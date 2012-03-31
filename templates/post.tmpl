@@ -1,0 +1,27 @@
+## -*- coding: utf-8 -*-
+<%inherit file="base.tmpl"/>
+<%block name="body">
+    <h2> <a href='${permalink}'>${title}</a></h2>
+    % if link:
+            <p><a href='${link}'>Original site</a></p>
+    % endif
+    <hr>
+    <small>
+        Posted: ${post.date}&nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="${post.pagename+".txt"}">reSt</a>
+    </small>
+    <hr>
+    ${post.text(lang)}
+
+    %if disqus_forum:
+        <!-- Disqus comments !-->
+        <script type="text/javascript">
+            var disqus_url = '${post.permalink(absolute=True)}';
+            var disqus_developer = 1;
+        </script>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript" src="http://disqus.com/forums/${disqus_forum}/embed.js"></script>
+        <noscript><a href="http://disqus.com/forums/${disqus_forum}/?url=ref">View the discussion thread.</a></noscript><a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+        <!-- End of Disqus comments !-->
+    %endif
+</%block>

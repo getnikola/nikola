@@ -1,0 +1,42 @@
+## -*- coding: utf-8 -*-
+<%inherit file="base.tmpl"/>
+<%block name="body">
+    % for post in posts:
+        <div style="border-bottom: 2px solid darkgrey; margin-bottom: 12px;">
+        <a href="${post.permalink(lang)}"><h2>${post.title(lang)}</h2></a>
+        <hr>
+        <small>
+             Posted: ${post.date}&nbsp;&nbsp;|&nbsp;&nbsp;
+             <a href="${post.permalink(lang,extension=".txt")}">reSt</a>
+        </small><p>
+        ${post.text(lang)}
+        <p>
+        %if disqus_forum:
+            <a href="${post.permalink(absolute=True)}#disqus_thread">Comments</a>
+        %endif
+        </div>
+    % endfor
+    <div>
+        %if prevlink:
+            <a href="${prevlink}">newer posts</a>
+        %endif
+        <a href="${nextlink}">older posts</a>
+    </div>
+    <hr>
+    %if disqus_forum:
+        <script type="text/javascript">
+        //<![CDATA[
+        (function() {
+            var links = document.getElementsByTagName('a');
+            var query = '?';
+            for(var i = 0; i < links.length; i++) {
+            if(links[i].href.indexOf('#disqus_thread') >= 0) {
+                query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+            }
+            }
+            document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/lateralopinion/get_num_replies.js' + query + '"></' + 'script>');
+        })();
+        //]]>
+        </script>
+    %endif
+</%block>

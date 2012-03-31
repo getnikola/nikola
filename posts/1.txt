@@ -1,0 +1,45 @@
+.. raw:: html
+
+   <a href="http://www.flickr.com/photos/75108495@N00/352972944/" title="Nikola Tesla Corner by nicwest, on Flickr"><img src="http://farm1.staticflickr.com/138/352972944_4f9d568680.jpg" width="500" height="334" alt="Nikola Tesla Corner"></a>
+
+
+If you can see this in a web browser, it means you have managed to install Nikola,
+and build a site using it. Congratulations!
+
+Sorry about the docs not existing at the moment, I will write them shortly.
+
+Send feedback to ralsina@netmanagers.com.ar!
+
+
+To create your own posts, you need to create two files insite posts/
+
+whatever.meta
+    This is some information about your post. It has to include (one on each line):
+
+    1. Title (example: How to become rich)
+    2. URL filename (example: how-to-become-rich)
+    3. Publication date (example: 2012/03/13 02:17)
+    4. Tags (example: programming, happiness, linux)
+    5. Link to original source (example: http://boingboing.net/2012/01/14/boing-boing-will-go-dark-on-ja.html)
+
+    The 4th and 5th lines are optional.
+
+whatever.txt
+    The contents of your post, written in `Restructured Text <http://docutils.sourceforge.net/docs/user/rst/quickstart.html>`_
+
+You can also add the same kind of things in stories/. The difference between posts and stories in the default configuration
+is that posts will be added to RSS feeds and the front page of the site, while stories will generate pages that you
+have to link to manually.
+
+The templates are quite simple and are inside templates/
+
+After you change things, run "doit" and that's it, an updated site in output/.
+
+Before you publish this site anywhere, you should edit dodo.py (it has extensive comments) so it 
+says all the right things for your site. Upload to any server that can serve static files, and 
+you are done :-)
+
+**IMPORTANT**
+
+You will want to edit post.tmpl and delete the line that says disqus_developer.
+

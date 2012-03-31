@@ -1,0 +1,16 @@
+How To make This Work
+---------------------
+
+1. Install docutils (http://docutils.sourceforge.net)
+2. Install Mako (http://makotemplates.org)
+3. Install doit (http://python-doit.sourceforge.net)
+
+To build or update the site::
+
+    doit
+
+To see the contents::
+
+    (cd output; python -m SimpleHTTPServer 8000) 
+
+And point your browser to http://localhost:8000
