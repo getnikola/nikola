@@ -171,6 +171,9 @@ def task_render_tags():
             output_name = os.path.join(
                 "output", TRANSLATIONS[lang], TAG_PATH, tag + ".xml")
             deps = []
+            post_list = [global_data[post] for post in posts if global_data[post].use_in_feeds]
+            post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
+            post_list.reverse()
             for post in post_list:
                 deps += post.deps(lang)
             yield {
