@@ -5,15 +5,131 @@ import os
 from collections import defaultdict
 import codecs
 import glob
+from gzip import GzipFile
 import datetime
 from copy import copy
+import tempfile
 import urlparse
+
+########################################
+# New post
+########################################
+
+#def task_new_post():
+    #"""Create a new post (interactive)."""
+    #def post():
+        #raw_input("XXX")
+    #return {
+        #"uptodate": [True],
+        #"actions": (post),
+        #"interactive": [True],
+        #}
+
+
+########################################
+# Perform deployment
+########################################
+
+def task_deploy():
+    """Deploy site. (Use -a option to execute)"""
+    return {
+        "uptodate": [True],
+        "actions": DEPLOY_COMMANDS,
+        }
+
+########################################
+# Generate google sitemap
+########################################
+
+def task_sitemap():
+    """Generate Google sitemap. (Use -a option to execute)"""
+
+    output_path = os.path.abspath("output")
+    sitemap_path = os.path.join(output_path, "sitemap.xml.gz")
+    
+    def sitemap():
+        # Generate config
+        config_data = """<?xml version="1.0" encoding="UTF-8"?>
+<site
+  base_url="%s"
+  store_into="%s"
+  verbose="1" >
+  <directory path="%s" url="%s" />
+  <filter action="drop" type="wildcard" pattern="*~" />
+  <filter action="drop" type="regexp" pattern="/\.[^/]*" />
+</site>""" % (
+            BLOG_URL,
+            sitemap_path,
+            output_path,
+            BLOG_URL,
+        )
+        config_file = tempfile.NamedTemporaryFile(delete=False)
+        config_file.write(config_data)
+        config_file.close()
+
+        # Generate sitemap
+        import nikola.sitemap_gen as smap
+        sitemap = smap.CreateSitemapFromFile(config_file.name, True)
+        if not sitemap:
+            smap.output.Log('Configuration file errors -- exiting.', 0)
+        else:
+            sitemap.Generate()
+            smap.output.Log('Number of errors: %d' % smap.output.num_errors, 1)
+            smap.output.Log('Number of warnings: %d' % smap.output.num_warns, 1)
+        os.unlink(config_file.name)
+            
+    return {
+        "task_dep": [
+            "render_archive",
+            "render_indexes",
+            "render_pages",
+            "render_posts",
+            "render_rss",
+            "render_sources",
+            "render_tags"],
+        "targets": [sitemap_path],
+        "actions": [(sitemap, ())],
+        "verbosity": 1,
+        "clean": True,
+        }
+
+
+########################################
+# Start local server on port 8000
+########################################
+
+def task_serve():
+    """Start test server. (Use -a option to execute)"""
+    
+    def serve():
+        from BaseHTTPServer import HTTPServer
+        from SimpleHTTPServer import SimpleHTTPRequestHandler as handler
+
+        os.chdir("output")
+        
+        httpd = HTTPServer (('', 8000), handler)
+        sa = httpd.socket.getsockname()
+        print "Serving HTTP on", sa[0], "port", sa[1], "..."
+        httpd.serve_forever()
+
+    return {
+        "uptodate": [True],
+        "actions": [(serve, ())],
+        "verbosity": 2,
+        "params": [{'short': 'p',
+                 'name': 'port',
+                 'long': 'port',
+                 'type': int,
+                 'default': 8000,
+                 'help': 'Port number (default: 8000)'}],
+        }
+
 
 ########################################
 # Specialized post page tasks
 ########################################
 
-def task_render_page():
+def task_render_pages():
     """Build final pages from metadata and HTML fragments."""
     for lang in TRANSLATIONS:
         for wildcard, destination, template_name, _ in post_pages:
@@ -44,7 +160,7 @@ def task_render_sources():
 ########################################
 
 
-def task_render_post():
+def task_render_posts():
     """Build HTML fragments from metadata and reSt."""
     for lang in TRANSLATIONS:
         for post in timeline:
@@ -227,16 +343,6 @@ def task_render_rss():
 ########################################
 # Utility functions (not tasks)
 ########################################
-
-
-def permalink_year(year):
-    return("http://lateral.netmanagers.com.ar/weblog/%s/index.html" % year)
-
-
-def permalink_year_es(year):
-    return("http://lateral.netmanagers.com.ar/tr/es/weblog/%s/index.html"
-        % year)
-
 
 class Post(object):
 
@@ -465,5 +571,5 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path):
 
 def copy_file(source, dest):
     with open(source, "rb") as input:
-        with open(dest, "wb=") as output:
+        with open(dest, "wb+") as output:
             output.write(input.read())

@@ -1,0 +1,157 @@
+The Nikola Handbook
+===================
+
+
+:Version: 1.1+svn
+:Author: Roberto Alsina <ralsina@netmanagers.com.ar>
+
+.. contents::
+
+What's Nikola and what can you do with it?
+------------------------------------------
+
+Nikola is a static website and blog generator. The very short explanation is
+that it takes some texts you wrote, and uses them to create a folder full
+of HTML files. If you upload that folder to a server, you will have a
+rather full-featured website, done with little effort.
+
+It's original goal is to create blogs, but it supports most kind of sites, and
+can be used as a CMS, as long as what you present to the user is your own content
+instead of something the user generates.
+
+Nikola can do:
+    ..
+
+    * A blog
+    * Your company's site
+    * Your personal site
+    * A software project's site
+    * A book's site
+
+Since Nikola-based sites don't run any code on the server, there is no way to process
+user input in forms.
+
+Nikola can't do:
+    ..
+
+    * Twitter
+    * Facebook
+    * An Issue tracker
+    * Anything with forms, really (except for comments_!)
+
+Keep in mind that "static" doesn't mean **boring**. You can have animations, slides
+or whatever fancy CSS/HTML5 thingie you like. It only means all that HTML is
+generated already before being uploaded. On the other hand, Nikola sites will
+tend to be content-heavy. What Nikola is good at is at putting what you write
+out there.
+
+Why Static?
+-----------
+
+Most "modern" websites are *dynamic* in the sense that the contents of the site
+live in a database, and are converted into presentation-ready HTML only when a
+user wants to see the page. That's great. However, it presents some minor issues
+that static site generators try to solve.
+
+In a static site, the whole site, every page, *everything*, is created before
+the first user even sees it and uploaded to the server as a simple folder full
+of HTML files (and images, CSS, etc).
+
+So, let's see some reasons for using static sites:
+
+Security
+    Dynamic sites are prone to experience security issues. The solution for that
+    is constant vigilance, keeping the software behind the site updated, and
+    plain old good luck. The stack of software used to provide a static site,
+    like those Nikola generates, is much smaller (Just a webserver).
+
+    A smaller software stack implies less security risk.
+
+Obsolescense
+    If you create a site using (for example) Wordpress, what happens when Wordpress
+    releases a new version? You have to update your Wordpress. That is not optional,
+    because of security and support issues. If I release a new version of Nikola, and
+    you don't update, *nothing* happens. You can continue to use the version you
+    have now forever, no problems.
+
+    Also, in the longer term, the very foundations of dynamic sites shift. Can you
+    still deploy a blog software based on Django 0.96? What happens when your
+    host stops supporting the php version you rely on? And so on.
+
+    You may say those are long term issues, or that they won't matter for years. Well,
+    I believe things should work forever, or as close to it as we can make them.
+    Nikola's static output and its input files will work as long as you can install
+    a Python > 2.5 (soon 3.x) in a Linux, Windows, or Mac and can find a server
+    that sends files over HTTP. That's probably 10 or 15 years at least.
+
+    Also, static sites are easily handled by the Internet Archive.
+
+Cost and Performance
+    On dynamic sites, every time a reader wants a page, a whole lot of database
+    queries are made. Then a whole pile of code chews that data, and HTML is
+    produced, which is sent to the user. All that requires CPU and memory.
+
+    On a static site, the highly optimized HTTP server reads the file from disk
+    (or, if it's a popular file, from disk cache), and sends it to the user. You could
+    probably serve a bazillion (technical term) pageviews from a phone using
+    static sites.
+
+Features
+--------
+
+Nikola has a very defined featureset: it has every feature I needed for my own sites.
+Hopefully, it will be enough for others, and anyway, I am open to suggestions.
+
+If you want to create a blog or a site, Nikola provides:
+
+* Front page (and older posts pages)
+* RSS Feeds
+* Pages and feeds for each tag you used
+* Custom search
+* Full yearly archives
+* Custom output paths for generated pages
+* Easy page template customization
+* Static pages (not part of the blog)
+* Internationalization support (my own blog is English/Spanish)
+* Google sitemap generation
+* Custom deployment (if it's a command, you can use it)
+* A (very) basic look and feel you can customize
+* The input format is light markup (restructured text)
+
+Also:
+
+* A preview webserver
+* "Live" re-rendering while you edit
+* "Smart" builds: only what changed gets rebuilt (usually in 1 or 2 seconds)
+* Very easy to extend with minimal Python knowledge.
+
+Installing Nikola
+-----------------
+
+This is currently lacking on detail. Considering the niche Nikola is aimed at,
+I suspect that's not a problem yet. So, when I say "get", the specific details
+of how to "get" something for your specific operating system are left to you.
+
+1. Get python, if you don't have it.
+2. Get `doit <http://python-doit.sf.net>`_
+3. Get `docutils <http://docutils.sf.net>`_
+4. Get `Mako <http://makotemplates.org>`_
+
+Any non-prehistorical version of the above should work, but the newer the better.
+
+Then get Nikola itself (TODO add link), unzip it, and rename the folder nikola-x.y to the name of
+your site.
+
+Getting Started
+---------------
+
+To create posts and pages in Nikola, you write them in restructured text, a light
+markup that is later converted to HTML (I may add support for textile or other
+markups later).
+
+So, let's create a post!
+
+Comments
+--------
+
+Blah disqus

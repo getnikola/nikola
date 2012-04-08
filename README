@@ -11,6 +11,14 @@ To build or update the site::
 
 To see the contents::
 
-    (cd output; python -m SimpleHTTPServer 8000) 
+    doit -a serve
 
 And point your browser to http://localhost:8000
+
+You can even have doit rebuild the site automatically by running::
+
+    doit auto
+
+Nikola automatically generates a Google sitemap for your site. For information
+about how to make sitemaps useful for your site, please read FIXME: missing URL
+

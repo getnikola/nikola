@@ -62,6 +62,12 @@ ARCHIVE_PATH = ""
 # output / TRANSLATION[lang] / RSS_PATH / rss.xml
 RSS_PATH = ""
 
+# Commands to execute to deploy. Can be anything, for example,
+# you may use rsync:
+# "rsync -rav output/* joe@my.site:/srv/www/site"
+# And then do a backup, or ping pingomatic.
+# To do manual deployment, set it to []
+DEPLOY_COMMANDS = []
 
 ##############################################################################
 # HTML fragments and diverse things that are used by the templates
@@ -135,7 +141,7 @@ GLOBAL_CONTEXT = {
     'rss_link': RSS_LINK,
     # Locale-dependent archive links
     'archives_link': {
-        'en': '<a href="archive.html">Archives</a>',
+        'en': '<a href="/archive.html">Archives</a>',
         },
     'tags_link': {
         'en': '<a href="/categories/index.html">Tags</a>',
@@ -149,3 +155,11 @@ if __name__ == "__main__":
     print "Starting doit..."
     os.system("doit -f %s" % __file__)
 # End of magic.
+
+# To disable tasks, just delete them. For example, if you really
+# do not want to do a sitemap:
+# del(task_sitemap)
+
+# You can also replace the provided tasks with your own by redefining them
+# below this point. For a list of current tasks, run "doit list", and for
+# help on their syntax, refer to the doit handbook at http://python-doit.sf.net

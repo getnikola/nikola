@@ -27,7 +27,6 @@ def compile_html(source, dest):
     if error_level < 2:
         return True
     else:
-        print "error_level:", error_level
         return False
 
 
