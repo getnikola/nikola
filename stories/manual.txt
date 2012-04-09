@@ -321,6 +321,9 @@ You can create the page's files manually or use the helper ``new_page`` that wor
 the ``new_post`` described above, except it will place the files in the folder that
 has ``use_in_feed`` set to False.
 
+Redirections
+------------
+
 Configuration
 -------------
 

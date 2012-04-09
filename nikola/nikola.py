@@ -462,16 +462,51 @@ def task_render_galleries():
         context ["title"] = os.path.basename(gallery_path)
         thumb_name_list = [os.path.basename(x) for x in thumbs]
         context["images"] = zip(image_name_list, thumb_name_list)
-        def render_gallery(output_name, context):
+
+        # Use galleries/name/index.txt to generate a blurb for
+        # the gallery, if it exists
+        index_path = os.path.join(gallery_path, "index.txt")
+        index_dst_path = os.path.join(gallery_path, "index.html")
+        if os.path.exists(index_path):
+            yield {
+                'name': index_dst_path.encode('utf-8'),
+                'file_dep': [index_path],
+                'targets': [index_dst_path],
+                'actions': [(nikola.compile_html, [index_path, index_dst_path])],
+                'clean': True,
+            }            
+        
+        def render_gallery(output_name, context, index_dst_path):
+            if os.path.exists(index_dst_path):
+                with codecs.open(index_dst_path, "rb", "utf8") as fd:
+                    context['text'] = fd.read()
+            else:
+                context['text'] = ''
             render_template(template, output_name, context)
+
         yield {
             'name': gallery_path,
             'file_dep': [template_name] + image_list,
             'targets': [output_name],
-            'actions': [(render_gallery, (output_name, context))],
+            'actions': [(render_gallery, (output_name, context, index_dst_path))],
             'clean': True,
         }
 
+
+def task_redirect():
+
+    def create_redirect(src, dst):
+        with codecs.open(src_path, "wb+", "utf8") as fd:
+            fd.write('<head><meta HTTP-EQUIV="REFRESH" content="0; url=%s"></head>' % dst)
+    
+    for src, dst in REDIRECTIONS:
+        src_path = os.path.join("output", src)
+        yield {
+            'name': src_path,
+            'targets': [src_path],
+            'actions': [(create_redirect, (src_path, dst))],
+            'clean': True,
+            }
         
 ########################################
 # Utility functions (not tasks)

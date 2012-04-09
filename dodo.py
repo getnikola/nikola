@@ -62,6 +62,16 @@ ARCHIVE_PATH = ""
 # output / TRANSLATION[lang] / RSS_PATH / rss.xml
 RSS_PATH = ""
 
+# A list of redirection tuples, [("foo/from.html", "/bar/to.html")].
+#
+# A HTML file will be created in output/foo/from.html that redirects
+# to the "/bar/to.html" URL. notice that the "from" side MUST be a
+# relative URL.
+#
+# If you don't need any of these, just set to []
+
+REDIRECTIONS = []
+
 # Commands to execute to deploy. Can be anything, for example,
 # you may use rsync:
 # "rsync -rav output/* joe@my.site:/srv/www/site"
@@ -155,6 +165,7 @@ GLOBAL_CONTEXT = {
             ('/categories/index.html', 'Tags'),
             ('/stories/about-nikola.html', 'About Nikola'),
             ('/stories/handbook.html', 'The Nikola Handbook'),
+            ('http://nikola-generator.googlecode.com', 'Powered by Nikola!'),
             )
         }
     }

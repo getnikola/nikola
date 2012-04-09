@@ -8,6 +8,11 @@
 </%block>
 
 <%block name="body">
+    <p>
+    %if text:
+        ${text}
+    %endif
+    </p>
     <ul class="thumbnails">
         %for image in images:
             <li><a href="${image[0]}" class="thumbnail"><img src="${image[1]}" /></a></li>
