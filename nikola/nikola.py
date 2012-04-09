@@ -92,8 +92,7 @@ def task_sitemap():
             "render_sources",
             "render_tags"],
         "targets": [sitemap_path],
-        "actions": [(sitemap, ())],
-        "verbosity": 1,
+        "actions": [(sitemap,)],
         "clean": True,
         }
 
