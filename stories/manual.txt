@@ -357,11 +357,51 @@ Customizing Your Site
 
 There are lots of things you can do to persoalize your website, but let's see the easy ones!
 
+Basics
+    You can assume this needs to be changed::
+
+        # Data about this site
+        BLOG_TITLE = "Demo Site"
+        BLOG_URL = "http://nikola.googlecode.com"
+        BLOG_EMAIL = "joe@demo.site"
+        BLOG_DESCRIPTION = "This is a demo site for Nikola."
+
 CSS tweaking
     The default configuration includes a file, ``output/assets/css/custom.css`` which is empty.
     Put your CSS there, for minimal disruption of the provided CSS files. Of course you can
     also edit the others, but then you will have difficulties upgrading to the next Nikola
     release.
+
+Template tweaking
+    Each page you see is based on a template, and they all inherit from ``base.tmpl``, which
+    defines the page layout and other basic details. So, for example, you could tweak
+    ``post.tmpl`` and it would affect all the post pages, or ``base.tmpl`` and affect
+    all pages in the site.
+
+    Also, the ``post_pages`` configuration option defines what templates are used for
+    posts, so you could do a completely custom template.
+
+    Editing the provided templates may give you some problems when updating Nikola.
+
+Sidebar
+    ``LICENSE`` is a HTML snippet for things like a CC badge, or whatever you prefer.
+
+    The 'sidebar_links' option lets you define what links go in the right-hand
+    sidebar, so you can link to important pages, or to other sites.
+
+    The ``SEARCH_FORM`` option contains the HTML code for a search form based on
+    duckduckgo.com which should always work, but feel free to change it to
+    something else.
+
+Footer
+    ``CONTENT_FOOTER`` is displayed, small at the bottom of all pages, I use it for
+    the copyright notice.
+
+Analytics
+    This is probably a misleading name, but the ``ANALYTICS`` option lets you define
+    a HTML snippet that will be added at the bottom of body. The main usage is
+    a Google analytics snippet or something similar, but you can really put anything
+    there.
 
 Deployment
 ----------
@@ -370,7 +410,8 @@ Deployment
 Comments
 --------
 
-Blah disqus
+The default templates contain support for `Disqus <http://disqus.com>`_. All you have
+to do is register a forum, put its short name in the ``DISQUS_FORUM`` option.
 
 Image Galleries
 ---------------
