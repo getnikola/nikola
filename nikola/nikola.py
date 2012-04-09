@@ -155,7 +155,8 @@ def task_render_sources():
                 'name': output_name.encode('utf8'),
                 'file_dep': [source],
                 'targets': [output_name],
-                'actions': [(copy_file, (source, output_name))]
+                'actions': [(copy_file, (source, output_name))],
+                'clean': True,
                 }
                 
 ########################################
@@ -301,7 +302,8 @@ def task_render_tags():
                 'targets': [output_name],
                 'actions': [(generic_rss_renderer,
                     (lang, "%s (%s)" % (BLOG_TITLE, tag), BLOG_URL,
-                    BLOG_DESCRIPTION, post_list, output_name))]
+                    BLOG_DESCRIPTION, post_list, output_name))],
+                'clean': True,
             }
 
     # And global "all your tags" page
@@ -323,7 +325,7 @@ def task_render_tags():
             context,
         )
 
-        
+
 def task_render_rss():
     """Generate RSS feeds."""
     for lang in TRANSLATIONS:
@@ -339,7 +341,8 @@ def task_render_rss():
             'targets': [output_name],
             'actions': [(generic_rss_renderer,
                 (lang, BLOG_TITLE, BLOG_URL,
-                BLOG_DESCRIPTION, posts, output_name))]
+                BLOG_DESCRIPTION, posts, output_name))],
+            'clean': True,
         }    
 
         
