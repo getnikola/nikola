@@ -155,6 +155,12 @@ GLOBAL_CONTEXT = {
     'tags_link': {
         'en': '<a href="/categories/index.html">Tags</a>',
         },
+    'sidebar_links': {
+        'en': (
+            ('/stories/about-nikola.html', 'About Nikola'),
+            ('/stories/handbook.html', 'The Nikola Handbook'),
+            )
+        }
     }
 
 # Sorry, this is magic. It just is.

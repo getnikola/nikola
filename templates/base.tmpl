@@ -63,7 +63,9 @@
             <!-- End of social buttons -->
             <li>${archives_link[lang]}
             <li>${tags_link[lang]}
-            <li><a href="/stories/about-nikola.html">About Nikola</a>
+            %for url, text in sidebar_links[lang]:
+                <li><a href="${url}">${text}</a>
+            %endfor
             <li>${search_form}
             </ul>
             <!--End of sidebar content-->
