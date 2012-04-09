@@ -124,7 +124,7 @@ If you want to create a blog or a site, Nikola provides:
 * Internationalization support (my own blog is English/Spanish)
 * Google sitemap generation
 * Custom deployment (if it's a command, you can use it)
-* A (very) basic look and feel you can customize
+* A (very) basic look and feel you can customize, and is even text-mode friendly
 * The input format is light markup (restructured text)
 * Easy-to-create image galleries
 
@@ -324,11 +324,44 @@ has ``use_in_feed`` set to False.
 Redirections
 ------------
 
+If you need a page to be available in more than one place, you can define redirections
+in your ``dodo.py``::
+
+    # A list of redirection tuples, [("foo/from.html", "/bar/to.html")].
+    #
+    # A HTML file will be created in output/foo/from.html that redirects
+    # to the "/bar/to.html" URL. notice that the "from" side MUST be a
+    # relative URL.
+    #
+    # If you don't need any of these, just set to []
+
+    REDIRECTIONS = [("index.html", "/weblog/index.html")]
+
+It's better if you can do these using your web server's configuration, but if
+you can't, this will work.
+
 Configuration
 -------------
 
+The configuration file is called ``dodo.py`` and can be used to customize a lot of
+what Nikola does. Its syntax is python, but if you don't know the languaje, it
+still should not be terribly hard to grasp.
+
+The default ``dodo.py`` you get with Nikola should be fairly complete, and is quite
+commented, but just in case, here is a full,
+`customized example configuration </stories/sampleconfig.html>`_ (the one I use for
+`my site <http://lateral.netmanagers.com.ar>`_)
+
 Customizing Your Site
 ---------------------
+
+There are lots of things you can do to persoalize your website, but let's see the easy ones!
+
+CSS tweaking
+    The default configuration includes a file, ``output/assets/css/custom.css`` which is empty.
+    Put your CSS there, for minimal disruption of the provided CSS files. Of course you can
+    also edit the others, but then you will have difficulties upgrading to the next Nikola
+    release.
 
 Deployment
 ----------
@@ -358,6 +391,9 @@ The ``dodo.py`` options affecting gallery pages are these::
     # Final location of galleries will be output / GALLERY_PATH / gallery_name
     GALLERY_PATH = "galleries"
     THUMBNAIL_SIZE = 180
+
+If you  add a file in ``galleries/gallery_name/index.txt`` its contents will be
+converted to HTML and inserted above the images in the gallery page.
 
 Here is a `demo gallery </galleries/demo>`_ of historic, public domain Nikola
 Tesla pictures taken from `this site <http://kerryr.net/pioneers/gallery/tesla.htm>`_.
