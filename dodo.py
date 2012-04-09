@@ -166,9 +166,7 @@ GLOBAL_CONTEXT = {
 # Sorry, this is magic. It just is.
 execfile("nikola/nikola.py")
 if __name__ == "__main__":
-    import os
-    print "Starting doit..."
-    os.system("doit -f %s" % __file__)
+    nikola_main()
 # End of magic.
 
 # To disable tasks, just delete them. For example, if you really

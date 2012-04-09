@@ -2,6 +2,7 @@
 
 import nikola
 import os
+import sys
 from collections import defaultdict
 import codecs
 import glob
@@ -10,23 +11,80 @@ import datetime
 from copy import copy
 import tempfile
 import urlparse
+import datetime
+import re
 
 from doit.reporter import ExecutedOnlyReporter
+from doit.tools import InteractiveAction
+
+# Use the less-verbose reporter
 DOIT_CONFIG = {'reporter': ExecutedOnlyReporter}
 
 ########################################
 # New post
 ########################################
 
-#def task_new_post():
-    #"""Create a new post (interactive)."""
-    #def post():
-        #raw_input("XXX")
-    #return {
-        #"uptodate": [True],
-        #"actions": (post),
-        #"interactive": [True],
-        #}
+# slugify is copied from
+# http://code.activestate.com/recipes/577257-slugify-make-a-string-usable-in-a-url-or-filename/
+_slugify_strip_re = re.compile(r'[^\w\s-]')
+_slugify_hyphenate_re = re.compile(r'[-\s]+')
+def slugify(value):
+    """
+    Normalizes string, converts to lowercase, removes non-alpha characters,
+    and converts spaces to hyphens.
+
+    From Django's "django/template/defaultfilters.py".
+    """
+    import unicodedata
+    if not isinstance(value, unicode):
+        value = unicode(value)
+    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
+    value = unicode(_slugify_strip_re.sub('', value).strip().lower())
+    return _slugify_hyphenate_re.sub('-', value)
+
+    
+def new_post(is_post = True):
+    # Guess where we should put this
+    for path, _, _, use_in_rss in post_pages:
+        if use_in_rss == is_post:
+            break
+    
+    print "Creating New Post"
+    print "-----------------\n"
+    title = raw_input("Enter title: ").decode(sys.stdin.encoding)
+    slug = slugify(title)
+    data = u'\n'.join([
+        title,
+        slug,
+        datetime.datetime.now().strftime('%Y/%m/%d %H:%M')
+        ])
+    output_path = os.path.dirname(path)
+    meta_path = os.path.join(output_path,slug+".meta")
+    with codecs.open(meta_path, "wb+", "utf8") as fd:
+        fd.write(data)
+    txt_path = os.path.join(output_path,slug+".txt")
+    with codecs.open(txt_path, "wb+", "utf8") as fd:
+        fd.write(u"Write your post here.")
+    print "Your post's metadata is at: ", meta_path
+    print "Your post's text is at: ", txt_path
+
+def new_page():
+    new_post(False)
+    
+
+def task_new_post():
+    """Create a new post (interactive)."""
+    return {
+        "uptodate": [True],
+        "actions": [InteractiveAction("%s %s new_post" % (sys.executable, __file__))],
+        }
+
+def task_new_page():
+    """Create a new post (interactive)."""
+    return {
+        "uptodate": [True],
+        "actions": [InteractiveAction("%s %s new_page" % (sys.executable, __file__))],
+        }
 
 
 ########################################
@@ -648,3 +706,13 @@ def copy_file(source, dest):
     with open(source, "rb") as input:
         with open(dest, "wb+") as output:
             output.write(input.read())
+
+def nikola_main():
+    if sys.argv[1] == "new_post":
+        new_post()
+    elif sys.argv[1] == "new_page":
+        new_page()
+    else:
+        print "Starting doit..."
+        os.system("doit -f %s" % __file__)
+    
