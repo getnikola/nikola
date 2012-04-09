@@ -7,7 +7,12 @@
         %endfor
     </ul>
     <script>
-        jQuery('a.thumbnail').colorbox({rel:'gal', width:'80%',height:'100%'});
+        jQuery('a.thumbnail').colorbox({
+            rel:'gal',
+            maxWidth:'80%',
+            maxHeight:'80%',
+            scalePhotos: true
+        });
     </script>
 </%block>
 
