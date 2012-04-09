@@ -147,9 +147,51 @@ Getting Started
 
 To create posts and pages in Nikola, you write them in restructured text, a light
 markup that is later converted to HTML (I may add support for textile or other
-markups later).
+markups later). There is a great quick tutorial to learn restructured text here (TODO:
+add quickstart link)
 
-So, let's create a post!
+First, let's see how you "build" your site. Nikola comes with a minimal site to get you started.
+
+The tool used to do builds is called doit, and it rebuilds the files that are not up to date,
+so your site always reflects your latest content. To do our first build, just run "doit"::
+
+    $ doit
+    Parsing metadata
+    -- deploy
+    .  render_posts:stories/manual.html
+    .  render_posts:posts/1.html
+    .  render_posts:stories/1.html
+    .  render_posts:posts/1.html
+    -- render_posts:stories/1.html
+    .  render_archive:output/2012/index.html
+    .  render_archive:output/archive.html
+    .  render_indexes:output/index.html
+    .  render_pages:output/posts/welcome-to-nikola.html
+    .  render_pages:output/stories/about-nikola.html
+    .  render_pages:output/stories/handbook.html
+    -- render_rss:output/rss.xml
+    -- render_sources:output/stories/about-nikola.txt
+    -- render_sources:output/posts/welcome-to-nikola.txt
+    -- render_sources:output/stories/handbook.txt
+    .  render_tags:output/categories/python.html
+    -- render_tags:output/categories/python.xml
+    .  render_tags:output/categories/demo.html
+    -- render_tags:output/categories/demo.xml
+    .  render_tags:output/categories/nikola.html
+    -- render_tags:output/categories/nikola.xml
+    .  render_tags:output/categories/blog.html
+    -- render_tags:output/categories/blog.xml
+    .  render_tags:output/categories/index.html
+    .  sitemap
+
+As you add more content to your site, this can become very long, so you can get a
+less verbose run by using ``doit -r executed-only`` and you can even make this your
+default (TODO: link to doit docs)
+
+
+
+
+
 
 Comments
 --------

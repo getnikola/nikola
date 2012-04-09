@@ -38,6 +38,7 @@ def task_deploy():
     return {
         "uptodate": [True],
         "actions": DEPLOY_COMMANDS,
+        "verbosity": 2,
         }
 
 ########################################
@@ -45,7 +46,7 @@ def task_deploy():
 ########################################
 
 def task_sitemap():
-    """Generate Google sitemap. (Use -a option to execute)"""
+    """Generate Google sitemap."""
 
     output_path = os.path.abspath("output")
     sitemap_path = os.path.join(output_path, "sitemap.xml.gz")
