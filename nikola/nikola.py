@@ -102,22 +102,22 @@ def task_sitemap():
 ########################################
 
 def task_serve():
-    """Start test server. (Use -a option to execute)"""
+    """Start test server. (Usage: doit -a serve [-p 8000])"""
     
-    def serve():
+    def serve(port):
         from BaseHTTPServer import HTTPServer
         from SimpleHTTPServer import SimpleHTTPRequestHandler as handler
 
         os.chdir("output")
         
-        httpd = HTTPServer (('', 8000), handler)
+        httpd = HTTPServer (('127.0.0.1', port), handler)
         sa = httpd.socket.getsockname()
         print "Serving HTTP on", sa[0], "port", sa[1], "..."
         httpd.serve_forever()
 
     return {
         "uptodate": [True],
-        "actions": [(serve, ())],
+        "actions": [(serve,)],
         "verbosity": 2,
         "params": [{'short': 'p',
                  'name': 'port',
