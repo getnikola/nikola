@@ -345,6 +345,75 @@ def task_render_rss():
             'clean': True,
         }    
 
+def task_render_galleries():
+    """Render image galleries."""
+    template_name = os.path.join("templates", "gallery.tmpl")
+    template = Template(
+        filename=template_name,
+        output_encoding='utf-8',
+        module_directory='tmp',
+        lookup=template_lookup)
+
+    gallery_list = glob.glob("galleries/*")
+    # Fail quick if we don't have galleries, so we don't
+    # require PIL
+    if not gallery_list:
+        return
+    import Image
+    def create_thumb(src, dst):
+        size = THUMBNAIL_SIZE, THUMBNAIL_SIZE
+        im = Image.open(src)
+        im.thumbnail(size, Image.ANTIALIAS)
+        im.save(dst)
+    
+    # gallery_path is "gallery/name"
+    for gallery_path in gallery_list:
+        # gallery_name is "name"
+        gallery_name = os.path.basename(gallery_path)
+        # output_gallery is "output/GALLERY_PATH/name"
+        output_gallery = os.path.join('output', GALLERY_PATH, gallery_name)
+        # image_list contains "gallery/name/image_name.jpg"
+        image_list = glob.glob(gallery_path+"/*jpg")
+        image_list = [x for x in image_list if "thumbnail" not in x]
+        image_name_list = [os.path.basename(x) for x in image_list]
+        thumbs = []
+        # Do thumbnails and copy originals
+        for img, img_name in zip(image_list, image_name_list):
+            # img is "galleries/name/image_name.jpg"
+            # img_name is "image_name.jpg"
+            # fname, ext are "image_name", ".jpg"
+            fname, ext = os.path.splitext(img_name)
+            # thumb_path is "output/GALLERY_PATH/name/image_name.thumbnail.jpg"
+            thumb_path = os.path.join(output_gallery, fname +".thumbnail" + ext)
+            # thumb_path is "output/GALLERY_PATH/name/image_name.jpg"
+            orig_dest_path = os.path.join(output_gallery, img_name)
+            thumbs.append(os.path.basename(thumb_path))
+            yield {
+                'name': thumb_path,
+                'file_dep': [img],
+                'targets': [thumb_path, orig_dest_path],
+                'actions': [
+                    (create_thumb, (img, thumb_path)),
+                    (copy_file, (img, orig_dest_path))
+                ],
+                'clean': True,
+            }
+        output_name = os.path.join(output_gallery, "index.html")
+        context = {}
+        context ["lang"] = DEFAULT_LANG
+        context ["title"] = os.path.basename(gallery_path)
+        thumb_name_list = [os.path.basename(x) for x in thumbs]
+        context["images"] = zip(image_name_list, thumb_name_list)
+        def render_gallery(output_name, context):
+            render_template(template, output_name, context)
+        yield {
+            'name': gallery_path,
+            'file_dep': [template_name] + image_list,
+            'targets': [output_name],
+            'actions': [(render_gallery, (output_name, context))],
+            'clean': True,
+        }
+
         
 ########################################
 # Utility functions (not tasks)

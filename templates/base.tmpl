@@ -20,6 +20,7 @@
             <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${("/"+translations[language]+"/"+rss_path+"/rss.xml").replace("//", "/")}">
         %endfor
     %endif
+    ${self.extra_head()}
 </head>
 <body>
     <script type="text/javascript">
@@ -41,6 +42,7 @@
             <!--Body content-->
             ${self.body()}
             <!--End of body content-->
+            <hr>
             <small>${content_footer}</small><p>
         </div>
         <div class="span2" id="sidebar">
@@ -68,3 +70,6 @@
         </div>
     ${analytics}
 </body>
+
+<%block name="extra_head">
+</%block>

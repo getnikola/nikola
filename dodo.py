@@ -70,6 +70,15 @@ RSS_PATH = ""
 DEPLOY_COMMANDS = []
 
 ##############################################################################
+# Image Gallery Options
+##############################################################################
+
+# Galleries are folders in galleries/
+# Final location of galleries will be output / GALLERY_PATH / gallery_name
+GALLERY_PATH = "galleries"
+THUMBNAIL_SIZE = 256
+
+##############################################################################
 # HTML fragments and diverse things that are used by the templates
 ##############################################################################
 
