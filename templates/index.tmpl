@@ -17,10 +17,17 @@
         </div>
     % endfor
     <div>
-        %if prevlink:
-            <a href="${prevlink}">newer posts</a>
-        %endif
-        <a href="${nextlink}">older posts</a>
+<ul class="pager">
+  %if prevlink:
+    <li class="previous">
+        <a href="${prevlink}">&larr; Newer posts</a>
+    </li>
+  %endif
+  <li class="next">
+    <a href="${nextlink}">Older posts &rarr;</a>
+  </li>
+</ul>
+
     </div>
     <hr>
     %if disqus_forum:
