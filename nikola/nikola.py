@@ -11,6 +11,9 @@ from copy import copy
 import tempfile
 import urlparse
 
+from doit.reporter import ExecutedOnlyReporter
+DOIT_CONFIG = {'reporter': ExecutedOnlyReporter}
+
 ########################################
 # New post
 ########################################
