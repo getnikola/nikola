@@ -148,15 +148,11 @@ GLOBAL_CONTEXT = {
     'content_footer': CONTENT_FOOTER,
     'rss_path': RSS_PATH,
     'rss_link': RSS_LINK,
-    # Locale-dependent archive links
-    'archives_link': {
-        'en': '<a href="/archive.html">Archives</a>',
-        },
-    'tags_link': {
-        'en': '<a href="/categories/index.html">Tags</a>',
-        },
+    # Locale-dependent links for the sidebar
     'sidebar_links': {
         'en': (
+            ('/archive.html', 'Archives'),
+            ('/categories/index.html', 'Tags'),
             ('/stories/about-nikola.html', 'About Nikola'),
             ('/stories/handbook.html', 'The Nikola Handbook'),
             )
