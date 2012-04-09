@@ -76,7 +76,7 @@ DEPLOY_COMMANDS = []
 # Galleries are folders in galleries/
 # Final location of galleries will be output / GALLERY_PATH / gallery_name
 GALLERY_PATH = "galleries"
-THUMBNAIL_SIZE = 256
+THUMBNAIL_SIZE = 180
 
 ##############################################################################
 # HTML fragments and diverse things that are used by the templates
