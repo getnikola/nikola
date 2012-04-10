@@ -63,7 +63,7 @@
                 <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
             <!-- End of social buttons -->
             %for url, text in sidebar_links[lang]:
-                <li><a href="${url}">${text}</a>
+                <li><a href="${rel_link(permalink, url)}">${text}</a>
             %endfor
             <li>${search_form}
             </ul>

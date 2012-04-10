@@ -297,6 +297,7 @@ def task_render_indexes():
             if i == 1:
                 context["prevlink"] = "index.html"
             context["nextlink"] = "index-%s.html" % (i + 1)
+            context["permalink"] = link("index", i, lang)
             output_name = os.path.join(
                 'output', path("index", i, lang))
             yield generic_post_list_renderer(
@@ -322,6 +323,7 @@ def task_render_archive():
             context = {}
             context["lang"] = lang
             context["items"] = [("[%s] %s" % (post.date, post.title(lang)), post.permalink(lang)) for post in post_list]
+            context["permalink"] = link("archive", year, lang)
             # TODO: translate
             context["title"] = "Posts for year %s" % year
             yield generic_post_list_renderer(
@@ -366,6 +368,7 @@ def task_render_tags():
             # TODO: translate
             context["title"] = "Posts about %s:" % tag
             context["items"] = [("[%s] %s" % (post.date, post.title(lang)), post.permalink(lang)) for post in post_list]
+            context["permalink"] = link("tag", tag, lang)
             
             yield generic_post_list_renderer(
                 lang,
@@ -400,9 +403,10 @@ def task_render_tags():
         output_name = os.path.join(
             "output", path('tag_index', None, lang))
         context = {}
+        #TODO: translate
         context["title"] = u"Tags"
-        context["title_es"] = u"Tags"
         context["items"] = [(tag, link("tag", tag, lang)) for tag in tags]
+        context["permalink"] = link("tag_index", None, lang)
         yield generic_post_list_renderer(
             lang,
             [],
@@ -489,6 +493,7 @@ def task_render_galleries():
         context ["title"] = os.path.basename(gallery_path)
         thumb_name_list = [os.path.basename(x) for x in thumbs]
         context["images"] = zip(image_name_list, thumb_name_list)
+        context["permalink"] = link("gallery", gallery_name)
 
         # Use galleries/name/index.txt to generate a blurb for
         # the gallery, if it exists
@@ -725,9 +730,6 @@ def generic_post_list_renderer(lang, posts, output_name, template_name,
     context = {}
     context["posts"] = posts
     context["title"] = BLOG_TITLE
-    context["title_es"] = BLOG_TITLE
-    context["permalink"] = "/posts/" + output_name
-    context["permalink_es"] = "/es/posts/" + output_name
     context["lang"] = lang
     context["prevlink"] = None
     context["nextlink"] = None
@@ -826,4 +828,25 @@ def path(kind, name=None, lang=DEFAULT_LANG, is_link=False):
 def link(*args):
     return path(*args, is_link=True)
 
+def rel_link(src, dst):
+    # Normalize
+    src = urlparse.urljoin(BLOG_URL, src)
+    dst = urlparse.urljoin(src, dst)
+    # Check that link can be made relative, otherwise return dest
+    parsed_src = urlparse.urlsplit(src)
+    parsed_dst = urlparse.urlsplit(dst)
+    if parsed_src[:2] != parsed_dst[:2]:
+        return dst
+    # Now both paths are on the same site and absolute
+    src_elems = parsed_src.path.split('/')[1:]
+    dst_elems = parsed_dst.path.split('/')[1:]
+    i = 0
+    for (i,s),d in zip(enumerate(src_elems), dst_elems):
+        if s != d: break
+    else:
+        i += 1
+    # Now i is the longest common prefix
+    return '/'.join(['..']*(len(src_elems)-i-1)+dst_elems[i:])    
+
 GLOBAL_CONTEXT['_link'] = link
+GLOBAL_CONTEXT['rel_link'] = rel_link
