@@ -227,7 +227,7 @@ The ``-p 8080`` tells it the port for the webserver, and is optional (the defaul
 
 After you do this, you can point your web browser to http://localhost:8080 and you should see
 the sample site. This is useful as a "preview" of your work. You can combine add ``auto`` and do
- ``doit auto serve`` which makes doit automatically regenerate your pages as needed, and
+``doit auto serve`` which makes doit automatically regenerate your pages as needed, and
 it's a live preview!
 
 The ``deploy`` task is discussed in the Deployment_ section. 
