@@ -54,9 +54,16 @@ div.abstract p.topic-title {
 
 div.admonition, div.attention, div.caution, div.danger, div.error,
 div.hint, div.important, div.note, div.tip, div.warning {
-  margin: 2em ;
-  border: medium outset ;
-  padding: 1em }
+  padding: 8px 35px 8px 14px;
+  margin-bottom: 18px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  background-color: #d9edf7;
+  color: #3a87ad;
+  border: 1px solid #bce8f1;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
 
 div.admonition p.admonition-title, div.hint p.admonition-title,
 div.important p.admonition-title, div.note p.admonition-title,
