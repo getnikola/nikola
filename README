@@ -1,24 +1,19 @@
 How To make This Work
 ---------------------
 
+The full manual is in stories/manual.txt, but here is the very short version:
+
 1. Install docutils (http://docutils.sourceforge.net)
 2. Install Mako (http://makotemplates.org)
 3. Install doit (http://python-doit.sourceforge.net)
 
-To build or update the site::
+To build or update the demo site::
 
     doit
 
-To see the contents::
+To see it::
 
-    doit -a serve
+    doit -a serve -p 8000
 
 And point your browser to http://localhost:8000
-
-You can even have doit rebuild the site automatically by running::
-
-    doit auto
-
-Nikola automatically generates a Google sitemap for your site. For information
-about how to make sitemaps useful for your site, please read FIXME: missing URL
 
