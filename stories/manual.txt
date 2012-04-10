@@ -406,12 +406,43 @@ Analytics
 Deployment
 ----------
 
+Nikola doesn't really have a concept of deployment. However, if you can specify your
+deployment procedure as a series of commands, you can put them in the ``DEPLOY_COMMANDS``
+option, and run them with ``doit -a deploy``.
+
+One caveat is that if any command has a % in it, you should double them.
+
+Here is an example, from my own site's deployment script::
+
+    DEPLOY_COMMANDS = [
+        'rsync -rav --delete output/* ralsina@lateral.netmanagers.com.ar:/srv/www/lateral',
+        'rdiff-backup output ~/bartleblog-backup',
+        "links -dump 'http://www.twingly.com/ping2?url=lateral.netmanagers.com.ar'",
+        'rsync -rav ~/bartleblog-backup/* ralsina@netmanagers.com.ar:bartleblog-backup',
+    ]
+
 
 Comments
 --------
 
+While Nikola creates static sites, there is a minimum level of user interaction you
+are probably expecting: comments.
+
 The default templates contain support for `Disqus <http://disqus.com>`_. All you have
 to do is register a forum, put its short name in the ``DISQUS_FORUM`` option.
+
+Disqus is a good option because:
+
+1) It doesn't require any server-side software on your site
+2) They offer you a way to export your comments, so you can take
+   them with you if you need to.
+3) It's free.
+4) It's damn nice.
+
+.. admonition:: Important
+
+   You will want to edit post.tmpl and delete the line that says disqus_developer.
+
 
 Image Galleries
 ---------------
@@ -438,3 +469,8 @@ converted to HTML and inserted above the images in the gallery page.
 
 Here is a `demo gallery </galleries/demo>`_ of historic, public domain Nikola
 Tesla pictures taken from `this site <http://kerryr.net/pioneers/gallery/tesla.htm>`_.
+
+Getting Help
+------------
+
+Feel free to contact me at ralsina@netmanagers.com.ar for questions about Nikola.
