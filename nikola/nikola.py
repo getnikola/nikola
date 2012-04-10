@@ -15,7 +15,20 @@ import datetime
 import re
 
 from doit.reporter import ExecutedOnlyReporter
-from doit.tools import InteractiveAction
+from doit.action import PythonAction
+
+class InteractiveAction(PythonAction):
+    """Action to handle Interactive python functions:
+        * the output is never captured
+        * it is always successful (return code is not used)
+    """
+    def execute(self, out=None, err=None):
+        kwargs = self._prepare_kwargs()
+        try:
+            returned_value = self.py_callable(*self.args, **kwargs)
+        except Exception, exception:
+            return TaskError("PythonAction Error", exception)
+
 
 # Use the less-verbose reporter
 DOIT_CONFIG = {
@@ -95,13 +108,13 @@ def new_page():
 def task_new_post():
     """Create a new post (interactive)."""
     return {
-        "actions": [InteractiveAction("%s %s new_post" % (sys.executable, __file__))],
+        "actions": [InteractiveAction(new_post)],
         }
 
 def task_new_page():
     """Create a new post (interactive)."""
     return {
-        "actions": [InteractiveAction("%s %s new_page" % (sys.executable, __file__))],
+        "actions": [InteractiveAction(new_post, (False,))],
         }
 
 
@@ -759,11 +772,6 @@ def copy_file(source, dest):
             output.write(input.read())
 
 def nikola_main():
-    if sys.argv[1] == "new_post":
-        new_post()
-    elif sys.argv[1] == "new_page":
-        new_page()
-    else:
-        print "Starting doit..."
-        os.system("doit -f %s" % __file__)
+    print "Starting doit..."
+    os.system("doit -f %s" % __file__)
     
