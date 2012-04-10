@@ -298,7 +298,7 @@ def task_render_indexes():
                 context["prevlink"] = "index.html"
             context["nextlink"] = "index-%s.html" % (i + 1)
             output_name = os.path.join(
-                'output', TRANSLATIONS[lang], INDEX_PATH, output_name)
+                'output', path("index", i, lang))
             yield generic_post_list_renderer(
                 lang,
                 post_list,
@@ -315,15 +315,15 @@ def task_render_archive():
     for year, posts in posts_per_year.items():
         for lang in TRANSLATIONS:
             output_name = os.path.join(
-                "output", TRANSLATIONS[lang], INDEX_PATH, year, "index.html")
+                "output", path("archive", year, lang))
             post_list = [global_data[post] for post in posts]
             post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
             post_list.reverse()
             context = {}
             context["lang"] = lang
             context["items"] = [("[%s] %s" % (post.date, post.title(lang)), post.permalink(lang)) for post in post_list]
+            # TODO: translate
             context["title"] = "Posts for year %s" % year
-
             yield generic_post_list_renderer(
                 lang,
                 post_list,
@@ -333,15 +333,15 @@ def task_render_archive():
             )
 
     # And global "all your years" page
-    years = [int(x) for x in posts_per_year.keys()]
+    years = posts_per_year.keys()
     years.sort(reverse=True)
     template_name = os.path.join("templates", "list.tmpl")
     for lang in TRANSLATIONS:
         output_name = os.path.join(
-            "output", TRANSLATIONS[lang], INDEX_PATH, "archive.html")
+            "output", path("archive", None, lang))
+        # TODO: translate
         context["title"] = "Archive"
-        context["title_es"] = u"Archivo"
-        context["items"] = [(year, "%s/index.html" % year) for year in years]
+        context["items"] = [(year, link("archive", year, lang)) for year in years]
         yield generic_post_list_renderer(
             lang,
             [],
@@ -357,13 +357,13 @@ def task_render_tags():
     for tag, posts in posts_per_tag.items():
         for lang in TRANSLATIONS:
             # Render HTML
-            output_name = os.path.join(
-                "output", TRANSLATIONS[lang], TAG_PATH, tag + ".html")
+            output_name = os.path.join("output", path("tag", tag, lang))
             post_list = [global_data[post] for post in posts]
             post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
             post_list.reverse()
             context = {}
             context["lang"] = lang
+            # TODO: translate
             context["title"] = "Posts about %s:" % tag
             context["items"] = [("[%s] %s" % (post.date, post.title(lang)), post.permalink(lang)) for post in post_list]
             
@@ -375,8 +375,7 @@ def task_render_tags():
                 context,
             )
             #Render RSS
-            output_name = os.path.join(
-                "output", TRANSLATIONS[lang], TAG_PATH, tag + ".xml")
+            output_name = os.path.join("output", path("tag_rss", tag, lang))
             deps = []
             post_list = [global_data[post] for post in posts if global_data[post].use_in_feeds]
             post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
@@ -399,11 +398,11 @@ def task_render_tags():
     template_name = os.path.join("templates", "list.tmpl")
     for lang in TRANSLATIONS:
         output_name = os.path.join(
-            "output", TRANSLATIONS[lang], TAG_PATH, "index.html")
+            "output", path('tag_index', None, lang))
         context = {}
         context["title"] = u"Tags"
         context["title_es"] = u"Tags"
-        context["items"] = [(tag, "%s.html" % tag) for tag in tags]
+        context["items"] = [(tag, link("tag", tag, lang)) for tag in tags]
         yield generic_post_list_renderer(
             lang,
             [],
@@ -416,8 +415,7 @@ def task_render_tags():
 def task_render_rss():
     """Generate RSS feeds."""
     for lang in TRANSLATIONS:
-        output_name = os.path.join("output", TRANSLATIONS[lang],
-            RSS_PATH, "rss.xml")
+        output_name = os.path.join("output", path("rss", None, lang))
         deps = []
         posts = [x for x in timeline if x.use_in_feeds][:10]
         for post in posts:
@@ -458,7 +456,7 @@ def task_render_galleries():
         # gallery_name is "name"
         gallery_name = os.path.basename(gallery_path)
         # output_gallery is "output/GALLERY_PATH/name"
-        output_gallery = os.path.join('output', GALLERY_PATH, gallery_name)
+        output_gallery = os.path.join('output', path("gallery", gallery_name))
         # image_list contains "gallery/name/image_name.jpg"
         image_list = glob.glob(gallery_path+"/*jpg")
         image_list = [x for x in image_list if "thumbnail" not in x]
@@ -774,4 +772,58 @@ def copy_file(source, dest):
 def nikola_main():
     print "Starting doit..."
     os.system("doit -f %s" % __file__)
+
+def path(kind, name=None, lang=DEFAULT_LANG, is_link=False):
+    """Build the path to a certain kind of page.
+
+    kind is one of:
+
+    * tag_index (name is ignored)
+    * tag (and name is the tag name)
+    * tag_rss (name is the tag name)
+    * archive (and name is the year, or None for the main archive index)
+    * index (name is the number in index-number)
+    * rss (name is ignored)
+    * gallery (name is the gallery name)
+
+    The returned value is always a path relative to output, like
+    "categories/whatever.html"
     
+    If is_link is True, the path is absolute and uses "/" as separator
+    (ex: "/archive/index.html").
+    If is_link is False, the path is relative to output and uses the
+    platform's separator.
+    (ex: "archive\\index.html")
+    """
+    
+    path = []
+    
+    if kind == "tag_index":
+        path = filter(lambda x: x, [TRANSLATIONS[lang], TAG_PATH, 'index.html'])
+    elif kind == "tag":
+        path = filter(lambda x: x, [TRANSLATIONS[lang], TAG_PATH, name + ".html"])
+    elif kind == "tag_rss":
+        path = filter(lambda x: x, [TRANSLATIONS[lang], TAG_PATH, name + ".xml"])
+    elif kind == "index":
+        if name > 0:
+            path = filter(lambda x: x, [TRANSLATIONS[lang], ARCHIVE_PATH, 'index-%s.html' % name])
+        else:
+            path = filter(lambda x: x, [TRANSLATIONS[lang], ARCHIVE_PATH, 'index.html'])
+    elif kind == "rss":
+        path = filter(lambda x: x, [TRANSLATIONS[lang], RSS_PATH, 'rss.xml'])
+    elif kind == "archive":
+        if name:
+            path = filter(lambda x: x, [TRANSLATIONS[lang], INDEX_PATH, name, 'index.html'])
+        else:
+            path = filter(lambda x: x, [TRANSLATIONS[lang], INDEX_PATH, 'archive.html'])
+    elif kind == "gallery":
+        path = filter(lambda x: x, [GALLERY_PATH, name])
+    if is_link:
+        return '/'+('/'.join(path))
+    else:
+        return os.path.join(*path)
+        
+def link(*args):
+    return path(*args, is_link=True)
+
+GLOBAL_CONTEXT['_link'] = link

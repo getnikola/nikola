@@ -18,7 +18,7 @@
         ${rss_link}
     %else:
         %for language in translations:
-            <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${("/"+translations[language]+"/"+rss_path+"/rss.xml").replace("//", "/")}">
+            <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${_link("rss", None, lang)}">
         %endfor
     %endif
     ${self.extra_head()}
