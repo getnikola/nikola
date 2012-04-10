@@ -199,7 +199,7 @@ Nikola is a series of doit *tasks*, and you can see them by doing ``doit list``:
 
     $ doit list
     Parsing metadata
-    deploy             Deploy site. (Use -a option to execute)
+    deploy             Deploy site.
     render_archive     Render the post archives.
     render_galleries   Render image galleries.
     render_indexes     Render 10-post-per-page indexes.
@@ -208,7 +208,7 @@ Nikola is a series of doit *tasks*, and you can see them by doing ``doit list``:
     render_rss         Generate RSS feeds.
     render_sources     Publish the rst sources because why not?
     render_tags        Render the tag pages.
-    serve              Start test server. (Usage: doit -a serve [-p 8000])
+    serve              Start test server. (Usage: doit serve [-p 8000])
     sitemap            Generate Google sitemap.
 
 You can make Nikola redo everythig by calling ``doit clean``, you can make it do just a specific
@@ -218,18 +218,17 @@ part of the site using task names, for example ``doit render_pages``, and even i
 The ``serve`` task is special, in that instead of generating a file it starts a web server so
 you can see the site you are creating::
 
-    $ doit -a serve -p 8080
+    $ doit serve -p 8080
     Parsing metadata
     .  serve
     Serving HTTP on 127.0.0.1 port 8080 ...
 
-You have to use ``-a`` because this task is always considered up to date so it's not run
-automatically. The ``-p 8080`` tells it the port for the webserver, and is optional (the
-default is port 8000).
+The ``-p 8080`` tells it the port for the webserver, and is optional (the default is port 8000).
 
 After you do this, you can point your web browser to http://localhost:8080 and you should see
-the sample site. This is useful as a "preview" of your work. Combine it with ``doit auto``
-which makes doit automatically regenerate your pages as needed, and it's a live preview!
+the sample site. This is useful as a "preview" of your work. You can combine add ``auto`` and do
+ ``doit auto serve`` which makes doit automatically regenerate your pages as needed, and
+it's a live preview!
 
 The ``deploy`` task is discussed in the Deployment_ section. 
 
@@ -243,7 +242,7 @@ but that can be changed (see below, the post_pages option)
 
 You can just create them in ``posts`` or use a little helper task provided by Nikola::
 
-    $ doit -a new_post
+    $ doit new_post
     Parsing metadata
     .  new_post
     Creating New Post
@@ -408,7 +407,7 @@ Deployment
 
 Nikola doesn't really have a concept of deployment. However, if you can specify your
 deployment procedure as a series of commands, you can put them in the ``DEPLOY_COMMANDS``
-option, and run them with ``doit -a deploy``.
+option, and run them with ``doit deploy``.
 
 One caveat is that if any command has a % in it, you should double them.
 

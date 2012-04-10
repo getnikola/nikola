@@ -18,7 +18,27 @@ from doit.reporter import ExecutedOnlyReporter
 from doit.tools import InteractiveAction
 
 # Use the less-verbose reporter
-DOIT_CONFIG = {'reporter': ExecutedOnlyReporter}
+DOIT_CONFIG = {
+        'reporter': ExecutedOnlyReporter,
+        'default_tasks': ['render_site'],
+}
+
+def task_render_site():
+    return {
+        'actions': [],
+        'task_dep': [
+            'redirect',
+            'render_archive',
+            'render_galleries',
+            'render_indexes',
+            'render_pages',
+            'render_posts',
+            'render_rss',
+            'render_sources',
+            'render_tags',
+            'sitemap',
+            ],
+        }
 
 ########################################
 # New post
@@ -75,14 +95,12 @@ def new_page():
 def task_new_post():
     """Create a new post (interactive)."""
     return {
-        "uptodate": [True],
         "actions": [InteractiveAction("%s %s new_post" % (sys.executable, __file__))],
         }
 
 def task_new_page():
     """Create a new post (interactive)."""
     return {
-        "uptodate": [True],
         "actions": [InteractiveAction("%s %s new_page" % (sys.executable, __file__))],
         }
 
@@ -92,9 +110,8 @@ def task_new_page():
 ########################################
 
 def task_deploy():
-    """Deploy site. (Use -a option to execute)"""
+    """Deploy site."""
     return {
-        "uptodate": [True],
         "actions": DEPLOY_COMMANDS,
         "verbosity": 2,
         }
@@ -160,7 +177,7 @@ def task_sitemap():
 ########################################
 
 def task_serve():
-    """Start test server. (Usage: doit -a serve [-p 8000])"""
+    """Start test server. (Usage: doit serve [-p 8000])"""
     
     def serve(port):
         from BaseHTTPServer import HTTPServer
@@ -174,7 +191,6 @@ def task_serve():
         httpd.serve_forever()
 
     return {
-        "uptodate": [True],
         "actions": [(serve,)],
         "verbosity": 2,
         "params": [{'short': 'p',

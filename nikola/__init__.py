@@ -24,7 +24,7 @@ def compile_html(source, dest):
             settings_overrides={'initial_header_level': 2})
     with codecs.open(dest, "w+", "utf8") as out_file:
         out_file.write(output)
-    if error_level < 2:
+    if error_level < 3:
         return True
     else:
         return False
