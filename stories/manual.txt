@@ -420,6 +420,10 @@ Here is an example, from my own site's deployment script::
         'rsync -rav ~/bartleblog-backup/* ralsina@netmanagers.com.ar:bartleblog-backup',
     ]
 
+Other interesting ideas are using
+`git as a deployment mechanism <http://toroid.org/ams/git-website-howto>`_ (or any other VCS
+for that matter), using `lftp mirror <http://lftp.yar.ru/>`_ or unison, or dropbox, or
+Ubuntu One. Any way you can think of to copy files from one place to another is good enough.
 
 Comments
 --------
