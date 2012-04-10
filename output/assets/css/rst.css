@@ -128,11 +128,21 @@ div.system-messages h1 {
   color: red }
 
 div.system-message {
-  border: medium outset ;
-  padding: 1em }
+  padding: 8px 35px 8px 14px;
+  margin-bottom: 18px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  border: 1px solid #eed3d7;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  padding: 1em;
+  background-color: #f2dede;
+  color: #b94a48;
+    
+}
 
 div.system-message p.system-message-title {
-  color: red ;
+  color: inherit ;
   font-weight: bold }
 
 div.topic {
