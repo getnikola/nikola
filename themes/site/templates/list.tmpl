@@ -1,13 +1,12 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="base.tmpl"/>
-<%block name="body">
+<%block name="content">
         <!--Body content-->
-        <h2>${title}</h2>
+        <h1>${title}</h1>
         <ul class="unstyled">
         % for text, link in items:
             <li><a href="${link}">${text}</a>
         % endfor
         </ul>
-	<hr>
         <!--End of body content-->
 </%block>

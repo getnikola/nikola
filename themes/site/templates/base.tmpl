@@ -21,56 +21,42 @@
             <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${_link("rss", None, lang)}">
         %endfor
     %endif
-    ${self.extra_head()}
+    <%block name="extra_head">
+    </%block>
 </head>
 <body>
-    <script type="text/javascript">
-        var addthis_config = { 'ui_language': '${lang}' };
-    </script>
-<div class="container-fluid" id="container">
-    <div class="row" id="titlerow">
-    <div class="span12" id="titlecolumn">
-    <!-- Banner-like substance !-->
-        <div style="text-align: right;">
-        <h1 id="blog-title">
-            <a href="${blog_url}" title="${blog_title}">${blog_title}</a>
-        </h1>
-        <hr>
-        </div>
-    <!-- End of banner-like substance !-->
-    <div class="row" id="contentrow">
-        <div class="span10" id="contentcolumn">
-            <!--Body content-->
-            ${self.body()}
-            <!--End of body content-->
-            <hr>
-            <small>${content_footer}</small><p>
-        </div>
-        <div class="span2" id="sidebar">
-            <!--Sidebar content-->
-            <ul class="unstyled">
-            <li>${license}
-            <!-- social buttons -->
-            <li>
-                <div class="addthis_toolbox addthis_default_style" style="margin-bottom: 12px;">
-                <a class="addthis_button_preferred_1"></a>
-                <a class="addthis_button_preferred_2"></a>
-                <a class="addthis_button_preferred_3"></a>
-                <a class="addthis_button_preferred_4"></a>
-                <a class="addthis_button_compact"></a>
-                <a class="addthis_counter addthis_bubble_style"></a>
-                </div>
-                <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
-            <!-- End of social buttons -->
-            %for url, text in sidebar_links[lang]:
-                <li><a href="${rel_link(permalink, url)}">${text}</a>
-            %endfor
-            <li>${search_form}
+<!-- Menubar -->
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="/">
+            Nikola
+            </a>
+            <ul class="nav">
+                %for url, text in sidebar_links[lang]:
+                    <!-- ${rel_link(permalink, url)} / ${permalink} / ${url} -->
+                    % if rel_link(permalink, url) == "":
+                        <li class="active"><a href="${rel_link(permalink, url)}">${text}</a>
+                    %else:
+                        <li><a href="${rel_link(permalink, url)}">${text}</a>
+                    %endif
+                %endfor
             </ul>
-            <!--End of sidebar content-->
+            <%block name="sourcelink">
+            </%block>
         </div>
-    ${analytics}
-</body>
+    </div>
+</div>
+<!-- End of Menubar -->
 
-<%block name="extra_head">
-</%block>
+<div class="container" id="container" style="margin-top: 50px;">
+    <!--Body content-->
+    <!--End of body content-->
+    <%block name="content"></%block>
+</div>
+    <div class="span12" style="text-align: center;">
+    <hr>
+    <small>${content_footer}</small><p>
+    </div>
+${analytics}
+</body>
