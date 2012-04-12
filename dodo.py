@@ -27,7 +27,7 @@
 
 post_pages = (
     ("posts/*.txt", "posts", "post.tmpl", True),
-    ("stories/*.txt", "stories", "post.tmpl", False),
+    ("stories/*.txt", "stories", "story.tmpl", False),
 )
 
 # What is the default language?
