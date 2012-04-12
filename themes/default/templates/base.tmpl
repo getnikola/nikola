@@ -36,6 +36,18 @@
         <h1 id="blog-title">
             <a href="${blog_url}" title="${blog_title}">${blog_title}</a>
         </h1>
+        <%block name="belowtitle">
+        %if len(translations) > 1:
+        <small>
+            ${(messages[lang][u"Also available in: "])}
+            %for langname in translations.keys():
+                %if langname != lang:
+                    <a href="${_link("index", None, langname)}">${messages[langname]["LANGUAGE"]}</a>
+                %endif
+            %endfor
+        </small>
+        %endif
+        </%block>
         <hr>
         </div>
     <!-- End of banner-like substance !-->
