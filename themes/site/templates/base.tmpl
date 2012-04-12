@@ -42,20 +42,20 @@
                     %endif
                 %endfor
             </ul>
+            <ul class="nav pull-right">
             <%block name="belowtitle">
             %if len(translations) > 1:
-                <ul class="pull-right">
-                    <li>${(messages[lang][u"Also available in: "])}
+                    <li>
                     %for langname in translations.keys():
                         %if langname != lang:
                             <a href="${_link("index", None, langname)}">${messages[langname]["LANGUAGE"]}</a>
                         %endif
                     %endfor
-                </ul>
+                    </li>
             %endif
             </%block>
-            <%block name="sourcelink">
-            </%block>
+            <%block name="sourcelink"> </%block>
+            </ul>
         </div>
     </div>
 </div>
