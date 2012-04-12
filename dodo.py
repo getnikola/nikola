@@ -169,7 +169,7 @@ GLOBAL_CONTEXT = {
             ('/categories/index.html', 'Tags'),
             ('/stories/about-nikola.html', 'About Nikola'),
             ('/stories/handbook.html', 'The Nikola Handbook'),
-            ('http://nikola-generator.googlecode.com', 'Powered by Nikola!'),
+            ('http://nikola.ralsina.com.ar', 'Powered by Nikola!'),
             )
         }
     }
