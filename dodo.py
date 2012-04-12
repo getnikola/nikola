@@ -100,6 +100,7 @@ BLOG_DESCRIPTION = "This is a demo site for Nikola."
 
 # Name of the theme to use. Themes are located in themes/theme_name
 THEME = 'default'
+THEME = 'site'
 
 # A HTML fragment describing the license, for the sidebar.
 # I recomment using Creative Commons' wizard: http://creativecommons.org/choose/
