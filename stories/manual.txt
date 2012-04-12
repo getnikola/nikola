@@ -134,7 +134,7 @@ If you want to create a blog or a site, Nikola provides:
 * Google sitemap generation
 * Custom deployment (if it's a command, you can use it)
 * A (very) basic look and feel you can customize, and is even text-mode friendly
-* The input format is light markup (restructured text)
+* The input format is light markup (`reStructuredText <quickstart.html>`_)
 * Easy-to-create image galleries
 
 Also:
@@ -166,8 +166,7 @@ Getting Started
 
 To create posts and pages in Nikola, you write them in restructured text, a light
 markup that is later converted to HTML (I may add support for textile or other
-markups later). There is a great quick tutorial to learn restructured text here (TODO:
-add quickstart link)
+markups later). There is a great `quick tutorial to learn restructured text <quickstart.html>`_
 
 First, let's see how you "build" your site. Nikola comes with a minimal site to get you started.
 
