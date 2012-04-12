@@ -5,6 +5,8 @@ The Nikola Handbook
 :Version: 1.2+svn
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
+.. class:: alert alert-info pull-right
+
 .. contents::
 
 What's Nikola and what can you do with it?
@@ -20,30 +22,37 @@ can be used as a CMS, as long as what you present to the user is your own conten
 instead of something the user generates.
 
 Nikola can do:
-    ..
 
-    * A blog
-    * Your company's site
-    * Your personal site
-    * A software project's site
-    * A book's site
+* A blog (`example <http://lateral.netmanagers.com.ar>`__)
+* Your company's site
+* Your personal site
+* A software project's site (`example <http://nikola.ralsina.com.ar>`__)
+* A book's site
 
 Since Nikola-based sites don't run any code on the server, there is no way to process
 user input in forms.
 
 Nikola can't do:
-    ..
 
-    * Twitter
-    * Facebook
-    * An Issue tracker
-    * Anything with forms, really (except for comments_!)
+* Twitter
+* Facebook
+* An Issue tracker
+* Anything with forms, really (except for comments_!)
 
 Keep in mind that "static" doesn't mean **boring**. You can have animations, slides
 or whatever fancy CSS/HTML5 thingie you like. It only means all that HTML is
 generated already before being uploaded. On the other hand, Nikola sites will
 tend to be content-heavy. What Nikola is good at is at putting what you write
 out there.
+
+Getting Help
+------------
+
+* Feel free to contact me at ralsina@netmanagers.com.ar for questions about Nikola.
+* You can file bugs at `the issue tracker <http://code.google.com/p/nikola-generator/issues/list>`__
+* You can discuss Nikola at the `nikola-discuss google group <http://groups.google.com/group/nikola-discuss>`_
+* You can subscribe to `the Nikola Blog <http://nikola.ralsina.com.ar/blog>`_
+* You can follow `Nikola on Twitter <https://twitter.com/#!/nikolagenerator>`_
 
 Why Static?
 -----------
@@ -299,7 +308,7 @@ configuration option::
     #
     post_pages = (
         ("posts/*.txt", "posts", "post.tmpl", True),
-        ("stories/*.txt", "stories", "post.tmpl", False),
+        ("stories/*.txt", "stories", "story.tmpl", False),
     )
 
 It will use the first location that has the last parameter set to True, or the last
@@ -312,6 +321,7 @@ Pages are the same as posts, except that:
 
 * They are not added to the front page
 * They don't appear on the RSS feed
+* They use the ``story.tmpl`` template instead of ``post.tmpl`` by default
 
 The default configuration expects the page's metadata and text files to be on the
 ``stories`` folder, but that can be changed (see post_pages option above).
@@ -348,7 +358,7 @@ still should not be terribly hard to grasp.
 
 The default ``dodo.py`` you get with Nikola should be fairly complete, and is quite
 commented, but just in case, here is a full,
-`customized example configuration </stories/sampleconfig.html>`_ (the one I use for
+`customized example configuration <sampleconfig.html>`_ (the one I use for
 `my site <http://lateral.netmanagers.com.ar>`_)
 
 Customizing Your Site
@@ -473,7 +483,14 @@ converted to HTML and inserted above the images in the gallery page.
 Here is a `demo gallery </galleries/demo>`_ of historic, public domain Nikola
 Tesla pictures taken from `this site <http://kerryr.net/pioneers/gallery/tesla.htm>`_.
 
-Getting Help
-------------
+License
+-------
 
-Feel free to contact me at ralsina@netmanagers.com.ar for questions about Nikola.
+Nikola is released under the `GPL version 3 <http://www.gnu.org/licenses/gpl-3.0.html>`_ which
+is a free software license. Some components shipped along with Nikola, or required by it are
+released under other licenses.
+
+If you are not familiar with free software licensing: In general, you should be able to
+do pretty much anything you want, unless you modify Nikola. If you modify it, and share
+it with someone else, that someone else should get all your modifications under the same
+license you got it.
