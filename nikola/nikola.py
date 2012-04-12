@@ -223,7 +223,6 @@ def task_render_pages():
     """Build final pages from metadata and HTML fragments."""
     for lang in TRANSLATIONS:
         for wildcard, destination, template_name, _ in post_pages:
-            template_name = os.path.join("templates", template_name)
             for task in generic_page_renderer(
                     lang, wildcard, template_name, destination):
                 yield task
@@ -277,7 +276,7 @@ def task_render_posts():
 
 def task_render_indexes():
     "Render 10-post-per-page indexes."
-    template_name = os.path.join("templates", "index.tmpl")
+    template_name = "index.tmpl"
     posts = [x for x in timeline if x.use_in_feeds]
     # Split in smaller lists
     lists = []
@@ -312,7 +311,7 @@ def task_render_indexes():
 def task_render_archive():
     """Render the post archives."""
     # TODO add next/prev links for years
-    template_name = os.path.join("templates", "list.tmpl")
+    template_name = "list.tmpl"
     for year, posts in posts_per_year.items():
         for lang in TRANSLATIONS:
             output_name = os.path.join(
@@ -337,7 +336,7 @@ def task_render_archive():
     # And global "all your years" page
     years = posts_per_year.keys()
     years.sort(reverse=True)
-    template_name = os.path.join("templates", "list.tmpl")
+    template_name = "list.tmpl"
     for lang in TRANSLATIONS:
         output_name = os.path.join(
             "output", path("archive", None, lang))
@@ -355,7 +354,7 @@ def task_render_archive():
 
 def task_render_tags():
     """Render the tag pages."""
-    template_name = os.path.join("templates", "list.tmpl")
+    template_name = "list.tmpl"
     for tag, posts in posts_per_tag.items():
         for lang in TRANSLATIONS:
             # Render HTML
@@ -398,7 +397,7 @@ def task_render_tags():
     # And global "all your tags" page
     tags = posts_per_tag.keys()
     tags.sort()
-    template_name = os.path.join("templates", "list.tmpl")
+    template_name = "list.tmpl"
     for lang in TRANSLATIONS:
         output_name = os.path.join(
             "output", path('tag_index', None, lang))
@@ -436,12 +435,8 @@ def task_render_rss():
 
 def task_render_galleries():
     """Render image galleries."""
-    template_name = os.path.join("templates", "gallery.tmpl")
-    template = Template(
-        filename=template_name,
-        output_encoding='utf-8',
-        module_directory='tmp',
-        lookup=template_lookup)
+    template_name = "gallery.tmpl"
+    template = template_lookup.get_template(template_name)
 
     gallery_list = glob.glob("galleries/*")
     # Fail quick if we don't have galleries, so we don't
@@ -460,7 +455,7 @@ def task_render_galleries():
         # gallery_name is "name"
         gallery_name = os.path.basename(gallery_path)
         # output_gallery is "output/GALLERY_PATH/name"
-        output_gallery = os.path.join('output', path("gallery", gallery_name))
+        output_gallery = os.path.dirname(os.path.join('output', path("gallery", gallery_name)))
         # image_list contains "gallery/name/image_name.jpg"
         image_list = glob.glob(gallery_path+"/*jpg")
         image_list = [x for x in image_list if "thumbnail" not in x]
@@ -518,7 +513,7 @@ def task_render_galleries():
 
         yield {
             'name': gallery_path,
-            'file_dep': [template_name] + image_list,
+            'file_dep': [template.filename] + image_list,
             'targets': [output_name],
             'actions': [(render_gallery, (output_name, context, index_dst_path))],
             'clean': True,
@@ -664,17 +659,10 @@ from mako.lookup import TemplateLookup
 from mako.template import Template
 
 template_lookup = TemplateLookup(
-    directories=['.'],
+    directories=[os.path.join('themes', THEME, "templates")],
     module_directory='tmp',
-    )
-
-
-post_tmpl = Template(
-    filename=os.path.join("templates", "post.tmpl"),
     output_encoding='utf-8',
-    module_directory='tmp',
-    lookup=template_lookup)
-
+    )
 
 def render_template(template, output_name, context):
     context.update(GLOBAL_CONTEXT)
@@ -690,15 +678,11 @@ def generic_page_renderer(lang, wildcard, template_name, destination):
     """Render post fragments to final HTML pages."""
     for post in glob.glob(wildcard):
         post_name = post.split('.', 1)[0]
-        template = Template(
-            filename=template_name,
-            output_encoding='utf-8',
-            module_directory='tmp',
-            lookup=template_lookup)
+        template = template_lookup.get_template(template_name)
         meta_name = post_name + ".meta"
         context = {}
         post = global_data[post_name]        
-        deps = post.deps(lang) + [template_name]
+        deps = post.deps(lang) + [template.filename]
         context['post'] = post
         context['lang'] = lang
         context['title'] = post.title(lang)
@@ -719,14 +703,10 @@ def generic_post_list_renderer(lang, posts, output_name, template_name,
     extra_context={}):
     """Renders pages with lists of posts."""
 
-    deps = [template_name]
+    template = template_lookup.get_template(template_name)
+    deps = [template.filename]
     for post in posts:
         deps += post.deps(lang)
-    template = Template(
-        filename=template_name,
-        output_encoding='utf-8',
-        module_directory='tmp',
-        lookup=template_lookup)
     context = {}
     context["posts"] = posts
     context["title"] = BLOG_TITLE
@@ -819,7 +799,7 @@ def path(kind, name=None, lang=DEFAULT_LANG, is_link=False):
         else:
             path = filter(lambda x: x, [TRANSLATIONS[lang], INDEX_PATH, 'archive.html'])
     elif kind == "gallery":
-        path = filter(lambda x: x, [GALLERY_PATH, name])
+        path = filter(lambda x: x, [GALLERY_PATH, name, 'index.html'])
     if is_link:
         return '/'+('/'.join(path))
     else:
