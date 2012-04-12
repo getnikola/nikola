@@ -21,7 +21,8 @@
             <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${_link("rss", None, lang)}">
         %endfor
     %endif
-    ${self.extra_head()}
+    <%block name="extra_head">
+    </%block>
 </head>
 <body>
     <script type="text/javascript">
@@ -41,7 +42,7 @@
     <div class="row" id="contentrow">
         <div class="span10" id="contentcolumn">
             <!--Body content-->
-            ${self.body()}
+            <%block name="content"></%block>
             <!--End of body content-->
             <hr>
             <small>${content_footer}</small><p>
@@ -71,6 +72,3 @@
         </div>
     ${analytics}
 </body>
-
-<%block name="extra_head">
-</%block>
