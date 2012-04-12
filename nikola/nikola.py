@@ -38,7 +38,8 @@ DOIT_CONFIG = {
 
 def task_render_site():
     return {
-        'actions': [],
+        'actions': None,
+        'clean': True,
         'task_dep': [
             'redirect',
             'render_archive',
@@ -49,10 +50,37 @@ def task_render_site():
             'render_rss',
             'render_sources',
             'render_tags',
+            'copy_assets',
             'sitemap',
             ],
         }
 
+########################################
+# Copy theme assets to the output
+########################################
+
+def task_copy_assets():
+    """Copy theme assets into the output folder."""
+    ignore = set(['.svn'])
+    assets_dir = os.path.join('themes', THEME, 'assets')
+    for root, dirs, files in os.walk(assets_dir):
+        root_parts = root.split(os.sep) 
+        if set(root_parts) & ignore:
+            continue
+        root_base = root_parts[2:]
+        dst_dir = os.path.join('output', *root_base)
+        if not os.path.isdir(dst_dir):
+            os.makedirs(dst_dir)
+        for src_name in files:
+            dst =  os.path.join(dst_dir, src_name)
+            src = os.path.join(root, src_name)
+            yield {
+                'name' : dst,
+                'file_dep' : [src],
+                'actions' : [(copy_file, (src, dst))],
+                'clean' : True,
+            }
+        
 ########################################
 # New post
 ########################################
@@ -456,6 +484,11 @@ def task_render_galleries():
         gallery_name = os.path.basename(gallery_path)
         # output_gallery is "output/GALLERY_PATH/name"
         output_gallery = os.path.dirname(os.path.join('output', path("gallery", gallery_name)))
+        yield {
+            'name': output_gallery,
+            'actions': [(os.makedirs, (output_gallery,))],
+            'clean': True,
+            }
         # image_list contains "gallery/name/image_name.jpg"
         image_list = glob.glob(gallery_path+"/*jpg")
         image_list = [x for x in image_list if "thumbnail" not in x]
