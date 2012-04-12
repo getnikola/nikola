@@ -351,8 +351,7 @@ def task_render_archive():
             context["lang"] = lang
             context["items"] = [("[%s] %s" % (post.date, post.title(lang)), post.permalink(lang)) for post in post_list]
             context["permalink"] = link("archive", year, lang)
-            # TODO: translate
-            context["title"] = "Posts for year %s" % year
+            context["title"] = MESSAGES[lang]["Posts for year %s"] % year
             yield generic_post_list_renderer(
                 lang,
                 post_list,
@@ -368,8 +367,7 @@ def task_render_archive():
     for lang in TRANSLATIONS:
         output_name = os.path.join(
             "output", path("archive", None, lang))
-        # TODO: translate
-        context["title"] = "Archive"
+        context["title"] = MESSAGES[lang]["Archive"]
         context["items"] = [(year, link("archive", year, lang)) for year in years]
         yield generic_post_list_renderer(
             lang,
@@ -392,8 +390,7 @@ def task_render_tags():
             post_list.reverse()
             context = {}
             context["lang"] = lang
-            # TODO: translate
-            context["title"] = "Posts about %s:" % tag
+            context["title"] = MESSAGES[lang][u"Posts about %s:"] % tag
             context["items"] = [("[%s] %s" % (post.date, post.title(lang)), post.permalink(lang)) for post in post_list]
             context["permalink"] = link("tag", tag, lang)
             
@@ -430,8 +427,7 @@ def task_render_tags():
         output_name = os.path.join(
             "output", path('tag_index', None, lang))
         context = {}
-        #TODO: translate
-        context["title"] = u"Tags"
+        context["title"] = MESSAGES[lang][u"Tags"]
         context["items"] = [(tag, link("tag", tag, lang)) for tag in tags]
         context["permalink"] = link("tag_index", None, lang)
         yield generic_post_list_renderer(
@@ -865,3 +861,13 @@ def rel_link(src, dst):
 
 GLOBAL_CONTEXT['_link'] = link
 GLOBAL_CONTEXT['rel_link'] = rel_link
+
+# Load theme's messages into context
+MSG_FOLDER = os.path.join('themes', THEME, 'messages')
+oldpath = sys.path
+sys.path.insert(0, MSG_FOLDER)
+MESSAGES = defaultdict(dict)
+for lang in TRANSLATIONS.keys():
+    translation = __import__(lang)
+    MESSAGES[lang].update(translation.MESSAGES)
+GLOBAL_CONTEXT['messages'] = MESSAGES
