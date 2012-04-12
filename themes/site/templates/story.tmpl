@@ -1,19 +1,8 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="post.tmpl"/>
 <%block name="content">
+%if title:
     <h1>${title}</h1>
-    <hr>
+%endif
     ${post.text(lang)}
-
-    %if disqus_forum:
-        <!-- Disqus comments !-->
-        <script type="text/javascript">
-            var disqus_url = '${post.permalink(absolute=True)}';
-            var disqus_developer = 1;
-        </script>
-        <div id="disqus_thread"></div>
-        <script type="text/javascript" src="http://disqus.com/forums/${disqus_forum}/embed.js"></script>
-        <noscript><a href="http://disqus.com/forums/${disqus_forum}/?url=ref">View the discussion thread.</a></noscript><a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
-        <!-- End of Disqus comments !-->
-    %endif
 </%block>
