@@ -484,11 +484,13 @@ def task_render_galleries():
         gallery_name = os.path.basename(gallery_path)
         # output_gallery is "output/GALLERY_PATH/name"
         output_gallery = os.path.dirname(os.path.join('output', path("gallery", gallery_name)))
-        yield {
-            'name': output_gallery,
-            'actions': [(os.makedirs, (output_gallery,))],
-            'clean': True,
-            }
+        if not os.path.isdir(output_gallery):
+            yield {
+                'name': output_gallery,
+                'actions': [(os.makedirs, (output_gallery,))],
+                'targets': [output_gallery],
+                'clean': True,
+                }
         # image_list contains "gallery/name/image_name.jpg"
         image_list = glob.glob(gallery_path+"/*jpg")
         image_list = [x for x in image_list if "thumbnail" not in x]
@@ -821,16 +823,16 @@ def path(kind, name=None, lang=DEFAULT_LANG, is_link=False):
         path = filter(lambda x: x, [TRANSLATIONS[lang], TAG_PATH, name + ".xml"])
     elif kind == "index":
         if name > 0:
-            path = filter(lambda x: x, [TRANSLATIONS[lang], ARCHIVE_PATH, 'index-%s.html' % name])
+            path = filter(lambda x: x, [TRANSLATIONS[lang], INDEX_PATH, 'index-%s.html' % name])
         else:
-            path = filter(lambda x: x, [TRANSLATIONS[lang], ARCHIVE_PATH, 'index.html'])
+            path = filter(lambda x: x, [TRANSLATIONS[lang], INDEX_PATH, 'index.html'])
     elif kind == "rss":
         path = filter(lambda x: x, [TRANSLATIONS[lang], RSS_PATH, 'rss.xml'])
     elif kind == "archive":
         if name:
-            path = filter(lambda x: x, [TRANSLATIONS[lang], INDEX_PATH, name, 'index.html'])
+            path = filter(lambda x: x, [TRANSLATIONS[lang], ARCHIVE_PATH, name, 'index.html'])
         else:
-            path = filter(lambda x: x, [TRANSLATIONS[lang], INDEX_PATH, 'archive.html'])
+            path = filter(lambda x: x, [TRANSLATIONS[lang], ARCHIVE_PATH, 'archive.html'])
     elif kind == "gallery":
         path = filter(lambda x: x, [GALLERY_PATH, name, 'index.html'])
     if is_link:
