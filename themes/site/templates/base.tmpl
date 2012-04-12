@@ -42,6 +42,9 @@
                     %endif
                 %endfor
             </ul>
+            %if search_form:
+                ${search_form}
+            %endif
             <ul class="nav pull-right">
             <%block name="belowtitle">
             %if len(translations) > 1:
