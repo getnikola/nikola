@@ -870,4 +870,5 @@ MESSAGES = defaultdict(dict)
 for lang in TRANSLATIONS.keys():
     translation = __import__(lang)
     MESSAGES[lang].update(translation.MESSAGES)
+sys.path = oldpath
 GLOBAL_CONTEXT['messages'] = MESSAGES
