@@ -1,9 +1,7 @@
-.. raw:: html
-
-   <div style="text-align: center; width: 60%>
-   <a href="http://www.flickr.com/photos/75108495@N00/352972944/" title="Nikola Tesla Corner by nicwest, on Flickr"><img src="http://farm1.staticflickr.com/138/352972944_4f9d568680.jpg" width="500" height="334" alt="Nikola Tesla Corner"></a>
-   </div>
-
+.. figure:: http://farm1.staticflickr.com/138/352972944_4f9d568680.jpg
+   :target: http://www.flickr.com/photos/75108495@N00/352972944/
+   :class: thumbnail
+   :alt: Nikola Tesla Corner by nicwest, on Flickr
 
 If you can see this in a web browser, it means you have managed to install Nikola,
 and build a site using it. Congratulations!
