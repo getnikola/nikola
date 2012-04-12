@@ -3,10 +3,21 @@
 <%block name="content">
     <h1> <a href='${permalink}'>${title}</a></h1>
     % if link:
-            <p><a href='${link}'>Original site</a></p>
+            <p><a href='${link}'>${messages[lang]["Original site"]}</a></p>
     % endif
     <hr>
     <small>
+        ${messages[lang]["Posted:"]} ${post.date}
+
+        %if len(translations) > 1:
+            %for langname in translations.keys():
+                %if langname != lang:
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a href="${post.permalink(langname)}">${messages[langname][u"Read in english"]}</a>
+                %endif
+            %endfor
+        %endif
+
         Posted: ${post.date}
         %if post.tags:
             &nbsp;&nbsp;|&nbsp;&nbsp;More posts about

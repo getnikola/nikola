@@ -42,6 +42,18 @@
                     %endif
                 %endfor
             </ul>
+            <%block name="belowtitle">
+            %if len(translations) > 1:
+                <ul class="pull-right">
+                    <li>${(messages[lang][u"Also available in: "])}
+                    %for langname in translations.keys():
+                        %if langname != lang:
+                            <a href="${_link("index", None, langname)}">${messages[langname]["LANGUAGE"]}</a>
+                        %endif
+                    %endfor
+                </ul>
+            %endif
+            </%block>
             <%block name="sourcelink">
             </%block>
         </div>
