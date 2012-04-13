@@ -7,7 +7,7 @@ If you can see this in a web browser, it means you have managed to install Nikol
 and build a site using it. Congratulations!
 
 * You can read the manual `here </stories/handbook.html>`__
-* You can learn more about Nikola at http://nikola-generator.googlecode.com
+* You can learn more about Nikola at http://nikola.ralsina.com.ar
 * You can see a demo photo gallery `here </galleries/demo/>`__
 
 Send feedback to ralsina@netmanagers.com.ar!
