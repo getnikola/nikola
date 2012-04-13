@@ -92,6 +92,11 @@ THUMBNAIL_SIZE = 180
 # HTML fragments and diverse things that are used by the templates
 ##############################################################################
 
+# What markup are you using for your posts. Possible values include:
+# "rest" => reStructuredText
+# "markdown" => MarkDown
+INPUT_FORMAT = 'rest'
+
 # Data about this site
 BLOG_TITLE = "Demo Site"
 BLOG_URL = "http://nikola.googlecode.com"
@@ -199,3 +204,4 @@ if __name__ == "__main__":
 # You can also replace the provided tasks with your own by redefining them
 # below this point. For a list of current tasks, run "doit list", and for
 # help on their syntax, refer to the doit handbook at http://python-doit.sf.net
+

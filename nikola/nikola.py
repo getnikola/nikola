@@ -29,7 +29,22 @@ class InteractiveAction(PythonAction):
         except Exception, exception:
             return TaskError("PythonAction Error", exception)
 
-
+INPUT_FORMAT = locals().get('INPUT_FORMAT', 'rest')
+if INPUT_FORMAT == "rest":
+    try:
+        import nikola.rest
+        compile_html = nikola.rest.compile_html
+    except Exception, exc:
+        print "There was a problem loading docutils. Is it installed?", exc
+        sys.exit(1)
+elif INPUT_FORMAT == "markdown":
+    try:
+        import nikola.md
+        compile_html = nikola.md.compile_html
+    except Exception, exc:
+        print "There was a problem loading markdown. Is it installed?", exc
+        sys.exit(1)
+            
 # Use the less-verbose reporter
 DOIT_CONFIG = {
         'reporter': ExecutedOnlyReporter,
@@ -319,7 +334,7 @@ def task_render_posts():
                 'name': dest.encode('utf-8'),
                 'file_dep': post.fragment_deps(lang),
                 'targets': [dest],
-                'actions': [(nikola.compile_html, [source, dest])],
+                'actions': [(compile_html, [source, dest])],
                 'clean': True,                
             }
 
@@ -556,7 +571,7 @@ def task_render_galleries():
                 'name': index_dst_path.encode('utf-8'),
                 'file_dep': [index_path],
                 'targets': [index_dst_path],
-                'actions': [(nikola.compile_html, [index_path, index_dst_path])],
+                'actions': [(compile_html, [index_path, index_dst_path])],
                 'clean': True,
             }            
         
