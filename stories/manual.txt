@@ -133,7 +133,8 @@ If you want to create a blog or a site, Nikola provides:
 * Google sitemap generation
 * Custom deployment (if it's a command, you can use it)
 * A (very) basic look and feel you can customize, and is even text-mode friendly
-* The input format is light markup (`reStructuredText <quickstart.html>`_)
+* The input format is light markup (`reStructuredText <quickstart.html>`_ or
+  `Markdown <http://daringfireball.net/projects/markdown/>`_)
 * Easy-to-create image galleries
 
 Also:
@@ -244,8 +245,9 @@ Creating a Blog Post
 
 A post consists of two files, a metadata file (``post-title.meta``) and a
 file containing the contents written in  `restructured text <http://docutils.sf.net>`_
-(``post-title.txt``). The default configuration expects them to be placed in ``posts``
-but that can be changed (see below, the post_pages option)
+(``post-title.txt``) or markdown (see the ``INPUT_FORMAT`` option in dodo.py).
+The default configuration expects them to be placed in ``posts`` but that can be
+changed (see below, the post_pages option)
 
 You can just create them in ``posts`` or use a little helper task provided by Nikola::
 
