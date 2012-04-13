@@ -157,7 +157,7 @@ When you modify templates, you may want to add text in them (for example: "About
 Instead of adding the text directly, which makes it impossible to translate to other
 languages, add it like this::
 
-    ${messages[langname]["About Me"]}
+    ${messages[lang]["About Me"]}
 
 Then, in ``messages/en.py`` add it along the other strings::
 
