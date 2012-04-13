@@ -15,4 +15,4 @@ msg_dict = {}
 for msg in MESSAGES:
     msg_dict[msg] = msg
 MESSAGES = msg_dict
-MESSAGES[u"LANGUAGE"] = "english"
+MESSAGES[u"LANGUAGE"] = "English"
