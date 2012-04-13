@@ -1,4 +1,7 @@
-A more "website-done-with-bootstrap" theme, so to speak.
+A more "website-done-with-bootstrap" theme, so to speak. This theme should 
+be completely compatible with the default theme and need no configuration
+changes, except for the search form, as explained below.
+
 
 Has a fixed navigation bar at top that displays:
 
@@ -7,6 +10,9 @@ Has a fixed navigation bar at top that displays:
 * search form (taken from SEARCH_FORM in dodo.py)
 * Link to page's source code (if available)
 * Floating social bar on the left margin
+* The below-title block is displayed flush right
+
+This theme is used in Nikola's website: http://nikola.ralsina.com.ar
 
 Important: To fit in the bootstrap navigation bar, the search form needs the
 navbar-form and pull-left CSS classes applied. Here is an example with Nikola's
