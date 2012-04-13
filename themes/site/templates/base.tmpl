@@ -34,7 +34,6 @@
             </a>
             <ul class="nav">
                 %for url, text in sidebar_links[lang]:
-                    <!-- ${rel_link(permalink, url)} / ${permalink} / ${url} -->
                     % if rel_link(permalink, url) == "":
                         <li class="active"><a href="${rel_link(permalink, url)}">${text}</a>
                     %else:
