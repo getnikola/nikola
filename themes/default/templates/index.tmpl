@@ -6,8 +6,7 @@
         <a href="${post.permalink(lang)}"><h2>${post.title(lang)}</h2></a>
         <hr>
         <small>
-             Posted: ${post.date}&nbsp;&nbsp;|&nbsp;&nbsp;
-             <a href="${post.permalink(lang,extension=".txt")}">reSt</a>
+             ${messages[lang]["Posted:"]} ${post.date}
         </small><p>
         ${post.text(lang)}
         <p>

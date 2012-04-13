@@ -5,7 +5,7 @@
         <div style="border-bottom: 2px solid darkgrey; margin-bottom: 12px;">
         <a href="${post.permalink(lang)}"><h1>${post.title(lang)}</a>
         <small>&nbsp;&nbsp;
-             Posted: ${post.date}
+             ${messages[lang]["Posted:"]} ${post.date}
         </small></h1>
         <hr>
         ${post.text(lang)}
