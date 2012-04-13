@@ -51,6 +51,7 @@ def task_render_site():
             'render_sources',
             'render_tags',
             'copy_assets',
+            'copy_files',
             'sitemap',
             ],
         }
@@ -59,27 +60,52 @@ def task_render_site():
 # Copy theme assets to the output
 ########################################
 
-def task_copy_assets():
-    """Copy theme assets into the output folder."""
+def copy_tree(src, dst):
+    """Copy a src tree to the dst folder.
+
+    Example:
+
+    src = "themes/default/assets"
+    dst = "output/assets"
+
+    should copy "themes/defauts/assets/foo/bar" to
+    "output/assets/foo/bar"
+    """
     ignore = set(['.svn'])
-    assets_dir = os.path.join('themes', THEME, 'assets')
-    for root, dirs, files in os.walk(assets_dir):
-        root_parts = root.split(os.sep) 
+    base_len = len(src.split(os.sep))
+    for root, dirs, files in os.walk(src):
+        root_parts = root.split(os.sep)
         if set(root_parts) & ignore:
             continue
-        root_base = root_parts[2:]
-        dst_dir = os.path.join('output', *root_base)
+        dst_dir = os.path.join(dst, *root_parts[base_len:])
         if not os.path.isdir(dst_dir):
             os.makedirs(dst_dir)
         for src_name in files:
-            dst =  os.path.join(dst_dir, src_name)
-            src = os.path.join(root, src_name)
+            dst_file =  os.path.join(dst_dir, src_name)
+            src_file = os.path.join(root, src_name)
             yield {
-                'name' : dst,
-                'file_dep' : [src],
-                'actions' : [(copy_file, (src, dst))],
+                'name' : dst_file,
+                'file_dep' : [src_file],
+                'targets' : [dst_file],
+                'actions' : [(copy_file, (src_file, dst_file))],
                 'clean' : True,
             }
+    
+
+def task_copy_assets():
+    """Copy theme assets into the output folder."""
+    src = os.path.join('themes', THEME, 'assets')
+    dst = os.path.join('output', 'assets')
+    for task in copy_tree(src, dst):
+        yield task
+
+def task_copy_files():
+    """Copy theme assets into the output folder."""
+    src = os.path.join('files')
+    dst = 'output'
+    for task in copy_tree(src, dst):
+        yield task
+
         
 ########################################
 # New post
