@@ -406,6 +406,7 @@ def task_render_archive():
     years.sort(reverse=True)
     template_name = "list.tmpl"
     for lang in TRANSLATIONS:
+        context = {}
         output_name = os.path.join(
             "output", path("archive", None, lang))
         context["title"] = MESSAGES[lang]["Archive"]
