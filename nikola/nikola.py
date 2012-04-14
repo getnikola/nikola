@@ -44,7 +44,26 @@ elif INPUT_FORMAT == "markdown":
     except Exception, exc:
         print "There was a problem loading markdown. Is it installed?", exc
         sys.exit(1)
-            
+
+
+# Create the full theme inheritance chain
+THEME = locals().get('THEME', 'default')
+def get_parent(theme_name):
+    parent_path = os.path.join('themes', theme_name, 'parent')
+    if os.path.isfile(parent_path):
+        with open(parent_path) as fd:
+            return fd.readlines()[0].strip()
+    return None
+        
+THEMES = [THEME]
+while True:
+    parent = get_parent(THEMES[-1])
+    # Avoid silly loops
+    if parent is None or parent in THEMES:
+        break
+    THEMES.append(parent)        
+
+
 # Use the less-verbose reporter
 DOIT_CONFIG = {
         'reporter': ExecutedOnlyReporter,
@@ -732,7 +751,7 @@ from mako.lookup import TemplateLookup
 from mako.template import Template
 
 template_lookup = TemplateLookup(
-    directories=[os.path.join('themes', THEME, "templates")],
+    directories=[os.path.join('themes', name, "templates") for name in THEMES],
     module_directory='tmp',
     output_encoding='utf-8',
     )

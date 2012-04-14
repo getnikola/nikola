@@ -3,11 +3,11 @@
 <%block name="content">
     % for post in posts:
         <div style="border-bottom: 2px solid darkgrey; margin-bottom: 12px;">
-        <a href="${post.permalink(lang)}"><h2>${post.title(lang)}</h2></a>
-        <hr>
-        <small>
+        <a href="${post.permalink(lang)}"><h1>${post.title(lang)}</a>
+        <small>&nbsp;&nbsp;
              ${messages[lang]["Posted:"]} ${post.date}
-        </small><p>
+        </small></h1>
+        <hr>
         ${post.text(lang)}
         <p>
         %if disqus_forum:
