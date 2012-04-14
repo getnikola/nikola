@@ -430,6 +430,7 @@ def task_render_archive():
             "output", path("archive", None, lang))
         context["title"] = MESSAGES[lang]["Archive"]
         context["items"] = [(year, link("archive", year, lang)) for year in years]
+        context["permalink"] = link("archive", None, lang)
         yield generic_post_list_renderer(
             lang,
             [],
