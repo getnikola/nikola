@@ -13,7 +13,7 @@ To build or update the demo site::
 
 To see it::
 
-    doit -a serve -p 8000
+    doit serve -p 8000
 
 And point your browser to http://localhost:8000
 
