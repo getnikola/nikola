@@ -62,7 +62,7 @@ if sys.hexversion < 0x02020000:
 import fnmatch
 import glob
 import gzip
-import md5
+import hashlib
 import os
 import re
 import stat
@@ -389,7 +389,7 @@ class Output:
     """ Output and count a warning.  Suppress duplicate warnings. """
     if text:
       text = encoder.NarrowText(text, None)
-      hash = md5.new(text).digest()
+      hash = hashlib.md5(text).digest()
       if not self._warns_shown.has_key(hash):
         self._warns_shown[hash] = 1
         print '[WARNING] ' + text
@@ -402,7 +402,7 @@ class Output:
     """ Output and count an error.  Suppress duplicate errors. """
     if text:
       text = encoder.NarrowText(text, None)
-      hash = md5.new(text).digest()
+      hash = hashlib.md5(text).digest()
       if not self._errors_shown.has_key(hash):
         self._errors_shown[hash] = 1
         print '[ERROR] ' + text
@@ -605,8 +605,8 @@ class URL(object):
     if not self.loc:
       return None
     if self.loc.endswith('/'):
-      return md5.new(self.loc[:-1]).digest()
-    return md5.new(self.loc).digest()
+      return hashlib.md5(self.loc[:-1]).digest()
+    return hashlib.md5(self.loc).digest()
   #end def MakeHash
 
   def Log(self, prefix='URL', level=3):
