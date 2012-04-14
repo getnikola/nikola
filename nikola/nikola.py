@@ -46,23 +46,53 @@ elif INPUT_FORMAT == "markdown":
         sys.exit(1)
 
 
-# Create the full theme inheritance chain
 THEME = locals().get('THEME', 'default')
-def get_parent(theme_name):
-    parent_path = os.path.join('themes', theme_name, 'parent')
-    if os.path.isfile(parent_path):
-        with open(parent_path) as fd:
-            return fd.readlines()[0].strip()
-    return None
-        
-THEMES = [THEME]
-while True:
-    parent = get_parent(THEMES[-1])
-    # Avoid silly loops
-    if parent is None or parent in THEMES:
-        break
-    THEMES.append(parent)        
 
+def get_theme_chain():
+    """Create the full theme inheritance chain."""
+    THEMES = [THEME]
+    def get_parent(theme_name):
+        parent_path = os.path.join('themes', theme_name, 'parent')
+        if os.path.isfile(parent_path):
+            with open(parent_path) as fd:
+                return fd.readlines()[0].strip()
+        return None
+
+    while True:
+        parent = get_parent(THEMES[-1])
+        # Avoid silly loops
+        if parent is None or parent in THEMES:
+            break
+        THEMES.append(parent)
+    return THEMES
+
+THEMES = get_theme_chain()
+
+
+def load_messages():
+    """ Load theme's messages into context.
+
+    All the messages from parent themes are loaded,
+    and "younger" themes have priority.
+    """
+    MESSAGES = defaultdict(dict)
+    for theme_name in THEMES[::-1]:
+        MSG_FOLDER = os.path.join('themes', theme_name, 'messages')
+        oldpath = sys.path
+        sys.path.insert(0, MSG_FOLDER)
+        for lang in TRANSLATIONS.keys():
+            # If we don't do the reload, the module is cached
+            translation = __import__(lang)
+            reload(translation)
+            MESSAGES[lang].update(translation.MESSAGES)
+            del(translation)
+        sys.path = oldpath
+    return MESSAGES
+
+MESSAGES = load_messages()
+GLOBAL_CONTEXT['messages'] = MESSAGES
+
+    
 
 # Use the less-verbose reporter
 DOIT_CONFIG = {
@@ -127,11 +157,21 @@ def copy_tree(src, dst):
     
 
 def task_copy_assets():
-    """Copy theme assets into the output folder."""
-    src = os.path.join('themes', THEME, 'assets')
-    dst = os.path.join('output', 'assets')
-    for task in copy_tree(src, dst):
-        yield task
+    """Create tasks for current theme and its parent.
+
+    If a file is present on two themes, use the version
+    from the "youngest" theme.
+    """
+    tasks = {}
+    for theme_name in THEMES:
+        src = os.path.join('themes', theme_name, 'assets')
+        dst = os.path.join('output', 'assets')
+        for task in copy_tree(src, dst):
+            if task['name'] in tasks:
+                continue
+            tasks[task['name']] = task
+            yield task
+
 
 def task_copy_files():
     """Copy theme assets into the output folder."""
@@ -923,14 +963,3 @@ def rel_link(src, dst):
 
 GLOBAL_CONTEXT['_link'] = link
 GLOBAL_CONTEXT['rel_link'] = rel_link
-
-# Load theme's messages into context
-MSG_FOLDER = os.path.join('themes', THEME, 'messages')
-oldpath = sys.path
-sys.path.insert(0, MSG_FOLDER)
-MESSAGES = defaultdict(dict)
-for lang in TRANSLATIONS.keys():
-    translation = __import__(lang)
-    MESSAGES[lang].update(translation.MESSAGES)
-sys.path = oldpath
-GLOBAL_CONTEXT['messages'] = MESSAGES

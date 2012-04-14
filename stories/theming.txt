@@ -38,6 +38,13 @@ messages
     Nikola tries to be multilingual. This is where you put the strings for your theme
     so that it can be translated into other languages.
 
+And the file ``parent``, which is a text file that, on its first line, contains the
+name of the **parent theme**. any resources missing on this theme, will be looked up
+in the parent theme (and then in the grandparent, etc).
+
+The ``parent`` is so you don't have to create a full theme each time: just create an
+empty theme and add the bits you want modified.
+
 Creating a New Theme
 --------------------
 
