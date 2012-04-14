@@ -1,2 +1,5 @@
 *.py[co]
 *.db
+*.html
+tmp/
+output/
