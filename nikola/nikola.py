@@ -569,12 +569,15 @@ def task_render_galleries():
     # require PIL
     if not gallery_list:
         return
-    import Image
-    def create_thumb(src, dst):
-        size = THUMBNAIL_SIZE, THUMBNAIL_SIZE
-        im = Image.open(src)
-        im.thumbnail(size, Image.ANTIALIAS)
-        im.save(dst)
+    try:
+        import Image
+        def create_thumb(src, dst):
+            size = THUMBNAIL_SIZE, THUMBNAIL_SIZE
+            im = Image.open(src)
+            im.thumbnail(size, Image.ANTIALIAS)
+            im.save(dst)
+    except ImportError:
+        create_thumb = copy_file
     
     # gallery_path is "gallery/name"
     for gallery_path in gallery_list:
@@ -694,7 +697,7 @@ class Post(object):
         while len(meta_data) < 5:
             meta_data.append("")
         default_title, self.pagename, self.date, self.tags, self.link = \
-            [x.strip() for x in meta_data]
+            [x.strip() for x in meta_data][:5]
         self.date = datetime.datetime.strptime(self.date, '%Y/%m/%d %H:%M')
         self.tags = [x.strip() for x in self.tags.split(',')]
         self.tags = filter(lambda x: x, self.tags)
@@ -859,7 +862,7 @@ def generic_post_list_renderer(lang, posts, output_name, template_name,
 def generic_rss_renderer(lang, title, link, description, timeline, output_path):
     """Takes all necessary data, and renders a RSS feed in output_path."""
     items = []
-    for post in timeline:
+    for post in timeline[:10]:
         args = {
             'title': post.title(lang),
             'link': post.permalink(lang),

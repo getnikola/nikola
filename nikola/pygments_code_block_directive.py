@@ -41,7 +41,7 @@ try:
     from pygments.lexers import get_lexer_by_name
     from pygments.formatters.html import _get_ttype_class
 except ImportError:
-    pass
+    pygments = None
 
 
 
@@ -85,7 +85,7 @@ class DocutilsInterface(object):
         self.custom_args = custom_args
 
     def lex(self):
-        # Get lexer for language (use text as fallback)
+        """Get lexer for language (use text as fallback)"""
         try:
             if self.language and unicode(self.language).lower() <> 'none':
                 lexer = get_lexer_by_name(self.language.lower(),
@@ -219,25 +219,28 @@ def code_block_directive(name, arguments, options, content, lineno,
         code_block += nodes.inline(fstr[1:] % lineno, fstr[1:] % lineno,   classes=['linenumber'])
 
     # parse content with pygments and add to code_block element
-    for cls, value in DocutilsInterface(content, language, options):
-        if withln and "\n" in value:
-            # Split on the "\n"s
-            values = value.split("\n")
-            # The first piece, pass as-is
-            code_block += nodes.Text(values[0], values[0])
-            # On the second and later pieces, insert \n and linenos
-            linenos = range(lineno, lineno + len(values))
-            for chunk, ln in zip(values, linenos)[1:]:
-                if ln <= total_lines:
-                    code_block += nodes.inline(fstr % ln, fstr % ln, classes=['linenumber'])
-                    code_block += nodes.Text(chunk, chunk)
-            lineno += len(values) - 1
+    if pygments is None:
+        code_block += nodes.Text(content, content)
+    else:
+        for cls, value in DocutilsInterface(content, language, options):
+            if withln and "\n" in value:
+                # Split on the "\n"s
+                values = value.split("\n")
+                # The first piece, pass as-is
+                code_block += nodes.Text(values[0], values[0])
+                # On the second and later pieces, insert \n and linenos
+                linenos = range(lineno, lineno + len(values))
+                for chunk, ln in zip(values, linenos)[1:]:
+                    if ln <= total_lines:
+                        code_block += nodes.inline(fstr % ln, fstr % ln, classes=['linenumber'])
+                        code_block += nodes.Text(chunk, chunk)
+                lineno += len(values) - 1
 
-        elif cls in unstyled_tokens:
-            # insert as Text to decrease the verbosity of the output.
-            code_block += nodes.Text(value, value)
-        else:
-            code_block += nodes.inline(value, value, classes=[cls])
+            elif cls in unstyled_tokens:
+                # insert as Text to decrease the verbosity of the output.
+                code_block += nodes.Text(value, value)
+            else:
+                code_block += nodes.inline(value, value, classes=[cls])
 
     return [code_block]
 

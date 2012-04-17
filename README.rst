@@ -19,3 +19,11 @@ To see it::
 
 And point your browser to http://localhost:8000
 
+Notes on Requirements
+---------------------
+
+If you don't have PIL, then image galleries will be inefficient because Nikola
+will not generate thumbnails. Alternatively, you may install pillow instead of
+PIL.
+
+If you don't have pygments, the code-block directive will not highlight syntax.
