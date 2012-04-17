@@ -155,10 +155,12 @@ of how to "get" something for your specific operating system are left to you.
 2. Get `doit <http://python-doit.sf.net>`_
 3. Get `docutils <http://docutils.sf.net>`_
 4. Get `Mako <http://makotemplates.org>`_
+5. Get `PIL <http://www.pythonware.com/products/pil/>`_
+6. Get `Pygments <http://pygments.org/>`_
 
 Any non-prehistorical version of the above should work, but the newer the better.
 
-Then get Nikola itself (TODO add link), unzip it, and rename the folder nikola-x.y to the name of
+Then get Nikola itself (<http://nikola.ralsina.com.ar/>), unzip it, and rename the folder nikola-x.y to the name of
 your site.
 
 Getting Started
@@ -238,7 +240,7 @@ the sample site. This is useful as a "preview" of your work. You can combine add
 ``doit auto serve`` which makes doit automatically regenerate your pages as needed, and
 it's a live preview!
 
-The ``deploy`` task is discussed in the Deployment_ section. 
+The ``deploy`` task is discussed in the Deployment_ section.
 
 Creating a Blog Post
 --------------------
