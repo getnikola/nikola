@@ -22,9 +22,11 @@
         <a href="${prevlink}">&larr; Newer posts</a>
     </li>
   %endif
-  <li class="next">
-    <a href="${nextlink}">Older posts &rarr;</a>
-  </li>
+  %if nextlink:
+    <li class="next">
+        <a href="${nextlink}">Older posts &rarr;</a>
+    </li>
+  %endif
 </ul>
 
     </div>

@@ -411,6 +411,7 @@ def task_render_indexes():
     while posts:
         lists.append(posts[:10])
         posts = posts[10:]
+    num_pages = len(lists)
     for lang in TRANSLATIONS:
         for i, post_list in enumerate(lists):
             context = {}
@@ -419,11 +420,13 @@ def task_render_indexes():
             else:
                 output_name = "index-%s.html" % i
             context["prevlink"] = None
+            context["nextlink"] = None
             if i > 1:
                 context["prevlink"] = "index-%s.html" % (i - 1)
             if i == 1:
                 context["prevlink"] = "index.html"
-            context["nextlink"] = "index-%s.html" % (i + 1)
+            if i < num_pages-1:
+                context["nextlink"] = "index-%s.html" % (i + 1)
             context["permalink"] = link("index", i, lang)
             output_name = os.path.join(
                 'output', path("index", i, lang))
