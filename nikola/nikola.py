@@ -69,6 +69,20 @@ def get_theme_chain():
 THEMES = get_theme_chain()
 
 
+TEMPLATE_ENGINE=locals().get('TEMPLATE_ENGINE', 'mako')
+if TEMPLATE_ENGINE == "mako":
+    try:
+        import nikola.mako_templates
+        template_lookup = nikola.mako_templates.get_template_lookup(THEMES)
+        def render_template(template, output_name, context):
+            nikola.mako_templates.render_template(template, output_name, context, GLOBAL_CONTEXT)
+    except Exception, exc:
+        print "There was a problem loading Mako. Is it installed?", exc
+        sys.exit(1)
+elif INPUT_FORMAT == "jinja":
+    raise Exception("Jinja support is not implemented yet.")
+
+
 def load_messages():
     """ Load theme's messages into context.
 
@@ -788,29 +802,6 @@ if __name__ != "__main__":
     posts_per_tag = defaultdict(list)
     timeline = []
     set_temporal_structure()
-
-
-########################################
-# Mako template handlers
-########################################
-
-from mako.lookup import TemplateLookup
-from mako.template import Template
-
-template_lookup = TemplateLookup(
-    directories=[os.path.join('themes', name, "templates") for name in THEMES],
-    module_directory='tmp',
-    output_encoding='utf-8',
-    )
-
-def render_template(template, output_name, context):
-    context.update(GLOBAL_CONTEXT)
-    try:
-        os.makedirs(os.path.dirname(output_name))
-    except:
-        pass
-    with open(output_name, 'w+') as output:
-        output.write(template.render(**context))
 
 
 def generic_page_renderer(lang, wildcard, template_name, destination):
