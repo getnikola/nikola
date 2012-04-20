@@ -90,7 +90,7 @@ elif TEMPLATE_ENGINE == "jinja":
     try:
         import nikola.jinja_templates as templates_module
     except Exception, exc:
-        print "There was a problem loading Mako. Is it installed?", exc
+        print "There was a problem loading Jinja2. Is it installed?", exc
         sys.exit(1)
        
 templates_module.lookup = templates_module.get_template_lookup(THEMES)
