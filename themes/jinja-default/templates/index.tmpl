@@ -1,0 +1,49 @@
+{% extends "base.tmpl" %}
+{% block content %}
+    {% for post in posts %}
+        <div style="border-bottom: 2px solid darkgrey; margin-bottom: 12px;">
+        <a href="{{post.permalink(lang)}}"><h1>{{post.title(lang)}}</a>
+        <small>&nbsp;&nbsp;
+             {{messages[lang]["Posted:"]}} {{post.date}}
+        </small></h1>
+        <hr>
+        {{post.text(lang)}}
+        <p>
+        {% if disqus_forum %}
+            <a href="{{post.permalink(absolute=True)}}#disqus_thread">Comments</a>
+        {% endif %}
+        </div>
+    {% endfor %}
+    <div>
+<ul class="pager">
+  {%if prevlink %}
+    <li class="previous">
+        <a href="{{prevlink}}">&larr; Newer posts</a>
+    </li>
+  {% endif %}
+  {% if nextlink %}
+    <li class="next">
+        <a href="{{nextlink}}">Older posts &rarr;</a>
+    </li>
+  {% endif %}
+</ul>
+
+    </div>
+    <hr>
+    {% if disqus_forum %}
+        <script type="text/javascript">
+        //<![CDATA[
+        (function() {
+            var links = document.getElementsByTagName('a');
+            var query = '?';
+            for(var i = 0; i < links.length; i++) {
+            if(links[i].href.indexOf('#disqus_thread') >= 0) {
+                query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+            }
+            }
+            document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/{{disqus_forum}}/get_num_replies.js' + query + '"></' + 'script>');
+        })();
+        //]]>
+        </script>
+    {% endif %}
+{% endblock %}

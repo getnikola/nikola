@@ -33,7 +33,6 @@ post_pages = (
 # What is the default language?
 
 DEFAULT_LANG = "en"
-
 # What languages do you have?
 # If a specific post is not translated to a language, then the version
 # in the default language will be shown instead.
@@ -105,6 +104,11 @@ BLOG_DESCRIPTION = "This is a demo site for Nikola."
 
 # Name of the theme to use. Themes are located in themes/theme_name
 THEME = 'site'
+
+# Name of the template engie to use. Usually this is theme dependent
+# and you probably don't want to touch it. Supported values are
+# "mako" and "jinja"
+TEMPLATE_ENGINE="mako"
 
 # A HTML fragment describing the license, for the sidebar.
 # I recomment using Creative Commons' wizard: http://creativecommons.org/choose/

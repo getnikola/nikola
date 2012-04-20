@@ -1,0 +1,42 @@
+{% extends "base.tmpl" %}
+{% block content %}
+    <h1> <a href='{{permalink}}'>{{title}}</a></h1>
+    {% if link %}
+            <p><a href='{{link}}'>{{messages[lang]["Original site"]}}</a></p>
+    {% endif %}
+    <hr>
+    <small>
+        {{messages[lang]["Posted:"]}} {{post.date}}&nbsp;&nbsp;|&nbsp;&nbsp;
+
+        {% if translations|length > 1 %}
+            {% for langname in translations.keys() %}
+                {% if langname != lang %}
+                    <a href="{{post.permalink(langname)}}">{{messages[langname]["Read in english"]}}</a>
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <a href="{{post.pagename+".txt"}}">reSt</a>
+        {% if post.tags %}
+            &nbsp;&nbsp;|&nbsp;&nbsp;{{messages[lang]["More posts about"]}}
+            {% for tag in post.tags %}
+                <a href="{{_link("tag", tag, lang)}}"><span class="badge badge-info">{{tag}}</span></a>
+            {% endfor %}
+        {% endif %}
+    </small>
+    <hr>
+    {{post.text(lang)}}
+
+    {% if disqus_forum %}
+        <!-- Disqus comments !-->
+        <script type="text/javascript">
+            var disqus_url = '{{post.permalink(absolute=True)}}';
+            var disqus_developer = 1;
+        </script>
+        <div id="disqus_thread"></div>
+        <script type="text/javascript" src="http://disqus.com/forums/{{disqus_forum}}/embed.js"></script>
+        <noscript><a href="http://disqus.com/forums/{{disqus_forum}}/?url=ref">View the discussion thread.</a></noscript><a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+        <!-- End of Disqus comments !-->
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends "post.tmpl" %}
+{% block content %}
+{% if title %}
+    <h1>{{title}}</h1>
+{% endif %}
+    {{post.text(lang)}}
+{% endblock %}
