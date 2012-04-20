@@ -1,37 +1,36 @@
-## -*- coding: utf-8 -*-
-<%inherit file="base.tmpl"/>
-<%block name="content">
-    % for post in posts:
+{% extends "base.tmpl" %}
+{% block content %}
+    {% for post in posts %}
         <div style="border-bottom: 2px solid darkgrey; margin-bottom: 12px;">
-        <a href="${post.permalink(lang)}"><h1>${post.title(lang)}</a>
+        <a href="{{post.permalink(lang)}}"><h1>{{post.title(lang)}}</a>
         <small>&nbsp;&nbsp;
-             ${messages[lang]["Posted:"]} ${post.date}
+             {{messages[lang]["Posted:"]}} {{post.date}}
         </small></h1>
         <hr>
-        ${post.text(lang)}
+        {{post.text(lang)}}
         <p>
-        %if disqus_forum:
-            <a href="${post.permalink(absolute=True)}#disqus_thread">Comments</a>
-        %endif
+        {% if disqus_forum %}
+            <a href="{{post.permalink(absolute=True)}}#disqus_thread">Comments</a>
+        {% endif %}
         </div>
-    % endfor
+    {% endfor %}
     <div>
 <ul class="pager">
-  %if prevlink:
+  {%if prevlink %}
     <li class="previous">
-        <a href="${prevlink}">&larr; Newer posts</a>
+        <a href="{{prevlink}}">&larr; Newer posts</a>
     </li>
-  %endif
-  %if nextlink:
+  {% endif %}
+  {% if nextlink %}
     <li class="next">
-        <a href="${nextlink}">Older posts &rarr;</a>
+        <a href="{{nextlink}}">Older posts &rarr;</a>
     </li>
-  %endif
+  {% endif %}
 </ul>
 
     </div>
     <hr>
-    %if disqus_forum:
+    {% if disqus_forum %}
         <script type="text/javascript">
         //<![CDATA[
         (function() {
@@ -42,9 +41,9 @@
                 query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
             }
             }
-            document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/lateralopinion/get_num_replies.js' + query + '"></' + 'script>');
+            document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/{{disqus_forum}}/get_num_replies.js' + query + '"></' + 'script>');
         })();
         //]]>
         </script>
-    %endif
-</%block>
+    {% endif %}
+{% endblock %}

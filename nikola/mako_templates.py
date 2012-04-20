@@ -17,7 +17,6 @@ def get_template_lookup(themes):
         )
         
 def render_template(template_name, output_name, context, global_context):
-    global lookup
     template = lookup.get_template(template_name)
     context.update(global_context)
     try:
@@ -26,3 +25,8 @@ def render_template(template_name, output_name, context, global_context):
         pass
     with open(output_name, 'w+') as output:
         output.write(template.render(**context))
+
+def template_deps(template_name):
+    template = lookup.get_template(template_name)
+    return [template.filename]
+    

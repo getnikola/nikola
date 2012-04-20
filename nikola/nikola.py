@@ -96,6 +96,7 @@ elif TEMPLATE_ENGINE == "jinja":
 templates_module.lookup = templates_module.get_template_lookup(THEMES)
 def render_template(template_name, output_name, context):
     templates_module.render_template(template_name, output_name, context, GLOBAL_CONTEXT)
+template_deps = templates_module.template_deps
 
 ########################################
 # Setup translations
@@ -597,7 +598,6 @@ def task_render_rss():
 def task_render_galleries():
     """Render image galleries."""
     template_name = "gallery.tmpl"
-    template = template_lookup.get_template(template_name)
 
     gallery_list = glob.glob("galleries/*")
     # Fail quick if we don't have galleries, so we don't
@@ -684,7 +684,7 @@ def task_render_galleries():
 
         yield {
             'name': gallery_path,
-            'file_dep': [template.filename] + image_list,
+            'file_dep': template_deps(template_name) + image_list,
             'targets': [output_name],
             'actions': [(render_gallery, (output_name, context, index_dst_path))],
             'clean': True,
@@ -826,11 +826,10 @@ def generic_page_renderer(lang, wildcard, template_name, destination):
     """Render post fragments to final HTML pages."""
     for post in glob.glob(wildcard):
         post_name = post.split('.', 1)[0]
-        template = template_lookup.get_template(template_name)
         meta_name = post_name + ".meta"
         context = {}
         post = global_data[post_name]        
-        deps = post.deps(lang) + [template.filename]
+        deps = post.deps(lang) + template_deps(template_name)
         context['post'] = post
         context['lang'] = lang
         context['title'] = post.title(lang)
@@ -851,8 +850,7 @@ def generic_post_list_renderer(lang, posts, output_name, template_name,
     extra_context={}):
     """Renders pages with lists of posts."""
 
-    template = template_lookup.get_template(template_name)
-    deps = [template.filename]
+    deps = template_deps(template_name)
     for post in posts:
         deps += post.deps(lang)
     context = {}

@@ -1,8 +1,7 @@
-## -*- coding: utf-8 -*-
-<%inherit file="post.tmpl"/>
-<%block name="content">
-%if title:
-    <h1>${title}</h1>
-%endif
-    ${post.text(lang)}
-</%block>
+{% extends "post.tmpl" %}
+{% block content %}
+{% if title %}
+    <h1>{{title}}</h1>
+{% endif %}
+    {{post.text(lang)}}
+{% endblock %}

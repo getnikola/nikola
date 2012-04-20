@@ -29,11 +29,10 @@ post_pages = (
     ("posts/*.txt", "posts", "post.tmpl", True),
     ("stories/*.txt", "stories", "story.tmpl", False),
 )
-
+TEMPLATE_ENGINE = "jinja"
 # What is the default language?
 
 DEFAULT_LANG = "en"
-
 # What languages do you have?
 # If a specific post is not translated to a language, then the version
 # in the default language will be shown instead.
@@ -104,7 +103,7 @@ BLOG_EMAIL = "joe@demo.site"
 BLOG_DESCRIPTION = "This is a demo site for Nikola."
 
 # Name of the theme to use. Themes are located in themes/theme_name
-THEME = 'site'
+THEME = 'jinja-default'
 
 # A HTML fragment describing the license, for the sidebar.
 # I recomment using Creative Commons' wizard: http://creativecommons.org/choose/

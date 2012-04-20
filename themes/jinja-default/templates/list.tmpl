@@ -1,12 +1,11 @@
-## -*- coding: utf-8 -*-
-<%inherit file="base.tmpl"/>
-<%block name="content">
+{% extends "base.tmpl" %}
+{% block content %}
         <!--Body content-->
-        <h1>${title}</h1>
+        <h1>{{title}}</h1>
         <ul class="unstyled">
-        % for text, link in items:
-            <li><a href="${link}">${text}</a>
-        % endfor
+        {% for text, link in items %}
+            <li><a href="{{link}}">{{text}}</a>
+        {% endfor %}
         </ul>
         <!--End of body content-->
-</%block>
+{% endblock %}
