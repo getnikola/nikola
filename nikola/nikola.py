@@ -29,6 +29,10 @@ class InteractiveAction(PythonAction):
         except Exception, exception:
             return TaskError("PythonAction Error", exception)
 
+########################################
+# Setup input format library
+########################################
+
 INPUT_FORMAT = locals().get('INPUT_FORMAT', 'rest')
 if INPUT_FORMAT == "rest":
     try:
@@ -45,6 +49,9 @@ elif INPUT_FORMAT == "markdown":
         print "There was a problem loading markdown. Is it installed?", exc
         sys.exit(1)
 
+########################################
+# Setup themes
+########################################
 
 THEME = locals().get('THEME', 'default')
 
@@ -68,20 +75,31 @@ def get_theme_chain():
 
 THEMES = get_theme_chain()
 
+########################################
+# Setup templating library
+########################################
 
 TEMPLATE_ENGINE=locals().get('TEMPLATE_ENGINE', 'mako')
 if TEMPLATE_ENGINE == "mako":
     try:
-        import nikola.mako_templates
-        template_lookup = nikola.mako_templates.get_template_lookup(THEMES)
-        def render_template(template, output_name, context):
-            nikola.mako_templates.render_template(template, output_name, context, GLOBAL_CONTEXT)
+        import nikola.mako_templates as templates_module
     except Exception, exc:
         print "There was a problem loading Mako. Is it installed?", exc
         sys.exit(1)
-elif INPUT_FORMAT == "jinja":
-    raise Exception("Jinja support is not implemented yet.")
+elif TEMPLATE_ENGINE == "jinja":
+    try:
+        import nikola.jinja_templates as templates_module
+    except Exception, exc:
+        print "There was a problem loading Mako. Is it installed?", exc
+        sys.exit(1)
+       
+templates_module.lookup = templates_module.get_template_lookup(THEMES)
+def render_template(template_name, output_name, context):
+    templates_module.render_template(template_name, output_name, context, GLOBAL_CONTEXT)
 
+########################################
+# Setup translations
+########################################
 
 def load_messages():
     """ Load theme's messages into context.
@@ -662,7 +680,7 @@ def task_render_galleries():
                     context['text'] = fd.read()
             else:
                 context['text'] = ''
-            render_template(template, output_name, context)
+            render_template(template_name, output_name, context)
 
         yield {
             'name': gallery_path,
@@ -824,7 +842,7 @@ def generic_page_renderer(lang, wildcard, template_name, destination):
             'name': output_name.encode('utf-8'),
             'file_dep': deps, 
             'targets': [output_name],
-            'actions': [(render_template, [template, output_name, context])],
+            'actions': [(render_template, [template_name, output_name, context])],
             'clean': True,
         }
 
@@ -848,7 +866,7 @@ def generic_post_list_renderer(lang, posts, output_name, template_name,
         'name': output_name.encode('utf8'),
         'targets': [output_name],
         'file_dep': deps,
-        'actions': [(render_template, [template, output_name, context])],
+        'actions': [(render_template, [template_name, output_name, context])],
         'clean': True,
     }
 
