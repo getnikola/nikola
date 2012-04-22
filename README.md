@@ -7,7 +7,7 @@ Why Static Websites?
 --------------------
 
 Static websites are safer, use fewer resources, and avoid vendor and platform lockin.
-You can read more about this in the [http://nikola.ralsina.com.ar/handbook.html#why-static>](Nikola Handbook.)
+You can read more about this in the [Nikola Handbook.](http://nikola.ralsina.com.ar/handbook.html#why-static)
 
 What Can Nikola Do?
 -------------------
@@ -15,12 +15,12 @@ What Can Nikola Do?
 It has many features, but here are some of the nicer ones:
 
 * Blogs, with tags, feeds, archives, comments, etc.
-* [http://nikola.ralsina.com.ar/theming.html](Theming)
-* Fast builds, thanks to [http://python-doit.sf.net](doit)
+* [Theming](http://nikola.ralsina.com.ar/theming.html)
+* Fast builds, thanks to [doit](http://python-doit.sf.net)
 * Flexible
 * Small codebase (programmers can understand all of Nikola in a couple of hours)
-* [http://nikola.ralsina.com.ar/quickstart.html](reStructuredText) or [http://daringfireball.net/projects/markdown](Markdown) as input languages.
-* Easy [http://nikola.ralsina.com.ar/galleries/demo/](image galleries) (just drop files in a folder!)
+* [reStructuredText](http://nikola.ralsina.com.ar/quickstart.html) or [Markdown](http://daringfireball.net/projects/markdown) as input languages.
+* Easy [image galleries](http://nikola.ralsina.com.ar/galleries/demo/) (just drop files in a folder!)
 * Syntax highlighting for almost any programming language or markup
 * Multilingual sites
 * Doesn't reinvent wheels, leverages existing tools.
