@@ -7,7 +7,7 @@ Why Static Websites?
 --------------------
 
 Static websites are safer, use fewer resources, and avoid vendor and platform lockin.
-You can read more about this in the `Nikola Handbook. </handbook.html#why-static>`__
+You can read more about this in the [http://nikola.ralsina.com.ar/handbook.html#why-static>](Nikola Handbook.)
 
 What Can Nikola Do?
 -------------------
