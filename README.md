@@ -25,4 +25,4 @@ It has many features, but here are some of the nicer ones:
 * Multilingual sites
 * Doesn't reinvent wheels, leverages existing tools.
 
-For more information, see the [http://nikola.ralsina.com.ar](web site)
+For more information, see http://nikola.ralsina.com.ar
