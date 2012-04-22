@@ -185,7 +185,9 @@ GLOBAL_CONTEXT = {
     }
 
 # Sorry, this is magic. It just is.
-execfile("nikola/nikola.py")
+import os
+import nikola
+execfile(os.path.join(os.path.dirname(nikola.__file__), "nikola.py"))
 if __name__ == "__main__":
     nikola_main()
 # End of magic.
