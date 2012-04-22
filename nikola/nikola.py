@@ -55,11 +55,25 @@ elif INPUT_FORMAT == "markdown":
 
 THEME = locals().get('THEME', 'default')
 
+def get_theme_path(theme):
+    """Given a theme name, returns the path where its files are located.
+
+    Looks in ./themes and in the place where themes go when installed.
+    """
+    dir_name = os.path.join('themes', theme)
+    if os.path.isdir(dir_name):
+        return dirname
+    dir_name = os.path.join(os.path.dirname(nikola.__file__), 'data', 'themes', theme)
+    if os.path.isdir(dir_name):
+        return dir_name
+    raise Exception(u"Can't find theme '%s'" % theme)
+
 def get_theme_chain():
     """Create the full theme inheritance chain."""
     THEMES = [THEME]
     def get_parent(theme_name):
         parent_path = os.path.join('themes', theme_name, 'parent')
+        parent_path = os.path.join(get_theme_path(theme_name), 'parent')
         if os.path.isfile(parent_path):
             with open(parent_path) as fd:
                 return fd.readlines()[0].strip()
@@ -92,8 +106,9 @@ elif TEMPLATE_ENGINE == "jinja":
     except Exception, exc:
         print "There was a problem loading Jinja2. Is it installed?", exc
         sys.exit(1)
-       
-templates_module.lookup = templates_module.get_template_lookup(THEMES)
+
+templates_module.lookup = templates_module.get_template_lookup(
+    [os.path.join(get_theme_path(name), "templates") for name in THEMES])
 def render_template(template_name, output_name, context):
     templates_module.render_template(template_name, output_name, context, GLOBAL_CONTEXT)
 template_deps = templates_module.template_deps
@@ -110,7 +125,7 @@ def load_messages():
     """
     MESSAGES = defaultdict(dict)
     for theme_name in THEMES[::-1]:
-        MSG_FOLDER = os.path.join('themes', theme_name, 'messages')
+        MSG_FOLDER = os.path.join(get_theme_path(theme_name), 'messages')
         oldpath = sys.path
         sys.path.insert(0, MSG_FOLDER)
         for lang in TRANSLATIONS.keys():
@@ -900,7 +915,8 @@ def copy_file(source, dest):
 def nikola_main():
     print "Starting doit..."
     os.system("doit -f %s" % __file__)
-
+        
+    
 def path(kind, name=None, lang=DEFAULT_LANG, is_link=False):
     """Build the path to a certain kind of page.
 

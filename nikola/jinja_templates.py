@@ -8,9 +8,9 @@ import jinja2
 
 lookup = None
 
-def get_template_lookup(themes):
+def get_template_lookup(directories):
     return jinja2.Environment(loader=jinja2.FileSystemLoader(
-        [os.path.join('themes', name, "templates") for name in themes],
+        directories,
         encoding='utf-8',
         ))
 
