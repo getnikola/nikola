@@ -14,8 +14,6 @@ What Can Nikola Do?
 
 It has many features, but here are some of the nicer ones:
 
-.. class:: nav-list
-
 * Blogs, with tags, feeds, archives, comments, etc.
 * [http://nikola.ralsina.com.ar/theming.html](Theming)
 * Fast builds, thanks to [http://python-doit.sf.net](doit)
