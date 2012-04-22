@@ -212,7 +212,7 @@ def task_copy_assets():
     """
     tasks = {}
     for theme_name in THEMES:
-        src = os.path.join('themes', theme_name, 'assets')
+        src = os.path.join(get_theme_path(theme_name), 'assets')
         dst = os.path.join('output', 'assets')
         for task in copy_tree(src, dst):
             if task['name'] in tasks:
@@ -621,13 +621,18 @@ def task_render_galleries():
         return
     try:
         import Image
-        def create_thumb(src, dst):
-            size = THUMBNAIL_SIZE, THUMBNAIL_SIZE
-            im = Image.open(src)
-            im.thumbnail(size, Image.ANTIALIAS)
-            im.save(dst)
     except ImportError:
-        create_thumb = copy_file
+        try:
+            from PIL import Image
+            def create_thumb(src, dst):
+                size = THUMBNAIL_SIZE, THUMBNAIL_SIZE
+                im = Image.open(src)
+                im.thumbnail(size, Image.ANTIALIAS)
+                im.save(dst)
+        except ImportError:
+            create_thumb = copy_file
+        
+        
     
     # gallery_path is "gallery/name"
     for gallery_path in gallery_list:

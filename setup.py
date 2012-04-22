@@ -106,6 +106,8 @@ setup(name='Nikola',
       packages=['nikola'],
       scripts=['scripts/nikola'],
       package_data=find_package_data(),
+      data_files=['docs/manual.txt',
+        'docs/theming.txt'],
       install_requires = [
           'pygments',
           'doit',
