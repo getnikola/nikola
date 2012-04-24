@@ -9,9 +9,9 @@ from mako.template import Template
 
 lookup = None
 
-def get_template_lookup(themes):
+def get_template_lookup(directories):
     return TemplateLookup(
-        directories=[os.path.join('themes', name, "templates") for name in themes],
+        directories=directories,
         module_directory='tmp',
         output_encoding='utf-8',
         )
