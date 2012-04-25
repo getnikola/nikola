@@ -151,6 +151,10 @@ This is currently lacking on detail. Considering the niche Nikola is aimed at,
 I suspect that's not a problem yet. So, when I say "get", the specific details
 of how to "get" something for your specific operating system are left to you.
 
+The short version is: ``pip install https://github.com/ralsina/nikola``
+
+Longer version:
+
 1. Get python, if you don't have it.
 2. Get `doit <http://python-doit.sf.net>`_
 3. Get `docutils <http://docutils.sf.net>`_
@@ -160,8 +164,11 @@ of how to "get" something for your specific operating system are left to you.
 
 Any non-prehistorical version of the above should work, but the newer the better.
 
-Then get Nikola itself (<http://nikola.ralsina.com.ar/>), unzip it, and rename the folder nikola-x.y to the name of
-your site.
+Then get Nikola itself (<http://nikola.ralsina.com.ar/>), unzip it, and
+run ``python setup.py install``.
+
+After that, run ``nikola init sitename`` and that will create a folder called
+``sitename`` containing a functional demo site.
 
 Getting Started
 ---------------

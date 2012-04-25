@@ -11,8 +11,8 @@ Theming Nikola
 The Structure
 -------------
 
-Themes are located in the ``themes`` folder, one folder per theme. The folder name
-is the theme name.
+Themes are located in the ``themes`` folder where Nikola is installed, one folder per theme.
+The folder name is the theme name.
 
 A Nikola theme consists of three folders:
 
@@ -48,9 +48,10 @@ empty theme and add the bits you want modified.
 Creating a New Theme
 --------------------
 
-Look in the ``themes`` folder. Choose a theme to start from. Make a copy with your
-new theme's name. There, you just created a new theme. Of course it looks exactly
-like the other one, so let's customize it.
+In your site's folder, create a ``themes`` folder. Choose a theme to start from, and
+create ``themes/youthemename/parent`` as a file containing the parent theme's name.
+There, you just created a new theme. Of course it looks exactly like the other one,
+so let's customize it.
 
 Templates
 ---------
