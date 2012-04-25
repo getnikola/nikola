@@ -624,15 +624,16 @@ def task_render_galleries():
     except ImportError:
         try:
             from PIL import Image
-            def create_thumb(src, dst):
-                size = THUMBNAIL_SIZE, THUMBNAIL_SIZE
-                im = Image.open(src)
-                im.thumbnail(size, Image.ANTIALIAS)
-                im.save(dst)
         except ImportError:
-            create_thumb = copy_file
-        
-        
+            Image = None
+    if Image:
+        def create_thumb(src, dst):
+            size = THUMBNAIL_SIZE, THUMBNAIL_SIZE
+            im = Image.open(src)
+            im.thumbnail(size, Image.ANTIALIAS)
+            im.save(dst)
+    else:
+        create_thumb = copy_file
     
     # gallery_path is "gallery/name"
     for gallery_path in gallery_list:
