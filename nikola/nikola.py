@@ -252,7 +252,7 @@ def slugify(value):
     return _slugify_hyphenate_re.sub('-', value)
 
     
-def new_post(is_post = True):
+def new_post(post_pages, is_post = True):
     # Guess where we should put this
     for path, _, _, use_in_rss in post_pages:
         if use_in_rss == is_post:
@@ -277,20 +277,23 @@ def new_post(is_post = True):
     print "Your post's metadata is at: ", meta_path
     print "Your post's text is at: ", txt_path
 
+
 def new_page():
     new_post(False)
     
 
-def task_new_post():
+def gen_task_new_post(post_pages):
     """Create a new post (interactive)."""
-    return {
-        "actions": [InteractiveAction(new_post)],
+    yield {
+        "basename": "new_post",
+        "actions": [InteractiveAction(new_post, (post_pages,))],
         }
 
-def task_new_page():
+def gen_task_new_page(post_pages):
     """Create a new post (interactive)."""
-    return {
-        "actions": [InteractiveAction(new_post, (False,))],
+    yield {
+        "basename": "new_page",
+        "actions": [InteractiveAction(new_post, (post_pages, False,) )],
         }
 
 
@@ -998,3 +1001,8 @@ def rel_link(src, dst):
 
 GLOBAL_CONTEXT['_link'] = link
 GLOBAL_CONTEXT['rel_link'] = rel_link
+
+DEPS_CONTEXT = {}
+for k, v in GLOBAL_CONTEXT.items():
+    if isinstance(v, (str, unicode, int, float, dict)):
+        DEPS_CONTEXT[k]=v

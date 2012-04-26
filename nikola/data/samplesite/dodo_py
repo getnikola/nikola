@@ -188,6 +188,11 @@ GLOBAL_CONTEXT = {
 import os
 import nikola
 execfile(os.path.join(os.path.dirname(nikola.__file__), "nikola.py"))
+
+def task_all():
+    yield gen_task_new_post(post_pages)
+    yield gen_task_new_page(post_pages)
+
 if __name__ == "__main__":
     nikola_main()
 # End of magic.
