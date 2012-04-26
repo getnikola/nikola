@@ -698,8 +698,15 @@ def gen_task_render_rss(**kw):
         }
 
 
-def task_render_galleries():
-    """Render image galleries."""
+def gen_task_render_galleries(**kw):
+    """Render image galleries.
+
+    Required keyword arguments:
+
+    thumbnail_size,
+    default_lang,
+    
+    """
     template_name = "gallery.tmpl"
 
     gallery_list = glob.glob("galleries/*")
@@ -716,7 +723,7 @@ def task_render_galleries():
             Image = None
     if Image:
         def create_thumb(src, dst):
-            size = THUMBNAIL_SIZE, THUMBNAIL_SIZE
+            size = kw["thumbnail_size"], kw["thumbnail_size"]
             im = Image.open(src)
             im.thumbnail(size, Image.ANTIALIAS)
             im.save(dst)
@@ -735,6 +742,7 @@ def task_render_galleries():
                 'actions': [(os.makedirs, (output_gallery,))],
                 'targets': [output_gallery],
                 'clean': True,
+                'uptodate': [config_changed(kw)],
                 }
         # image_list contains "gallery/name/image_name.jpg"
         image_list = glob.glob(gallery_path+"/*jpg") + glob.glob(gallery_path+"/*png")
@@ -761,10 +769,11 @@ def task_render_galleries():
                     (copy_file, (img, orig_dest_path))
                 ],
                 'clean': True,
+                'uptodate': [config_changed(kw)],
             }
         output_name = os.path.join(output_gallery, "index.html")
         context = {}
-        context ["lang"] = DEFAULT_LANG
+        context ["lang"] = kw["default_lang"]
         context ["title"] = os.path.basename(gallery_path)
         thumb_name_list = [os.path.basename(x) for x in thumbs]
         context["images"] = zip(image_name_list, thumb_name_list)
@@ -781,6 +790,7 @@ def task_render_galleries():
                 'targets': [index_dst_path],
                 'actions': [(compile_html, [index_path, index_dst_path])],
                 'clean': True,
+                'uptodate': [config_changed(kw)],
             }            
         
         def render_gallery(output_name, context, index_dst_path):
@@ -797,6 +807,7 @@ def task_render_galleries():
             'targets': [output_name],
             'actions': [(render_gallery, (output_name, context, index_dst_path))],
             'clean': True,
+            'uptodate': [config_changed(kw)],
         }
 
 
