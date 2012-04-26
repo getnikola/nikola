@@ -491,9 +491,15 @@ def gen_task_render_posts(**kw):
 ########################################
 
 
-def task_render_indexes():
-    "Render 10-post-per-page indexes."
+def gen_task_render_indexes(**kw):
+    """Render 10-post-per-page indexes.
+
+    Required keyword arguments:
+
+    translations
+    """
     template_name = "index.tmpl"
+    # TODO: timeline is global, get rid of it
     posts = [x for x in timeline if x.use_in_feeds]
     # Split in smaller lists
     lists = []
@@ -501,7 +507,7 @@ def task_render_indexes():
         lists.append(posts[:10])
         posts = posts[10:]
     num_pages = len(lists)
-    for lang in TRANSLATIONS:
+    for lang in kw["translations"]:
         for i, post_list in enumerate(lists):
             context = {}
             if not i:
@@ -519,13 +525,15 @@ def task_render_indexes():
             context["permalink"] = link("index", i, lang)
             output_name = os.path.join(
                 'output', path("index", i, lang))
-            yield generic_post_list_renderer(
+            task = generic_post_list_renderer(
                 lang,
                 post_list,
                 output_name,
                 template_name,
-                context,
+                context,                
             )
+            task['uptodate'] = task.get('updtodate', []) + [config_changed(kw)]
+            yield task
 
 
 def task_render_archive():
