@@ -14,8 +14,9 @@ import urlparse
 import datetime
 import re
 
-from doit.reporter import ExecutedOnlyReporter
 from doit.action import PythonAction
+from doit.reporter import ExecutedOnlyReporter
+from doit.tools import config_changed
 
 class InteractiveAction(PythonAction):
     """Action to handle Interactive python functions:
@@ -162,7 +163,7 @@ def task_render_site():
             'render_rss',
             'render_sources',
             'render_tags',
-            'copy_assets',
+            #'copy_assets',
             'copy_files',
             'sitemap',
             ],
@@ -204,20 +205,21 @@ def copy_tree(src, dst):
             }
     
 
-def task_copy_assets():
+def gen_task_copy_assets(**kw):
     """Create tasks for current theme and its parent.
 
     If a file is present on two themes, use the version
     from the "youngest" theme.
     """
     tasks = {}
-    for theme_name in THEMES:
+    for theme_name in kw['themes']:
         src = os.path.join(get_theme_path(theme_name), 'assets')
         dst = os.path.join('output', 'assets')
         for task in copy_tree(src, dst):
             if task['name'] in tasks:
                 continue
             tasks[task['name']] = task
+            task['uptodate'] = task.get('uptodate',[]) + [config_changed(kw)]
             yield task
 
 
