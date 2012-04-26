@@ -811,19 +811,26 @@ def gen_task_render_galleries(**kw):
         }
 
 
-def task_redirect():
+def gen_task_redirect(**kw):
+    """Generate redirections.
+
+    Required keyword arguments:
+
+    redirections
+    """
 
     def create_redirect(src, dst):
         with codecs.open(src_path, "wb+", "utf8") as fd:
             fd.write('<head><meta HTTP-EQUIV="REFRESH" content="0; url=%s"></head>' % dst)
     
-    for src, dst in REDIRECTIONS:
+    for src, dst in kw["redirections"]:
         src_path = os.path.join("output", src)
         yield {
             'name': src_path,
             'targets': [src_path],
             'actions': [(create_redirect, (src_path, dst))],
             'clean': True,
+            'uptodate': [config_changed(kw)],
             }
         
 ########################################

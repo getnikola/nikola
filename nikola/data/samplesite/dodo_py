@@ -235,6 +235,9 @@ def task_render_galleries():
     yield gen_task_render_galleries(thumbnail_size=THUMBNAIL_SIZE,
         default_lang=DEFAULT_LANG)
 
+def task_redirect():
+    yield gen_task_redirect(redirections=REDIRECTIONS)
+
 if __name__ == "__main__":
     nikola_main()
 # End of magic.
