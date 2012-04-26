@@ -308,6 +308,7 @@ def gen_task_new_page(post_pages):
 def gen_task_deploy(**kw):
     """Deploy site."""
     return {
+        "basename": "deploy",
         "actions": kw['commands'],
         "uptodate": [config_changed(kw)],
         "verbosity": 2,
@@ -317,8 +318,13 @@ def gen_task_deploy(**kw):
 # Generate google sitemap
 ########################################
 
-def task_sitemap():
-    """Generate Google sitemap."""
+def gen_task_sitemap(**kw):
+    """Generate Google sitemap.
+
+    Required keyword arguments:
+
+    blog_url
+    """
 
     output_path = os.path.abspath("output")
     sitemap_path = os.path.join(output_path, "sitemap.xml.gz")
@@ -334,10 +340,10 @@ def task_sitemap():
   <filter action="drop" type="wildcard" pattern="*~" />
   <filter action="drop" type="regexp" pattern="/\.[^/]*" />
 </site>""" % (
-            BLOG_URL,
+            kw["blog_url"],
             sitemap_path,
             output_path,
-            BLOG_URL,
+            kw["blog_url"],
         )
         config_file = tempfile.NamedTemporaryFile(delete=False)
         config_file.write(config_data)
@@ -355,6 +361,7 @@ def task_sitemap():
         os.unlink(config_file.name)
             
     return {
+        "basename": "sitemap",
         "task_dep": [
             "render_archive",
             "render_indexes",
@@ -365,6 +372,7 @@ def task_sitemap():
             "render_tags"],
         "targets": [sitemap_path],
         "actions": [(sitemap,)],
+        "uptodate": [config_changed(kw)],
         "clean": True,
         }
 

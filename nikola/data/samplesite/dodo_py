@@ -199,6 +199,9 @@ def task_copy_assets():
 def task_deploy():
     yield gen_task_deploy(commands=DEPLOY_COMMANDS)
 
+def task_sitemap():
+    yield gen_task_sitemap(blog_url=BLOG_URL)
+
 if __name__ == "__main__":
     nikola_main()
 # End of magic.
