@@ -210,6 +210,10 @@ def task_render_sources():
     yield gen_task_render_sources(translations=TRANSLATIONS,
         default_lang=DEFAULT_LANG, post_pages=post_pages)
 
+def task_render_posts():
+    yield gen_task_render_posts(translations=TRANSLATIONS,
+        default_lang=DEFAULT_LANG)
+
 if __name__ == "__main__":
     nikola_main()
 # End of magic.

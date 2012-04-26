@@ -459,13 +459,20 @@ def gen_task_render_sources(**kw):
 ########################################
 
 
-def task_render_posts():
-    """Build HTML fragments from metadata and reSt."""
-    for lang in TRANSLATIONS:
+def gen_task_render_posts(**kw):
+    """Build HTML fragments from metadata and reSt.
+
+    Required keyword arguments:
+
+    translations
+    default_lang
+    """
+    for lang in kw["translations"]:
+        # TODO: timeline is global, get rid of it
         for post in timeline:
             source = post.source_path
             dest = post.base_path           
-            if lang != DEFAULT_LANG:
+            if lang != kw["default_lang"]:
                 dest += '.' + lang
                 source_lang = source + '.' + lang
                 if os.path.exists(source_lang):
@@ -475,7 +482,8 @@ def task_render_posts():
                 'file_dep': post.fragment_deps(lang),
                 'targets': [dest],
                 'actions': [(compile_html, [source, dest])],
-                'clean': True,                
+                'clean': True,
+                'uptodate': [config_changed(kw)],
             }
 
 ########################################
