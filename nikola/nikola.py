@@ -536,12 +536,19 @@ def gen_task_render_indexes(**kw):
             yield task
 
 
-def task_render_archive():
-    """Render the post archives."""
+def gen_task_render_archive(**kw):
+    """Render the post archives.
+
+    Required keyword arguments:
+
+    translations
+    messages
+    """
     # TODO add next/prev links for years
     template_name = "list.tmpl"
+    # TODO: posts_per_year is global, kill it
     for year, posts in posts_per_year.items():
-        for lang in TRANSLATIONS:
+        for lang in kw["translations"]:
             output_name = os.path.join(
                 "output", path("archive", year, lang))
             post_list = [global_data[post] for post in posts]
@@ -551,33 +558,37 @@ def task_render_archive():
             context["lang"] = lang
             context["items"] = [("[%s] %s" % (post.date, post.title(lang)), post.permalink(lang)) for post in post_list]
             context["permalink"] = link("archive", year, lang)
-            context["title"] = MESSAGES[lang]["Posts for year %s"] % year
-            yield generic_post_list_renderer(
+            context["title"] = kw["messages"][lang]["Posts for year %s"] % year
+            task = generic_post_list_renderer(
                 lang,
                 post_list,
                 output_name,
                 template_name,
                 context,
             )
+            task['uptodate'] = task.get('updtodate', []) + [config_changed(kw)]
+            yield task
 
     # And global "all your years" page
     years = posts_per_year.keys()
     years.sort(reverse=True)
     template_name = "list.tmpl"
-    for lang in TRANSLATIONS:
+    for lang in kw["translations"]:
         context = {}
         output_name = os.path.join(
             "output", path("archive", None, lang))
-        context["title"] = MESSAGES[lang]["Archive"]
+        context["title"] = kw["messages"][lang]["Archive"]
         context["items"] = [(year, link("archive", year, lang)) for year in years]
         context["permalink"] = link("archive", None, lang)
-        yield generic_post_list_renderer(
+        task = generic_post_list_renderer(
             lang,
             [],
             output_name,
             template_name,
             context,
         )
+        task['uptodate'] = task.get('updtodate', []) + [config_changed(kw)]
+        yield task
 
 
 def task_render_tags():

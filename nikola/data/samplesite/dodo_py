@@ -217,6 +217,10 @@ def task_render_posts():
 def task_render_indexes():
     yield gen_task_render_indexes(translations=TRANSLATIONS)
 
+def task_render_archive():
+    yield gen_task_render_archive(translations=TRANSLATIONS,
+        messages=MESSAGES)
+
 
 if __name__ == "__main__":
     nikola_main()
