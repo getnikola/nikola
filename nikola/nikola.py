@@ -650,20 +650,22 @@ def gen_task_render_tags(**kw):
     tags = posts_per_tag.keys()
     tags.sort()
     template_name = "list.tmpl"
-    for lang in TRANSLATIONS:
+    for lang in kw["translations"]:
         output_name = os.path.join(
             "output", path('tag_index', None, lang))
         context = {}
-        context["title"] = MESSAGES[lang][u"Tags"]
+        context["title"] = kw["messages"][lang][u"Tags"]
         context["items"] = [(tag, link("tag", tag, lang)) for tag in tags]
         context["permalink"] = link("tag_index", None, lang)
-        yield generic_post_list_renderer(
+        task = generic_post_list_renderer(
             lang,
             [],
             output_name,
             template_name,
             context,
         )
+        task['uptodate'] = task.get('updtodate', []) + [config_changed(kw)]
+        yield task
 
 
 def task_render_rss():
