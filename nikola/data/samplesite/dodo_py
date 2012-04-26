@@ -196,6 +196,9 @@ def task_all():
 def task_copy_assets():
     yield gen_task_copy_assets(themes=THEMES)
 
+def task_deploy():
+    yield gen_task_deploy(commands=DEPLOY_COMMANDS)
+
 if __name__ == "__main__":
     nikola_main()
 # End of magic.

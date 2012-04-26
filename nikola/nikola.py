@@ -225,6 +225,8 @@ def gen_task_copy_assets(**kw):
 
 def task_copy_files():
     """Copy theme assets into the output folder."""
+
+    # TODO: make the path for files configurable?
     src = os.path.join('files')
     dst = 'output'
     for task in copy_tree(src, dst):
@@ -303,10 +305,11 @@ def gen_task_new_page(post_pages):
 # Perform deployment
 ########################################
 
-def task_deploy():
+def gen_task_deploy(**kw):
     """Deploy site."""
     return {
-        "actions": DEPLOY_COMMANDS,
+        "actions": kw['commands'],
+        "uptodate": [config_changed(kw)],
         "verbosity": 2,
         }
 
