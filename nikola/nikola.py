@@ -411,12 +411,20 @@ def task_serve():
 # Specialized post page tasks
 ########################################
 
-def task_render_pages():
-    """Build final pages from metadata and HTML fragments."""
-    for lang in TRANSLATIONS:
-        for wildcard, destination, template_name, _ in post_pages:
+def gen_task_render_pages(**kw):
+    """Build final pages from metadata and HTML fragments.
+
+    Required keyword arguments:
+
+    translations
+    post_pages
+    """
+    for lang in kw["translations"]:
+        for wildcard, destination, template_name, _ in kw["post_pages"]:
             for task in generic_page_renderer(
                     lang, wildcard, template_name, destination):
+                task['uptodate'] = task.get('uptodate',[]) + [
+                    config_changed(kw)]
                 yield task
 
 def task_render_sources():

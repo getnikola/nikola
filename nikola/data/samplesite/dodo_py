@@ -202,6 +202,10 @@ def task_deploy():
 def task_sitemap():
     yield gen_task_sitemap(blog_url=BLOG_URL)
 
+def task_render_pages():
+    yield gen_task_render_pages(translations=TRANSLATIONS,
+        post_pages=post_pages)
+
 if __name__ == "__main__":
     nikola_main()
 # End of magic.
