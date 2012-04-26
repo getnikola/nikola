@@ -163,7 +163,7 @@ def task_render_site():
             'render_rss',
             'render_sources',
             'render_tags',
-            #'copy_assets',
+            'copy_assets',
             'copy_files',
             'sitemap',
             ],
@@ -427,13 +427,21 @@ def gen_task_render_pages(**kw):
                     config_changed(kw)]
                 yield task
 
-def task_render_sources():
-    """Publish the rst sources because why not?"""
-    for lang in TRANSLATIONS:
+def gen_task_render_sources(**kw):
+    """Publish the rst sources because why not?
+
+    Required keyword arguments:
+
+    translations
+    default_lang
+    post_pages
+    """
+    for lang in kw["translations"]:
+        # TODO: timeline is global
         for post in timeline:
             output_name = post.destination_path(lang, '.txt')
             source = post.source_path
-            if lang != DEFAULT_LANG:
+            if lang != kw["default_lang"]:
                 source_lang = source + '.' + lang
                 if os.path.exists(source_lang):
                     source = source_lang
@@ -443,6 +451,7 @@ def task_render_sources():
                 'targets': [output_name],
                 'actions': [(copy_file, (source, output_name))],
                 'clean': True,
+                'uptodate': [config_changed(kw)],
                 }
                 
 ########################################
