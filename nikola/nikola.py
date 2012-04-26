@@ -591,11 +591,21 @@ def gen_task_render_archive(**kw):
         yield task
 
 
-def task_render_tags():
-    """Render the tag pages."""
+def gen_task_render_tags(**kw):
+    """Render the tag pages.
+
+    Required keyword arguments:
+
+    translations
+    messages
+    blog_title
+    blog_url
+    blog_description
+    """
     template_name = "list.tmpl"
+    # TODO: post_per_tags is global, kill it
     for tag, posts in posts_per_tag.items():
-        for lang in TRANSLATIONS:
+        for lang in kw["translations"]:
             # Render HTML
             output_name = os.path.join("output", path("tag", tag, lang))
             post_list = [global_data[post] for post in posts]
@@ -603,17 +613,20 @@ def task_render_tags():
             post_list.reverse()
             context = {}
             context["lang"] = lang
-            context["title"] = MESSAGES[lang][u"Posts about %s:"] % tag
+            context["title"] = kw["messages"][lang][u"Posts about %s:"] % tag
             context["items"] = [("[%s] %s" % (post.date, post.title(lang)), post.permalink(lang)) for post in post_list]
             context["permalink"] = link("tag", tag, lang)
             
-            yield generic_post_list_renderer(
+            task = generic_post_list_renderer(
                 lang,
                 post_list,
                 output_name,
                 template_name,
                 context,
             )
+            task['uptodate'] = task.get('updtodate', []) + [config_changed(kw)]
+            yield task
+            
             #Render RSS
             output_name = os.path.join("output", path("tag_rss", tag, lang))
             deps = []
@@ -627,9 +640,10 @@ def task_render_tags():
                 'file_dep': deps,
                 'targets': [output_name],
                 'actions': [(generic_rss_renderer,
-                    (lang, "%s (%s)" % (BLOG_TITLE, tag), BLOG_URL,
-                    BLOG_DESCRIPTION, post_list, output_name))],
+                    (lang, "%s (%s)" % (kw["blog_title"], tag), kw["blog_url"],
+                    kw["blog_description"], post_list, output_name))],
                 'clean': True,
+                'uptodate': [config_changed(kw)],
             }
 
     # And global "all your tags" page
