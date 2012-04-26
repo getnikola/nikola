@@ -668,9 +668,19 @@ def gen_task_render_tags(**kw):
         yield task
 
 
-def task_render_rss():
-    """Generate RSS feeds."""
-    for lang in TRANSLATIONS:
+def gen_task_render_rss(**kw):
+    """Generate RSS feeds.
+
+    Required keyword arguments:
+
+    translations
+    blog_title
+    blog_url
+    blog_description
+    """
+
+    # TODO: timeline is global, kill it
+    for lang in kw["translations"]:
         output_name = os.path.join("output", path("rss", None, lang))
         deps = []
         posts = [x for x in timeline if x.use_in_feeds][:10]
@@ -681,10 +691,12 @@ def task_render_rss():
             'file_dep': deps,
             'targets': [output_name],
             'actions': [(generic_rss_renderer,
-                (lang, BLOG_TITLE, BLOG_URL,
-                BLOG_DESCRIPTION, posts, output_name))],
+                (lang, kw["blog_title"], kw["blog_url"],
+                kw["blog_description"], posts, output_name))],
             'clean': True,
-        }    
+            'uptodate': [config_changed(kw)],
+        }
+
 
 def task_render_galleries():
     """Render image galleries."""

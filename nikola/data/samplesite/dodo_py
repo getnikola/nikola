@@ -226,6 +226,10 @@ def task_render_tags():
         blog_title=BLOG_TITLE, blog_url=BLOG_URL,
         blog_description=BLOG_DESCRIPTION)
 
+def task_render_rss():
+    yield gen_task_render_rss(translations=TRANSLATIONS,
+        blog_title=BLOG_TITLE, blog_url=BLOG_URL,
+        blog_description=BLOG_DESCRIPTION)
 
 if __name__ == "__main__":
     nikola_main()
