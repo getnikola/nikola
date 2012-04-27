@@ -35,9 +35,6 @@ elif INPUT_FORMAT == "markdown":
         print "There was a problem loading markdown. Is it installed?", exc
         sys.exit(1)
 
-########################################
-# Theme utility functions
-########################################
 
 def get_theme_path(theme):
     """Given a theme name, returns the path where its files are located.
@@ -47,14 +44,17 @@ def get_theme_path(theme):
     dir_name = os.path.join('themes', theme)
     if os.path.isdir(dir_name):
         return dir_name
-    dir_name = os.path.join(os.path.dirname(nikola.__file__), 'data', 'themes', theme)
+    dir_name = os.path.join(os.path.dirname(nikola.__file__),
+        'data', 'themes', theme)
     if os.path.isdir(dir_name):
         return dir_name
     raise Exception(u"Can't find theme '%s'" % theme)
 
+
 def get_theme_chain(theme):
     """Create the full theme inheritance chain."""
     themes = [theme]
+
     def get_parent(theme_name):
         parent_path = os.path.join('themes', theme_name, 'parent')
         parent_path = os.path.join(get_theme_path(theme_name), 'parent')
@@ -75,7 +75,8 @@ def get_theme_chain(theme):
 # Setup templating library
 ########################################
 
-TEMPLATE_ENGINE=locals().get('TEMPLATE_ENGINE', 'mako')
+# FIXME: not working after refactoring
+TEMPLATE_ENGINE = locals().get('TEMPLATE_ENGINE', 'mako')
 templates_module = None
 if TEMPLATE_ENGINE == "mako":
     try:
@@ -93,9 +94,6 @@ elif TEMPLATE_ENGINE == "jinja":
         sys.exit(1)
 template_deps = templates_module.template_deps
 
-########################################
-# Setup translations
-########################################
 
 def load_messages(themes, translations):
     """ Load theme's messages into context.
@@ -117,9 +115,6 @@ def load_messages(themes, translations):
         sys.path = oldpath
     return messages
 
-########################################
-# File management helpers
-########################################
 
 def copy_tree(src, dst):
     """Copy a src tree to the dst folder.
@@ -142,16 +137,16 @@ def copy_tree(src, dst):
         if not os.path.isdir(dst_dir):
             os.makedirs(dst_dir)
         for src_name in files:
-            dst_file =  os.path.join(dst_dir, src_name)
+            dst_file = os.path.join(dst_dir, src_name)
             src_file = os.path.join(root, src_name)
             yield {
-                'name' : dst_file,
-                'file_dep' : [src_file],
-                'targets' : [dst_file],
-                'actions' : [(copy_file, (src_file, dst_file))],
-                'clean' : True,
+                'name': dst_file,
+                'file_dep': [src_file],
+                'targets': [dst_file],
+                'actions': [(copy_file, (src_file, dst_file))],
+                'clean': True,
             }
-    
+
 
 def gen_task_copy_assets(**kw):
     """Create tasks to copy the assets of the whole theme chain.
@@ -162,7 +157,7 @@ def gen_task_copy_assets(**kw):
     Required keyword arguments:
 
     themes
-    
+
     """
     tasks = {}
     for theme_name in kw['themes']:
@@ -172,7 +167,7 @@ def gen_task_copy_assets(**kw):
             if task['name'] in tasks:
                 continue
             tasks[task['name']] = task
-            task['uptodate'] = task.get('uptodate',[]) + [config_changed(kw)]
+            task['uptodate'] = task.get('uptodate', []) + [config_changed(kw)]
             task['basename'] = 'copy_assets'
             yield task
 
@@ -182,9 +177,12 @@ def gen_task_copy_assets(**kw):
 ########################################
 
 # slugify is copied from
-# http://code.activestate.com/recipes/577257-slugify-make-a-string-usable-in-a-url-or-filename/
+# http://code.activestate.com/recipes/
+# 577257-slugify-make-a-string-usable-in-a-url-or-filename/
 _slugify_strip_re = re.compile(r'[^\w\s-]')
 _slugify_hyphenate_re = re.compile(r'[-\s]+')
+
+
 def slugify(value):
     """
     Normalizes string, converts to lowercase, removes non-alpha characters,
@@ -199,13 +197,13 @@ def slugify(value):
     value = unicode(_slugify_strip_re.sub('', value).strip().lower())
     return _slugify_hyphenate_re.sub('-', value)
 
-    
-def new_post(post_pages, is_post = True):
+
+def new_post(post_pages, is_post=True):
     # Guess where we should put this
     for path, _, _, use_in_rss in post_pages:
         if use_in_rss == is_post:
             break
-    
+
     print "Creating New Post"
     print "-----------------\n"
     title = raw_input("Enter title: ").decode(sys.stdin.encoding)
@@ -216,10 +214,10 @@ def new_post(post_pages, is_post = True):
         datetime.datetime.now().strftime('%Y/%m/%d %H:%M')
         ])
     output_path = os.path.dirname(path)
-    meta_path = os.path.join(output_path,slug+".meta")
+    meta_path = os.path.join(output_path, slug + ".meta")
     with codecs.open(meta_path, "wb+", "utf8") as fd:
         fd.write(data)
-    txt_path = os.path.join(output_path,slug+".txt")
+    txt_path = os.path.join(output_path, slug + ".txt")
     with codecs.open(txt_path, "wb+", "utf8") as fd:
         fd.write(u"Write your post here.")
     print "Your post's metadata is at: ", meta_path
@@ -228,7 +226,7 @@ def new_post(post_pages, is_post = True):
 
 def new_page():
     new_post(False)
-    
+
 
 def gen_task_new_post(post_pages):
     """Create a new post (interactive)."""
@@ -237,17 +235,14 @@ def gen_task_new_post(post_pages):
         "actions": [PythonInteractiveAction(new_post, (post_pages,))],
         }
 
+
 def gen_task_new_page(post_pages):
     """Create a new post (interactive)."""
     yield {
         "basename": "new_page",
-        "actions": [PythonInteractiveAction(new_post, (post_pages, False,) )],
+        "actions": [PythonInteractiveAction(new_post, (post_pages, False,))],
         }
 
-
-########################################
-# Perform deployment
-########################################
 
 def gen_task_deploy(**kw):
     """Deploy site."""
@@ -258,9 +253,6 @@ def gen_task_deploy(**kw):
         "verbosity": 2,
         }
 
-########################################
-# Generate google sitemap
-########################################
 
 def gen_task_sitemap(**kw):
     """Generate Google sitemap.
@@ -272,7 +264,7 @@ def gen_task_sitemap(**kw):
 
     output_path = os.path.abspath("output")
     sitemap_path = os.path.join(output_path, "sitemap.xml.gz")
-    
+
     def sitemap():
         # Generate config
         config_data = """<?xml version="1.0" encoding="UTF-8"?>
@@ -300,10 +292,12 @@ def gen_task_sitemap(**kw):
             smap.output.Log('Configuration file errors -- exiting.', 0)
         else:
             sitemap.Generate()
-            smap.output.Log('Number of errors: %d' % smap.output.num_errors, 1)
-            smap.output.Log('Number of warnings: %d' % smap.output.num_warns, 1)
+            smap.output.Log('Number of errors: %d' %
+                smap.output.num_errors, 1)
+            smap.output.Log('Number of warnings: %d' %
+                smap.output.num_warns, 1)
         os.unlink(config_file.name)
-            
+
     return {
         "basename": "sitemap",
         "task_dep": [
@@ -327,14 +321,14 @@ def gen_task_sitemap(**kw):
 
 def task_serve():
     """Start test server. (Usage: doit serve [-p 8000])"""
-    
+
     def serve(port):
         from BaseHTTPServer import HTTPServer
         from SimpleHTTPServer import SimpleHTTPRequestHandler as handler
 
         os.chdir("output")
-        
-        httpd = HTTPServer (('127.0.0.1', port), handler)
+
+        httpd = HTTPServer(('127.0.0.1', port), handler)
         sa = httpd.socket.getsockname()
         print "Serving HTTP on", sa[0], "port", sa[1], "..."
         httpd.serve_forever()
@@ -351,11 +345,13 @@ def task_serve():
                  'help': 'Port number (default: 8000)'}],
         }
 
+
 class Post(object):
 
     """Represents a blog post or web page."""
 
-    def __init__(self, source_path, destination, use_in_feeds, translations, default_lang, blog_url):
+    def __init__(self, source_path, destination, use_in_feeds,
+        translations, default_lang, blog_url):
         """Initialize post.
 
         The base path is the .txt post file. From it we calculate
@@ -364,10 +360,10 @@ class Post(object):
         """
         self.use_in_feeds = use_in_feeds
         self.blog_url = blog_url
-        self.source_path = source_path # posts/blah.txt
+        self.source_path = source_path  # posts/blah.txt
         self.post_name = source_path.split(".", 1)[0]  # posts/blah
         self.base_path = self.post_name + ".html"  # posts/blah.html
-        self.metadata_path =  self.post_name + ".meta"  # posts/blah.meta
+        self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
         self.folder = destination
         self.translations = translations
         self.default_lang = default_lang
@@ -379,7 +375,7 @@ class Post(object):
             [x.strip() for x in meta_data][:5]
         self.date = datetime.datetime.strptime(self.date, '%Y/%m/%d %H:%M')
         self.tags = [x.strip() for x in self.tags.split(',')]
-        self.tags = filter(lambda x: x, self.tags)
+        self.tags = filter(None, self.tags)
 
         self.titles = {}
         # Load internationalized titles
@@ -402,7 +398,7 @@ class Post(object):
         """Return a list of dependencies to build this post's page."""
         deps = [self.base_path]
         if lang != self.default_lang:
-            deps += [ self.base_path + "." + lang]
+            deps += [self.base_path + "." + lang]
         deps += self.fragment_deps(lang)
         return deps
 
@@ -410,7 +406,7 @@ class Post(object):
         """Return a list of dependencies to build this post's fragment."""
         deps = [self.source_path, self.metadata_path]
         if lang != self.default_lang:
-            lang_deps = filter(os.path.exists, [ x + "." + lang for x in deps])
+            lang_deps = filter(os.path.exists, [x + "." + lang for x in deps])
             deps += lang_deps
         return deps
 
@@ -420,7 +416,7 @@ class Post(object):
         if lang != self.default_lang:
             file_name_lang = file_name + ".%s" % lang
             if os.path.exists(file_name_lang):
-                file_name = file_name_lang                
+                file_name = file_name_lang
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read()
         return data
@@ -436,14 +432,13 @@ class Post(object):
         pieces = list(os.path.split(self.translations[lang]))
         pieces += list(os.path.split(self.folder))
         pieces += [self.pagename + extension]
-        pieces = filter(lambda x: x, pieces)
+        pieces = filter(None, pieces)
         if absolute:
             pieces = [self.blog_url] + pieces
         else:
             pieces = [""] + pieces
         link = "/".join(pieces)
         return link
-
 
 
 class Nikola(object):
@@ -466,7 +461,8 @@ class Nikola(object):
         self.THEMES = get_theme_chain(config['THEME'])
 
         templates_module.lookup = templates_module.get_template_lookup(
-            [os.path.join(get_theme_path(name), "templates") for name in self.THEMES])
+            [os.path.join(get_theme_path(name), "templates")
+            for name in self.THEMES])
         self.set_temporal_structure()
 
         self.MESSAGES = load_messages(self.THEMES, config['TRANSLATIONS'])
@@ -478,10 +474,11 @@ class Nikola(object):
         self.DEPS_CONTEXT = {}
         for k, v in self.GLOBAL_CONTEXT.items():
             if isinstance(v, (str, unicode, int, float, dict)):
-                self.DEPS_CONTEXT[k]=v
+                self.DEPS_CONTEXT[k] = v
 
     def render_template(self, template_name, output_name, context):
-            templates_module.render_template(template_name, output_name, context, self.GLOBAL_CONTEXT)
+            templates_module.render_template(
+                template_name, output_name, context, self.GLOBAL_CONTEXT)
 
     def path(self, kind, name, lang, is_link=False):
         """Build the path to a certain kind of page.
@@ -509,35 +506,36 @@ class Nikola(object):
         path = []
 
         if kind == "tag_index":
-            path = filter(lambda x: x, [self.config['TRANSLATIONS'][lang],
+            path = filter(None, [self.config['TRANSLATIONS'][lang],
             self.config['TAG_PATH'], 'index.html'])
         elif kind == "tag":
-            path = filter(lambda x: x, [self.config['TRANSLATIONS'][lang],
+            path = filter(None, [self.config['TRANSLATIONS'][lang],
             self.config['TAG_PATH'], name + ".html"])
         elif kind == "tag_rss":
-            path = filter(lambda x: x, [self.config['TRANSLATIONS'][lang],
+            path = filter(None, [self.config['TRANSLATIONS'][lang],
             self.config['TAG_PATH'], name + ".xml"])
         elif kind == "index":
             if name > 0:
-                path = filter(lambda x: x, [self.config['TRANSLATIONS'][lang],
+                path = filter(None, [self.config['TRANSLATIONS'][lang],
                 self.config['INDEX_PATH'], 'index-%s.html' % name])
             else:
-                path = filter(lambda x: x, [self.config['TRANSLATIONS'][lang],
+                path = filter(None, [self.config['TRANSLATIONS'][lang],
                 self.config['INDEX_PATH'], 'index.html'])
         elif kind == "rss":
-            path = filter(lambda x: x, [self.config['TRANSLATIONS'][lang],
+            path = filter(None, [self.config['TRANSLATIONS'][lang],
             self.config['RSS_PATH'], 'rss.xml'])
         elif kind == "archive":
             if name:
-                path = filter(lambda x: x, [self.config['TRANSLATIONS'][lang],
+                path = filter(None, [self.config['TRANSLATIONS'][lang],
                 self.config['ARCHIVE_PATH'], name, 'index.html'])
             else:
-                path = filter(lambda x: x, [self.config['TRANSLATIONS'][lang],
+                path = filter(None, [self.config['TRANSLATIONS'][lang],
                 self.config['ARCHIVE_PATH'], 'archive.html'])
         elif kind == "gallery":
-            path = filter(lambda x: x, [self.config['GALLERY_PATH'], name, 'index.html'])
+            path = filter(None,
+                [self.config['GALLERY_PATH'], name, 'index.html'])
         if is_link:
-            return '/'+('/'.join(path))
+            return '/' + ('/'.join(path))
         else:
             return os.path.join(*path)
 
@@ -557,12 +555,13 @@ class Nikola(object):
         src_elems = parsed_src.path.split('/')[1:]
         dst_elems = parsed_dst.path.split('/')[1:]
         i = 0
-        for (i,s),d in zip(enumerate(src_elems), dst_elems):
-            if s != d: break
+        for (i, s), d in zip(enumerate(src_elems), dst_elems):
+            if s != d:
+                break
         else:
             i += 1
         # Now i is the longest common prefix
-        return '/'.join(['..']*(len(src_elems)-i-1)+dst_elems[i:])
+        return '/'.join(['..'] * (len(src_elems) - i - 1) + dst_elems[i:])
 
     def gen_tasks(self):
 
@@ -572,24 +571,37 @@ class Nikola(object):
         yield gen_task_copy_assets(themes=self.THEMES)
         yield gen_task_deploy(commands=self.config['DEPLOY_COMMANDS'])
         yield gen_task_sitemap(blog_url=self.config['BLOG_URL'])
-        yield self.gen_task_render_pages(translations=self.config['TRANSLATIONS'],
+        yield self.gen_task_render_pages(
+            translations=self.config['TRANSLATIONS'],
             post_pages=self.config['post_pages'])
-        yield self.gen_task_render_sources(translations=self.config['TRANSLATIONS'],
-            default_lang=self.config['DEFAULT_LANG'], post_pages=self.config['post_pages'])
-        yield self.gen_task_render_posts(translations=self.config['TRANSLATIONS'],
+        yield self.gen_task_render_sources(
+            translations=self.config['TRANSLATIONS'],
+            default_lang=self.config['DEFAULT_LANG'],
+            post_pages=self.config['post_pages'])
+        yield self.gen_task_render_posts(
+            translations=self.config['TRANSLATIONS'],
             default_lang=self.config['DEFAULT_LANG'])
-        yield self.gen_task_render_indexes(translations=self.config['TRANSLATIONS'])
-        yield self.gen_task_render_archive(translations=self.config['TRANSLATIONS'],
+        yield self.gen_task_render_indexes(
+            translations=self.config['TRANSLATIONS'])
+        yield self.gen_task_render_archive(
+            translations=self.config['TRANSLATIONS'],
             messages=self.MESSAGES)
-        yield self.gen_task_render_tags(translations=self.config['TRANSLATIONS'], messages=self.MESSAGES,
-            blog_title=self.config['BLOG_TITLE'], blog_url=self.config['BLOG_URL'],
+        yield self.gen_task_render_tags(
+            translations=self.config['TRANSLATIONS'],
+            messages=self.MESSAGES,
+            blog_title=self.config['BLOG_TITLE'],
+            blog_url=self.config['BLOG_URL'],
             blog_description=self.config['BLOG_DESCRIPTION'])
-        yield self.gen_task_render_rss(translations=self.config['TRANSLATIONS'],
-            blog_title=self.config['BLOG_TITLE'], blog_url=self.config['BLOG_URL'],
+        yield self.gen_task_render_rss(
+            translations=self.config['TRANSLATIONS'],
+            blog_title=self.config['BLOG_TITLE'],
+            blog_url=self.config['BLOG_URL'],
             blog_description=self.config['BLOG_DESCRIPTION'])
-        yield self.gen_task_render_galleries(thumbnail_size=self.config['THUMBNAIL_SIZE'],
+        yield self.gen_task_render_galleries(
+            thumbnail_size=self.config['THUMBNAIL_SIZE'],
             default_lang=self.config['DEFAULT_LANG'])
-        yield self.gen_task_redirect(redirections=self.config['REDIRECTIONS'])
+        yield self.gen_task_redirect(
+            redirections=self.config['REDIRECTIONS'])
         yield self.gen_task_copy_files()
         yield {
             'name': 'all',
@@ -614,7 +626,8 @@ class Nikola(object):
     def set_temporal_structure(self):
         """Scan all metadata and create some data structures."""
         print "Parsing metadata"
-        for wildcard, destination, _, use_in_feeds in self.config['post_pages']:
+        for wildcard, destination, _, use_in_feeds in \
+                self.config['post_pages']:
             for base_path in glob.glob(wildcard):
                 post = Post(base_path, destination, use_in_feeds,
                     self.config['TRANSLATIONS'], self.config['DEFAULT_LANG'],
@@ -628,7 +641,8 @@ class Nikola(object):
         self.timeline.sort(cmp=lambda a, b: cmp(a.date, b.date))
         self.timeline.reverse()
 
-    def generic_page_renderer(self, lang, wildcard, template_name, destination):
+    def generic_page_renderer(self, lang, wildcard,
+        template_name, destination):
         """Render post fragments to final HTML pages."""
         for post in glob.glob(wildcard):
             post_name = post.split('.', 1)[0]
@@ -646,7 +660,8 @@ class Nikola(object):
                 'name': output_name.encode('utf-8'),
                 'file_dep': deps,
                 'targets': [output_name],
-                'actions': [(self.render_template, [template_name, output_name, context])],
+                'actions': [(self.render_template,
+                    [template_name, output_name, context])],
                 'clean': True,
                 'uptodate': [config_changed(context)],
             }
@@ -663,8 +678,8 @@ class Nikola(object):
             for wildcard, destination, template_name, _ in kw["post_pages"]:
                 for task in self.generic_page_renderer(
                         lang, wildcard, template_name, destination):
-                    task['uptodate'] = task.get('uptodate',[]) + [
-                        config_changed(kw)]
+                    task['uptodate'] = task.get('uptodate', []) +\
+                        [config_changed(kw)]
                     task['basename'] = 'render_pages'
                     yield task
 
@@ -753,7 +768,7 @@ class Nikola(object):
                     context["prevlink"] = "index-%s.html" % (i - 1)
                 if i == 1:
                     context["prevlink"] = "index.html"
-                if i < num_pages-1:
+                if i < num_pages - 1:
                     context["nextlink"] = "index-%s.html" % (i + 1)
                 context["permalink"] = self.link("index", i, lang)
                 output_name = os.path.join(
@@ -765,12 +780,13 @@ class Nikola(object):
                     template_name,
                     context,
                 )
-                task['uptodate'] = task.get('updtodate', []) + [config_changed(kw)]
+                task['uptodate'] = task.get('updtodate', []) +\
+                    [config_changed(kw)]
                 task['basename'] = 'render_indexes'
                 yield task
 
-    def generic_post_list_renderer(self, lang, posts, output_name, template_name,
-        extra_context={}):
+    def generic_post_list_renderer(self, lang, posts,
+        output_name, template_name, extra_context={}):
         """Renders pages with lists of posts."""
 
         deps = template_deps(template_name)
@@ -787,7 +803,8 @@ class Nikola(object):
             'name': output_name.encode('utf8'),
             'targets': [output_name],
             'file_dep': deps,
-            'actions': [(self.render_template, [template_name, output_name, context])],
+            'actions': [(self.render_template,
+                [template_name, output_name, context])],
             'clean': True,
             'uptodate': [config_changed(context)]
         }
@@ -812,9 +829,12 @@ class Nikola(object):
                 post_list.reverse()
                 context = {}
                 context["lang"] = lang
-                context["items"] = [("[%s] %s" % (post.date, post.title(lang)), post.permalink(lang)) for post in post_list]
+                context["items"] = [("[%s] %s" %
+                    (post.date, post.title(lang)), post.permalink(lang))
+                    for post in post_list]
                 context["permalink"] = self.link("archive", year, lang)
-                context["title"] = kw["messages"][lang]["Posts for year %s"] % year
+                context["title"] = kw["messages"][lang]["Posts for year %s"]\
+                    % year
                 task = self.generic_post_list_renderer(
                     lang,
                     post_list,
@@ -822,7 +842,8 @@ class Nikola(object):
                     template_name,
                     context,
                 )
-                task['uptodate'] = task.get('updtodate', []) + [config_changed(kw)]
+                task['uptodate'] = task.get('updtodate', []) +\
+                    [config_changed(kw)]
                 yield task
 
         # And global "all your years" page
@@ -834,7 +855,8 @@ class Nikola(object):
             output_name = os.path.join(
                 "output", self.path("archive", None, lang))
             context["title"] = kw["messages"][lang]["Archive"]
-            context["items"] = [(year, self.link("archive", year, lang)) for year in years]
+            context["items"] = [(year, self.link("archive", year, lang))
+                for year in years]
             context["permalink"] = self.link("archive", None, lang)
             task = self.generic_post_list_renderer(
                 lang,
@@ -863,14 +885,17 @@ class Nikola(object):
         for tag, posts in self.posts_per_tag.items():
             for lang in kw["translations"]:
                 # Render HTML
-                output_name = os.path.join("output", self.path("tag", tag, lang))
+                output_name = os.path.join("output",
+                    self.path("tag", tag, lang))
                 post_list = [self.global_data[post] for post in posts]
                 post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
                 post_list.reverse()
                 context = {}
                 context["lang"] = lang
-                context["title"] = kw["messages"][lang][u"Posts about %s:"] % tag
-                context["items"] = [("[%s] %s" % (post.date, post.title(lang)), post.permalink(lang)) for post in post_list]
+                context["title"] = kw["messages"][lang][u"Posts about %s:"]\
+                    % tag
+                context["items"] = [("[%s] %s" % (post.date, post.title(lang)),
+                    post.permalink(lang)) for post in post_list]
                 context["permalink"] = self.link("tag", tag, lang)
 
                 task = self.generic_post_list_renderer(
@@ -880,14 +905,17 @@ class Nikola(object):
                     template_name,
                     context,
                 )
-                task['uptodate'] = task.get('updtodate', []) + [config_changed(kw)]
+                task['uptodate'] = task.get('updtodate', []) +\
+                    [config_changed(kw)]
                 task['basename'] = 'render_tags'
                 yield task
 
                 #Render RSS
-                output_name = os.path.join("output", self.path("tag_rss", tag, lang))
+                output_name = os.path.join("output",
+                    self.path("tag_rss", tag, lang))
                 deps = []
-                post_list = [self.global_data[post] for post in posts if self.global_data[post].use_in_feeds]
+                post_list = [self.global_data[post] for post in posts
+                    if self.global_data[post].use_in_feeds]
                 post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
                 post_list.reverse()
                 for post in post_list:
@@ -897,8 +925,9 @@ class Nikola(object):
                     'file_dep': deps,
                     'targets': [output_name],
                     'actions': [(generic_rss_renderer,
-                        (lang, "%s (%s)" % (kw["blog_title"], tag), kw["blog_url"],
-                        kw["blog_description"], post_list, output_name))],
+                        (lang, "%s (%s)" % (kw["blog_title"], tag),
+                        kw["blog_url"], kw["blog_description"],
+                        post_list, output_name))],
                     'clean': True,
                     'uptodate': [config_changed(kw)],
                 }
@@ -912,7 +941,8 @@ class Nikola(object):
                 "output", self.path('tag_index', None, lang))
             context = {}
             context["title"] = kw["messages"][lang][u"Tags"]
-            context["items"] = [(tag, self.link("tag", tag, lang)) for tag in tags]
+            context["items"] = [(tag, self.link("tag", tag, lang))
+                for tag in tags]
             context["permalink"] = self.link("tag_index", None, lang)
             task = self.generic_post_list_renderer(
                 lang,
@@ -923,7 +953,6 @@ class Nikola(object):
             )
             task['uptodate'] = task.get('updtodate', []) + [config_changed(kw)]
             yield task
-
 
     def gen_task_render_rss(self, **kw):
         """Generate RSS feeds.
@@ -995,7 +1024,8 @@ class Nikola(object):
             # gallery_name is "name"
             gallery_name = os.path.basename(gallery_path)
             # output_gallery is "output/GALLERY_PATH/name"
-            output_gallery = os.path.dirname(os.path.join('output', self.path("gallery", gallery_name, None)))
+            output_gallery = os.path.dirname(os.path.join('output',
+                self.path("gallery", gallery_name, None)))
             if not os.path.isdir(output_gallery):
                 yield {
                     'basename': 'render_galleries',
@@ -1006,7 +1036,8 @@ class Nikola(object):
                     'uptodate': [config_changed(kw)],
                     }
             # image_list contains "gallery/name/image_name.jpg"
-            image_list = glob.glob(gallery_path+"/*jpg") + glob.glob(gallery_path+"/*png")
+            image_list = glob.glob(gallery_path + "/*jpg") +\
+                glob.glob(gallery_path + "/*png")
             image_list = [x for x in image_list if "thumbnail" not in x]
             image_name_list = [os.path.basename(x) for x in image_list]
             thumbs = []
@@ -1016,8 +1047,10 @@ class Nikola(object):
                 # img_name is "image_name.jpg"
                 # fname, ext are "image_name", ".jpg"
                 fname, ext = os.path.splitext(img_name)
-                # thumb_path is "output/GALLERY_PATH/name/image_name.thumbnail.jpg"
-                thumb_path = os.path.join(output_gallery, fname +".thumbnail" + ext)
+                # thumb_path is
+                # "output/GALLERY_PATH/name/image_name.thumbnail.jpg"
+                thumb_path = os.path.join(output_gallery,
+                    fname + ".thumbnail" + ext)
                 # thumb_path is "output/GALLERY_PATH/name/image_name.jpg"
                 orig_dest_path = os.path.join(output_gallery, img_name)
                 thumbs.append(os.path.basename(thumb_path))
@@ -1035,8 +1068,8 @@ class Nikola(object):
                 }
             output_name = os.path.join(output_gallery, "index.html")
             context = {}
-            context ["lang"] = kw["default_lang"]
-            context ["title"] = os.path.basename(gallery_path)
+            context["lang"] = kw["default_lang"]
+            context["title"] = os.path.basename(gallery_path)
             thumb_name_list = [os.path.basename(x) for x in thumbs]
             context["images"] = zip(image_name_list, thumb_name_list)
             context["permalink"] = self.link("gallery", gallery_name, None)
@@ -1069,7 +1102,8 @@ class Nikola(object):
                 'name': gallery_path,
                 'file_dep': template_deps(template_name) + image_list,
                 'targets': [output_name],
-                'actions': [(render_gallery, (output_name, context, index_dst_path))],
+                'actions': [(render_gallery,
+                    (output_name, context, index_dst_path))],
                 'clean': True,
                 'uptodate': [config_changed(kw)],
             }
@@ -1084,7 +1118,9 @@ class Nikola(object):
 
         def create_redirect(src, dst):
             with codecs.open(src_path, "wb+", "utf8") as fd:
-                fd.write('<head><meta HTTP-EQUIV="REFRESH" content="0; url=%s"></head>' % dst)
+                fd.write(('<head>' +
+                '<meta HTTP-EQUIV="REFRESH" content="0; url=%s">' +
+                '</head>') % dst)
 
         if not kw['redirections']:
             # If there are no redirections, still needs to create a
@@ -1118,8 +1154,8 @@ class Nikola(object):
             yield task
 
 
-
-def generic_rss_renderer(lang, title, link, description, timeline, output_path):
+def generic_rss_renderer(lang, title, link, description,
+    timeline, output_path):
     """Takes all necessary data, and renders a RSS feed in output_path."""
     items = []
     for post in timeline[:10]:
@@ -1132,18 +1168,19 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path):
         }
         items.append(nikola.rss.RSSItem(**args))
     rss_obj = rss.RSS2(
-        title = title,
-        link = link,
-        description = description,
-        lastBuildDate = datetime.datetime.now(),
-        items = items,
-        generator = 'nikola 1.0',
+        title=title,
+        link=link,
+        description=description,
+        lastBuildDate=datetime.datetime.now(),
+        items=items,
+        generator='nikola 1.0',
     )
     dst_dir = os.path.dirname(output_path)
     if not os.path.isdir(dst_dir):
         os.makedirs(dst_dir)
     with open(output_path, "wb+") as rss_file:
         rss_obj.write_xml(rss_file)
+
 
 def copy_file(source, dest):
     dst_dir = os.path.dirname(dest)
@@ -1153,7 +1190,7 @@ def copy_file(source, dest):
         with open(dest, "wb+") as output:
             output.write(input.read())
 
+
 def nikola_main():
     print "Starting doit..."
     os.system("doit -f %s" % __file__)
-            
