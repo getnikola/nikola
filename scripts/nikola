@@ -18,7 +18,6 @@ def init(dst):
     """Create a copy of demosite in the current folder."""
     src = os.path.join(os.path.dirname(nikola.__file__),'data','samplesite')
     shutil.copytree(src, dst)
-    shutil.move(os.path.join(dst, 'dodo_py'), os.path.join(dst, 'dodo.py'))
     print "A new site with some sample data has been created at %s." % dst
     print "See README.txt in that folder for more information."
 

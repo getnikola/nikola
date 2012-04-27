@@ -14,6 +14,7 @@ from docutils.parsers.rst import directives
 from pygments_code_block_directive import code_block_directive
 directives.register_directive('code-block', code_block_directive)
 
+
 def compile_html(source, dest):
     with codecs.open(source, "r", "utf8") as in_file:
         data = in_file.read()
@@ -25,6 +26,7 @@ def compile_html(source, dest):
         return True
     else:
         return False
+
 
 def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
                   destination_path=None,

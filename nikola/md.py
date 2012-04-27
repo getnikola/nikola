@@ -6,6 +6,7 @@ import codecs
 
 from markdown import markdown
 
+
 def compile_html(source, dest):
     with codecs.open(source, "r", "utf8") as in_file:
         data = in_file.read()
