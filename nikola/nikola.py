@@ -467,7 +467,6 @@ class Nikola(object):
 
         templates_module.lookup = templates_module.get_template_lookup(
             [os.path.join(get_theme_path(name), "templates") for name in self.THEMES])
-        import pdb; pdb.set_trace()
         self.set_temporal_structure()
 
         self.MESSAGES = load_messages(self.THEMES, config['TRANSLATIONS'])
