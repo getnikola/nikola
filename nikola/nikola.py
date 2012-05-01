@@ -13,28 +13,8 @@ import re
 
 from doit.tools import config_changed, PythonInteractiveAction
 
-import PyRSS2Gen as rss
 
-########################################
-# Setup input format library
-########################################
-
-INPUT_FORMAT = locals().get('INPUT_FORMAT', 'rest')
-if INPUT_FORMAT == "rest":
-    try:
-        import rest
-        compile_html = rest.compile_html
-    except Exception, exc:
-        print "There was a problem loading docutils. Is it installed?", exc
-        sys.exit(1)
-elif INPUT_FORMAT == "markdown":
-    try:
-        import md
-        compile_html = md.compile_html
-    except Exception, exc:
-        print "There was a problem loading markdown. Is it installed?", exc
-        sys.exit(1)
-
+import utils
 
 def get_theme_path(theme):
     """Given a theme name, returns the path where its files are located.
@@ -70,29 +50,6 @@ def get_theme_chain(theme):
             break
         themes.append(parent)
     return themes
-
-########################################
-# Setup templating library
-########################################
-
-# FIXME: not working after refactoring
-TEMPLATE_ENGINE = locals().get('TEMPLATE_ENGINE', 'mako')
-templates_module = None
-if TEMPLATE_ENGINE == "mako":
-    try:
-        import mako_templates
-        templates_module = mako_templates
-    except Exception, exc:
-        print "There was a problem loading Mako. Is it installed?", exc
-        sys.exit(1)
-elif TEMPLATE_ENGINE == "jinja":
-    try:
-        import jinja_templates
-        templates_module = jinja_templates
-    except Exception, exc:
-        print "There was a problem loading Jinja2. Is it installed?", exc
-        sys.exit(1)
-template_deps = templates_module.template_deps
 
 
 def load_messages(themes, translations):
@@ -460,9 +417,13 @@ class Nikola(object):
         self.GLOBAL_CONTEXT = config['GLOBAL_CONTEXT']
         self.THEMES = get_theme_chain(config['THEME'])
 
-        templates_module.lookup = templates_module.get_template_lookup(
+        self.templates_module = utils.get_template_module(
+            config['TEMPLATE_ENGINE'])
+        self.templates_module.lookup = \
+            self.templates_module.get_template_lookup(
             [os.path.join(get_theme_path(name), "templates")
-            for name in self.THEMES])
+                for name in self.THEMES])
+        self.template_deps = self.templates_module.template_deps
         self.set_temporal_structure()
 
         self.MESSAGES = load_messages(self.THEMES, config['TRANSLATIONS'])
@@ -476,8 +437,10 @@ class Nikola(object):
             if isinstance(v, (str, unicode, int, float, dict)):
                 self.DEPS_CONTEXT[k] = v
 
+        self.compile_html = utils.get_compile_html(config['INPUT_FORMAT'])
+
     def render_template(self, template_name, output_name, context):
-            templates_module.render_template(
+            self.templates_module.render_template(
                 template_name, output_name, context, self.GLOBAL_CONTEXT)
 
     def path(self, kind, name, lang, is_link=False):
@@ -580,7 +543,10 @@ class Nikola(object):
             post_pages=self.config['post_pages'])
         yield self.gen_task_render_posts(
             translations=self.config['TRANSLATIONS'],
-            default_lang=self.config['DEFAULT_LANG'])
+            default_lang=self.config['DEFAULT_LANG'],
+            timeline=self.timeline,
+            compile_html=self.compile_html,
+            )
         yield self.gen_task_render_indexes(
             translations=self.config['TRANSLATIONS'])
         yield self.gen_task_render_archive(
@@ -599,7 +565,8 @@ class Nikola(object):
             blog_description=self.config['BLOG_DESCRIPTION'])
         yield self.gen_task_render_galleries(
             thumbnail_size=self.config['THUMBNAIL_SIZE'],
-            default_lang=self.config['DEFAULT_LANG'])
+            default_lang=self.config['DEFAULT_LANG'],
+            compile_html=self.compile_html)
         yield self.gen_task_redirect(
             redirections=self.config['REDIRECTIONS'])
         yield self.gen_task_copy_files()
@@ -648,7 +615,7 @@ class Nikola(object):
             post_name = post.split('.', 1)[0]
             context = {}
             post = self.global_data[post_name]
-            deps = post.deps(lang) + template_deps(template_name)
+            deps = post.deps(lang) + self.template_deps(template_name)
             context['post'] = post
             context['lang'] = lang
             context['title'] = post.title(lang)
@@ -718,10 +685,12 @@ class Nikola(object):
 
         translations
         default_lang
+        timeline
+        compile_html
         """
         for lang in kw["translations"]:
             # TODO: timeline is global, get rid of it
-            for post in self.timeline:
+            for post in kw['timeline']:
                 source = post.source_path
                 dest = post.base_path
                 if lang != kw["default_lang"]:
@@ -734,7 +703,7 @@ class Nikola(object):
                     'name': dest.encode('utf-8'),
                     'file_dep': post.fragment_deps(lang),
                     'targets': [dest],
-                    'actions': [(compile_html, [source, dest])],
+                    'actions': [(kw['compile_html'], [source, dest])],
                     'clean': True,
                     'uptodate': [config_changed(kw)],
                 }
@@ -789,7 +758,7 @@ class Nikola(object):
         output_name, template_name, extra_context={}):
         """Renders pages with lists of posts."""
 
-        deps = template_deps(template_name)
+        deps = self.template_deps(template_name)
         for post in posts:
             deps += post.deps(lang)
         context = {}
@@ -924,7 +893,7 @@ class Nikola(object):
                     'name': output_name.encode('utf8'),
                     'file_dep': deps,
                     'targets': [output_name],
-                    'actions': [(generic_rss_renderer,
+                    'actions': [(utils.generic_rss_renderer,
                         (lang, "%s (%s)" % (kw["blog_title"], tag),
                         kw["blog_url"], kw["blog_description"],
                         post_list, output_name))],
@@ -977,7 +946,7 @@ class Nikola(object):
                 'name': output_name,
                 'file_dep': deps,
                 'targets': [output_name],
-                'actions': [(generic_rss_renderer,
+                'actions': [(utils.generic_rss_renderer,
                     (lang, kw["blog_title"], kw["blog_url"],
                     kw["blog_description"], posts, output_name))],
                 'clean': True,
@@ -991,7 +960,7 @@ class Nikola(object):
 
         thumbnail_size,
         default_lang,
-
+        compile_html
         """
         template_name = "gallery.tmpl"
 
@@ -1084,7 +1053,8 @@ class Nikola(object):
                     'name': index_dst_path.encode('utf-8'),
                     'file_dep': [index_path],
                     'targets': [index_dst_path],
-                    'actions': [(compile_html, [index_path, index_dst_path])],
+                    'actions': [(kw['compile_html'],
+                        [index_path, index_dst_path])],
                     'clean': True,
                     'uptodate': [config_changed(kw)],
                 }
@@ -1100,7 +1070,7 @@ class Nikola(object):
             yield {
                 'basename': 'render_galleries',
                 'name': gallery_path,
-                'file_dep': template_deps(template_name) + image_list,
+                'file_dep': self.template_deps(template_name) + image_list,
                 'targets': [output_name],
                 'actions': [(render_gallery,
                     (output_name, context, index_dst_path))],
@@ -1153,33 +1123,6 @@ class Nikola(object):
             task['basename'] = 'copy_files'
             yield task
 
-
-def generic_rss_renderer(lang, title, link, description,
-    timeline, output_path):
-    """Takes all necessary data, and renders a RSS feed in output_path."""
-    items = []
-    for post in timeline[:10]:
-        args = {
-            'title': post.title(lang),
-            'link': post.permalink(lang),
-            'description': post.text(lang),
-            'guid': post.permalink(lang),
-            'pubDate': post.date,
-        }
-        items.append(nikola.rss.RSSItem(**args))
-    rss_obj = rss.RSS2(
-        title=title,
-        link=link,
-        description=description,
-        lastBuildDate=datetime.datetime.now(),
-        items=items,
-        generator='nikola 1.0',
-    )
-    dst_dir = os.path.dirname(output_path)
-    if not os.path.isdir(dst_dir):
-        os.makedirs(dst_dir)
-    with open(output_path, "wb+") as rss_file:
-        rss_obj.write_xml(rss_file)
 
 
 def copy_file(source, dest):
