@@ -1,8 +1,103 @@
 """Utility functions."""
 
+from collections import defaultdict
+import datetime
+import os
+import sys
+
 import PyRSS2Gen as rss
 
-def get_compile_html(input_format='rest'):
+
+def get_theme_path(theme):
+    """Given a theme name, returns the path where its files are located.
+
+    Looks in ./themes and in the place where themes go when installed.
+    """
+    dir_name = os.path.join('themes', theme)
+    if os.path.isdir(dir_name):
+        return dir_name
+    dir_name = os.path.join(os.path.dirname(__file__),
+        'data', 'themes', theme)
+    if os.path.isdir(dir_name):
+        return dir_name
+    raise Exception(u"Can't find theme '%s'" % theme)
+
+
+def get_theme_chain(theme):
+    """Create the full theme inheritance chain."""
+    themes = [theme]
+
+    def get_parent(theme_name):
+        parent_path = os.path.join('themes', theme_name, 'parent')
+        parent_path = os.path.join(get_theme_path(theme_name), 'parent')
+        if os.path.isfile(parent_path):
+            with open(parent_path) as fd:
+                return fd.readlines()[0].strip()
+        return None
+
+    while True:
+        parent = get_parent(themes[-1])
+        # Avoid silly loops
+        if parent is None or parent in themes:
+            break
+        themes.append(parent)
+    return themes
+
+
+def load_messages(themes, translations):
+    """ Load theme's messages into context.
+
+    All the messages from parent themes are loaded,
+    and "younger" themes have priority.
+    """
+    messages = defaultdict(dict)
+    for theme_name in themes[::-1]:
+        msg_folder = os.path.join(get_theme_path(theme_name), 'messages')
+        oldpath = sys.path
+        sys.path.insert(0, msg_folder)
+        for lang in translations.keys():
+            # If we don't do the reload, the module is cached
+            translation = __import__(lang)
+            reload(translation)
+            messages[lang].update(translation.MESSAGES)
+            del(translation)
+        sys.path = oldpath
+    return messages
+
+
+def copy_tree(src, dst):
+    """Copy a src tree to the dst folder.
+
+    Example:
+
+    src = "themes/default/assets"
+    dst = "output/assets"
+
+    should copy "themes/defauts/assets/foo/bar" to
+    "output/assets/foo/bar"
+    """
+    ignore = set(['.svn'])
+    base_len = len(src.split(os.sep))
+    for root, dirs, files in os.walk(src):
+        root_parts = root.split(os.sep)
+        if set(root_parts) & ignore:
+            continue
+        dst_dir = os.path.join(dst, *root_parts[base_len:])
+        if not os.path.isdir(dst_dir):
+            os.makedirs(dst_dir)
+        for src_name in files:
+            dst_file = os.path.join(dst_dir, src_name)
+            src_file = os.path.join(root, src_name)
+            yield {
+                'name': dst_file,
+                'file_dep': [src_file],
+                'targets': [dst_file],
+                'actions': [(copy_file, (src_file, dst_file))],
+                'clean': True,
+            }
+
+
+def get_compile_html(input_format):
     """Setup input format library."""
     if input_format == "rest":
         import rest
@@ -13,7 +108,7 @@ def get_compile_html(input_format='rest'):
     return compile_html
 
 
-def get_template_module(template_engine='mako'):
+def get_template_module(template_engine, themes):
     """Setup templating library."""
     templates_module = None
     if template_engine == "mako":
@@ -22,6 +117,10 @@ def get_template_module(template_engine='mako'):
     elif template_engine == "jinja":
         import jinja_templates
         templates_module = jinja_templates
+    templates_module.lookup = \
+        templates_module.get_template_lookup(
+        [os.path.join(get_theme_path(name), "templates")
+            for name in themes])
     return templates_module
 
 
@@ -37,7 +136,7 @@ def generic_rss_renderer(lang, title, link, description,
             'guid': post.permalink(lang),
             'pubDate': post.date,
         }
-        items.append(nikola.rss.RSSItem(**args))
+        items.append(rss.RSSItem(**args))
     rss_obj = rss.RSS2(
         title=title,
         link=link,
@@ -51,3 +150,12 @@ def generic_rss_renderer(lang, title, link, description,
         os.makedirs(dst_dir)
     with open(output_path, "wb+") as rss_file:
         rss_obj.write_xml(rss_file)
+
+
+def copy_file(source, dest):
+    dst_dir = os.path.dirname(dest)
+    if not os.path.isdir(dst_dir):
+        os.makedirs(dst_dir)
+    with open(source, "rb") as input:
+        with open(dest, "wb+") as output:
+            output.write(input.read())

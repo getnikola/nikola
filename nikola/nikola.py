@@ -16,119 +16,6 @@ from doit.tools import config_changed, PythonInteractiveAction
 
 import utils
 
-def get_theme_path(theme):
-    """Given a theme name, returns the path where its files are located.
-
-    Looks in ./themes and in the place where themes go when installed.
-    """
-    dir_name = os.path.join('themes', theme)
-    if os.path.isdir(dir_name):
-        return dir_name
-    dir_name = os.path.join(os.path.dirname(nikola.__file__),
-        'data', 'themes', theme)
-    if os.path.isdir(dir_name):
-        return dir_name
-    raise Exception(u"Can't find theme '%s'" % theme)
-
-
-def get_theme_chain(theme):
-    """Create the full theme inheritance chain."""
-    themes = [theme]
-
-    def get_parent(theme_name):
-        parent_path = os.path.join('themes', theme_name, 'parent')
-        parent_path = os.path.join(get_theme_path(theme_name), 'parent')
-        if os.path.isfile(parent_path):
-            with open(parent_path) as fd:
-                return fd.readlines()[0].strip()
-        return None
-
-    while True:
-        parent = get_parent(themes[-1])
-        # Avoid silly loops
-        if parent is None or parent in themes:
-            break
-        themes.append(parent)
-    return themes
-
-
-def load_messages(themes, translations):
-    """ Load theme's messages into context.
-
-    All the messages from parent themes are loaded,
-    and "younger" themes have priority.
-    """
-    messages = defaultdict(dict)
-    for theme_name in themes[::-1]:
-        msg_folder = os.path.join(get_theme_path(theme_name), 'messages')
-        oldpath = sys.path
-        sys.path.insert(0, msg_folder)
-        for lang in translations.keys():
-            # If we don't do the reload, the module is cached
-            translation = __import__(lang)
-            reload(translation)
-            messages[lang].update(translation.MESSAGES)
-            del(translation)
-        sys.path = oldpath
-    return messages
-
-
-def copy_tree(src, dst):
-    """Copy a src tree to the dst folder.
-
-    Example:
-
-    src = "themes/default/assets"
-    dst = "output/assets"
-
-    should copy "themes/defauts/assets/foo/bar" to
-    "output/assets/foo/bar"
-    """
-    ignore = set(['.svn'])
-    base_len = len(src.split(os.sep))
-    for root, dirs, files in os.walk(src):
-        root_parts = root.split(os.sep)
-        if set(root_parts) & ignore:
-            continue
-        dst_dir = os.path.join(dst, *root_parts[base_len:])
-        if not os.path.isdir(dst_dir):
-            os.makedirs(dst_dir)
-        for src_name in files:
-            dst_file = os.path.join(dst_dir, src_name)
-            src_file = os.path.join(root, src_name)
-            yield {
-                'name': dst_file,
-                'file_dep': [src_file],
-                'targets': [dst_file],
-                'actions': [(copy_file, (src_file, dst_file))],
-                'clean': True,
-            }
-
-
-def gen_task_copy_assets(**kw):
-    """Create tasks to copy the assets of the whole theme chain.
-
-    If a file is present on two themes, use the version
-    from the "youngest" theme.
-
-    Required keyword arguments:
-
-    themes
-
-    """
-    tasks = {}
-    for theme_name in kw['themes']:
-        src = os.path.join(get_theme_path(theme_name), 'assets')
-        dst = os.path.join('output', 'assets')
-        for task in copy_tree(src, dst):
-            if task['name'] in tasks:
-                continue
-            tasks[task['name']] = task
-            task['uptodate'] = task.get('uptodate', []) + [config_changed(kw)]
-            task['basename'] = 'copy_assets'
-            yield task
-
-
 ########################################
 # New post/story helper functions
 ########################################
@@ -415,18 +302,15 @@ class Nikola(object):
 
         self.config = config
         self.GLOBAL_CONTEXT = config['GLOBAL_CONTEXT']
-        self.THEMES = get_theme_chain(config['THEME'])
+        self.THEMES = utils.get_theme_chain(config['THEME'])
 
         self.templates_module = utils.get_template_module(
-            config['TEMPLATE_ENGINE'])
-        self.templates_module.lookup = \
-            self.templates_module.get_template_lookup(
-            [os.path.join(get_theme_path(name), "templates")
-                for name in self.THEMES])
+            config['TEMPLATE_ENGINE'], self.THEMES)
         self.template_deps = self.templates_module.template_deps
+
         self.set_temporal_structure()
 
-        self.MESSAGES = load_messages(self.THEMES, config['TRANSLATIONS'])
+        self.MESSAGES = utils.load_messages(self.THEMES, config['TRANSLATIONS'])
         self.GLOBAL_CONTEXT['messages'] = self.MESSAGES
 
         self.GLOBAL_CONTEXT['_link'] = self.link
@@ -531,7 +415,7 @@ class Nikola(object):
         yield task_serve()
         yield gen_task_new_post(self.config['post_pages'])
         yield gen_task_new_page(self.config['post_pages'])
-        yield gen_task_copy_assets(themes=self.THEMES)
+        yield self.gen_task_copy_assets(themes=self.THEMES)
         yield gen_task_deploy(commands=self.config['DEPLOY_COMMANDS'])
         yield gen_task_sitemap(blog_url=self.config['BLOG_URL'])
         yield self.gen_task_render_pages(
@@ -673,7 +557,7 @@ class Nikola(object):
                     'name': output_name.encode('utf8'),
                     'file_dep': [source],
                     'targets': [output_name],
-                    'actions': [(copy_file, (source, output_name))],
+                    'actions': [(utils.copy_file, (source, output_name))],
                     'clean': True,
                     'uptodate': [config_changed(kw)],
                     }
@@ -986,7 +870,7 @@ class Nikola(object):
                 im.thumbnail(size, Image.ANTIALIAS)
                 im.save(dst)
         else:
-            create_thumb = copy_file
+            create_thumb = utils.copy_file
 
         # gallery_path is "gallery/name"
         for gallery_path in gallery_list:
@@ -1030,7 +914,7 @@ class Nikola(object):
                     'targets': [thumb_path, orig_dest_path],
                     'actions': [
                         (create_thumb, (img, thumb_path)),
-                        (copy_file, (img, orig_dest_path))
+                        (utils.copy_file, (img, orig_dest_path))
                     ],
                     'clean': True,
                     'uptodate': [config_changed(kw)],
@@ -1119,19 +1003,34 @@ class Nikola(object):
         # TODO: make the path for files configurable?
         src = os.path.join('files')
         dst = 'output'
-        for task in copy_tree(src, dst):
+        for task in utils.copy_tree(src, dst):
             task['basename'] = 'copy_files'
             yield task
 
+    @staticmethod
+    def gen_task_copy_assets(**kw):
+        """Create tasks to copy the assets of the whole theme chain.
 
+        If a file is present on two themes, use the version
+        from the "youngest" theme.
 
-def copy_file(source, dest):
-    dst_dir = os.path.dirname(dest)
-    if not os.path.isdir(dst_dir):
-        os.makedirs(dst_dir)
-    with open(source, "rb") as input:
-        with open(dest, "wb+") as output:
-            output.write(input.read())
+        Required keyword arguments:
+
+        themes
+
+        """
+        tasks = {}
+        for theme_name in kw['themes']:
+            src = os.path.join(utils.get_theme_path(theme_name), 'assets')
+            dst = os.path.join('output', 'assets')
+            for task in utils.copy_tree(src, dst):
+                if task['name'] in tasks:
+                    continue
+                tasks[task['name']] = task
+                task['uptodate'] = task.get('uptodate', []) + [config_changed(kw)]
+                task['basename'] = 'copy_assets'
+                yield task
+
 
 
 def nikola_main():
