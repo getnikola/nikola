@@ -962,7 +962,8 @@ class Nikola(object):
                 'uptodate': [config_changed(kw)],
             }
 
-    def gen_task_redirect(self, **kw):
+    @staticmethod
+    def gen_task_redirect(**kw):
         """Generate redirections.
 
         Required keyword arguments:
@@ -997,8 +998,9 @@ class Nikola(object):
                     'uptodate': [config_changed(kw)],
                     }
 
-    def gen_task_copy_files(self):
-        """Copy theme assets into the output folder."""
+    @staticmethod
+    def gen_task_copy_files():
+        """Copy static files into the output folder."""
 
         # TODO: make the path for files configurable?
         src = os.path.join('files')
