@@ -9,186 +9,12 @@ import glob
 import datetime
 import tempfile
 import urlparse
-import re
 
 from doit.tools import config_changed, PythonInteractiveAction
 
-
 import utils
 
-########################################
-# New post/story helper functions
-########################################
-
-# slugify is copied from
-# http://code.activestate.com/recipes/
-# 577257-slugify-make-a-string-usable-in-a-url-or-filename/
-_slugify_strip_re = re.compile(r'[^\w\s-]')
-_slugify_hyphenate_re = re.compile(r'[-\s]+')
-
-
-def slugify(value):
-    """
-    Normalizes string, converts to lowercase, removes non-alpha characters,
-    and converts spaces to hyphens.
-
-    From Django's "django/template/defaultfilters.py".
-    """
-    import unicodedata
-    if not isinstance(value, unicode):
-        value = unicode(value)
-    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
-    value = unicode(_slugify_strip_re.sub('', value).strip().lower())
-    return _slugify_hyphenate_re.sub('-', value)
-
-
-def new_post(post_pages, is_post=True):
-    # Guess where we should put this
-    for path, _, _, use_in_rss in post_pages:
-        if use_in_rss == is_post:
-            break
-
-    print "Creating New Post"
-    print "-----------------\n"
-    title = raw_input("Enter title: ").decode(sys.stdin.encoding)
-    slug = slugify(title)
-    data = u'\n'.join([
-        title,
-        slug,
-        datetime.datetime.now().strftime('%Y/%m/%d %H:%M')
-        ])
-    output_path = os.path.dirname(path)
-    meta_path = os.path.join(output_path, slug + ".meta")
-    with codecs.open(meta_path, "wb+", "utf8") as fd:
-        fd.write(data)
-    txt_path = os.path.join(output_path, slug + ".txt")
-    with codecs.open(txt_path, "wb+", "utf8") as fd:
-        fd.write(u"Write your post here.")
-    print "Your post's metadata is at: ", meta_path
-    print "Your post's text is at: ", txt_path
-
-
-def new_page():
-    new_post(False)
-
-
-def gen_task_new_post(post_pages):
-    """Create a new post (interactive)."""
-    yield {
-        "basename": "new_post",
-        "actions": [PythonInteractiveAction(new_post, (post_pages,))],
-        }
-
-
-def gen_task_new_page(post_pages):
-    """Create a new post (interactive)."""
-    yield {
-        "basename": "new_page",
-        "actions": [PythonInteractiveAction(new_post, (post_pages, False,))],
-        }
-
-
-def gen_task_deploy(**kw):
-    """Deploy site."""
-    return {
-        "basename": "deploy",
-        "actions": kw['commands'],
-        "uptodate": [config_changed(kw)],
-        "verbosity": 2,
-        }
-
-
-def gen_task_sitemap(**kw):
-    """Generate Google sitemap.
-
-    Required keyword arguments:
-
-    blog_url
-    """
-
-    output_path = os.path.abspath("output")
-    sitemap_path = os.path.join(output_path, "sitemap.xml.gz")
-
-    def sitemap():
-        # Generate config
-        config_data = """<?xml version="1.0" encoding="UTF-8"?>
-<site
-  base_url="%s"
-  store_into="%s"
-  verbose="1" >
-  <directory path="%s" url="%s" />
-  <filter action="drop" type="wildcard" pattern="*~" />
-  <filter action="drop" type="regexp" pattern="/\.[^/]*" />
-</site>""" % (
-            kw["blog_url"],
-            sitemap_path,
-            output_path,
-            kw["blog_url"],
-        )
-        config_file = tempfile.NamedTemporaryFile(delete=False)
-        config_file.write(config_data)
-        config_file.close()
-
-        # Generate sitemap
-        import sitemap_gen as smap
-        sitemap = smap.CreateSitemapFromFile(config_file.name, True)
-        if not sitemap:
-            smap.output.Log('Configuration file errors -- exiting.', 0)
-        else:
-            sitemap.Generate()
-            smap.output.Log('Number of errors: %d' %
-                smap.output.num_errors, 1)
-            smap.output.Log('Number of warnings: %d' %
-                smap.output.num_warns, 1)
-        os.unlink(config_file.name)
-
-    return {
-        "basename": "sitemap",
-        "task_dep": [
-            "render_archive",
-            "render_indexes",
-            "render_pages",
-            "render_posts",
-            "render_rss",
-            "render_sources",
-            "render_tags"],
-        "targets": [sitemap_path],
-        "actions": [(sitemap,)],
-        "uptodate": [config_changed(kw)],
-        "clean": True,
-        }
-
-
-########################################
-# Start local server on port 8000
-########################################
-
-def task_serve():
-    """Start test server. (Usage: doit serve [-p 8000])"""
-
-    def serve(port):
-        from BaseHTTPServer import HTTPServer
-        from SimpleHTTPServer import SimpleHTTPRequestHandler as handler
-
-        os.chdir("output")
-
-        httpd = HTTPServer(('127.0.0.1', port), handler)
-        sa = httpd.socket.getsockname()
-        print "Serving HTTP on", sa[0], "port", sa[1], "..."
-        httpd.serve_forever()
-
-    return {
-        "basename": 'serve',
-        "actions": [(serve,)],
-        "verbosity": 2,
-        "params": [{'short': 'p',
-                 'name': 'port',
-                 'long': 'port',
-                 'type': int,
-                 'default': 8000,
-                 'help': 'Port number (default: 8000)'}],
-        }
-
+__all__ = ['Nikola', 'nikola_main']
 
 class Post(object):
 
@@ -310,7 +136,8 @@ class Nikola(object):
 
         self.set_temporal_structure()
 
-        self.MESSAGES = utils.load_messages(self.THEMES, config['TRANSLATIONS'])
+        self.MESSAGES = utils.load_messages(self.THEMES,
+            config['TRANSLATIONS'])
         self.GLOBAL_CONTEXT['messages'] = self.MESSAGES
 
         self.GLOBAL_CONTEXT['_link'] = self.link
@@ -412,12 +239,12 @@ class Nikola(object):
 
     def gen_tasks(self):
 
-        yield task_serve()
-        yield gen_task_new_post(self.config['post_pages'])
-        yield gen_task_new_page(self.config['post_pages'])
+        yield self.task_serve()
+        yield self.gen_task_new_post(self.config['post_pages'])
+        yield self.gen_task_new_page(self.config['post_pages'])
         yield self.gen_task_copy_assets(themes=self.THEMES)
-        yield gen_task_deploy(commands=self.config['DEPLOY_COMMANDS'])
-        yield gen_task_sitemap(blog_url=self.config['BLOG_URL'])
+        yield self.gen_task_deploy(commands=self.config['DEPLOY_COMMANDS'])
+        yield self.gen_task_sitemap(blog_url=self.config['BLOG_URL'])
         yield self.gen_task_render_pages(
             translations=self.config['TRANSLATIONS'],
             post_pages=self.config['post_pages'])
@@ -1029,10 +856,163 @@ class Nikola(object):
                 if task['name'] in tasks:
                     continue
                 tasks[task['name']] = task
-                task['uptodate'] = task.get('uptodate', []) + [config_changed(kw)]
+                task['uptodate'] = task.get('uptodate', []) + \
+                    [config_changed(kw)]
                 task['basename'] = 'copy_assets'
                 yield task
 
+    @staticmethod
+    def new_post(post_pages, is_post=True):
+        # Guess where we should put this
+        for path, _, _, use_in_rss in post_pages:
+            if use_in_rss == is_post:
+                break
+
+        print "Creating New Post"
+        print "-----------------\n"
+        title = raw_input("Enter title: ").decode(sys.stdin.encoding)
+        slug = utils.slugify(title)
+        data = u'\n'.join([
+            title,
+            slug,
+            datetime.datetime.now().strftime('%Y/%m/%d %H:%M')
+            ])
+        output_path = os.path.dirname(path)
+        meta_path = os.path.join(output_path, slug + ".meta")
+        with codecs.open(meta_path, "wb+", "utf8") as fd:
+            fd.write(data)
+        txt_path = os.path.join(output_path, slug + ".txt")
+        with codecs.open(txt_path, "wb+", "utf8") as fd:
+            fd.write(u"Write your post here.")
+        print "Your post's metadata is at: ", meta_path
+        print "Your post's text is at: ", txt_path
+
+
+    @classmethod
+    def new_page(cls):
+        cls.new_post(False)
+
+    @classmethod
+    def gen_task_new_post(cls, post_pages):
+        """Create a new post (interactive)."""
+        yield {
+            "basename": "new_post",
+            "actions": [PythonInteractiveAction(cls.new_post, (post_pages,))],
+            }
+
+
+    @classmethod
+    def gen_task_new_page(cls, post_pages):
+        """Create a new post (interactive)."""
+        yield {
+            "basename": "new_page",
+            "actions": [PythonInteractiveAction(cls.new_post, (post_pages, False,))],
+            }
+
+    @staticmethod
+    def gen_task_deploy(**kw):
+        """Deploy site.
+
+        Required keyword arguments:
+
+        commands
+
+        """
+        return {
+            "basename": "deploy",
+            "actions": kw['commands'],
+            "uptodate": [config_changed(kw)],
+            "verbosity": 2,
+            }
+
+    @staticmethod
+    def gen_task_sitemap(**kw):
+        """Generate Google sitemap.
+
+        Required keyword arguments:
+
+        blog_url
+        """
+
+        output_path = os.path.abspath("output")
+        sitemap_path = os.path.join(output_path, "sitemap.xml.gz")
+
+        def sitemap():
+            # Generate config
+            config_data = """<?xml version="1.0" encoding="UTF-8"?>
+    <site
+    base_url="%s"
+    store_into="%s"
+    verbose="1" >
+    <directory path="%s" url="%s" />
+    <filter action="drop" type="wildcard" pattern="*~" />
+    <filter action="drop" type="regexp" pattern="/\.[^/]*" />
+    </site>""" % (
+                kw["blog_url"],
+                sitemap_path,
+                output_path,
+                kw["blog_url"],
+            )
+            config_file = tempfile.NamedTemporaryFile(delete=False)
+            config_file.write(config_data)
+            config_file.close()
+
+            # Generate sitemap
+            import sitemap_gen as smap
+            sitemap = smap.CreateSitemapFromFile(config_file.name, True)
+            if not sitemap:
+                smap.output.Log('Configuration file errors -- exiting.', 0)
+            else:
+                sitemap.Generate()
+                smap.output.Log('Number of errors: %d' %
+                    smap.output.num_errors, 1)
+                smap.output.Log('Number of warnings: %d' %
+                    smap.output.num_warns, 1)
+            os.unlink(config_file.name)
+
+        return {
+            "basename": "sitemap",
+            "task_dep": [
+                "render_archive",
+                "render_indexes",
+                "render_pages",
+                "render_posts",
+                "render_rss",
+                "render_sources",
+                "render_tags"],
+            "targets": [sitemap_path],
+            "actions": [(sitemap,)],
+            "uptodate": [config_changed(kw)],
+            "clean": True,
+            }
+
+
+    @staticmethod
+    def task_serve():
+        """Start test server. (Usage: doit serve [-p 8000])"""
+
+        def serve(port):
+            from BaseHTTPServer import HTTPServer
+            from SimpleHTTPServer import SimpleHTTPRequestHandler as handler
+
+            os.chdir("output")
+
+            httpd = HTTPServer(('127.0.0.1', port), handler)
+            sa = httpd.socket.getsockname()
+            print "Serving HTTP on", sa[0], "port", sa[1], "..."
+            httpd.serve_forever()
+
+        return {
+            "basename": 'serve',
+            "actions": [(serve,)],
+            "verbosity": 2,
+            "params": [{'short': 'p',
+                    'name': 'port',
+                    'long': 'port',
+                    'type': int,
+                    'default': 8000,
+                    'help': 'Port number (default: 8000)'}],
+            }
 
 
 def nikola_main():
