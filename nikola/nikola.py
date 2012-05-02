@@ -62,7 +62,7 @@ def get_theme_path(theme):
     """
     dir_name = os.path.join('themes', theme)
     if os.path.isdir(dir_name):
-        return dirname
+        return dir_name
     dir_name = os.path.join(os.path.dirname(nikola.__file__), 'data', 'themes', theme)
     if os.path.isdir(dir_name):
         return dir_name
