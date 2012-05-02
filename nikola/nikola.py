@@ -918,7 +918,7 @@ class Nikola(object):
         commands
 
         """
-        return {
+        yield {
             "basename": "deploy",
             "actions": kw['commands'],
             "uptodate": [config_changed(kw)],
@@ -970,7 +970,7 @@ class Nikola(object):
                     smap.output.num_warns, 1)
             os.unlink(config_file.name)
 
-        return {
+        yield {
             "basename": "sitemap",
             "task_dep": [
                 "render_archive",
@@ -1002,7 +1002,7 @@ class Nikola(object):
             print "Serving HTTP on", sa[0], "port", sa[1], "..."
             httpd.serve_forever()
 
-        return {
+        yield {
             "basename": 'serve',
             "actions": [(serve,)],
             "verbosity": 2,
