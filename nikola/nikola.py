@@ -363,6 +363,8 @@ class Nikola(object):
             output_name = os.path.join(
                 "output", self.config['TRANSLATIONS'][lang], destination,
                 post.pagename + ".html")
+            deps_dict = copy(context)
+            deps_dict.pop('post')
             yield {
                 'name': output_name.encode('utf-8'),
                 'file_dep': deps,
@@ -370,7 +372,7 @@ class Nikola(object):
                 'actions': [(self.render_template,
                     [template_name, output_name, context])],
                 'clean': True,
-                'uptodate': [config_changed(context)],
+                'uptodate': [config_changed(deps_dict)],
             }
 
     def gen_task_render_pages(self, **kw):
@@ -385,8 +387,8 @@ class Nikola(object):
             for wildcard, destination, template_name, _ in kw["post_pages"]:
                 for task in self.generic_page_renderer(
                         lang, wildcard, template_name, destination):
-                    task['uptodate'] = task.get('uptodate', []) +\
-                        [config_changed(kw)]
+                    #task['uptodate'] = task.get('uptodate', []) +\
+                        #[config_changed(kw)]
                     task['basename'] = 'render_pages'
                     yield task
 
@@ -432,6 +434,7 @@ class Nikola(object):
             # TODO: timeline is global, get rid of it
             deps_dict = copy(kw)
             deps_dict.pop('timeline')
+            deps_dict.pop('compile_html')
             for post in kw['timeline']:
                 source = post.source_path
                 dest = post.base_path
