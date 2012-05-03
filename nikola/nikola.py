@@ -1,20 +1,48 @@
 # -*- coding: utf-8 -*-
 
-import nikola
+import codecs
+from collections import defaultdict
+from copy import copy
+import cPickle
+import datetime
+import glob
+import hashlib
 import os
 import sys
-from collections import defaultdict
-import codecs
-import glob
-import datetime
 import tempfile
 import urlparse
 
-from doit.tools import config_changed, PythonInteractiveAction
+from doit.tools import PythonInteractiveAction
 
+import nikola
 import utils
 
 __all__ = ['Nikola', 'nikola_main']
+
+
+def config_changed(config):
+    """check if passed config was modified
+    @var config (str) or (dict)
+    """
+    def uptodate_config(task, values):
+        config_digest = None
+        if isinstance(config, basestring):
+            config_digest = config
+        elif isinstance(config, dict):
+            data = cPickle.dumps(config)
+            config_digest = hashlib.md5(data).hexdigest()
+        else:
+            raise Exception(('Invalid type of config_changed parameter got %s' +
+                             ', must be string or dict') % (type(config),))
+
+        def save_config():
+            return {'_config_changed': config_digest}
+        task.insert_action(save_config)
+        last_success = values.get('_config_changed')
+        if last_success is None:
+            return False
+        return (last_success == config_digest)
+    return uptodate_config
 
 class Post(object):
 
@@ -303,7 +331,7 @@ class Nikola(object):
 
     def set_temporal_structure(self):
         """Scan all metadata and create some data structures."""
-        print "Parsing metadata"
+        print "Parsing metadata ",
         for wildcard, destination, _, use_in_feeds in \
                 self.config['post_pages']:
             for base_path in glob.glob(wildcard):
@@ -318,6 +346,7 @@ class Nikola(object):
             self.timeline.append(post)
         self.timeline.sort(cmp=lambda a, b: cmp(a.date, b.date))
         self.timeline.reverse()
+        print "... done"
 
     def generic_page_renderer(self, lang, wildcard,
         template_name, destination):
@@ -401,6 +430,8 @@ class Nikola(object):
         """
         for lang in kw["translations"]:
             # TODO: timeline is global, get rid of it
+            deps_dict = copy(kw)
+            deps_dict.pop('timeline')
             for post in kw['timeline']:
                 source = post.source_path
                 dest = post.base_path
@@ -416,7 +447,7 @@ class Nikola(object):
                     'targets': [dest],
                     'actions': [(kw['compile_html'], [source, dest])],
                     'clean': True,
-                    'uptodate': [config_changed(kw)],
+                    'uptodate': [config_changed(deps_dict)],
                 }
 
     def gen_task_render_indexes(self, **kw):
