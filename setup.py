@@ -110,7 +110,7 @@ setup(name='Nikola',
         'docs/theming.txt'],
       install_requires = [
           'pygments',
-          'doit',
+          'doit>=0.16',
           'mako>=0.6',
           'pillow',
           'docutils',
