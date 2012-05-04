@@ -955,7 +955,6 @@ class Nikola(object):
         yield {
             "basename": "deploy",
             "actions": kw['commands'],
-            "uptodate": [config_changed(kw)],
             "verbosity": 2,
             }
 
