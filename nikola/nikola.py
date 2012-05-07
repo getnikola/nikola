@@ -69,24 +69,31 @@ class Post(object):
             meta_data = meta_file.readlines()
         while len(meta_data) < 5:
             meta_data.append("")
-        default_title, self.pagename, self.date, self.tags, self.link = \
+        default_title, default_pagename, self.date, self.tags, self.link = \
             [x.strip() for x in meta_data][:5]
         self.date = datetime.datetime.strptime(self.date, '%Y/%m/%d %H:%M')
         self.tags = [x.strip() for x in self.tags.split(',')]
         self.tags = filter(None, self.tags)
 
+        self.pagenames = {}
         self.titles = {}
         # Load internationalized titles
         for lang in translations:
             if lang == default_lang:
                 self.titles[lang] = default_title
+                self.pagenames[lang] = default_pagename
             else:
                 metadata_path = self.metadata_path + "." + lang
                 try:
                     with codecs.open(metadata_path, "r", "utf8") as meta_file:
-                        self.titles[lang] = meta_file.readlines()[0].strip()
+                        meta_data = [x.strip() for x in meta_file.readlines()]
+                        while len(meta_data) < 2:
+                            meta_data.append("")
+                        self.titles[lang] = meta_data[0] or default_title
+                        self.pagenames[lang] = meta_data[1] or default_pagename
                 except:
                     self.titles[lang] = default_title
+                    self.pagenames[lang] = default_pagename
 
     def title(self, lang):
         """Return localized title."""
@@ -121,7 +128,7 @@ class Post(object):
 
     def destination_path(self, lang, extension='.html'):
         path = os.path.join('output', self.translations[lang],
-            self.folder, self.pagename + extension)
+            self.folder, self.pagenames[lang] + extension)
         return path
 
     def permalink(self, lang=None, absolute=False, extension='.html'):
@@ -129,7 +136,7 @@ class Post(object):
             lang = self.default_lang
         pieces = list(os.path.split(self.translations[lang]))
         pieces += list(os.path.split(self.folder))
-        pieces += [self.pagename + extension]
+        pieces += [self.pagenames[lang] + extension]
         pieces = filter(None, pieces)
         if absolute:
             pieces = [self.blog_url] + pieces
@@ -362,7 +369,7 @@ class Nikola(object):
             context['permalink'] = post.permalink(lang)
             output_name = os.path.join(
                 "output", self.config['TRANSLATIONS'][lang], destination,
-                post.pagename + ".html")
+                post.pagenames[lang] + ".html")
             deps_dict = copy(context)
             deps_dict.pop('post')
             yield {
