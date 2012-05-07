@@ -4,10 +4,23 @@
 
 import os
 
+from mako import util, lexer
 from mako.lookup import TemplateLookup
 
 lookup = None
 
+
+def get_deps(filename):
+    text = util.read_file(filename)
+    lex = lexer.Lexer(text=text, filename=filename)
+    lex.parse()
+
+    deps = []
+    for n in lex.template.nodes:
+        if getattr(n, 'keyword', None) == "inherit":
+            deps.append(n.attributes['file'])
+        # TODO: include tags are not handled
+    return deps
 
 def get_template_lookup(directories):
     return TemplateLookup(
@@ -30,4 +43,8 @@ def render_template(template_name, output_name, context, global_context):
 
 def template_deps(template_name):
     template = lookup.get_template(template_name)
-    return [template.filename]
+    dep_filenames = get_deps(template.filename)
+    deps = [template.filename]
+    for fname in dep_filenames:
+        deps += template_deps(fname)
+    return deps
