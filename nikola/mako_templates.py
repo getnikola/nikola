@@ -8,7 +8,7 @@ from mako import util, lexer
 from mako.lookup import TemplateLookup
 
 lookup = None
-
+cache = {}
 
 def get_deps(filename):
     text = util.read_file(filename)
@@ -42,9 +42,13 @@ def render_template(template_name, output_name, context, global_context):
 
 
 def template_deps(template_name):
-    template = lookup.get_template(template_name)
-    dep_filenames = get_deps(template.filename)
-    deps = [template.filename]
-    for fname in dep_filenames:
-        deps += template_deps(fname)
-    return deps
+    # We can cache here because depedencies should
+    # not change between runs
+    if cache.get(template_name, None) is None:
+        template = lookup.get_template(template_name)
+        dep_filenames = get_deps(template.filename)
+        deps = [template.filename]
+        for fname in dep_filenames:
+            deps += template_deps(fname)
+        cache[template_name] = deps
+    return cache[template_name]
