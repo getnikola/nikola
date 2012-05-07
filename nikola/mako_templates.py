@@ -19,6 +19,7 @@ def get_deps(filename):
     for n in lex.template.nodes:
         if getattr(n, 'keyword', None) == "inherit":
             deps.append(n.attributes['file'])
+        # TODO: include tags are not handled
     return deps
 
 def get_template_lookup(directories):
