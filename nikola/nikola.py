@@ -161,7 +161,12 @@ class Nikola(object):
         self.posts_per_tag = defaultdict(list)
         self.timeline = []
 
-        self.config = config
+        # This is the default config
+        # TODO: fill it
+        self.config = {
+            'OUTPUT_FOLDER': 'output'
+        }
+        self.config.update(config)
         self.GLOBAL_CONTEXT = config['GLOBAL_CONTEXT']
         self.THEMES = utils.get_theme_chain(config['THEME'])
 
