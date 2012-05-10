@@ -59,7 +59,7 @@ class Post(object):
         self.use_in_feeds = use_in_feeds
         self.blog_url = blog_url
         self.source_path = source_path  # posts/blah.txt
-        self.post_name = source_path.split(".", 1)[0]  # posts/blah
+        self.post_name = os.path.splitext(source_path)[0]  # posts/blah
         self.base_path = self.post_name + ".html"  # posts/blah.html
         self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
         self.folder = destination
@@ -359,7 +359,7 @@ class Nikola(object):
         template_name, destination):
         """Render post fragments to final HTML pages."""
         for post in glob.glob(wildcard):
-            post_name = post.split('.', 1)[0]
+            post_name = os.path.splitext(post)[0]
             context = {}
             post = self.global_data[post_name]
             deps = post.deps(lang) + self.template_deps(template_name)
