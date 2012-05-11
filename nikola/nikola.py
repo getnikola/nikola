@@ -49,12 +49,15 @@ class Post(object):
     """Represents a blog post or web page."""
 
     def __init__(self, source_path, destination, use_in_feeds,
-        translations, default_lang, blog_url):
+        translations, default_lang, blog_url, compile_html):
         """Initialize post.
 
         The base path is the .txt post file. From it we calculate
         the meta file, as well as any translations available, and
         the .html fragment file path.
+
+        `compile_html` is a function that knows how to compile this Post to
+        html.
         """
         self.use_in_feeds = use_in_feeds
         self.blog_url = blog_url
@@ -74,6 +77,7 @@ class Post(object):
         self.date = datetime.datetime.strptime(self.date, '%Y/%m/%d %H:%M')
         self.tags = [x.strip() for x in self.tags.split(',')]
         self.tags = filter(None, self.tags)
+        self.compile_html = compile_html
 
         self.pagenames = {}
         self.titles = {}
@@ -161,6 +165,15 @@ class Nikola(object):
         self.posts_per_tag = defaultdict(list)
         self.timeline = []
 
+        if 'post_compilers' not in config:
+            config['post_compilers'] = {
+                "rest":     ['.txt', '.rst'],
+                "markdown": ['.md', '.mdown', '.markdown']
+                }
+
+        self.get_compile_html = utils.CompileHtmlGetter(
+            config.pop('post_compilers'))
+
         self.config = config
         self.GLOBAL_CONTEXT = config['GLOBAL_CONTEXT']
         self.THEMES = utils.get_theme_chain(config['THEME'])
@@ -182,8 +195,6 @@ class Nikola(object):
         for k, v in self.GLOBAL_CONTEXT.items():
             if isinstance(v, (str, unicode, int, float, dict)):
                 self.DEPS_CONTEXT[k] = v
-
-        self.compile_html = utils.get_compile_html(config['INPUT_FORMAT'])
 
     def render_template(self, template_name, output_name, context):
             self.templates_module.render_template(
@@ -290,8 +301,7 @@ class Nikola(object):
         yield self.gen_task_render_posts(
             translations=self.config['TRANSLATIONS'],
             default_lang=self.config['DEFAULT_LANG'],
-            timeline=self.timeline,
-            compile_html=self.compile_html,
+            timeline=self.timeline
             )
         yield self.gen_task_render_indexes(
             translations=self.config['TRANSLATIONS'])
@@ -311,8 +321,7 @@ class Nikola(object):
             blog_description=self.config['BLOG_DESCRIPTION'])
         yield self.gen_task_render_galleries(
             thumbnail_size=self.config['THUMBNAIL_SIZE'],
-            default_lang=self.config['DEFAULT_LANG'],
-            compile_html=self.compile_html)
+            default_lang=self.config['DEFAULT_LANG'])
         yield self.gen_task_redirect(
             redirections=self.config['REDIRECTIONS'])
         yield self.gen_task_copy_files()
@@ -342,9 +351,11 @@ class Nikola(object):
         for wildcard, destination, _, use_in_feeds in \
                 self.config['post_pages']:
             for base_path in glob.glob(wildcard):
+                compile_html = self.get_compile_html(base_path)
                 post = Post(base_path, destination, use_in_feeds,
                     self.config['TRANSLATIONS'], self.config['DEFAULT_LANG'],
-                    self.config['BLOG_URL'])
+                    self.config['BLOG_URL'],
+                    compile_html)
                 self.global_data[post.post_name] = post
                 self.posts_per_year[str(post.date.year)].append(post.post_name)
                 for tag in post.tags:
@@ -435,13 +446,11 @@ class Nikola(object):
         translations
         default_lang
         timeline
-        compile_html
         """
         for lang in kw["translations"]:
             # TODO: timeline is global, get rid of it
             deps_dict = copy(kw)
             deps_dict.pop('timeline')
-            deps_dict.pop('compile_html')
             for post in kw['timeline']:
                 source = post.source_path
                 dest = post.base_path
@@ -455,7 +464,7 @@ class Nikola(object):
                     'name': dest.encode('utf-8'),
                     'file_dep': post.fragment_deps(lang),
                     'targets': [dest],
-                    'actions': [(kw['compile_html'], [source, dest])],
+                    'actions': [(post.compile_html, [source, dest])],
                     'clean': True,
                     'uptodate': [config_changed(deps_dict)],
                 }
@@ -712,7 +721,6 @@ class Nikola(object):
 
         thumbnail_size,
         default_lang,
-        compile_html
         """
         template_name = "gallery.tmpl"
 
@@ -800,12 +808,13 @@ class Nikola(object):
             index_path = os.path.join(gallery_path, "index.txt")
             index_dst_path = os.path.join(gallery_path, "index.html")
             if os.path.exists(index_path):
+                compile_html = self.get_compile_html(index_path)
                 yield {
                     'basename': 'render_galleries',
                     'name': index_dst_path.encode('utf-8'),
                     'file_dep': [index_path],
                     'targets': [index_dst_path],
-                    'actions': [(kw['compile_html'],
+                    'actions': [(compile_html,
                         [index_path, index_dst_path])],
                     'clean': True,
                     'uptodate': [config_changed(kw)],
