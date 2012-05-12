@@ -20,29 +20,32 @@ import utils
 __all__ = ['Nikola', 'nikola_main']
 
 
-def config_changed(config):
-    """check if passed config was modified
-    @var config (str) or (dict)
-    """
-    def uptodate_config(task, values):
+# config_changed is basically a copy of
+# doit's but using pickle instead of trying to serialize manually
+class config_changed(object):
+
+    def __init__(self, config):
+        self.config = config
+
+    def __call__(self, task, values):
         config_digest = None
-        if isinstance(config, basestring):
-            config_digest = config
-        elif isinstance(config, dict):
-            data = cPickle.dumps(config)
+        if isinstance(self.config, basestring):
+            config_digest = self.config
+        elif isinstance(self.config, dict):
+            data = cPickle.dumps(self.config)
             config_digest = hashlib.md5(data).hexdigest()
         else:
             raise Exception(('Invalid type of config_changed parameter got %s' +
-                             ', must be string or dict') % (type(config),))
+                             ', must be string or dict') % (type(self.config),))
 
-        def save_config():
+        def _save_config():
             return {'_config_changed': config_digest}
-        task.insert_action(save_config)
+
+        task.insert_action(_save_config)
         last_success = values.get('_config_changed')
         if last_success is None:
             return False
         return (last_success == config_digest)
-    return uptodate_config
 
 class Post(object):
 
