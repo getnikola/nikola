@@ -630,7 +630,6 @@ class Nikola(object):
         output_folder
         """
         template_name = "list.tmpl"
-        # TODO: post_per_tags is global, kill it
         for tag, posts in self.posts_per_tag.items():
             for lang in kw["translations"]:
                 # Render HTML
