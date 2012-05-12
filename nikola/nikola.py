@@ -12,7 +12,7 @@ import sys
 import tempfile
 import urlparse
 
-from doit.tools import PythonInteractiveAction
+from doit.tools import PythonInteractiveAction, run_once
 
 import nikola
 import utils
@@ -163,6 +163,7 @@ class Nikola(object):
         self.posts_per_year = defaultdict(list)
         self.posts_per_tag = defaultdict(list)
         self.timeline = []
+        self._scanned = False
 
         # This is the default config
         # TODO: fill it
@@ -176,8 +177,6 @@ class Nikola(object):
         self.templates_module = utils.get_template_module(
             config['TEMPLATE_ENGINE'], self.THEMES)
         self.template_deps = self.templates_module.template_deps
-
-        self.set_temporal_structure()
 
         self.MESSAGES = utils.load_messages(self.THEMES,
             config['TRANSLATIONS'])
@@ -355,24 +354,26 @@ class Nikola(object):
                 ],
             }
 
-    def set_temporal_structure(self):
-        """Scan all metadata and create some data structures."""
-        print "Parsing metadata ",
-        for wildcard, destination, _, use_in_feeds in \
-                self.config['post_pages']:
-            for base_path in glob.glob(wildcard):
-                post = Post(base_path, destination, use_in_feeds,
-                    self.config['TRANSLATIONS'], self.config['DEFAULT_LANG'],
-                    self.config['BLOG_URL'])
-                self.global_data[post.post_name] = post
-                self.posts_per_year[str(post.date.year)].append(post.post_name)
-                for tag in post.tags:
-                    self.posts_per_tag[tag].append(post.post_name)
-        for name, post in self.global_data.items():
-            self.timeline.append(post)
-        self.timeline.sort(cmp=lambda a, b: cmp(a.date, b.date))
-        self.timeline.reverse()
-        print "... done"
+    def scan_posts(self):
+        """Scan all the posts."""
+        if not self._scanned:
+            print "Scanning posts ",
+            for wildcard, destination, _, use_in_feeds in self.config['post_pages']:
+                print ".",
+                for base_path in glob.glob(wildcard):
+                    post = Post(base_path, destination, use_in_feeds,
+                        self.config['TRANSLATIONS'], self.config['DEFAULT_LANG'],
+                        self.config['BLOG_URL'])
+                    self.global_data[post.post_name] = post
+                    self.posts_per_year[str(post.date.year)].append(post.post_name)
+                    for tag in post.tags:
+                        self.posts_per_tag[tag].append(post.post_name)
+            for name, post in self.global_data.items():
+                self.timeline.append(post)
+            self.timeline.sort(cmp=lambda a, b: cmp(a.date, b.date))
+            self.timeline.reverse()
+            self._scanned = True
+            print "done!"
 
     def generic_page_renderer(self, lang, wildcard,
         template_name, destination):
@@ -413,6 +414,7 @@ class Nikola(object):
         translations
         post_pages
         """
+        self.scan_posts()
         for lang in kw["translations"]:
             for wildcard, destination, template_name, _ in kw["post_pages"]:
                 for task in self.generic_page_renderer(
@@ -432,6 +434,7 @@ class Nikola(object):
         post_pages
         output_folder
         """
+        self.scan_posts()
         for lang in kw["translations"]:
             # TODO: timeline is global
             for post in self.timeline:
@@ -462,6 +465,7 @@ class Nikola(object):
         timeline
         compile_html
         """
+        self.scan_posts()
         for lang in kw["translations"]:
             # TODO: timeline is global, get rid of it
             deps_dict = copy(kw)
@@ -493,6 +497,7 @@ class Nikola(object):
         translations
         output_folder
         """
+        self.scan_posts()
         template_name = "index.tmpl"
         # TODO: timeline is global, get rid of it
         posts = [x for x in self.timeline if x.use_in_feeds]
@@ -714,6 +719,7 @@ class Nikola(object):
         output_folder
         """
 
+        self.scan_posts()
         # TODO: timeline is global, kill it
         for lang in kw["translations"]:
             output_name = os.path.join(kw['output_folder'],
