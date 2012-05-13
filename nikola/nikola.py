@@ -12,7 +12,7 @@ import sys
 import tempfile
 import urlparse
 
-from doit.tools import PythonInteractiveAction
+from doit.tools import PythonInteractiveAction, run_once
 
 import nikola
 import utils
@@ -20,29 +20,32 @@ import utils
 __all__ = ['Nikola', 'nikola_main']
 
 
-def config_changed(config):
-    """check if passed config was modified
-    @var config (str) or (dict)
-    """
-    def uptodate_config(task, values):
+# config_changed is basically a copy of
+# doit's but using pickle instead of trying to serialize manually
+class config_changed(object):
+
+    def __init__(self, config):
+        self.config = config
+
+    def __call__(self, task, values):
         config_digest = None
-        if isinstance(config, basestring):
-            config_digest = config
-        elif isinstance(config, dict):
-            data = cPickle.dumps(config)
+        if isinstance(self.config, basestring):
+            config_digest = self.config
+        elif isinstance(self.config, dict):
+            data = cPickle.dumps(self.config)
             config_digest = hashlib.md5(data).hexdigest()
         else:
             raise Exception(('Invalid type of config_changed parameter got %s' +
-                             ', must be string or dict') % (type(config),))
+                             ', must be string or dict') % (type(self.config),))
 
-        def save_config():
+        def _save_config():
             return {'_config_changed': config_digest}
-        task.insert_action(save_config)
+
+        task.insert_action(_save_config)
         last_success = values.get('_config_changed')
         if last_success is None:
             return False
         return (last_success == config_digest)
-    return uptodate_config
 
 class Post(object):
 
@@ -131,7 +134,7 @@ class Post(object):
         return data
 
     def destination_path(self, lang, extension='.html'):
-        path = os.path.join('output', self.translations[lang],
+        path = os.path.join(self.translations[lang],
             self.folder, self.pagenames[lang] + extension)
         return path
 
@@ -164,25 +167,31 @@ class Nikola(object):
         self.posts_per_year = defaultdict(list)
         self.posts_per_tag = defaultdict(list)
         self.timeline = []
+        self._scanned = False
 
-        if 'post_compilers' not in config:
-            config['post_compilers'] = {
+
+        self.config = config
+        # This is the default config
+        # TODO: fill it
+        self.config = {
+            'OUTPUT_FOLDER': 'output',
+            'post_compilers': {
                 "rest":     ['.txt', '.rst'],
                 "markdown": ['.md', '.mdown', '.markdown']
-                }
+            }
+
+        }
+        self.config.update(config)
 
         self.get_compile_html = utils.CompileHtmlGetter(
             config.pop('post_compilers'))
 
-        self.config = config
         self.GLOBAL_CONTEXT = config['GLOBAL_CONTEXT']
         self.THEMES = utils.get_theme_chain(config['THEME'])
 
         self.templates_module = utils.get_template_module(
             config['TEMPLATE_ENGINE'], self.THEMES)
         self.template_deps = self.templates_module.template_deps
-
-        self.set_temporal_structure()
 
         self.MESSAGES = utils.load_messages(self.THEMES,
             config['TRANSLATIONS'])
@@ -285,18 +294,22 @@ class Nikola(object):
 
     def gen_tasks(self):
 
-        yield self.task_serve()
+        yield self.task_serve(output_folder=self.config['OUTPUT_FOLDER'])
         yield self.gen_task_new_post(self.config['post_pages'])
         yield self.gen_task_new_page(self.config['post_pages'])
-        yield self.gen_task_copy_assets(themes=self.THEMES)
+        yield self.gen_task_copy_assets(themes=self.THEMES,
+            output_folder=self.config['OUTPUT_FOLDER'])
         yield self.gen_task_deploy(commands=self.config['DEPLOY_COMMANDS'])
-        yield self.gen_task_sitemap(blog_url=self.config['BLOG_URL'])
+        yield self.gen_task_sitemap(blog_url=self.config['BLOG_URL'],
+            output_folder=self.config['OUTPUT_FOLDER']
+        )
         yield self.gen_task_render_pages(
             translations=self.config['TRANSLATIONS'],
             post_pages=self.config['post_pages'])
         yield self.gen_task_render_sources(
             translations=self.config['TRANSLATIONS'],
             default_lang=self.config['DEFAULT_LANG'],
+            output_folder=self.config['OUTPUT_FOLDER'],
             post_pages=self.config['post_pages'])
         yield self.gen_task_render_posts(
             translations=self.config['TRANSLATIONS'],
@@ -304,27 +317,34 @@ class Nikola(object):
             timeline=self.timeline
             )
         yield self.gen_task_render_indexes(
-            translations=self.config['TRANSLATIONS'])
+            translations=self.config['TRANSLATIONS'],
+            output_folder=self.config['OUTPUT_FOLDER'])
         yield self.gen_task_render_archive(
             translations=self.config['TRANSLATIONS'],
-            messages=self.MESSAGES)
+            messages=self.MESSAGES,
+            output_folder=self.config['OUTPUT_FOLDER'])
         yield self.gen_task_render_tags(
             translations=self.config['TRANSLATIONS'],
             messages=self.MESSAGES,
             blog_title=self.config['BLOG_TITLE'],
             blog_url=self.config['BLOG_URL'],
-            blog_description=self.config['BLOG_DESCRIPTION'])
+            blog_description=self.config['BLOG_DESCRIPTION'],
+            output_folder=self.config['OUTPUT_FOLDER'])
         yield self.gen_task_render_rss(
             translations=self.config['TRANSLATIONS'],
             blog_title=self.config['BLOG_TITLE'],
             blog_url=self.config['BLOG_URL'],
-            blog_description=self.config['BLOG_DESCRIPTION'])
+            blog_description=self.config['BLOG_DESCRIPTION'],
+            output_folder=self.config['OUTPUT_FOLDER'])
         yield self.gen_task_render_galleries(
             thumbnail_size=self.config['THUMBNAIL_SIZE'],
-            default_lang=self.config['DEFAULT_LANG'])
+            default_lang=self.config['DEFAULT_LANG'],
+            output_folder=self.config['OUTPUT_FOLDER'])
         yield self.gen_task_redirect(
-            redirections=self.config['REDIRECTIONS'])
-        yield self.gen_task_copy_files()
+            redirections=self.config['REDIRECTIONS'],
+            output_folder=self.config['OUTPUT_FOLDER'])
+        yield self.gen_task_copy_files(
+            output_folder=self.config['OUTPUT_FOLDER'])
         yield {
             'name': 'all',
             'actions': None,
@@ -345,26 +365,27 @@ class Nikola(object):
                 ],
             }
 
-    def set_temporal_structure(self):
-        """Scan all metadata and create some data structures."""
-        print "Parsing metadata ",
-        for wildcard, destination, _, use_in_feeds in \
-                self.config['post_pages']:
-            for base_path in glob.glob(wildcard):
-                compile_html = self.get_compile_html(base_path)
-                post = Post(base_path, destination, use_in_feeds,
-                    self.config['TRANSLATIONS'], self.config['DEFAULT_LANG'],
-                    self.config['BLOG_URL'],
-                    compile_html)
-                self.global_data[post.post_name] = post
-                self.posts_per_year[str(post.date.year)].append(post.post_name)
-                for tag in post.tags:
-                    self.posts_per_tag[tag].append(post.post_name)
-        for name, post in self.global_data.items():
-            self.timeline.append(post)
-        self.timeline.sort(cmp=lambda a, b: cmp(a.date, b.date))
-        self.timeline.reverse()
-        print "... done"
+    def scan_posts(self):
+        """Scan all the posts."""
+        if not self._scanned:
+            print "Scanning posts ",
+            for wildcard, destination, _, use_in_feeds in self.config['post_pages']:
+                print ".",
+                for base_path in glob.glob(wildcard):
+                    post = Post(base_path, destination, use_in_feeds,
+                        self.config['TRANSLATIONS'], self.config['DEFAULT_LANG'],
+                        self.config['BLOG_URL'],
+                        self.get_compile_html(base_path))
+                    self.global_data[post.post_name] = post
+                    self.posts_per_year[str(post.date.year)].append(post.post_name)
+                    for tag in post.tags:
+                        self.posts_per_tag[tag].append(post.post_name)
+            for name, post in self.global_data.items():
+                self.timeline.append(post)
+            self.timeline.sort(cmp=lambda a, b: cmp(a.date, b.date))
+            self.timeline.reverse()
+            self._scanned = True
+            print "done!"
 
     def generic_page_renderer(self, lang, wildcard,
         template_name, destination):
@@ -379,10 +400,14 @@ class Nikola(object):
             context['title'] = post.title(lang)
             context['permalink'] = post.permalink(lang)
             output_name = os.path.join(
-                "output", self.config['TRANSLATIONS'][lang], destination,
+                self.config['OUTPUT_FOLDER'],
+                self.config['TRANSLATIONS'][lang],
+                destination,
                 post.pagenames[lang] + ".html")
             deps_dict = copy(context)
             deps_dict.pop('post')
+            deps_dict['OUTPUT_FOLDER']=self.config['OUTPUT_FOLDER']
+            deps_dict['TRANSLATIONS']=self.config['TRANSLATIONS']
             yield {
                 'name': output_name.encode('utf-8'),
                 'file_dep': deps,
@@ -401,6 +426,7 @@ class Nikola(object):
         translations
         post_pages
         """
+        self.scan_posts()
         for lang in kw["translations"]:
             for wildcard, destination, template_name, _ in kw["post_pages"]:
                 for task in self.generic_page_renderer(
@@ -418,11 +444,14 @@ class Nikola(object):
         translations
         default_lang
         post_pages
+        output_folder
         """
+        self.scan_posts()
         for lang in kw["translations"]:
             # TODO: timeline is global
             for post in self.timeline:
-                output_name = post.destination_path(lang, '.txt')
+                output_name = os.path.join(kw['output_folder'],
+                    post.destination_path(lang, '.txt'))
                 source = post.source_path
                 if lang != kw["default_lang"]:
                     source_lang = source + '.' + lang
@@ -447,6 +476,7 @@ class Nikola(object):
         default_lang
         timeline
         """
+        self.scan_posts()
         for lang in kw["translations"]:
             # TODO: timeline is global, get rid of it
             deps_dict = copy(kw)
@@ -475,7 +505,9 @@ class Nikola(object):
         Required keyword arguments:
 
         translations
+        output_folder
         """
+        self.scan_posts()
         template_name = "index.tmpl"
         # TODO: timeline is global, get rid of it
         posts = [x for x in self.timeline if x.use_in_feeds]
@@ -502,7 +534,7 @@ class Nikola(object):
                     context["nextlink"] = "index-%s.html" % (i + 1)
                 context["permalink"] = self.link("index", i, lang)
                 output_name = os.path.join(
-                    'output', self.path("index", i, lang))
+                    kw['output_folder'], self.path("index", i, lang))
                 task = self.generic_post_list_renderer(
                     lang,
                     post_list,
@@ -546,6 +578,7 @@ class Nikola(object):
 
         translations
         messages
+        output_folder
         """
         # TODO add next/prev links for years
         template_name = "list.tmpl"
@@ -553,7 +586,7 @@ class Nikola(object):
         for year, posts in self.posts_per_year.items():
             for lang in kw["translations"]:
                 output_name = os.path.join(
-                    "output", self.path("archive", year, lang))
+                    kw['output_folder'], self.path("archive", year, lang))
                 post_list = [self.global_data[post] for post in posts]
                 post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
                 post_list.reverse()
@@ -583,7 +616,7 @@ class Nikola(object):
         for lang in kw["translations"]:
             context = {}
             output_name = os.path.join(
-                "output", self.path("archive", None, lang))
+                kw['output_folder'], self.path("archive", None, lang))
             context["title"] = kw["messages"][lang]["Archive"]
             context["items"] = [(year, self.link("archive", year, lang))
                 for year in years]
@@ -609,13 +642,13 @@ class Nikola(object):
         blog_title
         blog_url
         blog_description
+        output_folder
         """
         template_name = "list.tmpl"
-        # TODO: post_per_tags is global, kill it
         for tag, posts in self.posts_per_tag.items():
             for lang in kw["translations"]:
                 # Render HTML
-                output_name = os.path.join("output",
+                output_name = os.path.join(kw['output_folder'],
                     self.path("tag", tag, lang))
                 post_list = [self.global_data[post] for post in posts]
                 post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
@@ -641,7 +674,7 @@ class Nikola(object):
                 yield task
 
                 #Render RSS
-                output_name = os.path.join("output",
+                output_name = os.path.join(kw['output_folder'],
                     self.path("tag_rss", tag, lang))
                 deps = []
                 post_list = [self.global_data[post] for post in posts
@@ -668,7 +701,7 @@ class Nikola(object):
         template_name = "list.tmpl"
         for lang in kw["translations"]:
             output_name = os.path.join(
-                "output", self.path('tag_index', None, lang))
+                kw['output_folder'], self.path('tag_index', None, lang))
             context = {}
             context["title"] = kw["messages"][lang][u"Tags"]
             context["items"] = [(tag, self.link("tag", tag, lang))
@@ -693,11 +726,14 @@ class Nikola(object):
         blog_title
         blog_url
         blog_description
+        output_folder
         """
 
+        self.scan_posts()
         # TODO: timeline is global, kill it
         for lang in kw["translations"]:
-            output_name = os.path.join("output", self.path("rss", None, lang))
+            output_name = os.path.join(kw['output_folder'],
+                self.path("rss", None, lang))
             deps = []
             posts = [x for x in self.timeline if x.use_in_feeds][:10]
             for post in posts:
@@ -721,6 +757,7 @@ class Nikola(object):
 
         thumbnail_size,
         default_lang,
+        output_folder
         """
         template_name = "gallery.tmpl"
 
@@ -753,7 +790,7 @@ class Nikola(object):
             # gallery_name is "name"
             gallery_name = os.path.basename(gallery_path)
             # output_gallery is "output/GALLERY_PATH/name"
-            output_gallery = os.path.dirname(os.path.join('output',
+            output_gallery = os.path.dirname(os.path.join(kw["output_folder"],
                 self.path("gallery", gallery_name, None)))
             if not os.path.isdir(output_gallery):
                 yield {
@@ -846,10 +883,11 @@ class Nikola(object):
         Required keyword arguments:
 
         redirections
+        output_folder
         """
 
         def create_redirect(src, dst):
-            with codecs.open(src_path, "wb+", "utf8") as fd:
+            with codecs.open(src, "wb+", "utf8") as fd:
                 fd.write(('<head>' +
                 '<meta HTTP-EQUIV="REFRESH" content="0; url=%s">' +
                 '</head>') % dst)
@@ -865,7 +903,7 @@ class Nikola(object):
             }
         else:
             for src, dst in kw["redirections"]:
-                src_path = os.path.join("output", src)
+                src_path = os.path.join(kw["output_folder"], src)
                 yield {
                     'basename': 'redirect',
                     'name': src_path,
@@ -876,15 +914,29 @@ class Nikola(object):
                     }
 
     @staticmethod
-    def gen_task_copy_files():
-        """Copy static files into the output folder."""
+    def gen_task_copy_files(**kw):
+        """Copy static files into the output folder.
+
+        required keyword arguments:
+
+        output_folder
+        """
 
         # TODO: make the path for files configurable?
         src = os.path.join('files')
-        dst = 'output'
+        dst = kw['output_folder']
+	flag = False
         for task in utils.copy_tree(src, dst):
+            flag = True
             task['basename'] = 'copy_files'
+            task['uptodate'] = task.get('uptodate', []) +\
+                [config_changed(kw)]
             yield task
+        if not flag:
+            yield {
+                'basename': 'copy_files',
+                'actions': (),
+            }
 
     @staticmethod
     def gen_task_copy_assets(**kw):
@@ -896,12 +948,13 @@ class Nikola(object):
         Required keyword arguments:
 
         themes
+        output_folder
 
         """
         tasks = {}
         for theme_name in kw['themes']:
             src = os.path.join(utils.get_theme_path(theme_name), 'assets')
-            dst = os.path.join('output', 'assets')
+            dst = os.path.join(kw['output_folder'], 'assets')
             for task in utils.copy_tree(src, dst):
                 if task['name'] in tasks:
                     continue
@@ -981,9 +1034,10 @@ class Nikola(object):
         Required keyword arguments:
 
         blog_url
+        output_folder
         """
 
-        output_path = os.path.abspath("output")
+        output_path = os.path.abspath(kw['output_folder'])
         sitemap_path = os.path.join(output_path, "sitemap.xml.gz")
 
         def sitemap():
@@ -1037,14 +1091,14 @@ class Nikola(object):
 
 
     @staticmethod
-    def task_serve():
+    def task_serve(**kw):
         """Start test server. (Usage: doit serve [-p 8000])"""
 
         def serve(port):
             from BaseHTTPServer import HTTPServer
             from SimpleHTTPServer import SimpleHTTPRequestHandler as handler
 
-            os.chdir("output")
+            os.chdir(kw['output_folder'])
 
             httpd = HTTPServer(('127.0.0.1', port), handler)
             sa = httpd.socket.getsockname()

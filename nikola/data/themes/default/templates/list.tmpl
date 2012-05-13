@@ -5,7 +5,7 @@
         <h1>${title}</h1>
         <ul class="unstyled">
         % for text, link in items:
-            <li><a href="${link}">${text}</a>
+            <li><a href="${rel_link(permalink, link)}">${text}</a>
         % endfor
         </ul>
         <!--End of body content-->

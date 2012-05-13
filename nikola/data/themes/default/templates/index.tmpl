@@ -3,7 +3,7 @@
 <%block name="content">
     % for post in posts:
         <div style="border-bottom: 2px solid darkgrey; margin-bottom: 12px;">
-        <a href="${post.permalink(lang)}"><h1>${post.title(lang)}</a>
+        <a href="${rel_link(permalink, post.permalink(lang))}"><h1>${post.title(lang)}</a>
         <small>&nbsp;&nbsp;
              ${messages[lang]["Posted:"]} ${post.date}
         </small></h1>
