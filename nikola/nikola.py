@@ -877,7 +877,7 @@ class Nikola(object):
         """
 
         def create_redirect(src, dst):
-            with codecs.open(src_path, "wb+", "utf8") as fd:
+            with codecs.open(src, "wb+", "utf8") as fd:
                 fd.write(('<head>' +
                 '<meta HTTP-EQUIV="REFRESH" content="0; url=%s">' +
                 '</head>') % dst)
