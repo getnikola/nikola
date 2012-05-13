@@ -1100,6 +1100,25 @@ class Nikola(object):
                     'help': 'Port number (default: 8000)'}],
             }
 
+    @staticmethod
+    def task_install_theme():
+        """Install theme. (Usage: doit install_theme themename [-u URL]"""
+
+        def install_theme(name, url):
+            pass
+
+        yield {
+            "basename": 'install_theme',
+            "actions": [(install_theme,)],
+            "verbosity": 2,
+            "params": [{'short': 'u',
+                    'name': 'url',
+                    'long': 'url',
+                    'type': str,
+                    'default': 'http://nikola.ralsina.com.ar/themes',
+                    'help': 'URL for theme collection'}],
+            }
+
 
 def nikola_main():
     print "Starting doit..."
