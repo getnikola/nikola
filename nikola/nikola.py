@@ -915,11 +915,18 @@ class Nikola(object):
         # TODO: make the path for files configurable?
         src = os.path.join('files')
         dst = kw['output_folder']
+	flag = False
         for task in utils.copy_tree(src, dst):
+            flag = True
             task['basename'] = 'copy_files'
             task['uptodate'] = task.get('uptodate', []) +\
                 [config_changed(kw)]
             yield task
+        if not flag:
+            yield {
+                'basename': 'copy_files',
+                'actions': (),
+            }
 
     @staticmethod
     def gen_task_copy_assets(**kw):
