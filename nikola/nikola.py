@@ -169,8 +169,6 @@ class Nikola(object):
         self.timeline = []
         self._scanned = False
 
-
-        self.config = config
         # This is the default config
         # TODO: fill it
         self.config = {
