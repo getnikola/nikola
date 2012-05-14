@@ -182,7 +182,7 @@ class Nikola(object):
         self.config.update(config)
 
         self.get_compile_html = utils.CompileHtmlGetter(
-            config.pop('post_compilers'))
+            self.config.pop('post_compilers'))
 
         self.GLOBAL_CONTEXT = config['GLOBAL_CONTEXT']
         self.THEMES = utils.get_theme_chain(config['THEME'])
