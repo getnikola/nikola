@@ -11,6 +11,7 @@ import json
 import os
 import sys
 import tempfile
+import urllib
 import urlparse
 
 from doit.tools import PythonInteractiveAction, run_once
@@ -183,7 +184,7 @@ class Nikola(object):
         self.config.update(config)
 
         self.get_compile_html = utils.CompileHtmlGetter(
-            config.pop('post_compilers'))
+            self.config.pop('post_compilers'))
 
         self.GLOBAL_CONTEXT = config['GLOBAL_CONTEXT']
         self.THEMES = utils.get_theme_chain(config['THEME'])
@@ -1122,9 +1123,12 @@ class Nikola(object):
         """Install theme. (Usage: doit install_theme -n themename [-u URL]"""
 
         def install_theme(name, url):
-            from urllib import urlopen
-            data = urlopen(url).read()
-            print data
+            data = json.loads(urllib.urlopen(url).read())
+            if name in data:
+                print data[name]
+            else:
+                print "Can't find theme %s" % name
+                return False
 
         yield {
             "basename": 'install_theme',
