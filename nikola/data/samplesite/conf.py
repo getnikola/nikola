@@ -30,6 +30,17 @@ post_pages = (
     ("stories/*.txt", "stories", "story.tmpl", False),
 )
 
+# A mapping of languages to file-extensions that represent that language.
+# Feel free to add or delete extensions to any list, but don't add any new
+# compilers unless you write the interface for it yourself.
+#
+# 'rest' is reStructuredText
+# 'markdown' is MarkDown
+post_compilers = {
+    "rest": ('.txt', '.rst'),
+    "markdown": ('.md', '.mdown', '.markdown')
+    }
+
 # What is the default language?
 
 DEFAULT_LANG = "en"
@@ -96,11 +107,6 @@ THUMBNAIL_SIZE = 180
 ##############################################################################
 # HTML fragments and diverse things that are used by the templates
 ##############################################################################
-
-# What markup are you using for your posts. Possible values include:
-# "rest" => reStructuredText
-# "markdown" => MarkDown
-INPUT_FORMAT = 'rest'
 
 # Data about this site
 BLOG_TITLE = "Demo Site"

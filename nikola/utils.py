@@ -111,6 +111,53 @@ def get_compile_html(input_format):
         compile_html = md.compile_html
     return compile_html
 
+class CompileHtmlGetter(object):
+    """Get the correct compile_html for a file, based on file extension.
+
+    This class exists to provide a closure for its `__call__` method.
+    """
+    def __init__(self, post_compilers):
+        """Store post_compilers for use by `__call__`.
+
+        See the structure of `post_compilers` in conf.py
+        """
+        self.post_compilers = post_compilers
+        self.inverse_post_compilers = {}
+
+    def __call__(self, source_name):
+        """Get the correct compiler for a post from `conf.post_compilers`
+
+        To make things easier for users, the mapping in conf.py is
+        compiler->[extensions], although this is less convenient for us. The
+        majority of this function is reversing that dictionary and error
+        checking.
+        """
+        ext = os.path.splitext(source_name)[1]
+        try:
+            compile_html = self.inverse_post_compilers[ext]
+        except KeyError:
+            # Find the correct compiler for this files extension
+            langs = [lang for lang, exts in
+                     self.post_compilers.items()
+                     if ext in exts]
+            if len(langs) != 1:
+                if len(set(langs))>1:
+                    exit("Your file extension->compiler definition is"
+                         "ambiguous.\nPlease remove one of the file extensions"
+                         "from 'post_compilers' in conf.py\n(The error is in"
+                         "one of %s)" % ', '.join(langs))
+                elif len(langs) > 1:
+                    langs = langs[:1]
+                else:
+                    exit("post_compilers in conf.py does not tell me how to "
+                         "handle '%s' extensions." % ext)
+
+            lang = langs[0]
+            compile_html = get_compile_html(lang)
+
+            self.inverse_post_compilers[ext] = compile_html
+
+        return compile_html
 
 def get_template_module(template_engine, themes):
     """Setup templating library."""
