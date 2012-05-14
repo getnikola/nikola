@@ -7,6 +7,7 @@ import cPickle
 import datetime
 import glob
 import hashlib
+import json
 import os
 import sys
 import tempfile
@@ -282,6 +283,7 @@ class Nikola(object):
     def gen_tasks(self):
 
         yield self.task_serve(output_folder=self.config['OUTPUT_FOLDER'])
+        yield self.task_install_theme()
         yield self.gen_task_new_post(self.config['post_pages'])
         yield self.gen_task_new_page(self.config['post_pages'])
         yield self.gen_task_copy_assets(themes=self.THEMES,
@@ -1102,21 +1104,34 @@ class Nikola(object):
 
     @staticmethod
     def task_install_theme():
-        """Install theme. (Usage: doit install_theme themename [-u URL]"""
+        """Install theme. (Usage: doit install_theme -n themename [-u URL]"""
 
         def install_theme(name, url):
-            pass
+            from urllib import urlopen
+            data = urlopen(url).read()
+            print data
 
         yield {
             "basename": 'install_theme',
             "actions": [(install_theme,)],
             "verbosity": 2,
-            "params": [{'short': 'u',
+            "params": [
+                {
+                    'short': 'u',
                     'name': 'url',
                     'long': 'url',
                     'type': str,
-                    'default': 'http://nikola.ralsina.com.ar/themes',
-                    'help': 'URL for theme collection'}],
+                    'default': 'http://nikola.ralsina.com.ar/themes.json',
+                    'help': 'URL for theme collection'
+                },
+                {
+                    'short': 'n',
+                    'name': 'name',
+                    'long': 'name',
+                    'type': str,
+                    'default': 'site',
+                    'help': 'Theme name'
+                }],
             }
 
 
