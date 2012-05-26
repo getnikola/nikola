@@ -8,6 +8,8 @@ MESSAGES = [
     u"Posted:",
     u"Original site",
     u"Read in english",
+    u"&larr; Newer posts",
+    u"Older posts &rarr;",
 ]
 
 # In english things are not translated
