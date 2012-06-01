@@ -515,6 +515,11 @@ class Nikola(object):
             lists.append(posts[:10])
             posts = posts[10:]
         num_pages = len(lists)
+        if not lists:
+            yield {
+                'basename': 'render_indexes',
+                'actions': [],
+                }
         for lang in kw["translations"]:
             for i, post_list in enumerate(lists):
                 context = {}
