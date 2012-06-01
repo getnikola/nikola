@@ -769,6 +769,10 @@ class Nikola(object):
         # require PIL
         Image = None
         if not gallery_list:
+            yield {
+                'basename': 'render_galleries',
+                'actions': [],
+                }
             return
         try:
             import Image as _Image
