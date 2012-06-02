@@ -222,7 +222,11 @@ def code_block_directive(name, arguments, options, content, lineno,
     if pygments is None:
         code_block += nodes.Text(content, content)
     else:
-        for cls, value in DocutilsInterface(content, language, options):
+        # The [:-1] is because pygments adds a trailing \n which looks bad
+        l = list(DocutilsInterface(content, language, options))
+        if l[-1] == ('', u'\n'):
+            l = l[:-1]
+        for cls, value in l:
             if withln and "\n" in value:
                 # Split on the "\n"s
                 values = value.split("\n")
