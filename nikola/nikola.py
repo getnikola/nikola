@@ -1099,15 +1099,18 @@ class Nikola(object):
 
     @staticmethod
     def task_serve(**kw):
-        """Start test server. (Usage: doit serve [-p 8000])"""
+        """
+        Start test server. (Usage: doit serve [--address 127.0.0.1] [--port 8000])
+        By default, the server runs on port 8000 on the IP address 127.0.0.1.
+        """
 
-        def serve(port):
+        def serve(address, port):
             from BaseHTTPServer import HTTPServer
             from SimpleHTTPServer import SimpleHTTPRequestHandler as handler
 
             os.chdir(kw['output_folder'])
 
-            httpd = HTTPServer(('127.0.0.1', port), handler)
+            httpd = HTTPServer((address, port), handler)
             sa = httpd.socket.getsockname()
             print "Serving HTTP on", sa[0], "port", sa[1], "..."
             httpd.serve_forever()
@@ -1116,12 +1119,18 @@ class Nikola(object):
             "basename": 'serve',
             "actions": [(serve,)],
             "verbosity": 2,
-            "params": [{'short': 'p',
-                    'name': 'port',
-                    'long': 'port',
-                    'type': int,
-                    'default': 8000,
-                    'help': 'Port number (default: 8000)'}],
+            "params": [{'short': 'a',
+                        'name': 'address',
+                        'long': 'address',
+                        'type': str,
+                        'default': '127.0.0.1',
+                        'help': 'Bind address (default: 127.0.0.1)'},
+                       {'short': 'p',
+                        'name': 'port',
+                        'long': 'port',
+                        'type': int,
+                        'default': 8000,
+                        'help': 'Port number (default: 8000)'}],
             }
 
 
