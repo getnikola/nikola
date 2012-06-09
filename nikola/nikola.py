@@ -14,6 +14,7 @@ import sys
 import tempfile
 import urllib2
 import urlparse
+from unidecode import unidecode
 
 from doit.tools import PythonInteractiveAction, run_once
 
@@ -985,7 +986,7 @@ class Nikola(object):
         print "Creating New Post"
         print "-----------------\n"
         title = raw_input("Enter title: ").decode(sys.stdin.encoding)
-        slug = utils.slugify(title)
+        slug = utils.slugify(unidecode(title))
         data = u'\n'.join([
             title,
             slug,
