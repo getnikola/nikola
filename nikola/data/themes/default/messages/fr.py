@@ -11,4 +11,6 @@ MESSAGES = {
     u"Posted:": u"Publié :",
     u"Original site": u"Site d'origine",
     u"Read in english": u"Lire en français",
+    u"&larr; Newer posts": u"&larr; Billets récents",
+    u"Older posts &rarr;": u"Anciens billets &rarr;",
 }
