@@ -215,17 +215,23 @@ will be recreated. If you change the post page template, then all the post pages
 Nikola is a series of doit *tasks*, and you can see them by doing ``doit list``::
 
     $ doit list
-    Parsing metadata
+    Scanning posts  . . done!
+    copy_assets        Create tasks to copy the assets of the whole theme chain.
+    copy_files         Copy static files into the output folder.
     deploy             Deploy site.
+    new_page           Create a new post (interactive).
+    new_post           Create a new post (interactive).
+    redirect           Generate redirections.
     render_archive     Render the post archives.
     render_galleries   Render image galleries.
     render_indexes     Render 10-post-per-page indexes.
     render_pages       Build final pages from metadata and HTML fragments.
     render_posts       Build HTML fragments from metadata and reSt.
     render_rss         Generate RSS feeds.
+    render_site        Render the post archives.
     render_sources     Publish the rst sources because why not?
     render_tags        Render the tag pages.
-    serve              Start test server. (Usage: doit serve [-p 8000])
+    serve              Start test server. (Usage: doit serve [--address 127.0.0.1] [--port 8000])
     sitemap            Generate Google sitemap.
 
 You can make Nikola redo everythig by calling ``doit clean``, you can make it do just a specific
@@ -235,17 +241,25 @@ part of the site using task names, for example ``doit render_pages``, and even i
 The ``serve`` task is special, in that instead of generating a file it starts a web server so
 you can see the site you are creating::
 
-    $ doit serve -p 8080
+    $ doit serve
     Parsing metadata
     .  serve
-    Serving HTTP on 127.0.0.1 port 8080 ...
+    Serving HTTP on 127.0.0.1 port 8000 ...
 
-The ``-p 8080`` tells it the port for the webserver, and is optional (the default is port 8000).
-
-After you do this, you can point your web browser to http://localhost:8080 and you should see
+After you do this, you can point your web browser to http://localhost:8000 and you should see
 the sample site. This is useful as a "preview" of your work. You can combine add ``auto`` and do
 ``doit auto serve`` which makes doit automatically regenerate your pages as needed, and
 it's a live preview!
+
+By default, the ``serve`` task runs the web server on port 8000 on the IP address 127.0.0.1.
+You can pass in an IP address and port number explicity using ``-a IP_ADDRESS``
+(short version of ``--address``) or ``-p PORT_NUMBER`` (short version of ``--port``)
+Example usage::
+
+    $ doit serve --address 0.0.0.0 --port 8080
+    Parsing metadata
+    .  serve
+    Serving HTTP on 0.0.0.0 port 8080 ...
 
 The ``deploy`` task is discussed in the Deployment_ section.
 
