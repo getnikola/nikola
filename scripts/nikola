@@ -8,21 +8,27 @@ import sys
 
 import nikola
 
-USAGE = """To create a new site in a folder, run "nikola init foldername".
+USAGE = """To create a new site in a folder, run "nikola init foldername [src]".
 
 The destination folder must not exist.
+
+If you pass the src argument, that folder will be used as a template for
+the new site instead of Nikola's sample site.
 """
 
 
 def init(dst):
     """Create a copy of demosite in the current folder."""
-    src = os.path.join(os.path.dirname(nikola.__file__),'data','samplesite')
+    if len(sys.argv) > 3:
+        src = sys.argv[3]
+    else:
+        src = os.path.join(os.path.dirname(nikola.__file__),'data','samplesite')
     shutil.copytree(src, dst)
     print "A new site with some sample data has been created at %s." % dst
     print "See README.txt in that folder for more information."
 
 if __name__ == "__main__":
-    if len(sys.argv)==3 and sys.argv[1] == "init":
+    if len(sys.argv)>=3 and sys.argv[1] == "init":
         print "Doing init"
         init(sys.argv[2])
     else:
