@@ -449,6 +449,34 @@ Analytics
     a Google analytics snippet or something similar, but you can really put anything
     there.
 
+Getting More Themes
+-------------------
+
+There are not so many themes for Nikola. On occasion, I port something I like, and make
+it available for download. Nikola has a builtin theme download/install mechanism, its
+``install_theme`` task::
+
+    $ doit install_theme -l
+    Scanning posts  . . done!
+    .  install_theme
+    Themes:
+    -------
+    blogtxt
+    readable
+
+    $ doit install_theme -n blogtxt
+    Scanning posts  . . done!
+    .  install_theme
+    Downloading: http://nikola.ralsina.com.ar/themes/blogtxt.zip
+    Extracting: blogtxt into themes
+
+And there you are, you now have themes/blogtxt installed. It's very rudimentary, but it
+should work in most cases.
+
+If you create a nice theme, please share it! You can post about it on
+`the nikola forum <http://groups.google.com/group/nikola-discuss>`_ and I will
+make it available for download.
+
 Deployment
 ----------
 
