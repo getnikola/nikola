@@ -5,6 +5,7 @@ import datetime
 import os
 import re
 import sys
+from zipfile import ZipFile as zip
 
 import PyRSS2Gen as rss
 
@@ -232,3 +233,24 @@ def slugify(value):
     value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
     value = unicode(_slugify_strip_re.sub('', value).strip().lower())
     return _slugify_hyphenate_re.sub('-', value)
+
+# A very slightly safer version of zip.extractall that works on
+# python < 2.6
+
+class UnsafeZipException(Exception):
+    pass
+
+def extract_all(zipfile):
+    pwd = os.getcwd()
+    os.chdir('themes')
+    z = zip(zipfile)
+    namelist = z.namelist()
+    for f in namelist:
+        if f.endswith('/') and '..' in f:
+            raise UnsafeZipException('The zip file contains ".." and is not safe to expand.')
+    for f in namelist:
+        if f.endswith('/'):
+            os.makedirs(f)
+        else:
+            z.extract(f)
+    os.chdir(pwd)

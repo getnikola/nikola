@@ -9,9 +9,10 @@ import glob
 import hashlib
 import json
 import os
+from StringIO import StringIO
 import sys
 import tempfile
-import urllib
+import urllib2
 import urlparse
 
 from doit.tools import PythonInteractiveAction, run_once
@@ -1138,15 +1139,30 @@ class Nikola(object):
 
     @staticmethod
     def task_install_theme():
-        """Install theme. (Usage: doit install_theme -n themename [-u URL]"""
+        """Install theme. (Usage: doit install_theme -n themename [-u URL] | [-l])."""
 
-        def install_theme(name, url):
-            data = json.loads(urllib.urlopen(url).read())
-            if name in data:
-                print data[name]
-            else:
-                print "Can't find theme %s" % name
+        def install_theme(name, url, listing):
+            if name is None and not listing:
+                print "This command needs either the -n or the -l option."
                 return False
+            data = urllib2.urlopen(url).read()
+            data = json.loads(data)
+            if listing:
+                print "Themes:"
+                print "-------"
+                for theme in sorted(data.keys()):
+                    print theme
+                return True
+            else:
+                if name in data:
+                    print 'Downloading: %s' % data[name]
+                    zip_file = StringIO()
+                    zip_file.write(urllib2.urlopen(data[name]).read())
+                    print 'Extracting: %s into themes' % name
+                    utils.extract_all(zip_file)
+                else:
+                    print "Can't find theme %s" % name
+                    return False
 
         yield {
             "basename": 'install_theme',
@@ -1158,16 +1174,24 @@ class Nikola(object):
                     'name': 'url',
                     'long': 'url',
                     'type': str,
-                    'default': 'http://nikola.ralsina.com.ar/themes.json',
-                    'help': 'URL for theme collection'
+                    'default': 'http://nikola.ralsina.com.ar/themes/index.json',
+                    'help': 'URL for theme collection.'
+                },
+                {
+                    'short': 'l',
+                    'name': 'listing',
+                    'long': 'list',
+                    'type': bool,
+                    'default': False,
+                    'help': 'List available themes.'
                 },
                 {
                     'short': 'n',
                     'name': 'name',
                     'long': 'name',
                     'type': str,
-                    'default': 'site',
-                    'help': 'Theme name'
+                    'default': None,
+                    'help': 'Name of theme to install.'
                 }],
             }
 
