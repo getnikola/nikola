@@ -823,6 +823,8 @@ class Nikola(object):
                     }
             # image_list contains "gallery/name/image_name.jpg"
             image_list = glob.glob(gallery_path + "/*jpg") +\
+                glob.glob(gallery_path + "/*JPG") +\
+                glob.glob(gallery_path + "/*PNG") +\
                 glob.glob(gallery_path + "/*png")
             image_list = [x for x in image_list if "thumbnail" not in x]
             image_name_list = [os.path.basename(x) for x in image_list]
