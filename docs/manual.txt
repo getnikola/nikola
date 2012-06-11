@@ -8,6 +8,38 @@ The Nikola Handbook
 
 .. contents::
 
+
+All You Need to Know
+--------------------
+
+After you have Nikola installed:
+
+Create a site:
+    ``nikola init mysite``
+
+Create a post:
+    ``nikola new_post``
+
+Edit the post:
+    The filename should be in the output of the previous command.
+
+Build the site:
+     ``doit``
+
+Start the test server:
+     ``doit serve``
+
+See the site:
+     http://127.0.0.1:8000
+
+That should get you going. If you want to know more, this manual will always be here
+for you.
+
+DON'T READ THIS MANUAL. IF YOU NEED TO READ IT I FAILED, JUST USE THE THING.
+
+On the other hand, if anything about Nikola is not as obvious as it should be, by all
+means tell me about it :-)
+
 What's Nikola and what can you do with it?
 ------------------------------------------
 
