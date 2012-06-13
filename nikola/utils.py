@@ -195,7 +195,7 @@ def generic_rss_renderer(lang, title, link, description,
         description=description,
         lastBuildDate=datetime.datetime.now(),
         items=items,
-        generator='nikola 1.0',
+        generator='nikola',
     )
     dst_dir = os.path.dirname(output_path)
     if not os.path.isdir(dst_dir):
