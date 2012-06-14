@@ -14,7 +14,6 @@ import sys
 import tempfile
 import urllib2
 import urlparse
-from unidecode import unidecode
 
 from doit.tools import PythonInteractiveAction, run_once
 
@@ -986,7 +985,16 @@ class Nikola(object):
         print "Creating New Post"
         print "-----------------\n"
         title = raw_input("Enter title: ").decode(sys.stdin.encoding)
-        slug = utils.slugify(unidecode(title))
+        slug = utils.slugify(title)
+
+        if not slug:
+            try:
+                from unidecode import unidecode
+            except:
+                print "Please run 'pip install unidecode' for unicode issues"
+                exit()
+            slug = utils.slugify(unidecode(title))
+
         data = u'\n'.join([
             title,
             slug,

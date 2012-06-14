@@ -11,8 +11,7 @@ import sys
 from fnmatch import fnmatchcase
 from distutils.util import convert_path
 
-# Dependencies. If you don't need the "jinja2", you can remove it.
-dependencies = ['doit>=0.16', 'jinja2', 'pygments', 'pillow', 'docutils', 'mako>=0.6', 'unidecode']
+dependencies = ['doit>=0.16', 'pygments', 'pillow', 'docutils', 'mako>=0.6']
 
 # Provided as an attribute, so you can append to these instead
 # of replicating them:
