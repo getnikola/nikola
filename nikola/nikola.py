@@ -1002,9 +1002,14 @@ class Nikola(object):
             ])
         output_path = os.path.dirname(path)
         meta_path = os.path.join(output_path, slug + ".meta")
+        txt_path = os.path.join(output_path, slug + ".txt")
+
+        if os.path.isfile(meta_path) or os.path.isfile(txt_path):
+            print "The title already exists!"
+            exit()
+
         with codecs.open(meta_path, "wb+", "utf8") as fd:
             fd.write(data)
-        txt_path = os.path.join(output_path, slug + ".txt")
         with codecs.open(txt_path, "wb+", "utf8") as fd:
             fd.write(u"Write your post here.")
         print "Your post's metadata is at: ", meta_path
