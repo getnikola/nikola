@@ -3,3 +3,5 @@
 *.html
 tmp/
 output/
+build/
+*.egg-info/

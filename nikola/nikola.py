@@ -986,6 +986,15 @@ class Nikola(object):
         print "-----------------\n"
         title = raw_input("Enter title: ").decode(sys.stdin.encoding)
         slug = utils.slugify(title)
+
+        if not slug:
+            try:
+                from unidecode import unidecode
+            except:
+                print "Please run 'pip install unidecode' for unicode issues"
+                exit()
+            slug = utils.slugify(unidecode(title))
+
         data = u'\n'.join([
             title,
             slug,
