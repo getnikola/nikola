@@ -551,7 +551,9 @@ Disqus is a good option because:
 
 .. admonition:: Important
 
-   You will want to edit post.tmpl and delete the line that says disqus_developer.
+   In some cases, when you run the test site, you won't see the comments.
+   That can be fixed by adding the disqus_developer flag to the templates
+   but it's probably more trouble than it's worth.
 
 
 Image Galleries
