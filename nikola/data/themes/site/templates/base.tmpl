@@ -74,6 +74,7 @@
     <hr>
     <small>${content_footer}</small><p>
     </div>
+    %if add_this_buttons:
     <!-- addthis -->
     <div class="addthis_bar addthis_bar_vertical addthis_bar_small" style="top:50px;left:10px;">
         <div class="addthis_toolbox addthis_default_style">
@@ -86,5 +87,6 @@
     </div>
     <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
     <!-- End of addthis -->
+    %endif
 ${analytics}
 </body>

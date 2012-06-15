@@ -26,9 +26,11 @@
     {% endblock %}
 </head>
 <body>
+    {% if add_this_buttons %}
     <script type="text/javascript">
         var addthis_config = { 'ui_language': '{{lang}}' };
     </script>
+    {% endif %}
 <div class="container-fluid" id="container">
     <div class="row" id="titlerow">
     <div class="span12" id="titlecolumn">
@@ -65,6 +67,7 @@
             <ul class="unstyled">
             <li>{{license}}
             <!-- social buttons -->
+`           {% if add_this_buttons %}
             <li>
                 <div class="addthis_toolbox addthis_default_style" style="margin-bottom: 12px;">
                 <a class="addthis_button_preferred_1"></a>
@@ -75,6 +78,7 @@
                 <a class="addthis_counter addthis_bubble_style"></a>
                 </div>
                 <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
+            {% endif %}
             <!-- End of social buttons -->
             {% for url, text in sidebar_links[lang] %}
                 <li><a href="{{rel_link(permalink, url)}}">{{text}}</a>

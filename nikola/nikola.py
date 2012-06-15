@@ -177,6 +177,7 @@ class Nikola(object):
         self.config = {
             'OUTPUT_FOLDER': 'output',
             'FILES_FOLDERS': ('files', ),
+            'ADD_THIS_BUTTONS': True,
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
                 "markdown": ['.md', '.mdown', '.markdown']
@@ -188,20 +189,22 @@ class Nikola(object):
         self.get_compile_html = utils.CompileHtmlGetter(
             self.config.pop('post_compilers'))
 
-        self.GLOBAL_CONTEXT = config['GLOBAL_CONTEXT']
-        self.THEMES = utils.get_theme_chain(config['THEME'])
+        self.GLOBAL_CONTEXT = self.config['GLOBAL_CONTEXT']
+        self.THEMES = utils.get_theme_chain(self.config['THEME'])
 
         self.templates_module = utils.get_template_module(
-            config['TEMPLATE_ENGINE'], self.THEMES)
+            self.config['TEMPLATE_ENGINE'], self.THEMES)
         self.template_deps = self.templates_module.template_deps
 
         self.MESSAGES = utils.load_messages(self.THEMES,
-            config['TRANSLATIONS'])
+            self.config['TRANSLATIONS'])
         self.GLOBAL_CONTEXT['messages'] = self.MESSAGES
 
         self.GLOBAL_CONTEXT['_link'] = self.link
         self.GLOBAL_CONTEXT['rel_link'] = self.rel_link
         self.GLOBAL_CONTEXT['exists'] = self.file_exists
+        self.GLOBAL_CONTEXT['add_this_buttons'] = self.config[
+            'ADD_THIS_BUTTONS']
 
         self.DEPS_CONTEXT = {}
         for k, v in self.GLOBAL_CONTEXT.items():
