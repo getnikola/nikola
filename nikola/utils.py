@@ -4,6 +4,7 @@ from collections import defaultdict
 import datetime
 import os
 import re
+import shutil
 import sys
 from zipfile import ZipFile as zip
 
@@ -208,9 +209,7 @@ def copy_file(source, dest):
     dst_dir = os.path.dirname(dest)
     if not os.path.isdir(dst_dir):
         os.makedirs(dst_dir)
-    with open(source, "rb") as input:
-        with open(dest, "wb+") as output:
-            output.write(input.read())
+    shutil.copy2(source, dest)
 
 
 # slugify is copied from
