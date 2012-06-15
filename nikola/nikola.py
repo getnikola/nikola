@@ -200,6 +200,7 @@ class Nikola(object):
 
         self.GLOBAL_CONTEXT['_link'] = self.link
         self.GLOBAL_CONTEXT['rel_link'] = self.rel_link
+        self.GLOBAL_CONTEXT['exists'] = self.file_exists
 
         self.DEPS_CONTEXT = {}
         for k, v in self.GLOBAL_CONTEXT.items():
@@ -292,6 +293,14 @@ class Nikola(object):
             i += 1
         # Now i is the longest common prefix
         return '/'.join(['..'] * (len(src_elems) - i - 1) + dst_elems[i:])
+
+    def file_exists(self, path, not_empty=False):
+        """Returns True if the file exists. If not_empty is True,
+        it also has to be not empty."""
+        exists = os.path.exists(path)
+        if exists and not_empty:
+            exists = os.stat(path).st_size > 0
+        return exists
 
     def gen_tasks(self):
 
