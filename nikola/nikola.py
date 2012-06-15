@@ -176,7 +176,7 @@ class Nikola(object):
         # TODO: fill it
         self.config = {
             'OUTPUT_FOLDER': 'output',
-            'FILES_FOLDERS': 'files',
+            'FILES_FOLDERS': ('files', ),
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
                 "markdown": ['.md', '.mdown', '.markdown']
@@ -357,7 +357,7 @@ class Nikola(object):
             output_folder=self.config['OUTPUT_FOLDER'])
         yield self.gen_task_copy_files(
             output_folder=self.config['OUTPUT_FOLDER'],
-            files_folder=self.config['FILES_FOLDERS'])
+            files_folders=self.config['FILES_FOLDERS'])
         yield {
             'name': 'all',
             'actions': None,
@@ -947,9 +947,9 @@ class Nikola(object):
         files_folders
         """
 
-        for src in self.config['FILES_FOLDERS']:
+        flag = False
+        for src in kw['files_folders']:
             dst = kw['output_folder']
-            flag = False
 
             for task in utils.copy_tree(src, os.path.join(dst, src)):
                 flag = True
@@ -957,11 +957,11 @@ class Nikola(object):
                 task['uptodate'] = task.get('uptodate', []) +\
                     [config_changed(kw)]
                 yield task
-            if not flag:
-                yield {
-                    'basename': 'copy_files',
-                    'actions': (),
-                }
+        if not flag:
+            yield {
+                'basename': 'copy_files',
+                'actions': (),
+            }
 
     @staticmethod
     def gen_task_copy_assets(**kw):

@@ -30,6 +30,10 @@ post_pages = (
     ("stories/*.txt", "stories", "story.tmpl", False),
 )
 
+# One or more folders containing files to be copied as-is into the output.
+# Default is:
+# FILES_FOLDERS = ('files', )
+
 # A mapping of languages to file-extensions that represent that language.
 # Feel free to add or delete extensions to any list, but don't add any new
 # compilers unless you write the interface for it yourself.
