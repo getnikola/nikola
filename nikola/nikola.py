@@ -1186,6 +1186,13 @@ class Nikola(object):
                 return True
             else:
                 if name in data:
+                    if os.path.isfile("themes"):
+                        raise IOError, "the 'themes' isn't a directory!"
+                    elif not os.path.isdir("themes"):
+                        try:
+                            os.makedirs("themes")
+                        except:
+                            raise OSError, "mkdir 'theme' error!"
                     print 'Downloading: %s' % data[name]
                     zip_file = StringIO()
                     zip_file.write(urllib2.urlopen(data[name]).read())

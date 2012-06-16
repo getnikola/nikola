@@ -249,7 +249,11 @@ def extract_all(zipfile):
             raise UnsafeZipException('The zip file contains ".." and is not safe to expand.')
     for f in namelist:
         if f.endswith('/'):
-            os.makedirs(f)
+            if not os.path.isdir(f):
+                try:
+                    os.makedirs(f)
+                except:
+                    raise OSError, "mkdir '%s' error!" % f
         else:
             z.extract(f)
     os.chdir(pwd)
