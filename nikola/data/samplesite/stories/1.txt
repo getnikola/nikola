@@ -1,4 +1,4 @@
 Hope you enjoy this software!
 
-* Home page at http://nikola-generator.googlecode.com
+* Home page at http://nikola.ralsina.com.ar
 * Author's blog (and reason why Nikola exists): http://lateral.netmanagers.com.ar
