@@ -196,12 +196,12 @@
             'en': (
                 ('/archive.html', 'Archives'),
                 ('/categories/index.html', 'Tags'),
-                ('http://nikola-generator.googlecode.com', 'Powered by Nikola!'),
+                ('http://nikola.ralsina.com.ar', 'Powered by Nikola!'),
                 ),
             'es': (
                 ('/archive.html', 'Archivos'),
                 ('/categories/index.html', 'Tags'),
-                ('http://nikola-generator.googlecode.com', 'Powered by Nikola!'),
+                ('http://nikola.ralsina.com.ar', 'Powered by Nikola!'),
                 )
             }
         }

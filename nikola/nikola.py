@@ -954,7 +954,7 @@ class Nikola(object):
         for src in kw['files_folders']:
             dst = kw['output_folder']
 
-            for task in utils.copy_tree(src, os.path.join(dst, src)):
+            for task in utils.copy_tree(src, dst):
                 flag = True
                 task['basename'] = 'copy_files'
                 task['uptodate'] = task.get('uptodate', []) +\

@@ -445,7 +445,7 @@ Basics
 
         # Data about this site
         BLOG_TITLE = "Demo Site"
-        BLOG_URL = "http://nikola-generator.googlecode.com"
+        BLOG_URL = "http://nikola.ralsina.com.ar"
         BLOG_EMAIL = "joe@demo.site"
         BLOG_DESCRIPTION = "This is a demo site for Nikola."
 
