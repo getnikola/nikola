@@ -912,9 +912,10 @@ class InputDirectory:
     root_file = "index.html"
 
     def DecideFilename(name):
-      for remove in ( "assets", ):
-        if name == remove or name.startswith( remove + os.path.sep ):
-          return False
+      assert "/" not in name
+
+      if name in ( "robots.txt, " ):
+        return False
 
       if ".thumbnail." in name:
         return False
