@@ -113,8 +113,9 @@ THUMBNAIL_SIZE = 180
 ##############################################################################
 
 # Data about this site
+BLOG_AUTHOR = "Your Name"
 BLOG_TITLE = "Demo Site"
-BLOG_URL = "http://nikola-generator.googlecode.com"
+BLOG_URL = "http://nikola.ralsina.com.ar"
 BLOG_EMAIL = "joe@demo.site"
 BLOG_DESCRIPTION = "This is a demo site for Nikola."
 
@@ -184,8 +185,10 @@ ANALYTICS = """
 # It can be anything, data, functions, modules, etc.
 GLOBAL_CONTEXT = {
     'analytics': ANALYTICS,
+    'blog_author': BLOG_AUTHOR,
     'blog_title': BLOG_TITLE,
     'blog_url': BLOG_URL,
+    'blog_desc': BLOG_DESCRIPTION,
     'translations': TRANSLATIONS,
     'license': LICENSE,
     'search_form': SEARCH_FORM,
