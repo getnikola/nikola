@@ -8,6 +8,8 @@ import shutil
 import sys
 from zipfile import ZipFile as zip
 
+from unidecode import unidecode
+
 import PyRSS2Gen as rss
 
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
@@ -218,7 +220,6 @@ def copy_file(source, dest):
 _slugify_strip_re = re.compile(r'[^\w\s-]')
 _slugify_hyphenate_re = re.compile(r'[-\s]+')
 
-
 def slugify(value):
     """
     Normalizes string, converts to lowercase, removes non-alpha characters,
@@ -227,9 +228,7 @@ def slugify(value):
     From Django's "django/template/defaultfilters.py".
     """
     import unicodedata
-    if not isinstance(value, unicode):
-        value = unicode(value)
-    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
+    value = unidecode(value)
     value = unicode(_slugify_strip_re.sub('', value).strip().lower())
     return _slugify_hyphenate_re.sub('-', value)
 

@@ -11,7 +11,7 @@ import sys
 from fnmatch import fnmatchcase
 from distutils.util import convert_path
 
-dependencies = ['doit>=0.16', 'pygments', 'pillow', 'docutils', 'mako>=0.6']
+dependencies = ['doit>=0.16', 'pygments', 'pillow', 'docutils', 'mako>=0.6', 'unidecode']
 
 # Provided as an attribute, so you can append to these instead
 # of replicating them:
