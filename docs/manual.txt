@@ -300,7 +300,7 @@ Creating a Blog Post
 
 A post consists of two files, a metadata file (``post-title.meta``) and a
 file containing the contents written in  `restructured text <http://docutils.sf.net>`_
-(``post-title.txt``) or markdown (see the ``INPUT_FORMAT`` option in dodo.py).
+(``post-title.txt``) or markdown (see the ``INPUT_FORMAT`` option in conf.py).
 The default configuration expects them to be placed in ``posts`` but that can be
 changed (see below, the post_pages option)
 
@@ -395,7 +395,7 @@ Redirections
 ------------
 
 If you need a page to be available in more than one place, you can define redirections
-in your ``dodo.py``::
+in your ``conf.py``::
 
     # A list of redirection tuples, [("foo/from.html", "/bar/to.html")].
     #
@@ -413,11 +413,11 @@ you can't, this will work.
 Configuration
 -------------
 
-The configuration file is called ``dodo.py`` and can be used to customize a lot of
+The configuration file is called ``conf.py`` and can be used to customize a lot of
 what Nikola does. Its syntax is python, but if you don't know the languaje, it
 still should not be terribly hard to grasp.
 
-The default ``dodo.py`` you get with Nikola should be fairly complete, and is quite
+The default ``conf.py`` you get with Nikola should be fairly complete, and is quite
 commented, but just in case, here is a full,
 `customized example configuration <sampleconfig.html>`_ (the one I use for
 `my site <http://lateral.netmanagers.com.ar>`_)
@@ -569,7 +569,7 @@ The gallery pages are generated using the ``gallery.tmpl`` template, and you can
 customize it there (you could switch to another lightbox instead of colorbox, change
 its settings, change the layout, etc.).
 
-The ``dodo.py`` options affecting gallery pages are these::
+The ``conf.py`` options affecting gallery pages are these::
 
     # Galleries are folders in galleries/
     # Final location of galleries will be output / GALLERY_PATH / gallery_name
