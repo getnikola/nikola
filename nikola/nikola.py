@@ -65,6 +65,8 @@ class Post(object):
         `compile_html` is a function that knows how to compile this Post to
         html.
         """
+        self.prev_post = None
+        self.next_post = None
         self.use_in_feeds = use_in_feeds
         self.blog_url = blog_url
         self.source_path = source_path  # posts/blah.txt
@@ -403,6 +405,10 @@ class Nikola(object):
                 self.timeline.append(post)
             self.timeline.sort(cmp=lambda a, b: cmp(a.date, b.date))
             self.timeline.reverse()
+            for i, p in enumerate(self.timeline[1:]):
+                p.next_post = self.timeline[i]
+            for i, p in enumerate(self.timeline[:-1]):
+                p.prev_post = self.timeline[i+1]
             self._scanned = True
             print "done!"
 
