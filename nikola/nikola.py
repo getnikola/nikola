@@ -281,6 +281,9 @@ class Nikola(object):
         # Normalize
         src = urlparse.urljoin(self.config['BLOG_URL'], src)
         dst = urlparse.urljoin(src, dst)
+        # Avoid empty links.
+        if src == dst:
+            return "#"
         # Check that link can be made relative, otherwise return dest
         parsed_src = urlparse.urlsplit(src)
         parsed_dst = urlparse.urlsplit(dst)
