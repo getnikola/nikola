@@ -131,6 +131,8 @@ post.tmpl
       * ``post.permalink(language, absolute)``: Link to the post in that language.
         If ``absolute`` is ``True`` the link contains the full URL. This is useful
         for things like Disqus comment forms.
+      * ``post.next_post`` is None or a Post object that is next newest in the timeline.
+      * ``post.prev_post`` is None or a Post object that is next oldest in the timeline.
 
 story.tmpl
     Used for pages that are not part of a blog, usually a cleaner, less
