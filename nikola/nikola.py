@@ -178,7 +178,7 @@ class Nikola(object):
         # TODO: fill it
         self.config = {
             'OUTPUT_FOLDER': 'output',
-            'FILES_FOLDERS': ('files', ),
+            'FILES_FOLDERS': {'files': ''},
             'ADD_THIS_BUTTONS': True,
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
@@ -964,7 +964,8 @@ class Nikola(object):
         for src in kw['files_folders']:
             dst = kw['output_folder']
 
-            for task in utils.copy_tree(src, dst):
+            for task in utils.copy_tree(src, os.path.join(
+                dst, kw['files_folders'][src])):
                 flag = True
                 task['basename'] = 'copy_files'
                 task['uptodate'] = task.get('uptodate', []) +\

@@ -435,6 +435,16 @@ with files Nikola generates (it will give an error).
    Don't put any files manually in ``output/``. Ever. Really. Maybe someday Nikola
    will just wipe ``output/`` and then you will be sorry. So, please don't do that.
 
+If you want to copy more than one folder of static files into ``output`` you can
+change the FILES_FOLDERS option::
+
+    # One or more folders containing files to be copied as-is into the output.
+    # The format is a dictionary of "source" "relative destination".
+    # Default is:
+    # FILES_FOLDERS = {'files': '' }
+    # Which means copy 'files' into 'output'
+
+
 Customizing Your Site
 ---------------------
 

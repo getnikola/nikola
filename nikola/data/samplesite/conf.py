@@ -31,8 +31,10 @@ post_pages = (
 )
 
 # One or more folders containing files to be copied as-is into the output.
+# The format is a dictionary of "source" "relative destination".
 # Default is:
-# FILES_FOLDERS = ('files', )
+# FILES_FOLDERS = {'files': '' }
+# Which means copy 'files' into 'output'
 
 # A mapping of languages to file-extensions that represent that language.
 # Feel free to add or delete extensions to any list, but don't add any new
