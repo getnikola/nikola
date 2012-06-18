@@ -10,6 +10,8 @@ MESSAGES = [
     u"Read in english",
     u"&larr; Newer posts",
     u"Older posts &rarr;",
+    u"&larr; Previous post",
+    u"Next post &rarr;",
 ]
 
 # In english things are not translated
