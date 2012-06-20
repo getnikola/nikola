@@ -138,6 +138,10 @@ class Post(object):
             data = post_file.read()
         return data
 
+    def text_abs_linked(self, lang):
+        import lxml.html
+        return lxml.html.make_links_absolute(self.text(lang),self.permalink())
+
     def destination_path(self, lang, extension='.html'):
         path = os.path.join(self.translations[lang],
             self.folder, self.pagenames[lang] + extension)
