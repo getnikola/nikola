@@ -204,6 +204,7 @@ class Nikola(object):
 
         self.GLOBAL_CONTEXT['_link'] = self.link
         self.GLOBAL_CONTEXT['rel_link'] = self.rel_link
+        self.GLOBAL_CONTEXT['abs_link'] = self.abs_link
         self.GLOBAL_CONTEXT['exists'] = self.file_exists
         self.GLOBAL_CONTEXT['add_this_buttons'] = self.config[
             'ADD_THIS_BUTTONS']
@@ -278,6 +279,12 @@ class Nikola(object):
 
     def link(self, *args):
         return self.path(*args, is_link=True)
+
+    def abs_link(self,dst):
+        # Normalize
+        dst = urlparse.urljoin(self.config['BLOG_URL'], dst)
+
+        return urlparse.urlparse(dst).path
 
     def rel_link(self, src, dst):
         # Normalize
