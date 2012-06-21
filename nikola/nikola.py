@@ -76,12 +76,21 @@ class Post(object):
         self.folder = destination
         self.translations = translations
         self.default_lang = default_lang
-        with codecs.open(self.metadata_path, "r", "utf8") as meta_file:
-            meta_data = meta_file.readlines()
-        while len(meta_data) < 5:
-            meta_data.append("")
-        default_title, default_pagename, self.date, self.tags, self.link = \
-            [x.strip() for x in meta_data][:5]
+        if os.path.isfile(self.metadata_path):
+            with codecs.open(self.metadata_path, "r", "utf8") as meta_file:
+                meta_data = meta_file.readlines()
+            while len(meta_data) < 5:
+                meta_data.append("")
+            default_title, default_pagename, self.date, self.tags, self.link = \
+                [x.strip() for x in meta_data][:5]
+        else:
+            from utils import get_meta
+            default_title, default_pagename, self.date, self.tags, self.link = \
+                get_meta(self.source_path)
+
+        if not default_title or not default_pagename or not self.date:
+            raise OSError, "You must set a title and slug and date!"
+            
         self.date = datetime.datetime.strptime(self.date, '%Y/%m/%d %H:%M')
         self.tags = [x.strip() for x in self.tags.split(',')]
         self.tags = filter(None, self.tags)
@@ -96,13 +105,20 @@ class Post(object):
                 self.pagenames[lang] = default_pagename
             else:
                 metadata_path = self.metadata_path + "." + lang
+                source_path = self.source_path + "." + lang
                 try:
-                    with codecs.open(metadata_path, "r", "utf8") as meta_file:
-                        meta_data = [x.strip() for x in meta_file.readlines()]
-                        while len(meta_data) < 2:
-                            meta_data.append("")
-                        self.titles[lang] = meta_data[0] or default_title
-                        self.pagenames[lang] = meta_data[1] or default_pagename
+                    if os.path.isfile(metadata_path):
+                        with codecs.open(metadata_path, "r", "utf8") as meta_file:
+                            meta_data = [x.strip() for x in meta_file.readlines()]
+                            while len(meta_data) < 2:
+                                meta_data.append("")
+                            self.titles[lang] = meta_data[0] or default_title
+                            self.pagenames[lang] = meta_data[1] or default_pagename
+                    else:
+                        from utils import get_meta
+                        ttitle, ppagename, tmp1, tmp2, tmp3 = get_meta(source_path)
+                        self.titles[lang] = ttitle or default_title
+                        self.pagenames[lang] = ppagename or default_pagename
                 except:
                     self.titles[lang] = default_title
                     self.pagenames[lang] = default_pagename
@@ -121,7 +137,8 @@ class Post(object):
 
     def fragment_deps(self, lang):
         """Return a list of dependencies to build this post's fragment."""
-        deps = [self.source_path, self.metadata_path]
+        #deps = [self.source_path, self.metadata_path]
+        deps = [self.source_path]
         if lang != self.default_lang:
             lang_deps = filter(os.path.exists, [x + "." + lang for x in deps])
             deps += lang_deps
