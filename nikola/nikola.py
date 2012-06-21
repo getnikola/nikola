@@ -137,8 +137,9 @@ class Post(object):
 
     def fragment_deps(self, lang):
         """Return a list of dependencies to build this post's fragment."""
-        #deps = [self.source_path, self.metadata_path]
         deps = [self.source_path]
+        if os.path.isfile(self.metadata_path):
+            deps.append(self.metadata_path)
         if lang != self.default_lang:
             lang_deps = filter(os.path.exists, [x + "." + lang for x in deps])
             deps += lang_deps
