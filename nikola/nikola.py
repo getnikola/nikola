@@ -409,9 +409,11 @@ class Nikola(object):
                         self.config['BLOG_URL'],
                         self.get_compile_html(base_path))
                     self.global_data[post.post_name] = post
-                    self.posts_per_year[str(post.date.year)].append(post.post_name)
-                    for tag in post.tags:
-                        self.posts_per_tag[tag].append(post.post_name)
+
+                    if post.use_in_feeds:
+                        self.posts_per_year[str(post.date.year)].append(post.post_name)
+                        for tag in post.tags:
+                            self.posts_per_tag[tag].append(post.post_name)
             for name, post in self.global_data.items():
                 self.timeline.append(post)
             self.timeline.sort(cmp=lambda a, b: cmp(a.date, b.date))
