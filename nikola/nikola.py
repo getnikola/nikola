@@ -445,6 +445,10 @@ class Nikola(object):
                 post.pagenames[lang] + ".html")
             deps_dict = copy(context)
             deps_dict.pop('post')
+            if post.prev_post:
+                deps_dict['PREV_LINK'] = [post.prev_post.permalink(lang)]
+            if post.next_post:
+                deps_dict['NEXT_LINK'] = [post.next_post.permalink(lang)]
             deps_dict['OUTPUT_FOLDER']=self.config['OUTPUT_FOLDER']
             deps_dict['TRANSLATIONS']=self.config['TRANSLATIONS']
             yield {
