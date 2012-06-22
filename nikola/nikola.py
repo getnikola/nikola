@@ -880,9 +880,19 @@ class Nikola(object):
                     'basename': 'render_galleries',
                     'name': thumb_path,
                     'file_dep': [img],
-                    'targets': [thumb_path, orig_dest_path],
+                    'targets': [thumb_path],
                     'actions': [
-                        (create_thumb, (img, thumb_path)),
+                        (create_thumb, (img, thumb_path))
+                    ],
+                    'clean': True,
+                    'uptodate': [config_changed(kw)],
+                }
+                yield {
+                    'basename': 'render_galleries',
+                    'name': orig_dest_path,
+                    'file_dep': [img],
+                    'targets': [orig_dest_path],
+                    'actions': [
                         (utils.copy_file, (img, orig_dest_path))
                     ],
                     'clean': True,
