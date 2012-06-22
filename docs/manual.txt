@@ -266,7 +266,7 @@ Nikola is a series of doit *tasks*, and you can see them by doing ``doit list``:
     serve              Start test server. (Usage: doit serve [--address 127.0.0.1] [--port 8000])
     sitemap            Generate Google sitemap.
 
-You can make Nikola redo everythig by calling ``doit clean``, you can make it do just a specific
+You can make Nikola redo everything by calling ``doit clean``, you can make it do just a specific
 part of the site using task names, for example ``doit render_pages``, and even individual files like
 ``doit render_indexes:output/index.html``
 
