@@ -73,7 +73,7 @@ def load_messages(themes, translations):
     return messages
 
 
-def copy_tree(src, dst):
+def copy_tree(src, dst, link_cutoff=None):
     """Copy a src tree to the dst folder.
 
     Example:
@@ -83,6 +83,10 @@ def copy_tree(src, dst):
 
     should copy "themes/defauts/assets/foo/bar" to
     "output/assets/foo/bar"
+
+    if link_cutoff is set, then the links pointing at things
+    *inside* that folder will stay as links, and links
+    pointing *outside* that folder will be copied.
     """
     ignore = set(['.svn'])
     base_len = len(src.split(os.sep))
@@ -100,7 +104,7 @@ def copy_tree(src, dst):
                 'name': dst_file,
                 'file_dep': [src_file],
                 'targets': [dst_file],
-                'actions': [(copy_file, (src_file, dst_file))],
+                'actions': [(copy_file, (src_file, dst_file, link_cutoff))],
                 'clean': True,
             }
 
@@ -207,11 +211,23 @@ def generic_rss_renderer(lang, title, link, description,
         rss_obj.write_xml(rss_file)
 
 
-def copy_file(source, dest):
+def copy_file(source, dest, cutoff=None):
     dst_dir = os.path.dirname(dest)
     if not os.path.isdir(dst_dir):
         os.makedirs(dst_dir)
-    shutil.copy2(source, dest)
+    if os.path.islink(source):
+        link_target = os.path.relpath(
+            os.path.normpath(os.path.join(dst_dir,os.readlink(source))))
+        # Now we have to decide if we copy the link target or the
+        # link itself.
+        if cutoff is None or not link_target.startswith(cutoff):
+            # We copy
+            shutil.copy2(source, dest)
+        else:
+            # We link
+            os.symlink(os.readlink(source), dest)
+    else:
+        shutil.copy2(source, dest)
 
 
 # slugify is copied from
