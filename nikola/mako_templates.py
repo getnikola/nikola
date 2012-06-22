@@ -50,5 +50,5 @@ def template_deps(template_name):
         deps = [template.filename]
         for fname in dep_filenames:
             deps += template_deps(fname)
-        cache[template_name] = deps
-    return cache[template_name]
+        cache[template_name] = tuple(deps)
+    return list(cache[template_name])

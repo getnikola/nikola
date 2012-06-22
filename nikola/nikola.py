@@ -609,6 +609,8 @@ class Nikola(object):
         context["prevlink"] = None
         context["nextlink"] = None
         context.update(extra_context)
+        deps_context = copy(context)
+        deps_context["posts"] = [(p.titles[lang], p.permalink(lang)) for p in posts]
         return {
             'name': output_name.encode('utf8'),
             'targets': [output_name],
@@ -616,7 +618,7 @@ class Nikola(object):
             'actions': [(self.render_template,
                 [template_name, output_name, context])],
             'clean': True,
-            'uptodate': [config_changed(context)]
+            'uptodate': [config_changed(deps_context)]
         }
 
     def gen_task_render_archive(self, **kw):
