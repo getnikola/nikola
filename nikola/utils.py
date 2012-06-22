@@ -4,6 +4,7 @@ from collections import defaultdict
 import datetime
 import os
 import re
+import codecs
 import shutil
 import sys
 from zipfile import ZipFile as zip
@@ -29,6 +30,49 @@ def get_theme_path(theme):
     if os.path.isdir(dir_name):
         return dir_name
     raise Exception(u"Can't find theme '%s'" % theme)
+
+def re_meta(line,match):
+    """ re.compile for meta"""
+    reStr = re.compile('^%s(.*)' %  re.escape(match))
+    result = reStr.findall(line)
+    if result:
+        return result[0].strip()
+    else:
+        return ''
+
+def get_meta(source_path):
+    """get post's meta from source"""
+    with codecs.open(source_path, "r", "utf8") as meta_file:
+        meta_data = meta_file.readlines(15)
+    title = slug = date = tags = link = ''
+
+    re_md_title = re.compile(r'^%s([^%s].*)' % (re.escape('#'),re.escape('#')))
+    import string
+    re_rst_title = re.compile(r'^([^%s ].*)' % re.escape(string.punctuation))
+
+    for meta in meta_data:
+        if not title:
+            title = re_meta(meta,'.. title:')
+        if not title:
+            if re_rst_title.findall(meta):
+                title = re_rst_title.findall(meta)[0]
+        if not title:
+            if re_md_title.findall(meta):
+                title = re_md_title.findall(meta)[0]
+        if not slug:
+            slug = re_meta(meta,'.. slug:')
+        if not date:
+            date = re_meta(meta,'.. date:')
+        if not tags:
+            tags = re_meta(meta,'.. tags:')
+        if not link:
+            link = re_meta(meta,'.. link:')
+
+    #if not date:
+        #from datetime import datetime
+        #date = datetime.fromtimestamp(os.path.getmtime(source_path)).strftime('%Y/%m/%d %H:%M')
+
+    return (title,slug,date,tags,link)
 
 
 def get_theme_chain(theme):
