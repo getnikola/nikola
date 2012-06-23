@@ -695,6 +695,12 @@ class Nikola(object):
         output_folder
         """
         template_name = "list.tmpl"
+        if not self.posts_per_tag:
+            yield {
+                    'basename': 'render_tags',
+                    'actions': [],
+                }
+            return
         for tag, posts in self.posts_per_tag.items():
             for lang in kw["translations"]:
                 # Render HTML
