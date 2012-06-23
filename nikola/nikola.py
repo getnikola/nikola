@@ -272,7 +272,7 @@ class Nikola(object):
                 self.config['ARCHIVE_PATH'], name, 'index.html'])
             else:
                 path = filter(None, [self.config['TRANSLATIONS'][lang],
-                self.config['ARCHIVE_PATH'], 'archive.html'])
+                self.config['ARCHIVE_PATH'], 'index.html'])
         elif kind == "gallery":
             path = filter(None,
                 [self.config['GALLERY_PATH'], name, 'index.html'])
