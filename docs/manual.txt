@@ -375,6 +375,23 @@ configuration option::
 It will use the first location that has the last parameter set to True, or the last
 one in the list if all of them have it set to False.
 
+Alternatively, you can not have a meta file and embed the metadata in the post itself.
+
+In restructured text::
+
+    .. tags: test,demo
+    .. slug: demo-test
+    .. date: 2012/04/09 13:59
+    .. link: http://foo.bar/baz
+
+In Markdown:
+    <!--
+    .. tags: test,demo
+    .. slug: demo-test
+    .. date: 2012/04/09 13:59
+    .. link: http://foo.bar/baz
+    -->
+
 Creating a Page
 ---------------
 
