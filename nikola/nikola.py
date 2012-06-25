@@ -154,7 +154,41 @@ class Post(object):
                 file_name = file_name_lang
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read()
-        return data
+
+        src = self.permalink()
+        parsed_src = urlparse.urlsplit(src)
+
+        def replacer(dst):
+            # Normalize
+            dst = urlparse.urljoin(src, dst)
+            # Avoid empty links.
+            if src == dst:
+                return "#"
+            # Check that link can be made relative, otherwise return dest
+            parsed_dst = urlparse.urlsplit(dst)
+            if parsed_src[:2] != parsed_dst[:2]:
+                return dst
+            # Now both paths are on the same site and absolute
+            src_elems = parsed_src.path.split('/')[1:]
+            dst_elems = parsed_dst.path.split('/')[1:]
+
+            i = 0
+            for (i, s), d in zip(enumerate(src_elems), dst_elems):
+                if s != d:
+                    break
+            else:
+                i += 1
+            # Now i is the longest common prefix
+            result = '/'.join(['..'] * (len(src_elems) - i - 1) + dst_elems[i:])
+
+            # Don't forget the fragment (anchor) part of the link
+            if parsed_dst.fragment:
+                result += "#" + parsed_dst.fragment
+
+            return result
+
+        import lxml.html
+        return lxml.html.rewrite_links(data,replacer)
 
     def text_abs_linked(self, lang):
         import lxml.html
