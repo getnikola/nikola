@@ -8,10 +8,10 @@
              ${messages[lang]["Posted:"]} ${post.date}
         </small></h1>
         <hr>
-        ${post.text_abs_linked(lang)}
+        ${post.text(lang)}
         <p>
         %if disqus_forum:
-            <a href="${post.permalink(absolute=True)}#disqus_thread">Comments</a>
+            <a href="${post.permalink()}#disqus_thread">Comments</a>
         %endif
         </div>
     % endfor
