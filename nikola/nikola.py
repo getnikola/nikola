@@ -242,6 +242,7 @@ class Nikola(object):
             'OUTPUT_FOLDER': 'output',
             'FILES_FOLDERS': {'files': ''},
             'ADD_THIS_BUTTONS': True,
+            'INDEX_DISPLAY_POST_COUNT': 10,
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
                 "markdown": ['.md', '.mdown', '.markdown']
@@ -270,6 +271,8 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['exists'] = self.file_exists
         self.GLOBAL_CONTEXT['add_this_buttons'] = self.config[
             'ADD_THIS_BUTTONS']
+        self.GLOBAL_CONTEXT['index_display_post_count'] = self.config[
+            'INDEX_DISPLAY_POST_COUNT']
 
         self.DEPS_CONTEXT = {}
         for k, v in self.GLOBAL_CONTEXT.items():
@@ -407,7 +410,8 @@ class Nikola(object):
             )
         yield self.gen_task_render_indexes(
             translations=self.config['TRANSLATIONS'],
-            output_folder=self.config['OUTPUT_FOLDER'])
+            output_folder=self.config['OUTPUT_FOLDER'],
+            index_display_post_count=self.config['INDEX_DISPLAY_POST_COUNT'])
         yield self.gen_task_render_archive(
             translations=self.config['TRANSLATIONS'],
             messages=self.MESSAGES,
@@ -601,12 +605,14 @@ class Nikola(object):
                 }
 
     def gen_task_render_indexes(self, **kw):
-        """Render 10-post-per-page indexes.
+        """Render post-per-page indexes.
+        The default is 10.
 
         Required keyword arguments:
 
         translations
         output_folder
+        index_display_post_count
         """
         self.scan_posts()
         template_name = "index.tmpl"
@@ -615,8 +621,8 @@ class Nikola(object):
         # Split in smaller lists
         lists = []
         while posts:
-            lists.append(posts[:10])
-            posts = posts[10:]
+            lists.append(posts[:kw["index_display_post_count"]])
+            posts = posts[kw["index_display_post_count"]:]
         num_pages = len(lists)
         if not lists:
             yield {
