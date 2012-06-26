@@ -609,6 +609,27 @@ converted to HTML and inserted above the images in the gallery page.
 Here is a `demo gallery </galleries/demo>`_ of historic, public domain Nikola
 Tesla pictures taken from `this site <http://kerryr.net/pioneers/gallery/tesla.htm>`_.
 
+Optimizing Your Website
+-----------------------
+
+One of the main goals of Nikola is to make your site fast and light. So here are a few
+tips we have found when setting up Nikola with Apache. If you have more, or
+different ones, or about other webservers, please share!
+
+#. Use a speed testing tool. I used Yahoo's YSlow but you can use any of them, and
+   it's probably a good idea to use more than one.
+
+#. Enable compression in Apache::
+
+      AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+
+#. If even after you did the previous step the CSS files are not sent compressed::
+
+      AddType text/css .css
+
+In the future we will be adding HTML/CSS/JS minimization and image recompression but
+that's not there yet, so you may want to use 3rd party tools to achieve that.
+
 License
 -------
 
