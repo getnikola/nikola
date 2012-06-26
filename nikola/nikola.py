@@ -90,7 +90,7 @@ class Post(object):
 
         if not default_title or not default_pagename or not self.date:
             raise OSError, "You must set a title and slug and date!"
-            
+
         self.date = datetime.datetime.strptime(self.date, '%Y/%m/%d %H:%M')
         self.tags = [x.strip() for x in self.tags.split(',')]
         self.tags = filter(None, self.tags)
@@ -1232,11 +1232,15 @@ class Nikola(object):
 
         def serve(address, port):
             from BaseHTTPServer import HTTPServer
-            from SimpleHTTPServer import SimpleHTTPRequestHandler as handler
+            from SimpleHTTPServer import SimpleHTTPRequestHandler
+
+            class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
+                extensions_map=dict(SimpleHTTPRequestHandler.extensions_map)
+                extensions_map[""] = "text/plain"
 
             os.chdir(kw['output_folder'])
 
-            httpd = HTTPServer((address, port), handler)
+            httpd = HTTPServer((address, port), OurHTTPRequestHandler)
             sa = httpd.socket.getsockname()
             print "Serving HTTP on", sa[0], "port", sa[1], "..."
             httpd.serve_forever()
