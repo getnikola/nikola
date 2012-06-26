@@ -29,12 +29,12 @@
     <ul class="pager">
     %if post.prev_post:
         <li class="previous">
-            <a href="${rel_link(permalink, post.prev_post.permalink(lang))}">${messages[lang]["&larr; Previous post"]}</a>
+            <a href="${post.prev_post.permalink(lang)}">${messages[lang]["&larr; Previous post"]}</a>
         </li>
     %endif
     %if post.next_post:
         <li class="next">
-            <a href="${rel_link(permalink, post.next_post.permalink(lang))}">${messages[lang]["Next post &rarr;"]}</a>
+            <a href="${post.next_post.permalink(lang)}">${messages[lang]["Next post &rarr;"]}</a>
         </li>
     %endif
     </ul>
