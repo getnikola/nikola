@@ -155,47 +155,8 @@ class Post(object):
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read()
 
-        src = self.permalink()
-        parsed_src = urlparse.urlsplit(src)
-
-        def replacer(dst):
-            # Refuse to replace links that are full URLs.
-            dst_url=urlparse.urlparse(dst)
-            if dst_url.netloc:
-                return dst            # Normalize
-            dst = urlparse.urljoin(src, dst)
-            # Avoid empty links.
-            if src == dst:
-                return "#"
-            # Check that link can be made relative, otherwise return dest
-            parsed_dst = urlparse.urlsplit(dst)
-            if parsed_src[:2] != parsed_dst[:2]:
-                return dst
-            # Now both paths are on the same site and absolute
-            src_elems = parsed_src.path.split('/')[1:]
-            dst_elems = parsed_dst.path.split('/')[1:]
-
-            i = 0
-            for (i, s), d in zip(enumerate(src_elems), dst_elems):
-                if s != d:
-                    break
-            else:
-                i += 1
-            # Now i is the longest common prefix
-            result = '/'.join(['..'] * (len(src_elems) - i - 1) + dst_elems[i:])
-
-            # Don't forget the fragment (anchor) part of the link
-            if parsed_dst.fragment:
-                result += "#" + parsed_dst.fragment
-
-            return result
-
         import lxml.html
-        return lxml.html.rewrite_links(data,replacer)
-
-    def text_abs_linked(self, lang):
-        import lxml.html
-        return lxml.html.make_links_absolute(self.text(lang),self.permalink())
+        return lxml.html.make_links_absolute(data,self.permalink())
 
     def destination_path(self, lang, extension='.html'):
         path = os.path.join(self.translations[lang],
@@ -277,8 +238,59 @@ class Nikola(object):
                 self.DEPS_CONTEXT[k] = v
 
     def render_template(self, template_name, output_name, context):
-            self.templates_module.render_template(
-                template_name, output_name, context, self.GLOBAL_CONTEXT)
+        self.templates_module.render_template(
+            template_name, output_name, context, self.GLOBAL_CONTEXT)
+
+        with codecs.open(output_name, "r", "utf8") as post_file:
+            data = post_file.read()
+
+        assert output_name.startswith(self.config["OUTPUT_FOLDER"])
+        url_part = output_name[len(self.config["OUTPUT_FOLDER"])+1:]
+        src = urlparse.urljoin(self.config["BLOG_URL"],url_part)
+
+        parsed_src = urlparse.urlsplit(src)
+        src_elems = parsed_src.path.split('/')[1:]
+
+        def replacer(dst):
+            # Refuse to replace links that are full URLs.
+            dst_url=urlparse.urlparse(dst)
+            if dst_url.netloc:
+                return dst
+
+            # Normalize
+            dst = urlparse.urljoin(src, dst)
+            # Avoid empty links.
+            if src == dst:
+                return "#"
+            # Check that link can be made relative, otherwise return dest
+            parsed_dst = urlparse.urlsplit(dst)
+            if parsed_src[:2] != parsed_dst[:2]:
+                return dst
+
+            # Now both paths are on the same site and absolute
+            dst_elems = parsed_dst.path.split('/')[1:]
+
+            i = 0
+            for (i, s), d in zip(enumerate(src_elems), dst_elems):
+                if s != d:
+                    break
+            # Now i is the longest common prefix
+            result = '/'.join(['..'] * (len(src_elems) - i - 1) + dst_elems[i:])
+
+            if not result:
+                result = "."
+
+            # Don't forget the fragment (anchor) part of the link
+            if parsed_dst.fragment:
+                result += "#" + parsed_dst.fragment
+
+            assert result, (src, dst,i,src_elems,dst_elems)
+
+            return result
+
+        import lxml.html
+        with codecs.open(output_name, "w+", "utf8") as post_file:
+            post_file.write(lxml.html.rewrite_links(data,replacer))
 
     def path(self, kind, name, lang, is_link=False):
         """Build the path to a certain kind of page.
