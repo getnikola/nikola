@@ -213,6 +213,9 @@ class Post(object):
         link = "/".join(pieces)
         return link
 
+    def source_ext(self):
+        return os.path.splitext(self.source_path)[1]
+
 
 class Nikola(object):
 
@@ -546,7 +549,7 @@ class Nikola(object):
             # TODO: timeline is global
             for post in self.timeline:
                 output_name = os.path.join(kw['output_folder'],
-                    post.destination_path(lang, '.txt'))
+                    post.destination_path(lang, post.source_ext()))
                 source = post.source_path
                 if lang != kw["default_lang"]:
                     source_lang = source + '.' + lang
