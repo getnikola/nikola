@@ -159,7 +159,10 @@ class Post(object):
         parsed_src = urlparse.urlsplit(src)
 
         def replacer(dst):
-            # Normalize
+            # Refuse to replace links that are full URLs.
+            dst_url=urlparse.urlparse(dst)
+            if dst_url.netloc:
+                return dst            # Normalize
             dst = urlparse.urljoin(src, dst)
             # Avoid empty links.
             if src == dst:
