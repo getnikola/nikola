@@ -8,8 +8,6 @@ CODE = """\
 </iframe>
 """
 
-PARAM = """\n    <param name="%s" value="%s"></param>"""
-
 def youtube(name, args, options, content, lineno,
             contentOffset, blockText, state, stateMachine):
     """ Restructured text extension for inserting youtube embedded videos """
@@ -29,9 +27,6 @@ def youtube(name, args, options, content, lineno,
         string_vars['width'] = extra_args.pop('width')
     if 'height' in extra_args:
         string_vars['height'] = extra_args.pop('height')
-    if extra_args:
-        params = [PARAM % (key, extra_args[key]) for key in extra_args]
-        string_vars['extra'] = "".join(params)
     return [nodes.raw('', CODE % (string_vars), format='html')]
 youtube.content = True
 directives.register_directive('youtube', youtube)
