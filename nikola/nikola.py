@@ -83,6 +83,7 @@ class Post(object):
         default_title, default_pagename, self.date, self.tags, self.link = \
             [x.strip() for x in meta_data][:5]
         self.date = datetime.datetime.strptime(self.date, '%Y/%m/%d %I:%M:%S %p')
+        #self.date = datetime.datetime.strptime(self.date, '%Y/%m/%d %H:%M:%S')
         self.tags = [x.strip() for x in self.tags.split(',')]
         self.tags = filter(None, self.tags)
         self.compile_html = compile_html
@@ -1047,6 +1048,7 @@ class Nikola(object):
             title,
             slug,
             datetime.datetime.now().strftime('%Y/%m/%d %I:%M:%S %p')
+            #datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
             ])
         output_path = os.path.dirname(path)
         meta_path = os.path.join(output_path, slug + ".meta")
