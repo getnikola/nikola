@@ -14,6 +14,8 @@ from docutils.parsers.rst import directives
 from pygments_code_block_directive import code_block_directive
 directives.register_directive('code-block', code_block_directive)
 
+from youtube import youtube
+directives.register_directive('youtube',youtube)
 
 def compile_html(source, dest):
     with codecs.open(source, "r", "utf8") as in_file:
