@@ -16,6 +16,7 @@ import urllib2
 import urlparse
 
 from doit.tools import PythonInteractiveAction, run_once
+import lxml.html
 
 import nikola
 import utils
@@ -155,7 +156,6 @@ class Post(object):
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read()
 
-        import lxml.html
         return lxml.html.make_links_absolute(data,self.permalink())
 
     def destination_path(self, lang, extension='.html'):
@@ -241,11 +241,8 @@ class Nikola(object):
                 self.DEPS_CONTEXT[k] = v
 
     def render_template(self, template_name, output_name, context):
-        self.templates_module.render_template(
-            template_name, output_name, context, self.GLOBAL_CONTEXT)
-
-        with codecs.open(output_name, "r", "utf8") as post_file:
-            data = post_file.read()
+        data = self.templates_module.render_template(
+            template_name, None, context, self.GLOBAL_CONTEXT)
 
         assert output_name.startswith(self.config["OUTPUT_FOLDER"])
         url_part = output_name[len(self.config["OUTPUT_FOLDER"])+1:]
@@ -291,9 +288,15 @@ class Nikola(object):
 
             return result
 
-        import lxml.html
-        with codecs.open(output_name, "w+", "utf8") as post_file:
-            post_file.write(lxml.html.rewrite_links(data,replacer))
+        try:
+            os.makedirs(os.path.dirname(output_name))
+        except:
+            pass
+        doc = lxml.html.document_fromstring(data)
+        doc.rewrite_links(replacer)
+        with open(output_name, "w+") as post_file:
+            post_file.write(lxml.html.tostring(doc,
+                doctype='<!DOCTYPE html>', encoding='utf8'))
 
     def path(self, kind, name, lang, is_link=False):
         """Build the path to a certain kind of page.
