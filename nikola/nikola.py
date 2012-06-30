@@ -425,6 +425,7 @@ class Nikola(object):
             )
         yield self.gen_task_render_indexes(
             translations=self.config['TRANSLATIONS'],
+            messages=self.MESSAGES,
             output_folder=self.config['OUTPUT_FOLDER'],
             index_display_post_count=self.config['INDEX_DISPLAY_POST_COUNT'])
         yield self.gen_task_render_archive(
@@ -651,6 +652,7 @@ class Nikola(object):
                     output_name = "index.html"
                 else:
                     output_name = "index-%s.html" % i
+                    context["title"] = self.config['BLOG_TITLE'] + " (" + kw["messages"][lang]["old posts page %d" ] % i + ")"
                 context["prevlink"] = None
                 context["nextlink"] = None
                 if i > 1:

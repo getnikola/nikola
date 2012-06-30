@@ -12,6 +12,7 @@ MESSAGES = [
     u"Older posts &rarr;",
     u"&larr; Previous post",
     u"Next post &rarr;",
+    u"old posts page %d",
 ]
 
 # In english things are not translated
