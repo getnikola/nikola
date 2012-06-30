@@ -1122,6 +1122,8 @@ class Nikola(object):
         for path, _, _, use_in_rss in post_pages:
             if use_in_rss == is_post:
                 break
+        else:
+            path = post_pages[0][0]
 
         print "Creating New Post"
         print "-----------------\n"
@@ -1134,7 +1136,12 @@ class Nikola(object):
             ])
         output_path = os.path.dirname(path)
         meta_path = os.path.join(output_path, slug + ".meta")
-        txt_path = os.path.join(output_path, slug + ".txt")
+        pattern = os.path.basename(path)
+        if pattern.startswith( "*." ):
+            suffix = pattern[1:]
+        else:
+            suffix = ".txt"
+        txt_path = os.path.join(output_path, slug + suffix )
 
         if os.path.isfile(meta_path) or os.path.isfile(txt_path):
             print "The title already exists!"
