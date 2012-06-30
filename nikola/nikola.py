@@ -294,9 +294,9 @@ class Nikola(object):
             pass
         doc = lxml.html.document_fromstring(data)
         doc.rewrite_links(replacer)
+        data = '<!DOCTYPE html>' + lxml.html.tostring(doc, encoding='utf8')
         with open(output_name, "w+") as post_file:
-            post_file.write(lxml.html.tostring(doc,
-                doctype='<!DOCTYPE html>', encoding='utf8'))
+            post_file.write(data)
 
     def path(self, kind, name, lang, is_link=False):
         """Build the path to a certain kind of page.
