@@ -146,7 +146,7 @@ class Post(object):
             deps += lang_deps
         return deps
 
-    def text(self, lang):
+    def text(self, lang, teaser_only=False):
         """Read the post file for that language and return its contents"""
         file_name = self.base_path
         if lang != self.default_lang:
@@ -156,7 +156,17 @@ class Post(object):
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read()
 
-        return lxml.html.make_links_absolute(data,self.permalink())
+        data = lxml.html.make_links_absolute(data,self.permalink())
+        if teaser_only:
+            e = lxml.html.fromstring(data)
+            data=[]
+            for elem in e:
+                elem_string = lxml.html.tostring(elem)
+                if '<!-- TEASER_END -->' in elem_string:
+                    break
+                data.append(elem_string)
+            data = ''.join(data)
+        return data
 
     def destination_path(self, lang, extension='.html'):
         path = os.path.join(self.translations[lang],
