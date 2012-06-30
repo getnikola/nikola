@@ -11,7 +11,7 @@
         {% if translations|length > 1 %}
             {% for langname in translations.keys() %}
                 {% if langname != lang %}
-                    <a href="{{post.permalink(langname)}}">{{messages[langname]["Read in english"]}}</a>
+                    <a href="{{post.permalink(langname)}}">{{messages[langname]["Read in English"]}}</a>
                     &nbsp;&nbsp;|&nbsp;&nbsp;
                 {% endif %}
             {% endfor %}
