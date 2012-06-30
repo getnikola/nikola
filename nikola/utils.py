@@ -269,6 +269,8 @@ def copy_file(source, dest, cutoff=None):
             shutil.copy2(source, dest)
         else:
             # We link
+            if os.path.exists(dest) or os.path.islink(dest):
+                os.unlink(dest)
             os.symlink(os.readlink(source), dest)
     else:
         shutil.copy2(source, dest)
