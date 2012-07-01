@@ -72,7 +72,7 @@ class Post(object):
         self.blog_url = blog_url
         self.source_path = source_path  # posts/blah.txt
         self.post_name = os.path.splitext(source_path)[0]  # posts/blah
-        self.base_path = self.post_name + ".html"  # posts/blah.html
+        self.base_path = os.path.join('cache', self.post_name + ".html")  # cache/posts/blah.html
         self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
         self.folder = destination
         self.translations = translations

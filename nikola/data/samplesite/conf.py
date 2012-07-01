@@ -13,7 +13,7 @@
 #     whatever/thing.txt.es and whatever/thing.meta.es
 #
 # From those files, a set of HTML fragment files will be generated:
-# whatever/thing.html (and maybe whatever/thing.html.es)
+# cache/whatever/thing.html (and maybe cache/whatever/thing.html.es)
 #
 # These files are combinated with the template to produce rendered
 # pages, which will be placed at
