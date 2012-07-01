@@ -392,6 +392,23 @@ In Markdown:
     .. link: http://foo.bar/baz
     -->
 
+Teasers
+~~~~~~~
+
+If for any reason you want to provide feeds that only display the beginning of
+your post, you only need to add a "magical comment" in your post.
+
+In restructuredtext::
+
+   .. END_TEASER
+
+In Markdown::
+
+   <!-- END_TEASER -->
+
+Additionally, if you want also the "index" pages to show only the teasers, you can
+set the variable ``INDEX_TEASERS`` to ``True`` in ``conf.py``.
+
 Creating a Page
 ---------------
 
