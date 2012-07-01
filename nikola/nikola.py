@@ -206,7 +206,8 @@ class Nikola(object):
             'INDEX_DISPLAY_POST_COUNT': 10,
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
-                "markdown": ['.md', '.mdown', '.markdown']
+                "markdown": ['.md', '.mdown', '.markdown'],
+                "html": ['.html', '.htm'],
             }
 
         }

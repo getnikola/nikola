@@ -170,6 +170,9 @@ def get_compile_html(input_format):
     elif input_format == "markdown":
         import md
         compile_html = md.compile_html
+    elif input_format == "html":
+        import html
+        compile_html = copy_file
     return compile_html
 
 class CompileHtmlGetter(object):

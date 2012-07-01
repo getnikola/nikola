@@ -300,7 +300,19 @@ Creating a Blog Post
 
 A post consists of two files, a metadata file (``post-title.meta``) and a
 file containing the contents written in  `restructured text <http://docutils.sf.net>`_
-(``post-title.txt``) or markdown (see the ``INPUT_FORMAT`` option in conf.py).
+(``post-title.txt``), markdown or HTML. Which input type is used is guessed using
+the ``post_compilers`` option in ``conf.py`` but by default, the extensions
+supported are:
+
+.txt .rst
+    Restructured Text
+
+.md .markdown .mdown
+    Markdown
+
+.htm .html
+    HTML
+
 The default configuration expects them to be placed in ``posts`` but that can be
 changed (see below, the post_pages option)
 

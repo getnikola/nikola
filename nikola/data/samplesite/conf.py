@@ -42,10 +42,12 @@ post_pages = (
 #
 # 'rest' is reStructuredText
 # 'markdown' is MarkDown
-post_compilers = {
-    "rest": ('.txt', '.rst'),
-    "markdown": ('.md', '.mdown', '.markdown')
-    }
+# 'html' assumes the file is html and just copies it
+#post_compilers = {
+#    "rest": ('.txt', '.rst'),
+#    "markdown": ('.md', '.mdown', '.markdown')
+#    "html": ('.html', '.htm')
+#    }
 
 # What is the default language?
 
