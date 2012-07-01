@@ -479,6 +479,7 @@ class Nikola(object):
         """Scan all the posts."""
         if not self._scanned:
             print "Scanning posts ",
+            targets = set([])
             for wildcard, destination, _, use_in_feeds in self.config['post_pages']:
                 print ".",
                 for base_path in glob.glob(wildcard):
@@ -486,8 +487,13 @@ class Nikola(object):
                         self.config['TRANSLATIONS'], self.config['DEFAULT_LANG'],
                         self.config['BLOG_URL'],
                         self.get_compile_html(base_path))
+                    for lang, langpath in self.config['TRANSLATIONS'].items():
+                        dest = (destination, langpath, post.pagenames[lang])
+                        if dest in targets:
+                            raise Exception ('Duplicated output path %r in post %r' %
+                                (post.pagenames[lang], base_path))
+                        targets.add(dest)
                     self.global_data[post.post_name] = post
-
                     if post.use_in_feeds:
                         self.posts_per_year[str(post.date.year)].append(post.post_name)
                         for tag in post.tags:
