@@ -38,18 +38,26 @@ messages
     Nikola tries to be multilingual. This is where you put the strings for your theme
     so that it can be translated into other languages.
 
-And the file ``parent``, which is a text file that, on its first line, contains the
-name of the **parent theme**. any resources missing on this theme, will be looked up
-in the parent theme (and then in the grandparent, etc).
+And these optional files:
 
-The ``parent`` is so you don't have to create a full theme each time: just create an
-empty theme and add the bits you want modified.
+parent
+    A text file that, on its first line, contains the name of the **parent theme**. 
+    Any resources missing on this theme, will be looked up in the parent theme 
+    (and then in the grandparent, etc).
+
+    The ``parent`` is so you don't have to create a full theme each time: just create an
+    empty theme, set the parent, and add the bits you want modified.
+
+engine
+    A text file which, on the first line, contains the name of the template engine
+    this theme needs. Currently supported values are "mako" and "jinja".
+    If this file is not given, "mako" is assumed.
 
 Creating a New Theme
 --------------------
 
 In your site's folder, create a ``themes`` folder. Choose a theme to start from, and
-create ``themes/youthemename/parent`` as a file containing the parent theme's name.
+create ``themes/yourthemename/parent`` as a file containing the parent theme's name.
 There, you just created a new theme. Of course it looks exactly like the other one,
 so let's customize it.
 

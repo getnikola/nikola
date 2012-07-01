@@ -219,7 +219,7 @@ class Nikola(object):
         self.THEMES = utils.get_theme_chain(self.config['THEME'])
 
         self.templates_module = utils.get_template_module(
-            self.config['TEMPLATE_ENGINE'], self.THEMES)
+            utils.get_template_engine(self.THEMES), self.THEMES)
         self.template_deps = self.templates_module.template_deps
 
         self.MESSAGES = utils.load_messages(self.THEMES,

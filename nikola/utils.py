@@ -75,12 +75,21 @@ def get_meta(source_path):
     return (title,slug,date,tags,link)
 
 
+def get_template_engine(themes):
+    for theme_name in themes:
+        engine_path = os.path.join(get_theme_path(theme_name), 'engine')
+        if os.path.isfile(engine_path):
+            with open(engine_path) as fd:
+                return fd.readlines()[0].strip()
+    # default
+    return 'mako'
+
+
 def get_theme_chain(theme):
     """Create the full theme inheritance chain."""
     themes = [theme]
 
     def get_parent(theme_name):
-        parent_path = os.path.join('themes', theme_name, 'parent')
         parent_path = os.path.join(get_theme_path(theme_name), 'parent')
         if os.path.isfile(parent_path):
             with open(parent_path) as fd:
