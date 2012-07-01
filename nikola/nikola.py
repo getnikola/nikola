@@ -163,7 +163,7 @@ class Post(object):
             flag = False
             for elem in e:
                 elem_string = lxml.html.tostring(elem)
-                if '<!-- TEASER_END -->' in elem_string:
+                if '<!-- TEASER_END -->' in elem_string.upper():
                     flag = True
                     break
                 teaser.append(elem_string)
