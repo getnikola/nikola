@@ -861,6 +861,20 @@ class Nikola(object):
                 glob.glob(gallery_path + "/*JPG") +\
                 glob.glob(gallery_path + "/*PNG") +\
                 glob.glob(gallery_path + "/*png")
+
+            # Filter ignore images
+            try:
+                def add_gallery_path(index):
+                    return "{0}/{1}".format(gallery_path, index)
+
+                f = open(gallery_path + "/exclude.meta", 'r')
+                excludes = f.read()
+                exclude_images = map(add_gallery_path, excludes.split())
+                image_set = set(image_list) - set(exclude_images)
+                image_list = list(image_set)
+            except IOError:
+                pass
+
             image_list = [x for x in image_list if "thumbnail" not in x]
             image_name_list = [os.path.basename(x) for x in image_list]
             thumbs = []
