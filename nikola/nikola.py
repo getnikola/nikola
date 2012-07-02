@@ -751,6 +751,7 @@ class Nikola(object):
         years = self.posts_per_year.keys()
         years.sort(reverse=True)
         template_name = "list.tmpl"
+        kw['years'] = years
         for lang in kw["translations"]:
             context = {}
             output_name = os.path.join(
