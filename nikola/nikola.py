@@ -844,6 +844,7 @@ class Nikola(object):
         tags = self.posts_per_tag.keys()
         tags.sort()
         template_name = "tags.tmpl"
+        kw['tags'] = tags
         for lang in kw["translations"]:
             output_name = os.path.join(
                 kw['output_folder'], self.path('tag_index', None, lang))
