@@ -247,7 +247,7 @@ def generic_rss_renderer(lang, title, link, description,
         args = {
             'title': post.title(lang),
             'link': post.permalink(lang),
-            'description': post.text(lang, teaser=True),
+            'description': post.text(lang, teaser_only=True),
             'guid': post.permalink(lang),
             'pubDate': post.date,
         }
