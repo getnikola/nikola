@@ -85,14 +85,13 @@ class Post(object):
             default_title, default_pagename, self.date, self.tags, self.link = \
                 [x.strip() for x in meta_data][:5]
         else:
-            from utils import get_meta
             default_title, default_pagename, self.date, self.tags, self.link = \
-                get_meta(self.source_path)
+                utils.get_meta(self.source_path)
 
         if not default_title or not default_pagename or not self.date:
             raise OSError, "You must set a title and slug and date!"
 
-        self.date = datetime.datetime.strptime(self.date, '%Y/%m/%d %H:%M')
+        self.date = utils.to_datetime(self.date)
         self.tags = [x.strip() for x in self.tags.split(',')]
         self.tags = filter(None, self.tags)
         self.compile_html = compile_html
@@ -116,8 +115,7 @@ class Post(object):
                             self.titles[lang] = meta_data[0] or default_title
                             self.pagenames[lang] = meta_data[1] or default_pagename
                     else:
-                        from utils import get_meta
-                        ttitle, ppagename, tmp1, tmp2, tmp3 = get_meta(source_path)
+                        ttitle, ppagename, tmp1, tmp2, tmp3 = utils.get_meta(source_path)
                         self.titles[lang] = ttitle or default_title
                         self.pagenames[lang] = ppagename or default_pagename
                 except:

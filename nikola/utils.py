@@ -15,7 +15,7 @@ import PyRSS2Gen as rss
 
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
     'get_compile_html', 'get_template_module', 'generic_rss_renderer',
-    'copy_file', 'slugify']
+    'copy_file', 'slugify', 'get_meta', 'to_datetime']
 
 def get_theme_path(theme):
     """Given a theme name, returns the path where its files are located.
@@ -330,3 +330,26 @@ def extract_all(zipfile):
         else:
             z.extract(f)
     os.chdir(pwd)
+
+
+# From https://github.com/lepture/liquidluck/blob/develop/liquidluck/utils.py
+def to_datetime(value):
+    if isinstance(value, datetime.datetime):
+        return value
+    supported_formats = [
+        '%Y/%m/%d %H:%M',
+        '%a %b %d %H:%M:%S %Y',
+        '%Y-%m-%d %H:%M:%S',
+        '%Y-%m-%d %H:%M',
+        '%Y-%m-%dT%H:%M',
+        '%Y%m%d %H:%M:%S',
+        '%Y%m%d %H:%M',
+        '%Y-%m-%d',
+        '%Y%m%d',
+    ]
+    for format in supported_formats:
+        try:
+            return datetime.datetime.strptime(value, format)
+        except ValueError:
+            pass
+    raise ValueError('Unrecognized date/time: %r' % value)
