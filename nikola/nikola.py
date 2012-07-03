@@ -146,7 +146,7 @@ class Post(object):
             deps += lang_deps
         return deps
 
-    def text(self, lang):
+    def text(self, lang, teaser_only=False):
         """Read the post file for that language and return its contents"""
         file_name = self.base_path
         if lang != self.default_lang:
@@ -156,7 +156,21 @@ class Post(object):
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read()
 
-        return lxml.html.make_links_absolute(data,self.permalink())
+        data = lxml.html.make_links_absolute(data,self.permalink())
+        if teaser_only:
+            e = lxml.html.fromstring(data)
+            teaser=[]
+            flag = False
+            for elem in e:
+                elem_string = lxml.html.tostring(elem)
+                if '<!-- TEASER_END -->' in elem_string.upper():
+                    flag = True
+                    break
+                teaser.append(elem_string)
+            if flag:
+                teaser.append('<p><a href="%s">Read more...</a></p>' % self.permalink(lang))
+            data = ''.join(teaser)
+        return data
 
     def destination_path(self, lang, extension='.html'):
         path = os.path.join(self.translations[lang],
@@ -204,6 +218,7 @@ class Nikola(object):
             'FILES_FOLDERS': {'files': ''},
             'ADD_THIS_BUTTONS': True,
             'INDEX_DISPLAY_POST_COUNT': 10,
+            'INDEX_TEASERS': False,
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
                 "markdown": ['.md', '.mdown', '.markdown'],
@@ -428,7 +443,8 @@ class Nikola(object):
             translations=self.config['TRANSLATIONS'],
             messages=self.MESSAGES,
             output_folder=self.config['OUTPUT_FOLDER'],
-            index_display_post_count=self.config['INDEX_DISPLAY_POST_COUNT'])
+            index_display_post_count=self.config['INDEX_DISPLAY_POST_COUNT'],
+            index_teasers=self.config['INDEX_TEASERS'])
         yield self.gen_task_render_archive(
             translations=self.config['TRANSLATIONS'],
             messages=self.MESSAGES,
@@ -636,6 +652,7 @@ class Nikola(object):
         translations
         output_folder
         index_display_post_count
+        index_teasers
         """
         self.scan_posts()
         template_name = "index.tmpl"
@@ -662,6 +679,7 @@ class Nikola(object):
                     context["title"] = self.config['BLOG_TITLE'] + " (" + kw["messages"][lang]["old posts page %d" ] % i + ")"
                 context["prevlink"] = None
                 context["nextlink"] = None
+                context['index_teasers'] = kw['index_teasers']
                 if i > 1:
                     context["prevlink"] = "index-%s.html" % (i - 1)
                 if i == 1:
