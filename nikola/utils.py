@@ -213,6 +213,11 @@ def copy_file(source, dest):
         os.makedirs(dst_dir)
     shutil.copy2(source, dest)
 
+def remove_file(file_path):
+    if os.path.isdir(file_path):
+        shutil.rmtree(file_path)
+    elif os.path.isfile(file_path):
+        os.remove(file_path)
 
 # slugify is copied from
 # http://code.activestate.com/recipes/
