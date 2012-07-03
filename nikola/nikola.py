@@ -72,7 +72,7 @@ class Post(object):
         self.blog_url = blog_url
         self.source_path = source_path  # posts/blah.txt
         self.post_name = os.path.splitext(source_path)[0]  # posts/blah
-        self.base_path = self.post_name + ".html"  # posts/blah.html
+        self.base_path = os.path.join('cache', self.post_name + ".html")  # cache/posts/blah.html
         self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
         self.folder = destination
         self.translations = translations
@@ -221,7 +221,8 @@ class Nikola(object):
             'INDEX_TEASERS': False,
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
-                "markdown": ['.md', '.mdown', '.markdown']
+                "markdown": ['.md', '.mdown', '.markdown'],
+                "html": ['.html', '.htm'],
             }
 
         }
@@ -234,7 +235,7 @@ class Nikola(object):
         self.THEMES = utils.get_theme_chain(self.config['THEME'])
 
         self.templates_module = utils.get_template_module(
-            self.config['TEMPLATE_ENGINE'], self.THEMES)
+            utils.get_template_engine(self.THEMES), self.THEMES)
         self.template_deps = self.templates_module.template_deps
 
         self.MESSAGES = utils.load_messages(self.THEMES,
@@ -495,6 +496,7 @@ class Nikola(object):
         """Scan all the posts."""
         if not self._scanned:
             print "Scanning posts ",
+            targets = set([])
             for wildcard, destination, _, use_in_feeds in self.config['post_pages']:
                 print ".",
                 for base_path in glob.glob(wildcard):
@@ -502,8 +504,13 @@ class Nikola(object):
                         self.config['TRANSLATIONS'], self.config['DEFAULT_LANG'],
                         self.config['BLOG_URL'],
                         self.get_compile_html(base_path))
+                    for lang, langpath in self.config['TRANSLATIONS'].items():
+                        dest = (destination, langpath, post.pagenames[lang])
+                        if dest in targets:
+                            raise Exception ('Duplicated output path %r in post %r' %
+                                (post.pagenames[lang], base_path))
+                        targets.add(dest)
                     self.global_data[post.post_name] = post
-
                     if post.use_in_feeds:
                         self.posts_per_year[str(post.date.year)].append(post.post_name)
                         for tag in post.tags:
@@ -762,6 +769,7 @@ class Nikola(object):
         years = self.posts_per_year.keys()
         years.sort(reverse=True)
         template_name = "list.tmpl"
+        kw['years'] = years
         for lang in kw["translations"]:
             context = {}
             output_name = os.path.join(
@@ -854,6 +862,7 @@ class Nikola(object):
         tags = self.posts_per_tag.keys()
         tags.sort()
         template_name = "tags.tmpl"
+        kw['tags'] = tags
         for lang in kw["translations"]:
             output_name = os.path.join(
                 kw['output_folder'], self.path('tag_index', None, lang))

@@ -205,9 +205,9 @@ After that, run ``nikola init sitename`` and that will create a folder called
 Getting Started
 ---------------
 
-To create posts and pages in Nikola, you write them in restructured text, a light
-markup that is later converted to HTML (I may add support for textile or other
-markups later). There is a great `quick tutorial to learn restructured text <quickstart.html>`_
+To create posts and pages in Nikola, you write them in restructured text or Markdown, light
+markups that are later converted to HTML (I may add support for textile or other
+markups later). There is a great `quick tutorial to learn restructured text. <quickstart.html>`_
 
 First, let's see how you "build" your site. Nikola comes with a minimal site to get you started.
 
@@ -300,7 +300,19 @@ Creating a Blog Post
 
 A post consists of two files, a metadata file (``post-title.meta``) and a
 file containing the contents written in  `restructured text <http://docutils.sf.net>`_
-(``post-title.txt``) or markdown (see the ``INPUT_FORMAT`` option in conf.py).
+(``post-title.txt``), markdown or HTML. Which input type is used is guessed using
+the ``post_compilers`` option in ``conf.py`` but by default, the extensions
+supported are:
+
+.txt .rst
+    Restructured Text
+
+.md .markdown .mdown
+    Markdown
+
+.htm .html
+    HTML
+
 The default configuration expects them to be placed in ``posts`` but that can be
 changed (see below, the post_pages option)
 
@@ -356,7 +368,7 @@ configuration option::
     #     whatever/thing.txt.es and whatever/thing.meta.es
     #
     # From those files, a set of HTML fragment files will be generated:
-    # whatever/thing.html (and maybe whatever/thing.html.es)
+    # cache/whatever/thing.html (and maybe cache/whatever/thing.html.es)
     #
     # These files are combinated with the template to produce rendered
     # pages, which will be placed at
