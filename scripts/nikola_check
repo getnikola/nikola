@@ -79,7 +79,7 @@ def scan_files():
 
 if __name__ == '__main__':
     if '--help' in sys.argv or len(sys.argv) == 1:
-        print "Usage: nikola_check [--check-links [--find-sources]] [--check-files]
+        print "Usage: nikola_check [--check-links [--find-sources]] [--check-files]"
         sys.exit()
     elif '--check-links' in sys.argv:
         scan_links()
