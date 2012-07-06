@@ -1,0 +1,7 @@
+doit>=0.16.1
+pygments
+pillow
+docutils
+mako>=0.6
+unidecode
+lxml
