@@ -9,6 +9,7 @@ import glob
 import hashlib
 import json
 import os
+import string
 from StringIO import StringIO
 import sys
 import tempfile
@@ -268,9 +269,11 @@ class Nikola(object):
             path = filter(None, [self.config['TRANSLATIONS'][lang],
             self.config['TAG_PATH'], 'index.html'])
         elif kind == "tag":
+            name = utils.slugify(string.lower(name))
             path = filter(None, [self.config['TRANSLATIONS'][lang],
             self.config['TAG_PATH'], name + ".html"])
         elif kind == "tag_rss":
+            name = utils.slugify(string.lower(name))
             path = filter(None, [self.config['TRANSLATIONS'][lang],
             self.config['TAG_PATH'], name + ".xml"])
         elif kind == "index":
