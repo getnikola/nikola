@@ -214,6 +214,7 @@ class Nikola(object):
         self.config = {
             'OUTPUT_FOLDER': 'output',
             'FILES_FOLDERS': {'files': ''},
+            'LISTINGS_FOLDER': 'listings',
             'ADD_THIS_BUTTONS': True,
             'INDEX_DISPLAY_POST_COUNT': 10,
             'INDEX_TEASERS': False,
@@ -416,6 +417,7 @@ class Nikola(object):
 
         yield self.task_serve(output_folder=self.config['OUTPUT_FOLDER'])
         yield self.task_install_theme()
+        yield self.task_bootswatch_theme()
         yield self.gen_task_new_post(self.config['post_pages'])
         yield self.gen_task_new_page(self.config['post_pages'])
         yield self.gen_task_copy_assets(themes=self.THEMES,
@@ -1386,6 +1388,57 @@ class Nikola(object):
                 }],
             }
 
+    @staticmethod
+    def task_bootswatch_theme():
+        """Given a swatch name and a parent theme, creates a custom theme."""
+        def bootswatch_theme(name, parent, swatch):
+            print "Creating %s theme from %s and %s" % (name, swatch, parent)
+            try:
+                os.makedirs(os.path.join('themes', name, 'assets', 'css'))
+            except:
+                pass
+            for fname in ('bootstrap.min.css', 'bootstrap.css'):
+                url = 'http://bootswatch.com/%s/%s' % (swatch, fname)
+                print "Downloading: ", url
+                data = urllib2.urlopen(url).read()
+                with open(os.path.join('themes', name, 'assets', 'css', fname), 'wb+') as output:
+                    output.write(data)
+
+            with open(os.path.join('themes', name, 'parent'), 'wb+') as output:
+                output.write(parent)
+            print 'Theme created. Change the THEME setting to "%s" to use it.' % name
+
+        yield {
+            "basename": 'bootswatch_theme',
+            "actions": [(bootswatch_theme,)],
+            "verbosity": 2,
+            "params": [
+                {
+                    'short': 'p',
+                    'name': 'parent',
+                    'long': 'parent',
+                    'type': str,
+                    'default': 'site',
+                    'help': 'Name of parent theme.'
+                },
+                {
+                    'short': 's',
+                    'name': 'swatch',
+                    'long': 'swatch',
+                    'type': str,
+                    'default': 'slate',
+                    'help': 'Name of the swatch from bootswatch.com'
+                },
+                {
+                    'short': 'n',
+                    'name': 'name',
+                    'long': 'name',
+                    'type': str,
+                    'default': 'custom',
+                    'help': 'Name of the new theme'
+                }
+                ],
+        }
 
 def nikola_main():
     print "Starting doit..."

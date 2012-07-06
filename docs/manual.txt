@@ -565,6 +565,21 @@ If you create a nice theme, please share it! You can post about it on
 `the nikola forum <http://groups.google.com/group/nikola-discuss>`_ and I will
 make it available for download.
 
+One other option is to tweak an existing theme using a different color scheme,
+typography and CSS in general. Nikola provides a ``bootswatch_theme`` option
+to create a custom theme by downloading free CSS files from http://bootswatch.com::
+
+    $ doit bootswatch_theme -n custom_theme -s spruce -p site
+    Scanning posts  . . done!
+    .  bootswatch_theme
+    Creating custom_theme theme from spruce and site
+    Downloading:  http://bootswatch.com/spruce/bootstrap.min.css
+    Downloading:  http://bootswatch.com/spruce/bootstrap.css
+    Theme created. Change the THEME setting to "custom_theme" to use it.
+
+Play with it, there's cool stuff there. This feature was suggested by
+`clodo <http://elgalpondebanquito.com.ar>`_.
+
 Deployment
 ----------
 
