@@ -107,12 +107,12 @@ OUTPUT_FOLDER = 'output'
 # A directory where the keys are file extensions, and the
 # value is a list of commands to be applied in order.
 #
-# Each command must be a string containing a '%%s' which will
+# Each command must be a string containing a '%s' which will
 # be replaced with a filename. The command *must* produce output
 # in place.
 # By default, there are no filters.
 #FILTERS = {
-#    ".jpg": ["jpegoptim --strip-all -m75 -v %%s"],
+#    ".jpg": ["jpegoptim --strip-all -m75 -v %s"],
 #}
 
 ##############################################################################
