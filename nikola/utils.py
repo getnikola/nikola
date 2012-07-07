@@ -15,7 +15,7 @@ import PyRSS2Gen as rss
 
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
     'get_compile_html', 'get_template_module', 'generic_rss_renderer',
-    'copy_file', 'slugify', 'get_meta', 'to_datetime']
+    'copy_file', 'slugify', 'unslugfy', 'get_meta', 'to_datetime',]
 
 def get_theme_path(theme):
     """Given a theme name, returns the path where its files are located.
@@ -306,6 +306,16 @@ def slugify(value):
     value = unicode(_slugify_strip_re.sub('', value).strip().lower())
     return _slugify_hyphenate_re.sub('-', value)
 
+def unslugify(value):
+    """
+    Given a slug string (as a filename), return a human readable string
+    """
+    value = re.sub('^[0-9]', '', value)
+    value = re.sub('([_\-\.])', ' ', value)
+    value = value.strip().capitalize()
+    return value
+
+
 # A very slightly safer version of zip.extractall that works on
 # python < 2.6
 
@@ -353,3 +363,4 @@ def to_datetime(value):
         except ValueError:
             pass
     raise ValueError('Unrecognized date/time: %r' % value)
+

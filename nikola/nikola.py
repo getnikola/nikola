@@ -464,7 +464,8 @@ class Nikola(object):
             max_image_size=self.config['MAX_IMAGE_SIZE'],
             thumbnail_size=self.config['THUMBNAIL_SIZE'],
             default_lang=self.config['DEFAULT_LANG'],
-            output_folder=self.config['OUTPUT_FOLDER'])
+            output_folder=self.config['OUTPUT_FOLDER'],
+            use_filename_as_title=self.config['USE_FILENAME_AS_TITLE'])
         yield self.gen_task_redirect(
             redirections=self.config['REDIRECTIONS'],
             output_folder=self.config['OUTPUT_FOLDER'])
@@ -921,7 +922,8 @@ class Nikola(object):
         image_size
         thumbnail_size,
         default_lang,
-        output_folder
+        output_folder,
+        use_filename_as_title
         """
         template_name = "gallery.tmpl"
 
@@ -1027,8 +1029,12 @@ class Nikola(object):
             context = {}
             context["lang"] = kw["default_lang"]
             context["title"] = os.path.basename(gallery_path)
-            thumb_name_list = [os.path.basename(x) for x in thumbs]
-            context["images"] = zip(image_name_list, thumb_name_list)
+            if kw['use_filename_as_title']:
+                img_titles = ['title="%s"' % utils.unslugify(fn[:-4])
+                              for fn in image_name_list]
+            else:
+                img_titles = [''] * len(image_name_list)
+            context["images"] = zip(image_name_list, thumbs, img_titles)
             context["permalink"] = self.link("gallery", gallery_name, None)
 
             # Use galleries/name/index.txt to generate a blurb for

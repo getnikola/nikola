@@ -16,7 +16,8 @@
     %endif
     <ul class="thumbnails">
         %for image in images:
-            <li><a href="${image[0]}" class="thumbnail"><img src="${image[1]}" /></a></li>
+            <li><a href="${image[0]}" class="thumbnail" ${image[2]}>
+                <img src="${image[1]}" /></a></li>
         %endfor
     </ul>
     <script type="text/javascript">
