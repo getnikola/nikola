@@ -218,6 +218,8 @@ class Nikola(object):
             'ADD_THIS_BUTTONS': True,
             'INDEX_DISPLAY_POST_COUNT': 10,
             'INDEX_TEASERS': False,
+            'MAX_IMAGE_SIZE': 1280,
+            'USE_FILENAME_AS_TITLE': True,
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
                 "markdown": ['.md', '.mdown', '.markdown'],
