@@ -1048,10 +1048,13 @@ class Nikola(object):
                     'uptodate': [config_changed(kw)],
                 }
 
+            file_dep = self.template_deps(template_name) + image_list
+
             def render_gallery(output_name, context, index_dst_path):
                 if os.path.exists(index_dst_path):
                     with codecs.open(index_dst_path, "rb", "utf8") as fd:
                         context['text'] = fd.read()
+                    file_dep.append(index_dst_path)
                 else:
                     context['text'] = ''
                 self.render_template(template_name, output_name, context)
@@ -1059,7 +1062,7 @@ class Nikola(object):
             yield {
                 'basename': 'render_galleries',
                 'name': gallery_path,
-                'file_dep': self.template_deps(template_name) + image_list,
+                'file_dep': file_dep,
                 'targets': [output_name],
                 'actions': [(render_gallery,
                     (output_name, context, index_dst_path))],
