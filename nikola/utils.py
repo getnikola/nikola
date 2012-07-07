@@ -1,7 +1,9 @@
 """Utility functions."""
 
 from collections import defaultdict
+import cPickle
 import datetime
+import hashlib
 import os
 import re
 import codecs
@@ -15,7 +17,35 @@ import PyRSS2Gen as rss
 
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
     'get_compile_html', 'get_template_module', 'generic_rss_renderer',
-    'copy_file', 'slugify', 'get_meta', 'to_datetime']
+    'copy_file', 'slugify', 'get_meta', 'to_datetime', 'apply_filters',
+    'config_changed']
+
+# config_changed is basically a copy of
+# doit's but using pickle instead of trying to serialize manually
+class config_changed(object):
+
+    def __init__(self, config):
+        self.config = config
+
+    def __call__(self, task, values):
+        config_digest = None
+        if isinstance(self.config, basestring):
+            config_digest = self.config
+        elif isinstance(self.config, dict):
+            data = cPickle.dumps(self.config)
+            config_digest = hashlib.md5(data).hexdigest()
+        else:
+            raise Exception(('Invalid type of config_changed parameter got %s' +
+                             ', must be string or dict') % (type(self.config),))
+
+        def _save_config():
+            return {'_config_changed': config_digest}
+
+        task.insert_action(_save_config)
+        last_success = values.get('_config_changed')
+        if last_success is None:
+            return False
+        return (last_success == config_digest)
 
 def get_theme_path(theme):
     """Given a theme name, returns the path where its files are located.
@@ -353,3 +383,20 @@ def to_datetime(value):
         except ValueError:
             pass
     raise ValueError('Unrecognized date/time: %r' % value)
+
+def apply_filters(task, filters):
+    """
+    Given a task, checks its targets.
+    If any of the targets has a filter that matches,
+    adds the filter commands to the commands of the task,
+    and the filter itself to the uptodate of the task.
+    """
+
+    for target in task['targets']:
+        ext = os.path.splitext(target)[-1].lower()
+        filter_ = filters.get(ext)
+        if filter_:
+            task['actions'].extend([ f % target for f in filter_])
+            #task['uptodate']=task.get('uptodate', []) +\
+                #[config_changed(repr(filter_))]
+    return task
