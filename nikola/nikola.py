@@ -461,6 +461,7 @@ class Nikola(object):
             blog_description=self.config['BLOG_DESCRIPTION'],
             output_folder=self.config['OUTPUT_FOLDER'])
         yield self.gen_task_render_galleries(
+            max_image_size=self.config['MAX_IMAGE_SIZE'],
             thumbnail_size=self.config['THUMBNAIL_SIZE'],
             default_lang=self.config['DEFAULT_LANG'],
             output_folder=self.config['OUTPUT_FOLDER'])
@@ -917,6 +918,7 @@ class Nikola(object):
 
         Required keyword arguments:
 
+        image_size
         thumbnail_size,
         default_lang,
         output_folder
@@ -943,13 +945,24 @@ class Nikola(object):
             except ImportError:
                 pass
         if Image:
-            def create_thumb(src, dst):
-                size = kw["thumbnail_size"], kw["thumbnail_size"]
+            def _resize_image(src, dst, max_size):
                 im = Image.open(src)
-                im.thumbnail(size, Image.ANTIALIAS)
-                im.save(dst)
+                w, h = im.size
+                if w > max_size or h > max_size:
+                    size = max_size, max_size
+                    im.thumbnail(size, Image.ANTIALIAS)
+                    im.save(dst)
+                else:
+                    utils.copy_file(src, dst)
+
+            def create_thumb(src, dst):
+                return _resize_image(src, dst, kw['thumbnail_size'])
+
+            def create_resized_image(src, dst):
+                return _resize_image(src, dst, kw['max_image_size'])
         else:
             create_thumb = utils.copy_file
+            create_resized_image = utils.copy_file
 
         # gallery_path is "gallery/name"
         for gallery_path in gallery_list:
@@ -1005,7 +1018,7 @@ class Nikola(object):
                     'file_dep': [img],
                     'targets': [orig_dest_path],
                     'actions': [
-                        (utils.copy_file, (img, orig_dest_path))
+                        (create_resized_image, (img, orig_dest_path))
                     ],
                     'clean': True,
                     'uptodate': [config_changed(kw)],
