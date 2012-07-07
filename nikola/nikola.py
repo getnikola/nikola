@@ -20,6 +20,7 @@ import lxml.html
 
 import nikola
 import utils
+import pygments_code_block_directive
 
 __all__ = ['Nikola', 'nikola_main']
 
@@ -272,7 +273,10 @@ class Nikola(object):
             # Refuse to replace links that are full URLs.
             dst_url=urlparse.urlparse(dst)
             if dst_url.netloc:
-                return dst
+                if dst_url.scheme == 'link':  # Magic link
+                    dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'), context['lang'])
+                else:
+                    return dst
 
             # Normalize
             dst = urlparse.urljoin(src, dst)
@@ -327,6 +331,7 @@ class Nikola(object):
         * index (name is the number in index-number)
         * rss (name is ignored)
         * gallery (name is the gallery name)
+        * listing (name is the source code file name)
 
         The returned value is always a path relative to output, like
         "categories/whatever.html"
@@ -369,6 +374,9 @@ class Nikola(object):
         elif kind == "gallery":
             path = filter(None,
                 [self.config['GALLERY_PATH'], name, 'index.html'])
+        elif kind == "listing":
+            path = filter(None,
+                [self.config['LISTINGS_FOLDER'], name + '.html'])
         if is_link:
             return '/' + ('/'.join(path))
         else:
@@ -470,6 +478,10 @@ class Nikola(object):
             default_lang=self.config['DEFAULT_LANG'],
             output_folder=self.config['OUTPUT_FOLDER'],
             use_filename_as_title=self.config['USE_FILENAME_AS_TITLE'])
+        yield self.gen_task_render_listings(
+            listings_folder=self.config['LISTINGS_FOLDER'],
+            default_lang=self.config['DEFAULT_LANG'],
+            output_folder=self.config['OUTPUT_FOLDER'])
         yield self.gen_task_redirect(
             redirections=self.config['REDIRECTIONS'],
             output_folder=self.config['OUTPUT_FOLDER'])
@@ -917,6 +929,44 @@ class Nikola(object):
                 'clean': True,
                 'uptodate': [config_changed(kw)],
             }
+
+    def gen_task_render_listings(self, **kw):
+        """
+        Required keyword arguments:
+
+        listings_folder
+        output_folder
+        default_lang
+        """
+        from pygments import highlight
+        from pygments.lexers import (get_lexer_for_filename)
+        from pygments.formatters import HtmlFormatter
+        template_deps = self.template_deps('listing.tmpl')
+        print "scanning"
+        for root, dirs, files in os.walk(kw['listings_folder']):
+            for f in files:
+                in_name = os.path.join(root, f)
+                out_name = os.path.join(
+                    kw['output_folder'],
+                    kw['listings_folder'],
+                    f) + '.html'
+                title = f
+                with open(in_name, 'r') as fd:
+                    code = highlight(fd.read(), get_lexer_for_filename(f),
+                        HtmlFormatter(cssclass='code',
+                            linenos='table',
+                            lineanchors=utils.slugify(f),
+                            anchorlinenos=True))
+                context = {
+                    'code': code,
+                    'title': f,
+                    'lang': kw['default_lang'],
+                    }
+                yield {
+                    'basename': 'render_listings',
+                    'file_dep': template_deps + [in_name],
+                    'actions': [(self.render_template, ['listing.tmpl', out_name, context])],
+                }
 
     def gen_task_render_galleries(self, **kw):
         """Render image galleries.

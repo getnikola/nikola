@@ -1,8 +1,6 @@
 ## -*- coding: utf-8 -*-
-<%inherit file="post.tmpl"/>
+<%inherit file="base.tmpl"/>
 <%block name="content">
-%if title:
-    <h1>${title}</h1>
-%endif
-    ${post.text(lang)}
+<h1>${title}</h1>
+${code}
 </%block>
