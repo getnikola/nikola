@@ -300,9 +300,10 @@ def raw_compress(argument):
 
 def listings_directive(name, arguments, options, content, lineno,
                        content_offset, block_text, state, state_machine):
-    options['include'] = os.path.join('listings', arguments[0])
-    target = urlparse.urlunsplit(("link",'listing',arguments[0],'',''))
-    generated_nodes = [core.publish_doctree('`%s <%s>`_' % (arguments[0], target))[0]]
+    fname = arguments[0]
+    options['include'] = os.path.join('listings', fname)
+    target = urlparse.urlunsplit(("link",'listing',fname,'',''))
+    generated_nodes = [core.publish_doctree('`%s <%s>`_' % (fname, target))[0]]
     generated_nodes += code_block_directive(name, [arguments[1]], options, content, lineno,
                        content_offset, block_text, state, state_machine)
     return generated_nodes
