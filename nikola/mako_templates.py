@@ -24,7 +24,6 @@ def get_deps(filename):
     return deps
 
 def get_template_lookup(directories):
-    print "Directories:", directories
     cache_dir = os.path.join('cache', '.mako.tmp')
     if os.path.exists(cache_dir):
         shutil.rmtree(cache_dir)
@@ -37,7 +36,6 @@ def get_template_lookup(directories):
 
 def render_template(template_name, output_name, context, global_context):
     template = lookup.get_template(template_name)
-    print template.filename
     context.update(global_context)
     data = template.render_unicode(**context)
     if output_name is not None:
