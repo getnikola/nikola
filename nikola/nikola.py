@@ -463,9 +463,11 @@ class Nikola(object):
             blog_description=self.config['BLOG_DESCRIPTION'],
             output_folder=self.config['OUTPUT_FOLDER'])
         yield self.gen_task_render_galleries(
+            max_image_size=self.config['MAX_IMAGE_SIZE'],
             thumbnail_size=self.config['THUMBNAIL_SIZE'],
             default_lang=self.config['DEFAULT_LANG'],
-            output_folder=self.config['OUTPUT_FOLDER'])
+            output_folder=self.config['OUTPUT_FOLDER'],
+            use_filename_as_title=self.config['USE_FILENAME_AS_TITLE'])
         yield self.gen_task_redirect(
             redirections=self.config['REDIRECTIONS'],
             output_folder=self.config['OUTPUT_FOLDER'])
@@ -919,9 +921,11 @@ class Nikola(object):
 
         Required keyword arguments:
 
+        image_size
         thumbnail_size,
         default_lang,
-        output_folder
+        output_folder,
+        use_filename_as_title
         """
         template_name = "gallery.tmpl"
 
@@ -945,13 +949,24 @@ class Nikola(object):
             except ImportError:
                 pass
         if Image:
-            def create_thumb(src, dst):
-                size = kw["thumbnail_size"], kw["thumbnail_size"]
+            def _resize_image(src, dst, max_size):
                 im = Image.open(src)
-                im.thumbnail(size, Image.ANTIALIAS)
-                im.save(dst)
+                w, h = im.size
+                if w > max_size or h > max_size:
+                    size = max_size, max_size
+                    im.thumbnail(size, Image.ANTIALIAS)
+                    im.save(dst)
+                else:
+                    utils.copy_file(src, dst)
+
+            def create_thumb(src, dst):
+                return _resize_image(src, dst, kw['thumbnail_size'])
+
+            def create_resized_image(src, dst):
+                return _resize_image(src, dst, kw['max_image_size'])
         else:
             create_thumb = utils.copy_file
+            create_resized_image = utils.copy_file
 
         # gallery_path is "gallery/name"
         for gallery_path in gallery_list:
@@ -1007,7 +1022,7 @@ class Nikola(object):
                     'file_dep': [img],
                     'targets': [orig_dest_path],
                     'actions': [
-                        (utils.copy_file, (img, orig_dest_path))
+                        (create_resized_image, (img, orig_dest_path))
                     ],
                     'clean': True,
                     'uptodate': [config_changed(kw)],
@@ -1016,8 +1031,12 @@ class Nikola(object):
             context = {}
             context["lang"] = kw["default_lang"]
             context["title"] = os.path.basename(gallery_path)
-            thumb_name_list = [os.path.basename(x) for x in thumbs]
-            context["images"] = zip(image_name_list, thumb_name_list)
+            if kw['use_filename_as_title']:
+                img_titles = ['title="%s"' % utils.unslugify(fn[:-4])
+                              for fn in image_name_list]
+            else:
+                img_titles = [''] * len(image_name_list)
+            context["images"] = zip(image_name_list, thumbs, img_titles)
             context["permalink"] = self.link("gallery", gallery_name, None)
 
             # Use galleries/name/index.txt to generate a blurb for
@@ -1037,10 +1056,13 @@ class Nikola(object):
                     'uptodate': [config_changed(kw)],
                 }
 
+            file_dep = self.template_deps(template_name) + image_list
+
             def render_gallery(output_name, context, index_dst_path):
                 if os.path.exists(index_dst_path):
                     with codecs.open(index_dst_path, "rb", "utf8") as fd:
                         context['text'] = fd.read()
+                    file_dep.append(index_dst_path)
                 else:
                     context['text'] = ''
                 self.render_template(template_name, output_name, context)
@@ -1048,7 +1070,7 @@ class Nikola(object):
             yield {
                 'basename': 'render_galleries',
                 'name': gallery_path,
-                'file_dep': self.template_deps(template_name) + image_list,
+                'file_dep': file_dep,
                 'targets': [output_name],
                 'actions': [(render_gallery,
                     (output_name, context, index_dst_path))],

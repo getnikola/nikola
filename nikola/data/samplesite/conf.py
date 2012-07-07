@@ -111,6 +111,8 @@ OUTPUT_FOLDER = 'output'
 # Final location of galleries will be output / GALLERY_PATH / gallery_name
 GALLERY_PATH = "galleries"
 THUMBNAIL_SIZE = 180
+MAX_IMAGE_SIZE = 1280
+USE_FILENAME_AS_TITLE = True
 
 ##############################################################################
 # HTML fragments and diverse things that are used by the templates

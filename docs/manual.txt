@@ -646,9 +646,15 @@ The ``conf.py`` options affecting gallery pages are these::
     # Final location of galleries will be output / GALLERY_PATH / gallery_name
     GALLERY_PATH = "galleries"
     THUMBNAIL_SIZE = 180
+    MAX_IMAGE_SIZE = 1280
+    USE_FILENAME_AS_TITLE = True
 
 If you  add a file in ``galleries/gallery_name/index.txt`` its contents will be
 converted to HTML and inserted above the images in the gallery page.
+
+If ``USE_FILENAME_AS_TITLE`` is True the filename (parsed as a readable string)
+is used as the photo caption. If the filename starts with a number, it will
+be stripped. For example ``03_an_amazing_sunrise.jpg`` will be render as *An amazing sunrise*.
 
 Here is a `demo gallery </galleries/demo>`_ of historic, public domain Nikola
 Tesla pictures taken from `this site <http://kerryr.net/pioneers/gallery/tesla.htm>`_.
