@@ -392,11 +392,24 @@ def apply_filters(task, filters):
     and the filter itself to the uptodate of the task.
     """
 
+    def filter_matches(ext):
+        for key, value in filters.items():
+            if isinstance(key, (tuple, list)):
+                if ext in key:
+                    return value
+            elif isinstace(key, (str, unicode)):
+                if filters.get(key):
+                    return value
+
     for target in task['targets']:
         ext = os.path.splitext(target)[-1].lower()
-        filter_ = filters.get(ext)
+        filter_ = filter_matches(ext)
         if filter_:
-            task['actions'].extend([ f % target for f in filter_])
+            for action in filter_:
+                if callable(action):
+                    task['actions'].append((action, (target,)))
+                else:
+                    task['actions'].append(action % target)
             #task['uptodate']=task.get('uptodate', []) +\
                 #[config_changed(repr(filter_))]
     return task

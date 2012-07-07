@@ -104,12 +104,22 @@ DEPLOY_COMMANDS = []
 OUTPUT_FOLDER = 'output'
 
 # Filters to apply to the output.
-# A directory where the keys are file extensions, and the
-# value is a list of commands to be applied in order.
+# A directory where the keys are either: a file extensions, or
+# a tuple of file extensions.
 #
-# Each command must be a string containing a '%s' which will
+# And the value is a list of commands to be applied in order.
+#
+# Each command must be either:
+#
+# A string containing a '%s' which will
 # be replaced with a filename. The command *must* produce output
 # in place.
+#
+# Or:
+#
+# A python callable, which will be called with the filename as
+# argument.
+#
 # By default, there are no filters.
 #FILTERS = {
 #    ".jpg": ["jpegoptim --strip-all -m75 -v %s"],
