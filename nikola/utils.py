@@ -46,7 +46,6 @@ class config_changed(object):
         if last_success is None:
             return False
         return (last_success == config_digest)
->>>>>>> pipelines
 
 def get_theme_path(theme):
     """Given a theme name, returns the path where its files are located.
