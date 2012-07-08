@@ -939,11 +939,12 @@ class Nikola(object):
                 'lang': kw['default_lang'],
                 }
             self.render_template('listing.tmpl', out_name, context)
-
+        flag = True
         template_deps = self.template_deps('listing.tmpl')
         for root, dirs, files in os.walk(kw['listings_folder']):
             # Render all files
             for f in files:
+                flag = False
                 in_name = os.path.join(root, f)
                 out_name = os.path.join(
                     kw['output_folder'],
@@ -957,6 +958,12 @@ class Nikola(object):
                     'targets': [out_name],
                     'actions': [(render_listing, [in_name, out_name])],
                 }
+        if flag:
+            yield {
+                'basename': 'render_listings',
+                'actions': [],
+            }
+
 
     def gen_task_render_galleries(self, **kw):
         """Render image galleries.
