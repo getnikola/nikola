@@ -969,6 +969,7 @@ class Nikola(object):
 
         template_deps = self.template_deps('listing.tmpl')
         for root, dirs, files in os.walk(kw['listings_folder']):
+            # Render all files
             for f in files:
                 in_name = os.path.join(root, f)
                 out_name = os.path.join(
