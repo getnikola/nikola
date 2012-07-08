@@ -17,6 +17,9 @@ import urlparse
 
 from doit.tools import PythonInteractiveAction, run_once
 import lxml.html
+from pygments import highlight
+from pygments.lexers import get_lexer_for_filename, TextLexer
+from pygments.formatters import HtmlFormatter
 
 import nikola
 import utils
@@ -493,6 +496,7 @@ class Nikola(object):
             'actions': None,
             'clean': True,
             'task_dep': [
+                'render_listings',
                 'render_archive',
                 'render_galleries',
                 'render_indexes',
@@ -938,11 +942,27 @@ class Nikola(object):
         output_folder
         default_lang
         """
-        from pygments import highlight
-        from pygments.lexers import (get_lexer_for_filename)
-        from pygments.formatters import HtmlFormatter
+
+        def render_listing(in_name, out_name):
+            with open(in_name, 'r') as fd:
+                try:
+                    lexer = get_lexer_for_filename(f)
+                except:
+                    lexer = TextLexer()
+                code = highlight(fd.read(), lexer ,
+                    HtmlFormatter(cssclass='code',
+                        linenos="table",
+                        nowrap=False,
+                        lineanchors=utils.slugify(f),
+                        anchorlinenos=True))
+            context = {
+                'code': code,
+                'title': os.path.basename(in_name),
+                'lang': kw['default_lang'],
+                }
+            self.render_template('listing.tmpl', out_name, context)
+
         template_deps = self.template_deps('listing.tmpl')
-        print "scanning"
         for root, dirs, files in os.walk(kw['listings_folder']):
             for f in files:
                 in_name = os.path.join(root, f)
@@ -951,21 +971,12 @@ class Nikola(object):
                     kw['listings_folder'],
                     f) + '.html'
                 title = f
-                with open(in_name, 'r') as fd:
-                    code = highlight(fd.read(), get_lexer_for_filename(f),
-                        HtmlFormatter(cssclass='code',
-                            linenos='table',
-                            lineanchors=utils.slugify(f),
-                            anchorlinenos=True))
-                context = {
-                    'code': code,
-                    'title': f,
-                    'lang': kw['default_lang'],
-                    }
                 yield {
                     'basename': 'render_listings',
+                    'name': out_name.encode('utf8'),
                     'file_dep': template_deps + [in_name],
-                    'actions': [(self.render_template, ['listing.tmpl', out_name, context])],
+                    'targets': [out_name],
+                    'actions': [(render_listing, [in_name, out_name])],
                 }
 
     def gen_task_render_galleries(self, **kw):
