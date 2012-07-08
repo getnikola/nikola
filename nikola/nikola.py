@@ -946,7 +946,7 @@ class Nikola(object):
         def render_listing(in_name, out_name):
             with open(in_name, 'r') as fd:
                 try:
-                    lexer = get_lexer_for_filename(f)
+                    lexer = get_lexer_for_filename(in_name)
                 except:
                     lexer = TextLexer()
                 code = highlight(fd.read(), lexer ,
@@ -955,9 +955,14 @@ class Nikola(object):
                         nowrap=False,
                         lineanchors=utils.slugify(f),
                         anchorlinenos=True))
+            title = os.path.basename(in_name)
+            crumbs = out_name.split(os.sep)[1:-1] + [title]
+            # TODO: write this in human
+            paths = ['/'.join(['..']*(len(crumbs)-2-i)) for i in range(len(crumbs[:-2]))] + ['.', '#']
             context = {
                 'code': code,
-                'title': os.path.basename(in_name),
+                'title': title,
+                'crumbs': zip(paths,crumbs),
                 'lang': kw['default_lang'],
                 }
             self.render_template('listing.tmpl', out_name, context)
@@ -968,7 +973,7 @@ class Nikola(object):
                 in_name = os.path.join(root, f)
                 out_name = os.path.join(
                     kw['output_folder'],
-                    kw['listings_folder'],
+                    root,
                     f) + '.html'
                 title = f
                 yield {
