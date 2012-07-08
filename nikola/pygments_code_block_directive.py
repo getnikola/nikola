@@ -33,7 +33,11 @@
 # ::
 
 import codecs
-from docutils import nodes
+from copy import copy
+import os
+import urlparse
+
+from docutils import nodes, core
 from docutils.parsers.rst import directives
 
 try:
@@ -43,6 +47,8 @@ try:
 except ImportError:
     pygments = None
 
+
+import utils
 
 
 # Customisation
@@ -219,6 +225,7 @@ def code_block_directive(name, arguments, options, content, lineno,
         code_block += nodes.inline(fstr[1:] % lineno, fstr[1:] % lineno,   classes=['linenumber'])
 
     # parse content with pygments and add to code_block element
+    content = content.rstrip()
     if pygments is None:
         code_block += nodes.Text(content, content)
     else:
@@ -292,6 +299,15 @@ def lhs_litstyle(argument):
 def raw_compress(argument):
     return directives.choice(argument, ('gz', 'bz2'))
 
+def listings_directive(name, arguments, options, content, lineno,
+                       content_offset, block_text, state, state_machine):
+    fname = arguments[0]
+    options['include'] = os.path.join('listings', fname)
+    target = urlparse.urlunsplit(("link",'listing',fname,'',''))
+    generated_nodes = [core.publish_doctree('`%s <%s>`_' % (fname, target))[0]]
+    generated_nodes += code_block_directive(name, [arguments[1]], options, content, lineno,
+                       content_offset, block_text, state, state_machine)
+    return generated_nodes
 
 
 
@@ -300,7 +316,9 @@ def raw_compress(argument):
 # ::
 
 code_block_directive.arguments = (1, 0, 1)
+listings_directive.arguments = (2, 0, 1)
 code_block_directive.content = 1
+listings_directive.content = 1
 code_block_directive.options = {'include': directives.unchanged_required,
                                 'start-at': directives.unchanged_required,
                                 'end-at': directives.unchanged_required,
@@ -344,7 +362,8 @@ code_block_directive.options = {'include': directives.unchanged_required,
                                 'disabledmodules': string_list,
                                 }
 
-
+listings_directive.options = copy(code_block_directive.options)
+listings_directive.options.pop('include')
 
 # .. _doctutils: http://docutils.sf.net/
 # .. _pygments: http://pygments.org/

@@ -680,6 +680,69 @@ different ones, or about other webservers, please share!
 In the future we will be adding HTML/CSS/JS minimization and image recompression but
 that's not there yet, so you may want to use 3rd party tools to achieve that.
 
+Restructured Text Extensions
+----------------------------
+
+Nikola includes support for a few directives that are not part of docutils, but which
+we think are handy for website development.
+
+Youtube
+~~~~~~~
+
+To link to a youtube video, you need the id of the video. For example, if the
+URL of the video is http://www.youtube.com/watch?v=8N_tupPBtWQ what you need is
+**8N_tupPBtWQ**
+
+Once you have that, all you need to do is::
+
+    .. youtube:: 8N_tupPBtWQ
+
+code-block
+~~~~~~~~~~
+
+This is a somewhat complicated directive to display code nicely. You can just
+embed code like this::
+
+    .. code-block:: python
+
+        print "Hello World!"
+
+Or you can include the code from a file:
+
+    .. code-block:: python
+       :include: /foo/bar/baz.py
+
+listing
+~~~~~~~
+
+To use this, you have to put your source code files inside ``listings`` or whatever your
+``LISTINGS_FOLDER`` variable is set to. Assuming you have a ``foo.py`` inside that folder::
+
+    .. listing:: foo.py
+
+Will include the source code from ``foo.py`` and also create a ``listings/foo.py.html`` page
+and the listing will have a title linking to it.
+
+Advanced Code Options
+~~~~~~~~~~~~~~~~~~~~~
+
+Both code-block and listing support a number of options, including these:
+
+start-at
+    A string, the diplayed code will start when it finds this
+end-at
+    A string, the diplayed code will end when it finds this
+start-after
+    A string, the diplayed code will start in the line after this
+end-before
+    A string, the diplayed code will end in the line before this
+linenos
+    Display line numbers
+linenos_offset
+    Use the original file's line numbers (warning: broken)
+tab-width
+    Size of the tabs (default 4)
+
 License
 -------
 
