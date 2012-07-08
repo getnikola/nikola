@@ -225,6 +225,7 @@ def code_block_directive(name, arguments, options, content, lineno,
         code_block += nodes.inline(fstr[1:] % lineno, fstr[1:] % lineno,   classes=['linenumber'])
 
     # parse content with pygments and add to code_block element
+    content = content.rstrip()
     if pygments is None:
         code_block += nodes.Text(content, content)
     else:
