@@ -3,10 +3,8 @@
 import codecs
 from collections import defaultdict
 from copy import copy
-import cPickle
 import datetime
 import glob
-import hashlib
 import json
 import os
 from StringIO import StringIO
@@ -21,35 +19,9 @@ import lxml.html
 import nikola
 import utils
 
+config_changed = utils.config_changed
+
 __all__ = ['Nikola', 'nikola_main']
-
-
-# config_changed is basically a copy of
-# doit's but using pickle instead of trying to serialize manually
-class config_changed(object):
-
-    def __init__(self, config):
-        self.config = config
-
-    def __call__(self, task, values):
-        config_digest = None
-        if isinstance(self.config, basestring):
-            config_digest = self.config
-        elif isinstance(self.config, dict):
-            data = cPickle.dumps(self.config)
-            config_digest = hashlib.md5(data).hexdigest()
-        else:
-            raise Exception(('Invalid type of config_changed parameter got %s' +
-                             ', must be string or dict') % (type(self.config),))
-
-        def _save_config():
-            return {'_config_changed': config_digest}
-
-        task.insert_action(_save_config)
-        last_success = values.get('_config_changed')
-        if last_success is None:
-            return False
-        return (last_success == config_digest)
 
 class Post(object):
 
@@ -220,12 +192,12 @@ class Nikola(object):
             'INDEX_TEASERS': False,
             'MAX_IMAGE_SIZE': 1280,
             'USE_FILENAME_AS_TITLE': True,
+            'FILTERS': {},
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
                 "markdown": ['.md', '.mdown', '.markdown'],
                 "html": ['.html', '.htm'],
-            }
-
+            },
         }
         self.config.update(config)
 
@@ -475,7 +447,8 @@ class Nikola(object):
             output_folder=self.config['OUTPUT_FOLDER'])
         yield self.gen_task_copy_files(
             output_folder=self.config['OUTPUT_FOLDER'],
-            files_folders=self.config['FILES_FOLDERS'])
+            files_folders=self.config['FILES_FOLDERS'],
+            filters=self.config['FILTERS'])
         yield {
             'name': 'all',
             'actions': None,
@@ -1130,13 +1103,14 @@ class Nikola(object):
         flag = False
         for src in kw['files_folders']:
             dst = kw['output_folder']
+            filters = kw.pop('filters')
             real_dst = os.path.join(dst, kw['files_folders'][src])
             for task in utils.copy_tree(src, real_dst, link_cutoff=dst):
                 flag = True
                 task['basename'] = 'copy_files'
                 task['uptodate'] = task.get('uptodate', []) +\
                     [config_changed(kw)]
-                yield task
+                yield utils.apply_filters(task, filters)
         if not flag:
             yield {
                 'basename': 'copy_files',
@@ -1306,12 +1280,15 @@ class Nikola(object):
             "clean": True,
             }
 
-
     @staticmethod
     def task_serve(**kw):
         """
         Start test server. (Usage: doit serve [--address 127.0.0.1] [--port 8000])
         By default, the server runs on port 8000 on the IP address 127.0.0.1.
+
+        required keyword arguments:
+
+        output_folder
         """
 
         def serve(address, port):
