@@ -1179,7 +1179,7 @@ class Nikola(object):
         flag = False
         for src in kw['files_folders']:
             dst = kw['output_folder']
-            filters = kw.pop('filters')
+            filters = kw.get( 'filters', {} )
             real_dst = os.path.join(dst, kw['files_folders'][src])
             for task in utils.copy_tree(src, real_dst, link_cutoff=dst):
                 flag = True

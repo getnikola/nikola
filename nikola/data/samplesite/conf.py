@@ -121,9 +121,9 @@ OUTPUT_FOLDER = 'output'
 # argument.
 #
 # By default, there are no filters.
-#FILTERS = {
+FILTERS = {
 #    ".jpg": ["jpegoptim --strip-all -m75 -v %s"],
-#}
+}
 
 ##############################################################################
 # Image Gallery Options
