@@ -44,7 +44,6 @@ class Post(object):
         """
         self.prev_post = None
         self.next_post = None
-        self.use_in_feeds = use_in_feeds
         self.blog_url = blog_url
         self.source_path = source_path  # posts/blah.txt
         self.post_name = os.path.splitext(source_path)[0]  # posts/blah
@@ -70,6 +69,9 @@ class Post(object):
         self.date = utils.to_datetime(self.date)
         self.tags = [x.strip() for x in self.tags.split(',')]
         self.tags = filter(None, self.tags)
+
+        self.use_in_feeds = use_in_feeds and "draft" not in self.tags
+
         self.compile_html = compile_html
 
         self.pagenames = {}
