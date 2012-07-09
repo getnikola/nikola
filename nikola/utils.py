@@ -1,9 +1,12 @@
 """Utility functions."""
 
 from collections import defaultdict
+import cPickle
 import datetime
+import hashlib
 import os
 import re
+import codecs
 import shutil
 import sys
 from zipfile import ZipFile as zip
@@ -14,7 +17,35 @@ import PyRSS2Gen as rss
 
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
     'get_compile_html', 'get_template_module', 'generic_rss_renderer',
-    'copy_file', 'slugify']
+    'copy_file', 'slugify', 'unslugfy', 'get_meta', 'to_datetime',
+    'apply_filters', 'config_changed']
+
+# config_changed is basically a copy of
+# doit's but using pickle instead of trying to serialize manually
+class config_changed(object):
+
+    def __init__(self, config):
+        self.config = config
+
+    def __call__(self, task, values):
+        config_digest = None
+        if isinstance(self.config, basestring):
+            config_digest = self.config
+        elif isinstance(self.config, dict):
+            data = cPickle.dumps(self.config)
+            config_digest = hashlib.md5(data).hexdigest()
+        else:
+            raise Exception(('Invalid type of config_changed parameter got %s' +
+                             ', must be string or dict') % (type(self.config),))
+
+        def _save_config():
+            return {'_config_changed': config_digest}
+
+        task.insert_action(_save_config)
+        last_success = values.get('_config_changed')
+        if last_success is None:
+            return False
+        return (last_success == config_digest)
 
 def get_theme_path(theme):
     """Given a theme name, returns the path where its files are located.
@@ -30,13 +61,65 @@ def get_theme_path(theme):
         return dir_name
     raise Exception(u"Can't find theme '%s'" % theme)
 
+def re_meta(line,match):
+    """ re.compile for meta"""
+    reStr = re.compile('^%s(.*)' %  re.escape(match))
+    result = reStr.findall(line)
+    if result:
+        return result[0].strip()
+    else:
+        return ''
+
+def get_meta(source_path):
+    """get post's meta from source"""
+    with codecs.open(source_path, "r", "utf8") as meta_file:
+        meta_data = meta_file.readlines(15)
+    title = slug = date = tags = link = ''
+
+    re_md_title = re.compile(r'^%s([^%s].*)' % (re.escape('#'),re.escape('#')))
+    import string
+    re_rst_title = re.compile(r'^([^%s ].*)' % re.escape(string.punctuation))
+
+    for meta in meta_data:
+        if not title:
+            title = re_meta(meta,'.. title:')
+        if not title:
+            if re_rst_title.findall(meta):
+                title = re_rst_title.findall(meta)[0]
+        if not title:
+            if re_md_title.findall(meta):
+                title = re_md_title.findall(meta)[0]
+        if not slug:
+            slug = re_meta(meta,'.. slug:')
+        if not date:
+            date = re_meta(meta,'.. date:')
+        if not tags:
+            tags = re_meta(meta,'.. tags:')
+        if not link:
+            link = re_meta(meta,'.. link:')
+
+    #if not date:
+        #from datetime import datetime
+        #date = datetime.fromtimestamp(os.path.getmtime(source_path)).strftime('%Y/%m/%d %H:%M')
+
+    return (title,slug,date,tags,link)
+
+
+def get_template_engine(themes):
+    for theme_name in themes:
+        engine_path = os.path.join(get_theme_path(theme_name), 'engine')
+        if os.path.isfile(engine_path):
+            with open(engine_path) as fd:
+                return fd.readlines()[0].strip()
+    # default
+    return 'mako'
+
 
 def get_theme_chain(theme):
     """Create the full theme inheritance chain."""
     themes = [theme]
 
     def get_parent(theme_name):
-        parent_path = os.path.join('themes', theme_name, 'parent')
         parent_path = os.path.join(get_theme_path(theme_name), 'parent')
         if os.path.isfile(parent_path):
             with open(parent_path) as fd:
@@ -73,7 +156,7 @@ def load_messages(themes, translations):
     return messages
 
 
-def copy_tree(src, dst):
+def copy_tree(src, dst, link_cutoff=None):
     """Copy a src tree to the dst folder.
 
     Example:
@@ -83,6 +166,10 @@ def copy_tree(src, dst):
 
     should copy "themes/defauts/assets/foo/bar" to
     "output/assets/foo/bar"
+
+    if link_cutoff is set, then the links pointing at things
+    *inside* that folder will stay as links, and links
+    pointing *outside* that folder will be copied.
     """
     ignore = set(['.svn'])
     base_len = len(src.split(os.sep))
@@ -100,7 +187,7 @@ def copy_tree(src, dst):
                 'name': dst_file,
                 'file_dep': [src_file],
                 'targets': [dst_file],
-                'actions': [(copy_file, (src_file, dst_file))],
+                'actions': [(copy_file, (src_file, dst_file, link_cutoff))],
                 'clean': True,
             }
 
@@ -113,6 +200,9 @@ def get_compile_html(input_format):
     elif input_format == "markdown":
         import md
         compile_html = md.compile_html
+    elif input_format == "html":
+        import html
+        compile_html = copy_file
     return compile_html
 
 class CompileHtmlGetter(object):
@@ -187,7 +277,7 @@ def generic_rss_renderer(lang, title, link, description,
         args = {
             'title': post.title(lang),
             'link': post.permalink(lang),
-            'description': post.text_abs_linked(lang),
+            'description': post.text(lang, teaser_only=True),
             'guid': post.permalink(lang),
             'pubDate': post.date,
         }
@@ -207,11 +297,25 @@ def generic_rss_renderer(lang, title, link, description,
         rss_obj.write_xml(rss_file)
 
 
-def copy_file(source, dest):
+def copy_file(source, dest, cutoff=None):
     dst_dir = os.path.dirname(dest)
     if not os.path.isdir(dst_dir):
         os.makedirs(dst_dir)
-    shutil.copy2(source, dest)
+    if os.path.islink(source):
+        link_target = os.path.relpath(
+            os.path.normpath(os.path.join(dst_dir,os.readlink(source))))
+        # Now we have to decide if we copy the link target or the
+        # link itself.
+        if cutoff is None or not link_target.startswith(cutoff):
+            # We copy
+            shutil.copy2(source, dest)
+        else:
+            # We link
+            if os.path.exists(dest) or os.path.islink(dest):
+                os.unlink(dest)
+            os.symlink(os.readlink(source), dest)
+    else:
+        shutil.copy2(source, dest)
 
 def remove_file(file_path):
     if os.path.isdir(file_path):
@@ -237,6 +341,16 @@ def slugify(value):
     value = unicode(_slugify_strip_re.sub('', value).strip().lower())
     return _slugify_hyphenate_re.sub('-', value)
 
+def unslugify(value):
+    """
+    Given a slug string (as a filename), return a human readable string
+    """
+    value = re.sub('^[0-9]', '', value)
+    value = re.sub('([_\-\.])', ' ', value)
+    value = value.strip().capitalize()
+    return value
+
+
 # A very slightly safer version of zip.extractall that works on
 # python < 2.6
 
@@ -261,3 +375,57 @@ def extract_all(zipfile):
         else:
             z.extract(f)
     os.chdir(pwd)
+
+
+# From https://github.com/lepture/liquidluck/blob/develop/liquidluck/utils.py
+def to_datetime(value):
+    if isinstance(value, datetime.datetime):
+        return value
+    supported_formats = [
+        '%Y/%m/%d %H:%M',
+        '%a %b %d %H:%M:%S %Y',
+        '%Y-%m-%d %H:%M:%S',
+        '%Y-%m-%d %H:%M',
+        '%Y-%m-%dT%H:%M',
+        '%Y%m%d %H:%M:%S',
+        '%Y%m%d %H:%M',
+        '%Y-%m-%d',
+        '%Y%m%d',
+    ]
+    for format in supported_formats:
+        try:
+            return datetime.datetime.strptime(value, format)
+        except ValueError:
+            pass
+    raise ValueError('Unrecognized date/time: %r' % value)
+
+
+def apply_filters(task, filters):
+    """
+    Given a task, checks its targets.
+    If any of the targets has a filter that matches,
+    adds the filter commands to the commands of the task,
+    and the filter itself to the uptodate of the task.
+    """
+
+    def filter_matches(ext):
+        for key, value in filters.items():
+            if isinstance(key, (tuple, list)):
+                if ext in key:
+                    return value
+            elif isinstace(key, (str, unicode)):
+                if filters.get(key):
+                    return value
+
+    for target in task['targets']:
+        ext = os.path.splitext(target)[-1].lower()
+        filter_ = filter_matches(ext)
+        if filter_:
+            for action in filter_:
+                if callable(action):
+                    task['actions'].append((action, (target,)))
+                else:
+                    task['actions'].append(action % target)
+            #task['uptodate']=task.get('uptodate', []) +\
+                #[config_changed(repr(filter_))]
+    return task

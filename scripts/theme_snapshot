@@ -1,0 +1,17 @@
+#!/bin/sh -x
+
+# A script to install a theme, configure the default site to use it,
+# generate it, and then take a screenshot of the page.
+
+#This is a hack.
+
+theme_name=$1
+tempsite=temp_$theme_name
+nikola init $tempsite
+cd $tempsite
+doit install_theme -n $theme_name
+sed -i s/\'site\'/\'$theme_name\'/g conf.py
+sed -i s/http:\/\/nikola\.ralsina\.com\.ar/http:\/\/${theme_name}\.nikola\.ralsina\.com\.ar/g conf.py
+echo 'DEPLOY_COMMANDS = [ r"rsync -rav --delete output/* ralsina@lateral.netmanagers.com.ar:/srv/www/'${theme_name}'" ]' >> conf.py
+doit && doit deploy
+capty http://${theme_name}.nikola.ralsina.com.ar  ../${theme_name}.png

@@ -10,7 +10,7 @@ MESSAGES = {
     u"More posts about": u"Weitere Eintr&auml;ge &uuml;ber",
     u"Posted:": u"Ver&ouml;ffentlicht:",
     u"Original site": u"Original-Seite",
-    u"Read in english": u"In Deutsch lesen",
+    u"Read in English": u"Auf Deutsch lesen",
     u"Older posts &rarr;": u"&Auml;ltere Eintr&auml;ge &rarr;",
     u"&larr; Newer posts": u"&larr; Neuere Eintr&auml;ge",
     u"&larr; Previous post": u"&larr; Vorheriger Eintrag",

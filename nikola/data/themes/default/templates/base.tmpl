@@ -5,22 +5,22 @@
     <meta charset="utf-8">
     <title>${title}</title>
     <!-- Le styles -->
-    <link href="${rel_link(permalink, "/assets/css/bootstrap.css")}" rel="stylesheet">
-    <link href="${rel_link(permalink, "/assets/css/bootstrap-responsive.css")}" rel="stylesheet">
-    <link href="${rel_link(permalink, "/assets/css/rst.css")}" rel="stylesheet">
-    <link href="${rel_link(permalink, "/assets/css/code.css")}" rel="stylesheet">
+    <link href="/assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
     %if exists("files/assets/css/custom.css", not_empty=True):
-    <link href="${rel_link(permalink, "/assets/css/custom.css")}" rel="stylesheet">
+    <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
     %endif
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
     <![endif]-->
     %if rss_link:
         ${rss_link}
     %else:
         %for language in translations:
-            <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${_link("rss", None, lang)}">
+            <link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS (${language})" href="${_link("rss", None, lang)}">
         %endfor
     %endif
     <%block name="extra_head">
@@ -61,7 +61,7 @@
             <%block name="content"></%block>
             <!--End of body content-->
             <hr>
-            <small>${content_footer}</small><p>
+            <small>${content_footer}</small>
         </div>
         <div class="span2" id="sidebar">
             <!--Sidebar content-->
@@ -82,7 +82,7 @@
             <!-- End of social buttons -->
             % endif
             %for url, text in sidebar_links[lang]:
-                <li><a href="${rel_link(permalink, url)}">${text}</a>
+                <li><a href="${url}">${text}</a>
             %endfor
             <li>${search_form}
             </ul>

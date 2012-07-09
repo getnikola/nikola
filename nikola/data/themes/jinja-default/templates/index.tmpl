@@ -7,10 +7,10 @@
              {{messages[lang]["Posted:"]}} {{post.date}}
         </small></h1>
         <hr>
-        {{post.text(lang)}}
+        {{post.text(lang, index_teasers)}}
         <p>
         {% if disqus_forum %}
-            <a href="{{post.permalink(absolute=True)}}#disqus_thread">Comments</a>
+            <a href="{{post.permalink()}}#disqus_thread">Comments</a>
         {% endif %}
         </div>
     {% endfor %}

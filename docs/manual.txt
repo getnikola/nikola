@@ -205,9 +205,9 @@ After that, run ``nikola init sitename`` and that will create a folder called
 Getting Started
 ---------------
 
-To create posts and pages in Nikola, you write them in restructured text, a light
-markup that is later converted to HTML (I may add support for textile or other
-markups later). There is a great `quick tutorial to learn restructured text <quickstart.html>`_
+To create posts and pages in Nikola, you write them in restructured text or Markdown, light
+markups that are later converted to HTML (I may add support for textile or other
+markups later). There is a great `quick tutorial to learn restructured text. <quickstart.html>`_
 
 First, let's see how you "build" your site. Nikola comes with a minimal site to get you started.
 
@@ -300,7 +300,19 @@ Creating a Blog Post
 
 A post consists of two files, a metadata file (``post-title.meta``) and a
 file containing the contents written in  `restructured text <http://docutils.sf.net>`_
-(``post-title.txt``) or markdown (see the ``INPUT_FORMAT`` option in conf.py).
+(``post-title.txt``), markdown or HTML. Which input type is used is guessed using
+the ``post_compilers`` option in ``conf.py`` but by default, the extensions
+supported are:
+
+.txt .rst
+    Restructured Text
+
+.md .markdown .mdown
+    Markdown
+
+.htm .html
+    HTML
+
 The default configuration expects them to be placed in ``posts`` but that can be
 changed (see below, the post_pages option)
 
@@ -356,7 +368,7 @@ configuration option::
     #     whatever/thing.txt.es and whatever/thing.meta.es
     #
     # From those files, a set of HTML fragment files will be generated:
-    # whatever/thing.html (and maybe whatever/thing.html.es)
+    # cache/whatever/thing.html (and maybe cache/whatever/thing.html.es)
     #
     # These files are combinated with the template to produce rendered
     # pages, which will be placed at
@@ -374,6 +386,40 @@ configuration option::
 
 It will use the first location that has the last parameter set to True, or the last
 one in the list if all of them have it set to False.
+
+Alternatively, you can not have a meta file and embed the metadata in the post itself.
+
+In restructured text::
+
+    .. tags: test,demo
+    .. slug: demo-test
+    .. date: 2012/04/09 13:59
+    .. link: http://foo.bar/baz
+
+In Markdown:
+    <!--
+    .. tags: test,demo
+    .. slug: demo-test
+    .. date: 2012/04/09 13:59
+    .. link: http://foo.bar/baz
+    -->
+
+Teasers
+~~~~~~~
+
+If for any reason you want to provide feeds that only display the beginning of
+your post, you only need to add a "magical comment" in your post.
+
+In restructuredtext::
+
+   .. END_TEASER
+
+In Markdown::
+
+   <!-- END_TEASER -->
+
+Additionally, if you want also the "index" pages to show only the teasers, you can
+set the variable ``INDEX_TEASERS`` to ``True`` in ``conf.py``.
 
 Creating a Page
 ---------------
@@ -519,6 +565,21 @@ If you create a nice theme, please share it! You can post about it on
 `the nikola forum <http://groups.google.com/group/nikola-discuss>`_ and I will
 make it available for download.
 
+One other option is to tweak an existing theme using a different color scheme,
+typography and CSS in general. Nikola provides a ``bootswatch_theme`` option
+to create a custom theme by downloading free CSS files from http://bootswatch.com::
+
+    $ doit bootswatch_theme -n custom_theme -s spruce -p site
+    Scanning posts  . . done!
+    .  bootswatch_theme
+    Creating custom_theme theme from spruce and site
+    Downloading:  http://bootswatch.com/spruce/bootstrap.min.css
+    Downloading:  http://bootswatch.com/spruce/bootstrap.css
+    Theme created. Change the THEME setting to "custom_theme" to use it.
+
+Play with it, there's cool stuff there. This feature was suggested by
+`clodo <http://elgalpondebanquito.com.ar>`_.
+
 Deployment
 ----------
 
@@ -585,12 +646,102 @@ The ``conf.py`` options affecting gallery pages are these::
     # Final location of galleries will be output / GALLERY_PATH / gallery_name
     GALLERY_PATH = "galleries"
     THUMBNAIL_SIZE = 180
+    MAX_IMAGE_SIZE = 1280
+    USE_FILENAME_AS_TITLE = True
 
 If you  add a file in ``galleries/gallery_name/index.txt`` its contents will be
 converted to HTML and inserted above the images in the gallery page.
 
+If ``USE_FILENAME_AS_TITLE`` is True the filename (parsed as a readable string)
+is used as the photo caption. If the filename starts with a number, it will
+be stripped. For example ``03_an_amazing_sunrise.jpg`` will be render as *An amazing sunrise*.
+
 Here is a `demo gallery </galleries/demo>`_ of historic, public domain Nikola
 Tesla pictures taken from `this site <http://kerryr.net/pioneers/gallery/tesla.htm>`_.
+
+Optimizing Your Website
+-----------------------
+
+One of the main goals of Nikola is to make your site fast and light. So here are a few
+tips we have found when setting up Nikola with Apache. If you have more, or
+different ones, or about other webservers, please share!
+
+#. Use a speed testing tool. I used Yahoo's YSlow but you can use any of them, and
+   it's probably a good idea to use more than one.
+
+#. Enable compression in Apache::
+
+      AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+
+#. If even after you did the previous step the CSS files are not sent compressed::
+
+      AddType text/css .css
+
+In the future we will be adding HTML/CSS/JS minimization and image recompression but
+that's not there yet, so you may want to use 3rd party tools to achieve that.
+
+Restructured Text Extensions
+----------------------------
+
+Nikola includes support for a few directives that are not part of docutils, but which
+we think are handy for website development.
+
+Youtube
+~~~~~~~
+
+To link to a youtube video, you need the id of the video. For example, if the
+URL of the video is http://www.youtube.com/watch?v=8N_tupPBtWQ what you need is
+**8N_tupPBtWQ**
+
+Once you have that, all you need to do is::
+
+    .. youtube:: 8N_tupPBtWQ
+
+code-block
+~~~~~~~~~~
+
+This is a somewhat complicated directive to display code nicely. You can just
+embed code like this::
+
+    .. code-block:: python
+
+        print "Hello World!"
+
+Or you can include the code from a file:
+
+    .. code-block:: python
+       :include: /foo/bar/baz.py
+
+listing
+~~~~~~~
+
+To use this, you have to put your source code files inside ``listings`` or whatever your
+``LISTINGS_FOLDER`` variable is set to. Assuming you have a ``foo.py`` inside that folder::
+
+    .. listing:: foo.py
+
+Will include the source code from ``foo.py`` and also create a ``listings/foo.py.html`` page
+and the listing will have a title linking to it.
+
+Advanced Code Options
+~~~~~~~~~~~~~~~~~~~~~
+
+Both code-block and listing support a number of options, including these:
+
+start-at
+    A string, the diplayed code will start when it finds this
+end-at
+    A string, the diplayed code will end when it finds this
+start-after
+    A string, the diplayed code will start in the line after this
+end-before
+    A string, the diplayed code will end in the line before this
+linenos
+    Display line numbers
+linenos_offset
+    Use the original file's line numbers (warning: broken)
+tab-width
+    Size of the tabs (default 4)
 
 License
 -------

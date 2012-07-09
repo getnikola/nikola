@@ -1,0 +1,87 @@
+#!/usr/bin/env python
+import os
+import sys
+import urllib
+from urlparse import urlparse
+
+import lxml.html
+
+existing_targets = set([])
+
+def analize(task):
+    try:
+        filename = task.split(":")[-1]
+        d = lxml.html.fromstring(open(filename).read())
+        for l in d.iterlinks():
+            target = l[0].attrib[l[1]]
+            if target == "#":
+                continue
+            parsed = urlparse(target)
+            if parsed.scheme:
+                continue
+            if parsed.fragment:
+                target = target.split('#')[0]
+            target_filename = os.path.abspath(os.path.join(os.path.dirname(filename), urllib.unquote(target)))
+            if target_filename not in existing_targets:
+                if os.path.exists(target_filename):
+                    existing_targets.add(target_filename)
+                else:
+                    print "In %s broken link: " % filename, target
+                    if '--find-sources' in sys.argv:
+                        print "Possible sources:"
+                        print os.popen('doit list --deps %s' % task, 'r').read()
+                        print "===============================\n"
+
+    except Exception as exc:
+        print "Error with:", filename, exc
+
+def scan_links():
+    for task in os.popen('doit list --all', 'r').readlines():
+        task = task.strip()
+        if task.split(':')[0] in (
+            'render_tags',
+            'render_archive',
+            'render_galleries',
+            'render_indexes',
+            'render_pages',
+            'render_site') and '.html' in task:
+            analize(task)
+
+def scan_files():
+    task_fnames = set([])
+    real_fnames = set([])
+    # First check that all targets are generated in the right places
+    for task in os.popen('doit list --all', 'r').readlines():
+        task = task.strip()
+        if 'output' in task and ':' in task:
+            fname = task.split(':')[-1]
+            task_fnames.add(fname)
+     # And now check that there are no non-target files
+    for root, dirs, files in os.walk('output'):
+        for src_name in files:
+            fname = os.path.join(root, src_name)
+            real_fnames.add(fname)
+
+    only_on_output = list(real_fnames - task_fnames)
+    if only_on_output:
+        only_on_output.sort()
+        print "\nFiles from unknown origins:\n"
+        for f in only_on_output:
+            print f
+
+    only_on_input = list(task_fnames - real_fnames)
+    if only_on_input:
+        only_on_input.sort()
+        print "\nFiles not generated:\n"
+        for f in only_on_input:
+            print f
+
+
+if __name__ == '__main__':
+    if '--help' in sys.argv or len(sys.argv) == 1:
+        print "Usage: nikola_check [--check-links [--find-sources]] [--check-files]"
+        sys.exit()
+    elif '--check-links' in sys.argv:
+        scan_links()
+    elif '--check-files' in sys.argv:
+        scan_files()

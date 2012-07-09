@@ -13,7 +13,7 @@
             %for langname in translations.keys():
                 %if langname != lang:
                     &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <a href="${post.permalink(langname)}">${messages[langname][u"Read in english"]}</a>
+                    <a href="${post.permalink(langname)}">${messages[langname][u"Read in English"]}</a>
                 %endif
             %endfor
         %endif
@@ -29,12 +29,12 @@
     <ul class="pager">
     %if post.prev_post:
         <li class="previous">
-            <a href="${rel_link(permalink, post.prev_post.permalink(lang))}">${messages[lang]["&larr; Previous post"]}</a>
+            <a href="${post.prev_post.permalink(lang)}">${messages[lang]["&larr; Previous post"]}</a>
         </li>
     %endif
     %if post.next_post:
         <li class="next">
-            <a href="${rel_link(permalink, post.next_post.permalink(lang))}">${messages[lang]["Next post &rarr;"]}</a>
+            <a href="${post.next_post.permalink(lang)}">${messages[lang]["Next post &rarr;"]}</a>
         </li>
     %endif
     </ul>
@@ -56,6 +56,6 @@
 
 <%block name="sourcelink">
     <li>
-    <a href="${post.pagenames[lang]+'.txt'}">reSt</a>
+    <a href="${post.pagenames[lang]+post.source_ext()}">reSt</a>
     </li>
 </%block>

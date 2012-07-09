@@ -10,7 +10,7 @@ MESSAGES = {
     u"More posts about": u"Больше записей о",
     u"Posted:": u"Опубликовано",
     u"Original site": u"Оригинальный сайт",
-    u"Read in english": u"Прочесть по-русски",
+    u"Read in English": u"Прочесть по-русски",
     u"Older posts &rarr;": u"Старые записи &rarr;",
     u"&larr; Newer posts": u"&larr; Новые записи",
 }

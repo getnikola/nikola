@@ -12,7 +12,7 @@
         %if len(translations) > 1:
             %for langname in translations.keys():
                 %if langname != lang:
-                    <a href="${post.permalink(langname)}">${messages[langname][u"Read in english"]}</a>
+                    <a href="${post.permalink(langname)}">${messages[langname][u"Read in English"]}</a>
                     &nbsp;&nbsp;|&nbsp;&nbsp;
                 %endif
             %endfor
@@ -31,12 +31,12 @@
     <ul class="pager">
     %if post.prev_post:
         <li class="previous">
-            <a href="${rel_link(permalink, post.prev_post.permalink(lang))}">${messages[lang]["&larr; Previous post"]}</a>
+            <a href="${post.prev_post.permalink(lang)}">${messages[lang]["&larr; Previous post"]}</a>
         </li>
     %endif
     %if post.next_post:
         <li class="next">
-            <a href="${rel_link(permalink, post.next_post.permalink(lang))}">${messages[lang]["Next post &rarr;"]}</a>
+            <a href="${post.next_post.permalink(lang)}">${messages[lang]["Next post &rarr;"]}</a>
         </li>
     %endif
     </ul>

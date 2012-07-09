@@ -13,7 +13,7 @@
 #     whatever/thing.txt.es and whatever/thing.meta.es
 #
 # From those files, a set of HTML fragment files will be generated:
-# whatever/thing.html (and maybe whatever/thing.html.es)
+# cache/whatever/thing.html (and maybe cache/whatever/thing.html.es)
 #
 # These files are combinated with the template to produce rendered
 # pages, which will be placed at
@@ -42,10 +42,12 @@ post_pages = (
 #
 # 'rest' is reStructuredText
 # 'markdown' is MarkDown
-post_compilers = {
-    "rest": ('.txt', '.rst'),
-    "markdown": ('.md', '.mdown', '.markdown')
-    }
+# 'html' assumes the file is html and just copies it
+#post_compilers = {
+#    "rest": ('.txt', '.rst'),
+#    "markdown": ('.md', '.mdown', '.markdown')
+#    "html": ('.html', '.htm')
+#    }
 
 # What is the default language?
 
@@ -101,6 +103,28 @@ DEPLOY_COMMANDS = []
 
 OUTPUT_FOLDER = 'output'
 
+# Filters to apply to the output.
+# A directory where the keys are either: a file extensions, or
+# a tuple of file extensions.
+#
+# And the value is a list of commands to be applied in order.
+#
+# Each command must be either:
+#
+# A string containing a '%s' which will
+# be replaced with a filename. The command *must* produce output
+# in place.
+#
+# Or:
+#
+# A python callable, which will be called with the filename as
+# argument.
+#
+# By default, there are no filters.
+#FILTERS = {
+#    ".jpg": ["jpegoptim --strip-all -m75 -v %s"],
+#}
+
 ##############################################################################
 # Image Gallery Options
 ##############################################################################
@@ -109,6 +133,8 @@ OUTPUT_FOLDER = 'output'
 # Final location of galleries will be output / GALLERY_PATH / gallery_name
 GALLERY_PATH = "galleries"
 THUMBNAIL_SIZE = 180
+MAX_IMAGE_SIZE = 1280
+USE_FILENAME_AS_TITLE = True
 
 ##############################################################################
 # HTML fragments and diverse things that are used by the templates
@@ -124,10 +150,8 @@ BLOG_DESCRIPTION = "This is a demo site for Nikola."
 # Name of the theme to use. Themes are located in themes/theme_name
 THEME = 'site'
 
-# Name of the template engie to use. Usually this is theme dependent
-# and you probably don't want to touch it. Supported values are
-# "mako" and "jinja"
-TEMPLATE_ENGINE = "mako"
+# Show only teasers in the index pages? Defaults to False.
+# INDEX_TEASERS = False
 
 # A HTML fragment describing the license, for the sidebar.
 # I recomment using the Creative Commons' wizard:
@@ -148,6 +172,10 @@ DISQUS_FORUM = "nikolademo"
 # Enable Addthis social buttons?
 # Defaults to true
 # ADD_THIS_BUTTONS = True
+
+# Modify the number of Post per Index Page
+# Defaults to 10
+# INDEX_DISPLAY_POST_COUNT = 10
 
 # RSS_LINK is a HTML fragment to link the RSS or Atom feeds. If set to None,
 # the base.tmpl will use the feed Nikola generates. However, you may want to

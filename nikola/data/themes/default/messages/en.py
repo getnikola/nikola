@@ -7,11 +7,12 @@ MESSAGES = [
     u"More posts about",
     u"Posted:",
     u"Original site",
-    u"Read in english",
+    u"Read in English",
     u"&larr; Newer posts",
     u"Older posts &rarr;",
     u"&larr; Previous post",
     u"Next post &rarr;",
+    u"old posts page %d",
 ]
 
 # In english things are not translated

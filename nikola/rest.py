@@ -3,6 +3,7 @@
 __all__ = ['compile_html']
 
 import codecs
+import os
 
 ########################################
 # custom rst directives and renderer
@@ -11,17 +12,25 @@ import docutils.core
 import docutils.io
 from docutils.parsers.rst import directives
 
-from pygments_code_block_directive import code_block_directive
+from pygments_code_block_directive import code_block_directive, listings_directive
 directives.register_directive('code-block', code_block_directive)
+directives.register_directive('listing', listings_directive)
 
+from youtube import youtube
+directives.register_directive('youtube',youtube)
 
 def compile_html(source, dest):
-    with codecs.open(source, "r", "utf8") as in_file:
-        data = in_file.read()
-        output, error_level = rst2html(data,
-            settings_overrides={'initial_header_level': 2})
+    try:
+        os.makedirs(os.path.dirname(dest))
+    except:
+        pass
+    error_level = 100
     with codecs.open(dest, "w+", "utf8") as out_file:
-        out_file.write(output)
+        with codecs.open(source, "r", "utf8") as in_file:
+            data = in_file.read()
+            output, error_level = rst2html(data,
+                settings_overrides={'initial_header_level': 2})
+            out_file.write(output)
     if error_level < 3:
         return True
     else:

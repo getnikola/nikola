@@ -3,15 +3,15 @@
 <%block name="content">
     % for post in posts:
         <div style="border-bottom: 2px solid darkgrey; margin-bottom: 12px;">
-        <h1><a href="${rel_link(permalink, post.permalink(lang))}">${post.title(lang)}</a>
+        <h1><a href="${post.permalink(lang)}">${post.title(lang)}</a>
         <small>&nbsp;&nbsp;
              ${messages[lang]["Posted:"]} ${post.date}
         </small></h1>
         <hr>
-        ${post.text_abs_linked(lang)}
+        ${post.text(lang, index_teasers)}
         <p>
         %if disqus_forum:
-            <a href="${post.permalink(absolute=True)}#disqus_thread">Comments</a>
+            <a href="${post.permalink()}#disqus_thread">Comments</a>
         %endif
         </div>
     % endfor

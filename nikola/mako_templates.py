@@ -3,6 +3,7 @@
 ########################################
 
 import os
+import shutil
 
 from mako import util, lexer
 from mako.lookup import TemplateLookup
@@ -23,9 +24,12 @@ def get_deps(filename):
     return deps
 
 def get_template_lookup(directories):
+    cache_dir = os.path.join('cache', '.mako.tmp')
+    if os.path.exists(cache_dir):
+        shutil.rmtree(cache_dir)
     return TemplateLookup(
         directories=directories,
-        module_directory='tmp',
+        module_directory=cache_dir,
         output_encoding='utf-8',
         )
 
@@ -33,12 +37,15 @@ def get_template_lookup(directories):
 def render_template(template_name, output_name, context, global_context):
     template = lookup.get_template(template_name)
     context.update(global_context)
-    try:
-        os.makedirs(os.path.dirname(output_name))
-    except:
-        pass
-    with open(output_name, 'w+') as output:
-        output.write(template.render(**context))
+    data = template.render_unicode(**context)
+    if output_name is not None:
+        try:
+            os.makedirs(os.path.dirname(output_name))
+        except:
+            pass
+        with open(output_name, 'w+') as output:
+            output.write(data)
+    return data
 
 
 def template_deps(template_name):
