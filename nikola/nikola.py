@@ -1233,7 +1233,7 @@ class Nikola(object):
         data = u'\n'.join([
             title,
             slug,
-            datetime.datetime.now().strftime('%Y/%m/%d %H:%M')
+            datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
             ])
         output_path = os.path.dirname(path)
         meta_path = os.path.join(output_path, slug + ".meta")
