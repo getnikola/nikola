@@ -364,7 +364,7 @@ class Nikola(object):
     def link(self, *args):
         return self.path(*args, is_link=True)
 
-    def abs_link(self,dst):
+    def abs_link(self, dst):
         # Normalize
         dst = urlparse.urljoin(self.config['BLOG_URL'], dst)
 
@@ -516,11 +516,11 @@ class Nikola(object):
                 self.timeline.append(post)
             self.timeline.sort(cmp=lambda a, b: cmp(a.date, b.date))
             self.timeline.reverse()
-            post_timeline = [ p for p in self.timeline if p.use_in_feeds ]
+            post_timeline = [p for p in self.timeline if p.use_in_feeds]
             for i, p in enumerate(post_timeline[1:]):
                 p.next_post = post_timeline[i]
             for i, p in enumerate(post_timeline[:-1]):
-                p.prev_post = post_timeline[i+1]
+                p.prev_post = post_timeline[i + 1]
             self._scanned = True
             print "done!"
 
@@ -547,8 +547,8 @@ class Nikola(object):
                 deps_dict['PREV_LINK'] = [post.prev_post.permalink(lang)]
             if post.next_post:
                 deps_dict['NEXT_LINK'] = [post.next_post.permalink(lang)]
-            deps_dict['OUTPUT_FOLDER']=self.config['OUTPUT_FOLDER']
-            deps_dict['TRANSLATIONS']=self.config['TRANSLATIONS']
+            deps_dict['OUTPUT_FOLDER'] = self.config['OUTPUT_FOLDER']
+            deps_dict['TRANSLATIONS'] = self.config['TRANSLATIONS']
             yield {
                 'name': output_name.encode('utf-8'),
                 'file_dep': deps,
@@ -1313,7 +1313,6 @@ class Nikola(object):
         print "Your post's metadata is at: ", meta_path
         print "Your post's text is at: ", txt_path
 
-
     @classmethod
     def new_page(cls):
         cls.new_post(False)
@@ -1325,7 +1324,6 @@ class Nikola(object):
             "basename": "new_post",
             "actions": [PythonInteractiveAction(cls.new_post, (post_pages,))],
             }
-
 
     @classmethod
     def gen_task_new_page(cls, post_pages):
