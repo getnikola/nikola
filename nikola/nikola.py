@@ -28,6 +28,7 @@ config_changed = utils.config_changed
 
 __all__ = ['Nikola', 'nikola_main']
 
+
 class Post(object):
 
     """Represents a blog post or web page."""
@@ -1041,6 +1042,25 @@ class Nikola(object):
                 glob.glob(gallery_path + "/*JPG") +\
                 glob.glob(gallery_path + "/*PNG") +\
                 glob.glob(gallery_path + "/*png")
+
+            # Filter ignore images
+            try:
+                def add_gallery_path(index):
+                    return "{0}/{1}".format(gallery_path, index)
+
+                exclude_path = os.path.join(gallery_path, "exclude.meta")
+                try:
+                    f = open(exclude_path, 'r')
+                    excluded_image_name_list = f.read().split()
+                except IOError:
+                    excluded_image_name_list = []
+
+                excluded_image_list = map(add_gallery_path, excluded_image_name_list)
+                image_set = set(image_list) - set(excluded_image_list)
+                image_list = list(image_set)
+            except IOError:
+                pass
+
             image_list = [x for x in image_list if "thumbnail" not in x]
             image_name_list = [os.path.basename(x) for x in image_list]
             thumbs = []
@@ -1079,6 +1099,41 @@ class Nikola(object):
                     'clean': True,
                     'uptodate': [config_changed(kw)],
                 }
+
+            # Remove excluded images
+            if excluded_image_name_list:
+                for img, img_name in zip(excluded_image_list, excluded_image_name_list):
+                    # img_name is "image_name.jpg"
+                    # fname, ext are "image_name", ".jpg"
+                    #import pdb
+                    #pdb.set_trace()
+                    fname, ext = os.path.splitext(img_name)
+                    excluded_thumb_dest_path = os.path.join(output_gallery,
+                        fname + ".thumbnail" + ext)
+                    excluded_dest_path = os.path.join(output_gallery, img_name)
+                    yield {
+                        'basename': 'render_galleries',
+                        'name': excluded_thumb_dest_path,
+                        'file_dep': [exclude_path],
+                        #'targets': [excluded_thumb_dest_path],
+                        'actions': [
+                            (utils.remove_file, (excluded_thumb_dest_path,))
+                        ],
+                        'clean': True,
+                        'uptodate': [config_changed(kw)],
+                    }
+                    yield {
+                        'basename': 'render_galleries',
+                        'name': excluded_dest_path,
+                        'file_dep': [exclude_path],
+                        #'targets': [excluded_dest_path],
+                        'actions': [
+                            (utils.remove_file, (excluded_dest_path,))
+                        ],
+                        'clean': True,
+                        'uptodate': [config_changed(kw)],
+                    }
+
             output_name = os.path.join(output_gallery, "index.html")
             context = {}
             context["lang"] = kw["default_lang"]
