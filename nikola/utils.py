@@ -378,8 +378,6 @@ def to_datetime(value):
         return value
     supported_formats = [
         '%Y/%m/%d %H:%M',
-        '%Y/%m/%d %H:%M:%S',
-        '%Y/%m/%d %I:%M:%S %p',
         '%a %b %d %H:%M:%S %Y',
         '%Y-%m-%d %H:%M:%S',
         '%Y-%m-%d %H:%M',
