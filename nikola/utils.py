@@ -419,10 +419,12 @@ def apply_filters(task, filters):
         filter_ = filter_matches(ext)
         if filter_:
             for action in filter_:
-                if callable(action):
-                    task['actions'].append((action, (target,)))
-                else:
-                    task['actions'].append(action % target)
-            #task['uptodate']=task.get('uptodate', []) +\
-                #[config_changed(repr(filter_))]
+                def unlessLink(action, target):
+                    if not os.path.islink(target):
+                        if callable(action):
+                            action(target)
+                        else:
+                            subprocess.check_call(action % target,shell = True)
+
+                task['actions'].append( (unlessLink,(action, target)) )
     return task
