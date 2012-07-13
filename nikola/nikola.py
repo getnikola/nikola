@@ -200,6 +200,7 @@ class Nikola(object):
             'INDEX_TEASERS': False,
             'MAX_IMAGE_SIZE': 1280,
             'USE_FILENAME_AS_TITLE': True,
+            'SLUG_TAG_PATH': True,
             'FILTERS': {},
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
@@ -328,11 +329,13 @@ class Nikola(object):
             path = filter(None, [self.config['TRANSLATIONS'][lang],
             self.config['TAG_PATH'], 'index.html'])
         elif kind == "tag":
-            name = utils.slugify(string.lower(name))
+            if self.config['SLUG_TAG_PATH']:
+                name = utils.slugify(name.lower())
             path = filter(None, [self.config['TRANSLATIONS'][lang],
             self.config['TAG_PATH'], name + ".html"])
         elif kind == "tag_rss":
-            name = utils.slugify(string.lower(name))
+            if self.config['SLUG_TAG_PATH']:
+                name = utils.slugify(name.lower())
             path = filter(None, [self.config['TRANSLATIONS'][lang],
             self.config['TAG_PATH'], name + ".xml"])
         elif kind == "index":
