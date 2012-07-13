@@ -183,7 +183,7 @@ This is currently lacking on detail. Considering the niche Nikola is aimed at,
 I suspect that's not a problem yet. So, when I say "get", the specific details
 of how to "get" something for your specific operating system are left to you.
 
-The short version is: ``pip install git+https://github.com/ralsina/nikola``
+The short version is: ``pip install https://github.com/ralsina/nikola/zipball/master``
 
 Longer version:
 
@@ -420,6 +420,14 @@ In Markdown::
 
 Additionally, if you want also the "index" pages to show only the teasers, you can
 set the variable ``INDEX_TEASERS`` to ``True`` in ``conf.py``.
+
+Drafts
+~~~~~~
+
+If you add a "draft" tag to a post, then it will not be shown in indexes and feeds.
+It *will* be compiled, and if you deploy it it *will* be made available, so use
+with care.
+
 
 Creating a Page
 ---------------
