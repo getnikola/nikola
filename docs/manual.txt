@@ -657,8 +657,11 @@ The ``conf.py`` options affecting gallery pages are these::
     MAX_IMAGE_SIZE = 1280
     USE_FILENAME_AS_TITLE = True
 
-If you  add a file in ``galleries/gallery_name/index.txt`` its contents will be
+If you add a file in ``galleries/gallery_name/index.txt`` its contents will be
 converted to HTML and inserted above the images in the gallery page.
+
+If you add some image filenames in ``galleries/gallery_name/exclude.meta`` They 
+will be excluded in the gallery page.
 
 If ``USE_FILENAME_AS_TITLE`` is True the filename (parsed as a readable string)
 is used as the photo caption. If the filename starts with a number, it will
