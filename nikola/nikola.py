@@ -412,14 +412,17 @@ class Nikola(object):
         yield self.gen_task_new_post(self.config['post_pages'])
         yield self.gen_task_new_page(self.config['post_pages'])
         yield self.gen_task_copy_assets(themes=self.THEMES,
-            output_folder=self.config['OUTPUT_FOLDER'])
+            output_folder=self.config['OUTPUT_FOLDER'],
+            filters=self.config['FILTERS']
+        )
         yield self.gen_task_deploy(commands=self.config['DEPLOY_COMMANDS'])
         yield self.gen_task_sitemap(blog_url=self.config['BLOG_URL'],
             output_folder=self.config['OUTPUT_FOLDER']
         )
         yield self.gen_task_render_pages(
             translations=self.config['TRANSLATIONS'],
-            post_pages=self.config['post_pages'])
+            post_pages=self.config['post_pages'],
+            filters=self.config['FILTERS'])
         yield self.gen_task_render_sources(
             translations=self.config['TRANSLATIONS'],
             default_lang=self.config['DEFAULT_LANG'],
@@ -435,18 +438,24 @@ class Nikola(object):
             messages=self.MESSAGES,
             output_folder=self.config['OUTPUT_FOLDER'],
             index_display_post_count=self.config['INDEX_DISPLAY_POST_COUNT'],
-            index_teasers=self.config['INDEX_TEASERS'])
+            index_teasers=self.config['INDEX_TEASERS'],
+            filters=self.config['FILTERS'],
+        )
         yield self.gen_task_render_archive(
             translations=self.config['TRANSLATIONS'],
             messages=self.MESSAGES,
-            output_folder=self.config['OUTPUT_FOLDER'])
+            output_folder=self.config['OUTPUT_FOLDER'],
+            filters=self.config['FILTERS'],
+        )
         yield self.gen_task_render_tags(
             translations=self.config['TRANSLATIONS'],
             messages=self.MESSAGES,
             blog_title=self.config['BLOG_TITLE'],
             blog_url=self.config['BLOG_URL'],
             blog_description=self.config['BLOG_DESCRIPTION'],
-            output_folder=self.config['OUTPUT_FOLDER'])
+            output_folder=self.config['OUTPUT_FOLDER'],
+            filters=self.config['FILTERS']
+        )
         yield self.gen_task_render_rss(
             translations=self.config['TRANSLATIONS'],
             blog_title=self.config['BLOG_TITLE'],
@@ -527,7 +536,7 @@ class Nikola(object):
             print "done!"
 
     def generic_page_renderer(self, lang, wildcard,
-        template_name, destination):
+        template_name, destination,filters):
         """Render post fragments to final HTML pages."""
         for post in glob.glob(wildcard):
             post_name = os.path.splitext(post)[0]
@@ -551,7 +560,8 @@ class Nikola(object):
                 deps_dict['NEXT_LINK'] = [post.next_post.permalink(lang)]
             deps_dict['OUTPUT_FOLDER']=self.config['OUTPUT_FOLDER']
             deps_dict['TRANSLATIONS']=self.config['TRANSLATIONS']
-            yield {
+
+            task = {
                 'name': output_name.encode('utf-8'),
                 'file_dep': deps,
                 'targets': [output_name],
@@ -560,6 +570,8 @@ class Nikola(object):
                 'clean': True,
                 'uptodate': [config_changed(deps_dict)],
             }
+
+            yield utils.apply_filters(task, filters)
 
     def gen_task_render_pages(self, **kw):
         """Build final pages from metadata and HTML fragments.
@@ -573,7 +585,7 @@ class Nikola(object):
         for lang in kw["translations"]:
             for wildcard, destination, template_name, _ in kw["post_pages"]:
                 for task in self.generic_page_renderer(
-                        lang, wildcard, template_name, destination):
+                        lang, wildcard, template_name, destination, kw["filters"]):
                     #task['uptodate'] = task.get('uptodate', []) +\
                         #[config_changed(kw)]
                     task['basename'] = 'render_pages'
@@ -688,20 +700,21 @@ class Nikola(object):
                 context["permalink"] = self.link("index", i, lang)
                 output_name = os.path.join(
                     kw['output_folder'], self.path("index", i, lang))
-                task = self.generic_post_list_renderer(
+                for task in self.generic_post_list_renderer(
                     lang,
                     post_list,
                     output_name,
                     template_name,
+                    kw['filters'],
                     context,
-                )
-                task['uptodate'] = task.get('updtodate', []) +\
-                    [config_changed(kw)]
-                task['basename'] = 'render_indexes'
-                yield task
+                ):
+                    task['uptodate'] = task.get('updtodate', []) +\
+                                    [config_changed(kw)]
+                    task['basename'] = 'render_indexes'
+                    yield task
 
     def generic_post_list_renderer(self, lang, posts,
-        output_name, template_name, extra_context={}):
+        output_name, template_name, filters, extra_context):
         """Renders pages with lists of posts."""
 
         deps = self.template_deps(template_name)
@@ -716,7 +729,7 @@ class Nikola(object):
         context.update(extra_context)
         deps_context = copy(context)
         deps_context["posts"] = [(p.titles[lang], p.permalink(lang)) for p in posts]
-        return {
+        task = {
             'name': output_name.encode('utf8'),
             'targets': [output_name],
             'file_dep': deps,
@@ -725,6 +738,8 @@ class Nikola(object):
             'clean': True,
             'uptodate': [config_changed(deps_context)]
         }
+
+        yield utils.apply_filters(task, filters)
 
     def gen_task_render_archive(self, **kw):
         """Render the post archives.
@@ -753,16 +768,17 @@ class Nikola(object):
                 context["permalink"] = self.link("archive", year, lang)
                 context["title"] = kw["messages"][lang]["Posts for year %s"]\
                     % year
-                task = self.generic_post_list_renderer(
+                for task in self.generic_post_list_renderer(
                     lang,
                     post_list,
                     output_name,
                     template_name,
+                    kw['filters'],
                     context,
-                )
-                task['uptodate'] = task.get('updtodate', []) +\
-                    [config_changed(kw)]
-                yield task
+                ):
+                    task['uptodate'] = task.get('updtodate', []) +\
+                                       [config_changed(kw)]
+                    yield task
 
         # And global "all your years" page
         years = self.posts_per_year.keys()
@@ -777,16 +793,17 @@ class Nikola(object):
             context["items"] = [(year, self.link("archive", year, lang))
                 for year in years]
             context["permalink"] = self.link("archive", None, lang)
-            task = self.generic_post_list_renderer(
+            for task in self.generic_post_list_renderer(
                 lang,
                 [],
                 output_name,
                 template_name,
+                kw['filters'],
                 context,
-            )
-            task['uptodate'] = task.get('updtodate', []) + [config_changed(kw)]
-            task['basename'] = 'render_archive'
-            yield task
+            ):
+                task['uptodate'] = task.get('updtodate', []) + [config_changed(kw)]
+                task['basename'] = 'render_archive'
+                yield task
 
     def gen_task_render_tags(self, **kw):
         """Render the tag pages.
@@ -823,17 +840,18 @@ class Nikola(object):
                     post.permalink(lang)) for post in post_list]
                 context["permalink"] = self.link("tag", tag, lang)
 
-                task = self.generic_post_list_renderer(
+                for task in self.generic_post_list_renderer(
                     lang,
                     post_list,
                     output_name,
                     template_name,
+                    kw['filters'],
                     context,
-                )
-                task['uptodate'] = task.get('updtodate', []) +\
-                    [config_changed(kw)]
-                task['basename'] = 'render_tags'
-                yield task
+                ):
+                    task['uptodate'] = task.get('updtodate', []) +\
+                                       [config_changed(kw)]
+                    task['basename'] = 'render_tags'
+                    yield task
 
                 #Render RSS
                 output_name = os.path.join(kw['output_folder'],
@@ -870,15 +888,16 @@ class Nikola(object):
             context["items"] = [(tag, self.link("tag", tag, lang))
                 for tag in tags]
             context["permalink"] = self.link("tag_index", None, lang)
-            task = self.generic_post_list_renderer(
+            for task in self.generic_post_list_renderer(
                 lang,
                 [],
                 output_name,
                 template_name,
+                kw['filters'],
                 context,
-            )
-            task['uptodate'] = task.get('updtodate', []) + [config_changed(kw)]
-            yield task
+            ):
+                task['uptodate'] = task.get('updtodate', []) + [config_changed(kw)]
+                yield task
 
     def gen_task_render_rss(self, **kw):
         """Generate RSS feeds.
@@ -1183,7 +1202,7 @@ class Nikola(object):
         flag = False
         for src in kw['files_folders']:
             dst = kw['output_folder']
-            filters = kw.get( 'filters', {} )
+            filters = kw['filters']
             real_dst = os.path.join(dst, kw['files_folders'][src])
             for task in utils.copy_tree(src, real_dst, link_cutoff=dst):
                 flag = True
@@ -1221,7 +1240,7 @@ class Nikola(object):
                 task['uptodate'] = task.get('uptodate', []) + \
                     [config_changed(kw)]
                 task['basename'] = 'copy_assets'
-                yield task
+                yield utils.apply_filters(task, kw['filters'])
 
     @staticmethod
     def new_post(post_pages, is_post=True):
@@ -1358,7 +1377,7 @@ class Nikola(object):
             "actions": [(sitemap,)],
             "uptodate": [config_changed(kw)],
             "clean": True,
-            }
+        }
 
     @staticmethod
     def task_serve(**kw):
