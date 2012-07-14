@@ -8,6 +8,7 @@ import os
 import re
 import codecs
 import shutil
+import subprocess
 import sys
 from zipfile import ZipFile as zip
 
