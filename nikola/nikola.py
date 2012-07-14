@@ -45,6 +45,7 @@ class Post(object):
         self.prev_post = None
         self.next_post = None
         self.blog_url = blog_url
+        self.is_draft = False
         self.source_path = source_path  # posts/blah.txt
         self.post_name = os.path.splitext(source_path)[0]  # posts/blah
         self.base_path = os.path.join('cache', self.post_name + ".html")  # cache/posts/blah.html
@@ -70,7 +71,10 @@ class Post(object):
         self.tags = [x.strip() for x in self.tags.split(',')]
         self.tags = filter(None, self.tags)
 
+        # While draft comes from the tags, it's not really a tag
         self.use_in_feeds = use_in_feeds and "draft" not in self.tags
+        self.is_draft = 'draft' in self.tags
+        self.tags = [t for t in self.tags if t != 'draft']
 
         self.compile_html = compile_html
 
