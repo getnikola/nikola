@@ -408,9 +408,11 @@ def apply_filters(task, filters):
             if isinstance(key, (tuple, list)):
                 if ext in key:
                     return value
-            elif isinstace(key, (str, unicode)):
+            elif isinstance(key, (str, unicode)):
                 if filters.get(key):
                     return value
+            else:
+                assert False, key
 
     for target in task['targets']:
         ext = os.path.splitext(target)[-1].lower()
