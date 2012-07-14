@@ -8,6 +8,7 @@ import os
 import re
 import codecs
 import shutil
+import subprocess
 import sys
 from zipfile import ZipFile as zip
 
@@ -415,19 +416,23 @@ def apply_filters(task, filters):
             if isinstance(key, (tuple, list)):
                 if ext in key:
                     return value
-            elif isinstace(key, (str, unicode)):
+            elif isinstance(key, (str, unicode)):
                 if filters.get(key):
                     return value
+            else:
+                assert False, key
 
     for target in task['targets']:
         ext = os.path.splitext(target)[-1].lower()
         filter_ = filter_matches(ext)
         if filter_:
             for action in filter_:
-                if callable(action):
-                    task['actions'].append((action, (target,)))
-                else:
-                    task['actions'].append(action % target)
-            #task['uptodate']=task.get('uptodate', []) +\
-                #[config_changed(repr(filter_))]
+                def unlessLink(action, target):
+                    if not os.path.islink(target):
+                        if callable(action):
+                            action(target)
+                        else:
+                            subprocess.check_call(action % target,shell = True)
+
+                task['actions'].append( (unlessLink,(action, target)) )
     return task
