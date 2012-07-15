@@ -342,12 +342,12 @@ class Nikola(object):
             self.config['TAG_PATH'], 'index.html'])
         elif kind == "tag":
             if self.config['SLUG_TAG_PATH']:
-                name = utils.slugify(name.lower())
+                name = utils.slugify(name)
             path = filter(None, [self.config['TRANSLATIONS'][lang],
             self.config['TAG_PATH'], name + ".html"])
         elif kind == "tag_rss":
             if self.config['SLUG_TAG_PATH']:
-                name = utils.slugify(name.lower())
+                name = utils.slugify(name)
             path = filter(None, [self.config['TRANSLATIONS'][lang],
             self.config['TAG_PATH'], name + ".xml"])
         elif kind == "index":
