@@ -8,6 +8,7 @@ import os
 import re
 import codecs
 import shutil
+import string
 import subprocess
 import sys
 from zipfile import ZipFile as zip
@@ -78,7 +79,6 @@ def get_meta(source_path):
     title = slug = date = tags = link = ''
 
     re_md_title = re.compile(r'^%s([^%s].*)' % (re.escape('#'),re.escape('#')))
-    import string
     re_rst_title = re.compile(r'^([^%s ].*)' % re.escape(string.punctuation))
 
     for meta in meta_data:

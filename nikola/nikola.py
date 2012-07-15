@@ -7,7 +7,6 @@ import datetime
 import glob
 import json
 import os
-import string
 from StringIO import StringIO
 import sys
 import tempfile
