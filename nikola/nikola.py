@@ -210,7 +210,7 @@ class Nikola(object):
             'INDEX_TEASERS': False,
             'MAX_IMAGE_SIZE': 1280,
             'USE_FILENAME_AS_TITLE': True,
-            'SLUG_TAG_PATH': True,
+            'SLUG_TAG_PATH': False,
             'FILTERS': {},
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
