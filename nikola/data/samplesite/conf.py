@@ -77,13 +77,14 @@ INDEX_PATH = ""
 # Final locations for the archives are:
 # output / TRANSLATION[lang] / ARCHIVE_PATH / ARCHIVE_FILENAME
 # output / TRANSLATION[lang] / ARCHIVE_PATH / YEAR / index.html
-#ARCHIVE_PATH = ""
-#ARCHIVE_FILENAME = "archive.html"
+ARCHIVE_PATH = ""
+ARCHIVE_FILENAME = "archive.html"
 # Final locations are:
 # output / TRANSLATION[lang] / RSS_PATH / rss.xml
 RSS_PATH = ""
 
-# Slug the Tag URL easier for users to type, special characters are often removed or replaced as well.
+# Slug the Tag URL easier for users to type, special characters are
+# often removed or replaced as well.
 SLUG_TAG_PATH = True
 
 # A list of redirection tuples, [("foo/from.html", "/bar/to.html")].
@@ -163,12 +164,13 @@ THEME = 'site'
 # I recomment using the Creative Commons' wizard:
 # http://creativecommons.org/choose/
 LICENSE = """
-    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
-    <img alt="Creative Commons License" style="border-width:0; margin-bottom:12px;"
-    src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>"""
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
+<img alt="Creative Commons License BY-NC-SA"
+style="border-width:0; margin-bottom:12px;"
+src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>"""
 
-# A small copyright notice for the page footer
-CONTENT_FOOTER = u'Contents &copy; 2012 <a href=mailto:"ralsina@kde.org">Roberto Alsina</a>'
+# A small copyright notice for the page footer (in HTML)
+CONTENT_FOOTER = u'Contents &copy; 2012 Example Joe'
 
 # To enable comments via Disqus, you need to create a forum at
 # http://disqus.com, and set DISQUS_FORUM to the short name you selected.
@@ -186,11 +188,6 @@ DISQUS_FORUM = "nikolademo"
 # RSS_LINK is a HTML fragment to link the RSS or Atom feeds. If set to None,
 # the base.tmpl will use the feed Nikola generates. However, you may want to
 # change it for a feedburner feed or something else.
-
-#RSS_LINK = """
-    #<link rel="alternate" type="application/rss+xml" title="RSS" href="http://feeds.feedburner.com/LateralOpinion">
-    #<link rel="alternate" type="application/rss+xml" title="RSS en Espanol" href="http://feeds.feedburner.com/LateralOpinionEsp">
-#"""
 RSS_LINK = None
 
 # A search form to search this site, for the sidebar. You can use a google
@@ -198,18 +195,21 @@ RSS_LINK = None
 # Or a duckduckgo search: https://duckduckgo.com/search_box.html
 # This example should work for pretty much any site we generate.
 SEARCH_FORM = ""
-## This search form is better for the "site" theme where it appears on the navigation bar
+# This search form is better for the "site" theme where it
+# appears on the navigation bar
 #SEARCH_FORM = """
-    #<!-- Custom search -->
-    #<form method="get" id="search" action="http://duckduckgo.com/" class="navbar-form pull-left">
-    #<input type="hidden" name="sites" value="%s"/>
-    #<input type="hidden" name="k8" value="#444444"/>
-    #<input type="hidden" name="k9" value="#D51920"/>
-    #<input type="hidden" name="kt" value="h"/>
-    #<input type="text" name="q" maxlength="255" placeholder="Search&hellip;" class="span2" style="margin-top: 4px;"/>
-    #<input type="submit" value="DuckDuckGo Search" style="visibility: hidden;" />
-    #</form>
-    #<!-- End of custom search -->
+#<!-- Custom search -->
+#<form method="get" id="search" action="http://duckduckgo.com/" """\
+#"""class="navbar-form pull-left">
+#<input type="hidden" name="sites" value="%s"/>
+#<input type="hidden" name="k8" value="#444444"/>
+#<input type="hidden" name="k9" value="#D51920"/>
+#<input type="hidden" name="kt" value="h"/>
+#<input type="text" name="q" maxlength="255" """\
+#"""placeholder="Search&hellip;" class="span2" style="margin-top: 4px;"/>
+#<input type="submit" value="DuckDuckGo Search" style="visibility: hidden;" />
+#</form>
+#<!-- End of custom search -->
 #""" % BLOG_URL
 
 # Google analytics or whatever else you use. Added to the bottom of <body>
