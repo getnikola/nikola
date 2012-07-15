@@ -13,15 +13,13 @@ import tempfile
 import urllib2
 import urlparse
 
-from doit.tools import PythonInteractiveAction, run_once
+from doit.tools import PythonInteractiveAction
 import lxml.html
 from pygments import highlight
 from pygments.lexers import get_lexer_for_filename, TextLexer
 from pygments.formatters import HtmlFormatter
 
-import nikola
 import utils
-import pygments_code_block_directive
 
 config_changed = utils.config_changed
 
@@ -49,7 +47,8 @@ class Post(object):
         self.is_draft = False
         self.source_path = source_path  # posts/blah.txt
         self.post_name = os.path.splitext(source_path)[0]  # posts/blah
-        self.base_path = os.path.join('cache', self.post_name + ".html")  # cache/posts/blah.html
+        # cache/posts/blah.html
+        self.base_path = os.path.join('cache', self.post_name + ".html")
         self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
         self.folder = destination
         self.translations = translations
@@ -66,7 +65,7 @@ class Post(object):
                 utils.get_meta(self.source_path)
 
         if not default_title or not default_pagename or not self.date:
-            raise OSError, "You must set a title and slug and date!"
+            raise OSError("You must set a title and slug and date!")
 
         self.date = utils.to_datetime(self.date)
         self.tags = [x.strip() for x in self.tags.split(',')]
@@ -82,6 +81,7 @@ class Post(object):
         self.pagenames = {}
         self.titles = {}
         # Load internationalized titles
+        # TODO: this has gotten much too complicated. Rethink.
         for lang in translations:
             if lang == default_lang:
                 self.titles[lang] = default_title
@@ -91,14 +91,18 @@ class Post(object):
                 source_path = self.source_path + "." + lang
                 try:
                     if os.path.isfile(metadata_path):
-                        with codecs.open(metadata_path, "r", "utf8") as meta_file:
-                            meta_data = [x.strip() for x in meta_file.readlines()]
+                        with codecs.open(
+                                metadata_path, "r", "utf8") as meta_file:
+                            meta_data = [x.strip() for x in
+                                meta_file.readlines()]
                             while len(meta_data) < 2:
                                 meta_data.append("")
                             self.titles[lang] = meta_data[0] or default_title
-                            self.pagenames[lang] = meta_data[1] or default_pagename
+                            self.pagenames[lang] = meta_data[1] or\
+                                default_pagename
                     else:
-                        ttitle, ppagename, tmp1, tmp2, tmp3 = utils.get_meta(source_path)
+                        ttitle, ppagename, tmp1, tmp2, tmp3 = \
+                            utils.get_meta(source_path)
                         self.titles[lang] = ttitle or default_title
                         self.pagenames[lang] = ppagename or default_pagename
                 except:
@@ -137,10 +141,10 @@ class Post(object):
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read()
 
-        data = lxml.html.make_links_absolute(data,self.permalink())
+        data = lxml.html.make_links_absolute(data, self.permalink())
         if teaser_only:
             e = lxml.html.fromstring(data)
-            teaser=[]
+            teaser = []
             flag = False
             for elem in e:
                 elem_string = lxml.html.tostring(elem)
@@ -149,7 +153,8 @@ class Post(object):
                     break
                 teaser.append(elem_string)
             if flag:
-                teaser.append('<p><a href="%s">Read more...</a></p>' % self.permalink(lang))
+                teaser.append('<p><a href="%s">Read more...</a></p>' %
+                    self.permalink(lang))
             data = ''.join(teaser)
         return data
 
@@ -195,8 +200,8 @@ class Nikola(object):
         # This is the default config
         # TODO: fill it
         self.config = {
-            'ARCHIVE_PATH' : "",
-            'ARCHIVE_FILENAME' : "archive.html",
+            'ARCHIVE_PATH': "",
+            'ARCHIVE_FILENAME': "archive.html",
             'OUTPUT_FOLDER': 'output',
             'FILES_FOLDERS': {'files': ''},
             'LISTINGS_FOLDER': 'listings',
@@ -248,18 +253,19 @@ class Nikola(object):
             template_name, None, context, self.GLOBAL_CONTEXT)
 
         assert output_name.startswith(self.config["OUTPUT_FOLDER"])
-        url_part = output_name[len(self.config["OUTPUT_FOLDER"])+1:]
-        src = urlparse.urljoin(self.config["BLOG_URL"],url_part)
+        url_part = output_name[len(self.config["OUTPUT_FOLDER"]) + 1:]
+        src = urlparse.urljoin(self.config["BLOG_URL"], url_part)
 
         parsed_src = urlparse.urlsplit(src)
         src_elems = parsed_src.path.split('/')[1:]
 
         def replacer(dst):
             # Refuse to replace links that are full URLs.
-            dst_url=urlparse.urlparse(dst)
+            dst_url = urlparse.urlparse(dst)
             if dst_url.netloc:
                 if dst_url.scheme == 'link':  # Magic link
-                    dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'), context['lang'])
+                    dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'),
+                        context['lang'])
                 else:
                     return dst
 
@@ -281,7 +287,8 @@ class Nikola(object):
                 if s != d:
                     break
             # Now i is the longest common prefix
-            result = '/'.join(['..'] * (len(src_elems) - i - 1) + dst_elems[i:])
+            result = '/'.join(['..'] * (len(src_elems) - i - 1) +
+                dst_elems[i:])
 
             if not result:
                 result = "."
@@ -290,7 +297,7 @@ class Nikola(object):
             if parsed_dst.fragment:
                 result += "#" + parsed_dst.fragment
 
-            assert result, (src, dst,i,src_elems,dst_elems)
+            assert result, (src, dst, i, src_elems, dst_elems)
 
             return result
 
@@ -517,18 +524,21 @@ class Nikola(object):
                 print ".",
                 for base_path in glob.glob(wildcard):
                     post = Post(base_path, destination, use_in_feeds,
-                        self.config['TRANSLATIONS'], self.config['DEFAULT_LANG'],
+                        self.config['TRANSLATIONS'],
+                        self.config['DEFAULT_LANG'],
                         self.config['BLOG_URL'],
                         self.get_compile_html(base_path))
                     for lang, langpath in self.config['TRANSLATIONS'].items():
                         dest = (destination, langpath, post.pagenames[lang])
                         if dest in targets:
-                            raise Exception ('Duplicated output path %r in post %r' %
+                            raise Exception(
+                                'Duplicated output path %r in post %r' %
                                 (post.pagenames[lang], base_path))
                         targets.add(dest)
                     self.global_data[post.post_name] = post
                     if post.use_in_feeds:
-                        self.posts_per_year[str(post.date.year)].append(post.post_name)
+                        self.posts_per_year[
+                            str(post.date.year)].append(post.post_name)
                         for tag in post.tags:
                             self.posts_per_tag[tag].append(post.post_name)
             for name, post in self.global_data.items():
@@ -544,7 +554,7 @@ class Nikola(object):
             print "done!"
 
     def generic_page_renderer(self, lang, wildcard,
-        template_name, destination,filters):
+        template_name, destination, filters):
         """Render post fragments to final HTML pages."""
         for post in glob.glob(wildcard):
             post_name = os.path.splitext(post)[0]
@@ -592,8 +602,9 @@ class Nikola(object):
         self.scan_posts()
         for lang in kw["translations"]:
             for wildcard, destination, template_name, _ in kw["post_pages"]:
-                for task in self.generic_page_renderer(
-                        lang, wildcard, template_name, destination, kw["filters"]):
+                for task in self.generic_page_renderer(lang,
+                    wildcard, template_name, destination, kw["filters"]):
+                    # TODO: enable or remove
                     #task['uptodate'] = task.get('uptodate', []) +\
                         #[config_changed(kw)]
                     task['basename'] = 'render_pages'
@@ -695,7 +706,8 @@ class Nikola(object):
                     output_name = "index.html"
                 else:
                     output_name = "index-%s.html" % i
-                    context["title"] = self.config['BLOG_TITLE'] + " (" + kw["messages"][lang]["old posts page %d" ] % i + ")"
+                    context["title"] = self.config['BLOG_TITLE'] + " (" +\
+                        kw["messages"][lang]["old posts page %d"] % i + ")"
                 context["prevlink"] = None
                 context["nextlink"] = None
                 context['index_teasers'] = kw['index_teasers']
@@ -736,7 +748,8 @@ class Nikola(object):
         context["nextlink"] = None
         context.update(extra_context)
         deps_context = copy(context)
-        deps_context["posts"] = [(p.titles[lang], p.permalink(lang)) for p in posts]
+        deps_context["posts"] = [(p.titles[lang], p.permalink(lang))
+            for p in posts]
         task = {
             'name': output_name.encode('utf8'),
             'targets': [output_name],
@@ -809,7 +822,8 @@ class Nikola(object):
                 kw['filters'],
                 context,
             ):
-                task['uptodate'] = task.get('updtodate', []) + [config_changed(kw)]
+                task['uptodate'] = task.get('updtodate', []) +\
+                    [config_changed(kw)]
                 task['basename'] = 'render_archive'
                 yield task
 
@@ -904,7 +918,8 @@ class Nikola(object):
                 kw['filters'],
                 context,
             ):
-                task['uptodate'] = task.get('updtodate', []) + [config_changed(kw)]
+                task['uptodate'] = task.get('updtodate', []) +\
+                    [config_changed(kw)]
                 yield task
 
     def gen_task_render_rss(self, **kw):
@@ -955,7 +970,7 @@ class Nikola(object):
                     lexer = get_lexer_for_filename(in_name)
                 except:
                     lexer = TextLexer()
-                code = highlight(fd.read(), lexer ,
+                code = highlight(fd.read(), lexer,
                     HtmlFormatter(cssclass='code',
                         linenos="table",
                         nowrap=False,
@@ -964,11 +979,11 @@ class Nikola(object):
             title = os.path.basename(in_name)
             crumbs = out_name.split(os.sep)[1:-1] + [title]
             # TODO: write this in human
-            paths = ['/'.join(['..']*(len(crumbs)-2-i)) for i in range(len(crumbs[:-2]))] + ['.', '#']
+            paths = ['/'.join(['..'] * (len(crumbs) - 2 - i)) for i in range(len(crumbs[:-2]))] + ['.', '#']
             context = {
                 'code': code,
                 'title': title,
-                'crumbs': zip(paths,crumbs),
+                'crumbs': zip(paths, crumbs),
                 'lang': kw['default_lang'],
                 }
             self.render_template('listing.tmpl', out_name, context)
@@ -983,7 +998,6 @@ class Nikola(object):
                     kw['output_folder'],
                     root,
                     f) + '.html'
-                title = f
                 yield {
                     'basename': 'render_listings',
                     'name': out_name.encode('utf8'),
@@ -996,7 +1010,6 @@ class Nikola(object):
                 'basename': 'render_listings',
                 'actions': [],
             }
-
 
     def gen_task_render_galleries(self, **kw):
         """Render image galleries.
@@ -1084,7 +1097,8 @@ class Nikola(object):
                 except IOError:
                     excluded_image_name_list = []
 
-                excluded_image_list = map(add_gallery_path, excluded_image_name_list)
+                excluded_image_list = map(add_gallery_path,
+                    excluded_image_name_list)
                 image_set = set(image_list) - set(excluded_image_list)
                 image_list = list(image_set)
             except IOError:
@@ -1131,7 +1145,8 @@ class Nikola(object):
 
             # Remove excluded images
             if excluded_image_name_list:
-                for img, img_name in zip(excluded_image_list, excluded_image_name_list):
+                for img, img_name in zip(excluded_image_list,
+                        excluded_image_name_list):
                     # img_name is "image_name.jpg"
                     # fname, ext are "image_name", ".jpg"
                     #import pdb
@@ -1325,11 +1340,11 @@ class Nikola(object):
         output_path = os.path.dirname(path)
         meta_path = os.path.join(output_path, slug + ".meta")
         pattern = os.path.basename(path)
-        if pattern.startswith( "*." ):
+        if pattern.startswith("*."):
             suffix = pattern[1:]
         else:
             suffix = ".txt"
-        txt_path = os.path.join(output_path, slug + suffix )
+        txt_path = os.path.join(output_path, slug + suffix)
 
         if os.path.isfile(meta_path) or os.path.isfile(txt_path):
             print "The title already exists!"
@@ -1359,7 +1374,8 @@ class Nikola(object):
         """Create a new post (interactive)."""
         yield {
             "basename": "new_page",
-            "actions": [PythonInteractiveAction(cls.new_post, (post_pages, False,))],
+            "actions": [PythonInteractiveAction(cls.new_post,
+                (post_pages, False,))],
             }
 
     @staticmethod
@@ -1442,7 +1458,7 @@ class Nikola(object):
     @staticmethod
     def task_serve(**kw):
         """
-        Start test server. (Usage: doit serve [--address 127.0.0.1] [--port 8000])
+        Start test server. (doit serve [--address 127.0.0.1] [--port 8000])
         By default, the server runs on port 8000 on the IP address 127.0.0.1.
 
         required keyword arguments:
@@ -1455,7 +1471,7 @@ class Nikola(object):
             from SimpleHTTPServer import SimpleHTTPRequestHandler
 
             class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
-                extensions_map=dict(SimpleHTTPRequestHandler.extensions_map)
+                extensions_map = dict(SimpleHTTPRequestHandler.extensions_map)
                 extensions_map[""] = "text/plain"
 
             os.chdir(kw['output_folder'])
@@ -1485,7 +1501,7 @@ class Nikola(object):
 
     @staticmethod
     def task_install_theme():
-        """Install theme. (Usage: doit install_theme -n themename [-u URL] | [-l])."""
+        """Install theme. (doit install_theme -n themename [-u URL]|[-l])."""
 
         def install_theme(name, url, listing):
             if name is None and not listing:
@@ -1502,12 +1518,12 @@ class Nikola(object):
             else:
                 if name in data:
                     if os.path.isfile("themes"):
-                        raise IOError, "the 'themes' isn't a directory!"
+                        raise IOError("'themes' isn't a directory!")
                     elif not os.path.isdir("themes"):
                         try:
                             os.makedirs("themes")
                         except:
-                            raise OSError, "mkdir 'theme' error!"
+                            raise OSError("mkdir 'theme' error!")
                     print 'Downloading: %s' % data[name]
                     zip_file = StringIO()
                     zip_file.write(urllib2.urlopen(data[name]).read())
@@ -1561,12 +1577,14 @@ class Nikola(object):
                 url = 'http://bootswatch.com/%s/%s' % (swatch, fname)
                 print "Downloading: ", url
                 data = urllib2.urlopen(url).read()
-                with open(os.path.join('themes', name, 'assets', 'css', fname), 'wb+') as output:
+                with open(os.path.join(
+                    'themes', name, 'assets', 'css', fname), 'wb+') as output:
                     output.write(data)
 
             with open(os.path.join('themes', name, 'parent'), 'wb+') as output:
                 output.write(parent)
-            print 'Theme created. Change the THEME setting to "%s" to use it.' % name
+            print 'Theme created. Change the THEME setting to "%s" to use it.'\
+                % name
 
         yield {
             "basename": 'bootswatch_theme',
@@ -1599,6 +1617,7 @@ class Nikola(object):
                 }
                 ],
         }
+
 
 def nikola_main():
     print "Starting doit..."

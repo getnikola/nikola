@@ -18,6 +18,7 @@ from pygments_code_block_directive import (
 directives.register_directive('code-block', code_block_directive)
 directives.register_directive('listing', listings_directive)
 
+import pygments_code_block_directive
 from youtube import youtube
 directives.register_directive('youtube', youtube)
 
