@@ -318,6 +318,11 @@ def copy_file(source, dest, cutoff=None):
     else:
         shutil.copy2(source, dest)
 
+def remove_file(source):
+    if os.path.isdir(source):
+        shutil.rmtree(source)
+    elif os.path.isfile(source) or os.path.islink(source):
+        os.remove(source)
 
 # slugify is copied from
 # http://code.activestate.com/recipes/
@@ -379,6 +384,8 @@ def to_datetime(value):
         return value
     supported_formats = [
         '%Y/%m/%d %H:%M',
+        '%Y/%m/%d %H:%M:%S',
+        '%Y/%m/%d %I:%M:%S %p',
         '%a %b %d %H:%M:%S %Y',
         '%Y-%m-%d %H:%M:%S',
         '%Y-%m-%d %H:%M',

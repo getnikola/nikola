@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 ########################################
 # Configuration, please edit
 ########################################
@@ -73,12 +75,16 @@ TAG_PATH = "categories"
 # Final location is output / TRANSLATION[lang] / INDEX_PATH / index-*.html
 INDEX_PATH = ""
 # Final locations for the archives are:
-# output / TRANSLATION[lang] / ARCHIVE_PATH / archive.html
+# output / TRANSLATION[lang] / ARCHIVE_PATH / ARCHIVE_FILENAME
 # output / TRANSLATION[lang] / ARCHIVE_PATH / YEAR / index.html
 ARCHIVE_PATH = ""
+ARCHIVE_FILENAME = "archive.html"
 # Final locations are:
 # output / TRANSLATION[lang] / RSS_PATH / rss.xml
 RSS_PATH = ""
+
+# Slug the Tag URL easier for users to type, special characters are often removed or replaced as well.
+SLUG_TAG_PATH = True
 
 # A list of redirection tuples, [("foo/from.html", "/bar/to.html")].
 #
@@ -229,7 +235,7 @@ GLOBAL_CONTEXT = {
     # Locale-dependent links for the sidebar
     'sidebar_links': {
         'en': (
-            ('/archive.html', 'Archives'),
+            ('/' + os.path.join(ARCHIVE_PATH, ARCHIVE_FILENAME), 'Archives'),
             ('/categories/index.html', 'Tags'),
             ('/stories/about-nikola.html', 'About Nikola'),
             ('/stories/handbook.html', 'The Nikola Handbook'),
