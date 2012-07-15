@@ -77,8 +77,8 @@ INDEX_PATH = ""
 # Final locations for the archives are:
 # output / TRANSLATION[lang] / ARCHIVE_PATH / ARCHIVE_FILENAME
 # output / TRANSLATION[lang] / ARCHIVE_PATH / YEAR / index.html
-ARCHIVE_PATH = ""
-ARCHIVE_FILENAME = "archive.html"
+#ARCHIVE_PATH = ""
+#ARCHIVE_FILENAME = "archive.html"
 # Final locations are:
 # output / TRANSLATION[lang] / RSS_PATH / rss.xml
 RSS_PATH = ""

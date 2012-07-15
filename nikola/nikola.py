@@ -195,6 +195,8 @@ class Nikola(object):
         # This is the default config
         # TODO: fill it
         self.config = {
+            'ARCHIVE_PATH' : "",
+            'ARCHIVE_FILENAME' : "archive.html",
             'OUTPUT_FOLDER': 'output',
             'FILES_FOLDERS': {'files': ''},
             'LISTINGS_FOLDER': 'listings',
