@@ -692,9 +692,14 @@ class Nikola(object):
                 context = {}
                 if not i:
                     output_name = "index.html"
+                    context["title"] = self.config.get('INDEX_TITLE', self.config['BLOG_TITLE'])
                 else:
                     output_name = "index-%s.html" % i
-                    context["title"] = self.config['BLOG_TITLE'] + " (" + kw["messages"][lang]["old posts page %d" ] % i + ")"
+                    if self.config.get("PAGE_TITLE", ""):
+                        page_title = self.config.get("PAGE_TITLE") % i
+                    else:
+                        page_title = " (" + kw["messages"][lang]["old posts page %d"] % i + ")"
+                    context["title"] = self.config.get('INDEX_TITLE', self.config['BLOG_TITLE']) + page_title
                 context["prevlink"] = None
                 context["nextlink"] = None
                 context['index_teasers'] = kw['index_teasers']

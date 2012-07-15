@@ -152,6 +152,8 @@ BLOG_TITLE = "Demo Site"
 BLOG_URL = "http://nikola.ralsina.com.ar"
 BLOG_EMAIL = "joe@demo.site"
 BLOG_DESCRIPTION = "This is a demo site for Nikola."
+INDEX_TITLE = ""  # default is BLOG_TITLE
+PAGE_TITLE = ""  # default is (old posts page %d)
 
 # Name of the theme to use. Themes are located in themes/theme_name
 THEME = 'site'
@@ -232,6 +234,8 @@ GLOBAL_CONTEXT = {
     'content_footer': CONTENT_FOOTER,
     'rss_path': RSS_PATH,
     'rss_link': RSS_LINK,
+    'index_title': INDEX_TITLE,
+    'page_title': PAGE_TITLE,
     # Locale-dependent links for the sidebar
     'sidebar_links': {
         'en': (
