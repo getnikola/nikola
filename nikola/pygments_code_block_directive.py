@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-#$URL: https://rst2pdf.googlecode.com/svn/trunk/rst2pdf/pygments_code_block_directive.py $
 #$Date: 2012-02-28 21:07:21 -0300 (Tue, 28 Feb 2012) $
 #$Revision: 2443 $
 
@@ -40,15 +39,13 @@ import urlparse
 from docutils import nodes, core
 from docutils.parsers.rst import directives
 
+pygments = None
 try:
     import pygments
     from pygments.lexers import get_lexer_by_name
     from pygments.formatters.html import _get_ttype_class
 except ImportError:
-    pygments = None
-
-
-import utils
+    pass
 
 
 # Customisation
@@ -93,7 +90,7 @@ class DocutilsInterface(object):
     def lex(self):
         """Get lexer for language (use text as fallback)"""
         try:
-            if self.language and unicode(self.language).lower() <> 'none':
+            if self.language and unicode(self.language).lower() != 'none':
                 lexer = get_lexer_by_name(self.language.lower(),
                                         **self.custom_args
                                         )
@@ -123,8 +120,6 @@ class DocutilsInterface(object):
         try:
             tokens = self.lex()
         except IOError:
-            log.info("Pygments lexer not found, using fallback")
-            # TODO: write message to INFO
             yield ('', self.code)
             return
 
@@ -145,8 +140,9 @@ def code_block_directive(name, arguments, options, content, lineno,
                 encoding = options['encoding']
             else:
                 encoding = 'utf-8'
-            content = codecs.open(options['include'], 'r', encoding).read().rstrip()
-        except (IOError, UnicodeError): # no file or problem finding it or reading it
+            content = codecs.open(
+                options['include'], 'r', encoding).read().rstrip()
+        except (IOError, UnicodeError):  # no file or problem reading it
             content = u''
         line_offset = 0
         if content:
@@ -161,42 +157,54 @@ def code_block_directive(name, arguments, options, content, lineno,
 
             after_text = options.get('start-at', None)
             if after_text:
-                # skip content in include_text before *and NOT incl.* a matching text
+                # skip content in include_text before
+                # *and NOT incl.* a matching text
                 after_index = content.find(after_text)
                 if after_index < 0:
-                    raise state_machine.reporter.severe('Problem with "start-at" option of "%s" '
-                                      'code-block directive:\nText not found.' % options['start-at'])
+                    raise state_machine.reporter.severe(
+                        'Problem with "start-at" option of "%s" '
+                        'code-block directive:\nText not found.' %
+                        options['start-at'])
                 content = content[after_index:]
                 line_offset = len(content[:after_index].splitlines())
 
             after_text = options.get('start-after', None)
             if after_text:
-                # skip content in include_text before *and incl.* a matching text
+                # skip content in include_text before
+                # *and incl.* a matching text
                 after_index = content.find(after_text)
                 if after_index < 0:
-                    raise state_machine.reporter.severe('Problem with "start-after" option of "%s" '
-                                      'code-block directive:\nText not found.' % options['start-after'])
-                line_offset = len(content[:after_index + len(after_text)].splitlines())
+                    raise state_machine.reporter.severe(
+                        'Problem with "start-after" option of "%s" '
+                        'code-block directive:\nText not found.' %
+                        options['start-after'])
+                line_offset = len(content[:after_index +
+                    len(after_text)].splitlines())
                 content = content[after_index + len(after_text):]
-
 
             # same changes here for the same reason
             before_text = options.get('end-at', None)
             if before_text:
-                # skip content in include_text after *and incl.* a matching text
+                # skip content in include_text after
+                # *and incl.* a matching text
                 before_index = content.find(before_text)
                 if before_index < 0:
-                    raise state_machine.reporter.severe('Problem with "end-at" option of "%s" '
-                                      'code-block directive:\nText not found.' % options['end-at'])
+                    raise state_machine.reporter.severe(
+                        'Problem with "end-at" option of "%s" '
+                        'code-block directive:\nText not found.' %
+                        options['end-at'])
                 content = content[:before_index + len(before_text)]
 
             before_text = options.get('end-before', None)
             if before_text:
-                # skip content in include_text after *and NOT incl.* a matching text
+                # skip content in include_text after
+                # *and NOT incl.* a matching text
                 before_index = content.find(before_text)
                 if before_index < 0:
-                    raise state_machine.reporter.severe('Problem with "end-before" option of "%s" '
-                                      'code-block directive:\nText not found.' % options['end-before'])
+                    raise state_machine.reporter.severe(
+                        'Problem with "end-before" option of "%s" '
+                        'code-block directive:\nText not found.' %
+                        options['end-before'])
                 content = content[:before_index]
 
     else:
@@ -207,7 +215,7 @@ def code_block_directive(name, arguments, options, content, lineno,
     else:
         tabw = int(options.get('tab-width', 8))
 
-    content = content.replace('\t',' '*tabw)
+    content = content.replace('\t', ' ' * tabw)
 
     withln = "linenos" in options
     if not "linenos_offset" in options:
@@ -222,7 +230,8 @@ def code_block_directive(name, arguments, options, content, lineno,
         total_lines = content.count('\n') + 1 + line_offset
         lnwidth = len(str(total_lines))
         fstr = "\n%%%dd " % lnwidth
-        code_block += nodes.inline(fstr[1:] % lineno, fstr[1:] % lineno,   classes=['linenumber'])
+        code_block += nodes.inline(fstr[1:] % lineno, fstr[1:] % lineno,
+            classes=['linenumber'])
 
     # parse content with pygments and add to code_block element
     content = content.rstrip()
@@ -243,7 +252,8 @@ def code_block_directive(name, arguments, options, content, lineno,
                 linenos = range(lineno, lineno + len(values))
                 for chunk, ln in zip(values, linenos)[1:]:
                     if ln <= total_lines:
-                        code_block += nodes.inline(fstr % ln, fstr % ln, classes=['linenumber'])
+                        code_block += nodes.inline(fstr % ln, fstr % ln,
+                            classes=['linenumber'])
                         code_block += nodes.Text(chunk, chunk)
                 lineno += len(values) - 1
 
@@ -261,6 +271,7 @@ def code_block_directive(name, arguments, options, content, lineno,
 #
 # Move to separated module??
 
+
 def string_list(argument):
     """
     Converts a space- or comma-separated list of values into a python list
@@ -274,12 +285,13 @@ def string_list(argument):
         entries = argument.split()
     return entries
 
+
 def string_bool(argument):
     """
     Converts True, true, False, False in python boolean values
     """
     if argument is None:
-        msg = 'argument required but none supplied; choose from "True" or "False"'
+        msg = 'argument required but none supplied; choose "True" or "False"'
         raise ValueError(msg)
 
     elif argument.lower() == 'true':
@@ -290,30 +302,29 @@ def string_bool(argument):
         raise ValueError('"%s" unknown; choose from "True" or "False"'
                         % argument)
 
+
 def csharp_unicodelevel(argument):
     return directives.choice(argument, ('none', 'basic', 'full'))
+
 
 def lhs_litstyle(argument):
     return directives.choice(argument, ('bird', 'latex'))
 
+
 def raw_compress(argument):
     return directives.choice(argument, ('gz', 'bz2'))
+
 
 def listings_directive(name, arguments, options, content, lineno,
                        content_offset, block_text, state, state_machine):
     fname = arguments[0]
     options['include'] = os.path.join('listings', fname)
-    target = urlparse.urlunsplit(("link",'listing',fname,'',''))
+    target = urlparse.urlunsplit(("link", 'listing', fname, '', ''))
     generated_nodes = [core.publish_doctree('`%s <%s>`_' % (fname, target))[0]]
-    generated_nodes += code_block_directive(name, [arguments[1]], options, content, lineno,
-                       content_offset, block_text, state, state_machine)
+    generated_nodes += code_block_directive(name, [arguments[1]],
+                       options, content, lineno, content_offset, block_text,
+                       state, state_machine)
     return generated_nodes
-
-
-
-# Register Directive
-# ------------------
-# ::
 
 code_block_directive.arguments = (1, 0, 1)
 listings_directive.arguments = (2, 0, 1)
@@ -328,30 +339,30 @@ code_block_directive.options = {'include': directives.unchanged_required,
                                 'linenos_offset': directives.unchanged,
                                 'tab-width': directives.unchanged,
                                 # generic
-                                'stripnl' : string_bool,
+                                'stripnl': string_bool,
                                 'stripall': string_bool,
                                 'ensurenl': string_bool,
-                                'tabsize' : directives.positive_int,
+                                'tabsize': directives.positive_int,
                                 'encoding': directives.encoding,
                                 # Lua
-                                'func_name_hightlighting':string_bool,
+                                'func_name_hightlighting': string_bool,
                                 'disabled_modules': string_list,
                                 # Python Console
                                 'python3': string_bool,
                                 # Delphi
-                                'turbopascal':string_bool,
-                                'delphi' :string_bool,
+                                'turbopascal': string_bool,
+                                'delphi': string_bool,
                                 'freepascal': string_bool,
                                 'units': string_list,
                                 # Modula2
-                                'pim'   : string_bool,
-                                'iso'   : string_bool,
-                                'objm2' : string_bool,
+                                'pim': string_bool,
+                                'iso': string_bool,
+                                'objm2': string_bool,
                                 'gm2ext': string_bool,
                                 # CSharp
-                                'unicodelevel' : csharp_unicodelevel,
+                                'unicodelevel': csharp_unicodelevel,
                                 # Literate haskell
-                                'litstyle' : lhs_litstyle,
+                                'litstyle': lhs_litstyle,
                                 # Raw
                                 'compress': raw_compress,
                                 # Rst
