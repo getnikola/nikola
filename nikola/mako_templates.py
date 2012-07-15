@@ -11,6 +11,7 @@ from mako.lookup import TemplateLookup
 lookup = None
 cache = {}
 
+
 def get_deps(filename):
     text = util.read_file(filename)
     lex = lexer.Lexer(text=text, filename=filename)
@@ -22,6 +23,7 @@ def get_deps(filename):
             deps.append(n.attributes['file'])
         # TODO: include tags are not handled
     return deps
+
 
 def get_template_lookup(directories):
     cache_dir = os.path.join('cache', '.mako.tmp')
