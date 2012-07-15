@@ -3,6 +3,7 @@
 __all__ = ['compile_html']
 
 import codecs
+import os
 import re
 
 from markdown import markdown
@@ -20,9 +21,9 @@ def compile_html(source, dest):
         output = markdown(data, ['fenced_code', 'codehilite'])
         # remove the H1 because there is "title" h1.
         output = re.sub(r'<h1>.*</h1>', '', output)
-        # python-markdown's highlighter uses the class 'codehilite' to wrap code,
-        # instead of the standard 'code'. None of the standard pygments
+        # python-markdown's highlighter uses the class 'codehilite' to wrap
+        # code, # instead of the standard 'code'. None of the standard pygments
         # stylesheets use this class, so swap it to be 'code'
-        output = re.sub(r'(<div[^>]+class="[^"]*)codehilite([^>]+)', r'\1code\2',
-                        output)
+        output = re.sub(r'(<div[^>]+class="[^"]*)codehilite([^>]+)',
+                        r'\1code\2', output)
         out_file.write(output)
