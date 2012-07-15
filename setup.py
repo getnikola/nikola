@@ -1,23 +1,31 @@
 #!/usr/bin/env python
 
-# (c) 2005 Ian Bicking and contributors; written for Paste (http://pythonpaste.org)
-# Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
-# Note: you may want to copy this into your setup.py file verbatim, as
-# you can't import this from another package, when you don't know if
-# that package is installed yet.
+# find_package data is
+# (c) 2005 Ian Bicking and contributors; written for Paste
+# (http://pythonpaste.org)
+# Licensed under the MIT license:
+# http://www.opensource.org/licenses/mit-license.php
 
 import os
 import sys
 from fnmatch import fnmatchcase
 from distutils.util import convert_path
 
-dependencies = ['doit>=0.16.1', 'pygments', 'pillow', 'docutils', 'mako>=0.6', 'unidecode', 'lxml']
+dependencies = [
+    'doit>=0.16.1',
+    'pygments',
+    'pillow',
+    'docutils',
+    'mako>=0.6',
+    'unidecode',
+    'lxml']
 
 # Provided as an attribute, so you can append to these instead
 # of replicating them:
 standard_exclude = ('*.pyc', '*$py.class', '*~', '.*', '*.bak')
 standard_exclude_directories = ('.*', 'CVS', '_darcs', './build',
                                 './dist', 'EGG-INFO', '*.egg-info')
+
 
 def find_package_data(
     where='.', package='',
@@ -79,7 +87,8 @@ def find_package_data(
                         new_package = package + '.' + name
                     stack.append((fn, '', new_package, False))
                 else:
-                    stack.append((fn, prefix + name + '/', package, only_in_packages))
+                    stack.append((fn, prefix + name + '/',
+                    package, only_in_packages))
             elif package or not only_in_packages:
                 # is a file
                 bad_name = False
@@ -94,8 +103,8 @@ def find_package_data(
                         break
                 if bad_name:
                     continue
-                out.setdefault(package, []).append(prefix+name)
-    return out    
+                out.setdefault(package, []).append(prefix + name)
+    return out
 
 from distutils.core import setup
 
@@ -107,7 +116,7 @@ setup(name='Nikola',
       url='http://nikola.ralsina.com.ar/',
       packages=['nikola'],
       scripts=['scripts/nikola', 'scripts/nikola_check'],
-      install_requires = dependencies,
+      install_requires=dependencies,
       package_data=find_package_data(),
       data_files=['docs/manual.txt',
         'docs/theming.txt'],
