@@ -12,12 +12,16 @@ import docutils.core
 import docutils.io
 from docutils.parsers.rst import directives
 
-from pygments_code_block_directive import code_block_directive, listings_directive
+from pygments_code_block_directive import (
+    code_block_directive,
+    listings_directive)
 directives.register_directive('code-block', code_block_directive)
 directives.register_directive('listing', listings_directive)
 
+import pygments_code_block_directive
 from youtube import youtube
-directives.register_directive('youtube',youtube)
+directives.register_directive('youtube', youtube)
+
 
 def compile_html(source, dest):
     try:

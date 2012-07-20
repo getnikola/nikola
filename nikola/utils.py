@@ -8,6 +8,7 @@ import os
 import re
 import codecs
 import shutil
+import string
 import subprocess
 import sys
 from zipfile import ZipFile as zip
@@ -18,12 +19,12 @@ import PyRSS2Gen as rss
 
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
     'get_compile_html', 'get_template_module', 'generic_rss_renderer',
-    'copy_file', 'slugify', 'unslugfy', 'get_meta', 'to_datetime',
+    'copy_file', 'slugify', 'unslugify', 'get_meta', 'to_datetime',
     'apply_filters', 'config_changed']
 
-# config_changed is basically a copy of
-# doit's but using pickle instead of trying to serialize manually
+
 class config_changed(object):
+    """ A copy of doit's but using pickle instead of serializing manually."""
 
     def __init__(self, config):
         self.config = config
@@ -36,8 +37,8 @@ class config_changed(object):
             data = cPickle.dumps(self.config)
             config_digest = hashlib.md5(data).hexdigest()
         else:
-            raise Exception(('Invalid type of config_changed parameter got %s' +
-                             ', must be string or dict') % (type(self.config),))
+            raise Exception(('Invalid type of config_changed parameter got %s'
+                + ', must be string or dict') % (type(self.config),))
 
         def _save_config():
             return {'_config_changed': config_digest}
@@ -47,6 +48,7 @@ class config_changed(object):
         if last_success is None:
             return False
         return (last_success == config_digest)
+
 
 def get_theme_path(theme):
     """Given a theme name, returns the path where its files are located.
@@ -62,14 +64,16 @@ def get_theme_path(theme):
         return dir_name
     raise Exception(u"Can't find theme '%s'" % theme)
 
-def re_meta(line,match):
+
+def re_meta(line, match):
     """ re.compile for meta"""
-    reStr = re.compile('^%s(.*)' %  re.escape(match))
+    reStr = re.compile('^%s(.*)' % re.escape(match))
     result = reStr.findall(line)
     if result:
         return result[0].strip()
     else:
         return ''
+
 
 def get_meta(source_path):
     """get post's meta from source"""
@@ -77,13 +81,13 @@ def get_meta(source_path):
         meta_data = meta_file.readlines(15)
     title = slug = date = tags = link = ''
 
-    re_md_title = re.compile(r'^%s([^%s].*)' % (re.escape('#'),re.escape('#')))
-    import string
+    re_md_title = re.compile(r'^%s([^%s].*)' %
+        (re.escape('#'), re.escape('#')))
     re_rst_title = re.compile(r'^([^%s ].*)' % re.escape(string.punctuation))
 
     for meta in meta_data:
         if not title:
-            title = re_meta(meta,'.. title:')
+            title = re_meta(meta, '.. title:')
         if not title:
             if re_rst_title.findall(meta):
                 title = re_rst_title.findall(meta)[0]
@@ -91,19 +95,21 @@ def get_meta(source_path):
             if re_md_title.findall(meta):
                 title = re_md_title.findall(meta)[0]
         if not slug:
-            slug = re_meta(meta,'.. slug:')
+            slug = re_meta(meta, '.. slug:')
         if not date:
-            date = re_meta(meta,'.. date:')
+            date = re_meta(meta, '.. date:')
         if not tags:
-            tags = re_meta(meta,'.. tags:')
+            tags = re_meta(meta, '.. tags:')
         if not link:
-            link = re_meta(meta,'.. link:')
+            link = re_meta(meta, '.. link:')
 
+    # TODO: either enable or delete
     #if not date:
         #from datetime import datetime
-        #date = datetime.fromtimestamp(os.path.getmtime(source_path)).strftime('%Y/%m/%d %H:%M')
+        #date = datetime.fromtimestamp(
+        #    os.path.getmtime(source_path)).strftime('%Y/%m/%d %H:%M')
 
-    return (title,slug,date,tags,link)
+    return (title, slug, date, tags, link)
 
 
 def get_template_engine(themes):
@@ -202,9 +208,9 @@ def get_compile_html(input_format):
         import md
         compile_html = md.compile_html
     elif input_format == "html":
-        import html
         compile_html = copy_file
     return compile_html
+
 
 class CompileHtmlGetter(object):
     """Get the correct compile_html for a file, based on file extension.
@@ -236,7 +242,7 @@ class CompileHtmlGetter(object):
                      self.post_compilers.items()
                      if ext in exts]
             if len(langs) != 1:
-                if len(set(langs))>1:
+                if len(set(langs)) > 1:
                     exit("Your file extension->compiler definition is"
                          "ambiguous.\nPlease remove one of the file extensions"
                          "from 'post_compilers' in conf.py\n(The error is in"
@@ -253,6 +259,7 @@ class CompileHtmlGetter(object):
             self.inverse_post_compilers[ext] = compile_html
 
         return compile_html
+
 
 def get_template_module(template_engine, themes):
     """Setup templating library."""
@@ -304,7 +311,7 @@ def copy_file(source, dest, cutoff=None):
         os.makedirs(dst_dir)
     if os.path.islink(source):
         link_target = os.path.relpath(
-            os.path.normpath(os.path.join(dst_dir,os.readlink(source))))
+            os.path.normpath(os.path.join(dst_dir, os.readlink(source))))
         # Now we have to decide if we copy the link target or the
         # link itself.
         if cutoff is None or not link_target.startswith(cutoff):
@@ -318,6 +325,7 @@ def copy_file(source, dest, cutoff=None):
     else:
         shutil.copy2(source, dest)
 
+
 def remove_file(source):
     if os.path.isdir(source):
         shutil.rmtree(source)
@@ -330,6 +338,7 @@ def remove_file(source):
 _slugify_strip_re = re.compile(r'[^\w\s-]')
 _slugify_hyphenate_re = re.compile(r'[-\s]+')
 
+
 def slugify(value):
     """
     Normalizes string, converts to lowercase, removes non-alpha characters,
@@ -337,10 +346,10 @@ def slugify(value):
 
     From Django's "django/template/defaultfilters.py".
     """
-    import unicodedata
     value = unidecode(value)
     value = unicode(_slugify_strip_re.sub('', value).strip().lower())
     return _slugify_hyphenate_re.sub('-', value)
+
 
 def unslugify(value):
     """
@@ -358,6 +367,7 @@ def unslugify(value):
 class UnsafeZipException(Exception):
     pass
 
+
 def extract_all(zipfile):
     pwd = os.getcwd()
     os.chdir('themes')
@@ -365,14 +375,15 @@ def extract_all(zipfile):
     namelist = z.namelist()
     for f in namelist:
         if f.endswith('/') and '..' in f:
-            raise UnsafeZipException('The zip file contains ".." and is not safe to expand.')
+            raise UnsafeZipException(
+                'The zip file contains ".." and is not safe to expand.')
     for f in namelist:
         if f.endswith('/'):
             if not os.path.isdir(f):
                 try:
                     os.makedirs(f)
                 except:
-                    raise OSError, "mkdir '%s' error!" % f
+                    raise OSError("mkdir '%s' error!" % f)
         else:
             z.extract(f)
     os.chdir(pwd)
@@ -432,7 +443,7 @@ def apply_filters(task, filters):
                         if callable(action):
                             action(target)
                         else:
-                            subprocess.check_call(action % target,shell = True)
+                            subprocess.check_call(action % target, shell=True)
 
-                task['actions'].append( (unlessLink,(action, target)) )
+                task['actions'].append((unlessLink, (action, target)))
     return task
