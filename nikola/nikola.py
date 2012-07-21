@@ -491,7 +491,9 @@ class Nikola(object):
             thumbnail_size=self.config['THUMBNAIL_SIZE'],
             default_lang=self.config['DEFAULT_LANG'],
             output_folder=self.config['OUTPUT_FOLDER'],
-            use_filename_as_title=self.config['USE_FILENAME_AS_TITLE'])
+            use_filename_as_title=self.config['USE_FILENAME_AS_TITLE'],
+            default_desc=self.config['DEFAULT_PAGE_DESCRIPTION']
+        )
         yield self.gen_task_render_listings(
             listings_folder=self.config['LISTINGS_FOLDER'],
             default_lang=self.config['DEFAULT_LANG'],
@@ -713,20 +715,19 @@ class Nikola(object):
             for i, post_list in enumerate(lists):
                 context = {}
                 if self.config.get("INDEXES_TITLE", ""):
-                    indexes_title = self.config.get("INDEXES_TITLE")
+                    indexes_title = self.config['INDEXES_TITLE']
                 else:
-                    indexes_title = self.config("BLOG_TITLE")
+                    indexes_title = self.config["BLOG_TITLE"]
                 if not i:
                     output_name = "index.html"
                     context["title"] = indexes_title
                 else:
                     output_name = "index-%s.html" % i
                     if self.config.get("INDEXES_PAGES", ""):
-                        indexes_pages = self.config.get("INDEXES_PAGES") % i
+                        indexes_pages = self.config["INDEXES_PAGES"] % i
                     else:
                         indexes_pages = " (" + kw["messages"][lang]["old posts page %d"] % i + ")"
                     context["title"] = indexes_title + indexes_pages
-
                 context["prevlink"] = None
                 context["nextlink"] = None
                 context['index_teasers'] = kw['index_teasers']
@@ -761,8 +762,8 @@ class Nikola(object):
             deps += post.deps(lang)
         context = {}
         context["posts"] = posts
-        context["title"] = self.config.get("INDEXES_TITLE", self.config['BLOG_TITLE'])
-        context["description"] = self.config.get("INDEXES_DESCRIPTION", "")
+        context["title"] = self.config['BLOG_TITLE']
+        context["description"] = self.config['DEFAULT_PAGE_DESCRIPTION']
         context["lang"] = lang
         context["prevlink"] = None
         context["nextlink"] = None
@@ -1202,6 +1203,7 @@ class Nikola(object):
             context = {}
             context["lang"] = kw["default_lang"]
             context["title"] = os.path.basename(gallery_path)
+            context["description"] = kw["default_desc"]
             if kw['use_filename_as_title']:
                 img_titles = ['title="%s"' % utils.unslugify(fn[:-4])
                               for fn in image_name_list]
