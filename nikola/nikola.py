@@ -492,7 +492,7 @@ class Nikola(object):
             default_lang=self.config['DEFAULT_LANG'],
             output_folder=self.config['OUTPUT_FOLDER'],
             use_filename_as_title=self.config['USE_FILENAME_AS_TITLE'],
-            default_desc=self.config['DEFAULT_PAGE_DESCRIPTION']
+            blog_description=self.config['BLOG_DESCRIPTION']
         )
         yield self.gen_task_render_listings(
             listings_folder=self.config['LISTINGS_FOLDER'],
@@ -763,7 +763,7 @@ class Nikola(object):
         context = {}
         context["posts"] = posts
         context["title"] = self.config['BLOG_TITLE']
-        context["description"] = self.config['DEFAULT_PAGE_DESCRIPTION']
+        context["description"] = self.config['BLOG_DESCRIPTION']
         context["lang"] = lang
         context["prevlink"] = None
         context["nextlink"] = None
@@ -1203,7 +1203,7 @@ class Nikola(object):
             context = {}
             context["lang"] = kw["default_lang"]
             context["title"] = os.path.basename(gallery_path)
-            context["description"] = kw["default_desc"]
+            context["description"] = kw["blog_description"]
             if kw['use_filename_as_title']:
                 img_titles = ['title="%s"' % utils.unslugify(fn[:-4])
                               for fn in image_name_list]
