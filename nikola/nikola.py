@@ -1036,10 +1036,11 @@ class Nikola(object):
             return
         try:
             import Image as _Image
+            import ExifTags
             Image = _Image
         except ImportError:
             try:
-                from PIL import Image as _Image
+                from PIL import Image as _Image, ExifTags
                 Image = _Image
             except ImportError:
                 pass
@@ -1049,8 +1050,25 @@ class Nikola(object):
                 w, h = im.size
                 if w > max_size or h > max_size:
                     size = max_size, max_size
+
+                    exif = im._getexif()
+                    if exif is not None:
+                        for tag, value in exif.items():
+                            decoded = ExifTags.TAGS.get(tag, tag)
+
+                            if decoded == 'Orientation':
+                                if value == 3:
+                                    im = im.rotate(180)
+                                elif value == 6:
+                                    im = im.rotate(270)
+                                elif value == 8:
+                                    im = im.rotate(90)
+
+                                break
+
                     im.thumbnail(size, Image.ANTIALIAS)
                     im.save(dst)
+
                 else:
                     utils.copy_file(src, dst)
 
