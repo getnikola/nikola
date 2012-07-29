@@ -1050,8 +1050,10 @@ class Nikola(object):
                 w, h = im.size
                 if w > max_size or h > max_size:
                     size = max_size, max_size
-
-                    exif = im._getexif()
+                    try:
+                        exif = im._getexif()
+                    except AttributeError:
+                        exif = None
                     if exif is not None:
                         for tag, value in exif.items():
                             decoded = ExifTags.TAGS.get(tag, tag)
@@ -1077,6 +1079,26 @@ class Nikola(object):
 
             def create_resized_image(src, dst):
                 return _resize_image(src, dst, kw['max_image_size'])
+
+            dates = {}
+            def image_date(src):
+                #import doit.tools; doit.tools.set_trace()
+                if src not in dates:
+                    im = Image.open(src)
+                    try:
+                        exif = im._getexif()
+                    except AttributeError:
+                        exif = None
+                    if exif is not None:
+                        for tag, value in exif.items():
+                            decoded = ExifTags.TAGS.get(tag, tag)
+                            if decoded == 'DateTimeOriginal':
+                                dates[src] = datetime.datetime.strptime(value, r'%Y:%m:%d %H:%M:%S')
+                                break
+                if src not in dates:
+                    dates[src] = datetime.datetime.fromtimestamp(os.stat(src).st_mtime)
+                return dates[src]
+
         else:
             create_thumb = utils.copy_file
             create_resized_image = utils.copy_file
@@ -1103,6 +1125,8 @@ class Nikola(object):
                 glob.glob(gallery_path + "/*PNG") +\
                 glob.glob(gallery_path + "/*png")
 
+            # Sort by date
+            image_list.sort(cmp=lambda a,b: cmp(image_date(a), image_date(b)))
             # Filter ignore images
             try:
                 def add_gallery_path(index):
