@@ -89,6 +89,9 @@ base.tmpl
 
     * ``lang`` is the laguage for this page.
     * ``title`` is the page's title.
+    * ``description`` is the page's description.
+    * ``blog_title`` is the blog's title.
+    * ``blog_author`` is the blog's author.
     * ``messages`` contains the theme's strings and translations.
     * ``_link`` is an utility function to create links to other pages in the site.
       It takes three arguments, kind, name, lang:
