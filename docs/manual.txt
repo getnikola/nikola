@@ -187,14 +187,16 @@ The short version is: ``pip install https://github.com/ralsina/nikola/zipball/ma
 
 Longer version:
 
-1. Get python, if you don't have it.
-2. Get `doit <http://python-doit.sf.net>`_
-3. Get `docutils <http://docutils.sf.net>`_
-4. Get `Mako <http://makotemplates.org>`_
-5. Get `PIL <http://www.pythonware.com/products/pil/>`_
-6. Get `Pygments <http://pygments.org/>`_
+#. Get python, if you don't have it.
+#. Get `doit <http://python-doit.sf.net>`_
+#. Get `docutils <http://docutils.sf.net>`_
+#. Get `Mako <http://makotemplates.org>`_
+#. Get `PIL <http://www.pythonware.com/products/pil/>`_ or `Pillow <http://pypi.python.org/pypi/Pillow>`_
+#. Get `Pygments <http://pygments.org/>`_
+#. Get `lxml <http://lxml.de/>`_
 
-Any non-prehistorical version of the above should work, but the newer the better.
+Any non-prehistorical version of the above should work, and if you are in Linux
+you can try to use your distribution's packages if they exist, but the newer the better.
 
 Then get Nikola itself (<http://nikola.ralsina.com.ar/>), unzip it, and
 run ``python setup.py install``.

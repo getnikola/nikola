@@ -1022,6 +1022,11 @@ class Nikola(object):
         output_folder,
         use_filename_as_title
         """
+
+        # FIXME: lots of work is done even when images don't change,
+        # which should be moved into the task.
+        # Also, this is getting complex enough to be refactored into a file.
+
         template_name = "gallery.tmpl"
 
         gallery_list = glob.glob("galleries/*")
@@ -1125,8 +1130,6 @@ class Nikola(object):
                 glob.glob(gallery_path + "/*PNG") +\
                 glob.glob(gallery_path + "/*png")
 
-            # Sort by date
-            image_list.sort(cmp=lambda a,b: cmp(image_date(a), image_date(b)))
             # Filter ignore images
             try:
                 def add_gallery_path(index):
@@ -1147,7 +1150,10 @@ class Nikola(object):
                 pass
 
             image_list = [x for x in image_list if "thumbnail" not in x]
+            # Sort by date
+            image_list.sort(cmp=lambda a,b: cmp(image_date(a), image_date(b)))
             image_name_list = [os.path.basename(x) for x in image_list]
+
             thumbs = []
             # Do thumbnails and copy originals
             for img, img_name in zip(image_list, image_name_list):
