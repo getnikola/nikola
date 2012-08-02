@@ -56,12 +56,12 @@ class Post(object):
         if os.path.isfile(self.metadata_path):
             with codecs.open(self.metadata_path, "r", "utf8") as meta_file:
                 meta_data = meta_file.readlines()
-            while len(meta_data) < 5:
+            while len(meta_data) < 6:
                 meta_data.append("")
-            default_title, default_pagename, self.date, self.tags, self.link = \
-                [x.strip() for x in meta_data][:5]
+            default_title, default_pagename, self.date, self.tags, self.link, default_description = \
+                [x.strip() for x in meta_data][:6]
         else:
-            default_title, default_pagename, self.date, self.tags, self.link = \
+            default_title, default_pagename, self.date, self.tags, self.link, default_description = \
                 utils.get_meta(self.source_path)
 
         if not default_title or not default_pagename or not self.date:
@@ -80,12 +80,14 @@ class Post(object):
 
         self.pagenames = {}
         self.titles = {}
+        self.descriptions = {}
         # Load internationalized titles
         # TODO: this has gotten much too complicated. Rethink.
         for lang in translations:
             if lang == default_lang:
                 self.titles[lang] = default_title
                 self.pagenames[lang] = default_pagename
+                self.descriptions[lang] = default_description
             else:
                 metadata_path = self.metadata_path + "." + lang
                 source_path = self.source_path + "." + lang
@@ -95,23 +97,30 @@ class Post(object):
                                 metadata_path, "r", "utf8") as meta_file:
                             meta_data = [x.strip() for x in
                                 meta_file.readlines()]
-                            while len(meta_data) < 2:
+                            while len(meta_data) < 6:
                                 meta_data.append("")
                             self.titles[lang] = meta_data[0] or default_title
                             self.pagenames[lang] = meta_data[1] or\
                                 default_pagename
+                            self.descriptions[lang] = meta_data[5] or default_description
                     else:
-                        ttitle, ppagename, tmp1, tmp2, tmp3 = \
+                        ttitle, ppagename, tmp1, tmp2, tmp3, ddescription = \
                             utils.get_meta(source_path)
                         self.titles[lang] = ttitle or default_title
                         self.pagenames[lang] = ppagename or default_pagename
+                        self.descriptions[lang] = ddescription or default_description
                 except:
                     self.titles[lang] = default_title
                     self.pagenames[lang] = default_pagename
+                    self.descriptions[lang] = default_description
 
     def title(self, lang):
         """Return localized title."""
         return self.titles[lang]
+
+    def description(self, lang):
+        """Return localized description."""
+        return self.descriptions[lang]
 
     def deps(self, lang):
         """Return a list of dependencies to build this post's page."""
@@ -211,6 +220,8 @@ class Nikola(object):
             'MAX_IMAGE_SIZE': 1280,
             'USE_FILENAME_AS_TITLE': True,
             'SLUG_TAG_PATH': False,
+            'INDEXES_TITLE': "",
+            'INDEXES_PAGES': "",
             'FILTERS': {},
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
@@ -482,7 +493,9 @@ class Nikola(object):
             thumbnail_size=self.config['THUMBNAIL_SIZE'],
             default_lang=self.config['DEFAULT_LANG'],
             output_folder=self.config['OUTPUT_FOLDER'],
-            use_filename_as_title=self.config['USE_FILENAME_AS_TITLE'])
+            use_filename_as_title=self.config['USE_FILENAME_AS_TITLE'],
+            blog_description=self.config['BLOG_DESCRIPTION']
+        )
         yield self.gen_task_render_listings(
             listings_folder=self.config['LISTINGS_FOLDER'],
             default_lang=self.config['DEFAULT_LANG'],
@@ -564,6 +577,7 @@ class Nikola(object):
             context['post'] = post
             context['lang'] = lang
             context['title'] = post.title(lang)
+            context['description'] = post.description(lang)
             context['permalink'] = post.permalink(lang)
             output_name = os.path.join(
                 self.config['OUTPUT_FOLDER'],
@@ -702,12 +716,20 @@ class Nikola(object):
         for lang in kw["translations"]:
             for i, post_list in enumerate(lists):
                 context = {}
+                if self.config.get("INDEXES_TITLE", ""):
+                    indexes_title = self.config['INDEXES_TITLE']
+                else:
+                    indexes_title = self.config["BLOG_TITLE"]
                 if not i:
                     output_name = "index.html"
+                    context["title"] = indexes_title
                 else:
                     output_name = "index-%s.html" % i
-                    context["title"] = self.config['BLOG_TITLE'] + " (" +\
-                        kw["messages"][lang]["old posts page %d"] % i + ")"
+                    if self.config.get("INDEXES_PAGES", ""):
+                        indexes_pages = self.config["INDEXES_PAGES"] % i
+                    else:
+                        indexes_pages = " (" + kw["messages"][lang]["old posts page %d"] % i + ")"
+                    context["title"] = indexes_title + indexes_pages
                 context["prevlink"] = None
                 context["nextlink"] = None
                 context['index_teasers'] = kw['index_teasers']
@@ -743,6 +765,7 @@ class Nikola(object):
         context = {}
         context["posts"] = posts
         context["title"] = self.config['BLOG_TITLE']
+        context["description"] = self.config['BLOG_DESCRIPTION']
         context["lang"] = lang
         context["prevlink"] = None
         context["nextlink"] = None
@@ -1224,6 +1247,7 @@ class Nikola(object):
             context = {}
             context["lang"] = kw["default_lang"]
             context["title"] = os.path.basename(gallery_path)
+            context["description"] = kw["blog_description"]
             if kw['use_filename_as_title']:
                 img_titles = ['title="%s"' % utils.unslugify(fn[:-4])
                               for fn in image_name_list]

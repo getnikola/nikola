@@ -8,6 +8,8 @@ The full manual is in stories/manual.txt, but here is the very short version:
 3. Install doit (http://python-doit.sourceforge.net)
 4. Install PIL (http://www.pythonware.com/products/pil/)
 5. Install Pygments (http://pygments.org/)
+6. Install unidecode (http://pypi.python.org/pypi/Unidecode/)
+7. Install lxml (http://lxml.de/)
 
 To build or update the demo site run this command in the nikola's folder::
 
