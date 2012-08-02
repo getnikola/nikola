@@ -191,8 +191,9 @@ Longer version:
 #. Get `doit <http://python-doit.sf.net>`_
 #. Get `docutils <http://docutils.sf.net>`_
 #. Get `Mako <http://makotemplates.org>`_
-#. Get `PIL <http://www.pythonware.com/products/pil/>`_ or `Pillow <http://pypi.python.org/pypi/Pillow>`_
+#. Get `PIL <http://www.pythonware.com/products/pil/>`_
 #. Get `Pygments <http://pygments.org/>`_
+#. Get `unidecode <http://pypi.python.org/pypi/Unidecode/>`_
 #. Get `lxml <http://lxml.de/>`_
 
 Any non-prehistorical version of the above should work, and if you are in Linux
@@ -340,12 +341,14 @@ The first line is the title. The second one is the pagename. Since often titles 
 characters that look bad on URLs, it's generated as a "clean" version of the title.
 The third line is the post's date, and is set to "now".
 
-You can add two more optional lines. A fourth line that is a list of tags
+You can add three more optional lines. A fourth line that is a list of tags
 separated with commas (spaces around the commas are ignored)::
 
     programming, python, fame, fortune
 
 And a fifth line that's a URL for an original source of the post.
+
+And a sixth line that's the page description.
 
 If you are writing a multilingual site, you can also create a per-language
 metadata file. This one can have two lines:

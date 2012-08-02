@@ -154,6 +154,10 @@ BLOG_URL = "http://nikola.ralsina.com.ar"
 BLOG_EMAIL = "joe@demo.site"
 BLOG_DESCRIPTION = "This is a demo site for Nikola."
 
+# Data about post-per-page indexes
+INDEXES_TITLE = ""  # If this is empty, the default is BLOG_TITLE
+INDEXES_PAGES = ""  # If this is empty, the default is 'old posts page %d' translated
+
 # Name of the theme to use. Themes are located in themes/theme_name
 THEME = 'site'
 
