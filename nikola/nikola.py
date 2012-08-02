@@ -862,7 +862,7 @@ class Nikola(object):
         blog_description
         output_folder
         """
-        template_name = "list.tmpl"
+        template_name = "tag.tmpl"
         if not self.posts_per_tag:
             yield {
                     'basename': 'render_tags',
@@ -884,6 +884,7 @@ class Nikola(object):
                 context["items"] = [("[%s] %s" % (post.date, post.title(lang)),
                     post.permalink(lang)) for post in post_list]
                 context["permalink"] = self.link("tag", tag, lang)
+                context["tag"] = tag
 
                 for task in self.generic_post_list_renderer(
                     lang,
