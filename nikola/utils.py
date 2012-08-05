@@ -188,6 +188,8 @@ def copy_tree(src, dst, link_cutoff=None):
         if not os.path.isdir(dst_dir):
             os.makedirs(dst_dir)
         for src_name in files:
+            if src_name == '.DS_Store':
+                continue
             dst_file = os.path.join(dst_dir, src_name)
             src_file = os.path.join(root, src_name)
             yield {
