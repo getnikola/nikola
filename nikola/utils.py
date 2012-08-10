@@ -430,7 +430,7 @@ def apply_filters(task, filters):
                 if ext in key:
                     return value
             elif isinstance(key, (str, unicode)):
-                if filters.get(key):
+                if ext == key:
                     return value
             else:
                 assert False, key
