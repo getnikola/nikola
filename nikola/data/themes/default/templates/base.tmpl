@@ -8,12 +8,16 @@
     <meta name="author" content="${blog_author}">
     <title>${title} | ${blog_title}</title>
     <!-- Le styles -->
-    <link href="/assets/css/bootstrap.css" rel="stylesheet" type="text/css">
-    <link href="/assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
-    <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
-    <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
-    %if exists("files/assets/css/custom.css", not_empty=True):
-    <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
+    %if use_bundles:
+        <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
+    %else:
+        <link href="/assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+        <link href="/assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+        <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
+        <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
+        %if exists("files/assets/css/custom.css", not_empty=True):
+        <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
+        %endif
     %endif
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>

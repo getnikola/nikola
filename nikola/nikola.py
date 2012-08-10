@@ -18,6 +18,10 @@ import lxml.html
 from pygments import highlight
 from pygments.lexers import get_lexer_for_filename, TextLexer
 from pygments.formatters import HtmlFormatter
+try:
+    import webassets
+except ImportError:
+    webassets = None
 
 import utils
 
@@ -223,6 +227,7 @@ class Nikola(object):
             'INDEXES_TITLE': "",
             'INDEXES_PAGES': "",
             'FILTERS': {},
+            'USE_BUNDLES': True,
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
                 "markdown": ['.md', '.mdown', '.markdown'],
@@ -230,6 +235,9 @@ class Nikola(object):
             },
         }
         self.config.update(config)
+
+        if self.config['USE_BUNDLES'] and not webassets:
+            print "You have enabled USE_BUNDLES but webassets is not installed."
 
         self.get_compile_html = utils.CompileHtmlGetter(
             self.config.pop('post_compilers'))
@@ -240,6 +248,8 @@ class Nikola(object):
         self.templates_module = utils.get_template_module(
             utils.get_template_engine(self.THEMES), self.THEMES)
         self.template_deps = self.templates_module.template_deps
+
+        self.theme_bundles = utils.get_theme_bundles(self.THEMES)
 
         self.MESSAGES = utils.load_messages(self.THEMES,
             self.config['TRANSLATIONS'])
@@ -253,6 +263,7 @@ class Nikola(object):
             'ADD_THIS_BUTTONS']
         self.GLOBAL_CONTEXT['index_display_post_count'] = self.config[
             'INDEX_DISPLAY_POST_COUNT']
+        self.GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
 
         self.DEPS_CONTEXT = {}
         for k, v in self.GLOBAL_CONTEXT.items():
@@ -441,6 +452,10 @@ class Nikola(object):
             output_folder=self.config['OUTPUT_FOLDER'],
             filters=self.config['FILTERS']
         )
+        yield self.gen_task_build_bundles(theme_bundles=self.theme_bundles,
+            output_folder=self.config['OUTPUT_FOLDER'],
+            filters=self.config['FILTERS']
+            )
         yield self.gen_task_deploy(commands=self.config['DEPLOY_COMMANDS'])
         yield self.gen_task_sitemap(blog_url=self.config['BLOG_URL'],
             output_folder=self.config['OUTPUT_FOLDER']
@@ -525,6 +540,7 @@ class Nikola(object):
                 'copy_files',
                 'sitemap',
                 'redirect',
+                'build_bundles',
                 ],
             }
 
@@ -1009,6 +1025,7 @@ class Nikola(object):
                 'title': title,
                 'crumbs': zip(paths, crumbs),
                 'lang': kw['default_lang'],
+                'description': title,
                 }
             self.render_template('listing.tmpl', out_name, context)
         flag = True
@@ -1391,6 +1408,42 @@ class Nikola(object):
                     [config_changed(kw)]
                 task['basename'] = 'copy_assets'
                 yield utils.apply_filters(task, kw['filters'])
+
+    @staticmethod
+    def gen_task_build_bundles(**kw):
+        """Create tasks to build bundles from theme assets.
+
+        theme_bundles
+        output_folder
+        filters
+        """
+
+        def build_bundle(output, inputs):
+            env = webassets.Environment(
+                os.path.join(kw['output_folder'], os.path.dirname(output)),
+                os.path.dirname(output))
+            bundle = webassets.Bundle(*inputs,
+                output=os.path.basename(output))
+            env.register(output, bundle)
+            # This generates the file
+            env[output].urls()
+
+        for name, files in kw['theme_bundles'].items():
+            output_path = os.path.join(kw['output_folder'], name)
+            dname = os.path.dirname(name)
+            file_dep = [os.path.join('output', dname, fname)
+                for fname in files]
+            task = {
+                'task_dep': ['copy_assets', 'copy_files'],
+                'file_dep': file_dep,
+                'name': name,
+                'actions': [(build_bundle, (name, files))],
+                'targets': [os.path.join(kw['output_folder'], name)],
+                'basename': 'build_bundles',
+                'uptodate': [config_changed(kw)]
+                }
+            yield utils.apply_filters(task, kw['filters'])
+
 
     @staticmethod
     def new_post(post_pages, is_post=True):

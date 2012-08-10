@@ -121,6 +121,19 @@ def get_template_engine(themes):
     # default
     return 'mako'
 
+def get_theme_bundles(themes):
+    """Given a theme chain, return the bundle definitions."""
+    bundles = {}
+    for theme_name in themes:
+        bundles_path = os.path.join(get_theme_path(theme_name), 'bundles')
+        if os.path.isfile(bundles_path):
+            with open(bundles_path) as fd:
+                for line in fd:
+                    name, files = line.split('=')
+                    files = [f.strip() for f in files.split(',')]
+                    bundles[name.strip()] = files
+                break
+    return bundles
 
 def get_theme_chain(theme):
     """Create the full theme inheritance chain."""
