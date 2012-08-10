@@ -23,7 +23,7 @@ def runinplace(command, infile):
     tmpfname = os.path.join(tmpdir, os.path.basename(infile))
     command = command.replace('%1', infile)
     command = command.replace('%2', infile)
-    subprocess.call(command, shell=True)
+    subprocess.check_call(command, shell=True)
 
 def yui_compressor(infile):
     return runinplace('yui-compressor %1 -o %2', infile)
