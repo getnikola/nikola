@@ -53,6 +53,22 @@ engine
     this theme needs. Currently supported values are "mako" and "jinja".
     If this file is not given, "mako" is assumed.
 
+bundles
+    A text file containing a list of files to be turned into bundles using WebAssets.
+    For example::
+
+        assets/css/all.css=bootstrap.css,bootstrap-responsive.css,rst.css,code.css,colorbox.css,custom.css
+
+    This creates a file called "assets/css/all.css" in your output that is the
+    combination of all the other file paths, relative to the output file.
+    This makes the page much more efficient because it avoids multiple connections to the server,
+    at the cost of some extra difficult debugging.
+
+    WebAssets supports bundling CSS and JS files.
+
+    Templates should use either the bundle or the individual files based on the ``use_bundles``
+    variable, which in turn is set by the ``USE_BUNDLES`` option.
+
 Creating a New Theme
 --------------------
 

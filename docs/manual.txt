@@ -503,6 +503,27 @@ change the FILES_FOLDERS option::
     # FILES_FOLDERS = {'files': '' }
     # Which means copy 'files' into 'output'
 
+Post Processing Filters
+-----------------------
+
+You can apply post processing to the files in your site, in order to optimize them
+or change them in arbitrary ways. For example, you may want to compress all CSS
+and JS files using yui-compressor.
+
+To do that, you can use the provided helper adding this in your ``config.py``::
+
+  from nikola import filters
+
+  FILTERS = {
+    ".css": [filters.yui_compressor],
+    ".js": [filters.yui_compressor],
+  }
+
+Where ``filters.yui_compressor`` is a helper function provided by Nikola. You can
+replace that with strings describing command lines, or arbitrary python functions.
+
+If there's any specific thing you expect to be generally useful as a filter, contact
+me and I will add it to the filters library so that more people use it.
 
 Customizing Your Site
 ---------------------
