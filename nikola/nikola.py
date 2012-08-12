@@ -276,6 +276,10 @@ class Nikola(object):
 
         assert output_name.startswith(self.config["OUTPUT_FOLDER"])
         url_part = output_name[len(self.config["OUTPUT_FOLDER"]) + 1:]
+
+        #this to support windows paths
+        url_part = "/".join(url_part.split(os.sep))
+
         src = urlparse.urljoin(self.config["BLOG_URL"], url_part)
 
         parsed_src = urlparse.urlsplit(src)
