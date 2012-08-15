@@ -452,9 +452,10 @@ class Nikola(object):
             output_folder=self.config['OUTPUT_FOLDER'],
             filters=self.config['FILTERS']
         )
-        yield self.gen_task_build_bundles(theme_bundles=self.theme_bundles,
-            output_folder=self.config['OUTPUT_FOLDER'],
-            filters=self.config['FILTERS']
+        if webassets:
+            yield self.gen_task_build_bundles(theme_bundles=self.theme_bundles,
+                output_folder=self.config['OUTPUT_FOLDER'],
+                filters=self.config['FILTERS']
             )
         yield self.gen_task_deploy(commands=self.config['DEPLOY_COMMANDS'])
         yield self.gen_task_sitemap(blog_url=self.config['BLOG_URL'],
@@ -522,11 +523,8 @@ class Nikola(object):
             output_folder=self.config['OUTPUT_FOLDER'],
             files_folders=self.config['FILES_FOLDERS'],
             filters=self.config['FILTERS'])
-        yield {
-            'name': 'all',
-            'actions': None,
-            'clean': True,
-            'task_dep': [
+
+        task_dep = [
                 'render_listings',
                 'render_archive',
                 'render_galleries',
@@ -539,10 +537,18 @@ class Nikola(object):
                 'copy_assets',
                 'copy_files',
                 'sitemap',
-                'redirect',
-                'build_bundles',
-                ],
-            }
+                'redirect'
+        ]
+
+        if webassets:
+            task_dep.append( 'build_bundles' )
+
+        yield {
+            'name': 'all',
+            'actions': None,
+            'clean': True,
+            'task_dep': task_dep
+         }
 
     def scan_posts(self):
         """Scan all the posts."""
