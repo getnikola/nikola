@@ -16,6 +16,7 @@
         <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/colorbox.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/css/theme.css" rel="stylesheet" type="text/css"/>
         %if exists("files/assets/css/custom.css", not_empty=True):
             <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
         %endif
@@ -36,9 +37,7 @@
 </head>
 <body>
     %if add_this_buttons:
-    <script type="text/javascript">
-        var addthis_config = { 'ui_language': '${lang}' };
-    </script>
+    <script type="text/javascript">var addthis_config={ui_language:"${lang}"};</script>
     % endif
 <div class="container-fluid" id="container">
     <div class="row-fluid" id="titlerow">
