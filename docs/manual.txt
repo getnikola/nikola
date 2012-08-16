@@ -611,6 +611,9 @@ to create a custom theme by downloading free CSS files from http://bootswatch.co
     Downloading:  http://bootswatch.com/spruce/bootstrap.css
     Theme created. Change the THEME setting to "custom_theme" to use it.
 
+You can even try what different swatches do on an existing site using
+their handy `bootswatchlet <http://news.bootswatch.com/post/29555952123/a-bookmarklet-for-bootswatch>`_
+
 Play with it, there's cool stuff there. This feature was suggested by
 `clodo <http://elgalpondebanquito.com.ar>`_.
 
