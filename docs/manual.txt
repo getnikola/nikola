@@ -359,6 +359,18 @@ metadata file. This one can have two lines:
 You can edit these files with your favourite text editor, and once you are happy
 with the contents, generate the pages as explained in `Getting Started`_
 
+Currently supported languages are
+
+* English
+* Spanish
+* French
+* German
+* Russian
+* Greek.
+
+If you wish to add support for more languages, check out the instructions
+at the `theming guide <http://nikola.ralsina.com.ar/theming.html>`.
+
 The post page is generated using the ``post.tmpl`` template, which you can use
 to customize the output.
 
@@ -689,7 +701,7 @@ The ``conf.py`` options affecting gallery pages are these::
 If you add a file in ``galleries/gallery_name/index.txt`` its contents will be
 converted to HTML and inserted above the images in the gallery page.
 
-If you add some image filenames in ``galleries/gallery_name/exclude.meta``, they 
+If you add some image filenames in ``galleries/gallery_name/exclude.meta``, they
 will be excluded in the gallery page.
 
 If ``USE_FILENAME_AS_TITLE`` is True the filename (parsed as a readable string)
