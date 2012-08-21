@@ -16,5 +16,5 @@ MESSAGES = {
     u"&larr; Previous post": u"&larr; Post anterior",
     u"Next post &rarr;": u"Siguiente post &rarr;",
     u"old posts page %d": u"posts antiguos página %d",
-
+    u"Read more": u"Leer mas",
 }
