@@ -238,7 +238,7 @@ class Nikola(object):
         self.config.update(config)
 
         if self.config['USE_BUNDLES'] and not webassets:
-            print "You have enabled USE_BUNDLES but webassets is not installed."
+            self.config['USE_BUNDLES'] = False
 
         self.get_compile_html = utils.CompileHtmlGetter(
             self.config.pop('post_compilers'))
