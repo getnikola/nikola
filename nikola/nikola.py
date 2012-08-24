@@ -35,7 +35,7 @@ class Post(object):
     """Represents a blog post or web page."""
 
     def __init__(self, source_path, destination, use_in_feeds,
-        translations, default_lang, blog_url, compile_html):
+        translations, default_lang, blog_url, compile_html, messages):
         """Initialize post.
 
         The base path is the .txt post file. From it we calculate
@@ -57,6 +57,7 @@ class Post(object):
         self.folder = destination
         self.translations = translations
         self.default_lang = default_lang
+        self.messages = messages
         if os.path.isfile(self.metadata_path):
             with codecs.open(self.metadata_path, "r", "utf8") as meta_file:
                 meta_data = meta_file.readlines()
@@ -166,8 +167,8 @@ class Post(object):
                     break
                 teaser.append(elem_string)
             if flag:
-                teaser.append('<p><a href="%s">Read more...</a></p>' %
-                    self.permalink(lang))
+                teaser.append('<p><a href="%s">%s...</a></p>' %
+                    (self.permalink(lang),self.messages[lang]["Read more"]))
             data = ''.join(teaser)
         return data
 
@@ -567,7 +568,8 @@ class Nikola(object):
                         self.config['TRANSLATIONS'],
                         self.config['DEFAULT_LANG'],
                         self.config['BLOG_URL'],
-                        self.get_compile_html(base_path))
+                        self.get_compile_html(base_path),
+                        self.MESSAGES)
                     for lang, langpath in self.config['TRANSLATIONS'].items():
                         dest = (destination, langpath, post.pagenames[lang])
                         if dest in targets:
