@@ -1,3 +1,18 @@
+New in Version 4.0.1
+====================
+
+Features
+--------
+
+* Improved multilingual site documentation
+* Added Greek translation
+
+Bugfixes
+--------
+
+* "Read More" is translatable.
+* Fixed Issue 121: CSS was not found if webassets was not installed.
+
 New in Version 4
 ================
 
