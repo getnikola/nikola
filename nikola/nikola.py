@@ -1155,8 +1155,11 @@ class Nikola(object):
                         for tag, value in exif.items():
                             decoded = ExifTags.TAGS.get(tag, tag)
                             if decoded == 'DateTimeOriginal':
-                                dates[src] = datetime.datetime.strptime(value, r'%Y:%m:%d %H:%M:%S')
-                                break
+                                try:
+                                    dates[src] = datetime.datetime.strptime(value, r'%Y:%m:%d %H:%M:%S')
+                                    break
+                                except ValueError:  #invalid EXIF date
+                                    pass
                 if src not in dates:
                     dates[src] = datetime.datetime.fromtimestamp(os.stat(src).st_mtime)
                 return dates[src]

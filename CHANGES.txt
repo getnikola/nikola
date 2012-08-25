@@ -6,6 +6,11 @@ Features
 
 * Updated to bootstrap 2.1.0
 
+Bugfixes
+--------
+
+* Handle broken EXIF dates
+
 New in Version 4.0.1
 ====================
 
