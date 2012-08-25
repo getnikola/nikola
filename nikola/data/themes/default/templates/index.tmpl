@@ -2,7 +2,7 @@
 <%inherit file="base.tmpl"/>
 <%block name="content">
     % for post in posts:
-        <div style="border-bottom: 2px solid darkgrey; margin-bottom: 12px;">
+        <div class="postbox">
         <h1><a href="${post.permalink(lang)}">${post.title(lang)}</a>
         <small>&nbsp;&nbsp;
              ${messages[lang]["Posted:"]} ${post.date}

@@ -77,18 +77,17 @@
 </div>
 <!-- End of Menubar -->
 
-<div class="container" id="container" style="margin-top: 50px;">
+<div class="container" id="container">
     <!--Body content-->
     <%block name="content"></%block>
     <!--End of body content-->
-</div>
-    <div class="span12" style="text-align: center;">
-    <hr>
-    <small>${content_footer}</small>
+    <div class="footerbox">
+    ${content_footer}
     </div>
+</div>
     %if add_this_buttons:
     <!-- addthis -->
-    <div class="addthis_bar addthis_bar_vertical addthis_bar_small" style="top:50px;left:10px;">
+    <div id="addthisbox" class="addthis_bar addthis_bar_vertical addthis_bar_small">
         <div class="addthis_toolbox addthis_default_style">
             <span><a class="addthis_button_preferred_1"></a></span>
             <span><a class="addthis_button_preferred_2"></a></span>

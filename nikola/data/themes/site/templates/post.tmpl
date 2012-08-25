@@ -1,6 +1,7 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="base.tmpl"/>
 <%block name="content">
+    <div class="postbox">
     <h1>${title}</h1>
     % if link:
             <p><a href='${link}'>${messages[lang]["Original site"]}</a></p>
@@ -50,4 +51,5 @@
     <li>
     <a href="${post.pagenames[lang]+post.source_ext()}">reSt</a>
     </li>
+    </div>
 </%block>
