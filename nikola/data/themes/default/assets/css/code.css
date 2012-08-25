@@ -1,7 +1,7 @@
 pre { word-break: pre; white-space: pre; word-wrap: pre; overflow: auto; max-width: 100%;}
 td.linenos { vertical-align: top; width: 4em;}
 div.code > pre, .code
-{ background: #f8f8f8; white-space: pre; width: 100%;}
+{ background: #f8f8f8; white-space: pre;}
 .code .c { color: #008800; font-style: italic } /* Comment */
 .code .err { border: 1px solid #FF0000 } /* Error */
 .code .k { color: #AA22FF; font-weight: bold } /* Keyword */
