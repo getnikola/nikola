@@ -676,6 +676,7 @@ class Nikola(object):
         output_folder
         """
         self.scan_posts()
+        flag = False
         for lang in kw["translations"]:
             # TODO: timeline is global
             for post in self.timeline:
@@ -695,6 +696,13 @@ class Nikola(object):
                     'clean': True,
                     'uptodate': [config_changed(kw)],
                     }
+        if flag == False:  # No page rendered, yield a dummy task
+            yield {
+                'basename': 'render_sources',
+                'name': 'None',
+                'uptodate': [True],
+                'actions': [],
+            }
 
     def gen_task_render_posts(self, **kw):
         """Build HTML fragments from metadata and reSt.
