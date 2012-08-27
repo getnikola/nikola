@@ -646,6 +646,7 @@ class Nikola(object):
         post_pages
         """
         self.scan_posts()
+        flag = False
         for lang in kw["translations"]:
             for wildcard, destination, template_name, _ in kw["post_pages"]:
                 for task in self.generic_page_renderer(lang,
@@ -654,7 +655,15 @@ class Nikola(object):
                     #task['uptodate'] = task.get('uptodate', []) +\
                         #[config_changed(kw)]
                     task['basename'] = 'render_pages'
+                    flag = True
                     yield task
+        if flag == False:  # No page rendered, yield a dummy task
+            yield {
+                'basename': 'render_pages',
+                'name': 'None',
+                'uptodate': [True],
+                'actions': [],
+            }
 
     def gen_task_render_sources(self, **kw):
         """Publish the rst sources because why not?
