@@ -10,6 +10,7 @@ Bugfixes
 --------
 
 * Handle broken EXIF dates
+* Ignore .pyc files in the listings folder
 
 New in Version 4.0.1
 ====================
