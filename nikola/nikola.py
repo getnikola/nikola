@@ -1479,6 +1479,7 @@ class Nikola(object):
             # This generates the file
             env[output].urls()
 
+        flag = False
         for name, files in kw['theme_bundles'].items():
             output_path = os.path.join(kw['output_folder'], name)
             dname = os.path.dirname(name)
@@ -1493,7 +1494,15 @@ class Nikola(object):
                 'basename': 'build_bundles',
                 'uptodate': [config_changed(kw)]
                 }
+            flag = True
             yield utils.apply_filters(task, kw['filters'])
+        if flag == False:  # No page rendered, yield a dummy task
+            yield {
+                'basename': 'build_bundles',
+                'name': 'None',
+                'uptodate': [True],
+                'actions': [],
+            }
 
 
     @staticmethod
