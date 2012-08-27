@@ -230,6 +230,7 @@ class Nikola(object):
             'INDEXES_PAGES': "",
             'FILTERS': {},
             'USE_BUNDLES': True,
+            'TAG_PAGES_ARE_INDEXES': False,
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
                 "markdown": ['.md', '.mdown', '.markdown'],
@@ -502,7 +503,10 @@ class Nikola(object):
             blog_url=self.config['BLOG_URL'],
             blog_description=self.config['BLOG_DESCRIPTION'],
             output_folder=self.config['OUTPUT_FOLDER'],
-            filters=self.config['FILTERS']
+            filters=self.config['FILTERS'],
+            tag_pages_are_indexes=self.config['TAG_PAGES_ARE_INDEXES'],
+            index_display_post_count=self.config['INDEX_DISPLAY_POST_COUNT'],
+            index_teasers=self.config['INDEX_TEASERS'],
         )
         yield self.gen_task_render_rss(
             translations=self.config['TRANSLATIONS'],
@@ -919,28 +923,69 @@ class Nikola(object):
         blog_url
         blog_description
         output_folder
+        tag_pages_are_indexes
+        index_display_post_count
+        index_teasers
         """
-        template_name = "tag.tmpl"
         if not self.posts_per_tag:
             yield {
                     'basename': 'render_tags',
                     'actions': [],
                 }
             return
+        def page_name(tagname, i, lang):
+            """Given tag, n, returns a page name."""
+            name = self.path("tag", tag, lang)
+            if i:
+                name.replace('.html', '%s-.html' % i)
+            return name
+
         for tag, posts in self.posts_per_tag.items():
+            post_list = [self.global_data[post] for post in posts]
+            post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
+            post_list.reverse()
             for lang in kw["translations"]:
                 # Render HTML
-                output_name = os.path.join(kw['output_folder'],
-                    self.path("tag", tag, lang))
-                post_list = [self.global_data[post] for post in posts]
-                post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
-                post_list.reverse()
-                context = {}
-                context["lang"] = lang
-                context["title"] = kw["messages"][lang][u"Posts about %s:"]\
-                    % tag
-                context["items"] = [("[%s] %s" % (post.date, post.title(lang)),
-                    post.permalink(lang)) for post in post_list]
+                if kw['tag_pages_are_indexes']:
+                    # We render a sort of index page collection using only
+                    # this tag's posts.
+
+                    # FIXME: deduplicate this with render_indexes
+                    template_name = "index.tmpl"
+                    posts = post_list
+                    # Split in smaller lists
+                    lists = []
+                    while posts:
+                        lists.append(posts[:kw["index_display_post_count"]])
+                        posts = posts[kw["index_display_post_count"]:]
+                    num_pages = len(lists)
+                    for i, post_list in enumerate(lists):
+                        context = {}
+                        output_name = os.path.join(kw['output_folder'],
+                            page_name (tag, i, lang))
+                        context["title"] = kw["messages"][lang][u"Posts about %s:"]\
+                            % tag
+                        context["prevlink"] = None
+                        context["nextlink"] = None
+                        context['index_teasers'] = kw['index_teasers']
+                        if i > 1:
+                            context["prevlink"] = page_name(tag, i - 1, lang)
+                        if i == 1:
+                            context["prevlink"] = "index.html"
+                        if i < num_pages - 1:
+                            context["nextlink"] = page_name(tag, i + 1, lang)
+                else:
+                    # We render a single flat link list with this tag's posts
+                    template_name = "tag.tmpl"
+                    output_name = os.path.join(kw['output_folder'],
+                        self.path("tag", tag, lang))
+                    context = {}
+                    context["lang"] = lang
+                    context["title"] = kw["messages"][lang][u"Posts about %s:"]\
+                        % tag
+                    context["items"] = [("[%s] %s" % (post.date, post.title(lang)),
+                        post.permalink(lang)) for post in post_list]
+
                 context["permalink"] = self.link("tag", tag, lang)
                 context["tag"] = tag
 
@@ -953,7 +998,7 @@ class Nikola(object):
                     context,
                 ):
                     task['uptodate'] = task.get('updtodate', []) +\
-                                       [config_changed(kw)]
+                                    [config_changed(kw)]
                     task['basename'] = 'render_tags'
                     yield task
 

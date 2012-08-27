@@ -90,6 +90,11 @@ TRANSLATIONS = {
 # output / TRANSLATION[lang] / TAG_PATH / tag.html (list of posts for a tag)
 # output / TRANSLATION[lang] / TAG_PATH / tag.xml (RSS feed for a tag)
 TAG_PATH = "categories"
+
+# If TAG_PAGES_ARE_INDEXES is set to True, each tag's page will contain
+# the posts themselves. If set to False, it will be just a list of links.
+# TAG_PAGES_ARE_INDEXES = False
+
 # Final location is output / TRANSLATION[lang] / INDEX_PATH / index-*.html
 INDEX_PATH = ""
 # Final locations for the archives are:
