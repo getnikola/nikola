@@ -988,7 +988,6 @@ class Nikola(object):
 
                 context["permalink"] = self.link("tag", tag, lang)
                 context["tag"] = tag
-
                 for task in self.generic_post_list_renderer(
                     lang,
                     post_list,
@@ -1022,6 +1021,7 @@ class Nikola(object):
                         post_list, output_name))],
                     'clean': True,
                     'uptodate': [config_changed(kw)],
+                    'basename': 'render_tags'
                 }
 
         # And global "all your tags" page
