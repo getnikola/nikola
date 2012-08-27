@@ -731,7 +731,7 @@ class Nikola(object):
                 }
         if flag == False:  # Return a dummy task
             yield {
-                'basename': 'render_pages',
+                'basename': 'render_posts',
                 'name': 'None',
                 'uptodate': [True],
                 'actions': [],
