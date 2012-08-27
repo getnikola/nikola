@@ -729,7 +729,7 @@ class Nikola(object):
                     'clean': True,
                     'uptodate': [config_changed(deps_dict)],
                 }
-         if flag == False:  # Return a dummy task
+        if flag == False:  # Return a dummy task
             yield {
                 'basename': 'render_pages',
                 'name': 'None',
