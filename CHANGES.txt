@@ -12,6 +12,7 @@ Bugfixes
 * Handle broken EXIF dates
 * Ignore .pyc files in the listings folder
 * Don't fail on render_pages when there is no content at all
+* Don't fail on render_posts when there is no content at all
 
 New in Version 4.0.1
 ====================

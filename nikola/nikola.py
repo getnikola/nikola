@@ -706,6 +706,7 @@ class Nikola(object):
         timeline
         """
         self.scan_posts()
+        flag = False
         for lang in kw["translations"]:
             # TODO: timeline is global, get rid of it
             deps_dict = copy(kw)
@@ -718,6 +719,7 @@ class Nikola(object):
                     source_lang = source + '.' + lang
                     if os.path.exists(source_lang):
                         source = source_lang
+                flag = True
                 yield {
                     'basename': 'render_posts',
                     'name': dest.encode('utf-8'),
@@ -727,6 +729,13 @@ class Nikola(object):
                     'clean': True,
                     'uptodate': [config_changed(deps_dict)],
                 }
+         if flag == False:  # Return a dummy task
+            yield {
+                'basename': 'render_pages',
+                'name': 'None',
+                'uptodate': [True],
+                'actions': [],
+            }
 
     def gen_task_render_indexes(self, **kw):
         """Render post-per-page indexes.
