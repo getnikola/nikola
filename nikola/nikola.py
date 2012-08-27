@@ -1020,6 +1020,9 @@ class Nikola(object):
         default_lang
         """
 
+        # Things to ignore in listings
+        ignored_extensions = (".pyc",)
+
         def render_listing(in_name, out_name):
             with open(in_name, 'r') as fd:
                 try:
@@ -1049,6 +1052,9 @@ class Nikola(object):
         for root, dirs, files in os.walk(kw['listings_folder']):
             # Render all files
             for f in files:
+                ext = os.path.splitext(f)[-1]
+                if ext in ignored_extensions:
+                    continue
                 flag = False
                 in_name = os.path.join(root, f)
                 out_name = os.path.join(
