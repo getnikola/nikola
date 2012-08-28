@@ -937,7 +937,7 @@ class Nikola(object):
             """Given tag, n, returns a page name."""
             name = self.path("tag", tag, lang)
             if i:
-                name.replace('.html', '%s-.html' % i)
+                name = name.replace('.html', '-%s.html' % i)
             return name
 
         for tag, posts in self.posts_per_tag.items():
@@ -962,18 +962,32 @@ class Nikola(object):
                     for i, post_list in enumerate(lists):
                         context = {}
                         output_name = os.path.join(kw['output_folder'],
-                            page_name (tag, i, lang))
+                            page_name(tag, i, lang))
                         context["title"] = kw["messages"][lang][u"Posts about %s:"]\
                             % tag
                         context["prevlink"] = None
                         context["nextlink"] = None
                         context['index_teasers'] = kw['index_teasers']
                         if i > 1:
-                            context["prevlink"] = page_name(tag, i - 1, lang)
+                            context["prevlink"] = os.path.basename(page_name(tag, i - 1, lang))
                         if i == 1:
-                            context["prevlink"] = "index.html"
+                            context["prevlink"] = os.path.basename(page_name(tag, 0, lang))
                         if i < num_pages - 1:
-                            context["nextlink"] = page_name(tag, i + 1, lang)
+                            context["nextlink"] = os.path.basename(page_name(tag, i + 1, lang))
+                        context["permalink"] = self.link("tag", tag, lang)
+                        context["tag"] = tag
+                        for task in self.generic_post_list_renderer(
+                            lang,
+                            post_list,
+                            output_name,
+                            template_name,
+                            kw['filters'],
+                            context,
+                        ):
+                            task['uptodate'] = task.get('updtodate', []) +\
+                                            [config_changed(kw)]
+                            task['basename'] = 'render_tags'
+                            yield task
                 else:
                     # We render a single flat link list with this tag's posts
                     template_name = "tag.tmpl"
@@ -985,21 +999,20 @@ class Nikola(object):
                         % tag
                     context["items"] = [("[%s] %s" % (post.date, post.title(lang)),
                         post.permalink(lang)) for post in post_list]
-
-                context["permalink"] = self.link("tag", tag, lang)
-                context["tag"] = tag
-                for task in self.generic_post_list_renderer(
-                    lang,
-                    post_list,
-                    output_name,
-                    template_name,
-                    kw['filters'],
-                    context,
-                ):
-                    task['uptodate'] = task.get('updtodate', []) +\
-                                    [config_changed(kw)]
-                    task['basename'] = 'render_tags'
-                    yield task
+                    context["permalink"] = self.link("tag", tag, lang)
+                    context["tag"] = tag
+                    for task in self.generic_post_list_renderer(
+                        lang,
+                        post_list,
+                        output_name,
+                        template_name,
+                        kw['filters'],
+                        context,
+                    ):
+                        task['uptodate'] = task.get('updtodate', []) +\
+                                        [config_changed(kw)]
+                        task['basename'] = 'render_tags'
+                        yield task
 
                 #Render RSS
                 output_name = os.path.join(kw['output_folder'],
