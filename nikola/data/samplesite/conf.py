@@ -60,6 +60,7 @@ post_pages = (
 #   French -> fr
 #   Russian -> ru
 #   Spanish -> es
+#   Italian -> it
 #
 # If you want to use Nikola with a non-supported language you have to provide
 # a module containing the necessary translations
