@@ -17,6 +17,7 @@ Bugfixes
 * Don't fail on render_posts when there is no content at all
 * Don't fail on render_sources when there is no content at all
 * Don't fail on build_bundles when there are no bundles
+* Added missing listing.tmpl to jinja-default theme
 
 New in Version 4.0.1
 ====================
