@@ -217,6 +217,7 @@ class Nikola(object):
         self.config = {
             'ARCHIVE_PATH': "",
             'ARCHIVE_FILENAME': "archive.html",
+            'DEFAULT_LANGUAGE': "en",
             'OUTPUT_FOLDER': 'output',
             'FILES_FOLDERS': {'files': ''},
             'LISTINGS_FOLDER': 'listings',
@@ -238,6 +239,9 @@ class Nikola(object):
             },
         }
         self.config.update(config)
+        if not self.config['TRANSLATIONS']:
+            self.config['TRANSLATIONS']={
+                self.config['DEFAULT_LANGUAGE']: ''}
 
         if self.config['USE_BUNDLES'] and not webassets:
             self.config['USE_BUNDLES'] = False
