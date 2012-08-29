@@ -18,7 +18,7 @@ Bugfixes
 * Don't fail on render_sources when there is no content at all
 * Don't fail on build_bundles when there are no bundles
 * Added missing listing.tmpl to jinja-default theme
-* Added default for DEFAULT_LANGUAGE
+* Added default for DEFAULT_LANG
 * Added default for TRANSLATIONS
 
 New in Version 4.0.1
