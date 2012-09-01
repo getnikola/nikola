@@ -20,6 +20,8 @@ Bugfixes
 * Added missing listing.tmpl to jinja-default theme
 * Added default for DEFAULT_LANG
 * Added default for TRANSLATIONS
+* Fixed getting metadata from post file.
+* More resistence to broken EXIF data.
 
 New in Version 4.0.1
 ====================
