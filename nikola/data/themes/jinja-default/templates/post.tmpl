@@ -1,6 +1,7 @@
 {% extends "base.tmpl" %}
 {% block content %}
-    <h1> <a href='{{permalink}}'>{{title}}</a></h1>
+    <div class="postbox">
+    <h1><a href='{{permalink}}'>{{title}}</a></h1>
     {% if link %}
             <p><a href='{{link}}'>{{messages[lang]["Original site"]}}</a></p>
     {% endif %}
@@ -40,19 +41,10 @@
     {% endif %}
     </ul>
     {% if disqus_forum %}
-        <!-- Disqus comments !-->
         <div id="disqus_thread"></div>
-        <script type="text/javascript">
-            var disqus_shortname = '{{disqus_forum}}';
-            var disqus_url = '{{post.permalink(absolute=True)}}';
-            (function() {
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
+        <script type="text/javascript"> var disqus_shortname = '{{disqus_forum}}'; var disqus_url = '{{post.permalink(absolute=True)}}'; (function() { var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true; dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js'; (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq); })(); </script>
         <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
         <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-        <!-- End of Disqus comments !-->
     {% endif %}
+    </div>
 {% endblock %}
