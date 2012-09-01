@@ -7,6 +7,7 @@ import os
 import jinja2
 
 lookup = None
+cache = {}
 
 
 def get_template_lookup(directories):
@@ -31,5 +32,4 @@ def render_template(template_name, output_name, context, global_context):
 
 
 def template_deps(template_name):
-    # TODO Implement
     return []
