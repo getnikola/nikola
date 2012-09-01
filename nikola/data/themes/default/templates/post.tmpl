@@ -19,7 +19,7 @@
             %endfor
         %endif
 
-        <a href="${post.pagenames[lang]+".txt"}">reSt</a>
+        <a href="${post.pagenames[lang]+".txt"}">${messages[lang]["Source"]}</a>
         %if post.tags:
             &nbsp;&nbsp;|&nbsp;&nbsp;${messages[lang]["More posts about"]}
             %for tag in post.tags:

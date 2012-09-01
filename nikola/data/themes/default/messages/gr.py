@@ -16,4 +16,5 @@ MESSAGES = {
     u"&larr; Previous post": u"&larr; Προηγούμενη ανάρτηση",
     u"Next post &rarr;": u"Επόμενη ανάρτηση &rarr;",
     u"old posts page %d": u"σελίδα παλαιότερων αναρτήσεων %d",
+    u"Source": u"Source",
 }

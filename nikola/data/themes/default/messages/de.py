@@ -15,4 +15,5 @@ MESSAGES = {
     u"&larr; Newer posts": u"&larr; Neuere Eintr&auml;ge",
     u"&larr; Previous post": u"&larr; Vorheriger Eintrag",
     u"Next post &rarr;": u"N&auml;chster Eintrag &rarr;",
+    u"Source": u"Source",
 }

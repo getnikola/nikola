@@ -14,6 +14,7 @@ MESSAGES = [
     u"Next post &rarr;",
     u"old posts page %d",
     u"Read more",
+    u"Source",
 ]
 
 # In english things are not translated

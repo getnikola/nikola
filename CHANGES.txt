@@ -23,6 +23,7 @@ Bugfixes
 * Fixed getting metadata from post file.
 * More resistence to broken EXIF data.
 * Made jinja-default follow default more closely.
+* Don't say "reSt", say "Source" since it can be markdown or other stuff.
 
 New in Version 4.0.1
 ====================

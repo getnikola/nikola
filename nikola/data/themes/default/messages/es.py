@@ -17,4 +17,5 @@ MESSAGES = {
     u"Next post &rarr;": u"Siguiente post &rarr;",
     u"old posts page %d": u"posts antiguos página %d",
     u"Read more": u"Leer mas",
+    u"Source": u"Código",
 }

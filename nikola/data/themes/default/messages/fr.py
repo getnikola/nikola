@@ -13,4 +13,5 @@ MESSAGES = {
     u"Read in English": u"Lire en français",
     u"&larr; Newer posts": u"&larr; Billets récents",
     u"Older posts &rarr;": u"Anciens billets &rarr;",
+    u"Source": u"Source",
 }

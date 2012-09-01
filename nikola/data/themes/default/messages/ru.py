@@ -13,4 +13,5 @@ MESSAGES = {
     u"Read in English": u"Прочесть по-русски",
     u"Older posts &rarr;": u"Старые записи &rarr;",
     u"&larr; Newer posts": u"&larr; Новые записи",
+    u"Source": u"Source",
 }
