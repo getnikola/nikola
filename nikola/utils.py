@@ -79,7 +79,7 @@ def get_meta(source_path):
     """get post's meta from source"""
     with codecs.open(source_path, "r", "utf8") as meta_file:
         meta_data = meta_file.readlines(15)
-    title = slug = date = tags = link = ''
+    title = slug = date = tags = link = description = ''
 
     re_md_title = re.compile(r'^%s([^%s].*)' %
         (re.escape('#'), re.escape('#')))
@@ -102,6 +102,8 @@ def get_meta(source_path):
             tags = re_meta(meta, '.. tags:')
         if not link:
             link = re_meta(meta, '.. link:')
+        if not description:
+            link = re_meta(meta, '.. description:')
 
     # TODO: either enable or delete
     #if not date:
@@ -109,7 +111,7 @@ def get_meta(source_path):
         #date = datetime.fromtimestamp(
         #    os.path.getmtime(source_path)).strftime('%Y/%m/%d %H:%M')
 
-    return (title, slug, date, tags, link)
+    return (title, slug, date, tags, link, description)
 
 
 def get_template_engine(themes):
