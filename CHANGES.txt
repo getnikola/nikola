@@ -22,6 +22,7 @@ Bugfixes
 * Added default for TRANSLATIONS
 * Fixed getting metadata from post file.
 * More resistence to broken EXIF data.
+* Made jinja-default follow default more closely.
 
 New in Version 4.0.1
 ====================
