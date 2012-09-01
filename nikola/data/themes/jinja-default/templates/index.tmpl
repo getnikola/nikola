@@ -1,8 +1,8 @@
 {% extends "base.tmpl" %}
 {% block content %}
     {% for post in posts %}
-        <div style="border-bottom: 2px solid darkgrey; margin-bottom: 12px;">
-        <a href="{{post.permalink(lang)}}"><h1>{{post.title(lang)}}</a>
+        <div class="postbox">
+        <h1><a href="{{post.permalink(lang)}}">{{post.title(lang)}}</a>
         <small>&nbsp;&nbsp;
              {{messages[lang]["Posted:"]}} {{post.date}}
         </small></h1>
@@ -18,12 +18,12 @@
 <ul class="pager">
   {%if prevlink %}
     <li class="previous">
-        <a href="{{prevlink}}">&larr; Newer posts</a>
+        <a href="{{prevlink}}">${messages[lang]["&larr; Newer posts"]}</a>
     </li>
   {% endif %}
   {% if nextlink %}
     <li class="next">
-        <a href="{{nextlink}}">Older posts &rarr;</a>
+        <a href="{{nextlink}}">${messages[lang]["Older posts &rarr;"]}</a>
     </li>
   {% endif %}
 </ul>
@@ -31,14 +31,6 @@
     </div>
     <hr>
     {% if disqus_forum %}
-        <script type="text/javascript">
-        var disqus_shortname = '{{disqus_forum}}';
-        (function () {
-            var s = document.createElement('script'); s.async = true;
-            s.type = 'text/javascript';
-            s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-        }());
-        </script>    
+        <script type="text/javascript"> var disqus_shortname = '{{disqus_forum}}'; (function () { var s = document.createElement('script'); s.async = true; s.type = 'text/javascript'; s.src = 'http://' + disqus_shortname + '.disqus.com/count.js'; (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s); }()); </script>
     {% endif %}
 {% endblock %}
