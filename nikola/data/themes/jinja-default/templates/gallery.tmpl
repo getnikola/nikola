@@ -1,30 +1,17 @@
 {% extends "base.tmpl" %}
-
-{% block extra_head %}
-    <link rel="stylesheet" href="{{rel_link(permalink, "/assets/css/colorbox.css")}}"/>
-    <script src="{{rel_link(permalink, "/assets/js/jquery-1.7.2.min.js")}}"></script>
-    <script src="{{rel_link(permalink, "/assets/js/jquery.colorbox-min.js")}}"></script>
-{% endblock %}
 {% block sourcelink %}{% endblock %}
 
 {% block content %}
-    <p>
     {% if text %}
+    <p>
         {{ text }}
-    {% endif %}
     </p>
+    {% endif %}
     <ul class="thumbnails">
         {% for image in images %}
-            <li><a href="{{image[0]}}" class="thumbnail"><img src="{{image[1]}}" /></a></li>
+            <li><a href="{{image[0]}}" class="thumbnail image-reference"><img src="{{image[2]}}" /></a></li>
+                <img src="${image[1]}" /></a></li>
         {% endfor %}
     </ul>
-    <script>
-        jQuery('a.thumbnail').colorbox({
-            rel:'gal',
-            maxWidth:'80%',
-            maxHeight:'80%',
-            scalePhotos: true
-        });
-    </script>
 {% endblock %}
 
