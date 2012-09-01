@@ -1,5 +1,5 @@
-New in Master
-=============
+New in Version 4.0.2
+====================
 
 Features
 --------
