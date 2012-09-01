@@ -1208,7 +1208,7 @@ class Nikola(object):
                     size = max_size, max_size
                     try:
                         exif = im._getexif()
-                    except AttributeError:
+                    except Exception:
                         exif = None
                     if exif is not None:
                         for tag, value in exif.items():
@@ -1243,7 +1243,7 @@ class Nikola(object):
                     im = Image.open(src)
                     try:
                         exif = im._getexif()
-                    except AttributeError:
+                    except Exception:
                         exif = None
                     if exif is not None:
                         for tag, value in exif.items():
