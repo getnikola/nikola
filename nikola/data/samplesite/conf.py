@@ -6,6 +6,13 @@ import os
 # Configuration, please edit
 ########################################
 
+# Data about this site
+BLOG_AUTHOR = "Your Name"
+BLOG_TITLE = "Demo Site"
+BLOG_URL = "http://nikola.ralsina.com.ar"
+BLOG_EMAIL = "joe@demo.site"
+BLOG_DESCRIPTION = "This is a demo site for Nikola."
+
 # post_pages contains (wildcard, destination, template, use_in_feed) tuples.
 #
 # The wildcard is used to generate a list of reSt source files
@@ -75,7 +82,7 @@ DEFAULT_LANG = "en"
 # The format is {"translationcode" : "path/to/translation" }
 # the path will be used as a prefix for the generated pages location
 TRANSLATIONS = {
-    "en": "",
+    DEFAULT_LANG: "",
     #"gr": "./gr",
     #"de": "./de",
     #"fr": "./fr",
@@ -171,13 +178,6 @@ USE_FILENAME_AS_TITLE = True
 # HTML fragments and diverse things that are used by the templates
 ##############################################################################
 
-# Data about this site
-BLOG_AUTHOR = "Your Name"
-BLOG_TITLE = "Demo Site"
-BLOG_URL = "http://nikola.ralsina.com.ar"
-BLOG_EMAIL = "joe@demo.site"
-BLOG_DESCRIPTION = "This is a demo site for Nikola."
-
 # Data about post-per-page indexes
 INDEXES_TITLE = ""  # If this is empty, the default is BLOG_TITLE
 INDEXES_PAGES = ""  # If this is empty, the default is 'old posts page %d' translated
@@ -263,7 +263,7 @@ GLOBAL_CONTEXT = {
     # Locale-dependent links for the sidebar
     # You should provide a key-value pair for each used language.
     'sidebar_links': {
-        'en': (
+        DEFAULT_LANG: (
             ('/' + os.path.join(ARCHIVE_PATH, ARCHIVE_FILENAME), 'Archives'),
             ('/categories/index.html', 'Tags'),
             ('/stories/about-nikola.html', 'About Nikola'),
