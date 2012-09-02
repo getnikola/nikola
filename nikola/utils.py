@@ -103,7 +103,7 @@ def get_meta(source_path):
         if not link:
             link = re_meta(meta, '.. link:')
         if not description:
-            link = re_meta(meta, '.. description:')
+            description = re_meta(meta, '.. description:')
 
     # TODO: either enable or delete
     #if not date:
