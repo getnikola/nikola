@@ -7,6 +7,7 @@ Features
 * Updated to bootstrap 2.1.0
 * Italian translation by Pierpaolo Da Fieno
 * Index-like tag pages with the TAG_PAGES_ARE_INDEXES option
+* Wordpress.com import script
 
 Bugfixes
 --------
