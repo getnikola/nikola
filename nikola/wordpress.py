@@ -2,11 +2,17 @@ import codecs
 import os
 import sys
 from urlparse import urlparse
+from urllib import urlopen
 
-from lxml import etree
+from lxml import etree, html
 from mako.template import Template
 
 from nikola import utils
+
+links = {}
+
+def replacer(dst):
+    return links.get(dst, dst)
 
 def get_text_tag(tag, name, default):
     t = tag.find(name)
@@ -14,6 +20,25 @@ def get_text_tag(tag, name, default):
         return t.text
     else:
         return default
+
+def import_attachment(item):
+    post_type = get_text_tag(item, '{http://wordpress.org/export/1.2/}post_type', 'post')
+    if post_type == 'attachment':
+        url = get_text_tag(item, '{http://wordpress.org/export/1.2/}attachment_url', 'foo')
+        link = get_text_tag(item, '{http://wordpress.org/export/1.2/}link', 'foo')
+        path = urlparse(url).path
+        dst_path = os.path.join(*(['new_site', 'files']+list(path.split('/'))))
+        dst_dir = os.path.dirname(dst_path)
+        if not os.path.isdir(dst_dir):
+            os.makedirs(dst_dir)
+        print "Downloading %s => %s" % (url, dst_path)
+        with open(dst_path, 'wb+') as fd:
+            fd.write(urlopen(url).read())
+        dst_url = '/'.join(dst_path.split(os.sep)[2:])
+        links[link] = '/'+dst_url
+        links[url] = '/'+dst_url
+    return
+
 
 def import_item(item):
     """Takes an item from the feed and creates a post file."""
@@ -36,7 +61,9 @@ def import_item(item):
             continue
         tags.append(text)
 
-    if post_type == 'post':
+    if post_type == 'attachment':
+        return
+    elif post_type == 'post':
         out_folder = 'posts'
     else:
         out_folder = 'stories'
@@ -48,8 +75,14 @@ def import_item(item):
         fd.write(u'%s\n' % ','.join(tags))
         fd.write(u'\n')
         fd.write(u'%s\n' % description)
-    with codecs.open(os.path.join('new_site', out_folder, slug+'.wp'), "w+", "utf8") as fd:
-        fd.write(content)
+    with open(os.path.join('new_site', out_folder, slug+'.wp'), "wb+") as fd:
+        if content.strip():
+            try:
+                doc = html.document_fromstring(content)
+                doc.rewrite_links(replacer)
+                fd.write(html.tostring(doc, encoding='utf8'))
+            except:
+                import pdb; pdb.set_trace()
 
 
 def process(fname):
@@ -95,5 +128,7 @@ def process(fname):
         fd.write(conf_template.render(**context))
 
     # Import posts
+    for item in channel.findall('item'):
+        import_attachment(item)
     for item in channel.findall('item'):
         import_item(item)
