@@ -5,6 +5,7 @@ Bugfixes
 --------
 
 * Handle empty posts without crashing.
+* Treat wordpress imported posts as Markdown.
 
 New in Version 4.0.2
 ====================

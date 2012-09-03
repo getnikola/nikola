@@ -82,8 +82,8 @@ def process(fname):
     )'''
     context['POST_COMPILERS'] = '''{
     "rest": ('.txt', '.rst'),
-    "markdown": ('.md', '.mdown', '.markdown'),
-    "html": ('.html', '.htm', '.wp')
+    "markdown": ('.md', '.mdown', '.markdown', '.wp'),
+    "html": ('.html', '.htm')
     }
     '''
 
