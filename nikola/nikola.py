@@ -155,8 +155,9 @@ class Post(object):
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read()
 
-        data = lxml.html.make_links_absolute(data, self.permalink())
-        if teaser_only:
+        if data:
+            data = lxml.html.make_links_absolute(data, self.permalink())
+        if data and teaser_only:
             e = lxml.html.fromstring(data)
             teaser = []
             flag = False
