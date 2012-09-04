@@ -1,0 +1,180 @@
+# -*- coding: utf-8 -*-
+
+import codecs
+import os
+
+import lxml.html
+
+import utils
+
+__all__ = ['Post']
+
+
+class Post(object):
+
+    """Represents a blog post or web page."""
+
+    def __init__(self, source_path, destination, use_in_feeds,
+        translations, default_lang, blog_url, compile_html, messages):
+        """Initialize post.
+
+        The base path is the .txt post file. From it we calculate
+        the meta file, as well as any translations available, and
+        the .html fragment file path.
+
+        `compile_html` is a function that knows how to compile this Post to
+        html.
+        """
+        self.prev_post = None
+        self.next_post = None
+        self.blog_url = blog_url
+        self.is_draft = False
+        self.source_path = source_path  # posts/blah.txt
+        self.post_name = os.path.splitext(source_path)[0]  # posts/blah
+        # cache/posts/blah.html
+        self.base_path = os.path.join('cache', self.post_name + ".html")
+        self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
+        self.folder = destination
+        self.translations = translations
+        self.default_lang = default_lang
+        self.messages = messages
+        if os.path.isfile(self.metadata_path):
+            with codecs.open(self.metadata_path, "r", "utf8") as meta_file:
+                meta_data = meta_file.readlines()
+            while len(meta_data) < 6:
+                meta_data.append("")
+            (default_title, default_pagename, self.date, self.tags,
+                self.link, default_description) = \
+                    [x.strip() for x in meta_data][:6]
+        else:
+            (default_title, default_pagename, self.date, self.tags,
+                self.link, default_description) = \
+                    utils.get_meta(self.source_path)
+
+        if not default_title or not default_pagename or not self.date:
+            raise OSError("You must set a title and slug and date!")
+
+        self.date = utils.to_datetime(self.date)
+        self.tags = [x.strip() for x in self.tags.split(',')]
+        self.tags = filter(None, self.tags)
+
+        # While draft comes from the tags, it's not really a tag
+        self.use_in_feeds = use_in_feeds and "draft" not in self.tags
+        self.is_draft = 'draft' in self.tags
+        self.tags = [t for t in self.tags if t != 'draft']
+
+        self.compile_html = compile_html
+
+        self.pagenames = {}
+        self.titles = {}
+        self.descriptions = {}
+        # Load internationalized titles
+        # TODO: this has gotten much too complicated. Rethink.
+        for lang in translations:
+            if lang == default_lang:
+                self.titles[lang] = default_title
+                self.pagenames[lang] = default_pagename
+                self.descriptions[lang] = default_description
+            else:
+                metadata_path = self.metadata_path + "." + lang
+                source_path = self.source_path + "." + lang
+                try:
+                    if os.path.isfile(metadata_path):
+                        with codecs.open(
+                                metadata_path, "r", "utf8") as meta_file:
+                            meta_data = [x.strip() for x in
+                                meta_file.readlines()]
+                            while len(meta_data) < 6:
+                                meta_data.append("")
+                            self.titles[lang] = meta_data[0] or default_title
+                            self.pagenames[lang] = meta_data[1] or\
+                                default_pagename
+                            self.descriptions[lang] = meta_data[5] or\
+                                default_description
+                    else:
+                        ttitle, ppagename, tmp1, tmp2, tmp3, ddescription = \
+                            utils.get_meta(source_path)
+                        self.titles[lang] = ttitle or default_title
+                        self.pagenames[lang] = ppagename or default_pagename
+                        self.descriptions[lang] = ddescription or\
+                            default_description
+                except:
+                    self.titles[lang] = default_title
+                    self.pagenames[lang] = default_pagename
+                    self.descriptions[lang] = default_description
+
+    def title(self, lang):
+        """Return localized title."""
+        return self.titles[lang]
+
+    def description(self, lang):
+        """Return localized description."""
+        return self.descriptions[lang]
+
+    def deps(self, lang):
+        """Return a list of dependencies to build this post's page."""
+        deps = [self.base_path]
+        if lang != self.default_lang:
+            deps += [self.base_path + "." + lang]
+        deps += self.fragment_deps(lang)
+        return deps
+
+    def fragment_deps(self, lang):
+        """Return a list of dependencies to build this post's fragment."""
+        deps = [self.source_path]
+        if os.path.isfile(self.metadata_path):
+            deps.append(self.metadata_path)
+        if lang != self.default_lang:
+            lang_deps = filter(os.path.exists, [x + "." + lang for x in deps])
+            deps += lang_deps
+        return deps
+
+    def text(self, lang, teaser_only=False):
+        """Read the post file for that language and return its contents"""
+        file_name = self.base_path
+        if lang != self.default_lang:
+            file_name_lang = file_name + ".%s" % lang
+            if os.path.exists(file_name_lang):
+                file_name = file_name_lang
+        with codecs.open(file_name, "r", "utf8") as post_file:
+            data = post_file.read()
+
+        if data:
+            data = lxml.html.make_links_absolute(data, self.permalink())
+        if data and teaser_only:
+            e = lxml.html.fromstring(data)
+            teaser = []
+            flag = False
+            for elem in e:
+                elem_string = lxml.html.tostring(elem)
+                if '<!-- TEASER_END -->' in elem_string.upper():
+                    flag = True
+                    break
+                teaser.append(elem_string)
+            if flag:
+                teaser.append('<p><a href="%s">%s...</a></p>' %
+                    (self.permalink(lang), self.messages[lang]["Read more"]))
+            data = ''.join(teaser)
+        return data
+
+    def destination_path(self, lang, extension='.html'):
+        path = os.path.join(self.translations[lang],
+            self.folder, self.pagenames[lang] + extension)
+        return path
+
+    def permalink(self, lang=None, absolute=False, extension='.html'):
+        if lang is None:
+            lang = self.default_lang
+        pieces = list(os.path.split(self.translations[lang]))
+        pieces += list(os.path.split(self.folder))
+        pieces += [self.pagenames[lang] + extension]
+        pieces = filter(None, pieces)
+        if absolute:
+            pieces = [self.blog_url] + pieces
+        else:
+            pieces = [""] + pieces
+        link = "/".join(pieces)
+        return link
+
+    def source_ext(self):
+        return os.path.splitext(self.source_path)[1]

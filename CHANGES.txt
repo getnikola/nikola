@@ -11,6 +11,7 @@ Bugfixes
 * Change the global/local order of contexts on templates.
 * Link tag's feed in tag's pages.
 * Fix empty tag feeds.
+* Refactored Post out of nikola.py
 
 New in Version 4.0.2
 ====================
