@@ -8,6 +8,7 @@ Bugfixes
 * Treat wordpress imported posts as Markdown.
 * Download attachments from wordpress
 * Fix links to attachments so they work
+* Change the global/local order of contexts on templates.
 
 New in Version 4.0.2
 ====================

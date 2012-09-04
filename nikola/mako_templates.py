@@ -38,8 +38,10 @@ def get_template_lookup(directories):
 
 def render_template(template_name, output_name, context, global_context):
     template = lookup.get_template(template_name)
-    context.update(global_context)
-    data = template.render_unicode(**context)
+    local_context = {}
+    local_context.update(global_context)
+    local_context.update(context)
+    data = template.render_unicode(**local_context)
     if output_name is not None:
         try:
             os.makedirs(os.path.dirname(output_name))
