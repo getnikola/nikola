@@ -950,7 +950,6 @@ class Nikola(object):
             post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
             post_list.reverse()
             for lang in kw["translations"]:
-
                 #Render RSS
                 output_name = os.path.join(kw['output_folder'],
                     self.path("tag_rss", tag, lang))
@@ -981,12 +980,11 @@ class Nikola(object):
 
                     # FIXME: deduplicate this with render_indexes
                     template_name = "index.tmpl"
-                    posts = post_list
                     # Split in smaller lists
                     lists = []
-                    while posts:
-                        lists.append(posts[:kw["index_display_post_count"]])
-                        posts = posts[kw["index_display_post_count"]:]
+                    while post_list:
+                        lists.append(post_list[:kw["index_display_post_count"]])
+                        post_list = post_list[kw["index_display_post_count"]:]
                     num_pages = len(lists)
                     for i, post_list in enumerate(lists):
                         context = {}
