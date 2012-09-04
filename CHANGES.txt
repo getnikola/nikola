@@ -10,6 +10,7 @@ Bugfixes
 * Fix links to attachments so they work
 * Change the global/local order of contexts on templates.
 * Link tag's feed in tag's pages.
+* Fix empty tag feeds.
 
 New in Version 4.0.2
 ====================

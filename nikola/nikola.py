@@ -950,6 +950,30 @@ class Nikola(object):
             post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
             post_list.reverse()
             for lang in kw["translations"]:
+
+                #Render RSS
+                output_name = os.path.join(kw['output_folder'],
+                    self.path("tag_rss", tag, lang))
+                deps = []
+                post_list = [self.global_data[post] for post in posts
+                    if self.global_data[post].use_in_feeds]
+                post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
+                post_list.reverse()
+                for post in post_list:
+                    deps += post.deps(lang)
+                yield {
+                    'name': output_name.encode('utf8'),
+                    'file_dep': deps,
+                    'targets': [output_name],
+                    'actions': [(utils.generic_rss_renderer,
+                        (lang, "%s (%s)" % (kw["blog_title"], tag),
+                        kw["blog_url"], kw["blog_description"],
+                        post_list, output_name))],
+                    'clean': True,
+                    'uptodate': [config_changed(kw)],
+                    'basename': 'render_tags'
+                }
+
                 # Render HTML
                 if kw['tag_pages_are_indexes']:
                     # We render a sort of index page collection using only
@@ -1025,29 +1049,6 @@ class Nikola(object):
                                         [config_changed(kw)]
                         task['basename'] = 'render_tags'
                         yield task
-
-                #Render RSS
-                output_name = os.path.join(kw['output_folder'],
-                    self.path("tag_rss", tag, lang))
-                deps = []
-                post_list = [self.global_data[post] for post in posts
-                    if self.global_data[post].use_in_feeds]
-                post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
-                post_list.reverse()
-                for post in post_list:
-                    deps += post.deps(lang)
-                yield {
-                    'name': output_name.encode('utf8'),
-                    'file_dep': deps,
-                    'targets': [output_name],
-                    'actions': [(utils.generic_rss_renderer,
-                        (lang, "%s (%s)" % (kw["blog_title"], tag),
-                        kw["blog_url"], kw["blog_description"],
-                        post_list, output_name))],
-                    'clean': True,
-                    'uptodate': [config_changed(kw)],
-                    'basename': 'render_tags'
-                }
 
         # And global "all your tags" page
         tags = self.posts_per_tag.keys()
