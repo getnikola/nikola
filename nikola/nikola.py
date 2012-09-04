@@ -966,6 +966,13 @@ class Nikola(object):
                     num_pages = len(lists)
                     for i, post_list in enumerate(lists):
                         context = {}
+                        # On a tag page, the feeds are the tag's feeds, plus the site's
+                        rss_link = \
+                        """<link rel="alternate" type="application/rss+xml" """\
+                        """type="application/rss+xml" title="RSS for tag """\
+                        """%s (%s)" href="%s">""" % \
+                            (tag, lang, self.link("tag_rss", tag, lang))
+                        context ['rss_link'] = rss_link
                         output_name = os.path.join(kw['output_folder'],
                             page_name(tag, i, lang))
                         context["title"] = kw["messages"][lang][u"Posts about %s:"]\
@@ -1239,7 +1246,6 @@ class Nikola(object):
 
             dates = {}
             def image_date(src):
-                #import doit.tools; doit.tools.set_trace()
                 if src not in dates:
                     im = Image.open(src)
                     try:
@@ -1352,8 +1358,6 @@ class Nikola(object):
                         excluded_image_name_list):
                     # img_name is "image_name.jpg"
                     # fname, ext are "image_name", ".jpg"
-                    #import pdb
-                    #pdb.set_trace()
                     fname, ext = os.path.splitext(img_name)
                     excluded_thumb_dest_path = os.path.join(output_gallery,
                         fname + ".thumbnail" + ext)
