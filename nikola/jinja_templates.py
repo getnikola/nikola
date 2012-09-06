@@ -20,6 +20,8 @@ def get_template_lookup(directories):
 def render_template(template_name, output_name, context, global_context):
     template = lookup.get_template(template_name)
     local_context = {}
+    #add template name to context
+    local_context["template_name"] = template_name
     local_context.update(global_context)
     local_context.update(context)
     output = template.render(**local_context)
