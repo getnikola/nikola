@@ -5,6 +5,7 @@ Features
 --------
 
 * Templates now know their name from template_name in their context.
+* Task plugin support.
 
 New in Version 4.0.3
 ====================
