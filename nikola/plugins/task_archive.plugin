@@ -1,0 +1,10 @@
+[Core]
+Name = Generate Archive
+Module = task_archive
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Generates the blog's archive pages.
+

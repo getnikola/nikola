@@ -112,8 +112,9 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
 
         self.plugin_manager = PluginManager(categories_filter={
-		 "Tasks": Task
-	})
+            "Tasks": Task
+        })
+        self.plugin_manager.setPluginInfoExtension('plugin')
         self.plugin_manager.setPluginPlaces([
             os.path.join(os.path.dirname(__file__), 'plugins'),
             os.path.join(os.getcwd(), 'plugins'),
@@ -341,12 +342,12 @@ class Nikola(object):
             index_teasers=self.config['INDEX_TEASERS'],
             filters=self.config['FILTERS'],
         )
-        yield self.gen_task_render_archive(
-            translations=self.config['TRANSLATIONS'],
-            messages=self.MESSAGES,
-            output_folder=self.config['OUTPUT_FOLDER'],
-            filters=self.config['FILTERS'],
-        )
+        #yield self.gen_task_render_archive(
+            #translations=self.config['TRANSLATIONS'],
+            #messages=self.MESSAGES,
+            #output_folder=self.config['OUTPUT_FOLDER'],
+            #filters=self.config['FILTERS'],
+        #)
         yield self.gen_task_render_tags(
             translations=self.config['TRANSLATIONS'],
             messages=self.MESSAGES,
@@ -387,7 +388,7 @@ class Nikola(object):
 
         task_dep = [
                 'render_listings',
-                'render_archive',
+                #'render_archive',
                 'render_galleries',
                 'render_indexes',
                 'render_pages',
@@ -400,6 +401,12 @@ class Nikola(object):
                 'sitemap',
                 'redirect'
         ]
+
+        for pluginInfo in self.plugin_manager.getPluginsOfCategory("Tasks"):
+            for task in pluginInfo.plugin_object.gen_tasks():
+                yield task
+            task_dep.append(pluginInfo.plugin_object.name)
+
 
         if webassets:
             task_dep.append( 'build_bundles' )
@@ -697,71 +704,6 @@ class Nikola(object):
         }
 
         yield utils.apply_filters(task, filters)
-
-    def gen_task_render_archive(self, **kw):
-        """Render the post archives.
-
-        Required keyword arguments:
-
-        translations
-        messages
-        output_folder
-        """
-        # TODO add next/prev links for years
-        template_name = "list.tmpl"
-        # TODO: posts_per_year is global, kill it
-        for year, posts in self.posts_per_year.items():
-            for lang in kw["translations"]:
-                output_name = os.path.join(
-                    kw['output_folder'], self.path("archive", year, lang))
-                post_list = [self.global_data[post] for post in posts]
-                post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
-                post_list.reverse()
-                context = {}
-                context["lang"] = lang
-                context["items"] = [("[%s] %s" %
-                    (post.date, post.title(lang)), post.permalink(lang))
-                    for post in post_list]
-                context["permalink"] = self.link("archive", year, lang)
-                context["title"] = kw["messages"][lang]["Posts for year %s"]\
-                    % year
-                for task in self.generic_post_list_renderer(
-                    lang,
-                    post_list,
-                    output_name,
-                    template_name,
-                    kw['filters'],
-                    context,
-                ):
-                    task['uptodate'] = task.get('updtodate', []) +\
-                                       [config_changed(kw)]
-                    yield task
-
-        # And global "all your years" page
-        years = self.posts_per_year.keys()
-        years.sort(reverse=True)
-        template_name = "list.tmpl"
-        kw['years'] = years
-        for lang in kw["translations"]:
-            context = {}
-            output_name = os.path.join(
-                kw['output_folder'], self.path("archive", None, lang))
-            context["title"] = kw["messages"][lang]["Archive"]
-            context["items"] = [(year, self.link("archive", year, lang))
-                for year in years]
-            context["permalink"] = self.link("archive", None, lang)
-            for task in self.generic_post_list_renderer(
-                lang,
-                [],
-                output_name,
-                template_name,
-                kw['filters'],
-                context,
-            ):
-                task['uptodate'] = task.get('updtodate', []) +\
-                    [config_changed(kw)]
-                task['basename'] = 'render_archive'
-                yield task
 
     def gen_task_render_tags(self, **kw):
         """Render the tag pages.
