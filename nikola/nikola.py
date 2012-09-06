@@ -334,20 +334,6 @@ class Nikola(object):
             default_lang=self.config['DEFAULT_LANG'],
             timeline=self.timeline
             )
-        yield self.gen_task_render_indexes(
-            translations=self.config['TRANSLATIONS'],
-            messages=self.MESSAGES,
-            output_folder=self.config['OUTPUT_FOLDER'],
-            index_display_post_count=self.config['INDEX_DISPLAY_POST_COUNT'],
-            index_teasers=self.config['INDEX_TEASERS'],
-            filters=self.config['FILTERS'],
-        )
-        #yield self.gen_task_render_archive(
-            #translations=self.config['TRANSLATIONS'],
-            #messages=self.MESSAGES,
-            #output_folder=self.config['OUTPUT_FOLDER'],
-            #filters=self.config['FILTERS'],
-        #)
         yield self.gen_task_render_tags(
             translations=self.config['TRANSLATIONS'],
             messages=self.MESSAGES,
@@ -388,9 +374,7 @@ class Nikola(object):
 
         task_dep = [
                 'render_listings',
-                #'render_archive',
                 'render_galleries',
-                'render_indexes',
                 'render_pages',
                 'render_posts',
                 'render_rss',
@@ -606,74 +590,6 @@ class Nikola(object):
                 'uptodate': [True],
                 'actions': [],
             }
-
-    def gen_task_render_indexes(self, **kw):
-        """Render post-per-page indexes.
-        The default is 10.
-
-        Required keyword arguments:
-
-        translations
-        output_folder
-        index_display_post_count
-        index_teasers
-        """
-        self.scan_posts()
-        template_name = "index.tmpl"
-        # TODO: timeline is global, get rid of it
-        posts = [x for x in self.timeline if x.use_in_feeds]
-        # Split in smaller lists
-        lists = []
-        while posts:
-            lists.append(posts[:kw["index_display_post_count"]])
-            posts = posts[kw["index_display_post_count"]:]
-        num_pages = len(lists)
-        if not lists:
-            yield {
-                'basename': 'render_indexes',
-                'actions': [],
-                }
-        for lang in kw["translations"]:
-            for i, post_list in enumerate(lists):
-                context = {}
-                if self.config.get("INDEXES_TITLE", ""):
-                    indexes_title = self.config['INDEXES_TITLE']
-                else:
-                    indexes_title = self.config["BLOG_TITLE"]
-                if not i:
-                    output_name = "index.html"
-                    context["title"] = indexes_title
-                else:
-                    output_name = "index-%s.html" % i
-                    if self.config.get("INDEXES_PAGES", ""):
-                        indexes_pages = self.config["INDEXES_PAGES"] % i
-                    else:
-                        indexes_pages = " (" + kw["messages"][lang]["old posts page %d"] % i + ")"
-                    context["title"] = indexes_title + indexes_pages
-                context["prevlink"] = None
-                context["nextlink"] = None
-                context['index_teasers'] = kw['index_teasers']
-                if i > 1:
-                    context["prevlink"] = "index-%s.html" % (i - 1)
-                if i == 1:
-                    context["prevlink"] = "index.html"
-                if i < num_pages - 1:
-                    context["nextlink"] = "index-%s.html" % (i + 1)
-                context["permalink"] = self.link("index", i, lang)
-                output_name = os.path.join(
-                    kw['output_folder'], self.path("index", i, lang))
-                for task in self.generic_post_list_renderer(
-                    lang,
-                    post_list,
-                    output_name,
-                    template_name,
-                    kw['filters'],
-                    context,
-                ):
-                    task['uptodate'] = task.get('updtodate', []) +\
-                                    [config_changed(kw)]
-                    task['basename'] = 'render_indexes'
-                    yield task
 
     def generic_post_list_renderer(self, lang, posts,
         output_name, template_name, filters, extra_context):

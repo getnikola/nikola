@@ -1,10 +1,10 @@
 [Core]
-Name = render_archive
-Module = task_archive
+Name = render_index
+Module = task_indexes
 
 [Documentation]
 Author = Roberto Alsina
 Version = 0.1
 Website = http://nikola.ralsina.com.ar
-Description = Generates the blog's archive pages.
+Description = Generates the blog's index pages.
 
