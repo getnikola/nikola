@@ -5,3 +5,5 @@ docutils
 mako>=0.6
 unidecode
 lxml
+configparser
+yapsy

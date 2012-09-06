@@ -22,9 +22,12 @@ try:
     import webassets
 except ImportError:
     webassets = None
+from yapsy.PluginManager import PluginManager
+import logging; logging.basicConfig(level=logging.DEBUG)
 
 from post import Post
 import utils
+from plugin_categories import Task
 
 config_changed = utils.config_changed
 
@@ -108,10 +111,18 @@ class Nikola(object):
             'INDEX_DISPLAY_POST_COUNT']
         self.GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
 
-        self.DEPS_CONTEXT = {}
-        for k, v in self.GLOBAL_CONTEXT.items():
-            if isinstance(v, (str, unicode, int, float, dict)):
-                self.DEPS_CONTEXT[k] = v
+        self.plugin_manager = PluginManager(categories_filter={
+		 "Tasks": Task
+	})
+        self.plugin_manager.setPluginPlaces([
+            os.path.join(os.path.dirname(__file__), 'plugins'),
+            os.path.join(os.getcwd(), 'plugins'),
+            ])
+        self.plugin_manager.collectPlugins()
+        # Activate all loaded plugins
+        for pluginInfo in self.plugin_manager.getAllPlugins():
+            self.plugin_manager.activatePluginByName(pluginInfo.name)
+            pluginInfo.plugin_object.set_site(self)
 
     def render_template(self, template_name, output_name, context):
         data = self.templates_module.render_template(
