@@ -1,0 +1,10 @@
+[Core]
+Name = copy_assets
+Module = task_copy_assets
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Copy theme assets into output.
+

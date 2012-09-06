@@ -307,10 +307,6 @@ class Nikola(object):
         yield self.task_bootswatch_theme()
         yield self.gen_task_new_post(self.config['post_pages'])
         yield self.gen_task_new_page(self.config['post_pages'])
-        yield self.gen_task_copy_assets(themes=self.THEMES,
-            output_folder=self.config['OUTPUT_FOLDER'],
-            filters=self.config['FILTERS']
-        )
         if webassets:
             yield self.gen_task_build_bundles(theme_bundles=self.theme_bundles,
                 output_folder=self.config['OUTPUT_FOLDER'],
@@ -1203,32 +1199,6 @@ class Nikola(object):
                 'basename': 'copy_files',
                 'actions': (),
             }
-
-    @staticmethod
-    def gen_task_copy_assets(**kw):
-        """Create tasks to copy the assets of the whole theme chain.
-
-        If a file is present on two themes, use the version
-        from the "youngest" theme.
-
-        Required keyword arguments:
-
-        themes
-        output_folder
-
-        """
-        tasks = {}
-        for theme_name in kw['themes']:
-            src = os.path.join(utils.get_theme_path(theme_name), 'assets')
-            dst = os.path.join(kw['output_folder'], 'assets')
-            for task in utils.copy_tree(src, dst):
-                if task['name'] in tasks:
-                    continue
-                tasks[task['name']] = task
-                task['uptodate'] = task.get('uptodate', []) + \
-                    [config_changed(kw)]
-                task['basename'] = 'copy_assets'
-                yield utils.apply_filters(task, kw['filters'])
 
     @staticmethod
     def gen_task_build_bundles(**kw):
