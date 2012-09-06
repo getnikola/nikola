@@ -312,7 +312,6 @@ class Nikola(object):
                 output_folder=self.config['OUTPUT_FOLDER'],
                 filters=self.config['FILTERS']
             )
-        yield self.gen_task_deploy(commands=self.config['DEPLOY_COMMANDS'])
         yield self.gen_task_sitemap(blog_url=self.config['BLOG_URL'],
             output_folder=self.config['OUTPUT_FOLDER']
         )
@@ -320,11 +319,6 @@ class Nikola(object):
             translations=self.config['TRANSLATIONS'],
             post_pages=self.config['post_pages'],
             filters=self.config['FILTERS'])
-        yield self.gen_task_render_sources(
-            translations=self.config['TRANSLATIONS'],
-            default_lang=self.config['DEFAULT_LANG'],
-            output_folder=self.config['OUTPUT_FOLDER'],
-            post_pages=self.config['post_pages'])
         yield self.gen_task_render_posts(
             translations=self.config['TRANSLATIONS'],
             default_lang=self.config['DEFAULT_LANG'],
@@ -374,9 +368,7 @@ class Nikola(object):
                 'render_pages',
                 'render_posts',
                 'render_rss',
-                'render_sources',
                 'render_tags',
-                'copy_assets',
                 'copy_files',
                 'sitemap',
                 'redirect'
@@ -385,7 +377,8 @@ class Nikola(object):
         for pluginInfo in self.plugin_manager.getPluginsOfCategory("Tasks"):
             for task in pluginInfo.plugin_object.gen_tasks():
                 yield task
-            task_dep.append(pluginInfo.plugin_object.name)
+            if pluginInfo.plugin_object.is_default:
+                task_dep.append(pluginInfo.plugin_object.name)
 
 
         if webassets:
@@ -502,45 +495,6 @@ class Nikola(object):
         if flag == False:  # No page rendered, yield a dummy task
             yield {
                 'basename': 'render_pages',
-                'name': 'None',
-                'uptodate': [True],
-                'actions': [],
-            }
-
-    def gen_task_render_sources(self, **kw):
-        """Publish the rst sources because why not?
-
-        Required keyword arguments:
-
-        translations
-        default_lang
-        post_pages
-        output_folder
-        """
-        self.scan_posts()
-        flag = False
-        for lang in kw["translations"]:
-            # TODO: timeline is global
-            for post in self.timeline:
-                output_name = os.path.join(kw['output_folder'],
-                    post.destination_path(lang, post.source_ext()))
-                source = post.source_path
-                if lang != kw["default_lang"]:
-                    source_lang = source + '.' + lang
-                    if os.path.exists(source_lang):
-                        source = source_lang
-                yield {
-                    'basename': 'render_sources',
-                    'name': output_name.encode('utf8'),
-                    'file_dep': [source],
-                    'targets': [output_name],
-                    'actions': [(utils.copy_file, (source, output_name))],
-                    'clean': True,
-                    'uptodate': [config_changed(kw)],
-                    }
-        if flag == False:  # No page rendered, yield a dummy task
-            yield {
-                'basename': 'render_sources',
                 'name': 'None',
                 'uptodate': [True],
                 'actions': [],
@@ -1302,21 +1256,6 @@ class Nikola(object):
             "basename": "new_page",
             "actions": [PythonInteractiveAction(cls.new_post,
                 (post_pages, False,))],
-            }
-
-    @staticmethod
-    def gen_task_deploy(**kw):
-        """Deploy site.
-
-        Required keyword arguments:
-
-        commands
-
-        """
-        yield {
-            "basename": "deploy",
-            "actions": kw['commands'],
-            "verbosity": 2,
             }
 
     @staticmethod

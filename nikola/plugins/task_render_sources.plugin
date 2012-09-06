@@ -1,0 +1,10 @@
+[Core]
+Name = render_sources
+Module = task_render_sources
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Copy page sources into the output.
+
