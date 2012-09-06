@@ -1312,7 +1312,6 @@ class Nikola(object):
                 "render_pages",
                 "render_posts",
                 "render_rss",
-                "render_sources",
                 "render_tags"],
             "targets": [sitemap_path],
             "actions": [(sitemap,)],
