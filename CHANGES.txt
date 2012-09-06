@@ -1,3 +1,11 @@
+New in Master
+=============
+
+Features
+--------
+
+* Templates now know their name from template_name in their context.
+
 New in Version 4.0.3
 ====================
 
