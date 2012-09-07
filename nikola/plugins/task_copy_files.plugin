@@ -1,0 +1,10 @@
+[Core]
+Name = copy_files
+Module = task_copy_files
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Copy static files into the output.
+

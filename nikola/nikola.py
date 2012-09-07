@@ -337,17 +337,12 @@ class Nikola(object):
             blog_url=self.config['BLOG_URL'],
             blog_description=self.config['BLOG_DESCRIPTION'],
             output_folder=self.config['OUTPUT_FOLDER'])
-        yield self.gen_task_copy_files(
-            output_folder=self.config['OUTPUT_FOLDER'],
-            files_folders=self.config['FILES_FOLDERS'],
-            filters=self.config['FILTERS'])
 
         task_dep = [
                 'render_pages',
                 'render_posts',
                 'render_rss',
                 'render_tags',
-                'copy_files',
         ]
 
         for pluginInfo in self.plugin_manager.getPluginsOfCategory("Tasks"):
@@ -735,33 +730,6 @@ class Nikola(object):
                     kw["blog_description"], posts, output_name))],
                 'clean': True,
                 'uptodate': [config_changed(kw)],
-            }
-
-    @staticmethod
-    def gen_task_copy_files(**kw):
-        """Copy static files into the output folder.
-
-        required keyword arguments:
-
-        output_folder
-        files_folders
-        """
-
-        flag = False
-        for src in kw['files_folders']:
-            dst = kw['output_folder']
-            filters = kw['filters']
-            real_dst = os.path.join(dst, kw['files_folders'][src])
-            for task in utils.copy_tree(src, real_dst, link_cutoff=dst):
-                flag = True
-                task['basename'] = 'copy_files'
-                task['uptodate'] = task.get('uptodate', []) +\
-                    [config_changed(kw)]
-                yield utils.apply_filters(task, filters)
-        if not flag:
-            yield {
-                'basename': 'copy_files',
-                'actions': (),
             }
 
     @staticmethod
