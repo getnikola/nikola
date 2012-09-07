@@ -3,6 +3,7 @@ import os
 from nikola.plugin_categories import Task
 from nikola import utils
 
+
 class CopyAssets(Task):
     """Copy theme assets into output."""
 

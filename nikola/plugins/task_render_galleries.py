@@ -6,6 +6,7 @@ import os
 from nikola.plugin_categories import Task
 from nikola import utils
 
+
 class Galleries(Task):
     """Copy theme assets into output."""
 
@@ -85,6 +86,7 @@ class Galleries(Task):
                 return _resize_image(src, dst, kw['max_image_size'])
 
             dates = {}
+
             def image_date(src):
                 if src not in dates:
                     im = Image.open(src)
@@ -97,12 +99,14 @@ class Galleries(Task):
                             decoded = ExifTags.TAGS.get(tag, tag)
                             if decoded == 'DateTimeOriginal':
                                 try:
-                                    dates[src] = datetime.datetime.strptime(value, r'%Y:%m:%d %H:%M:%S')
+                                    dates[src] = datetime.datetime.strptime(
+                                        value, r'%Y:%m:%d %H:%M:%S')
                                     break
-                                except ValueError:  #invalid EXIF date
+                                except ValueError:  # Invalid EXIF date.
                                     pass
                 if src not in dates:
-                    dates[src] = datetime.datetime.fromtimestamp(os.stat(src).st_mtime)
+                    dates[src] = datetime.datetime.fromtimestamp(
+                        os.stat(src).st_mtime)
                 return dates[src]
 
         else:
@@ -152,7 +156,7 @@ class Galleries(Task):
 
             image_list = [x for x in image_list if "thumbnail" not in x]
             # Sort by date
-            image_list.sort(cmp=lambda a,b: cmp(image_date(a), image_date(b)))
+            image_list.sort(cmp=lambda a, b: cmp(image_date(a), image_date(b)))
             image_name_list = [os.path.basename(x) for x in image_list]
 
             thumbs = []
@@ -236,7 +240,8 @@ class Galleries(Task):
             else:
                 img_titles = [''] * len(image_name_list)
             context["images"] = zip(image_name_list, thumbs, img_titles)
-            context["permalink"] = self.site.link("gallery", gallery_name, None)
+            context["permalink"] = self.site.link(
+                "gallery", gallery_name, None)
 
             # Use galleries/name/index.txt to generate a blurb for
             # the gallery, if it exists
@@ -276,4 +281,3 @@ class Galleries(Task):
                 'clean': True,
                 'uptodate': [utils.config_changed(kw)],
             }
-

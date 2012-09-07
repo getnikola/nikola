@@ -3,6 +3,7 @@ import os
 from nikola.plugin_categories import Task
 from nikola import utils
 
+
 class Sources(Task):
     """Copy page sources into the output."""
 
@@ -44,7 +45,7 @@ class Sources(Task):
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
                     }
-        if flag == False:  # No page rendered, yield a dummy task
+        if flag is False:  # No page rendered, yield a dummy task
             yield {
                 'basename': 'render_sources',
                 'name': 'None',

@@ -3,6 +3,7 @@ import os
 from nikola.plugin_categories import Task
 from nikola.utils import config_changed
 
+
 class Archive(Task):
     """Render the post archives."""
 
@@ -72,4 +73,3 @@ class Archive(Task):
                     [config_changed(kw)]
                 task['basename'] = self.name
                 yield task
-

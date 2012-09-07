@@ -7,6 +7,7 @@ from pygments.formatters import HtmlFormatter
 from nikola.plugin_categories import Task
 from nikola import utils
 
+
 class Listings(Task):
     """Render pretty listings."""
 
@@ -38,7 +39,8 @@ class Listings(Task):
             title = os.path.basename(in_name)
             crumbs = out_name.split(os.sep)[1:-1] + [title]
             # TODO: write this in human
-            paths = ['/'.join(['..'] * (len(crumbs) - 2 - i)) for i in range(len(crumbs[:-2]))] + ['.', '#']
+            paths = ['/'.join(['..'] * (len(crumbs) - 2 - i)) for i in
+                range(len(crumbs[:-2]))] + ['.', '#']
             context = {
                 'code': code,
                 'title': title,

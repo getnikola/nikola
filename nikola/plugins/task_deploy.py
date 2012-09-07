@@ -1,7 +1,5 @@
-import os
-
 from nikola.plugin_categories import Task
-from nikola import utils
+
 
 class Deploy(Task):
     """Deploy site.  """

@@ -3,6 +3,7 @@ import os
 from nikola.plugin_categories import Task
 from nikola.utils import config_changed
 
+
 class Indexes(Task):
     """Render the blog indexes."""
 
@@ -13,7 +14,8 @@ class Indexes(Task):
 
         kw = {
             "translations": self.site.config['TRANSLATIONS'],
-            "index_display_post_count": self.site.config['INDEX_DISPLAY_POST_COUNT'],
+            "index_display_post_count":
+                self.site.config['INDEX_DISPLAY_POST_COUNT'],
             "messages": self.site.MESSAGES,
             "index_teasers": self.site.config['INDEX_TEASERS'],
             "output_folder": self.site.config['OUTPUT_FOLDER'],
@@ -49,7 +51,8 @@ class Indexes(Task):
                     if self.site.config.get("INDEXES_PAGES", ""):
                         indexes_pages = self.site.config["INDEXES_PAGES"] % i
                     else:
-                        indexes_pages = " (" + kw["messages"][lang]["old posts page %d"] % i + ")"
+                        indexes_pages = " (" + \
+                            kw["messages"][lang]["old posts page %d"] % i + ")"
                     context["title"] = indexes_title + indexes_pages
                 context["prevlink"] = None
                 context["nextlink"] = None
