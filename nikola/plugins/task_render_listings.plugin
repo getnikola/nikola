@@ -1,0 +1,10 @@
+[Core]
+Name = render_listings
+Module = task_render_listings
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Render code listings into output
+

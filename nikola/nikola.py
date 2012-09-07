@@ -15,9 +15,6 @@ import urlparse
 
 from doit.tools import PythonInteractiveAction
 import lxml.html
-from pygments import highlight
-from pygments.lexers import get_lexer_for_filename, TextLexer
-from pygments.formatters import HtmlFormatter
 try:
     import webassets
 except ImportError:
@@ -350,10 +347,6 @@ class Nikola(object):
             use_filename_as_title=self.config['USE_FILENAME_AS_TITLE'],
             blog_description=self.config['BLOG_DESCRIPTION']
         )
-        yield self.gen_task_render_listings(
-            listings_folder=self.config['LISTINGS_FOLDER'],
-            default_lang=self.config['DEFAULT_LANG'],
-            output_folder=self.config['OUTPUT_FOLDER'])
         yield self.gen_task_redirect(
             redirections=self.config['REDIRECTIONS'],
             output_folder=self.config['OUTPUT_FOLDER'])
@@ -363,7 +356,6 @@ class Nikola(object):
             filters=self.config['FILTERS'])
 
         task_dep = [
-                'render_listings',
                 'render_galleries',
                 'render_pages',
                 'render_posts',
@@ -375,6 +367,7 @@ class Nikola(object):
         ]
 
         for pluginInfo in self.plugin_manager.getPluginsOfCategory("Tasks"):
+            print pluginInfo.plugin_object.name
             for task in pluginInfo.plugin_object.gen_tasks():
                 yield task
             if pluginInfo.plugin_object.is_default:
@@ -758,69 +751,6 @@ class Nikola(object):
                     kw["blog_description"], posts, output_name))],
                 'clean': True,
                 'uptodate': [config_changed(kw)],
-            }
-
-    def gen_task_render_listings(self, **kw):
-        """
-        Required keyword arguments:
-
-        listings_folder
-        output_folder
-        default_lang
-        """
-
-        # Things to ignore in listings
-        ignored_extensions = (".pyc",)
-
-        def render_listing(in_name, out_name):
-            with open(in_name, 'r') as fd:
-                try:
-                    lexer = get_lexer_for_filename(in_name)
-                except:
-                    lexer = TextLexer()
-                code = highlight(fd.read(), lexer,
-                    HtmlFormatter(cssclass='code',
-                        linenos="table",
-                        nowrap=False,
-                        lineanchors=utils.slugify(f),
-                        anchorlinenos=True))
-            title = os.path.basename(in_name)
-            crumbs = out_name.split(os.sep)[1:-1] + [title]
-            # TODO: write this in human
-            paths = ['/'.join(['..'] * (len(crumbs) - 2 - i)) for i in range(len(crumbs[:-2]))] + ['.', '#']
-            context = {
-                'code': code,
-                'title': title,
-                'crumbs': zip(paths, crumbs),
-                'lang': kw['default_lang'],
-                'description': title,
-                }
-            self.render_template('listing.tmpl', out_name, context)
-        flag = True
-        template_deps = self.template_deps('listing.tmpl')
-        for root, dirs, files in os.walk(kw['listings_folder']):
-            # Render all files
-            for f in files:
-                ext = os.path.splitext(f)[-1]
-                if ext in ignored_extensions:
-                    continue
-                flag = False
-                in_name = os.path.join(root, f)
-                out_name = os.path.join(
-                    kw['output_folder'],
-                    root,
-                    f) + '.html'
-                yield {
-                    'basename': 'render_listings',
-                    'name': out_name.encode('utf8'),
-                    'file_dep': template_deps + [in_name],
-                    'targets': [out_name],
-                    'actions': [(render_listing, [in_name, out_name])],
-                }
-        if flag:
-            yield {
-                'basename': 'render_listings',
-                'actions': [],
             }
 
     def gen_task_render_galleries(self, **kw):
