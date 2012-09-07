@@ -42,7 +42,7 @@ class Sources(Task):
                     'targets': [output_name],
                     'actions': [(utils.copy_file, (source, output_name))],
                     'clean': True,
-                    'uptodate': [config_changed(kw)],
+                    'uptodate': [utils.config_changed(kw)],
                     }
         if flag == False:  # No page rendered, yield a dummy task
             yield {
