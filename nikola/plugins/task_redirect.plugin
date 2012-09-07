@@ -1,0 +1,10 @@
+[Core]
+Name = redirect
+Module = task_redirect
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Create redirect pages.
+

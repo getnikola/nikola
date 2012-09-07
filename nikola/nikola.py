@@ -19,7 +19,9 @@ try:
 except ImportError:
     webassets = None
 from yapsy.PluginManager import PluginManager
-import logging; logging.basicConfig(level=logging.DEBUG)
+
+if os.getenv('DEBUG'):
+    import logging; logging.basicConfig(level=logging.DEBUG)
 
 from post import Post
 import utils
@@ -335,9 +337,6 @@ class Nikola(object):
             blog_url=self.config['BLOG_URL'],
             blog_description=self.config['BLOG_DESCRIPTION'],
             output_folder=self.config['OUTPUT_FOLDER'])
-        yield self.gen_task_redirect(
-            redirections=self.config['REDIRECTIONS'],
-            output_folder=self.config['OUTPUT_FOLDER'])
         yield self.gen_task_copy_files(
             output_folder=self.config['OUTPUT_FOLDER'],
             files_folders=self.config['FILES_FOLDERS'],
@@ -349,7 +348,6 @@ class Nikola(object):
                 'render_rss',
                 'render_tags',
                 'copy_files',
-                'redirect'
         ]
 
         for pluginInfo in self.plugin_manager.getPluginsOfCategory("Tasks"):
@@ -738,43 +736,6 @@ class Nikola(object):
                 'clean': True,
                 'uptodate': [config_changed(kw)],
             }
-
-    @staticmethod
-    def gen_task_redirect(**kw):
-        """Generate redirections.
-
-        Required keyword arguments:
-
-        redirections
-        output_folder
-        """
-
-        def create_redirect(src, dst):
-            with codecs.open(src, "wb+", "utf8") as fd:
-                fd.write(('<head>' +
-                '<meta HTTP-EQUIV="REFRESH" content="0; url=%s">' +
-                '</head>') % dst)
-
-        if not kw['redirections']:
-            # If there are no redirections, still needs to create a
-            # dummy action so dependencies don't fail
-            yield {
-                'basename': 'redirect',
-                'name': 'None',
-                'uptodate': [True],
-                'actions': [],
-            }
-        else:
-            for src, dst in kw["redirections"]:
-                src_path = os.path.join(kw["output_folder"], src)
-                yield {
-                    'basename': 'redirect',
-                    'name': src_path,
-                    'targets': [src_path],
-                    'actions': [(create_redirect, (src_path, dst))],
-                    'clean': True,
-                    'uptodate': [config_changed(kw)],
-                    }
 
     @staticmethod
     def gen_task_copy_files(**kw):
