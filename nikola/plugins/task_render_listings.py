@@ -50,7 +50,7 @@ class Listings(Task):
                 }
             self.site.render_template('listing.tmpl', out_name, context)
         flag = True
-        template_deps = self.site.template_deps('listing.tmpl')
+        template_deps = self.site.template_system.template_deps('listing.tmpl')
         for root, dirs, files in os.walk(kw['listings_folder']):
             # Render all files
             for f in files:

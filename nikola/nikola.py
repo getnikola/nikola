@@ -25,7 +25,10 @@ if os.getenv('DEBUG'):
 
 from post import Post
 import utils
-from plugin_categories import Task
+from plugin_categories import (
+    Task,
+    TemplateSystem,
+)
 
 config_changed = utils.config_changed
 
@@ -89,10 +92,6 @@ class Nikola(object):
         self.GLOBAL_CONTEXT = self.config['GLOBAL_CONTEXT']
         self.THEMES = utils.get_theme_chain(self.config['THEME'])
 
-        self.templates_module = utils.get_template_module(
-            utils.get_template_engine(self.THEMES), self.THEMES)
-        self.template_deps = self.templates_module.template_deps
-
         self.theme_bundles = utils.get_theme_bundles(self.THEMES)
 
         self.MESSAGES = utils.load_messages(self.THEMES,
@@ -110,7 +109,8 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
 
         self.plugin_manager = PluginManager(categories_filter={
-            "Tasks": Task
+            "Task": Task,
+            "TemplateSystem": TemplateSystem,
         })
         self.plugin_manager.setPluginInfoExtension('plugin')
         self.plugin_manager.setPluginPlaces([
@@ -118,19 +118,32 @@ class Nikola(object):
             os.path.join(os.getcwd(), 'plugins'),
             ])
         self.plugin_manager.collectPlugins()
-        # Activate all loaded plugins
-        for pluginInfo in self.plugin_manager.getAllPlugins():
+
+        # Activate all task plugins
+        for pluginInfo in self.plugin_manager.getPluginsOfCategory("Task"):
             self.plugin_manager.activatePluginByName(pluginInfo.name)
             pluginInfo.plugin_object.set_site(self)
 
+        # Load template plugin
+        template_sys_name = utils.get_template_engine(self.THEMES)
+        pi = self.plugin_manager.getPluginByName(
+            template_sys_name, "TemplateSystem")
+        if pi is None:
+            raise Exception(
+                "Error loading %s template system plugin" % template_sys_name)
+        self.template_system = pi.plugin_object
+        self.template_system.set_directories(
+            [os.path.join(utils.get_theme_path(name), "templates")
+                for name in self.THEMES])
+
     def render_template(self, template_name, output_name, context):
-        data = self.templates_module.render_template(
+        data = self.template_system.render_template(
             template_name, None, context, self.GLOBAL_CONTEXT)
 
         assert output_name.startswith(self.config["OUTPUT_FOLDER"])
         url_part = output_name[len(self.config["OUTPUT_FOLDER"]) + 1:]
 
-        #this to support windows paths
+        # This is to support windows paths
         url_part = "/".join(url_part.split(os.sep))
 
         src = urlparse.urljoin(self.config["BLOG_URL"], url_part)
@@ -345,7 +358,7 @@ class Nikola(object):
                 'render_tags',
         ]
 
-        for pluginInfo in self.plugin_manager.getPluginsOfCategory("Tasks"):
+        for pluginInfo in self.plugin_manager.getPluginsOfCategory("Task"):
             print pluginInfo.plugin_object.name
             for task in pluginInfo.plugin_object.gen_tasks():
                 yield task
@@ -411,7 +424,8 @@ class Nikola(object):
             post_name = os.path.splitext(post)[0]
             context = {}
             post = self.global_data[post_name]
-            deps = post.deps(lang) + self.template_deps(template_name)
+            deps = post.deps(lang) + \
+                self.template_system.template_deps(template_name)
             context['post'] = post
             context['lang'] = lang
             context['title'] = post.title(lang)
@@ -517,7 +531,7 @@ class Nikola(object):
         output_name, template_name, filters, extra_context):
         """Renders pages with lists of posts."""
 
-        deps = self.template_deps(template_name)
+        deps = self.template_system.template_deps(template_name)
         for post in posts:
             deps += post.deps(lang)
         context = {}

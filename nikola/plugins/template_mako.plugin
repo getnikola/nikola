@@ -1,0 +1,9 @@
+[Core]
+Name = mako
+Module = template_mako
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Support for Mako templates.

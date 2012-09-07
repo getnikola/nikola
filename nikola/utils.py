@@ -278,22 +278,6 @@ class CompileHtmlGetter(object):
         return compile_html
 
 
-def get_template_module(template_engine, themes):
-    """Setup templating library."""
-    templates_module = None
-    if template_engine == "mako":
-        import mako_templates
-        templates_module = mako_templates
-    elif template_engine == "jinja":
-        import jinja_templates
-        templates_module = jinja_templates
-    templates_module.lookup = \
-        templates_module.get_template_lookup(
-        [os.path.join(get_theme_path(name), "templates")
-            for name in themes])
-    return templates_module
-
-
 def generic_rss_renderer(lang, title, link, description,
     timeline, output_path):
     """Takes all necessary data, and renders a RSS feed in output_path."""

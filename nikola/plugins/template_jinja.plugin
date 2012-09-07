@@ -1,0 +1,9 @@
+[Core]
+Name = jinja
+Module = template_jinja
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Support for Jinja2 templates.
