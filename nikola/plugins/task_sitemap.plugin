@@ -1,0 +1,10 @@
+[Core]
+Name = sitemap
+Module = task_sitemap
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Generate google sitemap.
+

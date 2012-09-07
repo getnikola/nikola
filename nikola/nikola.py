@@ -9,7 +9,6 @@ import json
 import os
 from StringIO import StringIO
 import sys
-import tempfile
 import urllib2
 import urlparse
 
@@ -309,9 +308,6 @@ class Nikola(object):
                 output_folder=self.config['OUTPUT_FOLDER'],
                 filters=self.config['FILTERS']
             )
-        yield self.gen_task_sitemap(blog_url=self.config['BLOG_URL'],
-            output_folder=self.config['OUTPUT_FOLDER']
-        )
         yield self.gen_task_render_pages(
             translations=self.config['TRANSLATIONS'],
             post_pages=self.config['post_pages'],
@@ -362,7 +358,6 @@ class Nikola(object):
                 'render_rss',
                 'render_tags',
                 'copy_files',
-                'sitemap',
                 'redirect'
         ]
 
@@ -1187,67 +1182,6 @@ class Nikola(object):
             "actions": [PythonInteractiveAction(cls.new_post,
                 (post_pages, False,))],
             }
-
-    @staticmethod
-    def gen_task_sitemap(**kw):
-        """Generate Google sitemap.
-
-        Required keyword arguments:
-
-        blog_url
-        output_folder
-        """
-
-        output_path = os.path.abspath(kw['output_folder'])
-        sitemap_path = os.path.join(output_path, "sitemap.xml.gz")
-
-        def sitemap():
-            # Generate config
-            config_data = """<?xml version="1.0" encoding="UTF-8"?>
-    <site
-    base_url="%s"
-    store_into="%s"
-    verbose="1" >
-    <directory path="%s" url="%s" />
-    <filter action="drop" type="wildcard" pattern="*~" />
-    <filter action="drop" type="regexp" pattern="/\.[^/]*" />
-    </site>""" % (
-                kw["blog_url"],
-                sitemap_path,
-                output_path,
-                kw["blog_url"],
-            )
-            config_file = tempfile.NamedTemporaryFile(delete=False)
-            config_file.write(config_data)
-            config_file.close()
-
-            # Generate sitemap
-            import sitemap_gen as smap
-            sitemap = smap.CreateSitemapFromFile(config_file.name, True)
-            if not sitemap:
-                smap.output.Log('Configuration file errors -- exiting.', 0)
-            else:
-                sitemap.Generate()
-                smap.output.Log('Number of errors: %d' %
-                    smap.output.num_errors, 1)
-                smap.output.Log('Number of warnings: %d' %
-                    smap.output.num_warns, 1)
-            os.unlink(config_file.name)
-
-        yield {
-            "basename": "sitemap",
-            "task_dep": [
-                "render_archive",
-                "render_indexes",
-                "render_pages",
-                "render_posts",
-                "render_rss",
-                "render_tags"],
-            "targets": [sitemap_path],
-            "actions": [(sitemap,)],
-            "uptodate": [config_changed(kw)],
-            "clean": True,
-        }
 
     @staticmethod
     def task_serve(**kw):
