@@ -248,7 +248,7 @@ class Galleries(Task):
             index_path = os.path.join(gallery_path, "index.txt")
             index_dst_path = os.path.join(gallery_path, "index.html")
             if os.path.exists(index_path):
-                compile_html = self.site.get_compile_html(index_path)
+                compile_html = self.site.get_compiler(index_path)
                 yield {
                     'basename': 'render_galleries',
                     'name': index_dst_path.encode('utf-8'),

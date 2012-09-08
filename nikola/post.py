@@ -15,7 +15,7 @@ class Post(object):
     """Represents a blog post or web page."""
 
     def __init__(self, source_path, destination, use_in_feeds,
-        translations, default_lang, blog_url, compile_html, messages):
+        translations, default_lang, blog_url, messages):
         """Initialize post.
 
         The base path is the .txt post file. From it we calculate
@@ -62,8 +62,6 @@ class Post(object):
         self.use_in_feeds = use_in_feeds and "draft" not in self.tags
         self.is_draft = 'draft' in self.tags
         self.tags = [t for t in self.tags if t != 'draft']
-
-        self.compile_html = compile_html
 
         self.pagenames = {}
         self.titles = {}

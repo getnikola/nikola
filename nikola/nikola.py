@@ -26,6 +26,7 @@ if os.getenv('DEBUG'):
 from post import Post
 import utils
 from plugin_categories import (
+    PageCompiler,
     Task,
     TemplateSystem,
 )
@@ -86,9 +87,6 @@ class Nikola(object):
         if self.config['USE_BUNDLES'] and not webassets:
             self.config['USE_BUNDLES'] = False
 
-        self.get_compile_html = utils.CompileHtmlGetter(
-            self.config.pop('post_compilers'))
-
         self.GLOBAL_CONTEXT = self.config['GLOBAL_CONTEXT']
         self.THEMES = utils.get_theme_chain(self.config['THEME'])
 
@@ -111,6 +109,7 @@ class Nikola(object):
         self.plugin_manager = PluginManager(categories_filter={
             "Task": Task,
             "TemplateSystem": TemplateSystem,
+            "PageCompiler": PageCompiler,
         })
         self.plugin_manager.setPluginInfoExtension('plugin')
         self.plugin_manager.setPluginPlaces([
@@ -135,6 +134,50 @@ class Nikola(object):
         self.template_system.set_directories(
             [os.path.join(utils.get_theme_path(name), "templates")
                 for name in self.THEMES])
+
+        # Load compiler plugins
+        self.compilers = {}
+        self.inverse_compilers = {}
+
+        for pluginInfo in self.plugin_manager.getPluginsOfCategory("PageCompiler"):
+            self.compilers[pluginInfo.name] = \
+                pluginInfo.plugin_object.compile_html
+
+    def get_compiler(self, source_name):
+        """Get the correct compiler for a post from `conf.post_compilers`
+
+        To make things easier for users, the mapping in conf.py is
+        compiler->[extensions], although this is less convenient for us. The
+        majority of this function is reversing that dictionary and error
+        checking.
+        """
+        ext = os.path.splitext(source_name)[1]
+        try:
+            compile_html = self.inverse_compilers[ext]
+        except KeyError:
+            # Find the correct compiler for this files extension
+            langs = [lang for lang, exts in
+                     self.config['post_compilers'].items()
+                     if ext in exts]
+            if len(langs) != 1:
+                if len(set(langs)) > 1:
+                    exit("Your file extension->compiler definition is"
+                         "ambiguous.\nPlease remove one of the file extensions"
+                         "from 'post_compilers' in conf.py\n(The error is in"
+                         "one of %s)" % ', '.join(langs))
+                elif len(langs) > 1:
+                    langs = langs[:1]
+                else:
+                    exit("post_compilers in conf.py does not tell me how to "
+                         "handle '%s' extensions." % ext)
+
+            lang = langs[0]
+            compile_html = self.compilers[lang]
+            self.inverse_compilers[ext] = compile_html
+
+        return compile_html
+
+
 
     def render_template(self, template_name, output_name, context):
         data = self.template_system.render_template(
@@ -388,7 +431,6 @@ class Nikola(object):
                         self.config['TRANSLATIONS'],
                         self.config['DEFAULT_LANG'],
                         self.config['BLOG_URL'],
-                        self.get_compile_html(base_path),
                         self.MESSAGES)
                     for lang, langpath in self.config['TRANSLATIONS'].items():
                         dest = (destination, langpath, post.pagenames[lang])
@@ -515,7 +557,7 @@ class Nikola(object):
                     'name': dest.encode('utf-8'),
                     'file_dep': post.fragment_deps(lang),
                     'targets': [dest],
-                    'actions': [(post.compile_html, [source, dest])],
+                    'actions': [(self.get_compiler(post.source_path), [source, dest])],
                     'clean': True,
                     'uptodate': [config_changed(deps_dict)],
                 }

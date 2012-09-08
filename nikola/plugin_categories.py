@@ -1,6 +1,6 @@
 from yapsy.IPlugin import IPlugin
 
-__all__ = ['Task', 'TemplateSystem']
+__all__ = ['PageCompiler', 'Task', 'TemplateSystem']
 
 class Task(object):
     """PLugins of this type are task generators."""
@@ -38,5 +38,15 @@ class TemplateSystem(object):
 
         This must save the data to output_name *and* return it
         so that the caller may do additional processing.
-	"""
+        """
+        raise Exception("Implement Me First")
+
+
+class PageCompiler(object):
+    """Plugins that compile text files into HTML."""
+
+    name = "dummy compiler"
+
+    def compile_html(self, source, dest):
+        """Compile the source, save it on dest."""
         raise Exception("Implement Me First")
