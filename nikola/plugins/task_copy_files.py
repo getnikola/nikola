@@ -34,4 +34,3 @@ class CopyFiles(Task):
                 'basename': self.name,
                 'actions': (),
             }
-

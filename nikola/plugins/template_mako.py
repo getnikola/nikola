@@ -8,6 +8,7 @@ from mako.lookup import TemplateLookup
 
 from nikola.plugin_categories import TemplateSystem
 
+
 class MakoTemplates(TemplateSystem):
     """Wrapper for Mako templates."""
 

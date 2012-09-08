@@ -5,6 +5,7 @@ import jinja2
 
 from nikola.plugin_categories import TemplateSystem
 
+
 class JinjaTemplates(TemplateSystem):
     """Wrapper for Jinja2 templates."""
 

@@ -260,7 +260,8 @@ class Galleries(Task):
                     'uptodate': [utils.config_changed(kw)],
                 }
 
-            file_dep = self.site.template_system.template_deps(template_name) + image_list
+            file_dep = self.site.template_system.template_deps(
+                template_name) + image_list
 
             def render_gallery(output_name, context, index_dst_path):
                 if os.path.exists(index_dst_path):
