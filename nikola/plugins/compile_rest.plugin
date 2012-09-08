@@ -1,0 +1,10 @@
+[Core]
+Name = rest
+Module = compile_rest
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Compile reSt into HTML
+

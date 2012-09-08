@@ -402,7 +402,6 @@ class Nikola(object):
         ]
 
         for pluginInfo in self.plugin_manager.getPluginsOfCategory("Task"):
-            print pluginInfo.plugin_object.name
             for task in pluginInfo.plugin_object.gen_tasks():
                 yield task
             if pluginInfo.plugin_object.is_default:
