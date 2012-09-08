@@ -1,3 +1,4 @@
+import codecs
 import os
 
 from nikola.plugin_categories import Task
@@ -36,8 +37,9 @@ class Redirect(Task):
                     'targets': [src_path],
                     'actions': [(create_redirect, (src_path, dst))],
                     'clean': True,
-                    'uptodate': [config_changed(kw)],
+                    'uptodate': [utils.config_changed(kw)],
                     }
+
 
 def create_redirect(src, dst):
     with codecs.open(src, "wb+", "utf8") as fd:
