@@ -18,7 +18,10 @@ dependencies = [
     'docutils',
     'mako>=0.6',
     'unidecode',
-    'lxml']
+    'lxml',
+    'yapsy',
+    'configparser',
+]
 
 # Provided as an attribute, so you can append to these instead
 # of replicating them:
