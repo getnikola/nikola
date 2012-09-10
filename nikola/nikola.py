@@ -22,6 +22,8 @@ from yapsy.PluginManager import PluginManager
 
 if os.getenv('DEBUG'):
     import logging; logging.basicConfig(level=logging.DEBUG)
+else:
+    import logging; logging.basicConfig(level=logging.ERROR)
 
 from post import Post
 import utils
@@ -128,8 +130,9 @@ class Nikola(object):
         pi = self.plugin_manager.getPluginByName(
             template_sys_name, "TemplateSystem")
         if pi is None:
-            raise Exception(
-                "Error loading %s template system plugin" % template_sys_name)
+            sys.stderr.write(
+                "Error loading %s template system plugin\n" % template_sys_name)
+            sys.exit(1)
         self.template_system = pi.plugin_object
         self.template_system.set_directories(
             [os.path.join(utils.get_theme_path(name), "templates")
