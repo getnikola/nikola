@@ -368,7 +368,6 @@ class Nikola(object):
         return exists
 
     def gen_tasks(self):
-        yield self.task_bootswatch_theme()
         yield self.gen_task_new_post(self.config['post_pages'])
         yield self.gen_task_new_page(self.config['post_pages'])
 
