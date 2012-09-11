@@ -14,7 +14,7 @@ class RenderPosts(Task):
         """Build HTML fragments from metadata and text."""
         self.site.scan_posts()
         kw = {
-            "translations": self.site.config["translations"],
+            "translations": self.site.config["TRANSLATIONS"],
             "timeline": self.site.timeline,
             "default_lang": self.site.config["DEFAULT_LANG"],
         }

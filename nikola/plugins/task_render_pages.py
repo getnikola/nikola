@@ -1,4 +1,3 @@
-
 from nikola.plugin_categories import Task
 
 
@@ -11,6 +10,7 @@ class RenderPages(Task):
         """Build final pages from metadata and HTML fragments."""
         kw = {
             "post_pages": self.site.config["post_pages"],
+            "translations": self.site.config["TRANSLATIONS"],
             "filters": self.site.config["FILTERS"],
         }
         self.site.scan_posts()
