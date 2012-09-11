@@ -1,12 +1,12 @@
 import os
 import tempfile
 
-from nikola.plugin_categories import Task
+from nikola.plugin_categories import LateTask
 from nikola.utils import config_changed
 
 import sitemap_gen as smap
 
-class Sitemap(Task):
+class Sitemap(LateTask):
     """Copy theme assets into output."""
 
     name = "sitemap"
@@ -54,13 +54,6 @@ class Sitemap(Task):
 
         yield {
             "basename": "sitemap",
-            "task_dep": [
-                "render_archive",
-                "render_indexes",
-                "render_pages",
-                "render_posts",
-                "render_rss",
-                "render_tags"],
             "targets": [sitemap_path],
             "actions": [(sitemap,)],
             "uptodate": [config_changed(kw)],

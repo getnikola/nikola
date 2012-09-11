@@ -28,6 +28,7 @@ else:
 from post import Post
 import utils
 from plugin_categories import (
+    LateTask,
     PageCompiler,
     Task,
     TemplateSystem,
@@ -110,6 +111,7 @@ class Nikola(object):
 
         self.plugin_manager = PluginManager(categories_filter={
             "Task": Task,
+            "LateTask": LateTask,
             "TemplateSystem": TemplateSystem,
             "PageCompiler": PageCompiler,
         })
@@ -122,6 +124,10 @@ class Nikola(object):
 
         # Activate all task plugins
         for pluginInfo in self.plugin_manager.getPluginsOfCategory("Task"):
+            self.plugin_manager.activatePluginByName(pluginInfo.name)
+            pluginInfo.plugin_object.set_site(self)
+
+        for pluginInfo in self.plugin_manager.getPluginsOfCategory("LateTask"):
             self.plugin_manager.activatePluginByName(pluginInfo.name)
             pluginInfo.plugin_object.set_site(self)
 
@@ -369,30 +375,19 @@ class Nikola(object):
                 output_folder=self.config['OUTPUT_FOLDER'],
                 filters=self.config['FILTERS']
             )
-        yield self.gen_task_render_tags(
-            translations=self.config['TRANSLATIONS'],
-            messages=self.MESSAGES,
-            blog_title=self.config['BLOG_TITLE'],
-            blog_url=self.config['BLOG_URL'],
-            blog_description=self.config['BLOG_DESCRIPTION'],
-            output_folder=self.config['OUTPUT_FOLDER'],
-            filters=self.config['FILTERS'],
-            tag_pages_are_indexes=self.config['TAG_PAGES_ARE_INDEXES'],
-            index_display_post_count=self.config['INDEX_DISPLAY_POST_COUNT'],
-            index_teasers=self.config['INDEX_TEASERS'],
-        )
 
-        task_dep = [
-                'render_tags',
-        ]
-
+        task_dep = []
         for pluginInfo in self.plugin_manager.getPluginsOfCategory("Task"):
-            print pluginInfo.plugin_object.name
             for task in pluginInfo.plugin_object.gen_tasks():
                 yield task
             if pluginInfo.plugin_object.is_default:
                 task_dep.append(pluginInfo.plugin_object.name)
 
+        for pluginInfo in self.plugin_manager.getPluginsOfCategory("LateTask"):
+            for task in pluginInfo.plugin_object.gen_tasks():
+                yield task
+            if pluginInfo.plugin_object.is_default:
+                task_dep.append(pluginInfo.plugin_object.name)
 
         if webassets:
             task_dep.append( 'build_bundles' )
@@ -402,7 +397,8 @@ class Nikola(object):
             'actions': None,
             'clean': True,
             'task_dep': task_dep
-         }
+        }
+
 
     def scan_posts(self):
         """Scan all the posts."""
@@ -514,162 +510,6 @@ class Nikola(object):
         }
 
         yield utils.apply_filters(task, filters)
-
-    def gen_task_render_tags(self, **kw):
-        """Render the tag pages.
-
-        Required keyword arguments:
-
-        translations
-        messages
-        blog_title
-        blog_url
-        blog_description
-        output_folder
-        tag_pages_are_indexes
-        index_display_post_count
-        index_teasers
-        """
-        if not self.posts_per_tag:
-            yield {
-                    'basename': 'render_tags',
-                    'actions': [],
-                }
-            return
-        def page_name(tagname, i, lang):
-            """Given tag, n, returns a page name."""
-            name = self.path("tag", tag, lang)
-            if i:
-                name = name.replace('.html', '-%s.html' % i)
-            return name
-
-        for tag, posts in self.posts_per_tag.items():
-            post_list = [self.global_data[post] for post in posts]
-            post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
-            post_list.reverse()
-            for lang in kw["translations"]:
-                #Render RSS
-                output_name = os.path.join(kw['output_folder'],
-                    self.path("tag_rss", tag, lang))
-                deps = []
-                post_list = [self.global_data[post] for post in posts
-                    if self.global_data[post].use_in_feeds]
-                post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
-                post_list.reverse()
-                for post in post_list:
-                    deps += post.deps(lang)
-                yield {
-                    'name': output_name.encode('utf8'),
-                    'file_dep': deps,
-                    'targets': [output_name],
-                    'actions': [(utils.generic_rss_renderer,
-                        (lang, "%s (%s)" % (kw["blog_title"], tag),
-                        kw["blog_url"], kw["blog_description"],
-                        post_list, output_name))],
-                    'clean': True,
-                    'uptodate': [config_changed(kw)],
-                    'basename': 'render_tags'
-                }
-
-                # Render HTML
-                if kw['tag_pages_are_indexes']:
-                    # We render a sort of index page collection using only
-                    # this tag's posts.
-
-                    # FIXME: deduplicate this with render_indexes
-                    template_name = "index.tmpl"
-                    # Split in smaller lists
-                    lists = []
-                    while post_list:
-                        lists.append(post_list[:kw["index_display_post_count"]])
-                        post_list = post_list[kw["index_display_post_count"]:]
-                    num_pages = len(lists)
-                    for i, post_list in enumerate(lists):
-                        context = {}
-                        # On a tag page, the feeds are the tag's feeds, plus the site's
-                        rss_link = \
-                        """<link rel="alternate" type="application/rss+xml" """\
-                        """type="application/rss+xml" title="RSS for tag """\
-                        """%s (%s)" href="%s">""" % \
-                            (tag, lang, self.link("tag_rss", tag, lang))
-                        context ['rss_link'] = rss_link
-                        output_name = os.path.join(kw['output_folder'],
-                            page_name(tag, i, lang))
-                        context["title"] = kw["messages"][lang][u"Posts about %s:"]\
-                            % tag
-                        context["prevlink"] = None
-                        context["nextlink"] = None
-                        context['index_teasers'] = kw['index_teasers']
-                        if i > 1:
-                            context["prevlink"] = os.path.basename(page_name(tag, i - 1, lang))
-                        if i == 1:
-                            context["prevlink"] = os.path.basename(page_name(tag, 0, lang))
-                        if i < num_pages - 1:
-                            context["nextlink"] = os.path.basename(page_name(tag, i + 1, lang))
-                        context["permalink"] = self.link("tag", tag, lang)
-                        context["tag"] = tag
-                        for task in self.generic_post_list_renderer(
-                            lang,
-                            post_list,
-                            output_name,
-                            template_name,
-                            kw['filters'],
-                            context,
-                        ):
-                            task['uptodate'] = task.get('updtodate', []) +\
-                                            [config_changed(kw)]
-                            task['basename'] = 'render_tags'
-                            yield task
-                else:
-                    # We render a single flat link list with this tag's posts
-                    template_name = "tag.tmpl"
-                    output_name = os.path.join(kw['output_folder'],
-                        self.path("tag", tag, lang))
-                    context = {}
-                    context["lang"] = lang
-                    context["title"] = kw["messages"][lang][u"Posts about %s:"]\
-                        % tag
-                    context["items"] = [("[%s] %s" % (post.date, post.title(lang)),
-                        post.permalink(lang)) for post in post_list]
-                    context["permalink"] = self.link("tag", tag, lang)
-                    context["tag"] = tag
-                    for task in self.generic_post_list_renderer(
-                        lang,
-                        post_list,
-                        output_name,
-                        template_name,
-                        kw['filters'],
-                        context,
-                    ):
-                        task['uptodate'] = task.get('updtodate', []) +\
-                                        [config_changed(kw)]
-                        task['basename'] = 'render_tags'
-                        yield task
-
-        # And global "all your tags" page
-        tags = self.posts_per_tag.keys()
-        tags.sort()
-        template_name = "tags.tmpl"
-        kw['tags'] = tags
-        for lang in kw["translations"]:
-            output_name = os.path.join(
-                kw['output_folder'], self.path('tag_index', None, lang))
-            context = {}
-            context["title"] = kw["messages"][lang][u"Tags"]
-            context["items"] = [(tag, self.link("tag", tag, lang))
-                for tag in tags]
-            context["permalink"] = self.link("tag_index", None, lang)
-            for task in self.generic_post_list_renderer(
-                lang,
-                [],
-                output_name,
-                template_name,
-                kw['filters'],
-                context,
-            ):
-                task['uptodate'] = task.get('updtodate', []) +\
-                    [config_changed(kw)]
-                yield task
 
     @staticmethod
     def gen_task_build_bundles(**kw):
