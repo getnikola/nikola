@@ -17,9 +17,11 @@ import lxml.html
 from yapsy.PluginManager import PluginManager
 
 if os.getenv('DEBUG'):
-    import logging; logging.basicConfig(level=logging.DEBUG)
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
 else:
-    import logging; logging.basicConfig(level=logging.ERROR)
+    import logging
+    logging.basicConfig(level=logging.ERROR)
 
 from post import Post
 import utils
@@ -82,7 +84,7 @@ class Nikola(object):
         }
         self.config.update(config)
         self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
-            { self.config['DEFAULT_LANG']: ''})
+            {self.config['DEFAULT_LANG']: ''})
 
         # FIXME: find  way to achieve this with the plugins
         #if self.config['USE_BUNDLES'] and not webassets:
@@ -140,8 +142,8 @@ class Nikola(object):
         pi = self.plugin_manager.getPluginByName(
             template_sys_name, "TemplateSystem")
         if pi is None:
-            sys.stderr.write(
-                "Error loading %s template system plugin\n" % template_sys_name)
+            sys.stderr.write("Error loading %s template system plugin\n"
+                % template_sys_name)
             sys.exit(1)
         self.template_system = pi.plugin_object
         self.template_system.set_directories(
@@ -152,7 +154,8 @@ class Nikola(object):
         self.compilers = {}
         self.inverse_compilers = {}
 
-        for pluginInfo in self.plugin_manager.getPluginsOfCategory("PageCompiler"):
+        for pluginInfo in self.plugin_manager.getPluginsOfCategory(
+                "PageCompiler"):
             self.compilers[pluginInfo.name] = \
                 pluginInfo.plugin_object.compile_html
 
@@ -189,8 +192,6 @@ class Nikola(object):
             self.inverse_compilers[ext] = compile_html
 
         return compile_html
-
-
 
     def render_template(self, template_name, output_name, context):
         data = self.template_system.render_template(
@@ -393,13 +394,13 @@ class Nikola(object):
             'task_dep': task_dep
         }
 
-
     def scan_posts(self):
         """Scan all the posts."""
         if not self._scanned:
             print "Scanning posts ",
             targets = set([])
-            for wildcard, destination, _, use_in_feeds in self.config['post_pages']:
+            for wildcard, destination, _, use_in_feeds in \
+                    self.config['post_pages']:
                 print ".",
                 for base_path in glob.glob(wildcard):
                     post = Post(base_path, destination, use_in_feeds,
@@ -608,7 +609,8 @@ class Nikola(object):
                     'name': 'url',
                     'long': 'url',
                     'type': str,
-                    'default': 'http://nikola.ralsina.com.ar/themes/index.json',
+                    'default':
+                        'http://nikola.ralsina.com.ar/themes/index.json',
                     'help': 'URL for theme collection.'
                 },
                 {
