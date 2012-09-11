@@ -6,6 +6,7 @@ __all__ = [
     'TemplateSystem'
 ]
 
+
 class BasePlugin(object):
     """Base plugin class."""
 
