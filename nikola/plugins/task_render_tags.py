@@ -1,5 +1,7 @@
-from nikola.plugin_categories import Task
+import os
 
+from nikola.plugin_categories import Task
+from nikola import utils
 
 class RenderTags(Task):
     """Render the tag pages and feeds."""
@@ -59,7 +61,7 @@ class RenderTags(Task):
                         kw["blog_url"], kw["blog_description"],
                         post_list, output_name))],
                     'clean': True,
-                    'uptodate': [config_changed(kw)],
+                    'uptodate': [utils.config_changed(kw)],
                     'basename': self.name
                 }
 
@@ -109,7 +111,7 @@ class RenderTags(Task):
                             context,
                         ):
                             task['uptodate'] = task.get('updtodate', []) +\
-                                            [config_changed(kw)]
+                                            [utils.config_changed(kw)]
                             task['basename'] = self.name
                             yield task
                 else:
@@ -134,7 +136,7 @@ class RenderTags(Task):
                         context,
                     ):
                         task['uptodate'] = task.get('updtodate', []) +\
-                                        [config_changed(kw)]
+                                        [utils.config_changed(kw)]
                         task['basename'] = self.name
                         yield task
 
@@ -160,5 +162,5 @@ class RenderTags(Task):
                 context,
             ):
                 task['uptodate'] = task.get('updtodate', []) +\
-                    [config_changed(kw)]
+                    [utils.config_changed(kw)]
                 yield task
