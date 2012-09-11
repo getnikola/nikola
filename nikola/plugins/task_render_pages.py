@@ -22,12 +22,12 @@ class RenderPages(Task):
                     # TODO: enable or remove
                     #task['uptodate'] = task.get('uptodate', []) +\
                         #[config_changed(kw)]
-                    task['basename'] = 'render_pages'
+                    task['basename'] = self.name
                     flag = True
                     yield task
         if flag is False:  # No page rendered, yield a dummy task
             yield {
-                'basename': 'render_pages',
+                'basename': self.name,
                 'name': 'None',
                 'uptodate': [True],
                 'actions': [],
