@@ -1,8 +1,8 @@
 from yapsy.IPlugin import IPlugin
 
-__all__ = ['PageCompiler', 'Task', 'TemplateSystem']
+__all__ = ['LateTask', 'PageCompiler', 'Task', 'TemplateSystem']
 
-class Task(object):
+class BaseTask(object):
     """PLugins of this type are task generators."""
 
     name = "dummy_task"
@@ -18,6 +18,14 @@ class Task(object):
     def gen_tasks(self):
         """Task generator."""
         raise Exception("Implement Me First")
+
+class Task(BaseTask):
+    """PLugins of this type are task generators."""
+
+class LateTask(BaseTask):
+    """Plugins of this type are executed after all plugins of type Task."""
+
+    name = "dummy_latetask"
 
 
 class TemplateSystem(object):
