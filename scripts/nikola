@@ -2,7 +2,6 @@
 
 """Nikola main script."""
 
-import os
 import sys
 
 import nikola
@@ -21,15 +20,12 @@ if __name__ == "__main__":
 
     site = nikola.Nikola(**config)
 
-    def task_render_site():
-        return SITE.gen_tasks()
-
     if len(sys.argv) < 2:
         sys.argv = 'help'
     cmd_name = sys.argv[1]
 
     if cmd_name == "help":
-        print usage
+        print USAGE
     elif cmd_name in site.commands:
         site.commands[cmd_name].run(*sys.argv[2:])
     else:
