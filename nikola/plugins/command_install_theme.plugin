@@ -1,0 +1,10 @@
+[Core]
+Name = install_theme
+Module = command_install_theme
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Install a theme into the current site.
+

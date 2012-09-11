@@ -5,9 +5,7 @@ from collections import defaultdict
 from copy import copy
 import datetime
 import glob
-import json
 import os
-from StringIO import StringIO
 import sys
 import urllib2
 import urlparse
@@ -369,7 +367,6 @@ class Nikola(object):
         return exists
 
     def gen_tasks(self):
-        yield self.task_install_theme()
         yield self.task_bootswatch_theme()
         yield self.gen_task_new_post(self.config['post_pages'])
         yield self.gen_task_new_page(self.config['post_pages'])
@@ -563,72 +560,6 @@ class Nikola(object):
             "basename": "new_page",
             "actions": [PythonInteractiveAction(cls.new_post,
                 (post_pages, False,))],
-            }
-
-    @staticmethod
-    def task_install_theme():
-        """Install theme. (doit install_theme -n themename [-u URL]|[-l])."""
-
-        def install_theme(name, url, listing):
-            if name is None and not listing:
-                print "This command needs either the -n or the -l option."
-                return False
-            data = urllib2.urlopen(url).read()
-            data = json.loads(data)
-            if listing:
-                print "Themes:"
-                print "-------"
-                for theme in sorted(data.keys()):
-                    print theme
-                return True
-            else:
-                if name in data:
-                    if os.path.isfile("themes"):
-                        raise IOError("'themes' isn't a directory!")
-                    elif not os.path.isdir("themes"):
-                        try:
-                            os.makedirs("themes")
-                        except:
-                            raise OSError("mkdir 'theme' error!")
-                    print 'Downloading: %s' % data[name]
-                    zip_file = StringIO()
-                    zip_file.write(urllib2.urlopen(data[name]).read())
-                    print 'Extracting: %s into themes' % name
-                    utils.extract_all(zip_file)
-                else:
-                    print "Can't find theme %s" % name
-                    return False
-
-        yield {
-            "basename": 'install_theme',
-            "actions": [(install_theme,)],
-            "verbosity": 2,
-            "params": [
-                {
-                    'short': 'u',
-                    'name': 'url',
-                    'long': 'url',
-                    'type': str,
-                    'default':
-                        'http://nikola.ralsina.com.ar/themes/index.json',
-                    'help': 'URL for theme collection.'
-                },
-                {
-                    'short': 'l',
-                    'name': 'listing',
-                    'long': 'list',
-                    'type': bool,
-                    'default': False,
-                    'help': 'List available themes.'
-                },
-                {
-                    'short': 'n',
-                    'name': 'name',
-                    'long': 'name',
-                    'type': str,
-                    'default': None,
-                    'help': 'Name of theme to install.'
-                }],
             }
 
     @staticmethod
