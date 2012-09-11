@@ -27,8 +27,8 @@ class CompileMarkdown(PageCompiler):
             # remove the H1 because there is "title" h1.
             output = re.sub(r'<h1>.*</h1>', '', output)
             # python-markdown's highlighter uses the class 'codehilite' to wrap
-            # code, # instead of the standard 'code'. None of the standard pygments
-            # stylesheets use this class, so swap it to be 'code'
+            # code, # instead of the standard 'code'. None of the standard
+            # pygments stylesheets use this class, so swap it to be 'code'
             output = re.sub(r'(<div[^>]+class="[^"]*)codehilite([^>]+)',
                             r'\1code\2', output)
             out_file.write(output)
