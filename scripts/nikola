@@ -49,7 +49,7 @@ if __name__ == "__main__":
     cmd_name = sys.argv[1]
     print site.commands
     if cmd_name in site.commands:
-        site.commands[cmd_name].run()
+        site.commands[cmd_name].run(*sys.argv[2:])
 
     else:
         print USAGE
