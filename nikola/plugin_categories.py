@@ -1,8 +1,30 @@
-from yapsy.IPlugin import IPlugin
+__all__ = [
+    'Command',
+    'LateTask',
+    'PageCompiler',
+    'Task',
+    'TemplateSystem'
+]
 
-__all__ = ['LateTask', 'PageCompiler', 'Task', 'TemplateSystem']
+class BasePlugin(object):
+    """Base plugin class."""
 
-class BaseTask(object):
+    def set_site(self, site):
+        """Sets site, which is a Nikola instance."""
+        self.site = site
+
+
+class Command(BasePlugin):
+    """These plugins are exposed via the command line."""
+
+    name = "dummy_command"
+
+    def run(self):
+        """Do whatever this command does."""
+        raise Exception("Implement Me First")
+
+
+class BaseTask(BasePlugin):
     """PLugins of this type are task generators."""
 
     name = "dummy_task"
@@ -11,16 +33,14 @@ class BaseTask(object):
     # the others have to be specifie in the command line.
     is_default = True
 
-    def set_site(self, site):
-        """Sets site, which is a Nikola instance."""
-        self.site = site
-
     def gen_tasks(self):
         """Task generator."""
         raise Exception("Implement Me First")
 
+
 class Task(BaseTask):
     """PLugins of this type are task generators."""
+
 
 class LateTask(BaseTask):
     """Plugins of this type are executed after all plugins of type Task."""

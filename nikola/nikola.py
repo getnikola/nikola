@@ -24,6 +24,7 @@ else:
 from post import Post
 import utils
 from plugin_categories import (
+    Command,
     LateTask,
     PageCompiler,
     Task,
@@ -105,6 +106,7 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
 
         self.plugin_manager = PluginManager(categories_filter={
+            "Command": Command,
             "Task": Task,
             "LateTask": LateTask,
             "TemplateSystem": TemplateSystem,
@@ -116,6 +118,13 @@ class Nikola(object):
             os.path.join(os.getcwd(), 'plugins'),
             ])
         self.plugin_manager.collectPlugins()
+
+        self.commands = {}
+        # Activate all command plugins
+        for pluginInfo in self.plugin_manager.getPluginsOfCategory("Command"):
+            self.plugin_manager.activatePluginByName(pluginInfo.name)
+            pluginInfo.plugin_object.set_site(self)
+            self.commands[pluginInfo.name] = pluginInfo.plugin_object
 
         # Activate all task plugins
         for pluginInfo in self.plugin_manager.getPluginsOfCategory("Task"):

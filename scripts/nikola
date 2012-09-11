@@ -28,8 +28,28 @@ def init(dst):
     print "See README.txt in that folder for more information."
 
 if __name__ == "__main__":
+
+    try:
+        sys.path.append('')
+        import conf
+        config = conf.__dict__
+    except ImportError:
+        print "No config"
+        config = {}
+
+    site = nikola.Nikola(**config)
+
+    def task_render_site():
+        return SITE.gen_tasks()
+
     if len(sys.argv)>=3 and sys.argv[1] == "init":
         print "Doing init"
         init(sys.argv[2])
+
+    cmd_name = sys.argv[1]
+    print site.commands
+    if cmd_name in site.commands:
+        site.commands[cmd_name].run()
+
     else:
         print USAGE
