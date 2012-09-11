@@ -6,9 +6,74 @@ from urllib import urlopen
 from lxml import etree, html
 from mako.template import Template
 
+from nikola.plugin_categories import Command
 from nikola import utils
 
 links = {}
+
+
+class CommandImportWordpress(Command):
+    """Import a wordpress dump."""
+
+    name = "import_wordpress"
+
+    def run(self, fname=None):
+        # Parse the data
+        if fname is None:
+            print "Usage: nikola import_wordpress wordpress_dump.xml"
+            return
+        context = {}
+        with open(fname) as fd:
+            xml = []
+            for line in fd:
+                # These explode etree and are useless
+                if '<atom:link rel=' in line:
+                    continue
+                xml.append(line)
+            xml = '\n'.join(xml)
+
+        tree = etree.fromstring(xml)
+        channel = tree.find('channel')
+
+        context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')
+        context['BLOG_TITLE'] = get_text_tag(
+            channel, 'title', 'PUT TITLE HERE')
+        context['BLOG_DESCRIPTION'] = get_text_tag(
+            channel, 'description', 'PUT DESCRIPTION HERE')
+        context['BLOG_URL'] = get_text_tag(channel, 'link', '#')
+        author = channel.find('{http://wordpress.org/export/1.2/}author')
+        context['BLOG_EMAIL'] = get_text_tag(
+            author,
+            '{http://wordpress.org/export/1.2/}author_email',
+            "joe@example.com")
+        context['BLOG_AUTHOR'] = get_text_tag(
+            author,
+            '{http://wordpress.org/export/1.2/}author_display_name',
+            "Joe Example")
+        context['POST_PAGES'] = '''(
+            ("posts/*.wp", "posts", "post.tmpl", True),
+            ("stories/*.wp", "stories", "story.tmpl", False),
+        )'''
+        context['POST_COMPILERS'] = '''{
+        "rest": ('.txt', '.rst'),
+        "markdown": ('.md', '.mdown', '.markdown', '.wp'),
+        "html": ('.html', '.htm')
+        }
+        '''
+
+        # Generate base site
+        os.system('nikola init new_site')
+        conf_template = Template(filename=os.path.join(
+            os.path.dirname(utils.__file__), 'data', 'samplesite', 'conf.py.in'))
+        with codecs.open(os.path.join('new_site', 'conf.py'),
+            'w+', 'utf8') as fd:
+            fd.write(conf_template.render(**context))
+
+        # Import posts
+        for item in channel.findall('item'):
+            import_attachment(item)
+        for item in channel.findall('item'):
+            import_item(item)
 
 
 def replacer(dst):
@@ -96,54 +161,3 @@ def import_item(item):
             except:
                 import pdb
                 pdb.set_trace()
-
-
-def process(fname):
-    # Parse the data
-    context = {}
-    with open(fname) as fd:
-        xml = []
-        for line in fd:
-            # These explode etree and are useless
-            if '<atom:link rel=' in line:
-                continue
-            xml.append(line)
-        xml = '\n'.join(xml)
-
-    tree = etree.fromstring(xml)
-    channel = tree.find('channel')
-
-    context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')
-    context['BLOG_TITLE'] = get_text_tag(
-        channel, 'title', 'PUT TITLE HERE')
-    context['BLOG_DESCRIPTION'] = get_text_tag(
-        channel, 'description', 'PUT DESCRIPTION HERE')
-    context['BLOG_URL'] = get_text_tag(channel, 'link', '#')
-    author = channel.find('{http://wordpress.org/export/1.2/}author')
-    context['BLOG_EMAIL'] = get_text_tag(author,
-        '{http://wordpress.org/export/1.2/}author_email', "joe@example.com")
-    context['BLOG_AUTHOR'] = get_text_tag(author,
-        '{http://wordpress.org/export/1.2/}author_display_name', "Joe Example")
-    context['POST_PAGES'] = '''(
-        ("posts/*.wp", "posts", "post.tmpl", True),
-        ("stories/*.wp", "stories", "story.tmpl", False),
-    )'''
-    context['POST_COMPILERS'] = '''{
-    "rest": ('.txt', '.rst'),
-    "markdown": ('.md', '.mdown', '.markdown', '.wp'),
-    "html": ('.html', '.htm')
-    }
-    '''
-
-    # Generate base site
-    os.system('nikola init new_site')
-    conf_template = Template(filename=os.path.join(
-        os.path.dirname(__file__), 'data', 'samplesite', 'conf.py.in'))
-    with codecs.open(os.path.join('new_site', 'conf.py'), 'w+', 'utf8') as fd:
-        fd.write(conf_template.render(**context))
-
-    # Import posts
-    for item in channel.findall('item'):
-        import_attachment(item)
-    for item in channel.findall('item'):
-        import_item(item)
