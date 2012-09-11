@@ -45,7 +45,7 @@ class Galleries(Task):
             Image = _Image
         except ImportError:
             try:
-                from PIL import Image as _Image, ExifTags
+                from PIL import Image as _Image, ExifTags  # NOQA
                 Image = _Image
             except ImportError:
                 pass

@@ -3,6 +3,7 @@ import os
 from nikola.plugin_categories import Task
 from nikola import utils
 
+
 class RenderTags(Task):
     """Render the tag pages and feeds."""
 
@@ -20,7 +21,8 @@ class RenderTags(Task):
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
             "tag_pages_are_indexes": self.site.config['TAG_PAGES_ARE_INDEXES'],
-            "index_display_post_count": self.site.config['INDEX_DISPLAY_POST_COUNT'],
+            "index_display_post_count":
+                self.site.config['INDEX_DISPLAY_POST_COUNT'],
             "index_teasers": self.site.config['INDEX_TEASERS'],
         }
 
@@ -30,6 +32,7 @@ class RenderTags(Task):
                     'actions': [],
                 }
             return
+
         def page_name(tagname, i, lang):
             """Given tag, n, returns a page name."""
             name = self.site.path("tag", tag, lang)
@@ -75,31 +78,36 @@ class RenderTags(Task):
                     # Split in smaller lists
                     lists = []
                     while post_list:
-                        lists.append(post_list[:kw["index_display_post_count"]])
-                        post_list = post_list[kw["index_display_post_count"]:]
+                        lists.append(post_list[
+                            :kw["index_display_post_count"]])
+                        post_list = post_list[
+                            kw["index_display_post_count"]:]
                     num_pages = len(lists)
                     for i, post_list in enumerate(lists):
                         context = {}
-                        # On a tag page, the feeds are the tag's feeds, plus the site's
+                        # On a tag page, the feeds include the tag's feeds
                         rss_link = \
                         """<link rel="alternate" type="application/rss+xml" """\
                         """type="application/rss+xml" title="RSS for tag """\
                         """%s (%s)" href="%s">""" % \
                             (tag, lang, self.site.link("tag_rss", tag, lang))
-                        context ['rss_link'] = rss_link
+                        context['rss_link'] = rss_link
                         output_name = os.path.join(kw['output_folder'],
                             page_name(tag, i, lang))
-                        context["title"] = kw["messages"][lang][u"Posts about %s:"]\
-                            % tag
+                        context["title"] = kw["messages"][lang][
+                            u"Posts about %s:"] % tag
                         context["prevlink"] = None
                         context["nextlink"] = None
                         context['index_teasers'] = kw['index_teasers']
                         if i > 1:
-                            context["prevlink"] = os.path.basename(page_name(tag, i - 1, lang))
+                            context["prevlink"] = os.path.basename(
+                                page_name(tag, i - 1, lang))
                         if i == 1:
-                            context["prevlink"] = os.path.basename(page_name(tag, 0, lang))
+                            context["prevlink"] = os.path.basename(
+                                page_name(tag, 0, lang))
                         if i < num_pages - 1:
-                            context["nextlink"] = os.path.basename(page_name(tag, i + 1, lang))
+                            context["nextlink"] = os.path.basename(
+                                page_name(tag, i + 1, lang))
                         context["permalink"] = self.site.link("tag", tag, lang)
                         context["tag"] = tag
                         for task in self.site.generic_post_list_renderer(
@@ -121,9 +129,10 @@ class RenderTags(Task):
                         self.site.path("tag", tag, lang))
                     context = {}
                     context["lang"] = lang
-                    context["title"] = kw["messages"][lang][u"Posts about %s:"]\
-                        % tag
-                    context["items"] = [("[%s] %s" % (post.date, post.title(lang)),
+                    context["title"] = kw["messages"][lang][
+                        u"Posts about %s:"] % tag
+                    context["items"] = [("[%s] %s" % (post.date,
+                        post.title(lang)),
                         post.permalink(lang)) for post in post_list]
                     context["permalink"] = self.site.link("tag", tag, lang)
                     context["tag"] = tag
