@@ -1,1 +1,1 @@
-from nikola import Nikola
+from nikola import Nikola  # NOQA

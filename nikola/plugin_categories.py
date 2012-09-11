@@ -8,6 +8,7 @@ __all__ = [
 
 from yapsy.IPlugin import IPlugin
 
+
 class BasePlugin(IPlugin):
     """Base plugin class."""
 

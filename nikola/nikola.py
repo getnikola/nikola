@@ -7,7 +7,6 @@ import datetime
 import glob
 import os
 import sys
-import urllib2
 import urlparse
 
 from doit.tools import PythonInteractiveAction
@@ -33,7 +32,7 @@ from plugin_categories import (
 
 config_changed = utils.config_changed
 
-__all__ = ['Nikola', 'nikola_main']
+__all__ = ['Nikola']
 
 
 class Nikola(object):

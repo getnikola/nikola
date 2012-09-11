@@ -6,6 +6,7 @@ from nikola.utils import config_changed
 
 import sitemap_gen as smap
 
+
 class Sitemap(LateTask):
     """Copy theme assets into output."""
 
