@@ -14,7 +14,7 @@ def print_help(site):
     print
     keys = sorted(site.commands.keys())
     for name in keys:
-        print "nikola %s: %s"% (name, site.commands[name].short_help)
+        print "nikola %s: %s" % (name, site.commands[name].short_help)
     print
     print "For detailed help for a command, use nikola command --help"
 
