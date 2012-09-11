@@ -6,8 +6,9 @@ __all__ = [
     'TemplateSystem'
 ]
 
+from yapsy.IPlugin import IPlugin
 
-class BasePlugin(object):
+class BasePlugin(IPlugin):
     """Base plugin class."""
 
     def set_site(self, site):
@@ -19,6 +20,8 @@ class Command(BasePlugin):
     """These plugins are exposed via the command line."""
 
     name = "dummy_command"
+
+    short_help = "A short explanation."
 
     def run(self):
         """Do whatever this command does."""

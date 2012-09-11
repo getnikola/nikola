@@ -124,6 +124,7 @@ class Nikola(object):
         for pluginInfo in self.plugin_manager.getPluginsOfCategory("Command"):
             self.plugin_manager.activatePluginByName(pluginInfo.name)
             pluginInfo.plugin_object.set_site(self)
+            pluginInfo.plugin_object.short_help = pluginInfo.description
             self.commands[pluginInfo.name] = pluginInfo.plugin_object
 
         # Activate all task plugins
