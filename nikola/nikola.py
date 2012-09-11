@@ -497,47 +497,6 @@ class Nikola(object):
 
             yield utils.apply_filters(task, filters)
 
-    def gen_task_render_posts(self, **kw):
-        """Build HTML fragments from metadata and reSt.
-
-        Required keyword arguments:
-
-        translations
-        default_lang
-        timeline
-        """
-        self.scan_posts()
-        flag = False
-        for lang in kw["translations"]:
-            # TODO: timeline is global, get rid of it
-            deps_dict = copy(kw)
-            deps_dict.pop('timeline')
-            for post in kw['timeline']:
-                source = post.source_path
-                dest = post.base_path
-                if lang != kw["default_lang"]:
-                    dest += '.' + lang
-                    source_lang = source + '.' + lang
-                    if os.path.exists(source_lang):
-                        source = source_lang
-                flag = True
-                yield {
-                    'basename': 'render_posts',
-                    'name': dest.encode('utf-8'),
-                    'file_dep': post.fragment_deps(lang),
-                    'targets': [dest],
-                    'actions': [(self.get_compiler(post.source_path), [source, dest])],
-                    'clean': True,
-                    'uptodate': [config_changed(deps_dict)],
-                }
-        if flag == False:  # Return a dummy task
-            yield {
-                'basename': 'render_posts',
-                'name': 'None',
-                'uptodate': [True],
-                'actions': [],
-            }
-
     def generic_post_list_renderer(self, lang, posts,
         output_name, template_name, filters, extra_context):
         """Renders pages with lists of posts."""

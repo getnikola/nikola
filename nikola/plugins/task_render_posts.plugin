@@ -1,0 +1,10 @@
+[Core]
+Name = render_posts
+Module = task_render_posts
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Create HTML fragments out of posts.
+
