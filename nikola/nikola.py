@@ -73,6 +73,7 @@ class Nikola(object):
             'FILTERS': {},
             'USE_BUNDLES': True,
             'TAG_PAGES_ARE_INDEXES': False,
+            'THEME': 'default',
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
                 "markdown": ['.md', '.mdown', '.markdown'],
@@ -80,15 +81,14 @@ class Nikola(object):
             },
         }
         self.config.update(config)
-        if not self.config['TRANSLATIONS']:
-            self.config['TRANSLATIONS']={
-                self.config['DEFAULT_LANG']: ''}
+        self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
+            { self.config['DEFAULT_LANG']: ''})
 
         # FIXME: find  way to achieve this with the plugins
         #if self.config['USE_BUNDLES'] and not webassets:
             #self.config['USE_BUNDLES'] = False
 
-        self.GLOBAL_CONTEXT = self.config['GLOBAL_CONTEXT']
+        self.GLOBAL_CONTEXT = self.config.get('GLOBAL_CONTEXT', {})
         self.THEMES = utils.get_theme_chain(self.config['THEME'])
 
         self.MESSAGES = utils.load_messages(self.THEMES,
