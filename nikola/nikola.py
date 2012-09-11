@@ -381,15 +381,8 @@ class Nikola(object):
             index_display_post_count=self.config['INDEX_DISPLAY_POST_COUNT'],
             index_teasers=self.config['INDEX_TEASERS'],
         )
-        yield self.gen_task_render_rss(
-            translations=self.config['TRANSLATIONS'],
-            blog_title=self.config['BLOG_TITLE'],
-            blog_url=self.config['BLOG_URL'],
-            blog_description=self.config['BLOG_DESCRIPTION'],
-            output_folder=self.config['OUTPUT_FOLDER'])
 
         task_dep = [
-                'render_rss',
                 'render_tags',
         ]
 
@@ -677,39 +670,6 @@ class Nikola(object):
                 task['uptodate'] = task.get('updtodate', []) +\
                     [config_changed(kw)]
                 yield task
-
-    def gen_task_render_rss(self, **kw):
-        """Generate RSS feeds.
-
-        Required keyword arguments:
-
-        translations
-        blog_title
-        blog_url
-        blog_description
-        output_folder
-        """
-
-        self.scan_posts()
-        # TODO: timeline is global, kill it
-        for lang in kw["translations"]:
-            output_name = os.path.join(kw['output_folder'],
-                self.path("rss", None, lang))
-            deps = []
-            posts = [x for x in self.timeline if x.use_in_feeds][:10]
-            for post in posts:
-                deps += post.deps(lang)
-            yield {
-                'basename': 'render_rss',
-                'name': output_name,
-                'file_dep': deps,
-                'targets': [output_name],
-                'actions': [(utils.generic_rss_renderer,
-                    (lang, kw["blog_title"], kw["blog_url"],
-                    kw["blog_description"], posts, output_name))],
-                'clean': True,
-                'uptodate': [config_changed(kw)],
-            }
 
     @staticmethod
     def gen_task_build_bundles(**kw):
