@@ -1,0 +1,10 @@
+[Core]
+Name = bootswatch_theme
+Module = command_bootswatch_theme
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Given a swatch name and a parent theme, creates a custom theme.
+
