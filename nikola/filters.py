@@ -1,8 +1,10 @@
 """Utility functions to help you run filters on files."""
 
 import os
+import shutil
 import subprocess
 import tempfile
+
 
 def runinplace(command, infile):
     """Runs a command in-place on a file.
@@ -22,8 +24,10 @@ def runinplace(command, infile):
     tmpdir = tempfile.mkdtemp()
     tmpfname = os.path.join(tmpdir, os.path.basename(infile))
     command = command.replace('%1', infile)
-    command = command.replace('%2', infile)
+    command = command.replace('%2', tmpfname)
     subprocess.check_call(command, shell=True)
+    shutil.move(tmpfname, infile)
+
 
 def yui_compressor(infile):
-    return runinplace('yui-compressor %1 -o %2', infile)
+    return runinplace(r'yui-compressor %1 -o %2', infile)
