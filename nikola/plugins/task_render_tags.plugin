@@ -1,0 +1,10 @@
+[Core]
+Name = render_tags
+Module = task_render_tags
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Render the tag pages and feeds.
+

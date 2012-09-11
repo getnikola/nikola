@@ -1,0 +1,10 @@
+[Core]
+Name = create_bundles
+Module = task_create_bundles
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Theme bundles using WebAssets
+

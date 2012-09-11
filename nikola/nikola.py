@@ -14,10 +14,6 @@ import urlparse
 
 from doit.tools import PythonInteractiveAction
 import lxml.html
-try:
-    import webassets
-except ImportError:
-    webassets = None
 from yapsy.PluginManager import PluginManager
 
 if os.getenv('DEBUG'):
@@ -87,13 +83,12 @@ class Nikola(object):
             self.config['TRANSLATIONS']={
                 self.config['DEFAULT_LANG']: ''}
 
-        if self.config['USE_BUNDLES'] and not webassets:
-            self.config['USE_BUNDLES'] = False
+        # FIXME: find  way to achieve this with the plugins
+        #if self.config['USE_BUNDLES'] and not webassets:
+            #self.config['USE_BUNDLES'] = False
 
         self.GLOBAL_CONTEXT = self.config['GLOBAL_CONTEXT']
         self.THEMES = utils.get_theme_chain(self.config['THEME'])
-
-        self.theme_bundles = utils.get_theme_bundles(self.THEMES)
 
         self.MESSAGES = utils.load_messages(self.THEMES,
             self.config['TRANSLATIONS'])
@@ -370,11 +365,6 @@ class Nikola(object):
         yield self.task_bootswatch_theme()
         yield self.gen_task_new_post(self.config['post_pages'])
         yield self.gen_task_new_page(self.config['post_pages'])
-        if webassets:
-            yield self.gen_task_build_bundles(theme_bundles=self.theme_bundles,
-                output_folder=self.config['OUTPUT_FOLDER'],
-                filters=self.config['FILTERS']
-            )
 
         task_dep = []
         for pluginInfo in self.plugin_manager.getPluginsOfCategory("Task"):
@@ -388,9 +378,6 @@ class Nikola(object):
                 yield task
             if pluginInfo.plugin_object.is_default:
                 task_dep.append(pluginInfo.plugin_object.name)
-
-        if webassets:
-            task_dep.append( 'build_bundles' )
 
         yield {
             'name': 'all',
@@ -510,51 +497,6 @@ class Nikola(object):
         }
 
         yield utils.apply_filters(task, filters)
-
-    @staticmethod
-    def gen_task_build_bundles(**kw):
-        """Create tasks to build bundles from theme assets.
-
-        theme_bundles
-        output_folder
-        filters
-        """
-
-        def build_bundle(output, inputs):
-            env = webassets.Environment(
-                os.path.join(kw['output_folder'], os.path.dirname(output)),
-                os.path.dirname(output))
-            bundle = webassets.Bundle(*inputs,
-                output=os.path.basename(output))
-            env.register(output, bundle)
-            # This generates the file
-            env[output].urls()
-
-        flag = False
-        for name, files in kw['theme_bundles'].items():
-            output_path = os.path.join(kw['output_folder'], name)
-            dname = os.path.dirname(name)
-            file_dep = [os.path.join('output', dname, fname)
-                for fname in files]
-            task = {
-                'task_dep': ['copy_assets', 'copy_files'],
-                'file_dep': file_dep,
-                'name': name,
-                'actions': [(build_bundle, (name, files))],
-                'targets': [os.path.join(kw['output_folder'], name)],
-                'basename': 'build_bundles',
-                'uptodate': [config_changed(kw)]
-                }
-            flag = True
-            yield utils.apply_filters(task, kw['filters'])
-        if flag == False:  # No page rendered, yield a dummy task
-            yield {
-                'basename': 'build_bundles',
-                'name': 'None',
-                'uptodate': [True],
-                'actions': [],
-            }
-
 
     @staticmethod
     def new_post(post_pages, is_post=True):
