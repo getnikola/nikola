@@ -1,6 +1,5 @@
 import codecs
 import os
-import sys
 from urlparse import urlparse
 from urllib import urlopen
 
@@ -11,8 +10,10 @@ from nikola import utils
 
 links = {}
 
+
 def replacer(dst):
     return links.get(dst, dst)
+
 
 def get_text_tag(tag, name, default):
     t = tag.find(name)
@@ -21,13 +22,18 @@ def get_text_tag(tag, name, default):
     else:
         return default
 
+
 def import_attachment(item):
-    post_type = get_text_tag(item, '{http://wordpress.org/export/1.2/}post_type', 'post')
+    post_type = get_text_tag(item,
+        '{http://wordpress.org/export/1.2/}post_type', 'post')
     if post_type == 'attachment':
-        url = get_text_tag(item, '{http://wordpress.org/export/1.2/}attachment_url', 'foo')
-        link = get_text_tag(item, '{http://wordpress.org/export/1.2/}link', 'foo')
+        url = get_text_tag(item,
+            '{http://wordpress.org/export/1.2/}attachment_url', 'foo')
+        link = get_text_tag(item,
+            '{http://wordpress.org/export/1.2/}link', 'foo')
         path = urlparse(url).path
-        dst_path = os.path.join(*(['new_site', 'files']+list(path.split('/'))))
+        dst_path = os.path.join(*(['new_site', 'files']
+            + list(path.split('/'))))
         dst_dir = os.path.dirname(dst_path)
         if not os.path.isdir(dst_dir):
             os.makedirs(dst_dir)
@@ -35,8 +41,8 @@ def import_attachment(item):
         with open(dst_path, 'wb+') as fd:
             fd.write(urlopen(url).read())
         dst_url = '/'.join(dst_path.split(os.sep)[2:])
-        links[link] = '/'+dst_url
-        links[url] = '/'+dst_url
+        links[link] = '/' + dst_url
+        links[url] = '/' + dst_url
     return
 
 
@@ -47,10 +53,14 @@ def import_item(item):
     # So, take the path, utils.slugify it, and that's our slug
     slug = utils.slugify(urlparse(get_text_tag(item, 'link', None)).path)
     description = get_text_tag(item, 'description', '')
-    post_date = get_text_tag(item, '{http://wordpress.org/export/1.2/}post_date', None)
-    post_type = get_text_tag(item, '{http://wordpress.org/export/1.2/}post_type', 'post')
-    status = get_text_tag(item, '{http://wordpress.org/export/1.2/}status', 'publish')
-    content = get_text_tag(item, '{http://purl.org/rss/1.0/modules/content/}encoded', '')
+    post_date = get_text_tag(item,
+        '{http://wordpress.org/export/1.2/}post_date', None)
+    post_type = get_text_tag(item,
+        '{http://wordpress.org/export/1.2/}post_type', 'post')
+    status = get_text_tag(item,
+        '{http://wordpress.org/export/1.2/}status', 'publish')
+    content = get_text_tag(item,
+        '{http://purl.org/rss/1.0/modules/content/}encoded', '')
 
     tags = []
     if status != 'publish':
@@ -68,21 +78,24 @@ def import_item(item):
     else:
         out_folder = 'stories'
     # Write metadata
-    with codecs.open(os.path.join('new_site', out_folder, slug+'.meta'), "w+", "utf8") as fd:
+    with codecs.open(os.path.join('new_site', out_folder, slug + '.meta'),
+        "w+", "utf8") as fd:
         fd.write(u'%s\n' % title)
         fd.write(u'%s\n' % slug)
         fd.write(u'%s\n' % post_date)
         fd.write(u'%s\n' % ','.join(tags))
         fd.write(u'\n')
         fd.write(u'%s\n' % description)
-    with open(os.path.join('new_site', out_folder, slug+'.wp'), "wb+") as fd:
+    with open(os.path.join(
+        'new_site', out_folder, slug + '.wp'), "wb+") as fd:
         if content.strip():
             try:
                 doc = html.document_fromstring(content)
                 doc.rewrite_links(replacer)
                 fd.write(html.tostring(doc, encoding='utf8'))
             except:
-                import pdb; pdb.set_trace()
+                import pdb
+                pdb.set_trace()
 
 
 def process(fname):
@@ -101,13 +114,15 @@ def process(fname):
     channel = tree.find('channel')
 
     context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')
-    context['BLOG_TITLE'] = get_text_tag(channel, 'title', 'PUT TITLE HERE')
-    context['BLOG_DESCRIPTION'] =  get_text_tag(channel, 'description', 'PUT DESCRIPTION HERE')
-    context['BLOG_URL'] =  get_text_tag(channel, 'link', '#')
+    context['BLOG_TITLE'] = get_text_tag(
+        channel, 'title', 'PUT TITLE HERE')
+    context['BLOG_DESCRIPTION'] = get_text_tag(
+        channel, 'description', 'PUT DESCRIPTION HERE')
+    context['BLOG_URL'] = get_text_tag(channel, 'link', '#')
     author = channel.find('{http://wordpress.org/export/1.2/}author')
-    context['BLOG_EMAIL'] =  get_text_tag(author,
+    context['BLOG_EMAIL'] = get_text_tag(author,
         '{http://wordpress.org/export/1.2/}author_email', "joe@example.com")
-    context['BLOG_AUTHOR'] =  get_text_tag(author,
+    context['BLOG_AUTHOR'] = get_text_tag(author,
         '{http://wordpress.org/export/1.2/}author_display_name', "Joe Example")
     context['POST_PAGES'] = '''(
         ("posts/*.wp", "posts", "post.tmpl", True),
@@ -122,7 +137,7 @@ def process(fname):
 
     # Generate base site
     os.system('nikola init new_site')
-    conf_template = Template(filename = os.path.join(
+    conf_template = Template(filename=os.path.join(
         os.path.dirname(__file__), 'data', 'samplesite', 'conf.py.in'))
     with codecs.open(os.path.join('new_site', 'conf.py'), 'w+', 'utf8') as fd:
         fd.write(conf_template.render(**context))
