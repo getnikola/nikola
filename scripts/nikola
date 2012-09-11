@@ -26,9 +26,12 @@ if __name__ == "__main__":
 
     if len(sys.argv) < 2:
         sys.argv = 'help'
-    else:
-        cmd_name = sys.argv[1]
-    if cmd_name in site.commands:
+    cmd_name = sys.argv[1]
+
+    if cmd_name == "help":
+        print usage
+    elif cmd_name in site.commands:
         site.commands[cmd_name].run(*sys.argv[2:])
     else:
+        print "Unknown command: %s" % cmd_name
         print USAGE

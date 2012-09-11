@@ -368,8 +368,6 @@ class Nikola(object):
         return exists
 
     def gen_tasks(self):
-
-        yield self.task_serve(output_folder=self.config['OUTPUT_FOLDER'])
         yield self.task_install_theme()
         yield self.task_bootswatch_theme()
         yield self.gen_task_new_post(self.config['post_pages'])
@@ -564,50 +562,6 @@ class Nikola(object):
             "basename": "new_page",
             "actions": [PythonInteractiveAction(cls.new_post,
                 (post_pages, False,))],
-            }
-
-    @staticmethod
-    def task_serve(**kw):
-        """
-        Start test server. (doit serve [--address 127.0.0.1] [--port 8000])
-        By default, the server runs on port 8000 on the IP address 127.0.0.1.
-
-        required keyword arguments:
-
-        output_folder
-        """
-
-        def serve(address, port):
-            from BaseHTTPServer import HTTPServer
-            from SimpleHTTPServer import SimpleHTTPRequestHandler
-
-            class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
-                extensions_map = dict(SimpleHTTPRequestHandler.extensions_map)
-                extensions_map[""] = "text/plain"
-
-            os.chdir(kw['output_folder'])
-
-            httpd = HTTPServer((address, port), OurHTTPRequestHandler)
-            sa = httpd.socket.getsockname()
-            print "Serving HTTP on", sa[0], "port", sa[1], "..."
-            httpd.serve_forever()
-
-        yield {
-            "basename": 'serve',
-            "actions": [(serve,)],
-            "verbosity": 2,
-            "params": [{'short': 'a',
-                        'name': 'address',
-                        'long': 'address',
-                        'type': str,
-                        'default': '127.0.0.1',
-                        'help': 'Bind address (default: 127.0.0.1)'},
-                       {'short': 'p',
-                        'name': 'port',
-                        'long': 'port',
-                        'type': int,
-                        'default': 8000,
-                        'help': 'Port number (default: 8000)'}],
             }
 
     @staticmethod

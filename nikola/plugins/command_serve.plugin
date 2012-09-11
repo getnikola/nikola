@@ -1,0 +1,10 @@
+[Core]
+Name = serve
+Module = command_serve
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Start test server.
+
