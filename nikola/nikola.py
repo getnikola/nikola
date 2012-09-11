@@ -389,7 +389,6 @@ class Nikola(object):
             output_folder=self.config['OUTPUT_FOLDER'])
 
         task_dep = [
-                'render_posts',
                 'render_rss',
                 'render_tags',
         ]
