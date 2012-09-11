@@ -369,11 +369,6 @@ class Nikola(object):
                 output_folder=self.config['OUTPUT_FOLDER'],
                 filters=self.config['FILTERS']
             )
-        yield self.gen_task_render_posts(
-            translations=self.config['TRANSLATIONS'],
-            default_lang=self.config['DEFAULT_LANG'],
-            timeline=self.timeline
-            )
         yield self.gen_task_render_tags(
             translations=self.config['TRANSLATIONS'],
             messages=self.MESSAGES,

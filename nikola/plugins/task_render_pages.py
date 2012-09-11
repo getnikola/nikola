@@ -7,7 +7,7 @@ class RenderPages(Task):
 
     name = "render_pages"
 
-    def gen_task(self):
+    def gen_tasks(self):
         """Build final pages from metadata and HTML fragments."""
         kw = {
             "post_pages": self.site.config["post_pages"],
