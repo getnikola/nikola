@@ -369,10 +369,6 @@ class Nikola(object):
                 output_folder=self.config['OUTPUT_FOLDER'],
                 filters=self.config['FILTERS']
             )
-        yield self.gen_task_render_pages(
-            translations=self.config['TRANSLATIONS'],
-            post_pages=self.config['post_pages'],
-            filters=self.config['FILTERS'])
         yield self.gen_task_render_posts(
             translations=self.config['TRANSLATIONS'],
             default_lang=self.config['DEFAULT_LANG'],
@@ -398,7 +394,6 @@ class Nikola(object):
             output_folder=self.config['OUTPUT_FOLDER'])
 
         task_dep = [
-                'render_pages',
                 'render_posts',
                 'render_rss',
                 'render_tags',
@@ -501,34 +496,6 @@ class Nikola(object):
             }
 
             yield utils.apply_filters(task, filters)
-
-    def gen_task_render_pages(self, **kw):
-        """Build final pages from metadata and HTML fragments.
-
-        Required keyword arguments:
-
-        translations
-        post_pages
-        """
-        self.scan_posts()
-        flag = False
-        for lang in kw["translations"]:
-            for wildcard, destination, template_name, _ in kw["post_pages"]:
-                for task in self.generic_page_renderer(lang,
-                    wildcard, template_name, destination, kw["filters"]):
-                    # TODO: enable or remove
-                    #task['uptodate'] = task.get('uptodate', []) +\
-                        #[config_changed(kw)]
-                    task['basename'] = 'render_pages'
-                    flag = True
-                    yield task
-        if flag == False:  # No page rendered, yield a dummy task
-            yield {
-                'basename': 'render_pages',
-                'name': 'None',
-                'uptodate': [True],
-                'actions': [],
-            }
 
     def gen_task_render_posts(self, **kw):
         """Build HTML fragments from metadata and reSt.

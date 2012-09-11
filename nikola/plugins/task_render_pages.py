@@ -1,36 +1,34 @@
-import os
 
 from nikola.plugin_categories import Task
-from nikola import utils
 
 
-class CopyAssets(Task):
-    """Copy theme assets into output."""
+class RenderPages(Task):
+    """Render pages into output."""
 
-    name = "copy_assets"
+    name = "render_pages"
 
-    def gen_tasks(self):
-        """Create tasks to copy the assets of the whole theme chain.
-
-        If a file is present on two themes, use the version
-        from the "youngest" theme.
-        """
-
+    def gen_task(self):
+        """Build final pages from metadata and HTML fragments."""
         kw = {
-            "themes": self.site.THEMES,
-            "output_folder": self.site.config['OUTPUT_FOLDER'],
-            "filters": self.site.config['FILTERS'],
+            "post_pages": self.site.config["post_pages"],
+            "filters": self.site.config["filters"],
         }
-
-        tasks = {}
-        for theme_name in kw['themes']:
-            src = os.path.join(utils.get_theme_path(theme_name), 'assets')
-            dst = os.path.join(kw['output_folder'], 'assets')
-            for task in utils.copy_tree(src, dst):
-                if task['name'] in tasks:
-                    continue
-                tasks[task['name']] = task
-                task['uptodate'] = task.get('uptodate', []) + \
-                    [utils.config_changed(kw)]
-                task['basename'] = self.name
-                yield utils.apply_filters(task, kw['filters'])
+        self.site.scan_posts()
+        flag = False
+        for lang in kw["translations"]:
+            for wildcard, destination, template_name, _ in kw["post_pages"]:
+                for task in self.site.generic_page_renderer(lang,
+                    wildcard, template_name, destination, kw["filters"]):
+                    # TODO: enable or remove
+                    #task['uptodate'] = task.get('uptodate', []) +\
+                        #[config_changed(kw)]
+                    task['basename'] = 'render_pages'
+                    flag = True
+                    yield task
+        if flag is False:  # No page rendered, yield a dummy task
+            yield {
+                'basename': 'render_pages',
+                'name': 'None',
+                'uptodate': [True],
+                'actions': [],
+            }

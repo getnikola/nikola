@@ -1,10 +1,10 @@
 [Core]
-Name = copy_assets
-Module = task_copy_assets
+Name = render_pages
+Module = task_render_pages
 
 [Documentation]
 Author = Roberto Alsina
 Version = 0.1
 Website = http://nikola.ralsina.com.ar
-Description = Copy theme assets into output.
+Description = Create pages in the output.
 
