@@ -1,0 +1,10 @@
+[Core]
+Name = init
+Module = command_init
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Create a new site.
+

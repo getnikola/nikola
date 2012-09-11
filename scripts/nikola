@@ -3,29 +3,12 @@
 """Nikola main script."""
 
 import os
-import shutil
 import sys
 
 import nikola
 
-USAGE = """To create a new site in a folder, run "nikola init foldername [src]".
+USAGE = "THERE WILL BE HELP HERE SOON"
 
-The destination folder must not exist.
-
-If you pass the src argument, that folder will be used as a template for
-the new site instead of Nikola's sample site.
-"""
-
-
-def init(dst):
-    """Create a copy of demosite in the current folder."""
-    if len(sys.argv) > 3:
-        src = sys.argv[3]
-    else:
-        src = os.path.join(os.path.dirname(nikola.__file__),'data','samplesite')
-    shutil.copytree(src, dst)
-    print "A new site with some sample data has been created at %s." % dst
-    print "See README.txt in that folder for more information."
 
 if __name__ == "__main__":
 
@@ -34,7 +17,6 @@ if __name__ == "__main__":
         import conf
         config = conf.__dict__
     except ImportError:
-        print "No config"
         config = {}
 
     site = nikola.Nikola(**config)
@@ -42,14 +24,11 @@ if __name__ == "__main__":
     def task_render_site():
         return SITE.gen_tasks()
 
-    if len(sys.argv)>=3 and sys.argv[1] == "init":
-        print "Doing init"
-        init(sys.argv[2])
-
-    cmd_name = sys.argv[1]
-    print site.commands
+    if len(sys.argv) < 2:
+        sys.argv = 'help'
+    else:
+        cmd_name = sys.argv[1]
     if cmd_name in site.commands:
         site.commands[cmd_name].run(*sys.argv[2:])
-
     else:
         print USAGE
