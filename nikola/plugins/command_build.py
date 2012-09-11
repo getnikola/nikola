@@ -3,6 +3,7 @@ import tempfile
 
 from nikola.plugin_categories import Command
 
+
 class CommandBuild(Command):
     """Build the site."""
 
