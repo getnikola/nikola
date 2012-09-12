@@ -1,7 +1,7 @@
 The Nikola Handbook
 ===================
 
-:Version: 2.1+svn
+:Version: 4.0.3+svn
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-info pull-right
@@ -187,20 +187,26 @@ The short version is: ``pip install https://github.com/ralsina/nikola/zipball/ma
 
 Longer version:
 
-#. Get python, if you don't have it.
-#. Get `doit <http://python-doit.sf.net>`_
-#. Get `docutils <http://docutils.sf.net>`_
-#. Get `Mako <http://makotemplates.org>`_
-#. Get `PIL <http://www.pythonware.com/products/pil/>`_
-#. Get `Pygments <http://pygments.org/>`_
-#. Get `unidecode <http://pypi.python.org/pypi/Unidecode/>`_
-#. Get `lxml <http://lxml.de/>`_
+#. Get `Nikola <http://nikola.ralsina.com.ar/>`_
+#. Install dependencies. To do that, either:
 
-Any non-prehistorical version of the above should work, and if you are in Linux
-you can try to use your distribution's packages if they exist, but the newer the better.
+   #. ``pip install -r requirements.txt`` or...
+   #. Install your distribution's packages for all the things
+      mentioned below, if they exist, or...
+   #. Get all of these manually:
 
-Then get Nikola itself (<http://nikola.ralsina.com.ar/>), unzip it, and
-run ``python setup.py install``.
+      #. Get python, if you don't have it.
+      #. Get `doit <http://python-doit.sf.net>`_
+      #. Get `docutils <http://docutils.sf.net>`_
+      #. Get `Mako <http://makotemplates.org>`_
+      #. Get `PIL <http://www.pythonware.com/products/pil/>`_
+      #. Get `Pygments <http://pygments.org/>`_
+      #. Get `unidecode <http://pypi.python.org/pypi/Unidecode/>`_
+      #. Get `lxml <http://lxml.de/>`_
+      #. Get `yapsy <http://yapsy.sourceforge.com>`_
+      #. Get `configparser <http://pypi.python.org/pypi/configparser/3.2.0r3>`_
+
+#. run ``python setup.py install``
 
 After that, run ``nikola init sitename`` and that will create a folder called
 ``sitename`` containing a functional demo site.

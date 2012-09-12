@@ -1,0 +1,293 @@
+Extending Nikola
+================
+
+.. class:: alert alert-info pull-right
+
+.. contents::
+
+Nikola is extensible. Almost all its functionality is based on plugins,
+and you can add your own or replace the provided ones.
+
+Plugins consist of a metadata file (with ``.plugin`` extension) and
+a python module (a ``.py`` file) or package (a folder containing
+a ``__init__.py`` file.
+
+To use a plugin in your site, you just have to put it in a ``plugins``
+folder in your site.
+
+Plugins come in various flavours, aimed at extending different aspects
+of Nikola.
+
+Command Plugins
+---------------
+
+When you run ``nikola --help`` you will see something like this::
+
+    $ nikola --help
+    Usage: nikola command [options]
+
+    Available commands:
+
+    nikola bootswatch_theme: Given a swatch name and a parent theme, creates a custom theme.
+    nikola build: Build the site.
+    nikola import_wordpress: Import a wordpress site from a XML dump.
+    nikola init: Create a new site.
+    nikola install_theme: Install a theme into the current site.
+    nikola new_post: Create a new post.
+    nikola serve: Start test server.
+
+    For detailed help for a command, use nikola command --help
+
+That will give you a list of all available commands in your version of Nikola.
+Each and every one of those is a plugin. Let's look at a typical example:
+
+First, the ``command_serve.plugin`` file:
+
+.. code_block:: init
+
+    [Core]
+    Name = serve
+    Module = command_serve
+
+    [Documentation]
+    Author = Roberto Alsina
+    Version = 0.1
+    Website = http://nikola.ralsina.com.ar
+    Description = Start test server.
+
+For your own plugin, just change the values in a sensible way. The
+``Module`` will be used to find the matching python module, in this case
+``command_serve.py``, from which this is the interesting bit:
+
+.. code_block:: python
+
+    from nikola.plugin_categories import Command
+
+    # You have to inherit Command for this to be a
+    # command plugin:
+
+    class CommandBuild(Command):
+        """Start test server."""
+
+        # This has to match the Name option in the .plugin file
+
+        name = "serve"
+
+        # This is the function that does stuff
+
+        def run(self, *args):
+            """Start test server."""
+
+            # use OptionParser if you want your command to have options
+
+            parser = OptionParser(usage="nikola %s [options]" % self.name)
+            parser.add_option("-p", "--port", dest="port",
+                help="Port numer (default: 8000)", default=8000,
+                type="int")
+            parser.add_option("-a", "--address", dest="address",
+                help="Address to bind (default: 127.0.0.1)",
+                default='127.0.0.1')
+            (options, args) = parser.parse_args(list(args))
+
+            # You can use self.site.config to access your
+            # configuration options. self.site is an instance
+            # of the Nikola class and contains all your site's
+            # data.
+
+            out_dir = self.site.config['OUTPUT_FOLDER']
+
+            # Then do something interesting. In this case,
+            # it starts a webserver
+
+            if not os.path.isdir(out_dir):
+                print "Error: Missing '%s' folder?" % out_dir
+            else:
+                os.chdir(out_dir)
+                httpd = HTTPServer((options.address, options.port),
+                    OurHTTPRequestHandler)
+                sa = httpd.socket.getsockname()
+                print "Serving HTTP on", sa[0], "port", sa[1], "..."
+                httpd.serve_forever()
+
+As mentioned above, a plugin can have options, which the user can see by doing
+``nikola command --help`` and can later use as ``nikola command --option``::
+
+    $ nikola serve --help
+    Usage: nikola serve [options]
+
+    Options:
+    -h, --help            show this help message and exit
+    -p PORT, --port=PORT  Port numer (default: 8000)
+    -a ADDRESS, --address=ADDRESS
+                            Address to bind (default: 127.0.0.1)
+
+    $ nikola serve -p 9000
+    Serving HTTP on 127.0.0.1 port 9000 ...
+
+So, what can you do with commands? Well, anything you want, really. I have implemented
+a sort of planet using it. So, be creative, and if you do something interesting,
+let me know ;-)
+
+TemplateSystem Plugins
+----------------------
+
+Nikola supports Mako and Jinja2. If you prefer some other templating
+system, then you will have to write a TemplateSystem plugin. Here's how they work.
+First, you have to create a .plugin file. Here's the one for the Mako plugin:
+
+.. code_block:: ini
+
+    [Core]
+    Name = mako
+    Module = template_mako
+
+    [Documentation]
+    Author = Roberto Alsina
+    Version = 0.1
+    Website = http://nikola.ralsina.com.ar
+    Description = Support for Mako templates.
+
+You will have to replace "mako" with your template system's name, and other data
+in the obvious ways.
+
+The "Module" option is the name of the module, which has to look something like this,
+a stub for a hypothetical system called "Templater":
+
+.. code_block:: python
+
+    from nikola.plugin_categories import TemplateSystem
+
+    # You have to inherit TemplateSystem
+
+    class TemplaterTemplates(TemplateSystem):
+        """Wrapper for Templater templates."""
+
+        # name has to match Name in the .plugin file
+        name = "templater"
+
+        # You *must* implement this, even if to return []
+        # It should return a list of all the files that,
+        # when changed, may affect the template's output.
+        # usually this involves template inheritance and
+        # inclusion.
+        def get_deps(self, filename):
+            return []
+
+        # A list of directories where the templates will be
+        # located. Most template systems have some sort of
+        # template loading tool that can use this.
+
+        def set_directories(self, directories):
+            """Createa  template lookup."""
+            pass
+
+        # The method that does the actual rendering.
+        # template_name is the name of the template file,
+        # output_name is the file for the output, context
+        # and global_context are dictionaries containing
+        # the data the template must use for rendering.
+        # context takes priority over global_context.
+
+        def render_template(self, template_name, output_name,
+            context, global_context):
+            """Render the template into output_name using context."""
+            pass
+
+
+Task Plugins
+------------
+
+If you want to do something that depends on the data in your site, you
+probably want to do a Task plugin, which will make it be part of the
+``nikola build`` command. There are the currently available tasks, all
+provided by plugins::
+
+    $ nikola build list
+
+    build_bundles
+    copy_assets
+    copy_files
+    deploy
+    redirect
+    render_archive
+    render_galleries
+    render_indexes
+    render_listings
+    render_pages
+    render_posts
+    render_rss
+    render_site
+    render_sources
+    render_tags
+    sitemap
+
+These have access to the ``site`` object which contains your timeline and
+your configuration.
+
+The critical bit of Task plugins is their ``gen_tasks`` method, which ``yields``
+`doit tasks <http://python-doit.sourceforge.net/tasks.html>`_
+
+The details of how to handle dependencies, etc. are a bit too much for this
+document, so I'll just leave you with an example, the ``copy_assets`` task.
+First the ``task_copy_assets.plugin`` file, which you should copy and edit
+in the logical ways:
+
+.. code_block:: ini
+
+    [Core]
+    Name = copy_assets
+    Module = task_copy_assets
+
+    [Documentation]
+    Author = Roberto Alsina
+    Version = 0.1
+    Website = http://nikola.ralsina.com.ar
+    Description = Copy theme assets into output.
+
+And the ``task_copy_assets.py`` file, in its entirety:
+
+.. code_block:: python
+
+    import os
+
+    from nikola.plugin_categories import Task
+    from nikola import utils
+
+    # Have to inherit Task to be a task plugin
+    class CopyAssets(Task):
+        """Copy theme assets into output."""
+
+        name = "copy_assets"
+
+        # This yields the tasks
+        def gen_tasks(self):
+            """Create tasks to copy the assets of the whole theme chain.
+
+            If a file is present on two themes, use the version
+            from the "youngest" theme.
+            """
+
+            # I put all the configurations and data the plugin uses
+            # in a dictionary because utils.config_changed will
+            # make it so that if these change, this task will be
+            # marked out of date, and run again.
+
+            kw = {
+                "themes": self.site.THEMES,
+                "output_folder": self.site.config['OUTPUT_FOLDER'],
+                "filters": self.site.config['FILTERS'],
+            }
+
+            tasks = {}
+            for theme_name in kw['themes']:
+                src = os.path.join(utils.get_theme_path(theme_name), 'assets')
+                dst = os.path.join(kw['output_folder'], 'assets')
+                for task in utils.copy_tree(src, dst):
+                    if task['name'] in tasks:
+                        continue
+                    tasks[task['name']] = task
+                    task['uptodate'] = task.get('uptodate', []) + \
+                        [utils.config_changed(kw)]
+                    task['basename'] = self.name
+                    # If your task generates files, please do this.
+                    yield utils.apply_filters(task, kw['filters'])
