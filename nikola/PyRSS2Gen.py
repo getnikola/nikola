@@ -1,5 +1,7 @@
 """PyRSS2Gen - A Python library for generating RSS 2.0 feeds."""
 
+# flake8: noqa
+
 __name__ = "PyRSS2Gen"
 __version__ = (1, 0, 0)
 __author__ = "Andrew Dalke <dalke@dalkescientific.com>"

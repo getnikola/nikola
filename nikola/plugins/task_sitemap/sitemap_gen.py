@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# flake8: noqa
 #
 # Copyright (c) 2004, 2005 Google Inc.
 # All rights reserved.

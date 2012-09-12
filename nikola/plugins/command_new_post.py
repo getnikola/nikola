@@ -99,4 +99,3 @@ class CommandNewPost(Command):
             print "Your post's metadata is at: ", meta_path
         print "Your post's text is at: ", txt_path
 
-
