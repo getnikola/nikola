@@ -367,9 +367,6 @@ class Nikola(object):
         return exists
 
     def gen_tasks(self):
-        yield self.gen_task_new_post(self.config['post_pages'])
-        yield self.gen_task_new_page(self.config['post_pages'])
-
         task_dep = []
         for pluginInfo in self.plugin_manager.getPluginsOfCategory("Task"):
             for task in pluginInfo.plugin_object.gen_tasks():
@@ -501,62 +498,3 @@ class Nikola(object):
         }
 
         yield utils.apply_filters(task, filters)
-
-    @staticmethod
-    def new_post(post_pages, is_post=True):
-        # Guess where we should put this
-        for path, _, _, use_in_rss in post_pages:
-            if use_in_rss == is_post:
-                break
-        else:
-            path = post_pages[0][0]
-
-        print "Creating New Post"
-        print "-----------------\n"
-        title = raw_input("Enter title: ").decode(sys.stdin.encoding)
-        slug = utils.slugify(title)
-        data = u'\n'.join([
-            title,
-            slug,
-            datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
-            ])
-        output_path = os.path.dirname(path)
-        meta_path = os.path.join(output_path, slug + ".meta")
-        pattern = os.path.basename(path)
-        if pattern.startswith("*."):
-            suffix = pattern[1:]
-        else:
-            suffix = ".txt"
-        txt_path = os.path.join(output_path, slug + suffix)
-
-        if os.path.isfile(meta_path) or os.path.isfile(txt_path):
-            print "The title already exists!"
-            exit()
-
-        with codecs.open(meta_path, "wb+", "utf8") as fd:
-            fd.write(data)
-        with codecs.open(txt_path, "wb+", "utf8") as fd:
-            fd.write(u"Write your post here.")
-        print "Your post's metadata is at: ", meta_path
-        print "Your post's text is at: ", txt_path
-
-    @classmethod
-    def new_page(cls):
-        cls.new_post(False)
-
-    @classmethod
-    def gen_task_new_post(cls, post_pages):
-        """Create a new post (interactive)."""
-        yield {
-            "basename": "new_post",
-            "actions": [PythonInteractiveAction(cls.new_post, (post_pages,))],
-            }
-
-    @classmethod
-    def gen_task_new_page(cls, post_pages):
-        """Create a new post (interactive)."""
-        yield {
-            "basename": "new_page",
-            "actions": [PythonInteractiveAction(cls.new_post,
-                (post_pages, False,))],
-            }

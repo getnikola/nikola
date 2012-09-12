@@ -13,7 +13,7 @@ class CommandBootswatchTheme(Command):
     def run(self, *args):
         """Given a swatch name and a parent theme, creates a custom theme."""
 
-        parser = OptionParser()
+        parser = OptionParser(usage="nikola %s [options]" % self.name)
         parser.add_option("-n", "--name", dest="name",
             help="New theme name (default: custom)", default='custom')
         parser.add_option("-s", "--swatch", dest="swatch",

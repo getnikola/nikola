@@ -16,7 +16,7 @@ class CommandInstallTheme(Command):
     def run(self, *args):
         """Install theme into current site."""
 
-        parser = OptionParser()
+        parser = OptionParser(usage="nikola %s [options]" % self.name)
         parser.add_option("-l", "--list", dest="list",
             action="store_true",
             help="Show list of available themes.")

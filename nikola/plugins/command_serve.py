@@ -14,7 +14,7 @@ class CommandBuild(Command):
     def run(self, *args):
         """Start test server."""
 
-        parser = OptionParser()
+        parser = OptionParser(usage="nikola %s [options]" % self.name)
         parser.add_option("-p", "--port", dest="port",
             help="Port numer (default: 8000)", default=8000,
             type="int")

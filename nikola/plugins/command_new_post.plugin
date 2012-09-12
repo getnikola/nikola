@@ -1,0 +1,10 @@
+[Core]
+Name = new_post
+Module = command_new_post
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Create a new post.
+

@@ -1,3 +1,4 @@
+from optparse import OptionParser
 import os
 import shutil
 
@@ -10,16 +11,18 @@ class CommandInit(Command):
 
     name = "init"
 
-    usage = """To create a new site in a folder, run "nikola init foldername".
+    usage = """Usage: nikola init folder [options].
 
+That will create a sample site in the specified folder.
 The destination folder must not exist.
-
-If you pass the src argument, that folder will be used as a template for
-the new site instead of Nikola's sample site.
 """
 
-    def run(self, target=None):
+    def run(self, *args):
         """Create a new site."""
+        parser = OptionParser(usage=self.usage)
+        (options, args) = parser.parse_args(list(args))
+
+        target = args[0]
         if target is None:
             print self.usage
         else:

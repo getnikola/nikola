@@ -22,7 +22,6 @@ class CompileMarkdown(PageCompiler):
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
-
             output = markdown(data, ['fenced_code', 'codehilite'])
             # remove the H1 because there is "title" h1.
             output = re.sub(r'<h1>.*</h1>', '', output)
