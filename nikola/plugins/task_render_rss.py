@@ -7,7 +7,7 @@ from nikola.plugin_categories import Task
 class RenderRSS(Task):
     """Generate RSS feeds."""
 
-    name = "render_pages"
+    name = "render_rss"
 
     def gen_tasks(self):
         """Generate RSS feeds."""
