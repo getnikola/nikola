@@ -30,7 +30,7 @@ if __name__ == "__main__":
     site = nikola.Nikola(**config)
 
     if len(sys.argv) < 2:
-        sys.argv[1] = 'help'
+        sys.argv[1:] = 'help'
     cmd_name = sys.argv[1]
 
     if cmd_name in ("help", "--help", "-h"):
