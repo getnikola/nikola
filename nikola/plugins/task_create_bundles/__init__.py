@@ -14,6 +14,11 @@ class BuildBundles(LateTask):
 
     name = "build_bundles"
 
+    def set_site(self, site):
+        super(BuildBundles, self).set_site(site)
+        if webassets is None:
+            self.site.config['USE_BUNDLES'] = False
+
     def gen_tasks(self):
         """Bundle assets using WebAssets."""
 
@@ -24,8 +29,11 @@ class BuildBundles(LateTask):
         }
 
         def build_bundle(output, inputs):
+            out_dir = os.path.join(kw['output_folder'], os.path.dirname(output)
+            inputs = [i for i in inputs if os.path.isfile(
+                os.path.join(out_dir, i))]
             env = webassets.Environment(
-                os.path.join(kw['output_folder'], os.path.dirname(output)),
+                out_dir),
                 os.path.dirname(output))
             bundle = webassets.Bundle(*inputs,
                 output=os.path.basename(output))
@@ -34,21 +42,22 @@ class BuildBundles(LateTask):
             env[output].urls()
 
         flag = False
-        for name, files in kw['theme_bundles'].items():
-            output_path = os.path.join(kw['output_folder'], name)
-            dname = os.path.dirname(name)
-            file_dep = [os.path.join('output', dname, fname)
-                for fname in files]
-            task = {
-                'file_dep': file_dep,
-                'basename': self.name,
-                'name': output_path,
-                'actions': [(build_bundle, (name, files))],
-                'targets': [output_path],
-                'uptodate': [utils.config_changed(kw)]
-                }
-            flag = True
-            yield utils.apply_filters(task, kw['filters'])
+        if webassets is not None and self.site.config['USE_BUNDLES'] != False:
+            for name, files in kw['theme_bundles'].items():
+                output_path = os.path.join(kw['output_folder'], name)
+                dname = os.path.dirname(name)
+                file_dep = [os.path.join('output', dname, fname)
+                    for fname in files]
+                task = {
+                    'file_dep': file_dep,
+                    'basename': self.name,
+                    'name': output_path,
+                    'actions': [(build_bundle, (name, files))],
+                    'targets': [output_path],
+                    'uptodate': [utils.config_changed(kw)]
+                    }
+                flag = True
+                yield utils.apply_filters(task, kw['filters'])
         if flag is False:  # No page rendered, yield a dummy task
             yield {
                 'basename': self.name,
