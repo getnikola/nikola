@@ -276,7 +276,7 @@ class Galleries(Task):
                 'basename': 'render_galleries',
                 'name': gallery_path,
                 'file_dep': file_dep,
-                'targets': [gallery_name],
+                'targets': [output_name],
                 'actions': [(render_gallery,
                     (output_name, context, index_dst_path))],
                 'clean': True,
