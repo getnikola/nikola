@@ -1,6 +1,6 @@
 [Core]
 Name = deploy
-Module = task_deploy
+Module = command_deploy
 
 [Documentation]
 Author = Roberto Alsina
