@@ -16,7 +16,7 @@ class Archive(Task):
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
         }
-
+        self.site.scan_posts()
         # TODO add next/prev links for years
         template_name = "list.tmpl"
         # TODO: posts_per_year is global, kill it
