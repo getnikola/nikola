@@ -1,0 +1,10 @@
+[Core]
+Name = check
+Module = command_check
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Check the generated site
+
