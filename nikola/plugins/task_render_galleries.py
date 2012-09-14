@@ -251,7 +251,7 @@ class Galleries(Task):
                 compile_html = self.site.get_compiler(index_path)
                 yield {
                     'basename': 'render_galleries',
-                    'name': index_dst_path.encode('utf-8'),
+                    'name': output_name.encode('utf-8'),
                     'file_dep': [index_path],
                     'targets': [index_dst_path],
                     'actions': [(compile_html,
@@ -276,7 +276,7 @@ class Galleries(Task):
                 'basename': 'render_galleries',
                 'name': gallery_path,
                 'file_dep': file_dep,
-                'targets': [output_name],
+                'targets': [gallery_name],
                 'actions': [(render_gallery,
                     (output_name, context, index_dst_path))],
                 'clean': True,

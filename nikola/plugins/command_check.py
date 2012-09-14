@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+from optparse import OptionParser
 import os
 import sys
 import urllib
@@ -6,7 +6,32 @@ from urlparse import urlparse
 
 import lxml.html
 
+from nikola.plugin_categories import Command
+
+
+class CommandCheck(Command):
+    """Check the generated site."""
+
+    name = "check"
+
+    def run(self, *args):
+        """Check the generated site."""
+        parser = OptionParser(usage="nikola %s [options]" % self.name)
+        parser.add_option('-l', '--check-links', dest='links',
+            action='store_true',
+            help='Check for dangling links.')
+        parser.add_option('-f', '--check-files', dest='files',
+            action='store_true',
+            help='Check for unknown files.')
+
+        (options, args) = parser.parse_args(list(args))
+        if options.links:
+            scan_links()
+        if options.files:
+            scan_files()
+
 existing_targets = set([])
+
 
 def analize(task):
     try:
@@ -21,7 +46,9 @@ def analize(task):
                 continue
             if parsed.fragment:
                 target = target.split('#')[0]
-            target_filename = os.path.abspath(os.path.join(os.path.dirname(filename), urllib.unquote(target)))
+            target_filename = os.path.abspath(
+                os.path.join(os.path.dirname(filename),
+                    urllib.unquote(target)))
             if target_filename not in existing_targets:
                 if os.path.exists(target_filename):
                     existing_targets.add(target_filename)
@@ -29,14 +56,17 @@ def analize(task):
                     print "In %s broken link: " % filename, target
                     if '--find-sources' in sys.argv:
                         print "Possible sources:"
-                        print os.popen('doit list --deps %s' % task, 'r').read()
+                        print os.popen(
+                            'nikola build list --deps %s' % task, 'r').read()
                         print "===============================\n"
 
     except Exception as exc:
         print "Error with:", filename, exc
 
+
 def scan_links():
-    for task in os.popen('doit list --all', 'r').readlines():
+    print "Checking Links:\n===============\n"
+    for task in os.popen('nikola build list --all', 'r').readlines():
         task = task.strip()
         if task.split(':')[0] in (
             'render_tags',
@@ -47,11 +77,13 @@ def scan_links():
             'render_site') and '.html' in task:
             analize(task)
 
+
 def scan_files():
+    print "Checking Files:\n===============\n"
     task_fnames = set([])
     real_fnames = set([])
     # First check that all targets are generated in the right places
-    for task in os.popen('doit list --all', 'r').readlines():
+    for task in os.popen('nikola build list --all', 'r').readlines():
         task = task.strip()
         if 'output' in task and ':' in task:
             fname = task.split(':')[-1]
@@ -75,13 +107,3 @@ def scan_files():
         print "\nFiles not generated:\n"
         for f in only_on_input:
             print f
-
-
-if __name__ == '__main__':
-    if '--help' in sys.argv or len(sys.argv) == 1:
-        print "Usage: nikola_check [--check-links [--find-sources]] [--check-files]"
-        sys.exit()
-    elif '--check-links' in sys.argv:
-        scan_links()
-    elif '--check-files' in sys.argv:
-        scan_files()
