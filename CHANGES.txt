@@ -7,6 +7,12 @@ Features
 * Templates now know their name from template_name in their context.
 * Made most of Nikola into Yapsy plugins.
 
+Bugfixes
+--------
+
+* Fixed doc installation
+* Put webassets cache in cache/webassets
+
 New in Version 4.0.3
 ====================
 
