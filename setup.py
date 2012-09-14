@@ -121,6 +121,8 @@ setup(name='Nikola',
       scripts=['scripts/nikola', 'scripts/nikola_check'],
       install_requires=dependencies,
       package_data=find_package_data(),
-      data_files=['docs/manual.txt',
-        'docs/theming.txt'],
+      data_files=[('share/doc/nikola', [
+        'docs/manual.txt',
+        'docs/theming.txt',
+        'docs/extending.txt'])],
      )
