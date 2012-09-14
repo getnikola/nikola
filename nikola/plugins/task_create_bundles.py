@@ -29,12 +29,10 @@ class BuildBundles(LateTask):
         }
 
         def build_bundle(output, inputs):
-            out_dir = os.path.join(kw['output_folder'], os.path.dirname(output)
+            out_dir = os.path.join(kw['output_folder'], os.path.dirname(output))
             inputs = [i for i in inputs if os.path.isfile(
                 os.path.join(out_dir, i))]
-            env = webassets.Environment(
-                out_dir),
-                os.path.dirname(output))
+            env = webassets.Environment(out_dir)
             bundle = webassets.Bundle(*inputs,
                 output=os.path.basename(output))
             env.register(output, bundle)
