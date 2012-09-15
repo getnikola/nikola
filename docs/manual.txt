@@ -18,16 +18,16 @@ Create a site:
     ``nikola init mysite``
 
 Create a post:
-    ``doit new_post``
+    ``nikola new_post``
 
 Edit the post:
     The filename should be in the output of the previous command.
 
 Build the site:
-     ``doit``
+     ``nikola build``
 
 Start the test server:
-     ``doit serve``
+     ``nikola serve``
 
 See the site:
      http://127.0.0.1:8000
@@ -168,13 +168,14 @@ If you want to create a blog or a site, Nikola provides:
 * The input format is light markup (`reStructuredText <quickstart.html>`_ or
   `Markdown <http://daringfireball.net/projects/markdown/>`_)
 * Easy-to-create image galleries
+* Support for displaying source code
 
 Also:
 
 * A preview webserver
 * "Live" re-rendering while you edit
-* "Smart" builds: only what changed gets rebuilt (usually in 1 or 2 seconds)
-* Very easy to extend with minimal Python knowledge.
+* "Smart" builds: only what changed gets rebuilt (usually in seconds)
+* Easy to extend with minimal Python knowledge.
 
 Installing Nikola
 -----------------
@@ -211,6 +212,11 @@ Longer version:
 After that, run ``nikola init sitename`` and that will create a folder called
 ``sitename`` containing a functional demo site.
 
+.. note:: Are you using Ubuntu?
+
+   Then you can try using `my PPA <https://launchpad.net/~ralsina/+archive/nikola>`_
+   and installing python-nikola
+
 Getting Started
 ---------------
 
@@ -222,10 +228,10 @@ First, let's see how you "build" your site. Nikola comes with a minimal site to 
 
 The tool used to do builds is called `doit <http://python-doit.sf.net>`_, and it rebuilds the
 files that are not up to date, so your site always reflects your latest content. To do our
-first build, just run "doit"::
+first build, just run "nikola build"::
 
-    $ doit
-    Parsing metadata
+    $ nikola build
+    Scanning posts  . . done!
     .  render_posts:stories/manual.html
     .  render_posts:posts/1.html
     .  render_posts:stories/1.html
@@ -244,65 +250,74 @@ first build, just run "doit"::
 Nikola will print a line for every output file it generates. If we do it again, that
 will be much much shorter::
 
-    $ doit
-    Parsing metadata
-    .  sitemap
+    $ nikola build
+    Scanning posts  . . done!
 
 That is because `doit <http://python-doit.sf.net>`_ is smart enough not to generate
 all the pages again, unless you changed something that the page requires. So, if you change
 the text of a post, or its title, that post page, and all index pages where it is mentioned,
 will be recreated. If you change the post page template, then all the post pages will be rebuilt.
 
-Nikola is a series of doit *tasks*, and you can see them by doing ``doit list``::
+Nikola is mostly a series of doit *tasks*, and you can see them by doing ``nikola build list``::
 
-    $ doit list
+    $ nikola build list
     Scanning posts  . . done!
-    copy_assets        Create tasks to copy the assets of the whole theme chain.
-    copy_files         Copy static files into the output folder.
-    deploy             Deploy site.
-    new_page           Create a new post (interactive).
-    new_post           Create a new post (interactive).
-    redirect           Generate redirections.
-    render_archive     Render the post archives.
-    render_galleries   Render image galleries.
-    render_indexes     Render 10-post-per-page indexes.
-    render_pages       Build final pages from metadata and HTML fragments.
-    render_posts       Build HTML fragments from metadata and reSt.
-    render_rss         Generate RSS feeds.
-    render_site        Render the post archives.
-    render_sources     Publish the rst sources because why not?
-    render_tags        Render the tag pages.
-    serve              Start test server. (Usage: doit serve [--address 127.0.0.1] [--port 8000])
-    sitemap            Generate Google sitemap.
+    build_bundles
+    copy_assets
+    copy_files
+    deploy
+    redirect
+    render_archive
+    render_galleries
+    render_indexes
+    render_listings
+    render_pages
+    render_posts
+    render_rss
+    render_site
+    render_sources
+    render_tags
+    sitemap
 
-You can make Nikola redo everything by calling ``doit clean``, you can make it do just a specific
-part of the site using task names, for example ``doit render_pages``, and even individual files like
-``doit render_indexes:output/index.html``
+You can make Nikola redo everything by calling ``nikola build forget``, you can make it do just a specific
+part of the site using task names, for example ``nikola build render_pages``, and even individual files like
+``nikola build render_indexes:output/index.html``
 
-The ``serve`` task is special, in that instead of generating a file it starts a web server so
-you can see the site you are creating::
+Nikola also has other commands besides ``build``::
 
-    $ doit serve
-    Parsing metadata
-    .  serve
+    $ nikola help
+    Usage: nikola command [options]
+
+    Available commands:
+
+    nikola bootswatch_theme: Given a swatch name and a parent theme, creates a custom theme.
+    nikola build: Build the site.
+    nikola check: Check the generated site
+    nikola deploy: Deploy the site
+    nikola import_wordpress: Import a wordpress site from a XML dump.
+    nikola init: Create a new site.
+    nikola install_theme: Install a theme into the current site.
+    nikola new_post: Create a new post.
+    nikola serve: Start test server.
+
+    For detailed help for a command, use nikola command --help
+
+The ``serve`` command starts a web server so you can see the site you are creating::
+
+    $ nikola serve
     Serving HTTP on 127.0.0.1 port 8000 ...
 
-After you do this, you can point your web browser to http://localhost:8000 and you should see
-the sample site. This is useful as a "preview" of your work. You can combine add ``auto`` and do
-``doit auto serve`` which makes doit automatically regenerate your pages as needed, and
-it's a live preview!
 
-By default, the ``serve`` task runs the web server on port 8000 on the IP address 127.0.0.1.
+After you do this, you can point your web browser to http://localhost:8000 and you should see
+the sample site. This is useful as a "preview" of your work.
+
+By default, the ``serve`` command runs the web server on port 8000 on the IP address 127.0.0.1.
 You can pass in an IP address and port number explicity using ``-a IP_ADDRESS``
 (short version of ``--address``) or ``-p PORT_NUMBER`` (short version of ``--port``)
 Example usage::
 
-    $ doit serve --address 0.0.0.0 --port 8080
-    Parsing metadata
-    .  serve
+    $ nikola serve --address 0.0.0.0 --port 8080
     Serving HTTP on 0.0.0.0 port 8080 ...
-
-The ``deploy`` task is discussed in the Deployment_ section.
 
 Creating a Blog Post
 --------------------
@@ -327,21 +342,22 @@ changed (see below, the post_pages option)
 
 You can just create them in ``posts`` or use a little helper task provided by Nikola::
 
-    $ doit new_post
-    Parsing metadata
-    .  new_post
+    $ nikola new_post
     Creating New Post
     -----------------
 
-    Enter title: How to Make Money
-    Your post's metadata is at:  posts/how-to-make-money.meta
+    Enter title: How to make money
     Your post's text is at:  posts/how-to-make-money.txt
 
-The format for the ``.meta`` file is as follows::
+The content of that file is as follows::
 
-    How to Make Money
-    how-to-make-money
-    2012/04/09 13:59
+    .. title: How to make money
+    .. slug: how-to-make-money
+    .. date: 2012/09/15 19:52:05
+    .. tags:
+    .. link:
+    .. description:
+    Write your post here.
 
 The first line is the title. The second one is the pagename. Since often titles will have
 characters that look bad on URLs, it's generated as a "clean" version of the title.
@@ -352,12 +368,22 @@ separated with commas (spaces around the commas are ignored)::
 
     programming, python, fame, fortune
 
-And a fifth line that's a URL for an original source of the post.
+A fifth line that's a URL for an original source of the post, and a sixth line
+that's the page description.
 
-And a sixth line that's the page description.
+.. note:: The Two-File Format
+
+   Nikola originally used a separate ``.meta`` file. That will still work!
+   The format of the meta files is the same as shown above, but without the
+   explanations::
+
+        How to make money
+        how-to-make-money
+        2012/09/15 19:52:05
 
 If you are writing a multilingual site, you can also create a per-language
-metadata file. This one can have two lines:
+post file (for example: ``how-to-make-money.txt.es``). This one can have two
+lines of metadata:
 
 1) The translated title for the post or page
 2) A translated version of the pagename
@@ -410,22 +436,22 @@ configuration option::
 It will use the first location that has the last parameter set to True, or the last
 one in the list if all of them have it set to False.
 
-Alternatively, you can not have a meta file and embed the metadata in the post itself.
+The ``new_post`` command supports some options::
 
-In restructured text::
+    $ nikola new_post --help
+    Usage: nikola new_post [options]
 
-    .. tags: test,demo
-    .. slug: demo-test
-    .. date: 2012/04/09 13:59
-    .. link: http://foo.bar/baz
+    Options:
+    -h, --help            show this help message and exit
+    -p, --page            Create a page instead of a blog post.
+    -t TITLE, --title=TITLE
+                            Title for the page/post.
+    --tags=TAGS           Comma-separated tags for the page/post.
+    -1                    Create post with embedded metadata (single file
+                            format).
+    -f POST_FORMAT, --format=POST_FORMAT
+                            Format for post (rest or markdown)
 
-In Markdown:
-    <!--
-    .. tags: test,demo
-    .. slug: demo-test
-    .. date: 2012/04/09 13:59
-    .. link: http://foo.bar/baz
-    -->
 
 Teasers
 ~~~~~~~
@@ -464,8 +490,8 @@ Pages are the same as posts, except that:
 The default configuration expects the page's metadata and text files to be on the
 ``stories`` folder, but that can be changed (see post_pages option above).
 
-You can create the page's files manually or use the helper ``new_page`` that works exactly like
-the ``new_post`` described above, except it will place the files in the folder that
+You can create the page's files manually or use the ``new_post`` command
+with the ``-p`` option, qhich will place the files in the folder that
 has ``use_in_feed`` set to False.
 
 Redirections
@@ -546,7 +572,8 @@ me and I will add it to the filters library so that more people use it.
 Customizing Your Site
 ---------------------
 
-There are lots of things you can do to persoalize your website, but let's see the easy ones!
+There are lots of things you can do to personalize your website, but let's see
+the easy ones!
 
 Basics
     You can assume this needs to be changed::
@@ -594,19 +621,15 @@ Getting More Themes
 
 There are not so many themes for Nikola. On occasion, I port something I like, and make
 it available for download. Nikola has a builtin theme download/install mechanism, its
-``install_theme`` task::
+``install_theme`` command::
 
-    $ doit install_theme -l
-    Scanning posts  . . done!
-    .  install_theme
+    $ nikola install_theme -l
     Themes:
     -------
     blogtxt
     readable
 
-    $ doit install_theme -n blogtxt
-    Scanning posts  . . done!
-    .  install_theme
+    $ nikola install_theme -n blogtxt
     Downloading: http://nikola.ralsina.com.ar/themes/blogtxt.zip
     Extracting: blogtxt into themes
 
@@ -621,10 +644,8 @@ One other option is to tweak an existing theme using a different color scheme,
 typography and CSS in general. Nikola provides a ``bootswatch_theme`` option
 to create a custom theme by downloading free CSS files from http://bootswatch.com::
 
-    $ doit bootswatch_theme -n custom_theme -s spruce -p site
-    Scanning posts  . . done!
-    .  bootswatch_theme
-    Creating custom_theme theme from spruce and site
+    $ nikola bootswatch_theme -n custom_theme -s spruce -p site
+    Creating 'custom_theme' theme from 'spruce' and 'site'
     Downloading:  http://bootswatch.com/spruce/bootstrap.min.css
     Downloading:  http://bootswatch.com/spruce/bootstrap.css
     Theme created. Change the THEME setting to "custom_theme" to use it.
@@ -640,7 +661,7 @@ Deployment
 
 Nikola doesn't really have a concept of deployment. However, if you can specify your
 deployment procedure as a series of commands, you can put them in the ``DEPLOY_COMMANDS``
-option, and run them with ``doit deploy``.
+option, and run them with ``nikola deploy``.
 
 One caveat is that if any command has a % in it, you should double them.
 
