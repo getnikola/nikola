@@ -294,7 +294,7 @@ Nikola also has other commands besides ``build``::
     nikola build: Build the site.
     nikola check: Check the generated site
     nikola deploy: Deploy the site
-    nikola import_wordpress: Import a wordpress site from a XML dump.
+    nikola import_wordpress: Import a wordpress site from a XML dump (requires markdown).
     nikola init: Create a new site.
     nikola install_theme: Install a theme into the current site.
     nikola new_post: Create a new post.
