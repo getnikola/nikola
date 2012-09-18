@@ -35,7 +35,7 @@ class CommandImportWordpress(Command):
         tree = etree.fromstring(xml)
         channel = tree.find('channel')
 
-        context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')
+        context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')[:2]
         context['BLOG_TITLE'] = get_text_tag(
             channel, 'title', 'PUT TITLE HERE')
         context['BLOG_DESCRIPTION'] = get_text_tag(
