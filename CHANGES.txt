@@ -7,6 +7,7 @@ Features
 * Templates now know their name from template_name in their context.
 * Made most of Nikola into Yapsy plugins.
 * Recurse galleries/ and render each folder as a gallery.
+* Breadcrumbs and folder links in image galleries.
 
 Bugfixes
 --------
