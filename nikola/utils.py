@@ -13,6 +13,7 @@ import subprocess
 import sys
 from zipfile import ZipFile as zip
 
+from doit import tools
 from unidecode import unidecode
 
 import PyRSS2Gen as rss
@@ -23,31 +24,22 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
     'apply_filters', 'config_changed']
 
 
-class config_changed(object):
+class config_changed(tools.config_changed):
     """ A copy of doit's but using pickle instead of serializing manually."""
 
-    def __init__(self, config):
-        self.config = config
-
-    def __call__(self, task, values):
-        config_digest = None
+    def _calc_digest(self):
         if isinstance(self.config, basestring):
-            config_digest = self.config
+            return self.config
         elif isinstance(self.config, dict):
             data = dumps(self.config)
-            config_digest = hashlib.md5(data).hexdigest()
+            if isinstance(data, unicode): # pragma: no cover # python3
+                byte_data = data.encode("utf-8")
+            else:
+                byte_data = data
+            return hashlib.md5(byte_data).hexdigest()
         else:
-            raise Exception(('Invalid type of config_changed parameter got %s'
-                + ', must be string or dict') % (type(self.config),))
-
-        def _save_config():
-            return {'_config_changed': config_digest}
-
-        task.insert_action(_save_config)
-        last_success = values.get('_config_changed')
-        if last_success is None:
-            return False
-        return (last_success == config_digest)
+            raise Exception(('Invalid type of config_changed parameter got %s' +
+                             ', must be string or dict') % (type(self.config),))
 
 
 def get_theme_path(theme):
