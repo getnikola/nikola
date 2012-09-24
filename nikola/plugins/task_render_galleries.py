@@ -45,7 +45,6 @@ class Galleries(Task):
         gallery_list = []
         for root, dirs, files in os.walk('galleries'):
             gallery_list.append(root)
-        print gallery_list
         if not gallery_list:
             yield {
                 'basename': 'render_galleries',
@@ -58,8 +57,9 @@ class Galleries(Task):
             # gallery_name is "name"
             splitted = gallery_path.split(os.sep)[1:]
             if not splitted:
-                continue
-            gallery_name = os.path.join(*splitted)
+                gallery_name = ''
+            else:
+                gallery_name = os.path.join(*splitted)
             # output_gallery is "output/GALLERY_PATH/name"
             output_gallery = os.path.dirname(os.path.join(kw["output_folder"],
                 self.site.path("gallery", gallery_name, None)))
@@ -96,6 +96,10 @@ class Galleries(Task):
                 image_list = list(image_set)
             except IOError:
                 pass
+
+            # List of sub-galleries
+            folder_list = [x.split(os.sep)[-2] for x in
+                glob.glob(os.path.join(gallery_path , '*') + os.sep)]
 
             image_list = [x for x in image_list if "thumbnail" not in x]
             # Sort by date
@@ -186,6 +190,7 @@ class Galleries(Task):
             else:
                 img_titles = [''] * len(image_name_list)
             context["images"] = zip(image_name_list, thumbs, img_titles)
+            context["folders"] = folder_list
             context["permalink"] = self.site.link(
                 "gallery", gallery_name, None)
 

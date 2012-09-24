@@ -8,6 +8,11 @@
         ${text}
     </p>
     %endif
+    <ul>
+    % for folder in folders:
+        <li><a href="${folder}"><i class="icon-folder-open"></i>&nbsp;${folder}</a></li>
+    % endfor
+    </ul>
     <ul class="thumbnails">
         %for image in images:
             <li><a href="${image[0]}" class="thumbnail image-reference" ${image[2]}>
