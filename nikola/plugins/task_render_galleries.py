@@ -42,7 +42,10 @@ class Galleries(Task):
 
         template_name = "gallery.tmpl"
 
-        gallery_list = glob.glob("galleries/*")
+        gallery_list = []
+        for root, dirs, files in os.walk('galleries'):
+            gallery_list.append(root)
+        print gallery_list
         if not gallery_list:
             yield {
                 'basename': 'render_galleries',
@@ -53,7 +56,10 @@ class Galleries(Task):
         # gallery_path is "gallery/name"
         for gallery_path in gallery_list:
             # gallery_name is "name"
-            gallery_name = os.path.basename(gallery_path)
+            splitted = gallery_path.split(os.sep)[1:]
+            if not splitted:
+                continue
+            gallery_name = os.path.join(*splitted)
             # output_gallery is "output/GALLERY_PATH/name"
             output_gallery = os.path.dirname(os.path.join(kw["output_folder"],
                 self.site.path("gallery", gallery_name, None)))
