@@ -3,6 +3,18 @@ import datetime
 import glob
 import os
 
+Image = None
+try:
+    import Image as _Image
+    import ExifTags
+    Image = _Image
+except ImportError:
+    try:
+        from PIL import Image, ExifTags  # NOQA
+    except ImportError:
+        pass
+
+
 from nikola.plugin_categories import Task
 from nikola import utils
 
@@ -11,6 +23,7 @@ class Galleries(Task):
     """Copy theme assets into output."""
 
     name = "render_galleries"
+    dates = {}
 
     def gen_tasks(self):
         """Render image galleries."""
@@ -30,88 +43,12 @@ class Galleries(Task):
         template_name = "gallery.tmpl"
 
         gallery_list = glob.glob("galleries/*")
-        # Fail quick if we don't have galleries, so we don't
-        # require PIL
-        Image = None
         if not gallery_list:
             yield {
                 'basename': 'render_galleries',
                 'actions': [],
                 }
             return
-        try:
-            import Image as _Image
-            import ExifTags
-            Image = _Image
-        except ImportError:
-            try:
-                from PIL import Image as _Image, ExifTags  # NOQA
-                Image = _Image
-            except ImportError:
-                pass
-        if Image:
-            def _resize_image(src, dst, max_size):
-                im = Image.open(src)
-                w, h = im.size
-                if w > max_size or h > max_size:
-                    size = max_size, max_size
-                    try:
-                        exif = im._getexif()
-                    except Exception:
-                        exif = None
-                    if exif is not None:
-                        for tag, value in exif.items():
-                            decoded = ExifTags.TAGS.get(tag, tag)
-
-                            if decoded == 'Orientation':
-                                if value == 3:
-                                    im = im.rotate(180)
-                                elif value == 6:
-                                    im = im.rotate(270)
-                                elif value == 8:
-                                    im = im.rotate(90)
-
-                                break
-
-                    im.thumbnail(size, Image.ANTIALIAS)
-                    im.save(dst)
-
-                else:
-                    utils.copy_file(src, dst)
-
-            def create_thumb(src, dst):
-                return _resize_image(src, dst, kw['thumbnail_size'])
-
-            def create_resized_image(src, dst):
-                return _resize_image(src, dst, kw['max_image_size'])
-
-            dates = {}
-
-            def image_date(src):
-                if src not in dates:
-                    im = Image.open(src)
-                    try:
-                        exif = im._getexif()
-                    except Exception:
-                        exif = None
-                    if exif is not None:
-                        for tag, value in exif.items():
-                            decoded = ExifTags.TAGS.get(tag, tag)
-                            if decoded == 'DateTimeOriginal':
-                                try:
-                                    dates[src] = datetime.datetime.strptime(
-                                        value, r'%Y:%m:%d %H:%M:%S')
-                                    break
-                                except ValueError:  # Invalid EXIF date.
-                                    pass
-                if src not in dates:
-                    dates[src] = datetime.datetime.fromtimestamp(
-                        os.stat(src).st_mtime)
-                return dates[src]
-
-        else:
-            create_thumb = utils.copy_file
-            create_resized_image = utils.copy_file
 
         # gallery_path is "gallery/name"
         for gallery_path in gallery_list:
@@ -156,7 +93,8 @@ class Galleries(Task):
 
             image_list = [x for x in image_list if "thumbnail" not in x]
             # Sort by date
-            image_list.sort(cmp=lambda a, b: cmp(image_date(a), image_date(b)))
+            image_list.sort(cmp=lambda a, b: cmp(
+                self.image_date(a), self.image_date(b)))
             image_name_list = [os.path.basename(x) for x in image_list]
 
             thumbs = []
@@ -179,7 +117,8 @@ class Galleries(Task):
                     'file_dep': [img],
                     'targets': [thumb_path],
                     'actions': [
-                        (create_thumb, (img, thumb_path))
+                        (self.resize_image,
+                            (img, thumb_path, kw['thumbnail_size']))
                     ],
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
@@ -190,7 +129,8 @@ class Galleries(Task):
                     'file_dep': [img],
                     'targets': [orig_dest_path],
                     'actions': [
-                        (create_resized_image, (img, orig_dest_path))
+                        (self.resize_image,
+                            (img, thumb_path, kw['max_image_size']))
                     ],
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
@@ -282,3 +222,59 @@ class Galleries(Task):
                 'clean': True,
                 'uptodate': [utils.config_changed(kw)],
             }
+
+    def resize_image(self, src, dst, max_size):
+        """Make a copy of the image in the requested size."""
+        if not Image:
+            utils.copy_file(src, dst)
+            return
+        im = Image.open(src)
+        w, h = im.size
+        if w > max_size or h > max_size:
+            size = max_size, max_size
+            try:
+                exif = im._getexif()
+            except Exception:
+                exif = None
+            if exif is not None:
+                for tag, value in exif.items():
+                    decoded = ExifTags.TAGS.get(tag, tag)
+
+                    if decoded == 'Orientation':
+                        if value == 3:
+                            im = im.rotate(180)
+                        elif value == 6:
+                            im = im.rotate(270)
+                        elif value == 8:
+                            im = im.rotate(90)
+
+                        break
+
+            im.thumbnail(size, Image.ANTIALIAS)
+            im.save(dst)
+
+        else:
+            utils.copy_file(src, dst)
+
+    def image_date(self, src):
+        """Try to figure out the date of the image."""
+        if src not in self.dates:
+            im = Image.open(src)
+            try:
+                exif = im._getexif()
+            except Exception:
+                exif = None
+            if exif is not None:
+                for tag, value in exif.items():
+                    decoded = ExifTags.TAGS.get(tag, tag)
+                    if decoded == 'DateTimeOriginal':
+                        try:
+                            self.dates[src] = datetime.datetime.strptime(
+                                value, r'%Y:%m:%d %H:%M:%S')
+                            break
+                        except ValueError:  # Invalid EXIF date.
+                            pass
+        if src not in self.dates:
+            self.dates[src] = datetime.datetime.fromtimestamp(
+                os.stat(src).st_mtime)
+        return self.dates[src]
