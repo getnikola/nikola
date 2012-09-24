@@ -147,7 +147,7 @@ class Galleries(Task):
                     'targets': [orig_dest_path],
                     'actions': [
                         (self.resize_image,
-                            (img, thumb_path, kw['max_image_size']))
+                            (img, orig_dest_path, kw['max_image_size']))
                     ],
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
