@@ -106,8 +106,6 @@ class Galleries(Task):
             # TODO: write this in human
             paths = ['/'.join(['..'] * (len(crumbs) - 1 - i)) for i in
                 range(len(crumbs[:-1]))] + ['#']
-            print paths
-            print crumbs
             crumbs = zip(paths, crumbs)
 
             image_list = [x for x in image_list if "thumbnail" not in x]
