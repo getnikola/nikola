@@ -29,7 +29,7 @@ class CustomEncoder(json.JSONEncoder):
         try:
             return json.JSONEncoder.default(self, obj)
         except TypeError:
-            s = repr(obj).split('0x',1)[0]
+            s = repr(obj).split('0x', 1)[0]
             return s
 
 
@@ -41,14 +41,19 @@ class config_changed(tools.config_changed):
             return self.config
         elif isinstance(self.config, dict):
             data = json.dumps(self.config, cls=CustomEncoder)
-            if isinstance(data, unicode): # pragma: no cover # python3
+            if isinstance(data, unicode):  # pragma: no cover # python3
                 byte_data = data.encode("utf-8")
             else:
                 byte_data = data
             return hashlib.md5(byte_data).hexdigest()
         else:
-            raise Exception(('Invalid type of config_changed parameter got %s' +
-                             ', must be string or dict') % (type(self.config),))
+            raise Exception(
+                ('Invalid type of config_changed parameter got %s' +
+                 ', must be string or dict') % (type(self.config),))
+
+    def __repr__(self):
+        return "Change with config: %s" % json.dumps(
+            self.config, cls=CustomEncoder)
 
 
 def get_theme_path(theme):

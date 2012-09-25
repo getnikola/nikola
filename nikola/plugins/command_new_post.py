@@ -98,4 +98,3 @@ class CommandNewPost(Command):
                 fd.write(u"Write your post here.")
             print "Your post's metadata is at: ", meta_path
         print "Your post's text is at: ", txt_path
-

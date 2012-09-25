@@ -26,8 +26,7 @@ class CopyFiles(Task):
             for task in utils.copy_tree(src, real_dst, link_cutoff=dst):
                 flag = True
                 task['basename'] = self.name
-                task['uptodate'] = task.get('uptodate', []) +\
-                    [utils.config_changed(kw)]
+                task['uptodate'] = [utils.config_changed(kw)]
                 yield utils.apply_filters(task, filters)
         if not flag:
             yield {

@@ -32,7 +32,7 @@ class BuildBundles(LateTask):
             out_dir = os.path.join(kw['output_folder'], os.path.dirname(output))
             inputs = [i for i in inputs if os.path.isfile(
                 os.path.join(out_dir, i))]
-            cache_dir = os.path.join('cache','webassets')
+            cache_dir = os.path.join('cache', 'webassets')
             if not os.path.isdir(cache_dir):
                 os.makedirs(cache_dir)
             env = webassets.Environment(out_dir, os.path.dirname(output),
@@ -44,7 +44,7 @@ class BuildBundles(LateTask):
             env[output].urls()
 
         flag = False
-        if webassets is not None and self.site.config['USE_BUNDLES'] != False:
+        if webassets is not None and self.site.config['USE_BUNDLES'] is not False:
             for name, files in kw['theme_bundles'].items():
                 output_path = os.path.join(kw['output_folder'], name)
                 dname = os.path.dirname(name)

@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import codecs
 from collections import defaultdict
 from copy import copy
-import datetime
 import glob
-import json
 import os
 import sys
 import urlparse
 
-from doit.tools import PythonInteractiveAction
 import lxml.html
 from yapsy.PluginManager import PluginManager
 

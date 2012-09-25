@@ -30,7 +30,6 @@ class CopyAssets(Task):
                 if task['name'] in tasks:
                     continue
                 tasks[task['name']] = task
-                task['uptodate'] = task.get('uptodate', []) + \
-                    [utils.config_changed(kw)]
+                task['uptodate'] = [utils.config_changed(kw)]
                 task['basename'] = self.name
                 yield utils.apply_filters(task, kw['filters'])

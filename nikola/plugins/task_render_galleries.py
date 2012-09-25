@@ -99,7 +99,7 @@ class Galleries(Task):
 
             # List of sub-galleries
             folder_list = [x.split(os.sep)[-2] for x in
-                glob.glob(os.path.join(gallery_path , '*') + os.sep)]
+                glob.glob(os.path.join(gallery_path, '*') + os.sep)]
 
             crumbs = gallery_path.split(os.sep)[:-1]
             crumbs.append(os.path.basename(gallery_name))
@@ -233,14 +233,15 @@ class Galleries(Task):
 
             yield {
                 'basename': 'render_galleries',
-                'name': gallery_path,
+                'name': output_name,
                 'file_dep': file_dep,
                 'targets': [output_name],
                 'actions': [(render_gallery,
                     (output_name, context, index_dst_path))],
                 'clean': True,
-                'uptodate': [utils.config_changed(kw),
-                    utils.config_changed(self.site.config['GLOBAL_CONTEXT'])],
+                'uptodate': [utils.config_changed({
+                    1: kw,
+                    2: self.site.config['GLOBAL_CONTEXT']})],
             }
 
     def resize_image(self, src, dst, max_size):

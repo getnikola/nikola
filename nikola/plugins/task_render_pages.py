@@ -1,4 +1,5 @@
 from nikola.plugin_categories import Task
+from nikola.utils import config_changed
 
 
 class RenderPages(Task):
@@ -19,9 +20,9 @@ class RenderPages(Task):
             for wildcard, destination, template_name, _ in kw["post_pages"]:
                 for task in self.site.generic_page_renderer(lang,
                     wildcard, template_name, destination, kw["filters"]):
-                    # TODO: enable or remove
-                    #task['uptodate'] = task.get('uptodate', []) +\
-                        #[config_changed(kw)]
+                    task['uptodate'] = [config_changed({
+                        1: task['uptodate'][0].config,
+                        2: kw})]
                     task['basename'] = self.name
                     flag = True
                     yield task
