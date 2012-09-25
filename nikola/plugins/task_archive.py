@@ -43,7 +43,7 @@ class Archive(Task):
                     kw['filters'],
                     context,
                 ):
-                    task['uptodate'] = task.get('updtodate', []) +\
+                    task['uptodate'] = task.get('uptodate', []) +\
                                        [config_changed(kw)]
                     task['basename'] = self.name
                     yield task
@@ -69,7 +69,7 @@ class Archive(Task):
                 kw['filters'],
                 context,
             ):
-                task['uptodate'] = task.get('updtodate', []) +\
+                task['uptodate'] = task.get('uptodate', []) +\
                     [config_changed(kw)]
                 task['basename'] = self.name
                 yield task

@@ -74,7 +74,7 @@ class Indexes(Task):
                     kw['filters'],
                     context,
                 ):
-                    task['uptodate'] = task.get('updtodate', []) +\
+                    task['uptodate'] = task.get('uptodate', []) +\
                                     [config_changed(kw)]
                     task['basename'] = 'render_indexes'
                     yield task

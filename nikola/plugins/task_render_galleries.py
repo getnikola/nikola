@@ -239,7 +239,8 @@ class Galleries(Task):
                 'actions': [(render_gallery,
                     (output_name, context, index_dst_path))],
                 'clean': True,
-                'uptodate': [utils.config_changed(kw)],
+                'uptodate': [utils.config_changed(kw),
+                    utils.config_changed(self.site.config['GLOBAL_CONTEXT'])],
             }
 
     def resize_image(self, src, dst, max_size):

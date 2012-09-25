@@ -69,6 +69,10 @@ class Listings(Task):
                     'file_dep': template_deps + [in_name],
                     'targets': [out_name],
                     'actions': [(render_listing, [in_name, out_name])],
+                    # This is necessary to reflect changes in blog title,
+                    # sidebar links, etc.
+                    'uptodate': [utils.config_changed(
+                        self.site.config['GLOBAL_CONTEXT'])]
                 }
         if flag:
             yield {

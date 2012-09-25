@@ -6,7 +6,7 @@ import hashlib
 import os
 import re
 import codecs
-from pickle import dumps
+import json
 import shutil
 import string
 import subprocess
@@ -24,6 +24,15 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
     'apply_filters', 'config_changed']
 
 
+class CustomEncoder(json.JSONEncoder):
+    def default(self, obj):
+        try:
+            return json.JSONEncoder.default(self, obj)
+        except TypeError:
+            s = repr(obj).split('0x',1)[0]
+            return s
+
+
 class config_changed(tools.config_changed):
     """ A copy of doit's but using pickle instead of serializing manually."""
 
@@ -31,7 +40,7 @@ class config_changed(tools.config_changed):
         if isinstance(self.config, basestring):
             return self.config
         elif isinstance(self.config, dict):
-            data = dumps(self.config)
+            data = json.dumps(self.config, cls=CustomEncoder)
             if isinstance(data, unicode): # pragma: no cover # python3
                 byte_data = data.encode("utf-8")
             else:

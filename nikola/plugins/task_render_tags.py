@@ -118,7 +118,7 @@ class RenderTags(Task):
                             kw['filters'],
                             context,
                         ):
-                            task['uptodate'] = task.get('updtodate', []) +\
+                            task['uptodate'] = task.get('uptodate', []) +\
                                             [utils.config_changed(kw)]
                             task['basename'] = self.name
                             yield task
@@ -144,7 +144,7 @@ class RenderTags(Task):
                         kw['filters'],
                         context,
                     ):
-                        task['uptodate'] = task.get('updtodate', []) +\
+                        task['uptodate'] = task.get('uptodate', []) +\
                                         [utils.config_changed(kw)]
                         task['basename'] = self.name
                         yield task
@@ -170,6 +170,6 @@ class RenderTags(Task):
                 kw['filters'],
                 context,
             ):
-                task['uptodate'] = task.get('updtodate', []) +\
+                task['uptodate'] = task.get('uptodate', []) +\
                     [utils.config_changed(kw)]
                 yield task

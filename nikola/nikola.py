@@ -5,6 +5,7 @@ from collections import defaultdict
 from copy import copy
 import datetime
 import glob
+import json
 import os
 import sys
 import urlparse
@@ -460,6 +461,7 @@ class Nikola(object):
                 deps_dict['NEXT_LINK'] = [post.next_post.permalink(lang)]
             deps_dict['OUTPUT_FOLDER'] = self.config['OUTPUT_FOLDER']
             deps_dict['TRANSLATIONS'] = self.config['TRANSLATIONS']
+            deps_dict['global'] = self.config['GLOBAL_CONTEXT']
 
             task = {
                 'name': output_name.encode('utf-8'),
@@ -491,6 +493,7 @@ class Nikola(object):
         deps_context = copy(context)
         deps_context["posts"] = [(p.titles[lang], p.permalink(lang))
             for p in posts]
+        deps_context["global"] = self.config['GLOBAL_CONTEXT']
         task = {
             'name': output_name.encode('utf8'),
             'targets': [output_name],
