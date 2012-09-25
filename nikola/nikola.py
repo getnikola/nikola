@@ -192,8 +192,12 @@ class Nikola(object):
         return compile_html
 
     def render_template(self, template_name, output_name, context):
+        local_context = {}
+        local_context["template_name"] = template_name
+        local_context.update(self.config['GLOBAL_CONTEXT'])
+        local_context.update(context)
         data = self.template_system.render_template(
-            template_name, None, context, self.GLOBAL_CONTEXT)
+            template_name, None, local_context)
 
         assert output_name.startswith(self.config["OUTPUT_FOLDER"])
         url_part = output_name[len(self.config["OUTPUT_FOLDER"]) + 1:]

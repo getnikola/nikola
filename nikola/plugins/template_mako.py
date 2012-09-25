@@ -40,16 +40,11 @@ class MakoTemplates(TemplateSystem):
             output_encoding='utf-8',
             )
 
-    def render_template(self, template_name, output_name,
-        context, global_context):
+    def render_template(self, template_name, output_name, context):
         """Render the template into output_name using context."""
 
         template = self.lookup.get_template(template_name)
-        local_context = {}
-        local_context["template_name"] = template_name
-        local_context.update(global_context)
-        local_context.update(context)
-        data = template.render_unicode(**local_context)
+        data = template.render_unicode(**context)
         if output_name is not None:
             try:
                 os.makedirs(os.path.dirname(output_name))

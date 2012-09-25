@@ -190,9 +190,8 @@ a stub for a hypothetical system called "Templater":
         # The method that does the actual rendering.
         # template_name is the name of the template file,
         # output_name is the file for the output, context
-        # and global_context are dictionaries containing
-        # the data the template must use for rendering.
-        # context takes priority over global_context.
+        # is a dictionary containing the data the template 
+        # uses for rendering.
 
         def render_template(self, template_name, output_name,
             context, global_context):

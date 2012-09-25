@@ -66,8 +66,8 @@ class TemplateSystem(object):
         """Returns filenames which are dependencies for a template."""
         raise Exception("Implement Me First")
 
-    def render_template(name, output_name, context, global_context):
-        """Renders template to a file using contexts.
+    def render_template(name, output_name, context):
+        """Renders template to a file using context.
 
         This must save the data to output_name *and* return it
         so that the caller may do additional processing.
