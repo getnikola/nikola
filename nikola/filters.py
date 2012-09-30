@@ -47,10 +47,15 @@ def runinplace(command, infile):
 
     tmpdir = tempfile.mkdtemp()
     tmpfname = os.path.join(tmpdir, os.path.basename(infile))
-    command = command.replace('%1', infile)
-    command = command.replace('%2', tmpfname)
+    command = command.replace('%1', "'%s'" % infile)
+
+    needs_tmp = "%2" in command
+    command = command.replace('%2', "'%s'"% tmpfname)
+
     subprocess.check_call(command, shell=True)
-    shutil.move(tmpfname, infile)
+
+    if needs_tmp:
+        shutil.move(tmpfname, infile)
 
 
 def yui_compressor(infile):
