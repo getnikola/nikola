@@ -25,6 +25,7 @@
 """Utility functions to help you run filters on files."""
 
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -66,3 +67,34 @@ def optipng(infile):
 
 def jpegoptim(infile):
     return runinplace(r"jpegoptim -p --strip-all -q %1",infile)
+
+def tidy(inplace):
+    # Goggle site verifcation files are no HTML
+    if re.match(r"google[a-f0-9]+.html", os.path.basename(inplace)) \
+       and open(inplace).readline().startswith("google-site-verification:"):
+        return
+
+    # Tidy will give error exits, that we will ignore.
+    output = subprocess.check_output( "tidy -m -w 90 --indent no --quote-marks no --keep-time yes --tidy-mark no '%s'; exit 0" % inplace, stderr = subprocess.STDOUT, shell = True )
+
+    for line in output.split( "\n" ):
+        if "Warning:" in line:
+            if '<meta> proprietary attribute "charset"' in line:
+                # We want to set it though.
+                continue
+            elif '<meta> lacks "content" attribute' in line:
+                # False alarm to me.
+                continue
+            elif '<div> anchor' in line and 'already defined' in line:
+                # Some seeming problem with JavaScript terminators.
+                continue
+            elif '<img> lacks "alt" attribute' in line:
+                # Happens in gallery code, probably can be tolerated.
+                continue
+            elif '<table> lacks "summary" attribute' in line:
+                # Happens for tables, TODO: Check this is normal.
+                continue
+            else:
+                assert False, (inplace,line)
+        elif "Error:" in line:
+            assert False, line
