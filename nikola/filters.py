@@ -63,3 +63,6 @@ def yui_compressor(infile):
 
 def optipng(infile):
     return runinplace(r"optipng -preserve -o2 -quiet %1", infile)
+
+def jpegoptim(infile):
+    return runinplace(r"jpegoptim -p --strip-all -q %1",infile)
