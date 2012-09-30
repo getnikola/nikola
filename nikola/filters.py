@@ -60,3 +60,6 @@ def runinplace(command, infile):
 
 def yui_compressor(infile):
     return runinplace(r'yui-compressor %1 -o %2', infile)
+
+def optipng(infile):
+    return runinplace(r"optipng -preserve -o2 -quiet %1", infile)
