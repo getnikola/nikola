@@ -15,6 +15,7 @@ Bugfixes
 * Fixed doc installation
 * Put webassets cache in cache/webassets
 * Update to doit 0.17
+* Don't crash on incomplete translations
 
 New in Version 4.0.3
 ====================

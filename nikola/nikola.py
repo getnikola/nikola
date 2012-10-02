@@ -80,10 +80,6 @@ class Nikola(object):
         self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
             {self.config['DEFAULT_LANG']: ''})
 
-        # FIXME: find  way to achieve this with the plugins
-        #if self.config['USE_BUNDLES'] and not webassets:
-            #self.config['USE_BUNDLES'] = False
-
         self.GLOBAL_CONTEXT = self.config.get('GLOBAL_CONTEXT', {})
         self.THEMES = utils.get_theme_chain(self.config['THEME'])
 

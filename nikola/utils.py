@@ -157,14 +157,23 @@ def load_messages(themes, translations):
     and "younger" themes have priority.
     """
     messages = defaultdict(dict)
+    warned = []
     for theme_name in themes[::-1]:
         msg_folder = os.path.join(get_theme_path(theme_name), 'messages')
         oldpath = sys.path
         sys.path.insert(0, msg_folder)
+        english = __import__('en')
         for lang in translations.keys():
             # If we don't do the reload, the module is cached
             translation = __import__(lang)
             reload(translation)
+            if sorted(translation.MESSAGES.keys()) !=\
+                sorted(english.MESSAGES.keys()) and \
+                lang not in warned:
+                # FIXME: get real logging in place
+                print "Warning: Incomplete translation for language '%s'." % lang
+                warned.append(lang)
+            messages[lang].update(english.MESSAGES)
             messages[lang].update(translation.MESSAGES)
             del(translation)
         sys.path = oldpath
