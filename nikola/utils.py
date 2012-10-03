@@ -225,9 +225,9 @@ def generic_rss_renderer(lang, title, link, description,
     for post in timeline[:10]:
         args = {
             'title': post.title(lang),
-            'link': post.permalink(lang),
+            'link': post.permalink(lang, absolute=True),
             'description': post.text(lang, teaser_only=True),
-            'guid': post.permalink(lang),
+            'guid': post.permalink(lang, absolute=True),
             'pubDate': post.date,
         }
         items.append(rss.RSSItem(**args))
