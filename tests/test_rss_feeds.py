@@ -8,6 +8,7 @@ import mock
 
 from context import nikola
 from lxml.etree import ElementTree
+from lxml import etree
 
 
 class RSSFeedTest(unittest.TestCase):
@@ -66,6 +67,18 @@ class RSSFeedTest(unittest.TestCase):
 
                     self.assertTrue(os.path.exists(self.feed_filename),
                                     'No feed was created!')
+
+                    with open('rss-2_0.xsd', 'r') as rss20_schema_file:
+                        parser = etree.XMLParser(dtd_validation=True)
+
+                        schema_root = etree.XML(''.join(rss20_schema_file.readlines()))
+                        schema = etree.XMLSchema(schema_root)
+                        parser = etree.XMLParser(schema = schema)
+
+                        with open(self.feed_filename, 'r') as feed_file:
+                            # parsing the created file with the parser will
+                            # throw errors if the scheme is not followed
+                            root = etree.fromstringlist(feed_file.readlines(), parser)
 
                     et = ElementTree(file=self.feed_filename)
                     channel = et.find('channel')
