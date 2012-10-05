@@ -14,6 +14,7 @@ from lxml import etree
 class RSSFeedTest(unittest.TestCase):
     def setUp(self):
         self.feed_filename = 'testfeed.rss'
+        self.blog_url = "http://some.blog"
 
         def get_metadata(*args, **kwargs):
             return ('post title', 'awesome_article',
@@ -32,12 +33,12 @@ class RSSFeedTest(unittest.TestCase):
                                                       True,
                                                       {'en': ''},
                                                       'en',
-                                                      'http://foo.bar',
+                                                      self.blog_url,
                                                       'unused message.')
 
                     nikola.nikola.utils.generic_rss_renderer('en',
                                                              "blog_title",
-                                                             "http://some.blog/",
+                                                             self.blog_url,
                                                              "blog_description",
                                                              [example_post, ],
                                                              self.feed_filename)
@@ -47,7 +48,8 @@ class RSSFeedTest(unittest.TestCase):
 
     def tearDown(self):
         if os.path.exists(self.feed_filename):
-            os.remove(self.feed_filename)
+            #os.remove(self.feed_filename)
+            pass
 
     def test_feed_items_have_valid_URLs(self):
         '''The items in the feed need to have valid urls in link and guid.'''
@@ -72,12 +74,14 @@ class RSSFeedTest(unittest.TestCase):
         # As stated by W3 FEED Validator: "link must be a full and valid URL"
         self.assertTrue(is_valid_URL(link.text),
                         'The following URL is not valid: %s' % link.text)
+        self.assertTrue(self.blog_url in link.text)
 
         # "guid must be a full URL, unless isPermaLink attribute
         # is false: /weblog/posts/the-minimal-server.html "
         self.assertTrue(is_valid_URL(guid.text),
                         'The following URL is not valid: %s' %
                         guid.text)
+        self.assertTrue(self.blog_url in guid.text)
 
     def test_feed_is_valid(self):
         '''
