@@ -16,17 +16,15 @@ class RSSFeedTest(unittest.TestCase):
         self.feed_filename = 'testfeed.rss'
         self.blog_url = "http://some.blog"
 
-        def get_metadata(*args, **kwargs):
-            return ('post title', 'awesome_article',
-                    '2012-10-01 22:41', 'tags', 'link', 'description')
-
-        def get_post_text(*args, **kwargs):
-            return 'some long text'
-
-        with mock.patch('nikola.nikola.utils.get_meta', get_metadata):
+        with mock.patch('nikola.nikola.utils.get_meta',
+                        mock.Mock(return_value=('post title',
+                                                'awesome_article',
+                                                '2012-10-01 22:41', 'tags',
+                                                'link', 'description'))):
             with mock.patch('nikola.nikola.utils.os.path.isdir',
                             mock.Mock(return_value=True)):
-                with mock.patch('nikola.nikola.Post.text', get_post_text):
+                with mock.patch('nikola.nikola.Post.text',
+                                mock.Mock(return_value='some long text')):
 
                     example_post = nikola.nikola.Post('source.file',
                                                       'blog_folder',
