@@ -48,8 +48,7 @@ class RSSFeedTest(unittest.TestCase):
 
     def tearDown(self):
         if os.path.exists(self.feed_filename):
-            #os.remove(self.feed_filename)
-            pass
+            os.remove(self.feed_filename)
 
     def test_feed_items_have_valid_URLs(self):
         '''The items in the feed need to have valid urls in link and guid.'''
