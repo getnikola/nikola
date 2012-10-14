@@ -95,7 +95,7 @@ class RenderTags(Task):
                         output_name = os.path.join(kw['output_folder'],
                             page_name(tag, i, lang))
                         context["title"] = kw["messages"][lang][
-                            u"Posts about %s:"] % tag
+                            u"Posts about %s"] % tag
                         context["prevlink"] = None
                         context["nextlink"] = None
                         context['index_teasers'] = kw['index_teasers']
@@ -131,7 +131,7 @@ class RenderTags(Task):
                     context = {}
                     context["lang"] = lang
                     context["title"] = kw["messages"][lang][
-                        u"Posts about %s:"] % tag
+                        u"Posts about %s"] % tag
                     context["items"] = [("[%s] %s" % (post.date,
                         post.title(lang)),
                         post.permalink(lang)) for post in post_list]
