@@ -52,7 +52,7 @@
         {% block belowtitle%}
         {% if translations|length > 1 %}
         <small>
-            {{ messages[lang]["Also available in: "] }}
+            {{ messages[lang]["Also available in"] }}:&nbsp; 
             {% for langname in translations.keys() %}
                 {% if langname != lang %}
                     <a href="{{_link("index", None, langname)}}">{{messages[langname]["LANGUAGE"]}}</a>

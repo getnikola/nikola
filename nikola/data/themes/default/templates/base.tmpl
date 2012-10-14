@@ -53,7 +53,7 @@
         <%block name="belowtitle">
         %if len(translations) > 1:
         <small>
-            ${(messages[lang][u"Also available in: "])}
+            ${(messages[lang][u"Also available in"])}:&nbsp;
             %for langname in translations.keys():
                 %if langname != lang:
                     <a href="${_link("index", None, langname)}">${messages[langname]["LANGUAGE"]}</a>
