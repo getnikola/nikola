@@ -16,6 +16,7 @@ Bugfixes
 * Put webassets cache in cache/webassets
 * Update to doit 0.17
 * Don't crash on incomplete translations
+* Fixed Issue 160: render_tags didn't call scan_posts()
 
 New in Version 4.0.3
 ====================

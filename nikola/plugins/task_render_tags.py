@@ -26,6 +26,8 @@ class RenderTags(Task):
             "index_teasers": self.site.config['INDEX_TEASERS'],
         }
 
+        self.site.scan_posts()
+
         if not self.site.posts_per_tag:
             yield {
                     'basename': self.name,
