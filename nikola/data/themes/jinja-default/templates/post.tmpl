@@ -7,7 +7,7 @@
     {% endif %}
     <hr>
     <small>
-        {{messages[lang]["Posted:"]}} {{post.date}}&nbsp;&nbsp;|&nbsp;&nbsp;
+        {{messages[lang]["Posted"]}}: {{post.date}}&nbsp;&nbsp;|&nbsp;&nbsp;
 
         {% if translations|length > 1 %}
             {% for langname in translations.keys() %}
@@ -31,12 +31,12 @@
     <ul class="pager">
     {%if post.prev_post %}
         <li class="previous">
-            <a href="{{rel_link(permalink, post.prev_post.permalink(lang))}}">{{messages[lang]["&larr; Previous post"]}}</a>
+            <a href="{{rel_link(permalink, post.prev_post.permalink(lang))}}">&larr; {{messages[lang]["Previous post"]}}</a>
         </li>
     {% endif %}
     {%if post.next_post %}
         <li class="next">
-            <a href="{{rel_link(permalink, post.next_post.permalink(lang))}}">{{messages[lang]["Next post &rarr;"]}}</a>
+            <a href="{{rel_link(permalink, post.next_post.permalink(lang))}}">{{messages[lang]["Next post"]}} &rarr;</a>
         </li>
     {% endif %}
     </ul>
