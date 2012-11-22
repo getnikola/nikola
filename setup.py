@@ -7,9 +7,11 @@
 # http://www.opensource.org/licenses/mit-license.php
 
 import os
+import subprocess
 import sys
 from fnmatch import fnmatchcase
 from distutils.util import convert_path
+from distutils.command.install import install
 
 dependencies = [
     'doit>=0.16.1',
@@ -28,6 +30,34 @@ dependencies = [
 standard_exclude = ('*.pyc', '*$py.class', '*~', '.*', '*.bak')
 standard_exclude_directories = ('.*', 'CVS', '_darcs', './build',
                                 './dist', 'EGG-INFO', '*.egg-info')
+
+
+def install_manpages(prefix):
+    man_pages = [
+        ('docs/man/nikola.1', 'share/man/man1/nikola.1'),
+    ]
+    join = os.path.join
+    normpath = os.path.normpath
+    for src, dst in man_pages:
+        path_dst = join(normpath(prefix), normpath(dst))
+        try:
+            os.makedirs(os.path.dirname(path_dst))
+        except OSError:
+            pass
+        rst2man_cmd = ['rst2man.py', 'rst2man']
+        for rst2man in rst2man_cmd:
+            try:
+                subprocess.call([rst2man, src, path_dst])
+            except OSError:
+                continue
+            else:
+                break
+
+
+class nikola_install(install):
+    def run(self):
+        install.run(self)
+        install_manpages(self.prefix)
 
 
 def find_package_data(
@@ -121,8 +151,11 @@ setup(name='Nikola',
       scripts=['scripts/nikola'],
       install_requires=dependencies,
       package_data=find_package_data(),
-      data_files=[('share/doc/nikola', [
-        'docs/manual.txt',
-        'docs/theming.txt',
-        'docs/extending.txt'])],
+      cmdclass={'install': nikola_install},
+      data_files=[
+              ('share/doc/nikola', [
+                      'docs/manual.txt',
+                      'docs/theming.txt',
+                      'docs/extending.txt']),
+      ],
      )

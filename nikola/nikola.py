@@ -80,26 +80,10 @@ class Nikola(object):
         self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
             {self.config['DEFAULT_LANG']: ''})
 
-        # FIXME: find  way to achieve this with the plugins
-        #if self.config['USE_BUNDLES'] and not webassets:
-            #self.config['USE_BUNDLES'] = False
-
-        self.GLOBAL_CONTEXT = self.config.get('GLOBAL_CONTEXT', {})
         self.THEMES = utils.get_theme_chain(self.config['THEME'])
 
         self.MESSAGES = utils.load_messages(self.THEMES,
             self.config['TRANSLATIONS'])
-        self.GLOBAL_CONTEXT['messages'] = self.MESSAGES
-
-        self.GLOBAL_CONTEXT['_link'] = self.link
-        self.GLOBAL_CONTEXT['rel_link'] = self.rel_link
-        self.GLOBAL_CONTEXT['abs_link'] = self.abs_link
-        self.GLOBAL_CONTEXT['exists'] = self.file_exists
-        self.GLOBAL_CONTEXT['add_this_buttons'] = self.config[
-            'ADD_THIS_BUTTONS']
-        self.GLOBAL_CONTEXT['index_display_post_count'] = self.config[
-            'INDEX_DISPLAY_POST_COUNT']
-        self.GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
 
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,
@@ -131,6 +115,19 @@ class Nikola(object):
         for pluginInfo in self.plugin_manager.getPluginsOfCategory("LateTask"):
             self.plugin_manager.activatePluginByName(pluginInfo.name)
             pluginInfo.plugin_object.set_site(self)
+
+        # set global_context for template rendering
+        self.GLOBAL_CONTEXT = self.config.get('GLOBAL_CONTEXT', {})
+        self.GLOBAL_CONTEXT['messages'] = self.MESSAGES
+        self.GLOBAL_CONTEXT['_link'] = self.link
+        self.GLOBAL_CONTEXT['rel_link'] = self.rel_link
+        self.GLOBAL_CONTEXT['abs_link'] = self.abs_link
+        self.GLOBAL_CONTEXT['exists'] = self.file_exists
+        self.GLOBAL_CONTEXT['add_this_buttons'] = self.config[
+            'ADD_THIS_BUTTONS']
+        self.GLOBAL_CONTEXT['index_display_post_count'] = self.config[
+            'INDEX_DISPLAY_POST_COUNT']
+        self.GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
 
         # Load template plugin
         template_sys_name = utils.get_template_engine(self.THEMES)
