@@ -17,6 +17,8 @@ Bugfixes
 * Update to doit 0.17
 * Don't crash on incomplete translations
 * Fixed Issue 160: render_tags didn't call scan_posts()
+* Fixed Issue 161: webassets setting USE_BUNDLES was ignored (fix by schettino72)
+* Fixed Issue 153: index.txt was being ignored in galleries.
 
 New in Version 4.0.3
 ====================

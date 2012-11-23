@@ -2,6 +2,7 @@ import codecs
 import datetime
 import glob
 import os
+import uuid
 
 Image = None
 try:
@@ -205,12 +206,15 @@ class Galleries(Task):
             # Use galleries/name/index.txt to generate a blurb for
             # the gallery, if it exists
             index_path = os.path.join(gallery_path, "index.txt")
-            index_dst_path = os.path.join(gallery_path, "index.html")
+            cache_dir = os.path.join('cache', 'galleries')
+            if not os.path.isdir(cache_dir):
+                os.makedirs(cache_dir)                
+            index_dst_path = os.path.join(cache_dir, unicode(uuid.uuid1())+'.html')
             if os.path.exists(index_path):
                 compile_html = self.site.get_compiler(index_path)
                 yield {
                     'basename': 'render_galleries',
-                    'name': output_name.encode('utf-8'),
+                    'name': index_dst_path.encode('utf-8'),
                     'file_dep': [index_path],
                     'targets': [index_dst_path],
                     'actions': [(compile_html,
