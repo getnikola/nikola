@@ -9,11 +9,7 @@ __author__ = "Andrew Dalke <dalke@dalkescientific.com>"
 _generator_name = __name__ + "-" + ".".join(map(str, __version__))
 
 import datetime
-try:
-    import cStringIO
-    StringIO = cStringIO
-except ImportError:
-    import StringIO
+import io
 
 # Could make this the base class; will need to add 'publish'
 class WriteXmlMixin:
@@ -25,7 +21,7 @@ class WriteXmlMixin:
         handler.endDocument()
 
     def to_xml(self, encoding = "iso-8859-1"):
-        f = StringIO.StringIO()
+        f = io.StringIO()
         self.write_xml(f, encoding)
         return f.getvalue()
 
