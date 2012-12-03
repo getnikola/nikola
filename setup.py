@@ -14,7 +14,7 @@ from distutils.util import convert_path
 from distutils.command.install import install
 
 dependencies = [
-    'doit>=0.16.1',
+    'doit>=0.18.1',
     'pygments',
     'pillow',
     'docutils',
@@ -142,7 +142,7 @@ def find_package_data(
 from distutils.core import setup
 
 setup(name='Nikola',
-      version='4.0.3',
+      version='5',
       description='Static blog/website generator',
       author='Roberto Alsina and others',
       author_email='ralsina@netmanagers.com.ar',

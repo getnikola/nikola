@@ -1,7 +1,7 @@
 Theming Nikola
 ==============
 
-:Version: 2.1+svn
+:Version: 5
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-info pull-right
