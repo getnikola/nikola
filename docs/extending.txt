@@ -52,7 +52,7 @@ Each and every one of those is a plugin. Let's look at a typical example:
 
 First, the ``command_serve.plugin`` file:
 
-.. code_block:: init
+.. code-block:: init
 
     [Core]
     Name = serve
@@ -68,7 +68,7 @@ For your own plugin, just change the values in a sensible way. The
 ``Module`` will be used to find the matching python module, in this case
 ``command_serve.py``, from which this is the interesting bit:
 
-.. code_block:: python
+.. code-block:: python
 
     from nikola.plugin_categories import Command
 
@@ -144,7 +144,7 @@ Nikola supports Mako and Jinja2. If you prefer some other templating
 system, then you will have to write a TemplateSystem plugin. Here's how they work.
 First, you have to create a .plugin file. Here's the one for the Mako plugin:
 
-.. code_block:: ini
+.. code-block:: ini
 
     [Core]
     Name = mako
@@ -162,7 +162,7 @@ in the obvious ways.
 The "Module" option is the name of the module, which has to look something like this,
 a stub for a hypothetical system called "Templater":
 
-.. code_block:: python
+.. code-block:: python
 
     from nikola.plugin_categories import TemplateSystem
 
@@ -240,7 +240,7 @@ document, so I'll just leave you with an example, the ``copy_assets`` task.
 First the ``task_copy_assets.plugin`` file, which you should copy and edit
 in the logical ways:
 
-.. code_block:: ini
+.. code-block:: ini
 
     [Core]
     Name = copy_assets
@@ -254,7 +254,7 @@ in the logical ways:
 
 And the ``task_copy_assets.py`` file, in its entirety:
 
-.. code_block:: python
+.. code-block:: python
 
     import os
 
