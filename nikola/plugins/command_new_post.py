@@ -90,7 +90,7 @@ class CommandNewPost(Command):
                 fd.write('.. description: \n')
                 if post_format == 'markdown':
                     fd.write('-->\n')
-                fd.write(u"Write your post here.")
+                fd.write(u"\nWrite your post here.")
         else:
             with codecs.open(meta_path, "wb+", "utf8") as fd:
                 fd.write(data)
