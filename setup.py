@@ -23,6 +23,7 @@ dependencies = [
     'lxml',
     'yapsy',
     'configparser',
+    'mock>=1.0.0',
 ]
 
 # Provided as an attribute, so you can append to these instead
