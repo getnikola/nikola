@@ -4,7 +4,7 @@ New in Master
 Features
 --------
 
-* New option CACHE_DIR
+* New option CACHE_FOLDER
 
 Bugfixes
 --------
