@@ -12,7 +12,7 @@ class JinjaTemplates(TemplateSystem):
     name = "jinja"
     lookup = None
 
-    def set_directories(self, directories):
+    def set_directories(self, directories, cache_folder):
         """Createa  template lookup."""
         self.lookup = jinja2.Environment(loader=jinja2.FileSystemLoader(
             directories,

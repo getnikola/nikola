@@ -14,7 +14,7 @@ class Post(object):
 
     """Represents a blog post or web page."""
 
-    def __init__(self, source_path, destination, use_in_feeds,
+    def __init__(self, source_path, cache_folder, destination, use_in_feeds,
         translations, default_lang, blog_url, messages):
         """Initialize post.
 
@@ -32,7 +32,7 @@ class Post(object):
         self.source_path = source_path  # posts/blah.txt
         self.post_name = os.path.splitext(source_path)[0]  # posts/blah
         # cache/posts/blah.html
-        self.base_path = os.path.join('cache', self.post_name + ".html")
+        self.base_path = os.path.join(cache_folder, self.post_name + ".html")
         self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
         self.folder = destination
         self.translations = translations

@@ -25,6 +25,7 @@ class RSSFeedTest(unittest.TestCase):
                                 mock.Mock(return_value='some long text')):
 
                     example_post = nikola.nikola.Post('source.file',
+                                                      'cache',
                                                       'blog_folder',
                                                       True,
                                                       {'en': ''},

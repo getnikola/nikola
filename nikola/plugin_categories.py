@@ -58,8 +58,8 @@ class TemplateSystem(object):
 
     name = "dummy templates"
 
-    def set_directories(self, directories):
-        """Sets the list of folders where templates are located."""
+    def set_directories(self, directories, cache_folder):
+        """Sets the list of folders where templates are located and cache."""
         raise Exception("Implement Me First")
 
     def template_deps(self, template_name):

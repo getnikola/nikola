@@ -56,6 +56,7 @@ class Nikola(object):
             'ARCHIVE_FILENAME': "archive.html",
             'DEFAULT_LANG': "en",
             'OUTPUT_FOLDER': 'output',
+            'CACHE_FOLDER': 'cache',
             'FILES_FOLDERS': {'files': ''},
             'LISTINGS_FOLDER': 'listings',
             'ADD_THIS_BUTTONS': True,
@@ -138,9 +139,10 @@ class Nikola(object):
                 % template_sys_name)
             sys.exit(1)
         self.template_system = pi.plugin_object
-        self.template_system.set_directories(
-            [os.path.join(utils.get_theme_path(name), "templates")
-                for name in self.THEMES])
+        lookup_dirs = [os.path.join(utils.get_theme_path(name), "templates")
+                       for name in self.THEMES]
+        self.template_system.set_directories(lookup_dirs,
+                                             self.config['CACHE_FOLDER'])
 
         # Load compiler plugins
         self.compilers = {}
@@ -394,7 +396,11 @@ class Nikola(object):
                     self.config['post_pages']:
                 print ".",
                 for base_path in glob.glob(wildcard):
-                    post = Post(base_path, destination, use_in_feeds,
+                    post = Post(
+                        base_path,
+                        self.config['CACHE_FOLDER'],
+                        destination,
+                        use_in_feeds,
                         self.config['TRANSLATIONS'],
                         self.config['DEFAULT_LANG'],
                         self.config['BLOG_URL'],
