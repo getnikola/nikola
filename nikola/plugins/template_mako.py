@@ -29,9 +29,9 @@ class MakoTemplates(TemplateSystem):
             # TODO: include tags are not handled
         return deps
 
-    def set_directories(self, directories):
+    def set_directories(self, directories, cache_folder):
         """Createa  template lookup."""
-        cache_dir = os.path.join('cache', '.mako.tmp')
+        cache_dir = os.path.join(cache_folder, '.mako.tmp')
         if os.path.exists(cache_dir):
             shutil.rmtree(cache_dir)
         self.lookup = TemplateLookup(

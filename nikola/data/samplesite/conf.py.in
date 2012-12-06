@@ -135,6 +135,10 @@ DEPLOY_COMMANDS = []
 
 OUTPUT_FOLDER = 'output'
 
+# where the "cache" of partial generated content should be located
+# default: 'cache'
+CACHE_FOLDER = 'cache'
+
 # Filters to apply to the output.
 # A directory where the keys are either: a file extensions, or
 # a tuple of file extensions.

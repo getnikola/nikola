@@ -33,6 +33,7 @@ class Galleries(Task):
             'thumbnail_size': self.site.config['THUMBNAIL_SIZE'],
             'max_image_size': self.site.config['MAX_IMAGE_SIZE'],
             'output_folder': self.site.config['OUTPUT_FOLDER'],
+            'cache_folder': self.site.config['CACHE_FOLDER'],
             'default_lang': self.site.config['DEFAULT_LANG'],
             'blog_description': self.site.config['BLOG_DESCRIPTION'],
             'use_filename_as_title': self.site.config['USE_FILENAME_AS_TITLE'],
@@ -206,7 +207,7 @@ class Galleries(Task):
             # Use galleries/name/index.txt to generate a blurb for
             # the gallery, if it exists
             index_path = os.path.join(gallery_path, "index.txt")
-            cache_dir = os.path.join('cache', 'galleries')
+            cache_dir = os.path.join(kw["cache_folder"], 'galleries')
             if not os.path.isdir(cache_dir):
                 os.makedirs(cache_dir)                
             index_dst_path = os.path.join(cache_dir, unicode(uuid.uuid1())+'.html')
