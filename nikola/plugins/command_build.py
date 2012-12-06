@@ -29,4 +29,11 @@ def task_render_site():
     return SITE.gen_tasks()
             ''')
             dodo.flush()
-            os.system('doit -f %s -d . %s' % (dodo.name, ' '.join(args)))
+            first = args[0] if args else None
+            if first in ('auto', 'clean', 'forget', 'ignore', 'list', 'run'):
+                cmd = first
+                args = args[1:]
+            else:
+                cmd = 'run'
+            os.system('doit %s -f %s -d . %s' % (cmd, dodo.name, ' '.join(args)))
+
