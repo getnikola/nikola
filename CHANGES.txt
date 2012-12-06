@@ -1,11 +1,18 @@
 New in Master
 =============
 
+Features
+--------
+
+* New option CACHE_DIR
 
 Bugfixes
 --------
 
 * Added newline after metadata in new_post template.
+* Issue 112: RSS feeds contained invalid links
+* Issue 88: RSS feed validation via lxml
+* Isuue 169: build subcommands were broken
 
 New in v5
 =========
