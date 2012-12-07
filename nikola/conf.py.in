@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
-
+<%text>
+# -*- coding: utf-8 -*-
 import os
 
 ########################################
 # Configuration, please edit
 ########################################
+</%text>
 
 # Data about this site
 BLOG_AUTHOR = "${BLOG_AUTHOR}"
@@ -47,7 +49,7 @@ post_pages = ${POST_PAGES}
 # Feel free to add or delete extensions to any list, but don't add any new
 # compilers unless you write the interface for it yourself.
 #
-# 'rest' is reStructuredTextq
+# 'rest' is reStructuredText
 # 'markdown' is MarkDown
 # 'html' assumes the file is html and just copies it
 post_compilers = ${POST_COMPILERS}
@@ -161,9 +163,9 @@ FILTERS = {
 #    ".jpg": ["jpegoptim --strip-all -m75 -v %s"],
 }
 
-##############################################################################
+# #############################################################################
 # Image Gallery Options
-##############################################################################
+# #############################################################################
 
 # Galleries are folders in galleries/
 # Final location of galleries will be output / GALLERY_PATH / gallery_name
@@ -172,9 +174,9 @@ THUMBNAIL_SIZE = 180
 MAX_IMAGE_SIZE = 1280
 USE_FILENAME_AS_TITLE = True
 
-##############################################################################
+# #############################################################################
 # HTML fragments and diverse things that are used by the templates
-##############################################################################
+# #############################################################################
 
 # Data about post-per-page indexes
 INDEXES_TITLE = ""  # If this is empty, the default is BLOG_TITLE
@@ -225,14 +227,14 @@ SEARCH_FORM = ""
 # appears on the navigation bar
 #SEARCH_FORM = """
 #<!-- Custom search -->
-#<form method="get" id="search" action="http://duckduckgo.com/" """\
-#"""class="navbar-form pull-left">
+#<form method="get" id="search" action="http://duckduckgo.com/"
+# class="navbar-form pull-left">
 #<input type="hidden" name="sites" value="%s"/>
 #<input type="hidden" name="k8" value="#444444"/>
 #<input type="hidden" name="k9" value="#D51920"/>
 #<input type="hidden" name="kt" value="h"/>
-#<input type="text" name="q" maxlength="255" """\
-#"""placeholder="Search&hellip;" class="span2" style="margin-top: 4px;"/>
+#<input type="text" name="q" maxlength="255"
+# placeholder="Search&hellip;" class="span2" style="margin-top: 4px;"/>
 #<input type="submit" value="DuckDuckGo Search" style="visibility: hidden;" />
 #</form>
 #<!-- End of custom search -->
