@@ -79,16 +79,15 @@
             <li>${license}
             <!-- social buttons -->
             %if add_this_buttons:
-            <li>
-                <div id="addthisbox" class="addthis_toolbox addthis_default_style">
-                <a class="addthis_button_preferred_1"></a>
-                <a class="addthis_button_preferred_2"></a>
-                <a class="addthis_button_preferred_3"></a>
-                <a class="addthis_button_preferred_4"></a>
-                <a class="addthis_button_compact"></a>
-                <a class="addthis_counter addthis_bubble_style"></a>
+                <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+                <a class="addthis_button_more">Share</a>    
+	        <ul><li><a class="addthis_button_facebook"></a></li>
+        	<li><a class="addthis_button_google_plusone_share"></a></li>
+        	<li><a class="addthis_button_linkedin"></a></li>
+        	<li><a class="addthis_button_twitter"></a></li>
+                </ul>
                 </div>
-                <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
+                <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
             <!-- End of social buttons -->
             % endif
             %for url, text in sidebar_links[lang]:

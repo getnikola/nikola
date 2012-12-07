@@ -13,6 +13,7 @@ Bugfixes
 * Issue 112: RSS feeds contained invalid links
 * Issue 88: RSS feed validation via lxml
 * Isuue 169: build subcommands were broken
+* Switched addThis to Peekaboo style, as seen on flexion.org (seems less broken)
 
 New in v5
 =========

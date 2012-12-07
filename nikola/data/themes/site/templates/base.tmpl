@@ -76,7 +76,6 @@
     </div>
 </div>
 <!-- End of Menubar -->
-
 <div class="container" id="container">
     <!--Body content-->
     <%block name="content"></%block>
@@ -85,20 +84,19 @@
     ${content_footer}
     </div>
 </div>
-    %if add_this_buttons:
-    <!-- addthis -->
-    <div id="addthisbox" class="addthis_bar addthis_bar_vertical addthis_bar_small">
-        <div class="addthis_toolbox addthis_default_style">
-            <span><a class="addthis_button_preferred_1"></a></span>
-            <span><a class="addthis_button_preferred_2"></a></span>
-            <span><a class="addthis_button_preferred_3"></a></span>
-            <span><a class="addthis_button_preferred_4"></a></span>
-            <span><a class="addthis_button_compact"></a></span>
-        </div>
+%if add_this_buttons:
+    <!-- Social buttons -->
+    <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+    <a class="addthis_button_more">Share</a>
+    <ul><li><a class="addthis_button_facebook"></a></li>
+    <li><a class="addthis_button_google_plusone_share"></a></li>
+    <li><a class="addthis_button_linkedin"></a></li>
+    <li><a class="addthis_button_twitter"></a></li>
+    </ul>
     </div>
     <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
-    <!-- End of addthis -->
-    %endif
+    <!-- End of social buttons -->
+%endif
 ${analytics}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
 </body>
