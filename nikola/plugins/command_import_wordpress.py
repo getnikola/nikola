@@ -64,7 +64,7 @@ class CommandImportWordpress(Command):
         # Generate base site
         os.system('nikola init new_site')
         conf_template = Template(filename=os.path.join(
-            os.path.dirname(utils.__file__), 'data', 'samplesite', 'conf.py.in'))
+            os.path.dirname(utils.__file__), 'conf.py.in'))
         with codecs.open(os.path.join('new_site', 'conf.py'),
             'w+', 'utf8') as fd:
             fd.write(conf_template.render(**context))
