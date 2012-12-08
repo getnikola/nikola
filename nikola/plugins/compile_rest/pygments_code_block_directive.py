@@ -163,8 +163,22 @@ def code_block_directive(name, arguments, options, content, lineno,
                 if after_index < 0:
                     raise state_machine.reporter.severe(
                         'Problem with "start-at" option of "%s" '
-                        'code-block directive:\nText not found.' %
-                        options['start-at'])
+                        'code-block directive:\nText not found.'
+                        % options['start-at'])
+                # patch mmueller start
+                # Move the after_index to the beginning of the line with the
+                # match.
+                for char in content[after_index:0:-1]:
+                    # codecs always opens binary. This works with '\n', 
+                    # '\r' and '\r\n'. We are going backwards, so 
+                    # '\n' is found first in '\r\n'.
+                    # Going with .splitlines() seems more appropriate
+                    # but needs a few more changes.
+                    if char == u'\n' or char == u'\r':
+                        break
+                    after_index -= 1
+                # patch mmueller end
+
                 content = content[after_index:]
                 line_offset = len(content[:after_index].splitlines())
 
