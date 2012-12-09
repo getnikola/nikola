@@ -2,7 +2,7 @@ from optparse import OptionParser
 import os
 import urllib2
 import json
-from io import StringIO
+from StringIO import StringIO
 
 from nikola.plugin_categories import Command
 from nikola import utils
