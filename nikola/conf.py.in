@@ -2,6 +2,7 @@
 <%text>
 # -*- coding: utf-8 -*-
 import os
+import time
 
 ########################################
 # Configuration, please edit
@@ -198,7 +199,10 @@ style="border-width:0; margin-bottom:12px;"
 src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>"""
 
 # A small copyright notice for the page footer (in HTML)
-CONTENT_FOOTER = u'Contents &copy; 2012 <a href="${BLOG_EMAIL}">${BLOG_AUTHOR}</a>'
+CONTENT_FOOTER = u'Contents &copy; {date} <a href="mailto:{email}">{author}</a> - Powered by <a href="http://nikola.ralsina.com.ar">Nikola</a>'
+CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
+                                       author=BLOG_AUTHOR,
+                                       date=time.gmtime().tm_year)
 
 # To enable comments via Disqus, you need to create a forum at
 # http://disqus.com, and set DISQUS_FORUM to the short name you selected.

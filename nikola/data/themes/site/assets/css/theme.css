@@ -1,5 +1,11 @@
-body { margin-top: 50px;}
-
+body {
+  padding-top: 60px;
+}
+@media (max-width: 979px) {
+  body {
+    padding-top: 0px;
+  }
+}
 #container {
     width: 960px;
     margin: 50 auto;
