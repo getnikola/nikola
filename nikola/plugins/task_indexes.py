@@ -90,16 +90,15 @@ class Indexes(Task):
                 context["permalink"] = self.site.link("index", i, lang)
                 output_name = os.path.join(
                     kw['output_folder'], self.site.path("index", i, lang))
-                for task in self.site.generic_post_list_renderer(
+                task = self.site.generic_post_list_renderer(
                     lang,
                     post_list,
                     output_name,
                     template_name,
                     kw['filters'],
                     context,
-                ):
-                    task['uptodate'] = [config_changed({
-                        1: task['uptodate'][0].config,
-                        2: kw})]
-                    task['basename'] = 'render_indexes'
-                    yield task
+                )
+                task_cfg = {1: task['uptodate'][0].config, 2: kw}
+                task['uptodate'] = [config_changed(task_cfg)]
+                task['basename'] = 'render_indexes'
+                yield task

@@ -183,6 +183,13 @@ list.tmpl
 
     * ``items``: a list of (text, link) elements.
 
+
+list_post.tmpl
+    Template used to display generic lists of links. Can use everything ``base.tmpl`` uses, plus:
+
+    * ``posts``: a list of Post objects.
+
+
 You can add other templates for specific pages, which the user can the use in his ``post_pages``
 option in ``dodo.py``. Also, keep in mind that your theme is yours, there is no reason why
 you would need to maintain the inheritance as it is, or not require whatever data you want.
