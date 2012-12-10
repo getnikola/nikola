@@ -130,6 +130,15 @@ class Nikola(object):
             'INDEX_DISPLAY_POST_COUNT']
         self.GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
 
+        # check if custom css exist and is not empty
+        for files_path in self.config['FILES_FOLDERS'].iterkeys():
+            custom_css_path = os.path.join(files_path, 'assets/css/custom.css')
+            if self.file_exists(custom_css_path, not_empty=True):
+                self.GLOBAL_CONTEXT['has_custom_css'] = True
+                break
+        else:
+            self.GLOBAL_CONTEXT['has_custom_css'] = False
+
         # Load template plugin
         template_sys_name = utils.get_template_engine(self.THEMES)
         pi = self.plugin_manager.getPluginByName(
