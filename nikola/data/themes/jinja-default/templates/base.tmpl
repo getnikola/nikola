@@ -17,7 +17,7 @@
         <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/colorbox.css" rel="stylesheet" type="text/css"/>
         <link href="/assets/css/theme.css" rel="stylesheet" type="text/css"/>
-        {% if exists("files/assets/css/custom.css", not_empty=True) %}
+        {% if has_custom_css %}
             <link href="/assets/css/custom.css" rel="stylesheet">
         {% endif %}
         <script src="/assets/js/jquery-1.7.2.min.js" type="text/javascript"></script>
