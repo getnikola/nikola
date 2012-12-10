@@ -503,4 +503,4 @@ class Nikola(object):
             'uptodate': [config_changed(deps_context)]
         }
 
-        yield utils.apply_filters(task, filters)
+        return utils.apply_filters(task, filters)

@@ -35,19 +35,18 @@ class Archive(Task):
                 context["permalink"] = self.site.link("archive", year, lang)
                 context["title"] = kw["messages"][lang]["Posts for year %s"]\
                     % year
-                for task in self.site.generic_post_list_renderer(
+                task = self.site.generic_post_list_renderer(
                     lang,
                     post_list,
                     output_name,
                     template_name,
                     kw['filters'],
                     context,
-                ):
-                    task['uptodate'] = [config_changed({
-                        1: task['uptodate'][0].config,
-                        2: kw})]
-                    task['basename'] = self.name
-                    yield task
+                )
+                task_cfg = {1: task['uptodate'][0].config, 2: kw}
+                task['uptodate'] = [config_changed(task_cfg)]
+                task['basename'] = self.name
+                yield task
 
         # And global "all your years" page
         years = self.site.posts_per_year.keys()
@@ -62,16 +61,15 @@ class Archive(Task):
             context["items"] = [(year, self.site.link("archive", year, lang))
                 for year in years]
             context["permalink"] = self.site.link("archive", None, lang)
-            for task in self.site.generic_post_list_renderer(
+            task = self.site.generic_post_list_renderer(
                 lang,
                 [],
                 output_name,
                 template_name,
                 kw['filters'],
                 context,
-            ):
-                task['uptodate'] = [config_changed({
-                    1: task['uptodate'][0].config,
-                    2: kw})]
-                task['basename'] = self.name
-                yield task
+            )
+            task_cfg = {1: task['uptodate'][0].config, 2: kw}
+            task['uptodate'] = [config_changed(task_cfg)]
+            task['basename'] = self.name
+            yield task
