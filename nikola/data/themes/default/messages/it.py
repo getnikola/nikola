@@ -1,3 +1,5 @@
+# vim: set fileencoding=utf-8 :
+
 MESSAGES = {
     u"LANGUAGE": u"Italiano",
     u"Posts for year %s": u"Articoli per l'anno %s",
