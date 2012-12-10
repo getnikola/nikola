@@ -16,6 +16,7 @@ Bugfixes
 * Isuue 169: build subcommands were broken
 * Switched addThis to Peekaboo style, as seen on flexion.org (seems less broken)
 * Remove duplicated sample config file. always build it from template (schettino72)
+* Don't use hardcoded path for custom.css (schettino72)
 
 New in v5
 =========
