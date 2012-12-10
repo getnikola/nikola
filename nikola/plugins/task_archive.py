@@ -18,7 +18,7 @@ class Archive(Task):
         }
         self.site.scan_posts()
         # TODO add next/prev links for years
-        template_name = "list.tmpl"
+        template_name = "list_post.tmpl"
         # TODO: posts_per_year is global, kill it
         for year, posts in self.site.posts_per_year.items():
             for lang in kw["translations"]:
@@ -29,9 +29,7 @@ class Archive(Task):
                 post_list.reverse()
                 context = {}
                 context["lang"] = lang
-                context["items"] = [("[%s] %s" %
-                    (post.date, post.title(lang)), post.permalink(lang))
-                    for post in post_list]
+                context["posts"] = post_list
                 context["permalink"] = self.site.link("archive", year, lang)
                 context["title"] = kw["messages"][lang]["Posts for year %s"]\
                     % year

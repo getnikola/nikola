@@ -145,9 +145,7 @@ class RenderTags(Task):
         context = {}
         context["lang"] = lang
         context["title"] = kw["messages"][lang][u"Posts about %s"] % tag
-        context["items"] = [("[%s] %s" % (post.date,
-            post.title(lang)),
-            post.permalink(lang)) for post in post_list]
+        context["posts"] = post_list
         context["permalink"] = self.site.link("tag", tag, lang)
         context["tag"] = tag
         task = self.site.generic_post_list_renderer(
