@@ -33,12 +33,14 @@ standard_exclude_directories = ('.*', 'CVS', '_darcs', './build',
                                 './dist', 'EGG-INFO', '*.egg-info')
 
 
-def install_manpages(prefix):
+def install_manpages(root, prefix):
     man_pages = [
         ('docs/man/nikola.1', 'share/man/man1/nikola.1'),
     ]
     join = os.path.join
     normpath = os.path.normpath
+    if root is not None:
+        prefix = os.path.realpath(root) + os.path.sep + prefix
     for src, dst in man_pages:
         path_dst = join(normpath(prefix), normpath(dst))
         try:
@@ -58,7 +60,7 @@ def install_manpages(prefix):
 class nikola_install(install):
     def run(self):
         install.run(self)
-        install_manpages(self.prefix)
+        install_manpages(self.root, self.prefix)
 
 
 def find_package_data(
