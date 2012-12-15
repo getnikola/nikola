@@ -9,5 +9,6 @@ and build a site using it. Congratulations!
 * You can read the manual `here </stories/handbook.html>`__
 * You can learn more about Nikola at http://nikola.ralsina.com.ar
 * You can see a demo photo gallery `here </galleries/demo/>`__
+* Demo usage of listings `here </stories/listings-demo.html>`__
 
 Send feedback to ralsina@netmanagers.com.ar!
