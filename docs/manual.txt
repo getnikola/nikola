@@ -797,10 +797,10 @@ listing
 To use this, you have to put your source code files inside ``listings`` or whatever your
 ``LISTINGS_FOLDER`` variable is set to. Assuming you have a ``foo.py`` inside that folder::
 
-    .. listing:: foo.py
+    .. listing:: foo.py python
 
-Will include the source code from ``foo.py`` and also create a ``listings/foo.py.html`` page
-and the listing will have a title linking to it.
+Will include the source code from ``foo.py``, highlight its syntax in python mode,
+and also create a ``listings/foo.py.html`` page and the listing will have a title linking to it.
 
 Advanced Code Options
 ~~~~~~~~~~~~~~~~~~~~~
