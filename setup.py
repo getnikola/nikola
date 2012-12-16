@@ -10,8 +10,22 @@ import os
 import subprocess
 import sys
 from fnmatch import fnmatchcase
-from distutils.util import convert_path
-from distutils.command.install import install
+
+
+try:
+    # Prefer setuptools for the installation to have no problem with the
+    # "--single-version-externally-managed" option that pip uses when 
+    # installing packages.
+    from setuptools import setup
+    from setuptools import convert_path 
+
+    from setuptools.command.install import install
+except ImportError:
+    print '\n*** setuptools not found! Falling back to distutils\n\n'
+    from distutils.core import setup
+
+    from distutils.command.install import install
+    from distutils.util import convert_path
 
 dependencies = [
     'doit>=0.18.1',
