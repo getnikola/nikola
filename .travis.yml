@@ -1,6 +1,5 @@
 language: python
 python:
-  - "2.5"
   - "2.6"
   - "2.7"
 # The dependencies we rely on are not yet full Python 3.x compatible.
