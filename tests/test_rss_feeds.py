@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+import os
 import re
 from StringIO import StringIO
 
@@ -40,11 +41,12 @@ class RSSFeedTest(unittest.TestCase):
                                                                  "blog_title",
                                                                  self.blog_url,
                                                                  "blog_description",
-                                                                 [example_post, ],
+                                                                 [example_post,
+                                                                  ],
                                                                  'testfeed.rss')
 
-
-                    self.file_content = ''.join([call[1][0] for call in opener_mock.mock_calls[2:-1]])
+                    self.file_content = ''.join(
+                        [call[1][0] for call in opener_mock.mock_calls[2:-1]])
 
     def tearDown(self):
         pass
@@ -88,9 +90,11 @@ class RSSFeedTest(unittest.TestCase):
         Validation can be tested with W3 FEED Validator that can be found
         at http://feedvalidator.org
         '''
-        with open('rss-2_0.xsd', 'r') as rss_schema_file:
+        rss_schema_filename = os.path.join(os.path.dirname(__file__),
+                                           'rss-2_0.xsd')
+        with open(rss_schema_filename, 'r') as rss_schema_file:
             xmlschema_doc = etree.parse(rss_schema_file)
-        
+
         xmlschema = etree.XMLSchema(xmlschema_doc)
         document = etree.parse(StringIO(self.file_content))
 
