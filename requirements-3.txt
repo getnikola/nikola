@@ -1,0 +1,10 @@
+doit>=0.17
+pygments
+https://github.com/fluggo/Pillow/archive/master.zip
+docutils
+mako>=0.6
+unidecode
+lxml
+yapsy
+mock>=1.0.0
+requests

@@ -6,6 +6,7 @@
 # Licensed under the MIT license:
 # http://www.opensource.org/licenses/mit-license.php
 
+from __future__ import print_function
 import os
 import subprocess
 import sys
@@ -21,7 +22,7 @@ try:
 
     from setuptools.command.install import install
 except ImportError:
-    print '\n*** setuptools not found! Falling back to distutils\n\n'
+    print('\n*** setuptools not found! Falling back to distutils\n\n')
     from distutils.core import setup
 
     from distutils.command.install import install

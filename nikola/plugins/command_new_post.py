@@ -22,6 +22,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import print_function
 import codecs
 import datetime
 from optparse import OptionParser
@@ -71,12 +72,12 @@ class CommandNewPost(Command):
         else:
             path = self.site.config['post_pages'][0][0]
 
-        print "Creating New Post"
-        print "-----------------\n"
+        print("Creating New Post")
+        print("-----------------\n")
         if title is None:
             title = raw_input("Enter title: ").decode(sys.stdin.encoding)
         else:
-            print "Title: ", title
+            print("Title: ", title)
         slug = utils.slugify(title)
         date = datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
         data = [
@@ -96,12 +97,12 @@ class CommandNewPost(Command):
 
         if (not onefile and os.path.isfile(meta_path)) or \
             os.path.isfile(txt_path):
-            print "The title already exists!"
+            print("The title already exists!")
             exit()
 
         if onefile:
             if post_format not in ('rest', 'markdown'):
-                print "ERROR: Unknown post format %s" % post_format
+                print("ERROR: Unknown post format %s" % post_format)
                 return
             with codecs.open(txt_path, "wb+", "utf8") as fd:
                 if post_format == 'markdown':
@@ -120,5 +121,5 @@ class CommandNewPost(Command):
                 fd.write(data)
             with codecs.open(txt_path, "wb+", "utf8") as fd:
                 fd.write(u"Write your post here.")
-            print "Your post's metadata is at: ", meta_path
-        print "Your post's text is at: ", txt_path
+            print("Your post's metadata is at: ", meta_path)
+        print("Your post's text is at: ", txt_path)
