@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -22,6 +22,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import print_function
 from optparse import OptionParser
 import os
 import shutil
@@ -71,7 +72,7 @@ The destination folder must not exist.
 
         target = args[0]
         if target is None:
-            print self.usage
+            print(self.usage)
         else:
             # copy sample data
             lib_path = os.path.dirname(nikola.__file__)
@@ -84,6 +85,6 @@ The destination folder must not exist.
             with codecs.open(conf_path, 'w+', 'utf8') as fd:
                 fd.write(conf_template.render(**self.SAMPLE_CONF))
 
-            print "A new site with some sample data has been created at %s."\
-                % target
-            print "See README.txt in that folder for more information."
+            print("A new site with some sample data has been created at %s."
+                % target)
+            print("See README.txt in that folder for more information.")
