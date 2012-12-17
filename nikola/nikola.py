@@ -415,7 +415,7 @@ class Nikola(object):
                 task_dep.append(pluginInfo.plugin_object.name)
 
         yield {
-            'name': 'all',
+            'name': b'all',
             'actions': None,
             'clean': True,
             'task_dep': task_dep

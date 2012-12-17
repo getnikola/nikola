@@ -239,7 +239,7 @@ def copy_tree(src, dst, link_cutoff=None):
             dst_file = os.path.join(dst_dir, src_name)
             src_file = os.path.join(root, src_name)
             yield {
-                'name': dst_file,
+                'name': str(dst_file),
                 'file_dep': [src_file],
                 'targets': [dst_file],
                 'actions': [(copy_file, (src_file, dst_file, link_cutoff))],
