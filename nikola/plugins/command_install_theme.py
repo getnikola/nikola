@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -22,9 +22,10 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import print_function
 from optparse import OptionParser
 import os
-import urllib2
+import requests
 import json
 from StringIO import StringIO
 
@@ -57,15 +58,15 @@ class CommandInstallTheme(Command):
         url = options.url
 
         if name is None and not listing:
-            print "This command needs either the -n or the -l option."
+            print("This command needs either the -n or the -l option.")
             return False
-        data = urllib2.urlopen(url).read()
+        data = requests.get(url).text
         data = json.loads(data)
         if listing:
-            print "Themes:"
-            print "-------"
+            print("Themes:")
+            print("-------")
             for theme in sorted(data.keys()):
-                print theme
+                print(theme)
             return True
         else:
             if name in data:
@@ -76,11 +77,11 @@ class CommandInstallTheme(Command):
                         os.makedirs("themes")
                     except:
                         raise OSError("mkdir 'theme' error!")
-                print 'Downloading: %s' % data[name]
+                print('Downloading: %s' % data[name])
                 zip_file = StringIO()
-                zip_file.write(urllib2.urlopen(data[name]).read())
-                print 'Extracting: %s into themes' % name
+                zip_file.write(requests.get(data[name]).content)
+                print('Extracting: %s into themes' % name)
                 utils.extract_all(zip_file)
             else:
-                print "Can't find theme %s" % name
+                print("Can't find theme %s" % name)
                 return False
