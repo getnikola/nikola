@@ -22,6 +22,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import unicode_literals
 import codecs
 import os
 
@@ -29,16 +30,13 @@ import docutils.core
 import docutils.io
 from docutils.parsers.rst import directives
 
-from pygments_code_block_directive import (
+from .pygments_code_block_directive import (
     code_block_directive,
     listings_directive)
 directives.register_directive('code-block', code_block_directive)
 directives.register_directive('listing', listings_directive)
 
-import pygments_code_block_directive
-# Below is to make pyflakes happy (sigh)
-pygments_code_block_directive
-from youtube import youtube
+from .youtube import youtube
 directives.register_directive('youtube', youtube)
 
 from nikola.plugin_categories import PageCompiler

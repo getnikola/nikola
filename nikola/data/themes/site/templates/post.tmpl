@@ -14,7 +14,7 @@
             %for langname in translations.keys():
                 %if langname != lang:
                     &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <a href="${post.permalink(langname)}">${messages[langname][u"Read in English"]}</a>
+                    <a href="${post.permalink(langname)}">${messages[langname]["Read in English"]}</a>
                 %endif
             %endfor
         %endif

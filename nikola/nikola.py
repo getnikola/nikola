@@ -9,11 +9,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -23,12 +23,16 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import print_function, unicode_literals
 from collections import defaultdict
 from copy import copy
 import glob
 import os
 import sys
-import urlparse
+try:
+    from urlparse import urlparse, urlsplit, urljoin
+except ImportError:
+    from urllib.parse import urlparse, urlsplit, urljoin
 
 import lxml.html
 from yapsy.PluginManager import PluginManager
@@ -40,9 +44,9 @@ else:
     import logging
     logging.basicConfig(level=logging.ERROR)
 
-from post import Post
-import utils
-from plugin_categories import (
+from .post import Post
+from . import utils
+from .plugin_categories import (
     Command,
     LateTask,
     PageCompiler,
@@ -154,7 +158,7 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
 
         # check if custom css exist and is not empty
-        for files_path in self.config['FILES_FOLDERS'].iterkeys():
+        for files_path in list(self.config['FILES_FOLDERS'].keys()):
             custom_css_path = os.path.join(files_path, 'assets/css/custom.css')
             if self.file_exists(custom_css_path, not_empty=True):
                 self.GLOBAL_CONTEXT['has_custom_css'] = True
@@ -199,7 +203,7 @@ class Nikola(object):
         except KeyError:
             # Find the correct compiler for this files extension
             langs = [lang for lang, exts in
-                     self.config['post_compilers'].items()
+                     list(self.config['post_compilers'].items())
                      if ext in exts]
             if len(langs) != 1:
                 if len(set(langs)) > 1:
@@ -233,14 +237,14 @@ class Nikola(object):
         # This is to support windows paths
         url_part = "/".join(url_part.split(os.sep))
 
-        src = urlparse.urljoin(self.config["BLOG_URL"], url_part)
+        src = urljoin(self.config["BLOG_URL"], url_part)
 
-        parsed_src = urlparse.urlsplit(src)
+        parsed_src = urlsplit(src)
         src_elems = parsed_src.path.split('/')[1:]
 
         def replacer(dst):
             # Refuse to replace links that are full URLs.
-            dst_url = urlparse.urlparse(dst)
+            dst_url = urlparse(dst)
             if dst_url.netloc:
                 if dst_url.scheme == 'link':  # Magic link
                     dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'),
@@ -249,12 +253,12 @@ class Nikola(object):
                     return dst
 
             # Normalize
-            dst = urlparse.urljoin(src, dst)
+            dst = urljoin(src, dst)
             # Avoid empty links.
             if src == dst:
                 return "#"
             # Check that link can be made relative, otherwise return dest
-            parsed_dst = urlparse.urlsplit(dst)
+            parsed_dst = urlsplit(dst)
             if parsed_src[:2] != parsed_dst[:2]:
                 return dst
 
@@ -286,8 +290,8 @@ class Nikola(object):
             pass
         doc = lxml.html.document_fromstring(data)
         doc.rewrite_links(replacer)
-        data = '<!DOCTYPE html>' + lxml.html.tostring(doc, encoding='utf8')
-        with open(output_name, "w+") as post_file:
+        data = b'<!DOCTYPE html>' + lxml.html.tostring(doc, encoding='utf8')
+        with open(output_name, "wb+") as post_file:
             post_file.write(data)
 
     def path(self, kind, name, lang, is_link=False):
@@ -317,41 +321,39 @@ class Nikola(object):
         path = []
 
         if kind == "tag_index":
-            path = filter(None, [self.config['TRANSLATIONS'][lang],
-            self.config['TAG_PATH'], 'index.html'])
+            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+            self.config['TAG_PATH'], 'index.html'] if _f]
         elif kind == "tag":
             if self.config['SLUG_TAG_PATH']:
                 name = utils.slugify(name)
-            path = filter(None, [self.config['TRANSLATIONS'][lang],
-            self.config['TAG_PATH'], name + ".html"])
+            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+            self.config['TAG_PATH'], name + ".html"] if _f]
         elif kind == "tag_rss":
             if self.config['SLUG_TAG_PATH']:
                 name = utils.slugify(name)
-            path = filter(None, [self.config['TRANSLATIONS'][lang],
-            self.config['TAG_PATH'], name + ".xml"])
+            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+            self.config['TAG_PATH'], name + ".xml"] if _f]
         elif kind == "index":
             if name > 0:
-                path = filter(None, [self.config['TRANSLATIONS'][lang],
-                self.config['INDEX_PATH'], 'index-%s.html' % name])
+                path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+                self.config['INDEX_PATH'], 'index-%s.html' % name] if _f]
             else:
-                path = filter(None, [self.config['TRANSLATIONS'][lang],
-                self.config['INDEX_PATH'], 'index.html'])
+                path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+                self.config['INDEX_PATH'], 'index.html'] if _f]
         elif kind == "rss":
-            path = filter(None, [self.config['TRANSLATIONS'][lang],
-            self.config['RSS_PATH'], 'rss.xml'])
+            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+            self.config['RSS_PATH'], 'rss.xml'] if _f]
         elif kind == "archive":
             if name:
-                path = filter(None, [self.config['TRANSLATIONS'][lang],
-                self.config['ARCHIVE_PATH'], name, 'index.html'])
+                path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+                self.config['ARCHIVE_PATH'], name, 'index.html'] if _f]
             else:
-                path = filter(None, [self.config['TRANSLATIONS'][lang],
-                self.config['ARCHIVE_PATH'], self.config['ARCHIVE_FILENAME']])
+                path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+                self.config['ARCHIVE_PATH'], self.config['ARCHIVE_FILENAME']] if _f]
         elif kind == "gallery":
-            path = filter(None,
-                [self.config['GALLERY_PATH'], name, 'index.html'])
+            path = [_f for _f in [self.config['GALLERY_PATH'], name, 'index.html'] if _f]
         elif kind == "listing":
-            path = filter(None,
-                [self.config['LISTINGS_FOLDER'], name + '.html'])
+            path = [_f for _f in [self.config['LISTINGS_FOLDER'], name + '.html'] if _f]
         if is_link:
             return '/' + ('/'.join(path))
         else:
@@ -362,20 +364,20 @@ class Nikola(object):
 
     def abs_link(self, dst):
         # Normalize
-        dst = urlparse.urljoin(self.config['BLOG_URL'], dst)
+        dst = urljoin(self.config['BLOG_URL'], dst)
 
-        return urlparse.urlparse(dst).path
+        return urlparse(dst).path
 
     def rel_link(self, src, dst):
         # Normalize
-        src = urlparse.urljoin(self.config['BLOG_URL'], src)
-        dst = urlparse.urljoin(src, dst)
+        src = urljoin(self.config['BLOG_URL'], src)
+        dst = urljoin(src, dst)
         # Avoid empty links.
         if src == dst:
             return "#"
         # Check that link can be made relative, otherwise return dest
-        parsed_src = urlparse.urlsplit(src)
-        parsed_dst = urlparse.urlsplit(dst)
+        parsed_src = urlsplit(src)
+        parsed_dst = urlsplit(dst)
         if parsed_src[:2] != parsed_dst[:2]:
             return dst
         # Now both paths are on the same site and absolute
@@ -422,11 +424,11 @@ class Nikola(object):
     def scan_posts(self):
         """Scan all the posts."""
         if not self._scanned:
-            print "Scanning posts ",
+            print("Scanning posts ")
             targets = set([])
             for wildcard, destination, _, use_in_feeds in \
                     self.config['post_pages']:
-                print ".",
+                print (".")
                 for base_path in glob.glob(wildcard):
                     post = Post(
                         base_path,
@@ -437,7 +439,7 @@ class Nikola(object):
                         self.config['DEFAULT_LANG'],
                         self.config['BLOG_URL'],
                         self.MESSAGES)
-                    for lang, langpath in self.config['TRANSLATIONS'].items():
+                    for lang, langpath in list(self.config['TRANSLATIONS'].items()):
                         dest = (destination, langpath, post.pagenames[lang])
                         if dest in targets:
                             raise Exception(
@@ -452,9 +454,9 @@ class Nikola(object):
                             self.posts_per_tag[tag].append(post.post_name)
                     else:
                         self.pages.append(post)
-            for name, post in self.global_data.items():
+            for name, post in list(self.global_data.items()):
                 self.timeline.append(post)
-            self.timeline.sort(cmp=lambda a, b: cmp(a.date, b.date))
+            self.timeline.sort(key=lambda p: p.date)
             self.timeline.reverse()
             post_timeline = [p for p in self.timeline if p.use_in_feeds]
             for i, p in enumerate(post_timeline[1:]):
@@ -462,7 +464,7 @@ class Nikola(object):
             for i, p in enumerate(post_timeline[:-1]):
                 p.prev_post = post_timeline[i + 1]
             self._scanned = True
-            print "done!"
+            print("done!")
 
     def generic_page_renderer(self, lang, wildcard,
         template_name, destination, filters):

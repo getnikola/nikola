@@ -28,7 +28,7 @@ import os
 
 import lxml.html
 
-import utils
+from . import utils
 
 __all__ = ['Post']
 
@@ -79,7 +79,7 @@ class Post(object):
 
         self.date = utils.to_datetime(self.date)
         self.tags = [x.strip() for x in self.tags.split(',')]
-        self.tags = filter(None, self.tags)
+        self.tags = [_f for _f in self.tags if _f]
 
         # While draft comes from the tags, it's not really a tag
         self.use_in_feeds = use_in_feeds and "draft" not in self.tags
@@ -146,7 +146,7 @@ class Post(object):
         if os.path.isfile(self.metadata_path):
             deps.append(self.metadata_path)
         if lang != self.default_lang:
-            lang_deps = filter(os.path.exists, [x + "." + lang for x in deps])
+            lang_deps = list(filter(os.path.exists, [x + "." + lang for x in deps]))
             deps += lang_deps
         return deps
 
@@ -189,7 +189,7 @@ class Post(object):
         pieces = list(os.path.split(self.translations[lang]))
         pieces += list(os.path.split(self.folder))
         pieces += [self.pagenames[lang] + extension]
-        pieces = filter(None, pieces)
+        pieces = [_f for _f in pieces if _f]
         if absolute:
             pieces = [self.blog_url] + pieces
         else:

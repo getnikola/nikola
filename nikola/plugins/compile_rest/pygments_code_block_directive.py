@@ -26,6 +26,7 @@
 
 """Define and register a code-block directive using pygments"""
 
+from __future__ import unicode_literals
 
 # Requirements
 # ------------
@@ -34,7 +35,10 @@
 import codecs
 from copy import copy
 import os
-import urlparse
+try:
+    from urlparse import urlparse, urlunsplit
+except ImportError:
+    from urllib.parse import urlparse, urlunsplit
 
 from docutils import nodes, core
 from docutils.parsers.rst import directives
@@ -90,7 +94,7 @@ class DocutilsInterface(object):
     def lex(self):
         """Get lexer for language (use text as fallback)"""
         try:
-            if self.language and unicode(self.language).lower() != 'none':
+            if self.language and str(self.language).lower() != 'none':
                 lexer = get_lexer_by_name(self.language.lower(),
                                         **self.custom_args
                                         )
@@ -105,7 +109,7 @@ class DocutilsInterface(object):
         """join subsequent tokens of same token-type
         """
         tokens = iter(tokens)
-        (lasttype, lastval) = tokens.next()
+        (lasttype, lastval) = next(tokens)
         for ttype, value in tokens:
             if ttype is lasttype:
                 lastval += value
@@ -143,7 +147,7 @@ def code_block_directive(name, arguments, options, content, lineno,
             content = codecs.open(
                 options['include'], 'r', encoding).read().rstrip()
         except (IOError, UnicodeError):  # no file or problem reading it
-            content = u''
+            content = ''
         line_offset = 0
         if content:
             # here we define the start-at and end-at options
@@ -174,7 +178,7 @@ def code_block_directive(name, arguments, options, content, lineno,
                     # '\n' is found first in '\r\n'.
                     # Going with .splitlines() seems more appropriate
                     # but needs a few more changes.
-                    if char == u'\n' or char == u'\r':
+                    if char == '\n' or char == '\r':
                         break
                     after_index -= 1
                 # patch mmueller end
@@ -222,7 +226,7 @@ def code_block_directive(name, arguments, options, content, lineno,
                 content = content[:before_index]
 
     else:
-        content = u'\n'.join(content)
+        content = '\n'.join(content)
 
     if 'tabsize' in options:
         tabw = options['tabsize']
@@ -254,7 +258,7 @@ def code_block_directive(name, arguments, options, content, lineno,
     else:
         # The [:-1] is because pygments adds a trailing \n which looks bad
         l = list(DocutilsInterface(content, language, options))
-        if l[-1] == ('', u'\n'):
+        if l[-1] == ('', '\n'):
             l = l[:-1]
         for cls, value in l:
             if withln and "\n" in value:
@@ -263,7 +267,7 @@ def code_block_directive(name, arguments, options, content, lineno,
                 # The first piece, pass as-is
                 code_block += nodes.Text(values[0], values[0])
                 # On the second and later pieces, insert \n and linenos
-                linenos = range(lineno, lineno + len(values))
+                linenos = list(range(lineno, lineno + len(values)))
                 for chunk, ln in zip(values, linenos)[1:]:
                     if ln <= total_lines:
                         code_block += nodes.inline(fstr % ln, fstr % ln,
@@ -333,7 +337,7 @@ def listings_directive(name, arguments, options, content, lineno,
                        content_offset, block_text, state, state_machine):
     fname = arguments[0]
     options['include'] = os.path.join('listings', fname)
-    target = urlparse.urlunsplit(("link", 'listing', fname, '', ''))
+    target = urlunsplit(("link", 'listing', fname, '', ''))
     generated_nodes = [core.publish_doctree('`%s <%s>`_' % (fname, target))[0]]
     generated_nodes += code_block_directive(name, [arguments[1]],
                        options, content, lineno, content_offset, block_text,

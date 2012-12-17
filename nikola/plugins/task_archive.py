@@ -44,12 +44,12 @@ class Archive(Task):
         # TODO add next/prev links for years
         template_name = "list_post.tmpl"
         # TODO: posts_per_year is global, kill it
-        for year, posts in self.site.posts_per_year.items():
+        for year, posts in list(self.site.posts_per_year.items()):
             for lang in kw["translations"]:
                 output_name = os.path.join(
                     kw['output_folder'], self.site.path("archive", year, lang))
                 post_list = [self.site.global_data[post] for post in posts]
-                post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
+                post_list.sort(key=lambda a: a.date)
                 post_list.reverse()
                 context = {}
                 context["lang"] = lang
@@ -71,7 +71,7 @@ class Archive(Task):
                 yield task
 
         # And global "all your years" page
-        years = self.site.posts_per_year.keys()
+        years = list(self.site.posts_per_year.keys())
         years.sort(reverse=True)
         template_name = "list.tmpl"
         kw['years'] = years

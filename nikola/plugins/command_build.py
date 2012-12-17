@@ -22,6 +22,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import unicode_literals
 import os
 import tempfile
 
@@ -38,7 +39,7 @@ class CommandBuild(Command):
 
         # FIXME: this is crap, do it right
         with tempfile.NamedTemporaryFile(suffix='.py', delete=False) as dodo:
-            dodo.write('''
+            dodo.write(b'''
 from doit.reporter import ExecutedOnlyReporter
 DOIT_CONFIG = {
         'reporter': ExecutedOnlyReporter,

@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -116,8 +116,8 @@ class Galleries(Task):
                 except IOError:
                     excluded_image_name_list = []
 
-                excluded_image_list = map(add_gallery_path,
-                    excluded_image_name_list)
+                excluded_image_list = list(map(add_gallery_path,
+                    excluded_image_name_list))
                 image_set = set(image_list) - set(excluded_image_list)
                 image_list = list(image_set)
             except IOError:
@@ -132,17 +132,16 @@ class Galleries(Task):
             # TODO: write this in human
             paths = ['/'.join(['..'] * (len(crumbs) - 1 - i)) for i in
                 range(len(crumbs[:-1]))] + ['#']
-            crumbs = zip(paths, crumbs)
+            crumbs = list(zip(paths, crumbs))
 
             image_list = [x for x in image_list if "thumbnail" not in x]
             # Sort by date
-            image_list.sort(cmp=lambda a, b: cmp(
-                self.image_date(a), self.image_date(b)))
+            image_list.sort(key=lambda a: self.image_date(a))
             image_name_list = [os.path.basename(x) for x in image_list]
 
             thumbs = []
             # Do thumbnails and copy originals
-            for img, img_name in zip(image_list, image_name_list):
+            for img, img_name in list(zip(image_list, image_name_list)):
                 # img is "galleries/name/image_name.jpg"
                 # img_name is "image_name.jpg"
                 # fname, ext are "image_name", ".jpg"
@@ -222,7 +221,7 @@ class Galleries(Task):
                               for fn in image_name_list]
             else:
                 img_titles = [''] * len(image_name_list)
-            context["images"] = zip(image_name_list, thumbs, img_titles)
+            context["images"] = list(zip(image_name_list, thumbs, img_titles))
             context["folders"] = folder_list
             context["crumbs"] = crumbs
             context["permalink"] = self.site.link(
@@ -234,7 +233,7 @@ class Galleries(Task):
             cache_dir = os.path.join(kw["cache_folder"], 'galleries')
             if not os.path.isdir(cache_dir):
                 os.makedirs(cache_dir)                
-            index_dst_path = os.path.join(cache_dir, unicode(uuid.uuid1())+'.html')
+            index_dst_path = os.path.join(cache_dir, str(uuid.uuid1())+'.html')
             if os.path.exists(index_path):
                 compile_html = self.site.get_compiler(index_path)
                 yield {
@@ -287,7 +286,7 @@ class Galleries(Task):
             except Exception:
                 exif = None
             if exif is not None:
-                for tag, value in exif.items():
+                for tag, value in list(exif.items()):
                     decoded = ExifTags.TAGS.get(tag, tag)
 
                     if decoded == 'Orientation':
@@ -315,7 +314,7 @@ class Galleries(Task):
             except Exception:
                 exif = None
             if exif is not None:
-                for tag, value in exif.items():
+                for tag, value in list(exif.items()):
                     decoded = ExifTags.TAGS.get(tag, tag)
                     if decoded == 'DateTimeOriginal':
                         try:
