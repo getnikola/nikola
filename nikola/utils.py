@@ -25,7 +25,7 @@
 """Utility functions."""
 
 from __future__ import print_function
-from collections import defaultdict
+from collections import defaultdict, Callable
 import datetime
 import hashlib
 import os
@@ -412,7 +412,7 @@ def apply_filters(task, filters):
             for action in filter_:
                 def unlessLink(action, target):
                     if not os.path.islink(target):
-                        if isinstance(action, collections.Callable):
+                        if isinstance(action, Callable):
                             action(target)
                         else:
                             subprocess.check_call(action % target, shell=True)
