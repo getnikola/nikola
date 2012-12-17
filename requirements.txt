@@ -8,3 +8,4 @@ lxml
 configparser
 yapsy
 mock>=1.0.0
+requests

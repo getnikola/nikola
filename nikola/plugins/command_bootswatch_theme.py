@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -22,9 +22,10 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import print_function
 from optparse import OptionParser
 import os
-import urllib2
+import requests
 
 from nikola.plugin_categories import Command
 
@@ -51,21 +52,21 @@ class CommandBootswatchTheme(Command):
         swatch = options.swatch
         parent = options.parent
 
-        print "Creating '%s' theme from '%s' and '%s'" % (
-            name, swatch, parent)
+        print("Creating '%s' theme from '%s' and '%s'" % (
+            name, swatch, parent))
         try:
             os.makedirs(os.path.join('themes', name, 'assets', 'css'))
         except:
             pass
         for fname in ('bootstrap.min.css', 'bootstrap.css'):
             url = 'http://bootswatch.com/%s/%s' % (swatch, fname)
-            print "Downloading: ", url
-            data = urllib2.urlopen(url).read()
+            print("Downloading: ", url)
+            data = requests.get(url).text
             with open(os.path.join(
                 'themes', name, 'assets', 'css', fname), 'wb+') as output:
                 output.write(data)
 
         with open(os.path.join('themes', name, 'parent'), 'wb+') as output:
             output.write(parent)
-        print 'Theme created. Change the THEME setting to "%s" to use it.'\
-            % name
+        print('Theme created. Change the THEME setting to "%s" to use it.'
+            % name)
