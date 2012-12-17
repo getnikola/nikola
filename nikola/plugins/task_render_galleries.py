@@ -22,6 +22,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import unicode_literals
 import codecs
 import datetime
 import glob
@@ -91,8 +92,8 @@ class Galleries(Task):
                 self.site.path("gallery", gallery_name, None)))
             if not os.path.isdir(output_gallery):
                 yield {
-                    'basename': 'render_galleries',
-                    'name': output_gallery,
+                    'basename': b'render_galleries',
+                    'name': str(output_gallery),
                     'actions': [(os.makedirs, (output_gallery,))],
                     'targets': [output_gallery],
                     'clean': True,
@@ -154,8 +155,8 @@ class Galleries(Task):
                 orig_dest_path = os.path.join(output_gallery, img_name)
                 thumbs.append(os.path.basename(thumb_path))
                 yield {
-                    'basename': 'render_galleries',
-                    'name': thumb_path,
+                    'basename': b'render_galleries',
+                    'name': thumb_path.encode('utf8'),
                     'file_dep': [img],
                     'targets': [thumb_path],
                     'actions': [
@@ -166,8 +167,8 @@ class Galleries(Task):
                     'uptodate': [utils.config_changed(kw)],
                 }
                 yield {
-                    'basename': 'render_galleries',
-                    'name': orig_dest_path,
+                    'basename': b'render_galleries',
+                    'name': orig_dest_path.encode('utf8'),
                     'file_dep': [img],
                     'targets': [orig_dest_path],
                     'actions': [
@@ -189,8 +190,8 @@ class Galleries(Task):
                         fname + ".thumbnail" + ext)
                     excluded_dest_path = os.path.join(output_gallery, img_name)
                     yield {
-                        'basename': 'render_galleries',
-                        'name': excluded_thumb_dest_path,
+                        'basename': b'render_galleries',
+                        'name': excluded_thumb_dest_path.encode('utf8'),
                         'file_dep': [exclude_path],
                         #'targets': [excluded_thumb_dest_path],
                         'actions': [
@@ -200,8 +201,8 @@ class Galleries(Task):
                         'uptodate': [utils.config_changed(kw)],
                     }
                     yield {
-                        'basename': 'render_galleries',
-                        'name': excluded_dest_path,
+                        'basename': b'render_galleries',
+                        'name': excluded_dest_path.encode('utf8'),
                         'file_dep': [exclude_path],
                         #'targets': [excluded_dest_path],
                         'actions': [
@@ -237,7 +238,7 @@ class Galleries(Task):
             if os.path.exists(index_path):
                 compile_html = self.site.get_compiler(index_path)
                 yield {
-                    'basename': 'render_galleries',
+                    'basename': b'render_galleries',
                     'name': index_dst_path.encode('utf-8'),
                     'file_dep': [index_path],
                     'targets': [index_dst_path],
@@ -260,8 +261,8 @@ class Galleries(Task):
                 self.site.render_template(template_name, output_name, context)
 
             yield {
-                'basename': 'render_galleries',
-                'name': output_name,
+                'basename': b'render_galleries',
+                'name': output_name.encode('utf8'),
                 'file_dep': file_dep,
                 'targets': [output_name],
                 'actions': [(render_gallery,
