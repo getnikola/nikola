@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -22,13 +22,17 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import unicode_literals, print_function
 import codecs
 import os
-from urlparse import urlparse
-from urllib import urlopen
+try:
+    from urlparse import urlparse
+except ImportError:
+    from urllib.parse import urlparse
 
 from lxml import etree, html
 from mako.template import Template
+import requests
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -44,17 +48,17 @@ class CommandImportWordpress(Command):
     def run(self, fname=None):
         # Parse the data
         if fname is None:
-            print "Usage: nikola import_wordpress wordpress_dump.xml"
+            print("Usage: nikola import_wordpress wordpress_dump.xml")
             return
         context = {}
         with open(fname) as fd:
             xml = []
             for line in fd:
                 # These explode etree and are useless
-                if '<atom:link rel=' in line:
+                if b'<atom:link rel=' in line:
                     continue
                 xml.append(line)
-            xml = '\n'.join(xml)
+            xml = b'\n'.join(xml)
 
         tree = etree.fromstring(xml)
         channel = tree.find('channel')
@@ -126,9 +130,9 @@ def import_attachment(item):
         dst_dir = os.path.dirname(dst_path)
         if not os.path.isdir(dst_dir):
             os.makedirs(dst_dir)
-        print "Downloading %s => %s" % (url, dst_path)
+        print("Downloading %s => %s" % (url, dst_path))
         with open(dst_path, 'wb+') as fd:
-            fd.write(urlopen(url).read())
+            fd.write(requests.get(url).content)
         dst_url = '/'.join(dst_path.split(os.sep)[2:])
         links[link] = '/' + dst_url
         links[url] = '/' + dst_url
@@ -169,12 +173,12 @@ def import_item(item):
     # Write metadata
     with codecs.open(os.path.join('new_site', out_folder, slug + '.meta'),
         "w+", "utf8") as fd:
-        fd.write(u'%s\n' % title)
-        fd.write(u'%s\n' % slug)
-        fd.write(u'%s\n' % post_date)
-        fd.write(u'%s\n' % ','.join(tags))
-        fd.write(u'\n')
-        fd.write(u'%s\n' % description)
+        fd.write('%s\n' % title)
+        fd.write('%s\n' % slug)
+        fd.write('%s\n' % post_date)
+        fd.write('%s\n' % ','.join(tags))
+        fd.write('\n')
+        fd.write('%s\n' % description)
     with open(os.path.join(
         'new_site', out_folder, slug + '.wp'), "wb+") as fd:
         if content.strip():
