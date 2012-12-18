@@ -62,7 +62,7 @@ class RenderTags(Task):
 
         for tag, posts in list(self.site.posts_per_tag.items()):
             post_list = [self.site.global_data[post] for post in posts]
-            post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
+            post_list.sort(key=lambda a: a.date)
             post_list.reverse()
             for lang in kw["translations"]:
                 yield self.tag_rss(tag, lang, posts, kw)
@@ -195,7 +195,7 @@ class RenderTags(Task):
         deps = []
         post_list = [self.site.global_data[post] for post in posts
             if self.site.global_data[post].use_in_feeds]
-        post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
+        post_list.sort(key=lambda a: a.date)
         post_list.reverse()
         for post in post_list:
             deps += post.deps(lang)

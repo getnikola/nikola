@@ -74,7 +74,7 @@ class Galleries(Task):
             gallery_list.append(root)
         if not gallery_list:
             yield {
-                'basename': 'render_galleries',
+                'basename': str('render_galleries'),
                 'actions': [],
                 }
             return
@@ -155,7 +155,7 @@ class Galleries(Task):
                 orig_dest_path = os.path.join(output_gallery, img_name)
                 thumbs.append(os.path.basename(thumb_path))
                 yield {
-                    'basename': b'render_galleries',
+                    'basename': str('render_galleries'),
                     'name': thumb_path.encode('utf8'),
                     'file_dep': [img],
                     'targets': [thumb_path],
@@ -167,7 +167,7 @@ class Galleries(Task):
                     'uptodate': [utils.config_changed(kw)],
                 }
                 yield {
-                    'basename': b'render_galleries',
+                    'basename': str('render_galleries'),
                     'name': orig_dest_path.encode('utf8'),
                     'file_dep': [img],
                     'targets': [orig_dest_path],
@@ -190,7 +190,7 @@ class Galleries(Task):
                         fname + ".thumbnail" + ext)
                     excluded_dest_path = os.path.join(output_gallery, img_name)
                     yield {
-                        'basename': b'render_galleries',
+                        'basename': str('render_galleries'),
                         'name': excluded_thumb_dest_path.encode('utf8'),
                         'file_dep': [exclude_path],
                         #'targets': [excluded_thumb_dest_path],
@@ -201,7 +201,7 @@ class Galleries(Task):
                         'uptodate': [utils.config_changed(kw)],
                     }
                     yield {
-                        'basename': b'render_galleries',
+                        'basename': str('render_galleries'),
                         'name': excluded_dest_path.encode('utf8'),
                         'file_dep': [exclude_path],
                         #'targets': [excluded_dest_path],
@@ -238,7 +238,7 @@ class Galleries(Task):
             if os.path.exists(index_path):
                 compile_html = self.site.get_compiler(index_path)
                 yield {
-                    'basename': b'render_galleries',
+                    'basename': str('render_galleries'),
                     'name': index_dst_path.encode('utf-8'),
                     'file_dep': [index_path],
                     'targets': [index_dst_path],
@@ -309,8 +309,8 @@ class Galleries(Task):
     def image_date(self, src):
         """Try to figure out the date of the image."""
         if src not in self.dates:
-            im = Image.open(src)
             try:
+                im = Image.open(src)
                 exif = im._getexif()
             except Exception:
                 exif = None
