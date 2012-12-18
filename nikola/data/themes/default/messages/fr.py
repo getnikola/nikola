@@ -1,17 +1,18 @@
 # -*- encoding:utf-8 -*-
+from __future__ import unicode_literals
 
 MESSAGES = {
-    u"LANGUAGE": u"Français",
-    u"Posts for year %s": u"Billets de l'année %s",
-    u"Archive": u"Archives",
-    u"Posts about %s": u"Billets sur %s",
-    u"Tags": u"Étiquettes",
-    u"Also available in": u"Disponible aussi en",
-    u"More posts about": u"Plus de billets sur",
-    u"Posted": u"Publié",
-    u"Original site": u"Site d'origine",
-    u"Read in English": u"Lire en français",
-    u"Newer posts": u"Billets récents",
-    u"Older posts": u"Anciens billets",
-    u"Source": u"Source",
+    "LANGUAGE": "Français",
+    "Posts for year %s": "Billets de l'année %s",
+    "Archive": "Archives",
+    "Posts about %s": "Billets sur %s",
+    "Tags": "Étiquettes",
+    "Also available in": "Disponible aussi en",
+    "More posts about": "Plus de billets sur",
+    "Posted": "Publié",
+    "Original site": "Site d'origine",
+    "Read in English": "Lire en français",
+    "Newer posts": "Billets récents",
+    "Older posts": "Anciens billets",
+    "Source": "Source",
 }
