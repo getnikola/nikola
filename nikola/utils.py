@@ -187,14 +187,14 @@ def load_messages(themes, translations):
     """
     messages = defaultdict(dict)
     warned = []
+    oldpath = sys.path[:]
     for theme_name in themes[::-1]:
         msg_folder = os.path.join(get_theme_path(theme_name), 'messages')
-        oldpath = sys.path
         sys.path.insert(0, msg_folder)
-        english = __import__('en')
+        english = __import__('messages_en')
         for lang in list(translations.keys()):
             # If we don't do the reload, the module is cached
-            translation = __import__(lang)
+            translation = __import__('messages_'+lang)
             reload(translation)
             if sorted(translation.MESSAGES.keys()) !=\
                 sorted(english.MESSAGES.keys()) and \
@@ -205,7 +205,7 @@ def load_messages(themes, translations):
             messages[lang].update(english.MESSAGES)
             messages[lang].update(translation.MESSAGES)
             del(translation)
-        sys.path = oldpath
+    sys.path = oldpath
     return messages
 
 

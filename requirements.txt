@@ -1,7 +1,7 @@
 doit>=0.17
 pygments
 pillow
-docutils<0.10
+docutils
 mako>=0.6
 unidecode
 lxml
