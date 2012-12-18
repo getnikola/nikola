@@ -24,6 +24,7 @@
 
 import os
 
+from __future__ import unicode_literals
 from nikola.plugin_categories import Task
 from nikola import utils
 
@@ -59,7 +60,7 @@ class RenderTags(Task):
                 }
             return
 
-        for tag, posts in self.site.posts_per_tag.items():
+        for tag, posts in list(self.site.posts_per_tag.items()):
             post_list = [self.site.global_data[post] for post in posts]
             post_list.sort(cmp=lambda a, b: cmp(a.date, b.date))
             post_list.reverse()
@@ -77,7 +78,7 @@ class RenderTags(Task):
 
     def list_tags_page(self, kw):
         """a global "all your tags" page for each language"""
-        tags = self.site.posts_per_tag.keys()
+        tags = list(self.site.posts_per_tag.keys())
         tags.sort()
         template_name = "tags.tmpl"
         kw['tags'] = tags
@@ -85,7 +86,7 @@ class RenderTags(Task):
             output_name = os.path.join(
                 kw['output_folder'], self.site.path('tag_index', None, lang))
             context = {}
-            context["title"] = kw["messages"][lang][u"Tags"]
+            context["title"] = kw["messages"][lang]["Tags"]
             context["items"] = [(tag, self.site.link("tag", tag, lang))
                 for tag in tags]
             context["permalink"] = self.site.link("tag_index", None, lang)
@@ -132,7 +133,7 @@ class RenderTags(Task):
             output_name = os.path.join(kw['output_folder'],
                 page_name(tag, i, lang))
             context["title"] = kw["messages"][lang][
-                u"Posts about %s"] % tag
+                "Posts about %s"] % tag
             context["prevlink"] = None
             context["nextlink"] = None
             context['index_teasers'] = kw['index_teasers']
@@ -168,7 +169,7 @@ class RenderTags(Task):
             self.site.path("tag", tag, lang))
         context = {}
         context["lang"] = lang
-        context["title"] = kw["messages"][lang][u"Posts about %s"] % tag
+        context["title"] = kw["messages"][lang]["Posts about %s"] % tag
         context["posts"] = post_list
         context["permalink"] = self.site.link("tag", tag, lang)
         context["tag"] = tag
