@@ -18,5 +18,5 @@ MESSAGES = {
     "Next post": "N&auml;chster Eintrag",
     "Source": "Source",
     "Read more": "Weiterlesen",
-    "old posts page %d": u'Vorherige Eintr&auml;ge %d'
+    "old posts page %d": "Vorherige Eintr&auml;ge %d"
 }
