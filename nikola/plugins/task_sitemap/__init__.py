@@ -28,7 +28,7 @@ import tempfile
 from nikola.plugin_categories import LateTask
 from nikola.utils import config_changed
 
-import sitemap_gen as smap
+from . import sitemap_gen as smap
 
 
 class Sitemap(LateTask):
