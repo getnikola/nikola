@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -22,7 +22,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import print_function
+from __future__ import unicode_literals, print_function
 import codecs
 import datetime
 from optparse import OptionParser
@@ -75,7 +75,8 @@ class CommandNewPost(Command):
         print("Creating New Post")
         print("-----------------\n")
         if title is None:
-            title = raw_input("Enter title: ").decode(sys.stdin.encoding)
+            print("Enter title: ")
+            title = sys.stdin.readline().decode(sys.stdin.encoding)
         else:
             print("Title: ", title)
         slug = utils.slugify(title)
@@ -115,11 +116,11 @@ class CommandNewPost(Command):
                 fd.write('.. description: \n')
                 if post_format == 'markdown':
                     fd.write('-->\n')
-                fd.write(u"\nWrite your post here.")
+                fd.write("\nWrite your post here.")
         else:
             with codecs.open(meta_path, "wb+", "utf8") as fd:
                 fd.write(data)
             with codecs.open(txt_path, "wb+", "utf8") as fd:
-                fd.write(u"Write your post here.")
+                fd.write("Write your post here.")
             print("Your post's metadata is at: ", meta_path)
         print("Your post's text is at: ", txt_path)
