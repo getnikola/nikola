@@ -55,7 +55,7 @@ class RenderTags(Task):
 
         if not self.site.posts_per_tag:
             yield {
-                    'basename': self.name,
+                    'basename': str(self.name),
                     'actions': [],
                 }
             return
@@ -85,6 +85,7 @@ class RenderTags(Task):
         for lang in kw["translations"]:
             output_name = os.path.join(
                 kw['output_folder'], self.site.path('tag_index', None, lang))
+            output_name = output_name.encode('utf8')
             context = {}
             context["title"] = kw["messages"][lang]["Tags"]
             context["items"] = [(tag, self.site.link("tag", tag, lang))
@@ -132,6 +133,7 @@ class RenderTags(Task):
             context['rss_link'] = rss_link
             output_name = os.path.join(kw['output_folder'],
                 page_name(tag, i, lang))
+            output_name = output_name.encode('utf8')
             context["title"] = kw["messages"][lang][
                 "Posts about %s"] % tag
             context["prevlink"] = None
@@ -158,7 +160,7 @@ class RenderTags(Task):
             )
             task_cfg = {1: task['uptodate'][0].config, 2: kw}
             task['uptodate'] = [utils.config_changed(task_cfg)]
-            task['basename'] = self.name
+            task['basename'] = str(self.name)
             yield task
 
 
@@ -167,6 +169,7 @@ class RenderTags(Task):
         template_name = "tag.tmpl"
         output_name = os.path.join(kw['output_folder'],
             self.site.path("tag", tag, lang))
+        output_name = output_name.encode('utf8')
         context = {}
         context["lang"] = lang
         context["title"] = kw["messages"][lang]["Posts about %s"] % tag
@@ -183,7 +186,7 @@ class RenderTags(Task):
         )
         task_cfg = {1: task['uptodate'][0].config, 2: kw}
         task['uptodate'] = [utils.config_changed(task_cfg)]
-        task['basename'] = self.name
+        task['basename'] = str(self.name)
         yield task
 
 
@@ -192,6 +195,7 @@ class RenderTags(Task):
         #Render RSS
         output_name = os.path.join(kw['output_folder'],
             self.site.path("tag_rss", tag, lang))
+        output_name = output_name.encode('utf8')
         deps = []
         post_list = [self.site.global_data[post] for post in posts
             if self.site.global_data[post].use_in_feeds]
@@ -200,8 +204,8 @@ class RenderTags(Task):
         for post in post_list:
             deps += post.deps(lang)
         return {
-            'basename': self.name,
-            'name': output_name.encode('utf8'),
+            'basename': str(self.name),
+            'name': output_name,
             'file_dep': deps,
             'targets': [output_name],
             'actions': [(utils.generic_rss_renderer,
