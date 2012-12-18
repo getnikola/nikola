@@ -1,7 +1,7 @@
 doit>=0.17
 pygments
 https://github.com/fluggo/Pillow/archive/master.zip
-docutils
+docutils<0.10
 mako>=0.6
 unidecode
 lxml
