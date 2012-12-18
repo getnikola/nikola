@@ -48,7 +48,7 @@ from nikola import utils
 class Galleries(Task):
     """Copy theme assets into output."""
 
-    name = "render_galleries"
+    name = str("render_galleries")
     dates = {}
 
     def gen_tasks(self):
