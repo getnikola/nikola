@@ -92,7 +92,7 @@ class Galleries(Task):
                 self.site.path("gallery", gallery_name, None)))
             if not os.path.isdir(output_gallery):
                 yield {
-                    'basename': b'render_galleries',
+                    'basename': str('render_galleries'),
                     'name': str(output_gallery),
                     'actions': [(os.makedirs, (output_gallery,))],
                     'targets': [output_gallery],
@@ -261,7 +261,7 @@ class Galleries(Task):
                 self.site.render_template(template_name, output_name, context)
 
             yield {
-                'basename': b'render_galleries',
+                'basename': str('render_galleries'),
                 'name': output_name.encode('utf8'),
                 'file_dep': file_dep,
                 'targets': [output_name],
