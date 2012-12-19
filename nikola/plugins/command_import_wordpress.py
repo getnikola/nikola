@@ -45,14 +45,11 @@ class CommandImportWordpress(Command):
 
     name = "import_wordpress"
 
-    def run(self, fname=None):
-        # Parse the data
-        if fname is None:
-            print("Usage: nikola import_wordpress wordpress_dump.xml")
-            return
-        context = {}
-        with open(fname) as fd:
-            xml = []
+    @staticmethod
+    def read_xml_file(filename):
+        xml = []
+
+        with open(filename) as fd:
             for line in fd:
                 # These explode etree and are useless
                 if b'<atom:link rel=' in line:
@@ -60,9 +57,34 @@ class CommandImportWordpress(Command):
                 xml.append(line)
             xml = b'\n'.join(xml)
 
-        tree = etree.fromstring(xml)
+        return xml
+
+    @staticmethod
+    def generate_base_site(context):
+        os.system('nikola init new_site')
+        conf_template = Template(filename=os.path.join(
+            os.path.dirname(utils.__file__), 'conf.py.in'))
+        with codecs.open(os.path.join('new_site', 'conf.py'),
+            'w+', 'utf8') as fd:
+            fd.write(conf_template.render(**context))
+
+    @staticmethod
+    def import_posts(channel):
+        for item in channel.findall('item'):
+            import_attachment(item)
+        for item in channel.findall('item'):
+            import_item(item)
+
+    def run(self, fname=None):
+        # Parse the data
+        if fname is None:
+            print("Usage: nikola import_wordpress wordpress_dump.xml")
+            return
+
+        tree = etree.fromstring(self.read_xml_file(fname))
         channel = tree.find('channel')
 
+        context = {}
         context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')[:2]
         context['BLOG_TITLE'] = get_text_tag(
             channel, 'title', 'PUT TITLE HERE')
@@ -89,19 +111,8 @@ class CommandImportWordpress(Command):
         }
         '''
 
-        # Generate base site
-        os.system('nikola init new_site')
-        conf_template = Template(filename=os.path.join(
-            os.path.dirname(utils.__file__), 'conf.py.in'))
-        with codecs.open(os.path.join('new_site', 'conf.py'),
-            'w+', 'utf8') as fd:
-            fd.write(conf_template.render(**context))
-
-        # Import posts
-        for item in channel.findall('item'):
-            import_attachment(item)
-        for item in channel.findall('item'):
-            import_item(item)
+        self.generate_base_site(context)
+        self.import_posts(channel)
 
 
 def replacer(dst):
