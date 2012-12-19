@@ -1,0 +1,1 @@
+import command_import_wordpress
