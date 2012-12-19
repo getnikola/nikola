@@ -27,10 +27,10 @@
 
     <item>
         <title>Arzt+Pfusch - S.I.C.K.</title>
-        <link>http://blog.nik0.de/2008/07/arzt-und-pfusch-s-i-c-k/arzt_und_pfusch-sick-cover/</link>
+        <link>http://some.blog/2008/07/arzt-und-pfusch-s-i-c-k/arzt_und_pfusch-sick-cover/</link>
         <pubDate>Thu, 16 Jul 2009 19:40:37 +0000</pubDate>
         <dc:creator>Niko</dc:creator>
-        <guid isPermaLink="false">http://blog.nik0.de/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png</guid>
+        <guid isPermaLink="false">http://some.blog/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png</guid>
         <description></description>
         <content:encoded><![CDATA[Das Cover von Arzt+Pfusch - S.I.C.K.]]></content:encoded>
         <excerpt:encoded><![CDATA[Arzt+Pfusch - S.I.C.K.]]></excerpt:encoded>
@@ -46,7 +46,7 @@
         <wp:post_type>attachment</wp:post_type>
         <wp:post_password></wp:post_password>
         <wp:is_sticky>0</wp:is_sticky>
-        <wp:attachment_url>http://blog.nik0.de/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png</wp:attachment_url>
+        <wp:attachment_url>http://some.blog/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png</wp:attachment_url>
         <wp:postmeta>
             <wp:meta_key>_wp_attached_file</wp:meta_key>
             <wp:meta_value><![CDATA[2008/07/arzt_und_pfusch-sick-cover.png]]></wp:meta_value>
