@@ -45,6 +45,43 @@ class CommandImportWordpress(Command):
 
     name = "import_wordpress"
 
+    @classmethod
+    def get_channel_from_file(cls, filename):
+        tree = etree.fromstring(cls.read_xml_file(filename))
+        channel = tree.find('channel')
+        return channel
+
+    @staticmethod
+    def populate_context(channel):
+        context = {}
+        context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')[:2]
+        context['BLOG_TITLE'] = get_text_tag(
+            channel, 'title', 'PUT TITLE HERE')
+        context['BLOG_DESCRIPTION'] = get_text_tag(
+            channel, 'description', 'PUT DESCRIPTION HERE')
+        context['BLOG_URL'] = get_text_tag(channel, 'link', '#')
+        author = channel.find('{http://wordpress.org/export/1.2/}author')
+        context['BLOG_EMAIL'] = get_text_tag(
+            author,
+            '{http://wordpress.org/export/1.2/}author_email',
+            "joe@example.com")
+        context['BLOG_AUTHOR'] = get_text_tag(
+            author,
+            '{http://wordpress.org/export/1.2/}author_display_name',
+            "Joe Example")
+        context['POST_PAGES'] = '''(
+            ("posts/*.wp", "posts", "post.tmpl", True),
+            ("stories/*.wp", "stories", "story.tmpl", False),
+        )'''
+        context['POST_COMPILERS'] = '''{
+        "rest": ('.txt', '.rst'),
+        "markdown": ('.md', '.mdown', '.markdown', '.wp'),
+        "html": ('.html', '.htm')
+        }
+        '''
+
+        return context
+
     @staticmethod
     def read_xml_file(filename):
         xml = []
@@ -81,36 +118,8 @@ class CommandImportWordpress(Command):
             print("Usage: nikola import_wordpress wordpress_dump.xml")
             return
 
-        tree = etree.fromstring(self.read_xml_file(fname))
-        channel = tree.find('channel')
-
-        context = {}
-        context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')[:2]
-        context['BLOG_TITLE'] = get_text_tag(
-            channel, 'title', 'PUT TITLE HERE')
-        context['BLOG_DESCRIPTION'] = get_text_tag(
-            channel, 'description', 'PUT DESCRIPTION HERE')
-        context['BLOG_URL'] = get_text_tag(channel, 'link', '#')
-        author = channel.find('{http://wordpress.org/export/1.2/}author')
-        context['BLOG_EMAIL'] = get_text_tag(
-            author,
-            '{http://wordpress.org/export/1.2/}author_email',
-            "joe@example.com")
-        context['BLOG_AUTHOR'] = get_text_tag(
-            author,
-            '{http://wordpress.org/export/1.2/}author_display_name',
-            "Joe Example")
-        context['POST_PAGES'] = '''(
-            ("posts/*.wp", "posts", "post.tmpl", True),
-            ("stories/*.wp", "stories", "story.tmpl", False),
-        )'''
-        context['POST_COMPILERS'] = '''{
-        "rest": ('.txt', '.rst'),
-        "markdown": ('.md', '.mdown', '.markdown', '.wp'),
-        "html": ('.html', '.htm')
-        }
-        '''
-
+        channel = self.get_channel_from_file(fname)
+        context = self.populate_context(channel)
         self.generate_base_site(context)
         self.import_posts(channel)
 
