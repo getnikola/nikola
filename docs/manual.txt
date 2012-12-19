@@ -786,7 +786,7 @@ embed code like this::
 
         print "Hello World!"
 
-Or you can include the code from a file:
+Or you can include the code from a file::
 
     .. code-block:: python
        :include: /foo/bar/baz.py
