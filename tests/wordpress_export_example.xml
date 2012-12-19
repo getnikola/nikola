@@ -11,14 +11,14 @@
 <channel>
     <title>Wordpress blog title</title>
     <link>http://some.blog</link>
-    <description></description>
+    <description>Nikola test blog ;)</description>
     <pubDate>Wed, 25 Jul 2012 22:31:24 +0000</pubDate>
     <language>de-DE</language>
     <wp:wxr_version>1.2</wp:wxr_version>
-    <wp:base_site_url>http://blog.nik0.de</wp:base_site_url>
-    <wp:base_blog_url>http://blog.nik0.de</wp:base_blog_url>
+    <wp:base_site_url>http://some.blog</wp:base_site_url>
+    <wp:base_blog_url>http://some.blog</wp:base_blog_url>
 
-    <wp:author><wp:author_id>2</wp:author_id><wp:author_login>Niko</wp:author_login><wp:author_email>blog@nik0.de</wp:author_email><wp:author_display_name><![CDATA[Niko]]></wp:author_display_name><wp:author_first_name><![CDATA[Niko]]></wp:author_first_name><wp:author_last_name><![CDATA[]]></wp:author_last_name></wp:author>
+    <wp:author><wp:author_id>2</wp:author_id><wp:author_login>Niko</wp:author_login><wp:author_email>mail@some.blog</wp:author_email><wp:author_display_name><![CDATA[Niko]]></wp:author_display_name><wp:author_first_name><![CDATA[Niko]]></wp:author_first_name><wp:author_last_name><![CDATA[]]></wp:author_last_name></wp:author>
 
     <wp:category><wp:term_id>11</wp:term_id><wp:category_nicename>programmierung</wp:category_nicename><wp:category_parent></wp:category_parent><wp:cat_name><![CDATA[c0ding]]></wp:cat_name></wp:category>
     <wp:tag><wp:term_id>501</wp:term_id><wp:tag_slug>dotnet</wp:tag_slug><wp:tag_name><![CDATA[.Net]]></wp:tag_name></wp:tag>
