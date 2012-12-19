@@ -8,19 +8,16 @@ class CommandImportWordpressTest(unittest.TestCase):
     def setUp(self):
         self.import_command = nikola.plugins.command_import_wordpress.CommandImportWordpress()
 
-        self.patcher = mock.patch('nikola.plugins.command_import_wordpress.os.system')
-        self.patcher.start()
-
     def tearDown(self):
-        self.patcher.stop()
         del self.import_command
 
     def test_create_import_work_without_argument(self):
         self.import_command.run()
 
     def test_create_import(self):
-        import_filename = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                       'wordpress_export_example.xml'))
+        import_filename = os.path.abspath(
+            os.path.join(os.path.dirname(__file__),
+                         'wordpress_export_example.xml'))
 
         with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.generate_base_site'):
             with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.import_posts'):

@@ -65,7 +65,7 @@ class CommandImportWordpress(Command):
         conf_template = Template(filename=os.path.join(
             os.path.dirname(utils.__file__), 'conf.py.in'))
         with codecs.open(os.path.join('new_site', 'conf.py'),
-            'w+', 'utf8') as fd:
+                         'w+', 'utf8') as fd:
             fd.write(conf_template.render(**context))
 
     @staticmethod
@@ -129,15 +129,15 @@ def get_text_tag(tag, name, default):
 
 def import_attachment(item):
     post_type = get_text_tag(item,
-        '{http://wordpress.org/export/1.2/}post_type', 'post')
+                             '{http://wordpress.org/export/1.2/}post_type', 'post')
     if post_type == 'attachment':
         url = get_text_tag(item,
-            '{http://wordpress.org/export/1.2/}attachment_url', 'foo')
+                           '{http://wordpress.org/export/1.2/}attachment_url', 'foo')
         link = get_text_tag(item,
-            '{http://wordpress.org/export/1.2/}link', 'foo')
+                            '{http://wordpress.org/export/1.2/}link', 'foo')
         path = urlparse(url).path
         dst_path = os.path.join(*(['new_site', 'files']
-            + list(path.split('/'))))
+                                  + list(path.split('/'))))
         dst_dir = os.path.dirname(dst_path)
         if not os.path.isdir(dst_dir):
             os.makedirs(dst_dir)
@@ -158,13 +158,13 @@ def import_item(item):
     slug = utils.slugify(urlparse(get_text_tag(item, 'link', None)).path)
     description = get_text_tag(item, 'description', '')
     post_date = get_text_tag(item,
-        '{http://wordpress.org/export/1.2/}post_date', None)
+                             '{http://wordpress.org/export/1.2/}post_date', None)
     post_type = get_text_tag(item,
-        '{http://wordpress.org/export/1.2/}post_type', 'post')
+                             '{http://wordpress.org/export/1.2/}post_type', 'post')
     status = get_text_tag(item,
-        '{http://wordpress.org/export/1.2/}status', 'publish')
+                          '{http://wordpress.org/export/1.2/}status', 'publish')
     content = get_text_tag(item,
-        '{http://purl.org/rss/1.0/modules/content/}encoded', '')
+                           '{http://purl.org/rss/1.0/modules/content/}encoded', '')
 
     tags = []
     if status != 'publish':
@@ -183,7 +183,7 @@ def import_item(item):
         out_folder = 'stories'
     # Write metadata
     with codecs.open(os.path.join('new_site', out_folder, slug + '.meta'),
-        "w+", "utf8") as fd:
+                     "w+", "utf8") as fd:
         fd.write('%s\n' % title)
         fd.write('%s\n' % slug)
         fd.write('%s\n' % post_date)
@@ -191,7 +191,7 @@ def import_item(item):
         fd.write('\n')
         fd.write('%s\n' % description)
     with open(os.path.join(
-        'new_site', out_folder, slug + '.wp'), "wb+") as fd:
+              'new_site', out_folder, slug + '.wp'), "wb+") as fd:
         if content.strip():
             try:
                 doc = html.document_fromstring(content)
