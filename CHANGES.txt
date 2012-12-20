@@ -8,6 +8,7 @@ Features
 * Updated bootstrap to 2.2.2
 * Wordpress importer supports redirects
 * Wordpress importer creates a url_map for Disqus thread migration
+* Wordpress importer: support for [sourcecode]
 
 Bugfixes
 --------

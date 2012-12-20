@@ -26,6 +26,7 @@ from __future__ import unicode_literals, print_function
 import codecs
 import csv
 import os
+import re
 try:
     from urlparse import urlparse
 except ImportError:
@@ -190,6 +191,10 @@ class CommandImportWordpress(Command):
         with open(os.path.join(
             'new_site', out_folder, slug + '.wp'), "wb+") as fd:
             if content.strip():
+                # Handle sourcecode pseudo-tags
+                content = re.sub('\[sourcecode language="([^"]+)"\]',
+                    "\n~~~~~~~~~~~~{.\\1}\n",content)
+                content = content.replace('[/sourcecode]', "\n~~~~~~~~~~~~\n")
                 try:
                     doc = html.document_fromstring(content)
                     doc.rewrite_links(replacer)
