@@ -9,6 +9,7 @@ Features
 * Wordpress importer supports redirects
 * Wordpress importer creates a url_map for Disqus thread migration
 * Wordpress importer: support for [sourcecode]
+* Wordpress importer: fixed issue 190, convert embedded H1 tags into H2
 
 Bugfixes
 --------

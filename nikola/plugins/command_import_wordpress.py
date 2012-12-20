@@ -32,7 +32,7 @@ try:
 except ImportError:
     from urllib.parse import urlparse
 
-from lxml import etree, html
+from lxml import etree, html, builder
 from mako.template import Template
 import requests
 
@@ -173,7 +173,7 @@ class CommandImportWordpress(Command):
         status = get_text_tag(item,
             '{%s}status' % wp_ns, 'publish')
         content = get_text_tag(item,
-            '{%s}encoded' % dc_ns, '')
+            '{http://purl.org/rss/1.0/modules/content/}encoded', '')
 
         tags = []
         if status != 'publish':
@@ -207,13 +207,15 @@ class CommandImportWordpress(Command):
                 content = re.sub('\[sourcecode language="([^"]+)"\]',
                     "\n~~~~~~~~~~~~{.\\1}\n",content)
                 content = content.replace('[/sourcecode]', "\n~~~~~~~~~~~~\n")
-                try:
-                    doc = html.document_fromstring(content)
-                    doc.rewrite_links(replacer)
-                    fd.write(html.tostring(doc, encoding='utf8'))
-                except:
-                    import pdb
-                    pdb.set_trace()
+                doc = html.document_fromstring(content)
+                doc.rewrite_links(replacer)
+                # Replace H1 elements with H2 elements
+                for tag in doc.findall('.//h1'):
+                    if not tag.text:
+                        print("Failed to fix bad title: %r" % html.tostring(tag))
+                    else:
+                        tag.getparent().replace(tag,builder.E.h2(tag.text)) 
+                fd.write(html.tostring(doc, encoding='utf8'))
 
 
 def replacer(dst):
