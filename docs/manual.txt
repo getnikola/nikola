@@ -828,7 +828,7 @@ Importing Your Wordpress Site Into Nikola
 If you like Nikola, and want to start using it, but you have a Wordpress blog, Nikola
 supports importing it. Here's the steps to do it:
 
-1) Get a XML dump of your site [#]
+1) Get a XML dump of your site [#]_
 2) nikola import_wordpress mysite.wordpress.2012-12-20.xml
 
 After some time, this will crate a ``new_site`` folder with all your data. It currently supports
