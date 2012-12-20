@@ -24,6 +24,7 @@
 
 from __future__ import unicode_literals, print_function
 import codecs
+import csv
 import os
 try:
     from urlparse import urlparse
@@ -50,7 +51,8 @@ class CommandImportWordpress(Command):
         if fname is None:
             print("Usage: nikola import_wordpress wordpress_dump.xml")
             return
-        context = {}
+        self.url_map = {}
+        self.context = {}
         with open(fname) as fd:
             xml = []
             for line in fd:
@@ -63,26 +65,26 @@ class CommandImportWordpress(Command):
         tree = etree.fromstring(xml)
         channel = tree.find('channel')
 
-        context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')[:2]
-        context['BLOG_TITLE'] = get_text_tag(
+        self.context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')[:2]
+        self.context['BLOG_TITLE'] = get_text_tag(
             channel, 'title', 'PUT TITLE HERE')
-        context['BLOG_DESCRIPTION'] = get_text_tag(
+        self.context['BLOG_DESCRIPTION'] = get_text_tag(
             channel, 'description', 'PUT DESCRIPTION HERE')
-        context['BLOG_URL'] = get_text_tag(channel, 'link', '#')
+        self.context['BLOG_URL'] = get_text_tag(channel, 'link', '#')
         author = channel.find('{http://wordpress.org/export/1.2/}author')
-        context['BLOG_EMAIL'] = get_text_tag(
+        self.context['BLOG_EMAIL'] = get_text_tag(
             author,
             '{http://wordpress.org/export/1.2/}author_email',
             "joe@example.com")
-        context['BLOG_AUTHOR'] = get_text_tag(
+        self.context['BLOG_AUTHOR'] = get_text_tag(
             author,
             '{http://wordpress.org/export/1.2/}author_display_name',
             "Joe Example")
-        context['POST_PAGES'] = '''(
+        self.context['POST_PAGES'] = '''(
             ("posts/*.wp", "posts", "post.tmpl", True),
             ("stories/*.wp", "stories", "story.tmpl", False),
         )'''
-        context['POST_COMPILERS'] = '''{
+        self.context['POST_COMPILERS'] = '''{
         "rest": ('.txt', '.rst'),
         "markdown": ('.md', '.mdown', '.markdown', '.wp'),
         "html": ('.html', '.htm')
@@ -93,15 +95,32 @@ class CommandImportWordpress(Command):
         os.system('nikola init new_site')
         conf_template = Template(filename=os.path.join(
             os.path.dirname(utils.__file__), 'conf.py.in'))
-        with codecs.open(os.path.join('new_site', 'conf.py'),
-            'w+', 'utf8') as fd:
-            fd.write(conf_template.render(**context))
 
         # Import posts
         for item in channel.findall('item'):
             self.import_attachment(item)
         for item in channel.findall('item'):
             self.import_item(item)
+        
+        with codecs.open(os.path.join('new_site', 'url_map.csv'),
+            'w+', 'utf8') as fd:
+            csv_writer = csv.writer(fd)
+            for item in self.url_map.items():
+                csv_writer.writerow(item)
+
+        self.context['REDIRECTIONS']=[]
+        for k,v in self.url_map.items():
+            # remove the initial "/" because src is a relative file path
+            src = (urlparse(k).path+'index.html')[1:]
+            dst = (urlparse(v).path)
+            if src == 'index.html':
+                print("Can't do a redirect for: %r" % k)
+            else:
+                self.context['REDIRECTIONS'].append((src,dst))
+                
+        with codecs.open(os.path.join('new_site', 'conf.py'),
+            'w+', 'utf8') as fd:
+            fd.write(conf_template.render(**self.context))
 
     def import_attachment(self, item):
         post_type = get_text_tag(item,
@@ -131,7 +150,8 @@ class CommandImportWordpress(Command):
         title = get_text_tag(item, 'title', 'NO TITLE')
         # link is something like http://foo.com/2012/09/01/hello-world/
         # So, take the path, utils.slugify it, and that's our slug
-        slug = utils.slugify(urlparse(get_text_tag(item, 'link', None)).path)
+        link = get_text_tag(item, 'link', None)
+        slug = utils.slugify(urlparse(link).path)
         description = get_text_tag(item, 'description', '')
         post_date = get_text_tag(item,
             '{http://wordpress.org/export/1.2/}post_date', None)
@@ -157,6 +177,7 @@ class CommandImportWordpress(Command):
             out_folder = 'posts'
         else:
             out_folder = 'stories'
+        self.url_map[link] = self.context['BLOG_URL']+'/'+out_folder+'/'+slug+'.html'
         # Write metadata
         with codecs.open(os.path.join('new_site', out_folder, slug + '.meta'),
             "w+", "utf8") as fd:
@@ -176,6 +197,7 @@ class CommandImportWordpress(Command):
                 except:
                     import pdb
                     pdb.set_trace()
+
 
 def replacer(dst):
     return links.get(dst, dst)
