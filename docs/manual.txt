@@ -822,6 +822,37 @@ linenos_offset
 tab-width
     Size of the tabs (default 4)
 
+Importing Your Wordpress Site Into Nikola
+-----------------------------------------
+
+If you like Nikola, and want to start using it, but you have a Wordpress blog, Nikola
+supports importing it. Here's the steps to do it:
+
+1) Get a XML dump of your site
+2) nikola import_wordpress mysite.wordpress.2012-12-20.xml
+
+After some time, this will crate a ``new_site`` folder with all your data. It currently supports
+the following:
+
+* All your posts and pages
+* Keeps "draft" status
+* Imports your attachments and fixes links to point to the right places
+* Will try to add redirects that send the old post URLs to the new ones
+* Will give you a url_map so you know where each old post was
+
+  This is also useful for Disqus thread migration!
+  
+* Will try to convert the content of your posts. This is *not* error free, because
+  wordpress uses some unholy  mix of HTML and strange things. Currently we are treating it
+  as markdown, which does a reasonabe job of it.
+  
+  You will find your old posts in ``new_site/posts/post-title.wp`` in case you need to fix 
+  any of them.
+  
+This feature is a work in progress, and the only way to improve it is to have it used for
+as many sites as possible and make it work better each time, so I am happy to get requests
+about it.
+  
 License
 -------
 
