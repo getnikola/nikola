@@ -209,6 +209,8 @@ def replacer(dst):
 
 
 def get_text_tag(tag, name, default):
+    if tag is None:
+        return default
     t = tag.find(name)
     if t is not None:
         return t.text
