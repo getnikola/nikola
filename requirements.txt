@@ -6,6 +6,6 @@ mako>=0.6
 unidecode
 lxml
 configparser
-yapsy
+yapsy<1.10
 mock>=1.0.0
 requests
