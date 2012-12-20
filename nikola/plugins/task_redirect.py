@@ -66,6 +66,7 @@ class Redirect(Task):
 
 
 def create_redirect(src, dst):
+    os.makedirs(os.path.dirname(src))
     with codecs.open(src, "wb+", "utf8") as fd:
         fd.write(('<head>' +
         '<meta HTTP-EQUIV="REFRESH" content="0; url=%s">' +
