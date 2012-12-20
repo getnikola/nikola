@@ -124,7 +124,7 @@ SLUG_TAG_PATH = True
 #
 # If you don't need any of these, just set to []
 
-REDIRECTIONS = []
+REDIRECTIONS = ${REDIRECTIONS}
 
 # Commands to execute to deploy. Can be anything, for example,
 # you may use rsync:

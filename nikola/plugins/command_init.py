@@ -63,6 +63,7 @@ The destination folder must not exist.
     "markdown": ('.md', '.mdown', '.markdown'),
     "html": ('.html', '.htm')
     }""",
+        'REDIRECTIONS': '[]',
         }
 
     def run(self, *args):
