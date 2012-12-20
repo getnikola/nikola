@@ -55,8 +55,6 @@ class CommandImportWordpressTest(unittest.TestCase):
         with mock.patch('nikola.plugins.command_import_wordpress.write_content', write_content):
             with mock.patch('nikola.plugins.command_import_wordpress.write_metadata', write_metadata):
                 with mock.patch('nikola.plugins.command_import_wordpress.download_url_content_to_file', download_mock):
-                    # import pdb
-                    # pdb.set_trace()
                     self.import_command.import_posts(channel)
 
         self.assertTrue(download_mock.called)
