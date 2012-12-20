@@ -836,6 +836,7 @@ the following:
 
 * All your posts and pages
 * Keeps "draft" status
+* Your tags and categories
 * Imports your attachments and fixes links to point to the right places
 * Will try to add redirects that send the old post URLs to the new ones
 * Will give you a url_map so you know where each old post was
