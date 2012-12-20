@@ -122,8 +122,8 @@ class Nikola(object):
         })
         self.plugin_manager.setPluginInfoExtension('plugin')
         self.plugin_manager.setPluginPlaces([
-            os.path.join(os.path.dirname(__file__), 'plugins'),
-            os.path.join(os.getcwd(), 'plugins'),
+            str(os.path.join(os.path.dirname(__file__), 'plugins')),
+            str(os.path.join(os.getcwd(), 'plugins')),
             ])
         self.plugin_manager.collectPlugins()
 

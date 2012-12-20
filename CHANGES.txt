@@ -9,7 +9,6 @@ Features
 * Wordpress importer supports redirects
 * Wordpress importer creates a url_map for Disqus thread migration
 * Wordpress importer: support for [sourcecode]
-* Wordpress importer: fixed issue 190, convert embedded H1 tags into H2
 
 Bugfixes
 --------
@@ -21,6 +20,8 @@ Bugfixes
 * Switched addThis to Peekaboo style, as seen on flexion.org (seems less broken)
 * Remove duplicated sample config file. always build it from template (schettino72)
 * Don't use hardcoded path for custom.css (schettino72)
+* Wordpress importer: fixed issue 190, convert embedded H1 tags into H2
+* Fixed bad interaction with Yapsy 1.10
 
 New in v5
 =========
