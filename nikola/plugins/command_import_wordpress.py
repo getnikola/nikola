@@ -99,10 +99,83 @@ class CommandImportWordpress(Command):
 
         # Import posts
         for item in channel.findall('item'):
-            import_attachment(item)
+            self.import_attachment(item)
         for item in channel.findall('item'):
-            import_item(item)
+            self.import_item(item)
 
+    def import_attachment(self, item):
+        post_type = get_text_tag(item,
+            '{http://wordpress.org/export/1.2/}post_type', 'post')
+        if post_type == 'attachment':
+            url = get_text_tag(item,
+                '{http://wordpress.org/export/1.2/}attachment_url', 'foo')
+            link = get_text_tag(item,
+                '{http://wordpress.org/export/1.2/}link', 'foo')
+            path = urlparse(url).path
+            dst_path = os.path.join(*(['new_site', 'files']
+                + list(path.split('/'))))
+            dst_dir = os.path.dirname(dst_path)
+            if not os.path.isdir(dst_dir):
+                os.makedirs(dst_dir)
+            print("Downloading %s => %s" % (url, dst_path))
+            with open(dst_path, 'wb+') as fd:
+                fd.write(requests.get(url).content)
+            dst_url = '/'.join(dst_path.split(os.sep)[2:])
+            links[link] = '/' + dst_url
+            links[url] = '/' + dst_url
+        return
+
+
+    def import_item(self, item):
+        """Takes an item from the feed and creates a post file."""
+        title = get_text_tag(item, 'title', 'NO TITLE')
+        # link is something like http://foo.com/2012/09/01/hello-world/
+        # So, take the path, utils.slugify it, and that's our slug
+        slug = utils.slugify(urlparse(get_text_tag(item, 'link', None)).path)
+        description = get_text_tag(item, 'description', '')
+        post_date = get_text_tag(item,
+            '{http://wordpress.org/export/1.2/}post_date', None)
+        post_type = get_text_tag(item,
+            '{http://wordpress.org/export/1.2/}post_type', 'post')
+        status = get_text_tag(item,
+            '{http://wordpress.org/export/1.2/}status', 'publish')
+        content = get_text_tag(item,
+            '{http://purl.org/rss/1.0/modules/content/}encoded', '')
+
+        tags = []
+        if status != 'publish':
+            tags.append('draft')
+        for tag in item.findall('category'):
+            text = tag.text
+            if text == 'Uncategorized':
+                continue
+            tags.append(text)
+
+        if post_type == 'attachment':
+            return
+        elif post_type == 'post':
+            out_folder = 'posts'
+        else:
+            out_folder = 'stories'
+        # Write metadata
+        with codecs.open(os.path.join('new_site', out_folder, slug + '.meta'),
+            "w+", "utf8") as fd:
+            fd.write('%s\n' % title)
+            fd.write('%s\n' % slug)
+            fd.write('%s\n' % post_date)
+            fd.write('%s\n' % ','.join(tags))
+            fd.write('\n')
+            fd.write('%s\n' % description)
+        with open(os.path.join(
+            'new_site', out_folder, slug + '.wp'), "wb+") as fd:
+            if content.strip():
+                try:
+                    doc = html.document_fromstring(content)
+                    doc.rewrite_links(replacer)
+                    fd.write(html.tostring(doc, encoding='utf8'))
+                except:
+                    import pdb
+                    pdb.set_trace()
 
 def replacer(dst):
     return links.get(dst, dst)
@@ -116,76 +189,3 @@ def get_text_tag(tag, name, default):
         return default
 
 
-def import_attachment(item):
-    post_type = get_text_tag(item,
-        '{http://wordpress.org/export/1.2/}post_type', 'post')
-    if post_type == 'attachment':
-        url = get_text_tag(item,
-            '{http://wordpress.org/export/1.2/}attachment_url', 'foo')
-        link = get_text_tag(item,
-            '{http://wordpress.org/export/1.2/}link', 'foo')
-        path = urlparse(url).path
-        dst_path = os.path.join(*(['new_site', 'files']
-            + list(path.split('/'))))
-        dst_dir = os.path.dirname(dst_path)
-        if not os.path.isdir(dst_dir):
-            os.makedirs(dst_dir)
-        print("Downloading %s => %s" % (url, dst_path))
-        with open(dst_path, 'wb+') as fd:
-            fd.write(requests.get(url).content)
-        dst_url = '/'.join(dst_path.split(os.sep)[2:])
-        links[link] = '/' + dst_url
-        links[url] = '/' + dst_url
-    return
-
-
-def import_item(item):
-    """Takes an item from the feed and creates a post file."""
-    title = get_text_tag(item, 'title', 'NO TITLE')
-    # link is something like http://foo.com/2012/09/01/hello-world/
-    # So, take the path, utils.slugify it, and that's our slug
-    slug = utils.slugify(urlparse(get_text_tag(item, 'link', None)).path)
-    description = get_text_tag(item, 'description', '')
-    post_date = get_text_tag(item,
-        '{http://wordpress.org/export/1.2/}post_date', None)
-    post_type = get_text_tag(item,
-        '{http://wordpress.org/export/1.2/}post_type', 'post')
-    status = get_text_tag(item,
-        '{http://wordpress.org/export/1.2/}status', 'publish')
-    content = get_text_tag(item,
-        '{http://purl.org/rss/1.0/modules/content/}encoded', '')
-
-    tags = []
-    if status != 'publish':
-        tags.append('draft')
-    for tag in item.findall('category'):
-        text = tag.text
-        if text == 'Uncategorized':
-            continue
-        tags.append(text)
-
-    if post_type == 'attachment':
-        return
-    elif post_type == 'post':
-        out_folder = 'posts'
-    else:
-        out_folder = 'stories'
-    # Write metadata
-    with codecs.open(os.path.join('new_site', out_folder, slug + '.meta'),
-        "w+", "utf8") as fd:
-        fd.write('%s\n' % title)
-        fd.write('%s\n' % slug)
-        fd.write('%s\n' % post_date)
-        fd.write('%s\n' % ','.join(tags))
-        fd.write('\n')
-        fd.write('%s\n' % description)
-    with open(os.path.join(
-        'new_site', out_folder, slug + '.wp'), "wb+") as fd:
-        if content.strip():
-            try:
-                doc = html.document_fromstring(content)
-                doc.rewrite_links(replacer)
-                fd.write(html.tostring(doc, encoding='utf8'))
-            except:
-                import pdb
-                pdb.set_trace()
