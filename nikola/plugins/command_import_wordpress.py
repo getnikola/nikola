@@ -65,6 +65,7 @@ class CommandImportWordpress(Command):
 
         tree = etree.fromstring(xml)
         channel = tree.find('channel')
+        wp_ns = channel.nsmap['wp']
 
         self.context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')[:2]
         self.context['BLOG_TITLE'] = get_text_tag(
@@ -72,14 +73,14 @@ class CommandImportWordpress(Command):
         self.context['BLOG_DESCRIPTION'] = get_text_tag(
             channel, 'description', 'PUT DESCRIPTION HERE')
         self.context['BLOG_URL'] = get_text_tag(channel, 'link', '#')
-        author = channel.find('{http://wordpress.org/export/1.2/}author')
+        author = channel.find('{%s}author' % wp_ns)
         self.context['BLOG_EMAIL'] = get_text_tag(
             author,
-            '{http://wordpress.org/export/1.2/}author_email',
+            '{%s}author_email' % wp_ns,
             "joe@example.com")
         self.context['BLOG_AUTHOR'] = get_text_tag(
             author,
-            '{http://wordpress.org/export/1.2/}author_display_name',
+            '{%s}author_display_name' % wp_ns,
             "Joe Example")
         self.context['POST_PAGES'] = '''(
             ("posts/*.wp", "posts", "post.tmpl", True),
@@ -124,13 +125,14 @@ class CommandImportWordpress(Command):
             fd.write(conf_template.render(**self.context))
 
     def import_attachment(self, item):
+        wp_ns = item.nsmap['wp']
         post_type = get_text_tag(item,
-            '{http://wordpress.org/export/1.2/}post_type', 'post')
+            '{%s}post_type' % wp_ns, 'post')
         if post_type == 'attachment':
             url = get_text_tag(item,
-                '{http://wordpress.org/export/1.2/}attachment_url', 'foo')
+                '{%s}attachment_url' % wp_ns, 'foo')
             link = get_text_tag(item,
-                '{http://wordpress.org/export/1.2/}link', 'foo')
+                '{%s}link' % wp_ns, 'foo')
             path = urlparse(url).path
             dst_path = os.path.join(*(['new_site', 'files']
                 + list(path.split('/'))))
@@ -149,19 +151,29 @@ class CommandImportWordpress(Command):
     def import_item(self, item):
         """Takes an item from the feed and creates a post file."""
         title = get_text_tag(item, 'title', 'NO TITLE')
+        wp_ns = item.nsmap['wp']
+        dc_ns = item.nsmap['dc']
         # link is something like http://foo.com/2012/09/01/hello-world/
         # So, take the path, utils.slugify it, and that's our slug
         link = get_text_tag(item, 'link', None)
         slug = utils.slugify(urlparse(link).path)
+        if not slug:  # it happens if the post has no "nice" URL
+            slug = get_text_tag(item, '{%s}post_name' % wp_ns, None)
+        if not slug:  # it *may* happen
+            slug = get_text_tag(item, '{%s}post_id' % wp_ns, None)
+        if not slug:  # should never happen
+            print("Error converting post:", title)
+            return
+            
         description = get_text_tag(item, 'description', '')
         post_date = get_text_tag(item,
-            '{http://wordpress.org/export/1.2/}post_date', None)
+            '{%s}post_date' % wp_ns, None)
         post_type = get_text_tag(item,
-            '{http://wordpress.org/export/1.2/}post_type', 'post')
+            '{%s}post_type' % wp_ns, 'post')
         status = get_text_tag(item,
-            '{http://wordpress.org/export/1.2/}status', 'publish')
+            '{%s}status' % wp_ns, 'publish')
         content = get_text_tag(item,
-            '{http://purl.org/rss/1.0/modules/content/}encoded', '')
+            '{%s}encoded' % dc_ns, '')
 
         tags = []
         if status != 'publish':
