@@ -135,6 +135,9 @@ def get_text_tag(tag, name, default):
     else:
         return default
 
+def download_url_content_to_file(url, dst_path):
+    with open(dst_path, 'wb+') as fd:
+        fd.write(requests.get(url).content)
 
 def import_attachment(item):
     post_type = get_text_tag(item,
@@ -151,13 +154,32 @@ def import_attachment(item):
         if not os.path.isdir(dst_dir):
             os.makedirs(dst_dir)
         print("Downloading %s => %s" % (url, dst_path))
-        with open(dst_path, 'wb+') as fd:
-            fd.write(requests.get(url).content)
+        download_url_content_to_file(url, dst_path)
         dst_url = '/'.join(dst_path.split(os.sep)[2:])
         links[link] = '/' + dst_url
         links[url] = '/' + dst_url
     return
 
+
+def write_metadata(filename, title, slug,  post_date,  description, tags):
+    with codecs.open(filename, "w+", "utf8") as fd:
+        fd.write('%s\n' % title)
+        fd.write('%s\n' % slug)
+        fd.write('%s\n' % post_date)
+        fd.write('%s\n' % ','.join(tags))
+        fd.write('\n')
+        fd.write('%s\n' % description)
+
+def write_content(filename, content):
+    with open(filename, "wb+") as fd:
+        if content.strip():
+            try:
+                doc = html.document_fromstring(content)
+                doc.rewrite_links(replacer)
+                fd.write(html.tostring(doc, encoding='utf8'))
+            except:
+                import pdb
+                pdb.set_trace()
 
 def import_item(item):
     """Takes an item from the feed and creates a post file."""
@@ -190,22 +212,7 @@ def import_item(item):
         out_folder = 'posts'
     else:
         out_folder = 'stories'
-    # Write metadata
-    with codecs.open(os.path.join('new_site', out_folder, slug + '.meta'),
-                     "w+", "utf8") as fd:
-        fd.write('%s\n' % title)
-        fd.write('%s\n' % slug)
-        fd.write('%s\n' % post_date)
-        fd.write('%s\n' % ','.join(tags))
-        fd.write('\n')
-        fd.write('%s\n' % description)
-    with open(os.path.join(
-              'new_site', out_folder, slug + '.wp'), "wb+") as fd:
-        if content.strip():
-            try:
-                doc = html.document_fromstring(content)
-                doc.rewrite_links(replacer)
-                fd.write(html.tostring(doc, encoding='utf8'))
-            except:
-                import pdb
-                pdb.set_trace()
+
+    write_metadata(os.path.join('new_site', out_folder, slug + '.meta'),
+        title, slug, post_date, description, tags)
+    write_content(os.path.join('new_site', out_folder, slug + '.wp'), content)

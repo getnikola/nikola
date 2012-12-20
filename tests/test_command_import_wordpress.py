@@ -45,5 +45,24 @@ class CommandImportWordpressTest(unittest.TestCase):
         self.assertEqual('mail@some.blog', context['BLOG_EMAIL'])
         self.assertEqual('Niko', context['BLOG_AUTHOR'])
 
+    def test_importing_posts_and_attachments(self):
+        channel = self.import_command.get_channel_from_file(self.import_filename)
+
+        write_metadata = mock.MagicMock()
+        write_content = mock.MagicMock()
+        download_mock = mock.MagicMock()
+
+        with mock.patch('nikola.plugins.command_import_wordpress.write_content', write_content):
+            with mock.patch('nikola.plugins.command_import_wordpress.write_metadata', write_metadata):
+                with mock.patch('nikola.plugins.command_import_wordpress.download_url_content_to_file', download_mock):
+                    # import pdb
+                    # pdb.set_trace()
+                    self.import_command.import_posts(channel)
+
+        self.assertTrue(download_mock.called)
+        self.assertTrue(write_metadata.called)
+        self.assertTrue(write_content.called)
+
+
 if __name__ == '__main__':
     unittest.main()
