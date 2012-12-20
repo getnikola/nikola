@@ -858,6 +858,8 @@ about it.
        ``xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"`` near the top of the
        file. If it says ``1.1`` instead of ``1.2`` you will have to update your
        wordpress before dumping.
+
+       Other versions may or may not work.
   
 License
 -------
