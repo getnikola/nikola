@@ -22,13 +22,14 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import unicode_literals
 import os
 import tempfile
 
 from nikola.plugin_categories import LateTask
 from nikola.utils import config_changed
 
-from . import sitemap_gen as smap
+import sitemap_gen
 
 
 class Sitemap(LateTask):
@@ -66,15 +67,15 @@ class Sitemap(LateTask):
             config_file.close()
 
             # Generate sitemap
-            sitemap = smap.CreateSitemapFromFile(config_file.name, True)
+            sitemap = sitemap_gen.CreateSitemapFromFile(config_file.name, True)
             if not sitemap:
-                smap.output.Log('Configuration file errors -- exiting.', 0)
+                sitemap_gen.output.Log('Configuration file errors -- exiting.', 0)
             else:
                 sitemap.Generate()
-                smap.output.Log('Number of errors: %d' %
-                    smap.output.num_errors, 1)
-                smap.output.Log('Number of warnings: %d' %
-                    smap.output.num_warns, 1)
+                sitemap_gen.output.Log('Number of errors: %d' %
+                    sitemap_gen.output.num_errors, 1)
+                sitemap_gen.output.Log('Number of warnings: %d' %
+                    sitemap_gen.output.num_warns, 1)
             os.unlink(config_file.name)
 
         yield {
