@@ -47,15 +47,12 @@ class CommandImportWordpress(Command):
 
     name = "import_wordpress"
 
-    def run(self, fname=None):
-        # Parse the data
-        if fname is None:
-            print("Usage: nikola import_wordpress wordpress_dump.xml")
-            return
-        self.url_map = {}
-        self.context = {}
-        with open(fname) as fd:
-            xml = []
+
+    @staticmethod
+    def read_xml_file(filename):
+        xml = []
+
+        with open(filename) as fd:
             for line in fd:
                 # These explode etree and are useless
                 if b'<atom:link rel=' in line:
@@ -63,66 +60,100 @@ class CommandImportWordpress(Command):
                 xml.append(line)
             xml = b'\n'.join(xml)
 
-        tree = etree.fromstring(xml)
+        return xml
+
+    @classmethod
+    def get_channel_from_file(cls, filename):
+        tree = etree.fromstring(cls.read_xml_file(filename))
         channel = tree.find('channel')
+        return channel
+
+    @staticmethod
+    def populate_context(channel):
         wp_ns = channel.nsmap['wp']
 
-        self.context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')[:2]
-        self.context['BLOG_TITLE'] = get_text_tag(
-            channel, 'title', 'PUT TITLE HERE')
-        self.context['BLOG_DESCRIPTION'] = get_text_tag(
+        context = {}
+        context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')[:2]
+        context['BLOG_TITLE'] = get_text_tag(channel, 'title', 'PUT TITLE HERE')
+        context['BLOG_DESCRIPTION'] = get_text_tag(
             channel, 'description', 'PUT DESCRIPTION HERE')
-        self.context['BLOG_URL'] = get_text_tag(channel, 'link', '#')
+        context['BLOG_URL'] = get_text_tag(channel, 'link', '#')
         author = channel.find('{%s}author' % wp_ns)
-        self.context['BLOG_EMAIL'] = get_text_tag(
+        context['BLOG_EMAIL'] = get_text_tag(
             author,
             '{%s}author_email' % wp_ns,
             "joe@example.com")
-        self.context['BLOG_AUTHOR'] = get_text_tag(
+        context['BLOG_AUTHOR'] = get_text_tag(
             author,
             '{%s}author_display_name' % wp_ns,
             "Joe Example")
-        self.context['POST_PAGES'] = '''(
+        context['POST_PAGES'] = '''(
             ("posts/*.wp", "posts", "post.tmpl", True),
             ("stories/*.wp", "stories", "story.tmpl", False),
         )'''
-        self.context['POST_COMPILERS'] = '''{
+        context['POST_COMPILERS'] = '''{
         "rest": ('.txt', '.rst'),
         "markdown": ('.md', '.mdown', '.markdown', '.wp'),
         "html": ('.html', '.htm')
         }
         '''
 
-        # Generate base site
-        os.system('nikola init new_site')
-        conf_template = Template(filename=os.path.join(
-            os.path.dirname(utils.__file__), 'conf.py.in'))
+        return context
 
-        # Import posts
-        for item in channel.findall('item'):
-            self.import_attachment(item)
-        for item in channel.findall('item'):
-            self.import_item(item)
-        
-        with codecs.open(os.path.join('new_site', 'url_map.csv'),
+    def write_urlmap_csv(self, output_file, url_map):
+        with codecs.open(output_file,
             'w+', 'utf8') as fd:
             csv_writer = csv.writer(fd)
-            for item in self.url_map.items():
+            for item in url_map.items():
                 csv_writer.writerow(item)
 
-        self.context['REDIRECTIONS']=[]
-        for k,v in self.url_map.items():
+    def configure_redirections(self, url_map):
+        redirections = []
+        for k,v in url_map.items():
             # remove the initial "/" because src is a relative file path
             src = (urlparse(k).path+'index.html')[1:]
             dst = (urlparse(v).path)
             if src == 'index.html':
                 print("Can't do a redirect for: %r" % k)
             else:
-                self.context['REDIRECTIONS'].append((src,dst))
-                
-        with codecs.open(os.path.join('new_site', 'conf.py'),
-            'w+', 'utf8') as fd:
-            fd.write(conf_template.render(**self.context))
+                redirections.append((src,dst))
+
+        return redirections
+
+
+    def write_configuration(self, filename, rendered_template):
+        with codecs.open(filename, 'w+', 'utf8') as fd:
+            fd.write(rendered_template)
+
+    def run(self, fname=None):
+        # Parse the data
+        if fname is None:
+            print("Usage: nikola import_wordpress wordpress_dump.xml")
+            return
+
+        self.url_map = {}
+        channel = self.get_channel_from_file(fname)
+        self.context = self.populate_context(channel)
+        conf_template = self.generate_base_site(self.context)
+        self.context['REDIRECTIONS'] = self.configure_redirections(self.url_map)
+
+        self.import_posts(channel)
+        self.write_urlmap_csv(os.path.join('new_site', 'url_map.csv'), self.url_map)
+        self.write_configuration(os.path.join('new_site', 'conf.py'), conf_template.render(**self.context))
+
+    @staticmethod
+    def generate_base_site(context):
+        os.system('nikola init new_site')
+        conf_template = Template(filename=os.path.join(
+            os.path.dirname(utils.__file__), 'conf.py.in'))
+
+        return conf_template
+
+    def import_posts(self, channel):
+        for item in channel.findall('item'):
+            self.import_attachment(item)
+        for item in channel.findall('item'):
+            self.import_item(item)
 
     def import_attachment(self, item):
         wp_ns = item.nsmap['wp']
@@ -140,8 +171,7 @@ class CommandImportWordpress(Command):
             if not os.path.isdir(dst_dir):
                 os.makedirs(dst_dir)
             print("Downloading %s => %s" % (url, dst_path))
-            with open(dst_path, 'wb+') as fd:
-                fd.write(requests.get(url).content)
+            download_url_content_to_file(url, dst_path)
             dst_url = '/'.join(dst_path.split(os.sep)[2:])
             links[link] = '/' + dst_url
             links[url] = '/' + dst_url
@@ -164,7 +194,7 @@ class CommandImportWordpress(Command):
         if not slug:  # should never happen
             print("Error converting post:", title)
             return
-            
+
         description = get_text_tag(item, 'description', '')
         post_date = get_text_tag(item,
             '{%s}post_date' % wp_ns, None)
@@ -190,32 +220,11 @@ class CommandImportWordpress(Command):
             out_folder = 'posts'
         else:
             out_folder = 'stories'
+
         self.url_map[link] = self.context['BLOG_URL']+'/'+out_folder+'/'+slug+'.html'
-        # Write metadata
-        with codecs.open(os.path.join('new_site', out_folder, slug + '.meta'),
-            "w+", "utf8") as fd:
-            fd.write('%s\n' % title)
-            fd.write('%s\n' % slug)
-            fd.write('%s\n' % post_date)
-            fd.write('%s\n' % ','.join(tags))
-            fd.write('\n')
-            fd.write('%s\n' % description)
-        with open(os.path.join(
-            'new_site', out_folder, slug + '.wp'), "wb+") as fd:
-            if content.strip():
-                # Handle sourcecode pseudo-tags
-                content = re.sub('\[sourcecode language="([^"]+)"\]',
-                    "\n~~~~~~~~~~~~{.\\1}\n",content)
-                content = content.replace('[/sourcecode]', "\n~~~~~~~~~~~~\n")
-                doc = html.document_fromstring(content)
-                doc.rewrite_links(replacer)
-                # Replace H1 elements with H2 elements
-                for tag in doc.findall('.//h1'):
-                    if not tag.text:
-                        print("Failed to fix bad title: %r" % html.tostring(tag))
-                    else:
-                        tag.getparent().replace(tag,builder.E.h2(tag.text)) 
-                fd.write(html.tostring(doc, encoding='utf8'))
+
+        write_metadata(os.path.join('new_site', out_folder, slug + '.meta'), title, slug, post_date, description, tags)
+        write_content(os.path.join('new_site', out_folder, slug + '.wp'), content)
 
 
 def replacer(dst):
@@ -231,4 +240,32 @@ def get_text_tag(tag, name, default):
     else:
         return default
 
+def download_url_content_to_file(url, dst_path):
+    with open(dst_path, 'wb+') as fd:
+        fd.write(requests.get(url).content)
 
+def write_metadata(filename, title, slug,  post_date,  description, tags):
+    with codecs.open(filename, "w+", "utf8") as fd:
+        fd.write('%s\n' % title)
+        fd.write('%s\n' % slug)
+        fd.write('%s\n' % post_date)
+        fd.write('%s\n' % ','.join(tags))
+        fd.write('\n')
+        fd.write('%s\n' % description)
+
+def write_content(filename, content):
+    with open(filename, "wb+") as fd:
+        if content.strip():
+            # Handle sourcecode pseudo-tags
+            content = re.sub('\[sourcecode language="([^"]+)"\]',
+                "\n~~~~~~~~~~~~{.\\1}\n",content)
+            content = content.replace('[/sourcecode]', "\n~~~~~~~~~~~~\n")
+            doc = html.document_fromstring(content)
+            doc.rewrite_links(replacer)
+            # Replace H1 elements with H2 elements
+            for tag in doc.findall('.//h1'):
+                if not tag.text:
+                    print("Failed to fix bad title: %r" % html.tostring(tag))
+                else:
+                    tag.getparent().replace(tag,builder.E.h2(tag.text))
+            fd.write(html.tostring(doc, encoding='utf8'))
