@@ -32,7 +32,8 @@ class CommandImportWordpressTest(unittest.TestCase):
         self.assertTrue(data_import.called)
 
     def test_populate_context(self):
-        channel = self.import_command.get_channel_from_file(self.import_filename)
+        channel = self.import_command.get_channel_from_file(
+            self.import_filename)
         context = self.import_command.populate_context(channel)
 
         for required_key in ('POST_PAGES', 'POST_COMPILERS'):
@@ -46,7 +47,8 @@ class CommandImportWordpressTest(unittest.TestCase):
         self.assertEqual('Niko', context['BLOG_AUTHOR'])
 
     def test_importing_posts_and_attachments(self):
-        channel = self.import_command.get_channel_from_file(self.import_filename)
+        channel = self.import_command.get_channel_from_file(
+            self.import_filename)
 
         write_metadata = mock.MagicMock()
         write_content = mock.MagicMock()
@@ -59,7 +61,7 @@ class CommandImportWordpressTest(unittest.TestCase):
                         self.import_command.import_posts(channel)
 
         self.assertTrue(download_mock.called)
-        download_mock.assert_any_call('http://some.blog/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png', u'new_site/files/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png')
+        download_mock.assert_any_call(u'http://some.blog/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png', u'new_site/files/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png')
 
         self.assertTrue(write_metadata.called)
         write_metadata.assert_any_call(u'new_site/stories/kontakt.meta', 'Kontakt', u'kontakt', '2009-07-16 20:20:32', None, [])
