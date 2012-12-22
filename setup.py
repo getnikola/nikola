@@ -41,6 +41,7 @@ dependencies = [
     'mock>=1.0.0',
     'requests',
     'markdown',
+    'Jinja2',
 ]
 
 if sys.version_info[0] == 2:
@@ -171,7 +172,7 @@ setup(name='Nikola',
       author='Roberto Alsina and others',
       author_email='ralsina@netmanagers.com.ar',
       url='http://nikola.ralsina.com.ar/',
-      packages=['nikola'],
+      packages=['nikola', 'nikola.plugins'],
       scripts=['scripts/nikola'],
       install_requires=dependencies,
       package_data=find_package_data(),
