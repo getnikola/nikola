@@ -52,7 +52,7 @@ class CommandImportWordpress(Command):
     def read_xml_file(filename):
         xml = []
 
-        with open(filename) as fd:
+        with open(filename, 'rb') as fd:
             for line in fd:
                 # These explode etree and are useless
                 if b'<atom:link rel=' in line:
