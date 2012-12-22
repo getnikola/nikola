@@ -37,7 +37,6 @@ dependencies = [
     'unidecode',
     'lxml',
     'yapsy',
-    'configparser',
     'mock>=1.0.0',
     'requests',
     'markdown',
