@@ -12,4 +12,3 @@ install:
 script: 
  - nosetests
  - nikola
- - "nikola init test_site && cd test_suite && nikola build"
