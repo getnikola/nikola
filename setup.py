@@ -43,6 +43,10 @@ dependencies = [
     'markdown',
 ]
 
+if sys.version_info[0] == 2:
+    # in Python 3 this becomes a builtin, for Python 2 we need the backport
+    dependencies.append('configparser')
+
 # Provided as an attribute, so you can append to these instead
 # of replicating them:
 standard_exclude = ('*.pyc', '*$py.class', '*~', '.*', '*.bak')
