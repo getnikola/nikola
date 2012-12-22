@@ -74,9 +74,9 @@ import urllib
 import xml.sax
 
 try:
-    from urlparse import urlparse
+    from urlparse import urlparse, urlsplit, urlunsplit
 except ImportError:
-        from urllib.parse import urlparse
+    from urllib.parse import urlparse, urlsplit, urlunsplit
 
 # Text encodings
 ENC_ASCII = 'ASCII'
@@ -472,7 +472,7 @@ class URL(object):
     if not loc:
       return False
     narrow = encoder.NarrowText(loc, None)
-    (scheme, netloc, path, query, frag) = urlparse.urlsplit(narrow)
+    (scheme, netloc, path, query, frag) = urlsplit(narrow)
     if (not scheme) or (not netloc):
       return False
     return True
@@ -488,7 +488,7 @@ class URL(object):
     narrow = encoder.NarrowText(loc, None)
 
     # Escape components individually
-    (scheme, netloc, path, query, frag) = urlparse.urlsplit(narrow)
+    (scheme, netloc, path, query, frag) = urlsplit(narrow)
     unr    = '-._~'
     sub    = '!$&\'()*+,;='
     netloc = urllib.quote(netloc, unr + sub + '%:@/[]')
@@ -498,7 +498,7 @@ class URL(object):
 
     # Try built-in IDNA encoding on the netloc
     try:
-      (ignore, widenetloc, ignore, ignore, ignore) = urlparse.urlsplit(loc)
+      (ignore, widenetloc, ignore, ignore, ignore) = urlsplit(loc)
       for c in widenetloc:
         if c >= unichr(128):
           netloc = widenetloc.encode(ENC_IDNA)
@@ -519,7 +519,7 @@ class URL(object):
       bad_netloc = True
 
     # Put it all back together
-    narrow = urlparse.urlunsplit((scheme, netloc, path, query, frag))
+    narrow = urlunsplit((scheme, netloc, path, query, frag))
 
     # I let '%' through.  Fix any that aren't pre-existing escapes.
     HEXDIG = '0123456789abcdefABCDEF'
@@ -1485,7 +1485,7 @@ class InputSitemap(xml.sax.handler.ContentHandler):
     for url in urllist:
       url = URL.Canonicalize(url)
       output.Log('Index points to Sitemap file at: %s' % url, 2)
-      (scheme, netloc, path, query, frag) = urlparse.urlsplit(url)
+      (scheme, netloc, path, query, frag) = urlsplit(url)
       file = os.path.basename(path)
       file = urllib.unquote(file)
       if wide:
@@ -1676,7 +1676,7 @@ class PerURLStatistics:
   def Consume(self, url):
     """ Log some stats for the URL.  At the moment, that means extension. """
     if url and url.loc:
-      (scheme, netloc, path, query, frag) = urlparse.urlsplit(url.loc)
+      (scheme, netloc, path, query, frag) = urlsplit(url.loc)
       if not path:
         return
 
@@ -2008,7 +2008,7 @@ class Sitemap(xml.sax.handler.ContentHandler):
       query_attr            = ping[5]
       query_map[query_attr] = url
       query = urllib.urlencode(query_map)
-      notify = urlparse.urlunsplit((ping[0], ping[1], ping[2], query, ping[4]))
+      notify = urlunsplit((ping[0], ping[1], ping[2], query, ping[4]))
 
       # Send the notification
       output.Log('Notifying: %s' % ping[1], 1)
