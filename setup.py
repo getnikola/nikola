@@ -15,10 +15,10 @@ from fnmatch import fnmatchcase
 
 try:
     # Prefer setuptools for the installation to have no problem with the
-    # "--single-version-externally-managed" option that pip uses when 
+    # "--single-version-externally-managed" option that pip uses when
     # installing packages.
     from setuptools import setup
-    from setuptools import convert_path 
+    from setuptools import convert_path
 
     from setuptools.command.install import install
 except ImportError:
@@ -89,7 +89,7 @@ def find_package_data(
     exclude=standard_exclude,
     exclude_directories=standard_exclude_directories,
     only_in_packages=True,
-    show_ignored=False):
+        show_ignored=False):
     """
     Return a dictionary suitable for use in ``package_data``
     in a distutils ``setup.py`` file.
@@ -127,7 +127,7 @@ def find_package_data(
                 bad_name = False
                 for pattern in exclude_directories:
                     if (fnmatchcase(name, pattern)
-                        or fn.lower() == pattern.lower()):
+                            or fn.lower() == pattern.lower()):
                         bad_name = True
                         if show_ignored:
                             print >> sys.stderr, (
@@ -137,7 +137,7 @@ def find_package_data(
                 if bad_name:
                     continue
                 if (os.path.isfile(os.path.join(fn, '__init__.py'))
-                    and not prefix):
+                        and not prefix):
                     if not package:
                         new_package = name
                     else:
@@ -145,13 +145,13 @@ def find_package_data(
                     stack.append((fn, '', new_package, False))
                 else:
                     stack.append((fn, prefix + name + '/',
-                    package, only_in_packages))
+                                  package, only_in_packages))
             elif package or not only_in_packages:
                 # is a file
                 bad_name = False
                 for pattern in exclude:
                     if (fnmatchcase(name, pattern)
-                        or fn.lower() == pattern.lower()):
+                            or fn.lower() == pattern.lower()):
                         bad_name = True
                         if show_ignored:
                             print >> sys.stderr, (
@@ -171,15 +171,19 @@ setup(name='Nikola',
       author='Roberto Alsina and others',
       author_email='ralsina@netmanagers.com.ar',
       url='http://nikola.ralsina.com.ar/',
-      packages=['nikola', 'nikola.plugins'],
+      packages=['nikola', 
+                'nikola.plugins',
+                'nikola.plugins.compile_markdown', 
+                'nikola.plugins.task_sitemap', 
+                'nikola.plugins.compile_rest'],
       scripts=['scripts/nikola'],
       install_requires=dependencies,
       package_data=find_package_data(),
       cmdclass={'install': nikola_install},
       data_files=[
               ('share/doc/nikola', [
-                      'docs/manual.txt',
-                      'docs/theming.txt',
-                      'docs/extending.txt']),
+               'docs/manual.txt',
+               'docs/theming.txt',
+               'docs/extending.txt']),
       ],
-     )
+      )
