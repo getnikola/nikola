@@ -39,6 +39,8 @@ dependencies = [
     'yapsy',
     'configparser',
     'mock>=1.0.0',
+    'requests',
+    'markdown',
 ]
 
 # Provided as an attribute, so you can append to these instead
