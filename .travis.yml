@@ -12,4 +12,4 @@ install:
 script: 
  - nosetests
  - nikola
- - "nikola import_wordpress tests/wordpress_export_example.xml && cd new_site && nikola build" 
+ - "nikola init test_site && cd test_suite && nikola build"
