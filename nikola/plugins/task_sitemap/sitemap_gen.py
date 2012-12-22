@@ -40,6 +40,7 @@
 #
 #   http://www.opensource.org/licenses/bsd-license.php
 #
+from __future__ import print_function
 
 __usage__ = \
 """A simple script to automatically produce sitemaps for a webserver,
@@ -56,8 +57,8 @@ Usage: python sitemap_gen.py --config=config.xml [--help] [--testing]
 # entire file has been parsed.
 import sys
 if sys.hexversion < 0x02020000:
-  print 'This script requires Python 2.2 or later.'
-  print 'Currently run with version: %s' % sys.version
+  print('This script requires Python 2.2 or later.')
+  print('Currently run with version: %s' % sys.version)
   sys.exit(1)
 
 import fnmatch
@@ -70,16 +71,12 @@ import stat
 import time
 import types
 import urllib
-import urlparse
 import xml.sax
 
-# True and False were introduced in Python2.2.2
 try:
-  testTrue=True
-  del testTrue
-except NameError:
-  True=1
-  False=0
+    from urlparse import urlparse
+except ImportError:
+        from urllib.parse import urlparse
 
 # Text encodings
 ENC_ASCII = 'ASCII'
@@ -383,7 +380,7 @@ class Output:
     if text:
       text = encoder.NarrowText(text, None)
       if self._verbose >= level:
-        print text
+        print(text)
   #end def Log
 
   def Warn(self, text):
@@ -393,7 +390,7 @@ class Output:
       hash = hashlib.md5(text).digest()
       if not self._warns_shown.has_key(hash):
         self._warns_shown[hash] = 1
-        print '[WARNING] ' + text
+        print('[WARNING] ' + text)
       else:
         self.Log('(suppressed) [WARNING] ' + text, 3)
       self.num_warns = self.num_warns + 1
@@ -406,7 +403,7 @@ class Output:
       hash = hashlib.md5(text).digest()
       if not self._errors_shown.has_key(hash):
         self._errors_shown[hash] = 1
-        print '[ERROR] ' + text
+        print('[ERROR] ' + text)
       else:
         self.Log('(suppressed) [ERROR] ' + text, 3)
       self.num_errors = self.num_errors + 1
@@ -416,9 +413,9 @@ class Output:
     """ Output an error and terminate the program. """
     if text:
       text = encoder.NarrowText(text, None)
-      print '[FATAL] ' + text
+      print('[FATAL] ' + text)
     else:
-      print 'Fatal error.'
+      print('Fatal error.')
     sys.exit(1)
   #end def Fatal
 
@@ -1459,7 +1456,7 @@ class InputSitemap(xml.sax.handler.ContentHandler):
                    % path)
     except IOError:
       output.Error('Cannot read from file "%s"' % path)
-    except xml.sax._exceptions.SAXParseException, e:
+    except xml.sax._exceptions.SAXParseException as e:
       output.Error('XML error in the file "%s" (line %d, column %d): %s' %
                    (path, e._linenum, e._colnum, e.getMessage()))
 
@@ -1930,7 +1927,7 @@ class Sitemap(xml.sax.handler.ContentHandler):
       file  = None
     except IOError:
       output.Fatal('Couldn\'t write out to file: %s' % filename)
-    os.chmod(filename, 0644)
+    os.chmod(filename, 0o0644)
 
     # Flush
     self._set = []
@@ -1965,7 +1962,7 @@ class Sitemap(xml.sax.handler.ContentHandler):
       fd = None
     except IOError:
       output.Fatal('Couldn\'t write out to file: %s' % filename)
-    os.chmod(filename, 0644)
+    os.chmod(filename, 0o0644)
   #end def WriteIndex
 
   def NotifySearch(self):
@@ -2183,7 +2180,7 @@ def CreateSitemapFromFile(configpath, suppress_notify):
     xml.sax.parse(configpath, sitemap)
   except IOError:
     output.Error('Cannot read configuration file: %s' % configpath)
-  except xml.sax._exceptions.SAXParseException, e:
+  except xml.sax._exceptions.SAXParseException as e:
     output.Error('XML error in the config file (line %d, column %d): %s' %
                  (e._linenum, e._colnum, e.getMessage()))
   except xml.sax._exceptions.SAXReaderNotAvailable:
