@@ -47,7 +47,6 @@ class CommandImportWordpress(Command):
 
     name = "import_wordpress"
 
-
     @staticmethod
     def read_xml_file(filename):
         xml = []
@@ -74,7 +73,8 @@ class CommandImportWordpress(Command):
 
         context = {}
         context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')[:2]
-        context['BLOG_TITLE'] = get_text_tag(channel, 'title', 'PUT TITLE HERE')
+        context['BLOG_TITLE'] = get_text_tag(channel, 'title',
+                                             'PUT TITLE HERE')
         context['BLOG_DESCRIPTION'] = get_text_tag(
             channel, 'description', 'PUT DESCRIPTION HERE')
         context['BLOG_URL'] = get_text_tag(channel, 'link', '#')
@@ -110,14 +110,14 @@ class CommandImportWordpress(Command):
     @staticmethod
     def configure_redirections(url_map):
         redirections = []
-        for k,v in url_map.items():
+        for k, v in url_map.items():
             # remove the initial "/" because src is a relative file path
-            src = (urlparse(k).path+'index.html')[1:]
+            src = (urlparse(k).path + 'index.html')[1:]
             dst = (urlparse(v).path)
             if src == 'index.html':
                 print("Can't do a redirect for: %r" % k)
             else:
-                redirections.append((src,dst))
+                redirections.append((src, dst))
 
         return redirections
 
@@ -136,11 +136,14 @@ class CommandImportWordpress(Command):
         channel = self.get_channel_from_file(fname)
         self.context = self.populate_context(channel)
         conf_template = self.generate_base_site(self.context)
-        self.context['REDIRECTIONS'] = self.configure_redirections(self.url_map)
+        self.context['REDIRECTIONS'] = self.configure_redirections(
+            self.url_map)
 
         self.import_posts(channel)
-        self.write_urlmap_csv(os.path.join('new_site', 'url_map.csv'), self.url_map)
-        self.write_configuration(os.path.join('new_site', 'conf.py'), conf_template.render(**self.context))
+        self.write_urlmap_csv(
+            os.path.join('new_site', 'url_map.csv'), self.url_map)
+        self.write_configuration(os.path.join(
+            'new_site', 'conf.py'), conf_template.render(**self.context))
 
     @staticmethod
     def generate_base_site(context):
@@ -164,7 +167,7 @@ class CommandImportWordpress(Command):
             link = get_text_tag(item, '{%s}link' % wp_ns, 'foo')
             path = urlparse(url).path
             dst_path = os.path.join(*(['new_site', 'files']
-                + list(path.split('/'))))
+                                      + list(path.split('/'))))
             dst_dir = os.path.dirname(dst_path)
             if not os.path.isdir(dst_dir):
                 os.makedirs(dst_dir)
@@ -181,16 +184,17 @@ class CommandImportWordpress(Command):
             if content.strip():
                 # Handle sourcecode pseudo-tags
                 content = re.sub('\[sourcecode language="([^"]+)"\]',
-                    "\n~~~~~~~~~~~~{.\\1}\n",content)
+                                 "\n~~~~~~~~~~~~{.\\1}\n", content)
                 content = content.replace('[/sourcecode]', "\n~~~~~~~~~~~~\n")
                 doc = html.document_fromstring(content)
                 doc.rewrite_links(replacer)
                 # Replace H1 elements with H2 elements
                 for tag in doc.findall('.//h1'):
                     if not tag.text:
-                        print("Failed to fix bad title: %r" % html.tostring(tag))
+                        print("Failed to fix bad title: %r" %
+                              html.tostring(tag))
                     else:
-                        tag.getparent().replace(tag,builder.E.h2(tag.text))
+                        tag.getparent().replace(tag, builder.E.h2(tag.text))
                 fd.write(html.tostring(doc, encoding='utf8'))
 
     @staticmethod
@@ -199,7 +203,7 @@ class CommandImportWordpress(Command):
             fd.write(requests.get(url).content)
 
     @staticmethod
-    def write_metadata(filename, title, slug,  post_date,  description, tags):
+    def write_metadata(filename, title, slug, post_date, description, tags):
         with codecs.open(filename, "w+", "utf8") as fd:
             fd.write('%s\n' % title)
             fd.write('%s\n' % slug)
@@ -207,7 +211,6 @@ class CommandImportWordpress(Command):
             fd.write('%s\n' % ','.join(tags))
             fd.write('\n')
             fd.write('%s\n' % description)
-
 
     def import_item(self, item):
         """Takes an item from the feed and creates a post file."""
@@ -230,7 +233,8 @@ class CommandImportWordpress(Command):
         post_date = get_text_tag(item, '{%s}post_date' % wp_ns, None)
         post_type = get_text_tag(item, '{%s}post_type' % wp_ns, 'post')
         status = get_text_tag(item, '{%s}status' % wp_ns, 'publish')
-        content = get_text_tag(item,'{http://purl.org/rss/1.0/modules/content/}encoded', '')
+        content = get_text_tag(
+            item, '{http://purl.org/rss/1.0/modules/content/}encoded', '')
 
         tags = []
         if status != 'publish':
@@ -248,10 +252,14 @@ class CommandImportWordpress(Command):
         else:
             out_folder = 'stories'
 
-        self.url_map[link] = self.context['BLOG_URL']+'/'+out_folder+'/'+slug+'.html'
+        self.url_map[link] = self.context['BLOG_URL'] + '/' + \
+            out_folder + '/' + slug + '.html'
 
-        self.write_metadata(os.path.join('new_site', out_folder, slug + '.meta'), title, slug, post_date, description, tags)
-        self.write_content(os.path.join('new_site', out_folder, slug + '.wp'), content)
+        self.write_metadata(os.path.join('new_site', out_folder,
+                                         slug + '.meta'),
+                            title, slug, post_date, description, tags)
+        self.write_content(
+            os.path.join('new_site', out_folder, slug + '.wp'), content)
 
 
 def replacer(dst):

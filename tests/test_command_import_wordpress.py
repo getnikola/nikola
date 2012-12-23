@@ -53,8 +53,9 @@ class CommandImportWordpressTest(unittest.TestCase):
     def test_importing_posts_and_attachments(self):
         channel = self.import_command.get_channel_from_file(
             self.import_filename)
-        self.import_command.context = self.import_command.populate_context(channel)
-        self.import_command.url_map = {} # For testing we use an empty one.
+        self.import_command.context = self.import_command.populate_context(
+            channel)
+        self.import_command.url_map = {}  # For testing we use an empty one.
 
         write_metadata = mock.MagicMock()
         write_content = mock.MagicMock()
