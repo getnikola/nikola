@@ -68,6 +68,28 @@ class CommandImportWordpress(Command):
         return channel
 
     @staticmethod
+    def configure_redirections(url_map):
+        redirections = []
+        for k, v in url_map.items():
+            # remove the initial "/" because src is a relative file path
+            src = (urlparse(k).path + 'index.html')[1:]
+            dst = (urlparse(v).path)
+            if src == 'index.html':
+                print("Can't do a redirect for: %r" % k)
+            else:
+                redirections.append((src, dst))
+
+        return redirections
+
+    @staticmethod
+    def generate_base_site(context):
+        os.system('nikola init new_site')
+        conf_template = Template(filename=os.path.join(
+            os.path.dirname(utils.__file__), 'conf.py.in'))
+
+        return conf_template
+
+    @staticmethod
     def populate_context(channel):
         wp_ns = channel.nsmap['wp']
 
@@ -101,63 +123,9 @@ class CommandImportWordpress(Command):
         return context
 
     @staticmethod
-    def write_urlmap_csv(output_file, url_map):
-        with codecs.open(output_file, 'w+', 'utf8') as fd:
-            csv_writer = csv.writer(fd)
-            for item in url_map.items():
-                csv_writer.writerow(item)
-
-    @staticmethod
-    def configure_redirections(url_map):
-        redirections = []
-        for k, v in url_map.items():
-            # remove the initial "/" because src is a relative file path
-            src = (urlparse(k).path + 'index.html')[1:]
-            dst = (urlparse(v).path)
-            if src == 'index.html':
-                print("Can't do a redirect for: %r" % k)
-            else:
-                redirections.append((src, dst))
-
-        return redirections
-
-    @staticmethod
-    def write_configuration(filename, rendered_template):
-        with codecs.open(filename, 'w+', 'utf8') as fd:
-            fd.write(rendered_template)
-
-    def run(self, fname=None):
-        # Parse the data
-        if fname is None:
-            print("Usage: nikola import_wordpress wordpress_dump.xml")
-            return
-
-        self.url_map = {}
-        channel = self.get_channel_from_file(fname)
-        self.context = self.populate_context(channel)
-        conf_template = self.generate_base_site(self.context)
-        self.context['REDIRECTIONS'] = self.configure_redirections(
-            self.url_map)
-
-        self.import_posts(channel)
-        self.write_urlmap_csv(
-            os.path.join('new_site', 'url_map.csv'), self.url_map)
-        self.write_configuration(os.path.join(
-            'new_site', 'conf.py'), conf_template.render(**self.context))
-
-    @staticmethod
-    def generate_base_site(context):
-        os.system('nikola init new_site')
-        conf_template = Template(filename=os.path.join(
-            os.path.dirname(utils.__file__), 'conf.py.in'))
-
-        return conf_template
-
-    def import_posts(self, channel):
-        for item in channel.findall('item'):
-            self.import_attachment(item)
-        for item in channel.findall('item'):
-            self.import_item(item)
+    def download_url_content_to_file(url, dst_path):
+        with open(dst_path, 'wb+') as fd:
+            fd.write(requests.get(url).content)
 
     def import_attachment(self, item):
         wp_ns = item.nsmap['wp']
@@ -196,11 +164,6 @@ class CommandImportWordpress(Command):
                     else:
                         tag.getparent().replace(tag, builder.E.h2(tag.text))
                 fd.write(html.tostring(doc, encoding='utf8'))
-
-    @staticmethod
-    def download_url_content_to_file(url, dst_path):
-        with open(dst_path, 'wb+') as fd:
-            fd.write(requests.get(url).content)
 
     @staticmethod
     def write_metadata(filename, title, slug, post_date, description, tags):
@@ -260,6 +223,43 @@ class CommandImportWordpress(Command):
                             title, slug, post_date, description, tags)
         self.write_content(
             os.path.join('new_site', out_folder, slug + '.wp'), content)
+
+    def import_posts(self, channel):
+        for item in channel.findall('item'):
+            self.import_attachment(item)
+        for item in channel.findall('item'):
+            self.import_item(item)
+
+    @staticmethod
+    def write_urlmap_csv(output_file, url_map):
+        with codecs.open(output_file, 'w+', 'utf8') as fd:
+            csv_writer = csv.writer(fd)
+            for item in url_map.items():
+                csv_writer.writerow(item)
+
+    @staticmethod
+    def write_configuration(filename, rendered_template):
+        with codecs.open(filename, 'w+', 'utf8') as fd:
+            fd.write(rendered_template)
+
+    def run(self, fname=None):
+        # Parse the data
+        if fname is None:
+            print("Usage: nikola import_wordpress wordpress_dump.xml")
+            return
+
+        self.url_map = {}
+        channel = self.get_channel_from_file(fname)
+        self.context = self.populate_context(channel)
+        conf_template = self.generate_base_site(self.context)
+        self.context['REDIRECTIONS'] = self.configure_redirections(
+            self.url_map)
+
+        self.import_posts(channel)
+        self.write_urlmap_csv(
+            os.path.join('new_site', 'url_map.csv'), self.url_map)
+        self.write_configuration(os.path.join(
+            'new_site', 'conf.py'), conf_template.render(**self.context))
 
 
 def replacer(dst):
