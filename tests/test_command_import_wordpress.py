@@ -80,6 +80,10 @@ class CommandImportWordpressTest(unittest.TestCase):
 
         self.assertTrue(len(self.import_command.url_map) > 0)
 
+        self.assertEqual(self.import_command.url_map['http://some.blog/2007/04/hoert/'], u'http://some.blog/posts/200704hoert.html')
+        self.assertEqual(self.import_command.url_map['http://some.blog/2008/07/arzt-und-pfusch-s-i-c-k/'], u'http://some.blog/posts/200807arzt-und-pfusch-s-i-c-k.html')
+        self.assertEqual(self.import_command.url_map['http://some.blog/kontakt/'], u'http://some.blog/stories/kontakt.html')
+
 
 if __name__ == '__main__':
     unittest.main()
