@@ -100,14 +100,15 @@ class CommandImportWordpress(Command):
 
         return context
 
-    def write_urlmap_csv(self, output_file, url_map):
-        with codecs.open(output_file,
-            'w+', 'utf8') as fd:
+    @staticmethod
+    def write_urlmap_csv(output_file, url_map):
+        with codecs.open(output_file, 'w+', 'utf8') as fd:
             csv_writer = csv.writer(fd)
             for item in url_map.items():
                 csv_writer.writerow(item)
 
-    def configure_redirections(self, url_map):
+    @staticmethod
+    def configure_redirections(url_map):
         redirections = []
         for k,v in url_map.items():
             # remove the initial "/" because src is a relative file path
@@ -120,8 +121,8 @@ class CommandImportWordpress(Command):
 
         return redirections
 
-
-    def write_configuration(self, filename, rendered_template):
+    @staticmethod
+    def write_configuration(filename, rendered_template):
         with codecs.open(filename, 'w+', 'utf8') as fd:
             fd.write(rendered_template)
 
@@ -157,13 +158,10 @@ class CommandImportWordpress(Command):
 
     def import_attachment(self, item):
         wp_ns = item.nsmap['wp']
-        post_type = get_text_tag(item,
-            '{%s}post_type' % wp_ns, 'post')
+        post_type = get_text_tag(item, '{%s}post_type' % wp_ns, 'post')
         if post_type == 'attachment':
-            url = get_text_tag(item,
-                '{%s}attachment_url' % wp_ns, 'foo')
-            link = get_text_tag(item,
-                '{%s}link' % wp_ns, 'foo')
+            url = get_text_tag(item, '{%s}attachment_url' % wp_ns, 'foo')
+            link = get_text_tag(item, '{%s}link' % wp_ns, 'foo')
             path = urlparse(url).path
             dst_path = os.path.join(*(['new_site', 'files']
                 + list(path.split('/'))))
@@ -171,11 +169,44 @@ class CommandImportWordpress(Command):
             if not os.path.isdir(dst_dir):
                 os.makedirs(dst_dir)
             print("Downloading %s => %s" % (url, dst_path))
-            download_url_content_to_file(url, dst_path)
+            self.download_url_content_to_file(url, dst_path)
             dst_url = '/'.join(dst_path.split(os.sep)[2:])
             links[link] = '/' + dst_url
             links[url] = '/' + dst_url
         return
+
+    @staticmethod
+    def write_content(filename, content):
+        with open(filename, "wb+") as fd:
+            if content.strip():
+                # Handle sourcecode pseudo-tags
+                content = re.sub('\[sourcecode language="([^"]+)"\]',
+                    "\n~~~~~~~~~~~~{.\\1}\n",content)
+                content = content.replace('[/sourcecode]', "\n~~~~~~~~~~~~\n")
+                doc = html.document_fromstring(content)
+                doc.rewrite_links(replacer)
+                # Replace H1 elements with H2 elements
+                for tag in doc.findall('.//h1'):
+                    if not tag.text:
+                        print("Failed to fix bad title: %r" % html.tostring(tag))
+                    else:
+                        tag.getparent().replace(tag,builder.E.h2(tag.text))
+                fd.write(html.tostring(doc, encoding='utf8'))
+
+    @staticmethod
+    def download_url_content_to_file(url, dst_path):
+        with open(dst_path, 'wb+') as fd:
+            fd.write(requests.get(url).content)
+
+    @staticmethod
+    def write_metadata(filename, title, slug,  post_date,  description, tags):
+        with codecs.open(filename, "w+", "utf8") as fd:
+            fd.write('%s\n' % title)
+            fd.write('%s\n' % slug)
+            fd.write('%s\n' % post_date)
+            fd.write('%s\n' % ','.join(tags))
+            fd.write('\n')
+            fd.write('%s\n' % description)
 
 
     def import_item(self, item):
@@ -196,14 +227,10 @@ class CommandImportWordpress(Command):
             return
 
         description = get_text_tag(item, 'description', '')
-        post_date = get_text_tag(item,
-            '{%s}post_date' % wp_ns, None)
-        post_type = get_text_tag(item,
-            '{%s}post_type' % wp_ns, 'post')
-        status = get_text_tag(item,
-            '{%s}status' % wp_ns, 'publish')
-        content = get_text_tag(item,
-            '{http://purl.org/rss/1.0/modules/content/}encoded', '')
+        post_date = get_text_tag(item, '{%s}post_date' % wp_ns, None)
+        post_type = get_text_tag(item, '{%s}post_type' % wp_ns, 'post')
+        status = get_text_tag(item, '{%s}status' % wp_ns, 'publish')
+        content = get_text_tag(item,'{http://purl.org/rss/1.0/modules/content/}encoded', '')
 
         tags = []
         if status != 'publish':
@@ -223,8 +250,8 @@ class CommandImportWordpress(Command):
 
         self.url_map[link] = self.context['BLOG_URL']+'/'+out_folder+'/'+slug+'.html'
 
-        write_metadata(os.path.join('new_site', out_folder, slug + '.meta'), title, slug, post_date, description, tags)
-        write_content(os.path.join('new_site', out_folder, slug + '.wp'), content)
+        self.write_metadata(os.path.join('new_site', out_folder, slug + '.meta'), title, slug, post_date, description, tags)
+        self.write_content(os.path.join('new_site', out_folder, slug + '.wp'), content)
 
 
 def replacer(dst):
@@ -239,33 +266,3 @@ def get_text_tag(tag, name, default):
         return t.text
     else:
         return default
-
-def download_url_content_to_file(url, dst_path):
-    with open(dst_path, 'wb+') as fd:
-        fd.write(requests.get(url).content)
-
-def write_metadata(filename, title, slug,  post_date,  description, tags):
-    with codecs.open(filename, "w+", "utf8") as fd:
-        fd.write('%s\n' % title)
-        fd.write('%s\n' % slug)
-        fd.write('%s\n' % post_date)
-        fd.write('%s\n' % ','.join(tags))
-        fd.write('\n')
-        fd.write('%s\n' % description)
-
-def write_content(filename, content):
-    with open(filename, "wb+") as fd:
-        if content.strip():
-            # Handle sourcecode pseudo-tags
-            content = re.sub('\[sourcecode language="([^"]+)"\]',
-                "\n~~~~~~~~~~~~{.\\1}\n",content)
-            content = content.replace('[/sourcecode]', "\n~~~~~~~~~~~~\n")
-            doc = html.document_fromstring(content)
-            doc.rewrite_links(replacer)
-            # Replace H1 elements with H2 elements
-            for tag in doc.findall('.//h1'):
-                if not tag.text:
-                    print("Failed to fix bad title: %r" % html.tostring(tag))
-                else:
-                    tag.getparent().replace(tag,builder.E.h2(tag.text))
-            fd.write(html.tostring(doc, encoding='utf8'))
