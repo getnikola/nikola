@@ -60,9 +60,9 @@ class CommandImportWordpressTest(unittest.TestCase):
         write_content = mock.MagicMock()
         download_mock = mock.MagicMock()
 
-        with mock.patch('nikola.plugins.command_import_wordpress.write_content', write_content):
-            with mock.patch('nikola.plugins.command_import_wordpress.write_metadata', write_metadata):
-                with mock.patch('nikola.plugins.command_import_wordpress.download_url_content_to_file', download_mock):
+        with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.write_content', write_content):
+            with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.write_metadata', write_metadata):
+                with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.download_url_content_to_file', download_mock):
                     with mock.patch('nikola.plugins.command_import_wordpress.os.makedirs'):
                         self.import_command.import_posts(channel)
 
