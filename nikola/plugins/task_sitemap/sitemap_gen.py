@@ -40,6 +40,7 @@
 #
 #   http://www.opensource.org/licenses/bsd-license.php
 #
+from __future__ import print_function
 
 __usage__ = \
 """A simple script to automatically produce sitemaps for a webserver,
@@ -56,8 +57,8 @@ Usage: python sitemap_gen.py --config=config.xml [--help] [--testing]
 # entire file has been parsed.
 import sys
 if sys.hexversion < 0x02020000:
-  print 'This script requires Python 2.2 or later.'
-  print 'Currently run with version: %s' % sys.version
+  print('This script requires Python 2.2 or later.')
+  print('Currently run with version: %s' % sys.version)
   sys.exit(1)
 
 import fnmatch
@@ -70,16 +71,12 @@ import stat
 import time
 import types
 import urllib
-import urlparse
 import xml.sax
 
-# True and False were introduced in Python2.2.2
 try:
-  testTrue=True
-  del testTrue
-except NameError:
-  True=1
-  False=0
+    from urlparse import urlparse, urlsplit, urlunsplit
+except ImportError:
+    from urllib.parse import urlparse, urlsplit, urlunsplit
 
 # Text encodings
 ENC_ASCII = 'ASCII'
@@ -383,7 +380,7 @@ class Output:
     if text:
       text = encoder.NarrowText(text, None)
       if self._verbose >= level:
-        print text
+        print(text)
   #end def Log
 
   def Warn(self, text):
@@ -393,7 +390,7 @@ class Output:
       hash = hashlib.md5(text).digest()
       if not self._warns_shown.has_key(hash):
         self._warns_shown[hash] = 1
-        print '[WARNING] ' + text
+        print('[WARNING] ' + text)
       else:
         self.Log('(suppressed) [WARNING] ' + text, 3)
       self.num_warns = self.num_warns + 1
@@ -406,7 +403,7 @@ class Output:
       hash = hashlib.md5(text).digest()
       if not self._errors_shown.has_key(hash):
         self._errors_shown[hash] = 1
-        print '[ERROR] ' + text
+        print('[ERROR] ' + text)
       else:
         self.Log('(suppressed) [ERROR] ' + text, 3)
       self.num_errors = self.num_errors + 1
@@ -416,9 +413,9 @@ class Output:
     """ Output an error and terminate the program. """
     if text:
       text = encoder.NarrowText(text, None)
-      print '[FATAL] ' + text
+      print('[FATAL] ' + text)
     else:
-      print 'Fatal error.'
+      print('Fatal error.')
     sys.exit(1)
   #end def Fatal
 
@@ -475,7 +472,7 @@ class URL(object):
     if not loc:
       return False
     narrow = encoder.NarrowText(loc, None)
-    (scheme, netloc, path, query, frag) = urlparse.urlsplit(narrow)
+    (scheme, netloc, path, query, frag) = urlsplit(narrow)
     if (not scheme) or (not netloc):
       return False
     return True
@@ -491,7 +488,7 @@ class URL(object):
     narrow = encoder.NarrowText(loc, None)
 
     # Escape components individually
-    (scheme, netloc, path, query, frag) = urlparse.urlsplit(narrow)
+    (scheme, netloc, path, query, frag) = urlsplit(narrow)
     unr    = '-._~'
     sub    = '!$&\'()*+,;='
     netloc = urllib.quote(netloc, unr + sub + '%:@/[]')
@@ -501,7 +498,7 @@ class URL(object):
 
     # Try built-in IDNA encoding on the netloc
     try:
-      (ignore, widenetloc, ignore, ignore, ignore) = urlparse.urlsplit(loc)
+      (ignore, widenetloc, ignore, ignore, ignore) = urlsplit(loc)
       for c in widenetloc:
         if c >= unichr(128):
           netloc = widenetloc.encode(ENC_IDNA)
@@ -522,7 +519,7 @@ class URL(object):
       bad_netloc = True
 
     # Put it all back together
-    narrow = urlparse.urlunsplit((scheme, netloc, path, query, frag))
+    narrow = urlunsplit((scheme, netloc, path, query, frag))
 
     # I let '%' through.  Fix any that aren't pre-existing escapes.
     HEXDIG = '0123456789abcdefABCDEF'
@@ -1459,7 +1456,7 @@ class InputSitemap(xml.sax.handler.ContentHandler):
                    % path)
     except IOError:
       output.Error('Cannot read from file "%s"' % path)
-    except xml.sax._exceptions.SAXParseException, e:
+    except xml.sax._exceptions.SAXParseException as e:
       output.Error('XML error in the file "%s" (line %d, column %d): %s' %
                    (path, e._linenum, e._colnum, e.getMessage()))
 
@@ -1488,7 +1485,7 @@ class InputSitemap(xml.sax.handler.ContentHandler):
     for url in urllist:
       url = URL.Canonicalize(url)
       output.Log('Index points to Sitemap file at: %s' % url, 2)
-      (scheme, netloc, path, query, frag) = urlparse.urlsplit(url)
+      (scheme, netloc, path, query, frag) = urlsplit(url)
       file = os.path.basename(path)
       file = urllib.unquote(file)
       if wide:
@@ -1679,7 +1676,7 @@ class PerURLStatistics:
   def Consume(self, url):
     """ Log some stats for the URL.  At the moment, that means extension. """
     if url and url.loc:
-      (scheme, netloc, path, query, frag) = urlparse.urlsplit(url.loc)
+      (scheme, netloc, path, query, frag) = urlsplit(url.loc)
       if not path:
         return
 
@@ -1930,7 +1927,7 @@ class Sitemap(xml.sax.handler.ContentHandler):
       file  = None
     except IOError:
       output.Fatal('Couldn\'t write out to file: %s' % filename)
-    os.chmod(filename, 0644)
+    os.chmod(filename, 0o0644)
 
     # Flush
     self._set = []
@@ -1965,7 +1962,7 @@ class Sitemap(xml.sax.handler.ContentHandler):
       fd = None
     except IOError:
       output.Fatal('Couldn\'t write out to file: %s' % filename)
-    os.chmod(filename, 0644)
+    os.chmod(filename, 0o0644)
   #end def WriteIndex
 
   def NotifySearch(self):
@@ -2011,7 +2008,7 @@ class Sitemap(xml.sax.handler.ContentHandler):
       query_attr            = ping[5]
       query_map[query_attr] = url
       query = urllib.urlencode(query_map)
-      notify = urlparse.urlunsplit((ping[0], ping[1], ping[2], query, ping[4]))
+      notify = urlunsplit((ping[0], ping[1], ping[2], query, ping[4]))
 
       # Send the notification
       output.Log('Notifying: %s' % ping[1], 1)
@@ -2183,7 +2180,7 @@ def CreateSitemapFromFile(configpath, suppress_notify):
     xml.sax.parse(configpath, sitemap)
   except IOError:
     output.Error('Cannot read configuration file: %s' % configpath)
-  except xml.sax._exceptions.SAXParseException, e:
+  except xml.sax._exceptions.SAXParseException as e:
     output.Error('XML error in the config file (line %d, column %d): %s' %
                  (e._linenum, e._colnum, e.getMessage()))
   except xml.sax._exceptions.SAXReaderNotAvailable:

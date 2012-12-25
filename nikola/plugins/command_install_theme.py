@@ -27,7 +27,7 @@ from optparse import OptionParser
 import os
 import requests
 import json
-from StringIO import StringIO
+from io import StringIO
 
 from nikola.plugin_categories import Command
 from nikola import utils
