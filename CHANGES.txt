@@ -22,6 +22,7 @@ Bugfixes
 * Don't use hardcoded path for custom.css (schettino72)
 * Wordpress importer: fixed issue 190, convert embedded H1 tags into H2
 * Fixed bad interaction with Yapsy 1.10
+* More elegant handling of "nikola init"
 
 New in v5
 =========

@@ -71,6 +71,9 @@ The destination folder must not exist.
         parser = OptionParser(usage=self.usage)
         (options, args) = parser.parse_args(list(args))
 
+        if not args:
+            print("Usage: nikola init folder [options]")
+            return
         target = args[0]
         if target is None:
             print(self.usage)
