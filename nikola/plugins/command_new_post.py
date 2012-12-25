@@ -76,7 +76,7 @@ class CommandNewPost(Command):
         print("-----------------\n")
         if title is None:
             print("Enter title: ")
-            title = sys.stdin.readline().decode(sys.stdin.encoding)
+            title = sys.stdin.readline().decode(sys.stdin.encoding).strip()
         else:
             print("Title: ", title)
         slug = utils.slugify(title)
