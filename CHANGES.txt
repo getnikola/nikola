@@ -4,6 +4,7 @@ New in Master
 Features
 --------
 
+* New "nikola console" command
 * New option CACHE_FOLDER
 * Updated bootstrap to 2.2.2
 * Wordpress importer supports redirects
