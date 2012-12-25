@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from context import nikola
 import os
 import unittest
@@ -45,7 +48,7 @@ class CommandImportWordpressTest(unittest.TestCase):
 
         self.assertEqual('de', context['DEFAULT_LANG'])
         self.assertEqual('Wordpress blog title', context['BLOG_TITLE'])
-        self.assertEqual('Nikola test blog ;)', context['BLOG_DESCRIPTION'])
+        self.assertEqual('Nikola test blog ;) - with moré Ümläüts', context['BLOG_DESCRIPTION'])
         self.assertEqual('http://some.blog', context['BLOG_URL'])
         self.assertEqual('mail@some.blog', context['BLOG_EMAIL'])
         self.assertEqual('Niko', context['BLOG_AUTHOR'])

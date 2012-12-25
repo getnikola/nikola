@@ -11,7 +11,7 @@
 <channel>
     <title>Wordpress blog title</title>
     <link>http://some.blog</link>
-    <description>Nikola test blog ;)</description>
+    <description>Nikola test blog ;) - with moré Ümläüts</description>
     <pubDate>Wed, 25 Jul 2012 22:31:24 +0000</pubDate>
     <language>de-DE</language>
     <wp:wxr_version>1.2</wp:wxr_version>
