@@ -91,7 +91,7 @@ class CommandImportWordpress(Command):
 
     @staticmethod
     def populate_context(channel):
-        wp_ns = channel.nsmap['wp']
+        wordpress_namespace = channel.nsmap['wp']
 
         context = {}
         context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')[:2]
@@ -100,14 +100,14 @@ class CommandImportWordpress(Command):
         context['BLOG_DESCRIPTION'] = get_text_tag(
             channel, 'description', 'PUT DESCRIPTION HERE')
         context['BLOG_URL'] = get_text_tag(channel, 'link', '#')
-        author = channel.find('{%s}author' % wp_ns)
+        author = channel.find('{%s}author' % wordpress_namespace)
         context['BLOG_EMAIL'] = get_text_tag(
             author,
-            '{%s}author_email' % wp_ns,
+            '{%s}author_email' % wordpress_namespace,
             "joe@example.com")
         context['BLOG_AUTHOR'] = get_text_tag(
             author,
-            '{%s}author_display_name' % wp_ns,
+            '{%s}author_display_name' % wordpress_namespace,
             "Joe Example")
         context['POST_PAGES'] = '''(
             ("posts/*.wp", "posts", "post.tmpl", True),
@@ -127,24 +127,20 @@ class CommandImportWordpress(Command):
         with open(dst_path, 'wb+') as fd:
             fd.write(requests.get(url).content)
 
-    def import_attachment(self, item):
-        wp_ns = item.nsmap['wp']
-        post_type = get_text_tag(item, '{%s}post_type' % wp_ns, 'post')
-        if post_type == 'attachment':
-            url = get_text_tag(item, '{%s}attachment_url' % wp_ns, 'foo')
-            link = get_text_tag(item, '{%s}link' % wp_ns, 'foo')
-            path = urlparse(url).path
-            dst_path = os.path.join(*(['new_site', 'files']
-                                      + list(path.split('/'))))
-            dst_dir = os.path.dirname(dst_path)
-            if not os.path.isdir(dst_dir):
-                os.makedirs(dst_dir)
-            print("Downloading %s => %s" % (url, dst_path))
-            self.download_url_content_to_file(url, dst_path)
-            dst_url = '/'.join(dst_path.split(os.sep)[2:])
-            links[link] = '/' + dst_url
-            links[url] = '/' + dst_url
-        return
+    def import_attachment(self, item, wordpress_namespace):
+        url = get_text_tag(item, '{%s}attachment_url' % wordpress_namespace, 'foo')
+        link = get_text_tag(item, '{%s}link' % wordpress_namespace, 'foo')
+        path = urlparse(url).path
+        dst_path = os.path.join(*(['new_site', 'files']
+                                  + list(path.split('/'))))
+        dst_dir = os.path.dirname(dst_path)
+        if not os.path.isdir(dst_dir):
+            os.makedirs(dst_dir)
+        print("Downloading %s => %s" % (url, dst_path))
+        self.download_url_content_to_file(url, dst_path)
+        dst_url = '/'.join(dst_path.split(os.sep)[2:])
+        links[link] = '/' + dst_url
+        links[url] = '/' + dst_url
 
     @staticmethod
     def write_content(filename, content):
@@ -175,27 +171,27 @@ class CommandImportWordpress(Command):
             fd.write('\n')
             fd.write('%s\n' % description)
 
-    def import_item(self, item):
+    def import_item(self, item, wordpress_namespace, out_folder=None):
         """Takes an item from the feed and creates a post file."""
+        if out_folder is None:
+            out_folder = 'posts'
+
         title = get_text_tag(item, 'title', 'NO TITLE')
-        wp_ns = item.nsmap['wp']
-        dc_ns = item.nsmap['dc']
         # link is something like http://foo.com/2012/09/01/hello-world/
         # So, take the path, utils.slugify it, and that's our slug
         link = get_text_tag(item, 'link', None)
         slug = utils.slugify(urlparse(link).path)
         if not slug:  # it happens if the post has no "nice" URL
-            slug = get_text_tag(item, '{%s}post_name' % wp_ns, None)
+            slug = get_text_tag(item, '{%s}post_name' % wordpress_namespace, None)
         if not slug:  # it *may* happen
-            slug = get_text_tag(item, '{%s}post_id' % wp_ns, None)
+            slug = get_text_tag(item, '{%s}post_id' % wordpress_namespace, None)
         if not slug:  # should never happen
             print("Error converting post:", title)
             return
 
         description = get_text_tag(item, 'description', '')
-        post_date = get_text_tag(item, '{%s}post_date' % wp_ns, None)
-        post_type = get_text_tag(item, '{%s}post_type' % wp_ns, 'post')
-        status = get_text_tag(item, '{%s}status' % wp_ns, 'publish')
+        post_date = get_text_tag(item, '{%s}post_date' % wordpress_namespace, None)
+        status = get_text_tag(item, '{%s}status' % wordpress_namespace, 'publish')
         content = get_text_tag(
             item, '{http://purl.org/rss/1.0/modules/content/}encoded', '')
 
@@ -208,13 +204,6 @@ class CommandImportWordpress(Command):
                 continue
             tags.append(text)
 
-        if post_type == 'attachment':
-            return
-        elif post_type == 'post':
-            out_folder = 'posts'
-        else:
-            out_folder = 'stories'
-
         self.url_map[link] = self.context['BLOG_URL'] + '/' + \
             out_folder + '/' + slug + '.html'
 
@@ -224,11 +213,22 @@ class CommandImportWordpress(Command):
         self.write_content(
             os.path.join('new_site', out_folder, slug + '.wp'), content)
 
+    def process_item(self, item):
+        # The namespace usually is something like:
+        # http://wordpress.org/export/1.2/
+        wordpress_namespace = item.nsmap['wp']
+        post_type = get_text_tag(item, '{%s}post_type' % wordpress_namespace, 'post')
+
+        if post_type == 'attachment':
+            self.import_attachment(item, wordpress_namespace)
+        elif post_type == 'post':
+            self.import_item(item, wordpress_namespace, 'posts')
+        else:
+            self.import_item(item, wordpress_namespace, 'stories')
+
     def import_posts(self, channel):
         for item in channel.findall('item'):
-            self.import_attachment(item)
-        for item in channel.findall('item'):
-            self.import_item(item)
+            self.process_item(item)
 
     @staticmethod
     def write_urlmap_csv(output_file, url_map):
