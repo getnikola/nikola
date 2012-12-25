@@ -34,7 +34,7 @@ from nikola.plugin_categories import PageCompiler
 
 
 class CompileMarkdown(PageCompiler):
-    """Compile reSt into HTML."""
+    """Compile markdown into HTML."""
 
     name = "markdown"
 

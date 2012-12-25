@@ -8,7 +8,7 @@
     % endif
     <hr>
     <small>
-        ${messages[lang]["Posted"]}: ${post.date}
+        ${messages[lang]["Posted"]}: ${post.date.strftime(date_format)}
 
         %if len(translations) > 1:
             %for langname in translations.keys():
