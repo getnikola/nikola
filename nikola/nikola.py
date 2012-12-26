@@ -156,6 +156,8 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['index_display_post_count'] = self.config[
             'INDEX_DISPLAY_POST_COUNT']
         self.GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
+        if 'date_format' not in self.GLOBAL_CONTEXT:
+            self.GLOBAL_CONTEXT['date_format'] = '%Y-%m-%d %H:%M'
 
         # check if custom css exist and is not empty
         for files_path in list(self.config['FILES_FOLDERS'].keys()):
