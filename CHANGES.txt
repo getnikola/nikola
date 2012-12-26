@@ -14,6 +14,7 @@ Features
 Bugfixes
 --------
 
+* Issue 113: refactored code in Mako templates
 * Added newline after metadata in new_post template.
 * Issue 112: RSS feeds contained invalid links
 * Issue 88: RSS feed validation via lxml
