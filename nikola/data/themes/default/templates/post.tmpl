@@ -7,14 +7,14 @@
     <hr>
     <small>
         ${messages[lang]["Posted"]}: ${post.date.strftime(date_format)}
-        ${helper.html_translations()}
+        ${helper.html_translations(post)}
         &nbsp;&nbsp;|&nbsp;&nbsp;
         <a href="${post.pagenames[lang]+'.txt'}">${messages[lang]["Source"]}</a>
-        ${helper.html_tags()}
+        ${helper.html_tags(post)}
     </small>
     <hr>
     ${post.text(lang)}
-    ${helper.html_pager()}
-    ${helper.html_disqus()}
+    ${helper.html_pager(post)}
+    ${helper.html_disqus(post)}
     </div>
 </%block>

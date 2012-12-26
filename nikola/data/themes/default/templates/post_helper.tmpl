@@ -6,7 +6,7 @@
 </%def>
 
 
-<%def name="html_translations()">
+<%def name="html_translations(post)">
     %if len(translations) > 1:
         %for langname in translations.keys():
             %if langname != lang:
@@ -18,7 +18,7 @@
 </%def>
 
 
-<%def name="html_tags()">
+<%def name="html_tags(post)">
     %if post.tags:
         &nbsp;&nbsp;|&nbsp;&nbsp;${messages[lang]["More posts about"]}
         %for tag in post.tags:
@@ -28,7 +28,7 @@
 </%def>
 
 
-<%def name="html_disqus()">
+<%def name="html_disqus(post)">
     %if disqus_forum:
         <div id="disqus_thread"></div>
         <script type="text/javascript">var disqus_shortname="${disqus_forum}";var disqus_url="${post.permalink(absolute=True)}";(function(){var a=document.createElement("script");a.type="text/javascript";a.async=true;a.src="http://"+disqus_shortname+".disqus.com/embed.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)})();        </script>
@@ -38,7 +38,7 @@
 </%def>
 
 
-<%def name="html_pager()">
+<%def name="html_pager(post)">
     <ul class="pager">
     %if post.prev_post:
         <li class="previous">
