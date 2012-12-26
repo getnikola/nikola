@@ -1,4 +1,5 @@
 ## -*- coding: utf-8 -*-
+<%namespace name="helper" file="post_helper.tmpl"/>
 <%inherit file="base.tmpl"/>
 <%block name="content">
     <div class="postbox">
@@ -29,23 +30,7 @@
     </small>
     <hr>
     ${post.text(lang)}
-    <ul class="pager">
-    %if post.prev_post:
-        <li class="previous">
-            <a href="${post.prev_post.permalink(lang)}">&larr; ${messages[lang]["Previous post"]}</a>
-        </li>
-    %endif
-    %if post.next_post:
-        <li class="next">
-            <a href="${post.next_post.permalink(lang)}">${messages[lang]["Next post"]}  &rarr;</a>
-        </li>
-    %endif
-    </ul>
-    %if disqus_forum:
-        <div id="disqus_thread"></div>
-        <script type="text/javascript">var disqus_shortname="${disqus_forum}";var disqus_url="${post.permalink(absolute=True)}";(function(){var a=document.createElement("script");a.type="text/javascript";a.async=true;a.src="http://"+disqus_shortname+".disqus.com/embed.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)})();        </script>
-        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-    %endif
+    ${helper.html_pager()}
+    ${helper.html_disqus()}
     </div>
 </%block>
