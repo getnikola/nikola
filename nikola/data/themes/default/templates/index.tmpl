@@ -5,7 +5,7 @@
         <div class="postbox">
         <h1><a href="${post.permalink(lang)}">${post.title(lang)}</a>
         <small>&nbsp;&nbsp;
-             ${messages[lang]["Posted"]}: ${post.date}
+             ${messages[lang]["Posted"]}: ${post.date.strftime(date_format)}
         </small></h1>
         <hr>
         ${post.text(lang, index_teasers)}
