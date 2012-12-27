@@ -822,6 +822,29 @@ linenos_offset
 tab-width
     Size of the tabs (default 4)
 
+Slideshows
+~~~~~~~~~~
+
+To create an image slideshow, you can use the ``slides`` directive. For example::
+
+    .. slides::     
+       :preload:
+       :play: 350
+        
+       /galleries/demo/tesla_conducts_lg.jpg
+       /galleries/demo/tesla_lightning2_lg.jpg
+       /galleries/demo/tesla4_lg.jpg
+       /galleries/demo/tesla_lightning1_lg.jpg
+       /galleries/demo/tesla_tower1_lg.jpg
+
+This is based on `slidejs <http://slidesjs.com/>`_ and it supports 
+`the options described there <http://slidesjs.com/#options>`_ with one minor tweak to make them
+fit in docutils convention: If the option takes a boolean value, you just have to add it or not. For example,
+to enable preloading, just use the ``:preload:`` option.
+
+If the option takes any other kind of argument, just use it after the option, like ``play`` in the 
+above example.
+
 Importing Your Wordpress Site Into Nikola
 -----------------------------------------
 
