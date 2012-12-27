@@ -22,27 +22,68 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import json
+
 from docutils import nodes
-from docutils.parsers.rst import directives
+from docutils.parsers.rst import Directive, directives
 
+class slides(Directive):
 
-def slides(name, args, options, content, lineno,
-            contentOffset, blockText, state, stateMachine):
     """ Restructured text extension for inserting slideshows."""
-    if len(content) == 0:
-        return
-    output = []
-    output.append("""<script> $(function(){ $("#slides").slides({
-    autoHeight: true,
-    bigTarget: true,
-    paginationClass: 'pager',
-    currentClass: 'slide-current',
-    }); }); </script>""")
-    output.append("""<div id="slides" class="slides"><div class="slides_container">""")
-    for image in content:
-        output.append("""<div><img src="%s"></div>""" % image)
-    output.append("""</div></div>""")
     
-    return [nodes.raw('', '\n'.join(output), format='html')]
-slides.content = True
+    has_content = True
+    option_spec = {
+        "preload": directives.flag,
+        "preloadImage": directives.uri,
+        "container": directives.unchanged,
+        "generateNextPrev": directives.flag,
+        "next": directives.unchanged,
+        "prev": directives.unchanged,
+        "pagination": directives.flag,
+        "generatePagination": directives.flag,
+        "paginationClass": directives.unchanged,
+        "currentClass": directives.unchanged,
+        "fadeSpeed": directives.positive_int,
+        "fadeEasing": directives.unchanged,
+        "slideSpeed": directives.positive_int,
+        "slideEasing": directives.unchanged,
+        "start": directives.positive_int,
+        "effect": directives.unchanged,
+        "crossfade": directives.flag,
+        "randomize": directives.flag,
+        "play": directives.positive_int,
+        "pause": directives.positive_int,
+        "hoverPause": directives.flag,
+        "autoHeight": directives.flag,
+        "autoHeightSpeed": directives.positive_int,
+        "bigTarget": directives.flag,
+        "animationStart": directives.unchanged,
+        "animationComplete": directives.unchanged,
+    }
+    
+    def run(self):
+        if len(self.content) == 0:
+            return
+        for opt in ("preload", "generateNextPrev", "pagination", "generatePagination", 
+                    "crossfade", "randomize", "hoverPause", "autoHeight", "bigTarget"):
+            if opt in self.options:
+                self.options[opt] = True
+        options = {
+            "autoHeight": True,
+            "bigTarget": True,
+            "paginationClass": "pager",
+            "currentClass": "slide-current"
+        }        
+        options.update(self.options)
+        options = json.dumps(options)
+        output = []
+        output.append("""<script> $(function(){ $("#slides").slides(%s); }); </script>""" % options)
+        output.append("""<div id="slides" class="slides"><div class="slides_container">""")
+        for image in self.content:
+            output.append("""<div><img src="%s"></div>""" % image)
+        output.append("""</div></div>""")
+        
+        return [nodes.raw('', '\n'.join(output), format='html')]
+    
+
 directives.register_directive('slides', slides)
