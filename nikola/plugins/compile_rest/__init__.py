@@ -38,6 +38,8 @@ directives.register_directive('listing', listings_directive)
 
 from .youtube import youtube
 directives.register_directive('youtube', youtube)
+from .slides import slides
+directives.register_directive('slides', slides)
 
 from nikola.plugin_categories import PageCompiler
 
