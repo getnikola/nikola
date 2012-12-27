@@ -4,6 +4,7 @@ New in Master
 Features
 --------
 
+* New ``slides`` directive, for image slideshows.
 * New option DATE_FORMAT
 * New "nikola console" command
 * New option CACHE_FOLDER
