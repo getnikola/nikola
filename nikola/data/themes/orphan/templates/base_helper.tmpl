@@ -4,12 +4,20 @@
     <meta name="description" content="${description}" >
     <meta name="author" content="${blog_author}">
     <title>${title} | ${blog_title}</title>
-<!--         CSS and JS here -->
     %if use_bundles:
 <!--         CSS and JS Bundles here -->
+        <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
+        <script src="/assets/js/all.js" type="text/javascript"></script>
     %else:
+<!--         CSS and JS here -->
+        <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
+        <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
+        <link href="/assets/css/colorbox.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/css/slides.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/css/theme.css" rel="stylesheet" type="text/css"/>
         %if has_custom_css:
 <!--         Custom CSS here -->
+            <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
         %endif
     %endif
     %if rss_link:
