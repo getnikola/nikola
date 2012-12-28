@@ -25,7 +25,11 @@
 from __future__ import print_function
 from optparse import OptionParser
 import os
-import requests
+
+try:
+    import requests
+except ImportError:
+    requests = None
 
 from nikola.plugin_categories import Command
 
@@ -37,7 +41,9 @@ class CommandBootswatchTheme(Command):
 
     def run(self, *args):
         """Given a swatch name and a parent theme, creates a custom theme."""
-
+        if requests is None:
+            print('To use the install_theme command, you need to install the "requests" package.')
+            return
         parser = OptionParser(usage="nikola %s [options]" % self.name)
         parser.add_option("-n", "--name", dest="name",
             help="New theme name (default: custom)", default='custom')

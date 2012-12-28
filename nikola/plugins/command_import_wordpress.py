@@ -34,7 +34,11 @@ except ImportError:
 
 from lxml import etree, html, builder
 from mako.template import Template
-import requests
+
+try:
+    import requests
+except ImportError:
+    requests = None
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -244,6 +248,9 @@ class CommandImportWordpress(Command):
 
     def run(self, fname=None):
         # Parse the data
+        if requests is None:
+            print('To use the import_wordpress command, you have to install the "requests" package.')
+            return
         if fname is None:
             print("Usage: nikola import_wordpress wordpress_dump.xml")
             return

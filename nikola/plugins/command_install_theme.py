@@ -25,9 +25,13 @@
 from __future__ import print_function
 from optparse import OptionParser
 import os
-import requests
 import json
 from io import StringIO
+
+try:
+    import requests
+except ImportError:
+    requests = None
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -40,7 +44,9 @@ class CommandInstallTheme(Command):
 
     def run(self, *args):
         """Install theme into current site."""
-
+        if requests is None:
+            print('To use the install_theme command, you need to install the "requests" package.')
+            return
         parser = OptionParser(usage="nikola %s [options]" % self.name)
         parser.add_option("-l", "--list", dest="list",
             action="store_true",

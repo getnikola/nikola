@@ -38,7 +38,6 @@ dependencies = [
     'lxml',
     'yapsy',
     'mock>=1.0.0',
-    'requests',
     'markdown',
     'Jinja2',
 ]
