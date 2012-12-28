@@ -45,7 +45,7 @@ class CopyAssets(Task):
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
         }
-
+        flag = True
         tasks = {}
         for theme_name in kw['themes']:
             src = os.path.join(utils.get_theme_path(theme_name), 'assets')
@@ -56,4 +56,13 @@ class CopyAssets(Task):
                 tasks[task['name']] = task
                 task['uptodate'] = [utils.config_changed(kw)]
                 task['basename'] = self.name
+                flag = False
                 yield utils.apply_filters(task, kw['filters'])
+
+        if flag:
+            yield {
+                'basename': self.name,
+                'name': 'None',
+                'uptodate': [True],
+                'actions': [],
+            }

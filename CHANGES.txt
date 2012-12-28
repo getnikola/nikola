@@ -28,6 +28,7 @@ Bugfixes
 * Wordpress importer: fixed issue 190, convert embedded H1 tags into H2
 * Fixed bad interaction with Yapsy 1.10
 * More elegant handling of "nikola init"
+* Don't crash if there's no assets to copy
 
 New in v5
 =========
