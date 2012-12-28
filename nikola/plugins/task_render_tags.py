@@ -85,6 +85,10 @@ class RenderTags(Task):
             'assets','js','tag_cloud_data.json')
             
         def write_tag_data(data):
+            try:
+                os.makedirs(os.path.dirname(output_name))
+            except:
+                pass
             with open(output_name, 'wb+') as fd:
                 fd.write(json.dumps(data))
                 
