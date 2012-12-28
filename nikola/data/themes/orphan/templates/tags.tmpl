@@ -1,0 +1,14 @@
+## -*- coding: utf-8 -*-
+<%inherit file="base.tmpl"/>
+<%block name="content">
+    <div class="postbox">
+        <!--Body content-->
+        <h1>${title}</h1>
+        <ul class="unstyled">
+        % for text, link in items:
+            <li><a class="tag" href="${link}"><span class="badge badge-info">${text}</span></a>
+        % endfor
+        </ul>
+        <!--End of body content-->
+    </div>
+</%block>

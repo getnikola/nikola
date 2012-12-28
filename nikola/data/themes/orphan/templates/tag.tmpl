@@ -1,0 +1,7 @@
+## -*- coding: utf-8 -*-
+<%inherit file="list_post.tmpl"/>
+<%block name="extra_head">
+        %for language in translations:
+            <link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for tag ${tag} (${language})" href="${_link("tag_rss", tag, lang)}">
+        %endfor
+</%block>

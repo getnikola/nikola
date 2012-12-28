@@ -13,6 +13,7 @@ Features
 * Wordpress importer supports redirects
 * Wordpress importer creates a url_map for Disqus thread migration
 * Wordpress importer: support for [sourcecode]
+* Added unstyled theme "orphan", useful as a base for independent themes.
 
 Bugfixes
 --------
