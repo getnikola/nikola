@@ -39,7 +39,6 @@ dependencies = [
     'yapsy',
     'mock>=1.0.0',
     'markdown',
-    'Jinja2',
 ]
 
 if sys.version_info[0] == 2:

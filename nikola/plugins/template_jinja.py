@@ -25,7 +25,10 @@
 """Jinja template handlers"""
 
 import os
-import jinja2
+try:
+    import jinja2
+except ImportError:
+    jinja2 = None
 
 from nikola.plugin_categories import TemplateSystem
 
@@ -38,6 +41,8 @@ class JinjaTemplates(TemplateSystem):
 
     def set_directories(self, directories, cache_folder):
         """Createa  template lookup."""
+        if jinja2 is None:
+            raise Exception('To use this theme you need to install the "Jinja2" package.')
         self.lookup = jinja2.Environment(loader=jinja2.FileSystemLoader(
             directories,
             encoding='utf-8',
@@ -45,7 +50,8 @@ class JinjaTemplates(TemplateSystem):
 
     def render_template(self, template_name, output_name, context):
         """Render the template into output_name using context."""
-
+        if jinja2 is None:
+            raise Exception('To use this theme you need to install the "Jinja2" package.')
         template = self.lookup.get_template(template_name)
         output = template.render(**context)
         if output_name is not None:
