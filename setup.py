@@ -38,7 +38,6 @@ dependencies = [
     'lxml',
     'yapsy',
     'mock>=1.0.0',
-    'markdown',
 ]
 
 if sys.version_info[0] == 2:

@@ -28,7 +28,10 @@ import codecs
 import os
 import re
 
-from markdown import markdown
+try:
+    from markdown import markdown
+except ImportError:
+    markdown = None
 
 from nikola.plugin_categories import PageCompiler
 
@@ -39,6 +42,8 @@ class CompileMarkdown(PageCompiler):
     name = "markdown"
 
     def compile_html(self, source, dest):
+        if markdown is None:
+            raise Exception('To build this site, you need to install the "markdown" package.')
         try:
             os.makedirs(os.path.dirname(dest))
         except:
