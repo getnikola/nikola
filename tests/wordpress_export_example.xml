@@ -58,17 +58,25 @@
     </item>
 
     <item>
-        <title>Caption test</title>
+        <title>Transformation test</title>
         <link>http://some.blog/2007/04/hoert/</link>
         <pubDate>Fri, 27 Apr 2007 13:02:35 +0000</pubDate>
         <dc:creator>Niko</dc:creator>
         <guid isPermaLink="false">http://some.blog/?p=17</guid>
         <description></description>
-        <content:encoded><![CDATA[...!
+        <content:encoded><![CDATA[An image.
 
 [caption id="attachment_16" align="alignnone" width="739" caption="caption test"]<img class="size-full wp-image-16" title="caption test" src="http://some.blog/wp-content/uploads/2009/07/caption_test.jpg" alt="caption test" width="739" height="517" />[/caption]
 
-Nicht, dass daran jemals Zweifel bestanden.]]></content:encoded>
+Some source code.
+
+[sourcecode language="Python"]
+import sys
+print sys.version
+[/sourcecode]
+
+The end.
+]]></content:encoded>
         <excerpt:encoded><![CDATA[]]></excerpt:encoded>
         <wp:post_id>17</wp:post_id>
         <wp:post_date>2007-04-27 15:02:35</wp:post_date>
