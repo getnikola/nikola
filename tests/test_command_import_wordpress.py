@@ -77,7 +77,7 @@ class CommandImportWordpressTest(unittest.TestCase):
         write_metadata.assert_any_call(u'new_site/stories/kontakt.meta', 'Kontakt', u'kontakt', '2009-07-16 20:20:32', None, [])
 
         self.assertTrue(write_content.called)
-        write_content.assert_any_call(u'new_site/posts/200704hoert.wp', '...!\n\n\n\n[caption id="attachment_16" align="alignnone" width="739" caption="caption test"]<img class="size-full wp-image-16" title="caption test" src="http://some.blog/wp-content/uploads/2009/07/caption_test.jpg" alt="caption test" width="739" height="517" />[/caption]\n\n\n\nNicht, dass daran jemals Zweifel bestanden.')
+        write_content.assert_any_call(u'new_site/posts/200704hoert.wp', u'An image.\n\n\n\n[caption id="attachment_16" align="alignnone" width="739" caption="caption test"]<img class="size-full wp-image-16" title="caption test" src="http://some.blog/wp-content/uploads/2009/07/caption_test.jpg" alt="caption test" width="739" height="517" />[/caption]\n\n\n\nSome source code.\n\n\n\n\n~~~~~~~~~~~~{.Python}\n\n\nimport sys\n\nprint sys.version\n\n\n~~~~~~~~~~~~\n\n\n\n\nThe end.\n\n')
         write_content.assert_any_call(u'new_site/posts/200807arzt-und-pfusch-s-i-c-k.wp', u'<img class="size-full wp-image-10 alignright" title="Arzt+Pfusch - S.I.C.K." src="http://some.blog/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png" alt="Arzt+Pfusch - S.I.C.K." width="210" height="209" />Arzt+Pfusch - S.I.C.K.Gerade bin ich \xfcber das Album <em>S.I.C.K</em> von <a title="Arzt+Pfusch" href="http://www.arztpfusch.com/" target="_blank">Arzt+Pfusch</a> gestolpert, welches Arzt+Pfusch zum Download f\xfcr lau anbieten. Das Album steht unter einer Creative Commons <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/de/">BY-NC-ND</a>-Lizenz.\n\nDie Ladung <em>noisebmstupidevildustrial</em> gibts als MP3s mit <a href="http://www.archive.org/download/dmp005/dmp005_64kb_mp3.zip">64kbps</a> und <a href="http://www.archive.org/download/dmp005/dmp005_vbr_mp3.zip">VBR</a>, als Ogg Vorbis und als FLAC (letztere <a href="http://www.archive.org/details/dmp005">hier</a>). <a href="http://www.archive.org/download/dmp005/dmp005-artwork.zip">Artwork</a> und <a href="http://www.archive.org/download/dmp005/dmp005-lyrics.txt">Lyrics</a> gibts nochmal einzeln zum Download.')
         write_content.assert_any_call(u'new_site/stories/kontakt.wp', u'<h1>Datenschutz</h1>\n\nIch erhebe und speichere automatisch in meine Server Log Files Informationen, die dein Browser an mich \xfcbermittelt. Dies sind:\n\n<ul>\n\n    <li>Browsertyp und -version</li>\n\n    <li>verwendetes Betriebssystem</li>\n\n    <li>Referrer URL (die zuvor besuchte Seite)</li>\n\n    <li>IP Adresse des zugreifenden Rechners</li>\n\n    <li>Uhrzeit der Serveranfrage.</li>\n\n</ul>\n\nDiese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammenf\xfchrung dieser Daten mit anderen Datenquellen wird nicht vorgenommen, die Daten werden einzig zu statistischen Zwecken erhoben.')
 
@@ -87,6 +87,41 @@ class CommandImportWordpressTest(unittest.TestCase):
         self.assertEqual(self.import_command.url_map['http://some.blog/2008/07/arzt-und-pfusch-s-i-c-k/'], u'http://some.blog/posts/200807arzt-und-pfusch-s-i-c-k.html')
         self.assertEqual(self.import_command.url_map['http://some.blog/kontakt/'], u'http://some.blog/stories/kontakt.html')
 
+    def test_transforming_content(self):
+        """Applying markup conversions to content."""
+        transform_sourcecode = mock.MagicMock()
+
+        with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.transform_sourcecode', transform_sourcecode):
+            self.import_command.transform_content("random content")
+
+        self.assertTrue(transform_sourcecode.called)
+
+    def test_transforming_source_code(self):
+        """
+        Tests the handling of sourcecode tags.
+        """
+        content = """Hello World.
+[sourcecode language="Python"]
+import sys
+print sys.version
+[/sourcecode]"""
+
+        content = self.import_command.transform_sourcecode(content)
+
+        self.assertFalse('[/sourcecode]' in content)
+        self.assertFalse('[sourcecode language=' in content)
+
+        replaced_content = """Hello World.
+
+~~~~~~~~~~~~{.Python}
+
+import sys
+print sys.version
+
+~~~~~~~~~~~~
+"""
+
+        self.assertEqual(content, replaced_content)
 
 if __name__ == '__main__':
     unittest.main()
