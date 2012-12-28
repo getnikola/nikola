@@ -23,6 +23,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #from __future__ import unicode_literals
+import json
 import os
 
 from nikola.plugin_categories import Task
@@ -75,6 +76,26 @@ class RenderTags(Task):
 
         yield self.list_tags_page(kw)
 
+        # Tag cloud json file
+        tag_cloud_data = {}
+        for tag, posts in self.site.posts_per_tag.items():
+            tag_cloud_data[tag] = [len(posts), self.site.link(
+                'tag', tag, self.site.config['DEFAULT_LANG'])]
+        output_name = os.path.join(kw['output_folder'],
+            'assets','js','tag_cloud_data.json')
+            
+        def write_tag_data(data):
+            with open(output_name, 'wb+') as fd:
+                fd.write(json.dumps(data))
+                
+        task = {
+            'basename': str(self.name),
+            'name': str(output_name)
+        }
+        task['uptodate'] = [utils.config_changed(tag_cloud_data)]
+        task['targets'] = [output_name]
+        task['actions'] = [(write_tag_data,[tag_cloud_data])]
+        yield task
 
     def list_tags_page(self, kw):
         """a global "all your tags" page for each language"""

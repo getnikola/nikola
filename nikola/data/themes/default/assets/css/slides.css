@@ -4,6 +4,7 @@
     margin-right: auto;
     max-width: 80%;
     width: 400px;
+    height: 300px;
 }
 .slide-current {
     font-weight: bold;
