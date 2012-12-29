@@ -1,0 +1,31 @@
+<%def name="html_pager()">
+<div>
+<ul class="pager">
+  %if prevlink:
+    <li class="previous">
+        <a href="${prevlink}">&larr; ${messages[lang]["Newer posts"]}</a>
+    </li>
+  %endif
+  %if nextlink:
+    <li class="next">
+        <a href="${nextlink}">${messages[lang]["Older posts"]} &rarr;</a>
+    </li>
+  %endif
+</ul>
+</div>
+</%def>
+
+
+<%def name="html_disqus_link(post)">
+    <p>
+    %if disqus_forum:
+        <a href="${post.permalink()}#disqus_thread">Comments</a>
+    %endif
+</%def>
+
+
+<%def name="html_disqus_script()">
+    %if disqus_forum:
+       <script type="text/javascript">var disqus_shortname="${disqus_forum}";(function(){var a=document.createElement("script");a.async=true;a.type="text/javascript";a.src="http://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("HEAD")[0]||document.getElementsByTagName("BODY")[0]).appendChild(a)}());</script>
+    %endif
+</%def>

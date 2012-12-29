@@ -1,0 +1,27 @@
+## -*- coding: utf-8 -*-
+<%inherit file="base.tmpl"/>
+<%block name="sourcelink"></%block>
+
+<%block name="content">
+    <ul class="breadcrumb">
+        % for link, crumb in crumbs:
+            <li><a href="${link}">/ ${crumb}</a></li>
+        % endfor
+    </ul>
+    %if text:
+    <p>
+        ${text}
+    </p>
+    %endif
+    <ul>
+    % for folder in folders:
+        <li><a href="${folder}"><i class="icon-folder-open"></i>&nbsp;${folder}</a></li>
+    % endfor
+    </ul>
+    <ul class="thumbnails">
+        %for image in images:
+            <li><a href="${image[0]}" class="thumbnail image-reference" ${image[2]}>
+                <img src="${image[1]}" /></a></li>
+        %endfor
+    </ul>
+</%block>

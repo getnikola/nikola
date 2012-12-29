@@ -1,0 +1,44 @@
+## -*- coding: utf-8 -*-
+<%namespace file="base_helper.tmpl" import="*"/>
+<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+    ${html_head()}
+    <%block name="extra_head">
+    </%block>
+</head>
+<body class="home blog">
+    %if add_this_buttons:
+    <script type="text/javascript">var addthis_config={"ui_language":"${lang}"};</script>
+    % endif
+    <div id="wrap" style="width:850px">
+        <div id="container" style="width:560px">
+            <%block name="content"></%block>
+        </div>
+        <div id="sidebar">
+            <!--Sidebar content-->
+            <h1 id="blog-title">
+                <a href="${abs_link('/')}" title="${blog_title}">${blog_title}</a>
+            </h1>
+            <%block name="belowtitle">
+            %if len(translations) > 1:
+            <small>
+                ${(messages[lang][u"Also available in"])}:&nbsp;
+                ${html_translations()}
+            </small>
+            %endif
+            </%block>
+            <ul class="unstyled">
+            <li>${license}
+            ${html_social()}
+            ${html_sidebar_links()}
+            <li>${search_form}
+            </ul>
+        </div>
+        <div id="footer">
+            ${content_footer}
+        </div>
+    </div>        
+    ${analytics}
+    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
+</body>
