@@ -1,7 +1,7 @@
 The Nikola Handbook
 ===================
 
-:Version: 5
+:Version: 5.1
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-info pull-right

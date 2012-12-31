@@ -8,6 +8,9 @@ Theming Nikola
 
 .. contents::
 
+This document is a reference about themes. If you want a tutorial, please read
+`Creating a Theme <creating-a-theme.html>`_
+
 The Structure
 -------------
 
@@ -69,20 +72,15 @@ bundles
     Templates should use either the bundle or the individual files based on the ``use_bundles``
     variable, which in turn is set by the ``USE_BUNDLES`` option.
 
-Creating a New Theme
---------------------
-
-In your site's folder, create a ``themes`` folder. Choose a theme to start from, and
-create ``themes/yourthemename/parent`` as a file containing the parent theme's name.
-There, you just created a new theme. Of course it looks exactly like the other one,
-so let's customize it.
-
 Templates
 ---------
 
 In templates there is a number of files whose name ends in ``.tmpl``. Those are the
 theme's page templates. They are done usig the `Mako <http://makotemplates.org>`_
-template language. If you want to do a theme, you should learn the Mako syntax first.
+or `Jinja2 <jinja.pocoo.org>`_ template languages. If you want to do a theme, you 
+should learn one first. What engine is used by the theme is declared in the ``engine`` file.
+
+The rest of this document explains Mako templates, but Jinja2 is fairly similar.
 
 Mako has a nifty concept of template inheritance. That means that, a
 template can inherit from another and only change small bits of the output. For example,
