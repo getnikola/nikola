@@ -163,7 +163,7 @@ def find_package_data(
 from distutils.core import setup
 
 setup(name='Nikola',
-      version='5',
+      version='5.1',
       description='Static blog/website generator',
       author='Roberto Alsina and others',
       author_email='ralsina@netmanagers.com.ar',

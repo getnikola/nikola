@@ -1,5 +1,5 @@
-New in Master
-=============
+New in v5.1
+===========
 
 Features
 --------
