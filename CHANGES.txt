@@ -20,6 +20,7 @@ Features
 Bugfixes
 --------
 
+* Added ALT attribute to gallery images.
 * Issue 113: refactored code in Mako templates
 * Added newline after metadata in new_post template.
 * Issue 112: RSS feeds contained invalid links
