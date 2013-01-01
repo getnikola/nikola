@@ -128,8 +128,11 @@ class CommandImportWordpress(Command):
 
     @staticmethod
     def download_url_content_to_file(url, dst_path):
-        with open(dst_path, 'wb+') as fd:
-            fd.write(requests.get(url).content)
+        try:
+            with open(dst_path, 'wb+') as fd:
+                fd.write(requests.get(url).content)
+        except requests.exceptions.ConnectionError as err:
+            print("Downloading %s to %s failed: %s" % (dst_path, url, err))
 
     def import_attachment(self, item, wordpress_namespace):
         url = get_text_tag(
@@ -240,6 +243,9 @@ class CommandImportWordpress(Command):
                                 title, slug, post_date, description, tags)
             self.write_content(
                 os.path.join('new_site', out_folder, slug + '.wp'), content)
+        else:
+            print('Not going to import "%s" because it seems to contain'
+                  ' no content.' % (title, ))
 
     def process_item(self, item):
         # The namespace usually is something like:
