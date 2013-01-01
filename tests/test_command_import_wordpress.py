@@ -60,6 +60,7 @@ class CommandImportWordpressTest(unittest.TestCase):
         self.import_command.context = self.import_command.populate_context(
             channel)
         self.import_command.url_map = {}  # For testing we use an empty one.
+        self.import_command.output_folder = 'new_site'
 
         write_metadata = mock.MagicMock()
         write_content = mock.MagicMock()
