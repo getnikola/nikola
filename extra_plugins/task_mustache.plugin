@@ -1,0 +1,10 @@
+[Core]
+Name = render_mustache
+Module = task_mustache
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Generates the blog's index pages in json.
+
