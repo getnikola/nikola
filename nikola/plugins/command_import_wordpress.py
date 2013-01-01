@@ -155,9 +155,17 @@ class CommandImportWordpress(Command):
                                           "\n~~~~~~~~~~~~\n")
         return new_content
 
+    @staticmethod
+    def transform_caption(content):
+        new_caption = re.sub(r'\[/caption\]', '', content)
+        new_caption = re.sub(r'\[caption.*\]', '', new_caption)
+
+        return new_caption
+
     @classmethod
     def transform_content(cls, content):
-        return cls.transform_sourcecode(content)
+        new_content = cls.transform_sourcecode(content)
+        return cls.transform_caption(new_content)
 
     @classmethod
     def write_content(cls, filename, content):
