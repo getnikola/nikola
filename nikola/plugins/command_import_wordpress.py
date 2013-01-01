@@ -132,7 +132,7 @@ class CommandImportWordpress(Command):
             with open(dst_path, 'wb+') as fd:
                 fd.write(requests.get(url).content)
         except requests.exceptions.ConnectionError as err:
-            print("Downloading %s to %s failed: %s" % (dst_path, url, err))
+            print("Downloading %s to %s failed: %s" % (url, dst_path, err))
 
     def import_attachment(self, item, wordpress_namespace):
         url = get_text_tag(
