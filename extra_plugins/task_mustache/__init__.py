@@ -1,0 +1,161 @@
+# Copyright (c) 2012 Roberto Alsina y otros.
+
+# Permission is hereby granted, free of charge, to any
+# person obtaining a copy of this software and associated
+# documentation files (the "Software"), to deal in the
+# Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the
+# Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice
+# shall be included in all copies or substantial portions of
+# the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+# KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+# PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
+# OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+import json
+import os
+
+from nikola.plugin_categories import Task
+from nikola.utils import config_changed, copy_file
+
+
+class Mustache(Task):
+    """Render the blog posts as JSON data."""
+
+    name = "render_mustache"
+
+    def gen_tasks(self):
+        self.site.scan_posts()
+
+        kw = {
+            "translations": self.site.config['TRANSLATIONS'],
+            "index_display_post_count":
+                self.site.config['INDEX_DISPLAY_POST_COUNT'],
+            "messages": self.site.MESSAGES,
+            "index_teasers": self.site.config['INDEX_TEASERS'],
+            "output_folder": self.site.config['OUTPUT_FOLDER'],
+            "filters": self.site.config['FILTERS'],
+            "blog_title": self.site.config['BLOG_TITLE'],
+            "content_footer": self.site.config['CONTENT_FOOTER'],
+        }
+
+        # TODO: timeline is global, get rid of it
+        posts = [x for x in self.site.timeline if x.use_in_feeds]
+        if not posts:
+            yield {
+                'basename': 'render_mustache',
+                'actions': [],
+                }
+            return
+        
+        def write_file(path, post, lang):
+            
+            # Prev/Next links
+            prev_link = False
+            if post.prev_post:
+                prev_link = post.prev_post.permalink(lang).replace(".html", ".json")
+            next_link = False
+            if post.next_post:
+                next_link = post.next_post.permalink(lang).replace(".html", ".json")
+            data = {} 
+            
+            # Configuration
+            for k,v in self.site.config.items():
+                if isinstance(v, (str, unicode)):
+                    data[k] = v
+
+            # Tag data
+            tags = []
+            for tag in post.tags:
+                tags.append({'name': tag, 'link': self.site.link("tag", tag, lang)})
+            data.update({
+                "tags": tags,
+                "tags?": True if tags else False,
+            })
+                    
+            # Template strings
+            for k,v in kw["messages"][lang].items():
+                data["message_"+k] = v
+                
+            # Post data
+            data.update({
+                "title": post.title(lang),
+                "text": post.text(lang),
+                "prev": prev_link,
+                "next": next_link,
+                "date": post.date.strftime(self.site.GLOBAL_CONTEXT['date_format']),
+            })
+            
+            # Disqus comments
+            data["disqus_html"] = """<div id="disqus_thread"></div>
+        <script type="text/javascript">var disqus_shortname="%s";var disqus_url="%s";(function(){var a=document.createElement("script");a.type="text/javascript";a.async=true;a.src="http://"+disqus_shortname+".disqus.com/embed.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)})();        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>""" % (
+            self.site.config['DISQUS_FORUM'],
+            post.permalink(absolute=True),
+            )
+            
+            # Post translations
+            translations = []
+            for langname in kw["translations"]:
+                if langname == lang:
+                    continue
+                translations.append({'name': kw["messages"][langname]["Read in English"], 
+                'link': "javascript:load_data('%s');" % post.permalink(langname).replace(".html", ".json")})
+            data["translations"] = translations
+
+            
+            try:
+                os.makedirs(os.path.dirname(path))
+            except:
+                pass
+            with open(path, 'wb+') as fd:
+                fd.write(json.dumps(data))                
+        
+        for lang in kw["translations"]:
+            for i, post in enumerate(posts):
+                out_path = post.destination_path(lang, ".json")
+                out_file = os.path.join(kw['output_folder'], out_path)
+                task = {
+                    'basename': 'render_mustache',
+                    'name': str(out_path),
+                    'actions': [(write_file, (out_file, post, lang))],
+                    'task_dep': ['render_posts'],
+                    }
+                yield task
+                if i == 0 and lang == self.site.config["DEFAULT_LANG"]:
+                    first_post_data = post.permalink(lang).replace(".html", ".json")
+                    
+
+        # Copy mustache template
+        src = os.path.join(os.path.dirname(__file__), 'mustache-template.html')
+        dst = os.path.join(kw['output_folder'],'mustache-template.html')
+        yield {
+            'basename': 'render_mustache',
+            'name': 'mustache-template.html',
+            'actions': [(copy_file, (src, dst))],
+        }
+        
+        # Copy mustache.html with the right starting file in it
+        def copy_mustache():
+            src = os.path.join(os.path.dirname(__file__), 'mustache.html')
+            dst = os.path.join(kw['output_folder'],'mustache.html')
+            with open(src, 'rb') as in_file:
+                with open(dst, 'wb+') as out_file:
+                    data = in_file.read().replace('{{first_post_data}}', first_post_data)
+                    out_file.write(data)
+        yield {
+            'basename': 'render_mustache',
+            'name': 'mustache.html',
+            'actions': [(copy_mustache, [])],
+        }

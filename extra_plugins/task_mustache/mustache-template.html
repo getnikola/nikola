@@ -1,0 +1,30 @@
+<script id="view" type="text/html">
+<div class="container" id="container">
+    <div class="postbox">
+    <h1>{{BLOG_TITLE}}</h1>
+    <hr>
+    <h2>{{title}}</h2>
+    Posted on: {{date}}</br>
+    {{#tags?}} More posts about: 
+    {{#tags}}<a class="tag" href={{link}}><span class="badge badge-info">{{name}}</span></a>{{/tags}}
+    </br>
+    {{/tags?}}
+    {{#translations}}<a href={{link}}>{{name}}</a>{{/translations}}&nbsp;</br>
+    <hr>
+    {{{text}}}
+    <ul class="pager">
+    {{#prev}}
+    <li class="previous"><a href="javascript:load_data('{{prev}}')">{{message_Previous post}}</a></li>    
+    {{/prev}}
+    {{#next}}
+    <li class="next"><a href="javascript:load_data('{{next}}')">{{message_Next post}}</a></li>
+    {{/next}}
+    </ul>
+    {{{disqus_html}}}
+    </div>
+    <div class="footerbox">
+    {{{CONTENT_FOOTER}}}
+    </div>
+</div>
+</script>
+

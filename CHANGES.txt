@@ -1,3 +1,11 @@
+New in Master
+=============
+
+Features
+--------
+
+* One-page, dynamic-loading, client-rendered site plugin (task_mustache)
+
 New in v5.1
 ===========
 
