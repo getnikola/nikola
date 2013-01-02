@@ -11,4 +11,4 @@ body { margin:0px; padding:20px 0px; text-align:center; font-family:Monospace; c
 #sidebar .description { display:block; width:100%; height:auto; margin:0px 0px 10px 0px; }
 h1, h2, h3, h4, h5, h6, h7 { margin:0px; text-transform:uppercase; }
 h4, h5, h6 { font-size:14px; }
-h1 { padding:0px 0px 15px; margin:0px 0px 15px 0px; }
+#blog-title { margin-top: 0; line-height:48px;}
