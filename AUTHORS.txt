@@ -1,2 +1,3 @@
 Roberto Alsina <ralsina@kde.org>
 Eduardo Schettino <https://github.com/schettino72>
+Niko Wenselowski

@@ -128,11 +128,15 @@ class CommandImportWordpress(Command):
 
     @staticmethod
     def download_url_content_to_file(url, dst_path):
-        with open(dst_path, 'wb+') as fd:
-            fd.write(requests.get(url).content)
+        try:
+            with open(dst_path, 'wb+') as fd:
+                fd.write(requests.get(url).content)
+        except requests.exceptions.ConnectionError as err:
+            print("Downloading %s to %s failed: %s" % (url, dst_path, err))
 
     def import_attachment(self, item, wordpress_namespace):
-        url = get_text_tag(item, '{%s}attachment_url' % wordpress_namespace, 'foo')
+        url = get_text_tag(
+            item, '{%s}attachment_url' % wordpress_namespace, 'foo')
         link = get_text_tag(item, '{%s}link' % wordpress_namespace, 'foo')
         path = urlparse(url).path
         dst_path = os.path.join(*(['new_site', 'files']
@@ -147,23 +151,38 @@ class CommandImportWordpress(Command):
         links[url] = '/' + dst_url
 
     @staticmethod
-    def write_content(filename, content):
+    def transform_sourcecode(content):
+        new_content = re.sub('\[sourcecode language="([^"]+)"\]',
+                             "\n~~~~~~~~~~~~{.\\1}\n", content)
+        new_content = new_content.replace('[/sourcecode]',
+                                          "\n~~~~~~~~~~~~\n")
+        return new_content
+
+    @staticmethod
+    def transform_caption(content):
+        new_caption = re.sub(r'\[/caption\]', '', content)
+        new_caption = re.sub(r'\[caption.*\]', '', new_caption)
+
+        return new_caption
+
+    @classmethod
+    def transform_content(cls, content):
+        new_content = cls.transform_sourcecode(content)
+        return cls.transform_caption(new_content)
+
+    @classmethod
+    def write_content(cls, filename, content):
         with open(filename, "wb+") as fd:
-            if content.strip():
-                # Handle sourcecode pseudo-tags
-                content = re.sub('\[sourcecode language="([^"]+)"\]',
-                                 "\n~~~~~~~~~~~~{.\\1}\n", content)
-                content = content.replace('[/sourcecode]', "\n~~~~~~~~~~~~\n")
-                doc = html.document_fromstring(content)
-                doc.rewrite_links(replacer)
-                # Replace H1 elements with H2 elements
-                for tag in doc.findall('.//h1'):
-                    if not tag.text:
-                        print("Failed to fix bad title: %r" %
-                              html.tostring(tag))
-                    else:
-                        tag.getparent().replace(tag, builder.E.h2(tag.text))
-                fd.write(html.tostring(doc, encoding='utf8'))
+            doc = html.document_fromstring(content)
+            doc.rewrite_links(replacer)
+            # Replace H1 elements with H2 elements
+            for tag in doc.findall('.//h1'):
+                if not tag.text:
+                    print("Failed to fix bad title: %r" %
+                          html.tostring(tag))
+                else:
+                    tag.getparent().replace(tag, builder.E.h2(tag.text))
+            fd.write(html.tostring(doc, encoding='utf8'))
 
     @staticmethod
     def write_metadata(filename, title, slug, post_date, description, tags):
@@ -186,16 +205,20 @@ class CommandImportWordpress(Command):
         link = get_text_tag(item, 'link', None)
         slug = utils.slugify(urlparse(link).path)
         if not slug:  # it happens if the post has no "nice" URL
-            slug = get_text_tag(item, '{%s}post_name' % wordpress_namespace, None)
+            slug = get_text_tag(
+                item, '{%s}post_name' % wordpress_namespace, None)
         if not slug:  # it *may* happen
-            slug = get_text_tag(item, '{%s}post_id' % wordpress_namespace, None)
+            slug = get_text_tag(
+                item, '{%s}post_id' % wordpress_namespace, None)
         if not slug:  # should never happen
             print("Error converting post:", title)
             return
 
         description = get_text_tag(item, 'description', '')
-        post_date = get_text_tag(item, '{%s}post_date' % wordpress_namespace, None)
-        status = get_text_tag(item, '{%s}status' % wordpress_namespace, 'publish')
+        post_date = get_text_tag(
+            item, '{%s}post_date' % wordpress_namespace, None)
+        status = get_text_tag(
+            item, '{%s}status' % wordpress_namespace, 'publish')
         content = get_text_tag(
             item, '{http://purl.org/rss/1.0/modules/content/}encoded', '')
 
@@ -211,17 +234,25 @@ class CommandImportWordpress(Command):
         self.url_map[link] = self.context['BLOG_URL'] + '/' + \
             out_folder + '/' + slug + '.html'
 
-        self.write_metadata(os.path.join('new_site', out_folder,
-                                         slug + '.meta'),
-                            title, slug, post_date, description, tags)
-        self.write_content(
-            os.path.join('new_site', out_folder, slug + '.wp'), content)
+        if content.strip():
+            # If no content is found, no files are written.
+            content = self.transform_content(content)
+
+            self.write_metadata(os.path.join('new_site', out_folder,
+                                             slug + '.meta'),
+                                title, slug, post_date, description, tags)
+            self.write_content(
+                os.path.join('new_site', out_folder, slug + '.wp'), content)
+        else:
+            print('Not going to import "%s" because it seems to contain'
+                  ' no content.' % (title, ))
 
     def process_item(self, item):
         # The namespace usually is something like:
         # http://wordpress.org/export/1.2/
         wordpress_namespace = item.nsmap['wp']
-        post_type = get_text_tag(item, '{%s}post_type' % wordpress_namespace, 'post')
+        post_type = get_text_tag(
+            item, '{%s}post_type' % wordpress_namespace, 'post')
 
         if post_type == 'attachment':
             self.import_attachment(item, wordpress_namespace)
