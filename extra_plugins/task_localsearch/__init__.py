@@ -83,7 +83,7 @@ class Tipue(Task):
             "targets": [dst_path],
             "actions": [(save_data,[])],
             "task_dep": ["render_site"],
-            'uptodate': [utils.config_changed(kw)]
+            'uptodate': [config_changed(kw)]
         }
 
         # Copy all the assets to the right places
