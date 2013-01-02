@@ -25,7 +25,7 @@
 import json
 import os
 
-from nikola.plugin_categories import Task
+from nikola.plugin_categories import LateTask
 from nikola.utils import config_changed, copy_tree
 
 # This is what we need to produce:
@@ -43,7 +43,7 @@ from nikola.utils import config_changed, copy_tree
         #"loc": "http://www.tipue.com/about"}
 #]};
 
-class Tipue(Task):
+class Tipue(LateTask):
     """Render the blog posts as JSON data."""
 
     name = "local_search"
@@ -67,7 +67,7 @@ class Tipue(Task):
                     data["title"] = post.title(lang)
                     data["text"] = post.text(lang)
                     data["tags"] = ",".join(post.tags)
-                    data["loc"] = post.permalink(lang, absolute=True)
+                    data["loc"] = post.permalink(lang)
                     pages.append(data)
             output = json.dumps({"pages": pages}, indent=2)
             try:
@@ -79,14 +79,14 @@ class Tipue(Task):
             
         yield {
             "basename": str(self.name),
-            "name": "tipuedrop_content.js",
+            "name": os.path.join("assets", "js", "tipuesearch_content.js"),
             "targets": [dst_path],
             "actions": [(save_data,[])],
-            "task_dep": ["render_site"],
             'uptodate': [config_changed(kw)]
         }
 
         # Copy all the assets to the right places
         asset_folder = os.path.join(os.path.dirname(__file__), "files")
-        for task in copy_tree(asset_folder, "output"):
+        for task in copy_tree(asset_folder, kw["output_folder"]):
+            task["basename"] = str(self.name)
             yield task
