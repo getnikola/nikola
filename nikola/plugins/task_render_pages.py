@@ -48,7 +48,6 @@ class RenderPages(Task):
                         2: kw})]
                     task['basename'] = self.name
                     flag = True
-                    print task['targets']
                     yield task
         if flag is False:  # No page rendered, yield a dummy task
             yield {
