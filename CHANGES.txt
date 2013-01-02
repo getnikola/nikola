@@ -6,6 +6,11 @@ Features
 
 * One-page, dynamic-loading, client-rendered site plugin (task_mustache)
 
+Bugfixes
+--------
+
+* Made layout of the site theme responsive, with collapsing navbar.
+
 New in v5.1
 ===========
 
