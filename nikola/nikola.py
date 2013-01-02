@@ -426,11 +426,11 @@ class Nikola(object):
     def scan_posts(self):
         """Scan all the posts."""
         if not self._scanned:
-            print("Scanning posts ")
+            print("Scanning posts", end='')
             targets = set([])
             for wildcard, destination, _, use_in_feeds in \
                     self.config['post_pages']:
-                print (".")
+                print (".", end='')
                 for base_path in glob.glob(wildcard):
                     post = Post(
                         base_path,
