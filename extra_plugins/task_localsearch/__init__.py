@@ -53,15 +53,11 @@ class Tipue(Task):
 
         kw = {
             "translations": self.site.config['TRANSLATIONS'],
-            "messages": self.site.MESSAGES,
-            "index_teasers": self.site.config['INDEX_TEASERS'],
             "output_folder": self.site.config['OUTPUT_FOLDER'],
-            "blog_title": self.site.config['BLOG_TITLE'],
-            "content_footer": self.site.config['CONTENT_FOOTER'],
         }
 
         posts = self.site.timeline[:]
-        dst_path = os.path.join("output", "assets", "js", "tipuesearch_content.json")
+        dst_path = os.path.join(kw["output_folder"], "assets", "js", "tipuesearch_content.json")
         
         def save_data():
             pages = []
@@ -86,6 +82,8 @@ class Tipue(Task):
             "name": "tipuedrop_content.js",
             "targets": [dst_path],
             "actions": [(save_data,[])],
+            "task_dep": ["render_site"],
+            'uptodate': [utils.config_changed(kw)]
         }
 
         # Copy all the assets to the right places
