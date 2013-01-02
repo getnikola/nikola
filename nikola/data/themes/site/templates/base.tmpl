@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="${lang}">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     ${html_head()}
     <%block name="extra_head">
     </%block>
@@ -44,13 +45,18 @@
     </div>
 </div>
 <!-- End of Menubar -->
-<div class="container" id="container-fluid">
+<div class="container-fluid" id="container-fluid">
     <!--Body content-->
+    <div class="row-fluid">
+    <div class="span2"></div>
+    <div class="span8">
     <%block name="content"></%block>
-    <!--End of body content-->
-    <div class="footerbox">
-    ${content_footer}
     </div>
+    </div> 
+    <!--End of body content-->
+</div>
+<div class="footerbox">
+    ${content_footer}
 </div>
 ${html_social()}
 ${analytics}
