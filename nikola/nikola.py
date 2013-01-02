@@ -428,34 +428,40 @@ class Nikola(object):
         if not self._scanned:
             print("Scanning posts", end='')
             targets = set([])
-            for wildcard, destination, _, use_in_feeds in \
+            for wildcard, destination, template_name, use_in_feeds in \
                     self.config['post_pages']:
-                print (".", end='')
-                for base_path in glob.glob(wildcard):
-                    post = Post(
-                        base_path,
-                        self.config['CACHE_FOLDER'],
-                        destination,
-                        use_in_feeds,
-                        self.config['TRANSLATIONS'],
-                        self.config['DEFAULT_LANG'],
-                        self.config['BLOG_URL'],
-                        self.MESSAGES)
-                    for lang, langpath in list(self.config['TRANSLATIONS'].items()):
-                        dest = (destination, langpath, post.pagenames[lang])
-                        if dest in targets:
-                            raise Exception(
-                                'Duplicated output path %r in post %r' %
-                                (post.pagenames[lang], base_path))
-                        targets.add(dest)
-                    self.global_data[post.post_name] = post
-                    if post.use_in_feeds:
-                        self.posts_per_year[
-                            str(post.date.year)].append(post.post_name)
-                        for tag in post.tags:
-                            self.posts_per_tag[tag].append(post.post_name)
-                    else:
-                        self.pages.append(post)
+                print(".", end='')
+                base_len = len(destination.split(os.sep))
+                dirname = os.path.dirname(wildcard)
+                for dirpath, _, _ in os.walk(dirname):
+                    dir_glob = os.path.join(dirpath, os.path.basename(wildcard))
+                    dest_dir = os.path.join(*([destination]+dirpath.split(os.sep)[base_len:]))
+                    for base_path in glob.glob(dir_glob):
+                        post = Post(
+                            base_path,
+                            self.config['CACHE_FOLDER'],
+                            dest_dir,
+                            use_in_feeds,
+                            self.config['TRANSLATIONS'],
+                            self.config['DEFAULT_LANG'],
+                            self.config['BLOG_URL'],
+                            self.MESSAGES,
+                            template_name)
+                        for lang, langpath in list(self.config['TRANSLATIONS'].items()):
+                            dest = (destination, langpath, dir_glob, post.pagenames[lang])
+                            if dest in targets:
+                                raise Exception(
+                                    'Duplicated output path %r in post %r' %
+                                    (post.pagenames[lang], base_path))
+                            targets.add(dest)
+                        self.global_data[post.post_name] = post
+                        if post.use_in_feeds:
+                            self.posts_per_year[
+                                str(post.date.year)].append(post.post_name)
+                            for tag in post.tags:
+                                self.posts_per_tag[tag].append(post.post_name)
+                        else:
+                            self.pages.append(post)
             for name, post in list(self.global_data.items()):
                 self.timeline.append(post)
             self.timeline.sort(key=lambda p: p.date)
@@ -468,47 +474,39 @@ class Nikola(object):
             self._scanned = True
             print("done!")
 
-    def generic_page_renderer(self, lang, wildcard,
-        template_name, destination, filters):
+    def generic_page_renderer(self, lang, post, filters):
         """Render post fragments to final HTML pages."""
-        for post in glob.glob(wildcard):
-            post_name = os.path.splitext(post)[0]
-            context = {}
-            post = self.global_data[post_name]
-            deps = post.deps(lang) + \
-                self.template_system.template_deps(template_name)
-            context['post'] = post
-            context['lang'] = lang
-            context['title'] = post.title(lang)
-            context['description'] = post.description(lang)
-            context['permalink'] = post.permalink(lang)
-            context['page_list'] = self.pages
-            output_name = os.path.join(
-                self.config['OUTPUT_FOLDER'],
-                self.config['TRANSLATIONS'][lang],
-                destination,
-                post.pagenames[lang] + ".html")
-            deps_dict = copy(context)
-            deps_dict.pop('post')
-            if post.prev_post:
-                deps_dict['PREV_LINK'] = [post.prev_post.permalink(lang)]
-            if post.next_post:
-                deps_dict['NEXT_LINK'] = [post.next_post.permalink(lang)]
-            deps_dict['OUTPUT_FOLDER'] = self.config['OUTPUT_FOLDER']
-            deps_dict['TRANSLATIONS'] = self.config['TRANSLATIONS']
-            deps_dict['global'] = self.config['GLOBAL_CONTEXT']
+        context = {}
+        deps = post.deps(lang) + \
+            self.template_system.template_deps(post.template_name)
+        context['post'] = post
+        context['lang'] = lang
+        context['title'] = post.title(lang)
+        context['description'] = post.description(lang)
+        context['permalink'] = post.permalink(lang)
+        context['page_list'] = self.pages
+        output_name = os.path.join(self.config['OUTPUT_FOLDER'], post.destination_path(lang))
+        deps_dict = copy(context)
+        deps_dict.pop('post')
+        if post.prev_post:
+            deps_dict['PREV_LINK'] = [post.prev_post.permalink(lang)]
+        if post.next_post:
+            deps_dict['NEXT_LINK'] = [post.next_post.permalink(lang)]
+        deps_dict['OUTPUT_FOLDER'] = self.config['OUTPUT_FOLDER']
+        deps_dict['TRANSLATIONS'] = self.config['TRANSLATIONS']
+        deps_dict['global'] = self.config['GLOBAL_CONTEXT']
 
-            task = {
-                'name': output_name.encode('utf-8'),
-                'file_dep': deps,
-                'targets': [output_name],
-                'actions': [(self.render_template,
-                    [template_name, output_name, context])],
-                'clean': True,
-                'uptodate': [config_changed(deps_dict)],
-            }
+        task = {
+            'name': output_name.encode('utf-8'),
+            'file_dep': deps,
+            'targets': [output_name],
+            'actions': [(self.render_template,
+                [post.template_name, output_name, context])],
+            'clean': True,
+            'uptodate': [config_changed(deps_dict)],
+        }
 
-            yield utils.apply_filters(task, filters)
+        yield utils.apply_filters(task, filters)
 
     def generic_post_list_renderer(self, lang, posts,
         output_name, template_name, filters, extra_context):

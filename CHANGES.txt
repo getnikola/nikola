@@ -6,11 +6,13 @@ Features
 
 * One-page, dynamic-loading, client-rendered site plugin (task_mustache)
 * Local search based on Tipue (extra_plugins/task_localsearch)
+* Recursive post/story folders
 
 Bugfixes
 --------
 
 * Made layout of the site theme responsive, with collapsing navbar.
+* Use timeline instead of parsing post_pages in generic_page_renderer and task_render_pages.
 
 New in v5.1
 ===========

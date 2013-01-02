@@ -41,14 +41,14 @@ class RenderPages(Task):
         self.site.scan_posts()
         flag = False
         for lang in kw["translations"]:
-            for wildcard, destination, template_name, _ in kw["post_pages"]:
-                for task in self.site.generic_page_renderer(lang,
-                    wildcard, template_name, destination, kw["filters"]):
+            for post in self.site.timeline:
+                for task in self.site.generic_page_renderer(lang, post, kw["filters"]):
                     task['uptodate'] = [config_changed({
                         1: task['uptodate'][0].config,
                         2: kw})]
                     task['basename'] = self.name
                     flag = True
+                    print task['targets']
                     yield task
         if flag is False:  # No page rendered, yield a dummy task
             yield {
