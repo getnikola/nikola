@@ -1,0 +1,10 @@
+[Core]
+Name = local_search
+Module = task_localsearch
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Create data files for local search via Tipue
+

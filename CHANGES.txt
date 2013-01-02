@@ -5,6 +5,7 @@ Features
 --------
 
 * One-page, dynamic-loading, client-rendered site plugin (task_mustache)
+* Local search based on Tipue (extra_plugins/task_localsearch)
 
 Bugfixes
 --------
