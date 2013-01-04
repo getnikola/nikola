@@ -16,6 +16,7 @@ Bugfixes
 * Updated disqus integration code, added identifiers so it works on any URL.
 * Make sure folder links end in "/" in the gallery code.
 * Removed copy of PyRSS2Gen, made it a dependency.
+* Detect "namespace" dependencies for Mako templates.
 
 New in v5.1
 ===========
