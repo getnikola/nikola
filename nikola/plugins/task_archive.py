@@ -47,7 +47,7 @@ class Archive(Task):
         for year, posts in list(self.site.posts_per_year.items()):
             for lang in kw["translations"]:
                 output_name = os.path.join(
-                    kw['output_folder'], self.site.path("archive", year, lang))
+                    kw['output_folder'], self.site.path("archive", year, lang)).encode('utf8')
                 post_list = [self.site.global_data[post] for post in posts]
                 post_list.sort(key=lambda a: a.date)
                 post_list.reverse()
@@ -78,7 +78,7 @@ class Archive(Task):
         for lang in kw["translations"]:
             context = {}
             output_name = os.path.join(
-                kw['output_folder'], self.site.path("archive", None, lang))
+                kw['output_folder'], self.site.path("archive", None, lang)).encode('utf8')
             context["title"] = kw["messages"][lang]["Archive"]
             context["items"] = [(year, self.site.link("archive", year, lang))
                 for year in years]

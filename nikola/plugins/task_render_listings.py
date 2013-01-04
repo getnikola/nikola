@@ -72,7 +72,7 @@ class Listings(Task):
                 'lang': kw['default_lang'],
                 'description': title,
                 }
-            self.site.render_template('listing.tmpl', out_name, context)
+            self.site.render_template('listing.tmpl', out_name.encode('utf8'), context)
         flag = True
         template_deps = self.site.template_system.template_deps('listing.tmpl')
         for root, dirs, files in os.walk(kw['listings_folder']):

@@ -233,8 +233,9 @@ class Nikola(object):
         data = self.template_system.render_template(
             template_name, None, local_context)
 
-        assert output_name.startswith(self.config["OUTPUT_FOLDER"])
-        url_part = output_name[len(self.config["OUTPUT_FOLDER"]) + 1:]
+        assert isinstance(output_name, bytes)
+        assert output_name.startswith(self.config["OUTPUT_FOLDER"].encode('utf8'))
+        url_part = output_name.decode('utf8')[len(self.config["OUTPUT_FOLDER"]) + 1:]
 
         # This is to support windows paths
         url_part = "/".join(url_part.split(os.sep))
@@ -485,7 +486,7 @@ class Nikola(object):
         context['description'] = post.description(lang)
         context['permalink'] = post.permalink(lang)
         context['page_list'] = self.pages
-        output_name = os.path.join(self.config['OUTPUT_FOLDER'], post.destination_path(lang))
+        output_name = os.path.join(self.config['OUTPUT_FOLDER'], post.destination_path(lang)).encode('utf8')
         deps_dict = copy(context)
         deps_dict.pop('post')
         if post.prev_post:
@@ -497,7 +498,7 @@ class Nikola(object):
         deps_dict['global'] = self.config['GLOBAL_CONTEXT']
 
         task = {
-            'name': output_name.encode('utf-8'),
+            'name': output_name,
             'file_dep': deps,
             'targets': [output_name],
             'actions': [(self.render_template,
@@ -511,6 +512,9 @@ class Nikola(object):
     def generic_post_list_renderer(self, lang, posts,
         output_name, template_name, filters, extra_context):
         """Renders pages with lists of posts."""
+
+        # This is a name on disk, has to be bytes
+        assert isinstance(output_name, bytes)
 
         deps = self.template_system.template_deps(template_name)
         for post in posts:
@@ -528,7 +532,7 @@ class Nikola(object):
             for p in posts]
         deps_context["global"] = self.config['GLOBAL_CONTEXT']
         task = {
-            'name': output_name.encode('utf8'),
+            'name': output_name,
             'targets': [output_name],
             'file_dep': deps,
             'actions': [(self.render_template,

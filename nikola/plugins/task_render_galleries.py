@@ -258,7 +258,7 @@ class Galleries(Task):
                     file_dep.append(index_dst_path)
                 else:
                     context['text'] = ''
-                self.site.render_template(template_name, output_name, context)
+                self.site.render_template(template_name, output_name.encode('utf8'), context)
 
             yield {
                 'basename': str('render_galleries'),
