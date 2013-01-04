@@ -45,7 +45,7 @@ except ImportError:
 from doit import tools
 from unidecode import unidecode
 
-from . import PyRSS2Gen as rss
+import PyRSS2Gen as rss
 
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
     'generic_rss_renderer',

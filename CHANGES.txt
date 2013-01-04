@@ -15,6 +15,7 @@ Bugfixes
 * Use timeline instead of parsing post_pages in generic_page_renderer and task_render_pages.
 * Updated disqus integration code, added identifiers so it works on any URL.
 * Make sure folder links end in "/" in the gallery code.
+* Removed copy of PyRSS2Gen, made it a dependency.
 
 New in v5.1
 ===========
