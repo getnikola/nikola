@@ -25,8 +25,10 @@
 from __future__ import unicode_literals, print_function
 import codecs
 import csv
+import datetime
 import os
 import re
+
 try:
     from urlparse import urlparse
 except ImportError:
@@ -86,7 +88,13 @@ class CommandImportWordpress(Command):
         return redirections
 
     def generate_base_site(self, context):
-        os.system('nikola init %s' % (self.output_folder, ))
+        if not os.path.exists(self.output_folder):
+            os.system('nikola init %s' % (self.output_folder, ))
+        else:
+            self.import_into_existing_site = True
+            print('The folder %s already exists - '
+                  'assuming that this is a already existing nikola site.' % self.output_folder)
+
         conf_template = Template(filename=os.path.join(
             os.path.dirname(utils.__file__), 'conf.py.in'))
 
@@ -271,6 +279,17 @@ class CommandImportWordpress(Command):
             for item in url_map.items():
                 csv_writer.writerow(item)
 
+    def get_configuration_output_path(self):
+        if not self.import_into_existing_site:
+            filename = 'conf.py'
+        else:
+            filename = 'conf.py.wordpress_import-%s' % datetime.datetime.now(
+            ).strftime('%Y%m%d_%H%M%s')
+        config_output_path = os.path.join(self.output_folder, filename)
+        print('Configuration will be written to: %s' % config_output_path)
+
+        return config_output_path
+
     @staticmethod
     def write_configuration(filename, rendered_template):
         with codecs.open(filename, 'w+', 'utf8') as fd:
@@ -279,7 +298,8 @@ class CommandImportWordpress(Command):
     def run(self, fname=None, output_folder=None):
         # Parse the data
         if requests is None:
-            print('To use the import_wordpress command, you have to install the "requests" package.')
+            print('To use the import_wordpress command,'
+                  ' you have to install the "requests" package.')
             return
         if fname is None:
             print("Usage: nikola import_wordpress wordpress_dump.xml")
@@ -288,6 +308,7 @@ class CommandImportWordpress(Command):
             output_folder = 'new_site'
 
         self.output_folder = output_folder
+        self.import_into_existing_site = False
         self.url_map = {}
         channel = self.get_channel_from_file(fname)
         self.context = self.populate_context(channel)
@@ -298,8 +319,9 @@ class CommandImportWordpress(Command):
         self.import_posts(channel)
         self.write_urlmap_csv(
             os.path.join(self.output_folder, 'url_map.csv'), self.url_map)
-        self.write_configuration(os.path.join(
-            self.output_folder, 'conf.py'), conf_template.render(**self.context))
+
+        self.write_configuration(self.get_configuration_output_path(
+        ), conf_template.render(**self.context))
 
 
 def replacer(dst):

@@ -161,6 +161,18 @@ asdasdas"""
         expected_content = """<a href="http://some.blog/openttd-missing_sound.png"><img class="size-thumbnail wp-image-551" title="openttd-missing_sound" src="http://some.blog/openttd-missing_sound-150x150.png" alt="Fehlermeldung" /></a>"""
         self.assertEqual(expected_content, transformed_content)
 
+    def test_get_configuration_output_path(self):
+        self.import_command.output_folder = 'new_site'
+        default_config_path = os.path.join('new_site', 'conf.py')
+
+        self.import_command.import_into_existing_site = False
+        self.assertEqual(default_config_path,
+                         self.import_command.get_configuration_output_path())
+
+        self.import_command.import_into_existing_site = True
+        config_path_with_timestamp = self.import_command.get_configuration_output_path()
+        self.assertNotEqual(default_config_path, config_path_with_timestamp)
+        self.assertTrue('wordpress_import' in config_path_with_timestamp)
 
 if __name__ == '__main__':
     unittest.main()
