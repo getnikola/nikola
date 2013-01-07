@@ -92,8 +92,8 @@ class CommandImportWordpress(Command):
             os.system('nikola init %s' % (self.output_folder, ))
         else:
             self.import_into_existing_site = True
-            print('The folder %s already exists - '
-                  'assuming that this is a already existing nikola site.' % self.output_folder)
+            print('The folder %s already exists - assuming that this is a '
+                  'already existing nikola site.' % self.output_folder)
 
         conf_template = Template(filename=os.path.join(
             os.path.dirname(utils.__file__), 'conf.py.in'))
