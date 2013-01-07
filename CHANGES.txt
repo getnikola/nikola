@@ -17,6 +17,7 @@ Bugfixes
 * Make sure folder links end in "/" in the gallery code.
 * Removed copy of PyRSS2Gen, made it a dependency.
 * Detect "namespace" dependencies for Mako templates.
+* Use consistent encodings in RSS feeds.
 
 New in v5.1
 ===========
