@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
 import unittest
 import os
 import re
-from StringIO import StringIO
+import sys
+from io import StringIO
 
 import mock
 
@@ -46,8 +49,16 @@ class RSSFeedTest(unittest.TestCase):
                                                                   ],
                                                                  'testfeed.rss')
 
-                    self.file_content = ''.join(
-                        [call[1][0] for call in opener_mock.mock_calls[2:-1]])
+                    if sys.version_info[0] == 2:
+                      self.file_content = ''.join(
+                          [call[1][0] for call in opener_mock.mock_calls[2:-1]])
+                    else:
+                      # Python 3 workaround
+                      # lxml will complain if the encoding is specified in the
+                      # xml when running with unicode strings.
+                      # We do not include this in our content.
+                      self.file_content = ''.join(
+                          [call[1][0] for call in opener_mock.mock_calls[3:-1]])
 
     def tearDown(self):
         pass
