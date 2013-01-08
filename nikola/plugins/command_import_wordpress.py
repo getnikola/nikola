@@ -87,7 +87,7 @@ class CommandImportWordpress(Command):
 
         return redirections
 
-    def generate_base_site(self, context):
+    def generate_base_site(self):
         if not os.path.exists(self.output_folder):
             os.system('nikola init %s' % (self.output_folder, ))
         else:
@@ -249,7 +249,8 @@ class CommandImportWordpress(Command):
                                              slug + '.meta'),
                                 title, slug, post_date, description, tags)
             self.write_content(
-                os.path.join(self.output_folder, out_folder, slug + '.wp'), content)
+                os.path.join(self.output_folder, out_folder, slug + '.wp'),
+                content)
         else:
             print('Not going to import "%s" because it seems to contain'
                   ' no content.' % (title, ))
@@ -302,7 +303,11 @@ class CommandImportWordpress(Command):
                   ' you have to install the "requests" package.')
             return
         if fname is None:
-            print("Usage: nikola import_wordpress wordpress_dump.xml")
+            print("Usage: nikola import_wordpress wordpress_dump.xml "
+                  "[import_location]")
+            print("")
+            print("Through import_location the location into which "
+                  "the imported content will be written can be specified.")
             return
         if output_folder is None:
             output_folder = 'new_site'
@@ -312,7 +317,7 @@ class CommandImportWordpress(Command):
         self.url_map = {}
         channel = self.get_channel_from_file(fname)
         self.context = self.populate_context(channel)
-        conf_template = self.generate_base_site(self.context)
+        conf_template = self.generate_base_site()
         self.context['REDIRECTIONS'] = self.configure_redirections(
             self.url_map)
 

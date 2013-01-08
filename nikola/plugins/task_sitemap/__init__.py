@@ -22,7 +22,9 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import print_function
 import os
+import sys
 import tempfile
 
 from nikola.plugin_categories import LateTask
@@ -37,6 +39,14 @@ class Sitemap(LateTask):
     name = "sitemap"
 
     def gen_tasks(self):
+        if sys.version_info.major > 2:
+            print("sitemap generation is not available for python 3")
+            yield {
+                'basename': 'sitemap',
+                'name': 'sitemap',
+                'actions': [], 
+            }
+            return
         """Generate Google sitemap."""
         kw = {
             "blog_url": self.site.config["BLOG_URL"],
@@ -62,7 +72,7 @@ class Sitemap(LateTask):
                 kw["blog_url"],
             )
             config_file = tempfile.NamedTemporaryFile(delete=False)
-            config_file.write(config_data)
+            config_file.write(config_data.encode('utf8'))
             config_file.close()
 
             # Generate sitemap

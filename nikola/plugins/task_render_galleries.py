@@ -125,7 +125,7 @@ class Galleries(Task):
                 pass
 
             # List of sub-galleries
-            folder_list = [x.split(os.sep)[-2] for x in
+            folder_list = [x.split(os.sep)[-2] + os.sep for x in
                 glob.glob(os.path.join(gallery_path, '*') + os.sep)]
 
             crumbs = gallery_path.split(os.sep)[:-1]
@@ -258,7 +258,7 @@ class Galleries(Task):
                     file_dep.append(index_dst_path)
                 else:
                     context['text'] = ''
-                self.site.render_template(template_name, output_name, context)
+                self.site.render_template(template_name, output_name.encode('utf8'), context)
 
             yield {
                 'basename': str('render_galleries'),

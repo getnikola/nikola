@@ -48,8 +48,9 @@ class MakoTemplates(TemplateSystem):
 
         deps = []
         for n in lex.template.nodes:
-            if getattr(n, 'keyword', None) == "inherit":
-                deps.append(n.attributes['file'])
+            keyword = getattr(n, 'keyword', None)
+            if keyword in ["inherit", "namespace"]:
+                deps.append(n.attributes['file'])                
             # TODO: include tags are not handled
         return deps
 

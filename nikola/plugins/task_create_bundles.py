@@ -77,8 +77,8 @@ class BuildBundles(LateTask):
                     for fname in files]
                 task = {
                     'file_dep': file_dep,
-                    'basename': self.name,
-                    'name': output_path,
+                    'basename': str(self.name),
+                    'name': str(output_path),
                     'actions': [(build_bundle, (name, files))],
                     'targets': [output_path],
                     'uptodate': [utils.config_changed(kw)]

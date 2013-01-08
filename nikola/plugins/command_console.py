@@ -32,4 +32,4 @@ class Deploy(Command):
     name = "console"
 
     def run(self, *args):
-	os.system('python -i -c "from nikola.console import *"')
+        os.system('python -i -c "from nikola.console import *"')

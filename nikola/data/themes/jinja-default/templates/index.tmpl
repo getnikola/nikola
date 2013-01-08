@@ -10,7 +10,7 @@
         {{post.text(lang, index_teasers)}}
         <p>
         {% if disqus_forum %}
-            <a href="{{post.permalink()}}#disqus_thread">Comments</a>
+            <a href="{{post.permalink()}}#disqus_thread"  data-disqus-identifier="{{post.base_path}}">Comments</a>
         {% endif %}
         </div>
     {% endfor %}

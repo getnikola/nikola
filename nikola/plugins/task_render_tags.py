@@ -23,6 +23,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #from __future__ import unicode_literals
+import codecs
 import json
 import os
 
@@ -89,7 +90,7 @@ class RenderTags(Task):
                 os.makedirs(os.path.dirname(output_name))
             except:
                 pass
-            with open(output_name, 'wb+') as fd:
+            with codecs.open(output_name, 'wb+', 'utf8') as fd:
                 fd.write(json.dumps(data))
                 
         task = {

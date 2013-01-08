@@ -19,7 +19,7 @@
 <%def name="html_disqus_link(post)">
     <p>
     %if disqus_forum:
-        <a href="${post.permalink()}#disqus_thread">Comments</a>
+        <a href="${post.permalink()}#disqus_thread" data-disqus-identifier="${post.base_path}">Comments</a>
     %endif
 </%def>
 
