@@ -5,6 +5,7 @@ Features
 --------
 
 * One-page, dynamic-loading, client-rendered site plugin (task_mustache)
+* Importing Wordpress exports into a custom location
 
 Bugfixes
 --------
