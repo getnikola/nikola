@@ -249,7 +249,8 @@ class CommandImportWordpress(Command):
                                              slug + '.meta'),
                                 title, slug, post_date, description, tags)
             self.write_content(
-                os.path.join(self.output_folder, out_folder, slug + '.wp'), content)
+                os.path.join(self.output_folder, out_folder, slug + '.wp'),
+                content)
         else:
             print('Not going to import "%s" because it seems to contain'
                   ' no content.' % (title, ))
@@ -302,7 +303,11 @@ class CommandImportWordpress(Command):
                   ' you have to install the "requests" package.')
             return
         if fname is None:
-            print("Usage: nikola import_wordpress wordpress_dump.xml")
+            print("Usage: nikola import_wordpress wordpress_dump.xml "
+                  "[import_location]")
+            print("")
+            print("Through import_location the location into which "
+                  "the imported content will be written can be specified.")
             return
         if output_folder is None:
             output_folder = 'new_site'
