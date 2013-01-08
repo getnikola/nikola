@@ -882,7 +882,20 @@ about it.
        wordpress before dumping.
 
        Other versions may or may not work.
-  
+
+Importing To A Custom Location Or Into An Existing Site
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is possible to either import into a location you desire or into an already existing Nikola site.
+To do so you can specify a location after the dump.::
+
+    $ nikola import_wordpress mysite.wordpress.2012-12-20.xml import_location
+
+With this command Nikola will import into the folder ``import_location``.
+
+If the folder already exists Nikola will not overwrite an existing ``conf.py``.
+Instead a new file with a timestamp at the end of the filename will be created.
+
 License
 -------
 

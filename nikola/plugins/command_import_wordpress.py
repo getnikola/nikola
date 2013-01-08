@@ -25,8 +25,10 @@
 from __future__ import unicode_literals, print_function
 import codecs
 import csv
+import datetime
 import os
 import re
+
 try:
     from urlparse import urlparse
 except ImportError:
@@ -85,9 +87,14 @@ class CommandImportWordpress(Command):
 
         return redirections
 
-    @staticmethod
-    def generate_base_site(context):
-        os.system('nikola init new_site')
+    def generate_base_site(self):
+        if not os.path.exists(self.output_folder):
+            os.system('nikola init %s' % (self.output_folder, ))
+        else:
+            self.import_into_existing_site = True
+            print('The folder %s already exists - assuming that this is a '
+                  'already existing nikola site.' % self.output_folder)
+
         conf_template = Template(filename=os.path.join(
             os.path.dirname(utils.__file__), 'conf.py.in'))
 
@@ -139,7 +146,7 @@ class CommandImportWordpress(Command):
             item, '{%s}attachment_url' % wordpress_namespace, 'foo')
         link = get_text_tag(item, '{%s}link' % wordpress_namespace, 'foo')
         path = urlparse(url).path
-        dst_path = os.path.join(*(['new_site', 'files']
+        dst_path = os.path.join(*([self.output_folder, 'files']
                                   + list(path.split('/'))))
         dst_dir = os.path.dirname(dst_path)
         if not os.path.isdir(dst_dir):
@@ -238,11 +245,12 @@ class CommandImportWordpress(Command):
             # If no content is found, no files are written.
             content = self.transform_content(content)
 
-            self.write_metadata(os.path.join('new_site', out_folder,
+            self.write_metadata(os.path.join(self.output_folder, out_folder,
                                              slug + '.meta'),
                                 title, slug, post_date, description, tags)
             self.write_content(
-                os.path.join('new_site', out_folder, slug + '.wp'), content)
+                os.path.join(self.output_folder, out_folder, slug + '.wp'),
+                content)
         else:
             print('Not going to import "%s" because it seems to contain'
                   ' no content.' % (title, ))
@@ -272,32 +280,53 @@ class CommandImportWordpress(Command):
             for item in url_map.items():
                 csv_writer.writerow(item)
 
+    def get_configuration_output_path(self):
+        if not self.import_into_existing_site:
+            filename = 'conf.py'
+        else:
+            filename = 'conf.py.wordpress_import-%s' % datetime.datetime.now(
+            ).strftime('%Y%m%d_%H%M%s')
+        config_output_path = os.path.join(self.output_folder, filename)
+        print('Configuration will be written to: %s' % config_output_path)
+
+        return config_output_path
+
     @staticmethod
     def write_configuration(filename, rendered_template):
         with codecs.open(filename, 'w+', 'utf8') as fd:
             fd.write(rendered_template)
 
-    def run(self, fname=None):
+    def run(self, fname=None, output_folder=None):
         # Parse the data
         if requests is None:
-            print('To use the import_wordpress command, you have to install the "requests" package.')
+            print('To use the import_wordpress command,'
+                  ' you have to install the "requests" package.')
             return
         if fname is None:
-            print("Usage: nikola import_wordpress wordpress_dump.xml")
+            print("Usage: nikola import_wordpress wordpress_dump.xml "
+                  "[import_location]")
+            print("")
+            print("Through import_location the location into which "
+                  "the imported content will be written can be specified.")
             return
+        if output_folder is None:
+            output_folder = 'new_site'
 
+        self.output_folder = output_folder
+        self.import_into_existing_site = False
         self.url_map = {}
         channel = self.get_channel_from_file(fname)
         self.context = self.populate_context(channel)
-        conf_template = self.generate_base_site(self.context)
+        conf_template = self.generate_base_site()
         self.context['REDIRECTIONS'] = self.configure_redirections(
             self.url_map)
 
         self.import_posts(channel)
         self.write_urlmap_csv(
-            os.path.join('new_site', 'url_map.csv'), self.url_map)
-        self.write_configuration(os.path.join(
-            'new_site', 'conf.py'), conf_template.render(**self.context))
+            os.path.join(self.output_folder, 'url_map.csv'), self.url_map)
+
+        self.write_configuration(self.get_configuration_output_path(
+        ), conf_template.render(**self.context))
 
 
 def replacer(dst):

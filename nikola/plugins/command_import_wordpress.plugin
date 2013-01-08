@@ -4,7 +4,7 @@ Module = command_import_wordpress
 
 [Documentation]
 Author = Roberto Alsina
-Version = 0.1
+Version = 0.2
 Website = http://nikola.ralsina.com.ar
 Description = Import a wordpress site from a XML dump (requires markdown).
 
