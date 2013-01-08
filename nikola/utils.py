@@ -45,7 +45,7 @@ except ImportError:
 from doit import tools
 from unidecode import unidecode
 
-from . import PyRSS2Gen as rss
+import PyRSS2Gen as rss
 
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
     'generic_rss_renderer',
@@ -272,8 +272,10 @@ def generic_rss_renderer(lang, title, link, description,
     if not os.path.isdir(dst_dir):
         os.makedirs(dst_dir)
     with open(output_path, "wb+") as rss_file:
-        rss_obj.write_xml(rss_file)
-
+        try:
+            rss_obj.write_xml(rss_file, encoding='utf-8')
+        except TypeError:
+            print("RSS generation doesn't work on python3 yet")
 
 def copy_file(source, dest, cutoff=None):
     dst_dir = os.path.dirname(dest)

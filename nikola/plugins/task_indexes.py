@@ -89,7 +89,7 @@ class Indexes(Task):
                     context["nextlink"] = "index-%s.html" % (i + 1)
                 context["permalink"] = self.site.link("index", i, lang)
                 output_name = os.path.join(
-                    kw['output_folder'], self.site.path("index", i, lang))
+                    kw['output_folder'], self.site.path("index", i, lang)).encode('utf8')
                 task = self.site.generic_post_list_renderer(
                     lang,
                     post_list,

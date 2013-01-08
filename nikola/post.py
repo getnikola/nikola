@@ -38,7 +38,7 @@ class Post(object):
     """Represents a blog post or web page."""
 
     def __init__(self, source_path, cache_folder, destination, use_in_feeds,
-        translations, default_lang, blog_url, messages):
+        translations, default_lang, blog_url, messages, template_name):
         """Initialize post.
 
         The base path is the .txt post file. From it we calculate
@@ -61,6 +61,7 @@ class Post(object):
         self.translations = translations
         self.default_lang = default_lang
         self.messages = messages
+        self.template_name = template_name
         if os.path.isfile(self.metadata_path):
             with codecs.open(self.metadata_path, "r", "utf8") as meta_file:
                 meta_data = meta_file.readlines()
@@ -168,14 +169,14 @@ class Post(object):
             flag = False
             for elem in e:
                 elem_string = lxml.html.tostring(elem)
-                if '<!-- TEASER_END -->' in elem_string.upper():
+                if b'<!-- TEASER_END -->' in elem_string.upper():
                     flag = True
                     break
                 teaser.append(elem_string)
             if flag:
                 teaser.append('<p><a href="%s">%s...</a></p>' %
                     (self.permalink(lang), self.messages[lang]["Read more"]))
-            data = ''.join(teaser)
+            data = b''.join(teaser)
         return data
 
     def destination_path(self, lang, extension='.html'):

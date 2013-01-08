@@ -5,12 +5,21 @@ Features
 --------
 
 * One-page, dynamic-loading, client-rendered site plugin (task_mustache)
+* Local search based on Tipue (extra_plugins/task_localsearch)
+* Recursive post/story folders
+* Added comments to image galleries
 * Importing Wordpress exports into a custom location
 
 Bugfixes
 --------
 
 * Made layout of the site theme responsive, with collapsing navbar.
+* Use timeline instead of parsing post_pages in generic_page_renderer and task_render_pages.
+* Updated disqus integration code, added identifiers so it works on any URL.
+* Make sure folder links end in "/" in the gallery code.
+* Removed copy of PyRSS2Gen, made it a dependency.
+* Detect "namespace" dependencies for Mako templates.
+* Use consistent encodings in RSS feeds.
 
 New in v5.1
 ===========

@@ -32,7 +32,8 @@ class RSSFeedTest(unittest.TestCase):
                                                       {'en': ''},
                                                       'en',
                                                       self.blog_url,
-                                                      'unused message.')
+                                                      'unused message.',
+                                                      'post.tmpl')
 
                     opener_mock = mock.mock_open()
 
