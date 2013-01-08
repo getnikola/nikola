@@ -87,7 +87,7 @@ class CommandImportWordpress(Command):
 
         return redirections
 
-    def generate_base_site(self, context):
+    def generate_base_site(self):
         if not os.path.exists(self.output_folder):
             os.system('nikola init %s' % (self.output_folder, ))
         else:
@@ -317,7 +317,7 @@ class CommandImportWordpress(Command):
         self.url_map = {}
         channel = self.get_channel_from_file(fname)
         self.context = self.populate_context(channel)
-        conf_template = self.generate_base_site(self.context)
+        conf_template = self.generate_base_site()
         self.context['REDIRECTIONS'] = self.configure_redirections(
             self.url_map)
 
