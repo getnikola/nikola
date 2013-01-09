@@ -260,6 +260,9 @@ def code_block_directive(name, arguments, options, content, lineno,
         l = list(DocutilsInterface(content, language, options))
         if l[-1] == ('', '\n'):
             l = l[:-1]
+        # We strip last element for the same reason (trailing \n looks bad)
+        if l:
+            l[-1] = (l[-1][0], l[-1][1].rstrip())
         for cls, value in l:
             if withln and "\n" in value:
                 # Split on the "\n"s
