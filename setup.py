@@ -29,7 +29,7 @@ except ImportError:
     from distutils.util import convert_path
 
 dependencies = [
-    'doit>=0.18.1',
+    'doit>=0.20.0',
     'pygments',
     'pillow',
     'docutils',

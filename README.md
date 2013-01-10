@@ -16,7 +16,7 @@ It has many features, but here are some of the nicer ones:
 
 * Blogs, with tags, feeds, archives, comments, etc.
 * [Theming](http://nikola.ralsina.com.ar/theming.html)
-* Fast builds, thanks to [doit](http://python-doit.sf.net)
+* Fast builds, thanks to [doit](http://pydoit.org)
 * Flexible
 * Small codebase (programmers can understand all of Nikola in a couple of hours)
 * [reStructuredText](http://nikola.ralsina.com.ar/quickstart.html) or [Markdown](http://daringfireball.net/projects/markdown) as input languages.
