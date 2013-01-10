@@ -56,6 +56,10 @@ class CommandNewPost(Command):
             action='store_true',
             help='Create post with embedded metadata (single file format).',
             default=self.site.config.get('ONE_FILE_POSTS', True))
+        parser.add_option('-2', dest='onefile',
+            action='store_false',
+            help='Create post with separate metadata (two file format).',
+            default=self.site.config.get('ONE_FILE_POSTS', True))
         parser.add_option('-f', '--format',
             dest='post_format',
             default='rest',
@@ -111,7 +115,7 @@ class CommandNewPost(Command):
 
         if not onefile:  # write metadata file
             with codecs.open(meta_path, "wb+", "utf8") as fd:
-                fd.write(data)
+                fd.write('\n'.join(data))
             with codecs.open(txt_path, "wb+", "utf8") as fd:
                 fd.write("Write your post here.")
             print("Your post's metadata is at: ", meta_path)
