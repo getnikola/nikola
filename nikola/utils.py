@@ -248,14 +248,14 @@ def copy_tree(src, dst, link_cutoff=None):
 
 
 def generic_rss_renderer(lang, title, link, description,
-    timeline, output_path):
+    timeline, output_path, rss_teasers):
     """Takes all necessary data, and renders a RSS feed in output_path."""
     items = []
     for post in timeline[:10]:
         args = {
             'title': post.title(lang),
             'link': post.permalink(lang, absolute=True),
-            'description': post.text(lang, teaser_only=True),
+            'description': post.text(lang, teaser_only=rss_teasers),
             'guid': post.permalink(lang, absolute=True),
             'pubDate': post.date,
         }

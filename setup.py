@@ -52,6 +52,22 @@ standard_exclude_directories = ('.*', 'CVS', '_darcs', './build',
                                 './dist', 'EGG-INFO', '*.egg-info')
 
 
+def copy_messages():
+    themes_directory = os.path.join(
+        os.path.dirname(__file__), 'nikola', 'data', 'themes')
+    original_messages_directory = os.path.join(
+        themes_directory, 'default', 'messages')
+
+    for theme in ('orphan', 'monospace'):
+        theme_messages_directory = os.path.join(
+            themes_directory, theme, 'messages')
+
+        if os.path.exists(theme_messages_directory):
+            shutil.rmtree(theme_messages_directory)
+
+        shutil.copytree(original_messages_directory, theme_messages_directory)
+
+
 def install_manpages(root, prefix):
     man_pages = [
         ('docs/man/nikola.1', 'share/man/man1/nikola.1'),
@@ -169,10 +185,10 @@ setup(name='Nikola',
       author='Roberto Alsina and others',
       author_email='ralsina@netmanagers.com.ar',
       url='http://nikola.ralsina.com.ar/',
-      packages=['nikola', 
+      packages=['nikola',
                 'nikola.plugins',
-                'nikola.plugins.compile_markdown', 
-                'nikola.plugins.task_sitemap', 
+                'nikola.plugins.compile_markdown',
+                'nikola.plugins.task_sitemap',
                 'nikola.plugins.compile_rest'],
       scripts=['scripts/nikola'],
       install_requires=dependencies,

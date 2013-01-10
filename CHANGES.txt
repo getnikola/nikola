@@ -8,6 +8,8 @@ Features
 * Local search based on Tipue (extra_plugins/task_localsearch)
 * Recursive post/story folders
 * Added comments to image galleries
+* Importing Wordpress exports into a custom location
+* New option RSS_TEASERS
 
 Bugfixes
 --------
