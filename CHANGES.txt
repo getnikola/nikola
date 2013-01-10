@@ -11,6 +11,7 @@ Features
 * Importing Wordpress exports into a custom location
 * New option RSS_TEASERS
 * Textile markup support.
+* Creole Wiki markup support.
 
 Bugfixes
 --------
