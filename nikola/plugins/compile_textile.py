@@ -53,3 +53,17 @@ class CompileTextile(PageCompiler):
                 data = in_file.read()
             output = textile(data, head_offset=1)
             out_file.write(output)
+
+    def create_post(self, path, onefile=False, title="", slug="", date="", tags=""):
+        with codecs.open(path, "wb+", "utf8") as fd:
+            if onefile:
+                fd.write('<notextile>  <!--\n')
+                fd.write('.. title: %s\n' % title)
+                fd.write('.. slug: %s\n' % slug)
+                fd.write('.. date: %s\n' % date)
+                fd.write('.. tags: %s\n' % tags)
+                fd.write('.. link: \n')
+                fd.write('.. description: \n')
+                fd.write('--></notextile>\n\n')
+            fd.write("\nWrite your post here.")
+        

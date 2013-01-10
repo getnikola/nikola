@@ -10,6 +10,7 @@ Features
 * Added comments to image galleries
 * Importing Wordpress exports into a custom location
 * New option RSS_TEASERS
+* Textile markup support.
 
 Bugfixes
 --------

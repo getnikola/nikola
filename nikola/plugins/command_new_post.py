@@ -40,6 +40,9 @@ class CommandNewPost(Command):
 
     def run(self, *args):
         """Create a new post."""
+        
+        compiler_names = [p.name for p in self.site.plugin_manager.getPluginsOfCategory("PageCompiler")]
+        
         parser = OptionParser(usage="nikola %s [options]" % self.name)
         parser.add_option('-p', '--page', dest='is_post',
             action='store_false',
@@ -56,7 +59,7 @@ class CommandNewPost(Command):
         parser.add_option('-f', '--format',
             dest='post_format',
             default='rest',
-            help='Format for post (rest or markdown)')
+            help='Format for post (one of %s)' % ','.join(compiler_names))
         (options, args) = parser.parse_args(list(args))
 
         is_post = options.is_post
@@ -64,6 +67,10 @@ class CommandNewPost(Command):
         tags = options.tags
         onefile = options.onefile
         post_format = options.post_format
+        if post_format not in compiler_names:
+            print("ERROR: Unknown post format %s" % post_format)
+            return
+        compiler_plugin = self.site.plugin_manager.getPluginByName(post_format, "PageCompiler").plugin_object
 
         # Guess where we should put this
         for path, _, _, use_in_rss in self.site.config['post_pages']:
@@ -100,24 +107,9 @@ class CommandNewPost(Command):
             os.path.isfile(txt_path):
             print("The title already exists!")
             exit()
+        compiler_plugin.create_post(txt_path, onefile, title, slug, date, tags)
 
-        if onefile:
-            if post_format not in ('rest', 'markdown'):
-                print("ERROR: Unknown post format %s" % post_format)
-                return
-            with codecs.open(txt_path, "wb+", "utf8") as fd:
-                if post_format == 'markdown':
-                    fd.write('<!-- \n')
-                fd.write('.. title: %s\n' % title)
-                fd.write('.. slug: %s\n' % slug)
-                fd.write('.. date: %s\n' % date)
-                fd.write('.. tags: %s\n' % tags)
-                fd.write('.. link: \n')
-                fd.write('.. description: \n')
-                if post_format == 'markdown':
-                    fd.write('-->\n')
-                fd.write("\nWrite your post here.")
-        else:
+        if not onefile:  # write metadata file
             with codecs.open(meta_path, "wb+", "utf8") as fd:
                 fd.write(data)
             with codecs.open(txt_path, "wb+", "utf8") as fd:

@@ -60,3 +60,16 @@ class CompileMarkdown(PageCompiler):
             output = re.sub(r'(<div[^>]+class="[^"]*)codehilite([^>]+)',
                             r'\1code\2', output)
             out_file.write(output)
+
+    def create_post(self, path, onefile=False, title="", slug="", date="", tags=""):
+        with codecs.open(path, "wb+", "utf8") as fd:
+            if onefile:
+                fd.write('<!-- \n')
+                fd.write('.. title: %s\n' % title)
+                fd.write('.. slug: %s\n' % slug)
+                fd.write('.. date: %s\n' % date)
+                fd.write('.. tags: %s\n' % tags)
+                fd.write('.. link: \n')
+                fd.write('.. description: \n')
+                fd.write('-->\n\n')
+            fd.write("\nWrite your post here.")

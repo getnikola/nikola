@@ -107,3 +107,7 @@ class PageCompiler(object):
     def compile_html(self, source, dest):
         """Compile the source, save it on dest."""
         raise Exception("Implement Me First")
+
+    def create_post(self, path, onefile=False, title="", slug="", date="", tags=""):
+        """Create post file with optional metadata."""
+        raise Exception("Implement Me First")
