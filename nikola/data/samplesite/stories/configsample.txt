@@ -218,4 +218,4 @@
 
     # You can also replace the provided tasks with your own by redefining them
     # below this point. For a list of current tasks, run "doit list", and for
-    # help on their syntax, refer to the doit handbook at http://python-doit.sf.net
+    # help on their syntax, refer to the doit handbook at http://pydoit.org
