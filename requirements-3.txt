@@ -1,4 +1,4 @@
-doit>=0.17
+doit>=0.20.0
 pygments
 https://github.com/fluggo/Pillow/archive/master.zip
 docutils
