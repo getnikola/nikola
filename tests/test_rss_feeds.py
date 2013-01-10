@@ -45,7 +45,8 @@ class RSSFeedTest(unittest.TestCase):
                                                                  "blog_description",
                                                                  [example_post,
                                                                   ],
-                                                                 'testfeed.rss')
+                                                                 'testfeed.rss',
+                                                                 True)
 
                     # Python 3 / unicode strings workaround
                     # lxml will complain if the encoding is specified in the

@@ -226,6 +226,9 @@ DISQUS_FORUM = "nikolademo"
 # change it for a feedburner feed or something else.
 RSS_LINK = None
 
+# Show only teasers in the RSS feed? Default to True
+RSS_TEASERS = True
+
 # A search form to search this site, for the sidebar. You can use a google
 # custom search (http://www.google.com/cse/)
 # Or a duckduckgo search: https://duckduckgo.com/search_box.html

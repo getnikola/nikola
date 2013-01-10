@@ -455,8 +455,10 @@ The ``new_post`` command supports some options::
 Teasers
 ~~~~~~~
 
-If for any reason you want to provide feeds that only display the beginning of
-your post, you only need to add a "magical comment" in your post.
+You may not want to show the complete content of your posts either on your
+index page or in RSS feeds, but to display instead only the beginning of them.
+
+If it's the case, you only need to add a "magical comment" in your post.
 
 In restructuredtext::
 
@@ -466,8 +468,11 @@ In Markdown::
 
    <!-- TEASER_END -->
 
-Additionally, if you want also the "index" pages to show only the teasers, you can
-set the variable ``INDEX_TEASERS`` to ``True`` in ``conf.py``.
+By default all your RSS feeds will be shortened (they'll contain only teasers)
+whereas your index page will still show complete posts. You can change
+this behaviour with your ``conf.py``: ``INDEX_TEASERS`` defines whether index
+page should display the whole contents or only teasers. ``RSS_TEASERS``
+works the same way for your RSS feeds.
 
 Drafts
 ~~~~~~
