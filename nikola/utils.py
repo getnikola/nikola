@@ -345,21 +345,21 @@ class UnsafeZipException(Exception):
 def extract_all(zipfile):
     pwd = os.getcwd()
     os.chdir('themes')
-    z = list(zip(zipfile))
-    namelist = z.namelist()
-    for f in namelist:
-        if f.endswith('/') and '..' in f:
-            raise UnsafeZipException(
-                'The zip file contains ".." and is not safe to expand.')
-    for f in namelist:
-        if f.endswith('/'):
-            if not os.path.isdir(f):
-                try:
-                    os.makedirs(f)
-                except:
-                    raise OSError("mkdir '%s' error!" % f)
-        else:
-            z.extract(f)
+    with zip(zipfile) as z:
+        namelist = z.namelist()
+        for f in namelist:
+            if f.endswith('/') and '..' in f:
+                raise UnsafeZipException(
+                    'The zip file contains ".." and is not safe to expand.')
+        for f in namelist:
+            if f.endswith('/'):
+                if not os.path.isdir(f):
+                    try:
+                        os.makedirs(f)
+                    except:
+                        raise OSError("mkdir '%s' error!" % f)
+            else:
+                z.extract(f)
     os.chdir(pwd)
 
 
