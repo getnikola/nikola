@@ -39,7 +39,7 @@ class Sitemap(LateTask):
     name = "sitemap"
 
     def gen_tasks(self):
-        if sys.version_info.major > 2:
+        if sys.version_info[0] == 3:
             print("sitemap generation is not available for python 3")
             yield {
                 'basename': 'sitemap',
