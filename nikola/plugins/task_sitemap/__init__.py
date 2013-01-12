@@ -30,7 +30,7 @@ import tempfile
 from nikola.plugin_categories import LateTask
 from nikola.utils import config_changed
 
-import nikola.plugins.task_sitemap.sitemap_gen
+from nikola.plugins.task_sitemap import sitemap_gen
 
 
 class Sitemap(LateTask):
