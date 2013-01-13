@@ -26,7 +26,7 @@ from __future__ import print_function
 from optparse import OptionParser
 import os
 import json
-from io import StringIO
+from io import BytesIO
 
 try:
     import requests
@@ -84,7 +84,7 @@ class CommandInstallTheme(Command):
                     except:
                         raise OSError("mkdir 'theme' error!")
                 print('Downloading: %s' % data[name])
-                zip_file = StringIO()
+                zip_file = BytesIO()
                 zip_file.write(requests.get(data[name]).content)
                 print('Extracting: %s into themes' % name)
                 utils.extract_all(zip_file)
