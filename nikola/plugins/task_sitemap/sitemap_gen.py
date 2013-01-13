@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# flake8: noqa
 #
 # Copyright (c) 2004, 2005 Google Inc.
 # All rights reserved.
@@ -52,31 +51,30 @@ Usage: python sitemap_gen.py --config=config.xml [--help] [--testing]
             --testing, specified when user is experimenting
 """
 
-# Please be careful that all syntax used in this file can be parsed on
-# Python 1.5 -- this version check is not evaluated until after the
-# entire file has been parsed.
-import sys
-if sys.hexversion < 0x02020000:
-  print('This script requires Python 2.2 or later.')
-  print('Currently run with version: %s' % sys.version)
-  sys.exit(1)
-
 import fnmatch
 import glob
 import gzip
-import hashlib
 import os
 import re
 import stat
+import sys
 import time
 import types
 import urllib
 import xml.sax
 
 try:
+  import md5
+except ImportError:
+  md5 = None
+  import hashlib
+
+try:
     from urlparse import urlparse, urlsplit, urlunsplit
 except ImportError:
     from urllib.parse import urlparse, urlsplit, urlunsplit
+
+
 
 # Text encodings
 ENC_ASCII = 'ASCII'
@@ -86,6 +84,18 @@ ENC_ASCII_LIST = ['ASCII', 'US-ASCII', 'US', 'IBM367', 'CP367', 'ISO646-US'
                   'ISO_646.IRV:1991', 'ISO-IR-6', 'ANSI_X3.4-1968',
                   'ANSI_X3.4-1986', 'CPASCII' ]
 ENC_DEFAULT_LIST = ['ISO-8859-1', 'ISO-8859-2', 'ISO-8859-5']
+
+# Available Sitemap types
+SITEMAP_TYPES = ['web', 'mobile', 'news']
+
+# General Sitemap tags
+GENERAL_SITEMAP_TAGS = ['loc', 'changefreq', 'priority', 'lastmod']
+
+# News specific tags
+NEWS_SPECIFIC_TAGS = ['keywords', 'publication_date', 'stock_tickers']
+
+# News Sitemap tags
+NEWS_SITEMAP_TAGS = GENERAL_SITEMAP_TAGS + NEWS_SPECIFIC_TAGS
 
 # Maximum number of urls in each sitemap, before next Sitemap is created
 MAXURLS_PER_SITEMAP = 50000
@@ -99,7 +109,7 @@ ACCESSLOG_CLF_PATTERN = re.compile(
   )
 
 # Match patterns for lastmod attributes
-LASTMOD_PATTERNS = map(re.compile, [
+DATE_PATTERNS = map(re.compile, [
   r'^\d\d\d\d$',
   r'^\d\d\d\d-\d\d$',
   r'^\d\d\d\d-\d\d-\d\d$',
@@ -115,32 +125,56 @@ CHANGEFREQ_PATTERNS = [
   ]
 
 # XML formats
-SITEINDEX_HEADER   = \
+GENERAL_SITEINDEX_HEADER   = \
   '<?xml version="1.0" encoding="UTF-8"?>\n' \
-  '<?xml-stylesheet type="text/xsl" href="gss.xsl"?>\n' \
   '<sitemapindex\n' \
-  '  xmlns="http://www.google.com/schemas/sitemap/0.84"\n' \
+  '  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' \
   '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n' \
-  '  xsi:schemaLocation="http://www.google.com/schemas/sitemap/0.84\n' \
-  '                      http://www.google.com/schemas/sitemap/0.84/' \
+  '  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9\n' \
+  '                      http://www.sitemaps.org/schemas/sitemap/0.9/' \
   'siteindex.xsd">\n'
+
+NEWS_SITEINDEX_HEADER   = \
+  '<?xml version="1.0" encoding="UTF-8"?>\n' \
+  '<sitemapindex\n' \
+  '  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' \
+  '  xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"\n' \
+  '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n' \
+  '  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9\n' \
+  '                      http://www.sitemaps.org/schemas/sitemap/0.9/' \
+  'siteindex.xsd">\n'
+
 SITEINDEX_FOOTER   = '</sitemapindex>\n'
 SITEINDEX_ENTRY    = \
   ' <sitemap>\n' \
   '  <loc>%(loc)s</loc>\n' \
   '  <lastmod>%(lastmod)s</lastmod>\n' \
   ' </sitemap>\n'
-SITEMAP_HEADER     = \
+GENERAL_SITEMAP_HEADER     = \
   '<?xml version="1.0" encoding="UTF-8"?>\n' \
   '<urlset\n' \
-  '  xmlns="http://www.google.com/schemas/sitemap/0.84"\n' \
+  '  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' \
   '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n' \
-  '  xsi:schemaLocation="http://www.google.com/schemas/sitemap/0.84\n' \
-  '                      http://www.google.com/schemas/sitemap/0.84/' \
+  '  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9\n' \
+  '                      http://www.sitemaps.org/schemas/sitemap/0.9/' \
   'sitemap.xsd">\n'
+
+NEWS_SITEMAP_HEADER        = \
+  '<?xml version="1.0" encoding="UTF-8"?>\n' \
+  '<urlset\n' \
+  '  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' \
+  '  xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"\n' \
+  '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n' \
+  '  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9\n' \
+  '                      http://www.sitemaps.org/schemas/sitemap/0.9/' \
+  'sitemap.xsd">\n'
+
 SITEMAP_FOOTER     = '</urlset>\n'
 SITEURL_XML_PREFIX = ' <url>\n'
 SITEURL_XML_SUFFIX = ' </url>\n'
+
+NEWS_TAG_XML_PREFIX        = '  <news:news>\n'
+NEWS_TAG_XML_SUFFIX        = '  </news:news>\n'
 
 # Search engines to notify with the updated sitemaps
 #
@@ -156,8 +190,17 @@ SITEURL_XML_SUFFIX = ' </url>\n'
 #   5 - query attribute that should be set to the new Sitemap URL
 # Clear as mud, I know.
 NOTIFICATION_SITES = [
-  ('http', 'www.google.com', 'webmasters/sitemaps/ping', {}, '', 'sitemap')
+  ('http', 'www.google.com', 'webmasters/sitemaps/ping', {}, '', 'sitemap'),
   ]
+
+
+def get_hash(text):
+  if md5 is not None:
+    return md5.new(text).digest()
+  else:
+    m = hashlib.md5()
+    m.update(text.encode('utf8'))
+    return m.digest()
 
 
 class Error(Exception):
@@ -387,8 +430,8 @@ class Output:
     """ Output and count a warning.  Suppress duplicate warnings. """
     if text:
       text = encoder.NarrowText(text, None)
-      hash = hashlib.md5(text).digest()
-      if not self._warns_shown.has_key(hash):
+      hash = get_hash(text)
+      if not hash in self._warns_shown:
         self._warns_shown[hash] = 1
         print('[WARNING] ' + text)
       else:
@@ -400,8 +443,8 @@ class Output:
     """ Output and count an error.  Suppress duplicate errors. """
     if text:
       text = encoder.NarrowText(text, None)
-      hash = hashlib.md5(text).digest()
-      if not self._errors_shown.has_key(hash):
+      hash = get_hash(text)
+      if not hash in self._errors_shown:
         self._errors_shown[hash] = 1
         print('[ERROR] ' + text)
       else:
@@ -541,6 +584,21 @@ class URL(object):
   #end def Canonicalize
   Canonicalize = staticmethod(Canonicalize)
 
+  def VerifyDate(self, date, metatag):
+    """Verify the date format is valid"""
+    match = False
+    if date:
+      date = date.upper()
+      for pattern in DATE_PATTERNS:
+        match = pattern.match(date)
+        if match:
+          return True
+      if not match:
+        output.Warn('The value for %s does not appear to be in ISO8601 '
+                    'format on URL: %s' % (metatag, self.loc))
+        return False
+  #end of VerifyDate
+
   def Validate(self, base_url, allow_fragment):
     """ Verify the data in this URL is well-formed, and override if not. """
     assert type(base_url) == types.StringType
@@ -550,7 +608,7 @@ class URL(object):
       output.Warn('Empty URL')
       return False
     if allow_fragment:
-      self.loc = urlparse.urljoin(base_url, self.loc)
+      self.loc = urljoin(base_url, self.loc)
     if not self.loc.startswith(base_url):
       output.Warn('Discarded URL for not starting with the base_url: %s' %
                   self.loc)
@@ -559,15 +617,7 @@ class URL(object):
 
     # Test the lastmod
     if self.lastmod:
-      match = False
-      self.lastmod = self.lastmod.upper()
-      for pattern in LASTMOD_PATTERNS:
-        match = pattern.match(self.lastmod)
-        if match:
-          break
-      if not match:
-        output.Warn('Lastmod "%s" does not appear to be in ISO8601 format on '
-                    'URL: %s' % (self.lastmod, self.loc))
+      if not self.VerifyDate(self.lastmod, "lastmod"):
         self.lastmod = None
 
     # Test the changefreq
@@ -603,8 +653,8 @@ class URL(object):
     if not self.loc:
       return None
     if self.loc.endswith('/'):
-      return hashlib.md5(self.loc[:-1]).digest()
-    return hashlib.md5(self.loc).digest()
+      return get_hash(self.loc[:-1])
+    return get_hash(self.loc)
   #end def MakeHash
 
   def Log(self, prefix='URL', level=3):
@@ -640,6 +690,62 @@ class URL(object):
     file.write(out)
   #end def WriteXML
 #end class URL
+
+class NewsURL(URL):
+  """ NewsURL is a subclass of URL with News-Sitemap specific properties. """
+  __slots__ = 'loc', 'lastmod', 'changefreq', 'priority', 'publication_date', \
+              'keywords', 'stock_tickers'
+
+  def __init__(self):
+    URL.__init__(self)
+    self.publication_date        = None        # ISO8601 timestamp of publication date
+    self.keywords                 = None  # Text keywords
+    self.stock_tickers           = None  # Text stock
+  #end def __init__
+
+  def Validate(self, base_url, allow_fragment):
+    """ Verify the data in this News URL is well-formed, and override if not. """
+    assert type(base_url) == types.StringType
+
+    if not URL.Validate(self, base_url, allow_fragment):
+      return False
+
+    if not URL.VerifyDate(self, self.publication_date, "publication_date"):
+      self.publication_date = None
+
+    return True
+  #end def Validate
+
+  def WriteXML(self, file):
+    """ Dump non-empty contents to the output file, in XML format. """
+    if not self.loc:
+      return
+    out = SITEURL_XML_PREFIX
+
+    # printed_news_tag indicates if news-specific metatags are present
+    printed_news_tag = False
+    for attribute in self.__slots__:
+      value = getattr(self, attribute)
+      if value:
+        if type(value) == types.UnicodeType:
+          value = encoder.NarrowText(value, None)
+        elif type(value) != types.StringType:
+          value = str(value)
+          value = xml.sax.saxutils.escape(value)
+        if attribute in NEWS_SPECIFIC_TAGS:
+          if not printed_news_tag:
+            printed_news_tag = True
+            out = out + NEWS_TAG_XML_PREFIX
+          out = out + ('    <news:%s>%s</news:%s>\n' % (attribute, value, attribute))
+        else:
+          out = out + ('  <%s>%s</%s>\n' % (attribute, value, attribute))
+
+    if printed_news_tag:
+      out = out + NEWS_TAG_XML_SUFFIX
+    out = out + SITEURL_XML_SUFFIX
+    file.write(out)
+  #end def WriteXML
+#end class NewsURL
 
 
 class Filter:
@@ -835,6 +941,115 @@ class InputURLList:
 #end class InputURLList
 
 
+class InputNewsURLList:
+  """
+  Each Input class knows how to yield a set of URLs from a data source.
+
+  This one handles a text file with a list of News URLs and their metadata
+  """
+
+  def __init__(self, attributes):
+    self._path      = None                  # The file path
+    self._encoding  = None                  # Encoding of that file
+    self._tag_order = []                    # Order of URL metadata
+
+    if not ValidateAttributes('URLLIST', attributes, ('path', 'encoding', 'tag_order')):
+      return
+
+    self._path      = attributes.get('path')
+    self._encoding  = attributes.get('encoding', ENC_UTF8)
+    self._tag_order = attributes.get('tag_order')
+
+    if self._path:
+      self._path    = encoder.MaybeNarrowPath(self._path)
+      if os.path.isfile(self._path):
+        output.Log('Input: From URLLIST "%s"' % self._path, 2)
+      else:
+        output.Error('Can not locate file: %s' % self._path)
+        self._path = None
+    else:
+      output.Error('Urllist entries must have a "path" attribute.')
+
+    # parse tag_order into an array
+    # tag_order_ascii created for more readable logging
+    tag_order_ascii = []
+    if self._tag_order:
+      self._tag_order = self._tag_order.split(",")
+      for i in range(0, len(self._tag_order)):
+        element = self._tag_order[i].strip().lower()
+        self._tag_order[i]= element
+        tag_order_ascii.append(element.encode('ascii'))
+      output.Log('Input: From URLLIST tag order is "%s"' % tag_order_ascii, 0)
+    else:
+      output.Error('News Urllist configuration file must contain tag_order '
+                   'to define Sitemap metatags.')
+
+    # verify all tag_order inputs are valid
+    tag_order_dict = {}
+    for tag in self._tag_order:
+      tag_order_dict[tag] = ""
+    if not ValidateAttributes('URLLIST', tag_order_dict, \
+                    NEWS_SITEMAP_TAGS):
+      return
+
+    # loc tag must be present
+    loc_tag = False
+    for tag in self._tag_order:
+      if tag == 'loc':
+        loc_tag = True
+        break
+    if not loc_tag:
+      output.Error('News Urllist tag_order in configuration file '
+                   'does not contain "loc" value: %s' % tag_order_ascii)
+  #end def __init__
+
+  def ProduceURLs(self, consumer):
+    """ Produces URLs from our data source, hands them in to the consumer. """
+
+    # Open the file
+    (frame, file) = OpenFileForRead(self._path, 'URLLIST')
+    if not file:
+      return
+
+    # Iterate lines
+    linenum = 0
+    for line in file.readlines():
+      linenum = linenum + 1
+
+      # Strip comments and empty lines
+      if self._encoding:
+        line = encoder.WidenText(line, self._encoding)
+      line = line.strip()
+      if (not line) or line[0] == '#':
+        continue
+
+      # Split the line on tabs
+      url = NewsURL()
+      cols = line.split('\t')
+      for i in range(0,len(cols)):
+        cols[i] = cols[i].strip()
+
+      for i in range(0,len(cols)):
+        if cols[i]:
+          attr_value = cols[i]
+          if i < len(self._tag_order):
+            attr_name = self._tag_order[i]
+            try:
+              url.TrySetAttribute(attr_name, attr_value)
+            except ValueError:
+              output.Warn('Line %d: Unable to parse attribute: %s' %
+                        (linenum, cols[i]))
+
+      # Pass it on
+      consumer(url, False)
+
+    file.close()
+    if frame:
+      frame.close()
+  #end def ProduceURLs
+#end class InputNewsURLList
+
+
 class InputDirectory:
   """
   Each Input class knows how to yield a set of URLs from a data source.
@@ -844,11 +1059,12 @@ class InputDirectory:
 
   def __init__(self, attributes, base_url):
     self._path         = None               # The directory
-    self._url          = None               # The URL equivelant
+    self._url          = None               # The URL equivalent
     self._default_file = None
+    self._remove_empty_directories = False
 
     if not ValidateAttributes('DIRECTORY', attributes, ('path', 'url',
-                                                           'default_file')):
+                              'default_file', 'remove_empty_directories')):
       return
 
     # Prep the path -- it MUST end in a sep
@@ -874,7 +1090,7 @@ class InputDirectory:
     if not url.endswith('/'):
       url = url + '/'
     if not url.startswith(base_url):
-      url = urlparse.urljoin(base_url, url)
+      url = urljoin(base_url, url)
       if not url.startswith(base_url):
         output.Error('The directory URL "%s" is not relative to the '
                     'base_url: %s' % (url, base_url))
@@ -889,9 +1105,28 @@ class InputDirectory:
                      % file)
         file = None
 
+    # Prep the remove_empty_directories -- default is false
+    remove_empty_directories = attributes.get('remove_empty_directories')
+    if remove_empty_directories:
+      if (remove_empty_directories == '1') or \
+         (remove_empty_directories.lower() == 'true'):
+        remove_empty_directories = True
+      elif (remove_empty_directories == '0') or \
+           (remove_empty_directories.lower() == 'false'):
+        remove_empty_directories = False
+      # otherwise the user set a non-default value
+      else:
+        output.Error('Configuration file remove_empty_directories '
+                     'value is not recognized.  Value must be true or false.')
+        return
+    else:
+      remove_empty_directories = False
+
     self._path         = path
     self._url          = url
     self._default_file = file
+    self._remove_empty_directories = remove_empty_directories
+
     if file:
       output.Log('Input: From DIRECTORY "%s" (%s) with default file "%s"'
                  % (path, url, file), 2)
@@ -900,6 +1135,7 @@ class InputDirectory:
                  % (path, url), 2)
   #end def __init__
 
+
   def ProduceURLs(self, consumer):
     """ Produces URLs from our data source, hands them in to the consumer. """
     if not self._path:
@@ -907,44 +1143,23 @@ class InputDirectory:
 
     root_path = self._path
     root_URL  = self._url
-    root_file = "index.html"
+    root_file = self._default_file
+    remove_empty_directories = self._remove_empty_directories
 
-    def DecideFilename(name):
-      assert "/" not in name
-
-      if name in ( "robots.txt, " ):
-        return False
-
-      if ".thumbnail." in name:
-        return False
-
-      if re.match( r"google[a-f0-9]+.html", name ):
-        return False
-
-      return not re.match( r"^index(\-\d+)?.html$", name )
-
-    def DecideDirectory(dirpath):
-      subpath = dirpath[len(root_path):]
-
-      assert not subpath.startswith( "/" ), subpath
-
-      for remove in ( "assets", ):
-        if subpath == remove or subpath.startswith( remove + os.path.sep ):
-          return False
-      else:
+    def HasReadPermissions(path):
+      """ Verifies a given path has read permissions. """
+      stat_info = os.stat(path)
+      mode = stat_info[stat.ST_MODE]
+      if mode & stat.S_IREAD:
         return True
+      else:
+        return None
 
     def PerFile(dirpath, name):
       """
       Called once per file.
       Note that 'name' will occasionally be None -- for a directory itself
       """
-      if not DecideDirectory(dirpath):
-        return
-
-      if name is not None and not DecideFilename(name):
-        return
-
       # Pull a timestamp
       url           = URL()
       isdir         = False
@@ -986,6 +1201,25 @@ class InputDirectory:
         url.Log(prefix='IGNORED (default file)', level=2)
         return
 
+      # Suppress directories when remove_empty_directories="true"
+      try:
+        if isdir:
+          if HasReadPermissions(path):
+            if remove_empty_directories == 'true' and \
+               len(os.listdir(path)) == 0:
+              output.Log('IGNORED empty directory %s' % str(path), level=1)
+              return
+          elif path == self._path:
+            output.Error('IGNORED configuration file directory input %s due '
+                         'to file permissions' % self._path)
+          else:
+            output.Log('IGNORED files within directory %s due to file '
+                       'permissions' % str(path), level=0)
+      except OSError:
+        pass
+      except ValueError:
+        pass
+
       consumer(url, False)
     #end def PerFile
 
@@ -998,9 +1232,6 @@ class InputDirectory:
       if not dirpath.startswith(root_path):
         output.Warn('Unable to decide what the root path is for directory: '
                     '%s' % dirpath)
-        return
-
-      if not DecideDirectory(dirpath):
         return
 
       for name in namelist:
@@ -1176,407 +1407,6 @@ class InputAccessLog:
 #end class InputAccessLog
 
 
-class InputSitemap(xml.sax.handler.ContentHandler):
-
-  """
-  Each Input class knows how to yield a set of URLs from a data source.
-
-  This one handles Sitemap files and Sitemap index files.  For the sake
-  of simplicity in design (and simplicity in interfacing with the SAX
-  package), we do not handle these at the same time, recursively.  Instead
-  we read an index file completely and make a list of Sitemap files, then
-  go back and process each Sitemap.
-  """
-
-  class _ContextBase(object):
-
-    """Base class for context handlers in our SAX processing.  A context
-    handler is a class that is responsible for understanding one level of
-    depth in the XML schema.  The class knows what sub-tags are allowed,
-    and doing any processing specific for the tag we're in.
-
-    This base class is the API filled in by specific context handlers,
-    all defined below.
-    """
-
-    def __init__(self, subtags):
-      """Initialize with a sequence of the sub-tags that would be valid in
-      this context."""
-      self._allowed_tags = subtags          # Sequence of sub-tags we can have
-      self._last_tag     = None             # Most recent seen sub-tag
-    #end def __init__
-
-    def AcceptTag(self, tag):
-      """Returns True iff opening a sub-tag is valid in this context."""
-      valid = tag in self._allowed_tags
-      if valid:
-        self._last_tag = tag
-      else:
-        self._last_tag = None
-      return valid
-    #end def AcceptTag
-
-    def AcceptText(self, text):
-      """Returns True iff a blurb of text is valid in this context."""
-      return False
-    #end def AcceptText
-
-    def Open(self):
-      """The context is opening.  Do initialization."""
-      pass
-    #end def Open
-
-    def Close(self):
-      """The context is closing.  Return our result, if any."""
-      pass
-    #end def Close
-
-    def Return(self, result):
-      """We're returning to this context after handling a sub-tag.  This
-      method is called with the result data from the sub-tag that just
-      closed.  Here in _ContextBase, if we ever see a result it means
-      the derived child class forgot to override this method."""
-      if result:
-        raise NotImplementedError
-    #end def Return
-  #end class _ContextBase
-
-  class _ContextUrlSet(_ContextBase):
-
-    """Context handler for the document node in a Sitemap."""
-
-    def __init__(self):
-      InputSitemap._ContextBase.__init__(self, ('url',))
-    #end def __init__
-  #end class _ContextUrlSet
-
-  class _ContextUrl(_ContextBase):
-
-    """Context handler for a URL node in a Sitemap."""
-
-    def __init__(self, consumer):
-      """Initialize this context handler with the callable consumer that
-      wants our URLs."""
-      InputSitemap._ContextBase.__init__(self, URL.__slots__)
-      self._url          = None            # The URL object we're building
-      self._consumer     = consumer        # Who wants to consume it
-    #end def __init__
-
-    def Open(self):
-      """Initialize the URL."""
-      assert not self._url
-      self._url = URL()
-    #end def Open
-
-    def Close(self):
-      """Pass the URL to the consumer and reset it to None."""
-      assert self._url
-      self._consumer(self._url, False)
-      self._url = None
-    #end def Close
-
-    def Return(self, result):
-      """A value context has closed, absorb the data it gave us."""
-      assert self._url
-      if result:
-        self._url.TrySetAttribute(self._last_tag, result)
-    #end def Return
-  #end class _ContextUrl
-
-  class _ContextSitemapIndex(_ContextBase):
-
-    """Context handler for the document node in an index file."""
-
-    def __init__(self):
-      InputSitemap._ContextBase.__init__(self, ('sitemap',))
-      self._loclist = []                    # List of accumulated Sitemap URLs
-    #end def __init__
-
-    def Open(self):
-      """Just a quick verify of state."""
-      assert not self._loclist
-    #end def Open
-
-    def Close(self):
-      """Return our list of accumulated URLs."""
-      if self._loclist:
-        temp = self._loclist
-        self._loclist = []
-        return temp
-    #end def Close
-
-    def Return(self, result):
-      """Getting a new loc URL, add it to the collection."""
-      if result:
-        self._loclist.append(result)
-    #end def Return
-  #end class _ContextSitemapIndex
-
-  class _ContextSitemap(_ContextBase):
-
-    """Context handler for a Sitemap entry in an index file."""
-
-    def __init__(self):
-      InputSitemap._ContextBase.__init__(self, ('loc', 'lastmod'))
-      self._loc = None                      # The URL to the Sitemap
-    #end def __init__
-
-    def Open(self):
-      """Just a quick verify of state."""
-      assert not self._loc
-    #end def Open
-
-    def Close(self):
-      """Return our URL to our parent."""
-      if self._loc:
-        temp = self._loc
-        self._loc = None
-        return temp
-      output.Warn('In the Sitemap index file, a "sitemap" entry had no "loc".')
-    #end def Close
-
-    def Return(self, result):
-      """A value has closed.  If it was a 'loc', absorb it."""
-      if result and (self._last_tag == 'loc'):
-        self._loc = result
-    #end def Return
-  #end class _ContextSitemap
-
-  class _ContextValue(_ContextBase):
-
-    """Context handler for a single value.  We return just the value.  The
-    higher level context has to remember what tag led into us."""
-
-    def __init__(self):
-      InputSitemap._ContextBase.__init__(self, ())
-      self._text        = None
-    #end def __init__
-
-    def AcceptText(self, text):
-      """Allow all text, adding it to our buffer."""
-      if self._text:
-        self._text = self._text + text
-      else:
-        self._text = text
-      return True
-    #end def AcceptText
-
-    def Open(self):
-      """Initialize our buffer."""
-      self._text = None
-    #end def Open
-
-    def Close(self):
-      """Return what's in our buffer."""
-      text = self._text
-      self._text = None
-      if text:
-        text = text.strip()
-      return text
-    #end def Close
-  #end class _ContextValue
-
-  def __init__(self, attributes):
-    """Initialize with a dictionary of attributes from our entry in the
-    config file."""
-    xml.sax.handler.ContentHandler.__init__(self)
-    self._pathlist      = None              # A list of files
-    self._current       = -1                # Current context in _contexts
-    self._contexts      = None              # The stack of contexts we allow
-    self._contexts_idx  = None              # ...contexts for index files
-    self._contexts_stm  = None              # ...contexts for Sitemap files
-
-    if not ValidateAttributes('SITEMAP', attributes, ['path']):
-      return
-
-    # Init the first file path
-    path = attributes.get('path')
-    if path:
-      path = encoder.MaybeNarrowPath(path)
-      if os.path.isfile(path):
-        output.Log('Input: From SITEMAP "%s"' % path, 2)
-        self._pathlist = [path]
-      else:
-        output.Error('Can not locate file "%s"' % path)
-    else:
-      output.Error('Sitemap entries must have a "path" attribute.')
-  #end def __init__
-
-  def ProduceURLs(self, consumer):
-    """In general: Produces URLs from our data source, hand them to the
-    callable consumer.
-
-    In specific: Iterate over our list of paths and delegate the actual
-    processing to helper methods.  This is a complexity no other data source
-    needs to suffer.  We are unique in that we can have files that tell us
-    to bring in other files.
-
-    Note the decision to allow an index file or not is made in this method.
-    If we call our parser with (self._contexts == None) the parser will
-    grab whichever context stack can handle the file.  IE: index is allowed.
-    If instead we set (self._contexts = ...) before parsing, the parser
-    will only use the stack we specify.  IE: index not allowed.
-    """
-    # Set up two stacks of contexts
-    self._contexts_idx = [InputSitemap._ContextSitemapIndex(),
-                          InputSitemap._ContextSitemap(),
-                          InputSitemap._ContextValue()]
-
-    self._contexts_stm = [InputSitemap._ContextUrlSet(),
-                          InputSitemap._ContextUrl(consumer),
-                          InputSitemap._ContextValue()]
-
-    # Process the first file
-    assert self._pathlist
-    path = self._pathlist[0]
-    self._contexts = None                # We allow an index file here
-    self._ProcessFile(path)
-
-    # Iterate over remaining files
-    self._contexts = self._contexts_stm  # No index files allowed
-    for path in self._pathlist[1:]:
-      self._ProcessFile(path)
-  #end def ProduceURLs
-
-  def _ProcessFile(self, path):
-    """Do per-file reading/parsing/consuming for the file path passed in."""
-    assert path
-
-    # Open our file
-    (frame, file) = OpenFileForRead(path, 'SITEMAP')
-    if not file:
-      return
-
-    # Rev up the SAX engine
-    try:
-      self._current = -1
-      xml.sax.parse(file, self)
-    except SchemaError:
-      output.Error('An error in file "%s" made us abort reading the Sitemap.'
-                   % path)
-    except IOError:
-      output.Error('Cannot read from file "%s"' % path)
-    except xml.sax._exceptions.SAXParseException as e:
-      output.Error('XML error in the file "%s" (line %d, column %d): %s' %
-                   (path, e._linenum, e._colnum, e.getMessage()))
-
-    # Clean up
-    file.close()
-    if frame:
-      frame.close()
-  #end def _ProcessFile
-
-  def _MungeLocationListIntoFiles(self, urllist):
-    """Given a list of URLs, munge them into our self._pathlist property.
-    We do this by assuming all the files live in the same directory as
-    the first file in the existing pathlist.  That is, we assume a
-    Sitemap index points to Sitemaps only in the same directory.  This
-    is not true in general, but will be true for any output produced
-    by this script.
-    """
-    assert self._pathlist
-    path = self._pathlist[0]
-    path = os.path.normpath(path)
-    dir  = os.path.dirname(path)
-    wide = False
-    if type(path) == types.UnicodeType:
-      wide = True
-
-    for url in urllist:
-      url = URL.Canonicalize(url)
-      output.Log('Index points to Sitemap file at: %s' % url, 2)
-      (scheme, netloc, path, query, frag) = urlsplit(url)
-      file = os.path.basename(path)
-      file = urllib.unquote(file)
-      if wide:
-        file = encoder.WidenText(file)
-      if dir:
-        file = dir + os.sep + file
-      if file:
-        self._pathlist.append(file)
-        output.Log('Will attempt to read Sitemap file: %s' % file, 1)
-  #end def _MungeLocationListIntoFiles
-
-  def startElement(self, tag, attributes):
-    """SAX processing, called per node in the config stream.
-    As long as the new tag is legal in our current context, this
-    becomes an Open call on one context deeper.
-    """
-    # If this is the document node, we may have to look for a context stack
-    if (self._current < 0) and not self._contexts:
-      assert self._contexts_idx and self._contexts_stm
-      if tag == 'urlset':
-        self._contexts = self._contexts_stm
-      elif tag == 'sitemapindex':
-        self._contexts = self._contexts_idx
-        output.Log('File is a Sitemap index.', 2)
-      else:
-        output.Error('The document appears to be neither a Sitemap nor a '
-                     'Sitemap index.')
-        raise SchemaError
-
-    # Display a kinder error on a common mistake
-    if (self._current < 0) and (self._contexts == self._contexts_stm) and (
-      tag == 'sitemapindex'):
-      output.Error('A Sitemap index can not refer to another Sitemap index.')
-      raise SchemaError
-
-    # Verify no unexpected attributes
-    if attributes:
-      text = ''
-      for attr in attributes.keys():
-        # The document node will probably have namespaces
-        if self._current < 0:
-          if attr.find('xmlns') >= 0:
-            continue
-          if attr.find('xsi') >= 0:
-            continue
-        if text:
-          text = text + ', '
-        text = text + attr
-      if text:
-        output.Warn('Did not expect any attributes on any tag, instead tag '
-                     '"%s" had attributes: %s' % (tag, text))
-
-    # Switch contexts
-    if (self._current < 0) or (self._contexts[self._current].AcceptTag(tag)):
-      self._current = self._current + 1
-      assert self._current < len(self._contexts)
-      self._contexts[self._current].Open()
-    else:
-      output.Error('Can not accept tag "%s" where it appears.' % tag)
-      raise SchemaError
-  #end def startElement
-
-  def endElement(self, tag):
-    """SAX processing, called per node in the config stream.
-    This becomes a call to Close on one context followed by a call
-    to Return on the previous.
-    """
-    tag = tag  # Avoid warning on unused argument
-    assert self._current >= 0
-    retval = self._contexts[self._current].Close()
-    self._current = self._current - 1
-    if self._current >= 0:
-      self._contexts[self._current].Return(retval)
-    elif retval and (self._contexts == self._contexts_idx):
-      self._MungeLocationListIntoFiles(retval)
-  #end def endElement
-
-  def characters(self, text):
-    """SAX processing, called when text values are read.  Important to
-    note that one single text value may be split across multiple calls
-    of this method.
-    """
-    if (self._current < 0) or (
-      not self._contexts[self._current].AcceptText(text)):
-      if text.strip():
-        output.Error('Can not accept text "%s" where it appears.' % text)
-        raise SchemaError
-  #end def characters
-#end class InputSitemap
-
-
 class FilePathGenerator:
   """
   This class generates filenames in a series, upon request.
@@ -1682,7 +1512,7 @@ class PerURLStatistics:
 
       # Recognize directories
       if path.endswith('/'):
-        if self._extensions.has_key('/'):
+        if '/' in self._extensions:
           self._extensions['/'] = self._extensions['/'] + 1
         else:
           self._extensions['/'] = 1
@@ -1699,12 +1529,12 @@ class PerURLStatistics:
       if i > 0:
         assert i < len(path)
         ext = path[i:].lower()
-        if self._extensions.has_key(ext):
+        if ext in self._extensions:
           self._extensions[ext] = self._extensions[ext] + 1
         else:
           self._extensions[ext] = 1
       else:
-        if self._extensions.has_key('(no extension)'):
+        if '(no extension)' in self._extensions:
           self._extensions['(no extension)'] = self._extensions[
             '(no extension)'] + 1
         else:
@@ -1747,6 +1577,7 @@ class Sitemap(xml.sax.handler.ContentHandler):
     self._default_enc  = None                # Best encoding to try on URLs
     self._base_url     = None                # Prefix to all valid URLs
     self._store_into   = None                # Output filepath
+    self._sitemap_type = None                     # Sitemap type (web, mobile or news)
     self._suppress     = suppress_notify     # Suppress notify of servers
   #end def __init__
 
@@ -1795,6 +1626,25 @@ class Sitemap(xml.sax.handler.ContentHandler):
           if (self._suppress == '0') or (self._suppress.lower() == 'false'):
             self._suppress = False
 
+    # Clean up the sitemap_type
+    if all_good:
+      match = False
+      # If sitemap_type is not specified, default to web sitemap
+      if not self._sitemap_type:
+        self._sitemap_type = 'web'
+      else:
+        self._sitemap_type = self._sitemap_type.lower()
+        for pattern in SITEMAP_TYPES:
+          if self._sitemap_type == pattern:
+            match = True
+            break
+        if not match:
+          output.Error('The "sitemap_type" value must be "web", "mobile" '
+                       'or "news": %s' % self._sitemap_type)
+          all_good = False
+      output.Log('The Sitemap type is %s Sitemap.' % \
+                        self._sitemap_type.upper(), 0)
+
     # Done
     if not all_good:
       output.Log('See "example_config.xml" for more information.', 0)
@@ -1829,6 +1679,7 @@ class Sitemap(xml.sax.handler.ContentHandler):
     """
     All per-URL processing comes together here, regardless of Input.
     Here we run filters, remove duplicates, spill to disk as needed, etc.
+
     """
     if not url:
       return
@@ -1855,7 +1706,7 @@ class Sitemap(xml.sax.handler.ContentHandler):
 
     # Note the sighting
     hash = url.MakeHash()
-    if self._urls.has_key(hash):
+    if hash in self._urls:
       dup = self._urls[hash]
       if dup > 0:
         dup = dup + 1
@@ -1882,6 +1733,12 @@ class Sitemap(xml.sax.handler.ContentHandler):
     slow because we like to sort them all and normalize the priorities
     before dumping.
     """
+
+    # Determine what Sitemap header to use (News or General)
+    if self._sitemap_type == 'news':
+      sitemap_header = NEWS_SITEMAP_HEADER
+    else:
+      sitemap_header = GENERAL_SITEMAP_HEADER
 
     # Sort and normalize
     output.Log('Sorting and normalizing collected URLs.', 1)
@@ -1914,7 +1771,7 @@ class Sitemap(xml.sax.handler.ContentHandler):
       else:
         file = open(filename, 'wt')
 
-      file.write(SITEMAP_HEADER)
+      file.write(sitemap_header)
       for url in self._set:
         url.WriteXML(file)
       file.write(SITEMAP_FOOTER)
@@ -1942,13 +1799,19 @@ class Sitemap(xml.sax.handler.ContentHandler):
     output.Log('Writing index file "%s" with %d Sitemaps' %
         (filename, self._sitemaps), 1)
 
+   # Determine what Sitemap index header to use (News or General)
+    if self._sitemap_type == 'news':
+      sitemap_index_header = NEWS_SITEMAP_HEADER
+    else:
+      sitemap__index_header = GENERAL_SITEMAP_HEADER
+
     # Make a lastmod time
     lastmod = TimestampISO8601(time.time())
 
     # Write to it
     try:
       fd = open(filename, 'wt')
-      fd.write(SITEINDEX_HEADER)
+      fd.write(sitemap_index_header)
 
       for mapnumber in range(0,self._sitemaps):
         # Write the entry
@@ -2011,7 +1874,7 @@ class Sitemap(xml.sax.handler.ContentHandler):
       notify = urlunsplit((ping[0], ping[1], ping[2], query, ping[4]))
 
       # Send the notification
-      output.Log('Notifying: %s' % ping[1], 1)
+      output.Log('Notifying: %s' % ping[1], 0)
       output.Log('Notification URL: %s' % notify, 2)
       try:
         u = urllib.urlopen(notify)
@@ -2026,7 +1889,6 @@ class Sitemap(xml.sax.handler.ContentHandler):
 
   def startElement(self, tag, attributes):
     """ SAX processing, called per node in the config stream. """
-
     if tag == 'site':
       if self._in_site:
         output.Error('Can not nest Site entries in the configuration.')
@@ -2035,7 +1897,7 @@ class Sitemap(xml.sax.handler.ContentHandler):
 
         if not ValidateAttributes('SITE', attributes,
           ('verbose', 'default_encoding', 'base_url', 'store_into',
-           'suppress_search_engine_notify')):
+           'suppress_search_engine_notify', 'sitemap_type')):
           return
 
         verbose           = attributes.get('verbose', 0)
@@ -2045,20 +1907,24 @@ class Sitemap(xml.sax.handler.ContentHandler):
         self._default_enc = attributes.get('default_encoding')
         self._base_url    = attributes.get('base_url')
         self._store_into  = attributes.get('store_into')
+        self._sitemap_type= attributes.get('sitemap_type')
         if not self._suppress:
           self._suppress  = attributes.get('suppress_search_engine_notify',
                                             False)
         self.ValidateBasicConfig()
-
     elif tag == 'filter':
       self._filters.append(Filter(attributes))
 
     elif tag == 'url':
-      self._inputs.append(InputURL(attributes))
+     print(type(attributes))
+     self._inputs.append(InputURL(attributes))
 
     elif tag == 'urllist':
       for attributeset in ExpandPathAttribute(attributes, 'path'):
-        self._inputs.append(InputURLList(attributeset))
+        if self._sitemap_type == 'news':
+          self._inputs.append(InputNewsURLList(attributeset))
+        else:
+          self._inputs.append(InputURLList(attributeset))
 
     elif tag == 'directory':
       self._inputs.append(InputDirectory(attributes, self._base_url))
@@ -2066,11 +1932,6 @@ class Sitemap(xml.sax.handler.ContentHandler):
     elif tag == 'accesslog':
       for attributeset in ExpandPathAttribute(attributes, 'path'):
         self._inputs.append(InputAccessLog(attributeset))
-
-    elif tag == 'sitemap':
-      for attributeset in ExpandPathAttribute(attributes, 'path'):
-        self._inputs.append(InputSitemap(attributeset))
-
     else:
       output.Error('Unrecognized tag in the configuration: %s' % tag)
   #end def startElement
@@ -2125,7 +1986,6 @@ def ExpandPathAttribute(src, attrib):
     for key in src.keys():
       tmp[key] = src[key]
     src = tmp
-
   # Create N new dictionaries
   retval = []
   for path in pathlist:
@@ -2209,9 +2069,9 @@ def ProcessCommandFlags(args):
   for a in args:
     try:
       rcg = rc.search(a).groupdict()
-      if rcg.has_key('key'):
+      if 'key' in rcg:
         flags[rcg['key']] = rcg['value']
-      if rcg.has_key('option'):
+      if 'option' in rcg:
         flags[rcg['option']] = rcg['option']
     except AttributeError:
       return None
@@ -2225,10 +2085,10 @@ def ProcessCommandFlags(args):
 
 if __name__ == '__main__':
   flags = ProcessCommandFlags(sys.argv[1:])
-  if not flags or not flags.has_key('config') or flags.has_key('help'):
+  if not flags or not 'config' in flags or 'help' in flags:
     output.Log(__usage__, 0)
   else:
-    suppress_notify = flags.has_key('testing')
+    suppress_notify = 'testing' in flags
     sitemap = CreateSitemapFromFile(flags['config'], suppress_notify)
     if not sitemap:
       output.Log('Configuration file errors -- exiting.', 0)
