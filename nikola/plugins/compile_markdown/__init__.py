@@ -52,8 +52,10 @@ class CompileMarkdown(PageCompiler):
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
             output = markdown(data, ['fenced_code', 'codehilite'])
-            # remove the H1 because there is "title" h1.
-            output = re.sub(r'<h1>.*</h1>', '', output)
+            # h1 is reserved for the title so increment all header levels
+            for n in reversed(range(1,9)):
+                output = re.sub('<h%i>' % n, '<h%i>' % (n + 1), output)
+                output = re.sub('</h%i>' % n, '</h%i>' % (n + 1), output)
             # python-markdown's highlighter uses the class 'codehilite' to wrap
             # code, # instead of the standard 'code'. None of the standard
             # pygments stylesheets use this class, so swap it to be 'code'
