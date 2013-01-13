@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -22,7 +22,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import print_function
+from __future__ import print_function, absolute_import
 import os
 import sys
 import tempfile
@@ -30,7 +30,7 @@ import tempfile
 from nikola.plugin_categories import LateTask
 from nikola.utils import config_changed
 
-import sitemap_gen
+from nikola.plugins.task_sitemap import sitemap_gen
 
 
 class Sitemap(LateTask):
@@ -39,12 +39,12 @@ class Sitemap(LateTask):
     name = "sitemap"
 
     def gen_tasks(self):
-        if sys.version_info.major > 2:
+        if sys.version_info[0] == 3:
             print("sitemap generation is not available for python 3")
             yield {
                 'basename': 'sitemap',
                 'name': 'sitemap',
-                'actions': [], 
+                'actions': [],
             }
             return
         """Generate Google sitemap."""
