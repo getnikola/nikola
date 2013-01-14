@@ -180,16 +180,11 @@ class CommandImportWordpress(Command):
     @classmethod
     def write_content(cls, filename, content):
         with open(filename, "wb+") as fd:
-            doc = html.document_fromstring(content)
-            doc.rewrite_links(replacer)
-            # Replace H1 elements with H2 elements
-            for tag in doc.findall('.//h1'):
-                if not tag.text:
-                    print("Failed to fix bad title: %r" %
-                          html.tostring(tag))
-                else:
-                    tag.getparent().replace(tag, builder.E.h2(tag.text))
-            fd.write(html.tostring(doc, encoding='utf8'))
+            # h1 is reserved for the title so increment all header levels
+            for n in reversed(range(1,9)):
+                content = re.sub('<h%i>' % n, '<h%i>' % (n + 1), content)
+                content = re.sub('</h%i>' % n, '</h%i>' % (n + 1), content)
+            fd.write(content)
 
     @staticmethod
     def write_metadata(filename, title, slug, post_date, description, tags):
