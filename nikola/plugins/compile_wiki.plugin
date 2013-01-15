@@ -1,0 +1,10 @@
+[Core]
+Name = wiki
+Module = compile_wiki
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Compile WikiMarkup into HTML
+
