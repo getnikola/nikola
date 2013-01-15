@@ -1,5 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="base.tmpl"/>
+<%namespace name="disqus" file="disqus_helper.tmpl"/>
 <%block name="sourcelink"></%block>
 
 <%block name="content">
@@ -24,18 +25,7 @@
                 <img src="${image[1]}" /></a></li>
         %endfor
     </ul>
-    %if disqus_forum:
-        <div id="disqus_thread"></div>    
-        <script type="text/javascript">
-        var disqus_shortname ="${disqus_forum}";
-        var disqus_title="Gallery: ${title}";
-        var disqus_identifier="${permalink}";
-        (function() {
-            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    %endif
+
+    ${disqus.html_disqus(None, permalink, title)}
+    
 </%block>
