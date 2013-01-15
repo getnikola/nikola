@@ -23,6 +23,7 @@ Bugfixes
 * Removed copy of PyRSS2Gen, made it a dependency.
 * Detect "namespace" dependencies for Mako templates.
 * Use consistent encodings in RSS feeds.
+* Refactored disqus code into separate helpers
 
 New in v5.1
 ===========
