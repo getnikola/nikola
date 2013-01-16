@@ -25,6 +25,7 @@ Bugfixes
 * Detect "namespace" dependencies for Mako templates.
 * Use consistent encodings in RSS feeds.
 * Refactored disqus code into separate helpers
+* Use the correct extension (or raise an error) on new_post
 
 New in v5.1
 ===========

@@ -32,6 +32,25 @@ import sys
 from nikola.plugin_categories import Command
 from nikola import utils
 
+def filter_post_pages(compiler, is_post, post_compilers, post_pages):
+    """Given a compiler ("markdown", "rest"), and whether it's meant for
+    a post or a page, and post_compilers, return the correct entry from
+    post_pages."""
+    
+    # First throw away all the post_pages with the wrong is_post
+    filtered = [entry for entry in post_pages if entry[3] == is_post]
+    
+    # These are the extensions supported by the required format
+    extensions = post_compilers[compiler]
+    
+    # Throw away the post_pages with the wrong extensions
+    filtered = [entry for entry in filtered if any([ext in entry[0] for ext in extensions])]
+    
+    if not filtered:        
+        type_name = "post" if is_post else "page"
+        raise Exception ("Can't find a way, using your configuration, to create a %s in format %s."
+            "You may want to tweak post_compilers or post_pages in conf.py" % (type_name, compiler))
+    return filtered[0]
 
 class CommandNewPost(Command):
     """Create a new post."""
@@ -45,7 +64,7 @@ class CommandNewPost(Command):
         
         parser = OptionParser(usage="nikola %s [options]" % self.name)
         parser.add_option('-p', '--page', dest='is_post',
-            action='store_false',
+            action='store_false', default=True,
             help='Create a page instead of a blog post.')
         parser.add_option('-t', '--title', dest='title',
             help='Title for the page/post.', default=None)
@@ -77,11 +96,8 @@ class CommandNewPost(Command):
         compiler_plugin = self.site.plugin_manager.getPluginByName(post_format, "PageCompiler").plugin_object
 
         # Guess where we should put this
-        for path, _, _, use_in_rss in self.site.config['post_pages']:
-            if use_in_rss == is_post:
-                break
-        else:
-            path = self.site.config['post_pages'][0][0]
+        entry = filter_post_pages(post_format, is_post,
+            self.site.config['post_compilers'], self.site.config['post_pages'])
 
         print("Creating New Post")
         print("-----------------\n")
@@ -98,13 +114,10 @@ class CommandNewPost(Command):
             date,
             tags
             ]
-        output_path = os.path.dirname(path)
+        output_path = os.path.dirname(entry[0])
         meta_path = os.path.join(output_path, slug + ".meta")
-        pattern = os.path.basename(path)
-        if pattern.startswith("*."):
-            suffix = pattern[1:]
-        else:
-            suffix = ".txt"
+        pattern = os.path.basename(entry[0])
+        suffix = pattern[1:]
         txt_path = os.path.join(output_path, slug + suffix)
 
         if (not onefile and os.path.isfile(meta_path)) or \
