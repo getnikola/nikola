@@ -25,7 +25,7 @@
                 <img src="${image[1]}" /></a></li>
         %endfor
     </ul>
-
+%if enable_comments:
     ${disqus.html_disqus(None, permalink, title)}
-    
+%endif
 </%block>
