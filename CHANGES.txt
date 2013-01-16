@@ -4,6 +4,7 @@ New in Master
 Features
 --------
 
+* New COMMENTS_IN_GALLERIES and COMMENTS_IN_STORIES options.
 * One-page, dynamic-loading, client-rendered site plugin (task_mustache)
 * Local search based on Tipue (extra_plugins/task_localsearch)
 * Recursive post/story folders

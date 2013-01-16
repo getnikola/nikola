@@ -194,7 +194,7 @@ DATE_FORMAT = '%Y-%m-%d %H:%M'
 # INDEX_TEASERS = False
 
 # A HTML fragment describing the license, for the sidebar.
-# I recomment using the Creative Commons' wizard:
+# I recommend using the Creative Commons' wizard:
 # http://creativecommons.org/choose/
 LICENSE = """
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
@@ -212,6 +212,11 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # http://disqus.com, and set DISQUS_FORUM to the short name you selected.
 # If you want to disable comments, set it to False.
 DISQUS_FORUM = "nikolademo"
+
+# Enable comments on story pages?
+# COMMENTS_IN_STORIES = False
+# Enable comments on picture gallery pages?
+# COMMENTS_IN_GALLERIES = False
 
 # Enable Addthis social buttons?
 # Defaults to true

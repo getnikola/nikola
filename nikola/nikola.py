@@ -99,6 +99,8 @@ class Nikola(object):
             'USE_BUNDLES': True,
             'TAG_PAGES_ARE_INDEXES': False,
             'THEME': 'default',
+            'COMMENTS_IN_GALLERIES': False,
+            'COMMENTS_IN_STORIES': False,
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
                 "markdown": ['.md', '.mdown', '.markdown'],
@@ -487,6 +489,10 @@ class Nikola(object):
         context['description'] = post.description(lang)
         context['permalink'] = post.permalink(lang)
         context['page_list'] = self.pages
+        if post.use_in_feeds:
+            context['enable_comments'] = True
+        else:
+            context['enable_comments'] = self.config['COMMENTS_IN_STORIES']
         output_name = os.path.join(self.config['OUTPUT_FOLDER'], post.destination_path(lang)).encode('utf8')
         deps_dict = copy(context)
         deps_dict.pop('post')
@@ -497,6 +503,7 @@ class Nikola(object):
         deps_dict['OUTPUT_FOLDER'] = self.config['OUTPUT_FOLDER']
         deps_dict['TRANSLATIONS'] = self.config['TRANSLATIONS']
         deps_dict['global'] = self.config['GLOBAL_CONTEXT']
+        deps_dict['comments'] = context['enable_comments']
 
         task = {
             'name': output_name,
