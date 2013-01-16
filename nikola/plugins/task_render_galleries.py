@@ -227,6 +227,7 @@ class Galleries(Task):
             context["crumbs"] = crumbs
             context["permalink"] = self.site.link(
                 "gallery", gallery_name, None)
+            context["enable_comments"] = self.site.config["COMMENTS_IN_GALLERIES"]
 
             # Use galleries/name/index.txt to generate a blurb for
             # the gallery, if it exists
@@ -270,7 +271,9 @@ class Galleries(Task):
                 'clean': True,
                 'uptodate': [utils.config_changed({
                     1: kw,
-                    2: self.site.config['GLOBAL_CONTEXT']})],
+                    2: self.site.config['GLOBAL_CONTEXT'],
+                    3: self.site.config["COMMENTS_IN_GALLERIES"],
+                    })],
             }
 
     def resize_image(self, src, dst, max_size):
