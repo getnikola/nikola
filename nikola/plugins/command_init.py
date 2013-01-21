@@ -61,7 +61,7 @@ The destination folder must not exist.
         'POST_COMPILERS': """{
     "rest": ('.txt', '.rst'),
     "markdown": ('.md', '.mdown', '.markdown'),
-    "textile": ('.textile,'),
+    "textile": ('.textile',),
     "html": ('.html', '.htm')
     }""",
         'REDIRECTIONS': '[]',
