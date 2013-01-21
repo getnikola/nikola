@@ -45,7 +45,7 @@
         <script type="text/javascript">
         var disqus_shortname ="{{disqus_forum}}";
         var disqus_url="{{post.permalink(absolute=True)}}";
-        var disqus_title="{{post.title(lang)}}";
+        var disqus_title={{post.title(lang)|tojson }};
         var disqus_identifier="{{post.base_path}}";
         (function() {
             var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
