@@ -12,3 +12,4 @@ requests
 markdown
 Jinja2
 PyRSS2Gen
+bbcode
