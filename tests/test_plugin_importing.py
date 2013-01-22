@@ -14,3 +14,6 @@ class ImportPluginsTest(unittest.TestCase):
 
     def test_importing_compile_rest(self):
         import nikola.plugins.compile_rest  # NOQA
+
+    def test_importing_plugin_compile_markdown(self):
+        import nikola.plugins.compile_markdown    # NOQA
