@@ -1,0 +1,58 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from context import nikola
+import os
+import unittest
+import mock
+
+class GetMetaTest(unittest.TestCase):
+    def test_getting_metadata_from_content(self):
+        file_metadata = [".. title: Nikola needs more tests!\n",
+".. slug: write-tests-now\n",
+".. date: 2012/09/15 19:52:05\n",
+".. tags:\n",
+".. link:\n",
+".. description:\n",
+"Post content\n"]
+
+        opener_mock = mock.mock_open(read_data=file_metadata)
+        opener_mock.return_value.readlines.return_value = file_metadata
+
+        with mock.patch('nikola.utils.codecs.open', opener_mock, create=True):
+            (title, slug, date, tags, link, description) = nikola.utils.get_meta('file_with_metadata')
+
+        self.assertEqual('Nikola needs more tests!', title)
+        self.assertEqual('write-tests-now', slug)
+        self.assertEqual('2012/09/15 19:52:05', date)
+        self.assertEqual('', tags)
+        self.assertEqual('', link)
+        self.assertEqual('', description)
+
+    def test_use_filename_as_slug_fallback(self):
+        file_metadata = [".. title: Nikola needs more tests!\n",
+".. date: 2012/09/15 19:52:05\n",
+".. tags:\n",
+".. link:\n",
+".. description:\n",
+"Post content\n"]
+
+        opener_mock = mock.mock_open(read_data=file_metadata)
+        opener_mock.return_value.readlines.return_value = file_metadata
+
+        with mock.patch('nikola.utils.codecs.open', opener_mock, create=True):
+            (title, slug, date, tags, link, description) = nikola.utils.get_meta('Slugify this')
+
+        self.assertEqual('Nikola needs more tests!', title)
+        self.assertEqual('slugify-this', slug)
+        self.assertEqual('2012/09/15 19:52:05', date)
+        self.assertEqual('', tags)
+        self.assertEqual('', link)
+        self.assertEqual('', description)
+
+
+
+
+
+if __name__ == '__main__':
+    unittest.main()
