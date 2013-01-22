@@ -219,9 +219,12 @@ Nikola is packaged for some Linux distributions, you may get that instead.
 Getting Started
 ---------------
 
-To create posts and pages in Nikola, you write them in restructured text or Markdown, light
-markups that are later converted to HTML (I may add support for textile or other
-markups later). There is a great `quick tutorial to learn restructured text. <quickstart.html>`_
+To create posts and pages in Nikola, you write them in one of the supported input formats. 
+Those source files are later converted to HTML
+The recommended formats are restructured text and Markdown, but there is also support
+for textile and WikiCreole and even for just writing HTML.
+
+.. note:: There is a great `quick tutorial to learn restructured text. <quickstart.html>`_
 
 First, let's see how you "build" your site. Nikola comes with a minimal site to get you started.
 

@@ -27,6 +27,7 @@ Bugfixes
 * Refactored disqus code into separate helpers
 * Use the correct extension (or raise an error) on new_post
 * Fix titles that include quotes
+* Updated to current CSS from docutils (was using version from 2005)
 
 New in v5.1
 ===========
