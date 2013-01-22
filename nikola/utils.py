@@ -118,7 +118,9 @@ def get_meta(source_path):
 
     re_md_title = re.compile(r'^%s([^%s].*)' %
         (re.escape('#'), re.escape('#')))
-    re_rst_title = re.compile(r'^([^%s ].*)' % re.escape(string.punctuation))
+    # Assuming rst titles are going to be at least 4 chars long
+    # otherwise this detects things like ''' wich breaks other markups.
+    re_rst_title = re.compile(r'^([^%s ].{4,})' % re.escape(string.punctuation))
 
     for meta in meta_data:
         if not title:
