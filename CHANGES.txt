@@ -26,6 +26,7 @@ Bugfixes
 * Use consistent encodings in RSS feeds.
 * Refactored disqus code into separate helpers
 * Use the correct extension (or raise an error) on new_post
+* Fix titles that include quotes
 
 New in v5.1
 ===========
