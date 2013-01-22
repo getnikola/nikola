@@ -13,6 +13,7 @@ Features
 * New option RSS_TEASERS
 * Textile markup support.
 * Creole Wiki markup support.
+* txt2tags markup support.
 
 Bugfixes
 --------

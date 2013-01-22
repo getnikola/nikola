@@ -1,0 +1,10 @@
+[Core]
+Name = txt2tags
+Module = compile_txt2tags
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Compile Txt2tags into HTML
+
