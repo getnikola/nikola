@@ -55,6 +55,9 @@ class CompileTextile(PageCompiler):
             out_file.write(output)
 
     def create_post(self, path, onefile=False, title="", slug="", date="", tags=""):
+        d_name = os.path.dirname(path)
+        if not os.path.isdir(d_name):
+            os.makedirs(os.path.dirname(path))
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
                 fd.write('<notextile>  <!--\n')
