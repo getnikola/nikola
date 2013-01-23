@@ -39,7 +39,7 @@
 #
 #   http://www.opensource.org/licenses/bsd-license.php
 #
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 
 __usage__ = \
 """A simple script to automatically produce sitemaps for a webserver,

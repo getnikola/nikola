@@ -209,6 +209,7 @@ class CommandImportWordpress(Command):
         """Takes an item from the feed and creates a post file."""
         if out_folder is None:
             out_folder = 'posts'
+        is_draft = False
 
         title = get_text_tag(item, 'title', 'NO TITLE')
         # link is something like http://foo.com/2012/09/01/hello-world/
@@ -236,6 +237,7 @@ class CommandImportWordpress(Command):
         tags = []
         if status != 'publish':
             tags.append('draft')
+            is_draft = True
         for tag in item.findall('category'):
             text = tag.text
             if text == 'Uncategorized':
@@ -245,7 +247,7 @@ class CommandImportWordpress(Command):
         self.url_map[link] = self.context['BLOG_URL'] + '/' + \
             out_folder + '/' + slug + '.html'
 
-        if content.strip():
+        if content.strip() and not (is_draft and self.exclude_drafts):
             # If no content is found, no files are written.
             content = self.transform_content(content)
 
@@ -314,6 +316,8 @@ class CommandImportWordpress(Command):
         parser.add_option('-o', '--output-folder', dest='output_folder',
             default='new_site',
             help='The location into which the imported content will be written')
+        parser.add_option('-d', '--no-drafts', dest='exclude_drafts',
+            default=False, action="store_true", help='Do not import drafts.')
 
         (options, args) = parser.parse_args(list(arguments))
 
@@ -327,6 +331,7 @@ class CommandImportWordpress(Command):
         self.wordpress_export_file = options.filename
         self.output_folder = options.output_folder
         self.import_into_existing_site = False
+        self.exclude_drafts = options.exclude_drafts
         self.url_map = {}
         channel = self.get_channel_from_file(self.wordpress_export_file)
         self.context = self.populate_context(channel)
