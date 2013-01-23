@@ -17,6 +17,8 @@ Features
 * bbcode markup support.
 * Custom "gist" directive providing reStructured text support for GitHub gists.
 * New Catalá translation
+* Using the filename as slug if no slug is found in the metadata.
+* Make it possible to extract metadata from filename by using regexp.
 
 Bugfixes
 --------
