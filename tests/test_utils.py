@@ -31,6 +31,51 @@ class GetMetaTest(unittest.TestCase):
         self.assertEqual('', link)
         self.assertEqual('', description)
 
+    def test_get_title_from_rest(self):
+        file_metadata = [".. slug: write-tests-now\n",
+                         ".. date: 2012/09/15 19:52:05\n",
+                         ".. tags:\n",
+                         ".. link:\n",
+                         ".. description:\n",
+                         "Post Title\n",
+                         "----------\n"]
+
+        opener_mock = mock.mock_open(read_data=file_metadata)
+        opener_mock.return_value.readlines.return_value = file_metadata
+
+        with mock.patch('nikola.utils.codecs.open', opener_mock, create=True):
+            (title, slug, date, tags, link,
+             description) = nikola.utils.get_meta('file_with_metadata')
+
+        self.assertEqual('Post Title', title)
+        self.assertEqual('write-tests-now', slug)
+        self.assertEqual('2012/09/15 19:52:05', date)
+        self.assertEqual('', tags)
+        self.assertEqual('', link)
+        self.assertEqual('', description)
+
+    def test_get_title_from_fname(self):
+        file_metadata = [".. slug: write-tests-now\n",
+                         ".. date: 2012/09/15 19:52:05\n",
+                         ".. tags:\n",
+                         ".. link:\n",
+                         ".. description:\n"]
+
+        opener_mock = mock.mock_open(read_data=file_metadata)
+        opener_mock.return_value.readlines.return_value = file_metadata
+
+        with mock.patch('nikola.utils.codecs.open', opener_mock, create=True):
+            (title, slug, date, tags, link,
+             description) = nikola.utils.get_meta('file_with_metadata')
+
+        self.assertEqual('file_with_metadata', title)
+        self.assertEqual('write-tests-now', slug)
+        self.assertEqual('2012/09/15 19:52:05', date)
+        self.assertEqual('', tags)
+        self.assertEqual('', link)
+        self.assertEqual('', description)
+
+
     def test_use_filename_as_slug_fallback(self):
         file_metadata = [".. title: Nikola needs more tests!\n",
                          ".. date: 2012/09/15 19:52:05\n",

@@ -145,14 +145,14 @@ def get_meta(source_path, file_metadata_regexp=None):
                             (re.escape('#'), re.escape('#')))
     # Assuming rst titles are going to be at least 4 chars long
     # otherwise this detects things like ''' wich breaks other markups.
-    re_rst_title = re.compile(r'^([^%s ].{4,})' % re.escape(string.punctuation))
+    re_rst_title = re.compile(r'^([%s]{4,})' % re.escape(string.punctuation))
 
-    for meta in meta_data:
+    for i,meta in enumerate(meta_data):
         if not title:
             title = re_meta(meta, '.. title:')
         if not title:
-            if re_rst_title.findall(meta):
-                title = re_rst_title.findall(meta)[0]
+            if re_rst_title.findall(meta) and i > 0:
+                title = meta_data[i-1].strip()
         if not title:
             if re_md_title.findall(meta):
                 title = re_md_title.findall(meta)[0]
@@ -167,15 +167,13 @@ def get_meta(source_path, file_metadata_regexp=None):
         if not description:
             description = re_meta(meta, '.. description:')
 
-    # TODO: either enable or delete
-    # if not date:
-        # from datetime import datetime
-        # date = datetime.fromtimestamp(
-        #    os.path.getmtime(source_path)).strftime('%Y/%m/%d %H:%M')
-
     if not slug:
         # If no slug is found in the metadata use the filename
         slug = slugify(source_path)
+
+    if not title:
+        # If no title is found, use the filename without extension
+        title = os.path.splitext(os.path.basename(source_path))[0]
 
     return (title, slug, date, tags, link, description)
 

@@ -36,6 +36,7 @@ Bugfixes
 * Updated to current CSS from docutils (was using version from 2005)
 * Avoid needless regeneration of gallery indexes.
 * Always ensure the folder for the new post exists.
+* Get title from filename if not available in metadata.
 
 New in v5.1
 ===========
