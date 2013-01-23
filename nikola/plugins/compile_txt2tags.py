@@ -22,37 +22,40 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Implementation of compile_html based on textile."""
+"""Implementation of compile_html based on txt2tags.
+
+Txt2tags is not in PyPI, you can install it with
+
+easy_install -f "http://txt2tags.org/txt2tags.py#egg=txt2tags-2.6" txt2tags
+
+"""
 
 import codecs
 import os
 import re
 
 try:
-    from textile import textile
+    from txt2tags import exec_command_line as txt2tags
 except ImportError:
-    textile = None
+    txt2tags = None
 
 from nikola.plugin_categories import PageCompiler
 
 
 class CompileTextile(PageCompiler):
-    """Compile textile into HTML."""
+    """Compile txt2tags into HTML."""
 
-    name = "textile"
+    name = "txt2tags"
 
     def compile_html(self, source, dest):
-        if textile is None:
-            raise Exception('To build this site, you need to install the "textile" package.')
+        if txt2tags is None:
+            raise Exception('To build this site, you need to install the "txt2tags" package.')
         try:
             os.makedirs(os.path.dirname(dest))
         except:
             pass
-        with codecs.open(dest, "w+", "utf8") as out_file:
-            with codecs.open(source, "r", "utf8") as in_file:
-                data = in_file.read()
-            output = textile(data, head_offset=1)
-            out_file.write(output)
+        cmd = ["-t", "html", "--no-headers", "--outfile", dest, source]
+        txt2tags(cmd)
 
     def create_post(self, path, onefile=False, title="", slug="", date="", tags=""):
         d_name = os.path.dirname(path)
@@ -60,13 +63,13 @@ class CompileTextile(PageCompiler):
             os.makedirs(os.path.dirname(path))
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
-                fd.write('<notextile>  <!--\n')
+                fd.write("\n'''\n<!--\n")
                 fd.write('.. title: %s\n' % title)
                 fd.write('.. slug: %s\n' % slug)
                 fd.write('.. date: %s\n' % date)
                 fd.write('.. tags: %s\n' % tags)
                 fd.write('.. link: \n')
                 fd.write('.. description: \n')
-                fd.write('--></notextile>\n\n')
+                fd.write("-->\n'''\n")
             fd.write("\nWrite your post here.")
         

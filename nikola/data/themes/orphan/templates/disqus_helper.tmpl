@@ -1,3 +1,6 @@
+<%!
+    import json
+%>
 <%def name="html_disqus(url, title, identifier)">
     %if disqus_forum:
         <div id="disqus_thread"></div>
@@ -6,7 +9,7 @@
         %if url:
             var disqus_url="${url}";
         %endif
-        var disqus_title="${title}";
+        var disqus_title=${json.dumps(title)};
         var disqus_identifier="${identifier}";
         (function() {
             var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

@@ -48,9 +48,9 @@ from unidecode import unidecode
 import PyRSS2Gen as rss
 
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
-    'generic_rss_renderer',
-    'copy_file', 'slugify', 'unslugify', 'get_meta', 'to_datetime',
-    'apply_filters', 'config_changed']
+           'generic_rss_renderer',
+           'copy_file', 'slugify', 'unslugify', 'get_meta', 'to_datetime',
+           'apply_filters', 'config_changed']
 
 
 class CustomEncoder(json.JSONEncoder):
@@ -94,7 +94,7 @@ def get_theme_path(theme):
     if os.path.isdir(dir_name):
         return dir_name
     dir_name = os.path.join(os.path.dirname(__file__),
-        'data', 'themes', theme)
+                            'data', 'themes', theme)
     if os.path.isdir(dir_name):
         return dir_name
     raise Exception("Can't find theme '%s'" % theme)
@@ -110,15 +110,42 @@ def re_meta(line, match):
         return ''
 
 
-def get_meta(source_path):
-    """get post's meta from source"""
+def get_meta(source_path, file_metadata_regexp=None):
+    """get post's meta from source
+
+    If ``file_metadata_regexp`` ist given it will be tried to read
+    metadata from the filename.
+    The part to read the metadata from the filename based on a regular
+    expression is taken from Pelican - pelican/readers.py"""
     with codecs.open(source_path, "r", "utf8") as meta_file:
         meta_data = meta_file.readlines(15)
     title = slug = date = tags = link = description = ''
 
+    if not (file_metadata_regexp is None):
+        match = re.match(file_metadata_regexp, source_path)
+        if match:
+            # .items() for py3k compat.
+            for k, v in match.groupdict().items():
+                k = k.lower()  # metadata must be lowercase
+
+                if k == 'title':
+                    title = v
+                if k == 'slug':
+                    slug = v
+                if k == 'date':
+                    date = v
+                if k == 'tags':
+                    tags = v
+                if k == 'link':
+                    link = v
+                if k == 'description':
+                    description = v
+
     re_md_title = re.compile(r'^%s([^%s].*)' %
-        (re.escape('#'), re.escape('#')))
-    re_rst_title = re.compile(r'^([^%s ].*)' % re.escape(string.punctuation))
+                            (re.escape('#'), re.escape('#')))
+    # Assuming rst titles are going to be at least 4 chars long
+    # otherwise this detects things like ''' wich breaks other markups.
+    re_rst_title = re.compile(r'^([^%s ].{4,})' % re.escape(string.punctuation))
 
     for meta in meta_data:
         if not title:
@@ -141,10 +168,14 @@ def get_meta(source_path):
             description = re_meta(meta, '.. description:')
 
     # TODO: either enable or delete
-    #if not date:
-        #from datetime import datetime
-        #date = datetime.fromtimestamp(
+    # if not date:
+        # from datetime import datetime
+        # date = datetime.fromtimestamp(
         #    os.path.getmtime(source_path)).strftime('%Y/%m/%d %H:%M')
+
+    if not slug:
+        # If no slug is found in the metadata use the filename
+        slug = slugify(source_path)
 
     return (title, slug, date, tags, link, description)
 
@@ -194,13 +225,14 @@ def load_messages(themes, translations):
         english = __import__('messages_en')
         for lang in list(translations.keys()):
             # If we don't do the reload, the module is cached
-            translation = __import__('messages_'+lang)
+            translation = __import__('messages_' + lang)
             reload(translation)
             if sorted(translation.MESSAGES.keys()) !=\
                 sorted(english.MESSAGES.keys()) and \
-                lang not in warned:
+                    lang not in warned:
                 # FIXME: get real logging in place
-                print("Warning: Incomplete translation for language '%s'." % lang)
+                print("Warning: Incomplete translation for language '%s'." %
+                      lang)
                 warned.append(lang)
             messages[lang].update(english.MESSAGES)
             messages[lang].update(translation.MESSAGES)
@@ -248,7 +280,7 @@ def copy_tree(src, dst, link_cutoff=None):
 
 
 def generic_rss_renderer(lang, title, link, description,
-    timeline, output_path, rss_teasers):
+                         timeline, output_path, rss_teasers):
     """Takes all necessary data, and renders a RSS feed in output_path."""
     items = []
     for post in timeline[:10]:
@@ -276,6 +308,7 @@ def generic_rss_renderer(lang, title, link, description,
             rss_obj.write_xml(rss_file, encoding='utf-8')
         except TypeError:
             print("RSS generation doesn't work on python3 yet")
+
 
 def copy_file(source, dest, cutoff=None):
     dst_dir = os.path.dirname(dest)
@@ -320,7 +353,7 @@ def slugify(value):
     """
     value = unidecode(value)
     # WARNING: this may not be python2/3 equivalent
-    #value = unicode(_slugify_strip_re.sub('', value).strip().lower())
+    # value = unicode(_slugify_strip_re.sub('', value).strip().lower())
     value = str(_slugify_strip_re.sub('', value).strip().lower())
     return _slugify_hyphenate_re.sub('-', value)
 

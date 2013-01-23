@@ -13,6 +13,12 @@ Features
 * New option RSS_TEASERS
 * Textile markup support.
 * Creole Wiki markup support.
+* txt2tags markup support.
+* bbcode markup support.
+* Custom "gist" directive providing reStructured text support for GitHub gists.
+* New Catalá translation
+* Using the filename as slug if no slug is found in the metadata.
+* Make it possible to extract metadata from filename by using regexp.
 
 Bugfixes
 --------
@@ -26,6 +32,10 @@ Bugfixes
 * Use consistent encodings in RSS feeds.
 * Refactored disqus code into separate helpers
 * Use the correct extension (or raise an error) on new_post
+* Fix titles that include quotes
+* Updated to current CSS from docutils (was using version from 2005)
+* Avoid needless regeneration of gallery indexes.
+* Always ensure the folder for the new post exists.
 
 New in v5.1
 ===========

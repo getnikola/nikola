@@ -22,28 +22,34 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Implementation of compile_html based on textile."""
+"""Implementation of compile_html based on bbcode."""
 
 import codecs
 import os
 import re
 
 try:
-    from textile import textile
+    import bbcode
 except ImportError:
-    textile = None
+    bbcode = None
 
 from nikola.plugin_categories import PageCompiler
 
 
 class CompileTextile(PageCompiler):
-    """Compile textile into HTML."""
+    """Compile bbcode into HTML."""
 
-    name = "textile"
+    name = "bbcode"
+    
+    def __init__(self):
+        if bbcode is None:
+            return
+        self.parser = bbcode.Parser()
+        self.parser.add_simple_formatter("note", "")
 
     def compile_html(self, source, dest):
-        if textile is None:
-            raise Exception('To build this site, you need to install the "textile" package.')
+        if bbcode is None:
+            raise Exception('To build this site, you need to install the "bbcode" package.')
         try:
             os.makedirs(os.path.dirname(dest))
         except:
@@ -51,7 +57,7 @@ class CompileTextile(PageCompiler):
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
-            output = textile(data, head_offset=1)
+            output = self.parser.format(data)
             out_file.write(output)
 
     def create_post(self, path, onefile=False, title="", slug="", date="", tags=""):
@@ -60,13 +66,13 @@ class CompileTextile(PageCompiler):
             os.makedirs(os.path.dirname(path))
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
-                fd.write('<notextile>  <!--\n')
+                fd.write('[note]<!--\n')
                 fd.write('.. title: %s\n' % title)
                 fd.write('.. slug: %s\n' % slug)
                 fd.write('.. date: %s\n' % date)
                 fd.write('.. tags: %s\n' % tags)
                 fd.write('.. link: \n')
                 fd.write('.. description: \n')
-                fd.write('--></notextile>\n\n')
+                fd.write('-->[/note]\n\n')
             fd.write("\nWrite your post here.")
         
