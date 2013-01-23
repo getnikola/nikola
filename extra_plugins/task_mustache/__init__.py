@@ -129,27 +129,32 @@ class Mustache(Task):
                 task = {
                     'basename': 'render_mustache',
                     'name': str(out_path),
+                    'file_dep': post.fragment_deps(lang),
+                    'targets': [out_file],
                     'actions': [(write_file, (out_file, post, lang))],
                     'task_dep': ['render_posts'],
                     }
                 yield task
-                if i == 0 and lang == self.site.config["DEFAULT_LANG"]:
-                    first_post_data = post.permalink(lang).replace(".html", ".json")
+        
+        if posts:
+            first_post_data = posts[0].permalink(
+                self.site.config["DEFAULT_LANG"]).replace(".html", ".json")
                     
-
         # Copy mustache template
         src = os.path.join(os.path.dirname(__file__), 'mustache-template.html')
         dst = os.path.join(kw['output_folder'],'mustache-template.html')
         yield {
             'basename': 'render_mustache',
             'name': 'mustache-template.html',
+            'targets': [dst],
+            'file_dep': [src],
             'actions': [(copy_file, (src, dst))],
         }
         
         # Copy mustache.html with the right starting file in it
+        src = os.path.join(os.path.dirname(__file__), 'mustache.html')
+        dst = os.path.join(kw['output_folder'],'mustache.html')
         def copy_mustache():
-            src = os.path.join(os.path.dirname(__file__), 'mustache.html')
-            dst = os.path.join(kw['output_folder'],'mustache.html')
             with open(src, 'rb') as in_file:
                 with open(dst, 'wb+') as out_file:
                     data = in_file.read().replace('{{first_post_data}}', first_post_data)
@@ -157,5 +162,8 @@ class Mustache(Task):
         yield {
             'basename': 'render_mustache',
             'name': 'mustache.html',
+            'targets': [dst],
+            'file_dep': [src],
+            'uptodate': [config_changed({1: first_post_data})],
             'actions': [(copy_mustache, [])],
         }
