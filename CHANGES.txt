@@ -13,6 +13,8 @@ Features
 * New option RSS_TEASERS
 * Textile markup support.
 * Creole Wiki markup support.
+* Using the filename as slug if no slug is found in the metadata.
+* Make it possible to extract metadata from filename by using regexp.
 
 Bugfixes
 --------
