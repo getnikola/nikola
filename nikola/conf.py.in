@@ -261,6 +261,21 @@ SEARCH_FORM = ""
 ANALYTICS = """
     """
 
+# The possibility to extract metadata from the filename by using a
+# regular expression.
+# To make it work you need to name parts of your regular expression.
+# The following names will be used to extract metadata:
+# - title
+# - slug
+# - date
+# - tags
+# - link
+# - description
+#
+# An example re is the following:
+# '(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.md'
+FILE_METADATA_REGEXP = None
+
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
 GLOBAL_CONTEXT = {
