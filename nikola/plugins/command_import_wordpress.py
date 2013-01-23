@@ -183,17 +183,16 @@ class CommandImportWordpress(Command):
         with open(filename, "wb+") as fd:
             doc = html.document_fromstring(content)
             doc.rewrite_links(replacer)
-            for n in reversed(range(1,9)):
+            for n in reversed(range(1, 9)):
                 for tag in doc.findall('.//h%i' % n):
                     if not tag.text:
                         print("Failed to fix bad title: %r" %
                               html.tostring(tag))
                     else:
                         tag.getparent().replace(tag,
-                                builder.E('h%i' % (n + 1), tag.text))
+                                                builder.E('h%i' % (n + 1), tag.text))
 
             fd.write(html.tostring(doc, encoding='utf8'))
-
 
     @staticmethod
     def write_metadata(filename, title, slug, post_date, description, tags):
@@ -236,6 +235,10 @@ class CommandImportWordpress(Command):
         tags = []
         if status != 'publish':
             tags.append('draft')
+            is_draft = True
+        else:
+            is_draft = False
+
         for tag in item.findall('category'):
             text = tag.text
             if text == 'Uncategorized':
@@ -245,7 +248,7 @@ class CommandImportWordpress(Command):
         self.url_map[link] = self.context['BLOG_URL'] + '/' + \
             out_folder + '/' + slug + '.html'
 
-        if content.strip():
+        if content.strip() and not (is_draft and self.exclude_drafts):
             # If no content is found, no files are written.
             content = self.transform_content(content)
 
@@ -308,12 +311,15 @@ class CommandImportWordpress(Command):
                   ' you have to install the "requests" package.')
             return
 
-        parser = OptionParser(usage="nikola %s [options] wordpress_export_file" % self.name)
+        parser = OptionParser(
+            usage="nikola %s [options] wordpress_export_file" % self.name)
         parser.add_option('-f', '--filename', dest='filename',
-            help='Wordpress export file from which the import is made.')
+                          help='Wordpress export file from which the import is made.')
         parser.add_option('-o', '--output-folder', dest='output_folder',
-            default='new_site',
-            help='The location into which the imported content will be written')
+                          default='new_site',
+                          help='The location into which the imported content will be written')
+        parser.add_option('-d', '--no-drafts', dest='exclude_drafts',
+                          default=False, action="store_true", help='Do not import drafts.')
 
         (options, args) = parser.parse_args(list(arguments))
 
@@ -327,6 +333,7 @@ class CommandImportWordpress(Command):
         self.wordpress_export_file = options.filename
         self.output_folder = options.output_folder
         self.import_into_existing_site = False
+        self.exclude_drafts = options.exclude_drafts
         self.url_map = {}
         channel = self.get_channel_from_file(self.wordpress_export_file)
         self.context = self.populate_context(channel)
