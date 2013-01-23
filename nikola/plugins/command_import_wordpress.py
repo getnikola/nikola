@@ -308,7 +308,7 @@ class CommandImportWordpress(Command):
                   ' you have to install the "requests" package.')
             return
 
-        parser = OptionParser(usage="nikola %s [options]" % self.name)
+        parser = OptionParser(usage="nikola %s [options] wordpress_export_file" % self.name)
         parser.add_option('-f', '--filename', dest='filename',
             help='Wordpress export file from which the import is made.')
         parser.add_option('-o', '--output-folder', dest='output_folder',
@@ -316,7 +316,6 @@ class CommandImportWordpress(Command):
             help='The location into which the imported content will be written')
 
         (options, args) = parser.parse_args(list(arguments))
-        print(args)
 
         if not options.filename and args:
             options.filename = args[0]
