@@ -829,6 +829,19 @@ linenos_offset
 tab-width
     Size of the tabs (default 4)
 
+gist
+~~~~
+
+You can easily embed GitHub gists with this directive, like this::
+
+    .. gist:: 2395294
+
+Producing this:
+
+.. gist:: 2395294
+
+This degrades gracefully if the browser doesn't support javascript.
+
 Slideshows
 ~~~~~~~~~~
 

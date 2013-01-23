@@ -15,6 +15,7 @@ Features
 * Creole Wiki markup support.
 * txt2tags markup support.
 * bbcode markup support.
+* Custom "gist" directive providing reStructured text support for GitHub gists.
 
 Bugfixes
 --------
