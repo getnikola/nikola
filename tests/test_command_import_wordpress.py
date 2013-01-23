@@ -24,19 +24,48 @@ class CommandImportWordpressTest(unittest.TestCase):
         self.import_command.run()
 
     def test_create_import(self):
-        data_import = mock.MagicMock()
-        site_generation = mock.MagicMock()
-        write_urlmap = mock.MagicMock()
-        write_configuration = mock.MagicMock()
+        valid_import_arguments = (
+            ['--filename', self.import_filename],
+            ['-f', self.import_filename, '-o', 'some_folder'],
+            [self.import_filename],
+            [self.import_filename, 'folder_argument'],
+            )
 
-        with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.generate_base_site', site_generation):
-            with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.import_posts', data_import):
-                with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.write_urlmap_csv', write_urlmap):
-                    with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.write_configuration', write_configuration):
-                        self.import_command.run(self.import_filename)
+        for arguments in valid_import_arguments:
+            data_import = mock.MagicMock()
+            site_generation = mock.MagicMock()
+            write_urlmap = mock.MagicMock()
+            write_configuration = mock.MagicMock()
 
-        self.assertTrue(site_generation.called)
-        self.assertTrue(data_import.called)
+            with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.generate_base_site', site_generation):
+                with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.import_posts', data_import):
+                    with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.write_urlmap_csv', write_urlmap):
+                        with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.write_configuration', write_configuration):
+                            self.import_command.run(*arguments)
+
+            self.assertTrue(site_generation.called)
+            self.assertTrue(data_import.called)
+            self.assertTrue(write_urlmap.called)
+            self.assertTrue(write_configuration.called)
+
+    def test_getting_help(self):
+        for arguments in (['-h'], 
+                        ['--help']):
+            data_import = mock.MagicMock()
+            site_generation = mock.MagicMock()
+            write_urlmap = mock.MagicMock()
+            write_configuration = mock.MagicMock()
+
+            with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.generate_base_site', site_generation):
+                with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.import_posts', data_import):
+                    with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.write_urlmap_csv', write_urlmap):
+                        with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.write_configuration', write_configuration):
+                            self.assertRaises(SystemExit, self.import_command.run, *arguments)
+
+            self.assertFalse(site_generation.called)
+            self.assertFalse(data_import.called)
+            self.assertFalse(write_urlmap.called)
+            self.assertFalse(write_configuration.called)
 
     def test_populate_context(self):
         channel = self.import_command.get_channel_from_file(

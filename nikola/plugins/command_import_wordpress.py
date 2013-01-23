@@ -28,6 +28,7 @@ import csv
 import datetime
 import os
 import re
+from optparse import OptionParser
 
 try:
     from urlparse import urlparse
@@ -299,26 +300,35 @@ class CommandImportWordpress(Command):
         with codecs.open(filename, 'w+', 'utf8') as fd:
             fd.write(rendered_template)
 
-    def run(self, fname=None, output_folder=None):
+    def run(self, *arguments):
+        """Import a Wordpress blog from an export file into a Nikola site."""
         # Parse the data
         if requests is None:
             print('To use the import_wordpress command,'
                   ' you have to install the "requests" package.')
             return
-        if fname is None:
-            print("Usage: nikola import_wordpress wordpress_dump.xml "
-                  "[import_location]")
-            print("")
-            print("Through import_location the location into which "
-                  "the imported content will be written can be specified.")
-            return
-        if output_folder is None:
-            output_folder = 'new_site'
 
-        self.output_folder = output_folder
+        parser = OptionParser(usage="nikola %s [options] wordpress_export_file" % self.name)
+        parser.add_option('-f', '--filename', dest='filename',
+            help='Wordpress export file from which the import is made.')
+        parser.add_option('-o', '--output-folder', dest='output_folder',
+            default='new_site',
+            help='The location into which the imported content will be written')
+
+        (options, args) = parser.parse_args(list(arguments))
+
+        if not options.filename and args:
+            options.filename = args[0]
+
+        if not options.filename:
+            parser.print_usage()
+            return
+
+        self.wordpress_export_file = options.filename
+        self.output_folder = options.output_folder
         self.import_into_existing_site = False
         self.url_map = {}
-        channel = self.get_channel_from_file(fname)
+        channel = self.get_channel_from_file(self.wordpress_export_file)
         self.context = self.populate_context(channel)
         conf_template = self.generate_base_site()
         self.context['REDIRECTIONS'] = self.configure_redirections(
