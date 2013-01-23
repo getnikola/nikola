@@ -101,6 +101,7 @@ class Nikola(object):
             'THEME': 'default',
             'COMMENTS_IN_GALLERIES': False,
             'COMMENTS_IN_STORIES': False,
+            'FILE_METADATA_REGEXP': None,
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
                 "markdown": ['.md', '.mdown', '.markdown'],
@@ -439,7 +440,7 @@ class Nikola(object):
                 dirname = os.path.dirname(wildcard)
                 for dirpath, _, _ in os.walk(dirname):
                     dir_glob = os.path.join(dirpath, os.path.basename(wildcard))
-                    dest_dir = os.path.join(*([destination]+dirpath.split(os.sep)[base_len:]))
+                    dest_dir = os.path.join(*([destination] + dirpath.split(os.sep)[base_len:]))
                     for base_path in glob.glob(dir_glob):
                         post = Post(
                             base_path,
@@ -450,7 +451,8 @@ class Nikola(object):
                             self.config['DEFAULT_LANG'],
                             self.config['BLOG_URL'],
                             self.MESSAGES,
-                            template_name)
+                            template_name,
+                            self.config['FILE_METADATA_REGEXP'])
                         for lang, langpath in list(self.config['TRANSLATIONS'].items()):
                             dest = (destination, langpath, dir_glob, post.pagenames[lang])
                             if dest in targets:

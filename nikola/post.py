@@ -38,15 +38,13 @@ class Post(object):
     """Represents a blog post or web page."""
 
     def __init__(self, source_path, cache_folder, destination, use_in_feeds,
-        translations, default_lang, blog_url, messages, template_name):
+        translations, default_lang, blog_url, messages, template_name,
+        file_metadata_regexp=None):
         """Initialize post.
 
         The base path is the .txt post file. From it we calculate
         the meta file, as well as any translations available, and
         the .html fragment file path.
-
-        `compile_html` is a function that knows how to compile this Post to
-        html.
         """
         self.prev_post = None
         self.next_post = None
@@ -73,7 +71,7 @@ class Post(object):
         else:
             (default_title, default_pagename, self.date, self.tags,
                 self.link, default_description) = \
-                    utils.get_meta(self.source_path)
+                    utils.get_meta(self.source_path, file_metadata_regexp)
 
         if not default_title or not default_pagename or not self.date:
             raise OSError("You must set a title and slug and date!")
@@ -115,7 +113,7 @@ class Post(object):
                                 default_description
                     else:
                         ttitle, ppagename, tmp1, tmp2, tmp3, ddescription = \
-                            utils.get_meta(source_path)
+                            utils.get_meta(source_path, file_metadata_regexp)
                         self.titles[lang] = ttitle or default_title
                         self.pagenames[lang] = ppagename or default_pagename
                         self.descriptions[lang] = ddescription or\
