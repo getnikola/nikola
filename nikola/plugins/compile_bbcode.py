@@ -43,11 +43,13 @@ class CompileTextile(PageCompiler):
     
     def __init__(self):
         if bbcode is None:
-            raise Exception('To build this site, you need to install the "bbcode" package.')
+            return
         self.parser = bbcode.Parser()
         self.parser.add_simple_formatter("note", "")
 
     def compile_html(self, source, dest):
+        if bbcode is None:
+            raise Exception('To build this site, you need to install the "bbcode" package.')
         try:
             os.makedirs(os.path.dirname(dest))
         except:
