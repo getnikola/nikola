@@ -26,8 +26,8 @@ from __future__ import unicode_literals
 import codecs
 import datetime
 import glob
+import hashlib
 import os
-import uuid
 
 Image = None
 try:
@@ -234,8 +234,8 @@ class Galleries(Task):
             index_path = os.path.join(gallery_path, "index.txt")
             cache_dir = os.path.join(kw["cache_folder"], 'galleries')
             if not os.path.isdir(cache_dir):
-                os.makedirs(cache_dir)                
-            index_dst_path = os.path.join(cache_dir, str(uuid.uuid1())+'.html')
+                os.makedirs(cache_dir)
+            index_dst_path = os.path.join(cache_dir, str(hashlib.sha224(index_path).hexdigest()+'.html'))
             if os.path.exists(index_path):
                 compile_html = self.site.get_compiler(index_path)
                 yield {

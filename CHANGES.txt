@@ -32,6 +32,7 @@ Bugfixes
 * Use the correct extension (or raise an error) on new_post
 * Fix titles that include quotes
 * Updated to current CSS from docutils (was using version from 2005)
+* Avoid needless regeneration of gallery indexes.
 
 New in v5.1
 ===========
