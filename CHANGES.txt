@@ -37,6 +37,7 @@ Bugfixes
 * Avoid needless regeneration of gallery indexes.
 * Always ensure the folder for the new post exists.
 * Get title from filename if not available in metadata.
+* Don't copy sources if they end in ".html"
 
 New in v5.1
 ===========
