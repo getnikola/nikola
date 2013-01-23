@@ -56,6 +56,9 @@ class Sources(Task):
                 output_name = os.path.join(kw['output_folder'],
                     post.destination_path(lang, post.source_ext()))
                 source = post.source_path
+                if source.endswith('.html'):
+                    print("Avoiting to render source of .html page")
+                    continue
                 if lang != kw["default_lang"]:
                     source_lang = source + '.' + lang
                     if os.path.exists(source_lang):

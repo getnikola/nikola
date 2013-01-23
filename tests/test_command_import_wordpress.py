@@ -7,7 +7,7 @@ import unittest
 import mock
 
 
-class CommandImportWordpressTest(unittest.TestCase):
+class BasicCommandImportWordpress(unittest.TestCase):
     def setUp(self):
         self.import_command = nikola.plugins.command_import_wordpress.CommandImportWordpress()
         self.import_filename = os.path.abspath(
@@ -18,10 +18,36 @@ class CommandImportWordpressTest(unittest.TestCase):
         del self.import_command
         del self.import_filename
 
-    def test_create_import_work_without_argument(self):
-        # Running this without an argument must not fail.
-        # It should show the proper usage of the command.
-        self.import_command.run()
+
+class CommandImportWordpressRunTest(BasicCommandImportWordpress):
+    def setUp(self):
+        super(self.__class__, self).setUp()
+        self.data_import = mock.MagicMock()
+        self.site_generation = mock.MagicMock()
+        self.write_urlmap = mock.MagicMock()
+        self.write_configuration = mock.MagicMock()
+
+        site_generation_patch = mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.generate_base_site', self.site_generation)
+        data_import_patch = mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.import_posts', self.data_import)
+        write_urlmap_patch = mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.write_urlmap_csv', self.write_urlmap)
+        write_configuration_patch = mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.write_configuration', self.write_configuration)
+
+        self.patches = [site_generation_patch, data_import_patch,
+                        write_urlmap_patch, write_configuration_patch]
+        for patch in self.patches:
+            patch.start()
+
+    def tearDown(self):
+        del self.data_import
+        del self.site_generation
+        del self.write_urlmap
+        del self.write_configuration
+
+        for patch in self.patches:
+            patch.stop()
+        del self.patches
+
+        super(self.__class__, self).tearDown()
 
     def test_create_import(self):
         valid_import_arguments = (
@@ -29,43 +55,42 @@ class CommandImportWordpressTest(unittest.TestCase):
             ['-f', self.import_filename, '-o', 'some_folder'],
             [self.import_filename],
             [self.import_filename, 'folder_argument'],
-            )
+        )
 
         for arguments in valid_import_arguments:
-            data_import = mock.MagicMock()
-            site_generation = mock.MagicMock()
-            write_urlmap = mock.MagicMock()
-            write_configuration = mock.MagicMock()
+            self.import_command.run(*arguments)
 
-            with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.generate_base_site', site_generation):
-                with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.import_posts', data_import):
-                    with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.write_urlmap_csv', write_urlmap):
-                        with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.write_configuration', write_configuration):
-                            self.import_command.run(*arguments)
+            self.assertTrue(self.site_generation.called)
+            self.assertTrue(self.data_import.called)
+            self.assertTrue(self.write_urlmap.called)
+            self.assertTrue(self.write_configuration.called)
+            self.assertFalse(self.import_command.exclude_drafts)
 
-            self.assertTrue(site_generation.called)
-            self.assertTrue(data_import.called)
-            self.assertTrue(write_urlmap.called)
-            self.assertTrue(write_configuration.called)
+    def test_ignoring_drafts(self):
+        valid_import_arguments = (
+            ['--filename', self.import_filename, '--no-drafts'],
+            ['-f', self.import_filename, '-o', 'some_folder', '-d'],
+        )
+
+        for arguments in valid_import_arguments:
+            self.import_command.run(*arguments)
+            self.assertTrue(self.import_command.exclude_drafts)
 
     def test_getting_help(self):
-        for arguments in (['-h'], 
-                        ['--help']):
-            data_import = mock.MagicMock()
-            site_generation = mock.MagicMock()
-            write_urlmap = mock.MagicMock()
-            write_configuration = mock.MagicMock()
+        for arguments in (['-h'], ['--help']):
+            self.assertRaises(SystemExit, self.import_command.run, *arguments)
 
-            with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.generate_base_site', site_generation):
-                with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.import_posts', data_import):
-                    with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.write_urlmap_csv', write_urlmap):
-                        with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.write_configuration', write_configuration):
-                            self.assertRaises(SystemExit, self.import_command.run, *arguments)
+            self.assertFalse(self.site_generation.called)
+            self.assertFalse(self.data_import.called)
+            self.assertFalse(self.write_urlmap.called)
+            self.assertFalse(self.write_configuration.called)
 
-            self.assertFalse(site_generation.called)
-            self.assertFalse(data_import.called)
-            self.assertFalse(write_urlmap.called)
-            self.assertFalse(write_configuration.called)
+
+class CommandImportWordpressTest(BasicCommandImportWordpress):
+    def test_create_import_work_without_argument(self):
+        # Running this without an argument must not fail.
+        # It should show the proper usage of the command.
+        self.import_command.run()
 
     def test_populate_context(self):
         channel = self.import_command.get_channel_from_file(
@@ -102,8 +127,9 @@ class CommandImportWordpressTest(unittest.TestCase):
                         self.import_command.import_posts(channel)
 
         self.assertTrue(download_mock.called)
-        download_mock.assert_any_call('http://some.blog/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png',
-                                      'new_site/files/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png')
+        download_mock.assert_any_call(
+            'http://some.blog/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png',
+            'new_site/files/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png')
 
         self.assertTrue(write_metadata.called)
         write_metadata.assert_any_call('new_site/stories/kontakt.meta', 'Kontakt', 'kontakt', '2009-07-16 20:20:32', None, [])
