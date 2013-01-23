@@ -240,13 +240,7 @@ def load_messages(themes, translations):
 
 
 def copy_tree(src, dst, link_cutoff=None):
-    """Copy a src tree to the dst folder.['get_theme['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
-    'generic_rss_renderer',
-    'copy_file', 'slugify', 'unslugify', 'get_meta', 'to_datetime',
-    'apply_filters', 'config_changed']_path', 'get_theme_chain', 'load_messages', 'copy_tree',
-    'generic_rss_renderer',
-    'copy_file', 'slugify', 'unslugify', 'get_meta', 'to_datetime',
-    'apply_filters', 'config_changed']
+    """Copy a src tree to the dst folder.
 
     Example:
 
