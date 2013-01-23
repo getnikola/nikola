@@ -64,6 +64,17 @@ class CommandImportWordpressRunTest(BasicCommandImportWordpress):
             self.assertTrue(self.data_import.called)
             self.assertTrue(self.write_urlmap.called)
             self.assertTrue(self.write_configuration.called)
+            self.assertFalse(self.import_command.exclude_drafts)
+
+    def test_ignoring_drafts(self):
+        valid_import_arguments = (
+            ['--filename', self.import_filename, '--no-drafts'],
+            ['-f', self.import_filename, '-o', 'some_folder', '-d'],
+        )
+
+        for arguments in valid_import_arguments:
+            self.import_command.run(*arguments)
+            self.assertTrue(self.import_command.exclude_drafts)
 
     def test_getting_help(self):
         for arguments in (['-h'], ['--help']):
