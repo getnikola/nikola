@@ -40,6 +40,8 @@ from .youtube import youtube
 directives.register_directive('youtube', youtube)
 from .slides import slides
 directives.register_directive('slides', slides)
+from .gist_directive import GitHubGist
+directives.register_directive('gist', GitHubGist)
 
 from nikola.plugin_categories import PageCompiler
 
