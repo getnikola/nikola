@@ -35,6 +35,7 @@ Bugfixes
 * Fix titles that include quotes
 * Updated to current CSS from docutils (was using version from 2005)
 * Avoid needless regeneration of gallery indexes.
+* Always ensure the folder for the new post exists.
 
 New in v5.1
 ===========
