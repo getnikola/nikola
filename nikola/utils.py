@@ -169,7 +169,7 @@ def get_meta(source_path, file_metadata_regexp=None):
 
     if not slug:
         # If no slug is found in the metadata use the filename
-        slug = slugify(source_path)
+        slug = slugify(os.path.splitext(os.path.basename(source_path))[0])
 
     if not title:
         # If no title is found, use the filename without extension
