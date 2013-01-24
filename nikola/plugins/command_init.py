@@ -65,6 +65,7 @@ The destination folder must not exist.
     "txt2tags": ('.t2t',),
     "bbcode": ('.bb',),
     "wiki": ('.wiki',),
+    "ipynb": ('.ipynb',),
     "html": ('.html', '.htm')
     }""",
         'REDIRECTIONS': '[]',
