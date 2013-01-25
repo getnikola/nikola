@@ -1,4 +1,0 @@
-docutils
-markdown
--e git://github.com/ipython/ipython.git#egg=IPython
-pygments
