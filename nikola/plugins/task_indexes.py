@@ -22,6 +22,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import glob
 import os
 
 from nikola.plugin_categories import Task
@@ -103,5 +104,16 @@ class Indexes(Task):
                 task['basename'] = 'render_indexes'
                 yield task
 
-
+        if not self.site.config["STORY_INDEX"]:
+            return
         # TODO: do story indexes as described in #232
+        kw = {
+            "post_pages": self.site.config["post_pages"],
+        }
+        
+        for wildcard, dest, _, is_post in kw["post_pages"]:
+            if is_post:
+                continue
+            src_dir = os.path.dirname(wildcard)
+            files = glob.glob(wildcard)
+            print "==>", src_dir, files
