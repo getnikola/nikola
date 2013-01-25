@@ -37,9 +37,6 @@ class ConverterBloggerHTML(ConverterHTML):
     """
 
     def optional_header(self):
-        with io.open(self.outbase + '_header.html', 'w',
-                     encoding=self.default_encoding) as f:
-            f.write('\n'.join(self.header_body()))
         return []
 
     def optional_footer(self):
