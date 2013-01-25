@@ -106,7 +106,8 @@ class RenderTags(Task):
     def list_tags_page(self, kw):
         """a global "all your tags" page for each language"""
         tags = list(self.site.posts_per_tag.keys())
-        tags.sort()
+        # We want our tags to be sorted case insensitive
+        tags.sort(cmp=lambda x, y: cmp(x.lower(), y.lower()))
         template_name = "tags.tmpl"
         kw['tags'] = tags
         for lang in kw["translations"]:
