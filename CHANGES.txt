@@ -20,11 +20,8 @@ Features
 * Using the filename as slug if no slug is found in the metadata.
 * Make it possible to extract metadata from filename by using regexp.
 * When using import_wordpress users can exclude drafts with the ``-d`` switch.
-<<<<<<< HEAD
 * New STORY_INDEX option to generate index.html in story folders (in progress).
-=======
 * Sort tags case insensitive.
->>>>>>> 268fee9ae1ea257ab2fcd3ec1f727a419ee75e54
 
 Bugfixes
 --------
