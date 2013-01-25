@@ -27,12 +27,13 @@
 import codecs
 import os
 import re
-from nbformat import current as nbformat
 
 try:
-    import nbconvert.converters.bloggerhtml as nbconverter
+    from .nbformat import current as nbformat
+    from .nbconvert.converters import bloggerhtml as nbconverter
+    bloggerhtml = True
 except ImportError:
-    nbconverter = None
+    bloggerhtml = None
 
 from nikola.plugin_categories import PageCompiler
 
@@ -44,14 +45,16 @@ class CompileIPynb(PageCompiler):
 
     def compile_html(self, source, dest):
         if nbconverter is None:
-            raise Exception('To build this site, you need to init the nbconvert submodule.')
+            raise Exception('To build this site, you need nbconvert and nbformat.')
         try:
             os.makedirs(os.path.dirname(dest))
         except:
             pass
         converter = nbconverter.ConverterBloggerHTML()
-        converter.nb = nbformat.reads_json(source)
         with codecs.open(dest, "w+", "utf8") as out_file:
+            with codecs.open(source, "r", "utf8") as in_file:
+                data = in_file.read()
+                converter.nb = nbformat.reads_json(data)
             output = converter.convert()
             out_file.write(output)
 

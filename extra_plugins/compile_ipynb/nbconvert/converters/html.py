@@ -46,6 +46,12 @@ class ConverterHTML(Converter):
     extension = 'html'
     blank_symbol = '&nbsp;'
 
+    def __init__(self):
+        pass
+
+    def read(self):
+        pass
+
     def in_tag(self, tag, src, attrs=None):
         """Return a list of elements bracketed by the given tag"""
         attr_s = '' if attrs is None else \
