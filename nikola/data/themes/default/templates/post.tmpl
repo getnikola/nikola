@@ -10,7 +10,7 @@
         ${messages[lang]["Posted"]}: ${post.date.strftime(date_format)}
         ${helper.html_translations(post)}
         &nbsp;&nbsp;|&nbsp;&nbsp;
-        <a href="${post.pagenames[lang]+'.txt'}">${messages[lang]["Source"]}</a>
+        <a href="${post.pagenames[lang]+'.txt'}" id="sourcelink">${messages[lang]["Source"]}</a>
         ${helper.html_tags(post)}
     </small>
     <hr>
