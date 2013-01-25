@@ -44,7 +44,7 @@ class CompileIPynb(PageCompiler):
 
     def compile_html(self, source, dest):
         if nbconverter is None:
-            raise Exception('To build this site, you need compile_ipython plugin.')
+            raise Exception('To build this site, you also need https://github.com/damianavila/compile_ipynb-for-Nikola.git.')
         try:
             os.makedirs(os.path.dirname(dest))
         except:
