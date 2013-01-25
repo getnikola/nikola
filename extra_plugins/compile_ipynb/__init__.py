@@ -24,6 +24,7 @@
 
 """Implementation of compile_html based on nbconvert."""
 
+from __future__ import unicode_literals, print_function
 import codecs
 import os
 
@@ -61,14 +62,35 @@ class CompileIPynb(PageCompiler):
         d_name = os.path.dirname(path)
         if not os.path.isdir(d_name):
             os.makedirs(os.path.dirname(path))
-        with codecs.open(path, "wb+", "utf8") as fd:
+        meta_path = os.path.join(d_name, slug + ".meta")
+        with codecs.open(meta_path, "wb+", "utf8") as fd:
             if onefile:
-                fd.write('<!-- \n')
-                fd.write('.. title: %s\n' % title)
-                fd.write('.. slug: %s\n' % slug)
-                fd.write('.. date: %s\n' % date)
-                fd.write('.. tags: %s\n' % tags)
-                fd.write('.. link: \n')
-                fd.write('.. description: \n')
-                fd.write('-->\n\n')
-            fd.write("\nWrite your post here.")
+                fd.write('%s\n' % title)
+                fd.write('%s\n' % slug)
+                fd.write('%s\n' % date)
+                fd.write('%s\n' % tags)
+        print("Your post's metadata is at: ", meta_path)
+        with codecs.open(path, "wb+", "utf8") as fd:
+            fd.write(
+"""{
+ "metadata": {
+  "name": "%s"
+ },
+ "nbformat": 3,
+ "nbformat_minor": 0,
+ "worksheets": [
+  {
+   "cells": [
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    }
+   ],
+   "metadata": {}
+  }
+ ]
+}""" % slug)
