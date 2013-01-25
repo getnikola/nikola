@@ -315,6 +315,7 @@ class Nikola(object):
         * rss (name is ignored)
         * gallery (name is the gallery name)
         * listing (name is the source code file name)
+        * post_path (name is 1st element in a post_pages tuple)
 
         The returned value is always a path relative to output, like
         "categories/whatever.html"
@@ -348,6 +349,9 @@ class Nikola(object):
             else:
                 path = [_f for _f in [self.config['TRANSLATIONS'][lang],
                 self.config['INDEX_PATH'], 'index.html'] if _f]
+        elif kind == "post_path":
+            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+                os.path.dirname(name) , "index.html"] if _f]            
         elif kind == "rss":
             path = [_f for _f in [self.config['TRANSLATIONS'][lang],
             self.config['RSS_PATH'], 'rss.xml'] if _f]

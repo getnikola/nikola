@@ -22,6 +22,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import unicode_literals
 import glob
 import os
 
@@ -108,12 +109,33 @@ class Indexes(Task):
             return
         # TODO: do story indexes as described in #232
         kw = {
+            "translations": self.site.config['TRANSLATIONS'],
             "post_pages": self.site.config["post_pages"],
+            "output_folder": self.site.config['OUTPUT_FOLDER'],
+            "filters": self.site.config['FILTERS'],
         }
-        
-        for wildcard, dest, _, is_post in kw["post_pages"]:
-            if is_post:
-                continue
-            src_dir = os.path.dirname(wildcard)
-            files = glob.glob(wildcard)
-            print "==>", src_dir, files
+        template_name = "list.tmpl"        
+        for lang in kw["translations"]:
+            for wildcard, dest, _, is_post in kw["post_pages"]:
+                if is_post:
+                    continue
+                context = {}
+                src_dir = os.path.dirname(wildcard)
+                files = glob.glob(wildcard)
+                post_list = [self.site.global_data[os.path.splitext(p)[0]] for p in files]
+                output_name = os.path.join(kw["output_folder"],
+                    self.site.path("post_path", wildcard, lang)).encode('utf8')
+                context["items"] = [(post.title(lang), post.permalink(lang)) for post in post_list]
+                task = self.site.generic_post_list_renderer(
+                        lang,
+                        post_list,
+                        output_name,
+                        template_name,
+                        kw['filters'],
+                        context,
+                    )
+            task_cfg = {1: task['uptodate'][0].config, 2: kw}
+            task['uptodate'] = [config_changed(task_cfg)]
+            task['basename'] = self.name
+            yield task
+                
