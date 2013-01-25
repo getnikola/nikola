@@ -1,4 +1,4 @@
-# Copyright (c) 2012 Roberto Alsina y otros.
+# Copyright (c) 2013 Damián Avila.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -26,7 +26,6 @@
 
 import codecs
 import os
-import re
 
 try:
     from .nbformat import current as nbformat
@@ -45,7 +44,7 @@ class CompileIPynb(PageCompiler):
 
     def compile_html(self, source, dest):
         if nbconverter is None:
-            raise Exception('To build this site, you need nbconvert and nbformat.')
+            raise Exception('To build this site, you need compile_ipython plugin.')
         try:
             os.makedirs(os.path.dirname(dest))
         except:
@@ -73,4 +72,3 @@ class CompileIPynb(PageCompiler):
                 fd.write('.. description: \n')
                 fd.write('-->\n\n')
             fd.write("\nWrite your post here.")
-
