@@ -102,6 +102,7 @@ class Nikola(object):
             'COMMENTS_IN_GALLERIES': False,
             'COMMENTS_IN_STORIES': False,
             'FILE_METADATA_REGEXP': None,
+            'STORY_INDEX': False,
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
                 "markdown": ['.md', '.mdown', '.markdown'],

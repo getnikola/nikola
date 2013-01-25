@@ -213,6 +213,8 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # If you want to disable comments, set it to False.
 DISQUS_FORUM = "nikolademo"
 
+# Create index.html for story folders?
+# STORY_INDEX = False
 # Enable comments on story pages?
 # COMMENTS_IN_STORIES = False
 # Enable comments on picture gallery pages?

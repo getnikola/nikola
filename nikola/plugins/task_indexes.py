@@ -102,3 +102,6 @@ class Indexes(Task):
                 task['uptodate'] = [config_changed(task_cfg)]
                 task['basename'] = 'render_indexes'
                 yield task
+
+
+        # TODO: do story indexes as described in #232
