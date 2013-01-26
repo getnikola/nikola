@@ -55,7 +55,8 @@ def task_render_site():
             ''')
             dodo.flush()
             first = args[0] if args else None
-            if first in ('auto', 'clean', 'forget', 'ignore', 'list', 'run'):
+            if first in ('auto', 'clean', 'forget', 'ignore', 'list', 'run',
+                         'forget', 'dumpdb', 'strace'):
                 cmd = first
                 args = args[1:]
             else:
