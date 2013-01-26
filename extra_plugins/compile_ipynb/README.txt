@@ -17,6 +17,17 @@ post_pages = (
 
 in your conf.py
 
+Then... to use it:
+
+$nikola new_page -f ipynb
+
+**NOTE**: DO NOT use the -2 option in nikola new_page, by default this compiler 
+create one metadata file and the corresponding naive IPython notebook.
+
+$nikola build
+
+And deploy the output folder... to see it locally: $nikola serve
+
 If you have any doubts, just ask: @damianavila
 
 Cheers.
