@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -26,7 +26,7 @@
 
 import os
 import shutil
-
+import codecs
 
 from nikola.plugin_categories import PageCompiler
 
@@ -39,12 +39,12 @@ class CompileHtml(PageCompiler):
     def compile_html(self, source, dest):
         try:
             os.makedirs(os.path.dirname(dest))
-        except:
+        except Exception:
             pass
         shutil.copyfile(source, dest)
 
-
-    def create_post(self, path, onefile=False, title="", slug="", date="", tags=""):
+    def create_post(self, path, onefile=False, title="", slug="",
+                    date="", tags=""):
         d_name = os.path.dirname(path)
         if not os.path.isdir(d_name):
             os.makedirs(os.path.dirname(path))
