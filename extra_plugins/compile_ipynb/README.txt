@@ -21,7 +21,7 @@ Then... to use it:
 
 $nikola new_page -f ipynb
 
-**NOTE**: DO NOT use the -2 option in nikola new_page, by default this compiler 
+**NOTE**: Just IGNORE the "-1" and "-2" options in nikola new_page command, by default this compiler 
 create one metadata file and the corresponding naive IPython notebook.
 
 $nikola build
