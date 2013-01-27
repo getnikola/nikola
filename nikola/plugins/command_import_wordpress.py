@@ -180,18 +180,10 @@ class CommandImportWordpress(Command):
 
     @classmethod
     def write_content(cls, filename, content):
-        with open(filename, "wb+") as fd:
-            doc = html.document_fromstring(content)
-            doc.rewrite_links(replacer)
-            for n in reversed(range(1, 9)):
-                for tag in doc.findall('.//h%i' % n):
-                    if not tag.text:
-                        print("Failed to fix bad title: %r" %
-                              html.tostring(tag))
-                    else:
-                        tag.getparent().replace(tag,
-                                                builder.E('h%i' % (n + 1), tag.text))
+        doc = html.document_fromstring(content)
+        doc.rewrite_links(replacer)
 
+        with open(filename, "wb+") as fd:
             fd.write(html.tostring(doc, encoding='utf8'))
 
     @staticmethod
