@@ -248,7 +248,9 @@ class CommandImportWordpress(Command):
         self.url_map[link] = self.context['BLOG_URL'] + '/' + \
             out_folder + '/' + slug + '.html'
 
-        if content.strip() and not (is_draft and self.exclude_drafts):
+        if is_draft and self.exclude_drafts:
+            print('Draft "%s" will not be imported.' % (title, ))
+        elif content.strip():
             # If no content is found, no files are written.
             content = self.transform_content(content)
 
