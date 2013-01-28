@@ -34,3 +34,12 @@ class CommandInitCallTest(unittest.TestCase):
         self.assertTrue(self.create_configuration.called)
         self.assertTrue(self.copy_sample_site.called)
 
+    def test_init_called_without_target(self):
+        self.init_commad.run()
+
+        self.assertFalse(self.create_configuration.called)
+        self.assertFalse(self.copy_sample_site.called)
+
+
+if __name__ == '__main__':
+    unittest.main()

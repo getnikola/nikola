@@ -79,6 +79,7 @@ The destination folder must not exist.
 
     @classmethod
     def create_configuration(cls, target):
+        lib_path = os.path.dirname(nikola.__file__)
         template_path = os.path.join(lib_path, 'conf.py.in')
         conf_template = Template(filename=template_path)
         conf_path = os.path.join(target, 'conf.py')
@@ -97,8 +98,8 @@ The destination folder must not exist.
         if target is None:
             print(self.usage)
         else:
-            self.copy_sample_site()
-            self.create_configuration()
+            self.copy_sample_site(target)
+            self.create_configuration(target)
             print("A new site with some sample data has been created at %s."
                   % target)
             print("See README.txt in that folder for more information.")
