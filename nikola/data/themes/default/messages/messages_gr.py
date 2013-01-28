@@ -17,5 +17,6 @@ MESSAGES = {
     "Previous post": "Προηγούμενη ανάρτηση",
     "Next post": "Επόμενη ανάρτηση",
     "old posts page %d": "σελίδα παλαιότερων αναρτήσεων %d",
+    "Read more": "Read more",
     "Source": "Source",
 }
