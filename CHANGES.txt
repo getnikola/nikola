@@ -4,6 +4,7 @@ New in Master
 Features
 --------
 
+* New vimeo directive for restructured text.
 * New COMMENTS_IN_GALLERIES and COMMENTS_IN_STORIES options.
 * One-page, dynamic-loading, client-rendered site plugin (task_mustache)
 * Local search based on Tipue (extra_plugins/task_localsearch)
@@ -22,6 +23,7 @@ Features
 * When using import_wordpress users can exclude drafts with the ``-d`` switch.
 * New STORY_INDEX option to generate index.html in story folders.
 * Sort tags case insensitive.
+* New polish translation.
 
 Bugfixes
 --------

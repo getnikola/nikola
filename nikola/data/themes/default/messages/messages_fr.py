@@ -14,5 +14,8 @@ MESSAGES = {
     "Read in English": "Lire en français",
     "Newer posts": "Billets récents",
     "Older posts": "Anciens billets",
+    "Previous post": "Previous post",
+    "Next post": "Next post",
+    "Read more": "Read more",
     "Source": "Source",
 }
