@@ -38,6 +38,8 @@ directives.register_directive('listing', listings_directive)
 
 from .youtube import youtube
 directives.register_directive('youtube', youtube)
+from .vimeo import vimeo
+directives.register_directive('vimeo', vimeo)
 from .slides import slides
 directives.register_directive('slides', slides)
 from .gist_directive import GitHubGist
