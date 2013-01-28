@@ -22,6 +22,7 @@ Features
 * When using import_wordpress users can exclude drafts with the ``-d`` switch.
 * New STORY_INDEX option to generate index.html in story folders.
 * Sort tags case insensitive.
+* New polish translation.
 
 Bugfixes
 --------
