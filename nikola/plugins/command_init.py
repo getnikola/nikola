@@ -69,7 +69,21 @@ The destination folder must not exist.
     "html": ('.html', '.htm')
     }""",
         'REDIRECTIONS': '[]',
-        }
+    }
+
+    @staticmethod
+    def copy_sample_site(target):
+        lib_path = os.path.dirname(nikola.__file__)
+        src = os.path.join(lib_path, 'data', 'samplesite')
+        shutil.copytree(src, target)
+
+    @classmethod
+    def create_configuration(cls, target):
+        template_path = os.path.join(lib_path, 'conf.py.in')
+        conf_template = Template(filename=template_path)
+        conf_path = os.path.join(target, 'conf.py')
+        with codecs.open(conf_path, 'w+', 'utf8') as fd:
+            fd.write(conf_template.render(**cls.SAMPLE_CONF))
 
     def run(self, *args):
         """Create a new site."""
@@ -83,17 +97,8 @@ The destination folder must not exist.
         if target is None:
             print(self.usage)
         else:
-            # copy sample data
-            lib_path = os.path.dirname(nikola.__file__)
-            src = os.path.join(lib_path, 'data', 'samplesite')
-            shutil.copytree(src, target)
-            # create conf.py
-            template_path = os.path.join(lib_path, 'conf.py.in')
-            conf_template = Template(filename=template_path)
-            conf_path = os.path.join(target, 'conf.py')
-            with codecs.open(conf_path, 'w+', 'utf8') as fd:
-                fd.write(conf_template.render(**self.SAMPLE_CONF))
-
+            self.copy_sample_site()
+            self.create_configuration()
             print("A new site with some sample data has been created at %s."
-                % target)
+                  % target)
             print("See README.txt in that folder for more information.")
