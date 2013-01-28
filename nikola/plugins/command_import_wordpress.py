@@ -90,7 +90,7 @@ class CommandImportWordpress(Command):
 
     def generate_base_site(self):
         if not os.path.exists(self.output_folder):
-            os.system('nikola init %s' % (self.output_folder, ))
+            os.system('nikola init --empty %s' % (self.output_folder, ))
         else:
             self.import_into_existing_site = True
             print('The folder %s already exists - assuming that this is a '
