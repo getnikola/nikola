@@ -4,7 +4,6 @@ Module = command_init
 
 [Documentation]
 Author = Roberto Alsina
-Version = 0.1
+Version = 0.2
 Website = http://nikola.ralsina.com.ar
 Description = Create a new site.
-
