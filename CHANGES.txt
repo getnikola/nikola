@@ -1,4 +1,4 @@
-New in Master
+﻿New in Master
 =============
 
 Features
@@ -20,6 +20,7 @@ Features
 * Using the filename as slug if no slug is found in the metadata.
 * Make it possible to extract metadata from filename by using regexp.
 * When using import_wordpress users can exclude drafts with the ``-d`` switch.
+* Add multi size favicon support.
 
 Bugfixes
 --------
