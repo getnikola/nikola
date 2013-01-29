@@ -46,6 +46,7 @@ class Post(object):
         the meta file, as well as any translations available, and
         the .html fragment file path.
         """
+        self.translated_to = set([])
         self.prev_post = None
         self.next_post = None
         self.blog_url = blog_url
@@ -100,6 +101,7 @@ class Post(object):
                 source_path = self.source_path + "." + lang
                 try:
                     if os.path.isfile(metadata_path):
+                        self.translated_to.add(lang)
                         with codecs.open(
                                 metadata_path, "r", "utf8") as meta_file:
                             meta_data = [x.strip() for x in
@@ -151,12 +153,7 @@ class Post(object):
 
     def is_translation_available(self, lang):
         """Return true if the translation actually exists."""
-        file_name = self.base_path
-        if lang == self.default_lang:
-            return True
-        if self._translated_file_path(lang) == file_name:
-            return False
-        return True
+        return lang in self.translated_to
 
     def _translated_file_path(self, lang):
         """Return path to the translation's file, or to the original."""

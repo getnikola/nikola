@@ -9,7 +9,7 @@
 <%def name="html_translations(post)">
     %if len(translations) > 1:
         %for langname in translations.keys():
-            %if langname != lang:
+            %if langname != lang  and post.is_translation_available(langname):
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 <a href="${post.permalink(langname)}">${messages[langname]["Read in English"]}</a>
             %endif
