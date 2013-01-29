@@ -23,7 +23,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-from optparse import OptionParser
+from optparse import OptionParser, OptionGroup
 import os
 import shutil
 import codecs
@@ -65,14 +65,45 @@ The destination folder must not exist.
     "txt2tags": ('.t2t',),
     "bbcode": ('.bb',),
     "wiki": ('.wiki',),
+    "ipynb": ('.ipynb',),
     "html": ('.html', '.htm')
     }""",
         'REDIRECTIONS': '[]',
-        }
+    }
+
+    @classmethod
+    def copy_sample_site(cls, target):
+        lib_path = cls.get_path_to_nikola_modules()
+        src = os.path.join(lib_path, 'data', 'samplesite')
+        shutil.copytree(src, target)
+
+    @classmethod
+    def create_configuration(cls, target):
+        lib_path = cls.get_path_to_nikola_modules()
+        template_path = os.path.join(lib_path, 'conf.py.in')
+        conf_template = Template(filename=template_path)
+        conf_path = os.path.join(target, 'conf.py')
+        with codecs.open(conf_path, 'w+', 'utf8') as fd:
+            fd.write(conf_template.render(**cls.SAMPLE_CONF))
+
+    @classmethod
+    def create_empty_site(cls, target):
+        for folder in ('files', 'galleries', 'listings', 'posts', 'stories'):
+            os.makedirs(os.path.join(target, folder))
+
+    @staticmethod
+    def get_path_to_nikola_modules():
+        return os.path.dirname(nikola.__file__)
 
     def run(self, *args):
         """Create a new site."""
         parser = OptionParser(usage=self.usage)
+        group = OptionGroup(parser, "Site Options")
+        group.add_option("--empty", action="store_true", dest='empty',
+                         help="Create an empty site with only a config.")
+        group.add_option("--example", action="store_false", dest='empty',
+                         help="Create a site filled with example data.")
+        parser.add_option_group(group)
         (options, args) = parser.parse_args(list(args))
 
         if not args:
@@ -82,17 +113,13 @@ The destination folder must not exist.
         if target is None:
             print(self.usage)
         else:
-            # copy sample data
-            lib_path = os.path.dirname(nikola.__file__)
-            src = os.path.join(lib_path, 'data', 'samplesite')
-            shutil.copytree(src, target)
-            # create conf.py
-            template_path = os.path.join(lib_path, 'conf.py.in')
-            conf_template = Template(filename=template_path)
-            conf_path = os.path.join(target, 'conf.py')
-            with codecs.open(conf_path, 'w+', 'utf8') as fd:
-                fd.write(conf_template.render(**self.SAMPLE_CONF))
+            if options.empty:
+                self.create_empty_site(target)
+                print('Created empty site at %s.' % target)
+            else:
+                self.copy_sample_site(target)
+                print("A new site with example data has been created at %s."
+                      % target)
+                print("See README.txt in that folder for more information.")
 
-            print("A new site with some sample data has been created at %s."
-                % target)
-            print("See README.txt in that folder for more information.")
+            self.create_configuration(target)

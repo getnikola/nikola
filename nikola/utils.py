@@ -110,49 +110,54 @@ def re_meta(line, match):
         return ''
 
 
-def get_meta(source_path, file_metadata_regexp=None):
-    """get post's meta from source
+def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
+    """
+    Tries to ried the metadata from the filename based on the given re.
+    This requires to use symbolic group names in the pattern.
 
-    If ``file_metadata_regexp`` ist given it will be tried to read
-    metadata from the filename.
     The part to read the metadata from the filename based on a regular
-    expression is taken from Pelican - pelican/readers.py"""
-    with codecs.open(source_path, "r", "utf8") as meta_file:
-        meta_data = meta_file.readlines(15)
+    expression is taken from Pelican - pelican/readers.py
+    """
     title = slug = date = tags = link = description = ''
+    match = re.match(metadata_regexp, filename)
+    if match:
+        # .items() for py3k compat.
+        for key, value in match.groupdict().items():
+            key = key.lower()  # metadata must be lowercase
 
-    if not (file_metadata_regexp is None):
-        match = re.match(file_metadata_regexp, source_path)
-        if match:
-            # .items() for py3k compat.
-            for k, v in match.groupdict().items():
-                k = k.lower()  # metadata must be lowercase
+            if key == 'title':
+                title = value
+            if key == 'slug':
+                slug = value
+            if key == 'date':
+                date = value
+            if key == 'tags':
+                tags = value
+            if key == 'link':
+                link = value
+            if key == 'description':
+                description = value
 
-                if k == 'title':
-                    title = v
-                if k == 'slug':
-                    slug = v
-                if k == 'date':
-                    date = v
-                if k == 'tags':
-                    tags = v
-                if k == 'link':
-                    link = v
-                if k == 'description':
-                    description = v
+    return (title, slug, date, tags, link, description)
 
+
+def _get_metadata_from_file(source_path, title='', slug='', date='', tags='',
+                            link='', description=''):
     re_md_title = re.compile(r'^%s([^%s].*)' %
                             (re.escape('#'), re.escape('#')))
     # Assuming rst titles are going to be at least 4 chars long
     # otherwise this detects things like ''' wich breaks other markups.
     re_rst_title = re.compile(r'^([%s]{4,})' % re.escape(string.punctuation))
 
-    for i,meta in enumerate(meta_data):
+    with codecs.open(source_path, "r", "utf8") as meta_file:
+        meta_data = meta_file.readlines(15)
+
+    for i, meta in enumerate(meta_data):
         if not title:
             title = re_meta(meta, '.. title:')
         if not title:
             if re_rst_title.findall(meta) and i > 0:
-                title = meta_data[i-1].strip()
+                title = meta_data[i - 1].strip()
         if not title:
             if re_md_title.findall(meta):
                 title = re_md_title.findall(meta)[0]
@@ -166,6 +171,25 @@ def get_meta(source_path, file_metadata_regexp=None):
             link = re_meta(meta, '.. link:')
         if not description:
             description = re_meta(meta, '.. description:')
+
+    return (title, slug, date, tags, link, description)
+
+
+def get_meta(source_path, file_metadata_regexp=None):
+    """Get post's meta from source.
+
+    If ``file_metadata_regexp`` ist given it will be tried to read
+    metadata from the filename.
+    If any metadata is then found inside the file the metadata from the
+    file will override previous findings.
+    """
+    title = slug = date = tags = link = description = ''
+
+    if not (file_metadata_regexp is None):
+        (title, slug, date, tags, link, description) = _get_metadata_from_filename_by_regex(source_path, file_metadata_regexp)
+
+    (title, slug, date, tags, link, description) = _get_metadata_from_file(
+        source_path, title, slug, date, tags, link, description)
 
     if not slug:
         # If no slug is found in the metadata use the filename

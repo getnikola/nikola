@@ -1,9 +1,11 @@
-﻿New in Master
+New in Master
 =============
 
 Features
 --------
 
+* Making it possible to initialise empty sites.
+* New vimeo directive for restructured text.
 * New COMMENTS_IN_GALLERIES and COMMENTS_IN_STORIES options.
 * One-page, dynamic-loading, client-rendered site plugin (task_mustache)
 * Local search based on Tipue (extra_plugins/task_localsearch)
@@ -20,6 +22,9 @@ Features
 * Using the filename as slug if no slug is found in the metadata.
 * Make it possible to extract metadata from filename by using regexp.
 * When using import_wordpress users can exclude drafts with the ``-d`` switch.
+* New STORY_INDEX option to generate index.html in story folders.
+* Sort tags case insensitive.
+* New polish translation.
 * Add multi size favicon support.
 
 Bugfixes

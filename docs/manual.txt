@@ -186,7 +186,7 @@ This is currently lacking on detail. Considering the niche Nikola is aimed at,
 I suspect that's not a problem yet. So, when I say "get", the specific details
 of how to "get" something for your specific operating system are left to you.
 
-The short version is: ``pip install https://github.com/ralsina/nikola/zipball/master``
+The short version is: ``pip install https://github.com/ralsina/nikola/archive/master.zip``
 
 Longer version:
 
@@ -206,7 +206,7 @@ Longer version:
       #. Get `Pygments <http://pygments.org/>`_
       #. Get `unidecode <http://pypi.python.org/pypi/Unidecode/>`_
       #. Get `lxml <http://lxml.de/>`_
-      #. Get `yapsy <http://yapsy.sourceforge.com>`_
+      #. Get `yapsy <http://yapsy.sourceforge.net>`_
       #. Get `configparser <http://pypi.python.org/pypi/configparser/3.2.0r3>`_
 
 #. run ``python setup.py install``
@@ -782,6 +782,26 @@ URL of the video is http://www.youtube.com/watch?v=8N_tupPBtWQ what you need is
 Once you have that, all you need to do is::
 
     .. youtube:: 8N_tupPBtWQ
+
+Vimeo
+~~~~~~~
+
+To link to a vimeo video, you need the id of the video. For example, if the
+URL of the video is http://www.vimeo.com/20241459 then the id is **20241459**
+
+Once you have that, all you need to do is::
+
+    .. vimeo:: 20241459
+
+If you are running python 2.6 or later, or have the json module installed and
+have internet connectivity when generating your site, the height and width of
+the embedded player will be set to the native height and width of the video.
+You can override this if you wish::
+
+    .. vimeo:: 20241459
+        height=240
+        width=320
+
 
 code-block
 ~~~~~~~~~~

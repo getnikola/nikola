@@ -7,7 +7,7 @@
     ${helper.html_title()}
         <div class="meta" style="background-color: rgb(234, 234, 234); ">                    
         <span class="authordate">
-            ${messages[lang]["Posted"]}: ${post.date.strftime(date_format)} [<a href="${post.pagenames[lang]+'.txt'}">${messages[lang]["Source"]}</a>]
+            ${messages[lang]["Posted"]}: ${post.date.strftime(date_format)} [<a href="${post.pagenames[lang]+'.txt'}" id="sourcelink">${messages[lang]["Source"]}</a>]
         </span>
         <br>
             %if post.tags:

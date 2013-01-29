@@ -90,7 +90,7 @@ class CommandImportWordpress(Command):
 
     def generate_base_site(self):
         if not os.path.exists(self.output_folder):
-            os.system('nikola init %s' % (self.output_folder, ))
+            os.system('nikola init --empty %s' % (self.output_folder, ))
         else:
             self.import_into_existing_site = True
             print('The folder %s already exists - assuming that this is a '
@@ -180,18 +180,10 @@ class CommandImportWordpress(Command):
 
     @classmethod
     def write_content(cls, filename, content):
-        with open(filename, "wb+") as fd:
-            doc = html.document_fromstring(content)
-            doc.rewrite_links(replacer)
-            for n in reversed(range(1, 9)):
-                for tag in doc.findall('.//h%i' % n):
-                    if not tag.text:
-                        print("Failed to fix bad title: %r" %
-                              html.tostring(tag))
-                    else:
-                        tag.getparent().replace(tag,
-                                                builder.E('h%i' % (n + 1), tag.text))
+        doc = html.document_fromstring(content)
+        doc.rewrite_links(replacer)
 
+        with open(filename, "wb+") as fd:
             fd.write(html.tostring(doc, encoding='utf8'))
 
     @staticmethod
@@ -248,7 +240,9 @@ class CommandImportWordpress(Command):
         self.url_map[link] = self.context['BLOG_URL'] + '/' + \
             out_folder + '/' + slug + '.html'
 
-        if content.strip() and not (is_draft and self.exclude_drafts):
+        if is_draft and self.exclude_drafts:
+            print('Draft "%s" will not be imported.' % (title, ))
+        elif content.strip():
             # If no content is found, no files are written.
             content = self.transform_content(content)
 
