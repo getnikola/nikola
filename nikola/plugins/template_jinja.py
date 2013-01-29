@@ -43,7 +43,7 @@ class JinjaTemplates(TemplateSystem):
     def __init__(self):
         """ initialize Jinja2 wrapper with extended set of filters"""
         if jinja2 is None:
-            raise Exception('To use this theme you need to install the "Jinja2" package.')
+            return
         self.lookup = jinja2.Environment()
         self.lookup.filters['tojson'] = json.dumps
 
@@ -55,6 +55,8 @@ class JinjaTemplates(TemplateSystem):
 
     def render_template(self, template_name, output_name, context):
         """Render the template into output_name using context."""
+        if jinja2 is None:
+            raise Exception('To use this theme you need to install the "Jinja2" package.')
         template = self.lookup.get_template(template_name)
         output = template.render(**context)
         if output_name is not None:
