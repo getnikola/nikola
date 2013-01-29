@@ -25,6 +25,7 @@ Features
 * New STORY_INDEX option to generate index.html in story folders.
 * Sort tags case insensitive.
 * New polish translation.
+* Add multi size favicon support.
 
 Bugfixes
 --------

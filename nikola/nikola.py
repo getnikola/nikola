@@ -103,6 +103,7 @@ class Nikola(object):
             'COMMENTS_IN_STORIES': False,
             'FILE_METADATA_REGEXP': None,
             'STORY_INDEX': False,
+            'FAVICONS': {},
             'post_compilers': {
                 "rest":     ['.txt', '.rst'],
                 "markdown": ['.md', '.mdown', '.markdown'],
@@ -161,6 +162,7 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['index_display_post_count'] = self.config[
             'INDEX_DISPLAY_POST_COUNT']
         self.GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
+        self.GLOBAL_CONTEXT['favicons'] = self.config['FAVICONS']
         if 'date_format' not in self.GLOBAL_CONTEXT:
             self.GLOBAL_CONTEXT['date_format'] = '%Y-%m-%d %H:%M'
 

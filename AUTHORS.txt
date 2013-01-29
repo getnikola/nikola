@@ -2,3 +2,4 @@ Roberto Alsina <ralsina@kde.org>
 Eduardo Schettino <https://github.com/schettino72>
 Niko Wenselowski
 Roman Imankulov <https://github.com/imankulov>
+Zhaojun Meng <https://github.com/zhaojunmeng>

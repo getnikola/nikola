@@ -35,6 +35,11 @@
             <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${_link('rss', None, lang)}">
         %endfor
     %endif
+    %if favicons:
+        %for name, file, size in favicons:
+            <link rel="${name}" href="${file}" sizes="${size}"/>
+        %endfor
+    %endif
 </%def>
 
 
