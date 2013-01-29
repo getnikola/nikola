@@ -4,6 +4,7 @@ New in Master
 Features
 --------
 
+* Making it possible to initialise empty sites.
 * New vimeo directive for restructured text.
 * New COMMENTS_IN_GALLERIES and COMMENTS_IN_STORIES options.
 * One-page, dynamic-loading, client-rendered site plugin (task_mustache)
