@@ -149,13 +149,28 @@ class Post(object):
             deps += lang_deps
         return deps
 
-    def text(self, lang, teaser_only=False):
-        """Read the post file for that language and return its contents"""
+    def is_translation_available(self, lang):
+        """Return true if the translation actually exists."""
+        file_name = self.base_path
+        if lang == self.default_lang:
+            return True
+        if self._translated_file_path(lang) == file_name:
+            return False
+        return True
+
+    def _translated_file_path(self, lang):
+        """Return path to the translation's file, or to the original."""
         file_name = self.base_path
         if lang != self.default_lang:
             file_name_lang = file_name + ".%s" % lang
             if os.path.exists(file_name_lang):
                 file_name = file_name_lang
+        return file_name
+
+    def text(self, lang, teaser_only=False):
+        """Read the post file for that language and return its contents"""
+        file_name = self._translated_file_path(lang)
+        
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read()
 
