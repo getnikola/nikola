@@ -92,13 +92,16 @@ class CommandImportBlogger(Command):
 
     @staticmethod
     def populate_context(channel):
+        blog_url = channel.feed.link
+        if blog_url.endswith('/'):
+            blog_url = blog_url[:-1]
 
         context = {}
         context['DEFAULT_LANG'] = 'en'  # blogger doesn't include the language in the dump
         context['BLOG_TITLE'] = channel.feed.title
         
         context['BLOG_DESCRIPTION'] = ''  # Missing in the dump
-        context['BLOG_URL'] = channel.feed.link
+        context['BLOG_URL'] = blog_url
         context['BLOG_EMAIL'] = channel.feed.author_detail.email
         context['BLOG_AUTHOR'] = channel.feed.author_detail.name
         context['POST_PAGES'] = '''(
@@ -169,7 +172,13 @@ class CommandImportBlogger(Command):
         # link is something like http://foo.com/2012/09/01/hello-world/
         # So, take the path, utils.slugify it, and that's our slug
         link = item.link
-        slug = utils.slugify(urlparse(link).path)
+        link_path = urlparse(link).path
+
+        if link_path.lower().endswith('.html'):
+            link_path = link_path[:-5]
+
+        slug = utils.slugify(link_path)
+
         if not slug:  # should never happen
             print("Error converting post:", title)
             return
