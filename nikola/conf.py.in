@@ -66,6 +66,7 @@ post_compilers = ${POST_COMPILERS}
 #   Russian -> ru
 #   Spanish -> es
 #   Italian -> it
+#   Simplified Chinese -> zh_cn
 #
 # If you want to use Nikola with a non-supported language you have to provide
 # a module containing the necessary translations
