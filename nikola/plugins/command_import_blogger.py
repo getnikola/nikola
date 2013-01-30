@@ -173,22 +173,19 @@ class CommandImportBlogger(Command):
 
         description = ''
         post_date = datetime.datetime.fromtimestamp(time.mktime(item.published_parsed))
-        
-        status = 'publish'  # FIXME: detect drafts
+                
         for candidate in item.content:
             if candidate.type == 'text/html':
                 content = candidate.value
                 break
                 #  FIXME: handle attachments
 
-        tags = []  # FIXME: find tags
-        #for tag in item.findall('category'):
-            #text = tag.text
-            #if text == 'Uncategorized':
-                #continue
-            #tags.append(text)
+        tags = []
+        for tag in item.tags:
+            if tag.scheme == 'http://www.blogger.com/atom/ns#':
+                tags.append(tag.term)
         
-        if status != 'publish':
+        if item.get('app_draft'):
             tags.append('draft')
             is_draft = True
         else:
