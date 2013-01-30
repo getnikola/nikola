@@ -400,7 +400,8 @@ Currently supported languages are
 * French
 * German
 * Russian
-* Greek.
+* Greek
+* Simplified Chinese.
 
 If you wish to add support for more languages, check out the instructions
 at the `theming guide <http://nikola.ralsina.com.ar/theming.html>`.

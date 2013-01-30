@@ -26,6 +26,7 @@ Features
 * Sort tags case insensitive.
 * New polish translation.
 * Add multi size favicon support.
+* Add Simplified Chinese translations.
 
 Bugfixes
 --------
