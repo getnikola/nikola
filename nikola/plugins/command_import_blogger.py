@@ -213,10 +213,21 @@ class CommandImportBlogger(Command):
     def process_item(self, item):
         post_type = item.tags[0].term
         
-        # FIXME: not importing comments. Does blogger support "pages"?
-        
         if post_type == 'http://schemas.google.com/blogger/2008/kind#post':
             self.import_item(item, 'posts')
+        elif post_type == 'http://schemas.google.com/blogger/2008/kind#page':
+            self.import_item(item, 'stories')
+        elif post_type == 'http://schemas.google.com/blogger/2008/kind#settings':
+            # Ignore settings
+            pass
+        elif post_type == 'http://schemas.google.com/blogger/2008/kind#template':
+            # Ignore template
+            pass
+        elif post_type == 'http://schemas.google.com/blogger/2008/kind#comment':
+            # FIXME: not importing comments. Does blogger support "pages"?          
+            pass
+        else:
+            print("Unknown post_type:", post_type)
 
     def import_posts(self, channel):
         for item in channel.entries:
