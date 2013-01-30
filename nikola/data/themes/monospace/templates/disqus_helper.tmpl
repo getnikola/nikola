@@ -11,6 +11,9 @@
         %endif
         var disqus_title=${json.dumps(title)};
         var disqus_identifier="${identifier}";
+        var disqus_config = function () { 
+            this.language = "${lang}";
+        };
         (function() {
             var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
             dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';

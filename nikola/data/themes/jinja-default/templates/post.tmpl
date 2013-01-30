@@ -47,6 +47,9 @@
         var disqus_url="{{post.permalink(absolute=True)}}";
         var disqus_title={{post.title(lang)|tojson }};
         var disqus_identifier="{{post.base_path}}";
+        var disqus_config = function () { 
+            this.language = "{{lang}}";
+        };
         (function() {
             var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
             dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
