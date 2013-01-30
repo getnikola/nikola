@@ -28,6 +28,7 @@ Features
 * Add multi size favicon support.
 * Use multilingual Disqus (although it doesn't seem to work)
 * Add Simplified Chinese translations.
+* (Rough) Blogger/Blogspot importer
 
 Bugfixes
 --------
