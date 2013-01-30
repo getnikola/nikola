@@ -169,7 +169,13 @@ class CommandImportBlogger(Command):
         # link is something like http://foo.com/2012/09/01/hello-world/
         # So, take the path, utils.slugify it, and that's our slug
         link = item.link
-        slug = utils.slugify(urlparse(link).path)
+        link_path = urlparse(link).path
+
+        if link_path.lower().endswith('.html'):
+            link_path = link_path[:-5]
+
+        slug = utils.slugify(link_path)
+
         if not slug:  # should never happen
             print("Error converting post:", title)
             return
