@@ -46,7 +46,7 @@ class Post(object):
         the meta file, as well as any translations available, and
         the .html fragment file path.
         """
-        self.translated_to = set([])
+        self.translated_to = set([default_lang])
         self.prev_post = None
         self.next_post = None
         self.blog_url = blog_url
@@ -99,9 +99,10 @@ class Post(object):
             else:
                 metadata_path = self.metadata_path + "." + lang
                 source_path = self.source_path + "." + lang
+                if os.path.isfile(source_path):
+                    self.translated_to.add(lang)
                 try:
                     if os.path.isfile(metadata_path):
-                        self.translated_to.add(lang)
                         with codecs.open(
                                 metadata_path, "r", "utf8") as meta_file:
                             meta_data = [x.strip() for x in
