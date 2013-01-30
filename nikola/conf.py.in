@@ -193,7 +193,7 @@ DATE_FORMAT = '%Y-%m-%d %H:%M'
 
 # FAVICONS contains (name, file, size) tuples.
 # Used for create favicon link like this: 
-# <link rel="${name}" href="${file}" sizes="${size}"/>
+# <link rel="name" href="file" sizes="size"/>
 # about favicons, see: http://www.netmagazine.com/features/create-perfect-favicon
 # FAVICONS = {
 #     ("icon", "/favicon.ico", "16x16"),
