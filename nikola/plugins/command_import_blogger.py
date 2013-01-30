@@ -36,7 +36,10 @@ try:
 except ImportError:
     from urllib.parse import urlparse
 
-import feedparser
+try:
+    import feedparser
+except ImportError:
+    feedparser = None
 from lxml import etree, html, builder
 from mako.template import Template
 
@@ -259,9 +262,9 @@ class CommandImportBlogger(Command):
     def run(self, *arguments):
         """Import a Wordpress blog from an export file into a Nikola site."""
         # Parse the data
-        if requests is None:
+        if feedparser is None:
             print('To use the import_blogger command,'
-                  ' you have to install the "requests" package.')
+                  ' you have to install the "feedparser" package.')
             return
 
         parser = OptionParser(
