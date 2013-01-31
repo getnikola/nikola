@@ -12,11 +12,15 @@ class CommandInitCallTest(unittest.TestCase):
         self.copy_sample_site = mock.MagicMock()
         self.create_configuration = mock.MagicMock()
         self.create_empty_site = mock.MagicMock()
-        copy_sample_site_patch = mock.patch('nikola.plugins.command_init.CommandInit.copy_sample_site', self.copy_sample_site)
-        create_configuration_patch = mock.patch('nikola.plugins.command_init.CommandInit.create_configuration', self.create_configuration)
-        create_empty_site_patch = mock.patch('nikola.plugins.command_init.CommandInit.create_empty_site', self.create_empty_site)
+        copy_sample_site_patch = mock.patch(
+            'nikola.plugins.command_init.CommandInit.copy_sample_site', self.copy_sample_site)
+        create_configuration_patch = mock.patch(
+            'nikola.plugins.command_init.CommandInit.create_configuration', self.create_configuration)
+        create_empty_site_patch = mock.patch(
+            'nikola.plugins.command_init.CommandInit.create_empty_site', self.create_empty_site)
 
-        self.patches = [copy_sample_site_patch, create_configuration_patch, create_empty_site_patch]
+        self.patches = [copy_sample_site_patch,
+                        create_configuration_patch, create_empty_site_patch]
         for patch in self.patches:
             patch.start()
 
@@ -32,7 +36,7 @@ class CommandInitCallTest(unittest.TestCase):
         del self.create_empty_site
 
     def test_init_default(self):
-        for arguments in (('destination', ), ('destination', '--example')):
+        for arguments in (('destination', '--demo'),):
             self.init_commad.run(*arguments)
 
             self.assertTrue(self.create_configuration.called)
@@ -47,12 +51,12 @@ class CommandInitCallTest(unittest.TestCase):
         self.assertFalse(self.create_empty_site.called)
 
     def test_init_empty_dir(self):
-        arguments = ('destination', '--empty')
-        self.init_commad.run(*arguments)
+        for arguments in (('destination', ), ('destination', '--empty')):
+            self.init_commad.run(*arguments)
 
-        self.assertTrue(self.create_configuration.called)
-        self.assertFalse(self.copy_sample_site.called)
-        self.assertTrue(self.create_empty_site.called)
+            self.assertTrue(self.create_configuration.called)
+            self.assertFalse(self.copy_sample_site.called)
+            self.assertTrue(self.create_empty_site.called)
 
 
 if __name__ == '__main__':
