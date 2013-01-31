@@ -211,7 +211,7 @@ Longer version:
 
 #. run ``python setup.py install``
 
-After that, run ``nikola init sitename`` and that will create a folder called
+After that, run ``nikola init --demo sitename`` and that will create a folder called
 ``sitename`` containing a functional demo site.
 
 Nikola is packaged for some Linux distributions, you may get that instead.

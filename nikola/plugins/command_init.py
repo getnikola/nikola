@@ -99,9 +99,10 @@ The destination folder must not exist.
         """Create a new site."""
         parser = OptionParser(usage=self.usage)
         group = OptionGroup(parser, "Site Options")
-        group.add_option("--empty", action="store_true", dest='empty',
-                         help="Create an empty site with only a config.")
-        group.add_option("--example", action="store_false", dest='empty',
+        group.add_option(
+            "--empty", action="store_true", dest='empty', default=True,
+            help="Create an empty site with only a config.")
+        group.add_option("--demo", action="store_false", dest='empty',
                          help="Create a site filled with example data.")
         parser.add_option_group(group)
         (options, args) = parser.parse_args(list(args))

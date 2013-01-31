@@ -29,6 +29,8 @@ Features
 * Use multilingual Disqus (although it doesn't seem to work)
 * Add Simplified Chinese translations.
 * (Rough) Blogger/Blogspot importer
+* When running the init command it now creates an empty site by default.
+  The previous behaviour can be triggered with the "--demo" switch.
 
 Bugfixes
 --------
