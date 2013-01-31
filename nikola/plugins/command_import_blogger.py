@@ -92,16 +92,12 @@ class CommandImportBlogger(Command):
 
     @staticmethod
     def populate_context(channel):
-        blog_url = channel.feed.link
-        if blog_url.endswith('/'):
-            blog_url = blog_url[:-1]
-
         context = {}
         context['DEFAULT_LANG'] = 'en'  # blogger doesn't include the language in the dump
         context['BLOG_TITLE'] = channel.feed.title
         
         context['BLOG_DESCRIPTION'] = ''  # Missing in the dump
-        context['BLOG_URL'] = blog_url
+        context['BLOG_URL'] = channel.feed.link.rstrip('/')
         context['BLOG_EMAIL'] = channel.feed.author_detail.email
         context['BLOG_AUTHOR'] = channel.feed.author_detail.name
         context['POST_PAGES'] = '''(
