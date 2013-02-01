@@ -494,7 +494,7 @@ class Nikola(object):
             self.template_system.template_deps(post.template_name)
         context['post'] = post
         context['lang'] = lang
-        context['title'] = post.title(lang)
+        context['title'] = post.title(lang) +" | "+self.config['BLOG_TITLE']
         context['description'] = post.description(lang)
         context['permalink'] = post.permalink(lang)
         context['page_list'] = self.pages
