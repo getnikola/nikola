@@ -24,12 +24,18 @@
 
 from docutils import nodes
 from docutils.parsers.rst import directives
-import urllib2
 
+try:
+    import requests
+except ImportError:
+    requests = None
 try:
     import json # python 2.6 or higher
 except ImportError:
-    json = None
+    try:
+        import simplejson
+    except ImportError:
+        json = None
 
 CODE = """\
 <iframe src="http://player.vimeo.com/video/%(vimeo_id)s"
@@ -44,6 +50,10 @@ VIDEO_DEFAULT_WIDTH=281
 def vimeo(name, args, options, content, lineno,
             contentOffset, blockText, state, stateMachine):
     """ Restructured text extension for inserting vimeo embedded videos """
+    if requests is None:
+        raise Exception("To use the Vimeo directive you need to install the requests module.")
+    if json is None:
+        raise Exception("To use the Vimeo directive you need python 2.6 or to install the simplejson module.")
     if len(content) == 0:
         return
 
@@ -66,13 +76,12 @@ def vimeo(name, args, options, content, lineno,
 
         if json: # we can attempt to retrieve video attributes from vimeo
             try:
-                u = urllib2.urlopen('http://vimeo.com/api/v2/video/%(vimeo_id)s.json' %
-                                    string_vars)
-                video_attributes = json.load(u)[0]
-                u.close()
+                url = 'http://vimeo.com/api/v2/video/%(vimeo_id)s.json' % string_vars
+                data = requests.get(url).text
+                video_attributes = json.loads(u)
                 string_vars['height'] = video_attributes['height']
                 string_vars['width'] = video_attributes['width']
-            except (urllib2.URLError, urllib2.HTTPError):
+            except Exception:
                 # fall back to the defaults
                 pass
 
