@@ -95,7 +95,7 @@ class Indexes(Task):
                 task = self.site.generic_post_list_renderer(
                     lang,
                     post_list,
-                    output_name.encode('utf8'),
+                    output_name,
                     template_name,
                     kw['filters'],
                     context,
