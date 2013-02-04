@@ -235,7 +235,7 @@ class Galleries(Task):
             cache_dir = os.path.join(kw["cache_folder"], 'galleries')
             if not os.path.isdir(cache_dir):
                 os.makedirs(cache_dir)
-            index_dst_path = os.path.join(cache_dir, str(hashlib.sha224(index_path).hexdigest()+'.html'))
+            index_dst_path = os.path.join(cache_dir, str(hashlib.sha224(index_path.encode('utf-8')).hexdigest()+'.html'))
             if os.path.exists(index_path):
                 compile_html = self.site.get_compiler(index_path)
                 yield {

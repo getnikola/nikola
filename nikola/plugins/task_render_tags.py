@@ -85,7 +85,7 @@ class RenderTags(Task):
                 'tag', tag, self.site.config['DEFAULT_LANG'])]
         output_name = os.path.join(kw['output_folder'],
             'assets','js','tag_cloud_data.json')
-            
+
         def write_tag_data(data):
             try:
                 os.makedirs(os.path.dirname(output_name))
@@ -93,7 +93,7 @@ class RenderTags(Task):
                 pass
             with codecs.open(output_name, 'wb+', 'utf8') as fd:
                 fd.write(json.dumps(data))
-                
+
         task = {
             'basename': str(self.name),
             'name': str(output_name)
@@ -107,7 +107,7 @@ class RenderTags(Task):
         """a global "all your tags" page for each language"""
         tags = list(self.site.posts_per_tag.keys())
         # We want our tags to be sorted case insensitive
-        tags.sort(cmp=lambda x, y: cmp(x.lower(), y.lower()))
+        tags.sort(key=lambda a: a.lower())
         template_name = "tags.tmpl"
         kw['tags'] = tags
         for lang in kw["translations"]:

@@ -345,7 +345,7 @@ class Nikola(object):
             path = [_f for _f in [self.config['TRANSLATIONS'][lang],
             self.config['TAG_PATH'], name + ".xml"] if _f]
         elif kind == "index":
-            if name > 0:
+            if name is not None:
                 path = [_f for _f in [self.config['TRANSLATIONS'][lang],
                 self.config['INDEX_PATH'], 'index-%s.html' % name] if _f]
             else:
@@ -353,7 +353,7 @@ class Nikola(object):
                 self.config['INDEX_PATH'], 'index.html'] if _f]
         elif kind == "post_path":
             path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                os.path.dirname(name) , "index.html"] if _f]            
+                os.path.dirname(name) , "index.html"] if _f]
         elif kind == "rss":
             path = [_f for _f in [self.config['TRANSLATIONS'][lang],
             self.config['RSS_PATH'], 'rss.xml'] if _f]
