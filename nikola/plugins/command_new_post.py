@@ -103,9 +103,12 @@ class CommandNewPost(Command):
         print("-----------------\n")
         if title is None:
             print("Enter title: ")
-            title = sys.stdin.readline().decode(sys.stdin.encoding).strip()
+            title = sys.stdin.readline()
         else:
             print("Title: ", title)
+        if isinstance(title, bytes):
+            title = title.decode(sys.stdin.encoding)
+        title = title.strip()
         slug = utils.slugify(title)
         date = datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
         data = [
