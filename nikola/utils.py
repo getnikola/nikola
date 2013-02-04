@@ -325,11 +325,9 @@ def generic_rss_renderer(lang, title, link, description,
     dst_dir = os.path.dirname(output_path)
     if not os.path.isdir(dst_dir):
         os.makedirs(dst_dir)
-    with open(output_path, "wb+") as rss_file:
-        try:
-            rss_obj.write_xml(rss_file, encoding='utf-8')
-        except TypeError:
-            print("RSS generation doesn't work on python3 yet")
+    with codecs.open(output_path, "wb+", "utf-8") as rss_file:
+        data = rss_obj.to_xml(encoding='utf-8')
+        rss_file.write(data)
 
 
 def copy_file(source, dest, cutoff=None):

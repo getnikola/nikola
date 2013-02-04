@@ -23,6 +23,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import unicode_literals, print_function
+
 import codecs
 import os
 
@@ -185,10 +187,10 @@ class Post(object):
                     break
                 teaser.append(elem_string)
             if flag:
-                teaser.append('<p><a href="%s">%s...</a></p>' %
+                teaser.append(b'<p><a href="%s">%s...</a></p>' %
                     (self.permalink(lang), self.messages[lang]["Read more"]))
             data = b''.join(teaser)
-        return data
+        return data.decode('utf8')
 
     def destination_path(self, lang, extension='.html'):
         path = os.path.join(self.translations[lang],
