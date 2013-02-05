@@ -38,7 +38,7 @@ class RSSFeedTest(unittest.TestCase):
 
                     opener_mock = mock.mock_open()
 
-                    with mock.patch('nikola.nikola.utils.open', opener_mock, create=True):
+                    with mock.patch('nikola.nikola.utils.codecs.open', opener_mock, create=True):
                         nikola.nikola.utils.generic_rss_renderer('en',
                                                                  "blog_title",
                                                                  self.blog_url,
@@ -48,12 +48,21 @@ class RSSFeedTest(unittest.TestCase):
                                                                  'testfeed.rss',
                                                                  True)
 
+                    opener_mock.assert_called_once_with(
+                        'testfeed.rss', 'wb+', 'utf-8')
+
                     # Python 3 / unicode strings workaround
                     # lxml will complain if the encoding is specified in the
                     # xml when running with unicode strings.
                     # We do not include this in our content.
-                    self.file_content = ''.join(
-                        [call[1][0] for call in opener_mock.mock_calls[3:-1]])
+                    open_handle = opener_mock()
+                    file_content = [call[1][0]
+                                    for call in open_handle.mock_calls[1:-1]][0]
+                    splitted_content = file_content.split('\n')
+                    self.encoding_declaration = splitted_content[0]
+                    content_without_encoding_declaration = splitted_content[1:]
+                    self.file_content = '\n'.join(
+                        content_without_encoding_declaration)
 
     def tearDown(self):
         pass
