@@ -164,11 +164,18 @@ class CommandImportBlogger(Command):
         """Takes an item from the feed and creates a post file."""
         if out_folder is None:
             out_folder = 'posts'
-        title = item.title
+
         # link is something like http://foo.com/2012/09/01/hello-world/
         # So, take the path, utils.slugify it, and that's our slug
         link = item.link
         link_path = urlparse(link).path
+
+        title = item.title
+
+        # blogger supports empty titles, which Nikola doesn't
+        if not title:
+            print("Warning: Empty title in post with URL %s. Using NO_TITLE as placeholder, please fix." % link)
+            title = "NO_TITLE"
 
         if link_path.lower().endswith('.html'):
             link_path = link_path[:-5]
