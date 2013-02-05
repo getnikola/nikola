@@ -190,7 +190,8 @@ class Post(object):
                 teaser.append(b'<p><a href="%s">%s...</a></p>' %
                     (self.permalink(lang), self.messages[lang]["Read more"]))
             data = b''.join(teaser)
-        return data.decode('utf8')
+            data = data.decode('utf8')
+        return data
 
     def destination_path(self, lang, extension='.html'):
         path = os.path.join(self.translations[lang],
