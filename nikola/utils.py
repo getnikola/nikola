@@ -42,6 +42,16 @@ try:
 except ImportError:
     pass
 
+
+if sys.version_info[0] == 3:
+    # Python 3
+    bytes_str = bytes
+    unicode_str = str
+    unichr = chr
+else:
+    bytes_str = str
+    unicode_str = unicode
+
 from doit import tools
 from unidecode import unidecode
 
@@ -327,6 +337,8 @@ def generic_rss_renderer(lang, title, link, description,
         os.makedirs(dst_dir)
     with codecs.open(output_path, "wb+", "utf-8") as rss_file:
         data = rss_obj.to_xml(encoding='utf-8')
+        if isinstance(data, bytes_str):
+            data = data.decode('utf-8')
         rss_file.write(data)
 
 
