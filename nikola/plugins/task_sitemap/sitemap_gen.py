@@ -74,6 +74,24 @@ try:
 except ImportError:
     from urllib.parse import urlparse, urlsplit, urlunsplit
 
+try:
+    from urllib import quote as urllib_quote
+    from urllib import FancyURLopener
+    from urllib import urlopen
+except ImportError:
+    from urllib.parse import quote as urllib_quote
+    from urllib.request import FancyURLopener
+    from urllib.request import urlopen
+
+
+if sys.version_info[0] == 3:
+    # Python 3
+    bytes_str = bytes
+    unicode_str = str
+    unichr = chr
+else:
+    bytes_str = str
+    unicode_str = unicode
 
 # Text encodings
 ENC_ASCII = 'ASCII'
@@ -108,7 +126,7 @@ ACCESSLOG_CLF_PATTERN = re.compile(
 )
 
 # Match patterns for lastmod attributes
-DATE_PATTERNS = map(re.compile, [
+DATE_PATTERNS = list(map(re.compile, [
                     r'^\d\d\d\d$',
                     r'^\d\d\d\d-\d\d$',
                     r'^\d\d\d\d-\d\d-\d\d$',
@@ -116,7 +134,7 @@ DATE_PATTERNS = map(re.compile, [
                     r'^\d\d\d\d-\d\d-\d\dT\d\d:\d\d[+-]\d\d:\d\d$',
                     r'^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?Z$',
                     r'^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?[+-]\d\d:\d\d$',
-                    ])
+                    ]))
 
 # Match patterns for changefreq attributes
 CHANGEFREQ_PATTERNS = [
@@ -291,7 +309,7 @@ class Encoder:
 
     def NarrowText(self, text, encoding):
         """ Narrow a piece of arbitrary text """
-        if not isinstance(text, types.UnicodeType):
+        if isinstance(text, bytes_str):
             return text
 
         # Try the passed in preference
@@ -343,13 +361,13 @@ class Encoder:
 
     def WidenText(self, text, encoding):
         """ Widen a piece of arbitrary text """
-        if not isinstance(text, types.StringType):
+        if not isinstance(text, bytes_str):
             return text
 
         # Try the passed in preference
         if encoding:
             try:
-                result = unicode(text, encoding)
+                result = unicode_str(text, encoding)
                 if not encoding in self._learned:
                     self._learned.append(encoding)
                 return result
@@ -361,7 +379,7 @@ class Encoder:
         # Try the user preference
         if self._user:
             try:
-                return unicode(text, self._user)
+                return unicode_str(text, self._user)
             except UnicodeError:
                 pass
             except LookupError:
@@ -372,13 +390,13 @@ class Encoder:
         # Look through learned defaults, knock any failing ones out of the list
         while self._learned:
             try:
-                return unicode(text, self._learned[0])
+                return unicode_str(text, self._learned[0])
             except:
                 del self._learned[0]
 
         # When all other defaults are exhausted, use UTF-8
         try:
-            return unicode(text, ENC_UTF8)
+            return unicode_str(text, ENC_UTF8)
         except UnicodeError:
             pass
 
@@ -465,7 +483,7 @@ class Output:
     def SetVerbose(self, level):
         """ Sets the verbose level. """
         try:
-            if not isinstance(level, types.IntType):
+            if not isinstance(level, int):
                 level = int(level)
             if (level >= 0) and (level <= 3):
                 self._verbose = level
@@ -535,10 +553,10 @@ class URL(object):
         (scheme, netloc, path, query, frag) = urlsplit(narrow)
         unr = '-._~'
         sub = '!$&\'()*+,;='
-        netloc = urllib.quote(netloc, unr + sub + '%:@/[]')
-        path = urllib.quote(path, unr + sub + '%:@/')
-        query = urllib.quote(query, unr + sub + '%:@/?')
-        frag = urllib.quote(frag, unr + sub + '%:@/?')
+        netloc = urllib_quote(netloc, unr + sub + '%:@/[]')
+        path = urllib_quote(path, unr + sub + '%:@/')
+        query = urllib_quote(query, unr + sub + '%:@/?')
+        frag = urllib_quote(frag, unr + sub + '%:@/?')
 
         # Try built-in IDNA encoding on the netloc
         try:
@@ -546,7 +564,7 @@ class URL(object):
             for c in widenetloc:
                 if c >= unichr(128):
                     netloc = widenetloc.encode(ENC_IDNA)
-                    netloc = urllib.quote(netloc, unr + sub + '%:@/[]')
+                    netloc = urllib_quote(netloc, unr + sub + '%:@/[]')
                     break
         except UnicodeError:
             # urlsplit must have failed, based on implementation differences in the
@@ -602,7 +620,7 @@ class URL(object):
 
     def Validate(self, base_url, allow_fragment):
         """ Verify the data in this URL is well-formed, and override if not. """
-        assert isinstance(base_url, types.StringType)
+        assert isinstance(base_url, bytes_str)
 
         # Test (and normalize) the ref
         if not self.loc:
@@ -680,9 +698,9 @@ class URL(object):
         for attribute in self.__slots__:
             value = getattr(self, attribute)
             if value:
-                if isinstance(value, types.UnicodeType):
+                if isinstance(value, unicode_str):
                     value = encoder.NarrowText(value, None)
-                elif not isinstance(value, types.StringType):
+                elif not isinstance(value, bytes_str):
                     value = str(value)
                 value = xml.sax.saxutils.escape(value)
                 out = out + ('  <%s>%s</%s>\n' % (attribute, value, attribute))
@@ -707,7 +725,7 @@ class NewsURL(URL):
 
     def Validate(self, base_url, allow_fragment):
         """ Verify the data in this News URL is well-formed, and override if not. """
-        assert isinstance(base_url, types.StringType)
+        assert isinstance(base_url, bytes_str)
 
         if not URL.Validate(self, base_url, allow_fragment):
             return False
@@ -729,9 +747,9 @@ class NewsURL(URL):
         for attribute in self.__slots__:
             value = getattr(self, attribute)
             if value:
-                if isinstance(value, types.UnicodeType):
+                if isinstance(value, unicode_str):
                     value = encoder.NarrowText(value, None)
-                elif not isinstance(value, types.StringType):
+                elif not isinstance(value, bytes_str):
                     value = str(value)
                     value = xml.sax.saxutils.escape(value)
                 if attribute in NEWS_SPECIFIC_TAGS:
@@ -1472,7 +1490,7 @@ class FilePathGenerator:
     def GeneratePath(self, instance):
         """ Generates the iterations, as described above. """
         prefix = self._path + self._prefix
-        if isinstance(instance, types.IntType):
+        if isinstance(instance, int):
             if instance:
                 return '%s%d%s' % (prefix, instance, self._suffix)
             return prefix + self._suffix
@@ -1483,7 +1501,7 @@ class FilePathGenerator:
         """ Generates iterations, but as a URL instead of a path. """
         prefix = root_url + self._prefix
         retval = None
-        if isinstance(instance, types.IntType):
+        if isinstance(instance, int):
             if instance:
                 retval = '%s%d%s' % (prefix, instance, self._suffix)
             else:
@@ -1628,7 +1646,7 @@ class Sitemap(xml.sax.handler.ContentHandler):
         # Unify various forms of False
         if all_good:
             if self._suppress:
-                if (isinstance(self._suppress, types.StringType)) or (isinstance(self._suppress, types.UnicodeType)):
+                if (isinstance(self._suppress, bytes_str)) or (isinstance(self._suppress, unicode_str)):
                     if (self._suppress == '0') or (self._suppress.lower() == 'false'):
                         self._suppress = False
 
@@ -1845,14 +1863,18 @@ class Sitemap(xml.sax.handler.ContentHandler):
         output.Log('Notifying search engines.', 1)
 
         # Override the urllib's opener class with one that doesn't ignore 404s
-        class ExceptionURLopener(urllib.FancyURLopener):
+        class ExceptionURLopener(FancyURLopener):
             def http_error_default(self, url, fp, errcode, errmsg, headers):
                 output.Log('HTTP error %d: %s' % (errcode, errmsg), 2)
                 raise IOError
             # end def http_error_default
         # end class ExceptionURLOpener
-        old_opener = urllib._urlopener
-        urllib._urlopener = ExceptionURLopener()
+        if sys.version_info[0] == 3:
+            old_opener = urllib.request._urlopener
+            urllib.request._urlopener = ExceptionURLopener()            
+        else:
+            old_opener = urllib._urlopener
+            urllib._urlopener = ExceptionURLopener()
 
         # Build the URL we want to send in
         if self._sitemaps > 1:
@@ -1862,7 +1884,7 @@ class Sitemap(xml.sax.handler.ContentHandler):
 
         # Test if we can hit it ourselves
         try:
-            u = urllib.urlopen(url)
+            u = urlopen(url)
             u.close()
         except IOError:
             output.Error('When attempting to access our generated Sitemap at the '
@@ -1886,14 +1908,17 @@ class Sitemap(xml.sax.handler.ContentHandler):
             output.Log('Notifying: %s' % ping[1], 0)
             output.Log('Notification URL: %s' % notify, 2)
             try:
-                u = urllib.urlopen(notify)
+                u = urlopen(notify)
                 u.read()
                 u.close()
             except IOError:
                 output.Warn('Cannot contact: %s' % ping[1])
 
         if old_opener:
-            urllib._urlopener = old_opener
+            if sys.version_info[0] == 3:
+                urllib.request._urlopener = old_opener
+            else:
+                urllib._urlopener = old_opener
     # end def NotifySearch
 
     def startElement(self, tag, attributes):
@@ -1992,7 +2017,7 @@ def ExpandPathAttribute(src, attrib):
         return [src]
 
     # If this isn't actually a dictionary, make it one
-    if not isinstance(src, types.DictionaryType):
+    if not isinstance(src, dict):
         tmp = {}
         for key in src.keys():
             tmp[key] = src[key]
