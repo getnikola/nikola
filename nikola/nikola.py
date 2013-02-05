@@ -345,7 +345,7 @@ class Nikola(object):
             path = [_f for _f in [self.config['TRANSLATIONS'][lang],
             self.config['TAG_PATH'], name + ".xml"] if _f]
         elif kind == "index":
-            if name is not None:
+            if name not in [None, 0]:
                 path = [_f for _f in [self.config['TRANSLATIONS'][lang],
                 self.config['INDEX_PATH'], 'index-%s.html' % name] if _f]
             else:

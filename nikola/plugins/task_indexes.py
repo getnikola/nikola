@@ -70,10 +70,8 @@ class Indexes(Task):
                 else:
                     indexes_title = self.site.config["BLOG_TITLE"]
                 if not i:
-                    output_name = "index.html"
                     context["title"] = indexes_title
                 else:
-                    output_name = "index-%s.html" % i
                     if self.site.config.get("INDEXES_PAGES", ""):
                         indexes_pages = self.site.config["INDEXES_PAGES"] % i
                     else:

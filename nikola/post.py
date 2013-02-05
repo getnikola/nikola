@@ -77,7 +77,7 @@ class Post(object):
                     utils.get_meta(self.source_path, file_metadata_regexp)
 
         if not default_title or not default_pagename or not self.date:
-            raise OSError("You must set a title and slug and date!")
+            raise OSError("You must set a title and slug and date! [%s]" % source_path)
 
         self.date = utils.to_datetime(self.date)
         self.tags = [x.strip() for x in self.tags.split(',')]
