@@ -127,14 +127,14 @@ ACCESSLOG_CLF_PATTERN = re.compile(
 
 # Match patterns for lastmod attributes
 DATE_PATTERNS = list(map(re.compile, [
-                    r'^\d\d\d\d$',
-                    r'^\d\d\d\d-\d\d$',
-                    r'^\d\d\d\d-\d\d-\d\d$',
-                    r'^\d\d\d\d-\d\d-\d\dT\d\d:\d\dZ$',
-                    r'^\d\d\d\d-\d\d-\d\dT\d\d:\d\d[+-]\d\d:\d\d$',
-                    r'^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?Z$',
-                    r'^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?[+-]\d\d:\d\d$',
-                    ]))
+    r'^\d\d\d\d$',
+    r'^\d\d\d\d-\d\d$',
+    r'^\d\d\d\d-\d\d-\d\d$',
+    r'^\d\d\d\d-\d\d-\d\dT\d\d:\d\dZ$',
+    r'^\d\d\d\d-\d\d-\d\dT\d\d:\d\d[+-]\d\d:\d\d$',
+    r'^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?Z$',
+    r'^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?[+-]\d\d:\d\d$',
+]))
 
 # Match patterns for changefreq attributes
 CHANGEFREQ_PATTERNS = [
@@ -1871,7 +1871,7 @@ class Sitemap(xml.sax.handler.ContentHandler):
         # end class ExceptionURLOpener
         if sys.version_info[0] == 3:
             old_opener = urllib.request._urlopener
-            urllib.request._urlopener = ExceptionURLopener()            
+            urllib.request._urlopener = ExceptionURLopener()
         else:
             old_opener = urllib._urlopener
             urllib._urlopener = ExceptionURLopener()
