@@ -63,6 +63,7 @@ post_compilers = ${POST_COMPILERS}
 #   Greek -> gr
 #   German -> de
 #   French -> fr
+#   Polish -> pl
 #   Russian -> ru
 #   Spanish -> es
 #   Italian -> it
