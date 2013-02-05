@@ -181,16 +181,15 @@ class Post(object):
             teaser = []
             flag = False
             for elem in e:
-                elem_string = lxml.html.tostring(elem)
-                if b'<!-- TEASER_END -->' in elem_string.upper():
+                elem_string = lxml.html.tostring(elem).decode('utf8')
+                if '<!-- TEASER_END -->' in elem_string.upper():
                     flag = True
                     break
                 teaser.append(elem_string)
             if flag:
-                teaser.append(b'<p><a href="%s">%s...</a></p>' %
+                teaser.append('<p><a href="%s">%s...</a></p>' %
                     (self.permalink(lang), self.messages[lang]["Read more"]))
-            data = b''.join(teaser)
-            data = data.decode('utf8')
+            data = ''.join(teaser)
         return data
 
     def destination_path(self, lang, extension='.html'):
