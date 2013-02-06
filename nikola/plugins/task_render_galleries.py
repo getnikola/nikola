@@ -151,7 +151,7 @@ class Galleries(Task):
                 # thumb_path is
                 # "output/GALLERY_PATH/name/image_name.thumbnail.jpg"
                 thumb_path = os.path.join(output_gallery,
-                                          ".thumbnail".join(fname, ext))
+                                          ".thumbnail".join([fname, ext]))
                 # thumb_path is "output/GALLERY_PATH/name/image_name.jpg"
                 orig_dest_path = os.path.join(output_gallery, img_name)
                 thumbs.append(os.path.basename(thumb_path))
@@ -188,7 +188,7 @@ class Galleries(Task):
                     # fname, ext are "image_name", ".jpg"
                     fname, ext = os.path.splitext(img_name)
                     excluded_thumb_dest_path = os.path.join(
-                        output_gallery, ".thumbnail".join(fname, ext))
+                        output_gallery, ".thumbnail".join([fname, ext]))
                     excluded_dest_path = os.path.join(output_gallery, img_name)
                     yield {
                         'basename': str('render_galleries'),
