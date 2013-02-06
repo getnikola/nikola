@@ -31,9 +31,9 @@ import re
 from optparse import OptionParser
 
 try:
-    from urlparse import urlparse  # NOQA
+    from urlparse import urlparse
 except ImportError:
-    from urllib.parse import urlparse
+    from urllib.parse import urlparse  # NOQA
 
 from lxml import etree, html
 from mako.template import Template

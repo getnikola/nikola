@@ -32,7 +32,7 @@ import sys
 try:
     from urlparse import urlparse, urlsplit, urljoin
 except ImportError:
-    from urllib.parse import urlparse, urlsplit, urljoin
+    from urllib.parse import urlparse, urlsplit, urljoin  # NOQA
 
 import lxml.html
 from yapsy.PluginManager import PluginManager
@@ -105,7 +105,7 @@ class Nikola(object):
             'LISTINGS_FOLDER': 'listings',
             'MAX_IMAGE_SIZE': 1280,
             'OUTPUT_FOLDER': 'output',
-            'post_compilers' : {
+            'post_compilers': {
                 "rest": ('.txt', '.rst'),
                 "markdown": ('.md', '.mdown', '.markdown'),
                 "textile": ('.textile',),
@@ -114,7 +114,7 @@ class Nikola(object):
                 "wiki": ('.wiki',),
                 "ipynb": ('.ipynb',),
                 "html": ('.html', '.htm')
-                },
+            },
             'POST_PAGES': (
                 ("posts/*.txt", "posts", "post.tmpl", True),
                 ("stories/*.txt", "stories", "story.tmpl", False),
@@ -184,7 +184,6 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['rel_link'] = self.rel_link
         self.GLOBAL_CONTEXT['abs_link'] = self.abs_link
         self.GLOBAL_CONTEXT['exists'] = self.file_exists
-
 
         self.GLOBAL_CONTEXT['add_this_buttons'] = self.config[
             'ADD_THIS_BUTTONS']
