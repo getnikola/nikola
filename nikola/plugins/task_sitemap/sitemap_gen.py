@@ -59,29 +59,28 @@ import re
 import stat
 import sys
 import time
-import types
 import urllib
 import xml.sax
 
 try:
     import md5
 except ImportError:
-    md5 = None
+    md5 = None  # NOQA
     import hashlib
 
 try:
-    from urlparse import urlparse, urlsplit, urlunsplit
+    from urlparse import urlsplit, urlunsplit, urljoin
 except ImportError:
-    from urllib.parse import urlparse, urlsplit, urlunsplit
+    from urllib.parse import urlsplit, urlunsplit, urljoin  # NOQA
 
 try:
     from urllib import quote as urllib_quote
     from urllib import FancyURLopener
     from urllib import urlopen
 except ImportError:
-    from urllib.parse import quote as urllib_quote
-    from urllib.request import FancyURLopener
-    from urllib.request import urlopen
+    from urllib.parse import quote as urllib_quote  # NOQA
+    from urllib.request import FancyURLopener  # NOQA
+    from urllib.request import urlopen  # NOQA
 
 
 if sys.version_info[0] == 3:
@@ -142,7 +141,7 @@ CHANGEFREQ_PATTERNS = [
 ]
 
 # XML formats
-GENERAL_SITEINDEX_HEADER   = \
+GENERAL_SITEINDEX_HEADER = \
     '<?xml version="1.0" encoding="UTF-8"?>\n' \
     '<sitemapindex\n' \
     '  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' \
@@ -151,7 +150,7 @@ GENERAL_SITEINDEX_HEADER   = \
     '                      http://www.sitemaps.org/schemas/sitemap/0.9/' \
     'siteindex.xsd">\n'
 
-NEWS_SITEINDEX_HEADER   = \
+NEWS_SITEINDEX_HEADER = \
     '<?xml version="1.0" encoding="UTF-8"?>\n' \
     '<sitemapindex\n' \
     '  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' \
@@ -162,12 +161,12 @@ NEWS_SITEINDEX_HEADER   = \
     'siteindex.xsd">\n'
 
 SITEINDEX_FOOTER = '</sitemapindex>\n'
-SITEINDEX_ENTRY    = \
+SITEINDEX_ENTRY = \
     ' <sitemap>\n' \
     '  <loc>%(loc)s</loc>\n' \
     '  <lastmod>%(lastmod)s</lastmod>\n' \
     ' </sitemap>\n'
-GENERAL_SITEMAP_HEADER     = \
+GENERAL_SITEMAP_HEADER = \
     '<?xml version="1.0" encoding="UTF-8"?>\n' \
     '<urlset\n' \
     '  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' \
@@ -176,7 +175,7 @@ GENERAL_SITEMAP_HEADER     = \
     '                      http://www.sitemaps.org/schemas/sitemap/0.9/' \
     'sitemap.xsd">\n'
 
-NEWS_SITEMAP_HEADER        = \
+NEWS_SITEMAP_HEADER = \
     '<?xml version="1.0" encoding="UTF-8"?>\n' \
     '<urlset\n' \
     '  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' \
@@ -1716,9 +1715,9 @@ class Sitemap(xml.sax.handler.ContentHandler):
         accept = None
         for filter in self._filters:
             accept = filter.Apply(url)
-            if accept != None:
+            if accept is not None:
                 break
-        if not (accept or (accept == None)):
+        if not (accept or (accept is None)):
             url.Log(prefix='FILTERED', level=2)
             return
 
@@ -1829,7 +1828,7 @@ class Sitemap(xml.sax.handler.ContentHandler):
         if self._sitemap_type == 'news':
             sitemap_index_header = NEWS_SITEMAP_HEADER
         else:
-            sitemap__index_header = GENERAL_SITEMAP_HEADER
+            sitemap_index_header = GENERAL_SITEMAP_HEADER
 
         # Make a lastmod time
         lastmod = TimestampISO8601(time.time())
