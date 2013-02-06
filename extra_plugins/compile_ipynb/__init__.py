@@ -71,8 +71,7 @@ class CompileIPynb(PageCompiler):
                 fd.write('%s\n' % tags)
         print("Your post's metadata is at: ", meta_path)
         with codecs.open(path, "wb+", "utf8") as fd:
-            fd.write(
-"""{
+            fd.write("""{
  "metadata": {
   "name": "%s"
  },
