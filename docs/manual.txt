@@ -767,8 +767,10 @@ different ones, or about other webservers, please share!
 
       AddType text/css .css
 
-In the future we will be adding HTML/CSS/JS minimization and image recompression but
-that's not there yet, so you may want to use 3rd party tools to achieve that.
+#. The webassets Nikola plugin can drastically decrease the number of CSS and JS files your site fetches.
+
+#. Through the filters feature, you can run your files through arbitrary commands, so that images
+   are recompressed, Javascript is minimized, etc.
 
 Restructured Text Extensions
 ----------------------------
