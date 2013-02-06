@@ -79,37 +79,61 @@ class Nikola(object):
         # This is the default config
         # TODO: fill it
         self.config = {
+            'ADD_THIS_BUTTONS': True,
+            'ANALYTICS': '',
             'ARCHIVE_PATH': "",
             'ARCHIVE_FILENAME': "archive.html",
-            'DEFAULT_LANG': "en",
-            'OUTPUT_FOLDER': 'output',
             'CACHE_FOLDER': 'cache',
-            'FILES_FOLDERS': {'files': ''},
-            'LISTINGS_FOLDER': 'listings',
-            'ADD_THIS_BUTTONS': True,
-            'INDEX_DISPLAY_POST_COUNT': 10,
-            'INDEX_TEASERS': False,
-            'RSS_TEASERS': True,
-            'MAX_IMAGE_SIZE': 1280,
-            'USE_FILENAME_AS_TITLE': True,
-            'SLUG_TAG_PATH': False,
-            'INDEXES_TITLE': "",
-            'INDEXES_PAGES': "",
-            'FILTERS': {},
-            'USE_BUNDLES': True,
-            'TAG_PAGES_ARE_INDEXES': False,
-            'THEME': 'default',
             'COMMENTS_IN_GALLERIES': False,
             'COMMENTS_IN_STORIES': False,
-            'FILE_METADATA_REGEXP': None,
-            'STORY_INDEX': False,
+            'CONTENT_FOOTER': '',
+            'DATE_FORMAT': '%Y-%m-%d %H:%M',
+            'DEFAULT_LANG': "en",
+            'DEPLOY_COMMANDS': [],
+            'DISQUS_FORUM': 'nikolademo',
             'FAVICONS': {},
-            'post_compilers': {
-                "rest":     ['.txt', '.rst'],
-                "markdown": ['.md', '.mdown', '.markdown'],
-                "html": ['.html', '.htm'],
-            },
+            'FILE_METADATA_REGEXP': None,
+            'FILES_FOLDERS': {'files': ''},
+            'FILTERS': {},
+            'GALLERY_PATH': 'galleries',
+            'INDEX_DISPLAY_POST_COUNT': 10,
+            'INDEX_TEASERS': False,
+            'INDEXES_TITLE': "",
+            'INDEXES_PAGES': "",
+            'INDEX_PATH': '',
+            'LICENSE': '',
+            'LISTINGS_FOLDER': 'listings',
+            'MAX_IMAGE_SIZE': 1280,
+            'OUTPUT_FOLDER': 'output',
+            'post_compilers' : {
+                "rest": ('.txt', '.rst'),
+                "markdown": ('.md', '.mdown', '.markdown'),
+                "textile": ('.textile',),
+                "txt2tags": ('.t2t',),
+                "bbcode": ('.bb',),
+                "wiki": ('.wiki',),
+                "ipynb": ('.ipynb',),
+                "html": ('.html', '.htm')
+                },
+            'POST_PAGES': (
+                ("posts/*.txt", "posts", "post.tmpl", True),
+                ("stories/*.txt", "stories", "story.tmpl", False),
+            ),
+            'REDIRECTIONS': [],
+            'RSS_LINK': None,
+            'RSS_PATH': '',
+            'RSS_TEASERS': True,
+            'SEARCH_FORM': '',
+            'SLUG_TAG_PATH': True,
+            'STORY_INDEX': False,
+            'TAG_PATH': 'categories',
+            'TAG_PAGES_ARE_INDEXES': False,
+            'THEME': 'site',
+            'THUMBNAIL_SIZE': 180,
+            'USE_FILENAME_AS_TITLE': True,
+            'USE_BUNDLES': True,
         }
+
         self.config.update(config)
         self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
                                                       {self.config['DEFAULT_'
@@ -152,12 +176,16 @@ class Nikola(object):
             pluginInfo.plugin_object.set_site(self)
 
         # set global_context for template rendering
-        self.GLOBAL_CONTEXT = self.config.get('GLOBAL_CONTEXT', {})
+        self.GLOBAL_CONTEXT = {
+        }
+
         self.GLOBAL_CONTEXT['messages'] = self.MESSAGES
         self.GLOBAL_CONTEXT['_link'] = self.link
         self.GLOBAL_CONTEXT['rel_link'] = self.rel_link
         self.GLOBAL_CONTEXT['abs_link'] = self.abs_link
         self.GLOBAL_CONTEXT['exists'] = self.file_exists
+
+
         self.GLOBAL_CONTEXT['add_this_buttons'] = self.config[
             'ADD_THIS_BUTTONS']
         self.GLOBAL_CONTEXT['index_display_post_count'] = self.config[
@@ -166,6 +194,22 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['favicons'] = self.config['FAVICONS']
         if 'date_format' not in self.GLOBAL_CONTEXT:
             self.GLOBAL_CONTEXT['date_format'] = '%Y-%m-%d %H:%M'
+
+        self.GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
+        self.GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
+        self.GLOBAL_CONTEXT['blog_url'] = self.config.get('BLOG_URL')
+        self.GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
+        self.GLOBAL_CONTEXT['analytics'] = self.config.get('ANALYTICS')
+        self.GLOBAL_CONTEXT['translations'] = self.config.get('TRANSLATIONS')
+        self.GLOBAL_CONTEXT['license'] = self.config.get('LICENSE')
+        self.GLOBAL_CONTEXT['search_form'] = self.config.get('SEARCH_FORM')
+        self.GLOBAL_CONTEXT['disqus_forum'] = self.config.get('DISQUS_FORUM')
+        self.GLOBAL_CONTEXT['content_footer'] = self.config.get('CONTENT_FOOTER')
+        self.GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
+        self.GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
+        self.GLOBAL_CONTEXT['sidebar_links'] = self.config.get('SIDEBAR_LINKS')
+
+        self.GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
         # check if custom css exist and is not empty
         for files_path in list(self.config['FILES_FOLDERS'].keys()):
@@ -236,7 +280,7 @@ class Nikola(object):
     def render_template(self, template_name, output_name, context):
         local_context = {}
         local_context["template_name"] = template_name
-        local_context.update(self.config['GLOBAL_CONTEXT'])
+        local_context.update(self.GLOBAL_CONTEXT)
         local_context.update(context)
         data = self.template_system.render_template(
             template_name, None, local_context)
@@ -528,7 +572,7 @@ class Nikola(object):
             deps_dict['NEXT_LINK'] = [post.next_post.permalink(lang)]
         deps_dict['OUTPUT_FOLDER'] = self.config['OUTPUT_FOLDER']
         deps_dict['TRANSLATIONS'] = self.config['TRANSLATIONS']
-        deps_dict['global'] = self.config['GLOBAL_CONTEXT']
+        deps_dict['global'] = self.GLOBAL_CONTEXT
         deps_dict['comments'] = context['enable_comments']
 
         task = {
@@ -564,7 +608,7 @@ class Nikola(object):
         deps_context = copy(context)
         deps_context["posts"] = [(p.titles[lang], p.permalink(lang)) for p in
                                  posts]
-        deps_context["global"] = self.config['GLOBAL_CONTEXT']
+        deps_context["global"] = self.GLOBAL_CONTEXT
         task = {
             'name': output_name,
             'targets': [output_name],

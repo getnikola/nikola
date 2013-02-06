@@ -35,6 +35,7 @@ Features
 Bugfixes
 --------
 
+* Added sane defaults for most options, so you can have a lean config file.
 * Made layout of the site theme responsive, with collapsing navbar.
 * Use timeline instead of parsing post_pages in generic_page_renderer and task_render_pages.
 * Updated disqus integration code, added identifiers so it works on any URL.
