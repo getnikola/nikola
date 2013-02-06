@@ -4,7 +4,6 @@ New in Master
 Features
 --------
 
-* Making it possible to initialise empty sites.
 * New vimeo directive for restructured text.
 * New COMMENTS_IN_GALLERIES and COMMENTS_IN_STORIES options.
 * One-page, dynamic-loading, client-rendered site plugin (task_mustache)
@@ -31,6 +30,7 @@ Features
 * (Rough) Blogger/Blogspot importer
 * When running the init command it now creates an empty site by default.
   The previous behaviour can be triggered with the "--demo" switch.
+* Python 3 support (except for sitemap generation)
 
 Bugfixes
 --------
