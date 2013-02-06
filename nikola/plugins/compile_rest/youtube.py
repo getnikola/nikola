@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -28,9 +28,8 @@ from docutils.parsers.rst import directives
 CODE = """\
 <iframe width="%(width)s"
 height="%(height)s"
-src="http://www.youtube.com/embed/%(yid)s?rel=0&amp;hd=1&amp;wmode=transparent">
-</iframe>
-"""
+src="http://www.youtube.com/embed/%(yid)s?rel=0&amp;hd=1&amp;wmode=transparent"
+></iframe>"""
 
 
 def youtube(name, args, options, content, lineno,
@@ -43,7 +42,7 @@ def youtube(name, args, options, content, lineno,
         'width': 425,
         'height': 344,
         'extra': ''
-        }
+    }
     extra_args = content[1:]  # Because content[0] is ID
     extra_args = [ea.strip().split("=") for ea in extra_args]  # key=value
     extra_args = [ea for ea in extra_args if len(ea) == 2]  # drop bad lines

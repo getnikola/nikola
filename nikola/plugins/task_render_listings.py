@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -55,24 +55,24 @@ class Listings(Task):
                 except:
                     lexer = TextLexer()
                 code = highlight(fd.read(), lexer,
-                    HtmlFormatter(cssclass='code',
-                        linenos="table",
-                        nowrap=False,
-                        lineanchors=utils.slugify(f),
-                        anchorlinenos=True))
+                                 HtmlFormatter(cssclass='code',
+                                               linenos="table", nowrap=False,
+                                               lineanchors=utils.slugify(f),
+                                               anchorlinenos=True))
             title = os.path.basename(in_name)
             crumbs = out_name.split(os.sep)[1:-1] + [title]
             # TODO: write this in human
             paths = ['/'.join(['..'] * (len(crumbs) - 2 - i)) for i in
-                range(len(crumbs[:-2]))] + ['.', '#']
+                     range(len(crumbs[:-2]))] + ['.', '#']
             context = {
                 'code': code,
                 'title': title,
                 'crumbs': zip(paths, crumbs),
                 'lang': kw['default_lang'],
                 'description': title,
-                }
-            self.site.render_template('listing.tmpl', out_name.encode('utf8'), context)
+            }
+            self.site.render_template('listing.tmpl', out_name.encode('utf8'),
+                                      context)
         flag = True
         template_deps = self.site.template_system.template_deps('listing.tmpl')
         for root, dirs, files in os.walk(kw['listings_folder']):

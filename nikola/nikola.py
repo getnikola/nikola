@@ -89,7 +89,10 @@ class Nikola(object):
             'ADD_THIS_BUTTONS': True,
             'INDEX_DISPLAY_POST_COUNT': 10,
             'INDEX_TEASERS': False,
+            'INDEX_READ_MORE_LINK': '<p><a href="{url}">{read_more}...</a>'
+                                    '</p>',
             'RSS_TEASERS': True,
+            'RSS_READ_MORE_LINK': '<p><a href="{url}">{read_more}...</a></p>',
             'MAX_IMAGE_SIZE': 1280,
             'USE_FILENAME_AS_TITLE': True,
             'SLUG_TAG_PATH': False,
@@ -112,12 +115,13 @@ class Nikola(object):
         }
         self.config.update(config)
         self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
-            {self.config['DEFAULT_LANG']: ''})
+                                                      {self.config['DEFAULT_'
+                                                      'LANG']: ''})
 
         self.THEMES = utils.get_theme_chain(self.config['THEME'])
 
         self.MESSAGES = utils.load_messages(self.THEMES,
-            self.config['TRANSLATIONS'])
+                                            self.config['TRANSLATIONS'])
 
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,
@@ -130,7 +134,7 @@ class Nikola(object):
         self.plugin_manager.setPluginPlaces([
             str(os.path.join(os.path.dirname(__file__), 'plugins')),
             str(os.path.join(os.getcwd(), 'plugins')),
-            ])
+        ])
         self.plugin_manager.collectPlugins()
 
         self.commands = {}
@@ -180,8 +184,8 @@ class Nikola(object):
         pi = self.plugin_manager.getPluginByName(
             template_sys_name, "TemplateSystem")
         if pi is None:
-            sys.stderr.write("Error loading %s template system plugin\n"
-                % template_sys_name)
+            sys.stderr.write("Error loading %s template system plugin\n" %
+                             template_sys_name)
             sys.exit(1)
         self.template_system = pi.plugin_object
         lookup_dirs = [os.path.join(utils.get_theme_path(name), "templates")
@@ -241,8 +245,10 @@ class Nikola(object):
             template_name, None, local_context)
 
         assert isinstance(output_name, bytes)
-        assert output_name.startswith(self.config["OUTPUT_FOLDER"].encode('utf8'))
-        url_part = output_name.decode('utf8')[len(self.config["OUTPUT_FOLDER"]) + 1:]
+        assert output_name.startswith(
+            self.config["OUTPUT_FOLDER"].encode('utf8'))
+        url_part = output_name.decode('utf8')[len(self.config["OUTPUT_FOLDER"])
+                                              + 1:]
 
         # This is to support windows paths
         url_part = "/".join(url_part.split(os.sep))
@@ -258,7 +264,7 @@ class Nikola(object):
             if dst_url.netloc:
                 if dst_url.scheme == 'link':  # Magic link
                     dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'),
-                        context['lang'])
+                                    context['lang'])
                 else:
                     return dst
 
@@ -281,7 +287,7 @@ class Nikola(object):
                     break
             # Now i is the longest common prefix
             result = '/'.join(['..'] * (len(src_elems) - i - 1) +
-                dst_elems[i:])
+                              dst_elems[i:])
 
             if not result:
                 result = "."
@@ -333,41 +339,49 @@ class Nikola(object):
 
         if kind == "tag_index":
             path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-            self.config['TAG_PATH'], 'index.html'] if _f]
+                                  self.config['TAG_PATH'], 'index.html'] if _f]
         elif kind == "tag":
             if self.config['SLUG_TAG_PATH']:
                 name = utils.slugify(name)
             path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-            self.config['TAG_PATH'], name + ".html"] if _f]
+                                  self.config['TAG_PATH'], name + ".html"] if
+                    _f]
         elif kind == "tag_rss":
             if self.config['SLUG_TAG_PATH']:
                 name = utils.slugify(name)
             path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-            self.config['TAG_PATH'], name + ".xml"] if _f]
+                                  self.config['TAG_PATH'], name + ".xml"] if
+                    _f]
         elif kind == "index":
             if name not in [None, 0]:
                 path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                self.config['INDEX_PATH'], 'index-%s.html' % name] if _f]
+                                      self.config['INDEX_PATH'],
+                                      'index-%s.html' % name] if _f]
             else:
                 path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                self.config['INDEX_PATH'], 'index.html'] if _f]
+                                      self.config['INDEX_PATH'], 'index.html']
+                        if _f]
         elif kind == "post_path":
             path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                os.path.dirname(name) , "index.html"] if _f]
+                                  os.path.dirname(name), "index.html"] if _f]
         elif kind == "rss":
             path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-            self.config['RSS_PATH'], 'rss.xml'] if _f]
+                                  self.config['RSS_PATH'], 'rss.xml'] if _f]
         elif kind == "archive":
             if name:
                 path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                self.config['ARCHIVE_PATH'], name, 'index.html'] if _f]
+                                      self.config['ARCHIVE_PATH'], name,
+                                      'index.html'] if _f]
             else:
                 path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                self.config['ARCHIVE_PATH'], self.config['ARCHIVE_FILENAME']] if _f]
+                                      self.config['ARCHIVE_PATH'],
+                                      self.config['ARCHIVE_FILENAME']] if _f]
         elif kind == "gallery":
-            path = [_f for _f in [self.config['GALLERY_PATH'], name, 'index.html'] if _f]
+            path = [_f for _f in [self.config['GALLERY_PATH'], name,
+                                  'index.html'] if _f]
         elif kind == "listing":
-            path = [_f for _f in [self.config['LISTINGS_FOLDER'], name + '.html'] if _f]
+            path = [_f for _f in [self.config['LISTINGS_FOLDER'], name +
+                                  '.html'] if _f]
         if is_link:
             return '/' + ('/'.join(path))
         else:
@@ -446,8 +460,11 @@ class Nikola(object):
                 base_len = len(destination.split(os.sep))
                 dirname = os.path.dirname(wildcard)
                 for dirpath, _, _ in os.walk(dirname):
-                    dir_glob = os.path.join(dirpath, os.path.basename(wildcard))
-                    dest_dir = os.path.join(*([destination] + dirpath.split(os.sep)[base_len:]))
+                    dir_glob = os.path.join(dirpath,
+                                            os.path.basename(wildcard))
+                    dest_dir = os.path.join(*([destination] +
+                                              dirpath.split(
+                                                  os.sep)[base_len:]))
                     for base_path in glob.glob(dir_glob):
                         post = Post(
                             base_path,
@@ -460,8 +477,10 @@ class Nikola(object):
                             self.MESSAGES,
                             template_name,
                             self.config['FILE_METADATA_REGEXP'])
-                        for lang, langpath in list(self.config['TRANSLATIONS'].items()):
-                            dest = (destination, langpath, dir_glob, post.pagenames[lang])
+                        for lang, langpath in list(
+                                self.config['TRANSLATIONS'].items()):
+                            dest = (destination, langpath, dir_glob,
+                                    post.pagenames[lang])
                             if dest in targets:
                                 raise Exception(
                                     'Duplicated output path %r in post %r' %
@@ -502,7 +521,8 @@ class Nikola(object):
             context['enable_comments'] = True
         else:
             context['enable_comments'] = self.config['COMMENTS_IN_STORIES']
-        output_name = os.path.join(self.config['OUTPUT_FOLDER'], post.destination_path(lang)).encode('utf8')
+        output_name = os.path.join(self.config['OUTPUT_FOLDER'],
+                                   post.destination_path(lang)).encode('utf8')
         deps_dict = copy(context)
         deps_dict.pop('post')
         if post.prev_post:
@@ -518,16 +538,16 @@ class Nikola(object):
             'name': output_name,
             'file_dep': deps,
             'targets': [output_name],
-            'actions': [(self.render_template,
-                [post.template_name, output_name, context])],
+            'actions': [(self.render_template, [post.template_name,
+                                                output_name, context])],
             'clean': True,
             'uptodate': [config_changed(deps_dict)],
         }
 
         yield utils.apply_filters(task, filters)
 
-    def generic_post_list_renderer(self, lang, posts,
-        output_name, template_name, filters, extra_context):
+    def generic_post_list_renderer(self, lang, posts, output_name,
+                                   template_name, filters, extra_context):
         """Renders pages with lists of posts."""
 
         # This is a name on disk, has to be bytes
@@ -545,15 +565,15 @@ class Nikola(object):
         context["nextlink"] = None
         context.update(extra_context)
         deps_context = copy(context)
-        deps_context["posts"] = [(p.titles[lang], p.permalink(lang))
-            for p in posts]
+        deps_context["posts"] = [(p.titles[lang], p.permalink(lang)) for p in
+                                 posts]
         deps_context["global"] = self.config['GLOBAL_CONTEXT']
         task = {
             'name': output_name,
             'targets': [output_name],
             'file_dep': deps,
-            'actions': [(self.render_template,
-                [template_name, output_name, context])],
+            'actions': [(self.render_template, [template_name, output_name,
+                                                context])],
             'clean': True,
             'uptodate': [config_changed(deps_context)]
         }

@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -26,7 +26,6 @@
 
 import codecs
 import os
-import re
 
 try:
     from creole import Parser
@@ -45,7 +44,8 @@ class CompileTextile(PageCompiler):
 
     def compile_html(self, source, dest):
         if creole is None:
-            raise Exception('To build this site, you need to install the "creole" package.')
+            raise Exception('To build this site, you need to install the '
+                            '"creole" package.')
         try:
             os.makedirs(os.path.dirname(dest))
         except:
@@ -53,16 +53,18 @@ class CompileTextile(PageCompiler):
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
-                document = Parser(data).parse()                
+                document = Parser(data).parse()
             output = HtmlEmitter(document).emit()
             out_file.write(output)
 
-    def create_post(self, path, onefile=False, title="", slug="", date="", tags=""):
+    def create_post(self, path, onefile=False, title="", slug="", date="",
+                    tags=""):
         if onefile:
-            raise Exception('There are no comments in CreoleWiki markup, so one-file format is not possible, use the -2 option.')
+            raise Exception('There are no comments in CreoleWiki markup, so '
+                            'one-file format is not possible, use the -2 '
+                            'option.')
         d_name = os.path.dirname(path)
         if not os.path.isdir(d_name):
             os.makedirs(os.path.dirname(path))
         with codecs.open(path, "wb+", "utf8") as fd:
             fd.write("Write your post here.")
-        

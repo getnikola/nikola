@@ -35,7 +35,7 @@ try:
 except ImportError:
     from urllib.parse import urlparse
 
-from lxml import etree, html, builder
+from lxml import etree, html
 from mako.template import Template
 
 try:
@@ -305,15 +305,17 @@ class CommandImportWordpress(Command):
                   ' you have to install the "requests" package.')
             return
 
-        parser = OptionParser(
-            usage="nikola %s [options] wordpress_export_file" % self.name)
+        parser = OptionParser(usage="nikola %s [options] "
+                              "wordpress_export_file" % self.name)
         parser.add_option('-f', '--filename', dest='filename',
-                          help='Wordpress export file from which the import is made.')
+                          help='WordPress export file from which the import '
+                          'made.')
         parser.add_option('-o', '--output-folder', dest='output_folder',
-                          default='new_site',
-                          help='The location into which the imported content will be written')
+                          default='new_site', help='The location into which '
+                          'the imported content will be written')
         parser.add_option('-d', '--no-drafts', dest='exclude_drafts',
-                          default=False, action="store_true", help='Do not import drafts.')
+                          default=False, action="store_true", help='Do not '
+                          'import drafts.')
 
         (options, args) = parser.parse_args(list(arguments))
 

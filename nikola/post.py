@@ -9,11 +9,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -40,8 +40,8 @@ class Post(object):
     """Represents a blog post or web page."""
 
     def __init__(self, source_path, cache_folder, destination, use_in_feeds,
-        translations, default_lang, blog_url, messages, template_name,
-        file_metadata_regexp=None):
+                 translations, default_lang, blog_url, messages, template_name,
+                 file_metadata_regexp=None):
         """Initialize post.
 
         The base path is the .txt post file. From it we calculate
@@ -69,15 +69,16 @@ class Post(object):
             while len(meta_data) < 6:
                 meta_data.append("")
             (default_title, default_pagename, self.date, self.tags,
-                self.link, default_description) = \
-                    [x.strip() for x in meta_data][:6]
+                self.link, default_description) = [x.strip() for x in
+                                                   meta_data][:6]
         else:
             (default_title, default_pagename, self.date, self.tags,
-                self.link, default_description) = \
-                    utils.get_meta(self.source_path, file_metadata_regexp)
+                self.link, default_description) = utils.get_meta(
+                    self.source_path, file_metadata_regexp)
 
         if not default_title or not default_pagename or not self.date:
-            raise OSError("You must set a title and slug and date! [%s]" % source_path)
+            raise OSError("You must set a title and slug and date! [%s]" %
+                          source_path)
 
         self.date = utils.to_datetime(self.date)
         self.tags = [x.strip() for x in self.tags.split(',')]
@@ -108,7 +109,7 @@ class Post(object):
                         with codecs.open(
                                 metadata_path, "r", "utf8") as meta_file:
                             meta_data = [x.strip() for x in
-                                meta_file.readlines()]
+                                         meta_file.readlines()]
                             while len(meta_data) < 6:
                                 meta_data.append("")
                             self.titles[lang] = meta_data[0] or default_title
@@ -150,7 +151,8 @@ class Post(object):
         if os.path.isfile(self.metadata_path):
             deps.append(self.metadata_path)
         if lang != self.default_lang:
-            lang_deps = list(filter(os.path.exists, [x + "." + lang for x in deps]))
+            lang_deps = list(filter(os.path.exists, [x + "." + lang for x in
+                                                     deps]))
             deps += lang_deps
         return deps
 
@@ -167,10 +169,10 @@ class Post(object):
                 file_name = file_name_lang
         return file_name
 
-    def text(self, lang, teaser_only=False):
+    def text(self, lang, teaser_only=False, read_more_link=''):
         """Read the post file for that language and return its contents"""
         file_name = self._translated_file_path(lang)
-        
+
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read()
 
@@ -187,14 +189,14 @@ class Post(object):
                     break
                 teaser.append(elem_string)
             if flag:
-                teaser.append('<p><a href="%s">%s...</a></p>' %
-                    (self.permalink(lang), self.messages[lang]["Read more"]))
+                teaser.append(read_more_link.format(url=self.permalink(lang),
+                              read_more=self.messages[lang]["Read More"]))
             data = ''.join(teaser)
         return data
 
     def destination_path(self, lang, extension='.html'):
         path = os.path.join(self.translations[lang],
-            self.folder, self.pagenames[lang] + extension)
+                            self.folder, self.pagenames[lang] + extension)
         return path
 
     def permalink(self, lang=None, absolute=False, extension='.html'):

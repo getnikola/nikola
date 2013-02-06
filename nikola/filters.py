@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -51,7 +51,7 @@ def runinplace(command, infile):
     command = command.replace('%1', "'%s'" % infile)
 
     needs_tmp = "%2" in command
-    command = command.replace('%2', "'%s'"% tmpfname)
+    command = command.replace('%2', "'%s'" % tmpfname)
 
     subprocess.check_call(command, shell=True)
 
@@ -62,22 +62,29 @@ def runinplace(command, infile):
 def yui_compressor(infile):
     return runinplace(r'yui-compressor --nomunge %1 -o %2', infile)
 
+
 def optipng(infile):
     return runinplace(r"optipng -preserve -o2 -quiet %1", infile)
 
+
 def jpegoptim(infile):
-    return runinplace(r"jpegoptim -p --strip-all -q %1",infile)
+    return runinplace(r"jpegoptim -p --strip-all -q %1", infile)
+
 
 def tidy(inplace):
     # Goggle site verifcation files are no HTML
     if re.match(r"google[a-f0-9]+.html", os.path.basename(inplace)) \
-       and open(inplace).readline().startswith("google-site-verification:"):
+            and open(inplace).readline().startswith(
+                "google-site-verification:"):
         return
 
     # Tidy will give error exits, that we will ignore.
-    output = subprocess.check_output( "tidy -m -w 90 --indent no --quote-marks no --keep-time yes --tidy-mark no '%s'; exit 0" % inplace, stderr = subprocess.STDOUT, shell = True )
+    output = subprocess.check_output("tidy -m -w 90 --indent no --quote-marks"
+                                     "no --keep-time yes --tidy-mark no '%s';"
+                                     "exit 0" % inplace,
+                                     stderr=subprocess.STDOUT, shell=True)
 
-    for line in output.split( "\n" ):
+    for line in output.split("\n"):
         if "Warning:" in line:
             if '<meta> proprietary attribute "charset"' in line:
                 # We want to set it though.
@@ -95,6 +102,6 @@ def tidy(inplace):
                 # Happens for tables, TODO: Check this is normal.
                 continue
             else:
-                assert False, (inplace,line)
+                assert False, (inplace, line)
         elif "Error:" in line:
             assert False, line

@@ -193,7 +193,7 @@ THEME = 'site'
 DATE_FORMAT = '%Y-%m-%d %H:%M'
 
 # FAVICONS contains (name, file, size) tuples.
-# Used for create favicon link like this: 
+# Used for create favicon link like this:
 # <link rel="name" href="file" sizes="size"/>
 # about favicons, see: http://www.netmagazine.com/features/create-perfect-favicon
 # FAVICONS = {
@@ -203,6 +203,9 @@ DATE_FORMAT = '%Y-%m-%d %H:%M'
 
 # Show only teasers in the index pages? Defaults to False.
 # INDEX_TEASERS = False
+
+# "Read more" link used if INDEX_TEASERS is True.
+# INDEX_READ_MORE_LINK = '<p><a href="{url}">{read_more}...</a></p>'
 
 # A HTML fragment describing the license, for the sidebar.
 # I recommend using the Creative Commons' wizard:
@@ -246,6 +249,9 @@ RSS_LINK = None
 
 # Show only teasers in the RSS feed? Default to True
 RSS_TEASERS = True
+
+# "Read more" link used if RSS_TEASERS is True.
+# RSS_READ_MORE_LINK = '<p><a href="{url}">{read_more}...</a></p>'
 
 # A search form to search this site, for the sidebar. You can use a google
 # custom search (http://www.google.com/cse/)

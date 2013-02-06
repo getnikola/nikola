@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -43,12 +43,13 @@ class RenderRSS(Task):
             "blog_description": self.site.config["BLOG_DESCRIPTION"],
             "output_folder": self.site.config["OUTPUT_FOLDER"],
             "rss_teasers": self.site.config["RSS_TEASERS"],
+            "rss_read_more_link": self.site.config["RSS_READ_MORE_LINK"],
         }
         self.site.scan_posts()
         # TODO: timeline is global, kill it
         for lang in kw["translations"]:
             output_name = os.path.join(kw['output_folder'],
-                self.site.path("rss", None, lang))
+                                       self.site.path("rss", None, lang))
             deps = []
             posts = [x for x in self.site.timeline if x.use_in_feeds][:10]
             for post in posts:
@@ -59,9 +60,9 @@ class RenderRSS(Task):
                 'file_dep': deps,
                 'targets': [output_name],
                 'actions': [(utils.generic_rss_renderer,
-                    (lang, kw["blog_title"], kw["blog_url"],
-                    kw["blog_description"], posts, output_name,
-                    kw["rss_teasers"]))],
+                            (lang, kw["blog_title"], kw["blog_url"],
+                             kw["blog_description"], posts, output_name,
+                             kw["rss_teasers"], kw["rss_read_more_link"]))],
                 'clean': True,
                 'uptodate': [utils.config_changed(kw)],
             }

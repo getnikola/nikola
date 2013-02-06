@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -54,27 +54,28 @@ class BuildBundles(LateTask):
         }
 
         def build_bundle(output, inputs):
-            out_dir = os.path.join(kw['output_folder'], os.path.dirname(output))
+            out_dir = os.path.join(kw['output_folder'],
+                                   os.path.dirname(output))
             inputs = [i for i in inputs if os.path.isfile(
                 os.path.join(out_dir, i))]
             cache_dir = os.path.join(kw['cache_folder'], 'webassets')
             if not os.path.isdir(cache_dir):
                 os.makedirs(cache_dir)
             env = webassets.Environment(out_dir, os.path.dirname(output),
-                cache=cache_dir)
-            bundle = webassets.Bundle(*inputs,
-                output=os.path.basename(output))
+                                        cache=cache_dir)
+            bundle = webassets.Bundle(*inputs, output=os.path.basename(output))
             env.register(output, bundle)
             # This generates the file
             env[output].urls()
 
         flag = False
-        if webassets is not None and self.site.config['USE_BUNDLES'] is not False:
+        if (webassets is not None and self.site.config['USE_BUNDLES'] is not
+                False):
             for name, files in kw['theme_bundles'].items():
                 output_path = os.path.join(kw['output_folder'], name)
                 dname = os.path.dirname(name)
-                file_dep = [os.path.join('output', dname, fname)
-                    for fname in files]
+                file_dep = [os.path.join('output', dname, fname) for fname in
+                            files]
                 task = {
                     'file_dep': file_dep,
                     'basename': str(self.name),
@@ -82,7 +83,7 @@ class BuildBundles(LateTask):
                     'actions': [(build_bundle, (name, files))],
                     'targets': [output_path],
                     'uptodate': [utils.config_changed(kw)]
-                    }
+                }
                 flag = True
                 yield utils.apply_filters(task, kw['filters'])
         if flag is False:  # No page rendered, yield a dummy task
