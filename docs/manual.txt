@@ -395,16 +395,19 @@ with the contents, generate the pages as explained in `Getting Started`_
 
 Currently supported languages are
 
+* Catalan
 * English
-* Spanish
 * French
 * German
-* Russian
 * Greek
+* Italian
+* Polish
+* Russian
 * Simplified Chinese.
+* Spanish
 
 If you wish to add support for more languages, check out the instructions
-at the `theming guide <http://nikola.ralsina.com.ar/theming.html>`.
+at the `theming guide <http://nikola.ralsina.com.ar/theming.html>`_.
 
 The post page is generated using the ``post.tmpl`` template, which you can use
 to customize the output.
