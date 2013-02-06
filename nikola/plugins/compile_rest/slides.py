@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -27,10 +27,9 @@ import json
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
-class slides(Directive):
 
+class slides(Directive):
     """ Restructured text extension for inserting slideshows."""
-    
     has_content = True
     option_spec = {
         "preload": directives.flag,
@@ -60,12 +59,13 @@ class slides(Directive):
         "animationStart": directives.unchanged,
         "animationComplete": directives.unchanged,
     }
-    
+
     def run(self):
         if len(self.content) == 0:
             return
-        for opt in ("preload", "generateNextPrev", "pagination", "generatePagination", 
-                    "crossfade", "randomize", "hoverPause", "autoHeight", "bigTarget"):
+        for opt in ("preload", "generateNextPrev", "pagination",
+                    "generatePagination", "crossfade", "randomize",
+                    "hoverPause", "autoHeight", "bigTarget"):
             if opt in self.options:
                 self.options[opt] = True
         options = {
@@ -73,17 +73,19 @@ class slides(Directive):
             "bigTarget": True,
             "paginationClass": "pager",
             "currentClass": "slide-current"
-        }        
+        }
         options.update(self.options)
         options = json.dumps(options)
         output = []
-        output.append("""<script> $(function(){ $("#slides").slides(%s); }); </script>""" % options)
-        output.append("""<div id="slides" class="slides"><div class="slides_container">""")
+        output.append('<script> $(function(){ $("#slides").slides(%s); });'
+                      '</script>' % options)
+        output.append('<div id="slides" class="slides"><div '
+                      'class="slides_container">')
         for image in self.content:
             output.append("""<div><img src="%s"></div>""" % image)
         output.append("""</div></div>""")
-        
+
         return [nodes.raw('', '\n'.join(output), format='html')]
-    
+
 
 directives.register_directive('slides', slides)

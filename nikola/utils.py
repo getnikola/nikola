@@ -196,7 +196,9 @@ def get_meta(source_path, file_metadata_regexp=None):
     title = slug = date = tags = link = description = ''
 
     if not (file_metadata_regexp is None):
-        (title, slug, date, tags, link, description) = _get_metadata_from_filename_by_regex(source_path, file_metadata_regexp)
+        (title, slug, date, tags, link,
+         description) = _get_metadata_from_filename_by_regex(
+             source_path, file_metadata_regexp)
 
     (title, slug, date, tags, link, description) = _get_metadata_from_file(
         source_path, title, slug, date, tags, link, description)
@@ -311,8 +313,8 @@ def copy_tree(src, dst, link_cutoff=None):
             }
 
 
-def generic_rss_renderer(lang, title, link, description,
-                         timeline, output_path, rss_teasers):
+def generic_rss_renderer(lang, title, link, description, timeline, output_path,
+                         rss_teasers):
     """Takes all necessary data, and renders a RSS feed in output_path."""
     items = []
     for post in timeline[:10]:

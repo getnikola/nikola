@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -62,7 +62,7 @@ class Redirect(Task):
                     'actions': [(create_redirect, (src_path, dst))],
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
-                    }
+                }
 
 
 def create_redirect(src, dst):
@@ -71,6 +71,5 @@ def create_redirect(src, dst):
     except:
         pass
     with codecs.open(src, "wb+", "utf8") as fd:
-        fd.write(('<head>' +
-        '<meta HTTP-EQUIV="REFRESH" content="0; url=%s">' +
-        '</head>') % dst)
+        fd.write('<head><meta http-equiv="refresh" content="0; '
+                 'url=%s"></head>' % dst)

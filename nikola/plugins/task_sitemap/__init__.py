@@ -78,13 +78,14 @@ class Sitemap(LateTask):
             # Generate sitemap
             sitemap = sitemap_gen.CreateSitemapFromFile(config_file.name, True)
             if not sitemap:
-                sitemap_gen.output.Log('Configuration file errors -- exiting.', 0)
+                sitemap_gen.output.Log('Configuration file errors -- exiting.',
+                                       0)
             else:
                 sitemap.Generate()
                 sitemap_gen.output.Log('Number of errors: %d' %
-                    sitemap_gen.output.num_errors, 1)
+                                       sitemap_gen.output.num_errors, 1)
                 sitemap_gen.output.Log('Number of warnings: %d' %
-                    sitemap_gen.output.num_warns, 1)
+                                       sitemap_gen.output.num_warns, 1)
             os.unlink(config_file.name)
 
         yield {
