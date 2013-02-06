@@ -33,19 +33,14 @@ import time
 try:
     from urlparse import urlparse
 except ImportError:
-    from urllib.parse import urlparse
+    from urllib.parse import urlparse  # NOQA
 
 try:
     import feedparser
 except ImportError:
-    feedparser = None
+    feedparser = None  # NOQA
 from lxml import html
 from mako.template import Template
-
-try:
-    import requests
-except ImportError:
-    requests = None
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -112,30 +107,6 @@ class CommandImportBlogger(Command):
         '''
 
         return context
-
-    @staticmethod
-    def download_url_content_to_file(url, dst_path):
-        try:
-            with open(dst_path, 'wb+') as fd:
-                fd.write(requests.get(url).content)
-        except requests.exceptions.ConnectionError as err:
-            print("Downloading %s to %s failed: %s" % (url, dst_path, err))
-
-    def import_attachment(self, item, wordpress_namespace):
-        url = get_text_tag(item, '{%s}attachment_url' % wordpress_namespace,
-                           'foo')
-        link = get_text_tag(item, '{%s}link' % wordpress_namespace, 'foo')
-        path = urlparse(url).path
-        dst_path = os.path.join(*([self.output_folder, 'files']
-                                  + list(path.split('/'))))
-        dst_dir = os.path.dirname(dst_path)
-        if not os.path.isdir(dst_dir):
-            os.makedirs(dst_dir)
-        print("Downloading %s => %s" % (url, dst_path))
-        self.download_url_content_to_file(url, dst_path)
-        dst_url = '/'.join(dst_path.split(os.sep)[2:])
-        links[link] = '/' + dst_url
-        links[url] = '/' + dst_url
 
     @classmethod
     def transform_content(cls, content):
