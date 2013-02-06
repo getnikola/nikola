@@ -109,7 +109,7 @@ class CommandNewPost(Command):
         print("Creating New Post")
         print("-----------------\n")
         if title is None:
-            print("Enter title: ")
+            print("Enter title: ", end='')
             title = sys.stdin.readline()
         else:
             print("Title: ", title)
