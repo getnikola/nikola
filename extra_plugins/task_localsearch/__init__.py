@@ -58,7 +58,8 @@ class Tipue(LateTask):
         }
 
         posts = self.site.timeline[:]
-        dst_path = os.path.join(kw["output_folder"], "assets", "js", "tipuesearch_content.json")
+        dst_path = os.path.join(kw["output_folder"], "assets", "js",
+                                "tipuesearch_content.json")
 
         def save_data():
             pages = []
