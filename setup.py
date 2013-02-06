@@ -179,7 +179,7 @@ def find_package_data(
     return out
 
 setup(name='Nikola',
-      version='5.1',
+      version='5.2',
       description='Static blog/website generator',
       author='Roberto Alsina and others',
       author_email='ralsina@netmanagers.com.ar',
