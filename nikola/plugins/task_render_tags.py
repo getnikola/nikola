@@ -51,9 +51,7 @@ class RenderTags(Task):
             "index_display_post_count":
             self.site.config['INDEX_DISPLAY_POST_COUNT'],
             "index_teasers": self.site.config['INDEX_TEASERS'],
-            "index_read_more_link": self.site.config['INDEX_READ_MORE_LINK'],
             "rss_teasers": self.site.config["RSS_TEASERS"],
-            "rss_read_more_link": self.site.config['RSS_READ_MORE_LINK'],
         }
 
         self.site.scan_posts()
@@ -235,8 +233,7 @@ class RenderTags(Task):
             'actions': [(utils.generic_rss_renderer,
                         (lang, "%s (%s)" % (kw["blog_title"], tag),
                          kw["blog_url"], kw["blog_description"], post_list,
-                         output_name, kw["rss_teasers"],
-                         kw["rss_read_more_link"]))],
+                         output_name, kw["rss_teasers"]))],
             'clean': True,
             'uptodate': [utils.config_changed(kw)],
         }

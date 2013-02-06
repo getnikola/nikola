@@ -169,7 +169,7 @@ class Post(object):
                 file_name = file_name_lang
         return file_name
 
-    def text(self, lang, teaser_only=False, read_more_link=''):
+    def text(self, lang, teaser_only=False):
         """Read the post file for that language and return its contents"""
         file_name = self._translated_file_path(lang)
 
@@ -189,8 +189,9 @@ class Post(object):
                     break
                 teaser.append(elem_string)
             if flag:
-                teaser.append(read_more_link.format(url=self.permalink(lang),
-                              read_more=self.messages[lang]["Read More"]))
+                teaser.append('<p><a href="%s">%s...</a></p>' %
+                              (self.permalink(lang),
+                               self.messages[lang]["Read more"]))
             data = ''.join(teaser)
         return data
 

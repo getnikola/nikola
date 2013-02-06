@@ -89,10 +89,7 @@ class Nikola(object):
             'ADD_THIS_BUTTONS': True,
             'INDEX_DISPLAY_POST_COUNT': 10,
             'INDEX_TEASERS': False,
-            'INDEX_READ_MORE_LINK': '<p><a href="{url}">{read_more}...</a>'
-                                    '</p>',
             'RSS_TEASERS': True,
-            'RSS_READ_MORE_LINK': '<p><a href="{url}">{read_more}...</a></p>',
             'MAX_IMAGE_SIZE': 1280,
             'USE_FILENAME_AS_TITLE': True,
             'SLUG_TAG_PATH': False,

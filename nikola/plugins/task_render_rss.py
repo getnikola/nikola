@@ -43,7 +43,6 @@ class RenderRSS(Task):
             "blog_description": self.site.config["BLOG_DESCRIPTION"],
             "output_folder": self.site.config["OUTPUT_FOLDER"],
             "rss_teasers": self.site.config["RSS_TEASERS"],
-            "rss_read_more_link": self.site.config["RSS_READ_MORE_LINK"],
         }
         self.site.scan_posts()
         # TODO: timeline is global, kill it
@@ -62,7 +61,7 @@ class RenderRSS(Task):
                 'actions': [(utils.generic_rss_renderer,
                             (lang, kw["blog_title"], kw["blog_url"],
                              kw["blog_description"], posts, output_name,
-                             kw["rss_teasers"], kw["rss_read_more_link"]))],
+                             kw["rss_teasers"]))],
                 'clean': True,
                 'uptodate': [utils.config_changed(kw)],
             }

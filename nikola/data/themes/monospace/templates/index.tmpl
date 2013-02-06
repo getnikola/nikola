@@ -19,7 +19,7 @@
                     %endif
                 </span>
             </div>
-        ${post.text(lang, index_teasers, index_read_more_link)}
+        ${post.text(lang, index_teasers)}
         ${disqus.html_disqus_link(post.permalink()+"#disqus_thread", post.base_path)}
         </div>
     % endfor
