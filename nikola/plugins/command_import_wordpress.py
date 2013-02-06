@@ -31,7 +31,7 @@ import re
 from optparse import OptionParser
 
 try:
-    from urlparse import urlparse
+    from urlparse import urlparse  # NOQA
 except ImportError:
     from urllib.parse import urlparse
 
@@ -41,7 +41,7 @@ from mako.template import Template
 try:
     import requests
 except ImportError:
-    requests = None
+    requests = None  # NOQA
 
 from nikola.plugin_categories import Command
 from nikola import utils

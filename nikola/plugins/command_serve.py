@@ -29,8 +29,8 @@ try:
     from BaseHTTPServer import HTTPServer
     from SimpleHTTPServer import SimpleHTTPRequestHandler
 except ImportError:
-    from http.server import HTTPServer
-    from http.server import SimpleHTTPRequestHandler
+    from http.server import HTTPServer  # NOQA
+    from http.server import SimpleHTTPRequestHandler  # NOQA
 
 from nikola.plugin_categories import Command
 

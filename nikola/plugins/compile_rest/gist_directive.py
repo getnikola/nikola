@@ -6,7 +6,7 @@ from docutils import nodes
 try:
     import requests
 except ImportError:
-    requests = None
+    requests = None  # NOQA
 
 
 class GitHubGist(Directive):

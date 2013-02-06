@@ -29,7 +29,7 @@ import os
 try:
     import requests
 except ImportError:
-    requests = None
+    requests = None  # NOQA
 
 from nikola.plugin_categories import Command
 

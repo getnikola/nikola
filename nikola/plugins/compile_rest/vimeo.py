@@ -28,12 +28,12 @@ from docutils.parsers.rst import directives
 try:
     import requests
 except ImportError:
-    requests = None
+    requests = None  # NOQA
 try:
     import json  # python 2.6 or higher
 except ImportError:
     try:
-        import simplejson as json
+        import simplejson as json  # NOQA
     except ImportError:
         json = None
 

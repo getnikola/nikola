@@ -30,7 +30,7 @@ try:
     from urllib import unquote
     from urlparse import urlparse
 except ImportError:
-    from urllib.parse import unquote, urlparse
+    from urllib.parse import unquote, urlparse  # NOQA
 
 import lxml.html
 

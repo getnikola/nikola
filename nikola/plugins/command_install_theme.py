@@ -31,7 +31,7 @@ from io import BytesIO
 try:
     import requests
 except ImportError:
-    requests = None
+    requests = None  # NOQA
 
 from nikola.plugin_categories import Command
 from nikola import utils

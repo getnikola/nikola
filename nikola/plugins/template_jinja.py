@@ -29,7 +29,7 @@ import json
 try:
     import jinja2
 except ImportError:
-    jinja2 = None
+    jinja2 = None  # NOQA
 
 from nikola.plugin_categories import TemplateSystem
 

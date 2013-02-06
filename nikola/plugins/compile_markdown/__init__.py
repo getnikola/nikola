@@ -31,7 +31,7 @@ import re
 try:
     from markdown import markdown
 except ImportError:
-    markdown = None
+    markdown = None  # NOQA
 
 from nikola.plugin_categories import PageCompiler
 

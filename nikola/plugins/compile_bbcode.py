@@ -30,7 +30,7 @@ import os
 try:
     import bbcode
 except ImportError:
-    bbcode = None
+    bbcode = None  # NOQA
 
 from nikola.plugin_categories import PageCompiler
 

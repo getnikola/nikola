@@ -30,7 +30,7 @@ import os
 try:
     from textile import textile
 except ImportError:
-    textile = None
+    textile = None  # NOQA
 
 from nikola.plugin_categories import PageCompiler
 

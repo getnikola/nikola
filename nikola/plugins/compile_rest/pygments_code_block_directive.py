@@ -38,7 +38,7 @@ import os
 try:
     from urlparse import urlunsplit
 except ImportError:
-    from urllib.parse import urlunsplit
+    from urllib.parse import urlunsplit  # NOQA
 
 from docutils import nodes, core
 from docutils.parsers.rst import directives

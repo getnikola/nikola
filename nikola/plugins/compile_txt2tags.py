@@ -36,7 +36,7 @@ import os
 try:
     from txt2tags import exec_command_line as txt2tags
 except ImportError:
-    txt2tags = None
+    txt2tags = None  # NOQA
 
 from nikola.plugin_categories import PageCompiler
 
