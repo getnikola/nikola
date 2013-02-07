@@ -10,6 +10,7 @@ from __future__ import print_function
 import os
 import subprocess
 import sys
+import shutil
 from fnmatch import fnmatchcase
 
 
@@ -23,10 +24,10 @@ try:
     from setuptools.command.install import install
 except ImportError:
     print('\n*** setuptools not found! Falling back to distutils\n\n')
-    from distutils.core import setup
+    from distutils.core import setup  # NOQA
 
     from distutils.command.install import install
-    from distutils.util import convert_path
+    from distutils.util import convert_path  # NOQA
 
 dependencies = [
     'doit>=0.20.0',
@@ -177,10 +178,8 @@ def find_package_data(
                 out.setdefault(package, []).append(prefix + name)
     return out
 
-from distutils.core import setup
-
 setup(name='Nikola',
-      version='5.1',
+      version='5.2',
       description='Static blog/website generator',
       author='Roberto Alsina and others',
       author_email='ralsina@netmanagers.com.ar',

@@ -45,7 +45,9 @@ class CompileIPynb(PageCompiler):
 
     def compile_html(self, source, dest):
         if bloggerhtml is None:
-            raise Exception('To build this site, you also need https://github.com/damianavila/compile_ipynb-for-Nikola.git.')
+            raise Exception('To build this site, you also need '
+                            'https://github.com/damianavila/com'
+                            'pile_ipynb-for-Nikola.git.')
         try:
             os.makedirs(os.path.dirname(dest))
         except:
@@ -58,7 +60,8 @@ class CompileIPynb(PageCompiler):
             output = converter.convert()
             out_file.write(output)
 
-    def create_post(self, path, onefile=False, title="", slug="", date="", tags=""):
+    def create_post(self, path, onefile=False, title="", slug="", date="",
+                    tags=""):
         d_name = os.path.dirname(path)
         if not os.path.isdir(d_name):
             os.makedirs(os.path.dirname(path))
@@ -71,8 +74,7 @@ class CompileIPynb(PageCompiler):
                 fd.write('%s\n' % tags)
         print("Your post's metadata is at: ", meta_path)
         with codecs.open(path, "wb+", "utf8") as fd:
-            fd.write(
-"""{
+            fd.write("""{
  "metadata": {
   "name": "%s"
  },

@@ -42,6 +42,16 @@ try:
 except ImportError:
     pass
 
+
+if sys.version_info[0] == 3:
+    # Python 3
+    bytes_str = bytes
+    unicode_str = str
+    unichr = chr
+else:
+    bytes_str = str
+    unicode_str = unicode
+
 from doit import tools
 from unidecode import unidecode
 
@@ -186,7 +196,9 @@ def get_meta(source_path, file_metadata_regexp=None):
     title = slug = date = tags = link = description = ''
 
     if not (file_metadata_regexp is None):
-        (title, slug, date, tags, link, description) = _get_metadata_from_filename_by_regex(source_path, file_metadata_regexp)
+        (title, slug, date, tags, link,
+         description) = _get_metadata_from_filename_by_regex(
+             source_path, file_metadata_regexp)
 
     (title, slug, date, tags, link, description) = _get_metadata_from_file(
         source_path, title, slug, date, tags, link, description)
@@ -301,8 +313,8 @@ def copy_tree(src, dst, link_cutoff=None):
             }
 
 
-def generic_rss_renderer(lang, title, link, description,
-                         timeline, output_path, rss_teasers):
+def generic_rss_renderer(lang, title, link, description, timeline, output_path,
+                         rss_teasers):
     """Takes all necessary data, and renders a RSS feed in output_path."""
     items = []
     for post in timeline[:10]:
@@ -325,11 +337,11 @@ def generic_rss_renderer(lang, title, link, description,
     dst_dir = os.path.dirname(output_path)
     if not os.path.isdir(dst_dir):
         os.makedirs(dst_dir)
-    with open(output_path, "wb+") as rss_file:
-        try:
-            rss_obj.write_xml(rss_file, encoding='utf-8')
-        except TypeError:
-            print("RSS generation doesn't work on python3 yet")
+    with codecs.open(output_path, "wb+", "utf-8") as rss_file:
+        data = rss_obj.to_xml(encoding='utf-8')
+        if isinstance(data, bytes_str):
+            data = data.decode('utf-8')
+        rss_file.write(data)
 
 
 def copy_file(source, dest, cutoff=None):

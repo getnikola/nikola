@@ -30,7 +30,7 @@ try:
     from urllib import unquote
     from urlparse import urlparse
 except ImportError:
-    from urllib.parse import unquote, urlparse
+    from urllib.parse import unquote, urlparse  # NOQA
 
 import lxml.html
 
@@ -46,11 +46,10 @@ class CommandCheck(Command):
         """Check the generated site."""
         parser = OptionParser(usage="nikola %s [options]" % self.name)
         parser.add_option('-l', '--check-links', dest='links',
-            action='store_true',
-            help='Check for dangling links.')
+                          action='store_true',
+                          help='Check for dangling links.')
         parser.add_option('-f', '--check-files', dest='files',
-            action='store_true',
-            help='Check for unknown files.')
+                          action='store_true', help='Check for unknown files.')
 
         (options, args) = parser.parse_args(list(args))
         if options.links:
@@ -75,8 +74,7 @@ def analize(task):
             if parsed.fragment:
                 target = target.split('#')[0]
             target_filename = os.path.abspath(
-                os.path.join(os.path.dirname(filename),
-                    unquote(target)))
+                os.path.join(os.path.dirname(filename), unquote(target)))
             if target_filename not in existing_targets:
                 if os.path.exists(target_filename):
                     existing_targets.add(target_filename)
@@ -96,13 +94,10 @@ def scan_links():
     print("Checking Links:\n===============\n")
     for task in os.popen('nikola build list --all', 'r').readlines():
         task = task.strip()
-        if task.split(':')[0] in (
-            'render_tags',
-            'render_archive',
-            'render_galleries',
-            'render_indexes',
-            'render_pages',
-            'render_site') and '.html' in task:
+        if task.split(':')[0] in ('render_tags', 'render_archive',
+                                  'render_galleries', 'render_indexes',
+                                  'render_pages',
+                                  'render_site') and '.html' in task:
             analize(task)
 
 

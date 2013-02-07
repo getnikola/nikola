@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -43,6 +43,7 @@ from nikola.utils import config_changed, copy_tree
         #"loc": "http://www.tipue.com/about"}
 #]};
 
+
 class Tipue(LateTask):
     """Render the blog posts as JSON data."""
 
@@ -57,8 +58,9 @@ class Tipue(LateTask):
         }
 
         posts = self.site.timeline[:]
-        dst_path = os.path.join(kw["output_folder"], "assets", "js", "tipuesearch_content.json")
-        
+        dst_path = os.path.join(kw["output_folder"], "assets", "js",
+                                "tipuesearch_content.json")
+
         def save_data():
             pages = []
             for lang in kw["translations"]:
@@ -76,12 +78,12 @@ class Tipue(LateTask):
                 pass
             with open(dst_path, "wb+") as fd:
                 fd.write(output)
-            
+
         yield {
             "basename": str(self.name),
             "name": os.path.join("assets", "js", "tipuesearch_content.js"),
             "targets": [dst_path],
-            "actions": [(save_data,[])],
+            "actions": [(save_data, [])],
             'uptodate': [config_changed(kw)]
         }
 

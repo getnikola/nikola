@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -40,7 +40,7 @@ class Mustache(Task):
         kw = {
             "translations": self.site.config['TRANSLATIONS'],
             "index_display_post_count":
-                self.site.config['INDEX_DISPLAY_POST_COUNT'],
+            self.site.config['INDEX_DISPLAY_POST_COUNT'],
             "messages": self.site.MESSAGES,
             "index_teasers": self.site.config['INDEX_TEASERS'],
             "output_folder": self.site.config['OUTPUT_FOLDER'],
@@ -55,73 +55,91 @@ class Mustache(Task):
             yield {
                 'basename': 'render_mustache',
                 'actions': [],
-                }
+            }
             return
-        
+
         def write_file(path, post, lang):
-            
+
             # Prev/Next links
             prev_link = False
             if post.prev_post:
-                prev_link = post.prev_post.permalink(lang).replace(".html", ".json")
+                prev_link = post.prev_post.permalink(lang).replace(".html",
+                                                                   ".json")
             next_link = False
             if post.next_post:
-                next_link = post.next_post.permalink(lang).replace(".html", ".json")
-            data = {} 
-            
+                next_link = post.next_post.permalink(lang).replace(".html",
+                                                                   ".json")
+            data = {}
+
             # Configuration
-            for k,v in self.site.config.items():
+            for k, v in self.site.config.items():
                 if isinstance(v, (str, unicode)):
                     data[k] = v
 
             # Tag data
             tags = []
             for tag in post.tags:
-                tags.append({'name': tag, 'link': self.site.link("tag", tag, lang)})
+                tags.append({'name': tag, 'link': self.site.link("tag", tag,
+                                                                 lang)})
             data.update({
                 "tags": tags,
                 "tags?": True if tags else False,
             })
-                    
+
             # Template strings
-            for k,v in kw["messages"][lang].items():
-                data["message_"+k] = v
-                
+            for k, v in kw["messages"][lang].items():
+                data["message_" + k] = v
+
             # Post data
             data.update({
                 "title": post.title(lang),
                 "text": post.text(lang),
                 "prev": prev_link,
                 "next": next_link,
-                "date": post.date.strftime(self.site.GLOBAL_CONTEXT['date_format']),
+                "date":
+                post.date.strftime(self.site.GLOBAL_CONTEXT['date_format']),
             })
-            
+
             # Disqus comments
-            data["disqus_html"] = """<div id="disqus_thread"></div>
-        <script type="text/javascript">var disqus_shortname="%s";var disqus_url="%s";(function(){var a=document.createElement("script");a.type="text/javascript";a.async=true;a.src="http://"+disqus_shortname+".disqus.com/embed.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)})();        </script>
-        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>""" % (
-            self.site.config['DISQUS_FORUM'],
-            post.permalink(absolute=True),
-            )
-            
+            data["disqus_html"] = ('<div id="disqus_thread"></div> <script '
+                                   'type="text/javascript">var disqus_'
+                                   'shortname="%s";var disqus_url="%s";'
+                                   '(function(){var a=document.createElement'
+                                   '("script");a.type="text/javascript";'
+                                   'a.async=true;a.src="http://"+disqus_'
+                                   'shortname+".disqus.com/embed.js";('
+                                   'document.getElementsByTagName("head")'
+                                   '[0]||document.getElementsByTagName("body")'
+                                   '[0]).appendChild(a)})();        </script>'
+                                   '<noscript>Please enable JavaScript to view'
+                                   ' the <a href="http://disqus.com/'
+                                   '?ref_noscript">comments powered by DISQUS.'
+                                   '</a></noscript><a href="http://disqus.com"'
+                                   'class="dsq-brlink">comments powered by <sp'
+                                   'an class="logo-disqus">DISQUS</span></a>' %
+                                   (self.site.config['DISQUS_FORUM'],
+                                    post.permalink(absolute=True)))
+
             # Post translations
             translations = []
             for langname in kw["translations"]:
                 if langname == lang:
                     continue
-                translations.append({'name': kw["messages"][langname]["Read in English"], 
-                'link': "javascript:load_data('%s');" % post.permalink(langname).replace(".html", ".json")})
+                translations.append({'name':
+                                     kw["messages"][langname]["Read in"
+                                                              "English"],
+                                    'link': "javascript:load_data('%s');"
+                                    % post.permalink(langname).replace(
+                                        ".html", ".json")})
             data["translations"] = translations
 
-            
             try:
                 os.makedirs(os.path.dirname(path))
             except:
                 pass
             with open(path, 'wb+') as fd:
-                fd.write(json.dumps(data))                
-        
+                fd.write(json.dumps(data))
+
         for lang in kw["translations"]:
             for i, post in enumerate(posts):
                 out_path = post.destination_path(lang, ".json")
@@ -133,16 +151,16 @@ class Mustache(Task):
                     'targets': [out_file],
                     'actions': [(write_file, (out_file, post, lang))],
                     'task_dep': ['render_posts'],
-                    }
+                }
                 yield task
-        
+
         if posts:
             first_post_data = posts[0].permalink(
                 self.site.config["DEFAULT_LANG"]).replace(".html", ".json")
-                    
+
         # Copy mustache template
         src = os.path.join(os.path.dirname(__file__), 'mustache-template.html')
-        dst = os.path.join(kw['output_folder'],'mustache-template.html')
+        dst = os.path.join(kw['output_folder'], 'mustache-template.html')
         yield {
             'basename': 'render_mustache',
             'name': 'mustache-template.html',
@@ -150,14 +168,16 @@ class Mustache(Task):
             'file_dep': [src],
             'actions': [(copy_file, (src, dst))],
         }
-        
+
         # Copy mustache.html with the right starting file in it
         src = os.path.join(os.path.dirname(__file__), 'mustache.html')
-        dst = os.path.join(kw['output_folder'],'mustache.html')
+        dst = os.path.join(kw['output_folder'], 'mustache.html')
+
         def copy_mustache():
             with open(src, 'rb') as in_file:
                 with open(dst, 'wb+') as out_file:
-                    data = in_file.read().replace('{{first_post_data}}', first_post_data)
+                    data = in_file.read().replace('{{first_post_data}}',
+                                                  first_post_data)
                     out_file.write(data)
         yield {
             'basename': 'render_mustache',

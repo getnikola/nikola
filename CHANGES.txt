@@ -1,10 +1,9 @@
-New in Master
-=============
+New in 5.2
+==========
 
 Features
 --------
 
-* Making it possible to initialise empty sites.
 * New vimeo directive for restructured text.
 * New COMMENTS_IN_GALLERIES and COMMENTS_IN_STORIES options.
 * One-page, dynamic-loading, client-rendered site plugin (task_mustache)
@@ -31,10 +30,12 @@ Features
 * (Rough) Blogger/Blogspot importer
 * When running the init command it now creates an empty site by default.
   The previous behaviour can be triggered with the "--demo" switch.
+* Python 3 support (except for sitemap generation)
 
 Bugfixes
 --------
 
+* Added sane defaults for most options, so you can have a lean config file.
 * Made layout of the site theme responsive, with collapsing navbar.
 * Use timeline instead of parsing post_pages in generic_page_renderer and task_render_pages.
 * Updated disqus integration code, added identifiers so it works on any URL.

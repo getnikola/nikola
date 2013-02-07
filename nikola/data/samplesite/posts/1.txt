@@ -8,7 +8,7 @@ and build a site using it. Congratulations!
 
 * You can read the manual `here </stories/handbook.html>`__
 * You can learn more about Nikola at http://nikola.ralsina.com.ar
-* You can see a demo photo gallery `here </galleries/demo/>`__
+* You can see a demo photo gallery `here </galleries/demo/index.html>`__
 * Demo usage of listings `here </stories/listings-demo.html>`__
 * Demo of slideshows `here </stories/slides-demo.html>`__
 

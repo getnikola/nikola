@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -41,7 +41,7 @@ class Indexes(Task):
         kw = {
             "translations": self.site.config['TRANSLATIONS'],
             "index_display_post_count":
-                self.site.config['INDEX_DISPLAY_POST_COUNT'],
+            self.site.config['INDEX_DISPLAY_POST_COUNT'],
             "messages": self.site.MESSAGES,
             "index_teasers": self.site.config['INDEX_TEASERS'],
             "output_folder": self.site.config['OUTPUT_FOLDER'],
@@ -58,10 +58,7 @@ class Indexes(Task):
             posts = posts[kw["index_display_post_count"]:]
         num_pages = len(lists)
         if not lists:
-            yield {
-                'basename': 'render_indexes',
-                'actions': [],
-                }
+            yield {'basename': 'render_indexes', 'actions': []}
         for lang in kw["translations"]:
             for i, post_list in enumerate(lists):
                 context = {}
@@ -70,10 +67,8 @@ class Indexes(Task):
                 else:
                     indexes_title = self.site.config["BLOG_TITLE"]
                 if not i:
-                    output_name = "index.html"
                     context["title"] = indexes_title
                 else:
-                    output_name = "index-%s.html" % i
                     if self.site.config.get("INDEXES_PAGES", ""):
                         indexes_pages = self.site.config["INDEXES_PAGES"] % i
                     else:
@@ -91,11 +86,12 @@ class Indexes(Task):
                     context["nextlink"] = "index-%s.html" % (i + 1)
                 context["permalink"] = self.site.link("index", i, lang)
                 output_name = os.path.join(
-                    kw['output_folder'], self.site.path("index", i, lang)).encode('utf8')
+                    kw['output_folder'], self.site.path("index", i,
+                                                        lang)).encode('utf8')
                 task = self.site.generic_post_list_renderer(
                     lang,
                     post_list,
-                    output_name.encode('utf8'),
+                    output_name,
                     template_name,
                     kw['filters'],
                     context,
@@ -114,28 +110,29 @@ class Indexes(Task):
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
         }
-        template_name = "list.tmpl"        
+        template_name = "list.tmpl"
         for lang in kw["translations"]:
             for wildcard, dest, _, is_post in kw["post_pages"]:
                 if is_post:
                     continue
                 context = {}
-                src_dir = os.path.dirname(wildcard)
+                # vim/pyflakes thinks it's unused
+                # src_dir = os.path.dirname(wildcard)
                 files = glob.glob(wildcard)
-                post_list = [self.site.global_data[os.path.splitext(p)[0]] for p in files]
+                post_list = [self.site.global_data[os.path.splitext(p)[0]] for
+                             p in files]
                 output_name = os.path.join(kw["output_folder"],
-                    self.site.path("post_path", wildcard, lang)).encode('utf8')
-                context["items"] = [(post.title(lang), post.permalink(lang)) for post in post_list]
-                task = self.site.generic_post_list_renderer(
-                        lang,
-                        post_list,
-                        output_name,
-                        template_name,
-                        kw['filters'],
-                        context,
-                    )
+                                           self.site.path("post_path",
+                                                          wildcard,
+                                                          lang)).encode('utf8')
+                context["items"] = [(post.title(lang), post.permalink(lang))
+                                    for post in post_list]
+                task = self.site.generic_post_list_renderer(lang, post_list,
+                                                            output_name,
+                                                            template_name,
+                                                            kw['filters'],
+                                                            context)
             task_cfg = {1: task['uptodate'][0].config, 2: kw}
             task['uptodate'] = [config_changed(task_cfg)]
             task['basename'] = self.name
             yield task
-                

@@ -36,9 +36,9 @@ import codecs
 from copy import copy
 import os
 try:
-    from urlparse import urlparse, urlunsplit
+    from urlparse import urlunsplit
 except ImportError:
-    from urllib.parse import urlparse, urlunsplit
+    from urllib.parse import urlunsplit  # NOQA
 
 from docutils import nodes, core
 from docutils.parsers.rst import directives
@@ -96,8 +96,7 @@ class DocutilsInterface(object):
         try:
             if self.language and str(self.language).lower() != 'none':
                 lexer = get_lexer_by_name(self.language.lower(),
-                                        **self.custom_args
-                                        )
+                                          **self.custom_args)
             else:
                 lexer = get_lexer_by_name('text', **self.custom_args)
         except ValueError:
@@ -136,7 +135,7 @@ class DocutilsInterface(object):
 # ::
 
 def code_block_directive(name, arguments, options, content, lineno,
-                       content_offset, block_text, state, state_machine):
+                         content_offset, block_text, state, state_machine):
     """Parse and classify content of a code_block."""
     if 'include' in options:
         try:
@@ -173,8 +172,8 @@ def code_block_directive(name, arguments, options, content, lineno,
                 # Move the after_index to the beginning of the line with the
                 # match.
                 for char in content[after_index:0:-1]:
-                    # codecs always opens binary. This works with '\n', 
-                    # '\r' and '\r\n'. We are going backwards, so 
+                    # codecs always opens binary. This works with '\n',
+                    # '\r' and '\r\n'. We are going backwards, so
                     # '\n' is found first in '\r\n'.
                     # Going with .splitlines() seems more appropriate
                     # but needs a few more changes.
@@ -197,7 +196,7 @@ def code_block_directive(name, arguments, options, content, lineno,
                         'code-block directive:\nText not found.' %
                         options['start-after'])
                 line_offset = len(content[:after_index +
-                    len(after_text)].splitlines())
+                                          len(after_text)].splitlines())
                 content = content[after_index + len(after_text):]
 
             # same changes here for the same reason
@@ -249,7 +248,7 @@ def code_block_directive(name, arguments, options, content, lineno,
         lnwidth = len(str(total_lines))
         fstr = "\n%%%dd " % lnwidth
         code_block += nodes.inline(fstr[1:] % lineno, fstr[1:] % lineno,
-            classes=['linenumber'])
+                                   classes=['linenumber'])
 
     # parse content with pygments and add to code_block element
     content = content.rstrip()
@@ -274,7 +273,7 @@ def code_block_directive(name, arguments, options, content, lineno,
                 for chunk, ln in zip(values, linenos)[1:]:
                     if ln <= total_lines:
                         code_block += nodes.inline(fstr % ln, fstr % ln,
-                            classes=['linenumber'])
+                                                   classes=['linenumber'])
                         code_block += nodes.Text(chunk, chunk)
                 lineno += len(values) - 1
 
@@ -320,8 +319,8 @@ def string_bool(argument):
     elif argument.lower() == 'false':
         return False
     else:
-        raise ValueError('"%s" unknown; choose from "True" or "False"'
-                        % argument)
+        raise ValueError('"%s" unknown; choose from "True" or "False"' %
+                         argument)
 
 
 def csharp_unicodelevel(argument):
@@ -342,9 +341,9 @@ def listings_directive(name, arguments, options, content, lineno,
     options['include'] = os.path.join('listings', fname)
     target = urlunsplit(("link", 'listing', fname, '', ''))
     generated_nodes = [core.publish_doctree('`%s <%s>`_' % (fname, target))[0]]
-    generated_nodes += code_block_directive(name, [arguments[1]],
-                       options, content, lineno, content_offset, block_text,
-                       state, state_machine)
+    generated_nodes += code_block_directive(name, [arguments[1]], options,
+                                            content, lineno, content_offset,
+                                            block_text, state, state_machine)
     return generated_nodes
 
 code_block_directive.arguments = (1, 0, 1)

@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -26,12 +26,11 @@
 
 import codecs
 import os
-import re
 
 try:
     import bbcode
 except ImportError:
-    bbcode = None
+    bbcode = None  # NOQA
 
 from nikola.plugin_categories import PageCompiler
 
@@ -40,7 +39,7 @@ class CompileTextile(PageCompiler):
     """Compile bbcode into HTML."""
 
     name = "bbcode"
-    
+
     def __init__(self):
         if bbcode is None:
             return
@@ -49,7 +48,8 @@ class CompileTextile(PageCompiler):
 
     def compile_html(self, source, dest):
         if bbcode is None:
-            raise Exception('To build this site, you need to install the "bbcode" package.')
+            raise Exception('To build this site, you need to install the '
+                            '"bbcode" package.')
         try:
             os.makedirs(os.path.dirname(dest))
         except:
@@ -60,7 +60,8 @@ class CompileTextile(PageCompiler):
             output = self.parser.format(data)
             out_file.write(output)
 
-    def create_post(self, path, onefile=False, title="", slug="", date="", tags=""):
+    def create_post(self, path, onefile=False, title="", slug="", date="",
+                    tags=""):
         d_name = os.path.dirname(path)
         if not os.path.isdir(d_name):
             os.makedirs(os.path.dirname(path))
@@ -75,4 +76,3 @@ class CompileTextile(PageCompiler):
                 fd.write('.. description: \n')
                 fd.write('-->[/note]\n\n')
             fd.write("\nWrite your post here.")
-        

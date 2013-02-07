@@ -29,8 +29,8 @@ try:
     from BaseHTTPServer import HTTPServer
     from SimpleHTTPServer import SimpleHTTPRequestHandler
 except ImportError:
-    from http.server import HTTPServer
-    from http.server import SimpleHTTPRequestHandler
+    from http.server import HTTPServer  # NOQA
+    from http.server import SimpleHTTPRequestHandler  # NOQA
 
 from nikola.plugin_categories import Command
 
@@ -44,12 +44,10 @@ class CommandBuild(Command):
         """Start test server."""
 
         parser = OptionParser(usage="nikola %s [options]" % self.name)
-        parser.add_option("-p", "--port", dest="port",
-            help="Port numer (default: 8000)", default=8000,
-            type="int")
-        parser.add_option("-a", "--address", dest="address",
-            help="Address to bind (default: 127.0.0.1)",
-            default='127.0.0.1')
+        parser.add_option("-p", "--port", dest="port", help="Port numer "
+                          "(default: 8000)", default=8000, type="int")
+        parser.add_option("-a", "--address", dest="address", help="Address to "
+                          "bind (default: 127.0.0.1)", default='127.0.0.1')
         (options, args) = parser.parse_args(list(args))
 
         out_dir = self.site.config['OUTPUT_FOLDER']
@@ -58,9 +56,9 @@ class CommandBuild(Command):
         else:
             os.chdir(out_dir)
             httpd = HTTPServer((options.address, options.port),
-                OurHTTPRequestHandler)
+                               OurHTTPRequestHandler)
             sa = httpd.socket.getsockname()
-            print("Serving HTTP on", sa[0], "port", sa[1], "...")
+            print("Serving HTTP on {0[0]} port {0[1]}...".format(sa))
             httpd.serve_forever()
 
 

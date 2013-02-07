@@ -29,7 +29,7 @@ import os
 try:
     import requests
 except ImportError:
-    requests = None
+    requests = None  # NOQA
 
 from nikola.plugin_categories import Command
 
@@ -42,16 +42,19 @@ class CommandBootswatchTheme(Command):
     def run(self, *args):
         """Given a swatch name and a parent theme, creates a custom theme."""
         if requests is None:
-            print('To use the install_theme command, you need to install the "requests" package.')
+            print('To use the install_theme command, you need to install the '
+                  '"requests" package.')
             return
         parser = OptionParser(usage="nikola %s [options]" % self.name)
         parser.add_option("-n", "--name", dest="name",
-            help="New theme name (default: custom)", default='custom')
+                          help="New theme name (default: custom)",
+                          default='custom')
         parser.add_option("-s", "--swatch", dest="swatch",
-            help="Name of the swatch from bootswatch.com (default: slate)",
-            default='slate')
+                          help="Name of the swatch from bootswatch.com "
+                          "(default: slate)", default='slate')
         parser.add_option("-p", "--parent", dest="parent",
-            help="Parent theme name (default: site)", default='site')
+                          help="Parent theme name (default: site)",
+                          default='site')
         (options, args) = parser.parse_args(list(args))
 
         name = options.name
@@ -68,11 +71,11 @@ class CommandBootswatchTheme(Command):
             url = 'http://bootswatch.com/%s/%s' % (swatch, fname)
             print("Downloading: ", url)
             data = requests.get(url).text
-            with open(os.path.join(
-                'themes', name, 'assets', 'css', fname), 'wb+') as output:
+            with open(os.path.join('themes', name, 'assets', 'css', fname),
+                      'wb+') as output:
                 output.write(data)
 
         with open(os.path.join('themes', name, 'parent'), 'wb+') as output:
             output.write(parent)
-        print('Theme created. Change the THEME setting to "%s" to use it.'
-            % name)
+        print('Theme created. Change the THEME setting to "%s" to use it.' %
+              name)

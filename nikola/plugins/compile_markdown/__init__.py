@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -31,7 +31,7 @@ import re
 try:
     from markdown import markdown
 except ImportError:
-    markdown = None
+    markdown = None  # NOQA
 
 from nikola.plugin_categories import PageCompiler
 
@@ -43,7 +43,8 @@ class CompileMarkdown(PageCompiler):
 
     def compile_html(self, source, dest):
         if markdown is None:
-            raise Exception('To build this site, you need to install the "markdown" package.')
+            raise Exception('To build this site, you need to install the '
+                            '"markdown" package.')
         try:
             os.makedirs(os.path.dirname(dest))
         except:
@@ -53,7 +54,7 @@ class CompileMarkdown(PageCompiler):
                 data = in_file.read()
             output = markdown(data, ['fenced_code', 'codehilite'])
             # h1 is reserved for the title so increment all header levels
-            for n in reversed(range(1,9)):
+            for n in reversed(range(1, 9)):
                 output = re.sub('<h%i>' % n, '<h%i>' % (n + 1), output)
                 output = re.sub('</h%i>' % n, '</h%i>' % (n + 1), output)
             # python-markdown's highlighter uses the class 'codehilite' to wrap
@@ -63,7 +64,8 @@ class CompileMarkdown(PageCompiler):
                             r'\1code\2', output)
             out_file.write(output)
 
-    def create_post(self, path, onefile=False, title="", slug="", date="", tags=""):
+    def create_post(self, path, onefile=False, title="", slug="", date="",
+                    tags=""):
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
                 fd.write('<!-- \n')

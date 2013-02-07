@@ -27,26 +27,20 @@ import codecs
 import csv
 import datetime
 import os
-import re
 from optparse import OptionParser
 import time
 
 try:
     from urlparse import urlparse
 except ImportError:
-    from urllib.parse import urlparse
+    from urllib.parse import urlparse  # NOQA
 
 try:
     import feedparser
 except ImportError:
-    feedparser = None
-from lxml import etree, html, builder
+    feedparser = None  # NOQA
+from lxml import html
 from mako.template import Template
-
-try:
-    import requests
-except ImportError:
-    requests = None
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -62,7 +56,7 @@ class CommandImportBlogger(Command):
     @classmethod
     def get_channel_from_file(cls, filename):
         return feedparser.parse(filename)
-    
+
     @staticmethod
     def configure_redirections(url_map):
         redirections = []
@@ -93,9 +87,10 @@ class CommandImportBlogger(Command):
     @staticmethod
     def populate_context(channel):
         context = {}
-        context['DEFAULT_LANG'] = 'en'  # blogger doesn't include the language in the dump
+        context['DEFAULT_LANG'] = 'en'  # blogger doesn't include the language
+                                        # in the dump
         context['BLOG_TITLE'] = channel.feed.title
-        
+
         context['BLOG_DESCRIPTION'] = ''  # Missing in the dump
         context['BLOG_URL'] = channel.feed.link.rstrip('/')
         context['BLOG_EMAIL'] = channel.feed.author_detail.email
@@ -112,30 +107,6 @@ class CommandImportBlogger(Command):
         '''
 
         return context
-
-    @staticmethod
-    def download_url_content_to_file(url, dst_path):
-        try:
-            with open(dst_path, 'wb+') as fd:
-                fd.write(requests.get(url).content)
-        except requests.exceptions.ConnectionError as err:
-            print("Downloading %s to %s failed: %s" % (url, dst_path, err))
-
-    def import_attachment(self, item, wordpress_namespace):
-        url = get_text_tag(
-            item, '{%s}attachment_url' % wordpress_namespace, 'foo')
-        link = get_text_tag(item, '{%s}link' % wordpress_namespace, 'foo')
-        path = urlparse(url).path
-        dst_path = os.path.join(*([self.output_folder, 'files']
-                                  + list(path.split('/'))))
-        dst_dir = os.path.dirname(dst_path)
-        if not os.path.isdir(dst_dir):
-            os.makedirs(dst_dir)
-        print("Downloading %s => %s" % (url, dst_path))
-        self.download_url_content_to_file(url, dst_path)
-        dst_url = '/'.join(dst_path.split(os.sep)[2:])
-        links[link] = '/' + dst_url
-        links[url] = '/' + dst_url
 
     @classmethod
     def transform_content(cls, content):
@@ -164,11 +135,19 @@ class CommandImportBlogger(Command):
         """Takes an item from the feed and creates a post file."""
         if out_folder is None:
             out_folder = 'posts'
-        title = item.title
+
         # link is something like http://foo.com/2012/09/01/hello-world/
         # So, take the path, utils.slugify it, and that's our slug
         link = item.link
         link_path = urlparse(link).path
+
+        title = item.title
+
+        # blogger supports empty titles, which Nikola doesn't
+        if not title:
+            print("Warning: Empty title in post with URL %s. Using NO_TITLE "
+                  "as placeholder, please fix." % link)
+            title = "NO_TITLE"
 
         if link_path.lower().endswith('.html'):
             link_path = link_path[:-5]
@@ -180,8 +159,9 @@ class CommandImportBlogger(Command):
             return
 
         description = ''
-        post_date = datetime.datetime.fromtimestamp(time.mktime(item.published_parsed))
-                
+        post_date = datetime.datetime.fromtimestamp(time.mktime(
+            item.published_parsed))
+
         for candidate in item.content:
             if candidate.type == 'text/html':
                 content = candidate.value
@@ -192,7 +172,7 @@ class CommandImportBlogger(Command):
         for tag in item.tags:
             if tag.scheme == 'http://www.blogger.com/atom/ns#':
                 tags.append(tag.term)
-        
+
         if item.get('app_draft'):
             tags.append('draft')
             is_draft = True
@@ -220,19 +200,22 @@ class CommandImportBlogger(Command):
 
     def process_item(self, item):
         post_type = item.tags[0].term
-        
+
         if post_type == 'http://schemas.google.com/blogger/2008/kind#post':
             self.import_item(item, 'posts')
         elif post_type == 'http://schemas.google.com/blogger/2008/kind#page':
             self.import_item(item, 'stories')
-        elif post_type == 'http://schemas.google.com/blogger/2008/kind#settings':
+        elif post_type == ('http://schemas.google.com/blogger/2008/kind'
+                           '#settings'):
             # Ignore settings
             pass
-        elif post_type == 'http://schemas.google.com/blogger/2008/kind#template':
+        elif post_type == ('http://schemas.google.com/blogger/2008/kind'
+                           '#template'):
             # Ignore template
             pass
-        elif post_type == 'http://schemas.google.com/blogger/2008/kind#comment':
-            # FIXME: not importing comments. Does blogger support "pages"?          
+        elif post_type == ('http://schemas.google.com/blogger/2008/kind'
+                           '#comment'):
+            # FIXME: not importing comments. Does blogger support "pages"?
             pass
         else:
             print("Unknown post_type:", post_type)
@@ -275,12 +258,15 @@ class CommandImportBlogger(Command):
         parser = OptionParser(
             usage="nikola %s [options] blogger_export_file" % self.name)
         parser.add_option('-f', '--filename', dest='filename',
-                          help='Blogger export file from which the import is made.')
+                          help='Blogger export file from which the import is '
+                               'made.')
         parser.add_option('-o', '--output-folder', dest='output_folder',
                           default='new_site',
-                          help='The location into which the imported content will be written')
+                          help='The location into which the imported content '
+                               'will be written')
         parser.add_option('-d', '--no-drafts', dest='exclude_drafts',
-                          default=False, action="store_true", help='Do not import drafts.')
+                          default=False, action="store_true", help='Do not '
+                          'import drafts.')
 
         (options, args) = parser.parse_args(list(arguments))
 

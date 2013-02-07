@@ -15,7 +15,7 @@ Starting The Theme
 
 First, we create a testing site, and copy the orphan theme from nikola's sources into the right place::
 
-    $ nikola init monospace-site
+    $ nikola init monospace-site --demo
     A new site with some sample data has been created at monospace-site.
     See README.txt in that folder for more information.
 

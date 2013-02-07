@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -63,15 +63,16 @@ class CompileRest(PageCompiler):
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
-                output, error_level = rst2html(data,
-                    settings_overrides={'initial_header_level': 2})
+                output, error_level = rst2html(
+                    data, settings_overrides={'initial_header_level': 2})
                 out_file.write(output)
         if error_level < 3:
             return True
         else:
             return False
 
-    def create_post(self, path, onefile=False, title="", slug="", date="", tags=""):
+    def create_post(self, path, onefile=False, title="", slug="", date="",
+                    tags=""):
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
                 fd.write('.. title: %s\n' % title)
@@ -84,13 +85,11 @@ class CompileRest(PageCompiler):
 
 
 def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
-                  destination_path=None,
-                  reader=None, reader_name='standalone',
-                  parser=None, parser_name='restructuredtext',
-                  writer=None, writer_name='html',
-                  settings=None, settings_spec=None,
-                  settings_overrides=None, config_section=None,
-                  enable_exit_status=None):
+             destination_path=None, reader=None, reader_name='standalone',
+             parser=None, parser_name='restructuredtext', writer=None,
+             writer_name='html', settings=None, settings_spec=None,
+             settings_overrides=None, config_section=None,
+             enable_exit_status=None):
     """
     Set up & run a `Publisher`, and return a dictionary of document parts.
     Dictionary keys are the names of parts, and values are Unicode strings;
