@@ -58,7 +58,6 @@ class Sources(Task):
                         lang, post.source_ext()))
                 source = post.source_path
                 if source.endswith('.html'):
-                    print("Avoiting to render source of .html page")
                     continue
                 if lang != kw["default_lang"]:
                     source_lang = source + '.' + lang
