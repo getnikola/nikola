@@ -1,3 +1,12 @@
+New in master
+=============
+
+Features
+--------
+
+* Bootstrap 2.3.0
+
+
 New in 5.2
 ==========
 
@@ -52,6 +61,7 @@ Bugfixes
 * Get title from filename if not available in metadata.
 * Don't copy sources if they end in ".html"
 * Don't link to unexisting translations.
+* Sort tags case insensitive.
 
 New in v5.1
 ===========
