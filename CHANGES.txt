@@ -1,3 +1,14 @@
+Features
+--------
+
+* Optionally use content distribution networks for jquery and twitter-bootstrap
+* Improve progressive rendering by moving javascript to the bottom of pages
+
+Bugfixes
+--------
+
+
+
 New in 5.2
 ==========
 
