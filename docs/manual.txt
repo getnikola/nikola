@@ -776,6 +776,9 @@ different ones, or about other webservers, please share!
 #. Through the filters feature, you can run your files through arbitrary commands, so that images
    are recompressed, Javascript is minimized, etc.
 
+#. The USE_CDN option offloads standard Javascript and CSS files to a CDN so they are not
+   downloaded from your server.
+
 Restructured Text Extensions
 ----------------------------
 
