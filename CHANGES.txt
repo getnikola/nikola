@@ -6,6 +6,10 @@ Features
 
 * Bootstrap 2.3.0
 
+Bugfixes
+--------
+
+* Make really sure we import the right conf.py
 
 New in 5.2
 ==========

@@ -40,6 +40,8 @@ class CommandBuild(Command):
         # FIXME: this is crap, do it right
         with tempfile.NamedTemporaryFile(suffix='.py', delete=False) as dodo:
             dodo.write(b'''
+import sys
+sys.path.insert(0, '.')
 from doit.reporter import ExecutedOnlyReporter
 DOIT_CONFIG = {
         'reporter': ExecutedOnlyReporter,
