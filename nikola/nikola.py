@@ -130,8 +130,9 @@ class Nikola(object):
             'TAG_PAGES_ARE_INDEXES': False,
             'THEME': 'site',
             'THUMBNAIL_SIZE': 180,
-            'USE_FILENAME_AS_TITLE': True,
             'USE_BUNDLES': True,
+            'USE_CDN': False,
+            'USE_FILENAME_AS_TITLE': True,
         }
 
         self.config.update(config)
@@ -190,7 +191,7 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['index_display_post_count'] = self.config[
             'INDEX_DISPLAY_POST_COUNT']
         self.GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
-        self.GLOBAL_CONTEXT['use_cdn'] = self.config.get("USE_CDN", True)
+        self.GLOBAL_CONTEXT['use_cdn'] = self.config.get("USE_CDN")
         self.GLOBAL_CONTEXT['favicons'] = self.config['FAVICONS']
         if 'date_format' not in self.GLOBAL_CONTEXT:
             self.GLOBAL_CONTEXT['date_format'] = '%Y-%m-%d %H:%M'
