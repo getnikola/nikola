@@ -5,7 +5,7 @@ Features
 --------
 
 * Bootstrap 2.3.0
-* Optionally use content distribution networks for jquery and twitter-bootstrap
+* Optionally use content distribution networks for jquery and twitter-bootstrap (USE_CDN option)
 * Improve progressive rendering by moving javascript to the bottom of pages
 
 Bugfixes
