@@ -20,4 +20,3 @@ MESSAGES = {
     "Read more": "Leia mais",
     "Source": "Código",
 }
-
