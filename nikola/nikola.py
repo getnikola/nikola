@@ -185,6 +185,8 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['rel_link'] = self.rel_link
         self.GLOBAL_CONTEXT['abs_link'] = self.abs_link
         self.GLOBAL_CONTEXT['exists'] = self.file_exists
+        self.GLOBAL_CONTEXT['SLUG_TAG_PATH'] = self.config[
+            'SLUG_TAG_PATH']
 
         self.GLOBAL_CONTEXT['add_this_buttons'] = self.config[
             'ADD_THIS_BUTTONS']

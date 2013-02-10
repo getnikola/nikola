@@ -12,6 +12,7 @@ Bugfixes
 --------
 
 * Make really sure we import the right conf.py
+* Make SLUG_TAG_PATH config dep for most pages
 
 New in 5.2
 ==========
