@@ -29,3 +29,10 @@ td.label {
     /* Issue #290 */
     background-color: inherit;
 }
+
+.footnote-reference {
+    /* Issue 290 */
+    vertical-align: super;
+    font-size: xx-small;
+}
+
