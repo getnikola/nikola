@@ -51,3 +51,9 @@ div.figure > a > img {
     margin-left: auto;
     margin-right: auto;
 }
+
+div.admonition, div.attention, div.caution, div.danger, div.error, div.hint, div.important, div.note, div.tip, div.warning {
+    /* Issue 277 */
+    border: 1px solid #aaa;
+    border-radius: 5px;
+}
