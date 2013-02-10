@@ -126,8 +126,7 @@ class Mustache(Task):
                 if langname == lang:
                     continue
                 translations.append({'name':
-                                     kw["messages"][langname]["Read in"
-                                                              "English"],
+                                     kw["messages"][langname]["Read in English"],
                                     'link': "javascript:load_data('%s');"
                                     % post.permalink(langname).replace(
                                         ".html", ".json")})
