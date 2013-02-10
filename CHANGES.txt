@@ -17,6 +17,7 @@ Bugfixes
 * Removed meta title tag for better HTML validation
 * Removed #999 background from footnote backlink.
 * Made footnote references be superscripted.
+* Centered figure's image and caption
 
 New in 5.2
 ==========

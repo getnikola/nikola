@@ -36,3 +36,16 @@ td.label {
     font-size: xx-small;
 }
 
+
+.caption {
+    /* Issue 292 */
+    text-align: center;
+}
+
+div.figure > a > img {
+    /* Issue 292 */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
