@@ -110,9 +110,11 @@ class CommandNewPost(Command):
         print("-----------------\n")
         if title is None:
             print("Enter title: ", end='')
+            # WHY, PYTHON3???? WHY?
+            sys.stdout.flush()
             title = sys.stdin.readline()
         else:
-            print("Title: ", title)
+            print("Title:", title)
         if isinstance(title, bytes):
             title = title.decode(sys.stdin.encoding)
         title = title.strip()
