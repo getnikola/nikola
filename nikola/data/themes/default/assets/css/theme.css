@@ -24,3 +24,8 @@ img {
 }
 
 #addthisbox {margin-bottom: 12px;}
+
+td.label {
+    /* Issue #290 */
+    background-color: inherit;
+}
