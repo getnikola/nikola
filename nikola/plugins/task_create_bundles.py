@@ -76,6 +76,10 @@ class BuildBundles(LateTask):
                 dname = os.path.dirname(name)
                 file_dep = [os.path.join('output', dname, fname) for fname in
                             files]
+                # Need to filter custom.css if it's not there so doit doesn't
+                # refuse to do this task. FIXME
+                file_dep = [f for f in file_dep if not f.endswith('custom.css')]
+
                 task = {
                     'file_dep': file_dep,
                     'basename': str(self.name),
