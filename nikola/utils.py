@@ -255,6 +255,8 @@ def load_messages(themes, translations):
     oldpath = sys.path[:]
     for theme_name in themes[::-1]:
         msg_folder = os.path.join(get_theme_path(theme_name), 'messages')
+        default_folder = os.path.join(get_theme_path('default'), 'messages')
+        sys.path.insert(0, default_folder)
         sys.path.insert(0, msg_folder)
         english = __import__('messages_en')
         for lang in list(translations.keys()):
