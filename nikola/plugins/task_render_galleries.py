@@ -126,7 +126,7 @@ class Galleries(Task):
                 pass
 
             # List of sub-galleries
-            folder_list = [x.split(os.sep)[-2] + os.sep for x in
+            folder_list = [x.split(os.sep)[-2] for x in
                            glob.glob(os.path.join(gallery_path, '*') + os.sep)]
 
             crumbs = gallery_path.split(os.sep)[:-1]

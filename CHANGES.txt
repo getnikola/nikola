@@ -22,6 +22,7 @@ Bugfixes
 * Removed outset border from admonitions.
 * Use default theme as last resource for messages/translations
 * DATE_FORMAT option was being ignored
+* Remove trailing "\" on windows gallery links (Issue #298)
 
 New in 5.2
 ==========
