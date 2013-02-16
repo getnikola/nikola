@@ -33,8 +33,13 @@ class IntegrationTest(unittest.TestCase):
         """Reove the demo site."""
         shutil.rmtree(self.tmpdir)
 
+class DefaultBuild(IntegrationTest):
+    """Test that a default build of --demo works."""
+
     def test_default_build(self):
         """Test that a default build of --demo works."""
         with cd(self.target_dir):
             self.build_command.run()
             self.assertTrue(True)  # Meaning we did not crash ;-)
+            # Ensure the temprary dodo file is deleted (Issue #302)
+            self.assertFalse(os.path.isfile(self.build_command.dodo.name))

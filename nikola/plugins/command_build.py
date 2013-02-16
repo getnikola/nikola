@@ -38,8 +38,8 @@ class CommandBuild(Command):
         """Build the site using doit."""
 
         # FIXME: this is crap, do it right
-        with tempfile.NamedTemporaryFile(suffix='.py', delete=False) as dodo:
-            dodo.write(b'''
+        with tempfile.NamedTemporaryFile(suffix='.py', delete=False) as self.dodo:
+            self.dodo.write(b'''
 import sys
 sys.path.insert(0, '.')
 from doit.reporter import ExecutedOnlyReporter
@@ -55,12 +55,13 @@ SITE = Nikola(**conf.__dict__)
 def task_render_site():
     return SITE.gen_tasks()
             ''')
-            dodo.flush()
+            self.dodo.flush()
             first = args[0] if args else None
             if first in ('auto', 'clean', 'forget', 'ignore', 'list', 'run'):
                 cmd = first
                 args = args[1:]
             else:
                 cmd = 'run'
-            os.system('doit %s -f %s -d . %s' % (cmd, dodo.name,
+            os.system('doit %s -f %s -d . %s' % (cmd, self.dodo.name,
                                                  ''.join(args)))
+            os.unlink(self.dodo.name)
