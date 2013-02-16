@@ -28,6 +28,17 @@ class IntegrationTest(unittest.TestCase):
         self.init_command = nikola.plugins.command_init.CommandInit()
         self.init_command.copy_sample_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
+        self.patch_site()
+        self.build()
+
+    def patch_site(self):
+        """Make any modifications you need to the site."""
+        pass
+
+    def build(self):
+        """Build the site."""
+        with cd(self.target_dir):
+            self.build_command.run()
 
     def tearDown(self):
         """Reove the demo site."""
@@ -38,8 +49,5 @@ class DefaultBuild(IntegrationTest):
 
     def test_default_build(self):
         """Test that a default build of --demo works."""
-        with cd(self.target_dir):
-            self.build_command.run()
-            self.assertTrue(True)  # Meaning we did not crash ;-)
-            # Ensure the temprary dodo file is deleted (Issue #302)
-            self.assertFalse(os.path.isfile(self.build_command.dodo.name))
+        # Ensure the temprary dodo file is deleted (Issue #302)
+        self.assertFalse(os.path.isfile(self.build_command.dodo.name))
