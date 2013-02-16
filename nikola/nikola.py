@@ -195,9 +195,7 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
         self.GLOBAL_CONTEXT['use_cdn'] = self.config.get("USE_CDN")
         self.GLOBAL_CONTEXT['favicons'] = self.config['FAVICONS']
-        if 'date_format' not in self.GLOBAL_CONTEXT:
-            self.GLOBAL_CONTEXT['date_format'] = '%Y-%m-%d %H:%M'
-
+        self.GLOBAL_CONTEXT['date_format'] = self.config.get('DATE_FORMAT', '%Y-%m-%d %H:%M')
         self.GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
         self.GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
         self.GLOBAL_CONTEXT['blog_url'] = self.config.get('BLOG_URL')
