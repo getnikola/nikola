@@ -20,6 +20,8 @@ Bugfixes
 * Made footnote references be superscripted.
 * Centered figure's image and caption.
 * Removed outset border from admonitions.
+* Use default theme as last resource for messages/translations
+* DATE_FORMAT option was being ignored
 
 New in 5.2
 ==========
