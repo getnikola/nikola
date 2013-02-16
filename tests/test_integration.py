@@ -47,7 +47,7 @@ class IntegrationTest(unittest.TestCase):
 class DefaultBuild(IntegrationTest):
     """Test that a default build of --demo works."""
 
-    def test_default_build(self):
+    def test_deleted_dodo(self):
         """Test that a default build of --demo works."""
         # Ensure the temprary dodo file is deleted (Issue #302)
         self.assertFalse(os.path.isfile(self.build_command.dodo.name))
