@@ -157,7 +157,7 @@ def _get_metadata_from_file(source_path, meta={'title': '', 'slug': '', 'date':
     re_rst_title = re.compile(r'^([%s]{4,})' % re.escape(string.punctuation))
 
     with codecs.open(source_path, "r", "utf8") as meta_file:
-        meta_data = meta_file.readlines(15)
+        meta_data = meta_file.read()
 
     for i, line in enumerate(meta_data):
         mt = False
