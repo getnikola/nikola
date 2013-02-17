@@ -44,6 +44,24 @@ class IntegrationTest(unittest.TestCase):
         """Reove the demo site."""
         shutil.rmtree(self.tmpdir)
 
+class EmptytBuild(IntegrationTest):
+    """Basic integration testcase."""
+    def setUp(self):
+        """Setup a demo site."""
+        self.tmpdir = tempfile.mkdtemp()
+        self.target_dir = os.path.join(self.tmpdir, "target")
+        self.build_command = nikola.plugins.command_build.CommandBuild()
+        self.init_command = nikola.plugins.command_init.CommandInit()
+        self.init_command.create_empty_site(self.target_dir)
+        self.init_command.create_configuration(self.target_dir)
+        self.patch_site()
+        self.build()
+
+    def test_deleted_dodo(self):
+        """Test that a default build of --demo works."""
+        # Ensure the temprary dodo file is deleted (Issue #302)
+        self.assertFalse(os.path.isfile(self.build_command.dodo.name))
+
 class DefaultBuild(IntegrationTest):
     """Test that a default build of --demo works."""
 
