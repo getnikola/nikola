@@ -115,14 +115,16 @@ def get_theme_path(theme):
 def re_meta(line, match=None):
     """re.compile for meta"""
     if match:
-        reStr = re.compile('^.. ({0}): (.*)'.format(re.escape(match)))
+        reStr = re.compile('^\s*\.\. {0}: (.*)'.format(re.escape(match)))
     else:
-        reStr = re.compile('^.. ([a-z]*): (.*)')
+        reStr = re.compile('^\s*\.\. ([a-z]*): (.*)')
     result = reStr.findall(line)
-    if result:
-        return (result[0], result[1].strip())
+    if match and result:
+        return (match, result[0])
+    elif not match and result:
+        return (result[0][0], result[0][1].strip())
     else:
-        return (None, '')
+        return (None,)
 
 
 def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
@@ -145,9 +147,9 @@ def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
     return meta
 
 
-def _get_metadata_from_file(source_path, meta={'title': '', 'slug': '', 'tags':
-                                               '', 'link': '', 'description':
-                                               ''}):
+def _get_metadata_from_file(source_path, meta={'title': '', 'slug': '', 'date':
+                                               '', 'tags': '', 'link': '',
+                                               'description': ''}):
     re_md_title = re.compile(r'^%s([^%s].*)' %
                             (re.escape('#'), re.escape('#')))
     # Assuming rst titles are going to be at least 4 chars long
@@ -158,18 +160,25 @@ def _get_metadata_from_file(source_path, meta={'title': '', 'slug': '', 'tags':
         meta_data = meta_file.readlines(15)
 
     for i, line in enumerate(meta_data):
+        mt = False
         if not meta['title']:
-            meta['title'] = re_meta(line, 'title')[1]
+            match = re_meta(line, 'title')
+            if match[0]:
+                meta['title'] = match[1]
+            mt = True
         if not meta['title']:
             if re_rst_title.findall(line) and i > 0:
                 meta['title'] = meta_data[i - 1].strip()
+            mt = True
         if not meta['title']:
             if re_md_title.findall(line):
                 meta['title'] = re_md_title.findall(line)[0]
+            mt = True
 
-        match = re_meta(line)
-        if match[0] != '':
-            meta[match[0]] = match[1]
+        if not mt:
+            match = re_meta(line)
+            if match[0]:
+                meta[match[0]] = match[1]
 
     return meta
 
@@ -182,16 +191,14 @@ def get_meta(source_path, file_metadata_regexp=None):
     If any metadata is then found inside the file the metadata from the
     file will override previous findings.
     """
-    meta = {'title': '', 'slug': '', 'tags': '', 'link': '',
+    meta = {'title': '', 'slug': '', 'date': '', 'tags': '', 'link': '',
             'description': ''}
 
     if not (file_metadata_regexp is None):
         meta = _get_metadata_from_filename_by_regex(source_path,
                                                     file_metadata_regexp)
 
-    meta = _get_metadata_from_file(source_path, meta['title'], meta['slug'],
-                                   meta['date'], meta['tags'], meta['link'],
-                                   meta['description'])
+    meta = _get_metadata_from_file(source_path, meta)
 
     if not meta['slug']:
         # If no slug is found in the metadata use the filename
