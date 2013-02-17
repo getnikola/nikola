@@ -26,11 +26,9 @@
 from __future__ import print_function
 import codecs
 import datetime
-import glob
 import hashlib
 from optparse import OptionParser
 import os
-import sys
 
 from doit.tools import timeout
 import feedparser
@@ -42,18 +40,19 @@ from nikola.utils import config_changed
 
 class Feed(peewee.Model):
     name = peewee.CharField()
-    url = peewee.CharField(max_length = 200)
+    url = peewee.CharField(max_length=200)
     last_status = peewee.CharField(null=True)
-    etag = peewee.CharField(max_length = 200)
+    etag = peewee.CharField(max_length=200)
     last_modified = peewee.DateTimeField()
+
 
 class Entry(peewee.Model):
     date = peewee.DateTimeField()
     feed = peewee.ForeignKeyField(Feed)
-    content = peewee.TextField(max_length = 20000)
-    link = peewee.CharField(max_length = 200)
-    title = peewee.CharField(max_length = 200)
-    guid = peewee.CharField(max_length = 200)
+    content = peewee.TextField(max_length=20000)
+    link = peewee.CharField(max_length=200)
+    title = peewee.CharField(max_length=200)
+    guid = peewee.CharField(max_length=200)
 
 
 class Planetoid(Command, Task):
@@ -79,7 +78,6 @@ class Planetoid(Command, Task):
         parser = OptionParser(usage="nikola %s [options]" % self.name)
         (options, args) = parser.parse_args(list(args))
 
-
     def task_load_feeds(self):
         "Read the feeds file, add it to the database."
         feeds = []
@@ -101,8 +99,8 @@ class Planetoid(Command, Task):
                 name=name,
                 url=url,
                 etag='foo',
-                last_modified=datetime.datetime(1970,1,1),
-                )
+                last_modified=datetime.datetime(1970, 1, 1),
+            )
             f.save()
 
         def update_feed_url(feed, url):
@@ -110,21 +108,20 @@ class Planetoid(Command, Task):
             feed.save()
 
         for feed, name in feeds:
-            f = Feed.select().where(Feed.name==name)
+            f = Feed.select().where(Feed.name == name)
             if not list(f):
                 yield {
                     'basename': self.name,
                     'name': name.encode('utf8'),
-                    'actions': ((add_feed,(name, feed)),),
+                    'actions': ((add_feed, (name, feed)), ),
                     'file_dep': ['feeds'],
-                    }
+                }
             elif list(f)[0].url != feed:
                 yield {
                     'basename': self.name,
-                    'name': (u'updating_'+name).encode('utf8'),
-                    'actions': ((update_feed_url,(list(f)[0], feed)),),
-                    }
-
+                    'name': (u'updating_' + name).encode('utf8'),
+                    'actions': ((update_feed_url, (list(f)[0], feed)), ),
+                }
 
     def task_update_feeds(self):
         """Download feed contents, add entries to the database."""
@@ -132,7 +129,8 @@ class Planetoid(Command, Task):
             modified = feed.last_modified.timetuple()
             etag = feed.etag
             try:
-                parsed = feedparser.parse(feed.url,
+                parsed = feedparser.parse(
+                    feed.url,
                     etag=etag,
                     modified=modified
                 )
@@ -145,7 +143,7 @@ class Planetoid(Command, Task):
             else:
                 print(feed.url)
             feed.etag = parsed.get('etag', 'foo')
-            modified = tuple(parsed.get('date_parsed', (1970,1,1)))[:6]
+            modified = tuple(parsed.get('date_parsed', (1970, 1, 1)))[:6]
             print("==========>", modified)
             modified = datetime.datetime(*modified)
             feed.last_modified = modified
@@ -165,7 +163,7 @@ class Planetoid(Command, Task):
                     return False
                 print("DATE:===>", date)
                 date = datetime.datetime(*(date[:6]))
-                title = "%s: %s" %(feed.name, entry_data.get('title', 'Sin título'))
+                title = "%s: %s" % (feed.name, entry_data.get('title', 'Sin título'))
                 content = entry_data.get('content', None)
                 if content:
                     content = content[0].value
@@ -176,20 +174,22 @@ class Planetoid(Command, Task):
                 guid = str(entry_data.get('guid', entry_data.link))
                 link = entry_data.link
                 print(repr([date, title]))
-                e = list(Entry.select().where(Entry.guid==guid))
-                print(repr(dict(
-                        date = date,
-                        title = title,
-                        content = content,
+                e = list(Entry.select().where(Entry.guid == guid))
+                print(
+                    repr(dict(
+                        date=date,
+                        title=title,
+                        content=content,
                         guid=guid,
                         feed=feed,
                         link=link,
-                    )))
+                    ))
+                )
                 if not e:
                     entry = Entry.create(
-                        date = date,
-                        title = title,
-                        content = content,
+                        date=date,
+                        title=title,
+                        content=content,
                         guid=guid,
                         feed=feed,
                         link=link,
@@ -205,10 +205,10 @@ class Planetoid(Command, Task):
             task = {
                 'basename': self.name,
                 'name': str(feed.url),
-                'actions': [(update_feed,(feed,))],
+                'actions': [(update_feed, (feed, ))],
                 'uptodate': [timeout(datetime.timedelta(minutes=
-                    self.site.config.get('PLANETOID_REFRESH',60)))],
-                }
+                             self.site.config.get('PLANETOID_REFRESH', 60)))],
+            }
             yield task
 
     def task_generate_posts(self):
@@ -221,8 +221,8 @@ class Planetoid(Command, Task):
 
         def generate_post(entry):
             unique_id = gen_id(entry)
-            meta_path = os.path.join('posts',unique_id+'.meta')
-            post_path = os.path.join('posts',unique_id+'.txt')
+            meta_path = os.path.join('posts', unique_id + '.meta')
+            post_path = os.path.join('posts', unique_id + '.txt')
             with codecs.open(meta_path, 'wb+', 'utf8') as fd:
                 fd.write(u'%s\n' % entry.title.replace('\n', ' '))
                 fd.write(u'%s\n' % unique_id)
@@ -241,8 +241,8 @@ class Planetoid(Command, Task):
             entry_id = gen_id(entry)
             yield {
                 'basename': self.name,
-                'targets': [os.path.join('posts',entry_id+'.meta'), os.path.join('posts',entry_id+'.txt')],
+                'targets': [os.path.join('posts', entry_id + '.meta'), os.path.join('posts', entry_id + '.txt')],
                 'name': entry_id,
                 'actions': [(generate_post, (entry,))],
                 'uptodate': [config_changed({1: entry})]
-                }
+            }
