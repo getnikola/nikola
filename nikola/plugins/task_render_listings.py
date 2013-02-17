@@ -22,6 +22,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import unicode_literals, print_function
+
 import os
 
 from pygments import highlight
@@ -60,14 +62,16 @@ class Listings(Task):
                                                lineanchors=utils.slugify(f),
                                                anchorlinenos=True))
             title = os.path.basename(in_name)
-            crumbs = out_name.split(os.sep)[1:-1] + [title]
+            print("CRUMBSINOUT", in_name, out_name)
+            #crumbs = out_name.split(os.sep)[1:-1] + [title]
             # TODO: write this in human
-            paths = ['/'.join(['..'] * (len(crumbs) - 2 - i)) for i in
-                     range(len(crumbs[:-2]))] + ['.', '#']
+            #paths = ['/'.join(['..'] * (len(crumbs) - 2 - i)) for i in
+                     #range(len(crumbs[:-2]))] + ['.', '#']
+            crumbs = utils.get_crumbs(os.path.relpath(out_name, kw['output_folder']), is_file=True)
             context = {
                 'code': code,
                 'title': title,
-                'crumbs': zip(paths, crumbs),
+                'crumbs': crumbs,
                 'lang': kw['default_lang'],
                 'description': title,
             }

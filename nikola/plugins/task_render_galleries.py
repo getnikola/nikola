@@ -44,23 +44,6 @@ except ImportError:
 from nikola.plugin_categories import Task
 from nikola import utils
 
-def get_crumbs(path):
-    """Create proper links for a crumb bar.
-
-    >>> get_crumbs('galleries')
-    [[u'#', u'galleries']]
-
-    >>> get_crumbs(os.path.join('galleries','demo'))
-    [[u'..', u'galleries'], [u'#', u'demo']]
-    """
-
-    crumbs = path.split(os.sep)
-    _crumbs = []
-    for i, crumb in enumerate(crumbs[::-1]):
-        path = '/'.join(['..']*i) or '#'
-        _crumbs.append([path, crumb])
-    return list(reversed(_crumbs))
-
 
 class Galleries(Task):
     """Copy theme assets into output."""
@@ -148,7 +131,7 @@ class Galleries(Task):
                            glob.glob(os.path.join(gallery_path, '*') + os.sep)]
 
 
-            crumbs = get_crumbs(gallery_path)
+            crumbs = utils.get_crumbs(gallery_path)
 
             image_list = [x for x in image_list if "thumbnail" not in x]
             # Sort by date

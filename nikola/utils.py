@@ -60,7 +60,7 @@ import PyRSS2Gen as rss
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'generic_rss_renderer',
            'copy_file', 'slugify', 'unslugify', 'get_meta', 'to_datetime',
-           'apply_filters', 'config_changed']
+           'apply_filters', 'config_changed', 'get_crumbs']
 
 
 class CustomEncoder(json.JSONEncoder):
@@ -490,3 +490,31 @@ def apply_filters(task, filters):
 
                 task['actions'].append((unlessLink, (action, target)))
     return task
+
+
+def get_crumbs(path, is_file=False):
+    """Create proper links for a crumb bar.
+
+    >>> get_crumbs('galleries')
+    [['#', 'galleries']]
+
+    >>> get_crumbs(os.path.join('galleries','demo'))
+    [['..', 'galleries'], ['#', 'demo']]
+
+    >>> get_crumbs(os.path.join('listings','foo','bar'), is_file=True)
+    [['..', 'listings'], ['.', 'foo'], ['#', 'bar']]
+    """
+
+    crumbs = path.split(os.sep)
+    _crumbs = []
+    if is_file:
+        for i, crumb in enumerate(crumbs[-3::-1]):  # Up to parent folder only
+            _path = '/'.join(['..']*(i+1))
+            _crumbs.append([_path, crumb])
+        _crumbs.insert(0,['.', crumbs[-2]])  # file's folder
+        _crumbs.insert(0,['#', crumbs[-1]])  # file itself
+    else:
+        for i, crumb in enumerate(crumbs[::-1]):
+            _path = '/'.join(['..']*i) or '#'
+            _crumbs.append([_path, crumb])
+    return list(reversed(_crumbs))
