@@ -79,8 +79,16 @@ class Post(object):
                                                    meta_data][:6]
         else:
             (default_title, default_pagename, self.date, self.tags,
-                self.link, default_description) = utils.get_meta(
-                    self.source_path, file_metadata_regexp)
+                self.link, default_description)
+            self.meta = utils.get_meta(self.source_path, file_metadata_regexp)
+
+            (default_title, default_pagename,
+                default_description) = (self.meta['title'], self.meta['slug'],
+                                        self.meta['description'])
+
+            for k, v in self.meta.items():
+                if k not in ['title', 'slug', 'description']:
+                    setattr(self, k, v)
 
         if not default_title or not default_pagename or not self.date:
             raise OSError("You must set a title and slug and date! [%s]" %
