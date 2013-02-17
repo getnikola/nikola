@@ -44,6 +44,23 @@ except ImportError:
 from nikola.plugin_categories import Task
 from nikola import utils
 
+def get_crumbs(path):
+    """Create proper links for a crumb bar.
+
+    >>> get_crumbs('galleries')
+    [[u'#', u'galleries']]
+
+    >>> get_crumbs(os.path.join('galleries','demo'))
+    [[u'..', u'galleries'], [u'#', u'demo']]
+    """
+
+    crumbs = path.split(os.sep)
+    _crumbs = []
+    for i, crumb in enumerate(crumbs[::-1]):
+        path = '/'.join(['..']*i) or '#'
+        _crumbs.append([path, crumb])
+    return list(reversed(_crumbs))
+
 
 class Galleries(Task):
     """Copy theme assets into output."""
@@ -91,6 +108,7 @@ class Galleries(Task):
             output_gallery = os.path.dirname(os.path.join(
                 kw["output_folder"], self.site.path("gallery", gallery_name,
                                                     None)))
+            output_name = os.path.join(output_gallery, "index.html")
             if not os.path.isdir(output_gallery):
                 yield {
                     'basename': str('render_galleries'),
@@ -129,12 +147,8 @@ class Galleries(Task):
             folder_list = [x.split(os.sep)[-2] for x in
                            glob.glob(os.path.join(gallery_path, '*') + os.sep)]
 
-            crumbs = gallery_path.split(os.sep)[:-1]
-            crumbs.append(os.path.basename(gallery_name))
-            # TODO: write this in human
-            paths = ['/'.join(['..'] * (len(crumbs) - 1 - i)) for i in
-                     range(len(crumbs[:-1]))] + ['#']
-            crumbs = list(zip(paths, crumbs))
+
+            crumbs = get_crumbs(gallery_path)
 
             image_list = [x for x in image_list if "thumbnail" not in x]
             # Sort by date
@@ -213,7 +227,6 @@ class Galleries(Task):
                         'uptodate': [utils.config_changed(kw)],
                     }
 
-            output_name = os.path.join(output_gallery, "index.html")
             context = {}
             context["lang"] = kw["default_lang"]
             context["title"] = os.path.basename(gallery_path)

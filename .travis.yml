@@ -10,5 +10,5 @@ install:
   - "pip install . --use-mirrors"
 # We run tests and afterwards nikola to see if the command is executable.
 script: 
- - nosetests
+ - nosetests --with-doctest
  - nikola

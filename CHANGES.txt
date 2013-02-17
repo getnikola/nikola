@@ -23,6 +23,7 @@ Bugfixes
 * Use default theme as last resource for messages/translations
 * DATE_FORMAT option was being ignored
 * Remove trailing "\" on windows gallery links (Issue #298)
+* Inconsistent breadcrumbs in gallery pages (Issue #303)
 
 New in 5.2
 ==========
