@@ -110,14 +110,17 @@ def get_theme_path(theme):
     raise Exception("Can't find theme '%s'" % theme)
 
 
-def re_meta(line, match):
+def re_meta(line, match=None):
     """re.compile for meta"""
-    reStr = re.compile('^%s(.*)' % re.escape(match))
+    if match:
+        reStr = re.compile('^.. ({0}): (.*)'.format(re.escape(match)))
+    else:
+        reStr = re.compile('^.. ([a-z]*): (.*)')
     result = reStr.findall(line)
     if result:
-        return result[0].strip()
+        return (result[0], result[1].strip())
     else:
-        return ''
+        return (None, '')
 
 
 def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
@@ -128,31 +131,21 @@ def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
     The part to read the metadata from the filename based on a regular
     expression is taken from Pelican - pelican/readers.py
     """
-    title = slug = date = tags = link = description = ''
     match = re.match(metadata_regexp, filename)
+    meta = {'title': '', 'slug': '', 'tags': '', 'link': '',
+            'description': ''}
+
     if match:
         # .items() for py3k compat.
         for key, value in match.groupdict().items():
-            key = key.lower()  # metadata must be lowercase
+            meta.update({key.lower(): value})  # metadata must be lowercase
 
-            if key == 'title':
-                title = value
-            if key == 'slug':
-                slug = value
-            if key == 'date':
-                date = value
-            if key == 'tags':
-                tags = value
-            if key == 'link':
-                link = value
-            if key == 'description':
-                description = value
-
-    return (title, slug, date, tags, link, description)
+    return meta
 
 
-def _get_metadata_from_file(source_path, title='', slug='', date='', tags='',
-                            link='', description=''):
+def _get_metadata_from_file(source_path, meta={'title': '', 'slug': '', 'tags':
+                                               '', 'link': '', 'description':
+                                               ''}):
     re_md_title = re.compile(r'^%s([^%s].*)' %
                             (re.escape('#'), re.escape('#')))
     # Assuming rst titles are going to be at least 4 chars long
@@ -162,27 +155,21 @@ def _get_metadata_from_file(source_path, title='', slug='', date='', tags='',
     with codecs.open(source_path, "r", "utf8") as meta_file:
         meta_data = meta_file.readlines(15)
 
-    for i, meta in enumerate(meta_data):
-        if not title:
-            title = re_meta(meta, '.. title:')
-        if not title:
-            if re_rst_title.findall(meta) and i > 0:
-                title = meta_data[i - 1].strip()
-        if not title:
-            if re_md_title.findall(meta):
-                title = re_md_title.findall(meta)[0]
-        if not slug:
-            slug = re_meta(meta, '.. slug:')
-        if not date:
-            date = re_meta(meta, '.. date:')
-        if not tags:
-            tags = re_meta(meta, '.. tags:')
-        if not link:
-            link = re_meta(meta, '.. link:')
-        if not description:
-            description = re_meta(meta, '.. description:')
+    for i, line in enumerate(meta_data):
+        if not meta['title']:
+            meta['title'] = re_meta(line, 'title')[1]
+        if not meta['title']:
+            if re_rst_title.findall(line) and i > 0:
+                meta['title'] = meta_data[i - 1].strip()
+        if not meta['title']:
+            if re_md_title.findall(line):
+                meta['title'] = re_md_title.findall(line)[0]
 
-    return (title, slug, date, tags, link, description)
+        match = re_meta(line)
+        if match[0] != '':
+            meta[match[0]] = match[1]
+
+    return meta
 
 
 def get_meta(source_path, file_metadata_regexp=None):
@@ -193,25 +180,26 @@ def get_meta(source_path, file_metadata_regexp=None):
     If any metadata is then found inside the file the metadata from the
     file will override previous findings.
     """
-    title = slug = date = tags = link = description = ''
+    meta = {'title': '', 'slug': '', 'tags': '', 'link': '',
+            'description': ''}
 
     if not (file_metadata_regexp is None):
-        (title, slug, date, tags, link,
-         description) = _get_metadata_from_filename_by_regex(
-             source_path, file_metadata_regexp)
+        meta = _get_metadata_from_filename_by_regex(source_path,
+                                                    file_metadata_regexp)
 
-    (title, slug, date, tags, link, description) = _get_metadata_from_file(
-        source_path, title, slug, date, tags, link, description)
+    meta = _get_metadata_from_file(source_path, meta['title'], meta['slug'],
+                                   meta['date'], meta['tags'], meta['link'],
+                                   meta['description'])
 
-    if not slug:
+    if not meta['slug']:
         # If no slug is found in the metadata use the filename
-        slug = slugify(os.path.splitext(os.path.basename(source_path))[0])
+        meta['slug'] = slugify(os.path.splitext(os.path.basename(source_path))[0])
 
-    if not title:
+    if not meta['title']:
         # If no title is found, use the filename without extension
-        title = os.path.splitext(os.path.basename(source_path))[0]
+        meta['title'] = os.path.splitext(os.path.basename(source_path))[0]
 
-    return (title, slug, date, tags, link, description)
+    return meta
 
 
 def get_template_engine(themes):
