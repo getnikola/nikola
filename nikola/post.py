@@ -72,8 +72,6 @@ class Post(object):
                 self.link, default_description) = [x.strip() for x in
                                                    meta_data][:6]
         else:
-            (default_title, default_pagename, self.date, self.tags,
-                self.link, default_description)
             self.meta = utils.get_meta(self.source_path, file_metadata_regexp)
 
             (default_title, default_pagename,
