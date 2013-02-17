@@ -44,6 +44,7 @@ class IntegrationTest(unittest.TestCase):
         """Reove the demo site."""
         shutil.rmtree(self.tmpdir)
 
+
 class EmptytBuild(IntegrationTest):
     """Basic integration testcase."""
     def setUp(self):
@@ -61,6 +62,7 @@ class EmptytBuild(IntegrationTest):
         """Test that a default build of --demo works."""
         # Ensure the temprary dodo file is deleted (Issue #302)
         self.assertFalse(os.path.isfile(self.build_command.dodo.name))
+
 
 class DefaultBuild(IntegrationTest):
     """Test that a default build of --demo works."""

@@ -509,12 +509,12 @@ def get_crumbs(path, is_file=False):
     _crumbs = []
     if is_file:
         for i, crumb in enumerate(crumbs[-3::-1]):  # Up to parent folder only
-            _path = '/'.join(['..']*(i+1))
+            _path = '/'.join(['..'] * (i + 1))
             _crumbs.append([_path, crumb])
-        _crumbs.insert(0,['.', crumbs[-2]])  # file's folder
-        _crumbs.insert(0,['#', crumbs[-1]])  # file itself
+        _crumbs.insert(0, ['.', crumbs[-2]])  # file's folder
+        _crumbs.insert(0, ['#', crumbs[-1]])  # file itself
     else:
         for i, crumb in enumerate(crumbs[::-1]):
-            _path = '/'.join(['..']*i) or '#'
+            _path = '/'.join(['..'] * i) or '#'
             _crumbs.append([_path, crumb])
     return list(reversed(_crumbs))

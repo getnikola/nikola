@@ -130,7 +130,6 @@ class Galleries(Task):
             folder_list = [x.split(os.sep)[-2] for x in
                            glob.glob(os.path.join(gallery_path, '*') + os.sep)]
 
-
             crumbs = utils.get_crumbs(gallery_path)
 
             image_list = [x for x in image_list if "thumbnail" not in x]
