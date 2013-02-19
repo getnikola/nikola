@@ -242,6 +242,27 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # Enable comments on picture gallery pages?
 # COMMENTS_IN_GALLERIES = False
 
+# Do you want a Mathjax config file?
+# You can use your own config file:
+# MATHJAX_SUPPORT = """
+#"""
+
+# We provide this one by default:
+#"""
+#<script type="text/x-mathjax-config">
+#MathJax.Hub.Config({
+#    tex2jax: {
+#        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+#        displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+#    },
+#    displayAlign: 'left', // Change this to 'center' to center equations.
+#    "HTML-CSS": {
+#        styles: {'.MathJax_Display': {"margin": 0}}
+#    }
+#});
+#</script>
+#"""
+
 # Enable Addthis social buttons?
 # Defaults to true
 # ADD_THIS_BUTTONS = True

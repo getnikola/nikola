@@ -104,6 +104,20 @@ class Nikola(object):
             'LICENSE': '',
             'LISTINGS_FOLDER': 'listings',
             'MAX_IMAGE_SIZE': 1280,
+            'MATHJAX_SUPPORT': """
+            <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+                },
+                displayAlign: 'left', // Change this to 'center' to center equations.
+                "HTML-CSS": {
+                    styles: {'.MathJax_Display': {"margin": 0}}
+                }
+            });
+            </script>
+            """,
             'OUTPUT_FOLDER': 'output',
             'post_compilers': {
                 "rest": ('.txt', '.rst'),
@@ -205,6 +219,7 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['license'] = self.config.get('LICENSE')
         self.GLOBAL_CONTEXT['search_form'] = self.config.get('SEARCH_FORM')
         self.GLOBAL_CONTEXT['disqus_forum'] = self.config.get('DISQUS_FORUM')
+        self.GLOBAL_CONTEXT['mathjax_support'] = self.config.get('MATHJAX_SUPPORT')
         self.GLOBAL_CONTEXT['content_footer'] = self.config.get('CONTENT_FOOTER')
         self.GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
         self.GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
