@@ -24,3 +24,34 @@ img {
 }
 
 #addthisbox {margin-bottom: 12px;}
+
+td.label {
+    /* Issue #290 */
+    background-color: inherit;
+}
+
+.footnote-reference {
+    /* Issue 290 */
+    vertical-align: super;
+    font-size: xx-small;
+}
+
+
+.caption {
+    /* Issue 292 */
+    text-align: center;
+}
+
+div.figure > a > img {
+    /* Issue 292 */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div.admonition, div.attention, div.caution, div.danger, div.error, div.hint, div.important, div.note, div.tip, div.warning {
+    /* Issue 277 */
+    border: 1px solid #aaa;
+    border-radius: 5px;
+}
+

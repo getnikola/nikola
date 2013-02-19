@@ -130,8 +130,9 @@ class Nikola(object):
             'TAG_PAGES_ARE_INDEXES': False,
             'THEME': 'site',
             'THUMBNAIL_SIZE': 180,
-            'USE_FILENAME_AS_TITLE': True,
             'USE_BUNDLES': True,
+            'USE_CDN': False,
+            'USE_FILENAME_AS_TITLE': True,
         }
 
         self.config.update(config)
@@ -184,16 +185,17 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['rel_link'] = self.rel_link
         self.GLOBAL_CONTEXT['abs_link'] = self.abs_link
         self.GLOBAL_CONTEXT['exists'] = self.file_exists
+        self.GLOBAL_CONTEXT['SLUG_TAG_PATH'] = self.config[
+            'SLUG_TAG_PATH']
 
         self.GLOBAL_CONTEXT['add_this_buttons'] = self.config[
             'ADD_THIS_BUTTONS']
         self.GLOBAL_CONTEXT['index_display_post_count'] = self.config[
             'INDEX_DISPLAY_POST_COUNT']
         self.GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
+        self.GLOBAL_CONTEXT['use_cdn'] = self.config.get("USE_CDN")
         self.GLOBAL_CONTEXT['favicons'] = self.config['FAVICONS']
-        if 'date_format' not in self.GLOBAL_CONTEXT:
-            self.GLOBAL_CONTEXT['date_format'] = '%Y-%m-%d %H:%M'
-
+        self.GLOBAL_CONTEXT['date_format'] = self.config.get('DATE_FORMAT', '%Y-%m-%d %H:%M')
         self.GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
         self.GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
         self.GLOBAL_CONTEXT['blog_url'] = self.config.get('BLOG_URL')

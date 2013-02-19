@@ -283,6 +283,13 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 #
 # Also, there is a local search plugin you can use.
 
+# Use content distribution networks for jquery and twitter-bootstrap css and js
+# If this is True, jquery is served from the Google CDN and twitter-bootstrap
+# is served from the NetDNA CDN
+# Set this to False if you want to host your site without requiring access to
+# external resources.
+# USE_CDN = False
+
 # Google analytics or whatever else you use. Added to the bottom of <body>
 # in the default template (base.tmpl).
 # ANALYTICS = ""

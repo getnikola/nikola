@@ -91,6 +91,7 @@ class Galleries(Task):
             output_gallery = os.path.dirname(os.path.join(
                 kw["output_folder"], self.site.path("gallery", gallery_name,
                                                     None)))
+            output_name = os.path.join(output_gallery, "index.html")
             if not os.path.isdir(output_gallery):
                 yield {
                     'basename': str('render_galleries'),
@@ -126,15 +127,10 @@ class Galleries(Task):
                 pass
 
             # List of sub-galleries
-            folder_list = [x.split(os.sep)[-2] + os.sep for x in
+            folder_list = [x.split(os.sep)[-2] for x in
                            glob.glob(os.path.join(gallery_path, '*') + os.sep)]
 
-            crumbs = gallery_path.split(os.sep)[:-1]
-            crumbs.append(os.path.basename(gallery_name))
-            # TODO: write this in human
-            paths = ['/'.join(['..'] * (len(crumbs) - 1 - i)) for i in
-                     range(len(crumbs[:-1]))] + ['#']
-            crumbs = list(zip(paths, crumbs))
+            crumbs = utils.get_crumbs(gallery_path)
 
             image_list = [x for x in image_list if "thumbnail" not in x]
             # Sort by date
@@ -213,7 +209,6 @@ class Galleries(Task):
                         'uptodate': [utils.config_changed(kw)],
                     }
 
-            output_name = os.path.join(output_gallery, "index.html")
             context = {}
             context["lang"] = kw["default_lang"]
             context["title"] = os.path.basename(gallery_path)

@@ -1,7 +1,7 @@
 The Nikola Handbook
 ===================
 
-:Version: 5.2
+:Version: 5.3
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-info pull-right
@@ -14,8 +14,12 @@ All You Need to Know
 
 After you have Nikola installed:
 
-Create a site:
+Create a empty site:
     ``nikola init mysite``
+
+You can create a site with demo files in it with ``nikola init mysite --demo``
+
+The rest of these commands have to be executed inside the new ``mysite`` folder.
 
 Create a post:
     ``nikola new_post``
@@ -215,6 +219,18 @@ After that, run ``nikola init --demo sitename`` and that will create a folder ca
 ``sitename`` containing a functional demo site.
 
 Nikola is packaged for some Linux distributions, you may get that instead.
+
+*NOTE*: If you get a ``ERROR: /bin/sh: 1: xslt-config: not found`` or ``fatal error:
+libxml/xmlversion.h: No such file or directory`` when running ``pip install -r requirements.txt``, install *libxml* and *libxslt* libraries, like so:
+
+Debian systems:
+
+    sudo apt-get install libxml2-dev
+    sudo apt-get install libxslt1-dev 
+
+RHEL systems:
+
+    yum install libxslt-devel libxml2-devel
 
 Getting Started
 ---------------
@@ -771,6 +787,9 @@ different ones, or about other webservers, please share!
 
 #. Through the filters feature, you can run your files through arbitrary commands, so that images
    are recompressed, Javascript is minimized, etc.
+
+#. The USE_CDN option offloads standard Javascript and CSS files to a CDN so they are not
+   downloaded from your server.
 
 Restructured Text Extensions
 ----------------------------

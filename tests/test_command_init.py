@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from context import nikola
-import os
 import unittest
 import mock
 

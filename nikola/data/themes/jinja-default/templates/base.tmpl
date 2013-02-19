@@ -2,26 +2,32 @@
 <html lang="{{lang}}">
 <head>
     <meta charset="utf-8">
-    <meta name="title" content="{{title}} | {{blog_title}}" >
     <meta name="description" content="{{description}}" >
     <meta name="author" content="{{blog_author}}">
     <title>{{title}} | {{blog_title}}</title>
     <!-- Le styles -->
     {% if use_bundles %}
-        <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
-        <script src="/assets/js/all.js" type="text/javascript"></script>
+        {% if use_cdn %}
+            <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
+            <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
+        {% else %}
+            <link href="/assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+        {% endif %}
     {% else %}
-        <link href="/assets/css/bootstrap.css" rel="stylesheet" type="text/css">
-        <link href="/assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+        {% if use_cdn %}
+            <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
+        {% else %}
+            <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+            <link href="/assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
+        {% endif %}
         <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/colorbox.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/css/slides.css" rel="stylesheet" type="text/css"/>
         <link href="/assets/css/theme.css" rel="stylesheet" type="text/css"/>
         {% if has_custom_css %}
-            <link href="/assets/css/custom.css" rel="stylesheet">
+            <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
         {% endif %}
-        <script src="/assets/js/jquery-1.7.2.min.js" type="text/javascript"></script>
-        <script src="/assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
     {% endif %}
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -97,5 +103,25 @@
         <!-- End of social buttons -->
     {% endif %}
     {{analytics}}
+    <!-- late load javascript -->
+    {% if use_bundles %}
+        {% if use_cdn %}
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+            <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>
+            <script src="/assets/js/all.js" type="text/javascript"></script>
+        {% else %}
+            <script src="/assets/js/all-nocdn.js" type="text/javascript"></script>
+        {% endif %}
+    {% else %}
+        {% if use_cdn %}
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+            <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>
+        {% else %}
+            <script src="/assets/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+            <script src="/assets/js/bootstrap.min.js" type="text/javascript"></script>
+        {% endif %}
+        <script src="/assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
+        <script src="/assets/js/slides.min.jquery.js" type="text/javascript"></script>
+    {% endif %}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
 </body>
