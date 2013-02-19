@@ -160,25 +160,20 @@ def _get_metadata_from_file(source_path, meta={'title': '', 'slug': '', 'date':
         meta_data = meta_file.read()
 
     for i, line in enumerate(meta_data):
-        mt = False
         if not meta['title']:
             match = re_meta(line, 'title')
             if match[0]:
                 meta['title'] = match[1]
-            mt = True
         if not meta['title']:
             if re_rst_title.findall(line) and i > 0:
                 meta['title'] = meta_data[i - 1].strip()
-            mt = True
         if not meta['title']:
             if re_md_title.findall(line):
                 meta['title'] = re_md_title.findall(line)[0]
-            mt = True
 
-        if not mt:
-            match = re_meta(line)
-            if match[0]:
-                meta[match[0]] = match[1]
+        match = re_meta(line)
+        if match[0]:
+            meta[match[0]] = match[1]
 
     return meta
 
