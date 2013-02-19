@@ -382,19 +382,19 @@ _slugify_hyphenate_re = re.compile(r'[-\s]+')
 
 
 def slugify(value):
-    u"""
+    """
     Normalizes string, converts to lowercase, removes non-alpha characters,
     and converts spaces to hyphens.
 
     From Django's "django/template/defaultfilters.py".
 
-    >>> slugify(u'áéí.óú')
+    >>> slugify('\xe1\xe9\xed.\xf3\xfa')
     'aeiou'
 
-    >>> slugify(u'foo/bar')
+    >>> slugify('foo/bar')
     'foobar'
 
-    >>> slugify(u'foo bar')
+    >>> slugify('foo bar')
     'foo-bar'
 
     """
