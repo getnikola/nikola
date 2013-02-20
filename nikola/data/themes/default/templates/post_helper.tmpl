@@ -61,7 +61,7 @@
         %if post.description(lang):
             <meta name="og:description" content="${post.description(lang)[:200]}">
         %else:
-            <meta name="og:description" content="${post.text(lang, without_html=True)[:200]}">
+            <meta name="og:description" content="${post.text(lang, strip_html=True)[:200]}">
         %endif
     %endif
 </%def>

@@ -977,7 +977,18 @@ They are implemented to use *Open Graph* tags whenever possible.
 
 To enable and configure your use of Twitter Cards please modify the
 corresponding lines in your ``conf.py``.
+An example configuration that uses the Twitter nickname of the website
+and the authors Twitter user ID is found below.
 
+.. code-block:: Python
+
+    TWITTER_CARD = {
+        'use_twitter_cards': True,  # enable Twitter Cards / Open Graph
+        'site': '@website',  # twitter nick for the website
+        # 'site:id': 123456,  # Same as site, but the website's Twitter user ID instead.
+        # 'creator': '@username',  # Username for the content creator / author.
+        'creator:id': 654321,  # Same as creator, but the Twitter user's ID.
+    }
 
 License
 -------

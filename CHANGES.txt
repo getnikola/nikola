@@ -4,9 +4,12 @@ New in Master
 Features
 --------
 
+* Twitter Card / Open Graph support.
+
 Bugfixes
 --------
 
+* Wordpress import: Description is left empty if no description is found.
 
 New in 5.3
 ==========
@@ -19,7 +22,6 @@ Features
 * Improve progressive rendering by moving javascript to the bottom of pages
 * New Brazilian portuguese translation.
 * New planetoid experimental extra_plugin
-* Twitter Card / Open Graph support.
 
 Bugfixes
 --------
@@ -36,7 +38,6 @@ Bugfixes
 * Remove trailing "\" on windows gallery links (Issue #298)
 * Inconsistent breadcrumbs in gallery pages (Issue #303)
 * Use source files as bundle dependencies instead of outputs (Issue #294)
-* Wordpress import: Description is left empty if no description is found.
 
 New in 5.2
 ==========
