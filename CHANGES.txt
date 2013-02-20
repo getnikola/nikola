@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Added missing </div> in default theme templates.
 * Wordpress import: Description is left empty if no description is found.
 
 New in 5.3
