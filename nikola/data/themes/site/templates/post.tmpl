@@ -18,6 +18,7 @@ ${helper.twitter_card_information(post)}
     ${post.text(lang)}
     ${helper.html_pager(post)}
     ${disqus.html_disqus(post.permalink(absolute=True), post.title(lang), post.base_path)}
+    ${helper.mathjax_script(post)}
     </div>
 </%block>
 
