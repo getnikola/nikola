@@ -5,6 +5,8 @@ Features
 --------
 
 * Twitter Card / Open Graph support.
+* Smart math support
+* New soundcould directive
 
 Bugfixes
 --------

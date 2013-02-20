@@ -809,7 +809,7 @@ Once you have that, all you need to do is::
     .. youtube:: 8N_tupPBtWQ
 
 Vimeo
-~~~~~~~
+~~~~~
 
 To link to a vimeo video, you need the id of the video. For example, if the
 URL of the video is http://www.vimeo.com/20241459 then the id is **20241459**
@@ -827,6 +827,18 @@ You can override this if you wish::
         height=240
         width=320
 
+Soundcloud
+~~~~~~~~~~
+
+This directive lets you share music from http://soundcloud.com You first need to get the
+ID for the piece, which you can find in the "share" link. For example, if the
+Wordpress code starts like this::
+
+    [soundcloud url="http://api.soundcloud.com/tracks/78131362"
+
+The ID is 78131362 and you can embed the audio with this::
+
+    .. soundcloud:: 78131362
 
 code-block
 ~~~~~~~~~~
