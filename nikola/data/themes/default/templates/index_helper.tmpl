@@ -15,3 +15,9 @@
 </ul>
 </div>
 </%def>
+
+<%def name="mathjax_script(post)">
+    %if any(post.is_mathjax for post in posts):
+        <script src="/assets/js/mathjax.js" type="text/javascript"></script>
+    %endif
+</%def>

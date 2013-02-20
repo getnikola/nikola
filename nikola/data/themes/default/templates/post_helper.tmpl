@@ -65,3 +65,9 @@
         %endif
     %endif
 </%def>
+
+<%def name="mathjax_script(post)">
+    %if post.is_mathjax:
+        <script src="/assets/js/mathjax.js" type="text/javascript"></script>
+    %endif
+</%def>
