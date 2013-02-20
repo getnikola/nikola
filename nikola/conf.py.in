@@ -309,6 +309,26 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # '(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.md'
 # FILE_METADATA_REGEXP = None
 
+# Nikola supports Twitter Card summaries / Open Graph.
+# Twitter cards make it possible for you to attach media to Tweets
+# that link to your content.
+#
+# IMPORTANT:
+# Please note, that you need to opt-in for using Twitter Cards!
+# To do this please visit https://dev.twitter.com/form/participate-twitter-cards
+#
+# Uncomment and modify to following lines to match your accounts.
+# Specifying the id for either 'site' or 'creator' will be preferred
+# over the cleartext username. Specifying an ID is not necessary.
+# Displaying images is currently not supported.
+# TWITTER_CARD = {
+#     # 'use_twitter_cards': True,  # enable Twitter Cards / Open Graph
+#     # 'site': '@website',  # twitter nick for the website
+#     # 'site:id': 123456,  # Same as site, but the website's Twitter user ID instead.
+#     # 'creator': '@username',  # Username for the content creator / author.
+#     # 'creator:id': 654321,  # Same as creator, but the Twitter user's ID.
+# }
+
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
 GLOBAL_CONTEXT = {}
