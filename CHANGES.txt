@@ -9,6 +9,7 @@ Features
 * Improve progressive rendering by moving javascript to the bottom of pages
 * New Brazilian portuguese translation.
 * New planetoid experimental extra_plugin
+* Twitter Card / Open Graph support.
 
 Bugfixes
 --------
@@ -24,6 +25,7 @@ Bugfixes
 * DATE_FORMAT option was being ignored
 * Remove trailing "\" on windows gallery links (Issue #298)
 * Inconsistent breadcrumbs in gallery pages (Issue #303)
+* Wordpress import: Description is left empty if no description is found.
 
 New in 5.2
 ==========

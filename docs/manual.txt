@@ -226,7 +226,7 @@ libxml/xmlversion.h: No such file or directory`` when running ``pip install -r r
 Debian systems:
 
     sudo apt-get install libxml2-dev
-    sudo apt-get install libxslt1-dev 
+    sudo apt-get install libxslt1-dev
 
 RHEL systems:
 
@@ -235,7 +235,7 @@ RHEL systems:
 Getting Started
 ---------------
 
-To create posts and pages in Nikola, you write them in one of the supported input formats. 
+To create posts and pages in Nikola, you write them in one of the supported input formats.
 Those source files are later converted to HTML
 The recommended formats are restructured text and Markdown, but there is also support
 for textile and WikiCreole and even for just writing HTML.
@@ -892,22 +892,22 @@ Slideshows
 
 To create an image slideshow, you can use the ``slides`` directive. For example::
 
-    .. slides::     
+    .. slides::
        :preload:
        :play: 350
-        
+
        /galleries/demo/tesla_conducts_lg.jpg
        /galleries/demo/tesla_lightning2_lg.jpg
        /galleries/demo/tesla4_lg.jpg
        /galleries/demo/tesla_lightning1_lg.jpg
        /galleries/demo/tesla_tower1_lg.jpg
 
-This is based on `slidejs <http://slidesjs.com/>`_ and it supports 
+This is based on `slidejs <http://slidesjs.com/>`_ and it supports
 `the options described there <http://slidesjs.com/#options>`_ with one minor tweak to make them
 fit in docutils convention: If the option takes a boolean value, you just have to add it or not. For example,
 to enable preloading, just use the ``:preload:`` option.
 
-If the option takes any other kind of argument, just use it after the option, like ``play`` in the 
+If the option takes any other kind of argument, just use it after the option, like ``play`` in the
 above example.
 
 Importing Your Wordpress Site Into Nikola
@@ -930,14 +930,14 @@ the following:
 * Will give you a url_map so you know where each old post was
 
   This is also useful for Disqus thread migration!
-  
+
 * Will try to convert the content of your posts. This is *not* error free, because
   wordpress uses some unholy  mix of HTML and strange things. Currently we are treating it
   as markdown, which does a reasonabe job of it.
-  
-  You will find your old posts in ``new_site/posts/post-title.wp`` in case you need to fix 
+
+  You will find your old posts in ``new_site/posts/post-title.wp`` in case you need to fix
   any of them.
-  
+
 This feature is a work in progress, and the only way to improve it is to have it used for
 as many sites as possible and make it work better each time, so I am happy to get requests
 about it.
@@ -961,6 +961,23 @@ With this command Nikola will import into the folder ``import_location``.
 
 If the folder already exists Nikola will not overwrite an existing ``conf.py``.
 Instead a new file with a timestamp at the end of the filename will be created.
+
+Using Twitter Cards
+-------------------
+
+Twitter Cards enable you to show additional information in Tweets that link
+to you content.
+Nikola supports `Twitter Cards <https://dev.twitter.com/docs/cards>`_.
+They are implemented to use *Open Graph* tags whenever possible.
+
+.. admonition:: Important
+
+    To use Twitter Cards you need to opt-in on Twitter.
+    To do so please use the form that can be found at https://dev.twitter.com/form/participate-twitter-cards
+
+To enable and configure your use of Twitter Cards please modify the
+corresponding lines in your ``conf.py``.
+
 
 License
 -------
