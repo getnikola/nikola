@@ -242,12 +242,11 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # Enable comments on picture gallery pages?
 # COMMENTS_IN_GALLERIES = False
 
-# Do you want a Mathjax config file?
-# You can use your own config file:
+# Do you want a add a Mathjax config file?
 # MATHJAX_SUPPORT = """
-#"""
+# """
 
-# We provide this one by default:
+# If you are using the compile-ipynb plugin, just add this one:
 #"""
 #<script type="text/x-mathjax-config">
 #MathJax.Hub.Config({
