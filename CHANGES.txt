@@ -4,9 +4,12 @@ New in Master
 Features
 --------
 
+* Twitter Card / Open Graph support.
+
 Bugfixes
 --------
 
+* Wordpress import: Description is left empty if no description is found.
 
 New in 5.3
 ==========
