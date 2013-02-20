@@ -169,7 +169,7 @@ class Post(object):
                 file_name = file_name_lang
         return file_name
 
-    def text(self, lang, teaser_only=False, without_html=False):
+    def text(self, lang, teaser_only=False, strip_html=False):
         """Read the post file for that language and return its contents"""
         file_name = self._translated_file_path(lang)
 
@@ -194,7 +194,7 @@ class Post(object):
                                self.messages[lang]["Read more"]))
             data = ''.join(teaser)
 
-        if data and without_html:
+        if data and strip_html:
             content = lxml.html.fromstring(data)
             data = content.text_content().strip()  # No whitespace wanted.
 
