@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (c) 2012 Roberto Alsina y otros.
 
 # Permission is hereby granted, free of charge, to any
@@ -386,6 +387,16 @@ def slugify(value):
     and converts spaces to hyphens.
 
     From Django's "django/template/defaultfilters.py".
+
+    >>> slugify('\xe1\xe9\xed.\xf3\xfa')
+    'aeiou'
+
+    >>> slugify('foo/bar')
+    'foobar'
+
+    >>> slugify('foo bar')
+    'foo-bar'
+
     """
     value = unidecode(value)
     # WARNING: this may not be python2/3 equivalent
