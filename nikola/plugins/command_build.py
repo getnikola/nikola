@@ -25,6 +25,7 @@
 from __future__ import unicode_literals
 import os
 import tempfile
+from optparse import OptionParser
 
 from nikola.plugin_categories import Command
 
@@ -34,8 +35,14 @@ class CommandBuild(Command):
 
     name = "build"
 
+    usage = """Usage: nikola build
+
+This will build the site present in the current folder."""
+
     def run(self, *args):
         """Build the site using doit."""
+        parser = OptionParser(usage=self.usage)
+        (options, args) = parser.parse_args(list(args))
 
         # FIXME: this is crap, do it right
         with tempfile.NamedTemporaryFile(suffix='.py', delete=False) as self.dodo:
