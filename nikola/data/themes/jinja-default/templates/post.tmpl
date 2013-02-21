@@ -32,12 +32,10 @@
     {%if post.prev_post %}
         <li class="previous">
             <a href="{{rel_link(permalink, post.prev_post.permalink(lang))}}">&larr; {{messages[lang]["Previous post"]}}</a>
-        </li>
     {% endif %}
     {%if post.next_post %}
         <li class="next">
             <a href="{{rel_link(permalink, post.next_post.permalink(lang))}}">{{messages[lang]["Next post"]}} &rarr;</a>
-        </li>
     {% endif %}
     </ul>
     {% if disqus_forum %}
