@@ -37,13 +37,16 @@ __all__ = ['Post']
 
 TEASER_REGEXP = re.compile('<!--\s*TEASER_END(:(.+))?\s*-->', re.IGNORECASE)
 
+
 class Post(object):
 
     """Represents a blog post or web page."""
 
-    def __init__(self, source_path, cache_folder, destination, use_in_feeds,
-                 translations, default_lang, blog_url, messages, template_name,
-                 file_metadata_regexp=None):
+    def __init__(
+        self, source_path, cache_folder, destination, use_in_feeds,
+        translations, default_lang, blog_url, messages, template_name,
+        file_metadata_regexp=None
+    ):
         """Initialize post.
 
         The base path is the .txt post file. From it we calculate
@@ -91,8 +94,8 @@ class Post(object):
         self.use_in_feeds = use_in_feeds and "draft" not in self.tags
         self.is_draft = 'draft' in self.tags
         self.tags = [t for t in self.tags if t != 'draft']
-        
-        # If mathjax is a tag, then enable mathjax rendering support 
+
+        # If mathjax is a tag, then enable mathjax rendering support
         self.is_mathjax = 'mathjax' in self.tags
 
         self.pagenames = {}
