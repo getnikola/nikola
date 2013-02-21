@@ -8,6 +8,7 @@ Features
 * Smart math support
 * New soundcould directive
 * Custom "read more" links
+* Better time display, timezone support
 
 Bugfixes
 --------

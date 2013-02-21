@@ -40,6 +40,7 @@ dependencies = [
     'yapsy',
     'mock>=1.0.0',
     'PyRSS2Gen',
+    'pytz',
 ]
 
 if sys.version_info[0] == 2:
