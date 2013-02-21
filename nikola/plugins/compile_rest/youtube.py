@@ -26,9 +26,9 @@ from docutils import nodes
 from docutils.parsers.rst import directives
 
 CODE = """\
-<iframe width="%(width)s"
-height="%(height)s"
-src="http://www.youtube.com/embed/%(yid)s?rel=0&amp;hd=1&amp;wmode=transparent"
+<iframe width="{width}"
+height="{height}"
+src="http://www.youtube.com/embed/{yid}?rel=0&amp;hd=1&amp;wmode=transparent"
 ></iframe>"""
 
 
@@ -51,6 +51,6 @@ def youtube(name, args, options, content, lineno,
         string_vars['width'] = extra_args.pop('width')
     if 'height' in extra_args:
         string_vars['height'] = extra_args.pop('height')
-    return [nodes.raw('', CODE % (string_vars), format='html')]
+    return [nodes.raw('', CODE.format(**string_vars), format='html')]
 youtube.content = True
 directives.register_directive('youtube', youtube)

@@ -69,6 +69,6 @@ def task_render_site():
                 args = args[1:]
             else:
                 cmd = 'run'
-            os.system('doit %s -f %s -d . %s' % (cmd, self.dodo.name,
-                                                 ''.join(args)))
+            os.system('doit {0} -f {1} -d . {2}'.format(cmd, self.dodo.name,
+                                                        ''.join(args)))
             os.unlink(self.dodo.name)

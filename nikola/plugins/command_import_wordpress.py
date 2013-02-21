@@ -82,7 +82,7 @@ class CommandImportWordpress(Command):
             src = (urlparse(k).path + 'index.html')[1:]
             dst = (urlparse(v).path)
             if src == 'index.html':
-                print("Can't do a redirect for: %r" % k)
+                print("Can't do a redirect for: {0!r}".format(k))
             else:
                 redirections.append((src, dst))
 
@@ -90,11 +90,11 @@ class CommandImportWordpress(Command):
 
     def generate_base_site(self):
         if not os.path.exists(self.output_folder):
-            os.system('nikola init --empty %s' % (self.output_folder, ))
+            os.system('nikola init --empty ' +self.output_folder)
         else:
             self.import_into_existing_site = True
-            print('The folder %s already exists - assuming that this is a '
-                  'already existing nikola site.' % self.output_folder)
+            print('The folder {0} already exists - assuming that this is a '
+                  'already existing nikola site.'.format(self.output_folder))
 
         conf_template = Template(filename=os.path.join(
             os.path.dirname(utils.__file__), 'conf.py.in'))

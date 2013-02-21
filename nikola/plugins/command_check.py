@@ -44,7 +44,7 @@ class CommandCheck(Command):
 
     def run(self, *args):
         """Check the generated site."""
-        parser = OptionParser(usage="nikola %s [options]" % self.name)
+        parser = OptionParser(usage="nikola {0} [options]".format(self.name))
         parser.add_option('-l', '--check-links', dest='links',
                           action='store_true',
                           help='Check for dangling links.')
@@ -79,11 +79,11 @@ def analize(task):
                 if os.path.exists(target_filename):
                     existing_targets.add(target_filename)
                 else:
-                    print("In %s broken link: " % filename, target)
+                    print("Broken link in {}: ".format(filename, target))
                     if '--find-sources' in sys.argv:
                         print("Possible sources:")
                         print(os.popen(
-                            'nikola build list --deps %s' % task, 'r').read())
+                            'nikola build list --deps ' + task, 'r').read())
                         print("===============================\n")
 
     except Exception as exc:

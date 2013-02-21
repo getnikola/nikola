@@ -77,12 +77,13 @@ class slides(Directive):
         options.update(self.options)
         options = json.dumps(options)
         output = []
-        output.append('<script> $(function(){ $("#slides").slides(%s); });'
-                      '</script>' % options)
+        output.append('<script> $(function(){ $("#slides").slides(' + options +
+                      '); });'
+                      '</script>')
         output.append('<div id="slides" class="slides"><div '
                       'class="slides_container">')
         for image in self.content:
-            output.append("""<div><img src="%s"></div>""" % image)
+            output.append("""<div><img src="{0}"></div>""".format(image))
         output.append("""</div></div>""")
 
         return [nodes.raw('', '\n'.join(output), format='html')]

@@ -45,7 +45,7 @@ class CommandBootswatchTheme(Command):
             print('To use the install_theme command, you need to install the '
                   '"requests" package.')
             return
-        parser = OptionParser(usage="nikola %s [options]" % self.name)
+        parser = OptionParser(usage="nikola {0} [options]".format(self.name))
         parser.add_option("-n", "--name", dest="name",
                           help="New theme name (default: custom)",
                           default='custom')
@@ -61,14 +61,14 @@ class CommandBootswatchTheme(Command):
         swatch = options.swatch
         parent = options.parent
 
-        print("Creating '%s' theme from '%s' and '%s'" % (
-            name, swatch, parent))
+        print("Creating '{0}' theme from '{1}' and '{2}'".format(name, swatch,
+                                                                 parent))
         try:
             os.makedirs(os.path.join('themes', name, 'assets', 'css'))
         except:
             pass
         for fname in ('bootstrap.min.css', 'bootstrap.css'):
-            url = 'http://bootswatch.com/%s/%s' % (swatch, fname)
+            url = '/'.join(('http://bootswatch.com', swatch, fname))
             print("Downloading: ", url)
             data = requests.get(url).text
             with open(os.path.join('themes', name, 'assets', 'css', fname),
@@ -77,5 +77,5 @@ class CommandBootswatchTheme(Command):
 
         with open(os.path.join('themes', name, 'parent'), 'wb+') as output:
             output.write(parent)
-        print('Theme created. Change the THEME setting to "%s" to use it.' %
-              name)
+        print('Theme created. Change the THEME setting to "{0}" to use '
+              'it.'.format(name))

@@ -72,4 +72,4 @@ def create_redirect(src, dst):
         pass
     with codecs.open(src, "wb+", "utf8") as fd:
         fd.write('<head><meta http-equiv="refresh" content="0; '
-                 'url=%s"></head>' % dst)
+                 'url={0}"></head>'.format(dst))

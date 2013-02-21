@@ -48,7 +48,7 @@ class CommandInstallTheme(Command):
             print('To use the install_theme command, you need to install the '
                   '"requests" package.')
             return
-        parser = OptionParser(usage="nikola %s [options]" % self.name)
+        parser = OptionParser(usage="nikola {0} [options]".format(self.name))
         parser.add_option("-l", "--list", dest="list", action="store_true",
                           help="Show list of available themes.")
         parser.add_option("-n", "--name", dest="name", help="Theme name",
@@ -84,11 +84,11 @@ class CommandInstallTheme(Command):
                         os.makedirs("themes")
                     except:
                         raise OSError("mkdir 'theme' error!")
-                print('Downloading: %s' % data[name])
+                print('Downloading: ' + data[name])
                 zip_file = BytesIO()
                 zip_file.write(requests.get(data[name]).content)
-                print('Extracting: %s into themes' % name)
+                print('Extracting: {0} into themes'.format(name))
                 utils.extract_all(zip_file)
             else:
-                print("Can't find theme %s" % name)
+                print("Can't find theme " + name)
                 return False

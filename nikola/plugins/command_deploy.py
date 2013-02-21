@@ -34,7 +34,7 @@ class Deploy(Command):
     name = "deploy"
 
     def run(self, *args):
-        parser = OptionParser(usage="nikola %s [options]" % self.name)
+        parser = OptionParser(usage="nikola {0} [options]".format(self.name))
         (options, args) = parser.parse_args(list(args))
         for command in self.site.config['DEPLOY_COMMANDS']:
             print("==>", command)

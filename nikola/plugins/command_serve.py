@@ -43,7 +43,7 @@ class CommandBuild(Command):
     def run(self, *args):
         """Start test server."""
 
-        parser = OptionParser(usage="nikola %s [options]" % self.name)
+        parser = OptionParser(usage="nikola {0} [options]".format(self.name))
         parser.add_option("-p", "--port", dest="port", help="Port numer "
                           "(default: 8000)", default=8000, type="int")
         parser.add_option("-a", "--address", dest="address", help="Address to "
@@ -52,7 +52,7 @@ class CommandBuild(Command):
 
         out_dir = self.site.config['OUTPUT_FOLDER']
         if not os.path.isdir(out_dir):
-            print("Error: Missing '%s' folder?" % out_dir)
+            print("Error: Missing '{0}' folder?".format(out_dir))
         else:
             os.chdir(out_dir)
             httpd = HTTPServer((options.address, options.port),

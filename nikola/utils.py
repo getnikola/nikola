@@ -88,13 +88,13 @@ class config_changed(tools.config_changed):
                 byte_data = data
             return hashlib.md5(byte_data).hexdigest()
         else:
-            raise Exception(
-                ('Invalid type of config_changed parameter got %s' +
-                 ', must be string or dict') % (type(self.config),))
+            raise Exception( 'Invalid type of config_changed parameter -- got '
+                            '{0}, must be string or dict'.format(type(
+                                self.config))
 
     def __repr__(self):
-        return "Change with config: %s" % json.dumps(
-            self.config, cls=CustomEncoder)
+        return "Change with config: {0}".format(json.dumps(self.config,
+                                                          cls=CustomEncoder))
 
 
 def get_theme_path(theme):
@@ -109,7 +109,7 @@ def get_theme_path(theme):
                             'data', 'themes', theme)
     if os.path.isdir(dir_name):
         return dir_name
-    raise Exception("Can't find theme '%s'" % theme)
+    raise Exception("Can't find theme '{0}'".format(theme))
 
 
 def re_meta(line, match):
@@ -269,8 +269,8 @@ def load_messages(themes, translations):
                 sorted(english.MESSAGES.keys()) and \
                     lang not in warned:
                 # FIXME: get real logging in place
-                print("Warning: Incomplete translation for language '%s'." %
-                      lang)
+                print("Warning: Incomplete translation for language "
+                      "'{0}'.".format(lang))
                 warned.append(lang)
             messages[lang].update(english.MESSAGES)
             messages[lang].update(translation.MESSAGES)
@@ -431,15 +431,16 @@ def extract_all(zipfile):
         namelist = z.namelist()
         for f in namelist:
             if f.endswith('/') and '..' in f:
-                raise UnsafeZipException(
-                    'The zip file contains ".." and is not safe to expand.')
+                raise UnsafeZipException('The zip file contains ".." and is '
+                                         'not safe to expand.')
         for f in namelist:
             if f.endswith('/'):
                 if not os.path.isdir(f):
                     try:
                         os.makedirs(f)
                     except:
-                        raise OSError("mkdir '%s' error!" % f)
+                        raise OSError("Failed making {0} directory "
+                                      "tree!".format(f))
             else:
                 z.extract(f)
     os.chdir(pwd)
@@ -471,7 +472,7 @@ def to_datetime(value, tzinfo=None):
             return tzinfo.localize(dt)
         except ValueError:
             pass
-    raise ValueError('Unrecognized date/time: %r' % value)
+    raise ValueError('Unrecognized date/time: {0!r}'.format(value))
 
 
 def apply_filters(task, filters):

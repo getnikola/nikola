@@ -83,8 +83,10 @@ class Post(object):
                     self.source_path, file_metadata_regexp)
 
         if not default_title or not default_pagename or not self.date:
-            raise OSError("You must set a title and slug and date! [%s]" %
-                          source_path)
+            raise OSError("You must set a title (found '{0}'), a slug (found "
+                          "'{1}') and a date (found '{2}')! [in file "
+                          "{3}]".format(default_title, default_pagename,
+                                       self.date, source_path))
 
         # If timezone is set, build localized datetime.
         self.date = utils.to_datetime(self.date, tzinfo)
@@ -174,7 +176,7 @@ class Post(object):
         """Return path to the translation's file, or to the original."""
         file_name = self.base_path
         if lang != self.default_lang:
-            file_name_lang = file_name + ".%s" % lang
+            file_name_lang = '.'.join((file_name, lang))
             if os.path.exists(file_name_lang):
                 file_name = file_name_lang
         return file_name
@@ -203,9 +205,8 @@ class Post(object):
                     break
                 teaser.append(elem_string)
             if flag:
-                teaser.append('<p><a href="%s">%s</a></p>' %
-                              (self.permalink(lang),
-                               teaser_str))
+                teaser.append('<p><a href="{0}">{1}</a></p>'.format(
+                    self.permalink(lang), teaser_str))
             data = ''.join(teaser)
 
         if data and strip_html:

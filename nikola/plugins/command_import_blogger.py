@@ -65,7 +65,7 @@ class CommandImportBlogger(Command):
             src = (urlparse(k).path + 'index.html')[1:]
             dst = (urlparse(v).path)
             if src == 'index.html':
-                print("Can't do a redirect for: %r" % k)
+                print("Can't do a redirect for: {0!r}".format(k))
             else:
                 redirections.append((src, dst))
 
@@ -73,11 +73,11 @@ class CommandImportBlogger(Command):
 
     def generate_base_site(self):
         if not os.path.exists(self.output_folder):
-            os.system('nikola init --empty %s' % (self.output_folder, ))
+            os.system('nikola init --empty ' + self.output_folder)
         else:
             self.import_into_existing_site = True
-            print('The folder %s already exists - assuming that this is a '
-                  'already existing nikola site.' % self.output_folder)
+            print('The folder {0} already exists - assuming that this is a '
+                  'already existing nikola site.'.format(self.output_folder))
 
         conf_template = Template(filename=os.path.join(
             os.path.dirname(utils.__file__), 'conf.py.in'))
@@ -124,12 +124,8 @@ class CommandImportBlogger(Command):
     @staticmethod
     def write_metadata(filename, title, slug, post_date, description, tags):
         with codecs.open(filename, "w+", "utf8") as fd:
-            fd.write('%s\n' % title)
-            fd.write('%s\n' % slug)
-            fd.write('%s\n' % post_date)
-            fd.write('%s\n' % ','.join(tags))
-            fd.write('\n')
-            fd.write('%s\n' % description)
+            fd.write('\n'.join((title, slug, post_date, ','.join(tags), '',
+                                description)))
 
     def import_item(self, item, out_folder=None):
         """Takes an item from the feed and creates a post file."""
@@ -145,8 +141,8 @@ class CommandImportBlogger(Command):
 
         # blogger supports empty titles, which Nikola doesn't
         if not title:
-            print("Warning: Empty title in post with URL %s. Using NO_TITLE "
-                  "as placeholder, please fix." % link)
+            print("Warning: Empty title in post with URL {0}. Using NO_TITLE "
+                  "as placeholder, please fix.".format(link))
             title = "NO_TITLE"
 
         if link_path.lower().endswith('.html'):
@@ -183,7 +179,7 @@ class CommandImportBlogger(Command):
             out_folder + '/' + slug + '.html'
 
         if is_draft and self.exclude_drafts:
-            print('Draft "%s" will not be imported.' % (title, ))
+            print('Draft "{0}" will not be imported.'.format(title))
         elif content.strip():
             # If no content is found, no files are written.
             content = self.transform_content(content)
@@ -195,8 +191,8 @@ class CommandImportBlogger(Command):
                 os.path.join(self.output_folder, out_folder, slug + '.html'),
                 content)
         else:
-            print('Not going to import "%s" because it seems to contain'
-                  ' no content.' % (title, ))
+            print('Not going to import "{0}" because it seems to contain'
+                  ' no content.'.format(title))
 
     def process_item(self, item):
         post_type = item.tags[0].term
@@ -235,10 +231,10 @@ class CommandImportBlogger(Command):
         if not self.import_into_existing_site:
             filename = 'conf.py'
         else:
-            filename = 'conf.py.wordpress_import-%s' % datetime.datetime.now(
-            ).strftime('%Y%m%d_%H%M%s')
+            filename = 'conf.py.wordpress_import-{0}'.format(
+                datetime.datetime.now().strftime('%Y%m%d_%H%M%s'))
         config_output_path = os.path.join(self.output_folder, filename)
-        print('Configuration will be written to: %s' % config_output_path)
+        print('Configuration will be written to: ' + config_output_path)
 
         return config_output_path
 
@@ -256,7 +252,7 @@ class CommandImportBlogger(Command):
             return
 
         parser = OptionParser(
-            usage="nikola %s [options] blogger_export_file" % self.name)
+            usage="nikola {0} [options] blogger_export_file".format(self.name))
         parser.add_option('-f', '--filename', dest='filename',
                           help='Blogger export file from which the import is '
                                'made.')
