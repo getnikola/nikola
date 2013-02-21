@@ -1,3 +1,22 @@
+New in Master
+=============
+
+Features
+--------
+
+* Twitter Card / Open Graph support.
+* Smart math support
+* New soundcould directive
+* Custom "read more" links
+* Better time display, timezone support
+
+Bugfixes
+--------
+
+* Added missing </div> in default theme templates.
+* Wordpress import: Description is left empty if no description is found.
+* When running the build command it is now possible to get help.
+
 New in 5.3
 ==========
 

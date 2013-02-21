@@ -44,6 +44,8 @@ from .slides import slides
 directives.register_directive('slides', slides)
 from .gist_directive import GitHubGist
 directives.register_directive('gist', GitHubGist)
+from .soundcloud import soundcloud
+directives.register_directive('soundcloud', soundcloud)
 
 from nikola.plugin_categories import PageCompiler
 

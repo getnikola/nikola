@@ -7,7 +7,7 @@
         <div class="postbox">
         <h1><a href="${post.permalink(lang)}">${post.title(lang)}</a>
         <small>&nbsp;&nbsp;
-             ${messages[lang]["Posted"]}: ${post.date.strftime(date_format)}
+             ${messages[lang]["Posted"]}: <time class="published" datetime="${post.date.isoformat()}">${post.date.strftime(date_format)}</time>
         </small></h1>
         <hr>
         ${post.text(lang, index_teasers)}
@@ -16,4 +16,5 @@
     % endfor
     ${helper.html_pager()}
     ${disqus.html_disqus_script()}
+    ${helper.mathjax_script(post)}
 </%block>

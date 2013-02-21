@@ -33,12 +33,39 @@
     %if post.prev_post:
         <li class="previous">
             <a href="${post.prev_post.permalink(lang)}">&larr; ${messages[lang]["Previous post"]}</a>
-        </li>
     %endif
     %if post.next_post:
         <li class="next">
             <a href="${post.next_post.permalink(lang)}">${messages[lang]["Next post"]} &rarr;</a>
-        </li>
     %endif
     </ul>
+</%def>
+
+<%def name="twitter_card_information(post)">
+    %if twitter_card and twitter_card['use_twitter_cards']:
+        <meta name="twitter:card" content="${twitter_card.get('card', 'summary')}">
+        <meta name="og:url" content="${post.permalink(lang, absolute=True)}">
+        %if 'site:id' in twitter_card:
+            <meta name="twitter:site:id" content="${twitter_card['site:id']}">
+        %elif 'site' in twitter_card:
+            <meta name="twitter:site" content="${twitter_card['site']}">
+        %endif
+        %if 'creator:id' in twitter_card:
+            <meta name="twitter:creator:id" content="${twitter_card['creator:id']}">
+        %elif 'creator' in twitter_card:
+            <meta name="twitter:creator" content="${twitter_card['creator']}">
+        %endif
+        <meta name="og:title" content="${post.title(lang)[:70]}">
+        %if post.description(lang):
+            <meta name="og:description" content="${post.description(lang)[:200]}">
+        %else:
+            <meta name="og:description" content="${post.text(lang, strip_html=True)[:200]}">
+        %endif
+    %endif
+</%def>
+
+<%def name="mathjax_script(post)">
+    %if post.is_mathjax:
+        <script src="/assets/js/mathjax.js" type="text/javascript"></script>
+    %endif
 </%def>

@@ -27,6 +27,7 @@ from __future__ import unicode_literals, print_function
 
 import codecs
 import os
+import re
 
 import lxml.html
 
@@ -34,14 +35,18 @@ from . import utils
 
 __all__ = ['Post']
 
+TEASER_REGEXP = re.compile('<!--\s*TEASER_END(:(.+))?\s*-->', re.IGNORECASE)
+
 
 class Post(object):
 
     """Represents a blog post or web page."""
 
-    def __init__(self, source_path, cache_folder, destination, use_in_feeds,
-                 translations, default_lang, blog_url, messages, template_name,
-                 file_metadata_regexp=None):
+    def __init__(
+        self, source_path, cache_folder, destination, use_in_feeds,
+        translations, default_lang, blog_url, messages, template_name,
+        file_metadata_regexp=None, tzinfo=None
+    ):
         """Initialize post.
 
         The base path is the .txt post file. From it we calculate
@@ -53,6 +58,7 @@ class Post(object):
         self.next_post = None
         self.blog_url = blog_url
         self.is_draft = False
+        self.is_mathjax = False
         self.source_path = source_path  # posts/blah.txt
         self.post_name = os.path.splitext(source_path)[0]  # posts/blah
         # cache/posts/blah.html
@@ -86,7 +92,8 @@ class Post(object):
             raise OSError("You must set a title and slug and date! [%s]" %
                           source_path)
 
-        self.date = utils.to_datetime(self.date)
+        # If timezone is set, build localized datetime.
+        self.date = utils.to_datetime(self.date, tzinfo)
         self.tags = [x.strip() for x in self.tags.split(',')]
         self.tags = [_f for _f in self.tags if _f]
 
@@ -94,6 +101,9 @@ class Post(object):
         self.use_in_feeds = use_in_feeds and "draft" not in self.tags
         self.is_draft = 'draft' in self.tags
         self.tags = [t for t in self.tags if t != 'draft']
+
+        # If mathjax is a tag, then enable mathjax rendering support
+        self.is_mathjax = 'mathjax' in self.tags
 
         self.pagenames = {}
         self.titles = {}
@@ -175,7 +185,7 @@ class Post(object):
                 file_name = file_name_lang
         return file_name
 
-    def text(self, lang, teaser_only=False):
+    def text(self, lang, teaser_only=False, strip_html=False):
         """Read the post file for that language and return its contents"""
         file_name = self._translated_file_path(lang)
 
@@ -187,18 +197,27 @@ class Post(object):
         if data and teaser_only:
             e = lxml.html.fromstring(data)
             teaser = []
+            teaser_str = self.messages[lang]["Read more"] + '...'
             flag = False
             for elem in e:
                 elem_string = lxml.html.tostring(elem).decode('utf8')
-                if '<!-- TEASER_END -->' in elem_string.upper():
+                match = TEASER_REGEXP.match(elem_string)
+                if match:
                     flag = True
+                    if match.group(2):
+                        teaser_str = match.group(2)
                     break
                 teaser.append(elem_string)
             if flag:
-                teaser.append('<p><a href="%s">%s...</a></p>' %
+                teaser.append('<p><a href="%s">%s</a></p>' %
                               (self.permalink(lang),
-                               self.messages[lang]["Read more"]))
+                               teaser_str))
             data = ''.join(teaser)
+
+        if data and strip_html:
+            content = lxml.html.fromstring(data)
+            data = content.text_content().strip()  # No whitespace wanted.
+
         return data
 
     def destination_path(self, lang, extension='.html'):

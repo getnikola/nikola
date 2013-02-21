@@ -188,6 +188,9 @@ class CommandImportWordpress(Command):
 
     @staticmethod
     def write_metadata(filename, title, slug, post_date, description, tags):
+        if not description:
+            description = ""
+
         with codecs.open(filename, "w+", "utf8") as fd:
             fd.write('%s\n' % title)
             fd.write('%s\n' % slug)

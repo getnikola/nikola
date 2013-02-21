@@ -36,6 +36,7 @@ except ImportError:
 
 import lxml.html
 from yapsy.PluginManager import PluginManager
+import pytz
 
 if os.getenv('DEBUG'):
     import logging
@@ -104,6 +105,7 @@ class Nikola(object):
             'LICENSE': '',
             'LISTINGS_FOLDER': 'listings',
             'MAX_IMAGE_SIZE': 1280,
+            'MATHJAX_CONFIG': '',
             'OUTPUT_FOLDER': 'output',
             'post_compilers': {
                 "rest": ('.txt', '.rst'),
@@ -133,6 +135,7 @@ class Nikola(object):
             'USE_BUNDLES': True,
             'USE_CDN': False,
             'USE_FILENAME_AS_TITLE': True,
+            'TIMEZONE': None,
         }
 
         self.config.update(config)
@@ -205,10 +208,12 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['license'] = self.config.get('LICENSE')
         self.GLOBAL_CONTEXT['search_form'] = self.config.get('SEARCH_FORM')
         self.GLOBAL_CONTEXT['disqus_forum'] = self.config.get('DISQUS_FORUM')
+        self.GLOBAL_CONTEXT['mathjax_config'] = self.config.get('MATHJAX_CONFIG')
         self.GLOBAL_CONTEXT['content_footer'] = self.config.get('CONTENT_FOOTER')
         self.GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
         self.GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
         self.GLOBAL_CONTEXT['sidebar_links'] = self.config.get('SIDEBAR_LINKS')
+        self.GLOBAL_CONTEXT['twitter_card'] = self.config.get('TWITTER_CARD', {})
 
         self.GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
@@ -495,6 +500,9 @@ class Nikola(object):
         """Scan all the posts."""
         if not self._scanned:
             print("Scanning posts", end='')
+            tzinfo = None
+            if self.config['TIMEZONE'] is not None:
+                tzinfo = pytz.timezone(self.config['TIMEZONE'])
             targets = set([])
             for wildcard, destination, template_name, use_in_feeds in \
                     self.config['post_pages']:
@@ -518,7 +526,9 @@ class Nikola(object):
                             self.config['BLOG_URL'],
                             self.MESSAGES,
                             template_name,
-                            self.config['FILE_METADATA_REGEXP'])
+                            self.config['FILE_METADATA_REGEXP'],
+                            tzinfo,
+                        )
                         for lang, langpath in list(
                                 self.config['TRANSLATIONS'].items()):
                             dest = (destination, langpath, dir_glob,
