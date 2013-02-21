@@ -7,6 +7,7 @@ Features
 * Twitter Card / Open Graph support.
 * Smart math support
 * New soundcould directive
+* Custom "read more" links
 
 Bugfixes
 --------
