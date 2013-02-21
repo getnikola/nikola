@@ -57,6 +57,7 @@ from doit import tools
 from unidecode import unidecode
 
 import PyRSS2Gen as rss
+import pytz
 
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'generic_rss_renderer',
@@ -326,7 +327,8 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path,
             'link': post.permalink(lang, absolute=True),
             'description': post.text(lang, teaser_only=rss_teasers),
             'guid': post.permalink(lang, absolute=True),
-            'pubDate': post.date,
+            # PyRSS2Gen's pubDate is GMT time.
+            'pubDate': post.date if post.date.tzinfo is None else post.date.astimezone(pytz.timezone('UTC')),
         }
         items.append(rss.RSSItem(**args))
     rss_obj = rss.RSS2(
@@ -444,7 +446,7 @@ def extract_all(zipfile):
 
 
 # From https://github.com/lepture/liquidluck/blob/develop/liquidluck/utils.py
-def to_datetime(value):
+def to_datetime(value, tzinfo=None):
     if isinstance(value, datetime.datetime):
         return value
     supported_formats = [
@@ -462,7 +464,11 @@ def to_datetime(value):
     ]
     for format in supported_formats:
         try:
-            return datetime.datetime.strptime(value, format)
+            dt = datetime.datetime.strptime(value, format)
+            if tzinfo is None:
+                return dt
+            # Build a localized time by using a given timezone.
+            return tzinfo.localize(dt)
         except ValueError:
             pass
     raise ValueError('Unrecognized date/time: %r' % value)

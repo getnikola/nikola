@@ -41,7 +41,7 @@ class Post(object):
 
     def __init__(self, source_path, cache_folder, destination, use_in_feeds,
                  translations, default_lang, blog_url, messages, template_name,
-                 file_metadata_regexp=None):
+                 file_metadata_regexp=None,tzinfo=None):
         """Initialize post.
 
         The base path is the .txt post file. From it we calculate
@@ -80,8 +80,8 @@ class Post(object):
         if not default_title or not default_pagename or not self.date:
             raise OSError("You must set a title and slug and date! [%s]" %
                           source_path)
-
-        self.date = utils.to_datetime(self.date)
+        # If timezone is set, build localized datetime.
+        self.date = utils.to_datetime(self.date,tzinfo)
         self.tags = [x.strip() for x in self.tags.split(',')]
         self.tags = [_f for _f in self.tags if _f]
 
