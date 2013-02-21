@@ -115,10 +115,10 @@ def get_theme_path(theme):
 def re_meta(line, match=None):
     """re.compile for meta"""
     if match:
-        reStr = re.compile('^\s*\.\. {0}: (.*)'.format(re.escape(match)))
+        reStr = re.compile('^\.\. {0}: (.*)'.format(re.escape(match)))
     else:
-        reStr = re.compile('^\s*\.\. ([a-z]*): (.*)')
-    result = reStr.findall(line)
+        reStr = re.compile('^\.\. ([a-z]*): (.*)')
+    result = reStr.findall(line.strip())
     if match and result:
         return (match, result[0])
     elif not match and result:
@@ -157,7 +157,7 @@ def _get_metadata_from_file(source_path, meta={'title': '', 'slug': '', 'date':
     re_rst_title = re.compile(r'^([%s]{4,})' % re.escape(string.punctuation))
 
     with codecs.open(source_path, "r", "utf8") as meta_file:
-        meta_data = meta_file.read()
+        meta_data = meta_file.readlines()
 
     for i, line in enumerate(meta_data):
         if not meta['title']:
