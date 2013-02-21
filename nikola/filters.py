@@ -80,7 +80,7 @@ def tidy(inplace):
 
     # Tidy will give error exits, that we will ignore.
     output = subprocess.check_output("tidy -m -w 90 --indent no --quote-marks"
-                                     "no --keep-time yes --tidy-mark no '%s';"
+                                     "no --keep-time yes --tidy-mark no --force-output yes '%s';"
                                      "exit 0" % inplace,
                                      stderr=subprocess.STDOUT, shell=True)
 
@@ -108,4 +108,8 @@ def tidy(inplace):
             else:
                 assert False, (inplace, line)
         elif "Error:" in line:
-            assert False, line
+            if '<time> is not recognized' in line:
+                # False alarm, time is proper HTML5.
+                continue
+            else:
+                assert False, line
