@@ -27,6 +27,7 @@ from __future__ import unicode_literals, print_function
 
 import codecs
 import os
+import re
 
 import lxml.html
 
@@ -34,6 +35,7 @@ from . import utils
 
 __all__ = ['Post']
 
+TEASER_REGEXP = re.compile('<!--\s*TEASER_END(:(.+))?\s*-->', re.IGNORECASE)
 
 class Post(object):
 
@@ -185,17 +187,21 @@ class Post(object):
         if data and teaser_only:
             e = lxml.html.fromstring(data)
             teaser = []
+            teaser_str = self.messages[lang]["Read more"] + '...'
             flag = False
             for elem in e:
                 elem_string = lxml.html.tostring(elem).decode('utf8')
-                if '<!-- TEASER_END -->' in elem_string.upper():
+                match = TEASER_REGEXP.match(elem_string)
+                if match:
                     flag = True
+                    if match.group(2):
+                        teaser_str = match.group(2)
                     break
                 teaser.append(elem_string)
             if flag:
-                teaser.append('<p><a href="%s">%s...</a></p>' %
+                teaser.append('<p><a href="%s">%s</a></p>' %
                               (self.permalink(lang),
-                               self.messages[lang]["Read more"]))
+                               teaser_str))
             data = ''.join(teaser)
 
         if data and strip_html:
