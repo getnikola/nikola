@@ -13,4 +13,3 @@ Jinja2
 PyRSS2Gen
 bbcode
 flake8
-pytz

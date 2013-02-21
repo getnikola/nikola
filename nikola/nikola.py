@@ -36,7 +36,6 @@ except ImportError:
 
 import lxml.html
 from yapsy.PluginManager import PluginManager
-import pytz
 
 if os.getenv('DEBUG'):
     import logging
@@ -135,7 +134,6 @@ class Nikola(object):
             'USE_BUNDLES': True,
             'USE_CDN': False,
             'USE_FILENAME_AS_TITLE': True,
-            'TIMEZONE': None,
         }
 
         self.config.update(config)
@@ -500,9 +498,6 @@ class Nikola(object):
         """Scan all the posts."""
         if not self._scanned:
             print("Scanning posts", end='')
-            tzinfo = None
-            if self.config['TIMEZONE'] is not None:
-                tzinfo = pytz.timezone(self.config['TIMEZONE'])
             targets = set([])
             for wildcard, destination, template_name, use_in_feeds in \
                     self.config['post_pages']:
@@ -526,8 +521,7 @@ class Nikola(object):
                             self.config['BLOG_URL'],
                             self.MESSAGES,
                             template_name,
-                            self.config['FILE_METADATA_REGEXP'],
-                            tzinfo)
+                            self.config['FILE_METADATA_REGEXP'])
                         for lang, langpath in list(
                                 self.config['TRANSLATIONS'].items()):
                             dest = (destination, langpath, dir_glob,

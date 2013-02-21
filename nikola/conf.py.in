@@ -348,11 +348,6 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 #     # 'creator:id': 654321,  # Same as creator, but the Twitter user's ID.
 # }
 
-# If you want to use formatted post time in W3C-DTF Format(ex. 2012-03-30T23:00:00+02:00),
-# set timzone if you want a localized posted date.
-# 
-# TIMEZONE='Europe/Zurich'
-
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
 GLOBAL_CONTEXT = {}
