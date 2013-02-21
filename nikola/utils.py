@@ -150,11 +150,11 @@ def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
 def _get_metadata_from_file(source_path, meta={'title': '', 'slug': '', 'date':
                                                '', 'tags': '', 'link': '',
                                                'description': ''}):
-    re_md_title = re.compile(r'^%s([^%s].*)' %
-                            (re.escape('#'), re.escape('#')))
+    re_md_title = re.compile(r'^{0}([^{0}].*)'.format(re.escape('#')))
     # Assuming rst titles are going to be at least 4 chars long
     # otherwise this detects things like ''' wich breaks other markups.
-    re_rst_title = re.compile(r'^([%s]{4,})' % re.escape(string.punctuation))
+    re_rst_title = re.compile(r'^([{0}]{4,})'.format(re.escape(
+        string.punctuation)))
 
     with codecs.open(source_path, "r", "utf8") as meta_file:
         meta_data = meta_file.readlines()
