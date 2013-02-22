@@ -34,7 +34,7 @@ from doit.doit_cmd import DoitMain
 from .nikola import Nikola
 
 
-def main():
+def main(args):
     try:
         sys.path.append('')
         import conf
@@ -43,7 +43,7 @@ def main():
         config = {}
 
     site = Nikola(**config)
-    DoitNikola(site).run(sys.argv[1:])
+    DoitNikola(site).run(args)
 
 
 def print_help(site):

@@ -7,10 +7,8 @@ import shutil
 import tempfile
 import unittest
 
-from doit.cmd_run import Run
-
 from context import nikola
-
+from nikola import main
 
 @contextmanager
 def cd(path):
@@ -20,56 +18,42 @@ def cd(path):
     os.chdir(old_dir)
 
 
-class IntegrationTest(unittest.TestCase):
+class EmptyBuildTest(unittest.TestCase):
     """Basic integration testcase."""
     def setUp(self):
         """Setup a demo site."""
         self.tmpdir = tempfile.mkdtemp()
         self.target_dir = os.path.join(self.tmpdir, "target")
-        self.build_command = Run()
         self.init_command = nikola.plugins.command_init.CommandInit()
-        self.init_command.copy_sample_site(self.target_dir)
-        self.init_command.create_configuration(self.target_dir)
+        self.fill_site()
         self.patch_site()
         self.build()
 
+    def fill_site(self):
+        """Add any needed initial content."""
+        self.init_command.create_empty_site(self.target_dir)
+        self.init_command.create_configuration(self.target_dir)
+
     def patch_site(self):
         """Make any modifications you need to the site."""
-        pass
 
     def build(self):
         """Build the site."""
         with cd(self.target_dir):
-            self.build_command.execute({}, [])
+            nikola.main.main([])
 
     def tearDown(self):
         """Reove the demo site."""
-        shutil.rmtree(self.tmpdir)
+        #shutil.rmtree(self.tmpdir)
 
+    def test_build(self):
+        self.assertTrue(True)
 
-class EmptytBuild(IntegrationTest):
-    """Basic integration testcase."""
-    def setUp(self):
-        """Setup a demo site."""
-        self.tmpdir = tempfile.mkdtemp()
-        self.target_dir = os.path.join(self.tmpdir, "target")
-        self.build_command = Run()
-        self.init_command = nikola.plugins.command_init.CommandInit()
-        self.init_command.create_empty_site(self.target_dir)
-        self.init_command.create_configuration(self.target_dir)
-        self.patch_site()
-        self.build()
-
-    def test_deleted_dodo(self):
-        """Test that a default build of --demo works."""
-        # Ensure the temprary dodo file is deleted (Issue #302)
-        self.assertFalse(os.path.isfile(self.build_command.dodo.name))
-
-
-class DefaultBuild(IntegrationTest):
+class DemoBuildTest(EmptyBuildTest):
     """Test that a default build of --demo works."""
 
-    def test_deleted_dodo(self):
-        """Test that a default build of --demo works."""
-        # Ensure the temprary dodo file is deleted (Issue #302)
-        self.assertFalse(os.path.isfile(self.build_command.dodo.name))
+    def fill_site(self):
+        """Fill the site with demo content."""
+        self.init_command.copy_sample_site(self.target_dir)
+        self.init_command.create_configuration(self.target_dir)
+
