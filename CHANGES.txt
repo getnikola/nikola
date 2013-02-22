@@ -17,6 +17,7 @@ Bugfixes
 * Wordpress import: Description is left empty if no description is found.
 * When running the build command it is now possible to get help.
 * Load jQuery before bootstrap in JS bundle (Issue #327)
+* Generate valid HTML5 for redirects (Issue #276)
 
 New in 5.3
 ==========
