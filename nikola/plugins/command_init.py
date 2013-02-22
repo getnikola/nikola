@@ -39,7 +39,7 @@ class CommandInit(Command):
 
     name = "init"
 
-    doc_usage = "nikola init folder [--demo]."
+    doc_usage = "folder [--demo]."
     doc_description = """Create a Nikola site in the specified folder.
 The destination folder must not exist.
 """
