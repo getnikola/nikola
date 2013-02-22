@@ -53,6 +53,55 @@ class CommandImportWordpress(Command):
     """Import a wordpress dump."""
 
     name = "import_wordpress"
+    doc_usage = "[options] wordpress_export_file"
+    doc_description = "Import a wordpress dump."
+    cmd_options = [
+        {'name': 'output_folder',
+         'long': 'output-folder',
+         'short': 'o',
+         'default': 'new_site',
+         'help': 'Location to write imported content.'
+        },
+        {'name': 'exclude_drafts',
+         'long': 'no-drafts',
+         'short': 'd',
+         'default': False,
+         'type': bool,
+         'help': "Don't import drafts",
+        },
+    ]
+
+    def execute(self, options, args):
+        """Import a Wordpress blog from an export file into a Nikola site."""
+        # Parse the data
+        if requests is None:
+            print('To use the import_wordpress command,'
+                  ' you have to install the "requests" package.')
+            return
+
+        if not args:
+            print(self.help())
+            return
+
+        options['filename'] = args[0]
+
+        self.wordpress_export_file = options['filename']
+        self.output_folder = options['output_folder']
+        self.import_into_existing_site = False
+        self.exclude_drafts = options['exclude_drafts']
+        self.url_map = {}
+        channel = self.get_channel_from_file(self.wordpress_export_file)
+        self.context = self.populate_context(channel)
+        conf_template = self.generate_base_site()
+        self.context['REDIRECTIONS'] = self.configure_redirections(
+            self.url_map)
+
+        self.import_posts(channel)
+        self.write_urlmap_csv(
+            os.path.join(self.output_folder, 'url_map.csv'), self.url_map)
+
+        self.write_configuration(self.get_configuration_output_path(
+        ), conf_template.render(**self.context))
 
     @staticmethod
     def read_xml_file(filename):
@@ -299,53 +348,6 @@ class CommandImportWordpress(Command):
     def write_configuration(filename, rendered_template):
         with codecs.open(filename, 'w+', 'utf8') as fd:
             fd.write(rendered_template)
-
-    def run(self, *arguments):
-        """Import a Wordpress blog from an export file into a Nikola site."""
-        # Parse the data
-        if requests is None:
-            print('To use the import_wordpress command,'
-                  ' you have to install the "requests" package.')
-            return
-
-        parser = OptionParser(usage="nikola %s [options] "
-                              "wordpress_export_file" % self.name)
-        parser.add_option('-f', '--filename', dest='filename',
-                          help='WordPress export file from which the import '
-                          'made.')
-        parser.add_option('-o', '--output-folder', dest='output_folder',
-                          default='new_site', help='The location into which '
-                          'the imported content will be written')
-        parser.add_option('-d', '--no-drafts', dest='exclude_drafts',
-                          default=False, action="store_true", help='Do not '
-                          'import drafts.')
-
-        (options, args) = parser.parse_args(list(arguments))
-
-        if not options.filename and args:
-            options.filename = args[0]
-
-        if not options.filename:
-            parser.print_usage()
-            return
-
-        self.wordpress_export_file = options.filename
-        self.output_folder = options.output_folder
-        self.import_into_existing_site = False
-        self.exclude_drafts = options.exclude_drafts
-        self.url_map = {}
-        channel = self.get_channel_from_file(self.wordpress_export_file)
-        self.context = self.populate_context(channel)
-        conf_template = self.generate_base_site()
-        self.context['REDIRECTIONS'] = self.configure_redirections(
-            self.url_map)
-
-        self.import_posts(channel)
-        self.write_urlmap_csv(
-            os.path.join(self.output_folder, 'url_map.csv'), self.url_map)
-
-        self.write_configuration(self.get_configuration_output_path(
-        ), conf_template.render(**self.context))
 
 
 def replacer(dst):
