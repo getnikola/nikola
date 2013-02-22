@@ -3,12 +3,11 @@ from __future__ import unicode_literals, print_function
 
 from contextlib import contextmanager
 import os
-import shutil
 import tempfile
 import unittest
 
 from context import nikola
-from nikola import main
+
 
 @contextmanager
 def cd(path):
@@ -49,6 +48,7 @@ class EmptyBuildTest(unittest.TestCase):
     def test_build(self):
         self.assertTrue(True)
 
+
 class DemoBuildTest(EmptyBuildTest):
     """Test that a default build of --demo works."""
 
@@ -56,4 +56,3 @@ class DemoBuildTest(EmptyBuildTest):
         """Fill the site with demo content."""
         self.init_command.copy_sample_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
-
