@@ -84,6 +84,6 @@ class DoitNikola(DoitMain):
         cmds = DoitMain.get_commands(self)
 
         # load nikola commands
-        for name, cmd in self.nikola.commands.iteritems():
+        for name, cmd in self.nikola.commands.items():
             cmds[name] = cmd
         return cmds
