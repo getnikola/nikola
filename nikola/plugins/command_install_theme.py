@@ -41,31 +41,38 @@ class CommandInstallTheme(Command):
     """Start test server."""
 
     name = "install_theme"
+    doc_usage = "[[-u] theme_name] | [[-u] -l]"
+    doc_description = "Install theme into current site."
+    cmd_options = [
+        {'name': 'list',
+         'short': 'l',
+         'long': 'list',
+         'type': bool,
+         'default': False,
+         'help': 'Show list of available themes.'
+        },
+        {'name': 'url',
+         'short': 'u',
+         'long': 'url',
+         'type': str,
+         'help': "URL for the theme repository (default: "
+                 "http://nikola.ralsina.com.ar/themes/index.json)",
+         'default': 'http://nikola.ralsina.com.ar/themes/index.json'
+        },
+    ]
 
-    def run(self, *args):
+    def execute(self, options, args):
         """Install theme into current site."""
-        if requests is None:
-            print('To use the install_theme command, you need to install the '
-                  '"requests" package.')
-            return
-        parser = OptionParser(usage="nikola %s [options]" % self.name)
-        parser.add_option("-l", "--list", dest="list", action="store_true",
-                          help="Show list of available themes.")
-        parser.add_option("-n", "--name", dest="name", help="Theme name",
-                          default=None)
-        parser.add_option("-u", "--url", dest="url", help="URL for the theme "
-                          "repository" "(default: "
-                          "http://nikola.ralsina.com.ar/themes/index.json)",
-                          default='http://nikola.ralsina.com.ar/themes/'
-                                  'index.json')
-        (options, args) = parser.parse_args(list(args))
 
-        listing = options.list
-        name = options.name
-        url = options.url
+        listing = options['list']
+        url = options['url']
+        if args:
+            name = args[0]
+        else:
+            name = None
 
         if name is None and not listing:
-            print("This command needs either the -n or the -l option.")
+            print("This command needs either a theme name or the -l option.")
             return False
         data = requests.get(url).text
         data = json.loads(data)

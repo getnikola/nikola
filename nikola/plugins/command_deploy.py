@@ -33,9 +33,10 @@ class Deploy(Command):
     """Deploy site.  """
     name = "deploy"
 
-    def run(self, *args):
-        parser = OptionParser(usage="nikola %s [options]" % self.name)
-        (options, args) = parser.parse_args(list(args))
+    doc_usage = ""
+    doc_description = "Deploy the site."
+
+    def execute(self, command, args):
         for command in self.site.config['DEPLOY_COMMANDS']:
             print("==>", command)
             os.system(command)

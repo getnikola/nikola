@@ -80,7 +80,7 @@ class CommandImportBlogger(Command):
             return
 
         if not args:
-            parser.print_usage()
+            print(self.help())
             return
 
         options['filename'] = args[0]
