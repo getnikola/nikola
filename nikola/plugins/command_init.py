@@ -39,11 +39,18 @@ class CommandInit(Command):
 
     name = "init"
 
-    usage = """Usage: nikola init folder [options].
-
-That will create a sample site in the specified folder.
+    doc_usage = "nikola init folder [--demo]."
+    doc_description = """Create a Nikola site in the specified folder.
 The destination folder must not exist.
 """
+    cmd_options = [
+        {'name': 'demo',
+         'long': 'demo',
+         'default': False,
+         'type': bool,
+         'help': "Create a site filled with example data.",
+        }
+    ]
 
     SAMPLE_CONF = {
         'BLOG_AUTHOR': "Your Name",
@@ -95,18 +102,8 @@ The destination folder must not exist.
     def get_path_to_nikola_modules():
         return os.path.dirname(nikola.__file__)
 
-    def run(self, *args):
+    def execute(self, options, args):
         """Create a new site."""
-        parser = OptionParser(usage=self.usage)
-        group = OptionGroup(parser, "Site Options")
-        group.add_option(
-            "--empty", action="store_true", dest='empty', default=True,
-            help="Create an empty site with only a config.")
-        group.add_option("--demo", action="store_false", dest='empty',
-                         help="Create a site filled with example data.")
-        parser.add_option_group(group)
-        (options, args) = parser.parse_args(list(args))
-
         if not args:
             print("Usage: nikola init folder [options]")
             return
@@ -114,7 +111,7 @@ The destination folder must not exist.
         if target is None:
             print(self.usage)
         else:
-            if options.empty:
+            if not options['demo']:
                 self.create_empty_site(target)
                 print('Created empty site at %s.' % target)
             else:
