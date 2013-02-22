@@ -27,12 +27,12 @@ from __future__ import print_function, unicode_literals
 import sys
 
 from doit.loader import generate_tasks
-from doit.cmd_base import TaskLoader, Command as DoitCommand
+from doit.cmd_base import TaskLoader
 from doit.reporter import ExecutedOnlyReporter
 from doit.doit_cmd import DoitMain
 
-from .plugin_categories import Command
 from .nikola import Nikola
+
 
 def main():
     try:
@@ -67,13 +67,14 @@ class NikolaTaskLoader(TaskLoader):
         DOIT_CONFIG = {
             'reporter': ExecutedOnlyReporter,
             'default_tasks': ['render_site'],
-            }
+        }
         tasks = generate_tasks('render_site', self.nikola.gen_tasks())
         return tasks, DOIT_CONFIG
 
 
 class DoitNikola(DoitMain):
     TASK_LOADER = NikolaTaskLoader
+
     def __init__(self, nikola):
         self.nikola = nikola
         self.task_loader = self.TASK_LOADER(nikola)

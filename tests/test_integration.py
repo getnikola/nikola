@@ -40,11 +40,12 @@ class IntegrationTest(unittest.TestCase):
     def build(self):
         """Build the site."""
         with cd(self.target_dir):
-            self.build_command.execute({},[])
+            self.build_command.execute({}, [])
 
     def tearDown(self):
         """Reove the demo site."""
         shutil.rmtree(self.tmpdir)
+
 
 class EmptytBuild(IntegrationTest):
     """Basic integration testcase."""

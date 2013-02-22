@@ -134,7 +134,7 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
 
         self.assertTrue(write_content.called)
         write_content.assert_any_call('new_site/posts/200704hoert.wp',
-            """An image.
+                                      """An image.
 
 
 
