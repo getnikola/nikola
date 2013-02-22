@@ -54,7 +54,7 @@ class CommandImportWordpress(Command):
 
     name = "import_wordpress"
     doc_usage = "[options] wordpress_export_file"
-    doc_description = "Import a wordpress dump."
+    doc_purpose = "Import a wordpress dump."
     cmd_options = [
         {'name': 'output_folder',
          'long': 'output-folder',

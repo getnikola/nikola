@@ -53,7 +53,7 @@ class CommandImportBlogger(Command):
 
     name = "import_blogger"
     doc_usage = "[options] blogger_export_file"
-    doc_description = "Import a blogger dump."
+    doc_purpose = "Import a blogger dump."
     cmd_options = [
         {'name': 'output_folder',
          'long': 'output-folder',

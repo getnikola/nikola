@@ -43,7 +43,7 @@ class CommandCheck(Command):
     name = "check"
 
     doc_usage = "-l | -f"
-    doc_description = "Check links and files in the generated site."
+    doc_purpose = "Check links and files in the generated site."
     cmd_options = [
         {'name': 'links',
          'short': 'l',

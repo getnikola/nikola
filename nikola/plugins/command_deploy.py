@@ -34,7 +34,7 @@ class Deploy(Command):
     name = "deploy"
 
     doc_usage = ""
-    doc_description = "Deploy the site."
+    doc_purpose = "Deploy the site."
 
     def execute(self, command, args):
         for command in self.site.config['DEPLOY_COMMANDS']:

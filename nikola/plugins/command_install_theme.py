@@ -42,7 +42,7 @@ class CommandInstallTheme(Command):
 
     name = "install_theme"
     doc_usage = "[[-u] theme_name] | [[-u] -l]"
-    doc_description = "Install theme into current site."
+    doc_purpose = "Install theme into current site."
     cmd_options = [
         {'name': 'list',
          'short': 'l',
