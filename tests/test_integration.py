@@ -7,6 +7,8 @@ import shutil
 import tempfile
 import unittest
 
+from doit.cmd_run import Run
+
 from context import nikola
 
 
@@ -18,14 +20,13 @@ def cd(path):
     os.chdir(old_dir)
 
 
-@unittest.skip("FIXME: Build command is gone")
 class IntegrationTest(unittest.TestCase):
     """Basic integration testcase."""
     def setUp(self):
         """Setup a demo site."""
         self.tmpdir = tempfile.mkdtemp()
         self.target_dir = os.path.join(self.tmpdir, "target")
-        self.build_command = nikola.plugins.command_build.CommandBuild()
+        self.build_command = Run()
         self.init_command = nikola.plugins.command_init.CommandInit()
         self.init_command.copy_sample_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
@@ -39,20 +40,19 @@ class IntegrationTest(unittest.TestCase):
     def build(self):
         """Build the site."""
         with cd(self.target_dir):
-            self.build_command.run()
+            self.build_command.execute({},[])
 
     def tearDown(self):
         """Reove the demo site."""
         shutil.rmtree(self.tmpdir)
 
-@unittest.skip("FIXME: Build command is gone")
 class EmptytBuild(IntegrationTest):
     """Basic integration testcase."""
     def setUp(self):
         """Setup a demo site."""
         self.tmpdir = tempfile.mkdtemp()
         self.target_dir = os.path.join(self.tmpdir, "target")
-        self.build_command = nikola.plugins.command_build.CommandBuild()
+        self.build_command = Run()
         self.init_command = nikola.plugins.command_init.CommandInit()
         self.init_command.create_empty_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
@@ -65,7 +65,6 @@ class EmptytBuild(IntegrationTest):
         self.assertFalse(os.path.isfile(self.build_command.dodo.name))
 
 
-@unittest.skip("FIXME: Build command is gone")
 class DefaultBuild(IntegrationTest):
     """Test that a default build of --demo works."""
 

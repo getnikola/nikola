@@ -31,65 +31,7 @@ else:
 
 # LIBDIR trick end (marker for removal on platforms that don't need it)
 
-import nikola
-
-
-from doit.loader import generate_tasks
-from doit.cmd_base import TaskLoader, Command as DoitCommand
-from doit.reporter import ExecutedOnlyReporter
-from doit.doit_cmd import DoitMain
-
-import nikola
-from nikola.plugin_categories import Command
-
-# TODO
-def print_help(site):
-    print("Usage: nikola command [options]")
-    print()
-    print("Available commands:")
-    print()
-    keys = sorted(site.commands.keys())
-    for name in keys:
-        print("nikola %s: %s" % (name, site.commands[name].short_help))
-    print()
-    print("For detailed help for a command, use nikola command --help")
-
-class NikolaTaskLoader(TaskLoader):
-    """custom task loader to get tasks from Nikola instead of dodo.py file"""
-    def __init__(self, nikola):
-        self.nikola = nikola
-
-    def load_tasks(self, cmd, opt_values, pos_args):
-        DOIT_CONFIG = {
-            'reporter': ExecutedOnlyReporter,
-            'default_tasks': ['render_site'],
-            }
-        tasks = generate_tasks('render_site', self.nikola.gen_tasks())
-        return tasks, DOIT_CONFIG
-
-class DoitNikola(DoitMain):
-    TASK_LOADER = NikolaTaskLoader
-    def __init__(self, nikola):
-        self.nikola = nikola
-        self.task_loader = self.TASK_LOADER(nikola)
-
-    def get_commands(self):
-        # core doit commands
-        cmds = DoitMain.get_commands(self)
-
-        # load nikola commands
-        for name, cmd in self.nikola.commands.iteritems():
-            cmds[name] = cmd
-        return cmds
-
+from nikola import main
 
 if __name__ == "__main__":
-    try:
-        sys.path.append('')
-        import conf
-        config = conf.__dict__
-    except ImportError:
-        config = {}
-
-    site = nikola.Nikola(**config)
-    DoitNikola(site).run(sys.argv[1:])
+    main.main()
