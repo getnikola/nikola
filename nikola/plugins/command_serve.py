@@ -39,6 +39,8 @@ class CommandBuild(Command):
     """Start test server."""
 
     name = "serve"
+    doc_usage = "[options]"
+    doc_purpose = "Start the test webserver."
 
     cmd_options = (
         {'name': 'port', # same as "dest" from optparse
@@ -46,7 +48,7 @@ class CommandBuild(Command):
          'long': 'port',
          'default': 8000,
          'type': int,
-         'help': 'Port nummber',
+         'help': 'Port nummber (default: 8000)',
          },
         {'name': 'address',
          'short': 'a',
