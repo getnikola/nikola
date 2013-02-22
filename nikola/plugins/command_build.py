@@ -25,7 +25,6 @@
 from __future__ import unicode_literals
 import os
 import tempfile
-from optparse import OptionParser
 
 from nikola.plugin_categories import Command
 
