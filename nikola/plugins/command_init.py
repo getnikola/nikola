@@ -101,7 +101,6 @@ class CommandInit(Command):
         return os.path.dirname(nikola.__file__)
 
     def execute(self, options={}, args=None):
-        print(options, args)
         """Create a new site."""
         if not args:
             print("Usage: nikola init folder [options]")
