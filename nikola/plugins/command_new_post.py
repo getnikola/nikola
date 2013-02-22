@@ -64,11 +64,11 @@ class CommandNewPost(Command):
     doc_purpose = "Create a new blog post or site page."
     cmd_options = [
         {
-            'name': 'is_post',
+            'name': 'is_page',
             'short': 'p',
             'long': 'page',
             'type': bool,
-            'default': True,
+            'default': False,
             'help': 'Create a page instead of a blog post.'
         },
         {
@@ -117,7 +117,8 @@ class CommandNewPost(Command):
                           self.site.plugin_manager.getPluginsOfCategory(
                               "PageCompiler")]
 
-        is_post = options['is_post']
+        is_page = options.get('is_page', False)
+        is_post = not is_page
         title = options['title'] or None
         tags = options['tags']
         onefile = options['onefile']
