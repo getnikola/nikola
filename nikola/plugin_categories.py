@@ -31,7 +31,7 @@ __all__ = [
 ]
 
 from yapsy.IPlugin import IPlugin
-
+from doit.cmd_base import Command as DoitCommand
 
 class BasePlugin(IPlugin):
     """Base plugin class."""
@@ -41,16 +41,45 @@ class BasePlugin(IPlugin):
         self.site = site
 
 
-class Command(BasePlugin):
-    """These plugins are exposed via the command line."""
+class Command(BasePlugin, DoitCommand):
+    """These plugins are exposed via the command line.
+    They implement the doit Command interface."""
 
     name = "dummy_command"
 
-    short_help = "A short explanation."
+    doc_purpose = "A short explanation."
+    doc_usage = ""
+    doc_description = None # None value will completely ommit line from doc
+    # see http://python-doit.sourceforge.net/cmd_run.html#parameters
+    cmd_options = ()
 
-    def run(self):
-        """Do whatever this command does."""
+    def __init__(self, *args, **kwargs):
+        BasePlugin.__init__(self, *args, **kwargs)
+        DoitCommand.__init__(self)
+
+    def execute(self, options, args):
+        """Do whatever this command does.
+        @param options (dict) with values from cmd_options
+        @param args (list) list of positional arguments
+        """
         raise Exception("Implement Me First")
+
+    def help(self):
+        """return help text"""
+        text = []
+        text.append("Purpose: %s" % self.doc_purpose)
+        text.append("Usage:   nikola %s %s" % (self.name, self.doc_usage))
+        text.append('')
+
+        text.append("Options:")
+        for opt in self.options:
+            text.extend(opt.help_doc())
+
+        if self.doc_description is not None:
+            text.append("")
+            text.append("Description:")
+            text.append(self.doc_description)
+        return "\n".join(text)
 
 
 class BaseTask(BasePlugin):
