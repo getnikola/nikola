@@ -38,7 +38,7 @@ class CommandInit(Command):
 
     name = "init"
 
-    doc_usage = "folder [--demo]."
+    doc_usage = "[--demo] folder"
     doc_purpose = """Create a Nikola site in the specified folder."""
     cmd_options = [
         {
@@ -101,6 +101,7 @@ class CommandInit(Command):
         return os.path.dirname(nikola.__file__)
 
     def execute(self, options={}, args=None):
+        print(options, args)
         """Create a new site."""
         if not args:
             print("Usage: nikola init folder [options]")
