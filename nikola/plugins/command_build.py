@@ -41,8 +41,6 @@ This will build the site present in the current folder."""
 
     def run(self, *args):
         """Build the site using doit."""
-        parser = OptionParser(usage=self.usage)
-        (options, args) = parser.parse_args(list(args))
 
         # FIXME: this is crap, do it right
         with tempfile.NamedTemporaryFile(suffix='.py', delete=False) as self.dodo:
@@ -70,5 +68,5 @@ def task_render_site():
             else:
                 cmd = 'run'
             os.system('doit %s -f %s -d . %s' % (cmd, self.dodo.name,
-                                                 ''.join(args)))
+                                                 ' '.join(args)))
             os.unlink(self.dodo.name)
