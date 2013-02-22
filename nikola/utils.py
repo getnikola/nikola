@@ -153,7 +153,7 @@ def _get_metadata_from_file(source_path, meta={'title': '', 'slug': '', 'date':
     re_md_title = re.compile(r'^{0}([^{0}].*)'.format(re.escape('#')))
     # Assuming rst titles are going to be at least 4 chars long
     # otherwise this detects things like ''' wich breaks other markups.
-    re_rst_title = re.compile(r'^([{0}]{4,})'.format(re.escape(
+    re_rst_title = re.compile(r'^([{0}]{{4,}})'.format(re.escape(
         string.punctuation)))
 
     with codecs.open(source_path, "r", "utf8") as meta_file:
