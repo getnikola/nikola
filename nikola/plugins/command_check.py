@@ -79,7 +79,7 @@ def analize(task):
                 if os.path.exists(target_filename):
                     existing_targets.add(target_filename)
                 else:
-                    print("Broken link in {}: ".format(filename, target))
+                    print("Broken link in {0}: ".format(filename), target)
                     if '--find-sources' in sys.argv:
                         print("Possible sources:")
                         print(os.popen(
