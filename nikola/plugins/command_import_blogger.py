@@ -27,7 +27,6 @@ import codecs
 import csv
 import datetime
 import os
-from optparse import OptionParser
 import time
 
 try:
@@ -55,18 +54,20 @@ class CommandImportBlogger(Command):
     doc_usage = "[options] blogger_export_file"
     doc_purpose = "Import a blogger dump."
     cmd_options = [
-        {'name': 'output_folder',
-         'long': 'output-folder',
-         'short': 'o',
-         'default': 'new_site',
-         'help': 'Location to write imported content.'
+        {
+            'name': 'output_folder',
+            'long': 'output-folder',
+            'short': 'o',
+            'default': 'new_site',
+            'help': 'Location to write imported content.'
         },
-        {'name': 'exclude_drafts',
-         'long': 'no-drafts',
-         'short': 'd',
-         'default': False,
-         'type': bool,
-         'help': "Don't import drafts",
+        {
+            'name': 'exclude_drafts',
+            'long': 'no-drafts',
+            'short': 'd',
+            'default': False,
+            'type': bool,
+            'help': "Don't import drafts",
         },
     ]
 
@@ -84,8 +85,6 @@ class CommandImportBlogger(Command):
             return
 
         options['filename'] = args[0]
-
-
         self.blogger_export_file = options['filename']
         self.output_folder = options['output_folder']
         self.import_into_existing_site = False
@@ -299,7 +298,6 @@ class CommandImportBlogger(Command):
     def write_configuration(filename, rendered_template):
         with codecs.open(filename, 'w+', 'utf8') as fd:
             fd.write(rendered_template)
-
 
 
 def replacer(dst):

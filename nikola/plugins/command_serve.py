@@ -23,7 +23,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-from optparse import OptionParser
 import os
 try:
     from BaseHTTPServer import HTTPServer
@@ -43,21 +42,23 @@ class CommandBuild(Command):
     doc_purpose = "Start the test webserver."
 
     cmd_options = (
-        {'name': 'port', # same as "dest" from optparse
-         'short': 'p',
-         'long': 'port',
-         'default': 8000,
-         'type': int,
-         'help': 'Port nummber (default: 8000)',
-         },
-        {'name': 'address',
-         'short': 'a',
-         'long': '--address',
-         'type': str,
-         'default': '127.0.0.1',
-         'help': 'Address to bind (default: 127.0.0.1)',
-         },
-        )
+        {
+            'name': 'port',
+            'short': 'p',
+            'long': 'port',
+            'default': 8000,
+            'type': int,
+            'help': 'Port nummber (default: 8000)',
+        },
+        {
+            'name': 'address',
+            'short': 'a',
+            'long': '--address',
+            'type': str,
+            'default': '127.0.0.1',
+            'help': 'Address to bind (default: 127.0.0.1)',
+        },
+    )
 
     def execute(self, options, args):
         """Start test server."""
@@ -67,10 +68,11 @@ class CommandBuild(Command):
         else:
             os.chdir(out_dir)
             httpd = HTTPServer((options['address'], options['port']),
-                OurHTTPRequestHandler)
+                               OurHTTPRequestHandler)
             sa = httpd.socket.getsockname()
             print("Serving HTTP on", sa[0], "port", sa[1], "...")
             httpd.serve_forever()
+
 
 class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
     extensions_map = dict(SimpleHTTPRequestHandler.extensions_map)

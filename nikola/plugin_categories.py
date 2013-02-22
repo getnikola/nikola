@@ -33,6 +33,7 @@ __all__ = [
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
 
+
 class BasePlugin(IPlugin):
     """Base plugin class."""
 
@@ -49,7 +50,7 @@ class Command(BasePlugin, DoitCommand):
 
     doc_purpose = "A short explanation."
     doc_usage = ""
-    doc_description = None # None value will completely ommit line from doc
+    doc_description = None  # None value will completely ommit line from doc
     # see http://python-doit.sourceforge.net/cmd_run.html#parameters
     cmd_options = ()
 

@@ -23,7 +23,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-from optparse import OptionParser
 import os
 import json
 from io import BytesIO
@@ -44,20 +43,22 @@ class CommandInstallTheme(Command):
     doc_usage = "[[-u] theme_name] | [[-u] -l]"
     doc_purpose = "Install theme into current site."
     cmd_options = [
-        {'name': 'list',
-         'short': 'l',
-         'long': 'list',
-         'type': bool,
-         'default': False,
-         'help': 'Show list of available themes.'
+        {
+            'name': 'list',
+            'short': 'l',
+            'long': 'list',
+            'type': bool,
+            'default': False,
+            'help': 'Show list of available themes.'
         },
-        {'name': 'url',
-         'short': 'u',
-         'long': 'url',
-         'type': str,
-         'help': "URL for the theme repository (default: "
-                 "http://nikola.ralsina.com.ar/themes/index.json)",
-         'default': 'http://nikola.ralsina.com.ar/themes/index.json'
+        {
+            'name': 'url',
+            'short': 'u',
+            'long': 'url',
+            'type': str,
+            'help': "URL for the theme repository (default: "
+                    "http://nikola.ralsina.com.ar/themes/index.json)",
+            'default': 'http://nikola.ralsina.com.ar/themes/index.json'
         },
     ]
 

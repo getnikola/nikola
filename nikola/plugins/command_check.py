@@ -23,7 +23,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-from optparse import OptionParser
 import os
 import sys
 try:
@@ -45,19 +44,21 @@ class CommandCheck(Command):
     doc_usage = "-l | -f"
     doc_purpose = "Check links and files in the generated site."
     cmd_options = [
-        {'name': 'links',
-         'short': 'l',
-         'long': 'check-links',
-         'type': bool,
-         'default': False,
-         'help': 'Check for dangling links',
+        {
+            'name': 'links',
+            'short': 'l',
+            'long': 'check-links',
+            'type': bool,
+            'default': False,
+            'help': 'Check for dangling links',
         },
-        {'name': 'files',
-         'short': 'f',
-         'long': 'check-files',
-         'type': bool,
-         'default': False,
-         'help': 'Check for unknown files',
+        {
+            'name': 'files',
+            'short': 'f',
+            'long': 'check-files',
+            'type': bool,
+            'default': False,
+            'help': 'Check for unknown files',
         },
     ]
 

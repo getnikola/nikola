@@ -25,7 +25,6 @@
 from __future__ import unicode_literals, print_function
 import codecs
 import datetime
-from optparse import OptionParser
 import os
 import sys
 
@@ -64,48 +63,54 @@ class CommandNewPost(Command):
     doc_usage = "[options]"
     doc_purpose = "Create a new blog post or site page."
     cmd_options = [
-        {'name': 'is_post',
-         'short': 'p',
-         'long': 'page',
-         'type': bool,
-         'default': False,
-         'help': 'Create a page instead of a blog post.'
+        {
+            'name': 'is_post',
+            'short': 'p',
+            'long': 'page',
+            'type': bool,
+            'default': False,
+            'help': 'Create a page instead of a blog post.'
         },
-        {'name': 'title',
-         'short': 't',
-         'long': 'title',
-         'type': str,
-         'default': '',
-         'help': 'Title for the page/post.'
+        {
+            'name': 'title',
+            'short': 't',
+            'long': 'title',
+            'type': str,
+            'default': '',
+            'help': 'Title for the page/post.'
         },
-        {'name': 'tags',
-         'long': 'tags',
-         'type': str,
-         'default': '',
-         'help': 'Comma-separated tags for the page/post.'
+        {
+            'name': 'tags',
+            'long': 'tags',
+            'type': str,
+            'default': '',
+            'help': 'Comma-separated tags for the page/post.'
         },
-        {'name': 'onefile',
-         'short': '1',
-         'type': bool,
-         'default': False,
-         'help': 'Create post with embedded metadata (single file format)'
+        {
+            'name': 'onefile',
+            'short': '1',
+            'type': bool,
+            'default': False,
+            'help': 'Create post with embedded metadata (single file format)'
         },
-        {'name': 'twofile',
-         'short': '2',
-         'type': bool,
-         'default': False,
-         'help': 'Create post with separate metadata (two file format)'
+        {
+            'name': 'twofile',
+            'short': '2',
+            'type': bool,
+            'default': False,
+            'help': 'Create post with separate metadata (two file format)'
         },
-        {'name': 'post_format',
-         'short': 'f',
-         'long': 'format',
-         'type': str,
-         'default': 'rest',
-         'help': 'Markup format for post, one of rest, markdown, wiki, bbcode, html, textile, txt2tags',
+        {
+            'name': 'post_format',
+            'short': 'f',
+            'long': 'format',
+            'type': str,
+            'default': 'rest',
+            'help': 'Markup format for post, one of rest, markdown, wiki, bbcode, html, textile, txt2tags',
         }
     ]
 
-    def execute (self, options, args):
+    def execute(self, options, args):
         """Create a new post or page."""
 
         compiler_names = [p.name for p in

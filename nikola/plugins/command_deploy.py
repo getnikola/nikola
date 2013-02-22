@@ -23,7 +23,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-from optparse import OptionParser
 import os
 
 from nikola.plugin_categories import Command

@@ -28,7 +28,6 @@ import csv
 import datetime
 import os
 import re
-from optparse import OptionParser
 
 try:
     from urlparse import urlparse
@@ -56,18 +55,20 @@ class CommandImportWordpress(Command):
     doc_usage = "[options] wordpress_export_file"
     doc_purpose = "Import a wordpress dump."
     cmd_options = [
-        {'name': 'output_folder',
-         'long': 'output-folder',
-         'short': 'o',
-         'default': 'new_site',
-         'help': 'Location to write imported content.'
+        {
+            'name': 'output_folder',
+            'long': 'output-folder',
+            'short': 'o',
+            'default': 'new_site',
+            'help': 'Location to write imported content.'
         },
-        {'name': 'exclude_drafts',
-         'long': 'no-drafts',
-         'short': 'd',
-         'default': False,
-         'type': bool,
-         'help': "Don't import drafts",
+        {
+            'name': 'exclude_drafts',
+            'long': 'no-drafts',
+            'short': 'd',
+            'default': False,
+            'type': bool,
+            'help': "Don't import drafts",
         },
     ]
 

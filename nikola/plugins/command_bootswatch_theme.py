@@ -23,7 +23,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-from optparse import OptionParser
 import os
 
 try:
@@ -41,24 +40,27 @@ class CommandBootswatchTheme(Command):
     doc_usage = "[options]"
     doc_purpose = "Given a swatch name and a parent theme, creates a custom theme."
     cmd_options = [
-        {'name': 'name',
-         'short': 'n',
-         'long': 'name',
-         'default': 'custom',
-         'type': str,
-         'help': 'New theme name (default: custom)',
+        {
+            'name': 'name',
+            'short': 'n',
+            'long': 'name',
+            'default': 'custom',
+            'type': str,
+            'help': 'New theme name (default: custom)',
         },
-        {'name': 'swatch',
-         'short': 's',
-         'default': 'slate',
-         'type': str,
-         'help': 'Name of the swatch from bootswatch.com.'
+        {
+            'name': 'swatch',
+            'short': 's',
+            'default': 'slate',
+            'type': str,
+            'help': 'Name of the swatch from bootswatch.com.'
         },
-        {'name': 'parent',
-         'short': 'p',
-         'long': 'parent',
-         'default': 'site',
-         'help': 'Parent theme name (default: site)',
+        {
+            'name': 'parent',
+            'short': 'p',
+            'long': 'parent',
+            'default': 'site',
+            'help': 'Parent theme name (default: site)',
         },
     ]
 

@@ -23,7 +23,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-from optparse import OptionParser, OptionGroup
 import os
 import shutil
 import codecs
@@ -42,11 +41,12 @@ class CommandInit(Command):
     doc_usage = "folder [--demo]."
     doc_purpose = """Create a Nikola site in the specified folder."""
     cmd_options = [
-        {'name': 'demo',
-         'long': 'demo',
-         'default': False,
-         'type': bool,
-         'help': "Create a site filled with example data.",
+        {
+            'name': 'demo',
+            'long': 'demo',
+            'default': False,
+            'type': bool,
+            'help': "Create a site filled with example data.",
         }
     ]
 
