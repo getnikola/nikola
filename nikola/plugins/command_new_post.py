@@ -68,7 +68,7 @@ class CommandNewPost(Command):
             'short': 'p',
             'long': 'page',
             'type': bool,
-            'default': False,
+            'default': True,
             'help': 'Create a page instead of a blog post.'
         },
         {
