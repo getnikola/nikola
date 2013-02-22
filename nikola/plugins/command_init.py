@@ -100,16 +100,16 @@ class CommandInit(Command):
     def get_path_to_nikola_modules():
         return os.path.dirname(nikola.__file__)
 
-    def execute(self, options, args):
+    def execute(self, options={}, args=None):
         """Create a new site."""
         if not args:
             print("Usage: nikola init folder [options]")
-            return
+            return False
         target = args[0]
         if target is None:
             print(self.usage)
         else:
-            if not options['demo']:
+            if not options or not options['demo']:
                 self.create_empty_site(target)
                 print('Created empty site at %s.' % target)
             else:
