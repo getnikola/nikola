@@ -34,6 +34,15 @@ else:
 import nikola
 
 
+from doit.loader import generate_tasks
+from doit.cmd_base import TaskLoader, Command as DoitCommand
+from doit.reporter import ExecutedOnlyReporter
+from doit.doit_cmd import DoitMain
+
+import nikola
+from nikola.plugin_categories import Command
+
+# TODO
 def print_help(site):
     print("Usage: nikola command [options]")
     print()
@@ -45,8 +54,36 @@ def print_help(site):
     print()
     print("For detailed help for a command, use nikola command --help")
 
-if __name__ == "__main__":
+class NikolaTaskLoader(TaskLoader):
+    """custom task loader to get tasks from Nikola instead of dodo.py file"""
+    def __init__(self, nikola):
+        self.nikola = nikola
 
+    def load_tasks(self, cmd, opt_values, pos_args):
+        DOIT_CONFIG = {
+            'reporter': ExecutedOnlyReporter,
+            'default_tasks': ['render_site'],
+            }
+        tasks = generate_tasks('render_site', self.nikola.gen_tasks())
+        return tasks, DOIT_CONFIG
+
+class DoitNikola(DoitMain):
+    TASK_LOADER = NikolaTaskLoader
+    def __init__(self, nikola):
+        self.nikola = nikola
+        self.task_loader = self.TASK_LOADER(nikola)
+
+    def get_commands(self):
+        # core doit commands
+        cmds = DoitMain.get_commands(self)
+
+        # load nikola commands
+        for name, cmd in self.nikola.commands.iteritems():
+            cmds[name] = cmd
+        return cmds
+
+
+if __name__ == "__main__":
     try:
         sys.path.append('')
         import conf
@@ -55,15 +92,4 @@ if __name__ == "__main__":
         config = {}
 
     site = nikola.Nikola(**config)
-
-    if len(sys.argv) < 2:
-        sys.argv.append('help')
-    cmd_name = sys.argv[1]
-
-    if cmd_name in ("help", "--help", "-h"):
-        print_help(site)
-    elif cmd_name in site.commands:
-        site.commands[cmd_name].run(*sys.argv[2:])
-    else:
-        print("Unknown command: %s" % cmd_name)
-        print_help(site)
+    DoitNikola(site).run(sys.argv[1:])
