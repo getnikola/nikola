@@ -18,6 +18,7 @@ def cd(path):
     os.chdir(old_dir)
 
 
+@unittest.skip("FIXME: Build command is gone")
 class IntegrationTest(unittest.TestCase):
     """Basic integration testcase."""
     def setUp(self):
@@ -44,7 +45,7 @@ class IntegrationTest(unittest.TestCase):
         """Reove the demo site."""
         shutil.rmtree(self.tmpdir)
 
-
+@unittest.skip("FIXME: Build command is gone")
 class EmptytBuild(IntegrationTest):
     """Basic integration testcase."""
     def setUp(self):
@@ -64,6 +65,7 @@ class EmptytBuild(IntegrationTest):
         self.assertFalse(os.path.isfile(self.build_command.dodo.name))
 
 
+@unittest.skip("FIXME: Build command is gone")
 class DefaultBuild(IntegrationTest):
     """Test that a default build of --demo works."""
 
