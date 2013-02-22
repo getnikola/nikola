@@ -72,9 +72,10 @@ class CommandImportWordpress(Command):
         },
     ]
 
-    def execute(self, options, args):
+    def execute(self, options={}, args=[]):
         """Import a Wordpress blog from an export file into a Nikola site."""
         # Parse the data
+        print(options, args)
         if requests is None:
             print('To use the import_wordpress command,'
                   ' you have to install the "requests" package.')
@@ -86,10 +87,13 @@ class CommandImportWordpress(Command):
 
         options['filename'] = args[0]
 
+        if len(args) > 1:
+            options['output_folder'] = args[1]
+
         self.wordpress_export_file = options['filename']
-        self.output_folder = options['output_folder']
+        self.output_folder = options.get('output_folder', 'new_site')
         self.import_into_existing_site = False
-        self.exclude_drafts = options['exclude_drafts']
+        self.exclude_drafts = options.get('exclude_drafts', False)
         self.url_map = {}
         channel = self.get_channel_from_file(self.wordpress_export_file)
         self.context = self.populate_context(channel)
