@@ -354,6 +354,9 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # 
 # TIMEZONE='Europe/Zurich'
 
+# If webassets is installed, bundle JS and CSS to make site loading faster
+# USE_BUNDLES = True
+
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
 
