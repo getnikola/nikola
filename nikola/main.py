@@ -25,11 +25,13 @@
 
 from __future__ import print_function, unicode_literals
 import sys
+from operator import attrgetter
 
 from doit.loader import generate_tasks
 from doit.cmd_base import TaskLoader
 from doit.reporter import ExecutedOnlyReporter
 from doit.doit_cmd import DoitMain
+from doit.cmd_help import Help as DoitHelp
 
 from .nikola import Nikola
 
@@ -46,16 +48,21 @@ def main(args):
     DoitNikola(site).run(args)
 
 
-def print_help(site):
-    print("Usage: nikola command [options]")
-    print()
-    print("Available commands:")
-    print()
-    keys = sorted(site.commands.keys())
-    for name in keys:
-        print("nikola %s: %s" % (name, site.commands[name].short_help))
-    print()
-    print("For detailed help for a command, use nikola command --help")
+class Help(DoitHelp):
+    """show Nikola usage instead of doit """
+
+    @staticmethod
+    def print_usage(cmds):
+        """print nikola "usage" (basic help) instructions"""
+        print("Nikola")
+        print("Available commands:")
+        # XXX - separate doit commands from nikola?
+        for cmd in sorted(cmds.values(), key=attrgetter('name')):
+            print("  nikola %s \t\t %s" % (cmd.name, cmd.doc_purpose))
+        print("")
+        print("  nikola help              show help / reference")
+        print("  nikola help <command>    show command usage")
+        print("  nikola help <task-name>  show task usage")
 
 
 class NikolaTaskLoader(TaskLoader):
@@ -73,6 +80,8 @@ class NikolaTaskLoader(TaskLoader):
 
 
 class DoitNikola(DoitMain):
+    # overwite help command
+    DOIT_CMDS = list(DoitMain.DOIT_CMDS) + [Help]
     TASK_LOADER = NikolaTaskLoader
 
     def __init__(self, nikola):
