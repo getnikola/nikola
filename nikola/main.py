@@ -32,6 +32,7 @@ from doit.cmd_base import TaskLoader
 from doit.reporter import ExecutedOnlyReporter
 from doit.doit_cmd import DoitMain
 from doit.cmd_help import Help as DoitHelp
+from doit.cmd_run import Run as DoitRun
 
 from .nikola import Nikola
 
@@ -65,6 +66,11 @@ class Help(DoitHelp):
         print("  nikola help <task-name>  show task usage")
 
 
+class Build(DoitRun):
+    """expose "run" command as "build" for backward compatibility"""
+    pass
+
+
 class NikolaTaskLoader(TaskLoader):
     """custom task loader to get tasks from Nikola instead of dodo.py file"""
     def __init__(self, nikola):
@@ -81,7 +87,7 @@ class NikolaTaskLoader(TaskLoader):
 
 class DoitNikola(DoitMain):
     # overwite help command
-    DOIT_CMDS = list(DoitMain.DOIT_CMDS) + [Help]
+    DOIT_CMDS = list(DoitMain.DOIT_CMDS) + [Help, Build]
     TASK_LOADER = NikolaTaskLoader
 
     def __init__(self, nikola):
