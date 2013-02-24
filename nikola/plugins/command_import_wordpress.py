@@ -194,7 +194,8 @@ class CommandImportWordpress(Command):
             with open(dst_path, 'wb+') as fd:
                 fd.write(requests.get(url).content)
         except requests.exceptions.ConnectionError as err:
-            print("Downloading {0} to {1} failed: {2}".format(url, dst_path, err))
+            print("Downloading {0} to {1} failed: {2}".format(url, dst_path,
+                                                              err))
 
     def import_attachment(self, item, wordpress_namespace):
         url = get_text_tag(
@@ -247,12 +248,12 @@ class CommandImportWordpress(Command):
             description = ""
 
         with codecs.open(filename, "w+", "utf8") as fd:
-            fd.write('{0}\n'.format(title)
-            fd.write('{0}\n'.format(slug)
-            fd.write('{0}\n'.format(post_date)
-            fd.write('{0}\n'.format(','.join(tags))
+            fd.write('{0}\n'.format(title))
+            fd.write('{0}\n'.format(slug))
+            fd.write('{0}\n'.format(post_date))
+            fd.write('{0}\n'.format(','.join(tags)))
             fd.write('\n')
-            fd.write('{0}\n'.format(description)
+            fd.write('{0}\n'.format(description))
 
     def import_item(self, item, wordpress_namespace, out_folder=None):
         """Takes an item from the feed and creates a post file."""
@@ -344,7 +345,7 @@ class CommandImportWordpress(Command):
             filename = 'conf.py'
         else:
             filename = 'conf.py.wordpress_import-{0}'.format(
-                datetime.datetime.now().strftime('%Y%m%d_%H%M%s')
+                datetime.datetime.now().strftime('%Y%m%d_%H%M%s'))
         config_output_path = os.path.join(self.output_folder, filename)
         print('Configuration will be written to:', config_output_path)
 
