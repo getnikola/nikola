@@ -13,3 +13,4 @@ install:
 script:
  - nosetests --with-doctest
  - nikola help
+ - "flake8 nikola"
