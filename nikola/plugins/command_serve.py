@@ -64,7 +64,7 @@ class CommandBuild(Command):
         """Start test server."""
         out_dir = self.site.config['OUTPUT_FOLDER']
         if not os.path.isdir(out_dir):
-            print("Error: Missing '%s' folder?" % out_dir)
+            print("Error: Missing '{0}' folder?".format(out_dir))
         else:
             os.chdir(out_dir)
             httpd = HTTPServer((options['address'], options['port']),

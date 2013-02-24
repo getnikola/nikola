@@ -91,11 +91,11 @@ def analize(task):
                 if os.path.exists(target_filename):
                     existing_targets.add(target_filename)
                 else:
-                    print("In %s broken link: " % filename, target)
+                    print("Broken link in {0}: ".format(filename), target)
                     if '--find-sources' in sys.argv:
                         print("Possible sources:")
-                        print(os.popen(
-                            'nikola list --deps %s' % task, 'r').read())
+                        print(os.popen('nikola list --deps ' + task,
+                                       'r').read())
                         print("===============================\n")
 
     except Exception as exc:

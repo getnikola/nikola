@@ -24,11 +24,11 @@ class GitHubGist(Directive):
     has_content = False
 
     def get_raw_gist_with_filename(self, gistID, filename):
-        url = "https://raw.github.com/gist/%s/%s" % (gistID, filename)
+        url = '/'.join(("https://raw.github.com/gist", gistID, filename))
         return requests.get(url).text
 
     def get_raw_gist(self, gistID):
-        url = "https://raw.github.com/gist/%s/" % (gistID)
+        url = "https://raw.github.com/gist/{0}/".format(gistID)
         return requests.get(url).text
 
     def run(self):
@@ -43,12 +43,12 @@ class GitHubGist(Directive):
         if 'file' in self.options:
             filename = self.options['file']
             rawGist = (self.get_raw_gist_with_filename(gistID, filename))
-            embedHTML = ('<script src="https://gist.github.com/%s.js?file=%s">'
-                         '</script>') % (gistID, filename)
+            embedHTML = ('<script src="https://gist.github.com/{0}.js?file={1}">'
+                         '</script>').format(gistID, filename)
         else:
             rawGist = (self.get_raw_gist(gistID))
-            embedHTML = ('<script src="https://gist.github.com/%s.js">'
-                         '</script>') % gistID
+            embedHTML = ('<script src="https://gist.github.com/{0}.js">'
+                         '</script>').format(gistID)
 
         return [nodes.raw('', embedHTML, format='html'),
                 nodes.raw('', '<noscript>', format='html'),

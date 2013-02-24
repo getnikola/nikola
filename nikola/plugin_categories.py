@@ -63,7 +63,7 @@ class Command(BasePlugin, DoitCommand):
         @param options (dict) with values from cmd_options
         @param args (list) list of positional arguments
         """
-        raise Exception("Implement Me First")
+        raise NotImplementedError()
 
     def help(self):
         """return help text"""
@@ -94,7 +94,7 @@ class BaseTask(BasePlugin):
 
     def gen_tasks(self):
         """Task generator."""
-        raise Exception("Implement Me First")
+        raise NotImplementedError()
 
 
 class Task(BaseTask):
@@ -114,11 +114,11 @@ class TemplateSystem(object):
 
     def set_directories(self, directories, cache_folder):
         """Sets the list of folders where templates are located and cache."""
-        raise Exception("Implement Me First")
+        raise NotImplementedError()
 
     def template_deps(self, template_name):
         """Returns filenames which are dependencies for a template."""
-        raise Exception("Implement Me First")
+        raise NotImplementedError()
 
     def render_template(name, output_name, context):
         """Renders template to a file using context.
@@ -126,7 +126,7 @@ class TemplateSystem(object):
         This must save the data to output_name *and* return it
         so that the caller may do additional processing.
         """
-        raise Exception("Implement Me First")
+        raise NotImplementedError()
 
 
 class PageCompiler(object):
@@ -136,9 +136,9 @@ class PageCompiler(object):
 
     def compile_html(self, source, dest):
         """Compile the source, save it on dest."""
-        raise Exception("Implement Me First")
+        raise NotImplementedError()
 
     def create_post(self, path, onefile=False, title="", slug="", date="",
                     tags=""):
         """Create post file with optional metadata."""
-        raise Exception("Implement Me First")
+        raise NotImplementedError()

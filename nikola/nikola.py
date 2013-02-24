@@ -231,8 +231,8 @@ class Nikola(object):
         pi = self.plugin_manager.getPluginByName(
             template_sys_name, "TemplateSystem")
         if pi is None:
-            sys.stderr.write("Error loading %s template system plugin\n" %
-                             template_sys_name)
+            sys.stderr.write("Error loading {0} template system "
+                             "plugin\n".format(template_sys_name))
             sys.exit(1)
         self.template_system = pi.plugin_object
         lookup_dirs = [os.path.join(utils.get_theme_path(name), "templates")
@@ -270,12 +270,12 @@ class Nikola(object):
                     exit("Your file extension->compiler definition is"
                          "ambiguous.\nPlease remove one of the file extensions"
                          "from 'post_compilers' in conf.py\n(The error is in"
-                         "one of %s)" % ', '.join(langs))
+                         "one of {0})".format(', '.join(langs)))
                 elif len(langs) > 1:
                     langs = langs[:1]
                 else:
                     exit("post_compilers in conf.py does not tell me how to "
-                         "handle '%s' extensions." % ext)
+                         "handle '{0}' extensions.".format(ext))
 
             lang = langs[0]
             compile_html = self.compilers[lang]
@@ -403,7 +403,7 @@ class Nikola(object):
             if name not in [None, 0]:
                 path = [_f for _f in [self.config['TRANSLATIONS'][lang],
                                       self.config['INDEX_PATH'],
-                                      'index-%s.html' % name] if _f]
+                                      'index-{0}.html'.format(name)] if _f]
             else:
                 path = [_f for _f in [self.config['TRANSLATIONS'][lang],
                                       self.config['INDEX_PATH'], 'index.html']
@@ -534,9 +534,10 @@ class Nikola(object):
                             dest = (destination, langpath, dir_glob,
                                     post.pagenames[lang])
                             if dest in targets:
-                                raise Exception(
-                                    'Duplicated output path %r in post %r' %
-                                    (post.pagenames[lang], base_path))
+                                raise Exception('Duplicated output path {0!r} '
+                                                'in post {1!r}'.format(
+                                                    post.pagenames[lang],
+                                                    base_path))
                             targets.add(dest)
                         self.global_data[post.post_name] = post
                         if post.use_in_feeds:

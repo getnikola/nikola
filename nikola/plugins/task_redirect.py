@@ -71,6 +71,6 @@ def create_redirect(src, dst):
     except:
         pass
     with codecs.open(src, "wb+", "utf8") as fd:
-        fd.write('<!DOCTYPE html><head><title>redirect</title>'
+        fd.write('<!DOCTYPE html><head><title>Redirecting...</title>'
                  '<meta http-equiv="refresh" content="0; '
-                 'url=%s"></head>' % dst)
+                 'url={0}"></head>'.format(dst))

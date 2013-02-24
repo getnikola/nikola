@@ -65,10 +65,10 @@ class CompileTextile(PageCompiler):
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
                 fd.write("\n'''\n<!--\n")
-                fd.write('.. title: %s\n' % title)
-                fd.write('.. slug: %s\n' % slug)
-                fd.write('.. date: %s\n' % date)
-                fd.write('.. tags: %s\n' % tags)
+                fd.write('.. title: {0}\n'.format(title))
+                fd.write('.. slug: {0}\n'.format(slug))
+                fd.write('.. date: {0}\n'.format(date))
+                fd.write('.. tags: {0}\n'.format(tags))
                 fd.write('.. link: \n')
                 fd.write('.. description: \n')
                 fd.write("-->\n'''\n")
