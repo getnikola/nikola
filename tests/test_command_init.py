@@ -35,27 +35,26 @@ class CommandInitCallTest(unittest.TestCase):
         del self.create_empty_site
 
     def test_init_default(self):
-        for arguments in (('destination', '--demo'),):
-            self.init_commad.run(*arguments)
+        for arguments in (dict(options={'demo': True}, args=['destination']), {}):
+            self.init_commad.execute(**arguments)
 
             self.assertTrue(self.create_configuration.called)
             self.assertTrue(self.copy_sample_site.called)
             self.assertFalse(self.create_empty_site.called)
 
     def test_init_called_without_target(self):
-        self.init_commad.run()
+        self.init_commad.execute()
 
         self.assertFalse(self.create_configuration.called)
         self.assertFalse(self.copy_sample_site.called)
         self.assertFalse(self.create_empty_site.called)
 
     def test_init_empty_dir(self):
-        for arguments in (('destination', ), ('destination', '--empty')):
-            self.init_commad.run(*arguments)
+        self.init_commad.execute(args=['destination'])
 
-            self.assertTrue(self.create_configuration.called)
-            self.assertFalse(self.copy_sample_site.called)
-            self.assertTrue(self.create_empty_site.called)
+        self.assertTrue(self.create_configuration.called)
+        self.assertFalse(self.copy_sample_site.called)
+        self.assertTrue(self.create_empty_site.called)
 
 
 if __name__ == '__main__':

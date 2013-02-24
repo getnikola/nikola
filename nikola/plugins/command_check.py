@@ -23,7 +23,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-from optparse import OptionParser
 import os
 import sys
 try:
@@ -42,8 +41,30 @@ class CommandCheck(Command):
 
     name = "check"
 
-    def run(self, *args):
+    doc_usage = "-l | -f"
+    doc_purpose = "Check links and files in the generated site."
+    cmd_options = [
+        {
+            'name': 'links',
+            'short': 'l',
+            'long': 'check-links',
+            'type': bool,
+            'default': False,
+            'help': 'Check for dangling links',
+        },
+        {
+            'name': 'files',
+            'short': 'f',
+            'long': 'check-files',
+            'type': bool,
+            'default': False,
+            'help': 'Check for unknown files',
+        },
+    ]
+
+    def execute(self, options, args):
         """Check the generated site."""
+<<<<<<< HEAD
         parser = OptionParser(usage="nikola {0} [options]".format(self.name))
         parser.add_option('-l', '--check-links', dest='links',
                           action='store_true',
@@ -53,8 +74,11 @@ class CommandCheck(Command):
 
         (options, args) = parser.parse_args(list(args))
         if options.links:
+=======
+        if options['links']:
+>>>>>>> 0417da4c6a95b3ec291f2329c8f3cf8c7e05d597
             scan_links()
-        if options.files:
+        if options['files']:
             scan_files()
 
 existing_targets = set([])
@@ -82,8 +106,8 @@ def analize(task):
                     print("Broken link in {0}: ".format(filename), target)
                     if '--find-sources' in sys.argv:
                         print("Possible sources:")
-                        print(os.popen(
-                            'nikola build list --deps ' + task, 'r').read())
+                        print(os.popen('nikola list --deps ' + task,
+                                       'r').read())
                         print("===============================\n")
 
     except Exception as exc:
@@ -92,7 +116,7 @@ def analize(task):
 
 def scan_links():
     print("Checking Links:\n===============\n")
-    for task in os.popen('nikola build list --all', 'r').readlines():
+    for task in os.popen('nikola list --all', 'r').readlines():
         task = task.strip()
         if task.split(':')[0] in ('render_tags', 'render_archive',
                                   'render_galleries', 'render_indexes',

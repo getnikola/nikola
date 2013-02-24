@@ -31,5 +31,5 @@ class Deploy(Command):
     """Start debugging console."""
     name = "console"
 
-    def run(self, *args):
+    def execute(self, options, args):
         os.system('python -i -c "from nikola.console import *"')

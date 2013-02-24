@@ -23,7 +23,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-from optparse import OptionParser
 import os
 
 try:
@@ -38,28 +37,43 @@ class CommandBootswatchTheme(Command):
     """Given a swatch name and a parent theme, creates a custom theme."""
 
     name = "bootswatch_theme"
+    doc_usage = "[options]"
+    doc_purpose = "Given a swatch name and a parent theme, creates a custom theme."
+    cmd_options = [
+        {
+            'name': 'name',
+            'short': 'n',
+            'long': 'name',
+            'default': 'custom',
+            'type': str,
+            'help': 'New theme name (default: custom)',
+        },
+        {
+            'name': 'swatch',
+            'short': 's',
+            'default': 'slate',
+            'type': str,
+            'help': 'Name of the swatch from bootswatch.com.'
+        },
+        {
+            'name': 'parent',
+            'short': 'p',
+            'long': 'parent',
+            'default': 'site',
+            'help': 'Parent theme name (default: site)',
+        },
+    ]
 
-    def run(self, *args):
+    def execute(self, options, args):
         """Given a swatch name and a parent theme, creates a custom theme."""
         if requests is None:
             print('To use the install_theme command, you need to install the '
                   '"requests" package.')
             return
-        parser = OptionParser(usage="nikola {0} [options]".format(self.name))
-        parser.add_option("-n", "--name", dest="name",
-                          help="New theme name (default: custom)",
-                          default='custom')
-        parser.add_option("-s", "--swatch", dest="swatch",
-                          help="Name of the swatch from bootswatch.com "
-                          "(default: slate)", default='slate')
-        parser.add_option("-p", "--parent", dest="parent",
-                          help="Parent theme name (default: site)",
-                          default='site')
-        (options, args) = parser.parse_args(list(args))
 
-        name = options.name
-        swatch = options.swatch
-        parent = options.parent
+        name = options['name']
+        swatch = options['swatch']
+        parent = options['parent']
 
         print("Creating '{0}' theme from '{1}' and '{2}'".format(name, swatch,
                                                                  parent))
