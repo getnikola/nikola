@@ -64,19 +64,7 @@ class CommandCheck(Command):
 
     def execute(self, options, args):
         """Check the generated site."""
-<<<<<<< HEAD
-        parser = OptionParser(usage="nikola {0} [options]".format(self.name))
-        parser.add_option('-l', '--check-links', dest='links',
-                          action='store_true',
-                          help='Check for dangling links.')
-        parser.add_option('-f', '--check-files', dest='files',
-                          action='store_true', help='Check for unknown files.')
-
-        (options, args) = parser.parse_args(list(args))
-        if options.links:
-=======
         if options['links']:
->>>>>>> 0417da4c6a95b3ec291f2329c8f3cf8c7e05d597
             scan_links()
         if options['files']:
             scan_files()
