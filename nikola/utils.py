@@ -94,7 +94,7 @@ class config_changed(tools.config_changed):
 
     def __repr__(self):
         return "Change with config: {0}".format(json.dumps(self.config,
-                                                          cls=CustomEncoder))
+                                                           cls=CustomEncoder))
 
 
 def get_theme_path(theme):
@@ -328,7 +328,8 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path,
             'description': post.text(lang, teaser_only=rss_teasers),
             'guid': post.permalink(lang, absolute=True),
             # PyRSS2Gen's pubDate is GMT time.
-            'pubDate': post.date if post.date.tzinfo is None else post.date.astimezone(pytz.timezone('UTC')),
+            'pubDate': (post.date if post.date.tzinfo is None else
+                        post.date.astimezone(pytz.timezone('UTC'))),
         }
         items.append(rss.RSSItem(**args))
     rss_obj = rss.RSS2(

@@ -152,13 +152,11 @@ class RenderTags(Task):
             # On a tag page, the feeds include the tag's feeds
             rss_link = ("""<link rel="alternate" type="application/rss+xml" """
                         """type="application/rss+xml" title="RSS for tag """
-                        """{0} ({1})" href="{2}">""".format(tag, lang,
-                                                            self.site.link("tag_rss",
-                                                                           tag,
-                                                                           lang)))
+                        """{0} ({1})" href="{2}">""".format(
+                            tag, lang, self.site.link("tag_rss", tag, lang)))
             context['rss_link'] = rss_link
-            output_name = os.path.join(kw['output_folder'], page_name(tag, i,
-                                                                      lang))
+            output_name = os.path.join(kw['output_folder'],
+                                       page_name(tag, i, lang))
             output_name = output_name.encode('utf8')
             context["title"] = kw["messages"][lang][
                 "Posts about %s"] % tag

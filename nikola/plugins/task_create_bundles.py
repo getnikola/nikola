@@ -77,7 +77,8 @@ class BuildBundles(LateTask):
                 output_path = os.path.join(kw['output_folder'], name)
                 dname = os.path.dirname(name)
                 file_dep = [get_asset_path(
-                    os.path.join(dname, fname), kw['themes'], kw['files_folders'])
+                    os.path.join(dname, fname), kw['themes'],
+                    kw['files_folders'])
                     for fname in files
                 ]
                 file_dep = filter(None, file_dep)  # removes missing files
@@ -108,16 +109,17 @@ def get_asset_path(path, themes, files_folders={'files': ''}):
     If the asset is not provided by a theme, then it will be checked for
     in the FILES_FOLDERS
 
-    >>> get_asset_path('assets/css/rst.css', ['site','default'])
+    >>> get_asset_path('assets/css/rst.css', ['site', 'default'])
     'nikola/data/themes/default/assets/css/rst.css'
 
-    >>> get_asset_path('assets/css/theme.css', ['site','default'])
+    >>> get_asset_path('assets/css/theme.css', ['site', 'default'])
     'nikola/data/themes/site/assets/css/theme.css'
 
-    >>> get_asset_path('nikola.py',['site','default'],{'nikola':''})
+    >>> get_asset_path('nikola.py', ['site', 'default'], {'nikola': ''})
     'nikola/nikola.py'
 
-    >>> get_asset_path('nikola/nikola.py',['site','default'],{'nikola':'nikola'})
+    >>> get_asset_path('nikola/nikola.py', ['site', 'default'],
+    ... {'nikola':'nikola'})
     'nikola/nikola.py'
 
     """

@@ -106,7 +106,8 @@ class CommandNewPost(Command):
             'long': 'format',
             'type': str,
             'default': 'rest',
-            'help': 'Markup format for post, one of rest, markdown, wiki, bbcode, html, textile, txt2tags',
+            'help': ('Markup format for post, one of: rest, markdown, wiki, '
+                     'bbcode, html, textile, txt2tags'),
         }
     ]
 

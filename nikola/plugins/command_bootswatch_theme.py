@@ -38,7 +38,8 @@ class CommandBootswatchTheme(Command):
 
     name = "bootswatch_theme"
     doc_usage = "[options]"
-    doc_purpose = "Given a swatch name and a parent theme, creates a custom theme."
+    doc_purpose = ("Given a swatch name and a parent theme, creates a custom "
+                   "theme.")
     cmd_options = [
         {
             'name': 'name',
