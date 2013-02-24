@@ -111,11 +111,11 @@ class CommandInit(Command):
         else:
             if not options or not options['demo']:
                 self.create_empty_site(target)
-                print('Created empty site at %s.' % target)
+                print('Created empty site at {0}.'.format(target))
             else:
                 self.copy_sample_site(target)
-                print("A new site with example data has been created at %s."
-                      % target)
+                print("A new site with example data has been created at "
+                      "{0}.".format(target))
                 print("See README.txt in that folder for more information.")
 
             self.create_configuration(target)

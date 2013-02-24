@@ -214,8 +214,9 @@ class Galleries(Task):
             context["title"] = os.path.basename(gallery_path)
             context["description"] = kw["blog_description"]
             if kw['use_filename_as_title']:
-                img_titles = ['id="%s" alt="%s" title="%s"' %
-                              (fn[:-4], fn[:-4], utils.unslugify(fn[:-4]))
+                img_titles = ['id="{0}" alt="{1}" title="{2}"'.format(fn[:-4],
+                                                                      fn[:-4],
+                                                                      utils.unslugify(fn[:-4]))
                               for fn in image_name_list]
             else:
                 img_titles = [''] * len(image_name_list)

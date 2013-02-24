@@ -64,7 +64,6 @@ class CommandInstallTheme(Command):
 
     def execute(self, options, args):
         """Install theme into current site."""
-
         listing = options['list']
         url = options['url']
         if args:
@@ -92,11 +91,11 @@ class CommandInstallTheme(Command):
                         os.makedirs("themes")
                     except:
                         raise OSError("mkdir 'theme' error!")
-                print('Downloading: %s' % data[name])
+                print('Downloading: ' + data[name])
                 zip_file = BytesIO()
                 zip_file.write(requests.get(data[name]).content)
-                print('Extracting: %s into themes' % name)
+                print('Extracting: {0} into themes'.format(name))
                 utils.extract_all(zip_file)
             else:
-                print("Can't find theme %s" % name)
+                print("Can't find theme " + name)
                 return False

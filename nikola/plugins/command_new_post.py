@@ -50,9 +50,9 @@ def filter_post_pages(compiler, is_post, post_compilers, post_pages):
     if not filtered:
         type_name = "post" if is_post else "page"
         raise Exception("Can't find a way, using your configuration, to create"
-                        "a %s in format %s. You may want to tweak "
-                        "post_compilers or post_pages in conf.py" %
-                        (type_name, compiler))
+                        "a {0} in format {1}. You may want to tweak "
+                        "post_compilers or post_pages in conf.py".format(
+                            type_name, compiler))
     return filtered[0]
 
 
@@ -132,7 +132,7 @@ class CommandNewPost(Command):
         post_format = options['post_format']
 
         if post_format not in compiler_names:
-            print("ERROR: Unknown post format %s" % post_format)
+            print("ERROR: Unknown post format " + post_format)
             return
         compiler_plugin = self.site.plugin_manager.getPluginByName(
             post_format, "PageCompiler").plugin_object
