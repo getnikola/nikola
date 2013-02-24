@@ -13,4 +13,4 @@ install:
 script:
  - nosetests --with-doctest
  - nikola help
- - "flake8 --exit-zero nikola"
+ - "flake8 --exit-zero nikola --ignore=E501"
