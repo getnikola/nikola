@@ -80,9 +80,9 @@ class Post(object):
         else:
             self.meta = utils.get_meta(self.source_path, file_metadata_regexp)
 
-            (default_title, default_pagename,
-                default_description) = (self.meta['title'], self.meta['slug'],
-                                        self.meta['description'])
+            default_title = self.meta['title']
+            default_pagename = self.meta['slug']
+            default_description = self.meta['description']
 
             for k, v in self.meta.items():
                 if k not in ['title', 'slug', 'description']:
