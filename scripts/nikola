@@ -34,4 +34,4 @@ else:
 from nikola import main
 
 if __name__ == "__main__":
-    main.main(sys.argv[1:])
+    sys.exit(main.main(sys.argv[1:]))

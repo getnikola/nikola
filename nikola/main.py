@@ -46,7 +46,7 @@ def main(args):
         config = {}
 
     site = Nikola(**config)
-    DoitNikola(site).run(args)
+    return DoitNikola(site).run(args)
 
 
 class Help(DoitHelp):
