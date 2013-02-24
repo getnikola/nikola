@@ -37,8 +37,8 @@ except ImportError:
     except ImportError:
         json = None
 
-CODE = """<iframe src="http://player.vimeo.com/video/%(vimeo_id)s"
-width="%(width)s" height="%(height)s"
+CODE = """<iframe src="http://player.vimeo.com/video/{vimeo_id}"
+width="{width}" height="{height}"
 frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen>
 </iframe>
 """
@@ -76,8 +76,8 @@ def vimeo(name, args, options, content, lineno, contentOffset, blockText,
 
         if json:  # we can attempt to retrieve video attributes from vimeo
             try:
-                url = ('http://vimeo.com/api/v2/video/%(vimeo_id)s.json' %
-                       string_vars)
+                url = ('http://vimeo.com/api/v2/video/{vimeo_id}'
+                       '.json'.format(**string_vars))
                 data = requests.get(url).text
                 video_attributes = json.loads(data)
                 string_vars['height'] = video_attributes['height']
@@ -86,7 +86,7 @@ def vimeo(name, args, options, content, lineno, contentOffset, blockText,
                 # fall back to the defaults
                 pass
 
-    return [nodes.raw('', CODE % string_vars, format='html')]
+    return [nodes.raw('', CODE.format(**string_vars), format='html')]
 
 vimeo.content = True
 directives.register_directive('vimeo', vimeo)

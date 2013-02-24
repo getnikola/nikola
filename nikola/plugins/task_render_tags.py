@@ -136,7 +136,7 @@ class RenderTags(Task):
             """Given tag, n, returns a page name."""
             name = self.site.path("tag", tag, lang)
             if i:
-                name = name.replace('.html', '-%s.html' % i)
+                name = name.replace('.html', '-{0}.html'.format(i))
             return name
 
         # FIXME: deduplicate this with render_indexes
@@ -152,8 +152,10 @@ class RenderTags(Task):
             # On a tag page, the feeds include the tag's feeds
             rss_link = ("""<link rel="alternate" type="application/rss+xml" """
                         """type="application/rss+xml" title="RSS for tag """
-                        """%s (%s)" href="%s">""" %
-                        (tag, lang, self.site.link("tag_rss", tag, lang)))
+                        """{0} ({1})" href="{2}">""".format(tag, lang,
+                                                            self.site.link("tag_rss",
+                                                                           tag,
+                                                                           lang)))
             context['rss_link'] = rss_link
             output_name = os.path.join(kw['output_folder'], page_name(tag, i,
                                                                       lang))
@@ -231,7 +233,7 @@ class RenderTags(Task):
             'file_dep': deps,
             'targets': [output_name],
             'actions': [(utils.generic_rss_renderer,
-                        (lang, "%s (%s)" % (kw["blog_title"], tag),
+                        (lang, "{0} ({1})".format(kw["blog_title"], tag),
                          kw["blog_url"], kw["blog_description"], post_list,
                          output_name, kw["rss_teasers"]))],
             'clean': True,

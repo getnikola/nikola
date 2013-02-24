@@ -79,11 +79,11 @@ class Indexes(Task):
                 context["nextlink"] = None
                 context['index_teasers'] = kw['index_teasers']
                 if i > 1:
-                    context["prevlink"] = "index-%s.html" % (i - 1)
+                    context["prevlink"] = "index-{0}.html".format(i - 1)
                 if i == 1:
                     context["prevlink"] = "index.html"
                 if i < num_pages - 1:
-                    context["nextlink"] = "index-%s.html" % (i + 1)
+                    context["nextlink"] = "index-{0}.html".format(i + 1)
                 context["permalink"] = self.site.link("index", i, lang)
                 output_name = os.path.join(
                     kw['output_folder'], self.site.path("index", i,

@@ -165,9 +165,9 @@ def code_block_directive(name, arguments, options, content, lineno,
                 after_index = content.find(after_text)
                 if after_index < 0:
                     raise state_machine.reporter.severe(
-                        'Problem with "start-at" option of "%s" '
-                        'code-block directive:\nText not found.'
-                        % options['start-at'])
+                        'Problem with "start-at" option of "{0}" '
+                        'code-block directive:\nText not found.'.format(
+                            options['start-at']))
                 # patch mmueller start
                 # Move the after_index to the beginning of the line with the
                 # match.
@@ -192,9 +192,9 @@ def code_block_directive(name, arguments, options, content, lineno,
                 after_index = content.find(after_text)
                 if after_index < 0:
                     raise state_machine.reporter.severe(
-                        'Problem with "start-after" option of "%s" '
-                        'code-block directive:\nText not found.' %
-                        options['start-after'])
+                        'Problem with "start-after" option of "{0}" '
+                        'code-block directive:\nText not found.'.format(
+                        options['start-after']))
                 line_offset = len(content[:after_index +
                                           len(after_text)].splitlines())
                 content = content[after_index + len(after_text):]
@@ -207,9 +207,9 @@ def code_block_directive(name, arguments, options, content, lineno,
                 before_index = content.find(before_text)
                 if before_index < 0:
                     raise state_machine.reporter.severe(
-                        'Problem with "end-at" option of "%s" '
-                        'code-block directive:\nText not found.' %
-                        options['end-at'])
+                        'Problem with "end-at" option of "{0}" '
+                        'code-block directive:\nText not found.'.format(
+                        options['end-at']))
                 content = content[:before_index + len(before_text)]
 
             before_text = options.get('end-before', None)
@@ -219,9 +219,9 @@ def code_block_directive(name, arguments, options, content, lineno,
                 before_index = content.find(before_text)
                 if before_index < 0:
                     raise state_machine.reporter.severe(
-                        'Problem with "end-before" option of "%s" '
-                        'code-block directive:\nText not found.' %
-                        options['end-before'])
+                        'Problem with "end-before" option of "{0}" '
+                        'code-block directive:\nText not found.'.format(
+                        options['end-before']))
                 content = content[:before_index]
 
     else:
@@ -246,8 +246,9 @@ def code_block_directive(name, arguments, options, content, lineno,
         lineno = 1 + line_offset
         total_lines = content.count('\n') + 1 + line_offset
         lnwidth = len(str(total_lines))
-        fstr = "\n%%%dd " % lnwidth
-        code_block += nodes.inline(fstr[1:] % lineno, fstr[1:] % lineno,
+        fstr = "\n%{0}d ".format(lnwidth)
+        code_block += nodes.inline(fstr[1:].format(lineno),
+                                   fstr[1:].format(lineno),
                                    classes=['linenumber'])
 
     # parse content with pygments and add to code_block element
@@ -272,7 +273,8 @@ def code_block_directive(name, arguments, options, content, lineno,
                 linenos = list(range(lineno, lineno + len(values)))
                 for chunk, ln in zip(values, linenos)[1:]:
                     if ln <= total_lines:
-                        code_block += nodes.inline(fstr % ln, fstr % ln,
+                        code_block += nodes.inline(fstr.format(ln),
+                                                   fstr.format(ln),
                                                    classes=['linenumber'])
                         code_block += nodes.Text(chunk, chunk)
                 lineno += len(values) - 1
@@ -319,8 +321,8 @@ def string_bool(argument):
     elif argument.lower() == 'false':
         return False
     else:
-        raise ValueError('"%s" unknown; choose from "True" or "False"' %
-                         argument)
+        raise ValueError('"{0}" unknown; choose from "True" or "False"'.format(
+                         argument))
 
 
 def csharp_unicodelevel(argument):
@@ -340,7 +342,7 @@ def listings_directive(name, arguments, options, content, lineno,
     fname = arguments[0]
     options['include'] = os.path.join('listings', fname)
     target = urlunsplit(("link", 'listing', fname, '', ''))
-    generated_nodes = [core.publish_doctree('`%s <%s>`_' % (fname, target))[0]]
+    generated_nodes = [core.publish_doctree('`{0} <{1}>`_'.format(fname, target))[0]]
     generated_nodes += code_block_directive(name, [arguments[1]], options,
                                             content, lineno, content_offset,
                                             block_text, state, state_machine)

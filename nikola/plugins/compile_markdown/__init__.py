@@ -55,8 +55,8 @@ class CompileMarkdown(PageCompiler):
             output = markdown(data, ['fenced_code', 'codehilite'])
             # h1 is reserved for the title so increment all header levels
             for n in reversed(range(1, 9)):
-                output = re.sub('<h%i>' % n, '<h%i>' % (n + 1), output)
-                output = re.sub('</h%i>' % n, '</h%i>' % (n + 1), output)
+                output = re.sub('<h{0}>'.format(n), '<h{0}>'.format(n + 1), output)
+                output = re.sub('</h{0}>'.format(n), '</h{0}>'.format(n + 1), output)
             # python-markdown's highlighter uses the class 'codehilite' to wrap
             # code, # instead of the standard 'code'. None of the standard
             # pygments stylesheets use this class, so swap it to be 'code'
@@ -69,10 +69,10 @@ class CompileMarkdown(PageCompiler):
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
                 fd.write('<!-- \n')
-                fd.write('.. title: %s\n' % title)
-                fd.write('.. slug: %s\n' % slug)
-                fd.write('.. date: %s\n' % date)
-                fd.write('.. tags: %s\n' % tags)
+                fd.write('.. title: {0}\n'.format(title))
+                fd.write('.. slug: {0}\n'.format(slug))
+                fd.write('.. date: {0}\n'.format(date))
+                fd.write('.. tags: {0}\n'.format(tags))
                 fd.write('.. link: \n')
                 fd.write('.. description: \n')
                 fd.write('-->\n\n')
