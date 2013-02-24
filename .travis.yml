@@ -12,4 +12,4 @@ install:
 # We run tests and afterwards nikola to see if the command is executable.
 script:
  - nosetests --with-doctest
- - nikola
+ - nikola help
