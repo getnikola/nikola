@@ -27,8 +27,9 @@ from __future__ import unicode_literals, print_function
 
 import codecs
 import os
+import sys
 import re
-
+import unidecode
 import lxml.html
 
 from . import utils
@@ -86,7 +87,10 @@ class Post(object):
 
             for k, v in self.meta.items():
                 if k not in ['title', 'slug', 'description']:
-                    setattr(self, k, v)
+                    if sys.version_info[0] == 2:
+                        setattr(self, unidecode.unidecode(unicode(k)), v)
+                    else:
+                        setattr(self, k, v)
 
         if not default_title or not default_pagename or not self.date:
             raise OSError("You must set a title (found '{0}'), a slug (found "

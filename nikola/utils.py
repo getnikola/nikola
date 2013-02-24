@@ -117,7 +117,7 @@ def re_meta(line, match=None):
     if match:
         reStr = re.compile('^\.\. {0}: (.*)'.format(re.escape(match)))
     else:
-        reStr = re.compile('^\.\. ([a-z]*): (.*)')
+        reStr = re.compile('^\.\. (.*?): (.*)')
     result = reStr.findall(line.strip())
     if match and result:
         return (match, result[0])
@@ -181,7 +181,7 @@ def _get_metadata_from_file(source_path, meta={'title': '', 'slug': '', 'date':
 def get_meta(source_path, file_metadata_regexp=None):
     """Get post's meta from source.
 
-    If ``file_metadata_regexp`` ist given it will be tried to read
+    If ``file_metadata_regexp`` is given it will be tried to read
     metadata from the filename.
     If any metadata is then found inside the file the metadata from the
     file will override previous findings.
