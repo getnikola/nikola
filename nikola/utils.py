@@ -147,8 +147,14 @@ def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
     return meta
 
 
-def _get_metadata_from_file(source_path, meta=None):
+def get_metadata_from_file(source_path, meta=None):
     """Extracts metadata from the file itself, by parsing contents."""
+    with codecs.open(source_path, "r", "utf8") as meta_file:
+        meta_data = meta_file.readlines()
+    return _get_metadata_from_file(meta_data, meta)
+
+def _get_metadata_from_file(meta_data, meta=None):
+    """Parse file contents and obtain metadata."""
     if meta is None:
         meta = {
             'title': '',
@@ -163,9 +169,6 @@ def _get_metadata_from_file(source_path, meta=None):
     # otherwise this detects things like ''' wich breaks other markups.
     re_rst_title = re.compile(r'^([{0}]{{4,}})'.format(re.escape(
         string.punctuation)))
-
-    with codecs.open(source_path, "r", "utf8") as meta_file:
-        meta_data = meta_file.readlines()
 
     for i, line in enumerate(meta_data):
         if not meta['title']:
@@ -201,7 +204,7 @@ def get_meta(source_path, file_metadata_regexp=None):
         meta = _get_metadata_from_filename_by_regex(source_path,
                                                     file_metadata_regexp)
 
-    meta = _get_metadata_from_file(source_path, meta)
+    meta = get_metadata_from_file(source_path, meta)
 
     if not meta['slug']:
         # If no slug is found in the metadata use the filename
