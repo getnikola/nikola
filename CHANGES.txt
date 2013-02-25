@@ -19,6 +19,7 @@ Bugfixes
 * When running the build command it is now possible to get help.
 * Load jQuery before bootstrap in JS bundle (Issue #327)
 * Generate valid HTML5 for redirects (Issue #276)
+* Fail gracefully if there's no conf.py present 
 
 New in 5.3
 ==========

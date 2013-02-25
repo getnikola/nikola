@@ -24,6 +24,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function, unicode_literals
+import os
 import sys
 from operator import attrgetter
 
@@ -38,12 +39,13 @@ from .nikola import Nikola
 
 
 def main(args):
-    try:
-        sys.path.append('')
-        import conf
-        config = conf.__dict__
-    except ImportError:
-        config = {}
+    if not os.path.isfile("conf.py"):
+        print("No conf.py present. This folder doesn't look like a Nikola site.")
+        return 1
+    sys.path.append('')
+    import conf
+    config = conf.__dict__
+    config = {}
 
     site = Nikola(**config)
     return DoitNikola(site).run(args)
