@@ -140,11 +140,10 @@ class Post(object):
                             self.descriptions[lang] = meta_data[5] or\
                                 default_description
                     else:
-                        ttitle, ppagename, tmp1, tmp2, tmp3, ddescription = \
-                            utils.get_meta(source_path, file_metadata_regexp)
-                        self.titles[lang] = ttitle or default_title
-                        self.pagenames[lang] = ppagename or default_pagename
-                        self.descriptions[lang] = ddescription or\
+                        meta = utils.get_meta(source_path, file_metadata_regexp)
+                        self.titles[lang] = meta['title'] or default_title
+                        self.pagenames[lang] = meta['slug'] or default_pagename
+                        self.descriptions[lang] = meta['description'] or\
                             default_description
                 except:
                     self.titles[lang] = default_title
