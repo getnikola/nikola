@@ -50,23 +50,22 @@ class Listings(Task):
         # Things to ignore in listings
         ignored_extensions = (".pyc",)
 
-        def render_listing(in_name, out_name):
-            with open(in_name, 'r') as fd:
-                try:
-                    lexer = get_lexer_for_filename(in_name)
-                except:
-                    lexer = TextLexer()
-                code = highlight(fd.read(), lexer,
-                                 HtmlFormatter(cssclass='code',
-                                               linenos="table", nowrap=False,
-                                               lineanchors=utils.slugify(f),
-                                               anchorlinenos=True))
-            title = os.path.basename(in_name)
-            print("CRUMBSINOUT", in_name, out_name)
-            #crumbs = out_name.split(os.sep)[1:-1] + [title]
-            # TODO: write this in human
-            #paths = ['/'.join(['..'] * (len(crumbs) - 2 - i)) for i in
-                     #range(len(crumbs[:-2]))] + ['.', '#']
+        def render_listing(in_name, out_name, folders=[], files=[]):
+            if in_name:
+                with open(in_name, 'r') as fd:
+                    try:
+                        lexer = get_lexer_for_filename(in_name)
+                    except:
+                        lexer = TextLexer()
+                    code = highlight(fd.read(), lexer,
+                                     HtmlFormatter(cssclass='code',
+                                                   linenos="table", nowrap=False,
+                                                   lineanchors=utils.slugify(f),
+                                                   anchorlinenos=True))
+                title = os.path.basename(in_name)
+            else:
+                code = ''
+                title = ''
             crumbs = utils.get_crumbs(os.path.relpath(out_name,
                                                       kw['output_folder']),
                                       is_file=True)
@@ -75,6 +74,8 @@ class Listings(Task):
                 'title': title,
                 'crumbs': crumbs,
                 'lang': kw['default_lang'],
+                'folders': folders,
+                'files': files,
                 'description': title,
             }
             self.site.render_template('listing.tmpl', out_name.encode('utf8'),
@@ -82,12 +83,27 @@ class Listings(Task):
         flag = True
         template_deps = self.site.template_system.template_deps('listing.tmpl')
         for root, dirs, files in os.walk(kw['listings_folder']):
+            flag = False
             # Render all files
+            out_name = os.path.join(
+                kw['output_folder'],
+                root, 'index.html'
+            )
+            yield {
+                'basename': self.name,
+                'name': out_name.encode('utf8'),
+                'file_dep': template_deps,
+                'targets': [out_name],
+                'actions': [(render_listing, [None, out_name, dirs, files])],
+                # This is necessary to reflect changes in blog title,
+                # sidebar links, etc.
+                'uptodate': [utils.config_changed(
+                    self.site.config['GLOBAL_CONTEXT'])]
+            }
             for f in files:
                 ext = os.path.splitext(f)[-1]
                 if ext in ignored_extensions:
                     continue
-                flag = False
                 in_name = os.path.join(root, f)
                 out_name = os.path.join(
                     kw['output_folder'],

@@ -153,6 +153,7 @@ def get_metadata_from_file(source_path, meta=None):
         meta_data = meta_file.readlines()
     return _get_metadata_from_file(meta_data, meta)
 
+
 def _get_metadata_from_file(meta_data, meta=None):
     """Parse file contents and obtain metadata.
 

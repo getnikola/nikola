@@ -10,6 +10,7 @@ Features
 * Custom "read more" links
 * Better time display, timezone support
 * Better doit integration (Issue #151)
+* Make the whole listings folder browsable (Issue #128)
 
 Bugfixes
 --------
