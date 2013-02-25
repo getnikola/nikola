@@ -41,7 +41,7 @@ class CommandCheck(Command):
 
     name = "check"
 
-    doc_usage = "-l | -f"
+    doc_usage = "-l [--find-sources] | -f"
     doc_purpose = "Check links and files in the generated site."
     cmd_options = [
         {
@@ -60,6 +60,13 @@ class CommandCheck(Command):
             'default': False,
             'help': 'Check for unknown files',
         },
+        {
+            'name': 'find_sources',
+            'long': 'find-sources',
+            'type': bool,
+            'default': False,
+            'help': 'List possible source files for files with broken links.',
+        },
     ]
 
     def execute(self, options, args):
@@ -68,14 +75,14 @@ class CommandCheck(Command):
             print(self.help())
             return False
         if options['links']:
-            scan_links()
+            scan_links(options['find_sources'])
         if options['files']:
             scan_files()
 
 existing_targets = set([])
 
 
-def analize(task):
+def analize(task, find_sources=False):
     try:
         filename = task.split(":")[-1]
         d = lxml.html.fromstring(open(filename).read())
@@ -95,7 +102,7 @@ def analize(task):
                     existing_targets.add(target_filename)
                 else:
                     print("Broken link in {0}: ".format(filename), target)
-                    if '--find-sources' in sys.argv:
+                    if find_sources:
                         print("Possible sources:")
                         print(os.popen('nikola list --deps ' + task,
                                        'r').read())
@@ -105,7 +112,7 @@ def analize(task):
         print("Error with:", filename, exc)
 
 
-def scan_links():
+def scan_links(find_sources=False):
     print("Checking Links:\n===============\n")
     for task in os.popen('nikola list --all', 'r').readlines():
         task = task.strip()
@@ -113,7 +120,7 @@ def scan_links():
                                   'render_galleries', 'render_indexes',
                                   'render_pages',
                                   'render_site') and '.html' in task:
-            analize(task)
+            analize(task, find_sources)
 
 
 def scan_files():
