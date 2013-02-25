@@ -65,22 +65,24 @@ class Command(BasePlugin, DoitCommand):
         """
         raise NotImplementedError()
 
-    def help(self):
-        """return help text"""
-        text = []
-        text.append("Purpose: %s" % self.doc_purpose)
-        text.append("Usage:   nikola %s %s" % (self.name, self.doc_usage))
-        text.append('')
+def help(self):
+    """return help text"""
+    text = []
+    text.append("Purpose: %s" % self.doc_purpose)
+    text.append("Usage:   nikola %s %s" % (self.name, self.doc_usage))
+    text.append('')
 
-        text.append("Options:")
-        for opt in self.options:
-            text.extend(opt.help_doc())
+    text.append("Options:")
+    for opt in self.options:
+        text.extend(opt.help_doc())
 
-        if self.doc_description is not None:
-            text.append("")
-            text.append("Description:")
-            text.append(self.doc_description)
-        return "\n".join(text)
+    if self.doc_description is not None:
+        text.append("")
+        text.append("Description:")
+        text.append(self.doc_description)
+    return "\n".join(text)
+
+DoitCommand.help = help
 
 
 class BaseTask(BasePlugin):
