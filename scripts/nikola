@@ -34,4 +34,7 @@ else:
 from nikola import main
 
 if __name__ == "__main__":
+    if not os.path.isfile("conf.py"):
+        print("No conf.py present. This folder doesn't look like a Nikola site.")
+        sys.exit(1)
     sys.exit(main.main(sys.argv[1:]))

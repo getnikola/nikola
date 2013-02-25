@@ -39,9 +39,6 @@ from .nikola import Nikola
 
 
 def main(args):
-    if not os.path.isfile("conf.py"):
-        print("No conf.py present. This folder doesn't look like a Nikola site.")
-        return 1
     sys.path.append('')
     import conf
     config = conf.__dict__
