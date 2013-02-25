@@ -136,7 +136,6 @@ class Galleries(Task):
             # Sort by date
             image_list.sort(key=lambda a: self.image_date(a))
             image_name_list = [os.path.basename(x) for x in image_list]
-
             thumbs = []
             # Do thumbnails and copy originals
             for img, img_name in list(zip(image_list, image_name_list)):
@@ -187,7 +186,7 @@ class Galleries(Task):
                         output_gallery, ".thumbnail".join([fname, ext]))
                     excluded_dest_path = os.path.join(output_gallery, img_name)
                     yield {
-                        'basename': str('render_galleries'),
+                        'basename': str('render_galleries_clean'),
                         'name': excluded_thumb_dest_path.encode('utf8'),
                         'file_dep': [exclude_path],
                         #'targets': [excluded_thumb_dest_path],
@@ -198,7 +197,7 @@ class Galleries(Task):
                         'uptodate': [utils.config_changed(kw)],
                     }
                     yield {
-                        'basename': str('render_galleries'),
+                        'basename': str('render_galleries_clean'),
                         'name': excluded_dest_path.encode('utf8'),
                         'file_dep': [exclude_path],
                         #'targets': [excluded_dest_path],
