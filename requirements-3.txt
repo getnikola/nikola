@@ -1,16 +1,7 @@
-doit>=0.20.0
-pygments
-https://github.com/fluggo/Pillow/archive/master.zip
-docutils
-mako>=0.6
-unidecode
-lxml
-yapsy
+https://github.com/python-imaging/Pillow/archive/master.zip
 mock>=1.0.0
 requests
 markdown
 Jinja2
-PyRSS2Gen
 bbcode
 flake8
-pytz

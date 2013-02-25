@@ -38,7 +38,6 @@ dependencies = [
     'unidecode',
     'lxml',
     'yapsy',
-    'mock>=1.0.0',
     'PyRSS2Gen',
     'pytz',
 ]
