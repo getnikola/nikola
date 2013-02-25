@@ -1,12 +1,11 @@
 from docutils import nodes
 from docutils.parsers.rst import directives
 
-CODE = """\
-<iframe width="{width}" height="{height}"
+CODE = ("""<iframe width="{width}" height="{height}"
 scrolling="no" frameborder="no"
-src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/{sid}">
-</iframe>
-"""
+src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/"""
+        """{sid}">
+</iframe>""")
 
 
 def soundcloud(name, args, options, content, lineno,

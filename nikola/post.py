@@ -96,7 +96,7 @@ class Post(object):
             raise OSError("You must set a title (found '{0}'), a slug (found "
                           "'{1}') and a date (found '{2}')! [in file "
                           "{3}]".format(default_title, default_pagename,
-                                       self.date, source_path))
+                                        self.date, source_path))
 
         # If timezone is set, build localized datetime.
         self.date = utils.to_datetime(self.date, tzinfo)

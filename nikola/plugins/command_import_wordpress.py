@@ -166,14 +166,14 @@ class CommandImportWordpress(Command):
         context['BLOG_DESCRIPTION'] = get_text_tag(
             channel, 'description', 'PUT DESCRIPTION HERE')
         context['BLOG_URL'] = get_text_tag(channel, 'link', '#')
-        author = channel.find('{%s}author' % wordpress_namespace)
+        author = channel.find('{{{0}}}author'.format(wordpress_namespace))
         context['BLOG_EMAIL'] = get_text_tag(
             author,
-            '{%s}author_email' % wordpress_namespace,
+            '{{{0}}}author_email'.format(wordpress_namespace),
             "joe@example.com")
         context['BLOG_AUTHOR'] = get_text_tag(
             author,
-            '{%s}author_display_name' % wordpress_namespace,
+            '{{{0}}}author_display_name'.format(wordpress_namespace),
             "Joe Example")
         context['POST_PAGES'] = '''(
             ("posts/*.wp", "posts", "post.tmpl", True),
@@ -194,19 +194,21 @@ class CommandImportWordpress(Command):
             with open(dst_path, 'wb+') as fd:
                 fd.write(requests.get(url).content)
         except requests.exceptions.ConnectionError as err:
-            print("Downloading %s to %s failed: %s" % (url, dst_path, err))
+            print("Downloading {0} to {1} failed: {2}".format(url, dst_path,
+                                                              err))
 
     def import_attachment(self, item, wordpress_namespace):
         url = get_text_tag(
-            item, '{%s}attachment_url' % wordpress_namespace, 'foo')
-        link = get_text_tag(item, '{%s}link' % wordpress_namespace, 'foo')
+            item, '{{{0}}}attachment_url'.format(wordpress_namespace), 'foo')
+        link = get_text_tag(item, '{{{0}}}link'.format(wordpress_namespace),
+                            'foo')
         path = urlparse(url).path
         dst_path = os.path.join(*([self.output_folder, 'files']
                                   + list(path.split('/'))))
         dst_dir = os.path.dirname(dst_path)
         if not os.path.isdir(dst_dir):
             os.makedirs(dst_dir)
-        print("Downloading %s => %s" % (url, dst_path))
+        print("Downloading {0} => {1}".format(url, dst_path))
         self.download_url_content_to_file(url, dst_path)
         dst_url = '/'.join(dst_path.split(os.sep)[2:])
         links[link] = '/' + dst_url
@@ -246,12 +248,12 @@ class CommandImportWordpress(Command):
             description = ""
 
         with codecs.open(filename, "w+", "utf8") as fd:
-            fd.write('%s\n' % title)
-            fd.write('%s\n' % slug)
-            fd.write('%s\n' % post_date)
-            fd.write('%s\n' % ','.join(tags))
+            fd.write('{0}\n'.format(title))
+            fd.write('{0}\n'.format(slug))
+            fd.write('{0}\n'.format(post_date))
+            fd.write('{0}\n'.format(','.join(tags)))
             fd.write('\n')
-            fd.write('%s\n' % description)
+            fd.write('{0}\n'.format(description))
 
     def import_item(self, item, wordpress_namespace, out_folder=None):
         """Takes an item from the feed and creates a post file."""
@@ -265,19 +267,19 @@ class CommandImportWordpress(Command):
         slug = utils.slugify(urlparse(link).path)
         if not slug:  # it happens if the post has no "nice" URL
             slug = get_text_tag(
-                item, '{%s}post_name' % wordpress_namespace, None)
+                item, '{{{0}}}post_name'.format(wordpress_namespace), None)
         if not slug:  # it *may* happen
             slug = get_text_tag(
-                item, '{%s}post_id' % wordpress_namespace, None)
+                item, '{{{0}}}post_id'.format(wordpress_namespace), None)
         if not slug:  # should never happen
             print("Error converting post:", title)
             return
 
         description = get_text_tag(item, 'description', '')
         post_date = get_text_tag(
-            item, '{%s}post_date' % wordpress_namespace, None)
+            item, '{{{0}}}post_date'.format(wordpress_namespace), None)
         status = get_text_tag(
-            item, '{%s}status' % wordpress_namespace, 'publish')
+            item, '{{{0}}}status'.format(wordpress_namespace), 'publish')
         content = get_text_tag(
             item, '{http://purl.org/rss/1.0/modules/content/}encoded', '')
 
@@ -298,7 +300,7 @@ class CommandImportWordpress(Command):
             out_folder + '/' + slug + '.html'
 
         if is_draft and self.exclude_drafts:
-            print('Draft "%s" will not be imported.' % (title, ))
+            print('Draft "{0}" will not be imported.'.format(title))
         elif content.strip():
             # If no content is found, no files are written.
             content = self.transform_content(content)
@@ -310,15 +312,15 @@ class CommandImportWordpress(Command):
                 os.path.join(self.output_folder, out_folder, slug + '.wp'),
                 content)
         else:
-            print('Not going to import "%s" because it seems to contain'
-                  ' no content.' % (title, ))
+            print('Not going to import "{0}" because it seems to contain'
+                  ' no content.'.format(title))
 
     def process_item(self, item):
         # The namespace usually is something like:
         # http://wordpress.org/export/1.2/
         wordpress_namespace = item.nsmap['wp']
         post_type = get_text_tag(
-            item, '{%s}post_type' % wordpress_namespace, 'post')
+            item, '{{{0}}}post_type'.format(wordpress_namespace), 'post')
 
         if post_type == 'attachment':
             self.import_attachment(item, wordpress_namespace)
@@ -342,10 +344,10 @@ class CommandImportWordpress(Command):
         if not self.import_into_existing_site:
             filename = 'conf.py'
         else:
-            filename = 'conf.py.wordpress_import-%s' % datetime.datetime.now(
-            ).strftime('%Y%m%d_%H%M%s')
+            filename = 'conf.py.wordpress_import-{0}'.format(
+                datetime.datetime.now().strftime('%Y%m%d_%H%M%s'))
         config_output_path = os.path.join(self.output_folder, filename)
-        print('Configuration will be written to: %s' % config_output_path)
+        print('Configuration will be written to:', config_output_path)
 
         return config_output_path
 

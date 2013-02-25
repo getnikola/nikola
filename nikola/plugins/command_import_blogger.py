@@ -295,5 +295,6 @@ class CommandImportBlogger(Command):
         with codecs.open(filename, 'w+', 'utf8') as fd:
             fd.write(rendered_template)
 
+
 def replacer(dst):
     return links.get(dst, dst)

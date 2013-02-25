@@ -342,7 +342,8 @@ def listings_directive(name, arguments, options, content, lineno,
     fname = arguments[0]
     options['include'] = os.path.join('listings', fname)
     target = urlunsplit(("link", 'listing', fname, '', ''))
-    generated_nodes = [core.publish_doctree('`{0} <{1}>`_'.format(fname, target))[0]]
+    generated_nodes = [core.publish_doctree('`{0} <{1}>`_'.format(fname,
+                                                                  target))[0]]
     generated_nodes += code_block_directive(name, [arguments[1]], options,
                                             content, lineno, content_offset,
                                             block_text, state, state_machine)

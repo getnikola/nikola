@@ -43,8 +43,8 @@ class GitHubGist(Directive):
         if 'file' in self.options:
             filename = self.options['file']
             rawGist = (self.get_raw_gist_with_filename(gistID, filename))
-            embedHTML = ('<script src="https://gist.github.com/{0}.js?file={1}">'
-                         '</script>').format(gistID, filename)
+            embedHTML = ('<script src="https://gist.github.com/{0}.js'
+                         '?file={1}"></script>').format(gistID, filename)
         else:
             rawGist = (self.get_raw_gist(gistID))
             embedHTML = ('<script src="https://gist.github.com/{0}.js">'

@@ -4,4 +4,3 @@ requests
 markdown
 Jinja2
 bbcode
-flake8

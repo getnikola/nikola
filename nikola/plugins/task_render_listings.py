@@ -67,7 +67,9 @@ class Listings(Task):
             # TODO: write this in human
             #paths = ['/'.join(['..'] * (len(crumbs) - 2 - i)) for i in
                      #range(len(crumbs[:-2]))] + ['.', '#']
-            crumbs = utils.get_crumbs(os.path.relpath(out_name, kw['output_folder']), is_file=True)
+            crumbs = utils.get_crumbs(os.path.relpath(out_name,
+                                                      kw['output_folder']),
+                                      is_file=True)
             context = {
                 'code': code,
                 'title': title,
