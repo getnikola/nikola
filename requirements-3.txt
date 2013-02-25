@@ -1,4 +1,4 @@
-https://github.com/fluggo/Pillow/archive/master.zip
+https://github.com/python-imaging/Pillow/archive/master.zip
 mock>=1.0.0
 requests
 markdown
