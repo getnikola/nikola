@@ -60,7 +60,7 @@ class CommandBuild(Command):
         },
     )
 
-    def execute(self, options, args):
+    def _execute(self, options, args):
         """Start test server."""
         out_dir = self.site.config['OUTPUT_FOLDER']
         if not os.path.isdir(out_dir):

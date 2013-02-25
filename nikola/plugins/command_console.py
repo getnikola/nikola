@@ -33,7 +33,7 @@ class Deploy(Command):
     """Start debugging console."""
     name = "console"
 
-    def execute(self, options, args):
+    def _execute(self, options, args):
         """Start the console."""
         from nikola import Nikola
         try:

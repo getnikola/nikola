@@ -53,17 +53,26 @@ class Command(BasePlugin, DoitCommand):
     doc_description = None  # None value will completely ommit line from doc
     # see http://python-doit.sourceforge.net/cmd_run.html#parameters
     cmd_options = ()
+    needs_config = True
 
     def __init__(self, *args, **kwargs):
         BasePlugin.__init__(self, *args, **kwargs)
         DoitCommand.__init__(self)
 
     def execute(self, options, args):
+        """Check if the command can run in the current environment,
+        fail if needed, or call _execute."""
+        if self.needs_config and not self.site.configured:
+            print("This command needs to run inside an existing Nikola site.")
+            return False
+
+    def _execute(self, options, args):
         """Do whatever this command does.
         @param options (dict) with values from cmd_options
         @param args (list) list of positional arguments
         """
         raise NotImplementedError()
+
 
 def help(self):
     """return help text"""

@@ -106,12 +106,12 @@ class CommandNewPost(Command):
             'long': 'format',
             'type': str,
             'default': 'rest',
-            'help': 'Markup format for post, one of rest, markdown, wiki, '\
+            'help': 'Markup format for post, one of rest, markdown, wiki, '
                     'bbcode, html, textile, txt2tags',
         }
     ]
 
-    def execute(self, options, args):
+    def _execute(self, options, args):
         """Create a new post or page."""
 
         compiler_names = [p.name for p in

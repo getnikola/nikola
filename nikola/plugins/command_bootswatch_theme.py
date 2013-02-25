@@ -65,7 +65,7 @@ class CommandBootswatchTheme(Command):
         },
     ]
 
-    def execute(self, options, args):
+    def _execute(self, options, args):
         """Given a swatch name and a parent theme, creates a custom theme."""
         if requests is None:
             print('To use the install_theme command, you need to install the '

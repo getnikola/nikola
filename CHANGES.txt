@@ -21,6 +21,7 @@ Bugfixes
 * Generate valid HTML5 for redirects (Issue #276)
 * Fixed "nikola check"
 * Fixed internationalized RSS links
+* Make commands that need to be run in a site fail gracefully (Issue #342)
 
 New in 5.3
 ==========

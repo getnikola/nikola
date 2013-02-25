@@ -76,6 +76,10 @@ class Nikola(object):
         self.timeline = []
         self.pages = []
         self._scanned = False
+        if not config:
+            self.configured = False
+        else:
+            self.configured = True
 
         # This is the default config
         # TODO: fill it

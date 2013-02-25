@@ -92,7 +92,6 @@ class GetMetaTest(unittest.TestCase):
         self.assertEqual('', meta['link'])
         self.assertEqual('', meta['description'])
 
-
     def test_extracting_metadata_from_filename(self):
         with mock.patch('nikola.utils.codecs.open', create=True):
             meta = nikola.utils.get_meta('2013-01-23-the_slug-dubdubtitle.md',

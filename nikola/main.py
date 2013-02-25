@@ -24,7 +24,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function, unicode_literals
-import os
 import sys
 from operator import attrgetter
 
@@ -103,3 +102,15 @@ class DoitNikola(DoitMain):
         for name, cmd in self.nikola.commands.items():
             cmds[name] = cmd
         return cmds
+
+    def run(self, cmd_args):
+        sub_cmds = self.get_commands()
+        args = self.process_args(cmd_args)
+        if len(args) == 0 or args[0] not in sub_cmds.keys() or \
+                args[0] in ('run', 'build'):
+            # Check for conf.py before launching run
+            if not self.nikola.configured:
+                print("This command needs to run inside an "
+                      "existing Nikola site.")
+                return False
+        super(DoitNikola, self).run(cmd_args)

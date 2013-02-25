@@ -35,7 +35,7 @@ class Deploy(Command):
     doc_usage = ""
     doc_purpose = "Deploy the site."
 
-    def execute(self, command, args):
+    def _execute(self, command, args):
         for command in self.site.config['DEPLOY_COMMANDS']:
             print("==>", command)
             os.system(command)

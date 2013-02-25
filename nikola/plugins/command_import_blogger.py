@@ -51,6 +51,7 @@ class CommandImportBlogger(Command):
     """Import a blogger dump."""
 
     name = "import_blogger"
+    needs_config = False
     doc_usage = "[options] blogger_export_file"
     doc_purpose = "Import a blogger dump."
     cmd_options = [
@@ -71,7 +72,7 @@ class CommandImportBlogger(Command):
         },
     ]
 
-    def execute(self, options, args):
+    def _execute(self, options, args):
         """Import a Wordpress blog from an export file into a Nikola site."""
 
         # Parse the data

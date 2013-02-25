@@ -62,7 +62,7 @@ class CommandInstallTheme(Command):
         },
     ]
 
-    def execute(self, options, args):
+    def _execute(self, options, args):
         """Install theme into current site."""
         listing = options['list']
         url = options['url']

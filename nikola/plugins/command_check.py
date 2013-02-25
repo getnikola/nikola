@@ -24,7 +24,6 @@
 
 from __future__ import print_function
 import os
-import sys
 try:
     from urllib import unquote
     from urlparse import urlparse
@@ -69,9 +68,9 @@ class CommandCheck(Command):
         },
     ]
 
-    def execute(self, options, args):
+    def _execute(self, options, args):
         """Check the generated site."""
-        if not options['links']  and not options['files']:
+        if not options['links'] and not options['files']:
             print(self.help())
             return False
         if options['links']:

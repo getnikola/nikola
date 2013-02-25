@@ -52,6 +52,7 @@ class CommandImportWordpress(Command):
     """Import a wordpress dump."""
 
     name = "import_wordpress"
+    needs_config = False
     doc_usage = "[options] wordpress_export_file"
     doc_purpose = "Import a wordpress dump."
     cmd_options = [
@@ -72,7 +73,7 @@ class CommandImportWordpress(Command):
         },
     ]
 
-    def execute(self, options={}, args=[]):
+    def _execute(self, options={}, args=[]):
         """Import a Wordpress blog from an export file into a Nikola site."""
         # Parse the data
         print(options, args)
