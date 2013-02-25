@@ -236,7 +236,7 @@ class Post(object):
         pieces = list(os.path.split(self.translations[lang]))
         pieces += list(os.path.split(self.folder))
         pieces += [self.pagenames[lang] + extension]
-        pieces = [_f for _f in pieces if _f]
+        pieces = [_f for _f in pieces if _f and  _f != '.']
         if absolute:
             pieces = [self.blog_url] + pieces
         else:
