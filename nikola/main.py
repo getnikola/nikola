@@ -40,9 +40,11 @@ from .nikola import Nikola
 
 def main(args):
     sys.path.append('')
-    import conf
-    config = conf.__dict__
-    config = {}
+    try:
+        import conf
+        config = conf.__dict__
+    except ImportError:
+        config = {}
 
     site = Nikola(**config)
     return DoitNikola(site).run(args)
