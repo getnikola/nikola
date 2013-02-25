@@ -148,6 +148,7 @@ def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
 
 
 def _get_metadata_from_file(source_path, meta=None):
+    """Extracts metadata from the file itself, by parsing contents."""
     if meta is None:
         meta = {
             'title': '',
