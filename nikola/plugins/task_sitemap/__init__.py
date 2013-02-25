@@ -86,6 +86,7 @@ class Sitemap(LateTask):
 
         yield {
             "basename": "sitemap",
+            "name": os.path.join(kw['output_folder'], "sitemap.xml.gz"),
             "targets": [sitemap_path],
             "actions": [(sitemap,)],
             "uptodate": [config_changed(kw)],
