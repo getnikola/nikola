@@ -304,21 +304,32 @@ part of the site using task names, for example ``nikola build render_pages``, an
 Nikola also has other commands besides ``build``::
 
     $ nikola help
-    Usage: nikola command [options]
-
+    Nikola
     Available commands:
-
-    nikola bootswatch_theme: Given a swatch name and a parent theme, creates a custom theme.
-    nikola build: Build the site.
-    nikola check: Check the generated site
-    nikola deploy: Deploy the site
-    nikola import_wordpress: Import a wordpress site from a XML dump (requires markdown).
-    nikola init: Create a new site.
-    nikola install_theme: Install a theme into the current site.
-    nikola new_post: Create a new post.
-    nikola serve: Start test server.
-
-    For detailed help for a command, use nikola command --help
+      nikola auto            automatically execute tasks when a dependency changes
+      nikola bootswatch_theme                Given a swatch name and a parent theme, creates a custom theme.
+      nikola build           run tasks
+      nikola check           Check links and files in the generated site.
+      nikola clean           clean action / remove targets
+      nikola console                 A short explanation.
+      nikola deploy                  Deploy the site.
+      nikola dumpdb                  dump dependency DB
+      nikola forget                  clear successful run status from internal DB
+      nikola help            show help
+      nikola ignore                  ignore task (skip) on subsequent runs
+      nikola import_blogger                  Import a blogger dump.
+      nikola import_wordpress                Import a wordpress dump.
+      nikola init            Create a Nikola site in the specified folder.
+      nikola install_theme           Install theme into current site.
+      nikola list            list tasks from dodo file
+      nikola new_post                Create a new blog post or site page.
+      nikola run             run tasks
+      nikola serve           Start the test webserver.
+      nikola strace                  use strace to list file_deps and targets
+    
+      nikola help              show help / reference
+      nikola help <command>    show command usage
+      nikola help <task-name>  show task usage
 
 The ``serve`` command starts a web server so you can see the site you are creating::
 
@@ -340,7 +351,7 @@ Example usage::
 Creating a Blog Post
 --------------------
 
-To crea te a new post, the easiest way is to run ``nikola new_post``. You  will
+To create a new post, the easiest way is to run ``nikola new_post``. You  will
 be asked for a title for your post, and it will tell you where the post's file
 is located.
 
