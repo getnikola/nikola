@@ -157,7 +157,7 @@ def _get_metadata_from_file(meta_data, meta=None):
     """Parse file contents and obtain metadata.
 
     >>> g = _get_metadata_from_file
-    >>> g([]).values()
+    >>> list(g([]).values())
     ['', '', '', '', '', '']
     >>> g(["FooBar","======"])["title"]
     'FooBar'
