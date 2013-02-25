@@ -65,6 +65,7 @@ class Command(BasePlugin, DoitCommand):
         if self.needs_config and not self.site.configured:
             print("This command needs to run inside an existing Nikola site.")
             return False
+        self._execute(options, args)
 
     def _execute(self, options, args):
         """Do whatever this command does.
