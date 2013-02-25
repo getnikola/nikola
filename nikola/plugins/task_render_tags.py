@@ -56,6 +56,8 @@ class RenderTags(Task):
 
         self.site.scan_posts()
 
+        yield self.list_tags_page(kw)
+
         if not self.site.posts_per_tag:
             yield {'basename': str(self.name), 'actions': []}
             return
@@ -72,8 +74,6 @@ class RenderTags(Task):
                     yield self.tag_page_as_index(tag, lang, post_list, kw)
                 else:
                     yield self.tag_page_as_list(tag, lang, post_list, kw)
-
-        yield self.list_tags_page(kw)
 
         # Tag cloud json file
         tag_cloud_data = {}
