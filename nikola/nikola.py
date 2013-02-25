@@ -198,7 +198,8 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
         self.GLOBAL_CONTEXT['use_cdn'] = self.config.get("USE_CDN")
         self.GLOBAL_CONTEXT['favicons'] = self.config['FAVICONS']
-        self.GLOBAL_CONTEXT['date_format'] = self.config.get('DATE_FORMAT', '%Y-%m-%d %H:%M')
+        self.GLOBAL_CONTEXT['date_format'] = self.config.get(
+            'DATE_FORMAT', '%Y-%m-%d %H:%M')
         self.GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
         self.GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
         self.GLOBAL_CONTEXT['blog_url'] = self.config.get('BLOG_URL')
@@ -208,12 +209,15 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['license'] = self.config.get('LICENSE')
         self.GLOBAL_CONTEXT['search_form'] = self.config.get('SEARCH_FORM')
         self.GLOBAL_CONTEXT['disqus_forum'] = self.config.get('DISQUS_FORUM')
-        self.GLOBAL_CONTEXT['mathjax_config'] = self.config.get('MATHJAX_CONFIG')
-        self.GLOBAL_CONTEXT['content_footer'] = self.config.get('CONTENT_FOOTER')
+        self.GLOBAL_CONTEXT['mathjax_config'] = self.config.get(
+            'MATHJAX_CONFIG')
+        self.GLOBAL_CONTEXT['content_footer'] = self.config.get(
+            'CONTENT_FOOTER')
         self.GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
         self.GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
         self.GLOBAL_CONTEXT['sidebar_links'] = self.config.get('SIDEBAR_LINKS')
-        self.GLOBAL_CONTEXT['twitter_card'] = self.config.get('TWITTER_CARD', {})
+        self.GLOBAL_CONTEXT['twitter_card'] = self.config.get(
+            'TWITTER_CARD', {})
 
         self.GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
