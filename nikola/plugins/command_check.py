@@ -64,6 +64,9 @@ class CommandCheck(Command):
 
     def execute(self, options, args):
         """Check the generated site."""
+        if not options['links']  and not options['files']:
+            print(self.help())
+            return False
         if options['links']:
             scan_links()
         if options['files']:
