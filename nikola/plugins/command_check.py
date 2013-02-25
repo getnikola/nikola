@@ -121,7 +121,7 @@ def scan_files():
     task_fnames = set([])
     real_fnames = set([])
     # First check that all targets are generated in the right places
-    for task in os.popen('nikola build list --all', 'r').readlines():
+    for task in os.popen('nikola list --all', 'r').readlines():
         task = task.strip()
         if 'output' in task and ':' in task:
             fname = task.split(':')[-1]
