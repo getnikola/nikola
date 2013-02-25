@@ -340,25 +340,24 @@ Example usage::
 Creating a Blog Post
 --------------------
 
-A post consists of two files, a metadata file (``post-title.meta``) and a
-file containing the contents written in  `restructured text <http://docutils.sf.net>`_
-(``post-title.txt``), markdown or HTML. Which input type is used is guessed using
-the ``post_compilers`` option in ``conf.py`` but by default, the extensions
-supported are:
+To crea te a new post, the easiest way is to run ``nikola new_post``. You  will
+be asked for a title for your post, and it will tell you where the post's file
+is located.
 
-.txt .rst
-    Restructured Text
+By default, that file will contain also some extra information about your post ("the metadata").
+It can be placed in a separate file by using the ``-2`` option, but it's generally
+easier to keep it in a single location.
 
-.md .markdown .mdown
-    Markdown
+The contents of your post have to be written (by default) in `restructured text <http://docutils.sf.net>`_
+but you can use a lot of different markups using the ``-f`` option. Currently
+Nikola supports bbcode, wiki, markdown, html, txt2tags and textile in addition
+to restructured text.
 
-.htm .html
-    HTML
-
-The default configuration expects them to be placed in ``posts`` but that can be
+You can control what markup compiler is used for each file extension with the ``post_compilers``
+option. The default configuration expects them to be placed in ``posts`` but that can be
 changed (see below, the post_pages option)
 
-You can just create them in ``posts`` or use a little helper task provided by Nikola::
+This is how it works::
 
     $ nikola new_post
     Creating New Post
@@ -375,19 +374,19 @@ The content of that file is as follows::
     .. tags:
     .. link:
     .. description:
+
     Write your post here.
 
-The first line is the title. The second one is the pagename. Since often titles will have
+The ``slug`` is the pagename. Since often titles will have
 characters that look bad on URLs, it's generated as a "clean" version of the title.
 The third line is the post's date, and is set to "now".
 
-You can add three more optional lines. A fourth line that is a list of tags
-separated with commas (spaces around the commas are ignored)::
+The other lines are optional. Tags are comma-separated. The ``link`` is an original
+source for the content, and ``description`` is mostly useful for SEO.
 
-    programming, python, fame, fortune
+You can add your own metadata fields in the same manner, if you use a theme that
+supports them (for example: ``.. author: John Doe``)
 
-A fifth line that's a URL for an original source of the post, and a sixth line
-that's the page description.
 
 .. note:: The Two-File Format
 
@@ -460,20 +459,17 @@ one in the list if all of them have it set to False.
 
 The ``new_post`` command supports some options::
 
-    $ nikola new_post --help
-    Usage: nikola new_post [options]
-
+    $ nikola help new_post
+    Purpose: Create a new blog post or site page.
+    Usage:   nikola new_post [options]
+    
     Options:
-    -h, --help            show this help message and exit
-    -p, --page            Create a page instead of a blog post.
-    -t TITLE, --title=TITLE
-                            Title for the page/post.
-    --tags=TAGS           Comma-separated tags for the page/post.
-    -1                    Create post with embedded metadata (single file
-                            format).
-    -f POST_FORMAT, --format=POST_FORMAT
-                            Format for post (rest or markdown)
-
+      -p, --page                Create a page instead of a blog post.
+      -t ARG, --title=ARG       Title for the page/post.
+      --tags=ARG                Comma-separated tags for the page/post.
+      -1                        Create post with embedded metadata (single file format)
+      -2                        Create post with separate metadata (two file format)
+      -f ARG, --format=ARG      Markup format for post, one of rest, markdown, wiki, bbcode, html, textile, txt2tags
 
 Teasers
 ~~~~~~~
