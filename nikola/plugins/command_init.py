@@ -110,7 +110,7 @@ class CommandInit(Command):
         if target is None:
             print(self.usage)
         else:
-            if not options or not options['demo']:
+            if not options or not options.get('demo'):
                 self.create_empty_site(target)
                 print('Created empty site at {0}.'.format(target))
             else:
