@@ -149,12 +149,13 @@ def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
 
 def _get_metadata_from_file(source_path, meta=None):
     if meta is None:
-        meta={'title': '',
-              'slug': '',
-              'date': '',
-              'tags': '',
-              'link': '',
-              'description': ''
+        meta = {
+            'title': '',
+            'slug': '',
+            'date': '',
+            'tags': '',
+            'link': '',
+            'description': '',
         }
     re_md_title = re.compile(r'^{0}([^{0}].*)'.format(re.escape('#')))
     # Assuming rst titles are going to be at least 4 chars long
@@ -203,7 +204,8 @@ def get_meta(source_path, file_metadata_regexp=None):
 
     if not meta['slug']:
         # If no slug is found in the metadata use the filename
-        meta['slug'] = slugify(os.path.splitext(os.path.basename(source_path))[0])
+        meta['slug'] = slugify(os.path.splitext(
+            os.path.basename(source_path))[0])
 
     if not meta['title']:
         # If no title is found, use the filename without extension
