@@ -3,6 +3,8 @@ Nikola, a Static Site and Blog Generator
 
 In goes content, out comes a website, ready to deploy.
 
+![travis-ci.org build status](https://api.travis-ci.org/ralsina/nikola.png "travis-ci.org build status")
+
 Why Static Websites?
 --------------------
 
