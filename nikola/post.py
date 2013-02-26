@@ -70,6 +70,8 @@ class Post(object):
         self.default_lang = default_lang
         self.messages = messages
         self.template_name = template_name
+
+        # FIXME: move into get_meta or something
         if os.path.isfile(self.metadata_path):
             with codecs.open(self.metadata_path, "r", "utf8") as meta_file:
                 meta_data = meta_file.readlines()
@@ -116,6 +118,7 @@ class Post(object):
         self.descriptions = {}
         # Load internationalized titles
         # TODO: this has gotten much too complicated. Rethink.
+        # TODO: localized metadata should be loaded by get_meta
         for lang in translations:
             if lang == default_lang:
                 self.titles[lang] = default_title
