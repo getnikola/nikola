@@ -24,6 +24,7 @@ Bugfixes
 * Fixed internationalized RSS links
 * Make commands that need to be run in a site fail gracefully (Issue #342)
 * Use localized links on lxml fixer
+* Redirections created during the import from wordpress are now written to conf.py
 
 New in 5.3
 ==========
