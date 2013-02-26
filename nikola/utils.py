@@ -166,6 +166,8 @@ def _get_metadata_from_file(meta_data, meta=None):
     'FooBar'
     >>> g([".. title: FooBar"])["title"]
     'FooBar'
+    >>> g(["",".. title: FooBar"])["title"]
+    ''
 
     """
     if meta is None:
@@ -184,6 +186,8 @@ def _get_metadata_from_file(meta_data, meta=None):
         string.punctuation)))
 
     for i, line in enumerate(meta_data):
+        if not line:
+            break
         if not meta['title']:
             match = re_meta(line, 'title')
             if match[0]:
