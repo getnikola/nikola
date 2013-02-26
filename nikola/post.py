@@ -55,6 +55,7 @@ class Post(object):
         the .html fragment file path.
         """
         self.translated_to = set([default_lang])
+        self.tags = ''
         self.prev_post = None
         self.next_post = None
         self.blog_url = blog_url
@@ -71,28 +72,20 @@ class Post(object):
         self.messages = messages
         self.template_name = template_name
 
-        # FIXME: move into get_meta or something
-        if os.path.isfile(self.metadata_path):
-            with codecs.open(self.metadata_path, "r", "utf8") as meta_file:
-                meta_data = meta_file.readlines()
-            while len(meta_data) < 6:
-                meta_data.append("")
-            (default_title, default_pagename, self.date, self.tags,
-                self.link, default_description) = [x.strip() for x in
-                                                   meta_data][:6]
-        else:
+        self.meta = utils.get_metadata_from_meta_file(self.source_path)
+        if not self.meta:  # Not a 2-file post
             self.meta = utils.get_meta(self.source_path, file_metadata_regexp)
 
-            default_title = self.meta['title']
-            default_pagename = self.meta['slug']
-            default_description = self.meta['description']
+        default_title = self.meta.get('title', '')
+        default_pagename = self.meta.get('slug', '')
+        default_description = self.meta.get('description', '')
 
-            for k, v in self.meta.items():
-                if k not in ['title', 'slug', 'description']:
-                    if sys.version_info[0] == 2:
-                        setattr(self, unidecode.unidecode(unicode(k)), v)
-                    else:
-                        setattr(self, k, v)
+        for k, v in self.meta.items():
+            if k not in ['title', 'slug', 'description']:
+                if sys.version_info[0] == 2:
+                    setattr(self, unidecode.unidecode(unicode(k)), v)
+                else:
+                    setattr(self, k, v)
 
         if not default_title or not default_pagename or not self.date:
             raise OSError("You must set a title (found '{0}'), a slug (found "
@@ -125,33 +118,21 @@ class Post(object):
                 self.pagenames[lang] = default_pagename
                 self.descriptions[lang] = default_description
             else:
-                metadata_path = self.metadata_path + "." + lang
                 source_path = self.source_path + "." + lang
                 if os.path.isfile(source_path):
                     self.translated_to.add(lang)
-                try:
-                    if os.path.isfile(metadata_path):
-                        with codecs.open(
-                                metadata_path, "r", "utf8") as meta_file:
-                            meta_data = [x.strip() for x in
-                                         meta_file.readlines()]
-                            while len(meta_data) < 6:
-                                meta_data.append("")
-                            self.titles[lang] = meta_data[0] or default_title
-                            self.pagenames[lang] = meta_data[1] or\
-                                default_pagename
-                            self.descriptions[lang] = meta_data[5] or\
-                                default_description
-                    else:
-                        meta = utils.get_meta(source_path, file_metadata_regexp)
-                        self.titles[lang] = meta['title'] or default_title
-                        self.pagenames[lang] = meta['slug'] or default_pagename
-                        self.descriptions[lang] = meta['description'] or\
-                            default_description
-                except:
-                    self.titles[lang] = default_title
-                    self.pagenames[lang] = default_pagename
-                    self.descriptions[lang] = default_description
+                meta = utils.get_metadata_from_meta_file(self.source_path, lang)
+                if meta:
+                    self.titles[lang] = meta['title'] or default_title
+                    self.pagenames[lang] = meta['slug'] or default_pagename
+                    self.descriptions[lang] = meta['description'] or default_description
+                else:
+                    meta = utils.get_meta(source_path, file_metadata_regexp)
+                    self.titles[lang] = meta.get('title', default_title)
+                    self.pagenames[lang] = meta.get('slug',
+                        default_pagename)
+                    self.descriptions[lang] = meta.get('description',
+                        default_description)
 
     def title(self, lang):
         """Return localized title."""
