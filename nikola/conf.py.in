@@ -45,7 +45,7 @@ TRANSLATIONS = {
     "${DEFAULT_LANG}": "",
     # Example for another language:
     # "es": "./es",
-    }
+}
 
 # Links for the sidebar / navigation bar.
 # You should provide a key-value pair for each used language.
@@ -139,7 +139,7 @@ post_compilers = ${POST_COMPILERS}
 # relative URL.
 #
 # If you don't need any of these, just set to []
-# REDIRECTIONS = ${REDIRECTIONS}
+REDIRECTIONS = ${REDIRECTIONS}
 
 # Commands to execute to deploy. Can be anything, for example,
 # you may use rsync:
@@ -351,11 +351,11 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 #     # 'creator:id': 654321,  # Same as creator, but the Twitter user's ID.
 # }
 
-	
+
 # If you want to use formatted post time in W3C-DTF Format(ex. 2012-03-30T23:00:00+02:00),
 # set timzone if you want a localized posted date.
-# 
-# TIMEZONE='Europe/Zurich'
+#
+# TIMEZONE = 'Europe/Zurich'
 
 # If webassets is installed, bundle JS and CSS to make site loading faster
 # USE_BUNDLES = True
