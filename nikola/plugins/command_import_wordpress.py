@@ -107,8 +107,10 @@ class CommandImportWordpress(Command):
         self.write_urlmap_csv(
             os.path.join(self.output_folder, 'url_map.csv'), self.url_map)
 
+        rendered_template = conf_template.render(**self.context)
+        rendered_template = re.sub('# REDIRECTIONS = ', 'REDIRECTIONS = ', rendered_template)
         self.write_configuration(self.get_configuration_output_path(
-        ), conf_template.render(**self.context))
+        ), rendered_template)
 
     @staticmethod
     def read_xml_file(filename):

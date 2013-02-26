@@ -139,7 +139,7 @@ post_compilers = ${POST_COMPILERS}
 # relative URL.
 #
 # If you don't need any of these, just set to []
-REDIRECTIONS = ${REDIRECTIONS}
+# REDIRECTIONS = ${REDIRECTIONS}
 
 # Commands to execute to deploy. Can be anything, for example,
 # you may use rsync:

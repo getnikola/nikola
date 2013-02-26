@@ -9,11 +9,9 @@ import mock
 
 class BasicCommandImportWordpress(unittest.TestCase):
     def setUp(self):
-        self.import_command = nikola.plugins.command_import_wordpress.CommandImportWordpress(
-        )
-        self.import_filename = os.path.abspath(
-            os.path.join(os.path.dirname(__file__),
-                         'wordpress_export_example.xml'))
+        self.import_command = nikola.plugins.command_import_wordpress.CommandImportWordpress()
+        self.import_filename = os.path.abspath(os.path.join(
+            os.path.dirname(__file__), 'wordpress_export_example.xml'))
 
     def tearDown(self):
         del self.import_command
@@ -28,8 +26,7 @@ class CommandImportWordpressRunTest(BasicCommandImportWordpress):
         self.write_urlmap = mock.MagicMock()
         self.write_configuration = mock.MagicMock()
 
-        site_generation_patch = mock.patch(
-            'nikola.plugins.command_import_wordpress.CommandImportWordpress.generate_base_site', self.site_generation)
+        site_generation_patch = mock.patch('os.system', self.site_generation)
         data_import_patch = mock.patch(
             'nikola.plugins.command_import_wordpress.CommandImportWordpress.import_posts', self.data_import)
         write_urlmap_patch = mock.patch(
@@ -56,7 +53,8 @@ class CommandImportWordpressRunTest(BasicCommandImportWordpress):
 
     def test_create_import(self):
         valid_import_arguments = (
-            dict(options={'output_folder': 'some_folder'}, args=[self.import_filename]),
+            dict(options={'output_folder': 'some_folder'},
+                 args=[self.import_filename]),
             dict(args=[self.import_filename]),
             dict(args=[self.import_filename, 'folder_argument']),
         )
@@ -72,9 +70,12 @@ class CommandImportWordpressRunTest(BasicCommandImportWordpress):
 
     def test_ignoring_drafts(self):
         valid_import_arguments = (
-            dict(options={'exclude_drafts': True}, args=[self.import_filename]),
-            dict(options={'exclude_drafts': True, 'output_folder': 'some_folder'},
-                 args=[self.import_filename]),
+            dict(options={'exclude_drafts': True}, args=[
+                 self.import_filename]),
+            dict(
+                options={'exclude_drafts': True,
+                                 'output_folder': 'some_folder'},
+                args=[self.import_filename]),
         )
 
         for arguments in valid_import_arguments:
