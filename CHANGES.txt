@@ -23,6 +23,7 @@ Bugfixes
 * Fixed "nikola check"
 * Fixed internationalized RSS links
 * Make commands that need to be run in a site fail gracefully (Issue #342)
+* Use localized links on lxml fixer
 
 New in 5.3
 ==========
