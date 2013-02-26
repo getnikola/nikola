@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from context import nikola
 import unittest
 import mock
+from nikola.post import get_meta
 
 
 class GetMetaTest(unittest.TestCase):
@@ -20,7 +20,7 @@ class GetMetaTest(unittest.TestCase):
         opener_mock.return_value.readlines.return_value = file_metadata
 
         with mock.patch('nikola.utils.codecs.open', opener_mock, create=True):
-            meta = nikola.utils.get_meta('file_with_metadata')
+            meta = get_meta('file_with_metadata')
 
         self.assertEqual('Nikola needs more tests!', meta['title'])
         self.assertEqual('write-tests-now', meta['slug'])
@@ -42,7 +42,7 @@ class GetMetaTest(unittest.TestCase):
         opener_mock.return_value.readlines.return_value = file_metadata
 
         with mock.patch('nikola.utils.codecs.open', opener_mock, create=True):
-            meta = nikola.utils.get_meta('file_with_metadata')
+            meta = get_meta('file_with_metadata')
 
         self.assertEqual('Post Title', meta['title'])
         self.assertEqual('write-tests-now', meta['slug'])
@@ -62,7 +62,7 @@ class GetMetaTest(unittest.TestCase):
         opener_mock.return_value.readlines.return_value = file_metadata
 
         with mock.patch('nikola.utils.codecs.open', opener_mock, create=True):
-            meta = nikola.utils.get_meta('file_with_metadata')
+            meta = get_meta('file_with_metadata')
 
         self.assertEqual('file_with_metadata', meta['title'])
         self.assertEqual('write-tests-now', meta['slug'])
@@ -83,7 +83,7 @@ class GetMetaTest(unittest.TestCase):
         opener_mock.return_value.readlines.return_value = file_metadata
 
         with mock.patch('nikola.utils.codecs.open', opener_mock, create=True):
-            meta = nikola.utils.get_meta('Slugify this')
+            meta = get_meta('Slugify this')
 
         self.assertEqual('Nikola needs more tests!', meta['title'])
         self.assertEqual('slugify-this', meta['slug'])
@@ -94,8 +94,8 @@ class GetMetaTest(unittest.TestCase):
 
     def test_extracting_metadata_from_filename(self):
         with mock.patch('nikola.utils.codecs.open', create=True):
-            meta = nikola.utils.get_meta('2013-01-23-the_slug-dubdubtitle.md',
-                                         '(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.md')
+            meta = get_meta('2013-01-23-the_slug-dubdubtitle.md',
+                            '(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.md')
 
         self.assertEqual('dubdubtitle', meta['title'])
         self.assertEqual('the_slug', meta['slug'])
@@ -106,7 +106,7 @@ class GetMetaTest(unittest.TestCase):
 
     def test_get_meta_slug_only_from_filename(self):
         with mock.patch('nikola.utils.codecs.open', create=True):
-            meta = nikola.utils.get_meta('some/path/the_slug.md')
+            meta = get_meta('some/path/the_slug.md')
 
         self.assertEqual('the_slug', meta['slug'])
 

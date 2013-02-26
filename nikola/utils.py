@@ -34,7 +34,6 @@ import re
 import codecs
 import json
 import shutil
-import string
 import subprocess
 import sys
 from zipfile import ZipFile as zip
@@ -61,8 +60,7 @@ import PyRSS2Gen as rss
 
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'generic_rss_renderer', 'copy_file', 'slugify', 'unslugify',
-           'get_meta', 'get_metadata_from_meta_file', 'to_datetime',
-           'apply_filters', 'config_changed', 'get_crumbs']
+           'to_datetime', 'apply_filters', 'config_changed', 'get_crumbs']
 
 
 class CustomEncoder(json.JSONEncoder):
@@ -110,147 +108,6 @@ def get_theme_path(theme):
     if os.path.isdir(dir_name):
         return dir_name
     raise Exception("Can't find theme '{0}'".format(theme))
-
-
-def re_meta(line, match=None):
-    """re.compile for meta"""
-    if match:
-        reStr = re.compile('^\.\. {0}: (.*)'.format(re.escape(match)))
-    else:
-        reStr = re.compile('^\.\. (.*?): (.*)')
-    result = reStr.findall(line.strip())
-    if match and result:
-        return (match, result[0])
-    elif not match and result:
-        return (result[0][0], result[0][1].strip())
-    else:
-        return (None,)
-
-
-def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
-    """
-    Tries to ried the metadata from the filename based on the given re.
-    This requires to use symbolic group names in the pattern.
-
-    The part to read the metadata from the filename based on a regular
-    expression is taken from Pelican - pelican/readers.py
-    """
-    match = re.match(metadata_regexp, filename)
-    meta = {'title': '', 'slug': '', 'tags': '', 'link': '',
-            'description': ''}
-
-    if match:
-        # .items() for py3k compat.
-        for key, value in match.groupdict().items():
-            meta.update({key.lower(): value})  # metadata must be lowercase
-
-    return meta
-
-
-def get_metadata_from_file(source_path, meta=None):
-    """Extracts metadata from the file itself, by parsing contents."""
-    try:
-        with codecs.open(source_path, "r", "utf8") as meta_file:
-            meta_data = meta_file.readlines()
-        return _get_metadata_from_file(meta_data, meta)
-    except Exception:  # The file may not exist, for multilingual sites
-        return {}
-
-def _get_metadata_from_file(meta_data, meta=None):
-    """Parse file contents and obtain metadata.
-
-    >>> g = _get_metadata_from_file
-    >>> list(g([]).values())
-    []
-    >>> g(["FooBar","======"])["title"]
-    'FooBar'
-    >>> g(["#FooBar"])["title"]
-    'FooBar'
-    >>> g([".. title: FooBar"])["title"]
-    'FooBar'
-    >>> 'title' in g(["",".. title: FooBar"])
-    False
-
-    """
-    if meta is None:
-        meta = {}
-    re_md_title = re.compile(r'^{0}([^{0}].*)'.format(re.escape('#')))
-    # Assuming rst titles are going to be at least 4 chars long
-    # otherwise this detects things like ''' wich breaks other markups.
-    re_rst_title = re.compile(r'^([{0}]{{4,}})'.format(re.escape(
-        string.punctuation)))
-
-    for i, line in enumerate(meta_data):
-        if not line:
-            break
-        if 'title' not in meta:
-            match = re_meta(line, 'title')
-            if match[0]:
-                meta['title'] = match[1]
-        if 'title' not in meta:
-            if re_rst_title.findall(line) and i > 0:
-                meta['title'] = meta_data[i - 1].strip()
-        if 'title' not in meta:
-            if re_md_title.findall(line):
-                meta['title'] = re_md_title.findall(line)[0]
-
-        match = re_meta(line)
-        if match[0]:
-            meta[match[0]] = match[1]
-
-    return meta
-
-
-def get_metadata_from_meta_file(path, lang=None):
-    """Takes a post path, and gets data from a matching .meta file."""
-
-    meta_path = os.path.splitext(path)[0]+'.meta'
-    if lang:
-        meta_path += '.' + lang
-    if os.path.isfile(meta_path):
-        with codecs.open(meta_path, "r", "utf8") as meta_file:
-            meta_data = meta_file.readlines()
-        while len(meta_data) < 6:
-            meta_data.append("")
-        (title, slug, date, tags, link, description) = [
-            x.strip() for x in meta_data][:6]
-        return {
-            'title': title,
-            'slug': slug,
-            'date': date,
-            'tags': tags,
-            'link': link,
-            'description': description,
-        }
-    else:
-        return {}
-
-def get_meta(source_path, file_metadata_regexp=None):
-    """Get post's meta from source.
-
-    If ``file_metadata_regexp`` is given it will be tried to read
-    metadata from the filename.
-    If any metadata is then found inside the file the metadata from the
-    file will override previous findings.
-    """
-    meta = {}
-
-    if not (file_metadata_regexp is None):
-        meta.update(_get_metadata_from_filename_by_regex(source_path,
-                                                    file_metadata_regexp))
-
-    meta.update(get_metadata_from_file(source_path, meta))
-
-    if 'slug' not in meta:
-        # If no slug is found in the metadata use the filename
-        meta['slug'] = slugify(os.path.splitext(
-            os.path.basename(source_path))[0])
-
-    if 'title' not in meta:
-        # If no title is found, use the filename without extension
-        meta['title'] = os.path.splitext(os.path.basename(source_path))[0]
-
-    return meta
 
 
 def get_template_engine(themes):

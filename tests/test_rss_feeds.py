@@ -16,7 +16,7 @@ class RSSFeedTest(unittest.TestCase):
     def setUp(self):
         self.blog_url = "http://some.blog"
 
-        with mock.patch('nikola.nikola.utils.get_meta',
+        with mock.patch('nikola.post.get_meta',
                         mock.Mock(return_value=({'title': 'post title',
                                                  'slug': 'awesome_article',
                                                  'date': '2012-10-01 22:41',
