@@ -99,15 +99,18 @@ class CommandImportWordpress(Command):
         channel = self.get_channel_from_file(self.wordpress_export_file)
         self.context = self.populate_context(channel)
         conf_template = self.generate_base_site()
-        self.context['REDIRECTIONS'] = self.configure_redirections(
-            self.url_map)
 
         self.import_posts(channel)
+
+        self.context['REDIRECTIONS'] = self.configure_redirections(
+            self.url_map)
         self.write_urlmap_csv(
             os.path.join(self.output_folder, 'url_map.csv'), self.url_map)
 
+        rendered_template = conf_template.render(**self.context)
+        rendered_template = re.sub('# REDIRECTIONS = ', 'REDIRECTIONS = ', rendered_template)
         self.write_configuration(self.get_configuration_output_path(
-        ), conf_template.render(**self.context))
+        ), rendered_template)
 
     @staticmethod
     def read_xml_file(filename):
@@ -297,13 +300,13 @@ class CommandImportWordpress(Command):
                 continue
             tags.append(text)
 
-        self.url_map[link] = self.context['BLOG_URL'] + '/' + \
-            out_folder + '/' + slug + '.html'
-
         if is_draft and self.exclude_drafts:
             print('Draft "{0}" will not be imported.'.format(title))
         elif content.strip():
             # If no content is found, no files are written.
+            self.url_map[link] = self.context['BLOG_URL'] + '/' + \
+                out_folder + '/' + slug + '.html'
+
             content = self.transform_content(content)
 
             self.write_metadata(os.path.join(self.output_folder, out_folder,
