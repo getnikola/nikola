@@ -286,12 +286,12 @@ def _get_metadata_from_file(meta_data, meta=None):
     >>> g = _get_metadata_from_file
     >>> list(g([]).values())
     []
-    >>> g(["FooBar","======"])["title"]
-    u'FooBar'
-    >>> g(["#FooBar"])["title"]
-    u'FooBar'
-    >>> g([".. title: FooBar"])["title"]
-    u'FooBar'
+    >>> str(g(["FooBar","======"])["title"])
+    'FooBar'
+    >>> str(g(["#FooBar"])["title"])
+    'FooBar'
+    >>> str(g([".. title: FooBar"])["title"])
+    'FooBar'
     >>> 'title' in g(["",".. title: FooBar"])
     False
 
