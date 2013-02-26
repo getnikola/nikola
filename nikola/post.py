@@ -34,7 +34,7 @@ import string
 import unidecode
 import lxml.html
 
-from utils import to_datetime, slugify
+from .utils import to_datetime, slugify
 
 __all__ = ['Post']
 
