@@ -201,7 +201,7 @@ class Post(object):
             data = post_file.read()
 
         if data:
-            data = lxml.html.make_links_absolute(data, self.permalink())
+            data = lxml.html.make_links_absolute(data, self.permalink(lang=lang))
         if data and teaser_only:
             e = lxml.html.fromstring(data)
             teaser = []

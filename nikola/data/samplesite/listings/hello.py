@@ -4,7 +4,8 @@ import sys
 
 
 def hello(name='world'):
-    print "hello", name
+    greeting = "hello " + name
+    print(greeting)
 
 if __name__ == "__main__":
     hello(*sys.argv[1:])
