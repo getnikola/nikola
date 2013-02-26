@@ -25,9 +25,9 @@ class GetMetaTest(unittest.TestCase):
         self.assertEqual('Nikola needs more tests!', meta['title'])
         self.assertEqual('write-tests-now', meta['slug'])
         self.assertEqual('2012/09/15 19:52:05', meta['date'])
-        self.assertNotIn('tags', meta)
-        self.assertNotIn('link', meta)
-        self.assertNotIn('description', meta)
+        self.assertFalse('tags' in meta)
+        self.assertFalse('link' in meta)
+        self.assertFalse('description' in meta)
 
     def test_get_title_from_rest(self):
         file_metadata = [".. slug: write-tests-now\n",
@@ -47,9 +47,9 @@ class GetMetaTest(unittest.TestCase):
         self.assertEqual('Post Title', meta['title'])
         self.assertEqual('write-tests-now', meta['slug'])
         self.assertEqual('2012/09/15 19:52:05', meta['date'])
-        self.assertNotIn('tags', meta)
-        self.assertNotIn('link', meta)
-        self.assertNotIn('description', meta)
+        self.assertFalse('tags' in meta)
+        self.assertFalse('link' in meta)
+        self.assertFalse('description' in meta)
 
     def test_get_title_from_fname(self):
         file_metadata = [".. slug: write-tests-now\n",
@@ -67,9 +67,9 @@ class GetMetaTest(unittest.TestCase):
         self.assertEqual('file_with_metadata', meta['title'])
         self.assertEqual('write-tests-now', meta['slug'])
         self.assertEqual('2012/09/15 19:52:05', meta['date'])
-        self.assertNotIn('tags', meta)
-        self.assertNotIn('link', meta)
-        self.assertNotIn('description', meta)
+        self.assertFalse('tags' in meta)
+        self.assertFalse('link' in meta)
+        self.assertFalse('description' in meta)
 
     def test_use_filename_as_slug_fallback(self):
         file_metadata = [".. title: Nikola needs more tests!\n",
@@ -88,9 +88,9 @@ class GetMetaTest(unittest.TestCase):
         self.assertEqual('Nikola needs more tests!', meta['title'])
         self.assertEqual('slugify-this', meta['slug'])
         self.assertEqual('2012/09/15 19:52:05', meta['date'])
-        self.assertNotIn('tags', meta)
-        self.assertNotIn('link', meta)
-        self.assertNotIn('description', meta)
+        self.assertFalse('tags' in meta)
+        self.assertFalse('link' in meta)
+        self.assertFalse('description' in meta)
 
     def test_extracting_metadata_from_filename(self):
         with mock.patch('nikola.utils.codecs.open', create=True):
