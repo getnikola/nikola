@@ -27,6 +27,7 @@ from __future__ import print_function, unicode_literals
 from collections import defaultdict
 from copy import copy
 import glob
+import gzip
 import os
 import sys
 try:
@@ -101,6 +102,7 @@ class Nikola(object):
             'FILES_FOLDERS': {'files': ''},
             'FILTERS': {},
             'GALLERY_PATH': 'galleries',
+            'GZIP_FILES': False,
             'INDEX_DISPLAY_POST_COUNT': 10,
             'INDEX_TEASERS': False,
             'INDEXES_TITLE': "",
@@ -492,15 +494,53 @@ class Nikola(object):
         return exists
 
     def gen_tasks(self):
-        task_dep = []
+
+        def create_gzipped_copy(in_path, out_path):
+            with gzip.GzipFile(out_path, 'wb+') as outf:
+                with open(in_path, 'rb') as inf:
+                    outf.write(inf.read())
+
+        def add_gzipped_copies(task):
+            if not self.config['GZIP_FILES']:
+                return None
+            if not isinstance(task, dict):
+                return None
+            gzip_task = {}
+            gzip_task['file_dep'] = []
+            gzip_task['targets'] = []
+            gzip_task['actions'] = []
+            gzip_task['basename'] = 'gzip'
+            gzip_task['name'] = task.get('name', 'unknown')
+
+            targets = task.get('targets', [])
+            flag = False
+            for target in targets:
+                ext = os.path.splitext(target)[1]
+                if ext.lower() in ('.txt', '.htm', '.html', '.css', '.js'):
+                    flag = True
+                    gzipped = target + '.gz'
+                    gzip_task['file_dep'].append(target)
+                    gzip_task['targets'].append(gzipped)
+                    gzip_task['actions'].append((create_gzipped_copy, (target, gzipped)))
+            if not flag:
+                return None
+            return gzip_task
+
+        task_dep = ['gzip']
         for pluginInfo in self.plugin_manager.getPluginsOfCategory("Task"):
             for task in pluginInfo.plugin_object.gen_tasks():
+                gztask = add_gzipped_copies(task)
+                if gztask:
+                    yield gztask
                 yield task
             if pluginInfo.plugin_object.is_default:
                 task_dep.append(pluginInfo.plugin_object.name)
 
         for pluginInfo in self.plugin_manager.getPluginsOfCategory("LateTask"):
             for task in pluginInfo.plugin_object.gen_tasks():
+                gztask = add_gzipped_copies(task)
+                if gztask:
+                    yield gztask
                 yield task
             if pluginInfo.plugin_object.is_default:
                 task_dep.append(pluginInfo.plugin_object.name)

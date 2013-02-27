@@ -184,6 +184,9 @@ post_compilers = ${POST_COMPILERS}
 #    ".jpg": ["jpegoptim --strip-all -m75 -v %s"],
 # }
 
+# Create a gzipped copy of each generated file. Cheap server-side optimization.
+# GZIP_FILES = False
+
 # #############################################################################
 # Image Gallery Options
 # #############################################################################
