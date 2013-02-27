@@ -74,7 +74,7 @@ class CommandImportWordpressRunTest(BasicCommandImportWordpress):
                  self.import_filename]),
             dict(
                 options={'exclude_drafts': True,
-                                 'output_folder': 'some_folder'},
+                         'output_folder': 'some_folder'},
                 args=[self.import_filename]),
         )
 

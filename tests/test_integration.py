@@ -9,6 +9,7 @@ import unittest
 from context import nikola
 from nikola import main
 
+
 @contextmanager
 def cd(path):
     old_dir = os.getcwd()

@@ -210,7 +210,7 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
         self.GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL')
         if (self.GLOBAL_CONTEXT['blog_url'] is None and
-            self.config.get('BLOG_URL')):
+                self.config.get('BLOG_URL')):
             # TODO: warn if using old options
             # print("WARNING: You should configure SITE_URL instead of BLOG_URL")
             # print("See docs at FIXME put URL")
@@ -505,13 +505,14 @@ class Nikola(object):
                 return None
             if not isinstance(task, dict):
                 return None
-            gzip_task = {}
-            gzip_task['file_dep'] = []
-            gzip_task['targets'] = []
-            gzip_task['actions'] = []
-            gzip_task['basename'] = 'gzip'
-            gzip_task['name'] = task.get('name', 'unknown')
-
+            gzip_task = {
+                'file_dep': [],
+                'targets': [],
+                'actions': [],
+                'basename': 'gzip',
+                'name': task.get('name', 'unknown'),
+                'clean': True,
+            }
             targets = task.get('targets', [])
             flag = False
             for target in targets:
@@ -526,7 +527,10 @@ class Nikola(object):
                 return None
             return gzip_task
 
-        task_dep = ['gzip']
+        if self.config['GZIP_FILES']:
+            task_dep = ['gzip']
+        else:
+            task_dep = []
         for pluginInfo in self.plugin_manager.getPluginsOfCategory("Task"):
             for task in pluginInfo.plugin_object.gen_tasks():
                 gztask = add_gzipped_copies(task)
@@ -544,7 +548,6 @@ class Nikola(object):
                 yield task
             if pluginInfo.plugin_object.is_default:
                 task_dep.append(pluginInfo.plugin_object.name)
-
         yield {
             'name': b'all',
             'actions': None,
