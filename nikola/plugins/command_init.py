@@ -54,7 +54,8 @@ class CommandInit(Command):
     SAMPLE_CONF = {
         'BLOG_AUTHOR': "Your Name",
         'BLOG_TITLE': "Demo Site",
-        'BLOG_URL': "http://nikola.ralsina.com.ar",
+        'SITE_URL': "http://nikola.ralsina.com.ar",
+        'BASE_URL': "http://nikola.ralsina.com.ar",
         'BLOG_EMAIL': "joe@demo.site",
         'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
         'DEFAULT_LANG': "en",

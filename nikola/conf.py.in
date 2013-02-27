@@ -12,7 +12,12 @@ import time
 # Data about this site
 BLOG_AUTHOR = "${BLOG_AUTHOR}"
 BLOG_TITLE = "${BLOG_TITLE}"
-BLOG_URL = "${BLOG_URL}"
+# This is the main URL for your site. It will be used
+# in a prominent link
+SITE_URL = "${SITE_URL}"
+# This is the URL where nikola's output will be deployed.
+# If not set, defaults to SITE_URL
+# BASE_URL = "${BASE_URL}
 BLOG_EMAIL = "${BLOG_EMAIL}"
 BLOG_DESCRIPTION = "${BLOG_DESCRIPTION}"
 

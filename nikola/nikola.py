@@ -206,7 +206,15 @@ class Nikola(object):
             'DATE_FORMAT', '%Y-%m-%d %H:%M')
         self.GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
         self.GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
-        self.GLOBAL_CONTEXT['blog_url'] = self.config.get('BLOG_URL')
+        self.GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL')
+        if (self.GLOBAL_CONTEXT['blog_url'] is None and
+            self.config.get('BLOG_URL')):
+            # TODO: warn if using old options
+            # print("WARNING: You should configure SITE_URL instead of BLOG_URL")
+            # print("See docs at FIXME put URL")
+            self.GLOBAL_CONTEXT['blog_url'] = self.config.get('BLOG_URL')
+        else:  # FIXME: temporary until I get rid of BLOG_URL
+            self.config['BLOG_URL'] = self.config.get('SITE_URL')
         self.GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
         self.GLOBAL_CONTEXT['analytics'] = self.config.get('ANALYTICS')
         self.GLOBAL_CONTEXT['translations'] = self.config.get('TRANSLATIONS')

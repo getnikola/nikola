@@ -7,7 +7,7 @@ import tempfile
 import unittest
 
 from context import nikola
-
+from nikola import main
 
 @contextmanager
 def cd(path):
@@ -39,7 +39,7 @@ class EmptyBuildTest(unittest.TestCase):
     def build(self):
         """Build the site."""
         with cd(self.target_dir):
-            nikola.main.main([])
+            main.main([])
 
     def tearDown(self):
         """Reove the demo site."""

@@ -106,7 +106,6 @@ class CommandImportWordpress(Command):
             self.url_map)
         self.write_urlmap_csv(
             os.path.join(self.output_folder, 'url_map.csv'), self.url_map)
-
         rendered_template = conf_template.render(**self.context)
         rendered_template = re.sub('# REDIRECTIONS = ', 'REDIRECTIONS = ', rendered_template)
         self.write_configuration(self.get_configuration_output_path(
@@ -169,7 +168,8 @@ class CommandImportWordpress(Command):
                                              'PUT TITLE HERE')
         context['BLOG_DESCRIPTION'] = get_text_tag(
             channel, 'description', 'PUT DESCRIPTION HERE')
-        context['BLOG_URL'] = get_text_tag(channel, 'link', '#')
+        context['SITE_URL'] = get_text_tag(channel, 'link', '#')
+        context['BASE_URL'] = get_text_tag(channel, 'link', '#')
         author = channel.find('{{{0}}}author'.format(wordpress_namespace))
         context['BLOG_EMAIL'] = get_text_tag(
             author,
@@ -304,7 +304,7 @@ class CommandImportWordpress(Command):
             print('Draft "{0}" will not be imported.'.format(title))
         elif content.strip():
             # If no content is found, no files are written.
-            self.url_map[link] = self.context['BLOG_URL'] + '/' + \
+            self.url_map[link] = self.context['SITE_URL'] + '/' + \
                 out_folder + '/' + slug + '.html'
 
             content = self.transform_content(content)
