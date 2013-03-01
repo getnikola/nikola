@@ -183,7 +183,9 @@ class CommandNewPost(Command):
             print("The title already exists!")
             exit()
 
-        os.makedirs(os.path.dirname(txt_path))
+        d_name = os.path.dirname(txt_path)
+        if not os.path.exists(d_name):
+            os.makedirs(d_name)
         compiler_plugin.create_post(txt_path, onefile, title, slug, date, tags)
 
         if not onefile:  # write metadata file
