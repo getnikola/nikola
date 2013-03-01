@@ -27,6 +27,7 @@ Bugfixes
 * Make commands that need to be run in a site fail gracefully (Issue #342)
 * Use localized links on lxml fixer
 * Redirections created during the import from wordpress are now written to conf.py
+* Stop parsing metadata in post file on first blank line
 
 New in 5.3
 ==========

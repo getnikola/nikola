@@ -58,6 +58,7 @@ class Post(object):
         """
         self.translated_to = set([default_lang])
         self.tags = ''
+        self.date = None
         self.prev_post = None
         self.next_post = None
         self.blog_url = blog_url
@@ -274,7 +275,7 @@ def get_metadata_from_file(source_path, meta=None):
     """Extracts metadata from the file itself, by parsing contents."""
     try:
         with codecs.open(source_path, "r", "utf8") as meta_file:
-            meta_data = meta_file.readlines()
+            meta_data = [x.strip() for x in meta_file.readlines()]
         return _get_metadata_from_file(meta_data, meta)
     except Exception:  # The file may not exist, for multilingual sites
         return {}
