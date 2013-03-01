@@ -71,6 +71,20 @@ class CommandImportWordpress(Command):
             'type': bool,
             'help': "Don't import drafts",
         },
+        {
+            'name': 'squash_newlines',
+            'long': 'squash-newlines',
+            'default': False,
+            'type': bool,
+            'help': "Shorten multiple newlines in a row to only two newlines",
+        },
+        {
+            'name': 'no_downloads',
+            'long': 'no-downloads',
+            'default': False,
+            'type': bool,
+            'help': "Do not try to download files for the import",
+        },
     ]
 
     def _execute(self, options={}, args=[]):
@@ -92,6 +106,8 @@ class CommandImportWordpress(Command):
             options['output_folder'] = args[1]
 
         self.wordpress_export_file = options['filename']
+        self.squash_newlines = options.get('squash_newlines', False)
+        self.no_downloads = options.get('no_downloads', False)
         self.output_folder = options.get('output_folder', 'new_site')
         self.import_into_existing_site = False
         self.exclude_drafts = options.get('exclude_drafts', False)
@@ -107,9 +123,10 @@ class CommandImportWordpress(Command):
         self.write_urlmap_csv(
             os.path.join(self.output_folder, 'url_map.csv'), self.url_map)
         rendered_template = conf_template.render(**self.context)
-        rendered_template = re.sub('# REDIRECTIONS = ', 'REDIRECTIONS = ', rendered_template)
-        self.write_configuration(self.get_configuration_output_path(
-        ), rendered_template)
+        rendered_template = re.sub('# REDIRECTIONS = ', 'REDIRECTIONS = ',
+                                   rendered_template)
+        self.write_configuration(self.get_configuration_output_path(),
+                                 rendered_template)
 
     @staticmethod
     def read_xml_file(filename):
@@ -192,8 +209,10 @@ class CommandImportWordpress(Command):
 
         return context
 
-    @staticmethod
-    def download_url_content_to_file(url, dst_path):
+    def download_url_content_to_file(self, url, dst_path):
+        if self.no_downloads:
+            return
+
         try:
             with open(dst_path, 'wb+') as fd:
                 fd.write(requests.get(url).content)
@@ -233,10 +252,18 @@ class CommandImportWordpress(Command):
 
         return new_caption
 
-    @classmethod
-    def transform_content(cls, content):
-        new_content = cls.transform_sourcecode(content)
-        return cls.transform_caption(new_content)
+    def transform_multiple_newlines(self, content):
+        """Replaces multiple newlines with only two."""
+        if self.squash_newlines:
+            return re.sub(r'\n{3,}', r'\n\n', content, flags=re.MULTILINE)
+        else:
+            return content
+
+    def transform_content(self, content):
+        new_content = self.transform_sourcecode(content)
+        new_content = self.transform_caption(new_content)
+        new_content = self.transform_multiple_newlines(new_content)
+        return new_content
 
     @classmethod
     def write_content(cls, filename, content):
