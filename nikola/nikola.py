@@ -103,6 +103,7 @@ class Nikola(object):
             'FILTERS': {},
             'GALLERY_PATH': 'galleries',
             'GZIP_FILES': False,
+            'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js'),
             'INDEX_DISPLAY_POST_COUNT': 10,
             'INDEX_TEASERS': False,
             'INDEXES_TITLE': "",
@@ -523,7 +524,8 @@ class Nikola(object):
             flag = False
             for target in targets:
                 ext = os.path.splitext(target)[1]
-                if ext.lower() in ('.txt', '.htm', '.html', '.css', '.js'):
+                if (ext.lower() in self.config['GZIP_EXTENSIONS'] and
+                        target.startswith(self.config['OUTPUT_FOLDER'])):
                     flag = True
                     gzipped = target + '.gz'
                     gzip_task['file_dep'].append(target)
