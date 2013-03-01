@@ -503,7 +503,7 @@ class Nikola(object):
 
         def flatten(task):
             if isinstance(task, dict):
-               yield task
+                yield task
             else:
                 for t in task:
                     for ft in flatten(t):
