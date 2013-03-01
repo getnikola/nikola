@@ -60,7 +60,7 @@ class CommandNewPost(Command):
     """Create a new post."""
 
     name = "new_post"
-    doc_usage = "[options]"
+    doc_usage = "[options] [path]"
     doc_purpose = "Create a new blog post or site page."
     cmd_options = [
         {
@@ -118,6 +118,14 @@ class CommandNewPost(Command):
                           self.site.plugin_manager.getPluginsOfCategory(
                               "PageCompiler")]
 
+        if len(args) > 1:
+            print(self.help())
+            return False
+        elif args:
+            path = args[0]
+        else:
+            path = None
+
         is_page = options.get('is_page', False)
         is_post = not is_page
         title = options['title'] or None
@@ -155,19 +163,27 @@ class CommandNewPost(Command):
         if isinstance(title, bytes):
             title = title.decode(sys.stdin.encoding)
         title = title.strip()
-        slug = utils.slugify(title)
+        if not path:
+            slug = utils.slugify(title)
+        else:
+            slug = utils.slugify(os.path.splitext(os.path.basename(path))[0])
         date = datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
         data = [title, slug, date, tags]
         output_path = os.path.dirname(entry[0])
         meta_path = os.path.join(output_path, slug + ".meta")
         pattern = os.path.basename(entry[0])
         suffix = pattern[1:]
-        txt_path = os.path.join(output_path, slug + suffix)
+        if not path:
+            txt_path = os.path.join(output_path, slug + suffix)
+        else:
+            txt_path = path
 
         if (not onefile and os.path.isfile(meta_path)) or \
                 os.path.isfile(txt_path):
             print("The title already exists!")
             exit()
+
+        os.makedirs(os.path.dirname(txt_path))
         compiler_plugin.create_post(txt_path, onefile, title, slug, date, tags)
 
         if not onefile:  # write metadata file

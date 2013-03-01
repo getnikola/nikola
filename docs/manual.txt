@@ -470,10 +470,10 @@ one in the list if all of them have it set to False.
 
 The ``new_post`` command supports some options::
 
-    $ nikola help new_post
+    $ nikola help new_post 
     Purpose: Create a new blog post or site page.
-    Usage:   nikola new_post [options]
-
+    Usage:   nikola new_post [options] [path]
+    
     Options:
       -p, --page                Create a page instead of a blog post.
       -t ARG, --title=ARG       Title for the page/post.
@@ -481,6 +481,10 @@ The ``new_post`` command supports some options::
       -1                        Create post with embedded metadata (single file format)
       -2                        Create post with separate metadata (two file format)
       -f ARG, --format=ARG      Markup format for post, one of rest, markdown, wiki, bbcode, html, textile, txt2tags
+
+The optional ``path`` parameter tells nikola exactly where to put it instead of guessing from your config.
+So, if you do ``nikola new_post posts/random/foo.txt`` you will have a post in that path, with
+"foo" as its slug.
 
 Teasers
 ~~~~~~~
