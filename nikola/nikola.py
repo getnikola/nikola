@@ -500,10 +500,16 @@ class Nikola(object):
                 with open(in_path, 'rb') as inf:
                     outf.write(inf.read())
 
+        def flatten(task):
+            if isinstance(task, dict):
+               yield task
+            else:
+                for t in task:
+                    for ft in flatten(t):
+                        yield ft
+
         def add_gzipped_copies(task):
             if not self.config['GZIP_FILES']:
-                return None
-            if not isinstance(task, dict):
                 return None
             gzip_task = {
                 'file_dep': [],
@@ -532,7 +538,7 @@ class Nikola(object):
         else:
             task_dep = []
         for pluginInfo in self.plugin_manager.getPluginsOfCategory("Task"):
-            for task in pluginInfo.plugin_object.gen_tasks():
+            for task in flatten(pluginInfo.plugin_object.gen_tasks()):
                 gztask = add_gzipped_copies(task)
                 if gztask:
                     yield gztask
