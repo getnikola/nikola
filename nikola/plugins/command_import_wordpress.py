@@ -255,7 +255,7 @@ class CommandImportWordpress(Command):
     def transform_multiple_newlines(self, content):
         """Replaces multiple newlines with only two."""
         if self.squash_newlines:
-            return re.sub(r'\n{3,}', r'\n\n', content, flags=re.MULTILINE)
+            return re.sub(r'\n{3,}', r'\n\n', content)
         else:
             return content
 
