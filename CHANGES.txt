@@ -13,6 +13,8 @@ Features
 * Make the whole listings folder browsable (Issue #128)
 * New GZIP_FILES/GZIP_EXTENSIONS options to create gzipped copies of some files (Issue #348)
 * New optional path parameter to new_post command.
+* Wordpress importer: option to not download files
+* Wordpress importer: option to squash newlines
 
 Bugfixes
 --------
