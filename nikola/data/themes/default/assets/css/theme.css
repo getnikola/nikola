@@ -49,7 +49,7 @@ div.figure > a > img {
     margin-right: auto;
 }
 
-div.admonition, div.attention, div.caution, div.danger, div.error, div.hint, div.important, div.note, div.tip, div.warning {
+div.sidebar, div.admonition, div.attention, div.caution, div.danger, div.error, div.hint, div.important, div.note, div.tip, div.warning {
     /* Issue 277 */
     border: 1px solid #aaa;
     border-radius: 5px;
