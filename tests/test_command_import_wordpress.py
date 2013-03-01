@@ -112,6 +112,8 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
             channel)
         self.import_command.url_map = {}  # For testing we use an empty one.
         self.import_command.output_folder = 'new_site'
+        self.import_command.squash_newlines = True
+        self.import_command.no_downloads = False
 
         write_metadata = mock.MagicMock()
         write_content = mock.MagicMock()
@@ -137,29 +139,17 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
         write_content.assert_any_call('new_site/posts/200704hoert.wp',
                                       """An image.
 
-
-
 <img class="size-full wp-image-16" title="caption test" src="http://some.blog/wp-content/uploads/2009/07/caption_test.jpg" alt="caption test" width="739" height="517" />
-
-
 
 Some source code.
 
-
-
-
 ~~~~~~~~~~~~{.Python}
-
 
 import sys
 
 print sys.version
 
-
 ~~~~~~~~~~~~
-
-
-
 
 The end.
 
@@ -206,13 +196,16 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
         """Applying markup conversions to content."""
         transform_sourcecode = mock.MagicMock()
         transform_caption = mock.MagicMock()
+        transform_newlines = mock.MagicMock()
 
         with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.transform_sourcecode', transform_sourcecode):
             with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.transform_caption', transform_caption):
-                self.import_command.transform_content("random content")
+                with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.transform_multiple_newlines', transform_newlines):
+                    self.import_command.transform_content("random content")
 
         self.assertTrue(transform_sourcecode.called)
         self.assertTrue(transform_caption.called)
+        self.assertTrue(transform_newlines.called)
 
     def test_transforming_source_code(self):
         """
@@ -266,6 +259,37 @@ asdasdas"""
 
         self.assertEqual(
             expected_content, self.import_command.transform_caption(content))
+
+    def test_transform_multiple_newlines(self):
+        content = """This
+
+
+has
+
+
+
+way to many
+
+newlines.
+
+
+"""
+        expected_content = """This
+
+has
+
+way to many
+
+newlines.
+
+"""
+        self.import_command.squash_newlines = False
+        self.assertEqual(content,
+                         self.import_command.transform_multiple_newlines(content))
+
+        self.import_command.squash_newlines = True
+        self.assertEqual(expected_content,
+                         self.import_command.transform_multiple_newlines(content))
 
     def test_transform_caption_with_link_inside(self):
         content = """[caption caption="Fehlermeldung"]<a href="http://some.blog/openttd-missing_sound.png"><img class="size-thumbnail wp-image-551" title="openttd-missing_sound" src="http://some.blog/openttd-missing_sound-150x150.png" alt="Fehlermeldung" /></a>[/caption]"""
