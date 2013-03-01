@@ -57,7 +57,6 @@ class Help(DoitHelp):
         """print nikola "usage" (basic help) instructions"""
         print("Nikola")
         print("Available commands:")
-        # XXX - separate doit commands from nikola?
         for cmd in sorted(cmds.values(), key=attrgetter('name')):
             print("  nikola %s \t\t %s" % (cmd.name, cmd.doc_purpose))
         print("")
@@ -106,8 +105,11 @@ class DoitNikola(DoitMain):
     def run(self, cmd_args):
         sub_cmds = self.get_commands()
         args = self.process_args(cmd_args)
-        if len(args) == 0:
-            cmd_args=['help']
+
+        if len(args) == 0 or args==["--help"]:
+            cmd_args = ['help']
+            args = ['help']
+
         if len(args) == 0 or args[0] not in sub_cmds.keys() or \
                 args[0] in ('run', 'build'):
             # Check for conf.py before launching run
