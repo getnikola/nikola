@@ -106,6 +106,8 @@ class DoitNikola(DoitMain):
     def run(self, cmd_args):
         sub_cmds = self.get_commands()
         args = self.process_args(cmd_args)
+        if len(args) == 0:
+            cmd_args=['help']
         if len(args) == 0 or args[0] not in sub_cmds.keys() or \
                 args[0] in ('run', 'build'):
             # Check for conf.py before launching run
