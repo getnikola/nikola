@@ -283,12 +283,12 @@ way to many
 newlines.
 
 """
-        self.import_command.squash_newlines = True
-        self.assertEqual(expected_content,
-                         self.import_command.transform_multiple_newlines(content))
-
         self.import_command.squash_newlines = False
         self.assertEqual(content,
+                         self.import_command.transform_multiple_newlines(content))
+
+        self.import_command.squash_newlines = True
+        self.assertEqual(expected_content,
                          self.import_command.transform_multiple_newlines(content))
 
     def test_transform_caption_with_link_inside(self):
