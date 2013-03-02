@@ -86,7 +86,7 @@ class Post(object):
         for k, v in self.meta.items():
             if k not in ['title', 'slug', 'description']:
                 if sys.version_info[0] == 2:
-                    setattr(self, unidecode.unidecode(unicode(k)), v)
+                    setattr(self, unidecode.unidecode(unicode(k)), v)  # NOQA
                 else:
                     setattr(self, k, v)
 

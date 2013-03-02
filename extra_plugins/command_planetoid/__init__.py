@@ -23,7 +23,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 import codecs
 import datetime
 import hashlib
@@ -86,7 +86,7 @@ class Planetoid(Command, Task):
             line = line.strip()
             if line.startswith("#"):
                 continue
-            elif line.startswith(u'http'):
+            elif line.startswith('http'):
                 feed = line
             elif line:
                 name = line
@@ -119,7 +119,7 @@ class Planetoid(Command, Task):
             elif list(f)[0].url != feed:
                 yield {
                     'basename': self.name,
-                    'name': (u'updating_' + name).encode('utf8'),
+                    'name': ('updating_' + name).encode('utf8'),
                     'actions': ((update_feed_url, (list(f)[0], feed)), ),
                 }
 
@@ -224,18 +224,18 @@ class Planetoid(Command, Task):
             meta_path = os.path.join('posts', unique_id + '.meta')
             post_path = os.path.join('posts', unique_id + '.txt')
             with codecs.open(meta_path, 'wb+', 'utf8') as fd:
-                fd.write(u'%s\n' % entry.title.replace('\n', ' '))
-                fd.write(u'%s\n' % unique_id)
-                fd.write(u'%s\n' % entry.date.strftime('%Y/%m/%d %H:%M'))
-                fd.write(u'\n')
-                fd.write(u'%s\n' % entry.link)
+                fd.write('%s\n' % entry.title.replace('\n', ' '))
+                fd.write('%s\n' % unique_id)
+                fd.write('%s\n' % entry.date.strftime('%Y/%m/%d %H:%M'))
+                fd.write('\n')
+                fd.write('%s\n' % entry.link)
             with codecs.open(post_path, 'wb+', 'utf8') as fd:
-                fd.write(u'.. raw:: html\n\n')
+                fd.write('.. raw:: html\n\n')
                 content = entry.content
                 if not content:
-                    content = u'Sin contenido'
+                    content = 'Sin contenido'
                 for line in content.splitlines():
-                    fd.write(u'    %s\n' % line)
+                    fd.write('    %s\n' % line)
 
         for entry in Entry.select().order_by(Entry.date.desc()):
             entry_id = gen_id(entry)
