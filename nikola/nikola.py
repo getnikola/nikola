@@ -565,66 +565,68 @@ class Nikola(object):
 
     def scan_posts(self):
         """Scan all the posts."""
-        if not self._scanned:
-            print("Scanning posts", end='')
-            tzinfo = None
-            if self.config['TIMEZONE'] is not None:
-                tzinfo = pytz.timezone(self.config['TIMEZONE'])
-            targets = set([])
-            for wildcard, destination, template_name, use_in_feeds in \
-                    self.config['post_pages']:
-                print(".", end='')
-                base_len = len(destination.split(os.sep))
-                dirname = os.path.dirname(wildcard)
-                for dirpath, _, _ in os.walk(dirname):
-                    dir_glob = os.path.join(dirpath,
-                                            os.path.basename(wildcard))
-                    dest_dir = os.path.join(*([destination] +
-                                              dirpath.split(
-                                                  os.sep)[base_len:]))
-                    for base_path in glob.glob(dir_glob):
-                        post = Post(
-                            base_path,
-                            self.config['CACHE_FOLDER'],
-                            dest_dir,
-                            use_in_feeds,
-                            self.config['TRANSLATIONS'],
-                            self.config['DEFAULT_LANG'],
-                            self.config['BLOG_URL'],
-                            self.MESSAGES,
-                            template_name,
-                            self.config['FILE_METADATA_REGEXP'],
-                            tzinfo,
-                        )
-                        for lang, langpath in list(
-                                self.config['TRANSLATIONS'].items()):
-                            dest = (destination, langpath, dir_glob,
-                                    post.pagenames[lang])
-                            if dest in targets:
-                                raise Exception('Duplicated output path {0!r} '
-                                                'in post {1!r}'.format(
-                                                    post.pagenames[lang],
-                                                    base_path))
-                            targets.add(dest)
-                        self.global_data[post.post_name] = post
-                        if post.use_in_feeds:
-                            self.posts_per_year[
-                                str(post.date.year)].append(post.post_name)
-                            for tag in post.tags:
-                                self.posts_per_tag[tag].append(post.post_name)
-                        else:
-                            self.pages.append(post)
-            for name, post in list(self.global_data.items()):
-                self.timeline.append(post)
-            self.timeline.sort(key=lambda p: p.date)
-            self.timeline.reverse()
-            post_timeline = [p for p in self.timeline if p.use_in_feeds]
-            for i, p in enumerate(post_timeline[1:]):
-                p.next_post = post_timeline[i]
-            for i, p in enumerate(post_timeline[:-1]):
-                p.prev_post = post_timeline[i + 1]
-            self._scanned = True
-            print("done!")
+        if self._scanned:
+            return
+
+        print("Scanning posts", end='')
+        tzinfo = None
+        if self.config['TIMEZONE'] is not None:
+            tzinfo = pytz.timezone(self.config['TIMEZONE'])
+        targets = set([])
+        for wildcard, destination, template_name, use_in_feeds in \
+                self.config['post_pages']:
+            print(".", end='')
+            base_len = len(destination.split(os.sep))
+            dirname = os.path.dirname(wildcard)
+            for dirpath, _, _ in os.walk(dirname):
+                dir_glob = os.path.join(dirpath,
+                                        os.path.basename(wildcard))
+                dest_dir = os.path.join(*([destination] +
+                                          dirpath.split(
+                                              os.sep)[base_len:]))
+                for base_path in glob.glob(dir_glob):
+                    post = Post(
+                        base_path,
+                        self.config['CACHE_FOLDER'],
+                        dest_dir,
+                        use_in_feeds,
+                        self.config['TRANSLATIONS'],
+                        self.config['DEFAULT_LANG'],
+                        self.config['BLOG_URL'],
+                        self.MESSAGES,
+                        template_name,
+                        self.config['FILE_METADATA_REGEXP'],
+                        tzinfo,
+                    )
+                    for lang, langpath in list(
+                            self.config['TRANSLATIONS'].items()):
+                        dest = (destination, langpath, dir_glob,
+                                post.pagenames[lang])
+                        if dest in targets:
+                            raise Exception('Duplicated output path {0!r} '
+                                            'in post {1!r}'.format(
+                                                post.pagenames[lang],
+                                                base_path))
+                        targets.add(dest)
+                    self.global_data[post.post_name] = post
+                    if post.use_in_feeds:
+                        self.posts_per_year[
+                            str(post.date.year)].append(post.post_name)
+                        for tag in post.tags:
+                            self.posts_per_tag[tag].append(post.post_name)
+                    else:
+                        self.pages.append(post)
+        for name, post in list(self.global_data.items()):
+            self.timeline.append(post)
+        self.timeline.sort(key=lambda p: p.date)
+        self.timeline.reverse()
+        post_timeline = [p for p in self.timeline if p.use_in_feeds]
+        for i, p in enumerate(post_timeline[1:]):
+            p.next_post = post_timeline[i]
+        for i, p in enumerate(post_timeline[:-1]):
+            p.prev_post = post_timeline[i + 1]
+        self._scanned = True
+        print("done!")
 
     def generic_page_renderer(self, lang, post, filters):
         """Render post fragments to final HTML pages."""
