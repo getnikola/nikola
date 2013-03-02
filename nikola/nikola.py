@@ -579,8 +579,8 @@ class Nikola(object):
             dirname = os.path.dirname(wildcard)
             for dirpath, _, _ in os.walk(dirname):
                 dir_glob = os.path.join(dirpath, os.path.basename(wildcard))
-                dest_dir = os.path.join(dirpath,
-                                        os.path.relpath(dirpath, dirname))
+                dest_dir = os.path.normpath(os.path.join(dirpath,
+                                            os.path.relpath(dirpath, dirname)))
                 for base_path in glob.glob(dir_glob):
                     post = Post(
                         base_path,
