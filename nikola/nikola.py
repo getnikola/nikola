@@ -165,7 +165,7 @@ class Nikola(object):
 
         # BASE_URL defaults to SITE_URL
         if 'BASE_URL' not in self.config:
-            self.config['BASE_URL'] = self.config['SITE_URL']
+            self.config['BASE_URL'] = self.config.get('SITE_URL')
 
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,
