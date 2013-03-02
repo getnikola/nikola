@@ -74,10 +74,7 @@ class Post(object):
         self.default_lang = default_lang
         self.messages = messages
         self.template_name = template_name
-
-        self.meta = get_metadata_from_meta_file(self.source_path)
-        if not self.meta:  # Not a 2-file post
-            self.meta = get_meta(self.source_path, file_metadata_regexp)
+        self.meta = get_meta(self.source_path, file_metadata_regexp)
 
         default_title = self.meta.get('title', '')
         default_pagename = self.meta.get('slug', '')
@@ -362,6 +359,8 @@ def get_meta(source_path, file_metadata_regexp=None):
     file will override previous findings.
     """
     meta = {}
+
+    meta.update(get_metadata_from_meta_file(source_path))
 
     if not (file_metadata_regexp is None):
         meta.update(_get_metadata_from_filename_by_regex(source_path,
