@@ -177,6 +177,58 @@ Diese Daten sind f√ºr mich nicht bestimmten Personen zuordenbar. Eine Zusammenf√
             <wp:meta_value><![CDATA[default]]></wp:meta_value>
         </wp:postmeta>
     </item>
+    <item>
+        <title>Indentation Test</title>
+        <link>http://some.blog/2012/04/indentation_test/</link>
+        <pubDate>Sun, 15 Apr 2012 11:44:59 +0000</pubDate>
+        <dc:creator>Niko</dc:creator>
+        <guid isPermaLink="false">http://some.blog/?p=2077</guid>
+        <description></description>
+        <content:encoded><![CDATA[Some examples for indented code that should not be broken.
+
+You should see some Python code hereafter. The code should be one block.
+<pre>class Borg:
+    _state = {}
+    def __init__(self):
+        self.__dict__ = self._state</pre>
+&nbsp;
+
+Here is a listing made with HTML that should display without the HTML being visible to the visitor.
+<ul>
+    <li>to post: <strong>groupname@googlegroups.com</strong></li>
+    <li>to <em>subscribe</em>: <strong>groupname+subscribe@googlegroups.com</strong></li>
+    <li>to <em>unsubscribe</em>: <strong>groupname+unsubscribe@googlegroups.com</strong></li>
+</ul>
+
+A listing with another listing inside.
+<ul>
+<li> foo
+    <ul>
+    <li> bar
+    </ul>
+</ul>
+]]></content:encoded>
+        <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+        <wp:post_id>2077</wp:post_id>
+        <wp:post_date>2012-04-15 12:44:59</wp:post_date>
+        <wp:post_date_gmt>2012-04-15 11:44:59</wp:post_date_gmt>
+        <wp:comment_status>open</wp:comment_status>
+        <wp:ping_status>open</wp:ping_status>
+        <wp:post_name>python-borg-pattern</wp:post_name>
+        <wp:status>publish</wp:status>
+        <wp:post_parent>0</wp:post_parent>
+        <wp:menu_order>0</wp:menu_order>
+        <wp:post_type>post</wp:post_type>
+        <wp:post_password></wp:post_password>
+        <wp:is_sticky>0</wp:is_sticky>
+        <category domain="category" nicename="programming"><![CDATA[programming]]></category>
+        <category domain="post_tag" nicename="design-patterns"><![CDATA[Design Patterns]]></category>
+        <category domain="post_tag" nicename="python"><![CDATA[Python]]></category>
+        <wp:postmeta>
+            <wp:meta_key>_edit_last</wp:meta_key>
+            <wp:meta_value><![CDATA[2]]></wp:meta_value>
+        </wp:postmeta>
+    </item>
 
 </channel>
 </rss>
