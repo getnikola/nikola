@@ -338,14 +338,17 @@ def get_metadata_from_meta_file(path, lang=None):
             meta_data.append("")
         (title, slug, date, tags, link, description) = [
             x.strip() for x in meta_data][:6]
-        return {
-            'title': title,
-            'slug': slug,
-            'date': date,
-            'tags': tags,
-            'link': link,
-            'description': description,
-        }
+
+        meta = {}
+
+        if title: meta['title'] = title
+        if slug: meta['slug'] = slug
+        if date: meta['date'] = date
+        if tags: meta['tags'] = tags
+        if link: meta['link'] = link
+        if description: meta['description'] = description
+
+        return meta
     else:
         return {}
 
