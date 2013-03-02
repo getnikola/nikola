@@ -576,14 +576,11 @@ class Nikola(object):
         for wildcard, destination, template_name, use_in_feeds in \
                 self.config['post_pages']:
             print(".", end='')
-            base_len = len(destination.split(os.sep))
             dirname = os.path.dirname(wildcard)
             for dirpath, _, _ in os.walk(dirname):
-                dir_glob = os.path.join(dirpath,
-                                        os.path.basename(wildcard))
-                dest_dir = os.path.join(*([destination] +
-                                          dirpath.split(
-                                              os.sep)[base_len:]))
+                dir_glob = os.path.join(dirpath, os.path.basename(wildcard))
+                dest_dir = os.path.join(dirpath,
+                                        os.path.relpath(dirpath, dirname))
                 for base_path in glob.glob(dir_glob):
                     post = Post(
                         base_path,
