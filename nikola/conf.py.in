@@ -17,7 +17,7 @@ BLOG_TITLE = "${BLOG_TITLE}"
 SITE_URL = "${SITE_URL}"
 # This is the URL where nikola's output will be deployed.
 # If not set, defaults to SITE_URL
-# BASE_URL = "${BASE_URL}
+# BASE_URL = "${SITE_URL}
 BLOG_EMAIL = "${BLOG_EMAIL}"
 BLOG_DESCRIPTION = "${BLOG_DESCRIPTION}"
 

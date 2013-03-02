@@ -57,7 +57,7 @@ class Deploy(Command):
         pythonrc = os.environ.get("PYTHONSTARTUP")
         if pythonrc and os.path.isfile(pythonrc):
             try:
-                execfile(pythonrc)
+                execfile(pythonrc)  # NOQA
             except NameError:
                 pass
         code.interact(local=globals())

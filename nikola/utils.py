@@ -51,7 +51,7 @@ if sys.version_info[0] == 3:
     unichr = chr
 else:
     bytes_str = str
-    unicode_str = unicode
+    unicode_str = unicode  # NOQA
 
 from doit import tools
 from unidecode import unidecode

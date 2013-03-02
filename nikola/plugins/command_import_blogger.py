@@ -145,7 +145,7 @@ class CommandImportBlogger(Command):
         context['BLOG_TITLE'] = channel.feed.title
 
         context['BLOG_DESCRIPTION'] = ''  # Missing in the dump
-        context['BLOG_URL'] = channel.feed.link.rstrip('/')
+        context['SITE_URL'] = channel.feed.link.rstrip('/')
         context['BLOG_EMAIL'] = channel.feed.author_detail.email
         context['BLOG_AUTHOR'] = channel.feed.author_detail.name
         context['POST_PAGES'] = '''(
@@ -228,7 +228,7 @@ class CommandImportBlogger(Command):
         else:
             is_draft = False
 
-        self.url_map[link] = self.context['BLOG_URL'] + '/' + \
+        self.url_map[link] = self.context['SITE_URL'] + '/' + \
             out_folder + '/' + slug + '.html'
 
         if is_draft and self.exclude_drafts:

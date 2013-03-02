@@ -42,7 +42,7 @@ class RenderTags(Task):
         kw = {
             "translations": self.site.config["TRANSLATIONS"],
             "blog_title": self.site.config["BLOG_TITLE"],
-            "blog_url": self.site.config["BLOG_URL"],
+            "site_url": self.site.config["SITE_URL"],
             "blog_description": self.site.config["BLOG_DESCRIPTION"],
             "messages": self.site.MESSAGES,
             "output_folder": self.site.config['OUTPUT_FOLDER'],
@@ -232,7 +232,7 @@ class RenderTags(Task):
             'targets': [output_name],
             'actions': [(utils.generic_rss_renderer,
                         (lang, "{0} ({1})".format(kw["blog_title"], tag),
-                         kw["blog_url"], kw["blog_description"], post_list,
+                         kw["site_url"], kw["blog_description"], post_list,
                          output_name, kw["rss_teasers"]))],
             'clean': True,
             'uptodate': [utils.config_changed(kw)],

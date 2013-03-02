@@ -29,4 +29,4 @@ default duckduckgo search form:
             <input type="submit" value="DuckDuckGo Search" style="visibility: hidden;" />
         </form>
         <!-- End of custom search -->
-    """ % BLOG_URL
+    """ % SITE_URL

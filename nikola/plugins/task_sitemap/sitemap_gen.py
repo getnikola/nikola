@@ -90,7 +90,7 @@ if sys.version_info[0] == 3:
     unichr = chr
 else:
     bytes_str = str
-    unicode_str = unicode
+    unicode_str = unicode  # NOQA
 
 # Text encodings
 ENC_ASCII = 'ASCII'

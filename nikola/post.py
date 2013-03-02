@@ -47,7 +47,7 @@ class Post(object):
 
     def __init__(
         self, source_path, cache_folder, destination, use_in_feeds,
-        translations, default_lang, blog_url, messages, template_name,
+        translations, default_lang, base_url, messages, template_name,
         file_metadata_regexp=None, tzinfo=None
     ):
         """Initialize post.
@@ -61,7 +61,7 @@ class Post(object):
         self.date = None
         self.prev_post = None
         self.next_post = None
-        self.blog_url = blog_url
+        self.base_url = base_url
         self.is_draft = False
         self.is_mathjax = False
         self.source_path = source_path  # posts/blah.txt
@@ -83,7 +83,7 @@ class Post(object):
         for k, v in self.meta.items():
             if k not in ['title', 'slug', 'description']:
                 if sys.version_info[0] == 2:
-                    setattr(self, unidecode.unidecode(unicode(k)), v)
+                    setattr(self, unidecode.unidecode(unicode(k)), v)  # NOQA
                 else:
                     setattr(self, k, v)
 
@@ -215,7 +215,7 @@ class Post(object):
         pieces += [self.pagenames[lang] + extension]
         pieces = [_f for _f in pieces if _f and _f != '.']
         if absolute:
-            pieces = [self.blog_url] + pieces
+            pieces = [self.base_url] + pieces
         else:
             pieces = [""] + pieces
         link = "/".join(pieces)

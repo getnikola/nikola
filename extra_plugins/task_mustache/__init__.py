@@ -73,7 +73,8 @@ class Mustache(Task):
 
             # Configuration
             for k, v in self.site.config.items():
-                if isinstance(v, (str, unicode)):
+                # FIXME: not py3 ready
+                if isinstance(v, (str, unicode)):  # NOQA
                     data[k] = v
 
             # Tag data
