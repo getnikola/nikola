@@ -32,6 +32,7 @@ Bugfixes
 * Redirections created during the import from wordpress are now written to conf.py
 * Stop parsing metadata in post file on first blank line
 * Metadata handling cleanups by Tordek
+* Fixed blockquote font size inconsistency
 
 New in 5.3
 ==========
