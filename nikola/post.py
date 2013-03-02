@@ -121,7 +121,7 @@ class Post(object):
                     self.translated_to.add(lang)
 
                 meta = self.meta.copy()
-                meta.update(get_meta(self.post_name, file_metadata_regexp, lang))
+                meta.update(get_meta(self.source_path, file_metadata_regexp, lang))
 
                 # FIXME this only gets three pieces of metadata from the i18n files
                 self.titles[lang] = meta['title']
@@ -356,7 +356,10 @@ def get_meta(source_path, file_metadata_regexp=None, lang=None):
 
     meta.update(get_metadata_from_meta_file(source_path, lang))
 
-    if not (file_metadata_regexp is None):
+    if meta:
+        return meta
+
+    if file_metadata_regexp is not None:
         meta.update(_get_metadata_from_filename_by_regex(source_path,
                                                          file_metadata_regexp))
 
