@@ -49,7 +49,8 @@ class Sitemap(LateTask):
             return
         """Generate Google sitemap."""
         kw = {
-            "blog_url": self.site.config["BLOG_URL"],
+            "base_url": self.site.config["BASE_URL"],
+            "site_url": self.site.config["SITE_URL"],
             "output_folder": self.site.config["OUTPUT_FOLDER"],
         }
         output_path = os.path.abspath(kw['output_folder'])
@@ -65,8 +66,8 @@ class Sitemap(LateTask):
     <directory path="{2}" url="{3}" />
     <filter action="drop" type="wildcard" pattern="*~" />
     <filter action="drop" type="regexp" pattern="/\.[^/]*" />
-    </site>""".format(kw["blog_url"], sitemap_path, output_path,
-                      kw["blog_url"])
+    </site>""".format(kw["site_url"], sitemap_path, output_path,
+                      kw["base_url"])
             config_file = tempfile.NamedTemporaryFile(delete=False)
             config_file.write(config_data.encode('utf8'))
             config_file.close()

@@ -155,6 +155,21 @@ class Nikola(object):
         self.MESSAGES = utils.load_messages(self.THEMES,
                                             self.config['TRANSLATIONS'])
 
+        # SITE_URL is required, but if the deprecated BLOG_URL
+        # is available, use it and warn
+        if 'SITE_URL' not in self.config:
+            if 'BLOG_URL' in self.config:
+                print("WARNING: You should configure SITE_URL instead of BLOG_URL")
+                print("See docs at FIXME put URL")
+                self.config['SITE_URL'] = self.config['BLOG_URL']
+            else:
+                # FIXME: do this for all required options
+                raise ValueError("ERROR: SITE_URL is a required option")
+
+        # BASE_URL defaults to SITE_URL
+        if 'BASE_URL' not in self.config:
+            self.config['BASE_URL'] = self.config['SITE_URL']
+
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,
             "Task": Task,
@@ -209,15 +224,8 @@ class Nikola(object):
             'DATE_FORMAT', '%Y-%m-%d %H:%M')
         self.GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
         self.GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
-        self.GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL')
-        if (self.GLOBAL_CONTEXT['blog_url'] is None and
-                self.config.get('BLOG_URL')):
-            # TODO: warn if using old options
-            # print("WARNING: You should configure SITE_URL instead of BLOG_URL")
-            # print("See docs at FIXME put URL")
-            self.GLOBAL_CONTEXT['blog_url'] = self.config.get('BLOG_URL')
-        else:  # FIXME: temporary until I get rid of BLOG_URL
-            self.config['BLOG_URL'] = self.config.get('SITE_URL')
+
+        self.GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL', self.config.get('BLOG_URL'))
         self.GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
         self.GLOBAL_CONTEXT['analytics'] = self.config.get('ANALYTICS')
         self.GLOBAL_CONTEXT['translations'] = self.config.get('TRANSLATIONS')
@@ -319,7 +327,7 @@ class Nikola(object):
         # This is to support windows paths
         url_part = "/".join(url_part.split(os.sep))
 
-        src = urljoin(self.config["BLOG_URL"], url_part)
+        src = urljoin(self.config["BASE_URL"], url_part)
 
         parsed_src = urlsplit(src)
         src_elems = parsed_src.path.split('/')[1:]
@@ -458,13 +466,13 @@ class Nikola(object):
 
     def abs_link(self, dst):
         # Normalize
-        dst = urljoin(self.config['BLOG_URL'], dst)
+        dst = urljoin(self.config['BASE_URL'], dst)
 
         return urlparse(dst).path
 
     def rel_link(self, src, dst):
         # Normalize
-        src = urljoin(self.config['BLOG_URL'], src)
+        src = urljoin(self.config['BASE_URL'], src)
         dst = urljoin(src, dst)
         # Avoid empty links.
         if src == dst:
@@ -589,7 +597,7 @@ class Nikola(object):
                         use_in_feeds,
                         self.config['TRANSLATIONS'],
                         self.config['DEFAULT_LANG'],
-                        self.config['BLOG_URL'],
+                        self.config['BASE_URL'],
                         self.MESSAGES,
                         template_name,
                         self.config['FILE_METADATA_REGEXP'],
