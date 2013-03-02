@@ -74,7 +74,7 @@ class Post(object):
         self.default_lang = default_lang
         self.messages = messages
         self.template_name = template_name
-        self.meta = get_meta(self.source_path, file_metadata_regexp)
+        self.meta = get_meta(self.post_name, file_metadata_regexp)
 
         default_title = self.meta.get('title', '')
         default_pagename = self.meta.get('slug', '')
@@ -117,22 +117,16 @@ class Post(object):
                 self.pagenames[lang] = default_pagename
                 self.descriptions[lang] = default_description
             else:
-                source_path = self.source_path + "." + lang
-                if os.path.isfile(source_path):
+                if os.path.isfile(self.source_path + "." + lang):
                     self.translated_to.add(lang)
-                meta = get_metadata_from_meta_file(self.source_path, lang)
+
+                meta = self.meta.copy()
+                meta.update(get_meta(self.post_name, file_metadata_regexp, lang))
+
                 # FIXME this only gets three pieces of metadata from the i18n files
-                if meta:
-                    self.titles[lang] = meta['title'] or default_title
-                    self.pagenames[lang] = meta['slug'] or default_pagename
-                    self.descriptions[lang] = meta['description'] or default_description
-                else:
-                    meta = get_meta(source_path, file_metadata_regexp)
-                    self.titles[lang] = meta.get('title', default_title)
-                    self.pagenames[lang] = meta.get('slug',
-                                                    default_pagename)
-                    self.descriptions[lang] = meta.get('description',
-                                                       default_description)
+                self.titles[lang] = meta['title']
+                self.pagenames[lang] = meta['slug']
+                self.descriptions[lang] = meta['description']
 
     def title(self, lang):
         """Return localized title."""
@@ -325,7 +319,7 @@ def _get_metadata_from_file(meta_data):
 def get_metadata_from_meta_file(path, lang=None):
     """Takes a post path, and gets data from a matching .meta file."""
 
-    meta_path = os.path.splitext(path)[0] + '.meta'
+    meta_path = path + '.meta'
     if lang:
         meta_path += '.' + lang
     if os.path.isfile(meta_path):
@@ -350,7 +344,7 @@ def get_metadata_from_meta_file(path, lang=None):
         return {}
 
 
-def get_meta(source_path, file_metadata_regexp=None):
+def get_meta(source_path, file_metadata_regexp=None, lang=None):
     """Get post's meta from source.
 
     If ``file_metadata_regexp`` is given it will be tried to read
@@ -360,7 +354,7 @@ def get_meta(source_path, file_metadata_regexp=None):
     """
     meta = {}
 
-    meta.update(get_metadata_from_meta_file(source_path))
+    meta.update(get_metadata_from_meta_file(source_path, lang))
 
     if not (file_metadata_regexp is None):
         meta.update(_get_metadata_from_filename_by_regex(source_path,
