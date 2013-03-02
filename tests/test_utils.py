@@ -100,9 +100,6 @@ class GetMetaTest(unittest.TestCase):
         self.assertEqual('dubdubtitle', meta['title'])
         self.assertEqual('the_slug', meta['slug'])
         self.assertEqual('2013-01-23', meta['date'])
-        self.assertEqual('', meta['tags'])
-        self.assertEqual('', meta['link'])
-        self.assertEqual('', meta['description'])
 
     def test_get_meta_slug_only_from_filename(self):
         with mock.patch('nikola.utils.codecs.open', create=True):
