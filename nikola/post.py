@@ -270,17 +270,17 @@ def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
     return meta
 
 
-def get_metadata_from_file(source_path, meta=None):
+def get_metadata_from_file(source_path):
     """Extracts metadata from the file itself, by parsing contents."""
     try:
         with codecs.open(source_path, "r", "utf8") as meta_file:
             meta_data = [x.strip() for x in meta_file.readlines()]
-        return _get_metadata_from_file(meta_data, meta)
+        return _get_metadata_from_file(meta_data)
     except Exception:  # The file may not exist, for multilingual sites
         return {}
 
 
-def _get_metadata_from_file(meta_data, meta=None):
+def _get_metadata_from_file(meta_data):
     """Parse file contents and obtain metadata.
 
     >>> g = _get_metadata_from_file
@@ -296,8 +296,8 @@ def _get_metadata_from_file(meta_data, meta=None):
     False
 
     """
-    if meta is None:
-        meta = {}
+    meta = {}
+
     re_md_title = re.compile(r'^{0}([^{0}].*)'.format(re.escape('#')))
     # Assuming rst titles are going to be at least 4 chars long
     # otherwise this detects things like ''' wich breaks other markups.
@@ -364,7 +364,7 @@ def get_meta(source_path, file_metadata_regexp=None):
         meta.update(_get_metadata_from_filename_by_regex(source_path,
                                                          file_metadata_regexp))
 
-    meta.update(get_metadata_from_file(source_path, meta))
+    meta.update(get_metadata_from_file(source_path))
 
     if 'slug' not in meta:
         # If no slug is found in the metadata use the filename
