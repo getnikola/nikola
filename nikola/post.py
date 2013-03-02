@@ -260,8 +260,7 @@ def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
     expression is taken from Pelican - pelican/readers.py
     """
     match = re.match(metadata_regexp, filename)
-    meta = {'title': '', 'slug': '', 'tags': '', 'link': '',
-            'description': ''}
+    meta = {}
 
     if match:
         # .items() for py3k compat.
