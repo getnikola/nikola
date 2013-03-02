@@ -266,7 +266,7 @@ def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
     if match:
         # .items() for py3k compat.
         for key, value in match.groupdict().items():
-            meta.update({key.lower(): value})  # metadata must be lowercase
+            meta[key.lower()] = value  # metadata must be lowercase
 
     return meta
 
