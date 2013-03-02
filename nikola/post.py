@@ -319,7 +319,7 @@ def _get_metadata_from_file(meta_data):
 def get_metadata_from_meta_file(path, lang=None):
     """Takes a post path, and gets data from a matching .meta file."""
 
-    meta_path = path + '.meta'
+    meta_path = os.path.splitext(path)[0] + '.meta'
     if lang:
         meta_path += '.' + lang
     if os.path.isfile(meta_path):
