@@ -58,7 +58,6 @@ class Post(object):
         """
         self.translated_to = set([default_lang])
         self.tags = ''
-        self.date = None
         self.prev_post = None
         self.next_post = None
         self.base_url = base_url
@@ -74,27 +73,23 @@ class Post(object):
         self.default_lang = default_lang
         self.messages = messages
         self.template_name = template_name
-        self.meta = get_meta(self, file_metadata_regexp)
 
-        default_title = self.meta.get('title', '')
-        default_pagename = self.meta.get('slug', '')
-        default_description = self.meta.get('description', '')
+        default_metadata = get_meta(self, file_metadata_regexp)
 
-        for k, v in self.meta.items():
-            if k not in ['title', 'slug', 'description']:
-                if sys.version_info[0] == 2:
-                    setattr(self, unidecode.unidecode(unicode(k)), v)  # NOQA
-                else:
-                    setattr(self, k, v)
+        self.meta = {}
+        self.meta[default_lang] = default_metadata
 
-        if not default_title or not default_pagename or not self.date:
+        if 'title' not in default_metadata or 'slug' not in default_metadata \
+            or 'date' not in default_metadata:
             raise OSError("You must set a title (found '{0}'), a slug (found "
                           "'{1}') and a date (found '{2}')! [in file "
-                          "{3}]".format(default_title, default_pagename,
-                                        self.date, source_path))
+                          "{3}]".format(default_metadata.get('title', None),
+                                        default_metadata.get('slug', None),
+                                        default_metadata.get('date', None),
+                                        source_path))
 
         # If timezone is set, build localized datetime.
-        self.date = to_datetime(self.date, tzinfo)
+        self.date = to_datetime(self.meta[default_lang]['date'], tzinfo)
         self.tags = [x.strip() for x in self.tags.split(',')]
         self.tags = [_f for _f in self.tags if _f]
 
@@ -106,35 +101,24 @@ class Post(object):
         # If mathjax is a tag, then enable mathjax rendering support
         self.is_mathjax = 'mathjax' in self.tags
 
-        self.pagenames = {}
-        self.titles = {}
-        self.descriptions = {}
-
         # Load internationalized metadata
         for lang in translations:
-            if lang == default_lang:
-                self.titles[lang] = default_title
-                self.pagenames[lang] = default_pagename
-                self.descriptions[lang] = default_description
-            else:
+            if lang != default_lang:
                 if os.path.isfile(self.source_path + "." + lang):
                     self.translated_to.add(lang)
 
-                meta = self.meta.copy()
+                meta = default_metadata.copy()
                 meta.update(get_meta(self, file_metadata_regexp, lang))
 
-                # FIXME this only gets three pieces of metadata from the i18n files
-                self.titles[lang] = meta.get('title', default_title)
-                self.pagenames[lang] = meta.get('slug', default_pagename)
-                self.descriptions[lang] = meta.get('description', default_description)
+                self.meta[lang] = meta
 
     def title(self, lang):
         """Return localized title."""
-        return self.titles[lang]
+        return self.meta[lang]['title']
 
     def description(self, lang):
         """Return localized description."""
-        return self.descriptions[lang]
+        return self.meta[lang]['description']
 
     def deps(self, lang):
         """Return a list of dependencies to build this post's page."""
@@ -204,7 +188,7 @@ class Post(object):
 
     def destination_path(self, lang, extension='.html'):
         path = os.path.join(self.translations[lang],
-                            self.folder, self.pagenames[lang] + extension)
+                            self.folder, self.meta[lang]['slug'] + extension)
         return path
 
     def permalink(self, lang=None, absolute=False, extension='.html'):
@@ -212,7 +196,7 @@ class Post(object):
             lang = self.default_lang
         pieces = list(os.path.split(self.translations[lang]))
         pieces += list(os.path.split(self.folder))
-        pieces += [self.pagenames[lang] + extension]
+        pieces += [self.meta[lang]['slug'] + extension]
         pieces = [_f for _f in pieces if _f and _f != '.']
         if absolute:
             pieces = [self.base_url] + pieces
