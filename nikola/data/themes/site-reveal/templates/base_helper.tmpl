@@ -108,7 +108,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="stylesheet" href="/assets/reveal/css/reveal.css">
     <!-- If you use another reveal.css, DO NOT forget to delete overflow: hidden from global variables -->
-    <link rel="stylesheet" href="/assets/reveal/css/theme/sky.css" id="theme">
+    <link rel="stylesheet" href="/assets/reveal/css/theme/${subtheme}.css" id="theme">
     <!-- If the query includes 'print-pdf', use the PDF print sheet -->
     <script>
     document.write( '<link rel="stylesheet" href="/assets/reveal/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
@@ -131,7 +131,7 @@
     keyboard: false,
     rollingLinks: false,
     theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
-    transition: Reveal.getQueryHash().transition || 'cube', // default/cube/page/concave/linear/none
+    transition: Reveal.getQueryHash().transition || '${transition}', // default/cube/page/concave/linear/none
     // Optional libraries used to extend on reveal.js
     dependencies: [
     { src: '/assets/reveal/lib/js/classList.js', condition: function() { return !document.body.classList; } }
