@@ -3,8 +3,6 @@
 <%namespace name="disqus" file="disqus_helper.tmpl"/>
 <%inherit file="base.tmpl"/>
 <%block name="content">
-    <div class="reveal"><div class="slides">
-    <section>
     % for post in posts:
         <section>
         <div class="postbox">
@@ -16,11 +14,9 @@
         ${post.text(lang, index_teasers)}
         ${disqus.html_disqus_link(post.permalink()+"#disqus_thread", post.base_path)}
         </div>
+        ${helper.html_pager()}
         </section>
     % endfor
-    </section>
-    </div></div>
-    ${helper.html_pager()}
     ${disqus.html_disqus_script()}
     ${helper.mathjax_script(post)}
 </%block>
@@ -33,4 +29,8 @@
     keyboard: true
     })
     </script>
+</%block>
+
+<%block name="outside_pager">
+
 </%block>

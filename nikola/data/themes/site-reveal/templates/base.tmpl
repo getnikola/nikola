@@ -48,22 +48,29 @@
 <!-- End of Menubar -->
 
 <!--Body content-->
-<%block name="content"></%block>
+<div class="reveal"><div class="slides">
+    <section>
+        <%block name="content"></%block>
+    </section>
+</div></div>
 <!--End of body content-->
 
 ${html_reveal_body()}
 <%block name="custom_reveal">
 </%block>
 
+<%block name="outside_pager">
+</%block>
+
 <div class="navbar navbar-fixed-bottom">
     <div class="navbar-inner">
         <div class="footerbox">
             ${content_footer}
-            ${html_social()}
         </div>
     </div>
 </div>
 
+${html_social()}
 ${analytics}
 ${late_load_js()}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
