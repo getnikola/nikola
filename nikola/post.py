@@ -331,12 +331,18 @@ def get_metadata_from_meta_file(path, lang=None):
 
         meta = {}
 
-        if title: meta['title'] = title
-        if slug: meta['slug'] = slug
-        if date: meta['date'] = date
-        if tags: meta['tags'] = tags
-        if link: meta['link'] = link
-        if description: meta['description'] = description
+        if title:
+            meta['title'] = title
+        if slug:
+            meta['slug'] = slug
+        if date:
+            meta['date'] = date
+        if tags:
+            meta['tags'] = tags
+        if link:
+            meta['link'] = link
+        if description:
+            meta['description'] = description
 
         return meta
     else:
