@@ -74,7 +74,7 @@ class Post(object):
         self.default_lang = default_lang
         self.messages = messages
         self.template_name = template_name
-        self.meta = get_meta(self.post_name, file_metadata_regexp)
+        self.meta = get_meta(self, file_metadata_regexp)
 
         default_title = self.meta.get('title', '')
         default_pagename = self.meta.get('slug', '')
@@ -318,7 +318,6 @@ def _get_metadata_from_file(meta_data):
 
 def get_metadata_from_meta_file(path, lang=None):
     """Takes a post path, and gets data from a matching .meta file."""
-
     meta_path = os.path.splitext(path)[0] + '.meta'
     if lang:
         meta_path += '.' + lang
@@ -344,7 +343,7 @@ def get_metadata_from_meta_file(path, lang=None):
         return {}
 
 
-def get_meta(source_path, file_metadata_regexp=None, lang=None):
+def get_meta(post, file_metadata_regexp=None, lang=None):
     """Get post's meta from source.
 
     If ``file_metadata_regexp`` is given it will be tried to read
@@ -354,16 +353,16 @@ def get_meta(source_path, file_metadata_regexp=None, lang=None):
     """
     meta = {}
 
-    meta.update(get_metadata_from_meta_file(source_path, lang))
+    meta.update(get_metadata_from_meta_file(post.metadata_path, lang))
 
     if meta:
         return meta
 
     if file_metadata_regexp is not None:
-        meta.update(_get_metadata_from_filename_by_regex(source_path,
+        meta.update(_get_metadata_from_filename_by_regex(post.source_path,
                                                          file_metadata_regexp))
 
-    meta.update(get_metadata_from_file(source_path))
+    meta.update(get_metadata_from_file(post.source_path))
 
     if 'slug' not in meta:
         # If no slug is found in the metadata use the filename
