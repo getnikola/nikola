@@ -1,0 +1,74 @@
+body {
+  padding-top: 60px;
+}
+@media (max-width: 979px) {
+  body {
+    padding-top: 0px;
+  }
+}
+#container {
+    width: 960px;
+    margin: 50 auto;
+}
+
+#contentcolumn {
+    max-width: 760px;
+}
+#q {
+    width: 150px;
+}
+
+img {
+    max-width: 90%;
+}
+
+.navbar-fixed-top {
+    font-family: "Open Sans", sans-serif;
+}
+
+.postbox {
+    border-bottom: 2px solid darkgrey;
+    margin-bottom: 12px;
+}
+
+.footerbox {
+    padding: 15px;
+    text-align: center;
+    margin-bottom: 0px;
+    font-family: "Open Sans", sans-serif;
+}
+
+td.label {
+    /* Issue #290 */
+    background-color: inherit;
+}
+
+.footnote-reference {
+    /* Issue 290 */
+    vertical-align: super;
+    font-size: xx-small;
+}
+
+.caption {
+    /* Issue 292 */
+    text-align: center;
+}
+
+.badge {
+-webkit-border-radius: 0px;
+-moz-border-radius: 0px;
+border-radius: 0px;
+}
+
+div.figure > a > img {
+    /* Issue 292 */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div.admonition, div.attention, div.caution, div.danger, div.error, div.hint, div.important, div.note, div.tip, div.warning {
+    /* Issue 277 */
+    border: 1px solid #aaa;
+    border-radius: 5px;
+}
