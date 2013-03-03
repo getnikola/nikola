@@ -121,7 +121,7 @@ class Post(object):
                     self.translated_to.add(lang)
 
                 meta = self.meta.copy()
-                meta.update(get_meta(self.source_path, file_metadata_regexp, lang))
+                meta.update(get_meta(self, file_metadata_regexp, lang))
 
                 # FIXME this only gets three pieces of metadata from the i18n files
                 self.titles[lang] = meta['title']
