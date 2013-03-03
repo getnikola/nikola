@@ -124,9 +124,9 @@ class Post(object):
                 meta.update(get_meta(self, file_metadata_regexp, lang))
 
                 # FIXME this only gets three pieces of metadata from the i18n files
-                self.titles[lang] = meta['title']
-                self.pagenames[lang] = meta['slug']
-                self.descriptions[lang] = meta['description']
+                self.titles[lang] = meta.get('title', default_title)
+                self.pagenames[lang] = meta.get('slug', default_pagename)
+                self.descriptions[lang] = meta.get('description', default_description)
 
     def title(self, lang):
         """Return localized title."""
