@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import unittest
 import mock
-from nikola.post import get_meta, Post
+from nikola.post import get_meta
 
 
 class dummy(object):
