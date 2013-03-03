@@ -11,11 +11,11 @@ ${helper.twitter_card_information(post)}
         <div class="postbox">
         ${helper.html_title()}
         <hr>
-        <small>
+        <medium>
             ${messages[lang]["Posted"]}: <time class="published" datetime="${post.date.isoformat()}">${post.date.strftime(date_format)}</time>
             ${helper.html_translations(post)}
             ${helper.html_tags(post)}
-        </small>
+        </medium>
         <hr>
         ${post.text(lang)}
         ${helper.html_pager(post)}
