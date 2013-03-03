@@ -74,10 +74,7 @@ class Post(object):
         self.default_lang = default_lang
         self.messages = messages
         self.template_name = template_name
-
-        self.meta = get_metadata_from_meta_file(self.source_path)
-        if not self.meta:  # Not a 2-file post
-            self.meta = get_meta(self.source_path, file_metadata_regexp)
+        self.meta = get_meta(self.post_name, file_metadata_regexp)
 
         default_title = self.meta.get('title', '')
         default_pagename = self.meta.get('slug', '')
@@ -120,22 +117,16 @@ class Post(object):
                 self.pagenames[lang] = default_pagename
                 self.descriptions[lang] = default_description
             else:
-                source_path = self.source_path + "." + lang
-                if os.path.isfile(source_path):
+                if os.path.isfile(self.source_path + "." + lang):
                     self.translated_to.add(lang)
-                meta = get_metadata_from_meta_file(self.source_path, lang)
+
+                meta = self.meta.copy()
+                meta.update(get_meta(self.source_path, file_metadata_regexp, lang))
+
                 # FIXME this only gets three pieces of metadata from the i18n files
-                if meta:
-                    self.titles[lang] = meta['title'] or default_title
-                    self.pagenames[lang] = meta['slug'] or default_pagename
-                    self.descriptions[lang] = meta['description'] or default_description
-                else:
-                    meta = get_meta(source_path, file_metadata_regexp)
-                    self.titles[lang] = meta.get('title', default_title)
-                    self.pagenames[lang] = meta.get('slug',
-                                                    default_pagename)
-                    self.descriptions[lang] = meta.get('description',
-                                                       default_description)
+                self.titles[lang] = meta['title']
+                self.pagenames[lang] = meta['slug']
+                self.descriptions[lang] = meta['description']
 
     def title(self, lang):
         """Return localized title."""
@@ -260,8 +251,7 @@ def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
     expression is taken from Pelican - pelican/readers.py
     """
     match = re.match(metadata_regexp, filename)
-    meta = {'title': '', 'slug': '', 'tags': '', 'link': '',
-            'description': ''}
+    meta = {}
 
     if match:
         # .items() for py3k compat.
@@ -271,17 +261,17 @@ def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
     return meta
 
 
-def get_metadata_from_file(source_path, meta=None):
+def get_metadata_from_file(source_path):
     """Extracts metadata from the file itself, by parsing contents."""
     try:
         with codecs.open(source_path, "r", "utf8") as meta_file:
             meta_data = [x.strip() for x in meta_file.readlines()]
-        return _get_metadata_from_file(meta_data, meta)
+        return _get_metadata_from_file(meta_data)
     except Exception:  # The file may not exist, for multilingual sites
         return {}
 
 
-def _get_metadata_from_file(meta_data, meta=None):
+def _get_metadata_from_file(meta_data):
     """Parse file contents and obtain metadata.
 
     >>> g = _get_metadata_from_file
@@ -297,8 +287,8 @@ def _get_metadata_from_file(meta_data, meta=None):
     False
 
     """
-    if meta is None:
-        meta = {}
+    meta = {}
+
     re_md_title = re.compile(r'^{0}([^{0}].*)'.format(re.escape('#')))
     # Assuming rst titles are going to be at least 4 chars long
     # otherwise this detects things like ''' wich breaks other markups.
@@ -339,19 +329,22 @@ def get_metadata_from_meta_file(path, lang=None):
             meta_data.append("")
         (title, slug, date, tags, link, description) = [
             x.strip() for x in meta_data][:6]
-        return {
-            'title': title,
-            'slug': slug,
-            'date': date,
-            'tags': tags,
-            'link': link,
-            'description': description,
-        }
+
+        meta = {}
+
+        if title: meta['title'] = title
+        if slug: meta['slug'] = slug
+        if date: meta['date'] = date
+        if tags: meta['tags'] = tags
+        if link: meta['link'] = link
+        if description: meta['description'] = description
+
+        return meta
     else:
         return {}
 
 
-def get_meta(source_path, file_metadata_regexp=None):
+def get_meta(source_path, file_metadata_regexp=None, lang=None):
     """Get post's meta from source.
 
     If ``file_metadata_regexp`` is given it will be tried to read
@@ -361,11 +354,16 @@ def get_meta(source_path, file_metadata_regexp=None):
     """
     meta = {}
 
-    if not (file_metadata_regexp is None):
+    meta.update(get_metadata_from_meta_file(source_path, lang))
+
+    if meta:
+        return meta
+
+    if file_metadata_regexp is not None:
         meta.update(_get_metadata_from_filename_by_regex(source_path,
                                                          file_metadata_regexp))
 
-    meta.update(get_metadata_from_file(source_path, meta))
+    meta.update(get_metadata_from_file(source_path))
 
     if 'slug' not in meta:
         # If no slug is found in the metadata use the filename
