@@ -373,10 +373,10 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
     if 'slug' not in meta:
         # If no slug is found in the metadata use the filename
         meta['slug'] = slugify(os.path.splitext(
-            os.path.basename(source_path))[0])
+            os.path.basename(post.source_path))[0])
 
     if 'title' not in meta:
         # If no title is found, use the filename without extension
-        meta['title'] = os.path.splitext(os.path.basename(source_path))[0]
+        meta['title'] = os.path.splitext(os.path.basename(post.source_path))[0]
 
     return meta
