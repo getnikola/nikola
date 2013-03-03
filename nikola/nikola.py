@@ -96,6 +96,7 @@ class Nikola(object):
             'DATE_FORMAT': '%Y-%m-%d %H:%M',
             'DEFAULT_LANG': "en",
             'DEPLOY_COMMANDS': [],
+            'DISABLED_PLUGINS': (),
             'DISQUS_FORUM': 'nikolademo',
             'FAVICONS': {},
             'FILE_METADATA_REGEXP': None,
@@ -179,24 +180,28 @@ class Nikola(object):
             str(os.path.join(os.path.dirname(__file__), 'plugins')),
             str(os.path.join(os.getcwd(), 'plugins')),
         ])
+
         self.plugin_manager.collectPlugins()
 
         self.commands = {}
         # Activate all command plugins
         for pluginInfo in self.plugin_manager.getPluginsOfCategory("Command"):
+            if pluginInfo.name in self.config['DISABLED_PLUGINS']:
+                self.plugin_manager.removePluginFromCategory(pluginInfo, "Command")
+                continue
             self.plugin_manager.activatePluginByName(pluginInfo.name)
             pluginInfo.plugin_object.set_site(self)
             pluginInfo.plugin_object.short_help = pluginInfo.description
             self.commands[pluginInfo.name] = pluginInfo.plugin_object
 
         # Activate all task plugins
-        for pluginInfo in self.plugin_manager.getPluginsOfCategory("Task"):
-            self.plugin_manager.activatePluginByName(pluginInfo.name)
-            pluginInfo.plugin_object.set_site(self)
-
-        for pluginInfo in self.plugin_manager.getPluginsOfCategory("LateTask"):
-            self.plugin_manager.activatePluginByName(pluginInfo.name)
-            pluginInfo.plugin_object.set_site(self)
+        for task_type in ["Task", "LateTask"]:
+            for pluginInfo in self.plugin_manager.getPluginsOfCategory(task_type):
+                if pluginInfo.name in self.config['DISABLED_PLUGINS']:
+                    self.plugin_manager.removePluginFromCategory(pluginInfo, task_type)
+                    continue
+                self.plugin_manager.activatePluginByName(pluginInfo.name)
+                pluginInfo.plugin_object.set_site(self)
 
         # set global_context for template rendering
         self.GLOBAL_CONTEXT = {

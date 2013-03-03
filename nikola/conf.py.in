@@ -370,6 +370,9 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # If webassets is installed, bundle JS and CSS to make site loading faster
 # USE_BUNDLES = True
 
+# Plugins you don't want to use. Be careful :-)
+# DISABLED_PLUGINS = ["render_galleries"]
+
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
 
