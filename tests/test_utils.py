@@ -6,6 +6,10 @@ import mock
 from nikola.post import get_meta
 
 
+class dummy(object):
+    pass
+
+
 class GetMetaTest(unittest.TestCase):
     def test_getting_metadata_from_content(self):
         file_metadata = [".. title: Nikola needs more tests!\n",
@@ -19,8 +23,12 @@ class GetMetaTest(unittest.TestCase):
         opener_mock = mock.mock_open(read_data=file_metadata)
         opener_mock.return_value.readlines.return_value = file_metadata
 
-        with mock.patch('nikola.utils.codecs.open', opener_mock, create=True):
-            meta = get_meta('file_with_metadata')
+        post = dummy()
+        post.source_path = 'file_with_metadata'
+        post.metadata_path = 'file_with_metadata.meta'
+
+        with mock.patch('nikola.post.codecs.open', opener_mock, create=True):
+            meta = get_meta(post)
 
         self.assertEqual('Nikola needs more tests!', meta['title'])
         self.assertEqual('write-tests-now', meta['slug'])
@@ -41,8 +49,12 @@ class GetMetaTest(unittest.TestCase):
         opener_mock = mock.mock_open(read_data=file_metadata)
         opener_mock.return_value.readlines.return_value = file_metadata
 
-        with mock.patch('nikola.utils.codecs.open', opener_mock, create=True):
-            meta = get_meta('file_with_metadata')
+        post = dummy()
+        post.source_path = 'file_with_metadata'
+        post.metadata_path = 'file_with_metadata.meta'
+
+        with mock.patch('nikola.post.codecs.open', opener_mock, create=True):
+            meta = get_meta(post)
 
         self.assertEqual('Post Title', meta['title'])
         self.assertEqual('write-tests-now', meta['slug'])
@@ -61,8 +73,12 @@ class GetMetaTest(unittest.TestCase):
         opener_mock = mock.mock_open(read_data=file_metadata)
         opener_mock.return_value.readlines.return_value = file_metadata
 
-        with mock.patch('nikola.utils.codecs.open', opener_mock, create=True):
-            meta = get_meta('file_with_metadata')
+        post = dummy()
+        post.source_path = 'file_with_metadata'
+        post.metadata_path = 'file_with_metadata.meta'
+
+        with mock.patch('nikola.post.codecs.open', opener_mock, create=True):
+            meta = get_meta(post, 'file_with_metadata')
 
         self.assertEqual('file_with_metadata', meta['title'])
         self.assertEqual('write-tests-now', meta['slug'])
@@ -82,8 +98,12 @@ class GetMetaTest(unittest.TestCase):
         opener_mock = mock.mock_open(read_data=file_metadata)
         opener_mock.return_value.readlines.return_value = file_metadata
 
-        with mock.patch('nikola.utils.codecs.open', opener_mock, create=True):
-            meta = get_meta('Slugify this')
+        post = dummy()
+        post.source_path = 'Slugify this'
+        post.metadata_path = 'Slugify this.meta'
+
+        with mock.patch('nikola.post.codecs.open', opener_mock, create=True):
+            meta = get_meta(post, 'Slugify this')
 
         self.assertEqual('Nikola needs more tests!', meta['title'])
         self.assertEqual('slugify-this', meta['slug'])
@@ -93,20 +113,23 @@ class GetMetaTest(unittest.TestCase):
         self.assertFalse('description' in meta)
 
     def test_extracting_metadata_from_filename(self):
-        with mock.patch('nikola.utils.codecs.open', create=True):
-            meta = get_meta('2013-01-23-the_slug-dubdubtitle.md',
+        post = dummy()
+        post.source_path = '2013-01-23-the_slug-dubdubtitle.md'
+        post.metadata_path = '2013-01-23-the_slug-dubdubtitle.meta'
+        with mock.patch('nikola.post.codecs.open', create=True):
+            meta = get_meta(post,
                             '(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.md')
 
         self.assertEqual('dubdubtitle', meta['title'])
         self.assertEqual('the_slug', meta['slug'])
         self.assertEqual('2013-01-23', meta['date'])
-        self.assertEqual('', meta['tags'])
-        self.assertEqual('', meta['link'])
-        self.assertEqual('', meta['description'])
 
     def test_get_meta_slug_only_from_filename(self):
-        with mock.patch('nikola.utils.codecs.open', create=True):
-            meta = get_meta('some/path/the_slug.md')
+        post = dummy()
+        post.source_path = 'some/path/the_slug.md'
+        post.metadata_path = 'some/path/the_slug.meta'
+        with mock.patch('nikola.post.codecs.open', create=True):
+            meta = get_meta(post)
 
         self.assertEqual('the_slug', meta['slug'])
 
