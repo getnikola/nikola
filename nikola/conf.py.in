@@ -211,6 +211,12 @@ post_compilers = ${POST_COMPILERS}
 # Name of the theme to use. Themes are located in themes/theme_name
 # THEME = 'site'
 
+# If you use 'site-reveal' theme you can select several subthemes
+# THEME_REVEAL_CONGIF_SUBTHEME = 'sky' # You can also use: beige/serif/simple/night/default 
+
+# Again, if you use 'site-reveal' theme you can select several transitions between the slides
+# THEME_REVEAL_CONGIF_TRANSITION = 'cube' # You can also use: page/concave/linear/none/default
+
 # date format used to display post dates. (str used by datetime.datetime.strftime)
 # DATE_FORMAT = '%Y-%m-%d %H:%M'
 
