@@ -1,0 +1,17 @@
+{% extends "base.tmpl" %}
+{% block content %}
+    <div class="reveal"><div class="slides">
+    <section>
+        <!--Body content-->
+        <div class="postbox">
+        <h1>{{title}}</h1>
+        <ul class="unstyled">
+        {% for text, link in items %}
+            <li><a href="{{link}}">{{text}}</a>
+        {% endfor %}
+        </ul>
+        </div>
+        <!--End of body content-->
+    </section>
+    </div></div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "post.tmpl" %}
+{% block content %}
+{% if title %}
+    <h1>{{title}}</h1>
+{% endif %}
+    {{post.text(lang)}}
+{%if enable_comments %}
+    {{disqus.html_disqus(post.permalink(absolute=True), post.title(lang), post.base_path)}}
+{%endif%}
+{% endblock %}
