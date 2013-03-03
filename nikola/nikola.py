@@ -103,7 +103,7 @@ class Nikola(object):
             'FILTERS': {},
             'GALLERY_PATH': 'galleries',
             'GZIP_FILES': False,
-            'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js'),
+            'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js', '.json'),
             'INDEX_DISPLAY_POST_COUNT': 10,
             'INDEX_TEASERS': False,
             'INDEXES_TITLE': "",
