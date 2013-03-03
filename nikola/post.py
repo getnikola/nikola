@@ -370,13 +370,17 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
 
     meta.update(get_metadata_from_file(post.source_path))
 
-    if 'slug' not in meta:
-        # If no slug is found in the metadata use the filename
-        meta['slug'] = slugify(os.path.splitext(
-            os.path.basename(post.source_path))[0])
+    if lang is None:
+        # Only perform these checks for the default language
 
-    if 'title' not in meta:
-        # If no title is found, use the filename without extension
-        meta['title'] = os.path.splitext(os.path.basename(post.source_path))[0]
+        if 'slug' not in meta:
+            # If no slug is found in the metadata use the filename
+            meta['slug'] = slugify(os.path.splitext(
+                os.path.basename(post.source_path))[0])
+
+        if 'title' not in meta:
+            # If no title is found, use the filename without extension
+            meta['title'] = os.path.splitext(os.path.basename(
+                        post.source_path))[0]
 
     return meta
