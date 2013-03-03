@@ -10,3 +10,6 @@ font-size: 80%;
 .reveal .slides {
 text-align: left;
 }
+.reveal .controls {
+bottom: 45px;
+}
