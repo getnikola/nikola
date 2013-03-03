@@ -134,7 +134,7 @@ class CommandImportWordpress(Command):
         previous_line_ended_in_newline = new_xml.endswith(b'\n')
         previous_line_was_indentet = False
         for line in xml[1:]:
-            if (re.match('^[ \t]+', line) and previous_line_ended_in_newline):
+            if (re.match(b'^[ \t]+', line) and previous_line_ended_in_newline):
                 new_xml = b''.join((new_xml, line))
                 previous_line_was_indentet = True
             elif previous_line_was_indentet:

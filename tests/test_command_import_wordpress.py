@@ -19,16 +19,16 @@ class BasicCommandImportWordpress(unittest.TestCase):
 
 class TestXMLGlueing(BasicCommandImportWordpress):
     def test_making_correct_newlines(self):
-        xml = ["Some information about how to (un)subscripe to a google group with a normal mail client.\n",
-                "<ul>\n",
-                "    <li>to post: <strong>groupname@googlegroups.com</strong></li>\n",
-                "    <li>to <em>subscribe</em>: <strong>groupname+subscribe@googlegroups.com</strong></li>\n",
-                "    <li>to <em>unsubscribe</em>: <strong>groupname+unsubscribe@googlegroups.com</strong></li>\n",
-                "</ul>\n",
-                "Easy.\n"
+        xml = [b"Some information about how to (un)subscripe to a google group with a normal mail client.\n",
+                b"<ul>\n",
+                b"    <li>to post: <strong>groupname@googlegroups.com</strong></li>\n",
+                b"    <li>to <em>subscribe</em>: <strong>groupname+subscribe@googlegroups.com</strong></li>\n",
+                b"    <li>to <em>unsubscribe</em>: <strong>groupname+unsubscribe@googlegroups.com</strong></li>\n",
+                b"</ul>\n",
+                b"Easy.\n"
                 ]
 
-        expected_xml = """Some information about how to (un)subscripe to a google group with a normal mail client.
+        expected_xml = b"""Some information about how to (un)subscripe to a google group with a normal mail client.
 
 <ul>
     <li>to post: <strong>groupname@googlegroups.com</strong></li>
