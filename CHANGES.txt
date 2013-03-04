@@ -35,6 +35,7 @@ Bugfixes
 * Metadata handling cleanups by Tordek
 * Fixed blockquote font size inconsistency
 * Wordpress Import: Do not break indentation (issue #189)
+* Make things work even if SITE_URL has a path (Fix #307)
 
 New in 5.3
 ==========

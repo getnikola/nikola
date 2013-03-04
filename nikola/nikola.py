@@ -330,10 +330,10 @@ class Nikola(object):
         url_part = output_name.decode('utf8')[len(self.config["OUTPUT_FOLDER"])
                                               + 1:]
 
-        # This is to support windows paths
-        url_part = "/".join(url_part.split(os.sep))
-
-        src = urljoin(self.config["BASE_URL"], url_part)
+        # The os.sep is to support windows paths.
+        # Treat our site as if output/ is "/" and then make all URLs relative,
+        # making the site "relocatable"
+        src = "/" + "/".join(url_part.split(os.sep))
 
         parsed_src = urlsplit(src)
         src_elems = parsed_src.path.split('/')[1:]
