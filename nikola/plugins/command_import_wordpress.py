@@ -128,8 +128,28 @@ class CommandImportWordpress(Command):
         self.write_configuration(self.get_configuration_output_path(),
                                  rendered_template)
 
-    @staticmethod
-    def read_xml_file(filename):
+    @classmethod
+    def _glue_xml_lines(cls, xml):
+        new_xml = xml[0]
+        previous_line_ended_in_newline = new_xml.endswith(b'\n')
+        previous_line_was_indentet = False
+        for line in xml[1:]:
+            if (re.match(b'^[ \t]+', line) and previous_line_ended_in_newline):
+                new_xml = b''.join((new_xml, line))
+                previous_line_was_indentet = True
+            elif previous_line_was_indentet:
+                new_xml = b''.join((new_xml, line))
+                previous_line_was_indentet = False
+            else:
+                new_xml = b'\n'.join((new_xml, line))
+                previous_line_was_indentet = False
+
+            previous_line_ended_in_newline = line.endswith(b'\n')
+
+        return new_xml
+
+    @classmethod
+    def read_xml_file(cls, filename):
         xml = []
 
         with open(filename, 'rb') as fd:
@@ -138,9 +158,8 @@ class CommandImportWordpress(Command):
                 if b'<atom:link rel=' in line:
                     continue
                 xml.append(line)
-            xml = b'\n'.join(xml)
 
-        return xml
+        return cls._glue_xml_lines(xml)
 
     @classmethod
     def get_channel_from_file(cls, filename):

@@ -34,6 +34,7 @@ Bugfixes
 * Stop parsing metadata in post file on first blank line
 * Metadata handling cleanups by Tordek
 * Fixed blockquote font size inconsistency
+* Wordpress Import: Do not break indentation (issue #189)
 
 New in 5.3
 ==========
