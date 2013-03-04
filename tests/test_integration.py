@@ -80,6 +80,7 @@ class RelativeLinkTest(DemoBuildTest):
     def test_relative_links(self):
         """Check that the links in output/index.html are correct"""
         test_path = os.path.join(self.target_dir, "output", "index.html")
+        flag = False
         with open(test_path, "rb") as inf:
             data = inf.read()
             for _, _, url, _ in lxml.html.iterlinks(data):
