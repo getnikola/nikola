@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 
+import codecs
 from contextlib import contextmanager
 import os
 import shutil
@@ -71,11 +72,11 @@ class RelativeLinkTest(DemoBuildTest):
     def patch_site(self):
         """Set the SITE_URL to have a path"""
         conf_path = os.path.join(self.target_dir, "conf.py")
-        with open(conf_path, "rb") as inf:
+        with codecs.open(conf_path, "rb", "utf-8") as inf:
             data = inf.read()
             data = data.replace('SITE_URL = "http://nikola.ralsina.com.ar"',
                                 'SITE_URL = "http://nikola.ralsina.com.ar/foo/bar/"')
-        with open(conf_path, "wb+") as outf:
+        with codecs.open(conf_path, "wb+", "utf8") as outf:
             outf.write(data)
 
     def test_relative_links(self):
