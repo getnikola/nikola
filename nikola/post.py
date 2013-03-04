@@ -380,7 +380,7 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
 
         if 'title' not in meta:
             # If no title is found, use the filename without extension
-            meta['title'] = os.path.splitext(os.path.basename(
-                        post.source_path))[0]
+            meta['title'] = os.path.splitext(
+                os.path.basename(post.source_path))[0]
 
     return meta

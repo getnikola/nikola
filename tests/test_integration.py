@@ -64,6 +64,7 @@ class DemoBuildTest(EmptyBuildTest):
         self.init_command.copy_sample_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
 
+
 class RelativeLinkTest(DemoBuildTest):
     """Check that SITE_URL with a path doesn't break links."""
 
