@@ -47,7 +47,7 @@ class EmptyBuildTest(unittest.TestCase):
 
     def tearDown(self):
         """Remove the demo site."""
-        shutil.rmtree(self.tmpdir)
+        #shutil.rmtree(self.tmpdir)
 
     def test_build(self):
         """Ensure the build did something."""
@@ -72,8 +72,8 @@ class RelativeLinkTest(DemoBuildTest):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with open(conf_path, "rb") as inf:
             data = inf.read()
-            data.replace('SITE_URL = "http://nikola.ralsina.com.ar"',
-                         'SITE_URL = "http://nikola.ralsina.com.ar/foo/bar/"')
+            data = data.replace('SITE_URL = "http://nikola.ralsina.com.ar"',
+                                'SITE_URL = "http://nikola.ralsina.com.ar/foo/bar/"')
         with open(conf_path, "wb+") as outf:
             outf.write(data)
 
