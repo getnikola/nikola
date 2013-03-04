@@ -47,7 +47,7 @@ class EmptyBuildTest(unittest.TestCase):
 
     def tearDown(self):
         """Remove the demo site."""
-        #shutil.rmtree(self.tmpdir)
+        shutil.rmtree(self.tmpdir)
 
     def test_build(self):
         """Ensure the build did something."""
@@ -85,8 +85,8 @@ class RelativeLinkTest(DemoBuildTest):
             data = inf.read()
             for _, _, url, _ in lxml.html.iterlinks(data):
                 # Just need to be sure this one is ok
-                if "assets/css/all-nocdn.css" in url:
-                    self.assertEqual(url, 'assets/css/all-nocdn.css')
+                if url.endswith("css"):
+                    self.assertFalse(url.startswith(".."))
                     flag = True
         # But I also need to be sure it is there!
         self.assertTrue(flag)
