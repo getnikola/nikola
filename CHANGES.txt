@@ -1,5 +1,5 @@
-New in Master
-=============
+New in 5.4.2
+============
 
 Bugfixes
 --------
