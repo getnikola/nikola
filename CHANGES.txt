@@ -5,6 +5,7 @@ Bugfixes
 --------
 
 * Fix relative paths when stories is "dropped to root" (Issue #362)
+* Pick translated titles in 1-file posts (Issue #365)
 
 New in 5.4
 ==========

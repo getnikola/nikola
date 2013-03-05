@@ -89,7 +89,6 @@ class TranslatedBuildTest(EmptyBuildTest):
 
     dataname = "translated_titles"
 
-    @unittest.skip("Fails, Issue #365")
     def test_translated_titles(self):
         """Check that translated title is picked up."""
         en_file = os.path.join(self.target_dir, "output", "stories", "1.html")
