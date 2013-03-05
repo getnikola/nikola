@@ -41,6 +41,7 @@ def main(args):
     sys.path.append('')
     try:
         import conf
+        reload(conf)
         config = conf.__dict__
     except ImportError:
         config = {}
