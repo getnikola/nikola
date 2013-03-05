@@ -24,6 +24,9 @@ def cd(path):
 
 class EmptyBuildTest(unittest.TestCase):
     """Basic integration testcase."""
+
+    dataname = None
+
     @classmethod
     def setUpClass(self):
         """Setup a demo site."""
@@ -40,6 +43,16 @@ class EmptyBuildTest(unittest.TestCase):
         self.init_command.create_empty_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
 
+        if self.dataname:
+            src = os.path.join(os.path.dirname(__file__), 'data',
+                                self.dataname)
+            for root, dirs, files in os.walk(src):
+                for src_name in files:
+                    rel_dir = os.path.relpath(root, src)
+                    dst_file = os.path.join(self.target_dir, rel_dir, src_name)
+                    src_file = os.path.join(root, src_name)
+                    shutil.copy2(src_file, dst_file)
+
     @classmethod
     def patch_site(self):
         """Make any modifications you need to the site."""
@@ -53,7 +66,6 @@ class EmptyBuildTest(unittest.TestCase):
     @classmethod
     def tearDownClass(self):
         """Remove the demo site."""
-        shutil.rmtree(self.tmpdir)
 
     def test_build(self):
         """Ensure the build did something."""
@@ -71,6 +83,26 @@ class DemoBuildTest(EmptyBuildTest):
         self.init_command.copy_sample_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
 
+class TranslatedBuildTest(EmptyBuildTest):
+    """Test a site with translated content."""
+
+    dataname = "translated_titles"
+
+    @unittest.skip("Fails, Issue #365")
+    def test_translated_titles(self):
+        """Check that translated title is picked up."""
+        en_file = os.path.join(self.target_dir, "output", "stories", "1.html")
+        es_file = os.path.join(self.target_dir, "output", "es", "stories", "1.html")
+        # Files should be created
+        self.assertTrue(os.path.isfile(en_file))
+        self.assertTrue(os.path.isfile(es_file))
+        # And now let's check the titles
+        with codecs.open(en_file, 'r', 'utf8') as inf:
+            doc = lxml.html.parse(inf)
+            self.assertEqual(doc.find('//title').text, 'Foo | Demo Site')
+        with codecs.open(es_file, 'r', 'utf8') as inf:
+            doc = lxml.html.parse(inf)
+            self.assertEqual(doc.find('//title').text, 'Bar | Demo Site')
 
 class RelativeLinkTest(DemoBuildTest):
     """Check that SITE_URL with a path doesn't break links."""
