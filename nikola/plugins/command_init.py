@@ -73,7 +73,7 @@ class CommandInit(Command):
     "wiki": ('.wiki',),
     "ipynb": ('.ipynb',),
     "html": ('.html', '.htm')
-    }""",
+}""",
         'REDIRECTIONS': '[]',
     }
 

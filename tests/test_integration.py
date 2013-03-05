@@ -45,7 +45,7 @@ class EmptyBuildTest(unittest.TestCase):
 
         if self.dataname:
             src = os.path.join(os.path.dirname(__file__), 'data',
-                                self.dataname)
+                               self.dataname)
             for root, dirs, files in os.walk(src):
                 for src_name in files:
                     rel_dir = os.path.relpath(root, src)
@@ -83,6 +83,7 @@ class DemoBuildTest(EmptyBuildTest):
         self.init_command.copy_sample_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
 
+
 class TranslatedBuildTest(EmptyBuildTest):
     """Test a site with translated content."""
 
@@ -103,6 +104,7 @@ class TranslatedBuildTest(EmptyBuildTest):
         with codecs.open(es_file, 'r', 'utf8') as inf:
             doc = lxml.html.parse(inf)
             self.assertEqual(doc.find('//title').text, 'Bar | Demo Site')
+
 
 class RelativeLinkTest(DemoBuildTest):
     """Check that SITE_URL with a path doesn't break links."""

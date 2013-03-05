@@ -115,7 +115,7 @@ post_compilers = {
     "wiki": ('.wiki',),
     "ipynb": ('.ipynb',),
     "html": ('.html', '.htm')
-    }
+}
 
 # Create by default posts in one file format?
 # Set to False for two-file posts, with separate metadata.
