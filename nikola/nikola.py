@@ -330,10 +330,12 @@ class Nikola(object):
         url_part = output_name.decode('utf8')[len(self.config["OUTPUT_FOLDER"])
                                               + 1:]
 
-        # The os.sep is to support windows paths.
         # Treat our site as if output/ is "/" and then make all URLs relative,
         # making the site "relocatable"
-        src = "/" + "/".join(url_part.split(os.sep))
+        src = os.sep + url_part
+        src = os.path.normpath(src)
+        # The os.sep is because normpath will change "/" to "\" on windows
+        src = "/".join(src.split(os.sep))
 
         parsed_src = urlsplit(src)
         src_elems = parsed_src.path.split('/')[1:]

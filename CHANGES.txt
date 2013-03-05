@@ -1,3 +1,11 @@
+New in Master
+=============
+
+Bugfixes
+--------
+
+* Fix relative paths when stories is "dropped to root" (Issue #362)
+
 New in 5.4
 ==========
 

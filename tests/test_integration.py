@@ -101,7 +101,6 @@ class RelativeLinkTest(DemoBuildTest):
         self.assertTrue(flag)
 
 
-@unittest.expectedFailure
 class RelativeLinkTest2(DemoBuildTest):
     """Check that dropping stories to the root doesn't break links."""
 
