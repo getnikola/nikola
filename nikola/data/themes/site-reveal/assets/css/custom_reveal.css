@@ -13,3 +13,6 @@ text-align: left;
 .reveal .controls {
 bottom: 45px;
 }
+.reveal iframe{
+max-height: none;
+}

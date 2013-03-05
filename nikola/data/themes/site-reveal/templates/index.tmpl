@@ -12,9 +12,8 @@
         </small></h1>
         <hr>
         ${post.text(teaser_only=index_teasers)}
-        ${disqus.html_disqus_link(post.permalink()+"#disqus_thread", post.base_path)}
+        ${disqus.html_disqus_link(post.permalink()+"#/0/1", post.base_path)}
         </div>
-        ${helper.html_pager()}
         </section>
     % endfor
     ${disqus.html_disqus_script()}
