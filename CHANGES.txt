@@ -6,6 +6,8 @@ Bugfixes
 
 * Set locale to the value of "lang" in templates, so things like strftime 
   use localized values. (Issue #368)
+* Fixed console command.
+* Cleaned up arbitrary metadata.
 
 New in 5.4.2
 ============
