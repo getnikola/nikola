@@ -160,15 +160,23 @@ class Post(object):
         return file_name
 
     def text(self, lang, teaser_only=False, strip_html=False):
-        """Read the post file for that language and return its contents"""
+        """Read the post file for that language and return its contents."""
         file_name = self._translated_file_path(lang)
 
         with codecs.open(file_name, "r", "utf8") as post_file:
-            data = post_file.read()
+            data = post_file.read().strip()
 
-        if data:
-            data = lxml.html.make_links_absolute(data, self.permalink(lang=lang))
-        if data and teaser_only:
+        try:
+            document = lxml.html.document_fromstring(data)
+        except lxml.etree.ParserError, e:
+            # if we don't catch this, it breaks later (Issue #374)
+            if e.message == "Document is empty":
+                return ""
+            # let other errors raise
+            raise(e)
+        document.make_links_absolute(self.permalink(lang=lang))
+        data = lxml.html.tostring(document)
+        if teaser_only:
             e = lxml.html.fromstring(data)
             teaser = []
             teaser_str = self.messages[lang]["Read more"] + '...'

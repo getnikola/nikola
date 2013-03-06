@@ -82,6 +82,13 @@ class DemoBuildTest(EmptyBuildTest):
         """Fill the site with demo content."""
         self.init_command.copy_sample_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
+        # File for Issue #374 (empty post text)
+        with codecs.open(os.path.join(self.target_dir, 'posts', 'empty.txt'), "wb+", "utf8") as outf:
+            outf.write(
+                ".. title: foobar\n"
+                ".. slug: foobar\n"
+                ".. date: 2013/03/06 19:08:15\n"
+            )
 
 
 class TranslatedBuildTest(EmptyBuildTest):

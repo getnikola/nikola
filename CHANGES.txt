@@ -8,6 +8,7 @@ Bugfixes
   use localized values. (Issue #368)
 * Fixed console command.
 * Cleaned up arbitrary metadata.
+* Don't crash in posts without actual post text.
 
 New in 5.4.2
 ============
