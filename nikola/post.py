@@ -56,7 +56,6 @@ class Post(object):
         the .html fragment file path.
         """
         self.translated_to = set([default_lang])
-        self.tags = ''
         self.prev_post = None
         self.next_post = None
         self.base_url = base_url
@@ -89,7 +88,7 @@ class Post(object):
 
         # If timezone is set, build localized datetime.
         self.date = to_datetime(self.meta[default_lang]['date'], tzinfo)
-        self.tags = [x.strip() for x in self.tags.split(',')]
+        self.tags = [x.strip() for x in self.meta[default_lang]['tags'].split(',')]
         self.tags = [_f for _f in self.tags if _f]
 
         # While draft comes from the tags, it's not really a tag
