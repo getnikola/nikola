@@ -40,24 +40,26 @@ class Deploy(Command):
             import conf
             SITE = Nikola(**conf.__dict__)
             SITE.scan_posts()
-            print("You can now access your configuration as conf and your "
-                  "site engine as SITE.")
+            gl = {'conf': conf, 'SITE': SITE, 'Nikola': Nikola}
         except ImportError:
-            print("No configuration found.")
-        import code
-        try:
-            import readline
-        except ImportError:
-            pass
+            print("No configuration found, cannot run the console.")
         else:
-            import rlcompleter
-            readline.set_completer(rlcompleter.Completer(globals()).complete)
-            readline.parse_and_bind("tab:complete")
-
-        pythonrc = os.environ.get("PYTHONSTARTUP")
-        if pythonrc and os.path.isfile(pythonrc):
+            import code
             try:
-                execfile(pythonrc)  # NOQA
-            except NameError:
+                import readline
+            except ImportError:
                 pass
-        code.interact(local=locals())
+            else:
+                import rlcompleter
+                readline.set_completer(rlcompleter.Completer(gl).complete)
+                readline.parse_and_bind("tab:complete")
+
+            pythonrc = os.environ.get("PYTHONSTARTUP")
+            if pythonrc and os.path.isfile(pythonrc):
+                try:
+                    execfile(pythonrc)  # NOQA
+                except NameError:
+                    pass
+
+            code.interact(local=gl, banner='Nikola Console (conf = '
+                          'configuration, SITE = site engine)')
