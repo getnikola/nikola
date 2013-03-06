@@ -47,7 +47,7 @@ DEFAULT_LANG = "${DEFAULT_LANG}"
 # The format is {"translationcode" : "path/to/translation" }
 # the path will be used as a prefix for the generated pages location
 TRANSLATIONS = {
-    "${DEFAULT_LANG}": "",
+    DEFAULT_LANG: "",
     # Example for another language:
     # "es": "./es",
 }
