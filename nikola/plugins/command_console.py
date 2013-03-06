@@ -60,4 +60,4 @@ class Deploy(Command):
                 execfile(pythonrc)  # NOQA
             except NameError:
                 pass
-        code.interact(local=globals())
+        code.interact(local=locals())
