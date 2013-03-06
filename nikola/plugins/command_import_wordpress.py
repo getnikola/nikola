@@ -334,7 +334,10 @@ class CommandImportWordpress(Command):
             item, '{http://purl.org/rss/1.0/modules/content/}encoded', '')
 
         tags = []
-        if status != 'publish':
+        if status == 'trash':
+            print('Trashed post "{0}" will not be imported.'.format(title))
+            return
+        elif status != 'publish':
             tags.append('draft')
             is_draft = True
         else:

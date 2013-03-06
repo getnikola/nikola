@@ -17,7 +17,7 @@ After you have Nikola installed:
 Create a empty site:
     ``nikola init mysite``
 
-You can create a site with demo files in it with ``nikola init mysite --demo``
+You can create a site with demo files in it with ``nikola init --demo mysite``
 
 The rest of these commands have to be executed inside the new ``mysite`` folder.
 
