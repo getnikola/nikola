@@ -60,4 +60,5 @@ class Deploy(Command):
                 execfile(pythonrc)  # NOQA
             except NameError:
                 pass
-        code.interact(local=globals())
+        import pdb; pdb.set_trace()  
+        code.interact(local=locals())

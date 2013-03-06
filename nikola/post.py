@@ -26,12 +26,11 @@
 from __future__ import unicode_literals, print_function
 
 import codecs
+from collections import defaultdict
 import os
 import re
-import sys
 import string
 
-import unidecode
 import lxml.html
 
 from .utils import to_datetime, slugify
@@ -80,7 +79,7 @@ class Post(object):
         self.meta[default_lang] = default_metadata
 
         if 'title' not in default_metadata or 'slug' not in default_metadata \
-            or 'date' not in default_metadata:
+                or 'date' not in default_metadata:
             raise OSError("You must set a title (found '{0}'), a slug (found "
                           "'{1}') and a date (found '{2}')! [in file "
                           "{3}]".format(default_metadata.get('title', None),
@@ -107,10 +106,19 @@ class Post(object):
                 if os.path.isfile(self.source_path + "." + lang):
                     self.translated_to.add(lang)
 
-                meta = default_metadata.copy()
+                meta = defaultdict(lambda: '')
+                meta.update(default_metadata.copy())
                 meta.update(get_meta(self, file_metadata_regexp, lang))
-
                 self.meta[lang] = meta
+
+    def _add_old_metadata(self):
+        # Compatibility for themes up to Nikola 5.4.1
+        # TODO: remove before Nikola 6
+        self.pagenames = {}
+        self.titles = {}
+        for lang in self.translations:
+            self.pagenames[lang] = self.meta[lang]['slug']
+            self.titles[lang] = self.meta[lang]['title']
 
     def title(self, lang):
         """Return localized title."""
@@ -343,7 +351,7 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
     If any metadata is then found inside the file the metadata from the
     file will override previous findings.
     """
-    meta = {}
+    meta = defaultdict(lambda: '')
 
     meta.update(get_metadata_from_meta_file(post.metadata_path, lang))
 

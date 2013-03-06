@@ -83,7 +83,6 @@ class Nikola(object):
             self.configured = True
 
         # This is the default config
-        # TODO: fill it
         self.config = {
             'ADD_THIS_BUTTONS': True,
             'ANALYTICS': '',
@@ -114,6 +113,7 @@ class Nikola(object):
             'LISTINGS_FOLDER': 'listings',
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
+            'OLD_THEME_SUPPORT': True,
             'OUTPUT_FOLDER': 'output',
             'post_compilers': {
                 "rest": ('.txt', '.rst'),
@@ -614,11 +614,11 @@ class Nikola(object):
                     for lang, langpath in list(
                             self.config['TRANSLATIONS'].items()):
                         dest = (destination, langpath, dir_glob,
-                                post.pagenames[lang])
+                                post.meta[lang]['slug'])
                         if dest in targets:
                             raise Exception('Duplicated output path {0!r} '
                                             'in post {1!r}'.format(
-                                                post.pagenames[lang],
+                                                post.meta[lang]['slug'],
                                                 base_path))
                         targets.add(dest)
                     self.global_data[post.post_name] = post
@@ -629,6 +629,8 @@ class Nikola(object):
                             self.posts_per_tag[tag].append(post.post_name)
                     else:
                         self.pages.append(post)
+                    if self.config['OLD_THEME_SUPPORT']:
+                        post._add_old_metadata()
         for name, post in list(self.global_data.items()):
             self.timeline.append(post)
         self.timeline.sort(key=lambda p: p.date)
@@ -700,7 +702,7 @@ class Nikola(object):
         context["nextlink"] = None
         context.update(extra_context)
         deps_context = copy(context)
-        deps_context["posts"] = [(p.titles[lang], p.permalink(lang)) for p in
+        deps_context["posts"] = [(p.meta[lang]['title'], p.permalink(lang)) for p in
                                  posts]
         deps_context["global"] = self.GLOBAL_CONTEXT
         task = {

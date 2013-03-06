@@ -24,6 +24,6 @@ ${helper.twitter_card_information(post)}
 
 <%block name="sourcelink">
     <li>
-    <a href="${post.pagenames[lang]+post.source_ext()}" id="sourcelink">${messages[lang]["Source"]}</a>
+    <a href="${post.meta[lang]i['slug']+post.source_ext()}" id="sourcelink">${messages[lang]["Source"]}</a>
     </li>
 </%block>

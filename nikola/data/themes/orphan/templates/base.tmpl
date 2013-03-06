@@ -18,7 +18,7 @@ ${set_locale(lang)}
         <%block name="belowtitle">
         %if len(translations) > 1:
         <small>
-            ${(messages[lang][u"Also available in"])}:&nbsp;
+            ${(messages[lang]["Also available in"])}:&nbsp;
             ${html_translations()}
         </small>
         %endif
