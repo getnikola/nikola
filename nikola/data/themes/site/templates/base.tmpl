@@ -1,5 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%namespace file="base_helper.tmpl" import="*"/>
+${set_locale(lang)}
 <!DOCTYPE html>
 <html lang="${lang}">
 <head>
@@ -13,14 +14,14 @@
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
-        
+
         <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
         <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-        </a>        
-        
+        </a>
+
             <a class="brand" href="${abs_link('/')}">
             ${blog_title}
             </a>
@@ -52,7 +53,7 @@
     <div class="span8">
     <%block name="content"></%block>
     </div>
-    </div> 
+    </div>
     <!--End of body content-->
 </div>
 <div class="footerbox">
