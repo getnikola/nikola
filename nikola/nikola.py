@@ -28,6 +28,7 @@ from collections import defaultdict
 from copy import copy
 import glob
 import gzip
+import locale
 import os
 import sys
 try:
@@ -211,6 +212,7 @@ class Nikola(object):
 
         self.GLOBAL_CONTEXT['messages'] = self.MESSAGES
         self.GLOBAL_CONTEXT['_link'] = self.link
+        self.GLOBAL_CONTEXT['set_locale'] = s_l
         self.GLOBAL_CONTEXT['rel_link'] = self.rel_link
         self.GLOBAL_CONTEXT['abs_link'] = self.abs_link
         self.GLOBAL_CONTEXT['exists'] = self.file_exists
@@ -716,3 +718,9 @@ class Nikola(object):
         }
 
         return utils.apply_filters(task, filters)
+
+
+def s_l(lang):
+    """A set_locale that uses utf8 encoding and returns ''."""
+    locale.setlocale(locale.LC_ALL, (lang, "utf8"))
+    return ''
