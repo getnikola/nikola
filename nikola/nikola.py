@@ -104,6 +104,7 @@ class Nikola(object):
             'GALLERY_PATH': 'galleries',
             'GZIP_FILES': False,
             'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js', '.json'),
+            'HIDE_UNTRANSLATED_POSTS': False,
             'INDEX_DISPLAY_POST_COUNT': 10,
             'INDEX_TEASERS': False,
             'INDEXES_TITLE': "",
