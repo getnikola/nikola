@@ -163,7 +163,6 @@ class Nikola(object):
         if 'SITE_URL' not in self.config:
             if 'BLOG_URL' in self.config:
                 print("WARNING: You should configure SITE_URL instead of BLOG_URL")
-                print("See docs at FIXME put URL")
                 self.config['SITE_URL'] = self.config['BLOG_URL']
 
         # BASE_URL defaults to SITE_URL
