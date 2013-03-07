@@ -64,3 +64,13 @@ blockquote p, blockquote {
   line-height: 1.25;
 }
 
+ul.bricks > li {
+    display: inline;
+    background-color: lightblue;
+    padding: 8px;
+    border-radius: 5px;
+    line-height: 3;
+    white-space:nowrap;
+    margin: 3px;
+}
+

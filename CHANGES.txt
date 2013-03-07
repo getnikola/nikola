@@ -15,6 +15,7 @@ Bugfixes
 * Fixed console command.
 * Cleaned up arbitrary metadata.
 * Don't crash in posts without actual post text.
+* Nicer tag listing.
 
 New in 5.4.2
 ============
