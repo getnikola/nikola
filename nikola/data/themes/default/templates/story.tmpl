@@ -6,7 +6,7 @@
     <h1>${title}</h1>
 %endif
     ${post.text(lang)}
-%if enable_comments:
-    ${disqus.html_disqus(post.permalink(absolute=True), post.title(lang), post.base_path)}
+%if enable_comments and not post.meta[lang]['nocomments']:
+        ${disqus.html_disqus(post.permalink(absolute=True), post.title(lang), post.base_path)}
 %endif
 </%block>

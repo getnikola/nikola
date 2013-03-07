@@ -718,6 +718,10 @@ Disqus is a good option because:
 3) It's free.
 4) It's damn nice.
 
+You can disable comments for a post by adding a "nocomments" metadata field to it::
+
+    .. nocomments: True
+
 .. admonition:: Important
 
    In some cases, when you run the test site, you won't see the comments.

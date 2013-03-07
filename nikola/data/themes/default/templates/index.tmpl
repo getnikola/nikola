@@ -11,7 +11,9 @@
         </small></h1>
         <hr>
         ${post.text(lang, index_teasers)}
-        ${disqus.html_disqus_link(post.permalink()+"#disqus_thread", post.base_path)}
+        % if not post.meta[lang]['nocomments']:
+            ${disqus.html_disqus_link(post.permalink()+"#disqus_thread", post.base_path)}
+        % endif
         </div>
     % endfor
     ${helper.html_pager()}

@@ -1,6 +1,11 @@
 New in master
 =============
 
+Features
+--------
+
+* New "nocomments" metadata that disables comments for a page/post (Issue #278).
+
 Bugfixes
 --------
 
