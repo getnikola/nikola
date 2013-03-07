@@ -132,7 +132,7 @@ base.tmpl
       The included themes use at least these:
 
       * ``rss_link`` a link to custom RSS feed, although it may be empty)
-      * ``blog_url`` the URL for your site
+      * ``site_url`` the URL for your site
       * ``blog_title`` the name of your site
       * ``content_footer`` things like copyright notices, disclaimers, etc.
       * ``license`` a larger license badge
