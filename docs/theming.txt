@@ -76,8 +76,8 @@ Templates
 ---------
 
 In templates there is a number of files whose name ends in ``.tmpl``. Those are the
-theme's page templates. They are done usig the `Mako <http://makotemplates.org>`_
-or `Jinja2 <jinja.pocoo.org>`_ template languages. If you want to do a theme, you 
+theme's page templates. They are done using the `Mako <http://makotemplates.org>`_
+or `Jinja2 <http://jinja.pocoo.org>`_ template languages. If you want to do a theme, you 
 should learn one first. What engine is used by the theme is declared in the ``engine`` file.
 
 The rest of this document explains Mako templates, but Jinja2 is fairly similar.

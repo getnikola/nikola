@@ -1,0 +1,10 @@
+[Core]
+Name = import_blogger
+Module = command_import_blogger
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.2
+Website = http://nikola.ralsina.com.ar
+Description = Import a blogger site from a XML dump.
+

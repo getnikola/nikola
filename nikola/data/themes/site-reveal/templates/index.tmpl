@@ -1,0 +1,36 @@
+## -*- coding: utf-8 -*-
+<%namespace name="helper" file="index_helper.tmpl"/>
+<%namespace name="disqus" file="disqus_helper.tmpl"/>
+<%inherit file="base.tmpl"/>
+<%block name="content">
+    % for post in posts:
+        <section>
+        <div class="postbox">
+        <h1><a href="${post.permalink(lang)}">${post.title(lang)}</a>
+        <small>&nbsp;&nbsp;
+             ${messages[lang]["Posted"]}: <time class="published" datetime="${post.date.isoformat()}">${post.date.strftime(date_format)}</time>
+        </small></h1>
+        <hr>
+        ${post.text(lang, index_teasers)}
+        ${disqus.html_disqus_link(post.permalink()+"#disqus_thread", post.base_path)}
+        </div>
+        ${helper.html_pager()}
+        </section>
+    % endfor
+    ${disqus.html_disqus_script()}
+    ${helper.mathjax_script(post)}
+</%block>
+
+<%block name="custom_reveal">
+    <script>
+    Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true
+    })
+    </script>
+</%block>
+
+<%block name="outside_pager">
+
+</%block>

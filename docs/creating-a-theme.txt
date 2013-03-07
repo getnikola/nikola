@@ -15,7 +15,7 @@ Starting The Theme
 
 First, we create a testing site, and copy the orphan theme from nikola's sources into the right place::
 
-    $ nikola init monospace-site
+    $ nikola init --demo monospace-site
     A new site with some sample data has been created at monospace-site.
     See README.txt in that folder for more information.
 
@@ -180,7 +180,7 @@ the posts themselves is different, and that was not described in ``base.tmpl`` a
 there is a placeholder called content: ``<%block name="content"></%block>``
 
 That's because ``base.tmpl`` defines the *base* layout. The layout of more specific pages, like "the page that shows
-a lis of posts" is defined in the other templates. Specifically, this is defined in ``index.tmpl``:
+a list of posts" is defined in the other templates. Specifically, this is defined in ``index.tmpl``:
 
 .. code-block:: mako
 
@@ -211,12 +211,13 @@ box, add links for the posts tags, move the date there, etc.
 
     ## -*- coding: utf-8 -*-
     <%namespace name="helper" file="index_helper.tmpl"/>
+    <%namespace name="disqus" file="disqus_helper.tmpl"/>
     <%inherit file="base.tmpl"/>
     <%block name="content">
         % for post in posts:
             <div class="postbox">
             <h1><a href="${post.permalink(lang)}">${post.title(lang)}</a></h1>
-                <div class="meta" style="background-color: rgb(234, 234, 234); ">                    
+                <div class="meta" style="background-color: rgb(234, 234, 234); ">
                     <span class="authordate">
                         ${messages[lang]["Posted"]}: ${post.date.strftime(date_format)}
                     </span>
@@ -230,10 +231,12 @@ box, add links for the posts tags, move the date there, etc.
                     </span>
                 </div>
             ${post.text(lang, index_teasers)}
-            ${helper.html_disqus_link(post)}
+            ${disqus.html_disqus_link(post.permalink()+"#disqus_thread", post.base_path)}
             </div>
         % endfor
         ${helper.html_pager()}
+        ${disqus.html_disqus_script()}
+    </%block>
 
 .. figure:: http://ralsina.com.ar/galleries/random/monospace-4.png
    :height: 400px
@@ -246,11 +249,12 @@ Then if we click on the post title, we will see some broken details in the metad
 
     ## -*- coding: utf-8 -*-
     <%namespace name="helper" file="post_helper.tmpl"/>
+    <%namespace name="disqus" file="disqus_helper.tmpl"/>
     <%inherit file="base.tmpl"/>
     <%block name="content">
         <div class="post">
         ${helper.html_title()}
-            <div class="meta" style="background-color: rgb(234, 234, 234); ">                    
+            <div class="meta" style="background-color: rgb(234, 234, 234); ">
             <span class="authordate">
                 ${messages[lang]["Posted"]}: ${post.date.strftime(date_format)} [<a href="${post.pagenames[lang]+'.txt'}">${messages[lang]["Source"]}</a>]
             </span>
@@ -269,7 +273,7 @@ Then if we click on the post title, we will see some broken details in the metad
             </div>
         ${post.text(lang)}
         ${helper.html_pager(post)}
-        ${helper.html_disqus(post)}
+        ${disqus.html_disqus(post.permalink(absolute=True), post.title(lang), post.base_path)}
         </div>
     </%block>
 

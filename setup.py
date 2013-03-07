@@ -10,6 +10,7 @@ from __future__ import print_function
 import os
 import subprocess
 import sys
+import shutil
 from fnmatch import fnmatchcase
 
 
@@ -23,10 +24,10 @@ try:
     from setuptools.command.install import install
 except ImportError:
     print('\n*** setuptools not found! Falling back to distutils\n\n')
-    from distutils.core import setup
+    from distutils.core import setup  # NOQA
 
     from distutils.command.install import install
-    from distutils.util import convert_path
+    from distutils.util import convert_path  # NOQA
 
 dependencies = [
     'doit>=0.20.0',
@@ -37,8 +38,8 @@ dependencies = [
     'unidecode',
     'lxml',
     'yapsy',
-    'mock>=1.0.0',
     'PyRSS2Gen',
+    'pytz',
 ]
 
 if sys.version_info[0] == 2:
@@ -69,27 +70,30 @@ def copy_messages():
 
 
 def install_manpages(root, prefix):
-    man_pages = [
-        ('docs/man/nikola.1', 'share/man/man1/nikola.1'),
-    ]
-    join = os.path.join
-    normpath = os.path.normpath
-    if root is not None:
-        prefix = os.path.realpath(root) + os.path.sep + prefix
-    for src, dst in man_pages:
-        path_dst = join(normpath(prefix), normpath(dst))
-        try:
-            os.makedirs(os.path.dirname(path_dst))
-        except OSError:
-            pass
-        rst2man_cmd = ['rst2man.py', 'rst2man']
-        for rst2man in rst2man_cmd:
+    try:
+        man_pages = [
+            ('docs/man/nikola.1', 'share/man/man1/nikola.1'),
+        ]
+        join = os.path.join
+        normpath = os.path.normpath
+        if root is not None:
+            prefix = os.path.realpath(root) + os.path.sep + prefix
+        for src, dst in man_pages:
+            path_dst = join(normpath(prefix), normpath(dst))
             try:
-                subprocess.call([rst2man, src, path_dst])
+                os.makedirs(os.path.dirname(path_dst))
             except OSError:
-                continue
-            else:
-                break
+                pass
+            rst2man_cmd = ['rst2man.py', 'rst2man']
+            for rst2man in rst2man_cmd:
+                try:
+                    subprocess.call([rst2man, src, path_dst])
+                except OSError:
+                    continue
+                else:
+                    break
+    except Exception as e:
+        print("Not installing the man pages:", e)
 
 
 class nikola_install(install):
@@ -177,10 +181,8 @@ def find_package_data(
                 out.setdefault(package, []).append(prefix + name)
     return out
 
-from distutils.core import setup
-
 setup(name='Nikola',
-      version='5.1',
+      version='5.4.2',
       description='Static blog/website generator',
       author='Roberto Alsina and others',
       author_email='ralsina@netmanagers.com.ar',

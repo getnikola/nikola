@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -47,7 +47,8 @@ class Archive(Task):
         for year, posts in list(self.site.posts_per_year.items()):
             for lang in kw["translations"]:
                 output_name = os.path.join(
-                    kw['output_folder'], self.site.path("archive", year, lang)).encode('utf8')
+                    kw['output_folder'], self.site.path("archive", year,
+                                                        lang)).encode('utf8')
                 post_list = [self.site.global_data[post] for post in posts]
                 post_list.sort(key=lambda a: a.date)
                 post_list.reverse()
@@ -78,10 +79,11 @@ class Archive(Task):
         for lang in kw["translations"]:
             context = {}
             output_name = os.path.join(
-                kw['output_folder'], self.site.path("archive", None, lang)).encode('utf8')
+                kw['output_folder'], self.site.path("archive", None,
+                                                    lang)).encode('utf8')
             context["title"] = kw["messages"][lang]["Archive"]
             context["items"] = [(year, self.site.link("archive", year, lang))
-                for year in years]
+                                for year in years]
             context["permalink"] = self.site.link("archive", None, lang)
             task = self.site.generic_post_list_renderer(
                 lang,

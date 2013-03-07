@@ -1,12 +1,13 @@
 ## -*- coding: utf-8 -*-
 <%namespace name="helper" file="post_helper.tmpl"/>
+<%namespace name="disqus" file="disqus_helper.tmpl"/>
 <%inherit file="base.tmpl"/>
 <%block name="content">
     <div class="post">
     ${helper.html_title()}
         <div class="meta" style="background-color: rgb(234, 234, 234); ">                    
         <span class="authordate">
-            ${messages[lang]["Posted"]}: ${post.date.strftime(date_format)} [<a href="${post.pagenames[lang]+'.txt'}">${messages[lang]["Source"]}</a>]
+            ${messages[lang]["Posted"]}: ${post.date.strftime(date_format)} [<a href="${post.meta[lang]['slug']+'.txt'}" id="sourcelink">${messages[lang]["Source"]}</a>]
         </span>
         <br>
             %if post.tags:
@@ -23,6 +24,6 @@
         </div>
     ${post.text(lang)}
     ${helper.html_pager(post)}
-    ${helper.html_disqus(post)}
+    ${disqus.html_disqus(post.permalink(absolute=True), post.title(lang), post.base_path)}
     </div>
 </%block>

@@ -1,0 +1,40 @@
+## -*- coding: utf-8 -*-
+<%!
+    import json
+%>
+<%def name="html_disqus(url, title, identifier)">
+    %if disqus_forum:
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+        var disqus_shortname ="${disqus_forum}";
+        %if url:
+            var disqus_url="${url}";
+        %endif
+        var disqus_title=${json.dumps(title)};
+        var disqus_identifier="${identifier}";
+        var disqus_config = function () { 
+            this.language = "${lang}";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    %endif
+</%def>
+
+<%def name="html_disqus_link(link, identifier)">
+    <p>
+    %if disqus_forum:
+        <a href="${link}" data-disqus-identifier="${identifier}">Comments</a>
+    %endif
+</%def>
+
+
+<%def name="html_disqus_script()">
+    %if disqus_forum:
+       <script type="text/javascript">var disqus_shortname="${disqus_forum}";(function(){var a=document.createElement("script");a.async=true;a.type="text/javascript";a.src="http://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("HEAD")[0]||document.getElementsByTagName("BODY")[0]).appendChild(a)}());</script>
+    %endif
+</%def>

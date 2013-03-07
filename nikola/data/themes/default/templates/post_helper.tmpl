@@ -1,3 +1,4 @@
+## -*- coding: utf-8 -*-
 <%def name="html_title()">
     <h1>${title}</h1>
     % if link:
@@ -9,7 +10,7 @@
 <%def name="html_translations(post)">
     %if len(translations) > 1:
         %for langname in translations.keys():
-            %if langname != lang:
+            %if langname != lang and post.is_translation_available(langname):
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 <a href="${post.permalink(langname)}">${messages[langname]["Read in English"]}</a>
             %endif
@@ -27,37 +28,44 @@
     %endif
 </%def>
 
-
-<%def name="html_disqus(post)">
-    %if disqus_forum:
-        <div id="disqus_thread"></div>    
-        <script type="text/javascript">
-        var disqus_shortname ="${disqus_forum}";
-        var disqus_url="${post.permalink(absolute=True)}";
-        var disqus_title="${post.title(lang)}";
-        var disqus_identifier="${post.base_path}";
-        (function() {
-            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    %endif
-</%def>
-
-
 <%def name="html_pager(post)">
     <ul class="pager">
     %if post.prev_post:
         <li class="previous">
             <a href="${post.prev_post.permalink(lang)}">&larr; ${messages[lang]["Previous post"]}</a>
-        </li>
     %endif
     %if post.next_post:
         <li class="next">
             <a href="${post.next_post.permalink(lang)}">${messages[lang]["Next post"]} &rarr;</a>
-        </li>
     %endif
     </ul>
+</%def>
+
+<%def name="twitter_card_information(post)">
+    %if twitter_card and twitter_card['use_twitter_cards']:
+        <meta name="twitter:card" content="${twitter_card.get('card', 'summary')}">
+        <meta name="og:url" content="${post.permalink(lang, absolute=True)}">
+        %if 'site:id' in twitter_card:
+            <meta name="twitter:site:id" content="${twitter_card['site:id']}">
+        %elif 'site' in twitter_card:
+            <meta name="twitter:site" content="${twitter_card['site']}">
+        %endif
+        %if 'creator:id' in twitter_card:
+            <meta name="twitter:creator:id" content="${twitter_card['creator:id']}">
+        %elif 'creator' in twitter_card:
+            <meta name="twitter:creator" content="${twitter_card['creator']}">
+        %endif
+        <meta name="og:title" content="${post.title(lang)[:70]}">
+        %if post.description(lang):
+            <meta name="og:description" content="${post.description(lang)[:200]}">
+        %else:
+            <meta name="og:description" content="${post.text(lang, strip_html=True)[:200]}">
+        %endif
+    %endif
+</%def>
+
+<%def name="mathjax_script(post)">
+    %if post.is_mathjax:
+        <script src="/assets/js/mathjax.js" type="text/javascript"></script>
+    %endif
 </%def>

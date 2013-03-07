@@ -1,0 +1,15 @@
+.reveal {
+font-size: 20px;
+}
+.reveal h1 { 
+font-size: 2.55em;
+}
+.reveal pre {
+font-size: 80%;
+}
+.reveal .slides {
+text-align: left;
+}
+.reveal .controls {
+bottom: 45px;
+}

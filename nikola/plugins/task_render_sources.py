@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -53,9 +53,12 @@ class Sources(Task):
         flag = False
         for lang in kw["translations"]:
             for post in self.site.timeline:
-                output_name = os.path.join(kw['output_folder'],
-                    post.destination_path(lang, post.source_ext()))
+                output_name = os.path.join(
+                    kw['output_folder'], post.destination_path(
+                        lang, post.source_ext()))
                 source = post.source_path
+                if source.endswith('.html'):
+                    continue
                 if lang != kw["default_lang"]:
                     source_lang = source + '.' + lang
                     if os.path.exists(source_lang):
@@ -68,7 +71,7 @@ class Sources(Task):
                     'actions': [(utils.copy_file, (source, output_name))],
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
-                    }
+                }
         if flag is False:  # No page rendered, yield a dummy task
             yield {
                 'basename': 'render_sources',

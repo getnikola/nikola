@@ -23,7 +23,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-from optparse import OptionParser
 import os
 
 from nikola.plugin_categories import Command
@@ -33,9 +32,10 @@ class Deploy(Command):
     """Deploy site.  """
     name = "deploy"
 
-    def run(self, *args):
-        parser = OptionParser(usage="nikola %s [options]" % self.name)
-        (options, args) = parser.parse_args(list(args))
+    doc_usage = ""
+    doc_purpose = "Deploy the site."
+
+    def _execute(self, command, args):
         for command in self.site.config['DEPLOY_COMMANDS']:
             print("==>", command)
             os.system(command)

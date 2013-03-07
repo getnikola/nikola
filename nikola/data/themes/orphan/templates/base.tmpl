@@ -1,5 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%namespace file="base_helper.tmpl" import="*"/>
+${set_locale(lang)}
 <!DOCTYPE html>
 <html lang="${lang}">
 <head>
@@ -17,7 +18,7 @@
         <%block name="belowtitle">
         %if len(translations) > 1:
         <small>
-            ${(messages[lang][u"Also available in"])}:&nbsp;
+            ${(messages[lang]["Also available in"])}:&nbsp;
             ${html_translations()}
         </small>
         %endif
@@ -32,5 +33,4 @@
             <li>${search_form}
             </ul>
     ${analytics}
-    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
 </body>

@@ -23,14 +23,12 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-from optparse import OptionParser
 import os
-import sys
 try:
     from urllib import unquote
     from urlparse import urlparse
 except ImportError:
-    from urllib.parse import unquote, urlparse
+    from urllib.parse import unquote, urlparse  # NOQA
 
 import lxml.html
 
@@ -42,26 +40,48 @@ class CommandCheck(Command):
 
     name = "check"
 
-    def run(self, *args):
-        """Check the generated site."""
-        parser = OptionParser(usage="nikola %s [options]" % self.name)
-        parser.add_option('-l', '--check-links', dest='links',
-            action='store_true',
-            help='Check for dangling links.')
-        parser.add_option('-f', '--check-files', dest='files',
-            action='store_true',
-            help='Check for unknown files.')
+    doc_usage = "-l [--find-sources] | -f"
+    doc_purpose = "Check links and files in the generated site."
+    cmd_options = [
+        {
+            'name': 'links',
+            'short': 'l',
+            'long': 'check-links',
+            'type': bool,
+            'default': False,
+            'help': 'Check for dangling links',
+        },
+        {
+            'name': 'files',
+            'short': 'f',
+            'long': 'check-files',
+            'type': bool,
+            'default': False,
+            'help': 'Check for unknown files',
+        },
+        {
+            'name': 'find_sources',
+            'long': 'find-sources',
+            'type': bool,
+            'default': False,
+            'help': 'List possible source files for files with broken links.',
+        },
+    ]
 
-        (options, args) = parser.parse_args(list(args))
-        if options.links:
-            scan_links()
-        if options.files:
+    def _execute(self, options, args):
+        """Check the generated site."""
+        if not options['links'] and not options['files']:
+            print(self.help())
+            return False
+        if options['links']:
+            scan_links(options['find_sources'])
+        if options['files']:
             scan_files()
 
 existing_targets = set([])
 
 
-def analize(task):
+def analize(task, find_sources=False):
     try:
         filename = task.split(":")[-1]
         d = lxml.html.fromstring(open(filename).read())
@@ -75,35 +95,31 @@ def analize(task):
             if parsed.fragment:
                 target = target.split('#')[0]
             target_filename = os.path.abspath(
-                os.path.join(os.path.dirname(filename),
-                    unquote(target)))
+                os.path.join(os.path.dirname(filename), unquote(target)))
             if target_filename not in existing_targets:
                 if os.path.exists(target_filename):
                     existing_targets.add(target_filename)
                 else:
-                    print("In %s broken link: " % filename, target)
-                    if '--find-sources' in sys.argv:
+                    print("Broken link in {0}: ".format(filename), target)
+                    if find_sources:
                         print("Possible sources:")
-                        print(os.popen(
-                            'nikola build list --deps %s' % task, 'r').read())
+                        print(os.popen('nikola list --deps ' + task,
+                                       'r').read())
                         print("===============================\n")
 
     except Exception as exc:
         print("Error with:", filename, exc)
 
 
-def scan_links():
+def scan_links(find_sources=False):
     print("Checking Links:\n===============\n")
-    for task in os.popen('nikola build list --all', 'r').readlines():
+    for task in os.popen('nikola list --all', 'r').readlines():
         task = task.strip()
-        if task.split(':')[0] in (
-            'render_tags',
-            'render_archive',
-            'render_galleries',
-            'render_indexes',
-            'render_pages',
-            'render_site') and '.html' in task:
-            analize(task)
+        if task.split(':')[0] in ('render_tags', 'render_archive',
+                                  'render_galleries', 'render_indexes',
+                                  'render_pages',
+                                  'render_site') and '.html' in task:
+            analize(task, find_sources)
 
 
 def scan_files():
@@ -111,7 +127,7 @@ def scan_files():
     task_fnames = set([])
     real_fnames = set([])
     # First check that all targets are generated in the right places
-    for task in os.popen('nikola build list --all', 'r').readlines():
+    for task in os.popen('nikola list --all', 'r').readlines():
         task = task.strip()
         if 'output' in task and ':' in task:
             fname = task.split(':')[-1]

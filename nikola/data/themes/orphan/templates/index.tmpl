@@ -1,5 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%namespace name="helper" file="index_helper.tmpl"/>
+<%namespace name="disqus" file="disqus_helper.tmpl"/>
 <%inherit file="base.tmpl"/>
 <%block name="content">
     % for post in posts:
@@ -10,9 +11,9 @@
         </small></h1>
         <hr>
         ${post.text(lang, index_teasers)}
-        ${helper.html_disqus_link(post)}
+        ${disqus.html_disqus_link(post.permalink()+"#disqus_thread", post.base_path)}
         </div>
     % endfor
     ${helper.html_pager()}
-    ${helper.html_disqus_script()}
+    ${disqus.html_disqus_script()}
 </%block>

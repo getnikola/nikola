@@ -1,0 +1,9 @@
+[Core]
+Name = planetoid
+Module = command_planetoid
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Maintain a planet-like site

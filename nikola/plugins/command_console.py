@@ -22,6 +22,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import print_function, unicode_literals
+
 import os
 
 from nikola.plugin_categories import Command
@@ -31,5 +33,31 @@ class Deploy(Command):
     """Start debugging console."""
     name = "console"
 
-    def run(self, *args):
-        os.system('python -i -c "from nikola.console import *"')
+    def _execute(self, options, args):
+        """Start the console."""
+        from nikola import Nikola
+        try:
+            import conf
+            SITE = Nikola(**conf.__dict__)
+            SITE.scan_posts()
+            print("You can now access your configuration as conf and your "
+                  "site engine as SITE.")
+        except ImportError:
+            print("No configuration found.")
+        import code
+        try:
+            import readline
+        except ImportError:
+            pass
+        else:
+            import rlcompleter
+            readline.set_completer(rlcompleter.Completer(globals()).complete)
+            readline.parse_and_bind("tab:complete")
+
+        pythonrc = os.environ.get("PYTHONSTARTUP")
+        if pythonrc and os.path.isfile(pythonrc):
+            try:
+                execfile(pythonrc)  # NOQA
+            except NameError:
+                pass
+        code.interact(local=locals())

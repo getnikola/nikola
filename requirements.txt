@@ -1,14 +1,5 @@
-doit>=0.20.0
-pygments
-pillow
-docutils
-mako>=0.6
-unidecode
-lxml
-configparser
-yapsy
 mock>=1.0.0
 requests
 markdown
 Jinja2
-PyRSS2Gen
+bbcode

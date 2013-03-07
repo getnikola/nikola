@@ -1,0 +1,29 @@
+## -*- coding: utf-8 -*-
+<%namespace name="helper" file="post_helper.tmpl"/>
+<%namespace name="disqus" file="disqus_helper.tmpl"/>
+<%inherit file="base.tmpl"/>
+<%block name="extra_head">
+${helper.twitter_card_information(post)}
+</%block>
+<%block name="content">
+    <div class="postbox">
+    ${helper.html_title()}
+    <hr>
+    <medium>
+        ${messages[lang]["Posted"]}: <time class="published" datetime="${post.date.isoformat()}">${post.date.strftime(date_format)}</time>
+        ${helper.html_translations(post)}
+        ${helper.html_tags(post)}
+    </medium>
+    <hr>
+    ${post.text(lang)}
+    ${helper.html_pager(post)}
+    ${disqus.html_disqus(post.permalink(absolute=True), post.title(lang), post.base_path)}
+    ${helper.mathjax_script(post)}
+    </div>
+</%block>
+
+<%block name="sourcelink">
+    <li>
+    <a href="${post.meta[lang]i['slug']+post.source_ext()}" id="sourcelink">${messages[lang]["Source"]}</a>
+    </li>
+</%block>

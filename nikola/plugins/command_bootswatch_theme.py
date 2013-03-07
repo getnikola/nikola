@@ -23,13 +23,12 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-from optparse import OptionParser
 import os
 
 try:
     import requests
 except ImportError:
-    requests = None
+    requests = None  # NOQA
 
 from nikola.plugin_categories import Command
 
@@ -38,41 +37,60 @@ class CommandBootswatchTheme(Command):
     """Given a swatch name and a parent theme, creates a custom theme."""
 
     name = "bootswatch_theme"
+    doc_usage = "[options]"
+    doc_purpose = "Given a swatch name and a parent theme, creates a custom"\
+        " theme."
+    cmd_options = [
+        {
+            'name': 'name',
+            'short': 'n',
+            'long': 'name',
+            'default': 'custom',
+            'type': str,
+            'help': 'New theme name (default: custom)',
+        },
+        {
+            'name': 'swatch',
+            'short': 's',
+            'default': 'slate',
+            'type': str,
+            'help': 'Name of the swatch from bootswatch.com.'
+        },
+        {
+            'name': 'parent',
+            'short': 'p',
+            'long': 'parent',
+            'default': 'site',
+            'help': 'Parent theme name (default: site)',
+        },
+    ]
 
-    def run(self, *args):
+    def _execute(self, options, args):
         """Given a swatch name and a parent theme, creates a custom theme."""
         if requests is None:
-            print('To use the install_theme command, you need to install the "requests" package.')
+            print('To use the install_theme command, you need to install the '
+                  '"requests" package.')
             return
-        parser = OptionParser(usage="nikola %s [options]" % self.name)
-        parser.add_option("-n", "--name", dest="name",
-            help="New theme name (default: custom)", default='custom')
-        parser.add_option("-s", "--swatch", dest="swatch",
-            help="Name of the swatch from bootswatch.com (default: slate)",
-            default='slate')
-        parser.add_option("-p", "--parent", dest="parent",
-            help="Parent theme name (default: site)", default='site')
-        (options, args) = parser.parse_args(list(args))
 
-        name = options.name
-        swatch = options.swatch
-        parent = options.parent
+        name = options['name']
+        swatch = options['swatch']
+        parent = options['parent']
 
-        print("Creating '%s' theme from '%s' and '%s'" % (
-            name, swatch, parent))
+        print("Creating '{0}' theme from '{1}' and '{2}'".format(name, swatch,
+                                                                 parent))
         try:
             os.makedirs(os.path.join('themes', name, 'assets', 'css'))
         except:
             pass
         for fname in ('bootstrap.min.css', 'bootstrap.css'):
-            url = 'http://bootswatch.com/%s/%s' % (swatch, fname)
+            url = '/'.join(('http://bootswatch.com', swatch, fname))
             print("Downloading: ", url)
             data = requests.get(url).text
-            with open(os.path.join(
-                'themes', name, 'assets', 'css', fname), 'wb+') as output:
+            with open(os.path.join('themes', name, 'assets', 'css', fname),
+                      'wb+') as output:
                 output.write(data)
 
         with open(os.path.join('themes', name, 'parent'), 'wb+') as output:
             output.write(parent)
-        print('Theme created. Change the THEME setting to "%s" to use it.'
-            % name)
+        print('Theme created. Change the THEME setting to "{0}" to use '
+              'it.'.format(name))

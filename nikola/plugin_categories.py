@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -31,6 +31,7 @@ __all__ = [
 ]
 
 from yapsy.IPlugin import IPlugin
+from doit.cmd_base import Command as DoitCommand
 
 
 class BasePlugin(IPlugin):
@@ -41,16 +42,57 @@ class BasePlugin(IPlugin):
         self.site = site
 
 
-class Command(BasePlugin):
-    """These plugins are exposed via the command line."""
+class Command(BasePlugin, DoitCommand):
+    """These plugins are exposed via the command line.
+    They implement the doit Command interface."""
 
     name = "dummy_command"
 
-    short_help = "A short explanation."
+    doc_purpose = "A short explanation."
+    doc_usage = ""
+    doc_description = None  # None value will completely ommit line from doc
+    # see http://python-doit.sourceforge.net/cmd_run.html#parameters
+    cmd_options = ()
+    needs_config = True
 
-    def run(self):
-        """Do whatever this command does."""
-        raise Exception("Implement Me First")
+    def __init__(self, *args, **kwargs):
+        BasePlugin.__init__(self, *args, **kwargs)
+        DoitCommand.__init__(self)
+
+    def execute(self, options={}, args=[]):
+        """Check if the command can run in the current environment,
+        fail if needed, or call _execute."""
+        if self.needs_config and not self.site.configured:
+            print("This command needs to run inside an existing Nikola site.")
+            return False
+        self._execute(options, args)
+
+    def _execute(self, options, args):
+        """Do whatever this command does.
+        @param options (dict) with values from cmd_options
+        @param args (list) list of positional arguments
+        """
+        raise NotImplementedError()
+
+
+def help(self):
+    """return help text"""
+    text = []
+    text.append("Purpose: %s" % self.doc_purpose)
+    text.append("Usage:   nikola %s %s" % (self.name, self.doc_usage))
+    text.append('')
+
+    text.append("Options:")
+    for opt in self.options:
+        text.extend(opt.help_doc())
+
+    if self.doc_description is not None:
+        text.append("")
+        text.append("Description:")
+        text.append(self.doc_description)
+    return "\n".join(text)
+
+DoitCommand.help = help
 
 
 class BaseTask(BasePlugin):
@@ -64,7 +106,7 @@ class BaseTask(BasePlugin):
 
     def gen_tasks(self):
         """Task generator."""
-        raise Exception("Implement Me First")
+        raise NotImplementedError()
 
 
 class Task(BaseTask):
@@ -84,11 +126,11 @@ class TemplateSystem(object):
 
     def set_directories(self, directories, cache_folder):
         """Sets the list of folders where templates are located and cache."""
-        raise Exception("Implement Me First")
+        raise NotImplementedError()
 
     def template_deps(self, template_name):
         """Returns filenames which are dependencies for a template."""
-        raise Exception("Implement Me First")
+        raise NotImplementedError()
 
     def render_template(name, output_name, context):
         """Renders template to a file using context.
@@ -96,7 +138,7 @@ class TemplateSystem(object):
         This must save the data to output_name *and* return it
         so that the caller may do additional processing.
         """
-        raise Exception("Implement Me First")
+        raise NotImplementedError()
 
 
 class PageCompiler(object):
@@ -106,8 +148,9 @@ class PageCompiler(object):
 
     def compile_html(self, source, dest):
         """Compile the source, save it on dest."""
-        raise Exception("Implement Me First")
+        raise NotImplementedError()
 
-    def create_post(self, path, onefile=False, title="", slug="", date="", tags=""):
+    def create_post(self, path, onefile=False, title="", slug="", date="",
+                    tags=""):
         """Create post file with optional metadata."""
-        raise Exception("Implement Me First")
+        raise NotImplementedError()

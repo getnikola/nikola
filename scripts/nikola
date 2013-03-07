@@ -31,39 +31,7 @@ else:
 
 # LIBDIR trick end (marker for removal on platforms that don't need it)
 
-import nikola
-
-
-def print_help(site):
-    print("Usage: nikola command [options]")
-    print()
-    print("Available commands:")
-    print()
-    keys = sorted(site.commands.keys())
-    for name in keys:
-        print("nikola %s: %s" % (name, site.commands[name].short_help))
-    print()
-    print("For detailed help for a command, use nikola command --help")
+from nikola import main
 
 if __name__ == "__main__":
-
-    try:
-        sys.path.append('')
-        import conf
-        config = conf.__dict__
-    except ImportError:
-        config = {}
-
-    site = nikola.Nikola(**config)
-
-    if len(sys.argv) < 2:
-        sys.argv.append('help')
-    cmd_name = sys.argv[1]
-
-    if cmd_name in ("help", "--help", "-h"):
-        print_help(site)
-    elif cmd_name in site.commands:
-        site.commands[cmd_name].run(*sys.argv[2:])
-    else:
-        print("Unknown command: %s" % cmd_name)
-        print_help(site)
+    sys.exit(main.main(sys.argv[1:]))

@@ -1,9 +1,99 @@
-New in Master
+New in master
 =============
+
+Bugfixes
+--------
+
+* Set locale to the value of "lang" in templates, so things like strftime 
+  use localized values. (Issue #368)
+* Fixed console command.
+* Cleaned up arbitrary metadata.
+* Don't crash in posts without actual post text.
+
+New in 5.4.2
+============
+
+Bugfixes
+--------
+
+* Fix relative paths when stories is "dropped to root" (Issue #362)
+* Pick translated titles in 1-file posts (Issue #365)
+
+New in 5.4
+==========
 
 Features
 --------
 
+* Twitter Card / Open Graph support.
+* Smart math support
+* New soundcould directive
+* Custom "read more" links
+* Better time display, timezone support
+* Better doit integration (Issue #151)
+* Make the whole listings folder browsable (Issue #128)
+* New GZIP_FILES/GZIP_EXTENSIONS options to create gzipped copies of some files (Issue #348)
+* New optional path parameter to new_post command.
+* Wordpress importer: option to not download files
+* Wordpress importer: option to squash newlines
+* Separated BLOG_URL into SITE_URL and BASE_URL
+* Added DISABLED_PLUGINS option (Issue #354)
+
+Bugfixes
+--------
+
+* Added missing </div> in default theme templates.
+* Wordpress import: Description is left empty if no description is found.
+* When running the build command it is now possible to get help.
+* Load jQuery before bootstrap in JS bundle (Issue #327)
+* Generate valid HTML5 for redirects (Issue #276)
+* Fixed "nikola check"
+* Fixed internationalized RSS links
+* Make commands that need to be run in a site fail gracefully (Issue #342)
+* Use localized links on lxml fixer
+* Redirections created during the import from wordpress are now written to conf.py
+* Stop parsing metadata in post file on first blank line
+* Metadata handling cleanups by Tordek
+* Fixed blockquote font size inconsistency
+* Wordpress Import: Do not break indentation (issue #189)
+* Make things work even if SITE_URL has a path (Fix #307)
+
+New in 5.3
+==========
+
+Features
+--------
+
+* Bootstrap 2.3.0
+* Optionally use content distribution networks for jquery and twitter-bootstrap (USE_CDN option)
+* Improve progressive rendering by moving javascript to the bottom of pages
+* New Brazilian portuguese translation.
+* New planetoid experimental extra_plugin
+
+Bugfixes
+--------
+
+* Make really sure we import the right conf.py
+* Make SLUG_TAG_PATH a config dep for most pages
+* Removed meta title tag for better HTML validation
+* Removed #999 background from footnote backlink.
+* Made footnote references be superscripted.
+* Centered figure's image and caption.
+* Removed outset border from admonitions.
+* Use default theme as last resource for messages/translations
+* DATE_FORMAT option was being ignored
+* Remove trailing "\" on windows gallery links (Issue #298)
+* Inconsistent breadcrumbs in gallery pages (Issue #303)
+* Use source files as bundle dependencies instead of outputs (Issue #294)
+
+New in 5.2
+==========
+
+Features
+--------
+
+* New vimeo directive for restructured text.
+* New COMMENTS_IN_GALLERIES and COMMENTS_IN_STORIES options.
 * One-page, dynamic-loading, client-rendered site plugin (task_mustache)
 * Local search based on Tipue (extra_plugins/task_localsearch)
 * Recursive post/story folders
@@ -12,10 +102,28 @@ Features
 * New option RSS_TEASERS
 * Textile markup support.
 * Creole Wiki markup support.
+* txt2tags markup support.
+* bbcode markup support.
+* Custom "gist" directive providing reStructured text support for GitHub gists.
+* New Catalá translation
+* Using the filename as slug if no slug is found in the metadata.
+* Make it possible to extract metadata from filename by using regexp.
+* When using import_wordpress users can exclude drafts with the ``-d`` switch.
+* New STORY_INDEX option to generate index.html in story folders.
+* Sort tags case insensitive.
+* New polish translation.
+* Add multi size favicon support.
+* Use multilingual Disqus (although it doesn't seem to work)
+* Add Simplified Chinese translations.
+* (Rough) Blogger/Blogspot importer
+* When running the init command it now creates an empty site by default.
+  The previous behaviour can be triggered with the "--demo" switch.
+* Python 3 support (except for sitemap generation)
 
 Bugfixes
 --------
 
+* Added sane defaults for most options, so you can have a lean config file.
 * Made layout of the site theme responsive, with collapsing navbar.
 * Use timeline instead of parsing post_pages in generic_page_renderer and task_render_pages.
 * Updated disqus integration code, added identifiers so it works on any URL.
@@ -23,6 +131,16 @@ Bugfixes
 * Removed copy of PyRSS2Gen, made it a dependency.
 * Detect "namespace" dependencies for Mako templates.
 * Use consistent encodings in RSS feeds.
+* Refactored disqus code into separate helpers
+* Use the correct extension (or raise an error) on new_post
+* Fix titles that include quotes
+* Updated to current CSS from docutils (was using version from 2005)
+* Avoid needless regeneration of gallery indexes.
+* Always ensure the folder for the new post exists.
+* Get title from filename if not available in metadata.
+* Don't copy sources if they end in ".html"
+* Don't link to unexisting translations.
+* Sort tags case insensitive.
 
 New in v5.1
 ===========

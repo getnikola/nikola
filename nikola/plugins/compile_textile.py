@@ -8,11 +8,11 @@
 # distribute, sublicense, and/or sell copies of the
 # Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice
 # shall be included in all copies or substantial portions of
 # the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
 # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -26,12 +26,11 @@
 
 import codecs
 import os
-import re
 
 try:
     from textile import textile
 except ImportError:
-    textile = None
+    textile = None  # NOQA
 
 from nikola.plugin_categories import PageCompiler
 
@@ -43,7 +42,8 @@ class CompileTextile(PageCompiler):
 
     def compile_html(self, source, dest):
         if textile is None:
-            raise Exception('To build this site, you need to install the "textile" package.')
+            raise Exception('To build this site, you need to install the '
+                            '"textile" package.')
         try:
             os.makedirs(os.path.dirname(dest))
         except:
@@ -54,16 +54,19 @@ class CompileTextile(PageCompiler):
             output = textile(data, head_offset=1)
             out_file.write(output)
 
-    def create_post(self, path, onefile=False, title="", slug="", date="", tags=""):
+    def create_post(self, path, onefile=False, title="", slug="", date="",
+                    tags=""):
+        d_name = os.path.dirname(path)
+        if not os.path.isdir(d_name):
+            os.makedirs(os.path.dirname(path))
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
                 fd.write('<notextile>  <!--\n')
-                fd.write('.. title: %s\n' % title)
-                fd.write('.. slug: %s\n' % slug)
-                fd.write('.. date: %s\n' % date)
-                fd.write('.. tags: %s\n' % tags)
+                fd.write('.. title: {0}\n'.format(title))
+                fd.write('.. slug: {0}\n'.format(slug))
+                fd.write('.. date: {0}\n'.format(date))
+                fd.write('.. tags: {0}\n'.format(tags))
                 fd.write('.. link: \n')
                 fd.write('.. description: \n')
                 fd.write('--></notextile>\n\n')
             fd.write("\nWrite your post here.")
-        

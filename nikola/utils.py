@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (c) 2012 Roberto Alsina y otros.
 
 # Permission is hereby granted, free of charge, to any
@@ -33,7 +34,6 @@ import re
 import codecs
 import json
 import shutil
-import string
 import subprocess
 import sys
 from zipfile import ZipFile as zip
@@ -42,15 +42,25 @@ try:
 except ImportError:
     pass
 
+import pytz
+
+if sys.version_info[0] == 3:
+    # Python 3
+    bytes_str = bytes
+    unicode_str = str
+    unichr = chr
+else:
+    bytes_str = str
+    unicode_str = unicode  # NOQA
+
 from doit import tools
 from unidecode import unidecode
 
 import PyRSS2Gen as rss
 
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
-    'generic_rss_renderer',
-    'copy_file', 'slugify', 'unslugify', 'get_meta', 'to_datetime',
-    'apply_filters', 'config_changed']
+           'generic_rss_renderer', 'copy_file', 'slugify', 'unslugify',
+           'to_datetime', 'apply_filters', 'config_changed', 'get_crumbs']
 
 
 class CustomEncoder(json.JSONEncoder):
@@ -76,13 +86,13 @@ class config_changed(tools.config_changed):
                 byte_data = data
             return hashlib.md5(byte_data).hexdigest()
         else:
-            raise Exception(
-                ('Invalid type of config_changed parameter got %s' +
-                 ', must be string or dict') % (type(self.config),))
+            raise Exception('Invalid type of config_changed parameter -- got '
+                            '{0}, must be string or dict'.format(type(
+                                self.config)))
 
     def __repr__(self):
-        return "Change with config: %s" % json.dumps(
-            self.config, cls=CustomEncoder)
+        return "Change with config: {0}".format(json.dumps(self.config,
+                                                           cls=CustomEncoder))
 
 
 def get_theme_path(theme):
@@ -94,59 +104,10 @@ def get_theme_path(theme):
     if os.path.isdir(dir_name):
         return dir_name
     dir_name = os.path.join(os.path.dirname(__file__),
-        'data', 'themes', theme)
+                            'data', 'themes', theme)
     if os.path.isdir(dir_name):
         return dir_name
-    raise Exception("Can't find theme '%s'" % theme)
-
-
-def re_meta(line, match):
-    """re.compile for meta"""
-    reStr = re.compile('^%s(.*)' % re.escape(match))
-    result = reStr.findall(line)
-    if result:
-        return result[0].strip()
-    else:
-        return ''
-
-
-def get_meta(source_path):
-    """get post's meta from source"""
-    with codecs.open(source_path, "r", "utf8") as meta_file:
-        meta_data = meta_file.readlines(15)
-    title = slug = date = tags = link = description = ''
-
-    re_md_title = re.compile(r'^%s([^%s].*)' %
-        (re.escape('#'), re.escape('#')))
-    re_rst_title = re.compile(r'^([^%s ].*)' % re.escape(string.punctuation))
-
-    for meta in meta_data:
-        if not title:
-            title = re_meta(meta, '.. title:')
-        if not title:
-            if re_rst_title.findall(meta):
-                title = re_rst_title.findall(meta)[0]
-        if not title:
-            if re_md_title.findall(meta):
-                title = re_md_title.findall(meta)[0]
-        if not slug:
-            slug = re_meta(meta, '.. slug:')
-        if not date:
-            date = re_meta(meta, '.. date:')
-        if not tags:
-            tags = re_meta(meta, '.. tags:')
-        if not link:
-            link = re_meta(meta, '.. link:')
-        if not description:
-            description = re_meta(meta, '.. description:')
-
-    # TODO: either enable or delete
-    #if not date:
-        #from datetime import datetime
-        #date = datetime.fromtimestamp(
-        #    os.path.getmtime(source_path)).strftime('%Y/%m/%d %H:%M')
-
-    return (title, slug, date, tags, link, description)
+    raise Exception("Can't find theme '{0}'".format(theme))
 
 
 def get_template_engine(themes):
@@ -190,17 +151,20 @@ def load_messages(themes, translations):
     oldpath = sys.path[:]
     for theme_name in themes[::-1]:
         msg_folder = os.path.join(get_theme_path(theme_name), 'messages')
+        default_folder = os.path.join(get_theme_path('default'), 'messages')
+        sys.path.insert(0, default_folder)
         sys.path.insert(0, msg_folder)
         english = __import__('messages_en')
         for lang in list(translations.keys()):
             # If we don't do the reload, the module is cached
-            translation = __import__('messages_'+lang)
+            translation = __import__('messages_' + lang)
             reload(translation)
             if sorted(translation.MESSAGES.keys()) !=\
                 sorted(english.MESSAGES.keys()) and \
-                lang not in warned:
+                    lang not in warned:
                 # FIXME: get real logging in place
-                print("Warning: Incomplete translation for language '%s'." % lang)
+                print("Warning: Incomplete translation for language "
+                      "'{0}'.".format(lang))
                 warned.append(lang)
             messages[lang].update(english.MESSAGES)
             messages[lang].update(translation.MESSAGES)
@@ -247,8 +211,8 @@ def copy_tree(src, dst, link_cutoff=None):
             }
 
 
-def generic_rss_renderer(lang, title, link, description,
-    timeline, output_path, rss_teasers):
+def generic_rss_renderer(lang, title, link, description, timeline, output_path,
+                         rss_teasers):
     """Takes all necessary data, and renders a RSS feed in output_path."""
     items = []
     for post in timeline[:10]:
@@ -257,7 +221,9 @@ def generic_rss_renderer(lang, title, link, description,
             'link': post.permalink(lang, absolute=True),
             'description': post.text(lang, teaser_only=rss_teasers),
             'guid': post.permalink(lang, absolute=True),
-            'pubDate': post.date,
+            # PyRSS2Gen's pubDate is GMT time.
+            'pubDate': (post.date if post.date.tzinfo is None else
+                        post.date.astimezone(pytz.timezone('UTC'))),
         }
         items.append(rss.RSSItem(**args))
     rss_obj = rss.RSS2(
@@ -271,11 +237,12 @@ def generic_rss_renderer(lang, title, link, description,
     dst_dir = os.path.dirname(output_path)
     if not os.path.isdir(dst_dir):
         os.makedirs(dst_dir)
-    with open(output_path, "wb+") as rss_file:
-        try:
-            rss_obj.write_xml(rss_file, encoding='utf-8')
-        except TypeError:
-            print("RSS generation doesn't work on python3 yet")
+    with codecs.open(output_path, "wb+", "utf-8") as rss_file:
+        data = rss_obj.to_xml(encoding='utf-8')
+        if isinstance(data, bytes_str):
+            data = data.decode('utf-8')
+        rss_file.write(data)
+
 
 def copy_file(source, dest, cutoff=None):
     dst_dir = os.path.dirname(dest)
@@ -317,10 +284,20 @@ def slugify(value):
     and converts spaces to hyphens.
 
     From Django's "django/template/defaultfilters.py".
+
+    >>> slugify('\xe1\xe9\xed.\xf3\xfa')
+    'aeiou'
+
+    >>> slugify('foo/bar')
+    'foobar'
+
+    >>> slugify('foo bar')
+    'foo-bar'
+
     """
     value = unidecode(value)
     # WARNING: this may not be python2/3 equivalent
-    #value = unicode(_slugify_strip_re.sub('', value).strip().lower())
+    # value = unicode(_slugify_strip_re.sub('', value).strip().lower())
     value = str(_slugify_strip_re.sub('', value).strip().lower())
     return _slugify_hyphenate_re.sub('-', value)
 
@@ -345,26 +322,27 @@ class UnsafeZipException(Exception):
 def extract_all(zipfile):
     pwd = os.getcwd()
     os.chdir('themes')
-    z = list(zip(zipfile))
-    namelist = z.namelist()
-    for f in namelist:
-        if f.endswith('/') and '..' in f:
-            raise UnsafeZipException(
-                'The zip file contains ".." and is not safe to expand.')
-    for f in namelist:
-        if f.endswith('/'):
-            if not os.path.isdir(f):
-                try:
-                    os.makedirs(f)
-                except:
-                    raise OSError("mkdir '%s' error!" % f)
-        else:
-            z.extract(f)
+    with zip(zipfile) as z:
+        namelist = z.namelist()
+        for f in namelist:
+            if f.endswith('/') and '..' in f:
+                raise UnsafeZipException('The zip file contains ".." and is '
+                                         'not safe to expand.')
+        for f in namelist:
+            if f.endswith('/'):
+                if not os.path.isdir(f):
+                    try:
+                        os.makedirs(f)
+                    except:
+                        raise OSError("Failed making {0} directory "
+                                      "tree!".format(f))
+            else:
+                z.extract(f)
     os.chdir(pwd)
 
 
 # From https://github.com/lepture/liquidluck/blob/develop/liquidluck/utils.py
-def to_datetime(value):
+def to_datetime(value, tzinfo=None):
     if isinstance(value, datetime.datetime):
         return value
     supported_formats = [
@@ -382,10 +360,14 @@ def to_datetime(value):
     ]
     for format in supported_formats:
         try:
-            return datetime.datetime.strptime(value, format)
+            dt = datetime.datetime.strptime(value, format)
+            if tzinfo is None:
+                return dt
+            # Build a localized time by using a given timezone.
+            return tzinfo.localize(dt)
         except ValueError:
             pass
-    raise ValueError('Unrecognized date/time: %r' % value)
+    raise ValueError('Unrecognized date/time: {0!r}'.format(value))
 
 
 def apply_filters(task, filters):
@@ -421,3 +403,31 @@ def apply_filters(task, filters):
 
                 task['actions'].append((unlessLink, (action, target)))
     return task
+
+
+def get_crumbs(path, is_file=False):
+    """Create proper links for a crumb bar.
+
+    >>> get_crumbs('galleries')
+    [['#', 'galleries']]
+
+    >>> get_crumbs(os.path.join('galleries','demo'))
+    [['..', 'galleries'], ['#', 'demo']]
+
+    >>> get_crumbs(os.path.join('listings','foo','bar'), is_file=True)
+    [['..', 'listings'], ['.', 'foo'], ['#', 'bar']]
+    """
+
+    crumbs = path.split(os.sep)
+    _crumbs = []
+    if is_file:
+        for i, crumb in enumerate(crumbs[-3::-1]):  # Up to parent folder only
+            _path = '/'.join(['..'] * (i + 1))
+            _crumbs.append([_path, crumb])
+        _crumbs.insert(0, ['.', crumbs[-2]])  # file's folder
+        _crumbs.insert(0, ['#', crumbs[-1]])  # file itself
+    else:
+        for i, crumb in enumerate(crumbs[::-1]):
+            _path = '/'.join(['..'] * i) or '#'
+            _crumbs.append([_path, crumb])
+    return list(reversed(_crumbs))
