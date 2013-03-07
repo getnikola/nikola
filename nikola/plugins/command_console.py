@@ -39,12 +39,12 @@ class Deploy(Command):
         from nikola import Nikola
         try:
             import conf
-            SITE = Nikola(**conf.__dict__)
-            SITE.scan_posts()
         except ImportError:
             print("No configuration found, cannot run the console.")
         else:
             import IPython
+            SITE = Nikola(**conf.__dict__)
+            SITE.scan_posts()
             IPython.embed(header='Nikola Console (conf = configuration, SITE '
                           '= site engine)')
 
@@ -53,12 +53,12 @@ class Deploy(Command):
         from nikola import Nikola
         try:
             import conf
-            SITE = Nikola(**conf.__dict__)
-            SITE.scan_posts()
         except ImportError:
             print("No configuration found, cannot run the console.")
         else:
             import bpython
+            SITE = Nikola(**conf.__dict__)
+            SITE.scan_posts()
             bpython.embed(banner='Nikola Console (conf = configuration, SITE '
                           '= site engine)')
 
