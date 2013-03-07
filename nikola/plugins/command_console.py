@@ -32,9 +32,38 @@ from nikola.plugin_categories import Command
 class Deploy(Command):
     """Start debugging console."""
     name = "console"
+    shells = ['ipython', 'bpython', 'plain']
 
-    def _execute(self, options, args):
-        """Start the console."""
+    def ipython(self):
+        """IPython shell."""
+        from nikola import Nikola
+        try:
+            import conf
+            SITE = Nikola(**conf.__dict__)
+            SITE.scan_posts()
+        except ImportError:
+            print("No configuration found, cannot run the console.")
+        else:
+            import IPython
+            IPython.embed(header='Nikola Console (conf = configuration, SITE '
+                          '= site engine)')
+
+    def bpython(self):
+        """bpython shell."""
+        from nikola import Nikola
+        try:
+            import conf
+            SITE = Nikola(**conf.__dict__)
+            SITE.scan_posts()
+        except ImportError:
+            print("No configuration found, cannot run the console.")
+        else:
+            import bpython
+            bpython.embed(banner='Nikola Console (conf = configuration, SITE '
+                          '= site engine)')
+
+    def plain(self):
+        """Plain Python shell."""
         from nikola import Nikola
         try:
             import conf
@@ -63,3 +92,14 @@ class Deploy(Command):
 
             code.interact(local=gl, banner='Nikola Console (conf = '
                           'configuration, SITE = site engine)')
+
+    def _execute(self, options, args):
+        """Start the console."""
+        for shell in self.shells:
+            try:
+                return getattr(self, shell)()
+            except ImportError:
+                pass
+        raise ImportError
+
+
