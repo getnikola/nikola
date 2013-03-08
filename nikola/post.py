@@ -106,7 +106,7 @@ class Post(object):
                     self.translated_to.add(lang)
 
                 meta = defaultdict(lambda: '')
-                meta.update(default_metadata.copy())
+                meta.update(default_metadata)
                 meta.update(get_meta(self, file_metadata_regexp, lang))
                 self.meta[lang] = meta
 
