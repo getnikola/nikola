@@ -142,8 +142,10 @@ class Post(object):
             lang = self.current_lang()
         return self.meta[lang]['title']
 
-    def description(self, lang):
+    def description(self, lang=None):
         """Return localized description."""
+        if lang is None:
+            lang = self.current_lang()
         return self.meta[lang]['description']
 
     def deps(self, lang):
@@ -178,8 +180,10 @@ class Post(object):
                 file_name = file_name_lang
         return file_name
 
-    def text(self, lang, teaser_only=False, strip_html=False):
+    def text(self, lang=None, teaser_only=False, strip_html=False):
         """Read the post file for that language and return its contents."""
+        if lang is None:
+            lang = self.current_lang()
         file_name = self._translated_file_path(lang)
 
         with codecs.open(file_name, "r", "utf8") as post_file:
