@@ -27,7 +27,7 @@
         {% endif %}
     </small>
     <hr>
-    {{post.text(lang)}}
+    {{post.text()}}
     <ul class="pager">
     {%if post.prev_post %}
         <li class="previous">
@@ -43,9 +43,9 @@
         <script type="text/javascript">
         var disqus_shortname ="{{disqus_forum}}";
         var disqus_url="{{post.permalink(absolute=True)}}";
-        var disqus_title={{post.title(lang)|tojson }};
+        var disqus_title={{post.title()|tojson }};
         var disqus_identifier="{{post.base_path}}";
-        var disqus_config = function () { 
+        var disqus_config = function () {
             this.language = "{{lang}}";
         };
         (function() {

@@ -22,10 +22,10 @@
             ${helper.html_translations(post)}
         </span>
         </div>
-    ${post.text(lang)}
+    ${post.text()}
     ${helper.html_pager(post)}
     % if not post.meta[lang]['nocomments']:
-        ${disqus.html_disqus(post.permalink(absolute=True), post.title(lang), post.base_path)}
+        ${disqus.html_disqus(post.permalink(absolute=True), post.title(), post.base_path)}
     % endif
     </div>
 </%block>

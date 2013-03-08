@@ -5,7 +5,7 @@
 <%block name="content">
     % for post in posts:
         <div class="postbox">
-        <h1><a href="${post.permalink(lang)}">${post.title(lang)}</a>
+        <h1><a href="${post.permalink(lang)}">${post.title()}</a>
         <small>&nbsp;&nbsp;
              ${messages[lang]["Posted"]}: <time class="published" datetime="${post.date.isoformat()}">${post.date.strftime(date_format)}</time>
         </small></h1>

@@ -4,8 +4,8 @@
 %if title:
     <h1>${title}</h1>
 %endif
-    ${post.text(lang)}
+    ${post.text()}
 %if enable_comments and not post.meta[lang]['nocomments']:
-    ${disqus.html_disqus(post.permalink(absolute=True), post.title(lang), post.base_path)}
+    ${disqus.html_disqus(post.permalink(absolute=True), post.title(), post.base_path)}
 %endif
 </%block>
