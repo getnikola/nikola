@@ -27,6 +27,7 @@ from __future__ import unicode_literals, print_function
 
 import codecs
 from collections import defaultdict
+import locale
 import os
 import re
 import string
@@ -119,8 +120,26 @@ class Post(object):
             self.pagenames[lang] = self.meta[lang]['slug']
             self.titles[lang] = self.meta[lang]['title']
 
-    def title(self, lang):
-        """Return localized title."""
+    def current_lang(self):
+        """Return the currently set locale, if it's one of the
+        available translations, or default_lang."""
+        lang = locale.getlocale()[0]
+        if lang in self.translations:
+            return lang
+        lang = lang.split('_')[0]
+        if lang in self.translations:
+            return lang
+        # whatever
+        return self.default_lang
+
+    def title(self, lang=None):
+        """Return localized title.
+
+        If lang is not specified, it will use the currently set locale,
+        because templates set it.
+        """
+        if lang is None:
+            lang = self.current_lang()
         return self.meta[lang]['title']
 
     def description(self, lang):
@@ -385,3 +404,4 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
                 os.path.basename(post.source_path))[0]
 
     return meta
+

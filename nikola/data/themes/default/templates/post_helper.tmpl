@@ -55,7 +55,7 @@
         %elif 'creator' in twitter_card:
             <meta name="twitter:creator" content="${twitter_card['creator']}">
         %endif
-        <meta name="og:title" content="${post.title(lang)[:70]}">
+        <meta name="og:title" content="${post.title()[:70]}">
         %if post.description(lang):
             <meta name="og:description" content="${post.description(lang)[:200]}">
         %else:
