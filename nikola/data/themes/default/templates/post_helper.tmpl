@@ -56,10 +56,10 @@
             <meta name="twitter:creator" content="${twitter_card['creator']}">
         %endif
         <meta name="og:title" content="${post.title()[:70]}">
-        %if post.description(lang):
-            <meta name="og:description" content="${post.description(lang)[:200]}">
+        %if post.description():
+            <meta name="og:description" content="${post.description()[:200]}">
         %else:
-            <meta name="og:description" content="${post.text(lang, strip_html=True)[:200]}">
+            <meta name="og:description" content="${post.text(strip_html=True)[:200]}">
         %endif
     %endif
 </%def>
