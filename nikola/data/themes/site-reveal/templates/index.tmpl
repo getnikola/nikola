@@ -6,7 +6,7 @@
     % for post in posts:
         <section>
         <div class="postbox">
-        <h1><a href="${post.permalink(lang)}">${post.title()}</a>
+        <h1><a href="${post.permalink()}">${post.title()}</a>
         <small>&nbsp;&nbsp;
              ${messages[lang]["Posted"]}: <time class="published" datetime="${post.date.isoformat()}">${post.date.strftime(date_format)}</time>
         </small></h1>

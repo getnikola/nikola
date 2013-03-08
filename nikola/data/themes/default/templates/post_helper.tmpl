@@ -32,11 +32,11 @@
     <ul class="pager">
     %if post.prev_post:
         <li class="previous">
-            <a href="${post.prev_post.permalink(lang)}">&larr; ${messages[lang]["Previous post"]}</a>
+            <a href="${post.prev_post.permalink()}">&larr; ${messages[lang]["Previous post"]}</a>
     %endif
     %if post.next_post:
         <li class="next">
-            <a href="${post.next_post.permalink(lang)}">${messages[lang]["Next post"]} &rarr;</a>
+            <a href="${post.next_post.permalink()}">${messages[lang]["Next post"]} &rarr;</a>
     %endif
     </ul>
 </%def>
@@ -44,7 +44,7 @@
 <%def name="twitter_card_information(post)">
     %if twitter_card and twitter_card['use_twitter_cards']:
         <meta name="twitter:card" content="${twitter_card.get('card', 'summary')}">
-        <meta name="og:url" content="${post.permalink(lang, absolute=True)}">
+        <meta name="og:url" content="${post.permalink(absolute=True)}">
         %if 'site:id' in twitter_card:
             <meta name="twitter:site:id" content="${twitter_card['site:id']}">
         %elif 'site' in twitter_card:

@@ -2,7 +2,7 @@
 {% block content %}
     {% for post in posts %}
         <div class="postbox">
-        <h1><a href="{{post.permalink(lang)}}">{{post.title()}}</a>
+        <h1><a href="{{post.permalink()}}">{{post.title()}}</a>
         <small>&nbsp;&nbsp;
              {{messages[lang]["Posted"]}}: {{post.date.strftime(date_format)}}
         </small></h1>
