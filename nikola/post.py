@@ -231,7 +231,7 @@ class Post(object):
 
     def permalink(self, lang=None, absolute=False, extension='.html'):
         if lang is None:
-            lang = self.default_lang
+            lang = self.current_lang()
         pieces = list(os.path.split(self.translations[lang]))
         pieces += list(os.path.split(self.folder))
         pieces += [self.meta[lang]['slug'] + extension]
