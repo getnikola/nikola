@@ -193,7 +193,7 @@ class Post(object):
             document = lxml.html.document_fromstring(data)
         except lxml.etree.ParserError as e:
             # if we don't catch this, it breaks later (Issue #374)
-            if e.message == "Document is empty":
+            if str(e) == "Document is empty":
                 return ""
             # let other errors raise
             raise(e)

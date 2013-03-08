@@ -68,12 +68,13 @@ class EmptyBuildTest(unittest.TestCase):
     @classmethod
     def tearDownClass(self):
         """Remove the demo site."""
-        shutil.rmtree(self.tmpdir)
+        #shutil.rmtree(self.tmpdir)
 
     def test_build(self):
         """Ensure the build did something."""
         index_path = os.path.join(
             self.target_dir, "output", "archive.html")
+        print("==>", index_path)
         self.assertTrue(os.path.isfile(index_path))
 
 
