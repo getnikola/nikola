@@ -68,6 +68,7 @@ class EmptyBuildTest(unittest.TestCase):
     @classmethod
     def tearDownClass(self):
         """Remove the demo site."""
+        #shutil.rmtree(self.tmpdir)
 
     def test_build(self):
         """Ensure the build did something."""
@@ -92,28 +93,28 @@ class DemoBuildTest(EmptyBuildTest):
                 ".. date: 2013/03/06 19:08:15\n"
             )
 
-locale = None
 
-def setlocale(lc, locale):
-    locale = locale
-def getlocale():
-    return locale
+no_locale = True
+try:
+    local.setlocale(locale.LC_ALL, ("es", "utf8"))
+    no_locale = False
+except:
+    pass
 
+@unittest.skipIf(no_locale, "Need spanish locale to test translations.")
 class TranslatedBuildTest(EmptyBuildTest):
     """Test a site with translated content."""
 
     dataname = "translated_titles"
 
-    def setUp(self):
-        super(TranslatedBuildTest, self).setUp()
-
-    @mock.patch('locale.getlocale', getlocale)
-    @mock.patch('locale.setlocale', setlocale)
     def test_translated_titles(self):
         """Check that translated title is picked up."""
         en_file = os.path.join(self.target_dir, "output", "stories", "1.html")
         es_file = os.path.join(self.target_dir, "output", "es", "stories", "1.html")
         # Files should be created
+        print(locale, locale.setlocale, setlocale)
+        print(en_file)
+        print(es_file)
         self.assertTrue(os.path.isfile(en_file))
         self.assertTrue(os.path.isfile(es_file))
         # And now let's check the titles
