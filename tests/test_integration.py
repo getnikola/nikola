@@ -3,11 +3,13 @@ from __future__ import unicode_literals, print_function
 
 import codecs
 from contextlib import contextmanager
+import locale
 import os
 import shutil
 import tempfile
 import unittest
 
+import mock
 import lxml.html
 
 from context import nikola
@@ -90,12 +92,23 @@ class DemoBuildTest(EmptyBuildTest):
                 ".. date: 2013/03/06 19:08:15\n"
             )
 
+locale = None
+
+def setlocale(lc, locale):
+    locale = locale
+def getlocale():
+    return locale
 
 class TranslatedBuildTest(EmptyBuildTest):
     """Test a site with translated content."""
 
     dataname = "translated_titles"
 
+    def setUp(self):
+        super(TranslatedBuildTest, self).setUp()
+
+    @mock.patch('locale.getlocale', getlocale)
+    @mock.patch('locale.setlocale', setlocale)
     def test_translated_titles(self):
         """Check that translated title is picked up."""
         en_file = os.path.join(self.target_dir, "output", "stories", "1.html")
