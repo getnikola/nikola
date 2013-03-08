@@ -16,6 +16,7 @@ Bugfixes
 * Cleaned up arbitrary metadata.
 * Don't crash in posts without actual post text.
 * Nicer tag listing.
+* Fixed unicode bug in markdown compiler.
 
 New in 5.4.2
 ============
