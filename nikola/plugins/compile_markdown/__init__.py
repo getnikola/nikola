@@ -24,6 +24,8 @@
 
 """Implementation of compile_html based on markdown."""
 
+from __future__ import unicode_literals
+
 import codecs
 import os
 import re
