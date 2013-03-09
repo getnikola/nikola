@@ -33,7 +33,7 @@ Basic Example:
     ... Text of the gist:
     ... [:gist: 4747847]
     ... """
-    >>> html = markdown.markdown(text, ['gist'])
+    >>> html = markdown.markdown(text, [GistExtension()])
     >>> print html
     <p>Text of the gist:
     <div class="gist">
@@ -51,7 +51,7 @@ Example with filename:
     ... Text of the gist:
     ... [:gist: 4747847 zen.py]
     ... """
-    >>> html = markdown.markdown(text, ['gist'])
+    >>> html = markdown.markdown(text, [GistExtension()])
     >>> print html
     <p>Text of the gist:
     <div class="gist">
@@ -69,7 +69,7 @@ Example using reStructuredText syntax:
     ... Text of the gist:
     ... .. gist:: 4747847 zen.py
     ... """
-    >>> html = markdown.markdown(text, ['gist'])
+    >>> html = markdown.markdown(text, [GistExtension()])
     >>> print html
     <p>Text of the gist:
     <div class="gist">
