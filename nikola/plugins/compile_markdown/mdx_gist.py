@@ -23,6 +23,10 @@
 #
 # Inspired by "[Python] reStructuredText GitHub Gist directive"
 # (https://gist.github.com/brianhsu/1407759), public domain by Brian Hsu
+
+from __future__ import print_function
+
+
 '''
 Extension to Python Markdown for Embedded Gists (gist.github.com)
 
@@ -34,7 +38,7 @@ Basic Example:
     ... [:gist: 4747847]
     ... """
     >>> html = markdown.markdown(text, [GistExtension()])
-    >>> print html
+    >>> print(html)
     <p>Text of the gist:
     <div class="gist">
     <script src="https://gist.github.com/4747847.js"></script>
@@ -52,7 +56,7 @@ Example with filename:
     ... [:gist: 4747847 zen.py]
     ... """
     >>> html = markdown.markdown(text, [GistExtension()])
-    >>> print html
+    >>> print(html)
     <p>Text of the gist:
     <div class="gist">
     <script src="https://gist.github.com/4747847.js?file=zen.py"></script>
@@ -70,7 +74,7 @@ Example using reStructuredText syntax:
     ... .. gist:: 4747847 zen.py
     ... """
     >>> html = markdown.markdown(text, [GistExtension()])
-    >>> print html
+    >>> print(html)
     <p>Text of the gist:
     <div class="gist">
     <script src="https://gist.github.com/4747847.js?file=zen.py"></script>
