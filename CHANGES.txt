@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Added gist support for Markdown.
 * New "nocomments" metadata that disables comments for a page/post (Issue #278).
 * New HIDE_UNTRANSLATED_POSTS option (does nothing yet)
 
