@@ -124,11 +124,12 @@ class Post(object):
         """Return the currently set locale, if it's one of the
         available translations, or default_lang."""
         lang = locale.getlocale()[0]
-        if lang in self.translations:
-            return lang
-        lang = lang.split('_')[0]
-        if lang in self.translations:
-            return lang
+        if lang:
+            if lang in self.translations:
+                return lang
+            lang = lang.split('_')[0]
+            if lang in self.translations:
+                return lang
         # whatever
         return self.default_lang
 

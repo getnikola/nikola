@@ -722,5 +722,9 @@ class Nikola(object):
 
 def s_l(lang):
     """A set_locale that uses utf8 encoding and returns ''."""
-    locale.setlocale(locale.LC_ALL, (lang, "utf8"))
+    try:
+        locale.setlocale(locale.LC_ALL, (lang, "utf8"))
+    except Exception:
+        print("WARNING: could not set locale to {0}."
+              "This may cause some i18n features not to work.".format(lang))
     return ''
