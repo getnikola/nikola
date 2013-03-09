@@ -719,6 +719,7 @@ class Nikola(object):
 
         return utils.apply_filters(task, filters)
 
+
 def s_l(lang):
     """A set_locale that uses utf8 encoding and returns ''."""
     locale.setlocale(locale.LC_ALL, (lang, "utf8"))

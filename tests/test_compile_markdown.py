@@ -96,7 +96,6 @@ Cool, eh?
         actual_output = self.compile(input_str)
         self.assertEquals(actual_output.strip(), expected_output.strip())
 
-
     def test_compile_html_gist_2(self):
         input_str = '''\
 Here's a gist file inline, using reStructuredText syntax:

@@ -39,7 +39,7 @@ try:
     gist_extension = GistExtension()
 
 except ImportError:
-    markdown = None
+    markdown = None  # NOQA
     nikola_extension = None
     gist_extension = None
 

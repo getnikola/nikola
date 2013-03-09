@@ -408,4 +408,3 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
                 os.path.basename(post.source_path))[0]
 
     return meta
-
