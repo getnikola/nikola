@@ -94,7 +94,7 @@ Cool, eh?
 <p>Cool, eh?</p>
 '''
 
-    def test_compile_html_gist(self):
+    def test_compile_html_gist_2(self):
         input_str = '''\
 Here's a gist file inline, using reStructuredText syntax:
 ..gist:: 4747847 zen.py
@@ -115,7 +115,6 @@ Cool, eh?
 
         actual_output = self.compile(input_str)
         self.assertEquals(actual_output.strip(), expected_output.strip())
-
 
 
 if __name__ == '__main__':
