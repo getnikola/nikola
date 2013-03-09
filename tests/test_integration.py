@@ -9,8 +9,8 @@ import shutil
 import tempfile
 import unittest
 
-import mock
 import lxml.html
+from nose.plugins.skip import SkipTest
 
 from context import nikola
 from nikola import main
@@ -95,27 +95,23 @@ class DemoBuildTest(EmptyBuildTest):
             )
 
 
-no_locale = True
-try:
-    local.setlocale(locale.LC_ALL, ("es", "utf8"))
-    no_locale = False
-except:
-    pass
-
-@unittest.skipIf(no_locale, "Need spanish locale to test translations.")
 class TranslatedBuildTest(EmptyBuildTest):
     """Test a site with translated content."""
 
     dataname = "translated_titles"
+
+    def __init__(self, *a, **kw):
+        super(TranslatedBuildTest, self).__init__(*a, **kw)
+        try:
+            locale.setlocale(locale.LC_ALL, ("es", "utf8"))
+        except:
+            raise SkipTest
 
     def test_translated_titles(self):
         """Check that translated title is picked up."""
         en_file = os.path.join(self.target_dir, "output", "stories", "1.html")
         es_file = os.path.join(self.target_dir, "output", "es", "stories", "1.html")
         # Files should be created
-        print(locale, locale.setlocale, setlocale)
-        print(en_file)
-        print(es_file)
         self.assertTrue(os.path.isfile(en_file))
         self.assertTrue(os.path.isfile(es_file))
         # And now let's check the titles
