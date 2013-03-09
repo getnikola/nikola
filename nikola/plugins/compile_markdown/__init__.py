@@ -38,7 +38,7 @@ try:
     from nikola.plugins.compile_markdown.mdx_gist import GistExtension
     gist_extension = GistExtension()
 
-except ImportError, e:
+except ImportError:
     markdown = None
     nikola_extension = None
     gist_extension = None
