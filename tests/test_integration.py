@@ -74,7 +74,6 @@ class EmptyBuildTest(unittest.TestCase):
         """Ensure the build did something."""
         index_path = os.path.join(
             self.target_dir, "output", "archive.html")
-        print("==>", index_path)
         self.assertTrue(os.path.isfile(index_path))
 
 
