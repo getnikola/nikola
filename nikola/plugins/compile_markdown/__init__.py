@@ -38,6 +38,9 @@ try:
     from nikola.plugins.compile_markdown.mdx_gist import GistExtension
     gist_extension = GistExtension()
 
+    from nikola.plugins.compile_markdown.mdx_podcast import PodcastExtension
+    podcast_extension = PodcastExtension()
+
 except ImportError:
     markdown = None  # NOQA
     nikola_extension = None
@@ -52,7 +55,7 @@ class CompileMarkdown(PageCompiler):
     name = "markdown"
 
     extensions = ['fenced_code', 'codehilite', gist_extension,
-                  nikola_extension]
+                  nikola_extension, podcast_extension]
 
     def compile_html(self, source, dest):
         if markdown is None:
