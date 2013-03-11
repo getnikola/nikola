@@ -6,10 +6,26 @@ font-size: 2.55em;
 }
 .reveal pre {
 font-size: 80%;
+width: auto;
 }
 .reveal .slides {
 text-align: left;
 }
 .reveal .controls {
 bottom: 45px;
+}
+.reveal iframe{
+max-height: none;
+}
+.reveal .slides section:not(.stack) {
+padding-bottom: 10%;
+}
+
+/* To get sidebar working properly. */
+
+div.sidebar {
+margin: 0 0 0.5em 1em !important;
+border: medium outset !important;
+padding: 1em !important;
+width: 50%;
 }

@@ -12,9 +12,9 @@
         </small></h1>
         <hr>
         ${post.text(teaser_only=index_teasers)}
-        ${disqus.html_disqus_link(post.permalink()+"#disqus_thread", post.base_path)}
-        </div>
+        ${disqus.html_disqus_link(post.permalink()+"#/0/1", post.base_path)}
         ${helper.html_pager()}
+        </div>
         </section>
     % endfor
     ${disqus.html_disqus_script()}
@@ -31,6 +31,12 @@
     </script>
 </%block>
 
-<%block name="outside_pager">
-
+<%block name="custom_navbar">
+    <div class="navbar navbar-fixed-bottom">
+        <div class="navbar-inner">
+            <div class="footerbox">
+                ${content_footer} - Use the control at the bottom right to navigate the index.
+            </div>
+        </div>
+    </div>
 </%block>
