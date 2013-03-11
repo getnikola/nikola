@@ -25,7 +25,7 @@
 
 """Utility functions."""
 
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 from collections import defaultdict, Callable
 import datetime
 import hashlib
@@ -285,14 +285,14 @@ def slugify(value):
 
     From Django's "django/template/defaultfilters.py".
 
-    >>> slugify('\xe1\xe9\xed.\xf3\xfa')
-    'aeiou'
+    >>> print(slugify('\xe1\xe9\xed.\xf3\xfa'))
+    aeiou
 
-    >>> slugify('foo/bar')
-    'foobar'
+    >>> print(slugify('foo/bar'))
+    foobar
 
-    >>> slugify('foo bar')
-    'foo-bar'
+    >>> print(slugify('foo bar'))
+    foo-bar
 
     """
     value = unidecode(value)
@@ -408,14 +408,29 @@ def apply_filters(task, filters):
 def get_crumbs(path, is_file=False):
     """Create proper links for a crumb bar.
 
-    >>> get_crumbs('galleries')
-    [['#', 'galleries']]
+    >>> crumbs = get_crumbs('galleries')
+    >>> len(crumbs)
+    1
+    >>> print('|'.join(crumbs[0]))
+    #|galleries
 
-    >>> get_crumbs(os.path.join('galleries','demo'))
-    [['..', 'galleries'], ['#', 'demo']]
+    >>> crumbs = get_crumbs(os.path.join('galleries','demo'))
+    >>> len(crumbs)
+    2
+    >>> print('|'.join(crumbs[0]))
+    ..|galleries
+    >>> print('|'.join(crumbs[1]))
+    #|demo
 
-    >>> get_crumbs(os.path.join('listings','foo','bar'), is_file=True)
-    [['..', 'listings'], ['.', 'foo'], ['#', 'bar']]
+    >>> crumbs = get_crumbs(os.path.join('listings','foo','bar'), is_file=True)
+    >>> len(crumbs)
+    3
+    >>> print('|'.join(crumbs[0]))
+    ..|listings
+    >>> print('|'.join(crumbs[1]))
+    .|foo
+    >>> print('|'.join(crumbs[2]))
+    #|bar
     """
 
     crumbs = path.split(os.sep)
