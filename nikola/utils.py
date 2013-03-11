@@ -295,6 +295,8 @@ def slugify(value):
     foo-bar
 
     """
+    if not isinstance(value, unicode):
+        raise ValueError("Not a unicode object: {0}".format(value))
     value = unidecode(value)
     # WARNING: this may not be python2/3 equivalent
     # value = unicode(_slugify_strip_re.sub('', value).strip().lower())
