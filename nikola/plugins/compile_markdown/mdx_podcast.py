@@ -39,10 +39,8 @@ Basic Example:
 <p><audio src="http://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3"></audio></p>
 '''
 
-import warnings
 from markdown.extensions import Extension
 from markdown.inlinepatterns import Pattern
-from markdown.util import AtomicString
 from markdown.util import etree
 
 PODCAST_RE = r'\[podcast\](?P<url>.+)\[/podcast\]'
