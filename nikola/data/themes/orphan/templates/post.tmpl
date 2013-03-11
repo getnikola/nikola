@@ -7,7 +7,7 @@
     ${helper.html_title()}
     <hr>
     <small>
-        ${messages[lang]["Posted"]}: ${post.date.strftime(date_format)}
+        ${messages[lang]["Posted"]}: ${post.formatted_date(date_format)}
         ${helper.html_translations(post)}
         &nbsp;&nbsp;|&nbsp;&nbsp;
         <a href="${post.meta[lang]['slug']+'.txt'}" id="sourcelink">${messages[lang]["Source"]}</a>

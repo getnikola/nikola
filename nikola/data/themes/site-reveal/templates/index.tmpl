@@ -8,7 +8,7 @@
         <div class="postbox">
         <h1><a href="${post.permalink()}">${post.title()}</a>
         <small>&nbsp;&nbsp;
-             ${messages[lang]["Posted"]}: <time class="published" datetime="${post.date.isoformat()}">${post.date.strftime(date_format)}</time>
+             ${messages[lang]["Posted"]}: <time class="published" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time>
         </small></h1>
         <hr>
         ${post.text(teaser_only=index_teasers)}

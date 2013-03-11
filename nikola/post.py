@@ -34,7 +34,7 @@ import string
 
 import lxml.html
 
-from .utils import to_datetime, slugify
+from .utils import to_datetime, slugify, bytes_str
 
 __all__ = ['Post']
 
@@ -119,6 +119,14 @@ class Post(object):
         for lang in self.translations:
             self.pagenames[lang] = self.meta[lang]['slug']
             self.titles[lang] = self.meta[lang]['title']
+
+    def formatted_date(self, date_format):
+        """Return the formatted date, as unicode."""
+        fmt_date = self.date.strftime(date_format)
+        # Issue #383, this changes from py2 to py3
+        if isinstance(fmt_date, bytes_str):
+            fmt_date = fmt_date.decode('utf8')
+        return fmt_date
 
     def current_lang(self):
         """Return the currently set locale, if it's one of the

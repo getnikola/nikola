@@ -7,7 +7,7 @@
     {% endif %}
     <hr>
     <small>
-        {{messages[lang]["Posted"]}}: {{post.date.strftime(date_format)}}&nbsp;&nbsp;|&nbsp;&nbsp;
+        {{messages[lang]["Posted"]}}: {{post.formatted_date(date_format)}}&nbsp;&nbsp;|&nbsp;&nbsp;
 
         {% if translations|length > 1 %}
             {% for langname in translations.keys() %}
