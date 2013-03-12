@@ -35,6 +35,7 @@ try:
     from urlparse import urlparse, urlsplit, urljoin
 except ImportError:
     from urllib.parse import urlparse, urlsplit, urljoin  # NOQA
+import warnings
 
 import lxml.html
 from yapsy.PluginManager import PluginManager
@@ -274,6 +275,13 @@ class Nikola(object):
                        for name in self.THEMES]
         self.template_system.set_directories(lookup_dirs,
                                              self.config['CACHE_FOLDER'])
+
+        # Check consistency of USE_CDN and the current THEME (Issue #386)
+        if self.config['USE_CDN']:
+            bootstrap_path = utils.get_asset_path(os.path.join(
+                'assets', 'css', 'bootstrap.min.css'), self.THEMES)
+            if bootstrap_path.split(os.sep)[-4] != 'site':
+                warnings.warn('The USE_CDN option may be incompatible with your theme, because it uses a hosted version of bootstrap.')
 
         # Load compiler plugins
         self.compilers = {}

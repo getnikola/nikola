@@ -78,7 +78,7 @@ class BuildBundles(LateTask):
             for name, files in kw['theme_bundles'].items():
                 output_path = os.path.join(kw['output_folder'], name)
                 dname = os.path.dirname(name)
-                file_dep = [get_asset_path(
+                file_dep = [utils.get_asset_path(
                     os.path.join(dname, fname), kw['themes'],
                     kw['files_folders'])
                     for fname in files
@@ -101,47 +101,6 @@ class BuildBundles(LateTask):
                 'name': 'None',
                 'actions': [],
             }
-
-
-def get_asset_path(path, themes, files_folders={'files': ''}):
-    """Checks which theme provides the path with the given asset,
-    and returns the "real" path to the asset, relative to the
-    current directory.
-
-    If the asset is not provided by a theme, then it will be checked for
-    in the FILES_FOLDERS
-
-    >>> print(get_asset_path('assets/css/rst.css', ['site', 'default']))
-    nikola/data/themes/default/assets/css/rst.css
-
-    >>> print(get_asset_path('assets/css/theme.css', ['site', 'default']))
-    nikola/data/themes/site/assets/css/theme.css
-
-    >>> print(get_asset_path('nikola.py', ['site', 'default'], {'nikola': ''}))
-    nikola/nikola.py
-
-    >>> print(get_asset_path('nikola/nikola.py', ['site', 'default'],
-    ... {'nikola':'nikola'}))
-    nikola/nikola.py
-
-    """
-    for theme_name in themes:
-        candidate = os.path.join(
-            utils.get_theme_path(theme_name),
-            path
-        )
-        if os.path.isfile(candidate):
-            return os.path.relpath(candidate, os.getcwd())
-    for src, rel_dst in files_folders.items():
-        candidate = os.path.join(
-            src,
-            os.path.relpath(path, rel_dst)
-        )
-        if os.path.isfile(candidate):
-            return os.path.relpath(candidate, os.getcwd())
-
-    # whatever!
-    return None
 
 
 def get_theme_bundles(themes):

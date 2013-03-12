@@ -60,7 +60,8 @@ import PyRSS2Gen as rss
 
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'generic_rss_renderer', 'copy_file', 'slugify', 'unslugify',
-           'to_datetime', 'apply_filters', 'config_changed', 'get_crumbs']
+           'to_datetime', 'apply_filters', 'config_changed', 'get_crumbs',
+           'get_asset_path']
 
 
 class CustomEncoder(json.JSONEncoder):
@@ -448,3 +449,44 @@ def get_crumbs(path, is_file=False):
             _path = '/'.join(['..'] * i) or '#'
             _crumbs.append([_path, crumb])
     return list(reversed(_crumbs))
+
+
+def get_asset_path(path, themes, files_folders={'files': ''}):
+    """Checks which theme provides the path with the given asset,
+    and returns the "real" path to the asset, relative to the
+    current directory.
+
+    If the asset is not provided by a theme, then it will be checked for
+    in the FILES_FOLDERS
+
+    >>> print(get_asset_path('assets/css/rst.css', ['site', 'default']))
+    nikola/data/themes/default/assets/css/rst.css
+
+    >>> print(get_asset_path('assets/css/theme.css', ['site', 'default']))
+    nikola/data/themes/site/assets/css/theme.css
+
+    >>> print(get_asset_path('nikola.py', ['site', 'default'], {'nikola': ''}))
+    nikola/nikola.py
+
+    >>> print(get_asset_path('nikola/nikola.py', ['site', 'default'],
+    ... {'nikola':'nikola'}))
+    nikola/nikola.py
+
+    """
+    for theme_name in themes:
+        candidate = os.path.join(
+            get_theme_path(theme_name),
+            path
+        )
+        if os.path.isfile(candidate):
+            return os.path.relpath(candidate, os.getcwd())
+    for src, rel_dst in files_folders.items():
+        candidate = os.path.join(
+            src,
+            os.path.relpath(path, rel_dst)
+        )
+        if os.path.isfile(candidate):
+            return os.path.relpath(candidate, os.getcwd())
+
+    # whatever!
+    return None
