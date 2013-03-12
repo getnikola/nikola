@@ -7,6 +7,7 @@ Features
 * Added gist support for Markdown.
 * New "nocomments" metadata that disables comments for a page/post (Issue #278).
 * New HIDE_UNTRANSLATED_POSTS option (does nothing yet)
+* New EXTRA_HEAD_DATA option, which adds extra things in <HEAD> (Issue #385)
 
 Bugfixes
 --------

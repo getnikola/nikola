@@ -99,6 +99,7 @@ class Nikola(object):
             'DEPLOY_COMMANDS': [],
             'DISABLED_PLUGINS': (),
             'DISQUS_FORUM': 'nikolademo',
+            'EXTRA_HEAD_DATA': '',
             'FAVICONS': {},
             'FILE_METADATA_REGEXP': None,
             'FILES_FOLDERS': {'files': ''},
@@ -250,6 +251,7 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['sidebar_links'] = self.config.get('SIDEBAR_LINKS')
         self.GLOBAL_CONTEXT['twitter_card'] = self.config.get(
             'TWITTER_CARD', {})
+        self.GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
 
         self.GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
