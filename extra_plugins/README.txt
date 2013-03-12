@@ -61,13 +61,13 @@ Here's a set of example settings for conf.py that should work nicely with the "s
     </form>"""
 
     ANALYTICS = """
-    <script type="text/javascript" src="assets/js/tipuesearch_set.js"></script>
-    <script type="text/javascript" src="assets/js/tipuesearch.js"></script>
+    <script type="text/javascript" src="/assets/js/tipuesearch_set.js"></script>
+    <script type="text/javascript" src="/assets/js/tipuesearch.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
         $('#tipue_search_input').tipuesearch({
             'mode': 'json',
-            'contentLocation': 'assets/js/tipuesearch_content.json',
+            'contentLocation': '/assets/js/tipuesearch_content.json',
             'showUrl': false
         });
     });
@@ -75,7 +75,7 @@ Here's a set of example settings for conf.py that should work nicely with the "s
     """
 
     EXTRA_HEAD_DATA = """
-    <link rel="stylesheet" type="text/css" href="assets/css/tipuesearch.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/tipuesearch.css">
     <div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
     """
 
