@@ -25,6 +25,9 @@
 import json
 import os
 
+from lxml import html
+from lxml.html.clean import clean_html
+
 from nikola.plugin_categories import LateTask
 from nikola.utils import config_changed, copy_tree
 
@@ -65,9 +68,13 @@ class Tipue(LateTask):
             pages = []
             for lang in kw["translations"]:
                 for post in posts:
+
+                    text = post.text(lang, strip_html=True)
+                    text = text.replace('^', '')
+
                     data = {}
                     data["title"] = post.title(lang)
-                    data["text"] = post.text(lang)
+                    data["text"] = text
                     data["tags"] = ",".join(post.tags)
                     data["loc"] = post.permalink(lang)
                     pages.append(data)

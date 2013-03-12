@@ -22,6 +22,8 @@ Bugfixes
 * Fixed unicode crash with polish dates and %B (Issue #383)
 * Fixed localsearch plugin
 * Warn if combining USE_CDN with a theme providing a copy of bootstrap (Issue #386)
+* Improved localsearch README
+* Updated to Tipue 2.1
 
 New in 5.4.2
 ============

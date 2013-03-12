@@ -1,7 +1,7 @@
 Extra Plugins
 =============
 
-These are plugins that may not be widely used or that are a bit too radical or 
+These are plugins that may not be widely used or that are a bit too radical or
 experimental for the general public.
 
 To enable them for you, create a ``plugins/`` folder in your site, and copy
@@ -30,7 +30,7 @@ aggregate. The format is very simple::
 
 FIXME: explain the planetoid theme stuff
 
-After all that is in place, just run ``nikola build`` and you'll get 
+After all that is in place, just run ``nikola build`` and you'll get
 a planet.
 
 Local Search
@@ -53,6 +53,34 @@ docs at http://www.tipue.com/search/
 
 Tipue is under an MIT license (see MIT-LICENSE.txt)
 
+Here's a set of example settings for conf.py that should work nicely with the "site" theme::
+
+    SEARCH_FORM = """
+    <form action="#" class="navbar-form pull-left">
+    <input type="text" id="tipue_search_input">
+    </form>"""
+
+    ANALYTICS = """
+    <script type="text/javascript" src="assets/js/tipuesearch_set.js"></script>
+    <script type="text/javascript" src="assets/js/tipuesearch.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('#tipue_search_input').tipuesearch({
+            'mode': 'json',
+            'contentLocation': 'assets/js/tipuesearch_content.json',
+            'showUrl': false
+        });
+    });
+    </script>
+    """
+
+    EXTRA_HEAD_DATA = """
+    <link rel="stylesheet" type="text/css" href="assets/css/tipuesearch.css">
+    <div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
+    """
+
+The <div> in EXTRA_HEAD_DATA is a hack but it will migrate into the <body> of the
+documents thanks to magic, and will hold the search results after the user searches.
 
 Mustache
 --------
