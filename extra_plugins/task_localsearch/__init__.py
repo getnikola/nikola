@@ -71,7 +71,7 @@ class Tipue(LateTask):
                     data["tags"] = ",".join(post.tags)
                     data["loc"] = post.permalink(lang)
                     pages.append(data)
-            output = json.dumps({"pages": pages}, indent=2)
+            output = "var tipuesearch = " + json.dumps({"pages": pages}, indent=2)
             try:
                 os.makedirs(os.path.dirname(dst_path))
             except:

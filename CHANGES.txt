@@ -19,6 +19,7 @@ Bugfixes
 * Nicer tag listing.
 * Fixed unicode bug in markdown compiler.
 * Fixed unicode crash with polish dates and %B (Issue #383)
+* Fixed localsearch plugin
 
 New in 5.4.2
 ============
