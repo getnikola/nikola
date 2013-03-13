@@ -214,7 +214,7 @@ class Post(object):
             teaser_str = self.messages[lang]["Read more"] + '...'
             flag = False
             for elem in e:
-                elem_string = lxml.html.tostring(elem, encoding='unicode').decode('utf8')
+                elem_string = lxml.html.tostring(elem, encoding='unicode')
                 match = TEASER_REGEXP.match(elem_string)
                 if match:
                     flag = True
