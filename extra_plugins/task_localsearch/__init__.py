@@ -68,7 +68,9 @@ class Tipue(LateTask):
             pages = []
             for lang in kw["translations"]:
                 for post in posts:
-
+                    # Don't index drafts (Issue #387)
+                    if 'draft' in post.tags:
+                        continue
                     text = post.text(lang, strip_html=True)
                     text = text.replace('^', '')
 
