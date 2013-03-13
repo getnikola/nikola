@@ -25,9 +25,6 @@
 import json
 import os
 
-from lxml import html
-from lxml.html.clean import clean_html
-
 from nikola.plugin_categories import LateTask
 from nikola.utils import config_changed, copy_tree
 
