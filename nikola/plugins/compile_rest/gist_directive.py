@@ -28,7 +28,7 @@ class GitHubGist(Directive):
         return requests.get(url).text
 
     def get_raw_gist(self, gistID):
-        url = "https://raw.github.com/gist/{0}/".format(gistID)
+        url = "https://raw.github.com/gist/{0}".format(gistID)
         return requests.get(url).text
 
     def run(self):
