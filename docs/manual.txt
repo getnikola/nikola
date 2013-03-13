@@ -848,8 +848,8 @@ the embedded player will be set to the native height and width of the video.
 You can override this if you wish::
 
     .. vimeo:: 20241459
-        height=240
-        width=320
+       :height: 240
+       :width: 320
 
 Soundcloud
 ~~~~~~~~~~
@@ -864,22 +864,19 @@ The ID is 78131362 and you can embed the audio with this::
 
     .. soundcloud:: 78131362
 
-code-block
-~~~~~~~~~~
+Code
+~~~~
 
-This is a somewhat complicated directive to display code nicely. You can just
-embed code like this::
+The ``code`` directive has been included in docutils since version 0.9 and now
+replaces Nikola's ``code-block`` directive. To ease the transition, two aliases
+for ``code`` directive are provided: ``code-block`` and ``sourcecode``::
 
-    .. code-block:: python
+    .. code:: python
+       :number-lines:
 
-        print "Hello World!"
+       print("Our virtues and our failings are inseparable")
 
-Or you can include the code from a file::
-
-    .. code-block:: python
-       :include: /foo/bar/baz.py
-
-listing
+Listing
 ~~~~~~~
 
 To use this, you have to put your source code files inside ``listings`` or whatever your
@@ -890,27 +887,7 @@ To use this, you have to put your source code files inside ``listings`` or whate
 Will include the source code from ``foo.py``, highlight its syntax in python mode,
 and also create a ``listings/foo.py.html`` page and the listing will have a title linking to it.
 
-Advanced Code Options
-~~~~~~~~~~~~~~~~~~~~~
-
-Both code-block and listing support a number of options, including these:
-
-start-at
-    A string, the diplayed code will start when it finds this
-end-at
-    A string, the diplayed code will end when it finds this
-start-after
-    A string, the diplayed code will start in the line after this
-end-before
-    A string, the diplayed code will end in the line before this
-linenos
-    Display line numbers
-linenos_offset
-    Use the original file's line numbers (warning: broken)
-tab-width
-    Size of the tabs (default 4)
-
-gist
+Gist
 ~~~~
 
 You can easily embed GitHub gists with this directive, like this::
