@@ -30,7 +30,7 @@ import docutils.core
 import docutils.io
 from docutils.parsers.rst import directives
 
-from .pygments_code_block_directive import Listing, CodeBlock
+from .listing import Listing, CodeBlock
 directives.register_directive('code-block', CodeBlock)
 directives.register_directive('sourcecode', CodeBlock)
 directives.register_directive('listing', Listing)
