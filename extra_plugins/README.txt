@@ -56,9 +56,9 @@ Tipue is under an MIT license (see MIT-LICENSE.txt)
 Here's a set of example settings for conf.py that should work nicely with the "site" theme::
 
     SEARCH_FORM = """
-    <form action="#" class="navbar-form pull-left">
+    <span class="navbar-form pull-left">
     <input type="text" id="tipue_search_input">
-    </form>"""
+    </span>"""
 
     ANALYTICS = """
     <script type="text/javascript" src="/assets/js/tipuesearch_set.js"></script>
