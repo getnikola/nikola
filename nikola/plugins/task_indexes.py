@@ -87,7 +87,7 @@ class Indexes(Task):
                 context["permalink"] = self.site.link("index", i, lang)
                 output_name = os.path.join(
                     kw['output_folder'], self.site.path("index", i,
-                                                        lang)).encode('utf8')
+                                                        lang))
                 task = self.site.generic_post_list_renderer(
                     lang,
                     post_list,

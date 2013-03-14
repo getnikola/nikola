@@ -152,7 +152,7 @@ class Galleries(Task):
                 thumbs.append(os.path.basename(thumb_path))
                 yield {
                     'basename': str('render_galleries'),
-                    'name': thumb_path.encode('utf8'),
+                    'name': thumb_path,
                     'file_dep': [img],
                     'targets': [thumb_path],
                     'actions': [
@@ -164,7 +164,7 @@ class Galleries(Task):
                 }
                 yield {
                     'basename': str('render_galleries'),
-                    'name': orig_dest_path.encode('utf8'),
+                    'name': orig_dest_path,
                     'file_dep': [img],
                     'targets': [orig_dest_path],
                     'actions': [
@@ -187,7 +187,7 @@ class Galleries(Task):
                     excluded_dest_path = os.path.join(output_gallery, img_name)
                     yield {
                         'basename': str('render_galleries_clean'),
-                        'name': excluded_thumb_dest_path.encode('utf8'),
+                        'name': excluded_thumb_dest_path,
                         'file_dep': [exclude_path],
                         #'targets': [excluded_thumb_dest_path],
                         'actions': [
@@ -198,7 +198,7 @@ class Galleries(Task):
                     }
                     yield {
                         'basename': str('render_galleries_clean'),
-                        'name': excluded_dest_path.encode('utf8'),
+                        'name': excluded_dest_path,
                         'file_dep': [exclude_path],
                         #'targets': [excluded_dest_path],
                         'actions': [
@@ -240,7 +240,7 @@ class Galleries(Task):
                 compile_html = self.site.get_compiler(index_path)
                 yield {
                     'basename': str('render_galleries'),
-                    'name': index_dst_path.encode('utf-8'),
+                    'name': index_dst_path,
                     'file_dep': [index_path],
                     'targets': [index_dst_path],
                     'actions': [(compile_html, [index_path, index_dst_path])],
@@ -258,12 +258,11 @@ class Galleries(Task):
                     file_dep.append(index_dst_path)
                 else:
                     context['text'] = ''
-                self.site.render_template(template_name, output_name.encode(
-                    'utf8'), context)
+                self.site.render_template(template_name, output_name, context)
 
             yield {
                 'basename': str('render_galleries'),
-                'name': output_name.encode('utf8'),
+                'name': output_name,
                 'file_dep': file_dep,
                 'targets': [output_name],
                 'actions': [(render_gallery, (output_name, context,

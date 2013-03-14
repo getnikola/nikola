@@ -110,7 +110,7 @@ class RenderTags(Task):
         for lang in kw["translations"]:
             output_name = os.path.join(
                 kw['output_folder'], self.site.path('tag_index', None, lang))
-            output_name = output_name.encode('utf8')
+            output_name = output_name
             context = {}
             context["title"] = kw["messages"][lang]["Tags"]
             context["items"] = [(tag, self.site.link("tag", tag, lang)) for tag
@@ -157,7 +157,6 @@ class RenderTags(Task):
             context['rss_link'] = rss_link
             output_name = os.path.join(kw['output_folder'],
                                        page_name(tag, i, lang))
-            output_name = output_name.encode('utf8')
             context["title"] = kw["messages"][lang][
                 "Posts about %s"] % tag
             context["prevlink"] = None
@@ -192,7 +191,6 @@ class RenderTags(Task):
         template_name = "tag.tmpl"
         output_name = os.path.join(kw['output_folder'], self.site.path(
             "tag", tag, lang))
-        output_name = output_name.encode('utf8')
         context = {}
         context["lang"] = lang
         context["title"] = kw["messages"][lang]["Posts about %s"] % tag
@@ -217,7 +215,6 @@ class RenderTags(Task):
         #Render RSS
         output_name = os.path.join(kw['output_folder'],
                                    self.site.path("tag_rss", tag, lang))
-        output_name = output_name.encode('utf8')
         deps = []
         post_list = [self.site.global_data[post] for post in posts if
                      self.site.global_data[post].use_in_feeds]
