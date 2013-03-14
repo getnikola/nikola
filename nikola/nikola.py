@@ -670,7 +670,7 @@ class Nikola(object):
         else:
             context['enable_comments'] = self.config['COMMENTS_IN_STORIES']
         output_name = os.path.join(self.config['OUTPUT_FOLDER'],
-                                   post.destination_path(lang)).encode('utf8')
+                                   post.destination_path(lang))
         deps_dict = copy(context)
         deps_dict.pop('post')
         if post.prev_post:
