@@ -55,7 +55,7 @@ class RenderRSS(Task):
                 deps += post.deps(lang)
             yield {
                 'basename': 'render_rss',
-                'name': output_name.encode('utf8'),
+                'name': output_name,
                 'file_dep': deps,
                 'targets': [output_name],
                 'actions': [(utils.generic_rss_renderer,

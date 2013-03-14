@@ -336,10 +336,9 @@ class Nikola(object):
         data = self.template_system.render_template(
             template_name, None, local_context)
 
-        assert isinstance(output_name, bytes)
         assert output_name.startswith(
-            self.config["OUTPUT_FOLDER"].encode('utf8'))
-        url_part = output_name.decode('utf8')[len(self.config["OUTPUT_FOLDER"])
+            self.config["OUTPUT_FOLDER"])
+        url_part = output_name[len(self.config["OUTPUT_FOLDER"])
                                               + 1:]
 
         # Treat our site as if output/ is "/" and then make all URLs relative,
@@ -671,7 +670,7 @@ class Nikola(object):
         else:
             context['enable_comments'] = self.config['COMMENTS_IN_STORIES']
         output_name = os.path.join(self.config['OUTPUT_FOLDER'],
-                                   post.destination_path(lang)).encode('utf8')
+                                   post.destination_path(lang))
         deps_dict = copy(context)
         deps_dict.pop('post')
         if post.prev_post:
@@ -698,9 +697,6 @@ class Nikola(object):
     def generic_post_list_renderer(self, lang, posts, output_name,
                                    template_name, filters, extra_context):
         """Renders pages with lists of posts."""
-
-        # This is a name on disk, has to be bytes
-        assert isinstance(output_name, bytes)
 
         deps = self.template_system.template_deps(template_name)
         for post in posts:

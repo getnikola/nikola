@@ -112,14 +112,14 @@ class Planetoid(Command, Task):
             if not list(f):
                 yield {
                     'basename': self.name,
-                    'name': name.encode('utf8'),
+                    'name': name,
                     'actions': ((add_feed, (name, feed)), ),
                     'file_dep': ['feeds'],
                 }
             elif list(f)[0].url != feed:
                 yield {
                     'basename': self.name,
-                    'name': ('updating_' + name).encode('utf8'),
+                    'name': 'updating_' + name,
                     'actions': ((update_feed_url, (list(f)[0], feed)), ),
                 }
 

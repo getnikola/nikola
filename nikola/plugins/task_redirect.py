@@ -57,7 +57,7 @@ class Redirect(Task):
                 src_path = os.path.join(kw["output_folder"], src)
                 yield {
                     'basename': self.name,
-                    'name': src_path.encode('utf8'),
+                    'name': src_path,
                     'targets': [src_path],
                     'actions': [(create_redirect, (src_path, dst))],
                     'clean': True,

@@ -22,11 +22,10 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import unicode_literals
+import codecs
 import json
 import os
-
-from lxml import html
-from lxml.html.clean import clean_html
 
 from nikola.plugin_categories import LateTask
 from nikola.utils import config_changed, copy_tree
@@ -68,7 +67,9 @@ class Tipue(LateTask):
             pages = []
             for lang in kw["translations"]:
                 for post in posts:
-
+                    # Don't index drafts (Issue #387)
+                    if post.is_draft:
+                        continue
                     text = post.text(lang, strip_html=True)
                     text = text.replace('^', '')
 
@@ -83,7 +84,7 @@ class Tipue(LateTask):
                 os.makedirs(os.path.dirname(dst_path))
             except:
                 pass
-            with open(dst_path, "wb+") as fd:
+            with codecs.open(dst_path, "wb+", "utf8") as fd:
                 fd.write(output)
 
         yield {

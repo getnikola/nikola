@@ -24,6 +24,7 @@ Bugfixes
 * Warn if combining USE_CDN with a theme providing a copy of bootstrap (Issue #386)
 * Improved localsearch README
 * Updated to Tipue 2.1
+* Don't index draft posts for Tipue (Issue #387)
 
 New in 5.4.2
 ============

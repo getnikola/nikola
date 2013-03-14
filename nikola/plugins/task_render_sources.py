@@ -65,7 +65,7 @@ class Sources(Task):
                         source = source_lang
                 yield {
                     'basename': 'render_sources',
-                    'name': output_name.encode('utf8'),
+                    'name': output_name,
                     'file_dep': [source],
                     'targets': [output_name],
                     'actions': [(utils.copy_file, (source, output_name))],
