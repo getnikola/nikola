@@ -38,14 +38,14 @@ class Sitemap(LateTask):
     name = "sitemap"
 
     def gen_tasks(self):
-#        if sys.version_info[0] == 3:
-#            print("sitemap generation is not available for python 3")
-#            yield {
-#                'basename': 'sitemap',
-#                'name': 'sitemap',
-#                'actions': [],
-#            }
-#            return
+        if sys.version_info[0] == 3:
+            print("sitemap generation is not available for python 3")
+            yield {
+                'basename': 'sitemap',
+                'name': 'sitemap',
+                'actions': [],
+            }
+            return
         """Generate Google sitemap."""
         kw = {
             "base_url": self.site.config["BASE_URL"],
