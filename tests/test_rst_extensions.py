@@ -123,7 +123,7 @@ class GistIntegrationTestCase(ReSTExtensionTestCase):
 
     def test_gist_integration(self):
         """ Fetch contents of the gist from GH and render in a noscript tag """
-        text = (u'Be alone, that is the secret of invention: be alone, that is'
+        text = ('Be alone, that is the secret of invention: be alone, that is'
                 ' when ideas are born. -- Nikola Tesla')
         self.assertHTMLContains('pre', text=text)
 
