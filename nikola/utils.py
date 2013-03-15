@@ -54,6 +54,7 @@ else:
     bytes_str = str
     unicode_str = unicode  # NOQA
     _reload = reload  # NOQA
+    unichr = unichr
 
 from doit import tools
 from unidecode import unidecode

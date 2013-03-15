@@ -37,6 +37,7 @@ from doit.cmd_run import Run as DoitRun
 from .nikola import Nikola
 from .utils import _reload
 
+
 def main(args):
     sys.path.append('')
     try:

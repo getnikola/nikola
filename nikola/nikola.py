@@ -338,8 +338,7 @@ class Nikola(object):
 
         assert output_name.startswith(
             self.config["OUTPUT_FOLDER"])
-        url_part = output_name[len(self.config["OUTPUT_FOLDER"])
-                                              + 1:]
+        url_part = output_name[len(self.config["OUTPUT_FOLDER"]) + 1:]
 
         # Treat our site as if output/ is "/" and then make all URLs relative,
         # making the site "relocatable"

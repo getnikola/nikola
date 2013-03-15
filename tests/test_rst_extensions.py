@@ -30,7 +30,7 @@ from __future__ import unicode_literals
 try:
     from io import StringIO
 except ImportError:
-    from StringIO import StringIO
+    from StringIO import StringIO  # NOQA
 
 from lxml import html
 from docutils.core import publish_parts
@@ -38,6 +38,7 @@ from docutils.core import publish_parts
 import unittest
 import nikola.plugins.compile_rest
 from nikola.utils import _reload
+
 
 class ReSTExtensionTestCase(unittest.TestCase):
     """ Base class for testing ReST extensions """
