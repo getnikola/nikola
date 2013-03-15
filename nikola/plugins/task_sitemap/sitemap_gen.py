@@ -82,15 +82,7 @@ except ImportError:
     from urllib.request import FancyURLopener  # NOQA
     from urllib.request import urlopen  # NOQA
 
-
-if sys.version_info[0] == 3:
-    # Python 3
-    bytes_str = bytes
-    unicode_str = str
-    unichr = chr
-else:
-    bytes_str = str
-    unicode_str = unicode  # NOQA
+from nikola.utils import bytes_str, unicode_str, unichr
 
 # Text encodings
 ENC_ASCII = 'ASCII'
