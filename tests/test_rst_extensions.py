@@ -17,7 +17,7 @@ tag, like "script" or "iframe". We will try to find this tag in the document
 and perform the tests on it. You can pass a dictionary to the attributes kwarg
 representing the name and the value of the tag attributes. The text kwarg takes
 a string argument, which will be tested against the contents of the HTML
-element. 
+element.
 One last caveat: you need to url unquote your urls if you are going to test
 attributes like "src" or "link", since the HTML rendered by docutils will be
 always unquoted.

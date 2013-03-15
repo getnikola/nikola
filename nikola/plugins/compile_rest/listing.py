@@ -43,12 +43,12 @@ import os
 
 class Listing(CodeBlock):
     """ listing directive: create a CodeBlock from file
-    
+
     Usage:
-        
+
         .. listing:: nikola.py python
            :number-lines:
-        
+
     """
     has_content = False
     required_arguments = 1
@@ -59,8 +59,8 @@ class Listing(CodeBlock):
         fname = self.arguments.pop(0)
         fileobject = self.open(os.path.join('listings', fname), 'r')
         target = urlunsplit(("link", 'listing', fname, '', ''))
-        generated_nodes = [core.publish_doctree(
-                '`{0} <{1}>`_'.format(fname, target))[0]]
+        generated_nodes = (
+            [core.publish_doctree('`{0} <{1}>`_'.format(fname, target))[0]])
         generated_nodes += self.get_code_from_file(fileobject)
         return generated_nodes
 

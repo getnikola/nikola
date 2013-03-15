@@ -84,11 +84,11 @@ class Vimeo(Directive):
 
     def check_modules(self):
         if requests is None:
-            raise Exception("To use the Vimeo directive you need to install the "
-                            "requests module.")
+            raise Exception("To use the Vimeo directive you need to install "
+                            "the requests module.")
         if json is None:
-            raise Exception("To use the Vimeo directive you need python 2.6 or to "
-                            "install the simplejson module.")
+            raise Exception("To use the Vimeo directive you need python 2.6 "
+                            "or to install the simplejson module.")
 
     def set_video_size(self):
         # Only need to make a connection if width and height aren't provided

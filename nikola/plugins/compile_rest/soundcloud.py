@@ -13,7 +13,7 @@ src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/"""
 
 
 class SoundCloud(Directive):
-    """ Restructured text extension for inserting SoundCloud embedded music 
+    """ Restructured text extension for inserting SoundCloud embedded music
 
     Usage:
         .. soundcloud:: <sound id>
@@ -40,7 +40,7 @@ class SoundCloud(Directive):
         return [nodes.raw('', CODE.format(**options), format='html')]
 
     def check_content(self):
-        """ Emit a deprecation warning if there is content """ 
+        """ Emit a deprecation warning if there is content """
         if self.content:
             raise self.warning("This directive does not accept content. The "
                                "'key=value' format for options is deprecated, "
