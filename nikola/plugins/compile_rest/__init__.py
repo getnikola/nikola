@@ -30,22 +30,20 @@ import docutils.core
 import docutils.io
 from docutils.parsers.rst import directives
 
-from .pygments_code_block_directive import (
-    code_block_directive,
-    listings_directive)
-directives.register_directive('code-block', code_block_directive)
-directives.register_directive('listing', listings_directive)
-
-from .youtube import youtube
-directives.register_directive('youtube', youtube)
-from .vimeo import vimeo
-directives.register_directive('vimeo', vimeo)
-from .slides import slides
-directives.register_directive('slides', slides)
+from .listing import Listing, CodeBlock
+directives.register_directive('code-block', CodeBlock)
+directives.register_directive('sourcecode', CodeBlock)
+directives.register_directive('listing', Listing)
+from .youtube import Youtube
+directives.register_directive('youtube', Youtube)
+from .vimeo import Vimeo
+directives.register_directive('vimeo', Vimeo)
+from .slides import Slides
+directives.register_directive('slides', Slides)
 from .gist_directive import GitHubGist
 directives.register_directive('gist', GitHubGist)
-from .soundcloud import soundcloud
-directives.register_directive('soundcloud', soundcloud)
+from .soundcloud import SoundCloud
+directives.register_directive('soundcloud', SoundCloud)
 
 from nikola.plugin_categories import PageCompiler
 
