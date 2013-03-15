@@ -37,7 +37,7 @@ from docutils.core import publish_parts
 
 import unittest
 import nikola.plugins.compile_rest
-
+from nikola.utils import _reload
 
 class ReSTExtensionTestCase(unittest.TestCase):
     """ Base class for testing ReST extensions """
@@ -97,7 +97,7 @@ class GistTestCase(ReSTExtensionTestCase):
         """ Patch GitHubGist for avoiding network dependency """
         self.gist_type.get_raw_gist_with_filename = lambda *_: 'raw_gist_file'
         self.gist_type.get_raw_gist = lambda *_: "raw_gist"
-        reload(nikola.plugins.compile_rest)
+        _reload(nikola.plugins.compile_rest)
 
     def test_gist(self):
         """ Test the gist directive with filename """
@@ -166,7 +166,7 @@ class VimeoTestCase(ReSTExtensionTestCase):
         """ Disable query of the vimeo api over the wire """
         nikola.plugins.compile_rest.Vimeo.request_size = False
         super(VimeoTestCase, self).setUp()
-        reload(nikola.plugins.compile_rest)
+        _reload(nikola.plugins.compile_rest)
 
     def test_vimeo(self):
         """ Test Vimeo iframe tag generation """
@@ -201,7 +201,7 @@ class ListingTestCase(ReSTExtensionTestCase):
         """ Inject a mock open function for not generating a test site """
         f = StringIO("import antigravity\n")
         nikola.plugins.compile_rest.Listing.open = lambda *_: f
-        reload(nikola.plugins.compile_rest)
+        _reload(nikola.plugins.compile_rest)
 
     def test_listing(self):
         """ Test that we can render a file object contents without errors """

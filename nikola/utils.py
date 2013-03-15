@@ -49,9 +49,11 @@ if sys.version_info[0] == 3:
     bytes_str = bytes
     unicode_str = str
     unichr = chr
+    from imp import reload as _reload
 else:
     bytes_str = str
     unicode_str = unicode  # NOQA
+    _reload = reload  # NOQA
 
 from doit import tools
 from unidecode import unidecode
@@ -61,7 +63,7 @@ import PyRSS2Gen as rss
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'generic_rss_renderer', 'copy_file', 'slugify', 'unslugify',
            'to_datetime', 'apply_filters', 'config_changed', 'get_crumbs',
-           'get_asset_path']
+           'get_asset_path', '_reload']
 
 
 class CustomEncoder(json.JSONEncoder):
