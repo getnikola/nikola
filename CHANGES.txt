@@ -25,6 +25,8 @@ Bugfixes
 * Improved localsearch README
 * Updated to Tipue 2.1
 * Don't index draft posts for Tipue (Issue #387)
+* Modernized all rst extensions, added tests (rbistolfi)
+* Removed obsolete custom code-block directive
 
 New in 5.4.2
 ============
