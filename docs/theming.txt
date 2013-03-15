@@ -44,8 +44,8 @@ messages
 And these optional files:
 
 parent
-    A text file that, on its first line, contains the name of the **parent theme**. 
-    Any resources missing on this theme, will be looked up in the parent theme 
+    A text file that, on its first line, contains the name of the **parent theme**.
+    Any resources missing on this theme, will be looked up in the parent theme
     (and then in the grandparent, etc).
 
     The ``parent`` is so you don't have to create a full theme each time: just create an
@@ -77,7 +77,7 @@ Templates
 
 In templates there is a number of files whose name ends in ``.tmpl``. Those are the
 theme's page templates. They are done using the `Mako <http://makotemplates.org>`_
-or `Jinja2 <http://jinja.pocoo.org>`_ template languages. If you want to do a theme, you 
+or `Jinja2 <http://jinja.pocoo.org>`_ template languages. If you want to do a theme, you
 should learn one first. What engine is used by the theme is declared in the ``engine`` file.
 
 The rest of this document explains Mako templates, but Jinja2 is fairly similar.
@@ -195,47 +195,8 @@ you would need to maintain the inheritance as it is, or not require whatever dat
 Messages and Translations
 -------------------------
 
-When you modify templates, you may want to add text in them (for example: "About Me").
-Instead of adding the text directly, which makes it impossible to translate to other
-languages, add it like this::
+The included themes are translated into a variety of languages. You can add your own translation
+at https://www.transifex.com/projects/p/nikola/
 
-    ${messages[lang]["About Me"]}
-
-Then, in ``messages/en.py`` add it along the other strings::
-
-    MESSAGES = [
-        u"Posts for year %s",
-        u"Archive",
-        u"Posts about %s:",
-        u"Tags",
-        u"Also available in: ",
-        u"More posts about",
-        u"Posted:",
-        u"Original site",
-        u"Read in english",
-        u"About Me",
-    ]
-
-Then, when I want to use your theme in spanish, all I have to do is add a line in ``messages/es.py``::
-
-    MESSAGES = {
-        u"LANGUAGE": u"Español",
-        u"Posts for year %s": u"Posts del año %s",
-        u"Archive": u"Archivo",
-        u"Posts about %s:": u"Posts sobre %s",
-        u"Tags": u"Tags",
-        u"Also available in: ": u"También disponible en: ",
-        u"More posts about": u"Más posts sobre",
-        u"Posted:": u"Publicado:",
-        u"Original site": u"Sitio original",
-        u"Read in english": u"Leer en español",
-        u"About Me": u"Acerca del autor",
-    }
-
-And voilá, your theme works in spanish. Don't remove strings from these files even if it seems
-your theme is not using them. Some are used internally in Nikola to generate titles and
-similar things.
-
-To create a new translation, just copy one of the existing ones, translate the right side of
-every string to your language, save it and send it to me, I will add it to Nikola!
-
+If you want to create a theme that has new strings, and you want those strings to be translatable,
+then your theme will need a custom ``messages`` folder.
