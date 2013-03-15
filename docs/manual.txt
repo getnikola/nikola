@@ -993,7 +993,7 @@ corresponding lines in your ``conf.py``.
 An example configuration that uses the Twitter nickname of the website
 and the authors Twitter user ID is found below.
 
-.. code-block:: Python
+.. code-block:: python
 
     TWITTER_CARD = {
         'use_twitter_cards': True,  # enable Twitter Cards / Open Graph
