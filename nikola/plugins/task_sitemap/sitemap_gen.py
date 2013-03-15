@@ -76,9 +76,9 @@ except ImportError:
 try:
     from urllib import quote as urllib_quote
     from urllib import FancyURLopener
-    from urllib import urlopen
+    from urllib import urlopen, urlencode
 except ImportError:
-    from urllib.parse import quote as urllib_quote  # NOQA
+    from urllib.parse import quote as urllib_quote, urlencode  # NOQA
     from urllib.request import FancyURLopener  # NOQA
     from urllib.request import urlopen  # NOQA
 
@@ -1892,7 +1892,7 @@ class Sitemap(xml.sax.handler.ContentHandler):
             query_map = ping[3]
             query_attr = ping[5]
             query_map[query_attr] = url
-            query = urllib.urlencode(query_map)
+            query = urlencode(query_map)
             notify = urlunsplit((ping[0], ping[1], ping[2], query, ping[4]))
 
             # Send the notification
