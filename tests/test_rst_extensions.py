@@ -38,9 +38,10 @@ from docutils.core import publish_parts
 import unittest
 import nikola.plugins.compile_rest
 from nikola.utils import _reload
+from base import BaseTestCase
 
 
-class ReSTExtensionTestCase(unittest.TestCase):
+class ReSTExtensionTestCase(BaseTestCase):
     """ Base class for testing ReST extensions """
 
     sample = None
