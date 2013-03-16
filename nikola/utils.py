@@ -183,7 +183,6 @@ def load_messages(themes, translations):
     and "younger" themes have priority.
     """
     messages = Functionary(dict, 'en')
-    messages = defaultdict(dict)
     warned = []
     oldpath = sys.path[:]
     for theme_name in themes[::-1]:
