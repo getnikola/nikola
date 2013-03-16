@@ -3,24 +3,24 @@
     <div class="postbox">
     <h1><a href='{{permalink}}'>{{title}}</a></h1>
     {% if link %}
-            <p><a href='{{link}}'>{{messages[lang]["Original site"]}}</a></p>
+            <p><a href='{{link}}'>{{messages("Original site")}}</a></p>
     {% endif %}
     <hr>
     <small>
-        {{messages[lang]["Posted"]}}: {{post.formatted_date(date_format)}}&nbsp;&nbsp;|&nbsp;&nbsp;
+        {{messages("Posted")}}: {{post.formatted_date(date_format)}}&nbsp;&nbsp;|&nbsp;&nbsp;
 
         {% if translations|length > 1 %}
             {% for langname in translations.keys() %}
                 {% if langname != lang and post.is_translation_available(langname) %}
-                    <a href="{{post.permalink(langname)}}">{{messages[langname]["Read in English"]}}</a>
+                    <a href="{{post.permalink(langname)}}">{{messages("Read in English", langname)}}</a>
                     &nbsp;&nbsp;|&nbsp;&nbsp;
                 {% endif %}
             {% endfor %}
         {% endif %}
 
-        <a href="{{post.meta[lang]['slug']+".txt"}}" id="sourcelink">{{messages[lang]["Source"]}}</a>
+        <a href="{{post.meta[lang]['slug']+".txt"}}" id="sourcelink">{{messages("Source")}}</a>
         {% if post.tags %}
-            &nbsp;&nbsp;|&nbsp;&nbsp;{{messages[lang]["More posts about"]}}
+            &nbsp;&nbsp;|&nbsp;&nbsp;{{messages("More posts about")}}
             {% for tag in post.tags %}
                 <a href="{{_link("tag", tag, lang)}}"><span class="badge badge-info">{{tag}}</span></a>
             {% endfor %}
@@ -31,11 +31,11 @@
     <ul class="pager">
     {%if post.prev_post %}
         <li class="previous">
-            <a href="{{rel_link(permalink, post.prev_post.permalink())}}">&larr; {{messages[lang]["Previous post"]}}</a>
+            <a href="{{rel_link(permalink, post.prev_post.permalink())}}">&larr; {{messages("Previous post")}}</a>
     {% endif %}
     {%if post.next_post %}
         <li class="next">
-            <a href="{{rel_link(permalink, post.next_post.permalink())}}">{{messages[lang]["Next post"]}} &rarr;</a>
+            <a href="{{rel_link(permalink, post.next_post.permalink())}}">{{messages("Next post")}} &rarr;</a>
     {% endif %}
     </ul>
     {% if disqus_forum and not post.meta[lang]['nocomments']%}
