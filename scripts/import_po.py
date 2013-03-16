@@ -21,7 +21,7 @@ from __future__ import unicode_literals
 MESSAGES = {""".splitlines()
     lines2 = []
     for entry in po:
-        lines2.append('"    {0}": "{1}",'. format(entry.msgid, entry.msgstr))
+        lines2.append('    "{0}": "{1}",'. format(entry.msgid, entry.msgstr))
     lines.extend(sorted(lines2))
     lines.append("}\n")
     print("Generating:", outf)

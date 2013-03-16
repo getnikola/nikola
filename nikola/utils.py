@@ -29,6 +29,7 @@ from __future__ import print_function, unicode_literals
 from collections import defaultdict, Callable
 import datetime
 import hashlib
+import locale
 import os
 import re
 import codecs
@@ -64,7 +65,38 @@ import PyRSS2Gen as rss
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'generic_rss_renderer', 'copy_file', 'slugify', 'unslugify',
            'to_datetime', 'apply_filters', 'config_changed', 'get_crumbs',
-           'get_asset_path', '_reload']
+           'get_asset_path', '_reload', 'unicode_str', 'bytes_str',
+           'unichr', 'Functionary']
+
+
+class Functionary(defaultdict):
+
+    """Class that looks like a function, but is a defaultdict."""
+
+    def __init__(self, default, default_lang):
+        super(Functionary, self).__init__(default)
+        self.default_lang = default_lang
+
+    def current_lang(self):
+        """Guess the current language from locale or default."""
+        lang = locale.getlocale()[0]
+        if lang:
+            if lang in self.keys():
+                return lang
+            lang = lang.split('_')[0]
+            if lang in self.keys():
+                return lang
+        # whatever
+        return self.default_lang
+
+    def __call__(self, key, lang=None):
+        """When called as a function, take an optional lang
+        and return self[lang][key]."""
+
+        if lang is None:
+            lang = self.current_lang()
+
+        return self[lang][key]
 
 
 class CustomEncoder(json.JSONEncoder):
@@ -150,6 +182,7 @@ def load_messages(themes, translations):
     All the messages from parent themes are loaded,
     and "younger" themes have priority.
     """
+    messages = Functionary(dict, 'en')
     messages = defaultdict(dict)
     warned = []
     oldpath = sys.path[:]
