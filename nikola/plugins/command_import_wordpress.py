@@ -99,10 +99,16 @@ class CommandImportWordpress(Command):
             print(self.help())
             return
 
-        options['filename'] = args[0]
+        options['filename'] = args.pop(0)
 
-        if len(args) > 1:
-            options['output_folder'] = args[1]
+        if args and ('output_folder' not in args or
+                     options['output_folder'] == 'new_site'):
+            options['output_folder'] = args.pop(0)
+
+        if args:
+            print('You specified additional arguments ({0}). Please consider '
+                  'putting these arguments before the filename if you '
+                  'are running into problems.'.format(args))
 
         self.wordpress_export_file = options['filename']
         self.squash_newlines = options.get('squash_newlines', False)
