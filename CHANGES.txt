@@ -28,6 +28,7 @@ Bugfixes
 * Don't index draft posts for Tipue (Issue #387)
 * Modernized all rst extensions, added tests (rbistolfi)
 * Removed obsolete custom code-block directive
+* New function messages(msgid, lang=current_lang) available for templates
 
 New in 5.4.2
 ============
