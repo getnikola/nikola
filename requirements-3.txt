@@ -1,6 +1,0 @@
-https://github.com/python-imaging/Pillow/archive/master.zip
-mock>=1.0.0
-requests
-markdown
-Jinja2
-bbcode
