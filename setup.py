@@ -32,7 +32,7 @@ except ImportError:
 dependencies = [
     'doit>=0.20.0',
     'pygments',
-    'pillow',
+    'pillow>=2.0.0',
     'docutils',
     'mako>=0.6',
     'unidecode',
