@@ -101,7 +101,8 @@ class CommandImportWordpress(Command):
 
         options['filename'] = args.pop(0)
 
-        if args and options['output_folder'] == 'new_site':
+        if args and ('output_folder' not in args or
+                     options['output_folder'] == 'new_site'):
             options['output_folder'] = args.pop(0)
 
         if args:
