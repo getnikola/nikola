@@ -2,7 +2,7 @@
 <%def name="html_title()">
     <h1>${title}</h1>
     % if link:
-            <p><a href='${link}'>${messages[lang]["Original site"]}</a></p>
+            <p><a href='${link}'>${messages("Original site")}</a></p>
     % endif
 </%def>
 
@@ -12,7 +12,7 @@
         %for langname in translations.keys():
             %if langname != lang  and post.is_translation_available(langname):
                 &nbsp;&nbsp;|&nbsp;&nbsp;
-                <a href="${post.permalink(langname)}">${messages[langname]["Read in English"]}</a>
+                <a href="${post.permalink(langname)}">${messages("Read in English", langname)}</a>
             %endif
         %endfor
     %endif
@@ -21,7 +21,7 @@
 
 <%def name="html_tags(post)">
     %if post.tags:
-        &nbsp;&nbsp;|&nbsp;&nbsp;${messages[lang]["More posts about"]}
+        &nbsp;&nbsp;|&nbsp;&nbsp;${messages("More posts about")}
         %for tag in post.tags:
             <a class="tag" href="${_link('tag', tag, lang)}"><span class="badge badge-info">${tag}</span></a>
         %endfor
@@ -33,12 +33,12 @@
     <ul class="pager">
     %if post.prev_post:
         <li class="previous">
-            <a href="${post.prev_post.permalink()}">&larr; ${messages[lang]["Previous post"]}</a>
+            <a href="${post.prev_post.permalink()}">&larr; ${messages("Previous post")}</a>
         </li>
     %endif
     %if post.next_post:
         <li class="next">
-            <a href="${post.next_post.permalink()}">${messages[lang]["Next post"]} &rarr;</a>
+            <a href="${post.next_post.permalink()}">${messages("Next post")} &rarr;</a>
         </li>
     %endif
     </ul>
