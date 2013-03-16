@@ -4,10 +4,8 @@ python:
   - "2.7"
   - "3.2"
   - "3.3"
-# command to install dependencies
-# pip is run inside the script because we need have different requirements for Python 2 / 3.
 install:
-  - "python install_requirements.py"
+  - "pip install -r requirements.txt --use-mirrors"
   - "pip install flake8 --use-mirrors"
   - "pip install . --use-mirrors"
 # We run tests and afterwards nikola to see if the command is executable.
