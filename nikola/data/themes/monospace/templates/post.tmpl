@@ -7,11 +7,11 @@
     ${helper.html_title()}
         <div class="meta" style="background-color: rgb(234, 234, 234); ">                    
         <span class="authordate">
-            ${messages[lang]["Posted"]}: ${post.formatted_date(date_format)} [<a href="${post.meta[lang]['slug']+'.txt'}" id="sourcelink">${messages[lang]["Source"]}</a>]
+            ${messages("Posted")}: ${post.formatted_date(date_format)} [<a href="${post.meta[lang]['slug']+'.txt'}" id="sourcelink">${messages("Source")}</a>]
         </span>
         <br>
             %if post.tags:
-                <span class="tags">${messages[lang]["Tags"]}:&nbsp;
+                <span class="tags">${messages("Tags")}:&nbsp;
                 %for tag in post.tags:
                     <a class="tag" href="${_link('tag', tag, lang)}"><span class="badge badge-info">${tag}</span></a>
                 %endfor

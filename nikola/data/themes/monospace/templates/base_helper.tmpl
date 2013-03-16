@@ -77,7 +77,7 @@
 <%def name="html_translations()">
     %for langname in translations.keys():
         %if langname != lang:
-            <a href="${_link("index", None, langname)}">${messages[langname]["LANGUAGE"]}</a>
+            <a href="${_link("index", None, langname)}">${messages("LANGUAGE", langname)}</a>
         %endif
     %endfor
 </%def>
