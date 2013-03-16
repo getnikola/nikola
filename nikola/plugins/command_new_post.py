@@ -49,7 +49,7 @@ def filter_post_pages(compiler, is_post, post_compilers, post_pages):
 
     if not filtered:
         type_name = "post" if is_post else "page"
-        raise Exception("Can't find a way, using your configuration, to create"
+        raise Exception("Can't find a way, using your configuration, to create "
                         "a {0} in format {1}. You may want to tweak "
                         "post_compilers or post_pages in conf.py".format(
                             type_name, compiler))
