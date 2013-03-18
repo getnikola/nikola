@@ -191,7 +191,6 @@ class Post(object):
 
     def text(self, lang=None, teaser_only=False, strip_html=False):
         """Read the post file for that language and return its contents."""
-        print("===>", self.title(), teaser_only)
         if lang is None:
             lang = self.current_lang()
         file_name = self._translated_file_path(lang)
@@ -210,23 +209,13 @@ class Post(object):
         document.make_links_absolute(self.permalink(lang=lang))
         data = lxml.html.tostring(document, encoding='unicode')
         if teaser_only:
-            e = lxml.html.fromstring(data).find('body')
-            teaser = []
+            teaser = TEASER_REGEXP.split(data)[0]
             teaser_str = self.messages[lang]["Read more"] + '...'
-            flag = False
-            for elem in e:
-                elem_string = lxml.html.tostring(elem, encoding='unicode')
-                match = TEASER_REGEXP.match(elem_string)
-                if match:
-                    flag = True
-                    if match.group(2):
-                        teaser_str = match.group(2)
-                    break
-                teaser.append(elem_string)
-            if flag:
-                teaser.append('<p><a href="{0}">{1}</a></p>'.format(
-                    self.permalink(lang), teaser_str))
-            data = ''.join(teaser)
+            teaser += '<p><a href="{0}">{1}</a></p>'.format(
+                self.permalink(lang), teaser_str)
+            # This closes all open tags and sanitizes the broken HTML
+            document = lxml.html.fromstring(teaser)
+            data = lxml.html.tostring(document, encoding='unicode')
 
         if data and strip_html:
             content = lxml.html.fromstring(data)
