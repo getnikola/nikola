@@ -42,6 +42,17 @@ dependencies = [
     'pytz',
 ]
 
+########### platform specific stuff #############
+import platform
+platform_system = platform.system()
+
+scripts = ['scripts/nikola']
+# platform specific scripts
+if platform_system == "Windows":
+    scripts.append('scripts/nikola.bat')
+
+##################################################
+
 if sys.version_info[0] == 2:
     # in Python 3 this becomes a builtin, for Python 2 we need the backport
     dependencies.append('configparser')
@@ -196,7 +207,7 @@ setup(name='Nikola',
                 'nikola.plugins.compile_markdown',
                 'nikola.plugins.task_sitemap',
                 'nikola.plugins.compile_rest'],
-      scripts=['scripts/nikola'],
+      scripts=scripts,
       install_requires=dependencies,
       package_data=find_package_data(),
       cmdclass={'install': nikola_install},
