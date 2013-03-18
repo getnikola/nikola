@@ -170,6 +170,10 @@ class Post(object):
         deps = [self.source_path]
         if os.path.isfile(self.metadata_path):
             deps.append(self.metadata_path)
+        dep_path = self.base_path + '.dep'
+        if os.path.isfile(dep_path):
+            with codecs.open(dep_path, 'rb+', 'utf8') as depf:
+                deps.extend([l.strip() for l in depf.readlines()])
         if lang != self.default_lang:
             lang_deps = list(filter(os.path.exists, [x + "." + lang for x in
                                                      deps]))
