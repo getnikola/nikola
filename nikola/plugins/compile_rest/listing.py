@@ -36,7 +36,10 @@ except ImportError:
 
 from docutils import core
 from docutils.parsers.rst import directives
-from docutils.parsers.rst.directives.body import CodeBlock
+try:
+    from docutils.parsers.rst.directives.body import CodeBlock
+except ImportError:  # docutils < 0.9 (Debian Sid For The Loss)
+    from dummy import CodeBlock
 
 import os
 

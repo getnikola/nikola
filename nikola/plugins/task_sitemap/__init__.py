@@ -52,6 +52,7 @@ url_format = """ <url>
 
 get_lastmod = lambda p: datetime.datetime.fromtimestamp(os.stat(p).st_mtime).isoformat()
 
+
 class Sitemap(LateTask):
     """Generate google sitemap."""
 
