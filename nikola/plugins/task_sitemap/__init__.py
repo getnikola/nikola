@@ -50,6 +50,7 @@ url_format = """ <url>
  </url>
 """
 
+get_lastmod = lambda p: datetime.datetime.fromtimestamp(os.stat(p).st_mtime).isoformat()
 
 class Sitemap(LateTask):
     """Generate google sitemap."""
@@ -75,15 +76,15 @@ class Sitemap(LateTask):
                 outf.write(header)
                 for root, dirs, files in os.walk(output):
                     path = os.path.relpath(root, output)
-                    path = path.replace(os.sep, '/')
-                    lastmod = datetime.datetime.fromtimestamp(os.stat(root).st_mtime).isoformat()
+                    path = path.replace(os.sep, '/') + '/'
+                    lastmod = get_lastmod(root)
                     outf.write(url_format.format(urljoin(base_url, path), lastmod))
                     for fname in files:
                         if os.path.splitext(fname)[-1] in mapped_exts:
                             real_path = os.path.join(root, fname)
                             path = os.path.relpath(real_path, output)
                             path = path.replace(os.sep, '/')
-                            lastmod = datetime.datetime.fromtimestamp(os.stat(real_path).st_mtime).isoformat()
+                            lastmod = get_lastmod(real_path)
                             outf.write(url_format.format(urljoin(base_url, path), lastmod))
 
                 outf.write("</urlset>")
