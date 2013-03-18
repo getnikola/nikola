@@ -71,6 +71,12 @@ class CompileRest(PageCompiler):
                         'link_stylesheet': True,
                     })
                 out_file.write(output)
+            if deps.list:
+                with codecs.open(dest+".dep", "w+", "utf8") as deps_file:
+                    deps_file.write('\n'.join(deps.list))
+            else:
+                if os.path.isfile(dest+".dep"):
+                    os.unlink(dest+".dep")
         if error_level < 3:
             return True
         else:
@@ -119,5 +125,4 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
         settings_overrides=settings_overrides,
         config_section=config_section,
         enable_exit_status=enable_exit_status)
-    print ("===-->", pub.settings.record_dependencies)
     return pub.writer.parts['fragment'], pub.document.reporter.max_level, pub.settings.record_dependencies
