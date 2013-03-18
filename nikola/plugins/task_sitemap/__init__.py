@@ -29,7 +29,7 @@ import os
 try:
     from urlparse import urljoin
 except ImportError:
-    from urllib.parse import urljoin
+    from urllib.parse import urljoin  # NOQA
 
 from nikola.plugin_categories import LateTask
 from nikola.utils import config_changed

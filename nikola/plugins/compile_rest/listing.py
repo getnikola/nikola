@@ -39,7 +39,7 @@ from docutils.parsers.rst import directives
 try:
     from docutils.parsers.rst.directives.body import CodeBlock
 except ImportError:  # docutils < 0.9 (Debian Sid For The Loss)
-    from dummy import CodeBlock
+    from dummy import CodeBlock  # NOQA
 
 import os
 
