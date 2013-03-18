@@ -191,6 +191,7 @@ class Post(object):
 
     def text(self, lang=None, teaser_only=False, strip_html=False):
         """Read the post file for that language and return its contents."""
+        print("===>", self.title(), teaser_only)
         if lang is None:
             lang = self.current_lang()
         file_name = self._translated_file_path(lang)
@@ -209,7 +210,7 @@ class Post(object):
         document.make_links_absolute(self.permalink(lang=lang))
         data = lxml.html.tostring(document, encoding='unicode')
         if teaser_only:
-            e = lxml.html.fromstring(data)
+            e = lxml.html.fromstring(data).find('body')
             teaser = []
             teaser_str = self.messages[lang]["Read more"] + '...'
             flag = False

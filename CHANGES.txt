@@ -29,6 +29,7 @@ Bugfixes
 * Modernized all rst extensions, added tests (rbistolfi)
 * Removed obsolete custom code-block directive
 * New function messages(msgid, lang=current_lang) available for templates
+* Fixed teasers (Issue #398)
 
 New in 5.4.2
 ============
