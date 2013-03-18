@@ -66,7 +66,9 @@ class CompileRest(PageCompiler):
                 output, error_level, deps = rst2html(
                     data, settings_overrides={
                         'initial_header_level': 2,
-                        'record_dependencies': True
+                        'record_dependencies': True,
+                        'stylesheet_path': None,
+                        'link_stylesheet': True,
                     })
                 out_file.write(output)
         if error_level < 3:
@@ -117,4 +119,5 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
         settings_overrides=settings_overrides,
         config_section=config_section,
         enable_exit_status=enable_exit_status)
+    print ("===-->", pub.settings.record_dependencies)
     return pub.writer.parts['fragment'], pub.document.reporter.max_level, pub.settings.record_dependencies
