@@ -31,6 +31,7 @@ Bugfixes
 * New function messages(msgid, lang=current_lang) available for templates
 * Fixed teasers (Issue #398)
 * Smarter guessing of the default post format (Issue #400)
+* Make headings not overlap navbar in site theme.
 
 New in 5.4.2
 ============

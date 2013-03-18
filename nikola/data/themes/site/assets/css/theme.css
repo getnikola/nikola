@@ -74,3 +74,7 @@ ul.bricks > li {
     margin: 3px;
 }
 
+h1, h2, h3, h4, h5, h6, h7 {
+    margin-top: -40px;
+    padding-top: 40px;
+}
