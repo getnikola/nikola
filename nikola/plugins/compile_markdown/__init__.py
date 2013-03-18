@@ -45,6 +45,7 @@ except ImportError:
     markdown = None  # NOQA
     nikola_extension = None
     gist_extension = None
+    podcast_extension = None
 
 from nikola.plugin_categories import PageCompiler
 
