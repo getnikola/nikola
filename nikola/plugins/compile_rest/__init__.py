@@ -71,12 +71,13 @@ class CompileRest(PageCompiler):
                         'link_stylesheet': True,
                     })
                 out_file.write(output)
+            deps_path = dest + '.dep'
             if deps.list:
-                with codecs.open(dest+".dep", "w+", "utf8") as deps_file:
+                with codecs.open(deps_path, "wb+", "utf8") as deps_file:
                     deps_file.write('\n'.join(deps.list))
             else:
-                if os.path.isfile(dest+".dep"):
-                    os.unlink(dest+".dep")
+                if os.path.isfile(deps_path):
+                    os.unlink(deps_path)
         if error_level < 3:
             return True
         else:
