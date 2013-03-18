@@ -210,12 +210,13 @@ class Post(object):
         data = lxml.html.tostring(document, encoding='unicode')
         if teaser_only:
             teaser = TEASER_REGEXP.split(data)[0]
-            teaser_str = self.messages[lang]["Read more"] + '...'
-            teaser += '<p><a href="{0}">{1}</a></p>'.format(
-                self.permalink(lang), teaser_str)
-            # This closes all open tags and sanitizes the broken HTML
-            document = lxml.html.fromstring(teaser)
-            data = lxml.html.tostring(document, encoding='unicode')
+            if teaser != data:
+                teaser_str = self.messages[lang]["Read more"] + '...'
+                teaser += '<p><a href="{0}">{1}</a></p>'.format(
+                    self.permalink(lang), teaser_str)
+                # This closes all open tags and sanitizes the broken HTML
+                document = lxml.html.fromstring(teaser)
+                data = lxml.html.tostring(document, encoding='unicode')
 
         if data and strip_html:
             content = lxml.html.fromstring(data)
