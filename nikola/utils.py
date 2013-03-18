@@ -95,7 +95,6 @@ class Functionary(defaultdict):
 
         if lang is None:
             lang = self.current_lang()
-
         return self[lang][key]
 
 
@@ -176,13 +175,13 @@ def get_theme_chain(theme):
     return themes
 
 
-def load_messages(themes, translations):
+def load_messages(themes, translations, default_lang):
     """ Load theme's messages into context.
 
     All the messages from parent themes are loaded,
     and "younger" themes have priority.
     """
-    messages = Functionary(dict, 'en')
+    messages = Functionary(dict, default_lang)
     warned = []
     oldpath = sys.path[:]
     for theme_name in themes[::-1]:

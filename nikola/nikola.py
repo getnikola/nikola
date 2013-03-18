@@ -160,7 +160,8 @@ class Nikola(object):
         self.THEMES = utils.get_theme_chain(self.config['THEME'])
 
         self.MESSAGES = utils.load_messages(self.THEMES,
-                                            self.config['TRANSLATIONS'])
+                                            self.config['TRANSLATIONS'],
+                                            self.config['DEFAULT_LANG'])
 
         # SITE_URL is required, but if the deprecated BLOG_URL
         # is available, use it and warn
