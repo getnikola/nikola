@@ -96,7 +96,7 @@ class Galleries(Task):
             if not os.path.isdir(output_gallery):
                 yield {
                     'basename': str('render_galleries'),
-                    'name': str(output_gallery),
+                    'name': output_gallery.decode (),
                     'actions': [(os.makedirs, (output_gallery,))],
                     'targets': [output_gallery],
                     'clean': True,
