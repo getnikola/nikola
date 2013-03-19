@@ -303,8 +303,13 @@ class Galleries(Task):
 
                         break
 
-            im.thumbnail(size, Image.ANTIALIAS)
-            im.save(dst)
+            try:
+                im.thumbnail(size, Image.ANTIALIAS)
+            except Exception:
+                # TODO: inform the user, but do not fail
+                pass
+            else:
+                im.save(dst)
 
         else:
             utils.copy_file(src, dst)
