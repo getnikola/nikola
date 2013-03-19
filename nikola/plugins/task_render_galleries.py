@@ -62,6 +62,7 @@ class Galleries(Task):
             'default_lang': self.site.config['DEFAULT_LANG'],
             'blog_description': self.site.config['BLOG_DESCRIPTION'],
             'use_filename_as_title': self.site.config['USE_FILENAME_AS_TITLE'],
+            'gallery_path': self.site.config['GALLERY_PATH']
         }
 
         # FIXME: lots of work is done even when images don't change,
@@ -70,7 +71,7 @@ class Galleries(Task):
         template_name = "gallery.tmpl"
 
         gallery_list = []
-        for root, dirs, files in os.walk('galleries'):
+        for root, dirs, files in os.walk(kw['gallery_path']):
             gallery_list.append(root)
         if not gallery_list:
             yield {
