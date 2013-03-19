@@ -62,6 +62,7 @@ class Galleries(Task):
             'default_lang': self.site.config['DEFAULT_LANG'],
             'blog_description': self.site.config['BLOG_DESCRIPTION'],
             'use_filename_as_title': self.site.config['USE_FILENAME_AS_TITLE'],
+            'gallery_path': self.site.config['GALLERY_PATH']
         }
 
         # FIXME: lots of work is done even when images don't change,
@@ -70,7 +71,7 @@ class Galleries(Task):
         template_name = "gallery.tmpl"
 
         gallery_list = []
-        for root, dirs, files in os.walk('galleries'):
+        for root, dirs, files in os.walk(kw['gallery_path']):
             gallery_list.append(root)
         if not gallery_list:
             yield {
@@ -95,7 +96,7 @@ class Galleries(Task):
             if not os.path.isdir(output_gallery):
                 yield {
                     'basename': str('render_galleries'),
-                    'name': str(output_gallery),
+                    'name': output_gallery.decode (),
                     'actions': [(os.makedirs, (output_gallery,))],
                     'targets': [output_gallery],
                     'clean': True,
@@ -302,8 +303,13 @@ class Galleries(Task):
 
                         break
 
-            im.thumbnail(size, Image.ANTIALIAS)
-            im.save(dst)
+            try:
+                im.thumbnail(size, Image.ANTIALIAS)
+            except Exception:
+                # TODO: inform the user, but do not fail
+                pass
+            else:
+                im.save(dst)
 
         else:
             utils.copy_file(src, dst)
