@@ -35,6 +35,9 @@ Bugfixes
 * Make headings not overlap navbar in site theme.
 * Added dummy codeblock fallback for docutils < 0.9
 * Detect dependency on included files in rest compiler
+* Use gallery path fom config
+* Don't fail in corrupted images
+* Don't assume filenames are ASCII
 
 New in 5.4.2
 ============
