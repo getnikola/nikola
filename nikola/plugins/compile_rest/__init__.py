@@ -26,24 +26,28 @@ from __future__ import unicode_literals
 import codecs
 import os
 
-import docutils.core
-import docutils.io
-from docutils.parsers.rst import directives
+try:
+    import docutils.core
+    import docutils.io
+    from docutils.parsers.rst import directives
 
-from .listing import Listing, CodeBlock
-directives.register_directive('code-block', CodeBlock)
-directives.register_directive('sourcecode', CodeBlock)
-directives.register_directive('listing', Listing)
-from .youtube import Youtube
-directives.register_directive('youtube', Youtube)
-from .vimeo import Vimeo
-directives.register_directive('vimeo', Vimeo)
-from .slides import Slides
-directives.register_directive('slides', Slides)
-from .gist_directive import GitHubGist
-directives.register_directive('gist', GitHubGist)
-from .soundcloud import SoundCloud
-directives.register_directive('soundcloud', SoundCloud)
+    from .listing import Listing, CodeBlock
+    directives.register_directive('code-block', CodeBlock)
+    directives.register_directive('sourcecode', CodeBlock)
+    directives.register_directive('listing', Listing)
+    from .youtube import Youtube
+    directives.register_directive('youtube', Youtube)
+    from .vimeo import Vimeo
+    directives.register_directive('vimeo', Vimeo)
+    from .slides import Slides
+    directives.register_directive('slides', Slides)
+    from .gist_directive import GitHubGist
+    directives.register_directive('gist', GitHubGist)
+    from .soundcloud import SoundCloud
+    directives.register_directive('soundcloud', SoundCloud)
+    has_docutils = True
+except ImportError:
+    has_docutils = False
 
 from nikola.plugin_categories import PageCompiler
 
@@ -55,6 +59,9 @@ class CompileRest(PageCompiler):
 
     def compile_html(self, source, dest):
         """Compile reSt into HTML."""
+        if not has_docutils:
+            raise Exception('To build this site, you need to install the '
+                            '"docutils" package.')
         try:
             os.makedirs(os.path.dirname(dest))
         except:

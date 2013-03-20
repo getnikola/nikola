@@ -41,6 +41,7 @@ Bugfixes
 * Don't crash if sidebar_links is not set for a language.
 * All RSS feed links for tags pointed to the DEFAULT_LANG one in some themes.
 * Nikola.link and Nikola.path are now locale aware and lang is optional.
+* Make docutils a soft requirement
 
 New in 5.4.2
 ============
