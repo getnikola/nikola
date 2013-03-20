@@ -251,7 +251,7 @@ class Nikola(object):
         self.GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
 
         self.GLOBAL_CONTEXT['sidebar_links'] = utils.Functionary(list, self.config['DEFAULT_LANG'])
-        for k, v in self.config.get('SIDEBAR_LINKS').items():
+        for k, v in self.config.get('SIDEBAR_LINKS', {}).items():
             self.GLOBAL_CONTEXT['sidebar_links'][k] = v
 
         self.GLOBAL_CONTEXT['twitter_card'] = self.config.get(

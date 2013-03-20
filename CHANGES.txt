@@ -38,6 +38,7 @@ Bugfixes
 * Use gallery path from config
 * Don't fail in corrupted images
 * Don't assume filenames are ASCII
+* Don't crash if sidebar_links is not set for a language.
 
 New in 5.4.2
 ============
