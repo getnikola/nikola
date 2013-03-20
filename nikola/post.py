@@ -34,7 +34,7 @@ import string
 
 import lxml.html
 
-from .utils import to_datetime, slugify, bytes_str
+from .utils import to_datetime, slugify, bytes_str, Functionary
 
 __all__ = ['Post']
 
@@ -75,7 +75,7 @@ class Post(object):
 
         default_metadata = get_meta(self, file_metadata_regexp)
 
-        self.meta = {}
+        self.meta = Functionary(lambda: None, self.default_lang)
         self.meta[default_lang] = default_metadata
 
         if 'title' not in default_metadata or 'slug' not in default_metadata \
