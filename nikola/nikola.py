@@ -249,7 +249,11 @@ class Nikola(object):
             'CONTENT_FOOTER')
         self.GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
         self.GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
-        self.GLOBAL_CONTEXT['sidebar_links'] = self.config.get('SIDEBAR_LINKS')
+
+        self.GLOBAL_CONTEXT['sidebar_links'] = utils.Functionary(list, self.config['DEFAULT_LANG'])
+        for k, v in self.config.get('SIDEBAR_LINKS').items():
+            self.GLOBAL_CONTEXT['sidebar_links'][k] = v
+
         self.GLOBAL_CONTEXT['twitter_card'] = self.config.get(
             'TWITTER_CARD', {})
         self.GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
