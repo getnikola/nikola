@@ -22,7 +22,7 @@
         {% if post.tags %}
             &nbsp;&nbsp;|&nbsp;&nbsp;{{messages("More posts about")}}
             {% for tag in post.tags %}
-                <a href="{{_link("tag", tag, lang)}}"><span class="badge badge-info">{{tag}}</span></a>
+                <a href="{{_link("tag", tag)}}"><span class="badge badge-info">{{tag}}</span></a>
             {% endfor %}
         {% endif %}
     </small>

@@ -170,6 +170,9 @@ class Nikola(object):
                 print("WARNING: You should configure SITE_URL instead of BLOG_URL")
                 self.config['SITE_URL'] = self.config['BLOG_URL']
 
+        self.default_lang = self.config['DEFAULT_LANG']
+        self.translations = self.config['TRANSLATIONS']
+
         # BASE_URL defaults to SITE_URL
         if 'BASE_URL' not in self.config:
             self.config['BASE_URL'] = self.config.get('SITE_URL')
@@ -407,7 +410,20 @@ class Nikola(object):
         with open(output_name, "wb+") as post_file:
             post_file.write(data)
 
-    def path(self, kind, name, lang, is_link=False):
+    def current_lang(self):  # FIXME: this is duplicated, turn into a mixin
+        """Return the currently set locale, if it's one of the
+        available translations, or default_lang."""
+        lang = locale.getlocale()[0]
+        if lang:
+            if lang in self.translations:
+                return lang
+            lang = lang.split('_')[0]
+            if lang in self.translations:
+                return lang
+        # whatever
+        return self.default_lang
+
+    def path(self, kind, name, lang=None, is_link=False):
         """Build the path to a certain kind of page.
 
         kind is one of:
@@ -431,6 +447,9 @@ class Nikola(object):
         platform's separator.
         (ex: "archive\\index.html")
         """
+
+        if lang is None:
+            lang = self.current_lang()
 
         path = []
 
