@@ -4,7 +4,7 @@
     <h1>{{title}}</h1>
 {% endif %}
     {{post.text()}}
-{%if enable_comments and disqus_forum and not post.meta[lang]['nocomments']%}
+{%if enable_comments and disqus_forum and not post.meta('nocomments')%}
     <div id="disqus_thread"></div>
     <script type="text/javascript">
     var disqus_shortname ="{{disqus_forum}}";

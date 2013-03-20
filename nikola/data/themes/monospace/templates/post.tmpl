@@ -7,7 +7,7 @@
     ${helper.html_title()}
         <div class="meta" style="background-color: rgb(234, 234, 234); ">                    
         <span class="authordate">
-            ${messages("Posted")}: ${post.formatted_date(date_format)} [<a href="${post.meta[lang]['slug']+'.txt'}" id="sourcelink">${messages("Source")}</a>]
+            ${messages("Posted")}: ${post.formatted_date(date_format)} [<a href="${post.meta('slug')+'.txt'}" id="sourcelink">${messages("Source")}</a>]
         </span>
         <br>
             %if post.tags:
@@ -24,7 +24,7 @@
         </div>
     ${post.text()}
     ${helper.html_pager(post)}
-    % if not post.meta[lang]['nocomments']:
+    % if not post.meta('nocomments'):
         ${disqus.html_disqus(post.permalink(absolute=True), post.title(), post.base_path)}
     % endif
     </div>

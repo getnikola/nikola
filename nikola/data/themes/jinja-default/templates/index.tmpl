@@ -9,7 +9,7 @@
         <hr>
         {{post.text(teaser_only=index_teasers)}}
         <p>
-        {% if disqus_forum and not post.meta[lang]['nocomments']%}
+        {% if disqus_forum and not post.meta('nocomments')%}
             <a href="{{post.permalink()}}#disqus_thread"  data-disqus-identifier="{{post.base_path}}">Comments</a>
         {% endif %}
         </div>

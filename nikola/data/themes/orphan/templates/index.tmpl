@@ -11,7 +11,7 @@
         </small></h1>
         <hr>
         ${post.text(teaser_only=index_teasers)}
-        % if not post.meta[lang]['nocomments']:
+        % if not post.meta('nocomments'):
             ${disqus.html_disqus_link(post.permalink()+"#disqus_thread", post.base_path)}
         % endif
         </div>
