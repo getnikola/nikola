@@ -712,7 +712,7 @@ class Nikola(object):
         deps_dict['comments'] = context['enable_comments']
 
         task = {
-            'name': output_name,
+            'name': os.path.normpath(output_name),
             'file_dep': deps,
             'targets': [output_name],
             'actions': [(self.render_template, [post.template_name,
@@ -743,7 +743,7 @@ class Nikola(object):
                                  posts]
         deps_context["global"] = self.GLOBAL_CONTEXT
         task = {
-            'name': output_name,
+            'name': os.path.normpath(output_name),
             'targets': [output_name],
             'file_dep': deps,
             'actions': [(self.render_template, [template_name, output_name,
