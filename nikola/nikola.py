@@ -140,6 +140,7 @@ class Nikola(object):
             'SEARCH_FORM': '',
             'SLUG_TAG_PATH': True,
             'STORY_INDEX': False,
+            'STRIP_INDEX_HTML': False,
             'TAG_PATH': 'categories',
             'TAG_PAGES_ARE_INDEXES': False,
             'THEME': 'site',
@@ -643,6 +644,7 @@ class Nikola(object):
                         self.MESSAGES,
                         template_name,
                         self.config['FILE_METADATA_REGEXP'],
+                        self.config['STRIP_INDEX_HTML'],
                         tzinfo,
                     )
                     for lang, langpath in list(

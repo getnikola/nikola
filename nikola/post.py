@@ -48,7 +48,7 @@ class Post(object):
     def __init__(
         self, source_path, cache_folder, destination, use_in_feeds,
         translations, default_lang, base_url, messages, template_name,
-        file_metadata_regexp=None, tzinfo=None
+        file_metadata_regexp=None, strip_index_html=False, tzinfo=None
     ):
         """Initialize post.
 
@@ -62,6 +62,7 @@ class Post(object):
         self.base_url = base_url
         self.is_draft = False
         self.is_mathjax = False
+        self.strip_index_html = strip_index_html
         self.source_path = source_path  # posts/blah.txt
         self.post_name = os.path.splitext(source_path)[0]  # posts/blah
         # cache/posts/blah.html
@@ -244,7 +245,10 @@ class Post(object):
         else:
             pieces = [""] + pieces
         link = "/".join(pieces)
-        return link
+        if self.strip_index_html and link.endswith('/index.html'):
+            return link[:-10]
+        else:
+            return link
 
     def source_ext(self):
         return os.path.splitext(self.source_path)[1]

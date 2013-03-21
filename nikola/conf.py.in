@@ -267,6 +267,11 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # Enable comments on picture gallery pages?
 # COMMENTS_IN_GALLERIES = False
 
+# If a link ends in /index.html, drop the index.html part.
+# http://mysite/foo/bar/index.html => http://mysite/foo/bar/
+# Default = False
+# STRIP_INDEX_HTML = False
+
 # Do you want a add a Mathjax config file?
 # MATHJAX_CONFIG = ""
 
