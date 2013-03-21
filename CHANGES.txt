@@ -11,6 +11,7 @@ Features
 * Moved translations to transifex.com
 * New custom sitemap generator (Issue #395)
 * New STRIP_INDEX_HTML option for cleaner URLs
+* New alternative markdown compiler based on misaka
 
 Bugfixes
 --------
