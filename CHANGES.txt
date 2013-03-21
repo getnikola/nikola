@@ -10,6 +10,7 @@ Features
 * New EXTRA_HEAD_DATA option, which adds extra things in <HEAD> (Issue #385)
 * Moved translations to transifex.com
 * New custom sitemap generator (Issue #395)
+* New STRIP_INDEX_HTML option for cleaner URLs
 
 Bugfixes
 --------
