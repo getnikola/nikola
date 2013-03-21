@@ -45,7 +45,6 @@ class RenderRSS(Task):
             "rss_teasers": self.site.config["RSS_TEASERS"],
         }
         self.site.scan_posts()
-        # TODO: timeline is global, kill it
         for lang in kw["translations"]:
             output_name = os.path.join(kw['output_folder'],
                                        self.site.path("rss", None, lang))
@@ -55,7 +54,7 @@ class RenderRSS(Task):
                 deps += post.deps(lang)
             yield {
                 'basename': 'render_rss',
-                'name': output_name,
+                'name': os.path.normpath(output_name),
                 'file_dep': deps,
                 'targets': [output_name],
                 'actions': [(utils.generic_rss_renderer,
