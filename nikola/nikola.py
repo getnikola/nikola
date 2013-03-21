@@ -500,7 +500,11 @@ class Nikola(object):
             path = [_f for _f in [self.config['LISTINGS_FOLDER'], name +
                                   '.html'] if _f]
         if is_link:
-            return '/' + ('/'.join(path))
+            link = '/' + ('/'.join(path))
+            if self.config['STRIP_INDEX_HTML'] and link.endswith('/index.html'):
+                return link[:-10]
+            else:
+                return link
         else:
             return os.path.join(*path)
 
