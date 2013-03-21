@@ -1,0 +1,10 @@
+[Core]
+Name = misaka
+Module = compile_misaka
+
+[Documentation]
+Author = Chris Lee
+Version = 0.1
+Website = http://c133.org/
+Description = Compile Markdown into HTML with Mikasa instead of python-markdown
+
