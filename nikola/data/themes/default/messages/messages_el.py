@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "Also available in": "Διαθέσιμο και στο",
+    "Also available in": "Διαθέσιμο και στα",
     "Archive": "Αρχείο",
     "LANGUAGE": "Ελληνικά",
     "More posts about": "Περισσότερες αναρτήσεις για",
@@ -12,11 +12,11 @@ MESSAGES = {
     "Original site": "Ιστοσελίδα αρχικής ανάρτησης",
     "Posted": "Αναρτήθηκε",
     "Posts about %s": "Αναρτήσεις για %s",
-    "Posts for year %s": "Αναρτήσεις για τη χρονιά %s",
+    "Posts for year %s": "Αναρτήσεις για το έτος %s",
     "Previous post": "Προηγούμενη ανάρτηση",
     "Read in English": "Διαβάστε στα Ελληνικά",
-    "Read more": "Read more",
-    "Source": "Source",
+    "Read more": "Διαβάστε περισσότερα",
+    "Source": "Πηγαίος κώδικας",
     "Tags": "Ετικέτες",
     "old posts page %d": "σελίδα παλαιότερων αναρτήσεων %d",
 }

@@ -46,6 +46,7 @@ Bugfixes
 * Nikola.link and Nikola.path are now locale aware and lang is optional.
 * Make docutils a soft requirement
 * Normalize paths on task names (Issue #406)
+* Updated translations (all 100%!)
 
 New in 5.4.2
 ============

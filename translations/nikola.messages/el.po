@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the Nikola package.
 # 
 # Translators:
+# Panagiotis Mavrogiorgos <otinanai90@gmail.com>, 2013.
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2013-03-15 15:53+0000\n"
-"Last-Translator: ralsina <ralsina@netmanagers.com.ar>\n"
+"PO-Revision-Date: 2013-03-18 21:43+0000\n"
+"Last-Translator: pmav99 <otinanai90@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/nikola/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgid "Tags"
 msgstr "Ετικέτες"
 
 msgid "Read more"
-msgstr "Read more"
+msgstr "Διαβάστε περισσότερα"
 
 msgid "Posts about %s"
 msgstr "Αναρτήσεις για %s"
@@ -40,13 +41,13 @@ msgid "old posts page %d"
 msgstr "σελίδα παλαιότερων αναρτήσεων %d"
 
 msgid "Source"
-msgstr "Source"
+msgstr "Πηγαίος κώδικας"
 
 msgid "Read in English"
 msgstr "Διαβάστε στα Ελληνικά"
 
 msgid "Posts for year %s"
-msgstr "Αναρτήσεις για τη χρονιά %s"
+msgstr "Αναρτήσεις για το έτος %s"
 
 msgid "Newer posts"
 msgstr "Νεότερες αναρτήσεις"
@@ -55,7 +56,7 @@ msgid "Previous post"
 msgstr "Προηγούμενη ανάρτηση"
 
 msgid "Also available in"
-msgstr "Διαθέσιμο και στο"
+msgstr "Διαθέσιμο και στα"
 
 msgid "Original site"
 msgstr "Ιστοσελίδα αρχικής ανάρτησης"
