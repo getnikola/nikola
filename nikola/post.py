@@ -72,7 +72,7 @@ class Post(object):
         self.translations = translations
         self.default_lang = default_lang
         self.messages = messages
-        self.template_name = template_name
+        self._template_name = template_name
 
         default_metadata = get_meta(self, file_metadata_regexp)
 
@@ -111,6 +111,10 @@ class Post(object):
                 meta.update(default_metadata)
                 meta.update(get_meta(self, file_metadata_regexp, lang))
                 self.meta[lang] = meta
+
+    @property
+    def template_name(self):
+        return self.meta('template') or self._template_name
 
     def _add_old_metadata(self):
         # Compatibility for themes up to Nikola 5.4.1
