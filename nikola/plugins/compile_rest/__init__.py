@@ -76,6 +76,7 @@ class CompileRest(PageCompiler):
                         'record_dependencies': True,
                         'stylesheet_path': None,
                         'link_stylesheet': True,
+                        'syntax_highlight': 'short',
                     })
                 out_file.write(output)
             deps_path = dest + '.dep'
