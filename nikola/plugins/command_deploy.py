@@ -23,7 +23,11 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
+from ast import literal_eval
+from datetime import datetime
 import os
+import subprocess
+
 
 from nikola.plugin_categories import Command
 
@@ -37,5 +41,25 @@ class Deploy(Command):
 
     def _execute(self, command, args):
         for command in self.site.config['DEPLOY_COMMANDS']:
+
+            # Get last succesful deploy date
+            timestamp_path = os.path.join(self.site.config['CACHE_FOLDER'], 'lastdeploy')
+            try:
+                with open(timestamp_path, 'rb') as inf:
+                    last_deploy = literal_eval(inf.read().strip())
+            except Exception:
+                last_deploy = datetime(1970,1,1)
+
             print("==>", command)
-            os.system(command)
+            ret = subprocess.check_call(command, shell=True)
+            if ret == 0: # successful deployment
+                print("Successful deployment")
+                new_deploy = datetime.now()
+                # Store timestamp of successful deployment
+                with open(timestamp_path, 'wb+') as outf:
+                    outf.write(repr(new_deploy))
+                # Here is where we would do things with whatever is
+                # on self.site.timeline and is newer than
+                # last_deploy
+            else:
+                print("Unsuccessful deployment")
