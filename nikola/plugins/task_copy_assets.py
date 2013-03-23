@@ -78,9 +78,8 @@ class CopyAssets(Task):
             def create_code_css():
                 from pygments.formatters import get_formatter_by_name
                 formatter = get_formatter_by_name('html', style=kw["code_color_scheme"])
-                style_data = formatter.get_style_defs('')
                 with codecs.open(code_css_path, 'wb+', 'utf8') as outf:
-                    outf.write(style_data)
+                    outf.write(formatter.get_style_defs('.code'))
 
             task = {
                 'basename': self.name,

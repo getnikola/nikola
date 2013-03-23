@@ -398,6 +398,20 @@ source for the content, and ``description`` is mostly useful for SEO.
 You can add your own metadata fields in the same manner, if you use a theme that
 supports them (for example: ``.. author: John Doe``)
 
+.. sidebar:: Other Metadata Fields
+
+   Nikola will also use other metadata fields:
+
+   nocomments
+       Set to "True" to disable comments. Example::
+
+           .. nocomments: True
+
+   template
+       Will change the template used to render this page/post specific page. Example::
+
+           .. template: story.tmpl
+
 
 .. note:: The Two-File Format
 
