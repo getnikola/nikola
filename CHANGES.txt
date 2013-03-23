@@ -13,6 +13,7 @@ Features
 * New STRIP_INDEX_HTML option for cleaner URLs
 * New alternative markdown compiler based on misaka
 * New "internals" doc
+* New CODE_COLOR_SCHEME option
 
 Bugfixes
 --------

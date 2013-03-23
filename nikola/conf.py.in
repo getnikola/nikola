@@ -214,8 +214,14 @@ post_compilers = ${POST_COMPILERS}
 # INDEXES_TITLE = ""  # If this is empty, the default is BLOG_TITLE
 # INDEXES_PAGES = ""  # If this is empty, the default is 'old posts page %d' translated
 
-# Name of the theme to use. Themes are located in themes/theme_name
+# Name of the theme to use.
 # THEME = 'site'
+
+# Color scheme to be used for code blocks. If your theme provide "assets/css/code.css" this
+# is ignored.
+# Can be any of autumn borland bw colorful default emacs friendly fruity manni monokai
+# murphy native pastie perldoc rrt tango trac vim vs
+# CODE_COLOR_SCHEME = default
 
 # If you use 'site-reveal' theme you can select several subthemes
 # THEME_REVEAL_CONGIF_SUBTHEME = 'sky' # You can also use: beige/serif/simple/night/default
