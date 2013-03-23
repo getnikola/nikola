@@ -48,11 +48,11 @@ class Deploy(Command):
                 with open(timestamp_path, 'rb') as inf:
                     last_deploy = literal_eval(inf.read().strip())
             except Exception:
-                last_deploy = datetime(1970,1,1)
+                last_deploy = datetime(1970, 1, 1)  # NOQA
 
             print("==>", command)
             ret = subprocess.check_call(command, shell=True)
-            if ret == 0: # successful deployment
+            if ret == 0:  # successful deployment
                 print("Successful deployment")
                 new_deploy = datetime.now()
                 # Store timestamp of successful deployment
