@@ -22,6 +22,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import codecs
 import os
 
 from nikola.plugin_categories import Task
@@ -76,12 +77,9 @@ class CopyAssets(Task):
 
             def create_code_css():
                 from pygments.formatters import get_formatter_by_name
-                #from pygments.styles import get_style_by_name
-
                 formatter = get_formatter_by_name('html', style=kw["code_color_scheme"])
-                #style = get_style_by_name(kw["code_color_scheme"])
                 style_data = formatter.get_style_defs('')
-                with open(code_css_path, 'wb+') as outf:
+                with codecs.open(code_css_path, 'wb+', 'utf8') as outf:
                     outf.write(style_data)
 
             task = {
