@@ -14,6 +14,7 @@ Features
 * New alternative markdown compiler based on misaka
 * New "internals" doc
 * Place links to RSS feeds more visible to the visitor
+* New CODE_COLOR_SCHEME option
 
 Bugfixes
 --------
@@ -48,6 +49,7 @@ Bugfixes
 * Make docutils a soft requirement
 * Normalize paths on task names (Issue #406)
 * Updated translations (all 100%!)
+* Planetoid requires only 3 runs now ;-)
 
 New in 5.4.2
 ============

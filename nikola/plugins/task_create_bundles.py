@@ -55,6 +55,7 @@ class BuildBundles(LateTask):
             'theme_bundles': get_theme_bundles(self.site.THEMES),
             'themes': self.site.THEMES,
             'files_folders': self.site.config['FILES_FOLDERS'],
+            'code_color_scheme': self.site.config['CODE_COLOR_SCHEME'],
         }
 
         def build_bundle(output, inputs):
