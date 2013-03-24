@@ -50,7 +50,7 @@ url_format = """ <url>
  </url>
 """
 
-get_lastmod = lambda p: datetime.datetime.fromtimestamp(os.stat(p).st_mtime).isoformat()
+get_lastmod = lambda p: datetime.datetime.fromtimestamp(os.stat(p).st_mtime).isoformat().split('T')[0]
 
 
 class Sitemap(LateTask):
@@ -75,19 +75,24 @@ class Sitemap(LateTask):
                 base_url = kw['base_url']
                 mapped_exts = kw['mapped_extensions']
                 outf.write(header)
+                locs = {}
                 for root, dirs, files in os.walk(output):
                     path = os.path.relpath(root, output)
                     path = path.replace(os.sep, '/') + '/'
                     lastmod = get_lastmod(root)
-                    outf.write(url_format.format(urljoin(base_url, path), lastmod))
+                    loc = urljoin(base_url, path)
+                    locs[loc] = url_format.format(loc, lastmod)
                     for fname in files:
                         if os.path.splitext(fname)[-1] in mapped_exts:
                             real_path = os.path.join(root, fname)
                             path = os.path.relpath(real_path, output)
                             path = path.replace(os.sep, '/')
                             lastmod = get_lastmod(real_path)
-                            outf.write(url_format.format(urljoin(base_url, path), lastmod))
+                            loc = urljoin(base_url, path)
+                            locs[loc] = url_format.format(loc, lastmod)
 
+                for k in sorted(locs.keys()):
+                    outf.write(locs[k])
                 outf.write("</urlset>")
 
         yield {
