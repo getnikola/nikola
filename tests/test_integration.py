@@ -192,7 +192,14 @@ class CommandInitInstallPlanetoidPlugin(EmptyBuildTest):
     @classmethod
     def patch_site(self):
         """Install the Planetoid"""
-        self.init_command.install_plugin(self.target_dir, 'command_planetoid')
+        try:
+            import feedparser
+            import peewee
+            self.init_command.install_plugin(
+                self.target_dir, 'command_planetoid')
+        except ImportError:
+            raise SkipTest('Necessary modules "feedparser" and "peewee" '
+                           'not found.')
 
     def test_plugin_folder_is_present(self):
         plugin_dir = os.path.join(self.target_dir, "plugins")
@@ -202,7 +209,6 @@ class CommandInitInstallPlanetoidPlugin(EmptyBuildTest):
         plugin_dir = os.path.join(self.target_dir, 'plugins')
 
         planetoid_plugin_dir = os.path.join(plugin_dir, 'command_planetoid')
-        # self.assertFalse(os.listdir(plugin_dir))
         self.assertTrue(os.path.isdir(planetoid_plugin_dir))
 
         plugin_information_file = os.path.join(
