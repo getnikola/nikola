@@ -56,6 +56,13 @@ class CommandInit(Command):
             'type': str,
             'help': "Specify an additional plugin to install.",
         },
+        {
+            'name': 'list_extra_plugins',
+            'long': 'list_extra_plugins',
+            'default': False,
+            'type': bool,
+            'help': "List available extra plugins.",
+        },
     ]
 
     SAMPLE_CONF = {
@@ -87,6 +94,19 @@ class CommandInit(Command):
     @staticmethod
     def get_path_to_nikola_modules():
         return os.path.dirname(nikola.__file__)
+
+    @classmethod
+    def get_path_to_extra_plugins(cls):
+        return os.path.join(cls.get_path_to_nikola_modules(), 'extra_plugins')
+
+    @classmethod
+    def list_extra_plugins(cls):
+        plugin_files = [name for name in os.listdir(cls.get_path_to_extra_plugins())
+                        if name.endswith('.plugin')]
+
+        print('The following extra plugins are available:')
+        for plugin_file in plugin_files:
+            print(' - {0}'.format(plugin_file[:-7]))
 
     @classmethod
     def copy_sample_site(cls, target):
@@ -145,9 +165,14 @@ class CommandInit(Command):
 
     def _execute(self, options={}, args=None):
         """Create a new site."""
+        if options.get('list_extra_plugins', False):
+            self.list_extra_plugins()
+            return
+
         if not args:
-            print("Usage: nikola init folder [options]")
+            print("Usage: nikola init [options] folder")
             return False
+
         target = args[0]
         if target is None:
             print(self.usage)
