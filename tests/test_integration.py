@@ -212,7 +212,7 @@ class CommandInitInstallPlanetoidPlugin(EmptyBuildTest):
         """Build the site."""
         with cd(self.target_dir):
             # The planetoid needs multiple builds.
-            for i in xrange(3):
+            for i in range(3):
                 main.main(["build"])
 
     def test_plugin_folder_is_present(self):
