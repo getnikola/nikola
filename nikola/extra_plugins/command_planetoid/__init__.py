@@ -31,28 +31,36 @@ from optparse import OptionParser
 import os
 
 from doit.tools import timeout
-import feedparser
-import peewee
 
 from nikola.plugin_categories import Command, Task
 from nikola.utils import config_changed
 
+try:
+    import feedparser
+except ImportError:
+    feedparser = None
 
-class Feed(peewee.Model):
-    name = peewee.CharField()
-    url = peewee.CharField(max_length=200)
-    last_status = peewee.CharField(null=True)
-    etag = peewee.CharField(max_length=200)
-    last_modified = peewee.DateTimeField()
+try:
+    import peewee
+except ImportError:
+    peewee = None
 
 
-class Entry(peewee.Model):
-    date = peewee.DateTimeField()
-    feed = peewee.ForeignKeyField(Feed)
-    content = peewee.TextField(max_length=20000)
-    link = peewee.CharField(max_length=200)
-    title = peewee.CharField(max_length=200)
-    guid = peewee.CharField(max_length=200)
+if peewee is not None:
+    class Feed(peewee.Model):
+        name = peewee.CharField()
+        url = peewee.CharField(max_length=200)
+        last_status = peewee.CharField(null=True)
+        etag = peewee.CharField(max_length=200)
+        last_modified = peewee.DateTimeField()
+
+    class Entry(peewee.Model):
+        date = peewee.DateTimeField()
+        feed = peewee.ForeignKeyField(Feed)
+        content = peewee.TextField(max_length=20000)
+        link = peewee.CharField(max_length=200)
+        title = peewee.CharField(max_length=200)
+        guid = peewee.CharField(max_length=200)
 
 
 class Planetoid(Command, Task):
@@ -65,6 +73,10 @@ class Planetoid(Command, Task):
         Entry.create_table(fail_silently=True)
 
     def gen_tasks(self):
+        if peewee is None:
+            print("You need to install the 'peewee' module.")
+            return
+
         self.init_db()
         self.load_feeds()
         for task in self.task_update_feeds():
@@ -125,6 +137,10 @@ class Planetoid(Command, Task):
 
     def task_update_feeds(self):
         """Download feed contents, add entries to the database."""
+        if feedparser is None:
+            print("You need to install the 'feedparser' module.")
+            return
+
         def update_feed(feed):
             modified = feed.last_modified.timetuple()
             etag = feed.etag
