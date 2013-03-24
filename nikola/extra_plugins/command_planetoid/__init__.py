@@ -99,7 +99,6 @@ class Planetoid(Command, Task):
             }
 
     def run(self, *args):
-        self.init_db()
         parser = OptionParser(usage="nikola %s [options]" % self.name)
         (options, args) = parser.parse_args(list(args))
 
