@@ -77,6 +77,11 @@ class Planetoid(Command, Task):
             print("You need to install the 'peewee' module.")
             return
 
+        if not os.path.isfile('feeds'):
+            print("You need to have a feeds-file present. "
+                  "Please see the planetoid README for more information.")
+            return
+
         self.init_db()
         self.load_feeds()
         for task in self.task_update_feeds():
@@ -179,7 +184,8 @@ class Planetoid(Command, Task):
                     return False
                 print("DATE:===>", date)
                 date = datetime.datetime(*(date[:6]))
-                title = "%s: %s" % (feed.name, entry_data.get('title', 'Sin título'))
+                title = "%s: %s" % (feed.name, entry_data.get(
+                    'title', 'Sin título'))
                 content = entry_data.get('content', None)
                 if content:
                     content = content[0].value
