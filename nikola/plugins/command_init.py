@@ -163,6 +163,8 @@ class CommandInit(Command):
             raise OSError(
                 'Plugin {0} not found. Did you spell it correctly?'.format(plugin_name))
 
+        print('Additional plugin {0} installed.'.format(plugin_name))
+
     def _execute(self, options={}, args=None):
         """Create a new site."""
         if options.get('list_extra_plugins', False):
