@@ -197,9 +197,23 @@ class CommandInitInstallPlanetoidPlugin(EmptyBuildTest):
             import peewee
             self.init_command.install_plugin(
                 self.target_dir, 'command_planetoid')
+
+            with open(os.path.join(self.target_dir, 'feeds'), 'w') as feeds:
+                feeds.write('#Niko\n')
+                feeds.write('http://www.nerdno.de/rss.xml\n')
+                feeds.write('Niko\n')
+
         except ImportError:
             raise SkipTest('Necessary modules "feedparser" and "peewee" '
                            'not found.')
+
+    @classmethod
+    def build(self):
+        """Build the site."""
+        with cd(self.target_dir):
+            # The planetoid needs multiple builds.
+            for i in xrange(3):
+                main.main(["build"])
 
     def test_plugin_folder_is_present(self):
         plugin_dir = os.path.join(self.target_dir, "plugins")
