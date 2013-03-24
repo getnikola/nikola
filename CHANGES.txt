@@ -13,13 +13,14 @@ Features
 * New STRIP_INDEX_HTML option for cleaner URLs
 * New alternative markdown compiler based on misaka
 * New "internals" doc
+* Place links to RSS feeds more visible to the visitor
 * New CODE_COLOR_SCHEME option
 * New "template" metadata that changes the template for a page/post (Issue #199)
 
 Bugfixes
 --------
 
-* Set locale to the value of "lang" in templates, so things like strftime 
+* Set locale to the value of "lang" in templates, so things like strftime
   use localized values. (Issue #368)
 * Fixed console command.
 * Cleaned up arbitrary metadata.

@@ -34,9 +34,13 @@
     %if rss_link:
         ${rss_link}
     %else:
-        %for language in translations:
-            <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${_link('rss', None, language)}">
-        %endfor
+        %if len(translations) > 1:
+            %for language in translations:
+                <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${_link('rss', None, language)}">
+            %endfor
+        %else:
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="${_link('rss', None)}">
+        %endif
     %endif
     %if favicons:
         %for name, file, size in favicons:
@@ -102,4 +106,3 @@
         %endif
     %endfor
 </%def>
-
