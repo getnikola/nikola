@@ -74,30 +74,29 @@ class Planetoid(Command, Task):
 
     def gen_tasks(self):
         if peewee is None:
-            print("You need to install the 'peewee' module.")
-            return
-
-        if not os.path.isfile('feeds'):
-            print("You need to have a feeds-file present. "
-                  "Please see the planetoid README for more information.")
-            return
-
-        self.init_db()
-        self.load_feeds()
-        for task in self.task_update_feeds():
-            yield task
-        for task in self.task_generate_posts():
-            yield task
-        yield {
+            yield {
             'basename': self.name,
             'name': '',
-            'actions': [],
-            'file_dep': ['feeds'],
-            'task_dep': [
-                self.name + "_fetch_feed",
-                self.name + "_generate_posts",
-            ]
-        }
+            'verbosity': 2,
+            'actions': ['echo "You need to install the \"peewee\" module."']
+            }
+        else:
+            self.init_db()
+            self.load_feeds()
+            for task in self.task_update_feeds():
+                yield task
+            for task in self.task_generate_posts():
+                yield task
+            yield {
+                'basename': self.name,
+                'name': '',
+                'actions': [],
+                'file_dep': ['feeds'],
+                'task_dep': [
+                    self.name + "_fetch_feed",
+                    self.name + "_generate_posts",
+                ]
+            }
 
     def run(self, *args):
         self.init_db()
