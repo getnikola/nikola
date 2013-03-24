@@ -109,7 +109,8 @@ class TranslatedBuildTest(EmptyBuildTest):
     def test_translated_titles(self):
         """Check that translated title is picked up."""
         en_file = os.path.join(self.target_dir, "output", "stories", "1.html")
-        es_file = os.path.join(self.target_dir, "output", "es", "stories", "1.html")
+        es_file = os.path.join(
+            self.target_dir, "output", "es", "stories", "1.html")
         # Files should be created
         self.assertTrue(os.path.isfile(en_file))
         self.assertTrue(os.path.isfile(es_file))
@@ -160,8 +161,9 @@ class RelativeLinkTest2(DemoBuildTest):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with codecs.open(conf_path, "rb", "utf-8") as inf:
             data = inf.read()
-            data = data.replace('("stories/*.txt", "stories", "story.tmpl", False),',
-                                '("stories/*.txt", "", "story.tmpl", False),')
+            data = data.replace(
+                '("stories/*.txt", "stories", "story.tmpl", False),',
+                '("stories/*.txt", "", "story.tmpl", False),')
             data = data.replace('# INDEX_PATH = ""',
                                 'INDEX_PATH = "blog"')
         with codecs.open(conf_path, "wb+", "utf8") as outf:
@@ -172,7 +174,8 @@ class RelativeLinkTest2(DemoBuildTest):
         """Check that the links in a story are correct"""
         conf_path = os.path.join(self.target_dir, "conf.py")
         data = open(conf_path).read()
-        test_path = os.path.join(self.target_dir, "output", "about-nikola.html")
+        test_path = os.path.join(
+            self.target_dir, "output", "about-nikola.html")
         flag = False
         with open(test_path, "rb") as inf:
             data = inf.read()
@@ -183,3 +186,25 @@ class RelativeLinkTest2(DemoBuildTest):
                     flag = True
         # But I also need to be sure it is there!
         self.assertTrue(flag)
+
+
+class CommandInitInstallPlanetoidPlugin(EmptyBuildTest):
+    @classmethod
+    def patch_site(self):
+        """Install the Planetoid"""
+        self.init_command.install_plugin(self.target_dir, 'command_planetoid')
+
+    def test_plugin_folder_is_present(self):
+        plugin_dir = os.path.join(self.target_dir, "plugins")
+        self.assertTrue(os.path.isdir(plugin_dir))
+
+    def test_planetoid_plugin_is_present(self):
+        plugin_dir = os.path.join(self.target_dir, 'plugins')
+
+        planetoid_plugin_dir = os.path.join(plugin_dir, 'command_planetoid')
+        # self.assertFalse(os.listdir(plugin_dir))
+        self.assertTrue(os.path.isdir(planetoid_plugin_dir))
+
+        plugin_information_file = os.path.join(
+            plugin_dir, 'command_planetoid.plugin')
+        self.assertTrue(os.path.isfile(plugin_information_file))

@@ -15,11 +15,12 @@ Features
 * New "internals" doc
 * New CODE_COLOR_SCHEME option
 * New "template" metadata that changes the template for a page/post (Issue #199)
+* Additional plugins can now be installed when running the `init`-command
 
 Bugfixes
 --------
 
-* Set locale to the value of "lang" in templates, so things like strftime 
+* Set locale to the value of "lang" in templates, so things like strftime
   use localized values. (Issue #368)
 * Fixed console command.
 * Cleaned up arbitrary metadata.

@@ -48,7 +48,14 @@ class CommandInit(Command):
             'default': False,
             'type': bool,
             'help': "Create a site filled with example data.",
-        }
+        },
+        {
+            'name': 'install_extra_plugin',
+            'long': 'install_extra_plugin',
+            'default': None,
+            'type': str,
+            'help': "Specify an additional plugin to install.",
+        },
     ]
 
     SAMPLE_CONF = {
@@ -77,6 +84,10 @@ class CommandInit(Command):
         'REDIRECTIONS': '[]',
     }
 
+    @staticmethod
+    def get_path_to_nikola_modules():
+        return os.path.dirname(nikola.__file__)
+
     @classmethod
     def copy_sample_site(cls, target):
         lib_path = cls.get_path_to_nikola_modules()
@@ -97,9 +108,40 @@ class CommandInit(Command):
         for folder in ('files', 'galleries', 'listings', 'posts', 'stories'):
             os.makedirs(os.path.join(target, folder))
 
-    @staticmethod
-    def get_path_to_nikola_modules():
-        return os.path.dirname(nikola.__file__)
+    @classmethod
+    def install_plugin(cls, target, plugin_name):
+        target_plugin_directory = os.path.join(target, 'plugins')
+        if not os.path.exists(target_plugin_directory):
+            os.makedirs(target_plugin_directory)
+
+        nikola_source = cls.get_path_to_nikola_modules()
+        source_extra_plugin_directory = os.path.join(
+            nikola_source, 'extra_plugins')
+        assert os.path.exists(
+            source_extra_plugin_directory), 'Missing folder extra_plugins'
+
+        source_plugin_information = os.path.join(
+            source_extra_plugin_directory, plugin_name + '.plugin')
+        assert os.path.exists(source_extra_plugin_directory), 'Missing plugin information file for plugin "{0}".'.format(
+            source_plugin_information)
+
+        source_plugin_directory = os.path.join(
+            source_extra_plugin_directory, plugin_name)
+        source_plugin_file = os.path.join(
+            source_extra_plugin_directory, plugin_name + '.py')
+        if os.path.isfile(source_plugin_file):
+            shutil.copyfile(source_plugin_information, os.path.join(
+                target_plugin_directory, plugin_name + '.plugin'))
+            shutil.copyfile(source_plugin_file, os.path.join(
+                target_plugin_directory, plugin_name + '.py'))
+        if os.path.isdir(source_plugin_directory):
+            shutil.copyfile(source_plugin_information, os.path.join(
+                target_plugin_directory, plugin_name + '.plugin'))
+            shutil.copytree(source_plugin_directory, os.path.join(
+                target_plugin_directory, plugin_name))
+        else:
+            raise OSError(
+                'Plugin {0} not found. Did you spell it correctly?'.format(plugin_name))
 
     def _execute(self, options={}, args=None):
         """Create a new site."""
@@ -120,3 +162,6 @@ class CommandInit(Command):
                 print("See README.txt in that folder for more information.")
 
             self.create_configuration(target)
+
+            if options and options.get('install_extra_plugin'):
+                self.install_plugin(target, options['install_extra_plugin'])
