@@ -29,6 +29,7 @@ import datetime
 import hashlib
 from optparse import OptionParser
 import os
+import sys
 
 from doit.tools import timeout
 
@@ -73,12 +74,17 @@ class Planetoid(Command, Task):
         Entry.create_table(fail_silently=True)
 
     def gen_tasks(self):
-        if peewee is None:
+        if peewee is None or sys.version_info[0] == 3:
+            if sys.version_info[0] == 3:
+                message = 'Peewee is currently incompatible with Python 3.'
+            else:
+                message = 'You need to install the \"peewee\" module.'
+
             yield {
             'basename': self.name,
             'name': '',
             'verbosity': 2,
-            'actions': ['echo "You need to install the \"peewee\" module."']
+            'actions': ['echo "%s"' % message]
             }
         else:
             self.init_db()
