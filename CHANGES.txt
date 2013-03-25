@@ -16,7 +16,7 @@ Features
 * Place links to RSS feeds more visible to the visitor
 * New CODE_COLOR_SCHEME option
 * New "template" metadata that changes the template for a page/post (Issue #199)
-* Added workaround for when Disqus doesn't support your exact locale 
+* Added workaround for when Disqus doesn't support your exact locale
   (spanish only at the moment) Issue #389
 
 Bugfixes
@@ -53,6 +53,7 @@ Bugfixes
 * Normalize paths on task names (Issue #406)
 * Updated translations (all 100%!)
 * Planetoid requires only 3 runs now ;-)
+* Blogger import: imports will not result in an TypeError because str.join expects all it's arguments to be of type str
 
 New in 5.4.2
 ============
