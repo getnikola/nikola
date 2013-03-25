@@ -54,6 +54,7 @@ Bugfixes
 * Normalize paths on task names (Issue #406)
 * Updated translations (all 100%!)
 * Planetoid requires only 3 runs now ;-)
+* Blogger import: imports will not result in an TypeError because str.join expects all it's arguments to be of type str
 
 New in 5.4.2
 ============

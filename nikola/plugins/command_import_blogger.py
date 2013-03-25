@@ -176,9 +176,16 @@ class CommandImportBlogger(Command):
 
     @staticmethod
     def write_metadata(filename, title, slug, post_date, description, tags):
+        if not description:
+            description = ""
+
         with codecs.open(filename, "w+", "utf8") as fd:
-            fd.write('\n'.join((title, slug, post_date, ','.join(tags), '',
-                                description)))
+            fd.write('{0}\n'.format(title))
+            fd.write('{0}\n'.format(slug))
+            fd.write('{0}\n'.format(post_date))
+            fd.write('{0}\n'.format(','.join(tags)))
+            fd.write('\n')
+            fd.write('{0}\n'.format(description))
 
     def import_item(self, item, out_folder=None):
         """Takes an item from the feed and creates a post file."""
