@@ -70,10 +70,10 @@ class Nikola(object):
     Takes a site config as argument on creation.
     """
     EXTRA_PLUGINS = [
-        'command_planetoid',
-        'compile_ipynb',
-        'task_localsearch',
-        'task_mustache',
+        'planetoid',
+        'ipynb',
+        'localsearch',
+        'mustache',
     ]
 
     def __init__(self, **config):
