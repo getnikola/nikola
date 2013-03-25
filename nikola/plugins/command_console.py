@@ -60,7 +60,8 @@ class Deploy(Command):
             SITE = Nikola(**conf.__dict__)
             SITE.scan_posts()
             bpython.embed(banner='Nikola Console (conf = configuration, SITE '
-                          '= site engine)')
+                          '= site engine)', locals_={'conf': conf, 'SITE':
+                                                     SITE})
 
     def plain(self):
         """Plain Python shell."""
