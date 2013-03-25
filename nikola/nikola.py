@@ -69,6 +69,12 @@ class Nikola(object):
 
     Takes a site config as argument on creation.
     """
+    EXTRA_PLUGINS = [
+        'command_planetoid',
+        'compile_ipynb',
+        'task_localsearch',
+        'task_mustache',
+    ]
 
     def __init__(self, **config):
         """Setup proper environment for running tasks."""
@@ -100,6 +106,7 @@ class Nikola(object):
             'DEPLOY_COMMANDS': [],
             'DISABLED_PLUGINS': (),
             'DISQUS_FORUM': 'nikolademo',
+            'ENABLED_EXTRAS': (),
             'EXTRA_HEAD_DATA': '',
             'FAVICONS': {},
             'FILE_METADATA_REGEXP': None,
@@ -196,23 +203,28 @@ class Nikola(object):
 
         self.commands = {}
         # Activate all command plugins
-        for pluginInfo in self.plugin_manager.getPluginsOfCategory("Command"):
-            if pluginInfo.name in self.config['DISABLED_PLUGINS']:
-                self.plugin_manager.removePluginFromCategory(pluginInfo, "Command")
+        for plugin_info in self.plugin_manager.getPluginsOfCategory("Command"):
+            if plugin_info.name in self.config['DISABLED_PLUGINS'] or (
+                plugin_info.name in self.EXTRA_PLUGINS and
+                plugin_info.name not in self.config['ENABLED_EXTRAS']):
+                self.plugin_manager.removePluginFromCategory(plugin_info, "Command")
                 continue
-            self.plugin_manager.activatePluginByName(pluginInfo.name)
-            pluginInfo.plugin_object.set_site(self)
-            pluginInfo.plugin_object.short_help = pluginInfo.description
-            self.commands[pluginInfo.name] = pluginInfo.plugin_object
+
+            self.plugin_manager.activatePluginByName(plugin_info.name)
+            plugin_info.plugin_object.set_site(self)
+            plugin_info.plugin_object.short_help = plugin_info.description
+            self.commands[plugin_info.name] = plugin_info.plugin_object
 
         # Activate all task plugins
         for task_type in ["Task", "LateTask"]:
-            for pluginInfo in self.plugin_manager.getPluginsOfCategory(task_type):
-                if pluginInfo.name in self.config['DISABLED_PLUGINS']:
-                    self.plugin_manager.removePluginFromCategory(pluginInfo, task_type)
+            for plugin_info in self.plugin_manager.getPluginsOfCategory(task_type):
+                if plugin_info.name in self.config['DISABLED_PLUGINS'] or (
+                    plugin_info.name in self.EXTRA_PLUGINS and
+                    plugin_info.name not in self.config['ENABLED_EXTRAS']):
+                    self.plugin_manager.removePluginFromCategory(plugin_info, task_type)
                     continue
-                self.plugin_manager.activatePluginByName(pluginInfo.name)
-                pluginInfo.plugin_object.set_site(self)
+                self.plugin_manager.activatePluginByName(plugin_info.name)
+                plugin_info.plugin_object.set_site(self)
 
         # set global_context for template rendering
         self.GLOBAL_CONTEXT = {
@@ -299,10 +311,10 @@ class Nikola(object):
         self.compilers = {}
         self.inverse_compilers = {}
 
-        for pluginInfo in self.plugin_manager.getPluginsOfCategory(
+        for plugin_info in self.plugin_manager.getPluginsOfCategory(
                 "PageCompiler"):
-            self.compilers[pluginInfo.name] = \
-                pluginInfo.plugin_object.compile_html
+            self.compilers[plugin_info.name] = \
+                plugin_info.plugin_object.compile_html
 
     def get_compiler(self, source_name):
         """Get the correct compiler for a post from `conf.post_compilers`
