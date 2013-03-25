@@ -22,72 +22,82 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import print_function, absolute_import
+from __future__ import print_function, absolute_import, unicode_literals
+import codecs
+import datetime
 import os
-import sys
-import tempfile
+try:
+    from urlparse import urljoin
+except ImportError:
+    from urllib.parse import urljoin  # NOQA
 
 from nikola.plugin_categories import LateTask
 from nikola.utils import config_changed
 
-from nikola.plugins.task_sitemap import sitemap_gen
+
+header = """<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+                        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+"""
+
+url_format = """ <url>
+  <loc>{0}</loc>
+  <lastmod>{1}</lastmod>
+  <priority>0.5000</priority>
+ </url>
+"""
+
+get_lastmod = lambda p: datetime.datetime.fromtimestamp(os.stat(p).st_mtime).isoformat().split('T')[0]
 
 
 class Sitemap(LateTask):
-    """Copy theme assets into output."""
+    """Generate google sitemap."""
 
     name = "sitemap"
 
     def gen_tasks(self):
-        if sys.version_info[0] == 3:
-            print("sitemap generation is not available for python 3")
-            yield {
-                'basename': 'sitemap',
-                'name': 'sitemap',
-                'actions': [],
-            }
-            return
         """Generate Google sitemap."""
         kw = {
             "base_url": self.site.config["BASE_URL"],
             "site_url": self.site.config["SITE_URL"],
             "output_folder": self.site.config["OUTPUT_FOLDER"],
+            "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.html', '.htm'])
         }
-        output_path = os.path.abspath(kw['output_folder'])
-        sitemap_path = os.path.join(output_path, "sitemap.xml.gz")
+        output_path = kw['output_folder']
+        sitemap_path = os.path.join(output_path, "sitemap.xml")
 
         def sitemap():
-            # Generate config
-            config_data = """<?xml version="1.0" encoding="UTF-8"?>
-    <site
-    base_url="{0}"
-    store_into="{1}"
-    verbose="1" >
-    <directory path="{2}" url="{3}" />
-    <filter action="drop" type="wildcard" pattern="*~" />
-    <filter action="drop" type="regexp" pattern="/\.[^/]*" />
-    </site>""".format(kw["site_url"], sitemap_path, output_path,
-                      kw["base_url"])
-            config_file = tempfile.NamedTemporaryFile(delete=False)
-            config_file.write(config_data.encode('utf8'))
-            config_file.close()
+            with codecs.open(sitemap_path, 'wb+', 'utf8') as outf:
+                output = kw['output_folder']
+                base_url = kw['base_url']
+                mapped_exts = kw['mapped_extensions']
+                outf.write(header)
+                locs = {}
+                for root, dirs, files in os.walk(output):
+                    path = os.path.relpath(root, output)
+                    path = path.replace(os.sep, '/') + '/'
+                    lastmod = get_lastmod(root)
+                    loc = urljoin(base_url, path)
+                    locs[loc] = url_format.format(loc, lastmod)
+                    for fname in files:
+                        if os.path.splitext(fname)[-1] in mapped_exts:
+                            real_path = os.path.join(root, fname)
+                            path = os.path.relpath(real_path, output)
+                            path = path.replace(os.sep, '/')
+                            lastmod = get_lastmod(real_path)
+                            loc = urljoin(base_url, path)
+                            locs[loc] = url_format.format(loc, lastmod)
 
-            # Generate sitemap
-            sitemap = sitemap_gen.CreateSitemapFromFile(config_file.name, True)
-            if not sitemap:
-                sitemap_gen.output.Log('Configuration file errors -- exiting.',
-                                       0)
-            else:
-                sitemap.Generate()
-                sitemap_gen.output.Log('Number of errors: {0}'.format(
-                                       sitemap_gen.output.num_errors), 1)
-                sitemap_gen.output.Log('Number of warnings: {0}'.format(
-                                       sitemap_gen.output.num_warns), 1)
-            os.unlink(config_file.name)
+                for k in sorted(locs.keys()):
+                    outf.write(locs[k])
+                outf.write("</urlset>")
 
         yield {
             "basename": "sitemap",
-            "name": os.path.join(kw['output_folder'], "sitemap.xml.gz"),
+            "name": sitemap_path,
             "targets": [sitemap_path],
             "actions": [(sitemap,)],
             "uptodate": [config_changed(kw)],

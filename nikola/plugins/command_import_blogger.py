@@ -73,7 +73,7 @@ class CommandImportBlogger(Command):
     ]
 
     def _execute(self, options, args):
-        """Import a Wordpress blog from an export file into a Nikola site."""
+        """Import a Blogger blog from an export file into a Nikola site."""
 
         # Parse the data
         if feedparser is None:
@@ -284,7 +284,7 @@ class CommandImportBlogger(Command):
         if not self.import_into_existing_site:
             filename = 'conf.py'
         else:
-            filename = 'conf.py.wordpress_import-{0}'.format(
+            filename = 'conf.py.blogger_import-{0}'.format(
                 datetime.datetime.now().strftime('%Y%m%d_%H%M%s'))
         config_output_path = os.path.join(self.output_folder, filename)
         print('Configuration will be written to: ' + config_output_path)

@@ -2,14 +2,14 @@
 {% block content %}
     {% for post in posts %}
         <div class="postbox">
-        <h1><a href="{{post.permalink(lang)}}">{{post.title(lang)}}</a>
+        <h1><a href="{{post.permalink()}}">{{post.title()}}</a>
         <small>&nbsp;&nbsp;
-             {{messages[lang]["Posted"]}}: {{post.date.strftime(date_format)}}
+             {{messages("Posted")}}: {{post.formatted_date(date_format)}}
         </small></h1>
         <hr>
-        {{post.text(lang, index_teasers)}}
+        {{post.text(teaser_only=index_teasers)}}
         <p>
-        {% if disqus_forum %}
+        {% if disqus_forum and not post.meta('nocomments')%}
             <a href="{{post.permalink()}}#disqus_thread"  data-disqus-identifier="{{post.base_path}}">Comments</a>
         {% endif %}
         </div>
@@ -18,11 +18,11 @@
 <ul class="pager">
   {%if prevlink %}
     <li class="previous">
-        <a href="{{prevlink}}">&larr; {{messages[lang]["Newer posts"]}}</a>
+        <a href="{{prevlink}}">&larr; {{messages("Newer posts")}}</a>
   {% endif %}
   {% if nextlink %}
     <li class="next">
-        <a href="{{nextlink}}">{{messages[lang]["Older posts"]}}  &rarr;</a>
+        <a href="{{nextlink}}">{{messages("Older posts")}}  &rarr;</a>
   {% endif %}
 </ul>
 

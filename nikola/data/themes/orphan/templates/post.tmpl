@@ -7,15 +7,17 @@
     ${helper.html_title()}
     <hr>
     <small>
-        ${messages[lang]["Posted"]}: ${post.date.strftime(date_format)}
+        ${messages("Posted")}: ${post.formatted_date(date_format)}
         ${helper.html_translations(post)}
         &nbsp;&nbsp;|&nbsp;&nbsp;
-        <a href="${post.meta[lang]['slug']+'.txt'}" id="sourcelink">${messages[lang]["Source"]}</a>
+        <a href="${post.meta('slug')+'.txt'}" id="sourcelink">${messages("Source")}</a>
         ${helper.html_tags(post)}
     </small>
     <hr>
-    ${post.text(lang)}
+    ${post.text()}
     ${helper.html_pager(post)}
-    ${disqus.html_disqus(post.permalink(absolute=True), post.title(lang), post.base_path)}
+    % if not post.meta('nocomments'):
+        ${disqus.html_disqus(post.permalink(absolute=True), post.title(), post.base_path)}
+    % endif
     </div>
 </%block>

@@ -28,7 +28,7 @@ from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
 
-class slides(Directive):
+class Slides(Directive):
     """ Restructured text extension for inserting slideshows."""
     has_content = True
     option_spec = {
@@ -89,4 +89,4 @@ class slides(Directive):
         return [nodes.raw('', '\n'.join(output), format='html')]
 
 
-directives.register_directive('slides', slides)
+directives.register_directive('slides', Slides)

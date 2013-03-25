@@ -22,11 +22,14 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import unicode_literals
+
+import codecs
 import json
 import os
 
 from nikola.plugin_categories import Task
-from nikola.utils import config_changed, copy_file
+from nikola.utils import config_changed, copy_file, unicode_str
 
 
 class Mustache(Task):
@@ -73,8 +76,7 @@ class Mustache(Task):
 
             # Configuration
             for k, v in self.site.config.items():
-                # FIXME: not py3 ready
-                if isinstance(v, (str, unicode)):  # NOQA
+                if isinstance(v, (str, unicode_str)):  # NOQA
                     data[k] = v
 
             # Tag data
@@ -137,7 +139,7 @@ class Mustache(Task):
                 os.makedirs(os.path.dirname(path))
             except:
                 pass
-            with open(path, 'wb+') as fd:
+            with codecs.open(path, 'wb+', 'utf8') as fd:
                 fd.write(json.dumps(data))
 
         for lang in kw["translations"]:
@@ -174,8 +176,8 @@ class Mustache(Task):
         dst = os.path.join(kw['output_folder'], 'mustache.html')
 
         def copy_mustache():
-            with open(src, 'rb') as in_file:
-                with open(dst, 'wb+') as out_file:
+            with codecs.open(src, 'rb', 'utf8') as in_file:
+                with codecs.open(dst, 'wb+', 'utf8') as out_file:
                     data = in_file.read().replace('{{first_post_data}}',
                                                   first_post_data)
                     out_file.write(data)

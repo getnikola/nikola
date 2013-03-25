@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{{set_locale(lang)}}
 <html lang="{{lang}}">
 <head>
     <meta charset="utf-8">
@@ -42,6 +43,7 @@
     {% endif %}
     {% block extra_head %}
     {% endblock %}
+    {{extra_head_data}}
 </head>
 <body>
     {% if add_this_buttons %}
@@ -58,10 +60,10 @@
         {% block belowtitle%}
         {% if translations|length > 1 %}
         <small>
-            {{ messages[lang]["Also available in"] }}:&nbsp; 
+            {{ messages("Also available in") }}:&nbsp; 
             {% for langname in translations.keys() %}
                 {% if langname != lang %}
-                    <a href="{{_link("index", None, langname)}}">{{messages[langname]["LANGUAGE"]}}</a>
+                    <a href="{{_link("index", None, langname)}}">{{messages("LANGUAGE", langname)}}</a>
                 {% endif %}
             {% endfor %}
         </small>
@@ -106,7 +108,6 @@
     </div>
     </div>
 </div>
-    {{analytics}}
     <!-- late load javascript -->
     {% if use_bundles %}
         {% if use_cdn %}
@@ -127,5 +128,6 @@
         <script src="/assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
         <script src="/assets/js/slides.min.jquery.js" type="text/javascript"></script>
     {% endif %}
+    {{analytics}}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
 </body>

@@ -398,6 +398,20 @@ source for the content, and ``description`` is mostly useful for SEO.
 You can add your own metadata fields in the same manner, if you use a theme that
 supports them (for example: ``.. author: John Doe``)
 
+.. sidebar:: Other Metadata Fields
+
+   Nikola will also use other metadata fields:
+
+   nocomments
+       Set to "True" to disable comments. Example::
+
+           .. nocomments: True
+
+   template
+       Will change the template used to render this page/post specific page. Example::
+
+           .. template: story.tmpl
+
 
 .. note:: The Two-File Format
 
@@ -572,7 +586,7 @@ You surely want to edit these options::
 
     # Data about this site
     BLOG_TITLE = "Demo Site"
-    BLOG_URL = "http://nikola.ralsina.com.ar"
+    SITE_URL = "http://nikola.ralsina.com.ar"
     BLOG_EMAIL = "joe@demo.site"
     BLOG_DESCRIPTION = "This is a demo site for Nikola."
 
@@ -718,6 +732,10 @@ Disqus is a good option because:
 3) It's free.
 4) It's damn nice.
 
+You can disable comments for a post by adding a "nocomments" metadata field to it::
+
+    .. nocomments: True
+
 .. admonition:: Important
 
    In some cases, when you run the test site, you won't see the comments.
@@ -844,8 +862,8 @@ the embedded player will be set to the native height and width of the video.
 You can override this if you wish::
 
     .. vimeo:: 20241459
-        height=240
-        width=320
+       :height: 240
+       :width: 320
 
 Soundcloud
 ~~~~~~~~~~
@@ -860,22 +878,19 @@ The ID is 78131362 and you can embed the audio with this::
 
     .. soundcloud:: 78131362
 
-code-block
-~~~~~~~~~~
+Code
+~~~~
 
-This is a somewhat complicated directive to display code nicely. You can just
-embed code like this::
+The ``code`` directive has been included in docutils since version 0.9 and now
+replaces Nikola's ``code-block`` directive. To ease the transition, two aliases
+for ``code`` directive are provided: ``code-block`` and ``sourcecode``::
 
-    .. code-block:: python
+    .. code:: python
+       :number-lines:
 
-        print "Hello World!"
+       print("Our virtues and our failings are inseparable")
 
-Or you can include the code from a file::
-
-    .. code-block:: python
-       :include: /foo/bar/baz.py
-
-listing
+Listing
 ~~~~~~~
 
 To use this, you have to put your source code files inside ``listings`` or whatever your
@@ -886,27 +901,7 @@ To use this, you have to put your source code files inside ``listings`` or whate
 Will include the source code from ``foo.py``, highlight its syntax in python mode,
 and also create a ``listings/foo.py.html`` page and the listing will have a title linking to it.
 
-Advanced Code Options
-~~~~~~~~~~~~~~~~~~~~~
-
-Both code-block and listing support a number of options, including these:
-
-start-at
-    A string, the diplayed code will start when it finds this
-end-at
-    A string, the diplayed code will end when it finds this
-start-after
-    A string, the diplayed code will start in the line after this
-end-before
-    A string, the diplayed code will end in the line before this
-linenos
-    Display line numbers
-linenos_offset
-    Use the original file's line numbers (warning: broken)
-tab-width
-    Size of the tabs (default 4)
-
-gist
+Gist
 ~~~~
 
 You can easily embed GitHub gists with this directive, like this::
@@ -1012,7 +1007,7 @@ corresponding lines in your ``conf.py``.
 An example configuration that uses the Twitter nickname of the website
 and the authors Twitter user ID is found below.
 
-.. code-block:: Python
+.. code-block:: python
 
     TWITTER_CARD = {
         'use_twitter_cards': True,  # enable Twitter Cards / Open Graph

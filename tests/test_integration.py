@@ -3,12 +3,14 @@ from __future__ import unicode_literals, print_function
 
 import codecs
 from contextlib import contextmanager
+import locale
 import os
 import shutil
 import tempfile
 import unittest
 
 import lxml.html
+from nose.plugins.skip import SkipTest
 
 from context import nikola
 from nikola import main
@@ -66,6 +68,7 @@ class EmptyBuildTest(unittest.TestCase):
     @classmethod
     def tearDownClass(self):
         """Remove the demo site."""
+        shutil.rmtree(self.tmpdir)
 
     def test_build(self):
         """Ensure the build did something."""
@@ -95,6 +98,13 @@ class TranslatedBuildTest(EmptyBuildTest):
     """Test a site with translated content."""
 
     dataname = "translated_titles"
+
+    def __init__(self, *a, **kw):
+        super(TranslatedBuildTest, self).__init__(*a, **kw)
+        try:
+            locale.setlocale(locale.LC_ALL, ("es", "utf8"))
+        except:
+            raise SkipTest
 
     def test_translated_titles(self):
         """Check that translated title is picked up."""

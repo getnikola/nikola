@@ -6,15 +6,15 @@
     % for post in posts:
         <section>
         <div class="postbox">
-        <h1><a href="${post.permalink(lang)}">${post.title(lang)}</a>
+        <h1><a href="${post.permalink()}">${post.title()}</a>
         <small>&nbsp;&nbsp;
-             ${messages[lang]["Posted"]}: <time class="published" datetime="${post.date.isoformat()}">${post.date.strftime(date_format)}</time>
+             ${messages[lang]["Posted"]}: <time class="published" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time>
         </small></h1>
         <hr>
-        ${post.text(lang, index_teasers)}
-        ${disqus.html_disqus_link(post.permalink()+"#disqus_thread", post.base_path)}
-        </div>
+        ${post.text(teaser_only=index_teasers)}
+        ${disqus.html_disqus_link(post.permalink()+"#/0/1", post.base_path)}
         ${helper.html_pager()}
+        </div>
         </section>
     % endfor
     ${disqus.html_disqus_script()}
@@ -29,8 +29,4 @@
     history: true
     })
     </script>
-</%block>
-
-<%block name="outside_pager">
-
 </%block>

@@ -1,3 +1,4 @@
+# coding: utf8
 # Copyright (c) 2012 Roberto Alsina y otros.
 
 # Permission is hereby granted, free of charge, to any
@@ -22,8 +23,9 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+
 from docutils import nodes
-from docutils.parsers.rst import directives
+from docutils.parsers.rst import Directive, directives
 
 try:
     import requests
@@ -37,6 +39,7 @@ except ImportError:
     except ImportError:
         json = None
 
+
 CODE = """<iframe src="http://player.vimeo.com/video/{vimeo_id}"
 width="{width}" height="{height}"
 frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen>
@@ -47,46 +50,69 @@ VIDEO_DEFAULT_HEIGHT = 500
 VIDEO_DEFAULT_WIDTH = 281
 
 
-def vimeo(name, args, options, content, lineno, contentOffset, blockText,
-          state, stateMachine):
-    """ Restructured text extension for inserting vimeo embedded videos """
-    if requests is None:
-        raise Exception("To use the Vimeo directive you need to install the "
-                        "requests module.")
-    if json is None:
-        raise Exception("To use the Vimeo directive you need python 2.6 or to "
-                        "install the simplejson module.")
-    if len(content) == 0:
-        return
+class Vimeo(Directive):
+    """ Restructured text extension for inserting vimeo embedded videos
 
-    string_vars = {'vimeo_id': content[0]}
-    extra_args = content[1:]  # Because content[0] is ID
-    extra_args = [ea.strip().split("=") for ea in extra_args]  # key=value
-    extra_args = [ea for ea in extra_args if len(ea) == 2]  # drop bad lines
-    extra_args = dict(extra_args)
-    if 'width' in extra_args:
-        string_vars['width'] = extra_args.pop('width')
-    if 'height' in extra_args:
-        string_vars['height'] = extra_args.pop('height')
+        Usage:
+            .. vimeo:: 20241459
+               :height: 400
+               :width: 600
 
-    # Only need to make a connection if width and height aren't provided
-    if 'height' not in string_vars or 'width' not in string_vars:
-        string_vars['height'] = VIDEO_DEFAULT_HEIGHT
-        string_vars['width'] = VIDEO_DEFAULT_WIDTH
+    """
+    has_content = True
+    required_arguments = 1
+    option_spec = {
+        "width": directives.positive_int,
+        "height": directives.positive_int,
+    }
 
-        if json:  # we can attempt to retrieve video attributes from vimeo
-            try:
-                url = ('http://vimeo.com/api/v2/video/{vimeo_id}'
-                       '.json'.format(**string_vars))
-                data = requests.get(url).text
-                video_attributes = json.loads(data)
-                string_vars['height'] = video_attributes['height']
-                string_vars['width'] = video_attributes['width']
-            except Exception:
-                # fall back to the defaults
-                pass
+    # set to False for not querying the vimeo api for size
+    request_size = True
 
-    return [nodes.raw('', CODE.format(**string_vars), format='html')]
+    def run(self):
+        self.check_content()
+        if self.request_size:
+            self.check_modules()
+            self.set_video_size()
+        options = {
+            'vimeo_id': self.arguments[0],
+            'width': 600,
+            'height': 160,
+        }
+        options.update(self.options)
+        return [nodes.raw('', CODE.format(**options), format='html')]
 
-vimeo.content = True
-directives.register_directive('vimeo', vimeo)
+    def check_modules(self):
+        if requests is None:
+            raise Exception("To use the Vimeo directive you need to install "
+                            "the requests module.")
+        if json is None:
+            raise Exception("To use the Vimeo directive you need python 2.6 "
+                            "or to install the simplejson module.")
+
+    def set_video_size(self):
+        # Only need to make a connection if width and height aren't provided
+        if 'height' not in self.options or 'width' not in self.options:
+            self.options['height'] = VIDEO_DEFAULT_HEIGHT
+            self.options['width'] = VIDEO_DEFAULT_WIDTH
+
+            if json:  # we can attempt to retrieve video attributes from vimeo
+                try:
+                    url = ('http://vimeo.com/api/v2/video/{vimeo_id}'
+                           '.json'.format(**self.options))
+                    data = requests.get(url).text
+                    video_attributes = json.loads(data)
+                    self.options['height'] = video_attributes['height']
+                    self.options['width'] = video_attributes['width']
+                except Exception:
+                    # fall back to the defaults
+                    pass
+
+    def check_content(self):
+        if self.content:
+            raise self.warning("This directive does not accept content. The "
+                               "'key=value' format for options is deprecated, "
+                               "use ':key: value' instead")
+
+
+directives.register_directive('vimeo', Vimeo)

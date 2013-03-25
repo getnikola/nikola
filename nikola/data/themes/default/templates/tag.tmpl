@@ -1,7 +1,32 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="list_post.tmpl"/>
 <%block name="extra_head">
+    %if len(translations) > 1:
         %for language in translations:
-            <link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for tag ${tag} (${language})" href="${_link("tag_rss", tag, lang)}">
+            <link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for tag ${tag} (${language})" href="${_link("tag_rss", tag, language)}">
         %endfor
+    %else:
+        <link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for tag ${tag}" href="${_link("tag_rss", tag)}">
+    %endif
+</%block>
+
+<%block name="content">
+        <!--Body content-->
+        <div class="postbox">
+        <h1>${title}</h1>
+        %if len(translations) > 1:
+            %for language in translations:
+                <a href="${_link("tag_rss", tag, language)}">RSS (${language})</a>&nbsp;
+            %endfor
+        %else:
+            <a href="${_link("tag_rss", tag)}">RSS</a>
+        %endif
+        <br>
+        <ul class="unstyled">
+        % for post in posts:
+            <li><a href="${post.permalink()}">[${post.formatted_date(date_format)}] ${post.title()}</a>
+        % endfor
+        </ul>
+        </div>
+        <!--End of body content-->
 </%block>

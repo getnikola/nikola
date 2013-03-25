@@ -1,14 +1,58 @@
 New in master
 =============
 
+Features
+--------
+
+* Added gist support for Markdown.
+* New "nocomments" metadata that disables comments for a page/post (Issue #278)
+* New HIDE_UNTRANSLATED_POSTS option (does nothing yet)
+* New EXTRA_HEAD_DATA option, which adds extra things in <HEAD> (Issue #385)
+* Moved translations to transifex.com
+* New custom sitemap generator (Issue #395)
+* New STRIP_INDEX_HTML option for cleaner URLs
+* New alternative markdown compiler based on misaka
+* New "internals" doc
+* Place links to RSS feeds more visible to the visitor
+* New CODE_COLOR_SCHEME option
+* New "template" metadata that changes the template for a page/post (Issue #199)
+* Added workaround for when Disqus doesn't support your exact locale 
+  (spanish only at the moment) Issue #389
+
 Bugfixes
 --------
 
-* Set locale to the value of "lang" in templates, so things like strftime 
+* Set locale to the value of "lang" in templates, so things like strftime
   use localized values. (Issue #368)
 * Fixed console command.
 * Cleaned up arbitrary metadata.
 * Don't crash in posts without actual post text.
+* Nicer tag listing.
+* Fixed unicode bug in markdown compiler.
+* Fixed unicode crash with polish dates and %B (Issue #383)
+* Fixed localsearch plugin
+* Warn if combining USE_CDN with a theme providing a copy of bootstrap (Issue #386)
+* Improved localsearch README
+* Updated to Tipue 2.1
+* Don't index draft posts for Tipue (Issue #387)
+* Modernized all rst extensions, added tests (rbistolfi)
+* Removed obsolete custom code-block directive
+* New function messages(msgid, lang=current_lang) available for templates
+* Fixed teasers (Issue #398)
+* Smarter guessing of the default post format (Issue #400)
+* Make headings not overlap navbar in site theme.
+* Added dummy codeblock fallback for docutils < 0.9
+* Detect dependency on included files in rest compiler
+* Use gallery path from config
+* Don't fail in corrupted images
+* Don't assume filenames are ASCII
+* Don't crash if sidebar_links is not set for a language.
+* All RSS feed links for tags pointed to the DEFAULT_LANG one in some themes.
+* Nikola.link and Nikola.path are now locale aware and lang is optional.
+* Make docutils a soft requirement
+* Normalize paths on task names (Issue #406)
+* Updated translations (all 100%!)
+* Planetoid requires only 3 runs now ;-)
 
 New in 5.4.2
 ============

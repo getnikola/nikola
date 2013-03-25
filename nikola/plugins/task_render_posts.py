@@ -56,10 +56,12 @@ class RenderPosts(Task):
                     source_lang = source + '.' + lang
                     if os.path.exists(source_lang):
                         source = source_lang
+                    elif self.site.config['HIDE_UNTRANSLATED_POSTS']:
+                        continue
                 flag = True
                 yield {
                     'basename': self.name,
-                    'name': dest.encode('utf-8'),
+                    'name': dest,
                     'file_dep': post.fragment_deps(lang),
                     'targets': [dest],
                     'actions': [(self.site.get_compiler(post.source_path),

@@ -62,6 +62,7 @@ class Galleries(Task):
             'default_lang': self.site.config['DEFAULT_LANG'],
             'blog_description': self.site.config['BLOG_DESCRIPTION'],
             'use_filename_as_title': self.site.config['USE_FILENAME_AS_TITLE'],
+            'gallery_path': self.site.config['GALLERY_PATH']
         }
 
         # FIXME: lots of work is done even when images don't change,
@@ -70,7 +71,7 @@ class Galleries(Task):
         template_name = "gallery.tmpl"
 
         gallery_list = []
-        for root, dirs, files in os.walk('galleries'):
+        for root, dirs, files in os.walk(kw['gallery_path']):
             gallery_list.append(root)
         if not gallery_list:
             yield {
@@ -95,7 +96,7 @@ class Galleries(Task):
             if not os.path.isdir(output_gallery):
                 yield {
                     'basename': str('render_galleries'),
-                    'name': str(output_gallery),
+                    'name': output_gallery,
                     'actions': [(os.makedirs, (output_gallery,))],
                     'targets': [output_gallery],
                     'clean': True,
@@ -152,7 +153,7 @@ class Galleries(Task):
                 thumbs.append(os.path.basename(thumb_path))
                 yield {
                     'basename': str('render_galleries'),
-                    'name': thumb_path.encode('utf8'),
+                    'name': thumb_path,
                     'file_dep': [img],
                     'targets': [thumb_path],
                     'actions': [
@@ -164,7 +165,7 @@ class Galleries(Task):
                 }
                 yield {
                     'basename': str('render_galleries'),
-                    'name': orig_dest_path.encode('utf8'),
+                    'name': orig_dest_path,
                     'file_dep': [img],
                     'targets': [orig_dest_path],
                     'actions': [
@@ -187,7 +188,7 @@ class Galleries(Task):
                     excluded_dest_path = os.path.join(output_gallery, img_name)
                     yield {
                         'basename': str('render_galleries_clean'),
-                        'name': excluded_thumb_dest_path.encode('utf8'),
+                        'name': excluded_thumb_dest_path,
                         'file_dep': [exclude_path],
                         #'targets': [excluded_thumb_dest_path],
                         'actions': [
@@ -198,7 +199,7 @@ class Galleries(Task):
                     }
                     yield {
                         'basename': str('render_galleries_clean'),
-                        'name': excluded_dest_path.encode('utf8'),
+                        'name': excluded_dest_path,
                         'file_dep': [exclude_path],
                         #'targets': [excluded_dest_path],
                         'actions': [
@@ -240,7 +241,7 @@ class Galleries(Task):
                 compile_html = self.site.get_compiler(index_path)
                 yield {
                     'basename': str('render_galleries'),
-                    'name': index_dst_path.encode('utf-8'),
+                    'name': index_dst_path,
                     'file_dep': [index_path],
                     'targets': [index_dst_path],
                     'actions': [(compile_html, [index_path, index_dst_path])],
@@ -258,12 +259,11 @@ class Galleries(Task):
                     file_dep.append(index_dst_path)
                 else:
                     context['text'] = ''
-                self.site.render_template(template_name, output_name.encode(
-                    'utf8'), context)
+                self.site.render_template(template_name, output_name, context)
 
             yield {
                 'basename': str('render_galleries'),
-                'name': output_name.encode('utf8'),
+                'name': output_name,
                 'file_dep': file_dep,
                 'targets': [output_name],
                 'actions': [(render_gallery, (output_name, context,
@@ -303,8 +303,13 @@ class Galleries(Task):
 
                         break
 
-            im.thumbnail(size, Image.ANTIALIAS)
-            im.save(dst)
+            try:
+                im.thumbnail(size, Image.ANTIALIAS)
+            except Exception:
+                # TODO: inform the user, but do not fail
+                pass
+            else:
+                im.save(dst)
 
         else:
             utils.copy_file(src, dst)

@@ -90,7 +90,6 @@ class CommandImportWordpress(Command):
     def _execute(self, options={}, args=[]):
         """Import a Wordpress blog from an export file into a Nikola site."""
         # Parse the data
-        print(options, args)
         if requests is None:
             print('To use the import_wordpress command,'
                   ' you have to install the "requests" package.')
@@ -100,10 +99,16 @@ class CommandImportWordpress(Command):
             print(self.help())
             return
 
-        options['filename'] = args[0]
+        options['filename'] = args.pop(0)
 
-        if len(args) > 1:
-            options['output_folder'] = args[1]
+        if args and ('output_folder' not in args or
+                     options['output_folder'] == 'new_site'):
+            options['output_folder'] = args.pop(0)
+
+        if args:
+            print('You specified additional arguments ({0}). Please consider '
+                  'putting these arguments before the filename if you '
+                  'are running into problems.'.format(args))
 
         self.wordpress_export_file = options['filename']
         self.squash_newlines = options.get('squash_newlines', False)
@@ -314,7 +319,13 @@ class CommandImportWordpress(Command):
         # link is something like http://foo.com/2012/09/01/hello-world/
         # So, take the path, utils.slugify it, and that's our slug
         link = get_text_tag(item, 'link', None)
-        slug = utils.slugify(urlparse(link).path)
+        path = urlparse(link).path
+
+        # In python 2, path is a str. slug requires a unicode
+        # object. Luckily, paths are also ASCII
+        if isinstance(path, utils.bytes_str):
+            path = path.decode('ASCII')
+        slug = utils.slugify(path)
         if not slug:  # it happens if the post has no "nice" URL
             slug = get_text_tag(
                 item, '{{{0}}}post_name'.format(wordpress_namespace), None)

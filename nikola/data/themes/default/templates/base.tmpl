@@ -7,6 +7,7 @@ ${set_locale(lang)}
     ${html_head()}
     <%block name="extra_head">
     </%block>
+    ${extra_head_data}
 </head>
 <body>
     %if add_this_buttons:
@@ -23,7 +24,7 @@ ${set_locale(lang)}
         <%block name="belowtitle">
         %if len(translations) > 1:
         <small>
-            ${(messages[lang]["Also available in"])}:&nbsp;
+            ${(messages("Also available in"))}:&nbsp;
             ${html_translations()}
         </small>
         %endif
@@ -53,7 +54,7 @@ ${set_locale(lang)}
     </div>
     </div>
 </div>
-    ${analytics}
     ${late_load_js()}
+    ${analytics}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
 </body>

@@ -7,13 +7,13 @@
     ${helper.html_title()}
         <div class="meta" style="background-color: rgb(234, 234, 234); ">                    
         <span class="authordate">
-            ${messages[lang]["Posted"]}: ${post.date.strftime(date_format)} [<a href="${post.meta[lang]['slug']+'.txt'}" id="sourcelink">${messages[lang]["Source"]}</a>]
+            ${messages("Posted")}: ${post.formatted_date(date_format)} [<a href="${post.meta('slug')+'.txt'}" id="sourcelink">${messages("Source")}</a>]
         </span>
         <br>
             %if post.tags:
-                <span class="tags">${messages[lang]["Tags"]}:&nbsp;
+                <span class="tags">${messages("Tags")}:&nbsp;
                 %for tag in post.tags:
-                    <a class="tag" href="${_link('tag', tag, lang)}"><span class="badge badge-info">${tag}</span></a>
+                    <a class="tag" href="${_link('tag', tag)}"><span class="badge badge-info">${tag}</span></a>
                 %endfor
                 </span>
                 <br>
@@ -22,8 +22,10 @@
             ${helper.html_translations(post)}
         </span>
         </div>
-    ${post.text(lang)}
+    ${post.text()}
     ${helper.html_pager(post)}
-    ${disqus.html_disqus(post.permalink(absolute=True), post.title(lang), post.base_path)}
+    % if not post.meta('nocomments'):
+        ${disqus.html_disqus(post.permalink(absolute=True), post.title(), post.base_path)}
+    % endif
     </div>
 </%block>

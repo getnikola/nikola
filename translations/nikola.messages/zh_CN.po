@@ -1,0 +1,70 @@
+# Messages in Nikola
+# Copyright (C) 2012-2013
+# This file is distributed under the same license as the Nikola package.
+# 
+# Translators:
+# Roberto Alsina <ralsina@netmanagers.com.ar>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: Nikola\n"
+"Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
+"POT-Creation-Date: 2013-03-15 12:24-0300\n"
+"PO-Revision-Date: 2013-03-15 16:06+0000\n"
+"Last-Translator: ralsina <ralsina@netmanagers.com.ar>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/nikola/language/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "More posts about"
+msgstr "更多相关文章："
+
+msgid "LANGUAGE"
+msgstr "简体中文"
+
+msgid "Tags"
+msgstr "标签"
+
+msgid "Read more"
+msgstr "更多"
+
+msgid "Posts about %s"
+msgstr "文章分类：%s"
+
+msgid "Next post"
+msgstr "后一篇"
+
+msgid "old posts page %d"
+msgstr "旧文章页 %d"
+
+msgid "Source"
+msgstr "源代码"
+
+msgid "Read in English"
+msgstr "中文版"
+
+msgid "Posts for year %s"
+msgstr "%s年文章"
+
+msgid "Newer posts"
+msgstr "新一篇"
+
+msgid "Previous post"
+msgstr "前一篇"
+
+msgid "Also available in"
+msgstr "其他语言版本"
+
+msgid "Original site"
+msgstr "原文地址"
+
+msgid "Older posts"
+msgstr "旧一篇"
+
+msgid "Archive"
+msgstr "文章存档"
+
+msgid "Posted"
+msgstr "发表于"

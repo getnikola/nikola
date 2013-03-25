@@ -22,6 +22,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import unicode_literals
+import codecs
 import json
 import os
 
@@ -65,9 +67,15 @@ class Tipue(LateTask):
             pages = []
             for lang in kw["translations"]:
                 for post in posts:
+                    # Don't index drafts (Issue #387)
+                    if post.is_draft:
+                        continue
+                    text = post.text(lang, strip_html=True)
+                    text = text.replace('^', '')
+
                     data = {}
                     data["title"] = post.title(lang)
-                    data["text"] = post.text(lang)
+                    data["text"] = text
                     data["tags"] = ",".join(post.tags)
                     data["loc"] = post.permalink(lang)
                     pages.append(data)
@@ -76,7 +84,7 @@ class Tipue(LateTask):
                 os.makedirs(os.path.dirname(dst_path))
             except:
                 pass
-            with open(dst_path, "wb+") as fd:
+            with codecs.open(dst_path, "wb+", "utf8") as fd:
                 fd.write(output)
 
         yield {

@@ -7,6 +7,7 @@ ${set_locale(lang)}
     ${html_head()}
     <%block name="extra_head">
     </%block>
+    ${extra_head_data}
 </head>
 <body class="home blog">
     %if add_this_buttons:
@@ -24,7 +25,7 @@ ${set_locale(lang)}
             <%block name="belowtitle">
             %if len(translations) > 1:
             <small>
-                ${(messages[lang]["Also available in"])}:&nbsp;
+                ${(messages("Also available in"))}:&nbsp;
                 ${html_translations()}
             </small>
             %endif

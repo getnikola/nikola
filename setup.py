@@ -42,9 +42,24 @@ dependencies = [
     'pytz',
 ]
 
+########### platform specific stuff #############
+import platform
+platform_system = platform.system()
+
+scripts = ['scripts/nikola']
+# platform specific scripts
+if platform_system == "Windows":
+    scripts.append('scripts/nikola.bat')
+
+##################################################
+
 if sys.version_info[0] == 2:
     # in Python 3 this becomes a builtin, for Python 2 we need the backport
     dependencies.append('configparser')
+elif sys.version_info[0] == 3:
+    # Pillow introduced support for Python 3 with 2.0.0
+    dependencies.remove('pillow')
+    dependencies.append('pillow>=2.0.0')
 
 # Provided as an attribute, so you can append to these instead
 # of replicating them:
@@ -190,9 +205,10 @@ setup(name='Nikola',
       packages=['nikola',
                 'nikola.plugins',
                 'nikola.plugins.compile_markdown',
+                'nikola.plugins.compile_misaka',
                 'nikola.plugins.task_sitemap',
                 'nikola.plugins.compile_rest'],
-      scripts=['scripts/nikola'],
+      scripts=scripts,
       install_requires=dependencies,
       package_data=find_package_data(),
       cmdclass={'install': nikola_install},

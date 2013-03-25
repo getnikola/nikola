@@ -66,19 +66,28 @@ class Planetoid(Command, Task):
 
     def gen_tasks(self):
         self.init_db()
-        for task in self.task_load_feeds():
-            yield task
+        self.load_feeds()
         for task in self.task_update_feeds():
             yield task
         for task in self.task_generate_posts():
             yield task
+        yield {
+            'basename': self.name,
+            'name': '',
+            'actions': [],
+            'file_dep': ['feeds'],
+            'task_dep': [
+                self.name + "_fetch_feed",
+                self.name + "_generate_posts",
+            ]
+        }
 
     def run(self, *args):
         self.init_db()
         parser = OptionParser(usage="nikola %s [options]" % self.name)
         (options, args) = parser.parse_args(list(args))
 
-    def task_load_feeds(self):
+    def load_feeds(self):
         "Read the feeds file, add it to the database."
         feeds = []
         feed = name = None
@@ -110,18 +119,9 @@ class Planetoid(Command, Task):
         for feed, name in feeds:
             f = Feed.select().where(Feed.name == name)
             if not list(f):
-                yield {
-                    'basename': self.name,
-                    'name': name.encode('utf8'),
-                    'actions': ((add_feed, (name, feed)), ),
-                    'file_dep': ['feeds'],
-                }
+                add_feed(name, feed)
             elif list(f)[0].url != feed:
-                yield {
-                    'basename': self.name,
-                    'name': ('updating_' + name).encode('utf8'),
-                    'actions': ((update_feed_url, (list(f)[0], feed)), ),
-                }
+                update_feed_url(list(f)[0], feed)
 
     def task_update_feeds(self):
         """Download feed contents, add entries to the database."""
@@ -201,15 +201,23 @@ class Planetoid(Command, Task):
                     entry.content = content
                     entry.link = link
                 entry.save()
+        flag = False
         for feed in Feed.select():
+            flag = True
             task = {
-                'basename': self.name,
+                'basename': self.name + "_fetch_feed",
                 'name': str(feed.url),
                 'actions': [(update_feed, (feed, ))],
                 'uptodate': [timeout(datetime.timedelta(minutes=
                              self.site.config.get('PLANETOID_REFRESH', 60)))],
             }
             yield task
+        if not flag:
+            yield {
+                'basename': self.name + "_fetch_feed",
+                'name': '',
+                'actions': [],
+            }
 
     def task_generate_posts(self):
         """Generate post files for the blog entries."""
@@ -237,12 +245,23 @@ class Planetoid(Command, Task):
                 for line in content.splitlines():
                     fd.write('    %s\n' % line)
 
+        if not os.path.isdir('posts'):
+            os.mkdir('posts')
+        flag = False
         for entry in Entry.select().order_by(Entry.date.desc()):
+            flag = True
             entry_id = gen_id(entry)
             yield {
-                'basename': self.name,
+                'basename': self.name + "_generate_posts",
                 'targets': [os.path.join('posts', entry_id + '.meta'), os.path.join('posts', entry_id + '.txt')],
                 'name': entry_id,
                 'actions': [(generate_post, (entry,))],
-                'uptodate': [config_changed({1: entry})]
+                'uptodate': [config_changed({1: entry})],
+                'task_dep': [self.name + "_fetch_feed"],
+            }
+        if not flag:
+            yield {
+                'basename': self.name + "_generate_posts",
+                'name': '',
+                'actions': [],
             }

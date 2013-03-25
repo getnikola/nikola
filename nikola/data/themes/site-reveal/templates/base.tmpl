@@ -8,6 +8,7 @@
     ${html_reveal_head()}
     <%block name="extra_head">
     </%block>
+    ${extra_head_data}
 </head>
 <body>
 <!-- Menubar -->
@@ -56,10 +57,8 @@
 <!--End of body content-->
 
 ${html_reveal_body()}
-<%block name="custom_reveal">
-</%block>
 
-<%block name="outside_pager">
+<%block name="custom_reveal">
 </%block>
 
 <div class="navbar navbar-fixed-bottom">
@@ -71,8 +70,8 @@ ${html_reveal_body()}
 </div>
 
 ${html_social()}
-${analytics}
 ${late_load_js()}
+${analytics}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
 
 </body>

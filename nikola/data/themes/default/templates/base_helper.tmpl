@@ -34,9 +34,13 @@
     %if rss_link:
         ${rss_link}
     %else:
-        %for language in translations:
-            <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${_link('rss', None, language)}">
-        %endfor
+        %if len(translations) > 1:
+            %for language in translations:
+                <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${_link('rss', None, language)}">
+            %endfor
+        %else:
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="${_link('rss', None)}">
+        %endif
     %endif
     %if favicons:
         %for name, file, size in favicons:
@@ -98,14 +102,7 @@
 <%def name="html_translations()">
     %for langname in translations.keys():
         %if langname != lang:
-            <a href="${_link("index", None, langname)}">${messages[langname]["LANGUAGE"]}</a>
+            <a href="${_link("index", None, langname)}">${messages("LANGUAGE", langname)}</a>
         %endif
     %endfor
-</%def>
-
-<%def name="set_locale(lang)">
-<%
-    import locale
-    locale.setlocale(locale.LC_ALL, (lang, "utf8"))
-%>
 </%def>

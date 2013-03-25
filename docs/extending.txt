@@ -52,7 +52,7 @@ Each and every one of those is a plugin. Let's look at a typical example:
 
 First, the ``command_serve.plugin`` file:
 
-.. code-block:: init
+.. code-block:: ini
 
     [Core]
     Name = serve

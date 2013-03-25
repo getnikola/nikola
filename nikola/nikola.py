@@ -28,12 +28,14 @@ from collections import defaultdict
 from copy import copy
 import glob
 import gzip
+import locale
 import os
 import sys
 try:
     from urlparse import urlparse, urlsplit, urljoin
 except ImportError:
     from urllib.parse import urlparse, urlsplit, urljoin  # NOQA
+import warnings
 
 import lxml.html
 from yapsy.PluginManager import PluginManager
@@ -89,6 +91,7 @@ class Nikola(object):
             'ARCHIVE_PATH': "",
             'ARCHIVE_FILENAME': "archive.html",
             'CACHE_FOLDER': 'cache',
+            'CODE_COLOR_SCHEME': 'default',
             'COMMENTS_IN_GALLERIES': False,
             'COMMENTS_IN_STORIES': False,
             'CONTENT_FOOTER': '',
@@ -97,6 +100,7 @@ class Nikola(object):
             'DEPLOY_COMMANDS': [],
             'DISABLED_PLUGINS': (),
             'DISQUS_FORUM': 'nikolademo',
+            'EXTRA_HEAD_DATA': '',
             'FAVICONS': {},
             'FILE_METADATA_REGEXP': None,
             'FILES_FOLDERS': {'files': ''},
@@ -104,6 +108,7 @@ class Nikola(object):
             'GALLERY_PATH': 'galleries',
             'GZIP_FILES': False,
             'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js', '.json'),
+            'HIDE_UNTRANSLATED_POSTS': False,
             'INDEX_DISPLAY_POST_COUNT': 10,
             'INDEX_TEASERS': False,
             'INDEXES_TITLE': "",
@@ -136,6 +141,7 @@ class Nikola(object):
             'SEARCH_FORM': '',
             'SLUG_TAG_PATH': True,
             'STORY_INDEX': False,
+            'STRIP_INDEX_HTML': False,
             'TAG_PATH': 'categories',
             'TAG_PAGES_ARE_INDEXES': False,
             'THEME': 'site',
@@ -156,15 +162,18 @@ class Nikola(object):
         self.THEMES = utils.get_theme_chain(self.config['THEME'])
 
         self.MESSAGES = utils.load_messages(self.THEMES,
-                                            self.config['TRANSLATIONS'])
+                                            self.config['TRANSLATIONS'],
+                                            self.config['DEFAULT_LANG'])
 
         # SITE_URL is required, but if the deprecated BLOG_URL
         # is available, use it and warn
         if 'SITE_URL' not in self.config:
             if 'BLOG_URL' in self.config:
                 print("WARNING: You should configure SITE_URL instead of BLOG_URL")
-                print("See docs at FIXME put URL")
                 self.config['SITE_URL'] = self.config['BLOG_URL']
+
+        self.default_lang = self.config['DEFAULT_LANG']
+        self.translations = self.config['TRANSLATIONS']
 
         # BASE_URL defaults to SITE_URL
         if 'BASE_URL' not in self.config:
@@ -211,6 +220,7 @@ class Nikola(object):
 
         self.GLOBAL_CONTEXT['messages'] = self.MESSAGES
         self.GLOBAL_CONTEXT['_link'] = self.link
+        self.GLOBAL_CONTEXT['set_locale'] = s_l
         self.GLOBAL_CONTEXT['rel_link'] = self.rel_link
         self.GLOBAL_CONTEXT['abs_link'] = self.abs_link
         self.GLOBAL_CONTEXT['exists'] = self.file_exists
@@ -244,9 +254,14 @@ class Nikola(object):
             'CONTENT_FOOTER')
         self.GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
         self.GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
-        self.GLOBAL_CONTEXT['sidebar_links'] = self.config.get('SIDEBAR_LINKS')
+
+        self.GLOBAL_CONTEXT['sidebar_links'] = utils.Functionary(list, self.config['DEFAULT_LANG'])
+        for k, v in self.config.get('SIDEBAR_LINKS', {}).items():
+            self.GLOBAL_CONTEXT['sidebar_links'][k] = v
+
         self.GLOBAL_CONTEXT['twitter_card'] = self.config.get(
             'TWITTER_CARD', {})
+        self.GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
 
         self.GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
@@ -272,6 +287,13 @@ class Nikola(object):
                        for name in self.THEMES]
         self.template_system.set_directories(lookup_dirs,
                                              self.config['CACHE_FOLDER'])
+
+        # Check consistency of USE_CDN and the current THEME (Issue #386)
+        if self.config['USE_CDN']:
+            bootstrap_path = utils.get_asset_path(os.path.join(
+                'assets', 'css', 'bootstrap.min.css'), self.THEMES)
+            if bootstrap_path.split(os.sep)[-4] != 'site':
+                warnings.warn('The USE_CDN option may be incompatible with your theme, because it uses a hosted version of bootstrap.')
 
         # Load compiler plugins
         self.compilers = {}
@@ -324,11 +346,9 @@ class Nikola(object):
         data = self.template_system.render_template(
             template_name, None, local_context)
 
-        assert isinstance(output_name, bytes)
         assert output_name.startswith(
-            self.config["OUTPUT_FOLDER"].encode('utf8'))
-        url_part = output_name.decode('utf8')[len(self.config["OUTPUT_FOLDER"])
-                                              + 1:]
+            self.config["OUTPUT_FOLDER"])
+        url_part = output_name[len(self.config["OUTPUT_FOLDER"]) + 1:]
 
         # Treat our site as if output/ is "/" and then make all URLs relative,
         # making the site "relocatable"
@@ -392,7 +412,20 @@ class Nikola(object):
         with open(output_name, "wb+") as post_file:
             post_file.write(data)
 
-    def path(self, kind, name, lang, is_link=False):
+    def current_lang(self):  # FIXME: this is duplicated, turn into a mixin
+        """Return the currently set locale, if it's one of the
+        available translations, or default_lang."""
+        lang = locale.getlocale()[0]
+        if lang:
+            if lang in self.translations:
+                return lang
+            lang = lang.split('_')[0]
+            if lang in self.translations:
+                return lang
+        # whatever
+        return self.default_lang
+
+    def path(self, kind, name, lang=None, is_link=False):
         """Build the path to a certain kind of page.
 
         kind is one of:
@@ -416,6 +449,9 @@ class Nikola(object):
         platform's separator.
         (ex: "archive\\index.html")
         """
+
+        if lang is None:
+            lang = self.current_lang()
 
         path = []
 
@@ -465,7 +501,11 @@ class Nikola(object):
             path = [_f for _f in [self.config['LISTINGS_FOLDER'], name +
                                   '.html'] if _f]
         if is_link:
-            return '/' + ('/'.join(path))
+            link = '/' + ('/'.join(path))
+            if self.config['STRIP_INDEX_HTML'] and link.endswith('/index.html'):
+                return link[:-10]
+            else:
+                return link
         else:
             return os.path.join(*path)
 
@@ -609,6 +649,7 @@ class Nikola(object):
                         self.MESSAGES,
                         template_name,
                         self.config['FILE_METADATA_REGEXP'],
+                        self.config['STRIP_INDEX_HTML'],
                         tzinfo,
                     )
                     for lang, langpath in list(
@@ -659,7 +700,7 @@ class Nikola(object):
         else:
             context['enable_comments'] = self.config['COMMENTS_IN_STORIES']
         output_name = os.path.join(self.config['OUTPUT_FOLDER'],
-                                   post.destination_path(lang)).encode('utf8')
+                                   post.destination_path(lang))
         deps_dict = copy(context)
         deps_dict.pop('post')
         if post.prev_post:
@@ -672,7 +713,7 @@ class Nikola(object):
         deps_dict['comments'] = context['enable_comments']
 
         task = {
-            'name': output_name,
+            'name': os.path.normpath(output_name),
             'file_dep': deps,
             'targets': [output_name],
             'actions': [(self.render_template, [post.template_name,
@@ -686,9 +727,6 @@ class Nikola(object):
     def generic_post_list_renderer(self, lang, posts, output_name,
                                    template_name, filters, extra_context):
         """Renders pages with lists of posts."""
-
-        # This is a name on disk, has to be bytes
-        assert isinstance(output_name, bytes)
 
         deps = self.template_system.template_deps(template_name)
         for post in posts:
@@ -706,7 +744,7 @@ class Nikola(object):
                                  posts]
         deps_context["global"] = self.GLOBAL_CONTEXT
         task = {
-            'name': output_name,
+            'name': os.path.normpath(output_name),
             'targets': [output_name],
             'file_dep': deps,
             'actions': [(self.render_template, [template_name, output_name,
@@ -716,3 +754,13 @@ class Nikola(object):
         }
 
         return utils.apply_filters(task, filters)
+
+
+def s_l(lang):
+    """A set_locale that uses utf8 encoding and returns ''."""
+    try:
+        locale.setlocale(locale.LC_ALL, (lang, "utf8"))
+    except Exception:
+        print("WARNING: could not set locale to {0}."
+              "This may cause some i18n features not to work.".format(lang))
+    return ''

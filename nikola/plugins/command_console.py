@@ -29,35 +29,76 @@ import os
 from nikola.plugin_categories import Command
 
 
-class Deploy(Command):
+class Console(Command):
     """Start debugging console."""
     name = "console"
+    shells = ['ipython', 'bpython', 'plain']
 
-    def _execute(self, options, args):
-        """Start the console."""
+    def ipython(self):
+        """IPython shell."""
+        from nikola import Nikola
+        try:
+            import conf
+        except ImportError:
+            print("No configuration found, cannot run the console.")
+        else:
+            import IPython
+            SITE = Nikola(**conf.__dict__)
+            SITE.scan_posts()
+            IPython.embed(header='Nikola Console (conf = configuration, SITE '
+                          '= site engine)')
+
+    def bpython(self):
+        """bpython shell."""
+        from nikola import Nikola
+        try:
+            import conf
+        except ImportError:
+            print("No configuration found, cannot run the console.")
+        else:
+            import bpython
+            SITE = Nikola(**conf.__dict__)
+            SITE.scan_posts()
+            gl = {'conf': conf, 'SITE': SITE, 'Nikola': Nikola}
+            bpython.embed(banner='Nikola Console (conf = configuration, SITE '
+                          '= site engine)', locals_=gl)
+
+    def plain(self):
+        """Plain Python shell."""
         from nikola import Nikola
         try:
             import conf
             SITE = Nikola(**conf.__dict__)
             SITE.scan_posts()
-            print("You can now access your configuration as conf and your "
-                  "site engine as SITE.")
+            gl = {'conf': conf, 'SITE': SITE, 'Nikola': Nikola}
         except ImportError:
-            print("No configuration found.")
-        import code
-        try:
-            import readline
-        except ImportError:
-            pass
+            print("No configuration found, cannot run the console.")
         else:
-            import rlcompleter
-            readline.set_completer(rlcompleter.Completer(globals()).complete)
-            readline.parse_and_bind("tab:complete")
-
-        pythonrc = os.environ.get("PYTHONSTARTUP")
-        if pythonrc and os.path.isfile(pythonrc):
+            import code
             try:
-                execfile(pythonrc)  # NOQA
-            except NameError:
+                import readline
+            except ImportError:
                 pass
-        code.interact(local=locals())
+            else:
+                import rlcompleter
+                readline.set_completer(rlcompleter.Completer(gl).complete)
+                readline.parse_and_bind("tab:complete")
+
+            pythonrc = os.environ.get("PYTHONSTARTUP")
+            if pythonrc and os.path.isfile(pythonrc):
+                try:
+                    execfile(pythonrc)  # NOQA
+                except NameError:
+                    pass
+
+            code.interact(local=gl, banner='Nikola Console (conf = '
+                          'configuration, SITE = site engine)')
+
+    def _execute(self, options, args):
+        """Start the console."""
+        for shell in self.shells:
+            try:
+                return getattr(self, shell)()
+            except ImportError:
+                pass
+        raise ImportError

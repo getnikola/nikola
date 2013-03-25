@@ -2,21 +2,21 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "LANGUAGE": "Deutsch",
-    "Posts for year %s": "Einträge aus dem Jahr %s",
-    "Archive": "Archiv",
-    "Posts about %s": "Einträge über %s",
-    "Tags": "Tags",
     "Also available in": "Auch verfügbar in",
+    "Archive": "Archiv",
+    "LANGUAGE": "Deutsch",
     "More posts about": "Weitere Einträge über",
-    "Posted": "Veröffentlicht",
-    "Original site": "Original-Seite",
-    "Read in English": "Auf Deutsch lesen",
-    "Older posts": "Ältere Einträge",
     "Newer posts": "Neuere Einträge",
-    "Previous post": "Vorheriger Eintrag",
     "Next post": "Nächster Eintrag",
-    "Source": "Source",
+    "Older posts": "Ältere Einträge",
+    "Original site": "Original-Seite",
+    "Posted": "Veröffentlicht",
+    "Posts about %s": "Einträge über %s",
+    "Posts for year %s": "Einträge aus dem Jahr %s",
+    "Previous post": "Vorheriger Eintrag",
+    "Read in English": "Auf Deutsch lesen",
     "Read more": "Weiterlesen",
-    "old posts page %d": "Vorherige Einträge %d"
+    "Source": "Source",
+    "Tags": "Tags",
+    "old posts page %d": "Vorherige Einträge %d",
 }
