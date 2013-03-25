@@ -29,7 +29,7 @@ import os
 from nikola.plugin_categories import Command
 
 
-class Deploy(Command):
+class Console(Command):
     """Start debugging console."""
     name = "console"
     shells = ['ipython', 'bpython', 'plain']
