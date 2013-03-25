@@ -403,10 +403,10 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # Experimental plugins - use at your own risk.
 # They probably need some manual adjustments - please see their respective readme.
 # ENABLED_EXTRAS = [
-#     'command_planetoid',
-#     'compile_ipynb',
-#     'task_localsearch',
-#     'task_mustache',
+#     'planetoid',
+#     'ipynb',
+#     'localsearch',
+#     'mustache',
 # ]
 
 # Put in global_context things you want available on all your templates.
