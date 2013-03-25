@@ -29,30 +29,38 @@ import datetime
 import hashlib
 from optparse import OptionParser
 import os
+import sys
 
 from doit.tools import timeout
-import feedparser
-import peewee
-
 from nikola.plugin_categories import Command, Task
 from nikola.utils import config_changed
 
+try:
+    import feedparser
+except ImportError:
+    feedparser = None
 
-class Feed(peewee.Model):
-    name = peewee.CharField()
-    url = peewee.CharField(max_length=200)
-    last_status = peewee.CharField(null=True)
-    etag = peewee.CharField(max_length=200)
-    last_modified = peewee.DateTimeField()
+try:
+    import peewee
+except ImportError:
+    peewee = None
 
 
-class Entry(peewee.Model):
-    date = peewee.DateTimeField()
-    feed = peewee.ForeignKeyField(Feed)
-    content = peewee.TextField(max_length=20000)
-    link = peewee.CharField(max_length=200)
-    title = peewee.CharField(max_length=200)
-    guid = peewee.CharField(max_length=200)
+if peewee is not None:
+    class Feed(peewee.Model):
+        name = peewee.CharField()
+        url = peewee.CharField(max_length=200)
+        last_status = peewee.CharField(null=True)
+        etag = peewee.CharField(max_length=200)
+        last_modified = peewee.DateTimeField()
+
+    class Entry(peewee.Model):
+        date = peewee.DateTimeField()
+        feed = peewee.ForeignKeyField(Feed)
+        content = peewee.TextField(max_length=20000)
+        link = peewee.CharField(max_length=200)
+        title = peewee.CharField(max_length=200)
+        guid = peewee.CharField(max_length=200)
 
 
 class Planetoid(Command, Task):
@@ -65,25 +73,37 @@ class Planetoid(Command, Task):
         Entry.create_table(fail_silently=True)
 
     def gen_tasks(self):
-        self.init_db()
-        self.load_feeds()
-        for task in self.task_update_feeds():
-            yield task
-        for task in self.task_generate_posts():
-            yield task
-        yield {
+        if peewee is None or sys.version_info[0] == 3:
+            if sys.version_info[0] == 3:
+                message = 'Peewee is currently incompatible with Python 3.'
+            else:
+                message = 'You need to install the \"peewee\" module.'
+
+            yield {
             'basename': self.name,
             'name': '',
-            'actions': [],
-            'file_dep': ['feeds'],
-            'task_dep': [
-                self.name + "_fetch_feed",
-                self.name + "_generate_posts",
-            ]
-        }
+            'verbosity': 2,
+            'actions': ['echo "%s"' % message]
+            }
+        else:
+            self.init_db()
+            self.load_feeds()
+            for task in self.task_update_feeds():
+                yield task
+            for task in self.task_generate_posts():
+                yield task
+            yield {
+                'basename': self.name,
+                'name': '',
+                'actions': [],
+                'file_dep': ['feeds'],
+                'task_dep': [
+                    self.name + "_fetch_feed",
+                    self.name + "_generate_posts",
+                ]
+            }
 
     def run(self, *args):
-        self.init_db()
         parser = OptionParser(usage="nikola %s [options]" % self.name)
         (options, args) = parser.parse_args(list(args))
 
