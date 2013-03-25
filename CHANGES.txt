@@ -15,6 +15,8 @@ Features
 * New "internals" doc
 * New CODE_COLOR_SCHEME option
 * New "template" metadata that changes the template for a page/post (Issue #199)
+* Added workaround for when Disqus doesn't support your exact locale 
+  (spanish only at the moment) Issue #389
 
 Bugfixes
 --------

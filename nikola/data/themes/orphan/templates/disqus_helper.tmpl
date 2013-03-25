@@ -1,6 +1,9 @@
 ## -*- coding: utf-8 -*-
 <%!
     import json
+    translations = {
+        'es': 'es_ES',
+    }
 %>
 <%def name="html_disqus(url, title, identifier)">
     %if disqus_forum:
@@ -12,8 +15,8 @@
         %endif
         var disqus_title=${json.dumps(title)};
         var disqus_identifier="${identifier}";
-        var disqus_config = function () { 
-            this.language = "${lang}";
+        var disqus_config = function () {
+            this.language = "${translations.get(lang, lang)}";
         };
         (function() {
             var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
