@@ -23,6 +23,8 @@ Features
 Bugfixes
 --------
 
+* If dateutil is installed, try to use it to parse dates (Issue #419)
+* Fixed posterous import via import_wordpress (Issue #419)
 * Set locale to the value of "lang" in templates, so things like strftime
   use localized values. (Issue #368)
 * Fixed console command.
