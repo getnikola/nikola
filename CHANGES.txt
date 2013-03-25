@@ -75,7 +75,7 @@ Features
 
 * Twitter Card / Open Graph support.
 * Smart math support
-* New soundcould directive
+* New soundcloud directive
 * Custom "read more" links
 * Better time display, timezone support
 * Better doit integration (Issue #151)
