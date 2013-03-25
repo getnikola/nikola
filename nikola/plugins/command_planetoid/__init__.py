@@ -80,10 +80,10 @@ class Planetoid(Command, Task):
                 message = 'You need to install the \"peewee\" module.'
 
             yield {
-            'basename': self.name,
-            'name': '',
-            'verbosity': 2,
-            'actions': ['echo "%s"' % message]
+                'basename': self.name,
+                'name': '',
+                'verbosity': 2,
+                'actions': ['echo "%s"' % message]
             }
         else:
             self.init_db()
