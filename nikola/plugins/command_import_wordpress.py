@@ -209,8 +209,12 @@ class CommandImportWordpress(Command):
                                              'PUT TITLE HERE')
         context['BLOG_DESCRIPTION'] = get_text_tag(
             channel, 'description', 'PUT DESCRIPTION HERE')
-        context['SITE_URL'] = get_text_tag(channel, 'link', '#')
         context['BASE_URL'] = get_text_tag(channel, 'link', '#')
+        if not context['BASE_URL']:
+            base_site_url = channel.find('{{{0}}}author'.format(wordpress_namespace))
+            context['BASE_URL'] = get_text_tag(base_site_url, None, "http://foo.com")
+        context['SITE_URL'] = context['BASE_URL']
+
         author = channel.find('{{{0}}}author'.format(wordpress_namespace))
         context['BLOG_EMAIL'] = get_text_tag(
             author,

@@ -23,6 +23,8 @@ Features
 Bugfixes
 --------
 
+* If dateutil is installed, try to use it to parse dates (Issue #419)
+* Fixed posterous import via import_wordpress (Issue #419)
 * Set locale to the value of "lang" in templates, so things like strftime
   use localized values. (Issue #368)
 * Fixed console command.
@@ -54,6 +56,7 @@ Bugfixes
 * Normalize paths on task names (Issue #406)
 * Updated translations (all 100%!)
 * Planetoid requires only 3 runs now ;-)
+* Blogger import: imports will not result in an TypeError because str.join expects all it's arguments to be of type str
 
 New in 5.4.2
 ============

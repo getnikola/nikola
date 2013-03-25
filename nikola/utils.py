@@ -404,6 +404,15 @@ def to_datetime(value, tzinfo=None):
             return tzinfo.localize(dt)
         except ValueError:
             pass
+    # So, let's try dateutil
+    try:
+        from dateutil import parser
+        dt = parser.parse(value)
+        if tzinfo is None:
+            return dt
+        return tzinfo.localize(dt)
+    except ImportError:
+        raise ValueError('Unrecognized date/time: {0!r}, try installing dateutil...'.format(value))
     raise ValueError('Unrecognized date/time: {0!r}'.format(value))
 
 
