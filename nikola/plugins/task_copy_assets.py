@@ -87,5 +87,6 @@ class CopyAssets(Task):
                 'targets': [code_css_path],
                 'uptodate': [utils.config_changed(kw)],
                 'actions': [(create_code_css, [])],
+                'clean': True,
             }
             yield utils.apply_filters(task, kw['filters'])

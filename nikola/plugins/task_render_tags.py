@@ -98,6 +98,7 @@ class RenderTags(Task):
         task['uptodate'] = [utils.config_changed(tag_cloud_data)]
         task['targets'] = [output_name]
         task['actions'] = [(write_tag_data, [tag_cloud_data])]
+        task['clean'] = True
         yield task
 
     def list_tags_page(self, kw):
