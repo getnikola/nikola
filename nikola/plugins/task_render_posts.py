@@ -133,7 +133,7 @@ function decrypt() {
 <form onsubmit="javascript:decrypt(); return false;">
 <fieldset>
 <legend>This post is password-protected.</legend>
-<input type="text" id="key" placeholder="Type password here">
+<input type="password" id="key" placeholder="Type password here">
 </fieldset>
 </form>
 </div>""")
