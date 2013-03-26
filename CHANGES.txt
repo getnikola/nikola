@@ -19,6 +19,7 @@ Features
 * Added workaround for when Disqus doesn't support your exact locale
   (spanish only at the moment) Issue #389
 * Extra plugins can be enabled via conf.py.
+* Password-protected pages.
 
 Bugfixes
 --------

@@ -7,7 +7,10 @@
     ${helper.html_title()}
         <div class="meta" style="background-color: rgb(234, 234, 234); ">                    
         <span class="authordate">
-            ${messages("Posted")}: ${post.formatted_date(date_format)} [<a href="${post.meta('slug')+'.txt'}" id="sourcelink">${messages("Source")}</a>]
+            ${messages("Posted")}: ${post.formatted_date(date_format)} 
+            % if not post.meta('password'):
+               [<a href="${post.meta('slug')+'.txt'}" id="sourcelink">${messages("Source")}</a>]
+            % endif
         </span>
         <br>
             %if post.tags:

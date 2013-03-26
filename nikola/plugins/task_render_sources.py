@@ -53,6 +53,8 @@ class Sources(Task):
         flag = False
         for lang in kw["translations"]:
             for post in self.site.timeline:
+                if post.meta('password'):
+                    continue
                 output_name = os.path.join(
                     kw['output_folder'], post.destination_path(
                         lang, post.source_ext()))

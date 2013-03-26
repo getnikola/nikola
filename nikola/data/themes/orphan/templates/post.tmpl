@@ -10,7 +10,9 @@
         ${messages("Posted")}: ${post.formatted_date(date_format)}
         ${helper.html_translations(post)}
         &nbsp;&nbsp;|&nbsp;&nbsp;
-        <a href="${post.meta('slug')+'.txt'}" id="sourcelink">${messages("Source")}</a>
+        % if not post.meta('password'):
+          <a href="${post.meta('slug')+'.txt'}" id="sourcelink">${messages("Source")}</a>
+        % endif
         ${helper.html_tags(post)}
     </small>
     <hr>
