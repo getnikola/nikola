@@ -24,6 +24,7 @@
 
 from __future__ import print_function
 from ast import literal_eval
+import codecs
 from datetime import datetime
 import os
 import subprocess
@@ -52,14 +53,13 @@ class Deploy(Command):
 
             print("==>", command)
             ret = subprocess.check_call(command, shell=True)
-            if ret == 0:  # successful deployment
-                print("Successful deployment")
-                new_deploy = datetime.now()
-                # Store timestamp of successful deployment
-                with open(timestamp_path, 'wb+') as outf:
-                    outf.write(repr(new_deploy))
-                # Here is where we would do things with whatever is
-                # on self.site.timeline and is newer than
-                # last_deploy
-            else:
-                print("Unsuccessful deployment")
+            if ret != 0:  # failed deployment
+                raise Exception("Failed deployment")
+        print("Successful deployment")
+        new_deploy = datetime.now()
+        # Store timestamp of successful deployment
+        with codecs.open(timestamp_path, 'wb+', 'utf8') as outf:
+            outf.write(repr(new_deploy))
+        # Here is where we would do things with whatever is
+        # on self.site.timeline and is newer than
+        # last_deploy
