@@ -429,7 +429,7 @@ def apply_filters(task, filters):
             if isinstance(key, (tuple, list)):
                 if ext in key:
                     return value
-            elif isinstance(key, (str, bytes)):
+            elif isinstance(key, (bytes_str, unicode_str)):
                 if ext == key:
                     return value
             else:
