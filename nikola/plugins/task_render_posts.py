@@ -34,7 +34,7 @@ from nikola import utils, rc4
 def wrap_encrypt(path, password):
     """Wrap a post with encryption."""
     with codecs.open(path, 'rb+', 'utf8') as inf:
-        data = inf.read()
+        data = inf.read()+"<!--tail-->"
     data = CRYPT.substitute(data=rc4.rc4(password, data))
     with codecs.open(path, 'wb+', 'utf8') as outf:
         outf.write(data)
@@ -122,18 +122,21 @@ function decrypt() {
     crypt_div = $$("#encr")
     crypted = crypt_div.html();
     decrypted = rc4(key, window.atob(crypted));
-    crypt_div.html(decrypted);
-    $$("#pwform").hide();
-    crypt_div.show();
+    if (decrypted.substr(decrypted.length - 11) == "<!--tail-->"){
+        crypt_div.html(decrypted);
+        $$("#pwform").hide();
+        crypt_div.show();
+    }
 }
 </script>
 
 <div id="encr" style="display: none;">${data}</div>
 <div id="pwform">
-<form onsubmit="javascript:decrypt(); return false;">
+<form onsubmit="javascript:decrypt(); return false;" class="form-inline">
 <fieldset>
 <legend>This post is password-protected.</legend>
 <input type="password" id="key" placeholder="Type password here">
+<button type="submit" class="btn">Show Content</button>
 </fieldset>
 </form>
 </div>""")
