@@ -38,7 +38,7 @@ from nikola.utils import config_changed
 try:
     import feedparser
 except ImportError:
-    feedparser = None
+    feedparser = None  # NOQA
 
 try:
     import peewee
