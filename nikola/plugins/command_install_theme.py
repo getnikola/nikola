@@ -64,6 +64,10 @@ class CommandInstallTheme(Command):
 
     def _execute(self, options, args):
         """Install theme into current site."""
+        if requests is None:
+            print('This command requires the requests package be installed.')
+            return False
+
         listing = options['list']
         url = options['url']
         if args:
