@@ -412,6 +412,10 @@ supports them (for example: ``.. author: John Doe``)
 
            .. template: story.tmpl
 
+   password
+       The post will be encrypted and invisible until the reader enters the password.
+       Also, the post's sourcecode will not be available.
+
 
 .. note:: The Two-File Format
 
