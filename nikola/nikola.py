@@ -681,7 +681,7 @@ class Nikola(object):
                         self.posts_per_year[
                             str(post.date.year)].append(post.post_name)
                         self.posts_per_month[
-                            '{0}/{1}'.format(post.date.year, post.date.month)].append(post.post_name)
+                            '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post.post_name)
                         for tag in post.tags:
                             self.posts_per_tag[tag].append(post.post_name)
                     else:
