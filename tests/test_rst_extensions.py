@@ -133,12 +133,11 @@ class GistIntegrationTestCase(ReSTExtensionTestCase):
 class SlidesTestCase(ReSTExtensionTestCase):
     """ Slides test case """
 
-    sample = '.. slides:: IMG.jpg\n   :crossfade:'
+    sample = '.. slides:: IMG.jpg\n'
 
     def test_slides(self):
         """ Test the slides js generation and img tag creation """
         self.assertHTMLContains("img", attributes={"src": "IMG.jpg"})
-        self.assertHTMLContains("script", text='"crossfade": true')
 
 
 class SoundCloudTestCase(ReSTExtensionTestCase):
