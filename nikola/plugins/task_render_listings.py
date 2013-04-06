@@ -98,7 +98,8 @@ class Listings(Task):
                 # This is necessary to reflect changes in blog title,
                 # sidebar links, etc.
                 'uptodate': [utils.config_changed(
-                    self.site.config['GLOBAL_CONTEXT'])]
+                    self.site.config['GLOBAL_CONTEXT'])],
+                'clean': True,
             }
             for f in files:
                 ext = os.path.splitext(f)[-1]
@@ -118,7 +119,8 @@ class Listings(Task):
                     # This is necessary to reflect changes in blog title,
                     # sidebar links, etc.
                     'uptodate': [utils.config_changed(
-                        self.site.config['GLOBAL_CONTEXT'])]
+                        self.site.config['GLOBAL_CONTEXT'])],
+                    'clean': True,
                 }
         if flag:
             yield {
