@@ -86,7 +86,7 @@ class Archive(Task):
                 context["posts"] = post_list
                 context["permalink"] = self.site.link("archive", year, lang)
                 context["title"] = kw["messages"][lang]["Posts for {month} {year}"].format(
-                    dict(year=year, month=month))
+                    year=year, month=month)
                 task = self.site.generic_post_list_renderer(
                     lang,
                     post_list,
