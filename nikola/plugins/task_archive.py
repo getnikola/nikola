@@ -22,6 +22,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import calendar
 import os
 
 from nikola.plugin_categories import Task
@@ -85,8 +86,9 @@ class Archive(Task):
                 context["lang"] = lang
                 context["posts"] = post_list
                 context["permalink"] = self.site.link("archive", year, lang)
+
                 context["title"] = kw["messages"][lang]["Posts for {month} {year}"].format(
-                    year=year, month=month)
+                    year=year, month=get_month_name(int(month), lang))
                 task = self.site.generic_post_list_renderer(
                     lang,
                     post_list,
@@ -126,3 +128,11 @@ class Archive(Task):
             task['uptodate'] = [config_changed(task_cfg)]
             task['basename'] = self.name
             yield task
+
+
+def get_month_name(month_no, locale):
+    with calendar.TimeEncoding((locale, "UTF-8")) as encoding:
+        s = calendar.month_name[month_no]
+        if encoding is not None:
+            s = s.decode(encoding)
+        return s
