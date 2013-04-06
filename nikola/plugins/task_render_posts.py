@@ -34,7 +34,7 @@ from nikola import utils, rc4
 def wrap_encrypt(path, password):
     """Wrap a post with encryption."""
     with codecs.open(path, 'rb+', 'utf8') as inf:
-        data = inf.read()+"<!--tail-->"
+        data = inf.read() + "<!--tail-->"
     data = CRYPT.substitute(data=rc4.rc4(password, data))
     with codecs.open(path, 'wb+', 'utf8') as outf:
         outf.write(data)
