@@ -81,6 +81,7 @@ class Nikola(object):
 
         self.global_data = {}
         self.posts_per_year = defaultdict(list)
+        self.posts_per_month = defaultdict(list)
         self.posts_per_tag = defaultdict(list)
         self.timeline = []
         self.pages = []
@@ -679,6 +680,8 @@ class Nikola(object):
                     if post.use_in_feeds:
                         self.posts_per_year[
                             str(post.date.year)].append(post.post_name)
+                        self.posts_per_month[
+                            '{0}/{1}'.format(post.date.year, post.date.month)].append(post.post_name)
                         for tag in post.tags:
                             self.posts_per_tag[tag].append(post.post_name)
                     else:
