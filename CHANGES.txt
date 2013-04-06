@@ -26,6 +26,7 @@ Features
 Bugfixes
 --------
 
+* Listings CSS fixes (Issue #416)
 * If dateutil is installed, try to use it to parse dates (Issue #419)
 * Fixed posterous import via import_wordpress (Issue #419)
 * Set locale to the value of "lang" in templates, so things like strftime

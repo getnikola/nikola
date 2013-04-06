@@ -80,6 +80,7 @@ class CopyAssets(Task):
                 formatter = get_formatter_by_name('html', style=kw["code_color_scheme"])
                 with codecs.open(code_css_path, 'wb+', 'utf8') as outf:
                     outf.write(formatter.get_style_defs('.code'))
+                    outf.write("table.codetable { width: 100%;} td.linenos {text-align: right; width: 4em;}")
 
             task = {
                 'basename': self.name,
