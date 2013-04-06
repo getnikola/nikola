@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the Nikola package.
 # 
 # Translators:
+# Translators:
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2013-03-15 15:58+0000\n"
+"PO-Revision-Date: 2013-04-06 18:50+0000\n"
 "Last-Translator: ralsina <ralsina@netmanagers.com.ar>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/nikola/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -68,3 +69,6 @@ msgstr "Arquivo"
 
 msgid "Posted"
 msgstr "Publicado"
+
+msgid "Posts for {month} {year}"
+msgstr ""

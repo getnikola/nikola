@@ -13,6 +13,7 @@ MESSAGES = {
     "Posted": "发表于",
     "Posts about %s": "文章分类：%s",
     "Posts for year %s": "%s年文章",
+    "Posts for {month} {year}": "",
     "Previous post": "前一篇",
     "Read in English": "中文版",
     "Read more": "更多",

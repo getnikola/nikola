@@ -13,6 +13,7 @@ MESSAGES = {
     "Posted": "Опубликовано",
     "Posts about %s": "Записи с тэгом %s:",
     "Posts for year %s": "Записи за %s год",
+    "Posts for {month} {year}": "",
     "Previous post": "Предыдущая запись",
     "Read in English": "Прочесть по-русски",
     "Read more": "Продолжить чтение",

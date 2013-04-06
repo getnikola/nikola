@@ -13,6 +13,7 @@ MESSAGES = {
     "Posted": "Pubblicato",
     "Posts about %s": "Articoli su %s",
     "Posts for year %s": "Articoli per l'anno %s",
+    "Posts for {month} {year}": "",
     "Previous post": "Articolo precedente",
     "Read in English": "Leggi in italiano",
     "Read more": "Espandi",

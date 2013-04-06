@@ -39,13 +39,13 @@ class Archive(Task):
             "translations": self.site.config['TRANSLATIONS'],
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
+            "create_monthly_archive": self.site.config['CREATE_MONTHLY_ARCHIVE'],
         }
         self.site.scan_posts()
         # TODO add next/prev links for years
         template_name = "list_post.tmpl"
-        # TODO: posts_per_year is global, kill it
-        for year, posts in list(self.site.posts_per_year.items()):
-            for lang in kw["translations"]:
+        for lang in kw["translations"]:
+            for year, posts in self.site.posts_per_year.items():
                 output_name = os.path.join(
                     kw['output_folder'], self.site.path("archive", year,
                                                         lang))
@@ -58,6 +58,35 @@ class Archive(Task):
                 context["permalink"] = self.site.link("archive", year, lang)
                 context["title"] = kw["messages"][lang]["Posts for year %s"]\
                     % year
+                task = self.site.generic_post_list_renderer(
+                    lang,
+                    post_list,
+                    output_name,
+                    template_name,
+                    kw['filters'],
+                    context,
+                )
+                task_cfg = {1: task['uptodate'][0].config, 2: kw}
+                task['uptodate'] = [config_changed(task_cfg)]
+                task['basename'] = self.name
+                yield task
+
+            if not kw["create_monthly_archive"]:
+                continue  # Just to avoid nesting the other loop in this if
+            for yearmonth, posts in self.site.posts_per_month.items():
+                output_name = os.path.join(
+                    kw['output_folder'], self.site.path("archive", yearmonth,
+                                                        lang))
+                year, month = yearmonth.split('/')
+                post_list = [self.site.global_data[post] for post in posts]
+                post_list.sort(key=lambda a: a.date)
+                post_list.reverse()
+                context = {}
+                context["lang"] = lang
+                context["posts"] = post_list
+                context["permalink"] = self.site.link("archive", year, lang)
+                context["title"] = kw["messages"][lang]["Posts for {month} {year}"].format(
+                    dict(year=year, month=month))
                 task = self.site.generic_post_list_renderer(
                     lang,
                     post_list,

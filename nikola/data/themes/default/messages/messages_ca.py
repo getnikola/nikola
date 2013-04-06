@@ -13,6 +13,7 @@ MESSAGES = {
     "Posted": "Publicat",
     "Posts about %s": "Entrades sobre %s",
     "Posts for year %s": "Entrades de l'any %s",
+    "Posts for {month} {year}": "",
     "Previous post": "Entrada anterior",
     "Read in English": "Llegeix-ho en català",
     "Read more": "Llegeix-ne més",
