@@ -126,7 +126,7 @@ function decrypt() {
         crypt_div.html(decrypted);
         $$("#pwform").hide();
         crypt_div.show();
-    }
+    } else { alert("Wrong password"); };
 }
 </script>
 

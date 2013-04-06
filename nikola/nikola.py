@@ -101,6 +101,7 @@ class Nikola(object):
             'COMMENTS_IN_GALLERIES': False,
             'COMMENTS_IN_STORIES': False,
             'CONTENT_FOOTER': '',
+            'CREATE_MONTHLY_ARCHIVE': False,
             'DATE_FORMAT': '%Y-%m-%d %H:%M',
             'DEFAULT_LANG': "en",
             'DEPLOY_COMMANDS': [],

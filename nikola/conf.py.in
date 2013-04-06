@@ -131,11 +131,16 @@ post_compilers = ${POST_COMPILERS}
 
 # Final location is output / TRANSLATION[lang] / INDEX_PATH / index-*.html
 # INDEX_PATH = ""
+
+# Create per-month archives instead of per-year
+# CREATE_MONTHLY_ARCHIVE = False
 # Final locations for the archives are:
 # output / TRANSLATION[lang] / ARCHIVE_PATH / ARCHIVE_FILENAME
 # output / TRANSLATION[lang] / ARCHIVE_PATH / YEAR / index.html
+# output / TRANSLATION[lang] / ARCHIVE_PATH / YEAR / MONTH / index.html
 # ARCHIVE_PATH = ""
 # ARCHIVE_FILENAME = "archive.html"
+
 # Final locations are:
 # output / TRANSLATION[lang] / RSS_PATH / rss.xml
 # RSS_PATH = ""
