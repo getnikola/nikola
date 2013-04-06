@@ -22,7 +22,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import json
+from __future__ import unicode_literals
 
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
@@ -31,61 +31,34 @@ from docutils.parsers.rst import Directive, directives
 class Slides(Directive):
     """ Restructured text extension for inserting slideshows."""
     has_content = True
-    option_spec = {
-        "preload": directives.flag,
-        "preloadImage": directives.uri,
-        "container": directives.unchanged,
-        "generateNextPrev": directives.flag,
-        "next": directives.unchanged,
-        "prev": directives.unchanged,
-        "pagination": directives.flag,
-        "generatePagination": directives.flag,
-        "paginationClass": directives.unchanged,
-        "currentClass": directives.unchanged,
-        "fadeSpeed": directives.positive_int,
-        "fadeEasing": directives.unchanged,
-        "slideSpeed": directives.positive_int,
-        "slideEasing": directives.unchanged,
-        "start": directives.positive_int,
-        "effect": directives.unchanged,
-        "crossfade": directives.flag,
-        "randomize": directives.flag,
-        "play": directives.positive_int,
-        "pause": directives.positive_int,
-        "hoverPause": directives.flag,
-        "autoHeight": directives.flag,
-        "autoHeightSpeed": directives.positive_int,
-        "bigTarget": directives.flag,
-        "animationStart": directives.unchanged,
-        "animationComplete": directives.unchanged,
-    }
 
     def run(self):
         if len(self.content) == 0:
             return
-        for opt in ("preload", "generateNextPrev", "pagination",
-                    "generatePagination", "crossfade", "randomize",
-                    "hoverPause", "autoHeight", "bigTarget"):
-            if opt in self.options:
-                self.options[opt] = True
-        options = {
-            "autoHeight": True,
-            "bigTarget": True,
-            "paginationClass": "pager",
-            "currentClass": "slide-current"
-        }
-        options.update(self.options)
-        options = json.dumps(options)
         output = []
-        output.append('<script> $(function(){ $("#slides").slides(' + options +
-                      '); });'
-                      '</script>')
-        output.append('<div id="slides" class="slides"><div '
-                      'class="slides_container">')
-        for image in self.content:
-            output.append("""<div><img src="{0}"></div>""".format(image))
-        output.append("""</div></div>""")
-
+        output.append("""
+        <div id="myCarousel" class="carousel slide">
+        <ol class="carousel-indicators">
+        """)
+        for i in range(len(self.content)):
+            if i == 0:
+                classname = 'class="active"'
+            else:
+                classname = ''
+            output.append('  <li data-target="#myCarousel" data-slide-to="{0}" {1}></li>'.format(i, classname))
+        output.append("""</ol>
+        <div class="carousel-inner">
+        """)
+        for i, image in enumerate(self.content):
+            if i == 0:
+                classname = "item active"
+            else:
+                classname = "item"
+            output.append("""<div class="{0}"><img src="{1}" alt="" style="margin: 0 auto 0 auto;"></div>""".format(classname, image))
+        output.append("""</div>
+                        <a class="left carousel-control" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+                <a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
+                </div>""")
         return [nodes.raw('', '\n'.join(output), format='html')]
 
 
