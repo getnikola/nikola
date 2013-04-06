@@ -25,6 +25,8 @@
 
 """A stupid codeblock replacement for neanderthals and users of Debian Sid."""
 
+from __future__ import unicode_literals
+
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
