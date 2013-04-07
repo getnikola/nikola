@@ -582,6 +582,8 @@ class Nikola(object):
         def add_gzipped_copies(task):
             if not self.config['GZIP_FILES']:
                 return None
+            if task.get('name') is None:
+                return None
             gzip_task = {
                 'file_dep': [],
                 'targets': [],
