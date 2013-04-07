@@ -14,6 +14,7 @@ Bugfixes
 * local search and mustache plugins must be disabled by default (Issue #437)
 * Avoid failure if there are no tags and USE_GZIP is enabled (Issue #439)
 * Fix aspect ratio detection in Vimeo videos (Issue #440)
+* Blogger importer was passing wrong options to "nikola init" (Issue #408)
 
 New in 5.4.3
 ============
