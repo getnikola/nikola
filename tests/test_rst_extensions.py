@@ -27,7 +27,6 @@ always unquoted.
 
 from __future__ import unicode_literals
 
-import codecs
 try:
     from io import StringIO
 except ImportError:
