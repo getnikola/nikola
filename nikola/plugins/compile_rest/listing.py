@@ -28,7 +28,7 @@
 
 
 from __future__ import unicode_literals
-
+import codecs
 try:
     from urlparse import urlunsplit
 except ImportError:
@@ -56,16 +56,15 @@ class Listing(CodeBlock):
     has_content = False
     required_arguments = 1
     optional_arguments = 1
-    open = open  # dependency injection for easy mocking
 
     def run(self):
         fname = self.arguments.pop(0)
-        fileobject = self.open(os.path.join('listings', fname), 'r')
-        target = urlunsplit(("link", 'listing', fname, '', ''))
-        generated_nodes = (
-            [core.publish_doctree('`{0} <{1}>`_'.format(fname, target))[0]])
-        generated_nodes += self.get_code_from_file(fileobject)
-        return generated_nodes
+        with codecs.open(os.path.join('listings', fname), 'rb+', 'utf8') as fileobject:
+            target = urlunsplit(("link", 'listing', fname, '', ''))
+            generated_nodes = (
+                [core.publish_doctree('`{0} <{1}>`_'.format(fname, target))[0]])
+            generated_nodes += self.get_code_from_file(fileobject)
+            return generated_nodes
 
     def get_code_from_file(self, fileobject):
         """ Create CodeBlock nodes from file object content """
