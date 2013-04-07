@@ -148,7 +148,7 @@ class Mustache(Task):
                 out_file = os.path.join(kw['output_folder'], out_path)
                 task = {
                     'basename': 'render_mustache',
-                    'name': str(out_path),
+                    'name': out_file,
                     'file_dep': post.fragment_deps(lang),
                     'targets': [out_file],
                     'actions': [(write_file, (out_file, post, lang))],
@@ -165,7 +165,7 @@ class Mustache(Task):
         dst = os.path.join(kw['output_folder'], 'mustache-template.html')
         yield {
             'basename': 'render_mustache',
-            'name': 'mustache-template.html',
+            'name': dst,
             'targets': [dst],
             'file_dep': [src],
             'actions': [(copy_file, (src, dst))],
@@ -183,7 +183,7 @@ class Mustache(Task):
                     out_file.write(data)
         yield {
             'basename': 'render_mustache',
-            'name': 'mustache.html',
+            'name': dst,
             'targets': [dst],
             'file_dep': [src],
             'uptodate': [config_changed({1: first_post_data})],
