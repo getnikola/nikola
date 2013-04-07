@@ -89,7 +89,7 @@ class Tipue(LateTask):
 
         yield {
             "basename": str(self.name),
-            "name": os.path.join("assets", "js", "tipuesearch_content.js"),
+            "name": dst_path,
             "targets": [dst_path],
             "actions": [(save_data, [])],
             'uptodate': [config_changed(kw)]
