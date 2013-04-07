@@ -13,6 +13,7 @@ Bugfixes
 * Compressed files were seen as unknown by "nikola check"
 * local search and mustache plugins must be disabled by default (Issue #437)
 * Avoid failure if there are no tags and USE_GZIP is enabled (Issue #439)
+* Fix aspect ratio detection in Vimeo videos (Issue #440)
 
 New in 5.4.3
 ============

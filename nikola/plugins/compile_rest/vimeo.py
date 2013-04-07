@@ -71,14 +71,14 @@ class Vimeo(Directive):
 
     def run(self):
         self.check_content()
-        if self.request_size:
-            self.check_modules()
-            self.set_video_size()
         options = {
             'vimeo_id': self.arguments[0],
             'width': 600,
             'height': 160,
         }
+        if self.request_size:
+            self.check_modules()
+            self.set_video_size()
         options.update(self.options)
         return [nodes.raw('', CODE.format(**options), format='html')]
 
@@ -98,10 +98,10 @@ class Vimeo(Directive):
 
             if json:  # we can attempt to retrieve video attributes from vimeo
                 try:
-                    url = ('http://vimeo.com/api/v2/video/{vimeo_id}'
-                           '.json'.format(**self.options))
+                    url = ('http://vimeo.com/api/v2/video/{0}'
+                           '.json'.format(self.arguments[0]))
                     data = requests.get(url).text
-                    video_attributes = json.loads(data)
+                    video_attributes = json.loads(data)[0]
                     self.options['height'] = video_attributes['height']
                     self.options['width'] = video_attributes['width']
                 except Exception:
