@@ -73,8 +73,8 @@ class Vimeo(Directive):
         self.check_content()
         options = {
             'vimeo_id': self.arguments[0],
-            'width': 600,
-            'height': 160,
+            'width': VIDEO_DEFAULT_WIDTH,
+            'height': VIDEO_DEFAULT_HEIGHT,
         }
         if self.request_size:
             self.check_modules()
