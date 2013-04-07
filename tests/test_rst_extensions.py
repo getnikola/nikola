@@ -27,13 +27,15 @@ always unquoted.
 
 from __future__ import unicode_literals
 
+import codecs
 try:
     from io import StringIO
 except ImportError:
     from StringIO import StringIO  # NOQA
 
-from lxml import html
 from docutils.core import publish_parts
+from lxml import html
+import mock
 
 import unittest
 import nikola.plugins.compile_rest
@@ -198,20 +200,24 @@ class ListingTestCase(ReSTExtensionTestCase):
     sample2 = '.. code-block:: python\n\n   import antigravity'
     sample3 = '.. sourcecode:: python\n\n   import antigravity'
 
+    opener_mock = mock.mock_open(read_data="import antigravity\n")
+    opener_mock.return_value.readlines.return_value = "import antigravity\n"
+
     def setUp(self):
         """ Inject a mock open function for not generating a test site """
-        f = StringIO("import antigravity\n")
-        nikola.plugins.compile_rest.Listing.open = lambda *_: f
-        _reload(nikola.plugins.compile_rest)
+        self.f = StringIO("import antigravity\n")
+        #_reload(nikola.plugins.compile_rest)
 
     def test_listing(self):
         """ Test that we can render a file object contents without errors """
-        self.setHtmlFromRst(self.sample)
+        with mock.patch("nikola.plugins.compile_rest.listing.codecs_open", self.opener_mock, create=True):
+            self.setHtmlFromRst(self.sample)
 
     def test_codeblock_alias(self):
         """ Test CodeBlock aliases """
-        self.setHtmlFromRst(self.sample2)
-        self.setHtmlFromRst(self.sample3)
+        with mock.patch("nikola.plugins.compile_rest.listing.codecs_open", self.opener_mock, create=True):
+            self.setHtmlFromRst(self.sample2)
+            self.setHtmlFromRst(self.sample3)
 
 
 if __name__ == "__main__":

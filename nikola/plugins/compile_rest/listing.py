@@ -28,7 +28,7 @@
 
 
 from __future__ import unicode_literals
-import codecs
+from codecs import open as codecs_open  # for patching purposes
 try:
     from urlparse import urlunsplit
 except ImportError:
@@ -59,16 +59,16 @@ class Listing(CodeBlock):
 
     def run(self):
         fname = self.arguments.pop(0)
-        with codecs.open(os.path.join('listings', fname), 'rb+', 'utf8') as fileobject:
-            target = urlunsplit(("link", 'listing', fname, '', ''))
-            generated_nodes = (
-                [core.publish_doctree('`{0} <{1}>`_'.format(fname, target))[0]])
-            generated_nodes += self.get_code_from_file(fileobject)
-            return generated_nodes
+        with codecs_open(os.path.join('listings', fname), 'rb+', 'utf8') as fileobject:
+            self.content = fileobject.read().splitlines()
+        target = urlunsplit(("link", 'listing', fname, '', ''))
+        generated_nodes = (
+            [core.publish_doctree('`{0} <{1}>`_'.format(fname, target))[0]])
+        generated_nodes += self.get_code_from_file(fileobject)
+        return generated_nodes
 
-    def get_code_from_file(self, fileobject):
+    def get_code_from_file(self, data):
         """ Create CodeBlock nodes from file object content """
-        self.content = fileobject.read().splitlines()
         return super(Listing, self).run()
 
     def assert_has_content(self):
