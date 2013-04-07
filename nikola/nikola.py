@@ -587,7 +587,7 @@ class Nikola(object):
                 'targets': [],
                 'actions': [],
                 'basename': 'gzip',
-                'name': task.get('name', 'unknown'),
+                'name': task.get('name') + '.gz',
                 'clean': True,
             }
             targets = task.get('targets', [])

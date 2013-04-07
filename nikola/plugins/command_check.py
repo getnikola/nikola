@@ -117,7 +117,7 @@ def scan_links(find_sources=False):
         task = task.strip()
         if task.split(':')[0] in ('render_tags', 'render_archive',
                                   'render_galleries', 'render_indexes',
-                                  'render_pages',
+                                  'render_pages'
                                   'render_site') and '.html' in task:
             analize(task, find_sources)
 
