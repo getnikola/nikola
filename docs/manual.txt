@@ -905,6 +905,21 @@ To use this, you have to put your source code files inside ``listings`` or whate
 Will include the source code from ``foo.py``, highlight its syntax in python mode,
 and also create a ``listings/foo.py.html`` page and the listing will have a title linking to it.
 
+Listings support a few extra options so that you can display a fragment instead of the whole
+file in a document:
+
+start-at
+    Takes a string, and starts displaying the code at the first line that matches it.
+start-before
+    Takes a string, and starts displaying the code right before the first line that matches it.
+end-at
+    Takes a string, and stops displaying the code at the first line that matches it.
+end-before
+    Takes a string, and stops displaying the code right before the first line that matches it.
+
+If you set start-at and start-before, start-at wins. If you set end-at and end-before, end-at wins.
+If you make it so your listing ends before it starts, it's frowned upon and nothing will be shown.
+
 Gist
 ~~~~
 
