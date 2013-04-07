@@ -72,8 +72,8 @@ class Nikola(object):
     EXTRA_PLUGINS = [
         'planetoid',
         'ipynb',
-        'localsearch',
-        'mustache',
+        'local_search',
+        'render_mustache',
     ]
 
     def __init__(self, **config):
@@ -220,6 +220,7 @@ class Nikola(object):
         # Activate all task plugins
         for task_type in ["Task", "LateTask"]:
             for plugin_info in self.plugin_manager.getPluginsOfCategory(task_type):
+                print("==>", plugin_info.name)
                 if (plugin_info.name in self.config['DISABLED_PLUGINS']
                     or (plugin_info.name in self.EXTRA_PLUGINS and
                         plugin_info.name not in self.config['ENABLED_EXTRAS'])):
