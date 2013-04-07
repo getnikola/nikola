@@ -6,6 +6,7 @@ from contextlib import contextmanager
 import locale
 import os
 import shutil
+import subprocess  # NOQA
 import tempfile
 import unittest
 
@@ -149,6 +150,37 @@ class RelativeLinkTest(DemoBuildTest):
                     flag = True
         # But I also need to be sure it is there!
         self.assertTrue(flag)
+
+
+#class TestCheck(DemoBuildTest):
+    #"""The demo build should pass 'nikola check'"""
+
+    #def test_check_links(self):
+        #with cd(self.target_dir):
+            #r = subprocess.call("nikola check -l", shell=True)
+        #self.assertEqual(r, 0)
+
+    #def test_check_files(self):
+        #with cd(self.target_dir):
+            #r = subprocess.call("nikola check -f", shell=True)
+        #self.assertEqual(r, 0)
+
+
+#class TestCheckFailure(DemoBuildTest):
+    #"""The demo build should pass 'nikola check'"""
+
+    #def test_check_links_fail(self):
+        #with cd(self.target_dir):
+            #os.unlink(os.path.join("output", "archive.html"))
+            #rv = subprocess.call("nikola check -l", shell=True)
+        #self.assertEqual(rv, 1)
+
+    #def test_check_files_fail(self):
+        #with cd(self.target_dir):
+            #with codecs.open(os.path.join("output", "foobar"), "wb+", "utf8") as outf:
+                #outf.write("foo")
+            #rv = subprocess.call("nikola check -f", shell=True)
+        #self.assertEqual(rv, 1)
 
 
 class RelativeLinkTest2(DemoBuildTest):
