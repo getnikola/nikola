@@ -1,10 +1,15 @@
 New in Master
 =============
 
+Features
+--------
+
+* Nikola check exists with 1 if there is an error
+
 Bugfixes
 --------
 
-* Compressed files are seen as unknown by "nikola check"
+* Compressed files were seen as unknown by "nikola check"
 * local search and mustache plugins must be disabled by default (Issue #437)
 
 New in 5.4.3

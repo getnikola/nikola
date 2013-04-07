@@ -24,6 +24,7 @@
 
 from __future__ import print_function
 import os
+import sys
 try:
     from urllib import unquote
     from urlparse import urlparse
@@ -74,14 +75,17 @@ class CommandCheck(Command):
             print(self.help())
             return False
         if options['links']:
-            scan_links(options['find_sources'])
+            failure = scan_links(options['find_sources'])
         if options['files']:
-            scan_files()
+            failure = scan_files()
+        if failure:
+            sys.exit(1)
 
 existing_targets = set([])
 
 
 def analize(task, find_sources=False):
+    rv = False
     try:
         filename = task.split(":")[-1]
         d = lxml.html.fromstring(open(filename).read())
@@ -100,6 +104,7 @@ def analize(task, find_sources=False):
                 if os.path.exists(target_filename):
                     existing_targets.add(target_filename)
                 else:
+                    rv = True
                     print("Broken link in {0}: ".format(filename), target)
                     if find_sources:
                         print("Possible sources:")
@@ -109,17 +114,21 @@ def analize(task, find_sources=False):
 
     except Exception as exc:
         print("Error with:", filename, exc)
+    return rv
 
 
 def scan_links(find_sources=False):
     print("Checking Links:\n===============\n")
+    failure = False
     for task in os.popen('nikola list --all', 'r').readlines():
         task = task.strip()
         if task.split(':')[0] in ('render_tags', 'render_archive',
                                   'render_galleries', 'render_indexes',
                                   'render_pages'
                                   'render_site') and '.html' in task:
-            analize(task, find_sources)
+            if analize(task, find_sources):
+                failure = True
+    return failure
 
 
 def scan_files():
@@ -127,6 +136,7 @@ def scan_files():
     task_fnames = set([])
     real_fnames = set([])
     # First check that all targets are generated in the right places
+    failure = False
     for task in os.popen('nikola list --all', 'r').readlines():
         task = task.strip()
         if 'output' in task and ':' in task:
@@ -144,6 +154,7 @@ def scan_files():
         print("\nFiles from unknown origins:\n")
         for f in only_on_output:
             print(f)
+        failure = True
 
     only_on_input = list(task_fnames - real_fnames)
     if only_on_input:
@@ -151,3 +162,5 @@ def scan_files():
         print("\nFiles not generated:\n")
         for f in only_on_input:
             print(f)
+
+    return failure
