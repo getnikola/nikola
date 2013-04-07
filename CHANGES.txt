@@ -5,6 +5,7 @@ Bugfixes
 --------
 
 * Compressed files are seen as unknown by "nikola check"
+* local search and mustache plugins must be disabled by default (Issue #437)
 
 New in 5.4.3
 ============
