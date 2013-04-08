@@ -79,6 +79,17 @@ class Post(object):
         self.meta = Functionary(lambda: None, self.default_lang)
         self.meta[default_lang] = default_metadata
 
+        # Load internationalized metadata
+        for lang in translations:
+            if lang != default_lang:
+                if os.path.isfile(self.source_path + "." + lang):
+                    self.translated_to.add(lang)
+
+                meta = defaultdict(lambda: '')
+                meta.update(default_metadata)
+                meta.update(get_meta(self, file_metadata_regexp, lang))
+                self.meta[lang] = meta
+
         if 'title' not in default_metadata or 'slug' not in default_metadata \
                 or 'date' not in default_metadata:
             raise OSError("You must set a title (found '{0}'), a slug (found "
@@ -101,16 +112,6 @@ class Post(object):
         # If mathjax is a tag, then enable mathjax rendering support
         self.is_mathjax = 'mathjax' in self.tags
 
-        # Load internationalized metadata
-        for lang in translations:
-            if lang != default_lang:
-                if os.path.isfile(self.source_path + "." + lang):
-                    self.translated_to.add(lang)
-
-                meta = defaultdict(lambda: '')
-                meta.update(default_metadata)
-                meta.update(get_meta(self, file_metadata_regexp, lang))
-                self.meta[lang] = meta
 
     @property
     def template_name(self):
