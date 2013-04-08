@@ -198,11 +198,14 @@ class Post(object):
                 file_name = file_name_lang
         return file_name
 
-    def text(self, lang=None, teaser_only=False, strip_html=False):
+    def text(self, lang=None, teaser_only=False, strip_html=False, fallback_to_default_lang=True):
         """Read the post file for that language and return its contents."""
         if lang is None:
             lang = self.current_lang()
         file_name = self._translated_file_path(lang)
+
+        if not self.is_translation_available(lang) and not fallback_to_default_lang:
+            return None
 
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read().strip()
