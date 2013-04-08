@@ -52,6 +52,7 @@ class RenderPages(Task):
                         1: task['uptodate'][0].config,
                         2: kw})]
                     task['basename'] = self.name
+                    task['task_dep'] = ['render_posts']
                     flag = True
                     yield task
         if flag is False:  # No page rendered, yield a dummy task

@@ -201,14 +201,29 @@ class Post(object):
         """Return true if the translation actually exists."""
         return lang in self.translated_to
 
+    def translated_source_path(self, lang):
+        """Return path to the translation's source file."""
+        if lang in self.translated_to:
+            if lang == self.default_lang:
+                return self.source_path
+            else:
+                return '.'.join((self.source_path, lang))
+        elif lang != self.default_lang:
+            return self.source_path
+        else:
+            return '.'.join((self.source_path, sorted(self.translated_to)[0]))
+
     def _translated_file_path(self, lang):
         """Return path to the translation's file, or to the original."""
-        file_name = self.base_path
-        if lang != self.default_lang:
-            file_name_lang = '.'.join((file_name, lang))
-            if os.path.exists(file_name_lang):
-                file_name = file_name_lang
-        return file_name
+        if lang in self.translated_to:
+            if lang == self.default_lang:
+                return self.base_path
+            else:
+                return '.'.join((self.base_path, lang))
+        elif lang != self.default_lang:
+            return self.base_path
+        else:
+            return '.'.join((self.base_path, sorted(self.translated_to)[0]))
 
     def text(self, lang=None, teaser_only=False, strip_html=False):
         """Read the post file for that language and return its contents."""
@@ -216,8 +231,6 @@ class Post(object):
         if lang is None:
             lang = self.current_lang()
         file_name = self._translated_file_path(lang)
-        print("=====>", lang, self.post_name, self.translated_to, self._translated_file_path(lang))
-
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read().strip()
 

@@ -24,7 +24,6 @@
 
 from copy import copy
 import codecs
-import os
 import string
 
 from nikola.plugin_categories import Task
@@ -65,9 +64,7 @@ class RenderPosts(Task):
                 if not post.is_translation_available(lang) and kw["hide_untranslated_posts"]:
                     continue
                 else:
-                    source_lang = source + '.' + lang
-                    if os.path.exists(source_lang):
-                        source = source_lang
+                    source = post.translated_source_path(lang)
                     if lang != post.default_lang:
                         dest = dest + '.' + lang
                 flag = True
