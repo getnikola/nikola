@@ -52,23 +52,24 @@ class RenderPosts(Task):
             "translations": self.site.config["TRANSLATIONS"],
             "timeline": self.site.timeline,
             "default_lang": self.site.config["DEFAULT_LANG"],
+            "hide_untranslated_posts": self.site.config['HIDE_UNTRANSLATED_POSTS'],
         }
 
         flag = False
         for lang in kw["translations"]:
-            # TODO: timeline is global, get rid of it
             deps_dict = copy(kw)
             deps_dict.pop('timeline')
             for post in kw['timeline']:
                 source = post.source_path
                 dest = post.base_path
-                if lang != kw["default_lang"]:
-                    dest += '.' + lang
+                if not post.is_translation_available(lang) and kw["hide_untranslated_posts"]:
+                    continue
+                else:
                     source_lang = source + '.' + lang
                     if os.path.exists(source_lang):
                         source = source_lang
-                    elif self.site.config['HIDE_UNTRANSLATED_POSTS']:
-                        continue
+                    if lang != post.default_lang:
+                        dest = dest + '.' + lang
                 flag = True
                 task = {
                     'basename': self.name,

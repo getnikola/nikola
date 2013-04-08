@@ -56,7 +56,7 @@ class Post(object):
         the meta file, as well as any translations available, and
         the .html fragment file path.
         """
-        self.translated_to = set([default_lang])
+        self.translated_to = set([])
         self.prev_post = None
         self.next_post = None
         self.base_url = base_url
@@ -89,8 +89,16 @@ class Post(object):
                 meta.update(default_metadata)
                 meta.update(get_meta(self, file_metadata_regexp, lang))
                 self.meta[lang] = meta
+            elif os.path.isfile(self.source_path):
+                self.translated_to.add(default_lang)
 
-        if 'title' not in default_metadata or 'slug' not in default_metadata \
+        if not self.is_translation_available(default_lang):
+            # Special case! (Issue #373)
+            # Check that all the other languages have full metadata
+            #for lang in translations:
+            pass
+
+        elif 'title' not in default_metadata or 'slug' not in default_metadata \
                 or 'date' not in default_metadata:
             raise OSError("You must set a title (found '{0}'), a slug (found "
                           "'{1}') and a date (found '{2}')! [in file "
@@ -111,7 +119,6 @@ class Post(object):
 
         # If mathjax is a tag, then enable mathjax rendering support
         self.is_mathjax = 'mathjax' in self.tags
-
 
     @property
     def template_name(self):
@@ -165,7 +172,9 @@ class Post(object):
 
     def deps(self, lang):
         """Return a list of dependencies to build this post's page."""
-        deps = [self.base_path]
+        deps = []
+        if self.default_lang in self.translated_to:
+            deps.append(self.base_path)
         if lang != self.default_lang:
             deps += [self.base_path + "." + lang]
         deps += self.fragment_deps(lang)
@@ -173,7 +182,9 @@ class Post(object):
 
     def fragment_deps(self, lang):
         """Return a list of dependencies to build this post's fragment."""
-        deps = [self.source_path]
+        deps = []
+        if self.default_lang in self.translated_to:
+            deps.append(self.source_path)
         if os.path.isfile(self.metadata_path):
             deps.append(self.metadata_path)
         dep_path = self.base_path + '.dep'
@@ -199,14 +210,13 @@ class Post(object):
                 file_name = file_name_lang
         return file_name
 
-    def text(self, lang=None, teaser_only=False, strip_html=False, fallback_to_default_lang=True):
+    def text(self, lang=None, teaser_only=False, strip_html=False):
         """Read the post file for that language and return its contents."""
+
         if lang is None:
             lang = self.current_lang()
         file_name = self._translated_file_path(lang)
-
-        if not self.is_translation_available(lang) and not fallback_to_default_lang:
-            return None
+        print("=====>", lang, self.post_name, self.translated_to, self._translated_file_path(lang))
 
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read().strip()
