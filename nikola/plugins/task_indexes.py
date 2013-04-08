@@ -46,20 +46,24 @@ class Indexes(Task):
             "index_teasers": self.site.config['INDEX_TEASERS'],
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
+            "hide_untranslated_posts": self.site.config['HIDE_UNTRANSLATED_POSTS'],
         }
 
         template_name = "index.tmpl"
-        # TODO: timeline is global, get rid of it
         posts = [x for x in self.site.timeline if x.use_in_feeds]
-        # Split in smaller lists
-        lists = []
-        while posts:
-            lists.append(posts[:kw["index_display_post_count"]])
-            posts = posts[kw["index_display_post_count"]:]
-        num_pages = len(lists)
-        if not lists:
+        if not posts:
             yield {'basename': 'render_indexes', 'actions': []}
         for lang in kw["translations"]:
+            # Split in smaller lists
+            lists = []
+            if kw["hide_untranslated_posts"]:
+                filtered_posts = [x for x in posts if x.is_translation_available(lang)]
+            else:
+                filtered_posts = posts
+            while filtered_posts:
+                lists.append(filtered_posts[:kw["index_display_post_count"]])
+                filtered_posts = filtered_posts[kw["index_display_post_count"]:]
+            num_pages = len(lists)
             for i, post_list in enumerate(lists):
                 context = {}
                 if self.site.config.get("INDEXES_TITLE", ""):

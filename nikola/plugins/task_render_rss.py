@@ -43,13 +43,18 @@ class RenderRSS(Task):
             "blog_description": self.site.config["BLOG_DESCRIPTION"],
             "output_folder": self.site.config["OUTPUT_FOLDER"],
             "rss_teasers": self.site.config["RSS_TEASERS"],
+            "hide_untranslated_posts": self.site.config['HIDE_UNTRANSLATED_POSTS'],
         }
         self.site.scan_posts()
         for lang in kw["translations"]:
             output_name = os.path.join(kw['output_folder'],
                                        self.site.path("rss", None, lang))
             deps = []
-            posts = [x for x in self.site.timeline if x.use_in_feeds][:10]
+            if kw["hide_untranslated_posts"]:
+                posts = [x for x in self.site.timeline if x.use_in_feeds
+                         and x.is_translation_available(lang)][:10]
+            else:
+                posts = [x for x in self.site.timeline if x.use_in_feeds][:10]
             for post in posts:
                 deps += post.deps(lang)
             yield {

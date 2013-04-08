@@ -52,6 +52,7 @@ class RenderTags(Task):
             self.site.config['INDEX_DISPLAY_POST_COUNT'],
             "index_teasers": self.site.config['INDEX_TEASERS'],
             "rss_teasers": self.site.config["RSS_TEASERS"],
+            "hide_untranslated_posts": self.site.config['HIDE_UNTRANSLATED_POSTS'],
         }
 
         self.site.scan_posts()
@@ -67,13 +68,17 @@ class RenderTags(Task):
             post_list.sort(key=lambda a: a.date)
             post_list.reverse()
             for lang in kw["translations"]:
-                yield self.tag_rss(tag, lang, posts, kw)
-
+                if kw["hide_untranslated_posts"]:
+                    filtered_posts = [x for x in post_list if x.is_translation_available(lang)]
+                else:
+                    filtered_posts = post_list
+                rss_post_list = [p.post_name for p in filtered_posts]
+                yield self.tag_rss(tag, lang, rss_post_list, kw)
                 # Render HTML
                 if kw['tag_pages_are_indexes']:
-                    yield self.tag_page_as_index(tag, lang, post_list, kw)
+                    yield self.tag_page_as_index(tag, lang, filtered_posts, kw)
                 else:
-                    yield self.tag_page_as_list(tag, lang, post_list, kw)
+                    yield self.tag_page_as_list(tag, lang, filtered_posts, kw)
 
         # Tag cloud json file
         tag_cloud_data = {}
