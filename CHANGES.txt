@@ -5,6 +5,7 @@ Features
 --------
 
 * Nikola check exists with 1 if there is an error
+* New HIDE_UNTRANSLATED_POSTS option that ensures you don't have mixed-language pages (Issue #373)
 
 Bugfixes
 --------
