@@ -427,11 +427,11 @@ supports them (for example: ``.. author: John Doe``)
         2012/09/15 19:52:05
 
 If you are writing a multilingual site, you can also create a per-language
-post file (for example: ``how-to-make-money.txt.es``). This one can have two
-lines of metadata:
+post file (for example: ``how-to-make-money.txt.es``). This one can replace
+metadata of the default language, for example:
 
-1) The translated title for the post or page
-2) A translated version of the pagename
+* The translated title for the post or page
+* A translated version of the pagename
 
 You can edit these files with your favourite text editor, and once you are happy
 with the contents, generate the pages as explained in `Getting Started`_
