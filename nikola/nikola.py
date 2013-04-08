@@ -653,7 +653,18 @@ class Nikola(object):
                 dir_glob = os.path.join(dirpath, os.path.basename(wildcard))
                 dest_dir = os.path.normpath(os.path.join(destination,
                                             os.path.relpath(dirpath, dirname)))
-                for base_path in glob.glob(dir_glob):
+                full_list = glob.glob(dir_glob)
+                # Now let's look for things that are not in default_lang
+                for lang in self.config['TRANSLATIONS'].keys():
+                    lang_glob = dir_glob + "." + lang
+                    translated_list = glob.glob(lang_glob)
+                    for fname in translated_list:
+                        orig_name = os.path.splitext(fname)[0]
+                        if orig_name in full_list:
+                            continue
+                        full_list.append(orig_name)
+
+                for base_path in full_list:
                     post = Post(
                         base_path,
                         self.config['CACHE_FOLDER'],
