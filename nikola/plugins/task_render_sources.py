@@ -65,15 +65,16 @@ class Sources(Task):
                     source_lang = source + '.' + lang
                     if os.path.exists(source_lang):
                         source = source_lang
-                yield {
-                    'basename': 'render_sources',
-                    'name': os.path.normpath(output_name),
-                    'file_dep': [source],
-                    'targets': [output_name],
-                    'actions': [(utils.copy_file, (source, output_name))],
-                    'clean': True,
-                    'uptodate': [utils.config_changed(kw)],
-                }
+                if os.path.isfile(source):
+                    yield {
+                        'basename': 'render_sources',
+                        'name': os.path.normpath(output_name),
+                        'file_dep': [source],
+                        'targets': [output_name],
+                        'actions': [(utils.copy_file, (source, output_name))],
+                        'clean': True,
+                        'uptodate': [utils.config_changed(kw)],
+                    }
         if flag is False:  # No page rendered, yield a dummy task
             yield {
                 'basename': 'render_sources',
