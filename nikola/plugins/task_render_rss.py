@@ -66,6 +66,7 @@ class RenderRSS(Task):
                             (lang, kw["blog_title"], kw["site_url"],
                              kw["blog_description"], posts, output_name,
                              kw["rss_teasers"]))],
+                'task_dep': ['render_posts'],
                 'clean': True,
                 'uptodate': [utils.config_changed(kw)],
             }

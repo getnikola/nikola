@@ -239,4 +239,5 @@ class RenderTags(Task):
                          output_name, kw["rss_teasers"]))],
             'clean': True,
             'uptodate': [utils.config_changed(kw)],
+            'task_dep': ['render_posts'],
         }
