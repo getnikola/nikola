@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Fix wrong path splitting (Issue #434)
 * Remember locale even when set_locale failes (Issue #446)
 * Decode path argument in new_post (Issue #442)
 * task_indexes had missing config dependencies (Issue #441)

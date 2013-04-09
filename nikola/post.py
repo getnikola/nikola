@@ -267,8 +267,8 @@ class Post(object):
         if lang is None:
             lang = self.current_lang()
 
-        pieces = list(os.path.split(self.translations[lang]))
-        pieces += list(os.path.split(self.folder))
+        pieces = self.translations[lang].split(os.sep)
+        pieces += self.folder.split(os.sep)
         pieces += [self.meta[lang]['slug'] + extension]
         pieces = [_f for _f in pieces if _f and _f != '.']
         if absolute:
