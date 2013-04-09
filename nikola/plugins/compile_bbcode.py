@@ -60,19 +60,17 @@ class CompileTextile(PageCompiler):
             output = self.parser.format(data)
             out_file.write(output)
 
-    def create_post(self, path, onefile=False, title="", slug="", date="",
-                    tags=""):
+    def create_post(self, path, onefile=False, **kw):
+        metadata = {}
+        metadata.update(self.default_metadata)
+        metadata.update(kw)
         d_name = os.path.dirname(path)
         if not os.path.isdir(d_name):
             os.makedirs(os.path.dirname(path))
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
                 fd.write('[note]<!--\n')
-                fd.write('.. title: {0}\n'.format(title))
-                fd.write('.. slug: {0}\n'.format(slug))
-                fd.write('.. date: {0}\n'.format(date))
-                fd.write('.. tags: {0}\n'.format(tags))
-                fd.write('.. link: \n')
-                fd.write('.. description: \n')
+                for k, v in metadata.items():
+                    fd.write('.. {0}: {1}\n'.format(k, v))
                 fd.write('-->[/note]\n\n')
-            fd.write("\nWrite your post here.")
+            fd.write("Write your post here.")

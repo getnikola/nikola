@@ -145,6 +145,14 @@ class PageCompiler(object):
     """Plugins that compile text files into HTML."""
 
     name = "dummy compiler"
+    default_metadata = {
+        'title': '',
+        'slug': '',
+        'date': '',
+        'tags': '',
+        'link': '',
+        'description': '',
+    }
 
     def compile_html(self, source, dest):
         """Compile the source, save it on dest."""

@@ -60,18 +60,20 @@ class CompileIPynb(PageCompiler):
             output = converter.convert()
             out_file.write(output)
 
-    def create_post(self, path, onefile=False, title="", slug="", date="",
-                    tags=""):
+    def create_post(self, path, onefile=False, **kw):
+        metadata = {}
+        metadata.update(self.default_metadata)
+        metadata.update(kw)
         d_name = os.path.dirname(path)
         if not os.path.isdir(d_name):
             os.makedirs(os.path.dirname(path))
-        meta_path = os.path.join(d_name, slug + ".meta")
+        meta_path = os.path.join(d_name, kw['slug'] + ".meta")
         with codecs.open(meta_path, "wb+", "utf8") as fd:
             if onefile:
-                fd.write('%s\n' % title)
-                fd.write('%s\n' % slug)
-                fd.write('%s\n' % date)
-                fd.write('%s\n' % tags)
+                fd.write('%s\n' % kw['title'])
+                fd.write('%s\n' % kw['slug'])
+                fd.write('%s\n' % kw['date'])
+                fd.write('%s\n' % kw['tags'])
         print("Your post's metadata is at: ", meta_path)
         with codecs.open(path, "wb+", "utf8") as fd:
             fd.write("""{
@@ -95,4 +97,4 @@ class CompileIPynb(PageCompiler):
    "metadata": {}
   }
  ]
-}""" % slug)
+}""" % kw['slug'])
