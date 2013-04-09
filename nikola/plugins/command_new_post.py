@@ -184,12 +184,14 @@ class CommandNewPost(Command):
             title = sys.stdin.readline()
         else:
             print("Title:", title)
-        if isinstance(title, bytes):
+        if isinstance(title, utils.bytes_str):
             title = title.decode(sys.stdin.encoding)
         title = title.strip()
         if not path:
             slug = utils.slugify(title)
         else:
+            if isinstance(path, utils.bytes_str):
+                path = path.decode(sys.stdin.encoding)
             slug = utils.slugify(os.path.splitext(os.path.basename(path))[0])
         date = datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
         data = [title, slug, date, tags]
