@@ -47,6 +47,9 @@ class Indexes(Task):
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
             "hide_untranslated_posts": self.site.config['HIDE_UNTRANSLATED_POSTS'],
+            "indexes_title": self.site.config['INDEXES_TITLE'],
+            "indexes_pages": self.site.config['INDEXES_PAGES'],
+            "blog_title": self.site.config["BLOG_TITLE"],
         }
 
         template_name = "index.tmpl"
@@ -66,15 +69,12 @@ class Indexes(Task):
             num_pages = len(lists)
             for i, post_list in enumerate(lists):
                 context = {}
-                if self.site.config.get("INDEXES_TITLE", ""):
-                    indexes_title = self.site.config['INDEXES_TITLE']
-                else:
-                    indexes_title = self.site.config["BLOG_TITLE"]
+                indexes_title = kw['indexes_title'] or kw['blog_title']
                 if not i:
                     context["title"] = indexes_title
                 else:
-                    if self.site.config.get("INDEXES_PAGES", ""):
-                        indexes_pages = self.site.config["INDEXES_PAGES"] % i
+                    if kw["indexes_pages"]:
+                        indexes_pages = kw["indexes_pages"] % i
                     else:
                         indexes_pages = " (" + \
                             kw["messages"][lang]["old posts page %d"] % i + ")"
@@ -107,7 +107,6 @@ class Indexes(Task):
 
         if not self.site.config["STORY_INDEX"]:
             return
-        # TODO: do story indexes as described in #232
         kw = {
             "translations": self.site.config['TRANSLATIONS'],
             "post_pages": self.site.config["post_pages"],
