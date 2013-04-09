@@ -150,7 +150,6 @@ class PageCompiler(object):
         """Compile the source, save it on dest."""
         raise NotImplementedError()
 
-    def create_post(self, path, onefile=False, title="", slug="", date="",
-                    tags=""):
+    def create_post(self, path, onefile=False, **kw):
         """Create post file with optional metadata."""
         raise NotImplementedError()
