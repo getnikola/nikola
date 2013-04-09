@@ -47,7 +47,8 @@ class Post(object):
     def __init__(
         self, source_path, cache_folder, destination, use_in_feeds,
         translations, default_lang, base_url, messages, template_name,
-        file_metadata_regexp=None, strip_index_html=False, tzinfo=None
+        file_metadata_regexp=None, strip_index_html=False, tzinfo=None,
+        skip_untranslated=False,
     ):
         """Initialize post.
 
@@ -56,8 +57,8 @@ class Post(object):
         the .html fragment file path.
         """
         self.translated_to = set([])
-        self.prev_post = None
-        self.next_post = None
+        self._prev_post = None
+        self._next_post = None
         self.base_url = base_url
         self.is_draft = False
         self.is_mathjax = False
@@ -71,6 +72,7 @@ class Post(object):
         self.translations = translations
         self.default_lang = default_lang
         self.messages = messages
+        self.skip_untranslated = skip_untranslated
         self._template_name = template_name
 
         default_metadata = get_meta(self, file_metadata_regexp)
@@ -118,6 +120,38 @@ class Post(object):
 
         # If mathjax is a tag, then enable mathjax rendering support
         self.is_mathjax = 'mathjax' in self.tags
+
+    @property
+    def prev_post(self):
+        lang = self.current_lang()
+        rv = self._prev_post
+        while self.skip_untranslated:
+            if rv is None:
+                break
+            if rv.is_translation_available(lang):
+                break
+            rv = rv._prev_post
+        return rv
+
+    @prev_post.setter
+    def prev_post(self, v):
+        self._prev_post = v
+
+    @property
+    def next_post(self):
+        lang = self.current_lang()
+        rv = self._next_post
+        while self.skip_untranslated:
+            if rv is None:
+                break
+            if rv.is_translation_available(lang):
+                break
+            rv = rv._next_post
+        return rv
+
+    @next_post.setter
+    def next_post(self, v):
+        self._next_post = v
 
     @property
     def template_name(self):

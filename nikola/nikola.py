@@ -678,6 +678,7 @@ class Nikola(object):
                         self.config['FILE_METADATA_REGEXP'],
                         self.config['STRIP_INDEX_HTML'],
                         tzinfo,
+                        self.config['HIDE_UNTRANSLATED_POSTS'],
                     )
                     for lang, langpath in list(
                             self.config['TRANSLATIONS'].items()):
