@@ -66,7 +66,7 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'generic_rss_renderer', 'copy_file', 'slugify', 'unslugify',
            'to_datetime', 'apply_filters', 'config_changed', 'get_crumbs',
            'get_asset_path', '_reload', 'unicode_str', 'bytes_str',
-           'unichr', 'Functionary']
+           'unichr', 'Functionary', 'LocaleBorg']
 
 
 class Functionary(defaultdict):
@@ -533,3 +533,12 @@ def get_asset_path(path, themes, files_folders={'files': ''}):
 
     # whatever!
     return None
+
+
+class LocaleBorg:
+    __shared_state = {
+        'current_lang': None
+    }
+
+    def __init__(self):
+        self.__dict__ = self.__shared_state

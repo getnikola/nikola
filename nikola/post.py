@@ -27,14 +27,13 @@ from __future__ import unicode_literals, print_function
 
 import codecs
 from collections import defaultdict
-import locale
 import os
 import re
 import string
 
 import lxml.html
 
-from .utils import to_datetime, slugify, bytes_str, Functionary
+from .utils import to_datetime, slugify, bytes_str, Functionary, LocaleBorg
 
 __all__ = ['Post']
 
@@ -144,7 +143,7 @@ class Post(object):
     def current_lang(self):
         """Return the currently set locale, if it's one of the
         available translations, or default_lang."""
-        lang = locale.getlocale()[0]
+        lang = LocaleBorg().current_lang
         if lang:
             if lang in self.translations:
                 return lang
@@ -267,6 +266,7 @@ class Post(object):
     def permalink(self, lang=None, absolute=False, extension='.html'):
         if lang is None:
             lang = self.current_lang()
+
         pieces = list(os.path.split(self.translations[lang]))
         pieces += list(os.path.split(self.folder))
         pieces += [self.meta[lang]['slug'] + extension]

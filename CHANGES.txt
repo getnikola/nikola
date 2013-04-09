@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Remember locale even when set_locale failes (Issue #446)
 * Decode path argument in new_post (Issue #442)
 * task_indexes had missing config dependencies (Issue #441)
 * Removed bogus links to slides assets that were removed

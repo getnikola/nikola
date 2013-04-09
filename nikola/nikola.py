@@ -429,7 +429,7 @@ class Nikola(object):
     def current_lang(self):  # FIXME: this is duplicated, turn into a mixin
         """Return the currently set locale, if it's one of the
         available translations, or default_lang."""
-        lang = locale.getlocale()[0]
+        lang = utils.LocaleBorg().current_lang
         if lang:
             if lang in self.translations:
                 return lang
@@ -787,6 +787,7 @@ class Nikola(object):
 
 def s_l(lang):
     """A set_locale that uses utf8 encoding and returns ''."""
+    utils.LocaleBorg().current_lang = lang
     try:
         locale.setlocale(locale.LC_ALL, (lang, "utf8"))
     except Exception:
