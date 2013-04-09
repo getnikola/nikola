@@ -1056,10 +1056,15 @@ aggregate. The format is very simple::
 #. Lines that start with http are feed URLs.
 #. URL lines have to be followed by the "real name" of the feed.
 
-FIXME: explain the planetoid theme stuff
-
 After all that is in place, just run ``nikola build`` and you'll get
 a planet.
+If you run ``nikola build`` for the first time you need to actually issue
+the command three times until the planet is build.
+
+There is a special theme for the planets called `site-planetoid`. To use
+this set `THEME` in your ``conf.py`` to ``'site-planetoid'``.
+This is special in the case that it redirects users to the original URL of the post
+when they try to open a post.
 
 Local Search
 ~~~~~~~~~~~~
