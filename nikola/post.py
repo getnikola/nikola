@@ -93,11 +93,11 @@ class Post(object):
 
         if not self.is_translation_available(default_lang):
             # Special case! (Issue #373)
-            # Check that all the other languages have full metadata
-            #for lang in translations:
-            pass
+            # Fill default_metadata with stuff from the other languages
+            for lang in sorted(self.translated_to):
+                default_metadata.update(self.meta[lang])
 
-        elif 'title' not in default_metadata or 'slug' not in default_metadata \
+        if 'title' not in default_metadata or 'slug' not in default_metadata \
                 or 'date' not in default_metadata:
             raise OSError("You must set a title (found '{0}'), a slug (found "
                           "'{1}') and a date (found '{2}')! [in file "
