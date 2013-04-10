@@ -1,5 +1,8 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="post.tmpl"/>
+<%block name="extra_head">
+${helper.twitter_card_information(post)}
+</%block>
 <%block name="content">
 %if title:
     <h1>${title}</h1>
