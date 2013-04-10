@@ -110,16 +110,40 @@ class Post(object):
 
         # If timezone is set, build localized datetime.
         self.date = to_datetime(self.meta[default_lang]['date'], tzinfo)
-        self.tags = [x.strip() for x in self.meta[default_lang]['tags'].split(',')]
-        self.tags = [_f for _f in self.tags if _f]
+
+        is_draft = False
+        self._tags = {}
+        for lang in self.translated_to:
+            self._tags[lang] = [x.strip() for x in self.meta[lang]['tags'].split(',')]
+            self._tags[lang] = [t for t in self._tags[lang] if t]
+            if 'draft' in self._tags[lang]:
+                is_draft = True
+                self._tags['lang'].remove('draft')
 
         # While draft comes from the tags, it's not really a tag
-        self.use_in_feeds = use_in_feeds and "draft" not in self.tags
-        self.is_draft = 'draft' in self.tags
-        self.tags = [t for t in self.tags if t != 'draft']
+        self.use_in_feeds = use_in_feeds and not is_draft
+        self.is_draft = is_draft
 
         # If mathjax is a tag, then enable mathjax rendering support
         self.is_mathjax = 'mathjax' in self.tags
+
+    @property
+    def alltags(self):
+        """This is ALL the tags for this post."""
+        tags = []
+        for l in self._tags:
+            tags.extend(self._tags[l])
+        return list(set(tags))
+
+    @property
+    def tags(self):
+        lang = self.current_lang()
+        if lang in self._tags:
+            return self._tags[lang]
+        elif self.default_lang in self._tags:
+            return self._tags[self.default_lang]
+        else:
+            return []
 
     @property
     def prev_post(self):
