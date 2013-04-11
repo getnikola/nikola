@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Escape twittercard data (Issue #452)
 * Added missing "twittercard" in story template
 * Added support for per-language tags (Issue #450)
 * Fix wrong path splitting (Issue #434)

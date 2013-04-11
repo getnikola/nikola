@@ -28,7 +28,6 @@
     %endif
 </%def>
 
-
 <%def name="html_pager(post)">
     <ul class="pager">
     %if post.prev_post:
@@ -42,4 +41,33 @@
         </li>
     %endif
     </ul>
+</%def>
+
+<%def name="twitter_card_information(post)">
+    %if twitter_card and twitter_card['use_twitter_cards']:
+        <meta name="twitter:card" content="${twitter_card.get('card', 'summary')|h}">
+        <meta name="og:url" content="${post.permalink(absolute=True)}">
+        %if 'site:id' in twitter_card:
+            <meta name="twitter:site:id" content="${twitter_card['site:id']}">
+        %elif 'site' in twitter_card:
+            <meta name="twitter:site" content="${twitter_card['site']}">
+        %endif
+        %if 'creator:id' in twitter_card:
+            <meta name="twitter:creator:id" content="${twitter_card['creator:id']}">
+        %elif 'creator' in twitter_card:
+            <meta name="twitter:creator" content="${twitter_card['creator']}">
+        %endif
+        <meta name="og:title" content="${post.title()[:70]|h}">
+        %if post.description():
+            <meta name="og:description" content="${post.description()[:200]|h}">
+        %else:
+            <meta name="og:description" content="${post.text(strip_html=True)[:200]|h}">
+        %endif
+    %endif
+</%def>
+
+<%def name="mathjax_script(post)">
+    %if post.is_mathjax:
+        <script src="/assets/js/mathjax.js" type="text/javascript"></script>
+    %endif
 </%def>
