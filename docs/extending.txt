@@ -210,7 +210,7 @@ probably want to do a Task plugin, which will make it be part of the
 ``nikola build`` command. There are the currently available tasks, all
 provided by plugins::
 
-    $ nikola build list
+    $ nikola list
 
     build_bundles
     copy_assets

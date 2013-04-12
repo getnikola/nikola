@@ -275,9 +275,9 @@ all the pages again, unless you changed something that the page requires. So, if
 the text of a post, or its title, that post page, and all index pages where it is mentioned,
 will be recreated. If you change the post page template, then all the post pages will be rebuilt.
 
-Nikola is mostly a series of doit *tasks*, and you can see them by doing ``nikola build list``::
+Nikola is mostly a series of doit *tasks*, and you can see them by doing ``nikola list``::
 
-    $ nikola build list
+    $ nikola list
     Scanning posts  . . done!
     build_bundles
     copy_assets
