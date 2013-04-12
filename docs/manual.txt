@@ -196,10 +196,10 @@ Longer version:
 #. Get `Nikola <http://nikola.ralsina.com.ar/>`_
 #. Install dependencies. To do that, either:
 
-   #. ``pip install -r requirements.txt`` or...
+   #. ``pip install -r requirements.txt`` and ``pip install .`` or...
    #. Install your distribution's packages for all the things
       mentioned below, if they exist, or...
-   #. Get all of these manually (but why?, use requirements.txt):
+   #. Get all of these manually (but why?, use pip):
 
       #. Get python, if you don't have it.
       #. Get `doit <http://pydoit.org>`_
