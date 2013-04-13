@@ -4,6 +4,7 @@ New in Master
 Features
 --------
 
+* New Japanese translation.
 * Nikola check exists with 1 if there is an error
 * New HIDE_UNTRANSLATED_POSTS option that ensures you don't have mixed-language pages (Issue #373)
 * New theme "site-planetoid" for use with the planetoid plugin.
