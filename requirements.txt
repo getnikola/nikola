@@ -1,5 +1,5 @@
 mock>=1.0.0
-requests
+requests>=1.0
 markdown
 Jinja2
 bbcode
