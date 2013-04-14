@@ -108,7 +108,7 @@ class DoitNikola(DoitMain):
         sub_cmds = self.get_commands()
         args = self.process_args(cmd_args)
 
-        if len(args) == 0 or args == ["--help"]:
+        if len(args) == 0 or any(arg in ["--help", '-h'] for arg in args):
             cmd_args = ['help']
             args = ['help']
 

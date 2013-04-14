@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Handle "-h" (Issue #460)
 * Added correct help for console command (Issue #460)
 * Escape twittercard data (Issue #452)
 * Added missing "twittercard" in story template
