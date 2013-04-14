@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Added correct help for console command (Issue #460)
 * Escape twittercard data (Issue #452)
 * Added missing "twittercard" in story template
 * Added support for per-language tags (Issue #450)

@@ -33,6 +33,7 @@ class Console(Command):
     """Start debugging console."""
     name = "console"
     shells = ['ipython', 'bpython', 'plain']
+    doc_purpose = "Start an interactive python console with access to your site and configuration."
 
     def ipython(self):
         """IPython shell."""
