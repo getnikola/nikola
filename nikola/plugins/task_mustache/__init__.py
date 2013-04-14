@@ -153,6 +153,12 @@ class Mustache(Task):
                     'targets': [out_file],
                     'actions': [(write_file, (out_file, post, lang))],
                     'task_dep': ['render_posts'],
+                    'uptodate': [config_changed({
+                        1: post.text(lang),
+                        2: post.prev_post,
+                        3: post.next_post,
+                        4: post.title(lang),
+                    })]
                 }
                 yield task
 
