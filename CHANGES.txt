@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Rebuild post pages when the post's translation list changes (Issue #458)
 * Handle "-h" (Issue #460)
 * Added correct help for console command (Issue #460)
 * Escape twittercard data (Issue #452)

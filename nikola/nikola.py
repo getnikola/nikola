@@ -741,6 +741,8 @@ class Nikola(object):
         deps_dict['TRANSLATIONS'] = self.config['TRANSLATIONS']
         deps_dict['global'] = self.GLOBAL_CONTEXT
         deps_dict['comments'] = context['enable_comments']
+        if post:
+            deps_dict['post_translations'] = post.translated_to
 
         task = {
             'name': os.path.normpath(output_name),
