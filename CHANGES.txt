@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Added post data as a uptodate check for mustache (Issue #456)
 * Rebuild post pages when the post's translation list changes (Issue #458)
 * Handle "-h" (Issue #460)
 * Added correct help for console command (Issue #460)
