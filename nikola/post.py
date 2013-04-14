@@ -157,7 +157,7 @@ class Post(object):
             rv = rv._prev_post
         return rv
 
-    @prev_post.setter
+    @prev_post.setter  # NOQA
     def prev_post(self, v):
         self._prev_post = v
 
@@ -173,7 +173,7 @@ class Post(object):
             rv = rv._next_post
         return rv
 
-    @next_post.setter
+    @next_post.setter  # NOQA
     def next_post(self, v):
         self._next_post = v
 
