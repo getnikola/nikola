@@ -19,5 +19,5 @@ MESSAGES = {
     "Read more": "続きを読む",
     "Source": "ソース",
     "Tags": "タグ",
-    "old posts page %d": "",
+    "old posts page %d": "前の記事 %dページ目",
 }
