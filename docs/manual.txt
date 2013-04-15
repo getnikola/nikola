@@ -537,6 +537,12 @@ If you add a "draft" tag to a post, then it will not be shown in indexes and fee
 It *will* be compiled, and if you deploy it it *will* be made available, so use
 with care.
 
+Retired Posts
+~~~~~~~~~~~~~
+
+If you add a "retired" tag to a post, then it will not be shown in indexes and feeds.
+It *will* be compiled, and if you deploy it it *will* be made available, so it will
+not generate 404s for people who had linked to it.
 
 Creating a Page
 ---------------
