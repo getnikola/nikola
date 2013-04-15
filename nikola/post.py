@@ -112,17 +112,21 @@ class Post(object):
         self.date = to_datetime(self.meta[default_lang]['date'], tzinfo)
 
         is_draft = False
+        is_retired = False
         self._tags = {}
         for lang in self.translated_to:
             self._tags[lang] = [x.strip() for x in self.meta[lang]['tags'].split(',')]
             self._tags[lang] = [t for t in self._tags[lang] if t]
             if 'draft' in self._tags[lang]:
                 is_draft = True
-                self._tags['lang'].remove('draft')
+                self._tags[lang].remove('draft')
+            if 'retired' in self._tags[lang]:
+                is_retired = True
+                self._tags[lang].remove('retired')
 
         # While draft comes from the tags, it's not really a tag
-        self.use_in_feeds = use_in_feeds and not is_draft
         self.is_draft = is_draft
+        self.use_in_feeds = use_in_feeds and not is_draft and not is_retired
 
         # If mathjax is a tag, then enable mathjax rendering support
         self.is_mathjax = 'mathjax' in self.tags
