@@ -303,7 +303,6 @@ class Post(object):
         file_name = self._translated_file_path(lang)
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read().strip()
-
         try:
             document = lxml.html.document_fromstring(data)
         except lxml.etree.ParserError as e:
@@ -314,6 +313,13 @@ class Post(object):
             raise(e)
         document.make_links_absolute(self.permalink(lang=lang))
         data = lxml.html.tostring(document, encoding='unicode')
+        # data here is a full HTML doc, including HTML and BODY tags
+        # which is not ideal (Issue #464)
+        body = document.body
+        data = (body.text or '') + ''.join(
+            [lxml.html.tostring(child, encoding='unicode')
+                for child in body.iterchildren()])
+
         if teaser_only:
             teaser = TEASER_REGEXP.split(data)[0]
             if teaser != data:
