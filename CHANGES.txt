@@ -5,6 +5,7 @@ Features
 --------
 
 * Added "templates/" folder to template path.
+* Keyword metadata support in post pages (Issue #451)
 
 New in 5.4.4
 ============
