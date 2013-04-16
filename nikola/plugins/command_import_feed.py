@@ -210,12 +210,12 @@ class CommandImportFeed(Command):
         post_date = datetime.datetime.fromtimestamp(time.mktime(
             item.published_parsed))
         if item.get('content'):
-            for candidate in item.get('content',[]):
+            for candidate in item.get('content', []):
                 content = candidate.value
                 break
                 #  FIXME: handle attachments
         elif item.get('summary'):
-            content=item.get('summary')
+            content = item.get('summary')
 
         tags = []
         for tag in item.get('tags', []):
