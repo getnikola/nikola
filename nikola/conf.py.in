@@ -284,6 +284,13 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # Default = False
 # STRIP_INDEX_HTML = False
 
+# Instead of putting files in <slug>.html, put them in
+# <slug>/index.html. Works well with STRIP_INDEX_HTML = True
+# This can be disabled on a per-page/post basis by adding
+#    .. pretty_url: False
+# to the metadata
+# PRETTY_URLS = False
+
 # Do you want a add a Mathjax config file?
 # MATHJAX_CONFIG = ""
 

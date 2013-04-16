@@ -143,6 +143,7 @@ class Nikola(object):
                 ("posts/*.txt", "posts", "post.tmpl", True),
                 ("stories/*.txt", "stories", "story.tmpl", False),
             ),
+            'PRETTY_URLS': False,
             'REDIRECTIONS': [],
             'RSS_LINK': None,
             'RSS_PATH': '',

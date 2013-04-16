@@ -48,7 +48,7 @@ class Post(object):
         self, source_path, cache_folder, destination, use_in_feeds,
         translations, default_lang, base_url, messages, template_name,
         file_metadata_regexp=None, strip_index_html=False, tzinfo=None,
-        skip_untranslated=False,
+        skip_untranslated=False, pretty_urls=False,
     ):
         """Initialize post.
 
@@ -63,6 +63,7 @@ class Post(object):
         self.is_draft = False
         self.is_mathjax = False
         self.strip_index_html = strip_index_html
+        self.pretty_urls = pretty_urls
         self.source_path = source_path  # posts/blah.txt
         self.post_name = os.path.splitext(source_path)[0]  # posts/blah
         # cache/posts/blah.html
@@ -130,6 +131,14 @@ class Post(object):
 
         # If mathjax is a tag, then enable mathjax rendering support
         self.is_mathjax = 'mathjax' in self.tags
+
+    def _has_pretty_url(self, lang):
+        if self.pretty_urls and \
+                self.meta[lang].get('pretty_url', '') != 'False' and \
+                self.meta[lang]['slug'] != 'index':
+            return True
+        else:
+            return False
 
     @property
     def alltags(self):
@@ -321,8 +330,12 @@ class Post(object):
         return data
 
     def destination_path(self, lang, extension='.html'):
-        path = os.path.join(self.translations[lang],
-                            self.folder, self.meta[lang]['slug'] + extension)
+        if self._has_pretty_url(lang):
+            path = os.path.join(self.translations[lang],
+                                self.folder, self.meta[lang]['slug'], 'index' + extension)
+        else:
+            path = os.path.join(self.translations[lang],
+                                self.folder, self.meta[lang]['slug'] + extension)
         return path
 
     def permalink(self, lang=None, absolute=False, extension='.html'):
@@ -331,7 +344,10 @@ class Post(object):
 
         pieces = self.translations[lang].split(os.sep)
         pieces += self.folder.split(os.sep)
-        pieces += [self.meta[lang]['slug'] + extension]
+        if self._has_pretty_url(lang):
+            pieces += [self.meta[lang]['slug'], 'index' + extension]
+        else:
+            pieces += [self.meta[lang]['slug'] + extension]
         pieces = [_f for _f in pieces if _f and _f != '.']
         if absolute:
             pieces = [self.base_url] + pieces

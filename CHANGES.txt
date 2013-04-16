@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New PRETTY_URLS option (generates slug/index.html instead of slug.html) (Issue #429)
 * Added "templates/" folder to template path.
 * Keyword metadata support in post pages (Issue #451)
 
