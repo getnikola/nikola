@@ -59,7 +59,8 @@ class Sources(Task):
                     kw['output_folder'], post.destination_path(
                         lang, post.source_ext()))
                 source = post.source_path
-                if source.endswith('.html'):
+                dest_ext = self.site.get_compiler(post.source_path).extension()
+                if dest_ext == post.source_ext():
                     continue
                 if lang != kw["default_lang"]:
                     source_lang = source + '.' + lang

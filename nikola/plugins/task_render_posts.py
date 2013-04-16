@@ -73,7 +73,7 @@ class RenderPosts(Task):
                     'name': dest,
                     'file_dep': post.fragment_deps(lang),
                     'targets': [dest],
-                    'actions': [(self.site.get_compiler(post.source_path),
+                    'actions': [(self.site.get_compiler(post.source_path).compile_html,
                                  [source, dest])],
                     'clean': True,
                     'uptodate': [utils.config_changed(deps_dict)],

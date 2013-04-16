@@ -161,3 +161,7 @@ class PageCompiler(object):
     def create_post(self, path, onefile=False, **kw):
         """Create post file with optional metadata."""
         raise NotImplementedError()
+
+    def extension(self):
+        """The preferred extension for the output of this compiler."""
+        return ".html"

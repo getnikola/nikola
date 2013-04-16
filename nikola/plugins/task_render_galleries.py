@@ -238,7 +238,7 @@ class Galleries(Task):
                 str(hashlib.sha224(index_path.encode('utf-8')).hexdigest() +
                     '.html'))
             if os.path.exists(index_path):
-                compile_html = self.site.get_compiler(index_path)
+                compile_html = self.site.get_compiler(index_path).compile_html
                 yield {
                     'basename': str('render_galleries'),
                     'name': index_dst_path,

@@ -317,7 +317,7 @@ class Nikola(object):
         for plugin_info in self.plugin_manager.getPluginsOfCategory(
                 "PageCompiler"):
             self.compilers[plugin_info.name] = \
-                plugin_info.plugin_object.compile_html
+                plugin_info.plugin_object
 
     def get_compiler(self, source_name):
         """Get the correct compiler for a post from `conf.post_compilers`
@@ -730,8 +730,9 @@ class Nikola(object):
             context['enable_comments'] = True
         else:
             context['enable_comments'] = self.config['COMMENTS_IN_STORIES']
+        extension = self.get_compiler(post.source_path).extension()
         output_name = os.path.join(self.config['OUTPUT_FOLDER'],
-                                   post.destination_path(lang))
+                                   post.destination_path(lang, extension))
         deps_dict = copy(context)
         deps_dict.pop('post')
         if post.prev_post:
