@@ -209,15 +209,16 @@ class CommandImportFeed(Command):
         description = ''
         post_date = datetime.datetime.fromtimestamp(time.mktime(
             item.published_parsed))
-
-        for candidate in item.content:
-            content = candidate.value
-            break
+        if item.get('content'):
+            for candidate in item.get('content',[]):
+                content = candidate.value
+                break
                 #  FIXME: handle attachments
+        elif item.get('summary'):
+            content=item.get('summary')
 
         tags = []
-        print(item.tags)
-        for tag in item.tags:
+        for tag in item.get('tags', []):
             tags.append(tag.term)
 
         if item.get('app_draft'):
@@ -261,7 +262,7 @@ class CommandImportFeed(Command):
     @staticmethod
     def write_metadata(filename, title, slug, post_date, description, tags):
         with codecs.open(filename, "w+", "utf8") as fd:
-            fd.write('\n'.join((title, slug, post_date.strftime('%Y/%M/%D %H:%m:%S'), ','.join(tags), '',
+            fd.write('\n'.join((title, slug, post_date.strftime(r'%Y/%m/%d %H:%m:%S'), ','.join(tags), '',
                                 description)))
 
 
