@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Experimental generic RSS/Atom importer (Issue #347)
 * PHP support (Issue #313)
 * New PRETTY_URLS option (generates slug/index.html instead of slug.html) (Issue #429)
 * Added "templates/" folder to template path.
