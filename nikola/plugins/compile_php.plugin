@@ -1,0 +1,10 @@
+[Core]
+Name = php
+Module = compile_php
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Compile PHP into HTML (just copy and name the file .php)
+
