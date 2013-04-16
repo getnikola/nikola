@@ -11,7 +11,7 @@ The Nikola Handbook
 All You Need to Know
 --------------------
 
-After you have Nikola installed:
+After you have Nikola `installed <#installing-nikola>`_:
 
 Create a empty site:
     ``nikola init mysite``
