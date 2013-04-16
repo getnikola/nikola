@@ -259,7 +259,7 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path,
             # PyRSS2Gen's pubDate is GMT time.
             'pubDate': (post.date if post.date.tzinfo is None else
                         post.date.astimezone(pytz.timezone('UTC'))),
-            'categories': post._tags[lang],
+            'categories': post._tags.get(lang, []),
         }
         items.append(rss.RSSItem(**args))
     rss_obj = rss.RSS2(
