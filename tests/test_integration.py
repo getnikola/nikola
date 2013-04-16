@@ -6,7 +6,8 @@ from contextlib import contextmanager
 import locale
 import os
 import shutil
-import subprocess  # NOQA
+import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -30,8 +31,7 @@ class EmptyBuildTest(unittest.TestCase):
 
     dataname = None
 
-    @classmethod
-    def setUpClass(self):
+    def setUp(self):
         """Setup a demo site."""
         self.tmpdir = tempfile.mkdtemp()
         self.target_dir = os.path.join(self.tmpdir, "target")
@@ -40,7 +40,6 @@ class EmptyBuildTest(unittest.TestCase):
         self.patch_site()
         self.build()
 
-    @classmethod
     def fill_site(self):
         """Add any needed initial content."""
         self.init_command.create_empty_site(self.target_dir)
@@ -56,18 +55,15 @@ class EmptyBuildTest(unittest.TestCase):
                     src_file = os.path.join(root, src_name)
                     shutil.copy2(src_file, dst_file)
 
-    @classmethod
     def patch_site(self):
         """Make any modifications you need to the site."""
 
-    @classmethod
     def build(self):
         """Build the site."""
         with cd(self.target_dir):
             main.main(["build"])
 
-    @classmethod
-    def tearDownClass(self):
+    def tearDown(self):
         """Remove the demo site."""
         shutil.rmtree(self.tmpdir)
 
@@ -81,7 +77,6 @@ class EmptyBuildTest(unittest.TestCase):
 class DemoBuildTest(EmptyBuildTest):
     """Test that a default build of --demo works."""
 
-    @classmethod
     def fill_site(self):
         """Fill the site with demo content."""
         self.init_command.copy_sample_site(self.target_dir)
@@ -126,7 +121,6 @@ class TranslatedBuildTest(EmptyBuildTest):
 class RelativeLinkTest(DemoBuildTest):
     """Check that SITE_URL with a path doesn't break links."""
 
-    @classmethod
     def patch_site(self):
         """Set the SITE_URL to have a path"""
         conf_path = os.path.join(self.target_dir, "conf.py")
@@ -157,13 +151,24 @@ class RelativeLinkTest(DemoBuildTest):
 
     #def test_check_links(self):
         #with cd(self.target_dir):
-            #r = subprocess.call("nikola check -l", shell=True)
-        #self.assertEqual(r, 0)
+            #p = subprocess.Popen(
+                #"nikola check -l", shell=True, stdout=subprocess.PIPE,
+                #stderr=subprocess.PIPE)
+            #out, err = p.communicate()
+            #sys.stdout.write(out)
+            #sys.stderr.write(err)
+        #self.assertEqual(p.returncode, 0)
 
     #def test_check_files(self):
         #with cd(self.target_dir):
-            #r = subprocess.call("nikola check -f", shell=True)
-        #self.assertEqual(r, 0)
+            #p = subprocess.Popen(
+                #"nikola check -f", shell=True, stdout=subprocess.PIPE,
+                #stderr=subprocess.PIPE)
+            #out, err = p.communicate()
+            #sys.stdout.write(out)
+            #sys.stderr.write(err)
+        #import pdb; pdb.set_trace()
+        #self.assertEqual(p.returncode, 0)
 
 
 #class TestCheckFailure(DemoBuildTest):
@@ -172,21 +177,30 @@ class RelativeLinkTest(DemoBuildTest):
     #def test_check_links_fail(self):
         #with cd(self.target_dir):
             #os.unlink(os.path.join("output", "archive.html"))
-            #rv = subprocess.call("nikola check -l", shell=True)
-        #self.assertEqual(rv, 1)
+            #p = subprocess.Popen(
+                #"nikola check -l", shell=True, stdout=subprocess.PIPE,
+                #stderr=subprocess.PIPE)
+            #out, err = p.communicate()
+            #sys.stdout.write(out)
+            #sys.stderr.write(err)
+        #self.assertEqual(p.returncode, 1)
 
     #def test_check_files_fail(self):
         #with cd(self.target_dir):
             #with codecs.open(os.path.join("output", "foobar"), "wb+", "utf8") as outf:
                 #outf.write("foo")
-            #rv = subprocess.call("nikola check -f", shell=True)
-        #self.assertEqual(rv, 1)
+            #p = subprocess.Popen(
+                #"nikola check -f", shell=True, stdout=subprocess.PIPE,
+                #stderr=subprocess.PIPE)
+            #out, err = p.communicate()
+            #sys.stdout.write(out)
+            #sys.stderr.write(err)
+        #self.assertEqual(p.returncode, 1)
 
 
 class RelativeLinkTest2(DemoBuildTest):
     """Check that dropping stories to the root doesn't break links."""
 
-    @classmethod
     def patch_site(self):
         """Set the SITE_URL to have a path"""
         conf_path = os.path.join(self.target_dir, "conf.py")
@@ -202,8 +216,6 @@ class RelativeLinkTest2(DemoBuildTest):
 
     def test_relative_links(self):
         """Check that the links in a story are correct"""
-        conf_path = os.path.join(self.target_dir, "conf.py")
-        data = open(conf_path).read()
         test_path = os.path.join(self.target_dir, "output", "about-nikola.html")
         flag = False
         with open(test_path, "rb") as inf:

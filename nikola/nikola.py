@@ -41,7 +41,7 @@ import lxml.html
 from yapsy.PluginManager import PluginManager
 import pytz
 
-if os.getenv('DEBUG'):
+if os.getenv('NIKOLA_DEBUG'):
     import logging
     logging.basicConfig(level=logging.DEBUG)
 else:
