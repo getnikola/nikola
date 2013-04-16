@@ -102,8 +102,6 @@ class CommandImportFeed(Command):
 
     @classmethod
     def get_channel_from_file(cls, filename):
-        if not os.path.isfile(filename):
-            raise Exception("Missing file: %s" % filename)
         return feedparser.parse(filename)
 
     @staticmethod
