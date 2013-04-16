@@ -77,12 +77,17 @@ class Sitemap(LateTask):
                 outf.write(header)
                 locs = {}
                 for root, dirs, files in os.walk(output):
+                    if not dirs and not files:
+                        continue  # Totally empty, not on sitemap
                     path = os.path.relpath(root, output)
                     path = path.replace(os.sep, '/') + '/'
                     lastmod = get_lastmod(root)
                     loc = urljoin(base_url, path)
-                    locs[loc] = url_format.format(loc, lastmod)
+                    if 'index.html' in files:  # Only map folders with indexes
+                        locs[loc] = url_format.format(loc, lastmod)
                     for fname in files:
+                        if fname == 'index.html':
+                            continue  # We already mapped the folder
                         if os.path.splitext(fname)[-1] in mapped_exts:
                             real_path = os.path.join(root, fname)
                             path = os.path.relpath(real_path, output)

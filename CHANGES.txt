@@ -7,6 +7,11 @@ Features
 * Added "templates/" folder to template path.
 * Keyword metadata support in post pages (Issue #451)
 
+Bugfixes
+--------
+
+* Don't map empty folders, map folders with index.html, and don't map index.html (Issue #430)
+
 New in 5.4.4
 ============
 
