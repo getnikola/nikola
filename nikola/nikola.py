@@ -298,7 +298,7 @@ class Nikola(object):
             sys.exit(1)
         self.template_system = pi.plugin_object
         lookup_dirs = ['templates'] + [os.path.join(utils.get_theme_path(name), "templates")
-                       for name in self.THEMES]
+                                       for name in self.THEMES]
         self.template_system.set_directories(lookup_dirs,
                                              self.config['CACHE_FOLDER'])
 
