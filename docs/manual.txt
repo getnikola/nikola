@@ -411,6 +411,9 @@ supports them (for example: ``.. author: John Doe``)
 
            .. template: story.tmpl
 
+       That template needs to either be part of the theme, or be placed in a ``templates/``
+       folder inside your site.
+
    password
        The post will be encrypted and invisible until the reader enters the password.
        Also, the post's sourcecode will not be available.

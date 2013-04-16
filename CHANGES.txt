@@ -1,3 +1,11 @@
+New in master
+=============
+
+Features
+--------
+
+* Added "templates/" folder to template path.
+
 New in 5.4.4
 ============
 
