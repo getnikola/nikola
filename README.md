@@ -28,4 +28,16 @@ It has many features, but here are some of the nicer ones:
 * Doesn't reinvent wheels, leverages existing tools.
 * Python 2 and 3 compatible.
 
+Installation Instructions
+-------------------------
+
+Assuming you have pip installed::
+
+    git clone git://github.com/ralsina/nikola.git
+    pip install .
+
+Optionally (for markdown and lots of other features):
+
+    pip install -r requirements.txt
+
 For more information, see http://nikola.ralsina.com.ar
