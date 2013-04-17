@@ -315,10 +315,13 @@ class Post(object):
         data = lxml.html.tostring(document, encoding='unicode')
         # data here is a full HTML doc, including HTML and BODY tags
         # which is not ideal (Issue #464)
-        body = document.body
-        data = (body.text or '') + ''.join(
-            [lxml.html.tostring(child, encoding='unicode')
-                for child in body.iterchildren()])
+        try:
+            body = document.body
+            data = (body.text or '') + ''.join(
+                [lxml.html.tostring(child, encoding='unicode')
+                    for child in body.iterchildren()])
+        except IndexError:  # No body there, it happens sometimes
+            pass
 
         if teaser_only:
             teaser = TEASER_REGEXP.split(data)[0]
