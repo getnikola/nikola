@@ -18,6 +18,7 @@ Bugfixes
 * Strip HTML and BODY tags in Post.text() (Issue #464)
 * -f option broken in HTML compiler (Issue #463)
 * Don't map empty folders, map folders with index.html, and don't map index.html (Issue #430)
+* Wordpress import: write correct redirections for URLs not ending in an / (Issue #459)
 
 New in 5.4.4
 ============
