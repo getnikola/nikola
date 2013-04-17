@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New Persian trnslation
 * RSS feed now includes post tags (Issue #462)
 * Experimental generic RSS/Atom importer (Issue #347)
 * PHP support (Issue #313)
