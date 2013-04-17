@@ -346,5 +346,20 @@ You can use the <a title="Jenkins Plugin: Violations" href="https://wiki.jenkins
         call_context.write.assert_called_once_with(
             content.join([b'<html><body>', b'</body></html>']))
 
+    def test_configure_redirections(self):
+        """
+        Testing the configuration of the redirections.
+
+        We need to make sure that we have valid sources and target links.
+        """
+        url_map = {
+            '/somewhere/else': 'http://foo.bar/posts/somewhereelse.html'
+        }
+
+        redirections = self.import_command.configure_redirections(url_map)
+
+        self.assertEqual(1, len(redirections))
+        self.assertTrue(('somewhere/else/index.html', '/posts/somewhereelse.html') in redirections)
+
 if __name__ == '__main__':
     unittest.main()

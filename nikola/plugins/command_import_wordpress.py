@@ -177,6 +177,8 @@ class CommandImportWordpress(Command):
         redirections = []
         for k, v in url_map.items():
             # remove the initial "/" because src is a relative file path
+            if not k[-1] == '/':
+                k = k + '/'
             src = (urlparse(k).path + 'index.html')[1:]
             dst = (urlparse(v).path)
             if src == 'index.html':
