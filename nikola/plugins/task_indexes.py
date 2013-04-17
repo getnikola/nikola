@@ -85,7 +85,7 @@ class Indexes(Task):
                 if i > 1:
                     context["prevlink"] = "index-{0}.html".format(i - 1)
                 if i == 1:
-                    context["prevlink"] = "index.html"
+                    context["prevlink"] = self.site.config["INDEX_FILE"]
                 if i < num_pages - 1:
                     context["nextlink"] = "index-{0}.html".format(i + 1)
                 context["permalink"] = self.site.link("index", i, lang)

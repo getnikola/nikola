@@ -92,7 +92,7 @@ class Galleries(Task):
             output_gallery = os.path.dirname(os.path.join(
                 kw["output_folder"], self.site.path("gallery", gallery_name,
                                                     None)))
-            output_name = os.path.join(output_gallery, "index.html")
+            output_name = os.path.join(output_gallery, self.site.config['INDEX_FILE'])
             if not os.path.isdir(output_gallery):
                 yield {
                     'basename': str('render_galleries'),

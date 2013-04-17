@@ -45,6 +45,7 @@ class Listings(Task):
             "default_lang": self.site.config["DEFAULT_LANG"],
             "listings_folder": self.site.config["LISTINGS_FOLDER"],
             "output_folder": self.site.config["OUTPUT_FOLDER"],
+            "index_file": self.site.config["INDEX_FILE"],
         }
 
         # Things to ignore in listings
@@ -87,7 +88,7 @@ class Listings(Task):
             # Render all files
             out_name = os.path.join(
                 kw['output_folder'],
-                root, 'index.html'
+                root, kw['index_file']
             )
             yield {
                 'basename': self.name,

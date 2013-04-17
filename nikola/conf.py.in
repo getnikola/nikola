@@ -279,13 +279,28 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # Enable comments on picture gallery pages?
 # COMMENTS_IN_GALLERIES = False
 
-# If a link ends in /index.html, drop the index.html part.
+# What file should be used for directory indexes?
+# Defaults to index.html
+# Common other alternatives: default.html for IIS, index.php
+# INDEX_FILE = "index.html"
+
+# If a link ends in /index.html,  drop the index.html part.
 # http://mysite/foo/bar/index.html => http://mysite/foo/bar/
+# (Uses the INDEX_FILE setting, so if that is, say, default.html,
+# it will instead /foo/default.html => /foo)
+# (Note: This was briefly STRIP_INDEX_HTML in v 5.4.3 and 5.4.4)
 # Default = False
-# STRIP_INDEX_HTML = False
+# STRIP_INDEXES = False
+
+# In the sitemap, should directories be included which have only other directories
+# Default to True
+# If this is False
+# e.g. /2012 includes only /01, /02, /03, /04, ...: don't add it to the sitemap
+# if /2012 includes any files (including index.html)... add it to the sitemap
+# SITEMAP_INCLUDE_FILELESS_DIRS = True
 
 # Instead of putting files in <slug>.html, put them in
-# <slug>/index.html. Works well with STRIP_INDEX_HTML = True
+# <slug>/index.html. Also enables STRIP_INDEXES
 # This can be disabled on a per-page/post basis by adding
 #    .. pretty_url: False
 # to the metadata

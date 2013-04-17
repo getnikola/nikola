@@ -64,6 +64,9 @@ class Sitemap(LateTask):
             "base_url": self.site.config["BASE_URL"],
             "site_url": self.site.config["SITE_URL"],
             "output_folder": self.site.config["OUTPUT_FOLDER"],
+            "strip_indexes": self.site.config["STRIP_INDEXES"],
+            "index_file": self.site.config["INDEX_FILE"],
+            "sitemap_include_fileless_dirs": self.site.config["SITEMAP_INCLUDE_FILELESS_DIRS"],
             "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.html', '.htm'])
         }
         output_path = kw['output_folder']
@@ -77,7 +80,7 @@ class Sitemap(LateTask):
                 outf.write(header)
                 locs = {}
                 for root, dirs, files in os.walk(output):
-                    if not dirs and not files:
+                    if not dirs and not files and not kw['sitemap_include_fileless_dirs']:
                         continue  # Totally empty, not on sitemap
                     path = os.path.relpath(root, output)
                     path = path.replace(os.sep, '/') + '/'
@@ -86,7 +89,7 @@ class Sitemap(LateTask):
                     if 'index.html' in files:  # Only map folders with indexes
                         locs[loc] = url_format.format(loc, lastmod)
                     for fname in files:
-                        if fname == 'index.html':
+                        if kw['strip_indexes'] and fname == kw['index_file']:
                             continue  # We already mapped the folder
                         if os.path.splitext(fname)[-1] in mapped_exts:
                             real_path = os.path.join(root, fname)
