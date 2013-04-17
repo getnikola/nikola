@@ -22,7 +22,7 @@
                 {% endif %}
             {% endfor %}
         {% endif %}
-        {% if not post.meta('password')
+        {% if not post.meta('password') %}
         <a href="{{post.meta('slug')+".txt"}}" id="sourcelink">{{messages("Source")}}</a>
         {% endif %}
         {% if post.tags %}
