@@ -3,7 +3,7 @@
 {% if post.meta('keywords') %}
     <meta name="keywords" content="{{post.meta('keywords')}}"/>
 {% endif %}
-{% block %}
+{% endblock %}
 {% block content %}
     <div class="postbox">
     <h1><a href='{{permalink}}'>{{title}}</a></h1>
