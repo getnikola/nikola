@@ -24,7 +24,7 @@ It has many features, but here are some of the nicer ones:
 * [reStructuredText](http://nikola.ralsina.com.ar/quickstart.html) or Markdown as input language (also Wiki, BBCode, Textile, and HTML)
 * Easy `image galleries </galleries/demo/>`_ (just drop files in a folder!)
 * Syntax highlighting for almost any programming language or markup
-* Multilingual sites, [translated to 11 languages.](https://www.transifex.com/projects/p/nikola/)
+* Multilingual sites, [translated to 13 languages.](https://www.transifex.com/projects/p/nikola/)
 * Doesn't reinvent wheels, leverages existing tools.
 * Python 2 and 3 compatible.
 
