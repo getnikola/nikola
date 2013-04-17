@@ -34,6 +34,7 @@ Installation Instructions
 Assuming you have pip installed::
 
     git clone git://github.com/ralsina/nikola.git
+    cd nikola
     pip install .
 
 Optionally (for markdown and lots of other features):
