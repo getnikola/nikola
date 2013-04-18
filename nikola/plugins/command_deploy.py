@@ -41,10 +41,9 @@ class Deploy(Command):
     doc_purpose = "Deploy the site."
 
     def _execute(self, command, args):
+        # Get last succesful deploy date
+        timestamp_path = os.path.join(self.site.config['CACHE_FOLDER'], 'lastdeploy')
         for command in self.site.config['DEPLOY_COMMANDS']:
-
-            # Get last succesful deploy date
-            timestamp_path = os.path.join(self.site.config['CACHE_FOLDER'], 'lastdeploy')
             try:
                 with open(timestamp_path, 'rb') as inf:
                     last_deploy = literal_eval(inf.read().strip())
