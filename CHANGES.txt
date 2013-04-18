@@ -15,6 +15,7 @@ Features
 Bugfixes
 --------
 
+* Better support for non-ascii urlencoded paths in the wp importer (Issue #468)
 * Avoid crashing if user does a deploy with no commands
 * Strip HTML and BODY tags in Post.text() (Issue #464)
 * -f option broken in HTML compiler (Issue #463)
