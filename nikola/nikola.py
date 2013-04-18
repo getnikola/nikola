@@ -171,6 +171,7 @@ class Nikola(object):
         # STRIP_INDEX_HTML config has been replaces with STRIP_INDEXES
         # Port it if only the oldef form is there
         if 'STRIP_INDEX_HTML' in config and 'STRIP_INDEXES' not in config:
+            print("WARNING: You should configure STRIP_INDEXES instead of STRIP_INDEX_HTML")
             self.config['STRIP_INDEXES'] = config['STRIP_INDEX_HTML']
 
         # PRETTY_URLS defaults to enabling STRIP_INDEXES unless explicitly disabled
