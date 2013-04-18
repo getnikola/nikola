@@ -4,7 +4,7 @@ New in master
 Features
 --------
 
-* New Persian trnslation
+* New Persian translation
 * RSS feed now includes post tags (Issue #462)
 * Experimental generic RSS/Atom importer (Issue #347)
 * PHP support (Issue #313)
@@ -15,6 +15,7 @@ Features
 Bugfixes
 --------
 
+* Avoid crashing if user does a deploy with no commands
 * Strip HTML and BODY tags in Post.text() (Issue #464)
 * -f option broken in HTML compiler (Issue #463)
 * Don't map empty folders, map folders with index.html, and don't map index.html (Issue #430)
