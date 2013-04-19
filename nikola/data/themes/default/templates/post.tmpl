@@ -1,29 +1,29 @@
 ## -*- coding: utf-8 -*-
-<%namespace name="helper" file="post_helper.tmpl"/>
-<%namespace name="disqus" file="disqus_helper.tmpl"/>
+<%namespace name="post_helper" file="post_helper.tmpl"/>
+<%namespace name="disqus_helper" file="disqus_helper.tmpl"/>
 <%inherit file="base.tmpl"/>
 <%block name="extra_head">
-${helper.twitter_card_information(post)}
+${post_helper.twitter_card_information(post)}
 % if post.meta('keywords'):
     <meta name="keywords" content="${post.meta('keywords')|h}"/>
 % endif
 </%block>
 <%block name="content">
     <div class="postbox">
-    ${helper.html_title()}
+    ${post_helper.html_title()}
     <hr>
     <small>
         ${messages("Posted")}: <time class="published" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time>
-        ${helper.html_translations(post)}
-        ${helper.html_tags(post)}
+        ${post_helper.html_translations(post)}
+        ${post_helper.html_tags(post)}
     </small>
     <hr>
     ${post.text()}
-    ${helper.html_pager(post)}
+    ${post_helper.html_pager(post)}
     % if not post.meta('nocomments'):
-        ${disqus.html_disqus(post.permalink(absolute=True), post.title(), post.base_path)}
+        ${disqus_helper.html_disqus(post.permalink(absolute=True), post.title(), post.base_path)}
     % endif
-    ${helper.mathjax_script(post)}
+    ${post_helper.mathjax_script(post)}
     </div>
 </%block>
 
