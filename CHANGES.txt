@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Jinja-default and jinja-site themes now automatically generated from the Mako versions.
 * New Persian translation
 * RSS feed now includes post tags (Issue #462)
 * Experimental generic RSS/Atom importer (Issue #347)
