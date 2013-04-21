@@ -1,66 +1,35 @@
-{% extends "base.tmpl" %}
+{% import 'post_helper.tmpl' as post_helper with context %}
+{% import 'disqus_helper.tmpl' as disqus_helper with context %}
+{% extends 'base.tmpl' %}
 {% block extra_head %}
 {% if post.meta('keywords') %}
     <meta name="keywords" content="{{post.meta('keywords')}}"/>
 {% endif %}
+{{ post_helper.twitter_card_information(post) }}
 {% endblock %}
 {% block content %}
     <div class="postbox">
-    <h1><a href='{{permalink}}'>{{title}}</a></h1>
-    {% if link %}
-            <p><a href='{{link}}'>{{messages("Original site")}}</a></p>
-    {% endif %}
+    {{ post_helper.html_title() }}
     <hr>
     <small>
-        {{messages("Posted")}}: {{post.formatted_date(date_format)}}&nbsp;&nbsp;|&nbsp;&nbsp;
-
-        {% if translations|length > 1 %}
-            {% for langname in translations.keys() %}
-                {% if langname != lang and post.is_translation_available(langname) %}
-                    <a href="{{post.permalink(langname)}}">{{messages("Read in English", langname)}}</a>
-                    &nbsp;&nbsp;|&nbsp;&nbsp;
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-        {% if not post.meta('password') %}
-        <a href="{{post.meta('slug')+".txt"}}" id="sourcelink">{{messages("Source")}}</a>
-        {% endif %}
-        {% if post.tags %}
-            &nbsp;&nbsp;|&nbsp;&nbsp;{{messages("More posts about")}}
-            {% for tag in post.tags %}
-                <a href="{{_link("tag", tag)}}"><span class="badge badge-info">{{tag}}</span></a>
-            {% endfor %}
-        {% endif %}
+        {{ messages("Posted") }}: <time class="published" datetime="{{ post.date.isoformat() }}">{{ post.formatted_date(date_format) }}</time>
+        {{ post_helper.html_translations(post) }}
+        {{ post_helper.html_tags(post) }}
     </small>
     <hr>
-    {{post.text()}}
-    <ul class="pager">
-    {%if post.prev_post %}
-        <li class="previous">
-            <a href="{{rel_link(permalink, post.prev_post.permalink())}}">&larr; {{messages("Previous post")}}</a>
+    {{ post.text() }}
+    {{ post_helper.html_pager(post) }}
+    {% if not post.meta('nocomments') %}
+        {{ disqus_helper.html_disqus(post.permalink(absolute=True), post.title(), post.base_path) }}
     {% endif %}
-    {%if post.next_post %}
-        <li class="next">
-            <a href="{{rel_link(permalink, post.next_post.permalink())}}">{{messages("Next post")}} &rarr;</a>
-    {% endif %}
-    </ul>
-    {% if disqus_forum and not post.meta('nocomments')%}
-        <div id="disqus_thread"></div>
-        <script type="text/javascript">
-        var disqus_shortname ="{{disqus_forum}}";
-        var disqus_url="{{post.permalink(absolute=True)}}";
-        var disqus_title={{post.title()|tojson }};
-        var disqus_identifier="{{post.base_path}}";
-        var disqus_config = function () {
-            this.language = "{{lang}}";
-        };
-        (function() {
-            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    {% endif %}
+    {{ post_helper.mathjax_script(post) }}
     </div>
+{% endblock %}
+
+{% block sourcelink %}
+{% if not post.meta('password') %}
+    <li>
+    <a href="{{ post.meta('slug')+post.source_ext() }}" id="sourcelink">{{ messages("Source") }}</a>
+    </li>
+{% endif %}
 {% endblock %}

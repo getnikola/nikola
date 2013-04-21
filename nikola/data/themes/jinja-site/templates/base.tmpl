@@ -1,14 +1,13 @@
-## -*- coding: utf-8 -*-
-<%namespace name="base_helper" file="base_helper.tmpl"/>
-${set_locale(lang)}
+{# -*- coding: utf-8 -*- #}
+{% import 'base_helper.tmpl' as base_helper with context %}
+{{ set_locale(lang) }}
 <!DOCTYPE html>
-<html lang="${lang}">
+<html lang="{{ lang }}">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    ${base_helper.html_head()}
-    <%block name="extra_head">
-    </%block>
-    ${extra_head_data}
+    {{ base_helper.html_head() }}
+    {% block extra_head %}
+    {% endblock %}
+    {{ extra_head_data }}
 </head>
 <body>
 <!-- Menubar -->
@@ -23,24 +22,24 @@ ${set_locale(lang)}
             <span class="icon-bar"></span>
         </a>
 
-            <a class="brand" href="${abs_link('/')}">
-            ${blog_title}
+            <a class="brand" href="{{ abs_link('/') }}">
+            {{ blog_title }}
             </a>
             <!-- Everything you want hidden at 940px or less, place within here -->
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    ${base_helper.html_sidebar_links()}
+                    {{ base_helper.html_sidebar_links() }}
                 </ul>
-                %if search_form:
-                    ${search_form}
-                %endif
+                {% if search_form %}
+                    {{ search_form }}
+                {% endif %}
                 <ul class="nav pull-right">
-                <%block name="belowtitle">
-                %if len(translations) > 1:
-                    <li>${base_helper.html_translations()}</li>
-                %endif
-                </%block>
-                <%block name="sourcelink"></%block>
+                {% block belowtitle %}
+                {% if translations|length > 1 %}
+                    <li>{{ base_helper.html_translations() }}</li>
+                {% endif %}
+                {% endblock %}
+                {% block sourcelink %}{% endblock %}
                 </ul>
             </div>
         </div>
@@ -52,16 +51,16 @@ ${set_locale(lang)}
     <div class="row-fluid">
     <div class="span2"></div>
     <div class="span8">
-    <%block name="content"></%block>
+    {% block content %}{% endblock %}
     </div>
     </div>
     <!--End of body content-->
 </div>
 <div class="footerbox">
-    ${content_footer}
+    {{ content_footer }}
 </div>
-${base_helper.html_social()}
-${base_helper.late_load_js()}
-${analytics}
+{{ base_helper.html_social() }}
+{{ base_helper.late_load_js() }}
+{{ analytics }}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
 </body>

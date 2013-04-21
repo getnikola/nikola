@@ -1,10 +1,10 @@
 ## -*- coding: utf-8 -*-
-<%namespace file="base_helper.tmpl" import="*"/>
+<%namespace name="base_helper" file="base_helper.tmpl" />
 ${set_locale(lang)}
 <!DOCTYPE html>
 <html lang="${lang}">
 <head>
-    ${html_head()}
+    ${base_helper.html_head()}
     <%block name="extra_head">
     </%block>
     ${extra_head_data}
@@ -25,7 +25,7 @@ ${set_locale(lang)}
         %if len(translations) > 1:
         <small>
             ${(messages("Also available in"))}:&nbsp;
-            ${html_translations()}
+            ${base_helper.html_translations()}
         </small>
         %endif
         </%block>
@@ -44,8 +44,8 @@ ${set_locale(lang)}
             <!--Sidebar content-->
             <ul class="unstyled">
             <li>${license}
-            ${html_social()}
-            ${html_sidebar_links()}
+            ${base_helper.html_social()}
+            ${base_helper.html_sidebar_links()}
             <li>${search_form}
             </ul>
             <!--End of sidebar content-->
@@ -54,7 +54,7 @@ ${set_locale(lang)}
     </div>
     </div>
 </div>
-    ${late_load_js()}
+    ${base_helper.late_load_js()}
     ${analytics}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
 </body>

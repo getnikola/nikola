@@ -1,52 +1,16 @@
+{% import 'base_helper.tmpl' as base_helper with context %}
+{{ set_locale(lang) }}
 <!DOCTYPE html>
-{{set_locale(lang)}}
-<html lang="{{lang}}">
+<html lang="{{ lang }}">
 <head>
-    <meta charset="utf-8">
-    <meta name="description" content="{{description}}" >
-    <meta name="author" content="{{blog_author}}">
-    <title>{{title}} | {{blog_title}}</title>
-    <!-- Le styles -->
-    {% if use_bundles %}
-        {% if use_cdn %}
-            <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
-            <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
-        {% else %}
-            <link href="/assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
-        {% endif %}
-    {% else %}
-        {% if use_cdn %}
-            <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
-        {% else %}
-            <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-            <link href="/assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
-        {% endif %}
-        <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
-        <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
-        <link href="/assets/css/colorbox.css" rel="stylesheet" type="text/css"/>
-        <link href="/assets/css/theme.css" rel="stylesheet" type="text/css"/>
-        {% if has_custom_css %}
-            <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
-        {% endif %}
-    {% endif %}
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
-    <![endif]-->
-    {% if rss_link %}
-        {{rss_link}}
-    {% else %}
-        {%  for language in translations %}
-            <link rel="alternate" type="application/rss+xml" title="RSS ({{language}})" href="{{_link("rss", None, lang)}}">
-        {% endfor %}
-    {% endif %}
+    {{ base_helper.html_head() }}
     {% block extra_head %}
     {% endblock %}
-    {{extra_head_data}}
+    {{ extra_head_data }}
 </head>
 <body>
     {% if add_this_buttons %}
-    <script type="text/javascript">var addthis_config={"ui_language":"{{lang}}"};</script>
+    <script type="text/javascript">var addthis_config={"ui_language":"{{ lang }}"};</script>
     {% endif %}
 <div class="container-fluid" id="container">
     <div class="row-fluid" id="titlerow">
@@ -54,17 +18,13 @@
     <!-- Banner-like substance !-->
         <div class="titlebox">
         <h1 id="blog-title">
-            <a href="{{abs_link('/')}}" title="{{blog_title}}">{{blog_title}}</a>
+            <a href="{{ abs_link('/') }}" title="{{ blog_title }}">{{ blog_title }}</a>
         </h1>
-        {% block belowtitle%}
+        {% block belowtitle %}
         {% if translations|length > 1 %}
         <small>
-            {{ messages("Also available in") }}:&nbsp; 
-            {% for langname in translations.keys() %}
-                {% if langname != lang %}
-                    <a href="{{_link("index", None, langname)}}">{{messages("LANGUAGE", langname)}}</a>
-                {% endif %}
-            {% endfor %}
+            {{ (messages("Also available in")) }}:&nbsp;
+            {{ base_helper.html_translations() }}
         </small>
         {% endif %}
         {% endblock %}
@@ -77,55 +37,23 @@
             {% block content %}{% endblock %}
             <!--End of body content-->
             <hr>
-            <small>{{content_footer}}</small>
+            <small>{{ content_footer }}</small>
         </div>
         <div class="span2" id="sidebar">
             <!--Sidebar content-->
             <ul class="unstyled">
-            <li>{{license}}
-            {% for url, text in sidebar_links[lang] %}
-                <li><a href="{{url}}">{{text}}</a>
-            {% endfor %}
-            <li>{{search_form}}
+            <li>{{ license }}
+            {{ base_helper.html_social() }}
+            {{ base_helper.html_sidebar_links() }}
+            <li>{{ search_form }}
             </ul>
             <!--End of sidebar content-->
         </div>
-    {% if add_this_buttons %}
-        <!-- social buttons -->
-        <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
-        <a class="addthis_button_more">Share</a>
-        <ul><li><a class="addthis_button_facebook"></a>
-        <li><a class="addthis_button_google_plusone_share"></a>
-        <li><a class="addthis_button_linkedin"></a>
-        <li><a class="addthis_button_twitter"></a>
-        </ul>
-        </div>
-        <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
-        <!-- End of social buttons -->
-    {% endif %}
     </div>
     </div>
     </div>
 </div>
-    <!-- late load javascript -->
-    {% if use_bundles %}
-        {% if use_cdn %}
-            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
-            <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>
-            <script src="/assets/js/all.js" type="text/javascript"></script>
-        {% else %}
-            <script src="/assets/js/all-nocdn.js" type="text/javascript"></script>
-        {% endif %}
-    {% else %}
-        {% if use_cdn %}
-            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
-            <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>
-        {% else %}
-            <script src="/assets/js/jquery-1.7.2.min.js" type="text/javascript"></script>
-            <script src="/assets/js/bootstrap.min.js" type="text/javascript"></script>
-        {% endif %}
-        <script src="/assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
-    {% endif %}
-    {{analytics}}
+    {{ base_helper.late_load_js() }}
+    {{ analytics }}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
 </body>
