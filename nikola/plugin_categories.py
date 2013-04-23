@@ -166,6 +166,7 @@ class PageCompiler(object):
         """The preferred extension for the output of this compiler."""
         return ".html"
 
+
 class Importer(Command):
     """Basic structure for importing data into Nikola.
 
@@ -201,7 +202,7 @@ class Importer(Command):
         """Create the base site."""
         raise NotImplementedError()
 
-    def populate_context(self)
+    def populate_context(self):
         """Use data to fill context for configuration."""
         raise NotImplementedError()
 
@@ -247,4 +248,3 @@ class Importer(Command):
     def save_post(self):
         """Save a post to disk."""
         raise NotImplementedError()
-
