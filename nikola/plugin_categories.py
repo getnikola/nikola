@@ -165,3 +165,86 @@ class PageCompiler(object):
     def extension(self):
         """The preferred extension for the output of this compiler."""
         return ".html"
+
+class Importer(Command):
+    """Basic structure for importing data into Nikola.
+
+    The flow is:
+
+    read_data
+    preprocess_data
+    parse_data
+    generate_base_site
+        populate_context
+        create_config
+    filter_data
+    process_data
+
+    process_data can branch into:
+
+    import_story (may use import_file and save_post)
+    import_post (may use import_file and save_post)
+    import_attachment (may use import_file)
+
+    Finally:
+
+    write_urlmap
+    """
+
+    name = "dummy_importer"
+
+    def _execute(self, options={}, args=[]):
+        """Import the data into Nikola."""
+        raise NotImplementedError()
+
+    def generate_base_site(self, path):
+        """Create the base site."""
+        raise NotImplementedError()
+
+    def populate_context(self)
+        """Use data to fill context for configuration."""
+        raise NotImplementedError()
+
+    def create_config(self):
+        """Use the context to create configuration."""
+        raise NotImplementedError()
+
+    def read_data(self, source):
+        """Fetch data into self.data"""
+        raise NotImplementedError()
+
+    def preprocess_data(self):
+        """Modify data if needed."""
+        pass
+
+    def parse_data(self):
+        """Convert self.data into self.items"""
+        raise NotImplementedError()
+
+    def filter_data(self):
+        """Remove data that's not to be imported."""
+        pass
+
+    def process_data(self):
+        """Go through self.items and save them."""
+
+    def import_story(self):
+        """Create a story."""
+        raise NotImplementedError()
+
+    def import_post(self):
+        """Create a post."""
+        raise NotImplementedError()
+
+    def import_attachment(self):
+        """Create an attachment."""
+        raise NotImplementedError()
+
+    def import_file(self):
+        """Import a file."""
+        raise NotImplementedError()
+
+    def save_post(self):
+        """Save a post to disk."""
+        raise NotImplementedError()
+
