@@ -35,7 +35,7 @@ from doit.cmd_help import Help as DoitHelp
 from doit.cmd_run import Run as DoitRun
 
 from .nikola import Nikola
-from .utils import _reload, unicode_str
+from .utils import _reload, sys_decode
 
 
 def main(args):
@@ -107,7 +107,7 @@ class DoitNikola(DoitMain):
     def run(self, cmd_args):
         sub_cmds = self.get_commands()
         args = self.process_args(cmd_args)
-        args = [arg if isinstance(arg, unicode_str) else arg.decode(sys.stdin.encoding) for arg in args]
+        args = [sys_decode(arg) for arg in args]
 
         if len(args) == 0 or any(arg in ["--help", '-h'] for arg in args):
             cmd_args = ['help']
