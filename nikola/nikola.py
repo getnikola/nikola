@@ -215,7 +215,6 @@ class Nikola(object):
             os.path.join(os.getcwd(), utils.bytes_str('plugins')),
         ]
         self.plugin_manager.setPluginPlaces(places)
-
         self.plugin_manager.collectPlugins()
 
         self.commands = {}
