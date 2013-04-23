@@ -16,6 +16,7 @@ Features
 Bugfixes
 --------
 
+* Handle non-ascii path in plugin loader (Issue #471)
 * Handle non-ascii arguments in main (Issue #470)
 * Make sitemap depend on file dates (reported by Kay Hayen)
 * Better support for non-ascii urlencoded paths in the wp importer (Issue #468)
