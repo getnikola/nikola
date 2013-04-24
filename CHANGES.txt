@@ -16,6 +16,7 @@ Features
 Bugfixes
 --------
 
+* Handle non-ascii path in bundles (Issue #473)
 * Handle non-ascii path in plugin loader (Issue #471)
 * Handle non-ascii arguments in main (Issue #470)
 * Make sitemap depend on file dates (reported by Kay Hayen)
