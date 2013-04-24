@@ -544,7 +544,6 @@ def get_asset_path(path, themes, files_folders={'files': ''}):
             os.path.relpath(path, rel_dst)
         )
         if os.path.isfile(candidate):
-            print(repr(candidate), repr(os.getcwd()))
             return os.path.relpath(candidate, sys_decode(os.getcwd()))
 
     # whatever!
