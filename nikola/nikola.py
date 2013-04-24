@@ -210,10 +210,16 @@ class Nikola(object):
             "PageCompiler": PageCompiler,
         })
         self.plugin_manager.setPluginInfoExtension('plugin')
-        places = [
-            os.path.join(os.path.dirname(__file__), utils.bytes_str('plugins')),
-            os.path.join(os.getcwd(), utils.bytes_str('plugins')),
-        ]
+        if sys.version_info[0] == 3:
+            places = [
+                os.path.join(os.path.dirname(__file__), 'plugins'),
+                os.path.join(os.getcwd(), 'plugins'),
+            ]
+        else:
+            places = [
+                os.path.join(os.path.dirname(__file__), utils.sys_encode('plugins')),
+                os.path.join(os.getcwd(), utils.sys_encode('plugins')),
+            ]
         self.plugin_manager.setPluginPlaces(places)
         self.plugin_manager.collectPlugins()
 
