@@ -71,17 +71,20 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
 
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
 
+
 def sys_encode(thing):
     """Return bytes encoded in the system's encoding."""
     if isinstance(thing, unicode_str):
         return thing.encode(ENCODING)
     return thing
 
+
 def sys_decode(thing):
     """Returns unicode."""
     if isinstance(thing, bytes_str):
         return thing.decode(ENCODING)
     return thing
+
 
 class Functionary(defaultdict):
 
