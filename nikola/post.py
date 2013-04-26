@@ -339,13 +339,22 @@ class Post(object):
             data = content.text_content().strip()  # No whitespace wanted.
         return data
 
-    def destination_path(self, lang, extension='.html'):
+    def destination_path(self, lang=None, extension='.html', sep=os.sep):
+        """Destination path for this post, relative to output/.
+
+        If lang is not specified, it's the current language.
+        Extension is used in the path if specified.
+        """
+        if lang is None:
+            lang = self.current_lang()
         if self._has_pretty_url(lang):
             path = os.path.join(self.translations[lang],
                                 self.folder, self.meta[lang]['slug'], 'index' + extension)
         else:
             path = os.path.join(self.translations[lang],
                                 self.folder, self.meta[lang]['slug'] + extension)
+        if sep != os.sep:
+            path = path.replace(os.sep, sep)
         return path
 
     def permalink(self, lang=None, absolute=False, extension='.html'):

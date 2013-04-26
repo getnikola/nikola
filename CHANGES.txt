@@ -16,6 +16,7 @@ Features
 Bugfixes
 --------
 
+* Use correct source links with PRETTY_URL=True (Issue #474)
 * Handle non-ascii path in bundles (Issue #473)
 * Handle non-ascii path in plugin loader (Issue #471)
 * Handle non-ascii arguments in main (Issue #470)
