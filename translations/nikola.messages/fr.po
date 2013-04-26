@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Translators:
-# Pablo SEMINARIO <pabluk@gmail.com>, 2013.
-# Roberto Alsina <ralsina@netmanagers.com.ar>, 2013.
+# pabluk <pabluk@gmail.com>, 2013
+# ralsina <ralsina@netmanagers.com.ar>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2013-04-13 12:52+0000\n"
+"PO-Revision-Date: 2013-04-26 13:09+0000\n"
 "Last-Translator: pabluk <pabluk@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/nikola/language/fr/)\n"
 "MIME-Version: 1.0\n"

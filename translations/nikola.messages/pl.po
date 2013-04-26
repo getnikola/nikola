@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Translators:
-#  <kwpolska@gmail.com>, 2013.
-# Roberto Alsina <ralsina@netmanagers.com.ar>, 2013.
+# Kwpolska <kwpolska@gmail.com>, 2013
+# ralsina <ralsina@netmanagers.com.ar>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2013-04-06 19:00+0000\n"
+"PO-Revision-Date: 2013-04-26 13:09+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/projects/p/nikola/language/pl/)\n"
 "MIME-Version: 1.0\n"
