@@ -339,6 +339,13 @@ class Post(object):
             data = content.text_content().strip()  # No whitespace wanted.
         return data
 
+    def source_link(self, lang=None):
+        """Return absolute link to the post's source."""
+        return "/" + self.destination_path(
+            lang=lang, 
+            extension=self.source_ext(),
+            sep='/')
+
     def destination_path(self, lang=None, extension='.html', sep=os.sep):
         """Destination path for this post, relative to output/.
 

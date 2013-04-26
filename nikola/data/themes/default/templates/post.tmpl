@@ -30,7 +30,7 @@ ${post_helper.twitter_card_information(post)}
 <%block name="sourcelink">
 % if not post.meta('password'):
     <li>
-    <a href="/${post.destination_path(extension=post.source_ext(), sep='/')}" id="sourcelink">${messages("Source")}</a>
+    <a href="${post.source_link()}" id="sourcelink">${messages("Source")}</a>
     </li>
 % endif
 </%block>
