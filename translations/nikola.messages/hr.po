@@ -4,12 +4,13 @@
 # 
 # Translators:
 # Translators:
+# tty <tty@live.nl>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2013-03-15 15:29+0000\n"
+"PO-Revision-Date: 2013-04-27 09:26+0000\n"
 "Last-Translator: ralsina <ralsina@netmanagers.com.ar>\n"
 "Language-Team: Croatian (http://www.transifex.com/projects/p/nikola/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -19,55 +20,55 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 msgid "More posts about"
-msgstr ""
+msgstr "Više postova o"
 
 msgid "LANGUAGE"
-msgstr ""
+msgstr "engleski"
 
 msgid "Tags"
-msgstr ""
+msgstr "Tagovi"
 
 msgid "Read more"
-msgstr ""
+msgstr "Čitaj dalje"
 
 msgid "Posts about %s"
-msgstr ""
+msgstr "Postovi o %s"
 
 msgid "Next post"
-msgstr ""
+msgstr "Sljedeći post"
 
 msgid "old posts page %d"
-msgstr ""
+msgstr "stari postovi stranice %d"
 
 msgid "Source"
-msgstr ""
+msgstr "Izvor"
 
 msgid "Read in English"
-msgstr ""
+msgstr "Čitaj na engleskom"
 
 msgid "Posts for year %s"
-msgstr ""
+msgstr "Postovi za godinu %s"
 
 msgid "Newer posts"
-msgstr ""
+msgstr "Noviji postovi"
 
 msgid "Previous post"
-msgstr ""
+msgstr "Prethodni post"
 
 msgid "Also available in"
-msgstr ""
+msgstr "Također dostupno i u"
 
 msgid "Original site"
-msgstr ""
+msgstr "Izvorna stranica"
 
 msgid "Older posts"
-msgstr ""
+msgstr "Stariji postovi"
 
 msgid "Archive"
-msgstr ""
+msgstr "Arhiva"
 
 msgid "Posted"
-msgstr ""
+msgstr "Objavljeno"
 
 msgid "Posts for {month} {year}"
-msgstr ""
+msgstr "Postovi za {month} {year}"
