@@ -83,7 +83,7 @@ Getting Help
 ------------
 
 * Feel free to contact me at ralsina@netmanagers.com.ar for questions about Nikola.
-* You can file bugs at `the issue tracker <https://github.com/ralsina/nikola-site/issues>`__
+* You can file bugs at `the issue tracker <https://github.com/ralsina/nikola/issues>`__
 * You can discuss Nikola at the `nikola-discuss google group <http://groups.google.com/group/nikola-discuss>`_
 * You can subscribe to `the Nikola Blog <http://nikola.ralsina.com.ar/blog>`_
 * You can follow `Nikola on Twitter <https://twitter.com/#!/nikolagenerator>`_
