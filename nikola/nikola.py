@@ -83,6 +83,7 @@ class Nikola(object):
         self.posts_per_year = defaultdict(list)
         self.posts_per_month = defaultdict(list)
         self.posts_per_tag = defaultdict(list)
+        self.post_per_file = {}
         self.timeline = []
         self.pages = []
         self._scanned = False
@@ -730,6 +731,9 @@ class Nikola(object):
                         self.pages.append(post)
                     if self.config['OLD_THEME_SUPPORT']:
                         post._add_old_metadata()
+                    self.post_per_file[post.destination_path(lang=lang)] = post
+                    self.post_per_file[post.destination_path(lang=lang, extension=post.source_ext())] = post
+                    
         for name, post in list(self.global_data.items()):
             self.timeline.append(post)
         self.timeline.sort(key=lambda p: p.date)

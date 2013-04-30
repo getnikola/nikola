@@ -99,6 +99,9 @@ class Sitemap(LateTask):
                 if os.path.splitext(fname)[-1] in mapped_exts:
                     real_path = os.path.join(root, fname)
                     path = os.path.relpath(real_path, output)
+                    post = self.site.post_per_file.get(path)
+                    if post and (post.is_draft or post.is_retired):
+                        continue
                     path = path.replace(os.sep, '/')
                     lastmod = get_lastmod(real_path)
                     loc = urljoin(base_url, path)
