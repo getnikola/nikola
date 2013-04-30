@@ -733,7 +733,7 @@ class Nikola(object):
                         post._add_old_metadata()
                     self.post_per_file[post.destination_path(lang=lang)] = post
                     self.post_per_file[post.destination_path(lang=lang, extension=post.source_ext())] = post
-                    
+
         for name, post in list(self.global_data.items()):
             self.timeline.append(post)
         self.timeline.sort(key=lambda p: p.date)
