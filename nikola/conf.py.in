@@ -436,6 +436,10 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 #     'mustache',
 # ]
 
+# List of regular expressions, links matching them will always be considered
+# valid by "nikola check -l"
+# LINK_CHECK_WHITELIST = []
+
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
 

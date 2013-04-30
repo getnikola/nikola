@@ -125,6 +125,7 @@ class Nikola(object):
             'INDEXES_PAGES': "",
             'INDEX_PATH': '',
             'LICENSE': '',
+            'LINK_CHECK_WHITELIST': [],
             'LISTINGS_FOLDER': 'listings',
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',

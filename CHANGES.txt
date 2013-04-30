@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New 'LINK_CHECK_WHITELIST' option for link checker (Issue #477)
 * New Croatian translation.
 * Jinja-default and jinja-site themes now automatically generated from the Mako versions.
 * New Persian translation

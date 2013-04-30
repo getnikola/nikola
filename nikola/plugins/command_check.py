@@ -24,6 +24,7 @@
 
 from __future__ import print_function
 import os
+import re
 import sys
 try:
     from urllib import unquote
@@ -75,92 +76,91 @@ class CommandCheck(Command):
             print(self.help())
             return False
         if options['links']:
-            failure = scan_links(options['find_sources'])
+            failure = self.scan_links(options['find_sources'])
         if options['files']:
-            failure = scan_files()
+            failure = self.scan_files()
         if failure:
             sys.exit(1)
 
-existing_targets = set([])
+    existing_targets = set([])
 
+    def analyze(self, task, find_sources=False):
+        rv = False
+        self.whitelist = [re.compile(x) for x in self.site.config['LINK_CHECK_WHITELIST']]
+        try:
+            filename = task.split(":")[-1]
+            d = lxml.html.fromstring(open(filename).read())
+            for l in d.iterlinks():
+                target = l[0].attrib[l[1]]
+                if target == "#":
+                    continue
+                parsed = urlparse(target)
+                if parsed.scheme:
+                    continue
+                if parsed.fragment:
+                    target = target.split('#')[0]
+                target_filename = os.path.abspath(
+                    os.path.join(os.path.dirname(filename), unquote(target)))
+                if any(re.match(x, target_filename) for x in self.whitelist):
+                    continue
+                elif target_filename not in self.existing_targets:
+                    if os.path.exists(target_filename):
+                        self.existing_targets.add(target_filename)
+                    else:
+                        rv = True
+                        print("Broken link in {0}: ".format(filename), target)
+                        if find_sources:
+                            print("Possible sources:")
+                            print(os.popen('nikola list --deps ' + task, 'r').read())
+                            print("===============================\n")
+        except Exception as exc:
+            print("Error with:", filename, exc)
+        return rv
 
-def analize(task, find_sources=False):
-    rv = False
-    try:
-        filename = task.split(":")[-1]
-        d = lxml.html.fromstring(open(filename).read())
-        for l in d.iterlinks():
-            target = l[0].attrib[l[1]]
-            if target == "#":
-                continue
-            parsed = urlparse(target)
-            if parsed.scheme:
-                continue
-            if parsed.fragment:
-                target = target.split('#')[0]
-            target_filename = os.path.abspath(
-                os.path.join(os.path.dirname(filename), unquote(target)))
-            if target_filename not in existing_targets:
-                if os.path.exists(target_filename):
-                    existing_targets.add(target_filename)
-                else:
-                    rv = True
-                    print("Broken link in {0}: ".format(filename), target)
-                    if find_sources:
-                        print("Possible sources:")
-                        print(os.popen('nikola list --deps ' + task,
-                                       'r').read())
-                        print("===============================\n")
+    def scan_links(self, find_sources=False):
+        print("Checking Links:\n===============\n")
+        failure = False
+        for task in os.popen('nikola list --all', 'r').readlines():
+            task = task.strip()
+            if task.split(':')[0] in (
+                    'render_tags', 'render_archive',
+                    'render_galleries', 'render_indexes',
+                    'render_pages'
+                    'render_site') and '.html' in task:
+                if self.analyze(task, find_sources):
+                    failure = True
+        return failure
 
-    except Exception as exc:
-        print("Error with:", filename, exc)
-    return rv
+    def scan_files(self):
+        print("Checking Files:\n===============\n")
+        task_fnames = set([])
+        real_fnames = set([])
+        # First check that all targets are generated in the right places
+        failure = False
+        for task in os.popen('nikola list --all', 'r').readlines():
+            task = task.strip()
+            if 'output' in task and ':' in task:
+                fname = task.split(':')[-1]
+                task_fnames.add(fname)
+        # And now check that there are no non-target files
+        for root, dirs, files in os.walk('output'):
+            for src_name in files:
+                fname = os.path.join(root, src_name)
+                real_fnames.add(fname)
 
+        only_on_output = list(real_fnames - task_fnames)
+        if only_on_output:
+            only_on_output.sort()
+            print("\nFiles from unknown origins:\n")
+            for f in only_on_output:
+                print(f)
+            failure = True
 
-def scan_links(find_sources=False):
-    print("Checking Links:\n===============\n")
-    failure = False
-    for task in os.popen('nikola list --all', 'r').readlines():
-        task = task.strip()
-        if task.split(':')[0] in ('render_tags', 'render_archive',
-                                  'render_galleries', 'render_indexes',
-                                  'render_pages'
-                                  'render_site') and '.html' in task:
-            if analize(task, find_sources):
-                failure = True
-    return failure
+        only_on_input = list(task_fnames - real_fnames)
+        if only_on_input:
+            only_on_input.sort()
+            print("\nFiles not generated:\n")
+            for f in only_on_input:
+                print(f)
 
-
-def scan_files():
-    print("Checking Files:\n===============\n")
-    task_fnames = set([])
-    real_fnames = set([])
-    # First check that all targets are generated in the right places
-    failure = False
-    for task in os.popen('nikola list --all', 'r').readlines():
-        task = task.strip()
-        if 'output' in task and ':' in task:
-            fname = task.split(':')[-1]
-            task_fnames.add(fname)
-     # And now check that there are no non-target files
-    for root, dirs, files in os.walk('output'):
-        for src_name in files:
-            fname = os.path.join(root, src_name)
-            real_fnames.add(fname)
-
-    only_on_output = list(real_fnames - task_fnames)
-    if only_on_output:
-        only_on_output.sort()
-        print("\nFiles from unknown origins:\n")
-        for f in only_on_output:
-            print(f)
-        failure = True
-
-    only_on_input = list(task_fnames - real_fnames)
-    if only_on_input:
-        only_on_input.sort()
-        print("\nFiles not generated:\n")
-        for f in only_on_input:
-            print(f)
-
-    return failure
+        return failure
