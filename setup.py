@@ -6,7 +6,8 @@
 # Licensed under the MIT license:
 # http://www.opensource.org/licenses/mit-license.php
 
-from __future__ import print_function
+# Don't use __future__ in this script, it breaks buildout
+# from __future__ import print_function
 import os
 import subprocess
 import sys

@@ -18,6 +18,7 @@ Features
 Bugfixes
 --------
 
+* Avoid __future__ in setup.py because it breaks buildout (Issue #478)
 * Use correct source links with PRETTY_URL=True (Issue #474)
 * Handle non-ascii path in bundles (Issue #473)
 * Handle non-ascii path in plugin loader (Issue #471)
