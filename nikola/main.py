@@ -80,10 +80,11 @@ class NikolaTaskLoader(TaskLoader):
     def load_tasks(self, cmd, opt_values, pos_args):
         DOIT_CONFIG = {
             'reporter': ExecutedOnlyReporter,
-            'default_tasks': ['render_site'],
+            'default_tasks': ['render_site', 'post_render'],
         }
-        tasks = generate_tasks('render_site', self.nikola.gen_tasks())
-        return tasks, DOIT_CONFIG
+        tasks = generate_tasks('render_site', self.nikola.gen_tasks('render_site', "Task"))
+        latetasks = generate_tasks('post_render', self.nikola.gen_tasks('post_render', "LateTask"))
+        return tasks + latetasks, DOIT_CONFIG
 
 
 class DoitNikola(DoitMain):

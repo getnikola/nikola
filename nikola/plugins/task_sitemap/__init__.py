@@ -73,7 +73,38 @@ class Sitemap(LateTask):
         sitemap_path = os.path.join(output_path, "sitemap.xml")
         locs = {}
 
+        output = kw['output_folder']
+        base_url = kw['base_url']
+        mapped_exts = kw['mapped_extensions']
+
+        def scan_locs():
+            for root, dirs, files in os.walk(output):
+                if not dirs and not files and not kw['sitemap_include_fileless_dirs']:
+                    continue  # Totally empty, not on sitemap
+                path = os.path.relpath(root, output)
+                path = path.replace(os.sep, '/') + '/'
+                lastmod = get_lastmod(root)
+                loc = urljoin(base_url, path)
+                if 'index.html' in files:  # Only map folders with indexes
+                    locs[loc] = url_format.format(loc, lastmod)
+                for fname in files:
+                    if kw['strip_indexes'] and fname == kw['index_file']:
+                        continue  # We already mapped the folder
+                    if os.path.splitext(fname)[-1] in mapped_exts:
+                        real_path = os.path.join(root, fname)
+                        path = os.path.relpath(real_path, output)
+                        post = self.site.post_per_file.get(path)
+                        if post and (post.is_draft or post.is_retired):
+                            continue
+                        path = path.replace(os.sep, '/')
+                        lastmod = get_lastmod(real_path)
+                        loc = urljoin(base_url, path)
+                        locs[loc] = url_format.format(loc, lastmod)
+
         def write_sitemap():
+            # Have to rescan, because files may have been added between
+            # task dep scanning and task execution
+            scan_locs()
             with codecs.open(sitemap_path, 'wb+', 'utf8') as outf:
                 outf.write(header)
                 for k in sorted(locs.keys()):
@@ -81,31 +112,7 @@ class Sitemap(LateTask):
                 outf.write("</urlset>")
             return True
 
-        output = kw['output_folder']
-        base_url = kw['base_url']
-        mapped_exts = kw['mapped_extensions']
-        for root, dirs, files in os.walk(output):
-            if not dirs and not files and not kw['sitemap_include_fileless_dirs']:
-                continue  # Totally empty, not on sitemap
-            path = os.path.relpath(root, output)
-            path = path.replace(os.sep, '/') + '/'
-            lastmod = get_lastmod(root)
-            loc = urljoin(base_url, path)
-            if 'index.html' in files:  # Only map folders with indexes
-                locs[loc] = url_format.format(loc, lastmod)
-            for fname in files:
-                if kw['strip_indexes'] and fname == kw['index_file']:
-                    continue  # We already mapped the folder
-                if os.path.splitext(fname)[-1] in mapped_exts:
-                    real_path = os.path.join(root, fname)
-                    path = os.path.relpath(real_path, output)
-                    post = self.site.post_per_file.get(path)
-                    if post and (post.is_draft or post.is_retired):
-                        continue
-                    path = path.replace(os.sep, '/')
-                    lastmod = get_lastmod(real_path)
-                    loc = urljoin(base_url, path)
-                    locs[loc] = url_format.format(loc, lastmod)
+        scan_locs()
         task = {
             "basename": "sitemap",
             "name": sitemap_path,
@@ -113,5 +120,6 @@ class Sitemap(LateTask):
             "actions": [(write_sitemap,)],
             "uptodate": [config_changed({1: kw, 2: locs})],
             "clean": True,
+            "task_dep": ["render_site"],
         }
         yield task

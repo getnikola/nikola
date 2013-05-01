@@ -591,7 +591,7 @@ class Nikola(object):
             exists = os.stat(path).st_size > 0
         return exists
 
-    def gen_tasks(self):
+    def gen_tasks(self, name, plugin_category):
 
         def create_gzipped_copy(in_path, out_path):
             with gzip.GzipFile(out_path, 'wb+') as outf:
@@ -638,7 +638,7 @@ class Nikola(object):
             task_dep = ['gzip']
         else:
             task_dep = []
-        for pluginInfo in self.plugin_manager.getPluginsOfCategory("Task"):
+        for pluginInfo in self.plugin_manager.getPluginsOfCategory(plugin_category):
             for task in flatten(pluginInfo.plugin_object.gen_tasks()):
                 gztask = add_gzipped_copies(task)
                 if gztask:
@@ -647,16 +647,8 @@ class Nikola(object):
             if pluginInfo.plugin_object.is_default:
                 task_dep.append(pluginInfo.plugin_object.name)
 
-        for pluginInfo in self.plugin_manager.getPluginsOfCategory("LateTask"):
-            for task in pluginInfo.plugin_object.gen_tasks():
-                gztask = add_gzipped_copies(task)
-                if gztask:
-                    yield gztask
-                yield task
-            if pluginInfo.plugin_object.is_default:
-                task_dep.append(pluginInfo.plugin_object.name)
         yield {
-            'name': b'all',
+            'name': name,
             'actions': None,
             'clean': True,
             'task_dep': task_dep
