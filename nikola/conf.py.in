@@ -362,7 +362,7 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 #<input type="submit" value="DuckDuckGo Search" style="visibility: hidden;" />
 #</form>
 #<!-- End of custom search -->
-#""" % BLOG_URL
+#""" % SITE_URL
 #
 # Also, there is a local search plugin you can use.
 
