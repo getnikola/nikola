@@ -218,30 +218,36 @@ post_compilers = ${POST_COMPILERS}
 
 # Data about post-per-page indexes
 # INDEXES_TITLE = ""  # If this is empty, the default is BLOG_TITLE
-# INDEXES_PAGES = ""  # If this is empty, the default is 'old posts page %d' translated
+# INDEXES_PAGES = ""  # If this is empty, the default is 'old posts page %d'
+# translated
 
 # Name of the theme to use.
 # THEME = 'site'
 
-# Color scheme to be used for code blocks. If your theme provide "assets/css/code.css" this
-# is ignored.
-# Can be any of autumn borland bw colorful default emacs friendly fruity manni monokai
-# murphy native pastie perldoc rrt tango trac vim vs
+# Color scheme to be used for code blocks. If your theme provides
+# "assets/css/code.css" this is ignored.
+# Can be any of autumn borland bw colorful default emacs friendly fruity manni
+# monokai murphy native pastie perldoc rrt tango trac vim vs
 # CODE_COLOR_SCHEME = default
 
 # If you use 'site-reveal' theme you can select several subthemes
-# THEME_REVEAL_CONGIF_SUBTHEME = 'sky' # You can also use: beige/serif/simple/night/default
+# THEME_REVEAL_CONGIF_SUBTHEME = 'sky'
+# You can also use: beige/serif/simple/night/default
 
-# Again, if you use 'site-reveal' theme you can select several transitions between the slides
-# THEME_REVEAL_CONGIF_TRANSITION = 'cube' # You can also use: page/concave/linear/none/default
+# Again, if you use 'site-reveal' theme you can select several transitions
+# between the slides
+# THEME_REVEAL_CONGIF_TRANSITION = 'cube'
+# You can also use: page/concave/linear/none/default
 
-# date format used to display post dates. (str used by datetime.datetime.strftime)
+# date format used to display post dates.
+# (str used by datetime.datetime.strftime)
 # DATE_FORMAT = '%Y-%m-%d %H:%M'
 
 # FAVICONS contains (name, file, size) tuples.
 # Used for create favicon link like this:
 # <link rel="name" href="file" sizes="size"/>
-# about favicons, see: http://www.netmagazine.com/features/create-perfect-favicon
+# For creating favicons, take a look at:
+# http://www.netmagazine.com/features/create-perfect-favicon
 # FAVICONS = {
 #     ("icon", "/favicon.ico", "16x16"),
 #     ("icon", "/icon_128x128.png", "128x128"),
@@ -261,7 +267,9 @@ post_compilers = ${POST_COMPILERS}
 
 # A small copyright notice for the page footer (in HTML).
 # Default is ''
-CONTENT_FOOTER = 'Contents &copy; {date} <a href="mailto:{email}">{author}</a> - Powered by <a href="http://nikola.ralsina.com.ar">Nikola</a>'
+CONTENT_FOOTER = 'Contents &copy; {date} \
+        <a href="mailto:{email}">{author}</a> - Powered by \
+        <a href="http://nikola.ralsina.com.ar">Nikola</a>'
 CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
                                        author=BLOG_AUTHOR,
                                        date=time.gmtime().tm_year)
@@ -292,7 +300,8 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # Default = False
 # STRIP_INDEXES = False
 
-# In the sitemap, should directories be included which have only other directories
+# Should the sitemap list directories which only include other directories
+# and no files.
 # Default to True
 # If this is False
 # e.g. /2012 includes only /01, /02, /03, /04, ...: don't add it to the sitemap
@@ -347,8 +356,8 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # Default is no search form.
 # SEARCH_FORM = ""
 #
-# This search form works for any site and looks good in the "site" theme where it
-# appears on the navigation bar
+# This search form works for any site and looks good in the "site" theme where
+# it appears on the navigation bar
 #SEARCH_FORM = """
 #<!-- Custom search -->
 #<form method="get" id="search" action="http://duckduckgo.com/"
@@ -401,7 +410,8 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 #
 # IMPORTANT:
 # Please note, that you need to opt-in for using Twitter Cards!
-# To do this please visit https://dev.twitter.com/form/participate-twitter-cards
+# To do this please visit
+# https://dev.twitter.com/form/participate-twitter-cards
 #
 # Uncomment and modify to following lines to match your accounts.
 # Specifying the id for either 'site' or 'creator' will be preferred
@@ -410,13 +420,15 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # TWITTER_CARD = {
 #     # 'use_twitter_cards': True,  # enable Twitter Cards / Open Graph
 #     # 'site': '@website',  # twitter nick for the website
-#     # 'site:id': 123456,  # Same as site, but the website's Twitter user ID instead.
+#     # 'site:id': 123456,  # Same as site, but the website's Twitter user ID
+#                           # instead.
 #     # 'creator': '@username',  # Username for the content creator / author.
 #     # 'creator:id': 654321,  # Same as creator, but the Twitter user's ID.
 # }
 
 
-# If you want to use formatted post time in W3C-DTF Format(ex. 2012-03-30T23:00:00+02:00),
+# If you want to use formatted post time in W3C-DTF Format
+# (ex. 2012-03-30T23:00:00+02:00),
 # set timzone if you want a localized posted date.
 #
 # TIMEZONE = 'Europe/Zurich'
@@ -428,7 +440,8 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # DISABLED_PLUGINS = ["render_galleries"]
 
 # Experimental plugins - use at your own risk.
-# They probably need some manual adjustments - please see their respective readme.
+# They probably need some manual adjustments - please see their respective
+# readme.
 # ENABLED_EXTRAS = [
 #     'planetoid',
 #     'ipynb',
