@@ -962,7 +962,7 @@ If you like Nikola, and want to start using it, but you have a Wordpress blog, N
 supports importing it. Here's the steps to do it:
 
 1) Get a XML dump of your site [#]_
-2) nikola import_wordpress -f mysite.wordpress.2012-12-20.xml
+2) nikola import_wordpress mysite.wordpress.2012-12-20.xml
 
 After some time, this will crate a ``new_site`` folder with all your data. It currently supports
 the following:
@@ -1000,7 +1000,7 @@ Importing To A Custom Location Or Into An Existing Site
 It is possible to either import into a location you desire or into an already existing Nikola site.
 To do so you can specify a location after the dump.::
 
-    $ nikola import_wordpress -f mysite.wordpress.2012-12-20.xml -o import_location
+    $ nikola import_wordpress  mysite.wordpress.2012-12-20.xml -o import_location
 
 With this command Nikola will import into the folder ``import_location``.
 
