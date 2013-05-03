@@ -299,3 +299,12 @@ And the ``task_copy_assets.py`` file, in its entirety:
                     task['basename'] = self.name
                     # If your task generates files, please do this.
                     yield utils.apply_filters(task, kw['filters'])
+
+TaskMultiplier Plugins
+----------------------
+
+These plugins process tasks and create other tasks. You can look at the gzip_files plugins as an example, it
+examines tasks, and if they produce files that go in output/ and would be nice to have gzipped, it creates a 
+gzipped copy.
+
+
