@@ -6,8 +6,6 @@ from contextlib import contextmanager
 import locale
 import os
 import shutil
-import subprocess
-import sys
 import tempfile
 import unittest
 
@@ -88,6 +86,45 @@ class DemoBuildTest(EmptyBuildTest):
                 ".. slug: foobar\n"
                 ".. date: 2013/03/06 19:08:15\n"
             )
+
+
+class FuturePostTest(DemoBuildTest):
+    """Test a site with future posts."""
+
+    def fill_site(self):
+        import datetime
+        from nikola.utils import current_time
+        self.init_command.copy_sample_site(self.target_dir)
+        self.init_command.create_configuration(self.target_dir)
+        with codecs.open(os.path.join(self.target_dir, 'posts', 'empty1.txt'), "wb+", "utf8") as outf:
+            outf.write(
+                ".. title: foo\n"
+                ".. slug: foo\n"
+                ".. date: %s\n" % (current_time() + datetime.timedelta(-1)).strftime('%Y/%m/%d %T')
+            )
+
+        with codecs.open(os.path.join(self.target_dir, 'posts', 'empty2.txt'), "wb+", "utf8") as outf:
+            outf.write(
+                ".. title: bar\n"
+                ".. slug: bar\n"
+                ".. date: %s\n" % (current_time() + datetime.timedelta(1)).strftime('%Y/%m/%d %T')
+            )
+
+    def test_future_post(self):
+        """ Ensure that the future post is not present in the index and sitemap."""
+        index_path = os.path.join(self.target_dir, "output", "index.html")
+        sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
+        foo_path = os.path.join(self.target_dir, "output", "posts", "foo.html")
+        bar_path = os.path.join(self.target_dir, "output", "posts", "bar.html")
+        self.assertTrue(os.path.isfile(index_path))
+        self.assertTrue(os.path.isfile(foo_path))
+        self.assertTrue(os.path.isfile(bar_path))
+        index_data = codecs.open(index_path, "r", "utf8").read()
+        sitemap_data = codecs.open(sitemap_path, "r", "utf8").read()
+        self.assertTrue('foo.html' in index_data)
+        self.assertFalse('bar.html' in index_data)
+        self.assertTrue('foo.html' in sitemap_data)
+        self.assertFalse('bar.html' in sitemap_data)
 
 
 class TranslatedBuildTest(EmptyBuildTest):

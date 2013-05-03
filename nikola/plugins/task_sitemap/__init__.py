@@ -94,7 +94,7 @@ class Sitemap(LateTask):
                         real_path = os.path.join(root, fname)
                         path = os.path.relpath(real_path, output)
                         post = self.site.post_per_file.get(path)
-                        if post and (post.is_draft or post.is_retired):
+                        if post and (post.is_draft or post.is_retired or post.publish_later):
                             continue
                         path = path.replace(os.sep, '/')
                         lastmod = get_lastmod(real_path)

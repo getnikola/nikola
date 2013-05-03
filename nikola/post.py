@@ -33,7 +33,7 @@ import string
 
 import lxml.html
 
-from .utils import to_datetime, slugify, bytes_str, Functionary, LocaleBorg
+from .utils import (to_datetime, slugify, bytes_str, Functionary, LocaleBorg)
 
 __all__ = ['Post']
 
@@ -48,7 +48,7 @@ class Post(object):
         self, source_path, cache_folder, destination, use_in_feeds,
         translations, default_lang, base_url, messages, template_name,
         file_metadata_regexp=None, strip_indexes=False, index_file='index.html',
-        tzinfo=None, skip_untranslated=False, pretty_urls=False,
+        tzinfo=None, current_time=None, skip_untranslated=False, pretty_urls=False,
     ):
         """Initialize post.
 
@@ -114,6 +114,8 @@ class Post(object):
         # If timezone is set, build localized datetime.
         self.date = to_datetime(self.meta[default_lang]['date'], tzinfo)
 
+        self.publish_later = False if current_time is None else self.date >= current_time
+
         is_draft = False
         is_retired = False
         self._tags = {}
@@ -130,7 +132,8 @@ class Post(object):
         # While draft comes from the tags, it's not really a tag
         self.is_draft = is_draft
         self.is_retired = is_retired
-        self.use_in_feeds = use_in_feeds and not is_draft and not is_retired
+        self.use_in_feeds = use_in_feeds and not is_draft and not is_retired \
+            and not self.publish_later
 
         # If mathjax is a tag, then enable mathjax rendering support
         self.is_mathjax = 'mathjax' in self.tags
