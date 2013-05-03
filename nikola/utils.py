@@ -426,7 +426,7 @@ def to_datetime(value, tzinfo=None):
     try:
         from dateutil import parser
         dt = parser.parse(value)
-        if tzinfo is None:
+        if tzinfo is None or dt.tzinfo:
             return dt
         return tzinfo.localize(dt)
     except ImportError:
