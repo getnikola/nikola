@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New "TaskMultiplier" plugin category, takes a task, returns 0 or more new tasks (Issue #483)
 * New 'LINK_CHECK_WHITELIST' option for link checker (Issue #477)
 * New Croatian translation.
 * Jinja-default and jinja-site themes now automatically generated from the Mako versions.

@@ -119,7 +119,7 @@ class LateTask(BaseTask):
     name = "dummy_latetask"
 
 
-class TemplateSystem(object):
+class TemplateSystem(BasePlugin):
     """Plugins of this type wrap templating systems."""
 
     name = "dummy templates"
@@ -141,7 +141,18 @@ class TemplateSystem(object):
         raise NotImplementedError()
 
 
-class PageCompiler(object):
+class TaskMultiplier(BasePlugin):
+    """Plugins that take a task and return *more* tasks."""
+
+    name = "dummy multiplier"
+
+    def process(self, task):
+        """Examine task and create more tasks.
+        Returns extra tasks only."""
+        return []
+
+
+class PageCompiler(BasePlugin):
     """Plugins that compile text files into HTML."""
 
     name = "dummy compiler"

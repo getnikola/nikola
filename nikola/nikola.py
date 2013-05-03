@@ -27,7 +27,6 @@ from __future__ import print_function, unicode_literals
 from collections import defaultdict
 from copy import copy
 import glob
-import gzip
 import locale
 import os
 import sys
@@ -55,6 +54,7 @@ from .plugin_categories import (
     LateTask,
     PageCompiler,
     Task,
+    TaskMultiplier,
     TemplateSystem,
 )
 
@@ -210,6 +210,7 @@ class Nikola(object):
             "LateTask": LateTask,
             "TemplateSystem": TemplateSystem,
             "PageCompiler": PageCompiler,
+            "TaskMultiplier": TaskMultiplier,
         })
         self.plugin_manager.setPluginInfoExtension('plugin')
         if sys.version_info[0] == 3:
@@ -249,6 +250,16 @@ class Nikola(object):
                     continue
                 self.plugin_manager.activatePluginByName(plugin_info.name)
                 plugin_info.plugin_object.set_site(self)
+
+        # Activate all multiplier plugins
+        for plugin_info in self.plugin_manager.getPluginsOfCategory("TaskMultiplier"):
+            if (plugin_info.name in self.config['DISABLED_PLUGINS']
+                or (plugin_info.name in self.EXTRA_PLUGINS and
+                    plugin_info.name not in self.config['ENABLED_EXTRAS'])):
+                self.plugin_manager.removePluginFromCategory(plugin_info, task_type)
+                continue
+            self.plugin_manager.activatePluginByName(plugin_info.name)
+            plugin_info.plugin_object.set_site(self)
 
         # set global_context for template rendering
         self.GLOBAL_CONTEXT = {
@@ -593,11 +604,6 @@ class Nikola(object):
 
     def gen_tasks(self, name, plugin_category):
 
-        def create_gzipped_copy(in_path, out_path):
-            with gzip.GzipFile(out_path, 'wb+') as outf:
-                with open(in_path, 'rb') as inf:
-                    outf.write(inf.read())
-
         def flatten(task):
             if isinstance(task, dict):
                 yield task
@@ -606,44 +612,17 @@ class Nikola(object):
                     for ft in flatten(t):
                         yield ft
 
-        def add_gzipped_copies(task):
-            if not self.config['GZIP_FILES']:
-                return None
-            if task.get('name') is None:
-                return None
-            gzip_task = {
-                'file_dep': [],
-                'targets': [],
-                'actions': [],
-                'basename': 'gzip',
-                'name': task.get('name') + '.gz',
-                'clean': True,
-            }
-            targets = task.get('targets', [])
-            flag = False
-            for target in targets:
-                ext = os.path.splitext(target)[1]
-                if (ext.lower() in self.config['GZIP_EXTENSIONS'] and
-                        target.startswith(self.config['OUTPUT_FOLDER'])):
-                    flag = True
-                    gzipped = target + '.gz'
-                    gzip_task['file_dep'].append(target)
-                    gzip_task['targets'].append(gzipped)
-                    gzip_task['actions'].append((create_gzipped_copy, (target, gzipped)))
-            if not flag:
-                return None
-            return gzip_task
-
-        if self.config['GZIP_FILES']:
-            task_dep = ['gzip']
-        else:
-            task_dep = []
+        task_dep = []
         for pluginInfo in self.plugin_manager.getPluginsOfCategory(plugin_category):
             for task in flatten(pluginInfo.plugin_object.gen_tasks()):
-                gztask = add_gzipped_copies(task)
-                if gztask:
-                    yield gztask
                 yield task
+                for pluginInfo in self.plugin_manager.getPluginsOfCategory("TaskMultiplier"):
+                    flag = False
+                    for task in pluginInfo.plugin_object.process(task):
+                        flag = True
+                        yield task
+                    if flag:
+                        task_dep.append(pluginInfo.plugin_object.name)
             if pluginInfo.plugin_object.is_default:
                 task_dep.append(pluginInfo.plugin_object.name)
 
