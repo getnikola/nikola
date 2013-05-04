@@ -37,7 +37,6 @@ import json
 import shutil
 import subprocess
 import sys
-import collections
 from zipfile import ZipFile as zip
 try:
     from imp import reload
@@ -45,8 +44,7 @@ except ImportError:
     pass
 
 import pytz
-from dateutil.parser import *
-import dateutil.tz as dtz
+
 
 
 if sys.version_info[0] == 3:
@@ -441,16 +439,19 @@ def get_tzname(dt):
     """
     Give a datetime value, find the name of the timezone
     """
+    try:
+        from dateutil import parser, tz
+    except ImportError:
+        raise ValueError('Unrecognized date/time: {0!r}, try installing dateutil...'.format(value))
+
     tzoffset = dt.strftime('%z')
-    result=collections.defaultdict(list)
     for name in pytz.common_timezones:
-        timezone=dtz.gettz(name)
+        timezone=tz.gettz(name)
         now=dt.now(timezone)
         offset=now.strftime('%z')
-        abbrev=now.strftime('%Z')
-        result[offset].append(name)
-        result[abbrev].append(name)
-    return result[tzoffset][-1]
+        if offset == tzoffset:
+            return name
+    raise ValueError('Unrecognized date/time: {0!r}'.format(value))
 
 
 def apply_filters(task, filters):
