@@ -37,6 +37,7 @@ import json
 import shutil
 import subprocess
 import sys
+import collections
 from zipfile import ZipFile as zip
 try:
     from imp import reload
@@ -44,6 +45,9 @@ except ImportError:
     pass
 
 import pytz
+from dateutil.parser import *
+import dateutil.tz as dtz
+
 
 if sys.version_info[0] == 3:
     # Python 3
@@ -65,7 +69,7 @@ import PyRSS2Gen as rss
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'generic_rss_renderer', 'copy_file', 'slugify', 'unslugify',
            'to_datetime', 'apply_filters', 'config_changed', 'get_crumbs',
-           'get_asset_path', '_reload', 'unicode_str', 'bytes_str',
+           'get_tzname', 'get_asset_path', '_reload', 'unicode_str', 'bytes_str',
            'unichr', 'Functionary', 'LocaleBorg', 'sys_encode', 'sys_decode']
 
 
@@ -432,6 +436,21 @@ def to_datetime(value, tzinfo=None):
     except ImportError:
         raise ValueError('Unrecognized date/time: {0!r}, try installing dateutil...'.format(value))
     raise ValueError('Unrecognized date/time: {0!r}'.format(value))
+
+def get_tzname(dt):
+    """
+    Give a datetime value, find the name of the timezone
+    """
+    tzoffset = dt.strftime('%z')
+    result=collections.defaultdict(list)
+    for name in pytz.common_timezones:
+        timezone=dtz.gettz(name)
+        now=dt.now(timezone)
+        offset=now.strftime('%z')
+        abbrev=now.strftime('%Z')
+        result[offset].append(name)
+        result[abbrev].append(name)
+    return result[tzoffset][-1]
 
 
 def apply_filters(task, filters):
