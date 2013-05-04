@@ -5,3 +5,4 @@ Roman Imankulov <https://github.com/imankulov>
 Kay Hayen <kay.hayen@gmail.com>
 Zhaojun Meng <https://github.com/zhaojunmeng>
 Chris “Kwpolska” Warrick <kwpolska@gmail.com>
+Troy Toman <troy@tomanator.com>
