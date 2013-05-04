@@ -31,14 +31,9 @@ import os
 
 Image = None
 try:
-    import Image as _Image
-    import ExifTags
-    Image = _Image
+    from PIL import Image, ExifTags  # NOQA
 except ImportError:
-    try:
-        from PIL import Image, ExifTags  # NOQA
-    except ImportError:
-        pass
+    pass
 
 
 from nikola.plugin_categories import Task
