@@ -135,7 +135,7 @@ class Indexes(Task):
                                                             template_name,
                                                             kw['filters'],
                                                             context)
-            task_cfg = {1: task['uptodate'][0].config, 2: kw}
-            task['uptodate'] = [config_changed(task_cfg)]
-            task['basename'] = self.name
-            yield task
+                task_cfg = {1: task['uptodate'][0].config, 2: kw}
+                task['uptodate'] = [config_changed(task_cfg)]
+                task['basename'] = self.name
+                yield task
