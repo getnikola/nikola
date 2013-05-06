@@ -19,6 +19,7 @@ Features
 Bugfixes
 --------
 
+* Handle timezones in posterous imports (Issue #475)
 * Actually ensure LateTasks are run later than Tasks
 * Don't add drafts and retired posts to the sitemap (Issue #476)
 * Avoid __future__ in setup.py because it breaks buildout (Issue #478)
