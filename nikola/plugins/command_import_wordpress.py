@@ -121,6 +121,7 @@ class CommandImportWordpress(Command):
         channel = self.get_channel_from_file(self.wordpress_export_file)
         self.context = self.populate_context(channel)
         conf_template = self.generate_base_site()
+        self.timezone = None
 
         self.import_posts(channel)
 
@@ -131,6 +132,9 @@ class CommandImportWordpress(Command):
         rendered_template = conf_template.render(**self.context)
         rendered_template = re.sub('# REDIRECTIONS = ', 'REDIRECTIONS = ',
                                    rendered_template)
+        if self.timezone:
+            rendered_template = re.sub('# TIMEZONE = \'Europe/Zurich\'', 'TIMEZONE = \''+self.timezone+'\'',
+                                       rendered_template)
         self.write_configuration(self.get_configuration_output_path(),
                                  rendered_template)
 
@@ -349,6 +353,9 @@ class CommandImportWordpress(Command):
         description = get_text_tag(item, 'description', '')
         post_date = get_text_tag(
             item, '{{{0}}}post_date'.format(wordpress_namespace), None)
+        dt = utils.to_datetime(post_date)
+        if dt.tzinfo and self.timezone is None:
+            self.timezone = utils.get_tzname(dt)
         status = get_text_tag(
             item, '{{{0}}}status'.format(wordpress_namespace), 'publish')
         content = get_text_tag(
