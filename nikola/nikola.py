@@ -625,8 +625,6 @@ class Nikola(object):
                         task_dep.append(multi.plugin_object.name)
             if pluginInfo.plugin_object.is_default:
                 task_dep.append(pluginInfo.plugin_object.name)
-
-        print(task_dep)
         yield {
             'name': name,
             'actions': None,
