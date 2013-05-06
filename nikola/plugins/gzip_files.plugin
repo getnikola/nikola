@@ -1,0 +1,10 @@
+[Core]
+Name = gzip
+Module = gzip_files
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Create gzipped copies of files
+
