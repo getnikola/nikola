@@ -616,16 +616,17 @@ class Nikola(object):
         for pluginInfo in self.plugin_manager.getPluginsOfCategory(plugin_category):
             for task in flatten(pluginInfo.plugin_object.gen_tasks()):
                 yield task
-                for pluginInfo in self.plugin_manager.getPluginsOfCategory("TaskMultiplier"):
+                for multi in self.plugin_manager.getPluginsOfCategory("TaskMultiplier"):
                     flag = False
-                    for task in pluginInfo.plugin_object.process(task):
+                    for task in multi.plugin_object.process(task):
                         flag = True
                         yield task
                     if flag:
-                        task_dep.append(pluginInfo.plugin_object.name)
+                        task_dep.append(multi.plugin_object.name)
             if pluginInfo.plugin_object.is_default:
                 task_dep.append(pluginInfo.plugin_object.name)
 
+        print(task_dep)
         yield {
             'name': name,
             'actions': None,
