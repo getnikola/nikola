@@ -1084,8 +1084,7 @@ search will be performed client side.
 
 This plugin implements a Tipue-based local search for your site.
 
-To use it, copy task_localsearch.plugin and task_localsearch
-into a plugins/ folder in your nikola site.
+To use it, enable local_search in ENABLED_EXTRAS in your sites conf.py
 
 After you build your site, you will have several new files in assets/css and assets/js
 and a tipue_search.html that you can use as a basis for using this in your site.

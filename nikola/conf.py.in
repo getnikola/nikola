@@ -445,7 +445,7 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # ENABLED_EXTRAS = [
 #     'planetoid',
 #     'ipynb',
-#     'localsearch',
+#     'local_search',
 #     'mustache',
 # ]
 
