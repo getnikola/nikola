@@ -641,6 +641,7 @@ class Nikola(object):
         tzinfo = None
         if self.config['TIMEZONE'] is not None:
             tzinfo = pytz.timezone(self.config['TIMEZONE'])
+        current_time = utils.current_time(tzinfo)
         targets = set([])
         for wildcard, destination, template_name, use_in_feeds in \
                 self.config['post_pages']:
@@ -676,6 +677,7 @@ class Nikola(object):
                         self.config['STRIP_INDEXES'],
                         self.config['INDEX_FILE'],
                         tzinfo,
+                        current_time,
                         self.config['HIDE_UNTRANSLATED_POSTS'],
                         self.config['PRETTY_URLS'],
                     )

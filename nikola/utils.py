@@ -454,6 +454,13 @@ def get_tzname(dt):
     raise ValueError('Unrecognized date/time: {0!r}'.format(value))
 
 
+def current_time(tzinfo=None):
+    dt = datetime.datetime.now()
+    if tzinfo is not None:
+        dt = tzinfo.localize(dt)
+    return dt
+
+
 def apply_filters(task, filters):
     """
     Given a task, checks its targets.
