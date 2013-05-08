@@ -1,0 +1,16 @@
+{% macro html_pager() %}
+<div>
+  <ul class="pager">
+    {% if prevlink %}
+    <li class="previous">
+      <a href="{{ prevlink }}">&larr; {{ messages("Newer posts") }}</a>
+    </li>
+    {% endif %}
+    {% if nextlink %}
+    <li class"next">
+      <a href="{{ nextlink }}>{{ messages("Older posts") }} &rarr;</a>
+    </li>
+    {% endif %}
+  </ul>
+</div>
+{% endmacro %}
