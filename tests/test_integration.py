@@ -6,6 +6,7 @@ from contextlib import contextmanager
 import locale
 import os
 import shutil
+import subprocess
 import tempfile
 import unittest
 
