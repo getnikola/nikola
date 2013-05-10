@@ -204,7 +204,6 @@ class RelativeLinkTest(DemoBuildTest):
             #out, err = p.communicate()
             #sys.stdout.write(out)
             #sys.stderr.write(err)
-        #import pdb; pdb.set_trace()
         #self.assertEqual(p.returncode, 0)
 
 
