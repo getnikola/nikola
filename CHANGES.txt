@@ -20,6 +20,7 @@ Features
 Bugfixes
 --------
 
+* Be less invasive when processing rendered HTML (Issue #500)
 * Run all tasks that should run (Issue #494, #493)
 * Handle timezones in posterous imports (Issue #475)
 * Actually ensure LateTasks are run later than Tasks

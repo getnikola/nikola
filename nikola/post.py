@@ -310,7 +310,7 @@ class Post(object):
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read().strip()
         try:
-            document = lxml.html.document_fromstring(data)
+            document = lxml.html.fragment_fromstring(data, "body")
         except lxml.etree.ParserError as e:
             # if we don't catch this, it breaks later (Issue #374)
             if str(e) == "Document is empty":
