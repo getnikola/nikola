@@ -46,7 +46,6 @@ except ImportError:
 import pytz
 
 
-
 if sys.version_info[0] == 3:
     # Python 3
     bytes_str = bytes
@@ -451,7 +450,7 @@ def get_tzname(dt):
         offset=now.strftime('%z')
         if offset == tzoffset:
             return name
-    raise ValueError('Unrecognized date/time: {0!r}'.format(value))
+    raise ValueError('Unrecognized date/time: {0!r}'.format(dt))
 
 
 def current_time(tzinfo=None):
