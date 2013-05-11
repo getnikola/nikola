@@ -9,6 +9,12 @@ from os import path
 from nikola.plugins.compile_markdown import CompileMarkdown
 
 
+class FakeSite(object):
+    config = {
+        "MARKDOWN_EXTENSIONS": ['fenced_code', 'codehilite']
+    }
+
+
 class CompileMarkdownTests(unittest.TestCase):
     def setUp(self):
         self.tmp_dir = tempfile.mkdtemp()
@@ -16,6 +22,7 @@ class CompileMarkdownTests(unittest.TestCase):
         self.output_path = path.join(self.tmp_dir, 'output.html')
 
         self.compiler = CompileMarkdown()
+        self.compiler.set_site(FakeSite())
 
     def compile(self, input_string):
         with codecs.open(self.input_path, "w+", "utf8") as input_file:

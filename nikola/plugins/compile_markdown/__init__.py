@@ -54,8 +54,8 @@ class CompileMarkdown(PageCompiler):
     """Compile markdown into HTML."""
 
     name = "markdown"
-
     extensions = [gist_extension, nikola_extension, podcast_extension]
+    site = None
 
     def compile_html(self, source, dest):
         if markdown is None:
@@ -65,7 +65,7 @@ class CompileMarkdown(PageCompiler):
             os.makedirs(os.path.dirname(dest))
         except:
             pass
-        self.extensions += self.SITE.config.get("MARKDOWN_EXTENSIONS")
+        self.extensions += self.site.config.get("MARKDOWN_EXTENSIONS")
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()

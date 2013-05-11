@@ -262,6 +262,12 @@ class Nikola(object):
             self.plugin_manager.activatePluginByName(plugin_info.name)
             plugin_info.plugin_object.set_site(self)
 
+        # Activate all required compiler plugins
+        for plugin_info in self.plugin_manager.getPluginsOfCategory("PageCompiler"):
+            if plugin_info.name in self.config["post_compilers"].keys():
+                self.plugin_manager.activatePluginByName(plugin_info.name)
+                plugin_info.plugin_object.set_site(self)
+
         # set global_context for template rendering
         self.GLOBAL_CONTEXT = {
         }
