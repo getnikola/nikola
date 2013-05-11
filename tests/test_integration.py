@@ -70,7 +70,7 @@ class EmptyBuildTest(unittest.TestCase):
         try:
             del sys.modules['conf']
         except KeyError:
-            pass        
+            pass
 
     def test_build(self):
         """Ensure the build did something."""
