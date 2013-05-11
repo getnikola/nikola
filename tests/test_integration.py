@@ -195,23 +195,13 @@ class TestCheck(DemoBuildTest):
 
     def test_check_links(self):
         with cd(self.target_dir):
-            p = subprocess.Popen(
-                "nikola check -l", shell=True, stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE)
-            out, err = p.communicate()
-            sys.stdout.write(out)
-            sys.stderr.write(err)
-        self.assertEqual(p.returncode, 0)
+            p = subprocess.call("nikola check -l", shell=True)
+        self.assertEqual(p, 0)
 
     def test_check_files(self):
         with cd(self.target_dir):
-            p = subprocess.Popen(
-                "nikola check -f", shell=True, stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE)
-            out, err = p.communicate()
-            sys.stdout.write(out)
-            sys.stderr.write(err)
-        self.assertEqual(p.returncode, 0)
+            p = subprocess.call("nikola check -f", shell=True)
+        self.assertEqual(p, 0)
 
 
 class TestCheckFailure(DemoBuildTest):
@@ -220,25 +210,15 @@ class TestCheckFailure(DemoBuildTest):
     def test_check_links_fail(self):
         with cd(self.target_dir):
             os.unlink(os.path.join("output", "archive.html"))
-            p = subprocess.Popen(
-                "nikola check -l", shell=True, stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE)
-            out, err = p.communicate()
-            sys.stdout.write(out)
-            sys.stderr.write(err)
-        self.assertEqual(p.returncode, 1)
+            p = subprocess.call("nikola check -l", shell=True)
+        self.assertEqual(p, 1)
 
     def test_check_files_fail(self):
         with cd(self.target_dir):
             with codecs.open(os.path.join("output", "foobar"), "wb+", "utf8") as outf:
                 outf.write("foo")
-            p = subprocess.Popen(
-                "nikola check -f", shell=True, stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE)
-            out, err = p.communicate()
-            sys.stdout.write(out)
-            sys.stderr.write(err)
-        self.assertEqual(p.returncode, 1)
+            p = subprocess.call("nikola check -f", shell=True)
+        self.assertEqual(p, 1)
 
 
 class RelativeLinkTest2(DemoBuildTest):
