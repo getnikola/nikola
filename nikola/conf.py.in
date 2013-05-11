@@ -334,6 +334,11 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 #</script>
 #"""
 
+# What MarkDown extensions to enable?
+# You will also get gist, nikola and podcast because those are
+# done in the code, hope you don't mind ;-)
+# MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite']
+
 # Enable Addthis social buttons?
 # Defaults to true
 # ADD_THIS_BUTTONS = True
