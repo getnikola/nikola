@@ -133,7 +133,7 @@ class CommandImportWordpress(Command):
         rendered_template = re.sub('# REDIRECTIONS = ', 'REDIRECTIONS = ',
                                    rendered_template)
         if self.timezone:
-            rendered_template = re.sub('# TIMEZONE = \'Europe/Zurich\'', 'TIMEZONE = \''+self.timezone+'\'',
+            rendered_template = re.sub('# TIMEZONE = \'Europe/Zurich\'', 'TIMEZONE = \'' + self.timezone + '\'',
                                        rendered_template)
         self.write_configuration(self.get_configuration_output_path(),
                                  rendered_template)
