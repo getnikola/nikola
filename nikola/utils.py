@@ -441,7 +441,7 @@ def get_tzname(dt):
     try:
         from dateutil import parser, tz
     except ImportError:
-        raise ValueError('Unrecognized date/time: {0!r}, try installing dateutil...'.format(value))
+        raise ValueError('Unrecognized date/time: {0!r}, try installing dateutil...'.format(dt))
 
     tzoffset = dt.strftime('%z')
     for name in pytz.common_timezones:
