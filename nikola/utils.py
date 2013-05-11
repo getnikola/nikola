@@ -434,20 +434,21 @@ def to_datetime(value, tzinfo=None):
         raise ValueError('Unrecognized date/time: {0!r}, try installing dateutil...'.format(value))
     raise ValueError('Unrecognized date/time: {0!r}'.format(value))
 
+
 def get_tzname(dt):
     """
     Give a datetime value, find the name of the timezone
     """
     try:
-        from dateutil import parser, tz
+        from dateutil import tz
     except ImportError:
         raise ValueError('Unrecognized date/time: {0!r}, try installing dateutil...'.format(dt))
 
     tzoffset = dt.strftime('%z')
     for name in pytz.common_timezones:
-        timezone=tz.gettz(name)
-        now=dt.now(timezone)
-        offset=now.strftime('%z')
+        timezone = tz.gettz(name)
+        now = dt.now(timezone)
+        offset = now.strftime('%z')
         if offset == tzoffset:
             return name
     raise ValueError('Unrecognized date/time: {0!r}'.format(dt))
