@@ -31,7 +31,8 @@ def main(import_directory=None):
     os.system('nikola')
     import_file = os.path.join(test_directory, 'wordpress_export_example.xml')
     os.system(
-        'nikola import_wordpress -f %s -o %s' % (import_file, import_directory))
+        'nikola import_wordpress -o {folder} {file}'.format(file=import_file,
+                                                            folder=import_directory))
 
     assert os.path.exists(
         import_directory), "The directory %s should be existing."
