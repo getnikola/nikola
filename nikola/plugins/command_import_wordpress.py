@@ -40,9 +40,7 @@ except ImportError:
 
 from nikola.plugin_categories import Command
 from nikola import utils
-from nikola.plugins.basic_import import ImportMixin
-
-links = {}
+from nikola.plugins.basic_import import ImportMixin, links
 
 
 class CommandImportWordpress(Command, ImportMixin):
@@ -52,14 +50,7 @@ class CommandImportWordpress(Command, ImportMixin):
     needs_config = False
     doc_usage = "[options] wordpress_export_file"
     doc_purpose = "Import a wordpress dump."
-    cmd_options = [
-        {
-            'name': 'output_folder',
-            'long': 'output-folder',
-            'short': 'o',
-            'default': 'new_site',
-            'help': 'Location to write imported content.'
-        },
+    cmd_options = ImportMixin.cmd_options + [
         {
             'name': 'exclude_drafts',
             'long': 'no-drafts',
@@ -129,7 +120,8 @@ class CommandImportWordpress(Command, ImportMixin):
         rendered_template = re.sub('# REDIRECTIONS = ', 'REDIRECTIONS = ',
                                    rendered_template)
         if self.timezone:
-            rendered_template = re.sub('# TIMEZONE = \'Europe/Zurich\'', 'TIMEZONE = \'' + self.timezone + '\'',
+            rendered_template = re.sub('# TIMEZONE = \'Europe/Zurich\'',
+                                       'TIMEZONE = \'' + self.timezone + '\'',
                                        rendered_template)
         self.write_configuration(self.get_configuration_output_path(),
                                  rendered_template)
@@ -186,7 +178,9 @@ class CommandImportWordpress(Command, ImportMixin):
         context['BASE_URL'] = get_text_tag(channel, 'link', '#')
         if not context['BASE_URL']:
             base_site_url = channel.find('{{{0}}}author'.format(wordpress_namespace))
-            context['BASE_URL'] = get_text_tag(base_site_url, None, "http://foo.com")
+            context['BASE_URL'] = get_text_tag(base_site_url,
+                                               None,
+                                               "http://foo.com")
         context['SITE_URL'] = context['BASE_URL']
 
         author = channel.find('{{{0}}}author'.format(wordpress_namespace))

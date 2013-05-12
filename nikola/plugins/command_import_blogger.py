@@ -49,14 +49,7 @@ class CommandImportBlogger(Command, ImportMixin):
     needs_config = False
     doc_usage = "[options] blogger_export_file"
     doc_purpose = "Import a blogger dump."
-    cmd_options = [
-        {
-            'name': 'output_folder',
-            'long': 'output-folder',
-            'short': 'o',
-            'default': 'new_site',
-            'help': 'Location to write imported content.'
-        },
+    cmd_options = ImportMixin.cmd_options + [
         {
             'name': 'exclude_drafts',
             'long': 'no-drafts',
