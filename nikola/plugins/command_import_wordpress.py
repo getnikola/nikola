@@ -23,20 +23,15 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import unicode_literals, print_function
-import codecs
-import csv
-import datetime
 import os
 import re
+from lxml import etree
 
 try:
     from urlparse import urlparse
     from urllib import unquote
 except ImportError:
     from urllib.parse import urlparse, unquote  # NOQA
-
-from lxml import etree, html
-from mako.template import Template
 
 try:
     import requests
@@ -45,11 +40,12 @@ except ImportError:
 
 from nikola.plugin_categories import Command
 from nikola import utils
+from nikola.plugins.basic_import import ImportMixin
 
 links = {}
 
 
-class CommandImportWordpress(Command):
+class CommandImportWordpress(Command, ImportMixin):
     """Import a wordpress dump."""
 
     name = "import_wordpress"
@@ -178,36 +174,6 @@ class CommandImportWordpress(Command):
         return channel
 
     @staticmethod
-    def configure_redirections(url_map):
-        redirections = []
-        for k, v in url_map.items():
-            if not k[-1] == '/':
-                k = k + '/'
-
-            # remove the initial "/" because src is a relative file path
-            src = (urlparse(k).path + 'index.html')[1:]
-            dst = (urlparse(v).path)
-            if src == 'index.html':
-                print("Can't do a redirect for: {0!r}".format(k))
-            else:
-                redirections.append((src, dst))
-
-        return redirections
-
-    def generate_base_site(self):
-        if not os.path.exists(self.output_folder):
-            os.system('nikola init ' + self.output_folder)
-        else:
-            self.import_into_existing_site = True
-            print('The folder {0} already exists - assuming that this is a '
-                  'already existing nikola site.'.format(self.output_folder))
-
-        conf_template = Template(filename=os.path.join(
-            os.path.dirname(utils.__file__), 'conf.py.in'))
-
-        return conf_template
-
-    @staticmethod
     def populate_context(channel):
         wordpress_namespace = channel.nsmap['wp']
 
@@ -301,27 +267,6 @@ class CommandImportWordpress(Command):
         new_content = self.transform_multiple_newlines(new_content)
         return new_content
 
-    @classmethod
-    def write_content(cls, filename, content):
-        doc = html.document_fromstring(content)
-        doc.rewrite_links(replacer)
-
-        with open(filename, "wb+") as fd:
-            fd.write(html.tostring(doc, encoding='utf8'))
-
-    @staticmethod
-    def write_metadata(filename, title, slug, post_date, description, tags):
-        if not description:
-            description = ""
-
-        with codecs.open(filename, "w+", "utf8") as fd:
-            fd.write('{0}\n'.format(title))
-            fd.write('{0}\n'.format(slug))
-            fd.write('{0}\n'.format(post_date))
-            fd.write('{0}\n'.format(','.join(tags)))
-            fd.write('\n')
-            fd.write('{0}\n'.format(description))
-
     def import_item(self, item, wordpress_namespace, out_folder=None):
         """Takes an item from the feed and creates a post file."""
         if out_folder is None:
@@ -413,33 +358,6 @@ class CommandImportWordpress(Command):
     def import_posts(self, channel):
         for item in channel.findall('item'):
             self.process_item(item)
-
-    @staticmethod
-    def write_urlmap_csv(output_file, url_map):
-        with codecs.open(output_file, 'w+', 'utf8') as fd:
-            csv_writer = csv.writer(fd)
-            for item in url_map.items():
-                csv_writer.writerow(item)
-
-    def get_configuration_output_path(self):
-        if not self.import_into_existing_site:
-            filename = 'conf.py'
-        else:
-            filename = 'conf.py.wordpress_import-{0}'.format(
-                datetime.datetime.now().strftime('%Y%m%d_%H%M%s'))
-        config_output_path = os.path.join(self.output_folder, filename)
-        print('Configuration will be written to:', config_output_path)
-
-        return config_output_path
-
-    @staticmethod
-    def write_configuration(filename, rendered_template):
-        with codecs.open(filename, 'w+', 'utf8') as fd:
-            fd.write(rendered_template)
-
-
-def replacer(dst):
-    return links.get(dst, dst)
 
 
 def get_text_tag(tag, name, default):

@@ -327,7 +327,7 @@ newlines.
         config_path_with_timestamp = self.import_command.get_configuration_output_path(
         )
         self.assertNotEqual(default_config_path, config_path_with_timestamp)
-        self.assertTrue('wordpress_import' in config_path_with_timestamp)
+        self.assertTrue(self.import_command.name in config_path_with_timestamp)
 
     def test_write_content_does_not_detroy_text(self):
         content = b"""<h1>Installation</h1>
@@ -338,7 +338,7 @@ There are many plugins.
 <h2>Violations</h2>
 You can use the <a title="Jenkins Plugin: Violations" href="https://wiki.jenkins-ci.org/display/JENKINS/Violations">Violations</a> plugin."""
         open_mock = mock.mock_open()
-        with mock.patch('nikola.plugins.command_import_wordpress.open', open_mock, create=True):
+        with mock.patch('nikola.plugins.basic_import.open', open_mock, create=True):
             self.import_command.write_content('some_file', content)
 
         open_mock.assert_called_once_with('some_file', 'wb+')
