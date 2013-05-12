@@ -58,28 +58,6 @@ class ImportMixin(object):
             'default': 'new_site',
             'help': 'Location to write imported content.'
         },
-        {
-            'name': 'exclude_drafts',
-            'long': 'no-drafts',
-            'short': 'd',
-            'default': False,
-            'type': bool,
-            'help': "Don't import drafts",
-        },
-        {
-            'name': 'squash_newlines',
-            'long': 'squash-newlines',
-            'default': False,
-            'type': bool,
-            'help': "Shorten multiple newlines in a row to only two newlines",
-        },
-        {
-            'name': 'no_downloads',
-            'long': 'no-downloads',
-            'default': False,
-            'type': bool,
-            'help': "Do not try to download files for the import",
-        },
     ]
 
     def _execute(self, options={}, args=[]):
