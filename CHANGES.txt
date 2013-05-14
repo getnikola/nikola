@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New Turkish translation.
 * New MARKDOWN_EXTENSIONS option, defaults to previopus behaviour (Issue #496)
 * Posts with dates in the future will be treated as drafts (Implemented by punchagan)
 * New "TaskMultiplier" plugin category, takes a task, returns 0 or more new tasks (Issue #483)
