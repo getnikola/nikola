@@ -22,6 +22,7 @@ Features
 Bugfixes
 --------
 
+* Customizable teasers were broken (Issue #502)
 * Be less invasive when processing rendered HTML (Issue #500)
 * Run all tasks that should run (Issue #494, #493)
 * Handle timezones in posterous imports (Issue #475)

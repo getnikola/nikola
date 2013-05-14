@@ -332,7 +332,8 @@ class Post(object):
         if teaser_only:
             teaser = TEASER_REGEXP.split(data)[0]
             if teaser != data:
-                teaser_str = self.messages[lang]["Read more"] + '...'
+                teaser_str = TEASER_REGEXP.search(data).groups()[-1] or \
+                    self.messages[lang]["Read more"] + '...'
                 teaser += '<p><a href="{0}">{1}</a></p>'.format(
                     self.permalink(lang), teaser_str)
                 # This closes all open tags and sanitizes the broken HTML
