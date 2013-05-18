@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Support --version on "run" command (Issue #504)
 * New Turkish translation.
 * New MARKDOWN_EXTENSIONS option, defaults to previopus behaviour (Issue #496)
 * Posts with dates in the future will be treated as drafts (Implemented by punchagan)

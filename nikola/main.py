@@ -37,6 +37,8 @@ from doit.cmd_run import Run as DoitRun
 from .nikola import Nikola
 from .utils import _reload, sys_decode
 
+VERSION = "5.4.4"
+
 
 def main(args):
     sys.path.append('')
@@ -122,3 +124,7 @@ class DoitNikola(DoitMain):
                       "existing Nikola site.")
                 return False
         super(DoitNikola, self).run(cmd_args)
+
+    @staticmethod
+    def print_version():
+        print("Nikola version %s" % VERSION)
