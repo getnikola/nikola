@@ -132,7 +132,7 @@ class config_changed(tools.config_changed):
         if isinstance(self.config, str):
             return self.config
         elif isinstance(self.config, dict):
-            data = json.dumps(self.config, cls=CustomEncoder)
+            data = json.dumps(self.config, cls=CustomEncoder, sort_keys=True)
             if isinstance(data, str):  # pragma: no cover # python3
                 byte_data = data.encode("utf-8")
             else:
