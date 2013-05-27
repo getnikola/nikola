@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New --clean-files option for nikola check
 * Support --version on "run" command (Issue #504)
 * New Turkish translation.
 * New MARKDOWN_EXTENSIONS option, defaults to previopus behaviour (Issue #496)

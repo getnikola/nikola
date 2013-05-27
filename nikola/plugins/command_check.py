@@ -62,6 +62,13 @@ class CommandCheck(Command):
             'help': 'Check for unknown files',
         },
         {
+            'name': 'clean',
+            'long': 'clean-files',
+            'type': bool,
+            'default': False,
+            'help': 'Remove all unknown files, use with caution',
+        },
+        {
             'name': 'find_sources',
             'long': 'find-sources',
             'type': bool,
@@ -72,13 +79,15 @@ class CommandCheck(Command):
 
     def _execute(self, options, args):
         """Check the generated site."""
-        if not options['links'] and not options['files']:
+        if not options['links'] and not options['files'] and not options['clean']:
             print(self.help())
             return False
         if options['links']:
             failure = self.scan_links(options['find_sources'])
         if options['files']:
             failure = self.scan_files()
+        if options['clean']:
+            failure = self.clean_files()
         if failure:
             sys.exit(1)
 
@@ -132,11 +141,32 @@ class CommandCheck(Command):
         return failure
 
     def scan_files(self):
+        failure = False
         print("Checking Files:\n===============\n")
+        only_on_output, only_on_input = self.real_scan_files()
+        if only_on_output:
+            only_on_output.sort()
+            print("\nFiles from unknown origins:\n")
+            for f in only_on_output:
+                print(f)
+            failure = True
+        if only_on_input:
+            only_on_input.sort()
+            print("\nFiles not generated:\n")
+            for f in only_on_input:
+                print(f)
+        return failure
+
+    def clean_files(self):
+        only_on_output, _ = self.real_scan_files()
+        for f in only_on_output:
+            os.unlink(f)
+        return True
+
+    def real_scan_files(self):
         task_fnames = set([])
         real_fnames = set([])
         # First check that all targets are generated in the right places
-        failure = False
         for task in os.popen('nikola list --all', 'r').readlines():
             task = task.strip()
             if 'output' in task and ':' in task:
@@ -149,18 +179,7 @@ class CommandCheck(Command):
                 real_fnames.add(fname)
 
         only_on_output = list(real_fnames - task_fnames)
-        if only_on_output:
-            only_on_output.sort()
-            print("\nFiles from unknown origins:\n")
-            for f in only_on_output:
-                print(f)
-            failure = True
 
         only_on_input = list(task_fnames - real_fnames)
-        if only_on_input:
-            only_on_input.sort()
-            print("\nFiles not generated:\n")
-            for f in only_on_input:
-                print(f)
 
-        return failure
+        return (only_on_output, only_on_input)
