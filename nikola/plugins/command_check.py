@@ -166,14 +166,15 @@ class CommandCheck(Command):
     def real_scan_files(self):
         task_fnames = set([])
         real_fnames = set([])
+        output_folder = self.site.config['OUTPUT_FOLDER']
         # First check that all targets are generated in the right places
         for task in os.popen('nikola list --all', 'r').readlines():
             task = task.strip()
-            if 'output' in task and ':' in task:
-                fname = task.split(':')[-1]
+            if output_folder in task and ':' in task:
+                fname = task.split(':', 1)[-1]
                 task_fnames.add(fname)
         # And now check that there are no non-target files
-        for root, dirs, files in os.walk('output'):
+        for root, dirs, files in os.walk(output_folder):
             for src_name in files:
                 fname = os.path.join(root, src_name)
                 real_fnames.add(fname)

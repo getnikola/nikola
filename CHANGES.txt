@@ -24,6 +24,8 @@ Features
 Bugfixes
 --------
 
+* Made the gzip plugin generate less confusing task names (no more double colon)
+* Made "nikola check -f" respect OUTPUT_DIR
 * Customizable teasers were broken (Issue #502)
 * Be less invasive when processing rendered HTML (Issue #500)
 * Run all tasks that should run (Issue #494, #493)
