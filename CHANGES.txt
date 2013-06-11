@@ -24,6 +24,7 @@ Features
 Bugfixes
 --------
 
+* Use schema-relative URL for addthis to avoid insecure page warnings on HTTPS sites (Issue #510)
 * Made the gzip plugin generate less confusing task names (no more double colon)
 * Made "nikola check -f" respect OUTPUT_DIR
 * Customizable teasers were broken (Issue #502)
