@@ -104,7 +104,7 @@ class CommandCheck(Command):
                 if target == "#":
                     continue
                 parsed = urlparse(target)
-                if parsed.scheme:
+                if parsed.scheme or target.startswith('//'):
                     continue
                 if parsed.fragment:
                     target = target.split('#')[0]
