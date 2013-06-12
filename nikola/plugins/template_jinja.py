@@ -26,8 +26,10 @@
 
 import os
 import json
+from collections import deque
 try:
     import jinja2
+    from jinja2 import meta
 except ImportError:
     jinja2 = None  # NOQA
 
@@ -39,6 +41,7 @@ class JinjaTemplates(TemplateSystem):
 
     name = "jinja"
     lookup = None
+    dependency_cache = {}
 
     def __init__(self):
         """ initialize Jinja2 wrapper with extended set of filters"""
@@ -72,6 +75,23 @@ class JinjaTemplates(TemplateSystem):
         return output
 
     def template_deps(self, template_name):
-        # FIXME: unimplemented
-        template = self.lookup.get_template(template_name)
-        return [template.filename]
+        # Cache the lists of dependencies for each template name.
+        if self.dependency_cache.get(template_name) is None:
+            # Use a breadth-first search to find all templates this one
+            # depends on.
+            queue = deque([template_name])
+            visited_templates = set([template_name])
+            deps = []
+            while len(queue) > 0:
+                curr = queue.popleft()
+                source, filename = self.lookup.loader.get_source(self.lookup,
+                                                                 curr)[:2]
+                deps.append(filename)
+                ast = self.lookup.parse(source)
+                dep_names = meta.find_referenced_templates(ast)
+                for dep_name in dep_names:
+                    if dep_name not in visited_templates:
+                        visited_templates.add(dep_name)
+                        queue.append(dep_name)
+            self.dependency_cache[template_name] = deps
+        return self.dependency_cache[template_name]
