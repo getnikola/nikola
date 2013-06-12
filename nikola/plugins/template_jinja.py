@@ -73,4 +73,5 @@ class JinjaTemplates(TemplateSystem):
 
     def template_deps(self, template_name):
         # FIXME: unimplemented
-        return []
+        template = self.lookup.get_template(template_name)
+        return [template.filename]

@@ -24,6 +24,7 @@ Features
 Bugfixes
 --------
 
+* At least detect the obvious Jinja template dependencies (Issue #511)
 * Use schema-relative URL for addthis to avoid insecure page warnings on HTTPS sites (Issue #510)
 * Made the gzip plugin generate less confusing task names (no more double colon)
 * Made "nikola check -f" respect OUTPUT_DIR
