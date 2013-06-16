@@ -98,6 +98,9 @@ class Sitemap(LateTask):
                 if not dirs and not files and not kw['sitemap_include_fileless_dirs']:
                     continue  # Totally empty, not on sitemap
                 path = os.path.relpath(root, output)
+                # ignore the current directory.
+                if path == '.':
+                    continue
                 path = path.replace(os.sep, '/') + '/'
                 lastmod = get_lastmod(root)
                 loc = urljoin(base_url, base_path + path)
