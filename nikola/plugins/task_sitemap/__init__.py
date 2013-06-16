@@ -62,7 +62,10 @@ def get_base_path(base):
         sub_path = ''
     else:
         sub_path = base_parsed.path
-    return sub_path + '/'
+    if sub_path.endswith('/'):
+        return sub_path
+    else:
+        return sub_path + '/'
 
 
 class Sitemap(LateTask):
