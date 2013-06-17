@@ -27,9 +27,9 @@ import codecs
 import datetime
 import os
 try:
-    from urlparse import urljoin
+    from urlparse import urljoin, urlparse
 except ImportError:
-    from urllib.parse import urljoin  # NOQA
+    from urllib.parse import urljoin, urlparse  # NOQA
 
 from nikola.plugin_categories import LateTask
 from nikola.utils import config_changed
@@ -53,6 +53,31 @@ url_format = """ <url>
 get_lastmod = lambda p: datetime.datetime.fromtimestamp(os.stat(p).st_mtime).isoformat().split('T')[0]
 
 
+def get_base_path(base):
+    u"""returns the path of a base URL if it contains one.
+
+    >>> get_base_path('http://some.site') == '/'
+    True
+    >>> get_base_path('http://some.site/') == '/'
+    True
+    >>> get_base_path('http://some.site/some/sub-path') == '/some/sub-path/'
+    True
+    >>> get_base_path('http://some.site/some/sub-path/') == '/some/sub-path/'
+    True
+    """
+    # first parse the base_url for some path
+    base_parsed = urlparse(base)
+
+    if not base_parsed.path:
+        sub_path = ''
+    else:
+        sub_path = base_parsed.path
+    if sub_path.endswith('/'):
+        return sub_path
+    else:
+        return sub_path + '/'
+
+
 class Sitemap(LateTask):
     """Generate google sitemap."""
 
@@ -71,6 +96,7 @@ class Sitemap(LateTask):
         }
         output_path = kw['output_folder']
         sitemap_path = os.path.join(output_path, "sitemap.xml")
+        base_path = get_base_path(kw['base_url'])
         locs = {}
 
         output = kw['output_folder']
@@ -82,9 +108,12 @@ class Sitemap(LateTask):
                 if not dirs and not files and not kw['sitemap_include_fileless_dirs']:
                     continue  # Totally empty, not on sitemap
                 path = os.path.relpath(root, output)
+                # ignore the current directory.
+                if path == '.':
+                    continue
                 path = path.replace(os.sep, '/') + '/'
                 lastmod = get_lastmod(root)
-                loc = urljoin(base_url, path)
+                loc = urljoin(base_url, base_path + path)
                 if 'index.html' in files:  # Only map folders with indexes
                     locs[loc] = url_format.format(loc, lastmod)
                 for fname in files:
@@ -98,7 +127,7 @@ class Sitemap(LateTask):
                             continue
                         path = path.replace(os.sep, '/')
                         lastmod = get_lastmod(real_path)
-                        loc = urljoin(base_url, path)
+                        loc = urljoin(base_url, base_path + path)
                         locs[loc] = url_format.format(loc, lastmod)
 
         def write_sitemap():
@@ -123,3 +152,7 @@ class Sitemap(LateTask):
             "task_dep": ["render_site"],
         }
         yield task
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
