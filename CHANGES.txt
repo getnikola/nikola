@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New man page (created with help2man nikola -N --version-option=version) (Issue #460)
 * Added "nikola version" command (Issue #504)
 * Added more search form examples in conf.py.in (Issue #515)
 * Template dependency support for Jinja (by koniiiik, Issue #511)
