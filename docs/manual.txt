@@ -1123,6 +1123,9 @@ Here's a set of example settings for conf.py that should work nicely with the "s
     <div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
     """
 
+    ENABLED_EXTRAS = [ 'local_search' ]
+
+
 The <div> in EXTRA_HEAD_DATA is a hack but it will migrate into the <body> of the
 documents thanks to magic, and will hold the search results after the user searches.
 
