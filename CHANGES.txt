@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Added "nikola version" command (Issue #504)
 * Added more search form examples in conf.py.in (Issue #515)
 * Template dependency support for Jinja (by koniiiik, Issue #511)
 * New --clean-files option for nikola check
