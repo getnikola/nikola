@@ -70,7 +70,7 @@ class CompileMarkdown(PageCompiler):
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
             if not is_two_file:
-                data = data.split('\n\n', 1)[1]
+                data = data.split('\n\n', 1)[-1]
             output = markdown(data, self.extensions)
             out_file.write(output)
 

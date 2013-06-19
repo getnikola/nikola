@@ -65,7 +65,7 @@ class EmptyBuildTest(unittest.TestCase):
 
     def tearDown(self):
         """Remove the demo site."""
-        shutil.rmtree(self.tmpdir)
+        #shutil.rmtree(self.tmpdir)
         # Fixes Issue #438
         try:
             del sys.modules['conf']

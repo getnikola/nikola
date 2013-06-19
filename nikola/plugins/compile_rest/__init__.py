@@ -71,7 +71,7 @@ class CompileRest(PageCompiler):
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
                 if not is_two_file:
-                    data = data.split('\n\n', 1)[1]
+                    data = data.split('\n\n', 1)[-1]
                 output, error_level, deps = rst2html(
                     data, settings_overrides={
                         'initial_header_level': 2,
