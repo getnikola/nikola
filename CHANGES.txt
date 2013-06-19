@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Display very annoying warning when deploying the nikolademo Disqus account
 * New Bulgarian translation
 * New man page (created with help2man nikola -N --version-option=version) (Issue #460)
 * Added "nikola version" command (Issue #504)

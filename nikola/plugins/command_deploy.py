@@ -28,6 +28,7 @@ import codecs
 from datetime import datetime
 import os
 import subprocess
+import time
 
 
 from nikola.plugin_categories import Command
@@ -43,6 +44,13 @@ class Deploy(Command):
     def _execute(self, command, args):
         # Get last succesful deploy date
         timestamp_path = os.path.join(self.site.config['CACHE_FOLDER'], 'lastdeploy')
+        if self.site.config['DISQUS_FORUM'] == 'nikolademo':
+            print("\nWARNING WARNING WARNING WARNING\n"
+                  "You are deploying using the nikolademo Disqus account.\n"
+                  "That means you will not be able to moderate the comments in your own site.\n"
+                  "And is probably not what you want to do.\n" 
+                  "Think about it for 5 seconds, I'll wait :-)\n\n")
+            time.sleep(5)
         for command in self.site.config['DEPLOY_COMMANDS']:
             try:
                 with open(timestamp_path, 'rb') as inf:
