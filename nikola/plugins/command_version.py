@@ -23,15 +23,10 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-import os
-import shutil
-import codecs
 
-from mako.template import Template
-
-import nikola
 from nikola.plugin_categories import Command
 from nikola.main import VERSION
+
 
 class CommandVersion(Command):
     """Print the version."""

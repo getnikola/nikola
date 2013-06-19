@@ -48,7 +48,7 @@ class Deploy(Command):
             print("\nWARNING WARNING WARNING WARNING\n"
                   "You are deploying using the nikolademo Disqus account.\n"
                   "That means you will not be able to moderate the comments in your own site.\n"
-                  "And is probably not what you want to do.\n" 
+                  "And is probably not what you want to do.\n"
                   "Think about it for 5 seconds, I'll wait :-)\n\n")
             time.sleep(5)
         for command in self.site.config['DEPLOY_COMMANDS']:
