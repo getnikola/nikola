@@ -40,7 +40,7 @@ class CompileTextile(PageCompiler):
 
     name = "textile"
 
-    def compile_html(self, source, dest, is_two_file=False):
+    def compile_html(self, source, dest, is_two_file=True):
         if textile is None:
             raise Exception('To build this site, you need to install the '
                             '"textile" package.')

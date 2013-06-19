@@ -52,7 +52,7 @@ class CompileMarkdown(PageCompiler):
             self.ext = misaka.EXT_FENCED_CODE | misaka.EXT_STRIKETHROUGH | \
                 misaka.EXT_AUTOLINK | misaka.EXT_NO_INTRA_EMPHASIS
 
-    def compile_html(self, source, dest, is_two_file=False):
+    def compile_html(self, source, dest, is_two_file=True):
         if misaka is None:
             raise Exception('To build this site, you need to install the '
                             '"misaka" package.')

@@ -57,7 +57,7 @@ class CompileMarkdown(PageCompiler):
     extensions = [gist_extension, nikola_extension, podcast_extension]
     site = None
 
-    def compile_html(self, source, dest, is_two_file=False):
+    def compile_html(self, source, dest, is_two_file=True):
         if markdown is None:
             raise Exception('To build this site, you need to install the '
                             '"markdown" package.')

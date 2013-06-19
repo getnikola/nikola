@@ -46,7 +46,7 @@ class CompileTextile(PageCompiler):
 
     name = "txt2tags"
 
-    def compile_html(self, source, dest, is_two_file=False):
+    def compile_html(self, source, dest, is_two_file=True):
         if txt2tags is None:
             raise Exception('To build this site, you need to install the '
                             '"txt2tags" package.')

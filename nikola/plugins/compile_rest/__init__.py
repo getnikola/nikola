@@ -57,7 +57,7 @@ class CompileRest(PageCompiler):
 
     name = "rest"
 
-    def compile_html(self, source, dest, is_two_file=False):
+    def compile_html(self, source, dest, is_two_file=True):
         """Compile reSt into HTML."""
         if not has_docutils:
             raise Exception('To build this site, you need to install the '

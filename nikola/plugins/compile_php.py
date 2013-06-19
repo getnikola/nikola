@@ -38,7 +38,7 @@ class CompilePhp(PageCompiler):
 
     name = "php"
 
-    def compile_html(self, source, dest, is_two_file=False):
+    def compile_html(self, source, dest, is_two_file=True):
         try:
             os.makedirs(os.path.dirname(dest))
         except Exception:

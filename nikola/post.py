@@ -77,7 +77,7 @@ class Post(object):
         self.messages = messages
         self.skip_untranslated = skip_untranslated
         self._template_name = template_name
-        self.is_two_file = False
+        self.is_two_file = True
 
         default_metadata = get_meta(self, file_metadata_regexp)
 
@@ -544,8 +544,8 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
     meta.update(get_metadata_from_meta_file(post.metadata_path, lang))
 
     if meta:
-        post.is_two_file = True
         return meta
+    post.is_two_file = False
 
     if file_metadata_regexp is not None:
         meta.update(_get_metadata_from_filename_by_regex(post.source_path,

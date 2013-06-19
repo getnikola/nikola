@@ -43,7 +43,7 @@ class CompileIPynb(PageCompiler):
 
     name = "ipynb"
 
-    def compile_html(self, source, dest, is_two_file=False):
+    def compile_html(self, source, dest, is_two_file=True):
         if bloggerhtml is None:
             raise Exception('To build this site, you also need '
                             'https://github.com/damianavila/com'

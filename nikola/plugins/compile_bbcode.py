@@ -46,7 +46,7 @@ class CompileTextile(PageCompiler):
         self.parser = bbcode.Parser()
         self.parser.add_simple_formatter("note", "")
 
-    def compile_html(self, source, dest, is_two_file=False):
+    def compile_html(self, source, dest, is_two_file=True):
         if bbcode is None:
             raise Exception('To build this site, you need to install the '
                             '"bbcode" package.')
