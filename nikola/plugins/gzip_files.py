@@ -36,7 +36,7 @@ class GzipFiles(TaskMultiplier):
     name = "gzip"
     is_default = True
 
-    def process(self, task):
+    def process(self, task, prefix):
         if not self.site.config['GZIP_FILES']:
             return []
         if task.get('name') is None:
@@ -45,7 +45,7 @@ class GzipFiles(TaskMultiplier):
             'file_dep': [],
             'targets': [],
             'actions': [],
-            'basename': 'gzip',
+            'basename': '{0}_gzip'.format(prefix),
             'name': task.get('name').split(":", 1)[-1] + '.gz',
             'clean': True,
         }

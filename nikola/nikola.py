@@ -625,11 +625,11 @@ class Nikola(object):
                 yield task
                 for multi in self.plugin_manager.getPluginsOfCategory("TaskMultiplier"):
                     flag = False
-                    for task in multi.plugin_object.process(task):
+                    for task in multi.plugin_object.process(task, name):
                         flag = True
                         yield task
                     if flag:
-                        task_dep.append(multi.plugin_object.name)
+                        task_dep.append('{0}_{1}'.format(name, multi.plugin_object.name))
             if pluginInfo.plugin_object.is_default:
                 task_dep.append(pluginInfo.plugin_object.name)
         yield {
