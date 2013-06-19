@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 MESSAGES = {
     "Also available in": "Također dostupno i u",
     "Archive": "Arhiva",
-    "LANGUAGE": "engleski",
+    "LANGUAGE": "hrvatski",
     "More posts about": "Više postova o",
     "Newer posts": "Noviji postovi",
     "Next post": "Sljedeći post",
@@ -15,7 +15,7 @@ MESSAGES = {
     "Posts for year %s": "Postovi za godinu %s",
     "Posts for {month} {year}": "Postovi za {month} {year}",
     "Previous post": "Prethodni post",
-    "Read in English": "Čitaj na engleskom",
+    "Read in English": "Čitaj na hrvatskom",
     "Read more": "Čitaj dalje",
     "Source": "Izvor",
     "Tags": "Tagovi",
