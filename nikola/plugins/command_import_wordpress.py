@@ -270,7 +270,6 @@ class CommandImportWordpress(Command, ImportMixin):
         # link is something like http://foo.com/2012/09/01/hello-world/
         # So, take the path, utils.slugify it, and that's our slug
         link = get_text_tag(item, 'link', None)
-        #import pdb; pdb.set_trace()
         path = unquote(urlparse(link).path)
 
         # In python 2, path is a str. slug requires a unicode

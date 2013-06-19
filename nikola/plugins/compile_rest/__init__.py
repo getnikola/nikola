@@ -71,7 +71,6 @@ class CompileRest(PageCompiler):
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
                 if not is_two_file:
-                    from doit.tools import set_trace; set_trace()
                     data = data.split('\n\n', 1)[1]
                 output, error_level, deps = rst2html(
                     data, settings_overrides={
