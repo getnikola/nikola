@@ -545,7 +545,6 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
 
     if meta:
         post.is_two_file = True
-        print (meta['title'], post.is_two_file)
         return meta
 
     if file_metadata_regexp is not None:
