@@ -77,6 +77,7 @@ class Post(object):
         self.messages = messages
         self.skip_untranslated = skip_untranslated
         self._template_name = template_name
+        self.is_two_file = False
 
         default_metadata = get_meta(self, file_metadata_regexp)
 
@@ -302,7 +303,15 @@ class Post(object):
             return '.'.join((self.base_path, sorted(self.translated_to)[0]))
 
     def text(self, lang=None, teaser_only=False, strip_html=False):
-        """Read the post file for that language and return its contents."""
+        """Read the post file for that language and return its contents.
+
+        teaser_only=True breaks at the teaser marker and returns only the teaser.
+        strip_html=True removes HTML tags
+        lang=None uses the currently set locale
+
+        All links in the returned HTML will be relative.
+        The HTML returned is a bare fragment, not a full document.
+        """
 
         if lang is None:
             lang = self.current_lang()
@@ -535,6 +544,8 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
     meta.update(get_metadata_from_meta_file(post.metadata_path, lang))
 
     if meta:
+        post.is_two_file = True
+        print (meta['title'], post.is_two_file)
         return meta
 
     if file_metadata_regexp is not None:

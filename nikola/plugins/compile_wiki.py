@@ -22,7 +22,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Implementation of compile_html based on textile."""
+"""Implementation of compile_html based on CreoleWiki."""
 
 import codecs
 import os
@@ -42,7 +42,7 @@ class CompileTextile(PageCompiler):
 
     name = "wiki"
 
-    def compile_html(self, source, dest):
+    def compile_html(self, source, dest, is_two_file=False):
         if creole is None:
             raise Exception('To build this site, you need to install the '
                             '"creole" package.')

@@ -40,7 +40,7 @@ class CompileTextile(PageCompiler):
 
     name = "textile"
 
-    def compile_html(self, source, dest):
+    def compile_html(self, source, dest, is_two_file=False):
         if textile is None:
             raise Exception('To build this site, you need to install the '
                             '"textile" package.')
@@ -51,6 +51,8 @@ class CompileTextile(PageCompiler):
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
+            if not is_two_file:
+                data = data.split('\n\n', 1)[1]
             output = textile(data, head_offset=1)
             out_file.write(output)
 

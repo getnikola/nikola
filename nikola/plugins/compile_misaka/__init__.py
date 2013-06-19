@@ -52,7 +52,7 @@ class CompileMarkdown(PageCompiler):
             self.ext = misaka.EXT_FENCED_CODE | misaka.EXT_STRIKETHROUGH | \
                 misaka.EXT_AUTOLINK | misaka.EXT_NO_INTRA_EMPHASIS
 
-    def compile_html(self, source, dest):
+    def compile_html(self, source, dest, is_two_file=False):
         if misaka is None:
             raise Exception('To build this site, you need to install the '
                             '"misaka" package.')
@@ -63,6 +63,8 @@ class CompileMarkdown(PageCompiler):
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
+            if not is_two_file:
+                data = data.split('\n\n', 1)[1]
             output = misaka.html(data, extensions=self.ext)
             out_file.write(output)
 

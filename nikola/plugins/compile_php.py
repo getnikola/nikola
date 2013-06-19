@@ -22,7 +22,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Implementation of compile_html based on markdown."""
+"""Implementation of compile_html fo HTML+php."""
 
 from __future__ import unicode_literals
 
@@ -36,9 +36,9 @@ from nikola.plugin_categories import PageCompiler
 class CompilePhp(PageCompiler):
     """Compile PHP into PHP."""
 
-    name = "html"
+    name = "php"
 
-    def compile_html(self, source, dest):
+    def compile_html(self, source, dest, is_two_file=False):
         try:
             os.makedirs(os.path.dirname(dest))
         except Exception:

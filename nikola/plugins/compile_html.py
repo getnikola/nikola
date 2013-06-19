@@ -22,7 +22,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Implementation of compile_html based on markdown."""
+"""Implementation of compile_html for HTML source files."""
 
 import os
 import shutil
@@ -36,7 +36,7 @@ class CompileHtml(PageCompiler):
 
     name = "html"
 
-    def compile_html(self, source, dest):
+    def compile_html(self, source, dest, is_two_file=False):
         try:
             os.makedirs(os.path.dirname(dest))
         except Exception:

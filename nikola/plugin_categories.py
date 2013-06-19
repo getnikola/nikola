@@ -165,7 +165,7 @@ class PageCompiler(BasePlugin):
         'description': '',
     }
 
-    def compile_html(self, source, dest):
+    def compile_html(self, source, dest, is_two_file=False):
         """Compile the source, save it on dest."""
         raise NotImplementedError()
 

@@ -244,7 +244,7 @@ class Galleries(Task):
                     'name': index_dst_path,
                     'file_dep': [index_path],
                     'targets': [index_dst_path],
-                    'actions': [(compile_html, [index_path, index_dst_path])],
+                    'actions': [(compile_html, [index_path, index_dst_path, True])],
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
                 }
