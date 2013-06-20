@@ -15,7 +15,7 @@ MESSAGES = {
     "Posts for year %s": "Публикации за %s година",
     "Posts for {month} {year}": "Публикации за {month} {year}",
     "Previous post": "Предишна публикация",
-    "Read in English": "Прочети на Английски",
+    "Read in English": "Прочетете на български",
     "Read more": "Прочети още",
     "Source": "Source",
     "Tags": "Тагове",
