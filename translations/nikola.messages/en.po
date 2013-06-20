@@ -41,6 +41,7 @@ msgstr "old posts page %d"
 msgid "Source"
 msgstr "Source"
 
+#. Here your translation should not say ENglish but the name of your language instead
 msgid "Read in English"
 msgstr "Read in English"
 
