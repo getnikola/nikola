@@ -94,6 +94,10 @@ class DemoBuildTest(EmptyBuildTest):
                 ".. date: 2013/03/06 19:08:15\n"
             )
 
+    def test_index_in_sitemap(self):
+        sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
+        sitemap_data = codecs.open(sitemap_path, "r", "utf8").read()
+        self.assert('<loc>http://nikola.ralsina.com.ar/</loc>' in sitemap_data)
 
 class FuturePostTest(DemoBuildTest):
     """Test a site with future posts."""

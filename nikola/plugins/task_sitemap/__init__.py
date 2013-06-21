@@ -109,9 +109,7 @@ class Sitemap(LateTask):
                     continue  # Totally empty, not on sitemap
                 path = os.path.relpath(root, output)
                 # ignore the current directory.
-                if path == '.':
-                    continue
-                path = path.replace(os.sep, '/') + '/'
+                path = (path.replace(os.sep, '/') + '/').replace('./','')
                 lastmod = get_lastmod(root)
                 loc = urljoin(base_url, base_path + path)
                 if 'index.html' in files:  # Only map folders with indexes
