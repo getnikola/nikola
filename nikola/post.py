@@ -482,7 +482,7 @@ def _get_metadata_from_file(meta_data):
         # and since we are here because it's a 1-file post
         # let's be flexible on what we accept, so, skip empty
         # first lines.
-        if not line and i>0:
+        if not line and i > 0:
             break
         if 'title' not in meta:
             match = re_meta(line, 'title')
