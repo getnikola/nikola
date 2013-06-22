@@ -465,7 +465,7 @@ def _get_metadata_from_file(meta_data):
     'FooBar'
     >>> str(g([".. title: FooBar"])["title"])
     'FooBar'
-    >>> 'title' in g(["",".. title: FooBar"])
+    >>> 'title' in g(["","",".. title: FooBar"])
     False
 
     """
@@ -478,7 +478,11 @@ def _get_metadata_from_file(meta_data):
         string.punctuation)))
 
     for i, line in enumerate(meta_data):
-        if not line:
+        # txt2tags requires an empty line at the beginning
+        # and since we are here because it's a 1-file post
+        # let's be flexible on what we accept, so, skip empty
+        # first lines.
+        if not line and i>0:
             break
         if 'title' not in meta:
             match = re_meta(line, 'title')
