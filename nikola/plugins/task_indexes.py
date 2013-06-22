@@ -81,13 +81,13 @@ class Indexes(Task):
                 if i == 0:  # index.html page
                     context["prevlink"] = None
                     if num_pages > 2:
-                        context["nextlink"] = "index-{0}.html".format(num_pages-2)
+                        context["nextlink"] = "index-{0}.html".format(num_pages - 2)
                     else:
                         context["nextlink"] = None
                 else:  # index-x.html pages
                     if i > 1:
                         context["nextlink"] = "index-{0}.html".format(i - 1)
-                    if i < num_pages -1:
+                    if i < num_pages - 1:
                         context["prevlink"] = "index-{0}.html".format(i + 1)
                 context["permalink"] = self.site.link("index", i, lang)
                 output_name = os.path.join(

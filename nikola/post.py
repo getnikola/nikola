@@ -467,7 +467,6 @@ def _get_metadata_from_file(meta_data):
     'FooBar'
     >>> 'title' in g(["","",".. title: FooBar"])
     False
-    
     >>> 'title' in g(["",".. title: FooBar"])  # for #520
     True
 
