@@ -1,0 +1,10 @@
+[Core]
+Name = asciidoc
+Module = compile_asciidoc
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Compile ASCIIDoc into HTML
+
