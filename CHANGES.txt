@@ -32,6 +32,7 @@ Features
 Bugfixes
 --------
 
+* Flip index pages order (Issue #521)
 * Make txt2tags work again (Issue #520)
 * Updated to latest colorbox
 * Skip metadata when compiling one-file posts (Issue #508)

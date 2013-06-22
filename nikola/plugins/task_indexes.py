@@ -63,31 +63,31 @@ class Indexes(Task):
                 filtered_posts = [x for x in posts if x.is_translation_available(lang)]
             else:
                 filtered_posts = posts
+            lists.append(filtered_posts[:kw["index_display_post_count"]])
             while filtered_posts:
-                lists.append(filtered_posts[:kw["index_display_post_count"]])
-                filtered_posts = filtered_posts[kw["index_display_post_count"]:]
+                lists.append(filtered_posts[-kw["index_display_post_count"]:])
+                filtered_posts = filtered_posts[:-kw["index_display_post_count"]]
             num_pages = len(lists)
             for i, post_list in enumerate(lists):
                 context = {}
                 indexes_title = kw['indexes_title'] or kw['blog_title']
-                if not i:
-                    context["title"] = indexes_title
+                if kw["indexes_pages"]:
+                    indexes_pages = kw["indexes_pages"] % i
                 else:
-                    if kw["indexes_pages"]:
-                        indexes_pages = kw["indexes_pages"] % i
-                    else:
-                        indexes_pages = " (" + \
-                            kw["messages"][lang]["old posts page %d"] % i + ")"
-                    context["title"] = indexes_title + indexes_pages
+                    indexes_pages = " (" + \
+                        kw["messages"][lang]["old posts page %d"] % i + ")"
+                context["title"] = indexes_title + indexes_pages
                 context["prevlink"] = None
                 context["nextlink"] = None
                 context['index_teasers'] = kw['index_teasers']
-                if i > 1:
-                    context["prevlink"] = "index-{0}.html".format(i - 1)
-                if i == 1:
-                    context["prevlink"] = self.site.config["INDEX_FILE"]
-                if i < num_pages - 1:
-                    context["nextlink"] = "index-{0}.html".format(i + 1)
+                if i == 0:  # index.html page
+                    context["prevlink"] = None
+                    context["nextlink"] = "index-{0}.html".format(num_pages-2)
+                else:  # index-x.html pages
+                    if i > 1:
+                        context["nextlink"] = "index-{0}.html".format(i - 1)
+                    if i < num_pages -1:
+                        context["prevlink"] = "index-{0}.html".format(i + 1)
                 context["permalink"] = self.site.link("index", i, lang)
                 output_name = os.path.join(
                     kw['output_folder'], self.site.path("index", i,
