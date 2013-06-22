@@ -57,8 +57,8 @@ class CommandInstallTheme(Command):
             'long': 'url',
             'type': str,
             'help': "URL for the theme repository (default: "
-                    "http://nikola.ralsina.com.ar/themes/index.json)",
-            'default': 'http://nikola.ralsina.com.ar/themes/index.json'
+                    "http://themes.nikola.ralsina.com.ar/themes.json)",
+            'default': 'http://themes.nikola.ralsina.com.ar/themes.json'
         },
     ]
 
