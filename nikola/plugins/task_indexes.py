@@ -82,7 +82,10 @@ class Indexes(Task):
                 context['index_teasers'] = kw['index_teasers']
                 if i == 0:  # index.html page
                     context["prevlink"] = None
-                    context["nextlink"] = "index-{0}.html".format(num_pages-2)
+                    if num_pages > 2:
+                        context["nextlink"] = "index-{0}.html".format(num_pages-2)
+                    else:
+                        context["nextlink"] = None
                 else:  # index-x.html pages
                     if i > 1:
                         context["nextlink"] = "index-{0}.html".format(i - 1)
