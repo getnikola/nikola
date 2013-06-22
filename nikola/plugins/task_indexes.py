@@ -54,8 +54,6 @@ class Indexes(Task):
 
         template_name = "index.tmpl"
         posts = [x for x in self.site.timeline if x.use_in_feeds]
-        if not posts:
-            yield {'basename': 'render_indexes', 'actions': []}
         for lang in kw["translations"]:
             # Split in smaller lists
             lists = []
