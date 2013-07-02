@@ -40,7 +40,9 @@
                     <li>${html_translations()}</li>
                 %endif
                 </%block>
-                <%block name="sourcelink"> </%block>
+                %if not hide_sourcelink:
+                    <%block name="sourcelink"> </%block>
+                %endif
                 </ul>
             </div>
         </div>

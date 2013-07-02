@@ -39,7 +39,9 @@
                     <li>{{ base_helper.html_translations() }}</li>
                 {% endif %}
                 {% endblock %}
+                {% if not hide_sourcelink %}
                 {% block sourcelink %}{% endblock %}
+                {% endif %}
                 </ul>
             </div>
         </div>

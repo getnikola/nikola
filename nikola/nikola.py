@@ -118,6 +118,7 @@ class Nikola(object):
             'GALLERY_PATH': 'galleries',
             'GZIP_FILES': False,
             'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js', '.json'),
+            'HIDE_SOURCELINK': False,
             'HIDE_UNTRANSLATED_POSTS': False,
             'INDEX_DISPLAY_POST_COUNT': 10,
             'INDEX_FILE': 'index.html',
@@ -315,6 +316,8 @@ class Nikola(object):
 
         self.GLOBAL_CONTEXT['twitter_card'] = self.config.get(
             'TWITTER_CARD', {})
+        self.GLOBAL_CONTEXT['hide_sourcelink'] = self.config.get(
+            'HIDE_SOURCELINK')
         self.GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
 
         self.GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))

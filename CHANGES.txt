@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New HIDE_SOURCELINK option (defaults to False)
 * Switched theme repo to http://themes.nikola.ralsina.com.ar (Issue #411)
 * New (untested) ASCIIDoc compiler
 * Display very annoying warning when deploying the nikolademo Disqus account
