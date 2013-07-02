@@ -62,6 +62,7 @@ class Indexes(Task):
             else:
                 filtered_posts = posts
             lists.append(filtered_posts[:kw["index_display_post_count"]])
+            filtered_posts = filtered_posts[kw["index_display_post_count"]:]
             while filtered_posts:
                 lists.append(filtered_posts[-kw["index_display_post_count"]:])
                 filtered_posts = filtered_posts[:-kw["index_display_post_count"]]
@@ -84,7 +85,7 @@ class Indexes(Task):
                 if i == 0:  # index.html page
                     context["prevlink"] = None
                     if num_pages > 2:
-                        context["nextlink"] = "index-{0}.html".format(num_pages - 2)
+                        context["nextlink"] = "index-{0}.html".format(num_pages - 1)
                     else:
                         context["nextlink"] = None
                 else:  # index-x.html pages
