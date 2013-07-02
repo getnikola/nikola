@@ -74,7 +74,10 @@ class Indexes(Task):
                 else:
                     indexes_pages = " (" + \
                         kw["messages"][lang]["old posts page %d"] % i + ")"
-                context["title"] = indexes_title + indexes_pages
+                if i > 0:
+                    context["title"] = indexes_title + indexes_pages
+                else:
+                    context["title"] = indexes_title
                 context["prevlink"] = None
                 context["nextlink"] = None
                 context['index_teasers'] = kw['index_teasers']
