@@ -99,6 +99,7 @@ class DemoBuildTest(EmptyBuildTest):
         sitemap_data = codecs.open(sitemap_path, "r", "utf8").read()
         self.assertTrue('<loc>http://nikola.ralsina.com.ar/</loc>' in sitemap_data)
 
+
 class FuturePostTest(DemoBuildTest):
     """Test a site with future posts."""
 
@@ -268,4 +269,3 @@ class RelativeLinkTest2(DemoBuildTest):
         sitemap_data = codecs.open(sitemap_path, "r", "utf8").read()
         self.assertFalse('<loc>http://nikola.ralsina.com.ar/</loc>' in sitemap_data)
         self.assertTrue('<loc>http://nikola.ralsina.com.ar/blog/</loc>' in sitemap_data)
-

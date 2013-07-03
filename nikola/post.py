@@ -533,7 +533,8 @@ def get_metadata_from_meta_file(path, lang=None):
             meta['description'] = description
 
         return meta
-    elif lang:  
+
+    elif lang:
         # Metadata file doesn't exist, but not default language,
         # So, if default language metadata exists, return that.
         # This makes the 2-file format detection more reliable (Issue #525)
