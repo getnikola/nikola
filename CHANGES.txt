@@ -33,6 +33,7 @@ Features
 Bugfixes
 --------
 
+* Fixed bad interaction between 2-file-format and untranslated posts in multilingual sites (Issue #525)
 * Workaround in site theme for navbar hiding targets
 * Flip index pages order (Issue #521)
 * Make txt2tags work again (Issue #520)
