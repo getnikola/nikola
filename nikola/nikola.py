@@ -323,11 +323,13 @@ class Nikola(object):
         self.GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
         # check if custom css exist and is not empty
-        for files_path in list(self.config['FILES_FOLDERS'].keys()):
-            custom_css_path = os.path.join(files_path, 'assets/css/custom.css')
-            if self.file_exists(custom_css_path, not_empty=True):
-                self.GLOBAL_CONTEXT['has_custom_css'] = True
-                break
+        custom_css_path = utils.get_asset_path(
+            'assets/css/custom.css',
+            self.THEMES,
+            self.config['FILES_FOLDERS']
+        )
+        if custom_css_path and self.file_exists(custom_css_path, not_empty=True):
+            self.GLOBAL_CONTEXT['has_custom_css'] = True
         else:
             self.GLOBAL_CONTEXT['has_custom_css'] = False
 
