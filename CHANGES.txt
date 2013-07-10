@@ -1,5 +1,5 @@
-New in master
-=============
+New in 5.5
+==========
 
 Features
 --------
@@ -9,7 +9,7 @@ Features
 * New (untested) ASCIIDoc compiler
 * Display very annoying warning when deploying the nikolademo Disqus account
 * New Bulgarian translation
-* New man page (created with help2man nikola -N --version-option=version) (Issue #460)
+* New man page (created with help2man nikola -N --version-string=5.5) (Issue #460)
 * Added "nikola version" command (Issue #504)
 * Added more search form examples in conf.py.in (Issue #515)
 * Template dependency support for Jinja (by koniiiik, Issue #511)

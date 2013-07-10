@@ -37,7 +37,7 @@ from doit.cmd_run import Run as DoitRun
 from .nikola import Nikola
 from .utils import _reload, sys_decode
 
-VERSION = "5.4.4"
+VERSION = "5.5"
 
 
 def main(args):
