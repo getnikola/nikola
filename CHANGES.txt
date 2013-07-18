@@ -1,3 +1,11 @@
+New in Master
+=============
+
+Features
+--------
+
+* New mincss command, removes unused and redundant CSS (Issue #364)
+
 New in 5.5
 ==========
 
