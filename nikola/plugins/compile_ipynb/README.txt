@@ -25,7 +25,7 @@ post_pages = (
 
 and 
 
-THEME = 'site-ipython'
+THEME = 'jinja-site-ipython' (or 'xkcd-site-ipython', if you want xkcd styling)
 
 to your conf.py.
 
