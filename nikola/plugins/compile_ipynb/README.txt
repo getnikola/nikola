@@ -4,15 +4,15 @@ To make this work...
 
 $ nikola install_theme -n jinja-site-ipython
 
-(more info here:
-http://nikola.ralsina.com.ar/handbook.html#getting-more-themes).
+(or xkcd-site-ipython, if you want xkcd styling)
+
+More info here about themes:
+http://nikola.ralsina.com.ar/handbook.html#getting-more-themes
 
 OR
 
 You can to download the "jinja-site-ipython" theme from here: 
-
 https://github.com/damianavila/jinja-site-ipython-theme-for-Nikola
-
 and copy the "site-ipython" folder inside the "themes" folder of your site.
 
 
@@ -28,7 +28,6 @@ and
 THEME = 'jinja-site-ipython' (or 'xkcd-site-ipython', if you want xkcd styling)
 
 to your conf.py.
-
 Finally... to use it:
 
 $nikola new_page -f ipynb
@@ -39,9 +38,7 @@ create one metadata file and the corresponding naive IPython notebook.
 $nikola build
 
 And deploy the output folder... to see it locally: $nikola serve
-
 If you have any doubts, just ask: @damianavila
 
 Cheers.
-
 Damián
