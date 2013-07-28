@@ -84,7 +84,7 @@ class Indexes(Task):
                 context['index_teasers'] = kw['index_teasers']
                 if i == 0:  # index.html page
                     context["prevlink"] = None
-                    if num_pages > 2:
+                    if num_pages > 1:
                         context["nextlink"] = "index-{0}.html".format(num_pages - 1)
                     else:
                         context["nextlink"] = None
@@ -93,6 +93,8 @@ class Indexes(Task):
                         context["nextlink"] = "index-{0}.html".format(i - 1)
                     if i < num_pages - 1:
                         context["prevlink"] = "index-{0}.html".format(i + 1)
+                    elif i == num_pages - 1:
+                        context["prevlink"] = "index.html"
                 context["permalink"] = self.site.link("index", i, lang)
                 output_name = os.path.join(
                     kw['output_folder'], self.site.path("index", i,
