@@ -6,6 +6,11 @@ Features
 
 * New mincss command, removes unused and redundant CSS (Issue #364)
 
+Bugfixes
+--------
+
+* Fixed issues with index pages indices (Issue #532)
+
 New in 5.5
 ==========
 
