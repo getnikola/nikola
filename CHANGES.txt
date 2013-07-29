@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Escape HTML in titles (Issue #537)
 * Fixed issues with index pages indices (Issue #532)
 
 New in 5.5

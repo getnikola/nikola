@@ -1,6 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%def name="html_title()">
-    <h1>${title}</h1>
+    <h1>${title|h}</h1>
     % if link:
             <p><a href='${link}'>${messages("Original site")}</a></p>
     % endif
