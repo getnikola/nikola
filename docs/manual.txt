@@ -957,6 +957,29 @@ To create an image slideshow, you can use the ``slides`` directive. For example:
        /galleries/demo/tesla_lightning1_lg.jpg
        /galleries/demo/tesla_tower1_lg.jpg
 
+Chart
+~~~~~
+
+This directive is a thin wrapper around `Pygal <http://pygal.org/>`_ and will produce charts
+as SVG files embedded directly in your pages.
+
+Here's an example of how it works::
+
+            .. chart:: Bar
+               :title: 'Browser usage evolution (in %)' 
+               :x_labels: ["2002", "2003", "2004", "2005", "2006", "2007"]
+            
+               'Firefox', [None, None, 0, 16.6, 25, 31]
+               'Chrome',  [None, None, None, None, None, None]
+               'IE',      [85.8, 84.6, 84.7, 74.5, 66, 58.6]
+               'Others',  [14.2, 15.4, 15.3, 8.9, 9, 10.4]
+
+The argument passed next to the directive (Bar in that example) is the type of chart, and can be one of
+Line, StackedLine, Bar, StackedBar, HorizontalBar, XY, DateY, Pie, Radar, Dot, Funnel, Gauge, Pyramid. For
+examples of what each kind of graph is, `check here <http://pygal.org/chart_types/>`_
+
+It can take *a lot* of options to let you customize the charts (in the example, title and x_labels). 
+You can use any option described in `the pygal docs <http://pygal.org/basic_customizations/>`_
 
 Importing Your Wordpress Site Into Nikola
 -----------------------------------------

@@ -45,6 +45,8 @@ try:
     directives.register_directive('gist', GitHubGist)
     from .soundcloud import SoundCloud
     directives.register_directive('soundcloud', SoundCloud)
+    from .chart import Chart
+    directives.register_directive('chart', Chart)
     has_docutils = True
 except ImportError:
     has_docutils = False

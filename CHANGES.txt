@@ -5,6 +5,7 @@ Features
 --------
 
 * New mincss command, removes unused and redundant CSS (Issue #364)
+* New chart directive based on pygal
 
 Bugfixes
 --------
