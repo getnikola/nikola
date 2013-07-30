@@ -1,5 +1,5 @@
 # coding: utf8
-# Copyright (c) 2012 Roberto Alsina y otros.
+# Copyright © 2012-2013 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
