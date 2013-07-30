@@ -27,7 +27,7 @@
 from __future__ import print_function
 
 from nikola.plugin_categories import Command
-from nikola.main import VERSION
+from nikola import __version__
 
 
 class CommandVersion(Command):
@@ -41,4 +41,4 @@ class CommandVersion(Command):
 
     def _execute(self, options={}, args=None):
         """Print the version number."""
-        print("Nikola version %s" % VERSION)
+        print("Nikola version " + __version__)
