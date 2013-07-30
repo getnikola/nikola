@@ -1,23 +1,34 @@
 To make this work...
 
-1- First, you have to put this plugin in your_site/plugins/ folder.
+1- You can install the "jinja-site-ipython" theme using this command:
 
-2- Then, you have to download the custom nbconvert from here: https://github.com/damianavila/compile_ipynb-for-Nikola.git
-and put it inside your_site/plugins/compile_ipynb/ folder
+$ nikola install_theme -n jinja-site-ipython
 
-3- Also, you have to use the site-ipython theme (or make a new one containing the ipython css, mathjax.js and the proper template).
-You can get it here: https://github.com/damianavila/site-ipython-theme-for-Nikola
+(or xkcd-site-ipython, if you want xkcd styling)
 
-4- Finally, you have to put: 
+More info here about themes:
+http://nikola.ralsina.com.ar/handbook.html#getting-more-themes
+
+OR
+
+You can to download the "jinja-site-ipython" theme from here: 
+https://github.com/damianavila/jinja-site-ipython-theme-for-Nikola
+and copy the "site-ipython" folder inside the "themes" folder of your site.
+
+
+2- Then, just add:
 
 post_pages = (
     ("posts/*.ipynb", "posts", "post.tmpl", True),
     ("stories/*.ipynb", "stories", "story.tmpl", False),
 )
 
-in your conf.py
+and 
 
-Then... to use it:
+THEME = 'jinja-site-ipython' (or 'xkcd-site-ipython', if you want xkcd styling)
+
+to your conf.py.
+Finally... to use it:
 
 $nikola new_page -f ipynb
 
@@ -27,9 +38,7 @@ create one metadata file and the corresponding naive IPython notebook.
 $nikola build
 
 And deploy the output folder... to see it locally: $nikola serve
-
 If you have any doubts, just ask: @damianavila
 
 Cheers.
-
 Damián

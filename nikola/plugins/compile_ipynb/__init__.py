@@ -31,11 +31,11 @@ import codecs
 import os
 
 try:
-    from .nbformat import current as nbformat
-    from .nbconvert.converters import bloggerhtml as nbconverter
-    bloggerhtml = True
+    from IPython.nbconvert.exporters import BasicHTMLExporter
+    from IPython.nbformat import current as nbformat
+    flag = True
 except ImportError:
-    bloggerhtml = None
+    flag = None
 
 from nikola.plugin_categories import PageCompiler
 
@@ -46,21 +46,20 @@ class CompileIPynb(PageCompiler):
     name = "ipynb"
 
     def compile_html(self, source, dest, is_two_file=True):
-        if bloggerhtml is None:
-            raise Exception('To build this site, you also need '
-                            'https://github.com/damianavila/com'
-                            'pile_ipynb-for-Nikola.git.')
+        if flag is None:
+            raise Exception('To build this site, you need '
+                            'to install IPython 1.0.')
         try:
             os.makedirs(os.path.dirname(dest))
         except:
             pass
-        converter = nbconverter.ConverterBloggerHTML()
+        exportHtml = BasicHTMLExporter()
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
-                data = in_file.read()
-                converter.nb = nbformat.reads_json(data)
-            output = converter.convert()
-            out_file.write(output)
+                nb = in_file.read()
+                nb_json = nbformat.reads_json(nb)
+            (body,resources) = exportHtml.from_notebook_node(nb_json)
+            out_file.write(body)
 
     def create_post(self, path, onefile=False, **kw):
         metadata = {}
@@ -80,7 +79,7 @@ class CompileIPynb(PageCompiler):
         with codecs.open(path, "wb+", "utf8") as fd:
             fd.write("""{
  "metadata": {
-  "name": "%s"
+  "name": ""
  },
  "nbformat": 3,
  "nbformat_minor": 0,
@@ -99,4 +98,4 @@ class CompileIPynb(PageCompiler):
    "metadata": {}
   }
  ]
-}""" % kw['slug'])
+}""")
