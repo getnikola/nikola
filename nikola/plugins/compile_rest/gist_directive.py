@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # This file is public domain according to its author, Brian Hsu
 
 from docutils.parsers.rst import Directive, directives

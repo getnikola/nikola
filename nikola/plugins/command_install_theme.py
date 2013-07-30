@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright © 2012-2013 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any

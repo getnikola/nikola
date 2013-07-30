@@ -1,4 +1,5 @@
-# coding: utf8
+# -*- coding: utf-8 -*-
+
 # Copyright © 2012-2013 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
@@ -38,15 +39,15 @@ class Chart(Directive):
 
         Usage:
             .. chart:: Bar
-               :title: 'Browser usage evolution (in %)' 
+               :title: 'Browser usage evolution (in %)'
                :x_labels: ["2002", "2003", "2004", "2005", "2006", "2007"]
-            
+
                'Firefox', [None, None, 0, 16.6, 25, 31]
                'Chrome',  [None, None, None, None, None, None]
                'IE',      [85.8, 84.6, 84.7, 74.5, 66, 58.6]
                'Others',  [14.2, 15.4, 15.3, 8.9, 9, 10.4]
     """
-    
+
     has_content = True
     required_arguments = 1
     option_spec = {
@@ -115,8 +116,8 @@ class Chart(Directive):
         if pygal is None:
             raise Exception("To use the Chart directive you need to install "
                             "the pygal module.")
-            
-            
+
+
         options = {}
         for k,v in self.options.items():
             if k == 'style':
@@ -124,13 +125,13 @@ class Chart(Directive):
                 self.options['style'] = getattr(pygal.style, style_name)
             else:
                 options[k] = literal_eval(v)
-        
+
         chart = getattr(pygal, self.arguments[0])()
         chart.config(**options)
         for line in self.content:
             label, series = literal_eval('({0})'.format(line))
             chart.add(label, series)
-        
+
         return [nodes.raw('', chart.render().decode('utf8'), format='html')]
 
 directives.register_directive('chart', Chart)

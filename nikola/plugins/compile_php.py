@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright © 2012-2013 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
@@ -22,7 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Implementation of compile_html fo HTML+php."""
+"""Implementation of compile_html for HTML+php."""
 
 from __future__ import unicode_literals
 

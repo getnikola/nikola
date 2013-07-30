@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright (c) 2013 Chris Lee
 
 # Permission is hereby granted, free of charge, to any

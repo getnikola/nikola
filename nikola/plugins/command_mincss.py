@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright © 2012-2013 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
@@ -70,4 +72,4 @@ class CommandMincss(Command):
             fname = os.path.basename(inline.href)
             print("===>", inline.href, len(inline.before), len(inline.after))
             with open(css_files[fname], 'wb+') as outf:
-                outf.write(inline.after)            
+                outf.write(inline.after)
