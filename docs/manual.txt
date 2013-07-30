@@ -981,6 +981,10 @@ examples of what each kind of graph is, `check here <http://pygal.org/chart_type
 It can take *a lot* of options to let you customize the charts (in the example, title and x_labels). 
 You can use any option described in `the pygal docs <http://pygal.org/basic_customizations/>`_
 
+Finally, the content of the directive is the actual data, in the form of a label and 
+a list of values, one series per line.
+
+
 Importing Your Wordpress Site Into Nikola
 -----------------------------------------
 

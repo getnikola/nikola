@@ -115,9 +115,15 @@ class Chart(Directive):
         if pygal is None:
             raise Exception("To use the Chart directive you need to install "
                             "the pygal module.")
+            
+            
         options = {}
         for k,v in self.options.items():
-            options[k] = literal_eval(v)
+            if k == 'style':
+                style_name = self.options['style']
+                self.options['style'] = getattr(pygal.style, style_name)
+            else:
+                options[k] = literal_eval(v)
         
         chart = getattr(pygal, self.arguments[0])()
         chart.config(**options)
