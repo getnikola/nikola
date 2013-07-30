@@ -35,10 +35,10 @@ from doit.doit_cmd import DoitMain
 from doit.cmd_help import Help as DoitHelp
 from doit.cmd_run import Run as DoitRun
 
+from . import __version__
 from .nikola import Nikola
 from .utils import _reload, sys_decode
 
-VERSION = "5.5"
 
 
 def main(args):
@@ -128,4 +128,4 @@ class DoitNikola(DoitMain):
 
     @staticmethod
     def print_version():
-        print("Nikola version %s" % VERSION)
+        print("Nikola version " + __version__)

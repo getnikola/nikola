@@ -28,6 +28,7 @@ from __future__ import print_function, unicode_literals
 
 import os
 
+from nikola import __version__
 from nikola.plugin_categories import Command
 
 
@@ -36,6 +37,8 @@ class Console(Command):
     name = "console"
     shells = ['ipython', 'bpython', 'plain']
     doc_purpose = "Start an interactive python console with access to your site and configuration."
+    header = "Nikola v" + __version__ + " -- {0} Console (conf = configuration, SITE = site engine)"
+
 
     def ipython(self):
         """IPython shell."""
@@ -48,8 +51,7 @@ class Console(Command):
             import IPython
             SITE = Nikola(**conf.__dict__)
             SITE.scan_posts()
-            IPython.embed(header='Nikola Console (conf = configuration, SITE '
-                          '= site engine)')
+            IPython.embed(header=self.header.format('IPython'))
 
     def bpython(self):
         """bpython shell."""
@@ -63,8 +65,7 @@ class Console(Command):
             SITE = Nikola(**conf.__dict__)
             SITE.scan_posts()
             gl = {'conf': conf, 'SITE': SITE, 'Nikola': Nikola}
-            bpython.embed(banner='Nikola Console (conf = configuration, SITE '
-                          '= site engine)', locals_=gl)
+            bpython.embed(banner=self.header.format('bpython'), locals_=gl)
 
     def plain(self):
         """Plain Python shell."""
@@ -94,8 +95,7 @@ class Console(Command):
                 except NameError:
                     pass
 
-            code.interact(local=gl, banner='Nikola Console (conf = '
-                          'configuration, SITE = site engine)')
+            code.interact(local=gl, banner=self.header.format('Python'))
 
     def _execute(self, options, args):
         """Start the console."""
