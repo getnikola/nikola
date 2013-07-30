@@ -6,6 +6,7 @@ Features
 
 * New mincss command, removes unused and redundant CSS (Issue #364)
 * New chart directive based on pygal
+* Update of IPython plugin to work with the upcoming IPython 1.0
 
 Bugfixes
 --------
