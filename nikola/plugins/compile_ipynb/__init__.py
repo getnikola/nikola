@@ -31,7 +31,7 @@ import codecs
 import os
 
 try:
-    from IPython.nbconvert.exporters import BasicHTMLExporter
+    from IPython.nbconvert.exporters import HTMLExporter
     from IPython.nbformat import current as nbformat
     flag = True
 except ImportError:
@@ -53,7 +53,8 @@ class CompileIPynb(PageCompiler):
             os.makedirs(os.path.dirname(dest))
         except:
             pass
-        exportHtml = BasicHTMLExporter()
+        HTMLExporter.default_template = 'basic'
+        exportHtml = HTMLExporter()
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
                 nb = in_file.read()
