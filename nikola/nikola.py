@@ -676,7 +676,7 @@ class Nikola(object):
                         full_list.append(orig_name)
                 # We eliminate from the list the files inside any .ipynb folder
                 full_list = [p for p in full_list \
-                        if not ".ipynb_checkpoints" in p.split("/")]
+                        if not any([x.startswith('.') for x in p.split(os.sep)])]
 
                 for base_path in full_list:
                     post = Post(
