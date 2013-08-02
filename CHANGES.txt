@@ -11,11 +11,12 @@ Features
 Bugfixes
 --------
 
+* Fixed installation under pip 1.4 or later (need to specify pytz version)
 * Moved the sample site to the new one-file format (Issue #542)
 * Escape HTML in titles (Issue #537)
 * Fixed issues with index pages indices (Issue #532)
 * Fixed IPython plugin to work with the latest IPython.nbconvert machinery
-* Fixed failing build because of hidden folders and files inside post folder 
+* Fixed failing build because of hidden folders and files inside post folder
 
 New in 5.5
 ==========
