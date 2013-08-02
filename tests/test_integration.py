@@ -243,6 +243,8 @@ class RelativeLinkTest2(DemoBuildTest):
             data = inf.read()
             data = data.replace('("stories/*.txt", "stories", "story.tmpl", False),',
                                 '("stories/*.txt", "", "story.tmpl", False),')
+            data = data.replace('("stories/*.rst", "stories", "story.tmpl", False),',
+                                '("stories/*.rst", "", "story.tmpl", False),')
             data = data.replace('# INDEX_PATH = ""',
                                 'INDEX_PATH = "blog"')
         with codecs.open(conf_path, "wb+", "utf8") as outf:
