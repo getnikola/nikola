@@ -1,3 +1,10 @@
+.. title: Creating a Theme
+.. slug: creating-a-theme
+.. date: 2012/03/13 12:00
+.. tags: 
+.. link: 
+.. description: 
+
 Creating A Theme From Scratch (Almost)
 ======================================
 

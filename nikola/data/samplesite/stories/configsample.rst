@@ -1,3 +1,10 @@
+.. title: Sample Nikola Config File
+.. slug: sampleconfig
+.. date: 2012/03/30 23:00
+.. tags: 
+.. link: 
+.. description: 
+
 .. code-block:: python
 
     #!/usr/bin/env python

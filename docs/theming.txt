@@ -1,3 +1,10 @@
+.. title: Theming Nikola
+.. slug: theming
+.. date: 2012/03/13 12:00
+.. tags: 
+.. link: 
+.. description: 
+
 Theming Nikola
 ==============
 

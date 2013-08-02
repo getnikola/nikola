@@ -1,3 +1,10 @@
+.. title: The Nikola Handbook
+.. slug: handbook
+.. date: 2012/03/30 23:00
+.. tags: 
+.. link: 
+.. description: 
+
 The Nikola Handbook
 ===================
 

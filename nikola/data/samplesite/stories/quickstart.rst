@@ -1,3 +1,10 @@
+.. title: A reStructuredText Primer
+.. slug: quickstart
+.. date: 2012/03/30 23:00
+.. tags: 
+.. link: 
+.. description: 
+
 A ReStructuredText Primer
 =========================
 

@@ -1,3 +1,10 @@
+.. title: A reStructuredText Reference
+.. slug: quickref
+.. date: 2012/03/30 23:00
+.. tags: 
+.. link: 
+.. description: 
+
 .. raw:: html
 
         <div class="alert alert-info pull-right" style="margin-left: 2em;">

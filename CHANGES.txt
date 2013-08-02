@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Moved the sample site to the new one-file format (Issue #542)
 * Escape HTML in titles (Issue #537)
 * Fixed issues with index pages indices (Issue #532)
 * Fixed IPython plugin to work with the latest IPython.nbconvert machinery
