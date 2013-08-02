@@ -63,7 +63,9 @@ class CommandInit(Command):
 
         'POST_PAGES': """(
     ("posts/*.txt", "posts", "post.tmpl", True),
+    ("posts/*.rst", "posts", "post.tmpl", True),
     ("stories/*.txt", "stories", "story.tmpl", False),
+    ("stories/*.rst", "stories", "story.tmpl", False),
 )""",
 
         'POST_COMPILERS': """{
