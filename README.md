@@ -22,7 +22,7 @@ It has many features, but here are some of the nicer ones:
 * Flexible, extensible via plugins
 * Small codebase (programmers can understand all of Nikola core in a day)
 * [reStructuredText](http://nikola.ralsina.com.ar/quickstart.html) or Markdown as input language (also Wiki, BBCode, Textile, and HTML)
-* Easy `image galleries </galleries/demo/>`_ (just drop files in a folder!)
+* Easy [image galleries](http://nikola.ralsina.com.ar/galleries/demo/) (just drop files in a folder!)
 * Syntax highlighting for almost any programming language or markup
 * Multilingual sites, [translated to 13 languages.](https://www.transifex.com/projects/p/nikola/)
 * Doesn't reinvent wheels, leverages existing tools.
