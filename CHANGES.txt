@@ -12,6 +12,9 @@ Features
 Bugfixes
 --------
 
+* Revamped ``requirements.txt`` — now ``requirements.txt`` contains the
+  required dependencies and ``requirements-full.txt`` contains the
+  optional ones (Issue #547)
 * Fixed bug in example usage of install_theme.
 * Better help text for bootswatch command.
 * Fixed installation under pip 1.4 or later (pytz and yapsy versions must be
