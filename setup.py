@@ -38,7 +38,7 @@ dependencies = [
     'mako>=0.6',
     'unidecode',
     'lxml',
-    'yapsy',
+    'yapsy==1.10.2-pythons2n3',
     'PyRSS2Gen',
     'pytz==2013b',
 ]
