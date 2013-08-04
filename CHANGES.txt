@@ -13,7 +13,7 @@ Bugfixes
 
 * Fixed bug in example usage of install_theme.
 * Better help text for bootswatch command.
-* Fixed installation under pip 1.4 or later (need to specify pytz version)
+* Fixed installation under pip 1.4 or later (pytz version must be hardcoded)
 * Added .rst to the default reStructuredText extensions (via Issue #542)
 * Moved the sample site to the new one-file format (Issue #542)
 * Escape HTML in titles (Issue #537)
