@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Fixed bug in example usage of install_theme.
 * Better help text for bootswatch command.
 * Fixed installation under pip 1.4 or later (need to specify pytz version)
 * Added .rst to the default reStructuredText extensions (via Issue #542)

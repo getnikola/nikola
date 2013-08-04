@@ -687,8 +687,8 @@ it available for download. Nikola has a builtin theme download/install mechanism
     blogtxt
     readable
 
-    $ nikola install_theme -n blogtxt
-    Downloading: http://nikola.ralsina.com.ar/themes/blogtxt.zip
+    $ nikola install_theme blogtxt
+    Downloading: http://themes.nikola.ralsina.com.ar/themes/blogtxt.zip
     Extracting: blogtxt into themes
 
 And there you are, you now have themes/blogtxt installed. It's very rudimentary, but it
