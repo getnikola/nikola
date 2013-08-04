@@ -36,11 +36,11 @@ from nikola.plugin_categories import Command
 
 
 class CommandBootswatchTheme(Command):
-    """Given a swatch name and a parent theme, creates a custom theme."""
+    """Given a swatch name from bootswatch.com and a parent theme, creates a custom theme."""
 
     name = "bootswatch_theme"
     doc_usage = "[options]"
-    doc_purpose = "Given a swatch name and a parent theme, creates a custom"\
+    doc_purpose = "Given a swatch name from bootswatch.com and a parent theme, creates a custom"\
         " theme."
     cmd_options = [
         {
