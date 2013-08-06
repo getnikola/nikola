@@ -25,8 +25,10 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function, unicode_literals
-import sys
 from operator import attrgetter
+import os
+import sys
+import warnings
 
 from doit.loader import generate_tasks
 from doit.cmd_base import TaskLoader
@@ -46,7 +48,9 @@ def main(args):
         import conf
         _reload(conf)
         config = conf.__dict__
-    except ImportError:
+    except (ImportError, NameError):
+        if os.path.exists('conf.py'):
+            warnings.warn('Error loading conf.py')
         config = {}
 
     site = Nikola(**config)
