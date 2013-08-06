@@ -50,7 +50,7 @@ def main(args):
         config = {}
 
     site = Nikola(**config)
-    sys.exit(DoitNikola(site).run(args))
+    return DoitNikola(site).run(args)
 
 
 class Help(DoitHelp):
