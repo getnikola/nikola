@@ -46,6 +46,7 @@ class RenderRSS(Task):
             "output_folder": self.site.config["OUTPUT_FOLDER"],
             "rss_teasers": self.site.config["RSS_TEASERS"],
             "hide_untranslated_posts": self.site.config['HIDE_UNTRANSLATED_POSTS'],
+            "feed_length": self.site.config['FEED_LENGTH'],
         }
         self.site.scan_posts()
         for lang in kw["translations"]:
@@ -67,7 +68,7 @@ class RenderRSS(Task):
                 'actions': [(utils.generic_rss_renderer,
                             (lang, kw["blog_title"], kw["site_url"],
                              kw["blog_description"], posts, output_name,
-                             kw["rss_teasers"]))],
+                             kw["rss_teasers"], kw['feed_length']))],
                 'task_dep': ['render_posts'],
                 'clean': True,
                 'uptodate': [utils.config_changed(kw)],

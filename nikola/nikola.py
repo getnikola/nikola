@@ -113,6 +113,7 @@ class Nikola(object):
             'ENABLED_EXTRAS': (),
             'EXTRA_HEAD_DATA': '',
             'FAVICONS': {},
+            'FEED_LENGTH': 10,
             'FILE_METADATA_REGEXP': None,
             'FILES_FOLDERS': {'files': ''},
             'FILTERS': {},
