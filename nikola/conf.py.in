@@ -395,14 +395,14 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 #<!-- End of custom search -->
 #""" % SITE_URL
 
-# Also, there is a local search plugin you can use, based on Tipue, but it requires setting several 
+# Also, there is a local search plugin you can use, based on Tipue, but it requires setting several
 # options:
 
 # SEARCH_FORM = """
 # <span class="navbar-form pull-left">
 # <input type="text" id="tipue_search_input">
 # </span>"""
-# 
+#
 # ANALYTICS = """
 # <script type="text/javascript" src="/assets/js/tipuesearch_set.js"></script>
 # <script type="text/javascript" src="/assets/js/tipuesearch.js"></script>
