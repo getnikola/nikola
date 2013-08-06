@@ -188,12 +188,6 @@ class Nikola(object):
                                                       {self.config['DEFAULT_'
                                                       'LANG']: ''})
 
-        self.THEMES = utils.get_theme_chain(self.config['THEME'])
-
-        self.MESSAGES = utils.load_messages(self.THEMES,
-                                            self.config['TRANSLATIONS'],
-                                            self.config['DEFAULT_LANG'])
-
         # SITE_URL is required, but if the deprecated BLOG_URL
         # is available, use it and warn
         if 'SITE_URL' not in self.config:
@@ -275,6 +269,7 @@ class Nikola(object):
         self.GLOBAL_CONTEXT = {
         }
 
+        # FIXME: delay initialization of messages (Issue #550)
         self.GLOBAL_CONTEXT['messages'] = self.MESSAGES
         self.GLOBAL_CONTEXT['_link'] = self.link
         self.GLOBAL_CONTEXT['set_locale'] = s_l
@@ -324,6 +319,7 @@ class Nikola(object):
 
         self.GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
+        # FIXME: delay initialization of custom_css (Issue #550)
         # check if custom css exist and is not empty
         custom_css_path = utils.get_asset_path(
             'assets/css/custom.css',
@@ -335,6 +331,7 @@ class Nikola(object):
         else:
             self.GLOBAL_CONTEXT['has_custom_css'] = False
 
+        # FIXME: delay initialization of template system (Issue #550)        
         # Load template plugin
         template_sys_name = utils.get_template_engine(self.THEMES)
         pi = self.plugin_manager.getPluginByName(
@@ -349,6 +346,7 @@ class Nikola(object):
         self.template_system.set_directories(lookup_dirs,
                                              self.config['CACHE_FOLDER'])
 
+        # FIXME: delay this warning (Issue #550)
         # Check consistency of USE_CDN and the current THEME (Issue #386)
         if self.config['USE_CDN']:
             bootstrap_path = utils.get_asset_path(os.path.join(
@@ -364,6 +362,18 @@ class Nikola(object):
                 "PageCompiler"):
             self.compilers[plugin_info.name] = \
                 plugin_info.plugin_object
+
+    def _get_themes(self):
+        return utils.get_theme_chain(self.config['THEME'])
+    
+    THEMES = property(_get_themes)
+    
+    def _get_messages(self):
+        return utils.load_messages(self.THEMES,
+                                   self.translations,
+                                   self.default_lang)
+
+    MESSAGES = property(_get_messages)
 
     def get_compiler(self, source_name):
         """Get the correct compiler for a post from `conf.post_compilers`
