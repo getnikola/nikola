@@ -148,4 +148,3 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
         # end no-cache patch
         self.end_headers()
         return f
-

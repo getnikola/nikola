@@ -34,6 +34,7 @@ try:
 except ImportError:
     pygal = None  # NOQA
 
+
 class Chart(Directive):
     """ Restructured text extension for inserting charts as SVG
 
@@ -111,15 +112,12 @@ class Chart(Directive):
         "zero": directives.unchanged,
     }
 
-
     def run(self):
         if pygal is None:
             raise Exception("To use the Chart directive you need to install "
                             "the pygal module.")
-
-
         options = {}
-        for k,v in self.options.items():
+        for k, v in self.options.items():
             if k == 'style':
                 style_name = self.options['style']
                 self.options['style'] = getattr(pygal.style, style_name)

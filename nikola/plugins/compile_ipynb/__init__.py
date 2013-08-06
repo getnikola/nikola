@@ -59,7 +59,7 @@ class CompileIPynb(PageCompiler):
             with codecs.open(source, "r", "utf8") as in_file:
                 nb = in_file.read()
                 nb_json = nbformat.reads_json(nb)
-            (body,resources) = exportHtml.from_notebook_node(nb_json)
+            (body, resources) = exportHtml.from_notebook_node(nb_json)
             out_file.write(body)
 
     def create_post(self, path, onefile=False, **kw):
