@@ -88,6 +88,8 @@ class Nikola(object):
         self.timeline = []
         self.pages = []
         self._scanned = False
+        self._template_system = None
+        self._THEMES = None
         if not config:
             self.configured = False
         else:
@@ -316,29 +318,6 @@ class Nikola(object):
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
-        # FIXME: delay initialization of template system (Issue #550)        
-        # Load template plugin
-        template_sys_name = utils.get_template_engine(self.THEMES)
-        pi = self.plugin_manager.getPluginByName(
-            template_sys_name, "TemplateSystem")
-        if pi is None:
-            sys.stderr.write("Error loading {0} template system "
-                             "plugin\n".format(template_sys_name))
-            sys.exit(1)
-        self.template_system = pi.plugin_object
-        lookup_dirs = ['templates'] + [os.path.join(utils.get_theme_path(name), "templates")
-                                       for name in self.THEMES]
-        self.template_system.set_directories(lookup_dirs,
-                                             self.config['CACHE_FOLDER'])
-
-        # FIXME: delay this warning (Issue #550)
-        # Check consistency of USE_CDN and the current THEME (Issue #386)
-        if self.config['USE_CDN']:
-            bootstrap_path = utils.get_asset_path(os.path.join(
-                'assets', 'css', 'bootstrap.min.css'), self.THEMES)
-            if bootstrap_path.split(os.sep)[-4] != 'site':
-                warnings.warn('The USE_CDN option may be incompatible with your theme, because it uses a hosted version of bootstrap.')
-
         # Load compiler plugins
         self.compilers = {}
         self.inverse_compilers = {}
@@ -349,7 +328,16 @@ class Nikola(object):
                 plugin_info.plugin_object
 
     def _get_themes(self):
-        return utils.get_theme_chain(self.config['THEME'])
+        if self._THEMES == None:
+            self._THEMES = utils.get_theme_chain(self.config['THEME'])
+            # Check consistency of USE_CDN and the current THEME (Issue #386)
+            if self.config['USE_CDN']:
+                bootstrap_path = utils.get_asset_path(os.path.join(
+                    'assets', 'css', 'bootstrap.min.css'), self._THEMES)
+                if bootstrap_path.split(os.sep)[-4] != 'site':
+                    warnings.warn('The USE_CDN option may be incompatible with your theme, because it uses a hosted version of bootstrap.')
+            
+        return self._THEMES
     
     THEMES = property(_get_themes)
     
@@ -375,10 +363,29 @@ class Nikola(object):
                 self._GLOBAL_CONTEXT['has_custom_css'] = True
             else:
                 self._GLOBAL_CONTEXT['has_custom_css'] = False
-                
+
         return self._GLOBAL_CONTEXT
     
     GLOBAL_CONTEXT = property(_get_global_context)
+    
+    def _get_template_system(self):
+        if self._template_system == None:
+            # Load template plugin
+            template_sys_name = utils.get_template_engine(self.THEMES)
+            pi = self.plugin_manager.getPluginByName(
+                template_sys_name, "TemplateSystem")
+            if pi is None:
+                sys.stderr.write("Error loading {0} template system "
+                                "plugin\n".format(template_sys_name))
+                sys.exit(1)
+            self._template_system = pi.plugin_object
+            lookup_dirs = ['templates'] + [os.path.join(utils.get_theme_path(name), "templates")
+                                        for name in self.THEMES]
+            self._template_system.set_directories(lookup_dirs,
+                                                self.config['CACHE_FOLDER'])            
+        return self._template_system
+
+    template_system = property(_get_template_system)
 
     def get_compiler(self, source_name):
         """Get the correct compiler for a post from `conf.post_compilers`
