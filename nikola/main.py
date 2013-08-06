@@ -50,7 +50,7 @@ def main(args):
         config = {}
 
     site = Nikola(**config)
-    return DoitNikola(site).run(args)
+    sys.exit(DoitNikola(site).run(args))
 
 
 class Help(DoitHelp):
@@ -123,7 +123,7 @@ class DoitNikola(DoitMain):
                 print("This command needs to run inside an "
                       "existing Nikola site.")
                 return False
-        super(DoitNikola, self).run(cmd_args)
+        return super(DoitNikola, self).run(cmd_args)
 
     @staticmethod
     def print_version():
