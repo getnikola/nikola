@@ -13,6 +13,7 @@ Features
 Bugfixes
 --------
 
+* Mark bundles as "cleanable" (Issue #558)
 * Made ``nikola help`` much more resilient against broken conf.py (Issue #550)
 * Show docinfo part of docutils output (Issue #556)
 * Exit with error code when there is an error (Issue #543)

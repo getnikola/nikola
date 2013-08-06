@@ -93,7 +93,8 @@ class BuildBundles(LateTask):
                     'name': str(output_path),
                     'actions': [(build_bundle, (name, files))],
                     'targets': [output_path],
-                    'uptodate': [utils.config_changed(kw)]
+                    'uptodate': [utils.config_changed(kw)],
+                    'clean': True,
                 }
                 flag = True
                 yield utils.apply_filters(task, kw['filters'])
