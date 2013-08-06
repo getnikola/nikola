@@ -40,7 +40,6 @@ from .nikola import Nikola
 from .utils import _reload, sys_decode
 
 
-
 def main(args):
     sys.path.append('')
     try:

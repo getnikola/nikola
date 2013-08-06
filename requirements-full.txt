@@ -8,3 +8,8 @@ lxml
 yapsy==1.10.2-pythons2n3
 PyRSS2Gen
 pytz==2013b
+mock>=1.0.0
+requests>=1.0
+markdown
+Jinja2
+bbcode

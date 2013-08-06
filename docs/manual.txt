@@ -203,21 +203,23 @@ Longer version:
 #. Get `Nikola <http://nikola.ralsina.com.ar/>`_
 #. Install dependencies. To do that, either:
 
-   #. ``pip install -r requirements.txt`` and ``pip install .`` or...
+   #. ``pip install -r requirements.txt`` (or ``requirements-full.txt`` for extra stuff) and ``pip install .`` or...
    #. Install your distribution's packages for all the things
       mentioned below, if they exist, or...
    #. Get all of these manually (but why?, use pip):
 
-      #. Get python, if you don't have it.
+      #. Get Python, if you don't have it.
       #. Get `doit <http://pydoit.org>`_
       #. Get `docutils <http://docutils.sf.net>`_
       #. Get `Mako <http://makotemplates.org>`_
-      #. Get `PIL <http://www.pythonware.com/products/pil/>`_ (or Pillow)
+      #. Get `Pillow <http://python-imaging.github.io/>`_
       #. Get `Pygments <http://pygments.org/>`_
       #. Get `unidecode <http://pypi.python.org/pypi/Unidecode/>`_
       #. Get `lxml <http://lxml.de/>`_
       #. Get `yapsy <http://yapsy.sourceforge.net>`_
-      #. Get `configparser <http://pypi.python.org/pypi/configparser/3.2.0r3>`_
+      #. Get `PyRSS2Gen <http://www.dalkescientific.com/Python/PyRSS2Gen.html>`_
+      #. Get `pytz <http://pytz.sourceforge.net/>`_
+      #. If using Python 2, get `configparser <http://pypi.python.org/pypi/configparser/3.2.0r3>`_
 
 #. run ``python setup.py install``
 

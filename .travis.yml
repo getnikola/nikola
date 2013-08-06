@@ -4,7 +4,7 @@ python:
   - "2.7"
   - "3.3"
 install:
-  - "pip install -r requirements.txt --use-mirrors"
+  - "pip install -r requirements-full.txt --use-mirrors"
   - "pip install flake8 --use-mirrors"
   - "pip install . --use-mirrors"
 # We run tests and afterwards nikola to see if the command is executable.
