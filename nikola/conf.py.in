@@ -145,6 +145,9 @@ post_compilers = ${POST_COMPILERS}
 # output / TRANSLATION[lang] / RSS_PATH / rss.xml
 # RSS_PATH = ""
 
+# Number of posts in RSS feeds
+# FEED_LENGTH = 10
+
 # Slug the Tag URL easier for users to type, special characters are
 # often removed or replaced as well.
 # SLUG_TAG_PATH = True
