@@ -118,8 +118,8 @@ Security
     A smaller software stack implies less security risk.
 
 Obsolescense
-    If you create a site using (for example) Wordpress, what happens when Wordpress
-    releases a new version? You have to update your Wordpress. That is not optional,
+    If you create a site using (for example) WordPress, what happens when WordPress
+    releases a new version? You have to update your WordPress. That is not optional,
     because of security and support issues. If I release a new version of Nikola, and
     you don't update, *nothing* happens. You can continue to use the version you
     have now forever, no problems.
@@ -327,7 +327,7 @@ Nikola also has other commands besides ``build``::
       nikola ignore               ignore task (skip) on subsequent runs
       nikola import_blogger       import a blogger dump
       nikola import_feed          import a RSS/Atom dump
-      nikola import_wordpress     import a wordpress dump
+      nikola import_wordpress     import a WordPress dump
       nikola init                 create a Nikola site in the specified folder
       nikola install_theme        install theme into current site
       nikola list                 list tasks from dodo file
@@ -898,7 +898,7 @@ Soundcloud
 
 This directive lets you share music from http://soundcloud.com You first need to get the
 ID for the piece, which you can find in the "share" link. For example, if the
-Wordpress code starts like this::
+WordPress code starts like this::
 
     [soundcloud url="http://api.soundcloud.com/tracks/78131362"
 
@@ -998,16 +998,16 @@ Finally, the content of the directive is the actual data, in the form of a label
 a list of values, one series per line.
 
 
-Importing Your Wordpress Site Into Nikola
+Importing Your WordPress Site Into Nikola
 -----------------------------------------
 
-If you like Nikola, and want to start using it, but you have a Wordpress blog, Nikola
+If you like Nikola, and want to start using it, but you have a WordPress blog, Nikola
 supports importing it. Here's the steps to do it:
 
 1) Get a XML dump of your site [#]_
 2) nikola import_wordpress mysite.wordpress.2012-12-20.xml
 
-After some time, this will crate a ``new_site`` folder with all your data. It currently supports
+After some time, this will create a ``new_site`` folder with all your data. It currently supports
 the following:
 
 * All your posts and pages
@@ -1020,7 +1020,7 @@ the following:
   This is also useful for Disqus thread migration!
 
 * Will try to convert the content of your posts. This is *not* error free, because
-  wordpress uses some unholy  mix of HTML and strange things. Currently we are treating it
+  WordPress uses some unholy  mix of HTML and strange things. Currently we are treating it
   as markdown, which does a reasonabe job of it.
 
   You will find your old posts in ``new_site/posts/post-title.wp`` in case you need to fix
@@ -1033,7 +1033,7 @@ about it.
 .. [#] The dump needs to be in 1.2 format. You can check by reading it, it should say
        ``xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"`` near the top of the
        file. If it says ``1.1`` instead of ``1.2`` you will have to update your
-       wordpress before dumping.
+       WordPress before dumping.
 
        Other versions may or may not work.
 

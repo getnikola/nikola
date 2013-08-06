@@ -46,12 +46,12 @@ from nikola.plugins.basic_import import ImportMixin, links
 
 
 class CommandImportWordpress(Command, ImportMixin):
-    """Import a wordpress dump."""
+    """Import a WordPress dump."""
 
     name = "import_wordpress"
     needs_config = False
     doc_usage = "[options] wordpress_export_file"
-    doc_purpose = "import a wordpress dump"
+    doc_purpose = "import a WordPress dump"
     cmd_options = ImportMixin.cmd_options + [
         {
             'name': 'exclude_drafts',
@@ -78,7 +78,7 @@ class CommandImportWordpress(Command, ImportMixin):
     ]
 
     def _execute(self, options={}, args=[]):
-        """Import a Wordpress blog from an export file into a Nikola site."""
+        """Import a WordPress blog from an export file into a Nikola site."""
         # Parse the data
         if requests is None:
             print('To use the import_wordpress command,'
