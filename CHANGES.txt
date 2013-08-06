@@ -13,6 +13,7 @@ Features
 Bugfixes
 --------
 
+* Show docinfo part of docutils output (Issue #556)
 * Exit with error code when there is an error (Issue #543)
 * Revamped ``requirements.txt`` — now ``requirements.txt`` contains the
   required dependencies and ``requirements-full.txt`` contains the

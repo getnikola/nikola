@@ -63,6 +63,7 @@ class CompileRest(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         """Compile reSt into HTML."""
+        
         if not has_docutils:
             raise Exception('To build this site, you need to install the '
                             '"docutils" package.')
@@ -141,4 +142,5 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
         settings_overrides=settings_overrides,
         config_section=config_section,
         enable_exit_status=enable_exit_status)
-    return pub.writer.parts['fragment'], pub.document.reporter.max_level, pub.settings.record_dependencies
+    
+    return pub.writer.parts['docinfo'] + pub.writer.parts['fragment'], pub.document.reporter.max_level, pub.settings.record_dependencies
