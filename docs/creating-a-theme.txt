@@ -13,7 +13,7 @@ to explain it. So, here it is. I'll explain how to create a theme (almost) from 
 you can take an existing theme and modify only parts of it via inheritance, but that's for another
 document.
 
-I will try to create a theme that looks like `Vinicius Massuchetto's Monospace Theme <http://vinicius.soylocoporti.org.br/monospace-wordpress-theme/#.UN4e9lLzu3c>`_.
+I will try to create a theme that looks like `Vinicius Massuchetto's Monospace Theme <http://wordpress.org/themes/monospace>`_.
 
 .. TEASER_END
 
