@@ -49,7 +49,7 @@ class ImportMixin(object):
     name = "import_mixin"
     needs_config = False
     doc_usage = "[options] wordpress_export_file"
-    doc_purpose = "Import a wordpress dump."
+    doc_purpose = "import a wordpress dump."
     cmd_options = [
         {
             'name': 'output_folder',

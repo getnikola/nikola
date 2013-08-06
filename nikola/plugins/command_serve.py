@@ -41,7 +41,7 @@ class CommandBuild(Command):
 
     name = "serve"
     doc_usage = "[options]"
-    doc_purpose = "Start the test webserver."
+    doc_purpose = "start the test webserver"
 
     cmd_options = (
         {

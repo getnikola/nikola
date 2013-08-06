@@ -1,9 +1,9 @@
 .. title: The Nikola Handbook
 .. slug: handbook
 .. date: 2012/03/30 23:00
-.. tags: 
-.. link: 
-.. description: 
+.. tags:
+.. link:
+.. description:
 
 The Nikola Handbook
 ===================
@@ -314,30 +314,34 @@ Nikola also has other commands besides ``build``::
     $ nikola help
     Nikola
     Available commands:
-      nikola auto            automatically execute tasks when a dependency changes
-      nikola bootswatch_theme                Given a swatch name and a parent theme, creates a custom theme.
-      nikola build           run tasks
-      nikola check           Check links and files in the generated site.
-      nikola clean           clean action / remove targets
-      nikola console                 A short explanation.
-      nikola deploy                  Deploy the site.
-      nikola dumpdb                  dump dependency DB
-      nikola forget                  clear successful run status from internal DB
-      nikola help            show help
-      nikola ignore                  ignore task (skip) on subsequent runs
-      nikola import_blogger                  Import a blogger dump.
-      nikola import_wordpress                Import a wordpress dump.
-      nikola init            Create a Nikola site in the specified folder.
-      nikola install_theme           Install theme into current site.
-      nikola list            list tasks from dodo file
-      nikola new_post                Create a new blog post or site page.
-      nikola run             run tasks
-      nikola serve           Start the test webserver.
-      nikola strace                  use strace to list file_deps and targets
+      nikola auto                 automatically execute tasks when a dependency changes
+      nikola bootswatch_theme     given a swatch name from bootswatch.com and a parent theme, creates a custom theme
+      nikola build                run tasks
+      nikola check                check links and files in the generated site
+      nikola clean                clean action / remove targets
+      nikola console              start an interactive python console with access to your site and configuration
+      nikola deploy               deploy the site
+      nikola dumpdb               dump dependency DB
+      nikola forget               clear successful run status from internal DB
+      nikola help                 show help
+      nikola ignore               ignore task (skip) on subsequent runs
+      nikola import_blogger       import a blogger dump
+      nikola import_feed          import a RSS/Atom dump
+      nikola import_wordpress     import a wordpress dump
+      nikola init                 create a Nikola site in the specified folder
+      nikola install_theme        install theme into current site
+      nikola list                 list tasks from dodo file
+      nikola mincss               apply mincss to the generated site
+      nikola new_post             create a new blog post or site page
+      nikola run                  run tasks
+      nikola serve                start the test webserver
+      nikola strace               use strace to list file_deps and targets
+      nikola version              print the Nikola version number
 
-      nikola help              show help / reference
-      nikola help <command>    show command usage
-      nikola help <task-name>  show task usage
+      nikola help                 show help / reference
+      nikola help <command>       show command usage
+      nikola help <task-name>     show task usage
+
 
 The ``serve`` command starts a web server so you can see the site you are creating::
 
@@ -975,9 +979,9 @@ as SVG files embedded directly in your pages.
 Here's an example of how it works::
 
             .. chart:: Bar
-               :title: 'Browser usage evolution (in %)' 
+               :title: 'Browser usage evolution (in %)'
                :x_labels: ["2002", "2003", "2004", "2005", "2006", "2007"]
-            
+
                'Firefox', [None, None, 0, 16.6, 25, 31]
                'Chrome',  [None, None, None, None, None, None]
                'IE',      [85.8, 84.6, 84.7, 74.5, 66, 58.6]
@@ -987,10 +991,10 @@ The argument passed next to the directive (Bar in that example) is the type of c
 Line, StackedLine, Bar, StackedBar, HorizontalBar, XY, DateY, Pie, Radar, Dot, Funnel, Gauge, Pyramid. For
 examples of what each kind of graph is, `check here <http://pygal.org/chart_types/>`_
 
-It can take *a lot* of options to let you customize the charts (in the example, title and x_labels). 
+It can take *a lot* of options to let you customize the charts (in the example, title and x_labels).
 You can use any option described in `the pygal docs <http://pygal.org/basic_customizations/>`_
 
-Finally, the content of the directive is the actual data, in the form of a label and 
+Finally, the content of the directive is the actual data, in the form of a label and
 a list of values, one series per line.
 
 

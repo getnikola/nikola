@@ -50,7 +50,7 @@ class CommandImportFeed(Command, ImportMixin):
     name = "import_feed"
     needs_config = False
     doc_usage = "[options] feed_file"
-    doc_purpose = "Import a RSS/Atom dump."
+    doc_purpose = "import a RSS/Atom dump"
     cmd_options = ImportMixin.cmd_options
 
     def _execute(self, options, args):
