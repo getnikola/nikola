@@ -36,7 +36,7 @@ The Build Command
 
 Nikola's goal is similar, deep at heart, to a Makefile. Take sources, compile them
 into something, in this case a website. Instead of a Makefile, Nikola uses
-`doit <http://pydoit.com>`_
+`doit <http://pydoit.org>`_
 
 Doit has the concept of "tasks". The 1 minute summary of tasks is that they have:
 
@@ -128,4 +128,3 @@ themes
     To change how the generated site looks, you can create custom themes.
 
 And of course, you can also replace or extend each of the existing plugins.
-
