@@ -316,18 +316,6 @@ class Nikola(object):
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
-        # FIXME: delay initialization of custom_css (Issue #550)
-        # check if custom css exist and is not empty
-        custom_css_path = utils.get_asset_path(
-            'assets/css/custom.css',
-            self.THEMES,
-            self.config['FILES_FOLDERS']
-        )
-        if custom_css_path and self.file_exists(custom_css_path, not_empty=True):
-            self._GLOBAL_CONTEXT['has_custom_css'] = True
-        else:
-            self._GLOBAL_CONTEXT['has_custom_css'] = False
-
         # FIXME: delay initialization of template system (Issue #550)        
         # Load template plugin
         template_sys_name = utils.get_template_engine(self.THEMES)
@@ -373,8 +361,21 @@ class Nikola(object):
     MESSAGES = property(_get_messages)
 
     def _get_global_context(self):
+        """Initialize some parts of GLOBAL_CONTEXT only when it's queried."""
         if 'messages' not in self._GLOBAL_CONTEXT:
             self._GLOBAL_CONTEXT['messages'] = self.MESSAGES
+        if 'has_custom_css' not in self._GLOBAL_CONTEXT:
+            # check if custom css exist and is not empty
+            custom_css_path = utils.get_asset_path(
+                'assets/css/custom.css',
+                self.THEMES,
+                self.config['FILES_FOLDERS']
+            )
+            if custom_css_path and self.file_exists(custom_css_path, not_empty=True):
+                self._GLOBAL_CONTEXT['has_custom_css'] = True
+            else:
+                self._GLOBAL_CONTEXT['has_custom_css'] = False
+                
         return self._GLOBAL_CONTEXT
     
     GLOBAL_CONTEXT = property(_get_global_context)
