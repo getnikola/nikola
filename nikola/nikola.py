@@ -266,58 +266,55 @@ class Nikola(object):
                 plugin_info.plugin_object.set_site(self)
 
         # set global_context for template rendering
-        self.GLOBAL_CONTEXT = {
-        }
+        self._GLOBAL_CONTEXT = {}
 
-        # FIXME: delay initialization of messages (Issue #550)
-        self.GLOBAL_CONTEXT['messages'] = self.MESSAGES
-        self.GLOBAL_CONTEXT['_link'] = self.link
-        self.GLOBAL_CONTEXT['set_locale'] = s_l
-        self.GLOBAL_CONTEXT['rel_link'] = self.rel_link
-        self.GLOBAL_CONTEXT['abs_link'] = self.abs_link
-        self.GLOBAL_CONTEXT['exists'] = self.file_exists
-        self.GLOBAL_CONTEXT['SLUG_TAG_PATH'] = self.config[
+        self._GLOBAL_CONTEXT['_link'] = self.link
+        self._GLOBAL_CONTEXT['set_locale'] = s_l
+        self._GLOBAL_CONTEXT['rel_link'] = self.rel_link
+        self._GLOBAL_CONTEXT['abs_link'] = self.abs_link
+        self._GLOBAL_CONTEXT['exists'] = self.file_exists
+        self._GLOBAL_CONTEXT['SLUG_TAG_PATH'] = self.config[
             'SLUG_TAG_PATH']
 
-        self.GLOBAL_CONTEXT['add_this_buttons'] = self.config[
+        self._GLOBAL_CONTEXT['add_this_buttons'] = self.config[
             'ADD_THIS_BUTTONS']
-        self.GLOBAL_CONTEXT['index_display_post_count'] = self.config[
+        self._GLOBAL_CONTEXT['index_display_post_count'] = self.config[
             'INDEX_DISPLAY_POST_COUNT']
-        self.GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
-        self.GLOBAL_CONTEXT['use_cdn'] = self.config.get("USE_CDN")
-        self.GLOBAL_CONTEXT['favicons'] = self.config['FAVICONS']
-        self.GLOBAL_CONTEXT['date_format'] = self.config.get(
+        self._GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
+        self._GLOBAL_CONTEXT['use_cdn'] = self.config.get("USE_CDN")
+        self._GLOBAL_CONTEXT['favicons'] = self.config['FAVICONS']
+        self._GLOBAL_CONTEXT['date_format'] = self.config.get(
             'DATE_FORMAT', '%Y-%m-%d %H:%M')
-        self.GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
-        self.GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
+        self._GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
+        self._GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
 
-        self.GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL', self.config.get('BLOG_URL'))
-        self.GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
-        self.GLOBAL_CONTEXT['analytics'] = self.config.get('ANALYTICS')
-        self.GLOBAL_CONTEXT['translations'] = self.config.get('TRANSLATIONS')
-        self.GLOBAL_CONTEXT['license'] = self.config.get('LICENSE')
-        self.GLOBAL_CONTEXT['search_form'] = self.config.get('SEARCH_FORM')
-        self.GLOBAL_CONTEXT['disqus_forum'] = self.config.get('DISQUS_FORUM')
-        self.GLOBAL_CONTEXT['mathjax_config'] = self.config.get(
+        self._GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL', self.config.get('BLOG_URL'))
+        self._GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
+        self._GLOBAL_CONTEXT['analytics'] = self.config.get('ANALYTICS')
+        self._GLOBAL_CONTEXT['translations'] = self.config.get('TRANSLATIONS')
+        self._GLOBAL_CONTEXT['license'] = self.config.get('LICENSE')
+        self._GLOBAL_CONTEXT['search_form'] = self.config.get('SEARCH_FORM')
+        self._GLOBAL_CONTEXT['disqus_forum'] = self.config.get('DISQUS_FORUM')
+        self._GLOBAL_CONTEXT['mathjax_config'] = self.config.get(
             'MATHJAX_CONFIG')
-        self.GLOBAL_CONTEXT['subtheme'] = self.config.get('THEME_REVEAL_CONGIF_SUBTHEME')
-        self.GLOBAL_CONTEXT['transition'] = self.config.get('THEME_REVEAL_CONGIF_TRANSITION')
-        self.GLOBAL_CONTEXT['content_footer'] = self.config.get(
+        self._GLOBAL_CONTEXT['subtheme'] = self.config.get('THEME_REVEAL_CONGIF_SUBTHEME')
+        self._GLOBAL_CONTEXT['transition'] = self.config.get('THEME_REVEAL_CONGIF_TRANSITION')
+        self._GLOBAL_CONTEXT['content_footer'] = self.config.get(
             'CONTENT_FOOTER')
-        self.GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
-        self.GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
+        self._GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
+        self._GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
 
-        self.GLOBAL_CONTEXT['sidebar_links'] = utils.Functionary(list, self.config['DEFAULT_LANG'])
+        self._GLOBAL_CONTEXT['sidebar_links'] = utils.Functionary(list, self.config['DEFAULT_LANG'])
         for k, v in self.config.get('SIDEBAR_LINKS', {}).items():
-            self.GLOBAL_CONTEXT['sidebar_links'][k] = v
+            self._GLOBAL_CONTEXT['sidebar_links'][k] = v
 
-        self.GLOBAL_CONTEXT['twitter_card'] = self.config.get(
+        self._GLOBAL_CONTEXT['twitter_card'] = self.config.get(
             'TWITTER_CARD', {})
-        self.GLOBAL_CONTEXT['hide_sourcelink'] = self.config.get(
+        self._GLOBAL_CONTEXT['hide_sourcelink'] = self.config.get(
             'HIDE_SOURCELINK')
-        self.GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
+        self._GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
 
-        self.GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
+        self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
         # FIXME: delay initialization of custom_css (Issue #550)
         # check if custom css exist and is not empty
@@ -327,9 +324,9 @@ class Nikola(object):
             self.config['FILES_FOLDERS']
         )
         if custom_css_path and self.file_exists(custom_css_path, not_empty=True):
-            self.GLOBAL_CONTEXT['has_custom_css'] = True
+            self._GLOBAL_CONTEXT['has_custom_css'] = True
         else:
-            self.GLOBAL_CONTEXT['has_custom_css'] = False
+            self._GLOBAL_CONTEXT['has_custom_css'] = False
 
         # FIXME: delay initialization of template system (Issue #550)        
         # Load template plugin
@@ -375,9 +372,15 @@ class Nikola(object):
 
     MESSAGES = property(_get_messages)
 
+    def _get_global_context(self):
+        if 'messages' not in self._GLOBAL_CONTEXT:
+            self._GLOBAL_CONTEXT['messages'] = self.MESSAGES
+        return self._GLOBAL_CONTEXT
+    
+    GLOBAL_CONTEXT = property(_get_global_context)
+
     def get_compiler(self, source_name):
         """Get the correct compiler for a post from `conf.post_compilers`
-
         To make things easier for users, the mapping in conf.py is
         compiler->[extensions], although this is less convenient for us. The
         majority of this function is reversing that dictionary and error
