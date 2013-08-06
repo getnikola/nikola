@@ -37,7 +37,7 @@ class CommandVersion(Command):
 
     doc_usage = ""
     needs_config = False
-    doc_purpose = """Print the Nikola version number."""
+    doc_purpose = "print the Nikola version number"
 
     def _execute(self, options={}, args=None):
         """Print the version number."""

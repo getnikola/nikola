@@ -51,7 +51,7 @@ class CommandImportWordpress(Command, ImportMixin):
     name = "import_wordpress"
     needs_config = False
     doc_usage = "[options] wordpress_export_file"
-    doc_purpose = "Import a wordpress dump."
+    doc_purpose = "import a wordpress dump"
     cmd_options = ImportMixin.cmd_options + [
         {
             'name': 'exclude_drafts',

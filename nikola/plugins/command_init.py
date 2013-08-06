@@ -42,7 +42,7 @@ class CommandInit(Command):
 
     doc_usage = "[--demo] folder"
     needs_config = False
-    doc_purpose = """Create a Nikola site in the specified folder."""
+    doc_purpose = "create a Nikola site in the specified folder"
     cmd_options = [
         {
             'name': 'demo',

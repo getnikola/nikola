@@ -42,7 +42,7 @@ class CommandMincss(Command):
     name = "mincss"
 
     doc_usage = ""
-    doc_purpose = "Apply mincss to the generated site."
+    doc_purpose = "apply mincss to the generated site"
 
     def _execute(self, options, args):
         """Apply mincss the generated site."""

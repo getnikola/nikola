@@ -81,7 +81,7 @@ class CommandNewPost(Command):
 
     name = "new_post"
     doc_usage = "[options] [path]"
-    doc_purpose = "Create a new blog post or site page."
+    doc_purpose = "create a new blog post or site page"
     cmd_options = [
         {
             'name': 'is_page',

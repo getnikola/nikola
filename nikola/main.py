@@ -62,11 +62,11 @@ class Help(DoitHelp):
         print("Nikola is a tool to create static websites and blogs. For full documentation and more information, please visit http://nikola.ralsina.com.ar\n\n")
         print("Available commands:")
         for cmd in sorted(cmds.values(), key=attrgetter('name')):
-            print("  nikola %s \t\t %s" % (cmd.name, cmd.doc_purpose))
+            print("  nikola %-*s %s" % (20, cmd.name, cmd.doc_purpose))
         print("")
-        print("  nikola help              show help / reference")
-        print("  nikola help <command>    show command usage")
-        print("  nikola help <task-name>  show task usage")
+        print("  nikola help                 show help / reference")
+        print("  nikola help <command>       show command usage")
+        print("  nikola help <task-name>     show task usage")
 
 
 class Build(DoitRun):

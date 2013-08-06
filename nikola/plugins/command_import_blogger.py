@@ -50,7 +50,7 @@ class CommandImportBlogger(Command, ImportMixin):
     name = "import_blogger"
     needs_config = False
     doc_usage = "[options] blogger_export_file"
-    doc_purpose = "Import a blogger dump."
+    doc_purpose = "import a blogger dump"
     cmd_options = ImportMixin.cmd_options + [
         {
             'name': 'exclude_drafts',

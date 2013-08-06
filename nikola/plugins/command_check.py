@@ -45,7 +45,7 @@ class CommandCheck(Command):
     name = "check"
 
     doc_usage = "-l [--find-sources] | -f"
-    doc_purpose = "Check links and files in the generated site."
+    doc_purpose = "check links and files in the generated site"
     cmd_options = [
         {
             'name': 'links',

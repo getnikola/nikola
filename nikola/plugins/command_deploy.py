@@ -41,7 +41,7 @@ class Deploy(Command):
     name = "deploy"
 
     doc_usage = ""
-    doc_purpose = "Deploy the site."
+    doc_purpose = "deploy the site"
 
     def _execute(self, command, args):
         # Get last succesful deploy date
