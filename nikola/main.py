@@ -27,6 +27,7 @@
 from __future__ import print_function, unicode_literals
 from operator import attrgetter
 import os
+import shutil
 import sys
 import warnings
 
@@ -36,6 +37,7 @@ from doit.reporter import ExecutedOnlyReporter
 from doit.doit_cmd import DoitMain
 from doit.cmd_help import Help as DoitHelp
 from doit.cmd_run import Run as DoitRun
+from doit.cmd_clean import Clean as DoitClean
 
 from . import __version__
 from .nikola import Nikola
@@ -78,6 +80,16 @@ class Build(DoitRun):
     pass
 
 
+class Clean(DoitClean):
+    """A clean that removes cache/"""
+    
+    def clean_tasks(self, tasks, dryrun):
+        if not dryrun:
+            if os.path.exists('conf.py'):
+                shutil.rmtree('cache')
+        return super(Clean, self).clean_tasks(tasks, dryrun)
+        
+
 class NikolaTaskLoader(TaskLoader):
     """custom task loader to get tasks from Nikola instead of dodo.py file"""
     def __init__(self, nikola):
@@ -95,7 +107,7 @@ class NikolaTaskLoader(TaskLoader):
 
 class DoitNikola(DoitMain):
     # overwite help command
-    DOIT_CMDS = list(DoitMain.DOIT_CMDS) + [Help, Build]
+    DOIT_CMDS = list(DoitMain.DOIT_CMDS) + [Help, Build, Clean]
     TASK_LOADER = NikolaTaskLoader
 
     def __init__(self, nikola):
