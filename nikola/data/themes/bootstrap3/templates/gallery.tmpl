@@ -1,0 +1,31 @@
+## -*- coding: utf-8 -*-
+<%inherit file="base.tmpl"/>
+<%namespace name="disqus" file="disqus_helper.tmpl"/>
+<%block name="sourcelink"></%block>
+
+<%block name="content">
+    <ul class="breadcrumb">
+        % for link, crumb in crumbs:
+            <li><a href="${link}">/ ${crumb}</a>
+        % endfor
+    </ul>
+    %if text:
+    <p>
+        ${text}
+    </p>
+    %endif
+    <ul>
+    % for folder in folders:
+        <li><a href="${folder}"><i class="icon-folder-open"></i>&nbsp;${folder}</a>
+    % endfor
+    </ul>
+    <ul class="thumbnails">
+        %for image in images:
+            <li><a href="${image[0]}" class="thumbnail image-reference" ${image[2]}>
+                <img src="${image[1]}" /></a>
+        %endfor
+    </ul>
+%if enable_comments:
+    ${disqus.html_disqus(None, permalink, title)}
+%endif
+</%block>

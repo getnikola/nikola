@@ -1,0 +1,60 @@
+## -*- coding: utf-8 -*-
+<%namespace name="base_helper" file="base_helper.tmpl" />
+${set_locale(lang)}
+<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+    ${base_helper.html_head()}
+    <%block name="extra_head">
+    </%block>
+    ${extra_head_data}
+</head>
+<body>
+    %if add_this_buttons:
+    <script type="text/javascript">var addthis_config={"ui_language":"${lang}"};</script>
+    % endif
+<div class="container-fluid" id="container">
+    <div class="row-fluid" id="titlerow">
+    <div class="span12" id="titlecolumn">
+    <!-- Banner-like substance !-->
+        <div class="titlebox">
+        <h1 id="blog-title">
+            <a href="${abs_link('/')}" title="${blog_title}">${blog_title}</a>
+        </h1>
+        <%block name="belowtitle">
+        %if len(translations) > 1:
+        <small>
+            ${(messages("Also available in"))}:&nbsp;
+            ${base_helper.html_translations()}
+        </small>
+        %endif
+        </%block>
+        <hr>
+        </div>
+    <!-- End of banner-like substance !-->
+    <div class="row-fluid" id="contentrow">
+        <div class="span10" id="contentcolumn">
+            <!--Body content-->
+            <%block name="content"></%block>
+            <!--End of body content-->
+            <hr>
+            <small>${content_footer}</small>
+        </div>
+        <div class="span2" id="sidebar">
+            <!--Sidebar content-->
+            <ul class="unstyled">
+            <li>${license}
+            ${base_helper.html_social()}
+            ${base_helper.html_sidebar_links()}
+            <li>${search_form}
+            </ul>
+            <!--End of sidebar content-->
+        </div>
+    </div>
+    </div>
+    </div>
+</div>
+    ${base_helper.late_load_js()}
+    ${analytics}
+    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
+</body>

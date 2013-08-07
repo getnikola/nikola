@@ -1,0 +1,12 @@
+## -*- coding: utf-8 -*-
+<%inherit file="base.tmpl"/>
+<%block name="content">
+    <!--Body content-->
+    <h1>${title}</h1>
+    <ul class="unstyled bricks">
+    % for text, link in items:
+        <li><a class="reference" href="${link}">${text}</a></li>
+    % endfor
+    </ul>
+    <!--End of body content-->
+</%block>

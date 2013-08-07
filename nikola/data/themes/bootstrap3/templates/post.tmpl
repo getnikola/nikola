@@ -1,0 +1,36 @@
+## -*- coding: utf-8 -*-
+<%namespace name="post_helper" file="post_helper.tmpl"/>
+<%namespace name="disqus_helper" file="disqus_helper.tmpl"/>
+<%inherit file="base.tmpl"/>
+<%block name="extra_head">
+${post_helper.twitter_card_information(post)}
+% if post.meta('keywords'):
+    <meta name="keywords" content="${post.meta('keywords')|h}"/>
+% endif
+</%block>
+<%block name="content">
+    <div class="postbox">
+    ${post_helper.html_title()}
+    <hr>
+    <small>
+        ${messages("Posted")}: <time class="published" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time>
+        ${post_helper.html_translations(post)}
+        ${post_helper.html_tags(post)}
+    </small>
+    <hr>
+    ${post.text()}
+    ${post_helper.html_pager(post)}
+    % if not post.meta('nocomments'):
+        ${disqus_helper.html_disqus(post.permalink(absolute=True), post.title(), post.base_path)}
+    % endif
+    ${post_helper.mathjax_script(post)}
+    </div>
+</%block>
+
+<%block name="sourcelink">
+% if not post.meta('password'):
+    <li>
+    <a href="${post.source_link()}" id="sourcelink">${messages("Source")}</a>
+    </li>
+% endif
+</%block>
