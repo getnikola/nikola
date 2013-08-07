@@ -328,7 +328,7 @@ class Nikola(object):
                 plugin_info.plugin_object
 
     def _get_themes(self):
-        if self._THEMES == None:
+        if self._THEMES is None:
             self._THEMES = utils.get_theme_chain(self.config['THEME'])
             # Check consistency of USE_CDN and the current THEME (Issue #386)
             if self.config['USE_CDN']:
@@ -336,11 +336,11 @@ class Nikola(object):
                     'assets', 'css', 'bootstrap.min.css'), self._THEMES)
                 if bootstrap_path.split(os.sep)[-4] != 'site':
                     warnings.warn('The USE_CDN option may be incompatible with your theme, because it uses a hosted version of bootstrap.')
-            
+
         return self._THEMES
-    
+
     THEMES = property(_get_themes)
-    
+
     def _get_messages(self):
         return utils.load_messages(self.THEMES,
                                    self.translations,
@@ -365,24 +365,24 @@ class Nikola(object):
                 self._GLOBAL_CONTEXT['has_custom_css'] = False
 
         return self._GLOBAL_CONTEXT
-    
+
     GLOBAL_CONTEXT = property(_get_global_context)
-    
+
     def _get_template_system(self):
-        if self._template_system == None:
+        if self._template_system is None:
             # Load template plugin
             template_sys_name = utils.get_template_engine(self.THEMES)
             pi = self.plugin_manager.getPluginByName(
                 template_sys_name, "TemplateSystem")
             if pi is None:
                 sys.stderr.write("Error loading {0} template system "
-                                "plugin\n".format(template_sys_name))
+                                 "plugin\n".format(template_sys_name))
                 sys.exit(1)
             self._template_system = pi.plugin_object
             lookup_dirs = ['templates'] + [os.path.join(utils.get_theme_path(name), "templates")
-                                        for name in self.THEMES]
+                                           for name in self.THEMES]
             self._template_system.set_directories(lookup_dirs,
-                                                self.config['CACHE_FOLDER'])            
+                                                  self.config['CACHE_FOLDER'])
         return self._template_system
 
     template_system = property(_get_template_system)

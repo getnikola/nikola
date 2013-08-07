@@ -82,13 +82,13 @@ class Build(DoitRun):
 
 class Clean(DoitClean):
     """A clean that removes cache/"""
-    
+
     def clean_tasks(self, tasks, dryrun):
         if not dryrun:
             if os.path.exists('conf.py'):
                 shutil.rmtree('cache')
         return super(Clean, self).clean_tasks(tasks, dryrun)
-        
+
 
 class NikolaTaskLoader(TaskLoader):
     """custom task loader to get tasks from Nikola instead of dodo.py file"""
