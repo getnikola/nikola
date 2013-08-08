@@ -111,6 +111,9 @@ class CompileRest(PageCompiler):
                     fd.write('.. {0}: {1}\n'.format(k, v))
             fd.write("\nWrite your post here.")
 
+    def set_site(self, site):
+        Slides.site = site
+        return super(CompileRest, self).set_site(site)
 
 def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
              destination_path=None, reader=None, reader_name='standalone',

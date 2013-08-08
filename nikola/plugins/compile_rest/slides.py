@@ -37,31 +37,13 @@ class Slides(Directive):
     def run(self):
         if len(self.content) == 0:
             return
-        output = []
-        output.append("""
-        <div id="myCarousel" class="carousel slide">
-        <ol class="carousel-indicators">
-        """)
-        for i in range(len(self.content)):
-            if i == 0:
-                classname = 'class="active"'
-            else:
-                classname = ''
-            output.append('  <li data-target="#myCarousel" data-slide-to="{0}" {1}></li>'.format(i, classname))
-        output.append("""</ol>
-        <div class="carousel-inner">
-        """)
-        for i, image in enumerate(self.content):
-            if i == 0:
-                classname = "item active"
-            else:
-                classname = "item"
-            output.append("""<div class="{0}"><img src="{1}" alt="" style="margin: 0 auto 0 auto;"></div>""".format(classname, image))
-        output.append("""</div>
-                        <a class="left carousel-control" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-                <a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
-                </div>""")
-        return [nodes.raw('', '\n'.join(output), format='html')]
+
+        output = self.site.template_system.render_template(
+            'slides.tmpl', 
+            None, 
+            {'content': self.content}
+        )
+        return [nodes.raw('', output, format='html')]
 
 
 directives.register_directive('slides', Slides)
