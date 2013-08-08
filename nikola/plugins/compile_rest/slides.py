@@ -39,8 +39,8 @@ class Slides(Directive):
             return
 
         output = self.site.template_system.render_template(
-            'slides.tmpl', 
-            None, 
+            'slides.tmpl',
+            None,
             {'content': self.content}
         )
         return [nodes.raw('', output, format='html')]

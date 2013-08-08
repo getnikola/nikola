@@ -76,3 +76,9 @@ ul.bricks > li {
     margin-top: -40px;
     padding-top: 40px;
 }
+
+.carousel-inner > .item > img,
+.carousel-inner > .item > a >img {
+    display: block;
+    line-height: 1;
+}
