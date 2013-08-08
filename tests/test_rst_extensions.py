@@ -41,6 +41,14 @@ import nikola.plugins.compile_rest
 from nikola.utils import _reload
 from base import BaseTestCase
 
+class FakeSite(object):
+    def __init__(self):
+        self.template_system = self
+    
+    def render_template(self, name, _, context):
+        return('<img src="IMG.jpg">')
+
+nikola.plugins.compile_rest.Slides.site = FakeSite()
 
 class ReSTExtensionTestCase(BaseTestCase):
     """ Base class for testing ReST extensions """
