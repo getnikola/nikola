@@ -259,7 +259,8 @@ post_compilers = ${POST_COMPILERS}
 # Show only teasers in the index pages? Defaults to False.
 # INDEX_TEASERS = False
 
-# A HTML fragment describing the license, for the sidebar. Default is "".
+# A HTML fragment describing the license, for the sidebar.
+LICENSE = ""
 # I recommend using the Creative Commons' wizard:
 # http://creativecommons.org/choose/
 # LICENSE = """
@@ -276,7 +277,7 @@ CONTENT_FOOTER = 'Contents &copy; {date} \
         {license}'
 CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
                                        author=BLOG_AUTHOR,
-                                       date=time.gmtime().tm_year
+                                       date=time.gmtime().tm_year,
                                        license=LICENSE)
 
 # To enable comments via Disqus, you need to create a forum at
