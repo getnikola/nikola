@@ -431,6 +431,9 @@ supports them (for example: ``.. author: John Doe``)
        The post will be encrypted and invisible until the reader enters the password.
        Also, the post's sourcecode will not be available.
 
+   category
+       Like tags, except each post can have only one, and they usually have
+       more descriptive names.
 
 .. note:: The Two-File Format
 

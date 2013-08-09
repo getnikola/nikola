@@ -34,7 +34,7 @@ from nikola import utils
 
 
 class RenderTags(Task):
-    """Render the tag pages and feeds."""
+    """Render the tag/category pages and feeds."""
 
     name = "render_tags"
 
@@ -62,11 +62,13 @@ class RenderTags(Task):
 
         yield self.list_tags_page(kw)
 
-        if not self.site.posts_per_tag:
+        if not self.site.posts_per_tag and not self.site.posts_per_category:
             yield {'basename': str(self.name), 'actions': []}
             return
 
-        for tag, posts in list(self.site.posts_per_tag.items()):
+        for tag, posts in list(self.site.posts_per_tag.items()) + list(self.site.posts_per_category.items()):
+            if tag == '':  # This is uncategorized posts
+                continue
             post_list = [self.site.global_data[post] for post in posts]
             post_list.sort(key=lambda a: a.date)
             post_list.reverse()
@@ -110,20 +112,35 @@ class RenderTags(Task):
         yield task
 
     def list_tags_page(self, kw):
-        """a global "all your tags" page for each language"""
+        """a global "all your tags/categories" page for each language"""
         tags = list(self.site.posts_per_tag.keys())
+        categories = list(self.site.posts_per_category.keys())
         # We want our tags to be sorted case insensitive
         tags.sort(key=lambda a: a.lower())
+        categories.sort(key=lambda a: a.lower())
+        if categories != ['']:
+            has_categories = True
+        else:
+            has_categories = False
         template_name = "tags.tmpl"
         kw['tags'] = tags
+        kw['categories'] = categories
         for lang in kw["translations"]:
             output_name = os.path.join(
                 kw['output_folder'], self.site.path('tag_index', None, lang))
             output_name = output_name
             context = {}
-            context["title"] = kw["messages"][lang]["Tags"]
+            if has_categories:
+                context["title"] = kw["messages"][lang]["Tags and Categories"]
+            else:
+                context["title"] = kw["messages"][lang]["Tags"]
             context["items"] = [(tag, self.site.link("tag", tag, lang)) for tag
                                 in tags]
+            if has_categories:
+                context["cat_items"] = [(tag, self.site.link("tag", tag, lang)) for tag
+                                    in categories]
+            else:
+                context["cat_items"] = None
             context["permalink"] = self.site.link("tag_index", None, lang)
             task = self.site.generic_post_list_renderer(
                 lang,
