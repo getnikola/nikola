@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* categories
 * Separate slides.tmpl template so that non-bootstrap themes can support them.
 
 New in 5.5.1
