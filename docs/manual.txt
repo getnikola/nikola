@@ -638,8 +638,6 @@ Template tweaking
 
 
 Sidebar
-    ``LICENSE`` is a HTML snippet for things like a CC badge, or whatever you prefer.
-
     The 'sidebar_links' option lets you define what links go in the right-hand
     sidebar, so you can link to important pages, or to other sites.
 
@@ -649,7 +647,8 @@ Sidebar
 
 Footer
     ``CONTENT_FOOTER`` is displayed, small at the bottom of all pages, I use it for
-    the copyright notice.
+    the copyright notice. The default shows a text formed using ``BLOG_AUTHOR``,
+    ``BLOG_EMAIL``, the date and ``LICENSE``.
 
 Analytics
     This is probably a misleading name, but the ``ANALYTICS`` option lets you define

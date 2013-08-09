@@ -272,10 +272,12 @@ post_compilers = ${POST_COMPILERS}
 # Default is ''
 CONTENT_FOOTER = 'Contents &copy; {date} \
         <a href="mailto:{email}">{author}</a> - Powered by \
-        <a href="http://nikola.ralsina.com.ar">Nikola</a>'
+        <a href="http://nikola.ralsina.com.ar">Nikola</a> \
+        {license}'
 CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
                                        author=BLOG_AUTHOR,
-                                       date=time.gmtime().tm_year)
+                                       date=time.gmtime().tm_year
+                                       license=LICENSE)
 
 # To enable comments via Disqus, you need to create a forum at
 # http://disqus.com, and set DISQUS_FORUM to the short name you selected.
