@@ -18,6 +18,7 @@ MESSAGES = {
     "Read in English": "Lire en français",
     "Read more": "Lire la suite",
     "Source": "Source",
+    "Tags and Categories": "",
     "Tags": "Étiquettes",
     "old posts page %d": "anciens billets page %d",
 }

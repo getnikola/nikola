@@ -18,6 +18,7 @@ MESSAGES = {
     "Read in English": "Read in English",
     "Read more": "Read more",
     "Source": "Source",
+    "Tags and Categories": "Tags and Categories",
     "Tags": "Tags",
     "old posts page %d": "old posts page %d",
 }

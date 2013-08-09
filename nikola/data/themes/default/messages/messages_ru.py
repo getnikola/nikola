@@ -18,6 +18,7 @@ MESSAGES = {
     "Read in English": "Прочесть по-русски",
     "Read more": "Продолжить чтение",
     "Source": "Source",
+    "Tags and Categories": "",
     "Tags": "Тэги",
     "old posts page %d": "страница со старыми записями %d",
 }

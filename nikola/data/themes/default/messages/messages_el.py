@@ -18,6 +18,7 @@ MESSAGES = {
     "Read in English": "Διαβάστε στα Ελληνικά",
     "Read more": "Διαβάστε περισσότερα",
     "Source": "Πηγαίος κώδικας",
+    "Tags and Categories": "",
     "Tags": "Ετικέτες",
     "old posts page %d": "σελίδα παλαιότερων αναρτήσεων %d",
 }

@@ -26,6 +26,9 @@ msgstr "English"
 msgid "Tags"
 msgstr "Tags"
 
+msgid "Tags and Categories"
+msgstr "Tags and Categories"
+
 msgid "Read more"
 msgstr "Read more"
 

@@ -18,6 +18,7 @@ MESSAGES = {
     "Read in English": "Čitaj na hrvatskom",
     "Read more": "Čitaj dalje",
     "Source": "Izvor",
+    "Tags and Categories": "",
     "Tags": "Tagovi",
     "old posts page %d": "stari postovi stranice %d",
 }

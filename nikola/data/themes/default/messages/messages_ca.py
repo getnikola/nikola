@@ -18,6 +18,7 @@ MESSAGES = {
     "Read in English": "Llegeix-ho en català",
     "Read more": "Llegeix-ne més",
     "Source": "Codi",
+    "Tags and Categories": "",
     "Tags": "Etiquetes",
     "old posts page %d": "entrades antigues pàgina %d",
 }

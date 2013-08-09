@@ -18,6 +18,7 @@ MESSAGES = {
     "Read in English": "İngilizce olarak oku",
     "Read more": "Devamını oku",
     "Source": "Kaynak",
+    "Tags and Categories": "",
     "Tags": "Etiketler",
     "old posts page %d": "Geçmiş yazılar sayfası %d",
 }

@@ -18,6 +18,7 @@ MESSAGES = {
     "Read in English": "日本語で読む",
     "Read more": "続きを読む",
     "Source": "ソース",
+    "Tags and Categories": "",
     "Tags": "タグ",
     "old posts page %d": "前の記事 %dページ目",
 }

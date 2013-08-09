@@ -18,6 +18,7 @@ MESSAGES = {
     "Read in English": "Прочетете на български",
     "Read more": "Прочети още",
     "Source": "Source",
+    "Tags and Categories": "",
     "Tags": "Тагове",
     "old posts page %d": "стари публикации страница %d",
 }
