@@ -26,6 +26,8 @@
 
 from __future__ import unicode_literals
 
+import uuid
+
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
@@ -33,7 +35,6 @@ from docutils.parsers.rst import Directive, directives
 class Slides(Directive):
     """ Restructured text extension for inserting slideshows."""
     has_content = True
-
     def run(self):
         if len(self.content) == 0:
             return
@@ -41,7 +42,10 @@ class Slides(Directive):
         output = self.site.template_system.render_template(
             'slides.tmpl', 
             None, 
-            {'content': self.content}
+            {
+                'content': self.content,
+                'carousel_id': 'slides_'+uuid.uuid4().hex,
+             }
         )
         return [nodes.raw('', output, format='html')]
 
