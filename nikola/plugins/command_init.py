@@ -80,7 +80,7 @@ class CommandInit(Command):
     # Pandoc detects the input from the source filename
     # but is disabled by default as it would conflict
     # with many of the others.
-    # "pandoc": ('.rst', '.md', '.txt'),  
+    # "pandoc": ('.rst', '.md', '.txt'),
 }""",
         'REDIRECTIONS': '[]',
     }
