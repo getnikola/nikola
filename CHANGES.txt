@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New pandoc compiler.
 * Separate slides.tmpl template so that non-bootstrap themes can support them.
 
 Bugfixes
