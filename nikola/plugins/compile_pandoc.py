@@ -24,31 +24,42 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import unicode_literals
+"""Implementation of compile_html based on asciidoc.
 
-import uuid
+You will need, of course, to install asciidoc
 
-from docutils import nodes
-from docutils.parsers.rst import Directive, directives
+"""
 
+import codecs
+import os
 
-class Slides(Directive):
-    """ Restructured text extension for inserting slideshows."""
-    has_content = True
-
-    def run(self):
-        if len(self.content) == 0:
-            return
-
-        output = self.site.template_system.render_template(
-            'slides.tmpl',
-            None,
-            {
-                'content': self.content,
-                'carousel_id': 'slides_' + uuid.uuid4().hex,
-            }
-        )
-        return [nodes.raw('', output, format='html')]
+from nikola.plugin_categories import PageCompiler
 
 
-directives.register_directive('slides', Slides)
+class CompileAsciiDoc(PageCompiler):
+    """Compile asciidoc into HTML."""
+
+    name = "asciidoc"
+
+    def compile_html(self, source, dest, is_two_file=True):
+        try:
+            os.makedirs(os.path.dirname(dest))
+        except:
+            pass
+        cmd = "pandoc -o {0} {1}".format(dest, source)
+        os.system(cmd)
+
+    def create_post(self, path, onefile=False, **kw):
+        metadata = {}
+        metadata.update(self.default_metadata)
+        metadata.update(kw)
+        d_name = os.path.dirname(path)
+        if not os.path.isdir(d_name):
+            os.makedirs(os.path.dirname(path))
+        with codecs.open(path, "wb+", "utf8") as fd:
+            if onefile:
+                fd.write('<!-- \n')
+                for k, v in metadata.items():
+                    fd.write('.. {0}: {1}\n'.format(k, v))
+                fd.write('-->\n\n')
+            fd.write("Write your post here.")

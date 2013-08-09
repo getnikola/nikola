@@ -4,7 +4,14 @@ New in master
 Features
 --------
 
+* New pandoc compiler.
 * Separate slides.tmpl template so that non-bootstrap themes can support them.
+
+Bugfixes
+--------
+
+* Added LICENSE in the footer (Issue #528)
+* Use random IDs for slides so you can have more than one in a page (Issue #572)
 
 New in 5.5.1
 ============
