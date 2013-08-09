@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 MESSAGES = {
     "Also available in": "其他语言版本",
     "Archive": "文章存档",
+    "Categories": "",
     "LANGUAGE": "简体中文",
     "More posts about": "更多相关文章：",
     "Newer posts": "新一篇",

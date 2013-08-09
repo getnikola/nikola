@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 MESSAGES = {
     "Also available in": "他の言語で読む",
     "Archive": "過去の記事",
+    "Categories": "",
     "LANGUAGE": "日本語",
     "More posts about": "タグ",
     "Newer posts": "新しい記事",

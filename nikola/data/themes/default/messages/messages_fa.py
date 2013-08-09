@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 MESSAGES = {
     "Also available in": "همچنین قابل دسترس از",
     "Archive": "آرشیو",
+    "Categories": "",
     "LANGUAGE": "فارسی",
     "More posts about": "ارسال‌های بیشتر دربارهٔ",
     "Newer posts": "ارسال‌های جدید‌تر",

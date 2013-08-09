@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 MESSAGES = {
     "Also available in": "Също достъпно в",
     "Archive": "Архив",
+    "Categories": "",
     "LANGUAGE": "Английски",
     "More posts about": "Още публикации относно ",
     "Newer posts": "Нови публикации",

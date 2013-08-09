@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 MESSAGES = {
     "Also available in": "Također dostupno i u",
     "Archive": "Arhiva",
+    "Categories": "",
     "LANGUAGE": "hrvatski",
     "More posts about": "Više postova o",
     "Newer posts": "Noviji postovi",

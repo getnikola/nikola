@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 MESSAGES = {
     "Also available in": "Διαθέσιμο και στα",
     "Archive": "Αρχείο",
+    "Categories": "",
     "LANGUAGE": "Ελληνικά",
     "More posts about": "Περισσότερες αναρτήσεις για",
     "Newer posts": "Νεότερες αναρτήσεις",
