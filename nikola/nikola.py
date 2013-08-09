@@ -99,6 +99,7 @@ class Nikola(object):
         self.config = {
             'ADD_THIS_BUTTONS': True,
             'ANALYTICS': '',
+            'ADD_THIS_DATA': '',
             'ARCHIVE_PATH': "",
             'ARCHIVE_FILENAME': "archive.html",
             'CACHE_FOLDER': 'cache',

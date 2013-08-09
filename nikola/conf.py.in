@@ -349,6 +349,36 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # Defaults to true
 # ADD_THIS_BUTTONS = True
 
+# Content of the Add_this code, customize it to fit your needs
+# Visit addthis.com to generate code samples
+# ADD_THIS_DATA = """
+# <!-- AddThis Smart Layers BEGIN -->
+# <!-- Go to http://www.addthis.com/get/smart-layers to customize -->
+# <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f2996314fcd3dfc"></script>
+# <script type="text/javascript">
+#   addthis.layers({
+#     'theme' : 'transparent',
+#     'share' : {
+#       'position' : 'left',
+#       'numPreferredServices' : 6
+#     },
+#     'follow' : {
+#       'services' : []
+#     },
+#     'whatsnext' : {},
+#     'recommended' : {
+#       'title': 'Recommended for you:'
+#     }
+#   });
+# </script>
+# <!-- AddThis Smart Layers END -->
+# """
+#
+# Add it to GLOBAL_CONTEXT as follow:
+# GLOBAL_CONTEXT = {
+#     'add_this': ADD_THIS_DATA,
+# }
+
 # Hide link to source for the posts?
 # HIDE_SOURCELINK = False
 
