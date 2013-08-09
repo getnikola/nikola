@@ -4,12 +4,14 @@ New in master
 Features
 --------
 
+* Updated to Colorbox 1.4.27
 * New pandoc compiler.
 * Separate slides.tmpl template so that non-bootstrap themes can support them.
 
 Bugfixes
 --------
 
+* Right-align image title in colorbox to avoid overlapping so much (Mentioned in Issue #570)
 * Added LICENSE in the footer (Issue #528)
 * Use random IDs for slides so you can have more than one in a page (Issue #572)
 
