@@ -19,7 +19,7 @@ MESSAGES = {
     "Read in English": "Czytaj po polsku",
     "Read more": "Czytaj więcej",
     "Source": "Źródło",
-    "Tags and Categories": "",
+    "Tags and Categories": "Tagi i Kategorie",
     "Tags": "Tags",
     "old posts page %d": "stare posty, strona %d",
 }
