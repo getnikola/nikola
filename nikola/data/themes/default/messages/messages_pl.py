@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 MESSAGES = {
     "Also available in": "Również dostępny w",
     "Archive": "Archiwum",
-    "Categories": "",
+    "Categories": "Kategorie",
     "LANGUAGE": "polski",
     "More posts about": "Więcej postów o",
     "Newer posts": "Nowsze posty",
