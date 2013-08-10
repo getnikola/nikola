@@ -51,19 +51,21 @@ class BuildLess(Task):
         # Find where in the theme chain we define the LESS targets
         # There can be many *.less in the folder, but we only will build
         # the ones listed in less/targets
-        targets_path = utils.get_asset_path(os.path.join("less","targets"), self.site.THEMES)
+        targets_path = utils.get_asset_path(os.path.join("less", "targets"), self.site.THEMES)
         with codecs.open(targets_path, "rb", "utf-8") as inf:
             targets = [x.strip() for x in inf.readlines()]
 
-        # Create a temporary folder and merge all the LESS sources from the theme chain
-        
+        # FIXME:
+        # Create a cache folder and merge all the LESS sources from the theme chain
+        # there, so theme inheritance still works for LESS-based themes
+
         # Build targets and write CSS files
         base_path = utils.get_theme_path(self.site.THEMES[0])
         dst_dir = os.path.join(base_path, "assets", "css")
         # Make everything depend on all sources, rough but enough
-        deps = glob.glob(os.path.join(base_path, "*.less"))
-        
-        def compile_target(target, dst):        
+        deps = glob.glob(os.path.join(base_path, "less", "*.less"))
+
+        def compile_target(target, dst):
             if not os.path.isdir(dst_dir):
                 os.makedirs(dst_dir)
             src = os.path.join(base_path, "less", target)
@@ -85,4 +87,3 @@ class BuildLess(Task):
 
         if not targets:
             yield {'basename': self.name, 'actions': []}
-        
