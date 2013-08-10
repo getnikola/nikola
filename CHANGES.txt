@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Customizable Read More (Issues #412, #533, #574)
 * Support for LESS/RECESS CSS compilers
 * Updated to Colorbox 1.4.27
 * New pandoc compiler.

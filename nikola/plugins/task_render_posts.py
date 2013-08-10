@@ -27,6 +27,7 @@
 from copy import copy
 import codecs
 import string
+import nikola.post
 
 from nikola.plugin_categories import Task
 from nikola import utils, rc4
@@ -55,6 +56,8 @@ class RenderPosts(Task):
             "default_lang": self.site.config["DEFAULT_LANG"],
             "hide_untranslated_posts": self.site.config['HIDE_UNTRANSLATED_POSTS'],
         }
+
+        nikola.post.READ_MORE_LINK = self.site.config['READ_MORE_LINK']
 
         flag = False
         for lang in kw["translations"]:
