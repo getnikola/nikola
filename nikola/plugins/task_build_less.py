@@ -26,7 +26,10 @@
 
 from __future__ import unicode_literals
 
+import codecs
+import glob
 import os
+import subprocess
 
 from nikola.plugin_categories import Task
 from nikola import utils
@@ -41,17 +44,45 @@ class BuildLess(Task):
         """Generate CSS out of LESS sources."""
 
         kw = {
-            'filters': self.site.config['FILTERS'],
-            'output_folder': self.site.config['OUTPUT_FOLDER'],
             'cache_folder': self.site.config['CACHE_FOLDER'],
-            'theme_bundles': get_theme_bundles(self.site.THEMES),
             'themes': self.site.THEMES,
-            'files_folders': self.site.config['FILES_FOLDERS'],
-            'code_color_scheme': self.site.config['CODE_COLOR_SCHEME'],
         }
-        
-        # Find all LESS sources in theme/less/*.less
-        
-        # Generate theme/assets/css/*.css
 
+        # Find where in the theme chain we define the LESS targets
+        # There can be many *.less in the folder, but we only will build
+        # the ones listed in less/targets
+        targets_path = utils.get_asset_path(os.path.join("less","targets"), self.site.THEMES)
+        with codecs.open(targets_path, "rb", "utf-8") as inf:
+            targets = [x.strip() for x in inf.readlines()]
+
+        # Create a temporary folder and merge all the LESS sources from the theme chain
+        
+        # Build targets and write CSS files
+        base_path = utils.get_theme_path(self.site.THEMES[0])
+        dst_dir = os.path.join(base_path, "assets", "css")
+        # Make everything depend on all sources, rough but enough
+        deps = glob.glob(os.path.join(base_path, "*.less"))
+        
+        def compile_target(target, dst):        
+            if not os.path.isdir(dst_dir):
+                os.makedirs(dst_dir)
+            src = os.path.join(base_path, "less", target)
+            compiled = subprocess.check_output(["lessc", src])
+            with open(dst, "wb+") as outf:
+                outf.write(compiled)
+
+        for target in targets:
+            dst = os.path.join(dst_dir, target.replace(".less", ".css"))
+            yield {
+                'basename': self.name,
+                'name': dst,
+                'targets': [dst],
+                'file_dep': deps,
+                'actions': ((compile_target, [target, dst]), ),
+                'uptodate': [utils.config_changed(kw)],
+                'clean': True
+            }
+
+        if not targets:
+            yield {'basename': self.name, 'actions': []}
         
