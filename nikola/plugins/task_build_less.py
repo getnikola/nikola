@@ -52,8 +52,11 @@ class BuildLess(Task):
         # There can be many *.less in the folder, but we only will build
         # the ones listed in less/targets
         targets_path = utils.get_asset_path(os.path.join("less", "targets"), self.site.THEMES)
-        with codecs.open(targets_path, "rb", "utf-8") as inf:
-            targets = [x.strip() for x in inf.readlines()]
+        try:
+            with codecs.open(targets_path, "rb", "utf-8") as inf:
+                targets = [x.strip() for x in inf.readlines()]
+        except Exception:
+            targets = []
 
         # FIXME:
         # Create a cache folder and merge all the LESS sources from the theme chain
