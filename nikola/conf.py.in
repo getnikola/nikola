@@ -259,6 +259,14 @@ post_compilers = ${POST_COMPILERS}
 # Show only teasers in the index pages? Defaults to False.
 # INDEX_TEASERS = False
 
+# A HTML fragment with the Read more... link.
+# The following tags exist and are replaced for you:
+# {link}        A link to the full post page.
+# {read_more}   The string “Read more” in the current language.
+# {{            A literal { (U+007B LEFT CURLY BRACKET)
+# }}            A literal } (U+007D RIGHT CURLY BRACKET)
+# READ_MORE_LINK = '<p><a href="{link}">{read_more}…</a></p>'
+
 # A HTML fragment describing the license, for the sidebar.
 LICENSE = ""
 # I recommend using the Creative Commons' wizard:
