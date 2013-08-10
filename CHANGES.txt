@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Support for LESS/RECESS CSS compilers
 * Updated to Colorbox 1.4.27
 * New pandoc compiler.
 * Separate slides.tmpl template so that non-bootstrap themes can support them.
