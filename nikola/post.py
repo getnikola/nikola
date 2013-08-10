@@ -39,7 +39,7 @@ from .utils import (to_datetime, slugify, bytes_str, Functionary, LocaleBorg)
 __all__ = ['Post']
 
 TEASER_REGEXP = re.compile('<!--\s*TEASER_END(:(.+))?\s*-->', re.IGNORECASE)
-READ_MORE_LINK = '<p><a href="{link}">{read_more}…</a></p>'
+READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
 
 class Post(object):
 
@@ -343,7 +343,7 @@ class Post(object):
             teaser = TEASER_REGEXP.split(data)[0]
             if teaser != data:
                 if TEASER_REGEXP.search(data).groups()[-1]:
-                    teaser += '<p><a href="{0}">{1}</a></p>'.format(
+                    teaser += '<p class="more"><a href="{0}">{1}</a></p>'.format(
                         self.permalink(lang), TEASER_REGEXP.search(data).groups()[-1])
                 else:
                     teaser += READ_MORE_LINK.format(

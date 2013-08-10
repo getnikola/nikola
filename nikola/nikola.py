@@ -153,7 +153,7 @@ class Nikola(object):
                 ("stories/*.txt", "stories", "story.tmpl", False),
             ),
             'PRETTY_URLS': False,
-            'READ_MORE_LINK': '<p><a href="{link}">{read_more}…</a></p>',
+            'READ_MORE_LINK': '<p class="more"><a href="{link}">{read_more}…</a></p>',
             'REDIRECTIONS': [],
             'RSS_LINK': None,
             'RSS_PATH': '',
