@@ -827,6 +827,24 @@ replace that with strings describing command lines, or arbitrary python function
 If there's any specific thing you expect to be generally useful as a filter, contact
 me and I will add it to the filters library so that more people use it.
 
+The currently available filters are:
+
+yui_compressor
+   Compress files using `YUI compressor <http://yui.github.io/yuicompressor/>`_
+
+optipng
+   Compress PNG files using `optipng <http://optipng.sourceforge.net/>`_
+
+jpegoptim
+   Compress JPEG files using `jpegoptim <http://www.kokkonen.net/tjko/projects.html>`_
+
+tidy
+   Apply `tidy <http://tidy.sourceforge.net/>`_ to HTML files
+
+typogrify
+   Improve typography using `tipogrify <https://github.com/mintchaos/typogrify>`_
+
+
 Optimizing Your Website
 -----------------------
 
