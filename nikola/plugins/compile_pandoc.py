@@ -32,6 +32,7 @@ You will need, of course, to install pandoc
 
 import codecs
 import os
+import subprocess
 
 from nikola.plugin_categories import PageCompiler
 
@@ -46,8 +47,7 @@ class CompilePandoc(PageCompiler):
             os.makedirs(os.path.dirname(dest))
         except:
             pass
-        cmd = "pandoc -o {0} {1}".format(dest, source)
-        os.system(cmd)
+        subprocess.check_call(('pandoc', '-o', source, dest))
 
     def create_post(self, path, onefile=False, **kw):
         metadata = {}

@@ -41,6 +41,7 @@ __all__ = ['Post']
 TEASER_REGEXP = re.compile('<!--\s*TEASER_END(:(.+))?\s*-->', re.IGNORECASE)
 READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
 
+
 class Post(object):
 
     """Represents a blog post or web page."""
