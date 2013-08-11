@@ -26,11 +26,27 @@
 
 """Utility functions to help you run filters on files."""
 
+from functools import wraps
 import os
 import re
 import shutil
 import subprocess
 import tempfile
+
+
+def apply_to_file(f):
+    """Takes a function f that transforms a data argument, and returns
+    a function that takes a filename and applies f to the contents,
+    in place."""
+    @wraps(f)
+    def f_in_file(fname):
+        with open(fname, 'rb') as inf:
+            data = inf.read()
+        data = f(data)
+        with open(fname, 'wb+') as outf:
+            outf.write(data)
+
+    return f_in_file
 
 
 def runinplace(command, infile):
@@ -120,8 +136,8 @@ def tidy(inplace):
 
 typogrify_filter = None
 
-
-def typogrify(infile):
+@apply_to_file
+def typogrify(data):
     global typogrify_filter
     if typogrify_filter is None:
         try:
@@ -129,8 +145,4 @@ def typogrify(infile):
         except ImportError:
             print("To use the typogrify filter, you need to install tipogrify.")
             raise
-    with open(infile, 'r') as inf:
-        data = inf.read()
-    data = typogrify_filter(data)
-    with open(infile, 'wb+') as outf:
-        outf.write(data)
+    return typogrify_filter(data)
