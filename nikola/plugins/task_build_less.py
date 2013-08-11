@@ -39,6 +39,9 @@ class BuildLess(Task):
     """Bundle assets using WebAssets."""
 
     name = "build_less"
+    sources_folder = "less"
+    sources_ext = ".less"
+    compiler_name = "lessc"
 
     def gen_tasks(self):
         """Generate CSS out of LESS sources."""
@@ -51,20 +54,16 @@ class BuildLess(Task):
         # Find where in the theme chain we define the LESS targets
         # There can be many *.less in the folder, but we only will build
         # the ones listed in less/targets
-        targets_path = utils.get_asset_path(os.path.join("less", "targets"), self.site.THEMES)
+        targets_path = utils.get_asset_path(os.path.join(self.sources_folder, "targets"), self.site.THEMES)
         try:
             with codecs.open(targets_path, "rb", "utf-8") as inf:
                 targets = [x.strip() for x in inf.readlines()]
         except Exception:
             targets = []
-            
-        # FIXME:
-        # Create a cache folder and merge all the LESS sources from the theme chain
-        # there, so theme inheritance still works for LESS-based themes
 
         for theme_name in kw['themes']:
-            src = os.path.join(utils.get_theme_path(theme_name), 'less')
-            for task in utils.copy_tree(src, os.path.join(kw['cache_folder'], 'less')):
+            src = os.path.join(utils.get_theme_path(theme_name), self.sources_folder)
+            for task in utils.copy_tree(src, os.path.join(kw['cache_folder'], self.sources_folder)):
                 task['basename'] = self.name
                 yield task
 
@@ -72,18 +71,21 @@ class BuildLess(Task):
         base_path = utils.get_theme_path(self.site.THEMES[0])
         dst_dir = os.path.join(base_path, "assets", "css")
         # Make everything depend on all sources, rough but enough
-        deps = glob.glob(os.path.join(base_path, "less", "*.less"))
+        deps = glob.glob(os.path.join(
+            base_path,
+            self.sources_folder,
+            "*.{0}".format(self.sources_ext)))
 
         def compile_target(target, dst):
             if not os.path.isdir(dst_dir):
                 os.makedirs(dst_dir)
-            src = os.path.join(kw['cache_folder'], "less", target)
-            compiled = subprocess.check_output(["lessc", src])
+            src = os.path.join(kw['cache_folder'], self.sources_folder, target)
+            compiled = subprocess.check_output([self.compiler_name, src])
             with open(dst, "wb+") as outf:
                 outf.write(compiled)
 
         for target in targets:
-            dst = os.path.join(dst_dir, target.replace(".less", ".css"))
+            dst = os.path.join(dst_dir, target.replace(self.sources_ext, ".css"))
             yield {
                 'basename': self.name,
                 'name': dst,
