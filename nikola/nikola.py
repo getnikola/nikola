@@ -106,6 +106,7 @@ class Nikola(object):
             'COMMENTS_IN_GALLERIES': False,
             'COMMENTS_IN_STORIES': False,
             'CONTENT_FOOTER': '',
+            'COPY_SOURCES': True,
             'CREATE_MONTHLY_ARCHIVE': False,
             'DATE_FORMAT': '%Y-%m-%d %H:%M',
             'DEFAULT_LANG': "en",
@@ -186,6 +187,9 @@ class Nikola(object):
         # PRETTY_URLS defaults to enabling STRIP_INDEXES unless explicitly disabled
         if config.get('PRETTY_URLS', False) and 'STRIP_INDEXES' not in config:
             self.config['STRIP_INDEXES'] = True
+
+        if self.config['COPY_SOURCES'] and not self.config['HIDE_SOURCELINK']:
+            self.config['HIDE_SOURCELINK'] = True
 
         self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
                                                       {self.config['DEFAULT_'

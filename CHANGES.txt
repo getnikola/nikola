@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New COPY_SOURCES option, defaults to True (Issue #544)
 * Customizable Read More (Issues #412, #533, #574)
 * Support for LESS/RECESS CSS compilers
 * Updated to Colorbox 1.4.27
