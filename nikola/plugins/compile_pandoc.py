@@ -24,9 +24,9 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Implementation of compile_html based on asciidoc.
+"""Implementation of compile_html based on pandoc.
 
-You will need, of course, to install asciidoc
+You will need, of course, to install pandoc
 
 """
 
@@ -36,10 +36,10 @@ import os
 from nikola.plugin_categories import PageCompiler
 
 
-class CompileAsciiDoc(PageCompiler):
-    """Compile asciidoc into HTML."""
+class CompilePandoc(PageCompiler):
+    """Compile markups into HTML using pandoc."""
 
-    name = "asciidoc"
+    name = "pandoc"
 
     def compile_html(self, source, dest, is_two_file=True):
         try:
