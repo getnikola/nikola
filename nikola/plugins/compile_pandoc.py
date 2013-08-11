@@ -47,7 +47,7 @@ class CompilePandoc(PageCompiler):
             pandoc_path = subprocess.check_output(('which', 'pandoc'))
         except subprocess.CalledProcessError:
             print('To use the pandoc compiler,'
-                  'you have to install the "pandoc" Haskell package.')
+                  ' you have to install the "pandoc" Haskell package.')
             raise Exception('Cannot compile {0} -- pandoc '
                             'missing'.format(source))
 
