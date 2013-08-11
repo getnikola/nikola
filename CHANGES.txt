@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New typogrify filter (Issue #576)
 * New COPY_SOURCES option, defaults to True (Issue #544)
 * Customizable Read More (Issues #412, #533, #574)
 * Support for LESS/RECESS CSS compilers

@@ -116,3 +116,21 @@ def tidy(inplace):
                 continue
             else:
                 assert False, line
+
+
+typogrify_filter = None
+
+
+def typogrify(infile):
+    global typogrify_filter
+    if typogrify_filter is None:
+        try:
+            from typogrify.filters import typogrify as typogrify_filter
+        except ImportError:
+            print("To use the typogrify filter, you need to install tipogrify.")
+            raise
+    with open(infile, 'r') as inf:
+        data = inf.read()
+    data = typogrify_filter(data)
+    with open(infile, 'wb+') as outf:
+        outf.write(data)
