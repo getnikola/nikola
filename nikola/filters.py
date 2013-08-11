@@ -136,6 +136,7 @@ def tidy(inplace):
 
 typogrify_filter = None
 
+
 @apply_to_file
 def typogrify(data):
     global typogrify_filter
