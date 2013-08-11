@@ -57,10 +57,16 @@ class BuildLess(Task):
                 targets = [x.strip() for x in inf.readlines()]
         except Exception:
             targets = []
-
+            
         # FIXME:
         # Create a cache folder and merge all the LESS sources from the theme chain
         # there, so theme inheritance still works for LESS-based themes
+
+        for theme_name in kw['themes']:
+            src = os.path.join(utils.get_theme_path(theme_name), 'less')
+            for task in utils.copy_tree(src, os.path.join(kw['cache_folder'], 'less')):
+                task['basename'] = self.name
+                yield task
 
         # Build targets and write CSS files
         base_path = utils.get_theme_path(self.site.THEMES[0])
@@ -71,7 +77,7 @@ class BuildLess(Task):
         def compile_target(target, dst):
             if not os.path.isdir(dst_dir):
                 os.makedirs(dst_dir)
-            src = os.path.join(base_path, "less", target)
+            src = os.path.join(kw['cache_folder'], "less", target)
             compiled = subprocess.check_output(["lessc", src])
             with open(dst, "wb+") as outf:
                 outf.write(compiled)
