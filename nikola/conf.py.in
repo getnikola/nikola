@@ -329,8 +329,9 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # to the metadata
 # PRETTY_URLS = False
 
-# Publish future dated posts right away instead of scheduling them
-# FUTURE_IS_NOW = True
+# iIf True, publish future dated posts right away instead of scheduling them.
+# Defaults to False.
+# FUTURE_IS_NOW = False
 
 # Do you want a add a Mathjax config file?
 # MATHJAX_CONFIG = ""
