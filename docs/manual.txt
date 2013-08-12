@@ -554,7 +554,8 @@ It *will* be compiled, and if you deploy it it *will* be made available, so use
 with care.
 
 Also if a post has a date in the future, it will not be shown in indexes until you rebuild after
-that date.
+that date. This behaviour can be disabled by setting ``FUTURE_IS_NOW = True`` in your
+configuration, which will make future posts be published immediately.
 
 Retired Posts
 ~~~~~~~~~~~~~
