@@ -229,6 +229,7 @@ class Galleries(Task):
                 "gallery", gallery_name, None)
             context["enable_comments"] = (
                 self.site.config["COMMENTS_IN_GALLERIES"])
+            context["thumbnail_size"] = kw["thumbnail_size"]
 
             # Use galleries/name/index.txt to generate a blurb for
             # the gallery, if it exists
@@ -263,9 +264,11 @@ class Galleries(Task):
                     w, h = im.size
                     photo_array.append({
                         'url': image[0],
-                        'url_n': image[1],
-                        'width_n': w,
-                        'height_n': h,
+                        'title': 'foo',
+                        'size': {
+                            'w': w,
+                            'h': h
+                         },
                     })
                 context['photo_array'] = json.dumps(photo_array)
 

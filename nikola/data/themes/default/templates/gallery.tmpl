@@ -20,12 +20,7 @@
     % endfor
     </ul>
 
-    <div id="gallery_container"}'>
-        %for image in images:
-            <div ><a href="${image[0]}" class="image-reference" ${image[2]}>
-                <img src="${image[1]}" style="margin-bottom:5px;" /></a></div>
-        %endfor
-    </div>
+    <div id="gallery_container"></div>
 
 %if enable_comments:
     ${disqus.html_disqus(None, permalink, title)}
@@ -34,15 +29,51 @@
 
 
 <%block name="extra_head">
+<style type="text/css">
+    .image-block {
+        display: inline-block;
+    }
+    .flowr_row {
+        width: 100%;
+    }
+    </style>
 </%block>
 
 
 <%block name="extra_js">
+<script src="/assets/js/flowr.plugin.js"></script>
 <script src="/assets/js/imagesloaded.pkgd.min.js"></script>
-<script src="/assets/js/masonry.pkgd.min.js"></script>
 <script>
+jsonContent = ${photo_array};
 imagesLoaded( $("#gallery_container"), function() {
-    $("#gallery_container").masonry({itemSelector: '.image-reference', columnWidth: 13});
+    $("#gallery_container").flowr({
+            data : jsonContent,
+            height : ${thumbnail_size},
+            padding: 5,
+            render : function(params) {
+                // Just return a div, string or a dom object, anything works fine
+                img = $("<img />").attr({
+                    'src': params.itemData.url,
+                    'width' : params.width,
+                    'height' : params.height,
+                }).css('max-width', '100%');
+                link = $( "<a></a>").attr({'href': params.itemData.url,
+                    'class': 'image-reference'});
+                div = $("<div />").addClass('image-block');
+                link.append(img);
+                div.append(link);
+                return div;
+            },
+            itemWidth : function(data) { return data.size.w; },
+            itemHeight : function(data) { return data.size.h; },
+            complete : function(params) {
+                if( jsonContent.length > params.renderedItems ) {
+                    nextRenderList = jsonContent.slice( params.renderedItems );
+                }
+            }
+        });
+
+
 });
 
 </script>
