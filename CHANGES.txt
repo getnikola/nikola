@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Added a FUTURE_IS_NOW option for publishing future-dated posts now (Issues #486, #577)
 * New typogrify filter (Issue #576)
 * New COPY_SOURCES option, defaults to True (Issue #544)
 * Customizable Read More (Issues #412, #533, #574)
