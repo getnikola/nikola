@@ -264,6 +264,7 @@ class Galleries(Task):
                     w, h = im.size
                     photo_array.append({
                         'url': image[0],
+                        'url_thumb': image[1],
                         'title': 'foo',
                         'size': {
                             'w': w,
