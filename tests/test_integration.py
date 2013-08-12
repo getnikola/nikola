@@ -100,7 +100,7 @@ class DemoBuildTest(EmptyBuildTest):
         self.assertTrue('<loc>http://nikola.ralsina.com.ar/</loc>' in sitemap_data)
 
 
-class FuturePostTest(DemoBuildTest):
+class FuturePostTest(EmptyBuildTest):
     """Test a site with future posts."""
 
     def fill_site(self):
@@ -108,6 +108,11 @@ class FuturePostTest(DemoBuildTest):
         from nikola.utils import current_time
         self.init_command.copy_sample_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
+
+        # Add the config option to allow future posts
+        with codecs.open(os.path.join(self.target_dir, 'conf.py'), "ab+", "utf8") as outf:
+            outf.write('\nFUTURE_IS_NOW = False\n')
+
         with codecs.open(os.path.join(self.target_dir, 'posts', 'empty1.txt'), "wb+", "utf8") as outf:
             outf.write(
                 ".. title: foo\n"

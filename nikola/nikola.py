@@ -153,6 +153,7 @@ class Nikola(object):
                 ("stories/*.txt", "stories", "story.tmpl", False),
             ),
             'PRETTY_URLS': False,
+            'FUTURE_IS_NOW': True,
             'READ_MORE_LINK': '<p class="more"><a href="{link}">{read_more}…</a></p>',
             'REDIRECTIONS': [],
             'RSS_LINK': None,
@@ -677,7 +678,10 @@ class Nikola(object):
         tzinfo = None
         if self.config['TIMEZONE'] is not None:
             tzinfo = pytz.timezone(self.config['TIMEZONE'])
-        current_time = utils.current_time(tzinfo)
+        if self.config['FUTURE_IS_NOW']:
+            current_time = None
+        else:
+            current_time = utils.current_time(tzinfo)
         targets = set([])
         for wildcard, destination, template_name, use_in_feeds in \
                 self.config['post_pages']:
