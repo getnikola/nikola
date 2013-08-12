@@ -29,6 +29,7 @@ import codecs
 import datetime
 import glob
 import hashlib
+import json
 import os
 
 Image = None
@@ -255,6 +256,19 @@ class Galleries(Task):
                 template_name) + image_list
 
             def render_gallery(output_name, context, index_dst_path):
+                photo_array = []
+                d_name = os.path.dirname(output_name)
+                for image in context['images']:
+                    im = Image.open(os.path.join(d_name, image[1]))
+                    w, h = im.size
+                    photo_array.append({
+                        'url': image[0],
+                        'url_n': image[1],
+                        'width_n': w,
+                        'height_n': h,
+                    })
+                context['photo_array'] = json.dumps(photo_array)
+
                 if os.path.exists(index_dst_path):
                     with codecs.open(index_dst_path, "rb", "utf8") as fd:
                         context['text'] = fd.read()

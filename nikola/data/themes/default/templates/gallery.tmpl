@@ -19,16 +19,31 @@
         <li><a href="${folder}"><i class="icon-folder-open"></i>&nbsp;${folder}</a>
     % endfor
     </ul>
-    <ul class="thumbnails">
+
+    <div id="gallery_container"}'>
         %for image in images:
-            <li><a href="${image[0]}" class="thumbnail image-reference" ${image[2]}>
-                <img src="${image[1]}" /></a>
+            <div ><a href="${image[0]}" class="image-reference" ${image[2]}>
+                <img src="${image[1]}" style="margin-bottom:5px;" /></a></div>
         %endfor
-    </ul>
+    </div>
+
 %if enable_comments:
     ${disqus.html_disqus(None, permalink, title)}
 %endif
 </%block>
 
+
+<%block name="extra_head">
+</%block>
+
+
 <%block name="extra_js">
+<script src="/assets/js/imagesloaded.pkgd.min.js"></script>
+<script src="/assets/js/masonry.pkgd.min.js"></script>
+<script>
+imagesLoaded( $("#gallery_container"), function() {
+    $("#gallery_container").masonry({itemSelector: '.image-reference', columnWidth: 13});
+});
+
+</script>
 </%block>
