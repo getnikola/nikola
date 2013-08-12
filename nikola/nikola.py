@@ -516,6 +516,8 @@ class Nikola(object):
         * tag_index (name is ignored)
         * tag (and name is the tag name)
         * tag_rss (name is the tag name)
+        * category (and name is the category name)
+        * category_rss (and name is the category name)
         * archive (and name is the year, or None for the main archive index)
         * index (name is the number in index-number)
         * rss (name is ignored)
@@ -548,11 +550,24 @@ class Nikola(object):
             path = [_f for _f in [self.config['TRANSLATIONS'][lang],
                                   self.config['TAG_PATH'], name + ".html"] if
                     _f]
+
+        elif kind == "category":
+            if self.config['SLUG_TAG_PATH']:
+                name = utils.slugify(name)
+            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+                                  self.config['TAG_PATH'], "cat_" + name + ".html"] if
+                    _f]
         elif kind == "tag_rss":
             if self.config['SLUG_TAG_PATH']:
                 name = utils.slugify(name)
             path = [_f for _f in [self.config['TRANSLATIONS'][lang],
                                   self.config['TAG_PATH'], name + ".xml"] if
+                    _f]
+        elif kind == "category_rss":
+            if self.config['SLUG_TAG_PATH']:
+                name = utils.slugify(name)
+            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+                                  self.config['TAG_PATH'], "cat_" + name + ".xml"] if
                     _f]
         elif kind == "index":
             if name not in [None, 0]:

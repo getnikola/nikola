@@ -66,9 +66,10 @@ class RenderTags(Task):
             yield {'basename': str(self.name), 'actions': []}
             return
 
-        for tag, posts in list(self.site.posts_per_tag.items()) + list(self.site.posts_per_category.items()):
-            if tag == '':  # This is uncategorized posts
-                continue
+        tag_list = list(self.site.posts_per_tag.items())
+        cat_list = list(self.site.posts_per_category.items())
+
+        def render_lists(tag, posts, is_category=True):
             post_list = [self.site.global_data[post] for post in posts]
             post_list.sort(key=lambda a: a.date)
             post_list.reverse()
@@ -78,12 +79,22 @@ class RenderTags(Task):
                 else:
                     filtered_posts = post_list
                 rss_post_list = [p.post_name for p in filtered_posts]
-                yield self.tag_rss(tag, lang, rss_post_list, kw)
+                yield self.tag_rss(tag, lang, rss_post_list, kw, is_category)
                 # Render HTML
                 if kw['tag_pages_are_indexes']:
-                    yield self.tag_page_as_index(tag, lang, filtered_posts, kw)
+                    yield self.tag_page_as_index(tag, lang, filtered_posts, kw, is_category)
                 else:
-                    yield self.tag_page_as_list(tag, lang, filtered_posts, kw)
+                    yield self.tag_page_as_list(tag, lang, filtered_posts, kw, is_category)
+
+        for tag, posts in tag_list:
+            for task in render_lists(tag, posts, False):
+                yield task
+
+        for tag, posts in cat_list:
+            if tag == '':  # This is uncategorized posts
+                continue
+            for task in render_lists(tag, posts, True):
+                yield task
 
         # Tag cloud json file
         tag_cloud_data = {}
@@ -137,7 +148,7 @@ class RenderTags(Task):
             context["items"] = [(tag, self.site.link("tag", tag, lang)) for tag
                                 in tags]
             if has_categories:
-                context["cat_items"] = [(tag, self.site.link("tag", tag, lang)) for tag
+                context["cat_items"] = [(tag, self.site.link("category", tag, lang)) for tag
                                     in categories]
             else:
                 context["cat_items"] = None
@@ -154,13 +165,15 @@ class RenderTags(Task):
             task['uptodate'] = [utils.config_changed(task_cfg)]
             yield task
 
-    def tag_page_as_index(self, tag, lang, post_list, kw):
+    def tag_page_as_index(self, tag, lang, post_list, kw, is_category):
         """render a sort of index page collection using only this
         tag's posts."""
 
+        kind = "category" if is_category else "tag"
+
         def page_name(tagname, i, lang):
             """Given tag, n, returns a page name."""
-            name = self.site.path("tag", tag, lang)
+            name = self.site.path(kind, tag, lang)
             if i:
                 name = name.replace('.html', '-{0}.html'.format(i))
             return name
@@ -179,7 +192,7 @@ class RenderTags(Task):
             rss_link = ("""<link rel="alternate" type="application/rss+xml" """
                         """type="application/rss+xml" title="RSS for tag """
                         """{0} ({1})" href="{2}">""".format(
-                            tag, lang, self.site.link("tag_rss", tag, lang)))
+                            tag, lang, self.site.link(kind + "_rss", tag, lang)))
             context['rss_link'] = rss_link
             output_name = os.path.join(kw['output_folder'],
                                        page_name(tag, i, lang))
@@ -197,7 +210,7 @@ class RenderTags(Task):
             if i < num_pages - 1:
                 context["nextlink"] = os.path.basename(
                     page_name(tag, i + 1, lang))
-            context["permalink"] = self.site.link("tag", tag, lang)
+            context["permalink"] = self.site.link(kind, tag, lang)
             context["tag"] = tag
             task = self.site.generic_post_list_renderer(
                 lang,
@@ -212,17 +225,19 @@ class RenderTags(Task):
             task['basename'] = str(self.name)
             yield task
 
-    def tag_page_as_list(self, tag, lang, post_list, kw):
+    def tag_page_as_list(self, tag, lang, post_list, kw, is_category):
         """We render a single flat link list with this tag's posts"""
+        kind = "category" if is_category else "tag"
         template_name = "tag.tmpl"
         output_name = os.path.join(kw['output_folder'], self.site.path(
-            "tag", tag, lang))
+            kind, tag, lang))
         context = {}
         context["lang"] = lang
         context["title"] = kw["messages"][lang]["Posts about %s"] % tag
         context["posts"] = post_list
-        context["permalink"] = self.site.link("tag", tag, lang)
+        context["permalink"] = self.site.link(kind, tag, lang)
         context["tag"] = tag
+        context["kind"] = kind
         task = self.site.generic_post_list_renderer(
             lang,
             post_list,
@@ -236,11 +251,12 @@ class RenderTags(Task):
         task['basename'] = str(self.name)
         yield task
 
-    def tag_rss(self, tag, lang, posts, kw):
+    def tag_rss(self, tag, lang, posts, kw, is_category):
         """RSS for a single tag / language"""
+        kind = "category" if is_category else "tag"
         #Render RSS
         output_name = os.path.join(kw['output_folder'],
-                                   self.site.path("tag_rss", tag, lang))
+                                   self.site.path(kind + "_rss", tag, lang))
         deps = []
         post_list = [self.site.global_data[post] for post in posts if
                      self.site.global_data[post].use_in_feeds]
