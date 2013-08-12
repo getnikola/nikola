@@ -83,6 +83,9 @@ class RenderPosts(Task):
                     'clean': True,
                     'uptodate': [utils.config_changed(deps_dict)],
                 }
+                if post.publish_later:
+                    print('%s is scheduled to be published in the future (%s)'
+                           %(post.source_path, post.date))
                 if post.meta('password'):
                     task['actions'].append((wrap_encrypt, (dest, post.meta('password'))))
                 yield task
