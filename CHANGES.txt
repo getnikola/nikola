@@ -5,7 +5,21 @@ Features
 --------
 
 * categories
+* Added a FUTURE_IS_NOW option for publishing future-dated posts now (Issues #486, #577)
+* New typogrify filter (Issue #576)
+* New COPY_SOURCES option, defaults to True (Issue #544)
+* Customizable Read More (Issues #412, #533, #574)
+* Support for LESS/RECESS CSS compilers
+* Updated to Colorbox 1.4.27
+* New pandoc compiler.
 * Separate slides.tmpl template so that non-bootstrap themes can support them.
+
+Bugfixes
+--------
+
+* Right-align image title in colorbox to avoid overlapping so much (Mentioned in Issue #570)
+* Added LICENSE in the footer (Issue #528)
+* Use random IDs for slides so you can have more than one in a page (Issue #572)
 
 New in 5.5.1
 ============

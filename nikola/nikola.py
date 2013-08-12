@@ -107,6 +107,7 @@ class Nikola(object):
             'COMMENTS_IN_GALLERIES': False,
             'COMMENTS_IN_STORIES': False,
             'CONTENT_FOOTER': '',
+            'COPY_SOURCES': True,
             'CREATE_MONTHLY_ARCHIVE': False,
             'DATE_FORMAT': '%Y-%m-%d %H:%M',
             'DEFAULT_LANG': "en",
@@ -154,6 +155,8 @@ class Nikola(object):
                 ("stories/*.txt", "stories", "story.tmpl", False),
             ),
             'PRETTY_URLS': False,
+            'FUTURE_IS_NOW': False,
+            'READ_MORE_LINK': '<p class="more"><a href="{link}">{read_more}…</a></p>',
             'REDIRECTIONS': [],
             'RSS_LINK': None,
             'RSS_PATH': '',
@@ -186,6 +189,9 @@ class Nikola(object):
         # PRETTY_URLS defaults to enabling STRIP_INDEXES unless explicitly disabled
         if config.get('PRETTY_URLS', False) and 'STRIP_INDEXES' not in config:
             self.config['STRIP_INDEXES'] = True
+
+        if self.config['COPY_SOURCES'] and not self.config['HIDE_SOURCELINK']:
+            self.config['HIDE_SOURCELINK'] = True
 
         self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
                                                       {self.config['DEFAULT_'
@@ -692,7 +698,10 @@ class Nikola(object):
         tzinfo = None
         if self.config['TIMEZONE'] is not None:
             tzinfo = pytz.timezone(self.config['TIMEZONE'])
-        current_time = utils.current_time(tzinfo)
+        if self.config['FUTURE_IS_NOW']:
+            current_time = None
+        else:
+            current_time = utils.current_time(tzinfo)
         targets = set([])
         for wildcard, destination, template_name, use_in_feeds in \
                 self.config['post_pages']:

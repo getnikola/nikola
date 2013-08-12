@@ -39,6 +39,7 @@ from .utils import (to_datetime, slugify, bytes_str, Functionary, LocaleBorg)
 __all__ = ['Post']
 
 TEASER_REGEXP = re.compile('<!--\s*TEASER_END(:(.+))?\s*-->', re.IGNORECASE)
+READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
 
 
 class Post(object):
@@ -342,10 +343,13 @@ class Post(object):
         if teaser_only:
             teaser = TEASER_REGEXP.split(data)[0]
             if teaser != data:
-                teaser_str = TEASER_REGEXP.search(data).groups()[-1] or \
-                    self.messages[lang]["Read more"] + '...'
-                teaser += '<p><a href="{0}">{1}</a></p>'.format(
-                    self.permalink(lang), teaser_str)
+                if TEASER_REGEXP.search(data).groups()[-1]:
+                    teaser += '<p class="more"><a href="{0}">{1}</a></p>'.format(
+                        self.permalink(lang), TEASER_REGEXP.search(data).groups()[-1])
+                else:
+                    teaser += READ_MORE_LINK.format(
+                        link=self.permalink(lang),
+                        read_more=self.messages[lang]["Read more"])
                 # This closes all open tags and sanitizes the broken HTML
                 document = lxml.html.fromstring(teaser)
                 data = lxml.html.tostring(document, encoding='unicode')

@@ -26,6 +26,8 @@
 
 from __future__ import unicode_literals
 
+import uuid
+
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
@@ -39,9 +41,12 @@ class Slides(Directive):
             return
 
         output = self.site.template_system.render_template(
-            'slides.tmpl', 
-            None, 
-            {'content': self.content}
+            'slides.tmpl',
+            None,
+            {
+                'content': self.content,
+                'carousel_id': 'slides_' + uuid.uuid4().hex,
+            }
         )
         return [nodes.raw('', output, format='html')]
 

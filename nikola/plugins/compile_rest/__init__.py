@@ -115,6 +115,7 @@ class CompileRest(PageCompiler):
         Slides.site = site
         return super(CompileRest, self).set_site(site)
 
+
 def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
              destination_path=None, reader=None, reader_name='standalone',
              parser=None, parser_name='restructuredtext', writer=None,

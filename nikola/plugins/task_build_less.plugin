@@ -1,0 +1,10 @@
+[Core]
+Name = build_less
+Module = task_build_less
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Build CSS out of LESS sources
+

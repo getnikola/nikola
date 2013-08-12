@@ -231,7 +231,7 @@ post_compilers = ${POST_COMPILERS}
 # "assets/css/code.css" this is ignored.
 # Can be any of autumn borland bw colorful default emacs friendly fruity manni
 # monokai murphy native pastie perldoc rrt tango trac vim vs
-# CODE_COLOR_SCHEME = default
+# CODE_COLOR_SCHEME = 'default'
 
 # If you use 'site-reveal' theme you can select several subthemes
 # THEME_REVEAL_CONGIF_SUBTHEME = 'sky'
@@ -259,7 +259,16 @@ post_compilers = ${POST_COMPILERS}
 # Show only teasers in the index pages? Defaults to False.
 # INDEX_TEASERS = False
 
-# A HTML fragment describing the license, for the sidebar. Default is "".
+# A HTML fragment with the Read more... link.
+# The following tags exist and are replaced for you:
+# {link}        A link to the full post page.
+# {read_more}   The string “Read more” in the current language.
+# {{            A literal { (U+007B LEFT CURLY BRACKET)
+# }}            A literal } (U+007D RIGHT CURLY BRACKET)
+# READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
+
+# A HTML fragment describing the license, for the sidebar.
+LICENSE = ""
 # I recommend using the Creative Commons' wizard:
 # http://creativecommons.org/choose/
 # LICENSE = """
@@ -272,10 +281,12 @@ post_compilers = ${POST_COMPILERS}
 # Default is ''
 CONTENT_FOOTER = 'Contents &copy; {date} \
         <a href="mailto:{email}">{author}</a> - Powered by \
-        <a href="http://nikola.ralsina.com.ar">Nikola</a>'
+        <a href="http://nikola.ralsina.com.ar">Nikola</a> \
+        {license}'
 CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
                                        author=BLOG_AUTHOR,
-                                       date=time.gmtime().tm_year)
+                                       date=time.gmtime().tm_year,
+                                       license=LICENSE)
 
 # To enable comments via Disqus, you need to create a forum at
 # http://disqus.com, and set DISQUS_FORUM to the short name you selected.
@@ -318,6 +329,10 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # to the metadata
 # PRETTY_URLS = False
 
+# iIf True, publish future dated posts right away instead of scheduling them.
+# Defaults to False.
+# FUTURE_IS_NOW = False
+
 # Do you want a add a Mathjax config file?
 # MATHJAX_CONFIG = ""
 
@@ -348,6 +363,9 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 
 # Hide link to source for the posts?
 # HIDE_SOURCELINK = False
+# Copy the source files for your pages?
+# Setting it to False implies HIDE_SOURCELINK = True
+# COPY_SOURCES = True
 
 # Modify the number of Post per Index Page
 # Defaults to 10

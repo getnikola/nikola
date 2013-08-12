@@ -53,31 +53,32 @@ class Sources(Task):
 
         self.site.scan_posts()
         flag = False
-        for lang in kw["translations"]:
-            for post in self.site.timeline:
-                if post.meta('password'):
-                    continue
-                output_name = os.path.join(
-                    kw['output_folder'], post.destination_path(
-                        lang, post.source_ext()))
-                source = post.source_path
-                dest_ext = self.site.get_compiler(post.source_path).extension()
-                if dest_ext == post.source_ext():
-                    continue
-                if lang != kw["default_lang"]:
-                    source_lang = source + '.' + lang
-                    if os.path.exists(source_lang):
-                        source = source_lang
-                if os.path.isfile(source):
-                    yield {
-                        'basename': 'render_sources',
-                        'name': os.path.normpath(output_name),
-                        'file_dep': [source],
-                        'targets': [output_name],
-                        'actions': [(utils.copy_file, (source, output_name))],
-                        'clean': True,
-                        'uptodate': [utils.config_changed(kw)],
-                    }
+        if self.site.config['COPY_SOURCES']:
+            for lang in kw["translations"]:
+                for post in self.site.timeline:
+                    if post.meta('password'):
+                        continue
+                    output_name = os.path.join(
+                        kw['output_folder'], post.destination_path(
+                            lang, post.source_ext()))
+                    source = post.source_path
+                    dest_ext = self.site.get_compiler(post.source_path).extension()
+                    if dest_ext == post.source_ext():
+                        continue
+                    if lang != kw["default_lang"]:
+                        source_lang = source + '.' + lang
+                        if os.path.exists(source_lang):
+                            source = source_lang
+                    if os.path.isfile(source):
+                        yield {
+                            'basename': 'render_sources',
+                            'name': os.path.normpath(output_name),
+                            'file_dep': [source],
+                            'targets': [output_name],
+                            'actions': [(utils.copy_file, (source, output_name))],
+                            'clean': True,
+                            'uptodate': [utils.config_changed(kw)],
+                        }
         if flag is False:  # No page rendered, yield a dummy task
             yield {
                 'basename': 'render_sources',

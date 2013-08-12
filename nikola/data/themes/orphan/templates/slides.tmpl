@@ -1,10 +1,10 @@
-<div id="myCarousel" class="carousel slide">
+<div id="${carousel_id}" class="carousel slide">
     <ol class="carousel-indicators">
     % for i in range(len(content)):
         % if i == 0:
-            <li data-target="#myCarousel" data-slide-to="${i}" class="active"></li>
+            <li data-target="#${carousel_id}" data-slide-to="${i}" class="active"></li>
         % else:
-            <li data-target="#myCarousel" data-slide-to="${i}"></li>
+            <li data-target="#${carousel_id}" data-slide-to="${i}"></li>
         % endif
     % endfor
     </ol>
@@ -17,6 +17,6 @@
             % endif
         % endfor
     </div>
-    <a class="left carousel-control" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-    <a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
+    <a class="left carousel-control" href="#${carousel_id}" data-slide="prev">&lsaquo;</a>
+    <a class="right carousel-control" href="#${carousel_id}" data-slide="next">&rsaquo;</a>
 </div>
