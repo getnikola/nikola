@@ -50,6 +50,7 @@ imagesLoaded( $("#gallery_container"), function() {
             data : jsonContent,
             height : ${thumbnail_size},
             padding: 5,
+            rows: -1,
             render : function(params) {
                 // Just return a div, string or a dom object, anything works fine
                 img = $("<img />").attr({
