@@ -11,10 +11,10 @@
         {% endfor %}
         </ul>
         {% if items %}
-            <h2>${messages("Tags")}</h2>
+            <h2>{{messages("Tags")}}</h2>
         {% endif %}
     {% endif %}
-    {% if items %}        
+    {% if items %}
         <ul class="unstyled bricks">
         {% for text, link in items %}
             <li><a href="{{link}}">{{text}}</a></li>
