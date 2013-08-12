@@ -101,6 +101,7 @@ base.tmpl
     but defines a few blocks that can be re-defined by inheriting templates:
 
     * ``extra_head`` is a block that is added before ``</head>``, (ex: for adding extra CSS)
+    * ``extra_js`` is a block that is added at the end of the body, (ex: for adding extra JS)
     * ``belowtitle`` is used by default to display a list of translations but you can put
       anything there.
     * ``content`` is where the inheriting templates will place the main content of the page.
