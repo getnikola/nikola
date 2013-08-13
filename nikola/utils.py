@@ -194,6 +194,9 @@ def get_theme_chain(theme):
     return themes
 
 
+warned = []
+
+
 def load_messages(themes, translations, default_lang):
     """ Load theme's messages into context.
 
@@ -201,7 +204,6 @@ def load_messages(themes, translations, default_lang):
     and "younger" themes have priority.
     """
     messages = Functionary(dict, default_lang)
-    warned = []
     oldpath = sys.path[:]
     for theme_name in themes[::-1]:
         msg_folder = os.path.join(get_theme_path(theme_name), 'messages')
@@ -214,12 +216,12 @@ def load_messages(themes, translations, default_lang):
             translation = __import__('messages_' + lang)
             reload(translation)
             if sorted(translation.MESSAGES.keys()) !=\
-                sorted(english.MESSAGES.keys()) and \
+                    sorted(english.MESSAGES.keys()) and \
                     lang not in warned:
                 # FIXME: get real logging in place
+                warned.append(lang)
                 print("Warning: Incomplete translation for language "
                       "'{0}'.".format(lang))
-                warned.append(lang)
             messages[lang].update(english.MESSAGES)
             messages[lang].update(translation.MESSAGES)
             del(translation)

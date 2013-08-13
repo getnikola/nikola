@@ -16,6 +16,7 @@ Features
 Bugfixes
 --------
 
+* Only warn about incomplete translations once (Issue #580)
 * Right-align image title in colorbox to avoid overlapping so much (Mentioned in Issue #570)
 * Added LICENSE in the footer (Issue #528)
 * Use random IDs for slides so you can have more than one in a page (Issue #572)
