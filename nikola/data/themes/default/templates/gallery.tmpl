@@ -23,9 +23,9 @@
     <div id="gallery_container"></div>
     <noscript>
     <ul class="thumbnails">
-        %for image in images:
-            <li><a href="${image[0]}" class="thumbnail image-reference" ${image[2]}>
-                <img src="${image[1]}" /></a>
+        %for image in photo_array:
+            <li><a href="${image['url']}" class="thumbnail image-reference" title="${image['title']}">
+                <img src="${image['url_thumb']}" alt="${image['title']}" /></a>
         %endfor
     </ul>
     </noscript>
@@ -50,7 +50,7 @@
 <%block name="extra_js">
 <script src="/assets/js/flowr.plugin.js"></script>
 <script>
-jsonContent = ${photo_array};
+jsonContent = ${photo_array_json};
 $("#gallery_container").flowr({
         data : jsonContent,
         height : ${thumbnail_size}*.6,

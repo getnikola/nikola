@@ -120,7 +120,7 @@ class Galleries(Task):
                     excluded_image_name_list = f.read().split()
                 except IOError:
                     excluded_image_name_list = []
-                excluded_image_list = [ "{0}/{1}".format(gallery_path, i) for i in excluded_image_name_list ]
+                excluded_image_list = ["{0}/{1}".format(gallery_path, i) for i in excluded_image_name_list]
                 image_set = set(image_list) - set(excluded_image_list)
                 image_list = list(image_set)
             except IOError:
@@ -136,7 +136,6 @@ class Galleries(Task):
             # Sort by date
             image_list.sort(key=lambda a: self.image_date(a))
             image_name_list = [os.path.basename(x) for x in image_list]
-
 
             # Do thumbnails and copy originals
             thumbs = []
@@ -212,7 +211,7 @@ class Galleries(Task):
 
             # Use galleries/name/index.txt to generate a blurb for
             # the gallery, if it exists.
-            
+
             index_path = os.path.join(gallery_path, "index.txt")
             cache_dir = os.path.join(kw["cache_folder"], 'galleries')
             if not os.path.isdir(cache_dir):
@@ -243,6 +242,7 @@ class Galleries(Task):
                     in image_name_list]
             else:
                 img_titles = [''] * len(image_name_list)
+            # In the future, remove images from context, use photo_array
             context["images"] = list(zip(image_name_list, thumbs, img_titles))
             context["folders"] = folder_list
             context["crumbs"] = crumbs
@@ -255,43 +255,20 @@ class Galleries(Task):
             file_dep = self.site.template_system.template_deps(
                 template_name) + image_list
 
-            def render_gallery(output_name, context, index_dst_path):
-
-                # The photo array needs to be created here, because
-                # it relies on thumbnails already being created on
-                # output
-
-                photo_array = []
-                d_name = os.path.dirname(output_name)
-                for image in context['images']:
-                    im = Image.open(os.path.join(d_name, image[1]))
-                    w, h = im.size
-                    photo_array.append({
-                        'url': image[0],
-                        'url_thumb': image[1],
-                        'title': utils.unslugify(image[0][:-4]),
-                        'size': {
-                            'w': w,
-                            'h': h
-                        },
-                    })
-                context['photo_array'] = json.dumps(photo_array)
-
-                if os.path.exists(index_dst_path):
-                    with codecs.open(index_dst_path, "rb", "utf8") as fd:
-                        context['text'] = fd.read()
-                    file_dep.append(index_dst_path)
-                else:
-                    context['text'] = ''
-                self.site.render_template(template_name, output_name, context)
-
             yield {
                 'basename': str('render_galleries'),
                 'name': output_name,
                 'file_dep': file_dep,
                 'targets': [output_name],
-                'actions': [(render_gallery, (output_name, context,
-                                              index_dst_path))],
+                'actions': [(self.render_gallery_index,
+                             (template_name,
+                              output_name,
+                              context,
+                              index_dst_path,
+                              image_name_list,
+                              thumbs,
+                              file_dep,
+                              kw))],
                 'clean': True,
                 'uptodate': [utils.config_changed({
                     1: kw,
@@ -299,6 +276,50 @@ class Galleries(Task):
                     3: self.site.config["COMMENTS_IN_GALLERIES"],
                 })],
             }
+
+    def render_gallery_index(
+            self,
+            template_name,
+            output_name,
+            context,
+            index_dst_path,
+            img_name_list,
+            thumbs,
+            file_dep,
+            kw):
+        """Build the gallery index."""
+
+        # The photo array needs to be created here, because
+        # it relies on thumbnails already being created on
+        # output
+
+        photo_array = []
+        d_name = os.path.dirname(output_name)
+        for name, thumb_name in zip(img_name_list, thumbs):
+            im = Image.open(os.path.join(d_name, thumb_name))
+            w, h = im.size
+            title = ''
+            if kw['use_filename_as_title']:
+                title = utils.unslugify(os.path.splitext(name)[0])
+            photo_array.append({
+                'url': name,
+                'url_thumb': thumb_name,
+                'title': title,
+                'size': {
+                    'w': w,
+                    'h': h
+                },
+            })
+        context['photo_array_json'] = json.dumps(photo_array)
+        context['photo_array'] = photo_array
+
+        if os.path.exists(index_dst_path):
+            with codecs.open(index_dst_path, "rb", "utf8") as fd:
+                context['text'] = fd.read()
+            file_dep.append(index_dst_path)
+        else:
+            context['text'] = ''
+        self.site.render_template(template_name, output_name, context)
 
     def resize_image(self, src, dst, max_size):
         """Make a copy of the image in the requested size."""
