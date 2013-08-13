@@ -91,6 +91,8 @@ class Galleries(Task):
                 gallery_name = ''
             else:
                 gallery_name = os.path.join(*splitted)
+
+            # Task to create gallery in output/
             # output_gallery is "output/GALLERY_PATH/name"
             output_gallery = os.path.dirname(os.path.join(
                 kw["output_folder"], self.site.path("gallery", gallery_name,
@@ -105,7 +107,8 @@ class Galleries(Task):
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
                 }
-            # image_list contains "gallery/name/image_name.jpg"
+
+            # Gather image_list contains "gallery/name/image_name.jpg"
             image_list = glob.glob(gallery_path + "/*jpg") +\
                 glob.glob(gallery_path + "/*JPG") +\
                 glob.glob(gallery_path + "/*PNG") +\
@@ -113,18 +116,13 @@ class Galleries(Task):
 
             # Filter ignore images
             try:
-                def add_gallery_path(index):
-                    return "{0}/{1}".format(gallery_path, index)
-
                 exclude_path = os.path.join(gallery_path, "exclude.meta")
                 try:
                     f = open(exclude_path, 'r')
                     excluded_image_name_list = f.read().split()
                 except IOError:
                     excluded_image_name_list = []
-
-                excluded_image_list = list(map(add_gallery_path,
-                                               excluded_image_name_list))
+                excluded_image_list = [ "{0}/{1}".format(gallery_path, i) for i in excluded_image_name_list ]
                 image_set = set(image_list) - set(excluded_image_list)
                 image_list = list(image_set)
             except IOError:
@@ -140,8 +138,10 @@ class Galleries(Task):
             # Sort by date
             image_list.sort(key=lambda a: self.image_date(a))
             image_name_list = [os.path.basename(x) for x in image_list]
-            thumbs = []
+
+
             # Do thumbnails and copy originals
+            thumbs = []
             for img, img_name in list(zip(image_list, image_name_list)):
                 # img is "galleries/name/image_name.jpg"
                 # img_name is "image_name.jpg"
