@@ -109,10 +109,8 @@ class Galleries(Task):
                 }
 
             # Gather image_list contains "gallery/name/image_name.jpg"
-            image_list = glob.glob(gallery_path + "/*jpg") +\
-                glob.glob(gallery_path + "/*JPG") +\
-                glob.glob(gallery_path + "/*PNG") +\
-                glob.glob(gallery_path + "/*png")
+            image_list = glob.iglob(gallery_path + "/*jpg") +\
+                glob.iglob(gallery_path + "/*png")
 
             # Filter ignore images
             try:
