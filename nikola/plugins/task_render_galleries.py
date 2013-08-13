@@ -269,7 +269,7 @@ class Galleries(Task):
                         'size': {
                             'w': w,
                             'h': h
-                         },
+                        },
                     })
                 context['photo_array'] = json.dumps(photo_array)
 
