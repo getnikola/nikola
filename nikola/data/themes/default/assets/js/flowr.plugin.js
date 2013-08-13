@@ -105,10 +105,17 @@
 
 					var minHeight = settings.height;
 					var minWidth = Math.floor( itemWidth * settings.height / itemHeight );
-
+                    console.log('>>>', minWidth, minHeight);
+                    if (minWidth > settings.maxWidth) {
+                        // very short+wide images
+                        // show them even if ugly
+                        minWidth = settings.maxWidth*.66;
+                        minHeight = settings.height;
+                    }
+//                     console.log('>>>', minWidth, minHeight);
 					var newLineWidth = lineWidth + minWidth + requiredPadding(1);
-					// console.log( 'lineWidth = ' + lineWidth );
-					// console.log( 'newLineWidth = ' + newLineWidth );
+//  					console.log( 'lineWidth = ' + lineWidth );
+//  					console.log( 'newLineWidth = ' + newLineWidth );
 					if( newLineWidth < settings.maxWidth ) {
 						lineItems.push({
 							'height' : minHeight,
@@ -145,7 +152,6 @@
 						testWidth += lineItem.width;
 					}
 				}
-
 				return {
 					data : lineItems,
 					width : testWidth + requiredPadding()
@@ -161,9 +167,16 @@
 			var currentRow = 0;
 			var currentItem = 0;
 			// While we have a new row
-			while( ( rowData = utils.getNextRow(data,settings) ) != null && rowData.data.length > 0 ) {
+			while( 1 ) {
 				if( settings.rows > 0 && currentRow >= settings.rows )
 					break;
+                rowData = utils.getNextRow(data,settings);
+                if(rowData == null){
+                    break;
+                }
+                if(rowData.data.length <= 0){
+                    break;
+                }
 				// remove the number of elements in the new row from the top of data stack
 				data.splice( 0, rowData.data.length );
 
