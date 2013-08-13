@@ -265,7 +265,7 @@ class Galleries(Task):
                     photo_array.append({
                         'url': image[0],
                         'url_thumb': image[1],
-                        'title': 'foo',
+                        'title': utils.unslugify(image[0][:-4]),
                         'size': {
                             'w': w,
                             'h': h
