@@ -105,14 +105,12 @@
 
 					var minHeight = settings.height;
 					var minWidth = Math.floor( itemWidth * settings.height / itemHeight );
-                    console.log('>>>', minWidth, minHeight);
                     if (minWidth > settings.maxWidth) {
                         // very short+wide images
-                        // show them even if ugly
-                        minWidth = settings.maxWidth*.66;
-                        minHeight = settings.height;
+                        // show them even if ugly, as wide as possible
+                        minWidth = settings.maxWidth-1;
+                        minHeight = settings.height * minHeight / minWidth;
                     }
-//                     console.log('>>>', minWidth, minHeight);
 					var newLineWidth = lineWidth + minWidth + requiredPadding(1);
 //  					console.log( 'lineWidth = ' + lineWidth );
 //  					console.log( 'newLineWidth = ' + newLineWidth );

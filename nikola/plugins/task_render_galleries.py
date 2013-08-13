@@ -305,6 +305,11 @@ class Galleries(Task):
         w, h = im.size
         if w > max_size or h > max_size:
             size = max_size, max_size
+
+            # Panoramas ge larger thumbnails because they look *awful*
+            if w / h > 2:
+                size = min(w, max_size * 3), min(w, max_size * 3)
+
             try:
                 exif = im._getexif()
             except Exception:
