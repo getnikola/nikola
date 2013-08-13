@@ -67,9 +67,13 @@ $("#gallery_container").flowr({
             link = $( "<a></a>").attr({'href': params.itemData.url,
                 'class': 'image-reference',
                 'title': params.itemData.title});
-            div = $("<div />").addClass('image-block');
+            div = $("<div />").addClass('image-block').attr({
+                'title': params.itemData.title,
+                'data-toggle': "tooltip",
+            });
             link.append(img);
             div.append(link);
+            div.hover(div.tooltip());
             return div;
         },
         itemWidth : function(data) { return data.size.w; },
