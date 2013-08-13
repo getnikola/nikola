@@ -109,10 +109,10 @@ class Galleries(Task):
                 }
 
             # Gather image_list contains "gallery/name/image_name.jpg"
-            image_list = glob.iglob(gallery_path + "/*jpg") +\
-                glob.iglob(gallery_path + "/*png")
+            image_list = list(glob.iglob(gallery_path + "/*jpg")) +\
+                list(glob.iglob(gallery_path + "/*png"))
 
-            # Filter ignore images
+            # Filter ignored images
             try:
                 exclude_path = os.path.join(gallery_path, "exclude.meta")
                 try:
@@ -210,27 +210,9 @@ class Galleries(Task):
                         'uptodate': [utils.config_changed(kw)],
                     }
 
-            context = {}
-            context["lang"] = kw["default_lang"]
-            context["title"] = os.path.basename(gallery_path)
-            context["description"] = kw["blog_description"]
-            if kw['use_filename_as_title']:
-                img_titles = ['id="{0}" alt="{1}" title="{2}"'.format(
-                    fn[:-4], fn[:-4], utils.unslugify(fn[:-4])) for fn
-                    in image_name_list]
-            else:
-                img_titles = [''] * len(image_name_list)
-            context["images"] = list(zip(image_name_list, thumbs, img_titles))
-            context["folders"] = folder_list
-            context["crumbs"] = crumbs
-            context["permalink"] = self.site.link(
-                "gallery", gallery_name, None)
-            context["enable_comments"] = (
-                self.site.config["COMMENTS_IN_GALLERIES"])
-            context["thumbnail_size"] = kw["thumbnail_size"]
-
             # Use galleries/name/index.txt to generate a blurb for
-            # the gallery, if it exists
+            # the gallery, if it exists.
+            
             index_path = os.path.join(gallery_path, "index.txt")
             cache_dir = os.path.join(kw["cache_folder"], 'galleries')
             if not os.path.isdir(cache_dir):
@@ -251,10 +233,34 @@ class Galleries(Task):
                     'uptodate': [utils.config_changed(kw)],
                 }
 
+            context = {}
+            context["lang"] = kw["default_lang"]
+            context["title"] = os.path.basename(gallery_path)
+            context["description"] = kw["blog_description"]
+            if kw['use_filename_as_title']:
+                img_titles = ['id="{0}" alt="{1}" title="{2}"'.format(
+                    fn[:-4], fn[:-4], utils.unslugify(fn[:-4])) for fn
+                    in image_name_list]
+            else:
+                img_titles = [''] * len(image_name_list)
+            context["images"] = list(zip(image_name_list, thumbs, img_titles))
+            context["folders"] = folder_list
+            context["crumbs"] = crumbs
+            context["permalink"] = self.site.link(
+                "gallery", gallery_name, None)
+            context["enable_comments"] = (
+                self.site.config["COMMENTS_IN_GALLERIES"])
+            context["thumbnail_size"] = kw["thumbnail_size"]
+
             file_dep = self.site.template_system.template_deps(
                 template_name) + image_list
 
             def render_gallery(output_name, context, index_dst_path):
+
+                # The photo array needs to be created here, because
+                # it relies on thumbnails already being created on
+                # output
+
                 photo_array = []
                 d_name = os.path.dirname(output_name)
                 for image in context['images']:
