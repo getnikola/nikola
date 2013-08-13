@@ -61,12 +61,12 @@ $("#gallery_container").flowr({
             img = $("<img />").attr({
                 'src': params.itemData.url_thumb,
                 'width' : params.width,
-                'height' : params.height,
-                'alt': params.itemData.title
+                'height' : params.height
             }).css('max-width', '100%');
-            link = $( "<a></a>").attr({'href': params.itemData.url,
-                'class': 'image-reference',
-                'title': params.itemData.title});
+            link = $( "<a></a>").attr({
+                'href': params.itemData.url,
+                'class': 'image-reference'
+            });
             div = $("<div />").addClass('image-block').attr({
                 'title': params.itemData.title,
                 'data-toggle': "tooltip",
