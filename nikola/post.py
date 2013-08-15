@@ -35,7 +35,7 @@ import sys
 
 import lxml.html
 
-from .utils import (to_datetime, slugify, bytes_str, Functionary, LocaleBorg)
+from .utils import (to_datetime, slugify, bytes_str, Functionary, LocaleBorg, unicode_str)
 
 __all__ = ['Post']
 
@@ -576,12 +576,7 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
 
         if 'slug' not in meta:
             # If no slug is found in the metadata use the filename
-            if sys.version_info[0] == 2:
-                u = unicode
-            else:
-                u = str
-
-            meta['slug'] = slugify(u(os.path.splitext(
+            meta['slug'] = slugify(unicode_str(os.path.splitext(
                 os.path.basename(post.source_path))[0]))
 
         if 'title' not in meta:
