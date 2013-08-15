@@ -31,10 +31,11 @@ from collections import defaultdict
 import os
 import re
 import string
+import sys
 
 import lxml.html
 
-from .utils import (to_datetime, slugify, bytes_str, Functionary, LocaleBorg)
+from .utils import (to_datetime, slugify, bytes_str, Functionary, LocaleBorg, unicode_str)
 
 __all__ = ['Post']
 
@@ -575,8 +576,8 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
 
         if 'slug' not in meta:
             # If no slug is found in the metadata use the filename
-            meta['slug'] = slugify(os.path.splitext(
-                os.path.basename(post.source_path))[0])
+            meta['slug'] = slugify(unicode_str(os.path.splitext(
+                os.path.basename(post.source_path))[0]))
 
         if 'title' not in meta:
             # If no title is found, use the filename without extension
