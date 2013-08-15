@@ -24,30 +24,38 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Implementation of compile_html based on asciidoc.
+"""Implementation of compile_html based on pandoc.
 
-You will need, of course, to install asciidoc
+You will need, of course, to install pandoc
 
 """
 
 import codecs
 import os
+import subprocess
 
 from nikola.plugin_categories import PageCompiler
 
 
-class CompileAsciiDoc(PageCompiler):
-    """Compile asciidoc into HTML."""
+class CompilePandoc(PageCompiler):
+    """Compile markups into HTML using pandoc."""
 
-    name = "asciidoc"
+    name = "pandoc"
 
     def compile_html(self, source, dest, is_two_file=True):
+        try:
+            pandoc_path = subprocess.check_output(('which', 'pandoc'))
+        except subprocess.CalledProcessError:
+            print('To use the pandoc compiler,'
+                  ' you have to install the "pandoc" Haskell package.')
+            raise Exception('Cannot compile {0} -- pandoc '
+                            'missing'.format(source))
+
         try:
             os.makedirs(os.path.dirname(dest))
         except:
             pass
-        cmd = "pandoc -o {0} {1}".format(dest, source)
-        os.system(cmd)
+        subprocess.check_call((pandoc_path, '-o', source, dest))
 
     def create_post(self, path, onefile=False, **kw):
         metadata = {}
