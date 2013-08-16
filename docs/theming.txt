@@ -1,9 +1,9 @@
 .. title: Theming Nikola
 .. slug: theming
 .. date: 2012/03/13 12:00
-.. tags: 
-.. link: 
-.. description: 
+.. tags:
+.. link:
+.. description:
 
 Theming Nikola
 ==============
@@ -101,6 +101,7 @@ base.tmpl
     but defines a few blocks that can be re-defined by inheriting templates:
 
     * ``extra_head`` is a block that is added before ``</head>``, (ex: for adding extra CSS)
+    * ``extra_js`` is a block that is added at the end of the body, (ex: for adding extra JS)
     * ``belowtitle`` is used by default to display a list of translations but you can put
       anything there.
     * ``content`` is where the inheriting templates will place the main content of the page.
@@ -174,7 +175,23 @@ gallery.tmpl
     Template used for image galleries. Can use everything ``base.tmpl`` uses, plus:
 
     * ``text``: A descriptive text for the gallery.
-    * ``images``: A list of (thumbnail, image) paths.
+    * ``crumbs``: A list of ``link, crumb`` to implement a crumbbar.
+    * ``folders``: A list of folders to implement hierarchical gallery navigation.
+    * ``enable_comments``: To enable/disable comments in galleries.
+    * ``thumbnail_size``: The ``THUMBNAIL_SIZE`` option.
+    * ``photo_array``: a list of dictionaries, each containing:
+
+      + ``url``: URL for the full-sized image.
+      + ``url_thumb``: URL for the thumbnail.
+      + ``title``: The title of the image.
+      + ``size``: A dict containing ``w`` and ``h``, the real size of the thumbnail.
+
+   * ``photo_array_json``: a JSON dump of photo_array, used in the default theme by flowr.js
+   * ``images``: **DEPRECATED** a list of tuples, each containing:
+
+     + image name.
+     + thumbnail name.
+     + a string to be used inside a IMG tag for extra attributes.
 
 index.tmpl
     Template used to render the multipost indexes. Can use everything ``base.tmpl`` uses, plus:

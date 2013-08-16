@@ -28,6 +28,12 @@ msgstr "فارسی"
 msgid "Tags"
 msgstr "برچسب‌ها"
 
+msgid "Categories"
+msgstr ""
+
+msgid "Tags and Categories"
+msgstr ""
+
 msgid "Read more"
 msgstr "بیشتر بخوانید"
 

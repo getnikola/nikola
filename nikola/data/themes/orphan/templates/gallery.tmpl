@@ -20,9 +20,9 @@
     % endfor
     </ul>
     <ul class="thumbnails">
-        %for image in images:
-            <li><a href="${image[0]}" class="thumbnail image-reference" ${image[2]}>
-                <img src="${image[1]}" /></a></li>
+        %for image in photo_array:
+            <li><a href="${image['url']}" class="thumbnail image-reference" title="${image['title']}">
+                <img src="${image['url_thumb']}" alt="${image['title']}" /></a>
         %endfor
     </ul>
 %if enable_comments:

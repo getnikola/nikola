@@ -29,6 +29,12 @@ msgstr "Italiano"
 msgid "Tags"
 msgstr "Tags"
 
+msgid "Categories"
+msgstr ""
+
+msgid "Tags and Categories"
+msgstr ""
+
 msgid "Read more"
 msgstr "Espandi"
 

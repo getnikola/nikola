@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 MESSAGES = {
     "Also available in": "Şu dilde de mevcut",
     "Archive": "Arşiv",
+    "Categories": "",
     "LANGUAGE": "Türkçe",
     "More posts about": "İlgili diğer yazılar",
     "Newer posts": "Daha yeni yazılar",
@@ -18,6 +19,7 @@ MESSAGES = {
     "Read in English": "İngilizce olarak oku",
     "Read more": "Devamını oku",
     "Source": "Kaynak",
+    "Tags and Categories": "",
     "Tags": "Etiketler",
     "old posts page %d": "Geçmiş yazılar sayfası %d",
 }

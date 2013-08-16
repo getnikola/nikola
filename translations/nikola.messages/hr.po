@@ -28,6 +28,12 @@ msgstr "hrvatski"
 msgid "Tags"
 msgstr "Tagovi"
 
+msgid "Categories"
+msgstr ""
+
+msgid "Tags and Categories"
+msgstr ""
+
 msgid "Read more"
 msgstr "Čitaj dalje"
 

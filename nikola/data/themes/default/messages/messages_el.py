@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 MESSAGES = {
     "Also available in": "Διαθέσιμο και στα",
     "Archive": "Αρχείο",
+    "Categories": "",
     "LANGUAGE": "Ελληνικά",
     "More posts about": "Περισσότερες αναρτήσεις για",
     "Newer posts": "Νεότερες αναρτήσεις",
@@ -18,6 +19,7 @@ MESSAGES = {
     "Read in English": "Διαβάστε στα Ελληνικά",
     "Read more": "Διαβάστε περισσότερα",
     "Source": "Πηγαίος κώδικας",
+    "Tags and Categories": "",
     "Tags": "Ετικέτες",
     "old posts page %d": "σελίδα παλαιότερων αναρτήσεων %d",
 }

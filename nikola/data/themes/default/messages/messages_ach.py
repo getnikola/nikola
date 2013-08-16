@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 MESSAGES = {
     "Also available in": "",
     "Archive": "",
+    "Categories": "",
     "LANGUAGE": "",
     "More posts about": "",
     "Newer posts": "",
@@ -18,6 +19,7 @@ MESSAGES = {
     "Read in English": "",
     "Read more": "",
     "Source": "",
+    "Tags and Categories": "",
     "Tags": "",
     "old posts page %d": "",
 }

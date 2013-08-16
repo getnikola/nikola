@@ -84,6 +84,7 @@ class Nikola(object):
         self.posts_per_year = defaultdict(list)
         self.posts_per_month = defaultdict(list)
         self.posts_per_tag = defaultdict(list)
+        self.posts_per_category = defaultdict(list)
         self.post_per_file = {}
         self.timeline = []
         self.pages = []
@@ -521,6 +522,8 @@ class Nikola(object):
         * tag_index (name is ignored)
         * tag (and name is the tag name)
         * tag_rss (name is the tag name)
+        * category (and name is the category name)
+        * category_rss (and name is the category name)
         * archive (and name is the year, or None for the main archive index)
         * index (name is the number in index-number)
         * rss (name is ignored)
@@ -553,11 +556,24 @@ class Nikola(object):
             path = [_f for _f in [self.config['TRANSLATIONS'][lang],
                                   self.config['TAG_PATH'], name + ".html"] if
                     _f]
+
+        elif kind == "category":
+            if self.config['SLUG_TAG_PATH']:
+                name = utils.slugify(name)
+            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+                                  self.config['TAG_PATH'], "cat_" + name + ".html"] if
+                    _f]
         elif kind == "tag_rss":
             if self.config['SLUG_TAG_PATH']:
                 name = utils.slugify(name)
             path = [_f for _f in [self.config['TRANSLATIONS'][lang],
                                   self.config['TAG_PATH'], name + ".xml"] if
+                    _f]
+        elif kind == "category_rss":
+            if self.config['SLUG_TAG_PATH']:
+                name = utils.slugify(name)
+            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+                                  self.config['TAG_PATH'], "cat_" + name + ".xml"] if
                     _f]
         elif kind == "index":
             if name not in [None, 0]:
@@ -747,6 +763,7 @@ class Nikola(object):
                             '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post.post_name)
                         for tag in post.alltags:
                             self.posts_per_tag[tag].append(post.post_name)
+                        self.posts_per_category[post.meta('category')].append(post.post_name)
                     else:
                         self.pages.append(post)
                     if self.config['OLD_THEME_SUPPORT']:
