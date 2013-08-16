@@ -29,6 +29,12 @@ msgstr "简体中文"
 msgid "Tags"
 msgstr "标签"
 
+msgid "Categories"
+msgstr ""
+
+msgid "Tags and Categories"
+msgstr ""
+
 msgid "Read more"
 msgstr "更多"
 

@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 MESSAGES = {
     "Also available in": "Также доступно в",
     "Archive": "Архив",
+    "Categories": "",
     "LANGUAGE": "Русский",
     "More posts about": "Больше записей о",
     "Newer posts": "Новые записи",
@@ -18,6 +19,7 @@ MESSAGES = {
     "Read in English": "Прочесть по-русски",
     "Read more": "Продолжить чтение",
     "Source": "Source",
+    "Tags and Categories": "",
     "Tags": "Тэги",
     "old posts page %d": "страница со старыми записями %d",
 }

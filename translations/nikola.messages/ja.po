@@ -29,6 +29,12 @@ msgstr "日本語"
 msgid "Tags"
 msgstr "タグ"
 
+msgid "Categories"
+msgstr ""
+
+msgid "Tags and Categories"
+msgstr ""
+
 msgid "Read more"
 msgstr "続きを読む"
 

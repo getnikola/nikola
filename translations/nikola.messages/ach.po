@@ -27,6 +27,12 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
+msgid "Categories"
+msgstr ""
+
+msgid "Tags and Categories"
+msgstr ""
+
 msgid "Read more"
 msgstr ""
 
