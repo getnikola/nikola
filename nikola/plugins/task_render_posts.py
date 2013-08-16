@@ -27,6 +27,7 @@
 from copy import copy
 import codecs
 import string
+import nikola.post
 
 from nikola.plugin_categories import Task
 from nikola import utils, rc4
@@ -56,6 +57,8 @@ class RenderPosts(Task):
             "hide_untranslated_posts": self.site.config['HIDE_UNTRANSLATED_POSTS'],
         }
 
+        nikola.post.READ_MORE_LINK = self.site.config['READ_MORE_LINK']
+
         flag = False
         for lang in kw["translations"]:
             deps_dict = copy(kw)
@@ -76,10 +79,13 @@ class RenderPosts(Task):
                     'file_dep': post.fragment_deps(lang),
                     'targets': [dest],
                     'actions': [(self.site.get_compiler(post.source_path).compile_html,
-                                 [source, dest, post.is_two_file])],
+                                [source, dest, post.is_two_file])],
                     'clean': True,
                     'uptodate': [utils.config_changed(deps_dict)],
                 }
+                if post.publish_later:
+                    print('%s is scheduled to be published in the future (%s)'
+                          % (post.source_path, post.date))
                 if post.meta('password'):
                     task['actions'].append((wrap_encrypt, (dest, post.meta('password'))))
                 yield task

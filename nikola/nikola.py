@@ -84,6 +84,7 @@ class Nikola(object):
         self.posts_per_year = defaultdict(list)
         self.posts_per_month = defaultdict(list)
         self.posts_per_tag = defaultdict(list)
+        self.posts_per_category = defaultdict(list)
         self.post_per_file = {}
         self.timeline = []
         self.pages = []
@@ -107,6 +108,7 @@ class Nikola(object):
             'COMMENTS_IN_GALLERIES': False,
             'COMMENTS_IN_STORIES': False,
             'CONTENT_FOOTER': '',
+            'COPY_SOURCES': True,
             'CREATE_MONTHLY_ARCHIVE': False,
             'DATE_FORMAT': '%Y-%m-%d %H:%M',
             'DEFAULT_LANG': "en",
@@ -154,6 +156,8 @@ class Nikola(object):
                 ("stories/*.txt", "stories", "story.tmpl", False),
             ),
             'PRETTY_URLS': False,
+            'FUTURE_IS_NOW': False,
+            'READ_MORE_LINK': '<p class="more"><a href="{link}">{read_more}…</a></p>',
             'REDIRECTIONS': [],
             'RSS_LINK': None,
             'RSS_PATH': '',
@@ -186,6 +190,9 @@ class Nikola(object):
         # PRETTY_URLS defaults to enabling STRIP_INDEXES unless explicitly disabled
         if config.get('PRETTY_URLS', False) and 'STRIP_INDEXES' not in config:
             self.config['STRIP_INDEXES'] = True
+
+        if config.get('COPY_SOURCES') and not self.config['HIDE_SOURCELINK']:
+            self.config['HIDE_SOURCELINK'] = True
 
         self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
                                                       {self.config['DEFAULT_'
@@ -516,6 +523,8 @@ class Nikola(object):
         * tag_index (name is ignored)
         * tag (and name is the tag name)
         * tag_rss (name is the tag name)
+        * category (and name is the category name)
+        * category_rss (and name is the category name)
         * archive (and name is the year, or None for the main archive index)
         * index (name is the number in index-number)
         * rss (name is ignored)
@@ -548,11 +557,24 @@ class Nikola(object):
             path = [_f for _f in [self.config['TRANSLATIONS'][lang],
                                   self.config['TAG_PATH'], name + ".html"] if
                     _f]
+
+        elif kind == "category":
+            if self.config['SLUG_TAG_PATH']:
+                name = utils.slugify(name)
+            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+                                  self.config['TAG_PATH'], "cat_" + name + ".html"] if
+                    _f]
         elif kind == "tag_rss":
             if self.config['SLUG_TAG_PATH']:
                 name = utils.slugify(name)
             path = [_f for _f in [self.config['TRANSLATIONS'][lang],
                                   self.config['TAG_PATH'], name + ".xml"] if
+                    _f]
+        elif kind == "category_rss":
+            if self.config['SLUG_TAG_PATH']:
+                name = utils.slugify(name)
+            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+                                  self.config['TAG_PATH'], "cat_" + name + ".xml"] if
                     _f]
         elif kind == "index":
             if name not in [None, 0]:
@@ -677,7 +699,10 @@ class Nikola(object):
         tzinfo = None
         if self.config['TIMEZONE'] is not None:
             tzinfo = pytz.timezone(self.config['TIMEZONE'])
-        current_time = utils.current_time(tzinfo)
+        if self.config['FUTURE_IS_NOW']:
+            current_time = None
+        else:
+            current_time = utils.current_time(tzinfo)
         targets = set([])
         for wildcard, destination, template_name, use_in_feeds in \
                 self.config['post_pages']:
@@ -739,6 +764,7 @@ class Nikola(object):
                             '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post.post_name)
                         for tag in post.alltags:
                             self.posts_per_tag[tag].append(post.post_name)
+                        self.posts_per_category[post.meta('category')].append(post.post_name)
                     else:
                         self.pages.append(post)
                     if self.config['OLD_THEME_SUPPORT']:

@@ -31,14 +31,16 @@ from collections import defaultdict
 import os
 import re
 import string
+import sys
 
 import lxml.html
 
-from .utils import (to_datetime, slugify, bytes_str, Functionary, LocaleBorg)
+from .utils import (to_datetime, slugify, bytes_str, Functionary, LocaleBorg, unicode_str)
 
 __all__ = ['Post']
 
 TEASER_REGEXP = re.compile('<!--\s*TEASER_END(:(.+))?\s*-->', re.IGNORECASE)
+READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
 
 
 class Post(object):
@@ -139,7 +141,7 @@ class Post(object):
 
         # If mathjax is a tag, then enable mathjax rendering support
         self.is_mathjax = 'mathjax' in self.tags
-
+        
     def _has_pretty_url(self, lang):
         if self.pretty_urls and \
                 self.meta[lang].get('pretty_url', '') != 'False' and \
@@ -342,10 +344,13 @@ class Post(object):
         if teaser_only:
             teaser = TEASER_REGEXP.split(data)[0]
             if teaser != data:
-                teaser_str = TEASER_REGEXP.search(data).groups()[-1] or \
-                    self.messages[lang]["Read more"] + '...'
-                teaser += '<p><a href="{0}">{1}</a></p>'.format(
-                    self.permalink(lang), teaser_str)
+                if TEASER_REGEXP.search(data).groups()[-1]:
+                    teaser += '<p class="more"><a href="{0}">{1}</a></p>'.format(
+                        self.permalink(lang), TEASER_REGEXP.search(data).groups()[-1])
+                else:
+                    teaser += READ_MORE_LINK.format(
+                        link=self.permalink(lang),
+                        read_more=self.messages[lang]["Read more"])
                 # This closes all open tags and sanitizes the broken HTML
                 document = lxml.html.fromstring(teaser)
                 data = lxml.html.tostring(document, encoding='unicode')
@@ -571,8 +576,8 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
 
         if 'slug' not in meta:
             # If no slug is found in the metadata use the filename
-            meta['slug'] = slugify(os.path.splitext(
-                os.path.basename(post.source_path))[0])
+            meta['slug'] = slugify(unicode_str(os.path.splitext(
+                os.path.basename(post.source_path))[0]))
 
         if 'title' not in meta:
             # If no title is found, use the filename without extension

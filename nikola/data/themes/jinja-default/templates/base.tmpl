@@ -56,4 +56,6 @@
     {{ base_helper.late_load_js() }}
     {{ analytics }}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
+    {% block extra_js %}
+    {% endblock %}
 </body>

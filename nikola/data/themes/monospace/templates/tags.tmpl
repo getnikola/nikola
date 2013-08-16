@@ -1,14 +1,25 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="base.tmpl"/>
 <%block name="content">
-    <div class="postbox">
-        <!--Body content-->
-        <h1>${title}</h1>
-        <ul class="unstyled">
-        % for text, link in items:
-            <li><a class="tag" href="${link}"><span class="badge badge-info">${text}</span></a>
+    <h1>${title}</h1>
+    % if cat_items:
+        <h2>${messages("Categories")}</h2>
+        <ul class="unstyled bricks">
+        % for text, link in cat_items:
+            % if text:
+                <li><a class="reference" href="${link}">${text}</a></li>
+            % endif
         % endfor
         </ul>
-        <!--End of body content-->
-    </div>
+        % if items:
+            <h2>${messages("Tags")}</h2>
+        % endif
+    %endif
+    % if items:
+        <ul class="unstyled bricks">
+        % for text, link in items:
+            <li><a class="reference" href="${link}">${text}</a></li>
+        % endfor
+        </ul>
+    % endif
 </%block>
