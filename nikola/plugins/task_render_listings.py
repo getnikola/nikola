@@ -63,7 +63,7 @@ class Listings(Task):
                     code = highlight(fd.read(), lexer,
                                      HtmlFormatter(cssclass='code',
                                                    linenos="table", nowrap=False,
-                                                   lineanchors=utils.slugify(f),
+                                                   lineanchors=utils.slugify(in_name),
                                                    anchorlinenos=True))
                 title = os.path.basename(in_name)
             else:
