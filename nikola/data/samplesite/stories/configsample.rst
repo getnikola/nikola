@@ -1,9 +1,9 @@
 .. title: Sample Nikola Config File
 .. slug: sampleconfig
 .. date: 2012/03/30 23:00
-.. tags: 
-.. link: 
-.. description: 
+.. tags:
+.. link:
+.. description:
 
 .. code-block:: python
 
@@ -185,10 +185,36 @@
             <!-- End of Google Analytics -->
         """
 
+    # Content of the Add_this code, customize it to fit your needs
+    # Visit addthis.com to generate code samples
+    ADD_THIS_DATA = """
+    <!-- AddThis Smart Layers BEGIN -->
+    <!-- Go to http://www.addthis.com/get/smart-layers to customize -->
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f5000214fcd3dfc"></script>
+    <script type="text/javascript">
+      addthis.layers({
+        'theme' : 'transparent',
+        'share' : {
+          'position' : 'left',
+          'numPreferredServices' : 6
+        },
+        'follow' : {
+          'services' : []
+        },
+        'whatsnext' : {},
+        'recommended' : {
+          'title': 'Recommended for you:'
+        }
+      });
+    </script>
+    <!-- AddThis Smart Layers END -->
+    """
+
     # Put in global_context things you want available on all your templates.
     # It can be anything, data, functions, modules, etc.
     GLOBAL_CONTEXT = {
         'analytics': ANALYTICS,
+        'add_this': ADD_THIS_DATA,
         'blog_title': BLOG_TITLE,
         'blog_url': BLOG_URL,
         'translations': TRANSLATIONS,

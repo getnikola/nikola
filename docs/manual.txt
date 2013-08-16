@@ -660,6 +660,11 @@ Analytics
     a Google analytics snippet or something similar, but you can really put anything
     there.
 
+Add_this
+    The ``ADD_THIS_DATA`` option lets you define a HTML snippet that will be added
+    at the bottom of body. The main usage is a Add this snippet or something similar,
+    but you can really put anything there.
+
 
 Adding Files
 ------------
@@ -845,7 +850,7 @@ The currently available filters are:
 
       def yui_compressor(infile):
           return runinplace(r'yui-compressor --nomunge %1 -o %2', infile)
-      
+
    You can turn any function into a filter using ``apply_to_file``.
    As a silly example, this would make everything uppercase and totally break
    your website:

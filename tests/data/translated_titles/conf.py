@@ -340,9 +340,13 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # external resources.
 # USE_CDN = False
 
-# Google analytics or whatever else you use. Added to the bottom of <body>
+# Google analytics script or whatever else you use. Added to the bottom of <body>
 # in the default template (base.tmpl).
 # ANALYTICS = ""
+
+# Add-this script or whatever else you use. Added to the bottom of <body>
+# in the default template (base.tmpl).
+# ADD_THIS_DATA = ""
 
 # The possibility to extract metadata from the filename by using a
 # regular expression.
