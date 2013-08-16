@@ -149,7 +149,7 @@ class RenderTags(Task):
                                 in tags]
             if has_categories:
                 context["cat_items"] = [(tag, self.site.link("category", tag, lang)) for tag
-                                    in categories]
+                                        in categories]
             else:
                 context["cat_items"] = None
             context["permalink"] = self.site.link("tag_index", None, lang)
