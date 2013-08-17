@@ -52,7 +52,7 @@ class CommandMincss(Command):
                   ' you have to install the "mincss" package.')
             return
 
-        p = Processor()
+        p = Processor(preserve_remote_urls=False)
         urls = []
         css_files = {}
         for root, dirs, files in os.walk(output_folder):
