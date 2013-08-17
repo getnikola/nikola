@@ -47,7 +47,7 @@ for watch in {0}:
 class Auto(Command):
     """Start debugging console."""
     name = "auto"
-    doc_purpose = "Automatically detect site changes, rebuild and optionally refresh a browser."
+    doc_purpose = "automatically detect site changes, rebuild and optionally refresh a browser"
     cmd_options = [
         {
             'name': 'browser',
