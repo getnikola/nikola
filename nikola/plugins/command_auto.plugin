@@ -1,0 +1,9 @@
+[Core]
+Name = auto
+Module = command_auto
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Automatically rebuild and refresh the site
