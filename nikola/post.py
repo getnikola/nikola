@@ -304,7 +304,7 @@ class Post(object):
         else:
             return '.'.join((self.base_path, sorted(self.translated_to)[0]))
 
-    def text(self, lang=None, teaser_only=False, strip_html=False):
+    def text(self, lang=None, teaser_only=False, strip_html=False, really_absolute=False):
         """Read the post file for that language and return its contents.
 
         teaser_only=True breaks at the teaser marker and returns only the teaser.
@@ -328,7 +328,8 @@ class Post(object):
                 return ""
             # let other errors raise
             raise(e)
-        document.make_links_absolute(self.permalink(lang=lang))
+        base_url = self.permalink(lang=lang, absolute=really_absolute)
+        document.make_links_absolute(base_url)
         data = lxml.html.tostring(document, encoding='unicode')
         # data here is a full HTML doc, including HTML and BODY tags
         # which is not ideal (Issue #464)
@@ -345,10 +346,11 @@ class Post(object):
             if teaser != data:
                 if TEASER_REGEXP.search(data).groups()[-1]:
                     teaser += '<p class="more"><a href="{0}">{1}</a></p>'.format(
-                        self.permalink(lang), TEASER_REGEXP.search(data).groups()[-1])
+                        self.permalink(lang, absolute=really_absolute),
+                        TEASER_REGEXP.search(data).groups()[-1])
                 else:
                     teaser += READ_MORE_LINK.format(
-                        link=self.permalink(lang),
+                        link=self.permalink(lang, absolute=really_absolute),
                         read_more=self.messages[lang]["Read more"])
                 # This closes all open tags and sanitizes the broken HTML
                 document = lxml.html.fromstring(teaser)
