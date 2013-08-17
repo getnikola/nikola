@@ -31,7 +31,6 @@ from collections import defaultdict
 import os
 import re
 import string
-import sys
 
 import lxml.html
 
@@ -141,7 +140,7 @@ class Post(object):
 
         # If mathjax is a tag, then enable mathjax rendering support
         self.is_mathjax = 'mathjax' in self.tags
-        
+
     def _has_pretty_url(self, lang):
         if self.pretty_urls and \
                 self.meta[lang].get('pretty_url', '') != 'False' and \
