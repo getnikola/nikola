@@ -62,6 +62,7 @@ class Auto(Command):
         """Start the watcher."""
         try:
             from livereload.task import Task
+            from livereload.server import start
         except ImportError:
             print('To use the auto command, you need to install the '
                   '"livereload" package.')
@@ -80,7 +81,4 @@ class Auto(Command):
 
         os.chmod("Guardfile", 0o755)
 
-        if options and options.get('browser'):
-            subprocess.check_call(['livereload', '-b', out_folder])
-        else:
-            subprocess.check_call(['livereload', out_folder])
+        start(35729, out_folder, options and options.get('browser'))
