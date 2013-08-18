@@ -36,9 +36,10 @@ from nikola.plugin_categories import Command
 GUARDFILE = """#!/usr/bin/env python
 from livereload.task import Task
 import json
+import subprocess
 
 def f():
-    os.system("nikola build")
+    subprocess.call(("nikola", "build"))
 
 fdata = json.loads('''{0}''')
 
