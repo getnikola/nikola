@@ -1,6 +1,6 @@
 [Core]
 Name = version
-Module = command_version
+Module = version
 
 [Documentation]
 Author = Roberto Alsina

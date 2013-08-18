@@ -1,6 +1,6 @@
 [Core]
 Name = init
-Module = command_init
+Module = init
 
 [Documentation]
 Author = Roberto Alsina

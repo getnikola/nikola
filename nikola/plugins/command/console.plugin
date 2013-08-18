@@ -1,6 +1,6 @@
 [Core]
 Name = console
-Module = command_console
+Module = console
 
 [Documentation]
 Author = Roberto Alsina

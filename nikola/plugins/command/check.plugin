@@ -1,6 +1,6 @@
 [Core]
 Name = check
-Module = command_check
+Module = check
 
 [Documentation]
 Author = Roberto Alsina

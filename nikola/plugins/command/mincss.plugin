@@ -1,6 +1,6 @@
 [Core]
 Name = mincss
-Module = command_mincss
+Module = mincss
 
 [Documentation]
 Author = Roberto Alsina

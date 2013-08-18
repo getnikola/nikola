@@ -9,7 +9,7 @@ import mock
 
 class BasicCommandImportWordpress(unittest.TestCase):
     def setUp(self):
-        self.import_command = nikola.plugins.command_import_wordpress.CommandImportWordpress()
+        self.import_command = nikola.plugins.command.import_wordpress.CommandImportWordpress()
         self.import_filename = os.path.abspath(os.path.join(
             os.path.dirname(__file__), 'wordpress_export_example.xml'))
 
@@ -51,11 +51,11 @@ class CommandImportWordpressRunTest(BasicCommandImportWordpress):
 
         site_generation_patch = mock.patch('os.system', self.site_generation)
         data_import_patch = mock.patch(
-            'nikola.plugins.command_import_wordpress.CommandImportWordpress.import_posts', self.data_import)
+            'nikola.plugins.command.import_wordpress.CommandImportWordpress.import_posts', self.data_import)
         write_urlmap_patch = mock.patch(
-            'nikola.plugins.command_import_wordpress.CommandImportWordpress.write_urlmap_csv', self.write_urlmap)
+            'nikola.plugins.command.import_wordpress.CommandImportWordpress.write_urlmap_csv', self.write_urlmap)
         write_configuration_patch = mock.patch(
-            'nikola.plugins.command_import_wordpress.CommandImportWordpress.write_configuration', self.write_configuration)
+            'nikola.plugins.command.import_wordpress.CommandImportWordpress.write_configuration', self.write_configuration)
 
         self.patches = [site_generation_patch, data_import_patch,
                         write_urlmap_patch, write_configuration_patch]
@@ -142,10 +142,10 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
         write_content = mock.MagicMock()
         download_mock = mock.MagicMock()
 
-        with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.write_content', write_content):
-            with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.write_metadata', write_metadata):
-                with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.download_url_content_to_file', download_mock):
-                    with mock.patch('nikola.plugins.command_import_wordpress.os.makedirs'):
+        with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.write_content', write_content):
+            with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.write_metadata', write_metadata):
+                with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.download_url_content_to_file', download_mock):
+                    with mock.patch('nikola.plugins.command.import_wordpress.os.makedirs'):
                         self.import_command.import_posts(channel)
 
         self.assertTrue(download_mock.called)
@@ -215,9 +215,9 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
         transform_caption = mock.MagicMock()
         transform_newlines = mock.MagicMock()
 
-        with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.transform_sourcecode', transform_sourcecode):
-            with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.transform_caption', transform_caption):
-                with mock.patch('nikola.plugins.command_import_wordpress.CommandImportWordpress.transform_multiple_newlines', transform_newlines):
+        with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_sourcecode', transform_sourcecode):
+            with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_caption', transform_caption):
+                with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_multiple_newlines', transform_newlines):
                     self.import_command.transform_content("random content")
 
         self.assertTrue(transform_sourcecode.called)

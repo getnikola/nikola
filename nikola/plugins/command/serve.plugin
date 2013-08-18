@@ -1,6 +1,6 @@
 [Core]
 Name = serve
-Module = command_serve
+Module = serve
 
 [Documentation]
 Author = Roberto Alsina
