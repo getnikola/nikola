@@ -275,7 +275,7 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path,
         args = {
             'title': post.title(lang),
             'link': post.permalink(lang, absolute=True),
-            'description': post.text(lang, teaser_only=rss_teasers),
+            'description': post.text(lang, teaser_only=rss_teasers, really_absolute=True),
             'guid': post.permalink(lang, absolute=True),
             # PyRSS2Gen's pubDate is GMT time.
             'pubDate': (post.date if post.date.tzinfo is None else
