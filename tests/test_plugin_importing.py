@@ -7,7 +7,7 @@ import unittest
 
 class ImportPluginsTest(unittest.TestCase):
     def test_importing_command_import_wordpress(self):
-        import nikola.plugins.command_import_wordpress  # NOQA
+        import nikola.plugins.command.import_wordpress  # NOQA
 
     def test_importing_compile_rest(self):
         import nikola.plugins.compile_rest  # NOQA

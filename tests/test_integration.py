@@ -35,7 +35,7 @@ class EmptyBuildTest(unittest.TestCase):
         """Setup a demo site."""
         self.tmpdir = tempfile.mkdtemp()
         self.target_dir = os.path.join(self.tmpdir, "target")
-        self.init_command = nikola.plugins.command_init.CommandInit()
+        self.init_command = nikola.plugins.command.init.CommandInit()
         self.fill_site()
         self.patch_site()
         self.build()

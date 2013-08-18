@@ -1,6 +1,6 @@
 [Core]
 Name = install_theme
-Module = command_install_theme
+Module = install_theme
 
 [Documentation]
 Author = Roberto Alsina

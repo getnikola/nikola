@@ -1,10 +1,10 @@
 [Core]
-Name = mincss
-Module = command_mincss
+Name = serve
+Module = serve
 
 [Documentation]
 Author = Roberto Alsina
 Version = 0.1
 Website = http://nikola.ralsina.com.ar
-Description = Apply mincss to the generated site
+Description = Start test server.
 

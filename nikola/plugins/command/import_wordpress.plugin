@@ -1,6 +1,6 @@
 [Core]
 Name = import_wordpress
-Module = command_import_wordpress
+Module = import_wordpress
 
 [Documentation]
 Author = Roberto Alsina

@@ -1,9 +1,9 @@
 [Core]
-Name = init
-Module = command_init
+Name = deploy
+Module = deploy
 
 [Documentation]
 Author = Roberto Alsina
-Version = 0.2
+Version = 0.1
 Website = http://nikola.ralsina.com.ar
-Description = Create a new site.
+Description = Deploy the site
