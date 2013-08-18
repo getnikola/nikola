@@ -40,7 +40,7 @@ import json
 def f():
     os.system("nikola build")
 
-fdata = json.loads("""{0}""")
+fdata = json.loads('''{0}''')
 
 for watch in fdata:
     Task.add(watch, f)
