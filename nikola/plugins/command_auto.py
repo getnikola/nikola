@@ -35,11 +35,14 @@ from nikola.plugin_categories import Command
 
 GUARDFILE = """#!/usr/bin/env python
 from livereload.task import Task
+import json
 
 def f():
     os.system("nikola build")
 
-for watch in {0}:
+fdata = json.loads("""{0}""")
+
+for watch in fdata:
     Task.add(watch, f)
 """
 
