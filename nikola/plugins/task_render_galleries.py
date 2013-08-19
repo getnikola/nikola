@@ -31,6 +31,7 @@ import glob
 import hashlib
 import json
 import os
+import sys
 
 Image = None
 try:
@@ -357,7 +358,7 @@ class Galleries(Task):
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
             except Exception:
-                # TODO: inform the user, but do not fail
+                utils.show_msg("WARNING: can't thumbnail {0}".format(src))
                 pass
             else:
                 im.save(dst)
