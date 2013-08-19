@@ -13,4 +13,4 @@ requests>=1.0
 markdown
 Jinja2
 bbcode
-livereload
+https://github.com/ralsina/python-livereload/archive/master.zip#livereload
