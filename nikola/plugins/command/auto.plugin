@@ -1,0 +1,9 @@
+[Core]
+Name = auto
+Module = auto
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.2
+Website = http://nikola.ralsina.com.ar
+Description = Automatically detect site changes, rebuild and optionally refresh a browser.

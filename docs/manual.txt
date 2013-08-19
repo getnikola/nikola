@@ -312,35 +312,38 @@ part of the site using task names, for example ``nikola build render_pages``, an
 Nikola also has other commands besides ``build``::
 
     $ nikola help
-    Nikola
-    Available commands:
-      nikola auto                 automatically execute tasks when a dependency changes
-      nikola bootswatch_theme     given a swatch name from bootswatch.com and a parent theme, creates a custom theme
-      nikola build                run tasks
-      nikola check                check links and files in the generated site
-      nikola clean                clean action / remove targets
-      nikola console              start an interactive python console with access to your site and configuration
-      nikola deploy               deploy the site
-      nikola dumpdb               dump dependency DB
-      nikola forget               clear successful run status from internal DB
-      nikola help                 show help
-      nikola ignore               ignore task (skip) on subsequent runs
-      nikola import_blogger       import a blogger dump
-      nikola import_feed          import a RSS/Atom dump
-      nikola import_wordpress     import a WordPress dump
-      nikola init                 create a Nikola site in the specified folder
-      nikola install_theme        install theme into current site
-      nikola list                 list tasks from dodo file
-      nikola mincss               apply mincss to the generated site
-      nikola new_post             create a new blog post or site page
-      nikola run                  run tasks
-      nikola serve                start the test webserver
-      nikola strace               use strace to list file_deps and targets
-      nikola version              print the Nikola version number
+        Nikola is a tool to create static websites and blogs. For full documentation and more information,
+        please visit http://nikola.ralsina.com.ar
 
-      nikola help                 show help / reference
-      nikola help <command>       show command usage
-      nikola help <task-name>     show task usage
+
+        Available commands:
+        nikola auto                 automatically detect site changes, rebuild and optionally refresh a browser
+        nikola bootswatch_theme     given a swatch name from bootswatch.com and a parent theme, creates a custom theme
+        nikola build                run tasks
+        nikola check                check links and files in the generated site
+        nikola clean                clean action / remove targets
+        nikola console              start an interactive python console with access to your site and configuration
+        nikola deploy               deploy the site
+        nikola dumpdb               dump dependency DB
+        nikola forget               clear successful run status from internal DB
+        nikola help                 show help
+        nikola ignore               ignore task (skip) on subsequent runs
+        nikola import_blogger       import a blogger dump
+        nikola import_feed          import a RSS/Atom dump
+        nikola import_wordpress     import a WordPress dump
+        nikola init                 create a Nikola site in the specified folder
+        nikola install_theme        install theme into current site
+        nikola list                 list tasks from dodo file
+        nikola mincss               apply mincss to the generated site
+        nikola new_post             create a new blog post or site page
+        nikola run                  run tasks
+        nikola serve                start the test webserver
+        nikola strace               use strace to list file_deps and targets
+        nikola version              print the Nikola version number
+
+        nikola help                 show help / reference
+        nikola help <command>       show command usage
+        nikola help <task-name>     show task usage
 
 
 The ``serve`` command starts a web server so you can see the site you are creating::
@@ -845,7 +848,7 @@ The currently available filters are:
 
       def yui_compressor(infile):
           return runinplace(r'yui-compressor --nomunge %1 -o %2', infile)
-      
+
    You can turn any function into a filter using ``apply_to_file``.
    As a silly example, this would make everything uppercase and totally break
    your website:
