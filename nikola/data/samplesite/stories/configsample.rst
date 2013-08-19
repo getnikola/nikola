@@ -185,9 +185,9 @@
             <!-- End of Google Analytics -->
         """
 
-    # Content of the Add_this code, customize it to fit your needs
+    # Content of the AddThis code, customize it to fit your needs
     # Visit addthis.com to generate code samples
-    ADD_THIS_DATA = """
+    SOCIAL_BUTTONS_CODE = """
     <!-- Social buttons -->
     <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
     <a class="addthis_button_more">Share</a>
@@ -205,7 +205,7 @@
     # It can be anything, data, functions, modules, etc.
     GLOBAL_CONTEXT = {
         'analytics': ANALYTICS,
-        'add_this': ADD_THIS_DATA,
+        'social_buttons_code': SOCIAL_BUTTONS_CODE,
         'blog_title': BLOG_TITLE,
         'blog_url': BLOG_URL,
         'translations': TRANSLATIONS,

@@ -361,9 +361,9 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # Defaults to true
 # ADD_THIS_BUTTONS = True
 
-# Content of the Add_this code, customize it to fit your needs
+# Content of the AddThis code, customize it to fit your needs
 # Visit addthis.com to generate code samples
-# ADD_THIS_DATA = """
+# SOCIAL_BUTTONS_CODE = """
 # <!-- Social buttons -->
 # <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
 # <a class="addthis_button_more">Share</a>
@@ -379,7 +379,7 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 #
 # Add it to GLOBAL_CONTEXT as follow:
 # GLOBAL_CONTEXT = {
-#     'add_this': ADD_THIS_DATA,
+#     'social_buttons_code': SOCIAL_BUTTONS_CODE,
 # }
 
 # Hide link to source for the posts?

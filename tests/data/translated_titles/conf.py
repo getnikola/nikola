@@ -344,9 +344,9 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # in the default template (base.tmpl).
 # ANALYTICS = ""
 
-# Add-this script or whatever else you use. Added to the bottom of <body>
+# HTML snippet that will be added at the bottom of body of <body>
 # in the default template (base.tmpl).
-# ADD_THIS_DATA = ""
+# SOCIAL_BUTTONS_CODE = ""
 
 # The possibility to extract metadata from the filename by using a
 # regular expression.

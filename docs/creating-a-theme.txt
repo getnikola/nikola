@@ -94,7 +94,7 @@ The general page layout for the theme is done by the ``base.tmpl`` template, whi
                 ${html_sidebar_links()}
                 <li>${search_form}
                 </ul>
-        ${add_this}
+        ${social_buttons_code}
         ${analytics}
         <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
     </body>
