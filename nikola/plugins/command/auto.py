@@ -59,7 +59,15 @@ class Auto(Command):
             'type': bool,
             'help': 'Start a web browser.',
             'default': False,
-        }
+        },
+        {
+            'name': 'port',
+            'short': 'p',
+            'long': 'port',
+            'default': 8000,
+            'type': int,
+            'help': 'Port nummber (default: 8000)',
+        },
     ]
 
     def _execute(self, options, args):
@@ -71,6 +79,8 @@ class Auto(Command):
             print('To use the auto command, you need to install the '
                   '"livereload" package.')
             return
+
+        port = options and options.get('port')
 
         # Create a Guardfile
         with open("Guardfile", "wb+") as guardfile:
@@ -85,4 +95,4 @@ class Auto(Command):
 
         os.chmod("Guardfile", 0o755)
 
-        start(35729, out_folder, options and options.get('browser'))
+        start(port, out_folder, options and options.get('browser'))
