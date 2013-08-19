@@ -80,6 +80,9 @@ class Auto(Command):
                   '"livereload" package.')
             return
 
+        # Run an initial build so we are uptodate
+        subprocess.call(("nikola", "build"))
+
         port = options and options.get('port')
 
         # Create a Guardfile
