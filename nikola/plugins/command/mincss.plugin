@@ -1,0 +1,10 @@
+[Core]
+Name = mincss
+Module = mincss
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Apply mincss to the generated site
+
