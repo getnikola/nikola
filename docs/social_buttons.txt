@@ -1,0 +1,75 @@
+.. title: Alternative Social Buttons
+.. slug: social_buttons
+.. date: 2013/08/19 23:00
+.. tags:
+.. link:
+.. description:
+
+Using Alternative Social Buttons with Nikola
+============================================
+
+:Version: 5.5.1+
+
+.. class:: alert alert-info pull-right
+
+.. contents::
+
+
+The Default
+-----------
+
+By Default, the themes provided with Nikola will add to your pages a "slide in" widget at
+the bottom right of the page, provided by Addthis. This is the HTML code for that:
+
+.. code:: html
+
+    <!-- Social buttons -->
+    <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style
+        addthis_default_style addthis_label_style addthis_32x32_style">
+    <a class="addthis_button_more">Share</a>
+    <ul><li><a class="addthis_button_facebook"></a>
+    <li><a class="addthis_button_google_plusone_share"></a>
+    <li><a class="addthis_button_linkedin"></a>
+    <li><a class="addthis_button_twitter"></a>
+    </ul>
+    </div>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
+    <!-- End of social buttons -->
+    """
+
+You can change that using the ``SOCIAL_BUTTONS_CODE`` option in your conf.py. In some cases, just
+doing that will be enough but in others, it won't. This document tries to describe all the bits
+involved in making this work correctly.
+
+Part 1: ``SOCIAL_BUTTONS_CODE``
+    Social sharing services like addthis and others will provide you a HTML snippet.
+    If it is self-contained, then just setting ``SOCIAL_BUTTONS_CODE`` may be enough.
+    Try :-)
+
+Part 2: The theme
+    The ``SOCIAL_BUTTONS_CODE`` HTML fragment will be embedded *somewhere* by the theme. Whether that
+    is the correct place or not is not something the theme author can truly know, so it is possible that
+    you may have to tweak the ``base.html`` template to make it look good.
+
+Part 3: ``ANALYTICS``
+    Some social sharing code requires JS execution that depends on JQuery being available
+    (example: `SocialSharePrivacy <https://github.com/panzi/SocialSharePrivacy>`_). It's good
+    practice (and often, the only way that will work) to put those at the end of ``<BODY>``
+
+Part 4: assets
+    For sharing code that doesn't rely on a social sharing service, you may need to add CSS, Image, or JS
+    files to your site
+
+SocialSharePrivacy
+------------------
+
+Let's go step-by-step into integrating SocialSharePrivacy into a Nikola site.
+
+https://github.com/panzi/SocialSharePrivacy
+
+ShareNice
+---------
+
+Let's go step-by-step into integrating ShareNice into a Nikola site.
+
+http://sharenice.org
