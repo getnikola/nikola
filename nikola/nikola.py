@@ -37,6 +37,11 @@ except ImportError:
     from urllib.parse import urlparse, urlsplit, urljoin  # NOQA
 import warnings
 
+try:
+    import pyphen
+except ImportError:
+    pyphen = None
+
 import lxml.html
 from yapsy.PluginManager import PluginManager
 import pytz
@@ -127,6 +132,7 @@ class Nikola(object):
             'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js', '.json'),
             'HIDE_SOURCELINK': False,
             'HIDE_UNTRANSLATED_POSTS': False,
+            'HYPHENATE': False,
             'INDEX_DISPLAY_POST_COUNT': 10,
             'INDEX_FILE': 'index.html',
             'INDEX_TEASERS': False,
@@ -180,6 +186,11 @@ class Nikola(object):
         }
 
         self.config.update(config)
+
+        # Make sure we have pyphen installed if we are using it
+        if self.config.get('HYPHENATE') and pyphen is None:
+            print('WARNING: Hyphenation support requires pyphen, setting HYPHENATE to False')
+            self.config['HYPHENATE'] = False
 
         # Deprecating the ADD_THIS_BUTTONS option
         if 'ADD_THIS_BUTTONS' in config:
@@ -752,6 +763,7 @@ class Nikola(object):
                         current_time,
                         self.config['HIDE_UNTRANSLATED_POSTS'],
                         self.config['PRETTY_URLS'],
+                        self.config['HYPHENATE'],
                     )
                     for lang, langpath in list(
                             self.config['TRANSLATIONS'].items()):
