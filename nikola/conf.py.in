@@ -538,6 +538,9 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # valid by "nikola check -l"
 # LINK_CHECK_WHITELIST = []
 
+# If set to True, enable optional hyphenation in your posts (requires pyphen)
+# HYPHENATE = False
+
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
 

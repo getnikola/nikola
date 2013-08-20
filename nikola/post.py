@@ -33,6 +33,10 @@ import re
 import string
 
 import lxml.html
+try:
+    import pyphen
+except ImportError:
+    pyphen = None
 
 from .utils import (to_datetime, slugify, bytes_str, Functionary, LocaleBorg, unicode_str)
 
@@ -51,6 +55,7 @@ class Post(object):
         translations, default_lang, base_url, messages, template_name,
         file_metadata_regexp=None, strip_indexes=False, index_file='index.html',
         tzinfo=None, current_time=None, skip_untranslated=False, pretty_urls=False,
+        hyphenate=False,
     ):
         """Initialize post.
 
@@ -80,6 +85,7 @@ class Post(object):
         self.skip_untranslated = skip_untranslated
         self._template_name = template_name
         self.is_two_file = True
+        self.hyphenate = hyphenate
 
         default_metadata = get_meta(self, file_metadata_regexp)
 
@@ -330,6 +336,10 @@ class Post(object):
             raise(e)
         base_url = self.permalink(lang=lang, absolute=really_absolute)
         document.make_links_absolute(base_url)
+
+        if self.hyphenate:
+            hyphenate(document, lang)
+
         data = lxml.html.tostring(document, encoding='unicode')
         # data here is a full HTML doc, including HTML and BODY tags
         # which is not ideal (Issue #464)
@@ -586,3 +596,34 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
                 os.path.basename(post.source_path))[0]
 
     return meta
+
+
+def hyphenate(dom, lang):
+    if pyphen is not None:
+        hyphenator = pyphen.Pyphen(lang=lang)
+        for tag in ('p', 'div', 'li', 'span'):
+            for node in dom.xpath("//%s" % tag):
+                insert_hyphens(node, hyphenator)
+    return dom
+
+
+def insert_hyphens(node, hyphenator):
+    textattrs = ('text', 'tail')
+    if isinstance(node, lxml.etree._Entity):
+        # HTML entities have no .text
+        textattrs = ('tail',)
+    for attr in textattrs:
+        text = getattr(node, attr)
+        if not text:
+            continue
+        new_data = ' '.join([hyphenator.inserted(w, hyphen=u'\u00AD')
+                             for w in text.split()])
+        # Spaces are trimmed, we have to add them manually back
+        if text[0].isspace():
+            new_data = ' ' + new_data
+        if text[-1].isspace():
+            new_data += ' '
+        setattr(node, attr, new_data)
+
+    for child in node.iterchildren():
+        insert_hyphens(child, hyphenator)

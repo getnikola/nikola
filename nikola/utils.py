@@ -588,6 +588,7 @@ def show_msg(msg):
     sys.stderr.write(msg)
     sys.stderr.flush()
 
+
 class LocaleBorg:
     __shared_state = {
         'current_lang': None

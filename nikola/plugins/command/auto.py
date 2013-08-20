@@ -30,7 +30,6 @@ import json
 import os
 import subprocess
 
-from nikola import __version__
 from nikola.plugin_categories import Command
 
 GUARDFILE = """#!/usr/bin/env python
@@ -73,7 +72,6 @@ class Auto(Command):
     def _execute(self, options, args):
         """Start the watcher."""
         try:
-            from livereload.task import Task
             from livereload.server import start
         except ImportError:
             print('To use the auto command, you need to install the '
