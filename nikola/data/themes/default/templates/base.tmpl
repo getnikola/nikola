@@ -10,9 +10,6 @@ ${set_locale(lang)}
     ${extra_head_data}
 </head>
 <body>
-    %if add_this_buttons:
-    <script type="text/javascript">var addthis_config={"ui_language":"${lang}"};</script>
-    % endif
 <div class="container-fluid" id="container">
     <div class="row-fluid" id="titlerow">
     <div class="span12" id="titlecolumn">
@@ -45,6 +42,7 @@ ${set_locale(lang)}
             <ul class="unstyled">
             <li>${license}
             ${base_helper.html_social()}
+            ${social_buttons_code}
             ${base_helper.html_sidebar_links()}
             <li>${search_form}
             </ul>
@@ -55,6 +53,7 @@ ${set_locale(lang)}
     </div>
 </div>
     ${base_helper.late_load_js()}
+    ${social_buttons_code}
     ${analytics}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
     <%block name="extra_js"></%block>

@@ -10,9 +10,6 @@ ${set_locale(lang)}
     ${extra_head_data}
 </head>
 <body>
-    %if add_this_buttons:
-    <script type="text/javascript">var addthis_config={"ui_language":"${lang}"};</script>
-    % endif
         <h1 id="blog-title">
             <a href="${abs_link('/')}" title="${blog_title}">${blog_title}</a>
         </h1>
@@ -33,6 +30,7 @@ ${set_locale(lang)}
             ${html_sidebar_links()}
             <li>${search_form}
             </ul>
+    ${social_buttons_code}
     ${analytics}
     <%block name="extra_js"></%block>
 </body>

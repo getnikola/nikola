@@ -663,6 +663,10 @@ Analytics
     a Google analytics snippet or something similar, but you can really put anything
     there.
 
+Social_buttons_code
+    The ``SOCIAL_BUTTONS_CODE`` option lets you define a HTML snippet that will be added
+    at the bottom of body. It defaults to a snippet for AddThis, but you can
+    really put anything there. See `social_buttons.html` for more details.
 
 Adding Files
 ------------
@@ -1224,7 +1228,6 @@ Mustache
 This task gives you a ``mustache.html`` file which lets you access your whole
 blog without reloading the page, using client-side templates. Makes it much
 faster and modern ;-)
-
 
 License
 -------

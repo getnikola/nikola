@@ -1,9 +1,9 @@
 .. title: Sample Nikola Config File
 .. slug: sampleconfig
 .. date: 2012/03/30 23:00
-.. tags: 
-.. link: 
-.. description: 
+.. tags:
+.. link:
+.. description:
 
 .. code-block:: python
 
@@ -185,10 +185,27 @@
             <!-- End of Google Analytics -->
         """
 
+    # Content of the AddThis code, customize it to fit your needs
+    # Visit addthis.com to generate code samples
+    SOCIAL_BUTTONS_CODE = """
+    <!-- Social buttons -->
+    <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+    <a class="addthis_button_more">Share</a>
+    <ul><li><a class="addthis_button_facebook"></a>
+    <li><a class="addthis_button_google_plusone_share"></a>
+    <li><a class="addthis_button_linkedin"></a>
+    <li><a class="addthis_button_twitter"></a>
+    </ul>
+    </div>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
+    <!-- End of social buttons -->
+    """
+
     # Put in global_context things you want available on all your templates.
     # It can be anything, data, functions, modules, etc.
     GLOBAL_CONTEXT = {
         'analytics': ANALYTICS,
+        'social_buttons_code': SOCIAL_BUTTONS_CODE,
         'blog_title': BLOG_TITLE,
         'blog_url': BLOG_URL,
         'translations': TRANSLATIONS,

@@ -105,6 +105,7 @@ class Nikola(object):
         self.config = {
             'ADD_THIS_BUTTONS': True,
             'ANALYTICS': '',
+            'SOCIAL_BUTTONS_CODE': SOCIAL_BUTTONS_CODE,
             'ARCHIVE_PATH': "",
             'ARCHIVE_FILENAME': "archive.html",
             'CACHE_FOLDER': 'cache',
@@ -190,6 +191,13 @@ class Nikola(object):
         if self.config.get('HYPHENATE') and pyphen is None:
             print('WARNING: Hyphenation support requires pyphen, setting HYPHENATE to False')
             self.config['HYPHENATE'] = False
+
+        # Deprecating the ADD_THIS_BUTTONS option
+        if 'ADD_THIS_BUTTONS' in config:
+            print("WARNING: The ADD_THIS_BUTTONS option is deprecated, use SOCIAL_BUTTONS_CODE instead.")
+            if not config['ADD_THIS_BUTTONS']:
+                print("WARNING: Setting SOCIAL_BUTTONS_CODE to empty because ADD_THIS_BUTTONS is False.")
+                self.config['SOCIAL_BUTTONS_CODE'] = ''
 
         # STRIP_INDEX_HTML config has been replaces with STRIP_INDEXES
         # Port it if only the oldef form is there
@@ -296,8 +304,6 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['SLUG_TAG_PATH'] = self.config[
             'SLUG_TAG_PATH']
 
-        self._GLOBAL_CONTEXT['add_this_buttons'] = self.config[
-            'ADD_THIS_BUTTONS']
         self._GLOBAL_CONTEXT['index_display_post_count'] = self.config[
             'INDEX_DISPLAY_POST_COUNT']
         self._GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
@@ -311,6 +317,8 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL', self.config.get('BLOG_URL'))
         self._GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
         self._GLOBAL_CONTEXT['analytics'] = self.config.get('ANALYTICS')
+        self._GLOBAL_CONTEXT['add_this_buttons'] = self.config.get('SOCIAL_BUTTONS_CODE')
+        self._GLOBAL_CONTEXT['social_buttons_code'] = self.config.get('SOCIAL_BUTTONS_CODE')
         self._GLOBAL_CONTEXT['translations'] = self.config.get('TRANSLATIONS')
         self._GLOBAL_CONTEXT['license'] = self.config.get('LICENSE')
         self._GLOBAL_CONTEXT['search_form'] = self.config.get('SEARCH_FORM')
@@ -879,3 +887,18 @@ def s_l(lang):
         print("WARNING: could not set locale to {0}."
               "This may cause some i18n features not to work.".format(lang))
     return ''
+
+
+SOCIAL_BUTTONS_CODE = """
+<!-- Social buttons -->
+<div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+<a class="addthis_button_more">Share</a>
+<ul><li><a class="addthis_button_facebook"></a>
+<li><a class="addthis_button_google_plusone_share"></a>
+<li><a class="addthis_button_linkedin"></a>
+<li><a class="addthis_button_twitter"></a>
+</ul>
+</div>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
+<!-- End of social buttons -->
+"""

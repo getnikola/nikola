@@ -10,9 +10,6 @@ ${set_locale(lang)}
     ${extra_head_data}
 </head>
 <body class="home blog">
-    %if add_this_buttons:
-    <script type="text/javascript">var addthis_config={"ui_language":"${lang}"};</script>
-    % endif
     <div id="wrap" style="width:850px">
         <div id="container" style="width:560px">
             <%block name="content"></%block>
@@ -41,6 +38,7 @@ ${set_locale(lang)}
             ${content_footer}
         </div>
     </div>
+    ${social_buttons_code}
     ${analytics}
     <%block name="extra_js"></%block>
 </body>

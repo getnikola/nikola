@@ -9,9 +9,6 @@
     {{ extra_head_data }}
 </head>
 <body>
-    {% if add_this_buttons %}
-    <script type="text/javascript">var addthis_config={"ui_language":"{{ lang }}"};</script>
-    {% endif %}
 <div class="container-fluid" id="container">
     <div class="row-fluid" id="titlerow">
     <div class="span12" id="titlecolumn">
@@ -54,6 +51,7 @@
     </div>
 </div>
     {{ base_helper.late_load_js() }}
+    {{ social_buttons_code }}
     {{ analytics }}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
     {% block extra_js %}
