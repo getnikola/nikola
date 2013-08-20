@@ -17,6 +17,7 @@ Features
 Bugfixes
 --------
 
+* Made AddThis support replaceable through new SOCIAL_BUTTONS_CODE option.
 * Show warning if unable to thumbnail an image (Issue #551)
 * Use absolute URLs in feeds (Issue #590)
 * Fix for mincss path munging (Issues #570 #589)
