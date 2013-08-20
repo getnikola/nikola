@@ -46,7 +46,7 @@
 			}
 
 			// Check if we have an incomplete last row
-			lastRow = $this.data('lastRow');		
+			lastRow = $this.data('lastRow');
 			if( lastRow.data.length > 0 && settings.maxWidth-lastRow.width > MAX_LAST_ROW_GAP ) {
 				// Prepend the incomplete row to newly loaded data and redraw
 				lastRowData = lastSettings.data.slice( lastSettings.data.length - lastRow.data.length - 1 );
@@ -111,14 +111,14 @@
 					var minWidth = Math.floor( itemWidth * settings.height / itemHeight );
 
 					var newLineWidth = lineWidth + minWidth + requiredPadding(1);
-					
+
 			                if (minWidth > settings.maxWidth) {
 			                    // very short+wide images like panoramas
 			                    // show them even if ugly, as wide as possible
 			                    minWidth = settings.maxWidth-1;
 			                    minHeight = settings.height * minHeight / minWidth;
 			                }
-					
+
 					// console.log( 'lineWidth = ' + lineWidth );
 					// console.log( 'newLineWidth = ' + newLineWidth );
 					if( newLineWidth < settings.maxWidth ) {
@@ -141,7 +141,7 @@
 				// Scale the size to max width
 				testWidth=0;
 				if( lineWidth < settings.maxWidth ) {
-					var fullScaleWidth = settings.maxWidth - requiredPadding();
+					var fullScaleWidth = settings.maxWidth - requiredPadding() - 10;
 					var currScaleWidth = lineWidth;
 					var scaleFactor = fullScaleWidth / currScaleWidth;
 					if( scaleFactor > settings.maxScale )
