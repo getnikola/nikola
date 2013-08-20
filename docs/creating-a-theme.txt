@@ -1,9 +1,9 @@
 .. title: Creating a Theme
 .. slug: creating-a-theme
 .. date: 2012/03/13 12:00
-.. tags: 
-.. link: 
-.. description: 
+.. tags:
+.. link:
+.. description:
 
 Creating A Theme From Scratch (Almost)
 ======================================
@@ -50,7 +50,7 @@ Now we can already build and test the site::
    :height: 400px
 
    This is the almost completely unstyled "orphan" theme.
-      
+
 Of course, the page layout is completely broken. To fix that, we need to get into templates.
 
 Templates: Page Layout
@@ -94,6 +94,7 @@ The general page layout for the theme is done by the ``base.tmpl`` template, whi
                 ${html_sidebar_links()}
                 <li>${search_form}
                 </ul>
+        ${social_buttons_code}
         ${analytics}
         <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
     </body>
@@ -146,7 +147,7 @@ Monospace is a two-column-with-footer layout, so let's copy the basics from its 
             <div id="footer">
                 ${content_footer}
             </div>
-        </div>        
+        </div>
         ${analytics}
         <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
     </body>
@@ -154,7 +155,7 @@ Monospace is a two-column-with-footer layout, so let's copy the basics from its 
 .. figure:: http://ralsina.com.ar/galleries/random/monospace-2.png
 
    Yikes!
-   
+
 This will get better quickly once we add some CSS
 
 
@@ -180,14 +181,14 @@ For example, this is taken from the original monospace theme:
     #sidebar > li { margin:20px 0px; }
     #sidebar h1 { border-bottom:1px dotted #C8C8C8; }
     #sidebar .description { display:block; width:100%; height:auto; margin:0px 0px 10px 0px; }
-    
+
 This will (after we rebuild it) make the site looks different of course, and getting closer to our goal:
 
 .. figure:: http://ralsina.com.ar/galleries/random/monospace-3.png
    :height: 400px
 
    Monospaced allright.
-   
+
 If you compare it to `the original <http://wp-themes.com/monospace/>`_, however, you will see that the layout of
 the posts themselves is different, and that was not described in ``base.tmpl`` at all. But if you look, you'll see that
 there is a placeholder called content: ``<%block name="content"></%block>``
@@ -206,7 +207,7 @@ a list of posts" is defined in the other templates. Specifically, this is define
             <h1><a href="${post.permalink(lang)}">${post.title(lang)}</a>
             <small>&nbsp;&nbsp;
                 ${messages[lang]["Posted"]}: ${post.date.strftime(date_format)}
-                
+
             </small></h1>
             <hr>
             ${post.text(lang, index_teasers)}
@@ -217,7 +218,7 @@ a list of posts" is defined in the other templates. Specifically, this is define
         ${helper.html_disqus_script()}
     </%block>
 
-So, let's tweak that to be closer to the original. We put the post's metadata in a 
+So, let's tweak that to be closer to the original. We put the post's metadata in a
 box, add links for the posts tags, move the date there, etc.
 
 .. code-block:: mako
@@ -255,9 +256,9 @@ box, add links for the posts tags, move the date there, etc.
    :height: 400px
 
    Close enough!
-   
+
 Then if we click on the post title, we will see some broken details in the metadata that can be fixed in ``post.tmpl``, and so on.
-   
+
 .. code-block:: mako
 
     ## -*- coding: utf-8 -*-
@@ -294,7 +295,7 @@ Then if we click on the post title, we will see some broken details in the metad
    :height: 400px
 
    Details, details.
-   
+
 The demo site exercises most of the features in Nikola, so if you make it look good, your site probably will look good too.
 This monospace theme is included with nikola, if you want to use it or play with it.
- 
+

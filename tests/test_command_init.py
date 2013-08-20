@@ -12,18 +12,18 @@ class CommandInitCallTest(unittest.TestCase):
         self.create_configuration = mock.MagicMock()
         self.create_empty_site = mock.MagicMock()
         copy_sample_site_patch = mock.patch(
-            'nikola.plugins.command_init.CommandInit.copy_sample_site', self.copy_sample_site)
+            'nikola.plugins.command.init.CommandInit.copy_sample_site', self.copy_sample_site)
         create_configuration_patch = mock.patch(
-            'nikola.plugins.command_init.CommandInit.create_configuration', self.create_configuration)
+            'nikola.plugins.command.init.CommandInit.create_configuration', self.create_configuration)
         create_empty_site_patch = mock.patch(
-            'nikola.plugins.command_init.CommandInit.create_empty_site', self.create_empty_site)
+            'nikola.plugins.command.init.CommandInit.create_empty_site', self.create_empty_site)
 
         self.patches = [copy_sample_site_patch,
                         create_configuration_patch, create_empty_site_patch]
         for patch in self.patches:
             patch.start()
 
-        self.init_commad = nikola.plugins.command_init.CommandInit()
+        self.init_commad = nikola.plugins.command.init.CommandInit()
 
     def tearDown(self):
         for patch in self.patches:

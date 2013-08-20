@@ -1,6 +1,6 @@
 [Core]
 Name = planetoid
-Module = command_planetoid
+Module = planetoid
 
 [Documentation]
 Author = Roberto Alsina

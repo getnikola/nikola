@@ -1,6 +1,6 @@
 [Core]
 Name = import_feed
-Module = command_import_feed
+Module = import_feed
 
 [Documentation]
 Author = Grzegorz Śliwiński

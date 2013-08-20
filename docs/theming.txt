@@ -146,6 +146,8 @@ base.tmpl
       * ``license`` a larger license badge
       * ``analytics`` google scripts, or any JS you want to tack at the end of the body
         of the page.
+      * ``social_buttons_code`` scripts, or any JS you want to tack at the end of the body
+        of the page.
       * ``disqus_forum``: a `Disqus <http://disqus.com>`_ ID you can use to enable comments.
 
     It's probably a bad idea to do a theme that *requires* more than this (please put

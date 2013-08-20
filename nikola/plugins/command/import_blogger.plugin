@@ -1,6 +1,6 @@
 [Core]
 Name = import_blogger
-Module = command_import_blogger
+Module = import_blogger
 
 [Documentation]
 Author = Roberto Alsina

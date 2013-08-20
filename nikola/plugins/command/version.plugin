@@ -1,9 +1,9 @@
 [Core]
-Name = deploy
-Module = command_deploy
+Name = version
+Module = version
 
 [Documentation]
 Author = Roberto Alsina
-Version = 0.1
+Version = 0.2
 Website = http://nikola.ralsina.com.ar
-Description = Deploy the site
+Description = Show nikola version
