@@ -361,6 +361,27 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # Defaults to true
 # ADD_THIS_BUTTONS = True
 
+# Content of the AddThis code, customize it to fit your needs
+# Visit addthis.com to generate code samples
+# SOCIAL_BUTTONS_CODE = """
+# <!-- Social buttons -->
+# <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+# <a class="addthis_button_more">Share</a>
+# <ul><li><a class="addthis_button_facebook"></a>
+# <li><a class="addthis_button_google_plusone_share"></a>
+# <li><a class="addthis_button_linkedin"></a>
+# <li><a class="addthis_button_twitter"></a>
+# </ul>
+# </div>
+# <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
+# <!-- End of social buttons -->
+# """
+#
+# Add it to GLOBAL_CONTEXT as follow:
+# GLOBAL_CONTEXT = {
+#     'social_buttons_code': SOCIAL_BUTTONS_CODE,
+# }
+
 # Hide link to source for the posts?
 # HIDE_SOURCELINK = False
 # Copy the source files for your pages?

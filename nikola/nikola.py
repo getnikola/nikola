@@ -100,6 +100,7 @@ class Nikola(object):
         self.config = {
             'ADD_THIS_BUTTONS': True,
             'ANALYTICS': '',
+            'SOCIAL_BUTTONS_CODE': '',
             'ARCHIVE_PATH': "",
             'ARCHIVE_FILENAME': "archive.html",
             'CACHE_FOLDER': 'cache',
@@ -300,6 +301,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL', self.config.get('BLOG_URL'))
         self._GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
         self._GLOBAL_CONTEXT['analytics'] = self.config.get('ANALYTICS')
+        self._GLOBAL_CONTEXT['social_buttons_code'] = self.config.get('SOCIAL_BUTTONS_CODE')
         self._GLOBAL_CONTEXT['translations'] = self.config.get('TRANSLATIONS')
         self._GLOBAL_CONTEXT['license'] = self.config.get('LICENSE')
         self._GLOBAL_CONTEXT['search_form'] = self.config.get('SEARCH_FORM')
