@@ -10,7 +10,7 @@ class ImportPluginsTest(unittest.TestCase):
         import nikola.plugins.command.import_wordpress  # NOQA
 
     def test_importing_compile_rest(self):
-        import nikola.plugins.compile_rest  # NOQA
+        import nikola.plugins.compile.rest  # NOQA
 
     def test_importing_plugin_compile_markdown(self):
-        import nikola.plugins.compile_markdown    # NOQA
+        import nikola.plugins.compile.markdown    # NOQA

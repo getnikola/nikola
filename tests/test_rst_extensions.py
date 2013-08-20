@@ -37,7 +37,7 @@ from lxml import html
 import mock
 
 import unittest
-import nikola.plugins.compile_rest
+import nikola.plugins.compile.rest
 from nikola.utils import _reload
 from base import BaseTestCase
 
@@ -49,7 +49,7 @@ class FakeSite(object):
     def render_template(self, name, _, context):
         return('<img src="IMG.jpg">')
 
-nikola.plugins.compile_rest.Slides.site = FakeSite()
+nikola.plugins.compile.rest.Slides.site = FakeSite()
 
 
 class ReSTExtensionTestCase(BaseTestCase):
@@ -102,7 +102,7 @@ class GistTestCase(ReSTExtensionTestCase):
     monkeypatching the GitHubGist class for avoiding network dependency
 
     """
-    gist_type = nikola.plugins.compile_rest.GitHubGist
+    gist_type = nikola.plugins.compile.rest.GitHubGist
     sample = '.. gist:: fake_id\n   :file: spam.py'
     sample_without_filename = '.. gist:: fake_id2'
 
@@ -110,7 +110,7 @@ class GistTestCase(ReSTExtensionTestCase):
         """ Patch GitHubGist for avoiding network dependency """
         self.gist_type.get_raw_gist_with_filename = lambda *_: 'raw_gist_file'
         self.gist_type.get_raw_gist = lambda *_: "raw_gist"
-        _reload(nikola.plugins.compile_rest)
+        _reload(nikola.plugins.compile.rest)
 
     def test_gist(self):
         """ Test the gist directive with filename """
@@ -176,9 +176,9 @@ class VimeoTestCase(ReSTExtensionTestCase):
 
     def setUp(self):
         """ Disable query of the vimeo api over the wire """
-        nikola.plugins.compile_rest.Vimeo.request_size = False
+        nikola.plugins.compile.rest.Vimeo.request_size = False
         super(VimeoTestCase, self).setUp()
-        _reload(nikola.plugins.compile_rest)
+        _reload(nikola.plugins.compile.rest)
 
     def test_vimeo(self):
         """ Test Vimeo iframe tag generation """
@@ -215,16 +215,16 @@ class ListingTestCase(ReSTExtensionTestCase):
     def setUp(self):
         """ Inject a mock open function for not generating a test site """
         self.f = StringIO("import antigravity\n")
-        #_reload(nikola.plugins.compile_rest)
+        #_reload(nikola.plugins.compile.rest)
 
     def test_listing(self):
         """ Test that we can render a file object contents without errors """
-        with mock.patch("nikola.plugins.compile_rest.listing.codecs_open", self.opener_mock, create=True):
+        with mock.patch("nikola.plugins.compile.rest.listing.codecs_open", self.opener_mock, create=True):
             self.setHtmlFromRst(self.sample)
 
     def test_codeblock_alias(self):
         """ Test CodeBlock aliases """
-        with mock.patch("nikola.plugins.compile_rest.listing.codecs_open", self.opener_mock, create=True):
+        with mock.patch("nikola.plugins.compile.rest.listing.codecs_open", self.opener_mock, create=True):
             self.setHtmlFromRst(self.sample2)
             self.setHtmlFromRst(self.sample3)
 

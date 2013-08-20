@@ -1,6 +1,6 @@
 [Core]
 Name = textile
-Module = compile_textile
+Module = textile
 
 [Documentation]
 Author = Roberto Alsina

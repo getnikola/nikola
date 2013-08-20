@@ -24,27 +24,57 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Implementation of compile_html for HTML source files."""
+"""Implementation of compile_html based on markdown."""
 
-import os
-import shutil
+from __future__ import unicode_literals
+
 import codecs
+import os
+
+try:
+    from markdown import markdown
+
+    from nikola.plugins.compile.markdown.mdx_nikola import NikolaExtension
+    nikola_extension = NikolaExtension()
+
+    from nikola.plugins.compile.markdown.mdx_gist import GistExtension
+    gist_extension = GistExtension()
+
+    from nikola.plugins.compile.markdown.mdx_podcast import PodcastExtension
+    podcast_extension = PodcastExtension()
+
+except ImportError:
+    markdown = None  # NOQA
+    nikola_extension = None
+    gist_extension = None
+    podcast_extension = None
 
 from nikola.plugin_categories import PageCompiler
 
 
-class CompileHtml(PageCompiler):
-    """Compile HTML into HTML."""
+class CompileMarkdown(PageCompiler):
+    """Compile markdown into HTML."""
 
-    name = "html"
+    name = "markdown"
+    extensions = [gist_extension, nikola_extension, podcast_extension]
+    site = None
 
     def compile_html(self, source, dest, is_two_file=True):
+        if markdown is None:
+            raise Exception('To build this site, you need to install the '
+                            '"markdown" package.')
         try:
             os.makedirs(os.path.dirname(dest))
-        except Exception:
+        except:
             pass
-        shutil.copyfile(source, dest)
-        return True
+        self.extensions += self.site.config.get("MARKDOWN_EXTENSIONS")
+        with codecs.open(dest, "w+", "utf8") as out_file:
+            with codecs.open(source, "r", "utf8") as in_file:
+                data = in_file.read()
+            if not is_two_file:
+                data = data.split('\n\n', 1)[-1]
+            output = markdown(data, self.extensions)
+            out_file.write(output)
 
     def create_post(self, path, onefile=False, **kw):
         metadata = {}
@@ -59,4 +89,4 @@ class CompileHtml(PageCompiler):
                 for k, v in metadata.items():
                     fd.write('.. {0}: {1}\n'.format(k, v))
                 fd.write('-->\n\n')
-            fd.write("\n<p>Write your post here.</p>")
+            fd.write("Write your post here.")

@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from os import path
 
-from nikola.plugins.compile_markdown import CompileMarkdown
+from nikola.plugins.compile.markdown import CompileMarkdown
 
 
 class FakeSite(object):

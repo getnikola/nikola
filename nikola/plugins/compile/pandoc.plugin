@@ -1,10 +1,10 @@
 [Core]
-Name = asciidoc
-Module = compile_asciidoc
+Name = pandoc
+Module = pandoc
 
 [Documentation]
 Author = Roberto Alsina
 Version = 0.1
 Website = http://nikola.ralsina.com.ar
-Description = Compile ASCIIDoc into HTML
+Description = Compile markups into HTML using pandoc
 

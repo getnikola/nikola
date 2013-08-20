@@ -1,10 +1,10 @@
 [Core]
-Name = bbcode
-Module = compile_bbcode
+Name = asciidoc
+Module = asciidoc
 
 [Documentation]
 Author = Roberto Alsina
 Version = 0.1
 Website = http://nikola.ralsina.com.ar
-Description = Compile BBCode into HTML
+Description = Compile ASCIIDoc into HTML
 

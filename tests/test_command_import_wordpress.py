@@ -6,6 +6,8 @@ import os
 import unittest
 import mock
 
+import nikola.plugins.command.import_wordpress
+
 
 class BasicCommandImportWordpress(unittest.TestCase):
     def setUp(self):

@@ -1,10 +1,10 @@
 [Core]
-Name = txt2tags
-Module = compile_txt2tags
+Name = markdown
+Module = markdown
 
 [Documentation]
 Author = Roberto Alsina
 Version = 0.1
 Website = http://nikola.ralsina.com.ar
-Description = Compile Txt2tags into HTML
+Description = Compile Markdown into HTML
 

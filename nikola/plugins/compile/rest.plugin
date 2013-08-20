@@ -1,10 +1,10 @@
 [Core]
-Name = pandoc
-Module = compile_pandoc
+Name = rest
+Module = rest
 
 [Documentation]
 Author = Roberto Alsina
 Version = 0.1
 Website = http://nikola.ralsina.com.ar
-Description = Compile markups into HTML using pandoc
+Description = Compile reSt into HTML
 
