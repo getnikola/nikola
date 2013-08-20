@@ -274,6 +274,7 @@ class Galleries(Task):
                     1: kw,
                     2: self.site.config['GLOBAL_CONTEXT'],
                     3: self.site.config["COMMENTS_IN_GALLERIES"],
+                    4: context,
                 })],
             }
 
