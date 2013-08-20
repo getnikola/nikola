@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Made AddThis support replaceable through new SOCIAL_BUTTONS_CODE option.
 * categories
 * Added a FUTURE_IS_NOW option for publishing future-dated posts now (Issues #486, #577)
 * New typogrify filter (Issue #576)
@@ -17,7 +18,7 @@ Features
 Bugfixes
 --------
 
-* Made AddThis support replaceable through new SOCIAL_BUTTONS_CODE option.
+* Deprecated ADD_THIS_BUTTONS option.
 * Show warning if unable to thumbnail an image (Issue #551)
 * Use absolute URLs in feeds (Issue #590)
 * Fix for mincss path munging (Issues #570 #589)
