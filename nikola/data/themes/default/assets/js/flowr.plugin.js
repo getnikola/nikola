@@ -13,7 +13,7 @@
 		$this = this;
 		var ROW_CLASS_NAME = 'flowr-row';	// Class name for the row of flowy
 		var MAX_LAST_ROW_GAP = 25;			// If the width of last row is lesser than max-width, recalculation is needed
-		var NO_COPY_FIELDS = [ 'complete', 'data' ];	// these attributes will not be carried forward for append related calls
+		var NO_COPY_FIELDS = [ 'complete', 'data', 'responsive' ];	// these attributes will not be carried forward for append related calls
 		var DEFAULTS = {
 			'data' : [],
 			'padding' : 5,					// whats the padding between flowy items
@@ -22,13 +22,14 @@
 			'append' : false,				// TODO
 			'widthAttr' : 'width',			// a custom data structure can specify which attribute refers to height/width
 			'heightAttr' : 'height',
-			'maxScale' : 2,				// In case there is only 1 elment in last row
+			'maxScale' : 1.5,				// In case there is only 1 elment in last row
 			'maxWidth' : this.width()-1,	// 1px is just for offset
 			'itemWidth' : null,				// callback function for width
 			'itemHeight' : null,			// callback function for height
 			'complete' : null,				// complete callback
 			'rowClassName' : ROW_CLASS_NAME,
-			'rows' : -1 					// Maximum number of rows to render. -1 for no limit.
+			'rows' : -1, 					// Maximum number of rows to render. -1 for no limit.
+			'responsive' : true				// make content responsive
 		};
 		var settings = $.extend( DEFAULTS, options);
 
@@ -45,7 +46,7 @@
 			}
 
 			// Check if we have an incomplete last row
-			lastRow = $this.data('lastRow');
+			lastRow = $this.data('lastRow');		
 			if( lastRow.data.length > 0 && settings.maxWidth-lastRow.width > MAX_LAST_ROW_GAP ) {
 				// Prepend the incomplete row to newly loaded data and redraw
 				lastRowData = lastSettings.data.slice( lastSettings.data.length - lastRow.data.length - 1 );
@@ -60,6 +61,9 @@
 			}
 		}
 
+		// only on the first initial call
+		if( !settings.responsive && !settings.append )
+			$this.width( $this.width() );
 
 		// Basic sanity checks
 		if( !(settings.data instanceof Array) )
@@ -105,15 +109,18 @@
 
 					var minHeight = settings.height;
 					var minWidth = Math.floor( itemWidth * settings.height / itemHeight );
-                    if (minWidth > settings.maxWidth) {
-                        // very short+wide images
-                        // show them even if ugly, as wide as possible
-                        minWidth = settings.maxWidth-1;
-                        minHeight = settings.height * minHeight / minWidth;
-                    }
+
 					var newLineWidth = lineWidth + minWidth + requiredPadding(1);
-//  					console.log( 'lineWidth = ' + lineWidth );
-//  					console.log( 'newLineWidth = ' + newLineWidth );
+					
+			                if (minWidth > settings.maxWidth) {
+			                    // very short+wide images like panoramas
+			                    // show them even if ugly, as wide as possible
+			                    minWidth = settings.maxWidth-1;
+			                    minHeight = settings.height * minHeight / minWidth;
+			                }
+					
+					// console.log( 'lineWidth = ' + lineWidth );
+					// console.log( 'newLineWidth = ' + newLineWidth );
 					if( newLineWidth < settings.maxWidth ) {
 						lineItems.push({
 							'height' : minHeight,
@@ -134,8 +141,7 @@
 				// Scale the size to max width
 				testWidth=0;
 				if( lineWidth < settings.maxWidth ) {
-                    // FIXME I added the -10 because otherwise it miscalculated :-(
-					var fullScaleWidth = settings.maxWidth - requiredPadding() - 10;
+					var fullScaleWidth = settings.maxWidth - requiredPadding();
 					var currScaleWidth = lineWidth;
 					var scaleFactor = fullScaleWidth / currScaleWidth;
 					if( scaleFactor > settings.maxScale )
@@ -150,12 +156,51 @@
 						testWidth += lineItem.width;
 					}
 				}
+
 				return {
 					data : lineItems,
 					width : testWidth + requiredPadding()
 				};
-			}	//getNextRow
+			},	//getNextRow
+			reorderContent : function(){
+				/*
+				 TODO: optimize for faster resizing by reusing dom objects instead of killing the dom
+				 */
+				var _initialWidth = $this.data('width');
+				var _newWidth = $this.width();
+				var _change = _initialWidth - _newWidth;
+
+				if(_initialWidth!=_newWidth) {
+					$this.html('');
+					var _settings = $this.data( 'lastSettings' );
+					_settings.data = $this.data( 'data' );
+					_settings.maxWidth = $this.width() - 1;
+					$this.flowr( _settings );
+				}
+			}
 		} //utils
+
+		// If the resposive var is set to true then listen for resize method
+		// and prevent resizing from happening twice if responsive is set again during append phase!
+		if( settings.responsive && !$this.data('__responsive') ) {
+			$(window).resize(function(){
+				initialWidth = $this.data('width');
+				newWidth = $this.width();
+
+				//initiate resize
+				if( initialWidth != newWidth ) {
+					var task_id = $this.data('task_id');
+					if( task_id ) {
+						task_id = clearTimeout( task_id );
+						task_id = null;
+					}
+					task_id = setTimeout( utils.reorderContent, 80 );
+					$this.data('task_id', task_id );
+				}
+			});
+			$this.data('__responsive',true);
+		}
+
 
 		return this.each(function(){
 
@@ -164,22 +209,23 @@
 			var rowData = null;
 			var currentRow = 0;
 			var currentItem = 0;
+
+			// Store all the data
+			var allData = $this.data( 'data' ) || [];
+			for(i=0;i<data.length;i++) {
+				allData.push( data[i] );
+			}
+			$this.data( 'data', allData );
+
 			// While we have a new row
-			while( 1 ) {
+			while( ( rowData = utils.getNextRow(data,settings) ) != null && rowData.data.length > 0 ) {
 				if( settings.rows > 0 && currentRow >= settings.rows )
 					break;
-                rowData = utils.getNextRow(data,settings);
-                if(rowData == null){
-                    break;
-                }
-                if(rowData.data.length <= 0){
-                    break;
-                }
 				// remove the number of elements in the new row from the top of data stack
 				data.splice( 0, rowData.data.length );
 
 				// Create a new row div, add class, append the htmls and insert the flowy items
-				var $row = $('<div>').addClass(settings.rowClassName).css('margin-bottom', settings.padding);
+				var $row = $('<div>').addClass(settings.rowClassName);
 				for( i=0; i<rowData.data.length; i++ ) {
 					var displayData = rowData.data[i];
 					// Get the HTML object from custom render function passed as argument
