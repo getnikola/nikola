@@ -31,7 +31,6 @@ import glob
 import hashlib
 import json
 import os
-import sys
 
 Image = None
 try:
