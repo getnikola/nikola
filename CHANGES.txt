@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Optional hyphenation (HYPHENATE option, Issue #576)
 * categories
 * Added a FUTURE_IS_NOW option for publishing future-dated posts now (Issues #486, #577)
 * New typogrify filter (Issue #576)
