@@ -68,8 +68,9 @@ Part 4: assets
 ShareNice
 ---------
 
-Sharenice is "written in order to provide social sharing features to web developers and website
-administrators who wish to maintain and protect their users' privacy" which sounds cool to me.
+`Sharenice <http://sharenice.org>`_ is "written in order to provide social sharing features to
+web developers and website administrators who wish to maintain and protect their users' privacy"
+which sounds cool to me.
 
 Let's go step by step into integrating the hosted version of ShareNice into a Nikola site.
 
@@ -125,7 +126,38 @@ minified.
 SocialSharePrivacy
 ------------------
 
-Let's go step-by-step into integrating SocialSharePrivacy into a Nikola site.
+`SocialSharePrivacy <https://github.com/panzi/SocialSharePrivacy>`_ is "a jQuery plugin that
+lets you add social share buttons to your website that don't allow the social sites to track
+your users." Nice!
+
+Let's go step-by-step into integrating SocialSharePrivacy into a Nikola site. One peculiarity
+is that it's **not a hosted service** so we'll have to do it the hard way, by getting and
+distributing everything in our own site.
 
 https://github.com/panzi/SocialSharePrivacy
+
+For testing purposes, let's do it on a demo site::
+
+    $ nikola init --demo ssp_test
+    A new site with example data has been created at ssp_test.
+    See README.txt in that folder for more information.
+    $ cd ssp_test/
+
+To see what's going on, let's start Nikola in "auto mode". This should build the
+site and open a web browser showing the default configuration, with the AddThis widget::
+
+    $ nikola auto -b
+
+Now, download `the current version <https://github.com/panzi/SocialSharePrivacy/archive/master.zip>`_
+and unzip it. You will have a ``SocialSharePrivacy-master`` folder with lots of stuff in it.
+
+First, we need to build it (this requires a working and modern uglifyjs, this may not be easy)::
+
+    $ cd SocialSharePrivacy-master
+    $ sh build.sh -m gplus,twitter,facebook,mail -s "/assets/css/socialshareprivacy.css" -a off
+
+You will now have several files in a ``build`` folder. We need to bring them into the site::
+
+    $ cp -Rv SocialSharePrivacy-master/build/* files/
+    $ cp -R SocialSharePrivacy-master/images/ files/assets/
 
