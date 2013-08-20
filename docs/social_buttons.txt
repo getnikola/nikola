@@ -126,13 +126,16 @@ minified.
 SocialSharePrivacy
 ------------------
 
+The Hard Way
+~~~~~~~~~~~~
+
 `SocialSharePrivacy <https://github.com/panzi/SocialSharePrivacy>`_ is "a jQuery plugin that
 lets you add social share buttons to your website that don't allow the social sites to track
 your users." Nice!
 
-Let's go step-by-step into integrating SocialSharePrivacy into a Nikola site. One peculiarity
-is that it's **not a hosted service** so we'll have to do it the hard way, by getting and
-distributing everything in our own site.
+Let's go step-by-step into integrating SocialSharePrivacy into a Nikola site. To improve
+privacy, they recommend you not use the hosted service so we'll do it the hard way, by 
+getting and distributing everything in our own site.
 
 https://github.com/panzi/SocialSharePrivacy
 
@@ -161,3 +164,39 @@ You will now have several files in a ``build`` folder. We need to bring them int
     $ cp -Rv SocialSharePrivacy-master/build/* files/
     $ cp -R SocialSharePrivacy-master/images/ files/assets/
 
+Edit your ``conf.py``:
+
+.. code:: python
+
+    ANALYTICS = """
+    <script type="text/javascript" src="/javascripts/jquery.socialshareprivacy.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('.share').socialSharePrivacy();
+    });
+    </script>
+    """
+    
+    SOCIAL_BUTTONS_CODE = """<div class="share"></div>"""
+
+In my experience this produces a broken, duplicate, semi-working thing. YMMV and if you make it work correctly, let me know how :-)
+
+The Easy Way
+~~~~~~~~~~~~
+
+Go to http://panzi.github.io/SocialSharePrivacy/ and use the provided form to get the code. Make sure you check "I already use JQuery" 
+if you are using one of the themes that require it, like site or default, select the services you want, and use your disqus name if
+you have one.
+
+It will give you 3 code snippets:
+
+"Insert this once in the head of your page"
+    Put it in ``ANALYTICS``
+
+"Insert this wherever you want a share widget displayed"
+    Put it in ``SOCIAL_BUTTONS_CODE``
+
+"Insert this once anywhere after the other code"
+    Put it in ``ANALYTICS``
+
+That should give you a working integration (not tested)
