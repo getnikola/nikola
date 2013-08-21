@@ -1,6 +1,6 @@
 [Core]
 Name = gzip
-Module = gzip_files
+Module = gzip
 
 [Documentation]
 Author = Roberto Alsina
