@@ -1,6 +1,6 @@
 [Core]
 Name = mako
-Module = template_mako
+Module = mako
 
 [Documentation]
 Author = Roberto Alsina
