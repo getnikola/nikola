@@ -1,6 +1,6 @@
 [Core]
 Name = create_bundles
-Module = task_create_bundles
+Module = bundles
 
 [Documentation]
 Author = Roberto Alsina

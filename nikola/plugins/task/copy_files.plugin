@@ -1,6 +1,6 @@
 [Core]
 Name = copy_files
-Module = task_copy_files
+Module = copy_files
 
 [Documentation]
 Author = Roberto Alsina

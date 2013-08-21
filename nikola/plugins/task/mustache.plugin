@@ -1,6 +1,6 @@
 [Core]
 Name = render_mustache
-Module = task_mustache
+Module = mustache
 
 [Documentation]
 Author = Roberto Alsina

@@ -1,6 +1,6 @@
 [Core]
 Name = render_index
-Module = task_indexes
+Module = indexes
 
 [Documentation]
 Author = Roberto Alsina

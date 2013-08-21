@@ -1,6 +1,6 @@
 [Core]
 Name = sitemap
-Module = task_sitemap
+Module = sitemap
 
 [Documentation]
 Author = Roberto Alsina

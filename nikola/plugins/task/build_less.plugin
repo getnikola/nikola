@@ -1,6 +1,6 @@
 [Core]
 Name = build_less
-Module = task_build_less
+Module = build_less
 
 [Documentation]
 Author = Roberto Alsina

@@ -1,6 +1,6 @@
 [Core]
 Name = render_archive
-Module = task_archive
+Module = archive
 
 [Documentation]
 Author = Roberto Alsina

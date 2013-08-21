@@ -1,6 +1,6 @@
 [Core]
 Name = local_search
-Module = task_localsearch
+Module = localsearch
 
 [Documentation]
 Author = Roberto Alsina

@@ -1,6 +1,6 @@
 [Core]
 Name = render_rss
-Module = task_render_rss
+Module = rss
 
 [Documentation]
 Author = Roberto Alsina

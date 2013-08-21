@@ -1,6 +1,6 @@
 [Core]
 Name = redirect
-Module = task_redirect
+Module = redirect
 
 [Documentation]
 Author = Roberto Alsina

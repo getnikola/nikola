@@ -1,6 +1,6 @@
 [Core]
 Name = copy_assets
-Module = task_copy_assets
+Module = copy_assets
 
 [Documentation]
 Author = Roberto Alsina

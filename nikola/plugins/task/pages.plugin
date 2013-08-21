@@ -1,6 +1,6 @@
 [Core]
 Name = render_pages
-Module = task_render_pages
+Module = pages
 
 [Documentation]
 Author = Roberto Alsina

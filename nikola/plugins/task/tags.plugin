@@ -1,6 +1,6 @@
 [Core]
 Name = render_tags
-Module = task_render_tags
+Module = tags
 
 [Documentation]
 Author = Roberto Alsina

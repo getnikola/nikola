@@ -1,6 +1,6 @@
 [Core]
 Name = render_galleries
-Module = task_render_galleries
+Module = galleries
 
 [Documentation]
 Author = Roberto Alsina

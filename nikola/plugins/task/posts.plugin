@@ -1,6 +1,6 @@
 [Core]
 Name = render_posts
-Module = task_render_posts
+Module = posts
 
 [Documentation]
 Author = Roberto Alsina
