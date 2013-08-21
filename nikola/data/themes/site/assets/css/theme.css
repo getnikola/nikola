@@ -73,8 +73,3 @@ ul.bricks > li {
     white-space:nowrap;
     margin: 3px;
 }
-
-:target, h1, h2, h3, h4, h5, h6, h7 {
-    margin-top: -40px;
-    padding-top: 40px;
-}

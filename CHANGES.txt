@@ -19,6 +19,7 @@ Features
 Bugfixes
 --------
 
+* Solve site theme's navbar overlapping Issues (Issue #585)
 * Deprecated ADD_THIS_BUTTONS option.
 * Show warning if unable to thumbnail an image (Issue #551)
 * Use absolute URLs in feeds (Issue #590)
