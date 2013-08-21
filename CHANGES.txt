@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New Dutch translation
 * Optional hyphenation (HYPHENATE option, Issue #576)
 * Made AddThis support replaceable through new SOCIAL_BUTTONS_CODE option.
 * categories

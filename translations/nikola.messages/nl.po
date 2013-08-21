@@ -1,0 +1,82 @@
+# Messages in Nikola
+# Copyright (C) 2012-2013
+# This file is distributed under the same license as the Nikola package.
+# 
+# Translators:
+# Translators:
+# Joes <joes@staalkemade.net>, 2013
+msgid ""
+msgstr ""
+"Project-Id-Version: Nikola\n"
+"Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
+"POT-Creation-Date: 2013-03-15 12:24-0300\n"
+"PO-Revision-Date: 2013-08-21 16:53+0000\n"
+"Last-Translator: Joes <joes@staalkemade.net>\n"
+"Language-Team: Dutch (http://www.transifex.com/projects/p/nikola/language/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "More posts about"
+msgstr "Meer berichten over"
+
+msgid "LANGUAGE"
+msgstr "Nederlands"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Categories"
+msgstr "Categorieën"
+
+msgid "Tags and Categories"
+msgstr "Tags en Categorieën"
+
+msgid "Read more"
+msgstr "Lees verder"
+
+msgid "Posts about %s"
+msgstr "Berichten over %s"
+
+msgid "Next post"
+msgstr "Volgend bericht"
+
+msgid "old posts page %d"
+msgstr "oude berichten pagina %d"
+
+msgid "Source"
+msgstr "Bron"
+
+#. Here your translation should not say ENglish but the name of your language
+#. instead
+msgid "Read in English"
+msgstr "Lees in het Nederlands"
+
+msgid "Posts for year %s"
+msgstr "Berichten voor het jaar %s"
+
+msgid "Newer posts"
+msgstr "Nieuwere berichten"
+
+msgid "Previous post"
+msgstr "Vorig bericht"
+
+msgid "Also available in"
+msgstr "Ook beschikbaar in"
+
+msgid "Original site"
+msgstr "Originele site"
+
+msgid "Older posts"
+msgstr "Oudere berichten"
+
+msgid "Archive"
+msgstr "Archief"
+
+msgid "Posted"
+msgstr "Geplaatst"
+
+msgid "Posts for {month} {year}"
+msgstr "Berichten voor {month} {year}"
