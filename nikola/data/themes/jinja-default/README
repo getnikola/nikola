@@ -1,3 +1,0 @@
-This theme is exactly the same as "default" but using Jinja2 templates.
-
-To try it, set THEME="jinja-default" in your 'conf.py'

@@ -1,9 +1,0 @@
-{% extends "base.tmpl" %}
-{% block content %}
-<ul class="breadcrumb">
-    {% for link, crumb in crumbs %}
-        <li><a href="{{link}}">/ {{crumb}}</a>
-    {% endfor %}
-</ul>
-{{code}}
-{% endblock %}
