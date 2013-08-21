@@ -175,7 +175,7 @@ class Nikola(object):
             'SITEMAP_INCLUDE_FILELESS_DIRS': True,
             'TAG_PATH': 'categories',
             'TAG_PAGES_ARE_INDEXES': False,
-            'THEME': 'site',
+            'THEME': 'bootstrap',
             'THEME_REVEAL_CONGIF_SUBTHEME': 'sky',
             'THEME_REVEAL_CONGIF_TRANSITION': 'cube',
             'THUMBNAIL_SIZE': 180,
