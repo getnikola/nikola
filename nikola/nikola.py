@@ -185,6 +185,9 @@ class Nikola(object):
             'TIMEZONE': None,
             'DEPLOY_DRAFTS': True,
             'DEPLOY_FUTURE': False,
+            'SCHEDULE_ALL': False,
+            'SCHEDULE_RULE': '',
+            'SCHEDULE_FORCE_TODAY': False
         }
 
         self.config.update(config)

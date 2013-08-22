@@ -76,6 +76,46 @@ def get_default_compiler(is_post, post_compilers, post_pages):
     return 'rest'
 
 
+def get_date(schedule=False, rule=None, last_date=None, force_today=False):
+    """Returns a date stamp, given a recurrence rule.
+
+    schedule - bool:
+        whether to use the recurrence rule or not
+
+    rule - str:
+        an iCal RRULE string that specifies the rule for scheduling posts
+
+    last_date - datetime:
+        timestamp of the last post
+
+    force_today - bool:
+        tries to schedule a post to today, if possible, even if the scheduled
+        time has already passed in the day.
+    """
+
+    date = now = datetime.datetime.now()
+    try:
+        from dateutil import rrule
+    except ImportError:
+        print('To use the --schedule switch of new_post, '
+              'you have to install the "dateutil" package.')
+        rrule = None
+    if rrule and schedule and rule:
+        if last_date and last_date.tzinfo:
+            # strip tzinfo for comparisons
+            last_date = last_date.replace(tzinfo=None)
+        try:
+            rule_ = rrule.rrulestr(rule, dtstart=last_date)
+        except Exception:
+            print('Unable to parse rule string, using current time.')
+        else:
+            # Try to post today, instead of tomorrow, if no other post today.
+            if force_today:
+                now = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            date = rule_.after(max(now, last_date or now), last_date is None)
+    return date.strftime('%Y/%m/%d %H:%M:%S')
+
+
 class CommandNewPost(Command):
     """Create a new post."""
 
@@ -128,7 +168,15 @@ class CommandNewPost(Command):
             'default': '',
             'help': 'Markup format for post, one of rest, markdown, wiki, '
                     'bbcode, html, textile, txt2tags',
-        }
+        },
+        {
+            'name': 'schedule',
+            'short': 's',
+            'type': bool,
+            'default': False,
+            'help': 'Schedule post based on recurrence rule'
+        },
+
     ]
 
     def _execute(self, options, args):
@@ -195,7 +243,15 @@ class CommandNewPost(Command):
             if isinstance(path, utils.bytes_str):
                 path = path.decode(sys.stdin.encoding)
             slug = utils.slugify(os.path.splitext(os.path.basename(path))[0])
-        date = datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+        # Calculate the date to use for the post
+        schedule = options['schedule'] or self.site.config.get('SCHEDULE_ALL',
+                                                               False)
+        rule = self.site.config.get('SCHEDULE_RULE', '')
+        force_today = self.site.config.get('SCHEDULE_FORCE_TODAY', False)
+        self.site.scan_posts()
+        timeline = self.site.timeline
+        last_date = None if not timeline else timeline[0].date
+        date = get_date(schedule, rule, last_date, force_today)
         data = [title, slug, date, tags]
         output_path = os.path.dirname(entry[0])
         meta_path = os.path.join(output_path, slug + ".meta")
