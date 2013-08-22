@@ -329,9 +329,11 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
         self._GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
 
+        # TODO: remove fallback in v7
         self._GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL', self.config.get('BLOG_URL'))
         self._GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
         self._GLOBAL_CONTEXT['analytics'] = self.config.get('ANALYTICS')
+        # TODO: remove in v7
         self._GLOBAL_CONTEXT['add_this_buttons'] = self.config.get('SOCIAL_BUTTONS_CODE')
         self._GLOBAL_CONTEXT['social_buttons_code'] = self.config.get('SOCIAL_BUTTONS_CODE')
         self._GLOBAL_CONTEXT['translations'] = self.config.get('TRANSLATIONS')

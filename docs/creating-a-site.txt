@@ -155,7 +155,7 @@ you can use anything you like from it:
 
    which will create a page you could access as "http://yoursite.com/foo"
 
-And that's it. You will want to change the SIDEBAR_LINKS option to create a reasonable
+And that's it. You will want to change the NAVIGATION_LINKS option to create a reasonable
 "menu" for your site, you will want to hack the theme (check ``nikola help bootswatch_theme``
 for a quick & dirty solution), and you may want to add a blog later on, for company news
 or whatever.
@@ -172,7 +172,7 @@ or whatever.
         )
 
     Create a post with ``nikola new_post`` and that's it, you now have a blog
-    in http://yoursite.com/blog (you may want to add links to it in SIDEBAR_LINKS of course).
+    in http://yoursite.com/blog (you may want to add links to it in NAVIGATION_LINKS of course).
 
 You can see the finished site in http://notablog.ralsina.com.ar and its full configuration in
 http://ralsina.com.ar/listings/notablog/conf.py.html
