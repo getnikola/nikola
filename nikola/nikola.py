@@ -142,6 +142,7 @@ class Nikola(object):
             'LICENSE': '',
             'LINK_CHECK_WHITELIST': [],
             'LISTINGS_FOLDER': 'listings',
+            'NAVIGATION_LINKS': {},
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
@@ -192,7 +193,19 @@ class Nikola(object):
             print('WARNING: Hyphenation support requires pyphen, setting HYPHENATE to False')
             self.config['HYPHENATE'] = False
 
+        # Deprecating the SIDEBAR_LINKS option
+        # TODO: remove on v7
+        if 'SIDEBAR_LINKS' in config:
+            print("WARNING: The SIDEBAR_LINKS option is deprecated, use NAVIGATION_LINKS instead.")
+            if 'NAVIGATION_LINKS' in config:
+                print("WARNING: The SIDEBAR_LINKS conflicts with NAVIGATION_LINKS, ignoring SIDEBAR_LINKS.")
+            else:
+                self.config['NAVIGATION_LINKS'] = config['SIDEBAR_LINKS']
+        # Compatibility alias
+        self.config['SIDEBAR_LINKS'] = self.config['NAVIGATION_LINKS']
+
         # Deprecating the ADD_THIS_BUTTONS option
+        # TODO: remove on v7
         if 'ADD_THIS_BUTTONS' in config:
             print("WARNING: The ADD_THIS_BUTTONS option is deprecated, use SOCIAL_BUTTONS_CODE instead.")
             if not config['ADD_THIS_BUTTONS']:
@@ -201,6 +214,7 @@ class Nikola(object):
 
         # STRIP_INDEX_HTML config has been replaces with STRIP_INDEXES
         # Port it if only the oldef form is there
+        # TODO: remove on v7
         if 'STRIP_INDEX_HTML' in config and 'STRIP_INDEXES' not in config:
             print("WARNING: You should configure STRIP_INDEXES instead of STRIP_INDEX_HTML")
             self.config['STRIP_INDEXES'] = config['STRIP_INDEX_HTML']
@@ -218,6 +232,7 @@ class Nikola(object):
 
         # SITE_URL is required, but if the deprecated BLOG_URL
         # is available, use it and warn
+        # TODO: remove on v7
         if 'SITE_URL' not in self.config:
             if 'BLOG_URL' in self.config:
                 print("WARNING: You should configure SITE_URL instead of BLOG_URL")
@@ -332,9 +347,12 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
         self._GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
 
-        self._GLOBAL_CONTEXT['sidebar_links'] = utils.Functionary(list, self.config['DEFAULT_LANG'])
-        for k, v in self.config.get('SIDEBAR_LINKS', {}).items():
-            self._GLOBAL_CONTEXT['sidebar_links'][k] = v
+        self._GLOBAL_CONTEXT['navigation_links'] = utils.Functionary(list, self.config['DEFAULT_LANG'])
+        for k, v in self.config.get('NAVIGATION_LINKS', {}).items():
+            self._GLOBAL_CONTEXT['navigation_links'][k] = v
+        # TODO: remove on v7
+        # Compatibility alias
+        self._GLOBAL_CONTEXT['sidebar_links'] = self._GLOBAL_CONTEXT['navigation_links']
 
         self._GLOBAL_CONTEXT['twitter_card'] = self.config.get(
             'TWITTER_CARD', {})

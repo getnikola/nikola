@@ -20,6 +20,7 @@ Features
 Bugfixes
 --------
 
+* Deprecated SIDEBAR_LINKS, replaced with NAVIGATION_LINKS (Issue #104 #601)
 * Solve site theme's navbar overlapping Issues (Issue #585)
 * Deprecated ADD_THIS_BUTTONS option.
 * Show warning if unable to thumbnail an image (Issue #551)

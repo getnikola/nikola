@@ -1,13 +1,12 @@
+## -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
-<%text>
-# -*- coding: utf-8 -*-
+
 from __future__ import unicode_literals
 import time
 
 ##############################################
 # Configuration, please edit
 ##############################################
-</%text>
 
 # Data about this site
 BLOG_AUTHOR = "${BLOG_AUTHOR}"
@@ -54,7 +53,7 @@ TRANSLATIONS = {
 
 # Links for the sidebar / navigation bar.
 # You should provide a key-value pair for each used language.
-SIDEBAR_LINKS = {
+NAVIGATION_LINKS = {
     DEFAULT_LANG: (
         ('/archive.html', 'Archives'),
         ('/categories/index.html', 'Tags'),
@@ -62,11 +61,9 @@ SIDEBAR_LINKS = {
     ),
 }
 
-<%text>
 ##############################################
 # Below this point, everything is optional
 ##############################################
-</%text>
 
 # post_pages contains (wildcard, destination, template, use_in_feed) tuples.
 #
