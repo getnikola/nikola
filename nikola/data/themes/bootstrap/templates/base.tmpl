@@ -1,11 +1,12 @@
 ## -*- coding: utf-8 -*-
-<%namespace name="base_helper" file="base_helper.tmpl"/>
+<%namespace file="base_helper.tmpl" import="*" />
+<%namespace file="base_helper_bootstrap.tmpl" import="*" />
 ${set_locale(lang)}
 <!DOCTYPE html>
 <html lang="${lang}">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    ${base_helper.html_head()}
+    ${html_head()}
     <%block name="extra_head">
     </%block>
     ${extra_head_data}
@@ -29,7 +30,7 @@ ${set_locale(lang)}
             <!-- Everything you want hidden at 940px or less, place within here -->
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    ${base_helper.html_sidebar_links()}
+                    ${html_sidebar_links()}
                 </ul>
                 %if search_form:
                     ${search_form}
@@ -37,7 +38,7 @@ ${set_locale(lang)}
                 <ul class="nav pull-right">
                 <%block name="belowtitle">
                 %if len(translations) > 1:
-                    <li>${base_helper.html_translations()}</li>
+                    <li>${html_translations()}</li>
                 %endif
                 </%block>
                 % if not hide_sourcelink:
@@ -62,11 +63,11 @@ ${set_locale(lang)}
 <div class="footerbox">
     ${content_footer}
 </div>
-${base_helper.html_social()}
+${html_social()}
 
 ${social_buttons_code}
 
-${base_helper.late_load_js()}
+${late_load_js()}
 ${analytics}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});
     $(window).on('hashchange', function(){
