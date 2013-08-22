@@ -30,8 +30,8 @@ ${set_locale(lang)}
             ${html_sidebar_links()}
             <li>${search_form}
             </ul>
+    ${base_helper.late_load_js()}
     ${social_buttons_code}
     ${analytics}
-    ${base_helper.late_load_js()}
     <%block name="extra_js"></%block>
 </body>
