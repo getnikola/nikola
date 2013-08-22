@@ -27,10 +27,10 @@ ${set_locale(lang)}
             <ul class="unstyled">
             <li>${license}
             ${html_social()}
-            ${html_sidebar_links()}
+            ${html_navigation_links()}
             <li>${search_form}
             </ul>
-    ${base_helper.late_load_js()}
+    ${late_load_js()}
     ${social_buttons_code}
     ${analytics}
     <%block name="extra_js"></%block>

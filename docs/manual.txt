@@ -648,6 +648,11 @@ Navigation Links
     The 'NAVIGATION_LINKS' option lets you define what links go in a sidebar or menu
     (depending on your theme) so you can link to important pages, or to other sites.
 
+    The format is a tuple of elements that are one of:
+
+    1. A (url, text) tuple, describing a link
+    2. A ((url, text), (url, text), (url, text), title) tuple, describing a submenu / sublist.
+
     The ``SEARCH_FORM`` option contains the HTML code for a search form based on
     duckduckgo.com which should always work, but feel free to change it to
     something else.
