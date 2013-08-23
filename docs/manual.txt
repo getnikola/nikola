@@ -557,11 +557,16 @@ Drafts
 
 If you add a "draft" tag to a post, then it will not be shown in indexes and feeds.
 It *will* be compiled, and if you deploy it it *will* be made available, so use
-with care.
+with care. If you wish your drafts to be not available in your deployed site, you
+can set ``DEPLOY_DRAFTS = False`` in your configuration.
 
-Also if a post has a date in the future, it will not be shown in indexes until you rebuild after
-that date. This behaviour can be disabled by setting ``FUTURE_IS_NOW = True`` in your
-configuration, which will make future posts be published immediately.
+Also if a post has a date in the future, it will not be shown in indexes until
+you rebuild after that date. This behaviour can be disabled by setting
+``FUTURE_IS_NOW = True`` in your configuration, which will make future posts be
+published immediately.  Posts dated in the future are *not* deployed by default
+(when ``FUTURE_IS_NOW = False``).  To make future posts available in the
+deployed site, you can set ``DEPLOY_FUTURE = True`` in your configuration.
+Generally, you want FUTURE_IS_NOW and DEPLOY_FUTURE to be the same value.
 
 Retired Posts
 ~~~~~~~~~~~~~
@@ -569,6 +574,57 @@ Retired Posts
 If you add a "retired" tag to a post, then it will not be shown in indexes and feeds.
 It *will* be compiled, and if you deploy it it *will* be made available, so it will
 not generate 404s for people who had linked to it.
+
+Queuing Posts
+~~~~~~~~~~~~~
+
+Some blogs tend to have new posts based on a schedule (for example,
+every Mon, Wed, Fri) but the blog authors don't like to manually
+schedule their posts.  You can schedule your blog posts based on a
+rule, by specifying a rule in the ``SCHEDULE_RULE`` in your
+configuration.  You can either post specific blog posts according to
+this schedule by using the ``--schedule`` flag on the ``new_post``
+command or post all new posts according to this schedule by setting
+``SCHEDULE_ALL = True`` in your configuration. (Note: This feature
+requires that the ``FUTURE_IS_NOW`` setting is set to ``False``)
+
+For example, if you would like to schedule your posts to be on every
+Monday, Wednesday and Friday at 7am, add the following
+``SCHEDULE_RULE`` to your configuration ::
+
+    SCHEDULE_RULE = 'RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR;BYHOUR=7'
+
+For more details on how to specify a recurrence rule, look at the
+`iCal specification <http://www.kanzaki.com/docs/ical/rrule.html>`_.
+
+Say, you get a free Sunday, and want to write a flurry of new posts,
+or at least posts for the rest of the week, you would run the
+``new_post`` command with the ``--schedule`` flag, as many times as
+you want::
+
+    $ nikola new_post --schedule
+    # Creates a new post to be posted on Monday, 7am.
+    $ nikola new_post -s
+    # Creates a new post to be posted on Wednesday, 7am.
+    $ nikola new_post -s
+    # Creates a new post to be posted on Friday, 7am.
+    .
+    .
+    .
+
+All these posts get queued up according to your schedule, but note
+that you will anyway need to build and deploy your site for the posts
+to appear online.  You can have a cron job that does this regularly.
+
+An additional setting (``SCHEDULE_FORCE_TODAY = True``) lets you tell
+Nikola to make the post today, if you run the ``new_post --schedule``
+after the scheduled hour has passed, and there is no other post
+at/after the scheduled hour.  Concretely, say, you run the ``nikola
+new_post -s`` command at 10am on a Monday (with the schedule rule set
+to the same as above), with no other post on Monday, at/after 7am,
+setting ``SCHEDULE_FORCE_TODAY = True`` will have your post scheduled
+to Monday, instead of being scheduled to Wednesday 7am.
+
 
 Creating a Page
 ---------------

@@ -184,13 +184,20 @@ class Nikola(object):
             'USE_CDN': False,
             'USE_FILENAME_AS_TITLE': True,
             'TIMEZONE': None,
+            'DEPLOY_DRAFTS': True,
+            'DEPLOY_FUTURE': False,
+            'SCHEDULE_ALL': False,
+            'SCHEDULE_RULE': '',
+            'SCHEDULE_FORCE_TODAY': False
         }
 
         self.config.update(config)
 
         # Make sure we have pyphen installed if we are using it
         if self.config.get('HYPHENATE') and pyphen is None:
-            print('WARNING: Hyphenation support requires pyphen, setting HYPHENATE to False')
+            print('WARNING: To use the hyphenation, you have to install '
+                  'the "pyphen" package.')
+            print('WARNING: Setting HYPHENATE to False.')
             self.config['HYPHENATE'] = False
 
         # Deprecating the ANALYTICS option

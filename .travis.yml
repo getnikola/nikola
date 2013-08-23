@@ -6,6 +6,7 @@ python:
 install:
   - "pip install -r requirements-full.txt --use-mirrors"
   - "pip install flake8 --use-mirrors"
+  - "pip install freezegun --use-mirrors"
   - "pip install . --use-mirrors"
 # We run tests and afterwards nikola to see if the command is executable.
 script:
