@@ -333,6 +333,12 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # Defaults to False.
 # FUTURE_IS_NOW = False
 
+# If True, future dated posts are allowed in deployed output
+# Only the individual posts are published/deployed; not in indexes/sitemap
+# DEPLOY_FUTURE = False
+# If False, draft posts will not be deployed
+# DEPLOY_DRAFTS = True
+
 # Do you want a add a Mathjax config file?
 # MATHJAX_CONFIG = ""
 

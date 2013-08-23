@@ -34,6 +34,7 @@ import time
 
 
 from nikola.plugin_categories import Command
+from nikola.utils import remove_file
 
 
 class Deploy(Command):
@@ -53,6 +54,19 @@ class Deploy(Command):
                   "And is probably not what you want to do.\n"
                   "Think about it for 5 seconds, I'll wait :-)\n\n")
             time.sleep(5)
+
+        deploy_drafts = self.site.config.get('DEPLOY_DRAFTS', True)
+        deploy_future = self.site.config.get('DEPLOY_FUTURE', False)
+        if not (deploy_drafts and deploy_future):
+            # Remove drafts and future posts
+            out_dir = self.site.config['OUTPUT_FOLDER']
+            self.site.scan_posts()
+            for post in self.site.timeline:
+                if (not deploy_drafts and post.is_draft) or \
+                   (not deploy_future and post.publish_later):
+                    remove_file(os.path.join(out_dir, post.destination_path()))
+                    remove_file(os.path.join(out_dir, post.source_path))
+
         for command in self.site.config['DEPLOY_COMMANDS']:
             try:
                 with open(timestamp_path, 'rb') as inf:
