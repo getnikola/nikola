@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New DEPLOY_DRAFTS and DEPLOY_FUTURE options (Issue #583)
 * New Dutch translation
 * Optional hyphenation (HYPHENATE option, Issue #576)
 * Made AddThis support replaceable through new SOCIAL_BUTTONS_CODE option.
