@@ -94,13 +94,14 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False):
     """
 
     date = now = datetime.datetime.now()
-    try:
-        from dateutil import rrule
-    except ImportError:
-        print('To use the --schedule switch of new_post, '
-              'you have to install the "dateutil" package.')
-        rrule = None
-    if rrule and schedule and rule:
+    if schedule:
+        try:
+            from dateutil import rrule
+        except ImportError:
+            print('To use the --schedule switch of new_post, '
+                'you have to install the "dateutil" package.')
+            rrule = None
+    if schedule and rrule and rule:
         if last_date and last_date.tzinfo:
             # strip tzinfo for comparisons
             last_date = last_date.replace(tzinfo=None)
@@ -244,10 +245,9 @@ class CommandNewPost(Command):
                 path = path.decode(sys.stdin.encoding)
             slug = utils.slugify(os.path.splitext(os.path.basename(path))[0])
         # Calculate the date to use for the post
-        schedule = options['schedule'] or self.site.config.get('SCHEDULE_ALL',
-                                                               False)
-        rule = self.site.config.get('SCHEDULE_RULE', '')
-        force_today = self.site.config.get('SCHEDULE_FORCE_TODAY', False)
+        schedule = options['schedule'] or self.site.config['SCHEDULE_ALL']
+        rule = self.site.config['SCHEDULE_RULE']
+        force_today = self.site.config['SCHEDULE_FORCE_TODAY']
         self.site.scan_posts()
         timeline = self.site.timeline
         last_date = None if not timeline else timeline[0].date
