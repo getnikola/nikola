@@ -24,6 +24,7 @@ Bugfixes
 --------
 
 * Fixed bundles in base theme
+* Deprecated ANALYTICS, replaced with BODY_END (Issue #601)
 * Deprecated SIDEBAR_LINKS, replaced with NAVIGATION_LINKS (Issue #104 #601)
 * Solve site theme's navbar overlapping Issues (Issue #585)
 * Deprecated ADD_THIS_BUTTONS option.

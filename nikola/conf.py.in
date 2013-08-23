@@ -430,7 +430,7 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # <input type="text" id="tipue_search_input">
 # </span>"""
 #
-# ANALYTICS = """
+# BODY_END = """
 # <script type="text/javascript" src="/assets/js/tipuesearch_set.js"></script>
 # <script type="text/javascript" src="/assets/js/tipuesearch.js"></script>
 # <script type="text/javascript">
@@ -465,7 +465,7 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # EXTRA_HEAD_DATA = ""
 # Google analytics or whatever else you use. Added to the bottom of <body>
 # in the default template (base.tmpl).
-# ANALYTICS = ""
+# BODY_END = ""
 
 # The possibility to extract metadata from the filename by using a
 # regular expression.

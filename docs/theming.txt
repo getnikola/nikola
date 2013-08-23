@@ -147,7 +147,7 @@ base.tmpl
       * ``blog_title`` the name of your site
       * ``content_footer`` things like copyright notices, disclaimers, etc.
       * ``license`` a larger license badge
-      * ``analytics`` google scripts, or any JS you want to tack at the end of the body
+      * ``body_end`` google scripts, or any JS you want to tack at the end of the body
         of the page.
       * ``social_buttons_code`` scripts, or any JS you want to tack at the end of the body
         of the page.

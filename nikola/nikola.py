@@ -104,10 +104,9 @@ class Nikola(object):
         # This is the default config
         self.config = {
             'ADD_THIS_BUTTONS': True,
-            'ANALYTICS': '',
-            'SOCIAL_BUTTONS_CODE': SOCIAL_BUTTONS_CODE,
             'ARCHIVE_PATH': "",
             'ARCHIVE_FILENAME': "archive.html",
+            'BODY_END': "",
             'CACHE_FOLDER': 'cache',
             'CODE_COLOR_SCHEME': 'default',
             'COMMENTS_IN_GALLERIES': False,
@@ -171,6 +170,7 @@ class Nikola(object):
             'RSS_TEASERS': True,
             'SEARCH_FORM': '',
             'SLUG_TAG_PATH': True,
+            'SOCIAL_BUTTONS_CODE': SOCIAL_BUTTONS_CODE,
             'STORY_INDEX': False,
             'STRIP_INDEXES': False,
             'SITEMAP_INCLUDE_FILELESS_DIRS': True,
@@ -192,6 +192,15 @@ class Nikola(object):
         if self.config.get('HYPHENATE') and pyphen is None:
             print('WARNING: Hyphenation support requires pyphen, setting HYPHENATE to False')
             self.config['HYPHENATE'] = False
+
+        # Deprecating the ANALYTICS option
+        # TODO: remove on v7
+        if 'ANALYTICS' in config:
+            print("WARNING: The ANALYTICS option is deprecated, use BODY_END instead.")
+            if 'BODY_END' in config:
+                print("WARNING: ANALYTICS conflicts with BODY_END, ignoring ANALYTICS.")
+            else:
+                self.config['BODY_END'] = config['ANALYTICS']
 
         # Deprecating the SIDEBAR_LINKS option
         # TODO: remove on v7
@@ -332,7 +341,9 @@ class Nikola(object):
         # TODO: remove fallback in v7
         self._GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL', self.config.get('BLOG_URL'))
         self._GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
-        self._GLOBAL_CONTEXT['analytics'] = self.config.get('ANALYTICS')
+        self._GLOBAL_CONTEXT['body_end'] = self.config.get('BODY_END')
+        # TODO: remove in v7
+        self._GLOBAL_CONTEXT['analytics'] = self.config.get('BODY_END')
         # TODO: remove in v7
         self._GLOBAL_CONTEXT['add_this_buttons'] = self.config.get('SOCIAL_BUTTONS_CODE')
         self._GLOBAL_CONTEXT['social_buttons_code'] = self.config.get('SOCIAL_BUTTONS_CODE')

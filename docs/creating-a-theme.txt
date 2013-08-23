@@ -93,7 +93,7 @@ The general page layout for the theme is done by the ``base.tmpl`` template, whi
                 <li>${search_form}
                 </ul>
         ${social_buttons_code}
-        ${analytics}
+        ${body_end}
         ${base_helper.late_load_js()}
         <%block name="extra_js"></%block>
     </body>
@@ -147,7 +147,7 @@ Monospace is a two-column-with-footer layout, so let's copy the basics from its 
             </div>
         </div>
         ${base_helper.late_load_js()}
-        ${analytics}
+        ${body_end}
         <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
         <%block name="extra_js"></%block>
     </body>
@@ -234,7 +234,7 @@ box, add links for the posts tags, move the date there, etc.
         % for post in posts:
             <div class="postbox">
             <h1><a href="${post.permalink()}">${post.title()}</a></h1>
-                <div class="meta" style="background-color: rgb(234, 234, 234); ">                    
+                <div class="meta" style="background-color: rgb(234, 234, 234); ">
                     <span class="authordate">
                         ${messages("Posted")}: ${post.formatted_date(date_format)}
                     </span>
