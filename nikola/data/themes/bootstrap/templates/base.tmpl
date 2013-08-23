@@ -68,7 +68,6 @@ ${html_social()}
 ${social_buttons_code}
 
 ${late_load_js()}
-${analytics}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});
     $(window).on('hashchange', function(){
         if (location.hash) {
@@ -78,4 +77,5 @@ ${analytics}
     $(document).ready(function(){$(window).trigger('hashchange')});
     </script>
    <%block name="extra_js"></%block>
+   ${body_end}
 </body>
