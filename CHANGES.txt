@@ -6,6 +6,7 @@ Features
 
 * Theme cleanup (Issue #599)
 * Support for nested navigation links (Issue #104)
+* New media directive for reStructuredText (Issue #608)
 * New DEPLOY_DRAFTS and DEPLOY_FUTURE options (Issue #583)
 * New Dutch translation
 * Optional hyphenation (HYPHENATE option, Issue #576)

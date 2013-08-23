@@ -990,6 +990,18 @@ Restructured Text Extensions
 Nikola includes support for a few directives that are not part of docutils, but which
 we think are handy for website development.
 
+Media
+~~~~~
+
+This directive lets you embed media from a variety of sites automatically by just passing the 
+URL of the page.  For example here are two random videos::
+
+    .. media:: http://vimeo.com/72425090
+
+    .. youtube:: http://www.youtube.com/watch?v=wyRpAat5oz0
+
+It supports Instagram, Flickr, Github gists, Funny or Die, and dozens more, thanks to `Micawber <https://github.com/coleifer/micawber>`_ 
+
 Youtube
 ~~~~~~~
 

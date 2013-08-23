@@ -37,6 +37,8 @@ try:
     directives.register_directive('code-block', CodeBlock)
     directives.register_directive('sourcecode', CodeBlock)
     directives.register_directive('listing', Listing)
+    from .media import Media
+    directives.register_directive('media', Media)
     from .youtube import Youtube
     directives.register_directive('youtube', Youtube)
     from .vimeo import Vimeo
