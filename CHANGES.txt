@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Theme cleanup (Issue #599)
+* Support for nested navigation links (Issue #104)
 * New media directive for reStructuredText (Issue #608)
 * New DEPLOY_DRAFTS and DEPLOY_FUTURE options (Issue #583)
 * New Dutch translation
@@ -22,6 +24,9 @@ Features
 Bugfixes
 --------
 
+* Fixed bundles in base theme
+* Deprecated ANALYTICS, replaced with BODY_END (Issue #601)
+* Deprecated SIDEBAR_LINKS, replaced with NAVIGATION_LINKS (Issue #104 #601)
 * Solve site theme's navbar overlapping Issues (Issue #585)
 * Deprecated ADD_THIS_BUTTONS option.
 * Show warning if unable to thumbnail an image (Issue #551)

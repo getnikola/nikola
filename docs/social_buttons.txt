@@ -51,11 +51,11 @@ Part 2: The theme
     is the correct place or not is not something the theme author can truly know, so it is possible that
     you may have to tweak the ``base.html`` template to make it look good.
 
-Part 3: ``ANALYTICS`` and ``EXTRA_HEAD_DATA``
+Part 3: ``BODY_END`` and ``EXTRA_HEAD_DATA``
     Some social sharing code requires JS execution that depends on JQuery being available
     (example: `SocialSharePrivacy <https://github.com/panzi/SocialSharePrivacy>`_). It's good
     practice (and often, the only way that will work) to put those at the end of ``<BODY>``,
-    and one easy way to do that is to put them in ``ANALYTICS``
+    and one easy way to do that is to put them in ``BODY_END``
 
     On the other hand, it's possible that it requires you to load some CSS files.
     The right place for that is in the document's ``<HEAD>`` so they should be added
@@ -96,7 +96,7 @@ is the HTML code suggested by ShareNice:
         data-services="plus.google.com,facebook.com,digg.com,email,delicious.com,twitter.com"
         style="float:right"></div>"""
 
-    ANALYTICS = """<script src="http://graingert.co.uk/shareNice/code.js"
+    BODY_END = """<script src="http://graingert.co.uk/shareNice/code.js"
         type="text/javascript"></script>"""
 
 And you should now see a sharing box at the bottom right of the page.
@@ -134,7 +134,7 @@ lets you add social share buttons to your website that don't allow the social si
 your users." Nice!
 
 Let's go step-by-step into integrating SocialSharePrivacy into a Nikola site. To improve
-privacy, they recommend you not use the hosted service so we'll do it the hard way, by 
+privacy, they recommend you not use the hosted service so we'll do it the hard way, by
 getting and distributing everything in our own site.
 
 https://github.com/panzi/SocialSharePrivacy
@@ -168,7 +168,7 @@ Edit your ``conf.py``:
 
 .. code:: python
 
-    ANALYTICS = """
+    BODY_END = """
     <script type="text/javascript" src="/javascripts/jquery.socialshareprivacy.min.js"></script>
     <script type="text/javascript">
     $(document).ready(function () {
@@ -176,7 +176,7 @@ Edit your ``conf.py``:
     });
     </script>
     """
-    
+
     SOCIAL_BUTTONS_CODE = """<div class="share"></div>"""
 
 In my experience this produces a broken, duplicate, semi-working thing. YMMV and if you make it work correctly, let me know how :-)
@@ -184,19 +184,19 @@ In my experience this produces a broken, duplicate, semi-working thing. YMMV and
 The Easy Way
 ~~~~~~~~~~~~
 
-Go to http://panzi.github.io/SocialSharePrivacy/ and use the provided form to get the code. Make sure you check "I already use JQuery" 
+Go to http://panzi.github.io/SocialSharePrivacy/ and use the provided form to get the code. Make sure you check "I already use JQuery"
 if you are using one of the themes that require it, like site or default, select the services you want, and use your disqus name if
 you have one.
 
 It will give you 3 code snippets:
 
 "Insert this once in the head of your page"
-    Put it in ``ANALYTICS``
+    Put it in ``BODY_END``
 
 "Insert this wherever you want a share widget displayed"
     Put it in ``SOCIAL_BUTTONS_CODE``
 
 "Insert this once anywhere after the other code"
-    Put it in ``ANALYTICS``
+    Put it in ``BODY_END``
 
 That should give you a working integration (not tested)

@@ -96,6 +96,9 @@ so ``post.tmpl`` only define the content, and the layout is inherited from ``bas
 
 These are the templates that come with the included themes:
 
+
+**FIXME** this is out of date
+
 base.tmpl
     This template defines the basic page layout for the site. It's mostly plain HTML
     but defines a few blocks that can be re-defined by inheriting templates:
@@ -135,7 +138,7 @@ base.tmpl
       able to work when moved inside the server. Example: ``rel_link(permalink, url)``
 
     * Anything you put in your ``GLOBAL_CONTEXT`` option in ``dodo.py``. This
-      usually includes ``sidebar_links``, ``search_form``, and others.
+      usually includes ``navigation_links``, ``search_form``, and others.
 
       The included themes use at least these:
 
@@ -144,7 +147,7 @@ base.tmpl
       * ``blog_title`` the name of your site
       * ``content_footer`` things like copyright notices, disclaimers, etc.
       * ``license`` a larger license badge
-      * ``analytics`` google scripts, or any JS you want to tack at the end of the body
+      * ``body_end`` google scripts, or any JS you want to tack at the end of the body
         of the page.
       * ``social_buttons_code`` scripts, or any JS you want to tack at the end of the body
         of the page.
@@ -213,10 +216,15 @@ list_post.tmpl
 
     * ``posts``: a list of Post objects.
 
+slides.tmpl
+    Template used by the reStructuredText compiler for the slides directive
 
 You can add other templates for specific pages, which the user can the use in his ``post_pages``
 option in ``dodo.py``. Also, keep in mind that your theme is yours, there is no reason why
 you would need to maintain the inheritance as it is, or not require whatever data you want.
+
+Also, you can specify a custom template to be used by a post or page via the ``template`` metadata,
+and custom templates can be added in the ``templates/`` folder of your site.
 
 Messages and Translations
 -------------------------

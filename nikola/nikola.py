@@ -104,10 +104,9 @@ class Nikola(object):
         # This is the default config
         self.config = {
             'ADD_THIS_BUTTONS': True,
-            'ANALYTICS': '',
-            'SOCIAL_BUTTONS_CODE': SOCIAL_BUTTONS_CODE,
             'ARCHIVE_PATH': "",
             'ARCHIVE_FILENAME': "archive.html",
+            'BODY_END': "",
             'CACHE_FOLDER': 'cache',
             'CODE_COLOR_SCHEME': 'default',
             'COMMENTS_IN_GALLERIES': False,
@@ -142,6 +141,7 @@ class Nikola(object):
             'LICENSE': '',
             'LINK_CHECK_WHITELIST': [],
             'LISTINGS_FOLDER': 'listings',
+            'NAVIGATION_LINKS': {},
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
@@ -170,12 +170,13 @@ class Nikola(object):
             'RSS_TEASERS': True,
             'SEARCH_FORM': '',
             'SLUG_TAG_PATH': True,
+            'SOCIAL_BUTTONS_CODE': SOCIAL_BUTTONS_CODE,
             'STORY_INDEX': False,
             'STRIP_INDEXES': False,
             'SITEMAP_INCLUDE_FILELESS_DIRS': True,
             'TAG_PATH': 'categories',
             'TAG_PAGES_ARE_INDEXES': False,
-            'THEME': 'site',
+            'THEME': 'bootstrap',
             'THEME_REVEAL_CONGIF_SUBTHEME': 'sky',
             'THEME_REVEAL_CONGIF_TRANSITION': 'cube',
             'THUMBNAIL_SIZE': 180,
@@ -199,7 +200,28 @@ class Nikola(object):
             print('WARNING: Setting HYPHENATE to False.')
             self.config['HYPHENATE'] = False
 
+        # Deprecating the ANALYTICS option
+        # TODO: remove on v7
+        if 'ANALYTICS' in config:
+            print("WARNING: The ANALYTICS option is deprecated, use BODY_END instead.")
+            if 'BODY_END' in config:
+                print("WARNING: ANALYTICS conflicts with BODY_END, ignoring ANALYTICS.")
+            else:
+                self.config['BODY_END'] = config['ANALYTICS']
+
+        # Deprecating the SIDEBAR_LINKS option
+        # TODO: remove on v7
+        if 'SIDEBAR_LINKS' in config:
+            print("WARNING: The SIDEBAR_LINKS option is deprecated, use NAVIGATION_LINKS instead.")
+            if 'NAVIGATION_LINKS' in config:
+                print("WARNING: The SIDEBAR_LINKS conflicts with NAVIGATION_LINKS, ignoring SIDEBAR_LINKS.")
+            else:
+                self.config['NAVIGATION_LINKS'] = config['SIDEBAR_LINKS']
+        # Compatibility alias
+        self.config['SIDEBAR_LINKS'] = self.config['NAVIGATION_LINKS']
+
         # Deprecating the ADD_THIS_BUTTONS option
+        # TODO: remove on v7
         if 'ADD_THIS_BUTTONS' in config:
             print("WARNING: The ADD_THIS_BUTTONS option is deprecated, use SOCIAL_BUTTONS_CODE instead.")
             if not config['ADD_THIS_BUTTONS']:
@@ -208,6 +230,7 @@ class Nikola(object):
 
         # STRIP_INDEX_HTML config has been replaces with STRIP_INDEXES
         # Port it if only the oldef form is there
+        # TODO: remove on v7
         if 'STRIP_INDEX_HTML' in config and 'STRIP_INDEXES' not in config:
             print("WARNING: You should configure STRIP_INDEXES instead of STRIP_INDEX_HTML")
             self.config['STRIP_INDEXES'] = config['STRIP_INDEX_HTML']
@@ -225,6 +248,7 @@ class Nikola(object):
 
         # SITE_URL is required, but if the deprecated BLOG_URL
         # is available, use it and warn
+        # TODO: remove on v7
         if 'SITE_URL' not in self.config:
             if 'BLOG_URL' in self.config:
                 print("WARNING: You should configure SITE_URL instead of BLOG_URL")
@@ -321,9 +345,13 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
         self._GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
 
+        # TODO: remove fallback in v7
         self._GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL', self.config.get('BLOG_URL'))
         self._GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
-        self._GLOBAL_CONTEXT['analytics'] = self.config.get('ANALYTICS')
+        self._GLOBAL_CONTEXT['body_end'] = self.config.get('BODY_END')
+        # TODO: remove in v7
+        self._GLOBAL_CONTEXT['analytics'] = self.config.get('BODY_END')
+        # TODO: remove in v7
         self._GLOBAL_CONTEXT['add_this_buttons'] = self.config.get('SOCIAL_BUTTONS_CODE')
         self._GLOBAL_CONTEXT['social_buttons_code'] = self.config.get('SOCIAL_BUTTONS_CODE')
         self._GLOBAL_CONTEXT['translations'] = self.config.get('TRANSLATIONS')
@@ -339,9 +367,12 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
         self._GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
 
-        self._GLOBAL_CONTEXT['sidebar_links'] = utils.Functionary(list, self.config['DEFAULT_LANG'])
-        for k, v in self.config.get('SIDEBAR_LINKS', {}).items():
-            self._GLOBAL_CONTEXT['sidebar_links'][k] = v
+        self._GLOBAL_CONTEXT['navigation_links'] = utils.Functionary(list, self.config['DEFAULT_LANG'])
+        for k, v in self.config.get('NAVIGATION_LINKS', {}).items():
+            self._GLOBAL_CONTEXT['navigation_links'][k] = v
+        # TODO: remove on v7
+        # Compatibility alias
+        self._GLOBAL_CONTEXT['sidebar_links'] = self._GLOBAL_CONTEXT['navigation_links']
 
         self._GLOBAL_CONTEXT['twitter_card'] = self.config.get(
             'TWITTER_CARD', {})
