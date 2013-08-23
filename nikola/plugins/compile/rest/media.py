@@ -39,12 +39,13 @@ class Media(Directive):
     """ Restructured text extension for inserting any sort of media using micawber."""
     has_content = False
     required_arguments = 1
+    optional_arguments = 999
 
     def run(self):
         if micawber is None:
             raise Exception("To use the media directive you need to install "
                             "the micawber module.")
         providers = micawber.bootstrap_basic()
-        return [nodes.raw('', micawber.parse_text(self.arguments[0], providers), format='html')]
+        return [nodes.raw('', micawber.parse_text(" ".join(self.arguments), providers), format='html')]
 
 directives.register_directive('media', Media)
