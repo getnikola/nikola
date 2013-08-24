@@ -220,7 +220,7 @@ class Nikola(object):
         # Compatibility alias
         self.config['SIDEBAR_LINKS'] = self.config['NAVIGATION_LINKS']
 
-        if self.config['NAVIGATION_LINKS'] == {}:
+        if self.config['NAVIGATION_LINKS'] in (None, {}):
             self.config['NAVIGATION_LINKS'] = {self.config['DEFAULT_LANG']: ()}
 
         # Deprecating the ADD_THIS_BUTTONS option
