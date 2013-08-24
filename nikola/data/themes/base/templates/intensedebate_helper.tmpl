@@ -1,5 +1,5 @@
 ## -*- coding: utf-8 -*-
-<%def name="html_disqus(url, title, identifier)">
+<%def name="comment_form(url, title, identifier)">
 <a name="#disqus_thread"></a>
 <script>
 var idcomments_acct = '${disqus_forum}';
@@ -12,7 +12,7 @@ var idcomments_post_url = "${url}";
 <!-- END: Livefyre Embed -->
 </%def>
 
-<%def name="html_disqus_link(link, identifier)">
+<%def name="comment_link(link, identifier)">
 <a href="{link}" onclick="this.href='${link}'; this.target='_self';"><span class='IDCommentsReplace' style='display:none'>${identifier}</span>
 <script>
 var idcomments_acct = '${disqus_forum}';
@@ -23,5 +23,5 @@ var idcomments_post_url = "${link}";
 </a>
 </%def>
 
-<%def name="html_disqus_script()">
+<%def name="comment_link_script()">
 </%def>

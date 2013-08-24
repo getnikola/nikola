@@ -1,5 +1,5 @@
 ## -*- coding: utf-8 -*-
-<%def name="html_disqus(url, title, identifier)">
+<%def name="comment_form(url, title, identifier)">
 <div id="livefyre-comments"></div>
 <script type="text/javascript" src="http://zor.livefyre.com/wjs/v3.0/javascripts/livefyre.js"></script>
 <script type="text/javascript">
@@ -20,7 +20,7 @@
 </script>
 </%def>
 
-<%def name="html_disqus_link(link, identifier)">
+<%def name="comment_link(link, identifier)">
     <p>
     <a href="${link}">
     <span class="livefyre-commentcount" data-lf-site-id="${disqus_forum}" data-lf-article-id="${identifier}">
@@ -29,7 +29,7 @@
 </%def>
 
 
-<%def name="html_disqus_script()">
+<%def name="comment_link_script()">
 <script
         type="text/javascript"
         src="http://zor.livefyre.com/wjs/v1.0/javascripts/CommentCount.js">
