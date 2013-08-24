@@ -7,21 +7,13 @@
     ${mathjax_config}
     %if use_bundles:
         %if use_cdn:
-            <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
             <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
         %else:
             <link href="/assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
         %endif
     %else:
-        %if use_cdn:
-            <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
-        %else:
-            <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-            <link href="/assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
-        %endif
         <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
-        <link href="/assets/css/colorbox.css" rel="stylesheet" type="text/css"/>
         <link href="/assets/css/theme.css" rel="stylesheet" type="text/css"/>
         %if has_custom_css:
             <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
