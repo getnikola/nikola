@@ -2,7 +2,7 @@
 <%def name="comment_form(url, title, identifier)">
 <a name="#disqus_thread"></a>
 <script>
-var idcomments_acct = '${disqus_forum}';
+var idcomments_acct = '${comment_system_id}';
 var idcomments_post_id = "${identifier}";
 var idcomments_post_url = "${url}";
 </script>
@@ -15,7 +15,7 @@ var idcomments_post_url = "${url}";
 <%def name="comment_link(link, identifier)">
 <a href="{link}" onclick="this.href='${link}'; this.target='_self';"><span class='IDCommentsReplace' style='display:none'>${identifier}</span>
 <script>
-var idcomments_acct = '${disqus_forum}';
+var idcomments_acct = '${comment_system_id}';
 var idcomments_post_id = "${identifier}";
 var idcomments_post_url = "${link}";
 </script>
