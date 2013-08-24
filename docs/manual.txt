@@ -833,10 +833,30 @@ Comments
 While Nikola creates static sites, there is a minimum level of user interaction you
 are probably expecting: comments.
 
-The default templates contain support for `Disqus <http://disqus.com>`_. All you have
-to do is register a forum, put its short name in the ``DISQUS_FORUM`` option.
+Nikola supports several third party comment systems:
 
-Disqus is a good option because:
+* `Disqus <http://disqus.com>`_
+* `IntenseDebate <http://www.intensedebate.com/>`_
+* `LiveFyre <http://www.livefyre.com/>`_
+* `Moot <http://moot.it>`_
+
+By default it will use Disqus, but you can change by setting ``COMMENT_SYSTEM``
+to one of "disqus", "intensedebate", "livefyre" or "moot"
+
+.. sidebar:: ``COMMENT_SYSTEM_ID``
+
+   The value of ``COMMENT_SYSTEM_ID`` depends on what comment system you
+   are using and you can see it in the system's admin interface.
+
+   * For Disqus it's called the **shortname**
+   * In IntenseDebate it's the **IntenseDeabte site acct**
+   * In LiveFyre it's the **siteId**
+   * In Moot it's your **username**
+
+To use comments in a visible site, you should register with the service and
+then set the ``COMMENT_SYSTEM_ID`` option.
+
+I recommend 3rd party comments, and specially Disqus because:
 
 1) It doesn't require any server-side software on your site
 2) They offer you a way to export your comments, so you can take
@@ -848,11 +868,28 @@ You can disable comments for a post by adding a "nocomments" metadata field to i
 
     .. nocomments: True
 
-.. admonition:: Important
+.. admonition:: Disqus Support
 
    In some cases, when you run the test site, you won't see the comments.
    That can be fixed by adding the disqus_developer flag to the templates
    but it's probably more trouble than it's worth.
+
+.. admonition:: Moot Support
+
+   Moot doesn't support comment counts on index pages, and it requires adding
+   this to your ``conf.py``:
+
+   .. code:: python
+
+        BODY_END = """
+        <script src="//cdn.moot.it/1/moot.min.js"></script>
+        """
+        EXTRA_HEAD_DATA = """
+        <link rel="stylesheet" type="text/css" href="//cdn.moot.it/1/moot.css">
+        <meta name="viewport" content="width=device-width">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        """
+
 
 
 Image Galleries
@@ -993,14 +1030,14 @@ we think are handy for website development.
 Media
 ~~~~~
 
-This directive lets you embed media from a variety of sites automatically by just passing the 
+This directive lets you embed media from a variety of sites automatically by just passing the
 URL of the page.  For example here are two random videos::
 
     .. media:: http://vimeo.com/72425090
 
     .. youtube:: http://www.youtube.com/watch?v=wyRpAat5oz0
 
-It supports Instagram, Flickr, Github gists, Funny or Die, and dozens more, thanks to `Micawber <https://github.com/coleifer/micawber>`_ 
+It supports Instagram, Flickr, Github gists, Funny or Die, and dozens more, thanks to `Micawber <https://github.com/coleifer/micawber>`_
 
 Youtube
 ~~~~~~~
