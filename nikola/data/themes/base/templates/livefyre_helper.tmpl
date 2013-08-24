@@ -1,0 +1,37 @@
+## -*- coding: utf-8 -*-
+<%def name="html_disqus(url, title, identifier)">
+<div id="livefyre-comments"></div>
+<script type="text/javascript" src="http://zor.livefyre.com/wjs/v3.0/javascripts/livefyre.js"></script>
+<script type="text/javascript">
+(function () {
+    var articleId = "${identifier}";
+    fyre.conv.load({}, [{
+        el: 'livefyre-comments',
+        network: "livefyre.com",
+        siteId: "${disqus_forum}",
+        articleId: articleId,
+        signed: false,
+        collectionMeta: {
+            articleId: articleId,
+            url: fyre.conv.load.makeCollectionUrl(),
+        }
+    }], function() {});
+}());
+</script>
+</%def>
+
+<%def name="html_disqus_link(link, identifier)">
+    <p>
+    <a href="${link}">
+    <span class="livefyre-commentcount" data-lf-site-id="${disqus_forum}" data-lf-article-id="${identifier}">
+    0 Comments
+    </span></a>
+</%def>
+
+
+<%def name="html_disqus_script()">
+<script
+        type="text/javascript"
+        src="http://zor.livefyre.com/wjs/v1.0/javascripts/CommentCount.js">
+</script>
+</%def>

@@ -1,0 +1,27 @@
+## -*- coding: utf-8 -*-
+<%def name="html_disqus(url, title, identifier)">
+<a name="#disqus_thread"></a>
+<script>
+var idcomments_acct = '${disqus_forum}';
+var idcomments_post_id = "${identifier}";
+var idcomments_post_url = "${url}";
+</script>
+<span id="IDCommentsPostTitle" style="display:none"></span>
+<script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+</script>
+<!-- END: Livefyre Embed -->
+</%def>
+
+<%def name="html_disqus_link(link, identifier)">
+<a href="{link}" onclick="this.href='${link}'; this.target='_self';"><span class='IDCommentsReplace' style='display:none'>${identifier}</span>
+<script>
+var idcomments_acct = '${disqus_forum}';
+var idcomments_post_id = "${identifier}";
+var idcomments_post_url = "${link}";
+</script>
+<script type="text/javascript" src="http://www.intensedebate.com/js/genericLinkWrapperV2.js"></script>
+</a>
+</%def>
+
+<%def name="html_disqus_script()">
+</%def>
