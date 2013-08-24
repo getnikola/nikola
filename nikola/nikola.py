@@ -141,7 +141,7 @@ class Nikola(object):
             'LICENSE': '',
             'LINK_CHECK_WHITELIST': [],
             'LISTINGS_FOLDER': 'listings',
-            'NAVIGATION_LINKS': {},
+            'NAVIGATION_LINKS': None,
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
@@ -219,6 +219,9 @@ class Nikola(object):
                 self.config['NAVIGATION_LINKS'] = config['SIDEBAR_LINKS']
         # Compatibility alias
         self.config['SIDEBAR_LINKS'] = self.config['NAVIGATION_LINKS']
+
+        if self.config['NAVIGATION_LINKS'] == {}:
+            self.config['NAVIGATION_LINKS'] = {self.config['DEFAULT_LANG']: ()}
 
         # Deprecating the ADD_THIS_BUTTONS option
         # TODO: remove on v7

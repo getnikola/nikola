@@ -25,6 +25,7 @@ Features
 Bugfixes
 --------
 
+* Fix broken config dep for tags when NAVIGATION_LINKS is not set (Issue #610)
 * Fixed bundles in base theme
 * Deprecated ANALYTICS, replaced with BODY_END (Issue #601)
 * Deprecated SIDEBAR_LINKS, replaced with NAVIGATION_LINKS (Issue #104 #601)
