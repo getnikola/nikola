@@ -5,52 +5,38 @@
 <%namespace name="intensedebate" file="intensedebate_helper.tmpl"/>
 <%namespace name="moot" file="moot_helper.tmpl"/>
 
-%if comment_system == 'disqus':
-    <%def name="comment_form(url, title, identifier)">
+<%def name="comment_form(url, title, identifier)">
+    %if comment_system == 'disqus':
         ${disqus.comment_form(url, title, identifier)}
-    </%def>
-
-    <%def name="comment_link(link, identifier)">
-        ${disqus.comment_link(link, identifier)}
-    </%def>
-
-    <%def name="comment_link_script()">
-        ${disqus.comment_link_script()}
-    </%def>
-% elif comment_system == 'livefyre':
-    <%def name="comment_form(url, title, identifier)">
+    % elif comment_system == 'livefyre':
         ${livefyre.comment_form(url, title, identifier)}
-    </%def>
-
-    <%def name="comment_link(link, identifier)">
-        ${livefyre.comment_link(link, identifier)}
-    </%def>
-
-    <%def name="comment_link_script()">
-        ${livefyre.comment_link_script()}
-    </%def>
-% elif comment_system == 'intensedebate':
-    <%def name="comment_form(url, title, identifier)">
+    % elif comment_system == 'intensedebate':
         ${intensedebate.comment_form(url, title, identifier)}
-    </%def>
-
-    <%def name="comment_link(link, identifier)">
-        ${intensedebate.comment_link(link, identifier)}
-    </%def>
-
-    <%def name="comment_link_script()">
-        ${intensedebate.comment_link_script()}
-    </%def>
-% elif comment_system == 'moot':
-    <%def name="comment_form(url, title, identifier)">
+    % elif comment_system == 'moot':
         ${moot.comment_form(url, title, identifier)}
-    </%def>
+    %endif
+</%def>
 
-    <%def name="comment_link(link, identifier)">
+<%def name="comment_link(link, identifier)">
+    %if comment_system == 'disqus':
+        ${disqus.comment_link(link, identifier)}
+    % elif comment_system == 'livefyre':
+        ${livefyre.comment_link(link, identifier)}
+    % elif comment_system == 'intensedebate':
+        ${intensedebate.comment_link(link, identifier)}
+    % elif comment_system == 'moot':
         ${moot.comment_link(link, identifier)}
-    </%def>
+    %endif
+</%def>
 
-    <%def name="comment_link_script()">
+<%def name="comment_link_script()">
+    %if comment_system == 'disqus':
+        ${disqus.comment_link_script()}
+    % elif comment_system == 'livefyre':
+        ${livefyre.comment_link_script()}
+    % elif comment_system == 'intensedebate':
+        ${intensedebate.comment_link_script()}
+    % elif comment_system == 'moot':
         ${moot.comment_link_script()}
-    </%def>
-%endif
+    %endif
+</%def>
