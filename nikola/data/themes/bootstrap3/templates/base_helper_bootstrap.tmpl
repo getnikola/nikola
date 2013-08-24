@@ -1,4 +1,5 @@
-## -*- coding: utf-8 -*-
+## Override only the functions that differ from base_helper.tmpl
+
 <%def name="html_head()">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
@@ -70,20 +71,12 @@
     %endif
 </%def>
 
-<%def name="html_social()">
-	${social_buttons_code}
-</%def>
-
-<!--FIXME: remove in v7 -->
-<%def name="html_sidebar_links()">
-    ${html_navigation_links()}
-</%def>
 
 <%def name="html_navigation_links()">
     %for url, text in navigation_links[lang]:
         % if isinstance(url, tuple):
-            <li> ${text}
-            <ul>
+            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">${text}<b class="caret"></b></a>
+            <ul class="dropdown-menu">
             %for suburl, text in url:
                 % if rel_link(permalink, suburl) == "#":
                     <li class="active"><a href="${suburl}">${text}</a>
@@ -99,14 +92,5 @@
                 <li><a href="${url}">${text}</a>
             %endif
         % endif
-    %endfor
-</%def>
-
-
-<%def name="html_translations()">
-    %for langname in translations.keys():
-        %if langname != lang:
-            <a href="${_link("index", None, langname)}">${messages("LANGUAGE", langname)}</a>
-        %endif
     %endfor
 </%def>

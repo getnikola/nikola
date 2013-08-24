@@ -6,7 +6,7 @@
 <%block name="content">
     <ul class="breadcrumb">
         % for link, crumb in crumbs:
-            <li><a href="${link}">/ ${crumb}</a></li>
+            <li><a href="${link}">${crumb}</a></li>
         % endfor
     </ul>
     %if text:
