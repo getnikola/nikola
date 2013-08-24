@@ -1,0 +1,22 @@
+## -*- coding: utf-8 -*-
+<%namespace name="helper" file="index_helper.tmpl"/>
+<%namespace name="disqus" file="disqus_helper.tmpl"/>
+<%inherit file="base.tmpl"/>
+<%block name="content">
+    % for post in posts:
+        <div class="postbox">
+        <h1><a href="${post.permalink()}">${post.title()}</a>
+        <small>&nbsp;&nbsp;
+             ${messages("Posted")}: <time class="published" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time>
+        </small></h1>
+        <hr>
+        ${post.text(teaser_only=index_teasers)}
+        % if not post.meta('nocomments'):
+            ${disqus.html_disqus_link(post.permalink()+"#disqus_thread", post.base_path)}
+        % endif
+        </div>
+    % endfor
+    ${helper.html_pager()}
+    ${disqus.html_disqus_script()}
+    ${helper.mathjax_script(posts)}
+</%block>

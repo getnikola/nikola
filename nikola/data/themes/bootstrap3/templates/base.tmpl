@@ -1,0 +1,68 @@
+## -*- coding: utf-8 -*-
+<%namespace name="base_helper" file="base_helper.tmpl"/>
+${set_locale(lang)}
+<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    ${base_helper.html_head()}
+    <%block name="extra_head">
+    </%block>
+    ${extra_head_data}
+</head>
+<body>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="${abs_link('/')}">${blog_title}</a>
+    </div>
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav">
+            ${base_helper.html_sidebar_links()}
+        </ul>
+        %if search_form:
+            ${search_form}
+        %endif
+
+        <ul class="nav navbar-nav navbar-right">
+            <%block name="belowtitle">
+            %if len(translations) > 1:
+                <li>${base_helper.html_translations()}</li>
+            %endif
+            </%block>
+            % if not hide_sourcelink:
+                <%block name="sourcelink"></%block>
+            %endif
+        </ul>
+    </div><!-- /.navbar-collapse -->
+</nav>
+
+<!-- End of Menubar -->
+
+<div class="container">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            <%block name="content"></%block>
+        </div>
+        <!--End of body content-->
+
+        <footer>
+            ${content_footer}
+        </footer>
+    </div>
+</div>
+
+${base_helper.html_social()}
+${base_helper.late_load_js()}
+${analytics}
+    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
+</body>
