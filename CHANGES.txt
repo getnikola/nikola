@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Added docs/upgrading-to-v6.txt for upgrade tips.
 * Theme cleanup (Issue #599)
 * Support for nested navigation links (Issue #104)
 * New media directive for reStructuredText (Issue #608)

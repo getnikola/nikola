@@ -1,0 +1,65 @@
+.. title: Upgrading to v6
+.. slug: ungrading-to-v6
+.. date: 2013/08/23 23:00
+.. tags:
+.. link:
+.. description:
+
+Upgrading to v6
+===============
+
+:Version: 5.97
+
+Nikola tries fairly hard to be compatible between versions. However, there were
+a few areas which were getting clunky, and needed fxing. So, here's what you may
+need to change in your site.
+
+If you need to change anything else, or something breaks, please write at nikola-discuss
+and I'll add further tweaks here.
+
+Themes
+------
+
+**NOTE**
+    The install_theme command is not working yet, get themes from https://github.com/ralsina/nikola-themes
+
+**NOTE**
+    There is no equivalent for the jinja-default theme yet. If you have a custom,
+    jinja-based theme, upgrading is probably a bad idea right now.
+
+
+Themes have been renamed:
+
+* site => bootstrap
+* orphan => base
+
+Theme added:
+
+* base-jinja
+
+Themes have been moved out of nikola and into nikola-themes:
+
+* default => oldfashioned at nikola-themes
+* jinja-default => not there yet, coming soon
+* monospace => monospace at nikola-themes
+* site-reveal => reveal at nikola-themes
+
+You may have to change your ``THEME`` setting, or change the ``parent`` if you are
+using a custom theme. Also, some templates have been tweaked, but nothing should
+break for you.
+
+Configuration
+-------------
+
+A number of options have been renamed. In all cases, the behaviour should be **exactly** as
+before. If it's not, let me know. Also, you will get warnings. That doesn't mean things
+broke. They are there to inform you of what's happening, and that you need to tweak
+your config.
+
+All the deprecated options will work during the v6 cycle, and only be removed in v7, when
+those warnings will become errors.
+
+
+
+
+
