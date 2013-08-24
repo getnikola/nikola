@@ -1,11 +1,12 @@
 ## -*- coding: utf-8 -*-
 
-%if comment_system = 'disqus':
+<%namespace file="disqus_helper.tmpl" import="*"/>
+%if comment_system == 'disqus':
     <%namespace file="disqus_helper.tmpl" import="*"/>
-% elif comment_system = 'livefyre':
+% elif comment_system == 'livefyre':
     <%namespace file="livefyre_helper.tmpl" import="*"/>
-% elif comment_system = 'intensedebate':
+% elif comment_system == 'intensedebate':
     <%namespace file="intensedebate_helper.tmpl" import="*"/>
-% elif comment_system = 'moot':
-    <%namespace file="moot.tmpl" import="*"/>
+% elif comment_system == 'moot':
+    <%namespace file="moot_helper.tmpl" import="*"/>
 %endif
