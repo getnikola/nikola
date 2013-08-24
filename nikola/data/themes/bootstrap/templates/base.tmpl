@@ -1,6 +1,5 @@
 ## -*- coding: utf-8 -*-
 <%namespace file="base_helper.tmpl" import="*" />
-<%namespace file="base_helper_bootstrap.tmpl" import="*" />
 ${set_locale(lang)}
 <!DOCTYPE html>
 <html lang="${lang}">
@@ -12,6 +11,7 @@ ${set_locale(lang)}
     ${extra_head_data}
 </head>
 <body>
+
 <!-- Menubar -->
 <div class="navbar navbar-fixed-top" id="navbar">
     <div class="navbar-inner">
@@ -30,7 +30,7 @@ ${set_locale(lang)}
             <!-- Everything you want hidden at 940px or less, place within here -->
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    ${html_sidebar_links()}
+                    ${html_navigation_links()}
                 </ul>
                 %if search_form:
                     ${search_form}

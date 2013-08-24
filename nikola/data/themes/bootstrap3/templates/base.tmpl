@@ -1,11 +1,12 @@
 ## -*- coding: utf-8 -*-
-<%namespace name="base_helper" file="base_helper.tmpl"/>
+<%namespace file="base_helper.tmpl" import="*" />
+<%namespace file="base_helper_bootstrap.tmpl" import="*" />
 ${set_locale(lang)}
 <!DOCTYPE html>
 <html lang="${lang}">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    ${base_helper.html_head()}
+    ${html_head()}
     <%block name="extra_head">
     </%block>
     ${extra_head_data}
@@ -26,7 +27,7 @@ ${set_locale(lang)}
     </div>
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav">
-            ${base_helper.html_sidebar_links()}
+            ${html_navigation_links()}
         </ul>
         %if search_form:
             ${search_form}
@@ -35,7 +36,7 @@ ${set_locale(lang)}
         <ul class="nav navbar-nav navbar-right">
             <%block name="belowtitle">
             %if len(translations) > 1:
-                <li>${base_helper.html_translations()}</li>
+                <li>${html_translations()}</li>
             %endif
             </%block>
             % if not hide_sourcelink:
@@ -61,8 +62,8 @@ ${set_locale(lang)}
     </div>
 </div>
 
-${base_helper.html_social()}
-${base_helper.late_load_js()}
+${html_social()}
+${late_load_js()}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
 ${body_end}
 </body>
