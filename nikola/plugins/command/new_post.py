@@ -99,7 +99,7 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False):
             from dateutil import rrule
         except ImportError:
             print('To use the --schedule switch of new_post, '
-                'you have to install the "dateutil" package.')
+                  'you have to install the "dateutil" package.')
             rrule = None
     if schedule and rrule and rule:
         if last_date and last_date.tzinfo:

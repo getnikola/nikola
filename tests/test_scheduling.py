@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from context import nikola
 from base import BaseTestCase
 import datetime
 from nose.plugins.skip import SkipTest
@@ -12,7 +11,7 @@ except ImportError:
     freeze_time = lambda x: lambda y: y
 
 FMT = '%Y/%m/%d %H:%M:%S'
-NOW = '2013/08/22 10:00:00' # Thursday
+NOW = '2013/08/22 10:00:00'  # Thursday
 TODAY = datetime.datetime.strptime(NOW, FMT)
 RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
 RULE_FR = 'RRULE:FREQ=WEEKLY;BYDAY=FR'
@@ -110,7 +109,6 @@ class TestScheduling(BaseTestCase):
         expected = TODAY.replace(day=22, hour=18).strftime(FMT)
         self.assertEqual(expected, get_date(True, RULE_TH, date))
         self.assertEqual(expected, get_date(True, RULE_TH, date, True))
-
 
         ## Last date in the future; matches rule
         ### Corresponding time has already passed, today

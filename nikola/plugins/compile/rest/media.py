@@ -34,7 +34,6 @@ except ImportError:
     micawber = None  # NOQA
 
 
-
 class Media(Directive):
     """ Restructured text extension for inserting any sort of media using micawber."""
     has_content = False
