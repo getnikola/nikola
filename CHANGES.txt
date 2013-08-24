@@ -4,6 +4,11 @@ New in master
 Features
 --------
 
+* New multiple comment system support (Issue #606)
+  
+  * Deprecated DISQUS_FORUM option for COMMENT_SYSTEM_ID
+  * New COMMENT_SYSTEM option to change comment systems, defaults to disqus
+
 * Added docs/upgrading-to-v6.txt for upgrade tips.
 * Theme cleanup (Issue #599)
 * Support for nested navigation links (Issue #104)
