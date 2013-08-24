@@ -1,12 +1,56 @@
 ## -*- coding: utf-8 -*-
 
-<%namespace file="disqus_helper.tmpl" import="*"/>
+<%namespace name="disqus" file="disqus_helper.tmpl"/>
+<%namespace name="livefyre" file="livefyre_helper.tmpl"/>
+<%namespace name="intensedebate" file="intensedebate_helper.tmpl"/>
+<%namespace name="moot" file="moot_helper.tmpl"/>
+
 %if comment_system == 'disqus':
-    <%namespace file="disqus_helper.tmpl" import="*"/>
+    <%def name="comment_form(url, title, identifier)">
+        ${disqus.comment_form(url, title, identifier)}
+    </%def>
+
+    <%def name="comment_link(link, identifier)">
+        ${disqus.comment_link(link, identifier)}
+    </%def>
+
+    <%def name="comment_link_script()">
+        ${disqus.comment_link_script()}
+    </%def>
 % elif comment_system == 'livefyre':
-    <%namespace file="livefyre_helper.tmpl" import="*"/>
+    <%def name="comment_form(url, title, identifier)">
+        ${livefyre.comment_form(url, title, identifier)}
+    </%def>
+
+    <%def name="comment_link(link, identifier)">
+        ${livefyre.comment_link(link, identifier)}
+    </%def>
+
+    <%def name="comment_link_script()">
+        ${livefyre.comment_link_script()}
+    </%def>
 % elif comment_system == 'intensedebate':
-    <%namespace file="intensedebate_helper.tmpl" import="*"/>
+    <%def name="comment_form(url, title, identifier)">
+        ${intensedebate.comment_form(url, title, identifier)}
+    </%def>
+
+    <%def name="comment_link(link, identifier)">
+        ${intensedebate.comment_link(link, identifier)}
+    </%def>
+
+    <%def name="comment_link_script()">
+        ${intensedebate.comment_link_script()}
+    </%def>
 % elif comment_system == 'moot':
-    <%namespace file="moot_helper.tmpl" import="*"/>
+    <%def name="comment_form(url, title, identifier)">
+        ${moot.comment_form(url, title, identifier)}
+    </%def>
+
+    <%def name="comment_link(link, identifier)">
+        ${moot.comment_link(link, identifier)}
+    </%def>
+
+    <%def name="comment_link_script()">
+        ${moot.comment_link_script()}
+    </%def>
 %endif
