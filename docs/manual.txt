@@ -849,7 +849,7 @@ to one of "disqus", "intensedebate", "livefyre" or "moot"
    are using and you can see it in the system's admin interface.
 
    * For Disqus it's called the **shortname**
-   * In IntenseDebate it's the **IntenseDeabte site acct**
+   * In IntenseDebate it's the **IntenseDebate site acct**
    * In LiveFyre it's the **siteId**
    * In Moot it's your **username**
 
