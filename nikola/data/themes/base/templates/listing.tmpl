@@ -6,5 +6,15 @@
         <li><a href="${link}">/ ${crumb}</a></li>
     % endfor
 </ul>
-${code}
+<ul class="unstyled">
+% for name in folders:
+    <li><a href="${name}"><i class="icon-folder-open"></i> ${name}</a>
+% endfor
+% for name in files:
+    <li><a href="${name}.html"><i class="icon-file"></i> ${name}</a>
+% endfor
+</ul>
+% if code:
+    ${code}
+% endif
 </%block>

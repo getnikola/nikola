@@ -1,6 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%namespace name="helper" file="post_helper.tmpl"/>
-<%namespace name="comments" file="comments_helper.tmpl"/>
+<%namespace name="disqus" file="disqus_helper.tmpl"/>
 <%inherit file="base.tmpl"/>
 <%block name="extra_head">
 ${helper.twitter_card_information(post)}
@@ -13,21 +13,24 @@ ${helper.twitter_card_information(post)}
     ${helper.html_title()}
     <hr>
     <small>
-        ${messages("Posted")}: ${post.formatted_date(date_format)}
-        ${helper.html_translations(post)}
-        &nbsp;&nbsp;|&nbsp;&nbsp;
-		<%block name="sourcelink">
-		% if not post.meta('password'):
-			<a href="${post.source_link()}" id="sourcelink">${messages("Source")}</a>
-		% endif
-		</%block>
+        ${messages("Posted")}: <time class="published" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time>
+        ${post_helper.html_translations(post)}
+        ${post_helper.html_tags(post)}
     </small>
     <hr>
     ${post.text()}
     ${helper.html_pager(post)}
     % if not post.meta('nocomments'):
-        ${comments.comment_form(post.permalink(absolute=True), post.title(), post.base_path)}
+        ${disqus.html_disqus(post.permalink(absolute=True), post.title(), post.base_path)}
     % endif
     ${helper.mathjax_script(post)}
     </div>
+</%block>
+
+<%block name="sourcelink">
+% if not post.meta('password'):
+    <li>
+    <a href="${post.source_link()}" id="sourcelink">${messages("Source")}</a>
+    </li>
+% endif
 </%block>
