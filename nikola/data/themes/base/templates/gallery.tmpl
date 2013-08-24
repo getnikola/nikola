@@ -1,6 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="base.tmpl"/>
-<%namespace name="disqus" file="comments_helper.tmpl"/>
+<%namespace name="comments" file="comments_helper.tmpl"/>
 <%block name="sourcelink"></%block>
 
 <%block name="content">
@@ -26,6 +26,6 @@
         %endfor
     </ul>
 %if enable_comments:
-    ${disqus.html_disqus(None, permalink, title)}
+    ${comments.comment_form(None, permalink, title)}
 %endif
 </%block>
