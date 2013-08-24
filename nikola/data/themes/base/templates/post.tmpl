@@ -16,10 +16,11 @@ ${helper.twitter_card_information(post)}
         ${messages("Posted")}: ${post.formatted_date(date_format)}
         ${helper.html_translations(post)}
         &nbsp;&nbsp;|&nbsp;&nbsp;
-        % if not post.meta('password'):
-          <a href="${post.source_link()}" id="sourcelink">${messages("Source")}</a>
-        % endif
-        ${helper.html_tags(post)}
+		<%block name="sourcelink">
+		% if not post.meta('password'):
+			<a href="${post.source_link()}" id="sourcelink">${messages("Source")}</a>
+		% endif
+		</%block>
     </small>
     <hr>
     ${post.text()}
@@ -27,5 +28,6 @@ ${helper.twitter_card_information(post)}
     % if not post.meta('nocomments'):
         ${disqus.html_disqus(post.permalink(absolute=True), post.title(), post.base_path)}
     % endif
+    ${helper.mathjax_script(post)}
     </div>
 </%block>
