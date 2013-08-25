@@ -1,0 +1,9 @@
+## -*- coding: utf-8 -*-
+
+<%def name="bar(crumbs)">
+<ul class="breadcrumb">
+    % for link, text in crumbs:
+        <li><a href="${link}">${text}</a></li>
+    % endfor
+</ul>
+</%def>
