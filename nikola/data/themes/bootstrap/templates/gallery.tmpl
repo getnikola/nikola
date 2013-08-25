@@ -1,14 +1,11 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="base.tmpl"/>
 <%namespace name="disqus" file="disqus_helper.tmpl"/>
+<%namespace name="ui" file="crumbs.tmpl" import="bar"/>
 <%block name="sourcelink"></%block>
 
 <%block name="content">
-    <ul class="breadcrumb">
-        % for link, crumb in crumbs:
-            <li><a href="${link}">/ ${crumb}</a>
-        % endfor
-    </ul>
+    ${ui.bar(crumbs)}
     %if text:
     <p>
         ${text}
@@ -16,7 +13,7 @@
     %endif
     <ul>
     % for folder in folders:
-        <li><a href="${folder}"><i class="icon-folder-open"></i>&nbsp;${folder}</a>
+        <li><a href="${folder}"><i class="icon-folder-open"></i>&nbsp;${folder}</a></li>
     % endfor
     </ul>
 
