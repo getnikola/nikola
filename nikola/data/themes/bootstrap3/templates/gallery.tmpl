@@ -1,14 +1,11 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="base.tmpl"/>
 <%namespace name="comments" file="comments_helper.tmpl"/>
+<%namespace name="ui" file="crumbs.tmpl" import="bar"/>
 <%block name="sourcelink"></%block>
 
 <%block name="content">
-    <ul class="breadcrumb">
-        % for link, crumb in crumbs:
-            <li><a href="${link}">${crumb}</a></li>
-        % endfor
-    </ul>
+    ${ui.bar(crumbs)}
     %if text:
     <p>
         ${text}

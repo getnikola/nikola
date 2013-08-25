@@ -1,16 +1,7 @@
-A more "website-done-with-bootstrap" theme, so to speak. This theme should 
-be completely compatible with the default theme and need no configuration
-changes, except for the search form, as explained below.
+A "website-done-with-bootstrap" theme, so to speak. 
 
-
-Has a fixed navigation bar at top that displays:
-
-* Site name
-* navigation links (taken from sidebar_links in dodo.py)
-* search form (taken from SEARCH_FORM in dodo.py)
-* Link to page's source code (if available)
-* Floating social bar on the left margin
-* The below-title block is displayed flush right
+Has a fixed navigation bar at top that displays the NAVIGATION_LINKS
+setting and supports nested menus.
 
 This theme is used in Nikola's website: http://nikola.ralsina.com.ar
 

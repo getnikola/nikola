@@ -1,6 +1,6 @@
 ## -*- coding: utf-8 -*-
-<%namespace file="base_helper.tmpl" import="*" />
 <%namespace file="base_helper_bootstrap.tmpl" import="*" />
+<%namespace file="base_helper.tmpl" import="*" />
 ${set_locale(lang)}
 <!DOCTYPE html>
 <html lang="${lang}">
@@ -62,8 +62,9 @@ ${set_locale(lang)}
     </div>
 </div>
 
-${html_social()}
 ${late_load_js()}
+${html_social()}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+<%block name="extra_js"></%block>
 ${body_end}
 </body>
