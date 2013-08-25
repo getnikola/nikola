@@ -109,6 +109,7 @@ class Nikola(object):
             'BODY_END': "",
             'CACHE_FOLDER': 'cache',
             'CODE_COLOR_SCHEME': 'default',
+            'COMMENT_SYSTEM': 'disqus',
             'COMMENTS_IN_GALLERIES': False,
             'COMMENTS_IN_STORIES': False,
             'CONTENT_FOOTER': '',
@@ -118,7 +119,7 @@ class Nikola(object):
             'DEFAULT_LANG': "en",
             'DEPLOY_COMMANDS': [],
             'DISABLED_PLUGINS': (),
-            'DISQUS_FORUM': 'nikolademo',
+            'COMMENT_SYSTEM_ID': 'nikolademo',
             'ENABLED_EXTRAS': (),
             'EXTRA_HEAD_DATA': '',
             'FAVICONS': {},
@@ -199,6 +200,15 @@ class Nikola(object):
                   'the "pyphen" package.')
             print('WARNING: Setting HYPHENATE to False.')
             self.config['HYPHENATE'] = False
+
+        # Deprecating DISQUS_FORUM
+        # TODO: remove on v7
+        if 'DISQUS_FORUM' in config:
+            print("WARNING: The DISQUS_FORUM option is deprecated, use COMMENT_SYSTEM_ID instead.")
+            if 'COMMENT_SYSTEM_ID' in config:
+                print("WARNING: DISQUS_FORUM conflicts with COMMENT_SYSTEM_ID, ignoring DISQUS_FORUM.")
+            else:
+                self.config['COMMENT_SYSTEM_ID'] = config['DISQUS_FORUM']
 
         # Deprecating the ANALYTICS option
         # TODO: remove on v7
@@ -360,7 +370,10 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['translations'] = self.config.get('TRANSLATIONS')
         self._GLOBAL_CONTEXT['license'] = self.config.get('LICENSE')
         self._GLOBAL_CONTEXT['search_form'] = self.config.get('SEARCH_FORM')
-        self._GLOBAL_CONTEXT['disqus_forum'] = self.config.get('DISQUS_FORUM')
+        self._GLOBAL_CONTEXT['comment_system'] = self.config.get('COMMENT_SYSTEM')
+        self._GLOBAL_CONTEXT['comment_system_id'] = self.config.get('COMMENT_SYSTEM_ID')
+        # TODO: remove in v7
+        self._GLOBAL_CONTEXT['disqus_forum'] = self.config.get('COMMENT_SYSTEM_ID')
         self._GLOBAL_CONTEXT['mathjax_config'] = self.config.get(
             'MATHJAX_CONFIG')
         self._GLOBAL_CONTEXT['subtheme'] = self.config.get('THEME_REVEAL_CONGIF_SUBTHEME')

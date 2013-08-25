@@ -5,11 +5,12 @@
         'es': 'es_ES',
     }
 %>
-<%def name="html_disqus(url, title, identifier)">
-    %if disqus_forum:
+
+<%def name="comment_form(url, title, identifier)">
+    %if comment_system_id:
         <div id="disqus_thread"></div>
         <script type="text/javascript">
-        var disqus_shortname ="${disqus_forum}";
+        var disqus_shortname ="${comment_system_id}";
         %if url:
             var disqus_url="${url}";
         %endif
@@ -29,16 +30,29 @@
     %endif
 </%def>
 
-<%def name="html_disqus_link(link, identifier)">
+<%def name="comment_link(link, identifier)">
     <p>
-    %if disqus_forum:
-        <a href="${link}" data-disqus-identifier="${identifier}">Comments</a>
+    %if comment_system_id:
+        <a href="${link}#disqus_thread" data-disqus-identifier="${identifier}">Comments</a>
     %endif
 </%def>
 
 
-<%def name="html_disqus_script()">
-    %if disqus_forum:
-       <script type="text/javascript">var disqus_shortname="${disqus_forum}";(function(){var a=document.createElement("script");a.async=true;a.type="text/javascript";a.src="http://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("HEAD")[0]||document.getElementsByTagName("BODY")[0]).appendChild(a)}());</script>
+<%def name="comment_link_script()">
+    %if comment_system_id:
+       <script type="text/javascript">var disqus_shortname="${comment_system_id}";(function(){var a=document.createElement("script");a.async=true;a.type="text/javascript";a.src="http://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("HEAD")[0]||document.getElementsByTagName("BODY")[0]).appendChild(a)}());</script>
     %endif
+</%def>
+
+## FIXME: remove aliases in v7
+<%def name="html_disqus(url, title, identifier)">
+    ${comment_form(url, title, identifier)}
+</%def>
+
+<%def name="html_disqus_link(link, identifier)">
+    ${comment_link(link, identifier)}
+</%def>
+
+<%def name="html_disqus_script()">
+    ${comment_link_script()}
 </%def>

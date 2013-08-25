@@ -1,6 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%namespace name="helper" file="index_helper.tmpl"/>
-<%namespace name="disqus" file="disqus_helper.tmpl"/>
+<%namespace name="comments" file="comments_helper.tmpl"/>
 <%inherit file="base.tmpl"/>
 <%block name="content">
     % for post in posts:
@@ -12,10 +12,10 @@
         <hr>
         ${post.text(teaser_only=index_teasers)}
         % if not post.meta('nocomments'):
-            ${disqus.html_disqus_link(post.permalink()+"#disqus_thread", post.base_path)}
+            ${comments.comment_link(post.permalink(), post.base_path)}
         % endif
         </div>
     % endfor
     ${helper.html_pager()}
-    ${disqus.html_disqus_script()}
+    ${comments.comment_link_script()}
 </%block>
