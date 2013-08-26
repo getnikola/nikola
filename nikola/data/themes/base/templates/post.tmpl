@@ -15,6 +15,7 @@ ${helper.twitter_card_information(post)}
     <small>
         ${messages("Posted")}: <time class="published" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time>
         ${helper.html_translations(post)}
+		${helper.html_tags(post)}
         &nbsp;&nbsp;|&nbsp;&nbsp;
 		<%block name="sourcelink">
 		% if not post.meta('password'):
