@@ -51,6 +51,7 @@ class JinjaTemplates(TemplateSystem):
             return
         self.lookup = jinja2.Environment()
         self.lookup.filters['tojson'] = json.dumps
+        self.lookup.globals['enumerate'] = enumerate
 
     def set_directories(self, directories, cache_folder):
         """Createa  template lookup."""
