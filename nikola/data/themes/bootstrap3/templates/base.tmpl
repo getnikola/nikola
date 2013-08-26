@@ -1,12 +1,12 @@
 ## -*- coding: utf-8 -*-
-<%namespace file="base_helper.tmpl" import="*" />
-<%namespace file="bootstrap_helper.tmpl" import="*" />
+<%namespace name="base" file="base_helper.tmpl" import="*" />
+<%namespace name="bootstrap" file="bootstrap_helper.tmpl" import="*" />
 ${set_locale(lang)}
 <!DOCTYPE html>
 <html lang="${lang}">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    ${html_head()}
+    ${bootstrap.html_head()}
     <%block name="extra_head">
     </%block>
     ${extra_head_data}
@@ -27,7 +27,7 @@ ${set_locale(lang)}
     </div>
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav">
-            ${html_navigation_links()}
+            ${bootstrap.html_navigation_links()}
         </ul>
         %if search_form:
             ${search_form}
@@ -36,7 +36,7 @@ ${set_locale(lang)}
         <ul class="nav navbar-nav navbar-right">
             <%block name="belowtitle">
             %if len(translations) > 1:
-                <li>${html_translations()}</li>
+                <li>${base.html_translations()}</li>
             %endif
             </%block>
             % if not hide_sourcelink:
@@ -62,8 +62,8 @@ ${set_locale(lang)}
     </div>
 </div>
 
-${late_load_js()}
-${html_social()}
+${bootstrap.late_load_js()}
+${base.html_social()}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
 <%block name="extra_js"></%block>
 ${body_end}
