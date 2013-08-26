@@ -7,7 +7,7 @@
         <div class="postbox">
         <h1><a href="${post.permalink()}">${post.title()}</a>
         <small>&nbsp;&nbsp;
-             ${messages("Posted")}: ${post.formatted_date(date_format)}
+             ${messages("Posted")}: <time class="published" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time>
         </small></h1>
         <hr>
         ${post.text(teaser_only=index_teasers)}
@@ -18,4 +18,5 @@
     % endfor
     ${helper.html_pager()}
     ${comments.comment_link_script()}
+	${helper.mathjax_script(posts)}
 </%block>
