@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* All reStructuredText extensions are now plugins (Issue #621)
 * New multiple comment system support (Issue #606)
   
   * Deprecated DISQUS_FORUM option for COMMENT_SYSTEM_ID
@@ -31,6 +32,7 @@ Features
 Bugfixes
 --------
 
+* Switched docutils math rendering to MathJax (Issue #620)
 * Refactored crumb bar into a separate tmpl to avoid code duplication (Issue #612)
 * Fix broken config dep for tags when NAVIGATION_LINKS is not set (Issue #610)
 * Fixed bundles in base theme
