@@ -270,9 +270,10 @@ class CommandNewPost(Command):
         d_name = os.path.dirname(txt_path)
         if not os.path.exists(d_name):
             os.makedirs(d_name)
+        metadata = self.site.config['ADDITIONAL_METADATA']
         compiler_plugin.create_post(
             txt_path, onefile, title=title,
-            slug=slug, date=date, tags=tags)
+            slug=slug, date=date, tags=tags, **metadata)
 
         if not onefile:  # write metadata file
             with codecs.open(meta_path, "wb+", "utf8") as fd:
