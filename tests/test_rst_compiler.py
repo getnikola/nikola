@@ -27,6 +27,7 @@ always unquoted.
 
 from __future__ import unicode_literals
 
+import codecs
 try:
     from io import StringIO
 except ImportError:
@@ -108,11 +109,11 @@ class ReSTExtensionTestCase(BaseTestCase):
         tmpdir = tempfile.mkdtemp()
         inf = os.path.join(tmpdir, 'inf')
         outf = os.path.join(tmpdir, 'outf')
-        with open(inf, 'wb+') as f:
-            f.write(rst.encode('utf8'))
+        with codecs.open(inf, 'wb+', 'utf8') as f:
+            f.write(rst)
         self.html = self.compiler.compile_html(inf, outf)
-        with open(outf, 'r') as f:
-            self.html = f.read().decode('utf8')
+        with codecs.open(outf, 'r', 'utf8') as f:
+            self.html = f.read()
         os.unlink(inf)
         os.unlink(outf)
         os.rmdir(tmpdir)
