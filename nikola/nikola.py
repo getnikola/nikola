@@ -126,6 +126,7 @@ class Nikola(object):
             'FAVICONS': {},
             'FEED_LENGTH': 10,
             'FILE_METADATA_REGEXP': None,
+            'ADDITIONAL_METADATA': {},
             'FILES_FOLDERS': {'files': ''},
             'FILTERS': {},
             'GALLERY_PATH': 'galleries',

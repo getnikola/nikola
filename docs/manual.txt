@@ -413,6 +413,15 @@ source for the content, and ``description`` is mostly useful for SEO.
 You can add your own metadata fields in the same manner, if you use a theme that
 supports them (for example: ``.. author: John Doe``)
 
+To add these metadata fields to all new posts by default, you can set the
+variable ``ADDITIONAL_METADATA`` in your configuration.  For example, you can
+add the author metadata to all new posts by default, by adding the following
+to your configuration ::
+
+    ADDITIONAL_METADATA = {
+        'author': 'John Doe'
+    }
+
 .. sidebar:: Other Metadata Fields
 
    Nikola will also use other metadata fields:
