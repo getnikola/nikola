@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New ADDITIONAL_METADATA option to set extra metadata on all posts.
 * All reStructuredText extensions are now plugins (Issue #621)
 * New multiple comment system support (Issue #606)
   
