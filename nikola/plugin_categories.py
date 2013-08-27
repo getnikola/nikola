@@ -28,7 +28,9 @@ __all__ = [
     'Command',
     'LateTask',
     'PageCompiler',
+    'RestExtension',
     'Task',
+    'TaskMultiplier',
     'TemplateSystem'
 ]
 
