@@ -146,6 +146,15 @@ class ReSTExtensionTestCaseTestCase(ReSTExtensionTestCase):
                                 text="spam")
         self.assertRaises(Exception, self.assertHTMLContains, "eggs", {})
 
+class MathTestCase(ReSTExtensionTestCase):
+    sample = ':math:`e^{ix} = \cos x + i\sin x`'
+
+    def test_mathjax(self):
+        """ Test that math is outputting MathJax."""
+        self.assertHTMLContains("span", attributes={"class": "math"},
+                                text="\(e^{ix} = \cos x + i\sin x\)")
+
+
 
 class GistTestCase(ReSTExtensionTestCase):
     """ Test GitHubGist.
