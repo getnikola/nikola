@@ -28,7 +28,9 @@ Features
 * Updated to Colorbox 1.4.27
 * New pandoc compiler.
 * Separate slides.tmpl template so that non-bootstrap themes can support them.
-
+* New ADDITIONAL_METADATA option to specify metadata to include in the new_post
+  command, alongside with the defaults (Issue #622)
+  
 Bugfixes
 --------
 
