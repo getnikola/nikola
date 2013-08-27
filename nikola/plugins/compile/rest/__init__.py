@@ -31,26 +31,6 @@ import os
 try:
     import docutils.core
     import docutils.io
-    from docutils.parsers.rst import directives
-
-    from .listing import Listing, CodeBlock
-    directives.register_directive('code-block', CodeBlock)
-    directives.register_directive('sourcecode', CodeBlock)
-    directives.register_directive('listing', Listing)
-    from .media import Media
-    directives.register_directive('media', Media)
-    from .youtube import Youtube
-    directives.register_directive('youtube', Youtube)
-    from .vimeo import Vimeo
-    directives.register_directive('vimeo', Vimeo)
-    from .slides import Slides
-    directives.register_directive('slides', Slides)
-    from .gist_directive import GitHubGist
-    directives.register_directive('gist', GitHubGist)
-    from .soundcloud import SoundCloud
-    directives.register_directive('soundcloud', SoundCloud)
-    from .chart import Chart
-    directives.register_directive('chart', Chart)
     has_docutils = True
 except ImportError:
     has_docutils = False
@@ -115,7 +95,17 @@ class CompileRest(PageCompiler):
             fd.write("\nWrite your post here.")
 
     def set_site(self, site):
-        Slides.site = site
+        for plugin_info in site.plugin_manager.getPluginsOfCategory("RestExtension"):
+            if (plugin_info.name in site.config['DISABLED_PLUGINS']
+                or (plugin_info.name in site.EXTRA_PLUGINS and
+                    plugin_info.name not in site.config['ENABLED_EXTRAS'])):
+                site.plugin_manager.removePluginFromCategory(plugin_info, "RestExtension")
+                continue
+
+            site.plugin_manager.activatePluginByName(plugin_info.name)
+            plugin_info.plugin_object.set_site(site)
+            plugin_info.plugin_object.short_help = plugin_info.description
+
         return super(CompileRest, self).set_site(site)
 
 

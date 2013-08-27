@@ -1,0 +1,10 @@
+[Core]
+Name = chart
+Module = chart
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Chart directive based in PyGal
+

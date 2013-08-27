@@ -28,6 +28,19 @@ from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
 
+from nikola.plugin_categories import RestExtension
+
+
+class Plugin(RestExtension):
+
+    name = "rest_youtube"
+
+    def set_site(self, site):
+        self.site = site
+        directives.register_directive('youtube', Youtube)
+        return super(Plugin, self).set_site(site)
+
+
 CODE = """\
 <iframe width="{width}"
 height="{height}"
@@ -66,6 +79,3 @@ class Youtube(Directive):
             raise self.warning("This directive does not accept content. The "
                                "'key=value' format for options is deprecated, "
                                "use ':key: value' instead")
-
-
-directives.register_directive('youtube', Youtube)

@@ -1,0 +1,10 @@
+[Core]
+Name = gist
+Module = gist
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Gist directive
+

@@ -1,0 +1,10 @@
+[Core]
+Name = media
+Module = media
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Directive to support oembed via micawber
+

@@ -1,0 +1,10 @@
+[Core]
+Name = soundcloud
+Module = soundcloud
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Soundcloud directive
+

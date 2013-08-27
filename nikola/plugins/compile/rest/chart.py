@@ -34,6 +34,18 @@ try:
 except ImportError:
     pygal = None  # NOQA
 
+from nikola.plugin_categories import RestExtension
+
+
+class Plugin(RestExtension):
+
+    name = "rest_chart"
+
+    def set_site(self, site):
+        self.site = site
+        directives.register_directive('chart', Chart)
+        return super(Plugin, self).set_site(site)
+
 
 class Chart(Directive):
     """ Restructured text extension for inserting charts as SVG
@@ -131,5 +143,3 @@ class Chart(Directive):
             chart.add(label, series)
 
         return [nodes.raw('', chart.render().decode('utf8'), format='html')]
-
-directives.register_directive('chart', Chart)

@@ -30,6 +30,7 @@
 
 from __future__ import unicode_literals
 from codecs import open as codecs_open  # for patching purposes
+import os
 try:
     from urlparse import urlunsplit
 except ImportError:
@@ -42,7 +43,20 @@ try:
 except ImportError:  # docutils < 0.9 (Debian Sid For The Loss)
     from dummy import CodeBlock  # NOQA
 
-import os
+
+from nikola.plugin_categories import RestExtension
+
+
+class Plugin(RestExtension):
+
+    name = "rest_listing"
+
+    def set_site(self, site):
+        self.site = site
+        directives.register_directive('code-block', CodeBlock)
+        directives.register_directive('sourcecode', CodeBlock)
+        directives.register_directive('listing', Listing)
+        return super(Plugin, self).set_site(site)
 
 
 class Listing(CodeBlock):
@@ -117,6 +131,3 @@ class Listing(CodeBlock):
     def assert_has_content(self):
         """ Listing has no content, override check from superclass """
         pass
-
-
-directives.register_directive('listing', Listing)

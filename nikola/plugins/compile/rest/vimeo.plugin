@@ -1,0 +1,7 @@
+[Core]
+Name = vimeo
+Module = vimeo
+
+[Documentation]
+Description = Vimeo directive
+

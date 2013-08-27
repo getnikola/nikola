@@ -9,6 +9,18 @@ try:
 except ImportError:
     requests = None  # NOQA
 
+from nikola.plugin_categories import RestExtension
+
+
+class Plugin(RestExtension):
+
+    name = "rest_gist"
+
+    def set_site(self, site):
+        self.site = site
+        directives.register_directive('gist', GitHubGist)
+        return super(Plugin, self).set_site(site)
+
 
 class GitHubGist(Directive):
     """ Embed GitHub Gist.

@@ -59,6 +59,7 @@ from .plugin_categories import (
     Command,
     LateTask,
     PageCompiler,
+    RestExtension,
     Task,
     TaskMultiplier,
     TemplateSystem,
@@ -281,6 +282,7 @@ class Nikola(object):
             "TemplateSystem": TemplateSystem,
             "PageCompiler": PageCompiler,
             "TaskMultiplier": TaskMultiplier,
+            "RestExtension": RestExtension,
         })
         self.plugin_manager.setPluginInfoExtension('plugin')
         if sys.version_info[0] == 3:

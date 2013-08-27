@@ -179,6 +179,8 @@ class PageCompiler(BasePlugin):
         """The preferred extension for the output of this compiler."""
         return ".html"
 
+class RestExtension(BasePlugin):
+    name = "dummy_rest_extension"
 
 class Importer(Command):
     """Basic structure for importing data into Nikola.

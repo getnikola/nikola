@@ -1,0 +1,10 @@
+[Core]
+Name = listing
+Module = listing
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://nikola.ralsina.com.ar
+Description = Extension for source listings
+

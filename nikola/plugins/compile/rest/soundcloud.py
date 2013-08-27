@@ -5,6 +5,19 @@ from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
 
+from nikola.plugin_categories import RestExtension
+
+
+class Plugin(RestExtension):
+
+    name = "rest_soundcloud"
+
+    def set_site(self, site):
+        self.site = site
+        directives.register_directive('soundcloud', SoundCloud)
+        return super(Plugin, self).set_site(site)
+
+
 CODE = ("""<iframe width="{width}" height="{height}"
 scrolling="no" frameborder="no"
 src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/"""
@@ -45,6 +58,3 @@ class SoundCloud(Directive):
             raise self.warning("This directive does not accept content. The "
                                "'key=value' format for options is deprecated, "
                                "use ':key: value' instead")
-
-
-directives.register_directive('soundcloud', SoundCloud)

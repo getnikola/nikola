@@ -29,7 +29,8 @@
 from __future__ import unicode_literals
 
 from docutils import nodes
-from docutils.parsers.rst import Directive, directives
+from docutils.parsers.rst import Directive
+
 
 CODE = '<pre>{0}</pre>'
 
@@ -41,5 +42,3 @@ class CodeBlock(Directive):
     def run(self):
         """ Required by the Directive interface. Create docutils nodes """
         return [nodes.raw('', CODE.format('\n'.join(self.content)), format='html')]
-
-directives.register_directive('code', CodeBlock)

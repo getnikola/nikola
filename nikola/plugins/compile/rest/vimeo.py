@@ -41,6 +41,19 @@ except ImportError:
         json = None
 
 
+from nikola.plugin_categories import RestExtension
+
+
+class Plugin(RestExtension):
+
+    name = "rest_vimeo"
+
+    def set_site(self, site):
+        self.site = site
+        directives.register_directive('vimeo', Vimeo)
+        return super(Plugin, self).set_site(site)
+
+
 CODE = """<iframe src="http://player.vimeo.com/video/{vimeo_id}"
 width="{width}" height="{height}"
 frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen>
@@ -114,6 +127,3 @@ class Vimeo(Directive):
             raise self.warning("This directive does not accept content. The "
                                "'key=value' format for options is deprecated, "
                                "use ':key: value' instead")
-
-
-directives.register_directive('vimeo', Vimeo)

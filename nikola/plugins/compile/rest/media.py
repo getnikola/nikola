@@ -34,6 +34,19 @@ except ImportError:
     micawber = None  # NOQA
 
 
+from nikola.plugin_categories import RestExtension
+
+
+class Plugin(RestExtension):
+
+    name = "rest_media"
+
+    def set_site(self, site):
+        self.site = site
+        directives.register_directive('media', Media)
+        return super(Plugin, self).set_site(site)
+
+
 class Media(Directive):
     """ Restructured text extension for inserting any sort of media using micawber."""
     has_content = False
@@ -46,5 +59,3 @@ class Media(Directive):
                             "the micawber module.")
         providers = micawber.bootstrap_basic()
         return [nodes.raw('', micawber.parse_text(" ".join(self.arguments), providers), format='html')]
-
-directives.register_directive('media', Media)

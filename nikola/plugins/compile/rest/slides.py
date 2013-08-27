@@ -31,6 +31,19 @@ import uuid
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
+from nikola.plugin_categories import RestExtension
+
+
+class Plugin(RestExtension):
+
+    name = "rest_slides"
+
+    def set_site(self, site):
+        self.site = site
+        directives.register_directive('slides', Slides)
+        Slides.site = site
+        return super(Plugin, self).set_site(site)
+
 
 class Slides(Directive):
     """ Restructured text extension for inserting slideshows."""
