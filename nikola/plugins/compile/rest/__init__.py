@@ -86,6 +86,7 @@ class CompileRest(PageCompiler):
                         'stylesheet_path': None,
                         'link_stylesheet': True,
                         'syntax_highlight': 'short',
+                        'math_output': 'mathjax',
                     })
                 out_file.write(output)
             deps_path = dest + '.dep'
