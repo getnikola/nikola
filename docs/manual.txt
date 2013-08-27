@@ -601,7 +601,7 @@ For example, if you would like to schedule your posts to be on every
 Monday, Wednesday and Friday at 7am, add the following
 ``SCHEDULE_RULE`` to your configuration ::
 
-    SCHEDULE_RULE = 'RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR;BYHOUR=7'
+    SCHEDULE_RULE = 'RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR;BYHOUR=7;BYMINUTE=0;BYSECOND=0'
 
 For more details on how to specify a recurrence rule, look at the
 `iCal specification <http://www.kanzaki.com/docs/ical/rrule.html>`_.

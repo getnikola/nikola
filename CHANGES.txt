@@ -31,7 +31,9 @@ Features
 * Separate slides.tmpl template so that non-bootstrap themes can support them.
 * New ADDITIONAL_METADATA option to specify metadata to include in the new_post
   command, alongside with the defaults (Issue #622)
-  
+* Schedule new posts automatically by specifying an iCal recursive rule as
+  SCHEDULE_RULE (Issue #602)
+
 Bugfixes
 --------
 
