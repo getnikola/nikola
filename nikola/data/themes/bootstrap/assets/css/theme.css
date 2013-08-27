@@ -73,3 +73,7 @@ ul.bricks > li {
     white-space:nowrap;
     margin: 3px;
 }
+
+ul.breadcrumb > li:before {
+    content: " / ";
+}
