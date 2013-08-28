@@ -4,14 +4,12 @@
     <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
     <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
     <link href="/assets/css/colorbox.css" rel="stylesheet" type="text/css"/>
-    <link href="/assets/css/slides.css" rel="stylesheet" type="text/css"/>
     <link href="/assets/css/theme.css" rel="stylesheet" type="text/css"/>
     <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
-    <script src="/assets/js/jquery-1.7.2.min.js" type="text/javascript"></script>    
-    <script src="https://raw.github.com/jonnyreeves/jquery-Mustache/master/src/jquery.mustache.js"></script>
-    <script src="https://raw.github.com/janl/mustache.js/master/mustache.js"></script>
+    <script src="/assets/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="//cdn.jsdelivr.net/jquery.mustache/0.2.7/jquery.mustache.js"></script>
+    <script src="//cdn.jsdelivr.net/mustache.js/0.7.2/mustache.js"></script>
     <script src="/assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
-    <script src="/assets/js/slides.min.jquery.js" type="text/javascript"></script>
     <script type="text/javascript">
 function load_data(dataurl) {
     jQuery.getJSON(dataurl, function(data) {
@@ -29,7 +27,7 @@ $.Mustache.load('/mustache-template.html')
             load_data('{{first_post_data}}');
         };
     })
-});    
+});
 </script>
 </head>
 <body style="padding-top: 0;">

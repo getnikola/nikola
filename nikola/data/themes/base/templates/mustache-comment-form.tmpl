@@ -1,0 +1,5 @@
+## -*- coding: utf-8 -*-
+<%namespace name="comments" file="comments_helper.tmpl"/>
+% if not post.meta('nocomments'):
+    ${comments.comment_form(post.permalink(absolute=True), post.title(), post.base_path)}
+% endif
