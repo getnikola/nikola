@@ -17,3 +17,4 @@ https://github.com/lepture/python-livereload/archive/master.zip#livereload
 pyphen
 python-dateutil
 micawber
+pygal
