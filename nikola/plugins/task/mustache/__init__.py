@@ -105,25 +105,11 @@ class Mustache(Task):
                 post.date.strftime(self.site.GLOBAL_CONTEXT['date_format']),
             })
 
-            # Disqus comments
-            data["disqus_html"] = ('<div id="disqus_thread"></div> <script '
-                                   'type="text/javascript">var disqus_'
-                                   'shortname="%s";var disqus_url="%s";'
-                                   '(function(){var a=document.createElement'
-                                   '("script");a.type="text/javascript";'
-                                   'a.async=true;a.src="http://"+disqus_'
-                                   'shortname+".disqus.com/embed.js";('
-                                   'document.getElementsByTagName("head")'
-                                   '[0]||document.getElementsByTagName("body")'
-                                   '[0]).appendChild(a)})();        </script>'
-                                   '<noscript>Please enable JavaScript to view'
-                                   ' the <a href="http://disqus.com/'
-                                   '?ref_noscript">comments powered by DISQUS.'
-                                   '</a></noscript><a href="http://disqus.com"'
-                                   'class="dsq-brlink">comments powered by <sp'
-                                   'an class="logo-disqus">DISQUS</span></a>' %
-                                   (self.site.config['DISQUS_FORUM'],
-                                    post.permalink(absolute=True)))
+            # Comments
+            context = dict(post=post, lang=self.site.current_lang())
+            context.update(self.site.GLOBAL_CONTEXT)
+            data["comment_html"] = self.site.template_system.render_template(
+                'mustache-comment-form.tmpl', None, context).strip()
 
             # Post translations
             translations = []
