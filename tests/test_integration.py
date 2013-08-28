@@ -109,9 +109,9 @@ class FuturePostTest(EmptyBuildTest):
         self.init_command.copy_sample_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
 
-        # Add the config option to allow future posts
+        # Change COMMENT_SYSTEM_ID to not wait for 5 seconds
         with codecs.open(os.path.join(self.target_dir, 'conf.py'), "ab+", "utf8") as outf:
-            outf.write('\nFUTURE_IS_NOW = False\n')
+            outf.write('\nCOMMENT_SYSTEM_ID = "nikolatest"\n')
 
         with codecs.open(os.path.join(self.target_dir, 'posts', 'empty1.txt'), "wb+", "utf8") as outf:
             outf.write(
@@ -143,6 +143,13 @@ class FuturePostTest(EmptyBuildTest):
         self.assertTrue('foo.html' in sitemap_data)
         self.assertFalse('bar.html' in sitemap_data)
 
+        # Run deploy command to see if future post is deleted
+        with cd(self.target_dir):
+            main.main(["deploy"])
+
+        self.assertTrue(os.path.isfile(index_path))
+        self.assertTrue(os.path.isfile(foo_path))
+        self.assertFalse(os.path.isfile(bar_path))
 
 class TranslatedBuildTest(EmptyBuildTest):
     """Test a site with translated content."""
