@@ -3,7 +3,7 @@
 .. tags:
 .. date: 2013/08/27 18:20:55
 .. title: Charts
-.. slug: chars
+.. slug: charts
 
 If you are using reStructuredText and install pygal, Nikola has support for rather nice charts
 with little effort, and i's even semi-interactive (hover your pointer over the legend!):
