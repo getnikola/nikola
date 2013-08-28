@@ -11,7 +11,7 @@ Features
   * Deprecated DISQUS_FORUM option for COMMENT_SYSTEM_ID
   * New COMMENT_SYSTEM option to change comment systems, defaults to disqus
 
-* New bootstra3 theme (by areski)
+* New bootstrap3 theme (by areski)
 * Added docs/upgrading-to-v6.txt for upgrade tips.
 * Theme cleanup (Issue #599)
 * Support for nested navigation links (Issue #104)
