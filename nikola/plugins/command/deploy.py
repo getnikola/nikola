@@ -47,7 +47,7 @@ class Deploy(Command):
     def _execute(self, command, args):
         # Get last succesful deploy date
         timestamp_path = os.path.join(self.site.config['CACHE_FOLDER'], 'lastdeploy')
-        if self.site.config['DISQUS_FORUM'] == 'nikolademo':
+        if self.site.config['COMMENT_SYSTEM_ID'] == 'nikolademo':
             print("\nWARNING WARNING WARNING WARNING\n"
                   "You are deploying using the nikolademo Disqus account.\n"
                   "That means you will not be able to moderate the comments in your own site.\n"
