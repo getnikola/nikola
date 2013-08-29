@@ -68,7 +68,7 @@ ${bootstrap.late_load_js()}
 ${base.html_social()}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});
     $(window).on('hashchange', function(){
-        if (location.hash) {
+        if (location.hash && $(location.hash)[0]) {
             $('body').animate({scrollTop: $(location.hash).offset().top - $('#navbar').outerHeight(true)*1.2 }, 1);
         }
     });
