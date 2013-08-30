@@ -37,6 +37,7 @@ Features
 Bugfixes
 --------
 
+* Better figure styling (Issue #626)
 * Switched docutils math rendering to MathJax (Issue #620)
 * Refactored crumb bar into a separate tmpl to avoid code duplication (Issue #612)
 * Fix broken config dep for tags when NAVIGATION_LINKS is not set (Issue #610)

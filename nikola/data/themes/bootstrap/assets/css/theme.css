@@ -43,8 +43,10 @@ td.label {
 .caption {
     /* Issue 292 */
     text-align: center;
+    padding-top: 1em;
 }
 
+div.figure > img,
 div.figure > a > img {
     /* Issue 292 */
     display: block;
