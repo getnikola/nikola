@@ -18,3 +18,4 @@ pyphen
 python-dateutil
 micawber
 pygal
+typogrify
