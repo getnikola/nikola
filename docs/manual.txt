@@ -848,9 +848,10 @@ Nikola supports several third party comment systems:
 * `IntenseDebate <http://www.intensedebate.com/>`_
 * `LiveFyre <http://www.livefyre.com/>`_
 * `Moot <http://moot.it>`_
+* `Google Plus <http://plus.google.com>`_
 
 By default it will use Disqus, but you can change by setting ``COMMENT_SYSTEM``
-to one of "disqus", "intensedebate", "livefyre" or "moot"
+to one of "disqus", "intensedebate", "livefyre", "moot" or "googleplus"
 
 .. sidebar:: ``COMMENT_SYSTEM_ID``
 
@@ -861,6 +862,7 @@ to one of "disqus", "intensedebate", "livefyre" or "moot"
    * In IntenseDebate it's the **IntenseDebate site acct**
    * In LiveFyre it's the **siteId**
    * In Moot it's your **username**
+   * For Google Plus, ``COMMENT_SYSTEM_ID`` need not be set
 
 To use comments in a visible site, you should register with the service and
 then set the ``COMMENT_SYSTEM_ID`` option.
