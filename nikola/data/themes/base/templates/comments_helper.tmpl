@@ -4,6 +4,7 @@
 <%namespace name="livefyre" file="livefyre_helper.tmpl"/>
 <%namespace name="intensedebate" file="intensedebate_helper.tmpl"/>
 <%namespace name="moot" file="moot_helper.tmpl"/>
+<%namespace name="googleplus" file="googleplus_helper.tmpl"/>
 
 <%def name="comment_form(url, title, identifier)">
     %if comment_system == 'disqus':
@@ -14,6 +15,8 @@
         ${intensedebate.comment_form(url, title, identifier)}
     % elif comment_system == 'moot':
         ${moot.comment_form(url, title, identifier)}
+    % elif comment_system == 'googleplus':
+        ${googleplus.comment_form(url, title, identifier)}
     %endif
 </%def>
 
@@ -26,6 +29,8 @@
         ${intensedebate.comment_link(link, identifier)}
     % elif comment_system == 'moot':
         ${moot.comment_link(link, identifier)}
+    % elif comment_system == 'googleplus':
+        ${googleplus.comment_link(link, identifier)}
     %endif
 </%def>
 
@@ -38,5 +43,7 @@
         ${intensedebate.comment_link_script()}
     % elif comment_system == 'moot':
         ${moot.comment_link_script()}
+    % elif comment_system == 'googleplus':
+        ${googleplus.comment_link_script()}
     %endif
 </%def>
