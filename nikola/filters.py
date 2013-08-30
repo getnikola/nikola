@@ -33,6 +33,11 @@ import shutil
 import subprocess
 import tempfile
 
+try:
+    import typogrify.filters as typo
+except ImportError:
+    typo = None
+
 
 def apply_to_file(f):
     """Takes a function f that transforms a data argument, and returns
@@ -134,16 +139,15 @@ def tidy(inplace):
                 assert False, line
 
 
-typogrify_filter = None
-
-
 @apply_to_file
 def typogrify(data):
     global typogrify_filter
-    if typogrify_filter is None:
-        try:
-            from typogrify.filters import typogrify as typogrify_filter
-        except ImportError:
-            print("To use the typogrify filter, you need to install tipogrify.")
-            raise
-    return typogrify_filter(data)
+    if typo is None:
+        raise Exception("To use the typogrify filter, you need to install tipogrify.")
+    data = typo.amp(data)
+    data = typo.widont(data)
+    data = typo.smartypants(data)
+    # Disabled because of typogrify bug where it breaks <title>
+    #data = typo.caps(data)
+    data = typo.initial_quotes(data)
+    return data
