@@ -1,5 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%namespace name="base" file="base_helper.tmpl" import="*"/>
+<%namespace name="annotations" file="annotation_helper.tmpl"/>
 ${set_locale(lang)}
 <!DOCTYPE html>
 <html lang="${lang}">
@@ -32,6 +33,4 @@ ${set_locale(lang)}
             </ul>
     ${base.late_load_js()}
     ${social_buttons_code}
-    <%block name="extra_js"></%block>
-    ${body_end}
 </body>
