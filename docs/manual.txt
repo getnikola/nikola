@@ -862,7 +862,8 @@ to one of "disqus", "intensedebate", "livefyre", "moot" or "googleplus"
    * In IntenseDebate it's the **IntenseDebate site acct**
    * In LiveFyre it's the **siteId**
    * In Moot it's your **username**
-   * For Google Plus, ``COMMENT_SYSTEM_ID`` need not be set
+   * For Google Plus, ``COMMENT_SYSTEM_ID`` need not be set, but you must
+     `verify your authorship <https://plus.google.com/authorship>`_
 
 To use comments in a visible site, you should register with the service and
 then set the ``COMMENT_SYSTEM_ID`` option.
