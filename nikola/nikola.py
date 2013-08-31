@@ -258,8 +258,7 @@ class Nikola(object):
             self.config['HIDE_SOURCELINK'] = True
 
         self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
-                                                      {self.config['DEFAULT_'
-                                                      'LANG']: ''})
+                                                      {self.config['DEFAULT_LANG']: ''})
 
         # SITE_URL is required, but if the deprecated BLOG_URL
         # is available, use it and warn
@@ -800,7 +799,7 @@ class Nikola(object):
                 # We eliminate from the list the files inside any .ipynb folder
                 full_list = [p for p in full_list
                              if not any([x.startswith('.')
-                             for x in p.split(os.sep)])]
+                                         for x in p.split(os.sep)])]
 
                 for base_path in full_list:
                     post = Post(

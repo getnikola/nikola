@@ -102,11 +102,10 @@ def tidy(inplace):
         return
 
     # Tidy will give error exits, that we will ignore.
-    output = subprocess.check_output("tidy -m -w 90 --indent no --quote-marks"
-                                     "no --keep-time yes --tidy-mark no "
-                                     "--force-output yes '{0}'; exit 0".format(
-                                     inplace), stderr=subprocess.STDOUT,
-                                     shell=True)
+    output = subprocess.check_output(
+        "tidy -m -w 90 --indent no --quote-marks"
+        "no --keep-time yes --tidy-mark no "
+        "--force-output yes '{0}'; exit 0".format(inplace), stderr=subprocess.STDOUT, shell=True)
 
     for line in output.split("\n"):
         if "Warning:" in line:

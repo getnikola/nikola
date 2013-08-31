@@ -37,7 +37,6 @@ import sys
 import tempfile
 
 from lxml import html
-import mock
 from nose.plugins.skip import SkipTest
 import unittest
 from yapsy.PluginManager import PluginManager
@@ -88,6 +87,7 @@ class FakeSite(object):
             ]
         self.plugin_manager.setPluginPlaces(places)
         self.plugin_manager.collectPlugins()
+
     def render_template(self, name, _, context):
         return('<img src="IMG.jpg">')
 
@@ -147,6 +147,7 @@ class ReSTExtensionTestCaseTestCase(ReSTExtensionTestCase):
                                 text="spam")
         self.assertRaises(Exception, self.assertHTMLContains, "eggs", {})
 
+
 class MathTestCase(ReSTExtensionTestCase):
     sample = ':math:`e^{ix} = \cos x + i\sin x`'
 
@@ -154,7 +155,6 @@ class MathTestCase(ReSTExtensionTestCase):
         """ Test that math is outputting MathJax."""
         self.assertHTMLContains("span", attributes={"class": "math"},
                                 text="\(e^{ix} = \cos x + i\sin x\)")
-
 
 
 class GistTestCase(ReSTExtensionTestCase):
@@ -278,8 +278,10 @@ class ListingTestCase(ReSTExtensionTestCase):
         super(ListingTestCase, self).setUp()
         pi = self.compiler.site.plugin_manager.getPluginByName('listing', 'RestExtension')
         # THERE MUST BE A NICER WAY
+
         def fake_open(*a, **kw):
             return self.f
+
         sys.modules[pi.plugin_object.__module__].codecs_open = fake_open
 
     def test_listing(self):

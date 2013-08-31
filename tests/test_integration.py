@@ -151,6 +151,7 @@ class FuturePostTest(EmptyBuildTest):
         self.assertTrue(os.path.isfile(foo_path))
         self.assertFalse(os.path.isfile(bar_path))
 
+
 class TranslatedBuildTest(EmptyBuildTest):
     """Test a site with translated content."""
 
