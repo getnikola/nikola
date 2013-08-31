@@ -906,7 +906,7 @@ You can disable comments for a post by adding a "nocomments" metadata field to i
 
 An alternative or complement to comments are annotations. Nikola integrates
 the annotation service provided by `AnnotateIt. <annotateit.org>`_
-To use it, set the ``ANNOTATIONS`` option to True. This is speciall useful
+To use it, set the ``ANNOTATIONS`` option to True. This is specially useful
 if you want feedback on specific parts of your writing.
 
 You can enable or disable annotations for specific posts or pages using the
