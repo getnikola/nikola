@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Support for bootswatch in boostrap 2 and 3 (Issue #599)
 * New ADDITIONAL_METADATA option to set extra metadata on all posts.
 * All reStructuredText extensions are now plugins (Issue #621)
 * New multiple comment system support (Issue #606, #634)
