@@ -1,5 +1,5 @@
-New in master
-=============
+New in 6.0.0
+============
 
 Features
 --------
@@ -38,6 +38,7 @@ Features
 Bugfixes
 --------
 
+* Switched to semantic versioning (Issue #614)
 * Better figure styling (Issue #626)
 * Switched docutils math rendering to MathJax (Issue #620)
 * Refactored crumb bar into a separate tmpl to avoid code duplication (Issue #612)

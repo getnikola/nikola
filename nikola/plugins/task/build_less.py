@@ -64,7 +64,7 @@ class BuildLess(Task):
         for theme_name in kw['themes']:
             src = os.path.join(utils.get_theme_path(theme_name), self.sources_folder)
             for task in utils.copy_tree(src, os.path.join(kw['cache_folder'], self.sources_folder)):
-                task['basename'] = self.name
+                #task['basename'] = self.name
                 yield task
 
         # Build targets and write CSS files
@@ -74,7 +74,7 @@ class BuildLess(Task):
         deps = glob.glob(os.path.join(
             base_path,
             self.sources_folder,
-            "*.{0}".format(self.sources_ext)))
+            "*{0}".format(self.sources_ext)))
 
         def compile_target(target, dst):
             if not os.path.isdir(dst_dir):

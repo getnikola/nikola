@@ -1,7 +1,7 @@
 
 /*
-Tipue Search 2.0
-Copyright (c) 2012 Tipue
+Tipue Search 3.0.1
+Copyright (c) 2013 Tipue
 Tipue Search is released under the MIT License
 http://www.tipue.com/search
 */
@@ -19,10 +19,3 @@ var tipuesearch_stem = {"words": [
      {"word": "javascript", stem: "script"},
      {"word": "javascript", stem: "js"}
 ]};
-
-/*
-Include the following variable listing the pages on your site if you're using Live mode
-*/
-
-var tipuesearch_pages = ["http://foo.com/", "http://foo.com/about/", "http://foo.com/blog/", "http://foo.com/tos/"];
-
