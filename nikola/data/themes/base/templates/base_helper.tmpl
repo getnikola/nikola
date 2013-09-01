@@ -38,6 +38,9 @@
             <link rel="${name}" href="${file}" sizes="${size}"/>
         %endfor
     %endif
+    % if comment_system == 'facebook':
+        <meta property="fb:app_id" content="${comment_system_id}">
+    % endif
 </%def>
 
 <%def name="late_load_js()">
