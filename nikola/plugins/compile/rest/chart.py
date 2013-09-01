@@ -35,6 +35,7 @@ except ImportError:
     pygal = None  # NOQA
 
 from nikola.plugin_categories import RestExtension
+from nikola import utils
 
 
 class Plugin(RestExtension):
@@ -126,8 +127,13 @@ class Chart(Directive):
 
     def run(self):
         if pygal is None:
-            raise Exception("To use the Chart directive you need to install "
-                            "the pygal module.")
+            msg = (
+                "ERROR: "
+                "To use the Chart directive you need to install "
+                "the pygal module.\n"
+            )
+            utils.show_msg(msg)
+            return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
         options = {}
         if 'style' in self.options:
             style_name = self.options.pop('style')

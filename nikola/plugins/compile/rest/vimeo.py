@@ -42,6 +42,7 @@ except ImportError:
 
 
 from nikola.plugin_categories import RestExtension
+from nikola import utils
 
 
 class Plugin(RestExtension):
@@ -91,18 +92,31 @@ class Vimeo(Directive):
             'height': VIDEO_DEFAULT_HEIGHT,
         }
         if self.request_size:
-            self.check_modules()
+            err = self.check_modules()
+            if err:
+                return err
             self.set_video_size()
         options.update(self.options)
         return [nodes.raw('', CODE.format(**options), format='html')]
 
     def check_modules(self):
+        msg = None
         if requests is None:
-            raise Exception("To use the Vimeo directive you need to install "
-                            "the requests module.")
-        if json is None:
-            raise Exception("To use the Vimeo directive you need python 2.6 "
-                            "or to install the simplejson module.")
+            msg = (
+                "Error: "
+                "To use the Vimeo directive you need to install "
+                "the requests module.\n"
+            )
+        elif json is None:
+            msg = (
+                "Error: "
+                "To use the Vimeo directive you need python 2.6 "
+                "or to install the simplejson module."
+            )
+        if msg is not None:
+            utils.show_msg(msg)
+            return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
+        return None
 
     def set_video_size(self):
         # Only need to make a connection if width and height aren't provided

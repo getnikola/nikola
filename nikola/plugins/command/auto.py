@@ -92,7 +92,7 @@ class Auto(Command):
                 l.append(os.path.dirname(item[0]))
             for item in self.site.config['FILES_FOLDERS']:
                 l.append(os.path.dirname(item))
-            data =GUARDFILE.format(json.dumps(l))
+            data = GUARDFILE.format(json.dumps(l))
             guardfile.write(data)
 
         out_folder = self.site.config['OUTPUT_FOLDER']

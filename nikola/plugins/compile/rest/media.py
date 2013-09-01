@@ -35,6 +35,7 @@ except ImportError:
 
 
 from nikola.plugin_categories import RestExtension
+from nikola import utils
 
 
 class Plugin(RestExtension):
@@ -55,7 +56,13 @@ class Media(Directive):
 
     def run(self):
         if micawber is None:
-            raise Exception("To use the media directive you need to install "
-                            "the micawber module.")
+            msg = (
+                "Error: "
+                "To use the media directive you need to install "
+                "the micawber module."
+            )
+            utils.show_msg(msg)
+            return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
+
         providers = micawber.bootstrap_basic()
         return [nodes.raw('', micawber.parse_text(" ".join(self.arguments), providers), format='html')]
