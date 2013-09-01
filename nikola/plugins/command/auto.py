@@ -26,6 +26,7 @@
 
 from __future__ import print_function, unicode_literals
 
+import codecs
 import json
 import os
 import subprocess
@@ -33,6 +34,7 @@ import subprocess
 from nikola.plugin_categories import Command
 
 GUARDFILE = """#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from livereload.task import Task
 import json
 import subprocess
@@ -84,13 +86,14 @@ class Auto(Command):
         port = options and options.get('port')
 
         # Create a Guardfile
-        with open("Guardfile", "wb+") as guardfile:
+        with codecs.open("Guardfile", "wb+", "utf8") as guardfile:
             l = ["conf.py", "themes", "templates", self.site.config['GALLERY_PATH']]
             for item in self.site.config['post_pages']:
                 l.append(os.path.dirname(item[0]))
             for item in self.site.config['FILES_FOLDERS']:
                 l.append(os.path.dirname(item))
-            guardfile.write(GUARDFILE.format(json.dumps(l)))
+            data =GUARDFILE.format(json.dumps(l))
+            guardfile.write(data)
 
         out_folder = self.site.config['OUTPUT_FOLDER']
 

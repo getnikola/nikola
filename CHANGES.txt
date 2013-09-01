@@ -1,10 +1,11 @@
-New in master
-=============
+New in 6.0.0
+============
 
 Features
 --------
 
 * Annotations using annotateit.org (Issue #623)
+* Support for bootswatch in boostrap 2 and 3 (Issue #599)
 * New ADDITIONAL_METADATA option to set extra metadata on all posts.
 * All reStructuredText extensions are now plugins (Issue #621)
 * New multiple comment system support (Issue #606, #634)
@@ -38,6 +39,7 @@ Features
 Bugfixes
 --------
 
+* Switched to semantic versioning (Issue #614)
 * Better figure styling (Issue #626)
 * Switched docutils math rendering to MathJax (Issue #620)
 * Refactored crumb bar into a separate tmpl to avoid code duplication (Issue #612)

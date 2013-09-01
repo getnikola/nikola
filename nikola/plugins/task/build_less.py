@@ -74,7 +74,7 @@ class BuildLess(Task):
         deps = glob.glob(os.path.join(
             base_path,
             self.sources_folder,
-            "*.{0}".format(self.sources_ext)))
+            "*{0}".format(self.sources_ext)))
 
         def compile_target(target, dst):
             if not os.path.isdir(dst_dir):

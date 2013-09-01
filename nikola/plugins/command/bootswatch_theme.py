@@ -33,6 +33,7 @@ except ImportError:
     requests = None  # NOQA
 
 from nikola.plugin_categories import Command
+from nikola import utils
 
 
 class CommandBootswatchTheme(Command):
@@ -70,13 +71,21 @@ class CommandBootswatchTheme(Command):
     def _execute(self, options, args):
         """Given a swatch name and a parent theme, creates a custom theme."""
         if requests is None:
-            print('To use the install_theme command, you need to install the '
+            print('To use the bootswatch_theme command, you need to install the '
                   '"requests" package.')
             return
 
         name = options['name']
         swatch = options['swatch']
         parent = options['parent']
+
+        # See if we need bootswatch v2 or v3
+        themes = utils.get_theme_chain(parent)
+        version = '2'
+        if 'bootstrap3' in themes:
+            version = ''
+        elif 'bootstrap' not in themes:
+            print('WARNING: bootswatch_theme only makes sense for themes that use bootstrap')
 
         print("Creating '{0}' theme from '{1}' and '{2}'".format(name, swatch,
                                                                  parent))
@@ -85,7 +94,7 @@ class CommandBootswatchTheme(Command):
         except:
             pass
         for fname in ('bootstrap.min.css', 'bootstrap.css'):
-            url = '/'.join(('http://bootswatch.com', swatch, fname))
+            url = '/'.join(('http://bootswatch.com', version, swatch, fname))
             print("Downloading: ", url)
             data = requests.get(url).text
             with open(os.path.join('themes', name, 'assets', 'css', fname),

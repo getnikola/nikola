@@ -8,7 +8,7 @@
 The Nikola Handbook
 ===================
 
-:Version: 5.97
+:Version: 6.0.0+beta1
 
 .. class:: alert alert-info pull-right
 
@@ -851,10 +851,12 @@ Nikola supports several third party comment systems:
 * `IntenseDebate <http://www.intensedebate.com/>`_
 * `LiveFyre <http://www.livefyre.com/>`_
 * `Moot <http://moot.it>`_
-* `Google Plus <http://plus.google.com>`_
+* `Google+ <http://plus.google.com>`_
+* `Facebook <http://facebook.com>`_
 
 By default it will use Disqus, but you can change by setting ``COMMENT_SYSTEM``
-to one of "disqus", "intensedebate", "livefyre", "moot" or "googleplus"
+to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus" or
+"facebook"
 
 .. sidebar:: ``COMMENT_SYSTEM_ID``
 
@@ -865,7 +867,11 @@ to one of "disqus", "intensedebate", "livefyre", "moot" or "googleplus"
    * In IntenseDebate it's the **IntenseDebate site acct**
    * In LiveFyre it's the **siteId**
    * In Moot it's your **username**
-   * For Google Plus, ``COMMENT_SYSTEM_ID`` need not be set
+   * For Google Plus, ``COMMENT_SYSTEM_ID`` need not be set, but you must
+     `verify your authorship <https://plus.google.com/authorship>`_
+   * For Facebook, you need to `create an app
+     <https://developers.facebook.com/apps>` (turn off sandbox mode!)
+     and get an **App ID**
 
 To use comments in a visible site, you should register with the service and
 then set the ``COMMENT_SYSTEM_ID`` option.
@@ -903,6 +909,11 @@ You can disable comments for a post by adding a "nocomments" metadata field to i
         <meta name="viewport" content="width=device-width">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         """
+
+.. admonition:: Facebook Support
+
+    You need jQuery, but not because Facebook wants it (see Issue
+    #639).
 
 An alternative or complement to comments are annotations. Nikola integrates
 the annotation service provided by `AnnotateIt. <annotateit.org>`_

@@ -132,7 +132,7 @@ class Chart(Directive):
         if 'style' in self.options:
             style_name = self.options.pop('style')
         else:
-            style_name='DefaultStyle'
+            style_name = 'DefaultStyle'
         for k, v in self.options.items():
             options[k] = literal_eval(v)
 
