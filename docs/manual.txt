@@ -912,42 +912,6 @@ You can disable comments for a post by adding a "nocomments" metadata field to i
     You need jQuery, but not because Facebook wants it (see Issue
     #639).
 
-    You also need the following code in your ``conf.py``:
-
-    .. code:: python
-
-        BODY_END = """
-        <div id="fb-root"></div>
-        <script>
-            // thank lxml for this
-            $('.fb-comments-count').each(function(i, obj) {
-                var url = obj.attributes['data-url'].value;
-                // change here if you dislike the default way of displaying
-                // this
-                obj.innerHTML = '<fb:comments-count href="' + url + '"></fb:comments-count> comments';
-            });
-
-          window.fbAsyncInit = function() {
-            // init the FB JS SDK
-            FB.init({
-              appId      : '${comment_system_id}',
-              status     : true,
-              xfbml      : true
-            });
-
-          };
-
-          // Load the SDK asynchronously
-          (function(d, s, id){
-             var js, fjs = d.getElementsByTagName(s)[0];
-             if (d.getElementById(id)) {return;}
-             js = d.createElement(s); js.id = id;
-             js.src = "//connect.facebook.net/en_US/all.js";
-             fjs.parentNode.insertBefore(js, fjs);
-           }(document, 'script', 'facebook-jssdk'));
-        </script>
-        """
-
 Image Galleries
 ---------------
 
