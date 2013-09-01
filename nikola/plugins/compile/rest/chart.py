@@ -139,10 +139,14 @@ class Chart(Directive):
             style_name = self.options.pop('style')
         else:
             style_name = 'DefaultStyle'
+        if '(' in style_name:  # Parametric style
+            style = eval('pygal.style.' + style_name)
+        else:
+            style = getattr(pygal.style, style_name)
         for k, v in self.options.items():
             options[k] = literal_eval(v)
 
-        chart = getattr(pygal, self.arguments[0])(style=getattr(pygal.style, style_name))
+        chart = getattr(pygal, self.arguments[0])(style=style)
         chart.config(**options)
         for line in self.content:
             label, series = literal_eval('({0})'.format(line))
