@@ -48,6 +48,14 @@ You may have to change your ``THEME`` setting, or change the ``parent`` if you a
 using a custom theme. Also, some templates have been tweaked, but nothing should
 break for you.
 
+Facebook comments support changed the HTML tag to:
+
+.. code-block: html
+
+    <html% if comment_system == 'facebook': xmlns:fb="http://ogp.me/ns/fb#"
+    %endif lang="${lang}">
+
+
 Comments
 ~~~~~~~~
 
