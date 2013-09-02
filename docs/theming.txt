@@ -137,7 +137,7 @@ base.tmpl
       ``_link`` and ``permalink`` to create relative links, which makes the site
       able to work when moved inside the server. Example: ``rel_link(permalink, url)``
 
-    * Anything you put in your ``GLOBAL_CONTEXT`` option in ``dodo.py``. This
+    * Anything you put in your ``GLOBAL_CONTEXT`` option in ``conf.py``. This
       usually includes ``navigation_links``, ``search_form``, and others.
 
       The included themes use at least these:
@@ -154,7 +154,7 @@ base.tmpl
       * ``disqus_forum``: a `Disqus <http://disqus.com>`_ ID you can use to enable comments.
 
     It's probably a bad idea to do a theme that *requires* more than this (please put
-    a ``README`` in it saying what the user should add in its ``dodo.py``), but there is no
+    a ``README`` in it saying what the user should add in its ``conf.py``), but there is no
     problem in requiring less.
 
 post.tmpl
@@ -219,8 +219,8 @@ list_post.tmpl
 slides.tmpl
     Template used by the reStructuredText compiler for the slides directive
 
-You can add other templates for specific pages, which the user can the use in his ``post_pages``
-option in ``dodo.py``. Also, keep in mind that your theme is yours, there is no reason why
+You can add other templates for specific pages, which the user can then use in his ``POSTS/PAGES``
+option in ``conf.py``. Also, keep in mind that your theme is yours, there is no reason why
 you would need to maintain the inheritance as it is, or not require whatever data you want.
 
 Also, you can specify a custom template to be used by a post or page via the ``template`` metadata,

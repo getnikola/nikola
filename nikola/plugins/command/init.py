@@ -61,13 +61,14 @@ class CommandInit(Command):
         'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
         'DEFAULT_LANG': "en",
 
-        'POST_PAGES': """(
-    ("posts/*.txt", "posts", "post.tmpl", True),
-    ("posts/*.rst", "posts", "post.tmpl", True),
-    ("stories/*.txt", "stories", "story.tmpl", False),
-    ("stories/*.rst", "stories", "story.tmpl", False),
+        'POSTS': """(
+    ("posts/*.txt", "posts", "post.tmpl"),
+    ("posts/*.rst", "posts", "post.tmpl"),
 )""",
-
+        'PAGES': """(
+    ("stories/*.txt", "stories", "story.tmpl"),
+    ("stories/*.rst", "stories", "story.tmpl"),
+)""",
         'POST_COMPILERS': """{
     "rest": ('.txt', '.rst'),
     "markdown": ('.md', '.mdown', '.markdown'),

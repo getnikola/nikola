@@ -381,7 +381,7 @@ to restructured text.
 
 You can control what markup compiler is used for each file extension with the ``post_compilers``
 option. The default configuration expects them to be placed in ``posts`` but that can be
-changed (see below, the post_pages option)
+changed (see below, the ``POSTS`` and ``PAGES`` options)
 
 This is how it works::
 
@@ -486,13 +486,15 @@ at the `theming guide <http://nikola.ralsina.com.ar/theming.html>`_.
 The post page is generated using the ``post.tmpl`` template, which you can use
 to customize the output.
 
-The place where the post will be placed by ``new_post`` is based on the ``post_pages``
-configuration option::
+The place where the post will be placed by ``new_post`` is based on the ``POSTS``
+and ``PAGES`` configuration options::
 
-    # post_pages contains (wildcard, destination, template, use_in_feed) tuples.
+    # POSTS and PAGES contains (wildcard, destination, template) tuples.
     #
-    # The wildcard is used to generate a list of reSt source files (whatever/thing.txt)
-    # That fragment must have an associated metadata file (whatever/thing.meta),
+    # The wildcard is used to generate a list of reSt source files
+    # (whatever/thing.txt).
+    #
+    # That fragment could have an associated metadata file (whatever/thing.meta),
     # and opcionally translated files (example for spanish, with code "es"):
     #     whatever/thing.txt.es and whatever/thing.meta.es
     #
@@ -503,18 +505,24 @@ configuration option::
     # pages, which will be placed at
     # output / TRANSLATIONS[lang] / destination / pagename.html
     #
-    # where "pagename" is specified in the metadata file.
+    # where "pagename" is the "slug" specified in the metadata file.
     #
-    # if use_in_feed is True, then those posts will be added to the site's
-    # rss feeds.
+    # The difference between POSTS and PAGES is that POSTS are added
+    # to feeds and are considered part of a blog, while PAGES are
+    # just independent HTML pages.
     #
-    post_pages = (
-        ("posts/*.txt", "posts", "post.tmpl", True),
-        ("stories/*.txt", "stories", "story.tmpl", False),
+
+    POSTS = (
+        ("posts/*.txt", "posts", "post.tmpl"),
+        ("posts/*.rst", "posts", "post.tmpl"),
+    )
+    PAGES = (
+        ("stories/*.txt", "stories", "story.tmpl"),
+        ("stories/*.rst", "stories", "story.tmpl"),
     )
 
-It will use the first location that has the last parameter set to True, or the last
-one in the list if all of them have it set to False.
+It will use the first location that has the last item in ``POSTS``, or the last
+one in ``PAGES`` if ``POSTS`` is empty.
 
 The ``new_post`` command supports some options::
 
@@ -645,7 +653,7 @@ Pages are the same as posts, except that:
 * They use the ``story.tmpl`` template instead of ``post.tmpl`` by default
 
 The default configuration expects the page's metadata and text files to be on the
-``stories`` folder, but that can be changed (see post_pages option above).
+``stories`` folder, but that can be changed (see ``PAGES`` option above).
 
 You can create the page's files manually or use the ``new_post`` command
 with the ``-p`` option, qhich will place the files in the folder that
