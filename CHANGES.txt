@@ -38,6 +38,7 @@ Features
 Bugfixes
 --------
 
+* Added missing rel="self" link suggested by feedvalidator.org (Issue #264)
 * Switched to semantic versioning (Issue #614)
 * Better figure styling (Issue #626)
 * Switched docutils math rendering to MathJax (Issue #620)
