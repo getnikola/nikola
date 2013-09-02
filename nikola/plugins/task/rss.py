@@ -24,10 +24,16 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import unicode_literals, print_function
 import os
 
 from nikola import utils
 from nikola.plugin_categories import Task
+
+try:
+    from urlparse import urljoin
+except ImportError:
+    from urllib.parse import urljoin  # NOQA
 
 
 class RenderRSS(Task):
@@ -60,6 +66,8 @@ class RenderRSS(Task):
                 posts = [x for x in self.site.timeline if x.use_in_feeds][:10]
             for post in posts:
                 deps += post.deps(lang)
+
+            feed_url = urljoin(self.site.config['BASE_URL'], self.site.link("rss", None, lang).lstrip('/'))
             yield {
                 'basename': 'render_rss',
                 'name': os.path.normpath(output_name),
@@ -68,7 +76,7 @@ class RenderRSS(Task):
                 'actions': [(utils.generic_rss_renderer,
                             (lang, kw["blog_title"], kw["site_url"],
                              kw["blog_description"], posts, output_name,
-                             kw["rss_teasers"], kw['feed_length']))],
+                             kw["rss_teasers"], kw['feed_length'], feed_url))],
                 'task_dep': ['render_posts'],
                 'clean': True,
                 'uptodate': [utils.config_changed(kw)],
