@@ -28,6 +28,10 @@ from __future__ import unicode_literals
 import codecs
 import json
 import os
+try:
+    from urlparse import urljoin
+except ImportError:
+    from urllib.parse import urljoin  # NOQA
 
 from nikola.plugin_categories import Task
 from nikola import utils
@@ -255,8 +259,10 @@ class RenderTags(Task):
         """RSS for a single tag / language"""
         kind = "category" if is_category else "tag"
         #Render RSS
-        output_name = os.path.join(kw['output_folder'],
-                                   self.site.path(kind + "_rss", tag, lang))
+        output_name = os.path.normpath(
+            os.path.join(kw['output_folder'],
+                         self.site.path(kind + "_rss", tag, lang)))
+        feed_url = urljoin(self.site.config['BASE_URL'], self.site.link(kind + "_rss", tag, lang).lstrip('/'))
         deps = []
         post_list = [self.site.global_data[post] for post in posts if
                      self.site.global_data[post].use_in_feeds]
@@ -272,7 +278,7 @@ class RenderTags(Task):
             'actions': [(utils.generic_rss_renderer,
                         (lang, "{0} ({1})".format(kw["blog_title"], tag),
                          kw["site_url"], kw["blog_description"], post_list,
-                         output_name, kw["rss_teasers"], kw['feed_length']))],
+                         output_name, kw["rss_teasers"], kw['feed_length'], feed_url))],
             'clean': True,
             'uptodate': [utils.config_changed(kw)],
             'task_dep': ['render_posts'],

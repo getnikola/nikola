@@ -188,7 +188,7 @@ class RelativeLinkTest(DemoBuildTest):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with codecs.open(conf_path, "rb", "utf-8") as inf:
             data = inf.read()
-            data = data.replace('SITE_URL = "http://nikola.ralsina.com.ar"',
+            data = data.replace('SITE_URL = "http://nikola.ralsina.com.ar/"',
                                 'SITE_URL = "http://nikola.ralsina.com.ar/foo/bar/"')
         with codecs.open(conf_path, "wb+", "utf8") as outf:
             outf.write(data)
