@@ -268,7 +268,7 @@ def copy_tree(src, dst, link_cutoff=None):
 
 
 def generic_rss_renderer(lang, title, link, description, timeline, output_path,
-                         rss_teasers, feed_length=10):
+                         rss_teasers, feed_length=10, feed_url=None):
     """Takes all necessary data, and renders a RSS feed in output_path."""
     items = []
     for post in timeline[:feed_length]:
@@ -283,7 +283,7 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path,
             'categories': post._tags.get(lang, []),
         }
         items.append(rss.RSSItem(**args))
-    rss_obj = rss.RSS2(
+    rss_obj = ExtendedRSS2(
         title=title,
         link=link,
         description=description,
@@ -291,6 +291,8 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path,
         items=items,
         generator='nikola',
     )
+    rss_obj.self_url = feed_url
+    rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
     dst_dir = os.path.dirname(output_path)
     if not os.path.isdir(dst_dir):
         os.makedirs(dst_dir)
@@ -596,3 +598,14 @@ class LocaleBorg:
 
     def __init__(self):
         self.__dict__ = self.__shared_state
+
+
+class ExtendedRSS2(rss.RSS2):
+    def publish_extensions(self, handler):
+        if self.self_url:
+            handler.startElement("atom:link", {
+                'href': self.self_url,
+                'rel': "self",
+                'type': "application/rss+xml"
+            })
+            handler.endElement("atom:link")
