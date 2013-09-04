@@ -428,7 +428,27 @@ class Nikola(object):
 
     def _get_themes(self):
         if self._THEMES is None:
-            self._THEMES = utils.get_theme_chain(self.config['THEME'])
+            # Check for old theme names (Issue #650) TODO: remove in v7
+            theme_replacements = {
+                'site': 'bootstrap',
+                'orphan': 'base',
+                'default': 'oldfashioned',
+            }
+            if self.config['THEME'] in theme_replacements:
+                warnings.warn('You are using the old theme "{0}", using "{1}" instead.'.format(
+                    self.config['THEME'], theme_replacements[self.config['THEME']]))
+                self.config['THEME'] = theme_replacements[self.config['THEME']]
+                if self.config['THEME'] == 'oldfashioned':
+                    warnings.warn('''You may need to install the "oldfashioned" theme '''
+                                  '''from themes.nikola.ralsina.com.ar because it's not '''
+                                  '''shipped by default anymore.''')
+                warnings.warn('Please change your THEME setting.')
+            try:
+                self._THEMES = utils.get_theme_chain(self.config['THEME'])
+            except Exception:
+                warnings.warn('''Can't load theme "{0}", using 'bootstrap' instead.'''.format(self.config['THEME']))
+                self.config['THEME'] = 'bootstrap'
+                return self._get_themes()
             # Check consistency of USE_CDN and the current THEME (Issue #386)
             if self.config['USE_CDN']:
                 bootstrap_path = utils.get_asset_path(os.path.join(
