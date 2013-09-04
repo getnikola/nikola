@@ -83,7 +83,7 @@ class BuildBundles(LateTask):
                 dname = os.path.dirname(name)
                 file_dep = [os.path.join(kw['output_folder'], dname, fname)
                             for fname in files]
-                file_dep = filter(None, file_dep)  # removes missing files
+                file_dep = filter(os.path.isfile, file_dep)  # removes missing files
                 task = {
                     'file_dep': file_dep,
                     'task_dep': ['copy_assets'],
