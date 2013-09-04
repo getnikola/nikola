@@ -69,7 +69,7 @@ class BuildLess(Task):
 
         # Build targets and write CSS files
         base_path = utils.get_theme_path(self.site.THEMES[0])
-        dst_dir = os.path.join(base_path, "assets", "css")
+        dst_dir = os.path.join(self.site.config['OUTPUT_FOLDER'], 'assets', 'css')
         # Make everything depend on all sources, rough but enough
         deps = glob.glob(os.path.join(
             base_path,

@@ -32,13 +32,7 @@ try:
     import requests
 except ImportError:
     requests = None  # NOQA
-try:
-    import json  # python 2.6 or higher
-except ImportError:
-    try:
-        import simplejson as json  # NOQA
-    except ImportError:
-        json = None
+import json
 
 
 from nikola.plugin_categories import RestExtension
@@ -100,20 +94,12 @@ class Vimeo(Directive):
         return [nodes.raw('', CODE.format(**options), format='html')]
 
     def check_modules(self):
-        msg = None
         if requests is None:
             msg = (
                 "Error: "
                 "To use the Vimeo directive you need to install "
                 "the requests module.\n"
             )
-        elif json is None:
-            msg = (
-                "Error: "
-                "To use the Vimeo directive you need python 2.6 "
-                "or to install the simplejson module."
-            )
-        if msg is not None:
             utils.show_msg(msg)
             return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
         return None

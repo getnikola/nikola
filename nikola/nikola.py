@@ -288,6 +288,9 @@ class Nikola(object):
         # BASE_URL defaults to SITE_URL
         if 'BASE_URL' not in self.config:
             self.config['BASE_URL'] = self.config.get('SITE_URL')
+        # BASE_URL should *always* end in /
+        if self.config['BASE_URL'] and self.config['BASE_URL'][-1] != '/':
+            print("WARNING: Your BASE_URL doesn't end in / -- adding it.")
 
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,

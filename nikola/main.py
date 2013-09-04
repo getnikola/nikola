@@ -44,7 +44,11 @@ from .nikola import Nikola
 from .utils import _reload, sys_decode
 
 
+config = {}
+
+
 def main(args):
+    global config
     sys.path.append('')
     try:
         import conf
@@ -84,9 +88,10 @@ class Clean(DoitClean):
     """A clean that removes cache/"""
 
     def clean_tasks(self, tasks, dryrun):
-        if not dryrun:
-            if os.path.exists('conf.py'):
-                shutil.rmtree('cache')
+        if not dryrun and config:
+            cache_folder = config.get('CACHE_FOLDER', 'cache')
+            if os.path.exists(cache_folder):
+                shutil.rmtree(cache_folder)
         return super(Clean, self).clean_tasks(tasks, dryrun)
 
 
