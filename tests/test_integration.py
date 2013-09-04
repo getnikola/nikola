@@ -254,10 +254,10 @@ class RelativeLinkTest2(DemoBuildTest):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with codecs.open(conf_path, "rb", "utf-8") as inf:
             data = inf.read()
-            data = data.replace('("stories/*.txt", "stories", "story.tmpl", False),',
-                                '("stories/*.txt", "", "story.tmpl", False),')
-            data = data.replace('("stories/*.rst", "stories", "story.tmpl", False),',
-                                '("stories/*.rst", "", "story.tmpl", False),')
+            data = data.replace('("stories/*.txt", "stories", "story.tmpl"),',
+                                '("stories/*.txt", "", "story.tmpl"),')
+            data = data.replace('("stories/*.rst", "stories", "story.tmpl"),',
+                                '("stories/*.rst", "", "story.tmpl"),')
             data = data.replace('# INDEX_PATH = ""',
                                 'INDEX_PATH = "blog"')
         with codecs.open(conf_path, "wb+", "utf8") as outf:
