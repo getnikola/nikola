@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
+from __future__ import unicode_literals, print_function, absolute_import
 
 import codecs
 from contextlib import contextmanager
@@ -14,8 +14,10 @@ import unittest
 import lxml.html
 from nose.plugins.skip import SkipTest
 
-from context import nikola
 from nikola import main
+import nikola
+import nikola.plugins.command
+import nikola.plugins.command.init
 
 
 @contextmanager
@@ -254,10 +256,10 @@ class RelativeLinkTest2(DemoBuildTest):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with codecs.open(conf_path, "rb", "utf-8") as inf:
             data = inf.read()
-            data = data.replace('("stories/*.txt", "stories", "story.tmpl", False),',
-                                '("stories/*.txt", "", "story.tmpl", False),')
-            data = data.replace('("stories/*.rst", "stories", "story.tmpl", False),',
-                                '("stories/*.rst", "", "story.tmpl", False),')
+            data = data.replace('("stories/*.txt", "stories", "story.tmpl"),',
+                                '("stories/*.txt", "", "story.tmpl"),')
+            data = data.replace('("stories/*.rst", "stories", "story.tmpl"),',
+                                '("stories/*.rst", "", "story.tmpl"),')
             data = data.replace('# INDEX_PATH = ""',
                                 'INDEX_PATH = "blog"')
         with codecs.open(conf_path, "wb+", "utf8") as outf:
@@ -284,3 +286,6 @@ class RelativeLinkTest2(DemoBuildTest):
         sitemap_data = codecs.open(sitemap_path, "r", "utf8").read()
         self.assertFalse('<loc>http://nikola.ralsina.com.ar/</loc>' in sitemap_data)
         self.assertTrue('<loc>http://nikola.ralsina.com.ar/blog/</loc>' in sitemap_data)
+
+if __name__ == "__main__":
+    unittest.main()

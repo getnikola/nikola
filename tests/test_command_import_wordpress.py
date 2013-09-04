@@ -119,7 +119,7 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
             self.import_filename)
         context = self.import_command.populate_context(channel)
 
-        for required_key in ('POST_PAGES', 'POST_COMPILERS'):
+        for required_key in ('POSTS', 'PAGES', 'POST_COMPILERS'):
             self.assertTrue(required_key in context)
 
         self.assertEqual('de', context['DEFAULT_LANG'])

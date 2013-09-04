@@ -160,10 +160,8 @@ class Nikola(object):
                 "ipynb": ('.ipynb',),
                 "html": ('.html', '.htm')
             },
-            'POST_PAGES': (
-                ("posts/*.txt", "posts", "post.tmpl", True),
-                ("stories/*.txt", "stories", "story.tmpl", False),
-            ),
+            'POSTS': (("posts/*.txt", "posts", "post.tmpl"),),
+            'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
             'PRETTY_URLS': False,
             'FUTURE_IS_NOW': False,
             'READ_MORE_LINK': '<p class="more"><a href="{link}">{read_more}…</a></p>',
@@ -202,6 +200,22 @@ class Nikola(object):
                   'the "pyphen" package.')
             print('WARNING: Setting HYPHENATE to False.')
             self.config['HYPHENATE'] = False
+
+        # Deprecating post_pages
+        # TODO: remove on v7
+        if 'post_pages' in config:
+            print("WARNING: The post_pages option is deprecated, use POSTS and PAGES instead.")
+            if 'POSTS' in config or 'PAGES' in config:
+                print("WARNING: POSTS and PAGES conflict with post_pages, ignoring post_pages.")
+            else:
+                self.config['POSTS'] = [item[:3] for item in config['post_pages'] if item[-1]]
+                self.config['PAGES'] = [item[:3] for item in config['post_pages'] if not item[-1]]
+        # FIXME: Internally, we still use post_pages because it's a pain to change it
+        self.config['post_pages'] = []
+        for i1, i2, i3 in self.config['POSTS']:
+            self.config['post_pages'].append([i1, i2, i3, True])
+        for i1, i2, i3 in self.config['PAGES']:
+            self.config['post_pages'].append([i1, i2, i3, False])
 
         # Deprecating DISQUS_FORUM
         # TODO: remove on v7
@@ -607,7 +621,7 @@ class Nikola(object):
         * rss (name is ignored)
         * gallery (name is the gallery name)
         * listing (name is the source code file name)
-        * post_path (name is 1st element in a post_pages tuple)
+        * post_path (name is 1st element in a POSTS/PAGES tuple)
 
         The returned value is always a path relative to output, like
         "categories/whatever.html"
