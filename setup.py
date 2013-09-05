@@ -80,7 +80,7 @@ def copy_messages():
 
         shutil.copytree(original_messages_directory, theme_messages_directory)
 
-def copy_harlinked_for_windows():
+def copy_hardlinked_for_windows():
     """replaces the hardlinked files with a copy of the original content.
     
     In windows (msysgit), a symlink is converted to a text file with a
@@ -130,7 +130,7 @@ def install_manpages(root, prefix):
 
 class nikola_install(install):
     def run(self):
-        copy_harlinked_for_windows()
+        copy_hardlinked_for_windows()
         install.run(self)
         install_manpages(self.root, self.prefix)
 
