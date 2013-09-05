@@ -16,14 +16,15 @@ Nikola is a Pile of Plugins
     an existing one.
 
     There are several kinds of plugins, all implementing interfaces defined in
-    ``nikola/plugin_categories.py``.
+    ``nikola/plugin_categories.py`` and documented in
+    `Extending Nikola <http://nikola.ralsina.com.ar/extending.html>`_
 
     If your plugin has a dependency, please make sure it doesn't make Nikola
     throw an exception when the dependency is missing. Try to fail gracefully
     with an informative message.
 
 Commands are plugins
-    When you use ``nikola foo`` you are using the plugin ``command_foo``. Those are
+    When you use ``nikola foo`` you are using the plugin ``command/foo``. Those are
     used to extend Nikola's command line. Their interface is defined in the ``Command``
     class. They take options and arguments and do whatever you want, so go wild.
 
@@ -77,8 +78,8 @@ one of the existing ones.
     You can do doctests, you can do unit tests, you can do integration tests. There is support
     for all of them.
 
-Post and Stories
-----------------
+Posts and Stories
+-----------------
 
 Nikola has a concept of posts and stories. Both are more or less the same thing, except
 posts are added into RSS feeds and stories are not. All of them are in a list called
@@ -100,17 +101,19 @@ the timeline, because it will cause consistency issues.
 Your plugin can use the timeline to generate "stuff" (technical term). For example,
 Nikola comes with plugins that use the timeline to create a website (surprised?).
 
-The workflow included with nikola is as follows:
+The workflow included with nikola is as follows (incomplete!):
 
 #. The post is assigned a compiler based on its extension and the ``post_compilers`` option.
 #. The compiler is applied to the post data and a "HTML fragment" is produced. That
-   fragment is stored in a cache (the ``render_posts`` plugin).
+   fragment is stored in a cache (the ``posts`` plugin).
 #. The configured theme has templates (and a template engine), which are applied to the post's
-   HTML fragment and metadata (the ``render_pages`` plugin).
-#. The original sources for the post are copied to some accessible place (the ``render_sources`` plugin)
-#. If the post is tagged, some pages and RSS feeds for each tag are updated (the ``render_tags`` plugin)
-#. If the post is new, it's included in the blog's RSS feed (the ``render_rss`` plugin)
-#. The post is added in the right place in the index pages for the blog (the ``task_indexes`` plugin)
+   HTML fragment and metadata (the ``pages`` plugin).
+#. The original sources for the post are copied to some accessible place (the ``sources`` plugin)
+#. If the post is tagged, some pages and RSS feeds for each tag are updated (the ``tags`` plugin)
+#. If the post is new, it's included in the blog's RSS feed (the ``rss`` plugin)
+#. The post is added in the right place in the index pages for the blog (the ``indexes`` plugin)
+#. CSS/JS/Images for the theme are put in the right places (the ``copy_assets`` and ``bundles`` plugins)
+#. A File describing the whole site is created (the ``sitemap`` plugin)
 
 You can add whatever you want to that list: just create a plugin for it.
 
