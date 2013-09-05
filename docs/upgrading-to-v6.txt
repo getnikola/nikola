@@ -66,7 +66,7 @@ If you want a custom theme to support comment systems other than disqus, you wil
 3) Replace mentions of html_disqus_link with comment_link
 4) Replace mentions of html_disqus_script with comment_link_script
 
-If you don't, your theme should work just fine, but support only disqus comments. 
+If you don't, your theme should work just fine, but support only disqus comments.
 
 
 Configuration
@@ -79,8 +79,3 @@ your config.
 
 All the deprecated options will work during the v6 cycle, and only be removed in v7, when
 those warnings will become errors.
-
-
-
-
-
