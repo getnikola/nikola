@@ -105,7 +105,7 @@ Nikola supports a ton of formats, including Markdown, plain HTML, BBCode,
 Wiki, and Textile.
 
 So, let's give the page a nicer title, and some fake content. Since the default
-Nikola theme (called "site") is based on `bootstrap <http://twitter.github.com/bootstrap/>`_
+Nikola theme (called "bootstrap") is based on `bootstrap 2 <http://getbootstrap.com/2.3.2/>`_
 you can use anything you like from it:
 
 .. code-block:: rest
