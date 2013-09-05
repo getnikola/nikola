@@ -86,6 +86,7 @@ class Post(object):
         self._template_name = template_name
         self.is_two_file = True
         self.hyphenate = hyphenate
+        self._reading_time = None
 
         default_metadata = get_meta(self, file_metadata_regexp)
 
@@ -370,6 +371,17 @@ class Post(object):
             content = lxml.html.fromstring(data)
             data = content.text_content().strip()  # No whitespace wanted.
         return data
+
+    @property
+    def reading_time(self):
+        """Reading time based on length of text.
+        """
+        if self._reading_time is None:
+            text = self.text(strip_html=True)
+            words_per_minute = 180
+            words = len(text.split())
+            self._reading_time = int(round(words/words_per_minute)) or 1
+        return self._reading_time
 
     def source_link(self, lang=None):
         """Return absolute link to the post's source."""
