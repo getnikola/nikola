@@ -47,7 +47,7 @@ tolusonaike <https://github.com/tolusonaike>
 quoth <https://github.com/quoth>
 claxo <https://github.com/claxo>
 clee <https://github.com/clee>
-arusahni <https://github.com/arusahni>
+Aru Sahni <https://github.com/arusahni>
 dmoisset <https://github.com/dmoisset>
 fizyk <https://github.com/fizyk>
 ivanteoh <https://github.com/ivanteoh>
