@@ -231,12 +231,12 @@ Nikola is packaged for some Linux distributions, you may get that instead.
 *NOTE*: If you get a ``ERROR: /bin/sh: 1: xslt-config: not found`` or ``fatal error:
 libxml/xmlversion.h: No such file or directory`` when running ``pip install -r requirements.txt``, install *libxml* and *libxslt* libraries, like so:
 
-Debian systems:
+Debian systems::
 
     sudo apt-get install libxml2-dev
     sudo apt-get install libxslt1-dev
 
-RHEL systems:
+RHEL systems::
 
     yum install libxslt-devel libxml2-devel
 
