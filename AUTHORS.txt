@@ -1,8 +1,62 @@
-Roberto Alsina <ralsina@kde.org>
+These are the people who have committed code according to GitHub.
+There is probably someone missing if he send me code directly, and
+for that I am sorry because I believe in giving credit.
+If you are here and prefer to be listed in a different way, just
+do a PR :-)
+
+                                                -- Roberto Alsina
+
+Roberto Alsina <https://github.com/ralsina>
+Niko Wenselowski <https://github.com/okin>
+Chris “Kwpolska” Warrick <https://github.com/Kwpolska>
+damianavila <https://github.com/damianavila>
+areski <https://github.com/areski>
 Eduardo Schettino <https://github.com/schettino72>
-Niko Wenselowski
+punchagan <https://github.com/punchagan>
+Tordek <https://github.com/Tordek>
+kadefor <https://github.com/kadefor>
+rbistolfi <https://github.com/rbistolfi>
+edwinsteele <https://github.com/edwinsteele>
+mgaitan <https://github.com/mgaitan>
 Roman Imankulov <https://github.com/imankulov>
-Kay Hayen <kay.hayen@gmail.com>
+pabluk <https://github.com/pabluk>
 Zhaojun Meng <https://github.com/zhaojunmeng>
-Chris “Kwpolska” Warrick <kwpolska@gmail.com>
-Troy Toman <troy@tomanator.com>
+mattgaviota <https://github.com/mattgaviota>
+quijot <https://github.com/quijot>
+localvoid <https://github.com/localvoid>
+quodlibetor <https://github.com/quodlibetor>
+dhruvbaldawa <https://github.com/dhruvbaldawa>
+dflock <https://github.com/dflock>
+mrabbitt <https://github.com/mrabbitt>
+agustinhenze <https://github.com/agustinhenze>
+bwhmather <https://github.com/bwhmather>
+DoctorMalboro <https://github.com/DoctorMalboro>
+StyXman <https://github.com/StyXman>
+Troy Toman <https://github.com/troytoman>
+notfoss <https://github.com/notfoss>
+dastagg <https://github.com/dastagg>
+Kay Hayen <https://github.com/kayhayen>
+camboris <https://github.com/camboris>
+kotnik <https://github.com/kotnik>
+numshub <https://github.com/numshub>
+paskal <https://github.com/paskal>
+fisadev <https://github.com/fisadev>
+koniiiik <https://github.com/koniiiik>
+Bluerise <https://github.com/Bluerise>
+tolusonaike <https://github.com/tolusonaike>
+quoth <https://github.com/quoth>
+claxo <https://github.com/claxo>
+clee <https://github.com/clee>
+arusahni <https://github.com/arusahni>
+dmoisset <https://github.com/dmoisset>
+fizyk <https://github.com/fizyk>
+ivanteoh <https://github.com/ivanteoh>
+jerrykan <https://github.com/jerrykan>
+marcelomd <https://github.com/marcelomd>
+marianoguerra <https://github.com/marianoguerra>
+wimpr1m <https://github.com/wimpr1m>
+ivanov <https://github.com/ivanov>
+rafacarrascosa <https://github.com/rafacarrascosa>
+snaewe <https://github.com/snaewe>
+neilmb <https://github.com/neilmb>
+yarko <https://github.com/yarko>
