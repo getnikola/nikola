@@ -793,8 +793,8 @@ change the FILES_FOLDERS option::
 Getting More Themes
 -------------------
 
-There are not so many themes for Nikola. On occasion, I port something I like, and make
-it available for download. Nikola has a builtin theme download/install mechanism, its
+There are not so many themes for Nikola. They are available at http://themes.getnikola.com
+Nikola has a builtin theme download/install mechanism to install those themes, its
 ``install_theme`` command::
 
     $ nikola install_theme -l
@@ -802,6 +802,8 @@ it available for download. Nikola has a builtin theme download/install mechanism
     -------
     blogtxt
     readable
+    ⋮
+    ⋮
 
     $ nikola install_theme blogtxt
     Downloading: http://themes.nikola.ralsina.com.ar/themes/blogtxt.zip
