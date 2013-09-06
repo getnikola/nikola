@@ -257,7 +257,7 @@ files that are not up to date, so your site always reflects your latest content.
 first build, just run "nikola build"::
 
     $ nikola build
-    Scanning posts  . . done!
+    Scanning posts....done!
     .  render_posts:stories/manual.html
     .  render_posts:posts/1.html
     .  render_posts:stories/1.html
@@ -277,7 +277,7 @@ Nikola will print a line for every output file it generates. If we do it again, 
 will be much much shorter::
 
     $ nikola build
-    Scanning posts  . . done!
+    Scanning posts....done!
 
 That is because `doit <http://pydoit.org>`_ is smart enough not to generate
 all the pages again, unless you changed something that the page requires. So, if you change
@@ -287,7 +287,7 @@ will be recreated. If you change the post page template, then all the post pages
 Nikola is mostly a series of doit *tasks*, and you can see them by doing ``nikola list``::
 
     $ nikola list
-    Scanning posts  . . done!
+    Scanning posts....done!
     build_bundles
     copy_assets
     copy_files

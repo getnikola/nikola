@@ -148,11 +148,7 @@ you can use anything you like from it:
 .. admonition:: TIP: Nice URLs
 
    If you like your URLs without the ".html" then you want to create folders and
-   put the pages in ``index.html`` inside them. Example::
-
-       nikola new_post -p pages/foo/index.txt
-
-   which will create a page you could access as "http://yoursite.com/foo"
+   put the pages in ``index.html`` inside them using the ``PRETTY_URLS`` option.
 
 And that's it. You will want to change the NAVIGATION_LINKS option to create a reasonable
 "menu" for your site, you will want to hack the theme (check ``nikola help bootswatch_theme``
