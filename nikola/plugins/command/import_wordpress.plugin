@@ -5,6 +5,6 @@ Module = import_wordpress
 [Documentation]
 Author = Roberto Alsina
 Version = 0.2
-Website = http://nikola.ralsina.com.ar
+Website = http://getnikola.com
 Description = Import a wordpress site from a XML dump (requires markdown).
 

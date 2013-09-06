@@ -1,6 +1,6 @@
 This folder contains the source used to generate a static site by nikola.
 
-Installation and documentation at http://nikola.ralsina.com.ar
+Installation and documentation at http://getnikola.com
 
 Configuration file for the site is `conf.py`.
 

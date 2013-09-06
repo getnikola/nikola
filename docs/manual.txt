@@ -64,10 +64,10 @@ instead of something the user generates.
 
 Nikola can do:
 
-* A blog (`example <http://lateral.netmanagers.com.ar>`__)
+* A blog (`example <http://ralsina.me>`__)
 * Your company's site
 * Your personal site
-* A software project's site (`example <http://nikola.ralsina.com.ar>`__)
+* A software project's site (`example <http://getnikola.com>`__)
 * A book's site
 
 Since Nikola-based sites don't run any code on the server, there is no way to process
@@ -92,7 +92,7 @@ Getting Help
 * Feel free to contact me at ralsina@netmanagers.com.ar for questions about Nikola.
 * You can file bugs at `the issue tracker <https://github.com/ralsina/nikola/issues>`__
 * You can discuss Nikola at the `nikola-discuss google group <http://groups.google.com/group/nikola-discuss>`_
-* You can subscribe to `the Nikola Blog <http://nikola.ralsina.com.ar/blog>`_
+* You can subscribe to `the Nikola Blog <http://getnikola.com/blog>`_
 * You can follow `Nikola on Twitter <https://twitter.com/nikolagenerator>`_
 
 Why Static?
@@ -200,7 +200,7 @@ The short version is: ``pip install https://github.com/ralsina/nikola/archive/ma
 
 Longer version:
 
-#. Get `Nikola <http://nikola.ralsina.com.ar/>`_
+#. Get `Nikola <http://getnikola.com/>`_
 #. Install dependencies. To do that, either:
 
    #. ``pip install -r requirements.txt`` (or ``requirements-full.txt`` for extra stuff) and ``pip install .`` or...
@@ -313,7 +313,7 @@ Nikola also has other commands besides ``build``::
 
     $ nikola help
         Nikola is a tool to create static websites and blogs. For full documentation and more information,
-        please visit http://nikola.ralsina.com.ar
+        please visit http://getnikola.com
 
 
         Available commands:
@@ -481,7 +481,7 @@ Currently supported languages are
 * Spanish
 
 If you wish to add support for more languages, check out the instructions
-at the `theming guide <http://nikola.ralsina.com.ar/theming.html>`_.
+at the `theming guide <http://getnikola.com/theming.html>`_.
 
 The post page is generated using the ``post.tmpl`` template, which you can use
 to customize the output.
@@ -686,15 +686,13 @@ what Nikola does. Its syntax is python, but if you don't know the language, it
 still should not be terribly hard to grasp.
 
 The default ``conf.py`` you get with Nikola should be fairly complete, and is quite
-commented, but just in case, here is a full,
-`customized example configuration <sampleconfig.html>`_ (the one I use for
-`my site <http://lateral.netmanagers.com.ar>`_)
+commented.
 
 You surely want to edit these options::
 
     # Data about this site
     BLOG_TITLE = "Demo Site"
-    SITE_URL = "http://nikola.ralsina.com.ar"
+    SITE_URL = "http://getnikola.com"
     BLOG_EMAIL = "joe@demo.site"
     BLOG_DESCRIPTION = "This is a demo site for Nikola."
 
@@ -834,9 +832,8 @@ Here is an example, from my own site's deployment script::
 
     DEPLOY_COMMANDS = [
         'rsync -rav --delete output/* ralsina@lateral.netmanagers.com.ar:/srv/www/lateral',
-        'rdiff-backup output ~/bartleblog-backup',
+        'rdiff-backup output ~/blog-backup',
         "links -dump 'http://www.twingly.com/ping2?url=lateral.netmanagers.com.ar'",
-        'rsync -rav ~/bartleblog-backup/* ralsina@netmanagers.com.ar:bartleblog-backup',
     ]
 
 Other interesting ideas are using

@@ -12,7 +12,7 @@ I create a site that's not a blog?". And of course, that's because the
 documentation is heavily blog-oriented. This document will change that ;-)
 
 Since it started, Nikola has had the capabilities to create generic sites. For example,
-Nikola's `own site <http://nikola.ralsina.com.ar>`_ is a fairly generic one. Let's go
+Nikola's `own site <http://getnikola.com>`_ is a fairly generic one. Let's go
 step by step on how you can do something like that.
 
 As usual when starting a nikola site, you start with ``nikola init`` which creates a
@@ -100,7 +100,7 @@ not-blogs, same for tags and link. Description is useful for SEO purposes
 if you care for that.
 
 And below, the content. By default you are expected to use
-`reStructured text <http://nikola.ralsina.com.ar/quickstart.html>`_ but
+`reStructured text <http://getnikola.com/quickstart.html>`_ but
 Nikola supports a ton of formats, including Markdown, plain HTML, BBCode,
 Wiki, and Textile.
 
