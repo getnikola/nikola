@@ -269,9 +269,9 @@ first build, just run "nikola build"::
     .  render_pages:output/stories/handbook.html
     .  render_rss:output/rss.xml
     .  render_sources:output/stories/about-nikola.txt
-    :
-    :
-    :
+    ⋮
+    ⋮
+    ⋮
 
 Nikola will print a line for every output file it generates. If we do it again, that
 will be much much shorter::
