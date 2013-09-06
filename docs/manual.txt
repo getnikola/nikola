@@ -569,6 +569,17 @@ change that text, you can use a custom teaser::
 
     .. TEASER_END: click to read the rest of the article
 
+Or you can completely customize the link using the ``READ_MORE_LINK`` option::
+
+    # A HTML fragment with the Read more... link.
+    # The following tags exist and are replaced for you:
+    # {link}        A link to the full post page.
+    # {read_more}   The string “Read more” in the current language.
+    # {{            A literal { (U+007B LEFT CURLY BRACKET)
+    # }}            A literal } (U+007D RIGHT CURLY BRACKET)
+    # READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
+
+
 Drafts
 ~~~~~~
 
