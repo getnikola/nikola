@@ -80,7 +80,7 @@ class CommandBootswatchTheme(Command):
         parent = options['parent']
         version = ''
 
-        # See if we need bootswatch v1 or v3
+        # See if we need bootswatch for bootstrap v2 or v3
         themes = utils.get_theme_chain(parent)
         if 'bootstrap3' not in themes:
             version = '2'
