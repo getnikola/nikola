@@ -78,12 +78,12 @@ class CommandBootswatchTheme(Command):
         name = options['name']
         swatch = options['swatch']
         parent = options['parent']
+        version = ''
 
-        # See if we need bootswatch v2 or v3
+        # See if we need bootswatch v1 or v3
         themes = utils.get_theme_chain(parent)
-        version = '2'
-        if 'bootstrap3' in themes:
-            version = ''
+        if 'bootstrap3' not in themes:
+            version = '2'
         elif 'bootstrap' not in themes:
             print('WARNING: bootswatch_theme only makes sense for themes that use bootstrap')
 
