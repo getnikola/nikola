@@ -104,7 +104,7 @@ PAGES = ${PAGES}
 # 'rest' is reStructuredText
 # 'markdown' is MarkDown
 # 'html' assumes the file is html and just copies it
-post_compilers = ${POST_COMPILERS}
+COMPILERS = ${COMPILERS}
 
 # Create by default posts in one file format?
 # Set to False for two-file posts, with separate metadata.

@@ -103,7 +103,7 @@ Nikola comes with plugins that use the timeline to create a website (surprised?)
 
 The workflow included with nikola is as follows (incomplete!):
 
-#. The post is assigned a compiler based on its extension and the ``post_compilers`` option.
+#. The post is assigned a compiler based on its extension and the ``COMPILERS`` option.
 #. The compiler is applied to the post data and a "HTML fragment" is produced. That
    fragment is stored in a cache (the ``posts`` plugin).
 #. The configured theme has templates (and a template engine), which are applied to the post's

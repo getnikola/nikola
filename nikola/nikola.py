@@ -113,6 +113,16 @@ class Nikola(object):
             'COMMENT_SYSTEM': 'disqus',
             'COMMENTS_IN_GALLERIES': False,
             'COMMENTS_IN_STORIES': False,
+            'COMPILERS': {
+                "rest": ('.txt', '.rst'),
+                "markdown": ('.md', '.mdown', '.markdown'),
+                "textile": ('.textile',),
+                "txt2tags": ('.t2t',),
+                "bbcode": ('.bb',),
+                "wiki": ('.wiki',),
+                "ipynb": ('.ipynb',),
+                "html": ('.html', '.htm')
+            },
             'CONTENT_FOOTER': '',
             'COPY_SOURCES': True,
             'CREATE_MONTHLY_ARCHIVE': False,
@@ -150,16 +160,6 @@ class Nikola(object):
             'MATHJAX_CONFIG': '',
             'OLD_THEME_SUPPORT': True,
             'OUTPUT_FOLDER': 'output',
-            'post_compilers': {
-                "rest": ('.txt', '.rst'),
-                "markdown": ('.md', '.mdown', '.markdown'),
-                "textile": ('.textile',),
-                "txt2tags": ('.t2t',),
-                "bbcode": ('.bb',),
-                "wiki": ('.wiki',),
-                "ipynb": ('.ipynb',),
-                "html": ('.html', '.htm')
-            },
             'POSTS': (("posts/*.txt", "posts", "post.tmpl"),),
             'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
             'PRETTY_URLS': False,
@@ -200,6 +200,15 @@ class Nikola(object):
                   'the "pyphen" package.')
             print('WARNING: Setting HYPHENATE to False.')
             self.config['HYPHENATE'] = False
+
+        # Deprecating post_compilers
+        # TODO: remove on v7
+        if 'post_compilers' in config:
+            print("WARNING: The post_compilers option is deprecated, use COMPILERS instead.")
+            if 'COMPILERS' in config:
+                print("WARNING: COMPILERS conflicts with post_compilers, ignoring post_compilers.")
+            else:
+                self.config['COMPILERS'] = config['post_compilers']
 
         # Deprecating post_pages
         # TODO: remove on v7
@@ -352,7 +361,7 @@ class Nikola(object):
 
         # Activate all required compiler plugins
         for plugin_info in self.plugin_manager.getPluginsOfCategory("PageCompiler"):
-            if plugin_info.name in self.config["post_compilers"].keys():
+            if plugin_info.name in self.config["COMPILERS"].keys():
                 self.plugin_manager.activatePluginByName(plugin_info.name)
                 plugin_info.plugin_object.set_site(self)
 
@@ -507,7 +516,7 @@ class Nikola(object):
     template_system = property(_get_template_system)
 
     def get_compiler(self, source_name):
-        """Get the correct compiler for a post from `conf.post_compilers`
+        """Get the correct compiler for a post from `conf.COMPILERS`
         To make things easier for users, the mapping in conf.py is
         compiler->[extensions], although this is less convenient for us. The
         majority of this function is reversing that dictionary and error
@@ -519,18 +528,18 @@ class Nikola(object):
         except KeyError:
             # Find the correct compiler for this files extension
             langs = [lang for lang, exts in
-                     list(self.config['post_compilers'].items())
+                     list(self.config['COMPILERS'].items())
                      if ext in exts]
             if len(langs) != 1:
                 if len(set(langs)) > 1:
                     exit("Your file extension->compiler definition is"
                          "ambiguous.\nPlease remove one of the file extensions"
-                         "from 'post_compilers' in conf.py\n(The error is in"
+                         "from 'COMPILERS' in conf.py\n(The error is in"
                          "one of {0})".format(', '.join(langs)))
                 elif len(langs) > 1:
                     langs = langs[:1]
                 else:
-                    exit("post_compilers in conf.py does not tell me how to "
+                    exit("COMPILERS in conf.py does not tell me how to "
                          "handle '{0}' extensions.".format(ext))
 
             lang = langs[0]

@@ -200,7 +200,7 @@ class CommandImportWordpress(Command, ImportMixin):
         context['PAGES'] = '''(
             ("stories/*.wp", "stories", "story.tmpl", False),
         )'''
-        context['POST_COMPILERS'] = '''{
+        context['COMPILERS'] = '''{
         "rest": ('.txt', '.rst'),
         "markdown": ('.md', '.mdown', '.markdown', '.wp'),
         "html": ('.html', '.htm')

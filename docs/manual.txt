@@ -379,7 +379,7 @@ but you can use a lot of different markups using the ``-f`` option. Currently
 Nikola supports bbcode, wiki, markdown, html, txt2tags and textile in addition
 to restructured text.
 
-You can control what markup compiler is used for each file extension with the ``post_compilers``
+You can control what markup compiler is used for each file extension with the ``COMPILERS``
 option. The default configuration expects them to be placed in ``posts`` but that can be
 changed (see below, the ``POSTS`` and ``PAGES`` options)
 

@@ -4,6 +4,7 @@ New in 6.0.0
 Features
 --------
 
+* Deprecated post_compilers for COMPILERS (Issue #601)
 * Replaced post_pages option with POSTS and PAGES (Issue #601)
 * Support for bootswatch in boostrap 2 and 3 (Issue #599)
 * New ADDITIONAL_METADATA option to set extra metadata on all posts.

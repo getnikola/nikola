@@ -69,7 +69,7 @@ class CommandInit(Command):
     ("stories/*.txt", "stories", "story.tmpl"),
     ("stories/*.rst", "stories", "story.tmpl"),
 )""",
-        'POST_COMPILERS': """{
+        'COMPILERS': """{
     "rest": ('.txt', '.rst'),
     "markdown": ('.md', '.mdown', '.markdown'),
     "textile": ('.textile',),
