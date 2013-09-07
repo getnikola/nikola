@@ -178,8 +178,8 @@ class Nikola(object):
             'TAG_PATH': 'categories',
             'TAG_PAGES_ARE_INDEXES': False,
             'THEME': 'bootstrap',
-            'THEME_REVEAL_CONGIF_SUBTHEME': 'sky',
-            'THEME_REVEAL_CONGIF_TRANSITION': 'cube',
+            'THEME_REVEAL_CONFIG_SUBTHEME': 'sky',
+            'THEME_REVEAL_CONFIG_TRANSITION': 'cube',
             'THUMBNAIL_SIZE': 180,
             'USE_BUNDLES': True,
             'USE_CDN': False,
@@ -404,8 +404,8 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['disqus_forum'] = self.config.get('COMMENT_SYSTEM_ID')
         self._GLOBAL_CONTEXT['mathjax_config'] = self.config.get(
             'MATHJAX_CONFIG')
-        self._GLOBAL_CONTEXT['subtheme'] = self.config.get('THEME_REVEAL_CONGIF_SUBTHEME')
-        self._GLOBAL_CONTEXT['transition'] = self.config.get('THEME_REVEAL_CONGIF_TRANSITION')
+        self._GLOBAL_CONTEXT['subtheme'] = self.config.get('THEME_REVEAL_CONFIG_SUBTHEME')
+        self._GLOBAL_CONTEXT['transition'] = self.config.get('THEME_REVEAL_CONFIG_TRANSITION')
         self._GLOBAL_CONTEXT['content_footer'] = self.config.get(
             'CONTENT_FOOTER')
         self._GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
