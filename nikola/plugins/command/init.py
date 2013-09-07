@@ -60,6 +60,7 @@ class CommandInit(Command):
         'BLOG_EMAIL': "joe@demo.site",
         'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
         'DEFAULT_LANG': "en",
+        'THEME': 'bootstrap3',
 
         'POSTS': """(
     ("posts/*.txt", "posts", "post.tmpl"),
