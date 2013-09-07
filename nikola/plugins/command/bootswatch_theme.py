@@ -63,8 +63,8 @@ class CommandBootswatchTheme(Command):
             'name': 'parent',
             'short': 'p',
             'long': 'parent',
-            'default': 'site',
-            'help': 'Parent theme name (default: site)',
+            'default': 'bootstrap',
+            'help': 'Parent theme name (default: bootstrap)',
         },
     ]
 
