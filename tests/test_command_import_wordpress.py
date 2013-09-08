@@ -11,7 +11,8 @@ import nikola.plugins.command.import_wordpress
 
 class BasicCommandImportWordpress(unittest.TestCase):
     def setUp(self):
-        self.import_command = nikola.plugins.command.import_wordpress.CommandImportWordpress()
+        self.module = nikola.plugins.command.import_wordpress
+        self.import_command = self.module.CommandImportWordpress()
         self.import_filename = os.path.abspath(os.path.join(
             os.path.dirname(__file__), 'wordpress_export_example.xml'))
 
@@ -135,10 +136,13 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
             self.import_filename)
         self.import_command.context = self.import_command.populate_context(
             channel)
-        self.import_command.url_map = {}  # For testing we use an empty one.
         self.import_command.output_folder = 'new_site'
         self.import_command.squash_newlines = True
         self.import_command.no_downloads = False
+
+        # Ensuring clean results
+        self.import_command.url_map = {}
+        self.module.links = {}
 
         write_metadata = mock.MagicMock()
         write_content = mock.MagicMock()
@@ -210,6 +214,27 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
         self.assertEqual(
             self.import_command.url_map['http://some.blog/kontakt/'],
             'http://some.blog/stories/kontakt.html')
+
+        image_thumbnails = [
+            'http://some.blog/wp-content/uploads/2012/12/2012-12-19-1355925145_1024x600_scrot-64x64.png',
+            'http://some.blog/wp-content/uploads/2012/12/2012-12-19-1355925145_1024x600_scrot-300x175.png',
+            'http://some.blog/wp-content/uploads/2012/12/2012-12-19-1355925145_1024x600_scrot-36x36.png',
+            'http://some.blog/wp-content/uploads/2012/12/2012-12-19-1355925145_1024x600_scrot-24x24.png',
+            'http://some.blog/wp-content/uploads/2012/12/2012-12-19-1355925145_1024x600_scrot-96x96.png',
+            'http://some.blog/wp-content/uploads/2012/12/2012-12-19-1355925145_1024x600_scrot-96x96.png',
+            'http://some.blog/wp-content/uploads/2012/12/2012-12-19-1355925145_1024x600_scrot-48x48.png',
+            'http://some.blog/wp-content/uploads/2012/12/2012-12-19-1355925145_1024x600_scrot-96x96.png',
+            'http://some.blog/wp-content/uploads/2012/12/2012-12-19-1355925145_1024x600_scrot-150x150.png'
+        ]
+
+        for link in image_thumbnails:
+            self.assertTrue(
+                link in self.module.links,
+                'No link to "{0}" found in {map}.'.format(
+                    link,
+                    map=self.module.links
+                )
+            )
 
     def test_transforming_content(self):
         """Applying markup conversions to content."""
