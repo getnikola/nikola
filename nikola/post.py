@@ -380,7 +380,7 @@ class Post(object):
             text = self.text(strip_html=True)
             words_per_minute = 180
             words = len(text.split())
-            self._reading_time = int(round(words/words_per_minute)) or 1
+            self._reading_time = int(round(words / words_per_minute)) or 1
         return self._reading_time
 
     def source_link(self, lang=None):
