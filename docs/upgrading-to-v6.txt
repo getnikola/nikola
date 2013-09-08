@@ -1,5 +1,5 @@
 .. title: Upgrading to v6
-.. slug: ungrading-to-v6
+.. slug: upgrading-to-v6
 .. date: 2013/08/23 23:00
 .. tags:
 .. link:
@@ -8,7 +8,7 @@
 Upgrading to v6
 ===============
 
-:Version: 6.0.0+beta1
+:Version: 6.0.0
 
 Nikola tries fairly hard to be compatible between versions. However, there were
 a few areas which were getting clunky, and needed fxing. So, here's what you may
