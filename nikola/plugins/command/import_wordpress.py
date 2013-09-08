@@ -184,6 +184,7 @@ class CommandImportWordpress(Command, ImportMixin):
                                                None,
                                                "http://foo.com")
         context['SITE_URL'] = context['BASE_URL']
+        context['THEME'] = 'bootstrap3'
 
         author = channel.find('{{{0}}}author'.format(wordpress_namespace))
         context['BLOG_EMAIL'] = get_text_tag(
