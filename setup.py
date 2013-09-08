@@ -30,18 +30,8 @@ except ImportError:
     from distutils.command.install import install
     from distutils.util import convert_path  # NOQA
 
-dependencies = [
-    'doit>=0.20.0',
-    'pygments',
-    'pillow>=2.0.0',
-    'docutils',
-    'mako>=0.6',
-    'unidecode',
-    'lxml',
-    'yapsy==1.10.2-pythons2n3',
-    'PyRSS2Gen',
-    'pytz==2013d',
-]
+with open('requirements.txt', 'r') as fh:
+    dependencies = [l.strip() for l in fh]
 
 ########### platform specific stuff #############
 import platform
