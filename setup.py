@@ -80,26 +80,28 @@ def copy_messages():
 
         shutil.copytree(original_messages_directory, theme_messages_directory)
 
+
 def copy_hardlinked_for_windows():
     """replaces the hardlinked files with a copy of the original content.
-    
+
     In windows (msysgit), a symlink is converted to a text file with a
     path to the file it points to. If not corrected, installing from a git
     clone will end with some files with bad content"""
-    
+
     if sys.platform != 'win32':
         return
-    # .txt in src, .rst in dst 
+    # .txt in src, .rst in dst
     stories_hardlinked = ['manual', 'creating-a-theme', 'theming']
     localdir = os.path.dirname(__file__)
     stories_directory = os.path.join(
-        localdir, 'nikola', 'data', 'samplesite','stories')
+        localdir, 'nikola', 'data', 'samplesite', 'stories')
     docs_directory = os.path.join(localdir, 'docs')
-    
+
     for name in stories_hardlinked:
         shutil.copy(
             os.path.join(docs_directory, name + '.txt'),
             os.path.join(stories_directory, name + '.rst'))
+
 
 def install_manpages(root, prefix):
     try:
