@@ -28,6 +28,8 @@
 
 import gzip
 import os
+import shlex
+import subprocess
 
 from nikola.plugin_categories import TaskMultiplier
 
@@ -61,13 +63,16 @@ class GzipFiles(TaskMultiplier):
                 gzipped = target + '.gz'
                 gzip_task['file_dep'].append(target)
                 gzip_task['targets'].append(gzipped)
-                gzip_task['actions'].append((create_gzipped_copy, (target, gzipped)))
+                gzip_task['actions'].append((create_gzipped_copy, (target, gzipped, self.site.config['GZIP_COMMAND'])))
         if not flag:
             return []
         return [gzip_task]
 
 
-def create_gzipped_copy(in_path, out_path):
-    with gzip.GzipFile(out_path, 'wb+') as outf:
-        with open(in_path, 'rb') as inf:
-            outf.write(inf.read())
+def create_gzipped_copy(in_path, out_path, command=None):
+    if command:
+        subprocess.check_call(shlex.split(command.format(filename=in_path)))
+    else:
+        with gzip.GzipFile(out_path, 'wb+') as outf:
+            with open(in_path, 'rb') as inf:
+                outf.write(inf.read())

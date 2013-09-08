@@ -1,3 +1,11 @@
+New in master
+=============
+
+Features
+--------
+
+* Support for external gzip commands (Issue #351)
+
 New in 6.0.0
 ============
 

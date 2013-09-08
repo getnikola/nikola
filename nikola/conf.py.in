@@ -203,6 +203,9 @@ COMPILERS = ${COMPILERS}
 # GZIP_FILES = False
 # File extensions that will be compressed
 # GZIP_EXTENSIONS = ('.txt', '.htm', '.html', '.css', '.js', '.json')
+# Use an external gzip command? None means no.
+# Example: GZIP_COMMAND = "pigz -k {filename}"
+# GZIP_COMMAND = None
 
 # #############################################################################
 # Image Gallery Options
