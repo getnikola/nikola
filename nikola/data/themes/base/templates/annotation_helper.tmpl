@@ -7,8 +7,10 @@
     <script src="http://assets.annotateit.org/annotator/v1.2.7/annotator-full.js"></script>
     <script>
     jQuery(function ($) {
-        $('body').annotator().annotator('setupPlugins');
+        $('body').annotator().annotator('setupPlugins', {}, {
+            // Disable filter bar
+            Filter: false
+        });
     });
     </script>
 </%def>
-
