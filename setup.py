@@ -40,7 +40,7 @@ dependencies = [
     'lxml',
     'yapsy==1.10.2-pythons2n3',
     'PyRSS2Gen',
-    'pytz==2013b',
+    'pytz==2013d',
 ]
 
 ########### platform specific stuff #############
