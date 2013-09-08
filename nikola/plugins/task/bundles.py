@@ -81,14 +81,12 @@ class BuildBundles(LateTask):
             for name, files in kw['theme_bundles'].items():
                 output_path = os.path.join(kw['output_folder'], name)
                 dname = os.path.dirname(name)
-                file_dep = [utils.get_asset_path(
-                    os.path.join(dname, fname), kw['themes'],
-                    kw['files_folders'])
-                    for fname in files
-                ]
-                file_dep = filter(None, file_dep)  # removes missing files
+                file_dep = [os.path.join(kw['output_folder'], dname, fname)
+                            for fname in files]
+                file_dep = filter(os.path.isfile, file_dep)  # removes missing files
                 task = {
                     'file_dep': file_dep,
+                    'task_dep': ['copy_assets'],
                     'basename': str(self.name),
                     'name': str(output_path),
                     'actions': [(build_bundle, (name, files))],

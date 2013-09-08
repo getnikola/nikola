@@ -7,7 +7,7 @@ $ nikola install_theme -n jinja-site-ipython
 (or xkcd-site-ipython, if you want xkcd styling)
 
 More info here about themes:
-http://nikola.ralsina.com.ar/handbook.html#getting-more-themes
+http://getnikola.com/handbook.html#getting-more-themes
 
 OR
 

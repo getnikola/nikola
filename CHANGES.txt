@@ -1,10 +1,20 @@
+New in master
+=============
+
+Features
+--------
+
+* Annotations using annotateit.org (Issue #623)
+
+
 New in 6.0.0
 ============
 
 Features
 --------
 
-* Annotations using annotateit.org (Issue #623)
+* Deprecated post_compilers for COMPILERS (Issue #601)
+* Replaced post_pages option with POSTS and PAGES (Issue #601)
 * Support for bootswatch in boostrap 2 and 3 (Issue #599)
 * New ADDITIONAL_METADATA option to set extra metadata on all posts.
 * All reStructuredText extensions are now plugins (Issue #621)
@@ -39,6 +49,7 @@ Features
 Bugfixes
 --------
 
+* Added missing rel="self" link suggested by feedvalidator.org (Issue #264)
 * Switched to semantic versioning (Issue #614)
 * Better figure styling (Issue #626)
 * Switched docutils math rendering to MathJax (Issue #620)

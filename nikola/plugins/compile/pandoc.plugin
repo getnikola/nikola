@@ -5,6 +5,6 @@ Module = pandoc
 [Documentation]
 Author = Roberto Alsina
 Version = 0.1
-Website = http://nikola.ralsina.com.ar
+Website = http://getnikola.com
 Description = Compile markups into HTML using pandoc
 

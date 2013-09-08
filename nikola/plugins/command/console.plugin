@@ -5,5 +5,5 @@ Module = console
 [Documentation]
 Author = Roberto Alsina
 Version = 0.1
-Website = http://nikola.ralsina.com.ar
+Website = http://getnikola.com
 Description = Start a debugging python console

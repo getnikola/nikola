@@ -1,7 +1,7 @@
 Extending Nikola
 ================
 
-:Version: 6.0.0+beta1
+:Version: 6.0.0
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-info pull-right
@@ -32,20 +32,42 @@ Command Plugins
 
 When you run ``nikola --help`` you will see something like this::
 
-    $ nikola --help
-    Usage: nikola command [options]
+    $ nikola help
+    Nikola is a tool to create static websites and blogs. For full documentation and more
+    information, please visit http://getnikola.com
+
 
     Available commands:
+    nikola auto                 automatically detect site changes, rebuild
+                                and optionally refresh a browser
+    nikola bootswatch_theme     given a swatch name from bootswatch.com and a
+                                parent theme, creates a custom theme
+    nikola build                run tasks
+    nikola check                check links and files in the generated site
+    nikola clean                clean action / remove targets
+    nikola console              start an interactive python console with access to
+                                your site and configuration
+    nikola deploy               deploy the site
+    nikola dumpdb               dump dependency DB
+    nikola forget               clear successful run status from internal DB
+    nikola help                 show help
+    nikola ignore               ignore task (skip) on subsequent runs
+    nikola import_blogger       import a blogger dump
+    nikola import_feed          import a RSS/Atom dump
+    nikola import_wordpress     import a WordPress dump
+    nikola init                 create a Nikola site in the specified folder
+    nikola install_theme        install theme into current site
+    nikola list                 list tasks from dodo file
+    nikola mincss               apply mincss to the generated site
+    nikola new_post             create a new blog post or site page
+    nikola run                  run tasks
+    nikola serve                start the test webserver
+    nikola strace               use strace to list file_deps and targets
+    nikola version              print the Nikola version number
 
-    nikola bootswatch_theme: Given a swatch name and a parent theme, creates a custom theme.
-    nikola build: Build the site.
-    nikola import_wordpress: Import a wordpress site from a XML dump.
-    nikola init: Create a new site.
-    nikola install_theme: Install a theme into the current site.
-    nikola new_post: Create a new post.
-    nikola serve: Start test server.
-
-    For detailed help for a command, use nikola command --help
+    nikola help                 show help / reference
+    nikola help <command>       show command usage
+    nikola help <task-name>     show task usage
 
 That will give you a list of all available commands in your version of Nikola.
 Each and every one of those is a plugin. Let's look at a typical example:
@@ -56,17 +78,17 @@ First, the ``command_serve.plugin`` file:
 
     [Core]
     Name = serve
-    Module = command_serve
+    Module = serve
 
     [Documentation]
     Author = Roberto Alsina
     Version = 0.1
-    Website = http://nikola.ralsina.com.ar
+    Website = http://getnikola.com
     Description = Start test server.
 
 For your own plugin, just change the values in a sensible way. The
 ``Module`` will be used to find the matching python module, in this case
-``command_serve.py``, from which this is the interesting bit:
+``serve.py``, from which this is the interesting bit:
 
 .. code-block:: python
 
@@ -78,57 +100,52 @@ For your own plugin, just change the values in a sensible way. The
     class CommandBuild(Command):
         """Start test server."""
 
-        # This has to match the Name option in the .plugin file
-
         name = "serve"
+        doc_usage = "[options]"
+        doc_purpose = "start the test webserver"
 
-        # This is the function that does stuff
+        cmd_options = (
+            {
+                'name': 'port',
+                'short': 'p',
+                'long': 'port',
+                'default': 8000,
+                'type': int,
+                'help': 'Port nummber (default: 8000)',
+            },
+            {
+                'name': 'address',
+                'short': 'a',
+                'long': '--address',
+                'type': str,
+                'default': '127.0.0.1',
+                'help': 'Address to bind (default: 127.0.0.1)',
+            },
+        )
 
-        def run(self, *args):
+        def _execute(self, options, args):
             """Start test server."""
-
-            # use OptionParser if you want your command to have options
-
-            parser = OptionParser(usage="nikola %s [options]" % self.name)
-            parser.add_option("-p", "--port", dest="port",
-                help="Port numer (default: 8000)", default=8000,
-                type="int")
-            parser.add_option("-a", "--address", dest="address",
-                help="Address to bind (default: 127.0.0.1)",
-                default='127.0.0.1')
-            (options, args) = parser.parse_args(list(args))
-
-            # You can use self.site.config to access your
-            # configuration options. self.site is an instance
-            # of the Nikola class and contains all your site's
-            # data.
-
             out_dir = self.site.config['OUTPUT_FOLDER']
-
-            # Then do something interesting. In this case,
-            # it starts a webserver
-
             if not os.path.isdir(out_dir):
-                print "Error: Missing '%s' folder?" % out_dir
+                print("Error: Missing '{0}' folder?".format(out_dir))
             else:
                 os.chdir(out_dir)
-                httpd = HTTPServer((options.address, options.port),
-                    OurHTTPRequestHandler)
+                httpd = HTTPServer((options['address'], options['port']),
+                                OurHTTPRequestHandler)
                 sa = httpd.socket.getsockname()
-                print "Serving HTTP on", sa[0], "port", sa[1], "..."
+                print("Serving HTTP on", sa[0], "port", sa[1], "...")
                 httpd.serve_forever()
 
 As mentioned above, a plugin can have options, which the user can see by doing
-``nikola command --help`` and can later use as ``nikola command --option``::
+``nikola help command`` and can later use, for example::
 
-    $ nikola serve --help
-    Usage: nikola serve [options]
+    $ nikola help serve
+    Purpose: start the test webserver
+    Usage:   nikola serve [options]
 
     Options:
-    -h, --help            show this help message and exit
-    -p PORT, --port=PORT  Port numer (default: 8000)
-    -a ADDRESS, --address=ADDRESS
-                            Address to bind (default: 127.0.0.1)
+    -p ARG, --port=ARG        Port nummber (default: 8000)
+    -a ARG, ----address=ARG   Address to bind (default: 127.0.0.1)
 
     $ nikola serve -p 9000
     Serving HTTP on 127.0.0.1 port 9000 ...
@@ -148,12 +165,12 @@ First, you have to create a .plugin file. Here's the one for the Mako plugin:
 
     [Core]
     Name = mako
-    Module = template_mako
+    Module = mako
 
     [Documentation]
     Author = Roberto Alsina
     Version = 0.1
-    Website = http://nikola.ralsina.com.ar
+    Website = http://getnikola.com
     Description = Support for Mako templates.
 
 You will have to replace "mako" with your template system's name, and other data
@@ -193,7 +210,7 @@ a stub for a hypothetical system called "Templater":
         # The method that does the actual rendering.
         # template_name is the name of the template file,
         # output_name is the file for the output, context
-        # is a dictionary containing the data the template 
+        # is a dictionary containing the data the template
         # uses for rendering.
 
         def render_template(self, template_name, output_name,
@@ -208,17 +225,27 @@ Task Plugins
 If you want to do something that depends on the data in your site, you
 probably want to do a Task plugin, which will make it be part of the
 ``nikola build`` command. There are the currently available tasks, all
-provided by plugins::
+provided by plugins:
+
+.. sidebar:: Other Tasks
+
+    There are also ``LateTask`` plugins, which are executed later,
+    and ``TaskMultiplier`` plugins that take a task and create
+    more tasks out of it.
+
+::
 
     $ nikola list
-
+    Scanning posts....done!
     build_bundles
+    build_less
     copy_assets
     copy_files
-    deploy
+    post_render
     redirect
     render_archive
     render_galleries
+    render_galleries_clean
     render_indexes
     render_listings
     render_pages
@@ -249,7 +276,7 @@ in the logical ways:
     [Documentation]
     Author = Roberto Alsina
     Version = 0.1
-    Website = http://nikola.ralsina.com.ar
+    Website = http://getnikola.com
     Description = Copy theme assets into output.
 
 And the ``task_copy_assets.py`` file, in its entirety:
@@ -300,11 +327,24 @@ And the ``task_copy_assets.py`` file, in its entirety:
                     # If your task generates files, please do this.
                     yield utils.apply_filters(task, kw['filters'])
 
-TaskMultiplier Plugins
-----------------------
+PageCompiler Plugins
+--------------------
 
-These plugins process tasks and create other tasks. You can look at the gzip_files plugins as an example, it
-examines tasks, and if they produce files that go in output/ and would be nice to have gzipped, it creates a 
-gzipped copy.
+These plugins implement markup languages, they take sources for posts or pages and
+create HTML or other output files. A good example is the ``misaka`` plugin.
 
+They must provide:
 
+``compile_html``
+    Function that builds a file.
+
+``create_post``
+    Function that creates an empty file with some metadata in it.
+
+If the compiler produces something other than HTML files, it should also implement ``extension`` which
+returns the preferred extension for the output file.
+
+RestExtension Plugins
+---------------------
+
+Implement directives for Restructured Text, see ``media.py`` for a simple example.

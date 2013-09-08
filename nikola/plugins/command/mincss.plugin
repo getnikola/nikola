@@ -5,6 +5,6 @@ Module = mincss
 [Documentation]
 Author = Roberto Alsina
 Version = 0.1
-Website = http://nikola.ralsina.com.ar
+Website = http://getnikola.com
 Description = Apply mincss to the generated site
 

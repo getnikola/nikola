@@ -8,7 +8,7 @@
 The Nikola Handbook
 ===================
 
-:Version: 6.0.0+beta1
+:Version: 6.0.0
 
 .. class:: alert alert-info pull-right
 
@@ -64,10 +64,10 @@ instead of something the user generates.
 
 Nikola can do:
 
-* A blog (`example <http://lateral.netmanagers.com.ar>`__)
+* A blog (`example <http://ralsina.me>`__)
 * Your company's site
 * Your personal site
-* A software project's site (`example <http://nikola.ralsina.com.ar>`__)
+* A software project's site (`example <http://getnikola.com>`__)
 * A book's site
 
 Since Nikola-based sites don't run any code on the server, there is no way to process
@@ -92,7 +92,7 @@ Getting Help
 * Feel free to contact me at ralsina@netmanagers.com.ar for questions about Nikola.
 * You can file bugs at `the issue tracker <https://github.com/ralsina/nikola/issues>`__
 * You can discuss Nikola at the `nikola-discuss google group <http://groups.google.com/group/nikola-discuss>`_
-* You can subscribe to `the Nikola Blog <http://nikola.ralsina.com.ar/blog>`_
+* You can subscribe to `the Nikola Blog <http://getnikola.com/blog>`_
 * You can follow `Nikola on Twitter <https://twitter.com/nikolagenerator>`_
 
 Why Static?
@@ -200,7 +200,7 @@ The short version is: ``pip install https://github.com/ralsina/nikola/archive/ma
 
 Longer version:
 
-#. Get `Nikola <http://nikola.ralsina.com.ar/>`_
+#. Get `Nikola <http://getnikola.com/>`_
 #. Install dependencies. To do that, either:
 
    #. ``pip install -r requirements.txt`` (or ``requirements-full.txt`` for extra stuff) and ``pip install .`` or...
@@ -231,12 +231,12 @@ Nikola is packaged for some Linux distributions, you may get that instead.
 *NOTE*: If you get a ``ERROR: /bin/sh: 1: xslt-config: not found`` or ``fatal error:
 libxml/xmlversion.h: No such file or directory`` when running ``pip install -r requirements.txt``, install *libxml* and *libxslt* libraries, like so:
 
-Debian systems:
+Debian systems::
 
     sudo apt-get install libxml2-dev
     sudo apt-get install libxslt1-dev
 
-RHEL systems:
+RHEL systems::
 
     yum install libxslt-devel libxml2-devel
 
@@ -257,7 +257,7 @@ files that are not up to date, so your site always reflects your latest content.
 first build, just run "nikola build"::
 
     $ nikola build
-    Scanning posts  . . done!
+    Scanning posts....done!
     .  render_posts:stories/manual.html
     .  render_posts:posts/1.html
     .  render_posts:stories/1.html
@@ -269,15 +269,15 @@ first build, just run "nikola build"::
     .  render_pages:output/stories/handbook.html
     .  render_rss:output/rss.xml
     .  render_sources:output/stories/about-nikola.txt
-    :
-    :
-    :
+    ⋮
+    ⋮
+    ⋮
 
 Nikola will print a line for every output file it generates. If we do it again, that
 will be much much shorter::
 
     $ nikola build
-    Scanning posts  . . done!
+    Scanning posts....done!
 
 That is because `doit <http://pydoit.org>`_ is smart enough not to generate
 all the pages again, unless you changed something that the page requires. So, if you change
@@ -287,7 +287,7 @@ will be recreated. If you change the post page template, then all the post pages
 Nikola is mostly a series of doit *tasks*, and you can see them by doing ``nikola list``::
 
     $ nikola list
-    Scanning posts  . . done!
+    Scanning posts....done!
     build_bundles
     copy_assets
     copy_files
@@ -313,7 +313,7 @@ Nikola also has other commands besides ``build``::
 
     $ nikola help
         Nikola is a tool to create static websites and blogs. For full documentation and more information,
-        please visit http://nikola.ralsina.com.ar
+        please visit http://getnikola.com
 
 
         Available commands:
@@ -379,9 +379,9 @@ but you can use a lot of different markups using the ``-f`` option. Currently
 Nikola supports bbcode, wiki, markdown, html, txt2tags and textile in addition
 to restructured text.
 
-You can control what markup compiler is used for each file extension with the ``post_compilers``
+You can control what markup compiler is used for each file extension with the ``COMPILERS``
 option. The default configuration expects them to be placed in ``posts`` but that can be
-changed (see below, the post_pages option)
+changed (see below, the ``POSTS`` and ``PAGES`` options)
 
 This is how it works::
 
@@ -484,18 +484,20 @@ Currently supported languages are
 * Spanish
 
 If you wish to add support for more languages, check out the instructions
-at the `theming guide <http://nikola.ralsina.com.ar/theming.html>`_.
+at the `theming guide <http://getnikola.com/theming.html>`_.
 
 The post page is generated using the ``post.tmpl`` template, which you can use
 to customize the output.
 
-The place where the post will be placed by ``new_post`` is based on the ``post_pages``
-configuration option::
+The place where the post will be placed by ``new_post`` is based on the ``POSTS``
+and ``PAGES`` configuration options::
 
-    # post_pages contains (wildcard, destination, template, use_in_feed) tuples.
+    # POSTS and PAGES contains (wildcard, destination, template) tuples.
     #
-    # The wildcard is used to generate a list of reSt source files (whatever/thing.txt)
-    # That fragment must have an associated metadata file (whatever/thing.meta),
+    # The wildcard is used to generate a list of reSt source files
+    # (whatever/thing.txt).
+    #
+    # That fragment could have an associated metadata file (whatever/thing.meta),
     # and opcionally translated files (example for spanish, with code "es"):
     #     whatever/thing.txt.es and whatever/thing.meta.es
     #
@@ -506,18 +508,24 @@ configuration option::
     # pages, which will be placed at
     # output / TRANSLATIONS[lang] / destination / pagename.html
     #
-    # where "pagename" is specified in the metadata file.
+    # where "pagename" is the "slug" specified in the metadata file.
     #
-    # if use_in_feed is True, then those posts will be added to the site's
-    # rss feeds.
+    # The difference between POSTS and PAGES is that POSTS are added
+    # to feeds and are considered part of a blog, while PAGES are
+    # just independent HTML pages.
     #
-    post_pages = (
-        ("posts/*.txt", "posts", "post.tmpl", True),
-        ("stories/*.txt", "stories", "story.tmpl", False),
+
+    POSTS = (
+        ("posts/*.txt", "posts", "post.tmpl"),
+        ("posts/*.rst", "posts", "post.tmpl"),
+    )
+    PAGES = (
+        ("stories/*.txt", "stories", "story.tmpl"),
+        ("stories/*.rst", "stories", "story.tmpl"),
     )
 
-It will use the first location that has the last parameter set to True, or the last
-one in the list if all of them have it set to False.
+It will use the first location that has the last item in ``POSTS``, or the last
+one in ``PAGES`` if ``POSTS`` is empty.
 
 The ``new_post`` command supports some options::
 
@@ -563,6 +571,17 @@ By default, teasers will include a "read more" link at the end. If you want to
 change that text, you can use a custom teaser::
 
     .. TEASER_END: click to read the rest of the article
+
+Or you can completely customize the link using the ``READ_MORE_LINK`` option::
+
+    # A HTML fragment with the Read more... link.
+    # The following tags exist and are replaced for you:
+    # {link}        A link to the full post page.
+    # {read_more}   The string “Read more” in the current language.
+    # {{            A literal { (U+007B LEFT CURLY BRACKET)
+    # }}            A literal } (U+007D RIGHT CURLY BRACKET)
+    # READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
+
 
 Drafts
 ~~~~~~
@@ -648,7 +667,7 @@ Pages are the same as posts, except that:
 * They use the ``story.tmpl`` template instead of ``post.tmpl`` by default
 
 The default configuration expects the page's metadata and text files to be on the
-``stories`` folder, but that can be changed (see post_pages option above).
+``stories`` folder, but that can be changed (see ``PAGES`` option above).
 
 You can create the page's files manually or use the ``new_post`` command
 with the ``-p`` option, qhich will place the files in the folder that
@@ -681,15 +700,13 @@ what Nikola does. Its syntax is python, but if you don't know the language, it
 still should not be terribly hard to grasp.
 
 The default ``conf.py`` you get with Nikola should be fairly complete, and is quite
-commented, but just in case, here is a full,
-`customized example configuration <sampleconfig.html>`_ (the one I use for
-`my site <http://lateral.netmanagers.com.ar>`_)
+commented.
 
 You surely want to edit these options::
 
     # Data about this site
     BLOG_TITLE = "Demo Site"
-    SITE_URL = "http://nikola.ralsina.com.ar"
+    SITE_URL = "http://getnikola.com"
     BLOG_EMAIL = "joe@demo.site"
     BLOG_DESCRIPTION = "This is a demo site for Nikola."
 
@@ -779,8 +796,8 @@ change the FILES_FOLDERS option::
 Getting More Themes
 -------------------
 
-There are not so many themes for Nikola. On occasion, I port something I like, and make
-it available for download. Nikola has a builtin theme download/install mechanism, its
+There are not so many themes for Nikola. They are available at http://themes.getnikola.com
+Nikola has a builtin theme download/install mechanism to install those themes, its
 ``install_theme`` command::
 
     $ nikola install_theme -l
@@ -788,6 +805,8 @@ it available for download. Nikola has a builtin theme download/install mechanism
     -------
     blogtxt
     readable
+    ⋮
+    ⋮
 
     $ nikola install_theme blogtxt
     Downloading: http://themes.nikola.ralsina.com.ar/themes/blogtxt.zip
@@ -829,9 +848,8 @@ Here is an example, from my own site's deployment script::
 
     DEPLOY_COMMANDS = [
         'rsync -rav --delete output/* ralsina@lateral.netmanagers.com.ar:/srv/www/lateral',
-        'rdiff-backup output ~/bartleblog-backup',
+        'rdiff-backup output ~/blog-backup',
         "links -dump 'http://www.twingly.com/ping2?url=lateral.netmanagers.com.ar'",
-        'rsync -rav ~/bartleblog-backup/* ralsina@netmanagers.com.ar:bartleblog-backup',
     ]
 
 Other interesting ideas are using
@@ -1095,8 +1113,7 @@ Once you have that, all you need to do is::
 
     .. vimeo:: 20241459
 
-If you are running python 2.6 or later, or have the json module installed and
-have internet connectivity when generating your site, the height and width of
+If you have internet connectivity when generating your site, the height and width of
 the embedded player will be set to the native height and width of the video.
 You can override this if you wish::
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
+from __future__ import unicode_literals, print_function, absolute_import
 
 import codecs
 from contextlib import contextmanager
@@ -14,8 +14,10 @@ import unittest
 import lxml.html
 from nose.plugins.skip import SkipTest
 
-from context import nikola
 from nikola import main
+import nikola
+import nikola.plugins.command
+import nikola.plugins.command.init
 
 
 @contextmanager
@@ -97,7 +99,7 @@ class DemoBuildTest(EmptyBuildTest):
     def test_index_in_sitemap(self):
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
         sitemap_data = codecs.open(sitemap_path, "r", "utf8").read()
-        self.assertTrue('<loc>http://nikola.ralsina.com.ar/</loc>' in sitemap_data)
+        self.assertTrue('<loc>http://getnikola.com/</loc>' in sitemap_data)
 
 
 class FuturePostTest(EmptyBuildTest):
@@ -188,8 +190,8 @@ class RelativeLinkTest(DemoBuildTest):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with codecs.open(conf_path, "rb", "utf-8") as inf:
             data = inf.read()
-            data = data.replace('SITE_URL = "http://nikola.ralsina.com.ar"',
-                                'SITE_URL = "http://nikola.ralsina.com.ar/foo/bar/"')
+            data = data.replace('SITE_URL = "http://getnikola.com/"',
+                                'SITE_URL = "http://getnikola.com/foo/bar/"')
         with codecs.open(conf_path, "wb+", "utf8") as outf:
             outf.write(data)
 
@@ -211,8 +213,8 @@ class RelativeLinkTest(DemoBuildTest):
         """Test that the correct path is in sitemap, and not the wrong one."""
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
         sitemap_data = codecs.open(sitemap_path, "r", "utf8").read()
-        self.assertFalse('<loc>http://nikola.ralsina.com.ar/</loc>' in sitemap_data)
-        self.assertTrue('<loc>http://nikola.ralsina.com.ar/foo/bar/</loc>' in sitemap_data)
+        self.assertFalse('<loc>http://getnikola.com/</loc>' in sitemap_data)
+        self.assertTrue('<loc>http://getnikola.com/foo/bar/</loc>' in sitemap_data)
 
 
 class TestCheck(DemoBuildTest):
@@ -254,10 +256,10 @@ class RelativeLinkTest2(DemoBuildTest):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with codecs.open(conf_path, "rb", "utf-8") as inf:
             data = inf.read()
-            data = data.replace('("stories/*.txt", "stories", "story.tmpl", False),',
-                                '("stories/*.txt", "", "story.tmpl", False),')
-            data = data.replace('("stories/*.rst", "stories", "story.tmpl", False),',
-                                '("stories/*.rst", "", "story.tmpl", False),')
+            data = data.replace('("stories/*.txt", "stories", "story.tmpl"),',
+                                '("stories/*.txt", "", "story.tmpl"),')
+            data = data.replace('("stories/*.rst", "stories", "story.tmpl"),',
+                                '("stories/*.rst", "", "story.tmpl"),')
             data = data.replace('# INDEX_PATH = ""',
                                 'INDEX_PATH = "blog"')
         with codecs.open(conf_path, "wb+", "utf8") as outf:
@@ -282,5 +284,8 @@ class RelativeLinkTest2(DemoBuildTest):
         """Test that the correct path is in sitemap, and not the wrong one."""
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
         sitemap_data = codecs.open(sitemap_path, "r", "utf8").read()
-        self.assertFalse('<loc>http://nikola.ralsina.com.ar/</loc>' in sitemap_data)
-        self.assertTrue('<loc>http://nikola.ralsina.com.ar/blog/</loc>' in sitemap_data)
+        self.assertFalse('<loc>http://getnikola.com/</loc>' in sitemap_data)
+        self.assertTrue('<loc>http://getnikola.com/blog/</loc>' in sitemap_data)
+
+if __name__ == "__main__":
+    unittest.main()

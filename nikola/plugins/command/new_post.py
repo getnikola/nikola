@@ -34,16 +34,16 @@ from nikola.plugin_categories import Command
 from nikola import utils
 
 
-def filter_post_pages(compiler, is_post, post_compilers, post_pages):
+def filter_post_pages(compiler, is_post, compilers, post_pages):
     """Given a compiler ("markdown", "rest"), and whether it's meant for
-    a post or a page, and post_compilers, return the correct entry from
+    a post or a page, and compilers, return the correct entry from
     post_pages."""
 
     # First throw away all the post_pages with the wrong is_post
     filtered = [entry for entry in post_pages if entry[3] == is_post]
 
     # These are the extensions supported by the required format
-    extensions = post_compilers[compiler]
+    extensions = compilers[compiler]
 
     # Throw away the post_pages with the wrong extensions
     filtered = [entry for entry in filtered if any([ext in entry[0] for ext in
@@ -53,13 +53,13 @@ def filter_post_pages(compiler, is_post, post_compilers, post_pages):
         type_name = "post" if is_post else "page"
         raise Exception("Can't find a way, using your configuration, to create "
                         "a {0} in format {1}. You may want to tweak "
-                        "post_compilers or post_pages in conf.py".format(
+                        "COMPILERS or POSTS/PAGES in conf.py".format(
                             type_name, compiler))
     return filtered[0]
 
 
-def get_default_compiler(is_post, post_compilers, post_pages):
-    """Given post_compilers and post_pages, return a reasonable
+def get_default_compiler(is_post, compilers, post_pages):
+    """Given compilers and post_pages, return a reasonable
     default compiler for this kind of post/page.
     """
 
@@ -69,7 +69,7 @@ def get_default_compiler(is_post, post_compilers, post_pages):
     # Get extensions in filtered post_pages until one matches a compiler
     for entry in filtered:
         extension = os.path.splitext(entry[0])[-1]
-        for compiler, extensions in post_compilers.items():
+        for compiler, extensions in compilers.items():
             if extension in extensions:
                 return compiler
     # No idea, back to default behaviour
@@ -212,7 +212,7 @@ class CommandNewPost(Command):
         if not post_format:  # Issue #400
             post_format = get_default_compiler(
                 is_post,
-                self.site.config['post_compilers'],
+                self.site.config['COMPILERS'],
                 self.site.config['post_pages'])
 
         if post_format not in compiler_names:
@@ -223,7 +223,7 @@ class CommandNewPost(Command):
 
         # Guess where we should put this
         entry = filter_post_pages(post_format, is_post,
-                                  self.site.config['post_compilers'],
+                                  self.site.config['COMPILERS'],
                                   self.site.config['post_pages'])
 
         print("Creating New Post")

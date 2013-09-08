@@ -44,7 +44,11 @@ from .nikola import Nikola
 from .utils import _reload, sys_decode
 
 
+config = {}
+
+
 def main(args):
+    global config
     sys.path.append('')
     try:
         import conf
@@ -65,7 +69,7 @@ class Help(DoitHelp):
     @staticmethod
     def print_usage(cmds):
         """print nikola "usage" (basic help) instructions"""
-        print("Nikola is a tool to create static websites and blogs. For full documentation and more information, please visit http://nikola.ralsina.com.ar\n\n")
+        print("Nikola is a tool to create static websites and blogs. For full documentation and more information, please visit http://getnikola.com\n\n")
         print("Available commands:")
         for cmd in sorted(cmds.values(), key=attrgetter('name')):
             print("  nikola %-*s %s" % (20, cmd.name, cmd.doc_purpose))
@@ -84,9 +88,10 @@ class Clean(DoitClean):
     """A clean that removes cache/"""
 
     def clean_tasks(self, tasks, dryrun):
-        if not dryrun:
-            if os.path.exists('conf.py'):
-                shutil.rmtree('cache')
+        if not dryrun and config:
+            cache_folder = config.get('CACHE_FOLDER', 'cache')
+            if os.path.exists(cache_folder):
+                shutil.rmtree(cache_folder)
         return super(Clean, self).clean_tasks(tasks, dryrun)
 
 

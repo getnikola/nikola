@@ -114,6 +114,16 @@ class Nikola(object):
             'COMMENT_SYSTEM': 'disqus',
             'COMMENTS_IN_GALLERIES': False,
             'COMMENTS_IN_STORIES': False,
+            'COMPILERS': {
+                "rest": ('.txt', '.rst'),
+                "markdown": ('.md', '.mdown', '.markdown'),
+                "textile": ('.textile',),
+                "txt2tags": ('.t2t',),
+                "bbcode": ('.bb',),
+                "wiki": ('.wiki',),
+                "ipynb": ('.ipynb',),
+                "html": ('.html', '.htm')
+            },
             'CONTENT_FOOTER': '',
             'COPY_SOURCES': True,
             'CREATE_MONTHLY_ARCHIVE': False,
@@ -151,20 +161,8 @@ class Nikola(object):
             'MATHJAX_CONFIG': '',
             'OLD_THEME_SUPPORT': True,
             'OUTPUT_FOLDER': 'output',
-            'post_compilers': {
-                "rest": ('.txt', '.rst'),
-                "markdown": ('.md', '.mdown', '.markdown'),
-                "textile": ('.textile',),
-                "txt2tags": ('.t2t',),
-                "bbcode": ('.bb',),
-                "wiki": ('.wiki',),
-                "ipynb": ('.ipynb',),
-                "html": ('.html', '.htm')
-            },
-            'POST_PAGES': (
-                ("posts/*.txt", "posts", "post.tmpl", True),
-                ("stories/*.txt", "stories", "story.tmpl", False),
-            ),
+            'POSTS': (("posts/*.txt", "posts", "post.tmpl"),),
+            'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
             'PRETTY_URLS': False,
             'FUTURE_IS_NOW': False,
             'READ_MORE_LINK': '<p class="more"><a href="{link}">{read_more}…</a></p>',
@@ -181,8 +179,8 @@ class Nikola(object):
             'TAG_PATH': 'categories',
             'TAG_PAGES_ARE_INDEXES': False,
             'THEME': 'bootstrap',
-            'THEME_REVEAL_CONGIF_SUBTHEME': 'sky',
-            'THEME_REVEAL_CONGIF_TRANSITION': 'cube',
+            'THEME_REVEAL_CONFIG_SUBTHEME': 'sky',
+            'THEME_REVEAL_CONFIG_TRANSITION': 'cube',
             'THUMBNAIL_SIZE': 180,
             'USE_BUNDLES': True,
             'USE_CDN': False,
@@ -203,6 +201,31 @@ class Nikola(object):
                   'the "pyphen" package.')
             print('WARNING: Setting HYPHENATE to False.')
             self.config['HYPHENATE'] = False
+
+        # Deprecating post_compilers
+        # TODO: remove on v7
+        if 'post_compilers' in config:
+            print("WARNING: The post_compilers option is deprecated, use COMPILERS instead.")
+            if 'COMPILERS' in config:
+                print("WARNING: COMPILERS conflicts with post_compilers, ignoring post_compilers.")
+            else:
+                self.config['COMPILERS'] = config['post_compilers']
+
+        # Deprecating post_pages
+        # TODO: remove on v7
+        if 'post_pages' in config:
+            print("WARNING: The post_pages option is deprecated, use POSTS and PAGES instead.")
+            if 'POSTS' in config or 'PAGES' in config:
+                print("WARNING: POSTS and PAGES conflict with post_pages, ignoring post_pages.")
+            else:
+                self.config['POSTS'] = [item[:3] for item in config['post_pages'] if item[-1]]
+                self.config['PAGES'] = [item[:3] for item in config['post_pages'] if not item[-1]]
+        # FIXME: Internally, we still use post_pages because it's a pain to change it
+        self.config['post_pages'] = []
+        for i1, i2, i3 in self.config['POSTS']:
+            self.config['post_pages'].append([i1, i2, i3, True])
+        for i1, i2, i3 in self.config['PAGES']:
+            self.config['post_pages'].append([i1, i2, i3, False])
 
         # Deprecating DISQUS_FORUM
         # TODO: remove on v7
@@ -275,6 +298,9 @@ class Nikola(object):
         # BASE_URL defaults to SITE_URL
         if 'BASE_URL' not in self.config:
             self.config['BASE_URL'] = self.config.get('SITE_URL')
+        # BASE_URL should *always* end in /
+        if self.config['BASE_URL'] and self.config['BASE_URL'][-1] != '/':
+            print("WARNING: Your BASE_URL doesn't end in / -- adding it.")
 
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,
@@ -336,7 +362,7 @@ class Nikola(object):
 
         # Activate all required compiler plugins
         for plugin_info in self.plugin_manager.getPluginsOfCategory("PageCompiler"):
-            if plugin_info.name in self.config["post_compilers"].keys():
+            if plugin_info.name in self.config["COMPILERS"].keys():
                 self.plugin_manager.activatePluginByName(plugin_info.name)
                 plugin_info.plugin_object.set_site(self)
 
@@ -378,8 +404,8 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['disqus_forum'] = self.config.get('COMMENT_SYSTEM_ID')
         self._GLOBAL_CONTEXT['mathjax_config'] = self.config.get(
             'MATHJAX_CONFIG')
-        self._GLOBAL_CONTEXT['subtheme'] = self.config.get('THEME_REVEAL_CONGIF_SUBTHEME')
-        self._GLOBAL_CONTEXT['transition'] = self.config.get('THEME_REVEAL_CONGIF_TRANSITION')
+        self._GLOBAL_CONTEXT['subtheme'] = self.config.get('THEME_REVEAL_CONFIG_SUBTHEME')
+        self._GLOBAL_CONTEXT['transition'] = self.config.get('THEME_REVEAL_CONFIG_TRANSITION')
         self._GLOBAL_CONTEXT['content_footer'] = self.config.get(
             'CONTENT_FOOTER')
         self._GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
@@ -411,7 +437,27 @@ class Nikola(object):
 
     def _get_themes(self):
         if self._THEMES is None:
-            self._THEMES = utils.get_theme_chain(self.config['THEME'])
+            # Check for old theme names (Issue #650) TODO: remove in v7
+            theme_replacements = {
+                'site': 'bootstrap',
+                'orphan': 'base',
+                'default': 'oldfashioned',
+            }
+            if self.config['THEME'] in theme_replacements:
+                warnings.warn('You are using the old theme "{0}", using "{1}" instead.'.format(
+                    self.config['THEME'], theme_replacements[self.config['THEME']]))
+                self.config['THEME'] = theme_replacements[self.config['THEME']]
+                if self.config['THEME'] == 'oldfashioned':
+                    warnings.warn('''You may need to install the "oldfashioned" theme '''
+                                  '''from themes.nikola.ralsina.com.ar because it's not '''
+                                  '''shipped by default anymore.''')
+                warnings.warn('Please change your THEME setting.')
+            try:
+                self._THEMES = utils.get_theme_chain(self.config['THEME'])
+            except Exception:
+                warnings.warn('''Can't load theme "{0}", using 'bootstrap' instead.'''.format(self.config['THEME']))
+                self.config['THEME'] = 'bootstrap'
+                return self._get_themes()
             # Check consistency of USE_CDN and the current THEME (Issue #386)
             if self.config['USE_CDN']:
                 bootstrap_path = utils.get_asset_path(os.path.join(
@@ -470,7 +516,7 @@ class Nikola(object):
     template_system = property(_get_template_system)
 
     def get_compiler(self, source_name):
-        """Get the correct compiler for a post from `conf.post_compilers`
+        """Get the correct compiler for a post from `conf.COMPILERS`
         To make things easier for users, the mapping in conf.py is
         compiler->[extensions], although this is less convenient for us. The
         majority of this function is reversing that dictionary and error
@@ -482,18 +528,18 @@ class Nikola(object):
         except KeyError:
             # Find the correct compiler for this files extension
             langs = [lang for lang, exts in
-                     list(self.config['post_compilers'].items())
+                     list(self.config['COMPILERS'].items())
                      if ext in exts]
             if len(langs) != 1:
                 if len(set(langs)) > 1:
                     exit("Your file extension->compiler definition is"
                          "ambiguous.\nPlease remove one of the file extensions"
-                         "from 'post_compilers' in conf.py\n(The error is in"
+                         "from 'COMPILERS' in conf.py\n(The error is in"
                          "one of {0})".format(', '.join(langs)))
                 elif len(langs) > 1:
                     langs = langs[:1]
                 else:
-                    exit("post_compilers in conf.py does not tell me how to "
+                    exit("COMPILERS in conf.py does not tell me how to "
                          "handle '{0}' extensions.".format(ext))
 
             lang = langs[0]
@@ -604,7 +650,7 @@ class Nikola(object):
         * rss (name is ignored)
         * gallery (name is the gallery name)
         * listing (name is the source code file name)
-        * post_path (name is 1st element in a post_pages tuple)
+        * post_path (name is 1st element in a POSTS/PAGES tuple)
 
         The returned value is always a path relative to output, like
         "categories/whatever.html"

@@ -34,12 +34,12 @@ import os
 
 Image = None
 try:
-    import Image as _Image
-    import ExifTags
-    Image = _Image
+    from PIL import Image, ExifTags  # NOQA
 except ImportError:
     try:
-        from PIL import Image, ExifTags  # NOQA
+        import Image as _Image
+        import ExifTags
+        Image = _Image
     except ImportError:
         pass
 

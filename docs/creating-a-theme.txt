@@ -9,9 +9,9 @@ Creating A Theme From Scratch (Almost)
 ======================================
 
 There is some documentation about creating themes for Nikola, but maybe a tutorial is also a useful way
-to explain it. So, here it is. I'll explain how to create a theme (almost) from scratch. Alternatively,
-you can take an existing theme and modify only parts of it via inheritance, but that's for another
-document.
+to explain it. So, here it is. I'll explain how to create a theme (almost) from scratch. All themes
+in Nikola must inherit from the ``base`` theme. In this case, we will inherit from ``bootstrap``
+so we get good support for slides and galleries.
 
 I will try to create a theme that looks like `Vinicius Massuchetto's Monospace Theme <http://wordpress.org/themes/monospace>`_.
 
@@ -28,12 +28,12 @@ First we will create a testing site::
 
     $ cd monospace-site/
 
-Our theme will inherit from the ``base`` theme, which is extremely barebones.
+Our theme will inherit from the ``bootstrap`` theme, which is full-featured but boring.
 
 
     $ mkdir themes
     $ mkdir themes/monospace
-    $ echo base > themes/monospace/parent
+    $ echo bootstrap > themes/monospace/parent
 
 The next step is to make the testing site use this new theme, by editing ``conf.py`` and
 changing the ``THEME`` option::
@@ -45,57 +45,99 @@ Now we can already build and test the site::
 
     $ nikola build && nikola serve
 
-.. figure:: http://ralsina.com.ar/galleries/random/monospace-1.png
+.. figure:: http://ralsina.com.ar/galleries/monospace-tut/monospace-1.png
    :height: 400px
 
-   This is the almost completely unstyled "orphan" theme.
+   This is the default "bootstrap" theme.
 
-Of course, the page layout is completely broken. To fix that, we need to get into templates.
+Of course, the page layout is completely different from what we want. To fix that, we need to
+get into templates.
 
 Templates: Page Layout
 ----------------------
 
 The general page layout for the theme is done by the ``base.tmpl`` template, which is done using
-`Mako <http://www.makotemplates.org/>`_. This is base's ``base.tmpl``, it's not very big:
+`Mako <http://www.makotemplates.org/>`_. This is bootstrap's ``base.tmpl``, it's not very big:
 
-.. code-block:: mako
+.. code:: mako
 
     ## -*- coding: utf-8 -*-
-    <%namespace file="base_helper.tmpl" import="*"/>
+    <%namespace name="base" file="base_helper.tmpl" import="*" />
+    <%namespace name="bootstrap" file="bootstrap_helper.tmpl" import="*" />
     ${set_locale(lang)}
     <!DOCTYPE html>
-    <html lang="${lang}">
+    <html% if comment_system == 'facebook': xmlns:fb="http://ogp.me/ns/fb#" %endif lang="${lang}">
     <head>
-        ${html_head()}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        ${bootstrap.html_head()}
         <%block name="extra_head">
         </%block>
         ${extra_head_data}
     </head>
     <body>
-            <h1 id="blog-title">
-                <a href="${abs_link('/')}" title="${blog_title}">${blog_title}</a>
-            </h1>
-            <%block name="belowtitle">
-            %if len(translations) > 1:
-            <small>
-                ${(messages("Also available in"))}:&nbsp;
-                ${html_translations()}
-            </small>
-            %endif
-            </%block>
-                <%block name="content"></%block>
-                <small>${content_footer}</small>
-                <!--Sidebar content-->
-                <ul class="unstyled">
-                <li>${license}
-                ${html_social()}
-                ${html_sidebar_links()}
-                <li>${search_form}
-                </ul>
-        ${social_buttons_code}
-        ${body_end}
-        ${base_helper.late_load_js()}
-        <%block name="extra_js"></%block>
+    <!-- Menubar -->
+    <div class="navbar navbar-fixed-top" id="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+
+                <a class="brand" href="${abs_link('/')}">
+                ${blog_title}
+                </a>
+                <!-- Everything you want hidden at 940px or less, place within here -->
+                <div class="nav-collapse collapse">
+                    <ul class="nav">
+                        ${bootstrap.html_navigation_links()}
+                    </ul>
+                    %if search_form:
+                        ${search_form}
+                    %endif
+                    <ul class="nav pull-right">
+                    <%block name="belowtitle">
+                    %if len(translations) > 1:
+                        <li>${base.html_translations()}</li>
+                    %endif
+                    </%block>
+                    % if not hide_sourcelink:
+                        <li><%block name="sourcelink"></%block></li>
+                    %endif
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of Menubar -->
+    <div class="container-fluid" id="container-fluid">
+        <!--Body content-->
+        <div class="row-fluid">
+        <div class="span2"></div>
+        <div class="span8">
+        <%block name="content"></%block>
+        </div>
+        </div>
+        <!--End of body content-->
+    </div>
+    <div class="footerbox">
+        ${content_footer}
+    </div>
+    ${bootstrap.late_load_js()}
+    ${base.html_social()}
+        <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});
+        $(window).on('hashchange', function(){
+            if (location.hash && $(location.hash)[0]) {
+                $('body').animate({scrollTop: $(location.hash).offset().top - $('#navbar').outerHeight(true)*1.2 }, 1);
+            }
+        });
+        $(document).ready(function(){$(window).trigger('hashchange')});
+        </script>
+    <%block name="extra_js"></%block>
+    ${body_end}
     </body>
 
 
@@ -104,15 +146,16 @@ For example, the ``html_head`` helper can be used to add CSS or JS files in all 
 
 Monospace is a two-column-with-footer layout, so let's copy the basics from its HTML and see what happens:
 
-.. code-block:: mako
+.. code:: mako
 
     ## -*- coding: utf-8 -*-
-    <%namespace name="base_helper" file="base_helper.tmpl" />
+    <%namespace name="base" file="base_helper.tmpl" import="*"/>
+    <%namespace name="bootstrap" file="bootstrap_helper.tmpl" import="*" />
     ${set_locale(lang)}
     <!DOCTYPE html>
     <html lang="${lang}">
     <head>
-        ${base_helper.html_head()}
+        ${bootstrap.html_head()}
         <%block name="extra_head">
         </%block>
         ${extra_head_data}
@@ -131,14 +174,14 @@ Monospace is a two-column-with-footer layout, so let's copy the basics from its 
                 %if len(translations) > 1:
                 <small>
                     ${(messages("Also available in"))}:&nbsp;
-                    ${base_helper.html_translations()}
+                    ${base.html_translations()}
                 </small>
                 %endif
                 </%block>
                 <ul class="unstyled">
                 <li>${license}
-                ${base_helper.html_social()}
-                ${base_helper.html_sidebar_links()}
+                ${base.html_social()}
+                ${bootstrap.html_navigation_links()}
                 <li>${search_form}
                 </ul>
             </div>
@@ -146,13 +189,13 @@ Monospace is a two-column-with-footer layout, so let's copy the basics from its 
                 ${content_footer}
             </div>
         </div>
-        ${base_helper.late_load_js()}
-        ${body_end}
+        ${bootstrap.late_load_js()}
         <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
         <%block name="extra_js"></%block>
+        ${body_end}
     </body>
 
-.. figure:: http://ralsina.com.ar/galleries/random/monospace-2.png
+.. figure:: http://ralsina.com.ar/galleries/monospace-tut/monospace-2.png
 
    Yikes!
 
@@ -166,9 +209,10 @@ The orphan theme includes just a little styling, specifically ``rest.css`` so
 the restructured text output looks reasonable, and ``code.css`` for code snippets.
 
 It also includes an empty ``assets/css/theme.css`` where you can add your own CSS.
-For example, this is taken from the original monospace theme:
+For example, this is taken from the original monospace theme, except for the last
+few selectors:
 
-.. code-block:: css
+.. code:: css
 
     body { margin:0px; padding:20px 0px; text-align:center; font-family:Monospace; color:#585858; }
     .post { margin:0px 0px 30px 0px; padding:0px 0px 30px 0px; border-bottom:1px dotted #C8C8C8; }
@@ -181,10 +225,23 @@ For example, this is taken from the original monospace theme:
     #sidebar > li { margin:20px 0px; }
     #sidebar h1 { border-bottom:1px dotted #C8C8C8; }
     #sidebar .description { display:block; width:100%; height:auto; margin:0px 0px 10px 0px; }
+    h1, h2, h3, h4, h5, h6, h7 { margin:0px; text-transform:uppercase; }
+    h4, h5, h6 { font-size:14px; }
+    #blog-title { margin-top: 0; line-height:48px;}
+    .literal-block {padding: .5em;}
+    div.sidebar, div.admonition, div.attention, div.caution, div.danger, div.error, div.hint, div.important, div.note, div.tip, div.warning {
+        /* Issue 277 */
+        border: 1px solid #aaa;
+        border-radius: 5px;
+        width: 100%;
+    }
+    ul.breadcrumb > li:before {
+        content: " / ";
+    }
 
 This will (after we rebuild it) make the site looks different of course, and getting closer to our goal:
 
-.. figure:: http://ralsina.com.ar/galleries/random/monospace-3.png
+.. figure:: http://ralsina.com.ar/galleries/monospace-tut/monospace-3.png
    :height: 400px
 
    Monospaced allright.
@@ -194,37 +251,38 @@ the posts themselves is different, and that was not described in ``base.tmpl`` a
 there is a placeholder called content: ``<%block name="content"></%block>``
 
 That's because ``base.tmpl`` defines the *base* layout. The layout of more specific pages, like "the page that shows
-a list of posts" is defined in the other templates. Specifically, this is defined in ``index.tmpl`` and this is the
-one from the base theme:
+a list of posts" is defined in the other templates. Specifically, this is defined in ``index.tmpl``.
+It turns out ``bootstrap`` doesn' have one of those! That's because it inherits that template from ``base``:
 
-.. code-block:: mako
+.. code:: mako
 
     ## -*- coding: utf-8 -*-
     <%namespace name="helper" file="index_helper.tmpl"/>
-    <%namespace name="disqus" file="disqus_helper.tmpl"/>
+    <%namespace name="comments" file="comments_helper.tmpl"/>
     <%inherit file="base.tmpl"/>
     <%block name="content">
         % for post in posts:
             <div class="postbox">
             <h1><a href="${post.permalink()}">${post.title()}</a>
             <small>&nbsp;&nbsp;
-                ${messages("Posted")}: ${post.formatted_date(date_format)}
+                ${messages("Posted")}: <time class="published" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time>
             </small></h1>
             <hr>
             ${post.text(teaser_only=index_teasers)}
             % if not post.meta('nocomments'):
-                ${disqus.html_disqus_link(post.permalink()+"#disqus_thread", post.base_path)}
+                ${comments.comment_link(post.permalink(), post.base_path)}
             % endif
             </div>
         % endfor
         ${helper.html_pager()}
-        ${disqus.html_disqus_script()}
+        ${comments.comment_link_script()}
+        ${helper.mathjax_script(posts)}
     </%block>
 
 So, let's tweak that to be closer to the original. We put the post's metadata in a
 box, add links for the posts tags, move the date there, etc.
 
-.. code-block:: mako
+.. code:: mako
 
     ## -*- coding: utf-8 -*-
     <%namespace name="helper" file="index_helper.tmpl"/>
@@ -258,14 +316,14 @@ box, add links for the posts tags, move the date there, etc.
     </%block>
 
 
-.. figure:: http://ralsina.com.ar/galleries/random/monospace-4.png
+.. figure:: http://ralsina.com.ar/galleries/monospace-tut/monospace-4.png
    :height: 400px
 
    Close enough!
 
 Then if we click on the post title, we will see some broken details in the metadata that can be fixed in ``post.tmpl``, and so on.
 
-.. code-block:: mako
+.. code:: mako
 
     ## -*- coding: utf-8 -*-
     <%namespace name="helper" file="post_helper.tmpl"/>
@@ -309,7 +367,7 @@ Then if we click on the post title, we will see some broken details in the metad
     </%block>
 
 
-.. figure:: http://ralsina.com.ar/galleries/random/monospace-5.png
+.. figure:: http://ralsina.com.ar/galleries/monospace-tut/monospace-5.png
    :height: 400px
 
    Details, details.

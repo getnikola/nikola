@@ -65,11 +65,12 @@ NAVIGATION_LINKS = {
 # Below this point, everything is optional
 ##############################################
 
-# post_pages contains (wildcard, destination, template, use_in_feed) tuples.
+# POSTS and PAGES contains (wildcard, destination, template) tuples.
 #
 # The wildcard is used to generate a list of reSt source files
 # (whatever/thing.txt).
-# That fragment must have an associated metadata file (whatever/thing.meta),
+#
+# That fragment could have an associated metadata file (whatever/thing.meta),
 # and opcionally translated files (example for spanish, with code "es"):
 #     whatever/thing.txt.es and whatever/thing.meta.es
 #
@@ -80,13 +81,15 @@ NAVIGATION_LINKS = {
 # pages, which will be placed at
 # output / TRANSLATIONS[lang] / destination / pagename.html
 #
-# where "pagename" is specified in the metadata file.
+# where "pagename" is the "slug" specified in the metadata file.
 #
-# if use_in_feed is True, then those posts will be added to the site's
-# rss feeds.
+# The difference between POSTS and PAGES is that POSTS are added
+# to feeds and are considered part of a blog, while PAGES are
+# just independent HTML pages.
 #
 
-post_pages = ${POST_PAGES}
+POSTS = ${POSTS}
+PAGES = ${PAGES}
 
 # One or more folders containing files to be copied as-is into the output.
 # The format is a dictionary of "source" "relative destination".
@@ -101,7 +104,7 @@ post_pages = ${POST_PAGES}
 # 'rest' is reStructuredText
 # 'markdown' is MarkDown
 # 'html' assumes the file is html and just copies it
-post_compilers = ${POST_COMPILERS}
+COMPILERS = ${COMPILERS}
 
 # Create by default posts in one file format?
 # Set to False for two-file posts, with separate metadata.
@@ -231,12 +234,12 @@ post_compilers = ${POST_COMPILERS}
 # CODE_COLOR_SCHEME = 'default'
 
 # If you use 'site-reveal' theme you can select several subthemes
-# THEME_REVEAL_CONGIF_SUBTHEME = 'sky'
+# THEME_REVEAL_CONFIG_SUBTHEME = 'sky'
 # You can also use: beige/serif/simple/night/default
 
 # Again, if you use 'site-reveal' theme you can select several transitions
 # between the slides
-# THEME_REVEAL_CONGIF_TRANSITION = 'cube'
+# THEME_REVEAL_CONFIG_TRANSITION = 'cube'
 # You can also use: page/concave/linear/none/default
 
 # date format used to display post dates.
@@ -278,7 +281,7 @@ LICENSE = ""
 # Default is ''
 CONTENT_FOOTER = 'Contents &copy; {date} \
         <a href="mailto:{email}">{author}</a> - Powered by \
-        <a href="http://nikola.ralsina.com.ar">Nikola</a> \
+        <a href="http://getnikola.com">Nikola</a> \
         {license}'
 CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
                                        author=BLOG_AUTHOR,

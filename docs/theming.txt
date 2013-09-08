@@ -8,7 +8,7 @@
 Theming Nikola
 ==============
 
-:Version: 6.0.0+beta1
+:Version: 6.0.0
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-info pull-right
@@ -21,10 +21,10 @@ This document is a reference about themes. If you want a tutorial, please read
 The Structure
 -------------
 
-Themes are located in the ``themes`` folder where Nikola is installed, one folder per theme.
-The folder name is the theme name.
+Themes are located in the ``themes`` folder where Nikola is installed, and in the ``themes`` folder
+of your site, one folder per theme. The folder name is the theme name.
 
-A Nikola theme consists of three folders:
+A Nikola theme consists of the following folders (they are *all* optional):
 
 assets
     This is where you would put your CSS, Javascript and image files. It will be copied
@@ -48,7 +48,11 @@ messages
     Nikola tries to be multilingual. This is where you put the strings for your theme
     so that it can be translated into other languages.
 
-And these optional files:
+less
+    Files to be compiled into CSS using `less <http://lesscss.org/>`_
+
+
+This mandatory file:
 
 parent
     A text file that, on its first line, contains the name of the **parent theme**.
@@ -58,10 +62,19 @@ parent
     The ``parent`` is so you don't have to create a full theme each time: just create an
     empty theme, set the parent, and add the bits you want modified.
 
+    I recommend this:
+
+    * If your theme uses bootstrap, inherit the ``bootstrap`` theme.
+    * If your theme uses bootstrap3, inherit the ``bootstrap3`` theme.
+    * If your theme uses Jinja as a template engine, inherit ``base-jinja``
+      or ``bootstrap-jinja`` (available at http://themes.nikola.ralsina.com.ar)
+    * In any other case, inherit ``base``.
+
+And these optional files:
+
 engine
     A text file which, on the first line, contains the name of the template engine
     this theme needs. Currently supported values are "mako" and "jinja".
-    If this file is not given, "mako" is assumed.
 
 bundles
     A text file containing a list of files to be turned into bundles using WebAssets.
@@ -96,88 +109,29 @@ so ``post.tmpl`` only define the content, and the layout is inherited from ``bas
 
 These are the templates that come with the included themes:
 
-
-**FIXME** this is out of date
-
-base.tmpl
+``base.tmpl``
     This template defines the basic page layout for the site. It's mostly plain HTML
-    but defines a few blocks that can be re-defined by inheriting templates:
+    but defines a few blocks that can be re-defined by inheriting templates.
 
-    * ``extra_head`` is a block that is added before ``</head>``, (ex: for adding extra CSS)
-    * ``extra_js`` is a block that is added at the end of the body, (ex: for adding extra JS)
-    * ``belowtitle`` is used by default to display a list of translations but you can put
-      anything there.
-    * ``content`` is where the inheriting templates will place the main content of the page.
-    * ``permalink`` is an absolute path to the page (ex: "/archive/index.html")
+    It has some separate pieces defined in ``base_helper.tmpl`` so they can be
+    easily overriden. For example, the Bootstrap theme adds a ``bootstrap_helper.tmpl``
+    and then uses it to override things defined in base theme's ``base_helper.tmpl``
 
-    This template always receives the following variables you can use:
+``index.tmpl``
+    Template used to render the multipost indexes. The posts are in a ``posts`` variable.
+    Some functionality is in the ``index_helper.tmpl`` helper template.
 
-    * ``lang`` is the laguage for this page.
-    * ``title`` is the page's title.
-    * ``description`` is the page's description.
-    * ``blog_title`` is the blog's title.
-    * ``blog_author`` is the blog's author.
-    * ``messages`` contains the theme's strings and translations.
-    * ``_link`` is an utility function to create links to other pages in the site.
-      It takes three arguments, kind, name, lang:
+``comments_helper.tmpl``
+    This template handles comments. You should probably never touch it :-)
+    It uses a bunch of helper templates, one for each supported comment system:
+    ``disqus_helper.tmpl`` ``facebook_helper.tmpl`` ``googleplus_helper.tmpl``
+    ``intensedebate_helper.tmpl`` ``livefyre_helper.tmpl`` ``moot_helper.tmpl``
 
-      kind is one of:
+``crumbs.tmpl`` ``slides.tmpl``
+    These templates help render specific UI items, and can be tweaked as needed.
 
-      * tag_index (name is ignored)
-      * tag (and name is the tag name)
-      * tag_rss (name is the tag name)
-      * archive (and name is the year, or None for the main archive index)
-      * index (name is the number in index-number)
-      * rss (name is ignored)
-      * gallery (name is the gallery name)
-
-      The returned value is always an absolute path, like "/archive/index.html".
-
-    * ``rel_link`` converts absolute paths to relative ones. You can use it with
-      ``_link`` and ``permalink`` to create relative links, which makes the site
-      able to work when moved inside the server. Example: ``rel_link(permalink, url)``
-
-    * Anything you put in your ``GLOBAL_CONTEXT`` option in ``dodo.py``. This
-      usually includes ``navigation_links``, ``search_form``, and others.
-
-      The included themes use at least these:
-
-      * ``rss_link`` a link to custom RSS feed, although it may be empty)
-      * ``site_url`` the URL for your site
-      * ``blog_title`` the name of your site
-      * ``content_footer`` things like copyright notices, disclaimers, etc.
-      * ``license`` a larger license badge
-      * ``body_end`` google scripts, or any JS you want to tack at the end of the body
-        of the page.
-      * ``social_buttons_code`` scripts, or any JS you want to tack at the end of the body
-        of the page.
-      * ``disqus_forum``: a `Disqus <http://disqus.com>`_ ID you can use to enable comments.
-
-    It's probably a bad idea to do a theme that *requires* more than this (please put
-    a ``README`` in it saying what the user should add in its ``dodo.py``), but there is no
-    problem in requiring less.
-
-post.tmpl
-    Template used for blog posts. Can use everything ``base.tmpl`` uses, plus:
-
-    * ``post``: a Post object. This has a number of members:
-
-      * ``post.title(language)``: returns a localized title
-      * ``post.date``
-      * ``post.tags``: A list of tags
-      * ``post.text(language)``: the translated text of the post
-      * ``post.permalink(language, absolute)``: Link to the post in that language.
-        If ``absolute`` is ``True`` the link contains the full URL. This is useful
-        for things like Disqus comment forms.
-      * ``post.next_post`` is None or a Post object that is next newest in the timeline.
-      * ``post.prev_post`` is None or a Post object that is next oldest in the timeline.
-
-story.tmpl
-    Used for pages that are not part of a blog, usually a cleaner, less
-    intrusive layout than ``post.tmpl``, but same parameters.
-
-gallery.tmpl
-    Template used for image galleries. Can use everything ``base.tmpl`` uses, plus:
+``gallery.tmpl``
+    Template used for image galleries. Interesting data includes:
 
     * ``text``: A descriptive text for the gallery.
     * ``crumbs``: A list of ``link, crumb`` to implement a crumbbar.
@@ -191,37 +145,35 @@ gallery.tmpl
       + ``title``: The title of the image.
       + ``size``: A dict containing ``w`` and ``h``, the real size of the thumbnail.
 
-   * ``photo_array_json``: a JSON dump of photo_array, used in the default theme by flowr.js
-   * ``images``: **DEPRECATED** a list of tuples, each containing:
+   * ``photo_array_json``: a JSON dump of photo_array, used in the bootstrap theme by flowr.js
 
-     + image name.
-     + thumbnail name.
-     + a string to be used inside a IMG tag for extra attributes.
+``list.tmpl``
+    Template used to display generic lists of links, which it gets in ``items``,
+    a list of (text, link) elements.
 
-index.tmpl
-    Template used to render the multipost indexes. Can use everything ``base.tmpl`` uses, plus:
+``list_post.tmpl``
+    Template used to display generic lists of posts, which it gets in ``posts``.
 
-    * ``posts``: a list of Post objects, as described above.
-    * ``prevlink``: a link to a previous page
-    * ``nextlink``: a link to the next page
+``post.tmpl``
+    Template used by default for blog posts, gets the data in a ``post`` object
+    which is an instance of the Post class. Some functionality is in the
+    ``post_helper.tmpl`` template.
 
-list.tmpl
-    Template used to display generic lists of links. Can use everything ``base.tmpl`` uses, plus:
+``story.tmpl``
+    Used for pages that are not part of a blog, usually a cleaner, less
+    intrusive layout than ``post.tmpl``, but same parameters.
 
-    * ``items``: a list of (text, link) elements.
+``listing.tmpl``
+    Used to display code listings.
 
+``tags.tmpl``
+    Used to display the list of tags and categories. ``tag.tmpl`` is used to show the contents
+    of a single tag or category.
 
-list_post.tmpl
-    Template used to display generic lists of links. Can use everything ``base.tmpl`` uses, plus:
-
-    * ``posts``: a list of Post objects.
-
-slides.tmpl
-    Template used by the reStructuredText compiler for the slides directive
-
-You can add other templates for specific pages, which the user can the use in his ``post_pages``
-option in ``dodo.py``. Also, keep in mind that your theme is yours, there is no reason why
-you would need to maintain the inheritance as it is, or not require whatever data you want.
+You can add other templates for specific pages, which the user can then use in his ``POSTS``
+or ``PAGES`` option in ``conf.py``. Also, keep in mind that your theme is yours,
+there is no reason why you would need to maintain the inheritance as it is, or not
+require whatever data you want.
 
 Also, you can specify a custom template to be used by a post or page via the ``template`` metadata,
 and custom templates can be added in the ``templates/`` folder of your site.

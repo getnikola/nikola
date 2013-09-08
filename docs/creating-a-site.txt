@@ -7,12 +7,12 @@
 Creating a Site (Not a Blog) with Nikola
 ========================================
 
-One of the most frequent questions I get about Nikola is "but how do 
+One of the most frequent questions I get about Nikola is "but how do
 I create a site that's not a blog?". And of course, that's because the
 documentation is heavily blog-oriented. This document will change that ;-)
 
 Since it started, Nikola has had the capabilities to create generic sites. For example,
-Nikola's `own site <http://nikola.ralsina.com.ar>`_ is a fairly generic one. Let's go
+Nikola's `own site <http://getnikola.com>`_ is a fairly generic one. Let's go
 step by step on how you can do something like that.
 
 As usual when starting a nikola site, you start with ``nikola init`` which creates a
@@ -45,15 +45,14 @@ configuration file:
     # Some things in the middle you don't really need to change...
     #
 
-    post_pages = (
-        ("pages/*.txt", "", "story.tmpl", False),
-    )
+    POSTS = []
+    PAGES = [("pages/*.txt", "", "story.tmpl")]
 
     # And to avoid a conflict because blogs try to generate /index.html
     INDEX_PATH = "blog"
 
-    
-    
+
+
 And now we are ready to create our first page::
 
     $ nikola new_post -p
@@ -101,12 +100,12 @@ not-blogs, same for tags and link. Description is useful for SEO purposes
 if you care for that.
 
 And below, the content. By default you are expected to use
-`reStructured text <http://nikola.ralsina.com.ar/quickstart.html>`_ but
+`reStructured text <http://getnikola.com/quickstart.html>`_ but
 Nikola supports a ton of formats, including Markdown, plain HTML, BBCode,
 Wiki, and Textile.
 
 So, let's give the page a nicer title, and some fake content. Since the default
-Nikola theme (called "site") is based on `bootstrap <http://twitter.github.com/bootstrap/>`_
+Nikola theme (called "bootstrap") is based on `bootstrap 2 <http://getbootstrap.com/2.3.2/>`_
 you can use anything you like from it:
 
 .. code-block:: rest
@@ -149,11 +148,7 @@ you can use anything you like from it:
 .. admonition:: TIP: Nice URLs
 
    If you like your URLs without the ".html" then you want to create folders and
-   put the pages in ``index.html`` inside them. Example::
-
-       nikola new_post -p pages/foo/index.txt
-
-   which will create a page you could access as "http://yoursite.com/foo"
+   put the pages in ``index.html`` inside them using the ``PRETTY_URLS`` option.
 
 And that's it. You will want to change the NAVIGATION_LINKS option to create a reasonable
 "menu" for your site, you will want to hack the theme (check ``nikola help bootswatch_theme``
@@ -162,14 +157,11 @@ or whatever.
 
 .. admonition:: TIP: So, how do I add a blog now?
 
-    First, change the ``post_pages`` option like this:
+    First, change the ``POSTS`` option like this:
 
     .. code-block:: python
 
-        post_pages = (
-            ("pages/*.txt", "", "story.tmpl", False),
-            ("posts/*.txt", "blog", "post.tmpl", True),
-        )
+        POSTS = [("posts/*.txt", "blog", "post.tmpl", True)]
 
     Create a post with ``nikola new_post`` and that's it, you now have a blog
     in http://yoursite.com/blog (you may want to add links to it in NAVIGATION_LINKS of course).

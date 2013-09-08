@@ -25,7 +25,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """Mako template handlers"""
-from __future__ import absolute_import
+from __future__ import unicode_literals, print_function, absolute_import
 import os
 import shutil
 

@@ -7,5 +7,5 @@
 
 Hope you enjoy this software!
 
-* Home page at http://nikola.ralsina.com.ar
-* Author's blog (and reason why Nikola exists): http://lateral.netmanagers.com.ar
+* Home page at http://getnikola.com
+* Author's blog (and reason why Nikola exists): http://ralsina.me

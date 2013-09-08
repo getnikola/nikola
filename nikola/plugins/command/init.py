@@ -56,19 +56,20 @@ class CommandInit(Command):
     SAMPLE_CONF = {
         'BLOG_AUTHOR': "Your Name",
         'BLOG_TITLE': "Demo Site",
-        'SITE_URL': "http://nikola.ralsina.com.ar",
+        'SITE_URL': "http://getnikola.com/",
         'BLOG_EMAIL': "joe@demo.site",
         'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
         'DEFAULT_LANG': "en",
 
-        'POST_PAGES': """(
-    ("posts/*.txt", "posts", "post.tmpl", True),
-    ("posts/*.rst", "posts", "post.tmpl", True),
-    ("stories/*.txt", "stories", "story.tmpl", False),
-    ("stories/*.rst", "stories", "story.tmpl", False),
+        'POSTS': """(
+    ("posts/*.txt", "posts", "post.tmpl"),
+    ("posts/*.rst", "posts", "post.tmpl"),
 )""",
-
-        'POST_COMPILERS': """{
+        'PAGES': """(
+    ("stories/*.txt", "stories", "story.tmpl"),
+    ("stories/*.rst", "stories", "story.tmpl"),
+)""",
+        'COMPILERS': """{
     "rest": ('.txt', '.rst'),
     "markdown": ('.md', '.mdown', '.markdown'),
     "textile": ('.textile',),

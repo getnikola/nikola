@@ -102,7 +102,7 @@ class CommandImportFeed(Command, ImportMixin):
             ("posts/*.html", "posts", "post.tmpl", True),
             ("stories/*.html", "stories", "story.tmpl", False),
         )'''
-        context['POST_COMPILERS'] = '''{
+        context['COMPILERS'] = '''{
         "rest": ('.txt', '.rst'),
         "markdown": ('.md', '.mdown', '.markdown', '.wp'),
         "html": ('.html', '.htm')
