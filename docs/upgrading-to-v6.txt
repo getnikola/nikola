@@ -1,5 +1,5 @@
 .. title: Upgrading to v6
-.. slug: ungrading-to-v6
+.. slug: upgrading-to-v6
 .. date: 2013/08/23 23:00
 .. tags:
 .. link:
