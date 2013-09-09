@@ -138,6 +138,9 @@ class Post(object):
             if 'retired' in self._tags[lang]:
                 is_retired = True
                 self._tags[lang].remove('retired')
+            if 'private' in self._tags[lang]:
+                is_retired = True
+                self._tags[lang].remove('private')
 
         # While draft comes from the tags, it's not really a tag
         self.is_draft = is_draft
