@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Complain about decoding errors if files are not proper utf8 (Issue #691)
 * Galleries ignore *JPG and *PNG (Issue #690)
 
 New in 6.0.0
