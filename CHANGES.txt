@@ -5,6 +5,8 @@ Features
 --------
 
 * New russian translation
+* Made ``private`` an alternate spelling of the ``retired`` tag (via Issue
+  #686)
 
 Bugfixes
 --------
