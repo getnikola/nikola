@@ -23,16 +23,23 @@ BLOG_DESCRIPTION = "${BLOG_DESCRIPTION}"
 # Nikola is multilingual!
 #
 # Currently supported languages are:
-#   English -> en
-#   Greek -> gr
-#   German -> de
-#   French -> fr
-#   Polish -> pl
-#   Russian -> ru
-#   Spanish -> es
-#   Catalan -> ca
-#   Italian -> it
-#   Simplified Chinese -> zh-cn
+# en     English
+# bg     Bulgarian
+# ca     Catalan
+# zh_cn  Chinese (Simplified)
+# hr     Croatian
+# nl     Dutch
+# fr     French
+# el     Greek [NOT gr!]
+# de     German
+# it     Italian
+# jp     Japanese
+# fa     Persian
+# pl     Polish
+# pt_br  Portuguese (Brasil)
+# ru     Russian
+# es     Spanish
+# tr_tr  Turkish (Turkey)
 #
 # If you want to use Nikola with a non-supported language you have to provide
 # a module containing the necessary translations
