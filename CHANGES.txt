@@ -1,3 +1,16 @@
+New in master
+=============
+
+Features
+--------
+
+* New russian translation
+
+Bugfixes
+--------
+
+* Galleries ignore *JPG and *PNG (Issue #690)
+
 New in 6.0.0
 ============
 
