@@ -481,7 +481,7 @@ def get_metadata_from_file(source_path, lang=None):
         with codecs.open(source_path, "r", "utf8") as meta_file:
             meta_data = [x.strip() for x in meta_file.readlines()]
         return _get_metadata_from_file(meta_data)
-    except (UnicodeDecodeError, UnicodeEncodeError) as e:
+    except (UnicodeDecodeError, UnicodeEncodeError):
         print('Error reading {0}: Nikola only supports utf-8 files'.format(source_path))
         return {}
     except Exception:  # The file may not exist, for multilingual sites
