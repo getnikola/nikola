@@ -848,10 +848,10 @@ class Nikola(object):
                                          for x in p.split(os.sep)])]
 
                 for base_path in full_list:
-                    #if base_path in seen:
-                        #continue
-                    #else:
-                        #seen.add(base_path)
+                    if base_path in seen:
+                        continue
+                    else:
+                        seen.add(base_path)
                     post = Post(
                         base_path,
                         self.config['CACHE_FOLDER'],
