@@ -6,57 +6,59 @@ do a PR :-)
 
                                                 -- Roberto Alsina
 
-Roberto Alsina <https://github.com/ralsina>
-Niko Wenselowski <https://github.com/okin>
-Chris “Kwpolska” Warrick <https://github.com/Kwpolska>
-damianavila <https://github.com/damianavila>
-areski <https://github.com/areski>
-Eduardo Schettino <https://github.com/schettino72>
-punchagan <https://github.com/punchagan>
-Tordek <https://github.com/Tordek>
-kadefor <https://github.com/kadefor>
-rbistolfi <https://github.com/rbistolfi>
-edwinsteele <https://github.com/edwinsteele>
-mgaitan <https://github.com/mgaitan>
-Roman Imankulov <https://github.com/imankulov>
-pabluk <https://github.com/pabluk>
-Zhaojun Meng <https://github.com/zhaojunmeng>
-mattgaviota <https://github.com/mattgaviota>
-quijot <https://github.com/quijot>
-localvoid <https://github.com/localvoid>
-quodlibetor <https://github.com/quodlibetor>
-dhruvbaldawa <https://github.com/dhruvbaldawa>
-dflock <https://github.com/dflock>
-mrabbitt <https://github.com/mrabbitt>
-agustinhenze <https://github.com/agustinhenze>
-bwhmather <https://github.com/bwhmather>
-DoctorMalboro <https://github.com/DoctorMalboro>
-StyXman <https://github.com/StyXman>
-Troy Toman <https://github.com/troytoman>
-notfoss <https://github.com/notfoss>
-dastagg <https://github.com/dastagg>
-Kay Hayen <https://github.com/kayhayen>
-camboris <https://github.com/camboris>
-kotnik <https://github.com/kotnik>
-numshub <https://github.com/numshub>
-paskal <https://github.com/paskal>
-fisadev <https://github.com/fisadev>
-koniiiik <https://github.com/koniiiik>
+
+Aru Sahni <https://github.com/arusahni>
 Bluerise <https://github.com/Bluerise>
-tolusonaike <https://github.com/tolusonaike>
-quoth <https://github.com/quoth>
+Chris “Kwpolska” Warrick <https://github.com/Kwpolska>
+DoctorMalboro <https://github.com/DoctorMalboro>
+Eduardo Schettino <https://github.com/schettino72>
+Kay Hayen <https://github.com/kayhayen>
+Niko Wenselowski <https://github.com/okin>
+Raimon Esteve <https://github.com/raimonesteve>
+Roberto Alsina <https://github.com/ralsina>
+Roman Imankulov <https://github.com/imankulov>
+StyXman <https://github.com/StyXman>
+Tordek <https://github.com/Tordek>
+Troy Toman <https://github.com/troytoman>
+Zhaojun Meng <https://github.com/zhaojunmeng>
+agustinhenze <https://github.com/agustinhenze>
+areski <https://github.com/areski>
+bwhmather <https://github.com/bwhmather>
+camboris <https://github.com/camboris>
 claxo <https://github.com/claxo>
 clee <https://github.com/clee>
-Aru Sahni <https://github.com/arusahni>
+damianavila <https://github.com/damianavila>
+dastagg <https://github.com/dastagg>
+dflock <https://github.com/dflock>
+dhruvbaldawa <https://github.com/dhruvbaldawa>
 dmoisset <https://github.com/dmoisset>
+edwinsteele <https://github.com/edwinsteele>
+fisadev <https://github.com/fisadev>
 fizyk <https://github.com/fizyk>
+ivanov <https://github.com/ivanov>
 ivanteoh <https://github.com/ivanteoh>
 jerrykan <https://github.com/jerrykan>
+kadefor <https://github.com/kadefor>
+koniiiik <https://github.com/koniiiik>
+kotnik <https://github.com/kotnik>
+localvoid <https://github.com/localvoid>
 marcelomd <https://github.com/marcelomd>
 marianoguerra <https://github.com/marianoguerra>
-wimpr1m <https://github.com/wimpr1m>
-ivanov <https://github.com/ivanov>
-rafacarrascosa <https://github.com/rafacarrascosa>
-snaewe <https://github.com/snaewe>
+mattgaviota <https://github.com/mattgaviota>
+mgaitan <https://github.com/mgaitan>
+mrabbitt <https://github.com/mrabbitt>
 neilmb <https://github.com/neilmb>
+notfoss <https://github.com/notfoss>
+numshub <https://github.com/numshub>
+pabluk <https://github.com/pabluk>
+paskal <https://github.com/paskal>
+punchagan <https://github.com/punchagan>
+quijot <https://github.com/quijot>
+quodlibetor <https://github.com/quodlibetor>
+quoth <https://github.com/quoth>
+rafacarrascosa <https://github.com/rafacarrascosa>
+rbistolfi <https://github.com/rbistolfi>
+snaewe <https://github.com/snaewe>
+tolusonaike <https://github.com/tolusonaike>
+wimpr1m <https://github.com/wimpr1m>
 yarko <https://github.com/yarko>
