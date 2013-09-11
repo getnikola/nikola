@@ -3,7 +3,7 @@ Nikola, a Static Site and Blog Generator
 
 In goes content, out comes a website, ready to deploy.
 
-[![Build Status](https://travis-ci.org/ralsina/nikola.png)](https://travis-ci.org/ralsina/nikola)
+[![Build Status](https://travis-ci.org/getnikola/nikola.png)](https://travis-ci.org/getnikola/nikola)
 
 Why Static Websites?
 --------------------
@@ -33,7 +33,7 @@ Installation Instructions
 
 Assuming you have pip installed::
 
-    git clone git://github.com/ralsina/nikola.git
+    git clone git://github.com/getnikola/nikola.git
     cd nikola
     pip install .
 

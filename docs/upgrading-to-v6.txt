@@ -21,7 +21,7 @@ Themes
 ------
 
 **NOTE**
-    The install_theme command is not working yet, get themes from https://github.com/ralsina/nikola-themes
+    The install_theme command is not working yet, get themes from https://github.com/getnikola/nikola-themes
 
 **NOTE**
     There is no equivalent for the jinja-default theme yet. If you have a custom,
