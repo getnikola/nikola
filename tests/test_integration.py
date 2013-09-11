@@ -102,6 +102,15 @@ class DemoBuildTest(EmptyBuildTest):
         self.assertTrue('<loc>http://getnikola.com/</loc>' in sitemap_data)
 
 
+class RepeatedPostsSetting(DemoBuildTest):
+    """Duplicate POSTS, should not read each post twice, which causes conflicts."""
+    def patch_site(self):
+        """Set the SITE_URL to have a path"""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with codecs.open(conf_path, "ab", "utf8") as outf:
+            outf.write('\nPOSTS = (("posts/*.txt", "posts", "post.tmpl"),("posts/*.txt", "posts", "post.tmpl"))\n')
+
+
 class FuturePostTest(EmptyBuildTest):
     """Test a site with future posts."""
 

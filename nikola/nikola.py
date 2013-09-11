@@ -814,7 +814,7 @@ class Nikola(object):
         """Scan all the posts."""
         if self._scanned:
             return
-
+        seen = set([])
         print("Scanning posts", end='')
         tzinfo = None
         if self.config['TIMEZONE'] is not None:
@@ -848,6 +848,10 @@ class Nikola(object):
                                          for x in p.split(os.sep)])]
 
                 for base_path in full_list:
+                    #if base_path in seen:
+                        #continue
+                    #else:
+                        #seen.add(base_path)
                     post = Post(
                         base_path,
                         self.config['CACHE_FOLDER'],
