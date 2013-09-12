@@ -29,6 +29,7 @@ from operator import attrgetter
 import os
 import shutil
 import sys
+import traceback
 import warnings
 
 from doit.loader import generate_tasks
@@ -54,9 +55,11 @@ def main(args):
         import conf
         _reload(conf)
         config = conf.__dict__
-    except (ImportError, NameError):
+    except Exception as e:
         if os.path.exists('conf.py'):
-            warnings.warn('Error loading conf.py')
+            msg = traceback.format_exc(0).splitlines()[1]
+            print('In conf.py line {0}: {1}'.format(sys.exc_info()[2].tb_lineno, msg))
+            sys.exit(1)
         config = {}
 
     site = Nikola(**config)
