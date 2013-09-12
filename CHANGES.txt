@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Added missing defaults and make Nikola work with empty conf.py (Issue #697)
 * Made compatible with Docutils<0.9 again (Issue #679)
 * Make footnote-references keep line height in rst.css
 * Make bootswatch_theme work under Python 3 (Issue #695)
