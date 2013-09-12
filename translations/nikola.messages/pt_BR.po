@@ -30,10 +30,10 @@ msgid "Tags"
 msgstr "Tags"
 
 msgid "Categories"
-msgstr ""
+msgstr "Categorias"
 
 msgid "Tags and Categories"
-msgstr ""
+msgstr "Tags e Categorias"
 
 msgid "Read more"
 msgstr "Leia mais"
