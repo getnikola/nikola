@@ -37,11 +37,20 @@ except ImportError:
     from urllib.parse import urlunsplit  # NOQA
 
 from docutils import core
-from docutils.parsers.rst import directives
+from docutils import nodes
+from docutils.parsers.rst import Directive, directives
 try:
     from docutils.parsers.rst.directives.body import CodeBlock
 except ImportError:  # docutils < 0.9 (Debian Sid For The Loss)
-    from dummy import CodeBlock  # NOQA
+    class CodeBlock(Directive):
+        required_arguments = 1
+        has_content = True
+        CODE = '<pre>{0}</pre>'
+
+        def run(self):
+            """ Required by the Directive interface. Create docutils nodes """
+            return [nodes.raw('', self.CODE.format('\n'.join(self.content)), format='html')]
+    directives.register_directive('code', CodeBlock)
 
 
 from nikola.plugin_categories import RestExtension
