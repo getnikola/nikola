@@ -1,3 +1,12 @@
+New in Master
+=============
+
+Bugfixes
+--------
+
+* Make footnote-references keep line height in rst.css
+* Fixed Bootswatch support in Python 3 (Issue #695)
+
 New in 6.0.1
 ============
 
