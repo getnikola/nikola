@@ -11,7 +11,7 @@ pytz==2013d
 mock>=1.0.0
 requests>=1.0
 markdown
-Jinja2
+Jinja2>=2.7
 bbcode
 https://github.com/lepture/python-livereload/archive/master.zip#livereload
 pyphen
@@ -19,3 +19,4 @@ python-dateutil
 micawber
 pygal
 typogrify
+phpserialize

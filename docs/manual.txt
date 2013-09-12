@@ -8,7 +8,7 @@
 The Nikola Handbook
 ===================
 
-:Version: 6.0.0
+:Version: 6.0.1
 
 .. class:: alert alert-info pull-right
 
@@ -90,7 +90,7 @@ Getting Help
 ------------
 
 * Feel free to contact me at ralsina@netmanagers.com.ar for questions about Nikola.
-* You can file bugs at `the issue tracker <https://github.com/ralsina/nikola/issues>`__
+* You can file bugs at `the issue tracker <https://github.com/getnikola/nikola/issues>`__
 * You can discuss Nikola at the `nikola-discuss google group <http://groups.google.com/group/nikola-discuss>`_
 * You can subscribe to `the Nikola Blog <http://getnikola.com/blog>`_
 * You can follow `Nikola on Twitter <https://twitter.com/nikolagenerator>`_
@@ -196,7 +196,7 @@ This is currently lacking on detail. Considering the niche Nikola is aimed at,
 I suspect that's not a problem yet. So, when I say "get", the specific details
 of how to "get" something for your specific operating system are left to you.
 
-The short version is: ``pip install https://github.com/ralsina/nikola/archive/master.zip``
+The short version is: ``pip install https://github.com/getnikola/nikola/archive/master.zip``
 
 Longer version:
 
@@ -1392,7 +1392,7 @@ faster and modern ;-)
 License
 -------
 
-Nikola is released under a `MIT license <https://github.com/ralsina/nikola/blob/master/LICENSE.txt>`_ which
+Nikola is released under a `MIT license <https://github.com/getnikola/nikola/blob/master/LICENSE.txt>`_ which
 is a free software license. Some components shipped along with Nikola, or required by it are
 released under other licenses.
 

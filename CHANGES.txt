@@ -1,10 +1,34 @@
-New in master
+New in Master
 =============
 
 Features
 --------
 
 * Support for external gzip commands (Issue #351)
+
+Bugfixes
+--------
+
+* Made compatible with Docutils<0.9 again (Issue #679)
+* Make footnote-references keep line height in rst.css
+* Make bootswatch_theme work under Python 3 (Issue #695)
+
+New in 6.0.1
+============
+
+Features
+--------
+
+* New Russian translation
+* Made ``private`` an alternate spelling of the ``retired`` tag (via Issue
+  #686)
+
+Bugfixes
+--------
+
+* Remove decoding errors if files are not proper UTF-8 (Issue #691)
+* Stop ignoring *.JPG and *.PNG by galleries (Issue #690)
+>>>>>>> e0058dab40bcd1d189fba06d1578627716784470
 
 New in 6.0.0
 ============

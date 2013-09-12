@@ -30,18 +30,8 @@ except ImportError:
     from distutils.command.install import install
     from distutils.util import convert_path  # NOQA
 
-dependencies = [
-    'doit>=0.20.0',
-    'pygments',
-    'pillow>=2.0.0',
-    'docutils',
-    'mako>=0.6',
-    'unidecode',
-    'lxml',
-    'yapsy==1.10.2-pythons2n3',
-    'PyRSS2Gen',
-    'pytz==2013d',
-]
+with open('requirements.txt', 'r') as fh:
+    dependencies = [l.strip() for l in fh]
 
 ########### platform specific stuff #############
 import platform
@@ -217,7 +207,7 @@ def find_package_data(
     return out
 
 setup(name='Nikola',
-      version='6.0.0',
+      version='6.0.1',
       description='Static blog/website generator',
       author='Roberto Alsina and others',
       author_email='ralsina@netmanagers.com.ar',

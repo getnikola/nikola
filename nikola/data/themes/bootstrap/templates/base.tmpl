@@ -3,7 +3,11 @@
 <%namespace name="bootstrap" file="bootstrap_helper.tmpl" import="*" />
 ${set_locale(lang)}
 <!DOCTYPE html>
-<html% if comment_system == 'facebook': xmlns:fb="http://ogp.me/ns/fb#" %endif lang="${lang}">
+<html
+%if comment_system == 'facebook':
+xmlns:fb="http://ogp.me/ns/fb#"
+%endif
+lang="${lang}">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     ${bootstrap.html_head()}

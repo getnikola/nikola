@@ -138,6 +138,9 @@ class Post(object):
             if 'retired' in self._tags[lang]:
                 is_retired = True
                 self._tags[lang].remove('retired')
+            if 'private' in self._tags[lang]:
+                is_retired = True
+                self._tags[lang].remove('private')
 
         # While draft comes from the tags, it's not really a tag
         self.is_draft = is_draft
@@ -478,6 +481,8 @@ def get_metadata_from_file(source_path, lang=None):
         with codecs.open(source_path, "r", "utf8") as meta_file:
             meta_data = [x.strip() for x in meta_file.readlines()]
         return _get_metadata_from_file(meta_data)
+    except (UnicodeDecodeError, UnicodeEncodeError):
+        raise ValueError('Error reading {0}: Nikola only supports UTF-8 files'.format(source_path))
     except Exception:  # The file may not exist, for multilingual sites
         return {}
 
