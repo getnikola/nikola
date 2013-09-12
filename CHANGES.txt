@@ -5,7 +5,7 @@ Bugfixes
 --------
 
 * Make footnote-references keep line height in rst.css
-* Fixed Bootswatch support in Python 3 (Issue #695)
+* Make bootswatch_theme work under Python 3 (Issue #695)
 
 New in 6.0.1
 ============
@@ -22,7 +22,6 @@ Bugfixes
 
 * Remove decoding errors if files are not proper UTF-8 (Issue #691)
 * Stop ignoring *.JPG and *.PNG by galleries (Issue #690)
-* Make bootswatch_theme work under Python 3 (Issue #695)
 
 New in 6.0.0
 ============
