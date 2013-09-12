@@ -99,9 +99,9 @@ class CommandBootswatchTheme(Command):
             data = requests.get(url).text
             with open(os.path.join('themes', name, 'assets', 'css', fname),
                       'wb+') as output:
-                output.write(data)
+                output.write(data.encode('utf-8'))
 
         with open(os.path.join('themes', name, 'parent'), 'wb+') as output:
-            output.write(parent)
+            output.write(parent.encode('utf-8'))
         print('Theme created. Change the THEME setting to "{0}" to use '
               'it.'.format(name))
