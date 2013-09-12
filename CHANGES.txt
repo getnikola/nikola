@@ -1,6 +1,11 @@
 New in Master
 =============
 
+Features
+--------
+
+* Support for external gzip commands (Issue #351)
+
 Bugfixes
 --------
 
@@ -24,6 +29,7 @@ Bugfixes
 
 * Remove decoding errors if files are not proper UTF-8 (Issue #691)
 * Stop ignoring *.JPG and *.PNG by galleries (Issue #690)
+>>>>>>> e0058dab40bcd1d189fba06d1578627716784470
 
 New in 6.0.0
 ============
