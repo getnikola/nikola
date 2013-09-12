@@ -65,7 +65,8 @@ class Galleries(Task):
             'default_lang': self.site.config['DEFAULT_LANG'],
             'blog_description': self.site.config['BLOG_DESCRIPTION'],
             'use_filename_as_title': self.site.config['USE_FILENAME_AS_TITLE'],
-            'gallery_path': self.site.config['GALLERY_PATH']
+            'gallery_path': self.site.config['GALLERY_PATH'],
+            'sort_by_date': self.site.config['GALLERY_SORT_BY_DATE']
         }
 
         # FIXME: lots of work is done even when images don't change,
@@ -136,7 +137,10 @@ class Galleries(Task):
 
             image_list = [x for x in image_list if "thumbnail" not in x]
             # Sort by date
-            image_list.sort(key=lambda a: self.image_date(a))
+            if kw['sort_by_date']:
+                image_list.sort(key=lambda a: self.image_date(a))
+            else:  # Sort by name
+                image_list.sort()
             image_name_list = [os.path.basename(x) for x in image_list]
 
             # Do thumbnails and copy originals
