@@ -140,6 +140,7 @@ class Nikola(object):
             'FILES_FOLDERS': {'files': ''},
             'FILTERS': {},
             'GALLERY_PATH': 'galleries',
+            'GZIP_COMMAND': None,
             'GZIP_FILES': False,
             'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js', '.json'),
             'HIDE_SOURCELINK': False,
