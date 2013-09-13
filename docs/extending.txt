@@ -1,7 +1,7 @@
 Extending Nikola
 ================
 
-:Version: 6.0.1
+:Version: 6.0.2
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-info pull-right
