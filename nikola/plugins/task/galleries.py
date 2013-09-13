@@ -360,12 +360,13 @@ class Galleries(Task):
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
             except Exception:
-                utils.show_msg("WARNING: can't thumbnail {0}".format(src))
-                pass
+                utils.show_msg("WARNING: can't thumbnail {0}, using original image as thumbnail".format(src))
+                utils.copy_file(src, dst)
             else:
                 im.save(dst)
 
         else:
+            utils.show_msg("WARNING: PIL or Pillow not installed, using original image {0} as thumbnail".format(src))
             utils.copy_file(src, dst)
 
     def image_date(self, src):
