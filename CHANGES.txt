@@ -4,6 +4,7 @@ New in Master
 Bugfixes
 --------
 
+* Normalize paths in task targets, helping detect conflicts (Issue #546)
 * Strip multiple digits in unslugify, used by image galleries (Issue #703)
 * Added missing defaults and make Nikola work with empty conf.py (Issue #697)
 * Add thumbnails as file dependencies of gallery indexes (Issue #551)

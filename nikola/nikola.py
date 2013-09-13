@@ -784,6 +784,13 @@ class Nikola(object):
             exists = os.stat(path).st_size > 0
         return exists
 
+    def clean_task_paths(self, task):
+        """Normalize target paths in the task."""
+        targets = task.get('targets', None)
+        if targets is not None:
+            task['targets'] = [os.path.normpath(t) for t in targets]
+        return task
+
     def gen_tasks(self, name, plugin_category):
 
         def flatten(task):
@@ -797,12 +804,13 @@ class Nikola(object):
         task_dep = []
         for pluginInfo in self.plugin_manager.getPluginsOfCategory(plugin_category):
             for task in flatten(pluginInfo.plugin_object.gen_tasks()):
+                task = self.clean_task_paths(task)
                 yield task
                 for multi in self.plugin_manager.getPluginsOfCategory("TaskMultiplier"):
                     flag = False
                     for task in multi.plugin_object.process(task, name):
                         flag = True
-                        yield task
+                        yield self.clean_task_paths(task)
                     if flag:
                         task_dep.append('{0}_{1}'.format(name, multi.plugin_object.name))
             if pluginInfo.plugin_object.is_default:
