@@ -203,6 +203,9 @@ COMPILERS = ${COMPILERS}
 # argument.
 #
 # By default, there are no filters.
+#
+# Many filters are shipped with Nikola.  A list is available in the manual:
+# <http://getnikola.com/handbook.html#post-processing-filters>
 # FILTERS = {
 #    ".jpg": ["jpegoptim --strip-all -m75 -v %s"],
 # }
