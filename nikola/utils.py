@@ -367,7 +367,7 @@ def unslugify(value):
     """
     Given a slug string (as a filename), return a human readable string
     """
-    value = re.sub('^[0-9]', '', value)
+    value = re.sub('^[0-9]+', '', value)
     value = re.sub('([_\-\.])', ' ', value)
     value = value.strip().capitalize()
     return value
