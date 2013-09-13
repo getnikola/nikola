@@ -54,11 +54,13 @@ def apply_to_file(f):
 
     return f_in_file
 
+
 def list_replace(the_list, find, replacement):
     "Replaces all occurrences of ``find`` with ``replacement`` in ``the_list``"
-    for i,v in enumerate(the_list):
-        if v==find:
-            the_list[i]=replacement
+    for i, v in enumerate(the_list):
+        if v == find:
+            the_list[i] = replacement
+
 
 def runinplace(command, infile):
     """Runs a command in-place on a file.
@@ -77,9 +79,9 @@ def runinplace(command, infile):
     """
 
     if not isinstance(command, list):
-        command=shlex.split(command)
+        command = shlex.split(command)
 
-    tmpdir=None
+    tmpdir = None
 
     if "%2" in command:
         tmpdir = tempfile.mkdtemp(prefix="nikola")
@@ -98,6 +100,7 @@ def runinplace(command, infile):
         if tmpdir:
             shutil.rmtree(tmpdir)
 
+
 def yui_compressor(infile):
     return runinplace(r'yui-compressor --nomunge %1 -o %2', infile)
 
@@ -108,6 +111,7 @@ def optipng(infile):
 
 def jpegoptim(infile):
     return runinplace(r"jpegoptim -p --strip-all -q %1", infile)
+
 
 def tidy(inplace):
     # Goggle site verifcation files are no HTML
