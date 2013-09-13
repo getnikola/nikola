@@ -367,7 +367,7 @@ def unslugify(value):
     """
     Given a slug string (as a filename), return a human readable string
     """
-    value = re.sub('^[0-9]', '', value)
+    value = re.sub('^[0-9]+', '', value)
     value = re.sub('([_\-\.])', ' ', value)
     value = value.strip().capitalize()
     return value
@@ -485,7 +485,7 @@ def apply_filters(task, filters):
             else:
                 assert False, key
 
-    for target in task['targets']:
+    for target in task.get('targets', []):
         ext = os.path.splitext(target)[-1].lower()
         filter_ = filter_matches(ext)
         if filter_:

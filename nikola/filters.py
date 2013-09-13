@@ -32,6 +32,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+import shlex
 
 try:
     import typogrify.filters as typo
@@ -54,6 +55,13 @@ def apply_to_file(f):
     return f_in_file
 
 
+def list_replace(the_list, find, replacement):
+    "Replaces all occurrences of ``find`` with ``replacement`` in ``the_list``"
+    for i, v in enumerate(the_list):
+        if v == find:
+            the_list[i] = replacement
+
+
 def runinplace(command, infile):
     """Runs a command in-place on a file.
 
@@ -67,19 +75,30 @@ def runinplace(command, infile):
 
     That will replace myfile.css with a minified version.
 
+    You can also supply command as a list.
     """
 
-    tmpdir = tempfile.mkdtemp()
-    tmpfname = os.path.join(tmpdir, os.path.basename(infile))
-    command = command.replace('%1', "'%s'" % infile)
+    if not isinstance(command, list):
+        command = shlex.split(command)
 
-    needs_tmp = "%2" in command
-    command = command.replace('%2', "'%s'" % tmpfname)
+    tmpdir = None
 
-    subprocess.check_call(command, shell=True)
+    if "%2" in command:
+        tmpdir = tempfile.mkdtemp(prefix="nikola")
+        tmpfname = os.path.join(tmpdir, os.path.basename(infile))
 
-    if needs_tmp:
-        shutil.move(tmpfname, infile)
+    try:
+        list_replace(command, "%1", infile)
+        if tmpdir:
+            list_replace(command, "%2", tmpfname)
+
+        subprocess.check_call(command)
+
+        if tmpdir:
+            shutil.move(tmpfname, infile)
+    finally:
+        if tmpdir:
+            shutil.rmtree(tmpdir)
 
 
 def yui_compressor(infile):
@@ -142,7 +161,7 @@ def tidy(inplace):
 def typogrify(data):
     global typogrify_filter
     if typo is None:
-        raise Exception("To use the typogrify filter, you need to install tipogrify.")
+        raise Exception("To use the typogrify filter, you need to install typogrify.")
     data = typo.amp(data)
     data = typo.widont(data)
     data = typo.smartypants(data)

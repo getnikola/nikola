@@ -5,4 +5,4 @@ from __future__ import absolute_import
 from .nikola import Nikola  # NOQA
 from . import plugins  # NOQA
 
-__version__ = "6.0.1"
+__version__ = "6.0.2"
