@@ -1,3 +1,11 @@
+New in Master
+=============
+
+Bugfixes
+--------
+
+* More robust handling of filter commands' shell quoting (Issue #705)
+
 New in 6.0.2
 ============
 
