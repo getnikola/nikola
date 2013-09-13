@@ -79,18 +79,24 @@ def runinplace(command, infile):
     if not isinstance(command, list):
         command=shlex.split(command)
 
-    tmpdir = tempfile.mkdtemp(prefix="nikola")
-    try:
+    tmpdir=None
+
+    if "%2" in command:
+        tmpdir = tempfile.mkdtemp(prefix="nikola")
         tmpfname = os.path.join(tmpdir, os.path.basename(infile))
+
+    try:
         list_replace(command, "%1", infile)
-        list_replace(command, "%2", tmpfname)
+        if tmpdir:
+            list_replace(command, "%2", tmpfname)
 
         subprocess.check_call(command)
 
-        if needs_tmp:
+        if tmpdir:
             shutil.move(tmpfname, infile)
     finally:
-        shutil.rmtree(tmpdir)
+        if tmpdir:
+            shutil.rmtree(tmpdir)
 
 def yui_compressor(infile):
     return runinplace(r'yui-compressor --nomunge %1 -o %2', infile)
