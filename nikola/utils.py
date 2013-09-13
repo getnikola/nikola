@@ -485,7 +485,7 @@ def apply_filters(task, filters):
             else:
                 assert False, key
 
-    for target in task['targets']:
+    for target in task.get('targets', []):
         ext = os.path.splitext(target)[-1].lower()
         filter_ = filter_matches(ext)
         if filter_:

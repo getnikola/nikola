@@ -65,7 +65,8 @@ class Galleries(Task):
             'default_lang': self.site.config['DEFAULT_LANG'],
             'blog_description': self.site.config['BLOG_DESCRIPTION'],
             'use_filename_as_title': self.site.config['USE_FILENAME_AS_TITLE'],
-            'gallery_path': self.site.config['GALLERY_PATH']
+            'gallery_path': self.site.config['GALLERY_PATH'],
+            'filters': self.site.config['FILTERS']
         }
 
         # FIXME: lots of work is done even when images don't change,
@@ -99,14 +100,14 @@ class Galleries(Task):
                                                     None)))
             output_name = os.path.join(output_gallery, self.site.config['INDEX_FILE'])
             if not os.path.isdir(output_gallery):
-                yield {
+                yield utils.apply_filters({
                     'basename': str('render_galleries'),
                     'name': output_gallery,
                     'actions': [(os.makedirs, (output_gallery,))],
                     'targets': [output_gallery],
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
-                }
+                }, kw['filters'])
 
             # Gather image_list contains "gallery/name/image_name.jpg"
             image_list = glob.glob(gallery_path + "/*jpg") +\
@@ -153,7 +154,7 @@ class Galleries(Task):
                 # thumb_path is "output/GALLERY_PATH/name/image_name.jpg"
                 orig_dest_path = os.path.join(output_gallery, img_name)
                 thumbs.append(os.path.basename(thumb_path))
-                yield {
+                yield utils.apply_filters({
                     'basename': str('render_galleries'),
                     'name': thumb_path,
                     'file_dep': [img],
@@ -164,8 +165,8 @@ class Galleries(Task):
                     ],
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
-                }
-                yield {
+                }, kw['filters'])
+                yield utils.apply_filters({
                     'basename': str('render_galleries'),
                     'name': orig_dest_path,
                     'file_dep': [img],
@@ -176,7 +177,7 @@ class Galleries(Task):
                     ],
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
-                }
+                }, kw['filters'])
 
             # Remove excluded images
             if excluded_image_name_list:
@@ -188,7 +189,7 @@ class Galleries(Task):
                     excluded_thumb_dest_path = os.path.join(
                         output_gallery, ".thumbnail".join([fname, ext]))
                     excluded_dest_path = os.path.join(output_gallery, img_name)
-                    yield {
+                    yield utils.apply_filters({
                         'basename': str('render_galleries_clean'),
                         'name': excluded_thumb_dest_path,
                         'file_dep': [exclude_path],
@@ -198,8 +199,8 @@ class Galleries(Task):
                         ],
                         'clean': True,
                         'uptodate': [utils.config_changed(kw)],
-                    }
-                    yield {
+                    }, kw['filters'])
+                    yield utils.apply_filters({
                         'basename': str('render_galleries_clean'),
                         'name': excluded_dest_path,
                         'file_dep': [exclude_path],
@@ -209,7 +210,7 @@ class Galleries(Task):
                         ],
                         'clean': True,
                         'uptodate': [utils.config_changed(kw)],
-                    }
+                    }, kw['filters'])
 
             # Use galleries/name/index.txt to generate a blurb for
             # the gallery, if it exists.
@@ -224,7 +225,7 @@ class Galleries(Task):
                     '.html'))
             if os.path.exists(index_path):
                 compile_html = self.site.get_compiler(index_path).compile_html
-                yield {
+                yield utils.apply_filters({
                     'basename': str('render_galleries'),
                     'name': index_dst_path,
                     'file_dep': [index_path],
@@ -232,7 +233,7 @@ class Galleries(Task):
                     'actions': [(compile_html, [index_path, index_dst_path, True])],
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
-                }
+                }, kw['filters'])
 
             context = {}
             context["lang"] = kw["default_lang"]
@@ -257,7 +258,7 @@ class Galleries(Task):
             file_dep = self.site.template_system.template_deps(
                 template_name) + image_list
 
-            yield {
+            yield utils.apply_filters({
                 'basename': str('render_galleries'),
                 'name': output_name,
                 'file_dep': file_dep,
@@ -278,7 +279,7 @@ class Galleries(Task):
                     3: self.site.config["COMMENTS_IN_GALLERIES"],
                     4: context,
                 })],
-            }
+            }, kw['filters'])
 
     def render_gallery_index(
             self,
