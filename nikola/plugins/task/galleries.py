@@ -368,7 +368,13 @@ class Galleries(Task):
                 utils.copy_file(src, dst)
             else:
                 im.save(dst)
+<<<<<<< HEAD
+
+        else:
+            utils.show_msg("WARNING: PIL or Pillow not installed, using original image {0} as thumbnail".format(src))
+=======
         else:  # Image is small
+>>>>>>> c5dc0695e3f216d7d540125aede59a9f49f5bb48
             utils.copy_file(src, dst)
 
     def image_date(self, src):
