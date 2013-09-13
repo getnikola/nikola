@@ -175,7 +175,7 @@ class Nikola(object):
             'SEARCH_FORM': '',
             'SLUG_TAG_PATH': True,
             'SOCIAL_BUTTONS_CODE': SOCIAL_BUTTONS_CODE,
-            'SITE_URL': 'http://getnikola.com',
+            'SITE_URL': 'http://getnikola.com/',
             'STORY_INDEX': False,
             'STRIP_INDEXES': False,
             'SITEMAP_INCLUDE_FILELESS_DIRS': True,
