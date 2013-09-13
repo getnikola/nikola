@@ -66,7 +66,8 @@ class Galleries(Task):
             'blog_description': self.site.config['BLOG_DESCRIPTION'],
             'use_filename_as_title': self.site.config['USE_FILENAME_AS_TITLE'],
             'gallery_path': self.site.config['GALLERY_PATH'],
-            'filters': self.site.config['FILTERS']
+            'filters': self.site.config['FILTERS'],
+            'global_context': self.site.GLOBAL_CONTEXT,
         }
 
         # FIXME: lots of work is done even when images don't change,
@@ -275,9 +276,8 @@ class Galleries(Task):
                 'clean': True,
                 'uptodate': [utils.config_changed({
                     1: kw,
-                    2: self.site.config['GLOBAL_CONTEXT'],
-                    3: self.site.config["COMMENTS_IN_GALLERIES"],
-                    4: context,
+                    2: self.site.config["COMMENTS_IN_GALLERIES"],
+                    3: context,
                 })],
             }, kw['filters'])
 
@@ -360,12 +360,11 @@ class Galleries(Task):
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
             except Exception:
-                utils.show_msg("WARNING: can't thumbnail {0}".format(src))
-                pass
+                utils.show_msg("WARNING: can't thumbnail {0}, using original image as thumbnail".format(src))
+                utils.copy_file(src, dst)
             else:
                 im.save(dst)
-
-        else:
+        else:  # Image is small
             utils.copy_file(src, dst)
 
     def image_date(self, src):
