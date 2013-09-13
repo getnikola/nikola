@@ -141,6 +141,9 @@ class Galleries(Task):
             image_list.sort(key=lambda a: self.image_date(a))
             image_name_list = [os.path.basename(x) for x in image_list]
 
+            # List of thumbnail paths
+            thumb_list = []
+
             # Do thumbnails and copy originals
             thumbs = []
             for img, img_name in list(zip(image_list, image_name_list)):
@@ -155,6 +158,7 @@ class Galleries(Task):
                 # thumb_path is "output/GALLERY_PATH/name/image_name.jpg"
                 orig_dest_path = os.path.join(output_gallery, img_name)
                 thumbs.append(os.path.basename(thumb_path))
+                thumb_list.append(thumb_path)
                 yield utils.apply_filters({
                     'basename': str('render_galleries'),
                     'name': thumb_path,
@@ -257,7 +261,7 @@ class Galleries(Task):
             context["thumbnail_size"] = kw["thumbnail_size"]
 
             file_dep = self.site.template_system.template_deps(
-                template_name) + image_list
+                template_name) + image_list + thumb_list
 
             yield utils.apply_filters({
                 'basename': str('render_galleries'),
