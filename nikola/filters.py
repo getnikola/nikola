@@ -142,7 +142,7 @@ def tidy(inplace):
 def typogrify(data):
     global typogrify_filter
     if typo is None:
-        raise Exception("To use the typogrify filter, you need to install tipogrify.")
+        raise Exception("To use the typogrify filter, you need to install typogrify.")
     data = typo.amp(data)
     data = typo.widont(data)
     data = typo.smartypants(data)

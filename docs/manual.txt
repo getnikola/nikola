@@ -1027,7 +1027,7 @@ tidy
    Apply `tidy <http://tidy.sourceforge.net/>`_ to HTML files
 
 typogrify
-   Improve typography using `tipogrify <https://github.com/mintchaos/typogrify>`_
+   Improve typography using `typogrify <https://github.com/mintchaos/typogrify>`_
 
 
 Optimizing Your Website
