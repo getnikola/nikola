@@ -141,7 +141,7 @@ class ImportMixin(object):
             filename = 'conf.py'
         else:
             filename = 'conf.py.{name}-{time}'.format(
-                time=datetime.datetime.now().strftime('%Y%m%d_%H%M%s'),
+                time=datetime.datetime.now().strftime('%Y%m%d_%H%M%S'),
                 name=self.name)
         config_output_path = os.path.join(self.output_folder, filename)
         print('Configuration will be written to:', config_output_path)
