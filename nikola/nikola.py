@@ -86,6 +86,7 @@ class Nikola(object):
     def __init__(self, **config):
         """Setup proper environment for running tasks."""
 
+        self.strict = False
         self.global_data = {}
         self.posts_per_year = defaultdict(list)
         self.posts_per_month = defaultdict(list)

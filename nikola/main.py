@@ -153,12 +153,14 @@ class DoitNikola(DoitMain):
             args = ['help']
 
         if len(args) == 0 or args[0] not in sub_cmds.keys() or \
-                args[0] in ('run', 'build'):
+                args[0] == 'build':
             # Check for conf.py before launching run
             if not self.nikola.configured:
                 print("This command needs to run inside an "
                       "existing Nikola site.")
                 return False
+        if args[0] == 'build' and '--strict' in args:
+            self.nikola.strict = True
         return super(DoitNikola, self).run(cmd_args)
 
     @staticmethod
