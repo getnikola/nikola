@@ -139,6 +139,8 @@ class DoitNikola(DoitMain):
         # load nikola commands
         for name, cmd in self.nikola.commands.items():
             cmds[name] = cmd
+        # Hide run because Nikola uses build
+        cmds.pop('run')
         return cmds
 
     def run(self, cmd_args):
