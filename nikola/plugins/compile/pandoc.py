@@ -44,7 +44,7 @@ class CompilePandoc(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         try:
-            pandoc_path = subprocess.check_output(('which', 'pandoc'))
+            pandoc_path = subprocess.check_output(('which', 'pandoc')).splitlines()[0]
         except subprocess.CalledProcessError:
             print('To use the pandoc compiler,'
                   ' you have to install the "pandoc" Haskell package.')
@@ -55,7 +55,7 @@ class CompilePandoc(PageCompiler):
             os.makedirs(os.path.dirname(dest))
         except:
             pass
-        subprocess.check_call((pandoc_path, '-o', source, dest))
+        subprocess.check_call((pandoc_path, '-o', dest, source))
 
     def create_post(self, path, onefile=False, **kw):
         metadata = {}

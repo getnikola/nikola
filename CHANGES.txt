@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Use correct pandoc argument order (Issue #709)
 * Invalid POSTS and PAGES were created by the wordpress importer.
 * Normalize paths in task targets, helping detect conflicts (Issue #546)
 * Strip multiple digits in unslugify, used by image galleries (Issue #703)
