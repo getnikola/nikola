@@ -83,7 +83,19 @@ class Help(DoitHelp):
 
 class Build(DoitRun):
     """expose "run" command as "build" for backward compatibility"""
-    pass
+    def __init__(self, *args, **kw):
+        opts = list(self.cmd_options)
+        opts.append(
+            {
+                'name': 'strict',
+                'long': 'strict',
+                'default': False,
+                'type': bool,
+                'help': "Fail on things that would normally be warnings.",
+            }
+        )
+        self.cmd_options = tuple(opts)
+        super(Build, self).__init__(*args, **kw)
 
 
 class Clean(DoitClean):
@@ -124,7 +136,6 @@ class DoitNikola(DoitMain):
     def get_commands(self):
         # core doit commands
         cmds = DoitMain.get_commands(self)
-
         # load nikola commands
         for name, cmd in self.nikola.commands.items():
             cmds[name] = cmd
