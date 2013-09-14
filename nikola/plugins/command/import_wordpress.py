@@ -217,10 +217,10 @@ class CommandImportWordpress(Command, ImportMixin):
             '{{{0}}}author_display_name'.format(wordpress_namespace),
             "Joe Example")
         context['POSTS'] = '''(
-            ("posts/*.wp", "posts", "post.tmpl", True),
+            ("posts/*.wp", "posts", "post.tmpl"),
         )'''
         context['PAGES'] = '''(
-            ("stories/*.wp", "stories", "story.tmpl", False),
+            ("stories/*.wp", "stories", "story.tmpl"),
         )'''
         context['COMPILERS'] = '''{
         "rest": ('.txt', '.rst'),
