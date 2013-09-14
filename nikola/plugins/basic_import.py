@@ -95,8 +95,12 @@ class ImportMixin(object):
             print('The folder {0} already exists - assuming that this is a '
                   'already existing nikola site.'.format(self.output_folder))
 
-        conf_template = Template(filename=os.path.join(
-            os.path.dirname(utils.__file__), 'conf.py.in'))
+        filename = os.path.join(os.path.dirname(utils.__file__), 'conf.py.in')
+        # add format_extensions=True if getting an unhelpful traceback
+        # 'NameError(Undefined)' from mako\runtime.py, then more info is
+        # writen to *somefile* - For import_blogger by example it would
+        # write html to conf.py. Yeah!
+        conf_template = Template(filename=filename ) #,format_exceptions=True)
 
         return conf_template
 
