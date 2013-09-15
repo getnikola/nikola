@@ -70,7 +70,7 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'generic_rss_renderer', 'copy_file', 'slugify', 'unslugify',
            'to_datetime', 'apply_filters', 'config_changed', 'get_crumbs',
            'get_tzname', 'get_asset_path', '_reload', 'unicode_str', 'bytes_str',
-           'unichr', 'Functionary', 'LocaleBorg', 'sys_encode', 'sys_decode', 'show_msg']
+           'unichr', 'Functionary', 'LocaleBorg', 'sys_encode', 'sys_decode']
 
 
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
@@ -585,12 +585,6 @@ def get_asset_path(path, themes, files_folders={'files': ''}):
 
     # whatever!
     return None
-
-
-def show_msg(msg):
-    """Prints a message in stderr, so it bypasses doit's capture."""
-    sys.stderr.write(msg)
-    sys.stderr.flush()
 
 
 class LocaleBorg:
