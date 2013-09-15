@@ -44,8 +44,10 @@ try:
 except ImportError:
     pass
 
+import logbook
 import pytz
 
+LOGGER = logbook.Logger('Nikola')
 
 if sys.version_info[0] == 3:
     # Python 3
