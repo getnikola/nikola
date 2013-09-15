@@ -32,4 +32,5 @@ if __name__ == "__main__":
 
     sed_like_thing("version='.+'", "version='{0}'".format(version), 'setup.py')
     sed_like_thing('__version__ = ".*"', '__version__ = "{0}"'.format(version), os.path.join('nikola', '__init__.py'))
+    sed_like_thing('New in Master', 'New in {0}'.format(version), 'CHANGES.txt')
     os.system("help2man -h help -N --version-string='{0}' nikola > {1}".format(version, os.path.join('docs', 'man', 'nikola.1')))
