@@ -23,7 +23,7 @@ def sed_like_thing(pattern, repl, path):
         outf.write(data)
 
 if __name__ == "__main__":
-    print ("New version number: ", end="")
+    print("New version number: ", end="")
     sys.stdout.flush()
     version = sys.stdin.readline().strip()
 
