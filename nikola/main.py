@@ -41,13 +41,16 @@ from doit.cmd_clean import Clean as DoitClean
 
 from . import __version__
 from .nikola import Nikola
-from .utils import _reload, sys_decode, LOGGER
+from .utils import _reload, sys_decode, LOGGER, STRICT_HANDLER
 
 
 config = {}
 
 
 def main(args):
+    if args[0] == 'build' and '--strict' in args:
+        LOGGER.notice('Running in strict mode')
+        STRICT_HANDLER.push_application()
     global config
     sys.path.append('')
     try:
@@ -159,8 +162,6 @@ class DoitNikola(DoitMain):
                 LOGGER.error("This command needs to run inside an "
                              "existing Nikola site.")
                 return False
-        if args[0] == 'build' and '--strict' in args:
-            self.nikola.strict = True
         return super(DoitNikola, self).run(cmd_args)
 
     @staticmethod
