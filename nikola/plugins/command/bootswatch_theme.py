@@ -85,7 +85,7 @@ class CommandBootswatchTheme(Command):
         if 'bootstrap3' not in themes:
             version = '2'
         elif 'bootstrap' not in themes:
-            utils.LOGGER.warn('bootswatch_theme only makes sense for themes that use bootstrap')
+            utils.LOGGER.warn('"bootswatch_theme" only makes sense for themes that use bootstrap')
 
         utils.LOGGER.notice("Creating '{0}' theme from '{1}' and '{2}'".format(name, swatch, parent))
         try:
