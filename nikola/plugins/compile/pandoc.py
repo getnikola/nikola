@@ -35,6 +35,7 @@ import os
 import subprocess
 
 from nikola.plugin_categories import PageCompiler
+from nikola.utils import LOGGER
 
 
 class CompilePandoc(PageCompiler):
