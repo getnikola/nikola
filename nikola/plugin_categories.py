@@ -39,7 +39,7 @@ __all__ = [
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
 
-from .util import LOGGER
+from .utils import LOGGER
 
 
 class BasePlugin(IPlugin):

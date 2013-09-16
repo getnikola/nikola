@@ -88,7 +88,8 @@ from __future__ import unicode_literals
 from markdown.extensions import Extension
 from markdown.inlinepatterns import Pattern
 from markdown.util import AtomicString
-from markdown.util import etree, LOGGER
+from markdown.util import etree
+from nikola.utils import LOGGER
 
 try:
     import requests
