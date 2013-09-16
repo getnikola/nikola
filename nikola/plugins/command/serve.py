@@ -73,7 +73,7 @@ class CommandBuild(Command):
             httpd = HTTPServer((options['address'], options['port']),
                                OurHTTPRequestHandler)
             sa = httpd.socket.getsockname()
-            Logging.notice("Serving HTTP on", sa[0], "port", sa[1], "...")
+            LOGGER.notice("Serving HTTP on", sa[0], "port", sa[1], "...")
             httpd.serve_forever()
 
 
