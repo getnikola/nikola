@@ -37,6 +37,7 @@ except ImportError:
 import lxml.html
 
 from nikola.plugin_categories import Command
+from nikola.utils import LOGGER
 
 
 class CommandCheck(Command):
@@ -119,17 +120,17 @@ class CommandCheck(Command):
                         self.existing_targets.add(target_filename)
                     else:
                         rv = True
-                        print("Broken link in {0}: ".format(filename), target)
+                        LOGGER.warn("Broken link in {0}: ".format(filename), target)
                         if find_sources:
-                            print("Possible sources:")
-                            print(os.popen('nikola list --deps ' + task, 'r').read())
-                            print("===============================\n")
+                            LOGGER.warn("Possible sources:")
+                            LOGGER.warn(os.popen('nikola list --deps ' + task, 'r').read())
+                            LOGGER.warn("===============================\n")
         except Exception as exc:
-            print("Error with:", filename, exc)
+            LOGGER.error("Error with:", filename, exc)
         return rv
 
     def scan_links(self, find_sources=False):
-        print("Checking Links:\n===============\n")
+        LOGGER.notice("Checking Links:\n===============\n")
         failure = False
         for task in os.popen('nikola list --all', 'r').readlines():
             task = task.strip()
@@ -144,19 +145,19 @@ class CommandCheck(Command):
 
     def scan_files(self):
         failure = False
-        print("Checking Files:\n===============\n")
+        LOGGER.notice("Checking Files:\n===============\n")
         only_on_output, only_on_input = self.real_scan_files()
         if only_on_output:
             only_on_output.sort()
-            print("\nFiles from unknown origins:\n")
+            LOGGER.warn("\nFiles from unknown origins:\n")
             for f in only_on_output:
-                print(f)
+                LOGGER.warn(f)
             failure = True
         if only_on_input:
             only_on_input.sort()
-            print("\nFiles not generated:\n")
+            LOGGER.warn("\nFiles not generated:\n")
             for f in only_on_input:
-                print(f)
+                LOGGER.warn(f)
         return failure
 
     def clean_files(self):
