@@ -5,6 +5,9 @@ Bugfixes
 --------
 
 * Proper logging (Issues #712 #704)
+* Fixed several blogger import issues.
+* Avoid double slashes in RSS link elements (Issue #716)
+* Fix Python 3 incompatibility (Issue #715)
 * Consider the current theme chain's parent, bundles and engine part of the file_dep for
   files created by generic_page_renderer (Issue #711)
 

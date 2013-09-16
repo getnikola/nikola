@@ -101,6 +101,11 @@ class DemoBuildTest(EmptyBuildTest):
         sitemap_data = codecs.open(sitemap_path, "r", "utf8").read()
         self.assertTrue('<loc>http://getnikola.com/</loc>' in sitemap_data)
 
+    def test_avoid_double_slash_in_rss(self):
+        rss_path = os.path.join(self.target_dir, "output", "rss.xml")
+        rss_data = codecs.open(rss_path, "r", "utf8").read()
+        self.assertFalse('http://getnikola.com//' in rss_data)
+
 
 class RepeatedPostsSetting(DemoBuildTest):
     """Duplicate POSTS, should not read each post twice, which causes conflicts."""

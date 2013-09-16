@@ -927,7 +927,7 @@ class Nikola(object):
         deps = post.deps(lang) + \
             self.template_system.template_deps(post.template_name)
         deps.extend(utils.get_asset_path(x, self.THEMES) for x in ('bundles', 'parent', 'engine'))
-        deps = filter(None, deps)
+        deps = list(filter(None, deps))
         context['post'] = post
         context['lang'] = lang
         context['title'] = post.title(lang)
