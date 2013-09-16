@@ -4,6 +4,7 @@ New in Master
 Bugfixes
 --------
 
+* Fix Python 3 incompatibility (Issue #715)
 * Consider the current theme chain's parent, bundles and engine part of the file_dep for
   files created by generic_page_renderer (Issue #711)
 
