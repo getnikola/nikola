@@ -90,8 +90,11 @@ class CommandImportBlogger(Command, ImportMixin):
         self.write_urlmap_csv(
             os.path.join(self.output_folder, 'url_map.csv'), self.url_map)
 
-        self.write_configuration(self.get_configuration_output_path(
-        ), conf_template.render(**self.context))
+        conf_out_path = self.get_configuration_output_path()
+        # if it tracebacks here, look a comment in
+        # basic_import.Import_Mixin.generate_base_site
+        conf_termplate_render = conf_template.render(**self.context)
+        self.write_configuration(conf_out_path, conf_termplate_render)
 
     @classmethod
     def get_channel_from_file(cls, filename):
@@ -101,25 +104,32 @@ class CommandImportBlogger(Command, ImportMixin):
 
     @staticmethod
     def populate_context(channel):
+        # may need changes when the template conf.py.in changes
         context = {}
         context['DEFAULT_LANG'] = 'en'  # blogger doesn't include the language
                                         # in the dump
         context['BLOG_TITLE'] = channel.feed.title
 
         context['BLOG_DESCRIPTION'] = ''  # Missing in the dump
-        context['SITE_URL'] = channel.feed.link.rstrip('/')
+        context['SITE_URL'] = channel.feed.link
         context['BLOG_EMAIL'] = channel.feed.author_detail.email
         context['BLOG_AUTHOR'] = channel.feed.author_detail.name
-        context['POST_PAGES'] = '''(
-            ("posts/*.html", "posts", "post.tmpl", True),
-            ("stories/*.html", "stories", "story.tmpl", False),
-        )'''
+        context['POSTS'] = '''(
+            ("posts/*.txt", "posts", "post.tmpl"),
+            ("posts/*.rst", "posts", "post.tmpl"),
+            ("posts/*.html", "posts", "post.tmpl"),
+            )'''
+        context['PAGES'] = '''(
+            ("articles/*.txt", "articles", "story.tmpl"),
+            ("articles/*.rst", "articles", "story.tmpl"),
+            )'''
         context['COMPILERS'] = '''{
-        "rest": ('.txt', '.rst'),
-        "markdown": ('.md', '.mdown', '.markdown', '.wp'),
-        "html": ('.html', '.htm')
-        }
-        '''
+            "rest": ('.txt', '.rst'),
+            "markdown": ('.md', '.mdown', '.markdown', '.wp'),
+            "html": ('.html', '.htm')
+            }
+            '''
+        context['THEME'] = 'bootstrap3'
 
         return context
 
