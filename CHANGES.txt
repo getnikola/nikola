@@ -4,7 +4,7 @@ New in Master
 Bugfixes
 --------
 
-* Proper logging (Issue #712)
+* Proper logging (Issues #712 #704)
 * Consider the current theme chain's parent, bundles and engine part of the file_dep for
   files created by generic_page_renderer (Issue #711)
 
