@@ -4,6 +4,7 @@ New in Master
 Bugfixes
 --------
 
+* Fixed several blogger import issues.
 * Avoid double slashes in RSS link elements (Issue #716)
 * Fix Python 3 incompatibility (Issue #715)
 * Consider the current theme chain's parent, bundles and engine part of the file_dep for
