@@ -50,7 +50,7 @@ class CommandMincss(Command):
         output_folder = self.site.config['OUTPUT_FOLDER']
         if Processor is None:
             LOGGER.warn('To use the mincss command,'
-                  ' you have to install the "mincss" package.')
+                        ' you have to install the "mincss" package.')
             return
 
         p = Processor(preserve_remote_urls=False)
@@ -62,7 +62,7 @@ class CommandMincss(Command):
                 if url.endswith('.css'):
                     fname = os.path.basename(url)
                     if fname in css_files:
-                        print("You have two CSS files with the same name and that confuses me.")
+                        LOGGER.error("You have two CSS files with the same name and that confuses me.")
                         sys.exit(1)
                     css_files[fname] = url
                 if not f.endswith('.html'):
@@ -71,6 +71,5 @@ class CommandMincss(Command):
         p.process(*urls)
         for inline in p.links:
             fname = os.path.basename(inline.href)
-            print("===>", inline.href, len(inline.before), len(inline.after))
             with open(css_files[fname], 'wb+') as outf:
                 outf.write(inline.after)
