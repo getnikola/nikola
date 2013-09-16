@@ -1005,7 +1005,7 @@ def s_l(lang):
         locale.setlocale(locale.LC_ALL, (lang, "utf8"))
     except Exception:
         utils.LOGGER.warn(
-            "could not set locale to {0}."
+            "Could not set locale to {0}."
             "This may cause some i18n features not to work.".format(lang))
     return ''
 
