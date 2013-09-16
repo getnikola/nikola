@@ -143,7 +143,7 @@ class GistFetchException(Exception):
     '''Raised when attempt to fetch content of a Gist from github.com fails.'''
     def __init__(self, url, status_code):
         Exception.__init__(self)
-        self.message = 'Received a {} response from Gist URL: {}'.format(
+        self.message = 'Received a {0} response from Gist URL: {1}'.format(
             status_code, url)
 
 
@@ -200,7 +200,7 @@ class GistPattern(Pattern):
 
             except GistFetchException as e:
                 warnings.warn(e.message)
-                warning_comment = etree.Comment(' WARNING: {} '.format(e.message))
+                warning_comment = etree.Comment(' WARNING: {0} '.format(e.message))
                 noscript_elem.append(warning_comment)
 
         else:
