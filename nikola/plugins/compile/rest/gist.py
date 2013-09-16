@@ -38,11 +38,11 @@ class GitHubGist(Directive):
     has_content = False
 
     def get_raw_gist_with_filename(self, gistID, filename):
-        url = '/'.join(("https://raw.github.com/gist", gistID, filename))
+        url = '/'.join(("https://gist.github.com/raw", gistID, filename))
         return requests.get(url).text
 
     def get_raw_gist(self, gistID):
-        url = "https://raw.github.com/gist/{0}".format(gistID)
+        url = "https://gist.github.com/raw/{0}".format(gistID)
         return requests.get(url).text
 
     def run(self):
