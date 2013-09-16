@@ -51,8 +51,8 @@ class CompilePandoc(PageCompiler):
             subprocess.check_call(('pandoc', '-o', dest, source))
         except OSError as e:
             if e.strreror == 'No such file or directory':
-                print('To use the pandoc compiler,'
-                      ' you have to install the "pandoc" Haskell package.')
+                LOGGER.error('To use the pandoc compiler,'
+                             ' you have to install the "pandoc" Haskell package.')
                 raise Exception('Cannot compile {0} -- pandoc '
                                 'missing'.format(source))
 

@@ -85,11 +85,10 @@ Example using reStructuredText syntax:
     </p>
 '''
 from __future__ import unicode_literals
-import warnings
 from markdown.extensions import Extension
 from markdown.inlinepatterns import Pattern
 from markdown.util import AtomicString
-from markdown.util import etree
+from markdown.util import etree, LOGGER
 
 try:
     import requests
@@ -153,8 +152,8 @@ class GistPattern(Pattern):
             pre_elem.text = AtomicString(raw_gist)
 
         else:
-            warnings.warn('"requests" package not installed.  '
-                          'Please install to add inline gist source.')
+            LOGGER.warn('"requests" package not installed.  '
+                        'Please install to add inline gist source.')
 
         return gist_elem
 
