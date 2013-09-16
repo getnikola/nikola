@@ -426,7 +426,7 @@ class Post(object):
         else:
             pieces += [self.meta[lang]['slug'] + extension]
         pieces = [_f for _f in pieces if _f and _f != '.']
-        link = '/'+'/'.join(pieces)
+        link = '/' + '/'.join(pieces)
         if absolute:
             link = urljoin(self.base_url, link)
         index_len = len(self.index_file)
