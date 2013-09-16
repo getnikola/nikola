@@ -48,8 +48,6 @@ import logbook
 from logbook.more import ExceptionHandler
 import pytz
 
-class ApplicationWarning(Exception):
-    pass
 
 LOGGER = logbook.Logger('Nikola')
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
