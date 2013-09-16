@@ -21,6 +21,9 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
+# Warning: URL formats of "raw" gists are undocummented and subject to change.
+# See also:  http://developer.github.com/v3/gists/
+#
 # Inspired by "[Python] reStructuredText GitHub Gist directive"
 # (https://gist.github.com/brianhsu/1407759), public domain by Brian Hsu
 
@@ -38,7 +41,7 @@ Basic Example:
     ... [:gist: 4747847]
     ... """
     >>> html = markdown.markdown(text, [GistExtension()])
-    >>> print(html)
+    >>> print html
     <p>Text of the gist:
     <div class="gist">
     <script src="https://gist.github.com/4747847.js"></script>
@@ -56,7 +59,7 @@ Example with filename:
     ... [:gist: 4747847 zen.py]
     ... """
     >>> html = markdown.markdown(text, [GistExtension()])
-    >>> print(html)
+    >>> print html
     <p>Text of the gist:
     <div class="gist">
     <script src="https://gist.github.com/4747847.js?file=zen.py"></script>
@@ -74,7 +77,7 @@ Example using reStructuredText syntax:
     ... .. gist:: 4747847 zen.py
     ... """
     >>> html = markdown.markdown(text, [GistExtension()])
-    >>> print(html)
+    >>> print html
     <p>Text of the gist:
     <div class="gist">
     <script src="https://gist.github.com/4747847.js?file=zen.py"></script>
@@ -83,6 +86,41 @@ Example using reStructuredText syntax:
     </noscript>
     </div>
     </p>
+
+Error Case: non-existent Gist ID:
+
+    >>> import markdown
+    >>> text = """
+    ... Text of the gist:
+    ... [:gist: 0]
+    ... """
+    >>> html = markdown.markdown(text, [GistExtension()])
+    >>> print(html)
+    <p>Text of the gist:
+    <div class="gist">
+    <script src="https://gist.github.com/0.js"></script>
+    <noscript><!-- WARNING: Received a 404 response from Gist URL: \
+    https://gist.github.com/raw/0 --></noscript>
+    </div>
+    </p>
+
+Error Case:  non-existent file:
+
+    >>> import markdown
+    >>> text = """
+    ... Text of the gist:
+    ... [:gist: 4747847 doesntexist.py]
+    ... """
+    >>> html = markdown.markdown(text, [GistExtension()])
+    >>> print(html)
+    <p>Text of the gist:
+    <div class="gist">
+    <script src="https://gist.github.com/4747847.js?file=doesntexist.py"></script>
+    <noscript><!-- WARNING: Received a 404 response from Gist URL: \
+    https://gist.github.com/raw/4747847/doesntexist.py --></noscript>
+    </div>
+    </p>
+
 '''
 from __future__ import unicode_literals
 import warnings
@@ -98,11 +136,19 @@ except ImportError:
 
 GIST_JS_URL = "https://gist.github.com/{0}.js"
 GIST_FILE_JS_URL = "https://gist.github.com/{0}.js?file={1}"
-GIST_RAW_URL = "https://raw.github.com/gist/{0}"
-GIST_FILE_RAW_URL = "https://raw.github.com/gist/{0}/{1}"
+GIST_RAW_URL = "https://gist.github.com/raw/{0}"
+GIST_FILE_RAW_URL = "https://gist.github.com/raw/{0}/{1}"
 
-GIST_MD_RE = r'\[:gist:\s*(?P<gist_id>\d+)(?:\s*(?P<filename>.+?))?\]'
+GIST_MD_RE = r'\[:gist:\s*(?P<gist_id>\d+)(?:\s*(?P<filename>.+?))?\s*\]'
 GIST_RST_RE = r'(?m)^\.\.\s*gist::\s*(?P<gist_id>\d+)(?:\s*(?P<filename>.+))\s*$'
+
+
+class GistFetchException(Exception):
+    '''Raised when attempt to fetch content of a Gist from github.com fails.'''
+    def __init__(self, url, status_code):
+        Exception.__init__(self)
+        self.message = 'Received a {} response from Gist URL: {}'.format(
+            status_code, url)
 
 
 class GistPattern(Pattern):
@@ -113,11 +159,21 @@ class GistPattern(Pattern):
 
     def get_raw_gist_with_filename(self, gist_id, filename):
         url = GIST_FILE_RAW_URL.format(gist_id, filename)
-        return requests.get(url).text
+        resp = requests.get(url)
+
+        if not resp.ok:
+            raise GistFetchException(url, resp.status_code)
+
+        return resp.text
 
     def get_raw_gist(self, gist_id):
         url = GIST_RAW_URL.format(gist_id)
-        return requests.get(url).text
+        resp = requests.get(url)
+
+        if not resp.ok:
+            raise GistFetchException(url, resp.status_code)
+
+        return resp.text
 
     def handleMatch(self, m):
         gist_id = m.group('gist_id')
@@ -127,30 +183,29 @@ class GistPattern(Pattern):
         gist_elem.set('class', 'gist')
         script_elem = etree.SubElement(gist_elem, 'script')
 
-        if gist_file:
-            script_elem.set('src', GIST_FILE_JS_URL.format(
-                gist_id, gist_file))
-
-        else:
-            script_elem.set('src', GIST_JS_URL.format(
-                gist_id))
-
         if requests:
-            if gist_file:
-                raw_gist = (self.get_raw_gist_with_filename(
-                    gist_id, gist_file))
-                script_elem.set('src', GIST_FILE_JS_URL.format(
-                    gist_id, gist_file))
-
-            else:
-                raw_gist = (self.get_raw_gist(gist_id))
-                script_elem.set('src', GIST_JS_URL.format(
-                    gist_id))
-
-            # Insert source as <pre/> within <noscript>
             noscript_elem = etree.SubElement(gist_elem, 'noscript')
-            pre_elem = etree.SubElement(noscript_elem, 'pre')
-            pre_elem.text = AtomicString(raw_gist)
+
+            try:
+                if gist_file:
+                    script_elem.set('src', GIST_FILE_JS_URL.format(
+                        gist_id, gist_file))
+                    raw_gist = (self.get_raw_gist_with_filename(
+                        gist_id, gist_file))
+
+                else:
+                    script_elem.set('src', GIST_JS_URL.format(
+                        gist_id))
+                    raw_gist = (self.get_raw_gist(gist_id))
+
+                # Insert source as <pre/> within <noscript>
+                pre_elem = etree.SubElement(noscript_elem, 'pre')
+                pre_elem.text = AtomicString(raw_gist)
+
+            except GistFetchException, e:
+                warnings.warn(e.message)
+                warning_comment = etree.Comment(' WARNING: {} '.format(e.message))
+                noscript_elem.append(warning_comment)
 
         else:
             warnings.warn('"requests" package not installed.  '
@@ -185,5 +240,8 @@ def makeExtension(configs=None):
 
 if __name__ == '__main__':
     import doctest
-    doctest.testmod(optionflags=(doctest.NORMALIZE_WHITESPACE +
-                                 doctest.REPORT_NDIFF))
+
+    # Silence user warnings thrown by tests:
+    with warnings.catch_warnings(record=True):
+        doctest.testmod(optionflags=(doctest.NORMALIZE_WHITESPACE +
+                                     doctest.REPORT_NDIFF))
