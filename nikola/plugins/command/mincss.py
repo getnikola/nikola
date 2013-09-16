@@ -34,6 +34,7 @@ except ImportError:
     Processor = None
 
 from nikola.plugin_categories import Command
+from nikola.utils import LOGGER
 
 
 class CommandMincss(Command):
@@ -48,7 +49,7 @@ class CommandMincss(Command):
         """Apply mincss the generated site."""
         output_folder = self.site.config['OUTPUT_FOLDER']
         if Processor is None:
-            print('To use the mincss command,'
+            LOGGER.warn('To use the mincss command,'
                   ' you have to install the "mincss" package.')
             return
 
