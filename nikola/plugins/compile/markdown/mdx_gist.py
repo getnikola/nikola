@@ -119,11 +119,11 @@ Error Case:  non-existent file:
 
 '''
 from __future__ import unicode_literals, print_function
-import warnings
 from markdown.extensions import Extension
 from markdown.inlinepatterns import Pattern
 from markdown.util import AtomicString
 from markdown.util import etree
+from nikola.utils import LOGGER
 
 try:
     import requests
@@ -199,13 +199,13 @@ class GistPattern(Pattern):
                 pre_elem.text = AtomicString(raw_gist)
 
             except GistFetchException as e:
-                warnings.warn(e.message)
+                LOGGER.warn(e.message)
                 warning_comment = etree.Comment(' WARNING: {0} '.format(e.message))
                 noscript_elem.append(warning_comment)
 
         else:
-            warnings.warn('"requests" package not installed.  '
-                          'Please install to add inline gist source.')
+            LOGGER.warn('"requests" package not installed.  '
+                        'Please install to add inline gist source.')
 
         return gist_elem
 
@@ -238,6 +238,5 @@ if __name__ == '__main__':
     import doctest
 
     # Silence user warnings thrown by tests:
-    with warnings.catch_warnings(record=True):
-        doctest.testmod(optionflags=(doctest.NORMALIZE_WHITESPACE +
-                                     doctest.REPORT_NDIFF))
+    doctest.testmod(optionflags=(doctest.NORMALIZE_WHITESPACE +
+                                 doctest.REPORT_NDIFF))

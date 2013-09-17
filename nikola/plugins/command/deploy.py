@@ -34,7 +34,7 @@ import time
 
 
 from nikola.plugin_categories import Command
-from nikola.utils import remove_file
+from nikola.utils import remove_file, LOGGER
 
 
 class Deploy(Command):
@@ -48,11 +48,11 @@ class Deploy(Command):
         # Get last succesful deploy date
         timestamp_path = os.path.join(self.site.config['CACHE_FOLDER'], 'lastdeploy')
         if self.site.config['COMMENT_SYSTEM_ID'] == 'nikolademo':
-            print("\nWARNING WARNING WARNING WARNING\n"
-                  "You are deploying using the nikolademo Disqus account.\n"
-                  "That means you will not be able to moderate the comments in your own site.\n"
-                  "And is probably not what you want to do.\n"
-                  "Think about it for 5 seconds, I'll wait :-)\n\n")
+            LOGGER.warn("\nWARNING WARNING WARNING WARNING\n"
+                        "You are deploying using the nikolademo Disqus account.\n"
+                        "That means you will not be able to moderate the comments in your own site.\n"
+                        "And is probably not what you want to do.\n"
+                        "Think about it for 5 seconds, I'll wait :-)\n\n")
             time.sleep(5)
 
         deploy_drafts = self.site.config.get('DEPLOY_DRAFTS', True)
@@ -74,11 +74,11 @@ class Deploy(Command):
             except Exception:
                 last_deploy = datetime(1970, 1, 1)  # NOQA
 
-            print("==>", command)
+            LOGGER.notice("==>", command)
             ret = subprocess.check_call(command, shell=True)
             if ret != 0:  # failed deployment
                 raise Exception("Failed deployment")
-        print("Successful deployment")
+        LOGGER.notice("Successful deployment")
         new_deploy = datetime.now()
         # Store timestamp of successful deployment
         with codecs.open(timestamp_path, 'wb+', 'utf8') as outf:

@@ -128,11 +128,10 @@ class Chart(Directive):
     def run(self):
         if pygal is None:
             msg = (
-                "ERROR: "
                 "To use the Chart directive you need to install "
                 "the pygal module.\n"
             )
-            utils.show_msg(msg)
+            utils.logger.warn(msg)
             return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
         options = {}
         if 'style' in self.options:

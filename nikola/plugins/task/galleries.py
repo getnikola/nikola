@@ -364,7 +364,7 @@ class Galleries(Task):
                 im.thumbnail(size, Image.ANTIALIAS)
                 im.save(dst)
             except Exception:
-                utils.show_msg("WARNING: can't thumbnail {0}, using original image as thumbnail".format(src))
+                utils.LOGGER.warn("Can't thumbnail {0}, using original image as thumbnail".format(src))
                 utils.copy_file(src, dst)
         else:  # Image is small
             utils.copy_file(src, dst)
