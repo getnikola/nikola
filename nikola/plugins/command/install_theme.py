@@ -67,7 +67,7 @@ class CommandInstallTheme(Command):
     def _execute(self, options, args):
         """Install theme into current site."""
         if requests is None:
-            print('This command requires the requests package be installed.')
+            utils.LOGGER.error('This command requires the requests package be installed.')
             return False
 
         listing = options['list']
@@ -78,7 +78,7 @@ class CommandInstallTheme(Command):
             name = None
 
         if name is None and not listing:
-            print("This command needs either a theme name or the -l option.")
+            utils.LOGGER.error("This command needs either a theme name or the -l option.")
             return False
         data = requests.get(url).text
         data = json.loads(data)
@@ -97,11 +97,11 @@ class CommandInstallTheme(Command):
                         os.makedirs("themes")
                     except:
                         raise OSError("mkdir 'theme' error!")
-                print('Downloading: ' + data[name])
+                utils.LOGGER.notice('Downloading: ' + data[name])
                 zip_file = BytesIO()
                 zip_file.write(requests.get(data[name]).content)
-                print('Extracting: {0} into themes'.format(name))
+                utils.LOGGER.notice('Extracting: {0} into themes'.format(name))
                 utils.extract_all(zip_file)
             else:
-                print("Can't find theme " + name)
+                utils.LOGGER.error("Can't find theme " + name)
                 return False

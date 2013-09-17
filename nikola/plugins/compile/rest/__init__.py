@@ -36,7 +36,7 @@ except ImportError:
     has_docutils = False
 
 from nikola.plugin_categories import PageCompiler
-
+from nikola.utils import LOGGER
 
 class CompileRest(PageCompiler):
     """Compile reSt into HTML."""
@@ -76,6 +76,8 @@ class CompileRest(PageCompiler):
             else:
                 if os.path.isfile(deps_path):
                     os.unlink(deps_path)
+        if error_level == 2:
+            LOGGER.warning('Docutils reports warnings on {0}'.format(source))
         if error_level < 3:
             return True
         else:
