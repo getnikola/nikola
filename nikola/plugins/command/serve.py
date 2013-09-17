@@ -133,8 +133,13 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
             # transmitted *less* than the content-length!
             f = open(path, 'rb')
         except IOError:
-            self.send_error(404, "File not found")
-            return None
+            path = '404.html'
+            if os.path.exists(path):
+                f = open(path, 'rb')
+                ctype = self.guess_type(path)
+            else:
+                self.send_error(404, "File not found")
+                return None
         self.send_response(200)
         self.send_header("Content-type", ctype)
         fs = os.fstat(f.fileno())
