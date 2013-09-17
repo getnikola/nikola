@@ -48,11 +48,10 @@ class GitHubGist(Directive):
     def run(self):
         if requests is None:
             msg = (
-                'ERROR:'
                 'To use the gist directive, you need to install the '
                 '"requests" package.\n'
             )
-            utils.show_msg(msg)
+            utils.LOGGER.warn(msg)
             return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
         gistID = self.arguments[0].strip()
         embedHTML = ""

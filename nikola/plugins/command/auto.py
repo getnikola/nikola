@@ -32,6 +32,7 @@ import os
 import subprocess
 
 from nikola.plugin_categories import Command
+from nikola.utils import LOGGER
 
 GUARDFILE = """#!/usr/bin/env python
 # -*- coding: utf-8 -*-
@@ -76,8 +77,8 @@ class Auto(Command):
         try:
             from livereload.server import start
         except ImportError:
-            print('To use the auto command, you need to install the '
-                  '"livereload" package.')
+            LOGGER.error('To use the auto command, you need to install the '
+                         '"livereload" package.')
             return
 
         # Run an initial build so we are uptodate
