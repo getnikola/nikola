@@ -11,6 +11,7 @@ MESSAGES = {
     "Next post": "Next post",
     "Older posts": "Older posts",
     "Original site": "Original site",
+    "Page not found": "Page not found",
     "Posted": "Posted",
     "Posts about %s": "Posts about %s",
     "Posts for year %s": "Posts for year %s",
