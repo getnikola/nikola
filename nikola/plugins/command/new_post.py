@@ -280,5 +280,5 @@ class CommandNewPost(Command):
                 fd.write('\n'.join(data))
             with codecs.open(txt_path, "wb+", "utf8") as fd:
                 fd.write("Write your post here.")
-            utils.LOGGER.notice("Your post's metadata is at: ", meta_path)
-        utils.LOGGER.notice("Your post's text is at: ", txt_path)
+            utils.LOGGER.notice("Your post's metadata is at: {0}".format(meta_path))
+        utils.LOGGER.notice("Your post's text is at: {0}".format(txt_path))
