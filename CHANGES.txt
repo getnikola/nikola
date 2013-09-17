@@ -5,6 +5,7 @@ Bugfixes
 --------
 
 * Proper logging (Issues #712 #704)
+* Be less agressive in hyphenating, also, split words differently. (Issue #718)
 * Fixed several blogger import issues.
 * Avoid double slashes in RSS link elements (Issue #716)
 * Fix Python 3 incompatibility (Issue #715)
