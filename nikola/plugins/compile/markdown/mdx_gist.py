@@ -95,8 +95,7 @@ Error Case: non-existent Gist ID:
     <p>Text of the gist:
     <div class="gist">
     <script src="https://gist.github.com/0.js"></script>
-    <noscript><!-- WARNING: Received a 404 response from Gist URL: \
-    https://gist.github.com/raw/0 --></noscript>
+    <noscript><!-- WARNING: Received a 404 response from Gist URL: https://gist.github.com/raw/0 --></noscript>
     </div>
     </p>
 
@@ -112,8 +111,7 @@ Error Case:  non-existent file:
     <p>Text of the gist:
     <div class="gist">
     <script src="https://gist.github.com/4747847.js?file=doesntexist.py"></script>
-    <noscript><!-- WARNING: Received a 404 response from Gist URL: \
-    https://gist.github.com/raw/4747847/doesntexist.py --></noscript>
+    <noscript><!-- WARNING: Received a 404 response from Gist URL: https://gist.github.com/raw/4747847/doesntexist.py --></noscript>
     </div>
     </p>
 
