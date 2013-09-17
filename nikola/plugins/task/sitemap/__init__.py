@@ -139,7 +139,9 @@ class Sitemap(LateTask):
                 for k in sorted(locs.keys()):
                     outf.write(locs[k])
                 outf.write("</urlset>")
-            return True
+            # Other tasks can depend on this output, instead of having
+            # to scan locations.
+            return {'locations': locs.keys()}
 
         scan_locs()
         task = {
