@@ -620,8 +620,8 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
 def hyphenate(dom, lang):
     if pyphen is not None:
         hyphenator = pyphen.Pyphen(lang=lang)
-        for tag in ('p', 'div', 'li', 'span'):
-            for node in dom.xpath("//%s" % tag):
+        for tag in ('p', 'li', 'span'):
+            for node in dom.xpath("//%s[not(parent::pre)]" % tag):
                 insert_hyphens(node, hyphenator)
     return dom
 
@@ -636,7 +636,7 @@ def insert_hyphens(node, hyphenator):
         if not text:
             continue
         new_data = ' '.join([hyphenator.inserted(w, hyphen=u'\u00AD')
-                             for w in text.split()])
+                             for w in text.split(' ')])
         # Spaces are trimmed, we have to add them manually back
         if text[0].isspace():
             new_data = ' ' + new_data
