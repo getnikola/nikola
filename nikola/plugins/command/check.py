@@ -130,7 +130,8 @@ class CommandCheck(Command):
         return rv
 
     def scan_links(self, find_sources=False):
-        LOGGER.notice("Checking Links:\n===============\n")
+        LOGGER.notice("Checking Links:")
+        LOGGER.notice("===============")
         failure = False
         for task in os.popen('nikola list --all', 'r').readlines():
             task = task.strip()
@@ -141,23 +142,28 @@ class CommandCheck(Command):
                     'render_site') and '.html' in task:
                 if self.analyze(task, find_sources):
                     failure = True
+        if not failure:
+            LOGGER.notice("All links checked.")
         return failure
 
     def scan_files(self):
         failure = False
-        LOGGER.notice("Checking Files:\n===============\n")
+        LOGGER.notice("Checking Files:")
+        LOGGER.notice("===============\n")
         only_on_output, only_on_input = self.real_scan_files()
         if only_on_output:
             only_on_output.sort()
-            LOGGER.warn("\nFiles from unknown origins:\n")
+            LOGGER.warn("Files from unknown origins:")
             for f in only_on_output:
                 LOGGER.warn(f)
             failure = True
         if only_on_input:
             only_on_input.sort()
-            LOGGER.warn("\nFiles not generated:\n")
+            LOGGER.warn("Files not generated:")
             for f in only_on_input:
                 LOGGER.warn(f)
+        if not failure:
+            LOGGER.notice("All files checked.")
         return failure
 
     def clean_files(self):
