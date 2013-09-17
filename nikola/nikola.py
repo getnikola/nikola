@@ -617,10 +617,7 @@ class Nikola(object):
 
             return result
 
-        try:
-            os.makedirs(os.path.dirname(output_name))
-        except:
-            pass
+        utils.makedirs(os.path.dirname(output_name))
         doc = lxml.html.document_fromstring(data)
         doc.rewrite_links(replacer)
         data = b'<!DOCTYPE html>' + lxml.html.tostring(doc, encoding='utf8')

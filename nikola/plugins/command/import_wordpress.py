@@ -251,8 +251,7 @@ class CommandImportWordpress(Command, ImportMixin):
         dst_path = os.path.join(*([self.output_folder, 'files']
                                   + list(path.split('/'))))
         dst_dir = os.path.dirname(dst_path)
-        if not os.path.isdir(dst_dir):
-            os.makedirs(dst_dir)
+        utils.makedirs(dst_dir)
         print("Downloading {0} => {1}".format(url, dst_path))
         self.download_url_content_to_file(url, dst_path)
         dst_url = '/'.join(dst_path.split(os.sep)[2:])
@@ -306,8 +305,7 @@ class CommandImportWordpress(Command, ImportMixin):
                     dst_path = os.path.join(*([self.output_folder, 'files']
                                               + list(path.split('/'))))
                     dst_dir = os.path.dirname(dst_path)
-                    if not os.path.isdir(dst_dir):
-                        os.makedirs(dst_dir)
+                    utils.makedirs(dst_dir)
                     print("Downloading {0} => {1}".format(url, dst_path))
                     self.download_url_content_to_file(url, dst_path)
                     dst_url = '/'.join(dst_path.split(os.sep)[2:])

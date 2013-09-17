@@ -104,7 +104,7 @@ class Galleries(Task):
                 yield utils.apply_filters({
                     'basename': str('render_galleries'),
                     'name': output_gallery,
-                    'actions': [(os.makedirs, (output_gallery,))],
+                    'actions': [(utils.makedirs, (output_gallery,))],
                     'targets': [output_gallery],
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
@@ -222,8 +222,7 @@ class Galleries(Task):
 
             index_path = os.path.join(gallery_path, "index.txt")
             cache_dir = os.path.join(kw["cache_folder"], 'galleries')
-            if not os.path.isdir(cache_dir):
-                os.makedirs(cache_dir)
+            utils.makedirs(cache_dir)
             index_dst_path = os.path.join(
                 cache_dir,
                 str(hashlib.sha224(index_path.encode('utf-8')).hexdigest() +

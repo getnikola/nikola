@@ -68,7 +68,8 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'generic_rss_renderer', 'copy_file', 'slugify', 'unslugify',
            'to_datetime', 'apply_filters', 'config_changed', 'get_crumbs',
            'get_tzname', 'get_asset_path', '_reload', 'unicode_str', 'bytes_str',
-           'unichr', 'Functionary', 'LocaleBorg', 'sys_encode', 'sys_decode', 'show_msg']
+           'unichr', 'Functionary', 'LocaleBorg', 'sys_encode', 'sys_decode',
+           'show_msg', 'makedirs']
 
 
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
@@ -86,6 +87,15 @@ def sys_decode(thing):
     if isinstance(thing, bytes_str):
         return thing.decode(ENCODING)
     return thing
+
+
+def makedirs(path):
+    """Create a folder."""
+    if os.path.isdir(path):
+        return
+    if os.path.exists(path):
+        raise OSError('Path {0} already exists and is not a folder.')
+    os.makedirs(path)
 
 
 class Functionary(defaultdict):
@@ -251,8 +261,7 @@ def copy_tree(src, dst, link_cutoff=None):
         if set(root_parts) & ignore:
             continue
         dst_dir = os.path.join(dst, *root_parts[base_len:])
-        if not os.path.isdir(dst_dir):
-            os.makedirs(dst_dir)
+        makedirs(dst_dir)
         for src_name in files:
             if src_name == '.DS_Store':
                 continue
@@ -294,8 +303,7 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path,
     rss_obj.self_url = feed_url
     rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
     dst_dir = os.path.dirname(output_path)
-    if not os.path.isdir(dst_dir):
-        os.makedirs(dst_dir)
+    makedirs(dst_dir)
     with codecs.open(output_path, "wb+", "utf-8") as rss_file:
         data = rss_obj.to_xml(encoding='utf-8')
         if isinstance(data, bytes_str):
@@ -305,8 +313,7 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path,
 
 def copy_file(source, dest, cutoff=None):
     dst_dir = os.path.dirname(dest)
-    if not os.path.isdir(dst_dir):
-        os.makedirs(dst_dir)
+    makedirs(dst_dir)
     if os.path.islink(source):
         link_target = os.path.relpath(
             os.path.normpath(os.path.join(dst_dir, os.readlink(source))))
@@ -391,12 +398,7 @@ def extract_all(zipfile):
                                          'not safe to expand.')
         for f in namelist:
             if f.endswith('/'):
-                if not os.path.isdir(f):
-                    try:
-                        os.makedirs(f)
-                    except:
-                        raise OSError("Failed making {0} directory "
-                                      "tree!".format(f))
+                makedirs(f)
             else:
                 z.extract(f)
     os.chdir(pwd)

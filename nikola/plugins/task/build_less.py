@@ -77,8 +77,7 @@ class BuildLess(Task):
             "*{0}".format(self.sources_ext)))
 
         def compile_target(target, dst):
-            if not os.path.isdir(dst_dir):
-                os.makedirs(dst_dir)
+            utils.makedirs(dst_dir)
             src = os.path.join(kw['cache_folder'], self.sources_folder, target)
             compiled = subprocess.check_output([self.compiler_name, src])
             with open(dst, "wb+") as outf:

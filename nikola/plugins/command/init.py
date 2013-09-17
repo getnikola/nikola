@@ -33,6 +33,7 @@ from mako.template import Template
 
 import nikola
 from nikola.plugin_categories import Command
+from nikola.utils import makedirs
 
 
 class CommandInit(Command):
@@ -105,7 +106,7 @@ class CommandInit(Command):
     @classmethod
     def create_empty_site(cls, target):
         for folder in ('files', 'galleries', 'listings', 'posts', 'stories'):
-            os.makedirs(os.path.join(target, folder))
+            makedirs(os.path.join(target, folder))
 
     @staticmethod
     def get_path_to_nikola_modules():

@@ -36,6 +36,7 @@ except ImportError:
     jinja2 = None  # NOQA
 
 from nikola.plugin_categories import TemplateSystem
+from nikola.utils import makedirs
 
 
 class JinjaTemplates(TemplateSystem):
@@ -69,10 +70,7 @@ class JinjaTemplates(TemplateSystem):
         template = self.lookup.get_template(template_name)
         output = template.render(**context)
         if output_name is not None:
-            try:
-                os.makedirs(os.path.dirname(output_name))
-            except:
-                pass
+            makedirs(os.path.dirname(output_name))
             with open(output_name, 'w+') as output:
                 output.write(output.encode('utf8'))
         return output

@@ -30,7 +30,7 @@ import json
 import os
 
 from nikola.plugin_categories import LateTask
-from nikola.utils import config_changed, copy_tree
+from nikola.utils import config_changed, copy_tree, makedirs
 
 # This is what we need to produce:
 #var tipuesearch = {"pages": [
@@ -82,10 +82,7 @@ class Tipue(LateTask):
                     data["loc"] = post.permalink(lang)
                     pages.append(data)
             output = json.dumps({"pages": pages}, indent=2)
-            try:
-                os.makedirs(os.path.dirname(dst_path))
-            except:
-                pass
+            makedirs(os.path.dirname(dst_path))
             with codecs.open(dst_path, "wb+", "utf8") as fd:
                 fd.write(output)
 

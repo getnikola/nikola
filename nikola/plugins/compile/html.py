@@ -31,6 +31,7 @@ import shutil
 import codecs
 
 from nikola.plugin_categories import PageCompiler
+from nikola.utils import makedirs
 
 
 class CompileHtml(PageCompiler):
@@ -39,10 +40,7 @@ class CompileHtml(PageCompiler):
     name = "html"
 
     def compile_html(self, source, dest, is_two_file=True):
-        try:
-            os.makedirs(os.path.dirname(dest))
-        except Exception:
-            pass
+        makedirs(os.path.dirname(dest))
         shutil.copyfile(source, dest)
         return True
 
@@ -50,9 +48,7 @@ class CompileHtml(PageCompiler):
         metadata = {}
         metadata.update(self.default_metadata)
         metadata.update(kw)
-        d_name = os.path.dirname(path)
-        if not os.path.isdir(d_name):
-            os.makedirs(os.path.dirname(path))
+        makedirs(os.path.dirname(path))
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
                 fd.write('<!-- \n')

@@ -89,10 +89,7 @@ class CommandBootswatchTheme(Command):
 
         print("Creating '{0}' theme from '{1}' and '{2}'".format(name, swatch,
                                                                  parent))
-        try:
-            os.makedirs(os.path.join('themes', name, 'assets', 'css'))
-        except:
-            pass
+        utils.makedirs(os.path.join('themes', name, 'assets', 'css'))
         for fname in ('bootstrap.min.css', 'bootstrap.css'):
             url = '/'.join(('http://bootswatch.com', version, swatch, fname))
             print("Downloading: ", url)

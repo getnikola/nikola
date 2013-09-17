@@ -268,8 +268,7 @@ class CommandNewPost(Command):
             exit()
 
         d_name = os.path.dirname(txt_path)
-        if not os.path.exists(d_name):
-            os.makedirs(d_name)
+        utils.makedirs(d_name)
         metadata = self.site.config['ADDITIONAL_METADATA']
         compiler_plugin.create_post(
             txt_path, onefile, title=title,

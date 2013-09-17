@@ -25,7 +25,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-import os
 import json
 from io import BytesIO
 
@@ -90,13 +89,7 @@ class CommandInstallTheme(Command):
             return True
         else:
             if name in data:
-                if os.path.isfile("themes"):
-                    raise IOError("'themes' isn't a directory!")
-                elif not os.path.isdir("themes"):
-                    try:
-                        os.makedirs("themes")
-                    except:
-                        raise OSError("mkdir 'theme' error!")
+                utils.makedirs('themes')
                 print('Downloading: ' + data[name])
                 zip_file = BytesIO()
                 zip_file.write(requests.get(data[name]).content)
