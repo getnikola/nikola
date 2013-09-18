@@ -4,6 +4,7 @@ python:
   - "2.7"
   - "3.3"
 install:
+  - "diff requirements.txt requirements-full.txt | grep '^<' && echo 'WARNING WARNING WARNING: Some dependencies are missing from requirements-full.txt! "
   - "pip install -r requirements-full.txt --use-mirrors"
   - "pip install flake8 --use-mirrors"
   - "pip install freezegun --use-mirrors"
