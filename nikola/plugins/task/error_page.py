@@ -40,8 +40,10 @@ class ErrorPage(Task):
         """ Generate task for error page tasks."""
 
         kw = {
-            'error_page': self.site.config['CREATE_ERROR_PAGE'],
+            'create_error_page': self.site.config['CREATE_ERROR_PAGE'],
+            'error_page': self.site.config['ERROR_PAGE'],
             'output_folder': self.site.config['OUTPUT_FOLDER'],
+            'theme': self.site.config['THEME'],
         }
 
         if not kw['error_page']:
@@ -55,7 +57,7 @@ class ErrorPage(Task):
 
         else:
             template_name = '404.tmpl'
-            dst = os.path.join(kw["output_folder"], '404.html')
+            dst = os.path.join(kw["output_folder"], kw['error_page'])
             context = {}
             context["title"] = self.site.MESSAGES[self.site.current_lang()]['Page not found']
             context["description"] = self.site.config['BLOG_DESCRIPTION']

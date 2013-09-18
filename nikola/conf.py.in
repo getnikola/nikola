@@ -553,6 +553,9 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # If webassets is installed, bundle JS and CSS to make site loading faster
 # USE_BUNDLES = True
 
+# The default name for the error page.
+# ERROR_PAGE = '404.html'
+
 # Creates a /404.html page when set to True.
 # CREATE_ERROR_PAGE = False
 

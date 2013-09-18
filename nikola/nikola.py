@@ -129,6 +129,7 @@ class Nikola(object):
             'COPY_SOURCES': True,
             'CREATE_MONTHLY_ARCHIVE': False,
             'CREATE_ERROR_PAGE': False,
+            'ERROR_PAGE': '404.html',
             'DATE_FORMAT': '%Y-%m-%d %H:%M',
             'DEFAULT_LANG': "en",
             'DEPLOY_COMMANDS': [],
@@ -616,6 +617,14 @@ class Nikola(object):
             assert result, (src, dst, i, src_elems, dst_elems)
 
             return result
+
+        if src == '/' + self.config['ERROR_PAGE']:
+            # Redefine the replacer to convert all URLs to full URLs
+            def replacer(dst):
+                parsed_dst = urlsplit(dst)
+                if parsed_src[:2] == parsed_dst[:2]:
+                    dst = urljoin(self.config['SITE_URL'], dst.lstrip('/'))
+                return dst
 
         utils.makedirs(os.path.dirname(output_name))
         doc = lxml.html.document_fromstring(data)
