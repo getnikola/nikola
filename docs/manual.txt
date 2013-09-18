@@ -203,7 +203,8 @@ Longer version:
 #. Get `Nikola <http://getnikola.com/>`_
 #. Install dependencies. To do that, either:
 
-   #. ``pip install -r requirements.txt`` (or ``requirements-full.txt`` for extra stuff) and ``pip install .`` or...
+   #. ``pip install -r requirements.txt`` (or ``requirements-full.txt`` for
+   extra stuff [#]_) and ``pip install .`` or...
    #. Install your distribution's packages for all the things
       mentioned below, if they exist, or...
    #. Get all of these manually (but why?, use pip):
@@ -239,6 +240,11 @@ Debian systems::
 RHEL systems::
 
     yum install libxslt-devel libxml2-devel
+
+.. [#] For Python 3.0 through 3.2, you need to replace ``Jinja2==2.7``
+       with ``Jinja2==2.6`` or installation will fail.  (note that
+       upgrading Python is a better solution, although it is not always
+       possible)
 
 Getting Started
 ---------------
