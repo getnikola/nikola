@@ -4,6 +4,7 @@ New in Master
 Bugfixes
 --------
 
+* Localsearch task now depends on all pages, for better accuracy.
 * More robust directory creation (Issue #208)
 * Proper logging (Issues #712 #704)
 * Be less agressive in hyphenating, also, split words differently. (Issue #718)
