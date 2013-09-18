@@ -4,5 +4,6 @@
 <%namespace name="post_helper" file="post_helper.tmpl"/>
 <%inherit file="base.tmpl"/>
 <%block name="content">
-   <h1>Error 404: ${messages("Page not found")}</h1>
+   <h1>${messages("Page not found")}</h1>
+   ${messages("404 explained")}
 </%block>

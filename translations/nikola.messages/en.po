@@ -79,4 +79,7 @@ msgid "Posts for {month} {year}"
 msgstr "Posts for {month} {year}"
 
 msgid "Page not found"
-msgstr "Page not found"
+msgstr "404: Page not found"
+
+msgid "404 explained"
+msgstr "The page you requested could not be found on the server. Please verify the URL."
