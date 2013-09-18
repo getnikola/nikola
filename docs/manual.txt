@@ -203,8 +203,8 @@ Longer version:
 #. Get `Nikola <http://getnikola.com/>`_
 #. Install dependencies. To do that, either:
 
-   #. ``pip install -r requirements.txt`` (or ``requirements-full.txt`` for
-   extra stuff [#]_) and ``pip install .`` or...
+   #. ``pip install -r requirements.txt`` (or ``requirements-full.txt``
+      for extra stuff [#]_) and ``pip install .`` or...
    #. Install your distribution's packages for all the things
       mentioned below, if they exist, or...
    #. Get all of these manually (but why?, use pip):
