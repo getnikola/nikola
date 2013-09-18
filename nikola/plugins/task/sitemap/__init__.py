@@ -56,7 +56,7 @@ get_lastmod = lambda p: datetime.datetime.fromtimestamp(os.stat(p).st_mtime).iso
 
 
 def get_base_path(base):
-    u"""returns the path of a base URL if it contains one.
+    """returns the path of a base URL if it contains one.
 
     >>> get_base_path('http://some.site') == '/'
     True
