@@ -97,6 +97,15 @@ class Build(DoitRun):
                 'help': "Fail on things that would normally be warnings.",
             }
         )
+        opts.append(
+            {
+                'name': 'invariant',
+                'long': 'invariant',
+                'default': False,
+                'type': bool,
+                'help': "Generate invariant output (for testing only!).",
+            }
+        )
         self.cmd_options = tuple(opts)
         super(Build, self).__init__(*args, **kw)
 

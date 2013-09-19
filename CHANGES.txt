@@ -4,6 +4,7 @@ New in Master
 Bugfixes
 --------
 
+* Added invariance testing (Issue #672)
 * Changed default PyGal style (Issue #726)
 * Add files used by the listings directive as dependencies (Issue #723)
 * Localsearch task now depends on all pages, for better accuracy.
