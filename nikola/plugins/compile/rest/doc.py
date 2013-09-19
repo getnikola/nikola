@@ -50,11 +50,16 @@ def doc_role(name, rawtext, text, lineno, inliner,
     has_explicit_title, title, slug = split_explicit_title(text)
 
     # check if the slug given is part of our blog posts/pages
+    twin_slugs = False
     post = None
     for p in doc_role.site.timeline:
         if p.meta('slug') == slug:
-            post = p
-            break
+            if post is None:
+                post = p
+            else:
+                twin_slugs = True
+                break
+
     try:
         if post is None:
             raise ValueError
@@ -70,6 +75,10 @@ def doc_role(name, rawtext, text, lineno, inliner,
         title = post.title()
 
     permalink = post.permalink()
+    if twin_slugs:
+        msg = inliner.reporter.warning(
+            'More than one post with the same slug. Using "{}"'.format(permalink))
+
     node = make_link_node(rawtext, title, permalink, options)
     return [node], []
 
