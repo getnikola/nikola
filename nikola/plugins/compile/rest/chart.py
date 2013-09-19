@@ -137,7 +137,7 @@ class Chart(Directive):
         if 'style' in self.options:
             style_name = self.options.pop('style')
         else:
-            style_name = 'DefaultStyle'
+            style_name = 'BlueStyle'
         if '(' in style_name:  # Parametric style
             style = eval('pygal.style.' + style_name)
         else:
