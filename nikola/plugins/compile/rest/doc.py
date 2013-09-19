@@ -46,15 +46,13 @@ class Plugin(RestExtension):
 def doc_role(name, rawtext, text, lineno, inliner,
              options={}, content=[]):
 
-    lang = doc_role.site.config['DEFAULT_LANG']
-
     # split link's text and post's slug in role content
     has_explicit_title, title, slug = split_explicit_title(text)
 
     # check if the slug given is part of our blog posts/pages
     post = None
     for p in doc_role.site.timeline:
-        if p.meta[lang]['slug'] == slug:
+        if p.meta('slug') == slug:
             post = p
             break
     try:
