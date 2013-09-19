@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
+    "404 explained": "The page you requested could not be found on the server. Please verify the URL.",
     "Also available in": "Also available in",
     "Archive": "Archive",
     "Categories": "Categories",
@@ -11,6 +12,7 @@ MESSAGES = {
     "Next post": "Next post",
     "Older posts": "Older posts",
     "Original site": "Original site",
+    "Page not found": "404: Page not found",
     "Posted": "Posted",
     "Posts about %s": "Posts about %s",
     "Posts for year %s": "Posts for year %s",

@@ -698,6 +698,16 @@ in your ``conf.py``::
 It's better if you can do these using your web server's configuration, but if
 you can't, this will work.
 
+Error Page
+----------
+
+If you want Nikola to create a simple 404 page for you, you can set
+``CREATE_ERROR_PAGE`` to ``True`` in your ``conf.py``.  You could use
+this to redirect all errors on your site to this page, by configuring
+your webserver.  For example, you just need to add ``ErrorDocument 404
+/404.html`` to your Apache configuration file.  You can also change
+the error page's name the ``ERROR_PAGE`` configuration variable.
+
 Configuration
 -------------
 
