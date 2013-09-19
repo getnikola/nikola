@@ -1,0 +1,9 @@
+[Core]
+Name = tags
+Module = tags
+
+[Documentation]
+Author = Puneeth Chaganti
+Version = 0.1
+Website = http://getnikola.com
+Description = Manage the tags for your site.
