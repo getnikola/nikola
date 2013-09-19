@@ -48,7 +48,7 @@ config = {}
 
 
 def main(args):
-    if args[0] == 'build' and '--strict' in args:
+    if len(args) > 0 and args[0] == 'build' and '--strict' in args:
         LOGGER.notice('Running in strict mode')
         STRICT_HANDLER.push_application()
     global config
