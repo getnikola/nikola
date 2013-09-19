@@ -142,8 +142,6 @@ class DoitNikola(DoitMain):
         # load nikola commands
         for name, cmd in self.nikola.commands.items():
             cmds[name] = cmd
-        # Hide run because Nikola uses build
-        cmds.pop('run')
         return cmds
 
     def run(self, cmd_args):
@@ -154,6 +152,8 @@ class DoitNikola(DoitMain):
         if len(args) == 0 or any(arg in ["--help", '-h'] for arg in args):
             cmd_args = ['help']
             args = ['help']
+            # Hide run because Nikola uses build
+            sub_cmds.pop('run')
 
         if len(args) == 0 or args[0] not in sub_cmds.keys() or \
                 args[0] == 'build':
