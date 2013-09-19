@@ -21,7 +21,9 @@ Here are some guidelines about how you can contribute to Nikola:
   This makes life much easier for maintainers if you have (or ever plan to
   have) additional changes in your own ``master`` branch.
 
-    * A corollary: please **don't put multiple fixes/features in the same
+.. admonition:: A corollary: 
+
+      Please **don't put multiple fixes/features in the same
       branch/pull request**! In other words, if you're hacking on new feature X
       and find a bugfix that doesn't *require* new feature X, **make a new
       distinct branch and PR** for the bugfix.
