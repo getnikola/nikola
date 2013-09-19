@@ -1,0 +1,10 @@
+[Core]
+Name = ref
+Module = ref
+
+[Documentation]
+Author = Manuel Kaufmann
+Version = 0.1
+Website = http://getnikola.com
+Description = Role to link another post from the blog
+

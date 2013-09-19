@@ -42,6 +42,7 @@ import unittest
 from yapsy.PluginManager import PluginManager
 
 from nikola import utils
+from nikola.post import Post
 import nikola.plugins.compile.rest
 from nikola.plugins.compile.rest import gist
 from nikola.plugins.compile.rest import vimeo
@@ -59,12 +60,27 @@ from nikola.plugin_categories import (
 from base import BaseTestCase
 
 
+class FakePost(object):
+
+    def __init__(self, title, slug):
+        self._title = title
+        self._slug = slug
+        self.meta = {'en': {'slug': slug}}
+
+    def title(self):
+        return self._title
+
+    def permalink(self):
+        return '/posts/' + self._slug
+
+
 class FakeSite(object):
     def __init__(self):
         self.template_system = self
         self.config = {
             'DISABLED_PLUGINS': [],
             'EXTRA_PLUGINS': [],
+            'DEFAULT_LANG': 'en',
         }
         self.EXTRA_PLUGINS = self.config['EXTRA_PLUGINS']
         self.plugin_manager = PluginManager(categories_filter={
@@ -87,6 +103,12 @@ class FakeSite(object):
             ]
         self.plugin_manager.setPluginPlaces(places)
         self.plugin_manager.collectPlugins()
+
+        self.timeline = [
+            FakePost(title='Fake post',
+                     slug='fake-post')
+        ]
+
 
     def render_template(self, name, _, context):
         return('<img src="IMG.jpg">')
@@ -303,6 +325,32 @@ class ListingTestCase(ReSTExtensionTestCase):
         self.deps = None
         self.setHtmlFromRst(self.sample2)
         self.setHtmlFromRst(self.sample3)
+
+
+class RefTestCase(ReSTExtensionTestCase):
+    """ Ref role test case """
+
+    sample = 'Sample for testing my :ref:`doesnt-exist-post`'
+    sample1 = 'Sample for testing my :ref:`fake-post`'
+    sample2 = 'Sample for testing my :ref:`titled post <fake-post>`'
+
+    def setUp(self):
+        super(RefTestCase, self).setUp()
+
+    def test_ref_doesnt_exist(self):
+        self.assertRaises(Exception, self.assertHTMLContains, 'anything', {})
+
+    def test_ref(self):
+        self.setHtmlFromRst(self.sample1)
+        self.assertHTMLContains('a',
+                                text='Fake post',
+                                attributes={'href': '/posts/fake-post'})
+
+    def test_ref_titled(self):
+        self.setHtmlFromRst(self.sample2)
+        self.assertHTMLContains('a',
+                                text='titled post',
+                                attributes={'href': '/posts/fake-post'})
 
 
 if __name__ == "__main__":
