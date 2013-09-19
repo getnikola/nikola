@@ -141,6 +141,12 @@ class Build(DoitRun):
                 'default': False,
                 'type': bool,
                 'help': "Run quietly.",
+            }, {
+                'name': 'invariant',
+                'long': 'invariant',
+                'default': False,
+                'type': bool,
+                'help': "Generate invariant output (for testing only!).",
             }
         )
         self.cmd_options = tuple(opts)
