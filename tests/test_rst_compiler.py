@@ -42,7 +42,6 @@ import unittest
 from yapsy.PluginManager import PluginManager
 
 from nikola import utils
-from nikola.post import Post
 import nikola.plugins.compile.rest
 from nikola.plugins.compile.rest import gist
 from nikola.plugins.compile.rest import vimeo
