@@ -88,7 +88,6 @@ class Tipue(LateTask):
             with codecs.open(dst_path, "wb+", "utf8") as fd:
                 fd.write(output)
 
-
         yield {
             "basename": str(self.name),
             "name": dst_path,
@@ -99,8 +98,6 @@ class Tipue(LateTask):
         # Note: The task should run everytime a new file is added or a
         # file is changed.  We cheat, and depend on the sitemap task,
         # to run everytime a new file is added.
-
-
 
         # Copy all the assets to the right places
         asset_folder = os.path.join(os.path.dirname(__file__), "files")
