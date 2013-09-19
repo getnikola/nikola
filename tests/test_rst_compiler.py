@@ -96,6 +96,7 @@ class ReSTExtensionTestCase(BaseTestCase):
     """ Base class for testing ReST extensions """
 
     sample = 'foo'
+    deps = None
 
     def setUp(self):
         """ Parse cls.sample into a HTML document tree """
@@ -109,6 +110,7 @@ class ReSTExtensionTestCase(BaseTestCase):
         tmpdir = tempfile.mkdtemp()
         inf = os.path.join(tmpdir, 'inf')
         outf = os.path.join(tmpdir, 'outf')
+        depf = os.path.join(tmpdir, 'outf.dep')
         with codecs.open(inf, 'wb+', 'utf8') as f:
             f.write(rst)
         self.html = self.compiler.compile_html(inf, outf)
@@ -116,6 +118,12 @@ class ReSTExtensionTestCase(BaseTestCase):
             self.html = f.read()
         os.unlink(inf)
         os.unlink(outf)
+        if os.path.isfile(depf):
+            with codecs.open(depf, 'r', 'utf8') as f:
+                self.assertEqual(self.deps, f.read())
+            os.unlink(depf)
+        else:
+            self.assertEqual(self.deps, None)
         os.rmdir(tmpdir)
         self.html_doc = html.parse(StringIO(self.html))
 
@@ -268,6 +276,7 @@ class YoutubeTestCase(ReSTExtensionTestCase):
 class ListingTestCase(ReSTExtensionTestCase):
     """ Listing test case and CodeBlock alias tests """
 
+    deps = None
     sample1 = '.. listing:: nikola.py python'
     sample2 = '.. code-block:: python\n\n   import antigravity'
     sample3 = '.. sourcecode:: python\n\n   import antigravity'
@@ -286,10 +295,12 @@ class ListingTestCase(ReSTExtensionTestCase):
 
     def test_listing(self):
         """ Test that we can render a file object contents without errors """
+        self.deps = 'listings/nikola.py'
         self.setHtmlFromRst(self.sample1)
 
     def test_codeblock_alias(self):
         """ Test CodeBlock aliases """
+        self.deps = None
         self.setHtmlFromRst(self.sample2)
         self.setHtmlFromRst(self.sample3)
 
