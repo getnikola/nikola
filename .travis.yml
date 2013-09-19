@@ -11,6 +11,8 @@ install:
   - "pip install . --use-mirrors"
 # We run tests and afterwards nikola to see if the command is executable.
 script:
- - nosetests --with-doctest --doctest-options=+NORMALIZE_WHITESPACE
+ - nosetests --with-coverage --cover-package=nikola --with-doctest --doctest-options=+NORMALIZE_WHITESPACE
  - nikola help
  - "flake8 --exit-zero nikola --ignore=E501"
+after_success:
+  - coveralls
