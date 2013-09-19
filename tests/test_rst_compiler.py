@@ -330,23 +330,23 @@ class ListingTestCase(ReSTExtensionTestCase):
 class RefTestCase(ReSTExtensionTestCase):
     """ Ref role test case """
 
-    sample = 'Sample for testing my :ref:`doesnt-exist-post`'
-    sample1 = 'Sample for testing my :ref:`fake-post`'
-    sample2 = 'Sample for testing my :ref:`titled post <fake-post>`'
+    sample = 'Sample for testing my :doc:`doesnt-exist-post`'
+    sample1 = 'Sample for testing my :doc:`fake-post`'
+    sample2 = 'Sample for testing my :doc:`titled post <fake-post>`'
 
     def setUp(self):
         super(RefTestCase, self).setUp()
 
-    def test_ref_doesnt_exist(self):
+    def test_doc_doesnt_exist(self):
         self.assertRaises(Exception, self.assertHTMLContains, 'anything', {})
 
-    def test_ref(self):
+    def test_doc(self):
         self.setHtmlFromRst(self.sample1)
         self.assertHTMLContains('a',
                                 text='Fake post',
                                 attributes={'href': '/posts/fake-post'})
 
-    def test_ref_titled(self):
+    def test_doc_titled(self):
         self.setHtmlFromRst(self.sample2)
         self.assertHTMLContains('a',
                                 text='titled post',
