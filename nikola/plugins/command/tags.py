@@ -26,18 +26,17 @@
 
 from __future__ import unicode_literals, print_function
 import codecs
-import datetime
-import os
-import sys
 from textwrap import dedent
 
 from nikola.nikola import Nikola
 from nikola.plugin_categories import Command
-from nikola import utils
+from nikola.utils import LOGGER
+
 
 def format_doc_string(function):
     text = dedent(' ' * 4 + function.__doc__.strip())
-    return '\n'.join([line for line in text.splitlines() if line.strip()]) +'\n'
+    return '\n'.join([line for line in text.splitlines() if line.strip()]) + '\n'
+
 
 def list_tags(site, sorting='alpha'):
     """ Lists all the tags used in the site.
@@ -73,15 +72,13 @@ def merge_tags(site, tags, filenames, test_mode=False):
 
     """
 
-    import codecs
-
     if len(tags) < 2:
         print("ERROR: Need atleast two tags to merge.")
 
     else:
         # fixme: currently doesn't handle two post files.
         posts = [
-            post for post in site.timeline \
+            post for post in site.timeline
             if post.source_path in filenames and not post.is_two_file
         ]
         FMT = 'Tags for {0}:\n{1:>6} - {2}\n{3:>6} - {4}\n'
@@ -109,6 +106,7 @@ def _clean_tags(tags, remove, keep):
 
     return tags
 
+
 def _replace_tags_line(post, tags):
     with codecs.open(post.source_path) as f:
         post_text = f.readlines()
@@ -133,33 +131,33 @@ class CommandNewPost(Command):
     doc_purpose = "manages the tags of your site"
     cmd_options = [
         {
-            'name'    : 'list',
-            'long'    : 'list',
-            'short'   : 'l',
-            'default' : False,
-            'type'    : bool,
-            'help'    : format_doc_string(list_tags)
+            'name': 'list',
+            'long': 'list',
+            'short': 'l',
+            'default': False,
+            'type': bool,
+            'help': format_doc_string(list_tags)
         },
         {
-            'name'    : 'list_sorting',
-            'short'   : 's',
-            'type'    : str,
-            'default' : 'alpha',
-            'help'    : 'Changes sorting of list; can be one of alpha or count.\n'
+            'name': 'list_sorting',
+            'short': 's',
+            'type': str,
+            'default': 'alpha',
+            'help': 'Changes sorting of list; can be one of alpha or count.\n'
         },
         {
-            'name'    : 'merge',
-            'long'    : 'merge',
-            'type'    : lambda args: args.split(),
-            'default' : '',
-            'help'    : format_doc_string(merge_tags)
+            'name': 'merge',
+            'long': 'merge',
+            'type': lambda args: args.split(),
+            'default': '',
+            'help': format_doc_string(merge_tags)
         },
         {
-            'name'    : 'test',
-            'short'   : 't',
-            'type'    : bool,
-            'default' : False,
-            'help'    : 'Run other commands in test mode.  Does not edit any files.\n'
+            'name': 'test',
+            'short': 't',
+            'type': bool,
+            'default': False,
+            'help': 'Run other commands in test mode.  Does not edit any files.\n'
         },
 
     ]
