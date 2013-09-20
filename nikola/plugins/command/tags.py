@@ -59,6 +59,8 @@ def list_tags(site, sorting='alpha'):
             show = tag
         print(show)
 
+    return tags
+
 
 def merge_tags(site, tags, filenames, test_mode=False):
     """ Merges a list of tags, replacing everything with the last tag.
@@ -93,6 +95,8 @@ def merge_tags(site, tags, filenames, test_mode=False):
             else:
                 _replace_tags_line(post, new_tags)
 
+    return new_tags
+
 
 def _clean_tags(tags, remove, keep):
     """ In all tags list, replace tags in remove with keep tag. """
@@ -120,7 +124,7 @@ def _replace_tags_line(post, tags):
         post_text = f.writelines(post_text)
 
 
-class CommandNewPost(Command):
+class CommandTags(Command):
     """ Manage tags on the site.
 
     This plugin is inspired by `jtags <https://github.com/ttscoff/jtag>`_.
