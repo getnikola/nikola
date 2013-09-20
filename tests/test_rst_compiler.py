@@ -36,6 +36,7 @@ import os
 import sys
 import tempfile
 
+import docutils
 from lxml import html
 from nose.plugins.skip import SkipTest
 import unittest
@@ -344,6 +345,11 @@ class RefTestCase(ReSTExtensionTestCase):
     sample = 'Sample for testing my :doc:`doesnt-exist-post`'
     sample1 = 'Sample for testing my :doc:`fake-post`'
     sample2 = 'Sample for testing my :doc:`titled post <fake-post>`'
+
+    def setUp(self):
+        f =  docutils.parsers.rst.roles.role('doc', None, None, None)[0]
+        f.site = FakeSite()
+        return super(RefTestCase, self).setUp()
 
     def test_doc_doesnt_exist(self):
         self.assertRaises(Exception, self.assertHTMLContains, 'anything', {})
