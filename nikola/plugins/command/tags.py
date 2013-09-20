@@ -60,11 +60,13 @@ def add_tags(site, tags, filenames, test_mode=False):
 
     for post in posts:
         new_tags = _add_tags(post.tags[:], tags)
+
         if test_mode:
             print(FMT.format(
                 post.source_path, OLD, post.tags, NEW, new_tags)
             )
-        else:
+
+        elif new_tags != post.tags:
             _replace_tags_line(post, new_tags)
 
     return new_tags
@@ -124,11 +126,13 @@ def merge_tags(site, tags, filenames, test_mode=False):
 
     for post in posts:
         new_tags = _clean_tags(post.tags[:], set(tags[:-1]), tags[-1])
+
         if test_mode:
             print(FMT.format(
                 post.source_path, OLD, post.tags, NEW, new_tags)
             )
-        else:
+
+        elif new_tags != post.tags:
             _replace_tags_line(post, new_tags)
 
     return new_tags
@@ -170,7 +174,7 @@ def remove_tags(site, tags, filenames, test_mode=False):
                 post.source_path, OLD, post.tags, NEW, new_tags)
             )
 
-        elif new_tags != tags:
+        elif new_tags != post.tags:
             _replace_tags_line(post, new_tags)
 
     return new_tags
@@ -227,11 +231,13 @@ def sort_tags(site, filenames, test_mode=False):
 
     for post in posts:
         new_tags = sorted(post.tags)
+
         if test_mode:
             print(FMT.format(
                 post.source_path, OLD, post.tags, NEW, new_tags)
             )
-        else:
+
+        elif new_tags != post.tags:
             _replace_tags_line(post, new_tags)
 
     return new_tags
@@ -281,6 +287,7 @@ def _remove_tags(tags, removals):
 
 
 def _replace_tags_line(post, tags):
+
     with codecs.open(post.source_path) as f:
         post_text = f.readlines()
 
@@ -379,13 +386,16 @@ class CommandTags(Command):
             nikola = Nikola(**conf.__dict__)
             nikola.scan_posts()
 
-            if len(options['add']) > 1 and len(args) > 0:
+            if len(options['add']) > 0 and len(args) > 0:
                 add_tags(nikola, options['add'], args, options['test'])
 
-            elif len(options['merge']) > 1 and len(args) > 0:
+            elif options['list']:
+                list_tags(nikola, options['list_sorting'])
+
+            elif options['merge'].count(',') > 0 and len(args) > 0:
                 merge_tags(nikola, options['merge'], args, options['test'])
 
-            elif len(options['remove']) > 1 and len(args) > 0:
+            elif len(options['remove']) > 0 and len(args) > 0:
                 remove_tags(nikola, options['remove'], args, options['test'])
 
             elif len(options['search']) > 0:
@@ -393,9 +403,6 @@ class CommandTags(Command):
 
             elif options['sort']:
                 sort_tags(nikola, args, options['test'])
-
-            elif options['list']:
-                list_tags(nikola, options['list_sorting'])
 
             else:
                 print(self.help())
