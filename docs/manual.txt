@@ -1063,7 +1063,7 @@ different ones, or about other webservers, please share!
 Restructured Text Extensions
 ----------------------------
 
-Nikola includes support for a few directives that are not part of docutils, but which
+Nikola includes support for a few directives and roles that are not part of docutils, but which
 we think are handy for website development.
 
 Media
@@ -1210,6 +1210,27 @@ You can use any option described in `the pygal docs <http://pygal.org/basic_cust
 
 Finally, the content of the directive is the actual data, in the form of a label and
 a list of values, one series per line.
+
+Doc
+~~~
+
+This role is useful to make links to other post or page inside the same site.
+
+Here's an example::
+
+    Take a look at :doc:`my other post <creating-a-theme>` about theme creating.
+
+In this case we are giving the portion of text we want to link. So, the result will be:
+
+    Take a look at :doc:`my other post <creating-a-theme>` about theme creating.
+
+If we want to use the post's title as the link's text, just do::
+
+    Take a look at :doc:`creating-a-theme` to know how to do it.
+
+and it will produce:
+
+    Take a look at :doc:`creating-a-theme` to know how to do it.
 
 
 Importing Your WordPress Site Into Nikola
