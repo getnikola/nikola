@@ -63,16 +63,18 @@ def list_tags(site, sorting='alpha'):
 
 
 def merge_tags(site, tags, filenames, test_mode=False):
-    """ Merges a list of tags, replacing everything with the last tag.
+    """ Merges a list of comma-separated tags, replacing them with the last tag.
 
     Requires a list of file names to be passed as arguments.
 
-        $ nikola tags --merge "foo bar baz useless" posts/*.rst
+        $ nikola tags --merge "foo,bar,baz,useless" posts/*.rst
 
     The above command will replace foo, bar, and baz with 'useless'
     in all rst posts.
 
     """
+
+    tags = _process_comma_separated_tags(tags)
 
     if len(tags) < 2:
         print("ERROR: Need atleast two tags to merge.")
@@ -110,6 +112,8 @@ def _clean_tags(tags, remove, keep):
 
     return tags
 
+def _process_comma_separated_tags(tags):
+    return [tag.strip() for tag in tags.strip().split(',')]
 
 def _replace_tags_line(post, tags):
     with codecs.open(post.source_path) as f:
@@ -152,7 +156,7 @@ class CommandTags(Command):
         {
             'name': 'merge',
             'long': 'merge',
-            'type': lambda args: args.split(),
+            'type': str,
             'default': '',
             'help': format_doc_string(merge_tags)
         },
