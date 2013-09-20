@@ -19,6 +19,8 @@ import nikola
 import nikola.plugins.command
 import nikola.plugins.command.init
 
+from .base import BaseTestCase
+
 
 @contextmanager
 def cd(path):
@@ -28,7 +30,7 @@ def cd(path):
     os.chdir(old_dir)
 
 
-class EmptyBuildTest(unittest.TestCase):
+class EmptyBuildTest(BaseTestCase):
     """Basic integration testcase."""
 
     dataname = None
