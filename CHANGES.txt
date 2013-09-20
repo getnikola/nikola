@@ -1,6 +1,12 @@
 New in 6.0.4
 ==========================================
 
+Features
+--------
+
+* New :doc: role for reStructuredText compiler, creates a link to another post
+  / page inside the same site (Issue #724)
+
 Bugfixes
 --------
 

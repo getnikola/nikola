@@ -613,3 +613,16 @@ class ExtendedRSS2(rss.RSS2):
                 'type': "application/rss+xml"
             })
             handler.endElement("atom:link")
+
+
+# \x00 means the "<" was backslash-escaped
+explicit_title_re = re.compile(r'^(.+?)\s*(?<!\x00)<(.*?)>$', re.DOTALL)
+def split_explicit_title(text):
+    """Split role content into title and target, if given.
+
+       From Sphinx's "sphinx/util/nodes.py"
+    """
+    match = explicit_title_re.match(text)
+    if match:
+        return True, match.group(1), match.group(2)
+    return False, text, text
