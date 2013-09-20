@@ -237,9 +237,8 @@ def load_messages(themes, translations, default_lang):
             if sorted(translation.MESSAGES.keys()) !=\
                     sorted(english.MESSAGES.keys()) and \
                     lang not in warned:
-                # FIXME: get real logging in place
                 warned.append(lang)
-                print("Warning: Incomplete translation for language "
+                LOGGER.warn("Incomplete translation for language "
                       "'{0}'.".format(lang))
             messages[lang].update(english.MESSAGES)
             messages[lang].update(translation.MESSAGES)

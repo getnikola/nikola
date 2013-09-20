@@ -22,3 +22,6 @@ pygal
 typogrify
 phpserialize
 webassets
+coverage
+python-coveralls
+nose

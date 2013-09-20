@@ -32,7 +32,7 @@ Here are some guidelines about how you can contribute to Nikola:
   current, and if necessary, update the ReST documentation in ``docs/``.
 * **Add a changelog entry** at the top of ``CHANGES.txt`` mentioning issue number
   and in the correct Features/Bugfixes section.
-
+* **Run flake8** for style consistency. Use ``flake8 --ignore=E501 .``
 * **Try writing some tests** if possible -- again, following existing tests is
   often easiest, and a good way to tell whether the feature you're modifying is
   easily testable.
@@ -40,7 +40,7 @@ Here are some guidelines about how you can contribute to Nikola:
   Issue**. This isn't an absolute requirement, but makes the maintainers' lives
   much easier! Specifically: `install hub
   <https://github.com/defunkt/hub/#installation>`_ and then run `hub
-  pull-request <https://github.com/defunkt/hub/#git-pull-request>`_ to turn the
+  pull-request -i issuenumber <https://github.com/defunkt/hub/#git-pull-request>`_ to turn the
   issue into a pull request containing your code.
 
 * There are some quirks to how Nikola's codebase is structured, and to how
