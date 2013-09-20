@@ -60,7 +60,7 @@ class Media(Directive):
                 "To use the media directive you need to install "
                 "the micawber module."
             )
-            utils.logger.WARN(msg)
+            utils.LOGGER.warn(msg)
             return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
 
         providers = micawber.bootstrap_basic()

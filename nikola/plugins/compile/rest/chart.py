@@ -131,7 +131,7 @@ class Chart(Directive):
                 "To use the Chart directive you need to install "
                 "the pygal module.\n"
             )
-            utils.logger.warn(msg)
+            utils.LOGGER.warn(msg)
             return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
         options = {}
         if 'style' in self.options:
