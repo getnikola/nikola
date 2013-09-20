@@ -4,6 +4,7 @@ New in Master
 Bugfixes
 --------
 
+* Added missing metadata in internals.txt and extending.txt (Issue #738)
 * Fix addthis sizing with bootstrap3 theme (Issue #731)
 * Refuse to install in unsupported Python versions (Issue #733)
 * Fix sitemap plugin compatibility with Python 3 (Issue #734)
