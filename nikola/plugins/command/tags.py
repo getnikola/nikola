@@ -59,10 +59,10 @@ def add_tags(site, tags, filenames, test_mode=False):
     NEW = 'new'
 
     for post in posts:
-        new_tags = _add_tags(post.alltags[:], tags)
+        new_tags = _add_tags(post.tags[:], tags)
         if test_mode:
             print(FMT.format(
-                post.source_path, OLD, post.alltags, NEW, new_tags)
+                post.source_path, OLD, post.tags, NEW, new_tags)
             )
         else:
             _replace_tags_line(post, new_tags)
@@ -123,10 +123,10 @@ def merge_tags(site, tags, filenames, test_mode=False):
     NEW = 'new'
 
     for post in posts:
-        new_tags = _clean_tags(post.alltags[:], set(tags[:-1]), tags[-1])
+        new_tags = _clean_tags(post.tags[:], set(tags[:-1]), tags[-1])
         if test_mode:
             print(FMT.format(
-                post.source_path, OLD, post.alltags, NEW, new_tags)
+                post.source_path, OLD, post.tags, NEW, new_tags)
             )
         else:
             _replace_tags_line(post, new_tags)
@@ -160,10 +160,10 @@ def remove_tags(site, tags, filenames, test_mode=False):
     NEW = 'new'
 
     for post in posts:
-        new_tags = _remove_tags(post.alltags[:], tags)
+        new_tags = _remove_tags(post.tags[:], tags)
         if test_mode:
             print(FMT.format(
-                post.source_path, OLD, post.alltags, NEW, new_tags)
+                post.source_path, OLD, post.tags, NEW, new_tags)
             )
         else:
             _replace_tags_line(post, new_tags)
