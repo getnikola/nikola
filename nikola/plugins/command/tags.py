@@ -164,12 +164,39 @@ def remove_tags(site, tags, filenames, test_mode=False):
 
     for post in posts:
         new_tags = _remove_tags(post.tags[:], tags)
+
         if test_mode:
             print(FMT.format(
                 post.source_path, OLD, post.tags, NEW, new_tags)
             )
-        else:
+
+        elif new_tags != tags:
             _replace_tags_line(post, new_tags)
+
+    return new_tags
+
+
+def search_tags(site, term):
+    """ Lists all tags that match the specified search term.
+
+    The tags are sorted alphabetically, by default.
+
+    """
+
+    import re
+
+    tags = site.posts_per_tag
+    search_re = re.compile(term.lower())
+
+    matches = [
+        tag for tag in tags
+        if term in tag.lower() or search_re.match(tag.lower())
+    ]
+
+    new_tags = sorted(matches, key=lambda tag: tag.lower())
+
+    for tag in new_tags:
+        print(tag)
 
     return new_tags
 
@@ -315,6 +342,13 @@ class CommandTags(Command):
             'help': _format_doc_string(remove_tags)
         },
         {
+            'name': 'search',
+            'long': 'search',
+            'default': '',
+            'type': str,
+            'help': _format_doc_string(search_tags)
+        },
+        {
             'name': 'sort',
             'long': 'sort',
             'short': 'S',
@@ -353,6 +387,9 @@ class CommandTags(Command):
 
             elif len(options['remove']) > 1 and len(args) > 0:
                 remove_tags(nikola, options['remove'], args, options['test'])
+
+            elif len(options['search']) > 0:
+                search_tags(nikola, options['search'])
 
             elif options['sort']:
                 sort_tags(nikola, args, options['test'])
