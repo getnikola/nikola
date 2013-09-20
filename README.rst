@@ -55,13 +55,4 @@ For even more stuff, like tests and very optional features::
 
     pip install -r requirements-full.txt
 
-
-.. note:: For Python 3.0 through 3.2, you need to replace ``Jinja2==2.7``
-          with ``Jinja2==2.6`` or installation will fail.  (note that
-          upgrading Python is a better solution, although it is not always
-          possible)
-
-          You may also have problems with the Jinja themes included.  In this
-          case, you should use Mako themes instead.
-
 For more information, see http://getnikola.com/
