@@ -273,8 +273,8 @@ class CommandTags(Command):
     """
 
     name = "tags"
-    doc_usage = "[options]"
-    doc_purpose = "manages the tags of your site"
+    doc_usage = "[-t] command [options] [arguments] [filename(s)]"
+    doc_purpose = "Command to help manage the tags on your site"
     cmd_options = [
         {
             'name': 'add',
