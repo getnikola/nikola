@@ -33,9 +33,41 @@ from nikola.plugin_categories import Command
 from nikola.utils import LOGGER
 
 
-def format_doc_string(function):
-    text = dedent(' ' * 4 + function.__doc__.strip())
-    return '\n'.join([line for line in text.splitlines() if line.strip()]) + '\n'
+def add_tags(site, tags, filenames, test_mode=False):
+    """ Adds a list of comma-separated tags, given a list of filenames.
+
+        $ nikola tags --add "foo,bar" posts/*.rst
+
+    The above command will add foo and bar tags to all rst posts.
+
+    """
+
+    tags = _process_comma_separated_tags(tags)
+
+    if len(tags) < 1:
+        print("ERROR: Need atleast one tag to add.")
+        return
+
+    # fixme: currently doesn't handle two post files.
+    posts = [
+        post for post in site.timeline
+        if post.source_path in filenames and not post.is_two_file
+    ]
+
+    FMT = 'Tags for {0}:\n{1:>6} - {2}\n{3:>6} - {4}\n'
+    OLD = 'old'
+    NEW = 'new'
+
+    for post in posts:
+        new_tags = _add_tags(post.alltags[:], tags)
+        if test_mode:
+            print(FMT.format(
+                post.source_path, OLD, post.alltags, NEW, new_tags)
+            )
+        else:
+            _replace_tags_line(post, new_tags)
+
+    return new_tags
 
 
 def list_tags(site, sorting='alpha'):
@@ -78,26 +110,75 @@ def merge_tags(site, tags, filenames, test_mode=False):
 
     if len(tags) < 2:
         print("ERROR: Need atleast two tags to merge.")
+        return
 
-    else:
-        # fixme: currently doesn't handle two post files.
-        posts = [
-            post for post in site.timeline
-            if post.source_path in filenames and not post.is_two_file
-        ]
-        FMT = 'Tags for {0}:\n{1:>6} - {2}\n{3:>6} - {4}\n'
-        OLD = 'old'
-        NEW = 'new'
-        for post in posts:
-            new_tags = _clean_tags(post.alltags[:], set(tags[:-1]), tags[-1])
-            if test_mode:
-                print(FMT.format(
-                    post.source_path, OLD, post.alltags, NEW, new_tags)
-                )
-            else:
-                _replace_tags_line(post, new_tags)
+    # fixme: currently doesn't handle two post files.
+    posts = [
+        post for post in site.timeline
+        if post.source_path in filenames and not post.is_two_file
+    ]
+
+    FMT = 'Tags for {0}:\n{1:>6} - {2}\n{3:>6} - {4}\n'
+    OLD = 'old'
+    NEW = 'new'
+
+    for post in posts:
+        new_tags = _clean_tags(post.alltags[:], set(tags[:-1]), tags[-1])
+        if test_mode:
+            print(FMT.format(
+                post.source_path, OLD, post.alltags, NEW, new_tags)
+            )
+        else:
+            _replace_tags_line(post, new_tags)
 
     return new_tags
+
+
+def remove_tags(site, tags, filenames, test_mode=False):
+    """ Removes a list of comma-separated tags, given a list of filenames.
+
+        $ nikola tags --remove "foo,bar" posts/*.rst
+
+    The above command will remove foo and bar tags to all rst posts.
+
+    """
+
+    tags = _process_comma_separated_tags(tags)
+
+    if len(tags) < 1:
+        print("ERROR: Need atleast one tag to remove.")
+        return
+
+    # fixme: currently doesn't handle two post files.
+    posts = [
+        post for post in site.timeline
+        if post.source_path in filenames and not post.is_two_file
+    ]
+
+    FMT = 'Tags for {0}:\n{1:>6} - {2}\n{3:>6} - {4}\n'
+    OLD = 'old'
+    NEW = 'new'
+
+    for post in posts:
+        new_tags = _remove_tags(post.alltags[:], tags)
+        if test_mode:
+            print(FMT.format(
+                post.source_path, OLD, post.alltags, NEW, new_tags)
+            )
+        else:
+            _replace_tags_line(post, new_tags)
+
+    return new_tags
+
+
+def _add_tags(tags, additions):
+    """ In all tags list, add tags in additions if not already present. """
+
+    for tag in additions:
+        if tag not in tags:
+            tags.append(tag)
+
+    return tags
 
 
 def _clean_tags(tags, remove, keep):
@@ -112,8 +193,26 @@ def _clean_tags(tags, remove, keep):
 
     return tags
 
+
+def _format_doc_string(function):
+    text = dedent(' ' * 4 + function.__doc__.strip())
+    doc_lines = [line for line in text.splitlines() if line.strip()]
+    return '\n'.join(doc_lines) + '\n'
+
+
 def _process_comma_separated_tags(tags):
-    return [tag.strip() for tag in tags.strip().split(',')]
+    return [tag.strip() for tag in tags.strip().split(',') if tag.strip()]
+
+
+def _remove_tags(tags, removals):
+    """ In all tags list, remove tags in removals. """
+
+    for tag in removals:
+        while tag in tags:
+            tags.remove(tag)
+
+    return tags
+
 
 def _replace_tags_line(post, tags):
     with codecs.open(post.source_path) as f:
@@ -139,12 +238,20 @@ class CommandTags(Command):
     doc_purpose = "manages the tags of your site"
     cmd_options = [
         {
+            'name': 'add',
+            'long': 'add',
+            'short': 'a',
+            'default': '',
+            'type': str,
+            'help': _format_doc_string(add_tags)
+        },
+        {
             'name': 'list',
             'long': 'list',
             'short': 'l',
             'default': False,
             'type': bool,
-            'help': format_doc_string(list_tags)
+            'help': _format_doc_string(list_tags)
         },
         {
             'name': 'list_sorting',
@@ -158,14 +265,22 @@ class CommandTags(Command):
             'long': 'merge',
             'type': str,
             'default': '',
-            'help': format_doc_string(merge_tags)
+            'help': _format_doc_string(merge_tags)
+        },
+        {
+            'name': 'remove',
+            'long': 'remove',
+            'short': 'r',
+            'default': '',
+            'type': str,
+            'help': _format_doc_string(remove_tags)
         },
         {
             'name': 'test',
             'short': 't',
             'type': bool,
             'default': False,
-            'help': 'Run other commands in test mode.  Does not edit any files.\n'
+            'help': 'Run other commands in test mode (no files are edited).\n'
         },
 
     ]
@@ -185,6 +300,12 @@ class CommandTags(Command):
 
             if len(options['merge']) > 1 and len(args) > 0:
                 merge_tags(nikola, options['merge'], args, options['test'])
+
+            elif len(options['add']) > 1 and len(args) > 0:
+                add_tags(nikola, options['add'], args, options['test'])
+
+            elif len(options['remove']) > 1 and len(args) > 0:
+                remove_tags(nikola, options['remove'], args, options['test'])
 
             elif options['list']:
                 list_tags(nikola, options['list_sorting'])
