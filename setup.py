@@ -213,7 +213,7 @@ def find_package_data(
 
 
 setup(name='Nikola',
-      version='6.0.3',
+      version='6.0.4',
       description='A modular, fast, simple, static website generator',
       long_description=open('README.rst').read(),
       author='Roberto Alsina and others',
