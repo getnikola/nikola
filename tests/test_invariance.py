@@ -19,10 +19,17 @@ import nikola
 import nikola.plugins.command
 import nikola.plugins.command.init
 
-from test_integration import DemoBuildTest
+from test_integration import DemoBuildTest, cd
 
 class InvariantBuildTest(DemoBuildTest):
     """Test that a default build of --demo works."""
+
+    def test_invariance(self):
+        """Compare the output to the canonical output."""
+        good_path = os.path.join(os.path.dirname(__file__), 'data', 'invariant')
+        with cd(self.target_dir):
+            diff = subprocess.check_output(['diff', '-r', good_path, 'output'])
+            self.assertEqual(diff.strip(), '')
 
 if __name__ == "__main__":
     unittest.main()
