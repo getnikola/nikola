@@ -28,7 +28,7 @@ It has many features, but here are some of the nicer ones:
 * Syntax highlighting for almost any programming language or markup
 * Multilingual sites, `translated to 13 languages.`__
 * Doesn't reinvent wheels, leverages existing tools.
-* Python 2 and 3 compatible.
+* Python 2.6, 2.7 and 3.3 compatible.
 
 .. _Nikola Handbook: http://getnikola.com/handbook.html#why-static
 __ http://getnikola.com/some-sites-using-nikola.html
