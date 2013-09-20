@@ -81,7 +81,7 @@ class ImportMixin(object):
             src = (urlparse(k).path + 'index.html')[1:]
             dst = (urlparse(v).path)
             if src == 'index.html':
-                print("Can't do a redirect for: {0!r}".format(k))
+                utils.LOGGER.warn("Can't do a redirect for: {0!r}".format(k))
             else:
                 redirections.append((src, dst))
 
@@ -92,7 +92,7 @@ class ImportMixin(object):
             os.system('nikola init ' + self.output_folder)
         else:
             self.import_into_existing_site = True
-            print('The folder {0} already exists - assuming that this is a '
+            utils.LOGGER.notice('The folder {0} already exists - assuming that this is a '
                   'already existing nikola site.'.format(self.output_folder))
 
         filename = os.path.join(os.path.dirname(utils.__file__), 'conf.py.in')
@@ -148,7 +148,7 @@ class ImportMixin(object):
                 time=datetime.datetime.now().strftime('%Y%m%d_%H%M%S'),
                 name=self.name)
         config_output_path = os.path.join(self.output_folder, filename)
-        print('Configuration will be written to:', config_output_path)
+        utils.LOGGER.notice('Configuration will be written to:', config_output_path)
 
         return config_output_path
 
