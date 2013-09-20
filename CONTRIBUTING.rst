@@ -40,7 +40,7 @@ Here are some guidelines about how you can contribute to Nikola:
   Issue**. This isn't an absolute requirement, but makes the maintainers' lives
   much easier! Specifically: `install hub
   <https://github.com/defunkt/hub/#installation>`_ and then run `hub
-  pull-request <https://github.com/defunkt/hub/#git-pull-request>`_ to turn the
+  pull-request -i issuenumber <https://github.com/defunkt/hub/#git-pull-request>`_ to turn the
   issue into a pull request containing your code.
 
 * There are some quirks to how Nikola's codebase is structured, and to how
