@@ -122,10 +122,12 @@ class ReSTExtensionTestCase(BaseTestCase):
     deps = None
 
     def setUp(self):
-        """ Parse cls.sample into a HTML document tree """
-        super(ReSTExtensionTestCase, self).setUp()
         self.compiler = nikola.plugins.compile.rest.CompileRest()
         self.compiler.set_site(FakeSite())
+        return super(ReSTExtensionTestCase, self).setUp()
+
+    def basic_test(self):
+        """ Parse cls.sample into a HTML document tree """
         self.setHtmlFromRst(self.sample)
 
     def setHtmlFromRst(self, rst):
@@ -174,6 +176,7 @@ class ReSTExtensionTestCaseTestCase(ReSTExtensionTestCase):
     sample = '.. raw:: html\n\n   <iframe src="foo" height="bar">spam</iframe>'
 
     def test_test(self):
+        self.basic_test()
         self.assertHTMLContains("iframe", attributes={"src": "foo"},
                                 text="spam")
         self.assertRaises(Exception, self.assertHTMLContains, "eggs", {})
@@ -184,6 +187,7 @@ class MathTestCase(ReSTExtensionTestCase):
 
     def test_mathjax(self):
         """ Test that math is outputting MathJax."""
+        self.basic_test()
         self.assertHTMLContains("span", attributes={"class": "math"},
                                 text="\(e^{ix} = \cos x + i\sin x\)")
 
@@ -200,6 +204,7 @@ class GistTestCase(ReSTExtensionTestCase):
 
     def setUp(self):
         """ Patch GitHubGist for avoiding network dependency """
+        super(GistTestCase, self).setUp()
         self.gist_type.get_raw_gist_with_filename = lambda *_: 'raw_gist_file'
         self.gist_type.get_raw_gist = lambda *_: "raw_gist"
         _reload(nikola.plugins.compile.rest)
@@ -230,6 +235,7 @@ class GistIntegrationTestCase(ReSTExtensionTestCase):
 
     def test_gist_integration(self):
         """ Fetch contents of the gist from GH and render in a noscript tag """
+        self.basic_test()
         text = ('Be alone, that is the secret of invention: be alone, that is'
                 ' when ideas are born. -- Nikola Tesla')
         self.assertHTMLContains('pre', text=text)
@@ -242,6 +248,7 @@ class SlidesTestCase(ReSTExtensionTestCase):
 
     def test_slides(self):
         """ Test the slides js generation and img tag creation """
+        self.basic_test()
         self.assertHTMLContains("img", attributes={"src": "IMG.jpg"})
 
 
@@ -252,6 +259,7 @@ class SoundCloudTestCase(ReSTExtensionTestCase):
 
     def test_soundcloud(self):
         """ Test SoundCloud iframe tag generation """
+        self.basic_test()
         self.assertHTMLContains("iframe",
                                 attributes={"src": ("https://w.soundcloud.com"
                                                     "/player/?url=http://"
@@ -276,6 +284,7 @@ class VimeoTestCase(ReSTExtensionTestCase):
 
     def test_vimeo(self):
         """ Test Vimeo iframe tag generation """
+        self.basic_test()
         self.assertHTMLContains("iframe",
                                 attributes={"src": ("http://player.vimeo.com/"
                                                     "video/VID"),
@@ -289,6 +298,7 @@ class YoutubeTestCase(ReSTExtensionTestCase):
 
     def test_youtube(self):
         """ Test Youtube iframe tag generation """
+        self.basic_test()
         self.assertHTMLContains("iframe",
                                 attributes={"src": ("http://www.youtube.com/"
                                                     "embed/YID?rel=0&hd=1&"
@@ -334,9 +344,6 @@ class RefTestCase(ReSTExtensionTestCase):
     sample = 'Sample for testing my :doc:`doesnt-exist-post`'
     sample1 = 'Sample for testing my :doc:`fake-post`'
     sample2 = 'Sample for testing my :doc:`titled post <fake-post>`'
-
-    def setUp(self):
-        super(RefTestCase, self).setUp()
 
     def test_doc_doesnt_exist(self):
         self.assertRaises(Exception, self.assertHTMLContains, 'anything', {})
