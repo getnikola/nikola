@@ -4,6 +4,7 @@ New in Master
 Bugfixes
 --------
 
+* Refuse to install in unsupported Python versions (Issue #733)
 * Fix sitemap plugin compatibility with Python 3 (Issue #734)
 * Changed default PyGal style (Issue #726)
 * Add files used by the listings directive as dependencies (Issue #723)
