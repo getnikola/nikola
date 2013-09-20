@@ -58,7 +58,6 @@ from nikola.plugin_categories import (
 )
 from base import BaseTestCase
 
-
 class FakePost(object):
 
     def __init__(self, title, slug):
