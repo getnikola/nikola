@@ -63,10 +63,13 @@ class FakePost(object):
     def __init__(self, title, slug):
         self._title = title
         self._slug = slug
-        self.meta = {'en': {'slug': slug}}
+        self._meta = {'slug': slug}
 
     def title(self):
         return self._title
+
+    def meta(self, key):
+        return self._meta[key]
 
     def permalink(self):
         return '/posts/' + self._slug
