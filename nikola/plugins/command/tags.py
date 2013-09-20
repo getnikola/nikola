@@ -44,15 +44,15 @@ def add_tags(site, tags, filenames, test_mode=False):
 
     tags = _process_comma_separated_tags(tags)
 
-    if len(tags) < 1:
-        print("ERROR: Need atleast one tag to add.")
-        return
-
     # fixme: currently doesn't handle two post files.
     posts = [
         post for post in site.timeline
         if post.source_path in filenames and not post.is_two_file
     ]
+
+    if len(tags) == 0 or len(posts) == 0:
+        print("ERROR: Need atleast one tag and post.")
+        return
 
     FMT = 'Tags for {0}:\n{1:>6} - {2}\n{3:>6} - {4}\n'
     OLD = 'old'
@@ -108,15 +108,15 @@ def merge_tags(site, tags, filenames, test_mode=False):
 
     tags = _process_comma_separated_tags(tags)
 
-    if len(tags) < 2:
-        print("ERROR: Need atleast two tags to merge.")
-        return
-
     # fixme: currently doesn't handle two post files.
     posts = [
         post for post in site.timeline
         if post.source_path in filenames and not post.is_two_file
     ]
+
+    if len(tags) < 2 or len(posts) == 0:
+        print("ERROR: Need atleast two tags and a post.")
+        return
 
     FMT = 'Tags for {0}:\n{1:>6} - {2}\n{3:>6} - {4}\n'
     OLD = 'old'
@@ -145,9 +145,44 @@ def remove_tags(site, tags, filenames, test_mode=False):
 
     tags = _process_comma_separated_tags(tags)
 
-    if len(tags) < 1:
-        print("ERROR: Need atleast one tag to remove.")
+    # fixme: currently doesn't handle two post files.
+    posts = [
+        post for post in site.timeline
+        if post.source_path in filenames and not post.is_two_file
+    ]
+
+    if len(tags) == 0 or len(posts) == 0:
+        print("ERROR: Need atleast one tag and post.")
         return
+
+    FMT = 'Tags for {0}:\n{1:>6} - {2}\n{3:>6} - {4}\n'
+    OLD = 'old'
+    NEW = 'new'
+
+    if len(posts) == 0:
+        new_tags = []
+
+    for post in posts:
+        new_tags = _remove_tags(post.tags[:], tags)
+        if test_mode:
+            print(FMT.format(
+                post.source_path, OLD, post.tags, NEW, new_tags)
+            )
+        else:
+            _replace_tags_line(post, new_tags)
+
+    return new_tags
+
+
+def sort_tags(site, filenames, test_mode=False):
+    """ Sorts all the tags in the given list of posts.
+
+        $ nikola tags --sort posts/*.rst
+
+    The above command will sort all tags alphabetically, in all rst
+    posts.  This command can be run on all posts, to clean up things.
+
+    """
 
     # fixme: currently doesn't handle two post files.
     posts = [
@@ -155,12 +190,16 @@ def remove_tags(site, tags, filenames, test_mode=False):
         if post.source_path in filenames and not post.is_two_file
     ]
 
+    if len(posts) == 0:
+        print("ERROR: Need atleast one post.")
+        return
+
     FMT = 'Tags for {0}:\n{1:>6} - {2}\n{3:>6} - {4}\n'
     OLD = 'old'
     NEW = 'new'
 
     for post in posts:
-        new_tags = _remove_tags(post.tags[:], tags)
+        new_tags = sorted(post.tags)
         if test_mode:
             print(FMT.format(
                 post.source_path, OLD, post.tags, NEW, new_tags)
@@ -276,6 +315,14 @@ class CommandTags(Command):
             'help': _format_doc_string(remove_tags)
         },
         {
+            'name': 'sort',
+            'long': 'sort',
+            'short': 'S',
+            'default': False,
+            'type': bool,
+            'help': _format_doc_string(sort_tags)
+        },
+        {
             'name': 'test',
             'short': 't',
             'type': bool,
@@ -298,14 +345,17 @@ class CommandTags(Command):
             nikola = Nikola(**conf.__dict__)
             nikola.scan_posts()
 
-            if len(options['merge']) > 1 and len(args) > 0:
-                merge_tags(nikola, options['merge'], args, options['test'])
-
-            elif len(options['add']) > 1 and len(args) > 0:
+            if len(options['add']) > 1 and len(args) > 0:
                 add_tags(nikola, options['add'], args, options['test'])
+
+            elif len(options['merge']) > 1 and len(args) > 0:
+                merge_tags(nikola, options['merge'], args, options['test'])
 
             elif len(options['remove']) > 1 and len(args) > 0:
                 remove_tags(nikola, options['remove'], args, options['test'])
+
+            elif options['sort']:
+                sort_tags(nikola, args, options['test'])
 
             elif options['list']:
                 list_tags(nikola, options['list_sorting'])
