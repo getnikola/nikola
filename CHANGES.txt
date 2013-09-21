@@ -87,7 +87,7 @@ Bugfixes
 --------
 
 * Remove decoding errors if files are not proper UTF-8 (Issue #691)
-* Stop ignoring *.JPG and *.PNG by galleries (Issue #690)
+* Stop ignoring \*.JPG and \*.PNG by galleries (Issue #690)
 
 New in 6.0.0
 ============
