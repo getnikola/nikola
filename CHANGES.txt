@@ -4,6 +4,9 @@ New in master
 Features
 --------
 
+* New GALLERY_SORT_BY_DATE option, defaulting to True. 
+  If set to False, sorts by name (Issue #667)
+
 Bugfixes
 --------
 
@@ -63,8 +66,6 @@ New in 6.0.2
 Features
 --------
 
-* New GALLERY_SORT_BY_DATE option, defaulting to True. 
-  If set to False, sorts by name (Issue #667)
 * Support for external gzip commands (Issue #351)
 
 Bugfixes
