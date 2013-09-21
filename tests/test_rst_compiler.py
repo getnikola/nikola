@@ -25,7 +25,7 @@ always unquoted.
 """
 
 
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import
 
 import codecs
 try:
@@ -57,7 +57,7 @@ from nikola.plugin_categories import (
     TaskMultiplier,
     RestExtension,
 )
-from base import BaseTestCase
+from .base import BaseTestCase
 
 class FakePost(object):
 

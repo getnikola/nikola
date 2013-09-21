@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import
 import unittest
 import os
 import re
@@ -8,7 +8,7 @@ from io import StringIO
 
 import mock
 
-from context import nikola
+from .context import nikola
 from lxml import etree
 
 
