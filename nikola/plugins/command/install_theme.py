@@ -108,9 +108,9 @@ class CommandInstallTheme(Command):
                 utils.makedirs(self.output_dir)
                 dest_path = os.path.join(self.output_dir, name)
                 if os.path.exists(dest_path):
-                    utils.LOGGER.error("{0} it's already installed".format(name))
+                    utils.LOGGER.error("{0} is already installed".format(name))
                     return False
 
-                utils.LOGGER.notice('Copying: {0} into themes'.format(theme_path))
+                utils.LOGGER.notice('Copying {0} into themes'.format(theme_path))
                 shutil.copytree(theme_path, dest_path)
                 return True
