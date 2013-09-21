@@ -30,7 +30,7 @@ from textwrap import dedent
 
 from nikola.nikola import Nikola
 from nikola.plugin_categories import Command
-from nikola.utils import LOGGER
+from nikola.utils import LOGGER, _reload
 
 
 def add_tags(site, tags, filenames, test_mode=False):
@@ -88,7 +88,7 @@ def list_tags(site, sorting='alpha'):
 
     for tag in tags:
         if sorting == 'count':
-            show = '{:>4} {}'.format(len(site.posts_per_tag[tag]), tag)
+            show = '{0:>4} {1}'.format(len(site.posts_per_tag[tag]), tag)
         else:
             show = tag
         print(show)
@@ -288,15 +288,18 @@ def _remove_tags(tags, removals):
 
 def _replace_tags_line(post, tags):
 
-    with codecs.open(post.source_path) as f:
+    with codecs.open(post.source_path, 'r', 'utf-8') as f:
         post_text = f.readlines()
 
+    tag_identifier = u'.. tags:'
+    new_tags = u'.. tags: %s\n' % ', '.join(tags)
+
     for index, line in enumerate(post_text[:]):
-        if line.startswith('.. tags:'):
-            post_text[index] = '.. tags: %s\n' % ', '.join(tags)
+        if line.startswith(tag_identifier):
+            post_text[index] = new_tags
             break
 
-    with codecs.open(post.source_path, 'wb+') as f:
+    with codecs.open(post.source_path, 'w+', 'utf-8') as f:
         post_text = f.writelines(post_text)
 
 
@@ -383,6 +386,7 @@ class CommandTags(Command):
             LOGGER.error("No configuration found, cannot run the console.")
 
         else:
+            _reload(conf)
             nikola = Nikola(**conf.__dict__)
             nikola.scan_posts()
 

@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from context import nikola
-
 import os
 import shutil
+import sys
 import tempfile
 import unittest
-import sys
 
+from nikola import nikola
 from nikola.plugins.command.tags import (
     add_tags, list_tags, merge_tags, remove_tags, search_tags, sort_tags
 )
-
+from nikola.utils import _reload
 
 DEMO_TAGS = ['python', 'demo', 'nikola', 'blog']
 
@@ -40,7 +39,7 @@ class TestCommandTags(unittest.TestCase):
         new_tags = add_tags(self._site, tags, posts)
         new_parsed_tags = self._parse_new_tags(posts[0])
 
-        self.assertIn('test_nikola', new_tags)
+        self.assertTrue('test_nikola' in new_tags)
         self.assertEquals(set(new_tags), set(new_parsed_tags))
 
     def test_add_test_mode(self):
@@ -50,7 +49,7 @@ class TestCommandTags(unittest.TestCase):
         new_tags = add_tags(self._site, tags, posts, test_mode=True)
         new_parsed_tags = self._parse_new_tags(posts[0])
 
-        self.assertIn('test_nikola', new_tags)
+        self.assertTrue('test_nikola' in new_tags)
         self.assertEquals(set(new_parsed_tags), set(DEMO_TAGS))
 
     def test_list(self):
@@ -58,6 +57,7 @@ class TestCommandTags(unittest.TestCase):
 
     def test_list_count_sorted(self):
         self._add_test_post(title='2', tags=['python'])
+        self._force_scan()
         tags = list_tags(self._site, 'count')
         self.assertEquals('python', tags[0])
 
@@ -68,7 +68,7 @@ class TestCommandTags(unittest.TestCase):
         new_tags = merge_tags(self._site, tags, posts)
         new_parsed_tags = self._parse_new_tags(posts[0])
 
-        self.assertNotIn('nikola', new_tags)
+        self.assertFalse('nikola' in new_tags)
         self.assertEquals(set(new_tags), set(new_parsed_tags))
 
     def test_merge_test_mode(self):
@@ -78,7 +78,7 @@ class TestCommandTags(unittest.TestCase):
         new_tags = merge_tags(self._site, tags, posts, test_mode=True)
         new_parsed_tags = self._parse_new_tags(posts[0])
 
-        self.assertNotIn('nikola', new_tags)
+        self.assertFalse('nikola' in new_tags)
         self.assertEquals(set(DEMO_TAGS), set(new_parsed_tags))
 
     def test_remove(self):
@@ -88,7 +88,7 @@ class TestCommandTags(unittest.TestCase):
         new_tags = remove_tags(self._site, tags, posts)
         new_parsed_tags = self._parse_new_tags(posts[0])
 
-        self.assertNotIn('nikola', new_tags)
+        self.assertFalse('nikola' in new_tags)
         self.assertEquals(set(new_tags), set(new_parsed_tags))
 
     def test_remove_invalid(self):
@@ -107,7 +107,7 @@ class TestCommandTags(unittest.TestCase):
         new_tags = remove_tags(self._site, tags, posts, test_mode=True)
         new_parsed_tags = self._parse_new_tags(posts[0])
 
-        self.assertNotIn('nikola', new_tags)
+        self.assertFalse('nikola' in new_tags)
         self.assertEquals(set(new_parsed_tags), set(DEMO_TAGS))
 
     def test_search(self):
@@ -132,10 +132,11 @@ class TestCommandTags(unittest.TestCase):
     def test_sort_test_mode(self):
         posts = [os.path.join('posts', post) for post in os.listdir('posts')]
 
+        old_parsed_tags = self._parse_new_tags(posts[0])
         new_tags = sort_tags(self._site, posts, test_mode=True)
         new_parsed_tags = self._parse_new_tags(posts[0])
 
-        self.assertEquals(DEMO_TAGS, new_parsed_tags)
+        self.assertEquals(old_parsed_tags, new_parsed_tags)
         self.assertEquals(sorted(DEMO_TAGS), new_tags)
 
     #### Private protocol #####################################################
@@ -148,6 +149,10 @@ class TestCommandTags(unittest.TestCase):
         self._old_dir = os.getcwd()
         os.chdir(self._testdir)
 
+    def _force_scan(self):
+        self._site._scanned = False
+        self._site.scan_posts()
+
     def _init_site(self):
         from nikola.plugins.command.init import CommandInit
 
@@ -156,20 +161,21 @@ class TestCommandTags(unittest.TestCase):
 
         sys.path.insert(0, '')
         os.chdir('demo')
-
         import conf
+        _reload(conf)
+        sys.path.pop(0)
+
         self._site = nikola.Nikola(**conf.__dict__)
         self._site.scan_posts()
 
     def _parse_new_tags(self, source):
         """ Returns the new tags for a post, given it's source path. """
-        self._site._scanned = False
-        self._site.scan_posts()
+        self._force_scan()
         posts = [
             post for post in self._site.timeline
             if post.source_path == source
         ]
-        return posts[0].alltags
+        return posts[0].tags
 
     def _remove_temp_dir(self):
         os.chdir(self._old_dir)
