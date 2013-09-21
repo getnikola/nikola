@@ -26,6 +26,8 @@
 
 from __future__ import unicode_literals, print_function
 import codecs
+from collections import defaultdict
+import math
 from textwrap import dedent
 
 from nikola.nikola import Nikola
@@ -408,3 +410,100 @@ def _replace_tags_line(post, tags):
 
     with codecs.open(source_path, 'w+', 'utf-8') as f:
         post_text = f.writelines(post_text)
+
+
+class TfIdf(object):
+    """ A class to work with tf-idf of words on posts. """
+
+    def tags(self, post, count=5):
+        """ Return a list of top tags, given a post.
+
+        count: the number of tags to return
+
+        """
+
+        tf_idf_table = {}
+
+        for word in self._documents[post.source_path]:
+            tf_idf_table[word] = self._tf_idf(word, post)
+        tags = sorted(tf_idf_table, key=lambda x: tf_idf_table[x], reverse=True)
+
+        return tags[:count]
+
+    #### Private interface #####################################################
+
+    def __init__(self, site):
+        """ Set up a dictionary of documents.
+
+        Each post is mapped to a list of words it contains.
+
+        """
+
+        self._site = site
+        self._documents = {}
+
+        for post in site.timeline:
+            self._documents[post.source_path] = self._get_post_words(post)
+
+        self._document_count = len(self._documents)
+
+    def _get_post_words(self, post):
+        """ Return a list of words in the post.
+
+        Currently, just splits the text on spaces, and returns the
+        words in lowercase.
+
+        # fixme: this should use a porter stemmer, for getting root words.
+
+        """
+
+        with codecs.open(post.source_path, 'r', 'utf-8') as post_file:
+            post_text = post_file.read().lower()
+            if not post.is_two_file:
+                post_text = post_text.split('\n\n', 1)[-1]
+
+        return post_text.split()
+
+    def _get_word_count(self, post):
+        """ Get the count of all words in a given post. """
+
+        word_counts = defaultdict(lambda: 0)
+
+        for word in self._documents[post.source_path]:
+            word_counts[word] += 1
+
+        return word_counts
+
+    def _inverse_document_frequency(self, word):
+        """ Gets the inverse document frequency of a word. """
+
+        count = sum(1 for doc in self._documents.values()
+                    if word.lower() in doc)
+
+        return math.log(self._document_count / float(count))
+
+    def _term_frequncy(self, word, post):
+        """ Returns the frequency of a word, given a post.
+
+        # fixme: using stopwords may be necessary, if number of
+        # documents is small.  (not for small initial number of posts)
+
+        """
+
+        word_counts = self._get_word_count(post)
+
+        # A mix of augmented, logarithmic frequency.  We divide with
+        # the max frequency to prevent a bias towards longer document.
+        tf = math.log(
+            1 + float(word_counts[word]) / max(word_counts.values())
+        )
+
+        return tf
+
+    def _tf_idf(self, word, post):
+        """ Return tf-idf value of a word, in a specified post. """
+
+        tf = self._term_frequncy(word, post)
+        idf = self._inverse_document_frequency(word)
+
+        return tf * idf
