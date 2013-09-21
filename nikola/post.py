@@ -31,6 +31,10 @@ from collections import defaultdict
 import os
 import re
 import string
+try:
+    from urlparse import urljoin
+except ImportError:
+    from urllib.parse import urljoin  # NOQA
 
 import lxml.html
 try:
@@ -422,11 +426,9 @@ class Post(object):
         else:
             pieces += [self.meta[lang]['slug'] + extension]
         pieces = [_f for _f in pieces if _f and _f != '.']
+        link = '/' + '/'.join(pieces)
         if absolute:
-            pieces = [self.base_url] + pieces
-        else:
-            pieces = [""] + pieces
-        link = "/".join(pieces)
+            link = urljoin(self.base_url, link)
         index_len = len(self.index_file)
         if self.strip_indexes and link[-(1 + index_len):] == '/' + self.index_file:
             return link[:-index_len]
@@ -618,8 +620,8 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
 def hyphenate(dom, lang):
     if pyphen is not None:
         hyphenator = pyphen.Pyphen(lang=lang)
-        for tag in ('p', 'div', 'li', 'span'):
-            for node in dom.xpath("//%s" % tag):
+        for tag in ('p', 'li', 'span'):
+            for node in dom.xpath("//%s[not(parent::pre)]" % tag):
                 insert_hyphens(node, hyphenator)
     return dom
 
@@ -633,8 +635,8 @@ def insert_hyphens(node, hyphenator):
         text = getattr(node, attr)
         if not text:
             continue
-        new_data = ' '.join([hyphenator.inserted(w, hyphen=u'\u00AD')
-                             for w in text.split()])
+        new_data = ' '.join([hyphenator.inserted(w, hyphen='\u00AD')
+                             for w in text.split(' ')])
         # Spaces are trimmed, we have to add them manually back
         if text[0].isspace():
             new_data = ' ' + new_data

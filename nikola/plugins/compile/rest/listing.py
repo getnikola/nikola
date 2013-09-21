@@ -90,8 +90,10 @@ class Listing(CodeBlock):
 
     def run(self):
         fname = self.arguments.pop(0)
-        with codecs_open(os.path.join('listings', fname), 'rb+', 'utf8') as fileobject:
+        fpath = os.path.join('listings', fname)
+        with codecs_open(fpath, 'rb+', 'utf8') as fileobject:
             self.content = fileobject.read().splitlines()
+        self.state.document.settings.record_dependencies.add(fpath)
         self.trim_content()
         target = urlunsplit(("link", 'listing', fname, '', ''))
         generated_nodes = (

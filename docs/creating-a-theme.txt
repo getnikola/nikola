@@ -30,6 +30,7 @@ First we will create a testing site::
 
 Our theme will inherit from the ``bootstrap`` theme, which is full-featured but boring.
 
+::
 
     $ mkdir themes
     $ mkdir themes/monospace

@@ -1,0 +1,6 @@
+graft docs
+graft nikola
+graft scripts
+graft tests
+include *.txt
+include *.rst

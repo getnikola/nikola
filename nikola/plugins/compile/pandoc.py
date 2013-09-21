@@ -35,6 +35,7 @@ import os
 import subprocess
 
 from nikola.plugin_categories import PageCompiler
+from nikola.utils import LOGGER, makedirs
 
 
 class CompilePandoc(PageCompiler):
@@ -43,27 +44,21 @@ class CompilePandoc(PageCompiler):
     name = "pandoc"
 
     def compile_html(self, source, dest, is_two_file=True):
+        makedirs(os.path.dirname(dest))
         try:
-            pandoc_path = subprocess.check_output(('which', 'pandoc'))
-        except subprocess.CalledProcessError:
-            print('To use the pandoc compiler,'
-                  ' you have to install the "pandoc" Haskell package.')
-            raise Exception('Cannot compile {0} -- pandoc '
-                            'missing'.format(source))
-
-        try:
-            os.makedirs(os.path.dirname(dest))
-        except:
-            pass
-        subprocess.check_call((pandoc_path, '-o', source, dest))
+            subprocess.check_call(('pandoc', '-o', dest, source))
+        except OSError as e:
+            if e.strreror == 'No such file or directory':
+                LOGGER.error('To use the pandoc compiler,'
+                             ' you have to install the "pandoc" Haskell package.')
+                raise Exception('Cannot compile {0} -- pandoc '
+                                'missing'.format(source))
 
     def create_post(self, path, onefile=False, **kw):
         metadata = {}
         metadata.update(self.default_metadata)
         metadata.update(kw)
-        d_name = os.path.dirname(path)
-        if not os.path.isdir(d_name):
-            os.makedirs(os.path.dirname(path))
+        makedirs(os.path.dirname(path))
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
                 fd.write('<!-- \n')

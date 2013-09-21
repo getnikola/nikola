@@ -96,11 +96,10 @@ class Vimeo(Directive):
     def check_modules(self):
         if requests is None:
             msg = (
-                "Error: "
                 "To use the Vimeo directive you need to install "
                 "the requests module.\n"
             )
-            utils.show_msg(msg)
+            utils.LOGGER.warn(msg)
             return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
         return None
 

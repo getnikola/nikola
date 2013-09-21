@@ -56,7 +56,7 @@ get_lastmod = lambda p: datetime.datetime.fromtimestamp(os.stat(p).st_mtime).iso
 
 
 def get_base_path(base):
-    u"""returns the path of a base URL if it contains one.
+    """returns the path of a base URL if it contains one.
 
     >>> get_base_path('http://some.site') == '/'
     True
@@ -139,7 +139,9 @@ class Sitemap(LateTask):
                 for k in sorted(locs.keys()):
                     outf.write(locs[k])
                 outf.write("</urlset>")
-            return True
+            # Other tasks can depend on this output, instead of having
+            # to scan locations.
+            return {'locations': list(locs.keys())}
 
         scan_locs()
         task = {

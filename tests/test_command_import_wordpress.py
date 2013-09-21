@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import
 
-from context import nikola
+from .context import nikola
 import os
 import unittest
 import mock

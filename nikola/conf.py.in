@@ -547,9 +547,12 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # }
 
 
-# If you want to use formatted post time in W3C-DTF Format
-# (ex. 2012-03-30T23:00:00+02:00),
-# set timzone if you want a localized posted date.
+# Post's dates are considered in GMT by default, if you want to use 
+# another timezone, please set TIMEZONE to match. Check the available 
+# list from Wikipedia:
+# http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+# Also, if you want to use a different timezone in some of your posts, 
+# you can use W3C-DTF Format (ex. 2012-03-30T23:00:00+02:00)
 #
 # TIMEZONE = 'Europe/Zurich'
 

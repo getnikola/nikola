@@ -66,8 +66,7 @@ class BuildBundles(LateTask):
             inputs = [i for i in inputs if os.path.isfile(
                 os.path.join(out_dir, i))]
             cache_dir = os.path.join(kw['cache_folder'], 'webassets')
-            if not os.path.isdir(cache_dir):
-                os.makedirs(cache_dir)
+            utils.makedirs(cache_dir)
             env = webassets.Environment(out_dir, os.path.dirname(output),
                                         cache=cache_dir)
             bundle = webassets.Bundle(*inputs, output=os.path.basename(output))

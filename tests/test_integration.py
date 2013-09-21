@@ -19,6 +19,8 @@ import nikola
 import nikola.plugins.command
 import nikola.plugins.command.init
 
+from .base import BaseTestCase
+
 
 @contextmanager
 def cd(path):
@@ -28,20 +30,22 @@ def cd(path):
     os.chdir(old_dir)
 
 
-class EmptyBuildTest(unittest.TestCase):
+class EmptyBuildTest(BaseTestCase):
     """Basic integration testcase."""
 
     dataname = None
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         """Setup a demo site."""
-        self.tmpdir = tempfile.mkdtemp()
-        self.target_dir = os.path.join(self.tmpdir, "target")
-        self.init_command = nikola.plugins.command.init.CommandInit()
-        self.fill_site()
-        self.patch_site()
-        self.build()
+        cls.tmpdir = tempfile.mkdtemp()
+        cls.target_dir = os.path.join(cls.tmpdir, "target")
+        cls.init_command = nikola.plugins.command.init.CommandInit()
+        cls.fill_site()
+        cls.patch_site()
+        cls.build()
 
+    @classmethod
     def fill_site(self):
         """Add any needed initial content."""
         self.init_command.create_empty_site(self.target_dir)
@@ -57,15 +61,18 @@ class EmptyBuildTest(unittest.TestCase):
                     src_file = os.path.join(root, src_name)
                     shutil.copy2(src_file, dst_file)
 
+    @classmethod
     def patch_site(self):
         """Make any modifications you need to the site."""
 
+    @classmethod
     def build(self):
         """Build the site."""
         with cd(self.target_dir):
             main.main(["build"])
 
-    def tearDown(self):
+    @classmethod
+    def tearDownClass(self):
         """Remove the demo site."""
         shutil.rmtree(self.tmpdir)
         # Fixes Issue #438
@@ -84,6 +91,7 @@ class EmptyBuildTest(unittest.TestCase):
 class DemoBuildTest(EmptyBuildTest):
     """Test that a default build of --demo works."""
 
+    @classmethod
     def fill_site(self):
         """Fill the site with demo content."""
         self.init_command.copy_sample_site(self.target_dir)
@@ -101,9 +109,15 @@ class DemoBuildTest(EmptyBuildTest):
         sitemap_data = codecs.open(sitemap_path, "r", "utf8").read()
         self.assertTrue('<loc>http://getnikola.com/</loc>' in sitemap_data)
 
+    def test_avoid_double_slash_in_rss(self):
+        rss_path = os.path.join(self.target_dir, "output", "rss.xml")
+        rss_data = codecs.open(rss_path, "r", "utf8").read()
+        self.assertFalse('http://getnikola.com//' in rss_data)
+
 
 class RepeatedPostsSetting(DemoBuildTest):
     """Duplicate POSTS, should not read each post twice, which causes conflicts."""
+    @classmethod
     def patch_site(self):
         """Set the SITE_URL to have a path"""
         conf_path = os.path.join(self.target_dir, "conf.py")
@@ -114,6 +128,7 @@ class RepeatedPostsSetting(DemoBuildTest):
 class FuturePostTest(EmptyBuildTest):
     """Test a site with future posts."""
 
+    @classmethod
     def fill_site(self):
         import datetime
         from nikola.utils import current_time
@@ -194,6 +209,7 @@ class TranslatedBuildTest(EmptyBuildTest):
 class RelativeLinkTest(DemoBuildTest):
     """Check that SITE_URL with a path doesn't break links."""
 
+    @classmethod
     def patch_site(self):
         """Set the SITE_URL to have a path"""
         conf_path = os.path.join(self.target_dir, "conf.py")
@@ -260,6 +276,7 @@ class TestCheckFailure(DemoBuildTest):
 class RelativeLinkTest2(DemoBuildTest):
     """Check that dropping stories to the root doesn't break links."""
 
+    @classmethod
     def patch_site(self):
         """Set the SITE_URL to have a path"""
         conf_path = os.path.join(self.target_dir, "conf.py")

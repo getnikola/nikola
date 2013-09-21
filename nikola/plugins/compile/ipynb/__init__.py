@@ -38,6 +38,7 @@ except ImportError:
     flag = None
 
 from nikola.plugin_categories import PageCompiler
+from nikola.utils import makedirs
 
 
 class CompileIPynb(PageCompiler):
@@ -49,10 +50,7 @@ class CompileIPynb(PageCompiler):
         if flag is None:
             raise Exception('To build this site, you need '
                             'to install IPython 1.0.')
-        try:
-            os.makedirs(os.path.dirname(dest))
-        except:
-            pass
+        makedirs(os.path.dirname(dest))
         HTMLExporter.default_template = 'basic'
         exportHtml = HTMLExporter()
         with codecs.open(dest, "w+", "utf8") as out_file:
@@ -67,8 +65,7 @@ class CompileIPynb(PageCompiler):
         metadata.update(self.default_metadata)
         metadata.update(kw)
         d_name = os.path.dirname(path)
-        if not os.path.isdir(d_name):
-            os.makedirs(os.path.dirname(path))
+        makedirs(os.path.dirname(path))
         meta_path = os.path.join(d_name, kw['slug'] + ".meta")
         with codecs.open(meta_path, "wb+", "utf8") as fd:
             if onefile:

@@ -41,6 +41,7 @@ except ImportError:
     podcast_extension = None
 
 from nikola.plugin_categories import PageCompiler
+from nikola.utils import makedirs
 
 
 class CompileMarkdown(PageCompiler):
@@ -58,10 +59,7 @@ class CompileMarkdown(PageCompiler):
         if misaka is None:
             raise Exception('To build this site, you need to install the '
                             '"misaka" package.')
-        try:
-            os.makedirs(os.path.dirname(dest))
-        except:
-            pass
+        makedirs(os.path.dirname(dest))
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
@@ -74,9 +72,7 @@ class CompileMarkdown(PageCompiler):
         metadata = {}
         metadata.update(self.default_metadata)
         metadata.update(kw)
-        d_name = os.path.dirname(path)
-        if not os.path.isdir(d_name):
-            os.makedirs(os.path.dirname(path))
+        makedirs(os.path.dirname(path))
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
                 fd.write('<!-- \n')

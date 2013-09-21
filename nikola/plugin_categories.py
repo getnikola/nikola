@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import absolute_import
+
 __all__ = [
     'Command',
     'LateTask',
@@ -36,6 +38,8 @@ __all__ = [
 
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
+
+from .utils import LOGGER
 
 
 class BasePlugin(IPlugin):
@@ -67,7 +71,7 @@ class Command(BasePlugin, DoitCommand):
         """Check if the command can run in the current environment,
         fail if needed, or call _execute."""
         if self.needs_config and not self.site.configured:
-            print("This command needs to run inside an existing Nikola site.")
+            LOGGER.error("This command needs to run inside an existing Nikola site.")
             return False
         self._execute(options, args)
 

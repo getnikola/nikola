@@ -57,11 +57,10 @@ class Media(Directive):
     def run(self):
         if micawber is None:
             msg = (
-                "Error: "
                 "To use the media directive you need to install "
                 "the micawber module."
             )
-            utils.show_msg(msg)
+            utils.LOGGER.warn(msg)
             return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
 
         providers = micawber.bootstrap_basic()

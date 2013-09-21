@@ -80,10 +80,7 @@ class CopyAssets(Task):
             def create_code_css():
                 from pygments.formatters import get_formatter_by_name
                 formatter = get_formatter_by_name('html', style=kw["code_color_scheme"])
-                try:
-                    os.makedirs(os.path.dirname(code_css_path))
-                except:
-                    pass
+                utils.makedirs(os.path.dirname(code_css_path))
                 with codecs.open(code_css_path, 'wb+', 'utf8') as outf:
                     outf.write(formatter.get_style_defs('.code'))
                     outf.write("table.codetable { width: 100%;} td.linenos {text-align: right; width: 4em;}")

@@ -5,3 +5,4 @@ output/
 build/
 *.egg-info/
 *~
+dist

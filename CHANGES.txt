@@ -1,9 +1,55 @@
-New in Master
-=============
+New in master
+==========================================
+
+Features
+--------
 
 Bugfixes
 --------
 
+New in 6.0.4
+============
+
+Features
+--------
+
+* New :doc: role for reStructuredText compiler, creates a link to another post
+  / page inside the same site (Issue #724)
+
+Bugfixes
+--------
+
+* Added missing metadata in internals.txt and extending.txt (Issue #738)
+* Fix addthis sizing with bootstrap3 theme (Issue #731)
+* Refuse to install in unsupported Python versions (Issue #733)
+* Fix sitemap plugin compatibility with Python 3 (Issue #734)
+* Changed default PyGal style (Issue #726)
+* Add files used by the listings directive as dependencies (Issue #723)
+* Localsearch task now depends on all pages, for better accuracy.
+* More robust directory creation (Issue #208)
+* Proper logging (Issues #712 #704)
+* Be less agressive in hyphenating, also, split words differently. (Issue #718)
+* Fixed several blogger import issues.
+* Avoid double slashes in RSS link elements (Issue #716)
+* Fix Python 3 incompatibility (Issue #715)
+* Consider the current theme chain's parent, bundles and engine part of the file_dep for
+  files created by generic_page_renderer (Issue #711)
+
+New in 6.0.3
+============
+
+Features
+--------
+
+* New --strict option for build command, makes warnings abort the build (Issue #704)
+  Still doesn't really affect behaviour, because each warning needs to check it.
+
+Bugfixes
+--------
+
+* Use correct pandoc argument order (Issue #709)
+* Invalid POSTS and PAGES were created by the wordpress importer.
+* Normalize paths in task targets, helping detect conflicts (Issue #546)
 * Strip multiple digits in unslugify, used by image galleries (Issue #703)
 * Added missing defaults and make Nikola work with empty conf.py (Issue #697)
 * Add thumbnails as file dependencies of gallery indexes (Issue #551)
@@ -43,7 +89,7 @@ Bugfixes
 --------
 
 * Remove decoding errors if files are not proper UTF-8 (Issue #691)
-* Stop ignoring *.JPG and *.PNG by galleries (Issue #690)
+* Stop ignoring \*.JPG and \*.PNG by galleries (Issue #690)
 
 New in 6.0.0
 ============

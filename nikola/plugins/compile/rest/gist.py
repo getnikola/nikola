@@ -38,21 +38,20 @@ class GitHubGist(Directive):
     has_content = False
 
     def get_raw_gist_with_filename(self, gistID, filename):
-        url = '/'.join(("https://raw.github.com/gist", gistID, filename))
+        url = '/'.join(("https://gist.github.com/raw", gistID, filename))
         return requests.get(url).text
 
     def get_raw_gist(self, gistID):
-        url = "https://raw.github.com/gist/{0}".format(gistID)
+        url = "https://gist.github.com/raw/{0}".format(gistID)
         return requests.get(url).text
 
     def run(self):
         if requests is None:
             msg = (
-                'ERROR:'
                 'To use the gist directive, you need to install the '
                 '"requests" package.\n'
             )
-            utils.show_msg(msg)
+            utils.LOGGER.warn(msg)
             return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
         gistID = self.arguments[0].strip()
         embedHTML = ""
