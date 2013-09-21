@@ -25,7 +25,9 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
+import os
 import json
+import shutil
 from io import BytesIO
 
 try:
@@ -43,6 +45,7 @@ class CommandInstallTheme(Command):
     name = "install_theme"
     doc_usage = "[[-u] theme_name] | [[-u] -l]"
     doc_purpose = "install theme into current site"
+    output_dir = 'themes'
     cmd_options = [
         {
             'name': 'list',
@@ -89,12 +92,25 @@ class CommandInstallTheme(Command):
             return True
         else:
             if name in data:
-                utils.makedirs('themes')
+                utils.makedirs(self.output_dir)
                 utils.LOGGER.notice('Downloading: ' + data[name])
                 zip_file = BytesIO()
                 zip_file.write(requests.get(data[name]).content)
                 utils.LOGGER.notice('Extracting: {0} into themes'.format(name))
                 utils.extract_all(zip_file)
             else:
-                utils.LOGGER.error("Can't find theme " + name)
-                return False
+                try:
+                    theme_path = utils.get_theme_path(name)
+                except:
+                    utils.LOGGER.error("Can't find theme " + name)
+                    return False
+
+                utils.makedirs(self.output_dir)
+                dest_path = os.path.join(self.output_dir, name)
+                if os.path.exists(dest_path):
+                    utils.LOGGER.error("{0} it's already installed".format(name))
+                    return False
+
+                utils.LOGGER.notice('Copying: {0} into themes'.format(theme_path))
+                shutil.copytree(theme_path, dest_path)
+                return True
