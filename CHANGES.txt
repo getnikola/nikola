@@ -7,6 +7,7 @@ Features
 Bugfixes
 --------
 
+* Install builtin themes (Issue #741)
 * LOGGER was incorrectly imported in planetoid.py
 * Order Monthly Archive properly, descending order (Issue #740)
 
