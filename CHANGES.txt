@@ -7,6 +7,7 @@ Features
 Bugfixes
 --------
 
+* LOGGER was incorrectly imported in planetoid.py
 * Order Monthly Archive properly, descending order (Issue #740)
 
 New in 6.0.4

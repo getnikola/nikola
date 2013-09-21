@@ -239,7 +239,7 @@ def load_messages(themes, translations, default_lang):
                     lang not in warned:
                 warned.append(lang)
                 LOGGER.warn("Incomplete translation for language "
-                      "'{0}'.".format(lang))
+                            "'{0}'.".format(lang))
             messages[lang].update(english.MESSAGES)
             messages[lang].update(translation.MESSAGES)
             del(translation)
@@ -617,6 +617,8 @@ class ExtendedRSS2(rss.RSS2):
 
 # \x00 means the "<" was backslash-escaped
 explicit_title_re = re.compile(r'^(.+?)\s*(?<!\x00)<(.*?)>$', re.DOTALL)
+
+
 def split_explicit_title(text):
     """Split role content into title and target, if given.
 

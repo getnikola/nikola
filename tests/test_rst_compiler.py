@@ -59,6 +59,7 @@ from nikola.plugin_categories import (
 )
 from .base import BaseTestCase
 
+
 class FakePost(object):
 
     def __init__(self, title, slug):
@@ -110,7 +111,6 @@ class FakeSite(object):
             FakePost(title='Fake post',
                      slug='fake-post')
         ]
-
 
     def render_template(self, name, _, context):
         return('<img src="IMG.jpg">')
@@ -347,7 +347,7 @@ class RefTestCase(ReSTExtensionTestCase):
     sample2 = 'Sample for testing my :doc:`titled post <fake-post>`'
 
     def setUp(self):
-        f =  docutils.parsers.rst.roles.role('doc', None, None, None)[0]
+        f = docutils.parsers.rst.roles.role('doc', None, None, None)[0]
         f.site = FakeSite()
         return super(RefTestCase, self).setUp()
 
