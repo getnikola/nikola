@@ -243,64 +243,10 @@ def sort_tags(site, filenames, test_mode=False):
     return new_tags
 
 
-def _add_tags(tags, additions):
-    """ In all tags list, add tags in additions if not already present. """
-
-    for tag in additions:
-        if tag not in tags:
-            tags.append(tag)
-
-    return tags
-
-
-def _clean_tags(tags, remove, keep):
-    """ In all tags list, replace tags in remove with keep tag. """
-    original_tags = tags[:]
-    for index, tag in enumerate(original_tags):
-        if tag in remove:
-            tags.remove(tag)
-
-    if len(original_tags) != len(tags) and keep not in tags:
-        tags.append(keep)
-
-    return tags
-
-
 def _format_doc_string(function):
     text = dedent(' ' * 4 + function.__doc__.strip())
     doc_lines = [line for line in text.splitlines() if line.strip()]
     return '\n'.join(doc_lines) + '\n'
-
-
-def _process_comma_separated_tags(tags):
-    return [tag.strip() for tag in tags.strip().split(',') if tag.strip()]
-
-
-def _remove_tags(tags, removals):
-    """ In all tags list, remove tags in removals. """
-
-    for tag in removals:
-        while tag in tags:
-            tags.remove(tag)
-
-    return tags
-
-
-def _replace_tags_line(post, tags):
-
-    with codecs.open(post.source_path, 'r', 'utf-8') as f:
-        post_text = f.readlines()
-
-    tag_identifier = u'.. tags:'
-    new_tags = u'.. tags: %s\n' % ', '.join(tags)
-
-    for index, line in enumerate(post_text[:]):
-        if line.startswith(tag_identifier):
-            post_text[index] = new_tags
-            break
-
-    with codecs.open(post.source_path, 'w+', 'utf-8') as f:
-        post_text = f.writelines(post_text)
 
 
 class CommandTags(Command):
@@ -410,3 +356,60 @@ class CommandTags(Command):
 
             else:
                 print(self.help())
+
+
+#### Private functions #########################################################
+
+
+def _add_tags(tags, additions):
+    """ In all tags list, add tags in additions if not already present. """
+
+    for tag in additions:
+        if tag not in tags:
+            tags.append(tag)
+
+    return tags
+
+
+def _clean_tags(tags, remove, keep):
+    """ In all tags list, replace tags in remove with keep tag. """
+    original_tags = tags[:]
+    for index, tag in enumerate(original_tags):
+        if tag in remove:
+            tags.remove(tag)
+
+    if len(original_tags) != len(tags) and keep not in tags:
+        tags.append(keep)
+
+    return tags
+
+
+def _process_comma_separated_tags(tags):
+    return [tag.strip() for tag in tags.strip().split(',') if tag.strip()]
+
+
+def _remove_tags(tags, removals):
+    """ In all tags list, remove tags in removals. """
+
+    for tag in removals:
+        while tag in tags:
+            tags.remove(tag)
+
+    return tags
+
+
+def _replace_tags_line(post, tags):
+
+    with codecs.open(post.source_path, 'r', 'utf-8') as f:
+        post_text = f.readlines()
+
+    tag_identifier = u'.. tags:'
+    new_tags = u'.. tags: %s\n' % ', '.join(tags)
+
+    for index, line in enumerate(post_text[:]):
+        if line.startswith(tag_identifier):
+            post_text[index] = new_tags
+            break
+
+    with codecs.open(post.source_path, 'w+', 'utf-8') as f:
+        post_text = f.writelines(post_text)
