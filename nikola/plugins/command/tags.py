@@ -44,11 +44,7 @@ def add_tags(site, tags, filenames, test_mode=False):
 
     tags = _process_comma_separated_tags(tags)
 
-    # fixme: currently doesn't handle two post files.
-    posts = [
-        post for post in site.timeline
-        if post.source_path in filenames and not post.is_two_file
-    ]
+    posts = [post for post in site.timeline if post.source_path in filenames]
 
     if len(tags) == 0 or len(posts) == 0:
         print("ERROR: Need atleast one tag and post.")
@@ -110,11 +106,7 @@ def merge_tags(site, tags, filenames, test_mode=False):
 
     tags = _process_comma_separated_tags(tags)
 
-    # fixme: currently doesn't handle two post files.
-    posts = [
-        post for post in site.timeline
-        if post.source_path in filenames and not post.is_two_file
-    ]
+    posts = [post for post in site.timeline if post.source_path in filenames]
 
     if len(tags) < 2 or len(posts) == 0:
         print("ERROR: Need atleast two tags and a post.")
@@ -149,11 +141,7 @@ def remove_tags(site, tags, filenames, test_mode=False):
 
     tags = _process_comma_separated_tags(tags)
 
-    # fixme: currently doesn't handle two post files.
-    posts = [
-        post for post in site.timeline
-        if post.source_path in filenames and not post.is_two_file
-    ]
+    posts = [post for post in site.timeline if post.source_path in filenames]
 
     if len(tags) == 0 or len(posts) == 0:
         print("ERROR: Need atleast one tag and post.")
@@ -215,14 +203,11 @@ def sort_tags(site, filenames, test_mode=False):
 
     """
 
-    # fixme: currently doesn't handle two post files.
-    posts = [
-        post for post in site.timeline
-        if post.source_path in filenames and not post.is_two_file
-    ]
+    posts = [post for post in site.timeline if post.source_path in filenames]
 
     if len(posts) == 0:
-        print("ERROR: Need atleast one post.")
+        LOGGER.error("Need atleast one post.")
+
         return
 
     FMT = 'Tags for {0}:\n{1:>6} - {2}\n{3:>6} - {4}\n'
@@ -385,6 +370,7 @@ def _clean_tags(tags, remove, keep):
 
 
 def _process_comma_separated_tags(tags):
+    """ Return a list of tag strings given a string of comma-separated tags. """
     return [tag.strip() for tag in tags.strip().split(',') if tag.strip()]
 
 
@@ -399,8 +385,17 @@ def _remove_tags(tags, removals):
 
 
 def _replace_tags_line(post, tags):
+    """ Replaces the line that lists the tags, with given tags. """
 
-    with codecs.open(post.source_path, 'r', 'utf-8') as f:
+    source_path = post.source_path
+
+    if post.is_two_file:
+        # fixme: currently doesn't handle two post files.
+        LOGGER.error("Two file posts are unsupported. Skipping %s" % source_path)
+
+        return
+
+    with codecs.open(source_path, 'r', 'utf-8') as f:
         post_text = f.readlines()
 
     tag_identifier = u'.. tags:'
@@ -411,5 +406,5 @@ def _replace_tags_line(post, tags):
             post_text[index] = new_tags
             break
 
-    with codecs.open(post.source_path, 'w+', 'utf-8') as f:
+    with codecs.open(source_path, 'w+', 'utf-8') as f:
         post_text = f.writelines(post_text)
