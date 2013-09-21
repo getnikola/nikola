@@ -65,7 +65,7 @@ def doc_role(name, rawtext, text, lineno, inliner,
             raise ValueError
     except ValueError:
         msg = inliner.reporter.error(
-            '"{}" slug doesn\'t exist.'.format(slug),
+            '"{0}" slug doesn\'t exist.'.format(slug),
             line=lineno)
         prb = inliner.problematic(rawtext, rawtext, msg)
         return [prb], [msg]
@@ -77,7 +77,7 @@ def doc_role(name, rawtext, text, lineno, inliner,
     permalink = post.permalink()
     if twin_slugs:
         msg = inliner.reporter.warning(
-            'More than one post with the same slug. Using "{}"'.format(permalink))
+            'More than one post with the same slug. Using "{0}"'.format(permalink))
 
     node = make_link_node(rawtext, title, permalink, options)
     return [node], []
