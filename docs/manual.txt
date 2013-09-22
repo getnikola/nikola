@@ -78,7 +78,7 @@ Nikola can't do:
 * Twitter
 * Facebook
 * An Issue tracker
-* Anything with forms, really (except for comments_!)
+* Anything with forms, really (except for `comments <#comments-and-annotations>`_!)
 
 Keep in mind that "static" doesn't mean **boring**. You can have animations, slides
 or whatever fancy CSS/HTML5 thingie you like. It only means all that HTML is
@@ -447,6 +447,9 @@ to your configuration ::
    category
        Like tags, except each post can have only one, and they usually have
        more descriptive names.
+
+   annotations / noannotations
+       Override the value of the ``ANNOTATIONS`` option for this specific post or page.
 
 .. note:: The Two-File Format
 
@@ -855,8 +858,8 @@ Other interesting ideas are using
 for that matter), using `lftp mirror <http://lftp.yar.ru/>`_ or unison, or dropbox, or
 Ubuntu One. Any way you can think of to copy files from one place to another is good enough.
 
-Comments
---------
+Comments and Annotations
+------------------------
 
 While Nikola creates static sites, there is a minimum level of user interaction you
 are probably expecting: comments.
@@ -930,6 +933,18 @@ You can disable comments for a post by adding a "nocomments" metadata field to i
 
     You need jQuery, but not because Facebook wants it (see Issue
     #639).
+
+An alternative or complement to comments are annotations. Nikola integrates
+the annotation service provided by `AnnotateIt. <annotateit.org>`_
+To use it, set the ``ANNOTATIONS`` option to True. This is specially useful
+if you want feedback on specific parts of your writing.
+
+You can enable or disable annotations for specific posts or pages using the
+``annotations`` and ``noannotations`` metadata.
+
+Annotations require JQuery and are therefore not supported in the base theme.
+You can check bootstrap theme's ``base.html`` for details on how to handle them in
+custom themes.
 
 Image Galleries
 ---------------

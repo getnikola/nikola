@@ -94,6 +94,7 @@ class Vimeo(Directive):
         return [nodes.raw('', CODE.format(**options), format='html')]
 
     def check_modules(self):
+        msg = None
         if requests is None:
             msg = (
                 "To use the Vimeo directive you need to install "

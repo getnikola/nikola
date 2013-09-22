@@ -1,6 +1,7 @@
 ## -*- coding: utf-8 -*-
 <%namespace name="base" file="base_helper.tmpl" import="*" />
 <%namespace name="bootstrap" file="bootstrap_helper.tmpl" import="*" />
+<%namespace name="notes" file="annotation_helper.tmpl" import="*" />
 ${set_locale(lang)}
 <!DOCTYPE html>
 <html
@@ -13,6 +14,11 @@ lang="${lang}">
     ${bootstrap.html_head()}
     <%block name="extra_head">
     </%block>
+    % if annotations and post and not post.meta('noannotations'):
+        ${notes.css()}
+    % elif not annotations and post and post.meta('annotations'):
+        ${notes.css()}
+    % endif
     ${extra_head_data}
 </head>
 <body>
@@ -68,6 +74,11 @@ lang="${lang}">
 ${bootstrap.late_load_js()}
 ${base.html_social()}
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
-<%block name="extra_js"></%block>
+    <%block name="extra_js"></%block>
+    % if annotations and post and not post.meta('noannotations'):
+        ${notes.code()}
+    % elif not annotations and post and post.meta('annotations'):
+        ${notes.code()}
+    % endif
 ${body_end}
 </body>
