@@ -6,12 +6,19 @@
 """ Base class for Nikola test cases """
 
 
-__all__ = ["BaseTestCase"]
+__all__ = ["BaseTestCase", "cd"]
 
 from contextlib import contextmanager
 import os
 import sys
 import unittest
+
+import logbook
+
+# Make logbook shutup
+from nikola.utils import LOGGER
+
+LOGGER.handlers.append(logbook.TestHandler())
 
 
 if sys.version_info < (2, 7):
