@@ -45,7 +45,6 @@ class Plugin(RestExtension):
 
 def doc_role(name, rawtext, text, lineno, inliner,
              options={}, content=[]):
-
     # split link's text and post's slug in role content
     has_explicit_title, title, slug = split_explicit_title(text)
 

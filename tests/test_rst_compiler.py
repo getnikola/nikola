@@ -47,6 +47,7 @@ import nikola.plugins.compile.rest
 from nikola.plugins.compile.rest import gist
 from nikola.plugins.compile.rest import vimeo
 import nikola.plugins.compile.rest.listing
+from nikola.plugins.compile.rest.doc import Plugin as DocPlugin
 from nikola.utils import _reload
 from nikola.plugin_categories import (
     Command,
@@ -57,7 +58,7 @@ from nikola.plugin_categories import (
     TaskMultiplier,
     RestExtension,
 )
-from .base import BaseTestCase, cd
+from .base import BaseTestCase
 
 
 class FakePost(object):
@@ -336,9 +337,16 @@ class DocTestCase(ReSTExtensionTestCase):
     sample2 = 'Sample for testing my :doc:`titled post <fake-post>`'
 
     def setUp(self):
-        f = docutils.parsers.rst.roles.role('doc', None, None, None)[0]
-        f.site = FakeSite()
-        return super(RefTestCase, self).setUp()
+        # Initialize plugin, register role
+        self.plugin = DocPlugin()
+        self.plugin.set_site(FakeSite())
+        # Hack to fix leaked state from integration tests
+        try:
+            f = docutils.parsers.rst.roles.role('doc', None, None, None)[0]
+            f.site = FakeSite()
+        except AttributeError:
+            pass
+        return super(DocTestCase, self).setUp()
 
     def test_doc_doesnt_exist(self):
         self.assertRaises(Exception, self.assertHTMLContains, 'anything', {})
