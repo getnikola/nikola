@@ -78,7 +78,7 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'to_datetime', 'apply_filters', 'config_changed', 'get_crumbs',
            'get_tzname', 'get_asset_path', '_reload', 'unicode_str', 'bytes_str',
            'unichr', 'Functionary', 'LocaleBorg', 'sys_encode', 'sys_decode',
-           'makedirs']
+           'makedirs', 'get_parent_theme_name']
 
 
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
@@ -193,19 +193,20 @@ def get_template_engine(themes):
     return 'mako'
 
 
+def get_parent_theme_name(theme_name):
+    parent_path = os.path.join(get_theme_path(theme_name), 'parent')
+    if os.path.isfile(parent_path):
+        with open(parent_path) as fd:
+            return fd.readlines()[0].strip()
+    return None
+
+
 def get_theme_chain(theme):
     """Create the full theme inheritance chain."""
     themes = [theme]
 
-    def get_parent(theme_name):
-        parent_path = os.path.join(get_theme_path(theme_name), 'parent')
-        if os.path.isfile(parent_path):
-            with open(parent_path) as fd:
-                return fd.readlines()[0].strip()
-        return None
-
     while True:
-        parent = get_parent(themes[-1])
+        parent = get_parent_theme_name(themes[-1])
         # Avoid silly loops
         if parent is None or parent in themes:
             break

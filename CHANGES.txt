@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Install enough og the theme chain to ensure themes are usable (Issue #748)
 * Make Listings directive inherit Include making it simpler and more powerful (Issue #744)
 * Install builtin themes (Issue #741)
 * LOGGER was incorrectly imported in planetoid.py
