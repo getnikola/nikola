@@ -7,6 +7,7 @@ Features
 Bugfixes
 --------
 
+* Make Listings directive inherit Include making it simpler and more powerful (Issue #744)
 * Install builtin themes (Issue #741)
 * LOGGER was incorrectly imported in planetoid.py
 * Order Monthly Archive properly, descending order (Issue #740)
