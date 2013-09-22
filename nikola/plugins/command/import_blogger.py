@@ -67,7 +67,7 @@ class CommandImportBlogger(Command, ImportMixin):
         # Parse the data
         if feedparser is None:
             utils.LOGGER.error('To use the import_blogger command,'
-                  ' you have to install the "feedparser" package.')
+                               ' you have to install the "feedparser" package.')
             return
 
         if not args:
@@ -148,7 +148,7 @@ class CommandImportBlogger(Command, ImportMixin):
         # blogger supports empty titles, which Nikola doesn't
         if not title:
             utils.LOGGER.warn("Empty title in post with URL {0}. Using NO_TITLE "
-                  "as placeholder, please fix.".format(link))
+                              "as placeholder, please fix.".format(link))
             title = "NO_TITLE"
 
         if link_path.lower().endswith('.html'):
@@ -198,7 +198,7 @@ class CommandImportBlogger(Command, ImportMixin):
                 content)
         else:
             utils.LOGGER.warn('Not going to import "{0}" because it seems to contain'
-                  ' no content.'.format(title))
+                              ' no content.'.format(title))
 
     def process_item(self, item):
         post_type = item.tags[0].term

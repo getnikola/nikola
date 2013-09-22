@@ -2,7 +2,6 @@
 from __future__ import unicode_literals, print_function, absolute_import
 
 import codecs
-from contextlib import contextmanager
 import locale
 import os
 import shutil
@@ -19,15 +18,7 @@ import nikola
 import nikola.plugins.command
 import nikola.plugins.command.init
 
-from .base import BaseTestCase
-
-
-@contextmanager
-def cd(path):
-    old_dir = os.getcwd()
-    os.chdir(path)
-    yield
-    os.chdir(old_dir)
+from .base import BaseTestCase, cd
 
 
 class EmptyBuildTest(BaseTestCase):
@@ -312,6 +303,27 @@ class RelativeLinkTest2(DemoBuildTest):
         sitemap_data = codecs.open(sitemap_path, "r", "utf8").read()
         self.assertFalse('<loc>http://getnikola.com/</loc>' in sitemap_data)
         self.assertTrue('<loc>http://getnikola.com/blog/</loc>' in sitemap_data)
+
+
+class MonthlyArchiveTest(DemoBuildTest):
+    """Check that the monthly archives build and are correct."""
+
+    @classmethod
+    def patch_site(self):
+        """Set the SITE_URL to have a path"""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with codecs.open(conf_path, "rb", "utf-8") as inf:
+            data = inf.read()
+            data = data.replace('# CREATE_MONTHLY_ARCHIVE = False',
+                                'CREATE_MONTHLY_ARCHIVE = True')
+        with codecs.open(conf_path, "wb+", "utf8") as outf:
+            outf.write(data)
+            outf.flush()
+
+    def test_monthly_archive(self):
+        """See that it builds"""
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'target', 'output', '2012', '03', 'index.html')))
+
 
 if __name__ == "__main__":
     unittest.main()

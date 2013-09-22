@@ -97,8 +97,8 @@ class CommandImportWordpress(Command, ImportMixin):
 
         if args:
             utils.LOGGER.warn('You specified additional arguments ({0}). Please consider '
-                  'putting these arguments before the filename if you '
-                  'are running into problems.'.format(args))
+                              'putting these arguments before the filename if you '
+                              'are running into problems.'.format(args))
 
         self.import_into_existing_site = False
         self.url_map = {}
@@ -240,7 +240,7 @@ class CommandImportWordpress(Command, ImportMixin):
                 fd.write(requests.get(url).content)
         except requests.exceptions.ConnectionError as err:
             utils.LOGGER.warn("Downloading {0} to {1} failed: {2}".format(url, dst_path,
-                                                              err))
+                                                                          err))
 
     def import_attachment(self, item, wordpress_namespace):
         url = get_text_tag(
@@ -411,7 +411,7 @@ class CommandImportWordpress(Command, ImportMixin):
                 content)
         else:
             utils.LOGGER.warn('Not going to import "{0}" because it seems to contain'
-                  ' no content.'.format(title))
+                              ' no content.'.format(title))
 
     def process_item(self, item):
         # The namespace usually is something like:

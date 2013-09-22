@@ -36,13 +36,8 @@ Here are some guidelines about how you can contribute to Nikola:
 * **Try writing some tests** if possible -- again, following existing tests is
   often easiest, and a good way to tell whether the feature you're modifying is
   easily testable.
-* **Use** ``hub pull-request`` when writing a patch for a **pre-existing Github
-  Issue**. This isn't an absolute requirement, but makes the maintainers' lives
-  much easier! Specifically: `install hub
-  <https://github.com/defunkt/hub/#installation>`_ and then run `hub
-  pull-request -i issuenumber <https://github.com/defunkt/hub/#git-pull-request>`_ to turn the
-  issue into a pull request containing your code.
-
+* Make sure to mention the issue it affects in the description of your pull request,
+  so it's clear what to test and how to do it.
 * There are some quirks to how Nikola's codebase is structured, and to how
   some things need to be done [2]_ but don't worry, we'll guide you!
 

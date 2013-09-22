@@ -8,7 +8,8 @@
 
 __all__ = ["BaseTestCase"]
 
-
+from contextlib import contextmanager
+import os
 import sys
 import unittest
 
@@ -56,3 +57,11 @@ if sys.version_info < (2, 7):
 
 else:
     BaseTestCase = unittest.TestCase
+
+
+@contextmanager
+def cd(path):
+    old_dir = os.getcwd()
+    os.chdir(path)
+    yield
+    os.chdir(old_dir)

@@ -93,7 +93,7 @@ class ImportMixin(object):
         else:
             self.import_into_existing_site = True
             utils.LOGGER.notice('The folder {0} already exists - assuming that this is a '
-                  'already existing nikola site.'.format(self.output_folder))
+                                'already existing nikola site.'.format(self.output_folder))
 
         filename = os.path.join(os.path.dirname(utils.__file__), 'conf.py.in')
         # add format_extensions=True if getting an unhelpful traceback
