@@ -18,5 +18,6 @@ and build a site using it. Congratulations!
 * You can see a demo photo gallery `here </galleries/demo/index.html>`__
 * Demo usage of listings `here </stories/listings-demo.html>`__
 * Demo of slideshows `here </stories/slides-demo.html>`__
+* Demo of Bootstrap `here </stories/bootstrap-demo.html>`__
 
 Send feedback to ralsina@netmanagers.com.ar!

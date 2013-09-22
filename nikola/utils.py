@@ -44,8 +44,17 @@ try:
 except ImportError:
     pass
 
+import logbook
+from logbook.more import ExceptionHandler
 import pytz
 
+
+class ApplicationWarning(Exception):
+    pass
+
+
+LOGGER = logbook.Logger('Nikola')
+STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
 
 if sys.version_info[0] == 3:
     # Python 3
@@ -68,7 +77,8 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'generic_rss_renderer', 'copy_file', 'slugify', 'unslugify',
            'to_datetime', 'apply_filters', 'config_changed', 'get_crumbs',
            'get_tzname', 'get_asset_path', '_reload', 'unicode_str', 'bytes_str',
-           'unichr', 'Functionary', 'LocaleBorg', 'sys_encode', 'sys_decode', 'show_msg']
+           'unichr', 'Functionary', 'LocaleBorg', 'sys_encode', 'sys_decode',
+           'makedirs']
 
 
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
@@ -86,6 +96,15 @@ def sys_decode(thing):
     if isinstance(thing, bytes_str):
         return thing.decode(ENCODING)
     return thing
+
+
+def makedirs(path):
+    """Create a folder."""
+    if os.path.isdir(path):
+        return
+    if os.path.exists(path):
+        raise OSError('Path {0} already exists and is not a folder.')
+    os.makedirs(path)
 
 
 class Functionary(defaultdict):
@@ -218,10 +237,9 @@ def load_messages(themes, translations, default_lang):
             if sorted(translation.MESSAGES.keys()) !=\
                     sorted(english.MESSAGES.keys()) and \
                     lang not in warned:
-                # FIXME: get real logging in place
                 warned.append(lang)
-                print("Warning: Incomplete translation for language "
-                      "'{0}'.".format(lang))
+                LOGGER.warn("Incomplete translation for language "
+                            "'{0}'.".format(lang))
             messages[lang].update(english.MESSAGES)
             messages[lang].update(translation.MESSAGES)
             del(translation)
@@ -251,8 +269,7 @@ def copy_tree(src, dst, link_cutoff=None):
         if set(root_parts) & ignore:
             continue
         dst_dir = os.path.join(dst, *root_parts[base_len:])
-        if not os.path.isdir(dst_dir):
-            os.makedirs(dst_dir)
+        makedirs(dst_dir)
         for src_name in files:
             if src_name == '.DS_Store':
                 continue
@@ -294,8 +311,7 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path,
     rss_obj.self_url = feed_url
     rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
     dst_dir = os.path.dirname(output_path)
-    if not os.path.isdir(dst_dir):
-        os.makedirs(dst_dir)
+    makedirs(dst_dir)
     with codecs.open(output_path, "wb+", "utf-8") as rss_file:
         data = rss_obj.to_xml(encoding='utf-8')
         if isinstance(data, bytes_str):
@@ -305,8 +321,7 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path,
 
 def copy_file(source, dest, cutoff=None):
     dst_dir = os.path.dirname(dest)
-    if not os.path.isdir(dst_dir):
-        os.makedirs(dst_dir)
+    makedirs(dst_dir)
     if os.path.islink(source):
         link_target = os.path.relpath(
             os.path.normpath(os.path.join(dst_dir, os.readlink(source))))
@@ -367,7 +382,7 @@ def unslugify(value):
     """
     Given a slug string (as a filename), return a human readable string
     """
-    value = re.sub('^[0-9]', '', value)
+    value = re.sub('^[0-9]+', '', value)
     value = re.sub('([_\-\.])', ' ', value)
     value = value.strip().capitalize()
     return value
@@ -391,12 +406,7 @@ def extract_all(zipfile):
                                          'not safe to expand.')
         for f in namelist:
             if f.endswith('/'):
-                if not os.path.isdir(f):
-                    try:
-                        os.makedirs(f)
-                    except:
-                        raise OSError("Failed making {0} directory "
-                                      "tree!".format(f))
+                makedirs(f)
             else:
                 z.extract(f)
     os.chdir(pwd)
@@ -485,7 +495,7 @@ def apply_filters(task, filters):
             else:
                 assert False, key
 
-    for target in task['targets']:
+    for target in task.get('targets', []):
         ext = os.path.splitext(target)[-1].lower()
         filter_ = filter_matches(ext)
         if filter_:
@@ -585,12 +595,6 @@ def get_asset_path(path, themes, files_folders={'files': ''}):
     return None
 
 
-def show_msg(msg):
-    """Prints a message in stderr, so it bypasses doit's capture."""
-    sys.stderr.write(msg)
-    sys.stderr.flush()
-
-
 class LocaleBorg:
     __shared_state = {
         'current_lang': None
@@ -609,3 +613,18 @@ class ExtendedRSS2(rss.RSS2):
                 'type': "application/rss+xml"
             })
             handler.endElement("atom:link")
+
+
+# \x00 means the "<" was backslash-escaped
+explicit_title_re = re.compile(r'^(.+?)\s*(?<!\x00)<(.*?)>$', re.DOTALL)
+
+
+def split_explicit_title(text):
+    """Split role content into title and target, if given.
+
+       From Sphinx's "sphinx/util/nodes.py"
+    """
+    match = explicit_title_re.match(text)
+    if match:
+        return True, match.group(1), match.group(2)
+    return False, text, text

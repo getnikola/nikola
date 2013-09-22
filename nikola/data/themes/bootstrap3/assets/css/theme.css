@@ -78,3 +78,6 @@ ul.bricks > li {
     margin: 3px;
 }
 
+.at300b {
+    box-sizing: content-box;
+}

@@ -65,7 +65,10 @@ class Galleries(Task):
             'default_lang': self.site.config['DEFAULT_LANG'],
             'blog_description': self.site.config['BLOG_DESCRIPTION'],
             'use_filename_as_title': self.site.config['USE_FILENAME_AS_TITLE'],
-            'gallery_path': self.site.config['GALLERY_PATH']
+            'gallery_path': self.site.config['GALLERY_PATH'],
+            'sort_by_date': self.site.config['GALLERY_SORT_BY_DATE'],
+            'filters': self.site.config['FILTERS'],
+            'global_context': self.site.GLOBAL_CONTEXT,
         }
 
         # FIXME: lots of work is done even when images don't change,
@@ -99,18 +102,20 @@ class Galleries(Task):
                                                     None)))
             output_name = os.path.join(output_gallery, self.site.config['INDEX_FILE'])
             if not os.path.isdir(output_gallery):
-                yield {
+                yield utils.apply_filters({
                     'basename': str('render_galleries'),
                     'name': output_gallery,
-                    'actions': [(os.makedirs, (output_gallery,))],
+                    'actions': [(utils.makedirs, (output_gallery,))],
                     'targets': [output_gallery],
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
-                }
+                }, kw['filters'])
 
             # Gather image_list contains "gallery/name/image_name.jpg"
-            image_list = list(glob.iglob(gallery_path + "/*jpg")) +\
-                list(glob.iglob(gallery_path + "/*png"))
+            image_list = glob.glob(gallery_path + "/*jpg") +\
+                glob.glob(gallery_path + "/*JPG") +\
+                glob.glob(gallery_path + "/*png") +\
+                glob.glob(gallery_path + "/*PNG")
 
             # Filter ignored images
             try:
@@ -134,8 +139,14 @@ class Galleries(Task):
 
             image_list = [x for x in image_list if "thumbnail" not in x]
             # Sort by date
-            image_list.sort(key=lambda a: self.image_date(a))
+            if kw['sort_by_date']:
+                image_list.sort(key=lambda a: self.image_date(a))
+            else:  # Sort by name
+                image_list.sort()
             image_name_list = [os.path.basename(x) for x in image_list]
+
+            # List of thumbnail paths
+            thumb_list = []
 
             # Do thumbnails and copy originals
             thumbs = []
@@ -151,7 +162,8 @@ class Galleries(Task):
                 # thumb_path is "output/GALLERY_PATH/name/image_name.jpg"
                 orig_dest_path = os.path.join(output_gallery, img_name)
                 thumbs.append(os.path.basename(thumb_path))
-                yield {
+                thumb_list.append(thumb_path)
+                yield utils.apply_filters({
                     'basename': str('render_galleries'),
                     'name': thumb_path,
                     'file_dep': [img],
@@ -162,8 +174,8 @@ class Galleries(Task):
                     ],
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
-                }
-                yield {
+                }, kw['filters'])
+                yield utils.apply_filters({
                     'basename': str('render_galleries'),
                     'name': orig_dest_path,
                     'file_dep': [img],
@@ -174,7 +186,7 @@ class Galleries(Task):
                     ],
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
-                }
+                }, kw['filters'])
 
             # Remove excluded images
             if excluded_image_name_list:
@@ -186,7 +198,7 @@ class Galleries(Task):
                     excluded_thumb_dest_path = os.path.join(
                         output_gallery, ".thumbnail".join([fname, ext]))
                     excluded_dest_path = os.path.join(output_gallery, img_name)
-                    yield {
+                    yield utils.apply_filters({
                         'basename': str('render_galleries_clean'),
                         'name': excluded_thumb_dest_path,
                         'file_dep': [exclude_path],
@@ -196,8 +208,8 @@ class Galleries(Task):
                         ],
                         'clean': True,
                         'uptodate': [utils.config_changed(kw)],
-                    }
-                    yield {
+                    }, kw['filters'])
+                    yield utils.apply_filters({
                         'basename': str('render_galleries_clean'),
                         'name': excluded_dest_path,
                         'file_dep': [exclude_path],
@@ -207,22 +219,21 @@ class Galleries(Task):
                         ],
                         'clean': True,
                         'uptodate': [utils.config_changed(kw)],
-                    }
+                    }, kw['filters'])
 
             # Use galleries/name/index.txt to generate a blurb for
             # the gallery, if it exists.
 
             index_path = os.path.join(gallery_path, "index.txt")
             cache_dir = os.path.join(kw["cache_folder"], 'galleries')
-            if not os.path.isdir(cache_dir):
-                os.makedirs(cache_dir)
+            utils.makedirs(cache_dir)
             index_dst_path = os.path.join(
                 cache_dir,
                 str(hashlib.sha224(index_path.encode('utf-8')).hexdigest() +
                     '.html'))
             if os.path.exists(index_path):
                 compile_html = self.site.get_compiler(index_path).compile_html
-                yield {
+                yield utils.apply_filters({
                     'basename': str('render_galleries'),
                     'name': index_dst_path,
                     'file_dep': [index_path],
@@ -230,7 +241,7 @@ class Galleries(Task):
                     'actions': [(compile_html, [index_path, index_dst_path, True])],
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
-                }
+                }, kw['filters'])
 
             context = {}
             context["lang"] = kw["default_lang"]
@@ -253,9 +264,9 @@ class Galleries(Task):
             context["thumbnail_size"] = kw["thumbnail_size"]
 
             file_dep = self.site.template_system.template_deps(
-                template_name) + image_list
+                template_name) + image_list + thumb_list
 
-            yield {
+            yield utils.apply_filters({
                 'basename': str('render_galleries'),
                 'name': output_name,
                 'file_dep': file_dep,
@@ -272,11 +283,10 @@ class Galleries(Task):
                 'clean': True,
                 'uptodate': [utils.config_changed({
                     1: kw,
-                    2: self.site.config['GLOBAL_CONTEXT'],
-                    3: self.site.config["COMMENTS_IN_GALLERIES"],
-                    4: context,
+                    2: self.site.config["COMMENTS_IN_GALLERIES"],
+                    3: context,
                 })],
-            }
+            }, kw['filters'])
 
     def render_gallery_index(
             self,
@@ -356,13 +366,11 @@ class Galleries(Task):
 
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
-            except Exception:
-                utils.show_msg("WARNING: can't thumbnail {0}".format(src))
-                pass
-            else:
                 im.save(dst)
-
-        else:
+            except Exception:
+                utils.LOGGER.warn("Can't thumbnail {0}, using original image as thumbnail".format(src))
+                utils.copy_file(src, dst)
+        else:  # Image is small
             utils.copy_file(src, dst)
 
     def image_date(self, src):

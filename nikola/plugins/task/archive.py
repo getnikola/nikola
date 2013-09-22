@@ -64,6 +64,7 @@ class Archive(Task):
                 else:  # Monthly archives, just list the months
                     months = set([m.split('/')[1] for m in self.site.posts_per_month.keys() if m.startswith(str(year))])
                     months = sorted(list(months))
+                    months.reverse()
                     template_name = "list.tmpl"
                     context["items"] = [[get_month_name(int(month), lang), month] for month in months]
                     post_list = []

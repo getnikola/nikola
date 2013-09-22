@@ -29,7 +29,7 @@ from operator import attrgetter
 import os
 import shutil
 import sys
-import warnings
+import traceback
 
 from doit.loader import generate_tasks
 from doit.cmd_base import TaskLoader
@@ -41,22 +41,27 @@ from doit.cmd_clean import Clean as DoitClean
 
 from . import __version__
 from .nikola import Nikola
-from .utils import _reload, sys_decode
+from .utils import _reload, sys_decode, LOGGER, STRICT_HANDLER
 
 
 config = {}
 
 
 def main(args):
+    if len(args) > 0 and args[0] == 'build' and '--strict' in args:
+        LOGGER.notice('Running in strict mode')
+        STRICT_HANDLER.push_application()
     global config
     sys.path.append('')
     try:
         import conf
         _reload(conf)
         config = conf.__dict__
-    except (ImportError, NameError):
+    except Exception:
         if os.path.exists('conf.py'):
-            warnings.warn('Error loading conf.py')
+            msg = traceback.format_exc(0).splitlines()[1]
+            LOGGER.error('In conf.py line {0}: {1}'.format(sys.exc_info()[2].tb_lineno, msg))
+            sys.exit(1)
         config = {}
 
     site = Nikola(**config)
@@ -81,7 +86,19 @@ class Help(DoitHelp):
 
 class Build(DoitRun):
     """expose "run" command as "build" for backward compatibility"""
-    pass
+    def __init__(self, *args, **kw):
+        opts = list(self.cmd_options)
+        opts.append(
+            {
+                'name': 'strict',
+                'long': 'strict',
+                'default': False,
+                'type': bool,
+                'help': "Fail on things that would normally be warnings.",
+            }
+        )
+        self.cmd_options = tuple(opts)
+        super(Build, self).__init__(*args, **kw)
 
 
 class Clean(DoitClean):
@@ -122,7 +139,6 @@ class DoitNikola(DoitMain):
     def get_commands(self):
         # core doit commands
         cmds = DoitMain.get_commands(self)
-
         # load nikola commands
         for name, cmd in self.nikola.commands.items():
             cmds[name] = cmd
@@ -136,13 +152,15 @@ class DoitNikola(DoitMain):
         if len(args) == 0 or any(arg in ["--help", '-h'] for arg in args):
             cmd_args = ['help']
             args = ['help']
+            # Hide run because Nikola uses build
+            sub_cmds.pop('run')
 
         if len(args) == 0 or args[0] not in sub_cmds.keys() or \
-                args[0] in ('run', 'build'):
+                args[0] == 'build':
             # Check for conf.py before launching run
             if not self.nikola.configured:
-                print("This command needs to run inside an "
-                      "existing Nikola site.")
+                LOGGER.error("This command needs to run inside an "
+                             "existing Nikola site.")
                 return False
         return super(DoitNikola, self).run(cmd_args)
 

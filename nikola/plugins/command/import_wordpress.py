@@ -27,6 +27,7 @@
 from __future__ import unicode_literals, print_function
 import os
 import re
+import sys
 from lxml import etree
 
 try:
@@ -39,6 +40,11 @@ try:
     import requests
 except ImportError:
     requests = None  # NOQA
+
+try:
+    import phpserialize
+except ImportError:
+    phpserialize = None  # NOQA
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -79,12 +85,6 @@ class CommandImportWordpress(Command, ImportMixin):
 
     def _execute(self, options={}, args=[]):
         """Import a WordPress blog from an export file into a Nikola site."""
-        # Parse the data
-        if requests is None:
-            print('To use the import_wordpress command,'
-                  ' you have to install the "requests" package.')
-            return
-
         if not args:
             print(self.help())
             return
@@ -96,21 +96,42 @@ class CommandImportWordpress(Command, ImportMixin):
             options['output_folder'] = args.pop(0)
 
         if args:
-            print('You specified additional arguments ({0}). Please consider '
-                  'putting these arguments before the filename if you '
-                  'are running into problems.'.format(args))
+            utils.LOGGER.warn('You specified additional arguments ({0}). Please consider '
+                              'putting these arguments before the filename if you '
+                              'are running into problems.'.format(args))
+
+        self.import_into_existing_site = False
+        self.url_map = {}
+        self.timezone = None
 
         self.wordpress_export_file = options['filename']
         self.squash_newlines = options.get('squash_newlines', False)
-        self.no_downloads = options.get('no_downloads', False)
         self.output_folder = options.get('output_folder', 'new_site')
-        self.import_into_existing_site = False
+
         self.exclude_drafts = options.get('exclude_drafts', False)
-        self.url_map = {}
+        self.no_downloads = options.get('no_downloads', False)
+
+        if not self.no_downloads:
+            def show_info_about_mising_module(modulename):
+                utils.LOGGER.error(
+                    'To use the "{commandname}" command, you have to install '
+                    'the "{package}" package or supply the "--no-downloads" '
+                    'option.'.format(
+                        commandname=self.name,
+                        package=modulename)
+                )
+
+            if requests is None:
+                show_info_about_mising_module('requests')
+                return
+
+            if phpserialize is None:
+                show_info_about_mising_module('phpserialize')
+                return
+
         channel = self.get_channel_from_file(self.wordpress_export_file)
         self.context = self.populate_context(channel)
         conf_template = self.generate_base_site()
-        self.timezone = None
 
         self.import_posts(channel)
 
@@ -184,6 +205,7 @@ class CommandImportWordpress(Command, ImportMixin):
                                                None,
                                                "http://foo.com")
         context['SITE_URL'] = context['BASE_URL']
+        context['THEME'] = 'bootstrap3'
 
         author = channel.find('{{{0}}}author'.format(wordpress_namespace))
         context['BLOG_EMAIL'] = get_text_tag(
@@ -195,10 +217,10 @@ class CommandImportWordpress(Command, ImportMixin):
             '{{{0}}}author_display_name'.format(wordpress_namespace),
             "Joe Example")
         context['POSTS'] = '''(
-            ("posts/*.wp", "posts", "post.tmpl", True),
+            ("posts/*.wp", "posts", "post.tmpl"),
         )'''
         context['PAGES'] = '''(
-            ("stories/*.wp", "stories", "story.tmpl", False),
+            ("stories/*.wp", "stories", "story.tmpl"),
         )'''
         context['COMPILERS'] = '''{
         "rest": ('.txt', '.rst'),
@@ -217,8 +239,8 @@ class CommandImportWordpress(Command, ImportMixin):
             with open(dst_path, 'wb+') as fd:
                 fd.write(requests.get(url).content)
         except requests.exceptions.ConnectionError as err:
-            print("Downloading {0} to {1} failed: {2}".format(url, dst_path,
-                                                              err))
+            utils.LOGGER.warn("Downloading {0} to {1} failed: {2}".format(url, dst_path,
+                                                                          err))
 
     def import_attachment(self, item, wordpress_namespace):
         url = get_text_tag(
@@ -229,13 +251,66 @@ class CommandImportWordpress(Command, ImportMixin):
         dst_path = os.path.join(*([self.output_folder, 'files']
                                   + list(path.split('/'))))
         dst_dir = os.path.dirname(dst_path)
-        if not os.path.isdir(dst_dir):
-            os.makedirs(dst_dir)
-        print("Downloading {0} => {1}".format(url, dst_path))
+        utils.makedirs(dst_dir)
+        utils.LOGGER.notice("Downloading {0} => {1}".format(url, dst_path))
         self.download_url_content_to_file(url, dst_path)
         dst_url = '/'.join(dst_path.split(os.sep)[2:])
         links[link] = '/' + dst_url
         links[url] = '/' + dst_url
+
+        self.download_additional_image_sizes(
+            item,
+            wordpress_namespace,
+            os.path.dirname(url)
+        )
+
+    def download_additional_image_sizes(self, item, wordpress_namespace, source_path):
+        if phpserialize is None:
+            return
+
+        additional_metadata = item.findall('{{{0}}}postmeta'.format(wordpress_namespace))
+
+        if additional_metadata is None:
+            return
+
+        for element in additional_metadata:
+            meta_key = element.find('{{{0}}}meta_key'.format(wordpress_namespace))
+            if meta_key is not None and meta_key.text == '_wp_attachment_metadata':
+                meta_value = element.find('{{{0}}}meta_value'.format(wordpress_namespace))
+
+                if meta_value is None:
+                    continue
+
+                # Someone from Wordpress thought it was a good idea
+                # serialize PHP objects into that metadata field. Given
+                # that the export should give you the power to insert
+                # your blogging into another site or system its not.
+                # Why don't they just use JSON?
+                if sys.version_info[0] == 2:
+                    metadata = phpserialize.loads(meta_value.text)
+                    size_key = 'sizes'
+                    file_key = 'file'
+                else:
+                    metadata = phpserialize.loads(meta_value.text.encode('UTF-8'))
+                    size_key = b'sizes'
+                    file_key = b'file'
+
+                if not size_key in metadata:
+                    continue
+
+                for filename in [metadata[size_key][size][file_key] for size in metadata[size_key]]:
+                    url = '/'.join([source_path, filename.decode('utf-8')])
+
+                    path = urlparse(url).path
+                    dst_path = os.path.join(*([self.output_folder, 'files']
+                                              + list(path.split('/'))))
+                    dst_dir = os.path.dirname(dst_path)
+                    utils.makedirs(dst_dir)
+                    utils.LOGGER.notice("Downloading {0} => {1}".format(url, dst_path))
+                    self.download_url_content_to_file(url, dst_path)
+                    dst_url = '/'.join(dst_path.split(os.sep)[2:])
+                    links[url] = '/' + dst_url
+                    links[url] = '/' + dst_url
 
     @staticmethod
     def transform_sourcecode(content):
@@ -289,7 +364,7 @@ class CommandImportWordpress(Command, ImportMixin):
             slug = get_text_tag(
                 item, '{{{0}}}post_id'.format(wordpress_namespace), None)
         if not slug:  # should never happen
-            print("Error converting post:", title)
+            utils.LOGGER.error("Error converting post:", title)
             return
 
         description = get_text_tag(item, 'description', '')
@@ -305,7 +380,7 @@ class CommandImportWordpress(Command, ImportMixin):
 
         tags = []
         if status == 'trash':
-            print('Trashed post "{0}" will not be imported.'.format(title))
+            utils.LOGGER.warn('Trashed post "{0}" will not be imported.'.format(title))
             return
         elif status != 'publish':
             tags.append('draft')
@@ -320,7 +395,7 @@ class CommandImportWordpress(Command, ImportMixin):
             tags.append(text)
 
         if is_draft and self.exclude_drafts:
-            print('Draft "{0}" will not be imported.'.format(title))
+            utils.LOGGER.notice('Draft "{0}" will not be imported.'.format(title))
         elif content.strip():
             # If no content is found, no files are written.
             self.url_map[link] = self.context['SITE_URL'] + '/' + \
@@ -335,8 +410,8 @@ class CommandImportWordpress(Command, ImportMixin):
                 os.path.join(self.output_folder, out_folder, slug + '.wp'),
                 content)
         else:
-            print('Not going to import "{0}" because it seems to contain'
-                  ' no content.'.format(title))
+            utils.LOGGER.warn('Not going to import "{0}" because it seems to contain'
+                              ' no content.'.format(title))
 
     def process_item(self, item):
         # The namespace usually is something like:

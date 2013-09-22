@@ -31,7 +31,7 @@ import json
 import os
 
 from nikola.plugin_categories import Task
-from nikola.utils import config_changed, copy_file, unicode_str
+from nikola.utils import config_changed, copy_file, unicode_str, makedirs
 
 
 class Mustache(Task):
@@ -123,10 +123,7 @@ class Mustache(Task):
                                         ".html", ".json")})
             data["translations"] = translations
 
-            try:
-                os.makedirs(os.path.dirname(path))
-            except:
-                pass
+            makedirs(os.path.dirname(path))
             with codecs.open(path, 'wb+', 'utf8') as fd:
                 fd.write(json.dumps(data))
 

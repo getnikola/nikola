@@ -34,7 +34,7 @@ import sys
 
 from doit.tools import timeout
 from nikola.plugin_categories import Command, Task
-from nikola.utils import config_changed
+from nikola.utils import config_changed, LOGGER
 
 try:
     import feedparser
@@ -160,12 +160,12 @@ class Planetoid(Command, Task):
                 # TODO: log failure
                 return
             if parsed.feed.get('title'):
-                print(parsed.feed.title)
+                LOGGER.notice(parsed.feed.title)
             else:
-                print(feed.url)
+                LOGGER.notice(feed.url)
             feed.etag = parsed.get('etag', 'foo')
             modified = tuple(parsed.get('date_parsed', (1970, 1, 1)))[:6]
-            print("==========>", modified)
+            LOGGER.notice("==========>", modified)
             modified = datetime.datetime(*modified)
             feed.last_modified = modified
             feed.save()
@@ -174,15 +174,14 @@ class Planetoid(Command, Task):
                 # TODO log failure
                 return
             for entry_data in parsed.entries:
-                print("=========================================")
+                LOGGER.notice("=========================================")
                 date = entry_data.get('published_parsed', None)
                 if date is None:
                     date = entry_data.get('updated_parsed', None)
                 if date is None:
-                    print("Can't parse date from:")
-                    print(entry_data)
+                    LOGGER.error("Can't parse date from:\n", entry_data)
                     return False
-                print("DATE:===>", date)
+                LOGGER.notice("DATE:===>", date)
                 date = datetime.datetime(*(date[:6]))
                 title = "%s: %s" % (feed.name, entry_data.get('title', 'Sin título'))
                 content = entry_data.get('content', None)
@@ -194,9 +193,9 @@ class Planetoid(Command, Task):
                     content = entry_data.get('summary', 'Sin contenido')
                 guid = str(entry_data.get('guid', entry_data.link))
                 link = entry_data.link
-                print(repr([date, title]))
+                LOGGER.notice(repr([date, title]))
                 e = list(Entry.select().where(Entry.guid == guid))
-                print(
+                LOGGER.notice(
                     repr(dict(
                         date=date,
                         title=title,

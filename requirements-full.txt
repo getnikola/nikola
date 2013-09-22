@@ -8,10 +8,11 @@ lxml
 yapsy==1.10.2-pythons2n3
 PyRSS2Gen
 pytz==2013d
+logbook
 mock>=1.0.0
 requests>=1.0
 markdown
-Jinja2
+Jinja2>=2.7
 bbcode
 https://github.com/lepture/python-livereload/archive/master.zip#livereload
 pyphen
@@ -19,3 +20,8 @@ python-dateutil
 micawber
 pygal
 typogrify
+phpserialize
+webassets
+coverage
+python-coveralls
+nose

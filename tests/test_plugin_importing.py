@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
 
-from context import nikola  # NOQA
+from .context import nikola  # NOQA
 import unittest
 
 

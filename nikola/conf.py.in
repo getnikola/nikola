@@ -23,15 +23,23 @@ BLOG_DESCRIPTION = "${BLOG_DESCRIPTION}"
 # Nikola is multilingual!
 #
 # Currently supported languages are:
-#   English -> en
-#   Greek -> gr
-#   German -> de
-#   French -> fr
-#   Polish -> pl
-#   Russian -> ru
-#   Spanish -> es
-#   Italian -> it
-#   Simplified Chinese -> zh-cn
+# en     English
+# bg     Bulgarian
+# ca     Catalan
+# zh_cn  Chinese (Simplified)
+# hr     Croatian
+# nl     Dutch
+# fr     French
+# el     Greek [NOT gr!]
+# de     German
+# it     Italian
+# jp     Japanese
+# fa     Persian
+# pl     Polish
+# pt_br  Portuguese (Brasil)
+# ru     Russian
+# es     Spanish
+# tr_tr  Turkish (Turkey)
 #
 # If you want to use Nikola with a non-supported language you have to provide
 # a module containing the necessary translations
@@ -195,6 +203,9 @@ COMPILERS = ${COMPILERS}
 # argument.
 #
 # By default, there are no filters.
+#
+# Many filters are shipped with Nikola.  A list is available in the manual:
+# <http://getnikola.com/handbook.html#post-processing-filters>
 # FILTERS = {
 #    ".jpg": ["jpegoptim --strip-all -m75 -v %s"],
 # }
@@ -203,6 +214,9 @@ COMPILERS = ${COMPILERS}
 # GZIP_FILES = False
 # File extensions that will be compressed
 # GZIP_EXTENSIONS = ('.txt', '.htm', '.html', '.css', '.js', '.json')
+# Use an external gzip command? None means no.
+# Example: GZIP_COMMAND = "pigz -k {filename}"
+# GZIP_COMMAND = None
 
 # #############################################################################
 # Image Gallery Options
@@ -214,6 +228,9 @@ COMPILERS = ${COMPILERS}
 # THUMBNAIL_SIZE = 180
 # MAX_IMAGE_SIZE = 1280
 # USE_FILENAME_AS_TITLE = True
+#
+# If set to False, it will sort by filename instead. Defaults to True
+# GALLERY_SORT_BY_DATE = True
 
 # #############################################################################
 # HTML fragments and diverse things that are used by the templates
@@ -225,7 +242,7 @@ COMPILERS = ${COMPILERS}
 # translated
 
 # Name of the theme to use.
-# THEME = 'bootstrap'
+THEME = "${THEME}"
 
 # Color scheme to be used for code blocks. If your theme provides
 # "assets/css/code.css" this is ignored.
@@ -537,9 +554,12 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # }
 
 
-# If you want to use formatted post time in W3C-DTF Format
-# (ex. 2012-03-30T23:00:00+02:00),
-# set timzone if you want a localized posted date.
+# Post's dates are considered in GMT by default, if you want to use 
+# another timezone, please set TIMEZONE to match. Check the available 
+# list from Wikipedia:
+# http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+# Also, if you want to use a different timezone in some of your posts, 
+# you can use W3C-DTF Format (ex. 2012-03-30T23:00:00+02:00)
 #
 # TIMEZONE = 'Europe/Zurich'
 

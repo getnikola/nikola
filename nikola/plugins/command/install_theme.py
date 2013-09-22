@@ -27,6 +27,7 @@
 from __future__ import print_function
 import os
 import json
+import shutil
 from io import BytesIO
 
 try:
@@ -44,6 +45,7 @@ class CommandInstallTheme(Command):
     name = "install_theme"
     doc_usage = "[[-u] theme_name] | [[-u] -l]"
     doc_purpose = "install theme into current site"
+    output_dir = 'themes'
     cmd_options = [
         {
             'name': 'list',
@@ -67,7 +69,7 @@ class CommandInstallTheme(Command):
     def _execute(self, options, args):
         """Install theme into current site."""
         if requests is None:
-            print('This command requires the requests package be installed.')
+            utils.LOGGER.error('This command requires the requests package be installed.')
             return False
 
         listing = options['list']
@@ -78,7 +80,7 @@ class CommandInstallTheme(Command):
             name = None
 
         if name is None and not listing:
-            print("This command needs either a theme name or the -l option.")
+            utils.LOGGER.error("This command needs either a theme name or the -l option.")
             return False
         data = requests.get(url).text
         data = json.loads(data)
@@ -90,18 +92,25 @@ class CommandInstallTheme(Command):
             return True
         else:
             if name in data:
-                if os.path.isfile("themes"):
-                    raise IOError("'themes' isn't a directory!")
-                elif not os.path.isdir("themes"):
-                    try:
-                        os.makedirs("themes")
-                    except:
-                        raise OSError("mkdir 'theme' error!")
-                print('Downloading: ' + data[name])
+                utils.makedirs(self.output_dir)
+                utils.LOGGER.notice('Downloading: ' + data[name])
                 zip_file = BytesIO()
                 zip_file.write(requests.get(data[name]).content)
-                print('Extracting: {0} into themes'.format(name))
+                utils.LOGGER.notice('Extracting: {0} into themes'.format(name))
                 utils.extract_all(zip_file)
             else:
-                print("Can't find theme " + name)
-                return False
+                try:
+                    theme_path = utils.get_theme_path(name)
+                except:
+                    utils.LOGGER.error("Can't find theme " + name)
+                    return False
+
+                utils.makedirs(self.output_dir)
+                dest_path = os.path.join(self.output_dir, name)
+                if os.path.exists(dest_path):
+                    utils.LOGGER.error("{0} is already installed".format(name))
+                    return False
+
+                utils.LOGGER.notice('Copying {0} into themes'.format(theme_path))
+                shutil.copytree(theme_path, dest_path)
+                return True

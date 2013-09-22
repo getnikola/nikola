@@ -81,7 +81,7 @@ class ImportMixin(object):
             src = (urlparse(k).path + 'index.html')[1:]
             dst = (urlparse(v).path)
             if src == 'index.html':
-                print("Can't do a redirect for: {0!r}".format(k))
+                utils.LOGGER.warn("Can't do a redirect for: {0!r}".format(k))
             else:
                 redirections.append((src, dst))
 
@@ -92,11 +92,15 @@ class ImportMixin(object):
             os.system('nikola init ' + self.output_folder)
         else:
             self.import_into_existing_site = True
-            print('The folder {0} already exists - assuming that this is a '
-                  'already existing nikola site.'.format(self.output_folder))
+            utils.LOGGER.notice('The folder {0} already exists - assuming that this is a '
+                                'already existing nikola site.'.format(self.output_folder))
 
-        conf_template = Template(filename=os.path.join(
-            os.path.dirname(utils.__file__), 'conf.py.in'))
+        filename = os.path.join(os.path.dirname(utils.__file__), 'conf.py.in')
+        # add format_extensions=True if getting an unhelpful traceback
+        # 'NameError(Undefined)' from mako\runtime.py, then more info is
+        # writen to *somefile* - For import_blogger by example it would
+        # write html to conf.py. Yeah!
+        conf_template = Template(filename=filename)
 
         return conf_template
 
@@ -141,10 +145,10 @@ class ImportMixin(object):
             filename = 'conf.py'
         else:
             filename = 'conf.py.{name}-{time}'.format(
-                time=datetime.datetime.now().strftime('%Y%m%d_%H%M%s'),
+                time=datetime.datetime.now().strftime('%Y%m%d_%H%M%S'),
                 name=self.name)
         config_output_path = os.path.join(self.output_folder, filename)
-        print('Configuration will be written to:', config_output_path)
+        utils.LOGGER.notice('Configuration will be written to:', config_output_path)
 
         return config_output_path
 

@@ -71,8 +71,8 @@ class CommandBootswatchTheme(Command):
     def _execute(self, options, args):
         """Given a swatch name and a parent theme, creates a custom theme."""
         if requests is None:
-            print('To use the bootswatch_theme command, you need to install the '
-                  '"requests" package.')
+            utils.LOGGER.error('To use the bootswatch_theme command, you need to install the '
+                               '"requests" package.')
             return
 
         name = options['name']
@@ -85,23 +85,19 @@ class CommandBootswatchTheme(Command):
         if 'bootstrap3' not in themes:
             version = '2'
         elif 'bootstrap' not in themes:
-            print('WARNING: bootswatch_theme only makes sense for themes that use bootstrap')
+            utils.LOGGER.warn('"bootswatch_theme" only makes sense for themes that use bootstrap')
 
-        print("Creating '{0}' theme from '{1}' and '{2}'".format(name, swatch,
-                                                                 parent))
-        try:
-            os.makedirs(os.path.join('themes', name, 'assets', 'css'))
-        except:
-            pass
+        utils.LOGGER.notice("Creating '{0}' theme from '{1}' and '{2}'".format(name, swatch, parent))
+        utils.makedirs(os.path.join('themes', name, 'assets', 'css'))
         for fname in ('bootstrap.min.css', 'bootstrap.css'):
             url = '/'.join(('http://bootswatch.com', version, swatch, fname))
-            print("Downloading: ", url)
+            utils.LOGGER.notice("Downloading: " + url)
             data = requests.get(url).text
             with open(os.path.join('themes', name, 'assets', 'css', fname),
                       'wb+') as output:
-                output.write(data)
+                output.write(data.encode('utf-8'))
 
         with open(os.path.join('themes', name, 'parent'), 'wb+') as output:
-            output.write(parent)
-        print('Theme created. Change the THEME setting to "{0}" to use '
-              'it.'.format(name))
+            output.write(parent.encode('utf-8'))
+        utils.LOGGER.notice('Theme created. Change the THEME setting to "{0}" to use '
+                            'it.'.format(name))

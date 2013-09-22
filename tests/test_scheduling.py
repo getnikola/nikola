@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from base import BaseTestCase
+from __future__ import unicode_literals, absolute_import
+from .base import BaseTestCase
 import datetime
 from nose.plugins.skip import SkipTest
 try:

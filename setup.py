@@ -30,18 +30,8 @@ except ImportError:
     from distutils.command.install import install
     from distutils.util import convert_path  # NOQA
 
-dependencies = [
-    'doit>=0.20.0',
-    'pygments',
-    'pillow>=2.0.0',
-    'docutils',
-    'mako>=0.6',
-    'unidecode',
-    'lxml',
-    'yapsy==1.10.2-pythons2n3',
-    'PyRSS2Gen',
-    'pytz==2013b',
-]
+with open('requirements.txt', 'r') as fh:
+    dependencies = [l.strip() for l in fh]
 
 ########### platform specific stuff #############
 import platform
@@ -51,6 +41,11 @@ scripts = ['scripts/nikola']
 # platform specific scripts
 if platform_system == "Windows":
     scripts.append('scripts/nikola.bat')
+
+if sys.version_info[0] == 2 and sys.version_info[1] < 6:
+    raise Exception('Python 2 version < 2.6 is not supported')
+elif sys.version_info[0] == 3 and sys.version_info[1] < 3:
+    raise Exception('Python 3 version < 3.3 is not supported')
 
 ##################################################
 
@@ -80,26 +75,28 @@ def copy_messages():
 
         shutil.copytree(original_messages_directory, theme_messages_directory)
 
+
 def copy_hardlinked_for_windows():
     """replaces the hardlinked files with a copy of the original content.
-    
+
     In windows (msysgit), a symlink is converted to a text file with a
     path to the file it points to. If not corrected, installing from a git
     clone will end with some files with bad content"""
-    
+
     if sys.platform != 'win32':
         return
-    # .txt in src, .rst in dst 
+    # .txt in src, .rst in dst
     stories_hardlinked = ['manual', 'creating-a-theme', 'theming']
     localdir = os.path.dirname(__file__)
     stories_directory = os.path.join(
-        localdir, 'nikola', 'data', 'samplesite','stories')
+        localdir, 'nikola', 'data', 'samplesite', 'stories')
     docs_directory = os.path.join(localdir, 'docs')
-    
+
     for name in stories_hardlinked:
         shutil.copy(
             os.path.join(docs_directory, name + '.txt'),
             os.path.join(stories_directory, name + '.rst'))
+
 
 def install_manpages(root, prefix):
     try:
@@ -214,9 +211,11 @@ def find_package_data(
                 out.setdefault(package, []).append(prefix + name)
     return out
 
+
 setup(name='Nikola',
-      version='6.0.0',
-      description='Static blog/website generator',
+      version='6.0.4',
+      description='A modular, fast, simple, static website generator',
+      long_description=open('README.rst').read(),
       author='Roberto Alsina and others',
       author_email='ralsina@netmanagers.com.ar',
       url='http://getnikola.com',
@@ -235,7 +234,28 @@ setup(name='Nikola',
                 'nikola.plugins.task.sitemap',
                 'nikola.plugins.template',
                 ],
+      license='MIT',
+      keywords='website, static',
       scripts=scripts,
+      classifiers=('Development Status :: 5 - Production/Stable',
+                   'Environment :: Console',
+                   'Environment :: Plugins',
+                   'Environment :: Web Environment',
+                   'Intended Audience :: End Users/Desktop',
+                   'License :: OSI Approved :: MIT License',
+                   'Operating System :: MacOS',
+                   'Operating System :: Microsoft :: Windows',
+                   'Operating System :: OS Independent',
+                   'Operating System :: POSIX',
+                   'Operating System :: Unix',
+                   'Programming Language :: Python',
+                   'Programming Language :: Python :: 2.6',
+                   'Programming Language :: Python :: 2.7',
+                   'Programming Language :: Python :: 3.2',
+                   'Programming Language :: Python :: 3.3',
+                   'Topic :: Internet',
+                   'Topic :: Internet :: WWW/HTTP',
+                   'Topic :: Text Processing :: Markup'),
       install_requires=dependencies,
       package_data=find_package_data(),
       cmdclass={'install': nikola_install},

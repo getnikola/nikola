@@ -30,6 +30,7 @@ import os
 
 from nikola import __version__
 from nikola.plugin_categories import Command
+from nikola.utils import LOGGER
 
 
 class Console(Command):
@@ -45,7 +46,7 @@ class Console(Command):
         try:
             import conf
         except ImportError:
-            print("No configuration found, cannot run the console.")
+            LOGGER.error("No configuration found, cannot run the console.")
         else:
             import IPython
             SITE = Nikola(**conf.__dict__)
@@ -58,7 +59,7 @@ class Console(Command):
         try:
             import conf
         except ImportError:
-            print("No configuration found, cannot run the console.")
+            LOGGER.error("No configuration found, cannot run the console.")
         else:
             import bpython
             SITE = Nikola(**conf.__dict__)
@@ -75,7 +76,7 @@ class Console(Command):
             SITE.scan_posts()
             gl = {'conf': conf, 'SITE': SITE, 'Nikola': Nikola}
         except ImportError:
-            print("No configuration found, cannot run the console.")
+            LOGGER.error("No configuration found, cannot run the console.")
         else:
             import code
             try:

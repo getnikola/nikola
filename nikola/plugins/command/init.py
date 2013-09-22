@@ -33,6 +33,7 @@ from mako.template import Template
 
 import nikola
 from nikola.plugin_categories import Command
+from nikola.utils import LOGGER, makedirs
 
 
 class CommandInit(Command):
@@ -60,6 +61,7 @@ class CommandInit(Command):
         'BLOG_EMAIL': "joe@demo.site",
         'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
         'DEFAULT_LANG': "en",
+        'THEME': 'bootstrap3',
 
         'POSTS': """(
     ("posts/*.txt", "posts", "post.tmpl"),
@@ -104,7 +106,7 @@ class CommandInit(Command):
     @classmethod
     def create_empty_site(cls, target):
         for folder in ('files', 'galleries', 'listings', 'posts', 'stories'):
-            os.makedirs(os.path.join(target, folder))
+            makedirs(os.path.join(target, folder))
 
     @staticmethod
     def get_path_to_nikola_modules():
@@ -121,11 +123,11 @@ class CommandInit(Command):
         else:
             if not options or not options.get('demo'):
                 self.create_empty_site(target)
-                print('Created empty site at {0}.'.format(target))
+                LOGGER.notice('Created empty site at {0}.'.format(target))
             else:
                 self.copy_sample_site(target)
-                print("A new site with example data has been created at "
-                      "{0}.".format(target))
-                print("See README.txt in that folder for more information.")
+                LOGGER.notice("A new site with example data has been created at "
+                              "{0}.".format(target))
+                LOGGER.notice("See README.txt in that folder for more information.")
 
             self.create_configuration(target)

@@ -35,7 +35,6 @@ try:
     from urlparse import urlparse, urlsplit, urljoin
 except ImportError:
     from urllib.parse import urlparse, urlsplit, urljoin  # NOQA
-import warnings
 
 try:
     import pyphen
@@ -86,6 +85,7 @@ class Nikola(object):
     def __init__(self, **config):
         """Setup proper environment for running tasks."""
 
+        self.strict = False
         self.global_data = {}
         self.posts_per_year = defaultdict(list)
         self.posts_per_month = defaultdict(list)
@@ -108,6 +108,8 @@ class Nikola(object):
             'ANNOTATIONS': False,
             'ARCHIVE_PATH': "",
             'ARCHIVE_FILENAME': "archive.html",
+            'BLOG_TITLE': 'Default Title',
+            'BLOG_DESCRIPTION': 'Default Description',
             'BODY_END': "",
             'CACHE_FOLDER': 'cache',
             'CODE_COLOR_SCHEME': 'default',
@@ -141,6 +143,8 @@ class Nikola(object):
             'FILES_FOLDERS': {'files': ''},
             'FILTERS': {},
             'GALLERY_PATH': 'galleries',
+            'GALLERY_SORT_BY_DATE': True,
+            'GZIP_COMMAND': None,
             'GZIP_FILES': False,
             'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js', '.json'),
             'HIDE_SOURCELINK': False,
@@ -173,6 +177,7 @@ class Nikola(object):
             'SEARCH_FORM': '',
             'SLUG_TAG_PATH': True,
             'SOCIAL_BUTTONS_CODE': SOCIAL_BUTTONS_CODE,
+            'SITE_URL': 'http://getnikola.com/',
             'STORY_INDEX': False,
             'STRIP_INDEXES': False,
             'SITEMAP_INCLUDE_FILELESS_DIRS': True,
@@ -197,26 +202,26 @@ class Nikola(object):
 
         # Make sure we have pyphen installed if we are using it
         if self.config.get('HYPHENATE') and pyphen is None:
-            print('WARNING: To use the hyphenation, you have to install '
-                  'the "pyphen" package.')
-            print('WARNING: Setting HYPHENATE to False.')
+            utils.LOGGER.warn('To use the hyphenation, you have to install '
+                              'the "pyphen" package.')
+            utils.LOGGER.warn('Setting HYPHENATE to False.')
             self.config['HYPHENATE'] = False
 
         # Deprecating post_compilers
         # TODO: remove on v7
         if 'post_compilers' in config:
-            print("WARNING: The post_compilers option is deprecated, use COMPILERS instead.")
+            utils.LOGGER.warn('The post_compilers option is deprecated, use COMPILERS instead.')
             if 'COMPILERS' in config:
-                print("WARNING: COMPILERS conflicts with post_compilers, ignoring post_compilers.")
+                utils.LOGGER.warn('COMPILERS conflicts with post_compilers, ignoring post_compilers.')
             else:
                 self.config['COMPILERS'] = config['post_compilers']
 
         # Deprecating post_pages
         # TODO: remove on v7
         if 'post_pages' in config:
-            print("WARNING: The post_pages option is deprecated, use POSTS and PAGES instead.")
+            utils.LOGGER.warn('The post_pages option is deprecated, use POSTS and PAGES instead.')
             if 'POSTS' in config or 'PAGES' in config:
-                print("WARNING: POSTS and PAGES conflict with post_pages, ignoring post_pages.")
+                utils.LOGGER.warn('POSTS and PAGES conflict with post_pages, ignoring post_pages.')
             else:
                 self.config['POSTS'] = [item[:3] for item in config['post_pages'] if item[-1]]
                 self.config['PAGES'] = [item[:3] for item in config['post_pages'] if not item[-1]]
@@ -230,27 +235,27 @@ class Nikola(object):
         # Deprecating DISQUS_FORUM
         # TODO: remove on v7
         if 'DISQUS_FORUM' in config:
-            print("WARNING: The DISQUS_FORUM option is deprecated, use COMMENT_SYSTEM_ID instead.")
+            utils.LOGGER.warn('The DISQUS_FORUM option is deprecated, use COMMENT_SYSTEM_ID instead.')
             if 'COMMENT_SYSTEM_ID' in config:
-                print("WARNING: DISQUS_FORUM conflicts with COMMENT_SYSTEM_ID, ignoring DISQUS_FORUM.")
+                utils.LOGGER.warn('DISQUS_FORUM conflicts with COMMENT_SYSTEM_ID, ignoring DISQUS_FORUM.')
             else:
                 self.config['COMMENT_SYSTEM_ID'] = config['DISQUS_FORUM']
 
         # Deprecating the ANALYTICS option
         # TODO: remove on v7
         if 'ANALYTICS' in config:
-            print("WARNING: The ANALYTICS option is deprecated, use BODY_END instead.")
+            utils.LOGGER.warn('The ANALYTICS option is deprecated, use BODY_END instead.')
             if 'BODY_END' in config:
-                print("WARNING: ANALYTICS conflicts with BODY_END, ignoring ANALYTICS.")
+                utils.LOGGER.warn('ANALYTICS conflicts with BODY_END, ignoring ANALYTICS.')
             else:
                 self.config['BODY_END'] = config['ANALYTICS']
 
         # Deprecating the SIDEBAR_LINKS option
         # TODO: remove on v7
         if 'SIDEBAR_LINKS' in config:
-            print("WARNING: The SIDEBAR_LINKS option is deprecated, use NAVIGATION_LINKS instead.")
+            utils.LOGGER.warn('The SIDEBAR_LINKS option is deprecated, use NAVIGATION_LINKS instead.')
             if 'NAVIGATION_LINKS' in config:
-                print("WARNING: The SIDEBAR_LINKS conflicts with NAVIGATION_LINKS, ignoring SIDEBAR_LINKS.")
+                utils.LOGGER.warn('The SIDEBAR_LINKS conflicts with NAVIGATION_LINKS, ignoring SIDEBAR_LINKS.')
             else:
                 self.config['NAVIGATION_LINKS'] = config['SIDEBAR_LINKS']
         # Compatibility alias
@@ -262,16 +267,16 @@ class Nikola(object):
         # Deprecating the ADD_THIS_BUTTONS option
         # TODO: remove on v7
         if 'ADD_THIS_BUTTONS' in config:
-            print("WARNING: The ADD_THIS_BUTTONS option is deprecated, use SOCIAL_BUTTONS_CODE instead.")
+            utils.LOGGER.warn('The ADD_THIS_BUTTONS option is deprecated, use SOCIAL_BUTTONS_CODE instead.')
             if not config['ADD_THIS_BUTTONS']:
-                print("WARNING: Setting SOCIAL_BUTTONS_CODE to empty because ADD_THIS_BUTTONS is False.")
+                utils.LOGGER.warn('Setting SOCIAL_BUTTONS_CODE to empty because ADD_THIS_BUTTONS is False.')
                 self.config['SOCIAL_BUTTONS_CODE'] = ''
 
         # STRIP_INDEX_HTML config has been replaces with STRIP_INDEXES
         # Port it if only the oldef form is there
         # TODO: remove on v7
         if 'STRIP_INDEX_HTML' in config and 'STRIP_INDEXES' not in config:
-            print("WARNING: You should configure STRIP_INDEXES instead of STRIP_INDEX_HTML")
+            utils.LOGGER.warn('You should configure STRIP_INDEXES instead of STRIP_INDEX_HTML')
             self.config['STRIP_INDEXES'] = config['STRIP_INDEX_HTML']
 
         # PRETTY_URLS defaults to enabling STRIP_INDEXES unless explicitly disabled
@@ -289,7 +294,7 @@ class Nikola(object):
         # TODO: remove on v7
         if 'SITE_URL' not in self.config:
             if 'BLOG_URL' in self.config:
-                print("WARNING: You should configure SITE_URL instead of BLOG_URL")
+                utils.LOGGER.warn('You should configure SITE_URL instead of BLOG_URL')
                 self.config['SITE_URL'] = self.config['BLOG_URL']
 
         self.default_lang = self.config['DEFAULT_LANG']
@@ -300,7 +305,7 @@ class Nikola(object):
             self.config['BASE_URL'] = self.config.get('SITE_URL')
         # BASE_URL should *always* end in /
         if self.config['BASE_URL'] and self.config['BASE_URL'][-1] != '/':
-            print("WARNING: Your BASE_URL doesn't end in / -- adding it.")
+            utils.LOGGER.warn("Your BASE_URL doesn't end in / -- adding it.")
 
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,
@@ -444,18 +449,18 @@ class Nikola(object):
                 'default': 'oldfashioned',
             }
             if self.config['THEME'] in theme_replacements:
-                warnings.warn('You are using the old theme "{0}", using "{1}" instead.'.format(
+                utils.LOGGER.warn('You are using the old theme "{0}", using "{1}" instead.'.format(
                     self.config['THEME'], theme_replacements[self.config['THEME']]))
                 self.config['THEME'] = theme_replacements[self.config['THEME']]
                 if self.config['THEME'] == 'oldfashioned':
-                    warnings.warn('''You may need to install the "oldfashioned" theme '''
-                                  '''from themes.nikola.ralsina.com.ar because it's not '''
-                                  '''shipped by default anymore.''')
-                warnings.warn('Please change your THEME setting.')
+                    utils.LOGGER.warn('''You may need to install the "oldfashioned" theme '''
+                                      '''from themes.nikola.ralsina.com.ar because it's not '''
+                                      '''shipped by default anymore.''')
+                utils.LOGGER.warn('Please change your THEME setting.')
             try:
                 self._THEMES = utils.get_theme_chain(self.config['THEME'])
             except Exception:
-                warnings.warn('''Can't load theme "{0}", using 'bootstrap' instead.'''.format(self.config['THEME']))
+                utils.LOGGER.warn('''Can't load theme "{0}", using 'bootstrap' instead.'''.format(self.config['THEME']))
                 self.config['THEME'] = 'bootstrap'
                 return self._get_themes()
             # Check consistency of USE_CDN and the current THEME (Issue #386)
@@ -463,7 +468,7 @@ class Nikola(object):
                 bootstrap_path = utils.get_asset_path(os.path.join(
                     'assets', 'css', 'bootstrap.min.css'), self._THEMES)
                 if bootstrap_path and bootstrap_path.split(os.sep)[-4] not in ['bootstrap', 'bootstrap3']:
-                    warnings.warn('The USE_CDN option may be incompatible with your theme, because it uses a hosted version of bootstrap.')
+                    utils.LOGGER.warn('The USE_CDN option may be incompatible with your theme, because it uses a hosted version of bootstrap.')
 
         return self._THEMES
 
@@ -612,10 +617,7 @@ class Nikola(object):
 
             return result
 
-        try:
-            os.makedirs(os.path.dirname(output_name))
-        except:
-            pass
+        utils.makedirs(os.path.dirname(output_name))
         doc = lxml.html.document_fromstring(data)
         doc.rewrite_links(replacer)
         data = b'<!DOCTYPE html>' + lxml.html.tostring(doc, encoding='utf8')
@@ -780,6 +782,13 @@ class Nikola(object):
             exists = os.stat(path).st_size > 0
         return exists
 
+    def clean_task_paths(self, task):
+        """Normalize target paths in the task."""
+        targets = task.get('targets', None)
+        if targets is not None:
+            task['targets'] = [os.path.normpath(t) for t in targets]
+        return task
+
     def gen_tasks(self, name, plugin_category):
 
         def flatten(task):
@@ -793,12 +802,13 @@ class Nikola(object):
         task_dep = []
         for pluginInfo in self.plugin_manager.getPluginsOfCategory(plugin_category):
             for task in flatten(pluginInfo.plugin_object.gen_tasks()):
+                task = self.clean_task_paths(task)
                 yield task
                 for multi in self.plugin_manager.getPluginsOfCategory("TaskMultiplier"):
                     flag = False
                     for task in multi.plugin_object.process(task, name):
                         flag = True
-                        yield task
+                        yield self.clean_task_paths(task)
                     if flag:
                         task_dep.append('{0}_{1}'.format(name, multi.plugin_object.name))
             if pluginInfo.plugin_object.is_default:
@@ -814,7 +824,7 @@ class Nikola(object):
         """Scan all the posts."""
         if self._scanned:
             return
-
+        seen = set([])
         print("Scanning posts", end='')
         tzinfo = None
         if self.config['TIMEZONE'] is not None:
@@ -848,6 +858,10 @@ class Nikola(object):
                                          for x in p.split(os.sep)])]
 
                 for base_path in full_list:
+                    if base_path in seen:
+                        continue
+                    else:
+                        seen.add(base_path)
                     post = Post(
                         base_path,
                         self.config['CACHE_FOLDER'],
@@ -910,6 +924,8 @@ class Nikola(object):
         context = {}
         deps = post.deps(lang) + \
             self.template_system.template_deps(post.template_name)
+        deps.extend(utils.get_asset_path(x, self.THEMES) for x in ('bundles', 'parent', 'engine'))
+        deps = list(filter(None, deps))
         context['post'] = post
         context['lang'] = lang
         context['title'] = post.title(lang)
@@ -986,8 +1002,9 @@ def s_l(lang):
     try:
         locale.setlocale(locale.LC_ALL, (lang, "utf8"))
     except Exception:
-        print("WARNING: could not set locale to {0}."
-              "This may cause some i18n features not to work.".format(lang))
+        utils.LOGGER.warn(
+            "Could not set locale to {0}."
+            "This may cause some i18n features not to work.".format(lang))
     return ''
 
 

@@ -29,8 +29,10 @@ import codecs
 import json
 import os
 
+from doit.tools import result_dep
+
 from nikola.plugin_categories import LateTask
-from nikola.utils import config_changed, copy_tree
+from nikola.utils import config_changed, copy_tree, makedirs
 
 # This is what we need to produce:
 #var tipuesearch = {"pages": [
@@ -82,10 +84,7 @@ class Tipue(LateTask):
                     data["loc"] = post.permalink(lang)
                     pages.append(data)
             output = json.dumps({"pages": pages}, indent=2)
-            try:
-                os.makedirs(os.path.dirname(dst_path))
-            except:
-                pass
+            makedirs(os.path.dirname(dst_path))
             with codecs.open(dst_path, "wb+", "utf8") as fd:
                 fd.write(output)
 
@@ -94,8 +93,11 @@ class Tipue(LateTask):
             "name": dst_path,
             "targets": [dst_path],
             "actions": [(save_data, [])],
-            'uptodate': [config_changed(kw)]
+            'uptodate': [config_changed(kw), result_dep('sitemap')]
         }
+        # Note: The task should run everytime a new file is added or a
+        # file is changed.  We cheat, and depend on the sitemap task,
+        # to run everytime a new file is added.
 
         # Copy all the assets to the right places
         asset_folder = os.path.join(os.path.dirname(__file__), "files")

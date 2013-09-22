@@ -37,11 +37,21 @@ except ImportError:
     from urllib.parse import urlunsplit  # NOQA
 
 from docutils import core
-from docutils.parsers.rst import directives
+from docutils import nodes
+from docutils.parsers.rst import Directive, directives
+from docutils.parsers.rst.directives.misc import Include
 try:
     from docutils.parsers.rst.directives.body import CodeBlock
 except ImportError:  # docutils < 0.9 (Debian Sid For The Loss)
-    from dummy import CodeBlock  # NOQA
+    class CodeBlock(Directive):
+        required_arguments = 1
+        has_content = True
+        CODE = '<pre>{0}</pre>'
+
+        def run(self):
+            """ Required by the Directive interface. Create docutils nodes """
+            return [nodes.raw('', self.CODE.format('\n'.join(self.content)), format='html')]
+    directives.register_directive('code', CodeBlock)
 
 
 from nikola.plugin_categories import RestExtension
@@ -53,14 +63,17 @@ class Plugin(RestExtension):
 
     def set_site(self, site):
         self.site = site
+        # Even though listings don't use CodeBlock anymore, I am
+        # leaving these to make the code directive work with
+        # docutils < 0.9
         directives.register_directive('code-block', CodeBlock)
         directives.register_directive('sourcecode', CodeBlock)
         directives.register_directive('listing', Listing)
         return super(Plugin, self).set_site(site)
 
 
-class Listing(CodeBlock):
-    """ listing directive: create a CodeBlock from file
+class Listing(Include):
+    """ listing directive: create a highlighted block of code from a file in listings/
 
     Usage:
 
@@ -72,57 +85,20 @@ class Listing(CodeBlock):
     required_arguments = 1
     optional_arguments = 1
 
-    option_spec = {
-        'start-at': directives.unchanged,
-        'end-at': directives.unchanged,
-        'start-after': directives.unchanged,
-        'end-before': directives.unchanged,
-    }
-
     def run(self):
         fname = self.arguments.pop(0)
-        with codecs_open(os.path.join('listings', fname), 'rb+', 'utf8') as fileobject:
+        lang = self.arguments.pop(0)
+        fpath = os.path.join('listings', fname)
+        self.arguments.insert(0, fpath)
+        self.options['code'] = lang
+        with codecs_open(fpath, 'rb+', 'utf8') as fileobject:
             self.content = fileobject.read().splitlines()
-        self.trim_content()
+        self.state.document.settings.record_dependencies.add(fpath)
         target = urlunsplit(("link", 'listing', fname, '', ''))
         generated_nodes = (
             [core.publish_doctree('`{0} <{1}>`_'.format(fname, target))[0]])
         generated_nodes += self.get_code_from_file(fileobject)
         return generated_nodes
-
-    def trim_content(self):
-        """Cut the contents based in options."""
-        start = 0
-        end = len(self.content)
-        if 'start-at' in self.options:
-            for start, l in enumerate(self.content):
-                if self.options['start-at'] in l:
-                    break
-            else:
-                start = 0
-        elif 'start-before' in self.options:
-            for start, l in enumerate(self.content):
-                if self.options['start-before'] in l:
-                    if start > 0:
-                        start -= 1
-                    break
-            else:
-                start = 0
-        if 'end-at' in self.options:
-            for end, l in enumerate(self.content):
-                if self.options['end-at'] in l:
-                    break
-            else:
-                end = len(self.content)
-        elif 'end-before' in self.options:
-            for end, l in enumerate(self.content):
-                if self.options['end-before'] in l:
-                    end -= 1
-                    break
-            else:
-                end = len(self.content)
-
-        self.content = self.content[start:end]
 
     def get_code_from_file(self, data):
         """ Create CodeBlock nodes from file object content """

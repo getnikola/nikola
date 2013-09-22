@@ -33,6 +33,7 @@ from mako import util, lexer
 from mako.lookup import TemplateLookup
 
 from nikola.plugin_categories import TemplateSystem
+from nikola.utils import makedirs
 
 
 class MakoTemplates(TemplateSystem):
@@ -72,10 +73,7 @@ class MakoTemplates(TemplateSystem):
         template = self.lookup.get_template(template_name)
         data = template.render_unicode(**context)
         if output_name is not None:
-            try:
-                os.makedirs(os.path.dirname(output_name))
-            except:
-                pass
+            makedirs(os.path.dirname(output_name))
             with open(output_name, 'w+') as output:
                 output.write(data)
         return data

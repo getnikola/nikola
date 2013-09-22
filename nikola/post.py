@@ -31,6 +31,10 @@ from collections import defaultdict
 import os
 import re
 import string
+try:
+    from urlparse import urljoin
+except ImportError:
+    from urllib.parse import urljoin  # NOQA
 
 import lxml.html
 try:
@@ -138,6 +142,9 @@ class Post(object):
             if 'retired' in self._tags[lang]:
                 is_retired = True
                 self._tags[lang].remove('retired')
+            if 'private' in self._tags[lang]:
+                is_retired = True
+                self._tags[lang].remove('private')
 
         # While draft comes from the tags, it's not really a tag
         self.is_draft = is_draft
@@ -380,7 +387,7 @@ class Post(object):
             text = self.text(strip_html=True)
             words_per_minute = 180
             words = len(text.split())
-            self._reading_time = int(round(words/words_per_minute)) or 1
+            self._reading_time = int(round(words / words_per_minute)) or 1
         return self._reading_time
 
     def source_link(self, lang=None):
@@ -419,11 +426,9 @@ class Post(object):
         else:
             pieces += [self.meta[lang]['slug'] + extension]
         pieces = [_f for _f in pieces if _f and _f != '.']
+        link = '/' + '/'.join(pieces)
         if absolute:
-            pieces = [self.base_url] + pieces
-        else:
-            pieces = [""] + pieces
-        link = "/".join(pieces)
+            link = urljoin(self.base_url, link)
         index_len = len(self.index_file)
         if self.strip_indexes and link[-(1 + index_len):] == '/' + self.index_file:
             return link[:-index_len]
@@ -478,6 +483,8 @@ def get_metadata_from_file(source_path, lang=None):
         with codecs.open(source_path, "r", "utf8") as meta_file:
             meta_data = [x.strip() for x in meta_file.readlines()]
         return _get_metadata_from_file(meta_data)
+    except (UnicodeDecodeError, UnicodeEncodeError):
+        raise ValueError('Error reading {0}: Nikola only supports UTF-8 files'.format(source_path))
     except Exception:  # The file may not exist, for multilingual sites
         return {}
 
@@ -613,8 +620,8 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
 def hyphenate(dom, lang):
     if pyphen is not None:
         hyphenator = pyphen.Pyphen(lang=lang)
-        for tag in ('p', 'div', 'li', 'span'):
-            for node in dom.xpath("//%s" % tag):
+        for tag in ('p', 'li', 'span'):
+            for node in dom.xpath("//%s[not(parent::pre)]" % tag):
                 insert_hyphens(node, hyphenator)
     return dom
 
@@ -628,8 +635,8 @@ def insert_hyphens(node, hyphenator):
         text = getattr(node, attr)
         if not text:
             continue
-        new_data = ' '.join([hyphenator.inserted(w, hyphen=u'\u00AD')
-                             for w in text.split()])
+        new_data = ' '.join([hyphenator.inserted(w, hyphen='\u00AD')
+                             for w in text.split(' ')])
         # Spaces are trimmed, we have to add them manually back
         if text[0].isspace():
             new_data = ' ' + new_data
