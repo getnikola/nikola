@@ -6,6 +6,12 @@ In goes content, out comes a website, ready to deploy.
 .. image:: https://travis-ci.org/getnikola/nikola.png
    :target: https://travis-ci.org/getnikola/nikola
 
+.. image:: https://pypip.in/v/Nikola/badge.png
+        :target: https://crate.io/packages/Nikola
+
+.. image:: https://pypip.in/d/Nikola/badge.png
+        :target: https://crate.io/packages/Nikola
+
 Why Static Websites?
 --------------------
 
