@@ -4,6 +4,9 @@ New in master
 Features
 --------
 
+* New GALLERY_SORT_BY_DATE option, defaulting to True. 
+  If set to False, sorts by name (Issue #667)
+
 Bugfixes
 --------
 
