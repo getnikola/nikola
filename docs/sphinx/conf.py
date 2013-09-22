@@ -12,9 +12,6 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
-import os
-
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -24,6 +21,8 @@ import os
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #needs_sphinx = '1.0'
+
+from __future__ import unicode_literals
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -43,10 +42,10 @@ source_suffix = '.txt'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Nikola'
-copyright = u'2013, The Nikola Contributors'
+project = 'Nikola'
+copyright = '2013, The Nikola Contributors'
 
-# The version info for the project you're documenting, acts as replacement for
+# The version info for the project yo're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
@@ -182,22 +181,22 @@ htmlhelp_basename = 'Nikoladoc'
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
-# The paper size ('letterpaper' or 'a4paper').
-#'papersize': 'letterpaper',
+    # The paper size ('letterpaper' or 'a4paper').
+    #'papersize': 'letterpaper',
 
-# The font size ('10pt', '11pt' or '12pt').
-#'pointsize': '10pt',
+    # The font size ('10pt', '11pt' or '12pt').
+    #'pointsize': '10pt',
 
-# Additional stuff for the LaTeX preamble.
-#'preamble': '',
+    # Additional stuff for the LaTeX preamble.
+    #'preamble': '',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Nikola.tex', u'Nikola Documentation',
-   u'The Nikola Contributors', 'manual'),
+    ('index', 'Nikola.tex', 'Nikola Documentation',
+     'The Nikola Contributors', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -226,8 +225,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'nikola', u'Nikola Documentation',
-     [u'The Nikola Contributors'], 1)
+    ('index', 'nikola', 'Nikola Documentation',
+     ['The Nikola Contributors'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -240,9 +239,9 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Nikola', u'Nikola Documentation',
-   u'The Nikola Contributors', 'Nikola', 'One line description of project.',
-   'Miscellaneous'),
+    ('index', 'Nikola', 'Nikola Documentation',
+     'The Nikola Contributors', 'Nikola', 'One line description of project.',
+     'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.
