@@ -105,6 +105,7 @@ class Nikola(object):
         # This is the default config
         self.config = {
             'ADD_THIS_BUTTONS': True,
+            'ANNOTATIONS': False,
             'ARCHIVE_PATH': "",
             'ARCHIVE_FILENAME': "archive.html",
             'BLOG_TITLE': 'Default Title',
@@ -378,9 +379,8 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['rel_link'] = self.rel_link
         self._GLOBAL_CONTEXT['abs_link'] = self.abs_link
         self._GLOBAL_CONTEXT['exists'] = self.file_exists
-        self._GLOBAL_CONTEXT['SLUG_TAG_PATH'] = self.config[
-            'SLUG_TAG_PATH']
-
+        self._GLOBAL_CONTEXT['SLUG_TAG_PATH'] = self.config['SLUG_TAG_PATH']
+        self._GLOBAL_CONTEXT['annotations'] = self.config['ANNOTATIONS']
         self._GLOBAL_CONTEXT['index_display_post_count'] = self.config[
             'INDEX_DISPLAY_POST_COUNT']
         self._GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
