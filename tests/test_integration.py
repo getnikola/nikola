@@ -2,7 +2,6 @@
 from __future__ import unicode_literals, print_function, absolute_import
 
 import codecs
-from contextlib import contextmanager
 import locale
 import os
 import shutil
@@ -19,15 +18,7 @@ import nikola
 import nikola.plugins.command
 import nikola.plugins.command.init
 
-from .base import BaseTestCase
-
-
-@contextmanager
-def cd(path):
-    old_dir = os.getcwd()
-    os.chdir(path)
-    yield
-    os.chdir(old_dir)
+from .base import BaseTestCase, cd
 
 
 class EmptyBuildTest(BaseTestCase):
