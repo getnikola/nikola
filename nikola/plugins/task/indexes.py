@@ -126,7 +126,7 @@ class Indexes(Task):
         template_name = "list.tmpl"
         for lang in kw["translations"]:
             # Need to group by folder to avoid duplicated tasks (Issue #758)
-            for dirname, wildcards in itertools.groupby((w for w,d,x,i in kw["post_pages"] if not i), os.path.dirname):
+            for dirname, wildcards in itertools.groupby((w for w, d, x, i in kw["post_pages"] if not i), os.path.dirname):
                 context = {}
                 # vim/pyflakes thinks it's unused
                 # src_dir = os.path.dirname(wildcard)
