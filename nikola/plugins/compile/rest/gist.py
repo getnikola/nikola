@@ -27,7 +27,13 @@ class GitHubGist(Directive):
     """ Embed GitHub Gist.
 
         Usage:
+
           .. gist:: GIST_ID
+
+        or
+
+          .. gist:: GIST_URL
+
 
     """
 
@@ -53,7 +59,10 @@ class GitHubGist(Directive):
             )
             utils.LOGGER.warn(msg)
             return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
-        gistID = self.arguments[0].strip()
+        if 'https://' in self.arguments[0]:
+            gistID = self.arguments[0].split('/')[-1].strip()
+        else:
+            gistID = self.arguments[0].strip()
         embedHTML = ""
         rawGist = ""
 

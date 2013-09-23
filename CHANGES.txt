@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Support Gist URLs in the gist directive for compatibility with sphinx-gist-embed (Issue #754)
 * windows, dev - fix point pth to clone and run nikola without install (Issue #751) 
 * windows - fix install from clone or from a Github download (Issue #747, Windows)
 * Make Listings directive inherit Include making it simpler and more powerful (Issue #744)
