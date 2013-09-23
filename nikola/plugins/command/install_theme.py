@@ -91,26 +91,35 @@ class CommandInstallTheme(Command):
                 print(theme)
             return True
         else:
-            if name in data:
-                utils.makedirs(self.output_dir)
-                utils.LOGGER.notice('Downloading: ' + data[name])
-                zip_file = BytesIO()
-                zip_file.write(requests.get(data[name]).content)
-                utils.LOGGER.notice('Extracting: {0} into themes'.format(name))
-                utils.extract_all(zip_file)
-            else:
-                try:
-                    theme_path = utils.get_theme_path(name)
-                except:
-                    utils.LOGGER.error("Can't find theme " + name)
-                    return False
+            self.do_install(name, data)
+        # See if the theme's parent is available. If not, install it
+        parent_name = utils.get_parent_theme_name(name)
+        try:
+            utils.get_theme_path(parent_name)
+        except:  # Not available
+            self.do_install(parent_name, data)
 
-                utils.makedirs(self.output_dir)
-                dest_path = os.path.join(self.output_dir, name)
-                if os.path.exists(dest_path):
-                    utils.LOGGER.error("{0} is already installed".format(name))
-                    return False
+    def do_install(self, name, data):
+        if name in data:
+            utils.makedirs(self.output_dir)
+            utils.LOGGER.notice('Downloading: ' + data[name])
+            zip_file = BytesIO()
+            zip_file.write(requests.get(data[name]).content)
+            utils.LOGGER.notice('Extracting: {0} into themes'.format(name))
+            utils.extract_all(zip_file)
+        else:
+            try:
+                theme_path = utils.get_theme_path(name)
+            except:
+                utils.LOGGER.error("Can't find theme " + name)
+                return False
 
-                utils.LOGGER.notice('Copying {0} into themes'.format(theme_path))
-                shutil.copytree(theme_path, dest_path)
-                return True
+            utils.makedirs(self.output_dir)
+            dest_path = os.path.join(self.output_dir, name)
+            if os.path.exists(dest_path):
+                utils.LOGGER.error("{0} is already installed".format(name))
+                return False
+
+            utils.LOGGER.notice('Copying {0} into themes'.format(theme_path))
+            shutil.copytree(theme_path, dest_path)
+            return True
