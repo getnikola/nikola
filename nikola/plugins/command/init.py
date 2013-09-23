@@ -34,6 +34,7 @@ from mako.template import Template
 import nikola
 from nikola.plugin_categories import Command
 from nikola.utils import LOGGER, makedirs
+from nikola.winutils import fix_git_symlinked
 
 
 class CommandInit(Command):
@@ -93,6 +94,7 @@ class CommandInit(Command):
         lib_path = cls.get_path_to_nikola_modules()
         src = os.path.join(lib_path, 'data', 'samplesite')
         shutil.copytree(src, target)
+        fix_git_symlinked(src, target)
 
     @classmethod
     def create_configuration(cls, target):

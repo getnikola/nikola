@@ -76,26 +76,41 @@ def copy_messages():
         shutil.copytree(original_messages_directory, theme_messages_directory)
 
 
-def copy_hardlinked_for_windows():
+def copy_symlinked_for_windows():
     """replaces the hardlinked files with a copy of the original content.
 
     In windows (msysgit), a symlink is converted to a text file with a
     path to the file it points to. If not corrected, installing from a git
-    clone will end with some files with bad content"""
+    clone will end with some files with bad content
 
-    if sys.platform != 'win32':
-        return
-    # .txt in src, .rst in dst
-    stories_hardlinked = ['manual', 'creating-a-theme', 'theming']
+    After install the WC will be dirty (symlink markers rewroted with real
+    content)
+    """
+
+    # essentially nikola.utils.should_fix_git_symlinked inlined, to not
+    # fiddle with sys.path / import unless really needed
+    if sys.platform == 'win32':
+        path = (os.path.dirname(__file__) +
+                r'nikola\data\samplesite\stories\theming.rst')
+        try:
+            if os.path.getsize(path) < 200:
+                pass
+            else:
+                return
+        except Exception:
+            return
+
+    # apply the fix
     localdir = os.path.dirname(__file__)
-    stories_directory = os.path.join(
-        localdir, 'nikola', 'data', 'samplesite', 'stories')
-    docs_directory = os.path.join(localdir, 'docs')
-
-    for name in stories_hardlinked:
-        shutil.copy(
-            os.path.join(docs_directory, name + '.txt'),
-            os.path.join(stories_directory, name + '.rst'))
+    dst = os.path.join(localdir, 'nikola', 'data', 'samplesite')
+    src = dst
+    oldpath = sys.path[:]
+    sys.path.insert(0, os.path.join(localdir, 'nikola'))
+    winutils = __import__('winutils')
+    winutils.fix_git_symlinked(src, dst)
+    sys.path = oldpath
+    del sys.modules['winutils']
+    print('WARNING: your working copy is now dirty by changes in samplesite')
 
 
 def install_manpages(root, prefix):
@@ -127,7 +142,7 @@ def install_manpages(root, prefix):
 
 class nikola_install(install):
     def run(self):
-        copy_hardlinked_for_windows()
+        copy_symlinked_for_windows()
         install.run(self)
         install_manpages(self.root, self.prefix)
 
