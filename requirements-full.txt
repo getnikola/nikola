@@ -1,4 +1,4 @@
-doit>=0.20.0
+doit==0.22.0
 pygments
 pillow>=2.0.0
 docutils
