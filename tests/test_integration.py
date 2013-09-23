@@ -238,13 +238,11 @@ class TestCheck(DemoBuildTest):
 
     def test_check_links(self):
         with cd(self.target_dir):
-            p = subprocess.call("nikola check -l", shell=True)
-        self.assertEqual(p, 0)
+            subprocess.check_output("nikola check -l", shell=True, stderr=subprocess.STDOUT)
 
     def test_check_files(self):
         with cd(self.target_dir):
-            p = subprocess.call("nikola check -f", shell=True)
-        self.assertEqual(p, 0)
+            subprocess.check_output("nikola check -f", shell=True, stderr=subprocess.STDOUT)
 
 
 class TestCheckFailure(DemoBuildTest):
@@ -253,15 +251,21 @@ class TestCheckFailure(DemoBuildTest):
     def test_check_links_fail(self):
         with cd(self.target_dir):
             os.unlink(os.path.join("output", "archive.html"))
-            p = subprocess.call("nikola check -l", shell=True)
-        self.assertEqual(p, 1)
+            self.assertRaises(
+                subprocess.CalledProcessError,
+                subprocess.check_output,
+                ("nikola", "check", "-l")
+            )
 
     def test_check_files_fail(self):
         with cd(self.target_dir):
             with codecs.open(os.path.join("output", "foobar"), "wb+", "utf8") as outf:
                 outf.write("foo")
-            p = subprocess.call("nikola check -f", shell=True)
-        self.assertEqual(p, 1)
+            self.assertRaises(
+                subprocess.CalledProcessError,
+                subprocess.check_output,
+                ("nikola", "check", "-f")
+            )
 
 
 class RelativeLinkTest2(DemoBuildTest):
