@@ -26,6 +26,7 @@
 
 from __future__ import unicode_literals
 import glob
+import itertools
 import os
 
 from nikola.plugin_categories import Task
@@ -124,13 +125,14 @@ class Indexes(Task):
         }
         template_name = "list.tmpl"
         for lang in kw["translations"]:
-            for wildcard, dest, _, is_post in kw["post_pages"]:
-                if is_post:
-                    continue
+            # Need to group by folder to avoid duplicated tasks (Issue #758)
+            for dirname, wildcards in itertools.groupby((w for w,d,x,i in kw["post_pages"] if not i), os.path.dirname):
                 context = {}
                 # vim/pyflakes thinks it's unused
                 # src_dir = os.path.dirname(wildcard)
-                files = glob.glob(wildcard)
+                files = []
+                for wildcard in wildcards:
+                    files += glob.glob(wildcard)
                 post_list = [self.site.global_data[os.path.splitext(p)[0]] for
                              p in files]
                 output_name = os.path.join(kw["output_folder"],

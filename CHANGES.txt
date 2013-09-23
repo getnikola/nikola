@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Compatibility with doit 0.23.0 (Issues #756 #758)
 * Install enough of the theme chain to ensure themes are usable (Issue #748)
 * Support Gist URLs in the gist directive for compatibility with sphinx-gist-embed (Issue #754)
 * windows, dev - fix point pth to clone and run nikola without install (Issue #751) 
