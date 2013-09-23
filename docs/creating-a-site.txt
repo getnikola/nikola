@@ -3,6 +3,7 @@
 .. tags: nikola, python
 .. link:
 .. description:
+.. title: Creating a Site (Not a Blog) with Nikola
 
 Creating a Site (Not a Blog) with Nikola
 ========================================
