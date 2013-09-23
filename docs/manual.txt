@@ -196,7 +196,14 @@ This is currently lacking on detail. Considering the niche Nikola is aimed at,
 I suspect that's not a problem yet. So, when I say "get", the specific details
 of how to "get" something for your specific operating system are left to you.
 
-The short version is: ``pip install https://github.com/getnikola/nikola/archive/master.zip``
+The short version is: ``pip install nikola``
+
+For some features it may give you an error message telling you that you need to
+install something else. For example, if it tells you you need ``requests``::
+
+   pip install requests
+
+And so on.
 
 Longer version:
 
