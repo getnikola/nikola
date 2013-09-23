@@ -90,8 +90,8 @@ def copy_symlinked_for_windows():
     # essentially nikola.utils.should_fix_git_symlinked inlined, to not
     # fiddle with sys.path / import unless really needed
     if sys.platform == 'win32':
-        path = ( os.path.dirname(__file__) +
-                 r'nikola\data\samplesite\stories\theming.rst')
+        path = (os.path.dirname(__file__) +
+                r'nikola\data\samplesite\stories\theming.rst')
         try:
             if os.path.getsize(path) < 200:
                 pass
@@ -99,7 +99,7 @@ def copy_symlinked_for_windows():
                 return
         except Exception:
             return
-    
+
     # apply the fix
     localdir = os.path.dirname(__file__)
     dst = os.path.join(localdir, 'nikola', 'data', 'samplesite')
@@ -110,7 +110,8 @@ def copy_symlinked_for_windows():
     winutils.fix_git_symlinked(src, dst)
     sys.path = oldpath
     del sys.modules['winutils']
-    print('WARNING: your working copy is now dirty by changes in samplesite')     
+    print('WARNING: your working copy is now dirty by changes in samplesite')
+
 
 def install_manpages(root, prefix):
     try:

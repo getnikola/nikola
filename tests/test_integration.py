@@ -238,6 +238,7 @@ if sys.version_info[0] == 2 and sys.version_info[1] < 7:
 else:
     check_output = subprocess.check_output
 
+
 class TestCheck(DemoBuildTest):
     """The demo build should pass 'nikola check'"""
 

@@ -36,7 +36,7 @@ def should_fix_git_symlinked():
     """True if git symlinls markers should be filled with the real content"""
     if sys.platform == 'win32':
         path = (os.path.dirname(__file__) +
-                 r'\data\samplesite\stories\theming.rst')
+                r'\data\samplesite\stories\theming.rst')
         try:
             if os.path.getsize(path) < 200:
                 return True
@@ -51,21 +51,21 @@ def fix_git_symlinked(src, dst):
     Most (all?) of git implementations in windows store a symlink pointing
     into the repo as a text file, the text being the relative path to the
     file with the real content.
-    
+
     So, in a clone of nikola in windows the symlinked files will have the
     wrong content.
-    
+
     The linux usage pattern for those files is 'copy to some dir, then use',
     so we inspect after the copy and rewrite the wrong contents.
 
     The goals are:
        support running nikola from a clone without installing and without
        making dirty the WC.
-       
+
        support install from the WC.
 
        if possible and needed, support running the test suite without making
-       dirty the WC. 
+       dirty the WC.
     """
     # if running from WC there should be a 'doc' dir sibling to nikola package
     if not should_fix_git_symlinked():
@@ -82,7 +82,7 @@ def fix_git_symlinked(src, dst):
                 # which encoding uses a git symlink marker ? betting on default
                 with open(filename, 'r') as f:
                     text = f.read()
-                if text[0]!='.':
+                if text[0] != '.':
                     # de facto hint to skip binary files and exclude.meta
                     continue
             except Exception:
@@ -90,7 +90,7 @@ def fix_git_symlinked(src, dst):
                 # also in py2.6 it can be path encoding
                 continue
             dst_dir_relpath = os.path.dirname(os.path.relpath(filename, dst))
-            path = os.path.normpath(os.path.join(src, dst_dir_relpath, text))            
+            path = os.path.normpath(os.path.join(src, dst_dir_relpath, text))
             if not os.path.exists(path):
                 continue
             # most probably it is a git symlinked file
