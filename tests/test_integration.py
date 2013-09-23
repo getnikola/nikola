@@ -233,22 +233,21 @@ class RelativeLinkTest(DemoBuildTest):
         self.assertTrue('<loc>http://getnikola.com/foo/bar/</loc>' in sitemap_data)
 
 
+if sys.version_info[0] == 2 and sys.version_info[1] < 7:
+    check_output = subprocess.check_call
+else:
+    check_output = subprocess.check_output
+
 class TestCheck(DemoBuildTest):
     """The demo build should pass 'nikola check'"""
 
     def test_check_links(self):
-        if sys.version_info[0] == 2 and sys.version_info[1] < 7:
-            subprocess.check_call("nikola check -l", shell=True, stderr=subprocess.STDOUT)
-        else:
-            with cd(self.target_dir):
-                subprocess.check_output("nikola check -l", shell=True, stderr=subprocess.STDOUT)
+        with cd(self.target_dir):
+            check_output("nikola check -l", shell=True, stderr=subprocess.STDOUT)
 
     def test_check_files(self):
-        if sys.version_info[0] == 2 and sys.version_info[1] < 7:
-            subprocess.check_call("nikola check -f", shell=True, stderr=subprocess.STDOUT)
-        else:
-            with cd(self.target_dir):
-                subprocess.check_output("nikola check -f", shell=True, stderr=subprocess.STDOUT)
+        with cd(self.target_dir):
+            check_output("nikola check -f", shell=True, stderr=subprocess.STDOUT)
 
 
 class TestCheckFailure(DemoBuildTest):
@@ -259,8 +258,7 @@ class TestCheckFailure(DemoBuildTest):
             os.unlink(os.path.join("output", "archive.html"))
             self.assertRaises(
                 subprocess.CalledProcessError,
-                subprocess.check_output,
-                ("nikola", "check", "-l")
+                check_output, ("nikola", "check", "-l")
             )
 
     def test_check_files_fail(self):
@@ -269,8 +267,7 @@ class TestCheckFailure(DemoBuildTest):
                 outf.write("foo")
             self.assertRaises(
                 subprocess.CalledProcessError,
-                subprocess.check_output,
-                ("nikola", "check", "-f")
+                check_output, ("nikola", "check", "-f")
             )
 
 
