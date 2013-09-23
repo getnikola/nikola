@@ -13,6 +13,6 @@ script:
   - "diff requirements.txt requirements-full.txt | grep '^<' && echo 'WARNING WARNING WARNING: Some dependencies are missing from requirements-full.txt!' || echo 'Dependency check passed!'"
   - nosetests --with-coverage --cover-package=nikola --with-doctest --doctest-options=+NORMALIZE_WHITESPACE
   - nikola help
-  - "flake8 --exit-zero nikola --ignore=E501"
+  - "flake8 --ignore=E501 ."
 after_success:
   - coveralls
