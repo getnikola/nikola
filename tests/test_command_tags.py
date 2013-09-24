@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -9,7 +10,8 @@ import unittest
 
 from nikola import nikola
 from nikola.plugins.command.tags import (
-    add_tags, list_tags, merge_tags, remove_tags, search_tags, sort_tags
+    _AutoTag, add_tags, list_tags, merge_tags, remove_tags, search_tags,
+    sort_tags
 )
 from nikola.utils import _reload
 
@@ -51,6 +53,34 @@ class TestCommandTags(unittest.TestCase):
 
         self.assertTrue('test_nikola' in new_tags)
         self.assertEquals(set(new_parsed_tags), set(DEMO_TAGS))
+
+    def test_auto_tag_basic(self):
+        post = os.path.join('posts', os.listdir('posts')[0])
+        tagger = _AutoTag(self._site, use_nltk=False)
+
+        # regexp to check for invalid characters in tags allow only
+        # A-Za-z and hyphens.  regexp modified to make sure the whole
+        # tag matches, the requirement.
+        tag_pattern = re.compile('^' + _AutoTag.WORDS + '$')
+
+        # simple tagging test.
+        tags = tagger.tag(post)
+        tags = [tag for tag in tags if tag_pattern.search(tag)]
+        self.assertEquals(len(tags), 5)
+
+    def test_auto_tag_nltk(self):
+        post = os.path.join('posts', os.listdir('posts')[0])
+        tagger = _AutoTag(self._site)
+
+        # regexp to check for invalid characters in tags allow only
+        # A-Za-z and hyphens.  regexp modified to make sure the whole
+        # tag matches, the requirement.
+        tag_pattern = re.compile('^' + _AutoTag.WORDS + '$')
+
+        # tagging with nltk.
+        nltk_tags = tagger.tag(post)
+        tags = [tag for tag in nltk_tags if tag_pattern.search(tag)]
+        self.assertEquals(len(tags), 5)
 
     def test_list(self):
         self.assertEquals(sorted(DEMO_TAGS), list_tags(self._site))
