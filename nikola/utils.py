@@ -119,9 +119,9 @@ class Functionary(defaultdict):
         """Guess the current language from locale or default."""
         lang = locale.getlocale()[0]
         if lang is None:
-            # for python 2.x, see issues 12699 and 6203 in python bugtracker 
+            # for python 2.x, see issues 12699 and 6203 in python bugtracker
             locale.setlocale(locale.LC_ALL, '')
-            lang = locale.getlocale()[0]        
+            lang = locale.getlocale()[0]
         if lang:
             if lang in self.keys():
                 return lang
