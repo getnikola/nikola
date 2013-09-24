@@ -1433,6 +1433,13 @@ This task gives you a ``mustache.html`` file which lets you access your whole
 blog without reloading the page, using client-side templates. Makes it much
 faster and modern ;-)
 
+Custom Plugins
+--------------
+
+You can create your own plugins (see :doc:`extending`) and use them in your own
+site by putting them in a ``plugins/`` folder.
+
+
 License
 -------
 
