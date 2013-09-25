@@ -409,6 +409,7 @@ class _AutoTag(object):
         else:
             self._tag_pattern = re.compile(self.WORDS)
 
+        self._process_tags()
         self._process_posts()
         self._document_count = len(self._documents)
 
@@ -492,11 +493,20 @@ class _AutoTag(object):
 
         return stem
 
-    def _inverse_document_frequency(self, word):
-        """ Gets the inverse document frequency of a word. """
+    def _modified_inverse_document_frequency(self, word):
+        """ Gets the inverse document frequency of a word.
 
-        count = sum(1 for doc in self._documents.values()
-                    if word.lower() in doc)
+        This departs from the normal inverse document frequency
+        calculation, to give a higher score for words that are already
+        being used as tags in other posts.
+        """
+
+        if word not in self._tag_set:
+            count = sum(
+                1 for doc in self._documents.values() if word.lower() in doc
+            )
+        else:
+            count = 0.25
 
         return math.log(self._document_count / float(count))
 
@@ -525,6 +535,17 @@ class _AutoTag(object):
 
             self._documents[post.source_path] = words
 
+    def _process_tags(self):
+        """ Create a tag set, to be used during tf-idf calculation. """
+
+        tags = self._site.posts_per_tag.keys()
+
+        if not self._use_nltk:
+            self._tag_set = set(tags)
+
+        else:
+            self._tag_set = set(self._get_stem_from_cache(tag) for tag in tags)
+
     def _term_frequncy(self, word, post):
         """ Returns the frequency of a word, given a post.
 
@@ -547,7 +568,7 @@ class _AutoTag(object):
         """ Return tf-idf value of a word, in a specified post. """
 
         tf = self._term_frequncy(word, post)
-        idf = self._inverse_document_frequency(word)
+        idf = self._modified_inverse_document_frequency(word)
 
         return tf * idf
 
