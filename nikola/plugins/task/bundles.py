@@ -73,6 +73,7 @@ class BuildBundles(LateTask):
             env.register(output, bundle)
             # This generates the file
             env[output].urls()
+
         flag = False
         if (webassets is not None and self.site.config['USE_BUNDLES'] is not
                 False):
@@ -81,7 +82,6 @@ class BuildBundles(LateTask):
                 dname = os.path.dirname(name)
                 file_dep = [os.path.join(kw['output_folder'], dname, fname)
                             for fname in files]
-
                 file_dep = filter(os.path.isfile, file_dep)  # removes missing files
                 task = {
                     'file_dep': list(file_dep),
