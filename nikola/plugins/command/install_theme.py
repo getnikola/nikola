@@ -93,11 +93,16 @@ class CommandInstallTheme(Command):
         else:
             self.do_install(name, data)
         # See if the theme's parent is available. If not, install it
-        parent_name = utils.get_parent_theme_name(name)
-        try:
-            utils.get_theme_path(parent_name)
-        except:  # Not available
-            self.do_install(parent_name, data)
+        while True:
+            parent_name = utils.get_parent_theme_name(name)
+            if parent_name is None:
+                break
+            try:
+                utils.get_theme_path(parent_name)
+                break
+            except:  # Not available
+                self.do_install(parent_name, data)
+                name = parent_name
 
     def do_install(self, name, data):
         if name in data:

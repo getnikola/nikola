@@ -74,7 +74,7 @@ class Deploy(Command):
             except Exception:
                 last_deploy = datetime(1970, 1, 1)  # NOQA
 
-            LOGGER.notice("==>", command)
+            LOGGER.notice("==> {0}".format(command))
             ret = subprocess.check_call(command, shell=True)
             if ret != 0:  # failed deployment
                 raise Exception("Failed deployment")
