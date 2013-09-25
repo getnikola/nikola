@@ -9,7 +9,7 @@ Features
   If set to False, sorts by name (Issue #667)
 
 Bugfixes
--------
+--------
 
 * Fix USE_BUNDLES compatibility with Python 3 (Fix #760)
 * Compatibility with doit 0.23.0 (Issues #756 #758)
