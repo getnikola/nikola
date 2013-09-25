@@ -100,7 +100,7 @@ class ImportMixin(object):
         # 'NameError(Undefined)' from mako\runtime.py, then more info is
         # writen to *somefile* - For import_blogger by example it would
         # write html to conf.py. Yeah!
-        conf_template = Template(filename=filename)
+        conf_template = Template(filename=filename, strict_undefined=True)
 
         return conf_template
 
