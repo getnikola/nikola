@@ -9,8 +9,9 @@ Features
   If set to False, sorts by name (Issue #667)
 
 Bugfixes
---------
+-------
 
+* Fix USE_BUNDLES compatibility with Python 3 (Fix #760)
 * Compatibility with doit 0.23.0 (Issues #756 #758)
 * Install enough of the theme chain to ensure themes are usable (Issue #748)
 * Support Gist URLs in the gist directive for compatibility with sphinx-gist-embed (Issue #754)
