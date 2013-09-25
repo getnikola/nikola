@@ -14,7 +14,7 @@ requests>=1.0
 markdown
 Jinja2>=2.7
 bbcode
-livereload
+https://github.com/getnikola/python-livereload/archive/master.zip
 pyphen
 python-dateutil
 micawber
