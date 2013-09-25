@@ -84,7 +84,7 @@ class BuildBundles(LateTask):
                             for fname in files]
                 file_dep = filter(os.path.isfile, file_dep)  # removes missing files
                 task = {
-                    'file_dep': file_dep,
+                    'file_dep': list(file_dep),
                     'task_dep': ['copy_assets'],
                     'basename': str(self.name),
                     'name': str(output_path),
