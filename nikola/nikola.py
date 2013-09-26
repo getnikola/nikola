@@ -834,6 +834,7 @@ class Nikola(object):
         else:
             current_time = utils.current_time(tzinfo)
         targets = set([])
+        lower_case_tags = set([])
         for wildcard, destination, template_name, use_in_feeds in \
                 self.config['post_pages']:
             print(".", end='')
@@ -898,7 +899,16 @@ class Nikola(object):
                         self.posts_per_month[
                             '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post.post_name)
                         for tag in post.alltags:
-                            self.posts_per_tag[tag.lower()].append(post.post_name)
+                            if tag.lower() in lower_case_tags:
+                                if tag not in self.posts_per_tag:
+                                    # Tags that differ only in case
+                                    other_tag = [k for k in self.posts_per_tag.keys() if k.lower() == tag.lower()][0]
+                                    utils.LOGGER.error('You have cases that differ only in upper/lower case: {0} and {1}'.format(tag, other_tag))
+                                    utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.post_name))
+                                    utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join(self.posts_per_tag[other_tag])))
+                            else:
+                                lower_case_tags.add(tag.lower())
+                            self.posts_per_tag[tag].append(post.post_name)
                         self.posts_per_category[post.meta('category')].append(post.post_name)
                     else:
                         self.pages.append(post)
