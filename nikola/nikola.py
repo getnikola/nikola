@@ -906,6 +906,7 @@ class Nikola(object):
                                     utils.LOGGER.error('You have cases that differ only in upper/lower case: {0} and {1}'.format(tag, other_tag))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.post_name))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join(self.posts_per_tag[other_tag])))
+                                    sys.exit(1)
                             else:
                                 lower_case_tags.add(tag.lower())
                             self.posts_per_tag[tag].append(post.post_name)
