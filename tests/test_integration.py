@@ -92,7 +92,7 @@ class DemoBuildTest(EmptyBuildTest):
             outf.write(
                 ".. title: foobar\n"
                 ".. slug: foobar\n"
-                ".. date: 2013/03/06 19:08:15\n"
+                ".. date: 2013-03-06 19:08:15\n"
             )
 
     def test_index_in_sitemap(self):
@@ -134,14 +134,14 @@ class FuturePostTest(EmptyBuildTest):
             outf.write(
                 ".. title: foo\n"
                 ".. slug: foo\n"
-                ".. date: %s\n" % (current_time() + datetime.timedelta(-1)).strftime('%Y/%m/%d %T')
+                ".. date: %s\n" % (current_time() + datetime.timedelta(-1)).strftime('%Y-%m-%d %H:%M:%S')
             )
 
         with codecs.open(os.path.join(self.target_dir, 'posts', 'empty2.txt'), "wb+", "utf8") as outf:
             outf.write(
                 ".. title: bar\n"
                 ".. slug: bar\n"
-                ".. date: %s\n" % (current_time() + datetime.timedelta(1)).strftime('%Y/%m/%d %T')
+                ".. date: %s\n" % (current_time() + datetime.timedelta(1)).strftime('%Y-%m-%d %H:%M:%S')
             )
 
     def test_future_post(self):
