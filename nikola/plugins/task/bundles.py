@@ -76,7 +76,7 @@ class BuildBundles(LateTask):
                 env[output].urls()
             else:
                 with open(os.path.join(out_dir, os.path.basename(output)), 'wb+'):
-                    pass  #create empty file
+                    pass  # Create empty file
 
         flag = False
         if (webassets is not None and self.site.config['USE_BUNDLES'] is not
