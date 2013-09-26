@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Don't fail for empty bundles.
 * Fix USE_BUNDLES compatibility with Python 3 (Fix #760)
 * Compatibility with doit 0.23.0 (Issues #756 #758)
 * Install enough of the theme chain to ensure themes are usable (Issue #748)

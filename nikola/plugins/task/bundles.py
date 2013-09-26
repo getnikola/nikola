@@ -69,10 +69,14 @@ class BuildBundles(LateTask):
             utils.makedirs(cache_dir)
             env = webassets.Environment(out_dir, os.path.dirname(output),
                                         cache=cache_dir)
-            bundle = webassets.Bundle(*inputs, output=os.path.basename(output))
-            env.register(output, bundle)
-            # This generates the file
-            env[output].urls()
+            if inputs:
+                bundle = webassets.Bundle(*inputs, output=os.path.basename(output))
+                env.register(output, bundle)
+                # This generates the file
+                env[output].urls()
+            else:
+                with open(os.path.join(out_dir, os.path.basename(output)), 'wb+'):
+                    pass  #create empty file
 
         flag = False
         if (webassets is not None and self.site.config['USE_BUNDLES'] is not
