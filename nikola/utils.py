@@ -402,9 +402,10 @@ class UnsafeZipException(Exception):
     pass
 
 
-def extract_all(zipfile):
+def extract_all(zipfile, path='themes'):
     pwd = os.getcwd()
-    os.chdir('themes')
+    makedirs(path)
+    os.chdir(path)
     with zip(zipfile) as z:
         namelist = z.namelist()
         for f in namelist:

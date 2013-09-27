@@ -111,7 +111,7 @@ class CommandInstallPlugin(Command):
             zip_file = BytesIO()
             zip_file.write(requests.get(data[name]).content)
             utils.LOGGER.notice('Extracting: {0} into plugins'.format(name))
-            utils.extract_all(zip_file)
+            utils.extract_all(zip_file, 'plugins')
         else:
             try:
                 plugin_path = utils.get_plugin_path(name)
