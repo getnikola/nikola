@@ -40,7 +40,7 @@ from nikola import utils
 
 
 class CommandInstallTheme(Command):
-    """Start test server."""
+    """Install a theme."""
 
     name = "install_theme"
     doc_usage = "[[-u] theme_name] | [[-u] -l]"
