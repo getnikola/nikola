@@ -458,6 +458,10 @@ to your configuration ::
    annotations / noannotations
        Override the value of the ``ANNOTATIONS`` option for this specific post or page.
 
+   author
+       Author of the post, will be used in the RSS feed and possibly in the post
+       display (theme-dependent) 
+
 .. note:: The Two-File Format
 
    Nikola originally used a separate ``.meta`` file. That will still work!
