@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New -q flag for quiet running (Issue #762)
 * Added author field in RSS items (Issue #767)
 * Annotations using annotateit.org (Issue #623)
 * New GALLERY_SORT_BY_DATE option, defaulting to True. 
