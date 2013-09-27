@@ -28,6 +28,7 @@
 
 from __future__ import print_function, unicode_literals
 from collections import defaultdict, Callable
+import calendar
 import datetime
 import hashlib
 import locale
@@ -138,6 +139,37 @@ class Functionary(defaultdict):
         if lang is None:
             lang = self.current_lang()
         return self[lang][key]
+
+
+# compatibility note: v6.0.4x was feeding lang (as in selector for
+# nikola translation) and not a more specific locale ( en vs en_uk )
+# called from plugins/tasks/archive.py Archive.gen_tasks (2 times)
+# moved from nikola/plugins/task/archive.py , renamed arg locale -> lang
+# calendar calls getlocale/setlocale
+def get_month_name(month_no, lang):
+    if sys.version_info[0] == 3:  # Python 3
+        with calendar.different_locale((lang, "UTF-8")):
+            s = calendar.month_name[month_no]
+    else:  # Python 2
+        with calendar.TimeEncoding((lang, "UTF-8")):
+            s = calendar.month_name[month_no]
+    return s
+
+
+# compatibility note: v6.0.4x nikola.Nikola in __init__ passes this function as
+# self._GLOBAL_CONTEXT['set_locale'] ; no other use in nikola.py
+# called with lang as in 'selector for nikola translaction'
+# this function lived in nikola.py
+def s_l(lang):
+    """A set_locale that uses utf8 encoding and returns ''."""
+    LocaleBorg().current_lang = lang
+    try:
+        locale.setlocale(locale.LC_ALL, (lang, "utf8"))
+    except Exception:
+        LOGGER.warn(
+            "Could not set locale to {0}."
+            "This may cause some i18n features not to work.".format(lang))
+    return ''
 
 
 class CustomEncoder(json.JSONEncoder):
