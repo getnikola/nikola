@@ -38,6 +38,7 @@ from doit.doit_cmd import DoitMain
 from doit.cmd_help import Help as DoitHelp
 from doit.cmd_run import Run as DoitRun
 from doit.cmd_clean import Clean as DoitClean
+from logbook import NullHandler
 
 from . import __version__
 from .nikola import Nikola
@@ -48,9 +49,14 @@ config = {}
 
 
 def main(args):
+    quiet = False
     if len(args) > 0 and args[0] == 'build' and '--strict' in args:
         LOGGER.notice('Running in strict mode')
         STRICT_HANDLER.push_application()
+    if len(args) > 0 and args[0] == 'build' and '-q' in args or '--quiet' in args:
+        nullhandler = NullHandler()
+        nullhandler.push_application()
+        quiet = True
     global config
     sys.path.append('')
     try:
@@ -65,7 +71,7 @@ def main(args):
         config = {}
 
     site = Nikola(**config)
-    return DoitNikola(site).run(args)
+    return DoitNikola(site, quiet).run(args)
 
 
 class Help(DoitHelp):
@@ -97,6 +103,16 @@ class Build(DoitRun):
                 'help': "Fail on things that would normally be warnings.",
             }
         )
+        opts.append(
+            {
+                'name': 'quiet',
+                'long': 'quiet',
+                'short': 'q',
+                'default': False,
+                'type': bool,
+                'help': "Run quietly.",
+            }
+        )
         self.cmd_options = tuple(opts)
         super(Build, self).__init__(*args, **kw)
 
@@ -114,14 +130,21 @@ class Clean(DoitClean):
 
 class NikolaTaskLoader(TaskLoader):
     """custom task loader to get tasks from Nikola instead of dodo.py file"""
-    def __init__(self, nikola):
+    def __init__(self, nikola, quiet=False):
         self.nikola = nikola
+        self.quiet = quiet
 
     def load_tasks(self, cmd, opt_values, pos_args):
-        DOIT_CONFIG = {
-            'reporter': ExecutedOnlyReporter,
-            'default_tasks': ['render_site', 'post_render'],
-        }
+        if self.quiet:
+            DOIT_CONFIG = {
+                'verbosity': 0,
+                'reporter': 'zero',
+            }
+        else:
+            DOIT_CONFIG = {
+                'reporter': ExecutedOnlyReporter,
+            }
+        DOIT_CONFIG['default_tasks'] = ['render_site', 'post_render']
         tasks = generate_tasks('render_site', self.nikola.gen_tasks('render_site', "Task"))
         latetasks = generate_tasks('post_render', self.nikola.gen_tasks('post_render', "LateTask"))
         return tasks + latetasks, DOIT_CONFIG
@@ -132,9 +155,9 @@ class DoitNikola(DoitMain):
     DOIT_CMDS = list(DoitMain.DOIT_CMDS) + [Help, Build, Clean]
     TASK_LOADER = NikolaTaskLoader
 
-    def __init__(self, nikola):
+    def __init__(self, nikola, quiet=False):
         self.nikola = nikola
-        self.task_loader = self.TASK_LOADER(nikola)
+        self.task_loader = self.TASK_LOADER(nikola, quiet)
 
     def get_commands(self):
         # core doit commands
