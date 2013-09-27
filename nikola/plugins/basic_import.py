@@ -96,11 +96,11 @@ class ImportMixin(object):
                                 'already existing nikola site.'.format(self.output_folder))
 
         filename = os.path.join(os.path.dirname(utils.__file__), 'conf.py.in')
-        # add format_extensions=True if getting an unhelpful traceback
-        # 'NameError(Undefined)' from mako\runtime.py, then more info is
-        # writen to *somefile* - For import_blogger by example it would
-        # write html to conf.py. Yeah!
-        conf_template = Template(filename=filename)
+        # The 'strict_undefined=True' will give the missing symbol name if any,
+        # (ex: NameError: 'THEME' is not defined )
+        # for other errors from mako/runtime.py, you can add format_extensions=True ,
+        # then more info will be writen to *somefile* (most probably conf.py)
+        conf_template = Template(filename=filename, strict_undefined=True)
 
         return conf_template
 
