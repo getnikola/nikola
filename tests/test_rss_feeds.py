@@ -20,6 +20,7 @@ class RSSFeedTest(unittest.TestCase):
                         mock.Mock(return_value=({'title': 'post title',
                                                  'slug': 'awesome_article',
                                                  'date': '2012-10-01 22:41',
+                                                 'author': None,
                                                  'tags': 'tags', 'link':
                                                  'link', 'description':
                                                  'description'}))):
