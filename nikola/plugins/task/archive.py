@@ -25,7 +25,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import os
-import sys
 
 from nikola.plugin_categories import Task
 from nikola.utils import config_changed, get_month_name

@@ -138,11 +138,19 @@ class Functionary(defaultdict):
 
 
 def guess_lang_from_current_locale():
-    lang = locale.getlocale()[0]
-    if lang is None:
+    locale_n = locale.getlocale()[0]
+    if locale_n is None:
         # for python 2.x, see issues 12699 and 6203 in python bugtracker
         locale.setlocale(locale.LC_ALL, '')
-        lang = locale.getlocale()[0]
+        locale_n = locale.getlocale()[0]
+
+    if sys.platform == 'win32':
+        # all ad-hoc and brittle, don't worry now
+        if locale_n == 'es_ES':
+            locale_n = 'Spanish_Argentina'
+        lang = locale_win_to_nikola_selector[locale_n]
+    else:
+        lang = locale_n
     return lang
 
 
@@ -172,7 +180,11 @@ def locale_from_lang(lang):
 # moved from nikola/plugins/task/archive.py , renamed arg locale -> lang
 # calendar calls getlocale/setlocale
 def get_month_name(month_no, lang):
-    pylocale = (locale_from_lang(lang), "UTF-8")
+    if sys.platform == 'win32':
+        pylocale = (locale_from_lang(lang), None)
+    else:
+        pylocale = (locale_from_lang(lang), "UTF-8")
+
     if sys.version_info[0] == 3:  # Python 3
         with calendar.different_locale(pylocale):
             s = calendar.month_name[month_no]
@@ -190,7 +202,11 @@ def s_l(lang):
     """A set_locale that uses utf8 encoding and returns ''."""
     LocaleBorg().current_lang = lang
     locale_n = locale_from_lang(lang)
-    pylocale = (locale_n, "utf8")
+    if sys.platform == 'win32':
+        pylocale = (locale_n, None)
+    else:
+        pylocale = (locale_n, "utf8")
+
     try:
         locale.setlocale(locale.LC_ALL, pylocale)
     except Exception:
