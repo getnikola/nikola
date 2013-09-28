@@ -460,7 +460,7 @@ to your configuration ::
 
    author
        Author of the post, will be used in the RSS feed and possibly in the post
-       display (theme-dependent) 
+       display (theme-dependent)
 
 .. note:: The Two-File Format
 
@@ -929,7 +929,7 @@ You can disable comments for a post by adding a "nocomments" metadata field to i
    Moot doesn't support comment counts on index pages, and it requires adding
    this to your ``conf.py``:
 
-   .. code:: python
+   .. code-block:: python
 
         BODY_END = """
         <script src="//cdn.moot.it/1/moot.min.js"></script>
@@ -1024,7 +1024,7 @@ The currently available filters are:
    If your program doesn't run in-place, then you can use Nikola's runinplace function.
    For example, this is how the yui_compressor filter is implemented:
 
-   .. code:: python
+   .. code-block:: python
 
       def yui_compressor(infile):
           return runinplace(r'yui-compressor --nomunge %1 -o %2', infile)
@@ -1033,7 +1033,7 @@ The currently available filters are:
    As a silly example, this would make everything uppercase and totally break
    your website:
 
-   .. code:: python
+   .. code-block:: python
 
       import string
       from nikola.filters import apply_to_file
@@ -1153,7 +1153,7 @@ The ``code`` directive has been included in docutils since version 0.9 and now
 replaces Nikola's ``code-block`` directive. To ease the transition, two aliases
 for ``code`` directive are provided: ``code-block`` and ``sourcecode``::
 
-    .. code:: python
+    .. code-block:: python
        :number-lines:
 
        print("Our virtues and our failings are inseparable")

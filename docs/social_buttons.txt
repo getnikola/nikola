@@ -21,7 +21,7 @@ The Default
 By Default, the themes provided with Nikola will add to your pages a "slide in" widget at
 the bottom right of the page, provided by Addthis. This is the HTML code for that:
 
-.. code:: html
+.. code-block:: html
 
     <!-- Social buttons -->
     <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style
@@ -89,7 +89,7 @@ site and open a web browser showing the default configuration, with the AddThis 
 First, let's add the HTML snippet that will show the sharing options. In your conf.py, set this, which
 is the HTML code suggested by ShareNice:
 
-.. code:: python
+.. code-block:: python
 
     SOCIAL_BUTTONS_CODE = """<div id="shareNice" data-share-label="Share"
         data-color-scheme="black" data-icon-size="32" data-panel-bottom="plain"
@@ -104,7 +104,7 @@ And you should now see a sharing box at the bottom right of the page.
 Main problem remaining is that it doesn't really look good and integrated in the page layout.
 I suggest changing the code to this which looks nicer, but still has some placement issues:
 
-.. code:: python
+.. code-block:: python
 
     SOCIAL_BUTTONS_CODE = """<div id="shareNice" data-share-label="Share"
         data-color-scheme="black" data-icon-size="32" data-panel-bottom="plain"
@@ -166,7 +166,7 @@ You will now have several files in a ``build`` folder. We need to bring them int
 
 Edit your ``conf.py``:
 
-.. code:: python
+.. code-block:: python
 
     BODY_END = """
     <script type="text/javascript" src="/javascripts/jquery.socialshareprivacy.min.js"></script>
