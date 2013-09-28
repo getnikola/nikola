@@ -92,17 +92,6 @@ class CommandInstallPlugin(Command):
             return True
         else:
             self.do_install(name, data)
-        # See if the plugin's parent is available. If not, install it
-        while True:
-            parent_name = utils.get_parent_plugin_name(name)
-            if parent_name is None:
-                break
-            try:
-                utils.get_plugin_path(parent_name)
-                break
-            except:  # Not available
-                self.do_install(parent_name, data)
-                name = parent_name
 
     def do_install(self, name, data):
         if name in data:
