@@ -1398,7 +1398,7 @@ docs at http://www.tipue.com/search/
 
 Tipue is under an MIT license (see MIT-LICENSE.txt)
 
-Here's a set of example settings for conf.py that should work nicely with the "site" theme::
+Here's a set of example settings for conf.py that should work nicely with the "bootstrap" theme::
 
     SEARCH_FORM = """
     <span class="navbar-form pull-left">
