@@ -29,6 +29,7 @@ BLOG_DESCRIPTION = "${BLOG_DESCRIPTION}"
 # zh_cn  Chinese (Simplified)
 # hr     Croatian
 # nl     Dutch
+# eo     Esperanto
 # fr     French
 # el     Greek [NOT gr!]
 # de     German
@@ -40,7 +41,6 @@ BLOG_DESCRIPTION = "${BLOG_DESCRIPTION}"
 # ru     Russian
 # es     Spanish
 # tr_tr  Turkish (Turkey)
-# eo     Esperanto
 #
 # If you want to use Nikola with a non-supported language you have to provide
 # a module containing the necessary translations
