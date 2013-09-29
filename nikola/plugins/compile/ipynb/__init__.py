@@ -33,6 +33,7 @@ import os
 try:
     from IPython.nbconvert.exporters import HTMLExporter
     from IPython.nbformat import current as nbformat
+    from IPython.config import Config
     flag = True
 except ImportError:
     flag = None
@@ -52,7 +53,8 @@ class CompileIPynb(PageCompiler):
                             'to install IPython 1.0.')
         makedirs(os.path.dirname(dest))
         HTMLExporter.default_template = 'basic'
-        exportHtml = HTMLExporter()
+        c = Config(self.site.config['IPYNB_CONFIG'])
+        exportHtml = HTMLExporter(config=c)
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
                 nb = in_file.read()

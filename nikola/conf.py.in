@@ -396,6 +396,12 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 #</script>
 #"""
 
+# Do you want to customize the nbconversion of your IPython notebook?
+# IPYNB_CONFIG = {}
+# With the following example configuracion you can use a custom jinja template
+# called `toggle.tpl` which has to be located in your site/blog main folder:
+# IPYNB_CONFIG = {'Exporter':{'template_file': 'toggle'}}
+
 # What MarkDown extensions to enable?
 # You will also get gist, nikola and podcast because those are
 # done in the code, hope you don't mind ;-)
