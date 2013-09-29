@@ -65,15 +65,15 @@ class CommandInit(Command):
         'THEME': 'bootstrap3',
 
         'POSTS': """(
-    ("posts/*.txt", "posts", "post.tmpl"),
     ("posts/*.rst", "posts", "post.tmpl"),
+    ("posts/*.txt", "posts", "post.tmpl"),
 )""",
         'PAGES': """(
-    ("stories/*.txt", "stories", "story.tmpl"),
     ("stories/*.rst", "stories", "story.tmpl"),
+    ("stories/*.txt", "stories", "story.tmpl"),
 )""",
         'COMPILERS': """{
-    "rest": ('.txt', '.rst'),
+    "rest": ('.rst', '.txt'),
     "markdown": ('.md', '.mdown', '.markdown'),
     "textile": ('.textile',),
     "txt2tags": ('.t2t',),
