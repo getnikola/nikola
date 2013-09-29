@@ -43,7 +43,7 @@ It has many features, but here are some of the nicer ones:
 .. _Nikola Handbook: http://getnikola.com/handbook.html#why-static
 __ __ http://users.getnikola.com/
 .. _Themable: http://themes.getnikola.com
-.. _doit: http://python-doit.sf.net
+.. _doit: http://pydoit.org
 .. _reStructuredText: http://getnikola.com/quickstart.html
 .. _image galleries: http://getnikola.com/galleries/demo/
 __ https://www.transifex.com/projects/p/nikola/
