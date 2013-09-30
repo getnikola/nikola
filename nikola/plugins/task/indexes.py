@@ -40,6 +40,7 @@ class Indexes(Task):
 
     def gen_tasks(self):
         self.site.scan_posts()
+        yield self.group_task()
 
         kw = {
             "translations": self.site.config['TRANSLATIONS'],

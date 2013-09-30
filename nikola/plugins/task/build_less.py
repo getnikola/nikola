@@ -36,7 +36,7 @@ from nikola import utils
 
 
 class BuildLess(Task):
-    """Bundle assets using WebAssets."""
+    """Generate CSS out of LESS sources."""
 
     name = "build_less"
     sources_folder = "less"
@@ -83,6 +83,8 @@ class BuildLess(Task):
             with open(dst, "wb+") as outf:
                 outf.write(compiled)
 
+        yield self.group_task()
+
         for target in targets:
             dst = os.path.join(dst_dir, target.replace(self.sources_ext, ".css"))
             yield {
@@ -94,6 +96,3 @@ class BuildLess(Task):
                 'uptodate': [utils.config_changed(kw)],
                 'clean': True
             }
-
-        if not targets:
-            yield {'basename': self.name, 'actions': []}

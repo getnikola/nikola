@@ -637,3 +637,13 @@ def split_explicit_title(text):
     if match:
         return True, match.group(1), match.group(2)
     return False, text, text
+
+
+def first_line(doc):
+    """extract first non-blank line from text, to extract docstring title"""
+    if doc is not None:
+        for line in doc.splitlines():
+            striped = line.strip()
+            if striped:
+                return striped
+    return ''

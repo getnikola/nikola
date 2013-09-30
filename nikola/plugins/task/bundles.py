@@ -78,7 +78,7 @@ class BuildBundles(LateTask):
                 with open(os.path.join(out_dir, os.path.basename(output)), 'wb+'):
                     pass  # Create empty file
 
-        flag = False
+        yield self.group_task()
         if (webassets is not None and self.site.config['USE_BUNDLES'] is not
                 False):
             for name, files in kw['theme_bundles'].items():
@@ -97,15 +97,7 @@ class BuildBundles(LateTask):
                     'uptodate': [utils.config_changed(kw)],
                     'clean': True,
                 }
-                flag = True
                 yield utils.apply_filters(task, kw['filters'])
-        if flag is False:  # No page rendered, yield a dummy task
-            yield {
-                'basename': self.name,
-                'uptodate': [True],
-                'name': 'None',
-                'actions': [],
-            }
 
 
 def get_theme_bundles(themes):
