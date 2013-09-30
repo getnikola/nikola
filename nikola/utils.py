@@ -28,6 +28,7 @@
 
 from __future__ import print_function, unicode_literals
 from collections import defaultdict, Callable
+import calendar
 import datetime
 import hashlib
 import locale
@@ -117,11 +118,7 @@ class Functionary(defaultdict):
 
     def current_lang(self):
         """Guess the current language from locale or default."""
-        lang = locale.getlocale()[0]
-        if lang is None:
-            # for python 2.x, see issues 12699 and 6203 in python bugtracker
-            locale.setlocale(locale.LC_ALL, '')
-            lang = locale.getlocale()[0]
+        lang = guess_lang_from_current_locale()
         if lang:
             if lang in self.keys():
                 return lang
@@ -139,6 +136,88 @@ class Functionary(defaultdict):
             lang = self.current_lang()
         return self[lang][key]
 
+
+def guess_lang_from_current_locale():
+    locale_n = locale.getlocale()[0]
+    if locale_n is None:
+        # for python 2.x, see issues 12699 and 6203 in python bugtracker
+        locale.setlocale(locale.LC_ALL, '')
+        locale_n = locale.getlocale()[0]
+
+    if sys.platform == 'win32':
+        # all ad-hoc and brittle, don't worry now
+        if locale_n == 'es_ES':
+            locale_n = 'Spanish_Argentina'
+        lang = locale_win_to_nikola_selector[locale_n]
+    else:
+        lang = locale_n
+    return lang
+
+
+locale_win_to_nikola_selector = {
+    'Spanish_Argentina': 'es',  # es-AR
+    'English_United States': 'en',  # en-US
+}
+
+nikola_selector_to_locale_win = {
+    'es': 'Spanish_Argentina',
+    'en': 'English_United States'
+}
+
+
+def locale_from_lang(lang):
+    """locale to use when dealing with translation denoted by lang"""
+    if sys.platform == 'win32':
+        locale_n = nikola_selector_to_locale_win[lang]
+    else:
+        locale_n = lang
+    return locale_n
+
+
+# compatibility note: v6.0.4x was feeding lang (as in selector for
+# nikola translation) and not a more specific locale ( en vs en_uk )
+# called from plugins/tasks/archive.py Archive.gen_tasks (2 times)
+# moved from nikola/plugins/task/archive.py , renamed arg locale -> lang
+# calendar calls getlocale/setlocale
+def get_month_name(month_no, lang):
+    if sys.platform == 'win32':
+        pylocale = (locale_from_lang(lang), None)
+    else:
+        pylocale = (locale_from_lang(lang), "UTF-8")
+
+    if sys.version_info[0] == 3:  # Python 3
+        with calendar.different_locale(pylocale):
+            s = calendar.month_name[month_no]
+    else:  # Python 2
+        with calendar.TimeEncoding(pylocale):
+            s = calendar.month_name[month_no]
+    return s
+
+
+# compatibility note: v6.0.4x nikola.Nikola in __init__ passes this function as
+# self._GLOBAL_CONTEXT['set_locale'] ; no other use in nikola.py
+# called with lang as in 'selector for nikola translaction'
+# this function lived in nikola.py
+def s_l(lang):
+    """A set_locale that uses utf8 encoding and returns ''."""
+    LocaleBorg().current_lang = lang
+    locale_n = locale_from_lang(lang)
+    if sys.platform == 'win32':
+        pylocale = (locale_n, None)
+    else:
+        pylocale = (locale_n, "utf8")
+
+    try:
+        locale.setlocale(locale.LC_ALL, pylocale)
+    except Exception:
+        LOGGER.warn(
+            "Could not set locale to {0}."
+            "This may cause some i18n features not to work.".format(locale_n))
+    return ''
+
+
+# hmmm. notice a difference in spelling 'utf8' in the last two functions
+# they were in the original, so let them alone
 
 class CustomEncoder(json.JSONEncoder):
     def default(self, obj):

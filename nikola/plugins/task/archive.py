@@ -24,12 +24,10 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import calendar
 import os
-import sys
 
 from nikola.plugin_categories import Task
-from nikola.utils import config_changed
+from nikola.utils import config_changed, get_month_name
 
 
 class Archive(Task):
@@ -138,13 +136,3 @@ class Archive(Task):
             task['uptodate'] = [config_changed(task_cfg)]
             task['basename'] = self.name
             yield task
-
-
-def get_month_name(month_no, locale):
-    if sys.version_info[0] == 3:  # Python 3
-        with calendar.different_locale((locale, "UTF-8")):
-            s = calendar.month_name[month_no]
-    else:  # Python 2
-        with calendar.TimeEncoding((locale, "UTF-8")):
-            s = calendar.month_name[month_no]
-    return s

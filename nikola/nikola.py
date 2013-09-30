@@ -28,7 +28,6 @@ from __future__ import print_function, unicode_literals
 from collections import defaultdict
 from copy import copy
 import glob
-import locale
 import os
 import sys
 try:
@@ -376,7 +375,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT = {}
 
         self._GLOBAL_CONTEXT['_link'] = self.link
-        self._GLOBAL_CONTEXT['set_locale'] = s_l
+        self._GLOBAL_CONTEXT['set_locale'] = utils.s_l
         self._GLOBAL_CONTEXT['rel_link'] = self.rel_link
         self._GLOBAL_CONTEXT['abs_link'] = self.abs_link
         self._GLOBAL_CONTEXT['exists'] = self.file_exists
@@ -1006,18 +1005,6 @@ class Nikola(object):
         }
 
         return utils.apply_filters(task, filters)
-
-
-def s_l(lang):
-    """A set_locale that uses utf8 encoding and returns ''."""
-    utils.LocaleBorg().current_lang = lang
-    try:
-        locale.setlocale(locale.LC_ALL, (lang, "utf8"))
-    except Exception:
-        utils.LOGGER.warn(
-            "Could not set locale to {0}."
-            "This may cause some i18n features not to work.".format(lang))
-    return ''
 
 
 SOCIAL_BUTTONS_CODE = """
