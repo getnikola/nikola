@@ -62,6 +62,7 @@ except ImportError:
                 yield (prefix + line if predicate(line) else line)
         return ''.join(prefixed_lines())
 
+
 class CommandInstallPlugin(Command):
     """Install a plugin."""
 
