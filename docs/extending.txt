@@ -16,11 +16,6 @@ Extending Nikola
 .. contents::
 
 
-.. note:: This is a draft
-
-   I am not sure of the best way to do some things, including how
-   to document this. Suggestions are welcome.
-
 Nikola is extensible. Almost all its functionality is based on plugins,
 and you can add your own or replace the provided ones.
 
