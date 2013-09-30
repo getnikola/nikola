@@ -88,6 +88,11 @@ First, the ``command_serve.plugin`` file:
     Website = http://getnikola.com
     Description = Start test server.
 
+.. note:: If you want to publish your plugin on the Plugin Index, `read
+          the docs for the Index
+          <https://github.com/getnikola/plugins/blob/master/README.md>`_
+          (and the .plugin file examples and explanations).
+
 For your own plugin, just change the values in a sensible way. The
 ``Module`` will be used to find the matching python module, in this case
 ``serve.py``, from which this is the interesting bit:
@@ -174,6 +179,11 @@ First, you have to create a .plugin file. Here's the one for the Mako plugin:
     Version = 0.1
     Website = http://getnikola.com
     Description = Support for Mako templates.
+
+.. note:: If you want to publish your plugin on the Plugin Index, `read
+          the docs for the Index
+          <https://github.com/getnikola/plugins/blob/master/README.md>`_
+          (and the .plugin file examples and explanations).
 
 You will have to replace "mako" with your template system's name, and other data
 in the obvious ways.
@@ -282,9 +292,10 @@ in the logical ways:
     Description = Copy theme assets into output.
 
 
-.. note:: If you want to publish your plugin on the Plugin Index, `read the
-          docs for the Index and look at the .plugin file examples
-          <https://github.com/getnikola/plugins/blob/master/README.md>`_.
+.. note:: If you want to publish your plugin on the Plugin Index, `read
+          the docs for the Index
+          <https://github.com/getnikola/plugins/blob/master/README.md>`_
+          (and the .plugin file examples and explanations).
 
 And the ``task_copy_assets.py`` file, in its entirety:
 
