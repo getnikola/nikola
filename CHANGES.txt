@@ -14,6 +14,7 @@ Features
 Bugfixes
 --------
 
+* Added language in the RSS feeds (Issue #777)
 * Don't fail for empty bundles.
 * Fix USE_BUNDLES compatibility with Python 3 (Fix #760)
 * Compatibility with doit 0.23.0 (Issues #756 #758)

@@ -314,6 +314,7 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path,
         lastBuildDate=datetime.datetime.now(),
         items=items,
         generator='nikola',
+        language=lang
     )
     rss_obj.self_url = feed_url
     rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
