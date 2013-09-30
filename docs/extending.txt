@@ -281,6 +281,11 @@ in the logical ways:
     Website = http://getnikola.com
     Description = Copy theme assets into output.
 
+
+.. note:: If you want to publish your plugin on the Plugin Index, `read the
+          docs for the Index and look at the .plugin file examples
+          <https://github.com/getnikola/plugins/blob/master/README.md>`_.
+
 And the ``task_copy_assets.py`` file, in its entirety:
 
 .. code-block:: python
@@ -350,3 +355,13 @@ RestExtension Plugins
 ---------------------
 
 Implement directives for Restructured Text, see ``media.py`` for a simple example.
+
+Plugin Index
+============
+
+There is a `plugin index <http://plugins.getnikola.com/>`_, which stores all
+of the plugins for Nikola people wanted to share with the world.
+
+You may want to read the `README for the Index
+<https://github.com/getnikola/plugins/blob/master/README.md>`_ if you want to
+publish your package there.
