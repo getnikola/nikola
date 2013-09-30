@@ -63,11 +63,11 @@ class RenderTags(Task):
         }
 
         self.site.scan_posts()
+        yield self.group_task()
 
         yield self.list_tags_page(kw)
 
         if not self.site.posts_per_tag and not self.site.posts_per_category:
-            yield {'basename': str(self.name), 'actions': []}
             return
 
         tag_list = list(self.site.posts_per_tag.items())
@@ -164,6 +164,7 @@ class RenderTags(Task):
             )
             task_cfg = {1: task['uptodate'][0].config, 2: kw}
             task['uptodate'] = [utils.config_changed(task_cfg)]
+            task['basename'] = str(self.name)
             yield task
 
     def tag_page_as_index(self, tag, lang, post_list, kw, is_category):

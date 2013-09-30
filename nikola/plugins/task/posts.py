@@ -58,8 +58,8 @@ class RenderPosts(Task):
         }
 
         nikola.post.READ_MORE_LINK = self.site.config['READ_MORE_LINK']
+        yield self.group_task()
 
-        flag = False
         for lang in kw["translations"]:
             deps_dict = copy(kw)
             deps_dict.pop('timeline')
@@ -72,7 +72,6 @@ class RenderPosts(Task):
                     source = post.translated_source_path(lang)
                     if lang != post.default_lang:
                         dest = dest + '.' + lang
-                flag = True
                 task = {
                     'basename': self.name,
                     'name': dest,
@@ -89,13 +88,6 @@ class RenderPosts(Task):
                 if post.meta('password'):
                     task['actions'].append((wrap_encrypt, (dest, post.meta('password'))))
                 yield task
-        if flag is False:  # Return a dummy task
-            yield {
-                'basename': self.name,
-                'name': 'None',
-                'uptodate': [True],
-                'actions': [],
-            }
 
 
 CRYPT = string.Template("""\

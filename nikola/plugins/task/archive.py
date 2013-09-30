@@ -46,6 +46,7 @@ class Archive(Task):
             "create_monthly_archive": self.site.config['CREATE_MONTHLY_ARCHIVE'],
         }
         self.site.scan_posts()
+        yield self.group_task()
         # TODO add next/prev links for years
         for lang in kw["translations"]:
             for year, posts in self.site.posts_per_year.items():

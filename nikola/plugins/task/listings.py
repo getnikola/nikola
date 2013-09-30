@@ -83,10 +83,11 @@ class Listings(Task):
             }
             self.site.render_template('listing.tmpl', out_name,
                                       context)
-        flag = True
+
+        yield self.group_task()
+
         template_deps = self.site.template_system.template_deps('listing.tmpl')
         for root, dirs, files in os.walk(kw['listings_folder']):
-            flag = False
             # Render all files
             out_name = os.path.join(
                 kw['output_folder'],
@@ -125,8 +126,3 @@ class Listings(Task):
                         self.site.GLOBAL_CONTEXT)],
                     'clean': True,
                 }
-        if flag:
-            yield {
-                'basename': self.name,
-                'actions': [],
-            }

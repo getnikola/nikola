@@ -49,7 +49,7 @@ from nikola import utils
 
 
 class Galleries(Task):
-    """Copy theme assets into output."""
+    """Render image galleries."""
 
     name = str("render_galleries")
     dates = {}
@@ -71,6 +71,7 @@ class Galleries(Task):
             'global_context': self.site.GLOBAL_CONTEXT,
         }
 
+        yield self.group_task()
         # FIXME: lots of work is done even when images don't change,
         # which should be moved into the task.
 
@@ -79,13 +80,6 @@ class Galleries(Task):
         gallery_list = []
         for root, dirs, files in os.walk(kw['gallery_path']):
             gallery_list.append(root)
-        if not gallery_list:
-            yield {
-                'basename': str('render_galleries'),
-                'actions': [],
-            }
-            return
-
         # gallery_path is "gallery/name"
         for gallery_path in gallery_list:
             # gallery_name is "name"

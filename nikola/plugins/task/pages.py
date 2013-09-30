@@ -43,7 +43,7 @@ class RenderPages(Task):
             "hide_untranslated_posts": self.site.config['HIDE_UNTRANSLATED_POSTS'],
         }
         self.site.scan_posts()
-        flag = False
+        yield self.group_task()
         for lang in kw["translations"]:
             for post in self.site.timeline:
                 if kw["hide_untranslated_posts"] and not post.is_translation_available(lang):
@@ -55,12 +55,4 @@ class RenderPages(Task):
                         2: kw})]
                     task['basename'] = self.name
                     task['task_dep'] = ['render_posts']
-                    flag = True
                     yield task
-        if flag is False:  # No page rendered, yield a dummy task
-            yield {
-                'basename': self.name,
-                'name': 'None',
-                'uptodate': [True],
-                'actions': [],
-            }
