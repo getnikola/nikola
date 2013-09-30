@@ -25,9 +25,11 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
+import codecs
 import os
 import json
 import shutil
+import subprocess
 from io import BytesIO
 
 try:
@@ -38,6 +40,27 @@ except ImportError:
 from nikola.plugin_categories import Command
 from nikola import utils
 
+
+try:
+    from textwrap import indent
+except ImportError:
+    # Stolen from Python 3.3.2.
+    def indent(text, prefix, predicate=None):  # NOQA
+        """Adds 'prefix' to the beginning of selected lines in 'text'.
+
+        If 'predicate' is provided, 'prefix' will only be added to the lines
+        where 'predicate(line)' is True. If 'predicate' is not provided,
+        it will default to adding 'prefix' to all non-empty lines that do not
+        consist solely of whitespace characters.
+        """
+        if predicate is None:
+            def predicate(line):
+                return line.strip()
+
+        def prefixed_lines():
+            for line in text.splitlines(True):
+                yield (prefix + line if predicate(line) else line)
+        return ''.join(prefixed_lines())
 
 class CommandInstallPlugin(Command):
     """Install a plugin."""
@@ -101,6 +124,7 @@ class CommandInstallPlugin(Command):
             zip_file.write(requests.get(data[name]).content)
             utils.LOGGER.notice('Extracting: {0} into plugins'.format(name))
             utils.extract_all(zip_file, 'plugins')
+            dest_path = os.path.join('plugins', name)
         else:
             try:
                 plugin_path = utils.get_plugin_path(name)
@@ -116,4 +140,35 @@ class CommandInstallPlugin(Command):
 
             utils.LOGGER.notice('Copying {0} into plugins'.format(plugin_path))
             shutil.copytree(plugin_path, dest_path)
-            return True
+
+        reqpath = os.path.join(dest_path, 'requirements.txt')
+        print(reqpath)
+        if os.path.exists(reqpath):
+            utils.LOGGER.notice('Installing dependencies with pip…')
+            try:
+                subprocess.check_call(('pip', 'install', '-r', reqpath))
+            except subprocess.CalledProcessError:
+                utils.LOGGER.error('Could not install the dependencies.')
+                print('Contents of the requirements.txt file:\n')
+                with codecs.open(reqpath, 'rb', 'utf-8') as fh:
+                    print(indent(fh.read(), 4 * ' '))
+                print('You have to install those yourself or through a '
+                      'package manager.')
+            else:
+                utils.LOGGER.notice('Dependency installation succeeded.')
+        reqnpypath = os.path.join(dest_path, 'requirements-nonpy.txt')
+        if os.path.exists(reqnpypath):
+            utils.LOGGER.notice('This plugin has third-party '
+                                'dependencies you need to install '
+                                'manually.')
+            print('Contents of the requirements-nonpy.txt file:\n')
+            with codecs.open(reqnpypath, 'rb', 'utf-8') as fh:
+                for l in fh.readlines():
+                    i, j = l.split('::')
+                    print(indent(i.strip(), 4 * ' '))
+                    print(indent(j.strip(), 8 * ' '))
+                    print()
+
+            print('You have to install those yourself or through a package '
+                  'manager.')
+        return True
