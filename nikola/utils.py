@@ -290,7 +290,7 @@ def copy_tree(src, dst, link_cutoff=None):
 
 
 def generic_rss_renderer(lang, title, link, description, timeline, output_path,
-                         rss_teasers, feed_length=10, feed_url=None):
+                         rss_teasers, default_lang, feed_length=10, feed_url=None):
     """Takes all necessary data, and renders a RSS feed in output_path."""
     items = []
     for post in timeline[:feed_length]:
@@ -314,6 +314,7 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path,
         lastBuildDate=datetime.datetime.now(),
         items=items,
         generator='nikola',
+        language=default_lang,
     )
     rss_obj.self_url = feed_url
     rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"

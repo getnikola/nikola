@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Added language field in RSS feed (Issue #777)
 * New Esperanto translation.
 * New -q flag for quiet running (Issue #762)
 * Added author field in RSS items (Issue #767)
