@@ -259,7 +259,7 @@ class TestCheckFailure(DemoBuildTest):
             os.unlink(os.path.join("output", "archive.html"))
             self.assertRaises(
                 subprocess.CalledProcessError,
-                check_output, ("nikola", "check", "-l")
+                check_output, "nikola check -f", shell=True
             )
 
     def test_check_files_fail(self):
@@ -268,7 +268,7 @@ class TestCheckFailure(DemoBuildTest):
                 outf.write("foo")
             self.assertRaises(
                 subprocess.CalledProcessError,
-                check_output, ("nikola", "check", "-f")
+                check_output, "nikola check -f", shell=True
             )
 
 
