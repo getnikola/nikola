@@ -592,14 +592,14 @@ def get_asset_path(path, themes, files_folders={'files': ''}):
             path
         )
         if os.path.isfile(candidate):
-            return os.path.relpath(candidate, sys_decode(os.getcwd()))
+            return os.path.abspath(candidate)
     for src, rel_dst in files_folders.items():
         candidate = os.path.join(
             src,
-            os.path.relpath(path, rel_dst)
+            os.path.abspath(path)
         )
         if os.path.isfile(candidate):
-            return os.path.relpath(candidate, sys_decode(os.getcwd()))
+            return os.path.abspath(candidate)
 
     # whatever!
     return None
