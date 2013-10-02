@@ -52,7 +52,7 @@ class Sources(Task):
         }
 
         self.site.scan_posts()
-        flag = False
+        yield self.group_task()
         if self.site.config['COPY_SOURCES']:
             for lang in kw["translations"]:
                 for post in self.site.timeline:
@@ -79,10 +79,3 @@ class Sources(Task):
                             'clean': True,
                             'uptodate': [utils.config_changed(kw)],
                         }
-        if flag is False:  # No page rendered, yield a dummy task
-            yield {
-                'basename': 'render_sources',
-                'name': 'None',
-                'uptodate': [True],
-                'actions': [],
-            }

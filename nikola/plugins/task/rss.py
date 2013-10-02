@@ -54,6 +54,7 @@ class RenderRSS(Task):
             "feed_length": self.site.config['FEED_LENGTH'],
         }
         self.site.scan_posts()
+        yield self.group_task()
         for lang in kw["translations"]:
             output_name = os.path.join(kw['output_folder'],
                                        self.site.path("rss", None, lang))

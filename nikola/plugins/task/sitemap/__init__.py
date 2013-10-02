@@ -144,6 +144,7 @@ class Sitemap(LateTask):
             return {'locations': list(locs.keys())}
 
         scan_locs()
+        yield self.group_task()
         task = {
             "basename": "sitemap",
             "name": sitemap_path,

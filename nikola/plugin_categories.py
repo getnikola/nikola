@@ -39,7 +39,7 @@ __all__ = [
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
 
-from .utils import LOGGER
+from .utils import LOGGER, first_line
 
 
 class BasePlugin(IPlugin):
@@ -104,7 +104,7 @@ DoitCommand.help = help
 
 
 class BaseTask(BasePlugin):
-    """PLugins of this type are task generators."""
+    """Plugins of this type are task generators."""
 
     name = "dummy_task"
 
@@ -116,9 +116,17 @@ class BaseTask(BasePlugin):
         """Task generator."""
         raise NotImplementedError()
 
+    def group_task(self):
+        """dict for group task"""
+        return {
+            'basename': self.name,
+            'name': None,
+            'doc': first_line(self.__doc__),
+        }
+
 
 class Task(BaseTask):
-    """PLugins of this type are task generators."""
+    """Plugins of this type are task generators."""
 
 
 class LateTask(BaseTask):

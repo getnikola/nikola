@@ -790,7 +790,7 @@ class Nikola(object):
             task['targets'] = [os.path.normpath(t) for t in targets]
         return task
 
-    def gen_tasks(self, name, plugin_category):
+    def gen_tasks(self, name, plugin_category, doc=''):
 
         def flatten(task):
             if isinstance(task, dict):
@@ -803,6 +803,7 @@ class Nikola(object):
         task_dep = []
         for pluginInfo in self.plugin_manager.getPluginsOfCategory(plugin_category):
             for task in flatten(pluginInfo.plugin_object.gen_tasks()):
+                assert 'basename' in task
                 task = self.clean_task_paths(task)
                 yield task
                 for multi in self.plugin_manager.getPluginsOfCategory("TaskMultiplier"):
@@ -815,7 +816,8 @@ class Nikola(object):
             if pluginInfo.plugin_object.is_default:
                 task_dep.append(pluginInfo.plugin_object.name)
         yield {
-            'name': name,
+            'basename': name,
+            'doc': doc,
             'actions': None,
             'clean': True,
             'task_dep': task_dep
