@@ -145,12 +145,12 @@ class NikolaTaskLoader(TaskLoader):
                 'reporter': ExecutedOnlyReporter,
             }
         DOIT_CONFIG['default_tasks'] = ['render_site', 'post_render']
-        tasks = generate_tasks('render_site',
-            self.nikola.gen_tasks('render_site', "Task",
-            'Group of tasks to render the site.'))
-        latetasks = generate_tasks('post_render',
-            self.nikola.gen_tasks('post_render', "LateTask",
-            'Group of tasks to be executes after site is rendered.'))
+        tasks = generate_tasks(
+            'render_site',
+            self.nikola.gen_tasks('render_site', "Task", 'Group of tasks to render the site.'))
+        latetasks = generate_tasks(
+            'post_render',
+            self.nikola.gen_tasks('post_render', "LateTask", 'Group of tasks to be executes after site is rendered.'))
         return tasks + latetasks, DOIT_CONFIG
 
 
