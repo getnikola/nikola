@@ -65,7 +65,8 @@ class EmptyBuildTest(BaseTestCase):
     @classmethod
     def tearDownClass(self):
         """Remove the demo site."""
-        shutil.rmtree(self.tmpdir)
+        # ignore_errors=True for windows by issue #782
+        shutil.rmtree(self.tmpdir, ignore_errors=(sys.platform == 'win32'))
         # Fixes Issue #438
         try:
             del sys.modules['conf']
