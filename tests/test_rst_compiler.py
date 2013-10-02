@@ -162,7 +162,7 @@ class ReSTExtensionTestCase(BaseTestCase):
         try:
             tag = next(self.html_doc.iter(element))
         except StopIteration:
-            raise Exception("<{}> not in {}".format(element, self.html))
+            raise Exception("<{0}> not in {1}".format(element, self.html))
         else:
             if attributes:
                 arg_attrs = set(attributes.items())

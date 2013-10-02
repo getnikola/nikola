@@ -140,7 +140,7 @@ class TemplateSystem(BasePlugin):
         """Returns filenames which are dependencies for a template."""
         raise NotImplementedError()
 
-    def render_template(name, output_name, context):
+    def render_template(self, template_name, output_name, context):
         """Renders template to a file using context.
 
         This must save the data to output_name *and* return it

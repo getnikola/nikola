@@ -456,7 +456,8 @@ def to_datetime(value, tzinfo=None):
         return tzinfo.localize(dt)
     except ImportError:
         raise ValueError('Unrecognized date/time: {0!r}, try installing dateutil...'.format(value))
-    raise ValueError('Unrecognized date/time: {0!r}'.format(value))
+    except Exception:
+        raise ValueError('Unrecognized date/time: {0!r}'.format(value))
 
 
 def get_tzname(dt):
