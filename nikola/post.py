@@ -42,7 +42,7 @@ try:
 except ImportError:
     pyphen = None
 
-from .utils import (to_datetime, slugify, bytes_str, Functionary, LocaleBorg, unicode_str, LOGGER)
+from .utils import (to_datetime, slugify, bytes_str, Functionary, LocaleBorg, unicode_str)
 
 __all__ = ['Post']
 
@@ -582,7 +582,7 @@ def get_metadata_from_meta_file(path, lang=None):
 
 
 def get_meta(post, file_metadata_regexp=None,
-             lang=None, default_metadata = None):
+             lang=None, default_metadata=None):
     """Get post's meta from source.
 
     If ``file_metadata_regexp`` is given it will be tried to read

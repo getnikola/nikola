@@ -242,7 +242,7 @@ class Galleries(Task):
                         kw['base_url'],
                         kw['messages'],
                         'story.tmpl',
-                        default_metadata = {
+                        default_metadata={
                             'title': os.path.basename(gallery_path),
                             'date': '1/1/1970',
                             'slug': 'index',
