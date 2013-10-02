@@ -565,25 +565,26 @@ def get_crumbs(path, is_file=False):
 
 
 def get_asset_path(path, themes, files_folders={'files': ''}):
-    """Checks which theme provides the path with the given asset,
-    and returns the "real" path to the asset, relative to the
-    current directory.
+    """
+    .. versionchanghed:: 6.1.0
+
+    Checks which theme provides the path with the given asset,
+    and returns the "real", absolute path to the asset.
 
     If the asset is not provided by a theme, then it will be checked for
     in the FILES_FOLDERS
 
-    >>> print(get_asset_path('assets/css/rst.css', ['bootstrap', 'base']))
-    nikola/data/themes/base/assets/css/rst.css
+    >>> print(get_asset_path('assets/css/rst.css', ['bootstrap', 'base'])) # doctest: +SKIP
+    [...]/nikola/data/themes/base/assets/css/rst.css
 
-    >>> print(get_asset_path('assets/css/theme.css', ['bootstrap', 'base']))
-    nikola/data/themes/bootstrap/assets/css/theme.css
+    >>> print(get_asset_path('assets/css/theme.css', ['bootstrap', 'base'])) # doctest: +SKIP
+    [...]/nikola/data/themes/bootstrap/assets/css/theme.css
 
-    >>> print(get_asset_path('nikola.py', ['bootstrap', 'base'], {'nikola': ''}))
-    nikola/nikola.py
+    >>> print(get_asset_path('nikola.py', ['bootstrap', 'base'], {'nikola': ''})) # doctest: +SKIP
+    [...]/nikola/nikola.py
 
-    >>> print(get_asset_path('nikola/nikola.py', ['bootstrap', 'base'],
-    ... {'nikola':'nikola'}))
-    nikola/nikola.py
+    >>> print(get_asset_path('nikola/nikola.py', ['bootstrap', 'base'], {'nikola':'nikola'})) # doctest: +SKIP
+    [...]/nikola/nikola.py
 
     """
     for theme_name in themes:
@@ -592,14 +593,14 @@ def get_asset_path(path, themes, files_folders={'files': ''}):
             path
         )
         if os.path.isfile(candidate):
-            return os.path.relpath(candidate, sys_decode(os.getcwd()))
+            return candidate
     for src, rel_dst in files_folders.items():
         candidate = os.path.join(
             src,
-            os.path.relpath(path, rel_dst)
+            os.path.abspath(path)
         )
         if os.path.isfile(candidate):
-            return os.path.relpath(candidate, sys_decode(os.getcwd()))
+            return candidate
 
     # whatever!
     return None

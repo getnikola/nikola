@@ -8,19 +8,20 @@ Features
 * New -q flag for quiet running (Issue #762)
 * Added author field in RSS items (Issue #767)
 * Annotations using annotateit.org (Issue #623)
-* New GALLERY_SORT_BY_DATE option, defaulting to True. 
+* New GALLERY_SORT_BY_DATE option, defaulting to True.
   If set to False, sorts by name (Issue #667)
 
 Bugfixes
 --------
 
+* Fixed compatibility with Windows’ multiple partitions (Issues #776, #784)
 * Added language in the RSS feeds (Issue #777)
 * Don't fail for empty bundles.
-* Fix USE_BUNDLES compatibility with Python 3 (Fix #760)
+* Fix USE_BUNDLES compatibility with Python 3 (Issue #760)
 * Compatibility with doit 0.23.0 (Issues #756 #758)
 * Install enough of the theme chain to ensure themes are usable (Issue #748)
 * Support Gist URLs in the gist directive for compatibility with sphinx-gist-embed (Issue #754)
-* windows, dev - fix point pth to clone and run nikola without install (Issue #751) 
+* windows, dev - fix point pth to clone and run nikola without install (Issue #751)
 * windows - fix install from clone or from a Github download (Issue #747, Windows)
 * Make Listings directive inherit Include making it simpler and more powerful (Issue #744)
 * Install builtin themes (Issue #741)
