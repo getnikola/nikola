@@ -45,6 +45,7 @@ except ImportError:
 
 
 from nikola.plugin_categories import Task
+from nikola import post
 from nikola import utils
 
 
@@ -68,6 +69,9 @@ class Galleries(Task):
             'gallery_path': self.site.config['GALLERY_PATH'],
             'sort_by_date': self.site.config['GALLERY_SORT_BY_DATE'],
             'filters': self.site.config['FILTERS'],
+            'translations': self.site.config['TRANSLATIONS'],
+            'base_url': self.site.config['BASE_URL'],
+            'messages': self.site.MESSAGES,
             'global_context': self.site.GLOBAL_CONTEXT,
         }
 
@@ -217,30 +221,54 @@ class Galleries(Task):
 
             # Use galleries/name/index.txt to generate a blurb for
             # the gallery, if it exists.
+            # TODO: make this a method and move it out of the way
+            def create_index_post():
+                index_path = os.path.join(gallery_path, "index.txt")
+                cache_dir = os.path.join(kw["cache_folder"], 'galleries')
+                utils.makedirs(cache_dir)
+                index_dst_path = os.path.join(
+                    cache_dir,
+                    str(hashlib.sha224(index_path.encode('utf-8')).hexdigest() +
+                        '.html'))
+                if os.path.exists(index_path):
+                    # Parse like a post
+                    p = post.Post(
+                        index_path,
+                        kw['cache_folder'],
+                        index_dst_path,
+                        False,
+                        kw['translations'],
+                        kw['default_lang'],
+                        kw['base_url'],
+                        kw['messages'],
+                        'story.tmpl',
+                        default_metadata = {
+                            'title': os.path.basename(gallery_path),
+                            'date': '1/1/1970',
+                            'slug': 'index',
+                        }
+                    )
+                    compile_html = self.site.get_compiler(index_path).compile_html
+                    return index_dst_path, p, utils.apply_filters({
+                        'basename': str('render_galleries'),
+                        'name': index_dst_path,
+                        'file_dep': [index_path],
+                        'targets': [index_dst_path],
+                        'actions': [(compile_html, [index_path, p.base_path, True])],
+                        'clean': True,
+                        'uptodate': [utils.config_changed(kw)],
+                    }, kw['filters'])
+                return index_dst_path, None, None
 
-            index_path = os.path.join(gallery_path, "index.txt")
-            cache_dir = os.path.join(kw["cache_folder"], 'galleries')
-            utils.makedirs(cache_dir)
-            index_dst_path = os.path.join(
-                cache_dir,
-                str(hashlib.sha224(index_path.encode('utf-8')).hexdigest() +
-                    '.html'))
-            if os.path.exists(index_path):
-                compile_html = self.site.get_compiler(index_path).compile_html
-                yield utils.apply_filters({
-                    'basename': str('render_galleries'),
-                    'name': index_dst_path,
-                    'file_dep': [index_path],
-                    'targets': [index_dst_path],
-                    'actions': [(compile_html, [index_path, index_dst_path, True])],
-                    'clean': True,
-                    'uptodate': [utils.config_changed(kw)],
-                }, kw['filters'])
+            index_dst_path, index_post, task = create_index_post()
+            if task:
+                yield task
 
             context = {}
             context["lang"] = kw["default_lang"]
             context["title"] = os.path.basename(gallery_path)
             context["description"] = kw["blog_description"]
+            context["index_post"] = index_post
             if kw['use_filename_as_title']:
                 img_titles = ['id="{0}" alt="{1}" title="{2}"'.format(
                     fn[:-4], fn[:-4], utils.unslugify(fn[:-4])) for fn
@@ -318,6 +346,7 @@ class Galleries(Task):
         context['photo_array_json'] = json.dumps(photo_array)
         context['photo_array'] = photo_array
 
+        # TODO: make text out of the post instead
         if os.path.exists(index_dst_path):
             with codecs.open(index_dst_path, "rb", "utf8") as fd:
                 context['text'] = fd.read()
