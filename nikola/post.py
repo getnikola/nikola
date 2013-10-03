@@ -601,7 +601,8 @@ def get_meta(post, file_metadata_regexp=None,
     # two-file posts too. It doesn't because if there is anything
     # in default_metadata we would return in the previous return
 
-    meta.update(default_metadata)
+    if default_metadata is not None:
+        meta.update(default_metadata)
 
     post.is_two_file = False
 
