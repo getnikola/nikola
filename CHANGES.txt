@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Added slug support to the magic link:// URLs
 * New Esperanto translation.
 * New -q flag for quiet running (Issue #762)
 * Added author field in RSS items (Issue #767)

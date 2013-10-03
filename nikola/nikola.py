@@ -654,6 +654,7 @@ class Nikola(object):
         * gallery (name is the gallery name)
         * listing (name is the source code file name)
         * post_path (name is 1st element in a POSTS/PAGES tuple)
+        * slug (name is the slug of a post or story)
 
         The returned value is always a path relative to output, like
         "categories/whatever.html"
@@ -731,6 +732,16 @@ class Nikola(object):
         elif kind == "listing":
             path = [_f for _f in [self.config['LISTINGS_FOLDER'], name +
                                   '.html'] if _f]
+        elif kind == "slug":
+            results = [p for p in self.timeline if p.meta('slug') == name]
+            if not results:
+                utils.LOGGER.warning("Can't resolve path request for slug: {0}".format(name))
+            else:
+                if len(results) > 1:
+                    utils.LOGGER.warning('Ambiguous path request for slug: {0}'.format(name))
+                path = [_f for _f in results[0].permalink(lang).split('/') if _f]
+                utils.LOGGER.notice(path)
+
         if is_link:
             link = '/' + ('/'.join(path))
             index_len = len(self.config['INDEX_FILE'])
