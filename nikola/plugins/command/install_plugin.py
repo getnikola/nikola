@@ -145,6 +145,7 @@ class CommandInstallPlugin(Command):
         reqpath = os.path.join(dest_path, 'requirements.txt')
         print(reqpath)
         if os.path.exists(reqpath):
+            utils.LOGGER.notice('This plugin has Python dependencies.')
             utils.LOGGER.notice('Installing dependencies with pip…')
             try:
                 subprocess.check_call(('pip', 'install', '-r', reqpath))
@@ -172,4 +173,10 @@ class CommandInstallPlugin(Command):
 
             print('You have to install those yourself or through a package '
                   'manager.')
+        confpypath = os.path.join(dest_path, 'conf.py.sample')
+        if os.path.exists(confpypath):
+            utils.LOGGER.notice('This plugin has a sample config file.')
+            print('Contents of the conf.py.sample file:\n')
+            with codecs.open(confpypath, 'rb', 'utf-8') as fh:
+                print(indent(fh.read(), 4 * ' '))
         return True
