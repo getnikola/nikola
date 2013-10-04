@@ -34,7 +34,7 @@ import sys
 
 from doit.tools import timeout
 from nikola.plugin_categories import Command, Task
-from nikola.utils import config_changed, LOGGER
+from nikola.utils import config_changed, reqs_missing, LOGGER
 
 try:
     import feedparser
@@ -76,10 +76,10 @@ class Planetoid(Command, Task):
     def gen_tasks(self):
         if peewee is None or sys.version_info[0] == 3:
             if sys.version_info[0] == 3:
-                message = 'Peewee is currently incompatible with Python 3.'
+                message = 'Peewee, a requirement of the "planetoid" command, is currently incompatible with Python 3.'
             else:
-                message = 'You need to install the \"peewee\" module.'
-
+                reqs_missing('peewee', 'use the "planetoid" command')
+                message = ''
             yield {
                 'basename': self.name,
                 'name': '',

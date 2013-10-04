@@ -65,16 +65,21 @@ def get_logger(name, level=logbook.NOTICE):
 LOGGER = get_logger('Nikola')
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
 
-def packages_missing(names, purpose):
-    """Log that we are missing some required packages."""
+def reqs_missing(names, purpose, python=True):
+    """Log that we are missing some requirements."""
+    if python:
+        whatarethey_s = 'Python package'
+        whatarethey_p = 'Python packages'
+    else:
+        whatarethey_s = whatarethey_p = 'software'
     if len(names) == 1:
-        LOGGER.error('In order to {0}, you must install the "{1}" package.'.format(
-            purpose, names[0]))
+        LOGGER.error('In order to {0}, you must install the "{1}" {2}.'.format(
+            purpose, names[0], whatarethey_s))
     else:
         most = '", "'.join(names[:-1])
         pnames = most + '" and "' + names[-1]
-        LOGGER.error('In order to {0}, you must install the "{1}" packages.'.format(
-            purpose, pnames))
+        LOGGER.error('In order to {0}, you must install the "{1}" {2}.'.format(
+            purpose, pnames, whatarethey_p))
 
 
 if sys.version_info[0] == 3:

@@ -34,7 +34,7 @@ except ImportError:
     Processor = None
 
 from nikola.plugin_categories import Command
-from nikola.utils import packages_missing, get_logger
+from nikola.utils import reqs_missing, get_logger
 
 LOGGER = get_logger('mincss')
 
@@ -51,7 +51,7 @@ class CommandMincss(Command):
         """Apply mincss the generated site."""
         output_folder = self.site.config['OUTPUT_FOLDER']
         if Processor is None:
-            packages_missing(['mincss'], 'use the "mincss" command')
+            reqs_missing(['mincss'], 'use the "mincss" command')
             return
 
         p = Processor(preserve_remote_urls=False)
