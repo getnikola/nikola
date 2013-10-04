@@ -59,7 +59,7 @@ class Post(object):
         translations, default_lang, base_url, messages, template_name,
         file_metadata_regexp=None, strip_indexes=False, index_file='index.html',
         tzinfo=None, current_time=None, skip_untranslated=False, pretty_urls=False,
-        hyphenate=False,
+        hyphenate=False, default_metadata=None
     ):
         """Initialize post.
 
@@ -91,8 +91,10 @@ class Post(object):
         self.is_two_file = True
         self.hyphenate = hyphenate
         self._reading_time = None
-
-        default_metadata = get_meta(self, file_metadata_regexp)
+        d_m = defaultdict(lambda: '')
+        if default_metadata is not None:
+            d_m.update(default_metadata)
+        default_metadata = get_meta(self, file_metadata_regexp, default_metadata=d_m)
 
         self.meta = Functionary(lambda: None, self.default_lang)
         self.meta[default_lang] = default_metadata
@@ -579,7 +581,8 @@ def get_metadata_from_meta_file(path, lang=None):
         return {}
 
 
-def get_meta(post, file_metadata_regexp=None, lang=None):
+def get_meta(post, file_metadata_regexp=None,
+             lang=None, default_metadata=None):
     """Get post's meta from source.
 
     If ``file_metadata_regexp`` is given it will be tried to read
@@ -593,6 +596,14 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
 
     if meta:
         return meta
+
+    #FIXME: this is not good, default_metadata should work for
+    # two-file posts too. It doesn't because if there is anything
+    # in default_metadata we would return in the previous return
+
+    if default_metadata is not None:
+        meta.update(default_metadata)
+
     post.is_two_file = False
 
     if file_metadata_regexp is not None:
