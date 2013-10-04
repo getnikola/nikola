@@ -6,16 +6,10 @@
 
 <%block name="content">
     ${ui.bar(crumbs)}
-    %if index_post:
-        <h1>${index_post.title()}</h1>
-        % if index_post.tags:
-            ${messages("Tags")}
-            %for tag in index_post.tags:
-                <a class="tag" href="${_link('tag', tag)}"><span class="badge badge-info">${tag}</span></a>
-            %endfor
-        % endif
-        ${index_post.text()}
-        <hr>
+    %if text:
+    <p>
+        ${text}
+    </p>
     %endif
     <ul>
     % for folder in folders:
