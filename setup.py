@@ -77,7 +77,7 @@ def copy_messages():
 
 
 def copy_symlinked_for_windows():
-    """replaces the hardlinked files with a copy of the original content.
+    """replaces the symlinked files with a copy of the original content.
 
     In windows (msysgit), a symlink is converted to a text file with a
     path to the file it points to. If not corrected, installing from a git
@@ -266,7 +266,6 @@ setup(name='Nikola',
                    'Programming Language :: Python',
                    'Programming Language :: Python :: 2.6',
                    'Programming Language :: Python :: 2.7',
-                   'Programming Language :: Python :: 3.2',
                    'Programming Language :: Python :: 3.3',
                    'Topic :: Internet',
                    'Topic :: Internet :: WWW/HTTP',
