@@ -121,7 +121,9 @@ from markdown.extensions import Extension
 from markdown.inlinepatterns import Pattern
 from markdown.util import AtomicString
 from markdown.util import etree
-from nikola.utils import LOGGER
+from nikola.utils import get_logger, req_missing
+
+LOGGER = get_logger('compile_markdown.mdx_gist')
 
 try:
     import requests
@@ -202,8 +204,7 @@ class GistPattern(Pattern):
                 noscript_elem.append(warning_comment)
 
         else:
-            LOGGER.warn('"requests" package not installed.  '
-                        'Please install to add inline gist source.')
+            req_missing('requests', 'have inline gist source', optional=True)
 
         return gist_elem
 

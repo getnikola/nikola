@@ -50,7 +50,7 @@ except ImportError:
     podcast_extension = None
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs
+from nikola.utils import makedirs, req_missing
 
 
 class CompileMarkdown(PageCompiler):
@@ -62,8 +62,7 @@ class CompileMarkdown(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         if markdown is None:
-            raise Exception('To build this site, you need to install the '
-                            '"markdown" package.')
+            req_missing(['markdown'], 'build this site (compile Markdown)')
         makedirs(os.path.dirname(dest))
         self.extensions += self.site.config.get("MARKDOWN_EXTENSIONS")
         with codecs.open(dest, "w+", "utf8") as out_file:

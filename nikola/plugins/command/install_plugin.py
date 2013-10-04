@@ -44,6 +44,8 @@ except ImportError:
 from nikola.plugin_categories import Command
 from nikola import utils
 
+LOGGER = utils.get_logger('install_plugin')
+
 
 # Stolen from textwrap in Python 3.3.2.
 def indent(text, prefix, predicate=None):  # NOQA
@@ -94,8 +96,7 @@ class CommandInstallPlugin(Command):
     def _execute(self, options, args):
         """Install plugin into current site."""
         if requests is None:
-            utils.LOGGER.error('This command requires the requests package be installed.')
-            return False
+            utils.req_missing(['requests'], 'install plugins')
 
         listing = options['list']
         url = options['url']
@@ -105,7 +106,7 @@ class CommandInstallPlugin(Command):
             name = None
 
         if name is None and not listing:
-            utils.LOGGER.error("This command needs either a plugin name or the -l option.")
+            LOGGER.error("This command needs either a plugin name or the -l option.")
             return False
         data = requests.get(url).text
         data = json.loads(data)
@@ -121,49 +122,49 @@ class CommandInstallPlugin(Command):
     def do_install(self, name, data):
         if name in data:
             utils.makedirs(self.output_dir)
-            utils.LOGGER.notice('Downloading: ' + data[name])
+            LOGGER.notice('Downloading: ' + data[name])
             zip_file = BytesIO()
             zip_file.write(requests.get(data[name]).content)
-            utils.LOGGER.notice('Extracting: {0} into plugins'.format(name))
+            LOGGER.notice('Extracting: {0} into plugins'.format(name))
             utils.extract_all(zip_file, 'plugins')
             dest_path = os.path.join('plugins', name)
         else:
             try:
                 plugin_path = utils.get_plugin_path(name)
             except:
-                utils.LOGGER.error("Can't find plugin " + name)
+                LOGGER.error("Can't find plugin " + name)
                 return False
 
             utils.makedirs(self.output_dir)
             dest_path = os.path.join(self.output_dir, name)
             if os.path.exists(dest_path):
-                utils.LOGGER.error("{0} is already installed".format(name))
+                LOGGER.error("{0} is already installed".format(name))
                 return False
 
-            utils.LOGGER.notice('Copying {0} into plugins'.format(plugin_path))
+            LOGGER.notice('Copying {0} into plugins'.format(plugin_path))
             shutil.copytree(plugin_path, dest_path)
 
         reqpath = os.path.join(dest_path, 'requirements.txt')
         print(reqpath)
         if os.path.exists(reqpath):
-            utils.LOGGER.notice('This plugin has Python dependencies.')
-            utils.LOGGER.notice('Installing dependencies with pip...')
+            LOGGER.notice('This plugin has Python dependencies.')
+            LOGGER.notice('Installing dependencies with pip...')
             try:
                 subprocess.check_call(('pip', 'install', '-r', reqpath))
             except subprocess.CalledProcessError:
-                utils.LOGGER.error('Could not install the dependencies.')
+                LOGGER.error('Could not install the dependencies.')
                 print('Contents of the requirements.txt file:\n')
                 with codecs.open(reqpath, 'rb', 'utf-8') as fh:
                     print(indent(fh.read(), 4 * ' '))
                 print('You have to install those yourself or through a '
                       'package manager.')
             else:
-                utils.LOGGER.notice('Dependency installation succeeded.')
+                LOGGER.notice('Dependency installation succeeded.')
         reqnpypath = os.path.join(dest_path, 'requirements-nonpy.txt')
         if os.path.exists(reqnpypath):
-            utils.LOGGER.notice('This plugin has third-party '
-                                'dependencies you need to install '
-                                'manually.')
+            LOGGER.notice('This plugin has third-party '
+                          'dependencies you need to install '
+                          'manually.')
             print('Contents of the requirements-nonpy.txt file:\n')
             with codecs.open(reqnpypath, 'rb', 'utf-8') as fh:
                 for l in fh.readlines():
@@ -176,7 +177,7 @@ class CommandInstallPlugin(Command):
                   'manager.')
         confpypath = os.path.join(dest_path, 'conf.py.sample')
         if os.path.exists(confpypath):
-            utils.LOGGER.notice('This plugin has a sample config file.')
+            LOGGER.notice('This plugin has a sample config file.')
             print('Contents of the conf.py.sample file:\n')
             with codecs.open(confpypath, 'rb', 'utf-8') as fh:
                 print(indent(pygments.highlight(

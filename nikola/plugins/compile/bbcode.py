@@ -35,10 +35,10 @@ except ImportError:
     bbcode = None  # NOQA
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs
+from nikola.utils import makedirs, req_missing
 
 
-class CompileTextile(PageCompiler):
+class CompileBbcode(PageCompiler):
     """Compile bbcode into HTML."""
 
     name = "bbcode"
@@ -51,8 +51,7 @@ class CompileTextile(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         if bbcode is None:
-            raise Exception('To build this site, you need to install the '
-                            '"bbcode" package.')
+            req_missing(['bbcode'], 'build this site (compile BBCode)')
         makedirs(os.path.dirname(dest))
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:

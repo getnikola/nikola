@@ -41,7 +41,10 @@ except ImportError:
 
 from nikola.plugin_categories import Command
 from nikola import utils
+from nikola.utils import req_missing
 from nikola.plugins.basic_import import ImportMixin
+
+LOGGER = utils.get_logger('import_feed')
 
 
 class CommandImportFeed(Command, ImportMixin):
@@ -58,8 +61,7 @@ class CommandImportFeed(Command, ImportMixin):
             Import Atom/RSS feed
         '''
         if feedparser is None:
-            utils.LOGGER.error('To use the import_blogger command,'
-                               ' you have to install the "feedparser" package.')
+            req_missing(['feedparser'], 'import feeds')
             return
 
         if not args:
@@ -132,8 +134,8 @@ class CommandImportFeed(Command, ImportMixin):
 
         # blogger supports empty titles, which Nikola doesn't
         if not title:
-            utils.LOGGER.warn("Empty title in post with URL {0}. Using NO_TITLE "
-                              "as placeholder, please fix.".format(link))
+            LOGGER.warn("Empty title in post with URL {0}. Using NO_TITLE "
+                        "as placeholder, please fix.".format(link))
             title = "NO_TITLE"
 
         if link_path.lower().endswith('.html'):
@@ -142,7 +144,7 @@ class CommandImportFeed(Command, ImportMixin):
         slug = utils.slugify(link_path)
 
         if not slug:  # should never happen
-            utils.LOGGER.error("Error converting post:", title)
+            LOGGER.error("Error converting post:", title)
             return
 
         description = ''
@@ -170,7 +172,7 @@ class CommandImportFeed(Command, ImportMixin):
             out_folder + '/' + slug + '.html'
 
         if is_draft and self.exclude_drafts:
-            utils.LOGGER.notice('Draft "{0}" will not be imported.'.format(title))
+            LOGGER.notice('Draft "{0}" will not be imported.'.format(title))
         elif content.strip():
             # If no content is found, no files are written.
             content = self.transform_content(content)
@@ -182,8 +184,8 @@ class CommandImportFeed(Command, ImportMixin):
                 os.path.join(self.output_folder, out_folder, slug + '.html'),
                 content)
         else:
-            utils.LOGGER.warn('Not going to import "{0}" because it seems to contain'
-                              ' no content.'.format(title))
+            LOGGER.warn('Not going to import "{0}" because it seems to contain'
+                        ' no content.'.format(title))
 
     @staticmethod
     def write_metadata(filename, title, slug, post_date, description, tags):

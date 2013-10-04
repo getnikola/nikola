@@ -37,7 +37,9 @@ except ImportError:
 import lxml.html
 
 from nikola.plugin_categories import Command
-from nikola.utils import LOGGER
+from nikola.utils import get_logger
+
+LOGGER = get_logger('check')
 
 
 class CommandCheck(Command):

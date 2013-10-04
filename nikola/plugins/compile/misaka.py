@@ -33,7 +33,6 @@ import os
 
 try:
     import misaka
-
 except ImportError:
     misaka = None  # NOQA
     nikola_extension = None
@@ -41,7 +40,7 @@ except ImportError:
     podcast_extension = None
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs
+from nikola.utils import makedirs, req_missing
 
 
 class CompileMarkdown(PageCompiler):
@@ -57,8 +56,7 @@ class CompileMarkdown(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         if misaka is None:
-            raise Exception('To build this site, you need to install the '
-                            '"misaka" package.')
+            req_missing(['misaka'], 'build this site (compile with misaka)')
         makedirs(os.path.dirname(dest))
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
