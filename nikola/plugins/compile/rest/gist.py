@@ -78,7 +78,6 @@ class GitHubGist(Directive):
         else:
             reqnode = nodes.literal_block('', rawGist)
 
-
         return [nodes.raw('', embedHTML, format='html'),
                 nodes.raw('', '<noscript>', format='html'),
                 reqnode,
