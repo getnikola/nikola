@@ -32,6 +32,8 @@ import nikola.post
 from nikola.plugin_categories import Task
 from nikola import utils, rc4
 
+LOGGER = utils.get_logger('render_posts')
+
 
 def wrap_encrypt(path, password):
     """Wrap a post with encryption."""
