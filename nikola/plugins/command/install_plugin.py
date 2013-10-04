@@ -32,6 +32,10 @@ import shutil
 import subprocess
 from io import BytesIO
 
+import pygments
+from pygments.lexers import PythonLexer
+from pygments.formatters import TerminalFormatter
+
 try:
     import requests
 except ImportError:
@@ -41,26 +45,23 @@ from nikola.plugin_categories import Command
 from nikola import utils
 
 
-try:
-    from textwrap import indent
-except ImportError:
-    # Stolen from Python 3.3.2.
-    def indent(text, prefix, predicate=None):  # NOQA
-        """Adds 'prefix' to the beginning of selected lines in 'text'.
+# Stolen from textwrap in Python 3.3.2.
+def indent(text, prefix, predicate=None):  # NOQA
+    """Adds 'prefix' to the beginning of selected lines in 'text'.
 
-        If 'predicate' is provided, 'prefix' will only be added to the lines
-        where 'predicate(line)' is True. If 'predicate' is not provided,
-        it will default to adding 'prefix' to all non-empty lines that do not
-        consist solely of whitespace characters.
-        """
-        if predicate is None:
-            def predicate(line):
-                return line.strip()
+    If 'predicate' is provided, 'prefix' will only be added to the lines
+    where 'predicate(line)' is True. If 'predicate' is not provided,
+    it will default to adding 'prefix' to all non-empty lines that do not
+    consist solely of whitespace characters.
+    """
+    if predicate is None:
+        def predicate(line):
+            return line.strip()
 
-        def prefixed_lines():
-            for line in text.splitlines(True):
-                yield (prefix + line if predicate(line) else line)
-        return ''.join(prefixed_lines())
+    def prefixed_lines():
+        for line in text.splitlines(True):
+            yield (prefix + line if predicate(line) else line)
+    return ''.join(prefixed_lines())
 
 
 class CommandInstallPlugin(Command):
@@ -145,7 +146,8 @@ class CommandInstallPlugin(Command):
         reqpath = os.path.join(dest_path, 'requirements.txt')
         print(reqpath)
         if os.path.exists(reqpath):
-            utils.LOGGER.notice('Installing dependencies with pip…')
+            utils.LOGGER.notice('This plugin has Python dependencies.')
+            utils.LOGGER.notice('Installing dependencies with pip...')
             try:
                 subprocess.check_call(('pip', 'install', '-r', reqpath))
             except subprocess.CalledProcessError:
@@ -172,4 +174,11 @@ class CommandInstallPlugin(Command):
 
             print('You have to install those yourself or through a package '
                   'manager.')
+        confpypath = os.path.join(dest_path, 'conf.py.sample')
+        if os.path.exists(confpypath):
+            utils.LOGGER.notice('This plugin has a sample config file.')
+            print('Contents of the conf.py.sample file:\n')
+            with codecs.open(confpypath, 'rb', 'utf-8') as fh:
+                print(indent(pygments.highlight(
+                    fh.read(), PythonLexer(), TerminalFormatter()), 4 * ' '))
         return True

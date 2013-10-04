@@ -1,10 +1,14 @@
-New in master
-==========================================
+New in Master
+=========================================================
+
+
+New in 6.1.0
+============
 
 Features
 --------
 
-* Richer gallery descriptions (Issue #786)
+* Added slug support to the magic link:// URLs
 * New Esperanto translation.
 * New -q flag for quiet running (Issue #762)
 * Added author field in RSS items (Issue #767)
