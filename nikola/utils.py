@@ -53,13 +53,29 @@ class ApplicationWarning(Exception):
     pass
 
 
-LOGGER = logbook.Logger('Nikola')
+def get_logger(name, level=logbook.NOTICE):
+    """Get a logger for a plugin."""
+    l = logbook.Logger(name)
+    l.handlers.append(logbook.StderrHandler(
+        level=level,
+        format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
+    ))
+    return l
+
+LOGGER = get_logger('Nikola')
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
-LOGGER.handlers.append(logbook.StderrHandler(
-    level=logbook.NOTICE,
-    format_string=(u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: '
-    '{record.channel}: {record.message}')
-))
+
+def packages_missing(names, purpose):
+    """Log that we are missing some required packages."""
+    if len(names) == 1:
+        LOGGER.error('In order to {0}, you must install the "{1}" package.'.format(
+            purpose, names[0]))
+    else:
+        most = '", "'.join(names[:-1])
+        pnames = most + '" and "' + names[-1]
+        LOGGER.error('In order to {0}, you must install the "{1}" packages.'.format(
+            purpose, pnames))
+
 
 if sys.version_info[0] == 3:
     # Python 3

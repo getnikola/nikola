@@ -34,7 +34,9 @@ except ImportError:
     from http.server import SimpleHTTPRequestHandler  # NOQA
 
 from nikola.plugin_categories import Command
-from nikola.utils import LOGGER
+from nikola.utils import get_logger
+
+LOGGER = get_logger('serve')
 
 
 class CommandBuild(Command):
