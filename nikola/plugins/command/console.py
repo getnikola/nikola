@@ -34,6 +34,7 @@ from nikola.utils import get_logger
 
 LOGGER = get_logger('console')
 
+
 class Console(Command):
     """Start debugging console."""
     name = "console"

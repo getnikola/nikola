@@ -65,6 +65,7 @@ def get_logger(name, level=logbook.NOTICE):
 LOGGER = get_logger('Nikola')
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
 
+
 def reqs_missing(names, purpose, python=True):
     """Log that we are missing some requirements."""
     if python:
