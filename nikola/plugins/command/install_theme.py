@@ -28,7 +28,12 @@ from __future__ import print_function
 import os
 import json
 import shutil
+import codecs
 from io import BytesIO
+
+import pygments
+from pygments.lexers import PythonLexer
+from pygments.formatters import TerminalFormatter
 
 try:
     import requests
@@ -39,6 +44,25 @@ from nikola.plugin_categories import Command
 from nikola import utils
 
 LOGGER = utils.get_logger('install_plugin')
+
+
+# Stolen from textwrap in Python 3.3.2.
+def indent(text, prefix, predicate=None):  # NOQA
+    """Adds 'prefix' to the beginning of selected lines in 'text'.
+
+    If 'predicate' is provided, 'prefix' will only be added to the lines
+    where 'predicate(line)' is True. If 'predicate' is not provided,
+    it will default to adding 'prefix' to all non-empty lines that do not
+    consist solely of whitespace characters.
+    """
+    if predicate is None:
+        def predicate(line):
+            return line.strip()
+
+    def prefixed_lines():
+        for line in text.splitlines(True):
+            yield (prefix + line if predicate(line) else line)
+    return ''.join(prefixed_lines())
 
 
 class CommandInstallTheme(Command):
@@ -113,6 +137,7 @@ class CommandInstallTheme(Command):
             zip_file.write(requests.get(data[name]).content)
             LOGGER.notice('Extracting: {0} into themes'.format(name))
             utils.extract_all(zip_file)
+            dest_path = os.path.join('themes', name)
         else:
             try:
                 theme_path = utils.get_theme_path(name)
@@ -128,4 +153,11 @@ class CommandInstallTheme(Command):
 
             LOGGER.notice('Copying {0} into themes'.format(theme_path))
             shutil.copytree(theme_path, dest_path)
+        confpypath = os.path.join(dest_path, 'conf.py.sample')
+        if os.path.exists(confpypath):
+            LOGGER.notice('This plugin has a sample config file.')
+            print('Contents of the conf.py.sample file:\n')
+            with codecs.open(confpypath, 'rb', 'utf-8') as fh:
+                print(indent(pygments.highlight(
+                    fh.read(), PythonLexer(), TerminalFormatter()), 4 * ' '))
             return True
