@@ -34,7 +34,9 @@ import time
 
 
 from nikola.plugin_categories import Command
-from nikola.utils import remove_file, LOGGER
+from nikola.utils import remove_file, get_logger
+
+LOGGER = get_logger('deploy')
 
 
 class Deploy(Command):

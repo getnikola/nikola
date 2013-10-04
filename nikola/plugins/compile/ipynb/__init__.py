@@ -39,7 +39,7 @@ except ImportError:
     flag = None
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs
+from nikola.utils import makedirs, req_missing
 
 
 class CompileIPynb(PageCompiler):
@@ -49,8 +49,7 @@ class CompileIPynb(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         if flag is None:
-            raise Exception('To build this site, you need '
-                            'to install IPython 1.0.')
+            req_missing(['ipython>=1.0.0'], 'build this site (compile ipynb)')
         makedirs(os.path.dirname(dest))
         HTMLExporter.default_template = 'basic'
         c = Config(self.site.config['IPYNB_CONFIG'])
