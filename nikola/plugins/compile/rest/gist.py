@@ -10,7 +10,6 @@ except ImportError:
     requests = None  # NOQA
 
 from nikola.plugin_categories import RestExtension
-from nikola import utils
 from nikola.utils import req_missing
 
 
