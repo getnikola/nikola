@@ -57,8 +57,7 @@ LOGGER = logbook.Logger('Nikola')
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
 LOGGER.handlers.append(logbook.StderrHandler(
     level=logbook.NOTICE,
-    format_string=(u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: '
-    '{record.channel}: {record.message}')
+    format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
 ))
 
 if sys.version_info[0] == 3:
