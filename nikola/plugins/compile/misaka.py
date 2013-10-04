@@ -33,7 +33,6 @@ import os
 
 try:
     import misaka
-
 except ImportError:
     misaka = None  # NOQA
     nikola_extension = None
@@ -41,7 +40,7 @@ except ImportError:
     podcast_extension = None
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs
+from nikola.utils import makedirs, req_missing
 
 
 class CompileMarkdown(PageCompiler):
