@@ -16,6 +16,7 @@ Bugfixes
 --------
 
 * Every plugin now has its own LOGGER instance, with different names (Issue #797)
+* A standardized way of reporting missing requirements (Issue #797)
 * Don’t force requests for compile.rest.gist (Issue #795)
 * Fixed compatibility with Windows’ multiple partitions (Issues #776, #784)
 * Added language in the RSS feeds (Issue #777)
