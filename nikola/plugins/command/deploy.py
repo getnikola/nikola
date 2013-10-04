@@ -38,6 +38,7 @@ from nikola.utils import remove_file, get_logger
 
 LOGGER = get_logger('deploy')
 
+
 class Deploy(Command):
     """Deploy site.  """
     name = "deploy"

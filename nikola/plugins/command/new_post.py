@@ -35,6 +35,7 @@ from nikola import utils
 
 LOGGER = utils.get_logger('new_post')
 
+
 def filter_post_pages(compiler, is_post, compilers, post_pages):
     """Given a compiler ("markdown", "rest"), and whether it's meant for
     a post or a page, and compilers, return the correct entry from

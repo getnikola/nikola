@@ -46,6 +46,7 @@ from nikola.plugins.basic_import import ImportMixin
 
 LOGGER = utils.get_logger('import_blogger')
 
+
 class CommandImportBlogger(Command, ImportMixin):
     """Import a blogger dump."""
 

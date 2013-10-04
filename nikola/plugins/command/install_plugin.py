@@ -46,6 +46,7 @@ from nikola import utils
 
 LOGGER = utils.get_logger('install_plugin')
 
+
 # Stolen from textwrap in Python 3.3.2.
 def indent(text, prefix, predicate=None):  # NOQA
     """Adds 'prefix' to the beginning of selected lines in 'text'.
@@ -162,8 +163,8 @@ class CommandInstallPlugin(Command):
         reqnpypath = os.path.join(dest_path, 'requirements-nonpy.txt')
         if os.path.exists(reqnpypath):
             LOGGER.notice('This plugin has third-party '
-                                'dependencies you need to install '
-                                'manually.')
+                          'dependencies you need to install '
+                          'manually.')
             print('Contents of the requirements-nonpy.txt file:\n')
             with codecs.open(reqnpypath, 'rb', 'utf-8') as fh:
                 for l in fh.readlines():

@@ -37,6 +37,7 @@ from nikola import utils
 
 LOGGER = utils.get_logger('bootswatch_theme')
 
+
 class CommandBootswatchTheme(Command):
     """Given a swatch name from bootswatch.com and a parent theme, creates a custom theme."""
 

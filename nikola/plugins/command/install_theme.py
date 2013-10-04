@@ -40,6 +40,7 @@ from nikola import utils
 
 LOGGER = utils.get_logger('install_plugin')
 
+
 class CommandInstallTheme(Command):
     """Install a theme."""
 
