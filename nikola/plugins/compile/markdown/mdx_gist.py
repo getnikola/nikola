@@ -121,7 +121,9 @@ from markdown.extensions import Extension
 from markdown.inlinepatterns import Pattern
 from markdown.util import AtomicString
 from markdown.util import etree
-from nikola.utils import LOGGER, req_missing
+from nikola.utils import get_logger, req_missing
+
+LOGGER = get_logger('compile_markdown.mdx_gist')
 
 try:
     import requests

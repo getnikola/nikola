@@ -38,6 +38,7 @@ except ImportError:
 from nikola.plugin_categories import Command
 from nikola import utils
 
+LOGGER = utils.get_logger('install_plugin')
 
 class CommandInstallTheme(Command):
     """Install a theme."""
@@ -69,8 +70,7 @@ class CommandInstallTheme(Command):
     def _execute(self, options, args):
         """Install theme into current site."""
         if requests is None:
-            utils.LOGGER.error('This command requires the requests package be installed.')
-            return False
+            utils.req_missing(['requests'], 'install themes')
 
         listing = options['list']
         url = options['url']
@@ -80,7 +80,7 @@ class CommandInstallTheme(Command):
             name = None
 
         if name is None and not listing:
-            utils.LOGGER.error("This command needs either a theme name or the -l option.")
+            LOGGER.error("This command needs either a theme name or the -l option.")
             return False
         data = requests.get(url).text
         data = json.loads(data)
@@ -107,24 +107,24 @@ class CommandInstallTheme(Command):
     def do_install(self, name, data):
         if name in data:
             utils.makedirs(self.output_dir)
-            utils.LOGGER.notice('Downloading: ' + data[name])
+            LOGGER.notice('Downloading: ' + data[name])
             zip_file = BytesIO()
             zip_file.write(requests.get(data[name]).content)
-            utils.LOGGER.notice('Extracting: {0} into themes'.format(name))
+            LOGGER.notice('Extracting: {0} into themes'.format(name))
             utils.extract_all(zip_file)
         else:
             try:
                 theme_path = utils.get_theme_path(name)
             except:
-                utils.LOGGER.error("Can't find theme " + name)
+                LOGGER.error("Can't find theme " + name)
                 return False
 
             utils.makedirs(self.output_dir)
             dest_path = os.path.join(self.output_dir, name)
             if os.path.exists(dest_path):
-                utils.LOGGER.error("{0} is already installed".format(name))
+                LOGGER.error("{0} is already installed".format(name))
                 return False
 
-            utils.LOGGER.notice('Copying {0} into themes'.format(theme_path))
+            LOGGER.notice('Copying {0} into themes'.format(theme_path))
             shutil.copytree(theme_path, dest_path)
             return True

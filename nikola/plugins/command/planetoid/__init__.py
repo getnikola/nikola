@@ -34,7 +34,9 @@ import sys
 
 from doit.tools import timeout
 from nikola.plugin_categories import Command, Task
-from nikola.utils import config_changed, req_missing, LOGGER
+from nikola.utils import config_changed, req_missing, get_logger
+
+LOGGER = get_logger('planetoid')
 
 try:
     import feedparser

@@ -36,7 +36,9 @@ except ImportError:
     has_docutils = False
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import LOGGER, makedirs
+from nikola.utils import get_logger, makedirs, req_missing
+
+LOGGER = get_logger('compile_rest')
 
 
 class CompileRest(PageCompiler):
@@ -48,8 +50,7 @@ class CompileRest(PageCompiler):
         """Compile reSt into HTML."""
 
         if not has_docutils:
-            raise Exception('To build this site, you need to install the '
-                            '"docutils" package.')
+            req_missing(['docutils'], 'build this site (compile REST')
         makedirs(os.path.dirname(dest))
         error_level = 100
         with codecs.open(dest, "w+", "utf8") as out_file:
