@@ -41,7 +41,7 @@ except ImportError:
     txt2tags = None  # NOQA
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs
+from nikola.utils import makedirs, req_missing
 
 
 class CompileTextile(PageCompiler):
@@ -51,8 +51,7 @@ class CompileTextile(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         if txt2tags is None:
-            raise Exception('To build this site, you need to install the '
-                            '"txt2tags" package.')
+            req_missing(['txt2tags'], 'build this site (compile txt2tags)')
         makedirs(os.path.dirname(dest))
         cmd = ["-t", "html", "--no-headers", "--outfile", dest, source]
         txt2tags(cmd)

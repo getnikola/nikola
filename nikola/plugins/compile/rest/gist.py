@@ -11,6 +11,7 @@ except ImportError:
 
 from nikola.plugin_categories import RestExtension
 from nikola import utils
+from nikola.utils import req_missing
 
 
 class Plugin(RestExtension):
@@ -53,11 +54,7 @@ class GitHubGist(Directive):
 
     def run(self):
         if requests is None:
-            msg = (
-                'To use the gist directive, you need to install the '
-                '"requests" package.\n'
-            )
-            utils.LOGGER.warn(msg)
+            msg = req_missing(['requests'], 'use the gist reST directive', optional=True)
             return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
         if 'https://' in self.arguments[0]:
             gistID = self.arguments[0].split('/')[-1].strip()

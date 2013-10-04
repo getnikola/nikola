@@ -66,22 +66,31 @@ LOGGER = get_logger('Nikola')
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
 
 
-def reqs_missing(names, purpose, python=True):
+def req_missing(names, purpose, python=True, optional=False):
     """Log that we are missing some requirements."""
+    if not (isinstance(names, tuple) or isinstance(names, list) or isinstance(names, set)):
+        names = (names,)
     if python:
         whatarethey_s = 'Python package'
         whatarethey_p = 'Python packages'
     else:
         whatarethey_s = whatarethey_p = 'software'
     if len(names) == 1:
-        LOGGER.error('In order to {0}, you must install the "{1}" {2}.'.format(
-            purpose, names[0], whatarethey_s))
+        msg = 'In order to {0}, you must install the "{1}" {2}.'.format(
+            purpose, names[0], whatarethey_s)
     else:
         most = '", "'.join(names[:-1])
         pnames = most + '" and "' + names[-1]
-        LOGGER.error('In order to {0}, you must install the "{1}" {2}.'.format(
-            purpose, pnames, whatarethey_p))
+        msg = 'In order to {0}, you must install the "{1}" {2}.'.format(
+            purpose, pnames, whatarethey_p)
 
+    if optional:
+        LOGGER.warn(msg)
+    else:
+        LOGGER.error(msg)
+        raise Exception('Missing dependencies: {0}'.format(', '.join(names)))
+
+    return msg
 
 if sys.version_info[0] == 3:
     # Python 3

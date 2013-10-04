@@ -32,7 +32,7 @@ import os
 import subprocess
 
 from nikola.plugin_categories import Command
-from nikola.utils import reqs_missing
+from nikola.utils import req_missing
 
 GUARDFILE = """#!/usr/bin/env python
 # -*- coding: utf-8 -*-
@@ -77,7 +77,7 @@ class Auto(Command):
         try:
             from livereload.server import start
         except ImportError:
-            reqs_missing(['livereload'], 'use the "auto" command')
+            req_missing(['livereload'], 'use the "auto" command')
             return
 
         # Run an initial build so we are uptodate

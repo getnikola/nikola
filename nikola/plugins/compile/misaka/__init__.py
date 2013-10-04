@@ -57,8 +57,7 @@ class CompileMarkdown(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         if misaka is None:
-            raise Exception('To build this site, you need to install the '
-                            '"misaka" package.')
+            req_missing(['misaka'], 'build this site (compile with misaka)')
         makedirs(os.path.dirname(dest))
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
