@@ -52,9 +52,6 @@ class GitHubGist(Directive):
         return requests.get(url).text
 
     def run(self):
-        if requests is None:
-            msg = req_missing(['requests'], 'use the gist reST directive', optional=True)
-            return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
         if 'https://' in self.arguments[0]:
             gistID = self.arguments[0].split('/')[-1].strip()
         else:
@@ -64,15 +61,25 @@ class GitHubGist(Directive):
 
         if 'file' in self.options:
             filename = self.options['file']
-            rawGist = (self.get_raw_gist_with_filename(gistID, filename))
+            if requests is not None:
+                rawGist = (self.get_raw_gist_with_filename(gistID, filename))
             embedHTML = ('<script src="https://gist.github.com/{0}.js'
                          '?file={1}"></script>').format(gistID, filename)
         else:
-            rawGist = (self.get_raw_gist(gistID))
+            if requests is not None:
+                rawGist = (self.get_raw_gist(gistID))
             embedHTML = ('<script src="https://gist.github.com/{0}.js">'
                          '</script>').format(gistID)
 
+        if requests is None:
+            reqnode = nodes.raw(
+                '', req_missing('requests', 'have inline gist source',
+                                optional=True), format='html')
+        else:
+            reqnode = nodes.literal_block('', rawGist)
+
+
         return [nodes.raw('', embedHTML, format='html'),
                 nodes.raw('', '<noscript>', format='html'),
-                nodes.literal_block('', rawGist),
+                reqnode,
                 nodes.raw('', '</noscript>', format='html')]
