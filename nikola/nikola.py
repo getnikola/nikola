@@ -839,7 +839,7 @@ class Nikola(object):
         if self._scanned:
             return
         seen = set([])
-        print("Scanning posts", end='')
+        print("Scanning posts", end='', file=sys.stderr)
         tzinfo = None
         if self.config['TIMEZONE'] is not None:
             tzinfo = pytz.timezone(self.config['TIMEZONE'])
@@ -851,7 +851,7 @@ class Nikola(object):
         lower_case_tags = set([])
         for wildcard, destination, template_name, use_in_feeds in \
                 self.config['post_pages']:
-            print(".", end='')
+            print(".", end='', file=sys.stderr)
             dirname = os.path.dirname(wildcard)
             for dirpath, _, _ in os.walk(dirname):
                 dir_glob = os.path.join(dirpath, os.path.basename(wildcard))
@@ -942,7 +942,7 @@ class Nikola(object):
         for i, p in enumerate(post_timeline[:-1]):
             p.prev_post = post_timeline[i + 1]
         self._scanned = True
-        print("done!")
+        print("done!", file=sys.stderr)
 
     def generic_page_renderer(self, lang, post, filters):
         """Render post fragments to final HTML pages."""
