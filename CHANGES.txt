@@ -4,6 +4,7 @@ New in master
 Bugfixes
 --------
 
+* The build_less plugin was broken (Issue #802)
 * Every plugin now has its own LOGGER instance, with different names (Issue #797)
 * A standardized way of reporting missing requirements (Issue #797)
 * Don’t force requests for compile.rest.gist (Issue #795)
