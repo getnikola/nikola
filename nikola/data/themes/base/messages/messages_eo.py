@@ -9,6 +9,8 @@ MESSAGES = {
     "More posts about": "Pli artikoloj pri...",
     "Newer posts": "Pli novaj artikoloj",
     "Next post": "Venonta artikolo",
+    "No content": "",
+    "No title": "",
     "Older posts": "Pli malnovaj artikoloj",
     "Original site": "Originala interretejo",
     "Posted": "Skribita",

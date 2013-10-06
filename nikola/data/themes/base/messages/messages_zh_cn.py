@@ -9,6 +9,8 @@ MESSAGES = {
     "More posts about": "更多相关文章：",
     "Newer posts": "新一篇",
     "Next post": "后一篇",
+    "No content": "",
+    "No title": "",
     "Older posts": "旧一篇",
     "Original site": "原文地址",
     "Posted": "发表于",

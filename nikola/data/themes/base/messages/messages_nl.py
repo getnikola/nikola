@@ -9,6 +9,8 @@ MESSAGES = {
     "More posts about": "Meer berichten over",
     "Newer posts": "Nieuwere berichten",
     "Next post": "Volgend bericht",
+    "No content": "",
+    "No title": "",
     "Older posts": "Oudere berichten",
     "Original site": "Originele site",
     "Posted": "Geplaatst",

@@ -77,3 +77,9 @@ msgstr "Posted"
 
 msgid "Posts for {month} {year}"
 msgstr "Posts for {month} {year}"
+
+msgid "No title"
+msgstr ""
+
+msgid "No content"
+msgstr ""

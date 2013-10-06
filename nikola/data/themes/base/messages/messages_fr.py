@@ -4,11 +4,13 @@ from __future__ import unicode_literals
 MESSAGES = {
     "Also available in": "Disponible aussi en",
     "Archive": "Archives",
-    "Categories": "",
+    "Categories": "Catégories",
     "LANGUAGE": "Français",
     "More posts about": "Plus de billets sur",
     "Newer posts": "Billets récents",
     "Next post": "Billet suivant",
+    "No content": "",
+    "No title": "",
     "Older posts": "Anciens billets",
     "Original site": "Site d'origine",
     "Posted": "Publié",
@@ -19,7 +21,7 @@ MESSAGES = {
     "Read in English": "Lire en français",
     "Read more": "Lire la suite",
     "Source": "Source",
-    "Tags and Categories": "",
+    "Tags and Categories": "Étiquettes et catégories",
     "Tags": "Étiquettes",
     "old posts page %d": "anciens billets page %d",
 }
