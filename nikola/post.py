@@ -24,7 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import unicode_literals, print_function
+from __future__ import unicode_literals, print_function, absolute_import
 
 import codecs
 from collections import defaultdict
@@ -43,11 +43,12 @@ except ImportError:
     pyphen = None
 import pytz
 
+# for tearDown with _reload we need to use LocaleBorg as nu.LocaleBorg
+import nikola.utils as nu
 from .utils import (
     bytes_str,
     current_time,
     Functionary,
-    LocaleBorg,
     slugify,
     to_datetime,
     unicode_str,
@@ -192,7 +193,7 @@ class Post(object):
 
     @property
     def tags(self):
-        lang = self.current_lang()
+        lang = nu.LocaleBorg().current_lang
         if lang in self._tags:
             return self._tags[lang]
         elif self.default_lang in self._tags:
@@ -202,7 +203,7 @@ class Post(object):
 
     @property
     def prev_post(self):
-        lang = self.current_lang()
+        lang = nu.LocaleBorg().current_lang
         rv = self._prev_post
         while self.skip_untranslated:
             if rv is None:
@@ -218,7 +219,7 @@ class Post(object):
 
     @property
     def next_post(self):
-        lang = self.current_lang()
+        lang = nu.LocaleBorg().current_lang
         rv = self._next_post
         while self.skip_untranslated:
             if rv is None:
@@ -253,33 +254,20 @@ class Post(object):
             fmt_date = fmt_date.decode('utf8')
         return fmt_date
 
-    def current_lang(self):
-        """Return the currently set locale, if it's one of the
-        available translations, or self.default_lang."""
-        lang = LocaleBorg().current_lang
-        if lang:
-            if lang in self.translations:
-                return lang
-            lang = lang.split('_')[0]
-            if lang in self.translations:
-                return lang
-        # whatever
-        return self.default_lang
-
     def title(self, lang=None):
         """Return localized title.
 
-        If lang is not specified, it will use the currently set locale,
-        because templates set it.
+        If lang is not specified, it will use the last used to
+        set locale, because templates set it.
         """
         if lang is None:
-            lang = self.current_lang()
+            lang = nu.LocaleBorg().current_lang
         return self.meta[lang]['title']
 
     def description(self, lang=None):
         """Return localized description."""
         if lang is None:
-            lang = self.current_lang()
+            lang = nu.LocaleBorg().current_lang
         return self.meta[lang]['description']
 
     def deps(self, lang):
@@ -342,14 +330,14 @@ class Post(object):
 
         teaser_only=True breaks at the teaser marker and returns only the teaser.
         strip_html=True removes HTML tags
-        lang=None uses the currently set locale
+        lang=None uses the last used to set locale
 
         All links in the returned HTML will be relative.
         The HTML returned is a bare fragment, not a full document.
         """
 
         if lang is None:
-            lang = self.current_lang()
+            lang = nu.LocaleBorg().current_lang
         file_name = self._translated_file_path(lang)
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read().strip()
@@ -427,7 +415,7 @@ class Post(object):
         Extension is used in the path if specified.
         """
         if lang is None:
-            lang = self.current_lang()
+            lang = nu.LocaleBorg().current_lang
         if self._has_pretty_url(lang):
             path = os.path.join(self.translations[lang],
                                 self.folder, self.meta[lang]['slug'], 'index' + extension)
@@ -440,7 +428,7 @@ class Post(object):
 
     def permalink(self, lang=None, absolute=False, extension='.html'):
         if lang is None:
-            lang = self.current_lang()
+            lang = nu.LocaleBorg().current_lang
 
         pieces = self.translations[lang].split(os.sep)
         pieces += self.folder.split(os.sep)
