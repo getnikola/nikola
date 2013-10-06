@@ -50,7 +50,7 @@ copyright = '2013, The Nikola Contributors'
 # built documents.
 #
 # The short X.Y version.
-version = '6.1.0'
+version = '6.1.1'
 # The full version, including alpha/beta/rc tags.
 release = '6.1.0'
 
