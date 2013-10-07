@@ -881,6 +881,7 @@ class Nikola(object):
                             self.config['TRANSLATIONS'].items()):
                         dest = (destination, langpath, dir_glob,
                                 post.meta[lang]['slug'])
+                        # FIXME: Doesn't doit handle this already?
                         if dest in targets:
                             raise Exception('Duplicated output path {0!r} '
                                             'in post {1!r}'.format(
