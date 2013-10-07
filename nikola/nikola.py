@@ -43,7 +43,6 @@ except ImportError:
 
 import lxml.html
 from yapsy.PluginManager import PluginManager
-import pytz
 
 if os.getenv('NIKOLA_DEBUG'):
     import logging
@@ -840,13 +839,6 @@ class Nikola(object):
             return
         seen = set([])
         print("Scanning posts", end='', file=sys.stderr)
-        tzinfo = None
-        if self.config['TIMEZONE'] is not None:
-            tzinfo = pytz.timezone(self.config['TIMEZONE'])
-        if self.config['FUTURE_IS_NOW']:
-            current_time = None
-        else:
-            current_time = utils.current_time(tzinfo)
         targets = set([])
         lower_case_tags = set([])
         for wildcard, destination, template_name, use_in_feeds in \
@@ -879,22 +871,11 @@ class Nikola(object):
                         seen.add(base_path)
                     post = Post(
                         base_path,
-                        self.config['CACHE_FOLDER'],
+                        self.config,
                         dest_dir,
                         use_in_feeds,
-                        self.config['TRANSLATIONS'],
-                        self.config['DEFAULT_LANG'],
-                        self.config['BASE_URL'],
                         self.MESSAGES,
                         template_name,
-                        self.config['FILE_METADATA_REGEXP'],
-                        self.config['STRIP_INDEXES'],
-                        self.config['INDEX_FILE'],
-                        tzinfo,
-                        current_time,
-                        self.config['HIDE_UNTRANSLATED_POSTS'],
-                        self.config['PRETTY_URLS'],
-                        self.config['HYPHENATE'],
                     )
                     for lang, langpath in list(
                             self.config['TRANSLATIONS'].items()):

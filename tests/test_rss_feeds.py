@@ -1,15 +1,23 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals, absolute_import
-import unittest
+from collections import defaultdict
+from io import StringIO
 import os
 import re
-from io import StringIO
+import unittest
 
 import mock
 
 from .context import nikola
 from lxml import etree
+
+
+fake_conf = defaultdict(str)
+fake_conf['TIMEZONE'] = None
+fake_conf['DEFAULT_LANG'] = 'en'
+fake_conf['TRANSLATIONS'] = {'en': ''}
+fake_conf['BASE_URL'] = 'http://some.blog/'
 
 
 class RSSFeedTest(unittest.TestCase):
@@ -30,13 +38,10 @@ class RSSFeedTest(unittest.TestCase):
                                 mock.Mock(return_value='some long text')):
 
                     example_post = nikola.nikola.Post('source.file',
-                                                      'cache',
+                                                      fake_conf,
                                                       'blog_folder',
                                                       True,
                                                       {'en': ''},
-                                                      'en',
-                                                      self.blog_url,
-                                                      'unused message.',
                                                       'post.tmpl')
 
                     opener_mock = mock.mock_open()
