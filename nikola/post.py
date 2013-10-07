@@ -51,7 +51,7 @@ from .utils import (
     slugify,
     to_datetime,
     unicode_str,
-    )
+)
 
 __all__ = ['Post']
 
