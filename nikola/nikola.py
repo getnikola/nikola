@@ -839,7 +839,6 @@ class Nikola(object):
             return
         seen = set([])
         print("Scanning posts", end='', file=sys.stderr)
-        targets = set([])
         lower_case_tags = set([])
         for wildcard, destination, template_name, use_in_feeds in \
                 self.config['post_pages']:
