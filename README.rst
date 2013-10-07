@@ -41,7 +41,7 @@ It has many features, but here are some of the nicer ones:
 * Python 2.6, 2.7 and 3.3 compatible.
 
 .. _Nikola Handbook: http://getnikola.com/handbook.html#why-static
-__ __ http://users.getnikola.com/
+__ http://users.getnikola.com/
 .. _Themable: http://themes.getnikola.com
 .. _doit: http://pydoit.org
 .. _reStructuredText: http://getnikola.com/quickstart.html
