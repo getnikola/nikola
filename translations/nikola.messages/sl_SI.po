@@ -5,12 +5,13 @@
 # Translators:
 # Translators:
 # Venčeslav Vezjak <vezjakv@gmail.com>, 2013
+# Venčeslav Vezjak <vezjakv@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2013-10-08 10:04+0000\n"
+"PO-Revision-Date: 2013-10-08 10:06+0000\n"
 "Last-Translator: Venčeslav Vezjak <vezjakv@gmail.com>\n"
 "Language-Team: Slovenian (Slovenia) (http://www.transifex.com/projects/p/nikola/language/sl_SI/)\n"
 "MIME-Version: 1.0\n"
@@ -35,16 +36,16 @@ msgid "Tags and Categories"
 msgstr "Značke in kategorije"
 
 msgid "Read more"
-msgstr "Več o temi"
+msgstr "Več o tem"
 
 msgid "Posts about %s"
-msgstr "Objave o temi %s"
+msgstr "Objave o %s"
 
 msgid "Next post"
 msgstr "Naslednja objava"
 
 msgid "old posts page %d"
-msgstr "stare objave stran %d"
+msgstr "stare objave, stran %d"
 
 msgid "Source"
 msgstr "Izvor"
