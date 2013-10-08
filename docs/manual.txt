@@ -244,7 +244,7 @@ Debian systems::
     sudo apt-get install libxml2-dev
     sudo apt-get install libxslt1-dev
 
-RHEL systems::
+Red Hat/RPM based systems::
 
     yum install libxslt-devel libxml2-devel
 
@@ -1382,8 +1382,8 @@ when they try to open a post.
 Local Search
 ~~~~~~~~~~~~
 
-If you don't want to depend on google or duckduckgo to implement search for you,
-or just want it to wok even if you are offline, enable this plugin and the
+If you don't want to depend on Google or DuckDuckGo to implement search for you,
+or just want it to work even if you are offline, enable this plugin and the
 search will be performed client side.
 
 This plugin implements a Tipue-based local search for your site.
