@@ -36,7 +36,7 @@ It has many features, but here are some of the nicer ones:
 * `reStructuredText`_ or Markdown as input language (also Wiki, BBCode, Textile, and HTML)
 * Easy `image galleries`_ (just drop files in a folder!)
 * Syntax highlighting for almost any programming language or markup
-* Multilingual sites, `translated to 13 languages.`__
+* Multilingual sites, `translated to 18 languages.`__
 * Doesn't reinvent wheels, leverages existing tools.
 * Python 2.6, 2.7 and 3.3 compatible.
 
