@@ -43,7 +43,6 @@ except ImportError:
 
 import lxml.html
 from yapsy.PluginManager import PluginManager
-import pytz
 
 if os.getenv('NIKOLA_DEBUG'):
     import logging
@@ -840,14 +839,6 @@ class Nikola(object):
             return
         seen = set([])
         print("Scanning posts", end='', file=sys.stderr)
-        tzinfo = None
-        if self.config['TIMEZONE'] is not None:
-            tzinfo = pytz.timezone(self.config['TIMEZONE'])
-        if self.config['FUTURE_IS_NOW']:
-            current_time = None
-        else:
-            current_time = utils.current_time(tzinfo)
-        targets = set([])
         lower_case_tags = set([])
         for wildcard, destination, template_name, use_in_feeds in \
                 self.config['post_pages']:
@@ -879,52 +870,31 @@ class Nikola(object):
                         seen.add(base_path)
                     post = Post(
                         base_path,
-                        self.config['CACHE_FOLDER'],
+                        self.config,
                         dest_dir,
                         use_in_feeds,
-                        self.config['TRANSLATIONS'],
-                        self.config['DEFAULT_LANG'],
-                        self.config['BASE_URL'],
                         self.MESSAGES,
                         template_name,
-                        self.config['FILE_METADATA_REGEXP'],
-                        self.config['STRIP_INDEXES'],
-                        self.config['INDEX_FILE'],
-                        tzinfo,
-                        current_time,
-                        self.config['HIDE_UNTRANSLATED_POSTS'],
-                        self.config['PRETTY_URLS'],
-                        self.config['HYPHENATE'],
                     )
-                    for lang, langpath in list(
-                            self.config['TRANSLATIONS'].items()):
-                        dest = (destination, langpath, dir_glob,
-                                post.meta[lang]['slug'])
-                        if dest in targets:
-                            raise Exception('Duplicated output path {0!r} '
-                                            'in post {1!r}'.format(
-                                                post.meta[lang]['slug'],
-                                                base_path))
-                        targets.add(dest)
-                    self.global_data[post.post_name] = post
+                    self.global_data[post.source_path] = post
                     if post.use_in_feeds:
                         self.posts_per_year[
-                            str(post.date.year)].append(post.post_name)
+                            str(post.date.year)].append(post.source_path)
                         self.posts_per_month[
-                            '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post.post_name)
+                            '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post.source_path)
                         for tag in post.alltags:
                             if tag.lower() in lower_case_tags:
                                 if tag not in self.posts_per_tag:
                                     # Tags that differ only in case
                                     other_tag = [k for k in self.posts_per_tag.keys() if k.lower() == tag.lower()][0]
                                     utils.LOGGER.error('You have cases that differ only in upper/lower case: {0} and {1}'.format(tag, other_tag))
-                                    utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.post_name))
+                                    utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join(self.posts_per_tag[other_tag])))
                                     sys.exit(1)
                             else:
                                 lower_case_tags.add(tag.lower())
-                            self.posts_per_tag[tag].append(post.post_name)
-                        self.posts_per_category[post.meta('category')].append(post.post_name)
+                            self.posts_per_tag[tag].append(post.source_path)
+                        self.posts_per_category[post.meta('category')].append(post.source_path)
                     else:
                         self.pages.append(post)
                     if self.config['OLD_THEME_SUPPORT']:

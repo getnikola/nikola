@@ -134,8 +134,7 @@ class Indexes(Task):
                 files = []
                 for wildcard in wildcards:
                     files += glob.glob(wildcard)
-                post_list = [self.site.global_data[os.path.splitext(p)[0]] for
-                             p in files]
+                post_list = [self.site.global_data[p] for p in files]
                 output_name = os.path.join(kw["output_folder"],
                                            self.site.path("post_path",
                                                           wildcard,

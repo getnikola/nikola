@@ -82,7 +82,7 @@ class RenderTags(Task):
                     filtered_posts = [x for x in post_list if x.is_translation_available(lang)]
                 else:
                     filtered_posts = post_list
-                rss_post_list = [p.post_name for p in filtered_posts]
+                rss_post_list = [p.source_path for p in filtered_posts]
                 yield self.tag_rss(tag, lang, rss_post_list, kw, is_category)
                 # Render HTML
                 if kw['tag_pages_are_indexes']:

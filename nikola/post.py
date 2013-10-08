@@ -41,8 +41,17 @@ try:
     import pyphen
 except ImportError:
     pyphen = None
+import pytz
 
-from .utils import (to_datetime, slugify, bytes_str, Functionary, LocaleBorg, unicode_str)
+from .utils import (
+    bytes_str,
+    current_time,
+    Functionary,
+    LocaleBorg,
+    slugify,
+    to_datetime,
+    unicode_str,
+)
 
 __all__ = ['Post']
 
@@ -55,11 +64,13 @@ class Post(object):
     """Represents a blog post or web page."""
 
     def __init__(
-        self, source_path, cache_folder, destination, use_in_feeds,
-        translations, default_lang, base_url, messages, template_name,
-        file_metadata_regexp=None, strip_indexes=False, index_file='index.html',
-        tzinfo=None, current_time=None, skip_untranslated=False, pretty_urls=False,
-        hyphenate=False,
+        self,
+        source_path,
+        config,
+        destination,
+        use_in_feeds,
+        messages,
+        template_name
     ):
         """Initialize post.
 
@@ -67,50 +78,58 @@ class Post(object):
         the meta file, as well as any translations available, and
         the .html fragment file path.
         """
+        self.config = config
+        tzinfo = None
+        if self.config['TIMEZONE'] is not None:
+            tzinfo = pytz.timezone(self.config['TIMEZONE'])
+        if self.config['FUTURE_IS_NOW']:
+            self.current_time = None
+        else:
+            self.current_time = current_time(tzinfo)
         self.translated_to = set([])
         self._prev_post = None
         self._next_post = None
-        self.base_url = base_url
+        self.base_url = self.config['BASE_URL']
         self.is_draft = False
         self.is_retired = False
         self.is_mathjax = False
-        self.strip_indexes = strip_indexes
-        self.index_file = index_file
-        self.pretty_urls = pretty_urls
+        self.strip_indexes = self.config['STRIP_INDEXES']
+        self.index_file = self.config['INDEX_FILE']
+        self.pretty_urls = self.config['PRETTY_URLS']
         self.source_path = source_path  # posts/blah.txt
         self.post_name = os.path.splitext(source_path)[0]  # posts/blah
         # cache/posts/blah.html
-        self.base_path = os.path.join(cache_folder, self.post_name + ".html")
+        self.base_path = os.path.join(self.config['CACHE_FOLDER'], self.post_name + ".html")
         self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
         self.folder = destination
-        self.translations = translations
-        self.default_lang = default_lang
+        self.translations = self.config['TRANSLATIONS']
+        self.default_lang = self.config['DEFAULT_LANG']
         self.messages = messages
-        self.skip_untranslated = skip_untranslated
+        self.skip_untranslated = self.config['HIDE_UNTRANSLATED_POSTS']
         self._template_name = template_name
         self.is_two_file = True
-        self.hyphenate = hyphenate
+        self.hyphenate = self.config['HYPHENATE']
         self._reading_time = None
 
-        default_metadata = get_meta(self, file_metadata_regexp)
+        default_metadata = get_meta(self, self.config['FILE_METADATA_REGEXP'])
 
         self.meta = Functionary(lambda: None, self.default_lang)
-        self.meta[default_lang] = default_metadata
+        self.meta[self.default_lang] = default_metadata
 
         # Load internationalized metadata
-        for lang in translations:
-            if lang != default_lang:
+        for lang in self.translations:
+            if lang != self.default_lang:
                 if os.path.isfile(self.source_path + "." + lang):
                     self.translated_to.add(lang)
 
                 meta = defaultdict(lambda: '')
                 meta.update(default_metadata)
-                meta.update(get_meta(self, file_metadata_regexp, lang))
+                meta.update(get_meta(self, self.config['FILE_METADATA_REGEXP'], lang))
                 self.meta[lang] = meta
             elif os.path.isfile(self.source_path):
-                self.translated_to.add(default_lang)
+                self.translated_to.add(self.default_lang)
 
-        if not self.is_translation_available(default_lang):
+        if not self.is_translation_available(self.default_lang):
             # Special case! (Issue #373)
             # Fill default_metadata with stuff from the other languages
             for lang in sorted(self.translated_to):
@@ -126,9 +145,9 @@ class Post(object):
                                         source_path))
 
         # If timezone is set, build localized datetime.
-        self.date = to_datetime(self.meta[default_lang]['date'], tzinfo)
+        self.date = to_datetime(self.meta[self.default_lang]['date'], tzinfo)
 
-        self.publish_later = False if current_time is None else self.date >= current_time
+        self.publish_later = False if self.current_time is None else self.date >= self.current_time
 
         is_draft = False
         is_retired = False
@@ -236,7 +255,7 @@ class Post(object):
 
     def current_lang(self):
         """Return the currently set locale, if it's one of the
-        available translations, or default_lang."""
+        available translations, or self.default_lang."""
         lang = LocaleBorg().current_lang
         if lang:
             if lang in self.translations:
