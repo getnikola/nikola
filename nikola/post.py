@@ -394,8 +394,12 @@ class Post(object):
                 data = lxml.html.tostring(document, encoding='unicode')
 
         if data and strip_html:
-            content = lxml.html.fromstring(data)
-            data = content.text_content().strip()  # No whitespace wanted.
+            try:
+                # Not all posts have a body. For example, you may have a page statically defined in the template that does not take content as input.
+                content = lxml.html.fromstring(data)
+                data = content.text_content().strip()  # No whitespace wanted.
+            except lxml.etree.ParserError:
+                data = ""
         return data
 
     @property
