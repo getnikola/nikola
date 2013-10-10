@@ -675,7 +675,6 @@ class Nikola(object):
                 name = utils.slugify(name)
                 return name
 
-
         def tag_index():
             return [_f for _f in [self.config['TRANSLATIONS'][lang],
                                   self.config['TAG_PATH'],
@@ -750,18 +749,18 @@ class Nikola(object):
                 utils.LOGGER.notice(path)
 
         kinds = {
-            "tag_index" : tag_index,
-            "tag" : tag,
-            "category" : category,
-            "tag_rss" : tag_rss,
-            "category_rss" : category_rss,
-            "index" : index,
-            "post_path" : post_path,
-            "rss" : rss,
-            "archive" : archive,
-            "gallery" : gallery,
-            "listing" : listing,
-            "slug" : slug,
+            "tag_index": tag_index,
+            "tag": tag,
+            "category": category,
+            "tag_rss": tag_rss,
+            "category_rss": category_rss,
+            "index": index,
+            "post_path": post_path,
+            "rss": rss,
+            "archive": archive,
+            "gallery": gallery,
+            "listing": listing,
+            "slug": slug,
         }
 
         path = kinds[kind]()
@@ -1041,5 +1040,3 @@ SOCIAL_BUTTONS_CODE = """
 <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
 <!-- End of social buttons -->
 """
-
-
