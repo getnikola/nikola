@@ -117,6 +117,7 @@ class ImportMixin(object):
         doc = html.document_fromstring(content)
         doc.rewrite_links(replacer)
 
+        utils.makedirs(os.path.dirname(filename))
         with open(filename, "wb+") as fd:
             fd.write(html.tostring(doc, encoding='utf8'))
 
@@ -125,6 +126,7 @@ class ImportMixin(object):
         if not description:
             description = ""
 
+        utils.makedirs(os.path.dirname(filename))
         with codecs.open(filename, "w+", "utf8") as fd:
             fd.write('{0}\n'.format(title))
             fd.write('{0}\n'.format(slug))
@@ -135,6 +137,7 @@ class ImportMixin(object):
 
     @staticmethod
     def write_urlmap_csv(output_file, url_map):
+        utils.makedirs(os.path.dirname(output_file))
         with codecs.open(output_file, 'w+', 'utf8') as fd:
             csv_writer = csv.writer(fd)
             for item in url_map.items():
@@ -154,6 +157,7 @@ class ImportMixin(object):
 
     @staticmethod
     def write_configuration(filename, rendered_template):
+        utils.makedirs(os.path.dirname(filename))
         with codecs.open(filename, 'w+', 'utf8') as fd:
             fd.write(rendered_template)
 
