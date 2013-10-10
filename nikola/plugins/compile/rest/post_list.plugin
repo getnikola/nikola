@@ -1,0 +1,10 @@
+[Core]
+Name = post-list
+Module = post_list
+
+[Documentation]
+Author = Udo Spallek
+Version = 0.1
+Website = http://getnikola.com
+Description = Post-list directive
+

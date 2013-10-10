@@ -1,3 +1,8 @@
+Features
+--------
+
+* Add reStructuredText directive post_list (Issue #815)
+
 New in 6.2.0
 ============
 
