@@ -136,7 +136,7 @@ def sys_decode(thing):
 
 def makedirs(path):
     """Create a folder."""
-    if os.path.isdir(path):
+    if not path or os.path.isdir(path):
         return
     if os.path.exists(path):
         raise OSError('Path {0} already exists and is not a folder.')
