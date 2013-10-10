@@ -747,7 +747,7 @@ class Nikola(object):
                     utils.LOGGER.warning('Ambiguous path request for slug: {0}'.format(name))
                 return [_f for _f in results[0].permalink(lang).split('/') if _f]
 
-        kinds = {
+        path = {
             "tag_index": tag_index,
             "tag": tag,
             "category": category,
@@ -760,9 +760,7 @@ class Nikola(object):
             "gallery": gallery,
             "listing": listing,
             "slug": slug,
-        }
-
-        path = kinds[kind]()
+        }[kind]()
 
         if is_link:
             link = '/' + ('/'.join(path))
