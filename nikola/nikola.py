@@ -670,76 +670,101 @@ class Nikola(object):
 
         path = []
 
-        if kind == "tag_index":
-            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+        def slugify_name(name):
+            if self.config['SLUG_TAG_PATH']:
+                name = utils.slugify(name)
+                return name
+
+
+        def tag_index():
+            return [_f for _f in [self.config['TRANSLATIONS'][lang],
                                   self.config['TAG_PATH'],
                                   self.config['INDEX_FILE']] if _f]
-        elif kind == "tag":
-            if self.config['SLUG_TAG_PATH']:
-                name = utils.slugify(name)
-            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                                  self.config['TAG_PATH'], name + ".html"] if
+
+        def tag():
+            return [_f for _f in [self.config['TRANSLATIONS'][lang],
+                                  self.config['TAG_PATH'], slugify_name(name) + ".html"] if
                     _f]
 
-        elif kind == "category":
-            if self.config['SLUG_TAG_PATH']:
-                name = utils.slugify(name)
-            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                                  self.config['TAG_PATH'], "cat_" + name + ".html"] if
+        def category():
+            return [_f for _f in [self.config['TRANSLATIONS'][lang],
+                                  self.config['TAG_PATH'], "cat_" + slugify_name(name) + ".html"] if
                     _f]
-        elif kind == "tag_rss":
-            if self.config['SLUG_TAG_PATH']:
-                name = utils.slugify(name)
-            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                                  self.config['TAG_PATH'], name + ".xml"] if
+
+        def tag_rss():
+            return [_f for _f in [self.config['TRANSLATIONS'][lang],
+                                  self.config['TAG_PATH'], slugify_name(name) + ".xml"] if
                     _f]
-        elif kind == "category_rss":
-            if self.config['SLUG_TAG_PATH']:
-                name = utils.slugify(name)
-            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                                  self.config['TAG_PATH'], "cat_" + name + ".xml"] if
+
+        def category_rss():
+            return [_f for _f in [self.config['TRANSLATIONS'][lang],
+                                  self.config['TAG_PATH'], "cat_" + slugify_name(name) + ".xml"] if
                     _f]
-        elif kind == "index":
+
+        def index():
             if name not in [None, 0]:
-                path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+                return [_f for _f in [self.config['TRANSLATIONS'][lang],
                                       self.config['INDEX_PATH'],
                                       'index-{0}.html'.format(name)] if _f]
             else:
-                path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+                return [_f for _f in [self.config['TRANSLATIONS'][lang],
                                       self.config['INDEX_PATH'],
                                       self.config['INDEX_FILE']]
                         if _f]
-        elif kind == "post_path":
-            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+
+        def post_path():
+            return [_f for _f in [self.config['TRANSLATIONS'][lang],
                                   os.path.dirname(name),
                                   self.config['INDEX_FILE']] if _f]
-        elif kind == "rss":
-            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+
+        def rss():
+            return [_f for _f in [self.config['TRANSLATIONS'][lang],
                                   self.config['RSS_PATH'], 'rss.xml'] if _f]
-        elif kind == "archive":
+
+        def archive():
             if name:
-                path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+                return [_f for _f in [self.config['TRANSLATIONS'][lang],
                                       self.config['ARCHIVE_PATH'], name,
                                       self.config['INDEX_FILE']] if _f]
             else:
-                path = [_f for _f in [self.config['TRANSLATIONS'][lang],
+                return [_f for _f in [self.config['TRANSLATIONS'][lang],
                                       self.config['ARCHIVE_PATH'],
                                       self.config['ARCHIVE_FILENAME']] if _f]
-        elif kind == "gallery":
-            path = [_f for _f in [self.config['GALLERY_PATH'], name,
+
+        def gallery():
+            return [_f for _f in [self.config['GALLERY_PATH'], name,
                                   self.config['INDEX_FILE']] if _f]
-        elif kind == "listing":
-            path = [_f for _f in [self.config['LISTINGS_FOLDER'], name +
+
+        def listing():
+            return [_f for _f in [self.config['LISTINGS_FOLDER'], name +
                                   '.html'] if _f]
-        elif kind == "slug":
+
+        def slug():
             results = [p for p in self.timeline if p.meta('slug') == name]
             if not results:
                 utils.LOGGER.warning("Can't resolve path request for slug: {0}".format(name))
             else:
                 if len(results) > 1:
                     utils.LOGGER.warning('Ambiguous path request for slug: {0}'.format(name))
-                path = [_f for _f in results[0].permalink(lang).split('/') if _f]
+                return [_f for _f in results[0].permalink(lang).split('/') if _f]
                 utils.LOGGER.notice(path)
+
+        kinds = {
+            "tag_index" : tag_index,
+            "tag" : tag,
+            "category" : category,
+            "tag_rss" : tag_rss,
+            "category_rss" : category_rss,
+            "index" : index,
+            "post_path" : post_path,
+            "rss" : rss,
+            "archive" : archive,
+            "gallery" : gallery,
+            "listing" : listing,
+            "slug" : slug,
+        }
+
+        path = kinds[kind]()
 
         if is_link:
             link = '/' + ('/'.join(path))
@@ -1016,3 +1041,5 @@ SOCIAL_BUTTONS_CODE = """
 <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
 <!-- End of social buttons -->
 """
+
+
