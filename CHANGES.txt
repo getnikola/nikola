@@ -4,6 +4,7 @@ New in 6.2.0
 Bugfixes
 --------
 
+* Handle empty stories better and avoid Tipue crash (Issue #811)
 * Trigger conflict if two posts generate the same output (Issue #806)
 
 New in 6.1.1
