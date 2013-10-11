@@ -695,6 +695,18 @@ class LocaleBorg:
         cls.initialized = True
 
     @classmethod
+    def initialize_for_testing(cls, variant):
+        samples = {
+            # variant(_win): tuple with params for initialize
+            'unilang_win': ({"en": str("English")}, "en"),
+            'unilang': ({"en": str("en_US.utf8")}, "en")
+        }
+        cls.reset()
+        if sys.platform == 'win32':
+            variant += '_win'
+        cls.initialize(*samples[variant])
+
+    @classmethod
     def reset(cls):
         """used in testing to not leak state between tests"""
         cls.locales = {}

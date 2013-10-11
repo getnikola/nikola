@@ -9,7 +9,7 @@ import unittest
 
 import mock
 
-from .context import nikola
+from .context import nikola  # NOQA
 from lxml import etree
 
 
@@ -22,6 +22,9 @@ fake_conf['BASE_URL'] = 'http://some.blog/'
 
 class RSSFeedTest(unittest.TestCase):
     def setUp(self):
+        import nikola.utils
+        nikola.utils.LocaleBorg.initialize_for_testing('unilang')
+
         self.blog_url = "http://some.blog"
 
         with mock.patch('nikola.post.get_meta',
