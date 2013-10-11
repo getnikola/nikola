@@ -1,6 +1,11 @@
 New in 6.2.0
 ============
 
+Features
+--------
+
+* Initial support for signals/hooks using Blinker (Issue #764)
+
 Bugfixes
 --------
 
