@@ -41,6 +41,10 @@ class Listings(Task):
 
     name = "render_listings"
 
+    def set_site(self, site):
+        site.register_path_handler('listing', self.listing_path)
+        return super(Listings, self).set_site(site)
+
     def gen_tasks(self):
         """Render pretty code listings."""
         kw = {
@@ -126,3 +130,7 @@ class Listings(Task):
                         self.site.GLOBAL_CONTEXT)],
                     'clean': True,
                 }
+
+    def listing_path(self, name, lang):
+        return [_f for _f in [self.site.config['LISTINGS_FOLDER'], name +
+                              '.html'] if _f]

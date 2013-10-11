@@ -376,3 +376,28 @@ of the plugins for Nikola people wanted to share with the world.
 You may want to read the `README for the Index
 <https://github.com/getnikola/plugins/blob/master/README.md>`_ if you want to
 publish your package there.
+
+Path/Link Resolution Mechanism
+==============================
+
+Any plugin can register a function using ``Nikola.register_path_handler`` to
+allow resolution of paths and links. These are useful for tempaltes, which
+can access them via _link.
+
+For example, you can always get a link to the path for the feed of the "foo" tag
+by using ``_link('tag_rss', 'foo')`` or the ``link://tag_rss/foo`` URL.
+
+Here's the relevant code from the tag plugin.
+
+.. code-block:: python
+
+    # In set_site
+    site.register_path_handler('tag_rss', self.tag_rss_path)
+
+    # And these always take name and lang as arguments and returl a list of 
+    # path elements.
+    def tag_rss_path(self, name, lang):
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['TAG_PATH'], self.slugify_name(name) + ".xml"] if
+                _f]
+    

@@ -38,6 +38,10 @@ class Indexes(Task):
 
     name = "render_indexes"
 
+    def set_site(self, site):
+        site.register_path_handler('index', self.index_path)
+        return super(Indexes, self).set_site(site)
+
     def gen_tasks(self):
         self.site.scan_posts()
         yield self.group_task()
@@ -150,3 +154,14 @@ class Indexes(Task):
                 task['uptodate'] = [config_changed(task_cfg)]
                 task['basename'] = self.name
                 yield task
+
+    def index_path(self, name, lang):
+        if name not in [None, 0]:
+            return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                                  self.site.config['INDEX_PATH'],
+                                  'index-{0}.html'.format(name)] if _f]
+        else:
+            return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                                  self.site.config['INDEX_PATH'],
+                                  self.site.config['INDEX_FILE']]
+                    if _f]
