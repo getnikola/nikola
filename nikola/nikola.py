@@ -708,7 +708,6 @@ class Nikola(object):
             return [_f for _f in results[0].permalink(lang).split('/') if _f]
 
     def register_path_handler(self, kind, f):
-        utils.LOGGER.notice('Registered path handler for: {0}'.format(kind))
         if kind in self.path_handlers:
             utils.LOGGER.warning('Conflicting path handlers for kind: {0}'.format(kind))
         else:
