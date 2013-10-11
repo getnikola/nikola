@@ -381,7 +381,7 @@ Path/Link Resolution Mechanism
 ==============================
 
 Any plugin can register a function using ``Nikola.register_path_handler`` to
-allow resolution of paths and links. These are useful for tempaltes, which
+allow resolution of paths and links. These are useful for templates, which
 can access them via _link.
 
 For example, you can always get a link to the path for the feed of the "foo" tag
