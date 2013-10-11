@@ -109,10 +109,8 @@ class PostList(Directive):
 
         posts = []
         step = -1 if reverse else None
-        for post in self.site.timeline[first:last:step]:
-            if not post.use_in_feeds:
-                continue
-
+        timeline = [p for p in self.site.timeline if p.use_in_feeds]
+        for post in timeline[first:last:step]:
             if tags:
                 cont = True
                 for tag in tags:
