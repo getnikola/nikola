@@ -102,7 +102,8 @@ class PostList(Directive):
         first = self.options.get('first')
         last = self.options.get('last')
         reverse = self.options.get('reverse')
-        tags = [t.strip().lower() for t in self.options.get('tags').split(',')]
+        tags = self.options.get('tags')
+        tags = [t.strip().lower() for t in tags.split(',')] if tags else []
         lang = self.options.get('lang', self.site.current_lang())
         template = self.options.get('template', 'post_list_directive.tmpl')
         post_list_id = self.options.get('id', 'post_list_' + uuid.uuid4().hex)
@@ -113,13 +114,15 @@ class PostList(Directive):
             if not post.use_in_feeds:
                 continue
 
-            cont = True
-            for tag in tags:
-                if tag in [t.lower() for t in post.tags]:
-                    cont = False
+            if tags:
+                cont = True
+                for tag in tags:
+                    if tag in [t.lower() for t in post.tags]:
+                        cont = False
 
-            if cont:
-                continue
+                if cont:
+                    continue
+
             posts += [post]
 
         if not posts:
