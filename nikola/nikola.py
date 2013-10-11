@@ -1078,7 +1078,7 @@ def guess_locale_from_lang_linux(lang):
         locale_n = str(lang)
     else:
         # this works in Travis when locale support set by Travis suggestion
-        locale_n = (locale.normalize(lang).split('.')[0]) + '.utf8'
+        locale_n = str((locale.normalize(lang).split('.')[0]) + '.utf8')
     return locale_n
 
 
