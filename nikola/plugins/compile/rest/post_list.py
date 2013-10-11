@@ -45,46 +45,71 @@ class Plugin(RestExtension):
 
 
 class PostList(Directive):
-    """ Restructured text extension to insert a list of posts.
-
-    Usage:
-    .. post_list:: [post_list_id]
-        :lang: the language of the title and links (string)
-        :slice-start: the start value of the slice of the post list (integer)
-        :slice-stop: the stop value of the slice of the post list (integer)
-        :slice-step: the step value of the slice of the post list (integer)
-        :tags: shows only posts with tags (list of strings)
-        :template: use an alternative template (uri string)
-
-    The argument ``post_list_id`` sets an id for the post list.
-    All arguments and options are optional.
     """
-    required_arguments = 0
-    optional_arguments = 1
+    Post List
+    =========
+    :Directive Arguments: None.
+    :Directive Options: lang, first, last, reverse, tags, template, id
+    :Directive Content: None.
+
+    Provides a reStructuredText directive to create a list of posts.
+    The posts appearing in the list can be filtered by options.
+
+    The following not required options are recognized:
+
+    ``first`` : integer
+        The index of the first post to show.
+        Defaults to None.
+
+    ``last`` : integer
+        The index of the last post to show.
+        A value of ``-1`` will show every post, but not the last in the
+        post-list.
+        Defaults to None.
+
+    ``reverse`` : flag
+        Reverse the order of the post-list.
+        Defaults is to not reverse the order of posts.
+
+    ``tags`` : string [, string...]
+        Filter posts to show only posts having at least one of the ``tags``.
+        Defaults to None.
+
+    ``lang`` : string
+        The language of post *titles* and *links*.
+        Defaults to default language.
+
+    ``template`` : string
+        The name of an alternative template to render the post-list.
+        Defaults to ``post_list_directive.tmpl``
+
+    ``id`` : string
+        A manual id for the post list.
+        Defaults to a random name composed by 'post_list_' + uuid.uuid4().hex.
+
+    """
     option_spec = {
-        'lang': directives.unchanged,
-        'slice-start': int,
-        'slice-stop': int,
-        'slice-step': int,
+        'first': int,
+        'last': int,
+        'reverse': directives.flag,
         'tags': directives.unchanged,
-        'template': directives.uri,
+        'lang': directives.unchanged,
+        'template': directives.path,
+        'id': directives.unchanged,
     }
 
     def run(self):
-        post_list_id = 'post_list_' + uuid.uuid4().hex
-        if self.arguments:
-            post_list_id = self.arguments[0]
-
-        lang = self.options.get('lang', 'en')
-        start = self.options.get('slice-start', None)
-        stop = self.options.get('slice-stop', None)
-        step = self.options.get('slice-step', None)
-        tags = self.options.get('tags')
-        tags = [t.strip().lower() for t in tags.split(',')]
+        first = self.options.get('first')
+        last = self.options.get('last')
+        reverse = self.options.get('reverse')
+        tags = [t.strip().lower() for t in self.options.get('tags').split(',')]
+        lang = self.options.get('lang', self.site.current_lang())
         template = self.options.get('template', 'post_list_directive.tmpl')
-        posts = []
+        post_list_id = self.options.get('id', 'post_list_' + uuid.uuid4().hex)
 
-        for post in self.site.timeline[start:stop:step]:
+        posts = []
+        step = -1 if reverse else None
+        for post in self.site.timeline[first:last:step]:
             if not post.use_in_feeds:
                 continue
 
