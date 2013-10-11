@@ -694,8 +694,8 @@ class Nikola(object):
     def post_path(self, name, lang):
         """post_path path handler"""
         return [_f for _f in [self.config['TRANSLATIONS'][lang],
-                                os.path.dirname(name),
-                                self.config['INDEX_FILE']] if _f]
+                              os.path.dirname(name),
+                              self.config['INDEX_FILE']] if _f]
 
     def slug_path(self, name, lang):
         """slug path handler"""
@@ -706,7 +706,6 @@ class Nikola(object):
             if len(results) > 1:
                 utils.LOGGER.warning('Ambiguous path request for slug: {0}'.format(name))
             return [_f for _f in results[0].permalink(lang).split('/') if _f]
-
 
     def register_path_handler(self, kind, f):
         utils.LOGGER.notice('Registered path handler for: {0}'.format(kind))
