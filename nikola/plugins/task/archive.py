@@ -26,8 +26,8 @@
 
 import os
 
-# for tearDown with _reload we need to use LocaleBorg as nu.LocaleBorg
-import nikola.utils as nu
+# for tearDown with _reload we cannot use 'import from' to access LocaleBorg
+import nikola.utils
 from nikola.plugin_categories import Task
 from nikola.utils import config_changed
 
@@ -71,7 +71,7 @@ class Archive(Task):
                     months = sorted(list(months))
                     months.reverse()
                     template_name = "list.tmpl"
-                    context["items"] = [[nu.LocaleBorg.get_month_name(int(month), lang), month] for month in months]
+                    context["items"] = [[nikola.utils.LocaleBorg.get_month_name(int(month), lang), month] for month in months]
                     post_list = []
                 task = self.site.generic_post_list_renderer(
                     lang,
@@ -103,7 +103,7 @@ class Archive(Task):
                 context["permalink"] = self.site.link("archive", year, lang)
 
                 context["title"] = kw["messages"][lang]["Posts for {month} {year}"].format(
-                    year=year, month=nu.LocaleBorg.get_month_name(int(month), lang))
+                    year=year, month=nikola.utils.LocaleBorg.get_month_name(int(month), lang))
                 task = self.site.generic_post_list_renderer(
                     lang,
                     post_list,
