@@ -49,8 +49,10 @@ messages
     so that it can be translated into other languages.
 
 less
-    Files to be compiled into CSS using `less <http://lesscss.org/>`_
+    Files to be compiled into CSS using `LESS <http://lesscss.org/>`_
 
+sass
+    Files to be compiled into CSS using `Sass <http://sass-lang.com/>`_
 
 This mandatory file:
 
@@ -186,3 +188,29 @@ at https://www.transifex.com/projects/p/nikola/
 
 If you want to create a theme that has new strings, and you want those strings to be translatable,
 then your theme will need a custom ``messages`` folder.
+
+`LESS <http://lesscss.org/>`_ and `Sass <http://sass-lang.com/>`_
+-----------------------------------------------------------------
+
+.. note::
+    The LESS and Sass compilers will be moved to the Plugins Index in
+    Nikola v7.0.0.
+
+If you want to use those CSS extensions, you can — just store your files
+in the ``less`` or ``sass`` directory of your theme.
+
+In order to have them work, you need to create a list of ``.less`` or
+``.scss/.sass`` files to compile — the list should be in a file named
+``targets`` in the respective directory (``less``/``sass``).
+
+The files listed in the ``targets`` file will be passed to the respective
+compiler, which you have to install manually (``lessc`` which comes from
+the Node.js package named ``less`` or ``sass`` from a Ruby package aptly
+named ``sass``).  Whatever the compiler outputs will be saved as a CSS
+file in your rendered site, with the ``.css`` extension.
+
+.. note::
+    Conflicts may occur if you have two files with the same base name
+    but a different extension.  Pay attention to how you name your files
+    or your site won’t build!  (Nikola will tell you what’s wrong when
+    this happens)
