@@ -33,7 +33,8 @@ __all__ = [
     'RestExtension',
     'Task',
     'TaskMultiplier',
-    'TemplateSystem'
+    'TemplateSystem',
+    'SignalHandler'
 ]
 
 from yapsy.IPlugin import IPlugin
@@ -196,6 +197,10 @@ class PageCompiler(BasePlugin):
 
 class RestExtension(BasePlugin):
     name = "dummy_rest_extension"
+
+
+class SignalHandler(BasePlugin):
+    name = "dummy_signal_handler"
 
 
 class Importer(Command):
