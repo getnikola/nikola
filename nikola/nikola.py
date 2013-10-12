@@ -36,6 +36,7 @@ try:
 except ImportError:
     from urllib.parse import urlparse, urlsplit, urljoin  # NOQA
 
+from blinker import signal
 try:
     import pyphen
 except ImportError:
@@ -54,6 +55,7 @@ from .plugin_categories import (
     Task,
     TaskMultiplier,
     TemplateSystem,
+    SignalHandler,
 )
 
 config_changed = utils.config_changed
@@ -314,6 +316,7 @@ class Nikola(object):
             "PageCompiler": PageCompiler,
             "TaskMultiplier": TaskMultiplier,
             "RestExtension": RestExtension,
+            "SignalHandler": SignalHandler,
         })
         self.plugin_manager.setPluginInfoExtension('plugin')
         if sys.version_info[0] == 3:
@@ -328,6 +331,14 @@ class Nikola(object):
             ]
         self.plugin_manager.setPluginPlaces(places)
         self.plugin_manager.collectPlugins()
+
+        # Activate all required SignalHandler plugins
+        for plugin_info in self.plugin_manager.getPluginsOfCategory("SignalHandler"):
+            if plugin_info.name in self.config["DISABLED_PLUGINS"].keys():
+                self.plugin_manager.removePluginFromCategory(plugin_info, "SignalHandler")
+            else:
+                self.plugin_manager.activatePluginByName(plugin_info.name)
+                plugin_info.plugin_object.set_site(self)
 
         self.commands = {}
         # Activate all command plugins
@@ -438,6 +449,7 @@ class Nikola(object):
                 "PageCompiler"):
             self.compilers[plugin_info.name] = \
                 plugin_info.plugin_object
+        signal('configured').send(self)
 
     def _get_themes(self):
         if self._THEMES is None:
