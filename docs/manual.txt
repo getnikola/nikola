@@ -113,7 +113,7 @@ Security
     Dynamic sites are prone to experience security issues. The solution for that
     is constant vigilance, keeping the software behind the site updated, and
     plain old good luck. The stack of software used to provide a static site,
-    like those Nikola generates, is much smaller (Just a webserver).
+    like those Nikola generates, is much smaller (Just a web server).
 
     A smaller software stack implies less security risk.
 
@@ -149,7 +149,7 @@ Cost and Performance
 Lockin
     On server-side blog platforms, sometimes you can't export your own data, or
     it's in strange formats you can't use in other services. I have switched
-    blogging platforms from Advogato to PyCs to two homebrewed systems, to Nikola,
+    blogging platforms from Advogato to PyCs to two homebrew systems, to Nikola,
     and have never lost a file, a URL, or a comment. That's because I have *always*
     had my own data in a format of my choice.
 
@@ -158,7 +158,7 @@ Lockin
 Features
 --------
 
-Nikola has a very defined featureset: it has every feature I needed for my own sites.
+Nikola has a very defined feature set: it has every feature I needed for my own sites.
 Hopefully, it will be enough for others, and anyway, I am open to suggestions.
 
 If you want to create a blog or a site, Nikola provides:
@@ -184,7 +184,7 @@ If you want to create a blog or a site, Nikola provides:
 
 Also:
 
-* A preview webserver
+* A preview web server
 * "Live" re-rendering while you edit
 * "Smart" builds: only what changed gets rebuilt (usually in seconds)
 * Easy to extend with minimal Python knowledge.
@@ -364,7 +364,7 @@ After you do this, you can point your web browser to http://localhost:8000 and y
 the sample site. This is useful as a "preview" of your work.
 
 By default, the ``serve`` command runs the web server on port 8000 on the IP address 127.0.0.1.
-You can pass in an IP address and port number explicity using ``-a IP_ADDRESS``
+You can pass in an IP address and port number explicitly using ``-a IP_ADDRESS``
 (short version of ``--address``) or ``-p PORT_NUMBER`` (short version of ``--port``)
 Example usage::
 
@@ -411,7 +411,7 @@ The content of that file is as follows::
 
     Write your post here.
 
-The ``slug`` is the pagename. Since often titles will have
+The ``slug`` is the page name. Since often titles will have
 characters that look bad on URLs, it's generated as a "clean" version of the title.
 The third line is the post's date, and is set to "now".
 
@@ -477,7 +477,7 @@ post file (for example: ``how-to-make-money.txt.es``). This one can replace
 metadata of the default language, for example:
 
 * The translated title for the post or page
-* A translated version of the pagename
+* A translated version of the page name
 
 You can edit these files with your favourite text editor, and once you are happy
 with the contents, generate the pages as explained in `Getting Started`_
@@ -565,7 +565,7 @@ index page or in RSS feeds, but to display instead only the beginning of them.
 
 If it's the case, you only need to add a "magical comment" in your post.
 
-In restructuredtext::
+In reStructuredText::
 
    .. TEASER_END
 
@@ -682,7 +682,7 @@ The default configuration expects the page's metadata and text files to be on th
 ``stories`` folder, but that can be changed (see ``PAGES`` option above).
 
 You can create the page's files manually or use the ``new_post`` command
-with the ``-p`` option, qhich will place the files in the folder that
+with the ``-p`` option, which will place the files in the folder that
 has ``use_in_feed`` set to False.
 
 Redirections
@@ -776,7 +776,7 @@ Footer
 BODY_END
     This option lets you define a HTML snippet that will be added at the bottom of body.
     The main usage is a Google analytics snippet or something similar, but you can really
-    put anything there. Good place for Javascript.
+    put anything there. Good place for JavaScript.
 
 SOCIAL_BUTTONS_CODE
     The ``SOCIAL_BUTTONS_CODE`` option lets you define a HTML snippet that will be added
@@ -808,38 +808,41 @@ change the FILES_FOLDERS option::
 Getting More Themes
 -------------------
 
-There are not so many themes for Nikola. They are available at http://themes.getnikola.com
-Nikola has a builtin theme download/install mechanism to install those themes, its
-``install_theme`` command::
+There are a few themes for Nikola. They are available at
+the `Themes Index <http://themes.getnikola.com/>`_.
+Nikola has a built-in theme download/install mechanism to install those themes — the ``install_theme`` command::
 
     $ nikola install_theme -l
     Themes:
     -------
+    base-jinja
     blogtxt
-    readable
     ⋮
     ⋮
 
     $ nikola install_theme blogtxt
-    Downloading: http://themes.nikola.ralsina.com.ar/themes/blogtxt.zip
-    Extracting: blogtxt into themes
+    [2013-10-12T16:46:13Z] NOTICE: install_theme: Downloading:
+    http://themes.getnikola.com/v6/blogtxt.zip
+    [2013-10-12T16:46:15Z] NOTICE: install_theme: Extracting: blogtxt into themes
 
-And there you are, you now have themes/blogtxt installed. It's very rudimentary, but it
-should work in most cases.
+And there you are, you now have themes/blogtxt installed. It's very
+rudimentary, but it should work in most cases.
 
-If you create a nice theme, please share it! You can post about it on
-`the nikola forum <http://groups.google.com/group/nikola-discuss>`_ and I will
-make it available for download.
+If you create a nice theme, please share it!  You can do it as a pull
+request in the  `GitHub repository <https://github.com/getnikola/nikola-themes>`_.
 
 One other option is to tweak an existing theme using a different color scheme,
 typography and CSS in general. Nikola provides a ``bootswatch_theme`` option
 to create a custom theme by downloading free CSS files from http://bootswatch.com::
 
-    $ nikola bootswatch_theme -n custom_theme -s spruce -p site
-    Creating 'custom_theme' theme from 'spruce' and 'site'
-    Downloading:  http://bootswatch.com/spruce/bootstrap.min.css
-    Downloading:  http://bootswatch.com/spruce/bootstrap.css
-    Theme created. Change the THEME setting to "custom_theme" to use it.
+    $ nikola bootswatch_theme -n custom_theme -s spruce -p bootstrap3
+    [2013-10-12T16:46:58Z] NOTICE: bootswatch_theme: Creating 'custom_theme' theme
+    from 'spruce' and 'bootstrap3'
+    [2013-10-12T16:46:58Z] NOTICE: bootswatch_theme: Downloading:
+    http://bootswatch.com//spruce/bootstrap.min.css
+    [2013-10-12T16:46:58Z] NOTICE: bootswatch_theme: Downloading:
+    http://bootswatch.com//spruce/bootstrap.css
+    [2013-10-12T16:46:59Z] NOTICE: bootswatch_theme: Theme created. Change the THEME setting to "custom_theme" to use it.
 
 You can even try what different swatches do on an existing site using
 their handy `bootswatchlet <http://news.bootswatch.com/post/29555952123/a-bookmarklet-for-bootswatch>`_
@@ -866,7 +869,7 @@ Here is an example, from my own site's deployment script::
 
 Other interesting ideas are using
 `git as a deployment mechanism <http://toroid.org/ams/git-website-howto>`_ (or any other VCS
-for that matter), using `lftp mirror <http://lftp.yar.ru/>`_ or unison, or dropbox, or
+for that matter), using `lftp mirror <http://lftp.yar.ru/>`_ or unison, or Dropbox, or
 Ubuntu One. Any way you can think of to copy files from one place to another is good enough.
 
 Comments and Annotations
@@ -877,14 +880,14 @@ are probably expecting: comments.
 
 Nikola supports several third party comment systems:
 
-* `Disqus <http://disqus.com>`_
+* `DISQUS <http://disqus.com>`_
 * `IntenseDebate <http://www.intensedebate.com/>`_
 * `LiveFyre <http://www.livefyre.com/>`_
 * `Moot <http://moot.it>`_
 * `Google+ <http://plus.google.com>`_
 * `Facebook <http://facebook.com>`_
 
-By default it will use Disqus, but you can change by setting ``COMMENT_SYSTEM``
+By default it will use DISQUS, but you can change by setting ``COMMENT_SYSTEM``
 to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus" or
 "facebook"
 
@@ -893,7 +896,7 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus" or
    The value of ``COMMENT_SYSTEM_ID`` depends on what comment system you
    are using and you can see it in the system's admin interface.
 
-   * For Disqus it's called the **shortname**
+   * For DISQUS it's called the **shortname**
    * In IntenseDebate it's the **IntenseDebate site acct**
    * In LiveFyre it's the **siteId**
    * In Moot it's your **username**
@@ -906,7 +909,7 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus" or
 To use comments in a visible site, you should register with the service and
 then set the ``COMMENT_SYSTEM_ID`` option.
 
-I recommend 3rd party comments, and specially Disqus because:
+I recommend 3rd party comments, and specially DISQUS because:
 
 1) It doesn't require any server-side software on your site
 2) They offer you a way to export your comments, so you can take
@@ -918,7 +921,7 @@ You can disable comments for a post by adding a "nocomments" metadata field to i
 
     .. nocomments: True
 
-.. admonition:: Disqus Support
+.. admonition:: DISQUS Support
 
    In some cases, when you run the test site, you won't see the comments.
    That can be fixed by adding the disqus_developer flag to the templates
@@ -1062,7 +1065,7 @@ Optimizing Your Website
 
 One of the main goals of Nikola is to make your site fast and light. So here are a few
 tips we have found when setting up Nikola with Apache. If you have more, or
-different ones, or about other webservers, please share!
+different ones, or about other web servers, please share!
 
 #. Use a speed testing tool. I used Yahoo's YSlow but you can use any of them, and
    it's probably a good idea to use more than one.
@@ -1081,13 +1084,13 @@ different ones, or about other webservers, please share!
 #. The webassets Nikola plugin can drastically decrease the number of CSS and JS files your site fetches.
 
 #. Through the filters feature, you can run your files through arbitrary commands, so that images
-   are recompressed, Javascript is minimized, etc.
+   are recompressed, JavaScript is minimized, etc.
 
-#. The USE_CDN option offloads standard Javascript and CSS files to a CDN so they are not
+#. The USE_CDN option offloads standard JavaScript and CSS files to a CDN so they are not
    downloaded from your server.
 
-Restructured Text Extensions
-----------------------------
+reStructuredText Extensions
+---------------------------
 
 Nikola includes support for a few directives and roles that are not part of docutils, but which
 we think are handy for website development.
@@ -1104,10 +1107,10 @@ URL of the page.  For example here are two random videos::
 
 It supports Instagram, Flickr, Github gists, Funny or Die, and dozens more, thanks to `Micawber <https://github.com/coleifer/micawber>`_
 
-Youtube
+YouTube
 ~~~~~~~
 
-To link to a youtube video, you need the id of the video. For example, if the
+To link to a YouTube video, you need the id of the video. For example, if the
 URL of the video is http://www.youtube.com/watch?v=8N_tupPBtWQ what you need is
 **8N_tupPBtWQ**
 
@@ -1118,7 +1121,7 @@ Once you have that, all you need to do is::
 Vimeo
 ~~~~~
 
-To link to a vimeo video, you need the id of the video. For example, if the
+To link to a Vimeo video, you need the id of the video. For example, if the
 URL of the video is http://www.vimeo.com/20241459 then the id is **20241459**
 
 Once you have that, all you need to do is::
@@ -1195,7 +1198,7 @@ Producing this:
 
 .. gist:: 2395294
 
-This degrades gracefully if the browser doesn't support javascript.
+This degrades gracefully if the browser doesn't support JavaScript.
 
 Slideshows
 ~~~~~~~~~~
@@ -1278,11 +1281,11 @@ the following:
 * Will try to add redirects that send the old post URLs to the new ones
 * Will give you a url_map so you know where each old post was
 
-  This is also useful for Disqus thread migration!
+  This is also useful for DISQUS thread migration!
 
 * Will try to convert the content of your posts. This is *not* error free, because
-  WordPress uses some unholy  mix of HTML and strange things. Currently we are treating it
-  as markdown, which does a reasonabe job of it.
+  WordPress uses some unholy mix of HTML and strange things. Currently we are treating it
+  as markdown, which does a reasonable job of it.
 
   You will find your old posts in ``new_site/posts/post-title.wp`` in case you need to fix
   any of them.
@@ -1443,6 +1446,41 @@ Custom Plugins
 You can create your own plugins (see :doc:`extending`) and use them in your own
 site by putting them in a ``plugins/`` folder.
 
+
+Getting Extra Plugins
+---------------------
+
+If you want extra plugins, there is also the `Plugins Index <http://plugins.getnikola.com/>`_.
+
+Similarly to themes, there is a nice, built-in command to install them —
+``install_plugin``:
+
+    $ nikola install_plugin -l
+    Plugins:
+    --------
+    helloworld
+    tags
+    ⋮
+    ⋮
+
+    $ nikola install_plugin helloworld
+    [2013-10-12T16:51:56Z] NOTICE: install_plugin: Downloading: http://plugins.getnikola.com/v6/helloworld.zip
+    [2013-10-12T16:51:58Z] NOTICE: install_plugin: Extracting: helloworld into plugins
+    plugins/helloworld/requirements.txt
+    [2013-10-12T16:51:58Z] NOTICE: install_plugin: This plugin has Python dependencies.
+    [2013-10-12T16:51:58Z] NOTICE: install_plugin: Installing dependencies with pip...
+    ⋮
+    ⋮
+    [2013-10-12T16:51:59Z] NOTICE: install_plugin: Dependency installation succeeded.
+    [2013-10-12T16:51:59Z] NOTICE: install_plugin: This plugin has a sample config file.
+    Contents of the conf.py.sample file:
+
+        # Should the Hello World plugin say “BYE” instead?
+        BYE_WORLD = False
+
+
+You can also share plugins you created with the community!  Visit the
+`GitHub repository <https://github.com/getnikola/plugins>`_ to find out more.
 
 License
 -------
