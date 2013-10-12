@@ -34,6 +34,8 @@ import subprocess
 from nikola.plugin_categories import Task
 from nikola import utils
 
+LOGGER = utils.get_logger('build_sass')
+
 
 class BuildSass(Task):
     """Generate CSS out of Sass sources."""
@@ -76,20 +78,6 @@ class BuildSass(Task):
             self.sources_folder,
             *("*{0}".format(ext) for ext in self.sources_ext)))
 
-        # We can have file conflicts.  This is a way to prevent them.
-        # I orignally wanted to use sets and their cannot-have-duplicates
-        # magic, but I decided not to do this so we can show the user
-        # what files were problematic.
-        seennames = {}
-        for i in deps:
-            base = os.path.splitext(i)[0]
-            if base in seennames:
-                raise EnvironmentError(
-                'Duplicate filenames for SASS: {0} and {1}'.format(
-                    seennames[base], i))
-            else:
-                seennames.update({base: i})
-
         def compile_target(target, dst):
             utils.makedirs(dst_dir)
             src = os.path.join(kw['cache_folder'], self.sources_folder, target)
@@ -99,8 +87,25 @@ class BuildSass(Task):
 
         yield self.group_task()
 
+        # We can have file conflicts.  This is a way to prevent them.
+        # I orignally wanted to use sets and their cannot-have-duplicates
+        # magic, but I decided not to do this so we can show the user
+        # what files were problematic.
+        # If we didn’t do this, there would be a cryptic message from doit
+        # instead.
+        seennames = {}
         for target in targets:
-            dst = os.path.join(dst_dir, os.path.splitext(target)[0] + ".css")
+            base = os.path.splitext(target)[0]
+            dst = os.path.join(dst_dir, base + ".css")
+
+            if base in seennames:
+                LOGGER.error(
+                    'Duplicate filenames for SASS compiled files: {0} and '
+                    '{1} (both compile to {2})'.format(
+                        seennames[base], target, base + ".css"))
+            else:
+                seennames.update({base: target})
+
             yield {
                 'basename': self.name,
                 'name': dst,
