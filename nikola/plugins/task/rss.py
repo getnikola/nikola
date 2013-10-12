@@ -40,6 +40,10 @@ class RenderRSS(Task):
 
     name = "render_rss"
 
+    def set_site(self, site):
+        site.register_path_handler('rss', self.rss_path)
+        return super(RenderRSS, self).set_site(site)
+
     def gen_tasks(self):
         """Generate RSS feeds."""
         kw = {
@@ -81,3 +85,7 @@ class RenderRSS(Task):
                 'clean': True,
                 'uptodate': [utils.config_changed(kw)],
             }
+
+    def rss_path(self, name, lang):
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['RSS_PATH'], 'rss.xml'] if _f]

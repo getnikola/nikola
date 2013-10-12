@@ -1,6 +1,11 @@
 New in 6.2.0
 ============
 
+Features
+--------
+
+* Path/Link resolution mechanism for plugins (Issue #790)
+
 Bugfixes
 --------
 
