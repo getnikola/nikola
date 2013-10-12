@@ -11,3 +11,6 @@ build/
 .idea/
 __pycache__/
 *.egg-info/
+
+# For virtualenvwrapper
+.venv
