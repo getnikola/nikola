@@ -44,13 +44,6 @@ except ImportError:
 import lxml.html
 from yapsy.PluginManager import PluginManager
 
-if os.getenv('NIKOLA_DEBUG'):
-    import logging
-    logging.basicConfig(level=logging.DEBUG)
-else:
-    import logging
-    logging.basicConfig(level=logging.ERROR)
-
 from .post import Post
 from . import utils
 from .plugin_categories import (
