@@ -37,6 +37,10 @@ class Archive(Task):
 
     name = "render_archive"
 
+    def set_site(self, site):
+        site.register_path_handler('archive', self.archive_path)
+        return super(Archive, self).set_site(site)
+
     def gen_tasks(self):
         kw = {
             "messages": self.site.MESSAGES,
@@ -139,6 +143,16 @@ class Archive(Task):
             task['uptodate'] = [config_changed(task_cfg)]
             task['basename'] = self.name
             yield task
+
+    def archive_path(self, name, lang):
+        if name:
+            return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                                  self.site.config['ARCHIVE_PATH'], name,
+                                  self.site.config['INDEX_FILE']] if _f]
+        else:
+            return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                                  self.site.config['ARCHIVE_PATH'],
+                                  self.site.config['ARCHIVE_FILENAME']] if _f]
 
 
 def get_month_name(month_no, locale):

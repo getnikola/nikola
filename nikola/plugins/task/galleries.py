@@ -56,6 +56,10 @@ class Galleries(Task):
     name = str("render_galleries")
     dates = {}
 
+    def set_site(self, site):
+        site.register_path_handler('gallery', self.gallery_path)
+        return super(Galleries, self).set_site(site)
+
     def gen_tasks(self):
         """Render image galleries."""
 
@@ -391,3 +395,7 @@ class Galleries(Task):
             self.dates[src] = datetime.datetime.fromtimestamp(
                 os.stat(src).st_mtime)
         return self.dates[src]
+
+    def gallery_path(self, name, lang):
+        return [_f for _f in [self.site.config['GALLERY_PATH'], name,
+                              self.site.config['INDEX_FILE']] if _f]
