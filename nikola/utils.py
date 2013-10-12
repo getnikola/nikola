@@ -53,8 +53,13 @@ class ApplicationWarning(Exception):
     pass
 
 
-def get_logger(name, level=logbook.NOTICE):
+def get_logger(name, level=None):
     """Get a logger for a plugin."""
+    if level is None:
+        if os.getenv('NIKOLA_DEBUG'):
+            level = logbook.DEBUG
+        else:
+            level = logbook.NOTICE
     l = logbook.Logger(name)
     l.handlers.append(logbook.StderrHandler(
         level=level,

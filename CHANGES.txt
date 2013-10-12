@@ -5,6 +5,7 @@ Features
 --------
 
 * Initial support for signals/hooks using Blinker (Issue #764)
+* Path/Link resolution mechanism for plugins (Issue #790)
 
 Bugfixes
 --------
