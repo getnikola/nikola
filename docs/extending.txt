@@ -367,6 +367,22 @@ RestExtension Plugins
 
 Implement directives for Restructured Text, see ``media.py`` for a simple example.
 
+SignalHandler Plugins
+---------------------
+
+These plugins extend the ``SignalHandler`` class and connect to one or more
+signals via `blinker <http://pythonhosted.org/blinker/>`_
+
+The easiest way to do this is to reimplement ``set_site()`` and just connect to
+whatever signals you want there.
+
+Currently Nikola emits the following signals:
+
+``initialized``
+    Right after plugin activation
+``configured``
+    When all the configuration file is processed
+
 Plugin Index
 ============
 
