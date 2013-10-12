@@ -52,15 +52,9 @@ import pytz
 class ApplicationWarning(Exception):
     pass
 
-
-def get_logger(name, level=logbook.NOTICE):
+def get_logger(name):
     """Get a logger for a plugin."""
-    l = logbook.Logger(name)
-    l.handlers.append(logbook.StderrHandler(
-        level=level,
-        format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
-    ))
-    return l
+    return logbook.Logger(name)
 
 LOGGER = get_logger('Nikola')
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')

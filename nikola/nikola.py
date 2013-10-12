@@ -44,14 +44,6 @@ except ImportError:
 
 import lxml.html
 from yapsy.PluginManager import PluginManager
-
-if os.getenv('NIKOLA_DEBUG'):
-    import logging
-    logging.basicConfig(level=logging.DEBUG)
-else:
-    import logging
-    logging.basicConfig(level=logging.ERROR)
-
 from .post import Post
 from . import utils
 from .plugin_categories import (
@@ -335,7 +327,7 @@ class Nikola(object):
 
         # Activate all required SignalHandler plugins
         for plugin_info in self.plugin_manager.getPluginsOfCategory("SignalHandler"):
-            if plugin_info.name in self.config["DISABLED_PLUGINS"].keys():
+            if plugin_info.name in self.config.get('DISABLED_PLUGINS'):
                 self.plugin_manager.removePluginFromCategory(plugin_info, "SignalHandler")
             else:
                 self.plugin_manager.activatePluginByName(plugin_info.name)
