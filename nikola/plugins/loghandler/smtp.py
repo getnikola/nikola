@@ -13,7 +13,11 @@ class SmtpHandler(SignalHandler):
             print("loaded smtp handler")
 
             smtpconf['format_string'] = u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
-            LOGGER.handlers.append(logbook.MailHandler(**smtpconf))
+            LOGGER.handlers.append(logbook.MailHandler(
+                smtpconf.pop('from_addr'),
+                smtpconf.pop('recipients'),
+                **smtpconf 
+            ))
 
     def set_site(self, site):
         self.site = site
