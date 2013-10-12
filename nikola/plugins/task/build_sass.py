@@ -76,6 +76,20 @@ class BuildSass(Task):
             self.sources_folder,
             *("*{0}".format(ext) for ext in self.sources_ext)))
 
+        # We can have file conflicts.  This is a way to prevent them.
+        # I orignally wanted to use sets and their cannot-have-duplicates
+        # magic, but I decided not to do this so we can show the user
+        # what files were problematic.
+        seennames = {}
+        for i in deps:
+            base = os.path.splitext(i)[0]
+            if base in seennames:
+                raise EnvironmentError(
+                'Duplicate filenames for SASS: {0} and {1}'.format(
+                    seennames[base], i))
+            else:
+                seennames.update({base: i})
+
         def compile_target(target, dst):
             utils.makedirs(dst_dir)
             src = os.path.join(kw['cache_folder'], self.sources_folder, target)
