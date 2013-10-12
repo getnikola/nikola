@@ -53,8 +53,13 @@ class ApplicationWarning(Exception):
     pass
 
 
-def get_logger(name, level=logbook.NOTICE):
+def get_logger(name, level=None):
     """Get a logger for a plugin."""
+    if level is None:
+        if os.getenv('NIKOLA_DEBUG'):
+            level = logbook.DEBUG
+        else:
+            level = logbook.NOTICE
     l = logbook.Logger(name)
     l.handlers.append(logbook.StderrHandler(
         level=level,
@@ -136,7 +141,7 @@ def sys_decode(thing):
 
 def makedirs(path):
     """Create a folder."""
-    if os.path.isdir(path):
+    if not path or os.path.isdir(path):
         return
     if os.path.exists(path):
         raise OSError('Path {0} already exists and is not a folder.')

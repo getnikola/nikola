@@ -44,13 +44,6 @@ except ImportError:
 import lxml.html
 from yapsy.PluginManager import PluginManager
 
-if os.getenv('NIKOLA_DEBUG'):
-    import logging
-    logging.basicConfig(level=logging.DEBUG)
-else:
-    import logging
-    logging.basicConfig(level=logging.ERROR)
-
 from .post import Post
 from . import utils
 from .plugin_categories import (
@@ -83,6 +76,12 @@ class Nikola(object):
 
     def __init__(self, **config):
         """Setup proper environment for running tasks."""
+
+        # Register our own path handlers
+        self.path_handlers = {
+            'slug': self.slug_path,
+            'post_path': self.post_path,
+        }
 
         self.strict = False
         self.global_data = {}
@@ -640,7 +639,11 @@ class Nikola(object):
     def path(self, kind, name, lang=None, is_link=False):
         """Build the path to a certain kind of page.
 
-        kind is one of:
+        These are mostly defined by plugins by registering via
+        the register_path_handler method, except for slug and
+        post_path which are defined in this class' init method.
+
+        Here's some of the others, for historical reasons:
 
         * tag_index (name is ignored)
         * tag (and name is the tag name)
@@ -668,78 +671,7 @@ class Nikola(object):
         if lang is None:
             lang = self.current_lang()
 
-        path = []
-
-        if kind == "tag_index":
-            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                                  self.config['TAG_PATH'],
-                                  self.config['INDEX_FILE']] if _f]
-        elif kind == "tag":
-            if self.config['SLUG_TAG_PATH']:
-                name = utils.slugify(name)
-            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                                  self.config['TAG_PATH'], name + ".html"] if
-                    _f]
-
-        elif kind == "category":
-            if self.config['SLUG_TAG_PATH']:
-                name = utils.slugify(name)
-            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                                  self.config['TAG_PATH'], "cat_" + name + ".html"] if
-                    _f]
-        elif kind == "tag_rss":
-            if self.config['SLUG_TAG_PATH']:
-                name = utils.slugify(name)
-            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                                  self.config['TAG_PATH'], name + ".xml"] if
-                    _f]
-        elif kind == "category_rss":
-            if self.config['SLUG_TAG_PATH']:
-                name = utils.slugify(name)
-            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                                  self.config['TAG_PATH'], "cat_" + name + ".xml"] if
-                    _f]
-        elif kind == "index":
-            if name not in [None, 0]:
-                path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                                      self.config['INDEX_PATH'],
-                                      'index-{0}.html'.format(name)] if _f]
-            else:
-                path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                                      self.config['INDEX_PATH'],
-                                      self.config['INDEX_FILE']]
-                        if _f]
-        elif kind == "post_path":
-            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                                  os.path.dirname(name),
-                                  self.config['INDEX_FILE']] if _f]
-        elif kind == "rss":
-            path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                                  self.config['RSS_PATH'], 'rss.xml'] if _f]
-        elif kind == "archive":
-            if name:
-                path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                                      self.config['ARCHIVE_PATH'], name,
-                                      self.config['INDEX_FILE']] if _f]
-            else:
-                path = [_f for _f in [self.config['TRANSLATIONS'][lang],
-                                      self.config['ARCHIVE_PATH'],
-                                      self.config['ARCHIVE_FILENAME']] if _f]
-        elif kind == "gallery":
-            path = [_f for _f in [self.config['GALLERY_PATH'], name,
-                                  self.config['INDEX_FILE']] if _f]
-        elif kind == "listing":
-            path = [_f for _f in [self.config['LISTINGS_FOLDER'], name +
-                                  '.html'] if _f]
-        elif kind == "slug":
-            results = [p for p in self.timeline if p.meta('slug') == name]
-            if not results:
-                utils.LOGGER.warning("Can't resolve path request for slug: {0}".format(name))
-            else:
-                if len(results) > 1:
-                    utils.LOGGER.warning('Ambiguous path request for slug: {0}'.format(name))
-                path = [_f for _f in results[0].permalink(lang).split('/') if _f]
-                utils.LOGGER.notice(path)
+        path = self.path_handlers[kind](name, lang)
 
         if is_link:
             link = '/' + ('/'.join(path))
@@ -751,6 +683,28 @@ class Nikola(object):
                 return link
         else:
             return os.path.join(*path)
+
+    def post_path(self, name, lang):
+        """post_path path handler"""
+        return [_f for _f in [self.config['TRANSLATIONS'][lang],
+                              os.path.dirname(name),
+                              self.config['INDEX_FILE']] if _f]
+
+    def slug_path(self, name, lang):
+        """slug path handler"""
+        results = [p for p in self.timeline if p.meta('slug') == name]
+        if not results:
+            utils.LOGGER.warning("Can't resolve path request for slug: {0}".format(name))
+        else:
+            if len(results) > 1:
+                utils.LOGGER.warning('Ambiguous path request for slug: {0}'.format(name))
+            return [_f for _f in results[0].permalink(lang).split('/') if _f]
+
+    def register_path_handler(self, kind, f):
+        if kind in self.path_handlers:
+            utils.LOGGER.warning('Conflicting path handlers for kind: {0}'.format(kind))
+        else:
+            self.path_handlers[kind] = f
 
     def link(self, *args):
         return self.path(*args, is_link=True)

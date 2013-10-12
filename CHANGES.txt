@@ -4,11 +4,14 @@ New in 6.2.0
 Features
 --------
 
+* Path/Link resolution mechanism for plugins (Issue #790)
 * Sass compiling (Issue #642)
 
 Bugfixes
 --------
 
+* Ensure folder creation when importing wordpress (Issue #812)
+* Handle empty stories better and avoid Tipue crash (Issue #811)
 * Trigger conflict if two posts generate the same output (Issue #806)
 
 New in 6.1.1
