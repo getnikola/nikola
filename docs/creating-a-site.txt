@@ -101,7 +101,7 @@ not-blogs, same for tags and link. Description is useful for SEO purposes
 if you care for that.
 
 And below, the content. By default you are expected to use
-`reStructured text <http://getnikola.com/quickstart.html>`_ but
+`reStructuredText <http://getnikola.com/quickstart.html>`_ but
 Nikola supports a ton of formats, including Markdown, plain HTML, BBCode,
 Wiki, and Textile.
 

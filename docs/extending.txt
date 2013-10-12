@@ -365,7 +365,7 @@ returns the preferred extension for the output file.
 RestExtension Plugins
 ---------------------
 
-Implement directives for Restructured Text, see ``media.py`` for a simple example.
+Implement directives for reStructuredText, see ``media.py`` for a simple example.
 
 SignalHandler Plugins
 ---------------------

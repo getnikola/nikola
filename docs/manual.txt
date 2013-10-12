@@ -253,10 +253,10 @@ Getting Started
 
 To create posts and pages in Nikola, you write them in one of the supported input formats.
 Those source files are later converted to HTML
-The recommended formats are restructured text and Markdown, but there is also support
+The recommended formats are reStructuredText and Markdown, but there is also support
 for textile and WikiCreole and even for just writing HTML.
 
-.. note:: There is a great `quick tutorial to learn restructured text. <quickstart.html>`_
+.. note:: There is a great `quick tutorial to learn reStructuredText. <quickstart.html>`_
 
 First, let's see how you "build" your site. Nikola comes with a minimal site to get you started.
 
@@ -382,10 +382,10 @@ By default, that file will contain also some extra information about your post (
 It can be placed in a separate file by using the ``-2`` option, but it's generally
 easier to keep it in a single location.
 
-The contents of your post have to be written (by default) in `restructured text <http://docutils.sf.net>`_
+The contents of your post have to be written (by default) in `reStructuredText <http://docutils.sf.net>`_
 but you can use a lot of different markups using the ``-f`` option. Currently
 Nikola supports bbcode, wiki, markdown, html, txt2tags and textile in addition
-to restructured text.
+to reStructuredText.
 
 You can control what markup compiler is used for each file extension with the ``COMPILERS``
 option. The default configuration expects them to be placed in ``posts`` but that can be
