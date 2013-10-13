@@ -9,11 +9,12 @@ class StdoutHandler(SignalHandler):
 
     def attach_handler(self, sender):
         """Attach the handler to the logger."""
-        if self.site.config.get('LOGGING_HANDLERS').get('stderr') or os.getenv('NIKOLA_DEBUG'):
+        conf = self.site.config.get('LOGGING_HANDLERS').get('stderr')
+        if conf or os.getenv('NIKOLA_DEBUG'):
             print("stderr handler loaded")
 
             self.site.loghandlers.append(logbook.StderrHandler(
-                level='DEBUG' if not os.getenv('NIKOLA_DEBUG') else self.site.config.get('LOGGING_HANDLERS').get('stderr').get('loglevel','WARNING').upper(),
+                level='DEBUG' if os.getenv('NIKOLA_DEBUG') else conf.get('loglevel','WARNING').upper(),
                 format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] ### {record.level_name}: {record.channel}: {record.message}'
             ))
 
