@@ -45,7 +45,6 @@ except ImportError:
 import lxml.html
 from yapsy.PluginManager import PluginManager
 from .post import Post
-from . import utils
 from .plugin_categories import (
     Command,
     LateTask,
@@ -56,6 +55,7 @@ from .plugin_categories import (
     TemplateSystem,
     SignalHandler,
 )
+from . import utils
 
 config_changed = utils.config_changed
 
@@ -90,6 +90,7 @@ class Nikola(object):
         self._scanned = False
         self._template_system = None
         self._THEMES = None
+        self.loghandlers = []
         if not config:
             self.configured = False
         else:

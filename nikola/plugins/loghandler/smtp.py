@@ -1,5 +1,4 @@
 from nikola.plugin_categories import SignalHandler
-from nikola.utils import LOGGER
 from blinker import signal
 import logbook
 
@@ -7,13 +6,13 @@ class SmtpHandler(SignalHandler):
     name = 'smtp'
 
     def attach_handler(self, sender):
-        """Attach the handler to the logger."""
+        """Add the handler to a list of handlers that are attached when get_logger() is called.."""
         smtpconf = self.site.config.get('LOGGING_HANDLERS').get('smtp')
         if smtpconf:
             print("loaded smtp handler")
 
             smtpconf['format_string'] = u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
-            LOGGER.handlers.append(logbook.MailHandler(
+            self.site.loghandlers.append(logbook.MailHandler(
                 smtpconf.pop('from_addr'),
                 smtpconf.pop('recipients'),
                 **smtpconf 
