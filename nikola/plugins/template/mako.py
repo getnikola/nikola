@@ -28,12 +28,16 @@
 from __future__ import unicode_literals, print_function, absolute_import
 import os
 import shutil
+import sys
+import tempfile
 
 from mako import util, lexer
 from mako.lookup import TemplateLookup
 
 from nikola.plugin_categories import TemplateSystem
-from nikola.utils import makedirs
+from nikola.utils import makedirs, get_logger
+
+LOGGER = get_logger('mako')
 
 
 class MakoTemplates(TemplateSystem):
@@ -60,6 +64,14 @@ class MakoTemplates(TemplateSystem):
     def set_directories(self, directories, cache_folder):
         """Createa  template lookup."""
         cache_dir = os.path.join(cache_folder, '.mako.tmp')
+        # Workaround for a Mako bug, Issue #825
+        if sys.version_info[0] == 2:
+            try:
+                os.path.abspath(cache_dir).decode('ascii')
+            except UnicodeEncodeError:
+                cache_dir = tempfile.mkdtemp()
+                LOGGER.warning('Because of a Mako bug, setting cache_dir to {0}'.format(cache_dir))
+
         if os.path.exists(cache_dir):
             shutil.rmtree(cache_dir)
         self.lookup = TemplateLookup(
