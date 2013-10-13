@@ -46,7 +46,10 @@ except ImportError:
 
 import logbook
 from logbook.more import ExceptionHandler
+from logbook.compat import redirect_logging
 import pytz
+
+redirect_logging()
 
 
 class ApplicationWarning(Exception):

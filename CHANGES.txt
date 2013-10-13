@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Fix logging incompatibility in Yapsy (Issue #826)
 * Workaround for Mako cache folder unicode bug (Issue #825)
 * Ensure folder creation when importing wordpress (Issue #812)
 * Handle empty stories better and avoid Tipue crash (Issue #811)
