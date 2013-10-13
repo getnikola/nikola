@@ -44,8 +44,6 @@ class CompileRest(PageCompiler):
 
     name = "rest"
 
-    logger = None
-
     def compile_html(self, source, dest, is_two_file=True):
         """Compile reSt into HTML."""
 
@@ -76,7 +74,7 @@ class CompileRest(PageCompiler):
                 if os.path.isfile(deps_path):
                     os.unlink(deps_path)
         if error_level == 2:
-            logger.warning('Docutils reports warnings on {0}'.format(source))
+            self.logger.warning('Docutils reports warnings on {0}'.format(source))
         if error_level < 3:
             return True
         else:
@@ -105,8 +103,7 @@ class CompileRest(PageCompiler):
             plugin_info.plugin_object.set_site(site)
             plugin_info.plugin_object.short_help = plugin_info.description
 
-            self.logger = get_logger('compile_rest', site.loghandlers)
-
+        self.logger = get_logger('compile_rest', site.loghandlers)
         return super(CompileRest, self).set_site(site)
 
 
