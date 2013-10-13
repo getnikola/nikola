@@ -71,7 +71,7 @@ class Archive(Task):
                     months = sorted(list(months))
                     months.reverse()
                     template_name = "list.tmpl"
-                    context["items"] = [[nikola.utils.LocaleBorg.get_month_name(int(month), lang), month] for month in months]
+                    context["items"] = [[nikola.utils.LocaleBorg().get_month_name(int(month), lang), month] for month in months]
                     post_list = []
                 task = self.site.generic_post_list_renderer(
                     lang,
@@ -103,7 +103,7 @@ class Archive(Task):
                 context["permalink"] = self.site.link("archive", year, lang)
 
                 context["title"] = kw["messages"][lang]["Posts for {month} {year}"].format(
-                    year=year, month=nikola.utils.LocaleBorg.get_month_name(int(month), lang))
+                    year=year, month=nikola.utils.LocaleBorg().get_month_name(int(month), lang))
                 task = self.site.generic_post_list_renderer(
                     lang,
                     post_list,

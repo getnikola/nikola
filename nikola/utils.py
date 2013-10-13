@@ -691,7 +691,7 @@ class LocaleBorg:
             encodings[lang] = encoding
 
         cls.encodings = encodings
-        cls.set_locale(initial_lang)
+        cls.__shared_state['current_lang'] = lang
         cls.initialized = True
 
     @classmethod
@@ -719,8 +719,7 @@ class LocaleBorg:
             raise Exception("Attempt to use LocaleBorg before initialization")
         self.__dict__ = self.__shared_state
 
-    @classmethod
-    def set_locale(cls, lang):
+    def set_locale(self, lang):
         """Sets the locale for language lang, returns ''
 
         in linux the locale encoding is set to utf8,
@@ -729,25 +728,23 @@ class LocaleBorg:
         """
         # intentional non try-except: templates must ask locales with a lang,
         # let the code explode here and not hide the point of failure
-        if lang != cls.__shared_state['current_lang']:
-            locale_n = cls.locales[lang]
-            cls.__shared_state['current_lang'] = lang
+        if lang != self.__shared_state['current_lang']:
+            locale_n = self.locales[lang]
+            self.__shared_state['current_lang'] = lang
             locale.setlocale(locale.LC_ALL, locale_n)
         return ''
 
-    @classmethod
-    def get_month_name(cls, month_no, lang):
+    def get_month_name(self, month_no, lang):
         """returns localized month name in an unicode string"""
         if sys.version_info[0] == 3:  # Python 3
-            with calendar.different_locale(cls.locales[lang]):
+            with calendar.different_locale(self.locales[lang]):
                 s = calendar.month_name[month_no]
             # for py3 s is unicode
         else:  # Python 2
-            with calendar.TimeEncoding(cls.locales[lang]):
+            with calendar.TimeEncoding(self.locales[lang]):
                 s = calendar.month_name[month_no]
-            s = s.decode(cls.encodings[lang])
+            s = s.decode(self.encodings[lang])
         return s
-
 
 class ExtendedRSS2(rss.RSS2):
     def publish_extensions(self, handler):

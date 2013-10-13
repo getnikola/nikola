@@ -392,7 +392,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT = {}
 
         self._GLOBAL_CONTEXT['_link'] = self.link
-        self._GLOBAL_CONTEXT['set_locale'] = utils.LocaleBorg.set_locale
+        self._GLOBAL_CONTEXT['set_locale'] = utils.LocaleBorg().set_locale
         self._GLOBAL_CONTEXT['rel_link'] = self.rel_link
         self._GLOBAL_CONTEXT['abs_link'] = self.abs_link
         self._GLOBAL_CONTEXT['exists'] = self.file_exists
