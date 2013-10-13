@@ -32,6 +32,8 @@ import nikola.post
 from nikola.plugin_categories import Task
 from nikola import utils, rc4
 
+LOGGER = None
+
 def wrap_encrypt(path, password):
     """Wrap a post with encryption."""
     with codecs.open(path, 'rb+', 'utf8') as inf:
@@ -49,7 +51,7 @@ class RenderPosts(Task):
     def gen_tasks(self):
         """Build HTML fragments from metadata and text."""
 
-        self.logger = utils.get_logger('render_posts', self.site.loghandlers)
+        LOGGER = utils.get_logger('render_posts', self.site.loghandlers)
 
         self.site.scan_posts()
         kw = {
@@ -85,7 +87,7 @@ class RenderPosts(Task):
                     'uptodate': [utils.config_changed(deps_dict)],
                 }
                 if post.publish_later:
-                    self.logger.notice('{0} is scheduled to be published in the future ({1})'.format(post.source_path, post.date))
+                    LOGGER.notice('{0} is scheduled to be published in the future ({1})'.format(post.source_path, post.date))
                 if post.meta('password'):
                     task['actions'].append((wrap_encrypt, (dest, post.meta('password'))))
                 yield task

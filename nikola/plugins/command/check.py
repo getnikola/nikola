@@ -39,6 +39,8 @@ import lxml.html
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger
 
+LOGGER = None
+
 class CommandCheck(Command):
     """Check the generated site."""
 
@@ -82,7 +84,7 @@ class CommandCheck(Command):
     def _execute(self, options, args):
         """Check the generated site."""
 
-        self.logger = get_logger('check', self.site.loghandlers)
+        LOGGER = get_logger('check', self.site.loghandlers)
 
         if not options['links'] and not options['files'] and not options['clean']:
             print(self.help())
@@ -122,18 +124,18 @@ class CommandCheck(Command):
                         self.existing_targets.add(target_filename)
                     else:
                         rv = True
-                        self.logger.warn("Broken link in {0}: ".format(filename), target)
+                        LOGGER.warn("Broken link in {0}: ".format(filename), target)
                         if find_sources:
-                            self.logger.warn("Possible sources:")
-                            self.logger.warn(os.popen('nikola list --deps ' + task, 'r').read())
-                            self.logger.warn("===============================\n")
+                            LOGGER.warn("Possible sources:")
+                            LOGGER.warn(os.popen('nikola list --deps ' + task, 'r').read())
+                            LOGGER.warn("===============================\n")
         except Exception as exc:
-            self.logger.error("Error with:", filename, exc)
+            LOGGER.error("Error with:", filename, exc)
         return rv
 
     def scan_links(self, find_sources=False):
-        self.logger.notice("Checking Links:")
-        self.logger.notice("===============")
+        LOGGER.notice("Checking Links:")
+        LOGGER.notice("===============")
         failure = False
         for task in os.popen('nikola list --all', 'r').readlines():
             task = task.strip()
@@ -145,27 +147,27 @@ class CommandCheck(Command):
                 if self.analyze(task, find_sources):
                     failure = True
         if not failure:
-            self.logger.notice("All links checked.")
+            LOGGER.notice("All links checked.")
         return failure
 
     def scan_files(self):
         failure = False
-        self.logger.notice("Checking Files:")
-        self.logger.notice("===============\n")
+        LOGGER.notice("Checking Files:")
+        LOGGER.notice("===============\n")
         only_on_output, only_on_input = self.real_scan_files()
         if only_on_output:
             only_on_output.sort()
-            self.logger.warn("Files from unknown origins:")
+            LOGGER.warn("Files from unknown origins:")
             for f in only_on_output:
-                self.logger.warn(f)
+                LOGGER.warn(f)
             failure = True
         if only_on_input:
             only_on_input.sort()
-            self.logger.warn("Files not generated:")
+            LOGGER.warn("Files not generated:")
             for f in only_on_input:
-                self.logger.warn(f)
+                LOGGER.warn(f)
         if not failure:
-            self.logger.notice("All files checked.")
+            LOGGER.notice("All files checked.")
         return failure
 
     def clean_files(self):
