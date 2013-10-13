@@ -89,16 +89,17 @@ def copy_symlinked_for_windows():
 
     # essentially nikola.utils.should_fix_git_symlinked inlined, to not
     # fiddle with sys.path / import unless really needed
-    if sys.platform == 'win32':
-        path = (os.path.dirname(__file__) +
-                r'nikola\data\samplesite\stories\theming.rst')
-        try:
-            if os.path.getsize(path) < 200:
-                pass
-            else:
-                return
-        except Exception:
+    if sys.platform != 'win32':
+        return
+    path = (os.path.dirname(__file__) +
+            r'nikola\data\samplesite\stories\theming.rst')
+    try:
+        if os.path.getsize(path) < 200:
+            pass
+        else:
             return
+    except Exception:
+        return
 
     # apply the fix
     localdir = os.path.dirname(__file__)
