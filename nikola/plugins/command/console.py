@@ -30,9 +30,9 @@ import os
 
 from nikola import __version__
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger
+from nikola.utils import get_logger, STDERR_HANDLER
 
-LOGGER = get_logger('console')
+LOGGER = get_logger('console', STDERR_HANDLER)
 
 
 class Console(Command):

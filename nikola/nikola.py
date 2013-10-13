@@ -42,9 +42,17 @@ try:
 except ImportError:
     pyphen = None
 
+if os.getenv('NIKOLA_DEBUG'):
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    import logging
+    logging.basicConfig(level=logging.ERROR)
+
 import lxml.html
 from yapsy.PluginManager import PluginManager
 from .post import Post
+from . import utils
 from .plugin_categories import (
     Command,
     LateTask,
@@ -55,7 +63,7 @@ from .plugin_categories import (
     TemplateSystem,
     SignalHandler,
 )
-from . import utils
+
 
 config_changed = utils.config_changed
 
@@ -190,7 +198,8 @@ class Nikola(object):
             'DEPLOY_FUTURE': False,
             'SCHEDULE_ALL': False,
             'SCHEDULE_RULE': '',
-            'SCHEDULE_FORCE_TODAY': False
+            'SCHEDULE_FORCE_TODAY': False,
+            'LOGGING_HANDLERS': {'stderr': {'loglevel': 'WARNING'}},
         }
 
         self.config.update(config)

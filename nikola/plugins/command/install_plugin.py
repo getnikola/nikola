@@ -44,7 +44,7 @@ except ImportError:
 from nikola.plugin_categories import Command
 from nikola import utils
 
-LOGGER = utils.get_logger('install_plugin')
+LOGGER = utils.get_logger('install_plugin', utils.STDERR_HANDLER)
 
 
 # Stolen from textwrap in Python 3.3.2.

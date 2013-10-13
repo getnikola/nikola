@@ -38,13 +38,13 @@ except ImportError:
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import get_logger, makedirs, req_missing
 
-LOGGER = get_logger('compile_rest')
-
 
 class CompileRest(PageCompiler):
     """Compile reSt into HTML."""
 
     name = "rest"
+
+    logger = None
 
     def compile_html(self, source, dest, is_two_file=True):
         """Compile reSt into HTML."""
@@ -76,7 +76,7 @@ class CompileRest(PageCompiler):
                 if os.path.isfile(deps_path):
                     os.unlink(deps_path)
         if error_level == 2:
-            LOGGER.warning('Docutils reports warnings on {0}'.format(source))
+            logger.warning('Docutils reports warnings on {0}'.format(source))
         if error_level < 3:
             return True
         else:
@@ -104,6 +104,8 @@ class CompileRest(PageCompiler):
             site.plugin_manager.activatePluginByName(plugin_info.name)
             plugin_info.plugin_object.set_site(site)
             plugin_info.plugin_object.short_help = plugin_info.description
+
+            self.logger = get_logger('compile_rest', site.loghandlers)
 
         return super(CompileRest, self).set_site(site)
 

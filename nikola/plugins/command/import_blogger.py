@@ -44,7 +44,7 @@ from nikola import utils
 from nikola.utils import req_missing
 from nikola.plugins.basic_import import ImportMixin
 
-LOGGER = utils.get_logger('import_blogger')
+LOGGER = utils.get_logger('import_blogger', utils.STDERR_HANDLER)
 
 
 class CommandImportBlogger(Command, ImportMixin):

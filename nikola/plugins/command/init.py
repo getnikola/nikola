@@ -33,10 +33,10 @@ from mako.template import Template
 
 import nikola
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, makedirs
+from nikola.utils import get_logger, makedirs, STDERR_HANDLER
 from nikola.winutils import fix_git_symlinked
 
-LOGGER = get_logger('init')
+LOGGER = get_logger('init', STDERR_HANDLER)
 
 
 class CommandInit(Command):
