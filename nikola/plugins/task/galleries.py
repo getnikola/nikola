@@ -100,6 +100,7 @@ class Galleries(Task):
             post = self.parse_index(gallery)
 
             # Create image list, filter exclusions
+            image_list = self.get_image_list(gallery)
 
             # Sort as needed
 
@@ -149,6 +150,28 @@ class Galleries(Task):
             post = None
         return post
 
+    def get_image_list(self, gallery_path):
+
+        # Gather image_list contains "gallery/name/image_name.jpg"
+        image_list = glob.glob(gallery_path + "/*jpg") +\
+            glob.glob(gallery_path + "/*JPG") +\
+            glob.glob(gallery_path + "/*png") +\
+            glob.glob(gallery_path + "/*PNG")
+
+        # Filter ignored images
+        exclude_path = os.path.join(gallery_path, "exclude.meta")
+
+        try:
+            f = open(exclude_path, 'r')
+            excluded_image_name_list = f.read().split()
+        except IOError:
+            excluded_image_name_list = []
+
+        excluded_image_list = ["{0}/{1}".format(gallery_path, i) for i in excluded_image_name_list]
+        image_set = set(image_list) - set(excluded_image_list)
+        image_list = list(image_set)
+        return image_list
+
 
         #yield self.group_task()
         ## FIXME: lots of work is done even when images don't change,
@@ -158,25 +181,6 @@ class Galleries(Task):
 
 
             #output_name = os.path.join(output_gallery, self.site.config['INDEX_FILE'])
-            ## Gather image_list contains "gallery/name/image_name.jpg"
-            #image_list = glob.glob(gallery_path + "/*jpg") +\
-                #glob.glob(gallery_path + "/*JPG") +\
-                #glob.glob(gallery_path + "/*png") +\
-                #glob.glob(gallery_path + "/*PNG")
-
-            ## Filter ignored images
-            #try:
-                #exclude_path = os.path.join(gallery_path, "exclude.meta")
-                #try:
-                    #f = open(exclude_path, 'r')
-                    #excluded_image_name_list = f.read().split()
-                #except IOError:
-                    #excluded_image_name_list = []
-                #excluded_image_list = ["{0}/{1}".format(gallery_path, i) for i in excluded_image_name_list]
-                #image_set = set(image_list) - set(excluded_image_list)
-                #image_list = list(image_set)
-            #except IOError:
-                #pass
 
 
             #crumbs = utils.get_crumbs(gallery_path)
