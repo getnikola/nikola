@@ -78,6 +78,10 @@ class PostList(Directive):
         Filter posts to show only posts having at least one of the ``slugs``.
         Defaults to None.
 
+    ``all`` : flag
+        Shows all posts and pages in the post list.
+        Defaults to show only posts with set *use_in_feeds*.
+
     ``lang`` : string
         The language of post *titles* and *links*.
         Defaults to default language.
@@ -97,6 +101,7 @@ class PostList(Directive):
         'reverse': directives.flag,
         'tags': directives.unchanged,
         'slugs': directives.unchanged,
+        'all': directives.flag,
         'lang': directives.unchanged,
         'template': directives.path,
         'id': directives.unchanged,
@@ -110,13 +115,18 @@ class PostList(Directive):
         tags = [t.strip().lower() for t in tags.split(',')] if tags else []
         slugs = self.options.get('slugs')
         slugs = [s.strip() for s in slugs.split(',')] if slugs else []
+        show_all = self.options.get('all', False)
         lang = self.options.get('lang', self.site.current_lang())
         template = self.options.get('template', 'post_list_directive.tmpl')
         post_list_id = self.options.get('id', 'post_list_' + uuid.uuid4().hex)
 
         posts = []
         step = -1 if reverse else None
-        timeline = [p for p in self.site.timeline if p.use_in_feeds]
+        if show_all is None:
+            timeline = [p for p in self.site.timeline]
+        else:
+            timeline = [p for p in self.site.timeline if p.use_in_feeds]
+
         for post in timeline[first:last:step]:
             if tags:
                 cont = True
