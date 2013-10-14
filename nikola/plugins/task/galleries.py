@@ -46,7 +46,7 @@ except ImportError:
 
 from nikola.plugin_categories import Task
 from nikola import utils
-
+from nikola.post import Post
 
 class Galleries(Task):
     """Render image galleries."""
@@ -99,7 +99,6 @@ class Galleries(Task):
             # Parse index into a post (with translations)
             post = self.parse_index(gallery)
 
-
             # Create image list, filter exclusions
 
             # Sort as needed
@@ -141,8 +140,12 @@ class Galleries(Task):
         """Returns a Post object if there is an index.txt."""
 
         index_path = os.path.join(gallery, "index.txt")
-        utils.LOGGER.notice(index_path)
-
+        if os.path.isfile(index_path):
+            # FIXME: replace foo with a proper destination
+            post = Post(index_path, self.site.config, 'foo', False, self.site.MESSAGES, 'story.tmpl')
+        else:
+            post = None
+        return post
 
 
         #yield self.group_task()
