@@ -28,6 +28,7 @@ from __future__ import unicode_literals, print_function, absolute_import
 
 import codecs
 from collections import defaultdict
+import datetime
 import os
 import re
 import string
@@ -139,6 +140,10 @@ class Post(object):
             # Fill default_metadata with stuff from the other languages
             for lang in sorted(self.translated_to):
                 default_metadata.update(self.meta[lang])
+
+        if 'date' not in default_metadata and not use_in_feeds:
+            # For stories we don't *really* need a date
+            default_metadata['date'] = datetime.datetime.fromtimestamp(os.stat(self.source_path).st_ctime)
 
         if 'title' not in default_metadata or 'slug' not in default_metadata \
                 or 'date' not in default_metadata:
