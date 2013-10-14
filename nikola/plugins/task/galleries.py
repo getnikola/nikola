@@ -140,9 +140,11 @@ class Galleries(Task):
         """Returns a Post object if there is an index.txt."""
 
         index_path = os.path.join(gallery, "index.txt")
+        destination = os.path.join(
+                            self.kw["output_folder"],
+                            gallery)
         if os.path.isfile(index_path):
-            # FIXME: replace foo with a proper destination
-            post = Post(index_path, self.site.config, 'foo', False, self.site.MESSAGES, 'story.tmpl')
+            post = Post(index_path, self.site.config, destination, False, self.site.MESSAGES, 'story.tmpl')
         else:
             post = None
         return post
