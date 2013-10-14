@@ -103,8 +103,16 @@ class Galleries(Task):
             image_list = self.get_image_list(gallery)
 
             # Sort as needed
+            # Sort by date
+            if self.kw['sort_by_date']:
+                image_list.sort(key=lambda a: self.image_date(a))
+            else:  # Sort by name
+                image_list.sort()
 
-            # Create thumbnails
+            # Create thumbnails and large images in destination
+            for image in image_list:
+                for task in self.create_target_images(image):
+                    yield task
 
             # Create index.html for each language
 
@@ -172,6 +180,52 @@ class Galleries(Task):
         image_list = list(image_set)
         return image_list
 
+    def create_target_images(self, img):
+        gallery_name = os.path.relpath(os.path.dirname(img), self.kw['gallery_path'])
+        output_gallery = os.path.dirname(
+            os.path.join(
+                self.kw["output_folder"],
+                self.site.path("gallery", gallery_name)))
+        # Do thumbnails and copy originals
+        # img is "galleries/name/image_name.jpg"
+        # img_name is "image_name.jpg"
+        # fname, ext are "image_name", ".jpg"
+        # thumb_path is
+        # "output/GALLERY_PATH/name/image_name.thumbnail.jpg"
+        img_name = os.path.basename(img)
+        fname, ext = os.path.splitext(img_name)
+        thumb_path = os.path.join(output_gallery,
+                                    ".thumbnail".join([fname, ext]))
+        # thumb_path is "output/GALLERY_PATH/name/image_name.jpg"
+        orig_dest_path = os.path.join(output_gallery, img_name)
+        #thumbs.append(os.path.basename(thumb_path))
+        #thumb_list.append(thumb_path)
+        yield utils.apply_filters({
+            'basename': self.name,
+            'name': thumb_path,
+            'file_dep': [img],
+            'targets': [thumb_path],
+            'actions': [
+                (self.resize_image,
+                    (img, thumb_path, self.kw['thumbnail_size']))
+            ],
+            'clean': True,
+            'uptodate': [utils.config_changed(self.kw)],
+        }, self.kw['filters'])
+
+        yield utils.apply_filters({
+            'basename': self.name,
+            'name': orig_dest_path,
+            'file_dep': [img],
+            'targets': [orig_dest_path],
+            'actions': [
+                (self.resize_image,
+                    (img, orig_dest_path, self.kw['max_image_size']))
+            ],
+            'clean': True,
+            'uptodate': [utils.config_changed(self.kw)],
+        }, self.kw['filters'])
+
 
         #yield self.group_task()
         ## FIXME: lots of work is done even when images don't change,
@@ -185,56 +239,10 @@ class Galleries(Task):
 
             #crumbs = utils.get_crumbs(gallery_path)
 
-            #image_list = [x for x in image_list if "thumbnail" not in x]
-            ## Sort by date
-            #if self.kw['sort_by_date']:
-                #image_list.sort(key=lambda a: self.image_date(a))
-            #else:  # Sort by name
-                #image_list.sort()
-            #image_name_list = [os.path.basename(x) for x in image_list]
 
             ## List of thumbnail paths
             #thumb_list = []
 
-            ## Do thumbnails and copy originals
-            #thumbs = []
-            #for img, img_name in list(zip(image_list, image_name_list)):
-                ## img is "galleries/name/image_name.jpg"
-                ## img_name is "image_name.jpg"
-                ## fname, ext are "image_name", ".jpg"
-                #fname, ext = os.path.splitext(img_name)
-                ## thumb_path is
-                ## "output/GALLERY_PATH/name/image_name.thumbnail.jpg"
-                #thumb_path = os.path.join(output_gallery,
-                                          #".thumbnail".join([fname, ext]))
-                ## thumb_path is "output/GALLERY_PATH/name/image_name.jpg"
-                #orig_dest_path = os.path.join(output_gallery, img_name)
-                #thumbs.append(os.path.basename(thumb_path))
-                #thumb_list.append(thumb_path)
-                #yield utils.apply_filters({
-                    #'basename': self.name,
-                    #'name': thumb_path,
-                    #'file_dep': [img],
-                    #'targets': [thumb_path],
-                    #'actions': [
-                        #(self.resize_image,
-                            #(img, thumb_path, self.kw['thumbnail_size']))
-                    #],
-                    #'clean': True,
-                    #'uptodate': [utils.config_changed(self.kw)],
-                #}, self.kw['filters'])
-                #yield utils.apply_filters({
-                    #'basename': self.name,
-                    #'name': orig_dest_path,
-                    #'file_dep': [img],
-                    #'targets': [orig_dest_path],
-                    #'actions': [
-                        #(self.resize_image,
-                            #(img, orig_dest_path, self.kw['max_image_size']))
-                    #],
-                    #'clean': True,
-                    #'uptodate': [utils.config_changed(self.kw)],
-                #}, self.kw['filters'])
 
             ## Remove excluded images
             #if excluded_image_name_list:
@@ -380,66 +388,64 @@ class Galleries(Task):
             #context['text'] = ''
         #self.site.render_template(template_name, output_name, context)
 
-    #def resize_image(self, src, dst, max_size):
-        #"""Make a copy of the image in the requested size."""
-        #if not Image:
-            #utils.copy_file(src, dst)
-            #return
-        #im = Image.open(src)
-        #w, h = im.size
-        #if w > max_size or h > max_size:
-            #size = max_size, max_size
+    def resize_image(self, src, dst, max_size):
+        """Make a copy of the image in the requested size."""
+        if not Image:
+            utils.copy_file(src, dst)
+            return
+        im = Image.open(src)
+        w, h = im.size
+        if w > max_size or h > max_size:
+            size = max_size, max_size
 
-            ## Panoramas get larger thumbnails because they look *awful*
-            #if w > 2 * h:
-                #size = min(w, max_size * 4), min(w, max_size * 4)
+            # Panoramas get larger thumbnails because they look *awful*
+            if w > 2 * h:
+                size = min(w, max_size * 4), min(w, max_size * 4)
 
-            #try:
-                #exif = im._getexif()
-            #except Exception:
-                #exif = None
-            #if exif is not None:
-                #for tag, value in list(exif.items()):
-                    #decoded = ExifTags.TAGS.get(tag, tag)
+            try:
+                exif = im._getexif()
+            except Exception:
+                exif = None
+            if exif is not None:
+                for tag, value in list(exif.items()):
+                    decoded = ExifTags.TAGS.get(tag, tag)
 
-                    #if decoded == 'Orientation':
-                        #if value == 3:
-                            #im = im.rotate(180)
-                        #elif value == 6:
-                            #im = im.rotate(270)
-                        #elif value == 8:
-                            #im = im.rotate(90)
+                    if decoded == 'Orientation':
+                        if value == 3:
+                            im = im.rotate(180)
+                        elif value == 6:
+                            im = im.rotate(270)
+                        elif value == 8:
+                            im = im.rotate(90)
+                        break
+            try:
+                im.thumbnail(size, Image.ANTIALIAS)
+                im.save(dst)
+            except Exception:
+                utils.LOGGER.warn("Can't thumbnail {0}, using original image as thumbnail".format(src))
+                utils.copy_file(src, dst)
+        else:  # Image is small
+            utils.copy_file(src, dst)
 
-                        #break
-
-            #try:
-                #im.thumbnail(size, Image.ANTIALIAS)
-                #im.save(dst)
-            #except Exception:
-                #utils.LOGGER.warn("Can't thumbnail {0}, using original image as thumbnail".format(src))
-                #utils.copy_file(src, dst)
-        #else:  # Image is small
-            #utils.copy_file(src, dst)
-
-    #def image_date(self, src):
-        #"""Try to figure out the date of the image."""
-        #if src not in self.dates:
-            #try:
-                #im = Image.open(src)
-                #exif = im._getexif()
-            #except Exception:
-                #exif = None
-            #if exif is not None:
-                #for tag, value in list(exif.items()):
-                    #decoded = ExifTags.TAGS.get(tag, tag)
-                    #if decoded == 'DateTimeOriginal':
-                        #try:
-                            #self.dates[src] = datetime.datetime.strptime(
-                                #value, r'%Y:%m:%d %H:%M:%S')
-                            #break
-                        #except ValueError:  # Invalid EXIF date.
-                            #pass
-        #if src not in self.dates:
-            #self.dates[src] = datetime.datetime.fromtimestamp(
-                #os.stat(src).st_mtime)
-        #return self.dates[src]
+    def image_date(self, src):
+        """Try to figure out the date of the image."""
+        if src not in self.dates:
+            try:
+                im = Image.open(src)
+                exif = im._getexif()
+            except Exception:
+                exif = None
+            if exif is not None:
+                for tag, value in list(exif.items()):
+                    decoded = ExifTags.TAGS.get(tag, tag)
+                    if decoded == 'DateTimeOriginal':
+                        try:
+                            self.dates[src] = datetime.datetime.strptime(
+                                value, r'%Y:%m:%d %H:%M:%S')
+                            break
+                        except ValueError:  # Invalid EXIF date.
+                            pass
+        if src not in self.dates:
+            self.dates[src] = datetime.datetime.fromtimestamp(
+                os.stat(src).st_mtime)
+        return self.dates[src]
