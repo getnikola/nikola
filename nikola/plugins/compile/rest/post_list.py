@@ -74,6 +74,10 @@ class PostList(Directive):
         Filter posts to show only posts having at least one of the ``tags``.
         Defaults to None.
 
+    ``slugs`` : string [, string...]
+        Filter posts to show only posts having at least one of the ``slugs``.
+        Defaults to None.
+
     ``lang`` : string
         The language of post *titles* and *links*.
         Defaults to default language.
@@ -92,6 +96,7 @@ class PostList(Directive):
         'last': int,
         'reverse': directives.flag,
         'tags': directives.unchanged,
+        'slugs': directives.unchanged,
         'lang': directives.unchanged,
         'template': directives.path,
         'id': directives.unchanged,
@@ -103,6 +108,8 @@ class PostList(Directive):
         reverse = self.options.get('reverse')
         tags = self.options.get('tags')
         tags = [t.strip().lower() for t in tags.split(',')] if tags else []
+        slugs = self.options.get('slugs')
+        slugs = [s.strip() for s in slugs.split(',')] if slugs else []
         lang = self.options.get('lang', self.site.current_lang())
         template = self.options.get('template', 'post_list_directive.tmpl')
         post_list_id = self.options.get('id', 'post_list_' + uuid.uuid4().hex)
@@ -115,6 +122,15 @@ class PostList(Directive):
                 cont = True
                 for tag in tags:
                     if tag in [t.lower() for t in post.tags]:
+                        cont = False
+
+                if cont:
+                    continue
+
+            if slugs:
+                cont = True
+                for slug in slugs:
+                    if slug == post.meta('slug'):
                         cont = False
 
                 if cont:
