@@ -110,7 +110,7 @@ class PostList(Directive):
     def run(self):
         first = self.options.get('first')
         last = self.options.get('last')
-        reverse = self.options.get('reverse')
+        reverse = self.options.get('reverse', False)
         tags = self.options.get('tags')
         tags = [t.strip().lower() for t in tags.split(',')] if tags else []
         slugs = self.options.get('slugs')
@@ -121,7 +121,7 @@ class PostList(Directive):
         post_list_id = self.options.get('id', 'post_list_' + uuid.uuid4().hex)
 
         posts = []
-        step = -1 if reverse else None
+        step = -1 if reverse is None else None
         if show_all is None:
             timeline = [p for p in self.site.timeline]
         else:
