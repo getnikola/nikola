@@ -76,10 +76,13 @@ class Galleries(Task):
             'gallery_path': self.site.config['GALLERY_PATH'],
             'sort_by_date': self.site.config['GALLERY_SORT_BY_DATE'],
             'filters': self.site.config['FILTERS'],
+            'translations': self.site.config['TRANSLATIONS'],
             'global_context': self.site.GLOBAL_CONTEXT,
         }
 
         yield self.group_task()
+
+        template_name = "gallery.tmpl"
 
         # Find all galleries we need to process
         self.find_galleries()
@@ -118,7 +121,41 @@ class Galleries(Task):
                 for task in self.remove_excluded_image(image):
                     yield task
 
+            crumbs = utils.get_crumbs(gallery)
+
+
             # Create index.html for each language
+            for lang in self.kw['translations']:
+                dst = os.path.join(self.kw['output_folder'],
+                        self.site.path(
+                            "gallery",
+                            os.path.relpath(gallery, self.kw['gallery_path']), lang))
+
+                file_dep = self.site.template_system.template_deps(
+                    template_name) + image_list + thumb_list
+
+                yield utils.apply_filters({
+                    'basename': self.name,
+                    'name': dst,
+                    'file_dep': file_dep,
+                    'targets': [output_name],
+                    'actions': [(self.render_gallery_index,
+                                (template_name,
+                                output_name,
+                                context,
+                                index_dst_path,
+                                image_name_list,
+                                thumbs,
+                                file_dep,
+                                self.kw,
+                                lang))],
+                    'clean': True,
+                    'uptodate': [utils.config_changed({
+                        1: self.kw,
+                        2: self.site.config["COMMENTS_IN_GALLERIES"],
+                        3: context,
+                    })],
+                }, self.kw['filters'])
 
 
     def find_galleries(self):
@@ -268,16 +305,12 @@ class Galleries(Task):
         }, self.kw['filters'])
 
 
-        ## FIXME: lots of work is done even when images don't change,
-        ## which should be moved into the task.
-
-        #template_name = "gallery.tmpl"
+        #
 
 
             #output_name = os.path.join(output_gallery, self.site.config['INDEX_FILE'])
 
 
-            #crumbs = utils.get_crumbs(gallery_path)
 
 
             ## List of thumbnail paths
@@ -352,49 +385,50 @@ class Galleries(Task):
                 #})],
             #}, self.kw['filters'])
 
-    #def render_gallery_index(
-            #self,
-            #template_name,
-            #output_name,
-            #context,
-            #index_dst_path,
-            #img_name_list,
-            #thumbs,
-            #file_dep,
-            #self.kw):
-        #"""Build the gallery index."""
+    def render_gallery_index(
+            self,
+            template_name,
+            output_name,
+            context,
+            index_dst_path,
+            img_name_list,
+            thumbs,
+            file_dep,
+            self.kw,
+            lang):
+        """Build the gallery index."""
 
-        ## The photo array needs to be created here, because
-        ## it relies on thumbnails already being created on
-        ## output
+        # The photo array needs to be created here, because
+        # it relies on thumbnails already being created on
+        # output
 
-        #photo_array = []
-        #d_name = os.path.dirname(output_name)
-        #for name, thumb_name in zip(img_name_list, thumbs):
-            #im = Image.open(os.path.join(d_name, thumb_name))
-            #w, h = im.size
-            #title = ''
-            #if self.kw['use_filename_as_title']:
-                #title = utils.unslugify(os.path.splitext(name)[0])
-            #photo_array.append({
-                #'url': name,
-                #'url_thumb': thumb_name,
-                #'title': title,
-                #'size': {
-                    #'w': w,
-                    #'h': h
-                #},
-            #})
-        #context['photo_array_json'] = json.dumps(photo_array)
-        #context['photo_array'] = photo_array
+        photo_array = []
+        d_name = os.path.dirname(output_name)
+        for name, thumb_name in zip(img_name_list, thumbs):
+            im = Image.open(os.path.join(d_name, thumb_name))
+            w, h = im.size
+            title = ''
+            if self.kw['use_filename_as_title']:
+                title = utils.unslugify(os.path.splitext(name)[0])
+            photo_array.append({
+                'url': name,
+                'url_thumb': thumb_name,
+                'title': title,
+                'size': {
+                    'w': w,
+                    'h': h
+                },
+            })
+        context['photo_array_json'] = json.dumps(photo_array)
+        context['photo_array'] = photo_array
 
-        #if os.path.exists(index_dst_path):
-            #with codecs.open(index_dst_path, "rb", "utf8") as fd:
-                #context['text'] = fd.read()
-            #file_dep.append(index_dst_path)
-        #else:
-            #context['text'] = ''
-        #self.site.render_template(template_name, output_name, context)
+        if os.path.exists(index_dst_path):
+            with codecs.open(index_dst_path, "rb", "utf8") as fd:
+                context['text'] = fd.read()
+            file_dep.append(index_dst_path)
+        else:
+            context['text'] = ''
+        self.site.render_template(template_name, output_name, context)
 
     def resize_image(self, src, dst, max_size):
         """Make a copy of the image in the requested size."""
