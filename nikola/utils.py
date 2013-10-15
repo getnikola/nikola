@@ -663,6 +663,11 @@ class LocaleBorg:
         .current_lang : autoritative current_lang , the last seen in set_locale
         .set_locale(lang) : sets current_lang and sets the locale for lang
         .get_month_name(month_no, lang) : returns the localized month name
+
+    NOTE: never use locale.getlocale() , it can return values that
+    locale.setlocale will not accept in Windows XP, 7 and pythons 2.6, 2.7, 3.3
+    Examples: "Spanish", "French" can't do the full circle set / get / set
+    That used to break calendar, but now seems is not the case, with month at least
     """
     locales = {}
     encodings = {}
@@ -728,10 +733,11 @@ class LocaleBorg:
         """
         # intentional non try-except: templates must ask locales with a lang,
         # let the code explode here and not hide the point of failure
-        if lang != self.__shared_state['current_lang']:
-            locale_n = self.locales[lang]
-            self.__shared_state['current_lang'] = lang
-            locale.setlocale(locale.LC_ALL, locale_n)
+        # Also, not guarded with an if lang==current_lang because calendar may
+        # put that out of sync
+        locale_n = self.locales[lang]
+        self.__shared_state['current_lang'] = lang
+        locale.setlocale(locale.LC_ALL, locale_n)
         return ''
 
     def get_month_name(self, month_no, lang):
@@ -744,6 +750,8 @@ class LocaleBorg:
             with calendar.TimeEncoding(self.locales[lang]):
                 s = calendar.month_name[month_no]
             s = s.decode(self.encodings[lang])
+        # paranoid about calendar ending in the wrong locale (windows)
+        self.set_locale(self.current_lang)
         return s
 
 class ExtendedRSS2(rss.RSS2):

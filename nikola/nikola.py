@@ -969,6 +969,10 @@ def sanitized_locales(locale_fallback, locale_default, locales, translations):
     Languages with no explicit locale are set to
         the sanitized locale_default if it was explicitly set
         sanitized guesses compatible with v 6.0.4 if locale_default was None
+
+    NOTE: never use locale.getlocale() , it can return values that
+    locale.setlocale will not accept in Windows XP, 7 and pythons 2.6, 2.7, 3.3
+    Examples: "Spanish", "French" can't do the full circle set / get / set
     """
     # locales for languages not in translations are ignored
     extras = set(locales) - set(translations)
@@ -1032,13 +1036,6 @@ def is_valid_locale(locale_n):
         valid = True
     except locale.Error:
         pass
-    if valid:
-        loc_t = locale.getlocale()
-        try:
-            locale.setlocale(locale.LC_ALL, loc_t)
-        except locale.Error:
-            msg = 'setlocale(getlocale()) fails for locale {0}; some calendar results can be wrong'
-            utils.LOGGER.warn(msg.format(locale_n))
     return valid
 
 
