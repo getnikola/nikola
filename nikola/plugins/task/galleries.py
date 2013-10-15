@@ -79,7 +79,6 @@ class Galleries(Task):
             'global_context': self.site.GLOBAL_CONTEXT,
         }
 
-
         yield self.group_task()
 
         # Find all galleries we need to process
@@ -112,6 +111,11 @@ class Galleries(Task):
             # Create thumbnails and large images in destination
             for image in image_list:
                 for task in self.create_target_images(image):
+                    yield task
+
+            # Remove excluded images
+            for image in self.get_excluded_images(gallery):
+                for task in self.remove_excluded_image(image):
                     yield task
 
             # Create index.html for each language
@@ -158,15 +162,7 @@ class Galleries(Task):
             post = None
         return post
 
-    def get_image_list(self, gallery_path):
-
-        # Gather image_list contains "gallery/name/image_name.jpg"
-        image_list = glob.glob(gallery_path + "/*jpg") +\
-            glob.glob(gallery_path + "/*JPG") +\
-            glob.glob(gallery_path + "/*png") +\
-            glob.glob(gallery_path + "/*PNG")
-
-        # Filter ignored images
+    def get_excluded_images(self, gallery_path):
         exclude_path = os.path.join(gallery_path, "exclude.meta")
 
         try:
@@ -176,6 +172,18 @@ class Galleries(Task):
             excluded_image_name_list = []
 
         excluded_image_list = ["{0}/{1}".format(gallery_path, i) for i in excluded_image_name_list]
+        return excluded_image_list
+
+    def get_image_list(self, gallery_path):
+
+        # Gather image_list contains "gallery/name/image_name.jpg"
+        image_list = glob.glob(gallery_path + "/*jpg") +\
+            glob.glob(gallery_path + "/*JPG") +\
+            glob.glob(gallery_path + "/*png") +\
+            glob.glob(gallery_path + "/*PNG")
+
+        # Filter ignored images
+        excluded_image_list = self.get_excluded_images(gallery_path)
         image_set = set(image_list) - set(excluded_image_list)
         image_list = list(image_set)
         return image_list
@@ -226,8 +234,42 @@ class Galleries(Task):
             'uptodate': [utils.config_changed(self.kw)],
         }, self.kw['filters'])
 
+    def remove_excluded_image(self, img):
+        # Remove excluded images
+        # img is something like galleries/demo/tesla2_lg.jpg so it's the *source* path
+        # and we should remove both the large and thumbnail *destination* paths
 
-        #yield self.group_task()
+        img = os.path.relpath(img, self.kw['gallery_path'])
+        output_folder =  os.path.dirname(os.path.join(
+                self.kw["output_folder"],
+                self.site.path("gallery", os.path.dirname(img))))
+        img_path = os.path.join(output_folder, os.path.basename(img))
+        fname, ext = os.path.splitext(img_path)
+        thumb_path = fname + '.thumbnail' + ext
+        utils.LOGGER.notice('===> '+img_path)
+        utils.LOGGER.notice('===> '+thumb_path)
+
+        yield utils.apply_filters({
+            'basename': 'render_galleries_clean',
+            'name': thumb_path,
+            'actions': [
+                (utils.remove_file, (thumb_path,))
+            ],
+            'clean': True,
+            'uptodate': [utils.config_changed(self.kw)],
+        }, self.kw['filters'])
+
+        yield utils.apply_filters({
+            'basename': 'render_galleries_clean',
+            'name': img_path,
+            'actions': [
+                (utils.remove_file, (img_path,))
+            ],
+            'clean': True,
+            'uptodate': [utils.config_changed(self.kw)],
+        }, self.kw['filters'])
+
+
         ## FIXME: lots of work is done even when images don't change,
         ## which should be moved into the task.
 
@@ -244,38 +286,6 @@ class Galleries(Task):
             #thumb_list = []
 
 
-            ## Remove excluded images
-            #if excluded_image_name_list:
-                #for img, img_name in zip(excluded_image_list,
-                                         #excluded_image_name_list):
-                    ## img_name is "image_name.jpg"
-                    ## fname, ext are "image_name", ".jpg"
-                    #fname, ext = os.path.splitext(img_name)
-                    #excluded_thumb_dest_path = os.path.join(
-                        #output_gallery, ".thumbnail".join([fname, ext]))
-                    #excluded_dest_path = os.path.join(output_gallery, img_name)
-                    #yield utils.apply_filters({
-                        #'basename': str('render_galleries_clean'),
-                        #'name': excluded_thumb_dest_path,
-                        #'file_dep': [exclude_path],
-                        ##'targets': [excluded_thumb_dest_path],
-                        #'actions': [
-                            #(utils.remove_file, (excluded_thumb_dest_path,))
-                        #],
-                        #'clean': True,
-                        #'uptodate': [utils.config_changed(self.kw)],
-                    #}, self.kw['filters'])
-                    #yield utils.apply_filters({
-                        #'basename': str('render_galleries_clean'),
-                        #'name': excluded_dest_path,
-                        #'file_dep': [exclude_path],
-                        ##'targets': [excluded_dest_path],
-                        #'actions': [
-                            #(utils.remove_file, (excluded_dest_path,))
-                        #],
-                        #'clean': True,
-                        #'uptodate': [utils.config_changed(self.kw)],
-                    #}, self.kw['filters'])
 
             ## Use galleries/name/index.txt to generate a blurb for
             ## the gallery, if it exists.
