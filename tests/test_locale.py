@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
 import sys
 
 # needed if @unittest.expectedFailure is used
@@ -10,15 +9,12 @@ except:
     import unittest
 
 import nikola.nikola
+from .base import LocaleSupportInTesting
 
-# specified as unicode string because in nikola it will be read from conf.py
-# which uses unicode_constants
-if sys.platform == 'win32':
-    loc_eng = 'English'
-    loc_spa = 'Spanish'
-else:
-    loc_eng = 'en_US.utf8'
-    loc_spa = 'es_ES.utf8'
+LocaleSupportInTesting.initialize_locales_for_testing('bilingual')
+lang_11, loc_11 = LocaleSupportInTesting.langlocales['default']
+lang_22, loc_22 = LocaleSupportInTesting.langlocales['other']
+
 
 # these are candidates to hardcoded locales, using str() for py2x setlocale
 loc_C = str('C')
@@ -44,25 +40,28 @@ class TestConfigLocale(unittest.TestCase):
 
     def test_implicit_fallback(self):
         locale_fallback = None
-        sanitized_fallback = nikola.nikola.valid_locale_fallback(desired_locale=locale_fallback)
+        sanitized_fallback = nikola.nikola.valid_locale_fallback(
+            desired_locale=locale_fallback)
         self.assertTrue(nikola.nikola.is_valid_locale(sanitized_fallback))
 
     def test_explicit_good_fallback(self):
-        locale_fallback = str(loc_spa)
-        sanitized_fallback = nikola.nikola.valid_locale_fallback(desired_locale=locale_fallback)
+        locale_fallback = loc_22
+        sanitized_fallback = nikola.nikola.valid_locale_fallback(
+            desired_locale=locale_fallback)
         self.assertEquals(sanitized_fallback, locale_fallback)
 
     def test_explicit_bad_fallback(self):
         locale_fallback = str('xyz')
-        sanitized_fallback = nikola.nikola.valid_locale_fallback(desired_locale=locale_fallback)
+        sanitized_fallback = nikola.nikola.valid_locale_fallback(
+            desired_locale=locale_fallback)
         self.assertTrue(nikola.nikola.is_valid_locale(sanitized_fallback))
 
     def test_explicit_good_default(self):
         locale_fallback, locale_default, LOCALES, translations = (
-            loc_spa,
-            loc_eng,
+            loc_22,
+            loc_11,
             {},
-            {'en': ''},
+            {lang_11: ''},
         )
         fallback, default, locales = nikola.nikola.sanitized_locales(
             locale_fallback,
@@ -74,10 +73,10 @@ class TestConfigLocale(unittest.TestCase):
 
     def test_explicit_bad_default(self):
         locale_fallback, locale_default, LOCALES, translations = (
-            loc_spa,
+            loc_22,
             str('xyz'),
             {},
-            {'en': ''},
+            {lang_11: ''},
         )
         fallback, default, locales = nikola.nikola.sanitized_locales(
             locale_fallback,
@@ -89,10 +88,10 @@ class TestConfigLocale(unittest.TestCase):
 
     def test_extra_locales_deleted(self):
         locale_fallback, locale_default, LOCALES, translations = (
-            loc_spa,
+            loc_22,
             None,
-            {'@z': loc_spa},
-            {'en': ''},
+            {'@z': loc_22},
+            {lang_11: ''},
         )
         fallback, default, locales = nikola.nikola.sanitized_locales(
             locale_fallback,
@@ -103,24 +102,24 @@ class TestConfigLocale(unittest.TestCase):
 
     def test_explicit_good_locale_retained(self):
         locale_fallback, locale_default, LOCALES, translations = (
-            None,
-            loc_spa,
-            {'en': loc_eng},
-            {'en': ''},
+            loc_22,
+            loc_22,
+            {lang_11: loc_11},
+            {lang_11: ''},
         )
         fallback, default, locales = nikola.nikola.sanitized_locales(
             locale_fallback,
             locale_default,
             LOCALES,
             translations)
-        self.assertEquals(locales['en'], str(LOCALES['en']))
+        self.assertEquals(locales[lang_11], str(LOCALES[lang_11]))
 
     def test_explicit_bad_locale_replaced_with_fallback(self):
         locale_fallback, locale_default, LOCALES, translations = (
-            loc_spa,
-            loc_eng,
-            {'en': str('xyz')},
-            {'en': ''},
+            loc_22,
+            loc_11,
+            {lang_11: str('xyz')},
+            {lang_11: ''},
         )
         fallback, default, locales = nikola.nikola.sanitized_locales(
             locale_fallback,
@@ -131,10 +130,10 @@ class TestConfigLocale(unittest.TestCase):
 
     def test_impicit_locale_when_default_locale_defined(self):
         locale_fallback, locale_default, LOCALES, translations = (
-            loc_eng,
-            loc_spa,
+            loc_11,
+            loc_22,
             {},
-            {'en': ''},
+            {lang_11: ''},
         )
         fallback, default, locales = nikola.nikola.sanitized_locales(
             locale_fallback,
@@ -146,10 +145,10 @@ class TestConfigLocale(unittest.TestCase):
     def test_impicit_locale_when_default_locale_is_not_defined(self):
         # legacy mode, compat v6.0.4 : guess locale from lang
         locale_fallback, locale_default, LOCALES, translations = (
-            loc_spa,
+            loc_22,
             None,
             {},
-            {'en': ''},
+            {lang_11: ''},
         )
         fallback, default, locales = nikola.nikola.sanitized_locales(
             locale_fallback,
@@ -161,7 +160,7 @@ class TestConfigLocale(unittest.TestCase):
         else:
             guess_locale_for_lang = nikola.nikola.guess_locale_from_lang_linux
 
-        self.assertEquals(locales['en'], guess_locale_for_lang('en'))
+        self.assertEquals(locales[lang_11], guess_locale_for_lang(lang_11))
 
 
 class TestCalendarRelated(unittest.TestCase):
@@ -172,23 +171,26 @@ class TestCalendarRelated(unittest.TestCase):
         """
         import calendar
         if sys.version_info[0] == 3:  # Python 3
-            with calendar.different_locale(str(loc_spa)):
+            with calendar.different_locale(loc_11):
                 s = calendar.month_name[1]
         else:  # Python 2
-            with calendar.TimeEncoding(str(loc_spa)):
+            with calendar.TimeEncoding(loc_11):
                 s = calendar.month_name[1]
         self.assertTrue(type(s) == str)
 
 
 class TestTestPreconditions(unittest.TestCase):
-    """if this fails the other test in this module are mostly nonsense
-       failure probably means the OS support for the failing locale is not
-       instaled.
-       To test in a host with other locales, replace both with different,
-       existing locales in the host.
-    """
-    def test_locale_eng_availability(self):
-        self.assertTrue(nikola.nikola.is_valid_locale(str(loc_eng)), "META ERROR: locale for english should be valid")
+    """If this fails the other test in this module are mostly nonsense, and
+       probably same for tests of multilingual features.
 
-    def test_locale_esp_availability(self):
-        self.assertTrue(nikola.nikola.is_valid_locale(str(loc_spa)), "META ERROR: locale for spanish should be valid")
+       Failure probably means the OS support for the failing locale is not
+       instaled or environmet variables NIKOLA_LOCALE_DEFAULT  or
+       NIKOLA_LOCALE_OTHER with bad values.
+    """
+    def test_langlocale_default_availability(self):
+        msg = "META ERROR: The pair lang, locale : {0} {1} is invalid"
+        self.assertTrue(nikola.nikola.is_valid_locale(loc_11), msg.format(lang_11, loc_11))
+
+    def test_langlocale_other_availability(self):
+        msg = "META ERROR: The pair lang, locale : {0} {1} is invalid"
+        self.assertTrue(nikola.nikola.is_valid_locale(loc_22), msg.format(lang_22, loc_22))

@@ -754,6 +754,7 @@ class LocaleBorg:
         self.set_locale(self.current_lang)
         return s
 
+
 class ExtendedRSS2(rss.RSS2):
     def publish_extensions(self, handler):
         if self.self_url:
