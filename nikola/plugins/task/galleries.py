@@ -246,8 +246,6 @@ class Galleries(Task):
         img_path = os.path.join(output_folder, os.path.basename(img))
         fname, ext = os.path.splitext(img_path)
         thumb_path = fname + '.thumbnail' + ext
-        utils.LOGGER.notice('===> '+img_path)
-        utils.LOGGER.notice('===> '+thumb_path)
 
         yield utils.apply_filters({
             'basename': 'render_galleries_clean',
