@@ -130,6 +130,27 @@ class Galleries(Task):
                         self.site.path(
                             "gallery",
                             os.path.relpath(gallery, self.kw['gallery_path']), lang))
+                        
+                #  FIXME this block and render_gallery_index
+                #context = {}
+                #context["lang"] = self.kw["default_lang"]
+                #context["title"] = os.path.basename(gallery_path)
+                #context["description"] = self.kw["blog_description"]
+                #if self.kw['use_filename_as_title']:
+                    #img_titles = ['id="{0}" alt="{1}" title="{2}"'.format(
+                        #fn[:-4], fn[:-4], utils.unslugify(fn[:-4])) for fn
+                        #in image_name_list]
+                #else:
+                    #img_titles = [''] * len(image_name_list)
+                ## In the future, remove images from context, use photo_array
+                #context["images"] = list(zip(image_name_list, thumbs, img_titles))
+                #context["folders"] = folder_list
+                #context["crumbs"] = crumbs
+                #context["permalink"] = self.site.link(
+                    #"gallery", gallery_name, None)
+                #context["enable_comments"] = (
+                    #self.site.config["COMMENTS_IN_GALLERIES"])
+                #context["thumbnail_size"] = self.kw["thumbnail_size"]
 
                 file_dep = self.site.template_system.template_deps(
                     template_name) + image_list + thumb_list
@@ -303,87 +324,6 @@ class Galleries(Task):
             'clean': True,
             'uptodate': [utils.config_changed(self.kw)],
         }, self.kw['filters'])
-
-
-        #
-
-
-            #output_name = os.path.join(output_gallery, self.site.config['INDEX_FILE'])
-
-
-
-
-            ## List of thumbnail paths
-            #thumb_list = []
-
-
-
-            ## Use galleries/name/index.txt to generate a blurb for
-            ## the gallery, if it exists.
-
-            #index_path = os.path.join(gallery_path, "index.txt")
-            #cache_dir = os.path.join(self.kw["cache_folder"], 'galleries')
-            #utils.makedirs(cache_dir)
-            #index_dst_path = os.path.join(
-                #cache_dir,
-                #str(hashlib.sha224(index_path.encode('utf-8')).hexdigest() +
-                    #'.html'))
-            #if os.path.exists(index_path):
-                #compile_html = self.site.get_compiler(index_path).compile_html
-                #yield utils.apply_filters({
-                    #'basename': self.name,
-                    #'name': index_dst_path,
-                    #'file_dep': [index_path],
-                    #'targets': [index_dst_path],
-                    #'actions': [(compile_html, [index_path, index_dst_path, True])],
-                    #'clean': True,
-                    #'uptodate': [utils.config_changed(self.kw)],
-                #}, self.kw['filters'])
-
-            #context = {}
-            #context["lang"] = self.kw["default_lang"]
-            #context["title"] = os.path.basename(gallery_path)
-            #context["description"] = self.kw["blog_description"]
-            #if self.kw['use_filename_as_title']:
-                #img_titles = ['id="{0}" alt="{1}" title="{2}"'.format(
-                    #fn[:-4], fn[:-4], utils.unslugify(fn[:-4])) for fn
-                    #in image_name_list]
-            #else:
-                #img_titles = [''] * len(image_name_list)
-            ## In the future, remove images from context, use photo_array
-            #context["images"] = list(zip(image_name_list, thumbs, img_titles))
-            #context["folders"] = folder_list
-            #context["crumbs"] = crumbs
-            #context["permalink"] = self.site.link(
-                #"gallery", gallery_name, None)
-            #context["enable_comments"] = (
-                #self.site.config["COMMENTS_IN_GALLERIES"])
-            #context["thumbnail_size"] = self.kw["thumbnail_size"]
-
-            #file_dep = self.site.template_system.template_deps(
-                #template_name) + image_list + thumb_list
-
-            #yield utils.apply_filters({
-                #'basename': self.name,
-                #'name': output_name,
-                #'file_dep': file_dep,
-                #'targets': [output_name],
-                #'actions': [(self.render_gallery_index,
-                             #(template_name,
-                              #output_name,
-                              #context,
-                              #index_dst_path,
-                              #image_name_list,
-                              #thumbs,
-                              #file_dep,
-                              #self.kw))],
-                #'clean': True,
-                #'uptodate': [utils.config_changed({
-                    #1: self.kw,
-                    #2: self.site.config["COMMENTS_IN_GALLERIES"],
-                    #3: context,
-                #})],
-            #}, self.kw['filters'])
 
     def render_gallery_index(
             self,
