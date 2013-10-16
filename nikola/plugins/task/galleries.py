@@ -161,6 +161,9 @@ class Galleries(Task):
                     self.site.config["COMMENTS_IN_GALLERIES"])
                 context["thumbnail_size"] = self.kw["thumbnail_size"]
 
+                # FIXME: use post text
+                context['text'] = 'foo'
+
                 file_dep = self.site.template_system.template_deps(
                     template_name) + image_list + thumbs
 
@@ -173,7 +176,6 @@ class Galleries(Task):
                                 (template_name,
                                 dst,
                                 context,
-                                dst,
                                 image_name_list,
                                 thumbs,
                                 file_dep))],
@@ -335,7 +337,6 @@ class Galleries(Task):
             template_name,
             output_name,
             context,
-            index_dst_path,
             img_name_list,
             thumbs,
             file_dep):
@@ -365,12 +366,6 @@ class Galleries(Task):
         context['photo_array_json'] = json.dumps(photo_array)
         context['photo_array'] = photo_array
 
-        if os.path.exists(index_dst_path):
-            with codecs.open(index_dst_path, "rb", "utf8") as fd:
-                context['text'] = fd.read()
-            file_dep.append(index_dst_path)
-        else:
-            context['text'] = ''
         self.site.render_template(template_name, output_name, context)
 
     def resize_image(self, src, dst, max_size):
