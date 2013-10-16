@@ -382,6 +382,9 @@ Currently Nikola emits the following signals:
     Right after plugin activation
 ``configured``
     When all the configuration file is processed
+``new_post``
+    When a new post is created, using the ``nikola new_post`` command.  The signal
+    data contains the path of the file, and the metadata file (if there is one).
 
 Plugin Index
 ============
