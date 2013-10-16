@@ -176,7 +176,7 @@ class Galleries(Task):
                                 (template_name,
                                 dst,
                                 context,
-                                image_name_list,
+                                image_list,
                                 thumbs,
                                 file_dep))],
                     'clean': True,
@@ -337,7 +337,7 @@ class Galleries(Task):
             template_name,
             output_name,
             context,
-            img_name_list,
+            img_list,
             thumbs,
             file_dep):
         """Build the gallery index."""
@@ -346,17 +346,28 @@ class Galleries(Task):
         # it relies on thumbnails already being created on
         # output
 
+        #from doit.tools import set_trace; set_trace()
+
+        def url_from_path(p):
+            #from doit.tools import set_trace; set_trace()
+            url = '/'.join(os.path.relpath(p, os.path.dirname(output_name)+os.sep).split(os.sep))
+            utils.LOGGER.notice(p+' ==> '+ url)
+            return url
+
         photo_array = []
         d_name = os.path.dirname(output_name)
-        for name, thumb_name in zip(img_name_list, thumbs):
-            im = Image.open(thumb_name)
+        for img, thumb in zip(img_list, thumbs):
+            im = Image.open(thumb)
             w, h = im.size
             title = ''
             if self.kw['use_filename_as_title']:
-                title = utils.unslugify(os.path.splitext(name)[0])
+                title = utils.unslugify(os.path.splitext(img)[0])
+            # Thumbs are files in output, we need URLs
+            thumb_url = url_from_path(thumb)
+            utils.LOGGER.notice(thumb+'  '+thumb_url)
             photo_array.append({
-                'url': name,
-                'url_thumb': thumb_name,
+                'url': url_from_path(img),
+                'url_thumb': thumb_url,
                 'title': title,
                 'size': {
                     'w': w,
