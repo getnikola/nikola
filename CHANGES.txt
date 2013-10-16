@@ -19,6 +19,7 @@ Bugfixes
 * Trigger conflict if two posts generate the same output (Issue #806)
 * Compilers now accept two of any line endings (\n, \r\n) instead of only Unix (\n) (Issue #832)
 * Removed optional priority element from sitemap (Issue #838)
+* Avoid duplicate entries in the sitemap (Issue #836)
 
 Other
 -----
