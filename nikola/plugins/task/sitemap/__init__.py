@@ -94,7 +94,7 @@ class Sitemap(LateTask):
             "strip_indexes": self.site.config["STRIP_INDEXES"],
             "index_file": self.site.config["INDEX_FILE"],
             "sitemap_include_fileless_dirs": self.site.config["SITEMAP_INCLUDE_FILELESS_DIRS"],
-            "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.html', '.htm'])
+            "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.html', '.htm', '.xml'])
         }
         output_path = kw['output_folder']
         sitemap_path = os.path.join(output_path, "sitemap.xml")
@@ -113,6 +113,8 @@ class Sitemap(LateTask):
                 # ignore the current directory.
                 path = (path.replace(os.sep, '/') + '/').replace('./', '')
                 lastmod = get_lastmod(root)
+                if path.endswith('sitemap.xml') or path.endswith('BingSiteAuth.xml') or path.endswith('browserconfig.xml'):
+                    continue # ignore some known unwanted xml (assumes all other xml is RSS or otherwise useful)
                 loc = urljoin(base_url, base_path + path)
                 if 'index.html' in files:  # Only map folders with indexes
                     locs[loc] = url_format.format(loc, lastmod)
