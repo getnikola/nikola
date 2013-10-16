@@ -48,7 +48,6 @@ header = """<?xml version="1.0" encoding="UTF-8"?>
 url_format = """ <url>
   <loc>{0}</loc>
   <lastmod>{1}</lastmod>
-  <priority>0.5000</priority>
  </url>
 """
 
