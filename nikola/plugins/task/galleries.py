@@ -346,12 +346,8 @@ class Galleries(Task):
         # it relies on thumbnails already being created on
         # output
 
-        #from doit.tools import set_trace; set_trace()
-
         def url_from_path(p):
-            #from doit.tools import set_trace; set_trace()
             url = '/'.join(os.path.relpath(p, os.path.dirname(output_name)+os.sep).split(os.sep))
-            utils.LOGGER.notice(p+' ==> '+ url)
             return url
 
         photo_array = []
@@ -364,7 +360,6 @@ class Galleries(Task):
                 title = utils.unslugify(os.path.splitext(img)[0])
             # Thumbs are files in output, we need URLs
             thumb_url = url_from_path(thumb)
-            utils.LOGGER.notice(thumb+'  '+thumb_url)
             photo_array.append({
                 'url': url_from_path(img),
                 'url_thumb': thumb_url,
