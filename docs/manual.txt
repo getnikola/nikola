@@ -981,6 +981,7 @@ The ``conf.py`` options affecting gallery pages are these::
     THUMBNAIL_SIZE = 180
     MAX_IMAGE_SIZE = 1280
     USE_FILENAME_AS_TITLE = True
+    GALLERY_SORT_BY_DATE = False
 
 If you add a file in ``galleries/gallery_name/index.txt`` its contents will be
 converted to HTML and inserted above the images in the gallery page.
