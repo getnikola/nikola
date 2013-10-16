@@ -130,46 +130,53 @@ class Galleries(Task):
                         self.site.path(
                             "gallery",
                             os.path.relpath(gallery, self.kw['gallery_path']), lang))
-                        
-                #  FIXME this block and render_gallery_index
-                #context = {}
-                #context["lang"] = self.kw["default_lang"]
-                #context["title"] = os.path.basename(gallery_path)
-                #context["description"] = self.kw["blog_description"]
-                #if self.kw['use_filename_as_title']:
-                    #img_titles = ['id="{0}" alt="{1}" title="{2}"'.format(
-                        #fn[:-4], fn[:-4], utils.unslugify(fn[:-4])) for fn
-                        #in image_name_list]
-                #else:
-                    #img_titles = [''] * len(image_name_list)
-                ## In the future, remove images from context, use photo_array
-                #context["images"] = list(zip(image_name_list, thumbs, img_titles))
-                #context["folders"] = folder_list
-                #context["crumbs"] = crumbs
-                #context["permalink"] = self.site.link(
-                    #"gallery", gallery_name, None)
-                #context["enable_comments"] = (
-                    #self.site.config["COMMENTS_IN_GALLERIES"])
-                #context["thumbnail_size"] = self.kw["thumbnail_size"]
+
+                context = {}
+                context["lang"] = lang
+                if post:
+                    context["title"] = post.title(lang)
+                else:
+                    context["title"] = os.path.basename(gallery)
+                context["description"] = self.kw["blog_description"]
+
+                image_name_list = [os.path.basename(p) for p in image_list]
+                if self.kw['use_filename_as_title']:
+                    img_titles = ['id="{0}" alt="{1}" title="{2}"'.format(
+                        fn[:-4], fn[:-4], utils.unslugify(fn[:-4])) for fn
+                        in image_name_list]
+                else:
+                    img_titles = [''] * len(image_name_list)
+
+                thumbs = ['.thumbnail'.join(os.path.splitext(p)) for p in image_list]
+                thumbs = [os.path.join(self.kw['output_folder'], t) for t in thumbs]
+
+                ## TODO: in v7 remove images from context, use photo_array
+                context["images"] = list(zip(image_name_list, thumbs, img_titles))
+                context["folders"] = folder_list
+                context["crumbs"] = crumbs
+                context["permalink"] = self.site.link(
+                    "gallery", os.path.basename(gallery), None)
+                # FIXME: use kw
+                context["enable_comments"] = (
+                    self.site.config["COMMENTS_IN_GALLERIES"])
+                context["thumbnail_size"] = self.kw["thumbnail_size"]
 
                 file_dep = self.site.template_system.template_deps(
-                    template_name) + image_list + thumb_list
+                    template_name) + image_list + thumbs
 
                 yield utils.apply_filters({
                     'basename': self.name,
                     'name': dst,
                     'file_dep': file_dep,
-                    'targets': [output_name],
+                    'targets': [dst],
                     'actions': [(self.render_gallery_index,
                                 (template_name,
-                                output_name,
+                                dst,
                                 context,
-                                index_dst_path,
+                                dst,
                                 image_name_list,
                                 thumbs,
-                                file_dep,
-                                self.kw,
-                                lang))],
+                                file_dep))],
                     'clean': True,
                     'uptodate': [utils.config_changed({
                         1: self.kw,
@@ -264,8 +271,6 @@ class Galleries(Task):
                                     ".thumbnail".join([fname, ext]))
         # thumb_path is "output/GALLERY_PATH/name/image_name.jpg"
         orig_dest_path = os.path.join(output_gallery, img_name)
-        #thumbs.append(os.path.basename(thumb_path))
-        #thumb_list.append(thumb_path)
         yield utils.apply_filters({
             'basename': self.name,
             'name': thumb_path,
@@ -333,9 +338,7 @@ class Galleries(Task):
             index_dst_path,
             img_name_list,
             thumbs,
-            file_dep,
-            self.kw,
-            lang):
+            file_dep):
         """Build the gallery index."""
 
         # The photo array needs to be created here, because
@@ -345,7 +348,7 @@ class Galleries(Task):
         photo_array = []
         d_name = os.path.dirname(output_name)
         for name, thumb_name in zip(img_name_list, thumbs):
-            im = Image.open(os.path.join(d_name, thumb_name))
+            im = Image.open(thumb_name)
             w, h = im.size
             title = ''
             if self.kw['use_filename_as_title']:
