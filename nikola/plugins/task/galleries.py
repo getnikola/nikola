@@ -162,7 +162,10 @@ class Galleries(Task):
                 context["thumbnail_size"] = self.kw["thumbnail_size"]
 
                 # FIXME: use post text
-                context['text'] = 'foo'
+                if post:
+                    context['text'] = post.text(lang)
+                else:
+                    context['text'] = ''
 
                 file_dep = self.site.template_system.template_deps(
                     template_name) + image_list + thumbs
