@@ -216,7 +216,7 @@ a stub for a hypothetical system called "Templater":
         # template loading tool that can use this.
 
         def set_directories(self, directories):
-            """Createa  template lookup."""
+            """Create a template lookup."""
             pass
 
         # The method that does the actual rendering.
