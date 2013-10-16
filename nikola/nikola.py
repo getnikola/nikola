@@ -978,7 +978,7 @@ def sanitized_locales(locale_fallback, locale_default, locales, translations):
     extras = set(locales) - set(translations)
     if extras:
         msg = 'Unexpected languages in LOCALES, ignoring them: {0}'
-        utils.LOGGER.warn(msg.format(extras))
+        utils.LOGGER.warn(msg.format(','.join(extras)))
         for lang in extras:
             del locales[lang]
 
@@ -1013,7 +1013,7 @@ def sanitized_locales(locale_fallback, locale_default, locales, translations):
         if sys.platform == 'win32':
             guess_locale_fom_lang = guess_locale_from_lang_windows
         else:
-            guess_locale_fom_lang = guess_locale_from_lang_linux
+            guess_locale_fom_lang = guess_locale_from_lang_posix
         for lang in missing:
             locale_n = guess_locale_fom_lang(lang)
             if not locale:
@@ -1030,12 +1030,11 @@ def is_valid_locale(locale_n):
 
     for py2x compat locale_n should be of type str
     """
-    valid = False
     try:
         locale.setlocale(locale.LC_ALL, locale_n)
         valid = True
     except locale.Error:
-        pass
+        valid = False
     return valid
 
 
@@ -1046,8 +1045,8 @@ def valid_locale_fallback(desired_locale=None):
     """
     # Whenever fallbacks change, adjust test TestHarcodedFallbacksWork
     candidates_windows = [str('English'), str('C')]
-    candidates_linux = [str('en_US.utf8'), str('C')]
-    candidates = candidates_windows if sys.platform == 'win32' else candidates_linux
+    candidates_posix = [str('en_US.utf8'), str('C')]
+    candidates = candidates_windows if sys.platform == 'win32' else candidates_posix
     if desired_locale:
         candidates = list(candidates)
         candidates.insert(0, desired_locale)
@@ -1069,7 +1068,7 @@ def guess_locale_from_lang_windows(lang):
     return str(_windows_locale_guesses.get(lang, None))
 
 
-def guess_locale_from_lang_linux(lang):
+def guess_locale_from_lang_posix(lang):
     # compatibility v6.0.4
     if is_valid_locale(str(lang)):
         locale_n = str(lang)

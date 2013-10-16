@@ -75,8 +75,7 @@ def cd(path):
     os.chdir(old_dir)
 
 
-# calcula (locales, default_lang) de acuerdo a variant
-class LocaleSupportInTesting:
+class LocaleSupportInTesting(object):
     """
     Nikola needs two pairs of valid (language, locale_n) to test multilingual sites.
 

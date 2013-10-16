@@ -635,7 +635,7 @@ def get_asset_path(path, themes, files_folders={'files': ''}):
     return None
 
 
-class LocaleBorg:
+class LocaleBorg(object):
     """
     Provides locale related services and autoritative current_lang,
     where current_lang is the last lang for which the locale was set.

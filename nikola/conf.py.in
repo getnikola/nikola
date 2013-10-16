@@ -80,7 +80,7 @@ NAVIGATION_LINKS = {
 # In this file we express locales in the string form that
 # python's locales will accept in your OS, by example
 # "en_US.utf8" in unix-like OS, "English_United States" in Windows. 
-# LOCALES = dict mapping languaje --> explicit locale for the languajes 
+# LOCALES = dict mapping language --> explicit locale for the languages 
 # in TRANSLATIONS. You can ommit one or more keys.
 # LOCALE_FALLBACK = locale to use when an explicit locale is unavailable
 # LOCALE_DEFAULT = locale to use for languages not mentioned in LOCALES; if
