@@ -31,7 +31,6 @@ from collections import defaultdict, Callable
 import datetime
 import hashlib
 import locale
-import logging
 import os
 import re
 import codecs
@@ -76,7 +75,6 @@ if os.getenv('NIKOLA_DEBUG'):
     logging.basicConfig(level=logging.DEBUG) 
 else:
     logging.basicConfig(level=logging.WARNING) 
-#redirect_logging()
 
 
 def req_missing(names, purpose, python=True, optional=False):
