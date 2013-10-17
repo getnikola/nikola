@@ -29,6 +29,7 @@ from ast import literal_eval
 import codecs
 from datetime import datetime
 import os
+import sys
 import subprocess
 import time
 
@@ -77,9 +78,12 @@ class Deploy(Command):
                 last_deploy = datetime(1970, 1, 1)  # NOQA
 
             LOGGER.notice("==> {0}".format(command))
-            ret = subprocess.check_call(command, shell=True)
-            if ret != 0:  # failed deployment
-                raise Exception("Failed deployment")
+            try:
+                subprocess.check_call(command, shell=True)
+            except subprocess.CalledProcessError as e:
+                LOGGER.error('Failed deployment — command {0} '
+                             'returned {1}').format(e.cmd, e.returncode)
+                sys.exit(e.returncode)
         LOGGER.notice("Successful deployment")
         new_deploy = datetime.now()
         # Store timestamp of successful deployment
