@@ -99,7 +99,7 @@ class DemoBuildTest(EmptyBuildTest):
     def test_index_in_sitemap(self):
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
         sitemap_data = codecs.open(sitemap_path, "r", "utf8").read()
-        self.assertTrue('<loc>http://getnikola.com/</loc>' in sitemap_data)
+        self.assertTrue('<loc>http://getnikola.com/index.html</loc>' in sitemap_data)
 
     def test_avoid_double_slash_in_rss(self):
         rss_path = os.path.join(self.target_dir, "output", "rss.xml")
@@ -231,7 +231,7 @@ class RelativeLinkTest(DemoBuildTest):
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
         sitemap_data = codecs.open(sitemap_path, "r", "utf8").read()
         self.assertFalse('<loc>http://getnikola.com/</loc>' in sitemap_data)
-        self.assertTrue('<loc>http://getnikola.com/foo/bar/</loc>' in sitemap_data)
+        self.assertTrue('<loc>http://getnikola.com/foo/bar/index.html</loc>' in sitemap_data)
 
 
 if sys.version_info[0] == 2 and sys.version_info[1] < 7:
@@ -311,7 +311,7 @@ class RelativeLinkTest2(DemoBuildTest):
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
         sitemap_data = codecs.open(sitemap_path, "r", "utf8").read()
         self.assertFalse('<loc>http://getnikola.com/</loc>' in sitemap_data)
-        self.assertTrue('<loc>http://getnikola.com/blog/</loc>' in sitemap_data)
+        self.assertTrue('<loc>http://getnikola.com/blog/index.html</loc>' in sitemap_data)
 
 
 class MonthlyArchiveTest(DemoBuildTest):
