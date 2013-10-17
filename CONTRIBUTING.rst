@@ -31,7 +31,9 @@ Here are some guidelines about how you can contribute to Nikola:
 * While working, **rebase instead of merging** (if possible).  We encourage
   using ``git rebase`` instead of ``git merge``.  If you are using
   ``git pull``, please run ``git config pull.rebase true`` to prevent merges
-  from happening and replace them with rebase goodness.
+  from happening and replace them with rebase goodness.  There is also an
+  “emergency switch” in case rebases fail and you do not know what to do:
+  ``git pull --no-rebase``.
 * **Make sure documentation is updated** -- at the very least, keep docstrings
   current, and if necessary, update the ReST documentation in ``docs/``.
 * **Add a changelog entry** at the top of ``CHANGES.txt`` mentioning issue number
