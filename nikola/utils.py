@@ -28,6 +28,7 @@
 
 from __future__ import print_function, unicode_literals
 from collections import defaultdict, Callable
+import calendar
 import datetime
 import hashlib
 import locale
@@ -162,28 +163,12 @@ class Functionary(defaultdict):
         super(Functionary, self).__init__(default)
         self.default_lang = default_lang
 
-    def current_lang(self):
-        """Guess the current language from locale or default."""
-        lang = locale.getlocale()[0]
-        if lang is None:
-            # for python 2.x, see issues 12699 and 6203 in python bugtracker
-            locale.setlocale(locale.LC_ALL, '')
-            lang = locale.getlocale()[0]
-        if lang:
-            if lang in self.keys():
-                return lang
-            lang = lang.split('_')[0]
-            if lang in self.keys():
-                return lang
-        # whatever
-        return self.default_lang
-
     def __call__(self, key, lang=None):
         """When called as a function, take an optional lang
         and return self[lang][key]."""
 
         if lang is None:
-            lang = self.current_lang()
+            lang = LocaleBorg().current_lang
         return self[lang][key]
 
 
@@ -653,13 +638,124 @@ def get_asset_path(path, themes, files_folders={'files': ''}):
     return None
 
 
-class LocaleBorg:
+class LocaleBorg(object):
+    """
+    Provides locale related services and autoritative current_lang,
+    where current_lang is the last lang for which the locale was set.
+
+    current_lang is meant to be set only by LocaleBorg.set_locale
+
+    python's locale code should not be directly called from code outside of
+    LocaleBorg, they are compatibilty issues with py version and OS support
+    better handled at one central point, LocaleBorg.
+
+    In particular, don't call locale.setlocale outside of LocaleBorg.
+
+    Assumptions:
+        We need locales only for the languages there is a nikola translation.
+        We don't need to support current_lang through nested contexts
+
+    Usage:
+        # early in cmd or test execution
+        LocaleBorg.initialize(...)
+
+        # any time later
+        lang = LocaleBorg().<service>
+
+    Available services:
+        .current_lang : autoritative current_lang , the last seen in set_locale
+        .set_locale(lang) : sets current_lang and sets the locale for lang
+        .get_month_name(month_no, lang) : returns the localized month name
+
+    NOTE: never use locale.getlocale() , it can return values that
+    locale.setlocale will not accept in Windows XP, 7 and pythons 2.6, 2.7, 3.3
+    Examples: "Spanish", "French" can't do the full circle set / get / set
+    That used to break calendar, but now seems is not the case, with month at least
+    """
+    locales = {}
+    encodings = {}
+    initialized = False
     __shared_state = {
         'current_lang': None
     }
 
+    @classmethod
+    def initialize(cls, locales, initial_lang):
+        """
+        locales : dict with lang: locale_n
+            the same keys as in nikola's TRANSLATIONS
+            locale_n a sanitized locale, meaning
+                locale.setlocale(locale.LC_ALL, locale_n) will succeed
+                locale_n expressed in the string form, like "en.utf8"
+        """
+        assert initial_lang is not None and initial_lang in locales
+        cls.locales = locales
+
+        # needed to decode some localized output in py2x
+        encodings = {}
+        for lang in locales:
+            locale.setlocale(locale.LC_ALL, locales[lang])
+            loc, encoding = locale.getlocale()
+            encodings[lang] = encoding
+
+        cls.encodings = encodings
+        cls.__shared_state['current_lang'] = lang
+        cls.initialized = True
+
+    @classmethod
+    def initialize_for_testing(cls, variant):
+        samples = {
+            # variant(_win): tuple with params for initialize
+            'unilang_win': ({"en": str("English")}, "en"),
+            'unilang': ({"en": str("en_US.utf8")}, "en")
+        }
+        cls.reset()
+        if sys.platform == 'win32':
+            variant += '_win'
+        cls.initialize(*samples[variant])
+
+    @classmethod
+    def reset(cls):
+        """used in testing to not leak state between tests"""
+        cls.locales = {}
+        cls.encodings = {}
+        cls.__shared_state['current_lang'] = None
+        cls.initialized = False
+
     def __init__(self):
+        if not self.initialized:
+            raise Exception("Attempt to use LocaleBorg before initialization")
         self.__dict__ = self.__shared_state
+
+    def set_locale(self, lang):
+        """Sets the locale for language lang, returns ''
+
+        in linux the locale encoding is set to utf8,
+        in windows that cannot be guaranted.
+        In either case, the locale encoding is available in cls.encodings[lang]
+        """
+        # intentional non try-except: templates must ask locales with a lang,
+        # let the code explode here and not hide the point of failure
+        # Also, not guarded with an if lang==current_lang because calendar may
+        # put that out of sync
+        locale_n = self.locales[lang]
+        self.__shared_state['current_lang'] = lang
+        locale.setlocale(locale.LC_ALL, locale_n)
+        return ''
+
+    def get_month_name(self, month_no, lang):
+        """returns localized month name in an unicode string"""
+        if sys.version_info[0] == 3:  # Python 3
+            with calendar.different_locale(self.locales[lang]):
+                s = calendar.month_name[month_no]
+            # for py3 s is unicode
+        else:  # Python 2
+            with calendar.TimeEncoding(self.locales[lang]):
+                s = calendar.month_name[month_no]
+            s = s.decode(self.encodings[lang])
+        # paranoid about calendar ending in the wrong locale (windows)
+        self.set_locale(self.current_lang)
+        return s
 
 
 class ExtendedRSS2(rss.RSS2):
