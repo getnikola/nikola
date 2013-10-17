@@ -4,6 +4,8 @@ New in 6.2.0
 Features
 --------
 
+* The locales used in testing can be specified in environment variables (Issue #818)
+* The locale to use with each language can be explicitly set (Issue #818)
 * Initial support for signals/hooks using Blinker (Issue #764)
 * Path/Link resolution mechanism for plugins (Issue #790)
 * Sass compiling (Issue #642)
@@ -12,6 +14,7 @@ Features
 Bugfixes
 --------
 
+* locale support in windows fixed (Issue #818)
 * Fix logging incompatibility in Yapsy (Issue #826)
 * Workaround for Mako cache folder unicode bug (Issue #825)
 * Ensure folder creation when importing wordpress (Issue #812)

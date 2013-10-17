@@ -301,6 +301,13 @@ class Nikola(object):
         self.default_lang = self.config['DEFAULT_LANG']
         self.translations = self.config['TRANSLATIONS']
 
+        locale_fallback, locale_default, locales = sanitized_locales(
+                                    self.config.get('LOCALE_FALLBACK', None),
+                                    self.config.get('LOCALE_DEFAULT', None),
+                                    self.config.get('LOCALES', {}),
+                                    self.translations)  # NOQA
+        utils.LocaleBorg.initialize(locales, self.default_lang)
+
         # BASE_URL defaults to SITE_URL
         if 'BASE_URL' not in self.config:
             self.config['BASE_URL'] = self.config.get('SITE_URL')
@@ -385,7 +392,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT = {}
 
         self._GLOBAL_CONTEXT['_link'] = self.link
-        self._GLOBAL_CONTEXT['set_locale'] = s_l
+        self._GLOBAL_CONTEXT['set_locale'] = utils.LocaleBorg().set_locale
         self._GLOBAL_CONTEXT['rel_link'] = self.rel_link
         self._GLOBAL_CONTEXT['abs_link'] = self.abs_link
         self._GLOBAL_CONTEXT['exists'] = self.file_exists
@@ -635,19 +642,6 @@ class Nikola(object):
         with open(output_name, "wb+") as post_file:
             post_file.write(data)
 
-    def current_lang(self):  # FIXME: this is duplicated, turn into a mixin
-        """Return the currently set locale, if it's one of the
-        available translations, or default_lang."""
-        lang = utils.LocaleBorg().current_lang
-        if lang:
-            if lang in self.translations:
-                return lang
-            lang = lang.split('_')[0]
-            if lang in self.translations:
-                return lang
-        # whatever
-        return self.default_lang
-
     def path(self, kind, name, lang=None, is_link=False):
         """Build the path to a certain kind of page.
 
@@ -681,7 +675,7 @@ class Nikola(object):
         """
 
         if lang is None:
-            lang = self.current_lang()
+            lang = utils.LocaleBorg().current_lang
 
         path = self.path_handlers[kind](name, lang)
 
@@ -957,16 +951,156 @@ class Nikola(object):
         return utils.apply_filters(task, filters)
 
 
-def s_l(lang):
-    """A set_locale that uses utf8 encoding and returns ''."""
-    utils.LocaleBorg().current_lang = lang
+def sanitized_locales(locale_fallback, locale_default, locales, translations):
+    """Sanitizes all locales availble into a nikola session
+
+    There will be one locale for each language in translations.
+
+    Locales for languages not in translations are ignored.
+
+    An explicit locale for a language can be specified in locales[language].
+
+    Locales at the input must be in the string style (like 'en', 'en.utf8'), and
+    the string can be unicode or bytes; at the output will be of type str, as
+    required by locale.setlocale.
+
+    Explicit but invalid locales are replaced with the sanitized locale_fallback
+
+    Languages with no explicit locale are set to
+        the sanitized locale_default if it was explicitly set
+        sanitized guesses compatible with v 6.0.4 if locale_default was None
+
+    NOTE: never use locale.getlocale() , it can return values that
+    locale.setlocale will not accept in Windows XP, 7 and pythons 2.6, 2.7, 3.3
+    Examples: "Spanish", "French" can't do the full circle set / get / set
+    """
+    # locales for languages not in translations are ignored
+    extras = set(locales) - set(translations)
+    if extras:
+        msg = 'Unexpected languages in LOCALES, ignoring them: {0}'
+        utils.LOGGER.warn(msg.format(','.join(extras)))
+        for lang in extras:
+            del locales[lang]
+
+    # py2x: get/setlocale related functions require the locale string as a str
+    # so convert
+    locale_fallback = str(locale_fallback) if locale_fallback else None
+    locale_default = str(locale_default) if locale_default else None
+    for lang in locales:
+        locales[lang] = str(locales[lang])
+
+    locale_fallback = valid_locale_fallback(locale_fallback)
+
+    # explicit but invalid locales are replaced with the sanitized locale_fallback
+    for lang in locales:
+        if not is_valid_locale(locales[lang]):
+            msg = 'Locale {0} for language {1} not accepted by python locale.'
+            utils.LOGGER.warn(msg.format(locales[lang], lang))
+            locales[lang] = locale_fallback
+
+    # languages with no explicit locale
+    missing = set(translations) - set(locales)
+    if locale_default:
+        # are set to the sanitized locale_default if it was explicitly set
+        if not is_valid_locale(locale_default):
+            msg = 'LOCALE_DEFAULT {0} could not be set, using {1}'
+            utils.LOGGER.warn(msg.format(locale_default, locale_fallback))
+            locale_default = locale_fallback
+        for lang in missing:
+            locales[lang] = locale_default
+    else:
+        # are set to sanitized guesses compatible with v 6.0.4 in Linux-Mac (was broken in Windows)
+        if sys.platform == 'win32':
+            guess_locale_fom_lang = guess_locale_from_lang_windows
+        else:
+            guess_locale_fom_lang = guess_locale_from_lang_posix
+        for lang in missing:
+            locale_n = guess_locale_fom_lang(lang)
+            if not locale:
+                locale_n = locale_fallback
+                msg = "Could not guess locale for language {0}, using locale {1}"
+                utils.LOGGER.warn(msg.format(lang, locale_n))
+            locales[lang] = locale_n
+
+    return locale_fallback, locale_default, locales
+
+
+def is_valid_locale(locale_n):
+    """True if locale_n is acceptable for locale.setlocale
+
+    for py2x compat locale_n should be of type str
+    """
     try:
-        locale.setlocale(locale.LC_ALL, (lang, "utf8"))
-    except Exception:
-        utils.LOGGER.warn(
-            "Could not set locale to {0}."
-            "This may cause some i18n features not to work.".format(lang))
-    return ''
+        locale.setlocale(locale.LC_ALL, locale_n)
+        valid = True
+    except locale.Error:
+        valid = False
+    return valid
+
+
+def valid_locale_fallback(desired_locale=None):
+    """returns a default fallback_locale, a string that locale.setlocale will accept
+
+    If desired_locale is provided must be of type str for py2x compatibility
+    """
+    # Whenever fallbacks change, adjust test TestHarcodedFallbacksWork
+    candidates_windows = [str('English'), str('C')]
+    candidates_posix = [str('en_US.utf8'), str('C')]
+    candidates = candidates_windows if sys.platform == 'win32' else candidates_posix
+    if desired_locale:
+        candidates = list(candidates)
+        candidates.insert(0, desired_locale)
+    found_valid = False
+    for locale_n in candidates:
+        found_valid = is_valid_locale(locale_n)
+        if found_valid:
+            break
+    if not found_valid:
+        msg = 'Could not find a valid fallback locale, tried: {0}'
+        utils.LOGGER.warn(msg.format(candidates))
+    elif desired_locale and (desired_locale != locale_n):
+        msg = 'Desired fallback locale {0} could not be set, using: {1}'
+        utils.LOGGER.warn(msg.format(desired_locale, locale_n))
+    return locale_n
+
+
+def guess_locale_from_lang_windows(lang):
+    return str(_windows_locale_guesses.get(lang, None))
+
+
+def guess_locale_from_lang_posix(lang):
+    # compatibility v6.0.4
+    if is_valid_locale(str(lang)):
+        locale_n = str(lang)
+    else:
+        # this works in Travis when locale support set by Travis suggestion
+        locale_n = str((locale.normalize(lang).split('.')[0]) + '.utf8')
+    return locale_n
+
+
+_windows_locale_guesses = {
+    # some languages may need that the appropiate Microsoft's Language Pack
+    # be instaled; the 'str' bit will be added in the guess function
+    "bg": "Bulgarian",
+    "ca": "Catalan",
+    "de": "German",
+    "el": "Greek",
+    "en": "English",
+    "eo": "Esperanto",
+    "es": "Spanish",
+    "fa": "Farsi",  # persian
+    "fr": "French",
+    "hr": "Croatian",
+    "it": "Italian",
+    "jp": "Japanese",
+    "nl": "Dutch",
+    "pl": "Polish",
+    "pt_br": "Portuguese_Brazil",
+    "ru": "Russian",
+    "sl_si": "Slovenian",
+    "tr_tr": "Turkish",
+    "zh_cn": "Chinese_China",  # Chinese (Simplified)
+}
 
 
 SOCIAL_BUTTONS_CODE = """
