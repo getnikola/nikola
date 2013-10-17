@@ -48,10 +48,12 @@ from .utils import (
     current_time,
     Functionary,
     LocaleBorg,
+    LOGGER,
     slugify,
     to_datetime,
     unicode_str,
 )
+from .rc4 import rc4
 
 __all__ = ['Post']
 
@@ -70,7 +72,8 @@ class Post(object):
         destination,
         use_in_feeds,
         messages,
-        template_name
+        template_name,
+        compiler
     ):
         """Initialize post.
 
@@ -78,6 +81,7 @@ class Post(object):
         the meta file, as well as any translations available, and
         the .html fragment file path.
         """
+        self.compiler = compiler
         self.config = config
         tzinfo = None
         if self.config['TIMEZONE'] is not None:
@@ -292,6 +296,32 @@ class Post(object):
         deps += self.fragment_deps(lang)
         return deps
 
+    def compile(self, lang):
+        """Generate the cache/ file with the compiled post."""
+
+        def wrap_encrypt(path, password):
+            """Wrap a post with encryption."""
+            with codecs.open(path, 'rb+', 'utf8') as inf:
+                data = inf.read() + "<!--tail-->"
+            data = CRYPT.substitute(data=rc4(password, data))
+            with codecs.open(path, 'wb+', 'utf8') as outf:
+                outf.write(data)
+
+        self.READ_MORE_LINK = self.config['READ_MORE_LINK']
+        dest = self.translated_base_path(lang)
+        if not self.is_translation_available(lang) and self.config['HIDE_UNTRANSLATED_POSTS']:
+            return
+        else:
+            self.compiler(
+                self.translated_source_path(lang),
+                dest,
+                self.is_two_file),
+        if self.meta('password'):
+            wrap_encrypt(dest, self.meta('password'))
+        if self.publish_later:
+            LOGGER.notice('{0} is scheduled to be published in the future ({1})'.format(
+                self.source_path, self.date))
+
     def fragment_deps(self, lang):
         """Return a list of dependencies to build this post's fragment."""
         deps = []
@@ -324,6 +354,18 @@ class Post(object):
             return self.source_path
         else:
             return '.'.join((self.source_path, sorted(self.translated_to)[0]))
+
+    def translated_base_path(self, lang):
+        """Return path to the translation's base_path file."""
+        if lang in self.translated_to:
+            if lang == self.default_lang:
+                return self.base_path
+            else:
+                return '.'.join((self.base_path, lang))
+        elif lang != self.default_lang:
+            return self.base_path
+        else:
+            return '.'.join((self.base_path, sorted(self.translated_to)[0]))
 
     def _translated_file_path(self, lang):
         """Return path to the translation's file, or to the original."""
@@ -669,3 +711,53 @@ def insert_hyphens(node, hyphenator):
 
     for child in node.iterchildren():
         insert_hyphens(child, hyphenator)
+
+
+CRYPT = string.Template("""\
+<script>
+function rc4(key, str) {
+    var s = [], j = 0, x, res = '';
+    for (var i = 0; i < 256; i++) {
+        s[i] = i;
+    }
+    for (i = 0; i < 256; i++) {
+        j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;
+        x = s[i];
+        s[i] = s[j];
+        s[j] = x;
+    }
+    i = 0;
+    j = 0;
+    for (var y = 0; y < str.length; y++) {
+        i = (i + 1) % 256;
+        j = (j + s[i]) % 256;
+        x = s[i];
+        s[i] = s[j];
+        s[j] = x;
+        res += String.fromCharCode(str.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);
+    }
+    return res;
+}
+function decrypt() {
+    key = $$("#key").val();
+    crypt_div = $$("#encr")
+    crypted = crypt_div.html();
+    decrypted = rc4(key, window.atob(crypted));
+    if (decrypted.substr(decrypted.length - 11) == "<!--tail-->"){
+        crypt_div.html(decrypted);
+        $$("#pwform").hide();
+        crypt_div.show();
+    } else { alert("Wrong password"); };
+}
+</script>
+
+<div id="encr" style="display: none;">${data}</div>
+<div id="pwform">
+<form onsubmit="javascript:decrypt(); return false;" class="form-inline">
+<fieldset>
+<legend>This post is password-protected.</legend>
+<input type="password" id="key" placeholder="Type password here">
+<button type="submit" class="btn">Show Content</button>
+</fieldset>
+</form>
+</div>""")
