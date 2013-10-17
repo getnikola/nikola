@@ -113,7 +113,7 @@ class Sitemap(LateTask):
                 path = (path.replace(os.sep, '/') + '/').replace('./', '')
                 lastmod = get_lastmod(root)
                 if path.endswith('.xml'):  # ignores all XML except files presumed to be RSS
-                    if not open(path, "r").readlines()[1].startswith('<rss') :
+                    if not open(path, "r").readlines()[1].startswith('<rss'):
                         continue
                 if path.endswith(kw['index_file']) and not kw['strip_indexes']:
                     continue  # ignore index files when stripping urls
