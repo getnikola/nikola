@@ -113,8 +113,9 @@ class Sitemap(LateTask):
                 # ignore the current directory.
                 path = (path.replace(os.sep, '/') + '/').replace('./', '')
                 lastmod = get_lastmod(root)
-                if path.endswith('sitemap.xml') or path.endswith('BingSiteAuth.xml') or path.endswith('browserconfig.xml'):
-                    continue # ignore some known unwanted xml (assumes all other xml is RSS or otherwise useful)
+                if path.endswith('.xml'):  # ignores all XML except files presumed to be RSS
+                    if not open(path, "r").readlines()[1].startswith('<rss') :
+                        continue
                 loc = urljoin(base_url, base_path + path)
                 if 'index.html' in files:  # Only map folders with indexes
                     locs[loc] = url_format.format(loc, lastmod)
