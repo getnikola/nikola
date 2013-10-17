@@ -341,8 +341,6 @@ class Nikola(object):
         self.plugin_manager.setPluginPlaces(places)
         self.plugin_manager.collectPlugins()
 
-        print("site is: %s" % self)
-
         # Activate all required SignalHandler plugins
         for plugin_info in self.plugin_manager.getPluginsOfCategory("SignalHandler"):
             if plugin_info.name in self.config.get('DISABLED_PLUGINS'):
@@ -350,6 +348,9 @@ class Nikola(object):
             else:
                 self.plugin_manager.activatePluginByName(plugin_info.name)
                 plugin_info.plugin_object.set_site(self)
+
+        # Emit signal for SignalHandlers which need to start running immediately.
+        signal('sighandlers_loaded').send(self)
 
         self.commands = {}
         # Activate all command plugins

@@ -55,17 +55,9 @@ class ApplicationWarning(Exception):
 
 def get_logger(name, handlers):
     """Get a logger for a plugin."""
-    if level is None:
-        if os.getenv('NIKOLA_DEBUG'):
-            level = logbook.DEBUG
-        else:
-            level = logbook.NOTICE
     l = logbook.Logger(name)
-    print("requesting logger for: %s (handlers: %i)" % (name, len(handlers)))
     for h in handlers:
         l.handlers.append(h)
-        print("Added handler for %s" % name)
-        print(h)
     return l
 
 STDERR_HANDLER = [logbook.StderrHandler(

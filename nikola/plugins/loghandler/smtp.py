@@ -9,9 +9,11 @@ class SmtpHandler(SignalHandler):
         """Add the handler to a list of handlers that are attached when get_logger() is called.."""
         smtpconf = self.site.config.get('LOGGING_HANDLERS').get('smtp')
         if smtpconf:
-            print("loaded smtp handler")
+            smtpconf['format_string'] = '''\
+Subject: {record.level_name}: {record.channel}
 
-            smtpconf['format_string'] = u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
+{record.message}
+'''
             self.site.loghandlers.append(logbook.MailHandler(
                 smtpconf.pop('from_addr'),
                 smtpconf.pop('recipients'),
@@ -21,6 +23,5 @@ class SmtpHandler(SignalHandler):
     def set_site(self, site):
         self.site = site
 
-        # Plugins are defined in conf.py, so we want to wait for `configured` signal.
-        ready = signal('configured')
+        ready = signal('sighandlers_loaded')
         ready.connect(self.attach_handler)

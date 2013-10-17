@@ -57,6 +57,7 @@ class CompileRest(PageCompiler):
                 data = in_file.read()
                 if not is_two_file:
                     data = re.split('(\n\n|\r\n\r\n)', data, maxsplit=1)[-1]
+
                 output, error_level, deps = rst2html(
                     data, settings_overrides={
                         'initial_header_level': 2,
@@ -105,7 +106,6 @@ class CompileRest(PageCompiler):
             plugin_info.plugin_object.short_help = plugin_info.description
 
 
-        print("rest site is %s" % site)
         self.logger = get_logger('compile_rest', site.loghandlers)
         return super(CompileRest, self).set_site(site)
 
