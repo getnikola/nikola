@@ -93,7 +93,7 @@ class Sitemap(LateTask):
             "strip_indexes": self.site.config["STRIP_INDEXES"],
             "index_file": self.site.config["INDEX_FILE"],
             "sitemap_include_fileless_dirs": self.site.config["SITEMAP_INCLUDE_FILELESS_DIRS"],
-            "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.html', '.htm'])
+            "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.html', '.htm', '.xml'])
         }
         output_path = kw['output_folder']
         sitemap_path = os.path.join(output_path, "sitemap.xml")
@@ -112,10 +112,12 @@ class Sitemap(LateTask):
                 # ignore the current directory.
                 path = (path.replace(os.sep, '/') + '/').replace('./', '')
                 lastmod = get_lastmod(root)
+                if path.endswith('.xml'):  # ignores all XML except files presumed to be RSS
+                    if not open(path, "r").readlines()[1].startswith('<rss'):
+                        continue
                 if path.endswith(kw['index_file']) and not kw['strip_indexes']:
                     continue  # ignore index files when stripping urls
-                else:
-                    loc = urljoin(base_url, base_path + path)
+                loc = urljoin(base_url, base_path + path)
                 if kw['index_file'] in files and kw['strip_indexes']:  # ignore folders when not stripping urls
                     locs[loc] = url_format.format(loc, lastmod)
                 for fname in files:
