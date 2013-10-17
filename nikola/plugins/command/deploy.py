@@ -82,7 +82,7 @@ class Deploy(Command):
                 subprocess.check_call(command, shell=True)
             except subprocess.CalledProcessError as e:
                 LOGGER.error('Failed deployment — command {0} '
-                             'returned {1}').format(e.cmd, e.returncode)
+                             'returned {1}'.format(e.cmd, e.returncode))
                 sys.exit(e.returncode)
         LOGGER.notice("Successful deployment")
         new_deploy = datetime.now()
