@@ -31,6 +31,7 @@ from collections import defaultdict, Callable
 import datetime
 import hashlib
 import locale
+import logging
 import os
 import re
 import codecs
@@ -72,6 +73,11 @@ def get_logger(name, level=None):
 
 LOGGER = get_logger('Nikola')
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
+
+if os.getenv('NIKOLA_DEBUG'):
+    logging.getLogger('yapsy').setLevel(logging.WARNING)
+else:
+    logging.getLogger('yapsy').setLevel(logging.DEBUG)
 
 
 def req_missing(names, purpose, python=True, optional=False):
