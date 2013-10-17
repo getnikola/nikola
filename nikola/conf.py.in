@@ -39,7 +39,7 @@ BLOG_DESCRIPTION = "${BLOG_DESCRIPTION}"
 # pt_br  Portuguese (Brasil)
 # pl     Polish
 # ru     Russian
-# sl_si  Slovenian
+# sl     Slovenian [NOT sl_si!]
 # tr_tr  Turkish (Turkey)
 # zh_cn  Chinese (Simplified)
 #
@@ -562,11 +562,11 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # }
 
 
-# Post's dates are considered in GMT by default, if you want to use 
-# another timezone, please set TIMEZONE to match. Check the available 
+# Post's dates are considered in GMT by default, if you want to use
+# another timezone, please set TIMEZONE to match. Check the available
 # list from Wikipedia:
 # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-# Also, if you want to use a different timezone in some of your posts, 
+# Also, if you want to use a different timezone in some of your posts,
 # you can use W3C-DTF Format (ex. 2012-03-30T23:00:00+02:00)
 #
 # TIMEZONE = 'Europe/Zurich'

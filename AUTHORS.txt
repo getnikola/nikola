@@ -10,6 +10,7 @@ do a PR :-)
 Aru Sahni <https://github.com/arusahni>
 Bluerise <https://github.com/Bluerise>
 Chris “Kwpolska” Warrick <https://github.com/Kwpolska>
+Daniel Aleksandersen <https://github.com/Aeyoun>
 DoctorMalboro <https://github.com/DoctorMalboro>
 Eduardo Schettino <https://github.com/schettino72>
 Kay Hayen <https://github.com/kayhayen>

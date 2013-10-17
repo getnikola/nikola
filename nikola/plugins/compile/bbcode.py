@@ -28,6 +28,7 @@
 
 import codecs
 import os
+import re
 
 try:
     import bbcode
@@ -57,7 +58,7 @@ class CompileBbcode(PageCompiler):
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
             if not is_two_file:
-                data = data.split('\n\n', 1)[-1]
+                data = re.split('(\n\n|\r\n\r\n)', data, maxsplit=1)[-1]
             output = self.parser.format(data)
             out_file.write(output)
 

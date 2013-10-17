@@ -31,6 +31,7 @@ from collections import defaultdict, Callable
 import datetime
 import hashlib
 import locale
+import logging
 import os
 import re
 import codecs
@@ -54,6 +55,11 @@ class ApplicationWarning(Exception):
 
 def get_logger(name, handlers):
     """Get a logger for a plugin."""
+    if level is None:
+        if os.getenv('NIKOLA_DEBUG'):
+            level = logbook.DEBUG
+        else:
+            level = logbook.NOTICE
     l = logbook.Logger(name)
     print("requesting logger for: %s (handlers: %i)" % (name, len(handlers)))
     for h in handlers:
@@ -68,6 +74,11 @@ STDERR_HANDLER = [logbook.StderrHandler(
 )]
 LOGGER = get_logger('Nikola', STDERR_HANDLER)
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
+
+if os.getenv('NIKOLA_DEBUG'):
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.WARNING)
 
 
 def req_missing(names, purpose, python=True, optional=False):

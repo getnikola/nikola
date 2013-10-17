@@ -42,6 +42,14 @@ class RenderTags(Task):
 
     name = "render_tags"
 
+    def set_site(self, site):
+        site.register_path_handler('tag_index', self.tag_index_path)
+        site.register_path_handler('tag', self.tag_path)
+        site.register_path_handler('tag_rss', self.tag_rss_path)
+        site.register_path_handler('category', self.category_path)
+        site.register_path_handler('category_rss', self.category_rss_path)
+        return super(RenderTags, self).set_site(site)
+
     def gen_tasks(self):
         """Render the tag pages and feeds."""
 
@@ -281,3 +289,33 @@ class RenderTags(Task):
             'uptodate': [utils.config_changed(kw)],
             'task_dep': ['render_posts'],
         }
+
+    def slugify_name(self, name):
+        if self.site.config['SLUG_TAG_PATH']:
+            name = utils.slugify(name)
+        return name
+
+    def tag_index_path(self, name, lang):
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['TAG_PATH'],
+                              self.site.config['INDEX_FILE']] if _f]
+
+    def tag_path(self, name, lang):
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['TAG_PATH'], self.slugify_name(name) + ".html"] if
+                _f]
+
+    def tag_rss_path(self, name, lang):
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['TAG_PATH'], self.slugify_name(name) + ".xml"] if
+                _f]
+
+    def category_path(self, name, lang):
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['TAG_PATH'], "cat_" + self.slugify_name(name) + ".html"] if
+                _f]
+
+    def category_rss_path(self, name, lang):
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['TAG_PATH'], "cat_" + self.slugify_name(name) + ".xml"] if
+                _f]

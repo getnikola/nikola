@@ -5,13 +5,26 @@ Features
 --------
 
 * Initial support for signals/hooks using Blinker (Issue #764)
+* Path/Link resolution mechanism for plugins (Issue #790)
+* Sass compiling (Issue #642)
+* Emit a signal when a new post is created (Issue #831)
 
 Bugfixes
 --------
 
+* Fix logging incompatibility in Yapsy (Issue #826)
+* Workaround for Mako cache folder unicode bug (Issue #825)
 * Ensure folder creation when importing wordpress (Issue #812)
 * Handle empty stories better and avoid Tipue crash (Issue #811)
 * Trigger conflict if two posts generate the same output (Issue #806)
+* Compilers now accept two of any line endings (\n, \r\n) instead of only Unix (\n) (Issue #832)
+* Removed optional priority element from sitemap (Issue #838)
+* Avoid duplicate entries in the sitemap (Issue #836)
+
+Other
+-----
+
+* the bpython console is now “slightly deprecated”
 
 New in 6.1.1
 ============

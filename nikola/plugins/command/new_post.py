@@ -30,6 +30,8 @@ import datetime
 import os
 import sys
 
+from blinker import signal
+
 from nikola.plugin_categories import Command
 from nikola import utils
 
@@ -277,10 +279,15 @@ class CommandNewPost(Command):
             txt_path, onefile, title=title,
             slug=slug, date=date, tags=tags, **metadata)
 
+        event = dict(path=txt_path)
+
         if not onefile:  # write metadata file
             with codecs.open(meta_path, "wb+", "utf8") as fd:
                 fd.write('\n'.join(data))
             with codecs.open(txt_path, "wb+", "utf8") as fd:
                 fd.write("Write your post here.")
             LOGGER.notice("Your post's metadata is at: {0}".format(meta_path))
+            event['meta_path'] = meta_path
         LOGGER.notice("Your post's text is at: {0}".format(txt_path))
+
+        signal('new_post').send(self, **event)

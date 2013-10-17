@@ -48,7 +48,6 @@ header = """<?xml version="1.0" encoding="UTF-8"?>
 url_format = """ <url>
   <loc>{0}</loc>
   <lastmod>{1}</lastmod>
-  <priority>0.5000</priority>
  </url>
 """
 
@@ -113,8 +112,11 @@ class Sitemap(LateTask):
                 # ignore the current directory.
                 path = (path.replace(os.sep, '/') + '/').replace('./', '')
                 lastmod = get_lastmod(root)
-                loc = urljoin(base_url, base_path + path)
-                if 'index.html' in files:  # Only map folders with indexes
+                if path.endswith(kw['index_file']) and not kw['strip_indexes']:
+                    continue  # ignore index files when stripping urls
+                else:
+                    loc = urljoin(base_url, base_path + path)
+                if kw['index_file'] in files and kw['strip_indexes']:  # ignore folders when not stripping urls
                     locs[loc] = url_format.format(loc, lastmod)
                 for fname in files:
                     if kw['strip_indexes'] and fname == kw['index_file']:

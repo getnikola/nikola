@@ -207,7 +207,7 @@ Base CSS
 --------
 
 The orphan theme includes just a little styling, specifically ``rest.css`` so
-the restructured text output looks reasonable, and ``code.css`` for code snippets.
+the reStructuredText output looks reasonable, and ``code.css`` for code snippets.
 
 It also includes an empty ``assets/css/theme.css`` where you can add your own CSS.
 For example, this is taken from the original monospace theme, except for the last
