@@ -31,6 +31,7 @@ from collections import defaultdict, Callable
 import datetime
 import hashlib
 import locale
+import logging
 import os
 import re
 import codecs
@@ -46,10 +47,7 @@ except ImportError:
 
 import logbook
 from logbook.more import ExceptionHandler
-from logbook.compat import redirect_logging
 import pytz
-
-redirect_logging()
 
 
 class ApplicationWarning(Exception):
@@ -72,6 +70,11 @@ def get_logger(name, level=None):
 
 LOGGER = get_logger('Nikola')
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
+
+if os.getenv('NIKOLA_DEBUG'):
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.WARNING)
 
 
 def req_missing(names, purpose, python=True, optional=False):

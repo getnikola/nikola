@@ -175,7 +175,7 @@ If you want to create a blog or a site, Nikola provides:
 * Google sitemap generation
 * Custom deployment (if it's a command, you can use it)
 * A (very) basic look and feel you can customize, and is even text-mode friendly
-* The input format is light markup (`reStructuredText <quickstart.html>`_ or
+* The input format is light markup (`reStructuredText <quickstart.html>`__ or
   `Markdown <http://daringfireball.net/projects/markdown/>`_)
 * Easy-to-create image galleries
 * Support for displaying source code
@@ -256,7 +256,7 @@ Those source files are later converted to HTML
 The recommended formats are reStructuredText and Markdown, but there is also support
 for textile and WikiCreole and even for just writing HTML.
 
-.. note:: There is a great `quick tutorial to learn reStructuredText. <quickstart.html>`_
+.. note:: There is a great `quick tutorial to learn reStructuredText. <quickstart.html>`__
 
 First, let's see how you "build" your site. Nikola comes with a minimal site to get you started.
 
@@ -382,7 +382,7 @@ By default, that file will contain also some extra information about your post (
 It can be placed in a separate file by using the ``-2`` option, but it's generally
 easier to keep it in a single location.
 
-The contents of your post have to be written (by default) in `reStructuredText <http://docutils.sf.net>`_
+The contents of your post have to be written (by default) in `reStructuredText <http://docutils.sf.net>`__
 but you can use a lot of different markups using the ``-f`` option. Currently
 Nikola supports bbcode, wiki, markdown, html, txt2tags and textile in addition
 to reStructuredText.
@@ -829,7 +829,7 @@ And there you are, you now have themes/blogtxt installed. It's very
 rudimentary, but it should work in most cases.
 
 If you create a nice theme, please share it!  You can do it as a pull
-request in the  `GitHub repository <https://github.com/getnikola/nikola-themes>`_.
+request in the  `GitHub repository <https://github.com/getnikola/nikola-themes>`__.
 
 One other option is to tweak an existing theme using a different color scheme,
 typography and CSS in general. Nikola provides a ``bootswatch_theme`` option
@@ -1481,7 +1481,7 @@ Similarly to themes, there is a nice, built-in command to install them —
 
 
 You can also share plugins you created with the community!  Visit the
-`GitHub repository <https://github.com/getnikola/plugins>`_ to find out more.
+`GitHub repository <https://github.com/getnikola/plugins>`__ to find out more.
 
 License
 -------
