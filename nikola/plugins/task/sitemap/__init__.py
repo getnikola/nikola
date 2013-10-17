@@ -113,10 +113,10 @@ class Sitemap(LateTask):
                 path = (path.replace(os.sep, '/') + '/').replace('./', '')
                 lastmod = get_lastmod(root)
                 if path.endswith(kw['index_file']) and not kw['strip_indexes']:
-                    continue # ignore index files when stripping urls
+                    continue  # ignore index files when stripping urls
                 else:
                     loc = urljoin(base_url, base_path + path)
-                if kw['index_file'] in files and kw['strip_indexes']: # ignore folders when not stripping urls
+                if kw['index_file'] in files and kw['strip_indexes']:  # ignore folders when not stripping urls
                     locs[loc] = url_format.format(loc, lastmod)
                 for fname in files:
                     if kw['strip_indexes'] and fname == kw['index_file']:
