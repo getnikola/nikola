@@ -835,6 +835,7 @@ class Nikola(object):
                         use_in_feeds,
                         self.MESSAGES,
                         template_name,
+                        self.get_compiler(base_path).compile_html
                     )
                     self.global_data[post.source_path] = post
                     if post.use_in_feeds:
