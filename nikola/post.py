@@ -79,7 +79,7 @@ class Post(object):
     ):
         """Initialize post.
 
-        The source path is the .txt post file. From it we calculate
+        The source path is the user created post file. From it we calculate
         the meta file, as well as any translations available, and
         the .html fragment file path.
         """
