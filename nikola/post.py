@@ -345,15 +345,10 @@ class Post(object):
 
     def translated_base_path(self, lang):
         """Return path to the translation's base_path file."""
-        if lang in self.translated_to:
-            if lang == self.default_lang:
-                return self.base_path
-            else:
-                return '.'.join((self.base_path, lang))
-        elif lang != self.default_lang:
+        if lang == self.default_lang:
             return self.base_path
         else:
-            return '.'.join((self.base_path, sorted(self.translated_to)[0]))
+            return '.'.join((self.base_path, lang))
 
     def _translated_file_path(self, lang):
         """Return path to the translation's file, or to the original."""
