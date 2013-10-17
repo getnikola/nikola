@@ -50,8 +50,6 @@ from logbook.more import ExceptionHandler
 from logbook.compat import redirect_logging
 import pytz
 
-redirect_logging()
-
 
 class ApplicationWarning(Exception):
     pass
@@ -75,9 +73,10 @@ LOGGER = get_logger('Nikola')
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
 
 if os.getenv('NIKOLA_DEBUG'):
-    logging.getLogger('yapsy').setLevel(logging.WARNING)
+    logging.basicConfig(level=logging.DEBUG) 
 else:
-    logging.getLogger('yapsy').setLevel(logging.DEBUG)
+    logging.basicConfig(level=logging.WARNING) 
+#redirect_logging()
 
 
 def req_missing(names, purpose, python=True, optional=False):
