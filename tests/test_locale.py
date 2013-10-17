@@ -158,7 +158,7 @@ class TestConfigLocale(unittest.TestCase):
         if sys.platform == 'win32':
             guess_locale_for_lang = nikola.nikola.guess_locale_from_lang_windows
         else:
-            guess_locale_for_lang = nikola.nikola.guess_locale_from_lang_linux
+            guess_locale_for_lang = nikola.nikola.guess_locale_from_lang_posix
 
         self.assertEquals(locales[lang_11], guess_locale_for_lang(lang_11))
 
