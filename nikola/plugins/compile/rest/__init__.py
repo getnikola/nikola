@@ -32,6 +32,7 @@ import re
 try:
     import docutils.core
     import docutils.io
+    import docutils.readers.standalone
     has_docutils = True
 except ImportError:
     has_docutils = False
@@ -110,8 +111,12 @@ class CompileRest(PageCompiler):
         return super(CompileRest, self).set_site(site)
 
 
+def report_error(msg):
+    print('received a message')
+    print(msg)
+
 def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
-             destination_path=None, reader=None, reader_name='standalone',
+             destination_path=None, reader=None,
              parser=None, parser_name='restructuredtext', writer=None,
              writer_name='html', settings=None, settings_spec=None,
              settings_overrides=None, config_section=None,
@@ -128,17 +133,22 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
         publish_parts(..., settings_overrides={'input_encoding': 'unicode'})
 
     Parameters: see `publish_programmatically`.
+
+    WARNING: `reader` should be None if you want Nikola to report
+             reStructuredText syntax errors.
     """
-    output, pub = docutils.core.publish_programmatically(
-        source=source, source_path=source_path, source_class=source_class,
-        destination_class=docutils.io.StringOutput,
-        destination=None, destination_path=destination_path,
-        reader=reader, reader_name=reader_name,
-        parser=parser, parser_name=parser_name,
-        writer=writer, writer_name=writer_name,
-        settings=settings, settings_spec=settings_spec,
-        settings_overrides=settings_overrides,
-        config_section=config_section,
-        enable_exit_status=enable_exit_status)
+    if reader is None:
+        reader = docutils.readers.standalone.Reader()
+        reader.document.reporter.stream = False
+        reader.document.reporter.attach_observer(report_error)
+    pub = docutils.core.Publisher(reader, parser, writer, settings=settings,
+                                  source_class=source_class,
+                                  destination_class=docutils.io.StringOutput)
+    pub.set_components(None, parser_name, writer_name)
+    pub.process_programmatic_settings(
+        settings_spec, settings_overrides, config_section)
+    pub.set_source(source, source_path)
+    pub.set_destination(None, destination_path)
+    pub.publish(enable_exit_status=enable_exit_status)
 
     return pub.writer.parts['docinfo'] + pub.writer.parts['fragment'], pub.document.reporter.max_level, pub.settings.record_dependencies
