@@ -28,6 +28,7 @@ from nikola.plugin_categories import SignalHandler
 from blinker import signal
 import logbook
 
+
 class SmtpHandler(SignalHandler):
     name = 'smtp'
 

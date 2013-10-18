@@ -36,6 +36,7 @@ except ImportError:
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger
 
+
 class CommandBuild(Command):
     """Start test server."""
 

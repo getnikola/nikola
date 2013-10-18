@@ -53,6 +53,7 @@ from nikola.plugins.basic_import import ImportMixin, links
 
 LOGGER = utils.get_logger('import_wordpress', utils.STDERR_HANDLER)
 
+
 class CommandImportWordpress(Command, ImportMixin):
     """Import a WordPress dump."""
 

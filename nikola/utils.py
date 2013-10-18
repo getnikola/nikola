@@ -54,6 +54,7 @@ import pytz
 class ApplicationWarning(Exception):
     pass
 
+
 def get_logger(name, handlers):
     """Get a logger with handlers attached."""
     l = logbook.Logger(name)
@@ -61,8 +62,9 @@ def get_logger(name, handlers):
         l.handlers.append(h)
     return l
 
+
 STDERR_HANDLER = [logbook.StderrHandler(
-    level = logbook.NOTICE if not os.getenv('NIKOLA_DEBUG') else logbook.DEBUG,
+    level=logbook.NOTICE if not os.getenv('NIKOLA_DEBUG') else logbook.DEBUG,
     format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
 )]
 LOGGER = get_logger('Nikola', STDERR_HANDLER)

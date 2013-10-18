@@ -42,6 +42,7 @@ except ImportError:
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import get_logger, makedirs, req_missing
 
+
 class CompileRest(PageCompiler):
     """Compile reSt into HTML."""
 
