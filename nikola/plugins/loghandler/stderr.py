@@ -29,7 +29,8 @@ from blinker import signal
 import logbook
 import os
 
-class StdoutHandler(SignalHandler):
+
+class StderrHandler(SignalHandler):
     """Logs messages to stderr."""
     name = 'stderr'
 
