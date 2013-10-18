@@ -17,7 +17,7 @@ Subject: {record.level_name}: {record.channel}
             self.site.loghandlers.append(logbook.MailHandler(
                 smtpconf.pop('from_addr'),
                 smtpconf.pop('recipients'),
-                **smtpconf 
+                **smtpconf
             ))
 
     def set_site(self, site):

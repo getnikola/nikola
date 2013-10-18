@@ -28,7 +28,7 @@
 from docutils import nodes
 from docutils.parsers.rst import roles
 
-from nikola.utils import split_explicit_title
+from nikola.utils import split_explicit_title, get_logger
 from nikola.plugin_categories import RestExtension
 
 
@@ -45,6 +45,7 @@ class Plugin(RestExtension):
 
 def doc_role(name, rawtext, text, lineno, inliner,
              options={}, content=[]):
+
     # split link's text and post's slug in role content
     has_explicit_title, title, slug = split_explicit_title(text)
 

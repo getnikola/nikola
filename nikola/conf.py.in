@@ -597,8 +597,8 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # You can configure the logging handlers installed as plugins or change the 
 # log level of the default stdout handler.
 LOGGING_HANDLERS = {
-    'stderr': {'loglevel': 'WARNING'},
-    'smtp': {'from_addr': 'test-errors@example.com','recipients': ('test@example.com'),'credentials':('testusername', 'password'), 'server_addr': ('127.0.0.1', 1025), 'secure': [], 'level': 'DEBUG'}
+    'stderr': {'loglevel': 'WARNING', 'bubble': True},
+    #'smtp': {'from_addr': 'test-errors@example.com','recipients': ('test@example.com'),'credentials':('testusername', 'password'), 'server_addr': ('127.0.0.1', 1025), 'secure': [], 'level': 'DEBUG', 'bubble': True}
 }
 
 # Put in global_context things you want available on all your templates.

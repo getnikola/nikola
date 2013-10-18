@@ -54,7 +54,7 @@ class ApplicationWarning(Exception):
     pass
 
 def get_logger(name, handlers):
-    """Get a logger for a plugin."""
+    """Get a logger with handlers attached."""
     l = logbook.Logger(name)
     for h in handlers:
         l.handlers.append(h)
