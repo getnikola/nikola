@@ -67,7 +67,7 @@ class CompileRest(PageCompiler):
                         # matches the actual line number (off by 7 with default
                         # metadata, could be more or less depending on the post
                         # author).
-                        add_ln = spl[0].count('\n') + 2
+                        add_ln = len(spl[0].splitlines()) + 1
                     else:
                         add_ln = 0
 
