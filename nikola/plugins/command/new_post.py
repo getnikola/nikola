@@ -185,8 +185,7 @@ class CommandNewPost(Command):
 
     def _execute(self, options, args):
         """Create a new post or page."""
-        # do something quite ugly.  sorry!
-        global LOGGER
+
         LOGGER = utils.get_logger('new_post', self.site.loghandlers)
 
         compiler_names = [p.name for p in

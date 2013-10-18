@@ -36,6 +36,8 @@ from nikola.plugin_categories import Command
 from nikola.utils import get_logger, makedirs
 from nikola.winutils import fix_git_symlinked
 
+LOGGER = get_logger('init', STDERR_HANDLER)
+
 
 class CommandInit(Command):
     """Create a new site."""
@@ -116,7 +118,6 @@ class CommandInit(Command):
 
     def _execute(self, options={}, args=None):
         """Create a new site."""
-        self.logger = get_logger('init', self.site.loghandlers)
         if not args:
             print("Usage: nikola init folder [options]")
             return False
@@ -126,11 +127,11 @@ class CommandInit(Command):
         else:
             if not options or not options.get('demo'):
                 self.create_empty_site(target)
-                self.logger.notice('Created empty site at {0}.'.format(target))
+                LOGGER.notice('Created empty site at {0}.'.format(target))
             else:
                 self.copy_sample_site(target)
-                self.logger.notice("A new site with example data has been created at "
+                LOGGER.notice("A new site with example data has been created at "
                               "{0}.".format(target))
-                self.logger.notice("See README.txt in that folder for more information.")
+                LOGGER.notice("See README.txt in that folder for more information.")
 
             self.create_configuration(target)

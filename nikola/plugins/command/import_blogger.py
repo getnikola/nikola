@@ -44,6 +44,8 @@ from nikola import utils
 from nikola.utils import req_missing
 from nikola.plugins.basic_import import ImportMixin
 
+LOGGER = utils.get_logger('import_blogger', utils.STDERR_HANDLER)
+
 
 class CommandImportBlogger(Command, ImportMixin):
     """Import a blogger dump."""
@@ -65,7 +67,6 @@ class CommandImportBlogger(Command, ImportMixin):
 
     def _execute(self, options, args):
         """Import a Blogger blog from an export file into a Nikola site."""
-        self.logger = utils.get_logger('import_blogger', self.site.loghandlers)
         # Parse the data
         if feedparser is None:
             req_missing(['feedparser'], 'import Blogger dumps')
@@ -148,7 +149,7 @@ class CommandImportBlogger(Command, ImportMixin):
 
         # blogger supports empty titles, which Nikola doesn't
         if not title:
-            self.logger.warn("Empty title in post with URL {0}. Using NO_TITLE "
+            LOGGER.warn("Empty title in post with URL {0}. Using NO_TITLE "
                         "as placeholder, please fix.".format(link))
             title = "NO_TITLE"
 
@@ -158,7 +159,7 @@ class CommandImportBlogger(Command, ImportMixin):
         slug = utils.slugify(link_path)
 
         if not slug:  # should never happen
-            self.logger.error("Error converting post:", title)
+            LOGGER.error("Error converting post:", title)
             return
 
         description = ''
@@ -186,7 +187,7 @@ class CommandImportBlogger(Command, ImportMixin):
             out_folder + '/' + slug + '.html'
 
         if is_draft and self.exclude_drafts:
-            self.logger.notice('Draft "{0}" will not be imported.'.format(title))
+            LOGGER.notice('Draft "{0}" will not be imported.'.format(title))
         elif content.strip():
             # If no content is found, no files are written.
             content = self.transform_content(content)
@@ -198,7 +199,7 @@ class CommandImportBlogger(Command, ImportMixin):
                 os.path.join(self.output_folder, out_folder, slug + '.html'),
                 content)
         else:
-            self.logger.warn('Not going to import "{0}" because it seems to contain'
+            LOGGER.warn('Not going to import "{0}" because it seems to contain'
                         ' no content.'.format(title))
 
     def process_item(self, item):
@@ -221,7 +222,7 @@ class CommandImportBlogger(Command, ImportMixin):
             # FIXME: not importing comments. Does blogger support "pages"?
             pass
         else:
-            self.logger.warn("Unknown post_type:", post_type)
+            LOGGER.warn("Unknown post_type:", post_type)
 
     def import_posts(self, channel):
         for item in channel.entries:

@@ -43,6 +43,8 @@ except ImportError:
 from nikola.plugin_categories import Command
 from nikola import utils
 
+LOGGER = utils.get_logger('install_theme', utils.STDERR_HANDLER)
+
 
 # Stolen from textwrap in Python 3.3.2.
 def indent(text, prefix, predicate=None):  # NOQA
@@ -92,7 +94,6 @@ class CommandInstallTheme(Command):
 
     def _execute(self, options, args):
         """Install theme into current site."""
-        self.logger = utils.get_logger('install_theme', self.site.loghandlers)
         if requests is None:
             utils.req_missing(['requests'], 'install themes')
 
@@ -104,7 +105,7 @@ class CommandInstallTheme(Command):
             name = None
 
         if name is None and not listing:
-            self.logger.error("This command needs either a theme name or the -l option.")
+            LOGGER.error("This command needs either a theme name or the -l option.")
             return False
         data = requests.get(url).text
         data = json.loads(data)
@@ -131,30 +132,30 @@ class CommandInstallTheme(Command):
     def do_install(self, name, data):
         if name in data:
             utils.makedirs(self.output_dir)
-            self.logger.notice('Downloading: ' + data[name])
+            LOGGER.notice('Downloading: ' + data[name])
             zip_file = BytesIO()
             zip_file.write(requests.get(data[name]).content)
-            self.logger.notice('Extracting: {0} into themes'.format(name))
+            LOGGER.notice('Extracting: {0} into themes'.format(name))
             utils.extract_all(zip_file)
             dest_path = os.path.join('themes', name)
         else:
             try:
                 theme_path = utils.get_theme_path(name)
             except:
-                self.logger.error("Can't find theme " + name)
+                LOGGER.error("Can't find theme " + name)
                 return False
 
             utils.makedirs(self.output_dir)
             dest_path = os.path.join(self.output_dir, name)
             if os.path.exists(dest_path):
-                self.logger.error("{0} is already installed".format(name))
+                LOGGER.error("{0} is already installed".format(name))
                 return False
 
-            self.logger.notice('Copying {0} into themes'.format(theme_path))
+            LOGGER.notice('Copying {0} into themes'.format(theme_path))
             shutil.copytree(theme_path, dest_path)
         confpypath = os.path.join(dest_path, 'conf.py.sample')
         if os.path.exists(confpypath):
-            self.logger.notice('This plugin has a sample config file.')
+            LOGGER.notice('This plugin has a sample config file.')
             print('Contents of the conf.py.sample file:\n')
             with codecs.open(confpypath, 'rb', 'utf-8') as fh:
                 print(indent(pygments.highlight(
