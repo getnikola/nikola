@@ -34,8 +34,6 @@ import subprocess
 from nikola.plugin_categories import Task
 from nikola import utils
 
-LOGGER = utils.get_logger('build_sass', utils.STDERR_HANDLER)
-
 
 class BuildSass(Task):
     """Generate CSS out of Sass sources."""
@@ -47,6 +45,7 @@ class BuildSass(Task):
 
     def gen_tasks(self):
         """Generate CSS out of Sass sources."""
+        self.logger = utils.get_logger('build_sass', self.site.loghandlers)
 
         kw = {
             'cache_folder': self.site.config['CACHE_FOLDER'],
@@ -99,7 +98,7 @@ class BuildSass(Task):
             dst = os.path.join(dst_dir, base + ".css")
 
             if base in seennames:
-                LOGGER.error(
+                self.logger.error(
                     'Duplicate filenames for SASS compiled files: {0} and '
                     '{1} (both compile to {2})'.format(
                         seennames[base], target, base + ".css"))
