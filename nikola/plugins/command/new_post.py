@@ -79,7 +79,7 @@ def get_default_compiler(is_post, compilers, post_pages):
     return 'rest'
 
 
-def get_date(self, schedule=False, rule=None, last_date=None, force_today=False):
+def get_date(schedule=False, rule=None, last_date=None, force_today=False):
     """Returns a date stamp, given a recurrence rule.
 
     schedule - bool:
