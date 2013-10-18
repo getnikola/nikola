@@ -31,7 +31,10 @@ import re
 
 try:
     import docutils.core
+    import docutils.nodes
+    import docutils.utils
     import docutils.io
+    import docutils.readers.standalone
     has_docutils = True
 except ImportError:
     has_docutils = False
@@ -56,7 +59,17 @@ class CompileRest(PageCompiler):
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
                 if not is_two_file:
-                    data = re.split('(\n\n|\r\n\r\n)', data, maxsplit=1)[-1]
+                    spl = re.split('(\n\n|\r\n\r\n)', data, maxsplit=1)
+                    data = spl[-1]
+                    if len(spl) != 1:
+                        # If errors occur, this will be added to the line
+                        # number reported by docutils so the line number
+                        # matches the actual line number (off by 7 with default
+                        # metadata, could be more or less depending on the post
+                        # author).
+                        add_ln = len(spl[0].splitlines()) + 1
+                    else:
+                        add_ln = 0
 
                 output, error_level, deps = rst2html(
                     data, settings_overrides={
@@ -66,7 +79,7 @@ class CompileRest(PageCompiler):
                         'link_stylesheet': True,
                         'syntax_highlight': 'short',
                         'math_output': 'mathjax',
-                    })
+                    }, logger=self.logger, l_source=source, l_add_ln=add_ln)
                 out_file.write(output)
             deps_path = dest + '.dep'
             if deps.list:
@@ -75,8 +88,6 @@ class CompileRest(PageCompiler):
             else:
                 if os.path.isfile(deps_path):
                     os.unlink(deps_path)
-        if error_level == 2:
-            self.logger.warning('Docutils reports warnings on {0}'.format(source))
         if error_level < 3:
             return True
         else:
@@ -105,17 +116,51 @@ class CompileRest(PageCompiler):
             plugin_info.plugin_object.set_site(site)
             plugin_info.plugin_object.short_help = plugin_info.description
 
-
         self.logger = get_logger('compile_rest', site.loghandlers)
         return super(CompileRest, self).set_site(site)
 
 
+def get_report_error(settings):
+    """Return a report_error function, which is a docutils Reporter observer."""
+    def report_error(msg):
+        """Report an error to a Nikola user.
+
+        Error code mapping:
+
+        +------+---------+------+----------+
+        | dNUM |   dNAME | lNUM |    lNAME |    d = docutils, l = logbook
+        +------+---------+------+----------+
+        |    0 |   DEBUG |    1 |    DEBUG |
+        |    1 |    INFO |    2 |     INFO |
+        |    2 | WARNING |    4 |  WARNING |
+        |    3 |   ERROR |    5 |    ERROR |
+        |    4 |  SEVERE |    6 | CRITICAL |
+        +------+---------+------+----------+
+        """
+        errormap = {0: 1, 1: 2, 2: 4, 3: 5, 4: 6}
+        text = docutils.nodes.Element.astext(msg)
+        out = '[{source}:{line}] {text}'.format(source=settings['source'], line=msg['line'] + settings['add_ln'], text=text)
+        settings['logger'].log(errormap[msg['level']], out)
+
+    return report_error
+
+
+class NikolaReader(docutils.readers.standalone.Reader):
+
+    def new_document(self):
+        """Create and return a new empty document tree (root node)."""
+        document = docutils.utils.new_document(self.source.source_path, self.settings)
+        document.reporter.stream = False
+        document.reporter.attach_observer(get_report_error(self.l_settings))
+        return document
+
+
 def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
-             destination_path=None, reader=None, reader_name='standalone',
+             destination_path=None, reader=None,
              parser=None, parser_name='restructuredtext', writer=None,
              writer_name='html', settings=None, settings_spec=None,
              settings_overrides=None, config_section=None,
-             enable_exit_status=None):
+             enable_exit_status=None, logger=None, l_source='', l_add_ln=0):
     """
     Set up & run a `Publisher`, and return a dictionary of document parts.
     Dictionary keys are the names of parts, and values are Unicode strings;
@@ -128,17 +173,28 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
         publish_parts(..., settings_overrides={'input_encoding': 'unicode'})
 
     Parameters: see `publish_programmatically`.
+
+    WARNING: `reader` should be None (or NikolaReader()) if you want Nikola to report
+             reStructuredText syntax errors.
     """
-    output, pub = docutils.core.publish_programmatically(
-        source=source, source_path=source_path, source_class=source_class,
-        destination_class=docutils.io.StringOutput,
-        destination=None, destination_path=destination_path,
-        reader=reader, reader_name=reader_name,
-        parser=parser, parser_name=parser_name,
-        writer=writer, writer_name=writer_name,
-        settings=settings, settings_spec=settings_spec,
-        settings_overrides=settings_overrides,
-        config_section=config_section,
-        enable_exit_status=enable_exit_status)
+    if reader is None:
+        reader = NikolaReader()
+        # For our custom logging, we have special needs and special settings we
+        # specify here.
+        # logger    a logger from Nikola
+        # source   source filename (docutils gets a string)
+        # add_ln   amount of metadata lines (see comment in compile_html above)
+        reader.l_settings = {'logger': logger, 'source': l_source,
+                             'add_ln': l_add_ln}
+
+    pub = docutils.core.Publisher(reader, parser, writer, settings=settings,
+                                  source_class=source_class,
+                                  destination_class=docutils.io.StringOutput)
+    pub.set_components(None, parser_name, writer_name)
+    pub.process_programmatic_settings(
+        settings_spec, settings_overrides, config_section)
+    pub.set_source(source, source_path)
+    pub.set_destination(None, destination_path)
+    pub.publish(enable_exit_status=enable_exit_status)
 
     return pub.writer.parts['docinfo'] + pub.writer.parts['fragment'], pub.document.reporter.max_level, pub.settings.record_dependencies
