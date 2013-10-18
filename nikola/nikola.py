@@ -51,6 +51,7 @@ else:
 
 import lxml.html
 from yapsy.PluginManager import PluginManager
+
 from .post import Post
 from . import utils
 from .plugin_categories import (
@@ -205,7 +206,7 @@ class Nikola(object):
             'SCHEDULE_ALL': False,
             'SCHEDULE_RULE': '',
             'SCHEDULE_FORCE_TODAY': False,
-            'LOGGING_HANDLERS': {'stderr': {'loglevel': 'WARNING'}},
+            'LOGGING_HANDLERS': {'stderr': {'loglevel': 'WARNING', 'bubble': True}},
         }
 
         self.config.update(config)
