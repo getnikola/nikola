@@ -59,7 +59,8 @@ class Galleries(Task):
         return super(Galleries, self).set_site(site)
 
     def gallery_path(self, name, lang):
-        return [_f for _f in [self.site.config['GALLERY_PATH'], name,
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['GALLERY_PATH'], name,
                               self.site.config['INDEX_FILE']] if _f]
 
     def gen_tasks(self):
@@ -131,6 +132,7 @@ class Galleries(Task):
                             "gallery",
                             os.path.relpath(gallery, self.kw['gallery_path']), lang))
                 dst = os.path.normpath(dst)
+                utils.LOGGER.notice('===> '+dst)
 
                 context = {}
                 context["lang"] = lang
