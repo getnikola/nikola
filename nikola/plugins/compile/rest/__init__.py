@@ -31,6 +31,7 @@ import re
 
 try:
     import docutils.core
+    import docutils.nodes
     import docutils.utils
     import docutils.io
     import docutils.readers.standalone
@@ -58,7 +59,17 @@ class CompileRest(PageCompiler):
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
                 if not is_two_file:
-                    data = re.split('(\n\n|\r\n\r\n)', data, maxsplit=1)[-1]
+                    spl = re.split('(\n\n|\r\n\r\n)', data, maxsplit=1)
+                    data = spl[-1]
+                    if len(spl) != 1:
+                        # If errors occur, this will be added to the line
+                        # number reported by docutils so the line number
+                        # matches the actual line number (off by 7 with default
+                        # metadata, could be more or less depending on the post
+                        # creator).
+                        add_ln = spl[0].count('\n') + 2
+                    else:
+                        add_ln = 0
 
                 output, error_level, deps = rst2html(
                     data, settings_overrides={
@@ -68,7 +79,7 @@ class CompileRest(PageCompiler):
                         'link_stylesheet': True,
                         'syntax_highlight': 'short',
                         'math_output': 'mathjax',
-                    }, logger=self.logger)
+                    }, logger=self.logger, l_source=source, l_add_ln=add_ln)
                 out_file.write(output)
             deps_path = dest + '.dep'
             if deps.list:
@@ -112,9 +123,11 @@ class CompileRest(PageCompiler):
         return super(CompileRest, self).set_site(site)
 
 
-def get_report_error(logger):
+def get_report_error(settings):
     def report_error(msg):
-        logger.notice(msg)
+        text = docutils.nodes.Element.astext(msg)
+        out = '[{source}:{line}] {text}'.format(source=settings['source'], line=msg['line'] + settings['add_ln'], text=text)
+        settings['logger'].notice(out)
 
     return report_error
 
@@ -125,7 +138,7 @@ class NikolaReader(docutils.readers.standalone.Reader):
         """Create and return a new empty document tree (root node)."""
         document = docutils.utils.new_document(self.source.source_path, self.settings)
         document.reporter.stream = False
-        document.reporter.attach_observer(get_report_error(self.logger))
+        document.reporter.attach_observer(get_report_error(self.l_settings))
         return document
 
 
@@ -134,7 +147,7 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
              parser=None, parser_name='restructuredtext', writer=None,
              writer_name='html', settings=None, settings_spec=None,
              settings_overrides=None, config_section=None,
-             enable_exit_status=None, logger=None):
+             enable_exit_status=None, logger=None, l_source='', l_add_ln=0):
     """
     Set up & run a `Publisher`, and return a dictionary of document parts.
     Dictionary keys are the names of parts, and values are Unicode strings;
@@ -153,7 +166,13 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
     """
     if reader is None:
         reader = NikolaReader()
-        reader.logger = logger
+        # For our custom logging, we have special needs and special settings we
+        # specify here.
+        # logger    a logger from Nikola
+        # source   source filename (docutils gets a string)
+        # add_ln   amount of metadata lines (see comment in compile_html above)
+        reader.l_settings = {'logger': logger, 'source': l_source,
+                             'add_ln': l_add_ln}
 
     pub = docutils.core.Publisher(reader, parser, writer, settings=settings,
                                   source_class=source_class,
