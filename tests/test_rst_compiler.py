@@ -85,6 +85,7 @@ class FakeSite(object):
             'DISABLED_PLUGINS': [],
             'EXTRA_PLUGINS': [],
             'DEFAULT_LANG': 'en',
+            'LOGGING_HANDLERS': {'stderr': {'loglevel': 'WARNING', 'bubble': True}}
         }
         self.EXTRA_PLUGINS = self.config['EXTRA_PLUGINS']
         self.plugin_manager = PluginManager(categories_filter={

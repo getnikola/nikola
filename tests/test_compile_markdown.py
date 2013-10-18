@@ -11,7 +11,8 @@ from nikola.plugins.compile.markdown import CompileMarkdown
 
 class FakeSite(object):
     config = {
-        "MARKDOWN_EXTENSIONS": ['fenced_code', 'codehilite']
+        "MARKDOWN_EXTENSIONS": ['fenced_code', 'codehilite'],
+        "LOGGING_HANDLERS": {'stderr': {'loglevel': 'WARNING', 'bubble': True}}
     }
 
 
