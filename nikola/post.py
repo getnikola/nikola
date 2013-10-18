@@ -24,7 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import unicode_literals, print_function
+from __future__ import unicode_literals, print_function, absolute_import
 
 import codecs
 from collections import defaultdict
@@ -43,15 +43,18 @@ except ImportError:
     pyphen = None
 import pytz
 
+# for tearDown with _reload we cannot use 'from import' to get forLocaleBorg
+import nikola.utils
 from .utils import (
     bytes_str,
     current_time,
     Functionary,
-    LocaleBorg,
+    LOGGER,
     slugify,
     to_datetime,
     unicode_str,
 )
+from .rc4 import rc4
 
 __all__ = ['Post']
 
@@ -70,14 +73,16 @@ class Post(object):
         destination,
         use_in_feeds,
         messages,
-        template_name
+        template_name,
+        compiler
     ):
         """Initialize post.
 
-        The source path is the .txt post file. From it we calculate
+        The source path is the user created post file. From it we calculate
         the meta file, as well as any translations available, and
         the .html fragment file path.
         """
+        self.compiler = compiler
         self.config = config
         tzinfo = None
         if self.config['TIMEZONE'] is not None:
@@ -192,7 +197,7 @@ class Post(object):
 
     @property
     def tags(self):
-        lang = self.current_lang()
+        lang = nikola.utils.LocaleBorg().current_lang
         if lang in self._tags:
             return self._tags[lang]
         elif self.default_lang in self._tags:
@@ -202,7 +207,7 @@ class Post(object):
 
     @property
     def prev_post(self):
-        lang = self.current_lang()
+        lang = nikola.utils.LocaleBorg().current_lang
         rv = self._prev_post
         while self.skip_untranslated:
             if rv is None:
@@ -218,7 +223,7 @@ class Post(object):
 
     @property
     def next_post(self):
-        lang = self.current_lang()
+        lang = nikola.utils.LocaleBorg().current_lang
         rv = self._next_post
         while self.skip_untranslated:
             if rv is None:
@@ -253,33 +258,20 @@ class Post(object):
             fmt_date = fmt_date.decode('utf8')
         return fmt_date
 
-    def current_lang(self):
-        """Return the currently set locale, if it's one of the
-        available translations, or self.default_lang."""
-        lang = LocaleBorg().current_lang
-        if lang:
-            if lang in self.translations:
-                return lang
-            lang = lang.split('_')[0]
-            if lang in self.translations:
-                return lang
-        # whatever
-        return self.default_lang
-
     def title(self, lang=None):
         """Return localized title.
 
-        If lang is not specified, it will use the currently set locale,
-        because templates set it.
+        If lang is not specified, it defaults to the current language from
+        templates, as set in LocaleBorg.
         """
         if lang is None:
-            lang = self.current_lang()
+            lang = nikola.utils.LocaleBorg().current_lang
         return self.meta[lang]['title']
 
     def description(self, lang=None):
         """Return localized description."""
         if lang is None:
-            lang = self.current_lang()
+            lang = nikola.utils.LocaleBorg().current_lang
         return self.meta[lang]['description']
 
     def deps(self, lang):
@@ -291,6 +283,32 @@ class Post(object):
             deps += [self.base_path + "." + lang]
         deps += self.fragment_deps(lang)
         return deps
+
+    def compile(self, lang):
+        """Generate the cache/ file with the compiled post."""
+
+        def wrap_encrypt(path, password):
+            """Wrap a post with encryption."""
+            with codecs.open(path, 'rb+', 'utf8') as inf:
+                data = inf.read() + "<!--tail-->"
+            data = CRYPT.substitute(data=rc4(password, data))
+            with codecs.open(path, 'wb+', 'utf8') as outf:
+                outf.write(data)
+
+        self.READ_MORE_LINK = self.config['READ_MORE_LINK']
+        dest = self.translated_base_path(lang)
+        if not self.is_translation_available(lang) and self.config['HIDE_UNTRANSLATED_POSTS']:
+            return
+        else:
+            self.compiler(
+                self.translated_source_path(lang),
+                dest,
+                self.is_two_file),
+        if self.meta('password'):
+            wrap_encrypt(dest, self.meta('password'))
+        if self.publish_later:
+            LOGGER.notice('{0} is scheduled to be published in the future ({1})'.format(
+                self.source_path, self.date))
 
     def fragment_deps(self, lang):
         """Return a list of dependencies to build this post's fragment."""
@@ -325,6 +343,13 @@ class Post(object):
         else:
             return '.'.join((self.source_path, sorted(self.translated_to)[0]))
 
+    def translated_base_path(self, lang):
+        """Return path to the translation's base_path file."""
+        if lang == self.default_lang:
+            return self.base_path
+        else:
+            return '.'.join((self.base_path, lang))
+
     def _translated_file_path(self, lang):
         """Return path to the translation's file, or to the original."""
         if lang in self.translated_to:
@@ -342,14 +367,14 @@ class Post(object):
 
         teaser_only=True breaks at the teaser marker and returns only the teaser.
         strip_html=True removes HTML tags
-        lang=None uses the currently set locale
+        lang=None uses the last used to set locale
 
         All links in the returned HTML will be relative.
         The HTML returned is a bare fragment, not a full document.
         """
 
         if lang is None:
-            lang = self.current_lang()
+            lang = nikola.utils.LocaleBorg().current_lang
         file_name = self._translated_file_path(lang)
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read().strip()
@@ -427,7 +452,7 @@ class Post(object):
         Extension is used in the path if specified.
         """
         if lang is None:
-            lang = self.current_lang()
+            lang = nikola.utils.LocaleBorg().current_lang
         if self._has_pretty_url(lang):
             path = os.path.join(self.translations[lang],
                                 self.folder, self.meta[lang]['slug'], 'index' + extension)
@@ -440,7 +465,7 @@ class Post(object):
 
     def permalink(self, lang=None, absolute=False, extension='.html'):
         if lang is None:
-            lang = self.current_lang()
+            lang = nikola.utils.LocaleBorg().current_lang
 
         pieces = self.translations[lang].split(os.sep)
         pieces += self.folder.split(os.sep)
@@ -669,3 +694,53 @@ def insert_hyphens(node, hyphenator):
 
     for child in node.iterchildren():
         insert_hyphens(child, hyphenator)
+
+
+CRYPT = string.Template("""\
+<script>
+function rc4(key, str) {
+    var s = [], j = 0, x, res = '';
+    for (var i = 0; i < 256; i++) {
+        s[i] = i;
+    }
+    for (i = 0; i < 256; i++) {
+        j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;
+        x = s[i];
+        s[i] = s[j];
+        s[j] = x;
+    }
+    i = 0;
+    j = 0;
+    for (var y = 0; y < str.length; y++) {
+        i = (i + 1) % 256;
+        j = (j + s[i]) % 256;
+        x = s[i];
+        s[i] = s[j];
+        s[j] = x;
+        res += String.fromCharCode(str.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);
+    }
+    return res;
+}
+function decrypt() {
+    key = $$("#key").val();
+    crypt_div = $$("#encr")
+    crypted = crypt_div.html();
+    decrypted = rc4(key, window.atob(crypted));
+    if (decrypted.substr(decrypted.length - 11) == "<!--tail-->"){
+        crypt_div.html(decrypted);
+        $$("#pwform").hide();
+        crypt_div.show();
+    } else { alert("Wrong password"); };
+}
+</script>
+
+<div id="encr" style="display: none;">${data}</div>
+<div id="pwform">
+<form onsubmit="javascript:decrypt(); return false;" class="form-inline">
+<fieldset>
+<legend>This post is password-protected.</legend>
+<input type="password" id="key" placeholder="Type password here">
+<button type="submit" class="btn">Show Content</button>
+</fieldset>
+</form>
+</div>""")

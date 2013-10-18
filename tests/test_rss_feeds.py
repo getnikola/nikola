@@ -9,8 +9,9 @@ import unittest
 
 import mock
 
-from .context import nikola
+from .context import nikola  # NOQA
 from lxml import etree
+from .base import LocaleSupportInTesting
 
 
 fake_conf = defaultdict(str)
@@ -22,6 +23,8 @@ fake_conf['BASE_URL'] = 'http://some.blog/'
 
 class RSSFeedTest(unittest.TestCase):
     def setUp(self):
+        LocaleSupportInTesting.initialize_locales_for_testing('unilingual')
+
         self.blog_url = "http://some.blog"
 
         with mock.patch('nikola.post.get_meta',
@@ -42,7 +45,8 @@ class RSSFeedTest(unittest.TestCase):
                                                       'blog_folder',
                                                       True,
                                                       {'en': ''},
-                                                      'post.tmpl')
+                                                      'post.tmpl',
+                                                      lambda *a: None)
 
                     opener_mock = mock.mock_open()
 
