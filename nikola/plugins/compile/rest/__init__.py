@@ -58,6 +58,7 @@ class CompileRest(PageCompiler):
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
+                add_ln = 0
                 if not is_two_file:
                     spl = re.split('(\n\n|\r\n\r\n)', data, maxsplit=1)
                     data = spl[-1]
@@ -68,8 +69,6 @@ class CompileRest(PageCompiler):
                         # metadata, could be more or less depending on the post
                         # author).
                         add_ln = len(spl[0].splitlines()) + 1
-                else:
-                        add_ln = 0
 
                 output, error_level, deps = rst2html(
                     data, settings_overrides={
