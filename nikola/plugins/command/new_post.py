@@ -35,7 +35,7 @@ from blinker import signal
 from nikola.plugin_categories import Command
 from nikola import utils
 
-LOGGER = None
+LOGGER = utils.get_logger('new_post', utils.STDERR_HANDLER)
 
 def filter_post_pages(compiler, is_post, compilers, post_pages):
     """Given a compiler ("markdown", "rest"), and whether it's meant for
@@ -185,9 +185,6 @@ class CommandNewPost(Command):
 
     def _execute(self, options, args):
         """Create a new post or page."""
-
-        LOGGER = utils.get_logger('new_post', self.site.loghandlers)
-
         compiler_names = [p.name for p in
                           self.site.plugin_manager.getPluginsOfCategory(
                               "PageCompiler")]
