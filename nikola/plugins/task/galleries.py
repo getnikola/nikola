@@ -327,7 +327,7 @@ class Galleries(Task):
         thumb_path = fname + '.thumbnail' + ext
 
         yield utils.apply_filters({
-            'basename': 'render_galleries_clean',
+            'basename': '_render_galleries_clean',
             'name': thumb_path,
             'actions': [
                 (utils.remove_file, (thumb_path,))
@@ -337,7 +337,7 @@ class Galleries(Task):
         }, self.kw['filters'])
 
         yield utils.apply_filters({
-            'basename': 'render_galleries_clean',
+            'basename': '_render_galleries_clean',
             'name': img_path,
             'actions': [
                 (utils.remove_file, (img_path,))
