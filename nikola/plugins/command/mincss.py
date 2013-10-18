@@ -44,10 +44,9 @@ class CommandMincss(Command):
     doc_usage = ""
     doc_purpose = "apply mincss to the generated site"
 
-    logger = get_logger('mincss', STDERR_HANDLER)
-
     def _execute(self, options, args):
         """Apply mincss the generated site."""
+        self.logger = get_logger('mincss', self.site.loghandlers)
         output_folder = self.site.config['OUTPUT_FOLDER']
         if Processor is None:
             req_missing(['mincss'], 'use the "mincss" command')
