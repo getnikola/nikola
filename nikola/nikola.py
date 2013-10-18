@@ -42,11 +42,10 @@ try:
 except ImportError:
     pyphen = None
 
+import logging
 if os.getenv('NIKOLA_DEBUG'):
-    import logging
     logging.basicConfig(level=logging.DEBUG)
 else:
-    import logging
     logging.basicConfig(level=logging.ERROR)
 
 import lxml.html
