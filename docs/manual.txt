@@ -313,9 +313,9 @@ Nikola is mostly a series of doit *tasks*, and you can see them by doing ``nikol
     render_tags
     sitemap
 
-You can make Nikola redo everything by calling ``nikola build forget``, you can make it do just a specific
-part of the site using task names, for example ``nikola build render_pages``, and even individual files like
-``nikola build render_indexes:output/index.html``
+You can make Nikola redo everything by calling ``nikola forget`` and then ``nikola build`` (or ``nikola build -a``, 
+you can make it do just a specific part of the site using task names, for example ``nikola build render_pages``, 
+and even individual files like ``nikola build output/index.html``
 
 Nikola also has other commands besides ``build``::
 
