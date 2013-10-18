@@ -228,7 +228,6 @@ class Galleries(Task):
                             self.kw["output_folder"],
                             gallery)
         if os.path.isfile(index_path):
-<<<<<<< HEAD
             post = Post(
                 index_path,
                 self.site.config,
@@ -238,9 +237,6 @@ class Galleries(Task):
                 'story.tmpl',
                 self.site.get_compiler(index_path).compile_html
             )
-=======
-            post = Post(index_path, self.site.config, destination, False, self.site.MESSAGES, 'story.tmpl')
->>>>>>> d721f0656b7339bde2382168edfb2ec1514c75ec
         else:
             post = None
         return post
