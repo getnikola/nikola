@@ -30,10 +30,7 @@ import os
 
 from nikola import __version__
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, STDERR_HANDLER
-
-LOGGER = get_logger('console', STDERR_HANDLER)
-
+from nikola.utils import get_logger
 
 class Console(Command):
     """Start debugging console."""
@@ -48,7 +45,7 @@ class Console(Command):
         try:
             import conf
         except ImportError:
-            LOGGER.error("No configuration found, cannot run the console.")
+            self.logger.error("No configuration found, cannot run the console.")
         else:
             import IPython
             SITE = Nikola(**conf.__dict__)
@@ -61,7 +58,7 @@ class Console(Command):
         try:
             import conf
         except ImportError:
-            LOGGER.error("No configuration found, cannot run the console.")
+            self.logger.error("No configuration found, cannot run the console.")
         else:
             import bpython
             SITE = Nikola(**conf.__dict__)
@@ -79,7 +76,7 @@ class Console(Command):
             SITE.scan_posts()
             gl = {'conf': conf, 'SITE': SITE, 'Nikola': Nikola}
         except ImportError:
-            LOGGER.error("No configuration found, cannot run the console.")
+            self.logger.error("No configuration found, cannot run the console.")
         else:
             import code
             try:
@@ -102,6 +99,7 @@ class Console(Command):
 
     def _execute(self, options, args):
         """Start the console."""
+        self.logger = get_logger('console', self.site.loghandlers)
         for shell in self.shells:
             try:
                 return getattr(self, shell)()
