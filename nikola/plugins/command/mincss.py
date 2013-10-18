@@ -62,7 +62,7 @@ class CommandMincss(Command):
                 if url.endswith('.css'):
                     fname = os.path.basename(url)
                     if fname in css_files:
-                        logger.error("You have two CSS files with the same name and that confuses me.")
+                        self.logger.error("You have two CSS files with the same name and that confuses me.")
                         sys.exit(1)
                     css_files[fname] = url
                 if not f.endswith('.html'):

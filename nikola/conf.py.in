@@ -613,7 +613,7 @@ LOGGING_HANDLERS = {
     #    'from_addr': 'test-errors@example.com',
     #    'recipients': ('test@example.com'),
     #    'credentials':('testusername', 'password'), 
-    #    'server_addr': ('127.0.0.1', 1025), 
+    #    'server_addr': ('127.0.0.1', 25), 
     #    'secure': (), 
     #    'level': 'DEBUG', 
     #    'bubble': True

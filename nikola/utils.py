@@ -62,7 +62,7 @@ def get_logger(name, handlers):
     return l
 
 STDERR_HANDLER = [logbook.StderrHandler(
-    level = logbook.NOTICE if os.getenv('NIKOLA_DEBUG') else logbook.DEBUG,
+    level = logbook.NOTICE if not os.getenv('NIKOLA_DEBUG') else logbook.DEBUG,
     format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
 )]
 LOGGER = get_logger('Nikola', STDERR_HANDLER)
