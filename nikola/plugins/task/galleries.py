@@ -130,6 +130,7 @@ class Galleries(Task):
                         self.site.path(
                             "gallery",
                             os.path.relpath(gallery, self.kw['gallery_path']), lang))
+                dst = os.path.normpath(dst)
 
                 context = {}
                 context["lang"] = lang
@@ -210,6 +211,7 @@ class Galleries(Task):
                 os.path.join(
                     self.kw["output_folder"],
                     self.site.path("gallery", gallery_name)))
+            output_gallery = os.path.normpath(output_gallery)
             # Task to create gallery in output/
             yield {
                 'basename': self.name,
