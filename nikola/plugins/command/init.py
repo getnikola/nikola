@@ -33,7 +33,7 @@ from mako.template import Template
 
 import nikola
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, makedirs, STDERR_HANDLER
+from nikola.utils import get_logger, makedirs
 from nikola.winutils import fix_git_symlinked
 
 

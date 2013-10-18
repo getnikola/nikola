@@ -65,7 +65,7 @@ class CommandBuild(Command):
 
     def _execute(self, options, args):
         """Start test server."""
-        self.logger= get_logger('serve', self.site.loghandlers)
+        self.logger = get_logger('serve', self.site.loghandlers)
         out_dir = self.site.config['OUTPUT_FOLDER']
         if not os.path.isdir(out_dir):
             self.logger.error("Missing '{0}' folder?".format(out_dir))

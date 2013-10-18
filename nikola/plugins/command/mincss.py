@@ -34,7 +34,7 @@ except ImportError:
     Processor = None
 
 from nikola.plugin_categories import Command
-from nikola.utils import req_missing, get_logger, STDERR_HANDLER
+from nikola.utils import req_missing, get_logger
 
 
 class CommandMincss(Command):
