@@ -25,10 +25,8 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import unicode_literals
-import codecs
 import datetime
 import glob
-import hashlib
 import json
 import os
 
@@ -47,6 +45,7 @@ except ImportError:
 from nikola.plugin_categories import Task
 from nikola import utils
 from nikola.post import Post
+
 
 class Galleries(Task):
     """Render image galleries."""
@@ -124,15 +123,14 @@ class Galleries(Task):
 
             crumbs = utils.get_crumbs(gallery)
 
-
             # Create index.html for each language
             for lang in self.kw['translations']:
-                dst = os.path.join(self.kw['output_folder'],
-                        self.site.path(
-                            "gallery",
-                            os.path.relpath(gallery, self.kw['gallery_path']), lang))
+                dst = os.path.join(
+                    self.kw['output_folder'],
+                    self.site.path(
+                        "gallery",
+                        os.path.relpath(gallery, self.kw['gallery_path']), lang))
                 dst = os.path.normpath(dst)
-                utils.LOGGER.notice('===> '+dst)
 
                 context = {}
                 context["lang"] = lang
@@ -179,13 +177,14 @@ class Galleries(Task):
                     'name': dst,
                     'file_dep': file_dep,
                     'targets': [dst],
-                    'actions': [(self.render_gallery_index,
-                                (template_name,
-                                dst,
-                                context,
-                                image_list,
-                                thumbs,
-                                file_dep))],
+                    'actions': [
+                        (self.render_gallery_index, (
+                            template_name,
+                            dst,
+                            context,
+                            image_list,
+                            thumbs,
+                            file_dep))],
                     'clean': True,
                     'uptodate': [utils.config_changed({
                         1: self.kw,
@@ -193,7 +192,6 @@ class Galleries(Task):
                         3: context,
                     })],
                 }, self.kw['filters'])
-
 
     def find_galleries(self):
         """Find all galleries to be processed according to conf.py"""
@@ -229,8 +227,8 @@ class Galleries(Task):
 
         index_path = os.path.join(gallery, "index.txt")
         destination = os.path.join(
-                            self.kw["output_folder"],
-                            gallery)
+            self.kw["output_folder"],
+            gallery)
         if os.path.isfile(index_path):
             post = Post(
                 index_path,
@@ -285,8 +283,9 @@ class Galleries(Task):
         # "output/GALLERY_PATH/name/image_name.thumbnail.jpg"
         img_name = os.path.basename(img)
         fname, ext = os.path.splitext(img_name)
-        thumb_path = os.path.join(output_gallery,
-                                    ".thumbnail".join([fname, ext]))
+        thumb_path = os.path.join(
+            output_gallery,
+            ".thumbnail".join([fname, ext]))
         # thumb_path is "output/GALLERY_PATH/name/image_name.jpg"
         orig_dest_path = os.path.join(output_gallery, img_name)
         yield utils.apply_filters({
@@ -321,7 +320,8 @@ class Galleries(Task):
         # and we should remove both the large and thumbnail *destination* paths
 
         img = os.path.relpath(img, self.kw['gallery_path'])
-        output_folder =  os.path.dirname(os.path.join(
+        output_folder = os.path.dirname(
+            os.path.join(
                 self.kw["output_folder"],
                 self.site.path("gallery", os.path.dirname(img))))
         img_path = os.path.join(output_folder, os.path.basename(img))
@@ -363,11 +363,10 @@ class Galleries(Task):
         # output
 
         def url_from_path(p):
-            url = '/'.join(os.path.relpath(p, os.path.dirname(output_name)+os.sep).split(os.sep))
+            url = '/'.join(os.path.relpath(p, os.path.dirname(output_name) + os.sep).split(os.sep))
             return url
 
         photo_array = []
-        d_name = os.path.dirname(output_name)
         for img, thumb in zip(img_list, thumbs):
             im = Image.open(thumb)
             w, h = im.size
