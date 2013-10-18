@@ -9,6 +9,7 @@ except:
     import unittest
 
 import nikola.nikola
+import nikola.utils
 from .base import LocaleSupportInTesting
 
 LocaleSupportInTesting.initialize_locales_for_testing('bilingual')
@@ -30,7 +31,7 @@ class TestHarcodedFallbacks(unittest.TestCase):
         else:
             # the 1st is desired in Travis, not a problem if fails in user host
             self.assertTrue(nikola.nikola.is_valid_locale(str('en_US.utf8')))
-            # this is supposed to be always true, and we need an universal
+            # this is supposed to be always valid, and we need an universal
             # fallback. Failure is not a problem in user host if he / she
             # sets a valid (in his host) locale_fallback.
             self.assertTrue(nikola.nikola.is_valid_locale(str('C')))
@@ -177,6 +178,47 @@ class TestCalendarRelated(unittest.TestCase):
             with calendar.TimeEncoding(loc_11):
                 s = calendar.month_name[1]
         self.assertTrue(type(s) == str)
+
+
+class TestLocaleBorg(unittest.TestCase):
+    def test_initial_lang(self):
+        lang_11, loc_11 = LocaleSupportInTesting.langlocales['default']
+        lang_22, loc_22 = LocaleSupportInTesting.langlocales['other']
+
+        locales = {lang_11: loc_11, lang_22: loc_22}
+        initial_lang = lang_22
+        nikola.utils.LocaleBorg.initialize(locales, initial_lang)
+        self.assertEquals(initial_lang, nikola.utils.LocaleBorg().current_lang)
+
+    def test_remembers_last_lang(self):
+        lang_11, loc_11 = LocaleSupportInTesting.langlocales['default']
+        lang_22, loc_22 = LocaleSupportInTesting.langlocales['other']
+
+        locales = {lang_11: loc_11, lang_22: loc_22}
+        initial_lang = lang_22
+        nikola.utils.LocaleBorg.initialize(locales, initial_lang)
+
+        nikola.utils.LocaleBorg().set_locale(lang_11)
+        self.assertTrue(nikola.utils.LocaleBorg().current_lang, lang_11)
+
+    def test_services_ensure_initialization(self):
+        nikola.utils.LocaleBorg.reset()
+        self.assertRaises(Exception, nikola.utils.LocaleBorg)
+
+    def test_services_reject_dumb_wrong_call(self):
+        lang_11, loc_11 = LocaleSupportInTesting.langlocales['default']
+        nikola.utils.LocaleBorg.reset()
+        self.assertRaises(Exception, nikola.utils.LocaleBorg.set_locale, lang_11)
+        self.assertRaises(Exception, getattr, nikola.utils.LocaleBorg, 'current_lang')
+
+    def test_set_locale_raises_on_invalid_lang(self):
+        lang_11, loc_11 = LocaleSupportInTesting.langlocales['default']
+        lang_22, loc_22 = LocaleSupportInTesting.langlocales['other']
+
+        locales = {lang_11: loc_11, lang_22: loc_22}
+        initial_lang = lang_22
+        nikola.utils.LocaleBorg.initialize(locales, initial_lang)
+        self.assertRaises(KeyError, nikola.utils.LocaleBorg().set_locale, '@z')
 
 
 class TestTestPreconditions(unittest.TestCase):

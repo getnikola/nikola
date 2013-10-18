@@ -672,13 +672,6 @@ class LocaleBorg(object):
     Examples: "Spanish", "French" can't do the full circle set / get / set
     That used to break calendar, but now seems is not the case, with month at least
     """
-    locales = {}
-    encodings = {}
-    initialized = False
-    __shared_state = {
-        'current_lang': None
-    }
-
     @classmethod
     def initialize(cls, locales, initial_lang):
         """
@@ -689,6 +682,7 @@ class LocaleBorg(object):
                 locale_n expressed in the string form, like "en.utf8"
         """
         assert initial_lang is not None and initial_lang in locales
+        cls.reset()
         cls.locales = locales
 
         # needed to decode some localized output in py2x
@@ -703,23 +697,11 @@ class LocaleBorg(object):
         cls.initialized = True
 
     @classmethod
-    def initialize_for_testing(cls, variant):
-        samples = {
-            # variant(_win): tuple with params for initialize
-            'unilang_win': ({"en": str("English")}, "en"),
-            'unilang': ({"en": str("en_US.utf8")}, "en")
-        }
-        cls.reset()
-        if sys.platform == 'win32':
-            variant += '_win'
-        cls.initialize(*samples[variant])
-
-    @classmethod
     def reset(cls):
         """used in testing to not leak state between tests"""
         cls.locales = {}
         cls.encodings = {}
-        cls.__shared_state['current_lang'] = None
+        cls.__shared_state = {'current_lang': None}
         cls.initialized = False
 
     def __init__(self):

@@ -11,6 +11,7 @@ import mock
 
 from .context import nikola  # NOQA
 from lxml import etree
+from .base import LocaleSupportInTesting
 
 
 fake_conf = defaultdict(str)
@@ -22,8 +23,7 @@ fake_conf['BASE_URL'] = 'http://some.blog/'
 
 class RSSFeedTest(unittest.TestCase):
     def setUp(self):
-        import nikola.utils
-        nikola.utils.LocaleBorg.initialize_for_testing('unilang')
+        LocaleSupportInTesting.initialize_locales_for_testing('unilingual')
 
         self.blog_url = "http://some.blog"
 

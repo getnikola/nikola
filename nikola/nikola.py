@@ -979,7 +979,7 @@ def sanitized_locales(locale_fallback, locale_default, locales, translations):
     extras = set(locales) - set(translations)
     if extras:
         msg = 'Unexpected languages in LOCALES, ignoring them: {0}'
-        utils.LOGGER.warn(msg.format(','.join(extras)))
+        utils.LOGGER.warn(msg.format(', '.join(extras)))
         for lang in extras:
             del locales[lang]
 
@@ -1033,10 +1033,9 @@ def is_valid_locale(locale_n):
     """
     try:
         locale.setlocale(locale.LC_ALL, locale_n)
-        valid = True
+        return True
     except locale.Error:
-        valid = False
-    return valid
+        return False
 
 
 def valid_locale_fallback(desired_locale=None):

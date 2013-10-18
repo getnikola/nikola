@@ -261,8 +261,8 @@ class Post(object):
     def title(self, lang=None):
         """Return localized title.
 
-        If lang is not specified, it will use the last used to
-        set locale, because templates set it.
+        If lang is not specified, it defaults to the current language from
+        templates, as set in LocaleBorg.
         """
         if lang is None:
             lang = nikola.utils.LocaleBorg().current_lang
