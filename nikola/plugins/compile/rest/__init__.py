@@ -116,7 +116,6 @@ class CompileRest(PageCompiler):
             plugin_info.plugin_object.set_site(site)
             plugin_info.plugin_object.short_help = plugin_info.description
 
-
         self.logger = get_logger('compile_rest', site.loghandlers)
         return super(CompileRest, self).set_site(site)
 
