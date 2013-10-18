@@ -693,7 +693,7 @@ class LocaleBorg(object):
             encodings[lang] = encoding
 
         cls.encodings = encodings
-        cls.__shared_state['current_lang'] = lang
+        cls.__shared_state['current_lang'] = initial_lang
         cls.initialized = True
 
     @classmethod
