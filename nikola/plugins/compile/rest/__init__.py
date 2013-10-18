@@ -31,6 +31,7 @@ import re
 
 try:
     import docutils.core
+    import docutils.utils
     import docutils.io
     import docutils.readers.standalone
     has_docutils = True
@@ -112,8 +113,17 @@ class CompileRest(PageCompiler):
 
 
 def report_error(msg):
-    print('received a message')
-    print(msg)
+    pass
+
+
+class NikolaReader(docutils.readers.standalone.Reader):
+    def new_document(self):
+        """Create and return a new empty document tree (root node)."""
+        document = docutils.utils.new_document(self.source.source_path, self.settings)
+        document.reporter.stream = False
+        document.reporter.attach_observer(report_error)
+        return document
+
 
 def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
              destination_path=None, reader=None,
@@ -134,13 +144,12 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
 
     Parameters: see `publish_programmatically`.
 
-    WARNING: `reader` should be None if you want Nikola to report
+    WARNING: `reader` should be None (or NikolaReader()) if you want Nikola to report
              reStructuredText syntax errors.
     """
     if reader is None:
-        reader = docutils.readers.standalone.Reader()
-        reader.document.reporter.stream = False
-        reader.document.reporter.attach_observer(report_error)
+        reader = NikolaReader()
+
     pub = docutils.core.Publisher(reader, parser, writer, settings=settings,
                                   source_class=source_class,
                                   destination_class=docutils.io.StringOutput)
