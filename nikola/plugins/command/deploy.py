@@ -33,12 +33,8 @@ import sys
 import subprocess
 import time
 
-
 from nikola.plugin_categories import Command
 from nikola.utils import remove_file, get_logger
-
-LOGGER = get_logger('deploy')
-
 
 class Deploy(Command):
     """Deploy site.  """
@@ -47,11 +43,14 @@ class Deploy(Command):
     doc_usage = ""
     doc_purpose = "deploy the site"
 
+    logger = None
+    
     def _execute(self, command, args):
+        self.logger = get_logger('deploy', self.site.loghandlers)
         # Get last succesful deploy date
         timestamp_path = os.path.join(self.site.config['CACHE_FOLDER'], 'lastdeploy')
         if self.site.config['COMMENT_SYSTEM_ID'] == 'nikolademo':
-            LOGGER.warn("\nWARNING WARNING WARNING WARNING\n"
+            self.logger.warn("\nWARNING WARNING WARNING WARNING\n"
                         "You are deploying using the nikolademo Disqus account.\n"
                         "That means you will not be able to moderate the comments in your own site.\n"
                         "And is probably not what you want to do.\n"
@@ -77,14 +76,14 @@ class Deploy(Command):
             except Exception:
                 last_deploy = datetime(1970, 1, 1)  # NOQA
 
-            LOGGER.notice("==> {0}".format(command))
+            self.logger.notice("==> {0}".format(command))
             try:
                 subprocess.check_call(command, shell=True)
             except subprocess.CalledProcessError as e:
-                LOGGER.error('Failed deployment — command {0} '
+                self.logger.error('Failed deployment — command {0} '
                              'returned {1}'.format(e.cmd, e.returncode))
                 sys.exit(e.returncode)
-        LOGGER.notice("Successful deployment")
+        self.logger.notice("Successful deployment")
         new_deploy = datetime.now()
         # Store timestamp of successful deployment
         with codecs.open(timestamp_path, 'wb+', 'utf8') as outf:

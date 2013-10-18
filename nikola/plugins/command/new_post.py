@@ -35,8 +35,7 @@ from blinker import signal
 from nikola.plugin_categories import Command
 from nikola import utils
 
-LOGGER = utils.get_logger('new_post')
-
+LOGGER = None
 
 def filter_post_pages(compiler, is_post, compilers, post_pages):
     """Given a compiler ("markdown", "rest"), and whether it's meant for
@@ -80,7 +79,7 @@ def get_default_compiler(is_post, compilers, post_pages):
     return 'rest'
 
 
-def get_date(schedule=False, rule=None, last_date=None, force_today=False):
+def get_date(self, schedule=False, rule=None, last_date=None, force_today=False):
     """Returns a date stamp, given a recurrence rule.
 
     schedule - bool:
@@ -186,6 +185,8 @@ class CommandNewPost(Command):
 
     def _execute(self, options, args):
         """Create a new post or page."""
+
+        LOGGER = utils.get_logger('new_post', self.site.loghandlers)
 
         compiler_names = [p.name for p in
                           self.site.plugin_manager.getPluginsOfCategory(

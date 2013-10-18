@@ -30,8 +30,7 @@ import nikola.post
 from nikola.plugin_categories import Task
 from nikola import utils
 
-LOGGER = utils.get_logger('render_posts')
-
+LOGGER = None
 
 class RenderPosts(Task):
     """Build HTML fragments from metadata and text."""
@@ -40,6 +39,9 @@ class RenderPosts(Task):
 
     def gen_tasks(self):
         """Build HTML fragments from metadata and text."""
+
+        LOGGER = utils.get_logger('render_posts', self.site.loghandlers)
+
         self.site.scan_posts()
         kw = {
             "translations": self.site.config["TRANSLATIONS"],

@@ -605,6 +605,21 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # If set to True, enable optional hyphenation in your posts (requires pyphen)
 # HYPHENATE = False
 
+# You can configure the logging handlers installed as plugins or change the 
+# log level of the default stdout handler.
+LOGGING_HANDLERS = {
+    'stderr': {'loglevel': 'WARNING', 'bubble': True},
+    #'smtp': {
+    #    'from_addr': 'test-errors@example.com',
+    #    'recipients': ('test@example.com'),
+    #    'credentials':('testusername', 'password'), 
+    #    'server_addr': ('127.0.0.1', 25), 
+    #    'secure': (), 
+    #    'level': 'DEBUG', 
+    #    'bubble': True
+    #}
+}
+
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
 

@@ -35,9 +35,9 @@ from mako import util, lexer
 from mako.lookup import TemplateLookup
 
 from nikola.plugin_categories import TemplateSystem
-from nikola.utils import makedirs, get_logger
+from nikola.utils import makedirs, get_logger, STDERR_HANDLER
 
-LOGGER = get_logger('mako')
+LOGGER = get_logger('mako', STDERR_HANDLER)
 
 
 class MakoTemplates(TemplateSystem):

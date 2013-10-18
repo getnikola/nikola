@@ -34,7 +34,7 @@ import subprocess
 from nikola.plugin_categories import Task
 from nikola import utils
 
-LOGGER = utils.get_logger('build_sass')
+LOGGER = utils.get_logger('build_sass', utils.STDERR_HANDLER)
 
 
 class BuildSass(Task):
