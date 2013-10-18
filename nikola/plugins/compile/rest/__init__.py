@@ -68,7 +68,7 @@ class CompileRest(PageCompiler):
                         'link_stylesheet': True,
                         'syntax_highlight': 'short',
                         'math_output': 'mathjax',
-                    })
+                    }, logger=self.logger)
                 out_file.write(output)
             deps_path = dest + '.dep'
             if deps.list:
@@ -112,16 +112,20 @@ class CompileRest(PageCompiler):
         return super(CompileRest, self).set_site(site)
 
 
-def report_error(msg):
-    pass
+def get_report_error(logger):
+    def report_error(msg):
+        logger.notice(msg)
+
+    return report_error
 
 
 class NikolaReader(docutils.readers.standalone.Reader):
+
     def new_document(self):
         """Create and return a new empty document tree (root node)."""
         document = docutils.utils.new_document(self.source.source_path, self.settings)
         document.reporter.stream = False
-        document.reporter.attach_observer(report_error)
+        document.reporter.attach_observer(get_report_error(self.logger))
         return document
 
 
@@ -130,7 +134,7 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
              parser=None, parser_name='restructuredtext', writer=None,
              writer_name='html', settings=None, settings_spec=None,
              settings_overrides=None, config_section=None,
-             enable_exit_status=None):
+             enable_exit_status=None, logger=None):
     """
     Set up & run a `Publisher`, and return a dictionary of document parts.
     Dictionary keys are the names of parts, and values are Unicode strings;
@@ -149,6 +153,7 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
     """
     if reader is None:
         reader = NikolaReader()
+        reader.logger = logger
 
     pub = docutils.core.Publisher(reader, parser, writer, settings=settings,
                                   source_class=source_class,
