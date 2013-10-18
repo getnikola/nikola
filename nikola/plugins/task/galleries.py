@@ -47,7 +47,6 @@ except ImportError:
 from nikola.plugin_categories import Task
 from nikola import utils
 
-LOGGER = None
 
 class Galleries(Task):
     """Render image galleries."""
@@ -62,7 +61,7 @@ class Galleries(Task):
     def gen_tasks(self):
         """Render image galleries."""
 
-        LOGGER = utils.get_logger('render_galleries', self.site.loghandlers)
+        self.logger = utils.get_logger('render_galleries', self.site.loghandlers)
 
         kw = {
             'thumbnail_size': self.site.config['THUMBNAIL_SIZE'],
@@ -369,7 +368,7 @@ class Galleries(Task):
                 im.thumbnail(size, Image.ANTIALIAS)
                 im.save(dst)
             except Exception:
-                LOGGER.warn("Can't thumbnail {0}, using original image as thumbnail".format(src))
+                self.logger.warn("Can't thumbnail {0}, using original image as thumbnail".format(src))
                 utils.copy_file(src, dst)
         else:  # Image is small
             utils.copy_file(src, dst)
