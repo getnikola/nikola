@@ -68,7 +68,7 @@ class CompileRest(PageCompiler):
                         # metadata, could be more or less depending on the post
                         # author).
                         add_ln = len(spl[0].splitlines()) + 1
-                    else:
+                else:
                         add_ln = 0
 
                 output, error_level, deps = rst2html(
