@@ -66,7 +66,7 @@ class CompileRest(PageCompiler):
                         # number reported by docutils so the line number
                         # matches the actual line number (off by 7 with default
                         # metadata, could be more or less depending on the post
-                        # creator).
+                        # author).
                         add_ln = spl[0].count('\n') + 2
                     else:
                         add_ln = 0
