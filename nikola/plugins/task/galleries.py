@@ -161,8 +161,9 @@ class Galleries(Task):
                     self.site.config["COMMENTS_IN_GALLERIES"])
                 context["thumbnail_size"] = self.kw["thumbnail_size"]
 
-                # FIXME: use post text
+                # FIXME: render post in a task
                 if post:
+                    post.compile(lang)
                     context['text'] = post.text(lang)
                 else:
                     context['text'] = ''
@@ -227,7 +228,15 @@ class Galleries(Task):
                             self.kw["output_folder"],
                             gallery)
         if os.path.isfile(index_path):
-            post = Post(index_path, self.site.config, destination, False, self.site.MESSAGES, 'story.tmpl')
+            post = Post(
+                index_path,
+                self.site.config,
+                destination,
+                False,
+                self.site.MESSAGES,
+                'story.tmpl',
+                self.site.get_compiler(index_path).compile_html
+            )
         else:
             post = None
         return post
