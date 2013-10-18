@@ -88,8 +88,6 @@ class CompileRest(PageCompiler):
             else:
                 if os.path.isfile(deps_path):
                     os.unlink(deps_path)
-        if error_level == 2:
-            self.logger.warning('Docutils reports warnings on {0}'.format(source))
         if error_level < 3:
             return True
         else:
@@ -124,10 +122,26 @@ class CompileRest(PageCompiler):
 
 
 def get_report_error(settings):
+    """Return a report_error function, which is a docutils Reporter observer."""
     def report_error(msg):
+        """Report an error to a Nikola user.
+
+        Error code mapping:
+
+        +------+---------+------+----------+
+        | dNUM |   dNAME | lNUM |    lNAME |    d = docutils, l = logbook
+        +------+---------+------+----------+
+        |    0 |   DEBUG |    1 |    DEBUG |
+        |    1 |    INFO |    2 |     INFO |
+        |    2 | WARNING |    4 |  WARNING |
+        |    3 |   ERROR |    5 |    ERROR |
+        |    4 |  SEVERE |    6 | CRITICAL |
+        +------+---------+------+----------+
+        """
+        errormap = {0: 1, 1: 2, 2: 4, 3: 5, 4: 6}
         text = docutils.nodes.Element.astext(msg)
         out = '[{source}:{line}] {text}'.format(source=settings['source'], line=msg['line'] + settings['add_ln'], text=text)
-        settings['logger'].notice(out)
+        settings['logger'].log(errormap[msg['level']], out)
 
     return report_error
 
