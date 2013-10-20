@@ -120,10 +120,10 @@ class CompileRest(PageCompiler):
         return super(CompileRest, self).set_site(site)
 
 
-def get_report_error(settings):
-    """Return a report_error function, which is a docutils Reporter observer."""
-    def report_error(msg):
-        """Report an error to a Nikola user.
+def get_observer(settings):
+    """Return an observer for the docutils Reporter."""
+    def observer(msg):
+        """Report docutils/rest messages to a Nikola user.
 
         Error code mapping:
 
@@ -142,7 +142,7 @@ def get_report_error(settings):
         out = '[{source}:{line}] {text}'.format(source=settings['source'], line=msg['line'] + settings['add_ln'], text=text)
         settings['logger'].log(errormap[msg['level']], out)
 
-    return report_error
+    return observer
 
 
 class NikolaReader(docutils.readers.standalone.Reader):
@@ -151,7 +151,7 @@ class NikolaReader(docutils.readers.standalone.Reader):
         """Create and return a new empty document tree (root node)."""
         document = docutils.utils.new_document(self.source.source_path, self.settings)
         document.reporter.stream = False
-        document.reporter.attach_observer(get_report_error(self.l_settings))
+        document.reporter.attach_observer(get_observer(self.l_settings))
         return document
 
 
