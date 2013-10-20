@@ -28,6 +28,7 @@ from __future__ import unicode_literals
 import codecs
 import os
 import re
+import logbook.base
 
 try:
     import docutils.core
@@ -41,7 +42,6 @@ except ImportError:
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import get_logger, makedirs, req_missing
-
 
 class CompileRest(PageCompiler):
     """Compile reSt into HTML."""
@@ -140,8 +140,9 @@ def get_report_error(settings):
         errormap = {0: 1, 1: 2, 2: 4, 3: 5, 4: 6}
         text = docutils.nodes.Element.astext(msg)
         out = '[{source}:{line}] {text}'.format(source=settings['source'], line=msg['line'] + settings['add_ln'], text=text)
-        settings['logger'].notice('report_error: [{0}] {1}'.format(errormap[msg['level']], out))
-        settings['logger'].log(errormap[msg['level']], out)
+        if isinstance(settings['logger'], logbook.base.Logger):
+            # sometimes garbage gets in here
+            settings['logger'].log(errormap[msg['level']], out)
 
     return report_error
 
