@@ -53,7 +53,7 @@ class CompileRest(PageCompiler):
         """Compile reSt into HTML."""
 
         if not has_docutils:
-            req_missing(['docutils'], 'build this site (compile REST')
+            req_missing(['docutils'], 'build this site (compile reStructuredText)')
         makedirs(os.path.dirname(dest))
         error_level = 100
         with codecs.open(dest, "w+", "utf8") as out_file:
