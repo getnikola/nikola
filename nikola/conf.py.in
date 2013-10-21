@@ -79,8 +79,8 @@ NAVIGATION_LINKS = {
 # sometimes explicit control can come handy.
 # In this file we express locales in the string form that
 # python's locales will accept in your OS, by example
-# "en_US.utf8" in unix-like OS, "English_United States" in Windows. 
-# LOCALES = dict mapping language --> explicit locale for the languages 
+# "en_US.utf8" in unix-like OS, "English_United States" in Windows.
+# LOCALES = dict mapping language --> explicit locale for the languages
 # in TRANSLATIONS. You can ommit one or more keys.
 # LOCALE_FALLBACK = locale to use when an explicit locale is unavailable
 # LOCALE_DEFAULT = locale to use for languages not mentioned in LOCALES; if
@@ -155,6 +155,8 @@ COMPILERS = ${COMPILERS}
 
 # Create per-month archives instead of per-year
 # CREATE_MONTHLY_ARCHIVE = False
+# Create one large archive instead of per-year
+# CREATE_SINGLE_ARCHIVE = False
 # Final locations for the archives are:
 # output / TRANSLATION[lang] / ARCHIVE_PATH / ARCHIVE_FILENAME
 # output / TRANSLATION[lang] / ARCHIVE_PATH / YEAR / index.html
