@@ -87,6 +87,7 @@ class Nikola(object):
 
         self.strict = False
         self.global_data = {}
+        self.posts = []
         self.posts_per_year = defaultdict(list)
         self.posts_per_month = defaultdict(list)
         self.posts_per_tag = defaultdict(list)
@@ -840,6 +841,7 @@ class Nikola(object):
                     )
                     self.global_data[post.source_path] = post
                     if post.use_in_feeds:
+                        self.posts.append(post.source_path)
                         self.posts_per_year[
                             str(post.date.year)].append(post.source_path)
                         self.posts_per_month[

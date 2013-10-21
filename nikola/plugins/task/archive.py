@@ -57,9 +57,9 @@ class Archive(Task):
             raise Exception('Cannot create monthly and single archives at the same time.')
         for lang in kw["translations"]:
             archdata = self.site.posts_per_year
+            # A bit of a hack.
             if kw['create_single_archive']:
-                # This is a bit ugly.
-                archdata = {None: [p.source_path for p in self.site.timeline if p.use_in_feeds]}
+                archdata = {None: self.site.posts}
 
             for year, posts in archdata.items():
                 output_name = os.path.join(
