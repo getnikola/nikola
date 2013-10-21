@@ -129,6 +129,7 @@ class Nikola(object):
             'CONTENT_FOOTER': '',
             'COPY_SOURCES': True,
             'CREATE_MONTHLY_ARCHIVE': False,
+            'CREATE_SINGLE_ARCHIVE': False,
             'DATE_FORMAT': '%Y-%m-%d %H:%M',
             'DEFAULT_LANG': "en",
             'DEPLOY_COMMANDS': [],

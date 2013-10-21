@@ -48,17 +48,25 @@ class Archive(Task):
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
             "create_monthly_archive": self.site.config['CREATE_MONTHLY_ARCHIVE'],
+            "create_single_archive": self.site.config['CREATE_SINGLE_ARCHIVE'],
         }
         self.site.scan_posts()
         yield self.group_task()
         # TODO add next/prev links for years
         for lang in kw["translations"]:
-            for year, posts in self.site.posts_per_year.items():
+            archdata = self.site.posts_per_year
+            if kw['create_single_archive']:
+                archdata = {None: self.timeline}
+
+            for year, posts in archdata.items():
                 output_name = os.path.join(
                     kw['output_folder'], self.site.path("archive", year, lang))
                 context = {}
                 context["lang"] = lang
-                context["title"] = kw["messages"][lang]["Posts for year %s"] % year
+                if year:
+                    context["title"] = kw["messages"][lang]["Posts for year %s"] % year
+                else:
+                    context["title"] = kw["messages"][lang]["Archive"]
                 context["permalink"] = self.site.link("archive", year, lang)
                 if not kw["create_monthly_archive"]:
                     template_name = "list_post.tmpl"
@@ -117,32 +125,33 @@ class Archive(Task):
                 task['basename'] = self.name
                 yield task
 
-        # And global "all your years" page
-        years = list(self.site.posts_per_year.keys())
-        years.sort(reverse=True)
-        template_name = "list.tmpl"
-        kw['years'] = years
-        for lang in kw["translations"]:
-            context = {}
-            output_name = os.path.join(
-                kw['output_folder'], self.site.path("archive", None,
-                                                    lang))
-            context["title"] = kw["messages"][lang]["Archive"]
-            context["items"] = [(year, self.site.link("archive", year, lang))
-                                for year in years]
-            context["permalink"] = self.site.link("archive", None, lang)
-            task = self.site.generic_post_list_renderer(
-                lang,
-                [],
-                output_name,
-                template_name,
-                kw['filters'],
-                context,
-            )
-            task_cfg = {1: task['uptodate'][0].config, 2: kw}
-            task['uptodate'] = [config_changed(task_cfg)]
-            task['basename'] = self.name
-            yield task
+        if not kw['create_single_archive']:
+            # And an "all your years" page for yearly and monthly archives
+            years = list(self.site.posts_per_year.keys())
+            years.sort(reverse=True)
+            template_name = "list.tmpl"
+            kw['years'] = years
+            for lang in kw["translations"]:
+                context = {}
+                output_name = os.path.join(
+                    kw['output_folder'], self.site.path("archive", None,
+                                                        lang))
+                context["title"] = kw["messages"][lang]["Archive"]
+                context["items"] = [(year, self.site.link("archive", year, lang))
+                                    for year in years]
+                context["permalink"] = self.site.link("archive", None, lang)
+                task = self.site.generic_post_list_renderer(
+                    lang,
+                    [],
+                    output_name,
+                    template_name,
+                    kw['filters'],
+                    context,
+                )
+                task_cfg = {1: task['uptodate'][0].config, 2: kw}
+                task['uptodate'] = [config_changed(task_cfg)]
+                task['basename'] = self.name
+                yield task
 
     def archive_path(self, name, lang):
         if name:
