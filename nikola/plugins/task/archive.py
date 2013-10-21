@@ -53,10 +53,13 @@ class Archive(Task):
         self.site.scan_posts()
         yield self.group_task()
         # TODO add next/prev links for years
+        if kw['create_monthly_archive'] and kw['create_single_archive']:
+            raise Exception('Cannot create monthly and single archives at the same time.')
         for lang in kw["translations"]:
             archdata = self.site.posts_per_year
             if kw['create_single_archive']:
-                archdata = {None: self.timeline}
+                # This is a bit ugly.
+                archdata = {None: [p.source_path for p in self.site.timeline if p.use_in_feeds]}
 
             for year, posts in archdata.items():
                 output_name = os.path.join(
