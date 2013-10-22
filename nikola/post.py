@@ -106,7 +106,7 @@ class Post(object):
         # cache[\/]posts[\/]blah.html
         self._base_path = os.path.join(self.config['CACHE_FOLDER'], self.post_name + ".html")
         # cache/posts/blah.html
-        self.base_path = self._base_path.replace('/', '\\')
+        self.base_path = self._base_path.replace('\\', '/')
         self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
         self.folder = destination
         self.translations = self.config['TRANSLATIONS']
