@@ -67,7 +67,7 @@ class Galleries(Task):
 
         self.logger = utils.get_logger('render_galleries', self.site.loghandlers)
 
-        kw = {
+        self.kw = {
             'thumbnail_size': self.site.config['THUMBNAIL_SIZE'],
             'max_image_size': self.site.config['MAX_IMAGE_SIZE'],
             'output_folder': self.site.config['OUTPUT_FOLDER'],
