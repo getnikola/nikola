@@ -124,9 +124,13 @@ class Sitemap(LateTask):
                         if path.endswith(kw['index_file']) and kw['strip_indexes']:
                             # ignore index files when stripping urls
                             continue
+                        if path.endswith('.html'):
+                            if not u'<!doctype html' in codecs.open(real_path, 'r', 'utf8').read(1024).lower():
+                                # ignores "html" files without doctype
+                                # alexa-verify, google-site-verification, etc.
+                                continue
                         if path.endswith('.xml'):
-                            filepath = os.path.join(kw['output_folder'], path)
-                            if not u'<rss' in codecs.open(filepath, 'r', 'utf8').read(512):
+                            if not u'<rss' in codecs.open(real_path, 'r', 'utf8').read(512):
                                 # ignores all XML files except those presumed to be RSS
                                 continue  
                         post = self.site.post_per_file.get(path)
