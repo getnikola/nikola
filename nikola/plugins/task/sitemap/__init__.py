@@ -132,7 +132,7 @@ class Sitemap(LateTask):
                         if path.endswith('.xml'):
                             if not u'<rss' in codecs.open(real_path, 'r', 'utf8').read(512):
                                 # ignores all XML files except those presumed to be RSS
-                                continue  
+                                continue
                         post = self.site.post_per_file.get(path)
                         if post and (post.is_draft or post.is_retired or post.publish_later):
                             continue
