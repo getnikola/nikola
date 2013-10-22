@@ -5,6 +5,7 @@ Features
 --------
 
 * Galleries support translations
+* Support a single archive per site (optional; instead of per-year or per-month archives) (Issue #853)
 * The locales used in testing can be specified in environment variables (Issue #818)
 * The locale to use with each language can be explicitly set (Issue #818)
 * Initial support for signals/hooks using Blinker (Issue #764)
