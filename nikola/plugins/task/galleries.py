@@ -46,6 +46,8 @@ from nikola.plugin_categories import Task
 from nikola import utils
 from nikola.post import Post
 
+LOGGER = utils.get_logger('galleries')
+
 
 class Galleries(Task):
     """Render image galleries."""
@@ -374,10 +376,9 @@ class Galleries(Task):
             if self.kw['use_filename_as_title']:
                 title = utils.unslugify(os.path.splitext(img)[0])
             # Thumbs are files in output, we need URLs
-            thumb_url = url_from_path(thumb)
             photo_array.append({
                 'url': url_from_path(img),
-                'url_thumb': thumb_url,
+                'url_thumb': url_from_path(thumb),
                 'title': title,
                 'size': {
                     'w': w,
@@ -423,7 +424,7 @@ class Galleries(Task):
                 im.thumbnail(size, Image.ANTIALIAS)
                 im.save(dst)
             except Exception:
-                utils.LOGGER.warn("Can't thumbnail {0}, using original image as thumbnail".format(src))
+                LOGGER.warn("Can't thumbnail {0}, using original image as thumbnail".format(src))
                 utils.copy_file(src, dst)
         else:  # Image is small
             utils.copy_file(src, dst)
