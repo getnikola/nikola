@@ -628,9 +628,7 @@ def get_asset_path(path, themes, files_folders={'files': ''}):
         if os.path.isfile(candidate):
             return candidate
     for src, rel_dst in files_folders.items():
-        candidate = os.path.abspath (
-            os.path.join(src, path)
-        )
+        candidate = os.path.abspath(os.path.join(src, path))
         if os.path.isfile(candidate):
             return candidate
 
