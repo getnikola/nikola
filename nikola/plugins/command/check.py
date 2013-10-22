@@ -155,6 +155,11 @@ class CommandCheck(Command):
         self.logger.notice("Checking Files:")
         self.logger.notice("===============\n")
         only_on_output, only_on_input = self.real_scan_files()
+
+        # Ignore folders
+        only_on_output = [p for p in only_on_output if not os.path.isdir(p)]
+        only_on_input = [p for p in only_on_input if not os.path.isdir(p)]
+
         if only_on_output:
             only_on_output.sort()
             self.logger.warn("Files from unknown origins:")
