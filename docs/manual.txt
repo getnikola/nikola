@@ -248,6 +248,34 @@ Red Hat/RPM based systems::
 
     yum install libxslt-devel libxml2-devel
 
+Installation on Linux, Mac OS X, \*BSD, and any other POSIX-compatible OS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Using ``pip`` should suffice.  You may also want to use distribution- or
+system-specific packages for our dependencies.
+
+There are **no known issues or caveats** on those OSes.  Keep in mind that most
+of our developers run Linux on a daily basis and may not have the full
+knowledge required to resolve issues relating to your operating system.
+
+Installation on Windows and Windows support
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Nikola supports Windows!  Keep in mind, though, that there are some
+caveats:
+
+1. ``lxml`` and ``Pillow`` require compiled extensions.  Compiling them on Windows is hard for most people.  Fortunately, compiled packages exist.  Check their `PyPI <https://pypi.python.org/>` pages to find official packages or get them somewhere else (at your own risk).
+2. Windows has some differences over POSIX, which may cause some features to work incorrectly under Windows.  If any problems occur, please do not hesitate to report them.  Some of the differeces include:
+
+  * ``\`` as path separator (instead of ``/``)
+  * the concept of partitions
+  * some characters in paths are disallowed (although this shouldn’t cause
+    problems)
+  * CR+LF (aka ``\r\n``) as the line separator (instead of LF ``\n``)
+
+3. Windows also dislikes some characters in paths.
+4. Most of our developers run Linux on a daily basis and may not have the full knowledge required to resolve issues relating to Windows.
+
 Getting Started
 ---------------
 
@@ -313,8 +341,8 @@ Nikola is mostly a series of doit *tasks*, and you can see them by doing ``nikol
     render_tags
     sitemap
 
-You can make Nikola redo everything by calling ``nikola forget`` and then ``nikola build`` (or ``nikola build -a``, 
-you can make it do just a specific part of the site using task names, for example ``nikola build render_pages``, 
+You can make Nikola redo everything by calling ``nikola forget`` and then ``nikola build`` (or ``nikola build -a``,
+you can make it do just a specific part of the site using task names, for example ``nikola build render_pages``,
 and even individual files like ``nikola build output/index.html``
 
 Nikola also has other commands besides ``build``::
