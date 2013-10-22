@@ -42,6 +42,12 @@ try:
 except ImportError:
     pyphen = None
 
+import logging
+if os.getenv('NIKOLA_DEBUG'):
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.ERROR)
+
 import lxml.html
 from yapsy.PluginManager import PluginManager
 
@@ -57,6 +63,7 @@ from .plugin_categories import (
     TemplateSystem,
     SignalHandler,
 )
+
 
 config_changed = utils.config_changed
 
@@ -98,6 +105,7 @@ class Nikola(object):
         self._scanned = False
         self._template_system = None
         self._THEMES = None
+        self.loghandlers = []
         if not config:
             self.configured = False
         else:
@@ -198,7 +206,8 @@ class Nikola(object):
             'DEPLOY_FUTURE': False,
             'SCHEDULE_ALL': False,
             'SCHEDULE_RULE': '',
-            'SCHEDULE_FORCE_TODAY': False
+            'SCHEDULE_FORCE_TODAY': False,
+            'LOGGING_HANDLERS': {'stderr': {'loglevel': 'WARNING', 'bubble': True}},
         }
 
         self.config.update(config)
@@ -343,11 +352,14 @@ class Nikola(object):
 
         # Activate all required SignalHandler plugins
         for plugin_info in self.plugin_manager.getPluginsOfCategory("SignalHandler"):
-            if plugin_info.name in self.config["DISABLED_PLUGINS"].keys():
+            if plugin_info.name in self.config.get('DISABLED_PLUGINS'):
                 self.plugin_manager.removePluginFromCategory(plugin_info, "SignalHandler")
             else:
                 self.plugin_manager.activatePluginByName(plugin_info.name)
                 plugin_info.plugin_object.set_site(self)
+
+        # Emit signal for SignalHandlers which need to start running immediately.
+        signal('sighandlers_loaded').send(self)
 
         self.commands = {}
         # Activate all command plugins

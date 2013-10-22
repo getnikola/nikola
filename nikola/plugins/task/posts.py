@@ -30,8 +30,6 @@ import nikola.post
 from nikola.plugin_categories import Task
 from nikola import utils
 
-LOGGER = utils.get_logger('render_posts')
-
 
 class RenderPosts(Task):
     """Build HTML fragments from metadata and text."""

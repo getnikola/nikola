@@ -29,6 +29,7 @@ Bugfixes
 * Removed optional priority element from sitemap (Issue #838)
 * Avoid duplicate entries in the sitemap (Issue #836)
 * Include .xml in GZIP_EXTENSIONS (for RSS, sitemap) (Issue #844)
+* Post.base_path is now using forward slashes on Windows (Issue #856)
 
 Other
 -----

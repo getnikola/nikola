@@ -48,7 +48,7 @@ from nikola.plugins.compile.rest import gist
 from nikola.plugins.compile.rest import vimeo
 import nikola.plugins.compile.rest.listing
 from nikola.plugins.compile.rest.doc import Plugin as DocPlugin
-from nikola.utils import _reload
+from nikola.utils import _reload, STDERR_HANDLER
 from nikola.plugin_categories import (
     Command,
     Task,
@@ -96,6 +96,7 @@ class FakeSite(object):
             "TaskMultiplier": TaskMultiplier,
             "RestExtension": RestExtension,
         })
+        self.loghandlers = [STDERR_HANDLER]
         self.plugin_manager.setPluginInfoExtension('plugin')
         if sys.version_info[0] == 3:
             places = [
