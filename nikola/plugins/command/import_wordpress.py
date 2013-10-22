@@ -51,7 +51,7 @@ from nikola import utils
 from nikola.utils import req_missing
 from nikola.plugins.basic_import import ImportMixin, links
 
-LOGGER = utils.get_logger('import_wordpress')
+LOGGER = utils.get_logger('import_wordpress', utils.STDERR_HANDLER)
 
 
 class CommandImportWordpress(Command, ImportMixin):

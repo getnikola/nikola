@@ -55,21 +55,22 @@ class ApplicationWarning(Exception):
     pass
 
 
-def get_logger(name, level=None):
-    """Get a logger for a plugin."""
-    if level is None:
-        if os.getenv('NIKOLA_DEBUG'):
-            level = logbook.DEBUG
-        else:
-            level = logbook.NOTICE
+def get_logger(name, handlers):
+    """Get a logger with handlers attached."""
     l = logbook.Logger(name)
-    l.handlers.append(logbook.StderrHandler(
-        level=level,
-        format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
-    ))
+    for h in handlers:
+        if isinstance(h, list):
+            l.handlers += h
+        else:
+            l.handlers.append(h)
     return l
 
-LOGGER = get_logger('Nikola')
+
+STDERR_HANDLER = [logbook.StderrHandler(
+    level=logbook.NOTICE if not os.getenv('NIKOLA_DEBUG') else logbook.DEBUG,
+    format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
+)]
+LOGGER = get_logger('Nikola', STDERR_HANDLER)
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
 
 if os.getenv('NIKOLA_DEBUG'):

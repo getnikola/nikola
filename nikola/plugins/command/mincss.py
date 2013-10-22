@@ -34,18 +34,17 @@ except ImportError:
     Processor = None
 
 from nikola.plugin_categories import Command
-from nikola.utils import req_missing, get_logger
-
-LOGGER = get_logger('mincss')
+from nikola.utils import req_missing, get_logger, STDERR_HANDLER
 
 
 class CommandMincss(Command):
     """Check the generated site."""
-
     name = "mincss"
 
     doc_usage = ""
     doc_purpose = "apply mincss to the generated site"
+
+    logger = get_logger('mincss', STDERR_HANDLER)
 
     def _execute(self, options, args):
         """Apply mincss the generated site."""
@@ -63,7 +62,7 @@ class CommandMincss(Command):
                 if url.endswith('.css'):
                     fname = os.path.basename(url)
                     if fname in css_files:
-                        LOGGER.error("You have two CSS files with the same name and that confuses me.")
+                        self.logger.error("You have two CSS files with the same name and that confuses me.")
                         sys.exit(1)
                     css_files[fname] = url
                 if not f.endswith('.html'):

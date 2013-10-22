@@ -39,13 +39,12 @@ import lxml.html
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger
 
-LOGGER = get_logger('check')
-
 
 class CommandCheck(Command):
     """Check the generated site."""
 
     name = "check"
+    logger = None
 
     doc_usage = "-l [--find-sources] | -f"
     doc_purpose = "check links and files in the generated site"
@@ -84,6 +83,9 @@ class CommandCheck(Command):
 
     def _execute(self, options, args):
         """Check the generated site."""
+
+        self.logger = get_logger('check', self.site.loghandlers)
+
         if not options['links'] and not options['files'] and not options['clean']:
             print(self.help())
             return False
@@ -122,18 +124,18 @@ class CommandCheck(Command):
                         self.existing_targets.add(target_filename)
                     else:
                         rv = True
-                        LOGGER.warn("Broken link in {0}: ".format(filename), target)
+                        self.logger.warn("Broken link in {0}: ".format(filename), target)
                         if find_sources:
-                            LOGGER.warn("Possible sources:")
-                            LOGGER.warn(os.popen('nikola list --deps ' + task, 'r').read())
-                            LOGGER.warn("===============================\n")
+                            self.logger.warn("Possible sources:")
+                            self.logger.warn(os.popen('nikola list --deps ' + task, 'r').read())
+                            self.logger.warn("===============================\n")
         except Exception as exc:
-            LOGGER.error("Error with:", filename, exc)
+            self.logger.error("Error with:", filename, exc)
         return rv
 
     def scan_links(self, find_sources=False):
-        LOGGER.notice("Checking Links:")
-        LOGGER.notice("===============")
+        self.logger.notice("Checking Links:")
+        self.logger.notice("===============")
         failure = False
         for task in os.popen('nikola list --all', 'r').readlines():
             task = task.strip()
@@ -145,27 +147,27 @@ class CommandCheck(Command):
                 if self.analyze(task, find_sources):
                     failure = True
         if not failure:
-            LOGGER.notice("All links checked.")
+            self.logger.notice("All links checked.")
         return failure
 
     def scan_files(self):
         failure = False
-        LOGGER.notice("Checking Files:")
-        LOGGER.notice("===============\n")
+        self.logger.notice("Checking Files:")
+        self.logger.notice("===============\n")
         only_on_output, only_on_input = self.real_scan_files()
         if only_on_output:
             only_on_output.sort()
-            LOGGER.warn("Files from unknown origins:")
+            self.logger.warn("Files from unknown origins:")
             for f in only_on_output:
-                LOGGER.warn(f)
+                self.logger.warn(f)
             failure = True
         if only_on_input:
             only_on_input.sort()
-            LOGGER.warn("Files not generated:")
+            self.logger.warn("Files not generated:")
             for f in only_on_input:
-                LOGGER.warn(f)
+                self.logger.warn(f)
         if not failure:
-            LOGGER.notice("All files checked.")
+            self.logger.notice("All files checked.")
         return failure
 
     def clean_files(self):

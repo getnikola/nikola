@@ -35,7 +35,7 @@ except ImportError:
 from nikola.plugin_categories import Command
 from nikola import utils
 
-LOGGER = utils.get_logger('bootswatch_theme')
+LOGGER = utils.get_logger('bootswatch_theme', utils.STDERR_HANDLER)
 
 
 class CommandBootswatchTheme(Command):
