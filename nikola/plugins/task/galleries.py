@@ -143,10 +143,16 @@ class Galleries(Task):
                 context["description"] = self.kw["blog_description"]
 
                 image_name_list = [os.path.basename(p) for p in image_list]
+
                 if self.kw['use_filename_as_title']:
-                    img_titles = ['id="{0}" alt="{1}" title="{2}"'.format(
-                        fn[:-4], fn[:-4], utils.unslugify(fn[:-4])) for fn
-                        in image_name_list]
+                    img_titles = []
+                    for fn in image_name_list:
+                        name_without_ext = os.path.splitext(fn)[0]
+                        img_titles.append(
+                            'id="{0}" alt="{1}" title="{2}"'.format(
+                                name_without_ext,
+                                name_without_ext,
+                                utils.unslugify(name_without_ext)))
                 else:
                     img_titles = [''] * len(image_name_list)
 
