@@ -124,7 +124,7 @@ class Sitemap(LateTask):
                         if path.endswith(kw['index_file']) and kw['strip_indexes']:
                             # ignore index files when stripping urls
                             continue
-                        if path.endswith('.html'):
+                        if path.endswith('.html') or path.endswith('.htm'):
                             if not u'<!doctype html' in codecs.open(real_path, 'r', 'utf8').read(1024).lower():
                                 # ignores "html" files without doctype
                                 # alexa-verify, google-site-verification, etc.
