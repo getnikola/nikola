@@ -36,6 +36,8 @@ Bugfixes
 * Include .xml in GZIP_EXTENSIONS (for RSS, sitemap) (Issue #844)
 * Post.base_path is now using forward slashes on Windows (Issue #856)
 * Custom CSS not detected in the files folder (Issue #862)
+* Exclude non-RSS XML files in sitemap (Issue #864)
+* Exclude "html" files without a doctype decleration in sitemap (Issue #864)
 
 Other
 -----

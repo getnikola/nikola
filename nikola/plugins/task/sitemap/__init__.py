@@ -112,11 +112,6 @@ class Sitemap(LateTask):
                 # ignore the current directory.
                 path = (path.replace(os.sep, '/') + '/').replace('./', '')
                 lastmod = get_lastmod(root)
-                if path.endswith('.xml'):  # ignores all XML except files presumed to be RSS
-                    if not open(path, "r").readlines()[1].startswith('<rss'):
-                        continue
-                if path.endswith(kw['index_file']) and not kw['strip_indexes']:
-                    continue  # ignore index files when stripping urls
                 loc = urljoin(base_url, base_path + path)
                 if kw['index_file'] in files and kw['strip_indexes']:  # ignore folders when not stripping urls
                     locs[loc] = url_format.format(loc, lastmod)
@@ -126,6 +121,18 @@ class Sitemap(LateTask):
                     if os.path.splitext(fname)[-1] in mapped_exts:
                         real_path = os.path.join(root, fname)
                         path = os.path.relpath(real_path, output)
+                        if path.endswith(kw['index_file']) and kw['strip_indexes']:
+                            # ignore index files when stripping urls
+                            continue
+                        if path.endswith('.html') or path.endswith('.htm'):
+                            if not u'<!doctype html' in codecs.open(real_path, 'r', 'utf8').read(1024).lower():
+                                # ignores "html" files without doctype
+                                # alexa-verify, google-site-verification, etc.
+                                continue
+                        if path.endswith('.xml'):
+                            if not u'<rss' in codecs.open(real_path, 'r', 'utf8').read(512):
+                                # ignores all XML files except those presumed to be RSS
+                                continue
                         post = self.site.post_per_file.get(path)
                         if post and (post.is_draft or post.is_retired or post.publish_later):
                             continue
