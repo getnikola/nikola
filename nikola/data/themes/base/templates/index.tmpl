@@ -12,7 +12,7 @@
         <hr>
         ${post.text(teaser_only=index_teasers)}
         % if not post.meta('nocomments'):
-            ${comments.comment_link(post.permalink(), post.base_path)}
+            ${comments.comment_link(post.permalink(), post._base_path)}
         % endif
         </div>
     % endfor
