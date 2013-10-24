@@ -53,7 +53,7 @@ Part 2: The theme
 
 Part 3: ``BODY_END`` and ``EXTRA_HEAD_DATA``
     Some social sharing code requires JS execution that depends on JQuery being available
-    (example: `SocialSharePrivacy <https://github.com/panzi/SocialSharePrivacy>`_). It's good
+    (example: `SocialSharePrivacy <https://github.com/panzi/SocialSharePrivacy>`__). It's good
     practice (and often, the only way that will work) to put those at the end of ``<BODY>``,
     and one easy way to do that is to put them in ``BODY_END``
 
@@ -68,7 +68,7 @@ Part 4: assets
 ShareNice
 ---------
 
-`Sharenice <http://sharenice.org>`_ is "written in order to provide social sharing features to
+`Sharenice <http://sharenice.org>`__ is "written in order to provide social sharing features to
 web developers and website administrators who wish to maintain and protect their users' privacy"
 which sounds cool to me.
 
@@ -129,7 +129,7 @@ SocialSharePrivacy
 The Hard Way
 ~~~~~~~~~~~~
 
-`SocialSharePrivacy <https://github.com/panzi/SocialSharePrivacy>`_ is "a jQuery plugin that
+`SocialSharePrivacy <https://github.com/panzi/SocialSharePrivacy>`__ is "a jQuery plugin that
 lets you add social share buttons to your website that don't allow the social sites to track
 your users." Nice!
 
