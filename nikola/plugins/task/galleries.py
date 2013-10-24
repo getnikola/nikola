@@ -456,7 +456,7 @@ class Galleries(Task):
             return urljoin(self.site.config['BASE_URL'], url)
 
         items = []
-        for img, full_title in zip(img_list, img_titles)[:self.kw["feed_length"]]:
+        for img, full_title in list(zip(img_list, img_titles))[:self.kw["feed_length"]]:
             img_size = os.stat(
                 os.path.join(
                     self.site.config['OUTPUT_FOLDER'], img)).st_size
