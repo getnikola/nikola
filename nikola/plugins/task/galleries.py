@@ -25,10 +25,16 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import unicode_literals
+import codecs
 import datetime
 import glob
 import json
+import mimetypes
 import os
+try:
+    from urlparse import urljoin
+except ImportError:
+    from urllib.parse import urljoin  # NOQA
 
 Image = None
 try:
@@ -40,7 +46,7 @@ except ImportError:
         Image = _Image
     except ImportError:
         pass
-
+import PyRSS2Gen as rss
 
 from nikola.plugin_categories import Task
 from nikola import utils
@@ -55,12 +61,18 @@ class Galleries(Task):
 
     def set_site(self, site):
         site.register_path_handler('gallery', self.gallery_path)
+        site.register_path_handler('gallery_rss', self.gallery_rss_path)
         return super(Galleries, self).set_site(site)
 
     def gallery_path(self, name, lang):
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                               self.site.config['GALLERY_PATH'], name,
                               self.site.config['INDEX_FILE']] if _f]
+
+    def gallery_rss_path(self, name, lang):
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['GALLERY_PATH'], name,
+                              'rss.xml'] if _f]
 
     def gen_tasks(self):
         """Render image galleries."""
@@ -82,6 +94,7 @@ class Galleries(Task):
             'filters': self.site.config['FILTERS'],
             'translations': self.site.config['TRANSLATIONS'],
             'global_context': self.site.GLOBAL_CONTEXT,
+            "feed_length": self.site.config['FEED_LENGTH'],
         }
 
         yield self.group_task()
@@ -166,7 +179,7 @@ class Galleries(Task):
                 context["folders"] = folder_list
                 context["crumbs"] = crumbs
                 context["permalink"] = self.site.link(
-                    "gallery", os.path.basename(gallery), None)
+                    "gallery", os.path.basename(gallery), lang)
                 # FIXME: use kw
                 context["enable_comments"] = (
                     self.site.config["COMMENTS_IN_GALLERIES"])
@@ -200,6 +213,35 @@ class Galleries(Task):
                         1: self.kw,
                         2: self.site.config["COMMENTS_IN_GALLERIES"],
                         3: context,
+                    })],
+                }, self.kw['filters'])
+
+                # RSS for the gallery
+                rss_dst = os.path.join(
+                    self.kw['output_folder'],
+                    self.site.path(
+                        "gallery_rss",
+                        os.path.relpath(gallery, self.kw['gallery_path']), lang))
+                rss_dst = os.path.normpath(rss_dst)
+
+                yield utils.apply_filters({
+                    'basename': self.name,
+                    'name': rss_dst,
+                    'file_dep': file_dep,
+                    'targets': [rss_dst],
+                    'actions': [
+                        (self.gallery_rss, (
+                            image_list,
+                            img_titles,
+                            lang,
+                            self.site.link(
+                                "gallery_rss", os.path.basename(gallery), lang),
+                            rss_dst,
+                            context['title']
+                        ))],
+                    'clean': True,
+                    'uptodate': [utils.config_changed({
+                        1: self.kw,
                     })],
                 }, self.kw['filters'])
 
@@ -309,7 +351,9 @@ class Galleries(Task):
                     (img, thumb_path, self.kw['thumbnail_size']))
             ],
             'clean': True,
-            'uptodate': [utils.config_changed(self.kw)],
+            'uptodate': [utils.config_changed({
+                1: self.kw['thumbnail_size']
+            })],
         }, self.kw['filters'])
 
         yield utils.apply_filters({
@@ -322,7 +366,9 @@ class Galleries(Task):
                     (img, orig_dest_path, self.kw['max_image_size']))
             ],
             'clean': True,
-            'uptodate': [utils.config_changed(self.kw)],
+            'uptodate': [utils.config_changed({
+                1: self.kw['max_image_size']
+            })],
         }, self.kw['filters'])
 
     def remove_excluded_image(self, img):
@@ -398,6 +444,52 @@ class Galleries(Task):
         context['photo_array'] = photo_array
 
         self.site.render_template(template_name, output_name, context)
+
+    def gallery_rss(self, img_list, img_titles, lang, permalink, output_path, title):
+        """Create a RSS showing the latest images in the gallery.
+
+        This doesn't use generic_rss_renderer because it
+        doesn't involve Post objects.
+        """
+
+        def make_url(url):
+            return urljoin(self.site.config['BASE_URL'], url)
+
+        items = []
+        for img, full_title in zip(img_list, img_titles)[:self.kw["feed_length"]]:
+            img_size = os.stat(
+                os.path.join(
+                    self.site.config['OUTPUT_FOLDER'], img)).st_size
+            args = {
+                'title': full_title.split('"')[-2],
+                'link': make_url(img),
+                'guid': rss.Guid(img, False),
+                'pubDate': self.image_date(img),
+                'enclosure': rss.Enclosure(
+                    make_url(img),
+                    img_size,
+                    mimetypes.guess_type(img)[0]
+                ),
+            }
+            items.append(rss.RSSItem(**args))
+        rss_obj = utils.ExtendedRSS2(
+            title=title,
+            link=make_url(permalink),
+            description='',
+            lastBuildDate=datetime.datetime.now(),
+            items=items,
+            generator='nikola',
+            language=lang
+        )
+        rss_obj.self_url = make_url(permalink)
+        rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
+        dst_dir = os.path.dirname(output_path)
+        utils.makedirs(dst_dir)
+        with codecs.open(output_path, "wb+", "utf-8") as rss_file:
+            data = rss_obj.to_xml(encoding='utf-8')
+            if isinstance(data, utils.bytes_str):
+                data = data.decode('utf-8')
+            rss_file.write(data)
 
     def resize_image(self, src, dst, max_size):
         """Make a copy of the image in the requested size."""

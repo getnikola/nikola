@@ -127,7 +127,7 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'to_datetime', 'apply_filters', 'config_changed', 'get_crumbs',
            'get_tzname', 'get_asset_path', '_reload', 'unicode_str', 'bytes_str',
            'unichr', 'Functionary', 'LocaleBorg', 'sys_encode', 'sys_decode',
-           'makedirs', 'get_parent_theme_name']
+           'makedirs', 'get_parent_theme_name', 'ExtendedRSS2']
 
 
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
