@@ -336,10 +336,10 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path,
             'pubDate': (post.date if post.date.tzinfo is None else
                         post.date.astimezone(pytz.timezone('UTC'))),
             'categories': post._tags.get(lang, []),
+            'author': post.meta('author'),
         }
-        if post.meta('author'):
-            args['author'] = post.meta('author')
-        items.append(rss.RSSItem(**args))
+
+        items.append(ExtendedItem(**args))
     rss_obj = ExtendedRSS2(
         title=title,
         link=link,
@@ -351,6 +351,7 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path,
     )
     rss_obj.self_url = feed_url
     rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
+    rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
     dst_dir = os.path.dirname(output_path)
     makedirs(dst_dir)
     with codecs.open(output_path, "wb+", "utf-8") as rss_file:
@@ -747,6 +748,25 @@ class ExtendedRSS2(rss.RSS2):
                 'type': "application/rss+xml"
             })
             handler.endElement("atom:link")
+
+
+class ExtendedItem(rss.RSSItem):
+
+    def __init__(self, **kw):
+        author = kw.pop('author')
+        if '@' in author[1:]:  # Yes, this is a silly way to validate an email
+            kw['author'] = author
+            self.creator = None
+        else:
+            self.creator = author
+        # It's an old style class
+        return rss.RSSItem.__init__(self, **kw)
+
+    def publish_extensions(self, handler):
+        if self.creator:
+            handler.startElement("dc:creator", {})
+            handler.characters(self.creator)
+            handler.endElement("dc:creator")
 
 
 # \x00 means the "<" was backslash-escaped

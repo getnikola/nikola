@@ -19,7 +19,7 @@ Features
 Bugfixes
 --------
 
-* Don't create empty author elements (Issue #868)
+* Don't create empty author elements, use dc:creator if author is not an email (Issue #868)
 * Added striphtml filter in mako templates, strip tags from titles (Issue #865)
 * Major refactoring of post creation (Issue #800)
 * Major refactoring of galleries (Ongoing, Issue #786)
