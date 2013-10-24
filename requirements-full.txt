@@ -13,6 +13,5 @@ typogrify
 phpserialize
 webassets
 coverage
-python-coveralls
 nose
 ipython>=1.0.0
