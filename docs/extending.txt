@@ -377,6 +377,7 @@ The easiest way to do this is to reimplement ``set_site()`` and just connect to
 whatever signals you want there.
 
 Currently Nikola emits the following signals:
+
 ``sighandlers_loaded``
     Right after SignalHandler plugin activation.
 ``initialized``
