@@ -271,8 +271,8 @@ class Galleries(Task):
         image_list = []
 
         for ext in self.image_ext_list:
-            image_list += glob.glob(gallery_path + '/*'+ext.lower()) +\
-                glob.glob(gallery_path + '/*'+ext.upper())
+            image_list += glob.glob(gallery_path + '/*' + ext.lower()) +\
+                glob.glob(gallery_path + '/*' + ext.upper())
 
         # Filter ignored images
         excluded_image_list = self.get_excluded_images(gallery_path)
