@@ -337,7 +337,7 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path,
                         post.date.astimezone(pytz.timezone('UTC'))),
             'categories': post._tags.get(lang, []),
         }
-        if post.meta('author') is not None:
+        if post.meta('author'):
             args['author'] = post.meta('author')
         items.append(rss.RSSItem(**args))
     rss_obj = ExtendedRSS2(
