@@ -1,7 +1,9 @@
 ## -*- coding: utf-8 -*-
 <%def name="html_head()">
     <meta charset="utf-8">
-    <meta name="description" content="${description}" >
+    %if description:
+    <meta name="description" content="${description}">
+    %endif
     <meta name="author" content="${blog_author}">
     <title>${title|striphtml} | ${blog_title|striphtml}</title>
     ${mathjax_config}

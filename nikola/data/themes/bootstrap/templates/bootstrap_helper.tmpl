@@ -1,7 +1,9 @@
 ## Override only the functions that differ from base_helper.tmpl
 <%def name="html_head()">
     <meta charset="utf-8">
-    <meta name="description" content="${description}" >
+    %if description:
+    <meta name="description" content="${description}">
+    %endif
     <meta name="author" content="${blog_author}">
     <title>${title|striphtml} | ${blog_title|striphtml}</title>
     ${mathjax_config}
