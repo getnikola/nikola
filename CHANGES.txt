@@ -4,6 +4,7 @@ New in 6.2.0
 Features
 --------
 
+* RSS feeds for galleries (Issue #786)
 * New EXTRA_IMAGE_EXTENSIONS option, and support most common image extensions by default (Issue #857)
 * Add reStructuredText directive post_list (Issue #815)
 * Galleries support translations
