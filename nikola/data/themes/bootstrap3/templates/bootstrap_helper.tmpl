@@ -4,7 +4,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="${description}" >
+    %if description:
+    <meta name="description" content="${description}">
+    %endif
     <meta name="author" content="${blog_author}">
     <title>${title|striphtml} | ${blog_title|striphtml}</title>
     ${mathjax_config}
