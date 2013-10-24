@@ -599,7 +599,7 @@ def get_crumbs(path, is_file=False):
 
 def get_asset_path(path, themes, files_folders={'files': ''}):
     """
-    .. versionchanghed:: 6.1.0
+    .. versionchanged:: 6.1.0
 
     Checks which theme provides the path with the given asset,
     and returns the "real", absolute path to the asset.
