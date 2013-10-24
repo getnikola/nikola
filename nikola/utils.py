@@ -754,7 +754,7 @@ class ExtendedItem(rss.RSSItem):
 
     def __init__(self, **kw):
         author = kw.pop('author')
-        if '@' in author[1:]:  # Yes, this is a silly way to validate an email
+        if author and '@' in author[1:]:  # Yes, this is a silly way to validate an email
             kw['author'] = author
             self.creator = None
         else:
