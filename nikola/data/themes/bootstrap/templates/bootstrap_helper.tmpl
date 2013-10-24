@@ -3,7 +3,7 @@
     <meta charset="utf-8">
     <meta name="description" content="${description}" >
     <meta name="author" content="${blog_author}">
-    <title>${title|h} | ${blog_title|h}</title>
+    <title>${title|striphtml} | ${blog_title|striphtml}</title>
     ${mathjax_config}
     %if use_bundles:
         %if use_cdn:

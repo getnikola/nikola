@@ -33,6 +33,7 @@ import tempfile
 
 from mako import util, lexer
 from mako.lookup import TemplateLookup
+from markupsafe import Markup  # It's ok, Mako requires it
 
 from nikola.plugin_categories import TemplateSystem
 from nikola.utils import makedirs, get_logger
@@ -80,7 +81,7 @@ class MakoTemplates(TemplateSystem):
 
     def render_template(self, template_name, output_name, context):
         """Render the template into output_name using context."""
-
+        context['striphtml'] = striphtml
         template = self.lookup.get_template(template_name)
         data = template.render_unicode(**context)
         if output_name is not None:
@@ -101,3 +102,7 @@ class MakoTemplates(TemplateSystem):
                 deps += self.template_deps(fname)
             self.cache[template_name] = tuple(deps)
         return list(self.cache[template_name])
+
+
+def striphtml(text):
+    return Markup(text).striptags()

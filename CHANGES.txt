@@ -1,14 +1,10 @@
-Features
---------
-
-* Add reStructuredText directive post_list (Issue #815)
-
 New in 6.2.0
 ============
 
 Features
 --------
 
+* Add reStructuredText directive post_list (Issue #815)
 * Galleries support translations
 * Support a single archive per site (optional; instead of per-year or per-month archives) (Issue #853)
 * The locales used in testing can be specified in environment variables (Issue #818)
@@ -21,6 +17,7 @@ Features
 Bugfixes
 --------
 
+* Added striphtml filter in mako templates, strip tags from titles (Issue #865)
 * Major refactoring of post creation (Issue #800)
 * Major refactoring of galleries (Ongoing, Issue #786)
 * Locale support in windows fixed (Issue #818)
