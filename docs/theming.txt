@@ -49,10 +49,10 @@ messages
     so that it can be translated into other languages.
 
 less
-    Files to be compiled into CSS using `LESS <http://lesscss.org/>`_
+    Files to be compiled into CSS using `LESS <http://lesscss.org/>`__
 
 sass
-    Files to be compiled into CSS using `Sass <http://sass-lang.com/>`_
+    Files to be compiled into CSS using `Sass <http://sass-lang.com/>`__
 
 This mandatory file:
 
@@ -189,8 +189,8 @@ at https://www.transifex.com/projects/p/nikola/
 If you want to create a theme that has new strings, and you want those strings to be translatable,
 then your theme will need a custom ``messages`` folder.
 
-`LESS <http://lesscss.org/>`_ and `Sass <http://sass-lang.com/>`_
------------------------------------------------------------------
+`LESS <http://lesscss.org/>`__ and `Sass <http://sass-lang.com/>`__
+-------------------------------------------------------------------
 
 .. note::
     The LESS and Sass compilers will be moved to the Plugins Index in

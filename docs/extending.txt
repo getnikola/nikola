@@ -90,7 +90,7 @@ First, the ``command_serve.plugin`` file:
 
 .. note:: If you want to publish your plugin on the Plugin Index, `read
           the docs for the Index
-          <https://github.com/getnikola/plugins/blob/master/README.md>`_
+          <https://github.com/getnikola/plugins/blob/master/README.md>`__
           (and the .plugin file examples and explanations).
 
 For your own plugin, just change the values in a sensible way. The
@@ -182,7 +182,7 @@ First, you have to create a .plugin file. Here's the one for the Mako plugin:
 
 .. note:: If you want to publish your plugin on the Plugin Index, `read
           the docs for the Index
-          <https://github.com/getnikola/plugins/blob/master/README.md>`_
+          <https://github.com/getnikola/plugins/blob/master/README.md>`__
           (and the .plugin file examples and explanations).
 
 You will have to replace "mako" with your template system's name, and other data
@@ -391,7 +391,7 @@ Currently Nikola emits the following signals:
 Plugin Index
 ============
 
-There is a `plugin index <http://plugins.getnikola.com/>`_, which stores all
+There is a `plugin index <http://plugins.getnikola.com/>`__, which stores all
 of the plugins for Nikola people wanted to share with the world.
 
 You may want to read the `README for the Index
@@ -415,10 +415,10 @@ Here's the relevant code from the tag plugin.
     # In set_site
     site.register_path_handler('tag_rss', self.tag_rss_path)
 
-    # And these always take name and lang as arguments and returl a list of 
+    # And these always take name and lang as arguments and returl a list of
     # path elements.
     def tag_rss_path(self, name, lang):
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                               self.site.config['TAG_PATH'], self.slugify_name(name) + ".xml"] if
                 _f]
-    
+
