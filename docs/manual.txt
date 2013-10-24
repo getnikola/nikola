@@ -267,11 +267,11 @@ caveats:
 1. ``lxml`` and ``Pillow`` require compiled extensions.  Compiling them on Windows is hard for most people.  Fortunately, compiled packages exist.  Check their `PyPI <https://pypi.python.org/>` pages to find official packages or get them somewhere else (at your own risk).
 2. Windows has some differences over POSIX, which may cause some features to work incorrectly under Windows.  If any problems occur, please do not hesitate to report them.  Some of the differeces include:
 
-  * ``\`` as path separator (instead of ``/``)
-  * the concept of partitions
-  * some characters in paths are disallowed (although this shouldn’t cause
-    problems)
-  * CR+LF (aka ``\r\n``) as the line separator (instead of LF ``\n``)
+   * ``\`` as path separator (instead of ``/``)
+   * the concept of partitions
+   * some characters in paths are disallowed (although this shouldn’t cause
+     problems)
+   * CR+LF (aka ``\r\n``) as the line separator (instead of LF ``\n``)
 
 3. Windows also dislikes some characters in paths.
 4. Most of our developers run Linux on a daily basis and may not have the full knowledge required to resolve issues relating to Windows.
@@ -288,7 +288,7 @@ for textile and WikiCreole and even for just writing HTML.
 
 First, let's see how you "build" your site. Nikola comes with a minimal site to get you started.
 
-The tool used to do builds is called `doit <http://pydoit.org>`_, and it rebuilds the
+The tool used to do builds is called `doit <http://pydoit.org>`__, and it rebuilds the
 files that are not up to date, so your site always reflects your latest content. To do our
 first build, just run "nikola build"::
 
@@ -315,7 +315,7 @@ will be much much shorter::
     $ nikola build
     Scanning posts....done!
 
-That is because `doit <http://pydoit.org>`_ is smart enough not to generate
+That is because `doit <http://pydoit.org>`__ is smart enough not to generate
 all the pages again, unless you changed something that the page requires. So, if you change
 the text of a post, or its title, that post page, and all index pages where it is mentioned,
 will be recreated. If you change the post page template, then all the post pages will be rebuilt.
@@ -762,11 +762,11 @@ CSS tweaking
     which is empty. Put your CSS there, for minimal disruption of the provided CSS files.
 
     If you feel tempted to touch other files in assets, you probably will be better off
-    with a `custom theme <theming.html>`_.
+    with a `custom theme <theming.html>`__.
 
 Template tweaking
     If you really want to change the pages radically, you will want to do a
-    `custom theme <theming.html>`_.
+    `custom theme <theming.html>`__.
 
 
 Navigation Links
