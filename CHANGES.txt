@@ -38,6 +38,7 @@ Bugfixes
 * Custom CSS not detected in the files folder (Issue #862)
 * Exclude non-RSS XML files in sitemap (Issue #864)
 * Exclude "html" files without a doctype decleration in sitemap (Issue #864)
+* Do not include "Read more" links at the end of teasers when stripping HTML
 
 Other
 -----
