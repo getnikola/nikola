@@ -9,6 +9,8 @@ MESSAGES = {
     "More posts about": "ilgili diğer yazılar",
     "Newer posts": "Daha yeni yazılar",
     "Next post": "Sonraki yazı",
+    "No content": "",
+    "No title": "",
     "Older posts": "Daha eski yazılar",
     "Original site": "Orjinal web sayfası",
     "Posted": "Yayın tarihi",

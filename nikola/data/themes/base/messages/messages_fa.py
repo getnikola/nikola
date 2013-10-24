@@ -9,6 +9,8 @@ MESSAGES = {
     "More posts about": "ارسال‌های بیشتر دربارهٔ",
     "Newer posts": "ارسال‌های جدید‌تر",
     "Next post": "ارسال بعدی",
+    "No content": "",
+    "No title": "",
     "Older posts": "پست‌های قدیمی‌تر",
     "Original site": "سایت اصلی",
     "Posted": "ارسال شده",

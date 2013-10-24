@@ -5,6 +5,7 @@
 # Translators:
 # Translators:
 # Kwpolska <kwpolska@gmail.com>, 2013
+# Kwpolska <kwpolska@gmail.com>, 2013
 # ralsina <ralsina@netmanagers.com.ar>, 2013
 # udono <udono@gmx.net>, 2013
 # Niko <wenso@gmx.de>, 2013
@@ -13,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2013-10-08 09:45+0000\n"
+"PO-Revision-Date: 2013-10-24 15:52+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/nikola/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -52,7 +53,7 @@ msgstr "Vorherige Einträge %d"
 msgid "Source"
 msgstr "Source"
 
-#. Here your translation should not say ENglish but the name of your language
+#. Here your translation should not say English but the name of your language
 #. instead
 msgid "Read in English"
 msgstr "Auf Deutsch lesen"
@@ -82,4 +83,10 @@ msgid "Posted"
 msgstr "Veröffentlicht"
 
 msgid "Posts for {month} {year}"
-msgstr "Einträge für {month} {year}"
+msgstr "Einträge aus {month} {year}"
+
+msgid "No title"
+msgstr ""
+
+msgid "No content"
+msgstr ""

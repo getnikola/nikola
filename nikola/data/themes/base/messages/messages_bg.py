@@ -9,6 +9,8 @@ MESSAGES = {
     "More posts about": "Още публикации относно ",
     "Newer posts": "Нови публикации",
     "Next post": "Следваща публикация",
+    "No content": "",
+    "No title": "",
     "Older posts": "Стари публикации",
     "Original site": "Оригиналния сайт",
     "Posted": "Публиковано",
