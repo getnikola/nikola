@@ -66,6 +66,8 @@ class Galleries(Task):
         """Render image galleries."""
 
         self.logger = utils.get_logger('render_galleries', self.site.loghandlers)
+        self.image_ext_list = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.bmp', '.tiff']
+        self.image_ext_list.extend(self.site.config.get('EXTRA_IMAGE_EXTENSIONS', []))
 
         self.kw = {
             'thumbnail_size': self.site.config['THUMBNAIL_SIZE'],
@@ -266,10 +268,11 @@ class Galleries(Task):
     def get_image_list(self, gallery_path):
 
         # Gather image_list contains "gallery/name/image_name.jpg"
-        image_list = glob.glob(gallery_path + "/*jpg") +\
-            glob.glob(gallery_path + "/*JPG") +\
-            glob.glob(gallery_path + "/*png") +\
-            glob.glob(gallery_path + "/*PNG")
+        image_list = []
+
+        for ext in self.image_ext_list:
+            image_list += glob.glob(gallery_path + '/*'+ext.lower()) +\
+                glob.glob(gallery_path + '/*'+ext.upper())
 
         # Filter ignored images
         excluded_image_list = self.get_excluded_images(gallery_path)

@@ -4,6 +4,7 @@ New in 6.2.0
 Features
 --------
 
+* New EXTRA_IMAGE_EXTENSIONS option, and support most common image extensions by default (Issue #857)
 * Add reStructuredText directive post_list (Issue #815)
 * Galleries support translations
 * Support a single archive per site (optional; instead of per-year or per-month archives) (Issue #853)
