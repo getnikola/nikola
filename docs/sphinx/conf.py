@@ -28,7 +28,7 @@ from __future__ import unicode_literals
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 try:
-    import sphinxcontrib.gist
+    import sphinxcontrib.gist  # NOQA
     extensions = ['sphinxcontrib.gist']
 except ImportError:
     extensions = []
