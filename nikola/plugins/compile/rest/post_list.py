@@ -34,7 +34,6 @@ from nikola import utils
 from nikola.plugin_categories import RestExtension
 
 
-
 class Plugin(RestExtension):
     name = "rest_post_list"
 
