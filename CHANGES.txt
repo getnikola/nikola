@@ -1,5 +1,13 @@
+New in 6.2.1
+============
+
+Features
+--------
+
 * New "hidetitle" metadata to suppress printing a title as heading (Issue #584)
 
+Bugfixes
+--------
 
 New in 6.2.0
 ============

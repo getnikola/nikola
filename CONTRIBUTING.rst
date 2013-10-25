@@ -20,6 +20,9 @@ Here are some guidelines about how you can contribute to Nikola:
 
   This makes life much easier for maintainers if you have (or ever plan to
   have) additional changes in your own ``master`` branch.
+  
+  Also, if you have commit rights to the main Nikola repository, we suggest
+  having your branch there, instead of a personal fork.
 
 .. admonition:: A corollary: 
 
