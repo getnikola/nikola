@@ -10,12 +10,7 @@ ${helper.twitter_card_information(post)}
 </%block>
 <%block name="content">
     <div class="postbox">
-    % if not post.meta('hidetitle'):
-        ${helper.html_title()}
-    % endif
-    % if post.meta('hidetitle'):
-        ${post.text()}
-    % endif
+    ${helper.html_title()}
     <hr>
     <small>
         ${messages("Posted")}: <time class="published" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time>
@@ -29,9 +24,7 @@ ${helper.twitter_card_information(post)}
 		</%block>
     </small>
     <hr>
-    % if not post.meta('hidetitle'):
-        ${post.text()}
-    % endif
+    ${post.text()}
     ${helper.html_pager(post)}
     % if not post.meta('nocomments'):
         ${comments.comment_form(post.permalink(absolute=True), post.title(), post._base_path)}
