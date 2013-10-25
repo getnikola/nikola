@@ -33,6 +33,7 @@ from docutils.parsers.rst import Directive, directives
 from nikola.plugin_categories import RestExtension
 from nikola import utils
 
+
 class Plugin(RestExtension):
     name = "rest_post_list"
 
