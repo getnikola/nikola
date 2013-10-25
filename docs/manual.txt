@@ -198,6 +198,8 @@ of how to "get" something for your specific operating system are left to you.
 
 The short version is: ``pip install nikola``
 
+Note that you need Python v2.6 or newer OR v3.3 or newer.
+
 For some features it may give you an error message telling you that you need to
 install something else. For example, if it tells you you need ``requests``::
 
