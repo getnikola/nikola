@@ -9,8 +9,6 @@ MESSAGES = {
     "More posts about": "Više postova o",
     "Newer posts": "Noviji postovi",
     "Next post": "Sljedeći post",
-    "No content": "",
-    "No title": "",
     "Older posts": "Stariji postovi",
     "Original site": "Izvorna stranica",
     "Posted": "Objavljeno",

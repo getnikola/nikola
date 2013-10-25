@@ -9,8 +9,6 @@ MESSAGES = {
     "More posts about": "Lisää postauksia aiheesta",
     "Newer posts": "Uudempia postauksia",
     "Next post": "Seuraava postaus",
-    "No content": "",
-    "No title": "",
     "Older posts": "Vanhempia postauksia",
     "Original site": "Alkuperäinen sivusto",
     "Posted": "Postattu",
