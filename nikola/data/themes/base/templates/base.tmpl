@@ -16,7 +16,7 @@ lang="${lang}">
 </head>
 <body>
     <h1 id="blog-title">
-        <a href="${abs_link('/')}" title="${blog_title}">${blog_title}</a>
+        <a href="${abs_link('/')}" title="${blog_title}" rel="home">${blog_title}</a>
     </h1>
     <%block name="belowtitle">
         %if len(translations) > 1:
