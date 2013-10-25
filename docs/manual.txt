@@ -496,6 +496,10 @@ to your configuration ::
        Author of the post, will be used in the RSS feed and possibly in the post
        display (theme-dependent)
 
+   hidetitle
+       Set "True" to not show the title as header.
+
+
 .. note:: The Two-File Format
 
    Nikola originally used a separate ``.meta`` file. That will still work!

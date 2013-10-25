@@ -1,3 +1,6 @@
+* New "hidetitle" metadata to suppress printing a title as header (Issue #584)
+
+
 New in 6.2.0
 ============
 
