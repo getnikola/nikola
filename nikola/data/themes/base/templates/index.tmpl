@@ -12,10 +12,10 @@
         <hr>
         %if index_teasers:
         <div class="p-summary">
-        ${post.text(teaser_only=true)}
+        ${post.text(teaser_only=True)}
         %else:
         <div class="e-content">
-        ${post.text(teaser_only=false)}
+        ${post.text(teaser_only=False)}
         %endif
         </div>
         % if not post.meta('nocomments'):
