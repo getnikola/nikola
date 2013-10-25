@@ -57,7 +57,6 @@ class RenderTags(Task):
             "translations": self.site.config["TRANSLATIONS"],
             "blog_title": self.site.config["BLOG_TITLE"],
             "site_url": self.site.config["SITE_URL"],
-            "blog_description": self.site.config["BLOG_DESCRIPTION"],
             "messages": self.site.MESSAGES,
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
@@ -162,6 +161,7 @@ class RenderTags(Task):
             else:
                 context["cat_items"] = None
             context["permalink"] = self.site.link("tag_index", None, lang)
+            context["description"] = None
             task = self.site.generic_post_list_renderer(
                 lang,
                 [],
@@ -222,6 +222,7 @@ class RenderTags(Task):
                     page_name(tag, i + 1, lang))
             context["permalink"] = self.site.link(kind, tag, lang)
             context["tag"] = tag
+            context["description"] = None
             task = self.site.generic_post_list_renderer(
                 lang,
                 post_list,
@@ -233,6 +234,7 @@ class RenderTags(Task):
             task_cfg = {1: task['uptodate'][0].config, 2: kw}
             task['uptodate'] = [utils.config_changed(task_cfg)]
             task['basename'] = str(self.name)
+
             yield task
 
     def tag_page_as_list(self, tag, lang, post_list, kw, is_category):
@@ -248,6 +250,7 @@ class RenderTags(Task):
         context["permalink"] = self.site.link(kind, tag, lang)
         context["tag"] = tag
         context["kind"] = kind
+        context["description"] = None
         task = self.site.generic_post_list_renderer(
             lang,
             post_list,
@@ -283,7 +286,7 @@ class RenderTags(Task):
             'targets': [output_name],
             'actions': [(utils.generic_rss_renderer,
                         (lang, "{0} ({1})".format(kw["blog_title"], tag),
-                         kw["site_url"], kw["blog_description"], post_list,
+                         kw["site_url"], None, post_list,
                          output_name, kw["rss_teasers"], kw['feed_length'], feed_url))],
             'clean': True,
             'uptodate': [utils.config_changed(kw)],

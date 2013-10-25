@@ -6,6 +6,7 @@ Features
 
 Bugfixes
 --------
+* Don’t include BLOG_DESCRIPTION as meta tag on tag and gallery pages (Issue #876)
 
 New in 6.2.0
 ============

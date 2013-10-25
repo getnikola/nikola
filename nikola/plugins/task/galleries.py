@@ -87,7 +87,6 @@ class Galleries(Task):
             'output_folder': self.site.config['OUTPUT_FOLDER'],
             'cache_folder': self.site.config['CACHE_FOLDER'],
             'default_lang': self.site.config['DEFAULT_LANG'],
-            'blog_description': self.site.config['BLOG_DESCRIPTION'],
             'use_filename_as_title': self.site.config['USE_FILENAME_AS_TITLE'],
             'gallery_path': self.site.config['GALLERY_PATH'],
             'sort_by_date': self.site.config['GALLERY_SORT_BY_DATE'],
@@ -155,7 +154,7 @@ class Galleries(Task):
                     context["title"] = post.title(lang)
                 else:
                     context["title"] = os.path.basename(gallery)
-                context["description"] = self.kw["blog_description"]
+                context["description"] = None
 
                 image_name_list = [os.path.basename(p) for p in image_list]
 
