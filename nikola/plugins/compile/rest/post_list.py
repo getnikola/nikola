@@ -30,8 +30,9 @@ import uuid
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
-from nikola.plugin_categories import RestExtension
 from nikola import utils
+from nikola.plugin_categories import RestExtension
+
 
 class Plugin(RestExtension):
     name = "rest_post_list"
@@ -53,17 +54,20 @@ class PostList(Directive):
 
     Provides a reStructuredText directive to create a list of posts.
     The posts appearing in the list can be filtered by options.
+    *List slicing* is provided with the *start*, *stop* and *reverse* options.
 
     The following not required options are recognized:
 
-    ``first`` : integer
+    ``start`` : integer
         The index of the first post to show.
+        A negative value like ``-3`` will show the *last* three posts in the
+        post-list.
         Defaults to None.
 
-    ``last`` : integer
+    ``stop`` : integer
         The index of the last post to show.
-        A value of ``-1`` will show every post, but not the last in the
-        post-list.
+        A value negative value like ``-1`` will show every post, but not the
+        *last* in the post-list.
         Defaults to None.
 
     ``reverse`` : flag
@@ -93,11 +97,10 @@ class PostList(Directive):
     ``id`` : string
         A manual id for the post list.
         Defaults to a random name composed by 'post_list_' + uuid.uuid4().hex.
-
     """
     option_spec = {
-        'first': int,
-        'last': int,
+        'start': int,
+        'stop': int,
         'reverse': directives.flag,
         'tags': directives.unchanged,
         'slugs': directives.unchanged,
@@ -108,8 +111,8 @@ class PostList(Directive):
     }
 
     def run(self):
-        first = self.options.get('first')
-        last = self.options.get('last')
+        start = self.options.get('start')
+        stop = self.options.get('stop')
         reverse = self.options.get('reverse', False)
         tags = self.options.get('tags')
         tags = [t.strip().lower() for t in tags.split(',')] if tags else []
@@ -127,7 +130,7 @@ class PostList(Directive):
         else:
             timeline = [p for p in self.site.timeline if p.use_in_feeds]
 
-        for post in timeline[first:last:step]:
+        for post in timeline[start:stop:step]:
             if tags:
                 cont = True
                 for tag in tags:
