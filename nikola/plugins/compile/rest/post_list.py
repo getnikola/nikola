@@ -49,7 +49,7 @@ class PostList(Directive):
     Post List
     =========
     :Directive Arguments: None.
-    :Directive Options: lang, first, last, reverse, tags, template, id
+    :Directive Options: lang, start, stop, reverse, tags, template, id
     :Directive Content: None.
 
     Provides a reStructuredText directive to create a list of posts.
