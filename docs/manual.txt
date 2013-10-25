@@ -497,7 +497,7 @@ to your configuration ::
        display (theme-dependent)
 
    hidetitle
-       Set "True" to not show the title as header.
+       Set "True" to not show the title as heading.
 
 
 .. note:: The Two-File Format
