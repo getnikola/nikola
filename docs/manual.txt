@@ -251,6 +251,8 @@ Red Hat/RPM based systems::
 Installation on Linux, Mac OS X, \*BSD, and any other POSIX-compatible OS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+(we obviously support all.)
+
 Using ``pip`` should suffice.  You may also want to use distribution- or
 system-specific packages for our dependencies.
 
