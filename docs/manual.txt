@@ -268,7 +268,9 @@ Installation on Windows and Windows support
 Nikola supports Windows!  Keep in mind, though, that there are some
 caveats:
 
-1. ``lxml`` and ``Pillow`` require compiled extensions.  Compiling them on Windows is hard for most people.  Fortunately, compiled packages exist.  Check their `PyPI <https://pypi.python.org/>` pages to find official packages or get them somewhere else (at your own risk).
+1. ``lxml`` and ``Pillow`` require compiled extensions.  Compiling them on
+Windows is hard for most people.  Fortunately, compiled packages exist.  Check
+their `PyPI <https://pypi.python.org/>`_ pages to find official packages or get them somewhere else (at your own risk).
 2. Windows has some differences over POSIX, which may cause some features to work incorrectly under Windows.  If any problems occur, please do not hesitate to report them.  Some of the differeces include:
 
    * ``\`` as path separator (instead of ``/``)
