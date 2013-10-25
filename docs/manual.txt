@@ -198,6 +198,8 @@ of how to "get" something for your specific operating system are left to you.
 
 The short version is: ``pip install nikola``
 
+Note that you need Python v2.6 or newer OR v3.3 or newer.
+
 For some features it may give you an error message telling you that you need to
 install something else. For example, if it tells you you need ``requests``::
 
@@ -251,6 +253,8 @@ Red Hat/RPM based systems::
 Installation on Linux, Mac OS X, \*BSD, and any other POSIX-compatible OS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+(we obviously support all.)
+
 Using ``pip`` should suffice.  You may also want to use distribution- or
 system-specific packages for our dependencies.
 
@@ -264,7 +268,9 @@ Installation on Windows and Windows support
 Nikola supports Windows!  Keep in mind, though, that there are some
 caveats:
 
-1. ``lxml`` and ``Pillow`` require compiled extensions.  Compiling them on Windows is hard for most people.  Fortunately, compiled packages exist.  Check their `PyPI <https://pypi.python.org/>` pages to find official packages or get them somewhere else (at your own risk).
+1. ``lxml`` and ``Pillow`` require compiled extensions.  Compiling them on
+Windows is hard for most people.  Fortunately, compiled packages exist.  Check
+their `PyPI <https://pypi.python.org/>`_ pages to find official packages or get them somewhere else (at your own risk).
 2. Windows has some differences over POSIX, which may cause some features to work incorrectly under Windows.  If any problems occur, please do not hesitate to report them.  Some of the differeces include:
 
    * ``\`` as path separator (instead of ``/``)
