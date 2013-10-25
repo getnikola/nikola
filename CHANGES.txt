@@ -15,6 +15,7 @@ Features
 * Path/Link resolution mechanism for plugins (Issue #790)
 * Sass compiling (Issue #642)
 * Emit a signal when a new post is created (Issue #831)
+* New Finnish translation.
 
 Bugfixes
 --------
@@ -533,7 +534,7 @@ Features
 * When using import_wordpress users can exclude drafts with the ``-d`` switch.
 * New STORY_INDEX option to generate index.html in story folders.
 * Sort tags case insensitive.
-* New polish translation.
+* New Polish translation.
 * Add multi size favicon support.
 * Use multilingual Disqus (although it doesn't seem to work)
 * Add Simplified Chinese translations.
