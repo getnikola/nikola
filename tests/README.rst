@@ -38,20 +38,33 @@ You need:
 How to set the locale for Nikola tests?
 ---------------------------------------
 
-You need at least two locales.  By default, the test suite uses ``en`` and
-``es``.  You can set the locales you want by exporting two shell variables.
-They are::
+For testing nikola needs to specify two languages, each one with a supported locale. By default, the test suite uses ``en`` and ``es`` as languages, and their respective default locale for them.
+
+You can set the language - locale pairs by exporting two shell variables, like in::
 
     export NIKOLA_LOCALE_DEFAULT=en,en_US.utf8
     export NIKOLA_LOCALE_OTHER=es,es_ES.utf8
 
-Replace the part before the comma with a Nikola locale (see ``nikola/conf.py.in`` for details), and the part after the comma with an *installed* glibc locale.
+In Windows that would be::
+
+	set NIKOLA_LOCALE_DEFAULT=en,English 
+	set NIKOLA_LOCALE_OTHER=es,Spanish
+	
+Replace the part before the comma with a Nikola translation selector (see ``nikola/conf.py.in`` for details), and the part after the comma with an *installed* glibc locale.
+
+To check if the desired locale is supported in your host you can, in a python console::
+
+	import locale
+	locale.setlocale(locale.LC_ALL, 'locale_name')
+    # by example, 'en_US.utf8' (posix) 'English' (windows)
+	# if it does not traceback, then python can use that locale
 
 Alternatively, if you have some disk space to spare, you can install
 the two default locales. Here is how to do that in Ubuntu::
 
     sudo apt-get install language-pack-en language-pack-es
 
+	
 How to execute the tests
 ------------------------
 
@@ -62,8 +75,15 @@ The command to execute tests is::
 However, this command may change at any given moment.  Check the
 ``/.travis.yml`` file to get the current command.
 
+In Windows you want to drop the doctests parts, they fail over trivial differences in OS details.
+
 It is also recommended to run ``nikola help`` to see if Nikola actually
-works.  If you are committing code, make sure to run ``flake8 --ignore=E501 .`` to see if you comply with the PEP 8 style guide and do not have basic code mistakes (we ignore the 79-characters-per-line rule)
+works.
+
+If you are committing code, make sure to run ``flake8 --ignore=E501 .`` to see if you comply with the PEP 8 style guide and do not have basic code mistakes (we ignore the 79-characters-per-line rule).
+
+In windows ignore the two flake8 diagnostics about messages_sl_si.py , they are artifacts of (symlinks + git + windows).
+
 
 Travis CI
 ---------
