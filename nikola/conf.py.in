@@ -188,7 +188,7 @@ COMPILERS = ${COMPILERS}
 # Commands to execute to deploy. Can be anything, for example,
 # you may use rsync:
 # "rsync -rav output/* joe@my.site:/srv/www/site"
-# And then do a backup, or ping pingomatic.
+# And then do a backup, or run the `nikola ping` plug-in.
 # To do manual deployment, set it to []
 # DEPLOY_COMMANDS = []
 
