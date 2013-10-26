@@ -31,7 +31,7 @@ Requirements to run the tests
 
 You need:
 
-* ``pip -r requirements-tests.txt``
+* ``pip install -r requirements-tests.txt``
 * a few minutes’ time
 * appropriate locale settings
 
