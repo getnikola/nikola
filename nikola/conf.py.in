@@ -227,13 +227,18 @@ COMPILERS = ${COMPILERS}
 #    ".jpg": ["jpegoptim --strip-all -m75 -v %s"],
 # }
 
-# Create a gzipped copy of each generated file. Cheap server-side optimization.
+# Expert setting! Create a gzipped copy of each generated file. Cheap server-
+# side optimization for very high traffic sites or low memory servers.
 # GZIP_FILES = False
 # File extensions that will be compressed
 # GZIP_EXTENSIONS = ('.txt', '.htm', '.html', '.css', '.js', '.json', '.xml')
 # Use an external gzip command? None means no.
 # Example: GZIP_COMMAND = "pigz -k {filename}"
 # GZIP_COMMAND = None
+# Make sure the server does not return a "Accept-Ranges: bytes" header for 
+# files compressed by this option! OR make sure that a ranged request does not
+# return partial content of another representation for these resources. Do not
+# use this feature if you do not understand what this means.
 
 # #############################################################################
 # Image Gallery Options
