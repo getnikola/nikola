@@ -1,6 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%def name="html_title()">
-    <h1 class="p-name">${title|h}</h1>
+    <h1 class="p-name" itemprop="headline name">${title|h}</h1>
     % if link:
             <p><a href='${link}'>${messages("Original site")}</a></p>
     % endif
@@ -22,9 +22,11 @@
 <%def name="html_tags(post)">
     %if post.tags:
         &nbsp;&nbsp;|&nbsp;&nbsp;${messages("More posts about")}
+        <span itemprop="keywords">
         %for tag in post.tags:
-            <a class="tag p-category" href="${_link('tag', tag)}"><span class="badge badge-info">${tag}</span></a>
+            <a class="tag p-category" href="${_link('tag', tag)}" ><span class="badge badge-info">${tag}</span></a>
         %endfor
+        </span>
     %endif
 </%def>
 

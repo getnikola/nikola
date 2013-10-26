@@ -9,11 +9,12 @@ ${helper.twitter_card_information(post)}
 % endif
 </%block>
 <%block name="content">
-    <div class="postbox h-entry">
+    <div class="postbox">
+    <div class="h-entry" itemscope="itemscope" itemtype="http://schema.org/Article">
     ${helper.html_title()}
     <hr>
     <small>
-        ${messages("Posted")}: <time class="published dt-published" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time>
+        ${messages("Posted")}: <time class="published dt-published" datetime="${post.date.isoformat()}" itemprop="datePublished">${post.formatted_date(date_format)}</time>
         ${helper.html_translations(post)}
 		${helper.html_tags(post)}
         &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -24,8 +25,12 @@ ${helper.twitter_card_information(post)}
 		</%block>
     </small>
     <hr>
-    <div class="e-content">
+    <div class="e-content" itemprop="articleBody text">
     ${post.text()}
+    </div>
+    %if post.description():
+        <meta content="${post.description()}" itemprop="description" />
+    %endif
     </div>
     ${helper.html_pager(post)}
     % if not post.meta('nocomments'):
