@@ -1,1 +1,1 @@
-../tests/README.rst
+../tests.txt
