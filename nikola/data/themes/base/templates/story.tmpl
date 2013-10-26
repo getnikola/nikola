@@ -6,7 +6,7 @@
 ${helper.twitter_card_information(post)}
 </%block>
 <%block name="content">
-%if title:
+%if title and not post.meta('hidetitle'):
     <h1>${title}</h1>
 %endif
     ${post.text()}
