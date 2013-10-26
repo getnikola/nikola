@@ -192,6 +192,23 @@ COMPILERS = ${COMPILERS}
 # To do manual deployment, set it to []
 # DEPLOY_COMMANDS = []
 
+# XML-RPC "Ping" services to notify of site updates. Only use after
+# production site have been successfully deployed. Excessive or "false"
+# pings when there are no updates will get you blacklisted with the
+# service providers.
+# List XML-RPC services (preferred) in PING_XMLRPC_SERVICES and HTTP
+# GET services (web pages) in PING_GET_SERVICES.
+# Consider adding `nikola ping` as the last entry in DEPLOY_COMMANDS.
+# PING_XMLRPC_SERVICES = [
+#    "http://blogsearch.google.com/ping/RPC2",
+#    "http://ping.blogs.yandex.ru/RPC2",
+#    "http://ping.baidu.com/ping/RPC2",
+#    "http://rpc.pingomatic.com/",
+# ]
+# PING_GET_SERVICES = [
+#    "http://www.bing.com/webmaster/ping.aspx?sitemap={0}".format(SITE_URL+'sitemap.xml'),
+# ]
+
 # Where the output site should be located
 # If you don't use an absolute path, it will be considered as relative
 # to the location of conf.py
