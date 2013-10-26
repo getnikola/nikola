@@ -29,7 +29,8 @@ from __future__ import print_function
 import sys
 
 from nikola.plugin_categories import Command
-from nikola.utils import remove_file, get_logger
+from nikola.utils import get_logger
+
 
 class Ping(Command):
     """Ping site updates.  """
@@ -72,4 +73,3 @@ class Ping(Command):
                 self.logger.warn("Unknown problem while pinging service {0}: {1}".format(web_service, e))
 
         self.logger.notice("Pinged all services")
-
