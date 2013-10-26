@@ -47,6 +47,11 @@ They are::
 
 Replace the part before the comma with a Nikola locale (see ``nikola/conf.py.in`` for details), and the part after the comma with an *installed* glibc locale.
 
+Alternatively, if you have 35 MB of disk space to spare, you can install
+the two default locales. Here is how to do that in Ubuntu::
+
+    sudo apt-get install language-pack-en language-pack-es
+
 How to execute the tests
 ------------------------
 
