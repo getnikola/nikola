@@ -1,4 +1,7 @@
-=====================
+.. title: The Nikola Test Suite
+.. slug: tests
+.. date: 2012/03/30 23:00
+
 The Nikola Test Suite
 =====================
 
@@ -6,7 +9,7 @@ Nikola, like many software projects, has a test suite.  There are over 100
 tests.
 
 Tests (in alphabetical order)
-=============================
+-----------------------------
 
 * ``test_command_import_wordpress`` tests the WordPress importer for
   Nikola.
@@ -24,7 +27,7 @@ Tests (in alphabetical order)
 * ``test_utils`` test various Nikola utilities.
 
 Requirements to run the tests
-=============================
+-----------------------------
 
 You need:
 
@@ -45,7 +48,7 @@ They are::
 Replace the part before the comma with a Nikola locale (see ``nikola/conf.py.in`` for details), and the part after the comma with an *installed* glibc locale.
 
 How to execute the tests
-========================
+------------------------
 
 The command to execute tests is::
 
@@ -58,7 +61,7 @@ It is also recommended to run ``nikola help`` to see if Nikola actually
 works.  If you are committing code, make sure to run ``flake8 --ignore=E501 .`` to see if you comply with the PEP 8 style guide and do not have basic code mistakes (we ignore the 79-characters-per-line rule)
 
 Travis CI
-=========
+---------
 
 We also run our tests on `Travis CI <https://travis-ci.org/>`_.
 You can check the `current build status <https://travis-ci.org/getnikola/nikola>`_ there.
