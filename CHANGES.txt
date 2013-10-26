@@ -4,7 +4,7 @@ New in 6.2.1
 Features
 --------
 * Default themes adds semantic meanings to posts using h-entry (a microformats2) (Issue #867)
-
+* XML-RPC and HTTP GET ping support to notify services of updates to a site
 * New "hidetitle" metadata to suppress printing a title as heading (Issue #584)
 
 Bugfixes
