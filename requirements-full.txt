@@ -12,6 +12,4 @@ pygal
 typogrify
 phpserialize
 webassets
-coverage
-nose
 ipython>=1.0.0

@@ -7,8 +7,7 @@ python:
   - "2.7"
   - "3.3"
 install:
-  - "pip install -r requirements-full.txt --use-mirrors"
-  - "pip install flake8 freezegun python-coveralls --use-mirrors"
+  - "pip install -r requirements-tests.txt --use-mirrors"
   - "pip install . --use-mirrors"
 # We run tests, nikola (to see if the command is executable) and flake8.
 script:
