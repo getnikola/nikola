@@ -1,0 +1,9 @@
+[Core]
+Name = ping
+Module = ping
+
+[Documentation]
+Author = Daniel Aleksandersen
+Version = 0.1
+Website = http://getnikola.com
+Description = Ping services with updates to the live site

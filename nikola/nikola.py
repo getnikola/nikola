@@ -176,6 +176,8 @@ class Nikola(object):
             'MATHJAX_CONFIG': '',
             'OLD_THEME_SUPPORT': True,
             'OUTPUT_FOLDER': 'output',
+            'PING_XMLRPC_SERVICES': [],
+            'PING_GET_SERVICES': [],
             'POSTS': (("posts/*.txt", "posts", "post.tmpl"),),
             'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
             'PRETTY_URLS': False,
