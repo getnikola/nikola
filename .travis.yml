@@ -18,7 +18,8 @@ after_success:
   - coveralls
 notifications:
   irc:
-    - "chat.freenode.net#nikola"
+    channels:
+      - "chat.freenode.net#nikola"
     template:
       - "%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}"
       - "Change view: %{compare_url}"
