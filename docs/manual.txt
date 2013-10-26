@@ -497,7 +497,8 @@ to your configuration ::
        display (theme-dependent)
 
    hidetitle
-       Set "True" to not show the title as heading in stories.
+       Set "True" if you do not want to see the **story** title as a
+       heading of the page (does not work for posts).
 
 
 .. note:: The Two-File Format
