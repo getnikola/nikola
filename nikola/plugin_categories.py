@@ -162,6 +162,7 @@ class TemplateSystem(BasePlugin):
 
         raise NotImplementedError()
 
+
 class TaskMultiplier(BasePlugin):
     """Plugins that take a task and return *more* tasks."""
 
