@@ -41,6 +41,7 @@ from nikola.utils import makedirs, get_logger, STDERR_HANDLER
 
 LOGGER = get_logger('mako', STDERR_HANDLER)
 
+
 class MakoTemplates(TemplateSystem):
     """Wrapper for Mako templates."""
 
