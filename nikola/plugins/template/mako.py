@@ -37,8 +37,9 @@ from mako.template import Template
 from markupsafe import Markup  # It's ok, Mako requires it
 
 from nikola.plugin_categories import TemplateSystem
-from nikola.utils import makedirs, get_logger
+from nikola.utils import makedirs, get_logger, STDERR_HANDLER
 
+LOGGER = get_logger('mako', STDERR_HANDLER)
 
 class MakoTemplates(TemplateSystem):
     """Wrapper for Mako templates."""
@@ -70,8 +71,7 @@ class MakoTemplates(TemplateSystem):
                 os.path.abspath(cache_dir).decode('ascii')
             except UnicodeEncodeError:
                 cache_dir = tempfile.mkdtemp()
-                self.logger = get_logger('mako', self.site.loghandlers)
-                self.logger.warning('Because of a Mako bug, setting cache_dir to {0}'.format(cache_dir))
+                LOGGER.warning('Because of a Mako bug, setting cache_dir to {0}'.format(cache_dir))
 
         if os.path.exists(cache_dir):
             shutil.rmtree(cache_dir)
