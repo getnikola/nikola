@@ -33,6 +33,8 @@ import sys
 import subprocess
 import time
 
+from blinker import signal
+
 from nikola.plugin_categories import Command
 from nikola.utils import remove_file, get_logger
 
@@ -48,7 +50,7 @@ class Deploy(Command):
 
     def _execute(self, command, args):
         self.logger = get_logger('deploy', self.site.loghandlers)
-        # Get last succesful deploy date
+        # Get last successful deploy date
         timestamp_path = os.path.join(self.site.config['CACHE_FOLDER'], 'lastdeploy')
         if self.site.config['COMMENT_SYSTEM_ID'] == 'nikolademo':
             self.logger.warn("\nWARNING WARNING WARNING WARNING\n"
@@ -63,20 +65,16 @@ class Deploy(Command):
         if not (deploy_drafts and deploy_future):
             # Remove drafts and future posts
             out_dir = self.site.config['OUTPUT_FOLDER']
+            undeployed_posts = []
             self.site.scan_posts()
             for post in self.site.timeline:
                 if (not deploy_drafts and post.is_draft) or \
                    (not deploy_future and post.publish_later):
                     remove_file(os.path.join(out_dir, post.destination_path()))
                     remove_file(os.path.join(out_dir, post.source_path))
+                    undeployed_posts.append(post)
 
         for command in self.site.config['DEPLOY_COMMANDS']:
-            try:
-                with open(timestamp_path, 'rb') as inf:
-                    last_deploy = literal_eval(inf.read().strip())
-            except Exception:
-                last_deploy = datetime(1970, 1, 1)  # NOQA
-
             self.logger.notice("==> {0}".format(command))
             try:
                 subprocess.check_call(command, shell=True)
@@ -84,11 +82,54 @@ class Deploy(Command):
                 self.logger.error('Failed deployment — command {0} '
                                   'returned {1}'.format(e.cmd, e.returncode))
                 sys.exit(e.returncode)
+
         self.logger.notice("Successful deployment")
+
+        try:
+            with open(timestamp_path, 'rb') as inf:
+                last_deploy = literal_eval(inf.read().strip())
+                clean = False
+        except Exception:
+            last_deploy = datetime(1970, 1, 1)  # NOQA
+            clean = True
+
         new_deploy = datetime.now()
+        self._emit_deploy_event(last_deploy, new_deploy, clean, undeployed_posts)
+
         # Store timestamp of successful deployment
         with codecs.open(timestamp_path, 'wb+', 'utf8') as outf:
             outf.write(repr(new_deploy))
-        # Here is where we would do things with whatever is
-        # on self.site.timeline and is newer than
-        # last_deploy
+
+    def _emit_deploy_event(self, last_deploy, new_deploy, clean=False, undeployed=None):
+        """ Emit events for all timeline entries newer than last deploy.
+
+        last_deploy: datetime
+            Time stamp of the last successful deployment.
+
+        new_deploy: datetime
+            Time stamp of the current deployment.
+
+        clean: bool
+            True when it appears like deploy is being run after a clean.
+
+        """
+
+        if undeployed is None:
+            undeployed = []
+
+        event = {
+            'last_deploy': last_deploy,
+            'new_deploy': new_deploy,
+            'clean': clean,
+            'undeployed': undeployed
+        }
+
+        deployed = [
+            entry for entry in self.site.timeline
+            if entry.date > last_deploy and entry not in undeployed
+        ]
+
+        event['deployed'] = deployed
+
+        if len(deployed) > 0 or len(undeployed) > 0:
+            signal('deployed').send(event)
