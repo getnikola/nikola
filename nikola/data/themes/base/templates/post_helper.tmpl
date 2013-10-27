@@ -24,7 +24,7 @@
         &nbsp;&nbsp;|&nbsp;&nbsp;${messages("More posts about")}
         <span itemprop="keywords">
         %for tag in post.tags:
-            <a class="tag p-category" href="${_link('tag', tag)}" ><span class="badge badge-info">${tag}</span></a>
+            <a class="tag p-category" href="${_link('tag', tag)}"><span class="badge badge-info">${tag}</span></a>
         %endfor
         </span>
     %endif
