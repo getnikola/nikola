@@ -33,6 +33,7 @@ import tempfile
 
 from mako import util, lexer
 from mako.lookup import TemplateLookup
+from mako.template import Template
 from markupsafe import Markup  # It's ok, Mako requires it
 
 from nikola.plugin_categories import TemplateSystem
@@ -90,9 +91,14 @@ class MakoTemplates(TemplateSystem):
                 output.write(data)
         return data
 
+    def render_template_to_string(self, template, context):
+        """ Render template to a string using context. """
+
+        return Template(template).render(**context)
+
     def template_deps(self, template_name):
         """Returns filenames which are dependencies for a template."""
-        # We can cache here because depedencies should
+        # We can cache here because dependencies should
         # not change between runs
         if self.cache.get(template_name, None) is None:
             template = self.lookup.get_template(template_name)
