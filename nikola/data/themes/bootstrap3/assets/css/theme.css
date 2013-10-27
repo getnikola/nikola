@@ -82,7 +82,7 @@ ul.bricks > li {
     box-sizing: content-box;
 }
 
-pre, code {
+pre, pre code {
     white-space: pre;
     word-wrap: normal;
     overflow: auto;

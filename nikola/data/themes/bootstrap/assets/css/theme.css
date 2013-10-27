@@ -80,7 +80,7 @@ ul.breadcrumb > li:before {
     content: " / ";
 }
 
-pre, code {
+pre, pre code {
     white-space: pre;
     word-wrap: normal;
     overflow: auto;
