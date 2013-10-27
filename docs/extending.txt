@@ -387,6 +387,18 @@ Currently Nikola emits the following signals:
 ``new_post``
     When a new post is created, using the ``nikola new_post`` command.  The signal
     data contains the path of the file, and the metadata file (if there is one).
+``deployed``
+    When the ``nikola deploy`` command is run, and there is at least one new
+    entry/post since ``last_deploy``.  The signal data is of the form ::
+
+        {
+         'last_deploy: # datetime object for the last deployed time,
+         'new_deploy': # datetime object for the current deployed time,
+         'clean': # whether there was a record of a last deployment,
+         'deployed': # all files deployed after the last deploy,
+         'undeployed': # all files not deployed since they are either future posts/drafts
+        }
+
 
 Plugin Index
 ============
