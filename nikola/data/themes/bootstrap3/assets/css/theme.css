@@ -81,3 +81,8 @@ ul.bricks > li {
 .at300b {
     box-sizing: content-box;
 }
+
+code {
+    white-space: pre;
+    word-wrap: normal;
+}
