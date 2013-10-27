@@ -73,6 +73,11 @@ class JinjaTemplates(TemplateSystem):
                 output.write(output.encode('utf8'))
         return output
 
+    def render_template_to_string(self, template, context):
+        """ Render template to a string using context. """
+
+        return jinja2.Template(template).render(**context)
+
     def template_deps(self, template_name):
         # Cache the lists of dependencies for each template name.
         if self.dependency_cache.get(template_name) is None:

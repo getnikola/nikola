@@ -157,6 +157,10 @@ class TemplateSystem(BasePlugin):
         """
         raise NotImplementedError()
 
+    def render_template_to_string(self, template, context):
+        """ Renders template to a string using context. """
+
+        raise NotImplementedError()
 
 class TaskMultiplier(BasePlugin):
     """Plugins that take a task and return *more* tasks."""
