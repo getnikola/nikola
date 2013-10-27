@@ -90,7 +90,7 @@ class Deploy(Command):
                 last_deploy = literal_eval(inf.read().strip())
                 clean = False
         except Exception:
-            last_deploy = datetime(1970, 1, 1)  # NOQA
+            last_deploy = datetime(1970, 1, 1)
             clean = True
 
         new_deploy = datetime.now()
