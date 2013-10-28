@@ -1032,7 +1032,7 @@ def sanitized_locales(locale_fallback, locale_default, locales, translations):
             guess_locale_fom_lang = guess_locale_from_lang_posix
         for lang in missing:
             locale_n = guess_locale_fom_lang(lang)
-            if not locale:
+            if not locale_n:
                 locale_n = locale_fallback
                 msg = "Could not guess locale for language {0}, using locale {1}"
                 utils.LOGGER.warn(msg.format(lang, locale_n))
@@ -1080,7 +1080,10 @@ def valid_locale_fallback(desired_locale=None):
 
 
 def guess_locale_from_lang_windows(lang):
-    return str(_windows_locale_guesses.get(lang, None))
+    locale_n = str(_windows_locale_guesses.get(lang, None))
+    if not is_valid_locale(locale_n):
+        locale_n = None
+    return locale_n
 
 
 def guess_locale_from_lang_posix(lang):
@@ -1090,6 +1093,8 @@ def guess_locale_from_lang_posix(lang):
     else:
         # this works in Travis when locale support set by Travis suggestion
         locale_n = str((locale.normalize(lang).split('.')[0]) + '.utf8')
+    if not is_valid_locale(locale_n):
+        locale_n = None
     return locale_n
 
 
