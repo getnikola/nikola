@@ -35,14 +35,14 @@ from nikola import utils
 from nikola.plugin_categories import Task
 
 
-class RenderRSS(Task):
+class GenerateRSS(Task):
     """Generate RSS feeds."""
 
-    name = "render_rss"
+    name = "generate_rss"
 
     def set_site(self, site):
         site.register_path_handler('rss', self.rss_path)
-        return super(RenderRSS, self).set_site(site)
+        return super(GenerateRSS, self).set_site(site)
 
     def gen_tasks(self):
         """Generate RSS feeds."""
@@ -73,7 +73,7 @@ class RenderRSS(Task):
 
             feed_url = urljoin(self.site.config['BASE_URL'], self.site.link("rss", None, lang).lstrip('/'))
             yield {
-                'basename': 'render_rss',
+                'basename': 'generate_rss',
                 'name': os.path.normpath(output_name),
                 'file_dep': deps,
                 'targets': [output_name],

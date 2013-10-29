@@ -40,7 +40,7 @@ from nikola import utils
 class BuildBundles(LateTask):
     """Bundle assets using WebAssets."""
 
-    name = "build_bundles"
+    name = "create_bundles"
 
     def set_site(self, site):
         super(BuildBundles, self).set_site(site)
