@@ -44,13 +44,13 @@ from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, req_missing
 
 
-class CompileMarkdown(PageCompiler):
-    """Compile markdown into HTML."""
+class CompileMisaka(PageCompiler):
+    """Compile Misaka into HTML."""
 
-    name = "markdown"
+    name = "misaka"
 
     def __init__(self, *args, **kwargs):
-        super(CompileMarkdown, self).__init__(*args, **kwargs)
+        super(CompileMisaka, self).__init__(*args, **kwargs)
         if misaka is not None:
             self.ext = misaka.EXT_FENCED_CODE | misaka.EXT_STRIKETHROUGH | \
                 misaka.EXT_AUTOLINK | misaka.EXT_NO_INTRA_EMPHASIS
