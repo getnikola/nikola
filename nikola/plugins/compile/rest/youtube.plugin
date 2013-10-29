@@ -1,5 +1,5 @@
 [Core]
-Name = youtube
+Name = rest_youtube
 Module = youtube
 
 [Documentation]

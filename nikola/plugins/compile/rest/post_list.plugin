@@ -1,5 +1,5 @@
 [Core]
-Name = post-list RST-Directive
+Name = rest_post_list
 Module = post_list
 
 [Documentation]

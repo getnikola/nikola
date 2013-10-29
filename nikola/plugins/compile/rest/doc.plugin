@@ -1,5 +1,5 @@
 [Core]
-Name = doc
+Name = rest_doc
 Module = doc
 
 [Documentation]

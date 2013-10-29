@@ -1,5 +1,5 @@
 [Core]
-Name = slides
+Name = rest_slides
 Module = slides
 
 [Documentation]
