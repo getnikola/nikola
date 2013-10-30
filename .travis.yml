@@ -18,9 +18,9 @@ install:
 script:
   - "[[ $NMODE == 'nikola' ]] && nosetests --with-coverage --cover-package=nikola --with-doctest --doctest-options=+NORMALIZE_WHITESPACE --logging-filter=-yapsy || true"
   - "[[ $NMODE == 'nikola' ]] && nikola help || true"
-  - "[[ $NMODE == 'flake8' ]] && flake8 --ignore=E501 ."
+  - "[[ $NMODE == 'flake8' ]] && flake8 --ignore=E501 . || true"
 after_success:
-  - coveralls
+  - "[[ $NMODE == 'nikola' ]] && coveralls || true"
 notifications:
   irc:
     channels:
