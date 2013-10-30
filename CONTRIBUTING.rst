@@ -20,17 +20,21 @@ Here are some guidelines about how you can contribute to Nikola:
 
   This makes life much easier for maintainers if you have (or ever plan to
   have) additional changes in your own ``master`` branch.
-  
+
   Also, if you have commit rights to the main Nikola repository, we suggest
   having your branch there, instead of a personal fork.
 
-.. admonition:: A corollary: 
+.. admonition:: A corollary:
 
       Please **don't put multiple fixes/features in the same
       branch/pull request**! In other words, if you're hacking on new feature X
       and find a bugfix that doesn't *require* new feature X, **make a new
       distinct branch and PR** for the bugfix.
-      
+
+* You may want to use the `Tim Pope’s Git commit messages standard
+  <http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html>`_.
+  It’s not necessary, but if you are doing something big, we recommend
+  describing it there.
 * While working, **rebase instead of merging** (if possible).  We encourage
   using ``git rebase`` instead of ``git merge``.  If you are using
   ``git pull``, please run ``git config pull.rebase true`` to prevent merges
@@ -51,7 +55,7 @@ Here are some guidelines about how you can contribute to Nikola:
   so it's clear what to test and how to do it.
 * There are some quirks to how Nikola's codebase is structured, and to how
   some things need to be done [2]_ but don't worry, we'll guide you!
-  
+
 .. [1] Very inspired by `fabric's <https://github.com/fabric/fabric/blob/master/CONTRIBUTING.rst>`_ thanks!
 
 .. [2] For example, logging, or always making sure directories are created using ``utils.makedirs()``
