@@ -21,6 +21,9 @@ lang_22, loc_22 = LocaleSupportInTesting.langlocales['other']
 loc_C = str('C')
 loc_Cutf8 = str('C.utf8')
 
+if sys.platform != 'win32':
+    nikola.nikola.workaround_empty_LC_ALL_posix()
+
 
 class TestHarcodedFallbacks(unittest.TestCase):
     def test_hardcoded_fallbacks_work(self):
