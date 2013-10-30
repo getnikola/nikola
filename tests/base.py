@@ -121,16 +121,18 @@ class LocaleSupportInTesting(object):
         langlocales = {}
         for suffix in ['other', 'default']:
             try:
-                s = os.environ['NIKOLA_LOCALE_' + suffix.upper()]
+                envar = 'NIKOLA_LOCALE_' + suffix.upper()
+                s = os.environ[envar]
                 parts = s.split(',')
                 lang = parts[0].strip()
                 try:
                     locale_n = str(parts[1].strip())
-                    locale.setlocale(locale_n)
+                    locale.setlocale(locale.LC_ALL, locale_n)
                 except Exception:
-                    msg = ("Environment variable {0} fails to specify a valid 'lang', 'locale'" +
-                           "Check your sintax, check that python supports that locale in your host")
-                    nikola.utils.LOGGER.error(msg.format(s))
+                    msg = ("Environment variable {0} fails to specify a valid <lang>,<locale>." +
+                           "Check your syntax, check that python supports that locale in your host.")
+                    nikola.utils.LOGGER.error(msg.format(envar))
+                    sys.exit(1)
             except KeyError:
                 lang, locale_n = defaults[os_id][suffix]
             langlocales[suffix] = (lang, locale_n)
