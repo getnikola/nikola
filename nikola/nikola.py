@@ -990,8 +990,9 @@ def sanitized_locales(locale_fallback, locale_default, locales, translations):
     locale.setlocale will not accept in Windows XP, 7 and pythons 2.6, 2.7, 3.3
     Examples: "Spanish", "French" can't do the full circle set / get / set
     """
-    workaround_empty_LC_ALL_posix()
-    
+    if sys.platform != 'win32':
+        workaround_empty_LC_ALL_posix()
+
     # locales for languages not in translations are ignored
     extras = set(locales) - set(translations)
     if extras:
