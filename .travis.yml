@@ -1,6 +1,6 @@
 before_install:
-  - "[[ $NMODE == 'nikola' ]] && sudo apt-get update -qq || true"
-  - "[[ $NMODE == 'nikola' ]] && sudo apt-get --reinstall install -qq language-pack-en language-pack-pl"
+  - "if [[ $NMODE == 'nikola' ]]; then sudo apt-get update -qq || true; fi"
+  - "if [[ $NMODE == 'nikola' ]]; then sudo apt-get --reinstall install -qq language-pack-en-base language-pack-pl-base; fi"
 language: python
 cache: apt
 python:
@@ -11,16 +11,16 @@ env:
   - NMODE=nikola
   - NMODE=flake8
 install:
-  - "[[ $NMODE == 'nikola' ]] && pip install -r requirements-tests.txt --use-mirrors || true"
-  - "[[ $NMODE == 'nikola' ]] && pip install . --use-mirrors || true"
-  - "[[ $NMODE == 'flake8' ]] && pip install flake8 --use-mirrors || true"
+  - "if [[ $NMODE == 'nikola' ]]; then pip install -r requirements-tests.txt --use-mirrors; fi"
+  - "if [[ $NMODE == 'nikola' ]]; then pip install . --use-mirrors; fi"
+  - "if [[ $NMODE == 'flake8' ]]; then pip install flake8 --use-mirrors; fi"
 # We run tests, nikola (to see if the command is executable) and flake8.
 script:
-  - "[[ $NMODE == 'nikola' ]] && nosetests --with-coverage --cover-package=nikola --with-doctest --doctest-options=+NORMALIZE_WHITESPACE --logging-filter=-yapsy || true"
-  - "[[ $NMODE == 'nikola' ]] && nikola help || true"
-  - "[[ $NMODE == 'flake8' ]] && flake8 --ignore=E501 . || true"
+  - "if [[ $NMODE == 'nikola' ]]; then nosetests --with-coverage --cover-package=nikola --with-doctest --doctest-options=+NORMALIZE_WHITESPACE --logging-filter=-yapsy; fi"
+  - "if [[ $NMODE == 'nikola' ]]; then nikola help; fi"
+  - "if [[ $NMODE == 'flake8' ]]; then flake8 --ignore=E501 .; fi"
 after_success:
-  - "[[ $NMODE == 'nikola' ]] && coveralls || true"
+  - "if [[ $NMODE == 'nikola' ]]; then coveralls; fi"
 notifications:
   irc:
     channels:

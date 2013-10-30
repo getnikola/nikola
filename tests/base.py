@@ -106,18 +106,18 @@ class LocaleSupportInTesting(object):
         if hasattr(cls, 'langlocales'):
             return
         defaults = {
-            'linux': {
+            'posix': {
                 # non-windows defaults, must be two locales suported by .travis.yml
                 'default': ("en", str("en_US.utf8")),
-                'other': ("es", str("es_ES.utf8")),
+                'other': ("pl", str("pl_PL.utf8")),
             },
             'windows': {
                 # windows defaults
                 'default': ("en", str("English")),
-                'other': ("es", str("Spanish")),
+                'other': ("pl", str("Polish")),
             },
         }
-        os_id = 'windows' if sys.platform == 'win32' else 'linux'
+        os_id = 'windows' if sys.platform == 'win32' else 'posix'
         langlocales = {}
         for suffix in ['other', 'default']:
             try:
