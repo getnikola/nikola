@@ -37,14 +37,16 @@ Here are some guidelines about how you can contribute to Nikola:
   from happening and replace them with rebase goodness.  There is also an
   “emergency switch” in case rebases fail and you do not know what to do:
   ``git pull --no-rebase``.
-* **Make sure documentation is updated** -- at the very least, keep docstrings
-  current, and if necessary, update the ReST documentation in ``docs/``.
+* **Make sure documentation is updated** — at the very least, keep docstrings
+  current, and if necessary, update the reStructuredText documentation in ``docs/``.
 * **Add a changelog entry** at the top of ``CHANGES.txt`` mentioning issue number
   and in the correct Features/Bugfixes section.
 * **Run flake8** for style consistency. Use ``flake8 --ignore=E501 .``
-* **Try writing some tests** if possible -- again, following existing tests is
+* **Try writing some tests** if possible — again, following existing tests is
   often easiest, and a good way to tell whether the feature you are modifying is
-  easily testable. You will find instructions in ``tests/README.rst``
+  easily testable. You will find instructions in ``tests/README.rst``.
+  (alternatively you can push and wait for Travis to pick up and test your changes,
+  but we encourage to run them locally before pushing.)
 * Make sure to mention the issue it affects in the description of your pull request,
   so it's clear what to test and how to do it.
 * There are some quirks to how Nikola's codebase is structured, and to how
