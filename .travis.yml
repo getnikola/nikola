@@ -1,6 +1,6 @@
 before_install:
   - sudo apt-get update -qq || true
-  - sudo apt-get --reinstall install -qq language-pack-en language-pack-es
+  - sudo apt-get --reinstall install -qq language-pack-en language-pack-pl
 language: python
 cache: apt
 python:
