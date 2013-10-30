@@ -6,14 +6,18 @@ python:
   - "2.6"
   - "2.7"
   - "3.3"
+env:
+  - NMODE=nikola
+  - NMODE=flake8
 install:
-  - "pip install -r requirements-tests.txt --use-mirrors"
-  - "pip install . --use-mirrors"
+  - "[[ $NMODE == 'nikola' ]] && pip install -r requirements-tests.txt --use-mirrors"
+  - "[[ $NMODE == 'nikola' ]] && pip install . --use-mirrors"
+  - "[[ $NMODE == 'flake8' ]] && pip install flake8 --use-mirrors"
 # We run tests, nikola (to see if the command is executable) and flake8.
 script:
-  - nosetests --with-coverage --cover-package=nikola --with-doctest --doctest-options=+NORMALIZE_WHITESPACE --logging-filter=-yapsy
-  - nikola help
-  - "flake8 --ignore=E501 ."
+  - "[[ $NMODE == 'nikola' ]] && nosetests --with-coverage --cover-package=nikola --with-doctest --doctest-options=+NORMALIZE_WHITESPACE --logging-filter=-yapsy"
+  - "[[ $NMODE == 'nikola' ]] && nikola help"
+  - "[[ $NMODE == 'flake8' ]] && flake8 --ignore=E501 ."
 after_success:
   - coveralls
 notifications:
