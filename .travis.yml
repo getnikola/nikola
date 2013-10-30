@@ -13,7 +13,7 @@ env:
 install:
   - "[[ $NMODE == 'nikola' ]] && pip install -r requirements-tests.txt --use-mirrors || true"
   - "[[ $NMODE == 'nikola' ]] && pip install . --use-mirrors || true"
-  - "[[ $NMODE == 'flake8' ]] && pip install flake8 --use-mirrors"
+  - "[[ $NMODE == 'flake8' ]] && pip install flake8 --use-mirrors || true"
 # We run tests, nikola (to see if the command is executable) and flake8.
 script:
   - "[[ $NMODE == 'nikola' ]] && nosetests --with-coverage --cover-package=nikola --with-doctest --doctest-options=+NORMALIZE_WHITESPACE --logging-filter=-yapsy || true"
