@@ -94,7 +94,7 @@ class Deploy(Command):
             clean = True
 
         new_deploy = datetime.now()
-        self._emit_deploy_event(last_deploy, new_deploy, clean, undeployed_posts)
+        #self._emit_deploy_event(last_deploy, new_deploy, clean, undeployed_posts)
 
         # Store timestamp of successful deployment
         with codecs.open(timestamp_path, 'wb+', 'utf8') as outf:
