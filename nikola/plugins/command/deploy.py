@@ -32,6 +32,7 @@ import os
 import sys
 import subprocess
 import time
+import pytz
 
 from blinker import signal
 
@@ -84,17 +85,22 @@ class Deploy(Command):
                 sys.exit(e.returncode)
 
         self.logger.notice("Successful deployment")
-
+        if self.site.config['TIMEZONE'] is not None:
+            tzinfo = pytz.timezone(self.site.config['TIMEZONE'])
+        else:
+            tzinfo = pytz.UTC
         try:
             with open(timestamp_path, 'rb') as inf:
                 last_deploy = literal_eval(inf.read().strip())
+                # this might ignore DST
+                last_deploy = last_deploy.replace(tzinfo=tzinfo)
                 clean = False
         except Exception:
-            last_deploy = datetime(1970, 1, 1)
+            last_deploy = datetime(1970, 1, 1).replace(tzinfo=tzinfo)
             clean = True
 
         new_deploy = datetime.now()
-        #self._emit_deploy_event(last_deploy, new_deploy, clean, undeployed_posts)
+        self._emit_deploy_event(last_deploy, new_deploy, clean, undeployed_posts)
 
         # Store timestamp of successful deployment
         with codecs.open(timestamp_path, 'wb+', 'utf8') as outf:
