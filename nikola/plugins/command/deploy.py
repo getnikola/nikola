@@ -85,10 +85,7 @@ class Deploy(Command):
                 sys.exit(e.returncode)
 
         self.logger.notice("Successful deployment")
-        if self.site.config['TIMEZONE'] is not None:
-            tzinfo = pytz.timezone(self.site.config['TIMEZONE'])
-        else:
-            tzinfo = None
+        tzinfo = pytz.timezone(self.site.config['TIMEZONE'])
         try:
             with open(timestamp_path, 'rb') as inf:
                 last_deploy = literal_eval(inf.read().strip())
