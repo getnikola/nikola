@@ -1,3 +1,14 @@
+New in 6.2.2
+============
+
+Features
+--------
+
+Bugfixes
+--------
+
+* fixed deploy events if there is no TIMEZONE set (Issue #893 via #822)
+
 New in 6.2.1
 ============
 
