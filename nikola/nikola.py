@@ -201,7 +201,7 @@ class Nikola(object):
             'USE_BUNDLES': True,
             'USE_CDN': False,
             'USE_FILENAME_AS_TITLE': True,
-            'TIMEZONE': None,
+            'TIMEZONE': 'UTC',
             'DEPLOY_DRAFTS': True,
             'DEPLOY_FUTURE': False,
             'SCHEDULE_ALL': False,
