@@ -88,15 +88,17 @@ class Deploy(Command):
         if self.site.config['TIMEZONE'] is not None:
             tzinfo = pytz.timezone(self.site.config['TIMEZONE'])
         else:
-            tzinfo = pytz.UTC
+            tzinfo = None
         try:
             with open(timestamp_path, 'rb') as inf:
                 last_deploy = literal_eval(inf.read().strip())
-                # this might ignore DST
-                last_deploy = last_deploy.replace(tzinfo=tzinfo)
+                if tzinfo:
+                    last_deploy = last_deploy.replace(tzinfo=tzinfo)
                 clean = False
         except Exception:
-            last_deploy = datetime(1970, 1, 1).replace(tzinfo=tzinfo)
+            last_deploy = datetime(1970, 1, 1)
+            if tzinfo:
+                last_deploy = last_deploy.replace(tzinfo=tzinfo)
             clean = True
 
         new_deploy = datetime.now()
