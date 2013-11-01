@@ -4,6 +4,8 @@ New in 6.2.2
 Features
 --------
 
+* TIMEZONE now defaults to UTC [no output changes no matter what] (via Issue #893)
+
 Bugfixes
 --------
 
