@@ -13,7 +13,7 @@ Features
 Bugfixes
 --------
 
-* Fixed some locale problems in posix systems #886, #884, #875
+* Fixed some locale problems in posix systems (Issues #886, #884, #875)
 * Don’t include BLOG_DESCRIPTION as meta tag on tag and gallery pages (Issue #876)
 
 New in 6.2.0
