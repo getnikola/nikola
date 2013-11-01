@@ -990,6 +990,9 @@ def sanitized_locales(locale_fallback, locale_default, locales, translations):
     locale.setlocale will not accept in Windows XP, 7 and pythons 2.6, 2.7, 3.3
     Examples: "Spanish", "French" can't do the full circle set / get / set
     """
+    if sys.platform != 'win32':
+        workaround_empty_LC_ALL_posix()
+
     # locales for languages not in translations are ignored
     extras = set(locales) - set(translations)
     if extras:
@@ -1094,8 +1097,25 @@ def guess_locale_from_lang_posix(lang):
         # this works in Travis when locale support set by Travis suggestion
         locale_n = str((locale.normalize(lang).split('.')[0]) + '.utf8')
     if not is_valid_locale(locale_n):
+        # http://thread.gmane.org/gmane.comp.web.nikola/337/focus=343
+        locale_n = str((locale.normalize(lang).split('.')[0]))
+    if not is_valid_locale(locale_n):
         locale_n = None
     return locale_n
+
+
+def workaround_empty_LC_ALL_posix():
+    # clunky hack: we have seen some posix locales with all or most of LC_*
+    # defined to the same value, but with LC_ALL empty.
+    # Manually doing what we do here seems to work for nikola in that case.
+    # It is unknown if it will work when the LC_* aren't homogeneous
+    try:
+        lc_time = os.environ.get('LC_TIME', None)
+        lc_all = os.environ.get('LC_ALL', None)
+        if lc_time and not lc_all:
+            os.environ['LC_ALL'] = lc_time
+    except Exception:
+        pass
 
 
 _windows_locale_guesses = {

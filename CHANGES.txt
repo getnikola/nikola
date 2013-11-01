@@ -3,6 +3,7 @@ New in 6.2.1
 
 Features
 --------
+
 * Default themes adds semantic meanings to posts using h-entry (a microformats2) and HTML 5 microdata (Issue #867)
 * New "hidetitle" metadata to suppress printing a title as heading (Issue #584)
 * Template systems can now render to and from a string. (Issue #881)
@@ -11,6 +12,8 @@ Features
 
 Bugfixes
 --------
+
+* Fixed some locale problems in posix systems (Issues #886, #884, #875)
 * Don’t include BLOG_DESCRIPTION as meta tag on tag and gallery pages (Issue #876)
 
 New in 6.2.0
