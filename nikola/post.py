@@ -144,8 +144,7 @@ class Post(object):
         if 'date' not in default_metadata and not use_in_feeds:
             # For stories we don't *really* need a date
             default_metadata['date'] = datetime.datetime.utcfromtimestamp(
-                os.stat(self.source_path).st_ctime).replace(
-                    tzinfo=pytz.UTC).astimezone(tzinfo)
+                os.stat(self.source_path).st_ctime).replace(tzinfo=pytz.UTC).astimezone(tzinfo)
 
         if 'title' not in default_metadata or 'slug' not in default_metadata \
                 or 'date' not in default_metadata:
