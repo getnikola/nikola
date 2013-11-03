@@ -57,12 +57,12 @@ Assuming you have pip installed::
     cd nikola
     pip install .
 
-Optionally (for markdown and lots of other features)::
-
-    pip install -r requirements.txt
-
-For even more stuff, like tests and very optional features::
+For optional features::
 
     pip install -r requirements-full.txt
+    
+For tests (see tests/README.rst for more details)::
+
+    pip install -r requirements-tests.txt
 
 For more information, see http://getnikola.com/
