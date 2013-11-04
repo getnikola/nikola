@@ -17,3 +17,6 @@ __pycache__/
 
 # coverage.py
 .coverage
+
+# For pyenv
+.python-version
