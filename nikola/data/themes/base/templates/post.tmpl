@@ -9,7 +9,7 @@ ${helper.twitter_card_information(post)}
 % endif
 </%block>
 <%block name="content">
-    <div class="postbox">
+    <article class="postbox">
     <div class="h-entry" itemscope="itemscope" itemtype="http://schema.org/Article">
     ${helper.html_title()}
     <hr>
@@ -37,5 +37,5 @@ ${helper.twitter_card_information(post)}
         ${comments.comment_form(post.permalink(absolute=True), post.title(), post._base_path)}
     % endif
     ${helper.mathjax_script(post)}
-    </div>
+    </article>
 </%block>

@@ -4,7 +4,7 @@
 <%inherit file="base.tmpl"/>
 <%block name="content">
     % for post in posts:
-        <div class="postbox h-entry">
+        <article class="postbox h-entry">
         <h1 class="p-name"><a href="${post.permalink()}" class="u-url">${post.title()}</a>
         <small>&nbsp;&nbsp;
              ${messages("Posted")}: <time class="published dt-published" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time>
@@ -21,7 +21,7 @@
         % if not post.meta('nocomments'):
             ${comments.comment_link(post.permalink(), post._base_path)}
         % endif
-        </div>
+        </article>
     % endfor
     ${helper.html_pager()}
     ${comments.comment_link_script()}
