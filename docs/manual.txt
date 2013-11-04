@@ -1191,6 +1191,10 @@ The ID is 78131362 and you can embed the audio with this::
 
     .. soundcloud:: 78131362
 
+You can also embed playlists, via the `soundcloud_playlist` directive which works the same way.
+
+    .. soundcloud_playlist:: 9411706
+
 Code
 ~~~~
 
