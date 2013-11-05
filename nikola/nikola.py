@@ -198,6 +198,7 @@ class Nikola(object):
             'THEME_REVEAL_CONFIG_SUBTHEME': 'sky',
             'THEME_REVEAL_CONFIG_TRANSITION': 'cube',
             'THUMBNAIL_SIZE': 180,
+            'URL_TYPE': 'rel',
             'USE_BUNDLES': True,
             'USE_CDN': False,
             'USE_FILENAME_AS_TITLE': True,
@@ -608,6 +609,8 @@ class Nikola(object):
         src_elems = parsed_src.path.split('/')[1:]
 
         def replacer(dst):
+            #logging.error(">>> replacer1(url_type: %s, %s, %s)", self.config.get('URL_TYPE'), src, dst)
+
             # Refuse to replace links that are full URLs.
             dst_url = urlparse(dst)
             if dst_url.netloc:
@@ -615,16 +618,35 @@ class Nikola(object):
                     dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'),
                                     context['lang'])
                 else:
+                    #logging.error("replacer2(%s, %s)", src, dst)
                     return dst
 
             # Normalize
             dst = urljoin(src, dst)
+
+            #logging.error("replacer3(%s, %s)", src, dst)
+
             # Avoid empty links.
             if src == dst:
-                return "#"
+                if self.config.get('URL_TYPE') == 'full':
+                    dst = urljoin(self.config['BASE_URL'], dst)
+                    #logging.error("replacer4.1(%s, %s)", src, dst)
+                    return dst
+                else:
+                    #logging.error("replacer4.2(%s, %s)", src, dst)
+                    return "#"
             # Check that link can be made relative, otherwise return dest
             parsed_dst = urlsplit(dst)
             if parsed_src[:2] != parsed_dst[:2]:
+                if self.config.get('URL_TYPE') == 'full':
+                    dst = urljoin(self.config['BASE_URL'], dst)
+                #logging.error("replacer5(%s, %s)", src, dst)
+                return dst
+
+            if self.config.get('URL_TYPE') in ('abs', 'full'):
+                if self.config.get('URL_TYPE') == 'full':
+                    dst = urljoin(self.config['BASE_URL'], dst)
+                #logging.error("replacer6(%s, %s)", src, dst)
                 return dst
 
             # Now both paths are on the same site and absolute
@@ -646,6 +668,8 @@ class Nikola(object):
                 result += "#" + parsed_dst.fragment
 
             assert result, (src, dst, i, src_elems, dst_elems)
+
+            #logging.error("replacer6(%s, %s, %s)", src, dst, result)
 
             return result
 

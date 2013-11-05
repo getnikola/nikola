@@ -29,6 +29,7 @@ from __future__ import unicode_literals, print_function, absolute_import
 import codecs
 from collections import defaultdict
 import datetime
+import logging
 import os
 import re
 import string
@@ -393,7 +394,9 @@ class Post(object):
             # let other errors raise
             raise(e)
         base_url = self.permalink(lang=lang, absolute=really_absolute)
-        document.make_links_absolute(base_url)
+
+        if self.config.get('URL_TYPE') in ('abs', 'full'):
+            document.make_links_absolute(base_url)
 
         if self.hyphenate:
             hyphenate(document, lang)
