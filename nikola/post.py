@@ -29,7 +29,6 @@ from __future__ import unicode_literals, print_function, absolute_import
 import codecs
 from collections import defaultdict
 import datetime
-import logging
 import os
 import re
 import string
