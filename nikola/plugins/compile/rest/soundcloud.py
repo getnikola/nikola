@@ -50,7 +50,7 @@ class SoundCloud(Directive):
             'sid': self.arguments[0],
             'width': 600,
             'height': 160,
-            'preslug': preslug,
+            'preslug': self.preslug,
         }
         options.update(self.options)
         return [nodes.raw('', CODE.format(**options), format='html')]
