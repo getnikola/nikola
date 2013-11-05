@@ -165,6 +165,12 @@ COMPILERS = ${COMPILERS}
 # ARCHIVE_PATH = ""
 # ARCHIVE_FILENAME = "archive.html"
 
+# URLs to other posts/pages can take 3 forms:
+# rel: a relative URL to the current page/post (default)
+# abs: an absolute URL
+# full: a complete URL (that includes the SITE_URL)
+# URL_TYPE = 'rel'
+
 # Final locations are:
 # output / TRANSLATION[lang] / RSS_PATH / rss.xml
 # RSS_PATH = ""
