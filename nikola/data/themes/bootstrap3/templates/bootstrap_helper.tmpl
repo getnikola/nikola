@@ -7,6 +7,9 @@
     %if description:
     <meta name="description" content="${description}">
     %endif
+    %if url_type == 'rel':
+    <base href="${permalink}">
+    %endif
     <meta name="author" content="${blog_author}">
     <title>${title|striphtml} | ${blog_title|striphtml}</title>
     ${mathjax_config}
