@@ -627,6 +627,8 @@ class Nikola(object):
                 if self.config.get('URL_TYPE') == 'full':
                     dst = urljoin(self.config['BASE_URL'], dst)
                     return dst
+                elif self.config.get('URL_TYPE') == 'abs':
+                    return dst
                 else:
                     return "#"
 
