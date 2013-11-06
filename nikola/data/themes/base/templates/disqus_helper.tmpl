@@ -40,7 +40,7 @@
 
 <%def name="comment_link_script()">
     %if comment_system_id:
-       <script type="text/javascript">var disqus_shortname="${comment_system_id}";(function(){var a=document.createElement("script");a.async=true;a.type="text/javascript";a.src="//"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("HEAD")[0]||document.getElementsByTagName("BODY")[0]).appendChild(a)}());</script>
+       <script type="text/javascript">var disqus_shortname="${comment_system_id}";(function(){var a=document.createElement("script");a.async=true;a.type="text/javascript";a.src="//"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script>
     %endif
 </%def>
 
