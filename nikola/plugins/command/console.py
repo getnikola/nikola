@@ -41,9 +41,19 @@ class Console(Command):
     shells = ['ipython', 'bpython', 'plain']
     doc_purpose = "start an interactive Python console with access to your site"
     doc_description = """\
-Order of resolution: IPython → bpython → plain Python interpreter
+Order of resolution: IPython → bpython [deprecated] → plain Python interpreter
 The site engine is accessible as `SITE`, and the config as `conf`."""
     header = "Nikola v" + __version__ + " -- {0} Console (conf = configuration, SITE = site engine)"
+    cmd_options = [
+        {
+            'name': 'plain',
+            'short': 'p',
+            'long': 'plain',
+            'type': bool,
+            'default': False,
+            'help': 'Force the plain Python console',
+        }
+    ]
 
     def ipython(self):
         """IPython shell."""
@@ -105,9 +115,12 @@ The site engine is accessible as `SITE`, and the config as `conf`."""
 
     def _execute(self, options, args):
         """Start the console."""
-        for shell in self.shells:
-            try:
-                return getattr(self, shell)()
-            except ImportError:
-                pass
-        raise ImportError
+        if options['plain']:
+            self.plain()
+        else:
+            for shell in self.shells:
+                try:
+                    return getattr(self, shell)()
+                except ImportError:
+                    pass
+            raise ImportError
