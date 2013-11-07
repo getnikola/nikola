@@ -44,10 +44,11 @@ from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, req_missing
 
 
-class CompileTextile(PageCompiler):
+class CompileTxt2tags(PageCompiler):
     """Compile txt2tags into HTML."""
 
     name = "txt2tags"
+    demote_headers = True
 
     def compile_html(self, source, dest, is_two_file=True):
         if txt2tags is None:

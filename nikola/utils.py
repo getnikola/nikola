@@ -800,4 +800,3 @@ def demote_headers(doc):
             elements = doc.xpath('//h' + str(i))
             for e in elements:
                 e.tag = 'h' + str(i + 1)
-    return doc

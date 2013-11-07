@@ -47,6 +47,7 @@ class CompileRest(PageCompiler):
     """Compile reSt into HTML."""
 
     name = "rest"
+    demote_headers = True
     logger = None
 
     def compile_html(self, source, dest, is_two_file=True):

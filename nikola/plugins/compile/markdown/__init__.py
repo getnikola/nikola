@@ -58,6 +58,7 @@ class CompileMarkdown(PageCompiler):
     """Compile markdown into HTML."""
 
     name = "markdown"
+    demote_headers = True
     extensions = [gist_extension, nikola_extension, podcast_extension]
     site = None
 

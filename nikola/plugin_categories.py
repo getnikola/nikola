@@ -178,6 +178,7 @@ class PageCompiler(BasePlugin):
     """Plugins that compile text files into HTML."""
 
     name = "dummy compiler"
+    demote_headers = False
     default_metadata = {
         'title': '',
         'slug': '',
