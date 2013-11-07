@@ -40,6 +40,29 @@ from nikola.plugin_categories import Command
 from nikola.utils import get_logger
 
 
+def real_scan_files(site):
+    task_fnames = set([])
+    real_fnames = set([])
+    output_folder = site.config['OUTPUT_FOLDER']
+    # First check that all targets are generated in the right places
+    for task in os.popen('nikola list --all', 'r').readlines():
+        task = task.strip()
+        if output_folder in task and ':' in task:
+            fname = task.split(':', 1)[-1]
+            task_fnames.add(fname)
+    # And now check that there are no non-target files
+    for root, dirs, files in os.walk(output_folder):
+        for src_name in files:
+            fname = os.path.join(root, src_name)
+            real_fnames.add(fname)
+
+    only_on_output = list(real_fnames - task_fnames)
+
+    only_on_input = list(task_fnames - real_fnames)
+
+    return (only_on_output, only_on_input)
+
+
 class CommandCheck(Command):
     """Check the generated site."""
 
@@ -63,7 +86,7 @@ class CommandCheck(Command):
             'long': 'check-files',
             'type': bool,
             'default': False,
-            'help': 'Check for unknown files',
+            'help': 'Check for unknown (orphaned and not generated) files',
         },
         {
             'name': 'clean',
@@ -154,7 +177,7 @@ class CommandCheck(Command):
         failure = False
         self.logger.notice("Checking Files:")
         self.logger.notice("===============\n")
-        only_on_output, only_on_input = self.real_scan_files()
+        only_on_output, only_on_input = real_scan_files(self.site)
 
         # Ignore folders
         only_on_output = [p for p in only_on_output if not os.path.isdir(p)]
@@ -162,7 +185,7 @@ class CommandCheck(Command):
 
         if only_on_output:
             only_on_output.sort()
-            self.logger.warn("Files from unknown origins:")
+            self.logger.warn("Files from unknown origins (orphans):")
             for f in only_on_output:
                 self.logger.warn(f)
             failure = True
@@ -180,25 +203,3 @@ class CommandCheck(Command):
         for f in only_on_output:
             os.unlink(f)
         return True
-
-    def real_scan_files(self):
-        task_fnames = set([])
-        real_fnames = set([])
-        output_folder = self.site.config['OUTPUT_FOLDER']
-        # First check that all targets are generated in the right places
-        for task in os.popen('nikola list --all', 'r').readlines():
-            task = task.strip()
-            if output_folder in task and ':' in task:
-                fname = task.split(':', 1)[-1]
-                task_fnames.add(fname)
-        # And now check that there are no non-target files
-        for root, dirs, files in os.walk(output_folder):
-            for src_name in files:
-                fname = os.path.join(root, src_name)
-                real_fnames.add(fname)
-
-        only_on_output = list(real_fnames - task_fnames)
-
-        only_on_input = list(task_fnames - real_fnames)
-
-        return (only_on_output, only_on_input)
