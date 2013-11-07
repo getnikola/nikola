@@ -3,7 +3,7 @@ Name = console
 Module = console
 
 [Documentation]
-Author = Roberto Alsina
+Author = Roberto Alsina, Chris Warrick
 Version = 0.1
 Website = http://getnikola.com
 Description = Start a debugging python console
