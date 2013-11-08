@@ -86,8 +86,8 @@ class Post(object):
         """
         self.config = config
         self.compiler = compiler
-        self.compile = compiler.compile_html
-        self.demote_headers = compiler.demote_headers and self.config['DEMOTE_HEADERS']
+        self.compile_html = self.compiler.compile_html
+        self.demote_headers = self.compiler.demote_headers and self.config['DEMOTE_HEADERS']
         tzinfo = pytz.timezone(self.config['TIMEZONE'])
         if self.config['FUTURE_IS_NOW']:
             self.current_time = None
@@ -309,7 +309,7 @@ class Post(object):
         if not self.is_translation_available(lang) and self.config['HIDE_UNTRANSLATED_POSTS']:
             return
         else:
-            self.compile(
+            self.compile_html(
                 self.translated_source_path(lang),
                 dest,
                 self.is_two_file),
