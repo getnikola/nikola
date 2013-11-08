@@ -45,27 +45,6 @@ class CompileMarkdownTests(unittest.TestCase):
         actual_output = self.compile(input_str)
         self.assertEquals(actual_output, '')
 
-    def test_compile_html_heading_tags(self):
-        input_str = '''\
-# header 1
-## header 2
-### header 3
-#### header 4
-##### header 5
-###### header 6
-'''
-        expected_output = '''\
-<h2>header 1</h2>
-<h3>header 2</h3>
-<h4>header 3</h4>
-<h5>header 4</h5>
-<h6>header 5</h6>
-<h7>header 6</h7>
-'''
-
-        actual_output = self.compile(input_str)
-        self.assertEquals(actual_output.strip(), expected_output.strip())
-
     def test_compile_html_code_hilite(self):
         input_str = '''\
     #!python
