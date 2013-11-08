@@ -793,6 +793,7 @@ def first_line(doc):
                 return striped
     return ''
 
+
 def demote_headers(doc):
     """Demote <hN> elements by one."""
     for i in reversed(range(1, 6)):
