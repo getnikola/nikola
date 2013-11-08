@@ -20,6 +20,7 @@ fake_conf['DEFAULT_LANG'] = 'en'
 fake_conf['TRANSLATIONS'] = {'en': ''}
 fake_conf['BASE_URL'] = 'http://some.blog/'
 
+
 class FakeCompiler(object):
     demote_headers = False
     compile_html = None
