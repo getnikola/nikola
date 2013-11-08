@@ -437,9 +437,13 @@ class Post(object):
                 data = ""
         elif data:
             if self.demote_headers:
-                document = lxml.html.fromstring(data)
-                demote_headers(document)
-                data = lxml.html.tostring(document, encoding='unicode')
+                # see above
+                try:
+                    document = lxml.html.fromstring(data)
+                    demote_headers(document)
+                    data = lxml.html.tostring(document, encoding='unicode')
+                except lxml.etree.ParserError:
+                    pass
 
         return data
 
