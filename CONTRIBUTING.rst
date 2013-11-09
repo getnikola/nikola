@@ -34,7 +34,7 @@ Here are some guidelines about how you can contribute to Nikola:
 * You may want to use the `Tim Pope’s Git commit messages standard
   <http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html>`_.
   It’s not necessary, but if you are doing something big, we recommend
-  describing it there.
+  describing it in the commit message.
 * While working, **rebase instead of merging** (if possible).  We encourage
   using ``git rebase`` instead of ``git merge``.  If you are using
   ``git pull``, please run ``git config pull.rebase true`` to prevent merges
