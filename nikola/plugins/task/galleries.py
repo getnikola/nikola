@@ -175,10 +175,14 @@ class Galleries(Task):
 
                 folders = []
 
-                # Add titles
+                # Generate friendly gallery names
                 for path, folder in folder_list:
                     fpost = self.parse_index(path)
-                    folders.append((folder, fpost.title(lang) or folder))
+                    if fpost:
+                        ft = fpost.title(lang) or folder
+                    else:
+                        ft = folder
+                    folders.append((folder, ft))
 
                 ## TODO: in v7 remove images from context, use photo_array
                 context["images"] = list(zip(image_name_list, thumbs, img_titles))
