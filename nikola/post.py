@@ -54,6 +54,7 @@ from .utils import (
     slugify,
     to_datetime,
     unicode_str,
+    demote_headers,
 )
 from .rc4 import rc4
 
@@ -83,8 +84,10 @@ class Post(object):
         the meta file, as well as any translations available, and
         the .html fragment file path.
         """
-        self.compiler = compiler
         self.config = config
+        self.compiler = compiler
+        self.compile_html = self.compiler.compile_html
+        self.demote_headers = self.compiler.demote_headers and self.config['DEMOTE_HEADERS']
         tzinfo = pytz.timezone(self.config['TIMEZONE'])
         if self.config['FUTURE_IS_NOW']:
             self.current_time = None
@@ -306,7 +309,7 @@ class Post(object):
         if not self.is_translation_available(lang) and self.config['HIDE_UNTRANSLATED_POSTS']:
             return
         else:
-            self.compiler(
+            self.compile_html(
                 self.translated_source_path(lang),
                 dest,
                 self.is_two_file),
@@ -432,6 +435,16 @@ class Post(object):
                 data = content.text_content().strip()  # No whitespace wanted.
             except lxml.etree.ParserError:
                 data = ""
+        elif data:
+            if self.demote_headers:
+                # see above
+                try:
+                    document = lxml.html.fromstring(data)
+                    demote_headers(document)
+                    data = lxml.html.tostring(document, encoding='unicode')
+                except lxml.etree.ParserError:
+                    pass
+
         return data
 
     @property

@@ -288,7 +288,7 @@ class Galleries(Task):
                 False,
                 self.site.MESSAGES,
                 'story.tmpl',
-                self.site.get_compiler(index_path).compile_html
+                self.site.get_compiler(index_path)
             )
         else:
             post = None

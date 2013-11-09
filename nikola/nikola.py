@@ -208,6 +208,7 @@ class Nikola(object):
             'SCHEDULE_RULE': '',
             'SCHEDULE_FORCE_TODAY': False,
             'LOGGING_HANDLERS': {'stderr': {'loglevel': 'WARNING', 'bubble': True}},
+            'DEMOTE_HEADERS': True,
         }
 
         self.config.update(config)
@@ -849,7 +850,7 @@ class Nikola(object):
                         use_in_feeds,
                         self.MESSAGES,
                         template_name,
-                        self.get_compiler(base_path).compile_html
+                        self.get_compiler(base_path)
                     )
                     self.global_data[post.source_path] = post
                     if post.use_in_feeds:

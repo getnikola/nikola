@@ -21,6 +21,11 @@ fake_conf['TRANSLATIONS'] = {'en': ''}
 fake_conf['BASE_URL'] = 'http://some.blog/'
 
 
+class FakeCompiler(object):
+    demote_headers = False
+    compile_html = None
+
+
 class RSSFeedTest(unittest.TestCase):
     def setUp(self):
         LocaleSupportInTesting.initialize_locales_for_testing('unilingual')
@@ -46,7 +51,7 @@ class RSSFeedTest(unittest.TestCase):
                                                       True,
                                                       {'en': ''},
                                                       'post.tmpl',
-                                                      lambda *a: None)
+                                                      FakeCompiler())
 
                     opener_mock = mock.mock_open()
 

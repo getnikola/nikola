@@ -792,3 +792,12 @@ def first_line(doc):
             if striped:
                 return striped
     return ''
+
+
+def demote_headers(doc):
+    """Demote <hN> elements by one."""
+    for i in reversed(range(1, 6)):
+        # html headers go to 6, so we can’t “lower” beneath five
+            elements = doc.xpath('//h' + str(i))
+            for e in elements:
+                e.tag = 'h' + str(i + 1)

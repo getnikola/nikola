@@ -48,6 +48,7 @@ class CompileMisaka(PageCompiler):
     """Compile Misaka into HTML."""
 
     name = "misaka"
+    demote_headers = True
 
     def __init__(self, *args, **kwargs):
         super(CompileMisaka, self).__init__(*args, **kwargs)
