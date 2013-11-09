@@ -111,7 +111,7 @@ class Galleries(Task):
         for gallery in self.gallery_list:
 
             # Create subfolder list
-            folder_list = [x.split(os.sep)[-2] for x in
+            folder_list = [(x, x.split(os.sep)[-2]) for x in
                            glob.glob(os.path.join(gallery, '*') + os.sep)]
 
             # Parse index into a post (with translations)
@@ -173,9 +173,20 @@ class Galleries(Task):
                 thumbs = ['.thumbnail'.join(os.path.splitext(p)) for p in image_list]
                 thumbs = [os.path.join(self.kw['output_folder'], t) for t in thumbs]
 
+                folders = []
+
+                # Generate friendly gallery names
+                for path, folder in folder_list:
+                    fpost = self.parse_index(path)
+                    if fpost:
+                        ft = fpost.title(lang) or folder
+                    else:
+                        ft = folder
+                    folders.append((folder, ft))
+
                 ## TODO: in v7 remove images from context, use photo_array
                 context["images"] = list(zip(image_name_list, thumbs, img_titles))
-                context["folders"] = folder_list
+                context["folders"] = folders
                 context["crumbs"] = crumbs
                 context["permalink"] = self.site.link(
                     "gallery", os.path.basename(gallery), lang)

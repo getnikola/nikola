@@ -6,14 +6,18 @@
 
 <%block name="content">
     ${ui.bar(crumbs)}
+    %if title:
+    <h1>${title}</h1>
+    %endif
     %if text:
     <p>
         ${text}
     </p>
     %endif
     <ul>
-    % for folder in folders:
-        <li><a href="${folder}"><i class="icon-folder-open"></i>&nbsp;${folder}</a></li>
+    % for folder, ftitle in folders:
+        <li><a href="${folder}"><i
+        class="icon-folder-open"></i>&nbsp;${ftitle}</a></li>
     % endfor
     </ul>
     <ul class="thumbnails">
