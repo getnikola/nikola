@@ -1,6 +1,5 @@
 -r requirements-full.txt
 coverage
 nose
-flake8
 freezegun
 python-coveralls

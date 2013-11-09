@@ -38,33 +38,33 @@ You need:
 How to set the locale for Nikola tests?
 ---------------------------------------
 
-For testing nikola needs to specify two languages, each one with a supported locale. By default, the test suite uses ``en`` and ``es`` as languages, and their respective default locale for them.
+For testing nikola needs to specify two languages, each one with a supported locale. By default, the test suite uses ``en`` and ``pl`` as languages, and their respective default locale for them.
 
-You can set the language - locale pairs by exporting two shell variables, like in::
+The choice of Polish is due to having one locale to generate instead of 20 (Spanish) and you can happily ignore it — just set the language–locale pairs by exporting two shell variables, for example::
 
     export NIKOLA_LOCALE_DEFAULT=en,en_US.utf8
-    export NIKOLA_LOCALE_OTHER=es,es_ES.utf8
+    export NIKOLA_LOCALE_OTHER=pl,pl_PL.utf8
 
 In Windows that would be::
 
-	set NIKOLA_LOCALE_DEFAULT=en,English 
-	set NIKOLA_LOCALE_OTHER=es,Spanish
-	
+    set NIKOLA_LOCALE_DEFAULT=en,English
+    set NIKOLA_LOCALE_OTHER=pl,Polish
+
 Replace the part before the comma with a Nikola translation selector (see ``nikola/conf.py.in`` for details), and the part after the comma with an *installed* glibc locale.
 
 To check if the desired locale is supported in your host you can, in a python console::
 
-	import locale
-	locale.setlocale(locale.LC_ALL, 'locale_name')
-    # by example, 'en_US.utf8' (posix) 'English' (windows)
-	# if it does not traceback, then python can use that locale
+    import locale
+    locale.setlocale(locale.LC_ALL, 'locale_name')
+    # for example, 'en_US.utf8' (posix) 'English' (windows)
+    # if it does not traceback, then python can use that locale
 
 Alternatively, if you have some disk space to spare, you can install
 the two default locales. Here is how to do that in Ubuntu::
 
-    sudo apt-get install language-pack-en language-pack-es
+    sudo apt-get install language-pack-en language-pack-pl
 
-	
+
 How to execute the tests
 ------------------------
 
