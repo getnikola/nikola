@@ -5,6 +5,7 @@ Features
 --------
 
 * TIMEZONE now defaults to UTC [no output changes no matter what] (via Issue #893)
+* Gallery titles are used in more places (Issue #902)
 
 Bugfixes
 --------
