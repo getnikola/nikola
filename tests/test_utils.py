@@ -3,7 +3,9 @@ from __future__ import unicode_literals
 
 import unittest
 import mock
+import lxml.html
 from nikola.post import get_meta
+from nikola.utils import demote_headers
 
 
 class dummy(object):
@@ -132,6 +134,31 @@ class GetMetaTest(unittest.TestCase):
             meta = get_meta(post)
 
         self.assertEqual('the_slug', meta['slug'])
+
+
+class HeaderDemotionTest(unittest.TestCase):
+    def demote(self):
+        input_str = '''\
+<h1>header 1</h1>
+<h2>header 2</h2>
+<h3>header 3</h3>
+<h4>header 4</h4>
+<h5>header 5</h5>
+<h6>header 6</h6>
+'''
+        expected_output = '''\
+<h2>header 1</h2>
+<h3>header 2</h3>
+<h4>header 3</h4>
+<h5>header 4</h5>
+<h6>header 5</h6>
+<h6>header 6</h6>
+'''
+        doc = lxml.html.fromstring(input_str)
+        outdoc = lxml.html.fromstring(expected_output)
+        demote_headers(doc)
+        self.assertEquals(lxml.html.tostring(outdoc), lxml.html.tostring(doc))
+
 
 if __name__ == '__main__':
     unittest.main()

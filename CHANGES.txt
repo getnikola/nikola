@@ -4,7 +4,10 @@ New in 6.2.2
 Features
 --------
 
-* TIMEZONE now defaults to UTC [no output changes no matter what] (via Issue #893)
+* TIMEZONE now defaults to UTC (via Issue #893)
+* Added a DEMOTE_HEADERS option (on by default; previously implemented by
+  the Markdown compiler) to have consenting compilers produce documents
+  with headers lower by one than the one defined (Issue #891)
 
 Bugfixes
 --------

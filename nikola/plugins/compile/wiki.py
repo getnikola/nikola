@@ -44,6 +44,7 @@ class CompileWiki(PageCompiler):
     """Compile CreoleWiki into HTML."""
 
     name = "wiki"
+    demote_headers = True
 
     def compile_html(self, source, dest, is_two_file=True):
         if creole is None:

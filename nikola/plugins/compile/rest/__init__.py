@@ -47,6 +47,7 @@ class CompileRest(PageCompiler):
     """Compile reSt into HTML."""
 
     name = "rest"
+    demote_headers = True
     logger = None
 
     def compile_html(self, source, dest, is_two_file=True):
@@ -73,7 +74,7 @@ class CompileRest(PageCompiler):
 
                 output, error_level, deps = rst2html(
                     data, settings_overrides={
-                        'initial_header_level': 2,
+                        'initial_header_level': 1,
                         'record_dependencies': True,
                         'stylesheet_path': None,
                         'link_stylesheet': True,

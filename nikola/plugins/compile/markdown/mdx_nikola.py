@@ -34,10 +34,6 @@ from markdown.extensions import Extension
 class NikolaPostProcessor(Postprocessor):
     def run(self, text):
         output = text
-        # h1 is reserved for the title so increment all header levels
-        for n in reversed(range(1, 9)):
-            output = re.sub('<h%i>' % n, '<h%i>' % (n + 1), output)
-            output = re.sub('</h%i>' % n, '</h%i>' % (n + 1), output)
 
         # python-markdown's highlighter uses the class 'codehilite' to wrap
         # code, instead of the standard 'code'. None of the standard
