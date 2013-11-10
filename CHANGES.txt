@@ -1,4 +1,4 @@
-New in 6.2.2
+New in 6.5.0
 ============
 
 Features
@@ -13,6 +13,9 @@ Bugfixes
 --------
 
 * fixed deploy events if there is no TIMEZONE set (Issue #893 via #822)
+* modified translation strings: "Posted", "Also available in", "More posts
+  about" — may break backwards compatibility (Issue #905)
+  Details: https://groups.google.com/forum/#!topic/nikola-discuss/ABXKk9G0_u0
 
 New in 6.2.1
 ============
