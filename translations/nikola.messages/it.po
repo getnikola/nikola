@@ -5,6 +5,7 @@
 # Translators:
 # Translators:
 # Alessandro Pisa <alessandro.pisa@gmail.com>, 2013
+# David Paleino <d.paleino@gmail.com>, 2013
 # ralsina <ralsina@netmanagers.com.ar>, 2013
 # ralsina <ralsina@netmanagers.com.ar>, 2013
 msgid ""
@@ -12,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2013-11-10 09:27+0000\n"
+"PO-Revision-Date: 2013-11-10 10:11+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/nikola/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -65,8 +66,8 @@ msgstr "Articoli recenti"
 msgid "Previous post"
 msgstr "Articolo precedente"
 
-msgid "Also available in %s"
-msgstr "Anche disponibile in %s"
+msgid "Also available in:"
+msgstr "Anche disponibile in:"
 
 msgid "Original site"
 msgstr "Sito originale"

@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "Also available in %s": "Also available in %s",
+    "Also available in:": "Also available in:",
     "Archive": "Archive",
     "Categories": "Categories",
     "LANGUAGE": "English",
@@ -11,7 +11,7 @@ MESSAGES = {
     "Next post": "Next post",
     "Older posts": "Older posts",
     "Original site": "Original site",
-    "Posted %s": "Posted %s",
+    "Posted:": "Posted:",
     "Posts about %s": "Posts about %s",
     "Posts for year %s": "Posts for year %s",
     "Posts for {month} {year}": "Posts for {month} {year}",

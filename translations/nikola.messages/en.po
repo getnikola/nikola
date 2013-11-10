@@ -60,8 +60,8 @@ msgstr "Newer posts"
 msgid "Previous post"
 msgstr "Previous post"
 
-msgid "Also available in %s"
-msgstr "Also available in %s"
+msgid "Also available in:"
+msgstr "Also available in:"
 
 msgid "Original site"
 msgstr "Original site"

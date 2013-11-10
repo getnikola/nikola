@@ -591,6 +591,8 @@ class Nikola(object):
         local_context["template_name"] = template_name
         local_context.update(self.GLOBAL_CONTEXT)
         local_context.update(context)
+        # string, arguments
+        local_context["formatmsg"] = lambda s, *a: s % a
         data = self.template_system.render_template(
             template_name, None, local_context)
 

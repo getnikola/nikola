@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "Also available in %s": "",
+    "Also available in:": "",
     "Archive": "آرکائیو",
     "Categories": "زمرے",
     "LANGUAGE": "اردو",
@@ -11,7 +11,7 @@ MESSAGES = {
     "Next post": "اگلی تحریر",
     "Older posts": "پرانی تحاریر",
     "Original site": "اصلی سائٹ",
-    "Posted %s": "",
+    "Posted:": "",
     "Posts about %s": "%s کے بارے میں تحاریر",
     "Posts for year %s": "سال %s کی تحاریر",
     "Posts for {month} {year}": "{month} {year} کی تحاریر",

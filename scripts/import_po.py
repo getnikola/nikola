@@ -22,6 +22,22 @@ MESSAGES = {""".splitlines()
     lines2 = []
     for entry in po:
         lines2.append('    "{0}": "{1}",'. format(entry.msgid, entry.msgstr))
+        ### BACKWARDS COMPATIBILITY PATCH START
+        ### TODO: remove in v7
+        if entry.msgid in ["Posted:", "Also available in:"]:
+            fid = entry.msgid
+            fid.replace(':', '')
+            fstr = entry.msgstr
+            fstr.replace(':', '').replace('：', '')
+            lines2.append('    "{0}": "{1}",'. format(fid, fstr))
+        elif entry.msgid == 'More posts about %s':
+            fid = entry.msgid
+            fid.replace(' %s', ' ')
+            fstr = entry.msgstr
+            fstr.replace(' %s', ' ').replace('%s', '')
+            lines2.append('    "{0}": "{1}",'. format(fid, fstr))
+        ### BACKWARDS COMPATIBILITY PATCH END
+        ### TODO: remove in v7
     lines.extend(sorted(lines2))
     lines.append("}\n")
     print("Generating:", outf)

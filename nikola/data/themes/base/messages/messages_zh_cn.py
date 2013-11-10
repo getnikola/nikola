@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "Also available in %s": "",
+    "Also available in:": "其他语言版本：",
     "Archive": "文章存档",
     "Categories": "",
     "LANGUAGE": "简体中文",
@@ -11,7 +11,7 @@ MESSAGES = {
     "Next post": "后一篇",
     "Older posts": "旧一篇",
     "Original site": "原文地址",
-    "Posted %s": "%s发表于",
+    "Posted:": "发表于：",
     "Posts about %s": "文章分类：%s",
     "Posts for year %s": "%s年文章",
     "Posts for {month} {year}": "{year}年{month}月文章",

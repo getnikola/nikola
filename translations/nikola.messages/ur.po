@@ -64,7 +64,7 @@ msgstr "نئی تحاریر"
 msgid "Previous post"
 msgstr "پچھلی تحریر"
 
-msgid "Also available in %s"
+msgid "Also available in:"
 msgstr ""
 
 msgid "Original site"

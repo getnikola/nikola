@@ -65,8 +65,8 @@ msgstr "Daha yeni yazılar"
 msgid "Previous post"
 msgstr "Önceki yazı"
 
-msgid "Also available in %s"
-msgstr "Şu dilde de mevcut: %s"
+msgid "Also available in:"
+msgstr "Şu dilde de mevcut:"
 
 msgid "Original site"
 msgstr "Orjinal web sayfası"

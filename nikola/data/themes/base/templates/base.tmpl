@@ -21,7 +21,7 @@ lang="${lang}">
     <%block name="belowtitle">
         %if len(translations) > 1:
         <small>
-            ${(messages("Also available in"))}:&nbsp;
+            ${messages("Also available in:")}&nbsp;
             ${base.html_translations()}
         </small>
     %endif

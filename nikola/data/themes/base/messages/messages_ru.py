@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "Also available in %s": "Также доступно на %s",
+    "Also available in:": "Также доступно на:",
     "Archive": "Архив",
     "Categories": "Категории",
     "LANGUAGE": "Русский",
@@ -11,7 +11,7 @@ MESSAGES = {
     "Next post": "Следующая запись",
     "Older posts": "Старые записи",
     "Original site": "Оригинальный сайт",
-    "Posted %s": "Опубликовано %s",
+    "Posted:": "Опубликовано:",
     "Posts about %s": "Записи о %s",
     "Posts for year %s": "Записи за %s год",
     "Posts for {month} {year}": "Записи за {month} {year}",

@@ -18,15 +18,18 @@
     %endif
 </%def>
 
+<%def name="html_list_tags(post)" buffered="True">
+    <span itemprop="keywords">
+    %for tag in post.tags:
+        <a class="tag p-category" href="${_link('tag', tag)}"><span class="badge badge-info">${tag}</span></a>
+    %endfor
+    </span>
+</%def>
 
 <%def name="html_tags(post)">
     %if post.tags:
-        &nbsp;&nbsp;|&nbsp;&nbsp;${messages("More posts about")}
-        <span itemprop="keywords">
-        %for tag in post.tags:
-            <a class="tag p-category" href="${_link('tag', tag)}"><span class="badge badge-info">${tag}</span></a>
-        %endfor
-        </span>
+        &nbsp;&nbsp;|&nbsp;&nbsp;${formatmsg(messages("More posts about %s"),
+        html_list_tags(post))}
     %endif
 </%def>
 

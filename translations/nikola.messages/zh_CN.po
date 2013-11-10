@@ -66,8 +66,8 @@ msgstr "新一篇"
 msgid "Previous post"
 msgstr "前一篇"
 
-msgid "Also available in %s"
-msgstr ""
+msgid "Also available in:"
+msgstr "其他语言版本："
 
 msgid "Original site"
 msgstr "原文地址"

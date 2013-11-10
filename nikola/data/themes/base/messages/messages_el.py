@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "Also available in %s": "Διαθέσιμο και στα %s",
+    "Also available in:": "Διαθέσιμο και στα:",
     "Archive": "Αρχείο",
     "Categories": "Κατηγορίες",
     "LANGUAGE": "Ελληνικά",
@@ -11,7 +11,7 @@ MESSAGES = {
     "Next post": "Επόμενη ανάρτηση",
     "Older posts": "Παλαιότερες αναρτήσεις",
     "Original site": "Ιστοσελίδα αρχικής ανάρτησης",
-    "Posted %s": "Αναρτήθηκε %s",
+    "Posted:": "Αναρτήθηκε:",
     "Posts about %s": "Αναρτήσεις για %s",
     "Posts for year %s": "Αναρτήσεις για το έτος %s",
     "Posts for {month} {year}": "Αναρτήσεις για τον {month} του {year}",

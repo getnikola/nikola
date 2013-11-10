@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "Also available in %s": "همچنین قابل دسترس از%s",
+    "Also available in:": "همچنین قابل دسترس از:",
     "Archive": "آرشیو",
     "Categories": "دسته‌ها",
     "LANGUAGE": "فارسی",
@@ -11,7 +11,7 @@ MESSAGES = {
     "Next post": "ارسال بعدی",
     "Older posts": "پست‌های قدیمی‌تر",
     "Original site": "سایت اصلی",
-    "Posted %s": "ارسال شده%s",
+    "Posted:": "ارسال شده:",
     "Posts about %s": "ارسال‌ها دربارهٔ %s",
     "Posts for year %s": "ارسال‌ها برای سال %s",
     "Posts for {month} {year}": "ارسال برای {month} {year}",
