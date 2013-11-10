@@ -80,8 +80,8 @@ msgstr "Posts mais antigos"
 msgid "Archive"
 msgstr "Arquivo"
 
-msgid "Posted %s"
-msgstr "Publicado %s"
+msgid "Posted:"
+msgstr "Publicado:"
 
 msgid "Posts for {month} {year}"
 msgstr "Posts de {month} {year}"

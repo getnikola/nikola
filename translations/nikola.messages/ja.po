@@ -78,8 +78,8 @@ msgstr "過去の記事"
 msgid "Archive"
 msgstr "過去の記事"
 
-msgid "Posted %s"
-msgstr "%s投稿日時"
+msgid "Posted:"
+msgstr "投稿日時："
 
 msgid "Posts for {month} {year}"
 msgstr "{year}年{month}月の記事"

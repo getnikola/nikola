@@ -78,8 +78,8 @@ msgstr "Παλαιότερες αναρτήσεις"
 msgid "Archive"
 msgstr "Αρχείο"
 
-msgid "Posted %s"
-msgstr "Αναρτήθηκε %s"
+msgid "Posted:"
+msgstr "Αναρτήθηκε:"
 
 msgid "Posts for {month} {year}"
 msgstr "Αναρτήσεις για τον {month} του {year}"

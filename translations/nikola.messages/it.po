@@ -77,8 +77,8 @@ msgstr "Articoli precedenti"
 msgid "Archive"
 msgstr "Archivio"
 
-msgid "Posted %s"
-msgstr "Pubblicato %s"
+msgid "Posted:"
+msgstr "Pubblicato:"
 
 msgid "Posts for {month} {year}"
 msgstr "Articoli per {month} {year}"

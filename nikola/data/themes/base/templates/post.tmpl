@@ -14,7 +14,7 @@ ${helper.twitter_card_information(post)}
     ${helper.html_title()}
     <hr>
     <small>
-        ${messages("Posted")}: <time class="published dt-published" datetime="${post.date.isoformat()}" itemprop="datePublished">${post.formatted_date(date_format)}</time>
+        ${messages("Posted:")} <time class="published dt-published" datetime="${post.date.isoformat()}" itemprop="datePublished">${post.formatted_date(date_format)}</time>
         ${helper.html_translations(post)}
 		${helper.html_tags(post)}
         &nbsp;&nbsp;|&nbsp;&nbsp;

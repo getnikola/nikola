@@ -76,8 +76,8 @@ msgstr "Stariji postovi"
 msgid "Archive"
 msgstr "Arhiva"
 
-msgid "Posted %s"
-msgstr "Objavljeno %s"
+msgid "Posted:"
+msgstr "Objavljeno:"
 
 msgid "Posts for {month} {year}"
 msgstr "Postovi za {month} {year}"

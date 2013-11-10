@@ -77,8 +77,8 @@ msgstr "Daha eski yazılar"
 msgid "Archive"
 msgstr "Arşiv"
 
-msgid "Posted %s"
-msgstr "Yayın tarihi %s"
+msgid "Posted:"
+msgstr "Yayın tarihi:"
 
 msgid "Posts for {month} {year}"
 msgstr "{month} {year} göre yazılar"

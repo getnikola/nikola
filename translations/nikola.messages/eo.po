@@ -76,8 +76,8 @@ msgstr "Pli malnovaj artikoloj"
 msgid "Archive"
 msgstr "Arĥivo"
 
-msgid "Posted %s"
-msgstr "Skribita %s"
+msgid "Posted:"
+msgstr "Skribita:"
 
 msgid "Posts for {month} {year}"
 msgstr "Artikoloj skribitaj en {month} {year}"

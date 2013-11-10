@@ -79,8 +79,8 @@ msgstr "Starsze posty"
 msgid "Archive"
 msgstr "Archiwum"
 
-msgid "Posted %s"
-msgstr "Opublikowano %s"
+msgid "Posted:"
+msgstr "Opublikowano:"
 
 msgid "Posts for {month} {year}"
 msgstr "Posty z {month} {year}"

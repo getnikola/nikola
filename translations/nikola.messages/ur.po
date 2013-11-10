@@ -76,7 +76,7 @@ msgstr "پرانی تحاریر"
 msgid "Archive"
 msgstr "آرکائیو"
 
-msgid "Posted %s"
+msgid "Posted:"
 msgstr ""
 
 msgid "Posts for {month} {year}"

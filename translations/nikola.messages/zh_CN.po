@@ -78,8 +78,8 @@ msgstr "旧一篇"
 msgid "Archive"
 msgstr "文章存档"
 
-msgid "Posted %s"
-msgstr "%s发表于"
+msgid "Posted:"
+msgstr "发表于："
 
 msgid "Posts for {month} {year}"
 msgstr "{year}年{month}月文章"

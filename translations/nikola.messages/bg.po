@@ -76,8 +76,8 @@ msgstr "Стари публикации"
 msgid "Archive"
 msgstr "Архив"
 
-msgid "Posted %s"
-msgstr "Публиковано %s"
+msgid "Posted:"
+msgstr "Публиковано:"
 
 msgid "Posts for {month} {year}"
 msgstr "Публикации за {month} {year}"

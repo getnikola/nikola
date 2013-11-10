@@ -78,8 +78,8 @@ msgstr "پست‌های قدیمی‌تر"
 msgid "Archive"
 msgstr "آرشیو"
 
-msgid "Posted %s"
-msgstr "ارسال شده%s"
+msgid "Posted:"
+msgstr "ارسال شده:"
 
 msgid "Posts for {month} {year}"
 msgstr "ارسال برای {month} {year}"

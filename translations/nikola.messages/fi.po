@@ -76,8 +76,8 @@ msgstr "Vanhempia postauksia"
 msgid "Archive"
 msgstr "Arkisto"
 
-msgid "Posted %s"
-msgstr "Postattu %s"
+msgid "Posted:"
+msgstr "Postattu:"
 
 msgid "Posts for {month} {year}"
 msgstr "Postauksia ajalle {month} {year}"

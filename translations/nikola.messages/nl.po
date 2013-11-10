@@ -76,8 +76,8 @@ msgstr "Oudere berichten"
 msgid "Archive"
 msgstr "Archief"
 
-msgid "Posted %s"
-msgstr "Geplaatst %s"
+msgid "Posted:"
+msgstr "Geplaatst:"
 
 msgid "Posts for {month} {year}"
 msgstr "Berichten voor {month} {year}"

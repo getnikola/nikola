@@ -76,8 +76,8 @@ msgstr "Entrades anteriors"
 msgid "Archive"
 msgstr "Arxiu"
 
-msgid "Posted %s"
-msgstr "Publicat %s"
+msgid "Posted:"
+msgstr "Publicat:"
 
 msgid "Posts for {month} {year}"
 msgstr ""

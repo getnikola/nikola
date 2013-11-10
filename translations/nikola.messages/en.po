@@ -72,8 +72,8 @@ msgstr "Older posts"
 msgid "Archive"
 msgstr "Archive"
 
-msgid "Posted %s"
-msgstr "Posted %s"
+msgid "Posted:"
+msgstr "Posted:"
 
 msgid "Posts for {month} {year}"
 msgstr "Posts for {month} {year}"

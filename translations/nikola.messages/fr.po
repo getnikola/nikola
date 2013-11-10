@@ -79,8 +79,8 @@ msgstr "Anciens billets"
 msgid "Archive"
 msgstr "Archives"
 
-msgid "Posted %s"
-msgstr "Publié %s"
+msgid "Posted:"
+msgstr "Publié:"
 
 msgid "Posts for {month} {year}"
 msgstr "Billets de {month} {year}"
