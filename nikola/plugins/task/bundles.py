@@ -111,6 +111,6 @@ def get_theme_bundles(themes):
                 for line in fd:
                     name, files = line.split('=')
                     files = [f.strip() for f in files.split(',')]
-                    bundles[name.strip()] = files
+                    bundles[name.strip().replace('/', os.sep)] = files
                 break
     return bundles
