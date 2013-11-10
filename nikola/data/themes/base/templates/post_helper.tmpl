@@ -28,8 +28,8 @@
 
 <%def name="html_tags(post)">
     %if post.tags:
-        &nbsp;&nbsp;|&nbsp;&nbsp;${formatmsg(messages("More posts about %s"),
-        html_list_tags(post))}
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        ${formatmsg(messages("More posts about %s"), html_list_tags(post))}
     %endif
 </%def>
 

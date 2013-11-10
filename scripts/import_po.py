@@ -27,7 +27,7 @@ MESSAGES = {""".splitlines()
         ### TODO: remove in v7
         if entry.msgid in ["Posted:", "Also available in:"]:
             fid = entry.msgid
-            fid =  fid.replace(':', '')
+            fid = fid.replace(':', '')
             fstr = entry.msgstr
             fstr = fstr.replace(':', '').replace('：', '')
             lines2.append('    "{0}": "{1}",'. format(fid, fstr))
