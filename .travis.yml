@@ -7,9 +7,12 @@ python:
   - "2.6"
   - "2.7"
   - "3.3"
+matrix:
+  include:
+    - python: "2.7"
+      env: NMODE=flake8
 env:
-  - NMODE=nikola
-  - NMODE=flake8
+    NMODE=nikola
 install:
   - "if [[ $NMODE == 'nikola' ]]; then pip install -r requirements-tests.txt --use-mirrors; fi"
   - "if [[ $NMODE == 'nikola' ]]; then pip install . --use-mirrors; fi"
