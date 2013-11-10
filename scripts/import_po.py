@@ -27,15 +27,15 @@ MESSAGES = {""".splitlines()
         ### TODO: remove in v7
         if entry.msgid in ["Posted:", "Also available in:"]:
             fid = entry.msgid
-            fid.replace(':', '')
+            fid =  fid.replace(':', '')
             fstr = entry.msgstr
-            fstr.replace(':', '').replace('：', '')
+            fstr = fstr.replace(':', '').replace('：', '')
             lines2.append('    "{0}": "{1}",'. format(fid, fstr))
         elif entry.msgid == 'More posts about %s':
             fid = entry.msgid
-            fid.replace(' %s', ' ')
+            fid = fid.replace(' %s', '')
             fstr = entry.msgstr
-            fstr.replace(' %s', ' ').replace('%s', '')
+            fstr = fstr.replace(' %s', '').replace('%s', '')
             lines2.append('    "{0}": "{1}",'. format(fid, fstr))
         ### BACKWARDS COMPATIBILITY PATCH END
         ### TODO: remove in v7
