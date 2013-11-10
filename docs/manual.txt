@@ -924,7 +924,8 @@ Nikola supports several third party comment systems:
 * `LiveFyre <http://www.livefyre.com/>`_
 * `Moot <http://moot.it>`_
 * `Google+ <http://plus.google.com>`_
-* `Facebook <http://facebook.com>`_
+* `Facebook <http://facebook.com/>`_
+* `isso <http://posativ.org/isso/>`_
 
 By default it will use DISQUS, but you can change by setting ``COMMENT_SYSTEM``
 to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus" or
@@ -944,6 +945,8 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus" or
    * For Facebook, you need to `create an app
      <https://developers.facebook.com/apps>` (turn off sandbox mode!)
      and get an **App ID**
+   * For isso, it is the URL of isso (must be world-accessible, default
+     http://localhost:8080)
 
 To use comments in a visible site, you should register with the service and
 then set the ``COMMENT_SYSTEM_ID`` option.

@@ -8,6 +8,7 @@ Features
 * Added a DEMOTE_HEADERS option (on by default; previously implemented by
   the Markdown compiler) to have consenting compilers produce documents
   with headers lower by one than the one defined (Issue #891)
+* isso comments are now supported (Issue #905)
 
 Bugfixes
 --------
@@ -16,6 +17,7 @@ Bugfixes
 * modified translation strings: "Posted", "Also available in", "More posts
   about" — may break backwards compatibility (Issue #905)
   Details: https://groups.google.com/forum/#!topic/nikola-discuss/ABXKk9G0_u0
+* facebook comments are now showing properly
 
 New in 6.2.1
 ============

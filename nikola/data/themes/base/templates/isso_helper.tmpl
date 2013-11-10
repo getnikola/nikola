@@ -1,0 +1,20 @@
+## -*- coding: utf-8 -*-
+<%def name="comment_form(url, title, identifier)">
+    %if comment_system_id:
+        <div data-title="${title|u}" id="isso-thread"></div>
+        <script src="${comment_system_id}js/embed.min.js" data-isso="${comment_system_id}"></script>
+    %endif
+</%def>
+
+<%def name="comment_link(link, identifier)">
+    %if comment_system_id:
+        <a href="${link}#isso-thread">Comments</a>
+    %endif
+</%def>
+
+
+<%def name="comment_link_script()">
+    %if comment_system_id:
+        <script src="${comment_system_id}js/count.min.js" data-isso="${comment_system_id}"></script>
+    %endif
+</%def>
