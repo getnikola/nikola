@@ -2,16 +2,16 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "Also available in": "Disponible aussi en",
+    "Also available in %s": "Disponible aussi en %s",
     "Archive": "Archives",
     "Categories": "Catégories",
     "LANGUAGE": "Français",
-    "More posts about": "Plus de billets sur",
+    "More posts about %s": "Plus de billets sur %s",
     "Newer posts": "Billets récents",
     "Next post": "Billet suivant",
     "Older posts": "Anciens billets",
     "Original site": "Site d'origine",
-    "Posted": "Publié",
+    "Posted %s": "Publié %s",
     "Posts about %s": "Billets sur %s",
     "Posts for year %s": "Billets de l'année %s",
     "Posts for {month} {year}": "Billets de {month} {year}",

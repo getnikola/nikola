@@ -2,16 +2,16 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "Also available in": "Ankaŭ disponebla en",
+    "Also available in %s": "Ankaŭ disponebla en %s",
     "Archive": "Arĥivo",
     "Categories": "Kategorioj",
     "LANGUAGE": "Anglalingve",
-    "More posts about": "Pli artikoloj pri...",
+    "More posts about %s": "Pli artikoloj pri %s",
     "Newer posts": "Pli novaj artikoloj",
     "Next post": "Venonta artikolo",
     "Older posts": "Pli malnovaj artikoloj",
     "Original site": "Originala interretejo",
-    "Posted": "Skribita",
+    "Posted %s": "Skribita %s",
     "Posts about %s": "Artikoloj pri %s",
     "Posts for year %s": "Artikoloj de la jaro %s",
     "Posts for {month} {year}": "Artikoloj skribitaj en {month} {year}",

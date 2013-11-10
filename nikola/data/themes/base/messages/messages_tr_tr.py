@@ -2,16 +2,16 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "Also available in": "Şu dilde de mevcut:",
+    "Also available in %s": "Şu dilde de mevcut: %s",
     "Archive": "Arşiv",
     "Categories": "Kategoriler",
     "LANGUAGE": "Türkçe",
-    "More posts about": "ilgili diğer yazılar",
+    "More posts about %s": "%s ilgili diğer yazılar",
     "Newer posts": "Daha yeni yazılar",
     "Next post": "Sonraki yazı",
     "Older posts": "Daha eski yazılar",
     "Original site": "Orjinal web sayfası",
-    "Posted": "Yayın tarihi",
+    "Posted %s": "Yayın tarihi %s",
     "Posts about %s": "%s ile ilgili yazılar",
     "Posts for year %s": "%s yılındaki yazılar",
     "Posts for {month} {year}": "{month} {year} göre yazılar",

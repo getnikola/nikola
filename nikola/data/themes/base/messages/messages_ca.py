@@ -2,16 +2,16 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "Also available in": "També disponibles en",
+    "Also available in %s": "També disponibles en %s",
     "Archive": "Arxiu",
     "Categories": "",
     "LANGUAGE": "Català",
-    "More posts about": "Més entrades sobre",
+    "More posts about %s": "Més entrades sobre %s",
     "Newer posts": "Entrades posteriors",
     "Next post": "Entrada següent",
     "Older posts": "Entrades anteriors",
     "Original site": "Lloc original",
-    "Posted": "Publicat",
+    "Posted %s": "Publicat %s",
     "Posts about %s": "Entrades sobre %s",
     "Posts for year %s": "Entrades de l'any %s",
     "Posts for {month} {year}": "",
