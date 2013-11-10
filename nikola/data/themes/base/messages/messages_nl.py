@@ -3,14 +3,17 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "Also available in:": "Ook beschikbaar in:",
+    "Also available in:": "Ook beschikbaar in:",
     "Archive": "Archief",
     "Categories": "Categorieën",
     "LANGUAGE": "Nederlands",
+    "More posts about %s": "Meer berichten over %s",
     "More posts about %s": "Meer berichten over %s",
     "Newer posts": "Nieuwere berichten",
     "Next post": "Volgend bericht",
     "Older posts": "Oudere berichten",
     "Original site": "Originele site",
+    "Posted:": "Geplaatst:",
     "Posted:": "Geplaatst:",
     "Posts about %s": "Berichten over %s",
     "Posts for year %s": "Berichten voor het jaar %s",

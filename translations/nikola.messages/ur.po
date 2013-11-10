@@ -5,14 +5,14 @@
 # Translators:
 # Translators:
 # saadat, 2013
-# saadat, 2013
+# saadat <nastaliq@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2013-11-10 09:27+0000\n"
-"Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2013-11-10 10:24+0000\n"
+"Last-Translator: saadat <nastaliq@gmail.com>\n"
 "Language-Team: Urdu (http://www.transifex.com/projects/p/nikola/language/ur/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "More posts about %s"
-msgstr ""
+msgstr "%s کے بارے میں مزید تحاریر"
 
 msgid "LANGUAGE"
 msgstr "اردو"
@@ -65,7 +65,7 @@ msgid "Previous post"
 msgstr "پچھلی تحریر"
 
 msgid "Also available in:"
-msgstr ""
+msgstr "ان زبانوں میں بھی دستیاب:"
 
 msgid "Original site"
 msgstr "اصلی سائٹ"
@@ -77,7 +77,7 @@ msgid "Archive"
 msgstr "آرکائیو"
 
 msgid "Posted:"
-msgstr ""
+msgstr "اشاعت:"
 
 msgid "Posts for {month} {year}"
 msgstr "{month} {year} کی تحاریر"

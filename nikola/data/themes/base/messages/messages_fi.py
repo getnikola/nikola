@@ -3,14 +3,17 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "Also available in:": "Saatavilla myös:",
+    "Also available in:": "Saatavilla myös:",
     "Archive": "Arkisto",
     "Categories": "Kategoriat",
     "LANGUAGE": "Suomi",
+    "More posts about %s": "Lisää postauksia aiheesta %s",
     "More posts about %s": "Lisää postauksia aiheesta %s",
     "Newer posts": "Uudempia postauksia",
     "Next post": "Seuraava postaus",
     "Older posts": "Vanhempia postauksia",
     "Original site": "Alkuperäinen sivusto",
+    "Posted:": "Postattu:",
     "Posted:": "Postattu:",
     "Posts about %s": "Postauksia aiheesta %s",
     "Posts for year %s": "Postauksia vuodelta %s",
