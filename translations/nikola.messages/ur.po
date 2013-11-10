@@ -4,11 +4,8 @@
 # 
 # Translators:
 # Translators:
-# pabluk <pablo@seminar.io>, 2013
-# pabluk <pablo@seminar.io>, 2013
-# pabluk <pablo@seminar.io>, 2013
-# ralsina <ralsina@netmanagers.com.ar>, 2013
-# ralsina <ralsina@netmanagers.com.ar>, 2013
+# saadat, 2013
+# saadat, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
@@ -16,71 +13,71 @@ msgstr ""
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
 "PO-Revision-Date: 2013-11-10 09:27+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
-"Language-Team: French (http://www.transifex.com/projects/p/nikola/language/fr/)\n"
+"Language-Team: Urdu (http://www.transifex.com/projects/p/nikola/language/ur/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: ur\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "More posts about %s"
-msgstr "Plus de billets sur %s"
+msgstr ""
 
 msgid "LANGUAGE"
-msgstr "Français"
+msgstr "اردو"
 
 msgid "Tags"
-msgstr "Étiquettes"
+msgstr "ٹیگز"
 
 msgid "Categories"
-msgstr "Catégories"
+msgstr "زمرے"
 
 msgid "Tags and Categories"
-msgstr "Étiquettes et catégories"
+msgstr "ٹیگز اور زمرے"
 
 msgid "Read more"
-msgstr "Lire la suite"
+msgstr "مزید پڑھیے"
 
 msgid "Posts about %s"
-msgstr "Billets sur %s"
+msgstr "%s کے بارے میں تحاریر"
 
 msgid "Next post"
-msgstr "Billet suivant"
+msgstr "اگلی تحریر"
 
 msgid "old posts page %d"
-msgstr "anciens billets page %d"
+msgstr "پرانی تحاریر صفحہ %d"
 
 msgid "Source"
-msgstr "Source"
+msgstr "سورس"
 
 #. Here your translation should not say English but the name of your language
 #. instead
 msgid "Read in English"
-msgstr "Lire en français"
+msgstr "اردو میں پڑھیے"
 
 msgid "Posts for year %s"
-msgstr "Billets de l'année %s"
+msgstr "سال %s کی تحاریر"
 
 msgid "Newer posts"
-msgstr "Billets récents"
+msgstr "نئی تحاریر"
 
 msgid "Previous post"
-msgstr "Billet précédent"
+msgstr "پچھلی تحریر"
 
 msgid "Also available in %s"
-msgstr "Disponible aussi en %s"
+msgstr ""
 
 msgid "Original site"
-msgstr "Site d'origine"
+msgstr "اصلی سائٹ"
 
 msgid "Older posts"
-msgstr "Anciens billets"
+msgstr "پرانی تحاریر"
 
 msgid "Archive"
-msgstr "Archives"
+msgstr "آرکائیو"
 
 msgid "Posted %s"
-msgstr "Publié %s"
+msgstr ""
 
 msgid "Posts for {month} {year}"
-msgstr "Billets de {month} {year}"
+msgstr "{month} {year} کی تحاریر"

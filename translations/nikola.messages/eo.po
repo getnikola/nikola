@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2013-10-25 09:00+0000\n"
+"PO-Revision-Date: 2013-11-10 09:27+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Esperanto (http://www.transifex.com/projects/p/nikola/language/eo/)\n"
 "MIME-Version: 1.0\n"
@@ -20,8 +20,8 @@ msgstr ""
 "Language: eo\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "More posts about"
-msgstr "Pli artikoloj pri..."
+msgid "More posts about %s"
+msgstr "Pli artikoloj pri %s"
 
 msgid "LANGUAGE"
 msgstr "Anglalingve"
@@ -50,7 +50,7 @@ msgstr "paĝo de malnovaj artikoloj %d"
 msgid "Source"
 msgstr "Fonto"
 
-#. Here your translation should not say ENglish but the name of your language
+#. Here your translation should not say English but the name of your language
 #. instead
 msgid "Read in English"
 msgstr "Legu ĝin en Esperanto"
@@ -64,8 +64,8 @@ msgstr "Pli novaj artikoloj"
 msgid "Previous post"
 msgstr "Antaŭa artikolo"
 
-msgid "Also available in"
-msgstr "Ankaŭ disponebla en"
+msgid "Also available in %s"
+msgstr "Ankaŭ disponebla en %s"
 
 msgid "Original site"
 msgstr "Originala interretejo"
@@ -76,8 +76,8 @@ msgstr "Pli malnovaj artikoloj"
 msgid "Archive"
 msgstr "Arĥivo"
 
-msgid "Posted"
-msgstr "Skribita"
+msgid "Posted %s"
+msgstr "Skribita %s"
 
 msgid "Posts for {month} {year}"
 msgstr "Artikoloj skribitaj en {month} {year}"

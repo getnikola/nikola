@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2013-10-25 09:00+0000\n"
+"PO-Revision-Date: 2013-11-10 09:27+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/nikola/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -22,8 +22,8 @@ msgstr ""
 "Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "More posts about"
-msgstr "Περισσότερες αναρτήσεις για"
+msgid "More posts about %s"
+msgstr "Περισσότερες αναρτήσεις για %s"
 
 msgid "LANGUAGE"
 msgstr "Ελληνικά"
@@ -52,7 +52,7 @@ msgstr "σελίδα παλαιότερων αναρτήσεων %d"
 msgid "Source"
 msgstr "Πηγαίος κώδικας"
 
-#. Here your translation should not say ENglish but the name of your language
+#. Here your translation should not say English but the name of your language
 #. instead
 msgid "Read in English"
 msgstr "Διαβάστε στα Ελληνικά"
@@ -66,8 +66,8 @@ msgstr "Νεότερες αναρτήσεις"
 msgid "Previous post"
 msgstr "Προηγούμενη ανάρτηση"
 
-msgid "Also available in"
-msgstr "Διαθέσιμο και στα"
+msgid "Also available in %s"
+msgstr "Διαθέσιμο και στα %s"
 
 msgid "Original site"
 msgstr "Ιστοσελίδα αρχικής ανάρτησης"
@@ -78,8 +78,8 @@ msgstr "Παλαιότερες αναρτήσεις"
 msgid "Archive"
 msgstr "Αρχείο"
 
-msgid "Posted"
-msgstr "Αναρτήθηκε"
+msgid "Posted %s"
+msgstr "Αναρτήθηκε %s"
 
 msgid "Posts for {month} {year}"
 msgstr "Αναρτήσεις για τον {month} του {year}"

@@ -17,8 +17,8 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "More posts about"
-msgstr "More posts about"
+msgid "More posts about %s"
+msgstr "More posts about %s"
 
 msgid "LANGUAGE"
 msgstr "English"
@@ -60,8 +60,8 @@ msgstr "Newer posts"
 msgid "Previous post"
 msgstr "Previous post"
 
-msgid "Also available in"
-msgstr "Also available in"
+msgid "Also available in %s"
+msgstr "Also available in %s"
 
 msgid "Original site"
 msgstr "Original site"
@@ -72,14 +72,8 @@ msgstr "Older posts"
 msgid "Archive"
 msgstr "Archive"
 
-msgid "Posted"
-msgstr "Posted"
+msgid "Posted %s"
+msgstr "Posted %s"
 
 msgid "Posts for {month} {year}"
 msgstr "Posts for {month} {year}"
-
-msgid "No title"
-msgstr ""
-
-msgid "No content"
-msgstr ""

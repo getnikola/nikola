@@ -22,8 +22,8 @@ msgstr ""
 "Language: fa\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-msgid "More posts about"
-msgstr "ارسال‌های بیشتر دربارهٔ"
+msgid "More posts about %s"
+msgstr "ارسال‌های بیشتر دربارهٔ%s"
 
 msgid "LANGUAGE"
 msgstr "فارسی"
@@ -66,8 +66,8 @@ msgstr "ارسال‌های جدید‌تر"
 msgid "Previous post"
 msgstr "ارسال پیشین"
 
-msgid "Also available in"
-msgstr "همچنین قابل دسترس از"
+msgid "Also available in %s"
+msgstr "همچنین قابل دسترس از%s"
 
 msgid "Original site"
 msgstr "سایت اصلی"
@@ -78,8 +78,8 @@ msgstr "پست‌های قدیمی‌تر"
 msgid "Archive"
 msgstr "آرشیو"
 
-msgid "Posted"
-msgstr "ارسال شده"
+msgid "Posted %s"
+msgstr "ارسال شده%s"
 
 msgid "Posts for {month} {year}"
 msgstr "ارسال برای {month} {year}"
