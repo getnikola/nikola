@@ -794,10 +794,16 @@ def first_line(doc):
     return ''
 
 
-def demote_headers(doc):
+def demote_headers(doc, level=1):
     """Demote <hN> elements by one."""
-    for i in reversed(range(1, 6)):
+    if level == 0:
+        return doc
+    elif level > 0:
+        r = range(1, 7 - level)
+    elif level < 0:
+        r = range(1 + level, 7)
+    for i in reversed(r):
         # html headers go to 6, so we can’t “lower” beneath five
             elements = doc.xpath('//h' + str(i))
             for e in elements:
-                e.tag = 'h' + str(i + 1)
+                e.tag = 'h' + str(i + level)

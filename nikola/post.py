@@ -440,7 +440,7 @@ class Post(object):
                 # see above
                 try:
                     document = lxml.html.fromstring(data)
-                    demote_headers(document)
+                    demote_headers(document, self.demote_headers)
                     data = lxml.html.tostring(document, encoding='unicode')
                 except lxml.etree.ParserError:
                     pass

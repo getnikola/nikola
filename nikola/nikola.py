@@ -208,7 +208,7 @@ class Nikola(object):
             'SCHEDULE_RULE': '',
             'SCHEDULE_FORCE_TODAY': False,
             'LOGGING_HANDLERS': {'stderr': {'loglevel': 'WARNING', 'bubble': True}},
-            'DEMOTE_HEADERS': True,
+            'DEMOTE_HEADERS': 1,
         }
 
         self.config.update(config)
