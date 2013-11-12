@@ -276,6 +276,7 @@ class TestCheckFailure(DemoBuildTest):
             except SystemExit as e:
                 self.assertNotEqual(e.code, 0)
 
+
 class RelativeLinkTest2(DemoBuildTest):
     """Check that dropping stories to the root doesn't break links."""
 
