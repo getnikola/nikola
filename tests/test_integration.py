@@ -244,14 +244,14 @@ class TestCheck(DemoBuildTest):
     def test_check_links(self):
         with cd(self.target_dir):
             try:
-                main(['check', '-l'])
+                main.main(['check', '-l'])
             except SystemExit as e:
                 self.assertEqual(e.code, 0)
 
     def test_check_files(self):
         with cd(self.target_dir):
             try:
-                main(['check', '-f'])
+                main.main(['check', '-f'])
             except SystemExit as e:
                 self.assertEqual(e.code, 0)
 
@@ -263,7 +263,7 @@ class TestCheckFailure(DemoBuildTest):
         with cd(self.target_dir):
             os.unlink(os.path.join("output", "archive.html"))
             try:
-                main(['check', '-l'])
+                main.main(['check', '-l'])
             except SystemExit as e:
                 self.assertNotEqual(e.code, 0)
 
@@ -272,7 +272,7 @@ class TestCheckFailure(DemoBuildTest):
             with codecs.open(os.path.join("output", "foobar"), "wb+", "utf8") as outf:
                 outf.write("foo")
             try:
-                main(['check', '-f'])
+                main.main(['check', '-f'])
             except SystemExit as e:
                 self.assertNotEqual(e.code, 0)
 
