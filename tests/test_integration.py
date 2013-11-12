@@ -11,7 +11,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 import codecs
 import locale
 import shutil
-import subprocess
 import tempfile
 import unittest
 
@@ -239,22 +238,22 @@ class RelativeLinkTest(DemoBuildTest):
         self.assertTrue('<loc>http://getnikola.com/foo/bar/index.html</loc>' in sitemap_data)
 
 
-if sys.version_info[0] == 2 and sys.version_info[1] < 7:
-    check_output = subprocess.check_call
-else:
-    check_output = subprocess.check_output
-
-
 class TestCheck(DemoBuildTest):
     """The demo build should pass 'nikola check'"""
 
     def test_check_links(self):
         with cd(self.target_dir):
-            check_output("nikola check -l", shell=True, stderr=subprocess.STDOUT)
+            try:
+                main(['check', '-l'])
+            except SystemExit as e:
+                self.assertEqual(e.code, 0)
 
     def test_check_files(self):
         with cd(self.target_dir):
-            check_output("nikola check -f", shell=True, stderr=subprocess.STDOUT)
+            try:
+                main(['check', '-f'])
+            except SystemExit as e:
+                self.assertEqual(e.code, 0)
 
 
 class TestCheckFailure(DemoBuildTest):
@@ -263,20 +262,19 @@ class TestCheckFailure(DemoBuildTest):
     def test_check_links_fail(self):
         with cd(self.target_dir):
             os.unlink(os.path.join("output", "archive.html"))
-            self.assertRaises(
-                subprocess.CalledProcessError,
-                check_output, "nikola check -f", shell=True
-            )
+            try:
+                main(['check', '-l'])
+            except SystemExit as e:
+                self.assertNotEqual(e.code, 0)
 
     def test_check_files_fail(self):
         with cd(self.target_dir):
             with codecs.open(os.path.join("output", "foobar"), "wb+", "utf8") as outf:
                 outf.write("foo")
-            self.assertRaises(
-                subprocess.CalledProcessError,
-                check_output, "nikola check -f", shell=True
-            )
-
+            try:
+                main(['check', '-f'])
+            except SystemExit as e:
+                self.assertNotEqual(e.code, 0)
 
 class RelativeLinkTest2(DemoBuildTest):
     """Check that dropping stories to the root doesn't break links."""
