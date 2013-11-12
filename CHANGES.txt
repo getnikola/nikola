@@ -9,6 +9,7 @@ Features
   the Markdown compiler) to have consenting compilers produce documents
   with headers lower by one than the one defined (Issue #891)
 * isso comments are now supported (Issue #905)
+* Gallery titles are used in more places (Issue #902)
 
 Bugfixes
 --------
