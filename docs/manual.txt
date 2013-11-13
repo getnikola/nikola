@@ -1502,7 +1502,7 @@ Getting Extra Plugins
 If you want extra plugins, there is also the `Plugins Index <http://plugins.getnikola.com/>`_.
 
 Similarly to themes, there is a nice, built-in command to install them —
-``install_plugin``:
+``install_plugin``::
 
     $ nikola install_plugin -l
     Plugins:
