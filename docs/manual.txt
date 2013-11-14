@@ -945,8 +945,8 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus" or
    * For Facebook, you need to `create an app
      <https://developers.facebook.com/apps>` (turn off sandbox mode!)
      and get an **App ID**
-   * For isso, it is the URL of isso (must be world-accessible, default
-     http://localhost:8080)
+   * For isso, it is the URL of isso (must be world-accessible and **have a trailing slash**,
+     default ``http://localhost:8080/``)
 
 To use comments in a visible site, you should register with the service and
 then set the ``COMMENT_SYSTEM_ID`` option.
