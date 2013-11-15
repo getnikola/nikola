@@ -154,6 +154,7 @@ class CommandInstallTheme(Command):
             LOGGER.notice('Copying {0} into themes'.format(theme_path))
             shutil.copytree(theme_path, dest_path)
         confpypath = os.path.join(dest_path, 'conf.py.sample')
+        LOGGER.notice('Remember to set THEME="{0}" in conf.py to use this theme.'.format(name))
         if os.path.exists(confpypath):
             LOGGER.notice('This plugin has a sample config file.')
             print('Contents of the conf.py.sample file:\n')
