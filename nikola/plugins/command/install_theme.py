@@ -154,11 +154,11 @@ class CommandInstallTheme(Command):
             LOGGER.notice('Copying {0} into themes'.format(theme_path))
             shutil.copytree(theme_path, dest_path)
         confpypath = os.path.join(dest_path, 'conf.py.sample')
-        LOGGER.notice('Remember to set THEME="{0}" in conf.py to use this theme.'.format(name))
         if os.path.exists(confpypath):
-            LOGGER.notice('This plugin has a sample config file.')
+            LOGGER.notice('This plugin has a sample config file.  Integrate it with yours in order to make this theme work!')
             print('Contents of the conf.py.sample file:\n')
             with codecs.open(confpypath, 'rb', 'utf-8') as fh:
                 print(indent(pygments.highlight(
                     fh.read(), PythonLexer(), TerminalFormatter()), 4 * ' '))
-            return True
+        LOGGER.notice('Remember to set THEME="{0}" in conf.py to use this theme.'.format(name))
+        return True
