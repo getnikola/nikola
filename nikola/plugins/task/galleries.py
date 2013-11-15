@@ -471,7 +471,7 @@ class Galleries(Task):
                 os.path.join(
                     self.site.config['OUTPUT_FOLDER'], img)).st_size
             args = {
-                'title': full_title.split('"')[-2],
+                'title': full_title.split('"')[-2] if full_title else '',
                 'link': make_url(img),
                 'guid': rss.Guid(img, False),
                 'pubDate': self.image_date(img),

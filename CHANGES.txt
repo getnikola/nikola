@@ -14,12 +14,13 @@ Features
 Bugfixes
 --------
 
-* fixed deploy events if there is no TIMEZONE set (Issue #893 via #822)
-* modified translation strings: "Posted", "Also available in", "More posts
+* Fix crash when using USE_FILENAME_AS_TITLE = False (Issue #892)
+* Fixed deploy events if there is no TIMEZONE set (Issue #893 via #822)
+* Modified translation strings: "Posted", "Also available in", "More posts
   about" — may break backwards compatibility (Issue #905)
   Details: https://groups.google.com/forum/#!topic/nikola-discuss/ABXKk9G0_u0
-* facebook comments are now showing properly
-* added a warning/error when lessc/sass are missing (via Issue themes#24)
+* Facebook comments are now showing properly
+* Added a warning/error when lessc/sass are missing (via Issue themes#24)
 
 New in 6.2.1
 ============
