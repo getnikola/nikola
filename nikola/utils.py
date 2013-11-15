@@ -811,12 +811,16 @@ def demote_headers(doc, level=1):
 
 def get_root_dir():
     """Find root directory of nikola installation by looking for conf.py"""
-    parent = os.getcwd()
+    root = os.getcwd()
 
-    while parent:
-        if os.path.exists(os.path.join(parent, 'conf.py')):
-            return parent
+    while True:
+        if os.path.exists(os.path.join(root, 'conf.py')):
+            return root
         else:
-            parent = os.path.split(parent)[0]
+            basedir = os.path.split(root)[0]
+            # Top directory, already checked
+            if basedir == root:
+                break
+            root = basedir
 
-    return ''
+    return None
