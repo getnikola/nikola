@@ -338,5 +338,16 @@ class MonthlyArchiveTest(DemoBuildTest):
         self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'target', 'output', '2012', '03', 'index.html')))
 
 
+class SubdirRunningTest(DemoBuildTest):
+    """Check that running nikola from subdir works."""
+
+    def test_subdir_run(self):
+        """Check whether build works from posts/"""
+
+        with cd(os.path.join(self.target_dir, 'posts')):
+            result = main.main(['build'])
+            self.assertEquals(result, 0)
+
+
 if __name__ == "__main__":
     unittest.main()

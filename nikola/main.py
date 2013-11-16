@@ -42,7 +42,7 @@ from logbook import NullHandler
 
 from . import __version__
 from .nikola import Nikola
-from .utils import _reload, sys_decode, LOGGER, STRICT_HANDLER
+from .utils import _reload, sys_decode, get_root_dir, LOGGER, STRICT_HANDLER
 
 
 config = {}
@@ -58,6 +58,11 @@ def main(args):
         nullhandler.push_application()
         quiet = True
     global config
+
+    root = get_root_dir()
+    if root:
+        os.chdir(root)
+
     sys.path.append('')
     try:
         import conf

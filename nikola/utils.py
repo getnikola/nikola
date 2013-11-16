@@ -807,3 +807,20 @@ def demote_headers(doc, level=1):
             elements = doc.xpath('//h' + str(i))
             for e in elements:
                 e.tag = 'h' + str(i + level)
+
+
+def get_root_dir():
+    """Find root directory of nikola installation by looking for conf.py"""
+    root = os.getcwd()
+
+    while True:
+        if os.path.exists(os.path.join(root, 'conf.py')):
+            return root
+        else:
+            basedir = os.path.split(root)[0]
+            # Top directory, already checked
+            if basedir == root:
+                break
+            root = basedir
+
+    return None
