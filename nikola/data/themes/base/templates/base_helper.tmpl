@@ -49,7 +49,7 @@
 </%def>
 
 <%def name="html_social()">
-	${social_buttons_code}
+    ${social_buttons_code}
 </%def>
 
 <!--FIXME: remove in v7 -->
@@ -64,7 +64,7 @@
             <ul>
             %for suburl, text in url:
                 % if rel_link(permalink, suburl) == "#":
-                    <li class="active"><a href="${suburl}">${text}</a>
+                    <li class="active"><a href="${permalink}">${text}</a>
                 %else:
                     <li><a href="${suburl}">${text}</a>
                 %endif
@@ -72,7 +72,7 @@
             </ul>
         % else:
             % if rel_link(permalink, url) == "#":
-                <li class="active"><a href="${url}">${text}</a>
+                <li class="active"><a href="${permalink}">${text}</a>
             %else:
                 <li><a href="${url}">${text}</a>
             %endif
