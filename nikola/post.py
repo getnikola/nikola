@@ -334,15 +334,7 @@ class Post(object):
         if lang != self.default_lang:
             lang_deps = [d + "." + lang for d in deps]
             deps += lang_deps
-        existing_deps = [d for d in deps if os.path.exists(d)]
-        for d in deps:
-            # do not warn for inexistent language-specific deps this
-            # would spam the user in many occassions, and was done that
-            # way forever.  (v1.1, the earliest on GitHub, did that)
-            if d not in existing_deps and d not in lang_deps:
-                LOGGER.warning('Dependency {0} (of {1}) does not exist '
-                               'anymore, skipping'.format(d, self.source_path))
-        return existing_deps
+        return [d for d in deps if os.path.exists(d)]
 
     def is_translation_available(self, lang):
         """Return true if the translation actually exists."""
