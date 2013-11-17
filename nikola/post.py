@@ -396,9 +396,7 @@ class Post(object):
             # let other errors raise
             raise(e)
         base_url = self.permalink(lang=lang, absolute=really_absolute)
-
-        if self.config.get('URL_TYPE') in ('full_path', 'absolute'):
-            document.make_links_absolute(base_url)
+        document.make_links_absolute(base_url)
 
         if self.hyphenate:
             hyphenate(document, lang)
