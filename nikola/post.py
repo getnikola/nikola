@@ -330,6 +330,7 @@ class Post(object):
         if os.path.isfile(dep_path):
             with codecs.open(dep_path, 'rb+', 'utf8') as depf:
                 deps.extend([l.strip() for l in depf.readlines()])
+        lang_deps = []
         if lang != self.default_lang:
             lang_deps = [d + "." + lang for d in deps]
             deps += lang_deps
