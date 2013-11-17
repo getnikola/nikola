@@ -590,11 +590,11 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 
 
 # Post's dates are considered in UTC by default, if you want to use
-# another timezone, please set TIMEZONE to match. Check the available
+# another time zone, please set TIMEZONE to match. Check the available
 # list from Wikipedia:
 # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 # (eg. 'Europe/Zurich')
-# Also, if you want to use a different timezone in some of your posts,
+# Also, if you want to use a different time zone in some of your posts,
 # you can use W3C-DTF Format (ex. 2012-03-30T23:00:00+02:00)
 #
 # TIMEZONE = 'UTC'

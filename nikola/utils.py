@@ -477,7 +477,7 @@ def to_datetime(value, tzinfo=None):
             dt = datetime.datetime.strptime(value, format)
             if tzinfo is None:
                 return dt
-            # Build a localized time by using a given timezone.
+            # Build a localized time by using a given time zone.
             return tzinfo.localize(dt)
         except ValueError:
             pass
@@ -496,7 +496,7 @@ def to_datetime(value, tzinfo=None):
 
 def get_tzname(dt):
     """
-    Give a datetime value, find the name of the timezone
+    Given a datetime value, find the name of the time zone.
     """
     try:
         from dateutil import tz

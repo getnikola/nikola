@@ -158,7 +158,7 @@ class Post(object):
                                         default_metadata.get('date', None),
                                         source_path))
 
-        # If timezone is set, build localized datetime.
+        # If time zone is set, build localized datetime.
         self.date = to_datetime(self.meta[self.default_lang]['date'], tzinfo)
 
         self.publish_later = False if self.current_time is None else self.date >= self.current_time
