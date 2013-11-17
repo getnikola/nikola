@@ -198,7 +198,7 @@ class Nikola(object):
             'THEME_REVEAL_CONFIG_SUBTHEME': 'sky',
             'THEME_REVEAL_CONFIG_TRANSITION': 'cube',
             'THUMBNAIL_SIZE': 180,
-            'URL_TYPE': 'rel',
+            'URL_TYPE': 'rel_path',
             'USE_BUNDLES': True,
             'USE_CDN': False,
             'USE_FILENAME_AS_TITLE': True,
@@ -627,10 +627,10 @@ class Nikola(object):
 
             # Avoid empty links.
             if src == dst:
-                if self.config.get('URL_TYPE') == 'full':
+                if self.config.get('URL_TYPE') == 'absolute':
                     dst = urljoin(self.config['BASE_URL'], dst)
                     return dst
-                elif self.config.get('URL_TYPE') == 'abs':
+                elif self.config.get('URL_TYPE') == 'full_path':
                     return dst
                 else:
                     return "#"
@@ -638,12 +638,12 @@ class Nikola(object):
             # Check that link can be made relative, otherwise return dest
             parsed_dst = urlsplit(dst)
             if parsed_src[:2] != parsed_dst[:2]:
-                if self.config.get('URL_TYPE') == 'full':
+                if self.config.get('URL_TYPE') == 'absolute':
                     dst = urljoin(self.config['BASE_URL'], dst)
                 return dst
 
-            if self.config.get('URL_TYPE') in ('abs', 'full'):
-                if self.config.get('URL_TYPE') == 'full':
+            if self.config.get('URL_TYPE') in ('full_path', 'absolute'):
+                if self.config.get('URL_TYPE') == 'absolute':
                     dst = urljoin(self.config['BASE_URL'], dst)
                 return dst
 
