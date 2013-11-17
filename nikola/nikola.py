@@ -198,6 +198,7 @@ class Nikola(object):
             'THEME_REVEAL_CONFIG_SUBTHEME': 'sky',
             'THEME_REVEAL_CONFIG_TRANSITION': 'cube',
             'THUMBNAIL_SIZE': 180,
+            'URL_TYPE': 'rel',
             'USE_BUNDLES': True,
             'USE_CDN': False,
             'USE_FILENAME_AS_TITLE': True,
@@ -460,6 +461,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['hide_sourcelink'] = self.config.get(
             'HIDE_SOURCELINK')
         self._GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
+        self._GLOBAL_CONTEXT['url_type'] = self.config.get('URL_TYPE')
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
@@ -622,12 +624,27 @@ class Nikola(object):
 
             # Normalize
             dst = urljoin(src, dst)
+
             # Avoid empty links.
             if src == dst:
-                return "#"
+                if self.config.get('URL_TYPE') == 'full':
+                    dst = urljoin(self.config['BASE_URL'], dst)
+                    return dst
+                elif self.config.get('URL_TYPE') == 'abs':
+                    return dst
+                else:
+                    return "#"
+
             # Check that link can be made relative, otherwise return dest
             parsed_dst = urlsplit(dst)
             if parsed_src[:2] != parsed_dst[:2]:
+                if self.config.get('URL_TYPE') == 'full':
+                    dst = urljoin(self.config['BASE_URL'], dst)
+                return dst
+
+            if self.config.get('URL_TYPE') in ('abs', 'full'):
+                if self.config.get('URL_TYPE') == 'full':
+                    dst = urljoin(self.config['BASE_URL'], dst)
                 return dst
 
             # Now both paths are on the same site and absolute
