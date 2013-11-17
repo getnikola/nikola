@@ -461,7 +461,6 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['hide_sourcelink'] = self.config.get(
             'HIDE_SOURCELINK')
         self._GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
-        self._GLOBAL_CONTEXT['url_type'] = self.config.get('URL_TYPE')
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
