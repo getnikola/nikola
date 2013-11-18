@@ -137,7 +137,7 @@ class Galleries(Task):
                 for task in self.remove_excluded_image(image):
                     yield task
 
-            crumbs = utils.get_crumbs(gallery)
+            crumbs = utils.get_crumbs(gallery, index_folder=self)
 
             # Create index.html for each language
             for lang in self.kw['translations']:

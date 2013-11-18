@@ -555,7 +555,7 @@ def apply_filters(task, filters):
     return task
 
 
-def get_crumbs(path, is_file=False):
+def get_crumbs(path, is_file=False, index_folder=None):
     """Create proper links for a crumb bar.
 
     >>> crumbs = get_crumbs('galleries')
@@ -582,7 +582,7 @@ def get_crumbs(path, is_file=False):
     >>> print('|'.join(crumbs[2]))
     #|bar
     """
-
+    folder = path
     crumbs = path.split(os.sep)
     _crumbs = []
     if is_file:
@@ -594,6 +594,15 @@ def get_crumbs(path, is_file=False):
     else:
         for i, crumb in enumerate(crumbs[::-1]):
             _path = '/'.join(['..'] * i) or '#'
+            if index_folder and hasattr(index_folder, 'parse_index'):
+                #import pdb; pdb.set_trace()
+                if folder[-1] == '/':
+                    folder = folder[:-1]
+                fpost = index_folder.parse_index(folder)
+                folder = folder.replace(crumb, '')
+                if fpost:
+                    crumb = fpost.title() or crumb
+            #print("%s, %s" % (_path, crumb))
             _crumbs.append([_path, crumb])
     return list(reversed(_crumbs))
 
