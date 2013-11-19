@@ -10,6 +10,7 @@ Features
   documents with headers lower by one than the one defined (Issue #891)
 * isso comments are now supported (Issue #905)
 * Gallery titles are used in more places (Issue #902)
+* Gallery titles also are used in breadcrumbs (Issue #902)
 
 Bugfixes
 --------

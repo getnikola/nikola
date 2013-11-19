@@ -556,9 +556,9 @@ def apply_filters(task, filters):
 
 
 def get_crumbs(path, is_file=False, index_folder=None):
-    """Create proper links for a crumb bar. 
-    index_folder is used if you want to use title from index file 
-    instead of folder name as breadcrumb text. 
+    """Create proper links for a crumb bar.
+    index_folder is used if you want to use title from index file
+    instead of folder name as breadcrumb text.
 
     >>> crumbs = get_crumbs('galleries')
     >>> len(crumbs)
