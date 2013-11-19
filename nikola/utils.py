@@ -555,8 +555,10 @@ def apply_filters(task, filters):
     return task
 
 
-def get_crumbs(path, is_file=False):
+def get_crumbs(path, is_file=False, index_folder=None):
     """Create proper links for a crumb bar.
+    index_folder is used if you want to use title from index file
+    instead of folder name as breadcrumb text.
 
     >>> crumbs = get_crumbs('galleries')
     >>> len(crumbs)
@@ -595,6 +597,16 @@ def get_crumbs(path, is_file=False):
         for i, crumb in enumerate(crumbs[::-1]):
             _path = '/'.join(['..'] * i) or '#'
             _crumbs.append([_path, crumb])
+    if index_folder and hasattr(index_folder, 'parse_index'):
+        folder = path
+        for i, crumb in enumerate(crumbs[::-1]):
+            if folder[-1] == os.sep:
+                folder = folder[:-1]
+            index_post = index_folder.parse_index(folder)
+            folder = folder.replace(crumb, '')
+            if index_post:
+                crumb = index_post.title() or crumb
+            _crumbs[i][1] = crumb
     return list(reversed(_crumbs))
 
 
