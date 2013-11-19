@@ -301,6 +301,12 @@ class Galleries(Task):
                 'story.tmpl',
                 self.site.get_compiler(index_path)
             )
+            # If this did not exist, galleries without a title in the
+            # index.txt file would be errorneously named `index`
+            # (warning: galleries titled index and filenamed differently
+            #  may break)
+            if post.title == 'index':
+                post.title = os.path.split(gallery)[1]
         else:
             post = None
         return post
