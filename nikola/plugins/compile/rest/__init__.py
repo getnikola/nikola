@@ -140,7 +140,8 @@ def get_observer(settings):
         """
         errormap = {0: 1, 1: 2, 2: 4, 3: 5, 4: 6}
         text = docutils.nodes.Element.astext(msg)
-        out = '[{source}:{line}] {text}'.format(source=settings['source'], line=msg['line'] + settings['add_ln'], text=text)
+        line = msg['line'] + settings['add_ln'] if 'line' in msg else 0
+        out = '[{source}:{line}] {text}'.format(source=settings['source'], line=line, text=text)
         settings['logger'].log(errormap[msg['level']], out)
 
     return observer
