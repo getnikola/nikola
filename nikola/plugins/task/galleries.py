@@ -540,7 +540,7 @@ class Galleries(Task):
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
                 im.save(dst)
-            except Exception, e:
+            except Exception as e:
                 self.logger.warn("Can't thumbnail {0}, using original "
                                  "image as thumbnail ({1})".format(src, e))
                 utils.copy_file(src, dst)
