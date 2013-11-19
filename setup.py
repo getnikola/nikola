@@ -178,7 +178,6 @@ setup(name='Nikola',
                    'Topic :: Text Processing :: Markup'),
       install_requires=dependencies,
       include_package_data=True,
-      py_modules=['nikola'],
       cmdclass={'install': nikola_install},
       data_files=[
               ('share/doc/nikola', [
