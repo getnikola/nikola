@@ -1,5 +1,7 @@
-global-include *.css *.html *.js
-global-include engine parent bundles *.tmpl
-global-include *.jpg *.png *.svg *.ico *.gif
-global-include *.ttf *.eot *.woff
-global-include *.py *.txt *.rst *.md *.in *.meta
+graft docs
+graft nikola
+graft scripts
+graft tests
+include *.txt
+include *.rst
+include *.py
