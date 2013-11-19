@@ -250,15 +250,6 @@ class Post(object):
     def template_name(self):
         return self.meta('template') or self._template_name
 
-    def _add_old_metadata(self):
-        # Compatibility for themes up to Nikola 5.4.1
-        # TODO: remove before Nikola 6
-        self.pagenames = {}
-        self.titles = {}
-        for lang in self.translations:
-            self.pagenames[lang] = self.meta[lang]['slug']
-            self.titles[lang] = self.meta[lang]['title']
-
     def formatted_date(self, date_format):
         """Return the formatted date, as unicode."""
         fmt_date = self.date.strftime(date_format)

@@ -892,8 +892,6 @@ class Nikola(object):
                         self.posts_per_category[post.meta('category')].append(post.source_path)
                     else:
                         self.pages.append(post)
-                    if self.config['OLD_THEME_SUPPORT']:
-                        post._add_old_metadata()
                     self.post_per_file[post.destination_path(lang=lang)] = post
                     self.post_per_file[post.destination_path(lang=lang, extension=post.source_ext())] = post
 
