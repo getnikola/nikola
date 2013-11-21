@@ -12,11 +12,11 @@ build/
 __pycache__/
 *.egg-info/
 
-# For virtualenvwrapper
+# virtualenvwrapper oh-my-zsh plugin
 .venv
 
 # coverage.py
 .coverage
 
-# For pyenv
+# pyenv
 .python-version
