@@ -10,3 +10,4 @@ PyRSS2Gen
 pytz
 logbook
 blinker
+setuptools

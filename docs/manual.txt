@@ -234,6 +234,9 @@ Longer version:
       #. Get `yapsy <http://yapsy.sourceforge.net>`_
       #. Get `PyRSS2Gen <http://www.dalkescientific.com/Python/PyRSS2Gen.html>`_
       #. Get `pytz <http://pytz.sourceforge.net/>`_
+      #. Get `Logbook <http://pythonhosted.org/Logbook/>`_
+      #. Get `blinker <http://pythonhosted.org/blinker/>`_
+      #. Get `Setuptools <http://pythonhosted.org/setuptools/>`_
       #. If using Python 2, get `configparser <http://pypi.python.org/pypi/configparser/3.2.0r3>`_
 
 #. run ``python setup.py install``
