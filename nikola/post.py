@@ -613,7 +613,7 @@ def get_metadata_from_meta_file(path, lang=None):
             meta_data = meta_file.readlines()
         while len(meta_data) < 6:
             meta_data.append("")
-        (title, slug, date, tags, link, description) = [
+        (title, slug, date, tags, link, description, genre) = [
             x.strip() for x in meta_data][:6]
 
         meta = {}
