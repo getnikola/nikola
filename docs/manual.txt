@@ -508,6 +508,9 @@ to your configuration ::
        Set "True" if you do not want to see the **story** title as a
        heading of the page (does not work for posts).
 
+   genre
+       Genre of the post, will be used in the class attribute of article tag in index template (index.tmpl) and post template (post.tmpl).
+       The default value is ``is-text``.  
 
 .. note:: The Two-File Format
 
