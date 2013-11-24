@@ -81,7 +81,7 @@ class BuildSass(Task):
             utils.makedirs(dst_dir)
             src = os.path.join(kw['cache_folder'], self.sources_folder, target)
             try:
-                compiled = subprocess.check_output([self.compiler_name, src])
+                compiled = subprocess.check_output([self.compiler_name, src], shell=True)
             except OSError:
                 utils.req_missing([self.compiler_name],
                                   'build Sass files (and use this theme)',
