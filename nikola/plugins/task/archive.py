@@ -92,7 +92,8 @@ class Archive(Task):
                     kw['filters'],
                     context,
                 )
-                task_cfg = {1: task['uptodate'][0].config, 2: kw}
+                n = len(post_list) if 'posts' in context else len(months)
+                task_cfg = {1: task['uptodate'][0].config, 2: kw, 3: n}
                 task['uptodate'] = [config_changed(task_cfg)]
                 task['basename'] = self.name
                 yield task
@@ -123,7 +124,7 @@ class Archive(Task):
                     kw['filters'],
                     context,
                 )
-                task_cfg = {1: task['uptodate'][0].config, 2: kw}
+                task_cfg = {1: task['uptodate'][0].config, 2: kw, 3: len(post_list)}
                 task['uptodate'] = [config_changed(task_cfg)]
                 task['basename'] = self.name
                 yield task
@@ -151,7 +152,7 @@ class Archive(Task):
                     kw['filters'],
                     context,
                 )
-                task_cfg = {1: task['uptodate'][0].config, 2: kw}
+                task_cfg = {1: task['uptodate'][0].config, 2: kw, 3: len(years)}
                 task['uptodate'] = [config_changed(task_cfg)]
                 task['basename'] = self.name
                 yield task
