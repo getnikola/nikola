@@ -104,7 +104,7 @@ class BuildSass(Task):
 
             if base in seennames:
                 self.logger.error(
-                    'Duplicate filenames for SASS compiled files: {0} and '
+                    'Duplicate filenames for Sass compiled files: {0} and '
                     '{1} (both compile to {2})'.format(
                         seennames[base], target, base + ".css"))
             else:
