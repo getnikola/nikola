@@ -37,6 +37,11 @@ import os
 
 try:
     from txt2tags import exec_command_line as txt2tags
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = None  # NOQA
+
 except ImportError:
     txt2tags = None  # NOQA
 
@@ -58,7 +63,10 @@ class CompileTxt2tags(PageCompiler):
         txt2tags(cmd)
 
     def create_post(self, path, onefile=False, **kw):
-        metadata = {}
+        if OrderedDict is not None:
+            metadata = OrderedDict()
+        else:
+            metadata = {}
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))

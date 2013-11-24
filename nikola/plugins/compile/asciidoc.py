@@ -37,6 +37,11 @@ import subprocess
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, req_missing
 
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = None  # NOQA
+
 
 class CompileAsciiDoc(PageCompiler):
     """Compile asciidoc into HTML."""
@@ -53,7 +58,10 @@ class CompileAsciiDoc(PageCompiler):
                 req_missing(['asciidoc'], 'build this site (compile with asciidoc)', python=False)
 
     def create_post(self, path, onefile=False, **kw):
-        metadata = {}
+        if OrderedDict is not None:
+            metadata = OrderedDict()
+        else:
+            metadata = {}
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))

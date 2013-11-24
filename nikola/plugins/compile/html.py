@@ -37,6 +37,11 @@ from nikola.utils import makedirs
 class CompileHtml(PageCompiler):
     """Compile HTML into HTML."""
 
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = None  # NOQA
+
     name = "html"
 
     def compile_html(self, source, dest, is_two_file=True):
@@ -45,7 +50,10 @@ class CompileHtml(PageCompiler):
         return True
 
     def create_post(self, path, onefile=False, **kw):
-        metadata = {}
+        if OrderedDict is not None:
+            metadata = OrderedDict()
+        else:
+            metadata = {}
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))

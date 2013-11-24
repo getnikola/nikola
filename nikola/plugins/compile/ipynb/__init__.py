@@ -74,6 +74,9 @@ class CompileIPynb(PageCompiler):
                 fd.write('%s\n' % kw['slug'])
                 fd.write('%s\n' % kw['date'])
                 fd.write('%s\n' % kw['tags'])
+                fd.write('%s\n' % kw['link'])
+                fd.write('%s\n' % kw['description'])
+                fd.write('%s\n' % kw['type'])
         print("Your post's metadata is at: ", meta_path)
         with codecs.open(path, "wb+", "utf8") as fd:
             fd.write("""{

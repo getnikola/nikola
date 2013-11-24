@@ -37,6 +37,11 @@ try:
 except ImportError:
     misaka = None  # NOQA
     nikola_extension = None
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = None  # NOQA
+
     gist_extension = None
     podcast_extension = None
 
@@ -69,7 +74,10 @@ class CompileMisaka(PageCompiler):
             out_file.write(output)
 
     def create_post(self, path, onefile=False, **kw):
-        metadata = {}
+        if OrderedDict is not None:
+            metadata = OrderedDict()
+        else:
+            metadata = {}
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))

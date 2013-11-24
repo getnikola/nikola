@@ -50,6 +50,12 @@ except ImportError:
     gist_extension = None
     podcast_extension = None
 
+
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = None  # NOQA
+
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, req_missing
 
@@ -76,7 +82,10 @@ class CompileMarkdown(PageCompiler):
             out_file.write(output)
 
     def create_post(self, path, onefile=False, **kw):
-        metadata = {}
+        if OrderedDict is not None:
+            metadata = OrderedDict()
+        else:
+            metadata = {}
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))

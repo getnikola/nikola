@@ -37,6 +37,11 @@ from nikola.utils import makedirs
 
 
 class CompilePhp(PageCompiler):
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = None  # NOQA
+
     """Compile PHP into PHP."""
 
     name = "php"
@@ -46,7 +51,10 @@ class CompilePhp(PageCompiler):
         shutil.copyfile(source, dest)
 
     def create_post(self, path, onefile=False, **kw):
-        metadata = {}
+        if OrderedDict is not None:
+            metadata = OrderedDict()
+        else:
+            metadata = {}
         metadata.update(self.default_metadata)
         metadata.update(kw)
         os.makedirs(os.path.dirname(path))
