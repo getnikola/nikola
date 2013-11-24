@@ -9,7 +9,7 @@ ${helper.twitter_card_information(post)}
 % endif
 </%block>
 <%block name="content">
-    <article class="postbox ${post.meta('genre')}">
+    <article class="postbox post-${post.meta('type')}">
     <div class="h-entry" itemscope="itemscope" itemtype="http://schema.org/Article">
     ${helper.html_title()}
     <hr>

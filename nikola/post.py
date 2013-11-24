@@ -158,9 +158,9 @@ class Post(object):
                                         default_metadata.get('date', None),
                                         source_path))
 
-        if 'genre' not in default_metadata:
-            # default value is 'is-text'
-            default_metadata['genre'] = 'is-text'
+        if 'type' not in default_metadata:
+            # default value is 'text'
+            default_metadata['type'] = 'text'
 
         # If time zone is set, build localized datetime.
         self.date = to_datetime(self.meta[self.default_lang]['date'], tzinfo)
@@ -613,7 +613,7 @@ def get_metadata_from_meta_file(path, lang=None):
             meta_data = meta_file.readlines()
         while len(meta_data) < 6:
             meta_data.append("")
-        (title, slug, date, tags, link, description, genre) = [
+        (title, slug, date, tags, link, description, type) = [
             x.strip() for x in meta_data][:6]
 
         meta = {}
@@ -630,8 +630,8 @@ def get_metadata_from_meta_file(path, lang=None):
             meta['link'] = link
         if description:
             meta['description'] = description
-        if genre:
-            meta['genre'] = genre
+        if type:
+            meta['type'] = type
 
         return meta
 
@@ -679,9 +679,9 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
             meta['title'] = os.path.splitext(
                 os.path.basename(post.source_path))[0]
 
-        if 'genre' not in meta:
-            # If no genre is found, use default value, 'is-text'
-            meta['genre'] = 'is-text'
+        if 'type' not in meta:
+            # If no type is found, use default value, 'text'
+            meta['type'] = 'text'
 
     return meta
 
