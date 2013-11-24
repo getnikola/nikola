@@ -462,7 +462,7 @@ The other lines are optional. Tags are comma-separated. The ``link`` is an origi
 source for the content, and ``description`` is mostly useful for SEO.
 ``type`` is the post type, whatever you set here (prepended with ``post-``)
 will become a class of the `<article>` element for this post.  Defaults to
-``text`` (adding the class ``post-text``)
+``text`` (resulting in a ``post-text`` class)
 
 You can add your own metadata fields in the same manner, if you use a theme that
 supports them (for example: ``.. author: John Doe``)
