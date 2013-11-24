@@ -26,9 +26,10 @@
 
 from __future__ import print_function
 import os
+import sys
+import codecs
 import json
 import shutil
-import codecs
 from io import BytesIO
 
 import pygments
@@ -158,7 +159,11 @@ class CommandInstallTheme(Command):
             LOGGER.notice('This plugin has a sample config file.  Integrate it with yours in order to make this theme work!')
             print('Contents of the conf.py.sample file:\n')
             with codecs.open(confpypath, 'rb', 'utf-8') as fh:
-                print(indent(pygments.highlight(
-                    fh.read(), PythonLexer(), TerminalFormatter()), 4 * ' '))
+                if sys.platform == 'win32':
+                    print(indent(pygments.highlight(
+                        fh.read(), PythonLexer(), TerminalFormatter()),
+                        4 * ' '))
+                else:
+                    print(indent(fh.read(), 4 * ' '))
         LOGGER.notice('Remember to set THEME="{0}" in conf.py to use this theme.'.format(name))
         return True

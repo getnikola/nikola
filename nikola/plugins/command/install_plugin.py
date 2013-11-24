@@ -27,6 +27,7 @@
 from __future__ import print_function
 import codecs
 import os
+import sys
 import json
 import shutil
 import subprocess
@@ -180,6 +181,10 @@ class CommandInstallPlugin(Command):
             LOGGER.notice('This plugin has a sample config file.')
             print('Contents of the conf.py.sample file:\n')
             with codecs.open(confpypath, 'rb', 'utf-8') as fh:
-                print(indent(pygments.highlight(
-                    fh.read(), PythonLexer(), TerminalFormatter()), 4 * ' '))
+                if sys.platform == 'win32':
+                    print(indent(pygments.highlight(
+                        fh.read(), PythonLexer(), TerminalFormatter()),
+                        4 * ' '))
+                else:
+                    print(indent(fh.read(), 4 * ' '))
         return True
