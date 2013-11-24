@@ -679,10 +679,6 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
             meta['title'] = os.path.splitext(
                 os.path.basename(post.source_path))[0]
 
-        if 'type' not in meta:
-            # If no type is found, use default value, 'text'
-            meta['type'] = 'text'
-
     return meta
 
 
