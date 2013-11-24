@@ -43,7 +43,6 @@ except ImportError:
     OrderedDict = None  # NOQA
 
 
-
 class CompileBbcode(PageCompiler):
     """Compile bbcode into HTML."""
 

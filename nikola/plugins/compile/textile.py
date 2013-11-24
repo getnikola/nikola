@@ -37,11 +37,11 @@ except ImportError:
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, req_missing
+
 try:
     from collections import OrderedDict
 except ImportError:
     OrderedDict = None  # NOQA
-
 
 
 class CompileTextile(PageCompiler):

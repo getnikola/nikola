@@ -37,13 +37,13 @@ import os
 
 try:
     from txt2tags import exec_command_line as txt2tags
+except ImportError:
+    txt2tags = None  # NOQA
+
 try:
     from collections import OrderedDict
 except ImportError:
     OrderedDict = None  # NOQA
-
-except ImportError:
-    txt2tags = None  # NOQA
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, req_missing

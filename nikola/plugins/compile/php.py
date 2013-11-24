@@ -35,13 +35,13 @@ import codecs
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs
 
-
-class CompilePhp(PageCompiler):
 try:
     from collections import OrderedDict
 except ImportError:
     OrderedDict = None  # NOQA
 
+
+class CompilePhp(PageCompiler):
     """Compile PHP into PHP."""
 
     name = "php"
