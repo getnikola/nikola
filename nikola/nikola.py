@@ -896,8 +896,7 @@ class Nikola(object):
                     self.post_per_file[post.destination_path(lang=lang, extension=post.source_ext())] = post
 
         for name, post in list(self.global_data.items()):
-            if post.use_in_feeds:
-                self.timeline.append(post)
+            self.timeline.append(post)
         self.timeline.sort(key=lambda p: p.date)
         self.timeline.reverse()
         post_timeline = [p for p in self.timeline if p.use_in_feeds]
