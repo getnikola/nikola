@@ -16,6 +16,7 @@ Features
 Bugfixes
 --------
 
+* Drafts were leaked in RSS (fix by Kay Hayen)
 * Don't crash when docutils exception have no line number (Issue #920)
 * Forced permalinks in active menu items (Issue #916)
 * Remind the user to set THEME to use a downloaded theme
