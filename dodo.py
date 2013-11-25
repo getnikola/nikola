@@ -7,7 +7,7 @@ import subprocess
 DOIT_CONFIG = {
     'default_tasks': ['flake8', 'test'],
     'reporter': 'executed-only',
-    }
+}
 
 
 def recursive_glob(path, pattern):
@@ -17,10 +17,11 @@ def recursive_glob(path, pattern):
             yield os.path.join(root, filename)
 
 
-
 def task_flake8():
     """flake8 - static check for python files"""
-    for fname in recursive_glob('nikola', '*.py'):
+    for fname in recursive_glob('.', '*.py'):
+        if fname.startswith('./cache'):
+            continue
         yield {
             'name': fname,
             'actions': ['flake8 --ignore=E501 {0}'.format(fname)],
@@ -47,8 +48,8 @@ def task_locale():
                         locales.append((lang, line))
                         if len(locales) == 2:
                             break
-            if len(locales)!=2:
-                return False # task failed
+            if len(locales) != 2:
+                return False  # task failed
             else:
                 os.environ['NIKOLA_LOCALE_DEFAULT'] = ','.join(locales[0])
                 os.environ['NIKOLA_LOCALE_OTHER'] = ','.join(locales[1])
@@ -56,7 +57,7 @@ def task_locale():
             # restore to default locale
             locale.resetlocale()
 
-    return {'actions': [set_nikola_test_locales], 'verbosity':2}
+    return {'actions': [set_nikola_test_locales], 'verbosity': 2}
 
 
 def task_test():
@@ -64,7 +65,7 @@ def task_test():
     return {
         'task_dep': ['locale'],
         'actions': ['nosetests'],
-        }
+    }
 
 
 def task_coverage():
@@ -73,7 +74,7 @@ def task_coverage():
         'task_dep': ['locale'],
         'actions': ['nosetests --with-coverage --cover-package=nikola --with-doctest --doctest-options=+NORMALIZE_WHITESPACE --logging-filter=-yapsy'],
         'verbosity': 2,
-        }
+    }
 
 
 def task_gen_completion():
@@ -84,4 +85,4 @@ def task_gen_completion():
             'name': shell,
             'actions': [cmd.format(shell)],
             'targets': ['_nikola_{0}'.format(shell)],
-            }
+        }
