@@ -69,6 +69,9 @@ class RenderTags(Task):
             "feed_length": self.site.config['FEED_LENGTH'],
         }
 
+        if kw['tag_pages_are_indexes']:
+            kw['tag_index_template'] = self.site.config['TAG_INDEX_TEMPLATE']
+
         self.site.scan_posts()
         yield self.group_task()
 
@@ -189,7 +192,7 @@ class RenderTags(Task):
             return name
 
         # FIXME: deduplicate this with render_indexes
-        template_name = "index.tmpl"
+        template_name = kw['tag_index_template']
         # Split in smaller lists
         lists = []
         while post_list:

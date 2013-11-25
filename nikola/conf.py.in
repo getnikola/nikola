@@ -151,6 +151,9 @@ COMPILERS = ${COMPILERS}
 # the posts themselves. If set to False, it will be just a list of links.
 # TAG_PAGES_ARE_INDEXES = True
 
+# The name of the template to use for tag index pages.
+# TAG_INDEX_TEMPLATE = 'index.tmpl'
+
 # Final location is output / TRANSLATION[lang] / INDEX_PATH / index-*.html
 # INDEX_PATH = ""
 

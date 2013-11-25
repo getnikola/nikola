@@ -194,6 +194,7 @@ class Nikola(object):
             'SITEMAP_INCLUDE_FILELESS_DIRS': True,
             'TAG_PATH': 'categories',
             'TAG_PAGES_ARE_INDEXES': False,
+            'TAG_INDEX_TEMPLATE': 'index.tmpl',
             'THEME': 'bootstrap',
             'THEME_REVEAL_CONFIG_SUBTHEME': 'sky',
             'THEME_REVEAL_CONFIG_TRANSITION': 'cube',
