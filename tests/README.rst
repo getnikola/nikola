@@ -33,22 +33,22 @@ You need:
 
 * ``pip install -r requirements-tests.txt``
 * a few minutes’ time
-* two locales fully supported by python and your operating system, with appropriate nikola   locale settings
+* appropriate locale settings
 
 How to set the locale for Nikola tests?
 ---------------------------------------
 
 For testing nikola needs to specify two languages, each one with a supported locale. By default, the test suite uses ``en`` and ``pl`` as languages, and their respective default locale for them.
 
-The choice of Polish is due to having one locale to generate instead of 20 (Spanish) but you can specify other language–locale pairs by exporting two shell variables. By example, if you want to use the spanish and german nikola translations::
+The choice of Polish is due to having one locale to generate instead of 20 (Spanish) and you can happily ignore it — just set the language–locale pairs by exporting two shell variables, for example::
 
-    export NIKOLA_LOCALE_DEFAULT=es,es_AR.utf8
-    export NIKOLA_LOCALE_OTHER=de,de_DE.utf8
+    export NIKOLA_LOCALE_DEFAULT=en,en_US.utf8
+    export NIKOLA_LOCALE_OTHER=pl,pl_PL.utf8
 
 In Windows that would be::
 
-    set NIKOLA_LOCALE_DEFAULT=es,Spanish_Argentina
-    set NIKOLA_LOCALE_OTHER=de,German_Germany
+    set NIKOLA_LOCALE_DEFAULT=en,English
+    set NIKOLA_LOCALE_OTHER=pl,Polish
 
 Replace the part before the comma with a Nikola translation selector (see ``nikola/conf.py.in`` for details), and the part after the comma with an *installed* glibc locale.
 
@@ -64,7 +64,6 @@ the two default locales. Here is how to do that in Ubuntu::
 
     sudo apt-get install language-pack-en language-pack-pl
 
-If your system have only one locale it is strongly recommended to install an additional locale: setting the two pairs to the same value weakens the tests. 
 
 How to execute the tests
 ------------------------
