@@ -12,6 +12,7 @@ Features
 * Gallery titles are used in more places (Issue #902)
 * Gallery titles also are used in breadcrumbs (Issue #902)
 * New "type" metadata to make differences for posts (Issue #927)
+* ``tagindex.tmpl`` is used for tag indexes instead of ``index.tmpl`` (Issues #930, #933)
 
 Bugfixes
 --------
