@@ -11,6 +11,8 @@ Features
 * isso comments are now supported (Issue #905)
 * Gallery titles are used in more places (Issue #902)
 * Gallery titles also are used in breadcrumbs (Issue #902)
+* Added a TAG_INDEX_TEMPLATE option to choose the template name for
+  tag indexes. (Issue #930)
 
 Bugfixes
 --------
