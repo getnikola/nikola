@@ -4,11 +4,13 @@
         <!--Body content-->
         <div class="postbox">
         <h1>${title}</h1>
+        %if items:
         <ul class="unstyled">
         % for text, link in items:
             <li><a href="${link}">${text}</a>
         % endfor
         </ul>
+        %endif
         </div>
         <!--End of body content-->
 </%block>
