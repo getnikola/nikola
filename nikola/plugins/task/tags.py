@@ -189,7 +189,7 @@ class RenderTags(Task):
             return name
 
         # FIXME: deduplicate this with render_indexes
-        template_name = "index.tmpl"
+        template_name = "tagindex.tmpl"
         # Split in smaller lists
         lists = []
         while post_list:
