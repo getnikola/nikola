@@ -1,5 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%def name="html_pager()">
+%if preflink or nextlink:
 <div>
 <ul class="pager">
   %if prevlink:
@@ -14,6 +15,7 @@
   %endif
 </ul>
 </div>
+%endif
 </%def>
 
 <%def name="mathjax_script(posts)">
