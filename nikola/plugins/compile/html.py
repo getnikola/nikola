@@ -62,4 +62,4 @@ class CompileHtml(PageCompiler):
                 for k, v in metadata.items():
                     fd.write('.. {0}: {1}\n'.format(k, v))
                 fd.write('-->\n\n')
-            fd.write("\n<p>Write your post here.</p>")
+            fd.write("\n<p>Write your post here.</p>\n")
