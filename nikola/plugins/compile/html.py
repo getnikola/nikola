@@ -33,15 +33,14 @@ import codecs
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs
 
-
-class CompileHtml(PageCompiler):
-    """Compile HTML into HTML."""
-
 try:
     from collections import OrderedDict
 except ImportError:
     OrderedDict = None  # NOQA
 
+
+class CompileHtml(PageCompiler):
+    """Compile HTML into HTML."""
     name = "html"
 
     def compile_html(self, source, dest, is_two_file=True):
