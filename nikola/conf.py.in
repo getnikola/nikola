@@ -246,6 +246,9 @@ COMPILERS = ${COMPILERS}
 # return partial content of another representation for these resources. Do not
 # use this feature if you do not understand what this means.
 
+# Compiler to process SASS files
+# SASS_COMPILER = 'sass'
+
 # #############################################################################
 # Image Gallery Options
 # #############################################################################
