@@ -29,6 +29,7 @@ from __future__ import unicode_literals
 import codecs
 import glob
 import os
+import sys
 import subprocess
 
 from nikola.plugin_categories import Task
@@ -79,9 +80,10 @@ class BuildSass(Task):
 
         def compile_target(target, dst):
             utils.makedirs(dst_dir)
+            run_in_shell = sys.platform == 'win32'
             src = os.path.join(kw['cache_folder'], self.sources_folder, target)
             try:
-                compiled = subprocess.check_output([self.compiler_name, src])
+                compiled = subprocess.check_output([self.compiler_name, src], shell=run_in_shell)
             except OSError:
                 utils.req_missing([self.compiler_name],
                                   'build Sass files (and use this theme)',
