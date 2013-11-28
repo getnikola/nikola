@@ -718,6 +718,21 @@ to the same as above), with no other post on Monday, at/after 7am,
 setting ``SCHEDULE_FORCE_TODAY = True`` will have your post scheduled
 to Monday, instead of being scheduled to Wednesday 7am.
 
+Post Types
+~~~~~~~~~~
+
+Nikola supports specifying post types, just like Tumblr does.  Post
+types affect the look of your posts, by adding a ``post-YOURINPUTHERE``
+class to the post.  Each post can have one and exactly one type.  Nikola
+styles the following types in the default themes:
+
++-----------------+----------------------------+------------------+
+| Name(s)         | Description                | Styling          |
++=================+============================+==================+
+| text            | plain text — default value | standard         |
++-----------------+----------------------------+------------------+
+| micro           | “small” (short) posts      | big serif font   |
++-----------------+----------------------------+------------------+
 
 Creating a Page
 ---------------
