@@ -34,6 +34,7 @@
 </%def>
 
 <%def name="html_pager(post)">
+    %if post.prev_post or post.next_post:
     <ul class="pager">
     %if post.prev_post:
         <li class="previous">
@@ -46,6 +47,7 @@
         </li>
     %endif
     </ul>
+    %endif
 </%def>
 
 <%def name="twitter_card_information(post)">
