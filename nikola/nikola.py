@@ -167,6 +167,7 @@ class Nikola(object):
             'INDEXES_PAGES': "",
             'INDEX_PATH': '',
             'IPYNB_CONFIG': {},
+            'LESS_COMPILER': 'lessc',
             'LICENSE': '',
             'LINK_CHECK_WHITELIST': [],
             'LISTINGS_FOLDER': 'listings',
