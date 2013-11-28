@@ -41,7 +41,6 @@ class BuildSass(Task):
     name = "build_sass"
     sources_folder = "sass"
     sources_ext = (".sass", ".scss")
-    compiler_name = ""
 
     def gen_tasks(self):
         """Generate CSS out of Sass sources."""
