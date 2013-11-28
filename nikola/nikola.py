@@ -185,6 +185,7 @@ class Nikola(object):
             'RSS_LINK': None,
             'RSS_PATH': '',
             'RSS_TEASERS': True,
+            'SASS_COMPILER': 'sass',
             'SEARCH_FORM': '',
             'SLUG_TAG_PATH': True,
             'SOCIAL_BUTTONS_CODE': SOCIAL_BUTTONS_CODE,

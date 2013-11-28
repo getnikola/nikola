@@ -41,11 +41,12 @@ class BuildSass(Task):
     name = "build_sass"
     sources_folder = "sass"
     sources_ext = (".sass", ".scss")
-    compiler_name = "sass"
+    compiler_name = ""
 
     def gen_tasks(self):
         """Generate CSS out of Sass sources."""
         self.logger = utils.get_logger('build_sass', self.site.loghandlers)
+        self.compiler_name = self.site.config['SASS_COMPILER']
 
         kw = {
             'cache_folder': self.site.config['CACHE_FOLDER'],
@@ -81,7 +82,7 @@ class BuildSass(Task):
             utils.makedirs(dst_dir)
             src = os.path.join(kw['cache_folder'], self.sources_folder, target)
             try:
-                compiled = subprocess.check_output([self.compiler_name, src], shell=True)
+                compiled = subprocess.check_output([self.compiler_name, src])
             except OSError:
                 utils.req_missing([self.compiler_name],
                                   'build Sass files (and use this theme)',
