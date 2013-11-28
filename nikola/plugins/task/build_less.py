@@ -42,10 +42,10 @@ class BuildLess(Task):
     name = "build_less"
     sources_folder = "less"
     sources_ext = ".less"
-    compiler_name = "lessc"
 
     def gen_tasks(self):
         """Generate CSS out of LESS sources."""
+        self.compiler_name = self.site.config['LESS_COMPILER']
 
         kw = {
             'cache_folder': self.site.config['CACHE_FOLDER'],

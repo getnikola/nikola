@@ -12,7 +12,8 @@ Features
 * Gallery titles are used in more places (Issue #902)
 * Gallery titles also are used in breadcrumbs (Issue #902)
 * ``tagindex.tmpl`` is used for tag indexes instead of ``index.tmpl`` (Issues #930, #933)
-* Added SASS_COMPILER option (defaults to sass) to add support for sassc (Issue #940)
+* Added SASS_COMPILER option (defaults to sass) to add support for alternate compilers like sassc (Issue #940)
+* Added LESS_COMPILER option (defaults to lessc) to add support for alternate compilers like recess (via Issue #940)
 
 Bugfixes
 --------
