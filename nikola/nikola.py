@@ -623,6 +623,12 @@ class Nikola(object):
                 else:
                     return dst
 
+            # Refuse to replace links that consist of a fragment only
+            if (not dst_url.scheme) and (not dst_url.netloc) and \
+                    (not dst_url.path) and (not dst_url.params) and \
+                    (not dst_url.query) and dst_url.fragment:
+                return dst
+
             # Normalize
             dst = urljoin(src, dst)
 

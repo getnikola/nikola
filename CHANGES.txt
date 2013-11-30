@@ -29,6 +29,7 @@ Bugfixes
 * Facebook comments are now showing properly
 * Added a warning/error when lessc/sass are missing (via Issue themes#24)
 * Fixed sass/less under Windows (Issue #939, themes#24)
+* Fix URL rewriting of fragment-only links (Issue #945)
 
 New in 6.2.1
 ============
