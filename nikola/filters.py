@@ -102,7 +102,21 @@ def runinplace(command, infile):
 
 
 def yui_compressor(infile):
-    return runinplace(r'yui-compressor --nomunge %1 -o %2', infile)
+    yuicompressor = False
+    try:
+        subprocess.call('yui-compressor', stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
+        yuicompressor = 'yui-compressor'
+    except Exception:
+        pass
+    if not yuicompressor:
+        try:
+            subprocess.call('yuicompressor', stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
+            yuicompressor = 'yuicompressor'
+        except:
+            raise Exception("yui-compressor is not installed.")
+            return false
+
+    return runinplace(r'{} --nomunge %1 -o %2'.format(yuicompressor), infile)
 
 
 def optipng(infile):
