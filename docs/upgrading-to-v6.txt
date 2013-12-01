@@ -101,9 +101,9 @@ story short, anything that had a ``True`` as the ``use_in_feeds``
         ("stories/*.html", "s", "story.tmpl"),
     )
 
-Also, you will get warnings. That doesn't mean things
-broke. They are there to inform you of what's happening, and that you need to tweak
-your config.
+Also, you will get warnings. That doesn't mean things broke. They are
+there to inform you of what's happening, and that you need to tweak your
+config.
 
-All the deprecated options will work during the v6 cycle, and only be removed in v7, when
-those warnings will become errors.
+All the deprecated options will work during the v6 cycle, and only be
+removed in v7, when those warnings will become errors.
