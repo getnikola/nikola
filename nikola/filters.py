@@ -114,7 +114,7 @@ def yui_compressor(infile):
             yuicompressor = 'yuicompressor'
         except:
             raise Exception("yui-compressor is not installed.")
-            return false
+            return False
 
     return runinplace(r'{} --nomunge %1 -o %2'.format(yuicompressor), infile)
 
