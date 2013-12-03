@@ -41,6 +41,11 @@ except ImportError:
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, req_missing
 
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = None  # NOQA
+
 
 class CompileIPynb(PageCompiler):
     """Compile IPynb into HTML."""
@@ -49,7 +54,7 @@ class CompileIPynb(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         if flag is None:
-            req_missing(['ipython>=1.0.0'], 'build this site (compile ipynb)')
+            req_missing(['ipython>=1.1.0'], 'build this site (compile ipynb)')
         makedirs(os.path.dirname(dest))
         HTMLExporter.default_template = 'basic'
         c = Config(self.site.config['IPYNB_CONFIG'])
@@ -62,7 +67,10 @@ class CompileIPynb(PageCompiler):
             out_file.write(body)
 
     def create_post(self, path, onefile=False, **kw):
-        metadata = {}
+        if OrderedDict is not None:
+            metadata = OrderedDict()
+        else:
+            metadata = {}
         metadata.update(self.default_metadata)
         metadata.update(kw)
         d_name = os.path.dirname(path)
@@ -70,13 +78,8 @@ class CompileIPynb(PageCompiler):
         meta_path = os.path.join(d_name, kw['slug'] + ".meta")
         with codecs.open(meta_path, "wb+", "utf8") as fd:
             if onefile:
-                fd.write('%s\n' % kw['title'])
-                fd.write('%s\n' % kw['slug'])
-                fd.write('%s\n' % kw['date'])
-                fd.write('%s\n' % kw['tags'])
-                fd.write('%s\n' % kw['link'])
-                fd.write('%s\n' % kw['description'])
-                fd.write('%s\n' % kw['type'])
+                for k, v in metadata.items():
+                    fd.write('{0}\n'.format(v))
         print("Your post's metadata is at: ", meta_path)
         with codecs.open(path, "wb+", "utf8") as fd:
             fd.write("""{
