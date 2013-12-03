@@ -11,10 +11,12 @@ Features
 * isso comments are now supported (Issue #905)
 * Gallery titles are used in more places (Issue #902)
 * Gallery titles also are used in breadcrumbs (Issue #902)
-* New "type" metadata to make differences for posts (Issue #927)
 * ``tagindex.tmpl`` is used for tag indexes instead of ``index.tmpl`` (Issues #930, #933)
 * Added SASS_COMPILER option (defaults to sass) to add support for alternate compilers like sassc (Issue #940)
 * Added LESS_COMPILER option (defaults to lessc) to add support for alternate compilers like recess (via Issue #940)
+* sass/less files and targets file will be processed from site root (Issue #941)
+* Added a list of posts for each tag in tag_cloud_data.json
+* New "type" metadata to make differences for posts (Issue #927)
 
 Bugfixes
 --------
@@ -30,6 +32,10 @@ Bugfixes
 * Facebook comments are now showing properly
 * Added a warning/error when lessc/sass are missing (via Issue themes#24)
 * Fixed sass/less under Windows (Issue #939, themes#24)
+<<<<<<< HEAD
+=======
+* Fix URL rewriting of fragment-only links (Issue #945)
+>>>>>>> master
 
 New in 6.2.1
 ============

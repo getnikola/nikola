@@ -59,7 +59,7 @@ targets
     Files that the action generates. No two actions can have the same targets.
 
 basename:name
-    Each task is identified by either a name or a basename:name pair. Nikola
+    Each task is identified by either a name or a basename:name pair.
 
 .. sidebar:: More about tasks
 

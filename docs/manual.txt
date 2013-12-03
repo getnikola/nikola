@@ -245,8 +245,10 @@ After that, run ``nikola init --demo sitename`` and that will create a folder ca
 ``sitename`` containing a functional demo site.
 
 Nikola is packaged for some Linux distributions, you may get that instead.
+libxml/libxslt errors
+~~~~~~~~~~~~~~~~~~~~~
 
-*NOTE*: If you get a ``ERROR: /bin/sh: 1: xslt-config: not found`` or ``fatal error:
+If you get a ``ERROR: /bin/sh: 1: xslt-config: not found`` or ``fatal error:
 libxml/xmlversion.h: No such file or directory`` when running ``pip install -r requirements.txt``, install *libxml* and *libxslt* libraries, like so:
 
 Debian systems::
@@ -254,9 +256,27 @@ Debian systems::
     sudo apt-get install libxml2-dev
     sudo apt-get install libxslt1-dev
 
-Red Hat/RPM based systems::
+Red Hat/RPM-based systems::
 
-    yum install libxslt-devel libxml2-devel
+    sudo yum install libxslt-devel libxml2-devel
+
+Python.h not found
+~~~~~~~~~~~~~~~~~~
+
+If you get an error to the effect of ``Python.h not found``, you need to
+install development packages for Python.
+
+Debian systems::
+
+    sudo apt-get install python-dev
+
+Red Hat/RPM-based systems::
+
+    sudo yum install python-devel
+
+Note that many other distros/operating systems (including Arch Linux,
+\*BSD and OS X) do not require such packages, as C headers are included
+with the base distribution of Python.
 
 Installation on Linux, Mac OS X, \*BSD, and any other POSIX-compatible OS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
