@@ -470,7 +470,7 @@ supports them (for example: ``.. author: John Doe``)
 To add these metadata fields to all new posts by default, you can set the
 variable ``ADDITIONAL_METADATA`` in your configuration.  For example, you can
 add the author metadata to all new posts by default, by adding the following
-to your configuration ::
+to your configuration::
 
     ADDITIONAL_METADATA = {
         'author': 'John Doe'
