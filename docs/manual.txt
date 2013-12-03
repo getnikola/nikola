@@ -515,8 +515,9 @@ to your configuration::
 .. note:: The Two-File Format
 
    Nikola originally used a separate ``.meta`` file. That will still work!
-   The format of the meta files is the same as shown above, but without the
-   explanations, and supports **only** the 7 “base” meta fields::
+   The format of the meta files is the same as shown above (i.e. only
+   the 7 base fields, in the order listed above), but without the
+   explanations::
 
         How to make money
         how-to-make-money
