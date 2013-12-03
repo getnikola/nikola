@@ -15,6 +15,7 @@ Features
 * Added SASS_COMPILER option (defaults to sass) to add support for alternate compilers like sassc (Issue #940)
 * Added LESS_COMPILER option (defaults to lessc) to add support for alternate compilers like recess (via Issue #940)
 * sass/less files and targets file will be processed from site root (Issue #941)
+* Added a list of posts for each tag in tag_cloud_data.json
 
 Bugfixes
 --------
@@ -31,6 +32,7 @@ Bugfixes
 * Added a warning/error when lessc/sass are missing (via Issue themes#24)
 * Fixed sass/less under Windows (Issue #939, themes#24)
 * Fixed sass/less errors when more than one theme in chain has a targets file (Issue #941)
+* Fix URL rewriting of fragment-only links (Issue #945)
 
 New in 6.2.1
 ============
