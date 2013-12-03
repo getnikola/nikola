@@ -79,7 +79,7 @@ class CompileIPynb(PageCompiler):
         with codecs.open(meta_path, "wb+", "utf8") as fd:
             if onefile:
                 for k, v in metadata.items():
-                    fd.write('.. {0}: {1}\n'.format(k, v))
+                    fd.write('{0}\n'.format(v))
         print("Your post's metadata is at: ", meta_path)
         with codecs.open(path, "wb+", "utf8") as fd:
             fd.write("""{
