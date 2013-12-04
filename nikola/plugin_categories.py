@@ -199,6 +199,7 @@ class PageCompiler(BasePlugin):
     default_metadata['tags'] = ''
     default_metadata['link'] = ''
     default_metadata['description'] = ''
+    default_metadata['type'] = 'text'
 
     def compile_html(self, source, dest, is_two_file=False):
         """Compile the source, save it on dest."""

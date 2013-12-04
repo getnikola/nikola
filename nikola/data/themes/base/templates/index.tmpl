@@ -4,7 +4,7 @@
 <%inherit file="base.tmpl"/>
 <%block name="content">
     % for post in posts:
-        <article class="postbox h-entry">
+        <article class="postbox h-entry post-${post.meta('type')}">
         <h1 class="p-name"><a href="${post.permalink()}" class="u-url">${post.title()}</a>
         <small>&nbsp;&nbsp;
              ${messages("Posted:")} <time class="published dt-published" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time>
