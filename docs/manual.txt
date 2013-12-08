@@ -245,6 +245,7 @@ After that, run ``nikola init --demo sitename`` and that will create a folder ca
 ``sitename`` containing a functional demo site.
 
 Nikola is packaged for some Linux distributions, you may get that instead.
+
 libxml/libxslt errors
 ~~~~~~~~~~~~~~~~~~~~~
 
