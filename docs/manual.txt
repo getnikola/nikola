@@ -303,7 +303,8 @@ their `PyPI <https://pypi.python.org/>`_ pages to find official packages, `the u
 2. Windows has some differences over POSIX, which may cause some features to work incorrectly under Windows.  If any problems occur, please do not hesitate to report them.  Some of the differeces include:
 
    * ``\`` as path separator (instead of ``/``)
-   * the concept of partitions
+   * the concept of HDD partitions and letters (instead of
+     seamless mounting under one root)
    * some characters in paths are disallowed (although this shouldn’t cause
      problems)
    * CR+LF (aka ``\r\n``) as the line separator (instead of LF ``\n``)
