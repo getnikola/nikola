@@ -611,6 +611,10 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # Plugins you don't want to use. Be careful :-)
 # DISABLED_PLUGINS = ["render_galleries"]
 
+# Add the absolute paths to directories containing plugins, to use them.
+# For example, a clone of the nikola plugins repository
+# EXTRA_PLUGINS_DIRS = []
+
 # Experimental plugins - use at your own risk.
 # They probably need some manual adjustments - please see their respective
 # readme.
