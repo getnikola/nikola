@@ -16,7 +16,7 @@ Features
 * Added LESS_COMPILER option (defaults to lessc) to add support for alternate compilers like recess (via Issue #940)
 * sass/less files and targets file will be processed from site root (Issue #941)
 * Added a list of posts for each tag in tag_cloud_data.json
-
+* Added EXTRA_PLUGINS_DIRS option, for specifying additional plugin directories (Issue #953)
 
 Bugfixes
 --------
