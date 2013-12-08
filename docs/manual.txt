@@ -1523,7 +1523,8 @@ Custom Plugins
 --------------
 
 You can create your own plugins (see :doc:`extending`) and use them in your own
-site by putting them in a ``plugins/`` folder.
+site by putting them in a ``plugins/`` folder.  You can also put them in
+directories listed in the ``EXTRA_PLUGINS_DIRS`` configuration variable.
 
 
 Getting Extra Plugins
@@ -1563,7 +1564,7 @@ You can also share plugins you created with the community!  Visit the
 
 You can use the plugins in this repository without installing them into your
 site, by cloning the repository and adding the path of the plugins directory to
-the EXTRA_PLUGINS_DIRS list in your configuration.
+the ``EXTRA_PLUGINS_DIRS`` list in your configuration.
 
 License
 -------
