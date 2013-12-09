@@ -36,6 +36,7 @@ from nikola.plugin_categories import RestExtension
 # WARNING: the directive name is post-list
 #          (with a DASH instead of an UNDERSCORE)
 
+
 class Plugin(RestExtension):
     name = "rest_post_list"
 
