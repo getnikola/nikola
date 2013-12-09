@@ -38,7 +38,7 @@ configuration file:
     BLOG_TITLE = "Not a Blog"
     # This is the main URL for your site. It will be used
     # in a prominent link
-    SITE_URL = "http://notablog.ralsina.com.ar"
+    SITE_URL = "http://notablog.ralsina.com.ar/"
     BLOG_EMAIL = "ralsina@kde.org"
     BLOG_DESCRIPTION = "This is a demo site (not a blog) for Nikola."
 
@@ -168,6 +168,6 @@ or whatever.
     in http://yoursite.com/blog (you may want to add links to it in NAVIGATION_LINKS of course).
 
 You can see the finished site in http://notablog.ralsina.com.ar and its full configuration in
-http://ralsina.com.ar/listings/notablog/conf.py.html
+http://ralsina.me/listings/notablog/conf.py.html
 
 I hope this was helpful!
