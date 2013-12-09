@@ -5,7 +5,7 @@ docutils
 mako>=0.6
 unidecode
 lxml
-yapsy==1.10.2-pythons2n3
+yapsy
 PyRSS2Gen
 pytz
 logbook

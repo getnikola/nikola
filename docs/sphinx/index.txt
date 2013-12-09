@@ -17,11 +17,3 @@ the Nikola website <http://getnikola.com/documentation.html>`_.
    internals
    tests
    social_buttons
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
