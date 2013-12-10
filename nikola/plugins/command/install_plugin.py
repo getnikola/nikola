@@ -146,7 +146,6 @@ class CommandInstallPlugin(Command):
             shutil.copytree(plugin_path, dest_path)
 
         reqpath = os.path.join(dest_path, 'requirements.txt')
-        print(reqpath)
         if os.path.exists(reqpath):
             LOGGER.notice('This plugin has Python dependencies.')
             LOGGER.notice('Installing dependencies with pip...')
