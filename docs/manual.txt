@@ -245,6 +245,7 @@ After that, run ``nikola init --demo sitename`` and that will create a folder ca
 ``sitename`` containing a functional demo site.
 
 Nikola is packaged for some Linux distributions, you may get that instead.
+
 libxml/libxslt errors
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -302,7 +303,8 @@ their `PyPI <https://pypi.python.org/>`_ pages to find official packages, `the u
 2. Windows has some differences over POSIX, which may cause some features to work incorrectly under Windows.  If any problems occur, please do not hesitate to report them.  Some of the differeces include:
 
    * ``\`` as path separator (instead of ``/``)
-   * the concept of partitions
+   * the concept of HDD partitions and letters (instead of
+     seamless mounting under one root)
    * some characters in paths are disallowed (although this shouldn’t cause
      problems)
    * CR+LF (aka ``\r\n``) as the line separator (instead of LF ``\n``)
@@ -1527,7 +1529,8 @@ Custom Plugins
 --------------
 
 You can create your own plugins (see :doc:`extending`) and use them in your own
-site by putting them in a ``plugins/`` folder.
+site by putting them in a ``plugins/`` folder.  You can also put them in
+directories listed in the ``EXTRA_PLUGINS_DIRS`` configuration variable.
 
 
 Getting Extra Plugins
@@ -1564,6 +1567,10 @@ Similarly to themes, there is a nice, built-in command to install them —
 
 You can also share plugins you created with the community!  Visit the
 `GitHub repository <https://github.com/getnikola/plugins>`__ to find out more.
+
+You can use the plugins in this repository without installing them into your
+site, by cloning the repository and adding the path of the plugins directory to
+the ``EXTRA_PLUGINS_DIRS`` list in your configuration.
 
 License
 -------
