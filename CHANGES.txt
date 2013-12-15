@@ -17,6 +17,7 @@ Features
 * sass/less files and targets file will be processed from site root (Issue #941)
 * Added a list of posts for each tag in tag_cloud_data.json
 * Added EXTRA_PLUGINS_DIRS option, for specifying additional plugin directories (Issue #953)
+* Expose original doit "auto" command as "doit_auto" (Issue #955)
 
 Bugfixes
 --------
