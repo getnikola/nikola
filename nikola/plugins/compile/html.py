@@ -27,6 +27,7 @@
 """Implementation of compile_html for HTML source files."""
 
 import os
+import re
 import shutil
 import codecs
 
@@ -39,13 +40,20 @@ except ImportError:
     OrderedDict = None  # NOQA
 
 
+_META_SEPARATOR = '(' + os.linesep * 2 + '|' + ('\n' * 2) + '|' + ("\r\n" * 2) + ')'
+
 class CompileHtml(PageCompiler):
     """Compile HTML into HTML."""
     name = "html"
 
     def compile_html(self, source, dest, is_two_file=True):
         makedirs(os.path.dirname(dest))
-        shutil.copyfile(source, dest)
+        with codecs.open(dest, "w+", "utf8") as out_file:
+            with codecs.open(source, "r", "utf8") as in_file:
+                data = in_file.read()
+            if not is_two_file:
+                data = re.split(_META_SEPARATOR, data, maxsplit=1)[-1]
+            out_file.write(data)
         return True
 
     def create_post(self, path, onefile=False, **kw):
