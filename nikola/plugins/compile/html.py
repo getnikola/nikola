@@ -28,7 +28,6 @@
 
 import os
 import re
-import shutil
 import codecs
 
 from nikola.plugin_categories import PageCompiler
@@ -41,6 +40,7 @@ except ImportError:
 
 
 _META_SEPARATOR = '(' + os.linesep * 2 + '|' + ('\n' * 2) + '|' + ("\r\n" * 2) + ')'
+
 
 class CompileHtml(PageCompiler):
     """Compile HTML into HTML."""
