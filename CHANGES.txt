@@ -17,6 +17,7 @@ Features
 * sass/less files and targets file will be processed from site root (Issue #941)
 * Added a list of posts for each tag in tag_cloud_data.json
 * Added EXTRA_PLUGINS_DIRS option, for specifying additional plugin directories (Issue #953)
+* New "type" metadata to make differences for posts (Issue #927)
 
 Bugfixes
 --------
@@ -32,7 +33,10 @@ Bugfixes
 * Facebook comments are now showing properly
 * Added a warning/error when lessc/sass are missing (via Issue themes#24)
 * Fixed sass/less under Windows (Issue #939, themes#24)
+<<<<<<< HEAD
+=======
 * Fix URL rewriting of fragment-only links (Issue #945)
+>>>>>>> master
 
 New in 6.2.1
 ============

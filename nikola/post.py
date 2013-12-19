@@ -158,6 +158,10 @@ class Post(object):
                                         default_metadata.get('date', None),
                                         source_path))
 
+        if 'type' not in default_metadata:
+            # default value is 'text'
+            default_metadata['type'] = 'text'
+
         # If time zone is set, build localized datetime.
         self.date = to_datetime(self.meta[self.default_lang]['date'], tzinfo)
 
@@ -607,10 +611,10 @@ def get_metadata_from_meta_file(path, lang=None):
     if os.path.isfile(meta_path):
         with codecs.open(meta_path, "r", "utf8") as meta_file:
             meta_data = meta_file.readlines()
-        while len(meta_data) < 6:
+        while len(meta_data) < 7:
             meta_data.append("")
-        (title, slug, date, tags, link, description) = [
-            x.strip() for x in meta_data][:6]
+        (title, slug, date, tags, link, description, _type) = [
+            x.strip() for x in meta_data][:7]
 
         meta = {}
 
@@ -626,6 +630,8 @@ def get_metadata_from_meta_file(path, lang=None):
             meta['link'] = link
         if description:
             meta['description'] = description
+        if _type:
+            meta['type'] = _type
 
         return meta
 
