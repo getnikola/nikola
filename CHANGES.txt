@@ -1,3 +1,5 @@
+﻿* Fixed the deploy rsync example (rsync --delete doesn't work with '/*' as source).
+
 New in 6.5.0
 ============
 
