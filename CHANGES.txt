@@ -1,6 +1,4 @@
-﻿* Fixed the deploy rsync example (rsync --delete doesn't work with '/*' as source).
-
-New in 6.5.0
+﻿New in 6.5.0
 ============
 
 Features
@@ -37,6 +35,8 @@ Bugfixes
 * Added a warning/error when lessc/sass are missing (via Issue themes#24)
 * Fixed sass/less under Windows (Issue #939, themes#24)
 * Fix URL rewriting of fragment-only links (Issue #945)
+* Fixed the deploy rsync example (rsync --delete doesn't work with '/*' as
+  source) (Issue #959)
 
 New in 6.2.1
 ============
