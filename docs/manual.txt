@@ -950,7 +950,7 @@ One caveat is that if any command has a % in it, you should double them.
 Here is an example, from my own site's deployment script::
 
     DEPLOY_COMMANDS = [
-        'rsync -rav --delete output/* ralsina@lateral.netmanagers.com.ar:/srv/www/lateral',
+        'rsync -rav --delete output/ ralsina@lateral.netmanagers.com.ar:/srv/www/lateral',
         'rdiff-backup output ~/blog-backup',
         "links -dump 'http://www.twingly.com/ping2?url=lateral.netmanagers.com.ar'",
     ]
