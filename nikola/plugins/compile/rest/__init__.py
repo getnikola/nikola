@@ -35,6 +35,7 @@ try:
     import docutils.utils
     import docutils.io
     import docutils.readers.standalone
+    from docutils.writers.html4css1 import HTMLTranslator
     has_docutils = True
 except ImportError:
     has_docutils = False
@@ -167,6 +168,10 @@ class NikolaReader(docutils.readers.standalone.Reader):
         return document
 
 
+class NikolaHTMLTranslator(HTMLTranslator):
+    pass
+
+
 def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
              destination_path=None, reader=None,
              parser=None, parser_name='restructuredtext', writer=None,
@@ -203,6 +208,7 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
                                   source_class=source_class,
                                   destination_class=docutils.io.StringOutput)
     pub.set_components(None, parser_name, writer_name)
+    pub.writer.translator_class = NikolaHTMLTranslator
     pub.process_programmatic_settings(
         settings_spec, settings_overrides, config_section)
     pub.set_source(source, source_path)
