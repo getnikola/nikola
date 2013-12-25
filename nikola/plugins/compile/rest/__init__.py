@@ -35,6 +35,7 @@ try:
     import docutils.utils
     import docutils.io
     import docutils.readers.standalone
+    import docutils.writers.html4css1
     has_docutils = True
 except ImportError:
     has_docutils = False
@@ -165,6 +166,14 @@ class NikolaReader(docutils.readers.standalone.Reader):
         document.reporter.stream = False
         document.reporter.attach_observer(get_observer(self.l_settings))
         return document
+
+
+def add_node(node, visit_function=None, depart_function=None):
+    docutils.nodes._add_node_class_names([node.__name__])
+    if visit_function:
+        setattr(docutils.writers.html4css1.HTMLTranslator, 'visit_'+node.__name__, visit_function)
+    if depart_function:
+        setattr(docutils.writers.html4css1.HTMLTranslator, 'depart_'+node.__name__, depart_function)
 
 
 def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
