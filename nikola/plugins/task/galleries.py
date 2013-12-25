@@ -51,6 +51,7 @@ import PyRSS2Gen as rss
 from nikola.plugin_categories import Task
 from nikola import utils
 from nikola.post import Post
+from nikola.utils import req_missing
 
 
 class Galleries(Task):
@@ -76,6 +77,9 @@ class Galleries(Task):
 
     def gen_tasks(self):
         """Render image galleries."""
+
+        if Image is None:
+            req_missing(['pillow'], 'render galleries')
 
         self.logger = utils.get_logger('render_galleries', self.site.loghandlers)
         self.image_ext_list = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.bmp', '.tiff']
