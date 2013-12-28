@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2013 Damian Avila.
+# Copyright © 2013-2014 Damián Avila and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated

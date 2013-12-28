@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2013 Udo Spallek, Roberto Alsina and others.
+# Copyright © 2013-2014 Udo Spallek, Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
