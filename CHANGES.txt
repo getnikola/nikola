@@ -37,6 +37,8 @@ Bugfixes
 * Fix URL rewriting of fragment-only links (Issue #945)
 * Fixed the deploy rsync example (rsync --delete doesn't work with '/*' as
   source) (Issue #959)
+* Added a notice for the user if webassets is not installed and
+  USE_BUNDLES is True (Issue #965)
 
 New in 6.2.1
 ============
