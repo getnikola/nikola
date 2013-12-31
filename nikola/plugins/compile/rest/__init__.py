@@ -78,6 +78,7 @@ class CompileRest(PageCompiler):
                         # author).
                         add_ln = len(spl[0].splitlines()) + 1
 
+                default_template_path = os.path.join(os.path.dirname(__file__), 'template.txt')
                 output, error_level, deps = rst2html(
                     data, settings_overrides={
                         'initial_header_level': 1,
@@ -86,6 +87,7 @@ class CompileRest(PageCompiler):
                         'link_stylesheet': True,
                         'syntax_highlight': 'short',
                         'math_output': 'mathjax',
+                        'template': default_template_path,
                     }, logger=self.logger, l_source=source, l_add_ln=add_ln)
                 out_file.write(output)
             deps_path = dest + '.dep'
