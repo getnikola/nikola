@@ -173,9 +173,9 @@ class NikolaReader(docutils.readers.standalone.Reader):
 def add_node(node, visit_function=None, depart_function=None):
     docutils.nodes._add_node_class_names([node.__name__])
     if visit_function:
-        setattr(docutils.writers.html4css1.HTMLTranslator, 'visit_'+node.__name__, visit_function)
+        setattr(docutils.writers.html4css1.HTMLTranslator, 'visit_' + node.__name__, visit_function)
     if depart_function:
-        setattr(docutils.writers.html4css1.HTMLTranslator, 'depart_'+node.__name__, depart_function)
+        setattr(docutils.writers.html4css1.HTMLTranslator, 'depart_' + node.__name__, depart_function)
 
 
 def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
