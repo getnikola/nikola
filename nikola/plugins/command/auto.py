@@ -35,22 +35,6 @@ import webbrowser
 from nikola.plugin_categories import Command
 from nikola.utils import req_missing
 
-GUARDFILE = """#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from livereload.task import Task
-import json
-import subprocess
-
-def f():
-    import subprocess
-    subprocess.call(("nikola", "build"))
-
-fdata = json.loads('''{0}''')
-
-for watch in fdata:
-    Task.add(watch, f)
-"""
-
 
 class Auto(Command):
     """Start debugging console."""
@@ -79,7 +63,7 @@ class Auto(Command):
         try:
             from livereload import Server
         except ImportError:
-            req_missing(['livereload>=2.0'], 'use the "auto" command')
+            req_missing(['livereload>=2.0.0'], 'use the "auto" command')
             return
 
         # Run an initial build so we are uptodate
