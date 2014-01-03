@@ -26,8 +26,6 @@
 
 from __future__ import print_function, unicode_literals
 
-import codecs
-import json
 import os
 import subprocess
 import webbrowser
