@@ -44,7 +44,9 @@ Here are some guidelines about how you can contribute to Nikola:
 * **Make sure documentation is updated** — at the very least, keep docstrings
   current, and if necessary, update the reStructuredText documentation in ``docs/``.
 * **Add a changelog entry** at the top of ``CHANGES.txt`` mentioning issue number
-  and in the correct Features/Bugfixes section.
+  and in the correct Features/Bugfixes section.  (while creating the new
+  changelog entry, put it in the version that does not exist (consult
+  setup.py) or create a new section)
 * **Run flake8** for style consistency. Use ``flake8 --ignore=E501 .``
 * **Try writing some tests** if possible — again, following existing tests is
   often easiest, and a good way to tell whether the feature you are modifying is

@@ -23,7 +23,6 @@ Features
 Bugfixes
 --------
 
-* Support livereload 2.0 (Issue #968)
 * Don't crash when docutils exception have no line number (Issue #920)
 * Forced permalinks in active menu items (Issue #916)
 * Remind the user to set THEME to use a downloaded theme
@@ -40,6 +39,8 @@ Bugfixes
   source) (Issue #959)
 * Added a notice for the user if webassets is not installed and
   USE_BUNDLES is True (Issue #965)
+* Support livereload 2.0 (Issue #968)
+* Remove some unnecessary elements (Issues #969, #970)
 
 New in 6.2.1
 ============
