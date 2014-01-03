@@ -23,6 +23,8 @@ Features
 Bugfixes
 --------
 
+* Switch from typogrify to typogrify-web (https://github.com/chrisdrackett/django-typogrify/issues/7)
+* Support livereload 2.0 (Issue #968)
 * Don't crash when docutils exception have no line number (Issue #920)
 * Forced permalinks in active menu items (Issue #916)
 * Remind the user to set THEME to use a downloaded theme

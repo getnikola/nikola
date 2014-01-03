@@ -9,7 +9,7 @@ pyphen
 python-dateutil
 micawber
 pygal
-typogrify
+typogrify-web
 phpserialize
 webassets
 ipython>=1.0.0
