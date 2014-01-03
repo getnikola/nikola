@@ -1,19 +1,21 @@
 ## -*- coding: utf-8 -*-
 <%def name="html_pager()">
-<div>
-<ul class="pager">
-  %if prevlink:
-    <li class="previous">
-        <a href="${prevlink}" rel="prev">&larr; ${messages("Newer posts")}</a>
-    </li>
-  %endif
-  %if nextlink:
-    <li class="next">
-        <a href="${nextlink}" rel="next">${messages("Older posts")} &rarr;</a>
-    </li>
-  %endif
-</ul>
-</div>
+    %if prevlink or nextlink:
+        <div>
+        <ul class="pager">
+        %if prevlink:
+            <li class="previous">
+                <a href="${prevlink}" rel="prev">&larr; ${messages("Newer posts")}</a>
+            </li>
+        %endif
+        %if nextlink:
+            <li class="next">
+                <a href="${nextlink}" rel="next">${messages("Older posts")} &rarr;</a>
+            </li>
+        %endif
+        </ul>
+        </div>
+    %endif
 </%def>
 
 <%def name="mathjax_script(posts)">

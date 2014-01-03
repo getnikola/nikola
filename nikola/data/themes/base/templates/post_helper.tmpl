@@ -34,18 +34,20 @@
 </%def>
 
 <%def name="html_pager(post)">
-    <ul class="pager">
-    %if post.prev_post:
-        <li class="previous">
-            <a href="${post.prev_post.permalink()}" rel="prev">&larr; ${messages("Previous post")}</a>
-        </li>
+    %if post.prev_post or post.next_post:
+        <ul class="pager">
+        %if post.prev_post:
+            <li class="previous">
+                <a href="${post.prev_post.permalink()}" rel="prev">&larr; ${messages("Previous post")}</a>
+            </li>
+        %endif
+        %if post.next_post:
+            <li class="next">
+                <a href="${post.next_post.permalink()}" rel="next">${messages("Next post")} &rarr;</a>
+            </li>
+        %endif
+        </ul>
     %endif
-    %if post.next_post:
-        <li class="next">
-            <a href="${post.next_post.permalink()}" rel="next">${messages("Next post")} &rarr;</a>
-        </li>
-    %endif
-    </ul>
 </%def>
 
 <%def name="twitter_card_information(post)">
