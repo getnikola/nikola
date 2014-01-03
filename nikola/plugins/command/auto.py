@@ -30,6 +30,7 @@ import codecs
 import json
 import os
 import subprocess
+import webbrowser
 
 from nikola.plugin_categories import Command
 from nikola.utils import req_missing
@@ -76,9 +77,9 @@ class Auto(Command):
     def _execute(self, options, args):
         """Start the watcher."""
         try:
-            from livereload.server import start
+            from livereload import Server
         except ImportError:
-            req_missing(['livereload==1.0.1'], 'use the "auto" command')
+            req_missing(['livereload>=2.0'], 'use the "auto" command')
             return
 
         # Run an initial build so we are uptodate
@@ -86,18 +87,18 @@ class Auto(Command):
 
         port = options and options.get('port')
 
-        # Create a Guardfile
-        with codecs.open("Guardfile", "wb+", "utf8") as guardfile:
-            l = ["conf.py", "themes", "templates", self.site.config['GALLERY_PATH']]
-            for item in self.site.config['post_pages']:
-                l.append(os.path.dirname(item[0]))
-            for item in self.site.config['FILES_FOLDERS']:
-                l.append(os.path.dirname(item))
-            data = GUARDFILE.format(json.dumps(l))
-            guardfile.write(data)
+        server = Server()
+        server.watch('conf.py')
+        server.watch('themes/')
+        server.watch('templates/')
+        server.watch(self.site.config['GALLERY_PATH'])
+        for item in self.site.config['post_pages']:
+            server.watch(os.path.dirname(item[0]))
+        for item in self.site.config['FILES_FOLDERS']:
+            server.watch(os.path.dirname(item))
 
         out_folder = self.site.config['OUTPUT_FOLDER']
+        if options and options.get('browser'):
+            webbrowser.open('http://localhost:{0}'.format(port))
 
-        os.chmod("Guardfile", 0o755)
-
-        start(port, out_folder, options and options.get('browser'))
+        server.serve(port, out_folder)

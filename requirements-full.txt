@@ -4,7 +4,7 @@ requests>=1.0
 markdown
 Jinja2>=2.7
 bbcode
-livereload==1.0.1
+livereload>=2.0
 pyphen
 python-dateutil
 micawber
