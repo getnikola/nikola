@@ -19,6 +19,8 @@ Features
 * Added EXTRA_PLUGINS_DIRS option, for specifying additional plugin directories (Issue #953)
 * Expose original doit "auto" command as "doit_auto" (Issue #955)
 * New "type" metadata to make differences for posts (Issue #927)
+* New Post.is_post attribute to differentiate posts and pages without bias
+  (Post.use_in_feeds is False if the post is retired/unpublished/a draft)
 
 Bugfixes
 --------
