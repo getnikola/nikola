@@ -117,20 +117,24 @@ class CommandInstallTheme(Command):
                 print(theme)
             return True
         else:
-            self.do_install(name, data, True)
-        # See if the theme's parent is available. If not, install it
-        while True:
-            parent_name = utils.get_parent_theme_name(name)
-            if parent_name is None:
-                break
-            try:
-                utils.get_theme_path(parent_name)
-                break
-            except:  # Not available
-                self.do_install(parent_name, data, False)
-                name = parent_name
+            # `name` may be modified by the while loop.
+            origname = name
+            installstatus = self.do_install(name, data)
+            # See if the theme's parent is available. If not, install it
+            while True:
+                parent_name = utils.get_parent_theme_name(name)
+                if parent_name is None:
+                    break
+                try:
+                    utils.get_theme_path(parent_name)
+                    break
+                except:  # Not available
+                    self.do_install(parent_name, data)
+                    name = parent_name
+            if installstatus:
+                LOGGER.notice('Remember to set THEME="{0}" in conf.py to use this theme.'.format(origname))
 
-    def do_install(self, name, data, user_requested_this):
+    def do_install(self, name, data):
         if name in data:
             utils.makedirs(self.output_dir)
             LOGGER.notice('Downloading: ' + data[name])
@@ -165,8 +169,4 @@ class CommandInstallTheme(Command):
                         4 * ' '))
                 else:
                     print(indent(fh.read(), 4 * ' '))
-
-        if user_requested_this:
-            # This would show unwanted notices for dependencies.
-            LOGGER.notice('Remember to set THEME="{0}" in conf.py to use this theme.'.format(name))
         return True
