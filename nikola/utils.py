@@ -101,7 +101,8 @@ def req_missing(names, purpose, python=True, optional=False):
         LOGGER.warn(msg)
     else:
         LOGGER.error(msg)
-        raise Exception('Missing dependencies: {0}'.format(', '.join(names)))
+        LOGGER.error('Exiting due to missing dependencies.')
+        sys.exit(5)
 
     return msg
 
