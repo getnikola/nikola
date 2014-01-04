@@ -186,6 +186,7 @@ class Post(object):
         # While draft comes from the tags, it's not really a tag
         self.is_draft = is_draft
         self.is_retired = is_retired
+        self.is_post = use_in_feeds
         self.use_in_feeds = use_in_feeds and not is_draft and not is_retired \
             and not self.publish_later
 
