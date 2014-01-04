@@ -55,7 +55,7 @@ class JinjaTemplates(TemplateSystem):
         self.lookup.globals['enumerate'] = enumerate
 
     def set_directories(self, directories, cache_folder):
-        """Createa  template lookup."""
+        """Create a template lookup."""
         if jinja2 is None:
             req_missing(['jinja2'], 'use this theme')
         self.lookup.loader = jinja2.FileSystemLoader(directories,
