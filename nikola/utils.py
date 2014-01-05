@@ -347,7 +347,7 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path,
         description=description,
         lastBuildDate=datetime.datetime.now(),
         items=items,
-        generator='nikola',
+        generator='Nikola <http://getnikola.com/>',
         language=lang
     )
     rss_obj.self_url = feed_url
