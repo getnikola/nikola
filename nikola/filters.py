@@ -26,6 +26,7 @@
 
 """Utility functions to help you run filters on files."""
 
+from nikola.utils import req_missing
 from functools import wraps
 import os
 import re
@@ -37,8 +38,16 @@ import shlex
 try:
     import typogrify.filters as typo
 except ImportError:
-    typo = None
+    typo = None  # NOQA
 
+# TODO -- change to __name__ at next release of typogrify-web
+#         if #1 gets pulled in
+try:
+    from typogrify import __version__ as _typover
+    typover = _typover  # a cheap way to have everyone shut up
+    typoweb = True
+except ImportError:
+    typoweb = False
 
 def apply_to_file(f):
     """Takes a function f that transforms a data argument, and returns
@@ -128,7 +137,7 @@ def jpegoptim(infile):
 
 
 def tidy(inplace):
-    # Goggle site verifcation files are no HTML
+    # Google site verifcation files are not HTML
     if re.match(r"google[a-f0-9]+.html", os.path.basename(inplace)) \
             and open(inplace).readline().startswith(
                 "google-site-verification:"):
@@ -174,8 +183,9 @@ def tidy(inplace):
 @apply_to_file
 def typogrify(data):
     global typogrify_filter
-    if typo is None:
-        raise Exception("To use the typogrify filter, you need to install typogrify.")
+    if not typoweb:
+        req_missing(['typogrify-web', 'use the typogrify filter'])
+
     data = typo.amp(data)
     data = typo.widont(data)
     data = typo.smartypants(data)
