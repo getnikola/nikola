@@ -203,6 +203,16 @@ of how to "get" something for your specific operating system are left to you.
 
 The short version is: ``pip install nikola``
 
+If you are running Arch Linux, there are AUR packages, available in Python 2/3
+and stable/git master flavors: `python-nikola`__ / `python2-nikola`__ for the
+latest stable release or `python-nikola-git`__ / `python2-nikola-git`__ for the
+GitHub master.  (only one package may be installed at the same time.)
+
+__ https://aur.archlinux.org/packages/python-nikola/
+__ https://aur.archlinux.org/packages/python2-nikola/
+__ https://aur.archlinux.org/packages/python-nikola-git/
+__ https://aur.archlinux.org/packages/python2-nikola-git/
+
 Note that you need Python v2.6 or newer OR v3.3 or newer.
 
 For some features it may give you an error message telling you that you need to
@@ -210,7 +220,10 @@ install something else. For example, if it tells you you need ``requests``::
 
    pip install requests
 
-And so on.
+And so on.  Alternatively, you can install the ``requirements-full.txt`` file
+shipped with the full source tree to get everything.  (or `see the file
+online
+<https://github.com/getnikola/nikola/blob/master/requirements-full.txt>`_)
 
 Longer version:
 
