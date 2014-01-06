@@ -1,3 +1,4 @@
+six==1.4.1
 doit>=0.23.0
 pygments
 pillow>=2.0.0
