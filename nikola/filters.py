@@ -26,7 +26,7 @@
 
 """Utility functions to help you run filters on files."""
 
-from nikola.utils import req_missing
+from .utils import req_missing
 from functools import wraps
 import os
 import re
