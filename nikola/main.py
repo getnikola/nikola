@@ -191,7 +191,9 @@ class DoitNikola(DoitMain):
             args = ['help']
             # Hide run because Nikola uses build
             sub_cmds.pop('run')
-
+        if len(args) == 0 or any(arg in ["--version", '-V'] for arg in args):
+            cmd_args = ['version']
+            args = ['version']
         if len(args) == 0 or args[0] not in sub_cmds.keys() or \
                 args[0] == 'build':
             # Check for conf.py before launching run
@@ -203,4 +205,4 @@ class DoitNikola(DoitMain):
 
     @staticmethod
     def print_version():
-        print("Nikola version " + __version__)
+        print("Nikola v" + __version__)
