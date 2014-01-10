@@ -32,6 +32,17 @@ class TestScheduling(BaseTestCase):
         if not _freeze_time:
             raise SkipTest('freezegun not installed')
 
+        d = [name for name in sys.modules if name.startswith("six.moves.")]
+        self.deleted = {}
+        for name in d:
+            self.deleted[name] = sys.modules[name]
+            del sys.modules[name]
+
+    @classmethod
+    def tearDown(self):
+        for name, mod in self.deleted.items():
+            sys.modules[name] = mod
+
     @freeze_time(NOW)
     def test_get_date(self):
         from nikola.plugins.command.new_post import get_date

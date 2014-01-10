@@ -263,7 +263,7 @@ It turns out ``bootstrap`` doesn' have one of those! That's because it inherits 
     <%inherit file="base.tmpl"/>
     <%block name="content">
         % for post in posts:
-            <div class="postbox">
+            <div class="postbox post-${post.meta('type')}">
             <h1><a href="${post.permalink()}">${post.title()}</a>
             <small>&nbsp;&nbsp;
                 ${messages("Posted")}: <time class="published" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time>
@@ -291,7 +291,7 @@ box, add links for the posts tags, move the date there, etc.
     <%inherit file="base.tmpl"/>
     <%block name="content">
         % for post in posts:
-            <div class="postbox">
+            <div class="postbox post-${post.meta('type')}">
             <h1><a href="${post.permalink()}">${post.title()}</a></h1>
                 <div class="meta" style="background-color: rgb(234, 234, 234); ">
                     <span class="authordate">

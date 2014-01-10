@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2013 Chris Lee
+# Copyright © 2013-2014 Chris Lee and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated

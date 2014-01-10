@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -38,6 +38,7 @@ from doit.doit_cmd import DoitMain
 from doit.cmd_help import Help as DoitHelp
 from doit.cmd_run import Run as DoitRun
 from doit.cmd_clean import Clean as DoitClean
+from doit.cmd_auto import Auto as DoitAuto
 from logbook import NullHandler
 
 from . import __version__
@@ -132,6 +133,10 @@ class Clean(DoitClean):
                 shutil.rmtree(cache_folder)
         return super(Clean, self).clean_tasks(tasks, dryrun)
 
+# Nikola has its own "auto" commands that uses livereload.
+# Expose original doit "auto" command as "doit_auto".
+DoitAuto.name = 'doit_auto'
+
 
 class NikolaTaskLoader(TaskLoader):
     """custom task loader to get tasks from Nikola instead of dodo.py file"""
@@ -161,7 +166,7 @@ class NikolaTaskLoader(TaskLoader):
 
 class DoitNikola(DoitMain):
     # overwite help command
-    DOIT_CMDS = list(DoitMain.DOIT_CMDS) + [Help, Build, Clean]
+    DOIT_CMDS = list(DoitMain.DOIT_CMDS) + [Help, Build, Clean, DoitAuto]
     TASK_LOADER = NikolaTaskLoader
 
     def __init__(self, nikola, quiet=False):

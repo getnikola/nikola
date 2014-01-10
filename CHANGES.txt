@@ -1,4 +1,4 @@
-New in 6.5.0
+﻿New in 6.5.0
 ============
 
 Features
@@ -17,10 +17,15 @@ Features
 * sass/less files and targets file will be processed from site root (Issue #941)
 * Added a list of posts for each tag in tag_cloud_data.json
 * Added EXTRA_PLUGINS_DIRS option, for specifying additional plugin directories (Issue #953)
+* Expose original doit "auto" command as "doit_auto" (Issue #955)
+* New "type" metadata to make differences for posts (Issue #927)
+* New Post.is_post attribute to differentiate posts and pages without bias
+  (Post.use_in_feeds is False if the post is retired/unpublished/a draft)
 
 Bugfixes
 --------
 
+* Support livereload 2.0 (Issue #968)
 * Don't crash when docutils exception have no line number (Issue #920)
 * Forced permalinks in active menu items (Issue #916)
 * Remind the user to set THEME to use a downloaded theme
@@ -34,6 +39,12 @@ Bugfixes
 * Fixed sass/less under Windows (Issue #939, themes#24)
 * Fixed sass/less errors when more than one theme in chain has a targets file (Issue #941)
 * Fix URL rewriting of fragment-only links (Issue #945)
+* Fixed the deploy rsync example (rsync --delete doesn't work with '/*' as
+  source) (Issue #959)
+* Added a notice for the user if webassets is not installed and
+  USE_BUNDLES is True (Issue #965)
+* Support livereload 2.0 (Issue #968)
+* Remove some unnecessary elements (Issues #969, #970)
 
 New in 6.2.1
 ============

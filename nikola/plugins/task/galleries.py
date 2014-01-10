@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -51,6 +51,7 @@ import PyRSS2Gen as rss
 from nikola.plugin_categories import Task
 from nikola import utils
 from nikola.post import Post
+from nikola.utils import req_missing
 
 
 class Galleries(Task):
@@ -76,6 +77,9 @@ class Galleries(Task):
 
     def gen_tasks(self):
         """Render image galleries."""
+
+        if Image is None:
+            req_missing(['pillow'], 'render galleries')
 
         self.logger = utils.get_logger('render_galleries', self.site.loghandlers)
         self.image_ext_list = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.bmp', '.tiff']
@@ -494,7 +498,7 @@ class Galleries(Task):
             description='',
             lastBuildDate=datetime.datetime.now(),
             items=items,
-            generator='nikola',
+            generator='Nikola <http://getnikola.com/>',
             language=lang
         )
         rss_obj.self_url = make_url(permalink)

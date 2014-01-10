@@ -87,3 +87,8 @@ pre, pre code {
     word-wrap: normal;
     overflow: auto;
 }
+
+article.post-micro {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 1.5em;
+}

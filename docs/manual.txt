@@ -203,6 +203,16 @@ of how to "get" something for your specific operating system are left to you.
 
 The short version is: ``pip install nikola``
 
+If you are running Arch Linux, there are AUR packages, available in Python 2/3
+and stable/git master flavors: `python-nikola`__ / `python2-nikola`__ for the
+latest stable release or `python-nikola-git`__ / `python2-nikola-git`__ for the
+GitHub master.  (only one package may be installed at the same time.)
+
+__ https://aur.archlinux.org/packages/python-nikola/
+__ https://aur.archlinux.org/packages/python2-nikola/
+__ https://aur.archlinux.org/packages/python-nikola-git/
+__ https://aur.archlinux.org/packages/python2-nikola-git/
+
 Note that you need Python v2.6 or newer OR v3.3 or newer.
 
 For some features it may give you an error message telling you that you need to
@@ -210,7 +220,10 @@ install something else. For example, if it tells you you need ``requests``::
 
    pip install requests
 
-And so on.
+And so on.  Alternatively, you can install the ``requirements-full.txt`` file
+shipped with the full source tree to get everything.  (or `see the file
+online
+<https://github.com/getnikola/nikola/blob/master/requirements-full.txt>`_)
 
 Longer version:
 
@@ -472,6 +485,7 @@ The content of that file is as follows::
     .. tags:
     .. link:
     .. description:
+    .. type: text
 
     Write your post here.
 
@@ -481,6 +495,9 @@ The third line is the post's date, and is set to "now".
 
 The other lines are optional. Tags are comma-separated. The ``link`` is an original
 source for the content, and ``description`` is mostly useful for SEO.
+``type`` is the post type, whatever you set here (prepended with ``post-``)
+will become a class of the `<article>` element for this post.  Defaults to
+``text`` (resulting in a ``post-text`` class)
 
 You can add your own metadata fields in the same manner, if you use a theme that
 supports them (for example: ``.. author: John Doe``)
@@ -530,11 +547,11 @@ to your configuration::
        Set "True" if you do not want to see the **story** title as a
        heading of the page (does not work for posts).
 
-
 .. note:: The Two-File Format
 
    Nikola originally used a separate ``.meta`` file. That will still work!
-   The format of the meta files is the same as shown above, but without the
+   The format of the meta files is the same as shown above (i.e. only
+   the 7 base fields, in the order listed above), but without the
    explanations::
 
         How to make money
@@ -737,6 +754,21 @@ to the same as above), with no other post on Monday, at/after 7am,
 setting ``SCHEDULE_FORCE_TODAY = True`` will have your post scheduled
 to Monday, instead of being scheduled to Wednesday 7am.
 
+Post Types
+~~~~~~~~~~
+
+Nikola supports specifying post types, just like Tumblr does.  Post
+types affect the look of your posts, by adding a ``post-YOURINPUTHERE``
+class to the post.  Each post can have one and exactly one type.  Nikola
+styles the following types in the default themes:
+
++-----------------+----------------------------+------------------+
+| Name(s)         | Description                | Styling          |
++=================+============================+==================+
+| text            | plain text — default value | standard         |
++-----------------+----------------------------+------------------+
+| micro           | “small” (short) posts      | big serif font   |
++-----------------+----------------------------+------------------+
 
 Creating a Page
 ---------------
@@ -937,7 +969,7 @@ One caveat is that if any command has a % in it, you should double them.
 Here is an example, from my own site's deployment script::
 
     DEPLOY_COMMANDS = [
-        'rsync -rav --delete output/* ralsina@lateral.netmanagers.com.ar:/srv/www/lateral',
+        'rsync -rav --delete output/ ralsina@lateral.netmanagers.com.ar:/srv/www/lateral',
         'rdiff-backup output ~/blog-backup',
         "links -dump 'http://www.twingly.com/ping2?url=lateral.netmanagers.com.ar'",
     ]

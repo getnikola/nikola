@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2013 Damian Avila.
+# Copyright © 2013-2014 Damián Avila and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -80,7 +80,7 @@ class CompileIPynb(PageCompiler):
             fd.write('\n'.join((metadata['title'], metadata['slug'],
                                 metadata['date'], metadata['tags'],
                                 metadata['link'],
-                                metadata['description'])))
+                                metadata['description'], metadata['type'])))
         print("Your post's metadata is at: ", meta_path)
         with codecs.open(path, "wb+", "utf8") as fd:
             fd.write("""{

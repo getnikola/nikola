@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -55,7 +55,7 @@ class JinjaTemplates(TemplateSystem):
         self.lookup.globals['enumerate'] = enumerate
 
     def set_directories(self, directories, cache_folder):
-        """Createa  template lookup."""
+        """Create a template lookup."""
         if jinja2 is None:
             req_missing(['jinja2'], 'use this theme')
         self.lookup.loader = jinja2.FileSystemLoader(directories,
@@ -74,9 +74,8 @@ class JinjaTemplates(TemplateSystem):
         return output
 
     def render_template_to_string(self, template, context):
-        """ Render template to a string using context. """
-
-        return jinja2.Template(template).render(**context)
+        """Render template to a string using context."""
+        return self.lookup.from_string(template).render(**context)
 
     def template_deps(self, template_name):
         # Cache the lists of dependencies for each template name.

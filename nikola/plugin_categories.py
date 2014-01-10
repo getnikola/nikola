@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -199,6 +199,7 @@ class PageCompiler(BasePlugin):
     default_metadata['tags'] = ''
     default_metadata['link'] = ''
     default_metadata['description'] = ''
+    default_metadata['type'] = 'text'
 
     def compile_html(self, source, dest, is_two_file=False):
         """Compile the source, save it on dest."""
