@@ -203,4 +203,4 @@ class DoitNikola(DoitMain):
 
     @staticmethod
     def print_version():
-        print("Nikola version " + __version__)
+        print("Nikola v" + __version__)

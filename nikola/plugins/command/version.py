@@ -41,4 +41,4 @@ class CommandVersion(Command):
 
     def _execute(self, options={}, args=None):
         """Print the version number."""
-        print("Nikola version " + __version__)
+        print("Nikola v" + __version__)
