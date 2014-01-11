@@ -25,8 +25,10 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import absolute_import
+import os
+
+__version__ = "6.2.1"
+DEBUG = bool(os.getenv('NIKOLA_DEBUG'))
 
 from .nikola import Nikola  # NOQA
 from . import plugins  # NOQA
-
-__version__ = "6.2.1"
