@@ -1,4 +1,4 @@
-﻿New in 6.3.0
+New in 6.3.0
 ============
 
 Features

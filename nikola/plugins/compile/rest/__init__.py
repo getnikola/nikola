@@ -35,6 +35,7 @@ try:
     import docutils.utils
     import docutils.io
     import docutils.readers.standalone
+    import docutils.writers.html4css1
     has_docutils = True
 except ImportError:
     has_docutils = False
@@ -77,6 +78,7 @@ class CompileRest(PageCompiler):
                         # author).
                         add_ln = len(spl[0].splitlines()) + 1
 
+                default_template_path = os.path.join(os.path.dirname(__file__), 'template.txt')
                 output, error_level, deps = rst2html(
                     data, settings_overrides={
                         'initial_header_level': 1,
@@ -85,6 +87,7 @@ class CompileRest(PageCompiler):
                         'link_stylesheet': True,
                         'syntax_highlight': 'short',
                         'math_output': 'mathjax',
+                        'template': default_template_path,
                     }, logger=self.logger, l_source=source, l_add_ln=add_ln)
                 out_file.write(output)
             deps_path = dest + '.dep'
@@ -165,6 +168,14 @@ class NikolaReader(docutils.readers.standalone.Reader):
         document.reporter.stream = False
         document.reporter.attach_observer(get_observer(self.l_settings))
         return document
+
+
+def add_node(node, visit_function=None, depart_function=None):
+    docutils.nodes._add_node_class_names([node.__name__])
+    if visit_function:
+        setattr(docutils.writers.html4css1.HTMLTranslator, 'visit_' + node.__name__, visit_function)
+    if depart_function:
+        setattr(docutils.writers.html4css1.HTMLTranslator, 'depart_' + node.__name__, depart_function)
 
 
 def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
