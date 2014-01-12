@@ -129,6 +129,9 @@ class CompileRest(PageCompiler):
             plugin_info.plugin_object.short_help = plugin_info.description
 
         self.logger = get_logger('compile_rest', site.loghandlers)
+        if not site.debug:
+            self.logger.level = 4
+
         return super(CompileRest, self).set_site(site)
 
 

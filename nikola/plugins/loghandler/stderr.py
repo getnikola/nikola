@@ -29,6 +29,8 @@ from blinker import signal
 import logbook
 import os
 
+from nikola import DEBUG
+
 
 class StderrHandler(SignalHandler):
     """Logs messages to stderr."""
@@ -39,7 +41,7 @@ class StderrHandler(SignalHandler):
         conf = self.site.config.get('LOGGING_HANDLERS').get('stderr')
         if conf or os.getenv('NIKOLA_DEBUG'):
             self.site.loghandlers.append(logbook.StderrHandler(
-                level='DEBUG' if os.getenv('NIKOLA_DEBUG') else conf.get('loglevel', 'WARNING').upper(),
+                level='DEBUG' if DEBUG else conf.get('loglevel', 'WARNING').upper(),
                 format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
             ))
 

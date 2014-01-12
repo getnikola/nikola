@@ -43,7 +43,9 @@ except ImportError:
     pyphen = None
 
 import logging
-if os.getenv('NIKOLA_DEBUG'):
+from . import DEBUG
+
+if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
 else:
     logging.basicConfig(level=logging.ERROR)
@@ -105,6 +107,7 @@ class Nikola(object):
         self._scanned = False
         self._template_system = None
         self._THEMES = None
+        self.debug = DEBUG
         self.loghandlers = []
         if not config:
             self.configured = False

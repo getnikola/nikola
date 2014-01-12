@@ -118,6 +118,7 @@ class FakeSite(object):
             FakePost(title='Fake post',
                      slug='fake-post')
         ]
+        self.debug = True
 
     def render_template(self, name, _, context):
         return('<img src="IMG.jpg">')
