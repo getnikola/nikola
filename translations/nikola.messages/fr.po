@@ -48,8 +48,11 @@ msgstr "Articles sur %s"
 msgid "Next post"
 msgstr "Article suivant"
 
-msgid "old posts page %d"
-msgstr "anciens articles page %d"
+msgid "old posts, page %d"
+msgstr "anciens articles, page %d"
+
+msgid "page %d"
+msgstr "page %d"
 
 msgid "Source"
 msgstr "Source"

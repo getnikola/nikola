@@ -46,8 +46,11 @@ msgstr "Записи о %s"
 msgid "Next post"
 msgstr "Следующая запись"
 
-msgid "old posts page %d"
+msgid "old posts, page %d"
 msgstr "%d страница со старыми записями"
+
+msgid "page %d"
+msgstr "%d страница"
 
 msgid "Source"
 msgstr "Источник"

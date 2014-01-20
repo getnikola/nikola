@@ -44,8 +44,11 @@ msgstr "Postitused %s kohta"
 msgid "Next post"
 msgstr "Järgmine postitus"
 
-msgid "old posts page %d"
-msgstr "vanade postituste leht %d"
+msgid "old posts, page %d"
+msgstr "vanade postituste, leht %d"
+
+msgid "page %d"
+msgstr "leht %d"
 
 msgid "Source"
 msgstr "Lähtekood"

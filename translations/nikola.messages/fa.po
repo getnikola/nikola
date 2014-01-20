@@ -46,7 +46,7 @@ msgstr "ارسال‌ها دربارهٔ %s"
 msgid "Next post"
 msgstr "ارسال بعدی"
 
-msgid "old posts page %d"
+msgid "old posts, page %d"
 msgstr "صفحهٔ ارسال‌های قدیمی %d"
 
 msgid "Source"

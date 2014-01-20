@@ -47,7 +47,7 @@ msgstr "%sについての記事"
 msgid "Next post"
 msgstr "次の記事"
 
-msgid "old posts page %d"
+msgid "old posts, page %d"
 msgstr "前の記事 %dページ目"
 
 msgid "Source"

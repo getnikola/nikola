@@ -44,7 +44,7 @@ msgstr "%s کے بارے میں تحاریر"
 msgid "Next post"
 msgstr "اگلی تحریر"
 
-msgid "old posts page %d"
+msgid "old posts, page %d"
 msgstr "پرانی تحاریر صفحہ %d"
 
 msgid "Source"

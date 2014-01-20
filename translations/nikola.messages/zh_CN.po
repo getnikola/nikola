@@ -46,7 +46,7 @@ msgstr "文章分类：%s"
 msgid "Next post"
 msgstr "后一篇"
 
-msgid "old posts page %d"
+msgid "old posts, page %d"
 msgstr "旧文章页 %d"
 
 msgid "Source"

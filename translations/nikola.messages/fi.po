@@ -44,8 +44,11 @@ msgstr "Postauksia aiheesta %s"
 msgid "Next post"
 msgstr "Seuraava postaus"
 
-msgid "old posts page %d"
-msgstr "vanhojen postauksien sivu %d"
+msgid "old posts, page %d"
+msgstr "vanhojen postauksien, sivu %d"
+
+msgid "old posts, page %d"
+msgstr "sivu %d"
 
 msgid "Source"
 msgstr "Lähde"

@@ -43,8 +43,11 @@ msgstr "Innlegg om %s"
 msgid "Next post"
 msgstr "Neste innlegg"
 
-msgid "old posts page %d"
-msgstr "eldre innlegg side %d"
+msgid "old posts, page %d"
+msgstr "eldre innlegg, side %d"
+
+msgid "page %d"
+msgstr "side %d"
 
 msgid "Source"
 msgstr "Kilde"

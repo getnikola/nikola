@@ -51,8 +51,11 @@ msgstr "Einträge über %s"
 msgid "Next post"
 msgstr "Nächster Eintrag"
 
-msgid "old posts page %d"
-msgstr "Vorherige Einträge %d"
+msgid "old posts, page %d"
+msgstr "Vorherige Einträge, Seite %d"
+
+msgid "page %d"
+msgstr "Seite %d"
 
 msgid "Source"
 msgstr "Source"

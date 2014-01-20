@@ -45,8 +45,11 @@ msgstr "%s ile ilgili yazılar"
 msgid "Next post"
 msgstr "Sonraki yazı"
 
-msgid "old posts page %d"
-msgstr "eski yazılar sayfa %d"
+msgid "old posts, page %d"
+msgstr "eski yazılar, sayfa %d"
+
+msgid "page %d"
+msgstr "sayfa %d"
 
 msgid "Source"
 msgstr "Kaynak"
