@@ -24,5 +24,6 @@ MESSAGES = {
     "Source": "Lähtekood",
     "Tags and Categories": "Sildid ja kategooriad",
     "Tags": "Märksõnad",
-    "old posts page %d": "vanade postituste leht %d",
+    "old posts, page %d": "vanade postituste, leht %d",
+    "page %d": "leht %d",
 }

@@ -24,5 +24,6 @@ MESSAGES = {
     "Source": "Izvor",
     "Tags and Categories": "Značke in kategorije",
     "Tags": "Značke",
-    "old posts page %d": "stare objave, stran %d",
+    "old posts, page %d": "stare objave, stran %d",
+    "page %d": "stran %d",
 }

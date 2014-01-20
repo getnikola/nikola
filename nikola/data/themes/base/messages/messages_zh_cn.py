@@ -24,5 +24,5 @@ MESSAGES = {
     "Source": "源代码",
     "Tags and Categories": "",
     "Tags": "标签",
-    "old posts page %d": "旧文章页 %d",
+    "old posts, page %d": "旧文章页 %d",
 }

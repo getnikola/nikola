@@ -24,5 +24,6 @@ MESSAGES = {
     "Source": "Iturria",
     "Tags and Categories": "Etiketak eta Kategoriak",
     "Tags": "Etiketak",
-    "old posts page %d": "Post zaharren orria %d",
+    "old posts, page %d": "post zaharren, orria %d",
+    "page %d": "orria %d",
 }

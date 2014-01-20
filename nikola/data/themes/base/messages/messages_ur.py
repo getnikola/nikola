@@ -24,5 +24,5 @@ MESSAGES = {
     "Source": "سورس",
     "Tags and Categories": "ٹیگز اور زمرے",
     "Tags": "ٹیگز",
-    "old posts page %d": "پرانی تحاریر صفحہ %d",
+    "old posts, page %d": "پرانی تحاریر صفحہ %d",
 }

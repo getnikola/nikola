@@ -24,5 +24,6 @@ MESSAGES = {
     "Source": "Kilde",
     "Tags and Categories": "Merker og kategorier",
     "Tags": "Merker",
-    "old posts page %d": "eldre innlegg side %d",
+    "old posts, page %d": "eldre innlegg, side %d",
+    "page %d": "side %d",
 }
