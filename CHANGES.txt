@@ -21,6 +21,7 @@ Features
 * New "type" metadata to make differences for posts (Issue #927)
 * New Post.is_post attribute to differentiate posts and pages without bias
   (Post.use_in_feeds is False if the post is retired/unpublished/a draft)
+* Include canonical links (Issue #449)
 
 Bugfixes
 --------
