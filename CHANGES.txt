@@ -44,6 +44,7 @@ Bugfixes
   USE_BUNDLES is True (Issue #965)
 * Support livereload 2.0 (Issue #968)
 * Remove some unnecessary elements (Issues #969, #970)
+* abs_link should return absolute URI
 
 New in 6.2.1
 ============
