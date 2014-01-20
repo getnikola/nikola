@@ -84,7 +84,7 @@ class Indexes(Task):
                     ipages_msg = "page %d"
                 else:
                     ipages_i = i
-                    ipages_msg = "old posts page %d"
+                    ipages_msg = "old posts, page %d"
                 if kw["indexes_pages"]:
                     indexes_pages = kw["indexes_pages"] % ipages_i
                 else:
