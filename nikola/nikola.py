@@ -766,7 +766,7 @@ class Nikola(object):
         # Normalize
         dst = urljoin(self.config['BASE_URL'], dst)
 
-        return urlparse(dst).path
+        return urlparse(dst).geturl()
 
     def rel_link(self, src, dst):
         # Normalize
