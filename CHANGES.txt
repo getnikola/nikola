@@ -46,6 +46,9 @@ Bugfixes
 * Support livereload 2.0 (Issue #968)
 * Remove some unnecessary elements (Issues #969, #970)
 * abs_link should return absolute URI
+* Added a INDEXES_PAGES_MAIN setting to show the page number on the index page
+  if desired (True) (Issues #210, #987)
+* Add <link> elements to translations of the current page (Issues #988, #989)
 
 New in 6.2.1
 ============
