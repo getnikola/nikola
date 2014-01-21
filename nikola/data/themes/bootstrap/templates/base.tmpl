@@ -12,6 +12,7 @@ lang="${lang}">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     ${bootstrap.html_head()}
+    ${base.meta_translations()}
     <%block name="extra_head">
     </%block>
     % if annotations and post and not post.meta('noannotations'):
