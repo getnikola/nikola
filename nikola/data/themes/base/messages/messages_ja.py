@@ -24,5 +24,5 @@ MESSAGES = {
     "Source": "ソース",
     "Tags and Categories": "",
     "Tags": "タグ",
-    "old posts page %d": "前の記事 %dページ目",
+    "old posts, page %d": "前の記事 %dページ目",
 }

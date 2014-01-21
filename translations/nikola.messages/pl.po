@@ -47,8 +47,11 @@ msgstr "Posty o %s"
 msgid "Next post"
 msgstr "Następny post"
 
-msgid "old posts page %d"
+msgid "old posts, page %d"
 msgstr "stare posty, strona %d"
+
+msgid "page %d"
+msgstr "strona %d"
 
 msgid "Source"
 msgstr "Źródło"

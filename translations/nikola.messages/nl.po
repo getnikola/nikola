@@ -44,8 +44,11 @@ msgstr "Berichten over %s"
 msgid "Next post"
 msgstr "Volgend bericht"
 
-msgid "old posts page %d"
-msgstr "oude berichten pagina %d"
+msgid "old posts, page %d"
+msgstr "oude berichten, pagina %d"
+
+msgid "page %d"
+msgstr "pagina %d"
 
 msgid "Source"
 msgstr "Bron"

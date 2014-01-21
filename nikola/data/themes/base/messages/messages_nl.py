@@ -24,5 +24,6 @@ MESSAGES = {
     "Source": "Bron",
     "Tags and Categories": "Tags en Categorieën",
     "Tags": "Tags",
-    "old posts page %d": "oude berichten pagina %d",
+    "old posts, page %d": "oude berichten, pagina %d",
+    "page %d": "pagina %d",
 }

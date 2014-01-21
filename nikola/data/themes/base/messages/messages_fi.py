@@ -24,5 +24,6 @@ MESSAGES = {
     "Source": "Lähde",
     "Tags and Categories": "Tagit ja kategoriat",
     "Tags": "Tagit",
-    "old posts page %d": "vanhojen postauksien sivu %d",
+    "old posts, page %d": "sivu %d",
+    "old posts, page %d": "vanhojen postauksien, sivu %d",
 }

@@ -24,5 +24,6 @@ MESSAGES = {
     "Source": "Kaynak",
     "Tags and Categories": "Etiketler ve Kategoriler",
     "Tags": "Etiketler",
-    "old posts page %d": "eski yazılar sayfa %d",
+    "old posts, page %d": "eski yazılar, sayfa %d",
+    "page %d": "sayfa %d",
 }

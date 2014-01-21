@@ -169,6 +169,7 @@ class Nikola(object):
             'INDEX_TEASERS': False,
             'INDEXES_TITLE': "",
             'INDEXES_PAGES': "",
+            'INDEXES_PAGES_MAIN': False,
             'INDEX_PATH': '',
             'IPYNB_CONFIG': {},
             'LESS_COMPILER': 'lessc',

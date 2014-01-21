@@ -44,8 +44,11 @@ msgstr "Entrades sobre %s"
 msgid "Next post"
 msgstr "Entrada següent"
 
-msgid "old posts page %d"
-msgstr "entrades antigues pàgina %d"
+msgid "old posts, page %d"
+msgstr "entrades antigues, pàgina %d"
+
+msgid "page %d"
+msgstr "pàgina %d"
 
 msgid "Source"
 msgstr "Codi"

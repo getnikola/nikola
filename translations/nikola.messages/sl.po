@@ -44,8 +44,11 @@ msgstr "Objave o %s"
 msgid "Next post"
 msgstr "Naslednja objava"
 
-msgid "old posts page %d"
+msgid "old posts, page %d"
 msgstr "stare objave, stran %d"
+
+msgid "page %d"
+msgstr "stran %d"
 
 msgid "Source"
 msgstr "Izvor"

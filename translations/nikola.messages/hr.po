@@ -44,8 +44,11 @@ msgstr "Postovi o %s"
 msgid "Next post"
 msgstr "Sljedeći post"
 
-msgid "old posts page %d"
-msgstr "stari postovi stranice %d"
+msgid "old posts, page %d"
+msgstr "stari postovi, stranice %d"
+
+msgid "page %d"
+msgstr "stranice %d"
 
 msgid "Source"
 msgstr "Izvor"

@@ -46,8 +46,11 @@ msgstr "Αναρτήσεις για %s"
 msgid "Next post"
 msgstr "Επόμενη ανάρτηση"
 
-msgid "old posts page %d"
+msgid "old posts, page %d"
 msgstr "σελίδα παλαιότερων αναρτήσεων %d"
+
+msgid "page %d"
+msgstr "σελίδα %d"
 
 msgid "Source"
 msgstr "Πηγαίος κώδικας"

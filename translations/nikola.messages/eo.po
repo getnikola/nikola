@@ -44,8 +44,11 @@ msgstr "Artikoloj pri %s"
 msgid "Next post"
 msgstr "Venonta artikolo"
 
-msgid "old posts page %d"
+msgid "old posts, page %d"
 msgstr "paĝo de malnovaj artikoloj %d"
+
+msgid "page %d"
+msgstr "paĝo %d"
 
 msgid "Source"
 msgstr "Fonto"

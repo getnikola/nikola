@@ -24,5 +24,6 @@ MESSAGES = {
     "Source": "Codi",
     "Tags and Categories": "",
     "Tags": "Etiquetes",
-    "old posts page %d": "entrades antigues pàgina %d",
+    "old posts, page %d": "entrades antigues, pàgina %d",
+    "page %d": "pàgina %d",
 }

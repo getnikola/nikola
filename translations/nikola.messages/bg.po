@@ -44,8 +44,11 @@ msgstr "Публикации относно %s"
 msgid "Next post"
 msgstr "Следваща публикация"
 
-msgid "old posts page %d"
-msgstr "стари публикации страница %d"
+msgid "old posts, page %d"
+msgstr "стари публикации, страница %d"
+
+msgid "page %d"
+msgstr "страница %d"
 
 msgid "Source"
 msgstr "Source"

@@ -24,5 +24,6 @@ MESSAGES = {
     "Source": "Source",
     "Tags and Categories": "Étiquettes et catégories",
     "Tags": "Étiquettes",
-    "old posts page %d": "anciens articles page %d",
+    "old posts, page %d": "anciens articles, page %d",
+    "page %d": "page %d",
 }
