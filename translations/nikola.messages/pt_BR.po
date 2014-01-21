@@ -49,7 +49,7 @@ msgid "Next post"
 msgstr "Próximo post"
 
 msgid "old posts, page %d"
-msgstr "posts antigos, página %d"
+msgstr "Posts antigos, página %d"
 
 msgid "page %d"
 msgstr "página %d"

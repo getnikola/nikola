@@ -44,7 +44,7 @@ msgid "Next post"
 msgstr "Hurrengo posta"
 
 msgid "old posts, page %d"
-msgstr "post zaharren, orria %d"
+msgstr "Post zaharren, orria %d"
 
 msgid "page %d"
 msgstr "orria %d"
