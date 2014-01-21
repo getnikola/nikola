@@ -112,7 +112,7 @@ class Sitemap(LateTask):
                 # ignore the current directory.
                 path = (path.replace(os.sep, '/') + '/').replace('./', '')
                 lastmod = get_lastmod(root)
-                loc = urljoin(base_url, base_path + path)
+                loc = urljoin(base_url, (base_path + path).lstrip('/'))
                 if kw['index_file'] in files and kw['strip_indexes']:  # ignore folders when not stripping urls
                     locs[loc] = url_format.format(loc, lastmod)
                 for fname in files:
@@ -138,7 +138,7 @@ class Sitemap(LateTask):
                             continue
                         path = path.replace(os.sep, '/')
                         lastmod = get_lastmod(real_path)
-                        loc = urljoin(base_url, base_path + path)
+                        loc = urljoin(base_url, (base_path + path).lstrip('/'))
                         locs[loc] = url_format.format(loc, lastmod)
 
         def write_sitemap():
