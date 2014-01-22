@@ -573,6 +573,7 @@ Currently supported languages are
 * Basque
 * Bulgarian
 * Catalan
+* Chinese (Simplified)
 * Croatian
 * Czech
 * Dutch
@@ -585,12 +586,11 @@ Currently supported languages are
 * Greek
 * Italian
 * Japanese
-* Norwegian
+* Norwegian Bokmål
 * Persian
 * Polish
 * Portuguese
 * Russian
-* Simplified Chinese.
 * Slovenian
 * Spanish
 * Turkish

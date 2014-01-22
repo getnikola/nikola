@@ -5,13 +5,14 @@
 # Translators:
 # Translators:
 # Kwpolska <kwpolska@gmail.com>, 2014
+# Kwpolska <kwpolska@gmail.com>, 2014
 # Lauri Võsandi <lauri.vosandi@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-01-20 18:23+0000\n"
+"PO-Revision-Date: 2014-01-22 13:12+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Estonian (http://www.transifex.com/projects/p/nikola/language/et/)\n"
 "MIME-Version: 1.0\n"

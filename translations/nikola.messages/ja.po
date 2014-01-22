@@ -5,6 +5,7 @@
 # Translators:
 # Translators:
 # Kwpolska <kwpolska@gmail.com>, 2013
+# Kwpolska <kwpolska@gmail.com>, 2013
 # quoth <4wordextinguisher@gmail.com>, 2013
 # ralsina <ralsina@netmanagers.com.ar>, 2013
 # ralsina <ralsina@netmanagers.com.ar>, 2013
@@ -14,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2013-11-10 11:08+0000\n"
+"PO-Revision-Date: 2014-01-22 13:12+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Japanese (http://www.transifex.com/projects/p/nikola/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -33,10 +34,10 @@ msgid "Tags"
 msgstr "タグ"
 
 msgid "Categories"
-msgstr ""
+msgstr "カテゴリー"
 
 msgid "Tags and Categories"
-msgstr ""
+msgstr "タグとカテゴリー"
 
 msgid "Read more"
 msgstr "続きを読む"
@@ -49,6 +50,9 @@ msgstr "次の記事"
 
 msgid "old posts, page %d"
 msgstr "前の記事 %dページ目"
+
+msgid "page %d"
+msgstr ""
 
 msgid "Source"
 msgstr "ソース"

@@ -25,4 +25,5 @@ MESSAGES = {
     "Tags and Categories": "برچسب‌ها و دسته‌ها",
     "Tags": "برچسب‌ها",
     "old posts, page %d": "صفحهٔ ارسال‌های قدیمی %d",
+    "page %d": "",
 }

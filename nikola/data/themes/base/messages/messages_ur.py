@@ -25,4 +25,5 @@ MESSAGES = {
     "Tags and Categories": "ٹیگز اور زمرے",
     "Tags": "ٹیگز",
     "old posts, page %d": "پرانی تحاریر صفحہ %d",
+    "page %d": "",
 }

@@ -5,7 +5,7 @@ MESSAGES = {
     "Also available in": "他の言語で読む",
     "Also available in:": "他の言語で読む：",
     "Archive": "過去の記事",
-    "Categories": "",
+    "Categories": "カテゴリー",
     "LANGUAGE": "日本語",
     "More posts about %s": "タグ： %s",
     "More posts about": "タグ：",
@@ -22,7 +22,8 @@ MESSAGES = {
     "Read in English": "日本語で読む",
     "Read more": "続きを読む",
     "Source": "ソース",
-    "Tags and Categories": "",
+    "Tags and Categories": "タグとカテゴリー",
     "Tags": "タグ",
     "old posts, page %d": "前の記事 %dページ目",
+    "page %d": "",
 }
