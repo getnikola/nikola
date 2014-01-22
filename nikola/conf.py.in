@@ -45,7 +45,7 @@ BLOG_DESCRIPTION = "${BLOG_DESCRIPTION}"
 # pl     Polish
 # ru     Russian
 # sl     Slovenian [NOT sl_si!]
-# tr     Turkish (Turkey) [ALTERNATIVELY tr_tr]
+# tr     Turkish (Turkey) [NOT tr_tr!]
 # ur     Urdu
 # zh_cn  Chinese (Simplified)
 #
