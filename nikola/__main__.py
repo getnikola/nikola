@@ -206,3 +206,6 @@ class DoitNikola(DoitMain):
     @staticmethod
     def print_version():
         print("Nikola v" + __version__)
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
