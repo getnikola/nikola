@@ -4,6 +4,7 @@ New in 6.3.0
 Features
 --------
 
+* Added Czech translation.
 * TIMEZONE now defaults to UTC (via Issue #893)
 * Added a DEMOTE_HEADERS option (on by default; previously implemented by
   the Markdown and reST compilers) to have consenting compilers produce
