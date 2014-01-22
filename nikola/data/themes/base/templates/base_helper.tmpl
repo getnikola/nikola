@@ -89,12 +89,3 @@
         %endif
     %endfor
 </%def>
-
-<%def name="meta_translations()">
-    %for langname in translations.keys():
-        %if langname != lang:
-            <link rel="alternate" hreflang="${langname}"
-            href="${_link(permalink, None, langname)}">
-        %endif
-    %endfor
-</%def>
