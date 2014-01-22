@@ -771,17 +771,8 @@ class Nikola(object):
 
     def rel_link(self, src, dst):
         # Normalize
-        try:
-            src = urljoin(self.config['BASE_URL'], src.lstrip('/'))
-        except AttributeError:
-            # sometimes, it’s an Undefined object.
-            src = urljoin(self.config['BASE_URL'], src)
-
-        try:
-            dst = urljoin(src, dst.lstrip('/'))
-        except AttributeError:
-            dst = urljoin(src, dst)
-
+        src = urljoin(self.config['BASE_URL'], src.lstrip('/'))
+        dst = urljoin(src, dst.lstrip('/'))
         # Avoid empty links.
         if src == dst:
             return "#"
