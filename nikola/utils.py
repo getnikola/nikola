@@ -130,7 +130,8 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'to_datetime', 'apply_filters', 'config_changed', 'get_crumbs',
            'get_tzname', 'get_asset_path', '_reload', 'unicode_str', 'bytes_str',
            'unichr', 'Functionary', 'LocaleBorg', 'sys_encode', 'sys_decode',
-           'makedirs', 'get_parent_theme_name', 'ExtendedRSS2', 'demote_headers']
+           'makedirs', 'get_parent_theme_name', 'ExtendedRSS2', 'demote_headers',
+           'get_translation_candidate']
 
 
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
@@ -839,3 +840,14 @@ def get_root_dir():
             root = basedir
 
     return None
+
+
+def get_translation_candidate(config, path, lang):
+    """
+    Return a possible path where we can find the translated version of some page
+    based on the TRANSLATIONS_PATTERN configuration variable
+    """
+    pattern = config['TRANSLATIONS_PATTERN']
+    path, ext = os.path.splitext(path)
+    ext = ext[1:] if len(ext) > 0 else ext
+    return pattern.format(path=path, lang=lang, ext=ext)

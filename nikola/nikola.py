@@ -217,6 +217,7 @@ class Nikola(object):
             'SCHEDULE_FORCE_TODAY': False,
             'LOGGING_HANDLERS': {'stderr': {'loglevel': 'WARNING', 'bubble': True}},
             'DEMOTE_HEADERS': 1,
+            'TRANSLATIONS_PATTERN': '{path}.{ext}.{lang}',
         }
 
         self.config.update(config)
@@ -859,7 +860,7 @@ class Nikola(object):
                 full_list = glob.glob(dir_glob)
                 # Now let's look for things that are not in default_lang
                 for lang in self.config['TRANSLATIONS'].keys():
-                    lang_glob = dir_glob + "." + lang
+                    lang_glob = utils.get_translation_candidate(self.config, dir_glob, lang)
                     translated_list = glob.glob(lang_glob)
                     for fname in translated_list:
                         orig_name = os.path.splitext(fname)[0]

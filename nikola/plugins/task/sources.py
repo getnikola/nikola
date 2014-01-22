@@ -66,7 +66,7 @@ class Sources(Task):
                     if dest_ext == post.source_ext():
                         continue
                     if lang != kw["default_lang"]:
-                        source_lang = source + '.' + lang
+                        source_lang = utils.get_translation_candidate(self.site.config, source, lang)
                         if os.path.exists(source_lang):
                             source = source_lang
                     if os.path.isfile(source):
