@@ -570,16 +570,31 @@ with the contents, generate the pages as explained in `Getting Started`_
 
 Currently supported languages are
 
+* Basque
+* Bulgarian
 * Catalan
+* Croatian
+* Czech
+* Dutch
 * English
+* Esperanto
+* Estonian
+* Finnish
 * French
 * German
 * Greek
 * Italian
+* Japanese
+* Norwegian
+* Persian
 * Polish
+* Portuguese
 * Russian
 * Simplified Chinese.
+* Slovenian
 * Spanish
+* Turkish
+* Urdu
 
 If you wish to add support for more languages, check out the instructions
 at the `theming guide <http://getnikola.com/theming.html>`_.

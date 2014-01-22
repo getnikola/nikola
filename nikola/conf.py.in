@@ -25,6 +25,7 @@ BLOG_DESCRIPTION = "${BLOG_DESCRIPTION}"
 # Currently supported languages are:
 # bg     Bulgarian
 # ca     Catalan
+# cs_cz  Czech
 # de     German
 # el     Greek [NOT gr!]
 # en     English
