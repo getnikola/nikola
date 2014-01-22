@@ -473,7 +473,7 @@ class Galleries(Task):
         """
 
         def make_url(url):
-            return urljoin(self.site.config['BASE_URL'], url.lstrip('/'))
+            return urljoin(self.site.config['BASE_URL'], url)
 
         items = []
         for img, full_title in list(zip(img_list, img_titles))[:self.kw["feed_length"]]:

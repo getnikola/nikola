@@ -637,12 +637,12 @@ class Nikola(object):
                 return dst
 
             # Normalize
-            dst = urljoin(src, dst.lstrip('/'))
+            dst = urljoin(src, dst)
 
             # Avoid empty links.
             if src == dst:
                 if self.config.get('URL_TYPE') == 'absolute':
-                    dst = urljoin(self.config['BASE_URL'], dst.lstrip('/'))
+                    dst = urljoin(self.config['BASE_URL'], dst)
                     return dst
                 elif self.config.get('URL_TYPE') == 'full_path':
                     return dst
@@ -653,12 +653,12 @@ class Nikola(object):
             parsed_dst = urlsplit(dst)
             if parsed_src[:2] != parsed_dst[:2]:
                 if self.config.get('URL_TYPE') == 'absolute':
-                    dst = urljoin(self.config['BASE_URL'], dst.lstrip('/'))
+                    dst = urljoin(self.config['BASE_URL'], dst)
                 return dst
 
             if self.config.get('URL_TYPE') in ('full_path', 'absolute'):
                 if self.config.get('URL_TYPE') == 'absolute':
-                    dst = urljoin(self.config['BASE_URL'], dst.lstrip('/'))
+                    dst = urljoin(self.config['BASE_URL'], dst)
                 return dst
 
             # Now both paths are on the same site and absolute
@@ -765,14 +765,14 @@ class Nikola(object):
 
     def abs_link(self, dst):
         # Normalize
-        dst = urljoin(self.config['BASE_URL'], dst.lstrip('/'))
+        dst = urljoin(self.config['BASE_URL'], dst)
 
         return urlparse(dst).geturl()
 
     def rel_link(self, src, dst):
         # Normalize
-        src = urljoin(self.config['BASE_URL'], src.lstrip('/'))
-        dst = urljoin(src, dst.lstrip('/'))
+        src = urljoin(self.config['BASE_URL'], src)
+        dst = urljoin(src, dst)
         # Avoid empty links.
         if src == dst:
             return "#"
