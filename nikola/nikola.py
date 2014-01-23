@@ -866,7 +866,7 @@ class Nikola(object):
                     full_list = list(set(full_list + translated_list))
                     # Eliminate translations from full_list (even from dir_glob)
                     for fname in full_list:
-                        translation =  utils.get_translation_candidate(self.config, fname, lang)
+                        translation = utils.get_translation_candidate(self.config, fname, lang)
                         if translation in full_list:
                             full_list.remove(translation)
 
