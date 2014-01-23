@@ -55,6 +55,7 @@ from .utils import (
     to_datetime,
     unicode_str,
     demote_headers,
+    get_translation_candidate,
 )
 from .rc4 import rc4
 
@@ -128,7 +129,7 @@ class Post(object):
         # Load internationalized metadata
         for lang in self.translations:
             if lang != self.default_lang:
-                if os.path.isfile(self.source_path + "." + lang):
+                if os.path.isfile(get_translation_candidate(self.config, self.source_path, lang)):
                     self.translated_to.add(lang)
 
                 meta = defaultdict(lambda: '')
@@ -285,7 +286,7 @@ class Post(object):
         if self.default_lang in self.translated_to:
             deps.append(self.base_path)
         if lang != self.default_lang:
-            deps += [self.base_path + "." + lang]
+            deps += [get_translation_candidate(self.config, self.base_path, lang)]
         deps += self.fragment_deps(lang)
         return deps
 
@@ -328,7 +329,7 @@ class Post(object):
                 deps.extend([l.strip() for l in depf.readlines()])
         lang_deps = []
         if lang != self.default_lang:
-            lang_deps = [d + "." + lang for d in deps]
+            lang_deps = [get_translation_candidate(self.config, d, lang) for d in deps]
             deps += lang_deps
         return [d for d in deps if os.path.exists(d)]
 
@@ -342,18 +343,18 @@ class Post(object):
             if lang == self.default_lang:
                 return self.source_path
             else:
-                return '.'.join((self.source_path, lang))
+                return get_translation_candidate(self.config, self.source_path, lang)
         elif lang != self.default_lang:
             return self.source_path
         else:
-            return '.'.join((self.source_path, sorted(self.translated_to)[0]))
+            return get_translation_candidate(self.config, self.source_path, sorted(self.translated_to)[0])
 
     def translated_base_path(self, lang):
         """Return path to the translation's base_path file."""
         if lang == self.default_lang:
             return self.base_path
         else:
-            return '.'.join((self.base_path, lang))
+            return get_translation_candidate(self.config, self.base_path, lang)
 
     def _translated_file_path(self, lang):
         """Return path to the translation's file, or to the original."""
@@ -361,11 +362,11 @@ class Post(object):
             if lang == self.default_lang:
                 return self.base_path
             else:
-                return '.'.join((self.base_path, lang))
+                return get_translation_candidate(self.config, self.base_path, lang)
         elif lang != self.default_lang:
             return self.base_path
         else:
-            return '.'.join((self.base_path, sorted(self.translated_to)[0]))
+            return get_translation_candidate(self.config, self.base_path, sorted(self.translated_to)[0])
 
     def text(self, lang=None, teaser_only=False, strip_html=False, really_absolute=False):
         """Read the post file for that language and return its contents.
@@ -604,10 +605,12 @@ def _get_metadata_from_file(meta_data):
     return meta
 
 
-def get_metadata_from_meta_file(path, lang=None):
+def get_metadata_from_meta_file(path, config=None, lang=None):
     """Takes a post path, and gets data from a matching .meta file."""
     meta_path = os.path.splitext(path)[0] + '.meta'
-    if lang:
+    if lang and config:
+        meta_path = get_translation_candidate(config, meta_path, lang)
+    elif lang:
         meta_path += '.' + lang
     if os.path.isfile(meta_path):
         with codecs.open(meta_path, "r", "utf8") as meta_file:
@@ -640,7 +643,7 @@ def get_metadata_from_meta_file(path, lang=None):
         # Metadata file doesn't exist, but not default language,
         # So, if default language metadata exists, return that.
         # This makes the 2-file format detection more reliable (Issue #525)
-        return get_metadata_from_meta_file(path, lang=None)
+        return get_metadata_from_meta_file(path, config, lang=None)
     else:
         return {}
 
@@ -655,7 +658,10 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
     """
     meta = defaultdict(lambda: '')
 
-    meta.update(get_metadata_from_meta_file(post.metadata_path, lang))
+    try:
+        meta.update(get_metadata_from_meta_file(post.metadata_path, post.config, lang))
+    except AttributeError:
+        meta.update(get_metadata_from_meta_file(post.metadata_path, None, lang))
 
     if meta:
         return meta
