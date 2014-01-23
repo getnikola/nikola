@@ -540,11 +540,13 @@ def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
     return meta
 
 
-def get_metadata_from_file(source_path, lang=None):
+def get_metadata_from_file(source_path, config=None, lang=None):
     """Extracts metadata from the file itself, by parsing contents."""
     try:
-        if lang:
-            source_path = "{0}.{1}".format(source_path, lang)
+        if lang and config:
+            source_path = get_translation_candidate(config, source_path, lang)
+        elif lang:
+            source_path += '.' + lang
         with codecs.open(source_path, "r", "utf8") as meta_file:
             meta_data = [x.strip() for x in meta_file.readlines()]
         return _get_metadata_from_file(meta_data)
@@ -671,7 +673,7 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
         meta.update(_get_metadata_from_filename_by_regex(post.source_path,
                                                          file_metadata_regexp))
 
-    meta.update(get_metadata_from_file(post.source_path, lang))
+    meta.update(get_metadata_from_file(post.source_path, post.config, lang))
 
     if lang is None:
         # Only perform these checks for the default language
