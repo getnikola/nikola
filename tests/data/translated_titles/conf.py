@@ -47,7 +47,7 @@ DEFAULT_LANG = "en"
 TRANSLATIONS = {
     "en": "",
     # Example for another language:
-    "es": "./es",
+    "pl": "./pl",
 }
 
 # Links for the sidebar / navigation bar.
@@ -57,7 +57,7 @@ SIDEBAR_LINKS = {
         ('/archive.html', 'Archives'),
         ('/categories/index.html', 'Tags'),
     ),
-    "es": ()
+    "pl": ()
 }
 
 

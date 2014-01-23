@@ -182,22 +182,22 @@ class TranslatedBuildTest(EmptyBuildTest):
     def __init__(self, *a, **kw):
         super(TranslatedBuildTest, self).__init__(*a, **kw)
         try:
-            locale.setlocale(locale.LC_ALL, ("es", "utf8"))
+            locale.setlocale(locale.LC_ALL, ("pl_PL", "utf8"))
         except:
             raise SkipTest
 
     def test_translated_titles(self):
         """Check that translated title is picked up."""
         en_file = os.path.join(self.target_dir, "output", "stories", "1.html")
-        es_file = os.path.join(self.target_dir, "output", "es", "stories", "1.html")
+        pl_file = os.path.join(self.target_dir, "output", "pl", "stories", "1.html")
         # Files should be created
         self.assertTrue(os.path.isfile(en_file))
-        self.assertTrue(os.path.isfile(es_file))
+        self.assertTrue(os.path.isfile(pl_file))
         # And now let's check the titles
         with codecs.open(en_file, 'r', 'utf8') as inf:
             doc = lxml.html.parse(inf)
             self.assertEqual(doc.find('//title').text, 'Foo | Demo Site')
-        with codecs.open(es_file, 'r', 'utf8') as inf:
+        with codecs.open(pl_file, 'r', 'utf8') as inf:
             doc = lxml.html.parse(inf)
             self.assertEqual(doc.find('//title').text, 'Bar | Demo Site')
 
