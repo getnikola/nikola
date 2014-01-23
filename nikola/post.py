@@ -343,18 +343,18 @@ class Post(object):
             if lang == self.default_lang:
                 return self.source_path
             else:
-                return '.'.join((self.source_path, lang))
+                return get_translation_candidate(self.config, self.source_path, lang)
         elif lang != self.default_lang:
             return self.source_path
         else:
-            return '.'.join((self.source_path, sorted(self.translated_to)[0]))
+            return get_translation_candidate(self.config, self.source_path, sorted(self.translated_to)[0])
 
     def translated_base_path(self, lang):
         """Return path to the translation's base_path file."""
         if lang == self.default_lang:
             return self.base_path
         else:
-            return '.'.join((self.base_path, lang))
+            return get_translation_candidate(self.config, self.base_path, lang)
 
     def _translated_file_path(self, lang):
         """Return path to the translation's file, or to the original."""
@@ -362,11 +362,11 @@ class Post(object):
             if lang == self.default_lang:
                 return self.base_path
             else:
-                return '.'.join((self.base_path, lang))
+                return get_translation_candidate(self.config, self.base_path, lang)
         elif lang != self.default_lang:
             return self.base_path
         else:
-            return '.'.join((self.base_path, sorted(self.translated_to)[0]))
+            return get_translation_candidate(self.config, self.base_path, sorted(self.translated_to)[0])
 
     def text(self, lang=None, teaser_only=False, strip_html=False, really_absolute=False):
         """Read the post file for that language and return its contents.
