@@ -862,11 +862,14 @@ class Nikola(object):
                 for lang in self.config['TRANSLATIONS'].keys():
                     lang_glob = utils.get_translation_candidate(self.config, dir_glob, lang)
                     translated_list = glob.glob(lang_glob)
-                    for fname in translated_list:
-                        orig_name = os.path.splitext(fname)[0]
-                        if orig_name in full_list:
-                            continue
-                        full_list.append(orig_name)
+                    # dir_glob could have put it already in full_list
+                    full_list = list(set(full_list + translated_list))
+                    # Eliminate translations from full_list (even from dir_glob)
+                    for fname in full_list:
+                        translation =  utils.get_translation_candidate(self.config, fname, lang)
+                        if translation in full_list:
+                            full_list.remove(translation)
+
                 # We eliminate from the list the files inside any .ipynb folder
                 full_list = [p for p in full_list
                              if not any([x.startswith('.')
