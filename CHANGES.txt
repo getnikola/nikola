@@ -32,6 +32,8 @@ Features
 * Add rel=alternate <link> elements to translations of the current page (Issues #988, #989)
 * Added a INDEXES_PAGES_MAIN setting to show the page number on the index page
   if desired (True) (Issues #210, #987)
+* Added a TRANSLATIONS_PATTERN setting to specify the format for
+  language-dependent filenames (Issue #990)
 
 Bugfixes
 --------
