@@ -661,9 +661,11 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
     meta = defaultdict(lambda: '')
 
     try:
-        meta.update(get_metadata_from_meta_file(post.metadata_path, post.config, lang))
+        config = post.config
     except AttributeError:
-        meta.update(get_metadata_from_meta_file(post.metadata_path, None, lang))
+        config = None
+
+    meta.update(get_metadata_from_meta_file(post.metadata_path, config, lang))
 
     if meta:
         return meta
@@ -673,7 +675,7 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
         meta.update(_get_metadata_from_filename_by_regex(post.source_path,
                                                          file_metadata_regexp))
 
-    meta.update(get_metadata_from_file(post.source_path, post.config, lang))
+    meta.update(get_metadata_from_file(post.source_path, config, lang))
 
     if lang is None:
         # Only perform these checks for the default language
