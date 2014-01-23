@@ -208,6 +208,9 @@ class TranslationsPatternTest1(TranslatedBuildTest):
     @classmethod
     def patch_site(self):
         """Set the TRANSLATIONS_PATTERN to the new v7 default"""
+        os.rename(os.path.join(self.target_dir, "stories", "1.txt"),
+                  os.path.join(self.target_dir, "stories", "1.pl.txt")
+                  )
         conf_path = os.path.join(self.target_dir, "conf.py")
         with codecs.open(conf_path, "rb", "utf-8") as inf:
             data = inf.read()
@@ -224,6 +227,9 @@ class TranslationsPatternTest2(TranslatedBuildTest):
     def patch_site(self):
         """Set the TRANSLATIONS_PATTERN to the new v7 default"""
         conf_path = os.path.join(self.target_dir, "conf.py")
+        os.rename(os.path.join(self.target_dir, "stories", "1.txt"),
+                  os.path.join(self.target_dir, "stories", "1_pl.txt")
+                  )        
         with codecs.open(conf_path, "rb", "utf-8") as inf:
             data = inf.read()
             data = data.replace('TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"',

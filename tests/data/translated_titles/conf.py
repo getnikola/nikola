@@ -50,6 +50,20 @@ TRANSLATIONS = {
     "pl": "./pl",
 }
 
+# What will translated input files be named like?
+
+# If you have a page something.rst, then something.rst.pl will be considered
+# its Polish translation.
+#     (in the above example: path == "something", lang == "pl", ext == "rst")
+# this pattern is also used for metadata:
+#     something.meta -> something.meta.pl
+
+TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"
+
+# If you don't want your Polish files to be considered Perl code, use this:
+# TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"
+#     Note that this pattern will become the default in v7.0.0.
+
 # Links for the sidebar / navigation bar.
 # You should provide a key-value pair for each used language.
 SIDEBAR_LINKS = {
