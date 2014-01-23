@@ -67,7 +67,7 @@ TRANSLATIONS = {
     # "es": "./es",
 }
 
-# What will translated pages be named like?
+# What will translated input pages be named like?
 # if you have a page something.rst then something.rst.pl
 # will be considered its Polish translation
 # in the above example path == "something", lang == "pl",
