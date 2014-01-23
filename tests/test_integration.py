@@ -17,7 +17,7 @@ import unittest
 import lxml.html
 from nose.plugins.skip import SkipTest
 
-from nikola import main
+from nikola import __main__
 import nikola
 import nikola.plugins.command
 import nikola.plugins.command.init
@@ -64,7 +64,7 @@ class EmptyBuildTest(BaseTestCase):
     def build(self):
         """Build the site."""
         with cd(self.target_dir):
-            main.main(["build"])
+            __main__.main(["build"])
 
     @classmethod
     def tearDownClass(self):
@@ -167,7 +167,7 @@ class FuturePostTest(EmptyBuildTest):
 
         # Run deploy command to see if future post is deleted
         with cd(self.target_dir):
-            main.main(["deploy"])
+            __main__.main(["deploy"])
 
         self.assertTrue(os.path.isfile(index_path))
         self.assertTrue(os.path.isfile(foo_path))
@@ -244,14 +244,14 @@ class TestCheck(DemoBuildTest):
     def test_check_links(self):
         with cd(self.target_dir):
             try:
-                main.main(['check', '-l'])
+                __main__.main(['check', '-l'])
             except SystemExit as e:
                 self.assertEqual(e.code, 0)
 
     def test_check_files(self):
         with cd(self.target_dir):
             try:
-                main.main(['check', '-f'])
+                __main__.main(['check', '-f'])
             except SystemExit as e:
                 self.assertEqual(e.code, 0)
 
@@ -263,7 +263,7 @@ class TestCheckFailure(DemoBuildTest):
         with cd(self.target_dir):
             os.unlink(os.path.join("output", "archive.html"))
             try:
-                main.main(['check', '-l'])
+                __main__.main(['check', '-l'])
             except SystemExit as e:
                 self.assertNotEqual(e.code, 0)
 
@@ -272,7 +272,7 @@ class TestCheckFailure(DemoBuildTest):
             with codecs.open(os.path.join("output", "foobar"), "wb+", "utf8") as outf:
                 outf.write("foo")
             try:
-                main.main(['check', '-f'])
+                __main__.main(['check', '-f'])
             except SystemExit as e:
                 self.assertNotEqual(e.code, 0)
 
@@ -345,7 +345,7 @@ class SubdirRunningTest(DemoBuildTest):
         """Check whether build works from posts/"""
 
         with cd(os.path.join(self.target_dir, 'posts')):
-            result = main.main(['build'])
+            result = __main__.main(['build'])
             self.assertEquals(result, 0)
 
 

@@ -31,7 +31,7 @@ else:
 
 # LIBDIR trick end (marker for removal on platforms that don't need it)
 
-from nikola import main
+from nikola import __main__
 
 if __name__ == "__main__":
-    sys.exit(main.main(sys.argv[1:]))
+    sys.exit(__main__.main(sys.argv[1:]))
