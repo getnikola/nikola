@@ -127,7 +127,8 @@ These are the templates that come with the included themes:
     This template handles comments. You should probably never touch it :-)
     It uses a bunch of helper templates, one for each supported comment system:
     ``disqus_helper.tmpl`` ``facebook_helper.tmpl`` ``googleplus_helper.tmpl``
-    ``intensedebate_helper.tmpl`` ``livefyre_helper.tmpl`` ``moot_helper.tmpl``
+    ``intensedebate_helper.tmpl`` ``isso_helper.tmpl`` ``livefyre_helper.tmpl``
+    ``moot_helper.tmpl``
 
 ``crumbs.tmpl`` ``slides.tmpl``
     These templates help render specific UI items, and can be tweaked as needed.
