@@ -309,10 +309,15 @@ Installation on Windows and Windows support
 Nikola supports Windows!  Keep in mind, though, that there are some
 caveats:
 
-1. ``lxml`` and ``Pillow`` require compiled extensions.  Compiling them on
-Windows is hard for most people.  Fortunately, compiled packages exist.  Check
-their `PyPI <https://pypi.python.org/>`_ pages to find official packages, `the unofficial Gohlke binaries <http://www.lfd.uci.edu/~gohlke/pythonlibs/>`_ site, or get them somewhere else.  If you are using virtualenvs, using those pre-built packages is possible through ``virtualenv --system-site-packages``.
-2. Windows has some differences over POSIX, which may cause some features to work incorrectly under Windows.  If any problems occur, please do not hesitate to report them.  Some of the differeces include:
+#. ``lxml`` and ``Pillow`` require compiled extensions.  Compiling them on
+   Windows is hard for most people.  Fortunately, compiled packages exist.
+   Check their `PyPI <https://pypi.python.org/>`_ pages to find official packages,
+   `the unofficial Gohlke binaries <http://www.lfd.uci.edu/~gohlke/pythonlibs/>`_
+   site, or get them somewhere else.  If you are using virtualenvs, using those
+   pre-built packages is possible through ``virtualenv --system-site-packages``.
+#. Windows has some differences over POSIX, which may cause some features to
+   work incorrectly under Windows.  If any problems occur, please do not
+   hesitate to report them.  Some of the differeces include:
 
    * ``\`` as path separator (instead of ``/``)
    * the concept of HDD partitions and letters (instead of
@@ -321,8 +326,8 @@ their `PyPI <https://pypi.python.org/>`_ pages to find official packages, `the u
      problems)
    * CR+LF (aka ``\r\n``) as the line separator (instead of LF ``\n``)
 
-3. Windows also dislikes some characters in paths.
-4. Most of our developers run Linux on a daily basis and may not have the full knowledge required to resolve issues relating to Windows.
+#. Most of our developers run Linux on a daily basis and may not have the full
+   knowledge required to resolve issues relating to Windows.
 
 Getting Started
 ---------------
