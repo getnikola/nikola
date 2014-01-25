@@ -667,8 +667,10 @@ and ``PAGES`` configuration options::
         ("stories/*.rst", "stories", "story.tmpl"),
     )
 
-It will use the first location that has the last item in ``POSTS``, or the last
-one in ``PAGES`` if ``POSTS`` is empty.
+``new_post`` will use the *first* path in ``POSTS`` (or ``PAGES`` if ``-p`` is
+supplied) that ends with the extension of your desired markup format (as
+defined in ``COMPILERS`` in conf.py) as the directory that the new post will be
+written into.  If no such entry can be found, the post won’t be created.
 
 The ``new_post`` command supports some options::
 
