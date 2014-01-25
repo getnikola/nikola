@@ -8,6 +8,8 @@
 Nikola Internals
 ================
 
+.. class:: lead
+
 When trying to guide someone into adding a feature in Nikola, it hit me that
 while the way it's structured makes sense **to me** it is far from obvious.
 

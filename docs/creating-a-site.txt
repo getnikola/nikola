@@ -8,6 +8,8 @@
 Creating a Site (Not a Blog) with Nikola
 ========================================
 
+.. class:: lead
+
 One of the most frequent questions I get about Nikola is "but how do
 I create a site that's not a blog?". And of course, that's because the
 documentation is heavily blog-oriented. This document will change that ;-)

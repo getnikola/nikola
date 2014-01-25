@@ -15,6 +15,8 @@ Theming Nikola
 
 .. contents::
 
+.. class:: lead
+
 This document is a reference about themes. If you want a tutorial, please read
 `Creating a Theme <creating-a-theme.html>`_
 

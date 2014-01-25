@@ -8,6 +8,8 @@
 Creating A Theme From Scratch (Almost)
 ======================================
 
+.. class:: lead
+
 There is some documentation about creating themes for Nikola, but maybe a tutorial is also a useful way
 to explain it. So, here it is. I'll explain how to create a theme (almost) from scratch. All themes
 in Nikola must inherit from the ``base`` theme. In this case, we will inherit from ``bootstrap``

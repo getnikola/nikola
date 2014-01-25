@@ -16,6 +16,8 @@ Extending Nikola
 .. contents::
 
 
+.. class:: lead
+
 Nikola is extensible. Almost all its functionality is based on plugins,
 and you can add your own or replace the provided ones.
 
