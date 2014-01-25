@@ -86,7 +86,7 @@ class Help(DoitHelp):
     @staticmethod
     def print_usage(cmds):
         """print nikola "usage" (basic help) instructions"""
-        print("Nikola is a tool to create static websites and blogs. For full documentation and more information, please visit http://getnikola.com\n\n")
+        print("Nikola is a tool to create static websites and blogs. For full documentation and more information, please visit http://getnikola.com/\n\n")
         print("Available commands:")
         for cmd in sorted(cmds.values(), key=attrgetter('name')):
             print("  nikola %-*s %s" % (20, cmd.name, cmd.doc_purpose))
