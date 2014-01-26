@@ -25,7 +25,9 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
+from sys import platform
 import os
+import subprocess
 try:
     from BaseHTTPServer import HTTPServer
     from SimpleHTTPServer import SimpleHTTPRequestHandler
@@ -57,11 +59,19 @@ class CommandServe(Command):
         {
             'name': 'address',
             'short': 'a',
-            'long': '--address',
+            'long': 'address',
             'type': str,
             'default': '127.0.0.1',
             'help': 'Address to bind (default: 127.0.0.1)',
         },
+        {
+            'name': 'browser',
+            'short': 'b',
+            'long': 'browser',
+            'type': bool,
+            'default': False,
+            'help': 'Open the test server in a web browser',
+        }
     )
 
     def _execute(self, options, args):
@@ -76,8 +86,23 @@ class CommandServe(Command):
                                OurHTTPRequestHandler)
             sa = httpd.socket.getsockname()
             self.logger.notice("Serving HTTP on {0} port {1} ...".format(*sa))
+            if options['browser']:
+                server_url = "http://{0}:{1}/".format(options['address'], options['port'])
+                if "bsd" in platform or "linux" in platform:
+                   launcher = "xdg-open"
+                elif platform == 'darwin': # OS X
+                   launcher = "open"
+                elif platform.starts_with('win'):
+                   launcher = "start"
+                else:
+                    self.logger.error("Unsupported platform. Do not know how to start a browser.")
+                if launcher:
+                    self.logger.notice("Opening {0} in the default web browser ...".format(server_url))
+                    try:
+                        subprocess.call([launcher, server_url], stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
+                    except Exception:
+                        self.logger.warning("Could not open a web browser. None set as default?")
             httpd.serve_forever()
-
 
 class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
     extensions_map = dict(SimpleHTTPRequestHandler.extensions_map)
