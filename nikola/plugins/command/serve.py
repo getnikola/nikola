@@ -37,7 +37,7 @@ from nikola.plugin_categories import Command
 from nikola.utils import get_logger
 
 
-class CommandBuild(Command):
+class CommandServe(Command):
     """Start test server."""
 
     name = "serve"

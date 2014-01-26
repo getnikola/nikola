@@ -106,7 +106,7 @@ For your own plugin, just change the values in a sensible way. The
     # You have to inherit Command for this to be a
     # command plugin:
 
-    class CommandBuild(Command):
+    class CommandServe(Command):
         """Start test server."""
 
         name = "serve"
