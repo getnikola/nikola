@@ -25,9 +25,8 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-from sys import platform
 import os
-import subprocess
+import webbrowser
 try:
     from BaseHTTPServer import HTTPServer
     from SimpleHTTPServer import SimpleHTTPRequestHandler
@@ -88,20 +87,8 @@ class CommandServe(Command):
             self.logger.notice("Serving HTTP on {0} port {1} ...".format(*sa))
             if options['browser']:
                 server_url = "http://{0}:{1}/".format(options['address'], options['port'])
-                if "bsd" in platform or "linux" in platform:
-                   launcher = "xdg-open"
-                elif platform == 'darwin': # OS X
-                   launcher = "open"
-                elif platform.starts_with('win'):
-                   launcher = "start"
-                else:
-                    self.logger.error("Unsupported platform. Do not know how to start a browser.")
-                if launcher:
-                    self.logger.notice("Opening {0} in the default web browser ...".format(server_url))
-                    try:
-                        subprocess.call([launcher, server_url], stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
-                    except Exception:
-                        self.logger.warning("Could not open a web browser. None set as default?")
+                self.logger.notice("Opening {0} in the default web browser ...".format(server_url))
+                webbrowser.open(server_url)
             httpd.serve_forever()
 
 class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
