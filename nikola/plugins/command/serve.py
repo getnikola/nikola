@@ -91,6 +91,7 @@ class CommandServe(Command):
                 webbrowser.open(server_url)
             httpd.serve_forever()
 
+
 class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
     extensions_map = dict(SimpleHTTPRequestHandler.extensions_map)
     extensions_map[""] = "text/plain"
