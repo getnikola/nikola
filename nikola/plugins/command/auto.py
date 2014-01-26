@@ -34,7 +34,7 @@ from nikola.plugin_categories import Command
 from nikola.utils import req_missing
 
 
-class Auto(Command):
+class CommandAuto(Command):
     """Start debugging console."""
     name = "auto"
     doc_purpose = "automatically detect site changes, rebuild and optionally refresh a browser"
