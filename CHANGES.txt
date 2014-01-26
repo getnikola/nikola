@@ -4,7 +4,7 @@ New in 6.3.1
 Features
 --------
 
-* New --browser/-b option on the serve command to open instantly in a web browser
+* New --browser/-b option on the serve command to open instantly in a web browser (Issue #997)
 
 New in 6.3.0
 ============
