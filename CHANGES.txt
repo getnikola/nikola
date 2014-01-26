@@ -1,10 +1,13 @@
-New in 6.3.1
+New in 7.0.0
 ============
 
 Features
 --------
 
 * New --browser/-b option on the serve command to open instantly in a web browser (Issue #997)
+
+Bugfixes
+--------
 
 New in 6.3.0
 ============
