@@ -21,7 +21,7 @@ install:
 script:
   - "if [[ $NMODE == 'nikola' ]]; then nosetests --with-coverage --cover-package=nikola --with-doctest --doctest-options=+NORMALIZE_WHITESPACE --logging-filter=-yapsy; fi"
   - "if [[ $NMODE == 'nikola' ]]; then nikola help; fi"
-  - "if [[ $NMODE == 'flake8' ]]; then flake8 --ignore=E501 .; fi"
+  - "if [[ $NMODE == 'flake8' ]]; then flake8 .; fi"
 after_success:
   - "if [[ $NMODE == 'nikola' ]]; then coveralls; fi"
 notifications:
