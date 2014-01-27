@@ -172,7 +172,8 @@ COMPILERS = ${COMPILERS}
 # the posts themselves. If set to False, it will be just a list of links.
 # TAG_PAGES_ARE_INDEXES = True
 
-# Final location is output / TRANSLATION[lang] / INDEX_PATH / index-*.html
+# Final location for the main blog page and sibling paginated pages is
+# output / TRANSLATION[lang] / INDEX_PATH / index-*.html
 # INDEX_PATH = ""
 
 # Create per-month archives instead of per-year
@@ -192,7 +193,7 @@ COMPILERS = ${COMPILERS}
 # absolute: a complete URL (that includes the SITE_URL)
 # URL_TYPE = 'rel_path'
 
-# Final locations are:
+# Final location for the blog main RSS feed is:
 # output / TRANSLATION[lang] / RSS_PATH / rss.xml
 # RSS_PATH = ""
 
