@@ -9,6 +9,8 @@ Features
 Bugfixes
 --------
 
+* Fix image URLs in galleries (Issue #986)
+
 New in 6.3.0
 ============
 
