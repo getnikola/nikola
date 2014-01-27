@@ -728,7 +728,7 @@ class Nikola(object):
                             [lxml.html.tostring(child, encoding='unicode')
                                 for child in body.iterchildren()])
                     except IndexError:  # No body there, it happens sometimes
-                        data=''
+                        data = ''
                 except lxml.etree.ParserError as e:
                     if str(e) == "Document is empty":
                         data = ""
