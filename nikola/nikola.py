@@ -25,8 +25,10 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function, unicode_literals
+import codecs
 from collections import defaultdict
 from copy import copy
+import datetime
 import glob
 import locale
 import os
@@ -41,6 +43,7 @@ try:
     import pyphen
 except ImportError:
     pyphen = None
+import pytz
 
 import logging
 from . import DEBUG
@@ -113,6 +116,9 @@ class Nikola(object):
             self.configured = False
         else:
             self.configured = True
+
+        # Maintain API
+        utils.generic_rss_renderer = self.generic_rss_renderer
 
         # This is the default config
         self.config = {
@@ -691,8 +697,7 @@ class Nikola(object):
             if s != d:
                 break
         # Now i is the longest common prefix
-        result = '/'.join(['..'] * (len(src_elems) - i - 1) +
-                            dst_elems[i:])
+        result = '/'.join(['..'] * (len(src_elems) - i - 1) + dst_elems[i:])
 
         if not result:
             result = "."
@@ -705,6 +710,43 @@ class Nikola(object):
 
         return result
 
+    def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
+                             rss_teasers, feed_length=10, feed_url=None):
+        """Takes all necessary data, and renders a RSS feed in output_path."""
+        items = []
+        for post in timeline[:feed_length]:
+            args = {
+                'title': post.title(lang),
+                'link': post.permalink(lang, absolute=True),
+                'description': post.text(lang, teaser_only=rss_teasers, really_absolute=True),
+                'guid': post.permalink(lang, absolute=True),
+                # PyRSS2Gen's pubDate is GMT time.
+                'pubDate': (post.date if post.date.tzinfo is None else
+                            post.date.astimezone(pytz.timezone('UTC'))),
+                'categories': post._tags.get(lang, []),
+                'author': post.meta('author'),
+            }
+
+            items.append(utils.ExtendedItem(**args))
+        rss_obj = utils.ExtendedRSS2(
+            title=title,
+            link=link,
+            description=description,
+            lastBuildDate=datetime.datetime.now(),
+            items=items,
+            generator='Nikola <http://getnikola.com/>',
+            language=lang
+        )
+        rss_obj.self_url = feed_url
+        rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
+        rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
+        dst_dir = os.path.dirname(output_path)
+        utils.makedirs(dst_dir)
+        with codecs.open(output_path, "wb+", "utf-8") as rss_file:
+            data = rss_obj.to_xml(encoding='utf-8')
+            if isinstance(data, utils.bytes_str):
+                data = data.decode('utf-8')
+            rss_file.write(data)
 
     def path(self, kind, name, lang=None, is_link=False):
         """Build the path to a certain kind of page.
