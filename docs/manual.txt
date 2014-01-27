@@ -502,7 +502,7 @@ The third line is the post's date, and is set to "now".
 The other lines are optional. Tags are comma-separated. The ``link`` is an original
 source for the content, and ``description`` is mostly useful for SEO.
 ``type`` is the post type, whatever you set here (prepended with ``post-``)
-will become a class of the `<article>` element for this post.  Defaults to
+will become a CSS class of the ``<article>`` element for this post.  Defaults to
 ``text`` (resulting in a ``post-text`` class)
 
 You can add your own metadata fields in the same manner, if you use a theme that
@@ -806,7 +806,7 @@ Post Types
 
 Nikola supports specifying post types, just like Tumblr does.  Post
 types affect the look of your posts, by adding a ``post-YOURINPUTHERE``
-class to the post.  Each post can have one and exactly one type.  Nikola
+CSS class to the post.  Each post can have one and exactly one type.  Nikola
 styles the following types in the default themes:
 
 +-----------------+----------------------------+------------------+
