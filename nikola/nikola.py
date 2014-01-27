@@ -618,78 +618,93 @@ class Nikola(object):
         # The os.sep is because normpath will change "/" to "\" on windows
         src = "/".join(src.split(os.sep))
 
-        parsed_src = urlsplit(src)
-        src_elems = parsed_src.path.split('/')[1:]
-
-        def replacer(dst):
-            # Refuse to replace links that are full URLs.
-            dst_url = urlparse(dst)
-            if dst_url.netloc:
-                if dst_url.scheme == 'link':  # Magic link
-                    dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'),
-                                    context['lang'])
-                else:
-                    return dst
-
-            # Refuse to replace links that consist of a fragment only
-            if ((not dst_url.scheme) and (not dst_url.netloc) and
-                    (not dst_url.path) and (not dst_url.params) and
-                    (not dst_url.query) and dst_url.fragment):
-                return dst
-
-            # Normalize
-            dst = urljoin(src, dst)
-
-            # Avoid empty links.
-            if src == dst:
-                if self.config.get('URL_TYPE') == 'absolute':
-                    dst = urljoin(self.config['BASE_URL'], dst)
-                    return dst
-                elif self.config.get('URL_TYPE') == 'full_path':
-                    return dst
-                else:
-                    return "#"
-
-            # Check that link can be made relative, otherwise return dest
-            parsed_dst = urlsplit(dst)
-            if parsed_src[:2] != parsed_dst[:2]:
-                if self.config.get('URL_TYPE') == 'absolute':
-                    dst = urljoin(self.config['BASE_URL'], dst)
-                return dst
-
-            if self.config.get('URL_TYPE') in ('full_path', 'absolute'):
-                if self.config.get('URL_TYPE') == 'absolute':
-                    dst = urljoin(self.config['BASE_URL'], dst)
-                return dst
-
-            # Now both paths are on the same site and absolute
-            dst_elems = parsed_dst.path.split('/')[1:]
-
-            i = 0
-            for (i, s), d in zip(enumerate(src_elems), dst_elems):
-                if s != d:
-                    break
-            # Now i is the longest common prefix
-            result = '/'.join(['..'] * (len(src_elems) - i - 1) +
-                              dst_elems[i:])
-
-            if not result:
-                result = "."
-
-            # Don't forget the fragment (anchor) part of the link
-            if parsed_dst.fragment:
-                result += "#" + parsed_dst.fragment
-
-            assert result, (src, dst, i, src_elems, dst_elems)
-
-            return result
-
         utils.makedirs(os.path.dirname(output_name))
         doc = lxml.html.document_fromstring(data)
-        doc.rewrite_links(replacer)
+        doc.rewrite_links(lambda dst: self.url_replacer(src, dst, context['lang']))
         data = b'<!DOCTYPE html>' + lxml.html.tostring(doc, encoding='utf8')
         with open(output_name, "wb+") as post_file:
             post_file.write(data)
+
+    def url_replacer(self, src, dst, lang=None):
+        """URL mangler.
+
+        * Replaces link:// URLs with real links
+        * Makes dst relative to src
+        * Leaves fragments unchanged
+        * Leaves full URLs unchanged
+        * Avoids empty links
+
+        src is the URL where this link is used
+        dst is the link to be mangled
+        lang is used for language-sensitive URLs in link://
+
+        """
+        parsed_src = urlsplit(src)
+        src_elems = parsed_src.path.split('/')[1:]
+        dst_url = urlparse(dst)
+        if lang is None:
+            lang = self.default_lang
+
+        # Refuse to replace links that are full URLs.
+        if dst_url.netloc:
+            if dst_url.scheme == 'link':  # Magic link
+                dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'), lang)
+            else:
+                return dst
+
+        # Refuse to replace links that consist of a fragment only
+        if ((not dst_url.scheme) and (not dst_url.netloc) and
+                (not dst_url.path) and (not dst_url.params) and
+                (not dst_url.query) and dst_url.fragment):
+            return dst
+
+        # Normalize
+        dst = urljoin(src, dst)
+
+        # Avoid empty links.
+        if src == dst:
+            if self.config.get('URL_TYPE') == 'absolute':
+                dst = urljoin(self.config['BASE_URL'], dst)
+                return dst
+            elif self.config.get('URL_TYPE') == 'full_path':
+                return dst
+            else:
+                return "#"
+
+        # Check that link can be made relative, otherwise return dest
+        parsed_dst = urlsplit(dst)
+        if parsed_src[:2] != parsed_dst[:2]:
+            if self.config.get('URL_TYPE') == 'absolute':
+                dst = urljoin(self.config['BASE_URL'], dst)
+            return dst
+
+        if self.config.get('URL_TYPE') in ('full_path', 'absolute'):
+            if self.config.get('URL_TYPE') == 'absolute':
+                dst = urljoin(self.config['BASE_URL'], dst)
+            return dst
+
+        # Now both paths are on the same site and absolute
+        dst_elems = parsed_dst.path.split('/')[1:]
+
+        i = 0
+        for (i, s), d in zip(enumerate(src_elems), dst_elems):
+            if s != d:
+                break
+        # Now i is the longest common prefix
+        result = '/'.join(['..'] * (len(src_elems) - i - 1) +
+                            dst_elems[i:])
+
+        if not result:
+            result = "."
+
+        # Don't forget the fragment (anchor) part of the link
+        if parsed_dst.fragment:
+            result += "#" + parsed_dst.fragment
+
+        assert result, (src, dst, i, src_elems, dst_elems)
+
+        return result
+
 
     def path(self, kind, name, lang=None, is_link=False):
         """Build the path to a certain kind of page.
