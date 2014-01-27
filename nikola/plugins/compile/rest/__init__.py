@@ -174,6 +174,38 @@ class NikolaReader(docutils.readers.standalone.Reader):
 
 
 def add_node(node, visit_function=None, depart_function=None):
+    """
+    Register a Docutils node class.
+    This function is completely optional. It is a same concept as
+    `Sphinx add_node function <http://sphinx-doc.org/ext/appapi.html#sphinx.application.Sphinx.add_node>`_.
+
+    For example::
+
+        class Plugin(RestExtension):
+
+            name = "rest_math"
+
+            def set_site(self, site):
+                self.site = site
+                directives.register_directive('math', MathDirective)
+                add_node(MathBlock, visit_Math, depart_Math)
+                return super(Plugin, self).set_site(site)
+
+        class MathDirective(Directive):
+            def run(self):
+                node = MathBlock()
+                return [node]
+
+        class Math(docutils.nodes.Element): pass
+
+        def visit_Math(self, node):
+            self.body.append(self.starttag(node, 'math'))
+
+        def depart_Math(self, node):
+            self.body.append('</math>')
+
+    For full example, you can refer to `Microdata plugin <http://plugins.getnikola.com/#microdata>`_
+    """
     docutils.nodes._add_node_class_names([node.__name__])
     if visit_function:
         setattr(docutils.writers.html4css1.HTMLTranslator, 'visit_' + node.__name__, visit_function)
