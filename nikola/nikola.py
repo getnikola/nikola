@@ -715,23 +715,25 @@ class Nikola(object):
         """Takes all necessary data, and renders a RSS feed in output_path."""
         items = []
         for post in timeline[:feed_length]:
-
             # Massage the post's HTML
             data = post.text(lang, teaser_only=rss_teasers, really_absolute=True)
-            if feed_url is not None:
-                print(data)
-                doc = lxml.html.document_fromstring(data)
-                doc.rewrite_links(lambda dst: self.url_replacer(feed_url, dst, lang))
+            if feed_url is not None and data:
+                # FIXME: this is duplicated with code in Post.text()
                 try:
-                    body = doc.body
-                    data = (body.text or '') + ''.join(
-                        [lxml.html.tostring(child, encoding='unicode')
-                            for child in body.iterchildren()])
-                except IndexError:  # No body there, it happens sometimes
-                    data=''
-                print()
-                print()
-                print(data)
+                    doc = lxml.html.document_fromstring(data)
+                    doc.rewrite_links(lambda dst: self.url_replacer(feed_url, dst, lang))
+                    try:
+                        body = doc.body
+                        data = (body.text or '') + ''.join(
+                            [lxml.html.tostring(child, encoding='unicode')
+                                for child in body.iterchildren()])
+                    except IndexError:  # No body there, it happens sometimes
+                        data=''
+                except lxml.etree.ParserError as e:
+                    if str(e) == "Document is empty":
+                        data = ""
+                    else:  # let other errors raise
+                        raise(e)
 
             args = {
                 'title': post.title(lang),
