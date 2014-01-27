@@ -9,6 +9,8 @@ Features
 Bugfixes
 --------
 
+* Fix link:// in RSS contents (Issue #952)
+
 New in 6.3.0
 ============
 
