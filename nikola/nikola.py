@@ -305,7 +305,7 @@ class Nikola(object):
         if config.get('PRETTY_URLS', False) and 'STRIP_INDEXES' not in config:
             self.config['STRIP_INDEXES'] = True
 
-        if config.get('COPY_SOURCES') and not self.config['HIDE_SOURCELINK']:
+        if not config.get('COPY_SOURCES'):
             self.config['HIDE_SOURCELINK'] = True
 
         self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',

@@ -9,6 +9,8 @@ Features
 Bugfixes
 --------
 
+* HIDE_SOURCELINK was set to True sometimes (Issue #1004)
+
 New in 6.3.0
 ============
 
