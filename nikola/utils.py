@@ -823,7 +823,7 @@ def urljoin(base, url):
 
     this is because::
 
-    >>> return urllib.parse.urljoin("http://base.com/foo/", "/bar")
+    >>> urllib.parse.urljoin("http://base.com/foo/", "/bar")
     'http://base.com/bar'
     """
     if isinstance(url, str) and url.startswith("/"): # mind our SITE_URL root
