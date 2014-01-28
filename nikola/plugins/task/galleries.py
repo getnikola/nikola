@@ -176,6 +176,7 @@ class Galleries(Task):
 
                 thumbs = ['.thumbnail'.join(os.path.splitext(p)) for p in image_list]
                 thumbs = [os.path.join(self.kw['output_folder'], t) for t in thumbs]
+                dest_img_list = [os.path.join(self.kw['output_folder'], t) for t in image_list]
 
                 folders = []
 
@@ -219,7 +220,7 @@ class Galleries(Task):
                             template_name,
                             dst,
                             context,
-                            image_list,
+                            dest_img_list,
                             thumbs,
                             file_dep))],
                     'clean': True,
