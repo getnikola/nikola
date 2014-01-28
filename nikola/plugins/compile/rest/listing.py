@@ -56,6 +56,18 @@ except ImportError:  # docutils < 0.9 (Debian Sid For The Loss)
 
 from nikola.plugin_categories import RestExtension
 
+# Add sphinx compatibility option
+CodeBlock.option_spec['linenos'] = directives.unchanged
+
+
+class FlexibleCodeBlock(CodeBlock):
+
+    def run(self):
+        if 'linenos' in self.options:
+            self.options['number-lines'] = self.options['linenos']
+        return super(FlexibleCodeBlock, self).run()
+CodeBlock = FlexibleCodeBlock
+
 
 class Plugin(RestExtension):
 
@@ -71,6 +83,11 @@ class Plugin(RestExtension):
         directives.register_directive('listing', Listing)
         return super(Plugin, self).set_site(site)
 
+# Add sphinx compatibility option
+listing_spec = Include.option_spec
+listing_spec['linenos'] = directives.unchanged
+print(listing_spec)
+
 
 class Listing(Include):
     """ listing directive: create a highlighted block of code from a file in listings/
@@ -84,6 +101,7 @@ class Listing(Include):
     has_content = False
     required_arguments = 1
     optional_arguments = 1
+    option_spec = listing_spec
 
     def run(self):
         fname = self.arguments.pop(0)
@@ -91,6 +109,8 @@ class Listing(Include):
         fpath = os.path.join('listings', fname)
         self.arguments.insert(0, fpath)
         self.options['code'] = lang
+        if 'linenos' in self.options:
+            self.options['number-lines'] = self.options['linenos']
         with codecs_open(fpath, 'rb+', 'utf8') as fileobject:
             self.content = fileobject.read().splitlines()
         self.state.document.settings.record_dependencies.add(fpath)
