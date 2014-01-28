@@ -34,9 +34,10 @@ import locale
 import os
 import sys
 try:
-    from urlparse import urlparse, urlsplit, urljoin
+    from urlparse import urlparse, urlsplit
 except ImportError:
-    from urllib.parse import urlparse, urlsplit, urljoin  # NOQA
+    from urllib.parse import urlparse, urlsplit # NOQA
+from .utils import urljoin                  # our base-mindful urljoin
 
 from blinker import signal
 try:

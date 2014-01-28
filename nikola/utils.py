@@ -45,6 +45,11 @@ try:
 except ImportError:
     pass
 
+try:
+    from urlparse import urljoin as _urljoin
+except ImportError:
+    from urllib.parse import urljoin as _urljoin  # NOQA
+
 import logbook
 from logbook.more import ExceptionHandler
 import pytz
@@ -811,3 +816,18 @@ def get_translation_candidate(config, path, lang):
     path, ext = os.path.splitext(path)
     ext = ext[1:] if len(ext) > 0 else ext
     return pattern.format(path=path, lang=lang, ext=ext)
+
+
+def urljoin(base, url):
+    """A modified version of urljoin that treats the base as unbreakable
+
+    this is because::
+
+    >>> return urllib.parse.urljoin("http://base.com/foo/", "/bar")
+    'http://base.com/bar'
+    """
+    if url.startswith("/"): # mind our SITE_URL root
+        template = _urljoin("http://base_placeholder/", url)
+        return template.replace("http://base_placeholder", base.rstrip("/"))
+    else:
+        return _urljoin(base, url)
