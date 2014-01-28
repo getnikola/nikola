@@ -826,7 +826,7 @@ def urljoin(base, url):
     >>> return urllib.parse.urljoin("http://base.com/foo/", "/bar")
     'http://base.com/bar'
     """
-    if url.startswith("/"): # mind our SITE_URL root
+    if isinstance(url, str) and url.startswith("/"): # mind our SITE_URL root
         template = _urljoin("http://base_placeholder/", url)
         return template.replace("http://base_placeholder", base.rstrip("/"))
     else:
