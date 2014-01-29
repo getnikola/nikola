@@ -13,6 +13,7 @@ Bugfixes
 * Fix image URLs in galleries (Issue #986)
 * Fix link:// in RSS contents (Issue #952)
 * HIDE_SOURCELINK was set to True sometimes (Issue #1004)
+* Properly import cool URIs from WordPress, instead of just slugify-ing the path (Issue #693)
 
 New in 6.3.0
 ============
