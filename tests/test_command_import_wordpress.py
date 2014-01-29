@@ -173,7 +173,7 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
             'kontakt', '2009-07-16 20:20:32', None, [])
 
         self.assertTrue(write_content.called)
-        write_content.assert_any_call('new_site/posts/200704hoert.wp'.replace('/', os.sep),
+        write_content.assert_any_call('new_site/posts/2007/04/hoert.wp'.replace('/', os.sep),
                                       """An image.
 
 <img class="size-full wp-image-16" title="caption test" src="http://some.blog/wp-content/uploads/2009/07/caption_test.jpg" alt="caption test" width="739" height="517" />
@@ -193,7 +193,7 @@ The end.
 """)
 
         write_content.assert_any_call(
-            'new_site/posts/200807arzt-und-pfusch-s-i-c-k.wp'.replace('/', os.sep),
+            'new_site/posts/2008/07/arzt-und-pfusch-s-i-c-k.wp'.replace('/', os.sep),
             '''<img class="size-full wp-image-10 alignright" title="Arzt+Pfusch - S.I.C.K." src="http://some.blog/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png" alt="Arzt+Pfusch - S.I.C.K." width="210" height="209" />Arzt+Pfusch - S.I.C.K.Gerade bin ich \xfcber das Album <em>S.I.C.K</em> von <a title="Arzt+Pfusch" href="http://www.arztpfusch.com/" target="_blank">Arzt+Pfusch</a> gestolpert, welches Arzt+Pfusch zum Download f\xfcr lau anbieten. Das Album steht unter einer Creative Commons <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/de/">BY-NC-ND</a>-Lizenz.
 Die Ladung <em>noisebmstupidevildustrial</em> gibts als MP3s mit <a href="http://www.archive.org/download/dmp005/dmp005_64kb_mp3.zip">64kbps</a> und <a href="http://www.archive.org/download/dmp005/dmp005_vbr_mp3.zip">VBR</a>, als Ogg Vorbis und als FLAC (letztere <a href="http://www.archive.org/details/dmp005">hier</a>). <a href="http://www.archive.org/download/dmp005/dmp005-artwork.zip">Artwork</a> und <a href="http://www.archive.org/download/dmp005/dmp005-lyrics.txt">Lyrics</a> gibts nochmal einzeln zum Download.''')
         write_content.assert_any_call(
@@ -214,11 +214,11 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
 
         self.assertEqual(
             self.import_command.url_map['http://some.blog/2007/04/hoert/'],
-            'http://some.blog/posts/200704hoert.html')
+            'http://some.blog/posts/2007/04/hoert.html')
         self.assertEqual(
             self.import_command.url_map[
                 'http://some.blog/2008/07/arzt-und-pfusch-s-i-c-k/'],
-            'http://some.blog/posts/200807arzt-und-pfusch-s-i-c-k.html')
+            'http://some.blog/posts/2008/07/arzt-und-pfusch-s-i-c-k.html')
         self.assertEqual(
             self.import_command.url_map['http://some.blog/kontakt/'],
             'http://some.blog/stories/kontakt.html')
