@@ -66,3 +66,4 @@ wimpr1m <https://github.com/wimpr1m>
 yarko <https://github.com/yarko>
 neiesc <https://github.com/neiesc>
 ermeaney <https://github.com/ermeney>
+Evgeni Golov <https://github.com/evgeni>
