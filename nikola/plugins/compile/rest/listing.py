@@ -86,7 +86,6 @@ class Plugin(RestExtension):
 # Add sphinx compatibility option
 listing_spec = Include.option_spec
 listing_spec['linenos'] = directives.unchanged
-print(listing_spec)
 
 
 class Listing(Include):
