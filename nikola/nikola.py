@@ -582,9 +582,13 @@ class Nikola(object):
             compile_html = self.inverse_compilers[ext]
         except KeyError:
             # Find the correct compiler for this files extension
-            langs = [lang for lang, exts in
-                     list(self.config['COMPILERS'].items())
-                     if ext in exts]
+            lang_exts_tab = list(self.config['COMPILERS'].items())
+            # Also add aliases for combinations with TRANSLATIONS_PATTERN
+            lang_exts_tab = [ (lang, list(exts) + [ utils.get_translation_candidate(self.config, ext, lang)
+                                             for ext in exts
+                                             for lang in self.config['TRANSLATIONS'].keys() ])
+                            for lang, exts in lang_exts_tab ]
+            langs = [lang for lang, exts in lang_exts_tab if ext in exts]
             if len(langs) != 1:
                 if len(set(langs)) > 1:
                     exit("Your file extension->compiler definition is"
