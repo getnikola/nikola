@@ -311,9 +311,17 @@ class RenderTags(Task):
                               self.site.config['INDEX_FILE']] if _f]
 
     def tag_path(self, name, lang):
-        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['TAG_PATH'], self.slugify_name(name) + ".html"] if
-                _f]
+        if self.site.config['PRETTY_URLS']:
+            return [_f for _f in [
+                self.site.config['TRANSLATIONS'][lang],
+                self.site.config['TAG_PATH'],
+                self.slugify_name(name),
+                self.site.config['INDEX_FILE']] if _f]
+        else:
+            return [_f for _f in [
+                self.site.config['TRANSLATIONS'][lang],
+                self.site.config['TAG_PATH'],
+                self.slugify_name(name) + ".html"] if _f]
 
     def tag_rss_path(self, name, lang):
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],

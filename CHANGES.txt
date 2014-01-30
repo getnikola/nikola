@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Support PRETTY_URLS for tag files (Issue #655)
 * Remove conflicting CSS code from rst.css (Issue #913)
 * Fix image URLs in galleries (Issue #986)
 * Fix link:// in RSS contents (Issue #952)
