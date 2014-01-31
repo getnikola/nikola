@@ -231,7 +231,7 @@ class MissingDefaultLanguageTest(TranslatedBuildTest):
     def test_translated_titles(self):
         """Do not test titles as we just removed the translation"""
         pass
-    
+
 
 class TranslationsPatternTest2(TranslatedBuildTest):
     """Check that the path_lang.ext TRANSLATIONS_PATTERN works too"""
