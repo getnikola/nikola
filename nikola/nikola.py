@@ -654,8 +654,7 @@ class Nikola(object):
         # Refuse to replace links that are full URLs.
         if dst_url.netloc:
             if dst_url.scheme == 'link':  # Magic link
-                if dst_url.netloc:
-                    dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'), lang)
+                dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'), lang)
             else:
                 return dst
         elif dst_url.scheme == 'link':  # Magic absolute path link:
