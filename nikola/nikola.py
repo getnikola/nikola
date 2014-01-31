@@ -657,6 +657,9 @@ class Nikola(object):
                 dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'), lang)
             else:
                 return dst
+        elif dst_url.scheme == 'link':  # Magic absolute path link:
+            dst = dst_url.path
+            return dst
 
         # Refuse to replace links that consist of a fragment only
         if ((not dst_url.scheme) and (not dst_url.netloc) and
