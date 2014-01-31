@@ -590,7 +590,8 @@ class Nikola(object):
         except KeyError:
             # Find the correct compiler for this files extension
             lang_exts_tab = list(self.config['COMPILERS'].items())
-            langs = [lang for lang, exts in lang_exts_tab if ext in exts]
+            langs = [lang for lang, exts in lang_exts_tab if ext in exts or
+                     len([ext for ext in exts if source_name.endswith(ext)]) > 0]
             if len(langs) != 1:
                 if len(set(langs)) > 1:
                     exit("Your file extension->compiler definition is"
