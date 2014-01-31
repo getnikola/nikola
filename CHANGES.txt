@@ -1,4 +1,4 @@
-New in 7.0.0
+New in 6.4.0
 ============
 
 Features
