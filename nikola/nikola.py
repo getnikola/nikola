@@ -416,7 +416,7 @@ class Nikola(object):
 
         # Also add aliases for combinations with TRANSLATIONS_PATTERN
         self.config['COMPILERS'] = dict([(lang, list(exts) + [
-            utils.get_translation_candidate(self.config, ext, lang)
+            utils.get_translation_candidate(self.config, "f" + ext, lang)[1:]
             for ext in exts
             for lang in self.config['TRANSLATIONS'].keys()])
             for lang, exts in list(self.config['COMPILERS'].items())])
