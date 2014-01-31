@@ -15,8 +15,6 @@ matrix:
 env:
     NMODE=nikola
 install:
-#TEMPORARY REMOVE ME SOON
-  - "if [[ $NMODE == 'flake8' ]]; then false; fi"
   - "if [[ $NMODE == 'nikola' ]]; then wget https://github.com/getnikola/wheelhouse/archive/$(scripts/getpyver.py).zip; fi"
   - "if [[ $NMODE == 'nikola' ]]; then unzip $(scripts/getpyver.py).zip; fi"
   - "if [[ $NMODE == 'nikola' ]]; then python scripts/install_wheels.py; fi"
