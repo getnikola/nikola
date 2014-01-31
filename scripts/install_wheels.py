@@ -4,7 +4,9 @@ import wheel.install
 import glob
 import sys
 
-wheels = glob.glob(sys.argv[1] + '/*.whl')
+pyver = '.'.join([str(i) for i in sys.version_info[0:3]])
+
+wheels = glob.glob('wheelhouse-v{pyver}/*.whl'.format(pyver=pyver))
 print('Installing wheels...')
 for i in wheels:
     print(i)
