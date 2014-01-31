@@ -17,7 +17,7 @@ env:
 install:
   - "if [[ $NMODE == 'nikola' ]]; then wget https://github.com/getnikola/wheelhouse/archive/$(scripts/getpyver.py).zip; fi"
   - "if [[ $NMODE == 'nikola' ]]; then unzip $(scripts/getpyver.py).zip; fi"
-  - "if [[ $NMODE == 'nikola' ]]; then pip install --use-wheel --no-index --find-links=$PWD/wheelhouse-$(python scripts/getpyver.py)/ lxml Pillow; fi"
+  - "if [[ $NMODE == 'nikola' ]]; then pip install --use-wheel --no-index --find-links=file://$PWD/wheelhouse-$(python scripts/getpyver.py) lxml Pillow; fi"
   - "if [[ $NMODE == 'nikola' ]]; then pip install -r requirements-tests.txt --use-mirrors; fi"
   - "if [[ $NMODE == 'nikola' ]]; then pip install . --use-mirrors; fi"
   - "if [[ $NMODE == 'flake8' ]]; then pip install flake8 --use-mirrors; fi"
