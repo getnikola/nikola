@@ -662,7 +662,6 @@ class Nikola(object):
             dst = dst_url.path
             return dst
 
-
         # Refuse to replace links that consist of a fragment only
         if ((not dst_url.scheme) and (not dst_url.netloc) and
                 (not dst_url.path) and (not dst_url.params) and
