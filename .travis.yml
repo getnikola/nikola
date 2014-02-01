@@ -21,7 +21,7 @@ install:
   - "if [[ $NMODE == 'nikola' ]]; then pip install -r requirements-tests.txt; fi"
   - "if [[ $NMODE == 'nikola' ]]; then pip install .; fi"
   - "if [[ $NMODE == 'flake8' ]]; then pip install flake8; fi"
-# We run tests, nikola (to see if the command is executable) and flake8.
+# We run tests and nikola (to see if the command is executable) OR flake8.
 script:
   - "if [[ $NMODE == 'nikola' ]]; then nosetests --with-coverage --cover-package=nikola --with-doctest --doctest-options=+NORMALIZE_WHITESPACE --logging-filter=-yapsy; fi"
   - "if [[ $NMODE == 'nikola' ]]; then nikola help; fi"
