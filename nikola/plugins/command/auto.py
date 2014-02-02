@@ -83,4 +83,4 @@ class CommandAuto(Command):
         if options and options.get('browser'):
             webbrowser.open('http://localhost:{0}'.format(port))
 
-        server.serve(port, out_folder)
+        server.serve(port, None, out_folder)
