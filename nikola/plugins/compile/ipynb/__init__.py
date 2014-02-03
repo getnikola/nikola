@@ -44,7 +44,7 @@ from nikola.utils import makedirs, req_missing
 try:
     from collections import OrderedDict
 except ImportError:
-    OrderedDict = None  # NOQA
+    OrderedDict = dict  # NOQA
 
 
 class CompileIPynb(PageCompiler):
@@ -67,10 +67,7 @@ class CompileIPynb(PageCompiler):
             out_file.write(body)
 
     def create_post(self, path, onefile=False, **kw):
-        if OrderedDict is not None:
-            metadata = OrderedDict()
-        else:
-            metadata = {}
+        metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
         d_name = os.path.dirname(path)

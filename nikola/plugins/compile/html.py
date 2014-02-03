@@ -36,7 +36,7 @@ from nikola.utils import makedirs
 try:
     from collections import OrderedDict
 except ImportError:
-    OrderedDict = None  # NOQA
+    OrderedDict = dict  # NOQA
 
 
 _META_SEPARATOR = '(' + os.linesep * 2 + '|' + ('\n' * 2) + '|' + ("\r\n" * 2) + ')'
@@ -57,10 +57,7 @@ class CompileHtml(PageCompiler):
         return True
 
     def create_post(self, path, onefile=False, **kw):
-        if OrderedDict is not None:
-            metadata = OrderedDict()
-        else:
-            metadata = {}
+        metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))
