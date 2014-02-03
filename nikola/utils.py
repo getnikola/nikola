@@ -709,7 +709,11 @@ class LocaleBorg(object):
         else:  # Python 2
             with calendar.TimeEncoding(self.locales[lang]):
                 s = calendar.month_name[month_no]
-            s = s.decode(self.encodings[lang])
+            enc = self.encodings[lang]
+            if not enc:
+                enc = 'UTF-8'
+
+            s = s.decode(enc)
         # paranoid about calendar ending in the wrong locale (windows)
         self.set_locale(self.current_lang)
         return s
