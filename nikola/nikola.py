@@ -981,7 +981,7 @@ class Nikola(object):
                                 if tag not in self.posts_per_tag:
                                     # Tags that differ only in case
                                     other_tag = [k for k in self.posts_per_tag.keys() if k.lower() == tag.lower()][0]
-                                    utils.LOGGER.error('You have cases that differ only in upper/lower case: {0} and {1}'.format(tag, other_tag))
+                                    utils.LOGGER.error('You have tags that differ only in upper/lower case: {0} and {1}'.format(tag, other_tag))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join(self.posts_per_tag[other_tag])))
                                     sys.exit(1)
