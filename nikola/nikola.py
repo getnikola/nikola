@@ -414,6 +414,13 @@ class Nikola(object):
             self.plugin_manager.activatePluginByName(plugin_info.name)
             plugin_info.plugin_object.set_site(self)
 
+        # Also add aliases for combinations with TRANSLATIONS_PATTERN
+        self.config['COMPILERS'] = dict([(lang, list(exts) + [
+            utils.get_translation_candidate(self.config, "f" + ext, lang)[1:]
+            for ext in exts
+            for lang in self.config['TRANSLATIONS'].keys()])
+            for lang, exts in list(self.config['COMPILERS'].items())])
+
         # Activate all required compiler plugins
         for plugin_info in self.plugin_manager.getPluginsOfCategory("PageCompiler"):
             if plugin_info.name in self.config["COMPILERS"].keys():
@@ -582,9 +589,9 @@ class Nikola(object):
             compile_html = self.inverse_compilers[ext]
         except KeyError:
             # Find the correct compiler for this files extension
-            langs = [lang for lang, exts in
-                     list(self.config['COMPILERS'].items())
-                     if ext in exts]
+            lang_exts_tab = list(self.config['COMPILERS'].items())
+            langs = [lang for lang, exts in lang_exts_tab if ext in exts or
+                     len([ext_ for ext_ in exts if source_name.endswith(ext_)]) > 0]
             if len(langs) != 1:
                 if len(set(langs)) > 1:
                     exit("Your file extension->compiler definition is"
