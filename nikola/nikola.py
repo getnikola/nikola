@@ -929,6 +929,7 @@ class Nikola(object):
         seen = set([])
         print("Scanning posts", end='', file=sys.stderr)
         slugged_tags = set([])
+        quit = False
         for wildcard, destination, template_name, use_in_feeds in \
                 self.config['post_pages']:
             print(".", end='', file=sys.stderr)
@@ -984,6 +985,7 @@ class Nikola(object):
                                     utils.LOGGER.error('You have tags that are too similar: {0} and {1}'.format(tag, other_tag))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join(self.posts_per_tag[other_tag])))
+                                    quit = True
                             else:
                                 slugged_tags.add(utils.slugify(tag))
                             self.posts_per_tag[tag].append(post.source_path)
@@ -1004,6 +1006,8 @@ class Nikola(object):
             p.prev_post = post_timeline[i + 1]
         self._scanned = True
         print("done!", file=sys.stderr)
+        if quit:
+            sys.exit(1)
 
     def generic_page_renderer(self, lang, post, filters):
         """Render post fragments to final HTML pages."""
