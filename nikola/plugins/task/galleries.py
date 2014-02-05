@@ -31,10 +31,6 @@ import glob
 import json
 import mimetypes
 import os
-try:
-    from urlparse import urljoin
-except ImportError:
-    from urllib.parse import urljoin  # NOQA
 
 Image = None
 try:
@@ -51,7 +47,7 @@ import PyRSS2Gen as rss
 from nikola.plugin_categories import Task
 from nikola import utils
 from nikola.post import Post
-from nikola.utils import req_missing
+from nikola.utils import req_missing, urljoin
 
 
 class Galleries(Task):

@@ -32,10 +32,6 @@ import datetime
 import os
 import re
 import string
-try:
-    from urlparse import urljoin
-except ImportError:
-    from urllib.parse import urljoin  # NOQA
 
 import lxml.html
 try:
@@ -56,6 +52,7 @@ from .utils import (
     unicode_str,
     demote_headers,
     get_translation_candidate,
+    urljoin,
 )
 from .rc4 import rc4
 

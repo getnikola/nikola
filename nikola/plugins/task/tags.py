@@ -28,11 +28,7 @@ from __future__ import unicode_literals
 import codecs
 import json
 import os
-try:
-    from urlparse import urljoin
-except ImportError:
-    from urllib.parse import urljoin  # NOQA
-
+from nikola.utils import urljoin
 from nikola.plugin_categories import Task
 from nikola import utils
 

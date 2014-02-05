@@ -29,12 +29,12 @@ import codecs
 import datetime
 import os
 try:
-    from urlparse import urljoin, urlparse
+    from urlparse import urlparse
 except ImportError:
-    from urllib.parse import urljoin, urlparse  # NOQA
+    from urllib.parse import urlparse  # NOQA
 
 from nikola.plugin_categories import LateTask
-from nikola.utils import config_changed
+from nikola.utils import config_changed, urljoin
 
 
 header = """<?xml version="1.0" encoding="UTF-8"?>

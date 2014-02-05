@@ -26,11 +26,7 @@
 
 from __future__ import unicode_literals, print_function
 import os
-try:
-    from urlparse import urljoin
-except ImportError:
-    from urllib.parse import urljoin  # NOQA
-
+from nikola.utils import urljoin
 from nikola import utils
 from nikola.plugin_categories import Task
 
