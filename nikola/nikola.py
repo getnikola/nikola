@@ -984,7 +984,6 @@ class Nikola(object):
                                     utils.LOGGER.error('You have tags that are too similar: {0} and {1}'.format(tag, other_tag))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join(self.posts_per_tag[other_tag])))
-                                    sys.exit(1)
                             else:
                                 slugged_tags.add(utils.slugify(tag))
                             self.posts_per_tag[tag].append(post.source_path)
