@@ -928,7 +928,7 @@ class Nikola(object):
             return
         seen = set([])
         print("Scanning posts", end='', file=sys.stderr)
-        lower_case_tags = set([])
+        slugged_tags = set([])
         for wildcard, destination, template_name, use_in_feeds in \
                 self.config['post_pages']:
             print(".", end='', file=sys.stderr)
@@ -977,16 +977,16 @@ class Nikola(object):
                         self.posts_per_month[
                             '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post.source_path)
                         for tag in post.alltags:
-                            if tag.lower() in lower_case_tags:
+                            if utils.slugify(tag) in slugged_tags:
                                 if tag not in self.posts_per_tag:
                                     # Tags that differ only in case
                                     other_tag = [k for k in self.posts_per_tag.keys() if k.lower() == tag.lower()][0]
-                                    utils.LOGGER.error('You have tags that differ only in upper/lower case: {0} and {1}'.format(tag, other_tag))
+                                    utils.LOGGER.error('You have tags that are too similar: {0} and {1}'.format(tag, other_tag))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join(self.posts_per_tag[other_tag])))
                                     sys.exit(1)
                             else:
-                                lower_case_tags.add(tag.lower())
+                                slugged_tags.add(utils.slugify(tag))
                             self.posts_per_tag[tag].append(post.source_path)
                         self.posts_per_category[post.meta('category')].append(post.source_path)
                     else:
