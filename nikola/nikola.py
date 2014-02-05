@@ -807,6 +807,7 @@ class Nikola(object):
             lang = utils.LocaleBorg().current_lang
 
         path = self.path_handlers[kind](name, lang)
+        path = [os.path.normpath(p) for p in path if p != '.']  # Fix Issue #1028
 
         if is_link:
             link = '/' + ('/'.join(path))
