@@ -8,13 +8,15 @@
 Extending Nikola
 ================
 
-:Version: 6.2.1
+:Version: 6.3.0
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-info pull-right
 
 .. contents::
 
+
+.. class:: lead
 
 Nikola is extensible. Almost all its functionality is based on plugins,
 and you can add your own or replace the provided ones.
@@ -104,7 +106,7 @@ For your own plugin, just change the values in a sensible way. The
     # You have to inherit Command for this to be a
     # command plugin:
 
-    class CommandBuild(Command):
+    class CommandServe(Command):
         """Start test server."""
 
         name = "serve"

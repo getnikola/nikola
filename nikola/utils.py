@@ -35,7 +35,6 @@ import locale
 import logging
 import os
 import re
-import codecs
 import json
 import shutil
 import subprocess
@@ -49,6 +48,8 @@ except ImportError:
 import logbook
 from logbook.more import ExceptionHandler
 import pytz
+
+from . import DEBUG
 
 
 class ApplicationWarning(Exception):
@@ -67,13 +68,13 @@ def get_logger(name, handlers):
 
 
 STDERR_HANDLER = [logbook.StderrHandler(
-    level=logbook.NOTICE if not os.getenv('NIKOLA_DEBUG') else logbook.DEBUG,
+    level=logbook.NOTICE if not DEBUG else logbook.DEBUG,
     format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
 )]
 LOGGER = get_logger('Nikola', STDERR_HANDLER)
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
 
-if os.getenv('NIKOLA_DEBUG'):
+if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
 else:
     logging.basicConfig(level=logging.WARNING)
@@ -124,11 +125,12 @@ from unidecode import unidecode
 import PyRSS2Gen as rss
 
 __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
-           'generic_rss_renderer', 'copy_file', 'slugify', 'unslugify',
-           'to_datetime', 'apply_filters', 'config_changed', 'get_crumbs',
-           'get_tzname', 'get_asset_path', '_reload', 'unicode_str', 'bytes_str',
-           'unichr', 'Functionary', 'LocaleBorg', 'sys_encode', 'sys_decode',
-           'makedirs', 'get_parent_theme_name', 'ExtendedRSS2', 'demote_headers']
+           'copy_file', 'slugify', 'unslugify', 'to_datetime', 'apply_filters',
+           'config_changed', 'get_crumbs', 'get_tzname', 'get_asset_path',
+           '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
+           'LocaleBorg', 'sys_encode', 'sys_decode', 'makedirs',
+           'get_parent_theme_name', 'ExtendedRSS2', 'demote_headers',
+           'get_translation_candidate']
 
 
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
@@ -321,45 +323,6 @@ def copy_tree(src, dst, link_cutoff=None):
                 'actions': [(copy_file, (src_file, dst_file, link_cutoff))],
                 'clean': True,
             }
-
-
-def generic_rss_renderer(lang, title, link, description, timeline, output_path,
-                         rss_teasers, feed_length=10, feed_url=None):
-    """Takes all necessary data, and renders a RSS feed in output_path."""
-    items = []
-    for post in timeline[:feed_length]:
-        args = {
-            'title': post.title(lang),
-            'link': post.permalink(lang, absolute=True),
-            'description': post.text(lang, teaser_only=rss_teasers, really_absolute=True),
-            'guid': post.permalink(lang, absolute=True),
-            # PyRSS2Gen's pubDate is GMT time.
-            'pubDate': (post.date if post.date.tzinfo is None else
-                        post.date.astimezone(pytz.timezone('UTC'))),
-            'categories': post._tags.get(lang, []),
-            'author': post.meta('author'),
-        }
-
-        items.append(ExtendedItem(**args))
-    rss_obj = ExtendedRSS2(
-        title=title,
-        link=link,
-        description=description,
-        lastBuildDate=datetime.datetime.now(),
-        items=items,
-        generator='Nikola <http://getnikola.com/>',
-        language=lang
-    )
-    rss_obj.self_url = feed_url
-    rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
-    rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
-    dst_dir = os.path.dirname(output_path)
-    makedirs(dst_dir)
-    with codecs.open(output_path, "wb+", "utf-8") as rss_file:
-        data = rss_obj.to_xml(encoding='utf-8')
-        if isinstance(data, bytes_str):
-            data = data.decode('utf-8')
-        rss_file.write(data)
 
 
 def copy_file(source, dest, cutoff=None):
@@ -746,7 +709,11 @@ class LocaleBorg(object):
         else:  # Python 2
             with calendar.TimeEncoding(self.locales[lang]):
                 s = calendar.month_name[month_no]
-            s = s.decode(self.encodings[lang])
+            enc = self.encodings[lang]
+            if not enc:
+                enc = 'UTF-8'
+
+            s = s.decode(enc)
         # paranoid about calendar ending in the wrong locale (windows)
         self.set_locale(self.current_lang)
         return s
@@ -837,3 +804,14 @@ def get_root_dir():
             root = basedir
 
     return None
+
+
+def get_translation_candidate(config, path, lang):
+    """
+    Return a possible path where we can find the translated version of some page
+    based on the TRANSLATIONS_PATTERN configuration variable
+    """
+    pattern = config['TRANSLATIONS_PATTERN']
+    path, ext = os.path.splitext(path)
+    ext = ext[1:] if len(ext) > 0 else ext
+    return pattern.format(path=path, lang=lang, ext=ext)

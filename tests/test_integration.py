@@ -17,7 +17,7 @@ import unittest
 import lxml.html
 from nose.plugins.skip import SkipTest
 
-from nikola import main
+from nikola import __main__
 import nikola
 import nikola.plugins.command
 import nikola.plugins.command.init
@@ -64,7 +64,7 @@ class EmptyBuildTest(BaseTestCase):
     def build(self):
         """Build the site."""
         with cd(self.target_dir):
-            main.main(["build"])
+            __main__.main(["build"])
 
     @classmethod
     def tearDownClass(self):
@@ -167,7 +167,7 @@ class FuturePostTest(EmptyBuildTest):
 
         # Run deploy command to see if future post is deleted
         with cd(self.target_dir):
-            main.main(["deploy"])
+            __main__.main(["deploy"])
 
         self.assertTrue(os.path.isfile(index_path))
         self.assertTrue(os.path.isfile(foo_path))
@@ -182,24 +182,73 @@ class TranslatedBuildTest(EmptyBuildTest):
     def __init__(self, *a, **kw):
         super(TranslatedBuildTest, self).__init__(*a, **kw)
         try:
-            locale.setlocale(locale.LC_ALL, ("es", "utf8"))
+            locale.setlocale(locale.LC_ALL, ("pl_PL", "utf8"))
         except:
             raise SkipTest
 
     def test_translated_titles(self):
         """Check that translated title is picked up."""
         en_file = os.path.join(self.target_dir, "output", "stories", "1.html")
-        es_file = os.path.join(self.target_dir, "output", "es", "stories", "1.html")
+        pl_file = os.path.join(self.target_dir, "output", "pl", "stories", "1.html")
         # Files should be created
         self.assertTrue(os.path.isfile(en_file))
-        self.assertTrue(os.path.isfile(es_file))
+        self.assertTrue(os.path.isfile(pl_file))
         # And now let's check the titles
         with codecs.open(en_file, 'r', 'utf8') as inf:
             doc = lxml.html.parse(inf)
             self.assertEqual(doc.find('//title').text, 'Foo | Demo Site')
-        with codecs.open(es_file, 'r', 'utf8') as inf:
+        with codecs.open(pl_file, 'r', 'utf8') as inf:
             doc = lxml.html.parse(inf)
             self.assertEqual(doc.find('//title').text, 'Bar | Demo Site')
+
+
+class TranslationsPatternTest1(TranslatedBuildTest):
+    """Check that the path.lang.ext TRANSLATIONS_PATTERN works too"""
+
+    @classmethod
+    def patch_site(self):
+        """Set the TRANSLATIONS_PATTERN to the new v7 default"""
+        os.rename(os.path.join(self.target_dir, "stories", "1.txt.pl"),
+                  os.path.join(self.target_dir, "stories", "1.pl.txt")
+                  )
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with codecs.open(conf_path, "rb", "utf-8") as inf:
+            data = inf.read()
+            data = data.replace('TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"',
+                                'TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"')
+        with codecs.open(conf_path, "wb+", "utf8") as outf:
+            outf.write(data)
+
+
+class MissingDefaultLanguageTest(TranslatedBuildTest):
+    """Make sure posts only in secondary languages work."""
+
+    @classmethod
+    def fill_site(self):
+        super(MissingDefaultLanguageTest, self).fill_site()
+        os.unlink(os.path.join(self.target_dir, "stories", "1.txt"))
+
+    def test_translated_titles(self):
+        """Do not test titles as we just removed the translation"""
+        pass
+
+
+class TranslationsPatternTest2(TranslatedBuildTest):
+    """Check that the path_lang.ext TRANSLATIONS_PATTERN works too"""
+
+    @classmethod
+    def patch_site(self):
+        """Set the TRANSLATIONS_PATTERN to the new v7 default"""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        os.rename(os.path.join(self.target_dir, "stories", "1.txt.pl"),
+                  os.path.join(self.target_dir, "stories", "1_pl.txt")
+                  )
+        with codecs.open(conf_path, "rb", "utf-8") as inf:
+            data = inf.read()
+            data = data.replace('TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"',
+                                'TRANSLATIONS_PATTERN = "{path}_{lang}.{ext}"')
+        with codecs.open(conf_path, "wb+", "utf8") as outf:
+            outf.write(data)
 
 
 class RelativeLinkTest(DemoBuildTest):
@@ -244,14 +293,14 @@ class TestCheck(DemoBuildTest):
     def test_check_links(self):
         with cd(self.target_dir):
             try:
-                main.main(['check', '-l'])
+                __main__.main(['check', '-l'])
             except SystemExit as e:
                 self.assertEqual(e.code, 0)
 
     def test_check_files(self):
         with cd(self.target_dir):
             try:
-                main.main(['check', '-f'])
+                __main__.main(['check', '-f'])
             except SystemExit as e:
                 self.assertEqual(e.code, 0)
 
@@ -263,7 +312,7 @@ class TestCheckFailure(DemoBuildTest):
         with cd(self.target_dir):
             os.unlink(os.path.join("output", "archive.html"))
             try:
-                main.main(['check', '-l'])
+                __main__.main(['check', '-l'])
             except SystemExit as e:
                 self.assertNotEqual(e.code, 0)
 
@@ -272,7 +321,7 @@ class TestCheckFailure(DemoBuildTest):
             with codecs.open(os.path.join("output", "foobar"), "wb+", "utf8") as outf:
                 outf.write("foo")
             try:
-                main.main(['check', '-f'])
+                __main__.main(['check', '-f'])
             except SystemExit as e:
                 self.assertNotEqual(e.code, 0)
 
@@ -345,7 +394,7 @@ class SubdirRunningTest(DemoBuildTest):
         """Check whether build works from posts/"""
 
         with cd(os.path.join(self.target_dir, 'posts')):
-            result = main.main(['build'])
+            result = __main__.main(['build'])
             self.assertEquals(result, 0)
 
 

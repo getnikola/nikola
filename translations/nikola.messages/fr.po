@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Translators:
+# JohnPreston <john.mille78@gmail.com>, 2014
+# JohnPreston <john.mille78@gmail.com>, 2014
 # pabluk <pablo@seminar.io>, 2013
 # pabluk <pablo@seminar.io>, 2013
 # pabluk <pablo@seminar.io>, 2013
@@ -14,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2013-11-10 10:11+0000\n"
+"PO-Revision-Date: 2014-01-22 13:12+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/nikola/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +26,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "More posts about %s"
-msgstr "Plus de billets sur %s"
+msgstr "Plus d'articles sur %s"
 
 msgid "LANGUAGE"
 msgstr "Français"
@@ -42,13 +44,16 @@ msgid "Read more"
 msgstr "Lire la suite"
 
 msgid "Posts about %s"
-msgstr "Billets sur %s"
+msgstr "Articles sur %s"
 
 msgid "Next post"
-msgstr "Billet suivant"
+msgstr "Article suivant"
 
-msgid "old posts page %d"
-msgstr "anciens billets page %d"
+msgid "old posts, page %d"
+msgstr "anciens articles, page %d"
+
+msgid "page %d"
+msgstr "page %d"
 
 msgid "Source"
 msgstr "Source"
@@ -59,22 +64,22 @@ msgid "Read in English"
 msgstr "Lire en français"
 
 msgid "Posts for year %s"
-msgstr "Billets de l'année %s"
+msgstr "Articles de l'année %s"
 
 msgid "Newer posts"
 msgstr "Billets récents"
 
 msgid "Previous post"
-msgstr "Billet précédent"
+msgstr "Article précédent"
 
 msgid "Also available in:"
-msgstr "Disponible aussi en:"
+msgstr "Egalement disponible en:"
 
 msgid "Original site"
 msgstr "Site d'origine"
 
 msgid "Older posts"
-msgstr "Anciens billets"
+msgstr "Anciens articles"
 
 msgid "Archive"
 msgstr "Archives"
@@ -83,4 +88,4 @@ msgid "Posted:"
 msgstr "Publié:"
 
 msgid "Posts for {month} {year}"
-msgstr "Billets de {month} {year}"
+msgstr "Articles de {month} {year}"

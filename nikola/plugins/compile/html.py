@@ -27,7 +27,7 @@
 """Implementation of compile_html for HTML source files."""
 
 import os
-import shutil
+import re
 import codecs
 
 from nikola.plugin_categories import PageCompiler
@@ -36,7 +36,10 @@ from nikola.utils import makedirs
 try:
     from collections import OrderedDict
 except ImportError:
-    OrderedDict = None  # NOQA
+    OrderedDict = dict  # NOQA
+
+
+_META_SEPARATOR = '(' + os.linesep * 2 + '|' + ('\n' * 2) + '|' + ("\r\n" * 2) + ')'
 
 
 class CompileHtml(PageCompiler):
@@ -45,14 +48,16 @@ class CompileHtml(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         makedirs(os.path.dirname(dest))
-        shutil.copyfile(source, dest)
+        with codecs.open(dest, "w+", "utf8") as out_file:
+            with codecs.open(source, "r", "utf8") as in_file:
+                data = in_file.read()
+            if not is_two_file:
+                data = re.split(_META_SEPARATOR, data, maxsplit=1)[-1]
+            out_file.write(data)
         return True
 
     def create_post(self, path, onefile=False, **kw):
-        if OrderedDict is not None:
-            metadata = OrderedDict()
-        else:
-            metadata = {}
+        metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))

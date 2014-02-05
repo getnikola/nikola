@@ -38,7 +38,7 @@ from nikola.utils import makedirs
 try:
     from collections import OrderedDict
 except ImportError:
-    OrderedDict = None  # NOQA
+    OrderedDict = dict  # NOQA
 
 
 class CompilePhp(PageCompiler):
@@ -51,10 +51,7 @@ class CompilePhp(PageCompiler):
         shutil.copyfile(source, dest)
 
     def create_post(self, path, onefile=False, **kw):
-        if OrderedDict is not None:
-            metadata = OrderedDict()
-        else:
-            metadata = {}
+        metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
         os.makedirs(os.path.dirname(path))

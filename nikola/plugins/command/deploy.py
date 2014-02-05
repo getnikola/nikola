@@ -40,8 +40,8 @@ from nikola.plugin_categories import Command
 from nikola.utils import remove_file, get_logger
 
 
-class Deploy(Command):
-    """Deploy site.  """
+class CommandDeploy(Command):
+    """Deploy site."""
     name = "deploy"
 
     doc_usage = ""

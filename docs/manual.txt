@@ -8,7 +8,7 @@
 The Nikola Handbook
 ===================
 
-:Version: 6.2.1
+:Version: 6.3.0
 
 .. class:: alert alert-info pull-right
 
@@ -203,16 +203,6 @@ of how to "get" something for your specific operating system are left to you.
 
 The short version is: ``pip install nikola``
 
-If you are running Arch Linux, there are AUR packages, available in Python 2/3
-and stable/git master flavors: `python-nikola`__ / `python2-nikola`__ for the
-latest stable release or `python-nikola-git`__ / `python2-nikola-git`__ for the
-GitHub master.  (only one package may be installed at the same time.)
-
-__ https://aur.archlinux.org/packages/python-nikola/
-__ https://aur.archlinux.org/packages/python2-nikola/
-__ https://aur.archlinux.org/packages/python-nikola-git/
-__ https://aur.archlinux.org/packages/python2-nikola-git/
-
 Note that you need Python v2.6 or newer OR v3.3 or newer.
 
 For some features it may give you an error message telling you that you need to
@@ -257,7 +247,16 @@ Longer version:
 After that, run ``nikola init --demo sitename`` and that will create a folder called
 ``sitename`` containing a functional demo site.
 
-Nikola is packaged for some Linux distributions, you may get that instead.
+Nikola is packaged for some Linux distributions, you may get that instead. e.g.
+If you are running Arch Linux, there are AUR packages, available in Python 2/3
+and stable/git master flavors: `python-nikola`__ / `python2-nikola`__ for the
+latest stable release or `python-nikola-git`__ / `python2-nikola-git`__ for the
+GitHub master.  (only one package may be installed at the same time.)
+
+__ https://aur.archlinux.org/packages/python-nikola/
+__ https://aur.archlinux.org/packages/python2-nikola/
+__ https://aur.archlinux.org/packages/python-nikola-git/
+__ https://aur.archlinux.org/packages/python2-nikola-git/
 
 libxml/libxslt errors
 ~~~~~~~~~~~~~~~~~~~~~
@@ -310,10 +309,15 @@ Installation on Windows and Windows support
 Nikola supports Windows!  Keep in mind, though, that there are some
 caveats:
 
-1. ``lxml`` and ``Pillow`` require compiled extensions.  Compiling them on
-Windows is hard for most people.  Fortunately, compiled packages exist.  Check
-their `PyPI <https://pypi.python.org/>`_ pages to find official packages, `the unofficial Gohlke binaries <http://www.lfd.uci.edu/~gohlke/pythonlibs/>`_ site, or get them somewhere else.  If you are using virtualenvs, using those pre-built packages is possible through ``virtualenv --system-site-packages``.
-2. Windows has some differences over POSIX, which may cause some features to work incorrectly under Windows.  If any problems occur, please do not hesitate to report them.  Some of the differeces include:
+#. ``lxml`` and ``Pillow`` require compiled extensions.  Compiling them on
+   Windows is hard for most people.  Fortunately, compiled packages exist.
+   Check their `PyPI <https://pypi.python.org/>`_ pages to find official packages,
+   `the unofficial Gohlke binaries <http://www.lfd.uci.edu/~gohlke/pythonlibs/>`_
+   site, or get them somewhere else.  If you are using virtualenvs, using those
+   pre-built packages is possible through ``virtualenv --system-site-packages``.
+#. Windows has some differences over POSIX, which may cause some features to
+   work incorrectly under Windows.  If any problems occur, please do not
+   hesitate to report them.  Some of the differeces include:
 
    * ``\`` as path separator (instead of ``/``)
    * the concept of HDD partitions and letters (instead of
@@ -322,8 +326,8 @@ their `PyPI <https://pypi.python.org/>`_ pages to find official packages, `the u
      problems)
    * CR+LF (aka ``\r\n``) as the line separator (instead of LF ``\n``)
 
-3. Windows also dislikes some characters in paths.
-4. Most of our developers run Linux on a daily basis and may not have the full knowledge required to resolve issues relating to Windows.
+#. Most of our developers run Linux on a daily basis and may not have the full
+   knowledge required to resolve issues relating to Windows.
 
 Getting Started
 ---------------
@@ -397,39 +401,41 @@ and even individual files like ``nikola build output/index.html``
 Nikola also has other commands besides ``build``::
 
     $ nikola help
-        Nikola is a tool to create static websites and blogs. For full documentation and more information,
-        please visit http://getnikola.com
+    Nikola is a tool to create static websites and blogs. For full documentation and more information, please visit http://getnikola.com/
 
 
-        Available commands:
-        nikola auto                 automatically detect site changes, rebuild and optionally refresh a browser
-        nikola bootswatch_theme     given a swatch name from bootswatch.com and a parent theme, creates a custom theme
-        nikola build                run tasks
-        nikola check                check links and files in the generated site
-        nikola clean                clean action / remove targets
-        nikola console              start an interactive python console with access to your site and configuration
-        nikola deploy               deploy the site
-        nikola dumpdb               dump dependency DB
-        nikola forget               clear successful run status from internal DB
-        nikola help                 show help
-        nikola ignore               ignore task (skip) on subsequent runs
-        nikola import_blogger       import a blogger dump
-        nikola import_feed          import a RSS/Atom dump
-        nikola import_wordpress     import a WordPress dump
-        nikola init                 create a Nikola site in the specified folder
-        nikola install_theme        install theme into current site
-        nikola list                 list tasks from dodo file
-        nikola mincss               apply mincss to the generated site
-        nikola new_post             create a new blog post or site page
-        nikola run                  run tasks
-        nikola serve                start the test webserver
-        nikola strace               use strace to list file_deps and targets
-        nikola version              print the Nikola version number
+    Available commands:
+      nikola auto                 automatically detect site changes, rebuild and optionally refresh a browser
+      nikola bootswatch_theme     given a swatch name from bootswatch.com and a parent theme, creates a custom theme
+      nikola build                run tasks
+      nikola check                check links and files in the generated site
+      nikola clean                clean action / remove targets
+      nikola console              start an interactive Python console with access to your site
+      nikola deploy               deploy the site
+      nikola doit_auto            automatically execute tasks when a dependency changes
+      nikola dumpdb               dump dependency DB
+      nikola forget               clear successful run status from internal DB
+      nikola help                 show help
+      nikola ignore               ignore task (skip) on subsequent runs
+      nikola import_blogger       import a blogger dump
+      nikola import_feed          import a RSS/Atom dump
+      nikola import_wordpress     import a WordPress dump
+      nikola init                 create a Nikola site in the specified folder
+      nikola install_plugin       install plugin into current site
+      nikola install_theme        install theme into current site
+      nikola list                 list tasks from dodo file
+      nikola mincss               apply mincss to the generated site
+      nikola new_post             create a new blog post or site page
+      nikola orphans              list all orphans
+      nikola run                  run tasks
+      nikola serve                start the test webserver
+      nikola strace               use strace to list file_deps and targets
+      nikola tabcompletion        generate script for tab-complention
+      nikola version              print the Nikola version number
 
-        nikola help                 show help / reference
-        nikola help <command>       show command usage
-        nikola help <task-name>     show task usage
-
+      nikola help                 show help / reference
+      nikola help <command>       show command usage
+      nikola help <task-name>     show task usage
 
 The ``serve`` command starts a web server so you can see the site you are creating::
 
@@ -496,7 +502,7 @@ The third line is the post's date, and is set to "now".
 The other lines are optional. Tags are comma-separated. The ``link`` is an original
 source for the content, and ``description`` is mostly useful for SEO.
 ``type`` is the post type, whatever you set here (prepended with ``post-``)
-will become a class of the `<article>` element for this post.  Defaults to
+will become a CSS class of the ``<article>`` element for this post.  Defaults to
 ``text`` (resulting in a ``post-text`` class)
 
 You can add your own metadata fields in the same manner, if you use a theme that
@@ -559,27 +565,64 @@ to your configuration::
         2012/09/15 19:52:05
 
 If you are writing a multilingual site, you can also create a per-language
-post file (for example: ``how-to-make-money.txt.es``). This one can replace
-metadata of the default language, for example:
+post file (for example: ``how-to-make-money.txt.es`` with the default TRANSLATIONS_PATTERN, see below).
+This one can replace metadata of the default language, for example:
 
 * The translated title for the post or page
 * A translated version of the page name
+
+The pattern used for finding translations is controlled by the
+TRANSLATIONS_PATTERN variable in your configuration file.
+
+The default as in the example above is to append the language code to the
+filename path to identify a translation of a file, so the German translation
+of ``some_file.rst`` should be named ``some_file.rst.de``. This is because
+the TRANSLATIONS_PATTERN variable is by default set to::
+
+    TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"
+
+However, if you don't want your Polish input files to be considered
+Perl code (e.g. ``some_file.rst.pl``), you could use this pattern::
+
+    TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"
+
+Note that this pattern will become the default in v7.0.0.
+
+.. note:: Considered languages
+
+    nikola will only look for translation of input files for languages
+    specified in the TRANSLATIONS variable.
 
 You can edit these files with your favourite text editor, and once you are happy
 with the contents, generate the pages as explained in `Getting Started`_
 
 Currently supported languages are
 
+* Basque
+* Bulgarian
 * Catalan
+* Chinese (Simplified)
+* Croatian
+* Czech
+* Dutch
 * English
+* Esperanto
+* Estonian
+* Finnish
 * French
 * German
 * Greek
 * Italian
+* Japanese
+* Norwegian Bokmål
+* Persian
 * Polish
+* Portuguese
 * Russian
-* Simplified Chinese.
+* Slovenian
 * Spanish
+* Turkish
+* Urdu
 
 If you wish to add support for more languages, check out the instructions
 at the `theming guide <http://getnikola.com/theming.html>`_.
@@ -596,8 +639,10 @@ and ``PAGES`` configuration options::
     # (whatever/thing.txt).
     #
     # That fragment could have an associated metadata file (whatever/thing.meta),
-    # and optionally translated files (example for spanish, with code "es"):
+    # and optionally translated files (example for Spanish, with code "es"):
     #     whatever/thing.txt.es and whatever/thing.meta.es
+    #
+    #     This assumes you use the default TRANSLATIONS_PATTERN.
     #
     # From those files, a set of HTML fragment files will be generated:
     # cache/whatever/thing.html (and maybe cache/whatever/thing.html.es)
@@ -622,8 +667,10 @@ and ``PAGES`` configuration options::
         ("stories/*.rst", "stories", "story.tmpl"),
     )
 
-It will use the first location that has the last item in ``POSTS``, or the last
-one in ``PAGES`` if ``POSTS`` is empty.
+``new_post`` will use the *first* path in ``POSTS`` (or ``PAGES`` if ``-p`` is
+supplied) that ends with the extension of your desired markup format (as
+defined in ``COMPILERS`` in conf.py) as the directory that the new post will be
+written into.  If no such entry can be found, the post won’t be created.
 
 The ``new_post`` command supports some options::
 
@@ -759,7 +806,7 @@ Post Types
 
 Nikola supports specifying post types, just like Tumblr does.  Post
 types affect the look of your posts, by adding a ``post-YOURINPUTHERE``
-class to the post.  Each post can have one and exactly one type.  Nikola
+CSS class to the post.  Each post can have one and exactly one type.  Nikola
 styles the following types in the default themes:
 
 +-----------------+----------------------------+------------------+

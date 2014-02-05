@@ -8,12 +8,14 @@
 Theming Nikola
 ==============
 
-:Version: 6.2.1
+:Version: 6.3.0
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-info pull-right
 
 .. contents::
+
+.. class:: lead
 
 This document is a reference about themes. If you want a tutorial, please read
 `Creating a Theme <creating-a-theme.html>`_
@@ -127,7 +129,8 @@ These are the templates that come with the included themes:
     This template handles comments. You should probably never touch it :-)
     It uses a bunch of helper templates, one for each supported comment system:
     ``disqus_helper.tmpl`` ``facebook_helper.tmpl`` ``googleplus_helper.tmpl``
-    ``intensedebate_helper.tmpl`` ``livefyre_helper.tmpl`` ``moot_helper.tmpl``
+    ``intensedebate_helper.tmpl`` ``isso_helper.tmpl`` ``livefyre_helper.tmpl``
+    ``moot_helper.tmpl``
 
 ``crumbs.tmpl`` ``slides.tmpl``
     These templates help render specific UI items, and can be tweaked as needed.

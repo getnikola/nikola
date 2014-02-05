@@ -58,6 +58,11 @@ class GenerateRSS(Task):
             "feed_length": self.site.config['FEED_LENGTH'],
         }
         self.site.scan_posts()
+        # Check for any changes in the state of use_in_feeds for any post.
+        # Issue #934
+        kw['use_in_feeds_status'] = ''.join(
+            ['T' if x.use_in_feeds else 'F' for x in self.site.timeline]
+        )
         yield self.group_task()
         for lang in kw["translations"]:
             output_name = os.path.join(kw['output_folder'],

@@ -35,6 +35,7 @@ try:
     import docutils.utils
     import docutils.io
     import docutils.readers.standalone
+    import docutils.writers.html4css1
     has_docutils = True
 except ImportError:
     has_docutils = False
@@ -42,7 +43,7 @@ except ImportError:
 try:
     from collections import OrderedDict
 except ImportError:
-    OrderedDict = None  # NOQA
+    OrderedDict = dict  # NOQA
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import get_logger, makedirs, req_missing
@@ -77,6 +78,7 @@ class CompileRest(PageCompiler):
                         # author).
                         add_ln = len(spl[0].splitlines()) + 1
 
+                default_template_path = os.path.join(os.path.dirname(__file__), 'template.txt')
                 output, error_level, deps = rst2html(
                     data, settings_overrides={
                         'initial_header_level': 1,
@@ -85,6 +87,7 @@ class CompileRest(PageCompiler):
                         'link_stylesheet': True,
                         'syntax_highlight': 'short',
                         'math_output': 'mathjax',
+                        'template': default_template_path,
                     }, logger=self.logger, l_source=source, l_add_ln=add_ln)
                 out_file.write(output)
             deps_path = dest + '.dep'
@@ -100,10 +103,7 @@ class CompileRest(PageCompiler):
             return False
 
     def create_post(self, path, onefile=False, **kw):
-        if OrderedDict is not None:
-            metadata = OrderedDict()
-        else:
-            metadata = {}
+        metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))
@@ -126,6 +126,9 @@ class CompileRest(PageCompiler):
             plugin_info.plugin_object.short_help = plugin_info.description
 
         self.logger = get_logger('compile_rest', site.loghandlers)
+        if not site.debug:
+            self.logger.level = 4
+
         return super(CompileRest, self).set_site(site)
 
 
@@ -165,6 +168,46 @@ class NikolaReader(docutils.readers.standalone.Reader):
         document.reporter.stream = False
         document.reporter.attach_observer(get_observer(self.l_settings))
         return document
+
+
+def add_node(node, visit_function=None, depart_function=None):
+    """
+    Register a Docutils node class.
+    This function is completely optional. It is a same concept as
+    `Sphinx add_node function <http://sphinx-doc.org/ext/appapi.html#sphinx.application.Sphinx.add_node>`_.
+
+    For example::
+
+        class Plugin(RestExtension):
+
+            name = "rest_math"
+
+            def set_site(self, site):
+                self.site = site
+                directives.register_directive('math', MathDirective)
+                add_node(MathBlock, visit_Math, depart_Math)
+                return super(Plugin, self).set_site(site)
+
+        class MathDirective(Directive):
+            def run(self):
+                node = MathBlock()
+                return [node]
+
+        class Math(docutils.nodes.Element): pass
+
+        def visit_Math(self, node):
+            self.body.append(self.starttag(node, 'math'))
+
+        def depart_Math(self, node):
+            self.body.append('</math>')
+
+    For full example, you can refer to `Microdata plugin <http://plugins.getnikola.com/#microdata>`_
+    """
+    docutils.nodes._add_node_class_names([node.__name__])
+    if visit_function:
+        setattr(docutils.writers.html4css1.HTMLTranslator, 'visit_' + node.__name__, visit_function)
+    if depart_function:
+        setattr(docutils.writers.html4css1.HTMLTranslator, 'depart_' + node.__name__, depart_function)
 
 
 def rst2html(source, source_path=None, source_class=docutils.io.StringInput,

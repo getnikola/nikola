@@ -86,7 +86,7 @@ class Help(DoitHelp):
     @staticmethod
     def print_usage(cmds):
         """print nikola "usage" (basic help) instructions"""
-        print("Nikola is a tool to create static websites and blogs. For full documentation and more information, please visit http://getnikola.com\n\n")
+        print("Nikola is a tool to create static websites and blogs. For full documentation and more information, please visit http://getnikola.com/\n\n")
         print("Available commands:")
         for cmd in sorted(cmds.values(), key=attrgetter('name')):
             print("  nikola %-*s %s" % (20, cmd.name, cmd.doc_purpose))
@@ -191,7 +191,9 @@ class DoitNikola(DoitMain):
             args = ['help']
             # Hide run because Nikola uses build
             sub_cmds.pop('run')
-
+        if len(args) == 0 or any(arg in ["--version", '-V'] for arg in args):
+            cmd_args = ['version']
+            args = ['version']
         if len(args) == 0 or args[0] not in sub_cmds.keys() or \
                 args[0] == 'build':
             # Check for conf.py before launching run
@@ -203,4 +205,7 @@ class DoitNikola(DoitMain):
 
     @staticmethod
     def print_version():
-        print("Nikola version " + __version__)
+        print("Nikola v" + __version__)
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

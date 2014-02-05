@@ -24,5 +24,6 @@ MESSAGES = {
     "Source": "Código",
     "Tags and Categories": "Tags e Categorias",
     "Tags": "Tags",
-    "old posts page %d": "Posts antigos página %d",
+    "old posts, page %d": "Posts antigos, página %d",
+    "page %d": "página %d",
 }

@@ -24,5 +24,6 @@ MESSAGES = {
     "Source": "Source",
     "Tags and Categories": "Тагове и Категории",
     "Tags": "Тагове",
-    "old posts page %d": "стари публикации страница %d",
+    "old posts, page %d": "стари публикации, страница %d",
+    "page %d": "страница %d",
 }

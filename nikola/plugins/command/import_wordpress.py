@@ -350,14 +350,17 @@ class CommandImportWordpress(Command, ImportMixin):
         # link is something like http://foo.com/2012/09/01/hello-world/
         # So, take the path, utils.slugify it, and that's our slug
         link = get_text_tag(item, 'link', None)
-        path = unquote(urlparse(link).path)
+        path = unquote(urlparse(link).path.strip('/'))
 
         # In python 2, path is a str. slug requires a unicode
         # object. According to wikipedia, unquoted strings will
         # usually be UTF8
         if isinstance(path, utils.bytes_str):
             path = path.decode('utf8')
-        slug = utils.slugify(path)
+        pathlist = path.split('/')
+        if len(pathlist) > 1:
+            out_folder = os.path.join(*([out_folder] + pathlist[:-1]))
+        slug = utils.slugify(pathlist[-1])
         if not slug:  # it happens if the post has no "nice" URL
             slug = get_text_tag(
                 item, '{{{0}}}post_name'.format(wordpress_namespace), None)

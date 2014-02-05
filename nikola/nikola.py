@@ -25,8 +25,10 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function, unicode_literals
+import codecs
 from collections import defaultdict
 from copy import copy
+import datetime
 import glob
 import locale
 import os
@@ -41,9 +43,12 @@ try:
     import pyphen
 except ImportError:
     pyphen = None
+import pytz
 
 import logging
-if os.getenv('NIKOLA_DEBUG'):
+from . import DEBUG
+
+if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
 else:
     logging.basicConfig(level=logging.ERROR)
@@ -105,11 +110,15 @@ class Nikola(object):
         self._scanned = False
         self._template_system = None
         self._THEMES = None
+        self.debug = DEBUG
         self.loghandlers = []
         if not config:
             self.configured = False
         else:
             self.configured = True
+
+        # Maintain API
+        utils.generic_rss_renderer = self.generic_rss_renderer
 
         # This is the default config
         self.config = {
@@ -166,6 +175,7 @@ class Nikola(object):
             'INDEX_TEASERS': False,
             'INDEXES_TITLE': "",
             'INDEXES_PAGES': "",
+            'INDEXES_PAGES_MAIN': False,
             'INDEX_PATH': '',
             'IPYNB_CONFIG': {},
             'LESS_COMPILER': 'lessc',
@@ -213,6 +223,7 @@ class Nikola(object):
             'SCHEDULE_FORCE_TODAY': False,
             'LOGGING_HANDLERS': {'stderr': {'loglevel': 'WARNING', 'bubble': True}},
             'DEMOTE_HEADERS': 1,
+            'TRANSLATIONS_PATTERN': '{path}.{ext}.{lang}',
         }
 
         self.config.update(config)
@@ -300,7 +311,7 @@ class Nikola(object):
         if config.get('PRETTY_URLS', False) and 'STRIP_INDEXES' not in config:
             self.config['STRIP_INDEXES'] = True
 
-        if config.get('COPY_SOURCES') and not self.config['HIDE_SOURCELINK']:
+        if not config.get('COPY_SOURCES'):
             self.config['HIDE_SOURCELINK'] = True
 
         self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
@@ -402,6 +413,13 @@ class Nikola(object):
                 continue
             self.plugin_manager.activatePluginByName(plugin_info.name)
             plugin_info.plugin_object.set_site(self)
+
+        # Also add aliases for combinations with TRANSLATIONS_PATTERN
+        self.config['COMPILERS'] = dict([(lang, list(exts) + [
+            utils.get_translation_candidate(self.config, "f" + ext, lang)[1:]
+            for ext in exts
+            for lang in self.config['TRANSLATIONS'].keys()])
+            for lang, exts in list(self.config['COMPILERS'].items())])
 
         # Activate all required compiler plugins
         for plugin_info in self.plugin_manager.getPluginsOfCategory("PageCompiler"):
@@ -571,9 +589,9 @@ class Nikola(object):
             compile_html = self.inverse_compilers[ext]
         except KeyError:
             # Find the correct compiler for this files extension
-            langs = [lang for lang, exts in
-                     list(self.config['COMPILERS'].items())
-                     if ext in exts]
+            lang_exts_tab = list(self.config['COMPILERS'].items())
+            langs = [lang for lang, exts in lang_exts_tab if ext in exts or
+                     len([ext_ for ext_ in exts if source_name.endswith(ext_)]) > 0]
             if len(langs) != 1:
                 if len(set(langs)) > 1:
                     exit("Your file extension->compiler definition is"
@@ -613,78 +631,152 @@ class Nikola(object):
         # The os.sep is because normpath will change "/" to "\" on windows
         src = "/".join(src.split(os.sep))
 
-        parsed_src = urlsplit(src)
-        src_elems = parsed_src.path.split('/')[1:]
-
-        def replacer(dst):
-            # Refuse to replace links that are full URLs.
-            dst_url = urlparse(dst)
-            if dst_url.netloc:
-                if dst_url.scheme == 'link':  # Magic link
-                    dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'),
-                                    context['lang'])
-                else:
-                    return dst
-
-            # Refuse to replace links that consist of a fragment only
-            if ((not dst_url.scheme) and (not dst_url.netloc) and
-                    (not dst_url.path) and (not dst_url.params) and
-                    (not dst_url.query) and dst_url.fragment):
-                return dst
-
-            # Normalize
-            dst = urljoin(src, dst)
-
-            # Avoid empty links.
-            if src == dst:
-                if self.config.get('URL_TYPE') == 'absolute':
-                    dst = urljoin(self.config['BASE_URL'], dst)
-                    return dst
-                elif self.config.get('URL_TYPE') == 'full_path':
-                    return dst
-                else:
-                    return "#"
-
-            # Check that link can be made relative, otherwise return dest
-            parsed_dst = urlsplit(dst)
-            if parsed_src[:2] != parsed_dst[:2]:
-                if self.config.get('URL_TYPE') == 'absolute':
-                    dst = urljoin(self.config['BASE_URL'], dst)
-                return dst
-
-            if self.config.get('URL_TYPE') in ('full_path', 'absolute'):
-                if self.config.get('URL_TYPE') == 'absolute':
-                    dst = urljoin(self.config['BASE_URL'], dst)
-                return dst
-
-            # Now both paths are on the same site and absolute
-            dst_elems = parsed_dst.path.split('/')[1:]
-
-            i = 0
-            for (i, s), d in zip(enumerate(src_elems), dst_elems):
-                if s != d:
-                    break
-            # Now i is the longest common prefix
-            result = '/'.join(['..'] * (len(src_elems) - i - 1) +
-                              dst_elems[i:])
-
-            if not result:
-                result = "."
-
-            # Don't forget the fragment (anchor) part of the link
-            if parsed_dst.fragment:
-                result += "#" + parsed_dst.fragment
-
-            assert result, (src, dst, i, src_elems, dst_elems)
-
-            return result
-
         utils.makedirs(os.path.dirname(output_name))
         doc = lxml.html.document_fromstring(data)
-        doc.rewrite_links(replacer)
+        doc.rewrite_links(lambda dst: self.url_replacer(src, dst, context['lang']))
         data = b'<!DOCTYPE html>' + lxml.html.tostring(doc, encoding='utf8')
         with open(output_name, "wb+") as post_file:
             post_file.write(data)
+
+    def url_replacer(self, src, dst, lang=None):
+        """URL mangler.
+
+        * Replaces link:// URLs with real links
+        * Makes dst relative to src
+        * Leaves fragments unchanged
+        * Leaves full URLs unchanged
+        * Avoids empty links
+
+        src is the URL where this link is used
+        dst is the link to be mangled
+        lang is used for language-sensitive URLs in link://
+
+        """
+        parsed_src = urlsplit(src)
+        src_elems = parsed_src.path.split('/')[1:]
+        dst_url = urlparse(dst)
+        if lang is None:
+            lang = self.default_lang
+
+        # Refuse to replace links that are full URLs.
+        if dst_url.netloc:
+            if dst_url.scheme == 'link':  # Magic link
+                dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'), lang)
+            else:
+                return dst
+        elif dst_url.scheme == 'link':  # Magic absolute path link:
+            dst = dst_url.path
+            return dst
+
+        # Refuse to replace links that consist of a fragment only
+        if ((not dst_url.scheme) and (not dst_url.netloc) and
+                (not dst_url.path) and (not dst_url.params) and
+                (not dst_url.query) and dst_url.fragment):
+            return dst
+
+        # Normalize
+        dst = urljoin(src, dst)
+
+        # Avoid empty links.
+        if src == dst:
+            if self.config.get('URL_TYPE') == 'absolute':
+                dst = urljoin(self.config['BASE_URL'], dst)
+                return dst
+            elif self.config.get('URL_TYPE') == 'full_path':
+                return dst
+            else:
+                return "#"
+
+        # Check that link can be made relative, otherwise return dest
+        parsed_dst = urlsplit(dst)
+        if parsed_src[:2] != parsed_dst[:2]:
+            if self.config.get('URL_TYPE') == 'absolute':
+                dst = urljoin(self.config['BASE_URL'], dst)
+            return dst
+
+        if self.config.get('URL_TYPE') in ('full_path', 'absolute'):
+            if self.config.get('URL_TYPE') == 'absolute':
+                dst = urljoin(self.config['BASE_URL'], dst)
+            return dst
+
+        # Now both paths are on the same site and absolute
+        dst_elems = parsed_dst.path.split('/')[1:]
+
+        i = 0
+        for (i, s), d in zip(enumerate(src_elems), dst_elems):
+            if s != d:
+                break
+        # Now i is the longest common prefix
+        result = '/'.join(['..'] * (len(src_elems) - i - 1) + dst_elems[i:])
+
+        if not result:
+            result = "."
+
+        # Don't forget the fragment (anchor) part of the link
+        if parsed_dst.fragment:
+            result += "#" + parsed_dst.fragment
+
+        assert result, (src, dst, i, src_elems, dst_elems)
+
+        return result
+
+    def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
+                             rss_teasers, feed_length=10, feed_url=None):
+        """Takes all necessary data, and renders a RSS feed in output_path."""
+        items = []
+        for post in timeline[:feed_length]:
+            # Massage the post's HTML
+            data = post.text(lang, teaser_only=rss_teasers, really_absolute=True)
+            if feed_url is not None and data:
+                # FIXME: this is duplicated with code in Post.text()
+                try:
+                    doc = lxml.html.document_fromstring(data)
+                    doc.rewrite_links(lambda dst: self.url_replacer(feed_url, dst, lang))
+                    try:
+                        body = doc.body
+                        data = (body.text or '') + ''.join(
+                            [lxml.html.tostring(child, encoding='unicode')
+                                for child in body.iterchildren()])
+                    except IndexError:  # No body there, it happens sometimes
+                        data = ''
+                except lxml.etree.ParserError as e:
+                    if str(e) == "Document is empty":
+                        data = ""
+                    else:  # let other errors raise
+                        raise(e)
+
+            args = {
+                'title': post.title(lang),
+                'link': post.permalink(lang, absolute=True),
+                'description': data,
+                'guid': post.permalink(lang, absolute=True),
+                # PyRSS2Gen's pubDate is GMT time.
+                'pubDate': (post.date if post.date.tzinfo is None else
+                            post.date.astimezone(pytz.timezone('UTC'))),
+                'categories': post._tags.get(lang, []),
+                'author': post.meta('author'),
+            }
+
+            items.append(utils.ExtendedItem(**args))
+        rss_obj = utils.ExtendedRSS2(
+            title=title,
+            link=link,
+            description=description,
+            lastBuildDate=datetime.datetime.now(),
+            items=items,
+            generator='Nikola <http://getnikola.com/>',
+            language=lang
+        )
+        rss_obj.self_url = feed_url
+        rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
+        rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
+        dst_dir = os.path.dirname(output_path)
+        utils.makedirs(dst_dir)
+        with codecs.open(output_path, "wb+", "utf-8") as rss_file:
+            data = rss_obj.to_xml(encoding='utf-8')
+            if isinstance(data, utils.bytes_str):
+                data = data.decode('utf-8')
+            rss_file.write(data)
 
     def path(self, kind, name, lang=None, is_link=False):
         """Build the path to a certain kind of page.
@@ -763,7 +855,7 @@ class Nikola(object):
         # Normalize
         dst = urljoin(self.config['BASE_URL'], dst)
 
-        return urlparse(dst).path
+        return urlparse(dst).geturl()
 
     def rel_link(self, src, dst):
         # Normalize
@@ -855,13 +947,16 @@ class Nikola(object):
                 full_list = glob.glob(dir_glob)
                 # Now let's look for things that are not in default_lang
                 for lang in self.config['TRANSLATIONS'].keys():
-                    lang_glob = dir_glob + "." + lang
+                    lang_glob = utils.get_translation_candidate(self.config, dir_glob, lang)
                     translated_list = glob.glob(lang_glob)
-                    for fname in translated_list:
-                        orig_name = os.path.splitext(fname)[0]
-                        if orig_name in full_list:
-                            continue
-                        full_list.append(orig_name)
+                    # dir_glob could have put it already in full_list
+                    full_list = list(set(full_list + translated_list))
+                    # Eliminate translations from full_list (even from dir_glob)
+                    for fname in full_list:
+                        translation = utils.get_translation_candidate(self.config, fname, lang)
+                        if translation in full_list:
+                            full_list.remove(translation)
+
                 # We eliminate from the list the files inside any .ipynb folder
                 full_list = [p for p in full_list
                              if not any([x.startswith('.')

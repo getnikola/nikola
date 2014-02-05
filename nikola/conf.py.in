@@ -25,28 +25,33 @@ BLOG_DESCRIPTION = "${BLOG_DESCRIPTION}"
 # Currently supported languages are:
 # bg     Bulgarian
 # ca     Catalan
+# cs     Czech [ALTERNATIVELY cz]
 # de     German
 # el     Greek [NOT gr!]
 # en     English
 # eo     Esperanto
 # es     Spanish
+# et     Estonian
+# eu     Basque
 # fa     Persian
 # fi     Finnish
 # fr     French
 # hr     Croatian
 # it     Italian
-# jp     Japanese
+# ja     Japanese [NOT jp!]
+# nb     Norwegian Bokmål
 # nl     Dutch
 # pt_br  Portuguese (Brasil)
 # pl     Polish
 # ru     Russian
 # sl     Slovenian [NOT sl_si!]
-# tr_tr  Turkish (Turkey)
+# tr     Turkish (Turkey) [NOT tr_tr!]
+# ur     Urdu
 # zh_cn  Chinese (Simplified)
 #
 # If you want to use Nikola with a non-supported language you have to provide
 # a module containing the necessary translations
-# (p.e. look at the modules at: ./nikola/data/themes/default/messages/fr.py).
+# (cf. the modules at nikola/data/themes/base/messages/fr.py).
 # If a specific post is not translated to a language, then the version
 # in the default language will be shown instead.
 
@@ -61,6 +66,20 @@ TRANSLATIONS = {
     # Example for another language:
     # "es": "./es",
 }
+
+# What will translated input files be named like?
+
+# If you have a page something.rst, then something.rst.pl will be considered
+# its Polish translation.
+#     (in the above example: path == "something", lang == "pl", ext == "rst")
+# this pattern is also used for metadata:
+#     something.meta -> something.meta.pl
+
+TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"
+
+# If you don't want your Polish files to be considered Perl code, use this:
+# TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"
+#     Note that this pattern will become the default in v7.0.0.
 
 # Links for the sidebar / navigation bar.
 # You should provide a key-value pair for each used language.
@@ -95,6 +114,8 @@ NAVIGATION_LINKS = {
 # That fragment could have an associated metadata file (whatever/thing.meta),
 # and optionally translated files (example for spanish, with code "es"):
 #     whatever/thing.txt.es and whatever/thing.meta.es
+#
+#     This assumes you use the default TRANSLATIONS_PATTERN.
 #
 # From those files, a set of HTML fragment files will be generated:
 # cache/whatever/thing.html (and maybe cache/whatever/thing.html.es)
@@ -151,7 +172,8 @@ COMPILERS = ${COMPILERS}
 # the posts themselves. If set to False, it will be just a list of links.
 # TAG_PAGES_ARE_INDEXES = True
 
-# Final location is output / TRANSLATION[lang] / INDEX_PATH / index-*.html
+# Final location for the main blog page and sibling paginated pages is
+# output / TRANSLATION[lang] / INDEX_PATH / index-*.html
 # INDEX_PATH = ""
 
 # Create per-month archives instead of per-year
@@ -171,7 +193,7 @@ COMPILERS = ${COMPILERS}
 # absolute: a complete URL (that includes the SITE_URL)
 # URL_TYPE = 'rel_path'
 
-# Final locations are:
+# Final location for the blog main RSS feed is:
 # output / TRANSLATION[lang] / RSS_PATH / rss.xml
 # RSS_PATH = ""
 
@@ -271,10 +293,13 @@ COMPILERS = ${COMPILERS}
 # HTML fragments and diverse things that are used by the templates
 # #############################################################################
 
-# Data about post-per-page indexes
-# INDEXES_TITLE = ""  # If this is empty, the default is BLOG_TITLE
-# INDEXES_PAGES = ""  # If this is empty, the default is 'old posts page %d'
-# translated
+# Data about post-per-page indexes.
+# INDEXES_PAGES defaults to 'old posts, page %d' or 'page %d' (translated),
+# depending on the value of INDEXES_PAGES_MAIN.
+# INDEXES_TITLE = ""         # If this is empty, defaults to BLOG_TITLE
+# INDEXES_PAGES = ""         # If this is empty, defaults to '[old posts,] page %d' (see above)
+# INDEXES_PAGES_MAIN = False # If True, INDEXES_PAGES is also displayed on
+                             # the main (the newest) index page (index.html)
 
 # Name of the theme to use.
 THEME = "${THEME}"

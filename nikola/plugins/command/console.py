@@ -35,7 +35,7 @@ from nikola.utils import get_logger, STDERR_HANDLER
 LOGGER = get_logger('console', STDERR_HANDLER)
 
 
-class Console(Command):
+class CommandConsole(Command):
     """Start debugging console."""
     name = "console"
     shells = ['ipython', 'bpython', 'plain']

@@ -63,7 +63,7 @@ class RSSFeedTest(unittest.TestCase):
 
                     opener_mock = mock.mock_open()
 
-                    with mock.patch('nikola.nikola.utils.codecs.open', opener_mock, create=True):
+                    with mock.patch('nikola.nikola.codecs.open', opener_mock, create=True):
                         nikola.nikola.utils.generic_rss_renderer('en',
                                                                  "blog_title",
                                                                  self.blog_url,
