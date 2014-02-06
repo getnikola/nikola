@@ -6,6 +6,7 @@ Features
 
 * New link:///foo links which always point to absolute paths (/foo in that case) (Issue #986)
 * New --browser/-b option on the serve command to open instantly in a web browser (Issue #997)
+* SASS/LESS files and targets file will be processed from site root (Issue #941)
 
 Bugfixes
 --------
@@ -16,6 +17,7 @@ Bugfixes
 * Fix link:// in RSS contents (Issue #952)
 * HIDE_SOURCELINK was set to True sometimes (Issue #1004)
 * Properly import cool URIs from WordPress, instead of just slugify-ing the path (Issue #693)
+* Fixed SASS/LESS errors when more than one theme in chain has a targets file (Issue #941)
 
 New in v6.3.0
 =============
@@ -69,7 +71,6 @@ Bugfixes
 * Facebook comments are now showing properly
 * Added a warning/error when lessc/sass are missing (via Issue themes#24)
 * Fixed sass/less under Windows (Issue #939, themes#24)
-* Fixed sass/less errors when more than one theme in chain has a targets file (Issue #941)
 * Fix URL rewriting of fragment-only links (Issue #945)
 * Fixed the deploy rsync example (rsync --delete doesn't work with '/\*' as
   source) (Issue #959)
