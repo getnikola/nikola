@@ -414,6 +414,13 @@ class Nikola(object):
             self.plugin_manager.activatePluginByName(plugin_info.name)
             plugin_info.plugin_object.set_site(self)
 
+        # Also add aliases for combinations with TRANSLATIONS_PATTERN
+        self.config['COMPILERS'] = dict([(lang, list(exts) + [
+            utils.get_translation_candidate(self.config, "f" + ext, lang)[1:]
+            for ext in exts
+            for lang in self.config['TRANSLATIONS'].keys()])
+            for lang, exts in list(self.config['COMPILERS'].items())])
+
         # Activate all required compiler plugins
         for plugin_info in self.plugin_manager.getPluginsOfCategory("PageCompiler"):
             if plugin_info.name in self.config["COMPILERS"].keys():
@@ -582,9 +589,9 @@ class Nikola(object):
             compile_html = self.inverse_compilers[ext]
         except KeyError:
             # Find the correct compiler for this files extension
-            langs = [lang for lang, exts in
-                     list(self.config['COMPILERS'].items())
-                     if ext in exts]
+            lang_exts_tab = list(self.config['COMPILERS'].items())
+            langs = [lang for lang, exts in lang_exts_tab if ext in exts or
+                     len([ext_ for ext_ in exts if source_name.endswith(ext_)]) > 0]
             if len(langs) != 1:
                 if len(set(langs)) > 1:
                     exit("Your file extension->compiler definition is"
@@ -929,7 +936,8 @@ class Nikola(object):
             return
         seen = set([])
         print("Scanning posts", end='', file=sys.stderr)
-        lower_case_tags = set([])
+        slugged_tags = set([])
+        quit = False
         for wildcard, destination, template_name, use_in_feeds in \
                 self.config['post_pages']:
             print(".", end='', file=sys.stderr)
@@ -978,16 +986,16 @@ class Nikola(object):
                         self.posts_per_month[
                             '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post.source_path)
                         for tag in post.alltags:
-                            if tag.lower() in lower_case_tags:
+                            if utils.slugify(tag) in slugged_tags:
                                 if tag not in self.posts_per_tag:
                                     # Tags that differ only in case
                                     other_tag = [k for k in self.posts_per_tag.keys() if k.lower() == tag.lower()][0]
-                                    utils.LOGGER.error('You have cases that differ only in upper/lower case: {0} and {1}'.format(tag, other_tag))
+                                    utils.LOGGER.error('You have tags that are too similar: {0} and {1}'.format(tag, other_tag))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join(self.posts_per_tag[other_tag])))
-                                    sys.exit(1)
+                                    quit = True
                             else:
-                                lower_case_tags.add(tag.lower())
+                                slugged_tags.add(utils.slugify(tag))
                             self.posts_per_tag[tag].append(post.source_path)
                         self.posts_per_category[post.meta('category')].append(post.source_path)
                     else:
@@ -1006,6 +1014,8 @@ class Nikola(object):
             p.prev_post = post_timeline[i + 1]
         self._scanned = True
         print("done!", file=sys.stderr)
+        if quit:
+            sys.exit(1)
 
     def generic_page_renderer(self, lang, post, filters):
         """Render post fragments to final HTML pages."""

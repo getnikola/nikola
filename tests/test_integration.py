@@ -220,6 +220,19 @@ class TranslationsPatternTest1(TranslatedBuildTest):
             outf.write(data)
 
 
+class MissingDefaultLanguageTest(TranslatedBuildTest):
+    """Make sure posts only in secondary languages work."""
+
+    @classmethod
+    def fill_site(self):
+        super(MissingDefaultLanguageTest, self).fill_site()
+        os.unlink(os.path.join(self.target_dir, "stories", "1.txt"))
+
+    def test_translated_titles(self):
+        """Do not test titles as we just removed the translation"""
+        pass
+
+
 class TranslationsPatternTest2(TranslatedBuildTest):
     """Check that the path_lang.ext TRANSLATIONS_PATTERN works too"""
 
