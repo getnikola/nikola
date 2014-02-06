@@ -69,6 +69,7 @@ Bugfixes
 * Facebook comments are now showing properly
 * Added a warning/error when lessc/sass are missing (via Issue themes#24)
 * Fixed sass/less under Windows (Issue #939, themes#24)
+* Fixed sass/less errors when more than one theme in chain has a targets file (Issue #941)
 * Fix URL rewriting of fragment-only links (Issue #945)
 * Fixed the deploy rsync example (rsync --delete doesn't work with '/\*' as
   source) (Issue #959)

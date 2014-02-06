@@ -884,6 +884,12 @@ CSS tweaking
     If you feel tempted to touch other files in assets, you probably will be better off
     with a `custom theme <theming.html>`__.
 
+    If you want to use less or sass for your custom CSS, or the theme you use contains
+    less or sass that you want to override, create a less or sass directory in your site
+    root, put your .less or .scss files there and a targets file containing the files
+    you want compiled. Any .less or .scss files from the theme chain that you want to
+    use will need to be included in your files.
+
 Template tweaking
     If you really want to change the pages radically, you will want to do a
     `custom theme <theming.html>`__.
