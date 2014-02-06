@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Normalize paths (Issue #1028)
 * If two tags generate the same slug, they are the same tag (Issue #1022)
 * Support PRETTY_URLS for tag files (Issue #655)
 * Remove conflicting CSS code from rst.css (Issue #913)
