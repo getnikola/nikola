@@ -178,6 +178,7 @@ class Nikola(object):
             'INDEXES_PAGES_MAIN': False,
             'INDEX_PATH': '',
             'IPYNB_CONFIG': {},
+            'JINJA_FILTERS': {},
             'LESS_COMPILER': 'lessc',
             'LICENSE': '',
             'LINK_CHECK_WHITELIST': [],

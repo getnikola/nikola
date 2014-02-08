@@ -681,7 +681,11 @@ LOGGING_HANDLERS = {
     #}
 }
 
+# Jinja2 templates will use those filters, along with the defaults.
+# For Mako, just add your functions to the GLOBAL_CONTEXT.
+# Defining a filter: http://jinja.pocoo.org/docs/api/#custom-filters
+# JINJA_FILTERS = {}
+
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
-
 GLOBAL_CONTEXT = {}

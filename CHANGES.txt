@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Jinja filters are configurable — JINJA_FILTERS config variable (Issue #1038)
 * New link:///foo links which always point to absolute paths (/foo in that case) (Issue #986)
 * New --browser/-b option on the serve command to open instantly in a web browser (Issue #997)
 * SASS/LESS files and targets file will be processed from site root (Issue #941)

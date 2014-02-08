@@ -61,6 +61,11 @@ class JinjaTemplates(TemplateSystem):
         self.lookup.loader = jinja2.FileSystemLoader(directories,
                                                      encoding='utf-8')
 
+    def set_site(self, site):
+        """Sets the site."""
+        self.site = site
+        self.lookup.filters.update(self.site.config['JINJA_FILTERS'])
+
     def render_template(self, template_name, output_name, context):
         """Render the template into output_name using context."""
         if jinja2 is None:
