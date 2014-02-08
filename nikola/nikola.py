@@ -573,6 +573,7 @@ class Nikola(object):
                                            for name in self.THEMES]
             self._template_system.set_directories(lookup_dirs,
                                                   self.config['CACHE_FOLDER'])
+            self._template_system.set_site(self)
         return self._template_system
 
     template_system = property(_get_template_system)
