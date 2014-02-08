@@ -11,7 +11,7 @@ Features
 Bugfixes
 --------
 
-* Don't modify the list you are iterating.
+* Fix a bug with some multilingual pages
 * Normalize paths (Issue #1028)
 * If two tags generate the same slug, they are the same tag (Issue #1022)
 * Support PRETTY_URLS for tag files (Issue #655)
