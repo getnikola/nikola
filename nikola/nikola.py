@@ -953,11 +953,16 @@ class Nikola(object):
                     translated_list = glob.glob(lang_glob)
                     # dir_glob could have put it already in full_list
                     full_list = list(set(full_list + translated_list))
-                    # Eliminate translations from full_list (even from dir_glob)
-                    for fname in full_list:
+
+                # Eliminate translations from full_list if they are not the primary,
+                # or a secondary with no primary
+                limited_list = full_list[:]
+                for fname in full_list:
+                    for lang in self.config['TRANSLATIONS'].keys():
                         translation = utils.get_translation_candidate(self.config, fname, lang)
                         if translation in full_list:
-                            full_list.remove(translation)
+                            limited_list.remove(translation)
+                full_list = limited_list
 
                 # We eliminate from the list the files inside any .ipynb folder
                 full_list = [p for p in full_list
