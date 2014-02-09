@@ -335,10 +335,30 @@ class CommandImportWordpress(Command, ImportMixin):
         else:
             return content
 
+    @staticmethod
+    def transform_math(content):
+        """
+        Transform math from WordPress.com’s format to ours,
+        ignoring sizing and color hints.
+
+        (actual output without any mangling:
+         backslash, open-paren, CODE, backslash, close-paren)
+
+        >>> str(CommandImportWordpress.transform_math('foo bar $latex 2 + 2$ baz'))
+        'foo bar \\\\(2 + 2\\\\) baz'
+        >>> str(CommandImportWordpress.transform_math('foo bar $latex 2 + 2&s=2$'))
+        'foo bar \\\\(2 + 2\\\\)'
+        >>> str(CommandImportWordpress.transform_math('foo bar $latex 2 + 2&s=2&bg=000000$'))
+        'foo bar \\\\(2 + 2\\\\)'
+        """
+
+        return re.sub(r'\$latex (.+?)(&.*)?\$', r'\(\1\)', content)
+
     def transform_content(self, content):
         new_content = self.transform_sourcecode(content)
         new_content = self.transform_caption(new_content)
         new_content = self.transform_multiple_newlines(new_content)
+        new_content = self.transform_math(new_content)
         return new_content
 
     def import_item(self, item, wordpress_namespace, out_folder=None):
