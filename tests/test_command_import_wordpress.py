@@ -366,8 +366,8 @@ newlines.
                             r"foo bar \(2+2\) baz",
                             r"That is \(US\$20\), sir."]
 
-        for i in transformed_content:
-            self.assertEqual(i, expected_content)
+        for out, expected in zip(transformed_content, expected_content):
+            self.assertEqual(out, expected)
 
     def test_get_configuration_output_path(self):
         self.import_command.output_folder = 'new_site'
