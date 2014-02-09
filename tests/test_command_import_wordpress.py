@@ -255,7 +255,7 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
             with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_caption', transform_caption):
                 with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_multiple_newlines', transform_newlines):
                     with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_math', transform_math):
-                    self.import_command.transform_content("random content")
+                        self.import_command.transform_content("random content")
 
         self.assertTrue(transform_sourcecode.called)
         self.assertTrue(transform_caption.called)
