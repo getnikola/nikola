@@ -353,6 +353,15 @@ newlines.
         expected_content = """<a href="http://some.blog/openttd-missing_sound.png"><img class="size-thumbnail wp-image-551" title="openttd-missing_sound" src="http://some.blog/openttd-missing_sound-150x150.png" alt="Fehlermeldung" /></a>"""
         self.assertEqual(expected_content, transformed_content)
 
+    def test_transform_math(self):
+        """Make sure math is transformed properly."""
+        content = ["foo bar $latex 2+2$ baz", "foo bar $latex 2+2&s=5$ baz", "foo bar $latex 2+2&s=5&g=2$ baz"]
+        transformed_content = [self.import_command.transform_math(content)[0] for i in content]
+        expected_content = r"foo bar \(2+2\) baz"
+
+        for i in transformed_content:
+            self.assertEqual(i, expected_content)
+
     def test_get_configuration_output_path(self):
         self.import_command.output_folder = 'new_site'
         default_config_path = os.path.join('new_site', 'conf.py')
