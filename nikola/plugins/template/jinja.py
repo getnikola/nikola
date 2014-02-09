@@ -64,7 +64,7 @@ class JinjaTemplates(TemplateSystem):
     def set_site(self, site):
         """Sets the site."""
         self.site = site
-        self.lookup.filters.update(self.site.config['JINJA_FILTERS'])
+        self.lookup.filters.update(self.site.config['TEMPLATE_FILTERS'])
 
     def render_template(self, template_name, output_name, context):
         """Render the template into output_name using context."""

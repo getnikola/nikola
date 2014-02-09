@@ -49,6 +49,7 @@ class MakoTemplates(TemplateSystem):
 
     lookup = None
     cache = {}
+    filters = {}
 
     def get_deps(self, filename):
         text = util.read_file(filename)
@@ -81,6 +82,11 @@ class MakoTemplates(TemplateSystem):
             module_directory=cache_dir,
             output_encoding='utf-8')
 
+    def set_site(self, site):
+        """Sets the site."""
+        self.site = site
+        self.filters.update(self.site.config['TEMPLATE_FILTERS'])
+
     def render_template(self, template_name, output_name, context):
         """Render the template into output_name using context."""
         context['striphtml'] = striphtml
@@ -94,6 +100,8 @@ class MakoTemplates(TemplateSystem):
 
     def render_template_to_string(self, template, context):
         """ Render template to a string using context. """
+
+        context = context.update(self.filters)
 
         return Template(template).render(**context)
 
