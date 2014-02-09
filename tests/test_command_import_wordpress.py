@@ -250,6 +250,7 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
         transform_caption = mock.MagicMock()
         transform_newlines = mock.MagicMock()
         transform_math = mock.MagicMock()
+        transform_math.return_value = ("random content", False)
 
         with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_sourcecode', transform_sourcecode):
             with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_caption', transform_caption):
@@ -356,7 +357,7 @@ newlines.
     def test_transform_math(self):
         """Make sure math is transformed properly."""
         content = ["foo bar $latex 2+2$ baz", "foo bar $latex 2+2&s=5$ baz", "foo bar $latex 2+2&s=5&g=2$ baz"]
-        transformed_content = [self.import_command.transform_math(content)[0] for i in content]
+        transformed_content = [self.import_command.transform_math(i)[0] for i in content]
         expected_content = r"foo bar \(2+2\) baz"
 
         for i in transformed_content:
