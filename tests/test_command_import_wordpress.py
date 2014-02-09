@@ -249,15 +249,18 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
         transform_sourcecode = mock.MagicMock()
         transform_caption = mock.MagicMock()
         transform_newlines = mock.MagicMock()
+        transform_math = mock.MagicMock()
 
         with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_sourcecode', transform_sourcecode):
             with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_caption', transform_caption):
                 with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_multiple_newlines', transform_newlines):
+                    with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_math', transform_math):
                     self.import_command.transform_content("random content")
 
         self.assertTrue(transform_sourcecode.called)
         self.assertTrue(transform_caption.called)
         self.assertTrue(transform_newlines.called)
+        self.assertTrue(transform_math.called)
 
     def test_transforming_source_code(self):
         """
