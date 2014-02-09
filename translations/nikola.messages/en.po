@@ -80,3 +80,9 @@ msgstr "Posted:"
 
 msgid "Posts for {month} {year}"
 msgstr "Posts for {month} {year}"
+
+msgid "No items found."
+msgstr "No items found."
+
+msgid "No posts found."
+msgstr "No posts found."
