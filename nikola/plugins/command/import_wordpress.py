@@ -335,11 +335,37 @@ class CommandImportWordpress(Command, ImportMixin):
         else:
             return content
 
+    @staticmethod
+    def transform_math(content):
+        """
+        Transform math from WordPress.com’s format to ours,
+        ignoring sizing and color hints.
+
+        (actual output without any mangling:
+         0. backslash, open-paren, CODE, backslash, close-paren
+         1. True if something changed)
+
+        >>> str(CommandImportWordpress.transform_math('foo bar $latex 2 + 2$ baz')[0])
+        'foo bar \\\\(2 + 2\\\\) baz'
+        >>> str(CommandImportWordpress.transform_math('foo bar $latex 2 + 2&s=2$')[0])
+        'foo bar \\\\(2 + 2\\\\)'
+        >>> str(CommandImportWordpress.transform_math('foo bar $latex 2 + 2&s=2&bg=000000$')[0])
+        'foo bar \\\\(2 + 2\\\\)'
+        """
+
+        new_content = re.sub(r'\$latex (.+?)(&.*)?\$', r'\(\1\)', content)
+
+        change = new_content != content
+
+        return (new_content, change)
+
     def transform_content(self, content):
         new_content = self.transform_sourcecode(content)
         new_content = self.transform_caption(new_content)
         new_content = self.transform_multiple_newlines(new_content)
-        return new_content
+        new_content, has_math = self.transform_math(new_content)
+
+        return new_content, has_math
 
     def import_item(self, item, wordpress_namespace, out_folder=None):
         """Takes an item from the feed and creates a post file."""
@@ -405,7 +431,12 @@ class CommandImportWordpress(Command, ImportMixin):
             self.url_map[link] = self.context['SITE_URL'] + '/' + \
                 out_folder + '/' + slug + '.html'
 
-            content = self.transform_content(content)
+            content, has_math = self.transform_content(content)
+
+            if has_math and 'mathjax' not in tags:
+                # This check is kinda useless, as WordPress people are highly
+                # unlikely to use this tag, but we're doing it nevertheless.
+                tags.append('mathjax')
 
             self.write_metadata(os.path.join(self.output_folder, out_folder,
                                              slug + '.meta'),

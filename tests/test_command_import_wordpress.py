@@ -249,15 +249,19 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
         transform_sourcecode = mock.MagicMock()
         transform_caption = mock.MagicMock()
         transform_newlines = mock.MagicMock()
+        transform_math = mock.MagicMock()
+        transform_math.return_value = ("random content", False)
 
         with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_sourcecode', transform_sourcecode):
             with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_caption', transform_caption):
                 with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_multiple_newlines', transform_newlines):
-                    self.import_command.transform_content("random content")
+                    with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_math', transform_math):
+                        self.import_command.transform_content("random content")
 
         self.assertTrue(transform_sourcecode.called)
         self.assertTrue(transform_caption.called)
         self.assertTrue(transform_newlines.called)
+        self.assertTrue(transform_math.called)
 
     def test_transforming_source_code(self):
         """
@@ -349,6 +353,15 @@ newlines.
 
         expected_content = """<a href="http://some.blog/openttd-missing_sound.png"><img class="size-thumbnail wp-image-551" title="openttd-missing_sound" src="http://some.blog/openttd-missing_sound-150x150.png" alt="Fehlermeldung" /></a>"""
         self.assertEqual(expected_content, transformed_content)
+
+    def test_transform_math(self):
+        """Make sure math is transformed properly."""
+        content = ["foo bar $latex 2+2$ baz", "foo bar $latex 2+2&s=5$ baz", "foo bar $latex 2+2&s=5&g=2$ baz"]
+        transformed_content = [self.import_command.transform_math(i)[0] for i in content]
+        expected_content = r"foo bar \(2+2\) baz"
+
+        for i in transformed_content:
+            self.assertEqual(i, expected_content)
 
     def test_get_configuration_output_path(self):
         self.import_command.output_folder = 'new_site'
