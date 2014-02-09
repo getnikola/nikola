@@ -205,7 +205,9 @@ class CommandImportWordpress(Command, ImportMixin):
             base_site_url = channel.find('{{{0}}}author'.format(wordpress_namespace))
             context['BASE_URL'] = get_text_tag(base_site_url,
                                                None,
-                                               "http://foo.com")
+                                               "http://foo.com/")
+        if not context['BASE_URL'].endswith('/'):
+            context['BASE_URL'] += '/'
         context['SITE_URL'] = context['BASE_URL']
         context['THEME'] = 'bootstrap3'
 
