@@ -354,7 +354,7 @@ class CommandImportWordpress(Command, ImportMixin):
         >>> str(CommandImportWordpress.transform_math('foo bar $latex US\\$20$')[0])
         'foo bar \\\\(US\\\\$20\\\\)'
         """
-        new_content = re.sub(r'\$latex (.+?)(&.*)(?<!\\)?\$', r'\(\1\)', content)
+        new_content = re.sub(r'\$latex (.+?)(&.*)?(?<!\\)\$', r'\(\1\)', content)
         change = new_content != content
 
         return new_content, change
