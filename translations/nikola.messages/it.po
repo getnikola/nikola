@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-01-22 13:11+0000\n"
+"PO-Revision-Date: 2014-02-09 16:56+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/nikola/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -86,3 +86,9 @@ msgstr "Pubblicato:"
 
 msgid "Posts for {month} {year}"
 msgstr "Articoli per {month} {year}"
+
+msgid "Nothing found."
+msgstr ""
+
+msgid "No posts found."
+msgstr ""

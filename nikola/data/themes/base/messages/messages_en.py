@@ -11,6 +11,8 @@ MESSAGES = {
     "More posts about": "More posts about",
     "Newer posts": "Newer posts",
     "Next post": "Next post",
+    "No posts found.": "No posts found.",
+    "Nothing found.": "Nothing found.",
     "Older posts": "Older posts",
     "Original site": "Original site",
     "Posted": "Posted",

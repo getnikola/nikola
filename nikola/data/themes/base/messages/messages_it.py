@@ -11,6 +11,8 @@ MESSAGES = {
     "More posts about": "Altri articoli collegati",
     "Newer posts": "Articoli recenti",
     "Next post": "Articolo successivo",
+    "No posts found.": "",
+    "Nothing found.": "",
     "Older posts": "Articoli precedenti",
     "Original site": "Sito originale",
     "Posted": "Pubblicato",

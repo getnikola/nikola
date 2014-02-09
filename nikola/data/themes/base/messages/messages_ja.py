@@ -11,6 +11,8 @@ MESSAGES = {
     "More posts about": "タグ：",
     "Newer posts": "新しい記事",
     "Next post": "次の記事",
+    "No posts found.": "",
+    "Nothing found.": "",
     "Older posts": "過去の記事",
     "Original site": "元のサイト",
     "Posted": "投稿日時",

@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-01-22 13:12+0000\n"
+"PO-Revision-Date: 2014-02-09 16:56+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Persian (http://www.transifex.com/projects/p/nikola/language/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -86,3 +86,9 @@ msgstr "ارسال شده:"
 
 msgid "Posts for {month} {year}"
 msgstr "ارسال برای {month} {year}"
+
+msgid "Nothing found."
+msgstr ""
+
+msgid "No posts found."
+msgstr ""

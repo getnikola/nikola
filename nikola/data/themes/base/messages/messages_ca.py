@@ -11,6 +11,8 @@ MESSAGES = {
     "More posts about": "Més entrades sobre",
     "Newer posts": "Entrades posteriors",
     "Next post": "Entrada següent",
+    "No posts found.": "",
+    "Nothing found.": "",
     "Older posts": "Entrades anteriors",
     "Original site": "Lloc original",
     "Posted": "Publicat",

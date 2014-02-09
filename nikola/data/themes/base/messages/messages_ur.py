@@ -11,6 +11,8 @@ MESSAGES = {
     "More posts about": " کے بارے میں مزید تحاریر",
     "Newer posts": "نئی تحاریر",
     "Next post": "اگلی تحریر",
+    "No posts found.": "",
+    "Nothing found.": "",
     "Older posts": "پرانی تحاریر",
     "Original site": "اصلی سائٹ",
     "Posted": "اشاعت",
@@ -25,5 +27,5 @@ MESSAGES = {
     "Tags and Categories": "ٹیگز اور زمرے",
     "Tags": "ٹیگز",
     "old posts, page %d": "پرانی تحاریر صفحہ %d",
-    "page %d": "",
+    "page %d": "صفحہ %d",
 }

@@ -11,6 +11,8 @@ MESSAGES = {
     "More posts about": "Več objav o",
     "Newer posts": "Novejše objave",
     "Next post": "Naslednja objava",
+    "No posts found.": "",
+    "Nothing found.": "",
     "Older posts": "Starejše objave",
     "Original site": "Izvorna spletna stran",
     "Posted": "Objavljeno",

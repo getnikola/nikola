@@ -11,6 +11,8 @@ MESSAGES = {
     "More posts about": "Больше записей о",
     "Newer posts": "Новые записи",
     "Next post": "Следующая запись",
+    "No posts found.": "",
+    "Nothing found.": "",
     "Older posts": "Старые записи",
     "Original site": "Оригинальный сайт",
     "Posted": "Опубликовано",
