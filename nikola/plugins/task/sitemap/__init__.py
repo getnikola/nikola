@@ -144,26 +144,35 @@ class Sitemap(LateTask):
         def write_sitemap():
             # Have to rescan, because files may have been added between
             # task dep scanning and task execution
-            scan_locs()
             with codecs.open(sitemap_path, 'wb+', 'utf8') as outf:
                 outf.write(header)
                 for k in sorted(locs.keys()):
                     outf.write(locs[k])
                 outf.write("</urlset>")
-            # Other tasks can depend on this output, instead of having
-            # to scan locations.
+
+        # Yield a task to calculate the dependencies of the sitemap
+        # Other tasks can depend on this output, instead of having
+        # to scan locations.
+        def scan_locs_task():
+            scan_locs()
             return {'locations': list(locs.keys())}
 
-        scan_locs()
+        yield {
+            "basename": "_scan_locs",
+            "name": "sitemap",
+            "actions": [(scan_locs_task)]
+        }
+
         yield self.group_task()
         task = {
             "basename": "sitemap",
             "name": sitemap_path,
             "targets": [sitemap_path],
             "actions": [(write_sitemap,)],
-            "uptodate": [config_changed({1: kw, 2: locs})],
+            "uptodate": [config_changed(kw)],
             "clean": True,
             "task_dep": ["render_site"],
+            "calc_dep": ["_scan_locs:sitemap"],
         }
         yield task
 
