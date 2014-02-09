@@ -356,9 +356,15 @@ newlines.
 
     def test_transform_math(self):
         """Make sure math is transformed properly."""
-        content = ["foo bar $latex 2+2$ baz", "foo bar $latex 2+2&s=5$ baz", "foo bar $latex 2+2&s=5&g=2$ baz"]
+        content = ["foo bar $latex 2+2$ baz",
+                   "foo bar $latex 2+2&s=5$ baz",
+                   "foo bar $latex 2+2&s=5&g=2$ baz",
+                   "That is $latex US\\$20$, sir."]
         transformed_content = [self.import_command.transform_math(i)[0] for i in content]
-        expected_content = r"foo bar \(2+2\) baz"
+        expected_content = [r"foo bar \(2+2\) baz",
+                            r"foo bar \(2+2\) baz",
+                            r"foo bar \(2+2\) baz",
+                            r"That is \(US\$20\), sir."]
 
         for i in transformed_content:
             self.assertEqual(i, expected_content)

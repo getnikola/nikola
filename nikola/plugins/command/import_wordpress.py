@@ -351,13 +351,13 @@ class CommandImportWordpress(Command, ImportMixin):
         'foo bar \\\\(2 + 2\\\\)'
         >>> str(CommandImportWordpress.transform_math('foo bar $latex 2 + 2&s=2&bg=000000$')[0])
         'foo bar \\\\(2 + 2\\\\)'
+        >>> str(CommandImportWordpress.transform_math('foo bar $US\\$20$')[0])
+        'foo bar \\\\(US \\\\$20\\\\)'
         """
-
-        new_content = re.sub(r'\$latex (.+?)(&.*)?\$', r'\(\1\)', content)
-
+        new_content = re.sub(r'\$latex (.+?)(&.*)(?<!\\)?\$', r'\(\1\)', content)
         change = new_content != content
 
-        return (new_content, change)
+        return new_content, change
 
     def transform_content(self, content):
         new_content = self.transform_sourcecode(content)
