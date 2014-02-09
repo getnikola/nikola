@@ -342,13 +342,14 @@ class CommandImportWordpress(Command, ImportMixin):
         ignoring sizing and color hints.
 
         (actual output without any mangling:
-         backslash, open-paren, CODE, backslash, close-paren)
+         0. backslash, open-paren, CODE, backslash, close-paren
+         1. True if something changed)
 
-        >>> str(CommandImportWordpress.transform_math('foo bar $latex 2 + 2$ baz'))
+        >>> str(CommandImportWordpress.transform_math('foo bar $latex 2 + 2$ baz')[0])
         'foo bar \\\\(2 + 2\\\\) baz'
-        >>> str(CommandImportWordpress.transform_math('foo bar $latex 2 + 2&s=2$'))
+        >>> str(CommandImportWordpress.transform_math('foo bar $latex 2 + 2&s=2$')[0])
         'foo bar \\\\(2 + 2\\\\)'
-        >>> str(CommandImportWordpress.transform_math('foo bar $latex 2 + 2&s=2&bg=000000$'))
+        >>> str(CommandImportWordpress.transform_math('foo bar $latex 2 + 2&s=2&bg=000000$')[0])
         'foo bar \\\\(2 + 2\\\\)'
         """
 
