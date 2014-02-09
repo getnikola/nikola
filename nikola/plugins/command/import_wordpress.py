@@ -342,19 +342,21 @@ class CommandImportWordpress(Command, ImportMixin):
         ignoring sizing and color hints.
 
         (actual output without any mangling:
-         0. backslash, open-paren, CODE, backslash, close-paren
+         0. backslash, backslash, open-paren, CODE, backslash, backslash, close-paren
          1. True if something changed)
 
+        The backslashes are doubled because Markdown is an idiot.
+
         >>> str(CommandImportWordpress.transform_math('foo bar $latex 2 + 2$ baz')[0])
-        'foo bar \\\\(2 + 2\\\\) baz'
+        'foo bar \\\\\\\\(2 + 2\\\\\\\\) baz'
         >>> str(CommandImportWordpress.transform_math('foo bar $latex 2 + 2&s=2$')[0])
-        'foo bar \\\\(2 + 2\\\\)'
+        'foo bar \\\\\\\\(2 + 2\\\\\\\\)'
         >>> str(CommandImportWordpress.transform_math('foo bar $latex 2 + 2&s=2&bg=000000$')[0])
-        'foo bar \\\\(2 + 2\\\\)'
+        'foo bar \\\\\\\\(2 + 2\\\\\\\\)'
         >>> str(CommandImportWordpress.transform_math('foo bar $latex US\\$20$')[0])
-        'foo bar \\\\(US\\\\$20\\\\)'
+        'foo bar \\\\\\\\(US\\\\$20\\\\\\\\)'
         """
-        new_content = re.sub(r'\$latex (.+?)(&.*)?(?<!\\)\$', r'\(\1\)', content)
+        new_content = re.sub(r'\$latex (.+?)(&.*)?(?<!\\)\$', r'\\(\1\\)', content)
         change = new_content != content
 
         return new_content, change
