@@ -151,6 +151,10 @@ class TemplateSystem(BasePlugin):
         """Sets the list of folders where templates are located and cache."""
         raise NotImplementedError()
 
+    def set_site(self, site):
+        """Sets the site."""
+        self.site = site
+
     def template_deps(self, template_name):
         """Returns filenames which are dependencies for a template."""
         raise NotImplementedError()
