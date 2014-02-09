@@ -21,6 +21,7 @@ Raimon Esteve <https://github.com/raimonesteve>
 Roberto Alsina <https://github.com/ralsina>
 Roman Imankulov <https://github.com/imankulov>
 StyXman <https://github.com/StyXman>
+Tim Chase <https://github.com/Gumnos>
 Tordek <https://github.com/Tordek>
 Troy Toman <https://github.com/troytoman>
 Zhaojun Meng <https://github.com/zhaojunmeng>

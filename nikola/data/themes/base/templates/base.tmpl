@@ -30,10 +30,14 @@ lang="${lang}">
     <small>${content_footer}</small>
     <!--Sidebar content-->
     <ul class="unstyled">
+    %if license:
     <li>${license}
+    %endif
     ${base.html_social()}
     ${base.html_navigation_links()}
+    %if search_form:
     <li>${search_form}
+    %endif
     </ul>
     ${base.late_load_js()}
     ${social_buttons_code}
