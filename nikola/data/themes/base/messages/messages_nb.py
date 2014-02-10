@@ -11,6 +11,8 @@ MESSAGES = {
     "More posts about": "Flere innlegg om",
     "Newer posts": "Nyere innlegg",
     "Next post": "Neste innlegg",
+    "No posts found.": "",
+    "Nothing found.": "",
     "Older posts": "Eldre innlegg",
     "Original site": "Opprinnelig side",
     "Posted": "Publisert",

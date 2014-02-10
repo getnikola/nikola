@@ -205,7 +205,9 @@ class CommandImportWordpress(Command, ImportMixin):
             base_site_url = channel.find('{{{0}}}author'.format(wordpress_namespace))
             context['BASE_URL'] = get_text_tag(base_site_url,
                                                None,
-                                               "http://foo.com")
+                                               "http://foo.com/")
+        if not context['BASE_URL'].endswith('/'):
+            context['BASE_URL'] += '/'
         context['SITE_URL'] = context['BASE_URL']
         context['THEME'] = 'bootstrap3'
 
@@ -398,12 +400,15 @@ class CommandImportWordpress(Command, ImportMixin):
                 continue
             tags.append(text)
 
+        if '$latex' in content:
+            tags.append('mathjax')
+
         if is_draft and self.exclude_drafts:
             LOGGER.notice('Draft "{0}" will not be imported.'.format(title))
         elif content.strip():
             # If no content is found, no files are written.
-            self.url_map[link] = self.context['SITE_URL'] + '/' + \
-                out_folder + '/' + slug + '.html'
+            self.url_map[link] = (self.context['SITE_URL'] + out_folder + '/'
+                                  + slug + '.html')
 
             content = self.transform_content(content)
 

@@ -11,6 +11,8 @@ MESSAGES = {
     "More posts about": "Další příspěvky o",
     "Newer posts": "Novější příspěvky",
     "Next post": "Další příspěvek",
+    "No posts found.": "",
+    "Nothing found.": "",
     "Older posts": "Starší příspěvky",
     "Original site": "Původní stránka",
     "Posted": "Zveřejněno",

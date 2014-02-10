@@ -11,6 +11,8 @@ MESSAGES = {
     "More posts about": "-ri buruzko post gehiago",
     "Newer posts": "Post berrienak",
     "Next post": "Hurrengo posta",
+    "No posts found.": "",
+    "Nothing found.": "",
     "Older posts": "Post zaharrenak",
     "Original site": "Jatorrizko orria",
     "Posted": "Argitaratuta",

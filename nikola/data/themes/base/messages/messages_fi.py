@@ -11,6 +11,8 @@ MESSAGES = {
     "More posts about": "Lisää postauksia aiheesta",
     "Newer posts": "Uudempia postauksia",
     "Next post": "Seuraava postaus",
+    "No posts found.": "",
+    "Nothing found.": "",
     "Older posts": "Vanhempia postauksia",
     "Original site": "Alkuperäinen sivusto",
     "Posted": "Postattu",

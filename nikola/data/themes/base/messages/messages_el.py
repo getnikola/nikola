@@ -11,6 +11,8 @@ MESSAGES = {
     "More posts about": "Περισσότερες αναρτήσεις για",
     "Newer posts": "Νεότερες αναρτήσεις",
     "Next post": "Επόμενη ανάρτηση",
+    "No posts found.": "",
+    "Nothing found.": "",
     "Older posts": "Παλαιότερες αναρτήσεις",
     "Original site": "Ιστοσελίδα αρχικής ανάρτησης",
     "Posted": "Αναρτήθηκε",
