@@ -407,8 +407,8 @@ class CommandImportWordpress(Command, ImportMixin):
             LOGGER.notice('Draft "{0}" will not be imported.'.format(title))
         elif content.strip():
             # If no content is found, no files are written.
-            self.url_map[link] = self.context['SITE_URL'] + '/' + \
-                out_folder + '/' + slug + '.html'
+            self.url_map[link] = (self.context['SITE_URL']  + out_folder + '/'
+                                  + slug + '.html')
 
             content = self.transform_content(content)
 

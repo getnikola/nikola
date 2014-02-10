@@ -134,7 +134,7 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
         self.assertEqual('Wordpress blog title', context['BLOG_TITLE'])
         self.assertEqual('Nikola test blog ;) - with moré Ümläüts',
                          context['BLOG_DESCRIPTION'])
-        self.assertEqual('http://some.blog', context['SITE_URL'])
+        self.assertEqual('http://some.blog/', context['SITE_URL'])
         self.assertEqual('mail@some.blog', context['BLOG_EMAIL'])
         self.assertEqual('Niko', context['BLOG_AUTHOR'])
 
