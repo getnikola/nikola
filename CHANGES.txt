@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Only run sitemap once (Issue #1032)
 * Fix a bug with some multilingual pages
 * Normalize paths (Issue #1028)
 * If two tags generate the same slug, they are the same tag (Issue #1022)
