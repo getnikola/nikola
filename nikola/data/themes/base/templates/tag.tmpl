@@ -22,11 +22,13 @@
             <a href="${_link(kind + "_rss", tag)}">RSS</a>
         %endif
         <br>
+        %if posts:
         <ul class="unstyled">
         % for post in posts:
             <li><a href="${post.permalink()}">[${post.formatted_date(date_format)}] ${post.title()}</a>
         % endfor
         </ul>
+        %endif
         </div>
         <!--End of body content-->
 </%block>
