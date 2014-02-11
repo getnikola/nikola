@@ -304,6 +304,7 @@ class TestCheck(DemoBuildTest):
             except SystemExit as e:
                 self.assertEqual(e.code, 0)
 
+
 class TestCheckAbsoluteSubFolder(TestCheck):
     """Validate links in a site which is:
 
@@ -320,7 +321,6 @@ class TestCheckAbsoluteSubFolder(TestCheck):
                                 'SITE_URL = "http://getnikola.com/foo/"')
             data = data.replace("# URL_TYPE = 'rel_path'",
                                 "URL_TYPE = 'absolute'")
-
         with codecs.open(conf_path, "wb+", "utf8") as outf:
             outf.write(data)
             outf.flush()
@@ -330,6 +330,7 @@ class TestCheckAbsoluteSubFolder(TestCheck):
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
         sitemap_data = codecs.open(sitemap_path, "r", "utf8").read()
         self.assertTrue('<loc>http://getnikola.com/foo/index.html</loc>' in sitemap_data)
+
 
 class TestCheckFailure(DemoBuildTest):
     """The demo build should pass 'nikola check'"""
