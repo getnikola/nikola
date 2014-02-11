@@ -856,8 +856,10 @@ class Nikola(object):
 
     def abs_link(self, dst):
         # Normalize
-        dst = urljoin(self.config['BASE_URL'], dst)
-
+        if dst:  # Mako templates and empty strings evaluate to False
+            dst = urljoin(self.config['BASE_URL'], dst.lstrip('/'))
+        else:
+            dst = self.config['BASE_URL']
         return urlparse(dst).geturl()
 
     def rel_link(self, src, dst):
