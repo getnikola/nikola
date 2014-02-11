@@ -698,7 +698,7 @@ class Nikola(object):
 
         if self.config.get('URL_TYPE') in ('full_path', 'absolute'):
             if self.config.get('URL_TYPE') == 'absolute':
-                dst = urljoin(self.config['BASE_URL'], dst)
+                dst = urljoin(self.config['BASE_URL'], dst.lstrip('/'))
             return dst
 
         # Now both paths are on the same site and absolute
