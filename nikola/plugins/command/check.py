@@ -149,9 +149,6 @@ class CommandCheck(Command):
                     continue
                 parsed = urlparse(target)
 
-                #if target == 'http://getnikola.com/blog/':
-                    #from doit.tools import set_trace; set_trace()
-
                 # Absolute links when using only paths, skip.
                 if (parsed.scheme or target.startswith('//')) and url_type in ('rel_path', 'full_path'):
                     continue
