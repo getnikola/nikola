@@ -682,7 +682,7 @@ class Nikola(object):
         # Avoid empty links.
         if src == dst:
             if self.config.get('URL_TYPE') == 'absolute':
-                dst = urljoin(self.config['BASE_URL'], dst)
+                dst = urljoin(self.config['BASE_URL'], dst.lstrip('/'))
                 return dst
             elif self.config.get('URL_TYPE') == 'full_path':
                 return dst
