@@ -194,7 +194,8 @@ class Galleries(Task):
                 context["folders"] = folders
                 context["crumbs"] = crumbs
                 context["permalink"] = self.site.link(
-                    "gallery", os.path.basename(gallery), lang)
+                    "gallery", os.path.basename(
+                        os.path.relpath(gallery, self.kw['gallery_path'])), lang)
                 # FIXME: use kw
                 context["enable_comments"] = (
                     self.site.config["COMMENTS_IN_GALLERIES"])
