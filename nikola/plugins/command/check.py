@@ -149,6 +149,9 @@ class CommandCheck(Command):
                     continue
                 parsed = urlparse(target)
 
+                #if target == 'http://getnikola.com/blog/':
+                    #from doit.tools import set_trace; set_trace()
+
                 # Absolute links when using only paths, skip.
                 if (parsed.scheme or target.startswith('//')) and url_type in ('rel_path', 'full_path'):
                     continue
@@ -165,6 +168,8 @@ class CommandCheck(Command):
                 elif url_type == 'absolute':
                     target_filename = os.path.abspath(
                         os.path.join(os.path.dirname(filename), parsed.path))
+                    if parsed.path.endswith('/'):  # abspath removes trailing slashes
+                        target_filename += '/{0}'.format(self.site.config['INDEX_FILE'])
                     if target_filename.startswith(base_url.path):
                         target_filename = target_filename[len(base_url.path):]
                     target_filename = os.path.join(self.site.config['OUTPUT_FOLDER'], target_filename)
@@ -183,7 +188,7 @@ class CommandCheck(Command):
                             self.logger.warn(os.popen('nikola list --deps ' + task, 'r').read())
                             self.logger.warn("===============================\n")
         except Exception as exc:
-            self.logger.error("Error with:", filename, exc)
+            self.logger.error("Error with: {0} {1}".format(filename, exc))
         return rv
 
     def scan_links(self, find_sources=False):
