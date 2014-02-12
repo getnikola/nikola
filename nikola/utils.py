@@ -47,6 +47,7 @@ except ImportError:
 
 import logbook
 from logbook.more import ExceptionHandler
+from nikola.plugins.loghandler.colorful import ColorfulStderrHandler
 import pytz
 
 from . import DEBUG
@@ -67,7 +68,7 @@ def get_logger(name, handlers):
     return l
 
 
-STDERR_HANDLER = [logbook.StderrHandler(
+STDERR_HANDLER = [ColorfulStderrHandler(
     level=logbook.NOTICE if not DEBUG else logbook.DEBUG,
     format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
 )]

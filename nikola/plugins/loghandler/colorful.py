@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Daniel Devine and others.
+# Copyright © 2012-2014 Chris Warrick and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -24,29 +24,13 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from nikola.plugin_categories import SignalHandler
-from nikola.plugins.loghandler.colorful import ColorfulStderrHandler
-from blinker import signal
-import os
-
-from nikola import DEBUG
+from logbook.more import ColorizingStderrHandler
 
 
-class StderrHandler(SignalHandler):
-    """Logs messages to stderr."""
-    name = 'stderr'
+class ColorfulStderrHandler(ColorizingStderrHandler):
+    """Stream handler with colors."""
+    _colorful = False
 
-    def attach_handler(self, sender):
-        """Attach the handler to the logger."""
-        conf = self.site.config.get('LOGGING_HANDLERS').get('stderr')
-        if conf or os.getenv('NIKOLA_DEBUG'):
-            self.site.loghandlers.append(ColorfulStderrHandler(
-                level='DEBUG' if DEBUG else conf.get('loglevel', 'WARNING').upper(),
-                format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
-            ))
-
-    def set_site(self, site):
-        self.site = site
-
-        ready = signal('sighandlers_loaded')
-        ready.connect(self.attach_handler)
+    def should_colorize(self, record):
+        """Inform about colorization using the value obtained from Nikola."""
+        return self._colorful
