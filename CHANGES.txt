@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Template filters are configurable via the TEMPLATE_FILTERS config variable (Issue #1038)
 * Added Hindi translation by Sean Pue
 * New link:///foo links which always point to absolute paths (/foo in that case) (Issue #986)
 * New --browser/-b option on the serve command to open instantly in a web browser (Issue #997)
@@ -12,6 +13,8 @@ Features
 Bugfixes
 --------
 
+* Fix post links in RSS feeds (Issue #986)
+* Only run sitemap once (Issue #1032)
 * Fix a bug with some multilingual pages
 * Normalize paths (Issue #1028)
 * If two tags generate the same slug, they are the same tag (Issue #1022)
@@ -22,6 +25,7 @@ Bugfixes
 * HIDE_SOURCELINK was set to True sometimes (Issue #1004)
 * Properly import cool URIs from WordPress, instead of just slugify-ing the path (Issue #693)
 * Fixed SASS/LESS errors when more than one theme in chain has a targets file (Issue #941)
+* Guard against empty list-items in base templates (Issue #936)
 
 New in v6.3.0
 =============

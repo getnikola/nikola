@@ -1168,7 +1168,7 @@ You can apply post processing to the files in your site, in order to optimize th
 or change them in arbitrary ways. For example, you may want to compress all CSS
 and JS files using yui-compressor.
 
-To do that, you can use the provided helper adding this in your ``config.py``::
+To do that, you can use the provided helper adding this in your ``conf.py``::
 
   from nikola import filters
 
