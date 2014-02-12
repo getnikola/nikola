@@ -46,7 +46,7 @@ except ImportError:
     pass
 
 import logbook
-from logbook.more import ExceptionHandler, ColorizingStderrHandler
+from logbook.more import ExceptionHandler, ColorizedStderrHandler
 import pytz
 
 from . import DEBUG
@@ -55,7 +55,7 @@ from . import DEBUG
 class ApplicationWarning(Exception):
     pass
 
-class ColorfulStderrHandler(ColorizingStderrHandler):
+class ColorfulStderrHandler(ColorizedStderrHandler):
     """Stream handler with colors."""
     _colorful = False
 
