@@ -25,11 +25,11 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from nikola.plugin_categories import SignalHandler
-from nikola.plugins.loghandler.colorful import ColorfulStderrHandler
 from blinker import signal
 import os
 
 from nikola import DEBUG
+from nikola.utils import ColorfulStderrHandler
 
 
 class StderrHandler(SignalHandler):

@@ -46,8 +46,7 @@ except ImportError:
     pass
 
 import logbook
-from logbook.more import ExceptionHandler
-from nikola.plugins.loghandler.colorful import ColorfulStderrHandler
+from logbook.more import ExceptionHandler, ColorizingStderrHandler
 import pytz
 
 from . import DEBUG
@@ -55,6 +54,14 @@ from . import DEBUG
 
 class ApplicationWarning(Exception):
     pass
+
+class ColorfulStderrHandler(ColorizingStderrHandler):
+    """Stream handler with colors."""
+    _colorful = False
+
+    def should_colorize(self, record):
+        """Inform about colorization using the value obtained from Nikola."""
+        return self._colorful
 
 
 def get_logger(name, handlers):
