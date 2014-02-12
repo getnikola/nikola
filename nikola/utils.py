@@ -55,6 +55,7 @@ from . import DEBUG
 class ApplicationWarning(Exception):
     pass
 
+
 class ColorfulStderrHandler(ColorizedStderrHandler):
     """Stream handler with colors."""
     _colorful = False
