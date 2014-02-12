@@ -11,3 +11,4 @@ pytz
 logbook
 blinker
 setuptools
+colorama
