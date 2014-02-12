@@ -180,7 +180,7 @@ class CommandInstallPlugin(Command):
             LOGGER.notice('This plugin has a sample config file.')
             print('Contents of the conf.py.sample file:\n')
             with codecs.open(confpypath, 'rb', 'utf-8') as fh:
-                if sys.platform == 'win32':
+                if self.site.colorful:
                     print(indent(pygments.highlight(
                         fh.read(), PythonLexer(), TerminalFormatter()),
                         4 * ' '))
