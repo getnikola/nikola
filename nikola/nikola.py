@@ -69,7 +69,7 @@ from .plugin_categories import (
     SignalHandler,
 )
 
-from .plugins.loghandler.colorful import ColorfulStderrHandler
+from .utils import ColorfulStderrHandler
 
 config_changed = utils.config_changed
 

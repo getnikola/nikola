@@ -61,7 +61,7 @@ def main(args):
     global config
 
     colorful = False
-    if os.isatty():
+    if sys.stderr.isatty():
         colorful = True
         try:
             import colorama
