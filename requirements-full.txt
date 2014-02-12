@@ -1,5 +1,4 @@
 -r requirements.txt
-mock>=1.0.0
 requests>=1.0
 markdown
 Jinja2>=2.7
