@@ -157,8 +157,8 @@ class CommandCheck(Command):
         return rv
 
     def scan_links(self, find_sources=False):
-        self.logger.notice("Checking Links:")
-        self.logger.notice("===============")
+        self.logger.info("Checking Links:")
+        self.logger.info("===============")
         failure = False
         for task in os.popen('nikola list --all', 'r').readlines():
             task = task.strip()
@@ -170,13 +170,13 @@ class CommandCheck(Command):
                 if self.analyze(task, find_sources):
                     failure = True
         if not failure:
-            self.logger.notice("All links checked.")
+            self.logger.info("All links checked.")
         return failure
 
     def scan_files(self):
         failure = False
-        self.logger.notice("Checking Files:")
-        self.logger.notice("===============\n")
+        self.logger.info("Checking Files:")
+        self.logger.info("===============\n")
         only_on_output, only_on_input = real_scan_files(self.site)
 
         # Ignore folders
@@ -195,7 +195,7 @@ class CommandCheck(Command):
             for f in only_on_input:
                 self.logger.warn(f)
         if not failure:
-            self.logger.notice("All files checked.")
+            self.logger.info("All files checked.")
         return failure
 
     def clean_files(self):

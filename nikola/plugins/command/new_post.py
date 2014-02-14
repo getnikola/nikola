@@ -284,8 +284,8 @@ class CommandNewPost(Command):
                 fd.write('\n'.join(data))
             with codecs.open(txt_path, "wb+", "utf8") as fd:
                 fd.write("Write your post here.")
-            LOGGER.notice("Your post's metadata is at: {0}".format(meta_path))
+            LOGGER.info("Your post's metadata is at: {0}".format(meta_path))
             event['meta_path'] = meta_path
-        LOGGER.notice("Your post's text is at: {0}".format(txt_path))
+        LOGGER.info("Your post's text is at: {0}".format(txt_path))
 
         signal('new_post').send(self, **event)
