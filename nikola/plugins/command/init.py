@@ -66,6 +66,8 @@ class CommandInit(Command):
         'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
         'DEFAULT_LANG': "en",
         'THEME': 'bootstrap3',
+        'COMMENT_SYSTEM': 'disqus',
+        'COMMENT_SYSTEM_ID': 'nikolademo',
 
         'POSTS': """(
     ("posts/*.rst", "posts", "post.tmpl"),
