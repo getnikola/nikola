@@ -98,8 +98,9 @@ class CommandInit(Command):
 
     # In order to ensure proper escaping, all variables but the three
     # pre-formatted ones are handled by json.dumps().
-    SAMPLE_CONF_PARSED = {k: json.dumps(v) for k, v in SAMPLE_CONF.items()
-                          if k not in ('POSTS', 'PAGES', 'COMPILERS')}
+    SAMPLE_CONF_PARSED = SAMPLE_CONF
+    SAMPLE_CONF_PARSED.update({k: json.dumps(v) for k, v in SAMPLE_CONF.items()
+                               if k not in ('POSTS', 'PAGES', 'COMPILERS')})
 
     @classmethod
     def copy_sample_site(cls, target):
