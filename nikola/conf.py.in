@@ -1,21 +1,22 @@
+## -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
 import time
 
-### This is the configuration of Nikola. ###
-###  You should edit it to your liking.  ###
+#!! This is the configuration of Nikola. !!#
+#!!  You should edit it to your liking.  !!#
 
 
-## Some settings can be different in different languages.
-## A comment stating (translatable) is used to denote those.
-## There are two ways to specify a translatable setting:
-## (a) BLOG_TITLE = "My Blog"
-## (b) BLOG_TITLE = {"en": "My Blog", "es": "Mi Blog"}
-## Option (a) is there for backwards compatibility and when you don't
-##            want that setting translated.
-## Option (b) should be used for settings that are different in
-##            different languages.
+#! Some settings can be different in different languages.
+#! A comment stating (translatable) is used to denote those.
+#! There are two ways to specify a translatable setting:
+#! (a) BLOG_TITLE = "My Blog"
+#! (b) BLOG_TITLE = {"en": "My Blog", "es": "Mi Blog"}
+#! Option (a) is there for backwards compatibility and when you don't
+#!            want that setting translated.
+#! Option (b) should be used for settings that are different in
+#!            different languages.
 
 
 # Data about this site
