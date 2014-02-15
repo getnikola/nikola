@@ -19,16 +19,16 @@ import time
 
 
 # Data about this site
-BLOG_AUTHOR = "${BLOG_AUTHOR}"  # (translatable)
-BLOG_TITLE = "${BLOG_TITLE}"  # (translatable)
+BLOG_AUTHOR = ${BLOG_AUTHOR}  # (translatable)
+BLOG_TITLE = ${BLOG_TITLE}  # (translatable)
 # This is the main URL for your site. It will be used
 # in a prominent link
-SITE_URL = "${SITE_URL}"
+SITE_URL = ${SITE_URL}
 # This is the URL where nikola's output will be deployed.
 # If not set, defaults to SITE_URL
-# BASE_URL = "${SITE_URL}"
-BLOG_EMAIL = "${BLOG_EMAIL}"
-BLOG_DESCRIPTION = "${BLOG_DESCRIPTION}"  # (translatable)
+# BASE_URL = ${SITE_URL}
+BLOG_EMAIL = ${BLOG_EMAIL}
+BLOG_DESCRIPTION = ${BLOG_DESCRIPTION}  # (translatable)
 
 # Nikola is multilingual!
 #
@@ -67,7 +67,7 @@ BLOG_DESCRIPTION = "${BLOG_DESCRIPTION}"  # (translatable)
 # in the default language will be shown instead.
 
 # What is the default language?
-DEFAULT_LANG = "${DEFAULT_LANG}"
+DEFAULT_LANG = ${DEFAULT_LANG}
 
 # What other languages do you have?
 # The format is {"translationcode" : "path/to/translation" }
@@ -313,7 +313,7 @@ COMPILERS = ${COMPILERS}
                              # the main (the newest) index page (index.html)
 
 # Name of the theme to use.
-THEME = "${THEME}"
+THEME = ${THEME}
 
 # Color scheme to be used for code blocks. If your theme provides
 # "assets/css/code.css" this is ignored.
