@@ -137,9 +137,9 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'copy_file', 'slugify', 'unslugify', 'to_datetime', 'apply_filters',
            'config_changed', 'get_crumbs', 'get_tzname', 'get_asset_path',
            '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
-           'LocaleBorg', 'sys_encode', 'sys_decode', 'makedirs',
-           'get_parent_theme_name', 'ExtendedRSS2', 'demote_headers',
-           'get_translation_candidate']
+           'TranslatableSetting', 'LocaleBorg', 'sys_encode', 'sys_decode',
+           'makedirs', 'get_parent_theme_name', 'ExtendedRSS2',
+           'demote_headers', 'get_translation_candidate']
 
 
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
@@ -183,6 +183,70 @@ class Functionary(defaultdict):
         if lang is None:
             lang = LocaleBorg().current_lang
         return self[lang][key]
+
+
+class TranslatableSetting(object):
+
+    """
+    A setting that can be translated.
+
+    You can access it via:
+
+    * str(SETTING) == unicode(SETTING) -- outputs in SETTING.lang
+    * SETTING(lang)                    -- outputs in lang
+
+    Method 1 is generally used throughout themes for backwards
+    compatibility.  Method 2 is meant for new things, and for
+    code (which doesn't need to be backwards compatible).
+
+    The underlying structure is a defaultdict.  The language that
+    is the default value of the dict is provided with __init__().
+    """
+
+    # Note that this setting is global.  DO NOT set on a per-instance basis!
+    # The only reason for this is backwards compatibility with existing themes.
+    # It’s kinda hacky, but certainly worth the hassle.
+    lang = 'en'
+
+    def __init__(self, inp, default_lang):
+        """Initialize a translated setting.
+
+        Valid inputs include:
+
+        * a string               -- the same will be used for all languages
+        * a dict ({lang: value}) -- each language will use the value specified;
+                                    if there is none, default_lang is used.
+
+        """
+        self.default_lang = default_lang
+        self.lang = default_lang
+        self.values = defaultdict()
+        if isinstance(inp, dict):
+            self.values = inp
+            self.values.default_factory = lambda x: inp[self.default_lang]
+        else:
+            self.values.default_factory = lambda x: inp
+
+    def __call__(self, lang=None):
+        """
+        Return the value in the requested language.
+
+        While lang is None, self.lang (currently set language) is used.
+        Otherwise, the standard algorithm is used (see above).
+
+        """
+        if lang is None:
+            return self.values[self.lang]
+        else:
+            return self.values[lang]
+
+    def __str__(self):
+        """Return the value in the currently set language."""
+        return self.values[self.lang]
+
+    def __unicode__(self):
+        """Return the value in the currently set language."""
+        return self.values[self.lang]
 
 
 class CustomEncoder(json.JSONEncoder):
