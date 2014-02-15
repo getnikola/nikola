@@ -99,5 +99,4 @@ class CommandBootswatchTheme(Command):
 
         with open(os.path.join('themes', name, 'parent'), 'wb+') as output:
             output.write(parent.encode('utf-8'))
-        LOGGER.info('Theme created. Change the THEME setting to "{0}" to use '
-                    'it.'.format(name))
+        LOGGER.notice('Theme created.  Change the THEME setting to "{0}" to use it.'.format(name))
