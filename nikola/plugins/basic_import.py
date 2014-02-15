@@ -151,7 +151,7 @@ class ImportMixin(object):
                 time=datetime.datetime.now().strftime('%Y%m%d_%H%M%S'),
                 name=self.name)
         config_output_path = os.path.join(self.output_folder, filename)
-        utils.LOGGER.notice('Configuration will be written to: {0}'.format(config_output_path))
+        utils.LOGGER.info('Configuration will be written to: {0}'.format(config_output_path))
 
         return config_output_path
 
