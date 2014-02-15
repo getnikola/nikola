@@ -1,16 +1,26 @@
-## -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
 import time
 
-##############################################
-# Configuration, please edit
-##############################################
+### This is the configuration of Nikola. ###
+###  You should edit it to your liking.  ###
+
+
+## Some settings can be different in different languages.
+## A comment stating (translatable) is used to denote those.
+## There are two ways to specify a translatable setting:
+## (a) BLOG_TITLE = "My Blog"
+## (b) BLOG_TITLE = {"en": "My Blog", "es": "Mi Blog"}
+## Option (a) is there for backwards compatibility and when you don't
+##            want that setting translated.
+## Option (b) should be used for settings that are different in
+##            different languages.
+
 
 # Data about this site
-BLOG_AUTHOR = "${BLOG_AUTHOR}"
-BLOG_TITLE = "${BLOG_TITLE}"
+BLOG_AUTHOR = "${BLOG_AUTHOR}"  # (translatable)
+BLOG_TITLE = "${BLOG_TITLE}"  # (translatable)
 # This is the main URL for your site. It will be used
 # in a prominent link
 SITE_URL = "${SITE_URL}"
@@ -18,7 +28,7 @@ SITE_URL = "${SITE_URL}"
 # If not set, defaults to SITE_URL
 # BASE_URL = "${SITE_URL}"
 BLOG_EMAIL = "${BLOG_EMAIL}"
-BLOG_DESCRIPTION = "${BLOG_DESCRIPTION}"
+BLOG_DESCRIPTION = "${BLOG_DESCRIPTION}"  # (translatable)
 
 # Nikola is multilingual!
 #
@@ -346,6 +356,7 @@ THEME = "${THEME}"
 # READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
 
 # A HTML fragment describing the license, for the sidebar.
+# (translatable)
 LICENSE = ""
 # I recommend using the Creative Commons' wizard:
 # http://creativecommons.org/choose/
@@ -356,7 +367,7 @@ LICENSE = ""
 # src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>"""
 
 # A small copyright notice for the page footer (in HTML).
-# Default is ''
+# (translatable)
 CONTENT_FOOTER = 'Contents &copy; {date} \
         <a href="mailto:{email}">{author}</a> - Powered by \
         <a href="http://getnikola.com" rel="nofollow">Nikola</a> \
@@ -469,6 +480,7 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 
 # Social buttons. This is sample code for AddThis (which was the default for a
 # long time). Insert anything you want here, or even make it empty.
+# (translatable)
 # SOCIAL_BUTTONS_CODE = """
 # <!-- Social buttons -->
 # <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
@@ -505,6 +517,7 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # custom search (http://www.google.com/cse/)
 # Or a duckduckgo search: https://duckduckgo.com/search_box.html
 # Default is no search form.
+# (translatable)
 # SEARCH_FORM = ""
 #
 # This search form works for any site and looks good in the "site" theme where
@@ -574,10 +587,12 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # USE_CDN = False
 
 # Extra things you want in the pages HEAD tag. This will be added right
-# before </HEAD>
+# before </head>
+# (translatable)
 # EXTRA_HEAD_DATA = ""
-# Google analytics or whatever else you use. Added to the bottom of <body>
+# Google Analytics or whatever else you use. Added to the bottom of <body>
 # in the default template (base.tmpl).
+# (translatable)
 # BODY_END = ""
 
 # The possibility to extract metadata from the filename by using a
