@@ -147,21 +147,21 @@ class GetMetaTest(unittest.TestCase):
 class HeaderDemotionTest(unittest.TestCase):
     def demote_by_zero(self):
         input_str = '''\
-<h1>header 1</h1>
-<h2>header 2</h2>
-<h3>header 3</h3>
-<h4>header 4</h4>
-<h5>header 5</h5>
-<h6>header 6</h6>
-'''
+        <h1>header 1</h1>
+        <h2>header 2</h2>
+        <h3>header 3</h3>
+        <h4>header 4</h4>
+        <h5>header 5</h5>
+        <h6>header 6</h6>
+        '''
         expected_output = '''\
-<h1>header 1</h1>
-<h2>header 2</h2>
-<h3>header 3</h3>
-<h4>header 4</h4>
-<h5>header 5</h5>
-<h6>header 6</h6>
-'''
+        <h1>header 1</h1>
+        <h2>header 2</h2>
+        <h3>header 3</h3>
+        <h4>header 4</h4>
+        <h5>header 5</h5>
+        <h6>header 6</h6>
+        '''
         doc = lxml.html.fromstring(input_str)
         outdoc = lxml.html.fromstring(expected_output)
         demote_headers(doc, 0)
@@ -169,21 +169,21 @@ class HeaderDemotionTest(unittest.TestCase):
 
     def demote_by_one(self):
         input_str = '''\
-<h1>header 1</h1>
-<h2>header 2</h2>
-<h3>header 3</h3>
-<h4>header 4</h4>
-<h5>header 5</h5>
-<h6>header 6</h6>
-'''
+        <h1>header 1</h1>
+        <h2>header 2</h2>
+        <h3>header 3</h3>
+        <h4>header 4</h4>
+        <h5>header 5</h5>
+        <h6>header 6</h6>
+        '''
         expected_output = '''\
-<h2>header 1</h2>
-<h3>header 2</h3>
-<h4>header 3</h4>
-<h5>header 4</h5>
-<h6>header 5</h6>
-<h6>header 6</h6>
-'''
+        <h2>header 1</h2>
+        <h3>header 2</h3>
+        <h4>header 3</h4>
+        <h5>header 4</h5>
+        <h6>header 5</h6>
+        <h6>header 6</h6>
+        '''
         doc = lxml.html.fromstring(input_str)
         outdoc = lxml.html.fromstring(expected_output)
         demote_headers(doc, 1)
@@ -191,21 +191,21 @@ class HeaderDemotionTest(unittest.TestCase):
 
     def demote_by_two(self):
         input_str = '''\
-<h1>header 1</h1>
-<h2>header 2</h2>
-<h3>header 3</h3>
-<h4>header 4</h4>
-<h5>header 5</h5>
-<h6>header 6</h6>
-'''
+        <h1>header 1</h1>
+        <h2>header 2</h2>
+        <h3>header 3</h3>
+        <h4>header 4</h4>
+        <h5>header 5</h5>
+        <h6>header 6</h6>
+        '''
         expected_output = '''\
-<h3>header 1</h3>
-<h4>header 2</h4>
-<h5>header 3</h5>
-<h6>header 4</h6>
-<h6>header 5</h6>
-<h6>header 6</h6>
-'''
+        <h3>header 1</h3>
+        <h4>header 2</h4>
+        <h5>header 3</h5>
+        <h6>header 4</h6>
+        <h6>header 5</h6>
+        <h6>header 6</h6>
+        '''
         doc = lxml.html.fromstring(input_str)
         outdoc = lxml.html.fromstring(expected_output)
         demote_headers(doc, 2)
@@ -213,21 +213,21 @@ class HeaderDemotionTest(unittest.TestCase):
 
     def demote_by_minus_one(self):
         input_str = '''\
-<h1>header 1</h1>
-<h2>header 2</h2>
-<h3>header 3</h3>
-<h4>header 4</h4>
-<h5>header 5</h5>
-<h6>header 6</h6>
-'''
+        <h1>header 1</h1>
+        <h2>header 2</h2>
+        <h3>header 3</h3>
+        <h4>header 4</h4>
+        <h5>header 5</h5>
+        <h6>header 6</h6>
+        '''
         expected_output = '''\
-<h1>header 1</h1>
-<h1>header 2</h1>
-<h2>header 3</h2>
-<h3>header 4</h3>
-<h4>header 5</h4>
-<h5>header 6</h5>
-'''
+        <h1>header 1</h1>
+        <h1>header 2</h1>
+        <h2>header 3</h2>
+        <h3>header 4</h3>
+        <h4>header 5</h4>
+        <h5>header 6</h5>
+        '''
         doc = lxml.html.fromstring(input_str)
         outdoc = lxml.html.fromstring(expected_output)
         demote_headers(doc, -1)
