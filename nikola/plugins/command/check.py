@@ -102,6 +102,14 @@ class CommandCheck(Command):
             'default': False,
             'help': 'List possible source files for files with broken links.',
         },
+        {
+            'name': 'verbose',
+            'long': 'verbose',
+            'short': 'v',
+            'type': bool,
+            'default': False,
+            'help': 'Be more verbose.',
+        },
     ]
 
     def _execute(self, options, args):
@@ -112,6 +120,10 @@ class CommandCheck(Command):
         if not options['links'] and not options['files'] and not options['clean']:
             print(self.help())
             return False
+        if options['verbose']:
+            self.logger.level = 1
+        else:
+            self.logger.level = 4
         if options['links']:
             failure = self.scan_links(options['find_sources'])
         if options['files']:
@@ -126,6 +138,8 @@ class CommandCheck(Command):
     def analyze(self, task, find_sources=False):
         rv = False
         self.whitelist = [re.compile(x) for x in self.site.config['LINK_CHECK_WHITELIST']]
+        base_url = urlparse(self.site.config['BASE_URL'])
+        url_type = self.site.config['URL_TYPE']
         try:
             filename = task.split(":")[-1]
             d = lxml.html.fromstring(open(filename).read())
@@ -134,31 +148,50 @@ class CommandCheck(Command):
                 if target == "#":
                     continue
                 parsed = urlparse(target)
-                if parsed.scheme or target.startswith('//'):
+
+                # Absolute links when using only paths, skip.
+                if (parsed.scheme or target.startswith('//')) and url_type in ('rel_path', 'full_path'):
                     continue
+
+                # Absolute links to other domains, skip
+                if (parsed.scheme or target.startswith('//')) and parsed.netloc != base_url.netloc:
+                    continue
+
                 if parsed.fragment:
                     target = target.split('#')[0]
-                target_filename = os.path.abspath(
-                    os.path.join(os.path.dirname(filename), unquote(target)))
+                if url_type == 'rel_path':
+                    target_filename = os.path.abspath(
+                        os.path.join(os.path.dirname(filename), unquote(target)))
+                elif url_type == 'absolute':
+                    target_filename = os.path.abspath(
+                        os.path.join(os.path.dirname(filename), parsed.path))
+                    if parsed.path.endswith('/'):  # abspath removes trailing slashes
+                        target_filename += '/{0}'.format(self.site.config['INDEX_FILE'])
+                    if target_filename.startswith(base_url.path):
+                        target_filename = target_filename[len(base_url.path):]
+                    target_filename = os.path.join(self.site.config['OUTPUT_FOLDER'], target_filename)
+
                 if any(re.match(x, target_filename) for x in self.whitelist):
                     continue
                 elif target_filename not in self.existing_targets:
                     if os.path.exists(target_filename):
+                        self.logger.notice("Good link {0} => {1}".format(target, target_filename))
                         self.existing_targets.add(target_filename)
                     else:
                         rv = True
-                        self.logger.warn("Broken link in {0}: ".format(filename), target)
+                        self.logger.warn("Broken link in {0}: {1}".format(filename, target))
                         if find_sources:
                             self.logger.warn("Possible sources:")
                             self.logger.warn(os.popen('nikola list --deps ' + task, 'r').read())
                             self.logger.warn("===============================\n")
         except Exception as exc:
-            self.logger.error("Error with:", filename, exc)
+            self.logger.error("Error with: {0} {1}".format(filename, exc))
         return rv
 
     def scan_links(self, find_sources=False):
         self.logger.notice("Checking Links:")
-        self.logger.notice("===============")
+        self.logger.notice("===============\n")
+        self.logger.notice("{0} mode".format(self.site.config['URL_TYPE']))
         failure = False
         for task in os.popen('nikola list --all', 'r').readlines():
             task = task.strip()
