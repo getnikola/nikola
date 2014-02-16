@@ -50,7 +50,47 @@ Easy.
 """
         self.assertEqual(expected_xml, self.import_command._glue_xml_lines(xml))
 
+class TestQTranslateContentSeparation(BasicCommandImportWordpress):
 
+    def test_conserves_qtranslate_less_post(self):
+        content = """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual(1,len(content_translations))
+        self.assertEqual(content,content_translations[""])
+
+    def test_split_a_two_language_post(self):
+        content = """<!--:fr-->Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
+
+Veuillez utiliser pour cela le formulaire ci-dessous.
+
+[si-contact-form form='2']<!--:--><!--:en-->If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+
+Comments, questions and suggestions are welcome !
+
+Please use the contact form below.
+
+[si-contact-form form='2']<!--:-->"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual("""Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
+
+Veuillez utiliser pour cela le formulaire ci-dessous.
+
+[si-contact-form form='2']""",content_translations["fr"])
+        self.assertEqual("""If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+
+Comments, questions and suggestions are welcome !
+
+Please use the contact form below.
+
+[si-contact-form form='2']""",content_translations["en"])
+
+    
 class CommandImportWordpressRunTest(BasicCommandImportWordpress):
     def setUp(self):
         super(self.__class__, self).setUp()

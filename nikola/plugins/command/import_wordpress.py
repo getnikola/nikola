@@ -84,6 +84,13 @@ class CommandImportWordpress(Command, ImportMixin):
             'type': bool,
             'help': "Do not try to download files for the import",
         },
+        {
+            'name': 'separate_qtranslate_content',
+            'long': 'qtranslate',
+            'default': False,
+            'type': bool,
+            'help': "Will try to separate the language specific content when it has been generate with the qtranslate plugin (WARNING: you won't recover translated titles)", # actually translated titles don't see to be part of the wordpress export at the time of writing :(
+        },
     ]
 
     def _execute(self, options={}, args=[]):
@@ -113,7 +120,9 @@ class CommandImportWordpress(Command, ImportMixin):
 
         self.exclude_drafts = options.get('exclude_drafts', False)
         self.no_downloads = options.get('no_downloads', False)
-
+        
+        self.separate_qtranslate_content = options.get('separate_qtranslate_content', False)
+        
         if not self.no_downloads:
             def show_info_about_mising_module(modulename):
                 LOGGER.error(
@@ -412,15 +421,27 @@ class CommandImportWordpress(Command, ImportMixin):
             # If no content is found, no files are written.
             self.url_map[link] = (self.context['SITE_URL'] + out_folder + '/'
                                   + slug + '.html')
-
-            content = self.transform_content(content)
-
-            self.write_metadata(os.path.join(self.output_folder, out_folder,
-                                             slug + '.meta'),
-                                title, slug, post_date, description, tags)
-            self.write_content(
-                os.path.join(self.output_folder, out_folder, slug + '.wp'),
-                content)
+            if hasattr(self,"separate_qtranslate_content") \
+               and self.separate_qtranslate_content:
+                content_translations = separate_qtranslate_content(content)
+            else:
+                content_translations = {"": self.transform_content(content)}
+            for lang,content in content_translations.items():
+                if lang:
+                    self.write_metadata(os.path.join(self.output_folder, out_folder,
+                                                     slug + '.' + lang + '.meta'),
+                                        title, slug, post_date, description, tags)
+                    self.write_content(
+                        os.path.join(self.output_folder,
+                                     out_folder, slug + '.' + lang + '.wp'),
+                        content)
+                else:
+                    self.write_metadata(os.path.join(self.output_folder, out_folder,
+                                                     slug + '.meta'),
+                                        title, slug, post_date, description, tags)
+                    self.write_content(
+                        os.path.join(self.output_folder, out_folder, slug + '.wp'),
+                        content)
         else:
             LOGGER.warn('Not going to import "{0}" because it seems to contain'
                         ' no content.'.format(title))
@@ -452,3 +473,20 @@ def get_text_tag(tag, name, default):
         return t.text
     else:
         return default
+
+
+def separate_qtranslate_content(text):
+  """Parse the content of a wordpress post or page and separate the various language specific contents when they are delimited with qtranslate tags."""
+  qt_chunks = text.split("<!--:-->")
+  content_by_lang = {}
+  qt_start = "<!--:"
+  qt_start_len = 5
+  qt_start_with_lang_len = 7
+  qt_full_start_len = 10 # len("<!--:xx-->")
+  for c in qt_chunks:
+    if c.startswith(qt_start):
+      lang = c[qt_start_len:qt_start_with_lang_len]
+      content_by_lang[lang] = c[qt_full_start_len:]
+    else:
+      content_by_lang[""] = c
+  return content_by_lang
