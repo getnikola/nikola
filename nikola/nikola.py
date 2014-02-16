@@ -249,8 +249,10 @@ class Nikola(object):
                                  'EXTRA_HEAD_DATA',)
 
         for i in TRANSLATABLE_SETTINGS:
-            self.config[i] = utils.TranslatableSetting(self.config[i])
-
+            try:
+                self.config[i] = utils.TranslatableSetting(self.config[i])
+            except KeyError:
+                pass
 
         # Make sure we have pyphen installed if we are using it
         if self.config.get('HYPHENATE') and pyphen is None:
