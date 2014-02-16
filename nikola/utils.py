@@ -316,6 +316,10 @@ def copy_tree(src, dst, link_cutoff=None):
                 continue
             dst_file = os.path.join(dst_dir, src_name)
             src_file = os.path.join(root, src_name)
+            if sys.version_info[0] == 2:
+                # Python2 prefers encoded str here
+                dst_file = sys_encode(dst_file)
+                src_file = sys_encode(src_file)
             yield {
                 'name': str(dst_file),
                 'file_dep': [src_file],

@@ -262,6 +262,37 @@ A listing with another listing inside.
         </wp:postmeta>
     </item>
 
+	<item>
+				<title>NoirsEtPleinsDeLumière</title>
+		<link>http://some.blog/2011/04/noirs-et-pourtant-pleins-de-lumiere/noirsetpleinsdelumiere/#main</link>
+		<pubDate>Tue, 12 Apr 2011 21:56:05 +0000</pubDate>
+		<dc:creator><![CDATA[tibonihoo]]></dc:creator>
+		<guid isPermaLink="false">http://some.blog/wp-content/uploads/2011/04/NoirsEtPleinsDeLumière.jpg</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>724</wp:post_id>
+		<wp:post_date>2011-04-12 23:56:05</wp:post_date>
+		<wp:post_date_gmt>2011-04-12 21:56:05</wp:post_date_gmt>
+		<wp:comment_status>open</wp:comment_status>
+		<wp:ping_status>closed</wp:ping_status>
+		<wp:post_name>noirsetpleinsdelumiere</wp:post_name>
+		<wp:status>inherit</wp:status>
+		<wp:post_parent>723</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type>attachment</wp:post_type>
+		<wp:post_password></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<wp:attachment_url>http://some.blog/wp-content/uploads/2011/04/NoirsEtPleinsDeLumière.jpg</wp:attachment_url>
+		<wp:postmeta>
+			<wp:meta_key>_wp_attachment_metadata</wp:meta_key>
+			<wp:meta_value><![CDATA[a:6:{s:5:"width";s:3:"533";s:6:"height";s:3:"800";s:14:"hwstring_small";s:22:"height='96' width='63'";s:4:"file";s:35:"2011/04/NoirsEtPleinsDeLumière.jpg";s:5:"sizes";a:2:{s:9:"thumbnail";a:3:{s:4:"file";s:35:"NoirsEtPleinsDeLumière-150x150.jpg";s:5:"width";s:3:"150";s:6:"height";s:3:"150";}s:6:"medium";a:3:{s:4:"file";s:35:"NoirsEtPleinsDeLumière-199x300.jpg";s:5:"width";s:3:"199";s:6:"height";s:3:"300";}}s:10:"image_meta";a:10:{s:8:"aperture";s:1:"5";s:6:"credit";s:0:"";s:6:"camera";s:13:"Canon EOS 40D";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:3:"100";s:3:"iso";s:3:"200";s:13:"shutter_speed";s:9:"-42949672";s:5:"title";s:0:"";}}]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key>_wp_attached_file</wp:meta_key>
+			<wp:meta_value><![CDATA[2011/04/NoirsEtPleinsDeLumière.jpg]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
         <item>
             <title>Image Link Rewriting</title>
             <link>http://some.blog/2012/12/wintermodus/</link>
