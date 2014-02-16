@@ -314,8 +314,8 @@ def copy_tree(src, dst, link_cutoff=None):
         for src_name in files:
             if src_name == '.DS_Store':
                 continue
-            dst_file = os.path.join(dst_dir, src_name)
-            src_file = os.path.join(root, src_name)
+            dst_file = sys_encode(os.path.join(dst_dir, src_name))
+            src_file = sys_encode(os.path.join(root, src_name))
             yield {
                 'name': str(dst_file),
                 'file_dep': [src_file],
