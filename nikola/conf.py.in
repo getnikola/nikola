@@ -52,7 +52,7 @@ BLOG_DESCRIPTION = "${BLOG_DESCRIPTION}"
 #
 # If you want to use Nikola with a non-supported language you have to provide
 # a module containing the necessary translations
-# (cf. the modules at nikola/data/themes/base/messages/fr.py).
+# (cf. the modules at nikola/data/themes/base/messages/).
 # If a specific post is not translated to a language, then the version
 # in the default language will be shown instead.
 

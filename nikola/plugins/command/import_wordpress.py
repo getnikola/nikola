@@ -290,7 +290,7 @@ class CommandImportWordpress(Command, ImportMixin):
                 # your blogging into another site or system its not.
                 # Why don't they just use JSON?
                 if sys.version_info[0] == 2:
-                    metadata = phpserialize.loads(meta_value.text)
+                    metadata = phpserialize.loads(utils.sys_encode(meta_value.text))
                     size_key = 'sizes'
                     file_key = 'file'
                 else:

@@ -15,6 +15,7 @@ Bugfixes
 
 * nikola check supports URL_TYPE="absolute" (Issue #1046)
 * Fix URL_TYPE=absolute on non-root sites (Issue #1046)
+* Avoid running bundle tasks twice (Issue #1032)
 * Fix post links in RSS feeds (Issue #986)
 * Only run sitemap once (Issue #1032)
 * Fix a bug with some multilingual pages

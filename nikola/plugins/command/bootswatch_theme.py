@@ -86,6 +86,8 @@ class CommandBootswatchTheme(Command):
             version = '2'
         elif 'bootstrap' not in themes:
             LOGGER.warn('"bootswatch_theme" only makes sense for themes that use bootstrap')
+        elif 'bootstrap3-gradients' in themes or 'bootstrap3-gradients-jinja' in themes:
+            LOGGER.warn('"bootswatch_theme" doesn\'t work well with the bootstrap3-gradients family')
 
         LOGGER.notice("Creating '{0}' theme from '{1}' and '{2}'".format(name, swatch, parent))
         utils.makedirs(os.path.join('themes', name, 'assets', 'css'))

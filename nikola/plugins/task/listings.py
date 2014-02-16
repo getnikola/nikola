@@ -55,7 +55,7 @@ class Listings(Task):
         }
 
         # Things to ignore in listings
-        ignored_extensions = (".pyc",)
+        ignored_extensions = (".pyc", ".pyo")
 
         def render_listing(in_name, out_name, folders=[], files=[]):
             if in_name:
