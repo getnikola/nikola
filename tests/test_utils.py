@@ -241,6 +241,9 @@ class TranslatableSettingsTest(unittest.TestCase):
         """Tests for string input."""
         inp = 'Fancy Blog'
         S = TranslatableSetting(inp)
+        S.default_lang = 'xx'
+        S.lang = 'xx'
+
         try:
             u = unicode(S)
         except NameError:  # Python 3
@@ -263,6 +266,9 @@ class TranslatableSettingsTest(unittest.TestCase):
                'zz': 'Schmancy Blog'}
 
         S = TranslatableSetting(inp)
+        S.default_lang = 'xx'
+        S.lang = 'xx'
+
         try:
             u = unicode(S)
         except NameError:  # Python 3
@@ -285,6 +291,9 @@ class TranslatableSettingsTest(unittest.TestCase):
                'zz': 'Schmancy Blog'}
 
         S = TranslatableSetting(inp)
+        S.default_lang = 'xx'
+        S.lang = 'xx'
+
         try:
             u = unicode(S)
         except NameError:  # Python 3
@@ -318,6 +327,9 @@ class TranslatableSettingsTest(unittest.TestCase):
                'zz': 'Schmancy Blog'}
 
         S = TranslatableSetting(inp)
+        S.default_lang = 'xx'
+        S.lang = 'xx'
+
         try:
             u = unicode(S)
         except NameError:  # Python 3
@@ -352,6 +364,9 @@ class TranslatableSettingsTest(unittest.TestCase):
                'zz': 'Schmancy Blog'}
 
         S = TranslatableSetting(inp)
+        S.default_lang = 'xx'
+        S.lang = 'xx'
+
         try:
             u = unicode(S)
         except NameError:  # Python 3
