@@ -89,7 +89,8 @@ class CommandImportWordpress(Command, ImportMixin):
             'long': 'qtranslate',
             'default': False,
             'type': bool,
-            'help': "Separate the language specific content as generate by qtranslate plugin", #  WARNING: won't recover translated titles that actually don't seem to be part of the wordpress XML export at the time of writing :(
+            'help': "Separate the language specific content as generate by qtranslate plugin",
+            # WARNING: won't recover translated titles that actually don't seem to be part of the wordpress XML export at the time of writing :(
         },
     ]
 
@@ -120,9 +121,9 @@ class CommandImportWordpress(Command, ImportMixin):
 
         self.exclude_drafts = options.get('exclude_drafts', False)
         self.no_downloads = options.get('no_downloads', False)
-        
+
         self.separate_qtranslate_content = options.get('separate_qtranslate_content', False)
-        
+
         if not self.no_downloads:
             def show_info_about_mising_module(modulename):
                 LOGGER.error(
@@ -421,18 +422,18 @@ class CommandImportWordpress(Command, ImportMixin):
             # If no content is found, no files are written.
             self.url_map[link] = (self.context['SITE_URL'] + out_folder + '/'
                                   + slug + '.html')
-            if hasattr(self,"separate_qtranslate_content") \
+            if hasattr(self, "separate_qtranslate_content") \
                and self.separate_qtranslate_content:
                 content_translations = separate_qtranslate_content(content)
             else:
                 content_translations = {"": content}
-            for lang,content in content_translations.items():
+            for lang, content in content_translations.items():
                 if lang:
                     out_meta_filename = slug + '.' + lang + '.meta'
                     out_content_filename = slug + '.' + lang + '.wp'
                 else:
                     out_meta_filename = slug + '.meta'
-                    out_content_filename = slug + '.wp'                    
+                    out_content_filename = slug + '.wp'
                 content = self.transform_content(content)
                 self.write_metadata(os.path.join(self.output_folder, out_folder,
                                                  out_meta_filename),
@@ -491,7 +492,7 @@ def separate_qtranslate_content(text):
         if c.startswith(qt_end):
             # just after the end of a language specific section, there may
             # be some piece of common text or tags, or just nothing
-            lang = "" # default language
+            lang = ""  # default language
             c = c.lstrip(qt_end)
             if not c:
                 continue
@@ -502,13 +503,13 @@ def separate_qtranslate_content(text):
         else:
             # nowhere specific (maybe there is no language section in the
             # currently parsed content)
-            lang = "" # default language
+            lang = ""  # default language
         if not lang:
             common_txt_list.append(c)
             for l in content_by_lang.keys():
                 content_by_lang[l].append(c)
         else:
-            content_by_lang[lang] = content_by_lang.get(lang,common_txt_list) + [c]
+            content_by_lang[lang] = content_by_lang.get(lang, common_txt_list) + [c]
     # in case there was no language specific section, just add the text
     if common_txt_list and not content_by_lang:
         content_by_lang[""] = common_txt_list
@@ -516,4 +517,3 @@ def separate_qtranslate_content(text):
     for l in content_by_lang.keys():
         content_by_lang[l] = " ".join(content_by_lang[l])
     return content_by_lang
-
