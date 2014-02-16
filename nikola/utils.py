@@ -203,10 +203,11 @@ class TranslatableSetting(object):
     is the default value of the dict is provided with __init__().
     """
 
+    # WARNING: This is generally not used and replaced with a call to
+    #          LocaleBorg().  Set this to a truthy value to override that.
+    lang = None
+
     # Note that this setting is global.  DO NOT set on a per-instance basis!
-    # The only reason for this is backwards compatibility with existing themes.
-    # It’s kinda hacky, but certainly worth the hassle.
-    lang = 'en'
     default_lang = 'en'
 
     def __init__(self, inp):
@@ -227,6 +228,12 @@ class TranslatableSetting(object):
         else:
             self.values.default_factory = lambda: inp
 
+    def get_lang(self):
+        if self.lang:
+            return self.lang
+        else:
+            return LocaleBorg().current_lang
+
     def __call__(self, lang=None):
         """
         Return the value in the requested language.
@@ -236,17 +243,17 @@ class TranslatableSetting(object):
 
         """
         if lang is None:
-            return self.values[self.lang]
+            return self.values[self.get_lang()]
         else:
             return self.values[lang]
 
     def __str__(self):
         """Return the value in the currently set language."""
-        return self.values[self.lang]
+        return self.values[self.get_lang()]
 
     def __unicode__(self):
         """Return the value in the currently set language."""
-        return self.values[self.lang]
+        return self.values[self.get_lang()]
 
 
 class CustomEncoder(json.JSONEncoder):

@@ -298,6 +298,8 @@ class TranslatableSettingsTest(unittest.TestCase):
         # Change the language.
         # WARNING: DO NOT set lang locally in real code!  Set it globally
         #          instead! (TranslatableSetting.lang = ...)
+        # WARNING: TranslatableSetting.lang is used to override the current
+        #          locale settings returned by LocaleBorg!  Use with care!
         S.lang = 'zz'
 
         try:
@@ -363,6 +365,8 @@ class TranslatableSettingsTest(unittest.TestCase):
         # Change the default language.
         # WARNING: DO NOT set those locally in real code!
         #          Set it globally instead!
+        # WARNING: TranslatableSetting.lang is used to override the current
+        #          locale settings returned by LocaleBorg!  Use with care!
         S.default_lang = 'zz'
         S.lang = 'yy'
 
