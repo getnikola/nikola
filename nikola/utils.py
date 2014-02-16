@@ -312,7 +312,7 @@ def copy_tree(src, dst, link_cutoff=None):
         dst_dir = os.path.join(dst, *root_parts[base_len:])
         makedirs(dst_dir)
         for src_name in files:
-            if src_name == '.DS_Store':
+            if src_name in ('.DS_Store', 'Thumbs.db'):
                 continue
             dst_file = os.path.join(dst_dir, src_name)
             src_file = os.path.join(root, src_name)
