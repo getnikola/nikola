@@ -235,6 +235,23 @@ class Nikola(object):
 
         self.config.update(config)
 
+        # Translatability configuration.
+        utils.TranslatableSetting.default_lang = self.config['DEFAULT_LANG']
+
+        TRANSLATABLE_SETTINGS = ('BLOG_AUTHOR',
+                                 'BLOG_TITLE',
+                                 'BLOG_DESCRIPTION',
+                                 'LICENSE',
+                                 'CONTENT_FOOTER',
+                                 'SOCIAL_BUTTONS_CODE',
+                                 'SEARCH_FORM',
+                                 'BODY_END',
+                                 'EXTRA_HEAD_DATA',)
+
+        for i in TRANSLATABLE_SETTINGS:
+            self.config[i] = utils.TranslatableSetting(self.config[i])
+
+
         # Make sure we have pyphen installed if we are using it
         if self.config.get('HYPHENATE') and pyphen is None:
             utils.LOGGER.warn('To use the hyphenation, you have to install '
