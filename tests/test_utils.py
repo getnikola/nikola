@@ -240,7 +240,7 @@ class TranslatableSettingsTest(unittest.TestCase):
     def test_string_input(self):
         """Tests for string input."""
         inp = 'Fancy Blog'
-        S = TranslatableSetting(inp, 'xx')
+        S = TranslatableSetting(inp)
         try:
             u = unicode(S)
         except NameError:  # Python 3
@@ -262,7 +262,7 @@ class TranslatableSettingsTest(unittest.TestCase):
         inp = {'xx': 'Fancy Blog',
                'zz': 'Schmancy Blog'}
 
-        S = TranslatableSetting(inp, 'xx')
+        S = TranslatableSetting(inp)
         try:
             u = unicode(S)
         except NameError:  # Python 3
@@ -284,7 +284,7 @@ class TranslatableSettingsTest(unittest.TestCase):
         inp = {'xx': 'Fancy Blog',
                'zz': 'Schmancy Blog'}
 
-        S = TranslatableSetting(inp, 'xx')
+        S = TranslatableSetting(inp)
         try:
             u = unicode(S)
         except NameError:  # Python 3
@@ -315,7 +315,7 @@ class TranslatableSettingsTest(unittest.TestCase):
         inp = {'xx': 'Fancy Blog',
                'zz': 'Schmancy Blog'}
 
-        S = TranslatableSetting(inp, 'xx')
+        S = TranslatableSetting(inp)
         try:
             u = unicode(S)
         except NameError:  # Python 3
@@ -349,7 +349,7 @@ class TranslatableSettingsTest(unittest.TestCase):
                'yy': 'Dancy Blog',
                'zz': 'Schmancy Blog'}
 
-        S = TranslatableSetting(inp, 'xx')
+        S = TranslatableSetting(inp)
         try:
             u = unicode(S)
         except NameError:  # Python 3

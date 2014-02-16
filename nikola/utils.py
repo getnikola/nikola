@@ -209,7 +209,7 @@ class TranslatableSetting(object):
     lang = 'en'
     default_lang = 'en'
 
-    def __init__(self, inp, default_lang):
+    def __init__(self, inp):
         """Initialize a translated setting.
 
         Valid inputs include:
@@ -219,8 +219,6 @@ class TranslatableSetting(object):
                                     if there is none, default_lang is used.
 
         """
-        self.default_lang = default_lang
-        self.lang = default_lang
         self.values = defaultdict()
 
         if isinstance(inp, dict):
