@@ -89,7 +89,7 @@ class CommandImportWordpress(Command, ImportMixin):
             'long': 'qtranslate',
             'default': False,
             'type': bool,
-            'help': "Will try to separate the language specific content when it has been generate with the qtranslate plugin (WARNING: you won't recover translated titles)", # actually translated titles don't see to be part of the wordpress export at the time of writing :(
+            'help': "Separate the language specific content as generate by qtranslate plugin", #  WARNING: won't recover translated titles that actually don't seem to be part of the wordpress XML export at the time of writing :(
         },
     ]
 
@@ -425,23 +425,22 @@ class CommandImportWordpress(Command, ImportMixin):
                and self.separate_qtranslate_content:
                 content_translations = separate_qtranslate_content(content)
             else:
-                content_translations = {"": self.transform_content(content)}
+                content_translations = {"": content}
             for lang,content in content_translations.items():
                 if lang:
-                    self.write_metadata(os.path.join(self.output_folder, out_folder,
-                                                     slug + '.' + lang + '.meta'),
-                                        title, slug, post_date, description, tags)
-                    self.write_content(
-                        os.path.join(self.output_folder,
-                                     out_folder, slug + '.' + lang + '.wp'),
-                        content)
+                    out_meta_filename = slug + '.' + lang + '.meta'
+                    out_content_filename = slug + '.' + lang + '.wp'
                 else:
-                    self.write_metadata(os.path.join(self.output_folder, out_folder,
-                                                     slug + '.meta'),
-                                        title, slug, post_date, description, tags)
-                    self.write_content(
-                        os.path.join(self.output_folder, out_folder, slug + '.wp'),
-                        content)
+                    out_meta_filename = slug + '.meta'
+                    out_content_filename = slug + '.wp'                    
+                content = self.transform_content(content)
+                self.write_metadata(os.path.join(self.output_folder, out_folder,
+                                                 out_meta_filename),
+                                    title, slug, post_date, description, tags)
+                self.write_content(
+                    os.path.join(self.output_folder,
+                                 out_folder, out_content_filename),
+                    content)
         else:
             LOGGER.warn('Not going to import "{0}" because it seems to contain'
                         ' no content.'.format(title))
@@ -476,17 +475,45 @@ def get_text_tag(tag, name, default):
 
 
 def separate_qtranslate_content(text):
-  """Parse the content of a wordpress post or page and separate the various language specific contents when they are delimited with qtranslate tags."""
-  qt_chunks = text.split("<!--:-->")
-  content_by_lang = {}
-  qt_start = "<!--:"
-  qt_start_len = 5
-  qt_start_with_lang_len = 7
-  qt_full_start_len = 10 # len("<!--:xx-->")
-  for c in qt_chunks:
-    if c.startswith(qt_start):
-      lang = c[qt_start_len:qt_start_with_lang_len]
-      content_by_lang[lang] = c[qt_full_start_len:]
-    else:
-      content_by_lang[""] = c
-  return content_by_lang
+    """Parse the content of a wordpress post or page and separate
+    the various language specific contents when they are delimited
+    with qtranslate tags: <!--:LL-->blabla<!--:-->"""
+    # TODO: uniformize qtranslate tags <!--/en--> => <!--:-->
+    qt_start = "<!--:"
+    qt_end = "-->"
+    qt_end_with_lang_len = 5
+    qt_chunks = text.split(qt_start)
+    content_by_lang = {}
+    common_txt_list = []
+    for c in qt_chunks:
+        if not c.strip():
+            continue
+        if c.startswith(qt_end):
+            # just after the end of a language specific section, there may
+            # be some piece of common text or tags, or just nothing
+            lang = "" # default language
+            c = c.lstrip(qt_end)
+            if not c:
+                continue
+        elif c[2:].startswith(qt_end):
+            # a language specific section (with language code at the begining)
+            lang = c[:2]
+            c = c[qt_end_with_lang_len:]
+        else:
+            # nowhere specific (maybe there is no language section in the
+            # currently parsed content)
+            lang = "" # default language
+        if not lang:
+            common_txt_list.append(c)
+            for l in content_by_lang.keys():
+                content_by_lang[l].append(c)
+        else:
+            content_by_lang[lang] = content_by_lang.get(lang,common_txt_list) + [c]
+    # in case there was no language specific section, just add the text
+    if common_txt_list and not content_by_lang:
+        content_by_lang[""] = common_txt_list
+    # Format back the list to simple text
+    for l in content_by_lang.keys():
+        content_by_lang[l] = " ".join(content_by_lang[l])
+    return content_by_lang
+

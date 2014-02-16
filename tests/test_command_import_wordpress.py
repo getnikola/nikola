@@ -64,33 +64,65 @@ Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !"
         content = """<!--:fr-->Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
 
 Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
-
-Veuillez utiliser pour cela le formulaire ci-dessous.
-
-[si-contact-form form='2']<!--:--><!--:en-->If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+<!--:--><!--:en-->If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
 
 Comments, questions and suggestions are welcome !
-
-Please use the contact form below.
-
-[si-contact-form form='2']<!--:-->"""
+<!--:-->"""
         content_translations = self.module.separate_qtranslate_content(content)
         self.assertEqual("""Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
 
 Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
-
-Veuillez utiliser pour cela le formulaire ci-dessous.
-
-[si-contact-form form='2']""",content_translations["fr"])
+""",content_translations["fr"])
         self.assertEqual("""If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
 
 Comments, questions and suggestions are welcome !
+""",content_translations["en"])
 
-Please use the contact form below.
+    def test_split_a_two_language_post_with_teaser(self):
+        content = """<!--:fr-->Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
 
-[si-contact-form form='2']""",content_translations["en"])
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
+<!--:--><!--:en-->If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
 
-    
+Comments, questions and suggestions are welcome !
+<!--:--><!--more--><!--:fr-->
+Plus de détails ici !
+<!--:--><!--:en-->
+More details here !
+<!--:-->"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual("""Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
+ <!--more--> 
+Plus de détails ici !
+""",content_translations["fr"])
+        self.assertEqual("""If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+
+Comments, questions and suggestions are welcome !
+ <!--more--> 
+More details here !
+""",content_translations["en"])
+        
+    def test_split_a_two_language_post_with_intermission(self):
+        content = """<!--:fr-->Voila voila<!--:-->COMMON<!--:en-->BLA<!--:-->"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual("Voila voila COMMON",content_translations["fr"])
+        self.assertEqual("COMMON BLA",content_translations["en"])
+
+    def test_split_a_two_language_post_with_uneven_repartition(self):
+        content = """<!--:fr-->Voila voila<!--:-->COMMON<!--:fr-->MOUF<!--:--><!--:en-->BLA<!--:-->"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual("Voila voila COMMON MOUF",content_translations["fr"])
+        self.assertEqual("COMMON BLA",content_translations["en"])
+
+    def test_split_a_two_language_post_with_uneven_repartition_bis(self):
+        content = """<!--:fr-->Voila voila<!--:--><!--:en-->BLA<!--:-->COMMON<!--:fr-->MOUF<!--:-->"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual("Voila voila COMMON MOUF",content_translations["fr"])
+        self.assertEqual("BLA COMMON",content_translations["en"])
+
+
 class CommandImportWordpressRunTest(BasicCommandImportWordpress):
     def setUp(self):
         super(self.__class__, self).setUp()
