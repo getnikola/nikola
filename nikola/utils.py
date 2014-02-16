@@ -207,6 +207,7 @@ class TranslatableSetting(object):
     # The only reason for this is backwards compatibility with existing themes.
     # It’s kinda hacky, but certainly worth the hassle.
     lang = 'en'
+    default_lang = 'en'
 
     def __init__(self, inp, default_lang):
         """Initialize a translated setting.
@@ -221,11 +222,12 @@ class TranslatableSetting(object):
         self.default_lang = default_lang
         self.lang = default_lang
         self.values = defaultdict()
+
         if isinstance(inp, dict):
-            self.values = inp
-            self.values.default_factory = lambda x: inp[self.default_lang]
+            self.values.update(inp)
+            self.values.default_factory = lambda: inp[self.default_lang]
         else:
-            self.values.default_factory = lambda x: inp
+            self.values.default_factory = lambda: inp
 
     def __call__(self, lang=None):
         """
