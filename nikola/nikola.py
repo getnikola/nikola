@@ -96,6 +96,7 @@ class Nikola(object):
         self.path_handlers = {
             'slug': self.slug_path,
             'post_path': self.post_path,
+            'filename': self.filename_path,
         }
 
         self.strict = False
@@ -806,6 +807,7 @@ class Nikola(object):
         * listing (name is the source code file name)
         * post_path (name is 1st element in a POSTS/PAGES tuple)
         * slug (name is the slug of a post or story)
+        * filename (name is the source filename of a post/story, in DEFAULT_LANG, relative to conf.py)
 
         The returned value is always a path relative to output, like
         "categories/whatever.html"
@@ -848,6 +850,16 @@ class Nikola(object):
         else:
             if len(results) > 1:
                 utils.LOGGER.warning('Ambiguous path request for slug: {0}'.format(name))
+            return [_f for _f in results[0].permalink(lang).split('/') if _f]
+
+    def filename_path(self, name, lang):
+        """filename path handler"""
+        results = [p for p in self.timeline if p.source_path == name]
+        if not results:
+            utils.LOGGER.warning("Can't resolve path request for filename: {0}".format(name))
+        else:
+            if len(results) > 1:
+                utils.LOGGER.error("Ambiguous path request for filename: {0}".format(name))
             return [_f for _f in results[0].permalink(lang).split('/') if _f]
 
     def register_path_handler(self, kind, f):
