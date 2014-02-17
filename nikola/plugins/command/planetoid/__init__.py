@@ -162,12 +162,12 @@ class Planetoid(Command, Task):
                 # TODO: log failure
                 return
             if parsed.feed.get('title'):
-                LOGGER.notice(parsed.feed.title)
+                LOGGER.info(parsed.feed.title)
             else:
-                LOGGER.notice(feed.url)
+                LOGGER.info(feed.url)
             feed.etag = parsed.get('etag', 'foo')
             modified = tuple(parsed.get('date_parsed', (1970, 1, 1)))[:6]
-            LOGGER.notice("==========>", modified)
+            LOGGER.info("==========>", modified)
             modified = datetime.datetime(*modified)
             feed.last_modified = modified
             feed.save()
@@ -176,14 +176,14 @@ class Planetoid(Command, Task):
                 # TODO log failure
                 return
             for entry_data in parsed.entries:
-                LOGGER.notice("=========================================")
+                LOGGER.info("=========================================")
                 date = entry_data.get('published_parsed', None)
                 if date is None:
                     date = entry_data.get('updated_parsed', None)
                 if date is None:
                     LOGGER.error("Can't parse date from:\n", entry_data)
                     return False
-                LOGGER.notice("DATE:===>", date)
+                LOGGER.info("DATE:===>", date)
                 date = datetime.datetime(*(date[:6]))
                 title = "%s: %s" % (feed.name, entry_data.get('title', 'Sin título'))
                 content = entry_data.get('content', None)
@@ -195,9 +195,9 @@ class Planetoid(Command, Task):
                     content = entry_data.get('summary', 'Sin contenido')
                 guid = str(entry_data.get('guid', entry_data.link))
                 link = entry_data.link
-                LOGGER.notice(repr([date, title]))
+                LOGGER.info(repr([date, title]))
                 e = list(Entry.select().where(Entry.guid == guid))
-                LOGGER.notice(
+                LOGGER.info(
                     repr(dict(
                         date=date,
                         title=title,

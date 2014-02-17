@@ -89,11 +89,11 @@ class CommandBootswatchTheme(Command):
         elif 'bootstrap3-gradients' in themes or 'bootstrap3-gradients-jinja' in themes:
             LOGGER.warn('"bootswatch_theme" doesn\'t work well with the bootstrap3-gradients family')
 
-        LOGGER.notice("Creating '{0}' theme from '{1}' and '{2}'".format(name, swatch, parent))
+        LOGGER.info("Creating '{0}' theme from '{1}' and '{2}'".format(name, swatch, parent))
         utils.makedirs(os.path.join('themes', name, 'assets', 'css'))
         for fname in ('bootstrap.min.css', 'bootstrap.css'):
             url = '/'.join(('http://bootswatch.com', version, swatch, fname))
-            LOGGER.notice("Downloading: " + url)
+            LOGGER.info("Downloading: " + url)
             data = requests.get(url).text
             with open(os.path.join('themes', name, 'assets', 'css', fname),
                       'wb+') as output:
@@ -101,5 +101,4 @@ class CommandBootswatchTheme(Command):
 
         with open(os.path.join('themes', name, 'parent'), 'wb+') as output:
             output.write(parent.encode('utf-8'))
-        LOGGER.notice('Theme created. Change the THEME setting to "{0}" to use '
-                      'it.'.format(name))
+        LOGGER.notice('Theme created.  Change the THEME setting to "{0}" to use it.'.format(name))

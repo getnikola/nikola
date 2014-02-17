@@ -131,11 +131,11 @@ class CommandInit(Command):
         else:
             if not options or not options.get('demo'):
                 self.create_empty_site(target)
-                LOGGER.notice('Created empty site at {0}.'.format(target))
+                LOGGER.info('Created empty site at {0}.'.format(target))
             else:
                 self.copy_sample_site(target)
-                LOGGER.notice("A new site with example data has been created at "
-                              "{0}.".format(target))
-                LOGGER.notice("See README.txt in that folder for more information.")
+                LOGGER.info("A new site with example data has been created at "
+                            "{0}.".format(target))
+                LOGGER.info("See README.txt in that folder for more information.")
 
             self.create_configuration(target)

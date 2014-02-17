@@ -76,7 +76,7 @@ class CommandDeploy(Command):
                     undeployed_posts.append(post)
 
         for command in self.site.config['DEPLOY_COMMANDS']:
-            self.logger.notice("==> {0}".format(command))
+            self.logger.info("==> {0}".format(command))
             try:
                 subprocess.check_call(command, shell=True)
             except subprocess.CalledProcessError as e:
@@ -84,7 +84,7 @@ class CommandDeploy(Command):
                                   'returned {1}'.format(e.cmd, e.returncode))
                 sys.exit(e.returncode)
 
-        self.logger.notice("Successful deployment")
+        self.logger.info("Successful deployment")
         tzinfo = pytz.timezone(self.site.config['TIMEZONE'])
         try:
             with open(timestamp_path, 'rb') as inf:
