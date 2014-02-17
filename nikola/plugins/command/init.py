@@ -126,16 +126,13 @@ class CommandInit(Command):
             print("Usage: nikola init folder [options]")
             return False
         target = args[0]
-        if target is None:
-            print(self.usage)
+        if not options or not options.get('demo'):
+            self.create_empty_site(target)
+            LOGGER.info('Created empty site at {0}.'.format(target))
         else:
-            if not options or not options.get('demo'):
-                self.create_empty_site(target)
-                LOGGER.info('Created empty site at {0}.'.format(target))
-            else:
-                self.copy_sample_site(target)
-                LOGGER.info("A new site with example data has been created at "
-                            "{0}.".format(target))
-                LOGGER.info("See README.txt in that folder for more information.")
+            self.copy_sample_site(target)
+            LOGGER.info("A new site with example data has been created at "
+                        "{0}.".format(target))
+            LOGGER.info("See README.txt in that folder for more information.")
 
-            self.create_configuration(target)
+        self.create_configuration(target)
