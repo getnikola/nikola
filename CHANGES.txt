@@ -10,7 +10,7 @@ Features
 * Added Hindi translation by Sean Pue
 * Livereload v2.1.0 is supported and frozen as the version to use due to backwards-incompatible updates (Issue #1023)
 * New link:///foo links which always point to absolute paths (/foo in that case) (Issue #986)
-* Bootstrap 3 has been updated to v3.1.0 (Issue #1015)
+* Bootstrap 3 has been updated to v3.1.1 (Issue #1015)
 * New --browser/-b option on the serve command to open instantly in a web browser (Issue #997)
 * SASS/LESS files and targets file will be processed from site root (Issue #941)
 
