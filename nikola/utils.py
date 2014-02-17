@@ -46,7 +46,7 @@ except ImportError:
     pass
 
 import logbook
-from logbook.more import ExceptionHandler
+from logbook.more import ExceptionHandler, ColorizedStderrHandler
 import pytz
 
 from . import DEBUG
@@ -54,6 +54,15 @@ from . import DEBUG
 
 class ApplicationWarning(Exception):
     pass
+
+
+class ColorfulStderrHandler(ColorizedStderrHandler):
+    """Stream handler with colors."""
+    _colorful = False
+
+    def should_colorize(self, record):
+        """Inform about colorization using the value obtained from Nikola."""
+        return self._colorful
 
 
 def get_logger(name, handlers):
@@ -67,7 +76,7 @@ def get_logger(name, handlers):
     return l
 
 
-STDERR_HANDLER = [logbook.StderrHandler(
+STDERR_HANDLER = [ColorfulStderrHandler(
     level=logbook.NOTICE if not DEBUG else logbook.DEBUG,
     format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
 )]

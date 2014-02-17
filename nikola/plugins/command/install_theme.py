@@ -26,7 +26,6 @@
 
 from __future__ import print_function
 import os
-import sys
 import codecs
 import json
 import shutil
@@ -163,7 +162,7 @@ class CommandInstallTheme(Command):
             LOGGER.notice('This theme has a sample config file.  Integrate it with yours in order to make this theme work!')
             print('Contents of the conf.py.sample file:\n')
             with codecs.open(confpypath, 'rb', 'utf-8') as fh:
-                if sys.platform == 'win32':
+                if self.site.colorful:
                     print(indent(pygments.highlight(
                         fh.read(), PythonLexer(), TerminalFormatter()),
                         4 * ' '))

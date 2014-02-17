@@ -60,6 +60,16 @@ def main(args):
         quiet = True
     global config
 
+    colorful = False
+    if sys.stderr.isatty():
+        colorful = True
+        try:
+            import colorama
+            colorama.init()
+        except ImportError:
+            if os.name == 'nt':
+                colorful = False
+
     root = get_root_dir()
     if root:
         os.chdir(root)
@@ -75,6 +85,8 @@ def main(args):
             LOGGER.error('In conf.py line {0}: {1}'.format(sys.exc_info()[2].tb_lineno, msg))
             sys.exit(1)
         config = {}
+
+    config.update({'__colorful__': colorful})
 
     site = Nikola(**config)
     return DoitNikola(site, quiet).run(args)

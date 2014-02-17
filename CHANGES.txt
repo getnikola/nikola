@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Log messages are colorized (colorama is required under Windows) (Issue #1044)
 * Template filters are configurable via the TEMPLATE_FILTERS config variable (Issue #1038)
 * Added Hindi translation by Sean Pue
 * New link:///foo links which always point to absolute paths (/foo in that case) (Issue #986)

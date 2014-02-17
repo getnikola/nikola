@@ -69,6 +69,7 @@ from .plugin_categories import (
     SignalHandler,
 )
 
+from .utils import ColorfulStderrHandler
 
 config_changed = utils.config_changed
 
@@ -114,8 +115,12 @@ class Nikola(object):
         self.loghandlers = []
         if not config:
             self.configured = False
+            self.colorful = False
         else:
             self.configured = True
+            self.colorful = config.pop('__colorful__', False)
+
+        ColorfulStderrHandler._colorful = self.colorful
 
         # Maintain API
         utils.generic_rss_renderer = self.generic_rss_renderer
