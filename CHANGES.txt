@@ -4,27 +4,35 @@ New in master
 Features
 --------
 
+* Fix filename encodings in WordPress imports (Issue #1053)
 * Log messages are colorized (colorama is required under Windows) (Issue #1044)
 * Template filters are configurable via the TEMPLATE_FILTERS config variable (Issue #1038)
 * Added Hindi translation by Sean Pue
+* Livereload v2.1.0 is supported and frozen as the version to use due to backwards-incompatible updates (Issue #1023)
 * New link:///foo links which always point to absolute paths (/foo in that case) (Issue #986)
+* Bootstrap 3 has been updated to v3.1.0 (Issue #1015)
 * New --browser/-b option on the serve command to open instantly in a web browser (Issue #997)
 * SASS/LESS files and targets file will be processed from site root (Issue #941)
 
 Bugfixes
 --------
 
+* Warn users about bootswatch_theme being incompatible with bootstrap3-gradients
 * nikola check supports URL_TYPE="absolute" (Issue #1046)
 * Fix URL_TYPE=absolute on non-root sites (Issue #1046)
 * Avoid running bundle tasks twice (Issue #1032)
-* Fix post links in RSS feeds (Issue #986)
+* Fix post links in RSS feeds for sites outside of webserver root (Issue #986)
 * Only run sitemap once (Issue #1032)
 * Fix a bug with some multilingual pages
 * Normalize paths (Issue #1028)
+* Fix drafts being leaked in feeds (Issues #934, #971)
 * If two tags generate the same slug, they are the same tag (Issue #1022)
+* Assume UTF-8 if user's locale doesn't have any encodings attached (Issue #1026 via #1021)
 * Support PRETTY_URLS for tag files (Issue #655)
-* Remove conflicting CSS code from rst.css (Issue #913)
-* Fix image URLs in galleries (Issue #986)
+* Support :linenos: and :number-lines: in listings (Issue #1010)
+* Support :linenos: in code blocks for Sphinx compatibility (Issue #1010)
+* Change code.css and rst.css to have sane output everywhere (Issues #913, #1009, #1050)
+* Fix image URLs in galleries for sites outside of webserver root (Issue #986)
 * Fix link:// in RSS contents (Issue #952)
 * HIDE_SOURCELINK was set to True sometimes (Issue #1004)
 * Properly import cool URIs from WordPress, instead of just slugify-ing the path (Issue #693)
