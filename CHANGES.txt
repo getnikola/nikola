@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Add link://filename/foo/bar.rst syntax to refer to the post generated from foo/bar.rst (Issue #1035)
 * Fix filename encodings in WordPress imports (Issue #1053)
 * Log messages are colorized (colorama is required under Windows) (Issue #1044)
 * Template filters are configurable via the TEMPLATE_FILTERS config variable (Issue #1038)
