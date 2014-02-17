@@ -64,13 +64,7 @@ class EmptyBuildTest(BaseTestCase):
     def build(self):
         """Build the site."""
         with cd(self.target_dir):
-            if self.__class__.__name__ in ('EmptyBuildTest', 'DemoBuildTest'):
-                stdout = sys.stdout
-                sys.stdout = sys.stderr
-                __main__.main(["build"])
-                sys.stdout = stdout
-            else:
-                __main__.main(["build"])
+            __main__.main(["build"])
 
     @classmethod
     def tearDownClass(self):
