@@ -220,12 +220,16 @@ class TranslatableSetting(object):
                                     if there is none, default_lang is used.
 
         """
+        self._inp = inp
         self.values = defaultdict()
 
         if isinstance(inp, dict):
+            self.translated = True
             self.values.update(inp)
             self.values.default_factory = lambda: inp[self.default_lang]
         else:
+            self.translated = False
+            self.values[self.default_lang] = inp
             self.values.default_factory = lambda: inp
 
     def get_lang(self):
