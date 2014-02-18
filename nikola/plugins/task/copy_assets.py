@@ -76,7 +76,7 @@ class CopyAssets(Task):
                 utils.makedirs(os.path.dirname(code_css_path))
                 with codecs.open(code_css_path, 'wb+', 'utf8') as outf:
                     outf.write(formatter.get_style_defs(['pre.code', 'div.code pre']))
-                    outf.write("table.codetable { width: 100%;} td.linenos {text-align: right; width: 4em;}")
+                    outf.write("\ntable.codetable { width: 100%;} td.linenos {text-align: right; width: 4em;}\n")
 
             task = {
                 'basename': self.name,
