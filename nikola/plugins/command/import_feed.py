@@ -100,9 +100,11 @@ class CommandImportFeed(Command, ImportMixin):
         context['BLOG_EMAIL'] = channel.feed.author_detail.get('email', '') if 'author_detail' in channel.feed else ''
         context['BLOG_AUTHOR'] = channel.feed.author_detail.get('name', '') if 'author_detail' in channel.feed else ''
 
-        context['POST_PAGES'] = '''(
-            ("posts/*.html", "posts", "post.tmpl", True),
-            ("stories/*.html", "stories", "story.tmpl", False),
+        context['POSTS'] = '''(
+            ("posts/*.html", "posts", "post.tmpl"),
+        )'''
+        context['PAGES'] = '''(
+            ("stories/*.html", "stories", "story.tmpl"),
         )'''
         context['COMPILERS'] = '''{
         "rest": ('.txt', '.rst'),
@@ -110,6 +112,8 @@ class CommandImportFeed(Command, ImportMixin):
         "html": ('.html', '.htm')
         }
         '''
+        context['COMMENT_SYSTEM'] = 'disqus'
+        context['COMMENT_SYSTEM_ID'] = 'nikolademo'
 
         return context
 

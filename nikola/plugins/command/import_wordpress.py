@@ -211,6 +211,9 @@ class CommandImportWordpress(Command, ImportMixin):
         context['SITE_URL'] = context['BASE_URL']
         context['THEME'] = 'bootstrap3'
 
+        context['COMMENT_SYSTEM'] = 'disqus'
+        context['COMMENT_SYSTEM_ID'] = 'nikolademo'
+
         author = channel.find('{{{0}}}author'.format(wordpress_namespace))
         context['BLOG_EMAIL'] = get_text_tag(
             author,

@@ -132,6 +132,8 @@ class CommandImportBlogger(Command, ImportMixin):
             }
             '''
         context['THEME'] = 'bootstrap3'
+        context['COMMENT_SYSTEM'] = 'disqus'
+        context['COMMENT_SYSTEM_ID'] = 'nikolademo'
 
         return context
 

@@ -28,6 +28,7 @@ from __future__ import print_function
 import os
 import shutil
 import codecs
+import json
 
 from mako.template import Template
 
@@ -65,6 +66,8 @@ class CommandInit(Command):
         'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
         'DEFAULT_LANG': "en",
         'THEME': 'bootstrap3',
+        'COMMENT_SYSTEM': 'disqus',
+        'COMMENT_SYSTEM_ID': 'nikolademo',
 
         'POSTS': """(
     ("posts/*.rst", "posts", "post.tmpl"),
@@ -92,8 +95,14 @@ class CommandInit(Command):
     # with many of the others.
     # "pandoc": ('.rst', '.md', '.txt'),
 }""",
-        'REDIRECTIONS': '[]',
+        'REDIRECTIONS': [],
     }
+
+    # In order to ensure proper escaping, all variables but the three
+    # pre-formatted ones are handled by json.dumps().
+    SAMPLE_CONF_PARSED = SAMPLE_CONF
+    SAMPLE_CONF_PARSED.update(dict((k, json.dumps(v)) for k, v in SAMPLE_CONF.items()
+                                   if k not in ('POSTS', 'PAGES', 'COMPILERS')))
 
     @classmethod
     def copy_sample_site(cls, target):
@@ -109,7 +118,7 @@ class CommandInit(Command):
         conf_template = Template(filename=template_path)
         conf_path = os.path.join(target, 'conf.py')
         with codecs.open(conf_path, 'w+', 'utf8') as fd:
-            fd.write(conf_template.render(**cls.SAMPLE_CONF))
+            fd.write(conf_template.render(**cls.SAMPLE_CONF_PARSED))
 
     @classmethod
     def create_empty_site(cls, target):
