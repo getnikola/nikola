@@ -296,6 +296,7 @@ class TranslatableSetting(object):
     def globformat(self, *args, **kwargs):
         for k in self.values:
             self.values[k] = self.values[k].format(*args, **kwargs)
+        return self
 
     def __add__(self, other):
         return self() + other
@@ -306,6 +307,7 @@ class TranslatableSetting(object):
     def __iadd__(self, other):
         for k in self.values:
             self.values[k] = self.values[k] + other
+        return self
 
     def __mul__(self, other):
         return self() * other
@@ -316,6 +318,7 @@ class TranslatableSetting(object):
     def __imul__(self, other):
         for k in self.values:
             self.values[k] = self.values[k] * other
+        return self
 
     def __mod__(self, other):
         return self() % other
@@ -326,6 +329,7 @@ class TranslatableSetting(object):
     def __imod__(self, other):
         for k in self.values:
             self.values[k] = self.values[k] % other
+        return self
 
     def __len__(self):
         return self().__len__()
