@@ -217,6 +217,9 @@ class TranslatableSetting(object):
         except AttributeError:
             return self().__getattribute__(attr)
 
+    def __dir__(self):
+        return list(set(self.__dict__).union(set(dir(str))))
+
     def __init__(self, inp):
         """Initialize a translated setting.
 
@@ -240,8 +243,11 @@ class TranslatableSetting(object):
             self.values.default_factory = lambda: inp
 
     def get_lang(self):
+        """Return the language that should be used to retrieve settings."""
         if self.lang:
             return self.lang
+        elif not self.translated:
+            return self.default_lang
         else:
             try:
                 return LocaleBorg().current_lang
@@ -269,10 +275,20 @@ class TranslatableSetting(object):
         """Return the value in the currently set language."""
         return self.values[self.get_lang()]
 
-    # We are reimplementing most string methods below.
+    def __repr__(self):
+        """Provide a sane __repr__()."""
+        if not self.translated:
+            return repr(self())
+        else:
+            header = '<TranslatableSetting> '
+            values = ['{0}={1!r}'.format(k, v) for k, v in self.values.items()]
+            return header + ', '.join(values)
 
-    def __format__(self, inp):
-        return self().__format__(inp)
+    # We are reimplementing most string methods below.
+    # (actually, we just have a string handle most stuff)
+
+    def __format__(self, format_spec):
+        return self().__format__(format_spec)
 
     def format(self, *args, **kwargs):
         return self().format(*args, **kwargs)
@@ -361,6 +377,7 @@ class TranslatableSetting(object):
             return self.values <= other.values
         else:
             return self() <= other
+
 
 class CustomEncoder(json.JSONEncoder):
     def default(self, obj):
