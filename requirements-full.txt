@@ -8,7 +8,7 @@ pyphen
 python-dateutil
 micawber
 pygal
-typogrify==2.0.2
+typogrify>=2.0.4
 phpserialize
 webassets
 ipython>=1.0.0
