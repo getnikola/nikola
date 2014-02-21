@@ -22,7 +22,7 @@ Nikola is extensible. Almost all its functionality is based on plugins,
 and you can add your own or replace the provided ones.
 
 Plugins consist of a metadata file (with ``.plugin`` extension) and
-a python module (a ``.py`` file) or package (a folder containing
+a Python module (a ``.py`` file) or package (a folder containing
 a ``__init__.py`` file.
 
 To use a plugin in your site, you just have to put it in a ``plugins``
@@ -76,7 +76,7 @@ When you run ``nikola --help`` you will see something like this::
 That will give you a list of all available commands in your version of Nikola.
 Each and every one of those is a plugin. Let's look at a typical example:
 
-First, the ``command_serve.plugin`` file:
+First, the ``serve.plugin`` file:
 
 .. code-block:: ini
 
@@ -96,7 +96,7 @@ First, the ``command_serve.plugin`` file:
           (and the .plugin file examples and explanations).
 
 For your own plugin, just change the values in a sensible way. The
-``Module`` will be used to find the matching python module, in this case
+``Module`` will be used to find the matching Python module, in this case
 ``serve.py``, from which this is the interesting bit:
 
 .. code-block:: python
@@ -274,9 +274,9 @@ These have access to the ``site`` object which contains your timeline and
 your configuration.
 
 The critical bit of Task plugins is their ``gen_tasks`` method, which ``yields``
-`doit tasks <http://pydoit.org/tasks.html>`_
+`doit tasks <http://pydoit.org/tasks.html>`_.
 
-The details of how to handle dependencies, etc. are a bit too much for this
+The details of how to handle dependencies, etc., are a bit too much for this
 document, so I'll just leave you with an example, the ``copy_assets`` task.
 First the ``task_copy_assets.plugin`` file, which you should copy and edit
 in the logical ways:
@@ -373,7 +373,7 @@ SignalHandler Plugins
 ---------------------
 
 These plugins extend the ``SignalHandler`` class and connect to one or more
-signals via `blinker <http://pythonhosted.org/blinker/>`_
+signals via `blinker <http://pythonhosted.org/blinker/>`_.
 
 The easiest way to do this is to reimplement ``set_site()`` and just connect to
 whatever signals you want there.
@@ -383,7 +383,7 @@ Currently Nikola emits the following signals:
 ``sighandlers_loaded``
     Right after SignalHandler plugin activation.
 ``initialized``
-    Right after plugin activation
+    Right after plugin activation.
 ``configured``
     When all the configuration file is processed. Note that plugins are activated before this is emitted.
 ``new_post``
