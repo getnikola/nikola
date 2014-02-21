@@ -210,6 +210,13 @@ class TranslatableSetting(object):
     # Note that this setting is global.  DO NOT set on a per-instance basis!
     default_lang = 'en'
 
+    def __getattribute__(self, attr):
+        """Return attributes, falling back to string attributes."""
+        try:
+            return super(TranslatableSetting, self).__getattribute__(attr)
+        except AttributeError:
+            return self().__getattribute__(attr)
+
     def __init__(self, inp):
         """Initialize a translated setting.
 
@@ -236,7 +243,10 @@ class TranslatableSetting(object):
         if self.lang:
             return self.lang
         else:
-            return LocaleBorg().current_lang
+            try:
+                return LocaleBorg().current_lang
+            except AttributeError:
+                return self.default_lang
 
     def __call__(self, lang=None):
         """
@@ -259,6 +269,98 @@ class TranslatableSetting(object):
         """Return the value in the currently set language."""
         return self.values[self.get_lang()]
 
+    # We are reimplementing most string methods below.
+
+    def __format__(self, inp):
+        return self().__format__(inp)
+
+    def format(self, *args, **kwargs):
+        return self().format(*args, **kwargs)
+
+    def globformat(self, *args, **kwargs):
+        for k in self.values:
+            self.values[k] = self.values[k].format(*args, **kwargs)
+
+    def __add__(self, other):
+        return self() + other
+
+    def __radd__(self, other):
+        return other + self()
+
+    def __iadd__(self, other):
+        for k in self.values:
+            self.values[k] = self.values[k] + other
+
+    def __mul__(self, other):
+        return self() * other
+
+    def __rmul__(self, other):
+        return other * self()
+
+    def __imul__(self, other):
+        for k in self.values:
+            self.values[k] = self.values[k] * other
+
+    def __mod__(self, other):
+        return self() % other
+
+    def __rmod__(self, other):
+        return other % self()
+
+    def __imod__(self, other):
+        for k in self.values:
+            self.values[k] = self.values[k] % other
+
+    def __len__(self):
+        return self().__len__()
+
+    def __getitem__(self, key):
+        return self().__getitem__(key)
+
+    def __getnewargs__(self):
+        return self().__getnewargs__()
+
+    def __getslice__(self, i, j):
+        return self().__getslice__(i, j)
+
+    def __contains__(self, item):
+        return self().__contains__(item)
+
+    def __eq__(self, other):
+        if isinstance(other, TranslatableSetting):
+            return self.values == other.values
+        else:
+            return self() == other
+
+    def __ne__(self, other):
+        if isinstance(other, TranslatableSetting):
+            return self.values != other.values
+        else:
+            return self() != other
+
+    def __gt__(self, other):
+        if isinstance(other, TranslatableSetting):
+            return self.values > other.values
+        else:
+            return self() > other
+
+    def __ge__(self, other):
+        if isinstance(other, TranslatableSetting):
+            return self.values >= other.values
+        else:
+            return self() >= other
+
+    def __lt__(self, other):
+        if isinstance(other, TranslatableSetting):
+            return self.values < other.values
+        else:
+            return self() < other
+
+    def __le__(self, other):
+        if isinstance(other, TranslatableSetting):
+            return self.values <= other.values
+        else:
+            return self() <= other
 
 class CustomEncoder(json.JSONEncoder):
     def default(self, obj):
