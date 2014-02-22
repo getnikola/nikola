@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Warn users about bootswatch_theme being incompatible with bootstrap3-gradients
 * Add link://filename/foo/bar.rst syntax to refer to the post generated from foo/bar.rst (Issue #1035)
 * Fix filename encodings in WordPress imports (Issue #1053)
 * Log messages are colorized (colorama is required under Windows) (Issue #1044)
@@ -18,7 +19,7 @@ Features
 Bugfixes
 --------
 
-* Warn users about bootswatch_theme being incompatible with bootstrap3-gradients
+* Make livereload actually rebuild the site when changes are made (Issue #1067)
 * nikola check supports URL_TYPE="absolute" and URL_TYPE="full_path" (Issue #1046)
 * Fix URL_TYPE=absolute and URL_TYPE=full_path on non-root sites (Issue #1046)
 * Avoid running bundle tasks twice (Issue #1032)
