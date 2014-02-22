@@ -332,6 +332,27 @@ class TestCheckAbsoluteSubFolder(TestCheck):
         self.assertTrue('<loc>http://getnikola.com/foo/index.html</loc>' in sitemap_data)
 
 
+class TestCheckFullPathSubFolder(TestCheckAbsoluteSubFolder):
+    """Validate links in a site which is:
+
+    * built in URL_TYPE="full_path"
+    * deployable to a subfolder (BASE_URL="http://getnikola.com/foo/")
+    """
+
+    @classmethod
+    def patch_site(self):
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with codecs.open(conf_path, "rb", "utf-8") as inf:
+            data = inf.read()
+            data = data.replace('SITE_URL = "http://getnikola.com/"',
+                                'SITE_URL = "http://getnikola.com/foo/"')
+            data = data.replace("# URL_TYPE = 'rel_path'",
+                                "URL_TYPE = 'full_path'")
+        with codecs.open(conf_path, "wb+", "utf8") as outf:
+            outf.write(data)
+            outf.flush()
+
+
 class TestCheckFailure(DemoBuildTest):
     """The demo build should pass 'nikola check'"""
 
