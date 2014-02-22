@@ -46,6 +46,7 @@ class BuildLess(Task):
     def gen_tasks(self):
         """Generate CSS out of LESS sources."""
         self.compiler_name = self.site.config['LESS_COMPILER']
+        self.compiler_options = self.site.config['LESS_OPTIONS']
 
         kw = {
             'cache_folder': self.site.config['CACHE_FOLDER'],
@@ -93,7 +94,7 @@ class BuildLess(Task):
             src = os.path.join(kw['cache_folder'], self.sources_folder, target)
             run_in_shell = sys.platform == 'win32'
             try:
-                compiled = subprocess.check_output([self.compiler_name, src], shell=run_in_shell)
+                compiled = subprocess.check_output([self.compiler_name] + self.compiler_options + [src], shell=run_in_shell)
             except OSError:
                 utils.req_missing([self.compiler_name],
                                   'build LESS files (and use this theme)',
