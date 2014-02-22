@@ -162,10 +162,8 @@ class CommandCheck(Command):
                 if url_type == 'rel_path':
                     target_filename = os.path.abspath(
                         os.path.join(os.path.dirname(filename), unquote(target)))
-                elif url_type == 'full_path':
-                    target_filename = os.path.abspath(
-                        os.path.join(os.path.dirname(filename), unquote(target)))
-                elif url_type == 'absolute':
+
+                elif url_type in ('full_path', 'absolute'):
                     target_filename = os.path.abspath(
                         os.path.join(os.path.dirname(filename), parsed.path))
                     if parsed.path.endswith('/'):  # abspath removes trailing slashes
