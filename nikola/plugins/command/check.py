@@ -162,6 +162,9 @@ class CommandCheck(Command):
                 if url_type == 'rel_path':
                     target_filename = os.path.abspath(
                         os.path.join(os.path.dirname(filename), unquote(target)))
+                elif url_type == 'full_path':
+                    target_filename = os.path.abspath(
+                        os.path.join(os.path.dirname(filename), unquote(target)))
                 elif url_type == 'absolute':
                     target_filename = os.path.abspath(
                         os.path.join(os.path.dirname(filename), parsed.path))

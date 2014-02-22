@@ -20,6 +20,7 @@ Bugfixes
 
 * Warn users about bootswatch_theme being incompatible with bootstrap3-gradients
 * nikola check supports URL_TYPE="absolute" (Issue #1046)
+* nikola check supports URL_TYPE="full_path" (Issue #1046)
 * Fix URL_TYPE=absolute on non-root sites (Issue #1046)
 * Avoid running bundle tasks twice (Issue #1032)
 * Fix post links in RSS feeds for sites outside of webserver root (Issue #986)
