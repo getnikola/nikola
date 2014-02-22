@@ -283,8 +283,16 @@ COMPILERS = ${COMPILERS}
 # Compiler to process LESS files.
 # LESS_COMPILER = 'lessc'
 
+# A list of options to pass to the LESS compiler.
+# Final command is: LESS_COMPILER LESS_OPTIONS file.less
+# LESS_OPTIONS = []
+
 # Compiler to process Sass files.
 # SASS_COMPILER = 'sass'
+
+# A list of options to pass to the Sass compiler.
+# Final command is: SASS_COMPILER SASS_OPTIONS file.s(a|c)ss
+# SASS_OPTIONS = []
 
 # #############################################################################
 # Image Gallery Options
