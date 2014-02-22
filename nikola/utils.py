@@ -689,9 +689,11 @@ def get_tzname(dt):
 
 
 def current_time(tzinfo=None):
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.utcnow()
     if tzinfo is not None:
-        dt = tzinfo.localize(dt)
+        dt = tzinfo.fromutc(dt)
+    else:
+        dt = pytz.UTC.localize(dt)
     return dt
 
 
