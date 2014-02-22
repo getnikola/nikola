@@ -92,7 +92,7 @@ class Nikola(object):
         'local_search',
         'render_mustache',
     ]
-    
+
     def __init__(self, **config):
         """Setup proper environment for running tasks."""
 
@@ -238,7 +238,7 @@ class Nikola(object):
             'DEMOTE_HEADERS': 1,
             'TRANSLATIONS_PATTERN': DEFAULT_TRANSLATIONS_PATTERN,
         }
-        
+
         self.config.update(config)
 
         # Translatability configuration.

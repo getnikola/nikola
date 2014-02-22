@@ -103,7 +103,7 @@ class CommandImportWordpress(Command, ImportMixin):
             'help': "The pattern for translation files names",
         },
     ]
-    
+
     def _execute(self, options={}, args=[]):
         """Import a WordPress blog from an export file into a Nikola site."""
         if not args:
@@ -132,10 +132,10 @@ class CommandImportWordpress(Command, ImportMixin):
         self.exclude_drafts = options.get('exclude_drafts', False)
         self.no_downloads = options.get('no_downloads', False)
 
-        self.separate_qtranslate_content = \
-                            options.get('separate_qtranslate_content')
+        self.separate_qtranslate_content \
+            = options.get('separate_qtranslate_content')
         self.translations_pattern = options.get('translations_pattern')
-        
+
         if not self.no_downloads:
             def show_info_about_mising_module(modulename):
                 LOGGER.error(
@@ -155,13 +155,13 @@ class CommandImportWordpress(Command, ImportMixin):
 
         channel = self.get_channel_from_file(self.wordpress_export_file)
         self.context = self.populate_context(channel)
-        conf_template = self.generate_base_site()        
-        
+        conf_template = self.generate_base_site()
+
         # If user  has specified a custom pattern for translation files we
         # need to fix the config
         if self.translations_pattern:
             self.context['TRANSLATIONS_PATTERN'] = self.translations_pattern
-        
+
         self.import_posts(channel)
 
         self.context['REDIRECTIONS'] = self.configure_redirections(
@@ -171,7 +171,7 @@ class CommandImportWordpress(Command, ImportMixin):
         rendered_template = conf_template.render(**self.context)
         rendered_template = re.sub('# REDIRECTIONS = ', 'REDIRECTIONS = ',
                                    rendered_template)
-        
+
         if self.timezone:
             rendered_template = re.sub('# TIMEZONE = \'UTC\'',
                                        'TIMEZONE = \'' + self.timezone + '\'',
@@ -264,7 +264,7 @@ class CommandImportWordpress(Command, ImportMixin):
         "html": ('.html', '.htm')
         }
         '''
-            
+
         return context
 
     def download_url_content_to_file(self, url, dst_path):
@@ -455,7 +455,7 @@ class CommandImportWordpress(Command, ImportMixin):
                     else:
                         out_content_filename \
                             = utils.get_translation_candidate(self.context,
-                                                              slug+".wp",lang)
+                                                              slug + ".wp", lang)
                     meta_slug = slug
                 else:
                     out_meta_filename = slug + '.meta'
