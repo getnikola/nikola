@@ -25,34 +25,36 @@ lang="${lang}">
 <!-- Menubar -->
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="${abs_link('/')}">${blog_title}</a>
-    </div>
-    <div class="collapse navbar-collapse navbar-ex1-collapse">
-        <ul class="nav navbar-nav">
-            ${bootstrap.html_navigation_links()}
-        </ul>
-        %if search_form:
-            ${search_form}
-        %endif
+    <div class="container-fluid"><!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="${abs_link('/')}">${blog_title}</a>
+        </div><!-- /.navbar-header -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                ${bootstrap.html_navigation_links()}
+            </ul>
+            %if search_form:
+                ${search_form}
+            %endif
 
-        <ul class="nav navbar-nav navbar-right">
-            <%block name="belowtitle">
-            %if len(translations) > 1:
-                <li>${bootstrap.html_translations()}</li>
-            %endif
-            </%block>
-            % if not hide_sourcelink:
-                <%block name="sourcelink"></%block>
-            %endif
-        </ul>
-    </div><!-- /.navbar-collapse -->
+            <ul class="nav navbar-nav navbar-right">
+                <%block name="belowtitle">
+                %if len(translations) > 1:
+                    <li>${bootstrap.html_translations()}</li>
+                %endif
+                </%block>
+                % if not hide_sourcelink:
+                    <%block name="sourcelink"></%block>
+                %endif
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
 </nav>
 
 <!-- End of Menubar -->
