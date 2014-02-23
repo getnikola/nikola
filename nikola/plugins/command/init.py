@@ -83,10 +83,10 @@ SAMPLE_CONF = {
 
 # In order to ensure proper escaping, all variables but the three
 # pre-formatted ones are handled by json.dumps().
-def parse_config():
+def parse_config(config):
     """Parse sample config with JSON."""
-    p = SAMPLE_CONF
-    p.update(dict((k, json.dumps(v)) for k, v in SAMPLE_CONF.items()
+    p = config.copy()
+    p.update(dict((k, json.dumps(v)) for k, v in p.items()
              if k not in ('POSTS', 'PAGES', 'COMPILERS')))
     return p
 
@@ -124,7 +124,7 @@ class CommandInit(Command):
         conf_template = Template(filename=template_path)
         conf_path = os.path.join(target, 'conf.py')
         with codecs.open(conf_path, 'w+', 'utf8') as fd:
-            fd.write(conf_template.render(**parse_config()))
+            fd.write(conf_template.render(**parse_config(SAMPLE_CONF)))
 
     @classmethod
     def create_empty_site(cls, target):

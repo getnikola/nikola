@@ -51,7 +51,7 @@ from nikola import utils
 from nikola.utils import req_missing
 from nikola.plugins.basic_import import ImportMixin, links
 from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
-from nikola.plugins.command.init import parse_config
+from nikola.plugins.command.init import SAMPLE_CONF, parse_config
 
 LOGGER = utils.get_logger('import_wordpress', utils.STDERR_HANDLER)
 
@@ -168,7 +168,7 @@ class CommandImportWordpress(Command, ImportMixin):
             self.url_map)
         self.write_urlmap_csv(
             os.path.join(self.output_folder, 'url_map.csv'), self.url_map)
-        rendered_template = conf_template.render(**self.context)
+        rendered_template = conf_template.render(**parse_config(self.context))
         rendered_template = re.sub('# REDIRECTIONS = ', 'REDIRECTIONS = ',
                                    rendered_template)
 
@@ -222,7 +222,7 @@ class CommandImportWordpress(Command, ImportMixin):
     def populate_context(channel):
         wordpress_namespace = channel.nsmap['wp']
 
-        context = parse_config()
+        context = SAMPLE_CONF.copy()
         context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')[:2]
         context['TRANSLATIONS_PATTERN'] = DEFAULT_TRANSLATIONS_PATTERN
         context['BLOG_TITLE'] = get_text_tag(channel, 'title',

@@ -48,8 +48,8 @@ class ImportMixin(object):
 
     name = "import_mixin"
     needs_config = False
-    doc_usage = "[options] wordpress_export_file"
-    doc_purpose = "import a wordpress dump."
+    doc_usage = "[options] export_file"
+    doc_purpose = "import a dump from a different engine."
     cmd_options = [
         {
             'name': 'output_folder',
@@ -93,7 +93,7 @@ class ImportMixin(object):
         else:
             self.import_into_existing_site = True
             utils.LOGGER.notice('The folder {0} already exists - assuming that this is a '
-                                'already existing nikola site.'.format(self.output_folder))
+                                'already existing Nikola site.'.format(self.output_folder))
 
         filename = os.path.join(os.path.dirname(utils.__file__), 'conf.py.in')
         # The 'strict_undefined=True' will give the missing symbol name if any,
