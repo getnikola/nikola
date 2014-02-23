@@ -80,6 +80,7 @@ SAMPLE_CONF = {
     'REDIRECTIONS': [],
 }
 
+
 # In order to ensure proper escaping, all variables but the three
 # pre-formatted ones are handled by json.dumps().
 def parse_config():
