@@ -51,6 +51,79 @@ Easy.
         self.assertEqual(expected_xml, self.import_command._glue_xml_lines(xml))
 
 
+class TestQTranslateContentSeparation(BasicCommandImportWordpress):
+
+    def test_conserves_qtranslate_less_post(self):
+        content = """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual(1, len(content_translations))
+        self.assertEqual(content, content_translations[""])
+
+    def test_split_a_two_language_post(self):
+        content = """<!--:fr-->Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
+<!--:--><!--:en-->If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+
+Comments, questions and suggestions are welcome !
+<!--:-->"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual("""Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
+""", content_translations["fr"])
+        self.assertEqual("""If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+
+Comments, questions and suggestions are welcome !
+""", content_translations["en"])
+
+    def test_split_a_two_language_post_with_teaser(self):
+        content = """<!--:fr-->Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
+<!--:--><!--:en-->If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+
+Comments, questions and suggestions are welcome !
+<!--:--><!--more--><!--:fr-->
+Plus de détails ici !
+<!--:--><!--:en-->
+More details here !
+<!--:-->"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual("""Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
+ <!--more--> \n\
+Plus de détails ici !
+""", content_translations["fr"])
+        self.assertEqual("""If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+
+Comments, questions and suggestions are welcome !
+ <!--more--> \n\
+More details here !
+""", content_translations["en"])
+
+    def test_split_a_two_language_post_with_intermission(self):
+        content = """<!--:fr-->Voila voila<!--:-->COMMON<!--:en-->BLA<!--:-->"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual("Voila voila COMMON", content_translations["fr"])
+        self.assertEqual("COMMON BLA", content_translations["en"])
+
+    def test_split_a_two_language_post_with_uneven_repartition(self):
+        content = """<!--:fr-->Voila voila<!--:-->COMMON<!--:fr-->MOUF<!--:--><!--:en-->BLA<!--:-->"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual("Voila voila COMMON MOUF", content_translations["fr"])
+        self.assertEqual("COMMON BLA", content_translations["en"])
+
+    def test_split_a_two_language_post_with_uneven_repartition_bis(self):
+        content = """<!--:fr-->Voila voila<!--:--><!--:en-->BLA<!--:-->COMMON<!--:fr-->MOUF<!--:-->"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual("Voila voila COMMON MOUF", content_translations["fr"])
+        self.assertEqual("BLA COMMON", content_translations["en"])
+
+
 class CommandImportWordpressRunTest(BasicCommandImportWordpress):
     def setUp(self):
         super(self.__class__, self).setUp()

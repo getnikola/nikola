@@ -75,6 +75,10 @@ config_changed = utils.config_changed
 
 __all__ = ['Nikola']
 
+# Default pattern for translation files' names
+# WARNING: it is also hard-coded in conf.py.in
+DEFAULT_TRANSLATIONS_PATTERN = '{path}.{ext}.{lang}'
+
 
 class Nikola(object):
 
@@ -232,7 +236,7 @@ class Nikola(object):
             'SCHEDULE_FORCE_TODAY': False,
             'LOGGING_HANDLERS': {'stderr': {'loglevel': 'WARNING', 'bubble': True}},
             'DEMOTE_HEADERS': 1,
-            'TRANSLATIONS_PATTERN': '{path}.{ext}.{lang}',
+            'TRANSLATIONS_PATTERN': DEFAULT_TRANSLATIONS_PATTERN,
         }
 
         self.config.update(config)
