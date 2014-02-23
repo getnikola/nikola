@@ -51,7 +51,7 @@ from nikola import utils
 from nikola.utils import req_missing
 from nikola.plugins.basic_import import ImportMixin, links
 from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
-from nikola.plugins.command.init import SAMPLE_CONF, parse_config
+from nikola.plugins.command.init import SAMPLE_CONF, prepare_config
 
 LOGGER = utils.get_logger('import_wordpress', utils.STDERR_HANDLER)
 
@@ -168,7 +168,7 @@ class CommandImportWordpress(Command, ImportMixin):
             self.url_map)
         self.write_urlmap_csv(
             os.path.join(self.output_folder, 'url_map.csv'), self.url_map)
-        rendered_template = conf_template.render(**parse_config(self.context))
+        rendered_template = conf_template.render(**prepare_config(self.context))
         rendered_template = re.sub('# REDIRECTIONS = ', 'REDIRECTIONS = ',
                                    rendered_template)
 

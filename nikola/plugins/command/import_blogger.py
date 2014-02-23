@@ -43,7 +43,7 @@ from nikola.plugin_categories import Command
 from nikola import utils
 from nikola.utils import req_missing
 from nikola.plugins.basic_import import ImportMixin
-from nikola.plugins.command.init import SAMPLE_CONF, parse_config
+from nikola.plugins.command.init import SAMPLE_CONF, prepare_config
 
 LOGGER = utils.get_logger('import_blogger', utils.STDERR_HANDLER)
 
@@ -96,7 +96,7 @@ class CommandImportBlogger(Command, ImportMixin):
         conf_out_path = self.get_configuration_output_path()
         # if it tracebacks here, look a comment in
         # basic_import.Import_Mixin.generate_base_site
-        conf_template_render = conf_template.render(**parse_config(self.context))
+        conf_template_render = conf_template.render(**prepare_config(self.context))
         self.write_configuration(conf_out_path, conf_template_render)
 
     @classmethod
