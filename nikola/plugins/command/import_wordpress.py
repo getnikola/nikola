@@ -132,8 +132,7 @@ class CommandImportWordpress(Command, ImportMixin):
         self.exclude_drafts = options.get('exclude_drafts', False)
         self.no_downloads = options.get('no_downloads', False)
 
-        self.separate_qtranslate_content \
-            = options.get('separate_qtranslate_content')
+        self.separate_qtranslate_content = options.get('separate_qtranslate_content')
         self.translations_pattern = options.get('translations_pattern')
 
         if not self.no_downloads:
