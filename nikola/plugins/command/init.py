@@ -33,14 +33,65 @@ import json
 from mako.template import Template
 
 import nikola
+from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger, makedirs, STDERR_HANDLER
 from nikola.winutils import fix_git_symlinked
 
 LOGGER = get_logger('init', STDERR_HANDLER)
 
+SAMPLE_CONF = {
+    'BLOG_AUTHOR': "Your Name",
+    'BLOG_TITLE': "Demo Site",
+    'SITE_URL': "http://getnikola.com/",
+    'BLOG_EMAIL': "joe@demo.site",
+    'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
+    'DEFAULT_LANG': "en",
+    'THEME': 'bootstrap3',
+    'COMMENT_SYSTEM': 'disqus',
+    'COMMENT_SYSTEM_ID': 'nikolademo',
+    'TRANSLATIONS_PATTERN': DEFAULT_TRANSLATIONS_PATTERN,
+    'POSTS': """(
+("posts/*.rst", "posts", "post.tmpl"),
+("posts/*.txt", "posts", "post.tmpl"),
+)""",
+    'PAGES': """(
+("stories/*.rst", "stories", "story.tmpl"),
+("stories/*.txt", "stories", "story.tmpl"),
+)""",
+    'COMPILERS': """{
+"rest": ('.rst', '.txt'),
+"markdown": ('.md', '.mdown', '.markdown'),
+"textile": ('.textile',),
+"txt2tags": ('.t2t',),
+"bbcode": ('.bb',),
+"wiki": ('.wiki',),
+"ipynb": ('.ipynb',),
+"html": ('.html', '.htm'),
+# PHP files are rendered the usual way (i.e. with the full templates).
+# The resulting files have .php extensions, making it possible to run
+# them without reconfiguring your server to recognize them.
+"php": ('.php',),
+# Pandoc detects the input from the source filename
+# but is disabled by default as it would conflict
+# with many of the others.
+# "pandoc": ('.rst', '.md', '.txt'),
+}""",
+    'REDIRECTIONS': [],
+}
+
+# In order to ensure proper escaping, all variables but the three
+# pre-formatted ones are handled by json.dumps().
+def parse_config():
+    """Parse sample config with JSON."""
+    p = SAMPLE_CONF
+    p.update(dict((k, json.dumps(v)) for k, v in SAMPLE_CONF.items()
+             if k not in ('POSTS', 'PAGES', 'COMPILERS')))
+    return p
+
 
 class CommandInit(Command):
+
     """Create a new site."""
 
     name = "init"
@@ -58,52 +109,6 @@ class CommandInit(Command):
         }
     ]
 
-    SAMPLE_CONF = {
-        'BLOG_AUTHOR': "Your Name",
-        'BLOG_TITLE': "Demo Site",
-        'SITE_URL': "http://getnikola.com/",
-        'BLOG_EMAIL': "joe@demo.site",
-        'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
-        'DEFAULT_LANG': "en",
-        'THEME': 'bootstrap3',
-        'COMMENT_SYSTEM': 'disqus',
-        'COMMENT_SYSTEM_ID': 'nikolademo',
-
-        'POSTS': """(
-    ("posts/*.rst", "posts", "post.tmpl"),
-    ("posts/*.txt", "posts", "post.tmpl"),
-)""",
-        'PAGES': """(
-    ("stories/*.rst", "stories", "story.tmpl"),
-    ("stories/*.txt", "stories", "story.tmpl"),
-)""",
-        'COMPILERS': """{
-    "rest": ('.rst', '.txt'),
-    "markdown": ('.md', '.mdown', '.markdown'),
-    "textile": ('.textile',),
-    "txt2tags": ('.t2t',),
-    "bbcode": ('.bb',),
-    "wiki": ('.wiki',),
-    "ipynb": ('.ipynb',),
-    "html": ('.html', '.htm'),
-    # PHP files are rendered the usual way (i.e. with the full templates).
-    # The resulting files have .php extensions, making it possible to run
-    # them without reconfiguring your server to recognize them.
-    "php": ('.php',),
-    # Pandoc detects the input from the source filename
-    # but is disabled by default as it would conflict
-    # with many of the others.
-    # "pandoc": ('.rst', '.md', '.txt'),
-}""",
-        'REDIRECTIONS': [],
-    }
-
-    # In order to ensure proper escaping, all variables but the three
-    # pre-formatted ones are handled by json.dumps().
-    SAMPLE_CONF_PARSED = SAMPLE_CONF
-    SAMPLE_CONF_PARSED.update(dict((k, json.dumps(v)) for k, v in SAMPLE_CONF.items()
-                                   if k not in ('POSTS', 'PAGES', 'COMPILERS')))
-
     @classmethod
     def copy_sample_site(cls, target):
         lib_path = cls.get_path_to_nikola_modules()
@@ -118,7 +123,7 @@ class CommandInit(Command):
         conf_template = Template(filename=template_path)
         conf_path = os.path.join(target, 'conf.py')
         with codecs.open(conf_path, 'w+', 'utf8') as fd:
-            fd.write(conf_template.render(**cls.SAMPLE_CONF_PARSED))
+            fd.write(conf_template.render(**parse_config()))
 
     @classmethod
     def create_empty_site(cls, target):
