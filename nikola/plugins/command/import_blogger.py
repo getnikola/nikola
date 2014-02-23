@@ -43,6 +43,7 @@ from nikola.plugin_categories import Command
 from nikola import utils
 from nikola.utils import req_missing
 from nikola.plugins.basic_import import ImportMixin
+from nikola.plugins.command.init import parse_config
 
 LOGGER = utils.get_logger('import_blogger', utils.STDERR_HANDLER)
 
@@ -106,8 +107,7 @@ class CommandImportBlogger(Command, ImportMixin):
 
     @staticmethod
     def populate_context(channel):
-        # may need changes when the template conf.py.in changes
-        context = {}
+        context = parse_config()
         context['DEFAULT_LANG'] = 'en'  # blogger doesn't include the language
                                         # in the dump
         context['BLOG_TITLE'] = channel.feed.title
@@ -131,9 +131,6 @@ class CommandImportBlogger(Command, ImportMixin):
             "html": ('.html', '.htm')
             }
             '''
-        context['THEME'] = 'bootstrap3'
-        context['COMMENT_SYSTEM'] = 'disqus'
-        context['COMMENT_SYSTEM_ID'] = 'nikolademo'
 
         return context
 

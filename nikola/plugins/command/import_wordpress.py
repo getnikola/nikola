@@ -51,6 +51,7 @@ from nikola import utils
 from nikola.utils import req_missing
 from nikola.plugins.basic_import import ImportMixin, links
 from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
+from nikola.plugins.command.init import parse_config
 
 LOGGER = utils.get_logger('import_wordpress', utils.STDERR_HANDLER)
 
@@ -221,7 +222,7 @@ class CommandImportWordpress(Command, ImportMixin):
     def populate_context(channel):
         wordpress_namespace = channel.nsmap['wp']
 
-        context = {}
+        context = parse_config()
         context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')[:2]
         context['TRANSLATIONS_PATTERN'] = DEFAULT_TRANSLATIONS_PATTERN
         context['BLOG_TITLE'] = get_text_tag(channel, 'title',
@@ -237,10 +238,6 @@ class CommandImportWordpress(Command, ImportMixin):
         if not context['BASE_URL'].endswith('/'):
             context['BASE_URL'] += '/'
         context['SITE_URL'] = context['BASE_URL']
-        context['THEME'] = 'bootstrap3'
-
-        context['COMMENT_SYSTEM'] = 'disqus'
-        context['COMMENT_SYSTEM_ID'] = 'nikolademo'
 
         author = channel.find('{{{0}}}author'.format(wordpress_namespace))
         context['BLOG_EMAIL'] = get_text_tag(
