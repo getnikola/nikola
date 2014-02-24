@@ -19,14 +19,10 @@ def recursive_glob(path, pattern):
 
 def task_flake8():
     """flake8 - static check for python files"""
-    for fname in recursive_glob('.', '*.py'):
-        if fname.startswith('./cache'):
-            continue
-        yield {
-            'name': fname,
-            'actions': ['flake8 --ignore=E501 {0}'.format(fname)],
-            'file_dep': [fname],
-        }
+    yield {
+        'name': os.getcwd(),
+        'actions': ['flake8 --ignore=E501 .'],
+    }
 
 
 def task_locale():
@@ -64,7 +60,7 @@ def task_test():
     """run unit-tests using nose"""
     return {
         'task_dep': ['locale'],
-        'actions': ['nosetests'],
+        'actions': ['nosetests --with-doctest --doctest-options=+NORMALIZE_WHITESPACE --logging-filter=-yapsy'],
     }
 
 
