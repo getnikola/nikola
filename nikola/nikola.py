@@ -558,7 +558,7 @@ class Nikola(object):
                 self.config['THEME'] = theme_replacements[self.config['THEME']]
                 if self.config['THEME'] == 'oldfashioned':
                     utils.LOGGER.warn('''You may need to install the "oldfashioned" theme '''
-                                      '''from themes.nikola.ralsina.com.ar because it's not '''
+                                      '''from themes.getnikola.com because it's not '''
                                       '''shipped by default anymore.''')
                 utils.LOGGER.warn('Please change your THEME setting.')
             try:
