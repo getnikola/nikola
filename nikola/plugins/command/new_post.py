@@ -35,7 +35,9 @@ from blinker import signal
 from nikola.plugin_categories import Command
 from nikola import utils
 
-LOGGER = utils.get_logger('new_post', utils.STDERR_HANDLER)
+POSTLOGGER = utils.get_logger('new_post', utils.STDERR_HANDLER)
+PAGELOGGER = utils.get_logger('new_page', utils.STDERR_HANDLER)
+LOGGER = POSTLOGGER
 
 
 def filter_post_pages(compiler, is_post, compilers, post_pages):
@@ -134,7 +136,7 @@ class CommandNewPost(Command):
             'long': 'page',
             'type': bool,
             'default': False,
-            'help': 'Create a page instead of a blog post.'
+            'help': 'Create a page instead of a blog post. (see also: `nikola new_page`)'
         },
         {
             'name': 'title',
@@ -142,36 +144,36 @@ class CommandNewPost(Command):
             'long': 'title',
             'type': str,
             'default': '',
-            'help': 'Title for the page/post.'
+            'help': 'Title for the post.'
         },
         {
             'name': 'tags',
             'long': 'tags',
             'type': str,
             'default': '',
-            'help': 'Comma-separated tags for the page/post.'
+            'help': 'Comma-separated tags for the post.'
         },
         {
             'name': 'onefile',
             'short': '1',
             'type': bool,
             'default': False,
-            'help': 'Create post with embedded metadata (single file format)'
+            'help': 'Create the post with embedded metadata (single file format)'
         },
         {
             'name': 'twofile',
             'short': '2',
             'type': bool,
             'default': False,
-            'help': 'Create post with separate metadata (two file format)'
+            'help': 'Create the post with separate metadata (two file format)'
         },
         {
-            'name': 'post_format',
+            'name': 'content_format',
             'short': 'f',
             'long': 'format',
             'type': str,
             'default': '',
-            'help': 'Markup format for post, one of rest, markdown, wiki, '
+            'help': 'Markup format for the post, one of rest, markdown, wiki, '
                     'bbcode, html, textile, txt2tags',
         },
         {
@@ -179,13 +181,14 @@ class CommandNewPost(Command):
             'short': 's',
             'type': bool,
             'default': False,
-            'help': 'Schedule post based on recurrence rule'
+            'help': 'Schedule the post based on recurrence rule'
         },
 
     ]
 
     def _execute(self, options, args):
         """Create a new post or page."""
+        global LOGGER
         compiler_names = [p.name for p in
                           self.site.plugin_manager.getPluginsOfCategory(
                               "PageCompiler")]
@@ -198,38 +201,46 @@ class CommandNewPost(Command):
         else:
             path = None
 
+        # Even though stuff was split into `new_page`, it’s easier to do it
+        # here not to duplicate the code.
         is_page = options.get('is_page', False)
         is_post = not is_page
+        content_type = 'page' if is_page else 'post'
         title = options['title'] or None
         tags = options['tags']
         onefile = options['onefile']
         twofile = options['twofile']
+
+        if is_page:
+            LOGGER = PAGELOGGER
+        else:
+            LOGGER = POSTLOGGER
 
         if twofile:
             onefile = False
         if not onefile and not twofile:
             onefile = self.site.config.get('ONE_FILE_POSTS', True)
 
-        post_format = options['post_format']
+        content_format = options['content_format']
 
-        if not post_format:  # Issue #400
-            post_format = get_default_compiler(
+        if not content_format:  # Issue #400
+            content_format = get_default_compiler(
                 is_post,
                 self.site.config['COMPILERS'],
                 self.site.config['post_pages'])
 
-        if post_format not in compiler_names:
-            LOGGER.error("Unknown post format " + post_format)
+        if content_format not in compiler_names:
+            LOGGER.error("Unknown {0} format {1}".format(content_type, content_format))
             return
         compiler_plugin = self.site.plugin_manager.getPluginByName(
-            post_format, "PageCompiler").plugin_object
+            content_format, "PageCompiler").plugin_object
 
         # Guess where we should put this
-        entry = filter_post_pages(post_format, is_post,
+        entry = filter_post_pages(content_format, is_post,
                                   self.site.config['COMPILERS'],
                                   self.site.config['post_pages'])
 
-        print("Creating New Post")
+        print("Creating New {0}".format(content_type.title()))
         print("-----------------\n")
         if title is None:
             print("Enter title: ", end='')
@@ -247,7 +258,7 @@ class CommandNewPost(Command):
             if isinstance(path, utils.bytes_str):
                 path = path.decode(sys.stdin.encoding)
             slug = utils.slugify(os.path.splitext(os.path.basename(path))[0])
-        # Calculate the date to use for the post
+        # Calculate the date to use for the content
         schedule = options['schedule'] or self.site.config['SCHEDULE_ALL']
         rule = self.site.config['SCHEDULE_RULE']
         force_today = self.site.config['SCHEDULE_FORCE_TODAY']
@@ -275,7 +286,7 @@ class CommandNewPost(Command):
         metadata = self.site.config['ADDITIONAL_METADATA']
         compiler_plugin.create_post(
             txt_path, onefile, title=title,
-            slug=slug, date=date, tags=tags, **metadata)
+            slug=slug, date=date, tags=tags, is_page=is_page, **metadata)
 
         event = dict(path=txt_path)
 
@@ -283,9 +294,9 @@ class CommandNewPost(Command):
             with codecs.open(meta_path, "wb+", "utf8") as fd:
                 fd.write('\n'.join(data))
             with codecs.open(txt_path, "wb+", "utf8") as fd:
-                fd.write("Write your post here.")
-            LOGGER.info("Your post's metadata is at: {0}".format(meta_path))
+                fd.write("Write your {0} here.".format(content_type))
+            LOGGER.info("Your {0}'s metadata is at: {1}".format(content_type, meta_path))
             event['meta_path'] = meta_path
-        LOGGER.info("Your post's text is at: {0}".format(txt_path))
+        LOGGER.info("Your {0}'s text is at: {1}".format(content_type, txt_path))
 
-        signal('new_post').send(self, **event)
+        signal('new_' + content_type).send(self, **event)
