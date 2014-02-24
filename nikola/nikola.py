@@ -355,10 +355,10 @@ class Nikola(object):
             self.config['STRIP_INDEXES'] = config['STRIP_INDEX_HTML']
 
         # PRETTY_URLS defaults to enabling STRIP_INDEXES unless explicitly disabled
-        if config.get('PRETTY_URLS', False) and 'STRIP_INDEXES' not in config:
+        if self.config.get('PRETTY_URLS') and 'STRIP_INDEXES' not in config:
             self.config['STRIP_INDEXES'] = True
 
-        if not config.get('COPY_SOURCES'):
+        if not self.config.get('COPY_SOURCES'):
             self.config['HIDE_SOURCELINK'] = True
 
         self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
