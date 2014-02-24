@@ -66,7 +66,7 @@ class CompileIPynb(PageCompiler):
             (body, resources) = exportHtml.from_notebook_node(nb_json)
             out_file.write(body)
 
-    def create_post(self, path, onefile=False, **kw):
+    def create_post(self, path, onefile=False, is_page=False, **kw):
         metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
@@ -78,7 +78,7 @@ class CompileIPynb(PageCompiler):
                                 metadata['date'], metadata['tags'],
                                 metadata['link'],
                                 metadata['description'], metadata['type'])))
-        print("Your post's metadata is at: ", meta_path)
+        print("Your {0}'s metadata is at: {1}".format('page' if is_page else 'post', meta_path))
         with codecs.open(path, "wb+", "utf8") as fd:
             fd.write("""{
  "metadata": {
