@@ -195,7 +195,7 @@ class Post(object):
         self.is_mathjax = 'mathjax' in self.tags
 
     def __repr__(self):
-        return self.source_path
+        return '<Post: {0}>'.format(self.source_path)
 
     def _has_pretty_url(self, lang):
         if self.pretty_urls and \
