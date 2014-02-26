@@ -241,40 +241,6 @@ class Nikola(object):
 
         self.config.update(config)
 
-        # Translatability configuration.
-        utils.TranslatableSetting.default_lang = self.config['DEFAULT_LANG']
-
-        TRANSLATABLE_SETTINGS = ('BLOG_AUTHOR',
-                                 'BLOG_TITLE',
-                                 'BLOG_DESCRIPTION',
-                                 'LICENSE',
-                                 'CONTENT_FOOTER',
-                                 'SOCIAL_BUTTONS_CODE',
-                                 'SEARCH_FORM',
-                                 'BODY_END',
-                                 'EXTRA_HEAD_DATA',)
-
-        for i in TRANSLATABLE_SETTINGS:
-            try:
-                self.config[i] = utils.TranslatableSetting(self.config[i])
-            except KeyError:
-                pass
-
-        # Handle CONTENT_FOOTER properly.
-        # Because we format it in our config by default, AND it uses
-        # BLOG_AUTHOR and LICENSE (which are translatable), we need to fix it.
-        def fix_content_footer(brokenvar):
-            if brokenvar in self.config and self.config[brokenvar].translated:
-                blangs = self.config[brokenvar].values
-                clangs = self.config['CONTENT_FOOTER'].values
-                tlangs = set(list(blangs.keys()) + list(clangs.keys()))
-                new = dict((l, blangs[l]) for l in tlangs)
-                for l in tlangs:
-                    clangs[l] = clangs[l].replace(str(self.config[brokenvar]._inp), new[l])
-
-        fix_content_footer('BLOG_AUTHOR')
-        fix_content_footer('LICENSE')
-
         # Make sure we have pyphen installed if we are using it
         if self.config.get('HYPHENATE') and pyphen is None:
             utils.LOGGER.warn('To use the hyphenation, you have to install '
