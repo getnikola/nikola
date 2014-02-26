@@ -487,6 +487,11 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['navigation_links'] = utils.Functionary(list, self.config['DEFAULT_LANG'])
         for k, v in self.config.get('NAVIGATION_LINKS', {}).items():
             self._GLOBAL_CONTEXT['navigation_links'][k] = v
+
+        # avoid #1082 by making sure all keys in navigation_links are read once
+        for k in self._GLOBAL_CONTEXT['translations']:
+            self._GLOBAL_CONTEXT['navigation_links'][k]
+
         # TODO: remove on v7
         # Compatibility alias
         self._GLOBAL_CONTEXT['sidebar_links'] = self._GLOBAL_CONTEXT['navigation_links']

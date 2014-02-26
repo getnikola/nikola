@@ -21,6 +21,7 @@ Features
 Bugfixes
 --------
 
+* Avoid undefined behaviour if NAVIGATION_LINKS is missing keys for a translation (Issue #1082)
 * Make livereload actually rebuild the site when changes are made (Issue #1067)
 * nikola check supports URL_TYPE="absolute" and URL_TYPE="full_path" (Issue #1046)
 * Fix URL_TYPE=absolute and URL_TYPE=full_path on non-root sites (Issue #1046)
