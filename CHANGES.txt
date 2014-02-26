@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Add `nikola new_page` command (equivalent to `nikola new_post -p`) (Issue #1060)
 * Add LESS_OPTIONS and SASS_OPTIONS for specifying additional parameters to LESS/Sass compilers (Issue #1020)
 * Warn users about bootswatch_theme being incompatible with bootstrap3-gradients
 * Add link://filename/foo/bar.rst syntax to refer to the post generated from foo/bar.rst (Issue #1035)

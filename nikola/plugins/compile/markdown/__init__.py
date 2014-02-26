@@ -81,7 +81,7 @@ class CompileMarkdown(PageCompiler):
             output = markdown(data, self.extensions)
             out_file.write(output)
 
-    def create_post(self, path, onefile=False, **kw):
+    def create_post(self, path, onefile=False, is_page=False, **kw):
         metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
@@ -92,4 +92,4 @@ class CompileMarkdown(PageCompiler):
                 for k, v in metadata.items():
                     fd.write('.. {0}: {1}\n'.format(k, v))
                 fd.write('-->\n\n')
-            fd.write("Write your post here.")
+            fd.write("Write your {0} here.".format('page' if is_page else 'post'))

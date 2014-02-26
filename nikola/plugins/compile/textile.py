@@ -62,7 +62,7 @@ class CompileTextile(PageCompiler):
             output = textile(data, head_offset=1)
             out_file.write(output)
 
-    def create_post(self, path, onefile=False, **kw):
+    def create_post(self, path, onefile=False, is_page=False, **kw):
         metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
@@ -73,4 +73,4 @@ class CompileTextile(PageCompiler):
                 for k, v in metadata.items():
                     fd.write('.. {0}: {1}\n'.format(k, v))
                 fd.write('--></notextile>\n\n')
-            fd.write("\nWrite your post here.")
+            fd.write("\nWrite your {0} here.".format('page' if is_page else 'post'))
