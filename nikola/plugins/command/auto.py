@@ -61,7 +61,7 @@ class CommandAuto(Command):
         try:
             from livereload import Server
         except ImportError:
-            req_missing(['livereload>=2.1.0'], 'use the "auto" command')
+            req_missing(['livereload==2.1.0'], 'use the "auto" command')
             return
 
         # Run an initial build so we are up-to-date
