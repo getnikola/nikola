@@ -76,7 +76,6 @@ config_changed = utils.config_changed
 __all__ = ['Nikola']
 
 # Default pattern for translation files' names
-# WARNING: it is also hard-coded in conf.py.in
 DEFAULT_TRANSLATIONS_PATTERN = '{path}.{ext}.{lang}'
 
 

@@ -43,6 +43,7 @@ from nikola.plugin_categories import Command
 from nikola import utils
 from nikola.utils import req_missing
 from nikola.plugins.basic_import import ImportMixin
+from nikola.plugins.command.init import SAMPLE_CONF, prepare_config
 
 LOGGER = utils.get_logger('import_blogger', utils.STDERR_HANDLER)
 
@@ -95,8 +96,8 @@ class CommandImportBlogger(Command, ImportMixin):
         conf_out_path = self.get_configuration_output_path()
         # if it tracebacks here, look a comment in
         # basic_import.Import_Mixin.generate_base_site
-        conf_termplate_render = conf_template.render(**self.context)
-        self.write_configuration(conf_out_path, conf_termplate_render)
+        conf_template_render = conf_template.render(**prepare_config(self.context))
+        self.write_configuration(conf_out_path, conf_template_render)
 
     @classmethod
     def get_channel_from_file(cls, filename):
@@ -106,8 +107,7 @@ class CommandImportBlogger(Command, ImportMixin):
 
     @staticmethod
     def populate_context(channel):
-        # may need changes when the template conf.py.in changes
-        context = {}
+        context = SAMPLE_CONF.copy()
         context['DEFAULT_LANG'] = 'en'  # blogger doesn't include the language
                                         # in the dump
         context['BLOG_TITLE'] = channel.feed.title
@@ -131,9 +131,6 @@ class CommandImportBlogger(Command, ImportMixin):
             "html": ('.html', '.htm')
             }
             '''
-        context['THEME'] = 'bootstrap3'
-        context['COMMENT_SYSTEM'] = 'disqus'
-        context['COMMENT_SYSTEM_ID'] = 'nikolademo'
 
         return context
 
