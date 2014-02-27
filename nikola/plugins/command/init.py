@@ -28,7 +28,7 @@ from __future__ import print_function
 import os
 import shutil
 import codecs
-import json
+import pprint
 
 from mako.template import Template
 
@@ -82,11 +82,11 @@ SAMPLE_CONF = {
 
 
 # In order to ensure proper escaping, all variables but the three
-# pre-formatted ones are handled by json.dumps().
+# pre-formatted ones are handled by pprint.pformat()
 def prepare_config(config):
-    """Parse sample config with JSON."""
+    """Parse sample config with pprint."""
     p = config.copy()
-    p.update(dict((k, json.dumps(v)) for k, v in p.items()
+    p.update(dict((k, pprint.pformat(v)) for k, v in p.items()
              if k not in ('POSTS', 'PAGES', 'COMPILERS')))
     return p
 
