@@ -92,7 +92,8 @@ class CommandDeploy(Command):
                 if tzinfo:
                     last_deploy = last_deploy.replace(tzinfo=tzinfo)
                 clean = False
-        except Exception:
+        except (IOError, Exception) as e:
+            self.logger.debug("Problem when reading `{0}`: {1}".format(timestamp_path, e))
             last_deploy = datetime(1970, 1, 1)
             if tzinfo:
                 last_deploy = last_deploy.replace(tzinfo=tzinfo)
