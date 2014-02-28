@@ -8,11 +8,12 @@ Features
 * Add LESS_OPTIONS and SASS_OPTIONS for specifying additional parameters to LESS/Sass compilers (Issue #1020)
 * Warn users about bootswatch_theme being incompatible with bootstrap3-gradients
 * Add link://filename/foo/bar.rst syntax to refer to the post generated from foo/bar.rst (Issue #1035)
-* Fix filename encodings in WordPress imports (Issue #1053)
 * Log messages are colorized (colorama is required under Windows) (Issue #1044)
 * Template filters are configurable via the TEMPLATE_FILTERS config variable (Issue #1038)
 * Added Hindi translation by Sean Pue
 * Livereload v2.1.0 is supported and frozen as the version to use due to backwards-incompatible updates (Issue #1023)
+* Support :linenos: and :number-lines: in listings (Issue #1010)
+* Support :linenos: in code blocks for Sphinx compatibility (Issue #1010)
 * New link:///foo links which always point to absolute paths (/foo in that case) (Issue #986)
 * Bootstrap 3 has been updated to v3.1.1 (Issue #1015)
 * New --browser/-b option on the serve command to open instantly in a web browser (Issue #997)
@@ -23,6 +24,7 @@ Bugfixes
 
 * Avoid undefined behaviour if NAVIGATION_LINKS is missing keys for a translation (Issue #1082)
 * Make livereload actually rebuild the site when changes are made (Issue #1067)
+* Fix filename encodings in WordPress imports (Issue #1053)
 * nikola check supports URL_TYPE="absolute" and URL_TYPE="full_path" (Issue #1046)
 * Fix URL_TYPE=absolute and URL_TYPE=full_path on non-root sites (Issue #1046)
 * Avoid running bundle tasks twice (Issue #1032)
@@ -34,8 +36,6 @@ Bugfixes
 * If two tags generate the same slug, they are the same tag (Issue #1022)
 * Assume UTF-8 if user's locale doesn't have any encodings attached (Issue #1026 via #1021)
 * Support PRETTY_URLS for tag files (Issue #655)
-* Support :linenos: and :number-lines: in listings (Issue #1010)
-* Support :linenos: in code blocks for Sphinx compatibility (Issue #1010)
 * Change code.css and rst.css to have sane output everywhere (Issues #913, #1009, #1050)
 * Fix image URLs in galleries for sites outside of webserver root (Issue #986)
 * Fix link:// in RSS contents (Issue #952)
