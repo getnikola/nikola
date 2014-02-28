@@ -85,21 +85,16 @@ class CommandDeploy(Command):
                 sys.exit(e.returncode)
 
         self.logger.info("Successful deployment")
-        tzinfo = pytz.timezone(self.site.config['TIMEZONE'])
         try:
             with codecs.open(timestamp_path, 'rb', 'utf8') as inf:
                 last_deploy = datetime.strptime(inf.read().strip(), "%Y-%m-%dT%H:%M:%S.%f")
-                if tzinfo:
-                    last_deploy = last_deploy.replace(tzinfo=tzinfo)
                 clean = False
         except (IOError, Exception) as e:
             self.logger.debug("Problem when reading `{0}`: {1}".format(timestamp_path, e))
             last_deploy = datetime(1970, 1, 1)
-            if tzinfo:
-                last_deploy = last_deploy.replace(tzinfo=tzinfo)
             clean = True
 
-        new_deploy = datetime.now()
+        new_deploy = datetime.utcnow()
         self._emit_deploy_event(last_deploy, new_deploy, clean, undeployed_posts)
 
         # Store timestamp of successful deployment
@@ -130,9 +125,11 @@ class CommandDeploy(Command):
             'undeployed': undeployed
         }
 
+        tzinfo = pytz.timezone(self.site.config['TIMEZONE'])
+
         deployed = [
             entry for entry in self.site.timeline
-            if entry.date > last_deploy and entry not in undeployed
+            if entry.date > (last_deploy.replace(tzinfo=tzinfo) if tzinfo else last_deploy) and entry not in undeployed
         ]
 
         event['deployed'] = deployed
