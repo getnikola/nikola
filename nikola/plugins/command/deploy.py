@@ -87,8 +87,8 @@ class CommandDeploy(Command):
         self.logger.info("Successful deployment")
         tzinfo = pytz.timezone(self.site.config['TIMEZONE'])
         try:
-            with open(timestamp_path, 'rb') as inf:
-                last_deploy = literal_eval(inf.read().strip())
+            with codecs.open(timestamp_path, 'rb', 'utf8') as inf:
+                last_deploy = datetime.strptime(inf.read().strip(), "%Y-%m-%dT%H:%M:%S.%f")
                 if tzinfo:
                     last_deploy = last_deploy.replace(tzinfo=tzinfo)
                 clean = False
@@ -104,7 +104,7 @@ class CommandDeploy(Command):
 
         # Store timestamp of successful deployment
         with codecs.open(timestamp_path, 'wb+', 'utf8') as outf:
-            outf.write(repr(new_deploy))
+            outf.write(new_deploy.isoformat())
 
     def _emit_deploy_event(self, last_deploy, new_deploy, clean=False, undeployed=None):
         """ Emit events for all timeline entries newer than last deploy.
