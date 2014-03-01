@@ -1,4 +1,4 @@
-New in master
+New in v6.4.0
 =============
 
 Features
