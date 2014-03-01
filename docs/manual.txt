@@ -1319,6 +1319,19 @@ You can also embed playlists, via the `soundcloud_playlist` directive which work
 
     .. soundcloud_playlist:: 9411706
 
+
+Spotify
+~~~~~~~
+
+Spotify now supports an embed player for songs and playlists. Just copy the Spotify URI by
+right-clicking on the song and selecting ``Copy Spotify URI`` to get a link like this:
+
+    spotify:track:3lO1h0KPfhlXl2fSjaTcnh
+
+And then you embed the link like this:
+
+    .. spotify:: spotify:track:3lO1h0KPfhlXl2fSjaTcnh
+
 Code
 ~~~~
 
