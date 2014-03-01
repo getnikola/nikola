@@ -1,0 +1,10 @@
+[Core]
+Name = rest_spotify
+Module = spotify
+
+[Documentation]
+Author = Leandro Poblet
+Version = 0.1
+Website = http://getnikola.com
+Description = Spotify directive
+
