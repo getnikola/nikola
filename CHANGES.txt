@@ -22,6 +22,7 @@ Features
 Bugfixes
 --------
 
+* lastdeploy time recording was broken, changed to ISO format (Issue #1083)
 * Avoid undefined behaviour if NAVIGATION_LINKS is missing keys for a translation (Issue #1082)
 * Make livereload actually rebuild the site when changes are made (Issue #1067)
 * Fix filename encodings in WordPress imports (Issue #1053)
@@ -43,7 +44,6 @@ Bugfixes
 * Properly import cool URIs from WordPress, instead of just slugify-ing the path (Issue #693)
 * Fixed SASS/LESS errors when more than one theme in chain has a targets file (Issue #941)
 * Guard against empty list-items in base templates (Issue #936)
-* lastdeploy time recording not working (changed to ISO format) (Issue #1083)
 
 New in v6.3.0
 =============
