@@ -490,10 +490,11 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # <!-- End of social buttons -->
 # """
 
-# Hide link to source for the posts?
-# HIDE_SOURCELINK = False
+# Show link to source for the posts?
+# Formerly known as HIDE_SOURCELINK (reverse)
+# SHOW_SOURCELINK = True
 # Copy the source files for your pages?
-# Setting it to False implies HIDE_SOURCELINK = True
+# Setting it to False implies SHOW_SOURCELINK = False
 # COPY_SOURCES = True
 
 # Modify the number of Post per Index Page

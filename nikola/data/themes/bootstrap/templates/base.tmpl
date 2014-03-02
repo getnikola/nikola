@@ -51,7 +51,7 @@ lang="${lang}">
                     <li>${base.html_translations()}</li>
                 %endif
                 </%block>
-                % if not hide_sourcelink:
+                % if show_sourcelink:
                     <li><%block name="sourcelink"></%block></li>
                 %endif
                 </ul>

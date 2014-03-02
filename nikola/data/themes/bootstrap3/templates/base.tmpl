@@ -49,7 +49,7 @@ lang="${lang}">
                     <li>${bootstrap.html_translations()}</li>
                 %endif
                 </%block>
-                % if not hide_sourcelink:
+                % if show_sourcelink:
                     <%block name="sourcelink"></%block>
                 %endif
             </ul>
