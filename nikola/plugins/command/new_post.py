@@ -31,6 +31,7 @@ import os
 import sys
 
 from blinker import signal
+import pytz
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -82,7 +83,7 @@ def get_default_compiler(is_post, compilers, post_pages):
     return 'rest'
 
 
-def get_date(schedule=False, rule=None, last_date=None, force_today=False):
+def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=None):
     """Returns a date stamp, given a recurrence rule.
 
     schedule - bool:
@@ -97,9 +98,13 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False):
     force_today - bool:
         tries to schedule a post to today, if possible, even if the scheduled
         time has already passed in the day.
+
+    tz - tzinfo:
+        the timezone used for getting the current time.
+
     """
 
-    date = now = datetime.datetime.now()
+    date = now = datetime.datetime.now(tz)
     if schedule:
         try:
             from dateutil import rrule
@@ -265,7 +270,8 @@ class CommandNewPost(Command):
         self.site.scan_posts()
         timeline = self.site.timeline
         last_date = None if not timeline else timeline[0].date
-        date = get_date(schedule, rule, last_date, force_today)
+        tz = pytz.timezone(self.site.config['TIMEZONE'])
+        date = get_date(schedule, rule, last_date, force_today, tz)
         data = [title, slug, date, tags]
         output_path = os.path.dirname(entry[0])
         meta_path = os.path.join(output_path, slug + ".meta")
