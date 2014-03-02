@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Expose the SITE object in templates (Issue #1091)
+
 Bugfixes
 --------
 
