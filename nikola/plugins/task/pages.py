@@ -40,13 +40,13 @@ class RenderPages(Task):
             "post_pages": self.site.config["post_pages"],
             "translations": self.site.config["TRANSLATIONS"],
             "filters": self.site.config["FILTERS"],
-            "hide_untranslated_posts": self.site.config['HIDE_UNTRANSLATED_POSTS'],
+            "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
         }
         self.site.scan_posts()
         yield self.group_task()
         for lang in kw["translations"]:
             for post in self.site.timeline:
-                if kw["hide_untranslated_posts"] and not post.is_translation_available(lang):
+                if not kw["show_untranslated_posts"] and not post.is_translation_available(lang):
                     continue
                 for task in self.site.generic_page_renderer(lang, post,
                                                             kw["filters"]):

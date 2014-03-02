@@ -55,7 +55,7 @@ class GenerateRSS(Task):
             "output_folder": self.site.config["OUTPUT_FOLDER"],
             "rss_teasers": self.site.config["RSS_TEASERS"],
             "rss_plain": self.site.config["RSS_PLAIN"],
-            "hide_untranslated_posts": self.site.config['HIDE_UNTRANSLATED_POSTS'],
+            "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "feed_length": self.site.config['FEED_LENGTH'],
         }
         self.site.scan_posts()
@@ -69,10 +69,10 @@ class GenerateRSS(Task):
             output_name = os.path.join(kw['output_folder'],
                                        self.site.path("rss", None, lang))
             deps = []
-            if kw["hide_untranslated_posts"]:
-                posts = [x for x in self.site.posts if x.is_translation_available(lang)][:10]
-            else:
+            if kw["show_untranslated_posts"]:
                 posts = self.site.posts[:10]
+            else:
+                posts = [x for x in self.site.posts if x.is_translation_available(lang)][:10]
             for post in posts:
                 deps += post.deps(lang)
 

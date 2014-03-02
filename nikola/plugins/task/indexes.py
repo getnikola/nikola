@@ -54,7 +54,7 @@ class Indexes(Task):
             "index_teasers": self.site.config['INDEX_TEASERS'],
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
-            "hide_untranslated_posts": self.site.config['HIDE_UNTRANSLATED_POSTS'],
+            "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "indexes_title": self.site.config['INDEXES_TITLE'],
             "indexes_pages": self.site.config['INDEXES_PAGES'],
             "indexes_pages_main": self.site.config['INDEXES_PAGES_MAIN'],
@@ -66,10 +66,10 @@ class Indexes(Task):
         for lang in kw["translations"]:
             # Split in smaller lists
             lists = []
-            if kw["hide_untranslated_posts"]:
-                filtered_posts = [x for x in posts if x.is_translation_available(lang)]
-            else:
+            if kw["show_untranslated_posts"]:
                 filtered_posts = posts
+            else:
+                filtered_posts = [x for x in posts if x.is_translation_available(lang)]
             lists.append(filtered_posts[:kw["index_display_post_count"]])
             filtered_posts = filtered_posts[kw["index_display_post_count"]:]
             while filtered_posts:

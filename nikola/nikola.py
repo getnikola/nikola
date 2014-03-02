@@ -178,7 +178,6 @@ class Nikola(object):
             'GZIP_COMMAND': None,
             'GZIP_FILES': False,
             'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js', '.json', '.xml'),
-            'HIDE_UNTRANSLATED_POSTS': False,
             'HYPHENATE': False,
             'INDEX_DISPLAY_POST_COUNT': 10,
             'INDEX_FILE': 'index.html',
@@ -213,6 +212,7 @@ class Nikola(object):
             'SASS_OPTIONS': [],
             'SEARCH_FORM': '',
             'SHOW_SOURCELINK': True,
+            'SHOW_UNTRANSLATED_POSTS': True,
             'SLUG_TAG_PATH': True,
             'SOCIAL_BUTTONS_CODE': SOCIAL_BUTTONS_CODE,
             'SITE_URL': 'http://getnikola.com/',
@@ -329,6 +329,14 @@ class Nikola(object):
             if 'SHOW_SOURCELINK' in config:
                 utils.LOGGER.warn('HIDE_SOURCELINK conflicts with SHOW_SOURCELINK, ignoring HIDE_SOURCELINK.')
             self.config['SHOW_SOURCELINK'] = not config['HIDE_SOURCELINK']
+
+        # HIDE_UNTRANSLATED_POSTS has been replaced with the reversed SHOW_UNTRANSLATED_POSTS
+        # TODO: remove on v8
+        if 'HIDE_UNTRANSLATED_POSTS' in config:
+            utils.LOGGER.warn('The HIDE_UNTRANSLATED_POSTS option is deprecated, use SHOW_UNTRANSLATED_POSTS instead.')
+            if 'SHOW_UNTRANSLATED_POSTS' in config:
+                utils.LOGGER.warn('HIDE_UNTRANSLATED_POSTS conflicts with SHOW_UNTRANSLATED_POSTS, ignoring HIDE_UNTRANSLATED_POSTS.')
+            self.config['SHOW_UNTRANSLATED_POSTS'] = not config['HIDE_UNTRANSLATED_POSTS']
 
         # PRETTY_URLS defaults to enabling STRIP_INDEXES unless explicitly disabled
         if self.config.get('PRETTY_URLS') and 'STRIP_INDEXES' not in config:
