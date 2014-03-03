@@ -322,7 +322,7 @@ class Nikola(object):
             utils.LOGGER.warn('You should configure STRIP_INDEXES instead of STRIP_INDEX_HTML')
             self.config['STRIP_INDEXES'] = config['STRIP_INDEX_HTML']
 
-        # HIDE_SOURCELINK has been replaced with the reversed SHOW_SOURCELINK
+        # HIDE_SOURCELINK has been replaced with the inverted SHOW_SOURCELINK
         # TODO: remove on v8
         if 'HIDE_SOURCELINK' in config:
             utils.LOGGER.warn('The HIDE_SOURCELINK option is deprecated, use SHOW_SOURCELINK instead.')
@@ -330,7 +330,7 @@ class Nikola(object):
                 utils.LOGGER.warn('HIDE_SOURCELINK conflicts with SHOW_SOURCELINK, ignoring HIDE_SOURCELINK.')
             self.config['SHOW_SOURCELINK'] = not config['HIDE_SOURCELINK']
 
-        # HIDE_UNTRANSLATED_POSTS has been replaced with the reversed SHOW_UNTRANSLATED_POSTS
+        # HIDE_UNTRANSLATED_POSTS has been replaced with the inverted SHOW_UNTRANSLATED_POSTS
         # TODO: remove on v8
         if 'HIDE_UNTRANSLATED_POSTS' in config:
             utils.LOGGER.warn('The HIDE_UNTRANSLATED_POSTS option is deprecated, use SHOW_UNTRANSLATED_POSTS instead.')
