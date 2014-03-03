@@ -73,8 +73,7 @@ class Archive(Task):
                 context["permalink"] = self.site.link("archive", year, lang)
                 if not kw["create_monthly_archive"]:
                     template_name = "list_post.tmpl"
-                    post_list = [self.site.global_data[post] for post in posts]
-                    post_list.sort(key=lambda a: a.date)
+                    post_list = sorted(posts, key=lambda a: a.date)
                     post_list.reverse()
                     context["posts"] = post_list
                 else:  # Monthly archives, just list the months
@@ -106,8 +105,7 @@ class Archive(Task):
                     kw['output_folder'], self.site.path("archive", yearmonth,
                                                         lang))
                 year, month = yearmonth.split('/')
-                post_list = [self.site.global_data[post] for post in posts]
-                post_list.sort(key=lambda a: a.date)
+                post_list = sorted(posts, key=lambda a: a.date)
                 post_list.reverse()
                 context = {}
                 context["lang"] = lang

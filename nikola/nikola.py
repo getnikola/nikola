@@ -1020,13 +1020,14 @@ class Nikola(object):
                         template_name,
                         self.get_compiler(base_path)
                     )
+                    self.timeline.append(post)
                     self.global_data[post.source_path] = post
                     if post.use_in_feeds:
-                        self.posts.append(post.source_path)
+                        self.posts.append(post)
                         self.posts_per_year[
-                            str(post.date.year)].append(post.source_path)
+                            str(post.date.year)].append(post)
                         self.posts_per_month[
-                            '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post.source_path)
+                            '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post)
                         for tag in post.alltags:
                             if utils.slugify(tag) in slugged_tags:
                                 if tag not in self.posts_per_tag:
@@ -1034,26 +1035,29 @@ class Nikola(object):
                                     other_tag = [k for k in self.posts_per_tag.keys() if k.lower() == tag.lower()][0]
                                     utils.LOGGER.error('You have tags that are too similar: {0} and {1}'.format(tag, other_tag))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
-                                    utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join(self.posts_per_tag[other_tag])))
+                                    utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.posts_per_tag[other_tag]])))
                                     quit = True
                             else:
                                 slugged_tags.add(utils.slugify(tag))
-                            self.posts_per_tag[tag].append(post.source_path)
-                        self.posts_per_category[post.meta('category')].append(post.source_path)
+                            self.posts_per_tag[tag].append(post)
+                        self.posts_per_category[post.meta('category')].append(post)
                     else:
                         self.pages.append(post)
                     self.post_per_file[post.destination_path(lang=lang)] = post
                     self.post_per_file[post.destination_path(lang=lang, extension=post.source_ext())] = post
 
-        for name, post in list(self.global_data.items()):
-            self.timeline.append(post)
+        # Sort everything.
         self.timeline.sort(key=lambda p: p.date)
         self.timeline.reverse()
-        post_timeline = [p for p in self.timeline if p.use_in_feeds]
-        for i, p in enumerate(post_timeline[1:]):
-            p.next_post = post_timeline[i]
-        for i, p in enumerate(post_timeline[:-1]):
-            p.prev_post = post_timeline[i + 1]
+        self.posts.sort(key=lambda p: p.date)
+        self.posts.reverse()
+        self.pages.sort(key=lambda p: p.date)
+        self.pages.reverse()
+
+        for i, p in enumerate(self.posts[1:]):
+            p.next_post = self.posts[i]
+        for i, p in enumerate(self.posts[:-1]):
+            p.prev_post = self.posts[i + 1]
         self._scanned = True
         print("done!", file=sys.stderr)
         if quit:
