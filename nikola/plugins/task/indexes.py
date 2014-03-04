@@ -62,7 +62,7 @@ class Indexes(Task):
         }
 
         template_name = "index.tmpl"
-        posts = [x for x in self.site.timeline if x.use_in_feeds]
+        posts = self.site.posts
         for lang in kw["translations"]:
             # Split in smaller lists
             lists = []
