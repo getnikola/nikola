@@ -201,48 +201,19 @@ This is currently lacking on detail. Considering the niche Nikola is aimed at,
 I suspect that's not a problem yet. So, when I say "get", the specific details
 of how to "get" something for your specific operating system are left to you.
 
-The short version is: ``pip install nikola``
+The short version is::
+
+    pip install nikola
 
 Note that you need Python v2.6 or newer OR v3.3 or newer.
 
-For some features it may give you an error message telling you that you need to
-install something else. For example, if it tells you you need ``requests``::
+Some features require **extra dependencies**.  You can install them all in bulk
+by doing::
 
-   pip install requests
+    pip install nikola[extras]
 
-And so on.  Alternatively, you can install the ``requirements-full.txt`` file
-shipped with the full source tree to get everything.  (or `see the file
-online
-<https://github.com/getnikola/nikola/blob/master/requirements-full.txt>`_)
-
-Longer version:
-
-#. Get `Nikola <http://getnikola.com/>`_
-#. Install dependencies. To do that, either:
-
-   #. ``pip install -r requirements.txt`` (or ``requirements-full.txt``
-      for extra stuff) and ``pip install .`` or...
-   #. Install your distribution's packages for all the things
-      mentioned below, if they exist, or...
-   #. Get all of these manually (but why?, use pip):
-
-      #. Get Python, if you don't have it.
-      #. Get `doit <http://pydoit.org>`_
-      #. Get `docutils <http://docutils.sf.net>`_
-      #. Get `Mako <http://makotemplates.org>`_
-      #. Get `Pillow <http://python-imaging.github.io/>`_
-      #. Get `Pygments <http://pygments.org/>`_
-      #. Get `unidecode <http://pypi.python.org/pypi/Unidecode/>`_
-      #. Get `lxml <http://lxml.de/>`_
-      #. Get `yapsy <http://yapsy.sourceforge.net>`_
-      #. Get `PyRSS2Gen <http://www.dalkescientific.com/Python/PyRSS2Gen.html>`_
-      #. Get `pytz <http://pytz.sourceforge.net/>`_
-      #. Get `Logbook <http://pythonhosted.org/Logbook/>`_
-      #. Get `blinker <http://pythonhosted.org/blinker/>`_
-      #. Get `Setuptools <http://pythonhosted.org/setuptools/>`_
-      #. If using Python 2, get `configparser <http://pypi.python.org/pypi/configparser/3.2.0r3>`_
-
-#. run ``python setup.py install``
+Alternatively, you can install those packages one-by-one, when required (Nikola
+will tell you what packages are needed)
 
 After that, run ``nikola init --demo sitename`` and that will create a folder called
 ``sitename`` containing a functional demo site.

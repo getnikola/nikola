@@ -53,16 +53,14 @@ Installation Instructions
 
 Assuming you have pip installed::
 
-    git clone git://github.com/getnikola/nikola.git
-    cd nikola
-    pip install .
+    pip install Nikola
 
 For optional features::
 
-    pip install -r requirements-full.txt
-    
+    pip install Nikola[extras]
+
 For tests (see tests/README.rst for more details)::
 
-    pip install -r requirements-tests.txt
+    pip install Nikola[extras,tests]
 
 For more information, see http://getnikola.com/

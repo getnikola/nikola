@@ -19,6 +19,16 @@ from setuptools.command.install import install
 with open('requirements.txt', 'r') as fh:
     dependencies = [l.strip() for l in fh]
 
+extras = {}
+
+with open('requirements-extras.txt', 'r') as fh:
+    extras['extras'] = [l.strip() for l in fh][1:]
+    # Alternative name.
+    extras['full'] = extras['extras']
+
+with open('requirements-tests.txt', 'r') as fh:
+    extras['tests'] = [l.strip() for l in fh][1:]
+
 ########### platform specific stuff #############
 import platform
 platform_system = platform.system()
@@ -177,6 +187,7 @@ setup(name='Nikola',
                    'Topic :: Internet :: WWW/HTTP',
                    'Topic :: Text Processing :: Markup'),
       install_requires=dependencies,
+      extras_require = extras,
       include_package_data=True,
       cmdclass={'install': nikola_install},
       data_files=[
