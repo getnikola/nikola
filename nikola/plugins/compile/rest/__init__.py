@@ -104,6 +104,7 @@ class CompileRest(PageCompiler):
 
     def create_post(self, path, onefile=False, is_page=False, **kw):
         metadata = OrderedDict()
+        content = kw.pop('content', "Write your {0} here.".format('page' if is_page else 'post'))
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))
@@ -111,7 +112,7 @@ class CompileRest(PageCompiler):
             if onefile:
                 for k, v in metadata.items():
                     fd.write('.. {0}: {1}\n'.format(k, v))
-            fd.write("\nWrite your {0} here.".format('page' if is_page else 'post'))
+            fd.write(content)
 
     def set_site(self, site):
         for plugin_info in site.plugin_manager.getPluginsOfCategory("RestExtension"):

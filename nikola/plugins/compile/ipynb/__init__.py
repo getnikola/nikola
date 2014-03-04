@@ -68,6 +68,7 @@ class CompileIPynb(PageCompiler):
 
     def create_post(self, path, onefile=False, is_page=False, **kw):
         metadata = OrderedDict()
+        content = kw.pop('content', "Write your {0} here.".format('page' if is_page else 'post'))
         metadata.update(self.default_metadata)
         metadata.update(kw)
         d_name = os.path.dirname(path)

@@ -68,6 +68,7 @@ class CompileBbcode(PageCompiler):
 
     def create_post(self, path, onefile=False, is_page=False, **kw):
         metadata = OrderedDict()
+        content = kw.pop('content', "Write your {0} here.".format('page' if is_page else 'post'))
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))
@@ -77,4 +78,4 @@ class CompileBbcode(PageCompiler):
                 for k, v in metadata.items():
                     fd.write('.. {0}: {1}\n'.format(k, v))
                 fd.write('-->[/note]\n\n')
-            fd.write("Write your {0} here.".format('page' if is_page else 'post'))
+            fd.write(content)

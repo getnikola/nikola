@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Support content key in compilers' create_post (Issue #1098)
 * Use setuptools’ extras feature.  Use ``pip install nikola[extras]`` to
   install Nikola with extras (``requirements-extras.txt``, formerly
   ``requirements-full.txt`` -- note the name change!) (Issue #1089)

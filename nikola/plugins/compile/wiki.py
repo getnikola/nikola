@@ -64,6 +64,7 @@ class CompileWiki(PageCompiler):
 
     def create_post(self, path, onefile=False, is_page=False, **kw):
         metadata = OrderedDict()
+        content = kw.pop('content', "Write your {0} here.".format('page' if is_page else 'post'))
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))
@@ -72,4 +73,4 @@ class CompileWiki(PageCompiler):
                             'one-file format is not possible, use the -2 '
                             'option.')
         with codecs.open(path, "wb+", "utf8") as fd:
-            fd.write("Write your {0} here.".format('page' if is_page else 'post'))
+            fd.write(content)
