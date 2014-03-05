@@ -967,10 +967,21 @@ class Nikola(object):
             'task_dep': task_dep
         }
 
-    def scan_posts(self):
+    def scan_posts(self, really=False):
         """Scan all the posts."""
-        if self._scanned:
+        if self._scanned and not really:
             return
+
+        self.global_data = {}
+        self.posts = []
+        self.posts_per_year = defaultdict(list)
+        self.posts_per_month = defaultdict(list)
+        self.posts_per_tag = defaultdict(list)
+        self.posts_per_category = defaultdict(list)
+        self.post_per_file = {}
+        self.timeline = []
+        self.pages = []
+
         seen = set([])
         print("Scanning posts", end='', file=sys.stderr)
         slugged_tags = set([])

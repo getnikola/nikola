@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Support rescanning posts in the Nikola class (Issue #1099)
 * Use TIMEZONE with ``nikola new_post`` and ``nikola new_page``. (Issue #1088)
 
 New in v6.4.0
