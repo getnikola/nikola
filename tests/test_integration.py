@@ -33,6 +33,7 @@ class EmptyBuildTest(BaseTestCase):
     @classmethod
     def setUpClass(cls):
         """Setup a demo site."""
+        cls.startdir = os.getcwd()
         cls.tmpdir = tempfile.mkdtemp()
         cls.target_dir = os.path.join(cls.tmpdir, "target")
         cls.init_command = nikola.plugins.command.init.CommandInit()
@@ -69,6 +70,8 @@ class EmptyBuildTest(BaseTestCase):
     @classmethod
     def tearDownClass(self):
         """Remove the demo site."""
+        # Don't saw off the branch you're sitting on!
+        os.chdir(self.startdir)
         # ignore_errors=True for windows by issue #782
         shutil.rmtree(self.tmpdir, ignore_errors=(sys.platform == 'win32'))
         # Fixes Issue #438
