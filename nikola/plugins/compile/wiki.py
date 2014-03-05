@@ -62,7 +62,7 @@ class CompileWiki(PageCompiler):
             output = HtmlEmitter(document).emit()
             out_file.write(output)
 
-    def create_post(self, path, onefile=False, is_page=False, **kw):
+    def create_post(self, path, content, onefile=False, is_page=False, **kw):
         metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
@@ -72,4 +72,4 @@ class CompileWiki(PageCompiler):
                             'one-file format is not possible, use the -2 '
                             'option.')
         with codecs.open(path, "wb+", "utf8") as fd:
-            fd.write("Write your {0} here.".format('page' if is_page else 'post'))
+            fd.write(content)

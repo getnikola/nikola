@@ -66,7 +66,7 @@ class CompileIPynb(PageCompiler):
             (body, resources) = exportHtml.from_notebook_node(nb_json)
             out_file.write(body)
 
-    def create_post(self, path, onefile=False, is_page=False, **kw):
+    def create_post(self, path, content, onefile=False, is_page=False, **kw):
         metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)

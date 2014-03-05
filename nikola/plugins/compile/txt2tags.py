@@ -62,7 +62,7 @@ class CompileTxt2tags(PageCompiler):
         cmd = ["-t", "html", "--no-headers", "--outfile", dest, source]
         txt2tags(cmd)
 
-    def create_post(self, path, onefile=False, is_page=False, **kw):
+    def create_post(self, path, content, onefile=False, is_page=False, **kw):
         metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
@@ -73,4 +73,4 @@ class CompileTxt2tags(PageCompiler):
                 for k, v in metadata.items():
                     fd.write('.. {0}: {1}\n'.format(k, v))
                 fd.write("-->\n'''\n")
-            fd.write("\nWrite your {0} here.".format('page' if is_page else 'post'))
+            fd.write(content)
