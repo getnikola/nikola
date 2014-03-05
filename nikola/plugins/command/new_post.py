@@ -292,7 +292,7 @@ class CommandNewPost(Command):
         metadata = self.site.config['ADDITIONAL_METADATA']
         content = "Write your {0} here.".format('page' if is_page else 'post')
         compiler_plugin.create_post(
-            txt_path, onefile, title=title,
+            txt_path, onefile, content, title=title,
             slug=slug, date=date, tags=tags, is_page=is_page, **metadata)
 
         event = dict(path=txt_path)
