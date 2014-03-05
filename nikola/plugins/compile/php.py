@@ -50,9 +50,8 @@ class CompilePhp(PageCompiler):
         makedirs(os.path.dirname(dest))
         shutil.copyfile(source, dest)
 
-    def create_post(self, path, onefile=False, is_page=False, **kw):
+    def create_post(self, path, content, onefile=False, is_page=False, **kw):
         metadata = OrderedDict()
-        content = kw.pop('content', "Write your {0} here.".format('page' if is_page else 'post'))
         metadata.update(self.default_metadata)
         metadata.update(kw)
         os.makedirs(os.path.dirname(path))

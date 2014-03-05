@@ -57,9 +57,8 @@ class CompileAsciiDoc(PageCompiler):
             if e.strreror == 'No such file or directory':
                 req_missing(['asciidoc'], 'build this site (compile with asciidoc)', python=False)
 
-    def create_post(self, path, onefile=False, is_page=False, **kw):
+    def create_post(self, path, content, onefile=False, is_page=False, **kw):
         metadata = OrderedDict()
-        content = kw.pop('content', "Write your {0} here.".format('page' if is_page else 'post'))
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))

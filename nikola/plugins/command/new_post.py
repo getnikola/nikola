@@ -290,6 +290,7 @@ class CommandNewPost(Command):
         d_name = os.path.dirname(txt_path)
         utils.makedirs(d_name)
         metadata = self.site.config['ADDITIONAL_METADATA']
+        content = "Write your {0} here.".format('page' if is_page else 'post')
         compiler_plugin.create_post(
             txt_path, onefile, title=title,
             slug=slug, date=date, tags=tags, is_page=is_page, **metadata)
