@@ -111,7 +111,7 @@ class CompileRest(PageCompiler):
             if onefile:
                 for k, v in metadata.items():
                     fd.write('.. {0}: {1}\n'.format(k, v))
-            fd.write(content + '\n\n')
+            fd.write('\n' + content)
 
     def set_site(self, site):
         for plugin_info in site.plugin_manager.getPluginsOfCategory("RestExtension"):
