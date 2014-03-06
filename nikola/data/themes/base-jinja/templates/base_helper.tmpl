@@ -1,0 +1,93 @@
+{#  -*- coding: utf-8 -*- #}
+{% macro html_head() %}
+    <meta charset="utf-8">
+    {% if description %}
+    <meta name="description" content="{{ description }}">
+    {% endif %}
+    <meta name="author" content="{{ blog_author }}">
+    <title>{{ title|e }} | {{ blog_title|e }}</title>
+    {{ mathjax_config }}
+    {% if use_bundles %}
+        {% if use_cdn %}
+            <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
+        {% else %}
+            <link href="/assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+        {% endif %}
+    {% else %}
+        <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
+        <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
+        <link href="/assets/css/theme.css" rel="stylesheet" type="text/css"/>
+        {% if has_custom_css %}
+            <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
+        {% endif %}
+    {% endif %}
+    {% if permalink %}
+      <link rel="canonical" href="{{ abs_link(permalink) }}">
+    {% endif %}
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+    {% if rss_link %}
+        {{ rss_link }}
+    {% else %}
+        {% if translations|length > 1 %}
+            {% for language in translations %}
+                <link rel="alternate" type="application/rss+xml" title="RSS ({{ language }})" href="{{ _link('rss', None, language) }}">
+            {% endfor %}
+        {% else %}
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ _link('rss', None) }}">
+        {% endif %}
+    {% endif %}
+    {% if favicons %}
+        {% for name, file, size in favicons %}
+            <link rel="{{ name }}" href="{{ file }}" sizes="{{ size }}"/>
+        {% endfor %}
+    {% endif %}
+    {% if comment_system == 'facebook' %}
+        <meta property="fb:app_id" content="{{ comment_system_id }}">
+    {% endif %}
+{% endmacro %}
+
+{% macro late_load_js() %}
+{% endmacro %}
+
+{% macro html_social() %}
+    {{ social_buttons_code }}
+{% endmacro %}
+
+<!--FIXME: remove in v7 -->
+{% macro html_sidebar_links() %}
+    {{ html_navigation_links() }}
+{% endmacro %}
+
+{% macro html_navigation_links() %}
+    {% for url, text in navigation_links[lang] %}
+        {% if url is mapping %}
+            <li> {{ text }}
+            <ul>
+            {% for suburl, text in url %}
+                {% if rel_link(permalink, suburl) == "#" %}
+                    <li class="active"><a href="{{ permalink }}">{{ text }}</a>
+                {% else %}
+                    <li><a href="{{ suburl }}">{{ text }}</a>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        {% else %}
+            {% if rel_link(permalink, url) == "#" %}
+                <li class="active"><a href="{{ permalink }}">{{ text }}</a>
+            {% else %}
+                <li><a href="{{ url }}">{{ text }}</a>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+
+{% macro html_translations() %}
+    {% for langname in translations.keys() %}
+        {% if langname != lang %}
+            <a href="{{ _link("index", None, langname) }}" rel="alternate" hreflang="{{ langname }}">{{ messages("LANGUAGE", langname) }}</a>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}

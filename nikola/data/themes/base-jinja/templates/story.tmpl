@@ -1,0 +1,16 @@
+{#  -*- coding: utf-8 -*- #}
+{% extends 'post.tmpl' %}
+{% import 'post_helper.tmpl' as helper with context %}
+{% import 'comments_helper.tmpl' as comments with context %}
+{% block extra_head %}
+{{ helper.twitter_card_information(post) }}
+{% endblock %}
+{% block content %}
+{% if title and not post.meta('hidetitle') %}
+    <h1>{{ title }}</h1>
+{% endif %}
+    {{ post.text() }}
+{% if enable_comments and not post.meta('nocomments') %}
+    {{ comments.comment_form(post.permalink(absolute=True), post.title(), post.base_path) }}
+{% endif %}
+{% endblock %}

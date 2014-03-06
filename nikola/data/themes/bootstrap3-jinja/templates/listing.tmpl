@@ -1,0 +1,19 @@
+{#  -*- coding: utf-8 -*- #}
+{% extends 'base.tmpl' %}
+{% import 'crumbs.tmpl' as ui with context %}
+{% block content %}
+{{ ui.bar(crumbs) }}
+{% if folders or files %}
+<ul class="list-unstyled">
+{% for name in folders %}
+    <li><a href="{{ name }}"><i class="glyphicon glyphicon-folder-open"></i> {{ name }}</a>
+{% endfor %}
+{% for name in files %}
+    <li><a href="{{ name }}.html"><i class="glyphicon glyphicon-file"></i> {{ name }}</a>
+{% endfor %}
+</ul>
+{% endif %}
+{% if code %}
+    {{ code }}
+{% endif %}
+{% endblock %}

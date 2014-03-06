@@ -1,0 +1,37 @@
+{#  -*- coding: utf-8 -*- #}
+{% macro comment_form(url, title, identifier) %}
+<div id="livefyre-comments"></div>
+<script type="text/javascript" src="http://zor.livefyre.com/wjs/v3.0/javascripts/livefyre.js"></script>
+<script type="text/javascript">
+(function () {
+    var articleId = "{{ identifier }}";
+    fyre.conv.load({}, [{
+        el: 'livefyre-comments',
+        network: "livefyre.com",
+        siteId: "{{ comment_system_id }}",
+        articleId: articleId,
+        signed: false,
+        collectionMeta: {
+            articleId: articleId,
+            url: fyre.conv.load.makeCollectionUrl(),
+        }
+    }], function() {});
+}());
+</script>
+{% endmacro %}
+
+{% macro comment_link(link, identifier) %}
+    <p>
+    <a href="{{ link }}">
+    <span class="livefyre-commentcount" data-lf-site-id="{{ comment_system_id }}" data-lf-article-id="{{ identifier }}">
+    0 Comments
+    </span></a>
+{% endmacro %}
+
+
+{% macro comment_link_script() %}
+<script
+        type="text/javascript"
+        src="http://zor.livefyre.com/wjs/v1.0/javascripts/CommentCount.js">
+</script>
+{% endmacro %}

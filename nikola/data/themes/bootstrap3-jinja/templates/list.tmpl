@@ -1,0 +1,18 @@
+{#  -*- coding: utf-8 -*- #}
+{% extends 'base.tmpl' %}
+{% block content %}
+        <!--Body content-->
+        <div class="postbox">
+        <h1>{{ title }}</h1>
+        {% if items %}
+        <ul class="list-unstyled">
+        {% for text, link in items %}
+            <li><a href="{{ link }}">{{ text }}</a>
+        {% endfor %}
+        </ul>
+        {% else %}
+        <p>{{ messages("Nothing found.") }}</p>
+        {% endif %}
+        </div>
+        <!--End of body content-->
+{% endblock %}

@@ -1,0 +1,30 @@
+{#  -*- coding: utf-8 -*- #}
+{% macro html_pager() %}
+    {% if prevlink or nextlink %}
+        <div>
+        <ul class="pager">
+        {% if prevlink %}
+            <li class="previous">
+                <a href="{{ prevlink }}" rel="prev">&larr; {{ messages("Newer posts") }}</a>
+            </li>
+        {% endif %}
+        {% if nextlink %}
+            <li class="next">
+                <a href="{{ nextlink }}" rel="next">{{ messages("Older posts") }} &rarr;</a>
+            </li>
+        {% endif %}
+        </ul>
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro mathjax_script(posts) %}
+    {% if posts|selectattr("is_mathjax")|list %}
+        <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}
+        });
+        </script>
+        <script src="/assets/js/mathjax.js"></script>
+    {% endif %}
+{% endmacro %}

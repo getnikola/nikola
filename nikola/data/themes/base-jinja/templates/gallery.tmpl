@@ -1,0 +1,36 @@
+{#  -*- coding: utf-8 -*- #}
+{% extends 'base.tmpl' %}
+{% import 'comments_helper.tmpl' as comments with context %}
+{% import 'crumbs.tmpl' as ui with context %}
+{% block sourcelink %}{% endblock %}
+
+{% block content %}
+    {{ ui.bar(crumbs) }}
+    {% if title %}
+    <h1>{{ title }}</h1>
+    {% endif %}
+    {% if text %}
+    <p>
+        {{ text }}
+    </p>
+    {% endif %}
+    {% if folders %}
+    <ul>
+    {% for folder, ftitle in folders %}
+        <li><a href="{{ folder }}"><i
+        class="icon-folder-open"></i>&nbsp;{{ ftitle }}</a></li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% if photo_array %}
+    <ul class="thumbnails">
+        {% for image in photo_array %}
+            <li><a href="{{ image['url'] }}" class="thumbnail image-reference" title="{{ image['title'] }}">
+                <img src="{{ image['url_thumb'] }}" alt="{{ image['title'] }}" /></a>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% if enable_comments %}
+    {{ comments.comment_form(None, permalink, title) }}
+{% endif %}
+{% endblock %}
