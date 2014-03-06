@@ -2,20 +2,17 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "Also available in": "Eskuragarria hemen ere",
     "Also available in:": "Eskuragarria hemen ere:",
     "Archive": "Artxiboa",
     "Categories": "Kategoriak",
     "LANGUAGE": "Euskara",
     "More posts about %s": "%s-ri buruzko post gehiago",
-    "More posts about": "-ri buruzko post gehiago",
     "Newer posts": "Post berrienak",
     "Next post": "Hurrengo posta",
     "No posts found.": "",
     "Nothing found.": "",
     "Older posts": "Post zaharrenak",
     "Original site": "Jatorrizko orria",
-    "Posted": "Argitaratuta",
     "Posted:": "Argitaratuta:",
     "Posts about %s": "%s-ri buruzko postak",
     "Posts for year %s": "%s. urteko postak",

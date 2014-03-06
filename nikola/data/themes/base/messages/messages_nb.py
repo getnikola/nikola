@@ -2,20 +2,17 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "Also available in": "Også tilgjengelig på",
     "Also available in:": "Også tilgjengelig på:",
     "Archive": "Arkiv",
     "Categories": "Kategorier",
     "LANGUAGE": "norsk",
     "More posts about %s": "Flere innlegg om %s",
-    "More posts about": "Flere innlegg om",
     "Newer posts": "Nyere innlegg",
     "Next post": "Neste innlegg",
     "No posts found.": "",
     "Nothing found.": "",
     "Older posts": "Eldre innlegg",
     "Original site": "Opprinnelig side",
-    "Posted": "Publisert",
     "Posted:": "Publisert:",
     "Posts about %s": "Innlegg om %s",
     "Posts for year %s": "Innlegg fra %s",
