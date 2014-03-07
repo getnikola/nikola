@@ -53,6 +53,8 @@ if DEBUG:
 else:
     logging.basicConfig(level=logging.ERROR)
 
+import PyRSS2Gen as rss
+
 import lxml.html
 from yapsy.PluginManager import PluginManager
 
@@ -206,6 +208,7 @@ class Nikola(object):
             'REDIRECTIONS': [],
             'RSS_LINK': None,
             'RSS_PATH': '',
+            'RSS_PLAIN': False,
             'RSS_TEASERS': True,
             'SASS_COMPILER': 'sass',
             'SASS_OPTIONS': [],
@@ -745,29 +748,41 @@ class Nikola(object):
         return result
 
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
-                             rss_teasers, feed_length=10, feed_url=None):
+                             rss_teasers, rss_plain, feed_length=10, feed_url=None):
+
         """Takes all necessary data, and renders a RSS feed in output_path."""
+        rss_obj = rss.RSS2(
+            title=title,
+            link=link,
+            description=description,
+            lastBuildDate=datetime.datetime.now(),
+            generator='http://getnikola.com/',
+            language=lang
+        )
+
         items = []
+
         for post in timeline[:feed_length]:
-            # Massage the post's HTML
-            data = post.text(lang, teaser_only=rss_teasers, really_absolute=True)
+            data = post.text(lang, teaser_only=rss_teasers, really_absolute=True, strip_html=rss_plain)
             if feed_url is not None and data:
-                # FIXME: this is duplicated with code in Post.text()
-                try:
-                    doc = lxml.html.document_fromstring(data)
-                    doc.rewrite_links(lambda dst: self.url_replacer(feed_url, dst, lang))
+                # Massage the post's HTML (unless plain)
+                if not rss_plain:
+                    # FIXME: this is duplicated with code in Post.text()
                     try:
-                        body = doc.body
-                        data = (body.text or '') + ''.join(
-                            [lxml.html.tostring(child, encoding='unicode')
-                                for child in body.iterchildren()])
-                    except IndexError:  # No body there, it happens sometimes
-                        data = ''
-                except lxml.etree.ParserError as e:
-                    if str(e) == "Document is empty":
-                        data = ""
-                    else:  # let other errors raise
-                        raise(e)
+                        doc = lxml.html.document_fromstring(data)
+                        doc.rewrite_links(lambda dst: self.url_replacer(feed_url, dst, lang))
+                        try:
+                            body = doc.body
+                            data = (body.text or '') + ''.join(
+                                [lxml.html.tostring(child, encoding='unicode')
+                                    for child in body.iterchildren()])
+                        except IndexError:  # No body there, it happens sometimes
+                            data = ''
+                    except lxml.etree.ParserError as e:
+                        if str(e) == "Document is empty":
+                            data = ""
+                        else:  # let other errors raise
+                            raise(e)
 
             args = {
                 'title': post.title(lang),
@@ -781,19 +796,13 @@ class Nikola(object):
                 'author': post.meta('author'),
             }
 
+            if post.meta('author') and '@' in post.meta('author')[1:]:  # duplicated from utils.ExtendedItem
+                rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
+
             items.append(utils.ExtendedItem(**args))
-        rss_obj = utils.ExtendedRSS2(
-            title=title,
-            link=link,
-            description=description,
-            lastBuildDate=datetime.datetime.now(),
-            items=items,
-            generator='Nikola <http://getnikola.com/>',
-            language=lang
-        )
-        rss_obj.self_url = feed_url
-        rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
-        rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
+
+        rss_obj.items = items
+
         dst_dir = os.path.dirname(output_path)
         utils.makedirs(dst_dir)
         with codecs.open(output_path, "wb+", "utf-8") as rss_file:

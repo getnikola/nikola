@@ -46,6 +46,7 @@ except ImportError:
         Image = _Image
     except ImportError:
         pass
+
 import PyRSS2Gen as rss
 
 from nikola.plugin_categories import Task
@@ -494,17 +495,15 @@ class Galleries(Task):
                 ),
             }
             items.append(rss.RSSItem(**args))
-        rss_obj = utils.ExtendedRSS2(
+        rss_obj = rss.RSS2(
             title=title,
             link=make_url(permalink),
             description='',
             lastBuildDate=datetime.datetime.now(),
             items=items,
-            generator='Nikola <http://getnikola.com/>',
+            generator='http://getnikola.com/',
             language=lang
         )
-        rss_obj.self_url = make_url(permalink)
-        rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
         dst_dir = os.path.dirname(output_path)
         utils.makedirs(dst_dir)
         with codecs.open(output_path, "wb+", "utf-8") as rss_file:

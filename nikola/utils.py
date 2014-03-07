@@ -138,8 +138,7 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'config_changed', 'get_crumbs', 'get_tzname', 'get_asset_path',
            '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
            'LocaleBorg', 'sys_encode', 'sys_decode', 'makedirs',
-           'get_parent_theme_name', 'ExtendedRSS2', 'demote_headers',
-           'get_translation_candidate']
+           'get_parent_theme_name', 'demote_headers', 'get_translation_candidate']
 
 
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
@@ -732,17 +731,6 @@ class LocaleBorg(object):
         # paranoid about calendar ending in the wrong locale (windows)
         self.set_locale(self.current_lang)
         return s
-
-
-class ExtendedRSS2(rss.RSS2):
-    def publish_extensions(self, handler):
-        if self.self_url:
-            handler.startElement("atom:link", {
-                'href': self.self_url,
-                'rel': "self",
-                'type': "application/rss+xml"
-            })
-            handler.endElement("atom:link")
 
 
 class ExtendedItem(rss.RSSItem):

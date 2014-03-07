@@ -65,6 +65,7 @@ class RenderTags(Task):
             self.site.config['INDEX_DISPLAY_POST_COUNT'],
             "index_teasers": self.site.config['INDEX_TEASERS'],
             "rss_teasers": self.site.config["RSS_TEASERS"],
+            "rss_plain": self.site.config["RSS_PLAIN"],
             "hide_untranslated_posts": self.site.config['HIDE_UNTRANSLATED_POSTS'],
             "feed_length": self.site.config['FEED_LENGTH'],
         }
@@ -290,7 +291,8 @@ class RenderTags(Task):
             'actions': [(utils.generic_rss_renderer,
                         (lang, "{0} ({1})".format(kw["blog_title"], tag),
                          kw["site_url"], None, post_list,
-                         output_name, kw["rss_teasers"], kw['feed_length'], feed_url))],
+                         output_name, kw["rss_teasers"], kw["rss_plain"], kw['feed_length'],
+                         feed_url))],
             'clean': True,
             'uptodate': [utils.config_changed(kw)],
             'task_dep': ['render_posts'],
