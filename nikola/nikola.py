@@ -749,6 +749,7 @@ class Nikola(object):
 
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
                              rss_teasers, feed_length=10, feed_url=None):
+        """Takes all necessary data, and renders a RSS feed in output_path."""
         rss_obj = rss.RSS2(
             title=title,
             link=link,
@@ -758,7 +759,6 @@ class Nikola(object):
             language=lang
         )
 
-        """Takes all necessary data, and renders a RSS feed in output_path."""
         items = []
         for post in timeline[:feed_length]:
             data = post.text(lang, teaser_only=rss_teasers, really_absolute=True, strip_html=self.config['RSS_PLAIN'])
