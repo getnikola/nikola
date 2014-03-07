@@ -46,6 +46,7 @@ except ImportError:
         Image = _Image
     except ImportError:
         pass
+
 import PyRSS2Gen as rss
 
 from nikola.plugin_categories import Task
@@ -494,7 +495,7 @@ class Galleries(Task):
                 ),
             }
             items.append(rss.RSSItem(**args))
-        rss_obj = utils.ExtendedRSS2(
+        rss_obj = rss.RSS2(
             title=title,
             link=make_url(permalink),
             description='',
