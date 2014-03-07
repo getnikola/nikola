@@ -748,6 +748,15 @@ class Nikola(object):
 
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
                              rss_teasers, feed_length=10, feed_url=None):
+        rss_obj = rss.RSS2(
+            title=title,
+            link=link,
+            description=description,
+            lastBuildDate=datetime.datetime.now(),
+            generator='http://getnikola.com',
+            language=lang
+        )
+
         """Takes all necessary data, and renders a RSS feed in output_path."""
         items = []
         for post in timeline[:feed_length]:
@@ -783,18 +792,13 @@ class Nikola(object):
                 'author': post.meta('author'),
             }
 
-            items.append(utils.ExtendedItem(**args))
-        rss_obj = rss.RSS2(
-            title=title,
-            link=link,
-            description=description,
-            lastBuildDate=datetime.datetime.now(),
-            items=items,
-            generator='http://getnikola.com',
-            language=lang
-        )
+            if post.meta('author') and '@' in post.meta('author')[1:]: # duplicated from utils.ExtendedItem
+                rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
 
-        rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
+            items.append(utils.ExtendedItem(**args))
+
+        rss_obj.items = items
+
         dst_dir = os.path.dirname(output_path)
         utils.makedirs(dst_dir)
         with codecs.open(output_path, "wb+", "utf-8") as rss_file:
