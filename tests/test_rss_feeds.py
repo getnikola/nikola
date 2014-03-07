@@ -71,7 +71,8 @@ class RSSFeedTest(unittest.TestCase):
                                                                  [example_post,
                                                                   ],
                                                                  'testfeed.rss',
-                                                                 True)
+                                                                 True,
+                                                                 False)
 
                     opener_mock.assert_called_once_with(
                         'testfeed.rss', 'wb+', 'utf-8')
