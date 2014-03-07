@@ -8,7 +8,7 @@
 Using Alternative Social Buttons with Nikola
 ============================================
 
-:Version: 6.9.90
+:Version: 7.0.0-alpha
 
 .. class:: alert alert-info pull-right
 
