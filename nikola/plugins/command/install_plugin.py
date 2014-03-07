@@ -88,8 +88,8 @@ class CommandInstallPlugin(Command):
             'long': 'url',
             'type': str,
             'help': "URL for the plugin repository (default: "
-                    "http://plugins.getnikola.com/v6/plugins.json)",
-            'default': 'http://plugins.getnikola.com/v6/plugins.json'
+                    "http://plugins.getnikola.com/v7/plugins.json)",
+            'default': 'http://plugins.getnikola.com/v7/plugins.json'
         },
     ]
 
