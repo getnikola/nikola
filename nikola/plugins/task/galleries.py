@@ -500,7 +500,7 @@ class Galleries(Task):
             description='',
             lastBuildDate=datetime.datetime.now(),
             items=items,
-            generator='Nikola <http://getnikola.com/>',
+            generator='http://getnikola.com',
             language=lang
         )
         rss_obj.self_url = make_url(permalink)
