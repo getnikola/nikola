@@ -794,7 +794,7 @@ class Nikola(object):
                 'author': post.meta('author'),
             }
 
-            if post.meta('author') and '@' in post.meta('author')[1:]: # duplicated from utils.ExtendedItem
+            if post.meta('author') and '@' in post.meta('author')[1:]:  # duplicated from utils.ExtendedItem
                 rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
 
             items.append(utils.ExtendedItem(**args))
