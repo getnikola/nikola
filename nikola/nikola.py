@@ -748,7 +748,8 @@ class Nikola(object):
         return result
 
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
-                             rss_teasers, feed_length=10, feed_url=None):
+                             rss_teasers, rss_plain, feed_length=10, feed_url=None):
+
         """Takes all necessary data, and renders a RSS feed in output_path."""
         rss_obj = rss.RSS2(
             title=title,
@@ -760,11 +761,12 @@ class Nikola(object):
         )
 
         items = []
+
         for post in timeline[:feed_length]:
-            data = post.text(lang, teaser_only=rss_teasers, really_absolute=True, strip_html=self.config['RSS_PLAIN'])
+            data = post.text(lang, teaser_only=rss_teasers, really_absolute=True, strip_html=rss_plain)
             if feed_url is not None and data:
                 # Massage the post's HTML (unless plain)
-                if not self.config['RSS_PLAIN']:
+                if not rss_plain:
                     # FIXME: this is duplicated with code in Post.text()
                     try:
                         doc = lxml.html.document_fromstring(data)

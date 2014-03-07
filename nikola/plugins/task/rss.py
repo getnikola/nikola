@@ -54,6 +54,7 @@ class GenerateRSS(Task):
             "blog_description": self.site.config["BLOG_DESCRIPTION"],
             "output_folder": self.site.config["OUTPUT_FOLDER"],
             "rss_teasers": self.site.config["RSS_TEASERS"],
+            "rss_plain": self.site.config["RSS_PLAIN"],
             "hide_untranslated_posts": self.site.config['HIDE_UNTRANSLATED_POSTS'],
             "feed_length": self.site.config['FEED_LENGTH'],
         }
@@ -76,6 +77,7 @@ class GenerateRSS(Task):
                 deps += post.deps(lang)
 
             feed_url = urljoin(self.site.config['BASE_URL'], self.site.link("rss", None, lang).lstrip('/'))
+
             yield {
                 'basename': 'generate_rss',
                 'name': os.path.normpath(output_name),
@@ -84,7 +86,7 @@ class GenerateRSS(Task):
                 'actions': [(utils.generic_rss_renderer,
                             (lang, kw["blog_title"], kw["site_url"],
                              kw["blog_description"], posts, output_name,
-                             kw["rss_teasers"], kw['feed_length'], feed_url))],
+                             kw["rss_teasers"], kw["rss_plain"], kw['feed_length'], feed_url))],
                 'task_dep': ['render_posts'],
                 'clean': True,
                 'uptodate': [utils.config_changed(kw)],
