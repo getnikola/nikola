@@ -500,7 +500,7 @@ class Galleries(Task):
             description='',
             lastBuildDate=datetime.datetime.now(),
             items=items,
-            generator='http://getnikola.com',
+            generator='http://getnikola.com/',
             language=lang
         )
         dst_dir = os.path.dirname(output_path)
