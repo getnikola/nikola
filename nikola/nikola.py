@@ -754,7 +754,7 @@ class Nikola(object):
             link=link,
             description=description,
             lastBuildDate=datetime.datetime.now(),
-            generator='http://getnikola.com',
+            generator='http://getnikola.com/',
             language=lang
         )
 
