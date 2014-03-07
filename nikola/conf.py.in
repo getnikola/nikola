@@ -508,6 +508,9 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # Show only teasers in the RSS feed? Default to True
 # RSS_TEASERS = True
 
+# Strip HTML in the RSS feed? Default to False
+# RSS_PLAIN = False
+
 # A search form to search this site, for the sidebar. You can use a google
 # custom search (http://www.google.com/cse/)
 # Or a duckduckgo search: https://duckduckgo.com/search_box.html

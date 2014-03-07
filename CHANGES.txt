@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New option RSS_PLAIN to optionally strip HTML from RSS feeds
 * Support content key in compilers' create_post (Issue #1098)
 * Use setuptools’ extras feature.  Use ``pip install nikola[extras]`` to
   install Nikola with extras (``requirements-extras.txt``, formerly
