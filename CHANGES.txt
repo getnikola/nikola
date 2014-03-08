@@ -4,6 +4,13 @@ New in master
 Features
 --------
 
+* Remove old messages left over for backwards compatibility: (Issues #829, #1105)
+
+  - "More posts about", replaced by "More posts about %s"
+  - "Posted", replaced by "Posted:"
+  - "Also available in", replaced by "Also available in:"
+
+* Remove old "sl_SI", "tr_TR" locale aliases (use "sl" and "tr") (Issue #829, #1105)
 * New option RSS_PLAIN to optionally strip HTML from RSS feeds (Issue #1107)
 * Support content key in compilers' create_post (Issue #1098)
 * Use setuptools’ extras feature.  Use ``pip install nikola[extras]`` to

@@ -2,20 +2,17 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "Also available in": "Saadaval ka",
     "Also available in:": "Saadaval ka:",
     "Archive": "Arhiiv",
     "Categories": "Kategooriad",
     "LANGUAGE": "Eesti",
     "More posts about %s": "Veel postitusi %s kohta",
-    "More posts about": "Veel postitusi kohta",
     "Newer posts": "Uued postitused",
     "Next post": "Järgmine postitus",
     "No posts found.": "",
     "Nothing found.": "",
     "Older posts": "Vanemad postitused",
     "Original site": "Algallikas",
-    "Posted": "Postitatud",
     "Posted:": "Postitatud:",
     "Posts about %s": "Postitused %s kohta",
     "Posts for year %s": "Postitused aastast %s",
