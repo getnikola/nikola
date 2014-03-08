@@ -178,8 +178,6 @@ class Nikola(object):
             'GZIP_COMMAND': None,
             'GZIP_FILES': False,
             'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js', '.json', '.xml'),
-            'HIDE_SOURCELINK': False,
-            'HIDE_UNTRANSLATED_POSTS': False,
             'HYPHENATE': False,
             'INDEX_DISPLAY_POST_COUNT': 10,
             'INDEX_FILE': 'index.html',
@@ -213,6 +211,8 @@ class Nikola(object):
             'SASS_COMPILER': 'sass',
             'SASS_OPTIONS': [],
             'SEARCH_FORM': '',
+            'SHOW_SOURCELINK': True,
+            'SHOW_UNTRANSLATED_POSTS': True,
             'SLUG_TAG_PATH': True,
             'SOCIAL_BUTTONS_CODE': SOCIAL_BUTTONS_CODE,
             'SITE_URL': 'http://getnikola.com/',
@@ -316,18 +316,34 @@ class Nikola(object):
                 self.config['SOCIAL_BUTTONS_CODE'] = ''
 
         # STRIP_INDEX_HTML config has been replaces with STRIP_INDEXES
-        # Port it if only the oldef form is there
+        # Port it if only the older form is there
         # TODO: remove on v7
         if 'STRIP_INDEX_HTML' in config and 'STRIP_INDEXES' not in config:
             utils.LOGGER.warn('You should configure STRIP_INDEXES instead of STRIP_INDEX_HTML')
             self.config['STRIP_INDEXES'] = config['STRIP_INDEX_HTML']
+
+        # HIDE_SOURCELINK has been replaced with the inverted SHOW_SOURCELINK
+        # TODO: remove on v8
+        if 'HIDE_SOURCELINK' in config:
+            utils.LOGGER.warn('The HIDE_SOURCELINK option is deprecated, use SHOW_SOURCELINK instead.')
+            if 'SHOW_SOURCELINK' in config:
+                utils.LOGGER.warn('HIDE_SOURCELINK conflicts with SHOW_SOURCELINK, ignoring HIDE_SOURCELINK.')
+            self.config['SHOW_SOURCELINK'] = not config['HIDE_SOURCELINK']
+
+        # HIDE_UNTRANSLATED_POSTS has been replaced with the inverted SHOW_UNTRANSLATED_POSTS
+        # TODO: remove on v8
+        if 'HIDE_UNTRANSLATED_POSTS' in config:
+            utils.LOGGER.warn('The HIDE_UNTRANSLATED_POSTS option is deprecated, use SHOW_UNTRANSLATED_POSTS instead.')
+            if 'SHOW_UNTRANSLATED_POSTS' in config:
+                utils.LOGGER.warn('HIDE_UNTRANSLATED_POSTS conflicts with SHOW_UNTRANSLATED_POSTS, ignoring HIDE_UNTRANSLATED_POSTS.')
+            self.config['SHOW_UNTRANSLATED_POSTS'] = not config['HIDE_UNTRANSLATED_POSTS']
 
         # PRETTY_URLS defaults to enabling STRIP_INDEXES unless explicitly disabled
         if self.config.get('PRETTY_URLS') and 'STRIP_INDEXES' not in config:
             self.config['STRIP_INDEXES'] = True
 
         if not self.config.get('COPY_SOURCES'):
-            self.config['HIDE_SOURCELINK'] = True
+            self.config['SHOW_SOURCELINK'] = False
 
         self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
                                                       {self.config['DEFAULT_LANG']: ''})
@@ -501,8 +517,10 @@ class Nikola(object):
 
         self._GLOBAL_CONTEXT['twitter_card'] = self.config.get(
             'TWITTER_CARD', {})
-        self._GLOBAL_CONTEXT['hide_sourcelink'] = self.config.get(
-            'HIDE_SOURCELINK')
+        self._GLOBAL_CONTEXT['hide_sourcelink'] = not self.config.get(
+            'SHOW_SOURCELINK')
+        self._GLOBAL_CONTEXT['show_sourcelink'] = self.config.get(
+            'SHOW_SOURCELINK')
         self._GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))

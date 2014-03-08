@@ -115,7 +115,7 @@ class Post(object):
         self.translations = self.config['TRANSLATIONS']
         self.default_lang = self.config['DEFAULT_LANG']
         self.messages = messages
-        self.skip_untranslated = self.config['HIDE_UNTRANSLATED_POSTS']
+        self.skip_untranslated = not self.config['SHOW_UNTRANSLATED_POSTS']
         self._template_name = template_name
         self.is_two_file = True
         self.hyphenate = self.config['HYPHENATE']
@@ -306,7 +306,7 @@ class Post(object):
 
         self.READ_MORE_LINK = self.config['READ_MORE_LINK']
         dest = self.translated_base_path(lang)
-        if not self.is_translation_available(lang) and self.config['HIDE_UNTRANSLATED_POSTS']:
+        if not self.is_translation_available(lang) and not self.config['SHOW_UNTRANSLATED_POSTS']:
             return
         else:
             self.compile_html(

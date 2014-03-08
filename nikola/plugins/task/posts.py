@@ -43,7 +43,7 @@ class RenderPosts(Task):
             "translations": self.site.config["TRANSLATIONS"],
             "timeline": self.site.timeline,
             "default_lang": self.site.config["DEFAULT_LANG"],
-            "hide_untranslated_posts": self.site.config['HIDE_UNTRANSLATED_POSTS'],
+            "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
         }
 
         nikola.post.READ_MORE_LINK = self.site.config['READ_MORE_LINK']
