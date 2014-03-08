@@ -31,7 +31,7 @@
 <%def name="html_list_tags(post)" buffered="True">
     <span itemprop="keywords">
     %for tag in post.tags:
-        <a class="tag p-category" href="${_link('tag', tag)}"><span class="badge badge-info">${tag}</span></a>
+        <a class="tag p-category" href="${_link('tag', tag)}" rel="tag"><span class="badge badge-info">${tag}</span></a>
     %endfor
     </span>
 </%def>
@@ -48,12 +48,12 @@
         <ul class="pager">
         %if post.prev_post:
             <li class="previous">
-                <a href="${post.prev_post.permalink()}" rel="prev">&larr; ${messages("Previous post")}</a>
+                <a href="${post.prev_post.permalink()}" rel="prev" title="${post.prev_post.title()}">&larr; ${messages("Previous post")}</a>
             </li>
         %endif
         %if post.next_post:
             <li class="next">
-                <a href="${post.next_post.permalink()}" rel="next">${messages("Next post")} &rarr;</a>
+                <a href="${post.next_post.permalink()}" rel="next" title="${post.next_post.title()}">${messages("Next post")} &rarr;</a>
             </li>
         %endif
         </ul>
