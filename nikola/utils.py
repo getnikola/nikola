@@ -243,11 +243,10 @@ class TranslatableSetting(object):
             if self.default_lang not in self.values.keys():
                 self.default_lang = list(self.values.keys())[0]
                 self.overridden_default = True
-            self.values.default_factory = lambda: inp[self.default_lang]
         else:
             self.translated = False
             self.values[self.default_lang] = inp
-            self.values.default_factory = lambda: inp
+        self.values.default_factory = lambda: self.values[self.default_lang]
 
     def get_lang(self):
         """Return the language that should be used to retrieve settings."""
