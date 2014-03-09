@@ -137,6 +137,7 @@ class Nikola(object):
             'ANNOTATIONS': False,
             'ARCHIVE_PATH': "",
             'ARCHIVE_FILENAME': "archive.html",
+            'BLOG_AUTHOR': 'Default Author',
             'BLOG_TITLE': 'Default Title',
             'BLOG_DESCRIPTION': 'Default Description',
             'BODY_END': "",
