@@ -156,6 +156,7 @@ class Nikola(object):
                 "html": ('.html', '.htm')
             },
             'CONTENT_FOOTER': '',
+            'CONTENT_FOOTER_FORMATS': {},
             'COPY_SOURCES': True,
             'CREATE_MONTHLY_ARCHIVE': False,
             'CREATE_SINGLE_ARCHIVE': False,
@@ -275,19 +276,8 @@ class Nikola(object):
                 pass
 
         # Handle CONTENT_FOOTER properly.
-        # Because we format it in our config by default, AND it uses
-        # BLOG_AUTHOR and LICENSE (which are translatable), we need to fix it.
-        def fix_content_footer(brokenvar):
-            if brokenvar in self.config and self.config[brokenvar].translated:
-                blangs = self.config[brokenvar].values
-                clangs = self.config['CONTENT_FOOTER'].values
-                tlangs = set(list(blangs.keys()) + list(clangs.keys()))
-                new = dict((l, blangs[l]) for l in tlangs)
-                for l in tlangs:
-                    clangs[l] = clangs[l].replace(str(self.config[brokenvar]._inp), new[l])
-
-        fix_content_footer('BLOG_AUTHOR')
-        fix_content_footer('LICENSE')
+        # We provide the arguments to format in CONTENT_FOOTER_FORMATS.
+        self.config['CONTENT_FOOTER'].langformat(self.config['CONTENT_FOOTER_FORMATS'])
 
         # Make sure we have pyphen installed if we are using it
         if self.config.get('HYPHENATE') and pyphen is None:

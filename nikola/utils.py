@@ -299,6 +299,45 @@ class TranslatableSetting(object):
             self.values[k] = self.values[k].format(*args, **kwargs)
         return self
 
+    def langformat(self, formats):
+        """Format ALL the values in the setting, on a per-language basis."""
+        if not formats:
+            # Input is empty.
+            return self
+        if not self.translated:
+            # The easiest path: single language input.
+            l = self.default_lang
+            try:
+                args, kwargs = formats[l]
+            except KeyError:
+                a = formats[list(formats.keys())[0]]
+                args, kwargs = formats[a]
+            self.values[l] = self.values[l].format(*args, **kwargs)
+        else:
+            # Multiple languages? it can be a bit harder.
+            keys = list(formats.keys())
+            if len(keys) == 0:
+                # No input, actually.  No idea why user is calling us.
+                pass
+            elif len(keys) == 1:
+                # We have only one language.
+                args, kwargs = formats[self.default_lang]
+                self.format(*args, **kwargs)
+            else:
+                # We have multiple languages.  This is the hardest.
+                if self.default_lang in keys:
+                    d = formats[self.default_lang]
+                else:
+                    d = formats[keys[0]]
+                for k in self.values:
+                    if k in keys:
+                        args, kwargs = self.values[k]
+                    else:
+                        args, kwargs = d
+                    self.values[k] = self.values[k].format(*args, **kwargs)
+
+        return self
+
     def __getitem__(self, key):
         """Provide an alternate interface via __getitem__."""
         return self.values[key]
