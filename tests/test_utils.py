@@ -240,7 +240,7 @@ class TranslatableSettingsTest(unittest.TestCase):
     def test_string_input(self):
         """Tests for string input."""
         inp = 'Fancy Blog'
-        S = TranslatableSetting(inp)
+        S = TranslatableSetting('S', inp)
         S.default_lang = 'xx'
         S.lang = 'xx'
 
@@ -265,7 +265,7 @@ class TranslatableSettingsTest(unittest.TestCase):
         inp = {'xx': 'Fancy Blog',
                'zz': 'Schmancy Blog'}
 
-        S = TranslatableSetting(inp)
+        S = TranslatableSetting('S', inp)
         S.default_lang = 'xx'
         S.lang = 'xx'
 
@@ -290,7 +290,7 @@ class TranslatableSettingsTest(unittest.TestCase):
         inp = {'xx': 'Fancy Blog',
                'zz': 'Schmancy Blog'}
 
-        S = TranslatableSetting(inp)
+        S = TranslatableSetting('S', inp)
         S.default_lang = 'xx'
         S.lang = 'xx'
 
@@ -326,7 +326,7 @@ class TranslatableSettingsTest(unittest.TestCase):
         inp = {'xx': 'Fancy Blog',
                'zz': 'Schmancy Blog'}
 
-        S = TranslatableSetting(inp)
+        S = TranslatableSetting('S', inp)
         S.default_lang = 'xx'
         S.lang = 'xx'
 
@@ -363,7 +363,7 @@ class TranslatableSettingsTest(unittest.TestCase):
                'yy': 'Dancy Blog',
                'zz': 'Schmancy Blog'}
 
-        S = TranslatableSetting(inp)
+        S = TranslatableSetting('S', inp)
         S.default_lang = 'xx'
         S.lang = 'xx'
 

@@ -234,16 +234,16 @@ class TranslatableSetting(object):
         """
         self.name = name
         self._inp = inp
+        self.overriden_default = False
         self.values = defaultdict()
 
         if isinstance(inp, dict):
             self.translated = True
             self.values.update(inp)
-            if self.default_lang in self.values.keys():
-                self.values.default_factory = lambda: inp[self.default_lang]
-            else:
-                self.assumed_lang = list(self.values.keys())[0]
-                self.values.default_factory = lambda: inp[self.assumed_lang]
+            if self.default_lang not in self.values.keys():
+                self.default_lang = list(self.values.keys())[0]
+                self.overridden_default = True
+            self.values.default_factory = lambda: inp[self.default_lang]
         else:
             self.translated = False
             self.values[self.default_lang] = inp
