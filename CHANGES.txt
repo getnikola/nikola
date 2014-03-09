@@ -4,6 +4,10 @@ New in master
 Features
 --------
 
+* Added a ``CONTENT_FOOTER_FORMATS`` config option.  It is used to format
+  the ``CONTENT_FOOTER`` variable properly, for compatibility with
+  the Translatable Settings feature.  The variable takes a dict, the keys
+  of which are languages, and values are (args, kwargs). (Issue #1112)
 * Certain settings are now translatable.  As of now, the settings are:
   BLOG_AUTHOR, BLOG_TITLE, BLOG_DESCRIPTION, LICENSE, CONTENT_FOOTER,
   SOCIAL_BUTTONS_CODE, SEARCH_FORM, BODY_END, EXTRA_HEAD_DATA
