@@ -31,6 +31,15 @@ from nikola.plugin_categories import Task
 from nikola import utils
 
 
+def rest_deps(post, task):
+    """Add extra_deps from ReST into task.
+
+    The .dep file is created by ReST so not available before the task starts
+    to execute.
+    """
+    task.file_dep.update(post.extra_deps())
+
+
 class RenderPosts(Task):
     """Build HTML fragments from metadata and text."""
 
@@ -59,7 +68,9 @@ class RenderPosts(Task):
                     'name': dest,
                     'file_dep': post.fragment_deps(lang),
                     'targets': [dest],
-                    'actions': [(post.compile, (lang, ))],
+                    'actions': [(post.compile, (lang, )),
+                                (rest_deps, (post,)),
+                                ],
                     'clean': True,
                     'uptodate': [utils.config_changed(deps_dict)],
                 }
