@@ -319,6 +319,16 @@ class Post(object):
             LOGGER.notice('{0} is scheduled to be published in the future ({1})'.format(
                 self.source_path, self.date))
 
+    def extra_deps(self):
+        """get extra depepencies from .dep files
+        This file is created by ReST
+        """
+        dep_path = self.base_path + '.dep'
+        if os.path.isfile(dep_path):
+            with codecs.open(dep_path, 'rb+', 'utf8') as depf:
+                return [l.strip() for l in depf.readlines()]
+        return []
+
     def fragment_deps(self, lang):
         """Return a list of dependencies to build this post's fragment."""
         deps = []
@@ -326,10 +336,7 @@ class Post(object):
             deps.append(self.source_path)
         if os.path.isfile(self.metadata_path):
             deps.append(self.metadata_path)
-        dep_path = self.base_path + '.dep'
-        if os.path.isfile(dep_path):
-            with codecs.open(dep_path, 'rb+', 'utf8') as depf:
-                deps.extend([l.strip() for l in depf.readlines()])
+        deps.extend(self.extra_deps())
         lang_deps = []
         if lang != self.default_lang:
             lang_deps = [get_translation_candidate(self.config, d, lang) for d in deps]
