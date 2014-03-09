@@ -190,17 +190,19 @@ class TranslatableSetting(object):
     """
     A setting that can be translated.
 
-    You can access it via:
+    You can access it via: SETTING(lang).  You can omit lang, in which
+    case Nikola will ask LocaleBorg, unless you set SETTING.lang,
+    which overrides that call.
 
-    * str(SETTING) == unicode(SETTING) -- outputs in SETTING.lang
-    * SETTING(lang)                    -- outputs in lang
-
-    Method 1 is generally used throughout themes for backwards
-    compatibility.  Method 2 is meant for new things, and for
-    code (which doesn't need to be backwards compatible).
+    You can also stringify the setting and you will get something
+    sensible (in what LocaleBorg claims the language is, can also be
+    overriden by SETTING.lang). Note that this second method is
+    deprecated.  It is kept for backwards compatibility and
+    safety.  It is not guaranteed.
 
     The underlying structure is a defaultdict.  The language that
     is the default value of the dict is provided with __init__().
+    If you need access the underlying dict (you generally don’t,
     """
 
     # WARNING: This is generally not used and replaced with a call to
@@ -268,11 +270,11 @@ class TranslatableSetting(object):
             return self.values[lang]
 
     def __str__(self):
-        """Return the value in the currently set language."""
+        """Return the value in the currently set language.  (deprecated)"""
         return self.values[self.get_lang()]
 
     def __unicode__(self):
-        """Return the value in the currently set language."""
+        """Return the value in the currently set language.  (deprecated)"""
         return self.values[self.get_lang()]
 
     def __repr__(self):

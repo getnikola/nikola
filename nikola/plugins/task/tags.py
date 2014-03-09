@@ -289,7 +289,7 @@ class RenderTags(Task):
             'file_dep': deps,
             'targets': [output_name],
             'actions': [(utils.generic_rss_renderer,
-                        (lang, "{0} ({1})".format(kw["blog_title"], tag),
+                        (lang, "{0} ({1})".format(kw["blog_title"](lang), tag),
                          kw["site_url"], None, post_list,
                          output_name, kw["rss_teasers"], kw["rss_plain"], kw['feed_length'],
                          feed_url))],

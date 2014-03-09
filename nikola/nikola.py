@@ -246,17 +246,29 @@ class Nikola(object):
         # Translatability configuration.
         utils.TranslatableSetting.default_lang = self.config['DEFAULT_LANG']
 
-        TRANSLATABLE_SETTINGS = ('BLOG_AUTHOR',
-                                 'BLOG_TITLE',
-                                 'BLOG_DESCRIPTION',
-                                 'LICENSE',
-                                 'CONTENT_FOOTER',
-                                 'SOCIAL_BUTTONS_CODE',
-                                 'SEARCH_FORM',
-                                 'BODY_END',
-                                 'EXTRA_HEAD_DATA',)
+        self.TRANSLATABLE_SETTINGS = ('BLOG_AUTHOR',
+                                      'BLOG_TITLE',
+                                      'BLOG_DESCRIPTION',
+                                      'LICENSE',
+                                      'CONTENT_FOOTER',
+                                      'SOCIAL_BUTTONS_CODE',
+                                      'SEARCH_FORM',
+                                      'BODY_END',
+                                      'EXTRA_HEAD_DATA',)
+        self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
+                                             'blog_title',
+                                             'blog_desc',  # TODO: remove in v8
+                                             'blog_description',
+                                             'license',
+                                             'content_footer',
+                                             'social_buttons_code',
+                                             'add_this_buttons',  # TODO: remove in v7
+                                             'search_form',
+                                             'body_end',
+                                             'analytics',  # TODO: remove in v7
+                                             'extra_head_data')
 
-        for i in TRANSLATABLE_SETTINGS:
+        for i in self.TRANSLATABLE_SETTINGS:
             try:
                 self.config[i] = utils.TranslatableSetting(self.config[i])
             except KeyError:
@@ -511,10 +523,13 @@ class Nikola(object):
             'DATE_FORMAT', '%Y-%m-%d %H:%M')
         self._GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
         self._GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
+        self._GLOBAL_CONTEXT['blog_description'] = self.config.get('BLOG_DESCRIPTION')
+
+        # TODO: remove in v8
+        self._GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
 
         # TODO: remove fallback in v7
         self._GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL', self.config.get('BLOG_URL'))
-        self._GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
         self._GLOBAL_CONTEXT['body_end'] = self.config.get('BODY_END')
         # TODO: remove in v7
         self._GLOBAL_CONTEXT['analytics'] = self.config.get('BODY_END')
@@ -688,6 +703,8 @@ class Nikola(object):
         local_context["template_name"] = template_name
         local_context.update(self.GLOBAL_CONTEXT)
         local_context.update(context)
+        for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
+            local_context[k] = local_context[k](local_context['lang'])
         # string, arguments
         local_context["formatmsg"] = lambda s, *a: s % a
         data = self.template_system.render_template(
@@ -1189,8 +1206,8 @@ class Nikola(object):
             deps += post.deps(lang)
         context = {}
         context["posts"] = posts
-        context["title"] = self.config['BLOG_TITLE']
-        context["description"] = self.config['BLOG_DESCRIPTION']
+        context["title"] = self.config['BLOG_TITLE'](lang)
+        context["description"] = self.config['BLOG_DESCRIPTION'](lang)
         context["lang"] = lang
         context["prevlink"] = None
         context["nextlink"] = None
