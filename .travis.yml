@@ -23,7 +23,8 @@ install:
   - "if [[ $NMODE == 'flake8' ]]; then pip install flake8; fi"
 # We run tests and nikola (to see if the command is executable) OR flake8.
 script:
-  - "if [[ $NMODE == 'nikola' ]]; then nosetests --with-coverage --cover-package=nikola --with-doctest --doctest-options=+NORMALIZE_WHITESPACE --logging-filter=-yapsy; fi"
+  - "if [[ $NMODE == 'nikola' ]]; then py.test --doctest-modules nikola/; fi"
+  - "if [[ $NMODE == 'nikola' ]]; then py.test --cov nikola --cov-report term-missing tests/; fi"
   - "if [[ $NMODE == 'nikola' ]]; then nikola help; fi"
   - "if [[ $NMODE == 'flake8' ]]; then flake8 .; fi"
 after_success:
