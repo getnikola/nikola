@@ -243,10 +243,11 @@ class TranslatableSetting(object):
             if self.default_lang not in self.values.keys():
                 self.default_lang = list(self.values.keys())[0]
                 self.overridden_default = True
+            self.values.default_factory = lambda: self.values[self.default_lang]
         else:
             self.translated = False
             self.values[self.default_lang] = inp
-        self.values.default_factory = lambda: self.values[self.default_lang]
+            self.values.default_factory = lambda: inp
 
     def get_lang(self):
         """Return the language that should be used to retrieve settings."""
@@ -294,8 +295,9 @@ class TranslatableSetting(object):
 
     def format(self, *args, **kwargs):
         """Format ALL the values in the setting the same way."""
-        for k in self.values:
-            self.values[k] = self.values[k].format(*args, **kwargs)
+        for l in self.values:
+            self.values[l] = self.values[l].format(*args, **kwargs)
+        self.values.default_factory = lambda: self.values[self.default_lang]
         return self
 
     def langformat(self, formats):
@@ -303,37 +305,54 @@ class TranslatableSetting(object):
         if not formats:
             # Input is empty.
             return self
-        if not self.translated:
-            # The easiest path: single language input.
-            l = self.default_lang
-            try:
-                args, kwargs = formats[l]
-            except KeyError:
-                a = formats[list(formats.keys())[0]]
-                args, kwargs = formats[a]
-            self.values[l] = self.values[l].format(*args, **kwargs)
         else:
-            # Multiple languages? it can be a bit harder.
-            keys = list(formats.keys())
-            if len(keys) == 0:
-                # No input, actually.  No idea why user is calling us.
-                pass
-            elif len(keys) == 1:
-                # We have only one language.
-                args, kwargs = formats[self.default_lang]
-                self.format(*args, **kwargs)
+            # This is a little tricky.
+            # Basically, we have some things that may very well be dicts.  Or
+            # actually, TranslatableSettings in the original unprocessed dict
+            # form.  We need to detect them.
+
+            # First off, we need to check what languages we have and what
+            # should we use as the default.
+            keys = list(formats)
+            if self.default_lang in keys:
+                d = formats[self.default_lang]
             else:
-                # We have multiple languages.  This is the hardest.
-                if self.default_lang in keys:
-                    d = formats[self.default_lang]
+                d = formats[keys[0]]
+            # Discovering languages of the settings here.
+            langkeys = []
+            for f in formats.values():
+                for a in f[0] + tuple(f[1].values()):
+                    if isinstance(a, dict):
+                        langkeys += list(a)
+            # Now that we know all this, we go through all the languages we have.
+            allvalues = set(keys + langkeys + list(self.values))
+            for l in allvalues:
+                if l in keys:
+                    oargs, okwargs = formats[l]
                 else:
-                    d = formats[keys[0]]
-                for k in self.values:
-                    if k in keys:
-                        args, kwargs = self.values[k]
+                    oargs, okwargs = d
+
+                args = []
+                kwargs = {}
+
+                for a in oargs:
+                    # We create temporary TranslatableSettings and replace the
+                    # values with them.
+                    if isinstance(a, dict):
+                        a = TranslatableSetting('NULL', a)
+                        args.append(a(l))
                     else:
-                        args, kwargs = d
-                    self.values[k] = self.values[k].format(*args, **kwargs)
+                        args.append(a)
+
+                for k, v in okwargs.items():
+                    if isinstance(v, dict):
+                        v = TranslatableSetting('NULL', v)
+                        kwargs.update({k: v(l)})
+                    else:
+                        kwargs.update({k: v})
+
+                self.values[l] = self.values[l].format(*args, **kwargs)
+                self.values.default_factory = lambda: self.values[self.default_lang]
 
         return self
 
