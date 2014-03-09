@@ -222,7 +222,7 @@ class TranslatableSetting(object):
     def __dir__(self):
         return list(set(self.__dict__).union(set(dir(str))))
 
-    def __init__(self, inp):
+    def __init__(self, name, inp):
         """Initialize a translated setting.
 
         Valid inputs include:
@@ -232,6 +232,7 @@ class TranslatableSetting(object):
                                     if there is none, default_lang is used.
 
         """
+        self.name = name
         self._inp = inp
         self.values = defaultdict()
 

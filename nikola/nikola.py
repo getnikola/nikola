@@ -270,7 +270,7 @@ class Nikola(object):
 
         for i in self.TRANSLATABLE_SETTINGS:
             try:
-                self.config[i] = utils.TranslatableSetting(self.config[i])
+                self.config[i] = utils.TranslatableSetting(i, self.config[i])
             except KeyError:
                 pass
 
