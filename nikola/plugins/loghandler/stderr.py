@@ -41,7 +41,11 @@ class StderrHandler(SignalHandler):
         conf = self.site.config.get('LOGGING_HANDLERS').get('stderr')
         if conf or os.getenv('NIKOLA_DEBUG'):
             self.site.loghandlers.append(ColorfulStderrHandler(
-                level='DEBUG' if DEBUG else conf.get('loglevel', 'WARNING').upper(),
+                # We do not allow the level to be something else than 'DEBUG'
+                # or 'INFO'  Any other level can have bad effects on the user
+                # experience and is discouraged.
+                # (oh, and it was incorrectly set to WARNING before)
+                level='DEBUG' if DEBUG or (conf.get('loglevel', 'INFO').upper() == 'DEBUG') else 'INFO',
                 format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
             ))
 

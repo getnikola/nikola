@@ -713,9 +713,14 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # DEMOTE_HEADERS = 1
 
 # You can configure the logging handlers installed as plugins or change the
-# log level of the default stdout handler.
+# log level of the default stderr handler.
+# WARNING: The stderr handler allows only the loglevels of 'INFO' and 'DEBUG'.
+#          This is done for safety reasons, as blocking out anything other
+#          than 'DEBUG' may hide important information and break the user
+#          experience!
+
 LOGGING_HANDLERS = {
-    'stderr': {'loglevel': 'WARNING', 'bubble': True},
+    'stderr': {'loglevel': 'INFO', 'bubble': True},
     #'smtp': {
     #    'from_addr': 'test-errors@example.com',
     #    'recipients': ('test@example.com'),
