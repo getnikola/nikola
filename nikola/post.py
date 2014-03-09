@@ -290,7 +290,6 @@ class Post(object):
             deps.append(self.base_path)
         if lang != self.default_lang:
             deps += [get_translation_candidate(self.config, self.base_path, lang)]
-        deps += self.fragment_deps(lang)
         return deps
 
     def compile(self, lang):

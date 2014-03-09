@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Fix dependency issue in listings (Issue #1032)
 * Invert ``HIDE_SOURCELINK`` and ``HIDE_UNTRANSLATED_POSTS`` into
   ``SHOW_SOURCELINK`` and ``SHOW_UNTRANSLATED_POSTS`` (Issue #1076)
 * Remove old messages left over for backwards compatibility: (Issues #829, #1105)
