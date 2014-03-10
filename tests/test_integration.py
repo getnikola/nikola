@@ -459,12 +459,23 @@ class InvariantBuildTest(DemoBuildTest):
         with cd(self.target_dir):
             __main__.main(["build", "--invariant"])
 
+    @classmethod
+    def fill_site(self):
+        """Fill the site with demo content."""
+        self.init_command.copy_sample_site(self.target_dir)
+        self.init_command.create_configuration(self.target_dir)
+
     def test_invariance(self):
         """Compare the output to the canonical output."""
-        good_path = os.path.join(os.path.dirname(__file__), 'data', 'invariant')
+        from pdb import set_trace; set_trace()
+        good_path = os.path.join(os.path.dirname(__file__), 'data', 'baseline')
         with cd(self.target_dir):
-            diff = subprocess.check_output(['diff', '-r', good_path, 'output'])
-            self.assertEqual(diff.strip(), '')
+            try:
+                diff = subprocess.check_output(['diff', '-r', good_path, 'output'])
+                self.assertEqual(diff.strip(), '')
+            except subprocess.CalledProcessError:
+                print('Unexplained diff.')
+                self.assertEqual(1, 0)
 
 
 if __name__ == "__main__":
