@@ -154,5 +154,4 @@ class Chart(Directive):
             import re
             data = re.sub('id="chart-[a-f0-9\-]+"', 'id="chart-foobar"', data)
             data = re.sub('#chart-[a-f0-9\-]+', '#chart-foobar', data)
-                         
         return [nodes.raw('', data, format='html')]
