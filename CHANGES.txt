@@ -4,7 +4,7 @@ New in master
 Features
 --------
 
-* New Post.author() returns meta 'author' or BLOG_AUTHOR (Issue #TODO)
+* New Post.author() returns meta 'author' or BLOG_AUTHOR (Issue #1117)
 * Ship base-jinja, bootstrap-jinja, bootstrap3-jinja with Nikola (Issue #1104)
 * Fix dependency issue in listings (Issue #1032)
 * Invert ``HIDE_SOURCELINK`` and ``HIDE_UNTRANSLATED_POSTS`` into
