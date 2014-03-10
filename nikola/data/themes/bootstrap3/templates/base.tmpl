@@ -75,7 +75,7 @@ lang="${lang}">
 
 ${bootstrap.late_load_js()}
 ${base.html_social()}
-    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+    <script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
     <%block name="extra_js"></%block>
     % if annotations and post and not post.meta('noannotations'):
         ${notes.code()}

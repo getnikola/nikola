@@ -33,7 +33,7 @@ the bottom right of the page, provided by Addthis. This is the HTML code for tha
     <li><a class="addthis_button_twitter"></a>
     </ul>
     </div>
-    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
     <!-- End of social buttons -->
     """
 
@@ -96,8 +96,7 @@ is the HTML code suggested by ShareNice:
         data-services="plus.google.com,facebook.com,digg.com,email,delicious.com,twitter.com"
         style="float:right"></div>"""
 
-    BODY_END = """<script src="http://graingert.co.uk/shareNice/code.js"
-        type="text/javascript"></script>"""
+    BODY_END = """<script src="http://graingert.co.uk/shareNice/code.js"></script>"""
 
 And you should now see a sharing box at the bottom right of the page.
 
@@ -169,8 +168,8 @@ Edit your ``conf.py``:
 .. code-block:: python
 
     BODY_END = """
-    <script type="text/javascript" src="/javascripts/jquery.socialshareprivacy.min.js"></script>
-    <script type="text/javascript">
+    <script src="/javascripts/jquery.socialshareprivacy.min.js"></script>
+    <script>
     $(document).ready(function () {
         $('.share').socialSharePrivacy();
     });

@@ -1209,7 +1209,7 @@ different ones, or about other web servers, please share!
 
 #. Enable compression in Apache::
 
-      AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+      AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript
 
 #. If even after you did the previous step the CSS files are not sent compressed::
 
@@ -1550,9 +1550,9 @@ Here's a set of example settings for conf.py that should work nicely with the "b
     </span>"""
 
     BODY_END = """
-    <script type="text/javascript" src="/assets/js/tipuesearch_set.js"></script>
-    <script type="text/javascript" src="/assets/js/tipuesearch.js"></script>
-    <script type="text/javascript">
+    <script src="/assets/js/tipuesearch_set.js"></script>
+    <script src="/assets/js/tipuesearch.js"></script>
+    <script>
     $(document).ready(function() {
         $('#tipue_search_input').tipuesearch({
             'mode': 'json',

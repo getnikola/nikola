@@ -6,11 +6,11 @@
     <link href="/assets/css/colorbox.css" rel="stylesheet" type="text/css"/>
     <link href="/assets/css/theme.css" rel="stylesheet" type="text/css"/>
     <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
-    <script src="/assets/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/assets/js/jquery-1.10.2.min.js"></script>
     <script src="//cdn.jsdelivr.net/jquery.mustache/0.2.7/jquery.mustache.js"></script>
     <script src="//cdn.jsdelivr.net/mustache.js/0.7.2/mustache.js"></script>
-    <script src="/assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
-    <script type="text/javascript">
+    <script src="/assets/js/jquery.colorbox-min.js"></script>
+    <script>
 function load_data(dataurl) {
     jQuery.getJSON(dataurl, function(data) {
         $('body').mustache('view', data, { method: 'html' });

@@ -487,7 +487,7 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # <li><a class="addthis_button_twitter"></a>
 # </ul>
 # </div>
-# <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
+# <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
 # <!-- End of social buttons -->
 # """
 
@@ -556,9 +556,9 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # </span>"""
 #
 # BODY_END = """
-# <script type="text/javascript" src="/assets/js/tipuesearch_set.js"></script>
-# <script type="text/javascript" src="/assets/js/tipuesearch.js"></script>
-# <script type="text/javascript">
+# <script src="/assets/js/tipuesearch_set.js"></script>
+# <script src="/assets/js/tipuesearch.js"></script>
+# <script>
 # $(document).ready(function() {
     # $('#tipue_search_input').tipuesearch({
         # 'mode': 'json',
