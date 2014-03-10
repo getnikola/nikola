@@ -26,6 +26,7 @@
 
 from __future__ import print_function
 import os
+import sys
 import shutil
 import codecs
 import json
@@ -57,30 +58,30 @@ SAMPLE_CONF = {
     'COMMENT_SYSTEM_ID': 'nikolademo',
     'TRANSLATIONS_PATTERN': DEFAULT_TRANSLATIONS_PATTERN,
     'POSTS': """(
-("posts/*.rst", "posts", "post.tmpl"),
-("posts/*.txt", "posts", "post.tmpl"),
+    ("posts/*.rst", "posts", "post.tmpl"),
+    ("posts/*.txt", "posts", "post.tmpl"),
 )""",
     'PAGES': """(
-("stories/*.rst", "stories", "story.tmpl"),
-("stories/*.txt", "stories", "story.tmpl"),
+    ("stories/*.rst", "stories", "story.tmpl"),
+    ("stories/*.txt", "stories", "story.tmpl"),
 )""",
     'COMPILERS': """{
-"rest": ('.rst', '.txt'),
-"markdown": ('.md', '.mdown', '.markdown'),
-"textile": ('.textile',),
-"txt2tags": ('.t2t',),
-"bbcode": ('.bb',),
-"wiki": ('.wiki',),
-"ipynb": ('.ipynb',),
-"html": ('.html', '.htm'),
-# PHP files are rendered the usual way (i.e. with the full templates).
-# The resulting files have .php extensions, making it possible to run
-# them without reconfiguring your server to recognize them.
-"php": ('.php',),
-# Pandoc detects the input from the source filename
-# but is disabled by default as it would conflict
-# with many of the others.
-# "pandoc": ('.rst', '.md', '.txt'),
+    "rest": ('.rst', '.txt'),
+    "markdown": ('.md', '.mdown', '.markdown'),
+    "textile": ('.textile',),
+    "txt2tags": ('.t2t',),
+    "bbcode": ('.bb',),
+    "wiki": ('.wiki',),
+    "ipynb": ('.ipynb',),
+    "html": ('.html', '.htm'),
+    # PHP files are rendered the usual way (i.e. with the full templates).
+    # The resulting files have .php extensions, making it possible to run
+    # them without reconfiguring your server to recognize them.
+    "php": ('.php',),
+    # Pandoc detects the input from the source filename
+    # but is disabled by default as it would conflict
+    # with many of the others.
+    # "pandoc": ('.rst', '.md', '.txt'),
 }""",
     'REDIRECTIONS': [],
 }
@@ -118,6 +119,14 @@ class CommandInit(Command):
     doc_purpose = "create a Nikola site in the specified folder"
     cmd_options = [
         {
+            'name': 'quiet',
+            'long': 'quiet',
+            'short': 'q',
+            'default': False,
+            'type': bool,
+            'help': "Do not ask questions about config.",
+        },
+        {
             'name': 'demo',
             'long': 'demo',
             'default': False,
@@ -151,13 +160,56 @@ class CommandInit(Command):
     def get_path_to_nikola_modules():
         return os.path.dirname(nikola.__file__)
 
+    @staticmethod
+    def ask_questions():
+        """Ask some questions about Nikola."""
+        def ask(query, default):
+            """Ask a question."""
+            if default:
+                default_q = ' [{0}]'.format(default)
+            else:
+                default_q = ''
+            # Stolen from new_post.
+            print("{query}{default_q}: ".format(query=query, default_q=default_q), end='')
+            # WHY, PYTHON3???? WHY?
+            sys.stdout.flush()
+            inp = sys.stdin.readline().strip()
+            return inp if inp else default
+
+        questions = [
+            ('Questions about the site', None, None, None),
+            # query, default, toconf, destination
+            ('Site title', 'My Nikola Site', True, 'BLOG_TITLE'),
+            ('Site author', 'Nikola Tesla', True, 'BLOG_AUTHOR'),
+            ('Site author’s e-mail', 'n.tesla@example.com', True, 'BLOG_EMAIL'),
+            ('Site description', 'This is a demo site for Nikola.', True, 'BLOG_DESCRIPTION'),
+            ('Site URL', 'http://getnikola.com/', True, 'SITE_URL'),
+            #('Questions about languages and locales', None, None, None),
+            ('Default language', 'en', True, 'DEFAULT_LANG'),
+        ]
+
+        print("Creating Nikola Site")
+        print("====================\n")
+        print("This is Nikola v{0}.  We will now ask you a few easy questions about your new site.".format(nikola.__version__))
+        print("If you do not want to answer and want to go with the defaults instead, simply restart with the `-q` parameter.")
+
+        for query, default, toconf, destination in questions:
+            if default is toconf is destination is None:
+                print('--- {0} ---'.format(query))
+            else:
+                answer = ask(query, default)
+                if toconf:
+                    SAMPLE_CONF[destination] = answer
+
     def _execute(self, options={}, args=None):
         """Create a new site."""
         if not args:
             print("Usage: nikola init folder [options]")
             return False
         target = args[0]
-        if not options or not options.get('demo'):
+        if not options.get('quiet'):
+            self.ask_questions()
+        if not options.get('demo'):
             self.create_empty_site(target)
             LOGGER.info('Created empty site at {0}.'.format(target))
         else:
