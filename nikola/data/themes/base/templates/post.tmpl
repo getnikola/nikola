@@ -14,7 +14,7 @@ ${helper.meta_translations(post)}
     <header>
         ${helper.html_title()}
         <div class="metadata">
-        <p class="byline author vcard">${messages("By")} <span class="byline-name fn">FIXME</span></p>
+        <p class="byline author vcard">${messages("By")} <span class="byline-name fn">${post.author()}</span></p>
         <p class="dateline">${messages("Published on")} <time class="published dt-published" datetime="${post.date.isoformat()}" itemprop="datePublished">${post.formatted_date(date_format)}</time></p>
         ${helper.html_translations(post)}
 		<%block name="sourcelink">
