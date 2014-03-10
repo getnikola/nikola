@@ -11,7 +11,7 @@ ${helper.meta_translations(post)}
 </%block>
 <%block name="content">
     <article class="postbox post-${post.meta('type')}">
-    <div class="h-entry" itemscope="itemscope" itemtype="http://schema.org/Article">
+    <section class="h-entry" itemscope="itemscope" itemtype="http://schema.org/Article">
     ${helper.html_title()}
     <hr>
     <small>
@@ -28,14 +28,17 @@ ${helper.meta_translations(post)}
     <hr>
     <div class="e-content" itemprop="articleBody text">
     ${post.text()}
-    </div>
+    </section>
     %if post.description():
         <meta content="${post.description()}" itemprop="description">
     %endif
     </div>
     ${helper.html_pager(post)}
     % if not post.meta('nocomments'):
+        <section class="comments">
+        <h2>${messages("Comments")}</h2>
         ${comments.comment_form(post.permalink(absolute=True), post.title(), post._base_path)}
+        </section>
     % endif
     ${helper.mathjax_script(post)}
     </article>

@@ -5,6 +5,7 @@ MESSAGES = {
     "Also available in:": "Also available in:",
     "Archive": "Archive",
     "Categories": "Categories",
+    "Comments": "Comments",
     "LANGUAGE": "English",
     "More posts about %s": "More posts about %s",
     "Newer posts": "Newer posts",
