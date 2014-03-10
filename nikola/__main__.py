@@ -128,6 +128,8 @@ class Build(DoitRun):
                 'default': False,
                 'type': bool,
                 'help': "Generate invariant output (for testing only!).",
+            }
+        )
         opts.append(
             {
                 'name': 'quiet',
