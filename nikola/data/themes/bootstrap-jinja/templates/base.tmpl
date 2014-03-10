@@ -51,7 +51,7 @@ lang="{{ lang }}">
                     <li>{{ base.html_translations() }}</li>
                 {% endif %}
                 {% endblock %}
-                {% if not hide_sourcelink %}
+                {% if show_sourcelink %}
                     <li>{% block sourcelink %}{% endblock %}</li>
                 {% endif %}
                 </ul>

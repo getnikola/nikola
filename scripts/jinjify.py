@@ -47,7 +47,7 @@ def jinjify(in_theme, out_theme):
         data = '\n'.join(lines)
 
         with codecs.open(out_template, "wb+", "utf-8") as outf:
-            outf.write(data)
+            outf.write(data + '\n')
 
         # Syntax check output
         source, filename = lookup.loader.get_source(lookup, os.path.basename(template))[:2]
@@ -57,11 +57,21 @@ def jinjify(in_theme, out_theme):
             error("Syntax error in {0}:{1}".format(out_template, e.lineno))
 
     parent = os.path.basename(in_theme.rstrip('/'))
+    child = os.path.basename(out_theme.rstrip('/'))
+    mappings = {
+        'base-jinja': 'base',
+        'bootstrap-jinja': 'base-jinja',
+        'bootstrap3-jinja': 'bootstrap-jinja',
+    }
+
+    if child in mappings:
+        parent = mappings[child]
+
     with open(os.path.join(out_theme, "parent"), "wb+") as outf:
-        outf.write(parent)
+        outf.write(parent + '\n')
 
     with open(os.path.join(out_theme, "engine"), "wb+") as outf:
-        outf.write("jinja")
+        outf.write("jinja\n")
 
     # Copy assets
     #shutil.rmtree(os.path.join(out_theme, "assets"))
