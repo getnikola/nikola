@@ -524,7 +524,7 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 #
 #SEARCH_FORM = """
 #<!-- Custom search -->
-#<form method="get" id="search" action="http://duckduckgo.com/"
+#<form method="get" id="search" action="//duckduckgo.com/"
 # class="navbar-form pull-left">
 #<input type="hidden" name="sites" value="%s"/>
 #<input type="hidden" name="k8" value="#444444"/>
@@ -540,7 +540,7 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # If you prefer a google search form, here's an example that should just work:
 #SEARCH_FORM = """
 #<!-- Custom search with google-->
-#<form id="search" action="http://google.com/search" method="get" class="navbar-form pull-left">
+#<form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
 #<input type="hidden" name="q" value="site:%s" />
 #<input type="text" name="q" maxlength="255" results="0" placeholder="Search"/>
 #</form>
