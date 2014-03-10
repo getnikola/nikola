@@ -472,8 +472,9 @@ class InvariantBuildTest(DemoBuildTest):
             try:
                 diff = subprocess.check_output(['diff', '-r', good_path, 'output'])
                 self.assertEqual(diff.strip(), '')
-            except subprocess.CalledProcessError:
+            except subprocess.CalledProcessErrori, exc:
                 print('Unexplained diff.')
+                print(exc.output)
                 self.assertEqual(1, 0)
 
 
