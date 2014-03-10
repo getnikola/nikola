@@ -124,7 +124,10 @@ class PostList(Directive):
         show_all = self.options.get('all', False)
         lang = self.options.get('lang', utils.LocaleBorg().current_lang)
         template = self.options.get('template', 'post_list_directive.tmpl')
-        post_list_id = self.options.get('id', 'post_list_' + uuid.uuid4().hex)
+        if self.site.invariant:  # for testing purposes
+            post_list_id = self.options.get('id', 'post_list_' + 'fixedvaluethatisnotauuid')
+        else:
+            post_list_id = self.options.get('id', 'post_list_' + uuid.uuid4().hex)
 
         posts = []
         step = -1 if reverse is None else None

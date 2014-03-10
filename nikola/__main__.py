@@ -89,6 +89,9 @@ def main(args):
     config.update({'__colorful__': colorful})
 
     site = Nikola(**config)
+    site.invariant = False
+    if len(args) > 0 and args[0] == 'build' and '--invariant' in args:
+        site.invariant = True
     return DoitNikola(site, quiet).run(args)
 
 
