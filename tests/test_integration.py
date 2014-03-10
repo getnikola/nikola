@@ -467,7 +467,6 @@ class InvariantBuildTest(DemoBuildTest):
 
     def test_invariance(self):
         """Compare the output to the canonical output."""
-        from pdb import set_trace; set_trace()
         good_path = os.path.join(os.path.dirname(__file__), 'data', 'baseline')
         with cd(self.target_dir):
             try:
