@@ -141,7 +141,10 @@ class Build(DoitRun):
                 'default': False,
                 'type': bool,
                 'help': "Run quietly.",
-            }, {
+            }
+        )
+        opts.append(
+            {
                 'name': 'invariant',
                 'long': 'invariant',
                 'default': False,
