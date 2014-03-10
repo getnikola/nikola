@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -41,7 +41,11 @@ except ImportError:
 
 from nikola.plugin_categories import Command
 from nikola import utils
+from nikola.utils import req_missing
 from nikola.plugins.basic_import import ImportMixin
+from nikola.plugins.command.init import SAMPLE_CONF, prepare_config
+
+LOGGER = utils.get_logger('import_feed', utils.STDERR_HANDLER)
 
 
 class CommandImportFeed(Command, ImportMixin):
@@ -58,8 +62,7 @@ class CommandImportFeed(Command, ImportMixin):
             Import Atom/RSS feed
         '''
         if feedparser is None:
-            print('To use the import_blogger command,'
-                  ' you have to install the "feedparser" package.')
+            req_missing(['feedparser'], 'import feeds')
             return
 
         if not args:
@@ -80,7 +83,7 @@ class CommandImportFeed(Command, ImportMixin):
         self.import_posts(channel)
 
         self.write_configuration(self.get_configuration_output_path(
-        ), conf_template.render(**self.context))
+        ), conf_template.render(**prepare_config(self.context)))
 
     @classmethod
     def get_channel_from_file(cls, filename):
@@ -88,7 +91,7 @@ class CommandImportFeed(Command, ImportMixin):
 
     @staticmethod
     def populate_context(channel):
-        context = {}
+        context = SAMPLE_CONF.copy()
         context['DEFAULT_LANG'] = channel.feed.title_detail.language \
             if channel.feed.title_detail.language else 'en'
         context['BLOG_TITLE'] = channel.feed.title
@@ -98,9 +101,11 @@ class CommandImportFeed(Command, ImportMixin):
         context['BLOG_EMAIL'] = channel.feed.author_detail.get('email', '') if 'author_detail' in channel.feed else ''
         context['BLOG_AUTHOR'] = channel.feed.author_detail.get('name', '') if 'author_detail' in channel.feed else ''
 
-        context['POST_PAGES'] = '''(
-            ("posts/*.html", "posts", "post.tmpl", True),
-            ("stories/*.html", "stories", "story.tmpl", False),
+        context['POSTS'] = '''(
+            ("posts/*.html", "posts", "post.tmpl"),
+        )'''
+        context['PAGES'] = '''(
+            ("stories/*.html", "stories", "story.tmpl"),
         )'''
         context['COMPILERS'] = '''{
         "rest": ('.txt', '.rst'),
@@ -132,8 +137,8 @@ class CommandImportFeed(Command, ImportMixin):
 
         # blogger supports empty titles, which Nikola doesn't
         if not title:
-            print("Warning: Empty title in post with URL {0}. Using NO_TITLE "
-                  "as placeholder, please fix.".format(link))
+            LOGGER.warn("Empty title in post with URL {0}. Using NO_TITLE "
+                        "as placeholder, please fix.".format(link))
             title = "NO_TITLE"
 
         if link_path.lower().endswith('.html'):
@@ -142,7 +147,7 @@ class CommandImportFeed(Command, ImportMixin):
         slug = utils.slugify(link_path)
 
         if not slug:  # should never happen
-            print("Error converting post:", title)
+            LOGGER.error("Error converting post:", title)
             return
 
         description = ''
@@ -170,7 +175,7 @@ class CommandImportFeed(Command, ImportMixin):
             out_folder + '/' + slug + '.html'
 
         if is_draft and self.exclude_drafts:
-            print('Draft "{0}" will not be imported.'.format(title))
+            LOGGER.notice('Draft "{0}" will not be imported.'.format(title))
         elif content.strip():
             # If no content is found, no files are written.
             content = self.transform_content(content)
@@ -182,8 +187,8 @@ class CommandImportFeed(Command, ImportMixin):
                 os.path.join(self.output_folder, out_folder, slug + '.html'),
                 content)
         else:
-            print('Not going to import "{0}" because it seems to contain'
-                  ' no content.'.format(title))
+            LOGGER.warn('Not going to import "{0}" because it seems to contain'
+                        ' no content.'.format(title))
 
     @staticmethod
     def write_metadata(filename, title, slug, post_date, description, tags):

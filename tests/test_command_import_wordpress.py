@@ -1,15 +1,22 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import
 
-from context import nikola
+# This code is so you can run the samples without installing the package,
+# and should be before any import touching nikola, in any file under tests/
 import os
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+
 import unittest
 import mock
 
+import nikola
 import nikola.plugins.command.import_wordpress
+from .base import BaseTestCase
 
 
-class BasicCommandImportWordpress(unittest.TestCase):
+class BasicCommandImportWordpress(BaseTestCase):
     def setUp(self):
         self.module = nikola.plugins.command.import_wordpress
         self.import_command = self.module.CommandImportWordpress()
@@ -42,6 +49,79 @@ class TestXMLGlueing(BasicCommandImportWordpress):
 Easy.
 """
         self.assertEqual(expected_xml, self.import_command._glue_xml_lines(xml))
+
+
+class TestQTranslateContentSeparation(BasicCommandImportWordpress):
+
+    def test_conserves_qtranslate_less_post(self):
+        content = """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual(1, len(content_translations))
+        self.assertEqual(content, content_translations[""])
+
+    def test_split_a_two_language_post(self):
+        content = """<!--:fr-->Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
+<!--:--><!--:en-->If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+
+Comments, questions and suggestions are welcome !
+<!--:-->"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual("""Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
+""", content_translations["fr"])
+        self.assertEqual("""If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+
+Comments, questions and suggestions are welcome !
+""", content_translations["en"])
+
+    def test_split_a_two_language_post_with_teaser(self):
+        content = """<!--:fr-->Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
+<!--:--><!--:en-->If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+
+Comments, questions and suggestions are welcome !
+<!--:--><!--more--><!--:fr-->
+Plus de détails ici !
+<!--:--><!--:en-->
+More details here !
+<!--:-->"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual("""Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
+ <!--more--> \n\
+Plus de détails ici !
+""", content_translations["fr"])
+        self.assertEqual("""If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+
+Comments, questions and suggestions are welcome !
+ <!--more--> \n\
+More details here !
+""", content_translations["en"])
+
+    def test_split_a_two_language_post_with_intermission(self):
+        content = """<!--:fr-->Voila voila<!--:-->COMMON<!--:en-->BLA<!--:-->"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual("Voila voila COMMON", content_translations["fr"])
+        self.assertEqual("COMMON BLA", content_translations["en"])
+
+    def test_split_a_two_language_post_with_uneven_repartition(self):
+        content = """<!--:fr-->Voila voila<!--:-->COMMON<!--:fr-->MOUF<!--:--><!--:en-->BLA<!--:-->"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual("Voila voila COMMON MOUF", content_translations["fr"])
+        self.assertEqual("COMMON BLA", content_translations["en"])
+
+    def test_split_a_two_language_post_with_uneven_repartition_bis(self):
+        content = """<!--:fr-->Voila voila<!--:--><!--:en-->BLA<!--:-->COMMON<!--:fr-->MOUF<!--:-->"""
+        content_translations = self.module.separate_qtranslate_content(content)
+        self.assertEqual("Voila voila COMMON MOUF", content_translations["fr"])
+        self.assertEqual("BLA COMMON", content_translations["en"])
 
 
 class CommandImportWordpressRunTest(BasicCommandImportWordpress):
@@ -127,7 +207,7 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
         self.assertEqual('Wordpress blog title', context['BLOG_TITLE'])
         self.assertEqual('Nikola test blog ;) - with moré Ümläüts',
                          context['BLOG_DESCRIPTION'])
-        self.assertEqual('http://some.blog', context['SITE_URL'])
+        self.assertEqual('http://some.blog/', context['SITE_URL'])
         self.assertEqual('mail@some.blog', context['BLOG_EMAIL'])
         self.assertEqual('Niko', context['BLOG_AUTHOR'])
 
@@ -155,17 +235,18 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
                         self.import_command.import_posts(channel)
 
         self.assertTrue(download_mock.called)
+        qpath = 'new_site/files/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png'
         download_mock.assert_any_call(
             'http://some.blog/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png',
-            'new_site/files/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png')
+            qpath.replace('/', os.sep))
 
         self.assertTrue(write_metadata.called)
         write_metadata.assert_any_call(
-            'new_site/stories/kontakt.meta', 'Kontakt',
+            'new_site/stories/kontakt.meta'.replace('/', os.sep), 'Kontakt',
             'kontakt', '2009-07-16 20:20:32', None, [])
 
         self.assertTrue(write_content.called)
-        write_content.assert_any_call('new_site/posts/200704hoert.wp',
+        write_content.assert_any_call('new_site/posts/2007/04/hoert.wp'.replace('/', os.sep),
                                       """An image.
 
 <img class="size-full wp-image-16" title="caption test" src="http://some.blog/wp-content/uploads/2009/07/caption_test.jpg" alt="caption test" width="739" height="517" />
@@ -185,11 +266,11 @@ The end.
 """)
 
         write_content.assert_any_call(
-            'new_site/posts/200807arzt-und-pfusch-s-i-c-k.wp',
+            'new_site/posts/2008/07/arzt-und-pfusch-s-i-c-k.wp'.replace('/', os.sep),
             '''<img class="size-full wp-image-10 alignright" title="Arzt+Pfusch - S.I.C.K." src="http://some.blog/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png" alt="Arzt+Pfusch - S.I.C.K." width="210" height="209" />Arzt+Pfusch - S.I.C.K.Gerade bin ich \xfcber das Album <em>S.I.C.K</em> von <a title="Arzt+Pfusch" href="http://www.arztpfusch.com/" target="_blank">Arzt+Pfusch</a> gestolpert, welches Arzt+Pfusch zum Download f\xfcr lau anbieten. Das Album steht unter einer Creative Commons <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/de/">BY-NC-ND</a>-Lizenz.
 Die Ladung <em>noisebmstupidevildustrial</em> gibts als MP3s mit <a href="http://www.archive.org/download/dmp005/dmp005_64kb_mp3.zip">64kbps</a> und <a href="http://www.archive.org/download/dmp005/dmp005_vbr_mp3.zip">VBR</a>, als Ogg Vorbis und als FLAC (letztere <a href="http://www.archive.org/details/dmp005">hier</a>). <a href="http://www.archive.org/download/dmp005/dmp005-artwork.zip">Artwork</a> und <a href="http://www.archive.org/download/dmp005/dmp005-lyrics.txt">Lyrics</a> gibts nochmal einzeln zum Download.''')
         write_content.assert_any_call(
-            'new_site/stories/kontakt.wp', """<h1>Datenschutz</h1>
+            'new_site/stories/kontakt.wp'.replace('/', os.sep), """<h1>Datenschutz</h1>
 Ich erhebe und speichere automatisch in meine Server Log Files Informationen, die dein Browser an mich \xfcbermittelt. Dies sind:
 
 <ul>
@@ -206,11 +287,11 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
 
         self.assertEqual(
             self.import_command.url_map['http://some.blog/2007/04/hoert/'],
-            'http://some.blog/posts/200704hoert.html')
+            'http://some.blog/posts/2007/04/hoert.html')
         self.assertEqual(
             self.import_command.url_map[
                 'http://some.blog/2008/07/arzt-und-pfusch-s-i-c-k/'],
-            'http://some.blog/posts/200807arzt-und-pfusch-s-i-c-k.html')
+            'http://some.blog/posts/2008/07/arzt-und-pfusch-s-i-c-k.html')
         self.assertEqual(
             self.import_command.url_map['http://some.blog/kontakt/'],
             'http://some.blog/stories/kontakt.html')

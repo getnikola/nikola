@@ -2,16 +2,18 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "Also available in": "Również dostępny w",
+    "Also available in:": "Również dostępny w językach:",
     "Archive": "Archiwum",
     "Categories": "Kategorie",
     "LANGUAGE": "polski",
-    "More posts about": "Więcej postów o",
+    "More posts about %s": "Więcej postów o %s",
     "Newer posts": "Nowsze posty",
     "Next post": "Następny post",
+    "No posts found.": "Nie znaleziono żadnych postów.",
+    "Nothing found.": "Nic nie znaleziono.",
     "Older posts": "Starsze posty",
     "Original site": "Oryginalna strona",
-    "Posted": "Opublikowany",
+    "Posted:": "Opublikowano:",
     "Posts about %s": "Posty o %s",
     "Posts for year %s": "Posty z roku %s",
     "Posts for {month} {year}": "Posty z {month} {year}",
@@ -21,5 +23,6 @@ MESSAGES = {
     "Source": "Źródło",
     "Tags and Categories": "Tagi i Kategorie",
     "Tags": "Tags",
-    "old posts page %d": "stare posty, strona %d",
+    "old posts, page %d": "stare posty, strona %d",
+    "page %d": "strona %d",
 }

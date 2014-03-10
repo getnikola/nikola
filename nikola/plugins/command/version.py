@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -41,4 +41,4 @@ class CommandVersion(Command):
 
     def _execute(self, options={}, args=None):
         """Print the version number."""
-        print("Nikola version " + __version__)
+        print("Nikola v" + __version__)

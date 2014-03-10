@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -29,6 +29,7 @@ from __future__ import unicode_literals
 import codecs
 import glob
 import os
+import sys
 import subprocess
 
 from nikola.plugin_categories import Task
@@ -36,35 +37,47 @@ from nikola import utils
 
 
 class BuildLess(Task):
-    """Bundle assets using WebAssets."""
+    """Generate CSS out of LESS sources."""
 
     name = "build_less"
     sources_folder = "less"
     sources_ext = ".less"
-    compiler_name = "lessc"
 
     def gen_tasks(self):
         """Generate CSS out of LESS sources."""
+        self.compiler_name = self.site.config['LESS_COMPILER']
+        self.compiler_options = self.site.config['LESS_OPTIONS']
 
         kw = {
             'cache_folder': self.site.config['CACHE_FOLDER'],
             'themes': self.site.THEMES,
         }
+        tasks = {}
 
         # Find where in the theme chain we define the LESS targets
         # There can be many *.less in the folder, but we only will build
         # the ones listed in less/targets
-        targets_path = utils.get_asset_path(os.path.join(self.sources_folder, "targets"), self.site.THEMES)
+        if os.path.isfile(os.path.join(self.sources_folder, "targets")):
+            targets_path = os.path.join(self.sources_folder, "targets")
+        else:
+            targets_path = utils.get_asset_path(os.path.join(self.sources_folder, "targets"), self.site.THEMES)
         try:
             with codecs.open(targets_path, "rb", "utf-8") as inf:
                 targets = [x.strip() for x in inf.readlines()]
         except Exception:
             targets = []
 
+        for task in utils.copy_tree(self.sources_folder, os.path.join(kw['cache_folder'], self.sources_folder)):
+            if task['name'] in tasks:
+                continue
+            task['basename'] = 'prepare_less_sources'
+            tasks[task['name']] = task
+            yield task
+
         for theme_name in kw['themes']:
             src = os.path.join(utils.get_theme_path(theme_name), self.sources_folder)
             for task in utils.copy_tree(src, os.path.join(kw['cache_folder'], self.sources_folder)):
-                #task['basename'] = self.name
+                task['basename'] = 'prepare_less_sources'
                 yield task
 
         # Build targets and write CSS files
@@ -79,9 +92,17 @@ class BuildLess(Task):
         def compile_target(target, dst):
             utils.makedirs(dst_dir)
             src = os.path.join(kw['cache_folder'], self.sources_folder, target)
-            compiled = subprocess.check_output([self.compiler_name, src])
+            run_in_shell = sys.platform == 'win32'
+            try:
+                compiled = subprocess.check_output([self.compiler_name] + self.compiler_options + [src], shell=run_in_shell)
+            except OSError:
+                utils.req_missing([self.compiler_name],
+                                  'build LESS files (and use this theme)',
+                                  False, False)
             with open(dst, "wb+") as outf:
                 outf.write(compiled)
+
+        yield self.group_task()
 
         for target in targets:
             dst = os.path.join(dst_dir, target.replace(self.sources_ext, ".css"))
@@ -90,10 +111,8 @@ class BuildLess(Task):
                 'name': dst,
                 'targets': [dst],
                 'file_dep': deps,
+                'task_dep': ['prepare_less_sources'],
                 'actions': ((compile_target, [target, dst]), ),
                 'uptodate': [utils.config_changed(kw)],
                 'clean': True
             }
-
-        if not targets:
-            yield {'basename': self.name, 'actions': []}

@@ -8,6 +8,8 @@
 Creating A Theme From Scratch (Almost)
 ======================================
 
+.. class:: lead
+
 There is some documentation about creating themes for Nikola, but maybe a tutorial is also a useful way
 to explain it. So, here it is. I'll explain how to create a theme (almost) from scratch. All themes
 in Nikola must inherit from the ``base`` theme. In this case, we will inherit from ``bootstrap``
@@ -30,6 +32,7 @@ First we will create a testing site::
 
 Our theme will inherit from the ``bootstrap`` theme, which is full-featured but boring.
 
+::
 
     $ mkdir themes
     $ mkdir themes/monospace
@@ -59,7 +62,7 @@ Templates: Page Layout
 The general page layout for the theme is done by the ``base.tmpl`` template, which is done using
 `Mako <http://www.makotemplates.org/>`_. This is bootstrap's ``base.tmpl``, it's not very big:
 
-.. code:: mako
+.. code-block:: mako
 
     ## -*- coding: utf-8 -*-
     <%namespace name="base" file="base_helper.tmpl" import="*" />
@@ -104,7 +107,7 @@ The general page layout for the theme is done by the ``base.tmpl`` template, whi
                         <li>${base.html_translations()}</li>
                     %endif
                     </%block>
-                    % if not hide_sourcelink:
+                    % if show_sourcelink:
                         <li><%block name="sourcelink"></%block></li>
                     %endif
                     </ul>
@@ -128,7 +131,7 @@ The general page layout for the theme is done by the ``base.tmpl`` template, whi
     </div>
     ${bootstrap.late_load_js()}
     ${base.html_social()}
-        <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});
+        <script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});
         $(window).on('hashchange', function(){
             if (location.hash && $(location.hash)[0]) {
                 $('body').animate({scrollTop: $(location.hash).offset().top - $('#navbar').outerHeight(true)*1.2 }, 1);
@@ -146,7 +149,7 @@ For example, the ``html_head`` helper can be used to add CSS or JS files in all 
 
 Monospace is a two-column-with-footer layout, so let's copy the basics from its HTML and see what happens:
 
-.. code:: mako
+.. code-block:: mako
 
     ## -*- coding: utf-8 -*-
     <%namespace name="base" file="base_helper.tmpl" import="*"/>
@@ -190,7 +193,7 @@ Monospace is a two-column-with-footer layout, so let's copy the basics from its 
             </div>
         </div>
         ${bootstrap.late_load_js()}
-        <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+        <script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
         <%block name="extra_js"></%block>
         ${body_end}
     </body>
@@ -206,13 +209,13 @@ Base CSS
 --------
 
 The orphan theme includes just a little styling, specifically ``rest.css`` so
-the restructured text output looks reasonable, and ``code.css`` for code snippets.
+the reStructuredText output looks reasonable, and ``code.css`` for code snippets.
 
 It also includes an empty ``assets/css/theme.css`` where you can add your own CSS.
 For example, this is taken from the original monospace theme, except for the last
 few selectors:
 
-.. code:: css
+.. code-block:: css
 
     body { margin:0px; padding:20px 0px; text-align:center; font-family:Monospace; color:#585858; }
     .post { margin:0px 0px 30px 0px; padding:0px 0px 30px 0px; border-bottom:1px dotted #C8C8C8; }
@@ -254,7 +257,7 @@ That's because ``base.tmpl`` defines the *base* layout. The layout of more speci
 a list of posts" is defined in the other templates. Specifically, this is defined in ``index.tmpl``.
 It turns out ``bootstrap`` doesn' have one of those! That's because it inherits that template from ``base``:
 
-.. code:: mako
+.. code-block:: mako
 
     ## -*- coding: utf-8 -*-
     <%namespace name="helper" file="index_helper.tmpl"/>
@@ -262,7 +265,7 @@ It turns out ``bootstrap`` doesn' have one of those! That's because it inherits 
     <%inherit file="base.tmpl"/>
     <%block name="content">
         % for post in posts:
-            <div class="postbox">
+            <div class="postbox post-${post.meta('type')}">
             <h1><a href="${post.permalink()}">${post.title()}</a>
             <small>&nbsp;&nbsp;
                 ${messages("Posted")}: <time class="published" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time>
@@ -282,7 +285,7 @@ It turns out ``bootstrap`` doesn' have one of those! That's because it inherits 
 So, let's tweak that to be closer to the original. We put the post's metadata in a
 box, add links for the posts tags, move the date there, etc.
 
-.. code:: mako
+.. code-block:: mako
 
     ## -*- coding: utf-8 -*-
     <%namespace name="helper" file="index_helper.tmpl"/>
@@ -290,7 +293,7 @@ box, add links for the posts tags, move the date there, etc.
     <%inherit file="base.tmpl"/>
     <%block name="content">
         % for post in posts:
-            <div class="postbox">
+            <div class="postbox post-${post.meta('type')}">
             <h1><a href="${post.permalink()}">${post.title()}</a></h1>
                 <div class="meta" style="background-color: rgb(234, 234, 234); ">
                     <span class="authordate">
@@ -323,7 +326,7 @@ box, add links for the posts tags, move the date there, etc.
 
 Then if we click on the post title, we will see some broken details in the metadata that can be fixed in ``post.tmpl``, and so on.
 
-.. code:: mako
+.. code-block:: mako
 
     ## -*- coding: utf-8 -*-
     <%namespace name="helper" file="post_helper.tmpl"/>

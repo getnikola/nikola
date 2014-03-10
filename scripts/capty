@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python2
 # -*- coding: utf-8 -*-
 
 """This tries to do more or less the same thing as CutyCapt, but as a
@@ -54,7 +54,7 @@ class Capturer(object):
     def capture(self):
         """Captures url as an image to the file specified"""
         self.wb = QtWebKit.QWebPage()
-        self.wb.setPreferredContentsSize(QtCore.QSize(900, 700))
+        self.wb.setPreferredContentsSize(QtCore.QSize(1024, 768))
         self.wb.mainFrame().setScrollBarPolicy(
             QtCore.Qt.Horizontal, QtCore.Qt.ScrollBarAlwaysOff)
         self.wb.mainFrame().setScrollBarPolicy(
@@ -67,10 +67,10 @@ class Capturer(object):
         self.wb.mainFrame().load(QtCore.QUrl(self.url))
 
     def doCapture(self):
-        print "Capturando"
+        print("Capturing...")
         self.wb.setViewportSize(self.wb.mainFrame().contentsSize())
         img = QtGui.QImage(self.wb.viewportSize(), QtGui.QImage.Format_ARGB32)
-        print self.wb.viewportSize()
+        print(self.wb.viewportSize())
         painter = QtGui.QPainter(img)
         self.wb.mainFrame().render(painter)
         painter.end()

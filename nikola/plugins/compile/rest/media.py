@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -35,7 +35,7 @@ except ImportError:
 
 
 from nikola.plugin_categories import RestExtension
-from nikola import utils
+from nikola.utils import req_missing
 
 
 class Plugin(RestExtension):
@@ -56,11 +56,7 @@ class Media(Directive):
 
     def run(self):
         if micawber is None:
-            msg = (
-                "To use the media directive you need to install "
-                "the micawber module."
-            )
-            utils.logger.WARN(msg)
+            msg = req_missing(['micawber'], 'use the media directive', optional=True)
             return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
 
         providers = micawber.bootstrap_basic()

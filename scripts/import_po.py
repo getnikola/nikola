@@ -1,14 +1,17 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """Download translations from transifex and regenerate files."""
 
 from __future__ import unicode_literals, print_function
 import codecs
 from glob import glob
 import os
-
+import sys
 import polib
 
-os.system("tx pull -a")
+if 'nopull' not in sys.argv:
+    os.system("tx pull -a")
+
 trans_files = glob(os.path.join('translations', 'nikola.messages', '*.po'))
 for fname in trans_files:
     lang = os.path.splitext(os.path.basename(fname))[0].lower()

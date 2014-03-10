@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -52,7 +52,7 @@ class Sources(Task):
         }
 
         self.site.scan_posts()
-        flag = False
+        yield self.group_task()
         if self.site.config['COPY_SOURCES']:
             for lang in kw["translations"]:
                 for post in self.site.timeline:
@@ -66,7 +66,7 @@ class Sources(Task):
                     if dest_ext == post.source_ext():
                         continue
                     if lang != kw["default_lang"]:
-                        source_lang = source + '.' + lang
+                        source_lang = utils.get_translation_candidate(self.site.config, source, lang)
                         if os.path.exists(source_lang):
                             source = source_lang
                     if os.path.isfile(source):
@@ -79,10 +79,3 @@ class Sources(Task):
                             'clean': True,
                             'uptodate': [utils.config_changed(kw)],
                         }
-        if flag is False:  # No page rendered, yield a dummy task
-            yield {
-                'basename': 'render_sources',
-                'name': 'None',
-                'uptodate': [True],
-                'actions': [],
-            }

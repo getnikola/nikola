@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -48,7 +48,6 @@ header = """<?xml version="1.0" encoding="UTF-8"?>
 url_format = """ <url>
   <loc>{0}</loc>
   <lastmod>{1}</lastmod>
-  <priority>0.5000</priority>
  </url>
 """
 
@@ -94,7 +93,7 @@ class Sitemap(LateTask):
             "strip_indexes": self.site.config["STRIP_INDEXES"],
             "index_file": self.site.config["INDEX_FILE"],
             "sitemap_include_fileless_dirs": self.site.config["SITEMAP_INCLUDE_FILELESS_DIRS"],
-            "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.html', '.htm'])
+            "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.html', '.htm', '.xml'])
         }
         output_path = kw['output_folder']
         sitemap_path = os.path.join(output_path, "sitemap.xml")
@@ -114,7 +113,7 @@ class Sitemap(LateTask):
                 path = (path.replace(os.sep, '/') + '/').replace('./', '')
                 lastmod = get_lastmod(root)
                 loc = urljoin(base_url, base_path + path)
-                if 'index.html' in files:  # Only map folders with indexes
+                if kw['index_file'] in files and kw['strip_indexes']:  # ignore folders when not stripping urls
                     locs[loc] = url_format.format(loc, lastmod)
                 for fname in files:
                     if kw['strip_indexes'] and fname == kw['index_file']:
@@ -122,6 +121,18 @@ class Sitemap(LateTask):
                     if os.path.splitext(fname)[-1] in mapped_exts:
                         real_path = os.path.join(root, fname)
                         path = os.path.relpath(real_path, output)
+                        if path.endswith(kw['index_file']) and kw['strip_indexes']:
+                            # ignore index files when stripping urls
+                            continue
+                        if path.endswith('.html') or path.endswith('.htm'):
+                            if not u'<!doctype html' in codecs.open(real_path, 'r', 'utf8').read(1024).lower():
+                                # ignores "html" files without doctype
+                                # alexa-verify, google-site-verification, etc.
+                                continue
+                        if path.endswith('.xml'):
+                            if not u'<rss' in codecs.open(real_path, 'r', 'utf8').read(512):
+                                # ignores all XML files except those presumed to be RSS
+                                continue
                         post = self.site.post_per_file.get(path)
                         if post and (post.is_draft or post.is_retired or post.publish_later):
                             continue
@@ -133,25 +144,35 @@ class Sitemap(LateTask):
         def write_sitemap():
             # Have to rescan, because files may have been added between
             # task dep scanning and task execution
-            scan_locs()
             with codecs.open(sitemap_path, 'wb+', 'utf8') as outf:
                 outf.write(header)
                 for k in sorted(locs.keys()):
                     outf.write(locs[k])
                 outf.write("</urlset>")
-            # Other tasks can depend on this output, instead of having
-            # to scan locations.
-            return {'locations': locs.keys()}
 
-        scan_locs()
+        # Yield a task to calculate the dependencies of the sitemap
+        # Other tasks can depend on this output, instead of having
+        # to scan locations.
+        def scan_locs_task():
+            scan_locs()
+            return {'locations': list(locs.keys())}
+
+        yield {
+            "basename": "_scan_locs",
+            "name": "sitemap",
+            "actions": [(scan_locs_task)]
+        }
+
+        yield self.group_task()
         task = {
             "basename": "sitemap",
             "name": sitemap_path,
             "targets": [sitemap_path],
             "actions": [(write_sitemap,)],
-            "uptodate": [config_changed({1: kw, 2: locs})],
+            "uptodate": [config_changed(kw)],
             "clean": True,
             "task_dep": ["render_site"],
+            "calc_dep": ["_scan_locs:sitemap"],
         }
         yield task
 

@@ -1,5 +1,14 @@
+.. title: Nikola Internals
+.. slug: internals
+.. date: 2012/03/30 23:00
+.. tags:
+.. link:
+.. description:
+
 Nikola Internals
 ================
+
+.. class:: lead
 
 When trying to guide someone into adding a feature in Nikola, it hit me that
 while the way it's structured makes sense **to me** it is far from obvious.
@@ -45,14 +54,14 @@ actions
     What the task **does**. For example, convert a markdown document into HTML.
 
 dependencies
-    If this file changes, then we need to redo the actions. If this confguration
+    If this file changes, then we need to redo the actions. If this configuration
     option changes, redo it, etc.
 
 targets
     Files that the action generates. No two actions can have the same targets.
 
 basename:name
-    Each task is identified by either a name or a basename:name pair. Nikola
+    Each task is identified by either a name or a basename:name pair.
 
 .. sidebar:: More about tasks
 
@@ -83,7 +92,7 @@ Posts and Stories
 
 Nikola has a concept of posts and stories. Both are more or less the same thing, except
 posts are added into RSS feeds and stories are not. All of them are in a list called
-"the timeline" formed by objects of class ``Post``
+"the timeline" formed by objects of class ``Post``.
 
 When you are creating a task that needs the list of posts and/or stories (for example,
 the RSS creation plugin), your plugin should call ``self.site.scan_posts()`` to ensure
@@ -108,12 +117,12 @@ The workflow included with nikola is as follows (incomplete!):
    fragment is stored in a cache (the ``posts`` plugin).
 #. The configured theme has templates (and a template engine), which are applied to the post's
    HTML fragment and metadata (the ``pages`` plugin).
-#. The original sources for the post are copied to some accessible place (the ``sources`` plugin)
-#. If the post is tagged, some pages and RSS feeds for each tag are updated (the ``tags`` plugin)
-#. If the post is new, it's included in the blog's RSS feed (the ``rss`` plugin)
-#. The post is added in the right place in the index pages for the blog (the ``indexes`` plugin)
-#. CSS/JS/Images for the theme are put in the right places (the ``copy_assets`` and ``bundles`` plugins)
-#. A File describing the whole site is created (the ``sitemap`` plugin)
+#. The original sources for the post are copied to some accessible place (the ``sources`` plugin).
+#. If the post is tagged, some pages and RSS feeds for each tag are updated (the ``tags`` plugin).
+#. If the post is new, it's included in the blog's RSS feed (the ``rss`` plugin).
+#. The post is added in the right place in the index pages for the blog (the ``indexes`` plugin).
+#. CSS/JS/Images for the theme are put in the right places (the ``copy_assets`` and ``bundles`` plugins).
+#. A File describing the whole site is created (the ``sitemap`` plugin).
 
 You can add whatever you want to that list: just create a plugin for it.
 

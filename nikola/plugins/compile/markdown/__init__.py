@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -30,6 +30,7 @@ from __future__ import unicode_literals
 
 import codecs
 import os
+import re
 
 try:
     from markdown import markdown
@@ -49,33 +50,39 @@ except ImportError:
     gist_extension = None
     podcast_extension = None
 
+
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = dict  # NOQA
+
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs
+from nikola.utils import makedirs, req_missing
 
 
 class CompileMarkdown(PageCompiler):
     """Compile markdown into HTML."""
 
     name = "markdown"
+    demote_headers = True
     extensions = [gist_extension, nikola_extension, podcast_extension]
     site = None
 
     def compile_html(self, source, dest, is_two_file=True):
         if markdown is None:
-            raise Exception('To build this site, you need to install the '
-                            '"markdown" package.')
+            req_missing(['markdown'], 'build this site (compile Markdown)')
         makedirs(os.path.dirname(dest))
         self.extensions += self.site.config.get("MARKDOWN_EXTENSIONS")
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
             if not is_two_file:
-                data = data.split('\n\n', 1)[-1]
+                data = re.split('(\n\n|\r\n\r\n)', data, maxsplit=1)[-1]
             output = markdown(data, self.extensions)
             out_file.write(output)
 
-    def create_post(self, path, onefile=False, **kw):
-        metadata = {}
+    def create_post(self, path, content, onefile=False, is_page=False, **kw):
+        metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))
@@ -85,4 +92,4 @@ class CompileMarkdown(PageCompiler):
                 for k, v in metadata.items():
                     fd.write('.. {0}: {1}\n'.format(k, v))
                 fd.write('-->\n\n')
-            fd.write("Write your post here.")
+            fd.write(content)

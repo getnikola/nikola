@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -37,18 +37,23 @@ except ImportError:
     creole = None
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = dict  # NOQA
+
+from nikola.utils import makedirs, req_missing
 
 
-class CompileTextile(PageCompiler):
-    """Compile textile into HTML."""
+class CompileWiki(PageCompiler):
+    """Compile CreoleWiki into HTML."""
 
     name = "wiki"
+    demote_headers = True
 
     def compile_html(self, source, dest, is_two_file=True):
         if creole is None:
-            raise Exception('To build this site, you need to install the '
-                            '"creole" package.')
+            req_missing(['creole'], 'build this site (compile CreoleWiki)')
         makedirs(os.path.dirname(dest))
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
@@ -57,8 +62,8 @@ class CompileTextile(PageCompiler):
             output = HtmlEmitter(document).emit()
             out_file.write(output)
 
-    def create_post(self, path, onefile=False, **kw):
-        metadata = {}
+    def create_post(self, path, content, onefile=False, is_page=False, **kw):
+        metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))
@@ -67,4 +72,4 @@ class CompileTextile(PageCompiler):
                             'one-file format is not possible, use the -2 '
                             'option.')
         with codecs.open(path, "wb+", "utf8") as fd:
-            fd.write("Write your post here.")
+            fd.write(content)

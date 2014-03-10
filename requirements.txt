@@ -1,11 +1,14 @@
-doit>=0.20.0
+doit>=0.23.0
 pygments
 pillow>=2.0.0
 docutils
 mako>=0.6
 unidecode
 lxml
-yapsy==1.10.2-pythons2n3
+yapsy
 PyRSS2Gen
-pytz==2013d
+pytz
 logbook
+blinker
+setuptools
+colorama

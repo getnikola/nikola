@@ -1,0 +1,14 @@
+-r requirements.txt
+requests>=1.0
+markdown
+Jinja2>=2.7
+bbcode
+livereload==2.1.0
+pyphen
+python-dateutil
+micawber
+pygal
+typogrify>=2.0.4
+phpserialize
+webassets
+ipython>=1.0.0

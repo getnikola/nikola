@@ -2,16 +2,18 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "Also available in": "Също достъпно в",
+    "Also available in:": "Също достъпно в:",
     "Archive": "Архив",
     "Categories": "Категории",
     "LANGUAGE": "Български",
-    "More posts about": "Още публикации относно ",
+    "More posts about %s": "Още публикации относно %s",
     "Newer posts": "Нови публикации",
     "Next post": "Следваща публикация",
+    "No posts found.": "",
+    "Nothing found.": "",
     "Older posts": "Стари публикации",
     "Original site": "Оригиналния сайт",
-    "Posted": "Публиковано",
+    "Posted:": "Публиковано:",
     "Posts about %s": "Публикации относно %s",
     "Posts for year %s": "Публикации за %s година",
     "Posts for {month} {year}": "Публикации за {month} {year}",
@@ -21,5 +23,6 @@ MESSAGES = {
     "Source": "Source",
     "Tags and Categories": "Тагове и Категории",
     "Tags": "Тагове",
-    "old posts page %d": "стари публикации страница %d",
+    "old posts, page %d": "стари публикации, страница %d",
+    "page %d": "страница %d",
 }

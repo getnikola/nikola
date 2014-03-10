@@ -1,0 +1,25 @@
+{#  -*- coding: utf-8 -*- #}
+{% macro comment_form(url, title, identifier) %}
+<script>
+var idcomments_acct = '{{ comment_system_id }}';
+var idcomments_post_id = "{{ identifier }}";
+var idcomments_post_url = "{{ url }}";
+</script>
+<span id="IDCommentsPostTitle" style="display:none"></span>
+<script src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+</script>
+{% endmacro %}
+
+{% macro comment_link(link, identifier) %}
+<a href="{link}" onclick="this.href='{{ link }}'; this.target='_self';"><span class='IDCommentsReplace' style='display:none'>{{ identifier }}</span>
+<script>
+var idcomments_acct = '{{ comment_system_id }}';
+var idcomments_post_id = "{{ identifier }}";
+var idcomments_post_url = "{{ link }}";
+</script>
+<script src="http://www.intensedebate.com/js/genericLinkWrapperV2.js"></script>
+</a>
+{% endmacro %}
+
+{% macro comment_link_script() %}
+{% endmacro %}

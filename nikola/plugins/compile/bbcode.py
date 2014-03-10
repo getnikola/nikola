@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -28,6 +28,7 @@
 
 import codecs
 import os
+import re
 
 try:
     import bbcode
@@ -35,10 +36,14 @@ except ImportError:
     bbcode = None  # NOQA
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs
+from nikola.utils import makedirs, req_missing
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = dict  # NOQA
 
 
-class CompileTextile(PageCompiler):
+class CompileBbcode(PageCompiler):
     """Compile bbcode into HTML."""
 
     name = "bbcode"
@@ -51,19 +56,18 @@ class CompileTextile(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         if bbcode is None:
-            raise Exception('To build this site, you need to install the '
-                            '"bbcode" package.')
+            req_missing(['bbcode'], 'build this site (compile BBCode)')
         makedirs(os.path.dirname(dest))
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
             if not is_two_file:
-                data = data.split('\n\n', 1)[-1]
+                data = re.split('(\n\n|\r\n\r\n)', data, maxsplit=1)[-1]
             output = self.parser.format(data)
             out_file.write(output)
 
-    def create_post(self, path, onefile=False, **kw):
-        metadata = {}
+    def create_post(self, path, content, onefile=False, is_page=False, **kw):
+        metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))
@@ -73,4 +77,4 @@ class CompileTextile(PageCompiler):
                 for k, v in metadata.items():
                     fd.write('.. {0}: {1}\n'.format(k, v))
                 fd.write('-->[/note]\n\n')
-            fd.write("Write your post here.")
+            fd.write(content)

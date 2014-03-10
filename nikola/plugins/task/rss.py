@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -35,10 +35,14 @@ from nikola import utils
 from nikola.plugin_categories import Task
 
 
-class RenderRSS(Task):
+class GenerateRSS(Task):
     """Generate RSS feeds."""
 
-    name = "render_rss"
+    name = "generate_rss"
+
+    def set_site(self, site):
+        site.register_path_handler('rss', self.rss_path)
+        return super(GenerateRSS, self).set_site(site)
 
     def gen_tasks(self):
         """Generate RSS feeds."""
@@ -50,33 +54,44 @@ class RenderRSS(Task):
             "blog_description": self.site.config["BLOG_DESCRIPTION"],
             "output_folder": self.site.config["OUTPUT_FOLDER"],
             "rss_teasers": self.site.config["RSS_TEASERS"],
-            "hide_untranslated_posts": self.site.config['HIDE_UNTRANSLATED_POSTS'],
+            "rss_plain": self.site.config["RSS_PLAIN"],
+            "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "feed_length": self.site.config['FEED_LENGTH'],
         }
         self.site.scan_posts()
+        # Check for any changes in the state of use_in_feeds for any post.
+        # Issue #934
+        kw['use_in_feeds_status'] = ''.join(
+            ['T' if x.use_in_feeds else 'F' for x in self.site.timeline]
+        )
+        yield self.group_task()
         for lang in kw["translations"]:
             output_name = os.path.join(kw['output_folder'],
                                        self.site.path("rss", None, lang))
             deps = []
-            if kw["hide_untranslated_posts"]:
-                posts = [x for x in self.site.timeline if x.use_in_feeds
-                         and x.is_translation_available(lang)][:10]
+            if kw["show_untranslated_posts"]:
+                posts = self.site.posts[:10]
             else:
-                posts = [x for x in self.site.timeline if x.use_in_feeds][:10]
+                posts = [x for x in self.site.posts if x.is_translation_available(lang)][:10]
             for post in posts:
                 deps += post.deps(lang)
 
             feed_url = urljoin(self.site.config['BASE_URL'], self.site.link("rss", None, lang).lstrip('/'))
+
             yield {
-                'basename': 'render_rss',
+                'basename': 'generate_rss',
                 'name': os.path.normpath(output_name),
                 'file_dep': deps,
                 'targets': [output_name],
                 'actions': [(utils.generic_rss_renderer,
                             (lang, kw["blog_title"], kw["site_url"],
                              kw["blog_description"], posts, output_name,
-                             kw["rss_teasers"], kw['feed_length'], feed_url))],
+                             kw["rss_teasers"], kw["rss_plain"], kw['feed_length'], feed_url))],
                 'task_dep': ['render_posts'],
                 'clean': True,
                 'uptodate': [utils.config_changed(kw)],
             }
+
+    def rss_path(self, name, lang):
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['RSS_PATH'], 'rss.xml'] if _f]

@@ -1,0 +1,9 @@
+[Core]
+Name = rest_post_list
+Module = post_list
+
+[Documentation]
+Author = Udo Spallek
+Version = 0.1
+Website = http://getnikola.com
+Description = Includes a list of posts with tag and slide based filters.

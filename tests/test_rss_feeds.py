@@ -1,25 +1,50 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-import unittest
+from __future__ import unicode_literals, absolute_import
+
+# This code is so you can run the samples without installing the package,
+# and should be before any import touching nikola, in any file under tests/
+import os
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+
+from collections import defaultdict
+from io import StringIO
 import os
 import re
-from io import StringIO
+import unittest
 
 import mock
 
-from context import nikola
 from lxml import etree
+from .base import LocaleSupportInTesting
+
+import nikola
+
+fake_conf = defaultdict(str)
+fake_conf['TIMEZONE'] = 'UTC'
+fake_conf['DEFAULT_LANG'] = 'en'
+fake_conf['TRANSLATIONS'] = {'en': ''}
+fake_conf['BASE_URL'] = 'http://some.blog/'
+
+
+class FakeCompiler(object):
+    demote_headers = False
+    compile_html = None
 
 
 class RSSFeedTest(unittest.TestCase):
     def setUp(self):
+        LocaleSupportInTesting.initialize_locales_for_testing('unilingual')
+
         self.blog_url = "http://some.blog"
 
         with mock.patch('nikola.post.get_meta',
                         mock.Mock(return_value=({'title': 'post title',
                                                  'slug': 'awesome_article',
                                                  'date': '2012-10-01 22:41',
+                                                 'author': None,
                                                  'tags': 'tags', 'link':
                                                  'link', 'description':
                                                  'description'}))):
@@ -29,18 +54,16 @@ class RSSFeedTest(unittest.TestCase):
                                 mock.Mock(return_value='some long text')):
 
                     example_post = nikola.nikola.Post('source.file',
-                                                      'cache',
+                                                      fake_conf,
                                                       'blog_folder',
                                                       True,
                                                       {'en': ''},
-                                                      'en',
-                                                      self.blog_url,
-                                                      'unused message.',
-                                                      'post.tmpl')
+                                                      'post.tmpl',
+                                                      FakeCompiler())
 
                     opener_mock = mock.mock_open()
 
-                    with mock.patch('nikola.nikola.utils.codecs.open', opener_mock, create=True):
+                    with mock.patch('nikola.nikola.codecs.open', opener_mock, create=True):
                         nikola.nikola.utils.generic_rss_renderer('en',
                                                                  "blog_title",
                                                                  self.blog_url,
@@ -48,7 +71,8 @@ class RSSFeedTest(unittest.TestCase):
                                                                  [example_post,
                                                                   ],
                                                                  'testfeed.rss',
-                                                                 True)
+                                                                 True,
+                                                                 False)
 
                     opener_mock.assert_called_once_with(
                         'testfeed.rss', 'wb+', 'utf-8')

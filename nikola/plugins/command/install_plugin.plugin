@@ -1,0 +1,10 @@
+[Core]
+Name = install_plugin
+Module = install_plugin
+
+[Documentation]
+Author = Roberto Alsina and Chris Warrick
+Version = 0.1
+Website = http://getnikola.com
+Description = Install a plugin into the current site.
+

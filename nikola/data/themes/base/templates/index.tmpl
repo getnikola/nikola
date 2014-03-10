@@ -4,17 +4,24 @@
 <%inherit file="base.tmpl"/>
 <%block name="content">
     % for post in posts:
-        <div class="postbox">
-        <h1><a href="${post.permalink()}">${post.title()}</a>
+        <article class="postbox h-entry post-${post.meta('type')}">
+        <h1 class="p-name"><a href="${post.permalink()}" class="u-url">${post.title()}</a>
         <small>&nbsp;&nbsp;
-             ${messages("Posted")}: <time class="published" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time>
+             ${messages("Posted:")} <time class="published dt-published" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time>
         </small></h1>
         <hr>
-        ${post.text(teaser_only=index_teasers)}
-        % if not post.meta('nocomments'):
-            ${comments.comment_link(post.permalink(), post.base_path)}
-        % endif
+        %if index_teasers:
+        <div class="p-summary">
+        ${post.text(teaser_only=True)}
+        %else:
+        <div class="e-content">
+        ${post.text(teaser_only=False)}
+        %endif
         </div>
+        % if not post.meta('nocomments'):
+            ${comments.comment_link(post.permalink(), post._base_path)}
+        % endif
+        </article>
     % endfor
     ${helper.html_pager()}
     ${comments.comment_link_script()}

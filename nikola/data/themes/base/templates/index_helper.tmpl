@@ -1,23 +1,30 @@
 ## -*- coding: utf-8 -*-
 <%def name="html_pager()">
-<div>
-<ul class="pager">
-  %if prevlink:
-    <li class="previous">
-        <a href="${prevlink}">&larr; ${messages("Newer posts")}</a>
-    </li>
-  %endif
-  %if nextlink:
-    <li class="next">
-        <a href="${nextlink}">${messages("Older posts")} &rarr;</a>
-    </li>
-  %endif
-</ul>
-</div>
+    %if prevlink or nextlink:
+        <div>
+        <ul class="pager">
+        %if prevlink:
+            <li class="previous">
+                <a href="${prevlink}" rel="prev">${messages("Newer posts")}</a>
+            </li>
+        %endif
+        %if nextlink:
+            <li class="next">
+                <a href="${nextlink}" rel="next">${messages("Older posts")}</a>
+            </li>
+        %endif
+        </ul>
+        </div>
+    %endif
 </%def>
 
 <%def name="mathjax_script(posts)">
     %if any(post.is_mathjax for post in posts):
-        <script src="/assets/js/mathjax.js" type="text/javascript"></script>
+        <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}
+        });
+        </script>
+        <script src="/assets/js/mathjax.js"></script>
     %endif
 </%def>

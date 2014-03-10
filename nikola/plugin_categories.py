@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -33,13 +33,20 @@ __all__ = [
     'RestExtension',
     'Task',
     'TaskMultiplier',
-    'TemplateSystem'
+    'TemplateSystem',
+    'SignalHandler'
 ]
 
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
 
-from .utils import LOGGER
+from .utils import LOGGER, first_line
+
+try:
+    # ordereddict does not exist in py2.6
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = None  # NOQA
 
 
 class BasePlugin(IPlugin):
@@ -104,7 +111,7 @@ DoitCommand.help = help
 
 
 class BaseTask(BasePlugin):
-    """PLugins of this type are task generators."""
+    """Plugins of this type are task generators."""
 
     name = "dummy_task"
 
@@ -116,9 +123,17 @@ class BaseTask(BasePlugin):
         """Task generator."""
         raise NotImplementedError()
 
+    def group_task(self):
+        """dict for group task"""
+        return {
+            'basename': self.name,
+            'name': None,
+            'doc': first_line(self.__doc__),
+        }
+
 
 class Task(BaseTask):
-    """PLugins of this type are task generators."""
+    """Plugins of this type are task generators."""
 
 
 class LateTask(BaseTask):
@@ -136,16 +151,25 @@ class TemplateSystem(BasePlugin):
         """Sets the list of folders where templates are located and cache."""
         raise NotImplementedError()
 
+    def set_site(self, site):
+        """Sets the site."""
+        self.site = site
+
     def template_deps(self, template_name):
         """Returns filenames which are dependencies for a template."""
         raise NotImplementedError()
 
-    def render_template(name, output_name, context):
+    def render_template(self, template_name, output_name, context):
         """Renders template to a file using context.
 
         This must save the data to output_name *and* return it
         so that the caller may do additional processing.
         """
+        raise NotImplementedError()
+
+    def render_template_to_string(self, template, context):
+        """ Renders template to a string using context. """
+
         raise NotImplementedError()
 
 
@@ -164,14 +188,22 @@ class PageCompiler(BasePlugin):
     """Plugins that compile text files into HTML."""
 
     name = "dummy compiler"
-    default_metadata = {
-        'title': '',
-        'slug': '',
-        'date': '',
-        'tags': '',
-        'link': '',
-        'description': '',
-    }
+    demote_headers = False
+    if OrderedDict is not None:
+        default_metadata = OrderedDict()
+    else:
+        # Graceful fallback.  We could use a backport, but it is
+        # not going to change anything, other than a bit uglier
+        # and nonsensical layout.  Not enough to care.
+        default_metadata = {}
+
+    default_metadata['title'] = ''
+    default_metadata['slug'] = ''
+    default_metadata['date'] = ''
+    default_metadata['tags'] = ''
+    default_metadata['link'] = ''
+    default_metadata['description'] = ''
+    default_metadata['type'] = 'text'
 
     def compile_html(self, source, dest, is_two_file=False):
         """Compile the source, save it on dest."""
@@ -188,6 +220,10 @@ class PageCompiler(BasePlugin):
 
 class RestExtension(BasePlugin):
     name = "dummy_rest_extension"
+
+
+class SignalHandler(BasePlugin):
+    name = "dummy_signal_handler"
 
 
 class Importer(Command):

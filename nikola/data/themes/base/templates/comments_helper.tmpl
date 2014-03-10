@@ -5,6 +5,8 @@
 <%namespace name="intensedebate" file="intensedebate_helper.tmpl"/>
 <%namespace name="moot" file="moot_helper.tmpl"/>
 <%namespace name="googleplus" file="googleplus_helper.tmpl"/>
+<%namespace name="facebook" file="facebook_helper.tmpl"/>
+<%namespace name="isso" file="isso_helper.tmpl"/>
 
 <%def name="comment_form(url, title, identifier)">
     %if comment_system == 'disqus':
@@ -17,6 +19,10 @@
         ${moot.comment_form(url, title, identifier)}
     % elif comment_system == 'googleplus':
         ${googleplus.comment_form(url, title, identifier)}
+    % elif comment_system == 'facebook':
+        ${facebook.comment_form(url, title, identifier)}
+    % elif comment_system == 'isso':
+        ${isso.comment_form(url, title, identifier)}
     %endif
 </%def>
 
@@ -31,6 +37,10 @@
         ${moot.comment_link(link, identifier)}
     % elif comment_system == 'googleplus':
         ${googleplus.comment_link(link, identifier)}
+    % elif comment_system == 'facebook':
+        ${facebook.comment_link(link, identifier)}
+    % elif comment_system == 'isso':
+        ${isso.comment_link(link, identifier)}
     %endif
 </%def>
 
@@ -45,5 +55,9 @@
         ${moot.comment_link_script()}
     % elif comment_system == 'googleplus':
         ${googleplus.comment_link_script()}
+    % elif comment_system == 'facebook':
+        ${facebook.comment_link_script()}
+    % elif comment_system == 'isso':
+        ${isso.comment_link_script()}
     %endif
 </%def>

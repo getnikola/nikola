@@ -1,0 +1,93 @@
+# Messages in Nikola
+# Copyright (C) 2012-2013
+# This file is distributed under the same license as the Nikola package.
+# 
+# Translators:
+# Translators:
+# Kwpolska <kwpolska@gmail.com>, 2014
+# Kwpolska <kwpolska@gmail.com>, 2014
+# Lauri Võsandi <lauri.vosandi@gmail.com>, 2013
+msgid ""
+msgstr ""
+"Project-Id-Version: Nikola\n"
+"Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
+"POT-Creation-Date: 2013-03-15 12:24-0300\n"
+"PO-Revision-Date: 2014-02-09 16:56+0000\n"
+"Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
+"Language-Team: Estonian (http://www.transifex.com/projects/p/nikola/language/et/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "More posts about %s"
+msgstr "Veel postitusi %s kohta"
+
+msgid "LANGUAGE"
+msgstr "Eesti"
+
+msgid "Tags"
+msgstr "Märksõnad"
+
+msgid "Categories"
+msgstr "Kategooriad"
+
+msgid "Tags and Categories"
+msgstr "Sildid ja kategooriad"
+
+msgid "Read more"
+msgstr "Loe veel"
+
+msgid "Posts about %s"
+msgstr "Postitused %s kohta"
+
+msgid "Next post"
+msgstr "Järgmine postitus"
+
+msgid "old posts, page %d"
+msgstr "vanade postituste, leht %d"
+
+msgid "page %d"
+msgstr "leht %d"
+
+msgid "Source"
+msgstr "Lähtekood"
+
+#. Here your translation should not say English but the name of your language
+#. instead
+msgid "Read in English"
+msgstr "Loe eesti keeles"
+
+msgid "Posts for year %s"
+msgstr "Postitused aastast %s"
+
+msgid "Newer posts"
+msgstr "Uued postitused"
+
+msgid "Previous post"
+msgstr "Eelmine postitus"
+
+msgid "Also available in:"
+msgstr "Saadaval ka:"
+
+msgid "Original site"
+msgstr "Algallikas"
+
+msgid "Older posts"
+msgstr "Vanemad postitused"
+
+msgid "Archive"
+msgstr "Arhiiv"
+
+msgid "Posted:"
+msgstr "Postitatud:"
+
+msgid "Posts for {month} {year}"
+msgstr "Postitused {year} aasta kuust {month} "
+
+msgid "Nothing found."
+msgstr ""
+
+msgid "No posts found."
+msgstr ""

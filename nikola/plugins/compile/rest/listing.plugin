@@ -1,5 +1,5 @@
 [Core]
-Name = listing
+Name = rest_listing
 Module = listing
 
 [Documentation]

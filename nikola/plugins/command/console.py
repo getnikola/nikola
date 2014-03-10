@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Chris Warrick, Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -30,15 +30,30 @@ import os
 
 from nikola import __version__
 from nikola.plugin_categories import Command
-from nikola.utils import LOGGER
+from nikola.utils import get_logger, STDERR_HANDLER
+
+LOGGER = get_logger('console', STDERR_HANDLER)
 
 
-class Console(Command):
+class CommandConsole(Command):
     """Start debugging console."""
     name = "console"
     shells = ['ipython', 'bpython', 'plain']
-    doc_purpose = "start an interactive python console with access to your site and configuration"
+    doc_purpose = "start an interactive Python console with access to your site"
+    doc_description = """\
+Order of resolution: IPython → bpython [deprecated] → plain Python interpreter
+The site engine is accessible as `SITE`, and the config as `conf`."""
     header = "Nikola v" + __version__ + " -- {0} Console (conf = configuration, SITE = site engine)"
+    cmd_options = [
+        {
+            'name': 'plain',
+            'short': 'p',
+            'long': 'plain',
+            'type': bool,
+            'default': False,
+            'help': 'Force the plain Python console',
+        }
+    ]
 
     def ipython(self):
         """IPython shell."""
@@ -65,7 +80,8 @@ class Console(Command):
             SITE = Nikola(**conf.__dict__)
             SITE.scan_posts()
             gl = {'conf': conf, 'SITE': SITE, 'Nikola': Nikola}
-            bpython.embed(banner=self.header.format('bpython'), locals_=gl)
+            bpython.embed(banner=self.header.format(
+                'bpython (Slightly Deprecated)'), locals_=gl)
 
     def plain(self):
         """Plain Python shell."""
@@ -99,9 +115,12 @@ class Console(Command):
 
     def _execute(self, options, args):
         """Start the console."""
-        for shell in self.shells:
-            try:
-                return getattr(self, shell)()
-            except ImportError:
-                pass
-        raise ImportError
+        if options['plain']:
+            self.plain()
+        else:
+            for shell in self.shells:
+                try:
+                    return getattr(self, shell)()
+                except ImportError:
+                    pass
+            raise ImportError

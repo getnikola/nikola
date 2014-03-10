@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -39,6 +39,7 @@ except ImportError:
 from docutils import core
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
+from docutils.parsers.rst.directives.misc import Include
 try:
     from docutils.parsers.rst.directives.body import CodeBlock
 except ImportError:  # docutils < 0.9 (Debian Sid For The Loss)
@@ -55,6 +56,18 @@ except ImportError:  # docutils < 0.9 (Debian Sid For The Loss)
 
 from nikola.plugin_categories import RestExtension
 
+# Add sphinx compatibility option
+CodeBlock.option_spec['linenos'] = directives.unchanged
+
+
+class FlexibleCodeBlock(CodeBlock):
+
+    def run(self):
+        if 'linenos' in self.options:
+            self.options['number-lines'] = self.options['linenos']
+        return super(FlexibleCodeBlock, self).run()
+CodeBlock = FlexibleCodeBlock
+
 
 class Plugin(RestExtension):
 
@@ -62,14 +75,21 @@ class Plugin(RestExtension):
 
     def set_site(self, site):
         self.site = site
+        # Even though listings don't use CodeBlock anymore, I am
+        # leaving these to make the code directive work with
+        # docutils < 0.9
         directives.register_directive('code-block', CodeBlock)
         directives.register_directive('sourcecode', CodeBlock)
         directives.register_directive('listing', Listing)
         return super(Plugin, self).set_site(site)
 
+# Add sphinx compatibility option
+listing_spec = Include.option_spec
+listing_spec['linenos'] = directives.unchanged
 
-class Listing(CodeBlock):
-    """ listing directive: create a CodeBlock from file
+
+class Listing(Include):
+    """ listing directive: create a highlighted block of code from a file in listings/
 
     Usage:
 
@@ -80,60 +100,24 @@ class Listing(CodeBlock):
     has_content = False
     required_arguments = 1
     optional_arguments = 1
-
-    option_spec = {
-        'start-at': directives.unchanged,
-        'end-at': directives.unchanged,
-        'start-after': directives.unchanged,
-        'end-before': directives.unchanged,
-    }
+    option_spec = listing_spec
 
     def run(self):
         fname = self.arguments.pop(0)
+        lang = self.arguments.pop(0)
         fpath = os.path.join('listings', fname)
+        self.arguments.insert(0, fpath)
+        self.options['code'] = lang
+        if 'linenos' in self.options:
+            self.options['number-lines'] = self.options['linenos']
         with codecs_open(fpath, 'rb+', 'utf8') as fileobject:
             self.content = fileobject.read().splitlines()
         self.state.document.settings.record_dependencies.add(fpath)
-        self.trim_content()
         target = urlunsplit(("link", 'listing', fname, '', ''))
         generated_nodes = (
             [core.publish_doctree('`{0} <{1}>`_'.format(fname, target))[0]])
         generated_nodes += self.get_code_from_file(fileobject)
         return generated_nodes
-
-    def trim_content(self):
-        """Cut the contents based in options."""
-        start = 0
-        end = len(self.content)
-        if 'start-at' in self.options:
-            for start, l in enumerate(self.content):
-                if self.options['start-at'] in l:
-                    break
-            else:
-                start = 0
-        elif 'start-before' in self.options:
-            for start, l in enumerate(self.content):
-                if self.options['start-before'] in l:
-                    if start > 0:
-                        start -= 1
-                    break
-            else:
-                start = 0
-        if 'end-at' in self.options:
-            for end, l in enumerate(self.content):
-                if self.options['end-at'] in l:
-                    break
-            else:
-                end = len(self.content)
-        elif 'end-before' in self.options:
-            for end, l in enumerate(self.content):
-                if self.options['end-before'] in l:
-                    end -= 1
-                    break
-            else:
-                end = len(self.content)
-
-        self.content = self.content[start:end]
 
     def get_code_from_file(self, data):
         """ Create CodeBlock nodes from file object content """

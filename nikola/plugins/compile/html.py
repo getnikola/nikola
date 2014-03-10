@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -27,25 +27,37 @@
 """Implementation of compile_html for HTML source files."""
 
 import os
-import shutil
+import re
 import codecs
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs
 
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = dict  # NOQA
+
+
+_META_SEPARATOR = '(' + os.linesep * 2 + '|' + ('\n' * 2) + '|' + ("\r\n" * 2) + ')'
+
 
 class CompileHtml(PageCompiler):
     """Compile HTML into HTML."""
-
     name = "html"
 
     def compile_html(self, source, dest, is_two_file=True):
         makedirs(os.path.dirname(dest))
-        shutil.copyfile(source, dest)
+        with codecs.open(dest, "w+", "utf8") as out_file:
+            with codecs.open(source, "r", "utf8") as in_file:
+                data = in_file.read()
+            if not is_two_file:
+                data = re.split(_META_SEPARATOR, data, maxsplit=1)[-1]
+            out_file.write(data)
         return True
 
-    def create_post(self, path, onefile=False, **kw):
-        metadata = {}
+    def create_post(self, path, content, onefile=False, is_page=False, **kw):
+        metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))
@@ -55,4 +67,4 @@ class CompileHtml(PageCompiler):
                 for k, v in metadata.items():
                     fd.write('.. {0}: {1}\n'.format(k, v))
                 fd.write('-->\n\n')
-            fd.write("\n<p>Write your post here.</p>")
+            fd.write(content)

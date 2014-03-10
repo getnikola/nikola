@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -44,18 +44,12 @@ class CopyFiles(Task):
             'filters': self.site.config['FILTERS'],
         }
 
-        flag = False
+        yield self.group_task()
         for src in kw['files_folders']:
             dst = kw['output_folder']
             filters = kw['filters']
             real_dst = os.path.join(dst, kw['files_folders'][src])
             for task in utils.copy_tree(src, real_dst, link_cutoff=dst):
-                flag = True
                 task['basename'] = self.name
                 task['uptodate'] = [utils.config_changed(kw)]
                 yield utils.apply_filters(task, filters)
-        if not flag:
-            yield {
-                'basename': self.name,
-                'actions': (),
-            }

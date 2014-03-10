@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import time
@@ -48,8 +47,22 @@ DEFAULT_LANG = "en"
 TRANSLATIONS = {
     "en": "",
     # Example for another language:
-    "es": "./es",
+    "pl": "./pl",
 }
+
+# What will translated input files be named like?
+
+# If you have a page something.rst, then something.rst.pl will be considered
+# its Polish translation.
+#     (in the above example: path == "something", lang == "pl", ext == "rst")
+# this pattern is also used for metadata:
+#     something.meta -> something.meta.pl
+
+TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"
+
+# If you don't want your Polish files to be considered Perl code, use this:
+# TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"
+#     Note that this pattern will become the default in v7.0.0.
 
 # Links for the sidebar / navigation bar.
 # You should provide a key-value pair for each used language.
@@ -58,7 +71,7 @@ SIDEBAR_LINKS = {
         ('/archive.html', 'Archives'),
         ('/categories/index.html', 'Tags'),
     ),
-    "es": ()
+    "pl": ()
 }
 
 
@@ -72,7 +85,7 @@ SIDEBAR_LINKS = {
 # The wildcard is used to generate a list of reSt source files
 # (whatever/thing.txt).
 # That fragment must have an associated metadata file (whatever/thing.meta),
-# and opcionally translated files (example for spanish, with code "es"):
+# and optionally translated files (example for spanish, with code "es"):
 #     whatever/thing.txt.es and whatever/thing.meta.es
 #
 # From those files, a set of HTML fragment files will be generated:

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2013 Damian Avila.
+# Copyright © 2013-2014 Damián Avila and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -33,12 +33,18 @@ import os
 try:
     from IPython.nbconvert.exporters import HTMLExporter
     from IPython.nbformat import current as nbformat
+    from IPython.config import Config
     flag = True
 except ImportError:
     flag = None
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs
+from nikola.utils import makedirs, req_missing
+
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = dict  # NOQA
 
 
 class CompileIPynb(PageCompiler):
@@ -48,11 +54,11 @@ class CompileIPynb(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         if flag is None:
-            raise Exception('To build this site, you need '
-                            'to install IPython 1.0.')
+            req_missing(['ipython>=1.1.0'], 'build this site (compile ipynb)')
         makedirs(os.path.dirname(dest))
         HTMLExporter.default_template = 'basic'
-        exportHtml = HTMLExporter()
+        c = Config(self.site.config['IPYNB_CONFIG'])
+        exportHtml = HTMLExporter(config=c)
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
                 nb = in_file.read()
@@ -60,20 +66,19 @@ class CompileIPynb(PageCompiler):
             (body, resources) = exportHtml.from_notebook_node(nb_json)
             out_file.write(body)
 
-    def create_post(self, path, onefile=False, **kw):
-        metadata = {}
+    def create_post(self, path, content, onefile=False, is_page=False, **kw):
+        metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
         d_name = os.path.dirname(path)
         makedirs(os.path.dirname(path))
         meta_path = os.path.join(d_name, kw['slug'] + ".meta")
         with codecs.open(meta_path, "wb+", "utf8") as fd:
-            if onefile:
-                fd.write('%s\n' % kw['title'])
-                fd.write('%s\n' % kw['slug'])
-                fd.write('%s\n' % kw['date'])
-                fd.write('%s\n' % kw['tags'])
-        print("Your post's metadata is at: ", meta_path)
+            fd.write('\n'.join((metadata['title'], metadata['slug'],
+                                metadata['date'], metadata['tags'],
+                                metadata['link'],
+                                metadata['description'], metadata['type'])))
+        print("Your {0}'s metadata is at: {1}".format('page' if is_page else 'post', meta_path))
         with codecs.open(path, "wb+", "utf8") as fd:
             fd.write("""{
  "metadata": {

@@ -15,12 +15,13 @@ class Plugin(RestExtension):
     def set_site(self, site):
         self.site = site
         directives.register_directive('soundcloud', SoundCloud)
+        directives.register_directive('soundcloud_playlist', SoundCloudPlaylist)
         return super(Plugin, self).set_site(site)
 
 
 CODE = ("""<iframe width="{width}" height="{height}"
 scrolling="no" frameborder="no"
-src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/"""
+src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/{preslug}/"""
         """{sid}">
 </iframe>""")
 
@@ -40,6 +41,7 @@ class SoundCloud(Directive):
         'width': directives.positive_int,
         'height': directives.positive_int,
     }
+    preslug = "tracks"
 
     def run(self):
         """ Required by the Directive interface. Create docutils nodes """
@@ -48,6 +50,7 @@ class SoundCloud(Directive):
             'sid': self.arguments[0],
             'width': 600,
             'height': 160,
+            'preslug': self.preslug,
         }
         options.update(self.options)
         return [nodes.raw('', CODE.format(**options), format='html')]
@@ -58,3 +61,7 @@ class SoundCloud(Directive):
             raise self.warning("This directive does not accept content. The "
                                "'key=value' format for options is deprecated, "
                                "use ':key: value' instead")
+
+
+class SoundCloudPlaylist(SoundCloud):
+    preslug = "playlists"

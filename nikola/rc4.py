@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """
+    A RC4 encryption library (used for password-protected posts)
+    ---
     Copyright (C) 2012 Bo Zhu http://about.bozhu.me
 
     Permission is hereby granted, free of charge, to any person obtaining a

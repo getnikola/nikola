@@ -1,5 +1,5 @@
 [Core]
-Name = soundcloud
+Name = rest_soundcloud
 Module = soundcloud
 
 [Documentation]

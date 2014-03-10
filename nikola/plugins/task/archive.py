@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -24,10 +24,10 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import calendar
 import os
-import sys
 
+# for tearDown with _reload we cannot use 'import from' to access LocaleBorg
+import nikola.utils
 from nikola.plugin_categories import Task
 from nikola.utils import config_changed
 
@@ -37,6 +37,10 @@ class Archive(Task):
 
     name = "render_archive"
 
+    def set_site(self, site):
+        site.register_path_handler('archive', self.archive_path)
+        return super(Archive, self).set_site(site)
+
     def gen_tasks(self):
         kw = {
             "messages": self.site.MESSAGES,
@@ -44,28 +48,40 @@ class Archive(Task):
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
             "create_monthly_archive": self.site.config['CREATE_MONTHLY_ARCHIVE'],
+            "create_single_archive": self.site.config['CREATE_SINGLE_ARCHIVE'],
         }
         self.site.scan_posts()
+        yield self.group_task()
         # TODO add next/prev links for years
+        if kw['create_monthly_archive'] and kw['create_single_archive']:
+            raise Exception('Cannot create monthly and single archives at the same time.')
         for lang in kw["translations"]:
-            for year, posts in self.site.posts_per_year.items():
+            archdata = self.site.posts_per_year
+            # A bit of a hack.
+            if kw['create_single_archive']:
+                archdata = {None: self.site.posts}
+
+            for year, posts in archdata.items():
                 output_name = os.path.join(
                     kw['output_folder'], self.site.path("archive", year, lang))
                 context = {}
                 context["lang"] = lang
-                context["title"] = kw["messages"][lang]["Posts for year %s"] % year
+                if year:
+                    context["title"] = kw["messages"][lang]["Posts for year %s"] % year
+                else:
+                    context["title"] = kw["messages"][lang]["Archive"]
                 context["permalink"] = self.site.link("archive", year, lang)
                 if not kw["create_monthly_archive"]:
                     template_name = "list_post.tmpl"
-                    post_list = [self.site.global_data[post] for post in posts]
-                    post_list.sort(key=lambda a: a.date)
+                    post_list = sorted(posts, key=lambda a: a.date)
                     post_list.reverse()
                     context["posts"] = post_list
                 else:  # Monthly archives, just list the months
                     months = set([m.split('/')[1] for m in self.site.posts_per_month.keys() if m.startswith(str(year))])
                     months = sorted(list(months))
+                    months.reverse()
                     template_name = "list.tmpl"
-                    context["items"] = [[get_month_name(int(month), lang), month] for month in months]
+                    context["items"] = [[nikola.utils.LocaleBorg().get_month_name(int(month), lang), month] for month in months]
                     post_list = []
                 task = self.site.generic_post_list_renderer(
                     lang,
@@ -75,7 +91,8 @@ class Archive(Task):
                     kw['filters'],
                     context,
                 )
-                task_cfg = {1: task['uptodate'][0].config, 2: kw}
+                n = len(post_list) if 'posts' in context else len(months)
+                task_cfg = {1: task['uptodate'][0].config, 2: kw, 3: n}
                 task['uptodate'] = [config_changed(task_cfg)]
                 task['basename'] = self.name
                 yield task
@@ -88,8 +105,7 @@ class Archive(Task):
                     kw['output_folder'], self.site.path("archive", yearmonth,
                                                         lang))
                 year, month = yearmonth.split('/')
-                post_list = [self.site.global_data[post] for post in posts]
-                post_list.sort(key=lambda a: a.date)
+                post_list = sorted(posts, key=lambda a: a.date)
                 post_list.reverse()
                 context = {}
                 context["lang"] = lang
@@ -97,7 +113,7 @@ class Archive(Task):
                 context["permalink"] = self.site.link("archive", year, lang)
 
                 context["title"] = kw["messages"][lang]["Posts for {month} {year}"].format(
-                    year=year, month=get_month_name(int(month), lang))
+                    year=year, month=nikola.utils.LocaleBorg().get_month_name(int(month), lang))
                 task = self.site.generic_post_list_renderer(
                     lang,
                     post_list,
@@ -106,44 +122,45 @@ class Archive(Task):
                     kw['filters'],
                     context,
                 )
-                task_cfg = {1: task['uptodate'][0].config, 2: kw}
+                task_cfg = {1: task['uptodate'][0].config, 2: kw, 3: len(post_list)}
                 task['uptodate'] = [config_changed(task_cfg)]
                 task['basename'] = self.name
                 yield task
 
-        # And global "all your years" page
-        years = list(self.site.posts_per_year.keys())
-        years.sort(reverse=True)
-        template_name = "list.tmpl"
-        kw['years'] = years
-        for lang in kw["translations"]:
-            context = {}
-            output_name = os.path.join(
-                kw['output_folder'], self.site.path("archive", None,
-                                                    lang))
-            context["title"] = kw["messages"][lang]["Archive"]
-            context["items"] = [(year, self.site.link("archive", year, lang))
-                                for year in years]
-            context["permalink"] = self.site.link("archive", None, lang)
-            task = self.site.generic_post_list_renderer(
-                lang,
-                [],
-                output_name,
-                template_name,
-                kw['filters'],
-                context,
-            )
-            task_cfg = {1: task['uptodate'][0].config, 2: kw}
-            task['uptodate'] = [config_changed(task_cfg)]
-            task['basename'] = self.name
-            yield task
+        if not kw['create_single_archive']:
+            # And an "all your years" page for yearly and monthly archives
+            years = list(self.site.posts_per_year.keys())
+            years.sort(reverse=True)
+            template_name = "list.tmpl"
+            kw['years'] = years
+            for lang in kw["translations"]:
+                context = {}
+                output_name = os.path.join(
+                    kw['output_folder'], self.site.path("archive", None,
+                                                        lang))
+                context["title"] = kw["messages"][lang]["Archive"]
+                context["items"] = [(year, self.site.link("archive", year, lang))
+                                    for year in years]
+                context["permalink"] = self.site.link("archive", None, lang)
+                task = self.site.generic_post_list_renderer(
+                    lang,
+                    [],
+                    output_name,
+                    template_name,
+                    kw['filters'],
+                    context,
+                )
+                task_cfg = {1: task['uptodate'][0].config, 2: kw, 3: len(years)}
+                task['uptodate'] = [config_changed(task_cfg)]
+                task['basename'] = self.name
+                yield task
 
-
-def get_month_name(month_no, locale):
-    if sys.version_info[0] == 3:  # Python 3
-        with calendar.different_locale((locale, "UTF-8")):
-            s = calendar.month_name[month_no]
-    else:  # Python 2
-        with calendar.TimeEncoding((locale, "UTF-8")):
-            s = calendar.month_name[month_no]
-    return s
+    def archive_path(self, name, lang):
+        if name:
+            return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                                  self.site.config['ARCHIVE_PATH'], name,
+                                  self.site.config['INDEX_FILE']] if _f]
+        else:
+            return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                                  self.site.config['ARCHIVE_PATH'],
+                                  self.site.config['ARCHIVE_FILENAME']] if _f]

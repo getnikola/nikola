@@ -6,18 +6,25 @@
 
 <%block name="content">
     ${ui.bar(crumbs)}
+    %if title:
+    <h1>${title}</h1>
+    %endif
     %if text:
     <p>
         ${text}
     </p>
     %endif
+    %if folders:
     <ul>
-    % for folder in folders:
-        <li><a href="${folder}"><i class="icon-folder-open"></i>&nbsp;${folder}</a></li>
+    % for folder, ftitle in folders:
+        <li><a href="${folder}"><i
+        class="icon-folder-open"></i>&nbsp;${ftitle}</a></li>
     % endfor
     </ul>
+    %endif
 
     <div id="gallery_container"></div>
+    %if photo_array:
     <noscript>
     <ul class="thumbnails">
         %for image in photo_array:
@@ -26,6 +33,7 @@
         %endfor
     </ul>
     </noscript>
+    %endif
 %if enable_comments:
     ${comments.comment_form(None, permalink, title)}
 %endif

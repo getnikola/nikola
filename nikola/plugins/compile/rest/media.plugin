@@ -1,5 +1,5 @@
 [Core]
-Name = media
+Name = rest_media
 Module = media
 
 [Documentation]

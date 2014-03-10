@@ -6,6 +6,16 @@ In goes content, out comes a website, ready to deploy.
 .. image:: https://travis-ci.org/getnikola/nikola.png
    :target: https://travis-ci.org/getnikola/nikola
 
+.. image:: https://pypip.in/v/Nikola/badge.png
+        :target: https://crate.io/packages/Nikola
+
+.. image:: https://pypip.in/d/Nikola/badge.png
+        :target: https://crate.io/packages/Nikola
+
+.. image:: https://coveralls.io/repos/getnikola/nikola/badge.png?branch=master
+  :target: https://coveralls.io/r/getnikola/nikola?branch=master
+
+
 Why Static Websites?
 --------------------
 
@@ -26,14 +36,14 @@ It has many features, but here are some of the nicer ones:
 * `reStructuredText`_ or Markdown as input language (also Wiki, BBCode, Textile, and HTML)
 * Easy `image galleries`_ (just drop files in a folder!)
 * Syntax highlighting for almost any programming language or markup
-* Multilingual sites, `translated to 13 languages.`__
+* Multilingual sites, `translated to 18 languages.`__
 * Doesn't reinvent wheels, leverages existing tools.
-* Python 2 and 3 compatible.
+* Python 2.6, 2.7 and 3.3 compatible.
 
 .. _Nikola Handbook: http://getnikola.com/handbook.html#why-static
-__ http://getnikola.com/some-sites-using-nikola.html
+__ http://users.getnikola.com/
 .. _Themable: http://themes.getnikola.com
-.. _doit: http://python-doit.sf.net
+.. _doit: http://pydoit.org
 .. _reStructuredText: http://getnikola.com/quickstart.html
 .. _image galleries: http://getnikola.com/galleries/demo/
 __ https://www.transifex.com/projects/p/nikola/
@@ -43,25 +53,14 @@ Installation Instructions
 
 Assuming you have pip installed::
 
-    git clone git://github.com/getnikola/nikola.git
-    cd nikola
-    pip install .
+    pip install Nikola
 
-Optionally (for markdown and lots of other features)::
+For optional features::
 
-    pip install -r requirements.txt
+    pip install Nikola[extras]
 
-For even more stuff, like tests and very optional features::
+For tests (see tests/README.rst for more details)::
 
-    pip install -r requirements-full.txt
-
-
-.. note:: For Python 3.0 through 3.2, you need to replace ``Jinja2==2.7``
-          with ``Jinja2==2.6`` or installation will fail.  (note that
-          upgrading Python is a better solution, although it is not always
-          possible)
-
-          You may also have problems with the Jinja themes included.  In this
-          case, you should use Mako themes instead.
+    pip install Nikola[extras,tests]
 
 For more information, see http://getnikola.com/

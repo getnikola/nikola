@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -34,23 +34,23 @@ except ImportError:
     Processor = None
 
 from nikola.plugin_categories import Command
-from nikola.utils import LOGGER
+from nikola.utils import req_missing, get_logger, STDERR_HANDLER
 
 
 class CommandMincss(Command):
     """Check the generated site."""
-
     name = "mincss"
 
     doc_usage = ""
     doc_purpose = "apply mincss to the generated site"
 
+    logger = get_logger('mincss', STDERR_HANDLER)
+
     def _execute(self, options, args):
         """Apply mincss the generated site."""
         output_folder = self.site.config['OUTPUT_FOLDER']
         if Processor is None:
-            LOGGER.warn('To use the mincss command,'
-                        ' you have to install the "mincss" package.')
+            req_missing(['mincss'], 'use the "mincss" command')
             return
 
         p = Processor(preserve_remote_urls=False)
@@ -62,7 +62,7 @@ class CommandMincss(Command):
                 if url.endswith('.css'):
                     fname = os.path.basename(url)
                     if fname in css_files:
-                        LOGGER.error("You have two CSS files with the same name and that confuses me.")
+                        self.logger.error("You have two CSS files with the same name and that confuses me.")
                         sys.exit(1)
                     css_files[fname] = url
                 if not f.endswith('.html'):

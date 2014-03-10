@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -34,10 +34,6 @@ from markdown.extensions import Extension
 class NikolaPostProcessor(Postprocessor):
     def run(self, text):
         output = text
-        # h1 is reserved for the title so increment all header levels
-        for n in reversed(range(1, 9)):
-            output = re.sub('<h%i>' % n, '<h%i>' % (n + 1), output)
-            output = re.sub('</h%i>' % n, '</h%i>' % (n + 1), output)
 
         # python-markdown's highlighter uses the class 'codehilite' to wrap
         # code, instead of the standard 'code'. None of the standard

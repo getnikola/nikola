@@ -1,0 +1,10 @@
+[Core]
+Name = rest_doc
+Module = doc
+
+[Documentation]
+Author = Manuel Kaufmann
+Version = 0.1
+Website = http://getnikola.com
+Description = Role to link another page / post from the blog
+

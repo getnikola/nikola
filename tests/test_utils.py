@@ -1,9 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+# This code is so you can run the samples without installing the package,
+# and should be before any import touching nikola, in any file under tests/
+import os
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+
 import unittest
 import mock
+import lxml.html
 from nikola.post import get_meta
+from nikola.utils import demote_headers
 
 
 class dummy(object):
@@ -117,8 +126,9 @@ class GetMetaTest(unittest.TestCase):
         post.source_path = '2013-01-23-the_slug-dubdubtitle.md'
         post.metadata_path = '2013-01-23-the_slug-dubdubtitle.meta'
         with mock.patch('nikola.post.codecs.open', create=True):
-            meta = get_meta(post,
-                            '(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.md')
+            meta = get_meta(
+                post,
+                '(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.md')
 
         self.assertEqual('dubdubtitle', meta['title'])
         self.assertEqual('the_slug', meta['slug'])
@@ -132,6 +142,97 @@ class GetMetaTest(unittest.TestCase):
             meta = get_meta(post)
 
         self.assertEqual('the_slug', meta['slug'])
+
+
+class HeaderDemotionTest(unittest.TestCase):
+    def demote_by_zero(self):
+        input_str = '''\
+        <h1>header 1</h1>
+        <h2>header 2</h2>
+        <h3>header 3</h3>
+        <h4>header 4</h4>
+        <h5>header 5</h5>
+        <h6>header 6</h6>
+        '''
+        expected_output = '''\
+        <h1>header 1</h1>
+        <h2>header 2</h2>
+        <h3>header 3</h3>
+        <h4>header 4</h4>
+        <h5>header 5</h5>
+        <h6>header 6</h6>
+        '''
+        doc = lxml.html.fromstring(input_str)
+        outdoc = lxml.html.fromstring(expected_output)
+        demote_headers(doc, 0)
+        self.assertEquals(lxml.html.tostring(outdoc), lxml.html.tostring(doc))
+
+    def demote_by_one(self):
+        input_str = '''\
+        <h1>header 1</h1>
+        <h2>header 2</h2>
+        <h3>header 3</h3>
+        <h4>header 4</h4>
+        <h5>header 5</h5>
+        <h6>header 6</h6>
+        '''
+        expected_output = '''\
+        <h2>header 1</h2>
+        <h3>header 2</h3>
+        <h4>header 3</h4>
+        <h5>header 4</h5>
+        <h6>header 5</h6>
+        <h6>header 6</h6>
+        '''
+        doc = lxml.html.fromstring(input_str)
+        outdoc = lxml.html.fromstring(expected_output)
+        demote_headers(doc, 1)
+        self.assertEquals(lxml.html.tostring(outdoc), lxml.html.tostring(doc))
+
+    def demote_by_two(self):
+        input_str = '''\
+        <h1>header 1</h1>
+        <h2>header 2</h2>
+        <h3>header 3</h3>
+        <h4>header 4</h4>
+        <h5>header 5</h5>
+        <h6>header 6</h6>
+        '''
+        expected_output = '''\
+        <h3>header 1</h3>
+        <h4>header 2</h4>
+        <h5>header 3</h5>
+        <h6>header 4</h6>
+        <h6>header 5</h6>
+        <h6>header 6</h6>
+        '''
+        doc = lxml.html.fromstring(input_str)
+        outdoc = lxml.html.fromstring(expected_output)
+        demote_headers(doc, 2)
+        self.assertEquals(lxml.html.tostring(outdoc), lxml.html.tostring(doc))
+
+    def demote_by_minus_one(self):
+        input_str = '''\
+        <h1>header 1</h1>
+        <h2>header 2</h2>
+        <h3>header 3</h3>
+        <h4>header 4</h4>
+        <h5>header 5</h5>
+        <h6>header 6</h6>
+        '''
+        expected_output = '''\
+        <h1>header 1</h1>
+        <h1>header 2</h1>
+        <h2>header 3</h2>
+        <h3>header 4</h3>
+        <h4>header 5</h4>
+        <h5>header 6</h5>
+        '''
+        doc = lxml.html.fromstring(input_str)
+        outdoc = lxml.html.fromstring(expected_output)
+        demote_headers(doc, -1)
+        self.assertEquals(lxml.html.tostring(outdoc), lxml.html.tostring(doc))
+
 
 if __name__ == '__main__':
     unittest.main()

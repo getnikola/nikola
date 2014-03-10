@@ -1,10 +1,270 @@
-New in Master
-==========================================
+New in master
+=============
+
+Features
+--------
+
+* Added invariance testing (Issue #672)
+* Ship base-jinja, bootstrap-jinja, bootstrap3-jinja with Nikola (Issue #1104)
+* Fix dependency issue in listings (Issue #1032)
+* Invert ``HIDE_SOURCELINK`` and ``HIDE_UNTRANSLATED_POSTS`` into
+  ``SHOW_SOURCELINK`` and ``SHOW_UNTRANSLATED_POSTS`` (Issue #1076)
+* Remove old messages left over for backwards compatibility: (Issues #829, #1105)
+
+  - "More posts about", replaced by "More posts about %s"
+  - "Posted", replaced by "Posted:"
+  - "Also available in", replaced by "Also available in:"
+
+* Remove old "sl_SI", "tr_TR" locale aliases (use "sl" and "tr") (Issue #829, #1105)
+* New option RSS_PLAIN to optionally strip HTML from RSS feeds (Issue #1107)
+* Support content key in compilers' create_post (Issue #1098)
+* Use setuptools’ extras feature.  Use ``pip install nikola[extras]`` to
+  install Nikola with extras (``requirements-extras.txt``, formerly
+  ``requirements-full.txt`` -- note the name change!) (Issue #1089)
 
 Bugfixes
 --------
 
-* Added invariance testing (Issue #672)
+* Support rescanning posts in the Nikola class (Issue #1099)
+* Use TIMEZONE with ``nikola new_post`` and ``nikola new_page``. (Issue #1088)
+
+New in v6.4.0
+=============
+
+Features
+--------
+
+* Add ``nikola new_page`` command (equivalent to ``nikola new_post -p``) (Issue #1060)
+* Add LESS_OPTIONS and SASS_OPTIONS for specifying additional parameters to LESS/Sass compilers (Issue #1020)
+* Warn users about bootswatch_theme being incompatible with bootstrap3-gradients
+* Add link://filename/foo/bar.rst syntax to refer to the post generated from foo/bar.rst (Issue #1035)
+* Log messages are colorized (colorama is required under Windows) (Issue #1044)
+* Template filters are configurable via the TEMPLATE_FILTERS config variable (Issue #1038)
+* Added Hindi translation by Sean Pue
+* Livereload v2.1.0 is supported and frozen as the version to use due to backwards-incompatible updates (Issue #1023)
+* Support :linenos: and :number-lines: in listings (Issue #1010)
+* Support :linenos: in code blocks for Sphinx compatibility (Issue #1010)
+* New link:///foo links which always point to absolute paths (/foo in that case) (Issue #986)
+* Bootstrap 3 has been updated to v3.1.1 (Issue #1015)
+* New --browser/-b option on the serve command to open instantly in a web browser (Issue #997)
+* SASS/LESS files and targets file will be processed from site root (Issue #941)
+
+Bugfixes
+--------
+
+* lastdeploy time recording was broken, changed to ISO format (Issue #1083)
+* Avoid undefined behaviour if NAVIGATION_LINKS is missing keys for a translation (Issue #1082)
+* Make livereload actually rebuild the site when changes are made (Issue #1067)
+* Fix filename encodings in WordPress imports (Issue #1053)
+* nikola check supports URL_TYPE="absolute" and URL_TYPE="full_path" (Issue #1046)
+* Fix URL_TYPE=absolute and URL_TYPE=full_path on non-root sites (Issue #1046)
+* Avoid running bundle tasks twice (Issue #1032)
+* Fix post links in RSS feeds for sites outside of webserver root (Issue #986)
+* Only run sitemap once (Issue #1032)
+* Fix a bug with some multilingual pages
+* Normalize paths (Issue #1028)
+* Fix drafts being leaked in feeds (Issues #934, #971)
+* If two tags generate the same slug, they are the same tag (Issue #1022)
+* Assume UTF-8 if user's locale doesn't have any encodings attached (Issue #1026 via #1021)
+* Support PRETTY_URLS for tag files (Issue #655)
+* Change code.css and rst.css to have sane output everywhere (Issues #913, #1009, #1050)
+* Fix image URLs in galleries for sites outside of webserver root (Issue #986)
+* Fix link:// in RSS contents (Issue #952)
+* HIDE_SOURCELINK was set to True sometimes (Issue #1004)
+* Properly import cool URIs from WordPress, instead of just slugify-ing the path (Issue #693)
+* Fixed SASS/LESS errors when more than one theme in chain has a targets file (Issue #941)
+* Guard against empty list-items in base templates (Issue #936)
+
+New in v6.3.0
+=============
+
+Features
+--------
+
+* Added translations:
+
+  - Basque by aitorp
+  - Czech by Ondřej Grover
+  - Estonian by Lauri Võsandi
+  - Norwegian Bokmål by Daniel Aleksandersen
+
+* TIMEZONE now defaults to UTC (via Issue #893)
+* Added a DEMOTE_HEADERS option (on by default; previously implemented by
+  the Markdown and reST compilers) to have consenting compilers produce
+  documents with headers lower by one than the one defined (Issue #891)
+* isso comments are now supported (Issue #905)
+* Gallery titles are used in more places (Issue #902)
+* Gallery titles also are used in breadcrumbs (Issue #902)
+* ``tagindex.tmpl`` is used for tag indexes instead of ``index.tmpl`` (Issues #930, #933)
+* Added SASS_COMPILER option (defaults to sass) to add support for alternate compilers like sassc (Issue #940)
+* Added LESS_COMPILER option (defaults to lessc) to add support for alternate compilers like recess (via Issue #940)
+* sass/less files and targets file will be processed from site root (Issue #941)
+* Added a list of posts for each tag in tag_cloud_data.json
+* Added EXTRA_PLUGINS_DIRS option, for specifying additional plugin directories (Issue #953)
+* Expose original doit "auto" command as "doit_auto" (Issue #955)
+* New "type" metadata to make differences for posts (Issue #927)
+* New Post.is_post attribute to differentiate posts and pages without bias
+  (Post.use_in_feeds is False if the post is retired/unpublished/a draft)
+* Add rel=canonical <link> elements (Issue #449)
+* Add rel=alternate <link> elements to translations of the current page (Issues #988, #989)
+* Added a INDEXES_PAGES_MAIN setting to show the page number on the index page
+  if desired (True) (Issues #210, #987)
+* Added a TRANSLATIONS_PATTERN setting to specify the format for
+  language-dependent filenames (Issue #990)
+
+Bugfixes
+--------
+
+* Support livereload 2.0 (Issue #968)
+* Don't crash when docutils exception have no line number (Issue #920)
+* Forced permalinks in active menu items (Issue #916)
+* Remind the user to set THEME to use a downloaded theme
+* Fix crash when using USE_FILENAME_AS_TITLE = False (Issue #892)
+* Fixed deploy events if there is no TIMEZONE set (Issue #893 via #822)
+* Modified translation strings: "Posted", "Also available in", "More posts
+  about" — may break backwards compatibility (Issue #905)
+  Details: https://groups.google.com/forum/#!topic/nikola-discuss/ABXKk9G0_u0
+* Facebook comments are now showing properly
+* Added a warning/error when lessc/sass are missing (via Issue themes#24)
+* Fixed sass/less under Windows (Issue #939, themes#24)
+* Fix URL rewriting of fragment-only links (Issue #945)
+* Fixed the deploy rsync example (rsync --delete doesn't work with '/\*' as
+  source) (Issue #959)
+* Added a notice for the user if webassets is not installed and
+  USE_BUNDLES is True (Issue #965)
+* Support livereload 2.0 (Issue #968)
+* Remove some unnecessary elements (Issues #969, #970)
+* abs_link should return absolute URI
+
+New in v6.2.1
+=============
+
+Features
+--------
+
+* Default themes adds semantic meanings to posts using h-entry (a microformats2) and HTML 5 microdata (Issue #867)
+* New "hidetitle" metadata to suppress printing a title as heading (Issue #584)
+* Template systems can now render to and from a string. (Issue #881)
+* New event for newly deployed posts (Issue #882)
+
+
+Bugfixes
+--------
+
+* Fixed some locale problems in posix systems (Issues #886, #884, #875)
+* Don’t include BLOG_DESCRIPTION as meta tag on tag and gallery pages (Issue #876)
+
+New in v6.2.0
+=============
+
+Features
+--------
+
+* RSS feeds for galleries (Issue #786)
+* New EXTRA_IMAGE_EXTENSIONS option, and support most common image extensions by default (Issue #857)
+* Add reStructuredText directive post_list (Issue #815)
+* Galleries support translations
+* Support a single archive per site (optional; instead of per-year or per-month archives) (Issue #853)
+* The locales used in testing can be specified in environment variables (Issue #818)
+* The locale to use with each language can be explicitly set (Issue #818)
+* Initial support for signals/hooks using Blinker (Issue #764)
+* Path/Link resolution mechanism for plugins (Issue #790)
+* Sass compiling (Issue #642)
+* Emit a signal when a new post is created (Issue #831)
+* New Finnish translation.
+
+Bugfixes
+--------
+
+* Don't create empty author elements, use dc:creator if author is not an email (Issue #868)
+* Added striphtml filter in mako templates, strip tags from titles (Issue #865)
+* Major refactoring of post creation (Issue #800)
+* Major refactoring of galleries (Ongoing, Issue #786)
+* Locale support in windows fixed (Issue #818)
+* Fix logging incompatibility in Yapsy (Issue #826)
+* Workaround for Mako cache folder unicode bug (Issue #825)
+* Ensure folder creation when importing wordpress (Issue #812)
+* Handle empty stories better and avoid Tipue crash (Issue #811)
+* Trigger conflict if two posts generate the same output (Issue #806)
+* Compilers now accept two of any line endings (\n, \r\n) instead of only Unix (\n) (Issue #832)
+* Include RSS feeds in sitemap (Issue #804)
+* Removed optional priority element from sitemap (Issue #838)
+* Avoid duplicate entries in the sitemap (Issue #836)
+* Include .xml in GZIP_EXTENSIONS (for RSS, sitemap) (Issue #844)
+* Post.base_path is now using forward slashes on Windows (Issue #856)
+* Custom CSS not detected in the files folder (Issue #862)
+* Exclude non-RSS XML files in sitemap (Issue #864)
+* Exclude "html" files without a doctype decleration in sitemap (Issue #864)
+* Do not include "Read more" links at the end of teasers when stripping HTML
+
+Other
+-----
+
+* the bpython console is now “slightly deprecated”
+
+New in v6.1.1
+=============
+
+Features
+--------
+
+* New Slovenian translation
+
+Bugfixes
+--------
+
+* The build_less plugin was broken (Issue #802)
+* Every plugin now has its own LOGGER instance, with different names (Issue #797)
+* A standardized way of reporting missing requirements (Issue #797)
+* Don’t force requests for compile.rest.gist (Issue #795)
+
+New in v6.1.0
+=============
+
+Features
+--------
+
+* Added slug support to the magic link:// URLs
+* New Esperanto translation.
+* New -q flag for quiet running (Issue #762)
+* Added author field in RSS items (Issue #767)
+* Annotations using annotateit.org (Issue #623)
+* New GALLERY_SORT_BY_DATE option, defaulting to True.
+  If set to False, sorts by name (Issue #667)
+
+Bugfixes
+--------
+
+* Fixed compatibility with Windows’ multiple partitions (Issues #776, #784)
+* Added language in the RSS feeds (Issue #777)
+* Don't fail for empty bundles.
+* Fix USE_BUNDLES compatibility with Python 3 (Issue #760)
+* Compatibility with doit 0.23.0 (Issues #756 #758)
+* Install enough of the theme chain to ensure themes are usable (Issue #748)
+* Support Gist URLs in the gist directive for compatibility with sphinx-gist-embed (Issue #754)
+* windows, dev - fix point pth to clone and run nikola without install (Issue #751)
+* windows - fix install from clone or from a Github download (Issue #747, Windows)
+* Make Listings directive inherit Include making it simpler and more powerful (Issue #744)
+* Install builtin themes (Issue #741)
+* LOGGER was incorrectly imported in planetoid.py
+* Order Monthly Archive properly, descending order (Issue #740)
+
+New in v6.0.4
+=============
+
+Features
+--------
+
+* New :doc: role for reStructuredText compiler, creates a link to another post
+  / page inside the same site (Issue #724)
+
+Bugfixes
+--------
+
+* Added missing metadata in internals.txt and extending.txt (Issue #738)
+* Fix addthis sizing with bootstrap3 theme (Issue #731)
+* Refuse to install in unsupported Python versions (Issue #733)
+* Fix sitemap plugin compatibility with Python 3 (Issue #734)
 * Changed default PyGal style (Issue #726)
 * Add files used by the listings directive as dependencies (Issue #723)
 * Localsearch task now depends on all pages, for better accuracy.
@@ -17,8 +277,8 @@ Bugfixes
 * Consider the current theme chain's parent, bundles and engine part of the file_dep for
   files created by generic_page_renderer (Issue #711)
 
-New in 6.0.3
-============
+New in v6.0.3
+=============
 
 Features
 --------
@@ -39,8 +299,8 @@ Bugfixes
 * Apply filters to files generated by the gallery tasks (Issue #708)
 * More robust handling of filter commands' shell quoting (Issue #705)
 
-New in 6.0.2
-============
+New in v6.0.2
+=============
 
 Features
 --------
@@ -55,8 +315,8 @@ Bugfixes
 * Make footnote-references keep line height in rst.css
 * Make bootswatch_theme work under Python 3 (Issue #695)
 
-New in 6.0.1
-============
+New in v6.0.1
+=============
 
 Features
 --------
@@ -69,10 +329,10 @@ Bugfixes
 --------
 
 * Remove decoding errors if files are not proper UTF-8 (Issue #691)
-* Stop ignoring *.JPG and *.PNG by galleries (Issue #690)
+* Stop ignoring \*.JPG and \*.PNG by galleries (Issue #690)
 
-New in 6.0.0
-============
+New in v6.0.0
+=============
 
 Features
 --------
@@ -134,8 +394,8 @@ Bugfixes
 * Added LICENSE in the footer (Issue #528)
 * Use random IDs for slides so you can have more than one in a page (Issue #572)
 
-New in 5.5.1
-============
+New in v5.5.1
+=============
 
 Features
 --------
@@ -168,8 +428,8 @@ Bugfixes
 * Fixed IPython plugin to work with the latest IPython.nbconvert machinery
 * Fixed failing build because of hidden folders and files inside post folder
 
-New in 5.5
-==========
+New in v5.5
+===========
 
 Features
 --------
@@ -232,8 +492,8 @@ Bugfixes
 * Don't map empty folders, map folders with index.html, and don't map index.html (Issue #430)
 * Wordpress import: write correct redirections for URLs not ending in an / (Issue #459)
 
-New in 5.4.4
-============
+New in v5.4.4
+=============
 
 Features
 --------
@@ -265,8 +525,8 @@ Bugfixes
 * Fix aspect ratio detection in Vimeo videos (Issue #440)
 * Blogger importer was passing wrong options to "nikola init" (Issue #408)
 
-New in 5.4.3
-============
+New in v5.4.3
+=============
 
 Features
 --------
@@ -329,8 +589,8 @@ Bugfixes
 * Planetoid requires only 3 runs now ;-)
 * Blogger import: imports will not result in an TypeError because str.join expects all it's arguments to be of type str
 
-New in 5.4.2
-============
+New in v5.4.2
+=============
 
 Bugfixes
 --------
@@ -338,8 +598,8 @@ Bugfixes
 * Fix relative paths when stories is "dropped to root" (Issue #362)
 * Pick translated titles in 1-file posts (Issue #365)
 
-New in 5.4
-==========
+New in v5.4
+===========
 
 Features
 --------
@@ -377,8 +637,8 @@ Bugfixes
 * Wordpress Import: Do not break indentation (issue #189)
 * Make things work even if SITE_URL has a path (Fix #307)
 
-New in 5.3
-==========
+New in v5.3
+===========
 
 Features
 --------
@@ -405,8 +665,8 @@ Bugfixes
 * Inconsistent breadcrumbs in gallery pages (Issue #303)
 * Use source files as bundle dependencies instead of outputs (Issue #294)
 
-New in 5.2
-==========
+New in v5.2
+===========
 
 Features
 --------
@@ -430,7 +690,7 @@ Features
 * When using import_wordpress users can exclude drafts with the ``-d`` switch.
 * New STORY_INDEX option to generate index.html in story folders.
 * Sort tags case insensitive.
-* New polish translation.
+* New Polish translation.
 * Add multi size favicon support.
 * Use multilingual Disqus (although it doesn't seem to work)
 * Add Simplified Chinese translations.
@@ -520,8 +780,8 @@ Bugfixes
 * Fixed Issue 161: webassets setting USE_BUNDLES was ignored (fix by schettino72)
 * Fixed Issue 153: index.txt was being ignored in galleries.
 
-New in Version 4.0.3
-====================
+New in v4.0.3
+=============
 
 Bugfixes
 --------
@@ -535,8 +795,8 @@ Bugfixes
 * Fix empty tag feeds.
 * Refactored Post out of nikola.py
 
-New in Version 4.0.2
-====================
+New in v4.0.2
+=============
 
 Features
 --------
@@ -563,8 +823,8 @@ Bugfixes
 * Made jinja-default follow default more closely.
 * Don't say "reSt", say "Source" since it can be markdown or other stuff.
 
-New in Version 4.0.1
-====================
+New in v4.0.1
+=============
 
 Features
 --------
@@ -578,8 +838,8 @@ Bugfixes
 * "Read More" is translatable.
 * Fixed Issue 121: CSS was not found if webassets was not installed.
 
-New in Version 4
-================
+New in v4
+=========
 
 Features
 --------

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -26,31 +26,15 @@
 
 from __future__ import print_function, unicode_literals
 
-import codecs
-import json
 import os
 import subprocess
+import webbrowser
 
 from nikola.plugin_categories import Command
-from nikola.utils import LOGGER
-
-GUARDFILE = """#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from livereload.task import Task
-import json
-import subprocess
-
-def f():
-    subprocess.call(("nikola", "build"))
-
-fdata = json.loads('''{0}''')
-
-for watch in fdata:
-    Task.add(watch, f)
-"""
+from nikola.utils import req_missing
 
 
-class Auto(Command):
+class CommandAuto(Command):
     """Start debugging console."""
     name = "auto"
     doc_purpose = "automatically detect site changes, rebuild and optionally refresh a browser"
@@ -75,29 +59,28 @@ class Auto(Command):
     def _execute(self, options, args):
         """Start the watcher."""
         try:
-            from livereload.server import start
+            from livereload import Server
         except ImportError:
-            LOGGER.error('To use the auto command, you need to install the '
-                         '"livereload" package.')
+            req_missing(['livereload==2.1.0'], 'use the "auto" command')
             return
 
-        # Run an initial build so we are uptodate
+        # Run an initial build so we are up-to-date
         subprocess.call(("nikola", "build"))
 
         port = options and options.get('port')
 
-        # Create a Guardfile
-        with codecs.open("Guardfile", "wb+", "utf8") as guardfile:
-            l = ["conf.py", "themes", "templates", self.site.config['GALLERY_PATH']]
-            for item in self.site.config['post_pages']:
-                l.append(os.path.dirname(item[0]))
-            for item in self.site.config['FILES_FOLDERS']:
-                l.append(os.path.dirname(item))
-            data = GUARDFILE.format(json.dumps(l))
-            guardfile.write(data)
+        server = Server()
+        server.watch('conf.py', 'nikola build')
+        server.watch('themes/', 'nikola build')
+        server.watch('templates/', 'nikola build')
+        server.watch(self.site.config['GALLERY_PATH'])
+        for item in self.site.config['post_pages']:
+            server.watch(os.path.dirname(item[0]), 'nikola build')
+        for item in self.site.config['FILES_FOLDERS']:
+            server.watch(os.path.dirname(item), 'nikola build')
 
         out_folder = self.site.config['OUTPUT_FOLDER']
+        if options and options.get('browser'):
+            webbrowser.open('http://localhost:{0}'.format(port))
 
-        os.chmod("Guardfile", 0o755)
-
-        start(port, out_folder, options and options.get('browser'))
+        server.serve(port, None, out_folder)

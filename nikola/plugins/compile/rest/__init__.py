@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -27,45 +27,68 @@
 from __future__ import unicode_literals
 import codecs
 import os
+import re
 
 try:
     import docutils.core
+    import docutils.nodes
+    import docutils.utils
     import docutils.io
+    import docutils.readers.standalone
+    import docutils.writers.html4css1
     has_docutils = True
 except ImportError:
     has_docutils = False
 
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = dict  # NOQA
+
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import LOGGER, makedirs
+from nikola.utils import get_logger, makedirs, req_missing
 
 
 class CompileRest(PageCompiler):
     """Compile reSt into HTML."""
 
     name = "rest"
+    demote_headers = True
+    logger = None
 
     def compile_html(self, source, dest, is_two_file=True):
         """Compile reSt into HTML."""
 
         if not has_docutils:
-            raise Exception('To build this site, you need to install the '
-                            '"docutils" package.')
+            req_missing(['docutils'], 'build this site (compile reStructuredText)')
         makedirs(os.path.dirname(dest))
         error_level = 100
         with codecs.open(dest, "w+", "utf8") as out_file:
             with codecs.open(source, "r", "utf8") as in_file:
                 data = in_file.read()
+                add_ln = 0
                 if not is_two_file:
-                    data = data.split('\n\n', 1)[-1]
+                    spl = re.split('(\n\n|\r\n\r\n)', data, maxsplit=1)
+                    data = spl[-1]
+                    if len(spl) != 1:
+                        # If errors occur, this will be added to the line
+                        # number reported by docutils so the line number
+                        # matches the actual line number (off by 7 with default
+                        # metadata, could be more or less depending on the post
+                        # author).
+                        add_ln = len(spl[0].splitlines()) + 1
+
+                default_template_path = os.path.join(os.path.dirname(__file__), 'template.txt')
                 output, error_level, deps = rst2html(
                     data, settings_overrides={
-                        'initial_header_level': 2,
+                        'initial_header_level': 1,
                         'record_dependencies': True,
                         'stylesheet_path': None,
                         'link_stylesheet': True,
                         'syntax_highlight': 'short',
                         'math_output': 'mathjax',
-                    })
+                        'template': default_template_path,
+                    }, logger=self.logger, l_source=source, l_add_ln=add_ln)
                 out_file.write(output)
             deps_path = dest + '.dep'
             if deps.list:
@@ -74,15 +97,13 @@ class CompileRest(PageCompiler):
             else:
                 if os.path.isfile(deps_path):
                     os.unlink(deps_path)
-        if error_level == 2:
-            LOGGER.warning('Docutils reports warnings on {0}'.format(source))
         if error_level < 3:
             return True
         else:
             return False
 
-    def create_post(self, path, onefile=False, **kw):
-        metadata = {}
+    def create_post(self, path, content, onefile=False, is_page=False, **kw):
+        metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))
@@ -90,7 +111,7 @@ class CompileRest(PageCompiler):
             if onefile:
                 for k, v in metadata.items():
                     fd.write('.. {0}: {1}\n'.format(k, v))
-            fd.write("\nWrite your post here.")
+            fd.write('\n' + content)
 
     def set_site(self, site):
         for plugin_info in site.plugin_manager.getPluginsOfCategory("RestExtension"):
@@ -104,15 +125,97 @@ class CompileRest(PageCompiler):
             plugin_info.plugin_object.set_site(site)
             plugin_info.plugin_object.short_help = plugin_info.description
 
+        self.logger = get_logger('compile_rest', site.loghandlers)
+        if not site.debug:
+            self.logger.level = 4
+
         return super(CompileRest, self).set_site(site)
 
 
+def get_observer(settings):
+    """Return an observer for the docutils Reporter."""
+    def observer(msg):
+        """Report docutils/rest messages to a Nikola user.
+
+        Error code mapping:
+
+        +------+---------+------+----------+
+        | dNUM |   dNAME | lNUM |    lNAME |    d = docutils, l = logbook
+        +------+---------+------+----------+
+        |    0 |   DEBUG |    1 |    DEBUG |
+        |    1 |    INFO |    2 |     INFO |
+        |    2 | WARNING |    4 |  WARNING |
+        |    3 |   ERROR |    5 |    ERROR |
+        |    4 |  SEVERE |    6 | CRITICAL |
+        +------+---------+------+----------+
+        """
+        errormap = {0: 1, 1: 2, 2: 4, 3: 5, 4: 6}
+        text = docutils.nodes.Element.astext(msg)
+        line = msg['line'] + settings['add_ln'] if 'line' in msg else 0
+        out = '[{source}{colon}{line}] {text}'.format(
+            source=settings['source'], colon=(':' if line else ''),
+            line=line, text=text)
+        settings['logger'].log(errormap[msg['level']], out)
+
+    return observer
+
+
+class NikolaReader(docutils.readers.standalone.Reader):
+
+    def new_document(self):
+        """Create and return a new empty document tree (root node)."""
+        document = docutils.utils.new_document(self.source.source_path, self.settings)
+        document.reporter.stream = False
+        document.reporter.attach_observer(get_observer(self.l_settings))
+        return document
+
+
+def add_node(node, visit_function=None, depart_function=None):
+    """
+    Register a Docutils node class.
+    This function is completely optional. It is a same concept as
+    `Sphinx add_node function <http://sphinx-doc.org/ext/appapi.html#sphinx.application.Sphinx.add_node>`_.
+
+    For example::
+
+        class Plugin(RestExtension):
+
+            name = "rest_math"
+
+            def set_site(self, site):
+                self.site = site
+                directives.register_directive('math', MathDirective)
+                add_node(MathBlock, visit_Math, depart_Math)
+                return super(Plugin, self).set_site(site)
+
+        class MathDirective(Directive):
+            def run(self):
+                node = MathBlock()
+                return [node]
+
+        class Math(docutils.nodes.Element): pass
+
+        def visit_Math(self, node):
+            self.body.append(self.starttag(node, 'math'))
+
+        def depart_Math(self, node):
+            self.body.append('</math>')
+
+    For full example, you can refer to `Microdata plugin <http://plugins.getnikola.com/#microdata>`_
+    """
+    docutils.nodes._add_node_class_names([node.__name__])
+    if visit_function:
+        setattr(docutils.writers.html4css1.HTMLTranslator, 'visit_' + node.__name__, visit_function)
+    if depart_function:
+        setattr(docutils.writers.html4css1.HTMLTranslator, 'depart_' + node.__name__, depart_function)
+
+
 def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
-             destination_path=None, reader=None, reader_name='standalone',
+             destination_path=None, reader=None,
              parser=None, parser_name='restructuredtext', writer=None,
              writer_name='html', settings=None, settings_spec=None,
              settings_overrides=None, config_section=None,
-             enable_exit_status=None):
+             enable_exit_status=None, logger=None, l_source='', l_add_ln=0):
     """
     Set up & run a `Publisher`, and return a dictionary of document parts.
     Dictionary keys are the names of parts, and values are Unicode strings;
@@ -125,17 +228,28 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
         publish_parts(..., settings_overrides={'input_encoding': 'unicode'})
 
     Parameters: see `publish_programmatically`.
+
+    WARNING: `reader` should be None (or NikolaReader()) if you want Nikola to report
+             reStructuredText syntax errors.
     """
-    output, pub = docutils.core.publish_programmatically(
-        source=source, source_path=source_path, source_class=source_class,
-        destination_class=docutils.io.StringOutput,
-        destination=None, destination_path=destination_path,
-        reader=reader, reader_name=reader_name,
-        parser=parser, parser_name=parser_name,
-        writer=writer, writer_name=writer_name,
-        settings=settings, settings_spec=settings_spec,
-        settings_overrides=settings_overrides,
-        config_section=config_section,
-        enable_exit_status=enable_exit_status)
+    if reader is None:
+        reader = NikolaReader()
+        # For our custom logging, we have special needs and special settings we
+        # specify here.
+        # logger    a logger from Nikola
+        # source   source filename (docutils gets a string)
+        # add_ln   amount of metadata lines (see comment in compile_html above)
+        reader.l_settings = {'logger': logger, 'source': l_source,
+                             'add_ln': l_add_ln}
+
+    pub = docutils.core.Publisher(reader, parser, writer, settings=settings,
+                                  source_class=source_class,
+                                  destination_class=docutils.io.StringOutput)
+    pub.set_components(None, parser_name, writer_name)
+    pub.process_programmatic_settings(
+        settings_spec, settings_overrides, config_section)
+    pub.set_source(source, source_path)
+    pub.set_destination(None, destination_path)
+    pub.publish(enable_exit_status=enable_exit_status)
 
     return pub.writer.parts['docinfo'] + pub.writer.parts['fragment'], pub.document.reporter.max_level, pub.settings.record_dependencies

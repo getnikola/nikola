@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -25,34 +25,39 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-from ast import literal_eval
 import codecs
 from datetime import datetime
 import os
+import sys
 import subprocess
 import time
+import pytz
 
+from blinker import signal
 
 from nikola.plugin_categories import Command
-from nikola.utils import remove_file, LOGGER
+from nikola.utils import remove_file, get_logger
 
 
-class Deploy(Command):
-    """Deploy site.  """
+class CommandDeploy(Command):
+    """Deploy site."""
     name = "deploy"
 
     doc_usage = ""
     doc_purpose = "deploy the site"
 
+    logger = None
+
     def _execute(self, command, args):
-        # Get last succesful deploy date
+        self.logger = get_logger('deploy', self.site.loghandlers)
+        # Get last successful deploy date
         timestamp_path = os.path.join(self.site.config['CACHE_FOLDER'], 'lastdeploy')
         if self.site.config['COMMENT_SYSTEM_ID'] == 'nikolademo':
-            LOGGER.warn("\nWARNING WARNING WARNING WARNING\n"
-                        "You are deploying using the nikolademo Disqus account.\n"
-                        "That means you will not be able to moderate the comments in your own site.\n"
-                        "And is probably not what you want to do.\n"
-                        "Think about it for 5 seconds, I'll wait :-)\n\n")
+            self.logger.warn("\nWARNING WARNING WARNING WARNING\n"
+                             "You are deploying using the nikolademo Disqus account.\n"
+                             "That means you will not be able to moderate the comments in your own site.\n"
+                             "And is probably not what you want to do.\n"
+                             "Think about it for 5 seconds, I'll wait :-)\n\n")
             time.sleep(5)
 
         deploy_drafts = self.site.config.get('DEPLOY_DRAFTS', True)
@@ -60,29 +65,73 @@ class Deploy(Command):
         if not (deploy_drafts and deploy_future):
             # Remove drafts and future posts
             out_dir = self.site.config['OUTPUT_FOLDER']
+            undeployed_posts = []
             self.site.scan_posts()
             for post in self.site.timeline:
                 if (not deploy_drafts and post.is_draft) or \
                    (not deploy_future and post.publish_later):
                     remove_file(os.path.join(out_dir, post.destination_path()))
                     remove_file(os.path.join(out_dir, post.source_path))
+                    undeployed_posts.append(post)
 
         for command in self.site.config['DEPLOY_COMMANDS']:
+            self.logger.info("==> {0}".format(command))
             try:
-                with open(timestamp_path, 'rb') as inf:
-                    last_deploy = literal_eval(inf.read().strip())
-            except Exception:
-                last_deploy = datetime(1970, 1, 1)  # NOQA
+                subprocess.check_call(command, shell=True)
+            except subprocess.CalledProcessError as e:
+                self.logger.error('Failed deployment — command {0} '
+                                  'returned {1}'.format(e.cmd, e.returncode))
+                sys.exit(e.returncode)
 
-            LOGGER.notice("==>", command)
-            ret = subprocess.check_call(command, shell=True)
-            if ret != 0:  # failed deployment
-                raise Exception("Failed deployment")
-        LOGGER.notice("Successful deployment")
-        new_deploy = datetime.now()
+        self.logger.info("Successful deployment")
+        try:
+            with codecs.open(timestamp_path, 'rb', 'utf8') as inf:
+                last_deploy = datetime.strptime(inf.read().strip(), "%Y-%m-%dT%H:%M:%S.%f")
+                clean = False
+        except (IOError, Exception) as e:
+            self.logger.debug("Problem when reading `{0}`: {1}".format(timestamp_path, e))
+            last_deploy = datetime(1970, 1, 1)
+            clean = True
+
+        new_deploy = datetime.utcnow()
+        self._emit_deploy_event(last_deploy, new_deploy, clean, undeployed_posts)
+
         # Store timestamp of successful deployment
         with codecs.open(timestamp_path, 'wb+', 'utf8') as outf:
-            outf.write(repr(new_deploy))
-        # Here is where we would do things with whatever is
-        # on self.site.timeline and is newer than
-        # last_deploy
+            outf.write(new_deploy.isoformat())
+
+    def _emit_deploy_event(self, last_deploy, new_deploy, clean=False, undeployed=None):
+        """ Emit events for all timeline entries newer than last deploy.
+
+        last_deploy: datetime
+            Time stamp of the last successful deployment.
+
+        new_deploy: datetime
+            Time stamp of the current deployment.
+
+        clean: bool
+            True when it appears like deploy is being run after a clean.
+
+        """
+
+        if undeployed is None:
+            undeployed = []
+
+        event = {
+            'last_deploy': last_deploy,
+            'new_deploy': new_deploy,
+            'clean': clean,
+            'undeployed': undeployed
+        }
+
+        tzinfo = pytz.timezone(self.site.config['TIMEZONE'])
+
+        deployed = [
+            entry for entry in self.site.timeline
+            if entry.date > (last_deploy.replace(tzinfo=tzinfo) if tzinfo else last_deploy) and entry not in undeployed
+        ]
+
+        event['deployed'] = deployed
+
+        if len(deployed) > 0 or len(undeployed) > 0:
+            signal('deployed').send(event)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -40,25 +40,30 @@ try:
 except ImportError:
     txt2tags = None  # NOQA
 
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = dict  # NOQA
+
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs
+from nikola.utils import makedirs, req_missing
 
 
-class CompileTextile(PageCompiler):
+class CompileTxt2tags(PageCompiler):
     """Compile txt2tags into HTML."""
 
     name = "txt2tags"
+    demote_headers = True
 
     def compile_html(self, source, dest, is_two_file=True):
         if txt2tags is None:
-            raise Exception('To build this site, you need to install the '
-                            '"txt2tags" package.')
+            req_missing(['txt2tags'], 'build this site (compile txt2tags)')
         makedirs(os.path.dirname(dest))
         cmd = ["-t", "html", "--no-headers", "--outfile", dest, source]
         txt2tags(cmd)
 
-    def create_post(self, path, onefile=False, **kw):
-        metadata = {}
+    def create_post(self, path, content, onefile=False, is_page=False, **kw):
+        metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))
@@ -68,4 +73,4 @@ class CompileTextile(PageCompiler):
                 for k, v in metadata.items():
                     fd.write('.. {0}: {1}\n'.format(k, v))
                 fd.write("-->\n'''\n")
-            fd.write("\nWrite your post here.")
+            fd.write(content)

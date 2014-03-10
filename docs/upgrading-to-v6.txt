@@ -8,7 +8,9 @@
 Upgrading to v6
 ===============
 
-:Version: 6.0.3
+:Version: 7.0.0-alpha
+
+.. class:: lead
 
 Nikola tries fairly hard to be compatible between versions. However, there were
 a few areas which were getting clunky, and needed fxing. So, here's what you may
@@ -19,9 +21,6 @@ and I'll add further tweaks here.
 
 Themes
 ------
-
-**NOTE**
-    The install_theme command is not working yet, get themes from https://github.com/getnikola/nikola-themes
 
 **NOTE**
     There is no equivalent for the jinja-default theme yet. If you have a custom,
@@ -50,11 +49,16 @@ break for you.
 
 Facebook comments support changed the HTML tag to:
 
-.. code-block: html
+.. code-block:: mako
 
-    <html% if comment_system == 'facebook': xmlns:fb="http://ogp.me/ns/fb#"
-    %endif lang="${lang}">
+    <html
+    %if comment_system == 'facebook':
+    xmlns:fb="http://ogp.me/ns/fb#"
+    %endif
+    lang="${lang}">
 
+If you do not want to use Facebook comments, you can leave the old ``<html
+lang="${lang}">`` tag in and it will work just fine.
 
 Comments
 ~~~~~~~~
@@ -72,10 +76,36 @@ If you don't, your theme should work just fine, but support only disqus comments
 Configuration
 -------------
 
-A number of options have been renamed. In all cases, the behaviour should be **exactly** as
-before. If it's not, let me know. Also, you will get warnings. That doesn't mean things
-broke. They are there to inform you of what's happening, and that you need to tweak
-your config.
+A number of options have been renamed. In most cases, the behaviour
+should be **exactly** as before.
 
-All the deprecated options will work during the v6 cycle, and only be removed in v7, when
-those warnings will become errors.
+However, ``post_pages`` was split into ``POSTS`` and ``PAGES``.  Long
+story short, anything that had a ``True`` as the ``use_in_feeds``
+(last) value goes to ``POSTS`` and anything with ``False`` goes to
+``PAGES``.  For example:
+
+.. code-block:: python
+
+    post_pages = (
+        ("posts/*.txt", "", "post.tmpl", True),
+        ("stories/*.txt", "p", "story.tmpl", False),
+        ("stories/*.html", "s", "story.tmpl", False),
+    )
+
+    ### becomes ###
+
+    POSTS = (
+        ("posts/*.txt", "", "post.tmpl"),
+    )
+
+    PAGES = (
+        ("stories/*.txt", "p", "story.tmpl"),
+        ("stories/*.html", "s", "story.tmpl"),
+    )
+
+Also, you will get warnings. That doesn't mean things broke. They are
+there to inform you of what's happening, and that you need to tweak your
+config.
+
+All the deprecated options will work during the v6 cycle, and only be
+removed in v7, when those warnings will become errors.

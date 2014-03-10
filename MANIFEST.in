@@ -4,3 +4,4 @@ graft scripts
 graft tests
 include *.txt
 include *.rst
+include *.py

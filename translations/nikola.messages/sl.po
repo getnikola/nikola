@@ -1,0 +1,92 @@
+# Messages in Nikola
+# Copyright (C) 2012-2013
+# This file is distributed under the same license as the Nikola package.
+# 
+# Translators:
+# Translators:
+# Venčeslav Vezjak <vezjakv@gmail.com>, 2013
+# Venčeslav Vezjak <vezjakv@gmail.com>, 2013-2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Nikola\n"
+"Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
+"POT-Creation-Date: 2013-03-15 12:24-0300\n"
+"PO-Revision-Date: 2014-02-09 16:56+0000\n"
+"Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/nikola/language/sl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+msgid "More posts about %s"
+msgstr "Več objav o %s"
+
+msgid "LANGUAGE"
+msgstr "Slovenščina"
+
+msgid "Tags"
+msgstr "Značke"
+
+msgid "Categories"
+msgstr "Kategorije"
+
+msgid "Tags and Categories"
+msgstr "Značke in kategorije"
+
+msgid "Read more"
+msgstr "Več o tem"
+
+msgid "Posts about %s"
+msgstr "Objave o %s"
+
+msgid "Next post"
+msgstr "Naslednja objava"
+
+msgid "old posts, page %d"
+msgstr "stare objave, stran %d"
+
+msgid "page %d"
+msgstr "stran %d"
+
+msgid "Source"
+msgstr "Izvor"
+
+#. Here your translation should not say English but the name of your language
+#. instead
+msgid "Read in English"
+msgstr "Beri v slovenščini"
+
+msgid "Posts for year %s"
+msgstr "Objave za leto %s"
+
+msgid "Newer posts"
+msgstr "Novejše objave"
+
+msgid "Previous post"
+msgstr "Prejšnja objava"
+
+msgid "Also available in:"
+msgstr "Na voljo tudi v:"
+
+msgid "Original site"
+msgstr "Izvorna spletna stran"
+
+msgid "Older posts"
+msgstr "Starejše objave"
+
+msgid "Archive"
+msgstr "Arhiv"
+
+msgid "Posted:"
+msgstr "Objavljeno:"
+
+msgid "Posts for {month} {year}"
+msgstr "Objave za {month} {year}"
+
+msgid "Nothing found."
+msgstr ""
+
+msgid "No posts found."
+msgstr ""

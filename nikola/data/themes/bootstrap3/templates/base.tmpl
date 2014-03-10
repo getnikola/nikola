@@ -1,6 +1,7 @@
 ## -*- coding: utf-8 -*-
 <%namespace name="base" file="base_helper.tmpl" import="*" />
 <%namespace name="bootstrap" file="bootstrap_helper.tmpl" import="*" />
+<%namespace name="notes" file="annotation_helper.tmpl" import="*" />
 ${set_locale(lang)}
 <!DOCTYPE html>
 <html
@@ -13,40 +14,47 @@ lang="${lang}">
     ${bootstrap.html_head()}
     <%block name="extra_head">
     </%block>
+    % if annotations and post and not post.meta('noannotations'):
+        ${notes.css()}
+    % elif not annotations and post and post.meta('annotations'):
+        ${notes.css()}
+    % endif
     ${extra_head_data}
 </head>
 <body>
 <!-- Menubar -->
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="${abs_link('/')}">${blog_title}</a>
-    </div>
-    <div class="collapse navbar-collapse navbar-ex1-collapse">
-        <ul class="nav navbar-nav">
-            ${bootstrap.html_navigation_links()}
-        </ul>
-        %if search_form:
-            ${search_form}
-        %endif
+    <div class="container-fluid"><!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="${abs_link('/')}">${blog_title}</a>
+        </div><!-- /.navbar-header -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                ${bootstrap.html_navigation_links()}
+            </ul>
+            %if search_form:
+                ${search_form}
+            %endif
 
-        <ul class="nav navbar-nav navbar-right">
-            <%block name="belowtitle">
-            %if len(translations) > 1:
-                <li>${base.html_translations()}</li>
-            %endif
-            </%block>
-            % if not hide_sourcelink:
-                <%block name="sourcelink"></%block>
-            %endif
-        </ul>
-    </div><!-- /.navbar-collapse -->
+            <ul class="nav navbar-nav navbar-right">
+                <%block name="belowtitle">
+                %if len(translations) > 1:
+                    <li>${bootstrap.html_translations()}</li>
+                %endif
+                </%block>
+                % if show_sourcelink:
+                    <%block name="sourcelink"></%block>
+                %endif
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
 </nav>
 
 <!-- End of Menubar -->
@@ -67,7 +75,13 @@ lang="${lang}">
 
 ${bootstrap.late_load_js()}
 ${base.html_social()}
-    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
-<%block name="extra_js"></%block>
+    <script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+    <%block name="extra_js"></%block>
+    % if annotations and post and not post.meta('noannotations'):
+        ${notes.code()}
+    % elif not annotations and post and post.meta('annotations'):
+        ${notes.code()}
+    % endif
 ${body_end}
 </body>
+</html>

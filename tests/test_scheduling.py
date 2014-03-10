@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from base import BaseTestCase
+from __future__ import unicode_literals, absolute_import
+
+# This code is so you can run the samples without installing the package,
+# and should be before any import touching nikola, in any file under tests/
+import os
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+
+from .base import BaseTestCase
 import datetime
 from nose.plugins.skip import SkipTest
 try:
@@ -23,6 +31,17 @@ class TestScheduling(BaseTestCase):
     def setUp(self):
         if not _freeze_time:
             raise SkipTest('freezegun not installed')
+
+        d = [name for name in sys.modules if name.startswith("six.moves.")]
+        self.deleted = {}
+        for name in d:
+            self.deleted[name] = sys.modules[name]
+            del sys.modules[name]
+
+    @classmethod
+    def tearDown(self):
+        for name, mod in self.deleted.items():
+            sys.modules[name] = mod
 
     @freeze_time(NOW)
     def test_get_date(self):

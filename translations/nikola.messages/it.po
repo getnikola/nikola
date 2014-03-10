@@ -5,14 +5,16 @@
 # Translators:
 # Translators:
 # Alessandro Pisa <alessandro.pisa@gmail.com>, 2013
+# David Paleino <d.paleino@gmail.com>, 2013
+# ralsina <ralsina@netmanagers.com.ar>, 2013
 # ralsina <ralsina@netmanagers.com.ar>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2013-08-10 08:48+0000\n"
-"Last-Translator: ralsina <ralsina@netmanagers.com.ar>\n"
+"PO-Revision-Date: 2014-02-09 16:56+0000\n"
+"Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/nikola/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,8 +22,8 @@ msgstr ""
 "Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "More posts about"
-msgstr "Altri articoli collegati"
+msgid "More posts about %s"
+msgstr "Altri articoli collegati %s"
 
 msgid "LANGUAGE"
 msgstr "Italiano"
@@ -30,10 +32,10 @@ msgid "Tags"
 msgstr "Tags"
 
 msgid "Categories"
-msgstr ""
+msgstr "Categorie"
 
 msgid "Tags and Categories"
-msgstr ""
+msgstr "Tags e Categorie"
 
 msgid "Read more"
 msgstr "Espandi"
@@ -44,13 +46,16 @@ msgstr "Articoli su %s"
 msgid "Next post"
 msgstr "Articolo successivo"
 
-msgid "old posts page %d"
+msgid "old posts, page %d"
 msgstr "pagina dei vecchi articoli %d"
+
+msgid "page %d"
+msgstr "pagina %d"
 
 msgid "Source"
 msgstr "Sorgente"
 
-#. Here your translation should not say ENglish but the name of your language
+#. Here your translation should not say English but the name of your language
 #. instead
 msgid "Read in English"
 msgstr "Leggi in italiano"
@@ -64,8 +69,8 @@ msgstr "Articoli recenti"
 msgid "Previous post"
 msgstr "Articolo precedente"
 
-msgid "Also available in"
-msgstr "Anche disponibile in"
+msgid "Also available in:"
+msgstr "Anche disponibile in:"
 
 msgid "Original site"
 msgstr "Sito originale"
@@ -76,8 +81,14 @@ msgstr "Articoli precedenti"
 msgid "Archive"
 msgstr "Archivio"
 
-msgid "Posted"
-msgstr "Pubblicato"
+msgid "Posted:"
+msgstr "Pubblicato:"
 
 msgid "Posts for {month} {year}"
 msgstr "Articoli per {month} {year}"
+
+msgid "Nothing found."
+msgstr ""
+
+msgid "No posts found."
+msgstr ""

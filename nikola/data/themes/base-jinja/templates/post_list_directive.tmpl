@@ -1,0 +1,16 @@
+{#  -*- coding: utf-8 -*- #}
+<!-- Begin post-list {{ post_list_id }} -->
+<div id="{{ post_list_id }}" class="post-list">
+    {% if posts %}
+    <ul class="post-list">
+        {% for post in posts %}
+            <li class="post-list-item">
+	        {{ post.formatted_date(date_format) }}
+		&nbsp;
+		<a href="{{ post.permalink(lang) }}">{{ post.title(lang) }}</a>
+	    </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+<!-- End post-list {{ post_list_id }} -->

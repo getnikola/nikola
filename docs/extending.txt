@@ -1,7 +1,14 @@
+.. title: Extending Nikola
+.. slug: extending
+.. date: 2012/03/30 23:00
+.. tags:
+.. link:
+.. description:
+
 Extending Nikola
 ================
 
-:Version: 6.0.3
+:Version: 7.0.0-alpha
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-info pull-right
@@ -9,16 +16,13 @@ Extending Nikola
 .. contents::
 
 
-.. note:: This is a draft
-
-   I am not sure of the best way to do some things, including how
-   to document this. Suggestions are welcome.
+.. class:: lead
 
 Nikola is extensible. Almost all its functionality is based on plugins,
 and you can add your own or replace the provided ones.
 
 Plugins consist of a metadata file (with ``.plugin`` extension) and
-a python module (a ``.py`` file) or package (a folder containing
+a Python module (a ``.py`` file) or package (a folder containing
 a ``__init__.py`` file.
 
 To use a plugin in your site, you just have to put it in a ``plugins``
@@ -72,7 +76,7 @@ When you run ``nikola --help`` you will see something like this::
 That will give you a list of all available commands in your version of Nikola.
 Each and every one of those is a plugin. Let's look at a typical example:
 
-First, the ``command_serve.plugin`` file:
+First, the ``serve.plugin`` file:
 
 .. code-block:: ini
 
@@ -86,8 +90,13 @@ First, the ``command_serve.plugin`` file:
     Website = http://getnikola.com
     Description = Start test server.
 
+.. note:: If you want to publish your plugin on the Plugin Index, `read
+          the docs for the Index
+          <https://github.com/getnikola/plugins/blob/master/README.md>`__
+          (and the .plugin file examples and explanations).
+
 For your own plugin, just change the values in a sensible way. The
-``Module`` will be used to find the matching python module, in this case
+``Module`` will be used to find the matching Python module, in this case
 ``serve.py``, from which this is the interesting bit:
 
 .. code-block:: python
@@ -97,7 +106,7 @@ For your own plugin, just change the values in a sensible way. The
     # You have to inherit Command for this to be a
     # command plugin:
 
-    class CommandBuild(Command):
+    class CommandServe(Command):
         """Start test server."""
 
         name = "serve"
@@ -173,6 +182,11 @@ First, you have to create a .plugin file. Here's the one for the Mako plugin:
     Website = http://getnikola.com
     Description = Support for Mako templates.
 
+.. note:: If you want to publish your plugin on the Plugin Index, `read
+          the docs for the Index
+          <https://github.com/getnikola/plugins/blob/master/README.md>`__
+          (and the .plugin file examples and explanations).
+
 You will have to replace "mako" with your template system's name, and other data
 in the obvious ways.
 
@@ -204,7 +218,7 @@ a stub for a hypothetical system called "Templater":
         # template loading tool that can use this.
 
         def set_directories(self, directories):
-            """Createa  template lookup."""
+            """Create a template lookup."""
             pass
 
         # The method that does the actual rendering.
@@ -260,9 +274,9 @@ These have access to the ``site`` object which contains your timeline and
 your configuration.
 
 The critical bit of Task plugins is their ``gen_tasks`` method, which ``yields``
-`doit tasks <http://pydoit.org/tasks.html>`_
+`doit tasks <http://pydoit.org/tasks.html>`_.
 
-The details of how to handle dependencies, etc. are a bit too much for this
+The details of how to handle dependencies, etc., are a bit too much for this
 document, so I'll just leave you with an example, the ``copy_assets`` task.
 First the ``task_copy_assets.plugin`` file, which you should copy and edit
 in the logical ways:
@@ -278,6 +292,12 @@ in the logical ways:
     Version = 0.1
     Website = http://getnikola.com
     Description = Copy theme assets into output.
+
+
+.. note:: If you want to publish your plugin on the Plugin Index, `read
+          the docs for the Index
+          <https://github.com/getnikola/plugins/blob/master/README.md>`_
+          (and the .plugin file examples and explanations).
 
 And the ``task_copy_assets.py`` file, in its entirety:
 
@@ -347,4 +367,72 @@ returns the preferred extension for the output file.
 RestExtension Plugins
 ---------------------
 
-Implement directives for Restructured Text, see ``media.py`` for a simple example.
+Implement directives for reStructuredText, see ``media.py`` for a simple example.
+
+SignalHandler Plugins
+---------------------
+
+These plugins extend the ``SignalHandler`` class and connect to one or more
+signals via `blinker <http://pythonhosted.org/blinker/>`_.
+
+The easiest way to do this is to reimplement ``set_site()`` and just connect to
+whatever signals you want there.
+
+Currently Nikola emits the following signals:
+
+``sighandlers_loaded``
+    Right after SignalHandler plugin activation.
+``initialized``
+    Right after plugin activation.
+``configured``
+    When all the configuration file is processed. Note that plugins are activated before this is emitted.
+``new_post``
+    When a new post is created, using the ``nikola new_post`` command.  The signal
+    data contains the path of the file, and the metadata file (if there is one).
+``deployed``
+    When the ``nikola deploy`` command is run, and there is at least one new
+    entry/post since ``last_deploy``.  The signal data is of the form ::
+
+        {
+         'last_deploy: # datetime object for the last deployed time,
+         'new_deploy': # datetime object for the current deployed time,
+         'clean': # whether there was a record of a last deployment,
+         'deployed': # all files deployed after the last deploy,
+         'undeployed': # all files not deployed since they are either future posts/drafts
+        }
+
+
+Plugin Index
+============
+
+There is a `plugin index <http://plugins.getnikola.com/>`__, which stores all
+of the plugins for Nikola people wanted to share with the world.
+
+You may want to read the `README for the Index
+<https://github.com/getnikola/plugins/blob/master/README.md>`_ if you want to
+publish your package there.
+
+Path/Link Resolution Mechanism
+==============================
+
+Any plugin can register a function using ``Nikola.register_path_handler`` to
+allow resolution of paths and links. These are useful for templates, which
+can access them via _link.
+
+For example, you can always get a link to the path for the feed of the "foo" tag
+by using ``_link('tag_rss', 'foo')`` or the ``link://tag_rss/foo`` URL.
+
+Here's the relevant code from the tag plugin.
+
+.. code-block:: python
+
+    # In set_site
+    site.register_path_handler('tag_rss', self.tag_rss_path)
+
+    # And these always take name and lang as arguments and returl a list of
+    # path elements.
+    def tag_rss_path(self, name, lang):
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['TAG_PATH'], self.slugify_name(name) + ".xml"] if
+                _f]
+

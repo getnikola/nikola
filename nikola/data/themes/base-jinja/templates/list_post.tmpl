@@ -1,0 +1,16 @@
+{#  -*- coding: utf-8 -*- #}
+{% extends 'base.tmpl' %}
+{% block content %}
+        <!--Body content-->
+        <div class="postbox">
+        <h1>{{ title }}</h1>
+        {% if posts %}
+        <ul class="unstyled">
+        {% for post in posts %}
+            <li><a href="{{ post.permalink() }}">[{{ post.formatted_date(date_format) }}] {{ post.title() }}</a>
+        {% endfor %}
+        </ul>
+        {% endif %}
+        </div>
+        <!--End of body content-->
+{% endblock %}

@@ -25,17 +25,23 @@ always unquoted.
 """
 
 
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import
+
+# This code is so you can run the samples without installing the package,
+# and should be before any import touching nikola, in any file under tests/
+import os
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
 
 import codecs
 try:
     from io import StringIO
 except ImportError:
     from StringIO import StringIO  # NOQA
-import os
-import sys
 import tempfile
 
+import docutils
 from lxml import html
 from nose.plugins.skip import SkipTest
 import unittest
@@ -46,7 +52,8 @@ import nikola.plugins.compile.rest
 from nikola.plugins.compile.rest import gist
 from nikola.plugins.compile.rest import vimeo
 import nikola.plugins.compile.rest.listing
-from nikola.utils import _reload
+from nikola.plugins.compile.rest.doc import Plugin as DocPlugin
+from nikola.utils import _reload, STDERR_HANDLER
 from nikola.plugin_categories import (
     Command,
     Task,
@@ -56,7 +63,24 @@ from nikola.plugin_categories import (
     TaskMultiplier,
     RestExtension,
 )
-from base import BaseTestCase
+from .base import BaseTestCase
+
+
+class FakePost(object):
+
+    def __init__(self, title, slug):
+        self._title = title
+        self._slug = slug
+        self._meta = {'slug': slug}
+
+    def title(self):
+        return self._title
+
+    def meta(self, key):
+        return self._meta[key]
+
+    def permalink(self):
+        return '/posts/' + self._slug
 
 
 class FakeSite(object):
@@ -65,6 +89,7 @@ class FakeSite(object):
         self.config = {
             'DISABLED_PLUGINS': [],
             'EXTRA_PLUGINS': [],
+            'DEFAULT_LANG': 'en',
         }
         self.EXTRA_PLUGINS = self.config['EXTRA_PLUGINS']
         self.plugin_manager = PluginManager(categories_filter={
@@ -76,6 +101,7 @@ class FakeSite(object):
             "TaskMultiplier": TaskMultiplier,
             "RestExtension": RestExtension,
         })
+        self.loghandlers = [STDERR_HANDLER]
         self.plugin_manager.setPluginInfoExtension('plugin')
         if sys.version_info[0] == 3:
             places = [
@@ -88,6 +114,12 @@ class FakeSite(object):
         self.plugin_manager.setPluginPlaces(places)
         self.plugin_manager.collectPlugins()
 
+        self.timeline = [
+            FakePost(title='Fake post',
+                     slug='fake-post')
+        ]
+        self.debug = True
+
     def render_template(self, name, _, context):
         return('<img src="IMG.jpg">')
 
@@ -99,10 +131,12 @@ class ReSTExtensionTestCase(BaseTestCase):
     deps = None
 
     def setUp(self):
-        """ Parse cls.sample into a HTML document tree """
-        super(ReSTExtensionTestCase, self).setUp()
         self.compiler = nikola.plugins.compile.rest.CompileRest()
         self.compiler.set_site(FakeSite())
+        return super(ReSTExtensionTestCase, self).setUp()
+
+    def basic_test(self):
+        """ Parse cls.sample into a HTML document tree """
         self.setHtmlFromRst(self.sample)
 
     def setHtmlFromRst(self, rst):
@@ -135,7 +169,7 @@ class ReSTExtensionTestCase(BaseTestCase):
         try:
             tag = next(self.html_doc.iter(element))
         except StopIteration:
-            raise Exception("<{}> not in {}".format(element, self.html))
+            raise Exception("<{0}> not in {1}".format(element, self.html))
         else:
             if attributes:
                 arg_attrs = set(attributes.items())
@@ -151,6 +185,7 @@ class ReSTExtensionTestCaseTestCase(ReSTExtensionTestCase):
     sample = '.. raw:: html\n\n   <iframe src="foo" height="bar">spam</iframe>'
 
     def test_test(self):
+        self.basic_test()
         self.assertHTMLContains("iframe", attributes={"src": "foo"},
                                 text="spam")
         self.assertRaises(Exception, self.assertHTMLContains, "eggs", {})
@@ -161,6 +196,7 @@ class MathTestCase(ReSTExtensionTestCase):
 
     def test_mathjax(self):
         """ Test that math is outputting MathJax."""
+        self.basic_test()
         self.assertHTMLContains("span", attributes={"class": "math"},
                                 text="\(e^{ix} = \cos x + i\sin x\)")
 
@@ -177,6 +213,7 @@ class GistTestCase(ReSTExtensionTestCase):
 
     def setUp(self):
         """ Patch GitHubGist for avoiding network dependency """
+        super(GistTestCase, self).setUp()
         self.gist_type.get_raw_gist_with_filename = lambda *_: 'raw_gist_file'
         self.gist_type.get_raw_gist = lambda *_: "raw_gist"
         _reload(nikola.plugins.compile.rest)
@@ -207,6 +244,7 @@ class GistIntegrationTestCase(ReSTExtensionTestCase):
 
     def test_gist_integration(self):
         """ Fetch contents of the gist from GH and render in a noscript tag """
+        self.basic_test()
         text = ('Be alone, that is the secret of invention: be alone, that is'
                 ' when ideas are born. -- Nikola Tesla')
         self.assertHTMLContains('pre', text=text)
@@ -219,6 +257,7 @@ class SlidesTestCase(ReSTExtensionTestCase):
 
     def test_slides(self):
         """ Test the slides js generation and img tag creation """
+        self.basic_test()
         self.assertHTMLContains("img", attributes={"src": "IMG.jpg"})
 
 
@@ -229,6 +268,7 @@ class SoundCloudTestCase(ReSTExtensionTestCase):
 
     def test_soundcloud(self):
         """ Test SoundCloud iframe tag generation """
+        self.basic_test()
         self.assertHTMLContains("iframe",
                                 attributes={"src": ("https://w.soundcloud.com"
                                                     "/player/?url=http://"
@@ -253,6 +293,7 @@ class VimeoTestCase(ReSTExtensionTestCase):
 
     def test_vimeo(self):
         """ Test Vimeo iframe tag generation """
+        self.basic_test()
         self.assertHTMLContains("iframe",
                                 attributes={"src": ("http://player.vimeo.com/"
                                                     "video/VID"),
@@ -266,6 +307,7 @@ class YoutubeTestCase(ReSTExtensionTestCase):
 
     def test_youtube(self):
         """ Test Youtube iframe tag generation """
+        self.basic_test()
         self.assertHTMLContains("iframe",
                                 attributes={"src": ("http://www.youtube.com/"
                                                     "embed/YID?rel=0&hd=1&"
@@ -277,32 +319,56 @@ class ListingTestCase(ReSTExtensionTestCase):
     """ Listing test case and CodeBlock alias tests """
 
     deps = None
-    sample1 = '.. listing:: nikola.py python'
+    sample1 = '.. listing:: nikola.py python\n\n'
     sample2 = '.. code-block:: python\n\n   import antigravity'
     sample3 = '.. sourcecode:: python\n\n   import antigravity'
 
-    def setUp(self):
-        """ Inject a mock open function for not generating a test site """
-        self.f = StringIO("import antigravity\n")
-        super(ListingTestCase, self).setUp()
-        pi = self.compiler.site.plugin_manager.getPluginByName('listing', 'RestExtension')
-        # THERE MUST BE A NICER WAY
-
-        def fake_open(*a, **kw):
-            return self.f
-
-        sys.modules[pi.plugin_object.__module__].codecs_open = fake_open
-
-    def test_listing(self):
-        """ Test that we can render a file object contents without errors """
-        self.deps = 'listings/nikola.py'
-        self.setHtmlFromRst(self.sample1)
+    #def test_listing(self):
+        ##""" Test that we can render a file object contents without errors """
+        ##with cd(os.path.dirname(__file__)):
+            #self.deps = 'listings/nikola.py'
+            #self.setHtmlFromRst(self.sample1)
 
     def test_codeblock_alias(self):
         """ Test CodeBlock aliases """
         self.deps = None
         self.setHtmlFromRst(self.sample2)
         self.setHtmlFromRst(self.sample3)
+
+
+class DocTestCase(ReSTExtensionTestCase):
+    """ Ref role test case """
+
+    sample = 'Sample for testing my :doc:`doesnt-exist-post`'
+    sample1 = 'Sample for testing my :doc:`fake-post`'
+    sample2 = 'Sample for testing my :doc:`titled post <fake-post>`'
+
+    def setUp(self):
+        # Initialize plugin, register role
+        self.plugin = DocPlugin()
+        self.plugin.set_site(FakeSite())
+        # Hack to fix leaked state from integration tests
+        try:
+            f = docutils.parsers.rst.roles.role('doc', None, None, None)[0]
+            f.site = FakeSite()
+        except AttributeError:
+            pass
+        return super(DocTestCase, self).setUp()
+
+    def test_doc_doesnt_exist(self):
+        self.assertRaises(Exception, self.assertHTMLContains, 'anything', {})
+
+    def test_doc(self):
+        self.setHtmlFromRst(self.sample1)
+        self.assertHTMLContains('a',
+                                text='Fake post',
+                                attributes={'href': '/posts/fake-post'})
+
+    def test_doc_titled(self):
+        self.setHtmlFromRst(self.sample2)
+        self.assertHTMLContains('a',
+                                text='titled post',
+                                attributes={'href': '/posts/fake-post'})
 
 
 if __name__ == "__main__":

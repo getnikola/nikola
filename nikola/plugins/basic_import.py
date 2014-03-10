@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -48,8 +48,8 @@ class ImportMixin(object):
 
     name = "import_mixin"
     needs_config = False
-    doc_usage = "[options] wordpress_export_file"
-    doc_purpose = "import a wordpress dump."
+    doc_usage = "[options] export_file"
+    doc_purpose = "import a dump from a different engine."
     cmd_options = [
         {
             'name': 'output_folder',
@@ -81,7 +81,7 @@ class ImportMixin(object):
             src = (urlparse(k).path + 'index.html')[1:]
             dst = (urlparse(v).path)
             if src == 'index.html':
-                print("Can't do a redirect for: {0!r}".format(k))
+                utils.LOGGER.warn("Can't do a redirect for: {0!r}".format(k))
             else:
                 redirections.append((src, dst))
 
@@ -92,15 +92,15 @@ class ImportMixin(object):
             os.system('nikola init ' + self.output_folder)
         else:
             self.import_into_existing_site = True
-            print('The folder {0} already exists - assuming that this is a '
-                  'already existing nikola site.'.format(self.output_folder))
+            utils.LOGGER.notice('The folder {0} already exists - assuming that this is a '
+                                'already existing Nikola site.'.format(self.output_folder))
 
         filename = os.path.join(os.path.dirname(utils.__file__), 'conf.py.in')
-        # add format_extensions=True if getting an unhelpful traceback
-        # 'NameError(Undefined)' from mako\runtime.py, then more info is
-        # writen to *somefile* - For import_blogger by example it would
-        # write html to conf.py. Yeah!
-        conf_template = Template(filename=filename)
+        # The 'strict_undefined=True' will give the missing symbol name if any,
+        # (ex: NameError: 'THEME' is not defined )
+        # for other errors from mako/runtime.py, you can add format_extensions=True ,
+        # then more info will be writen to *somefile* (most probably conf.py)
+        conf_template = Template(filename=filename, strict_undefined=True)
 
         return conf_template
 
@@ -117,6 +117,7 @@ class ImportMixin(object):
         doc = html.document_fromstring(content)
         doc.rewrite_links(replacer)
 
+        utils.makedirs(os.path.dirname(filename))
         with open(filename, "wb+") as fd:
             fd.write(html.tostring(doc, encoding='utf8'))
 
@@ -125,6 +126,7 @@ class ImportMixin(object):
         if not description:
             description = ""
 
+        utils.makedirs(os.path.dirname(filename))
         with codecs.open(filename, "w+", "utf8") as fd:
             fd.write('{0}\n'.format(title))
             fd.write('{0}\n'.format(slug))
@@ -135,6 +137,7 @@ class ImportMixin(object):
 
     @staticmethod
     def write_urlmap_csv(output_file, url_map):
+        utils.makedirs(os.path.dirname(output_file))
         with codecs.open(output_file, 'w+', 'utf8') as fd:
             csv_writer = csv.writer(fd)
             for item in url_map.items():
@@ -148,12 +151,13 @@ class ImportMixin(object):
                 time=datetime.datetime.now().strftime('%Y%m%d_%H%M%S'),
                 name=self.name)
         config_output_path = os.path.join(self.output_folder, filename)
-        print('Configuration will be written to:', config_output_path)
+        utils.LOGGER.info('Configuration will be written to: {0}'.format(config_output_path))
 
         return config_output_path
 
     @staticmethod
     def write_configuration(filename, rendered_template):
+        utils.makedirs(os.path.dirname(filename))
         with codecs.open(filename, 'w+', 'utf8') as fd:
             fd.write(rendered_template)
 

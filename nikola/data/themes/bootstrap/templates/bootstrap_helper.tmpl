@@ -1,9 +1,11 @@
 ## Override only the functions that differ from base_helper.tmpl
 <%def name="html_head()">
     <meta charset="utf-8">
-    <meta name="description" content="${description}" >
+    %if description:
+    <meta name="description" content="${description}">
+    %endif
     <meta name="author" content="${blog_author}">
-    <title>${title|h} | ${blog_title|h}</title>
+    <title>${title|striphtml} | ${blog_title|striphtml}</title>
     ${mathjax_config}
     %if use_bundles:
         %if use_cdn:
@@ -27,8 +29,11 @@
             <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
         %endif
     %endif
+    %if permalink:
+      <link rel="canonical" href="${abs_link(permalink)}">
+    %endif
     <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     %if rss_link:
         ${rss_link}
@@ -51,21 +56,21 @@
 <%def name="late_load_js()">
     %if use_bundles:
         %if use_cdn:
-            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
             <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>
-            <script src="/assets/js/all.js" type="text/javascript"></script>
+            <script src="/assets/js/all.js"></script>
         %else:
-            <script src="/assets/js/all-nocdn.js" type="text/javascript"></script>
+            <script src="/assets/js/all-nocdn.js"></script>
         %endif
     %else:
         %if use_cdn:
-            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
             <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>
         %else:
-            <script src="/assets/js/jquery-1.10.2.min.js" type="text/javascript"></script>
-            <script src="/assets/js/bootstrap.min.js" type="text/javascript"></script>
+            <script src="/assets/js/jquery-1.10.2.min.js"></script>
+            <script src="/assets/js/bootstrap.min.js"></script>
         %endif
-        <script src="/assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
+        <script src="/assets/js/jquery.colorbox-min.js"></script>
     %endif
 </%def>
 
@@ -77,7 +82,7 @@
             <ul class="dropdown-menu">
             %for suburl, text in url:
                 % if rel_link(permalink, suburl) == "#":
-                    <li class="active"><a href="${suburl}">${text}</a>
+                    <li class="active"><a href="${permalink}">${text}</a>
                 %else:
                     <li><a href="${suburl}">${text}</a>
                 %endif
@@ -85,7 +90,7 @@
             </ul>
         % else:
             % if rel_link(permalink, url) == "#":
-                <li class="active"><a href="${url}">${text}</a>
+                <li class="active"><a href="${permalink}">${text}</a>
             %else:
                 <li><a href="${url}">${text}</a>
             %endif

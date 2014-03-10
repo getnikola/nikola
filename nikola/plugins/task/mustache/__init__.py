@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -31,7 +31,9 @@ import json
 import os
 
 from nikola.plugin_categories import Task
-from nikola.utils import config_changed, copy_file, unicode_str, makedirs
+from nikola.utils import (
+    config_changed, copy_file, LocaleBorg, makedirs, unicode_str,
+)
 
 
 class Mustache(Task):
@@ -106,7 +108,7 @@ class Mustache(Task):
             })
 
             # Comments
-            context = dict(post=post, lang=self.site.current_lang())
+            context = dict(post=post, lang=LocaleBorg().current_lang)
             context.update(self.site.GLOBAL_CONTEXT)
             data["comment_html"] = self.site.template_system.render_template(
                 'mustache-comment-form.tmpl', None, context).strip()

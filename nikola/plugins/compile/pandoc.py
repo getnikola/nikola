@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -35,7 +35,12 @@ import os
 import subprocess
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import LOGGER, makedirs
+from nikola.utils import req_missing, makedirs
+
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = dict  # NOQA
 
 
 class CompilePandoc(PageCompiler):
@@ -49,13 +54,10 @@ class CompilePandoc(PageCompiler):
             subprocess.check_call(('pandoc', '-o', dest, source))
         except OSError as e:
             if e.strreror == 'No such file or directory':
-                LOGGER.error('To use the pandoc compiler,'
-                             ' you have to install the "pandoc" Haskell package.')
-                raise Exception('Cannot compile {0} -- pandoc '
-                                'missing'.format(source))
+                req_missing(['pandoc'], 'build this site (compile with pandoc)', python=False)
 
-    def create_post(self, path, onefile=False, **kw):
-        metadata = {}
+    def create_post(self, path, content, onefile=False, is_page=False, **kw):
+        metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))
@@ -65,4 +67,4 @@ class CompilePandoc(PageCompiler):
                 for k, v in metadata.items():
                     fd.write('.. {0}: {1}\n'.format(k, v))
                 fd.write('-->\n\n')
-            fd.write("Write your post here.")
+            fd.write(content)

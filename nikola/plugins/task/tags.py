@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Roberto Alsina and others.
+# Copyright © 2012-2014 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -42,6 +42,14 @@ class RenderTags(Task):
 
     name = "render_tags"
 
+    def set_site(self, site):
+        site.register_path_handler('tag_index', self.tag_index_path)
+        site.register_path_handler('tag', self.tag_path)
+        site.register_path_handler('tag_rss', self.tag_rss_path)
+        site.register_path_handler('category', self.category_path)
+        site.register_path_handler('category_rss', self.category_rss_path)
+        return super(RenderTags, self).set_site(site)
+
     def gen_tasks(self):
         """Render the tag pages and feeds."""
 
@@ -49,7 +57,6 @@ class RenderTags(Task):
             "translations": self.site.config["TRANSLATIONS"],
             "blog_title": self.site.config["BLOG_TITLE"],
             "site_url": self.site.config["SITE_URL"],
-            "blog_description": self.site.config["BLOG_DESCRIPTION"],
             "messages": self.site.MESSAGES,
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
@@ -58,32 +65,31 @@ class RenderTags(Task):
             self.site.config['INDEX_DISPLAY_POST_COUNT'],
             "index_teasers": self.site.config['INDEX_TEASERS'],
             "rss_teasers": self.site.config["RSS_TEASERS"],
-            "hide_untranslated_posts": self.site.config['HIDE_UNTRANSLATED_POSTS'],
+            "rss_plain": self.site.config["RSS_PLAIN"],
+            "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "feed_length": self.site.config['FEED_LENGTH'],
         }
 
         self.site.scan_posts()
+        yield self.group_task()
 
         yield self.list_tags_page(kw)
 
         if not self.site.posts_per_tag and not self.site.posts_per_category:
-            yield {'basename': str(self.name), 'actions': []}
             return
 
         tag_list = list(self.site.posts_per_tag.items())
         cat_list = list(self.site.posts_per_category.items())
 
         def render_lists(tag, posts, is_category=True):
-            post_list = [self.site.global_data[post] for post in posts]
-            post_list.sort(key=lambda a: a.date)
+            post_list = sorted(posts, key=lambda a: a.date)
             post_list.reverse()
             for lang in kw["translations"]:
-                if kw["hide_untranslated_posts"]:
-                    filtered_posts = [x for x in post_list if x.is_translation_available(lang)]
-                else:
+                if kw["show_untranslated_posts"]:
                     filtered_posts = post_list
-                rss_post_list = [p.post_name for p in filtered_posts]
-                yield self.tag_rss(tag, lang, rss_post_list, kw, is_category)
+                else:
+                    filtered_posts = [x for x in post_list if x.is_translation_available(lang)]
+                yield self.tag_rss(tag, lang, filtered_posts, kw, is_category)
                 # Render HTML
                 if kw['tag_pages_are_indexes']:
                     yield self.tag_page_as_index(tag, lang, filtered_posts, kw, is_category)
@@ -103,8 +109,14 @@ class RenderTags(Task):
         # Tag cloud json file
         tag_cloud_data = {}
         for tag, posts in self.site.posts_per_tag.items():
+            tag_posts = dict(posts=[{'title': post.meta[post.default_lang]['title'],
+                                     'date': post.date.strftime('%m/%d/%Y'),
+                                     'isodate': post.date.isoformat(),
+                                     'url': post.base_path.replace('cache', '')}
+                                    for post in reversed(sorted(self.site.timeline, key=lambda post: post.date))
+                                    if tag in post.alltags])
             tag_cloud_data[tag] = [len(posts), self.site.link(
-                'tag', tag, self.site.config['DEFAULT_LANG'])]
+                'tag', tag, self.site.config['DEFAULT_LANG']), tag_posts]
         output_name = os.path.join(kw['output_folder'],
                                    'assets', 'js', 'tag_cloud_data.json')
 
@@ -117,6 +129,7 @@ class RenderTags(Task):
             'basename': str(self.name),
             'name': str(output_name)
         }
+
         task['uptodate'] = [utils.config_changed(tag_cloud_data)]
         task['targets'] = [output_name]
         task['actions'] = [(write_tag_data, [tag_cloud_data])]
@@ -154,6 +167,7 @@ class RenderTags(Task):
             else:
                 context["cat_items"] = None
             context["permalink"] = self.site.link("tag_index", None, lang)
+            context["description"] = None
             task = self.site.generic_post_list_renderer(
                 lang,
                 [],
@@ -164,6 +178,7 @@ class RenderTags(Task):
             )
             task_cfg = {1: task['uptodate'][0].config, 2: kw}
             task['uptodate'] = [utils.config_changed(task_cfg)]
+            task['basename'] = str(self.name)
             yield task
 
     def tag_page_as_index(self, tag, lang, post_list, kw, is_category):
@@ -180,7 +195,7 @@ class RenderTags(Task):
             return name
 
         # FIXME: deduplicate this with render_indexes
-        template_name = "index.tmpl"
+        template_name = "tagindex.tmpl"
         # Split in smaller lists
         lists = []
         while post_list:
@@ -213,6 +228,7 @@ class RenderTags(Task):
                     page_name(tag, i + 1, lang))
             context["permalink"] = self.site.link(kind, tag, lang)
             context["tag"] = tag
+            context["description"] = None
             task = self.site.generic_post_list_renderer(
                 lang,
                 post_list,
@@ -224,6 +240,7 @@ class RenderTags(Task):
             task_cfg = {1: task['uptodate'][0].config, 2: kw}
             task['uptodate'] = [utils.config_changed(task_cfg)]
             task['basename'] = str(self.name)
+
             yield task
 
     def tag_page_as_list(self, tag, lang, post_list, kw, is_category):
@@ -239,6 +256,7 @@ class RenderTags(Task):
         context["permalink"] = self.site.link(kind, tag, lang)
         context["tag"] = tag
         context["kind"] = kind
+        context["description"] = None
         task = self.site.generic_post_list_renderer(
             lang,
             post_list,
@@ -261,9 +279,7 @@ class RenderTags(Task):
                          self.site.path(kind + "_rss", tag, lang)))
         feed_url = urljoin(self.site.config['BASE_URL'], self.site.link(kind + "_rss", tag, lang).lstrip('/'))
         deps = []
-        post_list = [self.site.global_data[post] for post in posts if
-                     self.site.global_data[post].use_in_feeds]
-        post_list.sort(key=lambda a: a.date)
+        post_list = sorted(posts, key=lambda a: a.date)
         post_list.reverse()
         for post in post_list:
             deps += post.deps(lang)
@@ -274,9 +290,48 @@ class RenderTags(Task):
             'targets': [output_name],
             'actions': [(utils.generic_rss_renderer,
                         (lang, "{0} ({1})".format(kw["blog_title"], tag),
-                         kw["site_url"], kw["blog_description"], post_list,
-                         output_name, kw["rss_teasers"], kw['feed_length'], feed_url))],
+                         kw["site_url"], None, post_list,
+                         output_name, kw["rss_teasers"], kw["rss_plain"], kw['feed_length'],
+                         feed_url))],
             'clean': True,
             'uptodate': [utils.config_changed(kw)],
             'task_dep': ['render_posts'],
         }
+
+    def slugify_name(self, name):
+        if self.site.config['SLUG_TAG_PATH']:
+            name = utils.slugify(name)
+        return name
+
+    def tag_index_path(self, name, lang):
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['TAG_PATH'],
+                              self.site.config['INDEX_FILE']] if _f]
+
+    def tag_path(self, name, lang):
+        if self.site.config['PRETTY_URLS']:
+            return [_f for _f in [
+                self.site.config['TRANSLATIONS'][lang],
+                self.site.config['TAG_PATH'],
+                self.slugify_name(name),
+                self.site.config['INDEX_FILE']] if _f]
+        else:
+            return [_f for _f in [
+                self.site.config['TRANSLATIONS'][lang],
+                self.site.config['TAG_PATH'],
+                self.slugify_name(name) + ".html"] if _f]
+
+    def tag_rss_path(self, name, lang):
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['TAG_PATH'], self.slugify_name(name) + ".xml"] if
+                _f]
+
+    def category_path(self, name, lang):
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['TAG_PATH'], "cat_" + self.slugify_name(name) + ".html"] if
+                _f]
+
+    def category_rss_path(self, name, lang):
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['TAG_PATH'], "cat_" + self.slugify_name(name) + ".xml"] if
+                _f]

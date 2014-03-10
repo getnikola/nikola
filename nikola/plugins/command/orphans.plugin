@@ -1,0 +1,10 @@
+[Core]
+Name = orphans
+Module = orphans
+
+[Documentation]
+Author = Roberto Alsina, Chris Warrick
+Version = 0.1
+Website = http://getnikola.com
+Description = List all orphans
+
