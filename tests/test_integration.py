@@ -11,6 +11,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 import codecs
 import locale
 import shutil
+import subprocess
 import tempfile
 import unittest
 
@@ -447,6 +448,23 @@ class SubdirRunningTest(DemoBuildTest):
         with cd(os.path.join(self.target_dir, 'posts')):
             result = __main__.main(['build'])
             self.assertEquals(result, 0)
+
+
+class InvariantBuildTest(DemoBuildTest):
+    """Test that a default build of --demo works."""
+
+    @classmethod
+    def build(self):
+        """Build the site."""
+        with cd(self.target_dir):
+            __main__.main(["build", "--invariant"])
+
+    def test_invariance(self):
+        """Compare the output to the canonical output."""
+        good_path = os.path.join(os.path.dirname(__file__), 'data', 'invariant')
+        with cd(self.target_dir):
+            diff = subprocess.check_output(['diff', '-r', good_path, 'output'])
+            self.assertEqual(diff.strip(), '')
 
 
 if __name__ == "__main__":

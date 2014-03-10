@@ -1,0 +1,23 @@
+.. title: Welcome to Nikola
+.. slug: welcome-to-nikola
+.. date: 2012/03/30 23:00
+.. tags: nikola, python, demo, blog
+.. link: http://getnikola.com
+.. description:
+
+.. figure:: http://farm1.staticflickr.com/138/352972944_4f9d568680.jpg
+   :target: http://farm1.staticflickr.com/138/352972944_4f9d568680_z.jpg?zz=1
+   :class: thumbnail
+   :alt: Nikola Tesla Corner by nicwest, on Flickr
+
+If you can see this in a web browser, it means you have managed to install Nikola,
+and build a site using it. Congratulations!
+
+* You can read the manual `here </stories/handbook.html>`__
+* You can learn more about Nikola at http://getnikola.com
+* You can see a demo photo gallery `here </galleries/demo/index.html>`__
+* Demo usage of listings `here </stories/listings-demo.html>`__
+* Demo of slideshows `here </stories/slides-demo.html>`__
+* Demo of Bootstrap `here </stories/bootstrap-demo.html>`__
+
+Send feedback to ralsina@netmanagers.com.ar!
