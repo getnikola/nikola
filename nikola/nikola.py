@@ -809,7 +809,7 @@ class Nikola(object):
                 'guid': post.permalink(lang, absolute=True),
                 # PyRSS2Gen's pubDate is GMT time.
                 'pubDate': (post.date if post.date.tzinfo is None else
-                            post.date.astimezone(pytz.timezone('UTC'))),
+                            post.date.astimezone(pytz.UTC)),
                 'categories': post._tags.get(lang, []),
                 'author': post.meta('author'),
             }
