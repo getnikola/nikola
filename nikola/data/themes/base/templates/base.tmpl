@@ -16,32 +16,27 @@ lang="${lang}">
 </head>
 <body>
     <div id="container">
-    <h1 id="blog-title">
-        <a href="${abs_link('/')}" title="${blog_title}" rel="home">${blog_title}</a>
-    </h1>
-    <%block name="belowtitle">
-        %if len(translations) > 1:
-        <small>
-            ${messages("Also available in:")}&nbsp;
-            ${base.html_translations()}
-        </small>
-    %endif
-    </%block>
+    <header>
+        <a href="${abs_link('/')}" title="${blog_title}" rel="home"><h1 id="blog-title">${blog_title}</h1></a>
+        ${base.html_navigation_links()}
+        %if search_form:
+            ${search_form}
+        %endif
+        <%block name="belowtitle">
+            %if len(translations) > 1:
+                <h2 class="translations">${messages("Also available in:")}</h2>
+                ${base.html_translations()}
+            %endif
+        </%block>
+    </header>
     <%block name="content"></%block>
-    <small>${content_footer}</small>
-    <!--Sidebar content-->
-    <ul class="unstyled">
-    %if license:
-    <li>${license}
+    %if content_footer:
+        <footer role="contentinfo">
+        <p>${content_footer}</p>
+        </footer>
     %endif
-    ${base.html_social()}
-    ${base.html_navigation_links()}
-    %if search_form:
-    <li>${search_form}
-    %endif
-    </ul>
     </div>
     ${base.late_load_js()}
-    ${social_buttons_code}
+    ${base.html_social()}
 </body>
 </html>

@@ -11,24 +11,27 @@
 </%block>
 
 <%block name="content">
-        <!--Body content-->
-        <div class="postbox">
+        <article class="postbox">
+        <header>
         <h1>${title}</h1>
+        <div class="metadata">
         %if len(translations) > 1:
+            <p class="feedlinks">
             %for language in translations:
-                <a href="${_link(kind + "_rss", tag, language)}">RSS (${language})</a>&nbsp;
+                <a href="${_link(kind + "_rss", tag, language)}" hreflang="${language}" type="application/rss+xml">RSS (${language})</a>&nbsp;
             %endfor
+            </p>
         %else:
-            <a href="${_link(kind + "_rss", tag)}">RSS</a>
+            <p class="feedlinks"><a href="${_link(kind + "_rss", tag)}" type="application/rss+xml">RSS</a></p>
         %endif
-        <br>
+        </div>
+        </header>
         %if posts:
-        <ul class="unstyled">
+        <ul class="postlist">
         % for post in posts:
-            <li><a href="${post.permalink()}">[${post.formatted_date(date_format)}] ${post.title()}</a>
+            <li><a href="${post.permalink()}" class="listtitle">${post.title()}</a> <time class="listdate" datetime="${post.date.isoformat()}">${post.formatted_date(date_format)}</time></li>
         % endfor
         </ul>
         %endif
-        </div>
-        <!--End of body content-->
+        </article>
 </%block>

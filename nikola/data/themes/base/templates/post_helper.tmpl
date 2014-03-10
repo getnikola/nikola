@@ -1,6 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%def name="html_title()">
-    <h1 class="p-name" itemprop="headline name">${title|h}</h1>
+    <h1 class="p-name entry-title" itemprop="headline name">${title|h}</h1>
     % if link:
             <p><a href='${link}'>${messages("Original site")}</a></p>
     % endif
@@ -45,8 +45,7 @@
 
 <%def name="html_pager(post)">
     %if post.prev_post or post.next_post:
-        <nav class="pager">
-        <ul>
+        <ul class="pager">
         %if post.prev_post:
             <li class="previous">
                 <a href="${post.prev_post.permalink()}" rel="prev" title="${post.prev_post.title()}">${messages("Previous post")}</a>
@@ -58,7 +57,6 @@
             </li>
         %endif
         </ul>
-        </nav>
     %endif
 </%def>
 
@@ -88,10 +86,7 @@
 <%def name="mathjax_script(post)">
     %if post.is_mathjax:
         <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-          tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}
-        });
-        </script>
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});</script>
         <script src="/assets/js/mathjax.js"></script>
     %endif
 </%def>

@@ -61,6 +61,8 @@
 </%def>
 
 <%def name="html_navigation_links()">
+    <nav class="menu">
+    <ul>
     %for url, text in navigation_links[lang]:
         % if isinstance(url, tuple):
             <li> ${text}
@@ -81,13 +83,17 @@
             %endif
         % endif
     %endfor
+    </ul>
+    </nav>
 </%def>
 
 
 <%def name="html_translations()">
+    <ul>
     %for langname in translations.keys():
         %if langname != lang:
-            <a href="${_link("index", None, langname)}" rel="alternate" hreflang="${langname}">${messages("LANGUAGE", langname)}</a>
+            <li><a href="${_link("index", None, langname)}" rel="alternate" hreflang="${langname}">${messages("LANGUAGE", langname)}</a></li>
         %endif
     %endfor
+    </ul>
 </%def>
