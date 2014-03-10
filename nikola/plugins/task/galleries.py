@@ -495,11 +495,15 @@ class Galleries(Task):
                 ),
             }
             items.append(rss.RSSItem(**args))
+        if self.site.invariant:
+            lbd = datetime.datetime(2014,1,1)
+        else:
+            lbd = datetime.datetime.now()
         rss_obj = rss.RSS2(
             title=title,
             link=make_url(permalink),
             description='',
-            lastBuildDate=datetime.datetime.now(),
+            lastBuildDate=lbd,
             items=items,
             generator='http://getnikola.com/',
             language=lang
