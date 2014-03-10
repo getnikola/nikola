@@ -1,8 +1,8 @@
 {#  -*- coding: utf-8 -*- #}
 {% macro comment_form(url, title, identifier) %}
 <div id="livefyre-comments"></div>
-<script type="text/javascript" src="http://zor.livefyre.com/wjs/v3.0/javascripts/livefyre.js"></script>
-<script type="text/javascript">
+<script src="http://zor.livefyre.com/wjs/v3.0/javascripts/livefyre.js"></script>
+<script>
 (function () {
     var articleId = "{{ identifier }}";
     fyre.conv.load({}, [{
@@ -30,8 +30,5 @@
 
 
 {% macro comment_link_script() %}
-<script
-        type="text/javascript"
-        src="http://zor.livefyre.com/wjs/v1.0/javascripts/CommentCount.js">
-</script>
+<script src="http://zor.livefyre.com/wjs/v1.0/javascripts/CommentCount.js"></script>
 {% endmacro %}
