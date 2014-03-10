@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Ship base-jinja, bootstrap-jinja, bootstrap3-jinja with Nikola (Issue #1104)
 * Fix dependency issue in listings (Issue #1032)
 * Invert ``HIDE_SOURCELINK`` and ``HIDE_UNTRANSLATED_POSTS`` into
   ``SHOW_SOURCELINK`` and ``SHOW_UNTRANSLATED_POSTS`` (Issue #1076)

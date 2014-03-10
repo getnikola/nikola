@@ -1,0 +1,11 @@
+{#  -*- coding: utf-8 -*- #}
+
+{% macro bar(crumbs) %}
+{% if crumbs %}
+<ul class="breadcrumb">
+    {% for link, text in crumbs %}
+        <li><a href="{{ link }}">{{ text }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endmacro %}
