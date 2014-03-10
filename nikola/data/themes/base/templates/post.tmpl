@@ -12,20 +12,18 @@ ${helper.meta_translations(post)}
 <%block name="content">
     <article class="postbox post-${post.meta('type')}">
     <section class="h-entry" itemscope="itemscope" itemtype="http://schema.org/Article">
-    ${helper.html_title()}
-    <hr>
-    <small>
-        ${messages("Posted:")} <time class="published dt-published" datetime="${post.date.isoformat()}" itemprop="datePublished">${post.formatted_date(date_format)}</time>
+    <header>
+        ${helper.html_title()}
+        <p class="byline author vcard">${messages("By")} <span class="byline-name fn">FIXME</span></p>
+        <p class="dateline">${messages("Published on")} <time class="published dt-published" datetime="${post.date.isoformat()}" itemprop="datePublished">${post.formatted_date(date_format)}</time></p>
         ${helper.html_translations(post)}
 		${helper.html_tags(post)}
-        &nbsp;&nbsp;|&nbsp;&nbsp;
 		<%block name="sourcelink">
 		% if not post.meta('password'):
-			<a href="${post.source_link()}" id="sourcelink">${messages("Source")}</a>
+			<p class="sourceline"><a href="${post.source_link()}" id="sourcelink">${messages("Source")}</a></p>
 		% endif
 		</%block>
-    </small>
-    <hr>
+    </header>
     <div class="e-content" itemprop="articleBody text">
     ${post.text()}
     </section>
@@ -33,6 +31,7 @@ ${helper.meta_translations(post)}
         <meta content="${post.description()}" itemprop="description">
     %endif
     </div>
+    </section>
     ${helper.html_pager(post)}
     % if not post.meta('nocomments'):
         <section class="comments">

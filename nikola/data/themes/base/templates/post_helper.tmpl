@@ -9,12 +9,13 @@
 
 <%def name="html_translations(post)">
     %if len(translations) > 1:
+        <ul class="translations">
         %for langname in translations.keys():
             %if langname != lang and post.is_translation_available(langname):
-                &nbsp;&nbsp;|&nbsp;&nbsp;
-                <a href="${post.permalink(langname)}" rel="alternate" hreflang="${langname}">${messages("Read in English", langname)}</a>
+                <li><a href="${post.permalink(langname)}" rel="alternate" hreflang="${langname}">${messages("Read in English", langname)}</a></li>
             %endif
         %endfor
+        </ul>
     %endif
 </%def>
 
@@ -29,23 +30,23 @@
 </%def>
 
 <%def name="html_list_tags(post)" buffered="True">
-    <span itemprop="keywords">
+    <ul itemprop="keywords" class="tags">
     %for tag in post.tags:
-        <a class="tag p-category" href="${_link('tag', tag)}" rel="tag"><span class="badge badge-info">${tag}</span></a>
+       <li><a class="tag p-category" href="${_link('tag', tag)}" rel="tag" title="${formatmsg(messages("More posts about %s"), tag)}">${tag}</a></li>
     %endfor
-    </span>
+    </ul>
 </%def>
 
 <%def name="html_tags(post)">
     %if post.tags:
-        &nbsp;&nbsp;|&nbsp;&nbsp;
-        ${formatmsg(messages("More posts about %s"), html_list_tags(post))}
+        ${html_list_tags(post)}
     %endif
 </%def>
 
 <%def name="html_pager(post)">
     %if post.prev_post or post.next_post:
-        <ul class="pager">
+        <nav class="pager">
+        <ul>
         %if post.prev_post:
             <li class="previous">
                 <a href="${post.prev_post.permalink()}" rel="prev" title="${post.prev_post.title()}">${messages("Previous post")}</a>
@@ -57,6 +58,7 @@
             </li>
         %endif
         </ul>
+        </nav>
     %endif
 </%def>
 

@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 MESSAGES = {
     "Also available in:": "Also available in:",
     "Archive": "Archive",
+    "By": "By",
     "Categories": "Categories",
     "Comments": "Comments",
     "LANGUAGE": "English",
@@ -14,7 +15,7 @@ MESSAGES = {
     "Nothing found.": "Nothing found.",
     "Older posts": "Older posts",
     "Original site": "Original site",
-    "Posted:": "Posted:",
+    "Published on": "Published on",
     "Posts about %s": "Posts about %s",
     "Posts for year %s": "Posts for year %s",
     "Posts for {month} {year}": "Posts for {month} {year}",
