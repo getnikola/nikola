@@ -281,10 +281,8 @@ class Nikola(object):
                                              'license',
                                              'content_footer',
                                              'social_buttons_code',
-                                             'add_this_buttons',  # TODO: remove in v7
                                              'search_form',
                                              'body_end',
-                                             'analytics',  # TODO: remove in v7
                                              'extra_head_data',)
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
