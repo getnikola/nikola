@@ -58,7 +58,7 @@ def task_locale():
 
 def task_doctest():
     """run doctests with py.test"""
-    yield {
+    return {
         'actions': ['py.test --doctest-modules nikola/'],
     }
 
