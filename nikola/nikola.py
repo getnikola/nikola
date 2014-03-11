@@ -818,9 +818,11 @@ class Nikola(object):
                 'author': post.author(lang),
             }
 
+            if post.author(lang) and not '@' in post.author(lang):
+                rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
+
             items.append(utils.ExtendedItem(**args))
 
-        rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
         rss_obj.items = items
 
         dst_dir = os.path.dirname(output_path)
