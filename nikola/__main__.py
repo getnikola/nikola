@@ -143,15 +143,6 @@ class Build(DoitRun):
                 'help': "Run quietly.",
             }
         )
-        opts.append(
-            {
-                'name': 'invariant',
-                'long': 'invariant',
-                'default': False,
-                'type': bool,
-                'help': "Generate invariant output (for testing only!).",
-            }
-        )
         self.cmd_options = tuple(opts)
         super(Build, self).__init__(*args, **kw)
 
