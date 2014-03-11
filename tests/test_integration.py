@@ -474,7 +474,7 @@ class InvariantBuildTest(DemoBuildTest):
                 self.assertEqual(diff.strip(), '')
             except subprocess.CalledProcessError as exc:
                 print('Unexplained diff for the invariance test. (-canonical +built)')
-                print(exc.output)
+                print(exc.output.decode('utf-8'))
                 self.assertEqual(exc.returncode, 0, 'Unexplained diff for the invariance test.')
 
 
