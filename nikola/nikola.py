@@ -194,7 +194,7 @@ class Nikola(object):
             'LICENSE': '',
             'LINK_CHECK_WHITELIST': [],
             'LISTINGS_FOLDER': 'listings',
-            'NAVIGATION_LINKS': None,
+            'NAVIGATION_LINKS': {},
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
@@ -245,6 +245,21 @@ class Nikola(object):
 
         self.config.update(config)
 
+        # Deprecating the SIDEBAR_LINKS option
+        # TODO: remove on v7
+        if 'SIDEBAR_LINKS' in config:
+            utils.LOGGER.warn('The SIDEBAR_LINKS option is deprecated, use NAVIGATION_LINKS instead.')
+            if 'NAVIGATION_LINKS' in config:
+                utils.LOGGER.warn('The SIDEBAR_LINKS conflicts with NAVIGATION_LINKS, ignoring SIDEBAR_LINKS.')
+            else:
+                self.config['NAVIGATION_LINKS'] = utils.TranslatableSetting('NAVIGATION_LINKS', config['SIDEBAR_LINKS'])
+        # Compatibility alias
+        self.config['SIDEBAR_LINKS'] = self.config['NAVIGATION_LINKS']
+
+        # Make sure we have sane NAVIGATION_LINKS.
+        if not self.config['NAVIGATION_LINKS']:
+            self.config['NAVIGATION_LINKS'] = {self.config['DEFAULT_LANG']: ()}
+
         # Translatability configuration.
         utils.TranslatableSetting.default_lang = self.config['DEFAULT_LANG']
 
@@ -256,7 +271,9 @@ class Nikola(object):
                                       'SOCIAL_BUTTONS_CODE',
                                       'SEARCH_FORM',
                                       'BODY_END',
-                                      'EXTRA_HEAD_DATA',)
+                                      'EXTRA_HEAD_DATA',
+                                      'NAVIGATION_LINKS',)
+
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
                                              'blog_title',
                                              'blog_desc',  # TODO: remove in v8
@@ -268,7 +285,9 @@ class Nikola(object):
                                              'search_form',
                                              'body_end',
                                              'analytics',  # TODO: remove in v7
-                                             'extra_head_data')
+                                             'extra_head_data',)
+        # WARNING: navigation_links SHOULD NOT be added to the list above.
+        #          Themes ask for [lang] there and we should provide it.
 
         for i in self.TRANSLATABLE_SETTINGS:
             try:
@@ -329,20 +348,6 @@ class Nikola(object):
                 utils.LOGGER.warn('ANALYTICS conflicts with BODY_END, ignoring ANALYTICS.')
             else:
                 self.config['BODY_END'] = config['ANALYTICS']
-
-        # Deprecating the SIDEBAR_LINKS option
-        # TODO: remove on v7
-        if 'SIDEBAR_LINKS' in config:
-            utils.LOGGER.warn('The SIDEBAR_LINKS option is deprecated, use NAVIGATION_LINKS instead.')
-            if 'NAVIGATION_LINKS' in config:
-                utils.LOGGER.warn('The SIDEBAR_LINKS conflicts with NAVIGATION_LINKS, ignoring SIDEBAR_LINKS.')
-            else:
-                self.config['NAVIGATION_LINKS'] = config['SIDEBAR_LINKS']
-        # Compatibility alias
-        self.config['SIDEBAR_LINKS'] = self.config['NAVIGATION_LINKS']
-
-        if self.config['NAVIGATION_LINKS'] in (None, {}):
-            self.config['NAVIGATION_LINKS'] = {self.config['DEFAULT_LANG']: ()}
 
         # Deprecating the ADD_THIS_BUTTONS option
         # TODO: remove on v7
@@ -543,13 +548,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
         self._GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
 
-        self._GLOBAL_CONTEXT['navigation_links'] = utils.Functionary(list, self.config['DEFAULT_LANG'])
-        for k, v in self.config.get('NAVIGATION_LINKS', {}).items():
-            self._GLOBAL_CONTEXT['navigation_links'][k] = v
-
-        # avoid #1082 by making sure all keys in navigation_links are read once
-        for k in self._GLOBAL_CONTEXT['translations']:
-            self._GLOBAL_CONTEXT['navigation_links'][k]
+        self._GLOBAL_CONTEXT['navigation_links'] = self.config.get('NAVIGATION_LINKS')
 
         # TODO: remove on v7
         # Compatibility alias
