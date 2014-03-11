@@ -470,7 +470,7 @@ class InvariantBuildTest(DemoBuildTest):
         good_path = os.path.join(os.path.dirname(__file__), 'data', 'baseline')
         with cd(self.target_dir):
             try:
-                diff = subprocess.check_output(['diff', '-r', good_path, 'output'])
+                diff = subprocess.check_output(['diff', '-ur', good_path, 'output'])
                 self.assertEqual(diff.strip(), '')
             except subprocess.CalledProcessError as exc:
                 print('Unexplained diff.')
