@@ -621,7 +621,6 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # before </head>
 # (translatable)
 # EXTRA_HEAD_DATA = ""
-# Google Analytics or whatever else you use. Added to the bottom of <body>
 # in the default template (base.tmpl).
 # (translatable)
 # BODY_END = ""
@@ -644,9 +643,14 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # Additional metadata that is added to a post when creating a new_post
 # ADDITIONAL_METADATA = {}
 
-# Nikola supports Twitter Card summaries / Open Graph.
-# Twitter cards make it possible for you to attach media to Tweets
-# that link to your content.
+# Nikola supports Open Graph Protocol data for enhancing link sharing and
+# discoverability of your site on Facebook, Google+, and other services.
+# Open Graph is enabled by default.
+# USE_OPEN_GRAPH = False
+
+# Nikola supports Twitter Card summaries
+# Twitter cards are disabled by default. They make it possible for you to
+# attach media to Tweets that link to your content.
 #
 # IMPORTANT:
 # Please note, that you need to opt-in for using Twitter Cards!
@@ -658,7 +662,7 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # over the cleartext username. Specifying an ID is not necessary.
 # Displaying images is currently not supported.
 # TWITTER_CARD = {
-#     # 'use_twitter_cards': True,  # enable Twitter Cards / Open Graph
+#     # 'use_twitter_cards': True,  # enable Twitter Cards
 #     # 'site': '@website',  # twitter nick for the website
 #     # 'site:id': 123456,  # Same as site, but the website's Twitter user ID
 #                           # instead.

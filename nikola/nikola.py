@@ -231,6 +231,7 @@ class Nikola(object):
             'USE_BUNDLES': True,
             'USE_CDN': False,
             'USE_FILENAME_AS_TITLE': True,
+            'USE_OPEN_GRAPH': True,
             'TIMEZONE': 'UTC',
             'DEPLOY_DRAFTS': True,
             'DEPLOY_FUTURE': False,
@@ -481,6 +482,8 @@ class Nikola(object):
 
         self._GLOBAL_CONTEXT['navigation_links'] = self.config.get('NAVIGATION_LINKS')
 
+        self._GLOBAL_CONTEXT['use_open_graph'] = self.config.get(
+            'USE_OPEN_GRAPH', {})
         self._GLOBAL_CONTEXT['twitter_card'] = self.config.get(
             'TWITTER_CARD', {})
         self._GLOBAL_CONTEXT['hide_sourcelink'] = not self.config.get(

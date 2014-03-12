@@ -40,6 +40,7 @@ Features
 Bugfixes
 --------
 
+* Split Twitter Cards and Open Graph, enable the latter by default
 * Load html5shiv.js from remote or local server depending on USE_CDN option
 * Logging configuration has been fixed.  The stderr handler can now
   only be set to DEBUG or INFO (any higher levels are corrected as INFO), and
