@@ -3,10 +3,11 @@
 <%namespace name="comments" file="comments_helper.tmpl"/>
 <%inherit file="base.tmpl"/>
 <%block name="extra_head">
-${helper.twitter_card_information(post)}
 % if post.meta('keywords'):
     <meta name="keywords" content="${post.meta('keywords')|h}">
 % endif
+<meta name="author" content="${post.author()}">
+${helper.twitter_card_information(post)}
 ${helper.meta_translations(post)}
 </%block>
 <%block name="content">
