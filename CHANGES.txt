@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* `nikola console` allows for interpreter choice via -b, -i, -p; moreover,
+  support for bpython is not deprecated anymore (Issue #1126)
 * Changed the default TRANSLATIONS_PATTERN to "{path}.{lang}.{ext}". (Issues
   #990, #829)
 * Backwards compatibility with v5 is broken.  Added backwards-incompatible
