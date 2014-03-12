@@ -16,17 +16,17 @@ ${helper.meta_translations(post)}
     <header>
         ${helper.html_title()}
         <div class="metadata">
-        <p class="byline author vcard">${messages("By")} <span class="byline-name fn">${post.author()}</span></p>
-        <p class="dateline">${messages("Published on")} <time class="published dt-published" datetime="${post.date.isoformat()}" itemprop="datePublished">${post.formatted_date(date_format)}</time></p>
-        ${helper.html_translations(post)}
-		<%block name="sourcelink">
-		% if not post.meta('password'):
-			<p class="sourceline"><a href="${post.source_link()}" id="sourcelink">${messages("Source")}</a></p>
-		% endif
-		</%block>
-        %if post.description():
-        <meta content="${post.description()}" itemprop="description">
-        %endif
+            <p class="byline author vcard"><span class="byline-name fn">${post.author()}</span></p>
+            <p class="dateline"><a href="${post.permalink()}" rel="bookmark"><time class="published dt-published" datetime="${post.date.isoformat()}" itemprop="datePublished" title="${messages("Publication date")}">${post.formatted_date(date_format)}</time></a></p>
+            ${helper.html_translations(post)}
+            <%block name="sourcelink">
+                % if not post.meta('password'):
+                    <p class="sourceline"><a href="${post.source_link()}" id="sourcelink">${messages("Source")}</a></p>
+                % endif
+            </%block>
+            %if post.description():
+                <meta content="${post.description()}" itemprop="description">
+            %endif
         </div>
     </header>
     <div class="e-content entry-content" itemprop="articleBody text">

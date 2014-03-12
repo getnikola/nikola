@@ -10,7 +10,9 @@ ${helper.twitter_card_information(post)}
 <%block name="content">
     <article class="postbox storypage" itemscope="itemscope" itemtype="http://schema.org/Article">
 %if title and not post.meta('hidetitle'):
-    <h1 itemprop="headline name">${title}</h1>
+    <header>
+        <h1 itemprop="headline name">${title}</h1>
+    </header>
 %endif
     <div itemprop="articleBody text">
     ${post.text()}

@@ -2,7 +2,9 @@
 <%inherit file="base.tmpl"/>
 <%block name="content">
         <article class="postbox">
-        <h1>${title}</h1>
+        <header>
+            <h1>${title}</h1>
+        </header>
         %if items:
         <ul>
         % for text, link in items:
