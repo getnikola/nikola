@@ -210,15 +210,15 @@ class TranslationsPatternTest1(TranslatedBuildTest):
 
     @classmethod
     def patch_site(self):
-        """Set the TRANSLATIONS_PATTERN to the new v7 default"""
-        os.rename(os.path.join(self.target_dir, "stories", "1.txt.pl"),
-                  os.path.join(self.target_dir, "stories", "1.pl.txt")
+        """Set the TRANSLATIONS_PATTERN to the old v6 default"""
+        os.rename(os.path.join(self.target_dir, "stories", "1.pl.txt"),
+                  os.path.join(self.target_dir, "stories", "1.txt.pl")
                   )
         conf_path = os.path.join(self.target_dir, "conf.py")
         with codecs.open(conf_path, "rb", "utf-8") as inf:
             data = inf.read()
-            data = data.replace('TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"',
-                                'TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"')
+            data = data.replace('TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"',
+                                'TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"')
         with codecs.open(conf_path, "wb+", "utf8") as outf:
             outf.write(data)
 
@@ -241,15 +241,15 @@ class TranslationsPatternTest2(TranslatedBuildTest):
 
     @classmethod
     def patch_site(self):
-        """Set the TRANSLATIONS_PATTERN to the new v7 default"""
+        """Set the TRANSLATIONS_PATTERN to the old v6 default"""
         conf_path = os.path.join(self.target_dir, "conf.py")
-        os.rename(os.path.join(self.target_dir, "stories", "1.txt.pl"),
-                  os.path.join(self.target_dir, "stories", "1_pl.txt")
+        os.rename(os.path.join(self.target_dir, "stories", "1.pl.txt"),
+                  os.path.join(self.target_dir, "stories", "1.txt.pl")
                   )
         with codecs.open(conf_path, "rb", "utf-8") as inf:
             data = inf.read()
-            data = data.replace('TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"',
-                                'TRANSLATIONS_PATTERN = "{path}_{lang}.{ext}"')
+            data = data.replace('TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"',
+                                'TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"')
         with codecs.open(conf_path, "wb+", "utf8") as outf:
             outf.write(data)
 

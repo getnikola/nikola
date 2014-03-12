@@ -536,7 +536,7 @@ to your configuration::
         2012/09/15 19:52:05
 
 If you are writing a multilingual site, you can also create a per-language
-post file (for example: ``how-to-make-money.txt.es`` with the default TRANSLATIONS_PATTERN, see below).
+post file (for example: ``how-to-make-money.es.txt`` with the default TRANSLATIONS_PATTERN, see below).
 This one can replace metadata of the default language, for example:
 
 * The translated title for the post or page
@@ -545,19 +545,12 @@ This one can replace metadata of the default language, for example:
 The pattern used for finding translations is controlled by the
 TRANSLATIONS_PATTERN variable in your configuration file.
 
-The default as in the example above is to append the language code to the
-filename path to identify a translation of a file, so the German translation
-of ``some_file.rst`` should be named ``some_file.rst.de``. This is because
-the TRANSLATIONS_PATTERN variable is by default set to::
-
-    TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"
-
-However, if you don't want your Polish input files to be considered
-Perl code (e.g. ``some_file.rst.pl``), you could use this pattern::
+The default is to put the language code before the file extension,
+so the German translation of ``some_file.rst`` should be named
+``some_file.de.rst``. This is because the TRANSLATIONS_PATTERN variable is by
+default set to::
 
     TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"
-
-Note that this pattern will become the default in v7.0.0.
 
 .. note:: Considered languages
 
@@ -611,7 +604,7 @@ and ``PAGES`` configuration options::
     #
     # That fragment could have an associated metadata file (whatever/thing.meta),
     # and optionally translated files (example for Spanish, with code "es"):
-    #     whatever/thing.txt.es and whatever/thing.meta.es
+    #     whatever/thing.es.txt and whatever/thing.es.meta
     #
     #     This assumes you use the default TRANSLATIONS_PATTERN.
     #

@@ -81,17 +81,13 @@ TRANSLATIONS = {
 
 # What will translated input files be named like?
 
-# If you have a page something.rst, then something.rst.pl will be considered
+# If you have a page something.rst, then something.pl.rst will be considered
 # its Polish translation.
-#     (in the above example: path == "something", lang == "pl", ext == "rst")
+#     (in the above example: path == "something", ext == "rst", lang == "pl")
 # this pattern is also used for metadata:
-#     something.meta -> something.meta.pl
+#     something.meta -> something.pl.meta
 
 TRANSLATIONS_PATTERN = ${TRANSLATIONS_PATTERN}
-
-# If you don't want your Polish files to be considered Perl code, use this:
-# TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"
-#     Note that this pattern will become the default in v7.0.0.
 
 # Links for the sidebar / navigation bar.
 # You should provide a key-value pair for each used language.
@@ -126,7 +122,7 @@ NAVIGATION_LINKS = {
 #
 # That fragment could have an associated metadata file (whatever/thing.meta),
 # and optionally translated files (example for spanish, with code "es"):
-#     whatever/thing.txt.es and whatever/thing.meta.es
+#     whatever/thing.es.txt and whatever/thing.es.meta
 #
 #     This assumes you use the default TRANSLATIONS_PATTERN.
 #

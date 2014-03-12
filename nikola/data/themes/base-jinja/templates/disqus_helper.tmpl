@@ -43,16 +43,3 @@
        <script>var disqus_shortname="{{ comment_system_id }}";(function(){var a=document.createElement("script");a.async=true;a.src="//"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script>
     {% endif %}
 {% endmacro %}
-
-{#  FIXME: remove aliases in v7 #}
-{% macro html_disqus(url, title, identifier) %}
-    {{ comment_form(url, title, identifier) }}
-{% endmacro %}
-
-{% macro html_disqus_link(link, identifier) %}
-    {{ comment_link(link, identifier) }}
-{% endmacro %}
-
-{% macro html_disqus_script() %}
-    {{ comment_link_script() }}
-{% endmacro %}

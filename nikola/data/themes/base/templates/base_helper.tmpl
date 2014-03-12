@@ -55,11 +55,6 @@
     ${social_buttons_code}
 </%def>
 
-<!--FIXME: remove in v7 -->
-<%def name="html_sidebar_links()">
-    ${html_navigation_links()}
-</%def>
-
 <%def name="html_navigation_links()">
     %for url, text in navigation_links[lang]:
         % if isinstance(url, tuple):

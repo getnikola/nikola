@@ -4,6 +4,10 @@ New in master
 Features
 --------
 
+* Changed the default TRANSLATIONS_PATTERN to "{path}.{lang}.{ext}". (Issues
+  #990, #829)
+* Backwards compatibility with v5 is broken.  Added backwards-incompatible
+  changes. (Issue #829)
 * Added a ``CONTENT_FOOTER_FORMATS`` config option.  It is used to format
   the ``CONTENT_FOOTER`` variable properly, for compatibility with
   the Translatable Settings feature.  The variable takes a dict, the keys
