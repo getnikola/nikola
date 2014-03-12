@@ -30,7 +30,7 @@ import os
 
 from nikola import __version__
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, STDERR_HANDLER
+from nikola.utils import get_logger, STDERR_HANDLER, req_missing
 
 LOGGER = get_logger('console', STDERR_HANDLER)
 
@@ -41,21 +41,37 @@ class CommandConsole(Command):
     shells = ['ipython', 'bpython', 'plain']
     doc_purpose = "start an interactive Python console with access to your site"
     doc_description = """\
-Order of resolution: IPython → bpython [deprecated] → plain Python interpreter
-The site engine is accessible as `SITE`, and the config as `conf`."""
+The site engine is accessible as `SITE`, and the config as `conf`.
+If no option (-b, -i, -p), it tries -i, then -b, then -p."""
     header = "Nikola v" + __version__ + " -- {0} Console (conf = configuration, SITE = site engine)"
     cmd_options = [
+        {
+            'name': 'bpython',
+            'short': 'b',
+            'long': 'bpython',
+            'type': bool,
+            'default': False,
+            'help': 'Use bpython',
+        },
+        {
+            'name': 'ipython',
+            'short': 'i',
+            'long': 'plain',
+            'type': bool,
+            'default': False,
+            'help': 'Use IPython',
+        },
         {
             'name': 'plain',
             'short': 'p',
             'long': 'plain',
             'type': bool,
             'default': False,
-            'help': 'Force the plain Python console',
-        }
+            'help': 'Use the plain Python interpreter',
+        },
     ]
 
-    def ipython(self):
+    def ipython(self, willful=True):
         """IPython shell."""
         from nikola import Nikola
         try:
@@ -63,12 +79,18 @@ The site engine is accessible as `SITE`, and the config as `conf`."""
         except ImportError:
             LOGGER.error("No configuration found, cannot run the console.")
         else:
-            import IPython
-            SITE = Nikola(**conf.__dict__)
-            SITE.scan_posts()
-            IPython.embed(header=self.header.format('IPython'))
+            try:
+                import IPython
+            except ImportError as e:
+                if willful:
+                    req_missing(['IPython'], 'use the IPython console')
+                raise e  # That’s how _execute knows whether to try something else.
+            else:
+                SITE = Nikola(**conf.__dict__)
+                SITE.scan_posts()
+                IPython.embed(header=self.header.format('IPython'))
 
-    def bpython(self):
+    def bpython(self, willful=True):
         """bpython shell."""
         from nikola import Nikola
         try:
@@ -76,14 +98,19 @@ The site engine is accessible as `SITE`, and the config as `conf`."""
         except ImportError:
             LOGGER.error("No configuration found, cannot run the console.")
         else:
-            import bpython
-            SITE = Nikola(**conf.__dict__)
-            SITE.scan_posts()
-            gl = {'conf': conf, 'SITE': SITE, 'Nikola': Nikola}
-            bpython.embed(banner=self.header.format(
-                'bpython (Slightly Deprecated)'), locals_=gl)
+            try:
+                import bpython
+            except ImportError as e:
+                if willful:
+                    req_missing(['bpython'], 'use the bpython console')
+                raise e  # That’s how _execute knows whether to try something else.
+            else:
+                SITE = Nikola(**conf.__dict__)
+                SITE.scan_posts()
+                gl = {'conf': conf, 'SITE': SITE, 'Nikola': Nikola}
+                bpython.embed(banner=self.header.format('bpython'), locals_=gl)
 
-    def plain(self):
+    def plain(self, willful=True):
         """Plain Python shell."""
         from nikola import Nikola
         try:
@@ -115,12 +142,16 @@ The site engine is accessible as `SITE`, and the config as `conf`."""
 
     def _execute(self, options, args):
         """Start the console."""
-        if options['plain']:
-            self.plain()
+        if options['bpython']:
+            self.bpython(True)
+        elif options['ipython']:
+            self.ipython(True)
+        elif options['plain']:
+            self.plain(True)
         else:
             for shell in self.shells:
                 try:
-                    return getattr(self, shell)()
+                    return getattr(self, shell)(False)
                 except ImportError:
                     pass
             raise ImportError
