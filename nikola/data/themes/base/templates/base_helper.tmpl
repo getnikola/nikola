@@ -23,9 +23,13 @@
     %if permalink:
       <link rel="canonical" href="${abs_link(permalink)}">
     %endif
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+
+    %if use_cdn:
+        <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    %else:
+        <!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]-->
+    %endif
+
     %if rss_link:
         ${rss_link}
     %else:

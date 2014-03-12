@@ -25,6 +25,7 @@ Features
 Bugfixes
 --------
 
+* Load html5shiv.js from remote or local server depending on USE_CDN option
 * Support rescanning posts in the Nikola class (Issue #1099)
 * Use TIMEZONE with ``nikola new_post`` and ``nikola new_page``. (Issue #1088)
 
