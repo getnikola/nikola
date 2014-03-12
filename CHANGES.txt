@@ -25,6 +25,7 @@ Features
 Bugfixes
 --------
 
+* Catch keyboard exit while serving so traceback does not show (Issue #1124)
 * Support rescanning posts in the Nikola class (Issue #1099)
 * Use TIMEZONE with ``nikola new_post`` and ``nikola new_page``. (Issue #1088)
 
