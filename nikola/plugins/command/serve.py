@@ -92,7 +92,7 @@ class CommandServe(Command):
             try:
                 httpd.serve_forever()
             except KeyboardInterrupt:
-                exit(0)
+                exit(130)
 
 
 class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
