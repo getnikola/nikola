@@ -301,7 +301,7 @@ class Nikola(object):
         # DEFAULT_TRANSLATIONS_PATTERN was changed from "p.e.l" to "p.l.e"
         # TODO: remove on v8
         if 'TRANSLATIONS_PATTERN' not in self.config:
-            if len(self.config['TRANSLATIONS']) > 1:
+            if len(self.config.get('TRANSLATIONS', {})) > 1:
                 utils.LOGGER.warn('You do not have a TRANSLATIONS_PATTERN set in your config, yet you have multiple languages.')
                 utils.LOGGER.warn('Setting TRANSLATIONS_PATTERN to the pre-v6 default ("{path}.{ext}.{lang}").')
                 utils.LOGGER.warn('Please add the proper pattern to your conf.py.  (The new default in v7 is "{0}".)'.format(DEFAULT_TRANSLATIONS_PATTERN))
