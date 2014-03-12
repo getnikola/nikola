@@ -8,9 +8,20 @@ import time
 #!!  You should edit it to your liking.  !!#
 
 
+#! Some settings can be different in different languages.
+#! A comment stating (translatable) is used to denote those.
+#! There are two ways to specify a translatable setting:
+#! (a) BLOG_TITLE = "My Blog"
+#! (b) BLOG_TITLE = {"en": "My Blog", "es": "Mi Blog"}
+#! Option (a) is there for backwards compatibility and when you don't
+#!            want that setting translated.
+#! Option (b) should be used for settings that are different in
+#!            different languages.
+
+
 # Data about this site
-BLOG_AUTHOR = ${BLOG_AUTHOR}
-BLOG_TITLE = ${BLOG_TITLE}
+BLOG_AUTHOR = ${BLOG_AUTHOR}  # (translatable)
+BLOG_TITLE = ${BLOG_TITLE}  # (translatable)
 # This is the main URL for your site. It will be used
 # in a prominent link
 SITE_URL = ${SITE_URL}
@@ -18,7 +29,7 @@ SITE_URL = ${SITE_URL}
 # If not set, defaults to SITE_URL
 # BASE_URL = ${SITE_URL}
 BLOG_EMAIL = ${BLOG_EMAIL}
-BLOG_DESCRIPTION = ${BLOG_DESCRIPTION}
+BLOG_DESCRIPTION = ${BLOG_DESCRIPTION}  # (translatable)
 
 # Nikola is multilingual!
 #
@@ -70,20 +81,17 @@ TRANSLATIONS = {
 
 # What will translated input files be named like?
 
-# If you have a page something.rst, then something.rst.pl will be considered
+# If you have a page something.rst, then something.pl.rst will be considered
 # its Polish translation.
-#     (in the above example: path == "something", lang == "pl", ext == "rst")
+#     (in the above example: path == "something", ext == "rst", lang == "pl")
 # this pattern is also used for metadata:
-#     something.meta -> something.meta.pl
+#     something.meta -> something.pl.meta
 
 TRANSLATIONS_PATTERN = ${TRANSLATIONS_PATTERN}
 
-# If you don't want your Polish files to be considered Perl code, use this:
-# TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"
-#     Note that this pattern will become the default in v7.0.0.
-
 # Links for the sidebar / navigation bar.
 # You should provide a key-value pair for each used language.
+# (the same way you would do with a (translatable) setting.)
 NAVIGATION_LINKS = {
     DEFAULT_LANG: (
         ('/archive.html', 'Archives'),
@@ -114,7 +122,7 @@ NAVIGATION_LINKS = {
 #
 # That fragment could have an associated metadata file (whatever/thing.meta),
 # and optionally translated files (example for spanish, with code "es"):
-#     whatever/thing.txt.es and whatever/thing.meta.es
+#     whatever/thing.es.txt and whatever/thing.es.meta
 #
 #     This assumes you use the default TRANSLATIONS_PATTERN.
 #
@@ -355,6 +363,7 @@ THEME = ${THEME}
 # READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
 
 # A HTML fragment describing the license, for the sidebar.
+# (translatable)
 LICENSE = ""
 # I recommend using the Creative Commons' wizard:
 # http://creativecommons.org/choose/
@@ -365,14 +374,34 @@ LICENSE = ""
 # src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>"""
 
 # A small copyright notice for the page footer (in HTML).
+# (translatable)
 CONTENT_FOOTER = 'Contents &copy; {date} \
         <a href="mailto:{email}">{author}</a> - Powered by \
         <a href="http://getnikola.com" rel="nofollow">Nikola</a> \
         {license}'
-CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
-                                       author=BLOG_AUTHOR,
-                                       date=time.gmtime().tm_year,
-                                       license=LICENSE)
+
+# Things that will be passed to CONTENT_FOOTER.format().  This is done
+# for translatability, as dicts are not formattable.  Nikola will
+# intelligently format the setting properly.
+# The setting takes a dict. The keys are languages. The values are
+# tuples of tuples of positional arguments and dicts of keyword arguments
+# to format().  For example, {'en': (('Hello'), {'target': 'World'})}
+# results in CONTENT_FOOTER['en'].format('Hello', target='World').
+# WARNING: If you do not use multiple languages with CONTENT_FOOTER, this
+#          still needs to be a dict of this format.  (it can be empty if you
+#          do not need formatting)
+# (translatable)
+CONTENT_FOOTER_FORMATS = {
+    DEFAULT_LANG: (
+        (),
+        {
+            "email": BLOG_EMAIL,
+            "author": BLOG_AUTHOR,
+            "date": time.gmtime().tm_year,
+            "license": LICENSE
+        }
+    )
+}
 
 # To use comments, you can choose between different third party comment
 # systems, one of "disqus", "livefyre", "intensedebate", "moot",
@@ -477,6 +506,7 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 
 # Social buttons. This is sample code for AddThis (which was the default for a
 # long time). Insert anything you want here, or even make it empty.
+# (translatable)
 # SOCIAL_BUTTONS_CODE = """
 # <!-- Social buttons -->
 # <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
@@ -517,6 +547,7 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # custom search (http://www.google.com/cse/)
 # Or a duckduckgo search: https://duckduckgo.com/search_box.html
 # Default is no search form.
+# (translatable)
 # SEARCH_FORM = ""
 #
 # This search form works for any site and looks good in the "site" theme where
@@ -588,9 +619,11 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 
 # Extra things you want in the pages HEAD tag. This will be added right
 # before </head>
+# (translatable)
 # EXTRA_HEAD_DATA = ""
 # Google Analytics or whatever else you use. Added to the bottom of <body>
 # in the default template (base.tmpl).
+# (translatable)
 # BODY_END = ""
 
 # The possibility to extract metadata from the filename by using a
@@ -681,9 +714,14 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # DEMOTE_HEADERS = 1
 
 # You can configure the logging handlers installed as plugins or change the
-# log level of the default stdout handler.
+# log level of the default stderr handler.
+# WARNING: The stderr handler allows only the loglevels of 'INFO' and 'DEBUG'.
+#          This is done for safety reasons, as blocking out anything other
+#          than 'DEBUG' may hide important information and break the user
+#          experience!
+
 LOGGING_HANDLERS = {
-    'stderr': {'loglevel': 'WARNING', 'bubble': True},
+    'stderr': {'loglevel': 'INFO', 'bubble': True},
     #'smtp': {
     #    'from_addr': 'test-errors@example.com',
     #    'recipients': ('test@example.com'),

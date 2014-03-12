@@ -78,7 +78,7 @@ class Indexes(Task):
             num_pages = len(lists)
             for i, post_list in enumerate(lists):
                 context = {}
-                indexes_title = kw['indexes_title'] or kw['blog_title']
+                indexes_title = kw['indexes_title'] or kw['blog_title'](lang)
                 if kw["indexes_pages_main"]:
                     ipages_i = i + 1
                     ipages_msg = "page %d"

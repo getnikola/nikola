@@ -78,7 +78,7 @@ config_changed = utils.config_changed
 __all__ = ['Nikola']
 
 # Default pattern for translation files' names
-DEFAULT_TRANSLATIONS_PATTERN = '{path}.{ext}.{lang}'
+DEFAULT_TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
 
 
 class Nikola(object):
@@ -133,10 +133,10 @@ class Nikola(object):
 
         # This is the default config
         self.config = {
-            'ADD_THIS_BUTTONS': True,
             'ANNOTATIONS': False,
             'ARCHIVE_PATH': "",
             'ARCHIVE_FILENAME': "archive.html",
+            'BLOG_AUTHOR': 'Default Author',
             'BLOG_TITLE': 'Default Title',
             'BLOG_DESCRIPTION': 'Default Description',
             'BODY_END': "",
@@ -156,6 +156,7 @@ class Nikola(object):
                 "html": ('.html', '.htm')
             },
             'CONTENT_FOOTER': '',
+            'CONTENT_FOOTER_FORMATS': {},
             'COPY_SOURCES': True,
             'CREATE_MONTHLY_ARCHIVE': False,
             'CREATE_SINGLE_ARCHIVE': False,
@@ -192,7 +193,7 @@ class Nikola(object):
             'LICENSE': '',
             'LINK_CHECK_WHITELIST': [],
             'LISTINGS_FOLDER': 'listings',
-            'NAVIGATION_LINKS': None,
+            'NAVIGATION_LINKS': {},
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
@@ -238,10 +239,50 @@ class Nikola(object):
             'SCHEDULE_FORCE_TODAY': False,
             'LOGGING_HANDLERS': {'stderr': {'loglevel': 'WARNING', 'bubble': True}},
             'DEMOTE_HEADERS': 1,
-            'TRANSLATIONS_PATTERN': DEFAULT_TRANSLATIONS_PATTERN,
         }
 
         self.config.update(config)
+
+        # Make sure we have sane NAVIGATION_LINKS.
+        if not self.config['NAVIGATION_LINKS']:
+            self.config['NAVIGATION_LINKS'] = {self.config['DEFAULT_LANG']: ()}
+
+        # Translatability configuration.
+        utils.TranslatableSetting.default_lang = self.config['DEFAULT_LANG']
+
+        self.TRANSLATABLE_SETTINGS = ('BLOG_AUTHOR',
+                                      'BLOG_TITLE',
+                                      'BLOG_DESCRIPTION',
+                                      'LICENSE',
+                                      'CONTENT_FOOTER',
+                                      'SOCIAL_BUTTONS_CODE',
+                                      'SEARCH_FORM',
+                                      'BODY_END',
+                                      'EXTRA_HEAD_DATA',
+                                      'NAVIGATION_LINKS',)
+
+        self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
+                                             'blog_title',
+                                             'blog_desc',  # TODO: remove in v8
+                                             'blog_description',
+                                             'license',
+                                             'content_footer',
+                                             'social_buttons_code',
+                                             'search_form',
+                                             'body_end',
+                                             'extra_head_data',)
+        # WARNING: navigation_links SHOULD NOT be added to the list above.
+        #          Themes ask for [lang] there and we should provide it.
+
+        for i in self.TRANSLATABLE_SETTINGS:
+            try:
+                self.config[i] = utils.TranslatableSetting(i, self.config[i])
+            except KeyError:
+                pass
+
+        # Handle CONTENT_FOOTER properly.
+        # We provide the arguments to format in CONTENT_FOOTER_FORMATS.
+        self.config['CONTENT_FOOTER'].langformat(self.config['CONTENT_FOOTER_FORMATS'])
 
         # Make sure we have pyphen installed if we are using it
         if self.config.get('HYPHENATE') and pyphen is None:
@@ -250,24 +291,6 @@ class Nikola(object):
             utils.LOGGER.warn('Setting HYPHENATE to False.')
             self.config['HYPHENATE'] = False
 
-        # Deprecating post_compilers
-        # TODO: remove on v7
-        if 'post_compilers' in config:
-            utils.LOGGER.warn('The post_compilers option is deprecated, use COMPILERS instead.')
-            if 'COMPILERS' in config:
-                utils.LOGGER.warn('COMPILERS conflicts with post_compilers, ignoring post_compilers.')
-            else:
-                self.config['COMPILERS'] = config['post_compilers']
-
-        # Deprecating post_pages
-        # TODO: remove on v7
-        if 'post_pages' in config:
-            utils.LOGGER.warn('The post_pages option is deprecated, use POSTS and PAGES instead.')
-            if 'POSTS' in config or 'PAGES' in config:
-                utils.LOGGER.warn('POSTS and PAGES conflict with post_pages, ignoring post_pages.')
-            else:
-                self.config['POSTS'] = [item[:3] for item in config['post_pages'] if item[-1]]
-                self.config['PAGES'] = [item[:3] for item in config['post_pages'] if not item[-1]]
         # FIXME: Internally, we still use post_pages because it's a pain to change it
         self.config['post_pages'] = []
         for i1, i2, i3 in self.config['POSTS']:
@@ -275,52 +298,17 @@ class Nikola(object):
         for i1, i2, i3 in self.config['PAGES']:
             self.config['post_pages'].append([i1, i2, i3, False])
 
-        # Deprecating DISQUS_FORUM
-        # TODO: remove on v7
-        if 'DISQUS_FORUM' in config:
-            utils.LOGGER.warn('The DISQUS_FORUM option is deprecated, use COMMENT_SYSTEM_ID instead.')
-            if 'COMMENT_SYSTEM_ID' in config:
-                utils.LOGGER.warn('DISQUS_FORUM conflicts with COMMENT_SYSTEM_ID, ignoring DISQUS_FORUM.')
+        # DEFAULT_TRANSLATIONS_PATTERN was changed from "p.e.l" to "p.l.e"
+        # TODO: remove on v8
+        if 'TRANSLATIONS_PATTERN' not in self.config:
+            if len(self.config.get('TRANSLATIONS', {})) > 1:
+                utils.LOGGER.warn('You do not have a TRANSLATIONS_PATTERN set in your config, yet you have multiple languages.')
+                utils.LOGGER.warn('Setting TRANSLATIONS_PATTERN to the pre-v6 default ("{path}.{ext}.{lang}").')
+                utils.LOGGER.warn('Please add the proper pattern to your conf.py.  (The new default in v7 is "{0}".)'.format(DEFAULT_TRANSLATIONS_PATTERN))
+                self.config['TRANSLATIONS_PATTERN'] = "{path}.{ext}.{lang}"
             else:
-                self.config['COMMENT_SYSTEM_ID'] = config['DISQUS_FORUM']
-
-        # Deprecating the ANALYTICS option
-        # TODO: remove on v7
-        if 'ANALYTICS' in config:
-            utils.LOGGER.warn('The ANALYTICS option is deprecated, use BODY_END instead.')
-            if 'BODY_END' in config:
-                utils.LOGGER.warn('ANALYTICS conflicts with BODY_END, ignoring ANALYTICS.')
-            else:
-                self.config['BODY_END'] = config['ANALYTICS']
-
-        # Deprecating the SIDEBAR_LINKS option
-        # TODO: remove on v7
-        if 'SIDEBAR_LINKS' in config:
-            utils.LOGGER.warn('The SIDEBAR_LINKS option is deprecated, use NAVIGATION_LINKS instead.')
-            if 'NAVIGATION_LINKS' in config:
-                utils.LOGGER.warn('The SIDEBAR_LINKS conflicts with NAVIGATION_LINKS, ignoring SIDEBAR_LINKS.')
-            else:
-                self.config['NAVIGATION_LINKS'] = config['SIDEBAR_LINKS']
-        # Compatibility alias
-        self.config['SIDEBAR_LINKS'] = self.config['NAVIGATION_LINKS']
-
-        if self.config['NAVIGATION_LINKS'] in (None, {}):
-            self.config['NAVIGATION_LINKS'] = {self.config['DEFAULT_LANG']: ()}
-
-        # Deprecating the ADD_THIS_BUTTONS option
-        # TODO: remove on v7
-        if 'ADD_THIS_BUTTONS' in config:
-            utils.LOGGER.warn('The ADD_THIS_BUTTONS option is deprecated, use SOCIAL_BUTTONS_CODE instead.')
-            if not config['ADD_THIS_BUTTONS']:
-                utils.LOGGER.warn('Setting SOCIAL_BUTTONS_CODE to empty because ADD_THIS_BUTTONS is False.')
-                self.config['SOCIAL_BUTTONS_CODE'] = ''
-
-        # STRIP_INDEX_HTML config has been replaces with STRIP_INDEXES
-        # Port it if only the older form is there
-        # TODO: remove on v7
-        if 'STRIP_INDEX_HTML' in config and 'STRIP_INDEXES' not in config:
-            utils.LOGGER.warn('You should configure STRIP_INDEXES instead of STRIP_INDEX_HTML')
-            self.config['STRIP_INDEXES'] = config['STRIP_INDEX_HTML']
+                # use v7 default there
+                self.config['TRANSLATIONS_PATTERN'] = DEFAULT_TRANSLATIONS_PATTERN
 
         # HIDE_SOURCELINK has been replaced with the inverted SHOW_SOURCELINK
         # TODO: remove on v8
@@ -347,14 +335,6 @@ class Nikola(object):
 
         self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
                                                       {self.config['DEFAULT_LANG']: ''})
-
-        # SITE_URL is required, but if the deprecated BLOG_URL
-        # is available, use it and warn
-        # TODO: remove on v7
-        if 'SITE_URL' not in self.config:
-            if 'BLOG_URL' in self.config:
-                utils.LOGGER.warn('You should configure SITE_URL instead of BLOG_URL')
-                self.config['SITE_URL'] = self.config['BLOG_URL']
 
         self.default_lang = self.config['DEFAULT_LANG']
         self.translations = self.config['TRANSLATIONS']
@@ -477,23 +457,19 @@ class Nikola(object):
             'DATE_FORMAT', '%Y-%m-%d %H:%M')
         self._GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
         self._GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
+        self._GLOBAL_CONTEXT['blog_description'] = self.config.get('BLOG_DESCRIPTION')
 
-        # TODO: remove fallback in v7
-        self._GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL', self.config.get('BLOG_URL'))
+        # TODO: remove in v8
         self._GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
+
+        self._GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL')
         self._GLOBAL_CONTEXT['body_end'] = self.config.get('BODY_END')
-        # TODO: remove in v7
-        self._GLOBAL_CONTEXT['analytics'] = self.config.get('BODY_END')
-        # TODO: remove in v7
-        self._GLOBAL_CONTEXT['add_this_buttons'] = self.config.get('SOCIAL_BUTTONS_CODE')
         self._GLOBAL_CONTEXT['social_buttons_code'] = self.config.get('SOCIAL_BUTTONS_CODE')
         self._GLOBAL_CONTEXT['translations'] = self.config.get('TRANSLATIONS')
         self._GLOBAL_CONTEXT['license'] = self.config.get('LICENSE')
         self._GLOBAL_CONTEXT['search_form'] = self.config.get('SEARCH_FORM')
         self._GLOBAL_CONTEXT['comment_system'] = self.config.get('COMMENT_SYSTEM')
         self._GLOBAL_CONTEXT['comment_system_id'] = self.config.get('COMMENT_SYSTEM_ID')
-        # TODO: remove in v7
-        self._GLOBAL_CONTEXT['disqus_forum'] = self.config.get('COMMENT_SYSTEM_ID')
         self._GLOBAL_CONTEXT['mathjax_config'] = self.config.get(
             'MATHJAX_CONFIG')
         self._GLOBAL_CONTEXT['subtheme'] = self.config.get('THEME_REVEAL_CONFIG_SUBTHEME')
@@ -503,17 +479,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
         self._GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
 
-        self._GLOBAL_CONTEXT['navigation_links'] = utils.Functionary(list, self.config['DEFAULT_LANG'])
-        for k, v in self.config.get('NAVIGATION_LINKS', {}).items():
-            self._GLOBAL_CONTEXT['navigation_links'][k] = v
-
-        # avoid #1082 by making sure all keys in navigation_links are read once
-        for k in self._GLOBAL_CONTEXT['translations']:
-            self._GLOBAL_CONTEXT['navigation_links'][k]
-
-        # TODO: remove on v7
-        # Compatibility alias
-        self._GLOBAL_CONTEXT['sidebar_links'] = self._GLOBAL_CONTEXT['navigation_links']
+        self._GLOBAL_CONTEXT['navigation_links'] = self.config.get('NAVIGATION_LINKS')
 
         self._GLOBAL_CONTEXT['twitter_card'] = self.config.get(
             'TWITTER_CARD', {})
@@ -537,21 +503,6 @@ class Nikola(object):
 
     def _get_themes(self):
         if self._THEMES is None:
-            # Check for old theme names (Issue #650) TODO: remove in v7
-            theme_replacements = {
-                'site': 'bootstrap',
-                'orphan': 'base',
-                'default': 'oldfashioned',
-            }
-            if self.config['THEME'] in theme_replacements:
-                utils.LOGGER.warn('You are using the old theme "{0}", using "{1}" instead.'.format(
-                    self.config['THEME'], theme_replacements[self.config['THEME']]))
-                self.config['THEME'] = theme_replacements[self.config['THEME']]
-                if self.config['THEME'] == 'oldfashioned':
-                    utils.LOGGER.warn('''You may need to install the "oldfashioned" theme '''
-                                      '''from themes.getnikola.com because it's not '''
-                                      '''shipped by default anymore.''')
-                utils.LOGGER.warn('Please change your THEME setting.')
             try:
                 self._THEMES = utils.get_theme_chain(self.config['THEME'])
             except Exception:
@@ -654,6 +605,8 @@ class Nikola(object):
         local_context["template_name"] = template_name
         local_context.update(self.GLOBAL_CONTEXT)
         local_context.update(context)
+        for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
+            local_context[k] = local_context[k](local_context['lang'])
         # string, arguments
         local_context["formatmsg"] = lambda s, *a: s % a
         data = self.template_system.render_template(
@@ -1155,8 +1108,8 @@ class Nikola(object):
             deps += post.deps(lang)
         context = {}
         context["posts"] = posts
-        context["title"] = self.config['BLOG_TITLE']
-        context["description"] = self.config['BLOG_DESCRIPTION']
+        context["title"] = self.config['BLOG_TITLE'](lang)
+        context["description"] = self.config['BLOG_DESCRIPTION'](lang)
         context["lang"] = lang
         context["prevlink"] = None
         context["nextlink"] = None
