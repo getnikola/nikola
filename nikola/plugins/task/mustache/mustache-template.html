@@ -1,7 +1,7 @@
 <script id="view" type="text/html">
 <div class="container" id="container">
     <div class="postbox">
-    <h1>{{BLOG_TITLE}}</h1>
+    <h1>{{BLOG_TITLE(lang)}}</h1>
     <hr>
     <h2>{{title}}</h2>
     Posted on: {{date}}</br>
@@ -23,7 +23,7 @@
     {{{comment_html}}}
     </div>
     <div class="footerbox">
-    {{{CONTENT_FOOTER}}}
+    {{{CONTENT_FOOTER(lang)}}}
     </div>
 </div>
 </script>

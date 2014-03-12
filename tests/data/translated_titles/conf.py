@@ -12,10 +12,10 @@ BLOG_AUTHOR = "Your Name"
 BLOG_TITLE = "Demo Site"
 # This is the main URL for your site. It will be used
 # in a prominent link
-SITE_URL = "http://nikola.ralsina.com.ar"
+SITE_URL = "http://nikola.ralsina.com.ar/"
 # This is the URL where nikola's output will be deployed.
 # If not set, defaults to SITE_URL
-# BASE_URL = "http://nikola.ralsina.com.ar
+# BASE_URL = "http://nikola.ralsina.com.ar/"
 BLOG_EMAIL = "joe@demo.site"
 BLOG_DESCRIPTION = "This is a demo site for Nikola."
 
@@ -66,7 +66,7 @@ TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"
 
 # Links for the sidebar / navigation bar.
 # You should provide a key-value pair for each used language.
-SIDEBAR_LINKS = {
+NAVIGATION_LINKS = {
     DEFAULT_LANG: (
         ('/archive.html', 'Archives'),
         ('/categories/index.html', 'Tags'),
@@ -101,9 +101,11 @@ SIDEBAR_LINKS = {
 # rss feeds.
 #
 
-post_pages = (
-    ("posts/*.txt", "posts", "post.tmpl", True),
-    ("stories/*.txt", "stories", "story.tmpl", False),
+POSTS = (
+    ("posts/*.txt", "posts", "post.tmpl"),
+)
+PAGES = (
+    ("stories/*.txt", "stories", "story.tmpl"),
 )
 
 # One or more folders containing files to be copied as-is into the output.

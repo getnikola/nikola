@@ -137,8 +137,9 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'copy_file', 'slugify', 'unslugify', 'to_datetime', 'apply_filters',
            'config_changed', 'get_crumbs', 'get_tzname', 'get_asset_path',
            '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
-           'LocaleBorg', 'sys_encode', 'sys_decode', 'makedirs',
-           'get_parent_theme_name', 'demote_headers', 'get_translation_candidate']
+           'TranslatableSetting', 'LocaleBorg', 'sys_encode', 'sys_decode',
+           'makedirs', 'get_parent_theme_name', 'demote_headers',
+           'get_translation_candidate']
 
 
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
@@ -182,6 +183,194 @@ class Functionary(defaultdict):
         if lang is None:
             lang = LocaleBorg().current_lang
         return self[lang][key]
+
+
+class TranslatableSetting(object):
+
+    """
+    A setting that can be translated.
+
+    You can access it via: SETTING(lang).  You can omit lang, in which
+    case Nikola will ask LocaleBorg, unless you set SETTING.lang,
+    which overrides that call.
+
+    You can also stringify the setting and you will get something
+    sensible (in what LocaleBorg claims the language is, can also be
+    overriden by SETTING.lang). Note that this second method is
+    deprecated.  It is kept for backwards compatibility and
+    safety.  It is not guaranteed.
+
+    The underlying structure is a defaultdict.  The language that
+    is the default value of the dict is provided with __init__().
+    If you need access the underlying dict (you generally don’t,
+    """
+
+    # WARNING: This is generally not used and replaced with a call to
+    #          LocaleBorg().  Set this to a truthy value to override that.
+    lang = None
+
+    # Note that this setting is global.  DO NOT set on a per-instance basis!
+    default_lang = 'en'
+
+    def __getattribute__(self, attr):
+        """Return attributes, falling back to string attributes."""
+        try:
+            return super(TranslatableSetting, self).__getattribute__(attr)
+        except AttributeError:
+            return self().__getattribute__(attr)
+
+    def __dir__(self):
+        return list(set(self.__dict__).union(set(dir(str))))
+
+    def __init__(self, name, inp):
+        """Initialize a translated setting.
+
+        Valid inputs include:
+
+        * a string               -- the same will be used for all languages
+        * a dict ({lang: value}) -- each language will use the value specified;
+                                    if there is none, default_lang is used.
+
+        """
+        self.name = name
+        self._inp = inp
+        self.overriden_default = False
+        self.values = defaultdict()
+
+        if isinstance(inp, dict):
+            self.translated = True
+            self.values.update(inp)
+            if self.default_lang not in self.values.keys():
+                self.default_lang = list(self.values.keys())[0]
+                self.overridden_default = True
+            self.values.default_factory = lambda: self.values[self.default_lang]
+        else:
+            self.translated = False
+            self.values[self.default_lang] = inp
+            self.values.default_factory = lambda: inp
+
+    def get_lang(self):
+        """Return the language that should be used to retrieve settings."""
+        if self.lang:
+            return self.lang
+        elif not self.translated:
+            return self.default_lang
+        else:
+            try:
+                return LocaleBorg().current_lang
+            except AttributeError:
+                return self.default_lang
+
+    def __call__(self, lang=None):
+        """
+        Return the value in the requested language.
+
+        While lang is None, self.lang (currently set language) is used.
+        Otherwise, the standard algorithm is used (see above).
+
+        """
+        if lang is None:
+            return self.values[self.get_lang()]
+        else:
+            return self.values[lang]
+
+    def __str__(self):
+        """Return the value in the currently set language.  (deprecated)"""
+        return self.values[self.get_lang()]
+
+    def __unicode__(self):
+        """Return the value in the currently set language.  (deprecated)"""
+        return self.values[self.get_lang()]
+
+    def __repr__(self):
+        """Provide a representation for programmers."""
+        header = '<TranslatableSetting> '
+
+        if not self.translated:
+            values = [repr(self())]
+        else:
+            values = ['{0}={1!r}'.format(k, v) for k, v in self.values.items()]
+
+        return header + ', '.join(values)
+
+    def format(self, *args, **kwargs):
+        """Format ALL the values in the setting the same way."""
+        for l in self.values:
+            self.values[l] = self.values[l].format(*args, **kwargs)
+        self.values.default_factory = lambda: self.values[self.default_lang]
+        return self
+
+    def langformat(self, formats):
+        """Format ALL the values in the setting, on a per-language basis."""
+        if not formats:
+            # Input is empty.
+            return self
+        else:
+            # This is a little tricky.
+            # Basically, we have some things that may very well be dicts.  Or
+            # actually, TranslatableSettings in the original unprocessed dict
+            # form.  We need to detect them.
+
+            # First off, we need to check what languages we have and what
+            # should we use as the default.
+            keys = list(formats)
+            if self.default_lang in keys:
+                d = formats[self.default_lang]
+            else:
+                d = formats[keys[0]]
+            # Discovering languages of the settings here.
+            langkeys = []
+            for f in formats.values():
+                for a in f[0] + tuple(f[1].values()):
+                    if isinstance(a, dict):
+                        langkeys += list(a)
+            # Now that we know all this, we go through all the languages we have.
+            allvalues = set(keys + langkeys + list(self.values))
+            for l in allvalues:
+                if l in keys:
+                    oargs, okwargs = formats[l]
+                else:
+                    oargs, okwargs = d
+
+                args = []
+                kwargs = {}
+
+                for a in oargs:
+                    # We create temporary TranslatableSettings and replace the
+                    # values with them.
+                    if isinstance(a, dict):
+                        a = TranslatableSetting('NULL', a)
+                        args.append(a(l))
+                    else:
+                        args.append(a)
+
+                for k, v in okwargs.items():
+                    if isinstance(v, dict):
+                        v = TranslatableSetting('NULL', v)
+                        kwargs.update({k: v(l)})
+                    else:
+                        kwargs.update({k: v})
+
+                self.values[l] = self.values[l].format(*args, **kwargs)
+                self.values.default_factory = lambda: self.values[self.default_lang]
+
+        return self
+
+    def __getitem__(self, key):
+        """Provide an alternate interface via __getitem__."""
+        return self.values[key]
+
+    def __setitem__(self, key, value):
+        """Set values for translations."""
+        self.values[key] = value
+
+    def __eq__(self, other):
+        """Test whether two TranslatableSettings are equal."""
+        return self.values == other.values
+
+    def __ne__(self, other):
+        """Test whether two TranslatableSettings are inequal."""
+        return self.values != other.values
 
 
 class CustomEncoder(json.JSONEncoder):

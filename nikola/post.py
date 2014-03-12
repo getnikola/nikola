@@ -288,7 +288,8 @@ class Post(object):
         if self.meta[lang]['author']:
             author = self.meta[lang]['author']
         else:
-            author = self.config['BLOG_AUTHOR']
+            author = self.config['BLOG_AUTHOR'](lang)
+
         return author
 
     def description(self, lang=None):

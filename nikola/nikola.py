@@ -137,6 +137,7 @@ class Nikola(object):
             'ANNOTATIONS': False,
             'ARCHIVE_PATH': "",
             'ARCHIVE_FILENAME': "archive.html",
+            'BLOG_AUTHOR': 'Default Author',
             'BLOG_TITLE': 'Default Title',
             'BLOG_DESCRIPTION': 'Default Description',
             'BODY_END': "",
@@ -156,6 +157,7 @@ class Nikola(object):
                 "html": ('.html', '.htm')
             },
             'CONTENT_FOOTER': '',
+            'CONTENT_FOOTER_FORMATS': {},
             'COPY_SOURCES': True,
             'CREATE_MONTHLY_ARCHIVE': False,
             'CREATE_SINGLE_ARCHIVE': False,
@@ -192,7 +194,7 @@ class Nikola(object):
             'LICENSE': '',
             'LINK_CHECK_WHITELIST': [],
             'LISTINGS_FOLDER': 'listings',
-            'NAVIGATION_LINKS': None,
+            'NAVIGATION_LINKS': {},
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
@@ -243,6 +245,58 @@ class Nikola(object):
 
         self.config.update(config)
 
+        # Deprecating the SIDEBAR_LINKS option
+        # TODO: remove on v7
+        if 'SIDEBAR_LINKS' in config:
+            utils.LOGGER.warn('The SIDEBAR_LINKS option is deprecated, use NAVIGATION_LINKS instead.')
+            if 'NAVIGATION_LINKS' in config:
+                utils.LOGGER.warn('The SIDEBAR_LINKS conflicts with NAVIGATION_LINKS, ignoring SIDEBAR_LINKS.')
+            else:
+                self.config['NAVIGATION_LINKS'] = utils.TranslatableSetting('NAVIGATION_LINKS', config['SIDEBAR_LINKS'])
+        # Compatibility alias
+        self.config['SIDEBAR_LINKS'] = self.config['NAVIGATION_LINKS']
+
+        # Make sure we have sane NAVIGATION_LINKS.
+        if not self.config['NAVIGATION_LINKS']:
+            self.config['NAVIGATION_LINKS'] = {self.config['DEFAULT_LANG']: ()}
+
+        # Translatability configuration.
+        utils.TranslatableSetting.default_lang = self.config['DEFAULT_LANG']
+
+        self.TRANSLATABLE_SETTINGS = ('BLOG_AUTHOR',
+                                      'BLOG_TITLE',
+                                      'BLOG_DESCRIPTION',
+                                      'LICENSE',
+                                      'CONTENT_FOOTER',
+                                      'SOCIAL_BUTTONS_CODE',
+                                      'SEARCH_FORM',
+                                      'BODY_END',
+                                      'EXTRA_HEAD_DATA',
+                                      'NAVIGATION_LINKS',)
+
+        self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
+                                             'blog_title',
+                                             'blog_desc',  # TODO: remove in v8
+                                             'blog_description',
+                                             'license',
+                                             'content_footer',
+                                             'social_buttons_code',
+                                             'search_form',
+                                             'body_end',
+                                             'extra_head_data',)
+        # WARNING: navigation_links SHOULD NOT be added to the list above.
+        #          Themes ask for [lang] there and we should provide it.
+
+        for i in self.TRANSLATABLE_SETTINGS:
+            try:
+                self.config[i] = utils.TranslatableSetting(i, self.config[i])
+            except KeyError:
+                pass
+
+        # Handle CONTENT_FOOTER properly.
+        # We provide the arguments to format in CONTENT_FOOTER_FORMATS.
+        self.config['CONTENT_FOOTER'].langformat(self.config['CONTENT_FOOTER_FORMATS'])
+
         # Make sure we have pyphen installed if we are using it
         if self.config.get('HYPHENATE') and pyphen is None:
             utils.LOGGER.warn('To use the hyphenation, you have to install '
@@ -292,20 +346,6 @@ class Nikola(object):
                 utils.LOGGER.warn('ANALYTICS conflicts with BODY_END, ignoring ANALYTICS.')
             else:
                 self.config['BODY_END'] = config['ANALYTICS']
-
-        # Deprecating the SIDEBAR_LINKS option
-        # TODO: remove on v7
-        if 'SIDEBAR_LINKS' in config:
-            utils.LOGGER.warn('The SIDEBAR_LINKS option is deprecated, use NAVIGATION_LINKS instead.')
-            if 'NAVIGATION_LINKS' in config:
-                utils.LOGGER.warn('The SIDEBAR_LINKS conflicts with NAVIGATION_LINKS, ignoring SIDEBAR_LINKS.')
-            else:
-                self.config['NAVIGATION_LINKS'] = config['SIDEBAR_LINKS']
-        # Compatibility alias
-        self.config['SIDEBAR_LINKS'] = self.config['NAVIGATION_LINKS']
-
-        if self.config['NAVIGATION_LINKS'] in (None, {}):
-            self.config['NAVIGATION_LINKS'] = {self.config['DEFAULT_LANG']: ()}
 
         # Deprecating the ADD_THIS_BUTTONS option
         # TODO: remove on v7
@@ -477,10 +517,13 @@ class Nikola(object):
             'DATE_FORMAT', '%Y-%m-%d %H:%M')
         self._GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
         self._GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
+        self._GLOBAL_CONTEXT['blog_description'] = self.config.get('BLOG_DESCRIPTION')
+
+        # TODO: remove in v8
+        self._GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
 
         # TODO: remove fallback in v7
         self._GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL', self.config.get('BLOG_URL'))
-        self._GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
         self._GLOBAL_CONTEXT['body_end'] = self.config.get('BODY_END')
         # TODO: remove in v7
         self._GLOBAL_CONTEXT['analytics'] = self.config.get('BODY_END')
@@ -503,13 +546,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
         self._GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
 
-        self._GLOBAL_CONTEXT['navigation_links'] = utils.Functionary(list, self.config['DEFAULT_LANG'])
-        for k, v in self.config.get('NAVIGATION_LINKS', {}).items():
-            self._GLOBAL_CONTEXT['navigation_links'][k] = v
-
-        # avoid #1082 by making sure all keys in navigation_links are read once
-        for k in self._GLOBAL_CONTEXT['translations']:
-            self._GLOBAL_CONTEXT['navigation_links'][k]
+        self._GLOBAL_CONTEXT['navigation_links'] = self.config.get('NAVIGATION_LINKS')
 
         # TODO: remove on v7
         # Compatibility alias
@@ -654,6 +691,8 @@ class Nikola(object):
         local_context["template_name"] = template_name
         local_context.update(self.GLOBAL_CONTEXT)
         local_context.update(context)
+        for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
+            local_context[k] = local_context[k](local_context['lang'])
         # string, arguments
         local_context["formatmsg"] = lambda s, *a: s % a
         data = self.template_system.render_template(
@@ -1155,8 +1194,8 @@ class Nikola(object):
             deps += post.deps(lang)
         context = {}
         context["posts"] = posts
-        context["title"] = self.config['BLOG_TITLE']
-        context["description"] = self.config['BLOG_DESCRIPTION']
+        context["title"] = self.config['BLOG_TITLE'](lang)
+        context["description"] = self.config['BLOG_DESCRIPTION'](lang)
         context["lang"] = lang
         context["prevlink"] = None
         context["nextlink"] = None
