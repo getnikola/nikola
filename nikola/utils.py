@@ -70,9 +70,9 @@ def get_logger(name, handlers):
     l = logbook.Logger(name)
     for h in handlers:
         if isinstance(h, list):
-            l.handlers += h
+            l.handlers = h
         else:
-            l.handlers.append(h)
+            l.handlers = [h]
     return l
 
 
@@ -83,10 +83,14 @@ STDERR_HANDLER = [ColorfulStderrHandler(
 LOGGER = get_logger('Nikola', STDERR_HANDLER)
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
 
+# This will block out the default handler and will hide all unwanted
+# messages, properly.
+logbook.NullHandler().push_application()
+
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
 else:
-    logging.basicConfig(level=logging.WARNING)
+    logging.basicConfig(level=logging.INFO)
 
 
 def req_missing(names, purpose, python=True, optional=False):
