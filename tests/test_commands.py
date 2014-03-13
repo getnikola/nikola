@@ -8,10 +8,9 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import unittest
-#import mock
 
-#import nikola
 from nikola.plugins.command.version import CommandVersion
+
 
 class CommandVersionCallTest(unittest.TestCase):
     def test_version(self):
