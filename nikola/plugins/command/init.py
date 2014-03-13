@@ -129,6 +129,7 @@ class CommandInit(Command):
         {
             'name': 'demo',
             'long': 'demo',
+            'short': 'd',
             'default': False,
             'type': bool,
             'help': "Create a site filled with example data.",
