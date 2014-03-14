@@ -15,7 +15,7 @@ import tempfile
 import unittest
 
 import lxml.html
-from nose.plugins.skip import SkipTest
+import pytest
 
 from nikola import __main__
 import nikola
@@ -187,7 +187,7 @@ class TranslatedBuildTest(EmptyBuildTest):
         try:
             locale.setlocale(locale.LC_ALL, ("pl_PL", "utf8"))
         except:
-            raise SkipTest
+            pytest.skip()
 
     def test_translated_titles(self):
         """Check that translated title is picked up."""

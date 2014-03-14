@@ -1,7 +1,6 @@
 -r requirements-extras.txt
 mock>=1.0.0
 coverage
-nose
 pytest
 pytest-cov
 freezegun
