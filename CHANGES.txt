@@ -40,6 +40,10 @@ Features
 Bugfixes
 --------
 
+* The ``init`` command and the importers now always output to the CWD.
+  Previously, if you had a ``conf.py`` file higher in the directory structure,
+  Nikola would put the output of those commands in the directory that contained
+  the file. (Issue #1132)
 * Logging configuration has been fixed.  The stderr handler can now
   only be set to DEBUG or INFO (any higher levels are corrected as INFO), and
   unwanted (i.e. DEBUG) messages are not shown, as intended. (Issue #1111)
