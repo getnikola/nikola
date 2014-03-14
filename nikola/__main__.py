@@ -70,9 +70,16 @@ def main(args):
             if os.name == 'nt':
                 colorful = False
 
-    root = get_root_dir()
-    if root:
-        os.chdir(root)
+    # Those commands do not require a `conf.py`.  (Issue #1132)
+    # Moreover, actually having one somewhere in the tree can be bad, putting
+    # the output of that command (the new site) in an unknown directory that is
+    # not the current working directory.  (does not apply to `version`)
+    argname = args[0] if len(args) > 0 else None
+    if argname not in ['init', 'import_wordpress', 'import_feed',
+                       'import_blogger', 'version']:
+        root = get_root_dir()
+        if root:
+            os.chdir(root)
 
     sys.path.append('')
     try:
