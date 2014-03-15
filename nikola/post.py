@@ -89,7 +89,7 @@ class Post(object):
         self.compiler = compiler
         self.compile_html = self.compiler.compile_html
         self.demote_headers = self.compiler.demote_headers and self.config['DEMOTE_HEADERS']
-        tzinfo = pytz.timezone(self.config['TIMEZONE'])
+        tzinfo = self.config['__tzinfo__']
         if self.config['FUTURE_IS_NOW']:
             self.current_time = None
         else:

@@ -21,9 +21,11 @@ from lxml import etree
 from .base import LocaleSupportInTesting
 
 import nikola
+import pytz
 
 fake_conf = defaultdict(str)
 fake_conf['TIMEZONE'] = 'UTC'
+fake_conf['__tzinfo__'] = pytz.UTC
 fake_conf['DEFAULT_LANG'] = 'en'
 fake_conf['TRANSLATIONS'] = {'en': ''}
 fake_conf['BASE_URL'] = 'http://some.blog/'
