@@ -4,7 +4,10 @@ New in master
 Features
 --------
 
-* `nikola console` allows for interpreter choice via -b, -i, -p; moreover,
+* ``nikola import_wordpress`` now has a ``--qtranslate`` option, to parse posts
+  in the qtranslate wordpress plugin format and turn them into multilingual
+  Nikola posts (Issue #1072)
+* ``nikola console`` allows for interpreter choice via -b, -i, -p; moreover,
   support for bpython is not deprecated anymore (Issue #1126)
 * Changed the default TRANSLATIONS_PATTERN to "{path}.{lang}.{ext}". (Issues
   #990, #829)
