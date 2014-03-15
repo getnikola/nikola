@@ -47,6 +47,11 @@ SAMPLE_CONF = {
     'BLOG_EMAIL': "joe@demo.site",
     'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
     'DEFAULT_LANG': "en",
+    'TRANSLATIONS': """{
+    DEFAULT_LANG: "",
+    # Example for another language:
+    # "es": "./es",
+}""",
     'THEME': 'bootstrap3',
     'COMMENT_SYSTEM': 'disqus',
     'COMMENT_SYSTEM_ID': 'nikolademo',
@@ -87,7 +92,7 @@ def prepare_config(config):
     """Parse sample config with JSON."""
     p = config.copy()
     p.update(dict((k, json.dumps(v)) for k, v in p.items()
-             if k not in ('POSTS', 'PAGES', 'COMPILERS')))
+                  if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS')))
     return p
 
 
