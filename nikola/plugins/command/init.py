@@ -47,6 +47,11 @@ SAMPLE_CONF = {
     'BLOG_EMAIL': "joe@demo.site",
     'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
     'DEFAULT_LANG': "en",
+    'TRANSLATIONS': """{
+    DEFAULT_LANG: "",
+    # Example for another language:
+    # "es": "./es",
+}""",
     'THEME': 'bootstrap3',
     'COMMENT_SYSTEM': 'disqus',
     'COMMENT_SYSTEM_ID': 'nikolademo',
@@ -81,13 +86,24 @@ SAMPLE_CONF = {
 }
 
 
+def format_default_translations_config(additional_languages):
+    """Return the string to configure the TRANSLATIONS config variable to
+    make each additional language visible on the generated site."""
+    if not additional_languages:
+        return SAMPLE_CONF["TRANSLATIONS"]
+    lang_paths = ['    DEFAULT_LANG: "",']
+    for lang in sorted(additional_languages):
+        lang_paths.append('    "{0}": "./{0}",'.format(lang))
+    return "{{\n{0}\n}}".format("\n".join(lang_paths))
+
+
 # In order to ensure proper escaping, all variables but the three
 # pre-formatted ones are handled by json.dumps().
 def prepare_config(config):
     """Parse sample config with JSON."""
     p = config.copy()
     p.update(dict((k, json.dumps(v)) for k, v in p.items()
-             if k not in ('POSTS', 'PAGES', 'COMPILERS')))
+             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS')))
     return p
 
 

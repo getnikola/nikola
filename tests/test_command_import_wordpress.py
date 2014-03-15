@@ -469,5 +469,6 @@ You can use the <a title="Jenkins Plugin: Violations" href="https://wiki.jenkins
         self.assertEqual(1, len(redirections))
         self.assertTrue(('somewhere/else/index.html', '/posts/somewhereelse.html') in redirections)
 
+
 if __name__ == '__main__':
     unittest.main()
