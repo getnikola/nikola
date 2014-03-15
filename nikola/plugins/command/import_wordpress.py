@@ -135,6 +135,9 @@ class CommandImportWordpress(Command, ImportMixin):
 
         self.separate_qtranslate_content = options.get('separate_qtranslate_content')
         self.translations_pattern = options.get('translations_pattern')
+        
+        # A place holder where extra language (if detected) will be stored
+        self.extra_languages = set()
 
         if not self.no_downloads:
             def show_info_about_mising_module(modulename):
@@ -161,9 +164,11 @@ class CommandImportWordpress(Command, ImportMixin):
         # need to fix the config
         if self.translations_pattern:
             self.context['TRANSLATIONS_PATTERN'] = self.translations_pattern
-
+        
         self.import_posts(channel)
 
+        self.context['TRANSLATIONS'] = self.configure_translations(
+            self.extra_languages)
         self.context['REDIRECTIONS'] = self.configure_redirections(
             self.url_map)
         self.write_urlmap_csv(
@@ -452,6 +457,7 @@ class CommandImportWordpress(Command, ImportMixin):
                         out_content_filename \
                             = utils.get_translation_candidate(self.context,
                                                               slug + ".wp", lang)
+                        self.extra_languages.add(lang)
                     meta_slug = slug
                 else:
                     out_meta_filename = slug + '.meta'
@@ -486,6 +492,20 @@ class CommandImportWordpress(Command, ImportMixin):
     def import_posts(self, channel):
         for item in channel.findall('item'):
             self.process_item(item)
+
+    def configure_translations(self,additional_languages):
+        """Return the string to configure the TRANSLATIONS config variable to
+        make each additional language visible on the generated site."""
+        if not additional_languages:
+            return SAMPLE_CONF["TRANSLATIONS"]
+        cfg = """{
+    DEFAULT_LANG: "","""
+        for lang in sorted(additional_languages):
+            cfg += """
+    "%s": "./%s",""" % (lang,lang)
+        cfg += """
+}"""
+        return cfg
 
 
 def get_text_tag(tag, name, default):
