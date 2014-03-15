@@ -51,7 +51,7 @@ from nikola import utils
 from nikola.utils import req_missing
 from nikola.plugins.basic_import import ImportMixin, links
 from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
-from nikola.plugins.command.init import SAMPLE_CONF, prepare_config
+from nikola.plugins.command.init import SAMPLE_CONF, prepare_config, format_default_translations_config
 
 LOGGER = utils.get_logger('import_wordpress', utils.STDERR_HANDLER)
 
@@ -167,7 +167,7 @@ class CommandImportWordpress(Command, ImportMixin):
 
         self.import_posts(channel)
 
-        self.context['TRANSLATIONS'] = self.configure_translations(
+        self.context['TRANSLATIONS'] = format_default_translations_config(
             self.extra_languages)
         self.context['REDIRECTIONS'] = self.configure_redirections(
             self.url_map)
@@ -492,20 +492,6 @@ class CommandImportWordpress(Command, ImportMixin):
     def import_posts(self, channel):
         for item in channel.findall('item'):
             self.process_item(item)
-
-    def configure_translations(self, additional_languages):
-        """Return the string to configure the TRANSLATIONS config variable to
-        make each additional language visible on the generated site."""
-        if not additional_languages:
-            return SAMPLE_CONF["TRANSLATIONS"]
-        cfg = """{
-    DEFAULT_LANG: "","""
-        for lang in sorted(additional_languages):
-            cfg += """
-    "%s": "./%s",""" % (lang, lang)
-        cfg += """
-}"""
-        return cfg
 
 
 def get_text_tag(tag, name, default):

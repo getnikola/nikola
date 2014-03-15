@@ -469,26 +469,6 @@ You can use the <a title="Jenkins Plugin: Violations" href="https://wiki.jenkins
         self.assertEqual(1, len(redirections))
         self.assertTrue(('somewhere/else/index.html', '/posts/somewhereelse.html') in redirections)
 
-    def test_configure_translations_without_additional_languages(self):
-        """
-        Testing the configuration of the translation when no additional language has been found.
-        """
-        translations_cfg = self.import_command.configure_translations(set())
-        self.assertEqual(self.module.SAMPLE_CONF["TRANSLATIONS"],
-                         translations_cfg)
-
-    def test_configure_translations_with_2_additional_languages(self):
-        """
-        Testing the configuration of the translation when no additional language has been found.
-        """
-        translations_cfg = self.import_command.configure_translations(
-            set(["es", "en"]))
-        self.assertEqual("""{
-    DEFAULT_LANG: "",
-    "en": "./en",
-    "es": "./es",
-}""", translations_cfg)
-
 
 if __name__ == '__main__':
     unittest.main()
