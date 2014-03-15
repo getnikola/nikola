@@ -31,7 +31,6 @@ import os
 import sys
 
 from blinker import signal
-import pytz
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -270,8 +269,7 @@ class CommandNewPost(Command):
         self.site.scan_posts()
         timeline = self.site.timeline
         last_date = None if not timeline else timeline[0].date
-        tz = pytz.timezone(self.site.config['TIMEZONE'])
-        date = get_date(schedule, rule, last_date, force_today, tz)
+        date = get_date(schedule, rule, last_date, force_today, self.site.tzinfo)
         data = [title, slug, date, tags]
         output_path = os.path.dirname(entry[0])
         meta_path = os.path.join(output_path, slug + ".meta")

@@ -354,6 +354,10 @@ class Nikola(object):
         if self.config['BASE_URL'] and self.config['BASE_URL'][-1] != '/':
             utils.LOGGER.warn("Your BASE_URL doesn't end in / -- adding it.")
 
+        # We use one global tzinfo object all over Nikola.
+        self.tzinfo = pytz.timezone(self.config['TIMEZONE'])
+        self.config['__tzinfo__'] = self.tzinfo
+
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,
             "Task": Task,

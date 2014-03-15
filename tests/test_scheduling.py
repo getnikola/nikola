@@ -10,7 +10,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from .base import BaseTestCase
 import datetime
-from nose.plugins.skip import SkipTest
+import pytest
+
 try:
     from freezegun import freeze_time
     _freeze_time = True
@@ -25,13 +26,11 @@ RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
 RULE_FR = 'RRULE:FREQ=WEEKLY;BYDAY=FR'
 
 
+@pytest.mark.skipif(not _freeze_time, reason="freezegun not installed.")
 class TestScheduling(BaseTestCase):
 
     @classmethod
     def setUp(self):
-        if not _freeze_time:
-            raise SkipTest('freezegun not installed')
-
         d = [name for name in sys.modules if name.startswith("six.moves.")]
         self.deleted = {}
         for name in d:

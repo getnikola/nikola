@@ -73,11 +73,7 @@ DEFAULT_LANG = ${DEFAULT_LANG}
 # What other languages do you have?
 # The format is {"translationcode" : "path/to/translation" }
 # the path will be used as a prefix for the generated pages location
-TRANSLATIONS = {
-    DEFAULT_LANG: "",
-    # Example for another language:
-    # "es": "./es",
-}
+TRANSLATIONS = ${TRANSLATIONS}
 
 # What will translated input files be named like?
 

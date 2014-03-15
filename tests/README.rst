@@ -70,10 +70,9 @@ How to execute the tests
 
 The command to execute tests is::
 
-    nosetests --with-coverage --cover-package=nikola --with-doctest --doctest-options=+NORMALIZE_WHITESPACE --logging-filter=-yapsy
+    doit coverage
 
-However, this command may change at any given moment.  Check the
-``/.travis.yml`` file to get the current command.
+Note that Travis does not use this command — and as such, differences between the two may appear.
 
 In Windows you want to drop the doctests parts, they fail over trivial differences in OS details.
 

@@ -4,7 +4,10 @@ New in master
 Features
 --------
 
-* `nikola console` allows for interpreter choice via -b, -i, -p; moreover,
+* ``nikola import_wordpress`` now has a ``--qtranslate`` option, to parse posts
+  in the qtranslate wordpress plugin format and turn them into multilingual
+  Nikola posts (Issue #1072)
+* ``nikola console`` allows for interpreter choice via -b, -i, -p; moreover,
   support for bpython is not deprecated anymore (Issue #1126)
 * Changed the default TRANSLATIONS_PATTERN to "{path}.{lang}.{ext}". (Issues
   #990, #829)
@@ -40,6 +43,12 @@ Features
 Bugfixes
 --------
 
+* The ``init`` command and the importers now always output to the CWD.
+  Previously, if you had a ``conf.py`` file higher in the directory structure,
+  Nikola would put the output of those commands in the directory that contained
+  the file. (Issue #1132)
+* Files with non-ASCII characters in filenames are copied only when needed, and
+  not every build (Issue #1129)
 * Split Twitter Cards and Open Graph, enable the latter by default
 * Load html5shiv.js from remote or local server depending on USE_CDN option
 * Logging configuration has been fixed.  The stderr handler can now
