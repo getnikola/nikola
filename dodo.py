@@ -60,6 +60,7 @@ def task_doctest():
     """run doctests with py.test"""
     return {
         'actions': ['py.test --doctest-modules nikola/'],
+        'verbosity': 2,
     }
 
 
@@ -72,7 +73,7 @@ def task_test():
 
 
 def task_coverage():
-    """run unit-tests using nose"""
+    """run unit-tests using py.test, with coverage reporting"""
     return {
         'task_dep': ['locale', 'doctest'],
         'actions': ['py.test --cov nikola --cov-report term-missing tests/'],

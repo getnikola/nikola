@@ -22,6 +22,7 @@ install:
   - "if [[ $NMODE == 'nikola' ]]; then pip install .; fi"
   - "if [[ $NMODE == 'flake8' ]]; then pip install flake8; fi"
 # We run tests and nikola (to see if the command is executable) OR flake8.
+# WARNING: if you edit this, make sure to replicate your changes in dodo.py.
 script:
   - "if [[ $NMODE == 'nikola' ]]; then py.test --doctest-modules nikola/; fi"
   - "if [[ $NMODE == 'nikola' ]]; then py.test --cov nikola --cov-report term-missing tests/; fi"

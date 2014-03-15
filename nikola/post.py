@@ -89,7 +89,7 @@ class Post(object):
         self.compiler = compiler
         self.compile_html = self.compiler.compile_html
         self.demote_headers = self.compiler.demote_headers and self.config['DEMOTE_HEADERS']
-        tzinfo = pytz.timezone(self.config['TIMEZONE'])
+        tzinfo = self.config['__tzinfo__']
         if self.config['FUTURE_IS_NOW']:
             self.current_time = None
         else:
@@ -288,7 +288,8 @@ class Post(object):
         if self.meta[lang]['author']:
             author = self.meta[lang]['author']
         else:
-            author = self.config['BLOG_AUTHOR']
+            author = self.config['BLOG_AUTHOR'](lang)
+
         return author
 
     def description(self, lang=None):

@@ -12,7 +12,7 @@ import unittest
 import mock
 import lxml.html
 from nikola.post import get_meta
-from nikola.utils import demote_headers
+from nikola.utils import demote_headers, TranslatableSetting
 
 
 class dummy(object):
@@ -232,6 +232,170 @@ class HeaderDemotionTest(unittest.TestCase):
         outdoc = lxml.html.fromstring(expected_output)
         demote_headers(doc, -1)
         self.assertEquals(lxml.html.tostring(outdoc), lxml.html.tostring(doc))
+
+
+class TranslatableSettingsTest(unittest.TestCase):
+    """Tests for translatable settings."""
+
+    def test_string_input(self):
+        """Tests for string input."""
+        inp = 'Fancy Blog'
+        S = TranslatableSetting('S', inp)
+        S.default_lang = 'xx'
+        S.lang = 'xx'
+
+        try:
+            u = unicode(S)
+        except NameError:  # Python 3
+            u = str(S)
+
+        cn = S()      #   no language specified
+        cr = S('xx')  # real language specified
+        cf = S('zz')  # fake language specified
+
+        self.assertEqual(inp, u)
+        self.assertEqual(inp, cn)
+        self.assertEqual(inp, cr)
+        self.assertEqual(inp, cf)
+        self.assertEqual(S.lang, 'xx')
+        self.assertEqual(S.default_lang, 'xx')
+
+    def test_dict_input(self):
+        """Tests for dict input."""
+        inp = {'xx': 'Fancy Blog',
+               'zz': 'Schmancy Blog'}
+
+        S = TranslatableSetting('S', inp)
+        S.default_lang = 'xx'
+        S.lang = 'xx'
+
+        try:
+            u = unicode(S)
+        except NameError:  # Python 3
+            u = str(S)
+
+        cn = S()
+        cx = S('xx')
+        cz = S('zz')
+        cf = S('ff')
+
+        self.assertEqual(inp['xx'], u)
+        self.assertEqual(inp['xx'], cn)
+        self.assertEqual(inp['xx'], cx)
+        self.assertEqual(inp['zz'], cz)
+        self.assertEqual(inp['xx'], cf)
+
+    def test_dict_input_lang(self):
+        """Test dict input, with a language change along the way."""
+        inp = {'xx': 'Fancy Blog',
+               'zz': 'Schmancy Blog'}
+
+        S = TranslatableSetting('S', inp)
+        S.default_lang = 'xx'
+        S.lang = 'xx'
+
+        try:
+            u = unicode(S)
+        except NameError:  # Python 3
+            u = str(S)
+
+        cn = S()
+
+        self.assertEqual(inp['xx'], u)
+        self.assertEqual(inp['xx'], cn)
+
+        # Change the language.
+        # WARNING: DO NOT set lang locally in real code!  Set it globally
+        #          instead! (TranslatableSetting.lang = ...)
+        # WARNING: TranslatableSetting.lang is used to override the current
+        #          locale settings returned by LocaleBorg!  Use with care!
+        S.lang = 'zz'
+
+        try:
+            u = unicode(S)
+        except NameError:  # Python 3
+            u = str(S)
+
+        cn = S()
+
+        self.assertEqual(inp['zz'], u)
+        self.assertEqual(inp['zz'], cn)
+
+    def test_dict_input_default_lang(self):
+        """Test dict input, with a default language change along the way."""
+        inp = {'xx': 'Fancy Blog',
+               'zz': 'Schmancy Blog'}
+
+        S = TranslatableSetting('S', inp)
+        S.default_lang = 'xx'
+        S.lang = 'xx'
+
+        try:
+            u = unicode(S)
+        except NameError:  # Python 3
+            u = str(S)
+
+        cn = S()
+
+        self.assertEqual(inp['xx'], u)
+        self.assertEqual(inp['xx'], cn)
+
+        # Change the default language.
+        # WARNING: DO NOT set default_lang locally in real code!
+        #          Set it globally instead!
+        S.default_lang = 'zz'
+
+        try:
+            u = unicode(S)
+        except NameError:  # Python 3
+            u = str(S)
+
+        cn = S()
+        cf = S('ff')
+
+        self.assertEqual(inp['xx'], u)
+        self.assertEqual(inp['xx'], cn)
+        self.assertEqual(inp['zz'], cf)
+
+    def test_dict_input_both_langs(self):
+        """Test dict input, with both languages changed along the way."""
+        inp = {'xx': 'Fancy Blog',
+               'yy': 'Dancy Blog',
+               'zz': 'Schmancy Blog'}
+
+        S = TranslatableSetting('S', inp)
+        S.default_lang = 'xx'
+        S.lang = 'xx'
+
+        try:
+            u = unicode(S)
+        except NameError:  # Python 3
+            u = str(S)
+
+        cn = S()
+
+        self.assertEqual(inp['xx'], u)
+        self.assertEqual(inp['xx'], cn)
+
+        # Change the default language.
+        # WARNING: DO NOT set those locally in real code!
+        #          Set it globally instead!
+        # WARNING: TranslatableSetting.lang is used to override the current
+        #          locale settings returned by LocaleBorg!  Use with care!
+        S.default_lang = 'zz'
+        S.lang = 'yy'
+
+        try:
+            u = unicode(S)
+        except NameError:  # Python 3
+            u = str(S)
+
+        cn = S()
+        cf = S('ff')
+
+        self.assertEqual(inp['yy'], u)
+        self.assertEqual(inp['yy'], cn)
+        self.assertEqual(inp['zz'], cf)
 
 
 if __name__ == '__main__':

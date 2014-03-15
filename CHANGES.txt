@@ -5,6 +5,25 @@ Features
 --------
 
 * Added invariance testing (Issue #672)
+* ``nikola import_wordpress`` now has a ``--qtranslate`` option, to parse posts
+  in the qtranslate wordpress plugin format and turn them into multilingual
+  Nikola posts (Issue #1072)
+* ``nikola console`` allows for interpreter choice via -b, -i, -p; moreover,
+  support for bpython is not deprecated anymore (Issue #1126)
+* Changed the default TRANSLATIONS_PATTERN to "{path}.{lang}.{ext}". (Issues
+  #990, #829)
+* Backwards compatibility with v5 is broken.  Added backwards-incompatible
+  changes. (Issue #829)
+* Added a ``CONTENT_FOOTER_FORMATS`` config option.  It is used to format
+  the ``CONTENT_FOOTER`` variable properly, for compatibility with
+  the Translatable Settings feature.  The variable takes a dict, the keys
+  of which are languages, and values are (args, kwargs). (Issue #1112)
+* Certain settings are now translatable.  As of now, the settings are:
+  BLOG_AUTHOR, BLOG_TITLE, BLOG_DESCRIPTION, LICENSE, CONTENT_FOOTER,
+  SOCIAL_BUTTONS_CODE, SEARCH_FORM, BODY_END, EXTRA_HEAD_DATA
+  (the up-to-date list is available in SITE.TRANSLATABLE_SETTINGS)
+  (Issues #851, #1057, #1061, #1112)
+>>>>>>> master
 * New Post.author() returns meta 'author' or BLOG_AUTHOR (Issue #1117)
 * Ship base-jinja, bootstrap-jinja, bootstrap3-jinja with Nikola (Issue #1104)
 * Fix dependency issue in listings (Issue #1032)
@@ -26,6 +45,16 @@ Features
 Bugfixes
 --------
 
+* The ``init`` command and the importers now always output to the CWD.
+  Previously, if you had a ``conf.py`` file higher in the directory structure,
+  Nikola would put the output of those commands in the directory that contained
+  the file. (Issue #1132)
+* Files with non-ASCII characters in filenames are copied only when needed, and
+  not every build (Issue #1129)
+* Logging configuration has been fixed.  The stderr handler can now
+  only be set to DEBUG or INFO (any higher levels are corrected as INFO), and
+  unwanted (i.e. DEBUG) messages are not shown, as intended. (Issue #1111)
+* Catch keyboard exit while serving so traceback does not show (Issue #1124)
 * Support rescanning posts in the Nikola class (Issue #1099)
 * Use TIMEZONE with ``nikola new_post`` and ``nikola new_page``. (Issue #1088)
 

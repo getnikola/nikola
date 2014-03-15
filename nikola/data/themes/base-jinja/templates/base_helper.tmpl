@@ -55,11 +55,6 @@
     {{ social_buttons_code }}
 {% endmacro %}
 
-<!--FIXME: remove in v7 -->
-{% macro html_sidebar_links() %}
-    {{ html_navigation_links() }}
-{% endmacro %}
-
 {% macro html_navigation_links() %}
     {% for url, text in navigation_links[lang] %}
         {% if url is mapping %}

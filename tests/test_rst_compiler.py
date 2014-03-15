@@ -43,7 +43,7 @@ import tempfile
 
 import docutils
 from lxml import html
-from nose.plugins.skip import SkipTest
+import pytest
 import unittest
 from yapsy.PluginManager import PluginManager
 
@@ -219,17 +219,17 @@ class GistTestCase(ReSTExtensionTestCase):
         self.gist_type.get_raw_gist = lambda *_: "raw_gist"
         _reload(nikola.plugins.compile.rest)
 
+    @pytest.mark.skipif(True, reason="This test indefinitely skipped.")
     def test_gist(self):
         """ Test the gist directive with filename """
-        raise SkipTest
         self.setHtmlFromRst(self.sample)
         output = 'https://gist.github.com/fake_id.js?file=spam.py'
         self.assertHTMLContains("script", attributes={"src": output})
         self.assertHTMLContains("pre", text="raw_gist_file")
 
+    @pytest.mark.skipif(True, reason="This test indefinitely skipped.")
     def test_gist_without_filename(self):
         """ Test the gist directive without filename """
-        raise SkipTest
         self.setHtmlFromRst(self.sample_without_filename)
         output = 'https://gist.github.com/fake_id2.js'
         self.assertHTMLContains("script", attributes={"src": output})

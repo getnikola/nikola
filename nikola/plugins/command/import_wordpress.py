@@ -51,7 +51,7 @@ from nikola import utils
 from nikola.utils import req_missing
 from nikola.plugins.basic_import import ImportMixin, links
 from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
-from nikola.plugins.command.init import SAMPLE_CONF, prepare_config
+from nikola.plugins.command.init import SAMPLE_CONF, prepare_config, format_default_translations_config
 
 LOGGER = utils.get_logger('import_wordpress', utils.STDERR_HANDLER)
 
@@ -136,6 +136,9 @@ class CommandImportWordpress(Command, ImportMixin):
         self.separate_qtranslate_content = options.get('separate_qtranslate_content')
         self.translations_pattern = options.get('translations_pattern')
 
+        # A place holder where extra language (if detected) will be stored
+        self.extra_languages = set()
+
         if not self.no_downloads:
             def show_info_about_mising_module(modulename):
                 LOGGER.error(
@@ -164,6 +167,8 @@ class CommandImportWordpress(Command, ImportMixin):
 
         self.import_posts(channel)
 
+        self.context['TRANSLATIONS'] = format_default_translations_config(
+            self.extra_languages)
         self.context['REDIRECTIONS'] = self.configure_redirections(
             self.url_map)
         self.write_urlmap_csv(
@@ -452,6 +457,7 @@ class CommandImportWordpress(Command, ImportMixin):
                         out_content_filename \
                             = utils.get_translation_candidate(self.context,
                                                               slug + ".wp", lang)
+                        self.extra_languages.add(lang)
                     meta_slug = slug
                 else:
                     out_meta_filename = slug + '.meta'

@@ -84,9 +84,10 @@ class GenerateRSS(Task):
                 'file_dep': deps,
                 'targets': [output_name],
                 'actions': [(utils.generic_rss_renderer,
-                            (lang, kw["blog_title"], kw["site_url"],
-                             kw["blog_description"], posts, output_name,
+                            (lang, kw["blog_title"](lang), kw["site_url"],
+                             kw["blog_description"](lang), posts, output_name,
                              kw["rss_teasers"], kw["rss_plain"], kw['feed_length'], feed_url))],
+
                 'task_dep': ['render_posts'],
                 'clean': True,
                 'uptodate': [utils.config_changed(kw)],

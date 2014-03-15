@@ -31,7 +31,6 @@ import os
 import sys
 import subprocess
 import time
-import pytz
 
 from blinker import signal
 
@@ -124,11 +123,9 @@ class CommandDeploy(Command):
             'undeployed': undeployed
         }
 
-        tzinfo = pytz.timezone(self.site.config['TIMEZONE'])
-
         deployed = [
             entry for entry in self.site.timeline
-            if entry.date > (last_deploy.replace(tzinfo=tzinfo) if tzinfo else last_deploy) and entry not in undeployed
+            if entry.date > last_deploy.replace(tzinfo=self.site.tzinfo) and entry not in undeployed
         ]
 
         event['deployed'] = deployed

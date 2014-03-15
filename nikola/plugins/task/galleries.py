@@ -508,6 +508,7 @@ class Galleries(Task):
             generator='http://getnikola.com/',
             language=lang
         )
+        rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
         dst_dir = os.path.dirname(output_path)
         utils.makedirs(dst_dir)
         with codecs.open(output_path, "wb+", "utf-8") as rss_file:
