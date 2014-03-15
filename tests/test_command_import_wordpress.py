@@ -15,6 +15,7 @@ import nikola
 import nikola.plugins.command.import_wordpress
 from .base import BaseTestCase
 
+
 class BasicCommandImportWordpress(BaseTestCase):
     def setUp(self):
         self.module = nikola.plugins.command.import_wordpress
@@ -77,7 +78,7 @@ Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
 
 Comments, questions and suggestions are welcome !
 """, content_translations["en"])
-        
+
     def test_split_a_two_language_post_with_teaser(self):
         content = """<!--:fr-->Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
 
@@ -468,7 +469,6 @@ You can use the <a title="Jenkins Plugin: Violations" href="https://wiki.jenkins
         self.assertEqual(1, len(redirections))
         self.assertTrue(('somewhere/else/index.html', '/posts/somewhereelse.html') in redirections)
 
-
     def test_configure_translations_without_additional_languages(self):
         """
         Testing the configuration of the translation when no additional language has been found.
@@ -476,18 +476,19 @@ You can use the <a title="Jenkins Plugin: Violations" href="https://wiki.jenkins
         translations_cfg = self.import_command.configure_translations(set())
         self.assertEqual(self.module.SAMPLE_CONF["TRANSLATIONS"],
                          translations_cfg)
-        
+
     def test_configure_translations_with_2_additional_languages(self):
         """
         Testing the configuration of the translation when no additional language has been found.
         """
         translations_cfg = self.import_command.configure_translations(
-            set(["es","en"]))
+            set(["es", "en"]))
         self.assertEqual("""{
     DEFAULT_LANG: "",
     "en": "./en",
     "es": "./es",
-}""",translations_cfg)
-        
+}""", translations_cfg)
+
+
 if __name__ == '__main__':
     unittest.main()

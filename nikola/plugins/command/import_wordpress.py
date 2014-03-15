@@ -135,7 +135,7 @@ class CommandImportWordpress(Command, ImportMixin):
 
         self.separate_qtranslate_content = options.get('separate_qtranslate_content')
         self.translations_pattern = options.get('translations_pattern')
-        
+
         # A place holder where extra language (if detected) will be stored
         self.extra_languages = set()
 
@@ -164,7 +164,7 @@ class CommandImportWordpress(Command, ImportMixin):
         # need to fix the config
         if self.translations_pattern:
             self.context['TRANSLATIONS_PATTERN'] = self.translations_pattern
-        
+
         self.import_posts(channel)
 
         self.context['TRANSLATIONS'] = self.configure_translations(
@@ -493,7 +493,7 @@ class CommandImportWordpress(Command, ImportMixin):
         for item in channel.findall('item'):
             self.process_item(item)
 
-    def configure_translations(self,additional_languages):
+    def configure_translations(self, additional_languages):
         """Return the string to configure the TRANSLATIONS config variable to
         make each additional language visible on the generated site."""
         if not additional_languages:
@@ -502,7 +502,7 @@ class CommandImportWordpress(Command, ImportMixin):
     DEFAULT_LANG: "","""
         for lang in sorted(additional_languages):
             cfg += """
-    "%s": "./%s",""" % (lang,lang)
+    "%s": "./%s",""" % (lang, lang)
         cfg += """
 }"""
         return cfg
