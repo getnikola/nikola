@@ -92,7 +92,7 @@ def prepare_config(config):
     """Parse sample config with JSON."""
     p = config.copy()
     p.update(dict((k, json.dumps(v)) for k, v in p.items()
-                  if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS')))
+             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS')))
     return p
 
 
