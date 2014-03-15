@@ -94,7 +94,7 @@ def format_default_translations_config(additional_languages):
     lang_paths = ['    DEFAULT_LANG: "",']
     for lang in sorted(additional_languages):
         lang_paths.append('    "{0}": "./{0}",'.format(lang))
-    return "{\n%s\n}" % ("\n".join(lang_paths))
+    return "{{\n{0}\n}}".format("\n".join(lang_paths))
 
 
 # In order to ensure proper escaping, all variables but the three
