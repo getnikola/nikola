@@ -1,23 +1,4 @@
 ## -*- coding: utf-8 -*-
-<%def name="html_title()">
-    <h1 class="p-name entry-title" itemprop="headline name">${title|h}</h1>
-    % if link:
-            <p><a href='${link}'>${messages("Original site")}</a></p>
-    % endif
-</%def>
-
-
-<%def name="html_translations(post)">
-    %if len(translations) > 1:
-        <ul class="translations">
-        %for langname in translations.keys():
-            %if langname != lang and post.is_translation_available(langname):
-                <li><a href="${post.permalink(langname)}" rel="alternate" hreflang="${langname}">${messages("Read in English", langname)}</a></li>
-            %endif
-        %endfor
-        </ul>
-    %endif
-</%def>
 
 <%def name="meta_translations(post)">
     %if len(translations) > 1:

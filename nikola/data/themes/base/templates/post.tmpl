@@ -1,5 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%namespace name="helper" file="post_helper.tmpl"/>
+<%namespace name="header" file="post_header.tmpl"/>
 <%namespace name="comments" file="comments_helper.tmpl"/>
 <%inherit file="base.tmpl"/>
 
@@ -15,22 +16,7 @@ ${helper.meta_translations(post)}
 
 <%block name="content">
     <article class="post-${post.meta('type')} h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article">
-    <header>
-        ${helper.html_title()}
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">${post.author()}</span></p>
-            <p class="dateline"><a href="${post.permalink()}" rel="bookmark"><time class="published dt-published" datetime="${post.date.isoformat()}" itemprop="datePublished" title="${messages("Publication date")}">${post.formatted_date(date_format)}</time></a></p>
-            ${helper.html_translations(post)}
-            <%block name="sourcelink">
-                % if not post.meta('password'):
-                    <p class="sourceline"><a href="${post.source_link()}" id="sourcelink">${messages("Source")}</a></p>
-                % endif
-            </%block>
-            %if post.description():
-                <meta content="${post.description()}" itemprop="description">
-            %endif
-        </div>
-    </header>
+    ${header.html_post_header()}
     <div class="e-content entry-content" itemprop="articleBody text">
     ${post.text()}
     </div>
