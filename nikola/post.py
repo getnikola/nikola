@@ -99,7 +99,7 @@ class Post(object):
         self._next_post = None
         self.base_url = self.config['BASE_URL']
         self.is_draft = False
-        self.is_retired = False
+        self.is_private = False
         self.is_mathjax = False
         self.strip_indexes = self.config['STRIP_INDEXES']
         self.index_file = self.config['INDEX_FILE']
@@ -169,7 +169,7 @@ class Post(object):
         self.publish_later = False if self.current_time is None else self.date >= self.current_time
 
         is_draft = False
-        is_retired = False
+        is_private = False
         self._tags = {}
         for lang in self.translated_to:
             self._tags[lang] = [x.strip() for x in self.meta[lang]['tags'].split(',')]
@@ -177,18 +177,23 @@ class Post(object):
             if 'draft' in self._tags[lang]:
                 is_draft = True
                 self._tags[lang].remove('draft')
+
+            # TODO: remove in v8
             if 'retired' in self._tags[lang]:
-                is_retired = True
+                is_private = True
+                LOGGER.warning('The "retired" tag in post "{0}" is now deprecated and will be removed in v8.  Use "private" instead.'.format(self.source_path))
                 self._tags[lang].remove('retired')
+            # end remove in v8
+
             if 'private' in self._tags[lang]:
-                is_retired = True
+                is_private = True
                 self._tags[lang].remove('private')
 
         # While draft comes from the tags, it's not really a tag
         self.is_draft = is_draft
-        self.is_retired = is_retired
+        self.is_private = is_private
         self.is_post = use_in_feeds
-        self.use_in_feeds = use_in_feeds and not is_draft and not is_retired \
+        self.use_in_feeds = use_in_feeds and not is_draft and not is_private \
             and not self.publish_later
 
         # If mathjax is a tag, then enable mathjax rendering support
