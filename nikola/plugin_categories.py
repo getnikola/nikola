@@ -135,6 +135,7 @@ class BaseTask(BasePlugin):
 class Task(BaseTask):
     """Plugins of this type are task generators."""
 
+    name = "dummy_task"
 
 class LateTask(BaseTask):
     """Plugins of this type are executed after all plugins of type Task."""
@@ -145,15 +146,11 @@ class LateTask(BaseTask):
 class TemplateSystem(BasePlugin):
     """Plugins of this type wrap templating systems."""
 
-    name = "dummy templates"
+    name = "dummy_templates"
 
     def set_directories(self, directories, cache_folder):
         """Sets the list of folders where templates are located and cache."""
         raise NotImplementedError()
-
-    def set_site(self, site):
-        """Sets the site."""
-        self.site = site
 
     def template_deps(self, template_name):
         """Returns filenames which are dependencies for a template."""
