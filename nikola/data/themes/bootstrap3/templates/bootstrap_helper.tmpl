@@ -1,14 +1,7 @@
+## -*- coding: utf-8 -*-
 ## Override only the functions that differ from base_helper.tmpl
 
-<%def name="html_head()">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    %if description:
-    <meta name="description" content="${description}">
-    %endif
-    <meta name="author" content="${blog_author}">
-    <title>${title|striphtml} | ${blog_title|striphtml}</title>
-    ${mathjax_config}
+<%block name="html_stylesheets">
     %if use_bundles:
         %if use_cdn:
             <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
@@ -30,33 +23,14 @@
             <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
         %endif
     %endif
-    %if permalink:
-      <link rel="canonical" href="${abs_link(permalink)}">
-    %endif
-    %if use_cdn:
-        <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-    %else:
-        <!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]-->
-    %endif
-    %if rss_link:
-        ${rss_link}
-    %else:
-        %if len(translations) > 1:
-            %for language in translations:
-                <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${_link('rss', None, language)}">
-            %endfor
-        %else:
-            <link rel="alternate" type="application/rss+xml" title="RSS" href="${_link('rss', None)}">
-        %endif
-    %endif
-    %if favicons:
-        %for name, file, size in favicons:
-            <link rel="${name}" href="${file}" sizes="${size}"/>
-        %endfor
-    %endif
-</%def>
+    % if annotations and post and not post.meta('noannotations'):
+        ${notes.css()}
+    % elif not annotations and post and post.meta('annotations'):
+        ${notes.css()}
+    % endif
+</%block>
 
-<%def name="late_load_js()">
+<%block name="late_load_js">
     %if use_bundles:
         %if use_cdn:
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -75,10 +49,10 @@
         %endif
         <script src="/assets/js/jquery.colorbox-min.js"></script>
     %endif
-</%def>
+    ${social_buttons_code}
+</%block>
 
-
-<%def name="html_navigation_links()">
+<%block name="html_navigation_links">
     %for url, text in navigation_links[lang]:
         % if isinstance(url, tuple):
             <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">${text}<b class="caret"></b></a>
@@ -99,13 +73,4 @@
             %endif
         % endif
     %endfor
-</%def>
-
-
-<%def name="html_translations()">
-    %for langname in translations.keys():
-        %if langname != lang:
-            <li><a href="${_link("index", None, langname)}" rel="alternate" hreflang="${langname}">${messages("LANGUAGE", langname)}</a></li>
-        %endif
-    %endfor
-</%def>
+</%block>

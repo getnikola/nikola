@@ -23,8 +23,43 @@ lang="${lang}">
     %if description:
     <meta name="description" content="${description}">
     %endif
+    <meta name="viewport" content="width=device-width">
     <title>${title|striphtml} | ${blog_title|striphtml}</title>
 
+    ${self.html_stylesheets()}
+    ${self.html_feedlinks()}
+    %if permalink:
+      <link rel="canonical" href="${abs_link(permalink)}">
+    %endif
+
+    %if favicons:
+        %for name, file, size in favicons:
+            <link rel="${name}" href="${file}" sizes="${size}"/>
+        %endfor
+    %endif
+
+    % if comment_system == 'facebook':
+        <meta property="fb:app_id" content="${comment_system_id}">
+    % endif
+
+    ${mathjax_config}
+    %if use_cdn:
+        <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    %else:
+        <!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]-->
+    %endif
+
+    <%block name="extra_head"></%block>
+    ${extra_head_data}
+    </head>
+</%block>
+
+<%block name="late_load_js">
+
+    ${social_buttons_code}
+</%block>
+
+<%block name="html_stylesheets">
     %if use_bundles:
         %if use_cdn:
             <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
@@ -39,37 +74,6 @@ lang="${lang}">
             <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
         %endif
     %endif
-    %if permalink:
-      <link rel="canonical" href="${abs_link(permalink)}">
-    %endif
-
-    %if use_cdn:
-        <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-    %else:
-        <!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]-->
-    %endif
-
-    ${self.html_feedlinks()}
-
-    %if favicons:
-        %for name, file, size in favicons:
-            <link rel="${name}" href="${file}" sizes="${size}"/>
-        %endfor
-    %endif
-
-    % if comment_system == 'facebook':
-        <meta property="fb:app_id" content="${comment_system_id}">
-    % endif
-
-    ${mathjax_config}
-
-    <%block name="extra_head"></%block>
-    ${extra_head_data}
-    </head>
-</%block>
-
-<%block name="late_load_js">
-    ${social_buttons_code}
 </%block>
 
 <%block name="html_feedlinks">

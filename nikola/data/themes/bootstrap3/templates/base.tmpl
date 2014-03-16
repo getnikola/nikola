@@ -3,25 +3,10 @@
 <%namespace name="bootstrap" file="bootstrap_helper.tmpl" import="*" />
 <%namespace name="notes" file="annotation_helper.tmpl" import="*" />
 ${set_locale(lang)}
-<!DOCTYPE html>
-<html
-%if comment_system == 'facebook':
-xmlns:fb="http://ogp.me/ns/fb#"
-%endif
-lang="${lang}">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    ${bootstrap.html_head()}
-    <%block name="extra_head">
-    </%block>
-    % if annotations and post and not post.meta('noannotations'):
-        ${notes.css()}
-    % elif not annotations and post and post.meta('annotations'):
-        ${notes.css()}
-    % endif
-    ${extra_head_data}
-</head>
+
+${base.html_headstart()}
 <body>
+
 <!-- Menubar -->
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -74,7 +59,6 @@ lang="${lang}">
 </div>
 
 ${bootstrap.late_load_js()}
-${base.html_social()}
     <script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
     <%block name="extra_js"></%block>
     % if annotations and post and not post.meta('noannotations'):
