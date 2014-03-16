@@ -1,11 +1,30 @@
 ## -*- coding: utf-8 -*-
-<%def name="html_head()">
+<%block name="html_headstart">
+<!DOCTYPE html>
+<html
+
+% if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']) or (comment_system == 'facebook'):
+    prefix='
+    %if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']):
+        og: http://ogp.me/ns#
+    %endif
+    %if use_open_graph:
+        article: http://ogp.me/ns/article#
+    %endif
+    %if comment_system == 'facebook':
+        fb: http://ogp.me/ns/fb#
+    %endif
+    '
+%endif
+
+lang="${lang}">
+    <head>
     <meta charset="utf-8">
     %if description:
     <meta name="description" content="${description}">
     %endif
     <title>${title|striphtml} | ${blog_title|striphtml}</title>
-    ${mathjax_config}
+
     %if use_bundles:
         %if use_cdn:
             <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
@@ -30,6 +49,30 @@
         <!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]-->
     %endif
 
+    ${self.html_feedlinks}
+
+    %if favicons:
+        %for name, file, size in favicons:
+            <link rel="${name}" href="${file}" sizes="${size}"/>
+        %endfor
+    %endif
+
+    % if comment_system == 'facebook':
+        <meta property="fb:app_id" content="${comment_system_id}">
+    % endif
+
+    ${mathjax_config}
+
+    <%block name="extra_head"></%block>
+    ${extra_head_data}
+    </head>
+</%block>
+
+<%block name="late_load_js">
+    ${social_buttons_code}
+</%block>
+
+<%block name="html_feedlinks">
     %if rss_link:
         ${rss_link}
     %else:
@@ -41,52 +84,9 @@
             <link rel="alternate" type="application/rss+xml" title="RSS" href="${_link('rss', None)}">
         %endif
     %endif
-    %if favicons:
-        %for name, file, size in favicons:
-            <link rel="${name}" href="${file}" sizes="${size}"/>
-        %endfor
-    %endif
-    % if comment_system == 'facebook':
-        <meta property="fb:app_id" content="${comment_system_id}">
-    % endif
-</%def>
+</%block>
 
-<%def name="late_load_js()">
-</%def>
-
-<%def name="html_social()">
-    ${social_buttons_code}
-</%def>
-
-<%def name="html_navigation_links()">
-    <nav class="menu">
-    <ul>
-    %for url, text in navigation_links[lang]:
-        % if isinstance(url, tuple):
-            <li> ${text}
-            <ul>
-            %for suburl, text in url:
-                % if rel_link(permalink, suburl) == "#":
-                    <li class="active"><a href="${permalink}">${text}</a>
-                %else:
-                    <li><a href="${suburl}">${text}</a>
-                %endif
-            %endfor
-            </ul>
-        % else:
-            % if rel_link(permalink, url) == "#":
-                <li class="active"><a href="${permalink}">${text}</a>
-            %else:
-                <li><a href="${url}">${text}</a>
-            %endif
-        % endif
-    %endfor
-    </ul>
-    </nav>
-</%def>
-
-
-<%def name="html_translations()">
+<%block name="html_translations">
     <ul>
     %for langname in translations.keys():
         %if langname != lang:
@@ -94,4 +94,4 @@
         %endif
     %endfor
     </ul>
-</%def>
+</%block>

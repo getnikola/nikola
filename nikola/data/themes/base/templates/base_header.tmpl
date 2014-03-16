@@ -1,0 +1,53 @@
+## -*- coding: utf-8 -*-
+<%namespace name="base" file="base_helper.tmpl" import="*"/>
+
+<%block name="html_header">
+    <header id="header" role="banner">
+        $(self.html_site_title()}
+        ${self.html_translation_header()}
+        ${self.html_navigation_links()}
+        %if search_form:
+            <div class="searchform">
+                ${search_form}
+            </div>
+        %endif
+    </header>
+</%block>
+
+<%block name="html_site_title">
+    <a href="${abs_link('/')}" title="${blog_title}" rel="home"><h1 id="blog-title">${blog_title}</h1></a>
+</%block>
+
+<%block name="html_navigation_links">
+    <nav id="menu" role="navigation">
+    <ul>
+    %for url, text in navigation_links[lang]:
+        % if isinstance(url, tuple):
+            <li> ${text}
+            <ul>
+            %for suburl, text in url:
+                % if rel_link(permalink, suburl) == "#":
+                    <li class="active"><a href="${permalink}">${text}</a>
+                %else:
+                    <li><a href="${suburl}">${text}</a>
+                %endif
+            %endfor
+            </ul>
+        % else:
+            % if rel_link(permalink, url) == "#":
+                <li class="active"><a href="${permalink}">${text}</a>
+            %else:
+                <li><a href="${url}">${text}</a>
+            %endif
+        % endif
+    %endfor
+    </ul>
+    </nav>
+</%block>
+
+<%block name="html_translation_header">
+    %if len(translations) > 1:
+        <h2 class="translations">${messages("Also available in:")}</h2>
+        ${base.html_translations()}
+    %endif
+</%block>
