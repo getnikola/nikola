@@ -3,6 +3,7 @@
 <%namespace name="comments" file="comments_helpers.tmpl"/>
 <%inherit file="base.tmpl"/>
 <%block name="content">
+    <div class="postindex">
     % for post in posts:
         <article class="h-entry post-${post.meta('type')}">
         <header>
@@ -24,6 +25,7 @@
         </div>
         </article>
     % endfor
+    </div>
     ${helper.html_pager()}
     ${comments.comment_link_script()}
 	${helper.mathjax_script(posts)}
