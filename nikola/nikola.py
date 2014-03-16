@@ -122,9 +122,11 @@ class Nikola(object):
         if not config:
             self.configured = False
             self.colorful = False
+            self.invariant = False
         else:
             self.configured = True
-            self.colorful = config.pop('__colorful__', False)
+            self.colorful = config.get('__colorful__', False)
+            self.invariant = config.get('__invariant__', False)
 
         ColorfulStderrHandler._colorful = self.colorful
 

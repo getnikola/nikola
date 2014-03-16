@@ -93,19 +93,23 @@ def main(args):
             sys.exit(1)
         config = {}
 
-    config.update({'__colorful__': colorful})
+    invariant = False
 
-    site = Nikola(**config)
-    site.invariant = False
     if len(args) > 0 and args[0] == 'build' and '--invariant' in args:
         try:
             import freezegun
             freeze = freezegun.freeze_time("2014-01-01")
             freeze.start()
-            site.invariant = True
+            invariant = True
         except ImportError:
             req_missing(['freezegun'], 'perform invariant builds')
+
+    config['__colorful__'] = colorful
+    config['__invariant__'] = invariant
+
+    site = Nikola(**config)
     _ = DoitNikola(site, quiet).run(args)
+
     if site.invariant:
         freeze.stop()
     return _
