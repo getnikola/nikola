@@ -52,8 +52,6 @@ url_format = """ <url>
 """
 
 
-
-
 def get_base_path(base):
     """returns the path of a base URL if it contains one.
 
@@ -176,10 +174,9 @@ class Sitemap(LateTask):
         }
         yield task
 
-
     def get_lastmod(self, p):
-        if self.site.invariant: 
-            return datetime.datetime(2014, 1, 1).isoformat().split('T')[0]
+        if self.site.invariant:
+            return '2014-01-01'
         else:
             return datetime.datetime.fromtimestamp(os.stat(p).st_mtime).isoformat().split('T')[0]
 
