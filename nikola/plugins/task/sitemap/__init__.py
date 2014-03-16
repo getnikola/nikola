@@ -132,7 +132,7 @@ class Sitemap(LateTask):
                                 # ignores all XML files except those presumed to be RSS
                                 continue
                         post = self.site.post_per_file.get(path)
-                        if post and (post.is_draft or post.is_retired or post.publish_later):
+                        if post and (post.is_draft or post.is_private or post.publish_later):
                             continue
                         path = path.replace(os.sep, '/')
                         lastmod = self.get_lastmod(real_path)
