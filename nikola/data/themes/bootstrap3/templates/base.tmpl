@@ -31,7 +31,7 @@ ${base.html_headstart()}
             <ul class="nav navbar-nav navbar-right">
                 <%block name="belowtitle">
                 %if len(translations) > 1:
-                    <li>${bootstrap.html_translations()}</li>
+                    <li>${base.html_translations()}</li>
                 %endif
                 </%block>
                 % if show_sourcelink:
