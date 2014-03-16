@@ -74,7 +74,7 @@ class BasePlugin(IPlugin):
         )
         if os.path.isdir(tmpl_dir):
             # Inject tmpl_dir low in the theme chain
-            self.site.template_system.inject_folder(tmpl_dir)
+            self.site.template_system.inject_directory(tmpl_dir)
 
 
 class Command(BasePlugin, DoitCommand):
