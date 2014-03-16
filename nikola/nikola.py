@@ -487,7 +487,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['navigation_links'] = self.config.get('NAVIGATION_LINKS')
 
         self._GLOBAL_CONTEXT['use_open_graph'] = self.config.get(
-            'USE_OPEN_GRAPH', {})
+            'USE_OPEN_GRAPH', True)
         self._GLOBAL_CONTEXT['twitter_card'] = self.config.get(
             'TWITTER_CARD', {})
         self._GLOBAL_CONTEXT['hide_sourcelink'] = not self.config.get(
