@@ -80,12 +80,13 @@ def get_base_path(base):
 
 
 class Sitemap(LateTask):
-    """Generate google sitemap."""
+    """Generate a sitemap."""
 
     name = "sitemap"
 
     def gen_tasks(self):
-        """Generate Google sitemap."""
+        global get_lastmod  # required for invariant hack
+        """Generate a sitemap."""
         kw = {
             "base_url": self.site.config["BASE_URL"],
             "site_url": self.site.config["SITE_URL"],
@@ -103,6 +104,9 @@ class Sitemap(LateTask):
         output = kw['output_folder']
         base_url = kw['base_url']
         mapped_exts = kw['mapped_extensions']
+
+        if self.site.invariant:
+            get_lastmod = lambda p: '2014-01-01'
 
         def scan_locs():
             for root, dirs, files in os.walk(output):

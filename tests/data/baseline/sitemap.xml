@@ -6,142 +6,142 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>http://getnikola.com/2012/index.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/archive.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/categories/blog.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/categories/blog.xml</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/categories/demo.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/categories/demo.xml</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/categories/index.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/categories/nikola.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/categories/nikola.xml</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/categories/python.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/categories/python.xml</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/galleries/demo/index.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/galleries/demo/rss.xml</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/galleries/index.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/galleries/rss.xml</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/index.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/listings/hello.py.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/listings/index.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/posts/welcome-to-nikola.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/rss.xml</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/stories/a-study-in-scarlet.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/stories/about-nikola.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/stories/bootstrap-demo.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/stories/charts.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/stories/creating-a-theme.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/stories/extending.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/stories/handbook.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/stories/internals.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/stories/listings-demo.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/stories/quickref.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/stories/quickstart.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/stories/slides-demo.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/stories/social_buttons.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/stories/theming.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
  <url>
   <loc>http://getnikola.com/stories/upgrading-to-v6.html</loc>
-  <lastmod>2014-03-16</lastmod>
+  <lastmod>2014-01-01</lastmod>
  </url>
 </urlset>
