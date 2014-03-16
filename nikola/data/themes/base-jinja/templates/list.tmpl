@@ -1,16 +1,16 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'base.tmpl' %}
 {% block content %}
-        <!--Body content-->
-        <div class="postbox">
-        <h1>{{ title }}</h1>
+    <article class="listpage">
+        <header>
+            <h1>{{ title }}</h1>
+        </header>
         {% if items %}
-        <ul class="unstyled">
+        <ul class="postlist">
         {% for text, link in items %}
             <li><a href="{{ link }}">{{ text }}</a>
         {% endfor %}
         </ul>
         {% endif %}
-        </div>
-        <!--End of body content-->
+    </article>
 {% endblock %}

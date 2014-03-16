@@ -1,0 +1,17 @@
+{#  -*- coding: utf-8 -*- #}
+{% macro comment_form(url, title, identifier) %}
+<script src="https://apis.google.com/js/plusone.js"></script>
+<div class="g-comments"
+    data-href="{{ url }}"
+    data-first_party_property="BLOGGER"
+    data-view_type="FILTERED_POSTMOD">
+</div>
+{% endmacro %}
+
+{% macro comment_link(link, identifier) %}
+<div class="g-commentcount" data-href="{{ link }}"></div>
+<script src="https://apis.google.com/js/plusone.js"></script>
+{% endmacro %}
+
+{% macro comment_link_script() %}
+{% endmacro %}

@@ -1,0 +1,53 @@
+{#  -*- coding: utf-8 -*- #}
+{% import 'base_helper.tmpl' as base with context %}
+
+{% block html_header %}
+    <header id="header" role="banner">
+        {{ self.html_site_title() }}
+        {{ self.html_translation_header() }}
+        {{ self.html_navigation_links() }}
+        {% if search_form %}
+            <div class="searchform" role="search">
+                {{ search_form }}
+            </div>
+        {% endif %}
+    </header>
+{% endblock %}
+
+{% block html_site_title %}
+    <a href="{{ abs_link('/') }}" title="{{ blog_title }}" rel="home"><h1 id="blog-title">{{ blog_title }}</h1></a>
+{% endblock %}
+
+{% block html_navigation_links %}
+    <nav id="menu" role="navigation">
+    <ul>
+    {% for url, text in navigation_links[lang] %}
+        {% if url is mapping %}
+            <li> {{ text }}
+            <ul>
+            {% for suburl, text in url %}
+                {% if rel_link(permalink, suburl) == "#" %}
+                    <li class="active"><a href="{{ permalink }}">{{ text }}</a></li>
+                {% else %}
+                    <li><a href="{{ suburl }}">{{ text }}</a></li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        {% else %}
+            {% if rel_link(permalink, url) == "#" %}
+                <li class="active"><a href="{{ permalink }}">{{ text }}</a></li>
+            {% else %}
+                <li><a href="{{ url }}">{{ text }}</a></li>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    </ul>
+    </nav>
+{% endblock %}
+
+{% block html_translation_header %}
+    {% if translations|length > 1 %}
+        <h2 class="translations">{{ messages("Also available in:") }}</h2>
+        {{ base.html_translations() }}
+    {% endif %}
+{% endblock %}

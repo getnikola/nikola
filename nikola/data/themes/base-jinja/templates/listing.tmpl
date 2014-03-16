@@ -4,7 +4,7 @@
 {% block content %}
 {{ ui.bar(crumbs) }}
 {% if folders or files %}
-<ul class="unstyled">
+<ul>
 {% for name in folders %}
     <li><a href="{{ name }}"><i class="icon-folder-open"></i> {{ name }}</a>
 {% endfor %}

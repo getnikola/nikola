@@ -11,24 +11,44 @@
 {% endblock %}
 
 {% block content %}
-        <!--Body content-->
-        <div class="postbox">
-        <h1>{{ title }}</h1>
-        {% if translations|length > 1 %}
-            {% for language in translations %}
-                <a href="{{ _link(kind + "_rss", tag, language) }}">RSS ({{ language }})</a>&nbsp;
-            {% endfor %}
+    <article class="tagpage">
+        <header>
+            <h1>{{ title }}</h1>
+            <div class="metadata">
+            {% if translations|length > 1 %}
+                <p class="fe        <header>
+            <h1 class="p-name entry-title"><a href="{{ post.permalink() }}" class="u-url">{{ post.title() }}</h1></a>
+            <div class="metadata">
+                <p class="dateline"><a href="{{ post.permalink() }}" rel="bookmark"><time class="published dt-published" datetime="{{ post.date.isoformat() }}" itemprop="datePublished" title="{{ messages("Publication date") }}">{{ post.formatted_date(date_format) }}</time></a></p>
+                {% if not post.meta('nocomments') %}
+                    {{ comments.comment_link(post.permalink(), post._base_path) }}
+                {% endif %}
+            </div>
+        </header>
+        {% if index_teasers %}
+        <div class="p-summary entry-summary">
+        {{ post.text(teaser_only=True) }}
         {% else %}
-            <a href="{{ _link(kind + "_rss", tag) }}">RSS</a>
+        <div class="e-content entry-content">
+        {{ post.text(teaser_only=False) }}
         {% endif %}
-        <br>
+        </div>
+        </article>edlinks">
+                {% for language in translations %}
+                    <a href="{{ _link(kind + "_rss", tag, language) }}" hreflang="{{ language }}" type="application/rss+xml">RSS ({{ language }})</a>&nbsp;
+                {% endfor %}
+                </p>
+            {% else %}
+                <p class="feedlinks"><a href="{{ _link(kind + "_rss", tag) }}" type="application/rss+xml">RSS</a></p>
+            {% endif %}
+            </div>
+        </header>
         {% if posts %}
-        <ul class="unstyled">
+        <ul class="postlist">
         {% for post in posts %}
-            <li><a href="{{ post.permalink() }}">[{{ post.formatted_date(date_format) }}] {{ post.title() }}</a>
+            <li><a href="{{ post.permalink() }}" class="listtitle">{{ post.title() }}</a> <time class="listdate" datetime="{{ post.date.isoformat() }}" title="{{ messages("Publication date") }}">{{ post.formatted_date(date_format) }}</time></li>
         {% endfor %}
         </ul>
         {% endif %}
-        </div>
-        <!--End of body content-->
+    </article>
 {% endblock %}
