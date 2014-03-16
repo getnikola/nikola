@@ -11,12 +11,29 @@
 </%block>
 
 <%block name="content">
-    <article class="postbox">
+    <article class="tagpage">
         <header>
             <h1>${title}</h1>
             <div class="metadata">
             %if len(translations) > 1:
-                <p class="feedlinks">
+                <p class="fe        <header>
+            <h1 class="p-name entry-title"><a href="${post.permalink()}" class="u-url">${post.title()}</h1></a>
+            <div class="metadata">
+                <p class="dateline"><a href="${post.permalink()}" rel="bookmark"><time class="published dt-published" datetime="${post.date.isoformat()}" itemprop="datePublished" title="${messages("Publication date")}">${post.formatted_date(date_format)}</time></a></p>
+                % if not post.meta('nocomments'):
+                    ${comments.comment_link(post.permalink(), post._base_path)}
+                % endif
+            </div>
+        </header>
+        %if index_teasers:
+        <div class="p-summary entry-summary">
+        ${post.text(teaser_only=True)}
+        %else:
+        <div class="e-content entry-content">
+        ${post.text(teaser_only=False)}
+        %endif
+        </div>
+        </article>edlinks">
                 %for language in translations:
                     <a href="${_link(kind + "_rss", tag, language)}" hreflang="${language}" type="application/rss+xml">RSS (${language})</a>&nbsp;
                 %endfor

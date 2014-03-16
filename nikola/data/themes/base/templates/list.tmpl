@@ -1,16 +1,16 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="base.tmpl"/>
 <%block name="content">
-        <article class="postbox">
+    <article class="listpage">
         <header>
             <h1>${title}</h1>
         </header>
         %if items:
-        <ul>
+        <ul class="postlist">
         % for text, link in items:
             <li><a href="${link}">${text}</a>
         % endfor
         </ul>
         %endif
-        </article>
+    </article>
 </%block>
