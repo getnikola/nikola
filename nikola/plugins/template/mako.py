@@ -81,14 +81,14 @@ class MakoTemplates(TemplateSystem):
         self.directories = directories
         self.cache_dir = cache_dir
         self.create_lookup()
-        
+
     def inject_directory(self, directory):
         """if it's not there, add the directory to the lookup with lowest priority, and
         recreate the lookup."""
         if directory not in self.directories:
             self.directories.append(directory)
             self.create_lookup()
-        
+
     def create_lookup(self):
         """Create a template lookup object."""
         self.lookup = TemplateLookup(
