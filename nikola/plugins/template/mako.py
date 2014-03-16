@@ -50,6 +50,8 @@ class MakoTemplates(TemplateSystem):
     lookup = None
     cache = {}
     filters = {}
+    directories = []
+    cache_dir = None
 
     def get_deps(self, filename):
         text = util.read_file(filename)
@@ -65,7 +67,7 @@ class MakoTemplates(TemplateSystem):
         return deps
 
     def set_directories(self, directories, cache_folder):
-        """Create a template lookup."""
+        """Set directories and create a template lookup."""
         cache_dir = os.path.join(cache_folder, '.mako.tmp')
         # Workaround for a Mako bug, Issue #825
         if sys.version_info[0] == 2:
@@ -74,12 +76,24 @@ class MakoTemplates(TemplateSystem):
             except UnicodeEncodeError:
                 cache_dir = tempfile.mkdtemp()
                 LOGGER.warning('Because of a Mako bug, setting cache_dir to {0}'.format(cache_dir))
-
         if os.path.exists(cache_dir):
             shutil.rmtree(cache_dir)
+        self.directories = directories
+        self.cache_dir = cache_dir
+        self.create_lookup()
+        
+    def inject_directory(self, directory):
+        """if it's not there, add the directory to the lookup with lowest priority, and
+        recreate the lookup."""
+        if directory not in self.directories:
+            self.directories.append(directory)
+            self.create_lookup()
+        
+    def create_lookup(self):
+        """Create a template lookup object."""
         self.lookup = TemplateLookup(
-            directories=directories,
-            module_directory=cache_dir,
+            directories=self.directories,
+            module_directory=self.cache_dir,
             output_encoding='utf-8')
 
     def set_site(self, site):
