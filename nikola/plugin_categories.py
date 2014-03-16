@@ -63,12 +63,12 @@ class BasePlugin(IPlugin):
         """If this plugin contains a 'templates' folder,
         then templates/mako or templates/jinja will be inserted very early in
         the theme chain."""
-        
+
         # Sorry, found no other way to get this
         mod_path = sys.modules[self.__class__.__module__].__file__
         mod_dir = os.path.dirname(mod_path)
         tmpl_dir = os.path.join(
-            mod_dir, 
+            mod_dir,
             'templates',
             self.site.template_system.name
         )
@@ -157,6 +157,7 @@ class Task(BaseTask):
 
     name = "dummy_task"
 
+
 class LateTask(BaseTask):
     """Plugins of this type are executed after all plugins of type Task."""
 
@@ -189,7 +190,7 @@ class TemplateSystem(BasePlugin):
         raise NotImplementedError()
 
     def inject_directory(self, directory):
-        """Injects the directory with the lowest priority in the 
+        """Injects the directory with the lowest priority in the
         template search mechanism."""
         raise NotImplementedError()
 
