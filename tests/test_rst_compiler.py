@@ -120,6 +120,7 @@ class FakeSite(object):
                      slug='fake-post')
         ]
         self.debug = True
+        # This is to make plugin initialization happy
         self.template_system = self
         self.name = 'mako'
 

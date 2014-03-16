@@ -23,6 +23,7 @@ class FakeSite(object):
             "MARKDOWN_EXTENSIONS": ['fenced_code', 'codehilite'],
             "LOGGING_HANDLERS": {'stderr': {'loglevel': 'WARNING', 'bubble': True}}
         }
+        # This is to make plugin initialization happy
         self.template_system = self
         self.name = 'mako'
 
