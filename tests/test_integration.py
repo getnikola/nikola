@@ -185,9 +185,14 @@ class TranslatedBuildTest(EmptyBuildTest):
     def __init__(self, *a, **kw):
         super(TranslatedBuildTest, self).__init__(*a, **kw)
         try:
+            self.oldlocale = locale.getlocale()
             locale.setlocale(locale.LC_ALL, ("pl_PL", "utf8"))
         except:
             pytest.skip()
+
+    def tearDownClass(self):
+        locale.setlocale(locale.LC_ALL, self.oldlocale)
+        super(TranslatedBuildTest, self).tearDownClass()
 
     def test_translated_titles(self):
         """Check that translated title is picked up."""
