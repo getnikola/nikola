@@ -488,7 +488,7 @@ class InvariantBuildTest(EmptyBuildTest):
         """Compare the output to the canonical output."""
         if sys.version_info[0] == 2 and sys.version_info[1] < 7:
             pytest.skip('your python is too old')
-        good_path = os.path.join(os.path.dirname(__file__), 'data', 'baseline')
+        good_path = os.path.join(os.path.dirname(__file__), 'data', 'baseline{0[0]}.{0[1]}'.format(sys.version_info))
         with cd(self.target_dir):
             try:
                 diff = subprocess.check_output(['diff', '-ur', good_path, 'output'])
