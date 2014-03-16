@@ -7,7 +7,6 @@ import os
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-
 import codecs
 import locale
 import shutil
@@ -468,7 +467,7 @@ class InvariantBuildTest(EmptyBuildTest):
     def test_invariance(self):
         """Compare the output to the canonical output."""
         if sys.version_info[0] == 2 and sys.version_info[1] < 7:
-            raise SkipTest
+            raise unittest.SkipTest('Python too old')
         good_path = os.path.join(os.path.dirname(__file__), 'data', 'baseline')
         with cd(self.target_dir):
             try:
