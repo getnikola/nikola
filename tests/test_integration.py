@@ -192,7 +192,10 @@ class TranslatedBuildTest(EmptyBuildTest):
 
     @classmethod
     def tearDownClass(self):
-        locale.setlocale(locale.LC_ALL, self.oldlocale)
+        try:
+            locale.setlocale(locale.LC_ALL, self.oldlocale)
+        except:
+            pass
         super(TranslatedBuildTest, self).tearDownClass()
 
     def test_translated_titles(self):
@@ -461,8 +464,19 @@ class InvariantBuildTest(EmptyBuildTest):
     @classmethod
     def build(self):
         """Build the site."""
-        with cd(self.target_dir):
-            __main__.main(["build", "--invariant"])
+        try:
+            self.oldlocale = locale.getlocale()
+            locale.setlocale(locale.LC_ALL, ("en_US", "utf8"))
+        except:
+            pytest.skip('no en_US locale!')
+        else:
+            with cd(self.target_dir):
+                __main__.main(["build", "--invariant"])
+        finally:
+            try:
+                locale.setlocale(locale.LC_ALL, self.oldlocale)
+            except:
+                pass
 
     @classmethod
     def fill_site(self):
@@ -473,7 +487,7 @@ class InvariantBuildTest(EmptyBuildTest):
     def test_invariance(self):
         """Compare the output to the canonical output."""
         if sys.version_info[0] == 2 and sys.version_info[1] < 7:
-            pytest.skip()
+            pytest.skip('your python is too old')
         good_path = os.path.join(os.path.dirname(__file__), 'data', 'baseline')
         with cd(self.target_dir):
             try:
