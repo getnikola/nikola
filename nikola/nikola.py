@@ -445,6 +445,7 @@ class Nikola(object):
         # set global_context for template rendering
         self._GLOBAL_CONTEXT = {}
 
+        self._GLOBAL_CONTEXT['timezone'] = self.tzinfo
         self._GLOBAL_CONTEXT['_link'] = self.link
         self._GLOBAL_CONTEXT['set_locale'] = utils.LocaleBorg().set_locale
         self._GLOBAL_CONTEXT['rel_link'] = self.rel_link
