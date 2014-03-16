@@ -98,7 +98,8 @@ class Galleries(Task):
             'filters': self.site.config['FILTERS'],
             'translations': self.site.config['TRANSLATIONS'],
             'global_context': self.site.GLOBAL_CONTEXT,
-            "feed_length": self.site.config['FEED_LENGTH'],
+            'feed_length': self.site.config['FEED_LENGTH'],
+            'tzinfo': self.site.tzinfo,
         }
 
         yield self.group_task()
