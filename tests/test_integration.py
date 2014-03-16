@@ -192,7 +192,7 @@ class TranslatedBuildTest(EmptyBuildTest):
 
     def tearDownClass(self):
         locale.setlocale(locale.LC_ALL, self.oldlocale)
-        super(TranslatedBuildTest, self).tearDownClass()
+        super(TranslatedBuildTest, self).tearDownClass(self)
 
     def test_translated_titles(self):
         """Check that translated title is picked up."""
