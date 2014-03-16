@@ -18,6 +18,7 @@ MESSAGES = {
     "Posts about %s": "Posts about %s",
     "Posts for year %s": "Posts for year %s",
     "Posts for {month} {year}": "Posts for {month} {year}",
+    "Posted:": "Posted:",
     "Previous post": "Previous post",
     "Read in English": "Read in English",
     "Read more": "Read more",
