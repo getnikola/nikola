@@ -617,6 +617,7 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # before </head>
 # (translatable)
 # EXTRA_HEAD_DATA = ""
+# Google Analytics or whatever else you use. Added to the bottom of <body>
 # in the default template (base.tmpl).
 # (translatable)
 # BODY_END = ""
