@@ -51,7 +51,7 @@ url_format = """ <url>
  </url>
 """
 
-get_lastmod = lambda p: datetime.datetime.fromtimestamp(os.stat(p).st_mtime).isoformat().split('T')[0]
+
 
 
 def get_base_path(base):
@@ -115,7 +115,7 @@ class Sitemap(LateTask):
                 path = os.path.relpath(root, output)
                 # ignore the current directory.
                 path = (path.replace(os.sep, '/') + '/').replace('./', '')
-                lastmod = get_lastmod(root)
+                lastmod = self.get_lastmod(root)
                 loc = urljoin(base_url, base_path + path)
                 if kw['index_file'] in files and kw['strip_indexes']:  # ignore folders when not stripping urls
                     locs[loc] = url_format.format(loc, lastmod)
@@ -141,7 +141,7 @@ class Sitemap(LateTask):
                         if post and (post.is_draft or post.is_retired or post.publish_later):
                             continue
                         path = path.replace(os.sep, '/')
-                        lastmod = get_lastmod(real_path)
+                        lastmod = self.get_lastmod(real_path)
                         loc = urljoin(base_url, base_path + path)
                         locs[loc] = url_format.format(loc, lastmod)
 
@@ -179,6 +179,13 @@ class Sitemap(LateTask):
             "calc_dep": ["_scan_locs:sitemap"],
         }
         yield task
+
+
+    def get_lastmod(self, p):
+        if self.site.invariant: 
+            return datetime.datetime(2014, 3, 15)
+        else:
+            return datetime.datetime.fromtimestamp(os.stat(p).st_mtime).isoformat().split('T')[0]
 
 if __name__ == '__main__':
     import doctest
