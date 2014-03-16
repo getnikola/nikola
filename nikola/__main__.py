@@ -43,7 +43,7 @@ from logbook import NullHandler
 
 from . import __version__
 from .nikola import Nikola
-from .utils import _reload, sys_decode, get_root_dir, LOGGER, STRICT_HANDLER
+from .utils import _reload, sys_decode, get_root_dir, req_missing, LOGGER, STRICT_HANDLER
 
 
 config = {}
@@ -98,8 +98,17 @@ def main(args):
     site = Nikola(**config)
     site.invariant = False
     if len(args) > 0 and args[0] == 'build' and '--invariant' in args:
-        site.invariant = True
-    return DoitNikola(site, quiet).run(args)
+        try:
+            import freezegun
+            freeze = freezegun.freeze_time("2014-01-01")
+            freeze.start()
+            site.invariant = True
+        except ImportError:
+            req_missing(['freezegun'], 'perform invariant builds')
+    _ = DoitNikola(site, quiet).run(args)
+    if site.invariant:
+        freeze.stop()
+    return _
 
 
 class Help(DoitHelp):

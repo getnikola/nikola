@@ -726,15 +726,11 @@ class Nikola(object):
                              rss_teasers, rss_plain, feed_length=10, feed_url=None):
 
         """Takes all necessary data, and renders a RSS feed in output_path."""
-        if self.invariant:
-            lbd = datetime.datetime(2014, 1, 1)
-        else:
-            lbd = datetime.datetime.now()
         rss_obj = rss.RSS2(
             title=title,
             link=link,
             description=description,
-            lastBuildDate=lbd,
+            lastBuildDate=datetime.datetime.now(),
             generator='http://getnikola.com/',
             language=lang
         )
