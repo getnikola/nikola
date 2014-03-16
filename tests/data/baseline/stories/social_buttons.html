@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -24,7 +25,8 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container-fluid"><!-- This keeps the margins nice -->
+    <div class="container-fluid">
+<!-- This keeps the margins nice -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -33,15 +35,22 @@
             <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="http://getnikola.com/">Demo Site</a>
-        </div><!-- /.navbar-header -->
+        </div>
+<!-- /.navbar-header -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                 
-                <li><a href="../archive.html">Archives</a>
-                </li><li><a href="../categories/index.html">Tags</a>
-                </li><li><a href="../rss.xml">RSS</a>
+                <li>
+<a href="../archive.html">Archives</a>
+                </li>
+<li>
+<a href="../categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS</a>
 
-            </li></ul>
+            </li>
+</ul>
 
             <ul class="nav navbar-nav navbar-right">
                 
@@ -52,8 +61,10 @@
     </li>
 
             </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
+        </div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container-fluid -->
 </nav>
 
 <!-- End of Menubar -->
@@ -64,12 +75,15 @@
         <div class="row">
             
     <h1>Alternative Social Buttons</h1>
-    <div><table class="docinfo" frame="void" rules="none">
+    <div>
+<table class="docinfo" frame="void" rules="none">
 <col class="docinfo-name">
 <col class="docinfo-content">
 <tbody valign="top">
-<tr><th class="docinfo-name">Version:</th>
-<td>7.0.0-alpha</td></tr>
+<tr>
+<th class="docinfo-name">Version:</th>
+<td>7.0.0-alpha</td>
+</tr>
 </tbody>
 </table>
 <div class="contents alert alert-info pull-right topic" id="contents">
@@ -77,7 +91,8 @@
 <ul class="simple">
 <li><a class="reference internal" href="social_buttons.html#the-default" id="id1">The Default</a></li>
 <li><a class="reference internal" href="social_buttons.html#sharenice" id="id2">ShareNice</a></li>
-<li><a class="reference internal" href="social_buttons.html#socialshareprivacy" id="id3">SocialSharePrivacy</a><ul>
+<li>
+<a class="reference internal" href="social_buttons.html#socialshareprivacy" id="id3">SocialSharePrivacy</a><ul>
 <li><a class="reference internal" href="social_buttons.html#the-hard-way" id="id4">The Hard Way</a></li>
 <li><a class="reference internal" href="social_buttons.html#the-easy-way" id="id5">The Easy Way</a></li>
 </ul>
@@ -107,7 +122,8 @@ the bottom right of the page, provided by Addthis. This is the HTML code for tha
 doing that will be enough but in others, it won't. This document tries to describe all the bits
 involved in making this work correctly.</p>
 <dl class="docutils">
-<dt>Part 1: <tt class="docutils literal">SOCIAL_BUTTONS_CODE</tt></dt>
+<dt>Part 1: <tt class="docutils literal">SOCIAL_BUTTONS_CODE</tt>
+</dt>
 <dd>Social sharing services like addthis and others will provide you a HTML snippet.
 If it is self-contained, then just setting <tt class="docutils literal">SOCIAL_BUTTONS_CODE</tt> may be enough.
 Try :-)</dd>
@@ -115,8 +131,10 @@ Try :-)</dd>
 <dd>The <tt class="docutils literal">SOCIAL_BUTTONS_CODE</tt> HTML fragment will be embedded <em>somewhere</em> by the theme. Whether that
 is the correct place or not is not something the theme author can truly know, so it is possible that
 you may have to tweak the <tt class="docutils literal">base.html</tt> template to make it look good.</dd>
-<dt>Part 3: <tt class="docutils literal">BODY_END</tt> and <tt class="docutils literal">EXTRA_HEAD_DATA</tt></dt>
-<dd><p class="first">Some social sharing code requires JS execution that depends on JQuery being available
+<dt>Part 3: <tt class="docutils literal">BODY_END</tt> and <tt class="docutils literal">EXTRA_HEAD_DATA</tt>
+</dt>
+<dd>
+<p class="first">Some social sharing code requires JS execution that depends on JQuery being available
 (example: <a class="reference external" href="https://github.com/panzi/SocialSharePrivacy">SocialSharePrivacy</a>). It's good
 practice (and often, the only way that will work) to put those at the end of <tt class="docutils literal">&lt;BODY&gt;</tt>,
 and one easy way to do that is to put them in <tt class="docutils literal">BODY_END</tt></p>
@@ -234,15 +252,19 @@ you have one.</p>
 <p>It will give you 3 code snippets:</p>
 <dl class="docutils">
 <dt>"Insert this once in the head of your page"</dt>
-<dd>Put it in <tt class="docutils literal">BODY_END</tt></dd>
+<dd>Put it in <tt class="docutils literal">BODY_END</tt>
+</dd>
 <dt>"Insert this wherever you want a share widget displayed"</dt>
-<dd>Put it in <tt class="docutils literal">SOCIAL_BUTTONS_CODE</tt></dd>
+<dd>Put it in <tt class="docutils literal">SOCIAL_BUTTONS_CODE</tt>
+</dd>
 <dt>"Insert this once anywhere after the other code"</dt>
-<dd>Put it in <tt class="docutils literal">BODY_END</tt></dd>
+<dd>Put it in <tt class="docutils literal">BODY_END</tt>
+</dd>
 </dl>
 <p>That should give you a working integration (not tested)</p>
 </div>
-</div></div>
+</div>
+</div>
 
         </div>
         <!--End of body content-->
@@ -261,11 +283,20 @@ you have one.</p>
 <!-- Social buttons -->
 <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
 <a class="addthis_button_more">Share</a>
-<ul><li><a class="addthis_button_facebook"></a>
-</li><li><a class="addthis_button_google_plusone_share"></a>
-</li><li><a class="addthis_button_linkedin"></a>
-</li><li><a class="addthis_button_twitter"></a>
-</li></ul>
+<ul>
+<li>
+<a class="addthis_button_facebook"></a>
+</li>
+<li>
+<a class="addthis_button_google_plusone_share"></a>
+</li>
+<li>
+<a class="addthis_button_linkedin"></a>
+</li>
+<li>
+<a class="addthis_button_twitter"></a>
+</li>
+</ul>
 </div>
 <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
 <!-- End of social buttons -->

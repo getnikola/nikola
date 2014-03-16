@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -24,7 +25,8 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container-fluid"><!-- This keeps the margins nice -->
+    <div class="container-fluid">
+<!-- This keeps the margins nice -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -33,15 +35,22 @@
             <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="http://getnikola.com/">Demo Site</a>
-        </div><!-- /.navbar-header -->
+        </div>
+<!-- /.navbar-header -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                 
-                <li><a href="../archive.html">Archives</a>
-                </li><li><a href="../categories/index.html">Tags</a>
-                </li><li><a href="../rss.xml">RSS</a>
+                <li>
+<a href="../archive.html">Archives</a>
+                </li>
+<li>
+<a href="../categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS</a>
 
-            </li></ul>
+            </li>
+</ul>
 
             <ul class="nav navbar-nav navbar-right">
                 
@@ -52,8 +61,10 @@
     </li>
 
             </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
+        </div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container-fluid -->
 </nav>
 
 <!-- End of Menubar -->
@@ -64,16 +75,23 @@
         <div class="row">
             
     <h1>A reStructuredText Primer</h1>
-    <div><table class="docinfo" frame="void" rules="none">
+    <div>
+<table class="docinfo" frame="void" rules="none">
 <col class="docinfo-name">
 <col class="docinfo-content">
 <tbody valign="top">
-<tr><th class="docinfo-name">Author:</th>
-<td>Richard Jones</td></tr>
-<tr><th class="docinfo-name">Version:</th>
-<td>5801</td></tr>
-<tr><th class="docinfo-name">Copyright:</th>
-<td>This document has been placed in the public domain.</td></tr>
+<tr>
+<th class="docinfo-name">Author:</th>
+<td>Richard Jones</td>
+</tr>
+<tr>
+<th class="docinfo-name">Version:</th>
+<td>5801</td>
+</tr>
+<tr>
+<th class="docinfo-name">Copyright:</th>
+<td>This document has been placed in the public domain.</td>
+</tr>
 </tbody>
 </table>
 <div class="contents alert alert-info pull-left topic" id="contents">
@@ -83,7 +101,8 @@
 <li><a class="reference internal" href="quickstart.html#text-styles" id="id17">Text styles</a></li>
 <li><a class="reference internal" href="quickstart.html#lists" id="id18">Lists</a></li>
 <li><a class="reference internal" href="quickstart.html#preformatting-code-samples" id="id19">Preformatting (code samples)</a></li>
-<li><a class="reference internal" href="quickstart.html#sections" id="id20">Sections</a><ul>
+<li>
+<a class="reference internal" href="quickstart.html#sections" id="id20">Sections</a><ul>
 <li><a class="reference internal" href="quickstart.html#document-title-subtitle" id="id21">Document Title / Subtitle</a></li>
 </ul>
 </li>
@@ -172,8 +191,10 @@ in the list item.</p>
 <p>Lists must always start a new paragraph -- that is, they must appear
 after a blank line.</p>
 <dl class="docutils">
-<dt><strong>enumerated</strong> lists (numbers, letters or roman numerals; <a class="reference external" href="quickref.html#enumerated-lists">quickref</a>)</dt>
-<dd><p class="first">Start a line off with a number or letter followed by a period ".",
+<dt>
+<strong>enumerated</strong> lists (numbers, letters or roman numerals; <a class="reference external" href="quickref.html#enumerated-lists">quickref</a>)</dt>
+<dd>
+<p class="first">Start a line off with a number or letter followed by a period ".",
 right bracket ")" or surrounded by brackets "( )" -- whatever you're
 comfortable with.  All of the following forms are recognised:</p>
 <pre class="literal-block">
@@ -204,7 +225,8 @@ effect here):</p>
 <li>numbers</li>
 </ol>
 <ol class="upperalpha">
-<li><p class="first">upper-case letters
+<li>
+<p class="first">upper-case letters
 and it goes over many lines</p>
 <p>with two paragraphs and all!</p>
 </li>
@@ -229,8 +251,10 @@ and it goes over many lines</p>
 <li>and again</li>
 </ol>
 </dd>
-<dt><strong>bulleted</strong> lists (<a class="reference external" href="quickref.html#bullet-lists">quickref</a>)</dt>
-<dd><p class="first">Just like enumerated lists, start the line off with a bullet point
+<dt>
+<strong>bulleted</strong> lists (<a class="reference external" href="quickref.html#bullet-lists">quickref</a>)</dt>
+<dd>
+<p class="first">Just like enumerated lists, start the line off with a bullet point
 character - either "-", "+" or "*":</p>
 <pre class="literal-block">
 * a bullet point using "*"
@@ -253,8 +277,10 @@ character - either "-", "+" or "*":</p>
 </li>
 </ul>
 </dd>
-<dt><strong>definition</strong> lists (<a class="reference external" href="quickref.html#definition-lists">quickref</a>)</dt>
-<dd><p class="first">Unlike the other two, the definition lists consist of a term, and
+<dt>
+<strong>definition</strong> lists (<a class="reference external" href="quickref.html#definition-lists">quickref</a>)</dt>
+<dd>
+<p class="first">Unlike the other two, the definition lists consist of a term, and
 the definition of that term.  The format of a definition list is:</p>
 <pre class="literal-block">
 what
@@ -437,13 +463,20 @@ user reference is a good place to go next.  For complete details, the
 reStructuredText should post a message to the <a class="reference external" href="http://docutils.sourceforge.net/docs/user/mailing-lists.html#docutils-users">Docutils-users</a> mailing
 list.</p>
 <table class="docutils footnote" frame="void" id="id15" rules="none">
-<colgroup><col class="label"><col></colgroup>
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="quickstart.html#id14">[1]</a></td><td>If that relative link doesn't work, try the master document:
-<a class="reference external" href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html">http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html</a>.</td></tr>
+<tr>
+<td class="label"><a class="fn-backref" href="quickstart.html#id14">[1]</a></td>
+<td>If that relative link doesn't work, try the master document:
+<a class="reference external" href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html">http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html</a>.</td>
+</tr>
 </tbody>
 </table>
-</div></div>
+</div>
+</div>
 
         </div>
         <!--End of body content-->
@@ -462,11 +495,20 @@ list.</p>
 <!-- Social buttons -->
 <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
 <a class="addthis_button_more">Share</a>
-<ul><li><a class="addthis_button_facebook"></a>
-</li><li><a class="addthis_button_google_plusone_share"></a>
-</li><li><a class="addthis_button_linkedin"></a>
-</li><li><a class="addthis_button_twitter"></a>
-</li></ul>
+<ul>
+<li>
+<a class="addthis_button_facebook"></a>
+</li>
+<li>
+<a class="addthis_button_google_plusone_share"></a>
+</li>
+<li>
+<a class="addthis_button_linkedin"></a>
+</li>
+<li>
+<a class="addthis_button_twitter"></a>
+</li>
+</ul>
 </div>
 <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
 <!-- End of social buttons -->

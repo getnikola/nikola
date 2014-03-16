@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -24,7 +25,8 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container-fluid"><!-- This keeps the margins nice -->
+    <div class="container-fluid">
+<!-- This keeps the margins nice -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -33,15 +35,22 @@
             <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="http://getnikola.com/">Demo Site</a>
-        </div><!-- /.navbar-header -->
+        </div>
+<!-- /.navbar-header -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                 
-                <li><a href="../archive.html">Archives</a>
-                </li><li><a href="../categories/index.html">Tags</a>
-                </li><li><a href="../rss.xml">RSS</a>
+                <li>
+<a href="../archive.html">Archives</a>
+                </li>
+<li>
+<a href="../categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS</a>
 
-            </li></ul>
+            </li>
+</ul>
 
             <ul class="nav navbar-nav navbar-right">
                 
@@ -52,8 +61,10 @@
     </li>
 
             </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
+        </div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container-fluid -->
 </nav>
 
 <!-- End of Menubar -->
@@ -64,13 +75,15 @@
         <div class="row">
             
     <h1>Nikola Internals</h1>
-    <div><p class="lead">When trying to guide someone into adding a feature in Nikola, it hit me that
+    <div>
+<p class="lead">When trying to guide someone into adding a feature in Nikola, it hit me that
 while the way it's structured makes sense <strong>to me</strong> it is far from obvious.</p>
 <p>So, this is a short document explaining what each piece of Nikola does and
 how it all fits together.</p>
 <dl class="docutils">
 <dt>Nikola is a Pile of Plugins</dt>
-<dd><p class="first">Most of Nikola is implemented as plugins using <a class="reference external" href="http://yapsy.sourceforge.net/">Yapsy</a>.
+<dd>
+<p class="first">Most of Nikola is implemented as plugins using <a class="reference external" href="http://yapsy.sourceforge.net/">Yapsy</a>.
 You can ignore that they are plugins and just think of them as regular python
 modules and packages with a funny little <tt class="docutils literal">.plugin</tt> file next to them.</p>
 <p>So, 90% of the time, what you want to do is either write a new plugin or extend
@@ -174,7 +187,8 @@ you have to create a <tt class="docutils literal">TemplateSystem</tt> plugin.</d
 <dd>To change how the generated site looks, you can create custom themes.</dd>
 </dl>
 <p>And of course, you can also replace or extend each of the existing plugins.</p>
-</div></div>
+</div>
+</div>
 
         </div>
         <!--End of body content-->
@@ -193,11 +207,20 @@ you have to create a <tt class="docutils literal">TemplateSystem</tt> plugin.</d
 <!-- Social buttons -->
 <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
 <a class="addthis_button_more">Share</a>
-<ul><li><a class="addthis_button_facebook"></a>
-</li><li><a class="addthis_button_google_plusone_share"></a>
-</li><li><a class="addthis_button_linkedin"></a>
-</li><li><a class="addthis_button_twitter"></a>
-</li></ul>
+<ul>
+<li>
+<a class="addthis_button_facebook"></a>
+</li>
+<li>
+<a class="addthis_button_google_plusone_share"></a>
+</li>
+<li>
+<a class="addthis_button_linkedin"></a>
+</li>
+<li>
+<a class="addthis_button_twitter"></a>
+</li>
+</ul>
 </div>
 <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
 <!-- End of social buttons -->

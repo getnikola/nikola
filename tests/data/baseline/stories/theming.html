@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -24,7 +25,8 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container-fluid"><!-- This keeps the margins nice -->
+    <div class="container-fluid">
+<!-- This keeps the margins nice -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -33,15 +35,22 @@
             <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="http://getnikola.com/">Demo Site</a>
-        </div><!-- /.navbar-header -->
+        </div>
+<!-- /.navbar-header -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                 
-                <li><a href="../archive.html">Archives</a>
-                </li><li><a href="../categories/index.html">Tags</a>
-                </li><li><a href="../rss.xml">RSS</a>
+                <li>
+<a href="../archive.html">Archives</a>
+                </li>
+<li>
+<a href="../categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS</a>
 
-            </li></ul>
+            </li>
+</ul>
 
             <ul class="nav navbar-nav navbar-right">
                 
@@ -52,8 +61,10 @@
     </li>
 
             </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
+        </div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container-fluid -->
 </nav>
 
 <!-- End of Menubar -->
@@ -64,14 +75,19 @@
         <div class="row">
             
     <h1>Theming Nikola</h1>
-    <div><table class="docinfo" frame="void" rules="none">
+    <div>
+<table class="docinfo" frame="void" rules="none">
 <col class="docinfo-name">
 <col class="docinfo-content">
 <tbody valign="top">
-<tr><th class="docinfo-name">Version:</th>
-<td>7.0.0-alpha</td></tr>
-<tr><th class="docinfo-name">Author:</th>
-<td>Roberto Alsina &lt;<a class="reference external" href="mailto:ralsina@netmanagers.com.ar">ralsina@netmanagers.com.ar</a>&gt;</td></tr>
+<tr>
+<th class="docinfo-name">Version:</th>
+<td>7.0.0-alpha</td>
+</tr>
+<tr>
+<th class="docinfo-name">Author:</th>
+<td>Roberto Alsina &lt;<a class="reference external" href="mailto:ralsina@netmanagers.com.ar">ralsina@netmanagers.com.ar</a>&gt;</td>
+</tr>
 </tbody>
 </table>
 <div class="contents alert alert-info pull-right topic" id="contents">
@@ -92,7 +108,8 @@ of your site, one folder per theme. The folder name is the theme name.</p>
 <p>A Nikola theme consists of the following folders (they are <em>all</em> optional):</p>
 <dl class="docutils">
 <dt>assets</dt>
-<dd><p class="first">This is where you would put your CSS, Javascript and image files. It will be copied
+<dd>
+<p class="first">This is where you would put your CSS, Javascript and image files. It will be copied
 into <tt class="docutils literal">output/assets</tt> when you build the site, and the templates will contain
 references to them.</p>
 <p>The included themes use <a class="reference external" href="http://twitter.github.com/bootstrap/">Bootstrap</a>
@@ -110,14 +127,17 @@ of your site.</dd>
 <dd>Nikola tries to be multilingual. This is where you put the strings for your theme
 so that it can be translated into other languages.</dd>
 <dt>less</dt>
-<dd>Files to be compiled into CSS using <a class="reference external" href="http://lesscss.org/">LESS</a></dd>
+<dd>Files to be compiled into CSS using <a class="reference external" href="http://lesscss.org/">LESS</a>
+</dd>
 <dt>sass</dt>
-<dd>Files to be compiled into CSS using <a class="reference external" href="http://sass-lang.com/">Sass</a></dd>
+<dd>Files to be compiled into CSS using <a class="reference external" href="http://sass-lang.com/">Sass</a>
+</dd>
 </dl>
 <p>This mandatory file:</p>
 <dl class="docutils">
 <dt>parent</dt>
-<dd><p class="first">A text file that, on its first line, contains the name of the <strong>parent theme</strong>.
+<dd>
+<p class="first">A text file that, on its first line, contains the name of the <strong>parent theme</strong>.
 Any resources missing on this theme, will be looked up in the parent theme
 (and then in the grandparent, etc).</p>
 <p>The <tt class="docutils literal">parent</tt> is so you don't have to create a full theme each time: just create an
@@ -138,7 +158,8 @@ or <tt class="docutils literal"><span class="pre">bootstrap-jinja</span></tt> (a
 <dd>A text file which, on the first line, contains the name of the template engine
 this theme needs. Currently supported values are "mako" and "jinja".</dd>
 <dt>bundles</dt>
-<dd><p class="first">A text file containing a list of files to be turned into bundles using WebAssets.
+<dd>
+<p class="first">A text file containing a list of files to be turned into bundles using WebAssets.
 For example:</p>
 <pre class="literal-block">
 assets/css/all.css=bootstrap.css,bootstrap-responsive.css,rst.css,code.css,colorbox.css,custom.css
@@ -167,7 +188,8 @@ so <tt class="docutils literal">post.tmpl</tt> only define the content, and the 
 <p>These are the templates that come with the included themes:</p>
 <dl class="docutils">
 <dt><tt class="docutils literal">base.tmpl</tt></dt>
-<dd><p class="first">This template defines the basic page layout for the site. It's mostly plain HTML
+<dd>
+<p class="first">This template defines the basic page layout for the site. It's mostly plain HTML
 but defines a few blocks that can be re-defined by inheriting templates.</p>
 <p class="last">It has some separate pieces defined in <tt class="docutils literal">base_helper.tmpl</tt> so they can be
 easily overriden. For example, the Bootstrap theme adds a <tt class="docutils literal">bootstrap_helper.tmpl</tt>
@@ -181,29 +203,44 @@ Some functionality is in the <tt class="docutils literal">index_helper.tmpl</tt>
 It uses a bunch of helper templates, one for each supported comment system:
 <tt class="docutils literal">disqus_helper.tmpl</tt> <tt class="docutils literal">facebook_helper.tmpl</tt> <tt class="docutils literal">googleplus_helper.tmpl</tt>
 <tt class="docutils literal">intensedebate_helper.tmpl</tt> <tt class="docutils literal">isso_helper.tmpl</tt> <tt class="docutils literal">livefyre_helper.tmpl</tt>
-<tt class="docutils literal">moot_helper.tmpl</tt></dd>
-<dt><tt class="docutils literal">crumbs.tmpl</tt> <tt class="docutils literal">slides.tmpl</tt></dt>
+<tt class="docutils literal">moot_helper.tmpl</tt>
+</dd>
+<dt>
+<tt class="docutils literal">crumbs.tmpl</tt> <tt class="docutils literal">slides.tmpl</tt>
+</dt>
 <dd>These templates help render specific UI items, and can be tweaked as needed.</dd>
 <dt><tt class="docutils literal">gallery.tmpl</tt></dt>
-<dd><blockquote class="first">
+<dd>
+<blockquote class="first">
 <p>Template used for image galleries. Interesting data includes:</p>
 <ul class="simple">
-<li><tt class="docutils literal">text</tt>: A descriptive text for the gallery.</li>
-<li><tt class="docutils literal">crumbs</tt>: A list of <tt class="docutils literal">link, crumb</tt> to implement a crumbbar.</li>
-<li><tt class="docutils literal">folders</tt>: A list of folders to implement hierarchical gallery navigation.</li>
-<li><tt class="docutils literal">enable_comments</tt>: To enable/disable comments in galleries.</li>
-<li><tt class="docutils literal">thumbnail_size</tt>: The <tt class="docutils literal">THUMBNAIL_SIZE</tt> option.</li>
-<li><tt class="docutils literal">photo_array</tt>: a list of dictionaries, each containing:<ul>
-<li><tt class="docutils literal">url</tt>: URL for the full-sized image.</li>
-<li><tt class="docutils literal">url_thumb</tt>: URL for the thumbnail.</li>
-<li><tt class="docutils literal">title</tt>: The title of the image.</li>
-<li><tt class="docutils literal">size</tt>: A dict containing <tt class="docutils literal">w</tt> and <tt class="docutils literal">h</tt>, the real size of the thumbnail.</li>
+<li>
+<tt class="docutils literal">text</tt>: A descriptive text for the gallery.</li>
+<li>
+<tt class="docutils literal">crumbs</tt>: A list of <tt class="docutils literal">link, crumb</tt> to implement a crumbbar.</li>
+<li>
+<tt class="docutils literal">folders</tt>: A list of folders to implement hierarchical gallery navigation.</li>
+<li>
+<tt class="docutils literal">enable_comments</tt>: To enable/disable comments in galleries.</li>
+<li>
+<tt class="docutils literal">thumbnail_size</tt>: The <tt class="docutils literal">THUMBNAIL_SIZE</tt> option.</li>
+<li>
+<tt class="docutils literal">photo_array</tt>: a list of dictionaries, each containing:<ul>
+<li>
+<tt class="docutils literal">url</tt>: URL for the full-sized image.</li>
+<li>
+<tt class="docutils literal">url_thumb</tt>: URL for the thumbnail.</li>
+<li>
+<tt class="docutils literal">title</tt>: The title of the image.</li>
+<li>
+<tt class="docutils literal">size</tt>: A dict containing <tt class="docutils literal">w</tt> and <tt class="docutils literal">h</tt>, the real size of the thumbnail.</li>
 </ul>
 </li>
 </ul>
 </blockquote>
 <ul class="last simple">
-<li><tt class="docutils literal">photo_array_json</tt>: a JSON dump of photo_array, used in the bootstrap theme by flowr.js</li>
+<li>
+<tt class="docutils literal">photo_array_json</tt>: a JSON dump of photo_array, used in the bootstrap theme by flowr.js</li>
 </ul>
 </dd>
 <dt><tt class="docutils literal">list.tmpl</tt></dt>
@@ -242,7 +279,9 @@ at <a class="reference external" href="https://www.transifex.com/projects/p/niko
 then your theme will need a custom <tt class="docutils literal">messages</tt> folder.</p>
 </div>
 <div class="section" id="less-and-sass">
-<h2><a class="reference external" href="http://lesscss.org/">LESS</a> and <a class="reference external" href="http://sass-lang.com/">Sass</a></h2>
+<h2>
+<a class="reference external" href="http://lesscss.org/">LESS</a> and <a class="reference external" href="http://sass-lang.com/">Sass</a>
+</h2>
 <div class="note">
 <p class="first admonition-title">Note</p>
 <p class="last">The LESS and Sass compilers will be moved to the Plugins Index in
@@ -265,7 +304,8 @@ but a different extension.  Pay attention to how you name your files
 or your site won’t build!  (Nikola will tell you what’s wrong when
 this happens)</p>
 </div>
-</div></div>
+</div>
+</div>
 
         </div>
         <!--End of body content-->
@@ -284,11 +324,20 @@ this happens)</p>
 <!-- Social buttons -->
 <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
 <a class="addthis_button_more">Share</a>
-<ul><li><a class="addthis_button_facebook"></a>
-</li><li><a class="addthis_button_google_plusone_share"></a>
-</li><li><a class="addthis_button_linkedin"></a>
-</li><li><a class="addthis_button_twitter"></a>
-</li></ul>
+<ul>
+<li>
+<a class="addthis_button_facebook"></a>
+</li>
+<li>
+<a class="addthis_button_google_plusone_share"></a>
+</li>
+<li>
+<a class="addthis_button_linkedin"></a>
+</li>
+<li>
+<a class="addthis_button_twitter"></a>
+</li>
+</ul>
 </div>
 <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
 <!-- End of social buttons -->

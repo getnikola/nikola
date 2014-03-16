@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -24,7 +25,8 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container-fluid"><!-- This keeps the margins nice -->
+    <div class="container-fluid">
+<!-- This keeps the margins nice -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -33,15 +35,22 @@
             <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="http://getnikola.com/">Demo Site</a>
-        </div><!-- /.navbar-header -->
+        </div>
+<!-- /.navbar-header -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                 
-                <li><a href="../archive.html">Archives</a>
-                </li><li><a href="../categories/index.html">Tags</a>
-                </li><li><a href="../rss.xml">RSS</a>
+                <li>
+<a href="../archive.html">Archives</a>
+                </li>
+<li>
+<a href="../categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS</a>
 
-            </li></ul>
+            </li>
+</ul>
 
             <ul class="nav navbar-nav navbar-right">
                 
@@ -52,8 +61,10 @@
     </li>
 
             </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
+        </div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container-fluid -->
 </nav>
 
 <!-- End of Menubar -->
@@ -64,22 +75,28 @@
         <div class="row">
             
     <h1>Extending Nikola</h1>
-    <div><div class="section" id="extending-nikola">
+    <div>
+<div class="section" id="extending-nikola">
 <h2><a class="toc-backref" href="extending.html#id1">Extending Nikola</a></h2>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name">
 <col class="field-body">
 <tbody valign="top">
-<tr class="field"><th class="field-name">Version:</th><td class="field-body">7.0.0-alpha</td>
+<tr class="field">
+<th class="field-name">Version:</th>
+<td class="field-body">7.0.0-alpha</td>
 </tr>
-<tr class="field"><th class="field-name">Author:</th><td class="field-body">Roberto Alsina &lt;<a class="reference external" href="mailto:ralsina@netmanagers.com.ar">ralsina@netmanagers.com.ar</a>&gt;</td>
+<tr class="field">
+<th class="field-name">Author:</th>
+<td class="field-body">Roberto Alsina &lt;<a class="reference external" href="mailto:ralsina@netmanagers.com.ar">ralsina@netmanagers.com.ar</a>&gt;</td>
 </tr>
 </tbody>
 </table>
 <div class="contents alert alert-info pull-right topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="extending.html#extending-nikola" id="id1">Extending Nikola</a><ul>
+<li>
+<a class="reference internal" href="extending.html#extending-nikola" id="id1">Extending Nikola</a><ul>
 <li><a class="reference internal" href="extending.html#command-plugins" id="id2">Command Plugins</a></li>
 <li><a class="reference internal" href="extending.html#templatesystem-plugins" id="id3">TemplateSystem Plugins</a></li>
 <li><a class="reference internal" href="extending.html#task-plugins" id="id4">Task Plugins</a></li>
@@ -435,7 +452,8 @@ whatever signals you want there.</p>
 <dd>When a new post is created, using the <tt class="docutils literal">nikola new_post</tt> command.  The signal
 data contains the path of the file, and the metadata file (if there is one).</dd>
 <dt><tt class="docutils literal">deployed</tt></dt>
-<dd><p class="first">When the <tt class="docutils literal">nikola deploy</tt> command is run, and there is at least one new
+<dd>
+<p class="first">When the <tt class="docutils literal">nikola deploy</tt> command is run, and there is at least one new
 entry/post since <tt class="docutils literal">last_deploy</tt>.  The signal data is of the form</p>
 <pre class="last literal-block">
 {
@@ -476,7 +494,8 @@ by using <tt class="docutils literal"><span class="pre">_link('tag_rss',</span> 
                           <span class="bp">self</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'TAG_PATH'</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">slugify_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span> <span class="s">".xml"</span><span class="p">]</span> <span class="k">if</span>
             <span class="n">_f</span><span class="p">]</span>
 </pre>
-</div></div>
+</div>
+</div>
 
         </div>
         <!--End of body content-->
@@ -495,11 +514,20 @@ by using <tt class="docutils literal"><span class="pre">_link('tag_rss',</span> 
 <!-- Social buttons -->
 <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
 <a class="addthis_button_more">Share</a>
-<ul><li><a class="addthis_button_facebook"></a>
-</li><li><a class="addthis_button_google_plusone_share"></a>
-</li><li><a class="addthis_button_linkedin"></a>
-</li><li><a class="addthis_button_twitter"></a>
-</li></ul>
+<ul>
+<li>
+<a class="addthis_button_facebook"></a>
+</li>
+<li>
+<a class="addthis_button_google_plusone_share"></a>
+</li>
+<li>
+<a class="addthis_button_linkedin"></a>
+</li>
+<li>
+<a class="addthis_button_twitter"></a>
+</li>
+</ul>
 </div>
 <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
 <!-- End of social buttons -->
