@@ -3,11 +3,11 @@
 
 <%block name="html_header">
     <header id="header" role="banner">
-        $(self.html_site_title()}
+        ${self.html_site_title()}
         ${self.html_translation_header()}
         ${self.html_navigation_links()}
         %if search_form:
-            <div class="searchform">
+            <div class="searchform" role="search">
                 ${search_form}
             </div>
         %endif

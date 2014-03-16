@@ -49,7 +49,7 @@ lang="${lang}">
         <!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]-->
     %endif
 
-    ${self.html_feedlinks}
+    ${self.html_feedlinks()}
 
     %if favicons:
         %for name, file, size in favicons:
