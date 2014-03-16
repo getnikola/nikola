@@ -190,9 +190,10 @@ class TranslatedBuildTest(EmptyBuildTest):
         except:
             pytest.skip()
 
+    @classmethod
     def tearDownClass(self):
         locale.setlocale(locale.LC_ALL, self.oldlocale)
-        super(TranslatedBuildTest, self).tearDownClass(self)
+        super(TranslatedBuildTest, self).tearDownClass()
 
     def test_translated_titles(self):
         """Check that translated title is picked up."""
