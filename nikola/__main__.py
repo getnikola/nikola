@@ -101,6 +101,14 @@ def main(args):
             freeze = freezegun.freeze_time("2014-01-01")
             freeze.start()
             invariant = True
+
+            # duplicated with code in test_scheduling.py
+            d = [name for name in sys.modules if name.startswith("six.moves.")]
+            FGdeleted = {}
+            for name in d:
+                FGdeleted[name] = sys.modules[name]
+                del sys.modules[name]
+
         except ImportError:
             req_missing(['freezegun'], 'perform invariant builds')
 
@@ -112,6 +120,10 @@ def main(args):
 
     if site.invariant:
         freeze.stop()
+        # duplicated with code in test_scheduling.py
+        for name, mod in FGdeleted.items():
+            sys.modules[name] = mod
+
     return _
 
 
