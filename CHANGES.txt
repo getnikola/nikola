@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Plugins can inject templates in the system (Issue #1139)
 * ``nikola import_wordpress`` now has a ``--qtranslate`` option, to parse posts
   in the qtranslate wordpress plugin format and turn them into multilingual
   Nikola posts (Issue #1072)
