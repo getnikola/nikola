@@ -11,14 +11,14 @@
     ${mathjax_config}
     %if use_bundles:
         %if use_cdn:
-            <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+            <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
             <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
         %else:
             <link href="/assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
         %endif
     %else:
         %if use_cdn:
-            <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+            <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
         %else:
             <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         %endif
@@ -33,9 +33,11 @@
     %if permalink:
       <link rel="canonical" href="${abs_link(permalink)}">
     %endif
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    %if use_cdn:
+        <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    %else:
+        <!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]-->
+    %endif
     %if rss_link:
         ${rss_link}
     %else:
@@ -57,16 +59,16 @@
 <%def name="late_load_js()">
     %if use_bundles:
         %if use_cdn:
-            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-            <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+            <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
             <script src="/assets/js/all.js"></script>
         %else:
             <script src="/assets/js/all-nocdn.js"></script>
         %endif
     %else:
         %if use_cdn:
-            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-            <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+            <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
         %else:
             <script src="/assets/js/jquery-1.10.2.min.js"></script>
             <script src="/assets/js/bootstrap.min.js"></script>
