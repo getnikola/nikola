@@ -1,5 +1,6 @@
 {#  -*- coding: utf-8 -*- #}
 {% import 'post_helper.tmpl' as helper with context %}
+{% import 'post_header.tmpl' as post_header with context %}
 {% import 'comments_helper.tmpl' as comments with context %}
 {% extends 'base.tmpl' %}
 {% block extra_head %}
@@ -12,11 +13,11 @@
 {% block content %}
     <article class="postbox post-{{ post.meta('type') }}">
     <div class="h-entry" itemscope="itemscope" itemtype="http://schema.org/Article">
-    {{ helper.html_title() }}
+    {{ post_header.html_title() }}
     <hr>
     <small>
         {{ messages("Posted:") }} <time class="published dt-published" datetime="{{ post.date.isoformat() }}" itemprop="datePublished">{{ post.formatted_date(date_format) }}</time>
-        {{ helper.html_translations(post) }}
+        {{ post_header.html_translations(post) }}
         {{ helper.html_tags(post) }}
     </small>
     <hr>
