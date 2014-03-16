@@ -188,8 +188,8 @@ class TemplateSystem(BasePlugin):
         """Renders template to a string using context. """
         raise NotImplementedError()
 
-    def inject_folder(self, folder):
-        """Injects the folder with the lowest priority in the 
+    def inject_directory(self, directory):
+        """Injects the directory with the lowest priority in the 
         template search mechanism."""
         raise NotImplementedError()
 
