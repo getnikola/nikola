@@ -23,7 +23,6 @@ Features
   SOCIAL_BUTTONS_CODE, SEARCH_FORM, BODY_END, EXTRA_HEAD_DATA
   (the up-to-date list is available in SITE.TRANSLATABLE_SETTINGS)
   (Issues #851, #1057, #1061, #1112)
->>>>>>> master
 * New Post.author() returns meta 'author' or BLOG_AUTHOR (Issue #1117)
 * Ship base-jinja, bootstrap-jinja, bootstrap3-jinja with Nikola (Issue #1104)
 * Fix dependency issue in listings (Issue #1032)
