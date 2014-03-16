@@ -632,7 +632,7 @@ class Nikola(object):
         utils.makedirs(os.path.dirname(output_name))
         doc = lxml.html.document_fromstring(data)
         doc.rewrite_links(lambda dst: self.url_replacer(src, dst, context['lang']))
-        data = lxml.html.tostring(doc, encoding='utf8', method='html', doctype='<!DOCTYPE html>', pretty_print=True)
+        data = b'<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='utf8', method='html', pretty_print=True)
         with open(output_name, "wb+") as post_file:
             post_file.write(data)
 
