@@ -26,7 +26,6 @@ Features
   (Issues #851, #1057, #1061, #1112)
 * New Post.author() returns meta 'author' or BLOG_AUTHOR (Issue #1117)
 * Ship base-jinja, bootstrap-jinja, bootstrap3-jinja with Nikola (Issue #1104)
-* Fix dependency issue in listings (Issue #1032)
 * Invert ``HIDE_SOURCELINK`` and ``HIDE_UNTRANSLATED_POSTS`` into
   ``SHOW_SOURCELINK`` and ``SHOW_UNTRANSLATED_POSTS`` (Issue #1076)
 * Remove old messages left over for backwards compatibility: (Issues #829, #1105)
@@ -52,6 +51,7 @@ Bugfixes
   the file. (Issue #1132)
 * Files with non-ASCII characters in filenames are copied only when needed, and
   not every build (Issue #1129)
+* Fix dependency issue in listings (Issue #1032)
 * Logging configuration has been fixed.  The stderr handler can now
   only be set to DEBUG or INFO (any higher levels are corrected as INFO), and
   unwanted (i.e. DEBUG) messages are not shown, as intended. (Issue #1111)
