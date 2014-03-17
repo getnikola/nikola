@@ -25,6 +25,8 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import absolute_import
+import sys
+import os
 
 __all__ = [
     'Command',
@@ -55,6 +57,24 @@ class BasePlugin(IPlugin):
     def set_site(self, site):
         """Sets site, which is a Nikola instance."""
         self.site = site
+        self.inject_templates()
+
+    def inject_templates(self):
+        """If this plugin contains a 'templates' folder,
+        then templates/mako or templates/jinja will be inserted very early in
+        the theme chain."""
+
+        # Sorry, found no other way to get this
+        mod_path = sys.modules[self.__class__.__module__].__file__
+        mod_dir = os.path.dirname(mod_path)
+        tmpl_dir = os.path.join(
+            mod_dir,
+            'templates',
+            self.site.template_system.name
+        )
+        if os.path.isdir(tmpl_dir):
+            # Inject tmpl_dir low in the theme chain
+            self.site.template_system.inject_directory(tmpl_dir)
 
 
 class Command(BasePlugin, DoitCommand):
@@ -135,6 +155,8 @@ class BaseTask(BasePlugin):
 class Task(BaseTask):
     """Plugins of this type are task generators."""
 
+    name = "dummy_task"
+
 
 class LateTask(BaseTask):
     """Plugins of this type are executed after all plugins of type Task."""
@@ -145,15 +167,11 @@ class LateTask(BaseTask):
 class TemplateSystem(BasePlugin):
     """Plugins of this type wrap templating systems."""
 
-    name = "dummy templates"
+    name = "dummy_templates"
 
     def set_directories(self, directories, cache_folder):
         """Sets the list of folders where templates are located and cache."""
         raise NotImplementedError()
-
-    def set_site(self, site):
-        """Sets the site."""
-        self.site = site
 
     def template_deps(self, template_name):
         """Returns filenames which are dependencies for a template."""
@@ -168,8 +186,12 @@ class TemplateSystem(BasePlugin):
         raise NotImplementedError()
 
     def render_template_to_string(self, template, context):
-        """ Renders template to a string using context. """
+        """Renders template to a string using context. """
+        raise NotImplementedError()
 
+    def inject_directory(self, directory):
+        """Injects the directory with the lowest priority in the
+        template search mechanism."""
         raise NotImplementedError()
 
 
