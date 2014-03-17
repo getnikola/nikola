@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Your Name">
+<title>A reStructuredText Reference | Demo Site</title>
+<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link rel="canonical" href="http://getnikola.com/stories/quickref.html">
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+</head>
+<body>
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"><div class="container-fluid">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://getnikola.com/">Demo Site</a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../archive.html">Archives</a>
+                </li>
+<li>
+<a href="../categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS</a>
+
+            </li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="quickref.rst" id="sourcelink">Source</a>
+    </li>
+
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container-fluid -->
+</nav><!-- End of Menubar --><div class="container">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+    <h1>A reStructuredText Reference</h1>
+    <div>
+<div class="alert alert-info pull-right" style="margin-left: 2em;">
+    <h3><a name="contents">Contents</a></h3>
+
+    <ul>
+<li><a href="quickref.html#inline-markup">Inline Markup</a></li>
+    <li><a href="quickref.html#escaping">Escaping with Backslashes</a></li>
+    <li><a href="quickref.html#section-structure">Section Structure</a></li>
+    <li><a href="quickref.html#paragraphs">Paragraphs</a></li>
+    <li><a href="quickref.html#bullet-lists">Bullet Lists</a></li>
+    <li><a href="quickref.html#enumerated-lists">Enumerated Lists</a></li>
+    <li><a href="quickref.html#definition-lists">Definition Lists</a></li>
+    <li><a href="quickref.html#field-lists">Field Lists</a></li>
+    <li><a href="quickref.html#option-lists">Option Lists</a></li>
+    <li><a href="quickref.html#literal-blocks">Literal Blocks</a></li>
+    <li><a href="quickref.html#line-blocks">Line Blocks</a></li>
+    <li><a href="quickref.html#block-quotes">Block Quotes</a></li>
+    <li><a href="quickref.html#doctest-blocks">Doctest Blocks</a></li>
+    <li><a href="quickref.html#tables">Tables</a></li>
+    <li><a href="quickref.html#transitions">Transitions</a></li>
+    <li>
+<a href="quickref.html#explicit-markup">Explicit Markup</a>
+    <ul>
+<li><a href="quickref.html#footnotes">Footnotes</a></li>
+    <li><a href="quickref.html#citations">Citations</a></li>
+    <li>
+<a href="quickref.html#hyperlink-targets">Hyperlink Targets</a>
+    <ul>
+<li><a href="quickref.html#external-hyperlink-targets">External Hyperlink Targets</a></li>
+    <li><a href="quickref.html#internal-hyperlink-targets">Internal Hyperlink Targets</a></li>
+    <li><a href="quickref.html#indirect-hyperlink-targets">Indirect Hyperlink Targets</a></li>
+    <li><a href="quickref.html#implicit-hyperlink-targets">Implicit Hyperlink Targets</a></li>
+    </ul>
+</li>
+    <li><a href="quickref.html#directives">Directives</a></li>
+    <li><a href="quickref.html#substitution-references-and-definitions">Substitution References and Definitions</a></li>
+    <li><a href="quickref.html#comments">Comments</a></li>
+    </ul>
+</li>
+    <li><a href="quickref.html#getting-help">Getting Help</a></li>
+    </ul>
+</div>
+
+
+    <h2>Quick <i>re</i><font size="+4"><tt>Structured</tt></font><i>Text</i>
+</h2>
+
+    <!-- Caveat: if you're reading the HTML for the examples, -->
+    <!-- beware that it was hand-generated, not by Docutils/ReST.  -->
+
+    <blockquote>
+    <p>Copyright: This document has been placed in the public domain.
+    </p>
+</blockquote>
+
+
+    <p>The full details of the markup may be found on the
+    <a href="http://docutils.sourceforge.net/rst.html">reStructuredText</a>
+    page. This document is just intended as a reminder.
+
+    </p>
+<p>Links that look like "(<a href="quickref.html#details">details</a>)" point
+    into the HTML version of the full <a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html">reStructuredText
+    specification</a> document.  These are relative links; if they
+    don't work, please use the <a href="http://docutils.sourceforge.net/docs/user/rst/quickref.html">master "Quick reStructuredText"</a> document.
+
+
+    </p>
+<h3><a href="quickref.html#contents" name="inline-markup" class="backref">Inline Markup</a></h3>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#inline-markup">details</a>)
+
+    </p>
+<p>Inline markup allows words and phrases within text to have
+    character styles (like italics and boldface) and functionality
+    (like hyperlinks).
+
+    </p>
+<p></p>
+<table border="1" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th>Plain text
+    </th>
+<th>Typical result
+    </th>
+<th>Notes
+    </th>
+</tr></thead>
+<tbody>
+<tr valign="top">
+<td nowrap>
+<samp>*emphasis*</samp>
+    </td>
+<td>
+<em>emphasis</em>
+    </td>
+<td>Normally rendered as italics.
+
+    </td>
+</tr>
+<tr valign="top">
+<td nowrap>
+<samp>**strong emphasis**</samp>
+    </td>
+<td>
+<strong>strong emphasis</strong>
+    </td>
+<td>Normally rendered as boldface.
+
+    </td>
+</tr>
+<tr valign="top">
+<td nowrap>
+<samp>`interpreted text`</samp>
+    </td>
+<td>(see note at right)
+    </td>
+<td>The rendering and <em>meaning</em> of interpreted text is
+    domain- or application-dependent.  It can be used for things
+    like index entries or explicit descriptive markup (like program
+    identifiers).
+
+    </td>
+</tr>
+<tr valign="top">
+<td nowrap>
+<samp>``inline literal``</samp>
+    </td>
+<td>
+<code>inline literal</code>
+    </td>
+<td>Normally rendered as monospaced text. Spaces should be
+    preserved, but line breaks will not be.
+
+    </td>
+</tr>
+<tr valign="top">
+<td nowrap>
+<samp>reference_</samp>
+    </td>
+<td>
+<a href="quickref.html#hyperlink-targets">reference</a>
+    </td>
+<td>A simple, one-word hyperlink reference.  See <a href="quickref.html#hyperlink-targets">Hyperlink Targets</a>.
+
+    </td>
+</tr>
+<tr valign="top">
+<td nowrap>
+<samp>`phrase reference`_</samp>
+    </td>
+<td>
+<a href="quickref.html#hyperlink-targets">phrase reference</a>
+    </td>
+<td>A hyperlink reference with spaces or punctuation needs to be
+    quoted with backquotes.  See <a href="quickref.html#hyperlink-targets">Hyperlink Targets</a>.
+
+    </td>
+</tr>
+<tr valign="top">
+<td nowrap>
+<samp>anonymous__</samp>
+    </td>
+<td>
+<a href="quickref.html#hyperlink-targets">anonymous</a>
+    </td>
+<td>With two underscores instead of one, both simple and phrase
+    references may be anonymous (the reference text is not repeated
+    at the target).  See <a href="quickref.html#hyperlink-targets">Hyperlink Targets</a>.
+
+    </td>
+</tr>
+<tr valign="top">
+<td nowrap>
+<samp>_`inline internal target`</samp>
+    </td>
+<td>
+<a name="inline-internal-target">inline internal target</a>
+    </td>
+<td>A crossreference target within text.
+    See <a href="quickref.html#hyperlink-targets">Hyperlink Targets</a>.
+
+    </td>
+</tr>
+<tr valign="top">
+<td nowrap>
+<samp>|substitution reference|</samp>
+    </td>
+<td>(see note at right)
+    </td>
+<td>The result is substituted in from the <a href="quickref.html#substitution-references-and-definitions">substitution
+    definition</a>.  It could be text, an image, a hyperlink, or a
+    combination of these and others.
+
+    </td>
+</tr>
+<tr valign="top">
+<td nowrap>
+<samp>footnote reference [1]_</samp>
+    </td>
+<td>footnote reference <sup><a href="quickref.html#footnotes">1</a></sup>
+</td>
+<td>See <a href="quickref.html#footnotes">Footnotes</a>.
+
+    </td>
+</tr>
+<tr valign="top">
+<td nowrap>
+<samp>citation reference [CIT2002]_</samp>
+    </td>
+<td>citation reference <a href="quickref.html#citations">[CIT2002]</a>
+    </td>
+<td>See <a href="quickref.html#citations">Citations</a>.
+
+    </td>
+</tr>
+<tr valign="top">
+<td nowrap>
+<samp>http://docutils.sf.net/</samp>
+    </td>
+<td>
+<a href="http://docutils.sf.net/">http://docutils.sf.net/</a>
+    </td>
+<td>A standalone hyperlink.
+
+    </td>
+</tr>
+</tbody>
+</table>
+<p>Asterisk, backquote, vertical bar, and underscore are inline
+    delimiter characters. Asterisk, backquote, and vertical bar act
+    like quote marks; matching characters surround the marked-up word
+    or phrase, whitespace or other quoting is required outside them,
+    and there can't be whitespace just inside them. If you want to use
+    inline delimiter characters literally, <a href="quickref.html#escaping">escape
+    (with backslash)</a> or quote them (with double backquotes; i.e.
+    use inline literals).
+
+    </p>
+<p>In detail, the reStructuredText specification says that in
+    inline markup, the following rules apply to start-strings and
+    end-strings (inline markup delimiters):
+
+    </p>
+<ol>
+<li>The start-string must start a text block or be
+    immediately preceded by whitespace or any of 
+    <samp>' " ( [ {</samp> or <samp>&lt;</samp>.
+    </li>
+<li>The start-string must be immediately followed by non-whitespace.
+    </li>
+<li>The end-string must be immediately preceded by non-whitespace.
+    </li>
+<li>The end-string must end a text block (end of document or
+    followed by a blank line) or be immediately followed by whitespace
+    or any of <samp>' " . , : ; ! ? - ) ] } / \</samp>
+    or <samp>&gt;</samp>.
+    </li>
+<li>If a start-string is immediately preceded by one of 
+    <samp>' " ( [ {</samp> or <samp>&lt;</samp>, it must not be
+    immediately followed by the corresponding character from 
+    <samp>' " ) ] }</samp> or <samp>&gt;</samp>.
+    </li>
+<li>An end-string must be separated by at least one
+    character from the start-string.
+    </li>
+<li>An <a href="quickref.html#escaping">unescaped</a> backslash preceding a
+    start-string or end-string will disable markup recognition, except
+    for the end-string of inline literals.
+    </li>
+</ol>
+<p>Also remember that inline markup may not be nested (well,
+    except that inline literals can contain any of the other inline
+    markup delimiter characters, but that doesn't count because
+    nothing is processed).
+
+    </p>
+<h3><a href="quickref.html#contents" name="escaping" class="backref">Escaping with Backslashes</a></h3>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#escaping-mechanism">details</a>)
+
+    </p>
+<p>reStructuredText uses backslashes ("\") to override the special
+    meaning given to markup characters and get the literal characters
+    themselves. To get a literal backslash, use an escaped backslash
+    ("\\"). For example:
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Raw reStructuredText
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody>
+<tr valign="top">
+<td>
+        <samp>*escape* ``with`` "\"</samp>
+    </td>
+<td>
+<em>escape</em> <samp>with</samp> ""
+    </td>
+</tr>
+<tr valign="top">
+<td>
+        <samp>\*escape* \``with`` "\\"</samp>
+    </td>
+<td>*escape* ``with`` "\"
+    </td>
+</tr>
+</tbody>
+</table>
+<p>In Python strings it will, of course, be necessary
+    to escape any backslash characters so that they actually
+    <em>reach</em> reStructuredText.
+    The simplest way to do this is to use raw strings:
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Python string
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody>
+<tr valign="top">
+<td>
+        <samp>r"""\*escape* \`with` "\\""""</samp>
+    </td>
+<td>*escape* `with` "\"
+    </td>
+</tr>
+<tr valign="top">
+<td>
+        <samp> """\\*escape* \\`with` "\\\\""""</samp>
+    </td>
+<td>*escape* `with` "\"
+    </td>
+</tr>
+<tr valign="top">
+<td>
+        <samp> """\*escape* \`with` "\\""""</samp>
+    </td>
+<td>
+<em>escape</em> with ""
+    </td>
+</tr>
+</tbody>
+</table>
+<h3><a href="quickref.html#contents" name="section-structure" class="backref">Section Structure</a></h3>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#sections">details</a>)
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td>
+<samp>=====</samp>
+<br><samp>Title</samp>
+<br><samp>=====</samp>
+<br><samp>Subtitle</samp>
+<br><samp>--------</samp>
+<br><samp>Titles are underlined (or over-</samp>
+<br><samp>and underlined) with a printing</samp>
+<br><samp>nonalphanumeric 7-bit ASCII</samp>
+<br><samp>character. Recommended choices</samp>
+<br><samp>are "``= - ` : ' " ~ ^ _ * + # &lt; &gt;``".</samp>
+<br><samp>The underline/overline must be at</samp>
+<br><samp>least as long as the title text.</samp>
+<br><samp></samp>
+<br><samp>A lone top-level (sub)section</samp>
+<br><samp>is lifted up to be the document's</samp>
+<br><samp>(sub)title.</samp>
+
+    </td>
+<td>
+        <font size="+2"><strong>Title</strong></font>
+        <p><font size="+1"><strong>Subtitle</strong></font>
+        </p>
+<p>Titles are underlined (or over-
+        and underlined) with a printing
+        nonalphanumeric 7-bit ASCII
+        character. Recommended choices
+        are "<samp>= - ` : ' " ~ ^ _ * + # &lt; &gt;</samp>".
+        The underline/overline must be at
+        least as long as the title text.
+        </p>
+<p>A lone top-level (sub)section is
+        lifted up to be the document's
+        (sub)title.
+    </p>
+</td>
+</tr></tbody>
+</table>
+<h3><a href="quickref.html#contents" name="paragraphs" class="backref">Paragraphs</a></h3>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#paragraphs">details</a>)
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td>
+<p><samp>This is a paragraph.</samp>
+
+</p>
+<p><samp>Paragraphs line up at their left</samp>
+<br><samp>edges, and are normally separated</samp>
+<br><samp>by blank lines.</samp>
+
+    </p>
+</td>
+<td>
+        <p>This is a paragraph.
+
+        </p>
+<p>Paragraphs line up at their left edges, and are normally
+        separated by blank lines.
+
+    </p>
+</td>
+</tr></tbody>
+</table>
+<h3><a href="quickref.html#contents" name="bullet-lists" class="backref">Bullet Lists</a></h3>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#bullet-lists">details</a>)
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td>
+<samp>Bullet lists:</samp>
+
+<p><samp>- This is item 1</samp>
+<br><samp>- This is item 2</samp>
+
+</p>
+<p><samp>- Bullets are "-", "*" or "+".</samp>
+<br><samp>  Continuing text must be aligned</samp>
+<br><samp>  after the bullet and whitespace.</samp>
+
+</p>
+<p><samp>Note that a blank line is required</samp>
+<br><samp>before the first item and after the</samp>
+<br><samp>last, but is optional between items.</samp>
+    </p>
+</td>
+<td>Bullet lists:
+        <ul>
+<li>This is item 1
+        </li>
+<li>This is item 2
+        </li>
+<li>Bullets are "-", "*" or "+".
+        Continuing text must be aligned
+        after the bullet and whitespace.
+        </li>
+</ul>
+<p>Note that a blank line is required before the first
+        item and after the last, but is optional between items.
+    </p>
+</td>
+</tr></tbody>
+</table>
+<h3><a href="quickref.html#contents" name="enumerated-lists" class="backref">Enumerated Lists</a></h3>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#enumerated-lists">details</a>)
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td>
+<samp>Enumerated lists:</samp>
+
+<p><samp>3. This is the first item</samp>
+<br><samp>4. This is the second item</samp>
+<br><samp>5. Enumerators are arabic numbers,</samp>
+<br><samp>   single letters, or roman numerals</samp>
+<br><samp>6. List items should be sequentially</samp>
+<br><samp>   numbered, but need not start at 1</samp>
+<br><samp>   (although not all formatters will</samp>
+<br><samp>   honour the first index).</samp>
+<br><samp>#. This item is auto-enumerated</samp>
+    </p>
+</td>
+<td>Enumerated lists:
+        <ol type="1">
+<li value="3">This is the first item
+        </li>
+<li>This is the second item
+        </li>
+<li>Enumerators are arabic numbers, single letters,
+        or roman numerals
+        </li>
+<li>List items should be sequentially numbered,
+        but need not start at 1 (although not all
+        formatters will honour the first index).
+        </li>
+<li>This item is auto-enumerated
+        </li>
+</ol>
+</td>
+</tr></tbody>
+</table>
+<h3><a href="quickref.html#contents" name="definition-lists" class="backref">Definition Lists</a></h3>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#definition-lists">details</a>)
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td>
+<samp>Definition lists:</samp>
+<br><br><samp>what</samp>
+<br><samp>  Definition lists associate a term with</samp>
+<br><samp>  a definition.</samp>
+<br><br><samp>how</samp>
+<br><samp>  The term is a one-line phrase, and the</samp>
+<br><samp>  definition is one or more paragraphs or</samp>
+<br><samp>  body elements, indented relative to the</samp>
+<br><samp>  term. Blank lines are not allowed</samp>
+<br><samp>  between term and definition.</samp>
+    </td>
+<td>Definition lists:
+        <dl>
+<dt>
+<strong>what</strong>
+        </dt>
+<dd>Definition lists associate a term with
+        a definition.
+
+        </dd>
+<dt>
+<strong>how</strong>
+        </dt>
+<dd>The term is a one-line phrase, and the
+        definition is one or more paragraphs or
+        body elements, indented relative to the
+        term.  Blank lines are not allowed
+        between term and definition.
+        </dd>
+</dl>
+</td>
+</tr></tbody>
+</table>
+<h3><a href="quickref.html#contents" name="field-lists" class="backref">Field Lists</a></h3>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#field-lists">details</a>)
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td>
+<samp>:Authors:</samp>
+<br><samp>    Tony J. (Tibs) Ibbs,</samp>
+<br><samp>    David Goodger</samp>
+
+<p><samp>    (and sundry other good-natured folks)</samp>
+
+</p>
+<p><samp>:Version: 1.0 of 2001/08/08</samp>
+<br><samp>:Dedication: To my father.</samp>
+    </p>
+</td>
+<td>
+        <table>
+<tr valign="top">
+<td>
+<strong>Authors:</strong>
+        </td>
+<td>Tony J. (Tibs) Ibbs,
+        David Goodger
+        </td>
+</tr>
+<tr>
+<td></td>
+<td>(and sundry other good-natured folks)
+        </td>
+</tr>
+<tr>
+<td><strong>Version:</strong></td>
+<td>1.0 of 2001/08/08
+        </td>
+</tr>
+<tr>
+<td><strong>Dedication:</strong></td>
+<td>To my father.
+        </td>
+</tr>
+</table>
+</td>
+</tr></tbody>
+</table>
+<p>Field lists are used as part of an extension syntax, such as
+    options for <a href="quickref.html#directives">directives</a>, or database-like
+    records meant for further processing.  Field lists may also be
+    used as generic two-column table constructs in documents.
+
+    </p>
+<h3><a href="quickref.html#contents" name="option-lists" class="backref">Option Lists</a></h3>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#option-lists">details</a>)
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td>
+        <p><samp>
+-a            command-line option "a"
+<br>-b file       options can have arguments
+<br>              and long descriptions
+<br>--long        options can be long also
+<br>--input=file  long options can also have
+<br>              arguments
+<br>/V            DOS/VMS-style options too
+</samp>
+
+    </p>
+</td>
+<td>
+        <table border="0" width="100%"><tbody valign="top">
+<tr>
+<td width="30%">
+<samp>-a</samp>
+            </td>
+<td>command-line option "a"
+            </td>
+</tr>
+<tr>
+<td>
+<samp>-b <i>file</i></samp>
+            </td>
+<td>options can have arguments and long descriptions
+            </td>
+</tr>
+<tr>
+<td>
+<samp>--long</samp>
+            </td>
+<td>options can be long also
+            </td>
+</tr>
+<tr>
+<td>
+<samp>--input=<i>file</i></samp>
+            </td>
+<td>long options can also have arguments
+            </td>
+</tr>
+<tr>
+<td>
+<samp>/V</samp>
+            </td>
+<td>DOS/VMS-style options too
+        </td>
+</tr>
+</tbody></table>
+</td>
+</tr></tbody>
+</table>
+<p>There must be at least two spaces between the option and the
+    description.
+
+    </p>
+<h3><a href="quickref.html#contents" name="literal-blocks" class="backref">Literal Blocks</a></h3>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#literal-blocks">details</a>)
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td>
+<samp>A paragraph containing only two colons</samp>
+<br><samp>indicates that the following indented</samp>
+<br><samp>or quoted text is a literal block.</samp>
+<br><br><samp>::</samp>
+<br><br><samp>  Whitespace, newlines, blank lines, and</samp>
+<br><samp>  all kinds of markup (like *this* or</samp>
+<br><samp>  \this) is preserved by literal blocks.</samp>
+<br><br><samp>  The paragraph containing only '::'</samp>
+<br><samp>  will be omitted from the result.</samp>
+<br><br><samp>The ``::`` may be tacked onto the very</samp>
+<br><samp>end of any paragraph. The ``::`` will be</samp>
+<br><samp>omitted if it is preceded by whitespace.</samp>
+<br><samp>The ``::`` will be converted to a single</samp>
+<br><samp>colon if preceded by text, like this::</samp>
+<br><br><samp>  It's very convenient to use this form.</samp>
+<br><br><samp>Literal blocks end when text returns to</samp>
+<br><samp>the preceding paragraph's indentation.</samp>
+<br><samp>This means that something like this</samp>
+<br><samp>is possible::</samp>
+<br><br><samp>      We start here</samp>
+<br><samp>    and continue here</samp>
+<br><samp>  and end here.</samp>
+<br><br><samp>Per-line quoting can also be used on</samp>
+<br><samp>unindented literal blocks::</samp>
+<br><br><samp>&gt; Useful for quotes from email and</samp>
+<br><samp>&gt; for Haskell literate programming.</samp>
+
+    </td>
+<td>
+        <p>A paragraph containing only two colons
+indicates that the following indented or quoted
+text is a literal block.
+
+        </p>
+<pre>
+Whitespace, newlines, blank lines, and
+all kinds of markup (like *this* or
+\this) is preserved by literal blocks.
+
+The paragraph containing only '::'
+will be omitted from the result.</pre>
+
+        <p>The <samp>::</samp> may be tacked onto the very
+end of any paragraph. The <samp>::</samp> will be
+omitted if it is preceded by whitespace.
+The <samp>::</samp> will be converted to a single
+colon if preceded by text, like this:
+
+        </p>
+<pre>
+It's very convenient to use this form.</pre>
+
+        <p>Literal blocks end when text returns to
+the preceding paragraph's indentation.
+This means that something like this is possible:
+
+        </p>
+<pre>
+    We start here
+    and continue here
+and end here.</pre>
+
+        <p>Per-line quoting can also be used on
+unindented literal blocks:
+
+        </p>
+<pre>
+&gt; Useful for quotes from email and
+&gt; for Haskell literate programming.</pre>
+    </td>
+</tr></tbody>
+</table>
+<h3><a href="quickref.html#contents" name="line-blocks" class="backref">Line Blocks</a></h3>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#line-blocks">details</a>)
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td>
+<samp>| Line blocks are useful for addresses,</samp>
+<br><samp>| verse, and adornment-free lists.</samp>
+<br><samp>|</samp>
+<br><samp>| Each new line begins with a</samp>
+<br><samp>| vertical bar ("|").</samp>
+<br><samp>|     Line breaks and initial indents</samp>
+<br><samp>|     are preserved.</samp>
+<br><samp>| Continuation lines are wrapped</samp>
+<br><samp>  portions of long lines; they begin</samp>
+<br><samp>  with spaces in place of vertical bars.</samp>
+
+    </td>
+<td>
+        <div class="line-block">
+        <div class="line">Line blocks are useful for addresses,</div>
+        <div class="line">verse, and adornment-free lists.</div>
+        <div class="line"><br></div>
+        <div class="line">Each new line begins with a</div>
+        <div class="line">vertical bar ("|").</div>
+        <div class="line-block">
+            <div class="line">Line breaks and initial indents</div>
+            <div class="line">are preserved.</div>
+        </div>
+        <div class="line">Continuation lines are wrapped portions
+            of long lines; they begin
+            with spaces in place of vertical bars.</div>
+        </div>
+    </td>
+</tr></tbody>
+</table>
+<h3><a href="quickref.html#contents" name="block-quotes" class="backref">Block Quotes</a></h3>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#block-quotes">details</a>)
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td>
+<samp>Block quotes are just:</samp>
+
+<p><samp>    Indented paragraphs,</samp>
+
+</p>
+<p><samp>        and they may nest.</samp>
+    </p>
+</td>
+<td>
+        Block quotes are just:
+        <blockquote>
+        <p>Indented paragraphs,
+        </p>
+<blockquote>
+        <p>and they may nest.
+        </p>
+</blockquote>
+        </blockquote>
+    </td>
+</tr></tbody>
+</table>
+<p>Use <a href="quickref.html#comments">empty comments</a> to separate indentation
+    contexts, such as block quotes and directive contents.</p>
+
+    <h3><a href="quickref.html#contents" name="doctest-blocks" class="backref">Doctest Blocks</a></h3>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#doctest-blocks">details</a>)
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td>
+        <p><samp>Doctest blocks are interactive
+<br>Python sessions. They begin with
+<br>"``&gt;&gt;&gt;``" and end with a blank line.</samp>
+
+        </p>
+<p><samp>&gt;&gt;&gt; print "This is a doctest block."
+<br>This is a doctest block.</samp>
+
+    </p>
+</td>
+<td>
+        <p>Doctest blocks are interactive
+        Python sessions. They begin with
+        "<samp>&gt;&gt;&gt;</samp>" and end with a blank line.
+
+        </p>
+<p><samp>&gt;&gt;&gt; print "This is a doctest block."
+<br>This is a doctest block.</samp>
+    </p>
+</td>
+</tr></tbody>
+</table>
+<p>"The <a href="http://www.python.org/doc/current/lib/module-doctest.html">doctest</a>
+    module searches a module's docstrings for text that looks like an
+    interactive Python session, then executes all such sessions to
+    verify they still work exactly as shown." (From the doctest docs.)
+
+    </p>
+<h3><a href="quickref.html#contents" name="tables" class="backref">Tables</a></h3>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#tables">details</a>)
+
+    </p>
+<p>There are two syntaxes for tables in reStructuredText.  Grid
+    tables are complete but cumbersome to create.  Simple tables are
+    easy to create but limited (no row spans, etc.).</p>
+
+    <p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody>
+<tr valign="top">
+<td>
+<p><samp>Grid table:</samp></p>
+
+<p><samp>+------------+------------+-----------+</samp>
+<br><samp>| Header 1   | Header 2   | Header 3  |</samp>
+<br><samp>+============+============+===========+</samp>
+<br><samp>| body row 1 | column 2   | column 3  |</samp>
+<br><samp>+------------+------------+-----------+</samp>
+<br><samp>| body row 2 | Cells may span columns.|</samp>
+<br><samp>+------------+------------+-----------+</samp>
+<br><samp>| body row 3 | Cells may  | - Cells   |</samp>
+<br><samp>+------------+ span rows. | - contain |</samp>
+<br><samp>| body row 4 |            | - blocks. |</samp>
+<br><samp>+------------+------------+-----------+</samp></p>
+    </td>
+<td>
+        <p>Grid table:</p>
+        <table border="1">
+<thead valign="bottom"><tr>
+<th>Header 1
+            </th>
+<th>Header 2
+            </th>
+<th>Header 3
+            </th>
+</tr></thead>
+<tbody valign="top">
+<tr>
+<td>body row 1
+            </td>
+<td>column 2
+            </td>
+<td>column 3
+            </td>
+</tr>
+<tr>
+<td>body row 2
+            </td>
+<td colspan="2">Cells may span columns.
+            </td>
+</tr>
+<tr>
+<td>body row 3
+            </td>
+<td rowspan="2">Cells may<br>span rows.
+            </td>
+<td rowspan="2">
+                <ul>
+<li>Cells
+                </li>
+<li>contain
+                </li>
+<li>blocks.
+                </li>
+</ul>
+</td>
+</tr>
+<tr><td>body row 4
+            </td></tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr valign="top">
+<td>
+<p><samp>Simple table:</samp></p>
+
+<p><samp>=====  =====  ======</samp>
+<br><samp>   Inputs     Output</samp>
+<br><samp>------------  ------</samp>
+<br><samp>  A      B    A or B</samp>
+<br><samp>=====  =====  ======</samp>
+<br><samp>False  False  False</samp>
+<br><samp>True   False  True</samp>
+<br><samp>False  True   True</samp>
+<br><samp>True   True   True</samp>
+<br><samp>=====  =====  ======</samp></p>
+
+    </td>
+<td>
+        <p>Simple table:</p>
+        <table border="1">
+<colgroup>
+<col width="31%">
+<col width="31%">
+<col width="38%">
+</colgroup>
+<thead valign="bottom">
+<tr>
+<th colspan="2">Inputs
+            </th>
+<th>Output
+            </th>
+</tr>
+<tr>
+<th>A
+            </th>
+<th>B
+            </th>
+<th>A or B
+        </th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr>
+<td>False
+            </td>
+<td>False
+            </td>
+<td>False
+            </td>
+</tr>
+<tr>
+<td>True
+            </td>
+<td>False
+            </td>
+<td>True
+            </td>
+</tr>
+<tr>
+<td>False
+            </td>
+<td>True
+            </td>
+<td>True
+            </td>
+</tr>
+<tr>
+<td>True
+            </td>
+<td>True
+            </td>
+<td>True
+        </td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<h3><a href="quickref.html#contents" name="transitions" class="backref">Transitions</a></h3>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#transitions">details</a>)
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td>
+        <p><samp>
+A transition marker is a horizontal line
+<br>of 4 or more repeated punctuation
+<br>characters.</samp>
+
+        </p>
+<p><samp>------------</samp>
+
+        </p>
+<p><samp>A transition should not begin or end a
+<br>section or document, nor should two
+<br>transitions be immediately adjacent.</samp>
+
+    </p>
+</td>
+<td>
+        <p>A transition marker is a horizontal line
+        of 4 or more repeated punctuation
+        characters.</p>
+
+        <hr>
+<p>A transition should not begin or end a
+        section or document, nor should two
+        transitions be immediately adjacent.
+    </p>
+</td>
+</tr></tbody>
+</table>
+<p>Transitions are commonly seen in novels and short fiction, as a
+    gap spanning one or more lines, marking text divisions or
+    signaling changes in subject, time, point of view, or emphasis.
+
+    </p>
+<h3><a href="quickref.html#contents" name="explicit-markup" class="backref">Explicit Markup</a></h3>
+
+    <p>Explicit markup blocks are used for constructs which float
+    (footnotes), have no direct paper-document representation
+    (hyperlink targets, comments), or require specialized processing
+    (directives).  They all begin with two periods and whitespace, the
+    "explicit markup start".
+
+    </p>
+<h4><a href="quickref.html#contents" name="footnotes" class="backref">Footnotes</a></h4>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#footnotes">details</a>)
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody>
+<tr valign="top">
+<td>
+        <samp>Footnote references, like [5]_.</samp>
+        <br><samp>Note that footnotes may get</samp>
+        <br><samp>rearranged, e.g., to the bottom of</samp>
+        <br><samp>the "page".</samp>
+
+        <p><samp>.. [5] A numerical footnote. Note</samp>
+        <br><samp>   there's no colon after the ``]``.</samp>
+
+    </p>
+</td>
+<td>
+        Footnote references, like <sup><a href="quickref.html#5">5</a></sup>.
+        Note that footnotes may get rearranged, e.g., to the bottom of
+        the "page".
+
+        <p></p>
+<table>
+<tr><td colspan="2">
+<hr>
+<!-- <tr><td colspan="2">Footnotes: -->
+</td></tr>
+<tr>
+<td><a name="5"><strong>[5]</strong></a></td>
+<td> A numerical footnote.
+        Note there's no colon after the <samp>]</samp>.
+        </td>
+</tr>
+</table>
+</td>
+</tr>
+<tr valign="top">
+<td>
+        <samp>Autonumbered footnotes are</samp>
+        <br><samp>possible, like using [#]_ and [#]_.</samp>
+        <p><samp>.. [#] This is the first one.</samp>
+        <br><samp>.. [#] This is the second one.</samp>
+
+        </p>
+<p><samp>They may be assigned 'autonumber</samp>
+        <br><samp>labels' - for instance,
+        <br>[#fourth]_ and [#third]_.</samp>
+
+        </p>
+<p><samp>.. [#third] a.k.a. third_</samp>
+        </p>
+<p><samp>.. [#fourth] a.k.a. fourth_</samp>
+    </p>
+</td>
+<td>
+        Autonumbered footnotes are possible, like using <sup><a href="quickref.html#auto1">1</a></sup> and <sup><a href="quickref.html#auto2">2</a></sup>.
+
+        <p>They may be assigned 'autonumber labels' - for instance,
+        <sup><a href="quickref.html#fourth">4</a></sup> and <sup><a href="quickref.html#third">3</a></sup>.
+
+        </p>
+<p></p>
+<table>
+<tr><td colspan="2">
+<hr>
+<!-- <tr><td colspan="2">Footnotes: -->
+</td></tr>
+<tr>
+<td><a name="auto1"><strong>[1]</strong></a></td>
+<td> This is the first one.
+        </td>
+</tr>
+<tr>
+<td><a name="auto2"><strong>[2]</strong></a></td>
+<td> This is the second one.
+        </td>
+</tr>
+<tr>
+<td><a name="third"><strong>[3]</strong></a></td>
+<td> a.k.a. <a href="quickref.html#third">third</a>
+        </td>
+</tr>
+<tr>
+<td><a name="fourth"><strong>[4]</strong></a></td>
+<td> a.k.a. <a href="quickref.html#fourth">fourth</a>
+        </td>
+</tr>
+</table>
+</td>
+</tr>
+<tr valign="top">
+<td>
+        <samp>Auto-symbol footnotes are also</samp>
+        <br><samp>possible, like this: [*]_ and [*]_.</samp>
+        <p><samp>.. [*] This is the first one.</samp>
+        <br><samp>.. [*] This is the second one.</samp>
+
+    </p>
+</td>
+<td>
+        Auto-symbol footnotes are also
+        possible, like this: <sup><a href="quickref.html#symbol1">*</a></sup>
+        and <sup><a href="quickref.html#symbol2">†</a></sup>.
+
+        <p></p>
+<table>
+<tr><td colspan="2">
+<hr>
+<!-- <tr><td colspan="2">Footnotes: -->
+</td></tr>
+<tr>
+<td><a name="symbol1"><strong>[*]</strong></a></td>
+<td> This is the first symbol footnote
+        </td>
+</tr>
+<tr>
+<td><a name="symbol2"><strong>[†]</strong></a></td>
+<td> This is the second one.
+        </td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The numbering of auto-numbered footnotes is determined by the
+    order of the footnotes, not of the references. For auto-numbered
+    footnote references without autonumber labels
+    ("<samp>[#]_</samp>"), the references and footnotes must be in the
+    same relative order. Similarly for auto-symbol footnotes
+    ("<samp>[*]_</samp>").
+
+    </p>
+<h4><a href="quickref.html#contents" name="citations" class="backref">Citations</a></h4>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#citations">details</a>)
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td>
+        <samp>Citation references, like [CIT2002]_.</samp>
+        <br><samp>Note that citations may get</samp>
+        <br><samp>rearranged, e.g., to the bottom of</samp>
+        <br><samp>the "page".</samp>
+
+        <p><samp>.. [CIT2002] A citation</samp>
+        <br><samp>   (as often used in journals).</samp>
+
+        </p>
+<p><samp>Citation labels contain alphanumerics,</samp>
+        <br><samp>underlines, hyphens and fullstops.</samp>
+        <br><samp>Case is not significant.</samp>
+
+        </p>
+<p><samp>Given a citation like [this]_, one</samp>
+        <br><samp>can also refer to it like this_.</samp>
+
+        </p>
+<p><samp>.. [this] here.</samp>
+
+    </p>
+</td>
+<td>
+        Citation references, like <a href="quickref.html#cit2002">[CIT2002]</a>.
+        Note that citations may get rearranged, e.g., to the bottom of
+        the "page".
+
+        <p>Citation labels contain alphanumerics, underlines, hyphens
+        and fullstops.  Case is not significant.
+
+        </p>
+<p>Given a citation like <a href="quickref.html#this">[this]</a>, one
+        can also refer to it like <a href="quickref.html#this">this</a>.
+
+        </p>
+<p></p>
+<table>
+<tr><td colspan="2">
+<hr>
+<!-- <tr><td colspan="2">Citations: -->
+</td></tr>
+<tr>
+<td><a name="cit2002"><strong>[CIT2002]</strong></a></td>
+<td> A citation
+        (as often used in journals).
+        </td>
+</tr>
+<tr>
+<td><a name="this"><strong>[this]</strong></a></td>
+<td> here.
+        </td>
+</tr>
+</table>
+</td>
+</tr></tbody>
+</table>
+<h4><a href="quickref.html#contents" name="hyperlink-targets" class="backref">Hyperlink Targets</a></h4>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#hyperlink-targets">details</a>)
+
+    </p>
+<h5><a href="quickref.html#contents" name="external-hyperlink-targets" class="backref">External Hyperlink Targets</a></h5>
+
+    <p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody>
+<tr valign="top">
+<td rowspan="2">
+        <samp>External hyperlinks, like Python_.</samp>
+
+        <p><samp>.. _Python: http://www.python.org/</samp>
+    </p>
+</td>
+<td>
+        <table width="100%">
+<tr bgcolor="#99CCFF"><td>
+<em>Fold-in form</em>
+        </td></tr>
+<tr><td>External hyperlinks, like
+        <a href="http://www.python.org/">Python</a>.
+        </td></tr>
+</table>
+</td>
+</tr>
+<tr valign="top"><td>
+        <table width="100%">
+<tr bgcolor="#99CCFF"><td>
+<em>Call-out form</em>
+        </td></tr>
+<tr><td>External hyperlinks, like
+        <a href="quickref.html#labPython"><i>Python</i></a>.
+
+        <p></p>
+<table>
+<tr><td colspan="2"><hr></td></tr>
+<tr>
+<td>
+<a name="labPython"><i>Python:</i></a>
+            </td>
+<td> <a href="http://www.python.org/">http://www.python.org/</a>
+        </td>
+</tr>
+</table>
+</td></tr>
+</table>
+</td></tr>
+</tbody>
+</table>
+<p>"<em>Fold-in</em>" is the representation typically used in HTML
+    documents (think of the indirect hyperlink being "folded in" like
+    ingredients into a cake), and "<em>call-out</em>" is more suitable for
+    printed documents, where the link needs to be presented explicitly, for
+    example as a footnote.  You can force usage of the call-out form by
+    using the
+    "<a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#target-notes">target-notes</a>"
+    directive.
+
+    </p>
+<p>reStructuredText also provides for <b>embedded URIs</b> (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#embedded-uris">details</a>),
+    a convenience at the expense of readability.  A hyperlink
+    reference may directly embed a target URI inline, within angle
+    brackets.  The following is exactly equivalent to the example above:
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td rowspan="2">
+        <samp>External hyperlinks, like `Python
+<br>&lt;http://www.python.org/&gt;`_.</samp>
+    </td>
+<td>External hyperlinks, like
+        <a href="http://www.python.org/">Python</a>.
+    </td>
+</tr></tbody>
+</table>
+<h5><a href="quickref.html#contents" name="internal-hyperlink-targets" class="backref">Internal Hyperlink Targets</a></h5>
+
+    <p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody>
+<tr valign="top">
+<td rowspan="2">
+<samp>Internal crossreferences, like example_.</samp>
+
+        <p><samp>.. _example:</samp>
+
+        </p>
+<p><samp>This is an example crossreference target.</samp>
+    </p>
+</td>
+<td>
+        <table width="100%">
+<tr bgcolor="#99CCFF"><td>
+<em>Fold-in form</em>
+        <!-- Note that some browsers may not like an "a" tag that -->
+        <!-- does not have any content, so we could arbitrarily   -->
+        <!-- use the first word as content - *or* just trust to   -->
+        <!-- luck!                                                -->
+        </td></tr>
+<tr><td>Internal crossreferences, like <a href="quickref.html#example-foldin">example</a>
+        <p><a name="example-foldin">This</a> is an example
+            crossreference target.
+        </p>
+</td></tr>
+</table>
+</td>
+</tr>
+<tr valign="top"><td>
+        <table width="100%">
+<tr><td bgcolor="#99CCFF">
+<em>Call-out form</em>
+        </td></tr>
+<tr><td>Internal crossreferences, like <a href="quickref.html#example-callout">example</a>
+
+        <p><a name="example-callout"><i>example:</i></a>
+            <br>This is an example crossreference target.
+        </p>
+</td></tr>
+</table>
+</td></tr>
+</tbody>
+</table>
+<h5><a href="quickref.html#contents" name="indirect-hyperlink-targets" class="backref">Indirect Hyperlink Targets</a></h5>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#indirect-hyperlink-targets">details</a>)
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td>
+        <samp>Python_ is `my favourite
+<br>programming language`__.</samp>
+
+        <p><samp>.. _Python: http://www.python.org/</samp>
+
+        </p>
+<p><samp>__ Python_</samp>
+
+    </p>
+</td>
+<td>
+        <p><a href="http://www.python.org/">Python</a> is
+        <a href="http://www.python.org/">my favourite
+        programming language</a>.
+
+    </p>
+</td>
+</tr></tbody>
+</table>
+<p>The second hyperlink target (the line beginning with
+    "<samp>__</samp>") is both an indirect hyperlink target
+    (<i>indirectly</i> pointing at the Python website via the
+    "<samp>Python_</samp>" reference) and an <b>anonymous hyperlink
+    target</b>. In the text, a double-underscore suffix is used to
+    indicate an <b>anonymous hyperlink reference</b>.  In an anonymous
+    hyperlink target, the reference text is not repeated.  This is
+    useful for references with long text or throw-away references, but
+    the target should be kept close to the reference to prevent them
+    going out of sync.
+
+    </p>
+<h5><a href="quickref.html#contents" name="implicit-hyperlink-targets" class="backref">Implicit Hyperlink Targets</a></h5>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#implicit-hyperlink-targets">details</a>)
+
+    </p>
+<p>Section titles, footnotes, and citations automatically generate
+    hyperlink targets (the title text or footnote/citation label is
+    used as the hyperlink name).
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td>
+        <samp>Titles are targets, too</samp>
+        <br><samp>=======================</samp>
+        <br><samp>Implict references, like `Titles are</samp>
+        <br><samp>targets, too`_.</samp>
+    </td>
+<td>
+        <font size="+2"><strong><a name="title">Titles are targets, too</a></strong></font>
+        <p>Implict references, like <a href="quickref.html#title">Titles are
+        targets, too</a>.
+    </p>
+</td>
+</tr></tbody>
+</table>
+<h4><a href="quickref.html#contents" name="directives" class="backref">Directives</a></h4>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#directives">details</a>)
+
+    </p>
+<p>Directives are a general-purpose extension mechanism, a way of
+    adding support for new constructs without adding new syntax.  For
+    a description of all standard directives, see <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html">reStructuredText
+    Directives</a>.
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td>
+<samp>For instance:</samp>
+
+        <p><samp>.. image:: images/biohazard.png</samp>
+
+    </p>
+</td>
+<td>
+        For instance:
+        <p><img src="../images/biohazard.png" alt="ball1"></p>
+</td>
+</tr></tbody>
+</table>
+<h4><a href="quickref.html#contents" name="substitution-references-and-definitions" class="backref">Substitution References and Definitions</a></h4>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#substitution-definitions">details</a>)
+
+    </p>
+<p>Substitutions are like inline directives, allowing graphics and
+    arbitrary constructs within text.
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody><tr valign="top">
+<td>
+<samp>
+The |biohazard| symbol must be
+used on containers used to
+dispose of medical waste.</samp>
+
+        <p><samp>
+.. |biohazard| image:: biohazard.png</samp>
+
+    </p>
+</td>
+<td>
+
+        <p>The <img src="../images/biohazard.png" align="bottom" alt="biohazard"> symbol
+        must be used on containers used to dispose of medical waste.
+
+    </p>
+</td>
+</tr></tbody>
+</table>
+<h4><a href="quickref.html#contents" name="comments" class="backref">Comments</a></h4>
+
+    <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#comments">details</a>)
+
+    </p>
+<p>Any text which begins with an explicit markup start but doesn't
+    use the syntax of any of the constructs above, is a comment.
+
+    </p>
+<p></p>
+<table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+<thead><tr align="left" bgcolor="#99CCFF">
+<th width="50%">Plain text
+    </th>
+<th width="50%">Typical result
+    </th>
+</tr></thead>
+<tbody>
+<tr valign="top">
+<td>
+<samp>.. This text will not be shown</samp>
+        <br><samp>   (but, for instance, in HTML might be</samp>
+        <br><samp>   rendered as an HTML comment)</samp>
+
+    </td>
+<td> 
+        <!-- This text will not be shown         -->
+        <!-- (but, for instance in HTML might be -->
+        <!-- rendered as an HTML comment)        -->
+
+    </td>
+</tr>
+<tr valign="top">
+<td>
+        <samp>An "empty comment" does not</samp>
+        <br><samp>consume following blocks.</samp>
+        <br><samp>(An empty comment is ".." with</samp>
+        <br><samp>blank lines before and after.)</samp>
+        <p><samp>..</samp>
+        </p>
+<p><samp>        So this block is not "lost",</samp>
+        <br><samp>        despite its indentation.</samp>
+    </p>
+</td>
+<td>
+        An "empty comment" does not
+        consume following blocks.
+        (An empty comment is ".." with
+        blank lines before and after.)
+        <blockquote>
+        So this block is not "lost",
+        despite its indentation.
+        </blockquote>
+    </td>
+</tr>
+</tbody>
+</table>
+<h3><a href="quickref.html#contents" name="getting-help" class="backref">Getting Help</a></h3>
+
+    <p>Users who have questions or need assistance with Docutils or
+    reStructuredText should <a href="mailto:docutils-users@lists.sourceforge.net">post a
+    message</a> to the <a href="http://lists.sourceforge.net/lists/listinfo/docutils-users">Docutils-Users mailing list</a>.  The <a href="http://docutils.sourceforge.net/">Docutils project web
+    site</a> has more information.
+
+    </p>
+<p></p>
+<hr>
+<address>
+    <p>Authors:
+    <a href="http://www.tibsnjoan.co.uk/">Tibs</a>
+    (<a href="mailto:tibs@tibsnjoan.co.uk"><tt>tibs@tibsnjoan.co.uk</tt></a>)
+    and David Goodger
+    (<a href="mailto:goodger@python.org">goodger@python.org</a>)
+    </p>
+</address>
+    <!-- Created: Fri Aug 03 09:11:57 GMT Daylight Time 2001 -->
+</div>
+
+        </div>
+        <!--End of body content-->
+
+        <footer>
+            Contents © 2014         <a href="mailto:joe@demo.site">Your Name</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/all-nocdn.js"></script><!-- Social buttons --><div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+<a class="addthis_button_more">Share</a>
+<ul>
+<li>
+<a class="addthis_button_facebook"></a>
+</li>
+<li>
+<a class="addthis_button_google_plusone_share"></a>
+</li>
+<li>
+<a class="addthis_button_linkedin"></a>
+</li>
+<li>
+<a class="addthis_button_twitter"></a>
+</li>
+</ul>
+</div>
+<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script><!-- End of social buttons --><script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+</body>
+</html>

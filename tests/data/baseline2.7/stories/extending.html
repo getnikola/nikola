@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Your Name">
+<title>Extending Nikola | Demo Site</title>
+<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link rel="canonical" href="http://getnikola.com/stories/extending.html">
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+</head>
+<body>
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"><div class="container-fluid">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://getnikola.com/">Demo Site</a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../archive.html">Archives</a>
+                </li>
+<li>
+<a href="../categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS</a>
+
+            </li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="extending.txt" id="sourcelink">Source</a>
+    </li>
+
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container-fluid -->
+</nav><!-- End of Menubar --><div class="container">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+    <h1>Extending Nikola</h1>
+    <div>
+<div class="section" id="extending-nikola">
+<h2><a class="toc-backref" href="extending.html#id1">Extending Nikola</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field">
+<th class="field-name">Version:</th>
+<td class="field-body">7.0.0-alpha</td>
+</tr>
+<tr class="field">
+<th class="field-name">Author:</th>
+<td class="field-body">Roberto Alsina &lt;<a class="reference external" href="mailto:ralsina@netmanagers.com.ar">ralsina@netmanagers.com.ar</a>&gt;</td>
+</tr>
+</tbody>
+</table>
+<div class="contents alert alert-info pull-right topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li>
+<a class="reference internal" href="extending.html#extending-nikola" id="id1">Extending Nikola</a><ul>
+<li><a class="reference internal" href="extending.html#command-plugins" id="id2">Command Plugins</a></li>
+<li><a class="reference internal" href="extending.html#templatesystem-plugins" id="id3">TemplateSystem Plugins</a></li>
+<li><a class="reference internal" href="extending.html#task-plugins" id="id4">Task Plugins</a></li>
+<li><a class="reference internal" href="extending.html#pagecompiler-plugins" id="id5">PageCompiler Plugins</a></li>
+<li><a class="reference internal" href="extending.html#restextension-plugins" id="id6">RestExtension Plugins</a></li>
+<li><a class="reference internal" href="extending.html#signalhandler-plugins" id="id7">SignalHandler Plugins</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="extending.html#plugin-index" id="id8">Plugin Index</a></li>
+<li><a class="reference internal" href="extending.html#path-link-resolution-mechanism" id="id9">Path/Link Resolution Mechanism</a></li>
+</ul>
+</div>
+<p class="lead">Nikola is extensible. Almost all its functionality is based on plugins,
+and you can add your own or replace the provided ones.</p>
+<p>Plugins consist of a metadata file (with <tt class="docutils literal">.plugin</tt> extension) and
+a Python module (a <tt class="docutils literal">.py</tt> file) or package (a folder containing
+a <tt class="docutils literal">__init__.py</tt> file.</p>
+<p>To use a plugin in your site, you just have to put it in a <tt class="docutils literal">plugins</tt>
+folder in your site.</p>
+<p>Plugins come in various flavours, aimed at extending different aspects
+of Nikola.</p>
+<div class="section" id="command-plugins">
+<h3><a class="toc-backref" href="extending.html#id2">Command Plugins</a></h3>
+<p>When you run <tt class="docutils literal">nikola <span class="pre">--help</span></tt> you will see something like this:</p>
+<pre class="literal-block">
+$ nikola help
+Nikola is a tool to create static websites and blogs. For full documentation and more
+information, please visit http://getnikola.com
+
+
+Available commands:
+nikola auto                 automatically detect site changes, rebuild
+                            and optionally refresh a browser
+nikola bootswatch_theme     given a swatch name from bootswatch.com and a
+                            parent theme, creates a custom theme
+nikola build                run tasks
+nikola check                check links and files in the generated site
+nikola clean                clean action / remove targets
+nikola console              start an interactive python console with access to
+                            your site and configuration
+nikola deploy               deploy the site
+nikola dumpdb               dump dependency DB
+nikola forget               clear successful run status from internal DB
+nikola help                 show help
+nikola ignore               ignore task (skip) on subsequent runs
+nikola import_blogger       import a blogger dump
+nikola import_feed          import a RSS/Atom dump
+nikola import_wordpress     import a WordPress dump
+nikola init                 create a Nikola site in the specified folder
+nikola install_theme        install theme into current site
+nikola list                 list tasks from dodo file
+nikola mincss               apply mincss to the generated site
+nikola new_post             create a new blog post or site page
+nikola run                  run tasks
+nikola serve                start the test webserver
+nikola strace               use strace to list file_deps and targets
+nikola version              print the Nikola version number
+
+nikola help                 show help / reference
+nikola help &lt;command&gt;       show command usage
+nikola help &lt;task-name&gt;     show task usage
+</pre>
+<p>That will give you a list of all available commands in your version of Nikola.
+Each and every one of those is a plugin. Let's look at a typical example:</p>
+<p>First, the <tt class="docutils literal">serve.plugin</tt> file:</p>
+<pre class="code ini literal-block">
+<span class="k">[Core]</span>
+<span class="na">Name</span> <span class="o">=</span> <span class="s">serve</span>
+<span class="na">Module</span> <span class="o">=</span> <span class="s">serve</span>
+
+<span class="k">[Documentation]</span>
+<span class="na">Author</span> <span class="o">=</span> <span class="s">Roberto Alsina</span>
+<span class="na">Version</span> <span class="o">=</span> <span class="s">0.1</span>
+<span class="na">Website</span> <span class="o">=</span> <span class="s">http://getnikola.com</span>
+<span class="na">Description</span> <span class="o">=</span> <span class="s">Start test server.</span>
+</pre>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you want to publish your plugin on the Plugin Index, <a class="reference external" href="https://github.com/getnikola/plugins/blob/master/README.md">read
+the docs for the Index</a>
+(and the .plugin file examples and explanations).</p>
+</div>
+<p>For your own plugin, just change the values in a sensible way. The
+<tt class="docutils literal">Module</tt> will be used to find the matching Python module, in this case
+<tt class="docutils literal">serve.py</tt>, from which this is the interesting bit:</p>
+<pre class="code python literal-block">
+<span class="kn">from</span> <span class="nn">nikola.plugin_categories</span> <span class="kn">import</span> <span class="n">Command</span>
+
+<span class="c"># You have to inherit Command for this to be a</span>
+<span class="c"># command plugin:</span>
+
+<span class="k">class</span> <span class="nc">CommandServe</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">"""Start test server."""</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s">"serve"</span>
+    <span class="n">doc_usage</span> <span class="o">=</span> <span class="s">"[options]"</span>
+    <span class="n">doc_purpose</span> <span class="o">=</span> <span class="s">"start the test webserver"</span>
+
+    <span class="n">cmd_options</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s">'name'</span><span class="p">:</span> <span class="s">'port'</span><span class="p">,</span>
+            <span class="s">'short'</span><span class="p">:</span> <span class="s">'p'</span><span class="p">,</span>
+            <span class="s">'long'</span><span class="p">:</span> <span class="s">'port'</span><span class="p">,</span>
+            <span class="s">'default'</span><span class="p">:</span> <span class="mi">8000</span><span class="p">,</span>
+            <span class="s">'type'</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="s">'help'</span><span class="p">:</span> <span class="s">'Port nummber (default: 8000)'</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s">'name'</span><span class="p">:</span> <span class="s">'address'</span><span class="p">,</span>
+            <span class="s">'short'</span><span class="p">:</span> <span class="s">'a'</span><span class="p">,</span>
+            <span class="s">'long'</span><span class="p">:</span> <span class="s">'--address'</span><span class="p">,</span>
+            <span class="s">'type'</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="s">'default'</span><span class="p">:</span> <span class="s">'127.0.0.1'</span><span class="p">,</span>
+            <span class="s">'help'</span><span class="p">:</span> <span class="s">'Address to bind (default: 127.0.0.1)'</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="sd">"""Start test server."""</span>
+        <span class="n">out_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'OUTPUT_FOLDER'</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">out_dir</span><span class="p">):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">"Error: Missing '{0}' folder?"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">out_dir</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)</span>
+            <span class="n">httpd</span> <span class="o">=</span> <span class="n">HTTPServer</span><span class="p">((</span><span class="n">options</span><span class="p">[</span><span class="s">'address'</span><span class="p">],</span> <span class="n">options</span><span class="p">[</span><span class="s">'port'</span><span class="p">]),</span>
+                            <span class="n">OurHTTPRequestHandler</span><span class="p">)</span>
+            <span class="n">sa</span> <span class="o">=</span> <span class="n">httpd</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">getsockname</span><span class="p">()</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">"Serving HTTP on"</span><span class="p">,</span> <span class="n">sa</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">"port"</span><span class="p">,</span> <span class="n">sa</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s">"..."</span><span class="p">)</span>
+            <span class="n">httpd</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+</pre>
+<p>As mentioned above, a plugin can have options, which the user can see by doing
+<tt class="docutils literal">nikola help command</tt> and can later use, for example:</p>
+<pre class="literal-block">
+$ nikola help serve
+Purpose: start the test webserver
+Usage:   nikola serve [options]
+
+Options:
+-p ARG, --port=ARG        Port nummber (default: 8000)
+-a ARG, ----address=ARG   Address to bind (default: 127.0.0.1)
+
+$ nikola serve -p 9000
+Serving HTTP on 127.0.0.1 port 9000 ...
+</pre>
+<p>So, what can you do with commands? Well, anything you want, really. I have implemented
+a sort of planet using it. So, be creative, and if you do something interesting,
+let me know ;-)</p>
+</div>
+<div class="section" id="templatesystem-plugins">
+<h3><a class="toc-backref" href="extending.html#id3">TemplateSystem Plugins</a></h3>
+<p>Nikola supports Mako and Jinja2. If you prefer some other templating
+system, then you will have to write a TemplateSystem plugin. Here's how they work.
+First, you have to create a .plugin file. Here's the one for the Mako plugin:</p>
+<pre class="code ini literal-block">
+<span class="k">[Core]</span>
+<span class="na">Name</span> <span class="o">=</span> <span class="s">mako</span>
+<span class="na">Module</span> <span class="o">=</span> <span class="s">mako</span>
+
+<span class="k">[Documentation]</span>
+<span class="na">Author</span> <span class="o">=</span> <span class="s">Roberto Alsina</span>
+<span class="na">Version</span> <span class="o">=</span> <span class="s">0.1</span>
+<span class="na">Website</span> <span class="o">=</span> <span class="s">http://getnikola.com</span>
+<span class="na">Description</span> <span class="o">=</span> <span class="s">Support for Mako templates.</span>
+</pre>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you want to publish your plugin on the Plugin Index, <a class="reference external" href="https://github.com/getnikola/plugins/blob/master/README.md">read
+the docs for the Index</a>
+(and the .plugin file examples and explanations).</p>
+</div>
+<p>You will have to replace "mako" with your template system's name, and other data
+in the obvious ways.</p>
+<p>The "Module" option is the name of the module, which has to look something like this,
+a stub for a hypothetical system called "Templater":</p>
+<pre class="code python literal-block">
+<span class="kn">from</span> <span class="nn">nikola.plugin_categories</span> <span class="kn">import</span> <span class="n">TemplateSystem</span>
+
+<span class="c"># You have to inherit TemplateSystem</span>
+
+<span class="k">class</span> <span class="nc">TemplaterTemplates</span><span class="p">(</span><span class="n">TemplateSystem</span><span class="p">):</span>
+    <span class="sd">"""Wrapper for Templater templates."""</span>
+
+    <span class="c"># name has to match Name in the .plugin file</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s">"templater"</span>
+
+    <span class="c"># You *must* implement this, even if to return []</span>
+    <span class="c"># It should return a list of all the files that,</span>
+    <span class="c"># when changed, may affect the template's output.</span>
+    <span class="c"># usually this involves template inheritance and</span>
+    <span class="c"># inclusion.</span>
+    <span class="k">def</span> <span class="nf">get_deps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="c"># A list of directories where the templates will be</span>
+    <span class="c"># located. Most template systems have some sort of</span>
+    <span class="c"># template loading tool that can use this.</span>
+
+    <span class="k">def</span> <span class="nf">set_directories</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directories</span><span class="p">):</span>
+        <span class="sd">"""Create a template lookup."""</span>
+        <span class="k">pass</span>
+
+    <span class="c"># The method that does the actual rendering.</span>
+    <span class="c"># template_name is the name of the template file,</span>
+    <span class="c"># output_name is the file for the output, context</span>
+    <span class="c"># is a dictionary containing the data the template</span>
+    <span class="c"># uses for rendering.</span>
+
+    <span class="k">def</span> <span class="nf">render_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_name</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">,</span> <span class="n">global_context</span><span class="p">):</span>
+        <span class="sd">"""Render the template into output_name using context."""</span>
+        <span class="k">pass</span>
+</pre>
+</div>
+<div class="section" id="task-plugins">
+<h3><a class="toc-backref" href="extending.html#id4">Task Plugins</a></h3>
+<p>If you want to do something that depends on the data in your site, you
+probably want to do a Task plugin, which will make it be part of the
+<tt class="docutils literal">nikola build</tt> command. There are the currently available tasks, all
+provided by plugins:</p>
+<div class="sidebar">
+<p class="first sidebar-title">Other Tasks</p>
+<p class="last">There are also <tt class="docutils literal">LateTask</tt> plugins, which are executed later,
+and <tt class="docutils literal">TaskMultiplier</tt> plugins that take a task and create
+more tasks out of it.</p>
+</div>
+<pre class="literal-block">
+$ nikola list
+Scanning posts....done!
+build_bundles
+build_less
+copy_assets
+copy_files
+post_render
+redirect
+render_archive
+render_galleries
+render_galleries_clean
+render_indexes
+render_listings
+render_pages
+render_posts
+render_rss
+render_site
+render_sources
+render_tags
+sitemap
+</pre>
+<p>These have access to the <tt class="docutils literal">site</tt> object which contains your timeline and
+your configuration.</p>
+<p>The critical bit of Task plugins is their <tt class="docutils literal">gen_tasks</tt> method, which <tt class="docutils literal">yields</tt>
+<a class="reference external" href="http://pydoit.org/tasks.html">doit tasks</a>.</p>
+<p>The details of how to handle dependencies, etc., are a bit too much for this
+document, so I'll just leave you with an example, the <tt class="docutils literal">copy_assets</tt> task.
+First the <tt class="docutils literal">task_copy_assets.plugin</tt> file, which you should copy and edit
+in the logical ways:</p>
+<pre class="code ini literal-block">
+<span class="k">[Core]</span>
+<span class="na">Name</span> <span class="o">=</span> <span class="s">copy_assets</span>
+<span class="na">Module</span> <span class="o">=</span> <span class="s">task_copy_assets</span>
+
+<span class="k">[Documentation]</span>
+<span class="na">Author</span> <span class="o">=</span> <span class="s">Roberto Alsina</span>
+<span class="na">Version</span> <span class="o">=</span> <span class="s">0.1</span>
+<span class="na">Website</span> <span class="o">=</span> <span class="s">http://getnikola.com</span>
+<span class="na">Description</span> <span class="o">=</span> <span class="s">Copy theme assets into output.</span>
+</pre>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you want to publish your plugin on the Plugin Index, <a class="reference external" href="https://github.com/getnikola/plugins/blob/master/README.md">read
+the docs for the Index</a>
+(and the .plugin file examples and explanations).</p>
+</div>
+<p>And the <tt class="docutils literal">task_copy_assets.py</tt> file, in its entirety:</p>
+<pre class="code python literal-block">
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">nikola.plugin_categories</span> <span class="kn">import</span> <span class="n">Task</span>
+<span class="kn">from</span> <span class="nn">nikola</span> <span class="kn">import</span> <span class="n">utils</span>
+
+<span class="c"># Have to inherit Task to be a task plugin</span>
+<span class="k">class</span> <span class="nc">CopyAssets</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+    <span class="sd">"""Copy theme assets into output."""</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s">"copy_assets"</span>
+
+    <span class="c"># This yields the tasks</span>
+    <span class="k">def</span> <span class="nf">gen_tasks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">"""Create tasks to copy the assets of the whole theme chain.
+
+        If a file is present on two themes, use the version
+        from the "youngest" theme.
+        """</span>
+
+        <span class="c"># I put all the configurations and data the plugin uses</span>
+        <span class="c"># in a dictionary because utils.config_changed will</span>
+        <span class="c"># make it so that if these change, this task will be</span>
+        <span class="c"># marked out of date, and run again.</span>
+
+        <span class="n">kw</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">"themes"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">THEMES</span><span class="p">,</span>
+            <span class="s">"output_folder"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'OUTPUT_FOLDER'</span><span class="p">],</span>
+            <span class="s">"filters"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'FILTERS'</span><span class="p">],</span>
+        <span class="p">}</span>
+
+        <span class="n">tasks</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">theme_name</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">[</span><span class="s">'themes'</span><span class="p">]:</span>
+            <span class="n">src</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">get_theme_path</span><span class="p">(</span><span class="n">theme_name</span><span class="p">),</span> <span class="s">'assets'</span><span class="p">)</span>
+            <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">kw</span><span class="p">[</span><span class="s">'output_folder'</span><span class="p">],</span> <span class="s">'assets'</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">utils</span><span class="o">.</span><span class="n">copy_tree</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">task</span><span class="p">[</span><span class="s">'name'</span><span class="p">]</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">tasks</span><span class="p">[</span><span class="n">task</span><span class="p">[</span><span class="s">'name'</span><span class="p">]]</span> <span class="o">=</span> <span class="n">task</span>
+                <span class="n">task</span><span class="p">[</span><span class="s">'uptodate'</span><span class="p">]</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'uptodate'</span><span class="p">,</span> <span class="p">[])</span> <span class="o">+</span> \
+                    <span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">config_changed</span><span class="p">(</span><span class="n">kw</span><span class="p">)]</span>
+                <span class="n">task</span><span class="p">[</span><span class="s">'basename'</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+                <span class="c"># If your task generates files, please do this.</span>
+                <span class="k">yield</span> <span class="n">utils</span><span class="o">.</span><span class="n">apply_filters</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">kw</span><span class="p">[</span><span class="s">'filters'</span><span class="p">])</span>
+</pre>
+</div>
+<div class="section" id="pagecompiler-plugins">
+<h3><a class="toc-backref" href="extending.html#id5">PageCompiler Plugins</a></h3>
+<p>These plugins implement markup languages, they take sources for posts or pages and
+create HTML or other output files. A good example is the <tt class="docutils literal">misaka</tt> plugin.</p>
+<p>They must provide:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal">compile_html</tt></dt>
+<dd>Function that builds a file.</dd>
+<dt><tt class="docutils literal">create_post</tt></dt>
+<dd>Function that creates an empty file with some metadata in it.</dd>
+</dl>
+<p>If the compiler produces something other than HTML files, it should also implement <tt class="docutils literal">extension</tt> which
+returns the preferred extension for the output file.</p>
+</div>
+<div class="section" id="restextension-plugins">
+<h3><a class="toc-backref" href="extending.html#id6">RestExtension Plugins</a></h3>
+<p>Implement directives for reStructuredText, see <tt class="docutils literal">media.py</tt> for a simple example.</p>
+</div>
+<div class="section" id="signalhandler-plugins">
+<h3><a class="toc-backref" href="extending.html#id7">SignalHandler Plugins</a></h3>
+<p>These plugins extend the <tt class="docutils literal">SignalHandler</tt> class and connect to one or more
+signals via <a class="reference external" href="http://pythonhosted.org/blinker/">blinker</a>.</p>
+<p>The easiest way to do this is to reimplement <tt class="docutils literal">set_site()</tt> and just connect to
+whatever signals you want there.</p>
+<p>Currently Nikola emits the following signals:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal">sighandlers_loaded</tt></dt>
+<dd>Right after SignalHandler plugin activation.</dd>
+<dt><tt class="docutils literal">initialized</tt></dt>
+<dd>Right after plugin activation.</dd>
+<dt><tt class="docutils literal">configured</tt></dt>
+<dd>When all the configuration file is processed. Note that plugins are activated before this is emitted.</dd>
+<dt><tt class="docutils literal">new_post</tt></dt>
+<dd>When a new post is created, using the <tt class="docutils literal">nikola new_post</tt> command.  The signal
+data contains the path of the file, and the metadata file (if there is one).</dd>
+<dt><tt class="docutils literal">deployed</tt></dt>
+<dd>
+<p class="first">When the <tt class="docutils literal">nikola deploy</tt> command is run, and there is at least one new
+entry/post since <tt class="docutils literal">last_deploy</tt>.  The signal data is of the form</p>
+<pre class="last literal-block">
+{
+ 'last_deploy: # datetime object for the last deployed time,
+ 'new_deploy': # datetime object for the current deployed time,
+ 'clean': # whether there was a record of a last deployment,
+ 'deployed': # all files deployed after the last deploy,
+ 'undeployed': # all files not deployed since they are either future posts/drafts
+}
+</pre>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="plugin-index">
+<h2><a class="toc-backref" href="extending.html#id8">Plugin Index</a></h2>
+<p>There is a <a class="reference external" href="http://plugins.getnikola.com/">plugin index</a>, which stores all
+of the plugins for Nikola people wanted to share with the world.</p>
+<p>You may want to read the <a class="reference external" href="https://github.com/getnikola/plugins/blob/master/README.md">README for the Index</a> if you want to
+publish your package there.</p>
+</div>
+<div class="section" id="path-link-resolution-mechanism">
+<h2><a class="toc-backref" href="extending.html#id9">Path/Link Resolution Mechanism</a></h2>
+<p>Any plugin can register a function using <tt class="docutils literal">Nikola.register_path_handler</tt> to
+allow resolution of paths and links. These are useful for templates, which
+can access them via _link.</p>
+<p>For example, you can always get a link to the path for the feed of the "foo" tag
+by using <tt class="docutils literal"><span class="pre">_link('tag_rss',</span> 'foo')</tt> or the <tt class="docutils literal"><span class="pre">link://tag_rss/foo</span></tt> URL.</p>
+<p>Here's the relevant code from the tag plugin.</p>
+<pre class="code python literal-block">
+<span class="c"># In set_site</span>
+<span class="n">site</span><span class="o">.</span><span class="n">register_path_handler</span><span class="p">(</span><span class="s">'tag_rss'</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag_rss_path</span><span class="p">)</span>
+
+<span class="c"># And these always take name and lang as arguments and returl a list of</span>
+<span class="c"># path elements.</span>
+<span class="k">def</span> <span class="nf">tag_rss_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">lang</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">_f</span> <span class="k">for</span> <span class="n">_f</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'TRANSLATIONS'</span><span class="p">][</span><span class="n">lang</span><span class="p">],</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'TAG_PATH'</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">slugify_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span> <span class="s">".xml"</span><span class="p">]</span> <span class="k">if</span>
+            <span class="n">_f</span><span class="p">]</span>
+</pre>
+</div>
+</div>
+
+        </div>
+        <!--End of body content-->
+
+        <footer>
+            Contents © 2014         <a href="mailto:joe@demo.site">Your Name</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/all-nocdn.js"></script><!-- Social buttons --><div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+<a class="addthis_button_more">Share</a>
+<ul>
+<li>
+<a class="addthis_button_facebook"></a>
+</li>
+<li>
+<a class="addthis_button_google_plusone_share"></a>
+</li>
+<li>
+<a class="addthis_button_linkedin"></a>
+</li>
+<li>
+<a class="addthis_button_twitter"></a>
+</li>
+</ul>
+</div>
+<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script><!-- End of social buttons --><script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+</body>
+</html>

@@ -30,16 +30,16 @@ RULE_FR = 'RRULE:FREQ=WEEKLY;BYDAY=FR'
 class TestScheduling(BaseTestCase):
 
     @classmethod
-    def setUp(self):
+    def setUp(cls):
         d = [name for name in sys.modules if name.startswith("six.moves.")]
-        self.deleted = {}
+        cls.deleted = {}
         for name in d:
-            self.deleted[name] = sys.modules[name]
+            cls.deleted[name] = sys.modules[name]
             del sys.modules[name]
 
     @classmethod
-    def tearDown(self):
-        for name, mod in self.deleted.items():
+    def tearDown(cls):
+        for name, mod in cls.deleted.items():
             sys.modules[name] = mod
 
     @freeze_time(NOW)
