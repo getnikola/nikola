@@ -774,10 +774,10 @@ class Nikola(object):
                 'pubDate': (post.date if post.date.tzinfo is None else
                             post.date.astimezone(pytz.UTC)),
                 'categories': post._tags.get(lang, []),
-                'author': post.author(lang),
+                'creator': post.author(lang),
             }
 
-            if post.author(lang) and not '@' in post.author(lang):
+            if post.author(lang):
                 rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
 
             items.append(utils.ExtendedItem(**args))
