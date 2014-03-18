@@ -2,8 +2,8 @@
 
 <%def name="bar(crumbs)">
 %if crumbs:
-<nav class="breadcrumb">
-<ul>
+<nav class="breadcrumbs">
+<ul class="breadcrumb">
     % for link, text in crumbs:
         <li><a href="${link}">${text}</a></li>
     % endfor
