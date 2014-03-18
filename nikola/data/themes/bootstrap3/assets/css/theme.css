@@ -103,3 +103,10 @@ h4, h5, h6 {
     margin-top: -50px;
     padding-top: 60px;
 }
+
+.image-block {
+    display: inline-block;
+}
+.flowr_row {
+    width: 100%;
+}
