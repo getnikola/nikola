@@ -929,12 +929,7 @@ class LocaleBorg(object):
 class ExtendedItem(rss.RSSItem):
 
     def __init__(self, **kw):
-        author = kw.pop('author')
-        if author and '@' in author[1:]:  # Yes, this is a silly way to validate an email
-            kw['author'] = author
-            self.creator = None
-        else:
-            self.creator = author
+        self.creator = kw.pop('creator')
         # It's an old style class
         return rss.RSSItem.__init__(self, **kw)
 

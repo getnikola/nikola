@@ -45,6 +45,7 @@ Features
 Bugfixes
 --------
 
+* Don’t publish email addresses in RSS, use author name via Dublin Core
 * Rebuild a lot of files when TIMEZONE changes (Issue #1110)
 * The ``init`` command and the importers now always output to the CWD.
   Previously, if you had a ``conf.py`` file higher in the directory structure,
