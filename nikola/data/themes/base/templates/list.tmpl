@@ -11,6 +11,8 @@
             <li><a href="${link}">${text}</a>
         % endfor
         </ul>
+        %else:
+        <p>${messages("Nothing found.")}</p>
         %endif
     </article>
 </%block>
