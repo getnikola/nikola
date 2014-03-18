@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Your Name">
+<title>Theming Nikola | Demo Site</title>
+<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link rel="canonical" href="http://getnikola.com/stories/theming.html">
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+</head>
+<body>
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"><div class="container-fluid">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://getnikola.com/">Demo Site</a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../archive.html">Archives</a>
+                </li>
+<li>
+<a href="../categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS feed</a>
+
+            </li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="theming.rst" id="sourcelink">Source</a>
+    </li>
+
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container-fluid -->
+</nav><!-- End of Menubar --><div class="container">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+    <h1>Theming Nikola</h1>
+    <div>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name">
+<col class="docinfo-content">
+<tbody valign="top">
+<tr>
+<th class="docinfo-name">Version:</th>
+<td>7.0.0-alpha</td>
+</tr>
+<tr>
+<th class="docinfo-name">Author:</th>
+<td>Roberto Alsina &lt;<a class="reference external" href="mailto:ralsina@netmanagers.com.ar">ralsina@netmanagers.com.ar</a>&gt;</td>
+</tr>
+</tbody>
+</table>
+<div class="contents alert alert-info pull-right topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="theming.html#the-structure" id="id1">The Structure</a></li>
+<li><a class="reference internal" href="theming.html#templates" id="id2">Templates</a></li>
+<li><a class="reference internal" href="theming.html#messages-and-translations" id="id3">Messages and Translations</a></li>
+<li><a class="reference internal" href="theming.html#less-and-sass" id="id4">LESS and Sass</a></li>
+</ul>
+</div>
+<p class="lead">This document is a reference about themes. If you want a tutorial, please read
+<a class="reference external" href="creating-a-theme.html">Creating a Theme</a></p>
+<div class="section" id="the-structure">
+<h2><a class="toc-backref" href="theming.html#id1">The Structure</a></h2>
+<p>Themes are located in the <tt class="docutils literal">themes</tt> folder where Nikola is installed, and in the <tt class="docutils literal">themes</tt> folder
+of your site, one folder per theme. The folder name is the theme name.</p>
+<p>A Nikola theme consists of the following folders (they are <em>all</em> optional):</p>
+<dl class="docutils">
+<dt>assets</dt>
+<dd>
+<p class="first">This is where you would put your CSS, Javascript and image files. It will be copied
+into <tt class="docutils literal">output/assets</tt> when you build the site, and the templates will contain
+references to them.</p>
+<p>The included themes use <a class="reference external" href="http://twitter.github.com/bootstrap/">Bootstrap</a>
+and <a class="reference external" href="http://www.jacklmoore.com/colorbox">Colorbox</a> so they are in assets,
+along with CSS files for syntax highligting and reStructuredText, and a
+minified copy of jQuery.</p>
+<p class="last">If you want to base your theme on other frameworks (or on no framework at all)
+just remember to put there everything you need for deployment.</p>
+</dd>
+<dt>templates</dt>
+<dd>This contains the templates used to generate the pages. While Nikola will use a
+certain set of template names by default, you can add others for specific parts
+of your site.</dd>
+<dt>messages</dt>
+<dd>Nikola tries to be multilingual. This is where you put the strings for your theme
+so that it can be translated into other languages.</dd>
+<dt>less</dt>
+<dd>Files to be compiled into CSS using <a class="reference external" href="http://lesscss.org/">LESS</a>
+</dd>
+<dt>sass</dt>
+<dd>Files to be compiled into CSS using <a class="reference external" href="http://sass-lang.com/">Sass</a>
+</dd>
+</dl>
+<p>This mandatory file:</p>
+<dl class="docutils">
+<dt>parent</dt>
+<dd>
+<p class="first">A text file that, on its first line, contains the name of the <strong>parent theme</strong>.
+Any resources missing on this theme, will be looked up in the parent theme
+(and then in the grandparent, etc).</p>
+<p>The <tt class="docutils literal">parent</tt> is so you don't have to create a full theme each time: just create an
+empty theme, set the parent, and add the bits you want modified.</p>
+<p>I recommend this:</p>
+<ul class="last simple">
+<li>If your theme uses bootstrap, inherit the <tt class="docutils literal">bootstrap</tt> theme.</li>
+<li>If your theme uses bootstrap3, inherit the <tt class="docutils literal">bootstrap3</tt> theme.</li>
+<li>If your theme uses Jinja as a template engine, inherit <tt class="docutils literal"><span class="pre">base-jinja</span></tt>
+or <tt class="docutils literal"><span class="pre">bootstrap-jinja</span></tt> (available at <a class="reference external" href="http://themes.nikola.ralsina.com.ar">http://themes.nikola.ralsina.com.ar</a>)</li>
+<li>In any other case, inherit <tt class="docutils literal">base</tt>.</li>
+</ul>
+</dd>
+</dl>
+<p>And these optional files:</p>
+<dl class="docutils">
+<dt>engine</dt>
+<dd>A text file which, on the first line, contains the name of the template engine
+this theme needs. Currently supported values are "mako" and "jinja".</dd>
+<dt>bundles</dt>
+<dd>
+<p class="first">A text file containing a list of files to be turned into bundles using WebAssets.
+For example:</p>
+<pre class="literal-block">
+assets/css/all.css=bootstrap.css,bootstrap-responsive.css,rst.css,code.css,colorbox.css,custom.css
+</pre>
+<p>This creates a file called "assets/css/all.css" in your output that is the
+combination of all the other file paths, relative to the output file.
+This makes the page much more efficient because it avoids multiple connections to the server,
+at the cost of some extra difficult debugging.</p>
+<p>WebAssets supports bundling CSS and JS files.</p>
+<p class="last">Templates should use either the bundle or the individual files based on the <tt class="docutils literal">use_bundles</tt>
+variable, which in turn is set by the <tt class="docutils literal">USE_BUNDLES</tt> option.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="templates">
+<h2><a class="toc-backref" href="theming.html#id2">Templates</a></h2>
+<p>In templates there is a number of files whose name ends in <tt class="docutils literal">.tmpl</tt>. Those are the
+theme's page templates. They are done using the <a class="reference external" href="http://makotemplates.org">Mako</a>
+or <a class="reference external" href="http://jinja.pocoo.org">Jinja2</a> template languages. If you want to do a theme, you
+should learn one first. What engine is used by the theme is declared in the <tt class="docutils literal">engine</tt> file.</p>
+<p>The rest of this document explains Mako templates, but Jinja2 is fairly similar.</p>
+<p>Mako has a nifty concept of template inheritance. That means that, a
+template can inherit from another and only change small bits of the output. For example,
+<tt class="docutils literal">base.tmpl</tt> defines the whole layout for a page but has only a placeholder for content
+so <tt class="docutils literal">post.tmpl</tt> only define the content, and the layout is inherited from <tt class="docutils literal">base.tmpl</tt>.</p>
+<p>These are the templates that come with the included themes:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal">base.tmpl</tt></dt>
+<dd>
+<p class="first">This template defines the basic page layout for the site. It's mostly plain HTML
+but defines a few blocks that can be re-defined by inheriting templates.</p>
+<p class="last">It has some separate pieces defined in <tt class="docutils literal">base_helper.tmpl</tt> so they can be
+easily overriden. For example, the Bootstrap theme adds a <tt class="docutils literal">bootstrap_helper.tmpl</tt>
+and then uses it to override things defined in base theme's <tt class="docutils literal">base_helper.tmpl</tt></p>
+</dd>
+<dt><tt class="docutils literal">index.tmpl</tt></dt>
+<dd>Template used to render the multipost indexes. The posts are in a <tt class="docutils literal">posts</tt> variable.
+Some functionality is in the <tt class="docutils literal">index_helper.tmpl</tt> helper template.</dd>
+<dt><tt class="docutils literal">comments_helper.tmpl</tt></dt>
+<dd>This template handles comments. You should probably never touch it :-)
+It uses a bunch of helper templates, one for each supported comment system:
+<tt class="docutils literal">disqus_helper.tmpl</tt> <tt class="docutils literal">facebook_helper.tmpl</tt> <tt class="docutils literal">googleplus_helper.tmpl</tt>
+<tt class="docutils literal">intensedebate_helper.tmpl</tt> <tt class="docutils literal">isso_helper.tmpl</tt> <tt class="docutils literal">livefyre_helper.tmpl</tt>
+<tt class="docutils literal">moot_helper.tmpl</tt>
+</dd>
+<dt>
+<tt class="docutils literal">crumbs.tmpl</tt> <tt class="docutils literal">slides.tmpl</tt>
+</dt>
+<dd>These templates help render specific UI items, and can be tweaked as needed.</dd>
+<dt><tt class="docutils literal">gallery.tmpl</tt></dt>
+<dd>
+<blockquote class="first">
+<p>Template used for image galleries. Interesting data includes:</p>
+<ul class="simple">
+<li>
+<tt class="docutils literal">text</tt>: A descriptive text for the gallery.</li>
+<li>
+<tt class="docutils literal">crumbs</tt>: A list of <tt class="docutils literal">link, crumb</tt> to implement a crumbbar.</li>
+<li>
+<tt class="docutils literal">folders</tt>: A list of folders to implement hierarchical gallery navigation.</li>
+<li>
+<tt class="docutils literal">enable_comments</tt>: To enable/disable comments in galleries.</li>
+<li>
+<tt class="docutils literal">thumbnail_size</tt>: The <tt class="docutils literal">THUMBNAIL_SIZE</tt> option.</li>
+<li>
+<tt class="docutils literal">photo_array</tt>: a list of dictionaries, each containing:<ul>
+<li>
+<tt class="docutils literal">url</tt>: URL for the full-sized image.</li>
+<li>
+<tt class="docutils literal">url_thumb</tt>: URL for the thumbnail.</li>
+<li>
+<tt class="docutils literal">title</tt>: The title of the image.</li>
+<li>
+<tt class="docutils literal">size</tt>: A dict containing <tt class="docutils literal">w</tt> and <tt class="docutils literal">h</tt>, the real size of the thumbnail.</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<ul class="last simple">
+<li>
+<tt class="docutils literal">photo_array_json</tt>: a JSON dump of photo_array, used in the bootstrap theme by flowr.js</li>
+</ul>
+</dd>
+<dt><tt class="docutils literal">list.tmpl</tt></dt>
+<dd>Template used to display generic lists of links, which it gets in <tt class="docutils literal">items</tt>,
+a list of (text, link) elements.</dd>
+<dt><tt class="docutils literal">list_post.tmpl</tt></dt>
+<dd>Template used to display generic lists of posts, which it gets in <tt class="docutils literal">posts</tt>.</dd>
+<dt><tt class="docutils literal">post.tmpl</tt></dt>
+<dd>Template used by default for blog posts, gets the data in a <tt class="docutils literal">post</tt> object
+which is an instance of the Post class. Some functionality is in the
+<tt class="docutils literal">post_helper.tmpl</tt> template.</dd>
+<dt><tt class="docutils literal">story.tmpl</tt></dt>
+<dd>Used for pages that are not part of a blog, usually a cleaner, less
+intrusive layout than <tt class="docutils literal">post.tmpl</tt>, but same parameters.</dd>
+<dt><tt class="docutils literal">listing.tmpl</tt></dt>
+<dd>Used to display code listings.</dd>
+<dt><tt class="docutils literal">tags.tmpl</tt></dt>
+<dd>Used to display the list of tags and categories. <tt class="docutils literal">tag.tmpl</tt> is used to show the contents
+of a single tag or category.</dd>
+<dt><tt class="docutils literal">tagindex.tmpl</tt></dt>
+<dd>Used to display tag indexes, if <tt class="docutils literal">TAG_PAGES_ARE_INDEXES</tt> is True.
+By default, it just inherits <tt class="docutils literal">index.tmpl</tt>.</dd>
+</dl>
+<p>You can add other templates for specific pages, which the user can then use in his <tt class="docutils literal">POSTS</tt>
+or <tt class="docutils literal">PAGES</tt> option in <tt class="docutils literal">conf.py</tt>. Also, keep in mind that your theme is yours,
+there is no reason why you would need to maintain the inheritance as it is, or not
+require whatever data you want.</p>
+<p>Also, you can specify a custom template to be used by a post or page via the <tt class="docutils literal">template</tt> metadata,
+and custom templates can be added in the <tt class="docutils literal">templates/</tt> folder of your site.</p>
+</div>
+<div class="section" id="messages-and-translations">
+<h2><a class="toc-backref" href="theming.html#id3">Messages and Translations</a></h2>
+<p>The included themes are translated into a variety of languages. You can add your own translation
+at <a class="reference external" href="https://www.transifex.com/projects/p/nikola/">https://www.transifex.com/projects/p/nikola/</a></p>
+<p>If you want to create a theme that has new strings, and you want those strings to be translatable,
+then your theme will need a custom <tt class="docutils literal">messages</tt> folder.</p>
+</div>
+<div class="section" id="less-and-sass">
+<h2>
+<a class="reference external" href="http://lesscss.org/">LESS</a> and <a class="reference external" href="http://sass-lang.com/">Sass</a>
+</h2>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">The LESS and Sass compilers will be moved to the Plugins Index in
+Nikola v7.0.0.</p>
+</div>
+<p>If you want to use those CSS extensions, you can — just store your files
+in the <tt class="docutils literal">less</tt> or <tt class="docutils literal">sass</tt> directory of your theme.</p>
+<p>In order to have them work, you need to create a list of <tt class="docutils literal">.less</tt> or
+<tt class="docutils literal"><span class="pre">.scss/.sass</span></tt> files to compile — the list should be in a file named
+<tt class="docutils literal">targets</tt> in the respective directory (<tt class="docutils literal">less</tt>/<tt class="docutils literal">sass</tt>).</p>
+<p>The files listed in the <tt class="docutils literal">targets</tt> file will be passed to the respective
+compiler, which you have to install manually (<tt class="docutils literal">lessc</tt> which comes from
+the Node.js package named <tt class="docutils literal">less</tt> or <tt class="docutils literal">sass</tt> from a Ruby package aptly
+named <tt class="docutils literal">sass</tt>).  Whatever the compiler outputs will be saved as a CSS
+file in your rendered site, with the <tt class="docutils literal">.css</tt> extension.</p>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">Conflicts may occur if you have two files with the same base name
+but a different extension.  Pay attention to how you name your files
+or your site won’t build!  (Nikola will tell you what’s wrong when
+this happens)</p>
+</div>
+</div>
+</div>
+
+        </div>
+        <!--End of body content-->
+
+        <footer>
+            Contents © 2014         <a href="mailto:joe@demo.site">Your Name</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/all-nocdn.js"></script><!-- Social buttons --><div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+<a class="addthis_button_more">Share</a>
+<ul>
+<li>
+<a class="addthis_button_facebook"></a>
+</li>
+<li>
+<a class="addthis_button_google_plusone_share"></a>
+</li>
+<li>
+<a class="addthis_button_linkedin"></a>
+</li>
+<li>
+<a class="addthis_button_twitter"></a>
+</li>
+</ul>
+</div>
+<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script><!-- End of social buttons --><script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+</body>
+</html>

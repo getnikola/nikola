@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Your Name">
+<title>Creating a Theme | Demo Site</title>
+<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link rel="canonical" href="http://getnikola.com/stories/creating-a-theme.html">
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+</head>
+<body>
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"><div class="container-fluid">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://getnikola.com/">Demo Site</a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../archive.html">Archives</a>
+                </li>
+<li>
+<a href="../categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS feed</a>
+
+            </li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="creating-a-theme.rst" id="sourcelink">Source</a>
+    </li>
+
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container-fluid -->
+</nav><!-- End of Menubar --><div class="container">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+    <h1>Creating a Theme</h1>
+    <div>
+<p class="lead">There is some documentation about creating themes for Nikola, but maybe a tutorial is also a useful way
+to explain it. So, here it is. I'll explain how to create a theme (almost) from scratch. All themes
+in Nikola must inherit from the <tt class="docutils literal">base</tt> theme. In this case, we will inherit from <tt class="docutils literal">bootstrap</tt>
+so we get good support for slides and galleries.</p>
+<p>I will try to create a theme that looks like <a class="reference external" href="http://wordpress.org/themes/monospace">Vinicius Massuchetto's Monospace Theme</a>.</p>
+<!-- TEASER_END -->
+<div class="section" id="starting-the-theme">
+<h2>Starting The Theme</h2>
+<p>First we will create a testing site:</p>
+<pre class="literal-block">
+$ nikola init --demo monospace-site
+A new site with some sample data has been created at monospace-site.
+See README.txt in that folder for more information.
+
+$ cd monospace-site/
+</pre>
+<p>Our theme will inherit from the <tt class="docutils literal">bootstrap</tt> theme, which is full-featured but boring.</p>
+<pre class="literal-block">
+$ mkdir themes
+$ mkdir themes/monospace
+$ echo bootstrap &gt; themes/monospace/parent
+</pre>
+<p>The next step is to make the testing site use this new theme, by editing <tt class="docutils literal">conf.py</tt> and
+changing the <tt class="docutils literal">THEME</tt> option:</p>
+<pre class="literal-block">
+# Name of the theme to use. Themes are located in themes/theme_name
+THEME = 'monospace'
+</pre>
+<p>Now we can already build and test the site:</p>
+<pre class="literal-block">
+$ nikola build &amp;&amp; nikola serve
+</pre>
+<div class="figure">
+<img alt="http://ralsina.com.ar/galleries/monospace-tut/monospace-1.png" src="http://ralsina.com.ar/galleries/monospace-tut/monospace-1.png" style="height: 400px;"><p class="caption">This is the default "bootstrap" theme.</p>
+</div>
+<p>Of course, the page layout is completely different from what we want. To fix that, we need to
+get into templates.</p>
+</div>
+<div class="section" id="templates-page-layout">
+<h2>Templates: Page Layout</h2>
+<p>The general page layout for the theme is done by the <tt class="docutils literal">base.tmpl</tt> template, which is done using
+<a class="reference external" href="http://www.makotemplates.org/">Mako</a>. This is bootstrap's <tt class="docutils literal">base.tmpl</tt>, it's not very big:</p>
+<pre class="code mako literal-block">
+<span class="cp">## -*- coding: utf-8 -*-</span><span class="x">
+</span><span class="cp">&lt;%</span><span class="nb">namespace</span> <span class="na">name=</span><span class="s">"base"</span> <span class="na">file=</span><span class="s">"base_helper.tmpl"</span> <span class="na">import=</span><span class="s">"*"</span> <span class="cp">/&gt;</span><span class="x">
+</span><span class="cp">&lt;%</span><span class="nb">namespace</span> <span class="na">name=</span><span class="s">"bootstrap"</span> <span class="na">file=</span><span class="s">"bootstrap_helper.tmpl"</span> <span class="na">import=</span><span class="s">"*"</span> <span class="cp">/&gt;</span><span class="x">
+</span><span class="cp">${</span><span class="n">set_locale</span><span class="p">(</span><span class="n">lang</span><span class="p">)</span><span class="cp">}</span><span class="x">
+&lt;!DOCTYPE html&gt;
+&lt;html% if comment_system == 'facebook': xmlns:fb="http://ogp.me/ns/fb#" %endif lang="</span><span class="cp">${</span><span class="n">lang</span><span class="cp">}</span><span class="x">"&gt;
+&lt;head&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    </span><span class="cp">${</span><span class="n">bootstrap</span><span class="o">.</span><span class="n">html_head</span><span class="p">()</span><span class="cp">}</span><span class="x">
+    </span><span class="cp">&lt;%</span><span class="nb">block</span> <span class="na">name=</span><span class="s">"extra_head"</span><span class="cp">&gt;</span><span class="x">
+    </span><span class="cp">&lt;/%</span><span class="nb">block</span><span class="cp">&gt;</span><span class="x">
+    </span><span class="cp">${</span><span class="n">extra_head_data</span><span class="cp">}</span><span class="x">
+&lt;/head&gt;
+&lt;body&gt;
+&lt;!-- Menubar --&gt;
+&lt;div class="navbar navbar-fixed-top" id="navbar"&gt;
+    &lt;div class="navbar-inner"&gt;
+        &lt;div class="container"&gt;
+
+        &lt;!-- .btn-navbar is used as the toggle for collapsed navbar content --&gt;
+        &lt;a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"&gt;
+            &lt;span class="icon-bar"&gt;&lt;/span&gt;
+            &lt;span class="icon-bar"&gt;&lt;/span&gt;
+            &lt;span class="icon-bar"&gt;&lt;/span&gt;
+        &lt;/a&gt;
+
+            &lt;a class="brand" href="</span><span class="cp">${</span><span class="n">abs_link</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span><span class="cp">}</span><span class="x">"&gt;
+            </span><span class="cp">${</span><span class="n">blog_title</span><span class="cp">}</span><span class="x">
+            &lt;/a&gt;
+            &lt;!-- Everything you want hidden at 940px or less, place within here --&gt;
+            &lt;div class="nav-collapse collapse"&gt;
+                &lt;ul class="nav"&gt;
+                    </span><span class="cp">${</span><span class="n">bootstrap</span><span class="o">.</span><span class="n">html_navigation_links</span><span class="p">()</span><span class="cp">}</span><span class="x">
+                &lt;/ul&gt;
+</span>                <span class="cp">%</span><span class="k">if</span> <span class="n">search_form</span><span class="p">:</span><span class="x">
+                    </span><span class="cp">${</span><span class="n">search_form</span><span class="cp">}</span>
+                <span class="cp">%</span><span class="k">endif</span><span class="x">
+                &lt;ul class="nav pull-right"&gt;
+                </span><span class="cp">&lt;%</span><span class="nb">block</span> <span class="na">name=</span><span class="s">"belowtitle"</span><span class="cp">&gt;</span>
+                <span class="cp">%</span><span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">translations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span><span class="x">
+                    &lt;li&gt;</span><span class="cp">${</span><span class="n">base</span><span class="o">.</span><span class="n">html_translations</span><span class="p">()</span><span class="cp">}</span><span class="x">&lt;/li&gt;
+</span>                <span class="cp">%</span><span class="k">endif</span><span class="x">
+                </span><span class="cp">&lt;/%</span><span class="nb">block</span><span class="cp">&gt;</span>
+                <span class="cp">%</span> <span class="k">if</span> <span class="n">show_sourcelink</span><span class="p">:</span><span class="x">
+                    &lt;li&gt;</span><span class="cp">&lt;%</span><span class="nb">block</span> <span class="na">name=</span><span class="s">"sourcelink"</span><span class="cp">&gt;&lt;/%</span><span class="nb">block</span><span class="cp">&gt;</span><span class="x">&lt;/li&gt;
+</span>                <span class="cp">%</span><span class="k">endif</span><span class="x">
+                &lt;/ul&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- End of Menubar --&gt;
+&lt;div class="container-fluid" id="container-fluid"&gt;
+    &lt;!--Body content--&gt;
+    &lt;div class="row-fluid"&gt;
+    &lt;div class="span2"&gt;&lt;/div&gt;
+    &lt;div class="span8"&gt;
+    </span><span class="cp">&lt;%</span><span class="nb">block</span> <span class="na">name=</span><span class="s">"content"</span><span class="cp">&gt;&lt;/%</span><span class="nb">block</span><span class="cp">&gt;</span><span class="x">
+    &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;!--End of body content--&gt;
+&lt;/div&gt;
+&lt;div class="footerbox"&gt;
+    </span><span class="cp">${</span><span class="n">content_footer</span><span class="cp">}</span><span class="x">
+&lt;/div&gt;
+</span><span class="cp">${</span><span class="n">bootstrap</span><span class="o">.</span><span class="n">late_load_js</span><span class="p">()</span><span class="cp">}</span><span class="x">
+</span><span class="cp">${</span><span class="n">base</span><span class="o">.</span><span class="n">html_social</span><span class="p">()</span><span class="cp">}</span><span class="x">
+    &lt;script&gt;jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});
+    $(window).on('hashchange', function(){
+        if (location.hash &amp;&amp; $(location.hash)[0]) {
+            $('body').animate({scrollTop: $(location.hash).offset().top - $('#navbar').outerHeight(true)*1.2 }, 1);
+        }
+    });
+    $(document).ready(function(){$(window).trigger('hashchange')});
+    &lt;/script&gt;
+</span><span class="cp">&lt;%</span><span class="nb">block</span> <span class="na">name=</span><span class="s">"extra_js"</span><span class="cp">&gt;&lt;/%</span><span class="nb">block</span><span class="cp">&gt;</span><span class="x">
+</span><span class="cp">${</span><span class="n">body_end</span><span class="cp">}</span><span class="x">
+&lt;/body&gt;</span>
+</pre>
+<p>It's basically a HTML document with some placeholders to be replaced with actual content, configuration options, and some helper functions.
+For example, the <tt class="docutils literal">html_head</tt> helper can be used to add CSS or JS files in all document's <tt class="docutils literal">head</tt> tags.</p>
+<p>Monospace is a two-column-with-footer layout, so let's copy the basics from its HTML and see what happens:</p>
+<pre class="code mako literal-block">
+<span class="cp">## -*- coding: utf-8 -*-</span><span class="x">
+</span><span class="cp">&lt;%</span><span class="nb">namespace</span> <span class="na">name=</span><span class="s">"base"</span> <span class="na">file=</span><span class="s">"base_helper.tmpl"</span> <span class="na">import=</span><span class="s">"*"</span><span class="cp">/&gt;</span><span class="x">
+</span><span class="cp">&lt;%</span><span class="nb">namespace</span> <span class="na">name=</span><span class="s">"bootstrap"</span> <span class="na">file=</span><span class="s">"bootstrap_helper.tmpl"</span> <span class="na">import=</span><span class="s">"*"</span> <span class="cp">/&gt;</span><span class="x">
+</span><span class="cp">${</span><span class="n">set_locale</span><span class="p">(</span><span class="n">lang</span><span class="p">)</span><span class="cp">}</span><span class="x">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="</span><span class="cp">${</span><span class="n">lang</span><span class="cp">}</span><span class="x">"&gt;
+&lt;head&gt;
+    </span><span class="cp">${</span><span class="n">bootstrap</span><span class="o">.</span><span class="n">html_head</span><span class="p">()</span><span class="cp">}</span><span class="x">
+    </span><span class="cp">&lt;%</span><span class="nb">block</span> <span class="na">name=</span><span class="s">"extra_head"</span><span class="cp">&gt;</span><span class="x">
+    </span><span class="cp">&lt;/%</span><span class="nb">block</span><span class="cp">&gt;</span><span class="x">
+    </span><span class="cp">${</span><span class="n">extra_head_data</span><span class="cp">}</span><span class="x">
+&lt;/head&gt;
+&lt;body class="home blog"&gt;
+    &lt;div id="wrap" style="width:850px"&gt;
+        &lt;div id="container" style="width:560px"&gt;
+            </span><span class="cp">&lt;%</span><span class="nb">block</span> <span class="na">name=</span><span class="s">"content"</span><span class="cp">&gt;&lt;/%</span><span class="nb">block</span><span class="cp">&gt;</span><span class="x">
+        &lt;/div&gt;
+        &lt;div id="sidebar"&gt;
+            &lt;!--Sidebar content--&gt;
+            &lt;h1 id="blog-title"&gt;
+                &lt;a href="</span><span class="cp">${</span><span class="n">abs_link</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span><span class="cp">}</span><span class="x">" title="</span><span class="cp">${</span><span class="n">blog_title</span><span class="cp">}</span><span class="x">"&gt;</span><span class="cp">${</span><span class="n">blog_title</span><span class="cp">}</span><span class="x">&lt;/a&gt;
+            &lt;/h1&gt;
+            </span><span class="cp">&lt;%</span><span class="nb">block</span> <span class="na">name=</span><span class="s">"belowtitle"</span><span class="cp">&gt;</span>
+            <span class="cp">%</span><span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">translations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span><span class="x">
+            &lt;small&gt;
+                </span><span class="cp">${</span><span class="p">(</span><span class="n">messages</span><span class="p">(</span><span class="s">"Also available in"</span><span class="p">))</span><span class="cp">}</span><span class="x">:&amp;nbsp;
+                </span><span class="cp">${</span><span class="n">base</span><span class="o">.</span><span class="n">html_translations</span><span class="p">()</span><span class="cp">}</span><span class="x">
+            &lt;/small&gt;
+</span>            <span class="cp">%</span><span class="k">endif</span><span class="x">
+            </span><span class="cp">&lt;/%</span><span class="nb">block</span><span class="cp">&gt;</span><span class="x">
+            &lt;ul class="unstyled"&gt;
+            &lt;li&gt;</span><span class="cp">${</span><span class="n">license</span><span class="cp">}</span><span class="x">
+            </span><span class="cp">${</span><span class="n">base</span><span class="o">.</span><span class="n">html_social</span><span class="p">()</span><span class="cp">}</span><span class="x">
+            </span><span class="cp">${</span><span class="n">bootstrap</span><span class="o">.</span><span class="n">html_navigation_links</span><span class="p">()</span><span class="cp">}</span><span class="x">
+            &lt;li&gt;</span><span class="cp">${</span><span class="n">search_form</span><span class="cp">}</span><span class="x">
+            &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;div id="footer"&gt;
+            </span><span class="cp">${</span><span class="n">content_footer</span><span class="cp">}</span><span class="x">
+        &lt;/div&gt;
+    &lt;/div&gt;
+    </span><span class="cp">${</span><span class="n">bootstrap</span><span class="o">.</span><span class="n">late_load_js</span><span class="p">()</span><span class="cp">}</span><span class="x">
+    &lt;script&gt;jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});&lt;/script&gt;
+    </span><span class="cp">&lt;%</span><span class="nb">block</span> <span class="na">name=</span><span class="s">"extra_js"</span><span class="cp">&gt;&lt;/%</span><span class="nb">block</span><span class="cp">&gt;</span><span class="x">
+    </span><span class="cp">${</span><span class="n">body_end</span><span class="cp">}</span><span class="x">
+&lt;/body&gt;</span>
+</pre>
+<div class="figure">
+<img alt="http://ralsina.com.ar/galleries/monospace-tut/monospace-2.png" src="http://ralsina.com.ar/galleries/monospace-tut/monospace-2.png"><p class="caption">Yikes!</p>
+</div>
+<p>This will get better quickly once we add some CSS</p>
+</div>
+<div class="section" id="base-css">
+<h2>Base CSS</h2>
+<p>The orphan theme includes just a little styling, specifically <tt class="docutils literal">rest.css</tt> so
+the reStructuredText output looks reasonable, and <tt class="docutils literal">code.css</tt> for code snippets.</p>
+<p>It also includes an empty <tt class="docutils literal">assets/css/theme.css</tt> where you can add your own CSS.
+For example, this is taken from the original monospace theme, except for the last
+few selectors:</p>
+<pre class="code css literal-block">
+<span class="nt">body</span> <span class="p">{</span> <span class="k">margin</span><span class="o">:</span><span class="m">0px</span><span class="p">;</span> <span class="k">padding</span><span class="o">:</span><span class="m">20px</span> <span class="m">0px</span><span class="p">;</span> <span class="k">text-align</span><span class="o">:</span><span class="k">center</span><span class="p">;</span> <span class="k">font-family</span><span class="o">:</span><span class="n">Monospace</span><span class="p">;</span> <span class="k">color</span><span class="o">:</span><span class="m">#585858</span><span class="p">;</span> <span class="p">}</span>
+<span class="nc">.post</span> <span class="p">{</span> <span class="k">margin</span><span class="o">:</span><span class="m">0px</span> <span class="m">0px</span> <span class="m">30px</span> <span class="m">0px</span><span class="p">;</span> <span class="k">padding</span><span class="o">:</span><span class="m">0px</span> <span class="m">0px</span> <span class="m">30px</span> <span class="m">0px</span><span class="p">;</span> <span class="k">border-bottom</span><span class="o">:</span><span class="m">1px</span> <span class="k">dotted</span> <span class="m">#C8C8C8</span><span class="p">;</span> <span class="p">}</span>
+<span class="nc">.meta</span> <span class="p">{</span> <span class="k">margin</span><span class="o">:</span><span class="m">10px</span><span class="p">;</span> <span class="k">padding</span><span class="o">:</span><span class="m">15px</span><span class="p">;</span> <span class="k">background</span><span class="o">:</span><span class="m">#EAEAEA</span><span class="p">;</span> <span class="k">clear</span><span class="o">:</span><span class="k">both</span><span class="p">;</span> <span class="p">}</span>
+<span class="nf">#footer</span> <span class="p">{</span> <span class="k">text-align</span><span class="o">:</span><span class="k">center</span><span class="p">;</span> <span class="k">clear</span><span class="o">:</span><span class="k">both</span><span class="p">;</span> <span class="k">margin</span><span class="o">:</span><span class="m">30px</span> <span class="m">0px</span> <span class="m">0px</span> <span class="m">0px</span><span class="p">;</span> <span class="k">padding</span><span class="o">:</span><span class="m">30px</span> <span class="m">0px</span> <span class="m">0px</span> <span class="m">0px</span><span class="p">;</span> <span class="k">border-top</span><span class="o">:</span><span class="m">1px</span> <span class="k">dotted</span> <span class="m">#C8C8C8</span><span class="p">;</span> <span class="p">}</span>
+<span class="nf">#wrap</span> <span class="p">{</span> <span class="k">margin</span><span class="o">:</span><span class="m">0px</span> <span class="k">auto</span><span class="p">;</span> <span class="k">text-align</span><span class="o">:</span><span class="k">left</span><span class="p">;</span> <span class="k">font-size</span><span class="o">:</span> <span class="m">13px</span><span class="p">;</span> <span class="k">line-height</span><span class="o">:</span> <span class="m">1</span><span class="o">.</span><span class="m">4</span><span class="p">;</span> <span class="p">}</span>
+<span class="nf">#container</span> <span class="p">{</span> <span class="k">float</span><span class="o">:</span><span class="k">right</span><span class="p">;</span> <span class="p">}</span>
+<span class="nf">#sidebar</span> <span class="p">{</span> <span class="k">overflow</span><span class="o">:</span><span class="k">hidden</span><span class="p">;</span> <span class="k">clear</span><span class="o">:</span><span class="k">left</span><span class="p">;</span> <span class="k">text-align</span><span class="o">:</span><span class="k">right</span><span class="p">;</span> <span class="k">width</span><span class="o">:</span><span class="m">250px</span><span class="p">;</span> <span class="k">height</span><span class="o">:</span><span class="k">auto</span><span class="p">;</span> <span class="k">padding</span><span class="o">:</span><span class="m">0px</span> <span class="m">15px</span> <span class="m">0px</span> <span class="m">0px</span><span class="p">;</span> <span class="k">border-right</span><span class="o">:</span><span class="m">1px</span> <span class="k">dotted</span> <span class="m">#C8C8C8</span><span class="p">;</span> <span class="p">}</span>
+<span class="nf">#sidebar</span> <span class="nt">li</span> <span class="p">{</span> <span class="k">list-style-type</span><span class="o">:</span><span class="k">none</span><span class="p">;</span> <span class="p">}</span>
+<span class="nf">#sidebar</span> <span class="o">&gt;</span> <span class="nt">li</span> <span class="p">{</span> <span class="k">margin</span><span class="o">:</span><span class="m">20px</span> <span class="m">0px</span><span class="p">;</span> <span class="p">}</span>
+<span class="nf">#sidebar</span> <span class="nt">h1</span> <span class="p">{</span> <span class="k">border-bottom</span><span class="o">:</span><span class="m">1px</span> <span class="k">dotted</span> <span class="m">#C8C8C8</span><span class="p">;</span> <span class="p">}</span>
+<span class="nf">#sidebar</span> <span class="nc">.description</span> <span class="p">{</span> <span class="k">display</span><span class="o">:</span><span class="k">block</span><span class="p">;</span> <span class="k">width</span><span class="o">:</span><span class="m">100</span><span class="o">%</span><span class="p">;</span> <span class="k">height</span><span class="o">:</span><span class="k">auto</span><span class="p">;</span> <span class="k">margin</span><span class="o">:</span><span class="m">0px</span> <span class="m">0px</span> <span class="m">10px</span> <span class="m">0px</span><span class="p">;</span> <span class="p">}</span>
+<span class="nt">h1</span><span class="o">,</span> <span class="nt">h2</span><span class="o">,</span> <span class="nt">h3</span><span class="o">,</span> <span class="nt">h4</span><span class="o">,</span> <span class="nt">h5</span><span class="o">,</span> <span class="nt">h6</span><span class="o">,</span> <span class="nt">h7</span> <span class="p">{</span> <span class="k">margin</span><span class="o">:</span><span class="m">0px</span><span class="p">;</span> <span class="k">text-transform</span><span class="o">:</span><span class="k">uppercase</span><span class="p">;</span> <span class="p">}</span>
+<span class="nt">h4</span><span class="o">,</span> <span class="nt">h5</span><span class="o">,</span> <span class="nt">h6</span> <span class="p">{</span> <span class="k">font-size</span><span class="o">:</span><span class="m">14px</span><span class="p">;</span> <span class="p">}</span>
+<span class="nf">#blog-title</span> <span class="p">{</span> <span class="k">margin-top</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span> <span class="k">line-height</span><span class="o">:</span><span class="m">48px</span><span class="p">;}</span>
+<span class="nc">.literal-block</span> <span class="p">{</span><span class="k">padding</span><span class="o">:</span> <span class="m">.5em</span><span class="p">;}</span>
+<span class="nt">div</span><span class="nc">.sidebar</span><span class="o">,</span> <span class="nt">div</span><span class="nc">.admonition</span><span class="o">,</span> <span class="nt">div</span><span class="nc">.attention</span><span class="o">,</span> <span class="nt">div</span><span class="nc">.caution</span><span class="o">,</span> <span class="nt">div</span><span class="nc">.danger</span><span class="o">,</span> <span class="nt">div</span><span class="nc">.error</span><span class="o">,</span> <span class="nt">div</span><span class="nc">.hint</span><span class="o">,</span> <span class="nt">div</span><span class="nc">.important</span><span class="o">,</span> <span class="nt">div</span><span class="nc">.note</span><span class="o">,</span> <span class="nt">div</span><span class="nc">.tip</span><span class="o">,</span> <span class="nt">div</span><span class="nc">.warning</span> <span class="p">{</span>
+    <span class="c">/* Issue 277 */</span>
+    <span class="k">border</span><span class="o">:</span> <span class="m">1px</span> <span class="k">solid</span> <span class="m">#aaa</span><span class="p">;</span>
+    <span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">5px</span><span class="p">;</span>
+    <span class="k">width</span><span class="o">:</span> <span class="m">100</span><span class="o">%</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">ul</span><span class="nc">.breadcrumb</span> <span class="o">&gt;</span> <span class="nt">li</span><span class="nd">:before</span> <span class="p">{</span>
+    <span class="k">content</span><span class="o">:</span> <span class="s2">" / "</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+<p>This will (after we rebuild it) make the site looks different of course, and getting closer to our goal:</p>
+<div class="figure">
+<img alt="http://ralsina.com.ar/galleries/monospace-tut/monospace-3.png" src="http://ralsina.com.ar/galleries/monospace-tut/monospace-3.png" style="height: 400px;"><p class="caption">Monospaced allright.</p>
+</div>
+<p>If you compare it to <a class="reference external" href="http://wp-themes.com/monospace/">the original</a>, however, you will see that the layout of
+the posts themselves is different, and that was not described in <tt class="docutils literal">base.tmpl</tt> at all. But if you look, you'll see that
+there is a placeholder called content: <tt class="docutils literal">&lt;%block <span class="pre">name="content"&gt;&lt;/%block&gt;</span></tt></p>
+<p>That's because <tt class="docutils literal">base.tmpl</tt> defines the <em>base</em> layout. The layout of more specific pages, like "the page that shows
+a list of posts" is defined in the other templates. Specifically, this is defined in <tt class="docutils literal">index.tmpl</tt>.
+It turns out <tt class="docutils literal">bootstrap</tt> doesn' have one of those! That's because it inherits that template from <tt class="docutils literal">base</tt>:</p>
+<pre class="code mako literal-block">
+<span class="cp">## -*- coding: utf-8 -*-</span><span class="x">
+</span><span class="cp">&lt;%</span><span class="nb">namespace</span> <span class="na">name=</span><span class="s">"helper"</span> <span class="na">file=</span><span class="s">"index_helper.tmpl"</span><span class="cp">/&gt;</span><span class="x">
+</span><span class="cp">&lt;%</span><span class="nb">namespace</span> <span class="na">name=</span><span class="s">"comments"</span> <span class="na">file=</span><span class="s">"comments_helper.tmpl"</span><span class="cp">/&gt;</span><span class="x">
+</span><span class="cp">&lt;%</span><span class="nb">inherit</span> <span class="na">file=</span><span class="s">"base.tmpl"</span><span class="cp">/&gt;</span><span class="x">
+</span><span class="cp">&lt;%</span><span class="nb">block</span> <span class="na">name=</span><span class="s">"content"</span><span class="cp">&gt;</span>
+    <span class="cp">%</span> <span class="k">for</span> <span class="n">post</span> <span class="ow">in</span> <span class="n">posts</span><span class="p">:</span><span class="x">
+        &lt;div class="postbox post-</span><span class="cp">${</span><span class="n">post</span><span class="o">.</span><span class="n">meta</span><span class="p">(</span><span class="s">'type'</span><span class="p">)</span><span class="cp">}</span><span class="x">"&gt;
+        &lt;h1&gt;&lt;a href="</span><span class="cp">${</span><span class="n">post</span><span class="o">.</span><span class="n">permalink</span><span class="p">()</span><span class="cp">}</span><span class="x">"&gt;</span><span class="cp">${</span><span class="n">post</span><span class="o">.</span><span class="n">title</span><span class="p">()</span><span class="cp">}</span><span class="x">&lt;/a&gt;
+        &lt;small&gt;&amp;nbsp;&amp;nbsp;
+            </span><span class="cp">${</span><span class="n">messages</span><span class="p">(</span><span class="s">"Posted"</span><span class="p">)</span><span class="cp">}</span><span class="x">: &lt;time class="published" datetime="</span><span class="cp">${</span><span class="n">post</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="cp">}</span><span class="x">"&gt;</span><span class="cp">${</span><span class="n">post</span><span class="o">.</span><span class="n">formatted_date</span><span class="p">(</span><span class="n">date_format</span><span class="p">)</span><span class="cp">}</span><span class="x">&lt;/time&gt;
+        &lt;/small&gt;&lt;/h1&gt;
+        &lt;hr&gt;
+        </span><span class="cp">${</span><span class="n">post</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">teaser_only</span><span class="o">=</span><span class="n">index_teasers</span><span class="p">)</span><span class="cp">}</span>
+        <span class="cp">%</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">post</span><span class="o">.</span><span class="n">meta</span><span class="p">(</span><span class="s">'nocomments'</span><span class="p">):</span><span class="x">
+            </span><span class="cp">${</span><span class="n">comments</span><span class="o">.</span><span class="n">comment_link</span><span class="p">(</span><span class="n">post</span><span class="o">.</span><span class="n">permalink</span><span class="p">(),</span> <span class="n">post</span><span class="o">.</span><span class="n">base_path</span><span class="p">)</span><span class="cp">}</span>
+        <span class="cp">%</span><span class="k"> endif</span><span class="x">
+        &lt;/div&gt;
+</span>    <span class="cp">%</span><span class="k"> endfor</span><span class="x">
+    </span><span class="cp">${</span><span class="n">helper</span><span class="o">.</span><span class="n">html_pager</span><span class="p">()</span><span class="cp">}</span><span class="x">
+    </span><span class="cp">${</span><span class="n">comments</span><span class="o">.</span><span class="n">comment_link_script</span><span class="p">()</span><span class="cp">}</span><span class="x">
+    </span><span class="cp">${</span><span class="n">helper</span><span class="o">.</span><span class="n">mathjax_script</span><span class="p">(</span><span class="n">posts</span><span class="p">)</span><span class="cp">}</span><span class="x">
+</span><span class="cp">&lt;/%</span><span class="nb">block</span><span class="cp">&gt;</span>
+</pre>
+<p>So, let's tweak that to be closer to the original. We put the post's metadata in a
+box, add links for the posts tags, move the date there, etc.</p>
+<pre class="code mako literal-block">
+<span class="cp">## -*- coding: utf-8 -*-</span><span class="x">
+</span><span class="cp">&lt;%</span><span class="nb">namespace</span> <span class="na">name=</span><span class="s">"helper"</span> <span class="na">file=</span><span class="s">"index_helper.tmpl"</span><span class="cp">/&gt;</span><span class="x">
+</span><span class="cp">&lt;%</span><span class="nb">namespace</span> <span class="na">name=</span><span class="s">"disqus"</span> <span class="na">file=</span><span class="s">"disqus_helper.tmpl"</span><span class="cp">/&gt;</span><span class="x">
+</span><span class="cp">&lt;%</span><span class="nb">inherit</span> <span class="na">file=</span><span class="s">"base.tmpl"</span><span class="cp">/&gt;</span><span class="x">
+</span><span class="cp">&lt;%</span><span class="nb">block</span> <span class="na">name=</span><span class="s">"content"</span><span class="cp">&gt;</span>
+    <span class="cp">%</span> <span class="k">for</span> <span class="n">post</span> <span class="ow">in</span> <span class="n">posts</span><span class="p">:</span><span class="x">
+        &lt;div class="postbox post-</span><span class="cp">${</span><span class="n">post</span><span class="o">.</span><span class="n">meta</span><span class="p">(</span><span class="s">'type'</span><span class="p">)</span><span class="cp">}</span><span class="x">"&gt;
+        &lt;h1&gt;&lt;a href="</span><span class="cp">${</span><span class="n">post</span><span class="o">.</span><span class="n">permalink</span><span class="p">()</span><span class="cp">}</span><span class="x">"&gt;</span><span class="cp">${</span><span class="n">post</span><span class="o">.</span><span class="n">title</span><span class="p">()</span><span class="cp">}</span><span class="x">&lt;/a&gt;&lt;/h1&gt;
+            &lt;div class="meta" style="background-color: rgb(234, 234, 234); "&gt;
+                &lt;span class="authordate"&gt;
+                    </span><span class="cp">${</span><span class="n">messages</span><span class="p">(</span><span class="s">"Posted"</span><span class="p">)</span><span class="cp">}</span><span class="x">: </span><span class="cp">${</span><span class="n">post</span><span class="o">.</span><span class="n">formatted_date</span><span class="p">(</span><span class="n">date_format</span><span class="p">)</span><span class="cp">}</span><span class="x">
+                &lt;/span&gt;
+                &lt;br&gt;
+                &lt;span class="tags"&gt;Tags:&amp;nbsp;
+</span>                    <span class="cp">%</span><span class="k">if</span> <span class="n">post</span><span class="o">.</span><span class="n">tags</span><span class="p">:</span><span class="x">
+</span>                        <span class="cp">%</span><span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">post</span><span class="o">.</span><span class="n">tags</span><span class="p">:</span><span class="x">
+                            &lt;a class="tag" href="</span><span class="cp">${</span><span class="n">_link</span><span class="p">(</span><span class="s">'tag'</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span><span class="cp">}</span><span class="x">"&gt;&lt;span&gt;</span><span class="cp">${</span><span class="n">tag</span><span class="cp">}</span><span class="x">&lt;/span&gt;&lt;/a&gt;
+</span>                        <span class="cp">%</span><span class="k">endfor</span><span class="x">
+</span>                    <span class="cp">%</span><span class="k">endif</span><span class="x">
+                &lt;/span&gt;
+            &lt;/div&gt;
+        </span><span class="cp">${</span><span class="n">post</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">teaser_only</span><span class="o">=</span><span class="n">index_teasers</span><span class="p">)</span><span class="cp">}</span>
+        <span class="cp">%</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">post</span><span class="o">.</span><span class="n">meta</span><span class="p">(</span><span class="s">'nocomments'</span><span class="p">):</span><span class="x">
+            </span><span class="cp">${</span><span class="n">disqus</span><span class="o">.</span><span class="n">html_disqus_link</span><span class="p">(</span><span class="n">post</span><span class="o">.</span><span class="n">permalink</span><span class="p">()</span><span class="o">+</span><span class="s">"#disqus_thread"</span><span class="p">,</span> <span class="n">post</span><span class="o">.</span><span class="n">base_path</span><span class="p">)</span><span class="cp">}</span>
+        <span class="cp">%</span><span class="k"> endif</span><span class="x">
+        &lt;/div&gt;
+</span>    <span class="cp">%</span><span class="k"> endfor</span><span class="x">
+    </span><span class="cp">${</span><span class="n">helper</span><span class="o">.</span><span class="n">html_pager</span><span class="p">()</span><span class="cp">}</span><span class="x">
+    </span><span class="cp">${</span><span class="n">disqus</span><span class="o">.</span><span class="n">html_disqus_script</span><span class="p">()</span><span class="cp">}</span><span class="x">
+</span><span class="cp">&lt;/%</span><span class="nb">block</span><span class="cp">&gt;</span>
+</pre>
+<div class="figure">
+<img alt="http://ralsina.com.ar/galleries/monospace-tut/monospace-4.png" src="http://ralsina.com.ar/galleries/monospace-tut/monospace-4.png" style="height: 400px;"><p class="caption">Close enough!</p>
+</div>
+<p>Then if we click on the post title, we will see some broken details in the metadata that can be fixed in <tt class="docutils literal">post.tmpl</tt>, and so on.</p>
+<pre class="code mako literal-block">
+<span class="cp">## -*- coding: utf-8 -*-</span><span class="x">
+</span><span class="cp">&lt;%</span><span class="nb">namespace</span> <span class="na">name=</span><span class="s">"helper"</span> <span class="na">file=</span><span class="s">"post_helper.tmpl"</span><span class="cp">/&gt;</span><span class="x">
+</span><span class="cp">&lt;%</span><span class="nb">namespace</span> <span class="na">name=</span><span class="s">"disqus"</span> <span class="na">file=</span><span class="s">"disqus_helper.tmpl"</span><span class="cp">/&gt;</span><span class="x">
+</span><span class="cp">&lt;%</span><span class="nb">inherit</span> <span class="na">file=</span><span class="s">"base.tmpl"</span><span class="cp">/&gt;</span><span class="x">
+</span><span class="cp">&lt;%</span><span class="nb">block</span> <span class="na">name=</span><span class="s">"extra_head"</span><span class="cp">&gt;</span><span class="x">
+</span><span class="cp">${</span><span class="n">helper</span><span class="o">.</span><span class="n">twitter_card_information</span><span class="p">(</span><span class="n">post</span><span class="p">)</span><span class="cp">}</span>
+<span class="cp">%</span> <span class="k">if</span> <span class="n">post</span><span class="o">.</span><span class="n">meta</span><span class="p">(</span><span class="s">'keywords'</span><span class="p">):</span><span class="x">
+    &lt;meta name="keywords" content="</span><span class="cp">${</span><span class="n">post</span><span class="o">.</span><span class="n">meta</span><span class="p">(</span><span class="s">'keywords'</span><span class="p">)</span><span class="o">|</span><span class="n">h</span><span class="cp">}</span><span class="x">"/&gt;
+</span><span class="cp">%</span><span class="k"> endif</span><span class="x">
+</span><span class="cp">&lt;/%</span><span class="nb">block</span><span class="cp">&gt;</span><span class="x">
+</span><span class="cp">&lt;%</span><span class="nb">block</span> <span class="na">name=</span><span class="s">"content"</span><span class="cp">&gt;</span><span class="x">
+    &lt;div class="post"&gt;
+    </span><span class="cp">${</span><span class="n">helper</span><span class="o">.</span><span class="n">html_title</span><span class="p">()</span><span class="cp">}</span><span class="x">
+        &lt;div class="meta" style="background-color: rgb(234, 234, 234); "&gt;
+        &lt;span class="authordate"&gt;
+            </span><span class="cp">${</span><span class="n">messages</span><span class="p">(</span><span class="s">"Posted"</span><span class="p">)</span><span class="cp">}</span><span class="x">: </span><span class="cp">${</span><span class="n">post</span><span class="o">.</span><span class="n">formatted_date</span><span class="p">(</span><span class="n">date_format</span><span class="p">)</span><span class="cp">}</span>
+            <span class="cp">%</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">post</span><span class="o">.</span><span class="n">meta</span><span class="p">(</span><span class="s">'password'</span><span class="p">):</span><span class="x">
+            [&lt;a href="</span><span class="cp">${</span><span class="n">post</span><span class="o">.</span><span class="n">source_link</span><span class="p">()</span><span class="cp">}</span><span class="x">" id="sourcelink"&gt;</span><span class="cp">${</span><span class="n">messages</span><span class="p">(</span><span class="s">"Source"</span><span class="p">)</span><span class="cp">}</span><span class="x">&lt;/a&gt;]
+</span>            <span class="cp">%</span><span class="k"> endif</span><span class="x">
+        &lt;/span&gt;
+        &lt;br&gt;
+</span>            <span class="cp">%</span><span class="k">if</span> <span class="n">post</span><span class="o">.</span><span class="n">tags</span><span class="p">:</span><span class="x">
+                &lt;span class="tags"&gt;</span><span class="cp">${</span><span class="n">messages</span><span class="p">(</span><span class="s">"Tags"</span><span class="p">)</span><span class="cp">}</span><span class="x">:&amp;nbsp;
+</span>                <span class="cp">%</span><span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">post</span><span class="o">.</span><span class="n">tags</span><span class="p">:</span><span class="x">
+                    &lt;a class="tag" href="</span><span class="cp">${</span><span class="n">_link</span><span class="p">(</span><span class="s">'tag'</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span><span class="cp">}</span><span class="x">"&gt;&lt;span&gt;</span><span class="cp">${</span><span class="n">tag</span><span class="cp">}</span><span class="x">&lt;/span&gt;&lt;/a&gt;
+</span>                <span class="cp">%</span><span class="k">endfor</span><span class="x">
+                &lt;/span&gt;
+                &lt;br&gt;
+</span>            <span class="cp">%</span><span class="k">endif</span><span class="x">
+        &lt;span class="authordate"&gt;
+            </span><span class="cp">${</span><span class="n">helper</span><span class="o">.</span><span class="n">html_translations</span><span class="p">(</span><span class="n">post</span><span class="p">)</span><span class="cp">}</span><span class="x">
+        &lt;/span&gt;
+        &lt;/div&gt;
+    </span><span class="cp">${</span><span class="n">post</span><span class="o">.</span><span class="n">text</span><span class="p">()</span><span class="cp">}</span><span class="x">
+    </span><span class="cp">${</span><span class="n">helper</span><span class="o">.</span><span class="n">html_pager</span><span class="p">(</span><span class="n">post</span><span class="p">)</span><span class="cp">}</span>
+    <span class="cp">%</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">post</span><span class="o">.</span><span class="n">meta</span><span class="p">(</span><span class="s">'nocomments'</span><span class="p">):</span><span class="x">
+        </span><span class="cp">${</span><span class="n">disqus</span><span class="o">.</span><span class="n">html_disqus</span><span class="p">(</span><span class="n">post</span><span class="o">.</span><span class="n">permalink</span><span class="p">(</span><span class="n">absolute</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span> <span class="n">post</span><span class="o">.</span><span class="n">title</span><span class="p">(),</span> <span class="n">post</span><span class="o">.</span><span class="n">base_path</span><span class="p">)</span><span class="cp">}</span>
+    <span class="cp">%</span><span class="k"> endif</span><span class="x">
+    &lt;/div&gt;
+</span><span class="cp">&lt;/%</span><span class="nb">block</span><span class="cp">&gt;</span>
+</pre>
+<div class="figure">
+<img alt="http://ralsina.com.ar/galleries/monospace-tut/monospace-5.png" src="http://ralsina.com.ar/galleries/monospace-tut/monospace-5.png" style="height: 400px;"><p class="caption">Details, details.</p>
+</div>
+<p>The demo site exercises most of the features in Nikola, so if you make it look good, your site probably will look good too.
+This monospace theme is included with nikola, if you want to use it or play with it.</p>
+</div>
+</div>
+
+        </div>
+        <!--End of body content-->
+
+        <footer>
+            Contents © 2014         <a href="mailto:joe@demo.site">Your Name</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/all-nocdn.js"></script><!-- Social buttons --><div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+<a class="addthis_button_more">Share</a>
+<ul>
+<li>
+<a class="addthis_button_facebook"></a>
+</li>
+<li>
+<a class="addthis_button_google_plusone_share"></a>
+</li>
+<li>
+<a class="addthis_button_linkedin"></a>
+</li>
+<li>
+<a class="addthis_button_twitter"></a>
+</li>
+</ul>
+</div>
+<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script><!-- End of social buttons --><script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+</body>
+</html>

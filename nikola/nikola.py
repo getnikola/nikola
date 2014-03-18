@@ -122,9 +122,11 @@ class Nikola(object):
         if not config:
             self.configured = False
             self.colorful = False
+            self.invariant = False
         else:
             self.configured = True
-            self.colorful = config.pop('__colorful__', False)
+            self.colorful = config.get('__colorful__', False)
+            self.invariant = config.get('__invariant__', False)
 
         ColorfulStderrHandler._colorful = self.colorful
 
@@ -634,7 +636,7 @@ class Nikola(object):
         utils.makedirs(os.path.dirname(output_name))
         doc = lxml.html.document_fromstring(data)
         doc.rewrite_links(lambda dst: self.url_replacer(src, dst, context['lang']))
-        data = b'<!DOCTYPE html>' + lxml.html.tostring(doc, encoding='utf8')
+        data = b'<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='utf8', method='html', pretty_print=True)
         with open(output_name, "wb+") as post_file:
             post_file.write(data)
 

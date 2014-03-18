@@ -43,7 +43,7 @@ from logbook import NullHandler
 
 from . import __version__
 from .nikola import Nikola
-from .utils import _reload, sys_decode, get_root_dir, LOGGER, STRICT_HANDLER
+from .utils import _reload, sys_decode, get_root_dir, req_missing, LOGGER, STRICT_HANDLER
 
 
 config = {}
@@ -93,10 +93,26 @@ def main(args):
             sys.exit(1)
         config = {}
 
-    config.update({'__colorful__': colorful})
+    invariant = False
+
+    if len(args) > 0 and args[0] == 'build' and '--invariant' in args:
+        try:
+            import freezegun
+            freeze = freezegun.freeze_time("2014-01-01")
+            freeze.start()
+            invariant = True
+        except ImportError:
+            req_missing(['freezegun'], 'perform invariant builds')
+
+    config['__colorful__'] = colorful
+    config['__invariant__'] = invariant
 
     site = Nikola(**config)
-    return DoitNikola(site, quiet).run(args)
+    _ = DoitNikola(site, quiet).run(args)
+
+    if site.invariant:
+        freeze.stop()
+    return _
 
 
 class Help(DoitHelp):
@@ -126,6 +142,15 @@ class Build(DoitRun):
                 'default': False,
                 'type': bool,
                 'help': "Fail on things that would normally be warnings.",
+            }
+        )
+        opts.append(
+            {
+                'name': 'invariant',
+                'long': 'invariant',
+                'default': False,
+                'type': bool,
+                'help': "Generate invariant output (for testing only!).",
             }
         )
         opts.append(

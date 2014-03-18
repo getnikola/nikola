@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Your Name">
+<title>Upgrading to v6 | Demo Site</title>
+<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link rel="canonical" href="http://getnikola.com/stories/upgrading-to-v6.html">
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+</head>
+<body>
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"><div class="container-fluid">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://getnikola.com/">Demo Site</a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../archive.html">Archives</a>
+                </li>
+<li>
+<a href="../categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS feed</a>
+
+            </li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="upgrading-to-v6.txt" id="sourcelink">Source</a>
+    </li>
+
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container-fluid -->
+</nav><!-- End of Menubar --><div class="container">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+    <h1>Upgrading to v6</h1>
+    <div>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name">
+<col class="docinfo-content">
+<tbody valign="top"><tr>
+<th class="docinfo-name">Version:</th>
+<td>7.0.0-alpha</td>
+</tr></tbody>
+</table>
+<p class="lead">Nikola tries fairly hard to be compatible between versions. However, there were
+a few areas which were getting clunky, and needed fxing. So, here's what you may
+need to change in your site.</p>
+<p>If you need to change anything else, or something breaks, please write at nikola-discuss
+and I'll add further tweaks here.</p>
+<div class="section" id="themes">
+<h2>Themes</h2>
+<dl class="docutils">
+<dt><strong>NOTE</strong></dt>
+<dd>There is no equivalent for the jinja-default theme yet. If you have a custom,
+jinja-based theme, upgrading is probably a bad idea right now.</dd>
+</dl>
+<p>Themes have been renamed:</p>
+<ul class="simple">
+<li>site =&gt; bootstrap</li>
+<li>orphan =&gt; base</li>
+</ul>
+<p>Theme added:</p>
+<ul class="simple">
+<li>base-jinja</li>
+</ul>
+<p>Themes have been moved out of nikola and into nikola-themes:</p>
+<ul class="simple">
+<li>default =&gt; oldfashioned at nikola-themes</li>
+<li>jinja-default =&gt; not there yet, coming soon</li>
+<li>monospace =&gt; monospace at nikola-themes</li>
+<li>site-reveal =&gt; reveal at nikola-themes</li>
+</ul>
+<p>You may have to change your <tt class="docutils literal">THEME</tt> setting, or change the <tt class="docutils literal">parent</tt> if you are
+using a custom theme. Also, some templates have been tweaked, but nothing should
+break for you.</p>
+<p>Facebook comments support changed the HTML tag to:</p>
+<pre class="code mako literal-block">
+<span class="x">&lt;html
+</span><span class="cp">%</span><span class="k">if</span> <span class="n">comment_system</span> <span class="o">==</span> <span class="s">'facebook'</span><span class="p">:</span><span class="x">
+xmlns:fb="http://ogp.me/ns/fb#"
+</span><span class="cp">%</span><span class="k">endif</span><span class="x">
+lang="</span><span class="cp">${</span><span class="n">lang</span><span class="cp">}</span><span class="x">"&gt;</span>
+</pre>
+<p>If you do not want to use Facebook comments, you can leave the old <tt class="docutils literal">&lt;html
+<span class="pre">lang="${lang}"&gt;</span></tt> tag in and it will work just fine.</p>
+<div class="section" id="comments">
+<h3>Comments</h3>
+<p>If you want a custom theme to support comment systems other than disqus, you will need to:</p>
+<ol class="arabic simple">
+<li>Replace mentions of disqus_helper.tmpl with comments_helper.tmpl</li>
+<li>Replace mentions of html_disqus with comment_form</li>
+<li>Replace mentions of html_disqus_link with comment_link</li>
+<li>Replace mentions of html_disqus_script with comment_link_script</li>
+</ol>
+<p>If you don't, your theme should work just fine, but support only disqus comments.</p>
+</div>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration</h2>
+<p>A number of options have been renamed. In most cases, the behaviour
+should be <strong>exactly</strong> as before.</p>
+<p>However, <tt class="docutils literal">post_pages</tt> was split into <tt class="docutils literal">POSTS</tt> and <tt class="docutils literal">PAGES</tt>.  Long
+story short, anything that had a <tt class="docutils literal">True</tt> as the <tt class="docutils literal">use_in_feeds</tt>
+(last) value goes to <tt class="docutils literal">POSTS</tt> and anything with <tt class="docutils literal">False</tt> goes to
+<tt class="docutils literal">PAGES</tt>.  For example:</p>
+<pre class="code python literal-block">
+<span class="n">post_pages</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s">"posts/*.txt"</span><span class="p">,</span> <span class="s">""</span><span class="p">,</span> <span class="s">"post.tmpl"</span><span class="p">,</span> <span class="bp">True</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">"stories/*.txt"</span><span class="p">,</span> <span class="s">"p"</span><span class="p">,</span> <span class="s">"story.tmpl"</span><span class="p">,</span> <span class="bp">False</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">"stories/*.html"</span><span class="p">,</span> <span class="s">"s"</span><span class="p">,</span> <span class="s">"story.tmpl"</span><span class="p">,</span> <span class="bp">False</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c">### becomes ###</span>
+
+<span class="n">POSTS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s">"posts/*.txt"</span><span class="p">,</span> <span class="s">""</span><span class="p">,</span> <span class="s">"post.tmpl"</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">PAGES</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s">"stories/*.txt"</span><span class="p">,</span> <span class="s">"p"</span><span class="p">,</span> <span class="s">"story.tmpl"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">"stories/*.html"</span><span class="p">,</span> <span class="s">"s"</span><span class="p">,</span> <span class="s">"story.tmpl"</span><span class="p">),</span>
+<span class="p">)</span>
+</pre>
+<p>Also, you will get warnings. That doesn't mean things broke. They are
+there to inform you of what's happening, and that you need to tweak your
+config.</p>
+<p>All the deprecated options will work during the v6 cycle, and only be
+removed in v7, when those warnings will become errors.</p>
+</div>
+</div>
+
+        </div>
+        <!--End of body content-->
+
+        <footer>
+            Contents © 2014         <a href="mailto:joe@demo.site">Your Name</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/all-nocdn.js"></script><!-- Social buttons --><div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+<a class="addthis_button_more">Share</a>
+<ul>
+<li>
+<a class="addthis_button_facebook"></a>
+</li>
+<li>
+<a class="addthis_button_google_plusone_share"></a>
+</li>
+<li>
+<a class="addthis_button_linkedin"></a>
+</li>
+<li>
+<a class="addthis_button_twitter"></a>
+</li>
+</ul>
+</div>
+<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script><!-- End of social buttons --><script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+</body>
+</html>
