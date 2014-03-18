@@ -92,7 +92,7 @@ NAVIGATION_LINKS = {
     DEFAULT_LANG: (
         ('/archive.html', 'Archives'),
         ('/categories/index.html', 'Tags'),
-        ('/rss.xml', 'RSS'),
+        ('/rss.xml', 'RSS feed'),
     ),
 }
 
