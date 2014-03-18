@@ -45,6 +45,7 @@ Features
 Bugfixes
 --------
 
+* custom.css not included in bundles
 * Don’t publish email addresses in RSS, use author name via Dublin Core
 * Rebuild a lot of files when TIMEZONE changes (Issue #1110)
 * The ``init`` command and the importers now always output to the CWD.
