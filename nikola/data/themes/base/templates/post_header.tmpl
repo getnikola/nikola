@@ -36,7 +36,7 @@
 </%def>
 
 <%block name="html_sourcelink">
-    % if not post.meta('password'):
+    % if show_sourcelink:
         <p class="sourceline"><a href="${post.source_link()}" id="sourcelink">${messages("Source")}</a></p>
     % endif
 </%block>

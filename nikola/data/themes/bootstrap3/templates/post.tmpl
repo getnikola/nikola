@@ -37,7 +37,7 @@ ${helper.meta_translations(post)}
 </%block>
 
 <%block name="sourcelink">
-% if not post.meta('password'):
+% if show_sourcelink:
     <li>
     <a href="${post.source_link()}" id="sourcelink">${messages("Source")}</a>
     </li>
