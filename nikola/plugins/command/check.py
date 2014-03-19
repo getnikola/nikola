@@ -139,6 +139,8 @@ class CommandCheck(Command):
         rv = False
         self.whitelist = [re.compile(x) for x in self.site.config['LINK_CHECK_WHITELIST']]
         base_url = urlparse(self.site.config['BASE_URL'])
+        self.existing_targets.add(self.site.config['SITE_URL'])
+        self.existing_targets.add(self.site.config['BASE_URL'])
         url_type = self.site.config['URL_TYPE']
         try:
             filename = task.split(":")[-1]
@@ -166,11 +168,15 @@ class CommandCheck(Command):
                 elif url_type in ('full_path', 'absolute'):
                     target_filename = os.path.abspath(
                         os.path.join(os.path.dirname(filename), parsed.path))
-                    if parsed.path.endswith('/'):  # abspath removes trailing slashes
+                    if parsed.path in ['', '/']:
+                        target_filename = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.config['INDEX_FILE'])
+                    elif parsed.path.endswith('/'):  # abspath removes trailing slashes
                         target_filename += '/{0}'.format(self.site.config['INDEX_FILE'])
                     if target_filename.startswith(base_url.path):
                         target_filename = target_filename[len(base_url.path):]
                     target_filename = os.path.join(self.site.config['OUTPUT_FOLDER'], target_filename)
+                    if parsed.path in ['', '/']:
+                        target_filename = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.config['INDEX_FILE'])
 
                 if any(re.match(x, target_filename) for x in self.whitelist):
                     continue

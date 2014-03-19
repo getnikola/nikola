@@ -12,3 +12,4 @@ logbook
 blinker
 setuptools
 colorama
+natsort

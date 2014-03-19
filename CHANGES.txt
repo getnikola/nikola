@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Use natural sorting for files and folders list in listings and galleries (Issue #1144)
 * Added invariance testing (Issue #672)
 * Plugins can inject templates in the system (Issue #1139)
 * ``nikola import_wordpress`` now has a ``--qtranslate`` option, to parse posts
@@ -45,6 +46,9 @@ Features
 Bugfixes
 --------
 
+* Don't call links to SITE_URL bad on check when URL_TYPE is 'absolute' (Issue #1147)
+* Trigger rebuilds if URL_TYPE changes (Issue #1095)
+* Eliminate repeated tags in posts (Issue #1142)
 * custom.css not included in bundles
 * Don’t publish email addresses in RSS, use author name via Dublin Core
 * Rebuild a lot of files when TIMEZONE changes (Issue #1110)

@@ -38,6 +38,7 @@ except ImportError:
     from urllib.parse import urljoin  # NOQA
 
 import lxml.html
+import natsort
 try:
     import pyphen
 except ImportError:
@@ -175,7 +176,8 @@ class Post(object):
         is_private = False
         self._tags = {}
         for lang in self.translated_to:
-            self._tags[lang] = [x.strip() for x in self.meta[lang]['tags'].split(',')]
+            self._tags[lang] = natsort.natsorted(
+                list(set([x.strip() for x in self.meta[lang]['tags'].split(',')])))
             self._tags[lang] = [t for t in self._tags[lang] if t]
             if 'draft' in self._tags[lang]:
                 is_draft = True

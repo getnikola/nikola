@@ -31,6 +31,7 @@ import os
 from pygments import highlight
 from pygments.lexers import get_lexer_for_filename, TextLexer
 from pygments.formatters import HtmlFormatter
+import natsort
 
 from nikola.plugin_categories import Task
 from nikola import utils
@@ -81,8 +82,8 @@ class Listings(Task):
                 'title': title,
                 'crumbs': crumbs,
                 'lang': kw['default_lang'],
-                'folders': folders,
-                'files': files,
+                'folders': natsort.natsorted(folders),
+                'files': natsort.natsorted(files),
                 'description': title,
             }
             self.site.render_template('listing.tmpl', out_name,
@@ -93,6 +94,7 @@ class Listings(Task):
         template_deps = self.site.template_system.template_deps('listing.tmpl')
         for root, dirs, files in os.walk(kw['listings_folder']):
             files = [f for f in files if os.path.splitext(f)[-1] not in ignored_extensions]
+
             # Render all files
             out_name = os.path.join(
                 kw['output_folder'],
@@ -106,8 +108,11 @@ class Listings(Task):
                 'actions': [(render_listing, [None, out_name, dirs, files])],
                 # This is necessary to reflect changes in blog title,
                 # sidebar links, etc.
-                'uptodate': [utils.config_changed(
-                    self.site.GLOBAL_CONTEXT)],
+                'uptodate': [utils.config_changed({
+                    1: self.site.GLOBAL_CONTEXT,
+                    2: files,
+                    3: dirs
+                })],
                 'clean': True,
             }
             for f in files:
