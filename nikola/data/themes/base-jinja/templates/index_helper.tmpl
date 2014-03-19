@@ -1,7 +1,7 @@
 {#  -*- coding: utf-8 -*- #}
 {% macro html_pager() %}
     {% if prevlink or nextlink %}
-        <nav>
+        <nav class="postindexpager">
         <ul class="pager">
         {% if prevlink %}
             <li class="previous">
