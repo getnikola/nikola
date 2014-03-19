@@ -558,8 +558,6 @@ class Galleries(Task):
 
     def image_date(self, src):
         """Try to figure out the date of the image."""
-        if self.site.invariant:
-            return datetime.datetime.now()
         if src not in self.dates:
             try:
                 im = Image.open(src)
