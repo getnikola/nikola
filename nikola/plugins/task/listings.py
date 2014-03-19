@@ -94,7 +94,7 @@ class Listings(Task):
         template_deps = self.site.template_system.template_deps('listing.tmpl')
         for root, dirs, files in os.walk(kw['listings_folder']):
             files = [f for f in files if os.path.splitext(f)[-1] not in ignored_extensions]
-            
+
             # Render all files
             out_name = os.path.join(
                 kw['output_folder'],
