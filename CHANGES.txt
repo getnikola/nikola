@@ -46,6 +46,7 @@ Features
 Bugfixes
 --------
 
+* Eliminate repeated tags in posts (Issue #1142)
 * custom.css not included in bundles
 * Don’t publish email addresses in RSS, use author name via Dublin Core
 * Rebuild a lot of files when TIMEZONE changes (Issue #1110)
