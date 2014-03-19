@@ -46,6 +46,7 @@ Features
 Bugfixes
 --------
 
+* Trigger rebuilds if URL_TYPE changes (Issue #1095)
 * Eliminate repeated tags in posts (Issue #1142)
 * custom.css not included in bundles
 * Don’t publish email addresses in RSS, use author name via Dublin Core
