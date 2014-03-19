@@ -46,6 +46,7 @@ Features
 Bugfixes
 --------
 
+* Don't call links to SITE_URL bad on check when URL_TYPE is 'absolute' (Issue #1147)
 * Trigger rebuilds if URL_TYPE changes (Issue #1095)
 * Eliminate repeated tags in posts (Issue #1142)
 * custom.css not included in bundles
