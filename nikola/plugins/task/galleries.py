@@ -567,7 +567,7 @@ class Galleries(Task):
             if exif is not None:
                 for tag, value in list(exif.items()):
                     decoded = ExifTags.TAGS.get(tag, tag)
-                    if decoded == 'DateTimeOriginal':
+                    if decoded in ('DateTimeOriginal', 'DateTimeDigitized'):
                         try:
                             self.dates[src] = datetime.datetime.strptime(
                                 value, r'%Y:%m:%d %H:%M:%S')
