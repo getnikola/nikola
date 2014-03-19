@@ -108,8 +108,11 @@ class Listings(Task):
                 'actions': [(render_listing, [None, out_name, dirs, files])],
                 # This is necessary to reflect changes in blog title,
                 # sidebar links, etc.
-                'uptodate': [utils.config_changed(
-                    self.site.GLOBAL_CONTEXT)],
+                'uptodate': [utils.config_changed({
+                    1: self.site.GLOBAL_CONTEXT,
+                    2: files,
+                    3: dirs
+                })],
                 'clean': True,
             }
             for f in files:
