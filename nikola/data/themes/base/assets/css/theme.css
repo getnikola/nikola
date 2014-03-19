@@ -1,1 +1,116 @@
-/* This file intentionally left blank. */
+@charset "UTF-8";
+body {
+	color: #4F5151;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 17px;
+	line-height: 1.4;
+	padding: 1em;
+}
+#container {
+	margin: 1em auto;
+	max-width: 770px;
+}
+#menu ul,
+#menu ul li,
+.postpromonav .tags,
+.postpromonav .tags li,
+.pager,
+.pager li {
+	list-style: none;
+	padding-left: 0;
+	padding-right: 0;
+}
+#menu ul li {
+	display: inline-block;
+	margin-right: 1.5em;
+}
+#menu ul li:dir(rtl) {
+	margin-left: 1.5em;
+	margin-right: 0;
+}
+.postindex article {
+	border-bottom: 1px solid #4F5151;
+	padding-bottom: 1em;
+}
+#header {
+	border-bottom: 1px solid #4F5151;
+}
+#footer {
+	border-top: 1px solid #4F5151;
+}
+.postpromonav {
+	border-bottom: 1px solid #4F5151;
+	border-top: 1px solid #4F5151;
+	margin-top: 1em;
+	padding: .5em 0;
+}
+.postpromonav .tags {
+	text-align: center;
+}
+.metadata p:before,
+.postpromonav .tags li:before,
+.postlist .listdate:before {
+	content: " – ";
+}
+.postlist li {
+	margin-bottom: .33em;
+}
+.postindexpager .pager .next:before {
+	content: "↓ ";
+}
+.postindexpager .pager .previous:before {
+	content: "↑ ";
+}
+.postpromonav .pager .next:after {
+	content: " →";
+}
+.postpromonav .pager .previous:dir(rtl):after {
+	content: " →";
+}
+.postpromonav .pager .previous:before {
+	content: "← ";
+}
+.postpromonav .pager .next:dir(rtl):before {
+	content: "← ";
+}
+.metadata p:first-of-type:before,
+.postpromonav .tags li:first-of-type:before {
+	content: "";
+}
+.postpromonav .pager {
+	height: 1em;
+}
+.postpromonav .tags li,
+.postpromonav .pager li {
+	display: inline-block;
+}
+.postpromonav .pager .next {
+	float: right;
+}
+.postpromonav .pager .next:dir(rtl) {
+	float: left;
+}
+.metadata p {
+	display: inline;
+}
+:link {
+	color: #1168CC;
+	text-decoration: none;
+}
+:visited {
+	color: #6830BB;
+}
+:link:hover, :visited:hover {
+	color: #0d53a3;
+}
+.postindex .dateline :link {
+	color: inherit;
+}
+#blog-title {
+	font-size: 3em;
+	line-height: 1;
+}
+#blog-title :link, 
+#blog-title :visited {
+	color: inherit;
+}
