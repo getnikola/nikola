@@ -30,12 +30,14 @@ import datetime
 import glob
 import json
 import mimetypes
+from operator import itemgetter
 import os
 try:
     from urlparse import urljoin
 except ImportError:
     from urllib.parse import urljoin  # NOQA
 
+import natsort
 Image = None
 try:
     from PIL import Image, ExifTags  # NOQA
@@ -193,7 +195,7 @@ class Galleries(Task):
 
                 ## TODO: in v7 remove images from context, use photo_array
                 context["images"] = list(zip(image_name_list, thumbs, img_titles))
-                context["folders"] = folders
+                context["folders"] = natsort.natsorted(folders, key=itemgetter(1))
                 context["crumbs"] = crumbs
                 context["permalink"] = self.site.link(
                     "gallery", os.path.basename(

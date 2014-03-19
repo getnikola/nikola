@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Use natural sorting for files and folders list in listings and galleries (Issue #1144)
 * Added invariance testing (Issue #672)
 * Plugins can inject templates in the system (Issue #1139)
 * ``nikola import_wordpress`` now has a ``--qtranslate`` option, to parse posts
