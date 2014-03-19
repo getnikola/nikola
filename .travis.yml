@@ -15,8 +15,8 @@ matrix:
 env:
     NMODE=nikola
 install:
-  - "if [[ $NMODE == 'nikola' ]]; then scripts/getwheelhouse.sh $(scripts/getpyver.py); fi"
-  - "if [[ $NMODE == 'nikola' ]]; then scripts/getbaseline.sh $(scripts/getpyver.py); fi"
+  - "if [[ $NMODE == 'nikola' ]]; then scripts/getwheelhouse.sh $(scripts/getpyver.py short); fi"
+  - "if [[ $NMODE == 'nikola' ]]; then scripts/getbaseline.sh $(scripts/getpyver.py short); fi"
   - "if [[ $NMODE == 'nikola' ]]; then pip install -r requirements-tests.txt; fi"
   - "if [[ $NMODE == 'nikola' ]]; then pip install .; fi"
   - "if [[ $NMODE == 'flake8' ]]; then pip install flake8; fi"
