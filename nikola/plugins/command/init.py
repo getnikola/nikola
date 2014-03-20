@@ -199,7 +199,7 @@ class CommandInit(Command):
         return os.path.dirname(nikola.__file__)
 
     @staticmethod
-    def ask_questions():
+    def ask_questions(target):
         """Ask some questions about Nikola."""
         def ask(query, default):
             """Ask a question."""
@@ -238,9 +238,12 @@ class CommandInit(Command):
         def chandler(default, toconf):
             print("You can configure comments now.  Consult the manual if you want to know what is available.  If you do not want any comments, just leave the fields blank.")
 
+        STORAGE = {'target': target}
+
         questions = [
             ('Questions about the site', None, None, None),
             # query, default, toconf, destination
+            ('Destination', None, False, '!target'),
             ('Site title', 'My Nikola Site', True, 'BLOG_TITLE'),
             ('Site author', 'Nikola Tesla', True, 'BLOG_AUTHOR'),
             ('Site author’s e-mail', 'n.tesla@example.com', True, 'BLOG_EMAIL'),
@@ -259,27 +262,46 @@ class CommandInit(Command):
         print("This is Nikola v{0}.  We will now ask you a few easy questions about your new site.".format(nikola.__version__))
         print("If you do not want to answer and want to go with the defaults instead, simply restart with the `-q` parameter.")
 
+
         for query, default, toconf, destination in questions:
-            if default is toconf is destination is None:
-                print('--- {0} ---'.format(query))
-            elif destination is True:
-                query(default, toconf)
+            if target and destination == '!target':
+                # Skip the destination question if we know it already
+                pass
             else:
-                answer = ask(query, default)
-                if toconf:
-                    SAMPLE_CONF[destination] = answer
+                if default is toconf is destination is None:
+                    print('--- {0} ---'.format(query))
+                elif destination is True:
+                    query(default, toconf)
+                else:
+                    answer = ask(query, default)
+                    if toconf:
+                        SAMPLE_CONF[destination] = answer
+                    if destination == '!target':
+                        while not answer:
+                            print('ERROR: directory missing.')
+                            answer = ask(query, default)
+                        STORAGE['target'] = answer
 
         print("That's it, Nikola is now configured.")
         print("Make sure to edit conf.py to your liking.")
+        return STORAGE
 
     def _execute(self, options={}, args=None):
         """Create a new site."""
-        if not args:
-            print("Usage: nikola init folder [options]")
-            return False
-        target = args[0]
+        try:
+            target = args[0]
+        except IndexError:
+            target = None
         if not options.get('quiet'):
-            self.ask_questions()
+            st = self.ask_questions(target=target)
+            try:
+                target = st['target']
+            except KeyError:
+                pass
+
+        if not target:
+            print("Usage: nikola init [options] folder")
+            return False
         if not options.get('demo'):
             self.create_empty_site(target)
             LOGGER.info('Created empty site at {0}.'.format(target))
