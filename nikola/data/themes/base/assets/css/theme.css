@@ -141,3 +141,8 @@ body {
 #blog-title :visited {
 	color: inherit;
 }
+
+/* Comment helpers */
+#disqus_thread {
+	min-height: 325px;
+}
