@@ -36,7 +36,7 @@ from mako.template import Template
 import nikola
 from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, makedirs, STDERR_HANDLER
+from nikola.utils import get_logger, makedirs, STDERR_HANDLER, load_messages
 from nikola.winutils import fix_git_symlinked
 
 LOGGER = get_logger('init', STDERR_HANDLER)
@@ -83,6 +83,13 @@ SAMPLE_CONF = {
     # with many of the others.
     # "pandoc": ('.rst', '.md', '.txt'),
 }""",
+    'NAVIGATION_LINKS': """{
+    DEFAULT_LANG: (
+        ("/archive.html", "Archives"),
+        ("/categories/index.html", "Tags"),
+        ("/rss.xml", "RSS feed"),
+    ),
+}""",
     'REDIRECTIONS': [],
 }
 
@@ -98,13 +105,43 @@ def format_default_translations_config(additional_languages):
     return "{{\n{0}\n}}".format("\n".join(lang_paths))
 
 
+def format_navigation_links(additional_languages, default_lang, messages):
+    """Return the string to configure NAVIGATION_LINKS."""
+    f = u"""\
+    {0}: (
+        ("{1}/archive.html", "{2[Archive]}"),
+        ("{1}/categories/index.html", "{2[Tags]}"),
+        ("{1}/rss.xml", "{2[RSS feed]}"),
+    ),"""
+
+    pairs = []
+
+    def get_msg(lang):
+        """Generate a smaller messages dict with fallback."""
+        fmsg = {}
+        for i in (u'Archive', u'Tags', u'RSS feed'):
+            if messages[lang][i]:
+                fmsg[i] = messages[lang][i]
+            else:
+                fmsg[i] = i
+        return fmsg
+
+    # handle the default language
+    pairs.append(f.format('DEFAULT_LANG', '', get_msg(default_lang)))
+
+    for l in additional_languages:
+        pairs.append(f.format(json.dumps(l), '/' + l, get_msg(l)))
+
+    return u'{{\n{0}\n}}'.format('\n\n'.join(pairs))
+
+
 # In order to ensure proper escaping, all variables but the three
 # pre-formatted ones are handled by json.dumps().
 def prepare_config(config):
     """Parse sample config with JSON."""
     p = config.copy()
     p.update(dict((k, json.dumps(v)) for k, v in p.items()
-             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS')))
+             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS')))
     return p
 
 
@@ -187,6 +224,16 @@ class CommandInit(Command):
             # format_default_translations_config() is intelligent enough to
             # return the current value if there are no additional languages.
             SAMPLE_CONF['TRANSLATIONS'] = format_default_translations_config(langs)
+
+            # Get messages for navigation_links.  In order to do this, we need
+            # to generate a throwaway TRANSLATIONS dict.
+            tr = {default: ''}
+            for l in langs:
+                tr[l] = './' + l
+            # Assuming that base contains all the locales, and that base does
+            # not inherit from anywhere.
+            messages = nikola.utils.load_messages(['base'], tr, default)
+            SAMPLE_CONF['NAVIGATION_LINKS'] = format_navigation_links(langs, default, messages)
 
         def chandler(default, toconf):
             print("You can configure comments now.  Consult the manual if you want to know what is available.  If you do not want any comments, just leave the fields blank.")

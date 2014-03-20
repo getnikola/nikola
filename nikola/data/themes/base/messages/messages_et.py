@@ -18,6 +18,7 @@ MESSAGES = {
     "Posts for year %s": "Postitused aastast %s",
     "Posts for {month} {year}": "Postitused {year} aasta kuust {month} ",
     "Previous post": "Eelmine postitus",
+    "RSS feed": "",
     "Read in English": "Loe eesti keeles",
     "Read more": "Loe veel",
     "Source": "Lähtekood",

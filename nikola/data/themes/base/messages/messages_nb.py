@@ -18,6 +18,7 @@ MESSAGES = {
     "Posts for year %s": "Innlegg fra %s",
     "Posts for {month} {year}": "Innlegg fra {month} {year}",
     "Previous post": "Forrige innlegg",
+    "RSS feed": "",
     "Read in English": "Les på norsk",
     "Read more": "Les mer",
     "Source": "Kilde",

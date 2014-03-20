@@ -86,3 +86,6 @@ msgstr "Nothing found."
 
 msgid "No posts found."
 msgstr "No posts found."
+
+msgid "RSS feed"
+msgstr "RSS feed"

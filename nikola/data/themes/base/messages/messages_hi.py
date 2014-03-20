@@ -18,6 +18,7 @@ MESSAGES = {
     "Posts for year %s": "साल %s की पोस्टें",
     "Posts for {month} {year}": "{month} {year} की पोस्टें",
     "Previous post": "पिछली पोस्ट",
+    "RSS feed": "",
     "Read in English": "हिन्दी में पढ़िए",
     "Read more": "और पढ़िए",
     "Source": "सोर्स",

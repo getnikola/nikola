@@ -18,6 +18,7 @@ MESSAGES = {
     "Posts for year %s": "%s. urteko postak",
     "Posts for {month} {year}": "{year}ko {month}ren postak",
     "Previous post": "Aurreko posta",
+    "RSS feed": "",
     "Read in English": "Euskaraz irakurri",
     "Read more": "Irakurri gehiago",
     "Source": "Iturria",
