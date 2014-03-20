@@ -312,6 +312,6 @@ Options:
             self.copy_sample_site(target)
             LOGGER.info("A new site with example data has been created at "
                         "{0}.".format(target))
-            LOGGER.info("See README.txt in that folder for more information.")[
+            LOGGER.info("See README.txt in that folder for more information.")
 
         self.create_configuration(target)
