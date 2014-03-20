@@ -10,17 +10,13 @@
     %endif
 </%def>
 
-<%def name="html_list_tags(post)" buffered="True">
-    <ul itemprop="keywords" class="tags">
-    %for tag in post.tags:
-       <li><a class="tag p-category" href="${_link('tag', tag)}" rel="tag" title="${formatmsg(messages("More posts about %s"), tag)}">${tag}</a></li>
-    %endfor
-    </ul>
-</%def>
-
 <%def name="html_tags(post)">
     %if post.tags:
-        ${html_list_tags(post)}
+        <ul itemprop="keywords" class="tags">
+        %for tag in post.tags:
+           <li><a class="tag p-category" href="${_link('tag', tag)}" rel="tag">${tag}</a></li>
+        %endfor
+        </ul>
     %endif
 </%def>
 
