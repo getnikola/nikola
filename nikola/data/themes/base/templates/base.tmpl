@@ -4,13 +4,16 @@
 <%namespace name="footer" file="base_footer.tmpl" import="*"/>
 <%namespace name="annotations" file="annotation_helper.tmpl"/>
 ${set_locale(lang)}
-
 ${base.html_headstart()}
+<%block name="extra_head"/>
+### Leave the above alone
+
+</head>
 <body>
     <div id="container">
          ${header.html_header()}
          <main id="content">
-             <%block name="content"></%block>
+             <%block name="content"/>
          </main>
          ${footer.html_footer()}
     </div>

@@ -1,4 +1,5 @@
 ## -*- coding: utf-8 -*-
+
 <%block name="html_headstart">
 <!DOCTYPE html>
 <html
@@ -49,13 +50,10 @@ lang="${lang}">
         <!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]-->
     %endif
 
-    <%block name="extra_head"></%block>
     ${extra_head_data}
-    </head>
 </%block>
 
 <%block name="late_load_js">
-
     ${social_buttons_code}
 </%block>
 
@@ -69,7 +67,7 @@ lang="${lang}">
     %else:
         <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
-        <link href="/assets/css/theme.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/css/theme.css" rel="stylesheet" type="text/css">
         %if has_custom_css:
             <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
         %endif
