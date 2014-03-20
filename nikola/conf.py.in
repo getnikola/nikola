@@ -13,10 +13,8 @@ import time
 #! There are two ways to specify a translatable setting:
 #! (a) BLOG_TITLE = "My Blog"
 #! (b) BLOG_TITLE = {"en": "My Blog", "es": "Mi Blog"}
-#! Option (a) is there for backwards compatibility and when you don't
-#!            want that setting translated.
-#! Option (b) should be used for settings that are different in
-#!            different languages.
+#! Option (a) is used when you don't want that setting translated.
+#! Option (b) is used for settings that are different in different languages.
 
 
 # Data about this site

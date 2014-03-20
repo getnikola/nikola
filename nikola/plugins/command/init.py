@@ -177,6 +177,20 @@ class CommandInit(Command):
             inp = sys.stdin.readline().strip()
             return inp if inp else default
 
+        def lhandler(default, toconf):
+            print("We will now ask you to provide the list of languages you want to use.")
+            print("Please list all the desired languages, comma-separated.  The first language will be used as the default.")
+            answer = ask('Language(s) to use', 'en')
+            langs = answer.split(',')
+            default = langs.pop(0)
+            SAMPLE_CONF['DEFAULT_LANG'] = default
+            # format_default_translations_config() is intelligent enough to
+            # return the current value if there are no additional languages.
+            SAMPLE_CONF['TRANSLATIONS'] = format_default_translations_config(langs)
+
+        def chandler(default, toconf):
+            print("You can configure comments now.  Consult the manual if you want to know what is available.  If you do not want any comments, just leave the fields blank.")
+
         questions = [
             ('Questions about the site', None, None, None),
             # query, default, toconf, destination
@@ -185,8 +199,12 @@ class CommandInit(Command):
             ('Site author’s e-mail', 'n.tesla@example.com', True, 'BLOG_EMAIL'),
             ('Site description', 'This is a demo site for Nikola.', True, 'BLOG_DESCRIPTION'),
             ('Site URL', 'http://getnikola.com/', True, 'SITE_URL'),
-            #('Questions about languages and locales', None, None, None),
-            ('Default language', 'en', True, 'DEFAULT_LANG'),
+            ('Questions about languages and locales', None, None, None),
+            (lhandler, None, True, True),
+            ('Questions about comments', None, None, None),
+            (chandler, None, True, True),
+            ('Comment system', '', True, 'COMMENT_SYSTEM'),
+            ('Comment system site identifier', '', True, 'COMMENT_SYSTEM_ID'),
         ]
 
         print("Creating Nikola Site")
@@ -197,10 +215,15 @@ class CommandInit(Command):
         for query, default, toconf, destination in questions:
             if default is toconf is destination is None:
                 print('--- {0} ---'.format(query))
+            elif destination is True:
+                query(default, toconf)
             else:
                 answer = ask(query, default)
                 if toconf:
                     SAMPLE_CONF[destination] = answer
+
+        print("That's it, Nikola is now configured.")
+        print("Make sure to edit conf.py to your liking.")
 
     def _execute(self, options={}, args=None):
         """Create a new site."""
