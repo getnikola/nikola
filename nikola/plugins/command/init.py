@@ -151,7 +151,7 @@ class CommandInit(Command):
 
     name = "init"
 
-    doc_usage = "[--demo] folder"
+    doc_usage = "[--demo] [--quiet] folder"
     needs_config = False
     doc_purpose = "create a Nikola site in the specified folder"
     cmd_options = [
@@ -299,7 +299,7 @@ class CommandInit(Command):
                 pass
 
         if not target:
-            print("Usage: nikola init [options] folder")
+            print("Usage: nikola init [--demo] [--quiet] folder")
             print("""
 Options:
   -q, --quiet               Do not ask questions about config.
@@ -312,6 +312,6 @@ Options:
             self.copy_sample_site(target)
             LOGGER.info("A new site with example data has been created at "
                         "{0}.".format(target))
-            LOGGER.info("See README.txt in that folder for more information.")
+            LOGGER.info("See README.txt in that folder for more information.")[
 
         self.create_configuration(target)
