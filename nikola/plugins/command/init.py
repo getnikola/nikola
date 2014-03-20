@@ -232,7 +232,7 @@ class CommandInit(Command):
                 tr[l] = './' + l
             # Assuming that base contains all the locales, and that base does
             # not inherit from anywhere.
-            messages = nikola.utils.load_messages(['base'], tr, default)
+            messages = load_messages(['base'], tr, default)
             SAMPLE_CONF['NAVIGATION_LINKS'] = format_navigation_links(langs, default, messages)
 
         def chandler(default, toconf):
@@ -278,7 +278,7 @@ class CommandInit(Command):
                         SAMPLE_CONF[destination] = answer
                     if destination == '!target':
                         while not answer:
-                            print('ERROR: directory missing.')
+                            print('ERROR: directory missing.\n')
                             answer = ask(query, default)
                         STORAGE['target'] = answer
 
@@ -301,6 +301,10 @@ class CommandInit(Command):
 
         if not target:
             print("Usage: nikola init [options] folder")
+            print("""
+Options:
+  -q, --quiet               Do not ask questions about config.
+  -d, --demo                Create a site filled with example data.""")
             return False
         if not options.get('demo'):
             self.create_empty_site(target)
