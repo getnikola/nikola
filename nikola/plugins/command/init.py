@@ -262,7 +262,6 @@ class CommandInit(Command):
         print("This is Nikola v{0}.  We will now ask you a few easy questions about your new site.".format(nikola.__version__))
         print("If you do not want to answer and want to go with the defaults instead, simply restart with the `-q` parameter.")
 
-
         for query, default, toconf, destination in questions:
             if target and destination == '!target':
                 # Skip the destination question if we know it already
