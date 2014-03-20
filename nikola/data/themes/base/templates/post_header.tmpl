@@ -8,7 +8,9 @@
             <p class="byline author vcard"><span class="byline-name fn">${post.author()}</span></p>
             <p class="dateline"><a href="${post.permalink()}" rel="bookmark"><time class="published dt-published" datetime="${post.date.isoformat()}" itemprop="datePublished" title="${messages("Publication date")}">${post.formatted_date(date_format)}</time></a></p>
             ${self.html_translations(post)}
-            ${self.html_sourcelink()}
+            % if show_sourcelink:
+                ${self.html_sourcelink()}
+            % endif
             %if post.description():
                 <meta content="${post.description()}" itemprop="description">
             %endif
