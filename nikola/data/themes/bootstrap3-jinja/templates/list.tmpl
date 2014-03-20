@@ -1,8 +1,8 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'base.tmpl' %}
-{% block content %}
-        <!--Body content-->
-        <div class="postbox">
+
+    <!--Body content-->
+    <div class="postbox">
         <h1>{{ title }}</h1>
         {% if items %}
         <ul class="list-unstyled">
@@ -13,6 +13,6 @@
         {% else %}
         <p>{{ messages("Nothing found.") }}</p>
         {% endif %}
-        </div>
-        <!--End of body content-->
-{% endblock %}
+    </div>
+    <!--End of body content-->
+

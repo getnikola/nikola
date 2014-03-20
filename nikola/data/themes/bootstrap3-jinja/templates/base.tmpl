@@ -3,8 +3,11 @@
 {% import 'bootstrap_helper.tmpl' as bootstrap with context %}
 {% import 'annotation_helper.tmpl' as notes with context %}
 {{ set_locale(lang) }}
-
 {{ base.html_headstart() }}
+{% block extra_head %}
+{#  Leave this block alone. #}
+{% endblock %}
+
 <body>
 
 <!-- Menubar -->
@@ -48,7 +51,7 @@
     <div class="body-content">
         <!--Body content-->
         <div class="row">
-            {% block content %}{% endblock %}
+            {{ self.body() }}
         </div>
         <!--End of body content-->
 

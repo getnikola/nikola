@@ -1,18 +1,18 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'base.tmpl' %}
-{% block content %}
-    <article class="listpage">
-        <header>
-            <h1>{{ title }}</h1>
-        </header>
-        {% if items %}
-        <ul class="postlist">
-        {% for text, link in items %}
-            <li><a href="{{ link }}">{{ text }}</a>
-        {% endfor %}
-        </ul>
-        {% else %}
-        <p>{{ messages("Nothing found.") }}</p>
-        {% endif %}
-    </article>
-{% endblock %}
+
+<article class="listpage">
+    <header>
+        <h1>{{ title }}</h1>
+    </header>
+    {% if items %}
+    <ul class="postlist">
+    {% for text, link in items %}
+        <li><a href="{{ link }}">{{ text }}</a>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p>{{ messages("Nothing found.") }}</p>
+    {% endif %}
+</article>
+

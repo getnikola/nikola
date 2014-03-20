@@ -4,13 +4,17 @@
 {% import 'base_footer.tmpl' as footer with context %}
 {% import 'annotation_helper.tmpl' as annotations with context %}
 {{ set_locale(lang) }}
-
 {{ base.html_headstart() }}
+{% block extra_head %}
+{#  Leave this block alone. #}
+{% endblock %}
+
+</head>
 <body>
     <div id="container">
          {{ header.html_header() }}
          <main id="content">
-             {% block content %}{% endblock %}
+             {{ self.body() }}
          </main>
          {{ footer.html_footer() }}
     </div>

@@ -3,15 +3,20 @@
 {% import 'post_header.tmpl' as post_header with context %}
 {% import 'comments_helper.tmpl' as comments with context %}
 {% extends 'base.tmpl' %}
+
 {% block extra_head %}
-{{ helper.twitter_card_information(post) }}
-{% if post.meta('keywords') %}
-    <meta name="keywords" content="{{ post.meta('keywords')|e }}">
-{% endif %}
-{{ helper.meta_translations(post) }}
+    {{ parent.extra_head() }}
+    {% if post.meta('keywords') %}
+        <meta name="keywords" content="{{ post.meta('keywords')|e }}">
+    {% endif %}
+    <meta name="author" content="{{ post.author() }}">
+    {{ helper.open_graph_metadata(post) }}
+    {{ helper.twitter_card_information(post) }}
+    {{ helper.meta_translations(post) }}
 {% endblock %}
-{% block content %}
-    <article class="postbox post-{{ post.meta('type') }}">
+
+
+<article class="postbox post-{{ post.meta('type') }}">
     <div class="h-entry" itemscope="itemscope" itemtype="http://schema.org/Article">
     {{ post_header.html_title() }}
     <hr>
@@ -33,8 +38,8 @@
         {{ comments.comment_form(post.permalink(absolute=True), post.title(), post._base_path) }}
     {% endif %}
     {{ helper.mathjax_script(post) }}
-    </article>
-{% endblock %}
+</article>
+
 
 {% block sourcelink %}
 {% if show_sourcelink %}
