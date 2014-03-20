@@ -15,8 +15,7 @@
     ${helper.meta_translations(post)}
 </%block>
 
-<%block name="content">
-    <article class="post-${post.meta('type')} h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article">
+<article class="post-${post.meta('type')} h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article">
     ${header.html_post_header()}
     <div class="e-content entry-content" itemprop="articleBody text">
     ${post.text()}
@@ -34,5 +33,4 @@
         </section>
     % endif
     ${helper.mathjax_script(post)}
-    </article>
-</%block>
+</article>

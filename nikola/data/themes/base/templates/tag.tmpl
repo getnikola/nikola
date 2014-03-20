@@ -12,28 +12,27 @@
     %endif
 </%block>
 
-<%block name="content">
-    <article class="tagpage">
-        <header>
-            <h1>${title}</h1>
-            <div class="metadata">
-            %if len(translations) > 1:
-                <p class="feedlinks">
-                %for language in translations:
-                    <a href="${_link(kind + "_rss", tag, language)}" hreflang="${language}" type="application/rss+xml">RSS (${language})</a>&nbsp;
-                %endfor
-                </p>
-            %else:
-                <p class="feedlinks"><a href="${_link(kind + "_rss", tag)}" type="application/rss+xml">RSS</a></p>
-            %endif
-            </div>
-        </header>
-        %if posts:
-        <ul class="postlist">
-        % for post in posts:
-            <li><a href="${post.permalink()}" class="listtitle">${post.title()}</a> <time class="listdate" datetime="${post.date.isoformat()}" title="${messages("Publication date")}">${post.formatted_date(date_format)}</time></li>
-        % endfor
-        </ul>
+
+<article class="tagpage">
+    <header>
+        <h1>${title}</h1>
+        <div class="metadata">
+        %if len(translations) > 1:
+            <p class="feedlinks">
+            %for language in translations:
+                <a href="${_link(kind + "_rss", tag, language)}" hreflang="${language}" type="application/rss+xml">RSS (${language})</a>&nbsp;
+            %endfor
+            </p>
+        %else:
+            <p class="feedlinks"><a href="${_link(kind + "_rss", tag)}" type="application/rss+xml">RSS</a></p>
         %endif
-    </article>
-</%block>
+        </div>
+    </header>
+    %if posts:
+    <ul class="postlist">
+    % for post in posts:
+        <li><a href="${post.permalink()}" class="listtitle">${post.title()}</a> <time class="listdate" datetime="${post.date.isoformat()}" title="${messages("Publication date")}">${post.formatted_date(date_format)}</time></li>
+    % endfor
+    </ul>
+    %endif
+</article>

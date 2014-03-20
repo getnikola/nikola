@@ -4,18 +4,17 @@
 <%namespace name="ui" file="crumbs.tmpl" import="bar"/>
 <%block name="sourcelink"></%block>
 
-<%block name="content">
-    ${ui.bar(crumbs)}
-    %if title:
-    <h1>${title}</h1>
-    %endif
-    %if text:
-    <p>
-        ${text}
-    </p>
-    %endif
-    %if folders:
-    <ul>
+${ui.bar(crumbs)}
+%if title:
+<h1>${title}</h1>
+%endif
+%if text:
+<p>
+    ${text}
+</p>
+%endif
+%if folders:
+   <ul>
     % for folder, ftitle in folders:
         <li><a href="${folder}"><i
         class="icon-folder-open"></i>&nbsp;${ftitle}</a></li>
@@ -33,4 +32,3 @@
 %if enable_comments:
     ${comments.comment_form(None, permalink, title)}
 %endif
-</%block>
