@@ -130,9 +130,6 @@ body {
 :link:hover, :visited:hover {
 	color: #0d53a3;
 }
-.postindex .dateline :link {
-	color: inherit;
-}
 #blog-title {
 	font-size: 3em;
 	line-height: 1;

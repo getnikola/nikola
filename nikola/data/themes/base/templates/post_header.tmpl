@@ -1,5 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%namespace name="helper" file="post_helper.tmpl"/>
+<%namespace name="comments" file="comments_helper.tmpl"/>
 
 <%block name="html_post_header">
     <header>
@@ -8,7 +9,13 @@
             <p class="byline author vcard"><span class="byline-name fn">${post.author()}</span></p>
             <p class="dateline"><a href="${post.permalink()}" rel="bookmark"><time class="published dt-published" datetime="${post.date.isoformat()}" itemprop="datePublished" title="${messages("Publication date")}">${post.formatted_date(date_format)}</time></a></p>
             ${self.html_translations(post)}
+            % if not post.meta('nocomments'):
+                <p class="commentline">${comments.comment_link(post.permalink(), post._base_path)}
+            % endif
             ${self.html_sourcelink()}
+            % if post.meta('link'):
+                    <p><a href='${post.meta('link')}'>${messages("Original site")}</a></p>
+            % endif
             %if post.description():
                 <meta content="${post.description()}" itemprop="description">
             %endif
@@ -17,10 +24,8 @@
 </%block>
 
 <%block name="html_title">
-    <h1 class="p-name entry-title" itemprop="headline name">${title|h}</h1>
-    % if link:
-            <p><a href='${link}'>${messages("Original site")}</a></p>
-    % endif
+    <h1 class="p-name entry-title" itemprop="headline name"><a
+    href="${post.permalink()}" class="u-url">${title|h}</a></h1>
 </%block>
 
 <%def name="html_translations(post)">
