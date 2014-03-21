@@ -265,7 +265,7 @@ class CommandInit(Command):
 
         def lhandler(default, toconf):
             print("We will now ask you to provide the list of languages you want to use.")
-            print("Please list all the desired languages, comma-separated.  The first language will be used as the default.")
+            print("Please list all the desired languages, comma-separated, using ISO 639-1 codes.  The first language will be used as the default.")
             print("Type '?' (a question mark, sans quotes) to list available languages.")
             answer = ask('Language(s) to use', 'en')
             while answer.strip() == '?':
