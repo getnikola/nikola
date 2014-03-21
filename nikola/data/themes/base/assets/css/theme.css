@@ -151,3 +151,25 @@ body {
 #disqus_thread {
 	min-height: 325px;
 }
+
+.breadcrumb {
+	padding: 8px 15px;
+	margin-bottom: 20px;
+	list-style: none;
+}
+
+.breadcrumb > li {
+	display: inline-block;
+	margin-right: 0;
+	margin-left: 0;
+}
+
+.breadcrumb > li:after {
+	content: ' / ';
+	color: #888;
+}
+
+.breadcrumb > li:last-of-type:after {
+	content: '';
+	margin-left: 0;
+}
