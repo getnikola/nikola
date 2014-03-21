@@ -173,3 +173,16 @@ body {
 	content: '';
 	margin-left: 0;
 }
+
+.thumbnails {
+	list-style: none;
+}
+
+.thumbnails > li {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.thumbnails > li:last-of-type {
+	margin-right: 0;
+}
