@@ -330,8 +330,9 @@ class CommandInit(Command):
                             answer = ask(query, default)
                         STORAGE['target'] = answer
 
-        print("That's it, Nikola is now configured.")
-        print("Make sure to edit conf.py to your liking.")
+        print("That's it, Nikola is now configured.  Make sure to edit conf.py to your liking.")
+        print("If you are looking for themes and addons, check out http://themes.getnikola.com/ and http://plugins.getnikola.com/.")
+        print("Have fun!")
         return STORAGE
 
     def _execute(self, options={}, args=None):
