@@ -47,10 +47,14 @@ class CommandInitCallTest(unittest.TestCase):
         del self.create_empty_site
 
     def test_init_default(self):
-        for arguments in (dict(options={'demo': True, 'quiet': True}, args=['destination']), {}):
+        for arguments in (dict(options={'demo': True, 'quiet': True}, args=['destination']),
+                          {}):
             self.init_command.execute(**arguments)
 
-            self.assertFalse(self.ask_questions.called)
+            if arguments:
+                self.assertFalse(self.ask_questions.called)
+            else:
+                self.assertTrue(self.ask_questions.called)
             self.assertTrue(self.create_configuration.called)
             self.assertTrue(self.copy_sample_site.called)
             self.assertFalse(self.create_empty_site.called)
@@ -58,7 +62,7 @@ class CommandInitCallTest(unittest.TestCase):
     def test_init_called_without_target(self):
         self.init_command.execute()
 
-        self.assertFalse(self.ask_questions.called)
+        self.assertTrue(self.ask_questions.called)
         self.assertFalse(self.create_configuration.called)
         self.assertFalse(self.copy_sample_site.called)
         self.assertFalse(self.create_empty_site.called)
