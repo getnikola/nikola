@@ -141,7 +141,7 @@ h4, h5, h6 {
 
 .metadata p:before,
 .postlist .listdate:before {
-    content: " – ";
+    content: " — ";
 }
 
 .metadata p:first-of-type:before {

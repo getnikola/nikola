@@ -77,7 +77,7 @@ body {
 .metadata p:before,
 .postpromonav .tags li:before,
 .postlist .listdate:before {
-	content: " – ";
+	content: " — ";
 }
 .postlist li {
 	margin-bottom: .33em;
