@@ -266,7 +266,13 @@ class CommandInit(Command):
         def lhandler(default, toconf):
             print("We will now ask you to provide the list of languages you want to use.")
             print("Please list all the desired languages, comma-separated.  The first language will be used as the default.")
+            print("Type '?' (a question mark, sans quotes) to list available languages.")
             answer = ask('Language(s) to use', 'en')
+            while answer.strip() == '?':
+                print('\n# Available languages:')
+                print(SAMPLE_CONF['_SUPPORTED_LANGUAGES'])
+                answer = ask('Language(s) to use', 'en')
+
             langs = answer.split(',')
             default = langs.pop(0)
             SAMPLE_CONF['DEFAULT_LANG'] = default
@@ -285,7 +291,28 @@ class CommandInit(Command):
             SAMPLE_CONF['NAVIGATION_LINKS'] = format_navigation_links(langs, default, messages)
 
         def chandler(default, toconf):
-            print("You can configure comments now.  Consult the manual if you want to know what is available.  If you do not want any comments, just leave the fields blank.")
+            print("You can configure comments now.  Type '?' (a question mark, sans quotes) to list available comment systems.  If you do not want any comments, just leave the field blank.")
+            answer = ask('Comment system', '')
+            while answer.strip() == '?':
+                print('\n# Available comment systems:')
+                print(SAMPLE_CONF['_SUPPORTED_COMMENT_SYSTEMS'])
+                print('')
+                answer = ask('Comment system', '')
+
+            while answer and answer not in LEGAL_VALUES['COMMENT_SYSTEM']:
+                print('ERROR: Not a legal value.')
+                print('\n# Available comment systems:')
+                print(SAMPLE_CONF['_SUPPORTED_COMMENT_SYSTEMS'])
+                print('')
+                answer = ask('Comment system', '')
+
+            SAMPLE_CONF['COMMENT_SYSTEM'] = answer
+            SAMPLE_CONF['COMMENT_SYSTEM_ID'] = ''
+
+            if answer:
+                print("You need to provide the site identifier for your comment system.  Consult the Nikola manual for details on what the value should be.  (you can leave it empty and come back later)")
+                answer = ask('Comment system site identifier', '')
+                SAMPLE_CONF['COMMENT_SYSTEM_ID'] = answer
 
         STORAGE = {'target': target}
 
@@ -302,8 +329,6 @@ class CommandInit(Command):
             (lhandler, None, True, True),
             ('Questions about comments', None, None, None),
             (chandler, None, True, True),
-            ('Comment system', '', True, 'COMMENT_SYSTEM'),
-            ('Comment system site identifier', '', True, 'COMMENT_SYSTEM_ID'),
         ]
 
         print("Creating Nikola Site")
