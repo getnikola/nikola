@@ -18,6 +18,7 @@ MESSAGES = {
     "Posts for year %s": "Postovi za godinu %s",
     "Posts for {month} {year}": "Postovi za {month} {year}",
     "Previous post": "Prethodni post",
+    "RSS feed": "",
     "Read in English": "Čitaj na hrvatskom",
     "Read more": "Čitaj dalje",
     "Source": "Izvor",

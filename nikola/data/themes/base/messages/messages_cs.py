@@ -18,6 +18,7 @@ MESSAGES = {
     "Posts for year %s": "Příspěvky v roce %s",
     "Posts for {month} {year}": "Příspěvky v {month} {year}",
     "Previous post": "Předchozí příspěvek",
+    "RSS feed": "",
     "Read in English": "Číst v češtině",
     "Read more": "Číst dál",
     "Source": "Zdroj",

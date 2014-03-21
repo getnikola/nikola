@@ -18,6 +18,7 @@ MESSAGES = {
     "Posts for year %s": "Αναρτήσεις για το έτος %s",
     "Posts for {month} {year}": "Αναρτήσεις για τον {month} του {year}",
     "Previous post": "Προηγούμενη ανάρτηση",
+    "RSS feed": "",
     "Read in English": "Διαβάστε στα Ελληνικά",
     "Read more": "Διαβάστε περισσότερα",
     "Source": "Πηγαίος κώδικας",

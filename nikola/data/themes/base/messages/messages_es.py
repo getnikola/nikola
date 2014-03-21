@@ -18,6 +18,7 @@ MESSAGES = {
     "Posts for year %s": "Posts del año %s",
     "Posts for {month} {year}": "Posts de {month} {year}",
     "Previous post": "Post anterior",
+    "RSS feed": "",
     "Read in English": "Leer en español",
     "Read more": "Leer más",
     "Source": "Código",

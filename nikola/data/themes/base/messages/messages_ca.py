@@ -18,6 +18,7 @@ MESSAGES = {
     "Posts for year %s": "Entrades de l'any %s",
     "Posts for {month} {year}": "",
     "Previous post": "Entrada anterior",
+    "RSS feed": "",
     "Read in English": "Llegeix-ho en català",
     "Read more": "Llegeix-ne més",
     "Source": "Codi",
