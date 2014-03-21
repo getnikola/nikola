@@ -30,11 +30,12 @@ import sys
 import shutil
 import codecs
 import json
+import textwrap
 
 from mako.template import Template
 
 import nikola
-from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
+from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, LEGAL_VALUES
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger, makedirs, STDERR_HANDLER, load_messages
 from nikola.winutils import fix_git_symlinked
@@ -93,6 +94,54 @@ SAMPLE_CONF = {
     'REDIRECTIONS': [],
 }
 
+# Generate a list of supported languages here.
+# Ugly code follows.
+_suplang = {}
+_sllength = 0
+
+for k, v in LEGAL_VALUES['TRANSLATIONS'].items():
+    if not isinstance(k, tuple):
+        main = k
+        _suplang[main] = v
+    else:
+        main = k[0]
+        k = k[1:]
+        bad = []
+        good = []
+        for i in k:
+            if i.startswith('!'):
+                bad.append(i[1:])
+            else:
+                good.append(i)
+        different = ''
+        if good or bad:
+            different += ' ['
+        if good:
+            different += 'ALTERNATIVELY ' + ', '.join(good)
+        if bad:
+            if good:
+                different += '; '
+            different += 'NOT ' + ', '.join(bad)
+        if good or bad:
+            different += ']'
+        _suplang[main] = v + different
+
+    if len(main) > _sllength:
+        _sllength = len(main)
+
+_sllength = str(_sllength)
+suplang = (u'# {0:<' + _sllength + u'}  {1}\n').format('en', 'English')
+del _suplang['en']
+for k, v in sorted(_suplang.items()):
+    suplang += (u'# {0:<' + _sllength + u'}  {1}\n').format(k, v)
+
+SAMPLE_CONF['_SUPPORTED_LANGUAGES'] = suplang
+
+# Generate a list of supported comment systems here.
+
+SAMPLE_CONF['_SUPPORTED_COMMENT_SYSTEMS'] = '\n'.join(textwrap.wrap(
+    u', '.join(LEGAL_VALUES['COMMENT_SYSTEM']),
+    initial_indent=u'#   ', subsequent_indent=u'#   ', width=79))
 
 def format_default_translations_config(additional_languages):
     """Return the string to configure the TRANSLATIONS config variable to
@@ -141,7 +190,7 @@ def prepare_config(config):
     """Parse sample config with JSON."""
     p = config.copy()
     p.update(dict((k, json.dumps(v)) for k, v in p.items()
-             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS')))
+             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS')))
     return p
 
 

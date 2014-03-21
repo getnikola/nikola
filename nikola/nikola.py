@@ -80,6 +80,46 @@ __all__ = ['Nikola']
 # Default pattern for translation files' names
 DEFAULT_TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
 
+# We store legal values for some setting here.  For internal use.
+LEGAL_VALUES = {
+    'COMMENT_SYSTEM': [
+        'disqus',
+        'facebook',
+        'googleplus',
+        'intensedebate',
+        'isso',
+        'livefyre',
+        'moot',
+    ],
+    'TRANSLATIONS': {
+        'bg': 'Bulgarian',
+        'ca': 'Catalan',
+        ('cs', 'cz'): 'Czech',
+        'de': 'German',
+        ('el', '!gr'): 'Greek',
+        'en': 'English',
+        'eo': 'Esperanto',
+        'es': 'Spanish',
+        'et': 'Estonian',
+        'eu': 'Basque',
+        'fa': 'Persian',
+        'fi': 'Finnish',
+        'fr': 'French',
+        'hi': 'Hindi',
+        'hr': 'Croatian',
+        'it': 'Italian',
+        ('ja', '!jp'): 'Japanese',
+        'nb': 'Norwegian Bokmål',
+        'nl': 'Dutch',
+        'pt_br': 'Portuguese (Brasil)',
+        'pl': 'Polish',
+        'ru': 'Russian',
+        'sl': 'Slovenian',
+        ('tr', '!tr_TR'): 'Turkish',
+        'ur': 'Urdu',
+        'zh_cn': 'Chinese (Simplified)',
+    },
+}
 
 class Nikola(object):
 
