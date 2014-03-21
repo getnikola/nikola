@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* The base theme is now themable (Issues #1123, #1137)
 * Make ``nikola init`` ask about the site’s settings (Issue #1080)
 * Use natural sorting for files and folders list in listings and galleries (Issue #1144)
 * Added invariance testing (Issue #672)
