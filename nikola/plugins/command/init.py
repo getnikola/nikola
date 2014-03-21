@@ -143,6 +143,7 @@ SAMPLE_CONF['_SUPPORTED_COMMENT_SYSTEMS'] = '\n'.join(textwrap.wrap(
     u', '.join(LEGAL_VALUES['COMMENT_SYSTEM']),
     initial_indent=u'#   ', subsequent_indent=u'#   ', width=79))
 
+
 def format_default_translations_config(additional_languages):
     """Return the string to configure the TRANSLATIONS config variable to
     make each additional language visible on the generated site."""

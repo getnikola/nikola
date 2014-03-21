@@ -121,6 +121,7 @@ LEGAL_VALUES = {
     },
 }
 
+
 class Nikola(object):
 
     """Class that handles site generation.
