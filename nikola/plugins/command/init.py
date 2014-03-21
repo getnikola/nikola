@@ -257,11 +257,8 @@ class CommandInit(Command):
                 default_q = ' [{0}]'.format(default)
             else:
                 default_q = ''
-            # Stolen from new_post.
-            print("{query}{default_q}: ".format(query=query, default_q=default_q), end='')
-            # WHY, PYTHON3???? WHY?
-            sys.stdout.flush()
-            inp = sys.stdin.readline().strip()
+            inpf = raw_input if sys.version_info[0] == 2 else input
+            inp = inpf("{query}{default_q}: ".format(query=query, default_q=default_q)).strip()
             return inp if inp else default
 
         def lhandler(default, toconf):

@@ -247,10 +247,8 @@ class CommandNewPost(Command):
         print("Creating New {0}".format(content_type.title()))
         print("-----------------\n")
         if title is None:
-            print("Enter title: ", end='')
-            # WHY, PYTHON3???? WHY?
-            sys.stdout.flush()
-            title = sys.stdin.readline()
+            inpf = raw_input if sys.version_info[0] == 2 else input
+            title = inpf("Enter title: ").strip()
         else:
             print("Title:", title)
         if isinstance(title, utils.bytes_str):
