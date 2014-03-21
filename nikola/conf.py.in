@@ -13,10 +13,8 @@ import time
 #! There are two ways to specify a translatable setting:
 #! (a) BLOG_TITLE = "My Blog"
 #! (b) BLOG_TITLE = {"en": "My Blog", "es": "Mi Blog"}
-#! Option (a) is there for backwards compatibility and when you don't
-#!            want that setting translated.
-#! Option (b) should be used for settings that are different in
-#!            different languages.
+#! Option (a) is used when you don't want that setting translated.
+#! Option (b) is used for settings that are different in different languages.
 
 
 # Data about this site
@@ -34,33 +32,8 @@ BLOG_DESCRIPTION = ${BLOG_DESCRIPTION}  # (translatable)
 # Nikola is multilingual!
 #
 # Currently supported languages are:
-# bg     Bulgarian
-# ca     Catalan
-# cs     Czech [ALTERNATIVELY cz]
-# de     German
-# el     Greek [NOT gr!]
-# en     English
-# eo     Esperanto
-# es     Spanish
-# et     Estonian
-# eu     Basque
-# fa     Persian
-# fi     Finnish
-# fr     French
-# hi     Hindi
-# hr     Croatian
-# it     Italian
-# ja     Japanese [NOT jp!]
-# nb     Norwegian Bokmål
-# nl     Dutch
-# pt_br  Portuguese (Brasil)
-# pl     Polish
-# ru     Russian
-# sl     Slovenian [NOT sl_si!]
-# tr     Turkish (Turkey) [NOT tr_tr!]
-# ur     Urdu
-# zh_cn  Chinese (Simplified)
 #
+${_SUPPORTED_LANGUAGES}#
 # If you want to use Nikola with a non-supported language you have to provide
 # a module containing the necessary translations
 # (cf. the modules at nikola/data/themes/base/messages/).
@@ -88,13 +61,7 @@ TRANSLATIONS_PATTERN = ${TRANSLATIONS_PATTERN}
 # Links for the sidebar / navigation bar.
 # You should provide a key-value pair for each used language.
 # (the same way you would do with a (translatable) setting.)
-NAVIGATION_LINKS = {
-    DEFAULT_LANG: (
-        ('/archive.html', 'Archives'),
-        ('/categories/index.html', 'Tags'),
-        ('/rss.xml', 'RSS feed'),
-    ),
-}
+NAVIGATION_LINKS = ${NAVIGATION_LINKS}
 
 ##############################################
 # Below this point, everything is optional
@@ -400,8 +367,8 @@ CONTENT_FOOTER_FORMATS = {
 }
 
 # To use comments, you can choose between different third party comment
-# systems, one of "disqus", "livefyre", "intensedebate", "moot",
-#                 "googleplus", "facebook" or "isso"
+# systems.  The following comment systems are supported by Nikola:
+${_SUPPORTED_COMMENT_SYSTEMS}
 COMMENT_SYSTEM = ${COMMENT_SYSTEM}
 # And you also need to add your COMMENT_SYSTEM_ID which
 # depends on what comment system you use. The default is
