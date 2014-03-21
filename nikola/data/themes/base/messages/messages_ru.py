@@ -18,6 +18,7 @@ MESSAGES = {
     "Posts for year %s": "Записи за %s год",
     "Posts for {month} {year}": "Записи за {month} {year}",
     "Previous post": "Предыдущая запись",
+    "RSS feed": "",
     "Read in English": "Прочесть по-русски",
     "Read more": "Читать далее",
     "Source": "Источник",

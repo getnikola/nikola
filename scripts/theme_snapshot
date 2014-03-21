@@ -7,7 +7,7 @@
 
 theme_name=$1
 tempsite=temp_$theme_name
-nikola init $tempsite
+nikola init -q $tempsite
 cd $tempsite
 doit install_theme -n $theme_name
 sed -i s/\'site\'/\'$theme_name\'/g conf.py

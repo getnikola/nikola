@@ -61,8 +61,7 @@ class CopyAssets(Task):
             for task in utils.copy_tree(src, dst):
                 if task['name'] in tasks:
                     continue
-                if task['targets'][0] == code_css_path:
-                    has_code_css = True
+                has_code_css = task['targets'][0] == code_css_path
                 tasks[task['name']] = task
                 task['uptodate'] = [utils.config_changed(kw)]
                 task['basename'] = self.name

@@ -18,6 +18,7 @@ MESSAGES = {
     "Posts for year %s": "Artikoloj de la jaro %s",
     "Posts for {month} {year}": "Artikoloj skribitaj en {month} {year}",
     "Previous post": "Antaŭa artikolo",
+    "RSS feed": "",
     "Read in English": "Legu ĝin en Esperanto",
     "Read more": "Legu plu",
     "Source": "Fonto",

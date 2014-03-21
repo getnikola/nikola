@@ -5,13 +5,13 @@
 # Translators:
 # Translators:
 # Eero Kari <eero.kari@gmail.com>, 2013
-# Eero Kari <eero.kari@gmail.com>, 2013
+# Eero Kari <eero.kari@gmail.com>, 2013-2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-02-09 16:56+0000\n"
+"PO-Revision-Date: 2014-03-21 12:18+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/projects/p/nikola/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -45,7 +45,7 @@ msgid "Next post"
 msgstr "Seuraava postaus"
 
 msgid "old posts, page %d"
-msgstr "vanhojen postauksien, sivu %d"
+msgstr "vanhoja postauksia, sivu %d"
 
 msgid "page %d"
 msgstr "sivu %d"
@@ -86,7 +86,10 @@ msgid "Posts for {month} {year}"
 msgstr "Postauksia ajalle {month} {year}"
 
 msgid "Nothing found."
-msgstr ""
+msgstr "Ei hakutuloksia."
 
 msgid "No posts found."
+msgstr "Postauksia ei löytynyt."
+
+msgid "RSS feed"
 msgstr ""

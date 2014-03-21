@@ -89,7 +89,7 @@ class ImportMixin(object):
 
     def generate_base_site(self):
         if not os.path.exists(self.output_folder):
-            os.system('nikola init ' + self.output_folder)
+            os.system('nikola init -q ' + self.output_folder)
         else:
             self.import_into_existing_site = True
             utils.LOGGER.notice('The folder {0} already exists - assuming that this is a '

@@ -18,6 +18,7 @@ MESSAGES = {
     "Posts for year %s": "%s年の記事",
     "Posts for {month} {year}": "{year}年{month}月の記事",
     "Previous post": "前の記事",
+    "RSS feed": "",
     "Read in English": "日本語で読む",
     "Read more": "続きを読む",
     "Source": "ソース",

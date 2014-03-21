@@ -18,6 +18,7 @@ MESSAGES = {
     "Posts for year %s": "سال %s کی تحاریر",
     "Posts for {month} {year}": "{month} {year} کی تحاریر",
     "Previous post": "پچھلی تحریر",
+    "RSS feed": "",
     "Read in English": "اردو میں پڑھیے",
     "Read more": "مزید پڑھیے",
     "Source": "سورس",
