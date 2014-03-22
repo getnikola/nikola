@@ -51,7 +51,7 @@ body {
 }
 
 #toptranslations ul {
-    display: inline;
+	display: inline;
 }
 
 #menu ul li,
@@ -61,9 +61,9 @@ body {
 }
 
 #toptranslations h2 {
-    display: inline;
-    font-size: 1em;
-    margin-right: 1.5em;
+	display: inline;
+	font-size: 1em;
+	margin-right: 1.5em;
 }
 
 #menu ul li:dir(rtl),
@@ -74,16 +74,16 @@ body {
 }
 
 #toptranslations {
-    text-align: right;
+	text-align: right;
 }
 
 #toptranslations:dir(rtl) {
-    text-align: left;
+	text-align: left;
 }
 
 .posttranslations h3 {
-    display: inline;
-    font-size: 1em;
+	display: inline;
+	font-size: 1em;
 }
 
 .postindex article {
@@ -174,7 +174,7 @@ body {
 .postpage object,
 .postindex article img,
 .postindex article object {
-    height: auto;
+	height: auto;
 	max-width: 100%;
 }
 
