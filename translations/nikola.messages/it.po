@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Translators:
+# Translators:
 # Alessandro Pisa <alessandro.pisa@gmail.com>, 2013
 # David Paleino <d.paleino@gmail.com>, 2013
 # ralsina <ralsina@netmanagers.com.ar>, 2013
@@ -14,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-03-21 12:18+0000\n"
+"PO-Revision-Date: 2014-03-22 10:16+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/nikola/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -37,6 +38,9 @@ msgstr "Categorie"
 
 msgid "Tags and Categories"
 msgstr "Tags e Categorie"
+
+msgid "Comments"
+msgstr ""
 
 msgid "Read more"
 msgstr "Espandi"
@@ -81,6 +85,9 @@ msgstr "Articoli precedenti"
 
 msgid "Archive"
 msgstr "Archivio"
+
+msgid "Publication date"
+msgstr ""
 
 msgid "Posted:"
 msgstr "Pubblicato:"

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Translators:
+# Translators:
 # m.arnold <lwarxx@gmail.com>, 2013
 # m.arnold <lwarxx@gmail.com>, 2013
 # ralsina <ralsina@netmanagers.com.ar>, 2013
@@ -13,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-03-21 12:18+0000\n"
+"PO-Revision-Date: 2014-03-22 10:16+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/nikola/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -36,6 +37,9 @@ msgstr "Категории"
 
 msgid "Tags and Categories"
 msgstr "Тэги и категории"
+
+msgid "Comments"
+msgstr ""
 
 msgid "Read more"
 msgstr "Читать далее"
@@ -80,6 +84,9 @@ msgstr "Старые записи"
 
 msgid "Archive"
 msgstr "Архив"
+
+msgid "Publication date"
+msgstr ""
 
 msgid "Posted:"
 msgstr "Опубликовано:"

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Translators:
+# Translators:
 # David Paleino <d.paleino@gmail.com>, 2013
 # David Paleino <d.paleino@gmail.com>, 2013
 msgid ""
@@ -11,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-03-21 12:18+0000\n"
+"PO-Revision-Date: 2014-03-22 10:16+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Esperanto (http://www.transifex.com/projects/p/nikola/language/eo/)\n"
 "MIME-Version: 1.0\n"
@@ -34,6 +35,9 @@ msgstr "Kategorioj"
 
 msgid "Tags and Categories"
 msgstr "Etikedoj kaj Kategorioj"
+
+msgid "Comments"
+msgstr ""
 
 msgid "Read more"
 msgstr "Legu plu"
@@ -78,6 +82,9 @@ msgstr "Pli malnovaj artikoloj"
 
 msgid "Archive"
 msgstr "Arĥivo"
+
+msgid "Publication date"
+msgstr ""
 
 msgid "Posted:"
 msgstr "Skribita:"

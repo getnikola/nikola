@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Translators:
+# Translators:
 # Batuhan Büyükgüzel <bbuyukguzel@gmail.com>, 2013
 # Caner BAŞARAN <basaran.caner@gmail.com>, 2014
 # Caner BAŞARAN <basaran.caner@gmail.com>, 2013
@@ -12,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-03-21 12:18+0000\n"
+"PO-Revision-Date: 2014-03-22 10:16+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/projects/p/nikola/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -35,6 +36,9 @@ msgstr "Kategoriler"
 
 msgid "Tags and Categories"
 msgstr "Etiketler ve Kategoriler"
+
+msgid "Comments"
+msgstr ""
 
 msgid "Read more"
 msgstr "Devamını oku"
@@ -79,6 +83,9 @@ msgstr "Daha eski yazılar"
 
 msgid "Archive"
 msgstr "Arşiv"
+
+msgid "Publication date"
+msgstr ""
 
 msgid "Posted:"
 msgstr "Yayın tarihi:"

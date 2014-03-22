@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Translators:
+# Translators:
 # seanpue <a@seanpue.com>, 2014
 # saadat, 2013
 # saadat <nastaliq@gmail.com>, 2013
@@ -13,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-03-21 12:18+0000\n"
+"PO-Revision-Date: 2014-03-22 10:16+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Urdu (http://www.transifex.com/projects/p/nikola/language/ur/)\n"
 "MIME-Version: 1.0\n"
@@ -36,6 +37,9 @@ msgstr "زمرے"
 
 msgid "Tags and Categories"
 msgstr "ٹیگز اور زمرے"
+
+msgid "Comments"
+msgstr ""
 
 msgid "Read more"
 msgstr "مزید پڑھیے"
@@ -80,6 +84,9 @@ msgstr "پرانی تحاریر"
 
 msgid "Archive"
 msgstr "آرکائیو"
+
+msgid "Publication date"
+msgstr ""
 
 msgid "Posted:"
 msgstr "اشاعت:"

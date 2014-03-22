@@ -33,6 +33,9 @@ msgstr "Categories"
 msgid "Tags and Categories"
 msgstr "Tags and Categories"
 
+msgid "Comments"
+msgstr "Comments"
+
 msgid "Read more"
 msgstr "Read more"
 
@@ -76,6 +79,9 @@ msgstr "Older posts"
 
 msgid "Archive"
 msgstr "Archive"
+
+msgid "Publication date"
+msgstr "Publication date"
 
 msgid "Posted:"
 msgstr "Posted:"

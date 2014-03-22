@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Translators:
+# Translators:
 # Hossein Rayeshman <rayeshman@gmail.com>, 2014
 # Shahinism <ishahinism@gmail.com>, 2013
 # sazary <soroosh@azary.ir>, 2013
@@ -14,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-03-21 12:18+0000\n"
+"PO-Revision-Date: 2014-03-22 10:16+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Persian (http://www.transifex.com/projects/p/nikola/language/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -37,6 +38,9 @@ msgstr "دسته‌ها"
 
 msgid "Tags and Categories"
 msgstr "برچسب‌ها و دسته‌ها"
+
+msgid "Comments"
+msgstr ""
 
 msgid "Read more"
 msgstr "بیشتر بخوانید"
@@ -81,6 +85,9 @@ msgstr "پست‌های قدیمی‌تر"
 
 msgid "Archive"
 msgstr "آرشیو"
+
+msgid "Publication date"
+msgstr ""
 
 msgid "Posted:"
 msgstr "ارسال شده:"
