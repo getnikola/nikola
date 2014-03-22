@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Translators:
+# Translators:
 # tty, 2013
 # tty, 2013
 msgid ""
@@ -11,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-03-21 12:18+0000\n"
+"PO-Revision-Date: 2014-03-22 10:16+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/projects/p/nikola/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -34,6 +35,9 @@ msgstr "Kategorije"
 
 msgid "Tags and Categories"
 msgstr "Tagovi i kategorije"
+
+msgid "Comments"
+msgstr ""
 
 msgid "Read more"
 msgstr "Čitaj dalje"
@@ -78,6 +82,9 @@ msgstr "Stariji postovi"
 
 msgid "Archive"
 msgstr "Arhiva"
+
+msgid "Publication date"
+msgstr ""
 
 msgid "Posted:"
 msgstr "Objavljeno:"

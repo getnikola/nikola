@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Translators:
+# Translators:
 # Christopher Meng <cickumqt@gmail.com>, 2013
 # kadefor <kadefor@gmail.com>, 2013
 # kadefor <kadefor@gmail.com>, 2013
@@ -14,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-03-21 12:18+0000\n"
+"PO-Revision-Date: 2014-03-22 10:16+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/nikola/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -37,6 +38,9 @@ msgstr "分类"
 
 msgid "Tags and Categories"
 msgstr "标签和分类"
+
+msgid "Comments"
+msgstr ""
 
 msgid "Read more"
 msgstr "更多"
@@ -81,6 +85,9 @@ msgstr "旧一篇"
 
 msgid "Archive"
 msgstr "文章存档"
+
+msgid "Publication date"
+msgstr ""
 
 msgid "Posted:"
 msgstr "发表于："

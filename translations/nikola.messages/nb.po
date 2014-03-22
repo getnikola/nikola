@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Translators:
+# Translators:
 # Daniel <i18n@daniel.priv.no>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-03-21 12:18+0000\n"
+"PO-Revision-Date: 2014-03-22 10:16+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/projects/p/nikola/language/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -33,6 +34,9 @@ msgstr "Kategorier"
 
 msgid "Tags and Categories"
 msgstr "Merker og kategorier"
+
+msgid "Comments"
+msgstr ""
 
 msgid "Read more"
 msgstr "Les mer"
@@ -77,6 +81,9 @@ msgstr "Eldre innlegg"
 
 msgid "Archive"
 msgstr "Arkiv"
+
+msgid "Publication date"
+msgstr ""
 
 msgid "Posted:"
 msgstr "Publisert:"

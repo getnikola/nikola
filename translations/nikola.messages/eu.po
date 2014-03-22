@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Translators:
+# Translators:
 # aitorp <aitorp@gmail.com>, 2013
 # aitorp <aitorp@gmail.com>, 2013
 msgid ""
@@ -11,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-03-21 12:18+0000\n"
+"PO-Revision-Date: 2014-03-22 10:16+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Basque (http://www.transifex.com/projects/p/nikola/language/eu/)\n"
 "MIME-Version: 1.0\n"
@@ -34,6 +35,9 @@ msgstr "Kategoriak"
 
 msgid "Tags and Categories"
 msgstr "Etiketak eta Kategoriak"
+
+msgid "Comments"
+msgstr ""
 
 msgid "Read more"
 msgstr "Irakurri gehiago"
@@ -78,6 +82,9 @@ msgstr "Post zaharrenak"
 
 msgid "Archive"
 msgstr "Artxiboa"
+
+msgid "Publication date"
+msgstr ""
 
 msgid "Posted:"
 msgstr "Argitaratuta:"

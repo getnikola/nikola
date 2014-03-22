@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Translators:
+# Translators:
 # Ondřej Grover <ondrej.grover@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-03-21 12:18+0000\n"
+"PO-Revision-Date: 2014-03-22 10:16+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Czech (http://www.transifex.com/projects/p/nikola/language/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -33,6 +34,9 @@ msgstr "Kategorie"
 
 msgid "Tags and Categories"
 msgstr "Štítky a kategorie"
+
+msgid "Comments"
+msgstr ""
 
 msgid "Read more"
 msgstr "Číst dál"
@@ -77,6 +81,9 @@ msgstr "Starší příspěvky"
 
 msgid "Archive"
 msgstr "Archiv"
+
+msgid "Publication date"
+msgstr ""
 
 msgid "Posted:"
 msgstr "Zveřejněno:"
