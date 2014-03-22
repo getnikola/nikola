@@ -75,10 +75,12 @@ body {
 
 #toptranslations {
 	text-align: right;
+	float: right;
 }
 
 #toptranslations:dir(rtl) {
 	text-align: left;
+	float: left;
 }
 
 .posttranslations h3 {
