@@ -7,6 +7,7 @@ MESSAGES = {
     "Categories": "Kategooriad",
     "Comments": "",
     "LANGUAGE": "Eesti",
+    "Languages:": "",
     "More posts about %s": "Veel postitusi %s kohta",
     "Newer posts": "Uued postitused",
     "Next post": "Järgmine postitus",

@@ -7,6 +7,7 @@ MESSAGES = {
     "Categories": "分类",
     "Comments": "",
     "LANGUAGE": "简体中文",
+    "Languages:": "",
     "More posts about %s": "更多相关文章： %s",
     "Newer posts": "新一篇",
     "Next post": "后一篇",

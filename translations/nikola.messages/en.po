@@ -71,6 +71,9 @@ msgstr "Previous post"
 msgid "Also available in:"
 msgstr "Also available in:"
 
+msgid "Languages:"
+msgstr "Languages:"
+
 msgid "Original site"
 msgstr "Original site"
 

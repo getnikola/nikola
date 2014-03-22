@@ -7,6 +7,7 @@ MESSAGES = {
     "Categories": "Категории",
     "Comments": "",
     "LANGUAGE": "Български",
+    "Languages:": "",
     "More posts about %s": "Още публикации относно %s",
     "Newer posts": "Нови публикации",
     "Next post": "Следваща публикация",

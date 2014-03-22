@@ -7,6 +7,7 @@ MESSAGES = {
     "Categories": "Kategorie",
     "Comments": "",
     "LANGUAGE": "Čeština",
+    "Languages:": "",
     "More posts about %s": "Další příspěvky o %s",
     "Newer posts": "Novější příspěvky",
     "Next post": "Další příspěvek",

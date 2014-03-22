@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-03-22 10:19+0000\n"
+"PO-Revision-Date: 2014-03-22 10:56+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/nikola/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -80,6 +80,9 @@ msgstr "Vorheriger Eintrag"
 
 msgid "Also available in:"
 msgstr "Auch verfügbar in:"
+
+msgid "Languages:"
+msgstr "Sprachen:"
 
 msgid "Original site"
 msgstr "Original-Seite"

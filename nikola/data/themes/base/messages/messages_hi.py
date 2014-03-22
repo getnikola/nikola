@@ -7,6 +7,7 @@ MESSAGES = {
     "Categories": "श्रेणियाँ",
     "Comments": "",
     "LANGUAGE": "हिन्दी",
+    "Languages:": "",
     "More posts about %s": "%s के बारे में अौर पोस्टें",
     "Newer posts": "नई पोस्टें",
     "Next post": "अगली पोस्ट",

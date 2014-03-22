@@ -7,6 +7,7 @@ MESSAGES = {
     "Categories": "Kategorije",
     "Comments": "",
     "LANGUAGE": "hrvatski",
+    "Languages:": "",
     "More posts about %s": "Više postova o %s",
     "Newer posts": "Noviji postovi",
     "Next post": "Sljedeći post",

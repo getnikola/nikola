@@ -7,6 +7,7 @@ MESSAGES = {
     "Categories": "Kategoriak",
     "Comments": "",
     "LANGUAGE": "Euskara",
+    "Languages:": "",
     "More posts about %s": "%s-ri buruzko post gehiago",
     "Newer posts": "Post berrienak",
     "Next post": "Hurrengo posta",

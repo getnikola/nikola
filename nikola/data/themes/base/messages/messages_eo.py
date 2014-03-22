@@ -7,6 +7,7 @@ MESSAGES = {
     "Categories": "Kategorioj",
     "Comments": "",
     "LANGUAGE": "Anglalingve",
+    "Languages:": "",
     "More posts about %s": "Pli artikoloj pri %s",
     "Newer posts": "Pli novaj artikoloj",
     "Next post": "Venonta artikolo",

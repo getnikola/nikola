@@ -7,6 +7,7 @@ MESSAGES = {
     "Categories": "Kategorier",
     "Comments": "",
     "LANGUAGE": "norsk",
+    "Languages:": "",
     "More posts about %s": "Flere innlegg om %s",
     "Newer posts": "Nyere innlegg",
     "Next post": "Neste innlegg",

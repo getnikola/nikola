@@ -7,6 +7,7 @@ MESSAGES = {
     "Categories": "",
     "Comments": "",
     "LANGUAGE": "Català",
+    "Languages:": "",
     "More posts about %s": "Més entrades sobre %s",
     "Newer posts": "Entrades posteriors",
     "Next post": "Entrada següent",

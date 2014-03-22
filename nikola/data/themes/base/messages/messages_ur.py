@@ -7,6 +7,7 @@ MESSAGES = {
     "Categories": "زمرے",
     "Comments": "",
     "LANGUAGE": "اردو",
+    "Languages:": "",
     "More posts about %s": "%s کے بارے میں مزید تحاریر",
     "Newer posts": "نئی تحاریر",
     "Next post": "اگلی تحریر",

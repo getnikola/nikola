@@ -7,6 +7,7 @@ MESSAGES = {
     "Categories": "カテゴリー",
     "Comments": "",
     "LANGUAGE": "日本語",
+    "Languages:": "",
     "More posts about %s": "タグ： %s",
     "Newer posts": "新しい記事",
     "Next post": "次の記事",

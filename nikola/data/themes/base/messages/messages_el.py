@@ -7,6 +7,7 @@ MESSAGES = {
     "Categories": "Κατηγορίες",
     "Comments": "",
     "LANGUAGE": "Ελληνικά",
+    "Languages:": "",
     "More posts about %s": "Περισσότερες αναρτήσεις για %s",
     "Newer posts": "Νεότερες αναρτήσεις",
     "Next post": "Επόμενη ανάρτηση",
