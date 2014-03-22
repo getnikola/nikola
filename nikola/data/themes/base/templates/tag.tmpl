@@ -24,7 +24,7 @@
             %endfor
             </p>
         %else:
-            <p class="feedlinks"><a href="${_link(kind + "_rss", tag)}" type="application/rss+xml">RSS</a></p>
+            <p class="feedlinks"><a href="${_link(kind + "_rss", tag)}" type="application/rss+xml">${messages('RSS feed')}</a></p>
         %endif
         </div>
     </header>
