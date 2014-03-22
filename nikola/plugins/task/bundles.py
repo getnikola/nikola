@@ -88,11 +88,8 @@ class BuildBundles(LateTask):
                 dname = os.path.dirname(name)
                 files = []
                 for fname in _files:
-                    # if files have no paths, they are going to be in assets/css
-                    if os.sep not in fname:
-                        files.append(os.path.join('assets', 'css', fname))
-                    else:
-                        files.append(fname)
+                    # paths are relative to dirname
+                    files.append(os.path.join(dname, fname))
                 file_dep = [os.path.join(kw['output_folder'], fname)
                             for fname in files if
                             utils.get_asset_path(fname, self.site.THEMES, self.site.config['FILES_FOLDERS'])]
