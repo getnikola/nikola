@@ -83,10 +83,17 @@ class BuildBundles(LateTask):
         yield self.group_task()
         if (webassets is not None and self.site.config['USE_BUNDLES'] is not
                 False):
-            for name, files in kw['theme_bundles'].items():
+            for name, _files in kw['theme_bundles'].items():
                 output_path = os.path.join(kw['output_folder'], name)
                 dname = os.path.dirname(name)
-                file_dep = [os.path.join(kw['output_folder'], dname, fname)
+                files = []
+                for fname in _files:
+                    # if files have no paths, they are going to be in assets/css
+                    if os.sep not in fname:
+                        files.append(os.path.join('assets', 'css', fname))
+                    else:
+                        files.append(fname)
+                file_dep = [os.path.join(kw['output_folder'], fname)
                             for fname in files if
                             utils.get_asset_path(fname, self.site.THEMES, self.site.config['FILES_FOLDERS'])]
                 task = {
@@ -96,7 +103,11 @@ class BuildBundles(LateTask):
                     'name': str(output_path),
                     'actions': [(build_bundle, (name, files))],
                     'targets': [output_path],
-                    'uptodate': [utils.config_changed(kw)],
+                    'uptodate': [
+                        utils.config_changed({
+                            1: kw,
+                            2: file_dep
+                        })],
                     'clean': True,
                 }
                 yield utils.apply_filters(task, kw['filters'])
