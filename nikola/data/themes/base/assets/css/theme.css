@@ -42,19 +42,50 @@ body {
 .postpromonav .tags,
 .postpromonav .tags li,
 .pager,
-.pager li {
+.pager li,
+#toptranslations ul,
+#toptranslations ul li {
 	list-style: none;
 	padding-left: 0;
 	padding-right: 0;
 }
-#menu ul li {
+
+#toptranslations ul {
+    display: inline;
+}
+
+#menu ul li,
+#toptranslations ul li {
 	display: inline-block;
 	margin-right: 1.5em;
 }
-#menu ul li:dir(rtl) {
+
+#toptranslations h2 {
+    display: inline;
+    font-size: 1em;
+    margin-right: 1.5em;
+}
+
+#menu ul li:dir(rtl),
+#toptranslations ul li:dir(rtl),
+#toptranslations h2:dir(rtl) {
 	margin-left: 1.5em;
 	margin-right: 0;
 }
+
+#toptranslations {
+    text-align: right;
+}
+
+#toptranslations:dir(rtl) {
+    text-align: left;
+}
+
+.posttranslations h3 {
+    display: inline;
+    font-size: 1em;
+}
+
 .postindex article {
 	border-bottom: 1px solid #4F5151;
 	padding-bottom: 1em;

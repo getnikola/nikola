@@ -8,7 +8,6 @@
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">${post.author()}</span></p>
             <p class="dateline"><a href="${post.permalink()}" rel="bookmark"><time class="published dt-published" datetime="${post.date.isoformat()}" itemprop="datePublished" title="${messages("Publication date")}">${post.formatted_date(date_format)}</time></a></p>
-            ${self.html_translations(post)}
             % if not post.meta('nocomments'):
                 <p class="commentline">${comments.comment_link(post.permalink(), post._base_path)}
             % endif
@@ -20,6 +19,7 @@
                 <meta content="${post.description()}" itemprop="description">
             %endif
         </div>
+        ${self.html_translations(post)}
     </header>
 </%block>
 
@@ -29,13 +29,14 @@
 
 <%def name="html_translations(post)">
     % if len(translations) > 1:
-        <ul class="translations">
-        % for langname in translations.keys():
-            % if langname != lang and post.is_translation_available(langname):
-                <li><a href="${post.permalink(langname)}" rel="alternate" hreflang="${langname}">${messages("Read in English", langname)}</a></li>
-            % endif
-        % endfor
-        </ul>
+        <div class="metadata posttranslations translations">
+            <h3 class="posttranslations-intro">Also available in:</h3>
+            % for langname in translations.keys():
+                % if langname != lang and post.is_translation_available(langname):
+                <p><a href="${post.permalink(langname)}" rel="alternate" hreflang="${langname}">${messages("LANGUAGE", langname)}</a></p>
+                % endif
+            % endfor
+        </div>
     % endif
 </%def>
 

@@ -47,7 +47,9 @@
 
 <%block name="html_translation_header">
     %if len(translations) > 1:
-        <h2 class="translations">${messages("Also available in:")}</h2>
-        ${base.html_translations()}
+        <div id="toptranslations">
+            <h2>${messages("Languages:")}</h2>
+            ${base.html_translations()}
+        </div>
     %endif
 </%block>

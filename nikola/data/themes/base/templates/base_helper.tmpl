@@ -89,7 +89,7 @@ lang="${lang}">
 </%block>
 
 <%block name="html_translations">
-    <ul>
+    <ul class="translations">
     %for langname in translations.keys():
         %if langname != lang:
             <li><a href="${_link("index", None, langname)}" rel="alternate" hreflang="${langname}">${messages("LANGUAGE", langname)}</a></li>
