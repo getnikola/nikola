@@ -7,6 +7,7 @@ MESSAGES = {
     "Categories": "Kategoriat",
     "Comments": "",
     "LANGUAGE": "Suomi",
+    "Languages:": "",
     "More posts about %s": "Lisää postauksia aiheesta %s",
     "Newer posts": "Uudempia postauksia",
     "Next post": "Seuraava postaus",

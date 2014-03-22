@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-03-22 10:16+0000\n"
+"PO-Revision-Date: 2014-03-22 10:56+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Esperanto (http://www.transifex.com/projects/p/nikola/language/eo/)\n"
 "MIME-Version: 1.0\n"
@@ -73,6 +73,9 @@ msgstr "Antaŭa artikolo"
 
 msgid "Also available in:"
 msgstr "Ankaŭ disponebla en:"
+
+msgid "Languages:"
+msgstr ""
 
 msgid "Original site"
 msgstr "Originala interretejo"

@@ -7,6 +7,7 @@ MESSAGES = {
     "Categories": "دسته‌ها",
     "Comments": "",
     "LANGUAGE": "فارسی",
+    "Languages:": "",
     "More posts about %s": "ارسال‌های بیشتر دربارهٔ%s",
     "Newer posts": "ارسال‌های جدید‌تر",
     "Next post": "ارسال بعدی",

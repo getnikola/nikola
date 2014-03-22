@@ -7,6 +7,7 @@ MESSAGES = {
     "Categories": "Kategoriler",
     "Comments": "",
     "LANGUAGE": "Türkçe",
+    "Languages:": "",
     "More posts about %s": "%s ilgili diğer yazılar",
     "Newer posts": "Daha yeni yazılar",
     "Next post": "Sonraki yazı",

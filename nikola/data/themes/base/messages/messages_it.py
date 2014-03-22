@@ -7,6 +7,7 @@ MESSAGES = {
     "Categories": "Categorie",
     "Comments": "",
     "LANGUAGE": "Italiano",
+    "Languages:": "",
     "More posts about %s": "Altri articoli collegati %s",
     "Newer posts": "Articoli recenti",
     "Next post": "Articolo successivo",
