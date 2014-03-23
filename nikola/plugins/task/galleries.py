@@ -167,7 +167,6 @@ class Galleries(Task):
 
                 image_name_list = [os.path.basename(p) for p in image_list]
 
-                # FIXME: this code is duplicated in the index rendering
                 if self.kw['use_filename_as_title']:
                     img_titles = []
                     for fn in image_name_list:
@@ -226,6 +225,7 @@ class Galleries(Task):
                             dst,
                             context,
                             dest_img_list,
+                            img_titles,
                             thumbs,
                             file_dep))],
                     'clean': True,
@@ -437,6 +437,7 @@ class Galleries(Task):
             output_name,
             context,
             img_list,
+            img_titles,
             thumbs,
             file_dep):
         """Build the gallery index."""
@@ -450,12 +451,9 @@ class Galleries(Task):
             return url
 
         photo_array = []
-        for img, thumb in zip(img_list, thumbs):
+        for img, thumb, title in zip(img_list, thumbs, img_titles):
             im = Image.open(thumb)
             w, h = im.size
-            title = ''
-            if self.kw['use_filename_as_title']:
-                title = utils.unslugify(os.path.splitext(os.path.basename(img))[0])
             # Thumbs are files in output, we need URLs
             photo_array.append({
                 'url': url_from_path(img),
