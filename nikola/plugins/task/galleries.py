@@ -465,6 +465,7 @@ class Galleries(Task):
                     'h': h
                 },
             })
+        context['photo_array'] = photo_array
         context['photo_array_json'] = json.dumps(photo_array)
         self.site.render_template(template_name, output_name, context)
 
