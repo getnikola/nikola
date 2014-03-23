@@ -9,9 +9,9 @@
     %if title:
     <h1>${title}</h1>
     %endif
-    %if text:
+    %if post:
     <p>
-        ${text}
+        ${post.text()}
     </p>
     %endif
     %if folders:
