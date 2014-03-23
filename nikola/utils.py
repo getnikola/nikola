@@ -640,6 +640,17 @@ def to_datetime(value, tzinfo=None):
         '%Y%m%d %H:%M',
         '%Y-%m-%d',
         '%Y%m%d',
+        '%Y/%m/%d %H:%M %Z',
+        '%Y/%m/%d %H:%M:%S %Z',
+        '%Y/%m/%d %I:%M:%S %p %Z',
+        '%a %b %d %H:%M:%S %Y %Z',
+        '%Y-%m-%d %H:%M:%S %Z',
+        '%Y-%m-%d %H:%M %Z',
+        '%Y-%m-%dT%H:%M %Z',
+        '%Y%m%d %H:%M:%S %Z',
+        '%Y%m%d %H:%M %Z',
+        '%Y-%m-%d %Z',
+        '%Y%m%d %Z',
     ]
     for format in supported_formats:
         try:
