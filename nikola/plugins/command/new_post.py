@@ -27,6 +27,7 @@
 from __future__ import unicode_literals, print_function
 import codecs
 import datetime
+import locale
 import os
 import sys
 
@@ -124,7 +125,10 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
             if force_today:
                 now = now.replace(hour=0, minute=0, second=0, microsecond=0)
             date = rule_.after(max(now, last_date or now), last_date is None)
-    return date.strftime('%Y/%m/%d %H:%M:%S %Z')
+    return date.strftime('{0} {1} %Z'.format(
+        locale.nl_langinfo(locale.D_FMT),        
+        locale.nl_langinfo(locale.T_FMT),
+        ))
 
 
 class CommandNewPost(Command):
