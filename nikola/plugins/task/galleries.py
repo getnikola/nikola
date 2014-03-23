@@ -204,12 +204,18 @@ class Galleries(Task):
                 context["enable_comments"] = self.kw['comments_in_galleries']
                 context["thumbnail_size"] = self.kw["thumbnail_size"]
 
-                # FIXME: render post in a task
                 if post:
-                    post.compile(lang)
-                    context['text'] = post.text(lang)
+                    yield {
+                        'basename': self.name,
+                        'name': post.base_path,
+                        'targets': [post.base_path],
+                        'file_dep': post.fragment_deps(lang),
+                        'actions': [(post.compile, [lang])],
+                        'uptodate': [utils.config_changed(self.kw)]
+                    }
+                    context['post'] = post
                 else:
-                    context['text'] = ''
+                    context['post'] = None
 
                 file_dep = self.site.template_system.template_deps(
                     template_name) + image_list + thumbs
