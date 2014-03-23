@@ -1,6 +1,6 @@
 ## -*- coding: utf-8 -*-
 
-<%block name="html_headstart">
+<%def name="html_headstart()">
 <!DOCTYPE html>
 <html
 
@@ -27,8 +27,8 @@ lang="${lang}">
     <meta name="viewport" content="width=device-width">
     <title>${title|striphtml} | ${blog_title|striphtml}</title>
 
-    ${self.html_stylesheets()}
-    ${self.html_feedlinks()}
+    ${html_stylesheets()}
+    ${html_feedlinks()}
     %if permalink:
       <link rel="canonical" href="${abs_link(permalink)}">
     %endif
@@ -51,9 +51,9 @@ lang="${lang}">
     %endif
 
     ${extra_head_data}
-</%block>
+</%def>
 
-<%block name="late_load_js">
+<%def name="late_load_js()">
     %if use_bundles:
         %if use_cdn:
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -73,10 +73,10 @@ lang="${lang}">
         <script src="/assets/js/jquery.colorbox-min.js"></script>
     %endif
     ${social_buttons_code}
-</%block>
+</%def>
 
 
-<%block name="html_stylesheets">
+<%def name="html_stylesheets()">
     %if use_bundles:
         %if use_cdn:
             <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
@@ -103,9 +103,9 @@ lang="${lang}">
     % elif not annotations and post and post.meta('annotations'):
         ${notes.css()}
     % endif
-</%block>
+</%def>
 
-<%block name="html_navigation_links">
+<%def name="html_navigation_links()">
     %for url, text in navigation_links[lang]:
         % if isinstance(url, tuple):
             <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">${text}<b class="caret"></b></a>
@@ -126,9 +126,9 @@ lang="${lang}">
             %endif
         % endif
     %endfor
-</%block>
+</%def>
 
-<%block name="html_feedlinks">
+<%def name="html_feedlinks()">
     %if rss_link:
         ${rss_link}
     %else:
@@ -140,14 +140,12 @@ lang="${lang}">
             <link rel="alternate" type="application/rss+xml" title="RSS" href="${_link('rss', None)}">
         %endif
     %endif
-</%block>
+</%def>
 
-<%block name="html_translations">
-    <ul>
+<%def name="html_translations()">
     %for langname in translations.keys():
         %if langname != lang:
             <li><a href="${_link("index", None, langname)}" rel="alternate" hreflang="${langname}">${messages("LANGUAGE", langname)}</a></li>
         %endif
     %endfor
-    </ul>
-</%block>
+</%def>

@@ -152,3 +152,11 @@ h4, h5, h6 {
     display: inline;
 }
 
+.posttranslations h3 {
+	display: inline;
+	font-size: 1em;
+}
+
+.posttranslations h3:last-child {
+	display: none;
+}

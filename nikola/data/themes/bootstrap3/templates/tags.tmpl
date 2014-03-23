@@ -1,6 +1,7 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="base.tmpl"/>
 
+<%block name="content">
 <h1>${title}</h1>
 % if cat_items:
     <h2>${messages("Categories")}</h2>
@@ -22,3 +23,4 @@
     % endfor
     </ul>
 % endif
+</%block>

@@ -19,12 +19,6 @@
     {% endif %}
 {% endmacro %}
 
-{% macro html_sourcelink() %}
-    {% if show_sourcelink %}
-        <p class="sourceline"><a href="{{ post.source_link() }}" id="sourcelink">{{ messages("Source") }}</a></p>
-    {% endif %}
-{% endmacro %}
-
 {% macro html_post_header() %}
     <header>
         {{ html_title() }}
@@ -34,7 +28,6 @@
             {% if not post.meta('nocomments') %}
                 <p class="commentline">{{ comments.comment_link(post.permalink(), post._base_path) }}
             {% endif %}
-            {{ html_sourcelink() }}
             {% if post.meta('link') %}
                     <p><a href='{{ post.meta('link') }}'>{{ messages("Original site") }}</a></p>
             {% endif %}

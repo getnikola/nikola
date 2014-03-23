@@ -1,6 +1,5 @@
 {#  -*- coding: utf-8 -*- #}
 {% import 'base_helper.tmpl' as base with context %}
-{% import 'bootstrap_helper.tmpl' as bootstrap with context %}
 {% import 'annotation_helper.tmpl' as notes with context %}
 {{ set_locale(lang) }}
 {{ base.html_headstart() }}
@@ -25,7 +24,7 @@
         </div><!-- /.navbar-header -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
-                {{ bootstrap.html_navigation_links() }}
+                {{ base.html_navigation_links() }}
             </ul>
             {% if search_form %}
                 {{ search_form }}
@@ -51,7 +50,7 @@
     <div class="body-content">
         <!--Body content-->
         <div class="row">
-            {{ self.body() }}
+            {% block content %}{% endblock %}
         </div>
         <!--End of body content-->
 
@@ -61,7 +60,7 @@
     </div>
 </div>
 
-{{ bootstrap.late_load_js() }}
+{{ base.late_load_js() }}
     <script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
     {% block extra_js %}{% endblock %}
     {% if annotations and post and not post.meta('noannotations') %}
