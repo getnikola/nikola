@@ -167,6 +167,8 @@ class Galleries(Task):
 
                 image_name_list = [os.path.basename(p) for p in image_list]
 
+                # FIXME: img_titles is used in the RSS and not in the index
+                # figure out why
                 if self.kw['use_filename_as_title']:
                     img_titles = []
                     for fn in image_name_list:
@@ -452,7 +454,7 @@ class Galleries(Task):
             w, h = im.size
             title = ''
             if self.kw['use_filename_as_title']:
-                title = utils.unslugify(os.path.splitext(img)[0])
+                title = utils.unslugify(os.path.splitext(os.path.basename(img))[0])
             # Thumbs are files in output, we need URLs
             photo_array.append({
                 'url': url_from_path(img),
