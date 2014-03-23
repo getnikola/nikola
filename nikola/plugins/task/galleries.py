@@ -102,6 +102,7 @@ class Galleries(Task):
             'global_context': self.site.GLOBAL_CONTEXT,
             'feed_length': self.site.config['FEED_LENGTH'],
             'tzinfo': self.site.tzinfo,
+            'comments_in_galleries': self.site.config['COMMENTS_IN_GALLERIES'],
         }
 
         yield self.group_task()
@@ -169,12 +170,8 @@ class Galleries(Task):
                 if self.kw['use_filename_as_title']:
                     img_titles = []
                     for fn in image_name_list:
-                        name_without_ext = os.path.splitext(fn)[0]
-                        img_titles.append(
-                            'id="{0}" alt="{1}" title="{2}"'.format(
-                                name_without_ext,
-                                name_without_ext,
-                                utils.unslugify(name_without_ext)))
+                        name_without_ext = os.path.splitext(os.path.basename(fn))[0]
+                        img_titles.append(utils.unslugify(name_without_ext))
                 else:
                     img_titles = [''] * len(image_name_list)
 
@@ -193,24 +190,26 @@ class Galleries(Task):
                         ft = folder
                     folders.append((folder, ft))
 
-                ## TODO: in v7 remove images from context, use photo_array
-                context["images"] = list(zip(image_name_list, thumbs, img_titles))
                 context["folders"] = natsort.natsorted(folders, key=itemgetter(1))
                 context["crumbs"] = crumbs
                 context["permalink"] = self.site.link(
                     "gallery", os.path.basename(
                         os.path.relpath(gallery, self.kw['gallery_path'])), lang)
-                # FIXME: use kw
-                context["enable_comments"] = (
-                    self.site.config["COMMENTS_IN_GALLERIES"])
+                context["enable_comments"] = self.kw['comments_in_galleries']
                 context["thumbnail_size"] = self.kw["thumbnail_size"]
 
-                # FIXME: render post in a task
                 if post:
-                    post.compile(lang)
-                    context['text'] = post.text(lang)
+                    yield {
+                        'basename': self.name,
+                        'name': post.base_path,
+                        'targets': [post.base_path],
+                        'file_dep': post.fragment_deps(lang),
+                        'actions': [(post.compile, [lang])],
+                        'uptodate': [utils.config_changed(self.kw)]
+                    }
+                    context['post'] = post
                 else:
-                    context['text'] = ''
+                    context['post'] = None
 
                 file_dep = self.site.template_system.template_deps(
                     template_name) + image_list + thumbs
@@ -226,6 +225,7 @@ class Galleries(Task):
                             dst,
                             context,
                             dest_img_list,
+                            img_titles,
                             thumbs,
                             file_dep))],
                     'clean': True,
@@ -437,6 +437,7 @@ class Galleries(Task):
             output_name,
             context,
             img_list,
+            img_titles,
             thumbs,
             file_dep):
         """Build the gallery index."""
@@ -450,12 +451,9 @@ class Galleries(Task):
             return url
 
         photo_array = []
-        for img, thumb in zip(img_list, thumbs):
+        for img, thumb, title in zip(img_list, thumbs, img_titles):
             im = Image.open(thumb)
             w, h = im.size
-            title = ''
-            if self.kw['use_filename_as_title']:
-                title = utils.unslugify(os.path.splitext(img)[0])
             # Thumbs are files in output, we need URLs
             photo_array.append({
                 'url': url_from_path(img),
@@ -482,12 +480,12 @@ class Galleries(Task):
             return urljoin(self.site.config['BASE_URL'], url)
 
         items = []
-        for img, full_title in list(zip(img_list, img_titles))[:self.kw["feed_length"]]:
+        for img, title in list(zip(img_list, img_titles))[:self.kw["feed_length"]]:
             img_size = os.stat(
                 os.path.join(
                     self.site.config['OUTPUT_FOLDER'], img)).st_size
             args = {
-                'title': full_title.split('"')[-2] if full_title else '',
+                'title': title,
                 'link': make_url(img),
                 'guid': rss.Guid(img, False),
                 'pubDate': self.image_date(img),
