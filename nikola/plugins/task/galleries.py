@@ -201,8 +201,8 @@ class Galleries(Task):
                 if post:
                     yield {
                         'basename': self.name,
-                        'name': post.base_path,
-                        'targets': [post.base_path],
+                        'name': post.translated_base_path(lang),
+                        'targets': [post.translated_base_path(lang)],
                         'file_dep': post.fragment_deps(lang),
                         'actions': [(post.compile, [lang])],
                         'uptodate': [utils.config_changed(self.kw)]
