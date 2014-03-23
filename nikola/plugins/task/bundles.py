@@ -65,8 +65,7 @@ class BuildBundles(LateTask):
         def build_bundle(output, inputs):
             out_dir = os.path.join(kw['output_folder'],
                                    os.path.dirname(output))
-            inputs = [i for i in inputs if os.path.isfile(
-                os.path.join(out_dir, i))]
+            inputs = [os.path.relpath(i, out_dir) for i in inputs if os.path.isfile(i)]
             cache_dir = os.path.join(kw['cache_folder'], 'webassets')
             utils.makedirs(cache_dir)
             env = webassets.Environment(out_dir, os.path.dirname(output),
@@ -98,7 +97,7 @@ class BuildBundles(LateTask):
                     'task_dep': ['copy_assets'],
                     'basename': str(self.name),
                     'name': str(output_path),
-                    'actions': [(build_bundle, (name, files))],
+                    'actions': [(build_bundle, (name, file_dep))],
                     'targets': [output_path],
                     'uptodate': [
                         utils.config_changed({
