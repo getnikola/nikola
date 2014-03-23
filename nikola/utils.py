@@ -791,17 +791,17 @@ def get_asset_path(path, themes, files_folders={'files': ''}):
     If the asset is not provided by a theme, then it will be checked for
     in the FILES_FOLDERS
 
-    >>> print(get_asset_path('assets/css/rst.css', ['bootstrap', 'base'])) # doctest: +SKIP
-    [...]/nikola/data/themes/base/assets/css/rst.css
+    >>> print(get_asset_path('assets/css/rst.css', ['bootstrap', 'base']))
+    /.../nikola/data/themes/base/assets/css/rst.css
 
-    >>> print(get_asset_path('assets/css/theme.css', ['bootstrap', 'base'])) # doctest: +SKIP
-    [...]/nikola/data/themes/bootstrap/assets/css/theme.css
+    >>> print(get_asset_path('assets/css/theme.css', ['bootstrap', 'base']))
+    /.../nikola/data/themes/bootstrap/assets/css/theme.css
 
-    >>> print(get_asset_path('nikola.py', ['bootstrap', 'base'], {'nikola': ''})) # doctest: +SKIP
-    [...]/nikola/nikola.py
+    >>> print(get_asset_path('nikola.py', ['bootstrap', 'base'], {'nikola': ''}))
+    /.../nikola/nikola.py
 
-    >>> print(get_asset_path('nikola/nikola.py', ['bootstrap', 'base'], {'nikola':'nikola'})) # doctest: +SKIP
-    [...]/nikola/nikola.py
+    >>> print(get_asset_path('nikola/nikola.py', ['bootstrap', 'base'], {'nikola':'nikola'}))
+    None
 
     """
     for theme_name in themes:

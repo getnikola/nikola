@@ -65,8 +65,7 @@ class BuildBundles(LateTask):
         def build_bundle(output, inputs):
             out_dir = os.path.join(kw['output_folder'],
                                    os.path.dirname(output))
-            inputs = [i for i in inputs if os.path.isfile(
-                os.path.join(out_dir, i))]
+            inputs = [os.path.relpath(i, out_dir) for i in inputs if os.path.isfile(i)]
             cache_dir = os.path.join(kw['cache_folder'], 'webassets')
             utils.makedirs(cache_dir)
             env = webassets.Environment(out_dir, os.path.dirname(output),
@@ -83,10 +82,14 @@ class BuildBundles(LateTask):
         yield self.group_task()
         if (webassets is not None and self.site.config['USE_BUNDLES'] is not
                 False):
-            for name, files in kw['theme_bundles'].items():
+            for name, _files in kw['theme_bundles'].items():
                 output_path = os.path.join(kw['output_folder'], name)
                 dname = os.path.dirname(name)
-                file_dep = [os.path.join(kw['output_folder'], dname, fname)
+                files = []
+                for fname in _files:
+                    # paths are relative to dirname
+                    files.append(os.path.join(dname, fname))
+                file_dep = [os.path.join(kw['output_folder'], fname)
                             for fname in files if
                             utils.get_asset_path(fname, self.site.THEMES, self.site.config['FILES_FOLDERS'])]
                 task = {
@@ -94,9 +97,13 @@ class BuildBundles(LateTask):
                     'task_dep': ['copy_assets'],
                     'basename': str(self.name),
                     'name': str(output_path),
-                    'actions': [(build_bundle, (name, files))],
+                    'actions': [(build_bundle, (name, file_dep))],
                     'targets': [output_path],
-                    'uptodate': [utils.config_changed(kw)],
+                    'uptodate': [
+                        utils.config_changed({
+                            1: kw,
+                            2: file_dep
+                        })],
                     'clean': True,
                 }
                 yield utils.apply_filters(task, kw['filters'])

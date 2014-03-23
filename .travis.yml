@@ -16,9 +16,9 @@ env:
     NMODE=nikola
 install:
   - "if [[ $NMODE == 'nikola' ]]; then scripts/getwheelhouse.sh $(scripts/getpyver.py short); fi"
-  - "if [[ $NMODE == 'nikola' ]]; then scripts/getbaseline.sh $(scripts/getpyver.py short); fi"
   - "if [[ $NMODE == 'nikola' ]]; then pip install -r requirements-tests.txt; fi"
   - "if [[ $NMODE == 'nikola' ]]; then pip install .; fi"
+  - "if [[ $NMODE == 'nikola' ]]; then scripts/getbaseline.sh $(scripts/getpyver.py short); fi"
   - "if [[ $NMODE == 'flake8' ]]; then pip install flake8; fi"
 # We run tests and nikola (to see if the command is executable) OR flake8.
 # WARNING: if you edit this, make sure to replicate your changes in dodo.py.
