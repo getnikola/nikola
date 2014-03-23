@@ -210,9 +210,10 @@ class Galleries(Task):
                     context['post'] = post
                 else:
                     context['post'] = None
-
                 file_dep = self.site.template_system.template_deps(
                     template_name) + image_list + thumbs
+                if post:
+                    file_dep += [post.translated_base_path(l) for l in self.kw['translations']]
 
                 yield utils.apply_filters({
                     'basename': self.name,
@@ -465,8 +466,6 @@ class Galleries(Task):
                 },
             })
         context['photo_array_json'] = json.dumps(photo_array)
-        context['photo_array'] = photo_array
-
         self.site.render_template(template_name, output_name, context)
 
     def gallery_rss(self, img_list, img_titles, lang, permalink, output_path, title):
