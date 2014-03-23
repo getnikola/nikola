@@ -14,7 +14,7 @@ ${base.html_headstart()}
     <div id="container">
          ${header.html_header()}
          <main id="content">
-             ${self.body()}
+            <%block name="content"></%block>
          </main>
          ${footer.html_footer()}
     </div>

@@ -11,6 +11,7 @@
 </%block>
 
 
+<%block name="content">
 <article class="storypage" itemscope="itemscope" itemtype="http://schema.org/Article">
 %if title and not post.meta('hidetitle'):
     <header>
@@ -27,4 +28,4 @@
     </section>
 %endif
 </article>
-
+</%block>

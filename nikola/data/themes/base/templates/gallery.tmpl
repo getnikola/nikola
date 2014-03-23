@@ -4,6 +4,7 @@
 <%namespace name="ui" file="crumbs.tmpl" import="bar"/>
 <%block name="sourcelink"></%block>
 
+<%block name="content">
 ${ui.bar(crumbs)}
 %if title:
 <h1>${title}</h1>
@@ -32,3 +33,4 @@ ${ui.bar(crumbs)}
 %if enable_comments:
     ${comments.comment_form(None, permalink, title)}
 %endif
+</%block>

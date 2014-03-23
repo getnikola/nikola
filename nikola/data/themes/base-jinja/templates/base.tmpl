@@ -14,7 +14,7 @@
     <div id="container">
          {{ header.html_header() }}
          <main id="content">
-             {{ self.body() }}
+            {% block content %}{% endblock %}
          </main>
          {{ footer.html_footer() }}
     </div>

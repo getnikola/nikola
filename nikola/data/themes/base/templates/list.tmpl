@@ -1,6 +1,7 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="base.tmpl"/>
 
+<%block name="content">
 <article class="listpage">
     <header>
         <h1>${title}</h1>
@@ -15,4 +16,4 @@
     <p>${messages("Nothing found.")}</p>
     %endif
 </article>
-
+</%block>

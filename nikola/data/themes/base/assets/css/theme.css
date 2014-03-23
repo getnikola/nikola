@@ -88,6 +88,9 @@ body {
 	font-size: 1em;
 }
 
+.posttranslations h3:last-child {
+	display: none;
+}
 .postindex article {
 	border-bottom: 1px solid #4F5151;
 	padding-bottom: 1em;

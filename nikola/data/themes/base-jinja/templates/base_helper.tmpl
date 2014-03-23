@@ -1,6 +1,6 @@
 {#  -*- coding: utf-8 -*- #}
 
-{% block html_headstart %}
+{% macro html_headstart() %}
 <!DOCTYPE html>
 <html
 
@@ -27,8 +27,8 @@ lang="{{ lang }}">
     <meta name="viewport" content="width=device-width">
     <title>{{ title|e }} | {{ blog_title|e }}</title>
 
-    {{ self.html_stylesheets() }}
-    {{ self.html_feedlinks() }}
+    {{ html_stylesheets() }}
+    {{ html_feedlinks() }}
     {% if permalink %}
       <link rel="canonical" href="{{ abs_link(permalink) }}">
     {% endif %}
@@ -51,13 +51,13 @@ lang="{{ lang }}">
     {% endif %}
 
     {{ extra_head_data }}
-{% endblock %}
+{% endmacro %}
 
-{% block late_load_js %}
+{% macro late_load_js() %}
     {{ social_buttons_code }}
-{% endblock %}
+{% endmacro %}
 
-{% block html_stylesheets %}
+{% macro html_stylesheets() %}
     {% if use_bundles %}
         {% if use_cdn %}
             <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
@@ -72,9 +72,9 @@ lang="{{ lang }}">
             <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
         {% endif %}
     {% endif %}
-{% endblock %}
+{% endmacro %}
 
-{% block html_feedlinks %}
+{% macro html_feedlinks() %}
     {% if rss_link %}
         {{ rss_link }}
     {% else %}
@@ -86,14 +86,14 @@ lang="{{ lang }}">
             <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ _link('rss', None) }}">
         {% endif %}
     {% endif %}
-{% endblock %}
+{% endmacro %}
 
-{% block html_translations %}
-    <ul>
+{% macro html_translations() %}
+    <ul class="translations">
     {% for langname in translations.keys() %}
         {% if langname != lang %}
             <li><a href="{{ _link("index", None, langname) }}" rel="alternate" hreflang="{{ langname }}">{{ messages("LANGUAGE", langname) }}</a></li>
         {% endif %}
     {% endfor %}
     </ul>
-{% endblock %}
+{% endmacro %}

@@ -2,7 +2,7 @@
 {% extends 'list_post.tmpl' %}
 
 {% block extra_head %}
-    {{ parent.extra_head() }}
+    {{ super() }}
     {% if translations|length > 1 %}
         {% for language in translations %}
             <link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for {{ kind }} {{ tag }} ({{ language }})" href="{{ _link(kind + "_rss", tag, language) }}">
@@ -13,19 +13,20 @@
 {% endblock %}
 
 
+{% block content %}
 <article class="tagpage">
     <header>
         <h1>{{ title }}</h1>
         <div class="metadata">
-        {% if translations|length > 1 %}
-            <p class="feedlinks">
-            {% for language in translations %}
-                <a href="{{ _link(kind + "_rss", tag, language) }}" hreflang="{{ language }}" type="application/rss+xml">RSS ({{ language }})</a>&nbsp;
-            {% endfor %}
-            </p>
-        {% else %}
-            <p class="feedlinks"><a href="{{ _link(kind + "_rss", tag) }}" type="application/rss+xml">RSS</a></p>
-        {% endif %}
+            {% if translations|length > 1 %}
+                {% for language in translations %}
+                <p class="feedlink">
+                    <a href="{{ _link(kind + "_rss", tag, language) }}" hreflang="{{ language }}" type="application/rss+xml">{{ messages('RSS feed', language) }} ({{ language }})</a>&nbsp;
+                </p>
+                {% endfor %}
+            {% else %}
+                <p class="feedlink"><a href="{{ _link(kind + "_rss", tag) }}" type="application/rss+xml">{{ messages('RSS feed') }}</a></p>
+            {% endif %}
         </div>
     </header>
     {% if posts %}
@@ -36,3 +37,4 @@
     </ul>
     {% endif %}
 </article>
+{% endblock %}

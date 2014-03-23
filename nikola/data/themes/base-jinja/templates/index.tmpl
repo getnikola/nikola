@@ -3,13 +3,15 @@
 {% import 'comments_helper.tmpl' as comments with context %}
 {% extends 'base.tmpl' %}
 
+{% block content %}
 <div class="postindex">
 {% for post in posts %}
     <article class="h-entry post-{{ post.meta('type') }}">
     <header>
         <h1 class="p-name entry-title"><a href="{{ post.permalink() }}" class="u-url">{{ post.title() }}</h1></a>
         <div class="metadata">
-            <p class="dateline"><a href="{{ post.permalink() }}" rel="bookmark"><time class="published dt-published" datetime="{{ post.date.isoformat() }}" title="{{ messages("Publication date") }}">{{ post.formatted_date(date_format) }}</time></a></p>
+            <p class="byline author vcard"><span class="byline-name fn">{{ post.author() }}</span></p>
+            <p class="dateline"><a href="{{ post.permalink() }}" rel="bookmark"><time class="published dt-published" datetime="{{ post.date.isoformat() }}" itemprop="datePublished" title="{{ messages("Publication date") }}">{{ post.formatted_date(date_format) }}</time></a></p>
             {% if not post.meta('nocomments') %}
                 <p class="commentline">{{ comments.comment_link(post.permalink(), post._base_path) }}
             {% endif %}
@@ -29,3 +31,4 @@
 {{ helper.html_pager() }}
 {{ comments.comment_link_script() }}
 {{ helper.mathjax_script(posts) }}
+{% endblock %}

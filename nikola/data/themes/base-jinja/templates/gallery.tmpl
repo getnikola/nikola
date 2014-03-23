@@ -4,6 +4,7 @@
 {% import 'crumbs.tmpl' as ui with context %}
 {% block sourcelink %}{% endblock %}
 
+{% block content %}
 {{ ui.bar(crumbs) }}
 {% if title %}
 <h1>{{ title }}</h1>
@@ -32,3 +33,4 @@
 {% if enable_comments %}
     {{ comments.comment_form(None, permalink, title) }}
 {% endif %}
+{% endblock %}

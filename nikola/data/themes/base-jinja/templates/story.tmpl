@@ -4,13 +4,14 @@
 {% import 'comments_helper.tmpl' as comments with context %}
 
 {% block extra_head %}
-    {{ parent.extra_head() }}
+    {{ super() }}
     <meta name="author" content="{{ post.author() }}">
     {{ helper.open_graph_metadata(post) }}
     {{ helper.twitter_card_information(post) }}
 {% endblock %}
 
 
+{% block content %}
 <article class="storypage" itemscope="itemscope" itemtype="http://schema.org/Article">
 {% if title and not post.meta('hidetitle') %}
     <header>
@@ -27,4 +28,4 @@
     </section>
 {% endif %}
 </article>
-
+{% endblock %}

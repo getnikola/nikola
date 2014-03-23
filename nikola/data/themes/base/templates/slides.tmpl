@@ -1,3 +1,4 @@
+<%block name="content">
 <div id="${carousel_id}" class="carousel slide">
     <ol class="carousel-indicators">
     % for i in range(len(content)):
@@ -20,3 +21,4 @@
     <a class="left carousel-control" href="#${carousel_id}" data-slide="prev">&lsaquo;</a>
     <a class="right carousel-control" href="#${carousel_id}" data-slide="next">&rsaquo;</a>
 </div>
+</%block>
