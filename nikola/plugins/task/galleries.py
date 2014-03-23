@@ -170,7 +170,7 @@ class Galleries(Task):
                 if self.kw['use_filename_as_title']:
                     img_titles = []
                     for fn in image_name_list:
-                        name_without_ext = os.path.splitext(fn)[0]
+                        name_without_ext = os.path.splitext(os.path.basename(fn))[0]
                         img_titles.append(
                             'id="{0}" alt="{1}" title="{2}"'.format(
                                 name_without_ext,
@@ -199,7 +199,7 @@ class Galleries(Task):
                 context["permalink"] = self.site.link(
                     "gallery", os.path.basename(
                         os.path.relpath(gallery, self.kw['gallery_path'])), lang)
-                context["enable_comments"] = (kw['comments_in_galleries'])
+                context["enable_comments"] = self.kw['comments_in_galleries']
                 context["thumbnail_size"] = self.kw["thumbnail_size"]
 
                 # FIXME: render post in a task
