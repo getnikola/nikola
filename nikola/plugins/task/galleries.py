@@ -167,17 +167,12 @@ class Galleries(Task):
 
                 image_name_list = [os.path.basename(p) for p in image_list]
 
-                # FIXME: img_titles is used in the RSS and not in the index
-                # figure out why
+                # FIXME: this code is duplicated in the index rendering
                 if self.kw['use_filename_as_title']:
                     img_titles = []
                     for fn in image_name_list:
                         name_without_ext = os.path.splitext(os.path.basename(fn))[0]
-                        img_titles.append(
-                            'id="{0}" alt="{1}" title="{2}"'.format(
-                                name_without_ext,
-                                name_without_ext,
-                                utils.unslugify(name_without_ext)))
+                        img_titles.append(utils.unslugify(name_without_ext))
                 else:
                     img_titles = [''] * len(image_name_list)
 
@@ -487,12 +482,12 @@ class Galleries(Task):
             return urljoin(self.site.config['BASE_URL'], url)
 
         items = []
-        for img, full_title in list(zip(img_list, img_titles))[:self.kw["feed_length"]]:
+        for img, title in list(zip(img_list, img_titles))[:self.kw["feed_length"]]:
             img_size = os.stat(
                 os.path.join(
                     self.site.config['OUTPUT_FOLDER'], img)).st_size
             args = {
-                'title': full_title.split('"')[-2] if full_title else '',
+                'title': title,
                 'link': make_url(img),
                 'guid': rss.Guid(img, False),
                 'pubDate': self.image_date(img),
