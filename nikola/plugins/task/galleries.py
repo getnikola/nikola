@@ -102,6 +102,7 @@ class Galleries(Task):
             'global_context': self.site.GLOBAL_CONTEXT,
             'feed_length': self.site.config['FEED_LENGTH'],
             'tzinfo': self.site.tzinfo,
+            'comments_in_galleries': self.site.config['COMMENTS_IN_GALLERIES'],
         }
 
         yield self.group_task()
@@ -198,9 +199,7 @@ class Galleries(Task):
                 context["permalink"] = self.site.link(
                     "gallery", os.path.basename(
                         os.path.relpath(gallery, self.kw['gallery_path'])), lang)
-                # FIXME: use kw
-                context["enable_comments"] = (
-                    self.site.config["COMMENTS_IN_GALLERIES"])
+                context["enable_comments"] = (kw['comments_in_galleries'])
                 context["thumbnail_size"] = self.kw["thumbnail_size"]
 
                 # FIXME: render post in a task
