@@ -127,7 +127,8 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
             date = rule_.after(max(now, last_date or now), last_date is None)
 
     #offset is ntentionally integer, dateutil doesn't like fractional offsets
-    offset = tz.utcoffset(datetime.datetime.now()).seconds/3600  
+    offset = tz.utcoffset(datetime.datetime.now())
+    offset = (offset.days * 24 * 3600 + offset.seconds) / 3600
     if offset:
         tz_str = 'UTC{0:+}'.format(offset)
     else:
