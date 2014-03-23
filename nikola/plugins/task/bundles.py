@@ -98,7 +98,7 @@ class BuildBundles(LateTask):
                 # generation will happen before this task.
                 task = {
                     'file_dep': list(file_dep),
-                    'task_dep': ['copy_assets'],
+                    'task_dep': ['copy_assets', 'copy_files'],
                     'basename': str(self.name),
                     'name': str(output_path),
                     'actions': [(build_bundle, (name, file_dep))],
