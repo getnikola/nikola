@@ -193,8 +193,6 @@ class Galleries(Task):
                         ft = folder
                     folders.append((folder, ft))
 
-                ## TODO: in v7 remove images from context, use photo_array
-                context["images"] = list(zip(image_name_list, thumbs, img_titles))
                 context["folders"] = natsort.natsorted(folders, key=itemgetter(1))
                 context["crumbs"] = crumbs
                 context["permalink"] = self.site.link(
