@@ -1,6 +1,7 @@
 doit>=0.23.0
 pygments
 pillow>=2.0.0
+python-dateutil
 docutils
 mako>=0.6
 unidecode

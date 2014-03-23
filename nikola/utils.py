@@ -45,6 +45,7 @@ try:
 except ImportError:
     pass
 
+import dateutil.parser
 import logbook
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
 import pytz
@@ -628,48 +629,11 @@ def extract_all(zipfile, path='themes'):
 def to_datetime(value, tzinfo=None):
     if isinstance(value, datetime.datetime):
         return value
-    supported_formats = [
-        '%Y/%m/%d %H:%M',
-        '%Y/%m/%d %H:%M:%S',
-        '%Y/%m/%d %I:%M:%S %p',
-        '%a %b %d %H:%M:%S %Y',
-        '%Y-%m-%d %H:%M:%S',
-        '%Y-%m-%d %H:%M',
-        '%Y-%m-%dT%H:%M',
-        '%Y%m%d %H:%M:%S',
-        '%Y%m%d %H:%M',
-        '%Y-%m-%d',
-        '%Y%m%d',
-        '%Y/%m/%d %H:%M %Z',
-        '%Y/%m/%d %H:%M:%S %Z',
-        '%Y/%m/%d %I:%M:%S %p %Z',
-        '%a %b %d %H:%M:%S %Y %Z',
-        '%Y-%m-%d %H:%M:%S %Z',
-        '%Y-%m-%d %H:%M %Z',
-        '%Y-%m-%dT%H:%M %Z',
-        '%Y%m%d %H:%M:%S %Z',
-        '%Y%m%d %H:%M %Z',
-        '%Y-%m-%d %Z',
-        '%Y%m%d %Z',
-    ]
-    for format in supported_formats:
-        try:
-            dt = datetime.datetime.strptime(value, format)
-            if tzinfo is None:
-                return dt
-            # Build a localized time by using a given time zone.
-            return tzinfo.localize(dt)
-        except ValueError:
-            pass
-    # So, let's try dateutil
     try:
-        from dateutil import parser
-        dt = parser.parse(value)
+        dt = dateutil.parser.parse(value)
         if tzinfo is None or dt.tzinfo:
             return dt
         return tzinfo.localize(dt)
-    except ImportError:
-        raise ValueError('Unrecognized date/time: {0!r}, try installing dateutil...'.format(value))
     except Exception:
         raise ValueError('Unrecognized date/time: {0!r}'.format(value))
 
