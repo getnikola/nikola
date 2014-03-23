@@ -125,9 +125,17 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
             if force_today:
                 now = now.replace(hour=0, minute=0, second=0, microsecond=0)
             date = rule_.after(max(now, last_date or now), last_date is None)
-    return date.strftime('{0} {1} %Z'.format(
+
+    #offset is ntentionally integer, dateutil doesn't like fractional offsets
+    offset = tz.utcoffset(datetime.datetime.now()).seconds/3600  
+    if offset:
+        tz_str = 'UTC{0:+}'.format(offset)
+    else:
+        tz_str = 'UTC'
+    return date.strftime('{0} {1} {2}'.format(
         locale.nl_langinfo(locale.D_FMT),        
         locale.nl_langinfo(locale.T_FMT),
+        tz_str,
         ))
 
 
