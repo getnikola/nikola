@@ -128,9 +128,11 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
 
     #offset is ntentionally integer, dateutil doesn't like fractional offsets
     offset = tz.utcoffset(datetime.datetime.now())
-    offset = (offset.days * 24 * 3600 + offset.seconds) / 3600
+    offset_sec = (offset.days * 24 * 3600 + offset.seconds)
+    offset_hrs = offset_sec // 3600
+    offset_sec = offset_sec % 3600
     if offset:
-        tz_str = 'UTC{0:+}'.format(offset)
+        tz_str = 'UTC{0:+02d}:{1:02d}'.format(offset_hrs, offset_sec)
     else:
         tz_str = 'UTC'
     return date.strftime('{0} {1} {2}'.format(
