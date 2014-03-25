@@ -47,9 +47,9 @@ except ImportError:
     pass
 
 import dateutil.parser
+import dateutil.tz
 import logbook
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
-import pytz
 
 from . import DEBUG
 
@@ -642,20 +642,11 @@ def to_datetime(value, tzinfo=None):
 def get_tzname(dt):
     """
     Given a datetime value, find the name of the time zone.
-    """
-    try:
-        from dateutil import tz
-    except ImportError:
-        raise ValueError('Unrecognized date/time: {0!r}, try installing dateutil...'.format(dt))
 
-    tzoffset = dt.strftime('%z')
-    for name in pytz.common_timezones:
-        timezone = tz.gettz(name)
-        now = dt.now(timezone)
-        offset = now.strftime('%z')
-        if offset == tzoffset:
-            return name
-    raise ValueError('Unrecognized date/time: {0!r}'.format(dt))
+    DEPRECATED: This thing returned basically the 1st random zone
+    that matched the offset.
+    """
+    return dt.tzname()
 
 
 def current_time(tzinfo=None):
