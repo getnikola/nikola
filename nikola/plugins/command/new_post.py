@@ -32,6 +32,7 @@ import os
 import sys
 
 from blinker import signal
+import dateutil.tz
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -104,6 +105,8 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
 
     """
 
+    if tz is None:
+        tz = dateutil.tz.tzlocal()
     date = now = datetime.datetime.now(tz)
     if schedule:
         try:
@@ -127,7 +130,7 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
             date = rule_.after(max(now, last_date or now), last_date is None)
 
     #offset is ntentionally integer, dateutil doesn't like fractional offsets
-    offset = tz.utcoffset(datetime.datetime.now())
+    offset = tz.utcoffset(now)
     offset_sec = (offset.days * 24 * 3600 + offset.seconds)
     offset_hrs = offset_sec // 3600
     offset_sec = offset_sec % 3600
