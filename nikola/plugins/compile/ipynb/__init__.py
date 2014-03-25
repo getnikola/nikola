@@ -67,6 +67,7 @@ class CompileIPynb(PageCompiler):
             out_file.write(body)
 
     def create_post(self, path, content, onefile=False, is_page=False, **kw):
+        # warning: content and onefile are ignored by ipynb.
         metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)
