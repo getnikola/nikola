@@ -141,7 +141,9 @@ def tidy(inplace):
         "no --keep-time yes --tidy-mark no "
         "--force-output yes '{0}'; exit 0".format(inplace), stderr=subprocess.STDOUT, shell=True)
 
-    for line in output.split("\n"):
+    output = '\n'.join([l.decode('utf-8') for l in output.split(b'\n')])
+
+    for line in output.split(u"\n"):
         if "Warning:" in line:
             if '<meta> proprietary attribute "charset"' in line:
                 # We want to set it though.
