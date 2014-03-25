@@ -628,21 +628,20 @@ def extract_all(zipfile, path='themes'):
 
 # From https://github.com/lepture/liquidluck/blob/develop/liquidluck/utils.py
 def to_datetime(value, tzinfo=None):
-    if isinstance(value, datetime.datetime):
-        return value
+    if not isinstance(value, datetime.datetime):
+        value = dateutil.parser.parse(value)
     try:
-        dt = dateutil.parser.parse(value)
-        if dt.tzinfo:
+        if value.tzinfo:
             # dateutil does bad things with TZs like UTC-3
             # so revert them
-            if isinstance(dt.tzinfo, dateutil.tz.tzoffset):
-                offset = dt.tzinfo.utcoffset(dt)
+            if isinstance(value.tzinfo, dateutil.tz.tzoffset):
+                offset = value.tzinfo.utcoffset(value)
                 seconds = offset.days * 24 * 3600 + offset.seconds
-                dt = dt.replace(tzinfo=dateutil.tz.tzoffset(None, -seconds))
-            dt = dt.astimezone(tzinfo)
+                value = value.replace(tzinfo=dateutil.tz.tzoffset(None, -seconds))
+            value = value.astimezone(tzinfo)
         else:
-            dt.replace(tzinfo=tzinfo)
-        return dt
+            value = value.replace(tzinfo=tzinfo)
+        return value
     except Exception:
         raise ValueError('Unrecognized date/time: {0!r}'.format(value))
 
