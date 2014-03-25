@@ -632,9 +632,7 @@ def to_datetime(value, tzinfo=None):
         return value
     try:
         dt = dateutil.parser.parse(value)
-        if tzinfo is None or dt.tzinfo:
-            return dt
-        return tzinfo.localize(dt)
+        return dt.replace(tzinfo=tzinfo)
     except Exception:
         raise ValueError('Unrecognized date/time: {0!r}'.format(value))
 

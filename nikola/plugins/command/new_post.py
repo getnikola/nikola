@@ -127,14 +127,19 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
             #import pdb; pdb.set_trace()
             date = rule_.after(max(now, last_date or now), last_date is None)
 
-    if date.utcoffset():
-        utcstr = 'UTC%z'
+    #offset is ntentionally integer, dateutil doesn't like fractional offsets
+    offset = tz.utcoffset(now)
+    offset_sec = (offset.days * 24 * 3600 + offset.seconds)
+    offset_hrs = offset_sec // 3600
+    offset_sec = offset_sec % 3600
+    if offset:
+        tz_str = 'UTC{0:+02d}:{1:02d}'.format(offset_hrs, offset_sec // 60)
     else:
-        utcstr = 'UTC'
+        tz_str = 'UTC'
     return date.strftime('{0} {1} {2}'.format(
         locale.nl_langinfo(locale.D_FMT),
         locale.nl_langinfo(locale.T_FMT),
-        utcstr
+        tz_str,
     ))
 
 
@@ -278,7 +283,7 @@ class CommandNewPost(Command):
         self.site.scan_posts()
         timeline = self.site.timeline
         last_date = None if not timeline else timeline[0].date
-        date = get_date(schedule, rule, last_date, force_today, dateutil.tz.tzlocal())
+        date = get_date(schedule, rule, last_date, force_today, self.site.tzinfo)
         data = [title, slug, date, tags]
         output_path = os.path.dirname(entry[0])
         meta_path = os.path.join(output_path, slug + ".meta")
