@@ -628,9 +628,9 @@ def extract_all(zipfile, path='themes'):
 
 # From https://github.com/lepture/liquidluck/blob/develop/liquidluck/utils.py
 def to_datetime(value, tzinfo=None):
-    if not isinstance(value, datetime.datetime):
-        value = dateutil.parser.parse(value)
     try:
+        if not isinstance(value, datetime.datetime):
+            value = dateutil.parser.parse(value)
         if value.tzinfo:
             # dateutil does bad things with TZs like UTC-3
             # so revert them
