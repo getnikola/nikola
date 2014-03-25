@@ -10,6 +10,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import dateutil.parser
+import dateutil.tz
 import pytest
 
 from .base import BaseTestCase
@@ -25,7 +26,8 @@ FMT = '{0} {1} %Z'.format(
         locale.nl_langinfo(locale.D_FMT),        
         locale.nl_langinfo(locale.T_FMT),
       )
-NOW = '2013/08/22 10:00:00 UTC'  # Thursday
+NOW = datetime.datetime(  # Thursday
+    2013, 8, 22, 10, 0, 0, tzinfo=dateutil.tz.tzutc()).strftime(FMT)
 TODAY = dateutil.parser.parse(NOW)
 RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
 RULE_FR = 'RRULE:FREQ=WEEKLY;BYDAY=FR'

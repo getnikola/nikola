@@ -116,9 +116,6 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
                          'you have to install the "dateutil" package.')
             rrule = None
     if schedule and rrule and rule:
-        if last_date and last_date.tzinfo:
-            # strip tzinfo for comparisons
-            last_date = last_date.replace(tzinfo=None)
         try:
             rule_ = rrule.rrulestr(rule, dtstart=last_date)
         except Exception:
@@ -127,6 +124,7 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
             # Try to post today, instead of tomorrow, if no other post today.
             if force_today:
                 now = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            #import pdb; pdb.set_trace()
             date = rule_.after(max(now, last_date or now), last_date is None)
 
     #offset is ntentionally integer, dateutil doesn't like fractional offsets
@@ -139,7 +137,7 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
     else:
         tz_str = 'UTC'
     return date.strftime('{0} {1} {2}'.format(
-        locale.nl_langinfo(locale.D_FMT),        
+        locale.nl_langinfo(locale.D_FMT),
         locale.nl_langinfo(locale.T_FMT),
         tz_str,
         ))
