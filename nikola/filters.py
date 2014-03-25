@@ -164,8 +164,8 @@ def tidy(inplace):
             else:
                 assert False, (inplace, line)
         elif "Error:" in line:
-            if '<time> is not recognized' in line:
-                # False alarm, time is proper HTML5.
+            if 'is not recognized' in line:
+                # False alarm, most such things are HTML5.
                 continue
             else:
                 assert False, line
