@@ -22,17 +22,8 @@ except ImportError:
     _freeze_time = False
     freeze_time = lambda x: lambda y: y
 
-FMT = '{0} {1} %Z'.format(
-      locale.nl_langinfo(locale.D_FMT),
-      locale.nl_langinfo(locale.T_FMT),
-)
-NOW = datetime.datetime(  # Thursday
-    2013, 8, 22, 10, 0, 0, tzinfo=dateutil.tz.tzutc()).strftime(FMT)
-TODAY = dateutil.parser.parse(NOW)
-RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
-RULE_FR = 'RRULE:FREQ=WEEKLY;BYDAY=FR'
-UTC = dateutil.tz.tzutc()
-
+_NOW = datetime.datetime(  # Thursday
+    2013, 8, 22, 10, 0, 0, tzinfo=dateutil.tz.tzutc())
 
 @pytest.mark.skipif(not _freeze_time, reason="freezegun not installed.")
 class TestScheduling(BaseTestCase):
@@ -50,9 +41,22 @@ class TestScheduling(BaseTestCase):
         for name, mod in cls.deleted.items():
             sys.modules[name] = mod
 
-    @freeze_time(NOW)
+    @freeze_time(_NOW)
     def test_get_date(self):
         from nikola.plugins.command.new_post import get_date
+
+        # This is now locale-dependent, so do it here, where
+        # locale is set.
+        FMT = '{0} {1} %Z'.format(
+            locale.nl_langinfo(locale.D_FMT),
+            locale.nl_langinfo(locale.T_FMT),
+        )
+        NOW = _NOW.strftime(FMT)
+        TODAY = dateutil.parser.parse(NOW)
+        RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
+        RULE_FR = 'RRULE:FREQ=WEEKLY;BYDAY=FR'
+        UTC = dateutil.tz.tzutc()
+
 
         #### NOW does not match rule #########################################
         ## No last date
