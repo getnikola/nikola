@@ -158,9 +158,8 @@ def tidy(inplace):
             elif '<table> lacks "summary" attribute' in line:
                 # Happens for tables, TODO: Check this is normal.
                 continue
-            elif 'proprietary attribute "data-toggle"' in line or \
-                 'proprietary attribute "data-target"':
-                # Some of our own tricks
+            elif 'proprietary attribute "data-' in line:
+                # HTML5 allows and loves data-*
                 continue
             else:
                 assert False, (inplace, line)
