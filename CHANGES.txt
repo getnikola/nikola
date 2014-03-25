@@ -48,6 +48,7 @@ Features
 Bugfixes
 --------
 
+* Use current system TZ for current_time(Issue #1161)
 * Gallery code cleanup (Issue #1121)
 * USE_FILENAME_AS_TITLE works again (Issue #1073)
 * Rebuild CSS bundles when files change, and also when files are removed (Issue #1153)
