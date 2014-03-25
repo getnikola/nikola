@@ -137,8 +137,8 @@ def tidy(inplace):
 
     # Tidy will give error exits, that we will ignore.
     output = subprocess.check_output(
-        "tidy -m -w 90 --indent no --quote-marks"
-        "no --keep-time yes --tidy-mark no "
+        "tidy -m -w 90 -utf8 --new-blocklevel-tags header,footer,nav,article,aside "
+        "--new-inline-tags time --indent no --quote-marks no --keep-time yes --tidy-mark no "
         "--force-output yes '{0}'; exit 0".format(inplace), stderr=subprocess.STDOUT, shell=True)
 
     output = '\n'.join([l.decode('utf-8') for l in output.split(b'\n')])
@@ -160,8 +160,21 @@ def tidy(inplace):
             elif '<table> lacks "summary" attribute' in line:
                 # Happens for tables, TODO: Check this is normal.
                 continue
-            elif 'proprietary attribute "data-' in line:
-                # HTML5 allows and loves data-*
+            elif 'proprietary attribute' in line:
+                # for data-* and other html5 additions
+                continue
+            elif 'is not approved by W3C' in line:
+                # it is, in html5.  (--new-blocklevel-tags)
+                continue
+            elif "'<' + '/' + letter not allowed here" in line:
+                # javascript.  It turns it to <\/a>; fortunately JS understands
+                # this properly.
+                continue
+            elif '<script> inserting "type" attribute' in line:
+                # That’s what you get for using 2009 tools in 2014
+                continue
+            elif 'trimming empty' in line:
+                # [WARNING] destroys all icons, probably more things.
                 continue
             else:
                 assert False, (inplace, line)
