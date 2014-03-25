@@ -140,7 +140,7 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
         locale.nl_langinfo(locale.D_FMT),
         locale.nl_langinfo(locale.T_FMT),
         tz_str,
-        ))
+    ))
 
 
 class CommandNewPost(Command):

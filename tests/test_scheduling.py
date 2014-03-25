@@ -23,9 +23,9 @@ except ImportError:
     freeze_time = lambda x: lambda y: y
 
 FMT = '{0} {1} %Z'.format(
-        locale.nl_langinfo(locale.D_FMT),        
-        locale.nl_langinfo(locale.T_FMT),
-      )
+      locale.nl_langinfo(locale.D_FMT),
+      locale.nl_langinfo(locale.T_FMT),
+)
 NOW = datetime.datetime(  # Thursday
     2013, 8, 22, 10, 0, 0, tzinfo=dateutil.tz.tzutc()).strftime(FMT)
 TODAY = dateutil.parser.parse(NOW)
