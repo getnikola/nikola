@@ -632,8 +632,18 @@ def to_datetime(value, tzinfo=None):
         return value
     try:
         dt = dateutil.parser.parse(value)
-        return dt.replace(tzinfo=tzinfo)
-    except Exception:
+        if dt.tzinfo:
+            # dateutil does bad things with TZs like UTC-3
+            # so revert them
+            if isinstance(dt.tzinfo, dateutil.tz.tzoffset):
+                offset = dt.tzinfo.utcoffset(dt)
+                seconds = offset.days*24*3600 + offset.seconds
+                dt = dt.replace(tzinfo=dateutil.tz.tzoffset(None, -seconds))
+            dt = dt.astimezone(tzinfo)
+        else:
+            dt.replace(tzinfo=tzinfo)
+        return dt
+    except Exception as exc:
         raise ValueError('Unrecognized date/time: {0!r}'.format(value))
 
 
