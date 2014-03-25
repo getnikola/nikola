@@ -133,7 +133,7 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
     offset_hrs = offset_sec // 3600
     offset_sec = offset_sec % 3600
     if offset:
-        tz_str = 'UTC{0:+02d}:{1:02d}'.format(offset_hrs, offset_sec)
+        tz_str = 'UTC{0:+02d}:{1:02d}'.format(offset_hrs, offset_sec // 60)
     else:
         tz_str = 'UTC'
     return date.strftime('{0} {1} {2}'.format(
