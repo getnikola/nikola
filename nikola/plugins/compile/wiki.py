@@ -71,5 +71,7 @@ class CompileWiki(PageCompiler):
             raise Exception('There are no comments in CreoleWiki markup, so '
                             'one-file format is not possible, use the -2 '
                             'option.')
+        if not content.endswith('\n'):
+            content += '\n'
         with codecs.open(path, "wb+", "utf8") as fd:
             fd.write(content)

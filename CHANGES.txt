@@ -51,6 +51,7 @@ Bugfixes
 
 * Removed dependency on pytz because mixing it with dateutil breaks things.
 * Use current system TZ for current_time (Issue #1161)
+* ``nikola new_post`` now always outputs a newline at the end of file (Issue #1169)
 * Gallery code cleanup (Issue #1121)
 * USE_FILENAME_AS_TITLE works again (Issue #1073)
 * Rebuild CSS bundles when files change, and also when files are removed (Issue #1153)

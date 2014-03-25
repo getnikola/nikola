@@ -67,6 +67,8 @@ class CompileTxt2tags(PageCompiler):
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))
+        if not content.endswith('\n'):
+            content += '\n'
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
                 fd.write("\n'''\n<!--\n")
