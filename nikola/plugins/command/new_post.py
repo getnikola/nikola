@@ -84,7 +84,7 @@ def get_default_compiler(is_post, compilers, post_pages):
     return 'rest'
 
 
-def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=None):
+def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=None, iso8601=False):
     """Returns a date stamp, given a recurrence rule.
 
     schedule - bool:
@@ -102,6 +102,9 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
 
     tz - tzinfo:
         the timezone used for getting the current time.
+
+    iso8601 - bool:
+        whether to force ISO 8601 dates (instead of locale-specific ones)
 
     """
 
@@ -131,16 +134,19 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
     offset = tz.utcoffset(now)
     offset_sec = (offset.days * 24 * 3600 + offset.seconds)
     offset_hrs = offset_sec // 3600
-    offset_sec = offset_sec % 3600
-    if offset:
-        tz_str = 'UTC{0:+02d}:{1:02d}'.format(offset_hrs, offset_sec // 60)
+    offset_min = offset_sec % 3600
+    if iso8601:
+        tz_str = '{0:+03d}:{1:02d}'.format(offset_hrs, offset_min // 60)
+        return date.strftime('%Y-%m-%dT%T') + tz_str
     else:
-        tz_str = 'UTC'
-    return date.strftime('{0} {1} {2}'.format(
-        locale.nl_langinfo(locale.D_FMT),
-        locale.nl_langinfo(locale.T_FMT),
-        tz_str,
-    ))
+        if offset:
+            tz_str = ' UTC{0:+03d}:{1:02d}'.format(offset_hrs, offset_min // 60)
+        else:
+            tz_str = ' UTC'
+        return date.strftime('{0} {1}'.format(
+            locale.nl_langinfo(locale.D_FMT),
+            locale.nl_langinfo(locale.T_FMT),
+        )) + tz_str
 
 
 class CommandNewPost(Command):
@@ -283,7 +289,7 @@ class CommandNewPost(Command):
         self.site.scan_posts()
         timeline = self.site.timeline
         last_date = None if not timeline else timeline[0].date
-        date = get_date(schedule, rule, last_date, force_today, self.site.tzinfo)
+        date = get_date(schedule, rule, last_date, force_today, self.site.tzinfo, self.site.config['FORCE_ISO8601'])
         data = [title, slug, date, tags]
         output_path = os.path.dirname(entry[0])
         meta_path = os.path.join(output_path, slug + ".meta")

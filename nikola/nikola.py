@@ -217,6 +217,7 @@ class Nikola(object):
             'ADDITIONAL_METADATA': {},
             'FILES_FOLDERS': {'files': ''},
             'FILTERS': {},
+            'FORCE_ISO8601': False,
             'GALLERY_PATH': 'galleries',
             'GALLERY_SORT_BY_DATE': True,
             'GZIP_COMMAND': None,
