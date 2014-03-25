@@ -30,6 +30,7 @@ from __future__ import print_function, unicode_literals
 from collections import defaultdict, Callable
 import calendar
 import datetime
+import dateutil.tz
 import hashlib
 import locale
 import logging
@@ -658,11 +659,11 @@ def get_tzname(dt):
 
 
 def current_time(tzinfo=None):
-    dt = datetime.datetime.utcnow()
     if tzinfo is not None:
+        dt = datetime.datetime.utcnow()
         dt = tzinfo.fromutc(dt)
     else:
-        dt = pytz.UTC.localize(dt)
+        dt = datetime.datetime.now(dateutil.tz.tzlocal())
     return dt
 
 

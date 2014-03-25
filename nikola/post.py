@@ -94,7 +94,7 @@ class Post(object):
         if self.config['FUTURE_IS_NOW']:
             self.current_time = None
         else:
-            self.current_time = current_time(tzinfo)
+            self.current_time = current_time()
         self.translated_to = set([])
         self._prev_post = None
         self._next_post = None
