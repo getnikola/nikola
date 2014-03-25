@@ -25,6 +25,7 @@ except ImportError:
 _NOW = datetime.datetime(  # Thursday
     2013, 8, 22, 10, 0, 0, tzinfo=dateutil.tz.tzutc())
 
+
 @pytest.mark.skipif(not _freeze_time, reason="freezegun not installed.")
 class TestScheduling(BaseTestCase):
 
@@ -56,7 +57,6 @@ class TestScheduling(BaseTestCase):
         RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
         RULE_FR = 'RRULE:FREQ=WEEKLY;BYDAY=FR'
         UTC = dateutil.tz.tzutc()
-
 
         #### NOW does not match rule #########################################
         ## No last date
