@@ -331,7 +331,7 @@ class CommandImportWordpress(Command, ImportMixin):
                     size_key = b'sizes'
                     file_key = b'file'
 
-                if not size_key in metadata:
+                if size_key not in metadata:
                     continue
 
                 for filename in [metadata[size_key][size][file_key] for size in metadata[size_key]]:

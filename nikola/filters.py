@@ -182,6 +182,6 @@ def typogrify(data):
     data = typo.widont(data)
     data = typo.smartypants(data)
     # Disabled because of typogrify bug where it breaks <title>
-    #data = typo.caps(data)
+    # data = typo.caps(data)
     data = typo.initial_quotes(data)
     return data

@@ -274,7 +274,7 @@ class RenderTags(Task):
     def tag_rss(self, tag, lang, posts, kw, is_category):
         """RSS for a single tag / language"""
         kind = "category" if is_category else "tag"
-        #Render RSS
+        # Render RSS
         output_name = os.path.normpath(
             os.path.join(kw['output_folder'],
                          self.site.path(kind + "_rss", tag, lang)))

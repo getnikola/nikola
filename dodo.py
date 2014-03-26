@@ -20,8 +20,8 @@ def recursive_glob(path, pattern):
 def task_flake8():
     """flake8 - static check for python files"""
     yield {
-        'name': os.getcwd(),
-        'actions': ['flake8 --ignore=E501 .'],
+        'name': os.path.join(os.getcwd(), 'nikola'),
+        'actions': ['flake8 --ignore=E501 nikola/'],
     }
 
 
