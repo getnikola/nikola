@@ -59,6 +59,7 @@ class Listings(Task):
         ignored_extensions = (".pyc", ".pyo")
 
         def render_listing(in_name, out_name, folders=[], files=[]):
+            link_name = ''
             if in_name:
                 with open(in_name, 'r') as fd:
                     try:
@@ -71,6 +72,7 @@ class Listings(Task):
                                                    lineanchors=utils.slugify(in_name),
                                                    anchorlinenos=True))
                 title = os.path.basename(in_name)
+                link_name = in_name
             else:
                 code = ''
                 title = ''
@@ -81,6 +83,7 @@ class Listings(Task):
                 'code': code,
                 'title': title,
                 'crumbs': crumbs,
+                'permalink': self.site.link('listing', link_name),
                 'lang': kw['default_lang'],
                 'folders': natsort.natsorted(folders),
                 'files': natsort.natsorted(files),
