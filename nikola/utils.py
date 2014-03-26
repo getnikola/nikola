@@ -626,20 +626,14 @@ def extract_all(zipfile, path='themes'):
     os.chdir(pwd)
 
 
-# From https://github.com/lepture/liquidluck/blob/develop/liquidluck/utils.py
 def to_datetime(value, tzinfo=None):
     try:
         if not isinstance(value, datetime.datetime):
+            # dateutil does bad things with TZs like UTC-03:00.
+            dateregexp = re.compile(r' UTC([+-][0-9][0-9]:[0-9][0-9])')
+            value = re.sub(dateregexp, r'\1', value)
             value = dateutil.parser.parse(value)
-        if value.tzinfo:
-            # dateutil does bad things with TZs like UTC-3
-            # so revert them
-            if isinstance(value.tzinfo, dateutil.tz.tzoffset):
-                offset = value.tzinfo.utcoffset(value)
-                seconds = offset.days * 24 * 3600 + offset.seconds
-                value = value.replace(tzinfo=dateutil.tz.tzoffset(None, -seconds))
-            value = value.astimezone(tzinfo)
-        else:
+        if not value.tzinfo:
             value = value.replace(tzinfo=tzinfo)
         return value
     except Exception:
