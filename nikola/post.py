@@ -402,7 +402,7 @@ class Post(object):
         else:
             return get_translation_candidate(self.config, self.base_path, sorted(self.translated_to)[0])
 
-    def text(self, lang=None, teaser_only=False, strip_html=False, really_absolute=False):
+    def text(self, lang=None, teaser_only=False, strip_html=False):
         """Read the post file for that language and return its contents.
 
         teaser_only=True breaks at the teaser marker and returns only the teaser.
@@ -426,7 +426,7 @@ class Post(object):
                 return ""
             # let other errors raise
             raise(e)
-        base_url = self.permalink(lang=lang, absolute=really_absolute)
+        base_url = self.permalink(lang=lang)
         document.make_links_absolute(base_url)
 
         if self.hyphenate:
@@ -449,11 +449,11 @@ class Post(object):
                 if not strip_html:
                     if TEASER_REGEXP.search(data).groups()[-1]:
                         teaser += '<p class="more"><a href="{0}">{1}</a></p>'.format(
-                            self.permalink(lang, absolute=really_absolute),
+                            self.permalink(lang),
                             TEASER_REGEXP.search(data).groups()[-1])
                     else:
                         teaser += READ_MORE_LINK.format(
-                            link=self.permalink(lang, absolute=really_absolute),
+                            link=self.permalink(lang),
                             read_more=self.messages[lang]["Read more"])
                 # This closes all open tags and sanitizes the broken HTML
                 document = lxml.html.fromstring(teaser)
