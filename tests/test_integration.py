@@ -491,6 +491,8 @@ class InvariantBuildTest(EmptyBuildTest):
         if sys.version_info[0:2] != (2, 7):
             pytest.skip('only python 2.7 is supported right now')
         good_path = os.path.join(os.path.dirname(__file__), 'data', 'baseline{0[0]}.{0[1]}'.format(sys.version_info))
+        if not os.path.exists(good_path):
+            pytest.skip('no baseline found')
         with cd(self.target_dir):
             try:
                 diff = subprocess.check_output(['diff', '-ur', good_path, 'output'])
