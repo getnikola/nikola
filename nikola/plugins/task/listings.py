@@ -81,6 +81,7 @@ class Listings(Task):
                 'code': code,
                 'title': title,
                 'crumbs': crumbs,
+		'permalink': crumbs,
                 'lang': kw['default_lang'],
                 'folders': natsort.natsorted(folders),
                 'files': natsort.natsorted(files),
