@@ -327,11 +327,11 @@ class ListingTestCase(ReSTExtensionTestCase):
     sample2 = '.. code-block:: python\n\n   import antigravity'
     sample3 = '.. sourcecode:: python\n\n   import antigravity'
 
-    #def test_listing(self):
-        ##""" Test that we can render a file object contents without errors """
-        ##with cd(os.path.dirname(__file__)):
-            #self.deps = 'listings/nikola.py'
-            #self.setHtmlFromRst(self.sample1)
+    # def test_listing(self):
+    #     """ Test that we can render a file object contents without errors """
+    #     with cd(os.path.dirname(__file__)):
+    #        self.deps = 'listings/nikola.py'
+    #        self.setHtmlFromRst(self.sample1)
 
     def test_codeblock_alias(self):
         """ Test CodeBlock aliases """

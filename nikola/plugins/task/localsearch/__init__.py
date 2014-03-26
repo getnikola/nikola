@@ -35,19 +35,19 @@ from nikola.plugin_categories import LateTask
 from nikola.utils import config_changed, copy_tree, makedirs
 
 # This is what we need to produce:
-#var tipuesearch = {"pages": [
-    #{"title": "Tipue Search, a jQuery site search engine", "text": "Tipue
-        #Search is a site search engine jQuery plugin. It's free for both commercial and
-        #non-commercial use and released under the MIT License. Tipue Search includes
-        #features such as word stemming and word replacement.", "tags": "JavaScript",
-        #"loc": "http://www.tipue.com/search"},
-    #{"title": "Tipue Search demo", "text": "Tipue Search demo. Tipue Search is
-        #a site search engine jQuery plugin.", "tags": "JavaScript", "loc":
-        #"http://www.tipue.com/search/demo"},
-    #{"title": "About Tipue", "text": "Tipue is a small web development/design
-        #studio based in North London. We've been around for over a decade.", "tags": "",
-        #"loc": "http://www.tipue.com/about"}
-#]};
+# var tipuesearch = {"pages": [
+#     {"title": "Tipue Search, a jQuery site search engine", "text": "Tipue
+#         Search is a site search engine jQuery plugin. It's free for both commercial and
+#         non-commercial use and released under the MIT License. Tipue Search includes
+#         features such as word stemming and word replacement.", "tags": "JavaScript",
+#         "loc": "http://www.tipue.com/search"},
+#     {"title": "Tipue Search demo", "text": "Tipue Search demo. Tipue Search is
+#         a site search engine jQuery plugin.", "tags": "JavaScript", "loc":
+#         "http://www.tipue.com/search/demo"},
+#     {"title": "About Tipue", "text": "Tipue is a small web development/design
+#         studio based in North London. We've been around for over a decade.", "tags": "",
+#         "loc": "http://www.tipue.com/about"}
+# ]};
 
 
 class Tipue(LateTask):

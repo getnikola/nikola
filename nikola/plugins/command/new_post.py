@@ -127,10 +127,8 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
             # Try to post today, instead of tomorrow, if no other post today.
             if force_today:
                 now = now.replace(hour=0, minute=0, second=0, microsecond=0)
-            #import pdb; pdb.set_trace()
             date = rule_.after(max(now, last_date or now), last_date is None)
 
-    #offset is ntentionally integer, dateutil doesn't like fractional offsets
     offset = tz.utcoffset(now)
     offset_sec = (offset.days * 24 * 3600 + offset.seconds)
     offset_hrs = offset_sec // 3600

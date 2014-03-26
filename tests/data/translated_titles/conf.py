@@ -336,7 +336,7 @@ REDIRECTIONS = []
 # INDEXES_TITLE = ""         # If this is empty, defaults to BLOG_TITLE
 # INDEXES_PAGES = ""         # If this is empty, defaults to '[old posts,] page %d' (see above)
 # INDEXES_PAGES_MAIN = False # If True, INDEXES_PAGES is also displayed on
-                             # the main (the newest) index page (index.html)
+#                            # the main (the newest) index page (index.html)
 
 # Name of the theme to use.
 THEME = "bootstrap3"
@@ -607,11 +607,11 @@ COMMENT_SYSTEM_ID = "nikolademo"
 # <script src="/assets/js/tipuesearch.js"></script>
 # <script>
 # $(document).ready(function() {
-    # $('#tipue_search_input').tipuesearch({
-        # 'mode': 'json',
-        # 'contentLocation': '/assets/js/tipuesearch_content.json',
-        # 'showUrl': false
-    # });
+#     $('#tipue_search_input').tipuesearch({
+#         'mode': 'json',
+#         'contentLocation': '/assets/js/tipuesearch_content.json',
+#         'showUrl': false
+#     });
 # });
 # </script>
 # """
