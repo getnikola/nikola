@@ -51,6 +51,7 @@ Bugfixes
 
 * Removed dependency on pytz because mixing it with dateutil breaks things.
 * Use current system TZ for current_time (Issue #1161)
+* Fix links with full path in RSS for files outside root (Issue #1162)
 * ``nikola new_post`` now always outputs a newline at the end of file (Issue #1169)
 * Gallery code cleanup (Issue #1121)
 * USE_FILENAME_AS_TITLE works again (Issue #1073)
