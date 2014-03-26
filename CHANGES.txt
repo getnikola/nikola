@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Added FORCE_ISO8601 setting that currently makes new_post use ISO 8601 dates (via Issue #1156)
+* Added support for TZ specified in post date (Issue #1118)
 * Make ``nikola init`` ask about the site’s settings (Issue #1080)
 * Use natural sorting for files and folders list in listings and galleries (Issue #1144)
 * Added invariance testing (Issue #672)
@@ -47,6 +49,8 @@ Features
 Bugfixes
 --------
 
+* Removed dependency on pytz because mixing it with dateutil breaks things.
+* Use current system TZ for current_time (Issue #1161)
 * Fix links with full path in RSS for files outside root (Issue #1162)
 * ``nikola new_post`` now always outputs a newline at the end of file (Issue #1169)
 * Gallery code cleanup (Issue #1121)

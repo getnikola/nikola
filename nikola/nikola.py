@@ -43,7 +43,7 @@ try:
     import pyphen
 except ImportError:
     pyphen = None
-import pytz
+import dateutil.tz
 
 import logging
 from . import DEBUG
@@ -217,6 +217,7 @@ class Nikola(object):
             'ADDITIONAL_METADATA': {},
             'FILES_FOLDERS': {'files': ''},
             'FILTERS': {},
+            'FORCE_ISO8601': False,
             'GALLERY_PATH': 'galleries',
             'GALLERY_SORT_BY_DATE': True,
             'GZIP_COMMAND': None,
@@ -397,7 +398,7 @@ class Nikola(object):
             utils.LOGGER.warn("Your BASE_URL doesn't end in / -- adding it.")
 
         # We use one global tzinfo object all over Nikola.
-        self.tzinfo = pytz.timezone(self.config['TIMEZONE'])
+        self.tzinfo = dateutil.tz.gettz(self.config['TIMEZONE'])
         self.config['__tzinfo__'] = self.tzinfo
 
         self.plugin_manager = PluginManager(categories_filter={
@@ -813,7 +814,7 @@ class Nikola(object):
                 'guid': post.permalink(lang, absolute=True),
                 # PyRSS2Gen's pubDate is GMT time.
                 'pubDate': (post.date if post.date.tzinfo is None else
-                            post.date.astimezone(pytz.UTC)),
+                            post.date.astimezone(dateutil.tz.tzutc())),
                 'categories': post._tags.get(lang, []),
                 'creator': post.author(lang),
             }
