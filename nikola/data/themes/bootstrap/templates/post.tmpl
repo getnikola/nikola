@@ -1,6 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%namespace name="helper" file="post_helper.tmpl"/>
-<%namespace name="header" file="post_header.tmpl"/>
+<%namespace name="pheader" file="post_header.tmpl"/>
 <%namespace name="comments" file="comments_helper.tmpl"/>
 <%inherit file="base.tmpl"/>
 
@@ -17,7 +17,7 @@
 
 <%block name="content">
 <article class="post-${post.meta('type')} h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article">
-    ${header.html_post_header()}
+    ${pheader.html_post_header()}
     <div class="e-content entry-content" itemprop="articleBody text">
     ${post.text()}
     </div>
