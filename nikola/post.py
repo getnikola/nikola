@@ -37,13 +37,13 @@ try:
 except ImportError:
     from urllib.parse import urljoin  # NOQA
 
+import dateutil.tz
 import lxml.html
 import natsort
 try:
     import pyphen
 except ImportError:
     pyphen = None
-import pytz
 
 # for tearDown with _reload we cannot use 'from import' to get forLocaleBorg
 import nikola.utils
@@ -94,7 +94,7 @@ class Post(object):
         if self.config['FUTURE_IS_NOW']:
             self.current_time = None
         else:
-            self.current_time = current_time(tzinfo)
+            self.current_time = current_time()
         self.translated_to = set([])
         self._prev_post = None
         self._next_post = None
@@ -152,7 +152,7 @@ class Post(object):
                 default_metadata['date'] = datetime.datetime(2013, 12, 31, 23, 59, 59, tzinfo=tzinfo)
             else:
                 default_metadata['date'] = datetime.datetime.utcfromtimestamp(
-                    os.stat(self.source_path).st_ctime).replace(tzinfo=pytz.UTC).astimezone(tzinfo)
+                    os.stat(self.source_path).st_ctime).replace(tzinfo=dateutil.tz.tzutc()).astimezone(tzinfo)
 
         if 'title' not in default_metadata or 'slug' not in default_metadata \
                 or 'date' not in default_metadata:

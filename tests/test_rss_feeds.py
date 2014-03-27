@@ -15,17 +15,16 @@ import os
 import re
 import unittest
 
+import dateutil.tz
+from lxml import etree
 import mock
 
-from lxml import etree
 from .base import LocaleSupportInTesting
-
 import nikola
-import pytz
 
 fake_conf = defaultdict(str)
 fake_conf['TIMEZONE'] = 'UTC'
-fake_conf['__tzinfo__'] = pytz.UTC
+fake_conf['__tzinfo__'] = dateutil.tz.tzutc()
 fake_conf['DEFAULT_LANG'] = 'en'
 fake_conf['TRANSLATIONS'] = {'en': ''}
 fake_conf['BASE_URL'] = 'http://some.blog/'

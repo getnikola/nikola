@@ -30,6 +30,7 @@ from __future__ import print_function, unicode_literals
 from collections import defaultdict, Callable
 import calendar
 import datetime
+import dateutil.tz
 import hashlib
 import locale
 import logging
@@ -45,9 +46,10 @@ try:
 except ImportError:
     pass
 
+import dateutil.parser
+import dateutil.tz
 import logbook
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
-import pytz
 
 from . import DEBUG
 
@@ -620,41 +622,16 @@ def extract_all(zipfile, path='themes'):
     os.chdir(pwd)
 
 
-# From https://github.com/lepture/liquidluck/blob/develop/liquidluck/utils.py
 def to_datetime(value, tzinfo=None):
-    if isinstance(value, datetime.datetime):
-        return value
-    supported_formats = [
-        '%Y/%m/%d %H:%M',
-        '%Y/%m/%d %H:%M:%S',
-        '%Y/%m/%d %I:%M:%S %p',
-        '%a %b %d %H:%M:%S %Y',
-        '%Y-%m-%d %H:%M:%S',
-        '%Y-%m-%d %H:%M',
-        '%Y-%m-%dT%H:%M',
-        '%Y%m%d %H:%M:%S',
-        '%Y%m%d %H:%M',
-        '%Y-%m-%d',
-        '%Y%m%d',
-    ]
-    for format in supported_formats:
-        try:
-            dt = datetime.datetime.strptime(value, format)
-            if tzinfo is None:
-                return dt
-            # Build a localized time by using a given time zone.
-            return tzinfo.localize(dt)
-        except ValueError:
-            pass
-    # So, let's try dateutil
     try:
-        from dateutil import parser
-        dt = parser.parse(value)
-        if tzinfo is None or dt.tzinfo:
-            return dt
-        return tzinfo.localize(dt)
-    except ImportError:
-        raise ValueError('Unrecognized date/time: {0!r}, try installing dateutil...'.format(value))
+        if not isinstance(value, datetime.datetime):
+            # dateutil does bad things with TZs like UTC-03:00.
+            dateregexp = re.compile(r' UTC([+-][0-9][0-9]:[0-9][0-9])')
+            value = re.sub(dateregexp, r'\1', value)
+            value = dateutil.parser.parse(value)
+        if not value.tzinfo:
+            value = value.replace(tzinfo=tzinfo)
+        return value
     except Exception:
         raise ValueError('Unrecognized date/time: {0!r}'.format(value))
 
@@ -662,28 +639,19 @@ def to_datetime(value, tzinfo=None):
 def get_tzname(dt):
     """
     Given a datetime value, find the name of the time zone.
-    """
-    try:
-        from dateutil import tz
-    except ImportError:
-        raise ValueError('Unrecognized date/time: {0!r}, try installing dateutil...'.format(dt))
 
-    tzoffset = dt.strftime('%z')
-    for name in pytz.common_timezones:
-        timezone = tz.gettz(name)
-        now = dt.now(timezone)
-        offset = now.strftime('%z')
-        if offset == tzoffset:
-            return name
-    raise ValueError('Unrecognized date/time: {0!r}'.format(dt))
+    DEPRECATED: This thing returned basically the 1st random zone
+    that matched the offset.
+    """
+    return dt.tzname()
 
 
 def current_time(tzinfo=None):
-    dt = datetime.datetime.utcnow()
     if tzinfo is not None:
+        dt = datetime.datetime.utcnow()
         dt = tzinfo.fromutc(dt)
     else:
-        dt = pytz.UTC.localize(dt)
+        dt = datetime.datetime.now(dateutil.tz.tzlocal())
     return dt
 
 

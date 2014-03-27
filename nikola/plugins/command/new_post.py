@@ -27,10 +27,12 @@
 from __future__ import unicode_literals, print_function
 import codecs
 import datetime
+import locale
 import os
 import sys
 
 from blinker import signal
+import dateutil.tz
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -82,7 +84,7 @@ def get_default_compiler(is_post, compilers, post_pages):
     return 'rest'
 
 
-def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=None):
+def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=None, iso8601=False):
     """Returns a date stamp, given a recurrence rule.
 
     schedule - bool:
@@ -101,8 +103,13 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
     tz - tzinfo:
         the timezone used for getting the current time.
 
+    iso8601 - bool:
+        whether to force ISO 8601 dates (instead of locale-specific ones)
+
     """
 
+    if tz is None:
+        tz = dateutil.tz.tzlocal()
     date = now = datetime.datetime.now(tz)
     if schedule:
         try:
@@ -112,9 +119,6 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
                          'you have to install the "dateutil" package.')
             rrule = None  # NOQA
     if schedule and rrule and rule:
-        if last_date and last_date.tzinfo:
-            # strip tzinfo for comparisons
-            last_date = last_date.replace(tzinfo=None)
         try:
             rule_ = rrule.rrulestr(rule, dtstart=last_date)
         except Exception:
@@ -124,7 +128,23 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
             if force_today:
                 now = now.replace(hour=0, minute=0, second=0, microsecond=0)
             date = rule_.after(max(now, last_date or now), last_date is None)
-    return date.strftime('%Y/%m/%d %H:%M:%S')
+
+    offset = tz.utcoffset(now)
+    offset_sec = (offset.days * 24 * 3600 + offset.seconds)
+    offset_hrs = offset_sec // 3600
+    offset_min = offset_sec % 3600
+    if iso8601:
+        tz_str = '{0:+03d}:{1:02d}'.format(offset_hrs, offset_min // 60)
+        return date.strftime('%Y-%m-%dT%T') + tz_str
+    else:
+        if offset:
+            tz_str = ' UTC{0:+03d}:{1:02d}'.format(offset_hrs, offset_min // 60)
+        else:
+            tz_str = ' UTC'
+        return date.strftime('{0} {1}'.format(
+            locale.nl_langinfo(locale.D_FMT),
+            locale.nl_langinfo(locale.T_FMT),
+        )) + tz_str
 
 
 class CommandNewPost(Command):
@@ -267,7 +287,7 @@ class CommandNewPost(Command):
         self.site.scan_posts()
         timeline = self.site.timeline
         last_date = None if not timeline else timeline[0].date
-        date = get_date(schedule, rule, last_date, force_today, self.site.tzinfo)
+        date = get_date(schedule, rule, last_date, force_today, self.site.tzinfo, self.site.config['FORCE_ISO8601'])
         data = [title, slug, date, tags]
         output_path = os.path.dirname(entry[0])
         meta_path = os.path.join(output_path, slug + ".meta")

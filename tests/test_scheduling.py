@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
 
-# This code is so you can run the samples without installing the package,
-# and should be before any import touching nikola, in any file under tests/
+import datetime
+import locale
 import os
 import sys
+# This code is so you can run the samples without installing the package,
+# and should be before any import touching nikola, in any file under tests/
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
+import dateutil.parser
+import dateutil.tz
+import pytest
 
 from .base import BaseTestCase
-import datetime
-import pytest
 
 try:
     from freezegun import freeze_time
@@ -19,11 +22,8 @@ except ImportError:
     _freeze_time = False
     freeze_time = lambda x: lambda y: y
 
-FMT = '%Y/%m/%d %H:%M:%S'
-NOW = '2013/08/22 10:00:00'  # Thursday
-TODAY = datetime.datetime.strptime(NOW, FMT)
-RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
-RULE_FR = 'RRULE:FREQ=WEEKLY;BYDAY=FR'
+_NOW = datetime.datetime(  # Thursday
+    2013, 8, 22, 10, 0, 0, tzinfo=dateutil.tz.tzutc())
 
 
 @pytest.mark.skipif(not _freeze_time, reason="freezegun not installed.")
@@ -42,102 +42,114 @@ class TestScheduling(BaseTestCase):
         for name, mod in cls.deleted.items():
             sys.modules[name] = mod
 
-    @freeze_time(NOW)
+    @freeze_time(_NOW)
     def test_get_date(self):
         from nikola.plugins.command.new_post import get_date
+
+        # This is now locale-dependent, so do it here, where
+        # locale is set.
+        FMT = '{0} {1} %Z'.format(
+            locale.nl_langinfo(locale.D_FMT),
+            locale.nl_langinfo(locale.T_FMT),
+        )
+        NOW = _NOW.strftime(FMT)
+        TODAY = dateutil.parser.parse(NOW)
+        RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
+        RULE_FR = 'RRULE:FREQ=WEEKLY;BYDAY=FR'
+        UTC = dateutil.tz.tzutc()
 
         #### NOW does not match rule #########################################
         ## No last date
         expected = TODAY.replace(day=23).strftime(FMT)
-        self.assertEqual(expected, get_date(True, RULE_FR))
-        self.assertEqual(expected, get_date(True, RULE_FR, force_today=True))
+        self.assertEqual(expected, get_date(True, RULE_FR, tz=UTC))
+        self.assertEqual(expected, get_date(True, RULE_FR, tz=UTC, force_today=True))
 
         ## Last date in the past; doesn't match rule
         date = TODAY.replace(hour=7)
         expected = TODAY.replace(day=23, hour=7).strftime(FMT)
-        self.assertEqual(expected, get_date(True, RULE_FR, date))
-        self.assertEqual(expected, get_date(True, RULE_FR, date, True))
+        self.assertEqual(expected, get_date(True, RULE_FR, date, tz=UTC))
+        self.assertEqual(expected, get_date(True, RULE_FR, date, True, tz=UTC))
 
         ## Last date in the future; doesn't match rule
         date = TODAY.replace(day=24, hour=7)
         expected = TODAY.replace(day=30, hour=7).strftime(FMT)
-        self.assertEqual(expected, get_date(True, RULE_FR, date))
-        self.assertEqual(expected, get_date(True, RULE_FR, date, True))
+        self.assertEqual(expected, get_date(True, RULE_FR, date, tz=UTC))
+        self.assertEqual(expected, get_date(True, RULE_FR, date, True, tz=UTC))
 
         ## Last date in the past; matches rule
         date = TODAY.replace(day=16, hour=8)
         expected = TODAY.replace(day=23, hour=8).strftime(FMT)
-        self.assertEqual(expected, get_date(True, RULE_FR, date))
-        self.assertEqual(expected, get_date(True, RULE_FR, date, True))
+        self.assertEqual(expected, get_date(True, RULE_FR, date, tz=UTC))
+        self.assertEqual(expected, get_date(True, RULE_FR, date, True, tz=UTC))
 
         ## Last date in the future; matches rule
         date = TODAY.replace(day=23, hour=18)
         expected = TODAY.replace(day=30, hour=18).strftime(FMT)
-        self.assertEqual(expected, get_date(True, RULE_FR, date))
-        self.assertEqual(expected, get_date(True, RULE_FR, date, True))
+        self.assertEqual(expected, get_date(True, RULE_FR, date, tz=UTC))
+        self.assertEqual(expected, get_date(True, RULE_FR, date, True, tz=UTC))
 
         #### NOW matches rule ################################################
         ## Not scheduling should return NOW
-        self.assertEqual(NOW, get_date(False, RULE_TH))
+        self.assertEqual(NOW, get_date(False, RULE_TH, tz=UTC))
         ## No last date
-        self.assertEqual(NOW, get_date(True, RULE_TH))
-        self.assertEqual(NOW, get_date(True, RULE_TH, force_today=True))
+        self.assertEqual(NOW, get_date(True, RULE_TH, tz=UTC))
+        self.assertEqual(NOW, get_date(True, RULE_TH, force_today=True, tz=UTC))
 
         ## Last date in the past; doesn't match rule
         ### Corresponding time has already passed, today
         date = TODAY.replace(day=21, hour=7)
         expected = TODAY.replace(day=29, hour=7).strftime(FMT)
-        self.assertEqual(expected, get_date(True, RULE_TH, date))
+        self.assertEqual(expected, get_date(True, RULE_TH, date, tz=UTC))
         expected = TODAY.replace(day=22, hour=7).strftime(FMT)
-        self.assertEqual(expected, get_date(True, RULE_TH, date, True))
+        self.assertEqual(expected, get_date(True, RULE_TH, date, True, tz=UTC))
         ### Corresponding time has not passed today
         date = TODAY.replace(day=21, hour=18)
         expected = TODAY.replace(day=22, hour=18).strftime(FMT)
-        self.assertEqual(expected, get_date(True, RULE_TH, date))
-        self.assertEqual(expected, get_date(True, RULE_TH, date, True))
+        self.assertEqual(expected, get_date(True, RULE_TH, date, tz=UTC))
+        self.assertEqual(expected, get_date(True, RULE_TH, date, True, tz=UTC))
 
         ## Last date in the future; doesn't match rule
         ### Corresponding time has already passed, today
         date = TODAY.replace(day=24, hour=7)
         expected = TODAY.replace(day=29, hour=7).strftime(FMT)
-        self.assertEqual(expected, get_date(True, RULE_TH, date))
-        self.assertEqual(expected, get_date(True, RULE_TH, date, True))
+        self.assertEqual(expected, get_date(True, RULE_TH, date, tz=UTC))
+        self.assertEqual(expected, get_date(True, RULE_TH, date, True, tz=UTC))
         ### Corresponding time has not passed today
         date = TODAY.replace(day=24, hour=18)
         expected = TODAY.replace(day=29, hour=18).strftime(FMT)
-        self.assertEqual(expected, get_date(True, RULE_TH, date))
-        self.assertEqual(expected, get_date(True, RULE_TH, date, True))
+        self.assertEqual(expected, get_date(True, RULE_TH, date, tz=UTC))
+        self.assertEqual(expected, get_date(True, RULE_TH, date, True, tz=UTC))
 
         ## Last date in the past; matches rule
         ### Corresponding time has already passed, today
         date = TODAY.replace(day=15, hour=7)
         expected = TODAY.replace(day=29, hour=7).strftime(FMT)
-        self.assertEqual(expected, get_date(True, RULE_TH, date))
+        self.assertEqual(expected, get_date(True, RULE_TH, date, tz=UTC))
         expected = TODAY.replace(day=22, hour=7).strftime(FMT)
-        self.assertEqual(expected, get_date(True, RULE_TH, date, True))
+        self.assertEqual(expected, get_date(True, RULE_TH, date, True, tz=UTC))
         ### Corresponding time has already passed, today; rule specifies HOUR
         date = TODAY.replace(day=15, hour=7)
         expected = TODAY.replace(day=29, hour=9).strftime(FMT)
-        self.assertEqual(expected, get_date(True, RULE_TH + ';BYHOUR=9', date))
+        self.assertEqual(expected, get_date(True, RULE_TH + ';BYHOUR=9', date, tz=UTC))
         expected = TODAY.replace(day=22, hour=9).strftime(FMT)
         self.assertEqual(expected,
-                         get_date(True, RULE_TH + ';BYHOUR=9', date, True))
+                         get_date(True, RULE_TH + ';BYHOUR=9', date, True, tz=UTC))
         ### Corresponding time has not passed today
         date = TODAY.replace(day=15, hour=18)
         expected = TODAY.replace(day=22, hour=18).strftime(FMT)
-        self.assertEqual(expected, get_date(True, RULE_TH, date))
-        self.assertEqual(expected, get_date(True, RULE_TH, date, True))
+        self.assertEqual(expected, get_date(True, RULE_TH, date, tz=UTC))
+        self.assertEqual(expected, get_date(True, RULE_TH, date, True, tz=UTC))
 
         ## Last date in the future; matches rule
         ### Corresponding time has already passed, today
         date = TODAY.replace(day=29, hour=7)
         expected = TODAY.replace(day=5, month=9, hour=7).strftime(FMT)
-        self.assertEqual(expected, get_date(True, RULE_TH, date))
+        self.assertEqual(expected, get_date(True, RULE_TH, date, tz=UTC))
         ### Corresponding time has not passed today
         date = TODAY.replace(day=22, hour=18)
         expected = TODAY.replace(day=29, hour=18).strftime(FMT)
-        self.assertEqual(expected, get_date(True, RULE_TH, date))
-        self.assertEqual(expected, get_date(True, RULE_TH, date, True))
+        self.assertEqual(expected, get_date(True, RULE_TH, date, tz=UTC))
+        self.assertEqual(expected, get_date(True, RULE_TH, date, True, tz=UTC))
 
 if __name__ == '__main__':
     import unittest
