@@ -150,50 +150,23 @@ def install_manpages(root, prefix):
         print("Not installing the man pages:", e)
 
 def remove_old_files(self):
-    base = os.path.join(self.install_lib, 'nikola')
-    to_remove = [
-        'data/themes/base/templates/disqus_helper.tmpl',
-        'data/themes/base/templates/facebook_helper.tmpl',
-        'data/themes/base/templates/googleplus_helper.tmpl',
-        'data/themes/base/templates/intensedebate_helper.tmpl',
-        'data/themes/base/templates/isso_helper.tmpl',
-        'data/themes/base/templates/livefyre_helper.tmpl',
-        'data/themes/base/templates/moot_helper.tmpl',
-        'data/themes/base/templates/mustache-comment-form.tmpl',
-        'data/themes/base-jinja/templates/disqus_helper.tmpl',
-        'data/themes/base-jinja/templates/facebook_helper.tmpl',
-        'data/themes/base-jinja/templates/googleplus_helper.tmpl',
-        'data/themes/base-jinja/templates/intensedebate_helper.tmpl',
-        'data/themes/base-jinja/templates/isso_helper.tmpl',
-        'data/themes/base-jinja/templates/livefyre_helper.tmpl',
-        'data/themes/base-jinja/templates/moot_helper.tmpl',
-        'data/themes/base-jinja/templates/mustache-comment-form.tmpl',
-        'data/themes/bootstrap/templates/bootstrap_helper.tmpl',
-        'data/themes/bootstrap-jinja/templates/bootstrap_helper.tmpl',
-        'data/themes/bootstrap3/templates/bootstrap_helper.tmpl',
-        'data/themes/bootstrap3/templates/list.tmpl',
-        'data/themes/bootstrap3/templates/list_post.tmpl',
-        'data/themes/bootstrap3/templates/post.tmpl',
-        'data/themes/bootstrap3/templates/tags.tmpl',
-        'data/themes/bootstrap3-jinja/templates/bootstrap_helper.tmpl',
-        'data/themes/bootstrap3-jinja/templates/list.tmpl',
-        'data/themes/bootstrap3-jinja/templates/list_post.tmpl',
-        'data/themes/bootstrap3-jinja/templates/post.tmpl',
-        'data/themes/bootstrap3-jinja/templates/tags.tmpl',
-    ]
-    for f in to_remove:
-        try:
-            os.remove(os.path.join(base, f))
-        except:
-            pass
-        else:
-            print('removing', os.path.join(base, f))
+    tree = os.path.join(self.install_lib, 'nikola', 'data')
+    tree2 = os.path.join('build', 'lib', 'nikola', 'data')
+    try:
+        shutil.rmtree(tree, ignore_errors = True)
+    except:
+        pass
+
+    try:
+        shutil.rmtree(tree2, ignore_errors = True)
+    except:
+        pass
 
 class nikola_install(install):
     def run(self):
         copy_symlinked_for_windows()
-        install.run(self)
         remove_old_files(self)
+        install.run(self)
         install_manpages(self.root, self.prefix)
 
 
