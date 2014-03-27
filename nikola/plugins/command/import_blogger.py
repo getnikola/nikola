@@ -108,8 +108,8 @@ class CommandImportBlogger(Command, ImportMixin):
     @staticmethod
     def populate_context(channel):
         context = SAMPLE_CONF.copy()
-        context['DEFAULT_LANG'] = 'en'  # blogger doesn't include the language
-                                        # in the dump
+        # blogger doesn't include the language in the dump
+        context['DEFAULT_LANG'] = 'en'
         context['BLOG_TITLE'] = channel.feed.title
 
         context['BLOG_DESCRIPTION'] = ''  # Missing in the dump

@@ -120,9 +120,8 @@ class Mustache(Task):
                     continue
                 translations.append({'name':
                                      kw["messages"][langname]["Read in English"],
-                                    'link': "javascript:load_data('%s');"
-                                    % post.permalink(langname).replace(
-                                        ".html", ".json")})
+                                    'link': "javascript:load_data('%s');" % post.permalink(langname).replace(".html", ".json")
+                                     })
             data["translations"] = translations
 
             makedirs(os.path.dirname(path))

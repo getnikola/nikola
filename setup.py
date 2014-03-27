@@ -15,6 +15,19 @@ import shutil
 
 from setuptools import setup
 from setuptools.command.install import install
+from setuptools.command.test import test as TestCommand
+
+class PyTest(TestCommand):
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+    def run_tests(self):
+        #import here, cause outside the eggs aren't loaded
+        import pytest
+        errno = pytest.main(self.test_args)
+        sys.exit(errno)
+
 
 with open('requirements.txt', 'r') as fh:
     dependencies = [l.strip() for l in fh]
@@ -187,9 +200,10 @@ setup(name='Nikola',
                    'Topic :: Internet :: WWW/HTTP',
                    'Topic :: Text Processing :: Markup'),
       install_requires=dependencies,
-      extras_require = extras,
+      extras_require=extras,
+      tests_require=['pytest'],
       include_package_data=True,
-      cmdclass={'install': nikola_install},
+      cmdclass={'install': nikola_install, 'test': PyTest},
       data_files=[
               ('share/doc/nikola', [
                'docs/manual.txt',

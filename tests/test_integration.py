@@ -486,11 +486,11 @@ class InvariantBuildTest(EmptyBuildTest):
 
     def test_invariance(self):
         """Compare the output to the canonical output."""
-        #if sys.version_info[0] == 2 and sys.version_info[1] < 7:
-            #pytest.skip('your python is too old')
         if sys.version_info[0:2] != (2, 7):
             pytest.skip('only python 2.7 is supported right now')
         good_path = os.path.join(os.path.dirname(__file__), 'data', 'baseline{0[0]}.{0[1]}'.format(sys.version_info))
+        if not os.path.exists(good_path):
+            pytest.skip('no baseline found')
         with cd(self.target_dir):
             try:
                 diff = subprocess.check_output(['diff', '-ur', good_path, 'output'])

@@ -6,9 +6,8 @@ Features
 
 * The base theme produces properly sectioned and semantic HTML5 (Issues #1123, #1137)
 * The base theme comes with a new stylish look by default (Issue #1137)
-* The base theme supports RTL [in the future] using ::dir(rtl) CSS4 rules (Issue #1137)
-* Bootstrap 2.3.0 updated to 2.3.2
-
+* The base theme supports Right-to-Left by using ::dir(rtl) CSS4 rules (Issue #1137)
+* Bootstrap 2 updated to 2.3.2 (via Issue #1137)
 * Make ``nikola init`` ask about the site’s settings (Issue #1080)
 * Use natural sorting for files and folders list in listings and galleries (Issue #1144)
 * Added invariance testing (Issue #672)
@@ -52,7 +51,9 @@ Features
 Bugfixes
 --------
 
-* Galleries works in none-Bootstrap based themes
+* Galleries are more usable in non-Bootstrap-based themes (Issue #1137)
+* Fix links with full path in RSS for files outside root (Issue #1162)
+* ``nikola new_post`` now always outputs a newline at the end of file (Issue #1169)
 * Gallery code cleanup (Issue #1121)
 * USE_FILENAME_AS_TITLE works again (Issue #1073)
 * Rebuild CSS bundles when files change, and also when files are removed (Issue #1153)
