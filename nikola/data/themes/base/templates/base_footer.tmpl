@@ -1,0 +1,10 @@
+## -*- coding: utf-8 -*-
+<%namespace name="base" file="base_helper.tmpl" import="*"/>
+
+<%def name="html_footer()">
+    %if content_footer:
+        <footer id="footer" role="contentinfo">
+            <p>${content_footer}</p>
+        </footer>
+    %endif
+</%def>

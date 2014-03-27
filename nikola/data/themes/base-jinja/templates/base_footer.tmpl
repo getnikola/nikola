@@ -1,0 +1,10 @@
+{#  -*- coding: utf-8 -*- #}
+{% import 'base_helper.tmpl' as base with context %}
+
+{% macro html_footer() %}
+    {% if content_footer %}
+        <footer id="footer" role="contentinfo">
+            <p>{{ content_footer }}</p>
+        </footer>
+    {% endif %}
+{% endmacro %}

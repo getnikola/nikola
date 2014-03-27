@@ -1,0 +1,40 @@
+{#  -*- coding: utf-8 -*- #}
+{% import 'post_helper.tmpl' as helper with context %}
+{% import 'comments_helper.tmpl' as comments with context %}
+
+{% macro html_title() %}
+    <h1 class="p-name entry-title" itemprop="headline name"><a href="{{ post.permalink() }}" class="u-url">{{ title|e }}</a></h1>
+{% endmacro %}
+
+{% macro html_translations(post) %}
+    {% if translations|length > 1 %}
+        <div class="metadata posttranslations translations">
+            <h3 class="posttranslations-intro">{{ messages("Also available in:") }}</h3>
+            {% for langname in translations.keys() %}
+                {% if langname != lang and post.is_translation_available(langname) %}
+                <p><a href="{{ post.permalink(langname) }}" rel="alternate" hreflang="{{ langname }}">{{ messages("LANGUAGE", langname) }}</a></p>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro html_post_header() %}
+    <header>
+        {{ html_title() }}
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">{{ post.author() }}</span></p>
+            <p class="dateline"><a href="{{ post.permalink() }}" rel="bookmark"><time class="published dt-published" datetime="{{ post.date.isoformat() }}" itemprop="datePublished" title="{{ messages("Publication date") }}">{{ post.formatted_date(date_format) }}</time></a></p>
+            {% if not post.meta('nocomments') and site_has_comments %}
+                <p class="commentline">{{ comments.comment_link(post.permalink(), post._base_path) }}
+            {% endif %}
+            {% if post.meta('link') %}
+                    <p><a href='{{ post.meta('link') }}'>{{ messages("Original site") }}</a></p>
+            {% endif %}
+            {% if post.description() %}
+                <meta content="{{ post.description() }}" itemprop="description">
+            {% endif %}
+        </div>
+        {{ html_translations(post) }}
+    </header>
+{% endmacro %}

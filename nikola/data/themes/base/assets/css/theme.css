@@ -1,1 +1,230 @@
-/* This file intentionally left blank. */
+@charset "UTF-8";
+
+/*
+	Copyright © 2014 Daniel Aleksandersen and others.
+
+	Permission is hereby granted, free of charge, to any
+	person obtaining a copy of this software and associated
+	documentation files (the "Software"), to deal in the
+	Software without restriction, including without limitation
+	the rights to use, copy, modify, merge, publish,
+	distribute, sublicense, and/or sell copies of the
+	Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice
+	shall be included in all copies or substantial portions of
+	the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+	KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+	WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+	PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
+	OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+	OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+	OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+body {
+	color: #4F5151;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 17px;
+	line-height: 1.4;
+	padding: 1em;
+}
+#container {
+	margin: 1em auto;
+	max-width: 770px;
+}
+#menu ul,
+#menu ul li,
+.postpromonav .tags,
+.postpromonav .tags li,
+.pager,
+.pager li,
+#toptranslations ul,
+#toptranslations ul li {
+	list-style: none;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+#toptranslations ul {
+	display: inline;
+}
+
+#menu ul li,
+#toptranslations ul li {
+	display: inline-block;
+	margin-right: 1.5em;
+}
+
+#toptranslations h2 {
+	display: inline;
+	font-size: 1em;
+	margin-right: 1.5em;
+}
+
+#menu ul li:dir(rtl),
+#toptranslations ul li:dir(rtl),
+#toptranslations h2:dir(rtl) {
+	margin-left: 1.5em;
+	margin-right: 0;
+}
+
+#toptranslations {
+	text-align: right;
+	float: right;
+}
+
+#toptranslations:dir(rtl) {
+	text-align: left;
+	float: left;
+}
+
+.posttranslations h3 {
+	display: inline;
+	font-size: 1em;
+}
+
+.posttranslations h3:last-child {
+	display: none;
+}
+
+.postindex article {
+	border-bottom: 1px solid #4F5151;
+	padding-bottom: 1em;
+}
+#header {
+	border-bottom: 1px solid #4F5151;
+}
+#footer {
+	border-top: 1px solid #4F5151;
+}
+.postpromonav {
+	border-bottom: 1px solid #4F5151;
+	border-top: 1px solid #4F5151;
+	margin-top: 1em;
+	padding: .5em 0;
+}
+.postpromonav .tags {
+	text-align: center;
+}
+.metadata p:before,
+.postpromonav .tags li:before,
+.postlist .listdate:before {
+	content: " — ";
+}
+.postlist li {
+	margin-bottom: .33em;
+}
+.postindexpager .pager .next:before {
+	content: "↓ ";
+}
+.postindexpager .pager .previous:before {
+	content: "↑ ";
+}
+.postpromonav .pager .next:after {
+	content: " →";
+}
+.postpromonav .pager .previous:dir(rtl):after {
+	content: " →";
+}
+.postpromonav .pager .previous:before {
+	content: "← ";
+}
+.postpromonav .pager .next:dir(rtl):before {
+	content: "← ";
+}
+.metadata p:first-of-type:before,
+.postpromonav .tags li:first-of-type:before {
+	content: "";
+}
+.postpromonav .pager {
+	height: 1em;
+}
+.postpromonav .tags li,
+.postpromonav .pager li {
+	display: inline-block;
+}
+.postpromonav .pager .next {
+	float: right;
+}
+.postpromonav .pager .next:dir(rtl) {
+	float: left;
+}
+.metadata p {
+	display: inline;
+}
+:link {
+	color: #1168CC;
+	text-decoration: none;
+}
+:visited {
+	color: #6830BB;
+}
+:link:hover, :visited:hover {
+	color: #0d53a3;
+}
+#blog-title {
+	font-size: 3em;
+	line-height: 1;
+}
+#blog-title :link, 
+#blog-title :visited {
+	color: inherit;
+}
+
+.postpage img,
+.postpage object,
+.postindex article img,
+.postindex article object {
+	height: auto;
+	max-width: 100%;
+}
+
+/* Comment helpers */
+#disqus_thread {
+	min-height: 325px;
+}
+
+.breadcrumb {
+	padding: 8px 15px;
+	margin-bottom: 20px;
+	list-style: none;
+}
+
+.breadcrumb > li {
+	display: inline-block;
+	margin-right: 0;
+	margin-left: 0;
+}
+
+.breadcrumb > li:after {
+	content: ' / ';
+	color: #888;
+}
+
+.breadcrumb > li:last-of-type:after {
+	content: '';
+	margin-left: 0;
+}
+
+.thumbnails {
+	list-style: none;
+	padding: 0;
+}
+
+.thumbnails > li {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.thumbnails > li:last-of-type {
+	margin-right: 0;
+}
+
+.codetable .linenos {
+	padding-right: 10px;
+}

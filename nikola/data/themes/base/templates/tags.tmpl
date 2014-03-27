@@ -1,10 +1,14 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="base.tmpl"/>
+
 <%block name="content">
-    <h1>${title}</h1>
+<article class="tagindex">
+    <header>
+        <h1>${title}</h1>
+    </header>
     % if cat_items:
         <h2>${messages("Categories")}</h2>
-        <ul class="unstyled bricks">
+        <ul class="postlist">
         % for text, link in cat_items:
             % if text:
                 <li><a class="reference" href="${link}">${text}</a></li>
@@ -16,10 +20,11 @@
         % endif
     %endif
     % if items:
-        <ul class="unstyled bricks">
+        <ul class="postlist">
         % for text, link in items:
-            <li><a class="reference" href="${link}">${text}</a></li>
+            <li><a class="reference listtitle" href="${link}">${text}</a></li>
         % endfor
         </ul>
     % endif
+</article>
 </%block>

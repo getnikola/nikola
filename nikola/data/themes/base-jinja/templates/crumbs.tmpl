@@ -2,10 +2,12 @@
 
 {% macro bar(crumbs) %}
 {% if crumbs %}
+<nav class="breadcrumbs">
 <ul class="breadcrumb">
     {% for link, text in crumbs %}
         <li><a href="{{ link }}">{{ text }}</a></li>
     {% endfor %}
 </ul>
+</nav>
 {% endif %}
 {% endmacro %}

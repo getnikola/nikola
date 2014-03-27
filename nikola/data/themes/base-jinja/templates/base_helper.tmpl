@@ -1,12 +1,63 @@
 {#  -*- coding: utf-8 -*- #}
-{% macro html_head() %}
+
+{% macro html_headstart() %}
+<!DOCTYPE html>
+<html
+
+{% if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']) or (comment_system == 'facebook') %}
+    prefix='
+    {% if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']) %}
+        og: http://ogp.me/ns#
+    {% endif %}
+    {% if use_open_graph %}
+        article: http://ogp.me/ns/article#
+    {% endif %}
+    {% if comment_system == 'facebook' %}
+        fb: http://ogp.me/ns/fb#
+    {% endif %}
+    '
+{% endif %}
+
+lang="{{ lang }}">
+    <head>
     <meta charset="utf-8">
     {% if description %}
     <meta name="description" content="{{ description }}">
     {% endif %}
-    <meta name="author" content="{{ blog_author }}">
+    <meta name="viewport" content="width=device-width">
     <title>{{ title|e }} | {{ blog_title|e }}</title>
+
+    {{ html_stylesheets() }}
+    {{ html_feedlinks() }}
+    {% if permalink %}
+      <link rel="canonical" href="{{ abs_link(permalink) }}">
+    {% endif %}
+
+    {% if favicons %}
+        {% for name, file, size in favicons %}
+            <link rel="{{ name }}" href="{{ file }}" sizes="{{ size }}"/>
+        {% endfor %}
+    {% endif %}
+
+    {% if comment_system == 'facebook' %}
+        <meta property="fb:app_id" content="{{ comment_system_id }}">
+    {% endif %}
+
     {{ mathjax_config }}
+    {% if use_cdn %}
+        <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    {% else %}
+        <!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]-->
+    {% endif %}
+
+    {{ extra_head_data }}
+{% endmacro %}
+
+{% macro late_load_js() %}
+    {{ social_buttons_code }}
+{% endmacro %}
+
+{% macro html_stylesheets() %}
     {% if use_bundles %}
         {% if use_cdn %}
             <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
@@ -16,17 +67,14 @@
     {% else %}
         <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
-        <link href="/assets/css/theme.css" rel="stylesheet" type="text/css"/>
+        <link href="/assets/css/theme.css" rel="stylesheet" type="text/css">
         {% if has_custom_css %}
             <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
         {% endif %}
     {% endif %}
-    {% if permalink %}
-      <link rel="canonical" href="{{ abs_link(permalink) }}">
-    {% endif %}
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+{% endmacro %}
+
+{% macro html_feedlinks() %}
     {% if rss_link %}
         {{ rss_link }}
     {% else %}
@@ -38,51 +86,14 @@
             <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ _link('rss', None) }}">
         {% endif %}
     {% endif %}
-    {% if favicons %}
-        {% for name, file, size in favicons %}
-            <link rel="{{ name }}" href="{{ file }}" sizes="{{ size }}"/>
-        {% endfor %}
-    {% endif %}
-    {% if comment_system == 'facebook' %}
-        <meta property="fb:app_id" content="{{ comment_system_id }}">
-    {% endif %}
 {% endmacro %}
-
-{% macro late_load_js() %}
-{% endmacro %}
-
-{% macro html_social() %}
-    {{ social_buttons_code }}
-{% endmacro %}
-
-{% macro html_navigation_links() %}
-    {% for url, text in navigation_links[lang] %}
-        {% if url is mapping %}
-            <li> {{ text }}
-            <ul>
-            {% for suburl, text in url %}
-                {% if rel_link(permalink, suburl) == "#" %}
-                    <li class="active"><a href="{{ permalink }}">{{ text }}</a>
-                {% else %}
-                    <li><a href="{{ suburl }}">{{ text }}</a>
-                {% endif %}
-            {% endfor %}
-            </ul>
-        {% else %}
-            {% if rel_link(permalink, url) == "#" %}
-                <li class="active"><a href="{{ permalink }}">{{ text }}</a>
-            {% else %}
-                <li><a href="{{ url }}">{{ text }}</a>
-            {% endif %}
-        {% endif %}
-    {% endfor %}
-{% endmacro %}
-
 
 {% macro html_translations() %}
+    <ul class="translations">
     {% for langname in translations.keys() %}
         {% if langname != lang %}
-            <a href="{{ _link("index", None, langname) }}" rel="alternate" hreflang="{{ langname }}">{{ messages("LANGUAGE", langname) }}</a>
+            <li><a href="{{ _link("index", None, langname) }}" rel="alternate" hreflang="{{ langname }}">{{ messages("LANGUAGE", langname) }}</a></li>
         {% endif %}
     {% endfor %}
+    </ul>
 {% endmacro %}

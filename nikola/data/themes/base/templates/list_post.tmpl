@@ -1,16 +1,19 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="base.tmpl"/>
+
 <%block name="content">
-        <!--Body content-->
-        <div class="postbox">
+<article class="listpage">
+    <header>
         <h1>${title}</h1>
-        %if posts:
-        <ul class="unstyled">
-        % for post in posts:
-            <li><a href="${post.permalink()}">[${post.formatted_date(date_format)}] ${post.title()}</a>
-        % endfor
-        </ul>
-        %endif
-        </div>
-        <!--End of body content-->
+    </header>
+    %if posts:
+    <ul class="postlist">
+    % for post in posts:
+        <li><a href="${post.permalink()}" class="listtitle">${post.title()}</a> <time class="listdate" datetime="${post.date.isoformat()}" title="${messages("Publication date")}">${post.formatted_date(date_format)}</time></li>
+    % endfor
+    </ul>
+    %else:
+    <p>${messages("No posts found.")}</p>
+    %endif
+</article>
 </%block>

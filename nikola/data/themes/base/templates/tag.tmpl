@@ -1,6 +1,8 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="list_post.tmpl"/>
+
 <%block name="extra_head">
+    ${parent.extra_head()}
     %if len(translations) > 1:
         %for language in translations:
             <link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for ${kind} ${tag} (${language})" href="${_link(kind + "_rss", tag, language)}">
@@ -10,25 +12,29 @@
     %endif
 </%block>
 
+
 <%block name="content">
-        <!--Body content-->
-        <div class="postbox">
+<article class="tagpage">
+    <header>
         <h1>${title}</h1>
-        %if len(translations) > 1:
-            %for language in translations:
-                <a href="${_link(kind + "_rss", tag, language)}">RSS (${language})</a>&nbsp;
-            %endfor
-        %else:
-            <a href="${_link(kind + "_rss", tag)}">RSS</a>
-        %endif
-        <br>
-        %if posts:
-        <ul class="unstyled">
-        % for post in posts:
-            <li><a href="${post.permalink()}">[${post.formatted_date(date_format)}] ${post.title()}</a>
-        % endfor
-        </ul>
-        %endif
+        <div class="metadata">
+            %if len(translations) > 1:
+                %for language in translations:
+                <p class="feedlink">
+                    <a href="${_link(kind + "_rss", tag, language)}" hreflang="${language}" type="application/rss+xml">${messages('RSS feed', language)} (${language})</a>&nbsp;
+                </p>
+                %endfor
+            %else:
+                <p class="feedlink"><a href="${_link(kind + "_rss", tag)}" type="application/rss+xml">${messages('RSS feed')}</a></p>
+            %endif
         </div>
-        <!--End of body content-->
+    </header>
+    %if posts:
+    <ul class="postlist">
+    % for post in posts:
+        <li><a href="${post.permalink()}" class="listtitle">${post.title()}</a> <time class="listdate" datetime="${post.date.isoformat()}" title="${messages("Publication date")}">${post.formatted_date(date_format)}</time></li>
+    % endfor
+    </ul>
+    %endif
+</article>
 </%block>

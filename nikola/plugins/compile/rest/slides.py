@@ -62,7 +62,7 @@ class Slides(Directive):
             'slides.tmpl',
             None,
             {
-                'content': self.content,
+                'slides_content': self.content,
                 'carousel_id': carousel_id,
             }
         )

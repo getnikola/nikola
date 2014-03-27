@@ -1,42 +1,39 @@
 ## -*- coding: utf-8 -*-
 <%namespace name="helper" file="post_helper.tmpl"/>
+<%namespace name="pheader" file="post_header.tmpl"/>
 <%namespace name="comments" file="comments_helper.tmpl"/>
 <%inherit file="base.tmpl"/>
+
 <%block name="extra_head">
-${helper.twitter_card_information(post)}
-% if post.meta('keywords'):
-    <meta name="keywords" content="${post.meta('keywords')|h}">
-% endif
-${helper.meta_translations(post)}
+    ${parent.extra_head()}
+    % if post.meta('keywords'):
+        <meta name="keywords" content="${post.meta('keywords')|h}">
+    % endif
+    <meta name="author" content="${post.author()}">
+    ${helper.open_graph_metadata(post)}
+    ${helper.twitter_card_information(post)}
+    ${helper.meta_translations(post)}
 </%block>
+
 <%block name="content">
-    <article class="postbox post-${post.meta('type')}">
-    <div class="h-entry" itemscope="itemscope" itemtype="http://schema.org/Article">
-    ${helper.html_title()}
-    <hr>
-    <small>
-        ${messages("Posted:")} <time class="published dt-published" datetime="${post.date.isoformat()}" itemprop="datePublished">${post.formatted_date(date_format)}</time>
-        ${helper.html_translations(post)}
-		${helper.html_tags(post)}
-        &nbsp;&nbsp;|&nbsp;&nbsp;
-		<%block name="sourcelink">
-		% if not post.meta('password'):
-			<a href="${post.source_link()}" id="sourcelink">${messages("Source")}</a>
-		% endif
-		</%block>
-    </small>
-    <hr>
-    <div class="e-content" itemprop="articleBody text">
+<article class="post-${post.meta('type')} h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article">
+    ${pheader.html_post_header()}
+    <div class="e-content entry-content" itemprop="articleBody text">
     ${post.text()}
     </div>
-    %if post.description():
-        <meta content="${post.description()}" itemprop="description">
-    %endif
-    </div>
+    <aside class="postpromonav">
+    <nav>
+    ${helper.html_tags(post)}
     ${helper.html_pager(post)}
-    % if not post.meta('nocomments'):
+    </nav>
+    </aside>
+    % if not post.meta('nocomments') and site_has_comments:
+        <section class="comments">
+        <h2>${messages("Comments")}</h2>
         ${comments.comment_form(post.permalink(absolute=True), post.title(), post._base_path)}
+        </section>
     % endif
     ${helper.mathjax_script(post)}
-    </article>
+</article>
+${comments.comment_link_script()}
 </%block>

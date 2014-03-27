@@ -103,3 +103,65 @@ h4, h5, h6 {
     margin-top: -50px;
     padding-top: 60px;
 }
+
+.image-block {
+    display: inline-block;
+}
+
+.flowr_row {
+    width: 100%;
+}
+
+.tags {
+    padding-left: 0;
+    margin-left: -5px;
+    list-style: none;
+    text-align: center;
+
+}
+
+.tags > li {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    background-color: #999;
+    border-radius: 10px;
+}
+
+.tags > li a {
+    color: #fff;
+}
+
+.metadata p:before,
+.postlist .listdate:before {
+    content: " — ";
+}
+
+.metadata p:first-of-type:before {
+    content: "";
+}
+
+.metadata p {
+    display: inline;
+}
+
+.posttranslations h3 {
+	display: inline;
+	font-size: 1em;
+	font-weight: bold;
+}
+
+.posttranslations h3:last-child {
+	display: none;
+}
+
+.entry-content {
+	margin-top: 1em;
+}

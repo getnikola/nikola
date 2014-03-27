@@ -1,12 +1,12 @@
 ## -*- coding: utf-8 -*-
 
-<%namespace name="disqus" file="disqus_helper.tmpl"/>
-<%namespace name="livefyre" file="livefyre_helper.tmpl"/>
-<%namespace name="intensedebate" file="intensedebate_helper.tmpl"/>
-<%namespace name="moot" file="moot_helper.tmpl"/>
-<%namespace name="googleplus" file="googleplus_helper.tmpl"/>
-<%namespace name="facebook" file="facebook_helper.tmpl"/>
-<%namespace name="isso" file="isso_helper.tmpl"/>
+<%namespace name="disqus" file="comments_helper_disqus.tmpl"/>
+<%namespace name="livefyre" file="comments_helper_livefyre.tmpl"/>
+<%namespace name="intensedebate" file="comments_helper_intensedebate.tmpl"/>
+<%namespace name="moot" file="comments_helper_moot.tmpl"/>
+<%namespace name="googleplus" file="comments_helper_googleplus.tmpl"/>
+<%namespace name="facebook" file="comments_helper_facebook.tmpl"/>
+<%namespace name="isso" file="comments_helper_isso.tmpl"/>
 
 <%def name="comment_form(url, title, identifier)">
     %if comment_system == 'disqus':

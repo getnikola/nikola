@@ -30,7 +30,7 @@
         %endfor
     </ul>
     %endif
-%if enable_comments:
+%if site_has_comments and enable_comments:
     ${comments.comment_form(None, permalink, title)}
 %endif
 </%block>

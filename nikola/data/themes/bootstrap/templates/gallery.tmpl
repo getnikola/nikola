@@ -17,30 +17,29 @@
     %if folders:
     <ul>
     % for folder, ftitle in folders:
-        <li><a href="${folder}"><i
-        class="icon-folder-open"></i>&nbsp;${ftitle}</a></li>
+        <li><a href="${folder}"><i class="icon-folder-open"></i>&nbsp;${ftitle}</a></li>
     % endfor
     </ul>
     %endif
 
-    <div id="gallery_container"></div>
-    %if photo_array:
-    <noscript>
-    <ul class="thumbnails">
-        %for image in photo_array:
-            <li><a href="${image['url']}" class="thumbnail image-reference" title="${image['title']}">
-                <img src="${image['url_thumb']}" alt="${image['title']}" /></a>
-        %endfor
-    </ul>
-    </noscript>
-    %endif
-%if enable_comments:
-    ${comments.comment_form(None, permalink, title)}
+<div id="gallery_container"></div>
+%if photo_array:
+<noscript>
+<ul class="thumbnails">
+    %for image in photo_array:
+        <li><a href="${image['url']}" class="thumbnail image-reference" title="${image['title']}">
+            <img src="${image['url_thumb']}" alt="${image['title']}" /></a>
+    %endfor
+</ul>
+</noscript>
+%endif
+%if site_has_comments and enable_comments:
+${comments.comment_form(None, permalink, title)}
 %endif
 </%block>
 
-
 <%block name="extra_head">
+${parent.extra_head()}
 <style type="text/css">
     .image-block {
         display: inline-block;

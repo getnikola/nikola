@@ -4,6 +4,10 @@ New in master
 Features
 --------
 
+* The base theme produces properly sectioned and semantic HTML5 (Issues #1123, #1137)
+* The base theme comes with a new stylish look by default (Issue #1137)
+* The base theme supports Right-to-Left by using ::dir(rtl) CSS4 rules (Issue #1137)
+* Bootstrap 2 updated to 2.3.2 (via Issue #1137)
 * Added FORCE_ISO8601 setting that currently makes new_post use ISO 8601 dates (via Issue #1156)
 * Added support for TZ specified in post date (Issue #1118)
 * Make ``nikola init`` ask about the site’s settings (Issue #1080)
@@ -49,6 +53,7 @@ Features
 Bugfixes
 --------
 
+* Galleries are more usable in non-Bootstrap-based themes (Issue #1137)
 * Removed dependency on pytz because mixing it with dateutil breaks things.
 * Use current system TZ for current_time (Issue #1161)
 * Fix links with full path in RSS for files outside root (Issue #1162)
@@ -68,6 +73,9 @@ Bugfixes
   the file. (Issue #1132)
 * Files with non-ASCII characters in filenames are copied only when needed, and
   not every build (Issue #1129)
+* Split Twitter Cards and Open Graph, enable the latter by default
+* Load html5shiv.js from remote or local server depending on USE_CDN option
+=======
 * Fix dependency issue in listings (Issue #1032)
 * Logging configuration has been fixed.  The stderr handler can now
   only be set to DEBUG or INFO (any higher levels are corrected as INFO), and

@@ -149,10 +149,23 @@ def install_manpages(root, prefix):
     except Exception as e:
         print("Not installing the man pages:", e)
 
+def remove_old_files(self):
+    tree = os.path.join(self.install_lib, 'nikola', 'data')
+    tree2 = os.path.join('build', 'lib', 'nikola', 'data')
+    try:
+        shutil.rmtree(tree, ignore_errors = True)
+    except:
+        pass
+
+    try:
+        shutil.rmtree(tree2, ignore_errors = True)
+    except:
+        pass
 
 class nikola_install(install):
     def run(self):
         copy_symlinked_for_windows()
+        remove_old_files(self)
         install.run(self)
         install_manpages(self.root, self.prefix)
 

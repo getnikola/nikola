@@ -1,28 +1,17 @@
 ## -*- coding: utf-8 -*-
 <%namespace name="base" file="base_helper.tmpl" import="*" />
-<%namespace name="bootstrap" file="bootstrap_helper.tmpl" import="*" />
 <%namespace name="notes" file="annotation_helper.tmpl" import="*" />
 ${set_locale(lang)}
-<!DOCTYPE html>
-<html
-%if comment_system == 'facebook':
-xmlns:fb="http://ogp.me/ns/fb#"
-%endif
-lang="${lang}">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    ${bootstrap.html_head()}
-    <%block name="extra_head">
-    </%block>
-    % if annotations and post and not post.meta('noannotations'):
-        ${notes.css()}
-    % elif not annotations and post and post.meta('annotations'):
-        ${notes.css()}
-    % endif
-    ${extra_head_data}
-</head>
+${base.html_headstart()}
+<%block name="extra_head">
+### Leave this block alone.
+</%block>
+
 <body>
+
+
 <!-- Menubar -->
+
 <div class="navbar navbar-fixed-top" id="navbar">
     <div class="navbar-inner">
         <div class="container">
@@ -40,7 +29,7 @@ lang="${lang}">
             <!-- Everything you want hidden at 940px or less, place within here -->
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    ${bootstrap.html_navigation_links()}
+                    ${base.html_navigation_links()}
                 </ul>
                 %if search_form:
                     ${search_form}
@@ -73,22 +62,14 @@ lang="${lang}">
 <div class="footerbox">
     ${content_footer}
 </div>
-${bootstrap.late_load_js()}
-${base.html_social()}
-    <script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});
-    $(window).on('hashchange', function(){
-        if (location.hash && $(location.hash)[0]) {
-            $('body').animate({scrollTop: $(location.hash).offset().top - $('#navbar').outerHeight(true)*1.2 }, 1);
-        }
-    });
-    $(document).ready(function(){$(window).trigger('hashchange')});
-    </script>
+${base.late_load_js()}
+    <script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
     <%block name="extra_js"></%block>
     % if annotations and post and not post.meta('noannotations'):
         ${notes.code()}
     % elif not annotations and post and post.meta('annotations'):
         ${notes.code()}
     % endif
-    ${body_end}
+${body_end}
 </body>
 </html>

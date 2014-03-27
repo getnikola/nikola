@@ -275,6 +275,7 @@ class Nikola(object):
             'USE_BUNDLES': True,
             'USE_CDN': False,
             'USE_FILENAME_AS_TITLE': True,
+            'USE_OPEN_GRAPH': True,
             'TIMEZONE': 'UTC',
             'DEPLOY_DRAFTS': True,
             'DEPLOY_FUTURE': False,
@@ -520,6 +521,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['search_form'] = self.config.get('SEARCH_FORM')
         self._GLOBAL_CONTEXT['comment_system'] = self.config.get('COMMENT_SYSTEM')
         self._GLOBAL_CONTEXT['comment_system_id'] = self.config.get('COMMENT_SYSTEM_ID')
+        self._GLOBAL_CONTEXT['site_has_comments'] = bool(self.config.get('COMMENT_SYSTEM'))
         self._GLOBAL_CONTEXT['mathjax_config'] = self.config.get(
             'MATHJAX_CONFIG')
         self._GLOBAL_CONTEXT['subtheme'] = self.config.get('THEME_REVEAL_CONFIG_SUBTHEME')
@@ -531,6 +533,8 @@ class Nikola(object):
 
         self._GLOBAL_CONTEXT['navigation_links'] = self.config.get('NAVIGATION_LINKS')
 
+        self._GLOBAL_CONTEXT['use_open_graph'] = self.config.get(
+            'USE_OPEN_GRAPH', True)
         self._GLOBAL_CONTEXT['twitter_card'] = self.config.get(
             'TWITTER_CARD', {})
         self._GLOBAL_CONTEXT['hide_sourcelink'] = not self.config.get(

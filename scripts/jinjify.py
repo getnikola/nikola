@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import codecs
 import glob
 import os
@@ -19,6 +20,7 @@ dumb_replacements = [
         '''<html{% if comment_system == 'facebook': xmlns:fb="http %}//ogp.me/ns/fb#" %endif lang="{{ lang }}">''',
         '''<html{% if comment_system == 'facebook' %} xmlns:fb="http://ogp.me/ns/fb#" {%endif%} lang="{{ lang }}">'''
     ],
+    ["{{ parent.extra_head() }}", "{{ super() }}"],
 ]
 
 
