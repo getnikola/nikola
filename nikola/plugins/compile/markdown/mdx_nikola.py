@@ -28,6 +28,7 @@
 from __future__ import unicode_literals
 import re
 from markdown.postprocessors import Postprocessor
+from nikola.plugin_categories import MarkdownExtension
 from markdown.extensions import Extension
 
 
@@ -43,7 +44,7 @@ class NikolaPostProcessor(Postprocessor):
         return output
 
 
-class NikolaExtension(Extension):
+class NikolaExtension(MarkdownExtension, Extension):
     def extendMarkdown(self, md, md_globals):
         pp = NikolaPostProcessor()
         md.postprocessors.add('nikola_post_processor', pp, '_end')

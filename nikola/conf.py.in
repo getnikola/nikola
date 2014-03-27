@@ -476,9 +476,11 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # called `toggle.tpl` which has to be located in your site/blog main folder:
 # IPYNB_CONFIG = {'Exporter':{'template_file': 'toggle'}}
 
-# What MarkDown extensions to enable?
+# What Markdown extensions to enable?
 # You will also get gist, nikola and podcast because those are
 # done in the code, hope you don't mind ;-)
+# Note: most Nikola-specific extensions are done via the Nikola plugin system,
+#       with the MarkdownExtension class and should not be added here.
 # MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite']
 
 # Social buttons. This is sample code for AddThis (which was the default for a

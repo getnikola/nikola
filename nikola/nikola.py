@@ -65,6 +65,7 @@ from .plugin_categories import (
     LateTask,
     PageCompiler,
     RestExtension,
+    MarkdownExtension,
     Task,
     TaskMultiplier,
     TemplateSystem,
@@ -410,6 +411,7 @@ class Nikola(object):
             "PageCompiler": PageCompiler,
             "TaskMultiplier": TaskMultiplier,
             "RestExtension": RestExtension,
+            "MarkdownExtension": MarkdownExtension,
             "SignalHandler": SignalHandler,
         })
         self.plugin_manager.setPluginInfoExtension('plugin')

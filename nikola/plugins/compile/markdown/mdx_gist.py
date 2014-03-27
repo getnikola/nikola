@@ -118,6 +118,7 @@ Error Case:  non-existent file:
 '''
 from __future__ import unicode_literals, print_function
 from markdown.extensions import Extension
+from nikola.plugin_categories import MarkdownExtension
 from markdown.inlinepatterns import Pattern
 from markdown.util import AtomicString
 from markdown.util import etree
@@ -209,7 +210,7 @@ class GistPattern(Pattern):
         return gist_elem
 
 
-class GistExtension(Extension):
+class GistExtension(MarkdownExtension, Extension):
     def __init__(self, configs={}):
         # set extension defaults
         self.config = {}
