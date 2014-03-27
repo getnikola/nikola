@@ -184,6 +184,12 @@ body {
 	max-width: 100%;
 }
 
+/* Images */
+img {
+	border: none;
+	line-height: 1;
+}
+
 /* Comment helpers */
 #disqus_thread {
 	min-height: 325px;
