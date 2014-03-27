@@ -151,19 +151,36 @@ def install_manpages(root, prefix):
 
 def remove_old_files(self):
     base = os.path.join(self.install_lib, 'nikola')
-    to_remove = ['data/themes/bootstrap/templates/bootstrap_helper.tmpl',
-                 'data/themes/bootstrap-jinja/templates/bootstrap_helper.tmpl',
-                 'data/themes/bootstrap3/templates/bootstrap_helper.tmpl',
-                 'data/themes/bootstrap3/templates/list.tmpl',
-                 'data/themes/bootstrap3/templates/list_post.tmpl',
-                 'data/themes/bootstrap3/templates/post.tmpl',
-                 'data/themes/bootstrap3/templates/tags.tmpl',
-                 'data/themes/bootstrap3-jinja/templates/bootstrap_helper.tmpl',
-                 'data/themes/bootstrap3-jinja/templates/list.tmpl',
-                 'data/themes/bootstrap3-jinja/templates/list_post.tmpl',
-                 'data/themes/bootstrap3-jinja/templates/post.tmpl',
-                 'data/themes/bootstrap3-jinja/templates/tags.tmpl',
-                 ]
+    to_remove = [
+        'data/themes/base/templates/disqus_helper.tmpl',
+        'data/themes/base/templates/facebook_helper.tmpl',
+        'data/themes/base/templates/googleplus_helper.tmpl',
+        'data/themes/base/templates/intensedebate_helper.tmpl',
+        'data/themes/base/templates/isso_helper.tmpl',
+        'data/themes/base/templates/livefyre_helper.tmpl',
+        'data/themes/base/templates/moot_helper.tmpl',
+        'data/themes/base/templates/mustache-comment-form.tmpl',
+        'data/themes/base-jinja/templates/disqus_helper.tmpl',
+        'data/themes/base-jinja/templates/facebook_helper.tmpl',
+        'data/themes/base-jinja/templates/googleplus_helper.tmpl',
+        'data/themes/base-jinja/templates/intensedebate_helper.tmpl',
+        'data/themes/base-jinja/templates/isso_helper.tmpl',
+        'data/themes/base-jinja/templates/livefyre_helper.tmpl',
+        'data/themes/base-jinja/templates/moot_helper.tmpl',
+        'data/themes/base-jinja/templates/mustache-comment-form.tmpl',
+        'data/themes/bootstrap/templates/bootstrap_helper.tmpl',
+        'data/themes/bootstrap-jinja/templates/bootstrap_helper.tmpl',
+        'data/themes/bootstrap3/templates/bootstrap_helper.tmpl',
+        'data/themes/bootstrap3/templates/list.tmpl',
+        'data/themes/bootstrap3/templates/list_post.tmpl',
+        'data/themes/bootstrap3/templates/post.tmpl',
+        'data/themes/bootstrap3/templates/tags.tmpl',
+        'data/themes/bootstrap3-jinja/templates/bootstrap_helper.tmpl',
+        'data/themes/bootstrap3-jinja/templates/list.tmpl',
+        'data/themes/bootstrap3-jinja/templates/list_post.tmpl',
+        'data/themes/bootstrap3-jinja/templates/post.tmpl',
+        'data/themes/bootstrap3-jinja/templates/tags.tmpl',
+    ]
     for f in to_remove:
         try:
             os.remove(os.path.join(base, f))
