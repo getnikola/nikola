@@ -102,6 +102,8 @@ body {
 #footer {
 	border-top: 1px solid #4F5151;
 }
+
+/* Tags */
 .postpromonav {
 	border-bottom: 1px solid #4F5151;
 	border-top: 1px solid #4F5151;
@@ -119,6 +121,8 @@ body {
 .postlist li {
 	margin-bottom: .33em;
 }
+
+/* Post and archive pagers */
 .postindexpager .pager .next:before {
 	content: "↓ ";
 }
@@ -137,6 +141,7 @@ body {
 .postpromonav .pager .next:dir(rtl):before {
 	content: "← ";
 }
+
 .metadata p:first-of-type:before,
 .postpromonav .tags li:first-of-type:before {
 	content: "";
@@ -157,6 +162,13 @@ body {
 .metadata p {
 	display: inline;
 }
+
+#blog-title {
+	font-size: 3em;
+	line-height: 1;
+}
+
+/* Links */
 :link {
 	color: #1168CC;
 	text-decoration: none;
@@ -167,13 +179,16 @@ body {
 :link:hover, :visited:hover {
 	color: #0d53a3;
 }
-#blog-title {
-	font-size: 3em;
-	line-height: 1;
-}
+
 #blog-title :link, 
 #blog-title :visited {
 	color: inherit;
+}
+
+/* Images */
+img {
+	border: none;
+	line-height: 1;
 }
 
 .postpage img,
@@ -182,12 +197,6 @@ body {
 .postindex article object {
 	height: auto;
 	max-width: 100%;
-}
-
-/* Images */
-img {
-	border: none;
-	line-height: 1;
 }
 
 /* Comment helpers */
