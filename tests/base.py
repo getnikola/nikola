@@ -22,10 +22,20 @@ import unittest
 
 import logbook
 
-# Make logbook shutup
 import nikola.utils
-
 nikola.utils.LOGGER.handlers.append(logbook.TestHandler())
+
+from yapsy.PluginManager import PluginManager
+from nikola.plugin_categories import (
+    Command,
+    Task,
+    LateTask,
+    TemplateSystem,
+    PageCompiler,
+    TaskMultiplier,
+    RestExtension,
+    MarkdownExtension
+)
 
 
 if sys.version_info < (2, 7):
@@ -167,3 +177,67 @@ class LocaleSupportInTesting(object):
             raise ValueError('Unknown locale variant')
         nikola.utils.LocaleBorg.reset()
         nikola.utils.LocaleBorg.initialize(locales, default_lang)
+
+
+class FakePost(object):
+
+    def __init__(self, title, slug):
+        self._title = title
+        self._slug = slug
+        self._meta = {'slug': slug}
+
+    def title(self):
+        return self._title
+
+    def meta(self, key):
+        return self._meta[key]
+
+    def permalink(self):
+        return '/posts/' + self._slug
+
+
+class FakeSite(object):
+    def __init__(self):
+        self.template_system = self
+        self.invariant = False
+        self.config = {
+            'DISABLED_PLUGINS': [],
+            'EXTRA_PLUGINS': [],
+            'DEFAULT_LANG': 'en',
+            'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],
+        }
+        self.EXTRA_PLUGINS = self.config['EXTRA_PLUGINS']
+        self.plugin_manager = PluginManager(categories_filter={
+            "Command": Command,
+            "Task": Task,
+            "LateTask": LateTask,
+            "TemplateSystem": TemplateSystem,
+            "PageCompiler": PageCompiler,
+            "TaskMultiplier": TaskMultiplier,
+            "RestExtension": RestExtension,
+            "MarkdownExtension": MarkdownExtension,
+        })
+        self.loghandlers = [nikola.utils.STDERR_HANDLER]
+        self.plugin_manager.setPluginInfoExtension('plugin')
+        if sys.version_info[0] == 3:
+            places = [
+                os.path.join(os.path.dirname(nikola.utils.__file__), 'plugins'),
+            ]
+        else:
+            places = [
+                os.path.join(os.path.dirname(nikola.utils.__file__), nikola.utils.sys_encode('plugins')),
+            ]
+        self.plugin_manager.setPluginPlaces(places)
+        self.plugin_manager.collectPlugins()
+
+        self.timeline = [
+            FakePost(title='Fake post',
+                     slug='fake-post')
+        ]
+        self.debug = True
+        # This is to make plugin initialization happy
+        self.template_system = self
+        self.name = 'mako'
+
+    def render_template(self, name, _, context):
+        return('<img src="IMG.jpg">')

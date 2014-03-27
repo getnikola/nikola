@@ -247,10 +247,10 @@ class RestExtension(BasePlugin):
 
 class MarkdownExtension(BasePlugin):
     name = "dummy_markdown_extension"
+
     def set_site(self, site):
-        self.site = site
-        m = site.plugin_manager.getPluginByName('markdown', 'PageCompiler')
-        m.plugin_object.extensions.append(self)
+        from nikola.plugins.compile.markdown import CompileMarkdown
+        CompileMarkdown.extensions.append(self)
         return super(MarkdownExtension, self).set_site(site)
 
 

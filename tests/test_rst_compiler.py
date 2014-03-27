@@ -45,87 +45,14 @@ import docutils
 from lxml import html
 import pytest
 import unittest
-from yapsy.PluginManager import PluginManager
 
-from nikola import utils
 import nikola.plugins.compile.rest
 from nikola.plugins.compile.rest import gist
 from nikola.plugins.compile.rest import vimeo
 import nikola.plugins.compile.rest.listing
 from nikola.plugins.compile.rest.doc import Plugin as DocPlugin
-from nikola.utils import _reload, STDERR_HANDLER
-from nikola.plugin_categories import (
-    Command,
-    Task,
-    LateTask,
-    TemplateSystem,
-    PageCompiler,
-    TaskMultiplier,
-    RestExtension,
-)
-from .base import BaseTestCase
-
-
-class FakePost(object):
-
-    def __init__(self, title, slug):
-        self._title = title
-        self._slug = slug
-        self._meta = {'slug': slug}
-
-    def title(self):
-        return self._title
-
-    def meta(self, key):
-        return self._meta[key]
-
-    def permalink(self):
-        return '/posts/' + self._slug
-
-
-class FakeSite(object):
-    def __init__(self):
-        self.template_system = self
-        self.invariant = False
-        self.config = {
-            'DISABLED_PLUGINS': [],
-            'EXTRA_PLUGINS': [],
-            'DEFAULT_LANG': 'en',
-        }
-        self.EXTRA_PLUGINS = self.config['EXTRA_PLUGINS']
-        self.plugin_manager = PluginManager(categories_filter={
-            "Command": Command,
-            "Task": Task,
-            "LateTask": LateTask,
-            "TemplateSystem": TemplateSystem,
-            "PageCompiler": PageCompiler,
-            "TaskMultiplier": TaskMultiplier,
-            "RestExtension": RestExtension,
-        })
-        self.loghandlers = [STDERR_HANDLER]
-        self.plugin_manager.setPluginInfoExtension('plugin')
-        if sys.version_info[0] == 3:
-            places = [
-                os.path.join(os.path.dirname(utils.__file__), 'plugins'),
-            ]
-        else:
-            places = [
-                os.path.join(os.path.dirname(utils.__file__), utils.sys_encode('plugins')),
-            ]
-        self.plugin_manager.setPluginPlaces(places)
-        self.plugin_manager.collectPlugins()
-
-        self.timeline = [
-            FakePost(title='Fake post',
-                     slug='fake-post')
-        ]
-        self.debug = True
-        # This is to make plugin initialization happy
-        self.template_system = self
-        self.name = 'mako'
-
-    def render_template(self, name, _, context):
-        return('<img src="IMG.jpg">')
+from nikola.utils import _reload
+from .base import BaseTestCase, FakeSite
 
 
 class ReSTExtensionTestCase(BaseTestCase):
