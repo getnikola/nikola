@@ -88,6 +88,10 @@ body {
 	font-size: 1em;
 }
 
+.entry-title {
+	font-size: 2em;
+}
+
 .posttranslations h3:last-child {
 	display: none;
 }
