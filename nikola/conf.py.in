@@ -4,8 +4,8 @@
 from __future__ import unicode_literals
 import time
 
-# !! This is the configuration of Nikola. !!#
-# !!  You should edit it to your liking.  !!#
+# !! This is the configuration of Nikola. !! #
+# !!  You should edit it to your liking.  !! #
 
 
 # ! Some settings can be different in different languages.
@@ -34,6 +34,7 @@ BLOG_DESCRIPTION = ${BLOG_DESCRIPTION}  # (translatable)
 # Currently supported languages are:
 #
 ${_SUPPORTED_LANGUAGES}
+#
 # If you want to use Nikola with a non-supported language you have to provide
 # a module containing the necessary translations
 # (cf. the modules at nikola/data/themes/base/messages/).
