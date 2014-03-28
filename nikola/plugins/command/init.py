@@ -268,7 +268,7 @@ class CommandInit(Command):
             answer = ask('Language(s) to use', 'en')
             while answer.strip() == '?':
                 print('\n# Available languages:')
-                print(SAMPLE_CONF['_SUPPORTED_LANGUAGES']+ '\n')
+                print(SAMPLE_CONF['_SUPPORTED_LANGUAGES'] + '\n')
                 answer = ask('Language(s) to use', 'en')
 
             langs = answer.split(',')
