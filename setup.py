@@ -17,13 +17,15 @@ from setuptools import setup
 from setuptools.command.install import install
 from setuptools.command.test import test as TestCommand
 
+
 class PyTest(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
         self.test_args = []
         self.test_suite = True
+
     def run_tests(self):
-        #import here, cause outside the eggs aren't loaded
+        # import here, cause outside the eggs aren't loaded
         import pytest
         errno = pytest.main(self.test_args)
         sys.exit(errno)
@@ -42,7 +44,7 @@ with open('requirements-extras.txt', 'r') as fh:
 with open('requirements-tests.txt', 'r') as fh:
     extras['tests'] = [l.strip() for l in fh][1:]
 
-########### platform specific stuff #############
+# ########## platform specific stuff #############
 import platform
 platform_system = platform.system()
 
@@ -149,18 +151,20 @@ def install_manpages(root, prefix):
     except Exception as e:
         print("Not installing the man pages:", e)
 
+
 def remove_old_files(self):
     tree = os.path.join(self.install_lib, 'nikola', 'data')
     tree2 = os.path.join('build', 'lib', 'nikola', 'data')
     try:
-        shutil.rmtree(tree, ignore_errors = True)
+        shutil.rmtree(tree, ignore_errors=True)
     except:
         pass
 
     try:
-        shutil.rmtree(tree2, ignore_errors = True)
+        shutil.rmtree(tree2, ignore_errors=True)
     except:
         pass
+
 
 class nikola_install(install):
     def run(self):

@@ -3,19 +3,19 @@
 from __future__ import unicode_literals
 import time
 
-#!! This is the configuration of Nikola. !!#
-#!!  You should edit it to your liking.  !!#
+# !! This is the configuration of Nikola. !!#
+# !!  You should edit it to your liking.  !!#
 
 
-#! Some settings can be different in different languages.
-#! A comment stating (translatable) is used to denote those.
-#! There are two ways to specify a translatable setting:
-#! (a) BLOG_TITLE = "My Blog"
-#! (b) BLOG_TITLE = {"en": "My Blog", "es": "Mi Blog"}
-#! Option (a) is there for backwards compatibility and when you don't
-#!            want that setting translated.
-#! Option (b) should be used for settings that are different in
-#!            different languages.
+# ! Some settings can be different in different languages.
+# ! A comment stating (translatable) is used to denote those.
+# ! There are two ways to specify a translatable setting:
+# ! (a) BLOG_TITLE = "My Blog"
+# ! (b) BLOG_TITLE = {"en": "My Blog", "es": "Mi Blog"}
+# ! Option (a) is there for backwards compatibility and when you don't
+# !            want that setting translated.
+# ! Option (b) should be used for settings that are different in
+# !            different languages.
 
 
 # Data about this site
@@ -494,20 +494,20 @@ COMMENT_SYSTEM_ID = "nikolademo"
 # MATHJAX_CONFIG = ""
 
 # If you are using the compile-ipynb plugin, just add this one:
-#MATHJAX_CONFIG = """
-#<script type="text/x-mathjax-config">
-#MathJax.Hub.Config({
-#    tex2jax: {
-#        inlineMath: [ ['$','$'], ["\\\(","\\\)"] ],
-#        displayMath: [ ['$$','$$'], ["\\\[","\\\]"] ]
-#    },
-#    displayAlign: 'left', // Change this to 'center' to center equations.
-#    "HTML-CSS": {
-#        styles: {'.MathJax_Display': {"margin": 0}}
-#    }
-#});
-#</script>
-#"""
+# MATHJAX_CONFIG = """
+# <script type="text/x-mathjax-config">
+# MathJax.Hub.Config({
+#     tex2jax: {
+#         inlineMath: [ ['$','$'], ["\\\(","\\\)"] ],
+#         displayMath: [ ['$$','$$'], ["\\\[","\\\]"] ]
+#     },
+#     displayAlign: 'left', // Change this to 'center' to center equations.
+#     "HTML-CSS": {
+#         styles: {'.MathJax_Display': {"margin": 0}}
+#     }
+# });
+# </script>
+# """
 
 # Do you want to customize the nbconversion of your IPython notebook?
 # IPYNB_CONFIG = {}
@@ -569,30 +569,30 @@ COMMENT_SYSTEM_ID = "nikolademo"
 # This search form works for any site and looks good in the "site" theme where
 # it appears on the navigation bar:
 #
-#SEARCH_FORM = """
-#<!-- Custom search -->
-#<form method="get" id="search" action="//duckduckgo.com/"
-# class="navbar-form pull-left">
-#<input type="hidden" name="sites" value="%s"/>
-#<input type="hidden" name="k8" value="#444444"/>
-#<input type="hidden" name="k9" value="#D51920"/>
-#<input type="hidden" name="kt" value="h"/>
-#<input type="text" name="q" maxlength="255"
-# placeholder="Search&hellip;" class="span2" style="margin-top: 4px;"/>
-#<input type="submit" value="DuckDuckGo Search" style="visibility: hidden;" />
-#</form>
-#<!-- End of custom search -->
-#""" % SITE_URL
+# SEARCH_FORM = """
+# <!-- Custom search -->
+# <form method="get" id="search" action="//duckduckgo.com/"
+#  class="navbar-form pull-left">
+# <input type="hidden" name="sites" value="%s"/>
+# <input type="hidden" name="k8" value="#444444"/>
+# <input type="hidden" name="k9" value="#D51920"/>
+# <input type="hidden" name="kt" value="h"/>
+# <input type="text" name="q" maxlength="255"
+#  placeholder="Search&hellip;" class="span2" style="margin-top: 4px;"/>
+# <input type="submit" value="DuckDuckGo Search" style="visibility: hidden;" />
+# </form>
+# <!-- End of custom search -->
+# """ % SITE_URL
 #
 # If you prefer a google search form, here's an example that should just work:
-#SEARCH_FORM = """
-#<!-- Custom search with google-->
-#<form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
-#<input type="hidden" name="q" value="site:%s" />
-#<input type="text" name="q" maxlength="255" results="0" placeholder="Search"/>
-#</form>
-#<!-- End of custom search -->
-#""" % SITE_URL
+# SEARCH_FORM = """
+# <!-- Custom search with google-->
+# <form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+# <input type="hidden" name="q" value="site:%s" />
+# <input type="text" name="q" maxlength="255" results="0" placeholder="Search"/>
+# </form>
+# <!-- End of custom search -->
+# """ % SITE_URL
 
 # Also, there is a local search plugin you can use, based on Tipue, but it requires setting several
 # options:
@@ -731,15 +731,15 @@ COMMENT_SYSTEM_ID = "nikolademo"
 # log level of the default stdout handler.
 LOGGING_HANDLERS = {
     'stderr': {'loglevel': 'WARNING', 'bubble': True},
-    #'smtp': {
-    #    'from_addr': 'test-errors@example.com',
-    #    'recipients': ('test@example.com'),
-    #    'credentials':('testusername', 'password'),
-    #    'server_addr': ('127.0.0.1', 25),
-    #    'secure': (),
-    #    'level': 'DEBUG',
-    #    'bubble': True
-    #}
+    # 'smtp': {
+    #     'from_addr': 'test-errors@example.com',
+    #     'recipients': ('test@example.com'),
+    #     'credentials':('testusername', 'password'),
+    #     'server_addr': ('127.0.0.1', 25),
+    #     'secure': (),
+    #     'level': 'DEBUG',
+    #     'bubble': True
+    # }
 }
 
 # Templates will use those filters, along with the defaults.

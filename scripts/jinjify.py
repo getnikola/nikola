@@ -8,9 +8,6 @@ import shutil
 
 import colorama
 import jinja2
-#from jinja2 import meta
-
-#from nikola import utils
 
 dumb_replacements = [
     ["{% if isinstance(url, tuple) %}", "{% if url is mapping %}"],
@@ -76,11 +73,11 @@ def jinjify(in_theme, out_theme):
         outf.write("jinja\n")
 
     # Copy assets
-    #shutil.rmtree(os.path.join(out_theme, "assets"))
-    #shutil.copytree(os.path.join(in_theme, "assets"), os.path.join(out_theme, "assets"))
+    # shutil.rmtree(os.path.join(out_theme, "assets"))
+    # shutil.copytree(os.path.join(in_theme, "assets"), os.path.join(out_theme, "assets"))
 
     # Copy bundles
-    #shutil.copy(os.path.join(in_theme, "bundles"), os.path.join(out_theme, "bundles"))
+    # shutil.copy(os.path.join(in_theme, "bundles"), os.path.join(out_theme, "bundles"))
 
     # Copy README
     if os.path.isfile(os.path.join(in_theme, "README.md")):
