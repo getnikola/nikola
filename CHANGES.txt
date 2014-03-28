@@ -7,7 +7,8 @@ Features
 * Created a MarkdownExtension plugin class (Issue #1175)
 * The base theme produces properly sectioned and semantic HTML5 (Issues #1123, #1137)
 * The base theme comes with a new stylish look by default (Issue #1137)
-* The base theme supports Right-to-Left by using ::dir(rtl) CSS4 rules (Issue #1146)
+* The base theme supports Right-to-Left by using ::dir(rtl) CSS4 rules and
+  <html dir="rtl"> tags where valid (Issue #1146)
 * Bootstrap 2 updated to 2.3.2 (via Issue #1137)
 * Added FORCE_ISO8601 setting that currently makes new_post use ISO 8601 dates (via Issue #1156)
 * Added support for TZ specified in post date (Issue #1118)

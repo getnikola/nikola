@@ -120,6 +120,7 @@ LEGAL_VALUES = {
         'ur': 'Urdu',
         'zh_cn': 'Chinese (Simplified)',
     },
+    'RTL_LANGUAGES': ('fa', 'ur'),
 }
 
 
@@ -663,6 +664,7 @@ class Nikola(object):
         local_context.update(context)
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             local_context[k] = local_context[k](local_context['lang'])
+        local_context['is_rtl'] = local_context['lang'] in LEGAL_VALUES['RTL_LANGUAGES']
         # string, arguments
         local_context["formatmsg"] = lambda s, *a: s % a
         data = self.template_system.render_template(
