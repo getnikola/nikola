@@ -1621,6 +1621,19 @@ You can use the plugins in this repository without installing them into your
 site, by cloning the repository and adding the path of the plugins directory to
 the ``EXTRA_PLUGINS_DIRS`` list in your configuration.
 
+Shell Tab Completion
+--------------------
+
+Since Nikola is a command line tool, and this is the 21st century, it's handy to have smart tab-completion
+so that you don't have to type the full commands.
+
+To enable this, you can use the ``nikola tabcompletion`` command like this, depending on your shell::
+
+    $ nikola tabcompletion --shell bash --hardcode-tasks > _nikola_bash
+    $ nikola tabcompletion --shell zsh --hardcode-tasks > _nikola_zsh
+
+The ``--hardcode-tasks`` adds tasks to the completion and may need updating periodically.
+
 License
 -------
 
