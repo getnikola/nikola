@@ -1,0 +1,9 @@
+[Core]
+Name = mdx_gist
+Module = mdx_gist
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://getnikola.com
+Description = Extension for embedding gists

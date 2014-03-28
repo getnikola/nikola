@@ -1,0 +1,9 @@
+[Core]
+Name = mdx_podcast
+Module = mdx_podcast
+
+[Documentation]
+Author = Roberto Alsina
+Version = 0.1
+Website = http://getnikola.com
+Description = Markdown extensions for embedding podcasts and other audio files

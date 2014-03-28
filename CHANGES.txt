@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Created a MarkdownExtension plugin class (Issue #1175)
 * The base theme produces properly sectioned and semantic HTML5 (Issues #1123, #1137)
 * The base theme comes with a new stylish look by default (Issue #1137)
 * The base theme supports Right-to-Left by using ::dir(rtl) CSS4 rules (Issue #1146)
