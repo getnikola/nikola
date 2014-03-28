@@ -3,6 +3,9 @@ Nikola, a Static Site and Blog Generator
 
 In goes content, out comes a website, ready to deploy.
 
+.. image:: https://badge.fury.io/py/Nikola.png
+    :target: http://badge.fury.io/py/Nikola
+
 .. image:: https://travis-ci.org/getnikola/nikola.png
    :target: https://travis-ci.org/getnikola/nikola
 
@@ -14,7 +17,6 @@ In goes content, out comes a website, ready to deploy.
 
 .. image:: https://coveralls.io/repos/getnikola/nikola/badge.png?branch=master
   :target: https://coveralls.io/r/getnikola/nikola?branch=master
-
 
 Why Static Websites?
 --------------------
