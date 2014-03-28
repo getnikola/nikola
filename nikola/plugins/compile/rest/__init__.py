@@ -102,7 +102,7 @@ class CompileRest(PageCompiler):
         else:
             return False
 
-    def create_post(self, path, content, onefile=False, is_page=False, **kw):
+    def create_post(self, path, **kw):
         content = kw.pop('content', None)
         one_file = kw.pop('one_file', False)
         is_page = kw.pop('is_page', False)
