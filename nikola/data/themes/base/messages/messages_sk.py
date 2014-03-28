@@ -1,0 +1,32 @@
+# -*- encoding:utf-8 -*-
+from __future__ import unicode_literals
+
+MESSAGES = {
+    "Also available in:": "Tiež dostupné v:",
+    "Archive": "Archív",
+    "Categories": "Kategórie",
+    "Comments": "Komentáre",
+    "LANGUAGE": "Slovenčina",
+    "Languages:": "Jazyky:",
+    "More posts about %s": "Viac príspevkov o %s",
+    "Newer posts": "Novšie príspevky",
+    "Next post": "Nasledujúci príspevok",
+    "No posts found.": "Žiadne príspevky nenájdené",
+    "Nothing found.": "Nič nenájdené.",
+    "Older posts": "Staršie príspevky",
+    "Original site": "Pôvodná stránka",
+    "Posted:": "Zverejnené:",
+    "Posts about %s": "Príspevky o %s",
+    "Posts for year %s": "Príspevky z roku %s",
+    "Posts for {month} {year}": "Príspevky za mesiac {month} z roku {year}",
+    "Previous post": "Predchádzajúci príspevok",
+    "Publication date": "Dátum zverejnenia",
+    "RSS feed": "RSS kanál",
+    "Read in English": "Čítať v slovenčine",
+    "Read more": "Čítať ďalej",
+    "Source": "Zdroj",
+    "Tags and Categories": "Štítky a kategórie",
+    "Tags": "Štítky",
+    "old posts, page %d": "staré príspevky, strana %d",
+    "page %d": "stránka %d",
+}

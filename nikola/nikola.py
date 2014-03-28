@@ -115,6 +115,7 @@ LEGAL_VALUES = {
         'pt_br': 'Portuguese (Brasil)',
         'pl': 'Polish',
         'ru': 'Russian',
+        'sk': 'Slovak',
         'sl': 'Slovenian',
         ('tr', '!tr_TR'): 'Turkish',
         'ur': 'Urdu',
