@@ -12,6 +12,9 @@ In goes content, out comes a website, ready to deploy.
 .. image:: https://coveralls.io/repos/getnikola/nikola/badge.png?branch=master
   :target: https://coveralls.io/r/getnikola/nikola?branch=master
 
+.. image:: http://img.shields.io/badge/license-MIT-green.svg
+   :target: https://github.com/getnikola/nikola/blob/master/LICENSE.txt
+
 Why Static Websites?
 --------------------
 
