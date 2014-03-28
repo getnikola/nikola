@@ -3,8 +3,11 @@ Nikola, a Static Site and Blog Generator
 
 In goes content, out comes a website, ready to deploy.
 
-.. image:: http://img.shields.io/github/release/getnikola/nikola.png
-    :target: http://badge.fury.io/py/Nikola
+.. image:: http://img.shields.io/pypi/v/Nikola.png
+   :target: https://pypi.python.org/pypi/Nikola
+
+.. image:: http://img.shields.io/pypi/d/Nikola.png
+   :target: https://pypi.python.org/pypi/Nikola
 
 .. image:: http://img.shields.io/travis/getnikola/nikola.png
    :target: https://travis-ci.org/getnikola/nikola
