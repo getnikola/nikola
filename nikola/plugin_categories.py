@@ -231,7 +231,7 @@ class PageCompiler(BasePlugin):
         """Compile the source, save it on dest."""
         raise NotImplementedError()
 
-    def create_post(self, path, content, onefile=False, **kw):
+    def create_post(self, path, content=None, onefile=False, is_page=False, **kw):
         """Create post file with optional metadata."""
         raise NotImplementedError()
 
