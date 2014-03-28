@@ -3,13 +3,13 @@ Nikola, a Static Site and Blog Generator
 
 In goes content, out comes a website, ready to deploy.
 
-.. image:: https://badge.fury.io/py/Nikola.png
+.. image:: http://img.shields.io/github/release/getnikola/nikola.png
     :target: http://badge.fury.io/py/Nikola
 
-.. image:: https://travis-ci.org/getnikola/nikola.png
+.. image:: http://img.shields.io/travis/getnikola/nikola.png
    :target: https://travis-ci.org/getnikola/nikola
 
-.. image:: https://coveralls.io/repos/getnikola/nikola/badge.png?branch=master
+.. image:: http://img.shields.io/coveralls/getnikola/nikola.png
   :target: https://coveralls.io/r/getnikola/nikola?branch=master
 
 .. image:: http://img.shields.io/badge/license-MIT-green.png
