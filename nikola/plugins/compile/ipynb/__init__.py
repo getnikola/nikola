@@ -39,12 +39,7 @@ except ImportError:
     flag = None
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing, write_metadata
-
-try:
-    from collections import OrderedDict
-except ImportError:
-    OrderedDict = dict  # NOQA
+from nikola.utils import makedirs, req_missing
 
 
 class CompileIPynb(PageCompiler):

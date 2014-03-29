@@ -33,11 +33,6 @@ import codecs
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, write_metadata
 
-try:
-    from collections import OrderedDict
-except ImportError:
-    OrderedDict = dict  # NOQA
-
 
 _META_SEPARATOR = '(' + os.linesep * 2 + '|' + ('\n' * 2) + '|' + ("\r\n" * 2) + ')'
 
@@ -61,7 +56,7 @@ class CompileHtml(PageCompiler):
         onefile = kw.pop('onefile', False)
         # is_page is not used by create_post as of now.
         kw.pop('is_page', False)
-        metadata = OrderedDict()
+        metadata = {}
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))

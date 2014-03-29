@@ -37,11 +37,6 @@ except ImportError:
     creole = None
 
 from nikola.plugin_categories import PageCompiler
-try:
-    from collections import OrderedDict
-except ImportError:
-    OrderedDict = dict  # NOQA
-
 from nikola.utils import makedirs, req_missing
 
 
