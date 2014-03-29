@@ -33,6 +33,10 @@ body {
 	line-height: 1.4;
 	padding: 1em;
 }
+@media print {
+	font-family: Garamond, serif;
+}
+
 #container {
 	margin: 1em auto;
 	max-width: 770px;
