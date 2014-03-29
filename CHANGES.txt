@@ -4,7 +4,9 @@ New in master
 Features
 --------
 
-* Create automatic story index pages for subfolders too (Issue #793) 
+* Added support for new meta files that are the same format as 1-file metadata,
+  allowing for greater flexibility (Issue #954)
+* Create automatic story index pages for subfolders too (Issue #793)
 * New Slovak translation by Tomáš Prékop
 * Created a MarkdownExtension plugin class (Issue #1175)
 * The base theme produces properly sectioned and semantic HTML5 (Issues #1123, #1137)

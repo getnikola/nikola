@@ -651,29 +651,43 @@ def get_metadata_from_meta_file(path, config=None, lang=None):
     if os.path.isfile(meta_path):
         with codecs.open(meta_path, "r", "utf8") as meta_file:
             meta_data = meta_file.readlines()
-        while len(meta_data) < 7:
-            meta_data.append("")
-        (title, slug, date, tags, link, description, _type) = [
-            x.strip() for x in meta_data][:7]
 
-        meta = {}
+        # Detect new-style metadata.
+        newstyleregexp = re.compile(r'\.\. .*?: .*')
+        newstylemeta = False
+        for l in meta_data:
+            if l.strip():
+                if re.match(newstyleregexp, l):
+                    newstylemeta = True
 
-        if title:
-            meta['title'] = title
-        if slug:
-            meta['slug'] = slug
-        if date:
-            meta['date'] = date
-        if tags:
-            meta['tags'] = tags
-        if link:
-            meta['link'] = link
-        if description:
-            meta['description'] = description
-        if _type:
-            meta['type'] = _type
+        if newstylemeta:
+            # New-style metadata is basically the same as reading metadata from
+            # a 1-file post.
+            return get_metadata_from_file(path, config, lang)
+        else:
+            while len(meta_data) < 7:
+                meta_data.append("")
+            (title, slug, date, tags, link, description, _type) = [
+                x.strip() for x in meta_data][:7]
 
-        return meta
+            meta = {}
+
+            if title:
+                meta['title'] = title
+            if slug:
+                meta['slug'] = slug
+            if date:
+                meta['date'] = date
+            if tags:
+                meta['tags'] = tags
+            if link:
+                meta['link'] = link
+            if description:
+                meta['description'] = description
+            if _type:
+                meta['type'] = _type
+
+            return meta
 
     elif lang:
         # Metadata file doesn't exist, but not default language,
