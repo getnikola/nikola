@@ -92,6 +92,7 @@ class CommandServe(Command):
             try:
                 httpd.serve_forever()
             except KeyboardInterrupt:
+                self.logger.info("Server is shutting down.")
                 exit(130)
 
 
