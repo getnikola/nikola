@@ -58,8 +58,9 @@ class CompilePandoc(PageCompiler):
 
     def create_post(self, path, **kw):
         content = kw.pop('content', None)
-        one_file = kw.pop('one_file', False)
-        is_page = kw.pop('is_page', False)
+        onefile = kw.pop('onefile', False)
+        # is_page is not used by create_post as of now.
+        kw.pop('is_page', False)
         metadata = OrderedDict()
         metadata.update(self.default_metadata)
         metadata.update(kw)

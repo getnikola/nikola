@@ -67,9 +67,9 @@ class CompileIPynb(PageCompiler):
             out_file.write(body)
 
     def create_post(self, path, **kw):
-        # warning: content and onefile are ignored by ipynb.
-        content = kw.pop('content', None)
-        one_file = kw.pop('one_file', False)
+        # content and onefile are ignored by ipynb.
+        kw.pop('content', None)
+        kw.pop('onefile', False)
         is_page = kw.pop('is_page', False)
 
         metadata = OrderedDict()
