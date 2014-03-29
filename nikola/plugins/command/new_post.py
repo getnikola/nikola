@@ -314,6 +314,12 @@ class CommandNewPost(Command):
         d_name = os.path.dirname(txt_path)
         utils.makedirs(d_name)
         metadata = self.site.config['ADDITIONAL_METADATA']
+
+        # Override onefile if not really supported.
+        if not compiler_plugin.supports_onefile and onefile:
+            onefile = False
+            LOGGER.warn('This compiler does not support one-file posts.')
+
         content = "Write your {0} here.".format('page' if is_page else 'post')
         compiler_plugin.create_post(
             txt_path, content=content, onefile=onefile, title=title,

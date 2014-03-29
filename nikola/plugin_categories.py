@@ -212,6 +212,7 @@ class PageCompiler(BasePlugin):
 
     name = "dummy compiler"
     demote_headers = False
+    supports_onefile = True
     if OrderedDict is not None:
         default_metadata = OrderedDict()
     else:
