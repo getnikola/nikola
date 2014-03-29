@@ -25,8 +25,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import unicode_literals
-import glob
-import itertools
+from collections import defaultdict
 import os
 
 from nikola.plugin_categories import Task
@@ -134,33 +133,33 @@ class Indexes(Task):
             "post_pages": self.site.config["post_pages"],
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
+            "index_file": self.site.config['INDEX_FILE'],
         }
         template_name = "list.tmpl"
         for lang in kw["translations"]:
             # Need to group by folder to avoid duplicated tasks (Issue #758)
-            for dirname, wildcards in itertools.groupby((w for w, d, x, i in kw["post_pages"] if not i), os.path.dirname):
-                context = {}
-                # vim/pyflakes thinks it's unused
-                # src_dir = os.path.dirname(wildcard)
-                files = []
-                for wildcard in wildcards:
-                    files += glob.glob(wildcard)
-                post_list = [self.site.global_data[p] for p in files]
-                output_name = os.path.join(kw["output_folder"],
-                                           self.site.path("post_path",
-                                                          wildcard,
-                                                          lang)).encode('utf8')
-                context["items"] = [(post.title(lang), post.permalink(lang))
-                                    for post in post_list]
-                task = self.site.generic_post_list_renderer(lang, post_list,
-                                                            output_name,
-                                                            template_name,
-                                                            kw['filters'],
-                                                            context)
-                task_cfg = {1: task['uptodate'][0].config, 2: kw}
-                task['uptodate'] = [config_changed(task_cfg)]
-                task['basename'] = self.name
-                yield task
+                # Group all pages by path prefix
+                groups = defaultdict(list)
+                for p in self.site.timeline:
+                    if not p.is_post:
+                        dirname = os.path.dirname(p.destination_path(lang))
+                        groups[dirname].append(p)
+                for dirname, post_list in groups.items():
+                    context = {}
+                    context["items"] = [
+                        (post.title(lang), post.permalink(lang))
+                        for post in post_list
+                    ]
+                    output_name = os.path.join(kw['output_folder'], dirname, kw['index_file'])
+                    task = self.site.generic_post_list_renderer(lang, post_list,
+                                                                output_name,
+                                                                template_name,
+                                                                kw['filters'],
+                                                                context)
+                    task_cfg = {1: task['uptodate'][0].config, 2: kw}
+                    task['uptodate'] = [config_changed(task_cfg)]
+                    task['basename'] = self.name
+                    yield task
 
     def index_path(self, name, lang):
         if name not in [None, 0]:
