@@ -39,7 +39,7 @@ except ImportError:
     flag = None
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing
+from nikola.utils import makedirs, req_missing, write_metadata
 
 try:
     from collections import OrderedDict
@@ -79,10 +79,7 @@ class CompileIPynb(PageCompiler):
         makedirs(os.path.dirname(path))
         meta_path = os.path.join(d_name, kw['slug'] + ".meta")
         with codecs.open(meta_path, "wb+", "utf8") as fd:
-            fd.write('\n'.join((metadata['title'], metadata['slug'],
-                                metadata['date'], metadata['tags'],
-                                metadata['link'],
-                                metadata['description'], metadata['type'])))
+            fd.write(write_metadata(metadata))
         print("Your {0}'s metadata is at: {1}".format('page' if is_page else 'post', meta_path))
         with codecs.open(path, "wb+", "utf8") as fd:
             fd.write("""{

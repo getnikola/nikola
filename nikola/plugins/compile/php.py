@@ -33,7 +33,7 @@ import shutil
 import codecs
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs
+from nikola.utils import makedirs, write_metadata
 
 try:
     from collections import OrderedDict
@@ -63,9 +63,8 @@ class CompilePhp(PageCompiler):
             content += '\n'
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
-                fd.write('<!-- \n')
-                for k, v in metadata.items():
-                    fd.write('.. {0}: {1}\n'.format(k, v))
+                fd.write('<!--\n')
+                fd.write(write_metadata(metadata))
                 fd.write('-->\n\n')
             fd.write(content)
 

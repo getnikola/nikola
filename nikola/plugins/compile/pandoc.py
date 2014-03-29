@@ -35,7 +35,7 @@ import os
 import subprocess
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import req_missing, makedirs
+from nikola.utils import req_missing, makedirs, write_metadata
 
 try:
     from collections import OrderedDict
@@ -69,8 +69,7 @@ class CompilePandoc(PageCompiler):
             content += '\n'
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
-                fd.write('<!-- \n')
-                for k, v in metadata.items():
-                    fd.write('.. {0}: {1}\n'.format(k, v))
+                fd.write('<!--\n')
+                fd.write(write_metadata(metadata))
                 fd.write('-->\n\n')
             fd.write(content)

@@ -46,7 +46,7 @@ except ImportError:
     OrderedDict = dict  # NOQA
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing
+from nikola.utils import makedirs, req_missing, write_metadata
 
 
 class CompileTxt2tags(PageCompiler):
@@ -76,7 +76,6 @@ class CompileTxt2tags(PageCompiler):
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
                 fd.write("\n'''\n<!--\n")
-                for k, v in metadata.items():
-                    fd.write('.. {0}: {1}\n'.format(k, v))
+                fd.write(write_metadata(metadata))
                 fd.write("-->\n'''\n")
             fd.write(content)
