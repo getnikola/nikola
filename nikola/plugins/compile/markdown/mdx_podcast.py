@@ -39,6 +39,7 @@ Basic Example:
 <p><audio src="http://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3"></audio></p>
 '''
 
+from nikola.plugin_categories import MarkdownExtension
 from markdown.extensions import Extension
 from markdown.inlinepatterns import Pattern
 from markdown.util import etree
@@ -62,7 +63,7 @@ class PodcastPattern(Pattern):
         return audio_elem
 
 
-class PodcastExtension(Extension):
+class PodcastExtension(MarkdownExtension, Extension):
     def __init__(self, configs={}):
         # set extension defaults
         self.config = {}

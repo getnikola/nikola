@@ -33,6 +33,7 @@ __all__ = [
     'LateTask',
     'PageCompiler',
     'RestExtension',
+    'MarkdownExtension',
     'Task',
     'TaskMultiplier',
     'TemplateSystem',
@@ -242,6 +243,15 @@ class PageCompiler(BasePlugin):
 
 class RestExtension(BasePlugin):
     name = "dummy_rest_extension"
+
+
+class MarkdownExtension(BasePlugin):
+    name = "dummy_markdown_extension"
+
+    def set_site(self, site):
+        from nikola.plugins.compile.markdown import CompileMarkdown
+        CompileMarkdown.extensions.append(self)
+        return super(MarkdownExtension, self).set_site(site)
 
 
 class SignalHandler(BasePlugin):

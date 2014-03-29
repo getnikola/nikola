@@ -135,7 +135,7 @@ del _suplang['en']
 for k, v in sorted(_suplang.items()):
     suplang += (u'# {0:<' + _sllength + u'}  {1}\n').format(k, v)
 
-SAMPLE_CONF['_SUPPORTED_LANGUAGES'] = suplang
+SAMPLE_CONF['_SUPPORTED_LANGUAGES'] = suplang.strip()
 
 # Generate a list of supported comment systems here.
 
@@ -268,7 +268,7 @@ class CommandInit(Command):
             answer = ask('Language(s) to use', 'en')
             while answer.strip() == '?':
                 print('\n# Available languages:')
-                print(SAMPLE_CONF['_SUPPORTED_LANGUAGES'])
+                print(SAMPLE_CONF['_SUPPORTED_LANGUAGES'] + '\n')
                 answer = ask('Language(s) to use', 'en')
 
             langs = answer.split(',')

@@ -3,18 +3,20 @@ Nikola, a Static Site and Blog Generator
 
 In goes content, out comes a website, ready to deploy.
 
-.. image:: https://travis-ci.org/getnikola/nikola.png
+.. image:: http://img.shields.io/pypi/v/Nikola.png
+   :target: https://pypi.python.org/pypi/Nikola
+
+.. .. image:: http://img.shields.io/pypi/d/Nikola.png
+..   :target: https://pypi.python.org/pypi/Nikola
+
+.. image:: http://img.shields.io/travis/getnikola/nikola.png
    :target: https://travis-ci.org/getnikola/nikola
 
-.. image:: https://pypip.in/v/Nikola/badge.png
-        :target: https://crate.io/packages/Nikola
-
-.. image:: https://pypip.in/d/Nikola/badge.png
-        :target: https://crate.io/packages/Nikola
-
-.. image:: https://coveralls.io/repos/getnikola/nikola/badge.png?branch=master
+.. image:: http://img.shields.io/coveralls/getnikola/nikola.png
   :target: https://coveralls.io/r/getnikola/nikola?branch=master
 
+.. image:: http://img.shields.io/badge/license-MIT-green.png
+   :target: https://github.com/getnikola/nikola/blob/master/LICENSE.txt
 
 Why Static Websites?
 --------------------

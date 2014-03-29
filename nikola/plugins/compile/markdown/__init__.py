@@ -34,16 +34,6 @@ import re
 
 try:
     from markdown import markdown
-
-    from nikola.plugins.compile.markdown.mdx_nikola import NikolaExtension
-    nikola_extension = NikolaExtension()
-
-    from nikola.plugins.compile.markdown.mdx_gist import GistExtension
-    gist_extension = GistExtension()
-
-    from nikola.plugins.compile.markdown.mdx_podcast import PodcastExtension
-    podcast_extension = PodcastExtension()
-
 except ImportError:
     markdown = None  # NOQA
     nikola_extension = None
@@ -65,8 +55,22 @@ class CompileMarkdown(PageCompiler):
 
     name = "markdown"
     demote_headers = True
-    extensions = [gist_extension, nikola_extension, podcast_extension]
+    extensions = []
     site = None
+
+    def set_site(self, site):
+        for plugin_info in site.plugin_manager.getPluginsOfCategory("MarkdownExtension"):
+            if (plugin_info.name in site.config['DISABLED_PLUGINS']
+                or (plugin_info.name in site.EXTRA_PLUGINS and
+                    plugin_info.name not in site.config['ENABLED_EXTRAS'])):
+                site.plugin_manager.removePluginFromCategory(plugin_info, "MarkdownExtension")
+                continue
+
+            site.plugin_manager.activatePluginByName(plugin_info.name)
+            plugin_info.plugin_object.set_site(site)
+            plugin_info.plugin_object.short_help = plugin_info.description
+
+        return super(CompileMarkdown, self).set_site(site)
 
     def compile_html(self, source, dest, is_two_file=True):
         if markdown is None:

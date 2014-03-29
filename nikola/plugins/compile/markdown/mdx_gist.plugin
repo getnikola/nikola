@@ -1,10 +1,9 @@
 [Core]
-Name = textile
-Module = textile
+Name = mdx_gist
+Module = mdx_gist
 
 [Documentation]
 Author = Roberto Alsina
 Version = 0.1
 Website = http://getnikola.com
-Description = Compile Textile into HTML
-
+Description = Extension for embedding gists
