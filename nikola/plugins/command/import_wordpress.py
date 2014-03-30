@@ -343,6 +343,41 @@ class CommandImportWordpress(Command, ImportMixin):
                                           "\n~~~~~~~~~~~~\n")
         return new_content
 
+    code_re = re.compile(r'\[code(?: lang(?:uage)?="(.*?)")?\](.*?)\[/code\]', re.DOTALL)
+    def transform_code(self, content):
+        # http://en.support.wordpress.com/code/posting-source-code/. There are
+        # a ton of things not supported here. We only do a basic [code
+        # lang="x"] -> ```x translation, and remove quoted html entities (<,
+        # >, &, and ").
+
+        # Workaround from https://gist.github.com/gromgull/3922244, because
+        # re.sub doesn't work if there is no lang. An alternative would be to
+        # use the regex module, instead of re.
+        def re_sub(pattern, replacement, string):
+            def _r(m):
+                # Now this is ugly.
+                # Python has a "feature" where unmatched groups return None
+                # then re.sub chokes on this.
+                # see http://bugs.python.org/issue1519638
+
+                # this works around and hooks into the internal of the re module...
+
+                # the match object is replaced with a wrapper that
+                # returns "" instead of None for unmatched groups
+
+                class _m():
+                    def __init__(self, m):
+                        self.m=m
+                        self.string=m.string
+                    def group(self, n):
+                        return m.group(n) or ""
+
+                return re._expand(pattern, _m(m), replacement)
+
+            return re.sub(pattern, _r, string)
+
+        return re_sub(self.code_re, r'```\1\n\2\n```', content)
+
     @staticmethod
     def transform_caption(content):
         new_caption = re.sub(r'\[/caption\]', '', content)
@@ -359,6 +394,7 @@ class CommandImportWordpress(Command, ImportMixin):
 
     def transform_content(self, content):
         new_content = self.transform_sourcecode(content)
+        new_content = self.transform_code(content)
         new_content = self.transform_caption(new_content)
         new_content = self.transform_multiple_newlines(new_content)
         return new_content
