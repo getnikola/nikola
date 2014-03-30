@@ -344,6 +344,7 @@ class CommandImportWordpress(Command, ImportMixin):
         return new_content
 
     code_re = re.compile(r'\[code(?: lang(?:uage)?="(.*?)")?\](.*?)\[/code\]', re.DOTALL)
+
     def transform_code(self, content):
         # http://en.support.wordpress.com/code/posting-source-code/. There are
         # a ton of things not supported here. We only do a basic [code
