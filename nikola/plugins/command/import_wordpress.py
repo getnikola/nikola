@@ -350,33 +350,16 @@ class CommandImportWordpress(Command, ImportMixin):
         # lang="x"] -> ```x translation, and remove quoted html entities (<,
         # >, &, and ").
 
-        # Workaround from https://gist.github.com/gromgull/3922244, because
-        # re.sub doesn't work if there is no lang. An alternative would be to
-        # use the regex module, instead of re.
-        def re_sub(pattern, replacement, string):
-            def _r(m):
-                # Now this is ugly.
-                # Python has a "feature" where unmatched groups return None
-                # then re.sub chokes on this.
-                # see http://bugs.python.org/issue1519638
+        def replacement(m):
+            language = m.group(1) or ''
+            code = m.group(2)
+            code = code.replace('&amp;', '&')
+            code = code.replace('&gt;', '>')
+            code = code.replace('&lt;', '<')
+            code = code.replace('&quot;', '"')
+            return '```{language}\n{code}\n```'.format(language=language, code=code)
 
-                # this works around and hooks into the internal of the re module...
-
-                # the match object is replaced with a wrapper that
-                # returns "" instead of None for unmatched groups
-
-                class _m():
-                    def __init__(self, m):
-                        self.m=m
-                        self.string=m.string
-                    def group(self, n):
-                        return m.group(n) or ""
-
-                return re._expand(pattern, _m(m), replacement)
-
-            return re.sub(pattern, _r, string)
-
-        return re_sub(self.code_re, r'```\1\n\2\n```', content)
+        return self.code_re.sub(replacement, content)
 
     @staticmethod
     def transform_caption(content):
