@@ -139,8 +139,8 @@ class Archive(Task):
                     kw['output_folder'], self.site.path("archive", None,
                                                         lang))
                 context["title"] = kw["messages"][lang]["Archive"]
-                context["items"] = [(year, self.site.link("archive", year, lang))
-                                    for year in years]
+                context["items"] = [(y, self.site.link("archive", y, lang))
+                                    for y in years]
                 context["permalink"] = self.site.link("archive", None, lang)
                 task = self.site.generic_post_list_renderer(
                     lang,
