@@ -335,22 +335,13 @@ class CommandImportWordpress(Command, ImportMixin):
                     links[url] = '/' + dst_url
                     links[url] = '/' + dst_url
 
-    @staticmethod
-    def transform_sourcecode(content):
-        new_content = re.sub('\[sourcecode language="([^"]+)"\]',
-                             "\n~~~~~~~~~~~~{.\\1}\n", content)
-        new_content = new_content.replace('[/sourcecode]',
-                                          "\n~~~~~~~~~~~~\n")
-        return new_content
-
-    code_re = re.compile(r'\[code(?: lang(?:uage)?="(.*?)")?\](.*?)\[/code\]', re.DOTALL)
+    code_re = re.compile(r'\[(?:source)?code(?: lang(?:uage)?="(.*?)")?\](.*?)\[/code\]', re.DOTALL)
 
     def transform_code(self, content):
         # http://en.support.wordpress.com/code/posting-source-code/. There are
         # a ton of things not supported here. We only do a basic [code
         # lang="x"] -> ```x translation, and remove quoted html entities (<,
         # >, &, and ").
-
         def replacement(m):
             language = m.group(1) or ''
             code = m.group(2)
@@ -377,11 +368,10 @@ class CommandImportWordpress(Command, ImportMixin):
             return content
 
     def transform_content(self, content):
-        new_content = self.transform_sourcecode(content)
-        new_content = self.transform_code(content)
-        new_content = self.transform_caption(new_content)
-        new_content = self.transform_multiple_newlines(new_content)
-        return new_content
+        content = self.transform_code(content)
+        content = self.transform_caption(content)
+        content = self.transform_multiple_newlines(content)
+        return content
 
     def import_item(self, item, wordpress_namespace, out_folder=None):
         """Takes an item from the feed and creates a post file."""
