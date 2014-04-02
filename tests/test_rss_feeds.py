@@ -29,6 +29,7 @@ fake_conf['DEFAULT_LANG'] = 'en'
 fake_conf['TRANSLATIONS'] = {'en': ''}
 fake_conf['BASE_URL'] = 'http://some.blog/'
 fake_conf['BLOG_AUTHOR'] = nikola.nikola.utils.TranslatableSetting('BLOG_AUTHOR', 'Nikola Tesla')
+fake_conf['TRANSLATIONS_PATTERN'] = '{path}.{lang}.{ext}'
 
 
 class FakeCompiler(object):

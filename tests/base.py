@@ -205,6 +205,7 @@ class FakeSite(object):
             'EXTRA_PLUGINS': [],
             'DEFAULT_LANG': 'en',
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],
+            'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
         }
         self.EXTRA_PLUGINS = self.config['EXTRA_PLUGINS']
         self.plugin_manager = PluginManager(categories_filter={
