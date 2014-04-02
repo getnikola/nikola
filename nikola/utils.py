@@ -985,22 +985,22 @@ def get_translation_candidate(config, path, lang):
     """
     # Convert the pattern into a regexp
     pattern = config['TRANSLATIONS_PATTERN']
-    pattern = pattern.replace('{path}','(?P<path>[^\.]*)')
-    pattern = pattern.replace('{ext}','(?P<ext>[^\.]*)')
-    pattern = pattern.replace('{lang}','(?P<lang>[^\.]*)')
+    pattern = pattern.replace('{path}', '(?P<path>[^\.]*)')
+    pattern = pattern.replace('{ext}', '(?P<ext>[^\.]*)')
+    pattern = pattern.replace('{lang}', '(?P<lang>[^\.]*)')
     m = re.match(pattern, path)
     if m and all(m.groups()):  # It's a translated path
         p, e, l = m.group('path'), m.group('ext'), m.group('lang')
         if l == lang:  # Nothing to do
             return path
         elif lang == config['DEFAULT_LANG']:  # Return untranslated path
-            return '{0}.{1}'.format(p,e)
+            return '{0}.{1}'.format(p, e)
         else:  # Change lang and return
             return config['TRANSLATIONS_PATTERN'].format(path=p, ext=e, lang=lang)
     else:
         # It's a untranslated path, assume it's path.ext
-        p,e = os.path.splitext(path)
-        e=e[1:]  # No initial dot
+        p, e = os.path.splitext(path)
+        e = e[1:]  # No initial dot
         if lang == config['DEFAULT_LANG']:  # Nothing to do
             return path
         else:  # Change lang and return

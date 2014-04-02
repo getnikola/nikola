@@ -487,7 +487,7 @@ class Nikola(object):
                     compilers[compiler].add(candidate)
 
         # Avoid redundant compilers
-        for k,v in compilers.items():
+        for k, v in compilers.items():
             self.config['COMPILERS'][k] = sorted(list(v))
 
         # Activate all required compiler plugins
