@@ -132,11 +132,11 @@ class Post(object):
             if lang != self.default_lang:
                 if os.path.isfile(get_translation_candidate(self.config, self.source_path, lang)):
                     self.translated_to.add(lang)
-
                 meta = defaultdict(lambda: '')
                 meta.update(default_metadata)
                 meta.update(get_meta(self, self.config['FILE_METADATA_REGEXP'], lang))
                 self.meta[lang] = meta
+            # Don't assume that the source is in default_lang: bug #1194
             elif os.path.isfile(self.source_path):
                 self.translated_to.add(self.default_lang)
 
@@ -385,10 +385,7 @@ class Post(object):
 
     def translated_base_path(self, lang):
         """Return path to the translation's base_path file."""
-        if lang == self.default_lang:
-            return self.base_path
-        else:
-            return get_translation_candidate(self.config, self.base_path, lang)
+        return get_translation_candidate(self.config, self.base_path, lang)
 
     def _translated_file_path(self, lang):
         """Return path to the translation's file, or to the original."""
