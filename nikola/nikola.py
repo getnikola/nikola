@@ -1044,18 +1044,20 @@ class Nikola(object):
                 # And now get all the translated paths
                 translated = set([])
                 for lang in self.config['TRANSLATIONS'].keys():
+                    if lang == self.config['DEFAULT_LANG']:
+                        continue
                     lang_glob = utils.get_translation_candidate(self.config, dir_glob, lang)  # posts/foo/*.LANG.rst
                     translated = translated.union(set(glob.glob(lang_glob)))
-                # untranslated paths often match translated paths too, so remove them
-                translated = translated - set(untranslated)
+                # untranslated globs like *.rst often match translated paths too, so remove them
+                # and ensure x.rst is not in the translated set
+                untranslated = set(untranslated) - translated
 
                 # also remove from translated paths that are translations of
-                # paths in untranslated_list
+                # paths in untranslated_list, so x.es.rst is not in the untranslated set
                 for p in untranslated:
                     translated = translated - set([utils.get_translation_candidate(self.config, p, l) for l in self.config['TRANSLATIONS'].keys()])
 
                 full_list = list(translated) + list(untranslated)
-
                 # We eliminate from the list the files inside any .ipynb folder
                 full_list = [p for p in full_list
                              if not any([x.startswith('.')
