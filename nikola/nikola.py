@@ -1052,7 +1052,7 @@ class Nikola(object):
                 # also remove from translated paths that are translations of
                 # paths in untranslated_list
                 for p in untranslated:
-                    translated = translated - set([utils.get_translation_candidate(self.config, p, lang) for lanf in self.config['TRANSLATIONS'].keys()])
+                    translated = translated - set([utils.get_translation_candidate(self.config, p, l) for l in self.config['TRANSLATIONS'].keys()])
 
                 full_list = list(translated) + list(untranslated)
 
