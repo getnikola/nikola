@@ -56,6 +56,7 @@ Features
 Bugfixes
 --------
 
+* Refactoring of post translation checking (Issue #1194)
 * Trigger rebuild on gallery changes in auto mode (Issue #1180)
 * Galleries are more usable in non-Bootstrap-based themes (Issue #1137)
 * Removed dependency on pytz because mixing it with dateutil breaks things.

@@ -490,8 +490,6 @@ class Nikola(object):
         for k,v in compilers.items():
             self.config['COMPILERS'][k] = sorted(list(v))
 
-        print(self.config['COMPILERS'])
-
         # Activate all required compiler plugins
         for plugin_info in self.plugin_manager.getPluginsOfCategory("PageCompiler"):
             if plugin_info.name in self.config["COMPILERS"].keys():
@@ -1057,7 +1055,6 @@ class Nikola(object):
                     translated = translated - set([utils.get_translation_candidate(self.config, p, lang) for lanf in self.config['TRANSLATIONS'].keys()])
 
                 full_list = list(translated) + list(untranslated)
-                print('====>', full_list)
 
                 # We eliminate from the list the files inside any .ipynb folder
                 full_list = [p for p in full_list
