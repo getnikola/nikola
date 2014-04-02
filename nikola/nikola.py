@@ -477,12 +477,20 @@ class Nikola(object):
             self.plugin_manager.activatePluginByName(plugin_info.name)
             plugin_info.plugin_object.set_site(self)
 
+        compilers = defaultdict(set)
         # Also add aliases for combinations with TRANSLATIONS_PATTERN
-        self.config['COMPILERS'] = dict([(lang, list(exts) + [
-            utils.get_translation_candidate(self.config, "f" + ext, lang)[1:]
-            for ext in exts
-            for lang in self.config['TRANSLATIONS'].keys()])
-            for lang, exts in list(self.config['COMPILERS'].items())])
+        for compiler, exts in self.config['COMPILERS'].items():
+            for ext in exts:
+                compilers[compiler].add(ext)
+                for lang in self.config['TRANSLATIONS'].keys():
+                    candidate = utils.get_translation_candidate(self.config, "f" + ext, lang)
+                    compilers[compiler].add(candidate)
+
+        # Avoid redundant compilers
+        for k,v in compilers.items():
+            self.config['COMPILERS'][k] = sorted(list(v))
+
+        print(self.config['COMPILERS'])
 
         # Activate all required compiler plugins
         for plugin_info in self.plugin_manager.getPluginsOfCategory("PageCompiler"):
