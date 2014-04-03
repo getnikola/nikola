@@ -966,15 +966,17 @@ def get_translation_candidate(config, path, lang):
     Return a possible path where we can find the translated version of some page
     based on the TRANSLATIONS_PATTERN configuration variable.
 
-    >>> config = {'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}', 'DEFAULT_LANG': 'en'}
+    >>> config = {'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}', 'DEFAULT_LANG': 'en', 'TRANSLATIONS': {'es':'1', 'en': 1}}
     >>> print(get_translation_candidate(config, '*.rst', 'es'))
     *.es.rst
+    >>> print(get_translation_candidate(config, 'fancy.post.rst', 'es'))
+    fancy.post.es.rst
     >>> print(get_translation_candidate(config, '*.es.rst', 'es'))
     *.es.rst
     >>> print(get_translation_candidate(config, '*.es.rst', 'en'))
     *.rst
 
-    >>> config = {'TRANSLATIONS_PATTERN': '{path}.{ext}.{lang}', 'DEFAULT_LANG': 'en'}
+    >>> config = {'TRANSLATIONS_PATTERN': '{path}.{ext}.{lang}', 'DEFAULT_LANG': 'en', 'TRANSLATIONS': {'es':'1', 'en': 1}}
     >>> print(get_translation_candidate(config, '*.rst', 'es'))
     *.rst.es
     >>> print(get_translation_candidate(config, '*.rst.es', 'es'))
@@ -985,9 +987,9 @@ def get_translation_candidate(config, path, lang):
     """
     # Convert the pattern into a regexp
     pattern = config['TRANSLATIONS_PATTERN']
-    pattern = pattern.replace('{path}', '(?P<path>[^\.]*)')
-    pattern = pattern.replace('{ext}', '(?P<ext>[^\.]*)')
-    pattern = pattern.replace('{lang}', '(?P<lang>[^\.]*)')
+    pattern = pattern.replace('{path}', '(?P<path>.+)')
+    pattern = pattern.replace('{ext}', '(?P<ext>[^\./]+)')
+    pattern = pattern.replace('{lang}', '(?P<lang>{0})'.format('|'.join(config['TRANSLATIONS'].keys())))
     m = re.match(pattern, path)
     if m and all(m.groups()):  # It's a translated path
         p, e, l = m.group('path'), m.group('ext'), m.group('lang')
