@@ -296,6 +296,8 @@ class Nikola(object):
             self.config['NAVIGATION_LINKS'] = {self.config['DEFAULT_LANG']: ()}
 
         # Translatability configuration.
+        self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
+                                                      {self.config['DEFAULT_LANG']: ''})
         utils.TranslatableSetting.default_lang = self.config['DEFAULT_LANG']
 
         self.TRANSLATABLE_SETTINGS = ('BLOG_AUTHOR',
@@ -324,7 +326,7 @@ class Nikola(object):
 
         for i in self.TRANSLATABLE_SETTINGS:
             try:
-                self.config[i] = utils.TranslatableSetting(i, self.config[i])
+                self.config[i] = utils.TranslatableSetting(i, self.config[i], self.config['TRANSLATIONS'])
             except KeyError:
                 pass
 
@@ -380,9 +382,6 @@ class Nikola(object):
 
         if not self.config.get('COPY_SOURCES'):
             self.config['SHOW_SOURCELINK'] = False
-
-        self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
-                                                      {self.config['DEFAULT_LANG']: ''})
 
         self.default_lang = self.config['DEFAULT_LANG']
         self.translations = self.config['TRANSLATIONS']

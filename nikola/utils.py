@@ -228,7 +228,7 @@ class TranslatableSetting(object):
     def __dir__(self):
         return list(set(self.__dict__).union(set(dir(str))))
 
-    def __init__(self, name, inp):
+    def __init__(self, name, inp, translations):
         """Initialize a translated setting.
 
         Valid inputs include:
@@ -240,6 +240,7 @@ class TranslatableSetting(object):
         """
         self.name = name
         self._inp = inp
+        self.translations = translations
         self.overriden_default = False
         self.values = defaultdict()
 
@@ -250,6 +251,9 @@ class TranslatableSetting(object):
                 self.default_lang = list(self.values.keys())[0]
                 self.overridden_default = True
             self.values.default_factory = lambda: self.values[self.default_lang]
+            for k in translations.keys():
+                if k not in self.values.keys():
+                    self.values[k] = inp[self.default_lang]
         else:
             self.translated = False
             self.values[self.default_lang] = inp
