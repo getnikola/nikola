@@ -995,7 +995,7 @@ def get_translation_candidate(config, path, lang):
     """
     # Convert the pattern into a regexp
     pattern = config['TRANSLATIONS_PATTERN']
-    pattern = pattern.replace('{path}', '(?P<path>.+)')
+    pattern = pattern.replace('{path}', '(?P<path>.+?)')
     pattern = pattern.replace('{ext}', '(?P<ext>[^\./]+)')
     pattern = pattern.replace('{lang}', '(?P<lang>{0})'.format('|'.join(config['TRANSLATIONS'].keys())))
     m = re.match(pattern, path)
