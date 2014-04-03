@@ -985,6 +985,10 @@ def get_translation_candidate(config, path, lang):
     cache/posts/fancy.post.html
     >>> print(get_translation_candidate(config, 'cache/posts/fancy.post.html', 'es'))
     cache/posts/fancy.post.es.html
+    >>> print(get_translation_candidate(config, 'cache/stories/charts.html', 'es'))
+    cache/stories/charts.es.html
+    >>> print(get_translation_candidate(config, 'cache/stories/charts.html', 'en'))
+    cache/stories/charts.html
 
     >>> config = {'TRANSLATIONS_PATTERN': '{path}.{ext}.{lang}', 'DEFAULT_LANG': 'en', 'TRANSLATIONS': {'es':'1', 'en': 1}}
     >>> print(get_translation_candidate(config, '*.rst', 'es'))
@@ -1001,6 +1005,8 @@ def get_translation_candidate(config, path, lang):
     """
     # Convert the pattern into a regexp
     pattern = config['TRANSLATIONS_PATTERN']
+    # This will still break if the user has ?*[]\ in the pattern. But WHY WOULD HE?
+    pattern = pattern.replace('.', r'\.')
     pattern = pattern.replace('{path}', '(?P<path>.+?)')
     pattern = pattern.replace('{ext}', '(?P<ext>[^\./]+)')
     pattern = pattern.replace('{lang}', '(?P<lang>{0})'.format('|'.join(config['TRANSLATIONS'].keys())))
