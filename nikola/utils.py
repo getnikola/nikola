@@ -964,9 +964,54 @@ def get_root_dir():
 def get_translation_candidate(config, path, lang):
     """
     Return a possible path where we can find the translated version of some page
-    based on the TRANSLATIONS_PATTERN configuration variable
+    based on the TRANSLATIONS_PATTERN configuration variable.
+
+    >>> config = {'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}', 'DEFAULT_LANG': 'en', 'TRANSLATIONS': {'es':'1', 'en': 1}}
+    >>> print(get_translation_candidate(config, '*.rst', 'es'))
+    *.es.rst
+    >>> print(get_translation_candidate(config, 'fancy.post.rst', 'es'))
+    fancy.post.es.rst
+    >>> print(get_translation_candidate(config, '*.es.rst', 'es'))
+    *.es.rst
+    >>> print(get_translation_candidate(config, '*.es.rst', 'en'))
+    *.rst
+    >>> print(get_translation_candidate(config, 'cache/posts/fancy.post.es.html', 'en'))
+    cache/posts/fancy.post.html
+    >>> print(get_translation_candidate(config, 'cache/posts/fancy.post.html', 'es'))
+    cache/posts/fancy.post.es.html
+
+    >>> config = {'TRANSLATIONS_PATTERN': '{path}.{ext}.{lang}', 'DEFAULT_LANG': 'en', 'TRANSLATIONS': {'es':'1', 'en': 1}}
+    >>> print(get_translation_candidate(config, '*.rst', 'es'))
+    *.rst.es
+    >>> print(get_translation_candidate(config, '*.rst.es', 'es'))
+    *.rst.es
+    >>> print(get_translation_candidate(config, '*.rst.es', 'en'))
+    *.rst
+    >>> print(get_translation_candidate(config, 'cache/posts/fancy.post.html.es', 'en'))
+    cache/posts/fancy.post.html
+    >>> print(get_translation_candidate(config, 'cache/posts/fancy.post.html', 'es'))
+    cache/posts/fancy.post.html.es
+
     """
+    # Convert the pattern into a regexp
     pattern = config['TRANSLATIONS_PATTERN']
-    path, ext = os.path.splitext(path)
-    ext = ext[1:] if len(ext) > 0 else ext
-    return pattern.format(path=path, lang=lang, ext=ext)
+    pattern = pattern.replace('{path}', '(?P<path>.+?)')
+    pattern = pattern.replace('{ext}', '(?P<ext>[^\./]+)')
+    pattern = pattern.replace('{lang}', '(?P<lang>{0})'.format('|'.join(config['TRANSLATIONS'].keys())))
+    m = re.match(pattern, path)
+    if m and all(m.groups()):  # It's a translated path
+        p, e, l = m.group('path'), m.group('ext'), m.group('lang')
+        if l == lang:  # Nothing to do
+            return path
+        elif lang == config['DEFAULT_LANG']:  # Return untranslated path
+            return '{0}.{1}'.format(p, e)
+        else:  # Change lang and return
+            return config['TRANSLATIONS_PATTERN'].format(path=p, ext=e, lang=lang)
+    else:
+        # It's a untranslated path, assume it's path.ext
+        p, e = os.path.splitext(path)
+        e = e[1:]  # No initial dot
+        if lang == config['DEFAULT_LANG']:  # Nothing to do
+            return path
+        else:  # Change lang and return
+            return config['TRANSLATIONS_PATTERN'].format(path=p, ext=e, lang=lang)
