@@ -975,6 +975,10 @@ def get_translation_candidate(config, path, lang):
     *.es.rst
     >>> print(get_translation_candidate(config, '*.es.rst', 'en'))
     *.rst
+    >>> print(get_translation_candidate(config, 'cache/posts/fancy.post.es.html', 'en'))
+    cache/posts/fancy.post.html
+    >>> print(get_translation_candidate(config, 'cache/posts/fancy.post.html', 'es'))
+    cache/posts/fancy.post.es.html
 
     >>> config = {'TRANSLATIONS_PATTERN': '{path}.{ext}.{lang}', 'DEFAULT_LANG': 'en', 'TRANSLATIONS': {'es':'1', 'en': 1}}
     >>> print(get_translation_candidate(config, '*.rst', 'es'))
@@ -983,6 +987,10 @@ def get_translation_candidate(config, path, lang):
     *.rst.es
     >>> print(get_translation_candidate(config, '*.rst.es', 'en'))
     *.rst
+    >>> print(get_translation_candidate(config, 'cache/posts/fancy.post.html.es', 'en'))
+    cache/posts/fancy.post.html
+    >>> print(get_translation_candidate(config, 'cache/posts/fancy.post.html', 'es'))
+    cache/posts/fancy.post.html.es
 
     """
     # Convert the pattern into a regexp
