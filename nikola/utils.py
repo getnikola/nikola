@@ -1003,6 +1003,7 @@ def get_translation_candidate(config, path, lang):
     cache/posts/fancy.post.html.es
 
     """
+    # FIXME: this is rather slow and this function is called A LOT
     # Convert the pattern into a regexp
     pattern = config['TRANSLATIONS_PATTERN']
     # This will still break if the user has ?*[]\ in the pattern. But WHY WOULD HE?
