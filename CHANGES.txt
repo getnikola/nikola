@@ -81,7 +81,6 @@ Bugfixes
   not every build (Issue #1129)
 * Split Twitter Cards and Open Graph, enable the latter by default
 * Load html5shiv.js from remote or local server depending on USE_CDN option
-=======
 * Fix dependency issue in listings (Issue #1032)
 * Logging configuration has been fixed.  The stderr handler can now
   only be set to DEBUG or INFO (any higher levels are corrected as INFO), and
