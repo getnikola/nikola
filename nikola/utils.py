@@ -400,7 +400,9 @@ class config_changed(tools.config_changed):
                 byte_data = data.encode("utf-8")
             else:
                 byte_data = data
-            return hashlib.md5(byte_data).hexdigest()
+            digest = hashlib.md5(byte_data).hexdigest()
+            #LOGGER.debug('{0}: {1}'.format(digest, byte_data))
+            return digest
         else:
             raise Exception('Invalid type of config_changed parameter -- got '
                             '{0}, must be string or dict'.format(type(
