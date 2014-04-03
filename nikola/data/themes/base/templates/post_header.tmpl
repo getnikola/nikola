@@ -3,7 +3,9 @@
 <%namespace name="comments" file="comments_helper.tmpl"/>
 
 <%def name="html_title()">
+%if title and not post.meta('hidetitle'):
     <h1 class="p-name entry-title" itemprop="headline name"><a href="${post.permalink()}" class="u-url">${title|h}</a></h1>
+%endif
 </%def>
 
 <%def name="html_translations(post)">

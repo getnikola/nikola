@@ -1,6 +1,7 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="post.tmpl"/>
 <%namespace name="helper" file="post_helper.tmpl"/>
+<%namespace name="pheader" file="post_header.tmpl"/>
 <%namespace name="comments" file="comments_helper.tmpl"/>
 
 <%block name="extra_head">
@@ -13,11 +14,9 @@
 
 <%block name="content">
 <article class="storypage" itemscope="itemscope" itemtype="http://schema.org/Article">
-%if title and not post.meta('hidetitle'):
     <header>
-        <h1 itemprop="headline name">${title}</h1>
+        ${pheader.html_title()}
     </header>
-%endif
     <div itemprop="articleBody text">
     ${post.text()}
     </div>

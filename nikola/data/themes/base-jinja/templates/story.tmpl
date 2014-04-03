@@ -1,6 +1,7 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'post.tmpl' %}
 {% import 'post_helper.tmpl' as helper with context %}
+{% import 'post_header.tmpl' as pheader with context %}
 {% import 'comments_helper.tmpl' as comments with context %}
 
 {% block extra_head %}
@@ -13,11 +14,9 @@
 
 {% block content %}
 <article class="storypage" itemscope="itemscope" itemtype="http://schema.org/Article">
-{% if title and not post.meta('hidetitle') %}
     <header>
-        <h1 itemprop="headline name">{{ title }}</h1>
+        {{ pheader.html_title() }}
     </header>
-{% endif %}
     <div itemprop="articleBody text">
     {{ post.text() }}
     </div>
