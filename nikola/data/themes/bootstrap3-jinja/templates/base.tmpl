@@ -20,7 +20,15 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ abs_link('/') }}">{{ blog_title }}</a>
+            <a class="navbar-brand" href="{{ abs_link('/') }}">
+            {% if logo_url %}
+                <img src="{{ logo_url }}" alt="{{ blog_title }}" id="logo">
+            {% endif %}
+
+            {% if show_blog_title %}
+                <span id="blog-title">{{ blog_title }}</span>
+            {% endif %}
+            </a>
         </div><!-- /.navbar-header -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">

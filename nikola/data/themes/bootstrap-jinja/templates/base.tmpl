@@ -24,7 +24,13 @@
         </a>
 
             <a class="brand" href="{{ abs_link('/') }}">
-            {{ blog_title }}
+            {% if logo_url %}
+                <img src="{{ logo_url }}" alt="{{ blog_title }}" id="logo">
+            {% endif %}
+
+            {% if show_blog_title %}
+                <span id="blog-title">{{ blog_title }}</span>
+            {% endif %}
             </a>
             <!-- Everything you want hidden at 940px or less, place within here -->
             <div class="nav-collapse collapse">
