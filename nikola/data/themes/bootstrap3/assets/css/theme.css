@@ -177,3 +177,7 @@ h4, h5, h6 {
 .navbar-brand #logo {
     max-width: 100%;
 }
+
+.row {
+    margin: 0;
+}
