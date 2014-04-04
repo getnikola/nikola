@@ -57,6 +57,7 @@ Features
 Bugfixes
 --------
 
+* Make markdown extensions not break when markdown is not installed (Issue #1201)
 * hidetitle now works in posts, too (Issue #1188)
 * Refactoring of post translation checking (Issue #1194)
 * Trigger rebuild on gallery changes in auto mode (Issue #1180)
