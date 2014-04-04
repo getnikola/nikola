@@ -92,7 +92,10 @@ class CommandBootswatchTheme(Command):
         LOGGER.info("Creating '{0}' theme from '{1}' and '{2}'".format(name, swatch, parent))
         utils.makedirs(os.path.join('themes', name, 'assets', 'css'))
         for fname in ('bootstrap.min.css', 'bootstrap.css'):
-            url = '/'.join(('http://bootswatch.com', version, swatch, fname))
+            url = 'http://bootswatch.com'
+            if version:
+                url += '/' + version
+            url = '/'.join((url, swatch, fname))
             LOGGER.info("Downloading: " + url)
             data = requests.get(url).text
             with open(os.path.join('themes', name, 'assets', 'css', fname),
