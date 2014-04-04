@@ -230,8 +230,7 @@ class Planetoid(Command, Task):
                 'basename': self.name + "_fetch_feed",
                 'name': str(feed.url),
                 'actions': [(update_feed, (feed, ))],
-                'uptodate': [timeout(datetime.timedelta(minutes=
-                             self.site.config.get('PLANETOID_REFRESH', 60)))],
+                'uptodate': [timeout(datetime.timedelta(minutes=self.site.config.get('PLANETOID_REFRESH', 60)))],
             }
             yield task
         if not flag:
