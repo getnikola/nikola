@@ -77,6 +77,9 @@ lang="${lang}">
         %endif
         <script src="/assets/js/jquery.colorbox-min.js"></script>
     %endif
+    %if colorbox_locales[lang]:
+        <script src="/assets/js/colorbox-i18n/jquery.colorbox-${colorbox_locales[lang]}.js"></script>
+    %endif
     ${social_buttons_code}
 </%def>
 

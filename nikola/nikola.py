@@ -112,16 +112,41 @@ LEGAL_VALUES = {
         ('ja', '!jp'): 'Japanese',
         'nb': 'Norwegian Bokmål',
         'nl': 'Dutch',
-        'pt_br': 'Portuguese (Brasil)',
         'pl': 'Polish',
+        'pt_br': 'Portuguese (Brasil)',
         'ru': 'Russian',
         'sk': 'Slovak',
-        'sl': 'Slovenian',
+        'sl': 'Slovene',
         ('tr', '!tr_TR'): 'Turkish',
         'ur': 'Urdu',
         'zh_cn': 'Chinese (Simplified)',
     },
     'RTL_LANGUAGES': ('fa', 'ur'),
+    'COLORBOX_LOCALES': defaultdict(
+        str,
+        bg='bg',
+        ca='ca',
+        cs='cs',
+        cz='cs',
+        de='de',
+        es='es',
+        et='et',
+        fa='fa',
+        fi='fi',
+        fr='fr',
+        hr='hr',
+        it='it',
+        ja='ja',
+        nb='no',
+        nl='nl',
+        pt_br='pt-br',
+        pl='pl',
+        ru='ru',
+        sk='sk',
+        sl='si',  # country code is si, language code is sl, colorbox is wrong
+        tr='tr',
+        zh_cn='zh-CN'
+    )
 }
 
 
@@ -551,6 +576,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['show_sourcelink'] = self.config.get(
             'SHOW_SOURCELINK')
         self._GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
+        self._GLOBAL_CONTEXT['colorbox_locales'] = LEGAL_VALUES['COLORBOX_LOCALES']
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
@@ -1359,7 +1385,7 @@ _windows_locale_guesses = {
     "en": "English",
     "eo": "Esperanto",
     "es": "Spanish",
-    "fa": "Farsi",  # persian
+    "fa": "Farsi",  # Persian
     "fr": "French",
     "hr": "Croatian",
     "it": "Italian",
