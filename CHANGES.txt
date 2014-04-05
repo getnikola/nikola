@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Colorbox is now internationalized (Issue #1205)
 * Create automatic story index pages for subfolders, too (Issue #793)
 * New Slovak translation by Tomáš Prékop
 * Created a MarkdownExtension plugin class (Issue #1175)
