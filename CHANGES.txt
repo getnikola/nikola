@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Colorbox is now internationalized (Issue #1205)
 * Added LOGO_URL and SHOW_BLOG_TITLE=True settings to facilitate showing off logos (Issue #1122)
 * Create automatic story index pages for subfolders, too (Issue #793)
 * New Slovak translation by Tomáš Prékop

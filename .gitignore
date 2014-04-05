@@ -1,7 +1,7 @@
 *.py[co]
 *.db
 *~
-dist
+/dist
 *.log
 *.diff
 *.patch
