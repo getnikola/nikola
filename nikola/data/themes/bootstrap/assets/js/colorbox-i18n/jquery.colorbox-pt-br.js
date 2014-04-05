@@ -1,1 +1,1 @@
-bower_components/jquery-colorbox/i18n/jquery.colorbox-pt-br.js
+../../../../../../../bower_components/jquery-colorbox/i18n/jquery.colorbox-pt-br.js
