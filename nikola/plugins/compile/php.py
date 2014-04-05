@@ -33,12 +33,7 @@ import shutil
 import codecs
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs
-
-try:
-    from collections import OrderedDict
-except ImportError:
-    OrderedDict = dict  # NOQA
+from nikola.utils import makedirs, write_metadata
 
 
 class CompilePhp(PageCompiler):
@@ -55,7 +50,7 @@ class CompilePhp(PageCompiler):
         onefile = kw.pop('onefile', False)
         # is_page is not used by create_post as of now.
         kw.pop('is_page', False)
-        metadata = OrderedDict()
+        metadata = {}
         metadata.update(self.default_metadata)
         metadata.update(kw)
         os.makedirs(os.path.dirname(path))
@@ -63,9 +58,8 @@ class CompilePhp(PageCompiler):
             content += '\n'
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
-                fd.write('<!-- \n')
-                for k, v in metadata.items():
-                    fd.write('.. {0}: {1}\n'.format(k, v))
+                fd.write('<!--\n')
+                fd.write(write_metadata(metadata))
                 fd.write('-->\n\n')
             fd.write(content)
 

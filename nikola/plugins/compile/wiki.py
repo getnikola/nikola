@@ -37,11 +37,6 @@ except ImportError:
     creole = None
 
 from nikola.plugin_categories import PageCompiler
-try:
-    from collections import OrderedDict
-except ImportError:
-    OrderedDict = dict  # NOQA
-
 from nikola.utils import makedirs, req_missing
 
 
@@ -50,6 +45,7 @@ class CompileWiki(PageCompiler):
 
     name = "wiki"
     demote_headers = True
+    supports_onefile = False
 
     def compile_html(self, source, dest, is_two_file=True):
         if creole is None:
@@ -67,14 +63,8 @@ class CompileWiki(PageCompiler):
         onefile = kw.pop('onefile', False)
         # is_page is not used by create_post as of now.
         kw.pop('is_page', False)
-        metadata = OrderedDict()
-        metadata.update(self.default_metadata)
-        metadata.update(kw)
-        makedirs(os.path.dirname(path))
         if onefile:
-            raise Exception('There are no comments in CreoleWiki markup, so '
-                            'one-file format is not possible, use the -2 '
-                            'option.')
+            raise Exception('The one-file format is not supported by this compiler.')
         if not content.endswith('\n'):
             content += '\n'
         with codecs.open(path, "wb+", "utf8") as fd:

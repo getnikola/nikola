@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Added support for new meta files that are the same format as 1-file metadata,
+  allowing for greater flexibility (Issue #954)
 * Colorbox is now internationalized (Issue #1205)
 * Added LOGO_URL and SHOW_BLOG_TITLE=True settings to facilitate showing off logos (Issue #1122)
 * Create automatic story index pages for subfolders, too (Issue #793)

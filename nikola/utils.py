@@ -145,7 +145,7 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
            'TranslatableSetting', 'LocaleBorg', 'sys_encode', 'sys_decode',
            'makedirs', 'get_parent_theme_name', 'demote_headers',
-           'get_translation_candidate']
+           'get_translation_candidate', 'write_metadata']
 
 
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
@@ -1028,3 +1028,23 @@ def get_translation_candidate(config, path, lang):
             return path
         else:  # Change lang and return
             return config['TRANSLATIONS_PATTERN'].format(path=p, ext=e, lang=lang)
+
+
+def write_metadata(data):
+    """Write metadata."""
+    order = ('title', 'slug', 'date', 'tags', 'link', 'description', 'type')
+    f = '.. {0}: {1}'
+    meta = []
+    for k in order:
+        try:
+            meta.append(f.format(k, data.pop(k)))
+        except KeyError:
+            pass
+
+    # Leftover metadata (user-specified/non-default).
+    for k, v in data.items():
+        meta.append(f.format(k, v))
+
+    meta.append('')
+
+    return '\n'.join(meta)

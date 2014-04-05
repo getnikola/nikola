@@ -288,7 +288,15 @@ class CommandNewPost(Command):
         timeline = self.site.timeline
         last_date = None if not timeline else timeline[0].date
         date = get_date(schedule, rule, last_date, force_today, self.site.tzinfo, self.site.config['FORCE_ISO8601'])
-        data = [title, slug, date, tags]
+        data = {
+            'title': title,
+            'slug': slug,
+            'date': date,
+            'tags': tags,
+            'link': '',
+            'description': '',
+            'type': 'text',
+        }
         output_path = os.path.dirname(entry[0])
         meta_path = os.path.join(output_path, slug + ".meta")
         pattern = os.path.basename(entry[0])
@@ -306,6 +314,12 @@ class CommandNewPost(Command):
         d_name = os.path.dirname(txt_path)
         utils.makedirs(d_name)
         metadata = self.site.config['ADDITIONAL_METADATA']
+
+        # Override onefile if not really supported.
+        if not compiler_plugin.supports_onefile and onefile:
+            onefile = False
+            LOGGER.warn('This compiler does not support one-file posts.')
+
         content = "Write your {0} here.".format('page' if is_page else 'post')
         compiler_plugin.create_post(
             txt_path, content=content, onefile=onefile, title=title,
@@ -315,7 +329,7 @@ class CommandNewPost(Command):
 
         if not onefile:  # write metadata file
             with codecs.open(meta_path, "wb+", "utf8") as fd:
-                fd.write('\n'.join(data))
+                fd.write(utils.write_metadata(data))
             with codecs.open(txt_path, "wb+", "utf8") as fd:
                 fd.write("Write your {0} here.".format(content_type))
             LOGGER.info("Your {0}'s metadata is at: {1}".format(content_type, meta_path))

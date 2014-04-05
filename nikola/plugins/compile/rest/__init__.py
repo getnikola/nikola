@@ -40,13 +40,8 @@ try:
 except ImportError:
     has_docutils = False
 
-try:
-    from collections import OrderedDict
-except ImportError:
-    OrderedDict = dict  # NOQA
-
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import get_logger, makedirs, req_missing
+from nikola.utils import get_logger, makedirs, req_missing, write_metadata
 
 
 class CompileRest(PageCompiler):
@@ -107,7 +102,7 @@ class CompileRest(PageCompiler):
         onefile = kw.pop('onefile', False)
         # is_page is not used by create_post as of now.
         kw.pop('is_page', False)
-        metadata = OrderedDict()
+        metadata = {}
         metadata.update(self.default_metadata)
         metadata.update(kw)
         makedirs(os.path.dirname(path))
@@ -115,8 +110,7 @@ class CompileRest(PageCompiler):
             content += '\n'
         with codecs.open(path, "wb+", "utf8") as fd:
             if onefile:
-                for k, v in metadata.items():
-                    fd.write('.. {0}: {1}\n'.format(k, v))
+                fd.write(write_metadata(metadata))
             fd.write('\n' + content)
 
     def set_site(self, site):
