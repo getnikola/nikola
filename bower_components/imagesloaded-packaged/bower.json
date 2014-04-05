@@ -1,0 +1,14 @@
+{
+  "name": "imagesloaded-packaged",
+  "version": "3.1.4",
+  "description": "JavaScript is all like _You images done yet or what?_",
+  "main": "imagesloaded.pkgd.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

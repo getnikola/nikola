@@ -1,0 +1,25 @@
+{
+  "name": "imagesloaded-packaged",
+  "version": "3.1.4",
+  "description": "JavaScript is all like _You images done yet or what?_",
+  "main": "imagesloaded.pkgd.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "homepage": "https://github.com/alisamar/imagesloaded-packaged",
+  "_release": "3.1.4",
+  "_resolution": {
+    "type": "version",
+    "tag": "v3.1.4",
+    "commit": "189d8681747799ccca8c6108c05f1bf043bbe32d"
+  },
+  "_source": "git://github.com/alisamar/imagesloaded-packaged.git",
+  "_target": "~3.1.4",
+  "_originalSource": "imagesloaded-packaged",
+  "_direct": true
+}

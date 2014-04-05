@@ -10,6 +10,8 @@
   "private": true,
   "dependencies": {
     "bootstrap": "~3.1.1",
-    "jquery": "<2.0.0"
+    "jquery": "<2.0.0",
+    "jquery-colorbox": "~1.5.6",
+    "imagesloaded-packaged": "~3.1.4"
   }
 }
