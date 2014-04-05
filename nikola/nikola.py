@@ -265,6 +265,7 @@ class Nikola(object):
             'LICENSE': '',
             'LINK_CHECK_WHITELIST': [],
             'LISTINGS_FOLDER': 'listings',
+            'LOGO_URL': '',
             'NAVIGATION_LINKS': {},
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],
             'MAX_IMAGE_SIZE': 1280,
@@ -284,6 +285,7 @@ class Nikola(object):
             'SASS_COMPILER': 'sass',
             'SASS_OPTIONS': [],
             'SEARCH_FORM': '',
+            'SHOW_BLOG_TITLE': True,
             'SHOW_SOURCELINK': True,
             'SHOW_UNTRANSLATED_POSTS': True,
             'SLUG_TAG_PATH': True,
@@ -542,6 +544,8 @@ class Nikola(object):
             'DATE_FORMAT', '%Y-%m-%d %H:%M')
         self._GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
         self._GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
+        self._GLOBAL_CONTEXT['show_blog_title'] = self.config.get('SHOW_BLOG_TITLE')
+        self._GLOBAL_CONTEXT['logo_url'] = self.config.get('LOGO_URL')
         self._GLOBAL_CONTEXT['blog_description'] = self.config.get('BLOG_DESCRIPTION')
 
         # TODO: remove in v8

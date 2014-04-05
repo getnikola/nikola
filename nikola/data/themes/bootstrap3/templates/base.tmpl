@@ -12,7 +12,7 @@ ${base.html_headstart()}
 <!-- Menubar -->
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container-fluid"><!-- This keeps the margins nice -->
+    <div class="container"><!-- This keeps the margins nice -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -20,7 +20,15 @@ ${base.html_headstart()}
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="${abs_link('/')}">${blog_title}</a>
+            <a class="navbar-brand" href="${abs_link('/')}">
+            %if logo_url:
+                <img src="${logo_url}" alt="${blog_title}" id="logo">
+            %endif
+
+            % if show_blog_title:
+                <span id="blog-title">${blog_title}</span>
+            % endif
+            </a>
         </div><!-- /.navbar-header -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
@@ -41,7 +49,7 @@ ${base.html_headstart()}
                 %endif
             </ul>
         </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
+    </div><!-- /.container -->
 </nav>
 
 <!-- End of Menubar -->

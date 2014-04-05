@@ -5,6 +5,7 @@ Features
 --------
 
 * Colorbox is now internationalized (Issue #1205)
+* Added LOGO_URL and SHOW_BLOG_TITLE=True settings to facilitate showing off logos (Issue #1122)
 * Create automatic story index pages for subfolders, too (Issue #793)
 * New Slovak translation by Tomáš Prékop
 * Created a MarkdownExtension plugin class (Issue #1175)
@@ -58,6 +59,7 @@ Features
 Bugfixes
 --------
 
+* bootswatch_theme works again and does not try using server hostname=swatch (Issue #1202)
 * Make markdown extensions not break when markdown is not installed (Issue #1201)
 * hidetitle now works in posts, too (Issue #1188)
 * Refactoring of post translation checking (Issue #1194)

@@ -171,7 +171,7 @@ body {
 	display: inline;
 }
 
-#blog-title {
+#brand {
 	font-size: 3em;
 	line-height: 1;
 }
@@ -188,8 +188,8 @@ body {
 	color: #0d53a3;
 }
 
-#blog-title :link, 
-#blog-title :visited {
+#brand :link,
+#brand :visited {
 	color: inherit;
 }
 
