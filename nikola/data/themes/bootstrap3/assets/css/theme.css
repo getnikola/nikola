@@ -152,15 +152,32 @@ h4, h5, h6 {
 }
 
 .posttranslations h3 {
-	display: inline;
-	font-size: 1em;
-	font-weight: bold;
+    display: inline;
+    font-size: 1em;
+    font-weight: bold;
 }
 
 .posttranslations h3:last-child {
-	display: none;
+    display: none;
 }
 
 .entry-content {
-	margin-top: 1em;
+    margin-top: 1em;
+}
+
+.navbar-brand {
+    padding: 0 15px;
+}
+
+.navbar-brand #blog-title {
+    padding: 15px 0;
+    display: inline-block;
+}
+
+.navbar-brand #logo {
+    max-width: 100%;
+}
+
+.row {
+    margin: 0;
 }
