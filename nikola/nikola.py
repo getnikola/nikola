@@ -112,15 +112,41 @@ LEGAL_VALUES = {
         ('ja', '!jp'): 'Japanese',
         'nb': 'Norwegian Bokmål',
         'nl': 'Dutch',
-        'pt_br': 'Portuguese (Brasil)',
         'pl': 'Polish',
+        'pt_br': 'Portuguese (Brasil)',
         'ru': 'Russian',
         'sk': 'Slovak',
-        'sl': 'Slovenian',
+        'sl': 'Slovene',
         ('tr', '!tr_TR'): 'Turkish',
         'ur': 'Urdu',
         'zh_cn': 'Chinese (Simplified)',
     },
+    'RTL_LANGUAGES': ('fa', 'ur'),
+    'COLORBOX_LOCALES': defaultdict(
+        str,
+        bg='bg',
+        ca='ca',
+        cs='cs',
+        cz='cs',
+        de='de',
+        es='es',
+        et='et',
+        fa='fa',
+        fi='fi',
+        fr='fr',
+        hr='hr',
+        it='it',
+        ja='ja',
+        nb='no',
+        nl='nl',
+        pt_br='pt-br',
+        pl='pl',
+        ru='ru',
+        sk='sk',
+        sl='si',  # country code is si, language code is sl, colorbox is wrong
+        tr='tr',
+        zh_cn='zh-CN'
+    )
 }
 
 
@@ -239,6 +265,7 @@ class Nikola(object):
             'LICENSE': '',
             'LINK_CHECK_WHITELIST': [],
             'LISTINGS_FOLDER': 'listings',
+            'LOGO_URL': '',
             'NAVIGATION_LINKS': {},
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],
             'MAX_IMAGE_SIZE': 1280,
@@ -258,6 +285,7 @@ class Nikola(object):
             'SASS_COMPILER': 'sass',
             'SASS_OPTIONS': [],
             'SEARCH_FORM': '',
+            'SHOW_BLOG_TITLE': True,
             'SHOW_SOURCELINK': True,
             'SHOW_UNTRANSLATED_POSTS': True,
             'SLUG_TAG_PATH': True,
@@ -295,6 +323,8 @@ class Nikola(object):
             self.config['NAVIGATION_LINKS'] = {self.config['DEFAULT_LANG']: ()}
 
         # Translatability configuration.
+        self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
+                                                      {self.config['DEFAULT_LANG']: ''})
         utils.TranslatableSetting.default_lang = self.config['DEFAULT_LANG']
 
         self.TRANSLATABLE_SETTINGS = ('BLOG_AUTHOR',
@@ -323,7 +353,7 @@ class Nikola(object):
 
         for i in self.TRANSLATABLE_SETTINGS:
             try:
-                self.config[i] = utils.TranslatableSetting(i, self.config[i])
+                self.config[i] = utils.TranslatableSetting(i, self.config[i], self.config['TRANSLATIONS'])
             except KeyError:
                 pass
 
@@ -379,9 +409,6 @@ class Nikola(object):
 
         if not self.config.get('COPY_SOURCES'):
             self.config['SHOW_SOURCELINK'] = False
-
-        self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
-                                                      {self.config['DEFAULT_LANG']: ''})
 
         self.default_lang = self.config['DEFAULT_LANG']
         self.translations = self.config['TRANSLATIONS']
@@ -477,12 +504,18 @@ class Nikola(object):
             self.plugin_manager.activatePluginByName(plugin_info.name)
             plugin_info.plugin_object.set_site(self)
 
+        compilers = defaultdict(set)
         # Also add aliases for combinations with TRANSLATIONS_PATTERN
-        self.config['COMPILERS'] = dict([(lang, list(exts) + [
-            utils.get_translation_candidate(self.config, "f" + ext, lang)[1:]
-            for ext in exts
-            for lang in self.config['TRANSLATIONS'].keys()])
-            for lang, exts in list(self.config['COMPILERS'].items())])
+        for compiler, exts in self.config['COMPILERS'].items():
+            for ext in exts:
+                compilers[compiler].add(ext)
+                for lang in self.config['TRANSLATIONS'].keys():
+                    candidate = utils.get_translation_candidate(self.config, "f" + ext, lang)
+                    compilers[compiler].add(candidate)
+
+        # Avoid redundant compilers
+        for k, v in compilers.items():
+            self.config['COMPILERS'][k] = sorted(list(v))
 
         # Activate all required compiler plugins
         for plugin_info in self.plugin_manager.getPluginsOfCategory("PageCompiler"):
@@ -511,6 +544,8 @@ class Nikola(object):
             'DATE_FORMAT', '%Y-%m-%d %H:%M')
         self._GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
         self._GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
+        self._GLOBAL_CONTEXT['show_blog_title'] = self.config.get('SHOW_BLOG_TITLE')
+        self._GLOBAL_CONTEXT['logo_url'] = self.config.get('LOGO_URL')
         self._GLOBAL_CONTEXT['blog_description'] = self.config.get('BLOG_DESCRIPTION')
 
         # TODO: remove in v8
@@ -545,6 +580,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['show_sourcelink'] = self.config.get(
             'SHOW_SOURCELINK')
         self._GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
+        self._GLOBAL_CONTEXT['colorbox_locales'] = LEGAL_VALUES['COLORBOX_LOCALES']
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
@@ -664,6 +700,7 @@ class Nikola(object):
         local_context.update(context)
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             local_context[k] = local_context[k](local_context['lang'])
+        local_context['is_rtl'] = local_context['lang'] in LEGAL_VALUES['RTL_LANGUAGES']
         # string, arguments
         local_context["formatmsg"] = lambda s, *a: s % a
         data = self.template_system.render_template(
@@ -1030,27 +1067,28 @@ class Nikola(object):
             print(".", end='', file=sys.stderr)
             dirname = os.path.dirname(wildcard)
             for dirpath, _, _ in os.walk(dirname):
-                dir_glob = os.path.join(dirpath, os.path.basename(wildcard))
                 dest_dir = os.path.normpath(os.path.join(destination,
-                                            os.path.relpath(dirpath, dirname)))
-                full_list = glob.glob(dir_glob)
-                # Now let's look for things that are not in default_lang
+                                            os.path.relpath(dirpath, dirname)))  # output/destination/foo/
+                # Get all the untranslated paths
+                dir_glob = os.path.join(dirpath, os.path.basename(wildcard))  # posts/foo/*.rst
+                untranslated = glob.glob(dir_glob)
+                # And now get all the translated paths
+                translated = set([])
                 for lang in self.config['TRANSLATIONS'].keys():
-                    lang_glob = utils.get_translation_candidate(self.config, dir_glob, lang)
-                    translated_list = glob.glob(lang_glob)
-                    # dir_glob could have put it already in full_list
-                    full_list = list(set(full_list + translated_list))
+                    if lang == self.config['DEFAULT_LANG']:
+                        continue
+                    lang_glob = utils.get_translation_candidate(self.config, dir_glob, lang)  # posts/foo/*.LANG.rst
+                    translated = translated.union(set(glob.glob(lang_glob)))
+                # untranslated globs like *.rst often match translated paths too, so remove them
+                # and ensure x.rst is not in the translated set
+                untranslated = set(untranslated) - translated
 
-                # Eliminate translations from full_list if they are not the primary,
-                # or a secondary with no primary
-                limited_list = full_list[:]
-                for fname in full_list:
-                    for lang in self.config['TRANSLATIONS'].keys():
-                        translation = utils.get_translation_candidate(self.config, fname, lang)
-                        if translation in full_list:
-                            limited_list.remove(translation)
-                full_list = limited_list
+                # also remove from translated paths that are translations of
+                # paths in untranslated_list, so x.es.rst is not in the untranslated set
+                for p in untranslated:
+                    translated = translated - set([utils.get_translation_candidate(self.config, p, l) for l in self.config['TRANSLATIONS'].keys()])
 
+                full_list = list(translated) + list(untranslated)
                 # We eliminate from the list the files inside any .ipynb folder
                 full_list = [p for p in full_list
                              if not any([x.startswith('.')
@@ -1351,7 +1389,7 @@ _windows_locale_guesses = {
     "en": "English",
     "eo": "Esperanto",
     "es": "Spanish",
-    "fa": "Farsi",  # persian
+    "fa": "Farsi",  # Persian
     "fr": "French",
     "hr": "Croatian",
     "it": "Italian",

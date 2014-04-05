@@ -6,12 +6,15 @@ Features
 
 * Added support for new meta files that are the same format as 1-file metadata,
   allowing for greater flexibility (Issue #954)
-* Create automatic story index pages for subfolders too (Issue #793)
+* Colorbox is now internationalized (Issue #1205)
+* Added LOGO_URL and SHOW_BLOG_TITLE=True settings to facilitate showing off logos (Issue #1122)
+* Create automatic story index pages for subfolders, too (Issue #793)
 * New Slovak translation by Tomáš Prékop
 * Created a MarkdownExtension plugin class (Issue #1175)
 * The base theme produces properly sectioned and semantic HTML5 (Issues #1123, #1137)
 * The base theme comes with a new stylish look by default (Issue #1137)
-* The base theme supports Right-to-Left by using ::dir(rtl) CSS4 rules (Issue #1146)
+* The base theme supports Right-to-Left by using ::dir(rtl) CSS4 rules and
+  <html dir="rtl"> tags where valid (Issue #1146)
 * Bootstrap 2 updated to 2.3.2 (via Issue #1137)
 * Added FORCE_ISO8601 setting that currently makes new_post use ISO 8601 dates (via Issue #1156)
 * Added support for TZ specified in post date (Issue #1118)
@@ -58,6 +61,10 @@ Features
 Bugfixes
 --------
 
+* bootswatch_theme works again and does not try using server hostname=swatch (Issue #1202)
+* Make markdown extensions not break when markdown is not installed (Issue #1201)
+* hidetitle now works in posts, too (Issue #1188)
+* Refactoring of post translation checking (Issue #1194)
 * Trigger rebuild on gallery changes in auto mode (Issue #1180)
 * Galleries are more usable in non-Bootstrap-based themes (Issue #1137)
 * Removed dependency on pytz because mixing it with dateutil breaks things.
@@ -81,7 +88,6 @@ Bugfixes
   not every build (Issue #1129)
 * Split Twitter Cards and Open Graph, enable the latter by default
 * Load html5shiv.js from remote or local server depending on USE_CDN option
-=======
 * Fix dependency issue in listings (Issue #1032)
 * Logging configuration has been fixed.  The stderr handler can now
   only be set to DEBUG or INFO (any higher levels are corrected as INFO), and

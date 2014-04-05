@@ -27,9 +27,15 @@
 """Markdown Extension for Nikola-specific post-processing"""
 from __future__ import unicode_literals
 import re
-from markdown.postprocessors import Postprocessor
+try:
+    from markdown.postprocessors import Postprocessor
+    from markdown.extensions import Extension
+except ImportError:
+    # No need to catch this, if you try to use this without Markdown,
+    # the markdown compiler will fail first
+    Postprocessor = Extension = object
+
 from nikola.plugin_categories import MarkdownExtension
-from markdown.extensions import Extension
 
 
 class NikolaPostProcessor(Postprocessor):

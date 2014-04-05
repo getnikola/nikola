@@ -60,7 +60,7 @@ if peewee is not None:
     class Entry(peewee.Model):
         date = peewee.DateTimeField()
         feed = peewee.ForeignKeyField(Feed)
-        content = peewee.TextField(max_length=20000)
+        content = peewee.TextField()
         link = peewee.CharField(max_length=200)
         title = peewee.CharField(max_length=200)
         guid = peewee.CharField(max_length=200)
@@ -230,8 +230,7 @@ class Planetoid(Command, Task):
                 'basename': self.name + "_fetch_feed",
                 'name': str(feed.url),
                 'actions': [(update_feed, (feed, ))],
-                'uptodate': [timeout(datetime.timedelta(minutes=
-                             self.site.config.get('PLANETOID_REFRESH', 60)))],
+                'uptodate': [timeout(datetime.timedelta(minutes=self.site.config.get('PLANETOID_REFRESH', 60)))],
             }
             yield task
         if not flag:

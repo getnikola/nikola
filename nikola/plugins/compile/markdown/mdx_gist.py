@@ -117,11 +117,18 @@ Error Case:  non-existent file:
 
 '''
 from __future__ import unicode_literals, print_function
-from markdown.extensions import Extension
+
+try:
+    from markdown.extensions import Extension
+    from markdown.inlinepatterns import Pattern
+    from markdown.util import AtomicString
+    from markdown.util import etree
+except ImportError:
+    # No need to catch this, if you try to use this without Markdown,
+    # the markdown compiler will fail first
+    Extension = Pattern = object
+
 from nikola.plugin_categories import MarkdownExtension
-from markdown.inlinepatterns import Pattern
-from markdown.util import AtomicString
-from markdown.util import etree
 from nikola.utils import get_logger, req_missing, STDERR_HANDLER
 
 LOGGER = get_logger('compile_markdown.mdx_gist', STDERR_HANDLER)
