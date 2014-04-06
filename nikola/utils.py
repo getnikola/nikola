@@ -143,9 +143,9 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'copy_file', 'slugify', 'unslugify', 'to_datetime', 'apply_filters',
            'config_changed', 'get_crumbs', 'get_tzname', 'get_asset_path',
            '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
-           'TranslatableSetting', 'LocaleBorg', 'sys_encode', 'sys_decode',
-           'makedirs', 'get_parent_theme_name', 'demote_headers',
-           'get_translation_candidate', 'write_metadata']
+           'TranslatableSetting', 'TemplateHookRegistry', 'LocaleBorg',
+           'sys_encode', 'sys_decode', 'makedirs', 'get_parent_theme_name',
+           'demote_headers', 'get_translation_candidate', 'write_metadata']
 
 
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
@@ -381,6 +381,59 @@ class TranslatableSetting(object):
     def __ne__(self, other):
         """Test whether two TranslatableSettings are inequal."""
         return self.values != other.values
+
+
+class TemplateHookRegistry(object):
+
+    """
+    A registry for template hooks.
+
+    Usage:
+
+    >>> r = TemplateHookRegistry('foo', None)
+    >>> r.append('Hello!')
+    >>> r.append(lambda x: 'Hello ' + x + '!', False, 'world')
+    >>> str(r())  # str() call is not recommended in real use
+    'Hello!\\nHello world!'
+    >>>
+    """
+
+    def __init__(self, name, site):
+        """Initialize a hook registry."""
+        self._items = []
+        self.name = name
+        self.site = site
+
+    def generate(self):
+        """Generate items."""
+        for c, inp, site, args, kwargs in self._items:
+            if c:
+                if site:
+                    kwargs['site'] = self.site
+                yield inp(*args, **kwargs)
+            else:
+                yield inp
+
+    def __call__(self):
+        """Return items, in a string, separated by newlines."""
+        return '\n'.join(self.generate())
+
+    def append(self, inp, wants_site=False, *args, **kwargs):
+        """
+        Register an item.
+
+        `inp` can be a string or a callable returning one.
+        `wants_site` tells whether there should be a `site` keyword
+                     argument provided, for accessing the site.
+
+        Further positional and keyword arguments are passed as-is to the
+        callable.
+
+        `wants_site`, args and kwargs are ignored (but saved!) if `inp`
+        is not callable.  Callability of `inp` is determined only once.
+        """
+        c = callable(inp)
+        self._items.append((c, inp, wants_site, args, kwargs))
 
 
 class CustomEncoder(json.JSONEncoder):

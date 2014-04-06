@@ -8,7 +8,7 @@
 {% block extra_head %}
 {#  Leave this block alone. #}
 {% endblock %}
-
+{{ template_hooks['extra_head']() }}
 </head>
 <body>
     <div id="container">
@@ -19,6 +19,7 @@
          {{ footer.html_footer() }}
     </div>
     {{ body_end }}
+    {{ template_hooks['body_end']() }}
     {{ base.late_load_js() }}
 </body>
 </html>

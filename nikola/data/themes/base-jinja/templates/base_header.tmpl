@@ -12,6 +12,7 @@
             </div>
         {% endif %}
     </header>
+    {{ template_hooks['page_header']() }}
 {% endmacro %}
 
 {% macro html_site_title() %}
@@ -49,6 +50,8 @@
             {% endif %}
         {% endif %}
     {% endfor %}
+    {{ template_hooks['menu']() }}
+    {{ template_hooks['menu_alt']() }}
     </ul>
     </nav>
 {% endmacro %}

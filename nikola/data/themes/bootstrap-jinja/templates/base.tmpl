@@ -6,6 +6,7 @@
 {% block extra_head %}
 {#  Leave this block alone. #}
 {% endblock %}
+{{ template_hooks['extra_head']() }}
 
 <body>
 
@@ -36,6 +37,7 @@
             <div class="nav-collapse collapse">
                 <ul class="nav">
                     {{ base.html_navigation_links() }}
+                    {{ template_hooks['menu']() }}
                 </ul>
                 {% if search_form %}
                     {{ search_form }}
@@ -49,6 +51,7 @@
                 {% if show_sourcelink %}
                     <li>{% block sourcelink %}{% endblock %}</li>
                 {% endif %}
+                {{ template_hooks['menu_alt']() }}
                 </ul>
             </div>
         </div>
@@ -60,6 +63,7 @@
     <div class="row-fluid">
     <div class="span2"></div>
     <div class="span8">
+    {{ template_hooks['page_header']() }}
     {% block content %}{% endblock %}
     </div>
     </div>
@@ -67,6 +71,7 @@
 </div>
 <div class="footerbox">
     {{ content_footer }}
+    {{ template_hooks['page_footer']() }}
 </div>
 {{ base.late_load_js() }}
     <script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
@@ -77,5 +82,6 @@
         {{ notes.code() }}
     {% endif %}
 {{ body_end }}
+{{ template_hooks['body_end']() }}
 </body>
 </html>

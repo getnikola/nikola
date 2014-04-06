@@ -78,7 +78,6 @@ from .plugin_categories import (
     SignalHandler,
 )
 
-from .utils import ColorfulStderrHandler
 
 config_changed = utils.config_changed
 
@@ -199,7 +198,16 @@ class Nikola(object):
         config['__colorful__'] = self.colorful
         config['__invariant__'] = self.invariant
 
-        ColorfulStderrHandler._colorful = self.colorful
+        self.template_hooks = {
+            'extra_head': utils.TemplateHookRegistry('extra_head', self),
+            'body_end': utils.TemplateHookRegistry('body_end', self),
+            'page_header': utils.TemplateHookRegistry('page_header', self),
+            'menu': utils.TemplateHookRegistry('menu', self),
+            'menu_alt': utils.TemplateHookRegistry('menu_alt', self),
+            'page_footer': utils.TemplateHookRegistry('page_footer', self),
+        }
+
+        utils.ColorfulStderrHandler._colorful = self.colorful
 
         # Maintain API
         utils.generic_rss_renderer = self.generic_rss_renderer
@@ -561,6 +569,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
 
         self._GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL')
+        self._GLOBAL_CONTEXT['template_hooks'] = self.template_hooks
         self._GLOBAL_CONTEXT['body_end'] = self.config.get('BODY_END')
         self._GLOBAL_CONTEXT['social_buttons_code'] = self.config.get('SOCIAL_BUTTONS_CODE')
         self._GLOBAL_CONTEXT['translations'] = self.config.get('TRANSLATIONS')
