@@ -272,13 +272,19 @@ class CommandNewPost(Command):
         else:
             print("Title:", title)
         if isinstance(title, utils.bytes_str):
-            title = title.decode(sys.stdin.encoding)
+            try:
+                title = title.decode(sys.stdin.encoding)
+            except AttributeError:  # for tests
+                title = title.decode('utf-8')
         title = title.strip()
         if not path:
             slug = utils.slugify(title)
         else:
             if isinstance(path, utils.bytes_str):
-                path = path.decode(sys.stdin.encoding)
+                try:
+                    path = path.decode(sys.stdin.encoding)
+                except AttributeError:  # for tests
+                    path = path.decode('utf-8')
             slug = utils.slugify(os.path.splitext(os.path.basename(path))[0])
         # Calculate the date to use for the content
         schedule = options['schedule'] or self.site.config['SCHEDULE_ALL']
