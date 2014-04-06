@@ -316,6 +316,9 @@ class Nikola(object):
             'DEMOTE_HEADERS': 1,
         }
 
+        # set global_context for template rendering
+        self._GLOBAL_CONTEXT = {}
+
         self.config.update(config)
 
         # Make sure we have sane NAVIGATION_LINKS.
@@ -522,9 +525,6 @@ class Nikola(object):
             if plugin_info.name in self.config["COMPILERS"].keys():
                 self.plugin_manager.activatePluginByName(plugin_info.name)
                 plugin_info.plugin_object.set_site(self)
-
-        # set global_context for template rendering
-        self._GLOBAL_CONTEXT = {}
 
         self._GLOBAL_CONTEXT['url_type'] = self.config['URL_TYPE']
         self._GLOBAL_CONTEXT['timezone'] = self.tzinfo
