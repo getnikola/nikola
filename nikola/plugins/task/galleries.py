@@ -270,7 +270,7 @@ class Galleries(Task):
         """Find all galleries to be processed according to conf.py"""
 
         self.gallery_list = []
-        for root, dirs, files in os.walk(self.kw['gallery_path']):
+        for root, dirs, files in os.walk(self.kw['gallery_path'], follow_symlinks=True):
             self.gallery_list.append(root)
 
     def create_galleries(self):

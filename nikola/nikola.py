@@ -1066,7 +1066,7 @@ class Nikola(object):
                 self.config['post_pages']:
             print(".", end='', file=sys.stderr)
             dirname = os.path.dirname(wildcard)
-            for dirpath, _, _ in os.walk(dirname):
+            for dirpath, _, _ in os.walk(dirname, follow_symlinks=True):
                 dest_dir = os.path.normpath(os.path.join(destination,
                                             os.path.relpath(dirpath, dirname)))  # output/destination/foo/
                 # Get all the untranslated paths

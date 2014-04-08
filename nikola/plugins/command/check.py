@@ -51,7 +51,7 @@ def real_scan_files(site):
             fname = task.split(':', 1)[-1]
             task_fnames.add(fname)
     # And now check that there are no non-target files
-    for root, dirs, files in os.walk(output_folder):
+    for root, dirs, files in os.walk(output_folder, follow_symlinks=True):
         for src_name in files:
             fname = os.path.join(root, src_name)
             real_fnames.add(fname)

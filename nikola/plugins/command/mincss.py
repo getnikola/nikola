@@ -56,7 +56,7 @@ class CommandMincss(Command):
         p = Processor(preserve_remote_urls=False)
         urls = []
         css_files = {}
-        for root, dirs, files in os.walk(output_folder):
+        for root, dirs, files in os.walk(output_folder, follow_symlinks=True):
             for f in files:
                 url = os.path.join(root, f)
                 if url.endswith('.css'):

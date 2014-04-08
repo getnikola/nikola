@@ -61,6 +61,7 @@ Features
 Bugfixes
 --------
 
+* Follow symlinks when walking trees (Issue #1206)
 * bootswatch_theme works again and does not try using server hostname=swatch (Issue #1202)
 * Make markdown extensions not break when markdown is not installed (Issue #1201)
 * hidetitle now works in posts, too (Issue #1188)
