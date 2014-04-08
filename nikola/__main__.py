@@ -51,10 +51,10 @@ config = {}
 
 def main(args):
     quiet = False
-    if len(args) > 0 and args[0] == 'build' and '--strict' in args:
+    if len(args) > 0 and args[0] == b'build' and b'--strict' in args:
         LOGGER.notice('Running in strict mode')
         STRICT_HANDLER.push_application()
-    if len(args) > 0 and args[0] == 'build' and '-q' in args or '--quiet' in args:
+    if len(args) > 0 and args[0] == b'build' and b'-q' in args or b'--quiet' in args:
         nullhandler = NullHandler()
         nullhandler.push_application()
         quiet = True
@@ -95,7 +95,7 @@ def main(args):
 
     invariant = False
 
-    if len(args) > 0 and args[0] == 'build' and '--invariant' in args:
+    if len(args) > 0 and args[0] == b'build' and b'--invariant' in args:
         try:
             import freezegun
             freeze = freezegun.freeze_time("2014-01-01")
