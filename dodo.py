@@ -12,7 +12,7 @@ DOIT_CONFIG = {
 
 def recursive_glob(path, pattern):
     """recursively walk path directories and return files matching the pattern"""
-    for root, dirnames, filenames in os.walk(path, follow_symlinks=True):
+    for root, dirnames, filenames in os.walk(path, followlinks=True):
         for filename in fnmatch.filter(filenames, pattern):
             yield os.path.join(root, filename)
 

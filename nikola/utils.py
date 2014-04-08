@@ -514,7 +514,7 @@ def copy_tree(src, dst, link_cutoff=None):
     """
     ignore = set(['.svn'])
     base_len = len(src.split(os.sep))
-    for root, dirs, files in os.walk(src, follow_symlinks=True):
+    for root, dirs, files in os.walk(src, followlinks=True):
         root_parts = root.split(os.sep)
         if set(root_parts) & ignore:
             continue

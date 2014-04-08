@@ -103,7 +103,7 @@ class Sitemap(LateTask):
         mapped_exts = kw['mapped_extensions']
 
         def scan_locs():
-            for root, dirs, files in os.walk(output, follow_symlinks=True):
+            for root, dirs, files in os.walk(output, followlinks=True):
                 if not dirs and not files and not kw['sitemap_include_fileless_dirs']:
                     continue  # Totally empty, not on sitemap
                 path = os.path.relpath(root, output)
