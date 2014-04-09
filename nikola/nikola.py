@@ -129,6 +129,7 @@ LEGAL_VALUES = {
         cs='cs',
         cz='cs',
         de='de',
+        en='',
         es='es',
         et='et',
         fa='fa',
