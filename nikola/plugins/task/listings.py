@@ -146,5 +146,7 @@ class Listings(Task):
                 }
 
     def listing_path(self, name, lang):
+        if not name.endswith('.html'):
+            name += '.html'
         path_parts = [self.site.config['LISTINGS_FOLDER']] + list(os.path.split(name))
         return [_f for _f in path_parts if _f]
