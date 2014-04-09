@@ -77,10 +77,18 @@ class Listings(Task):
             crumbs = utils.get_crumbs(os.path.relpath(out_name,
                                                       kw['output_folder']),
                                       is_file=True)
+            permalink = self.site.link(
+                'listing',
+                os.path.relpath(
+                    out_name,
+                    os.path.join(
+                        kw['output_folder'],
+                        kw['listings_folder'])))
             context = {
                 'code': code,
                 'title': title,
                 'crumbs': crumbs,
+                'permalink': permalink,
                 'lang': kw['default_lang'],
                 'folders': natsort.natsorted(folders),
                 'files': natsort.natsorted(files),
@@ -138,5 +146,5 @@ class Listings(Task):
                 }
 
     def listing_path(self, name, lang):
-        return [_f for _f in [self.site.config['LISTINGS_FOLDER'], name +
-                              '.html'] if _f]
+        path_parts = [self.site.config['LISTINGS_FOLDER']] + list(os.path.split(name))
+        return [_f for _f in path_parts if _f]
