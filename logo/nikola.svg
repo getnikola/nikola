@@ -1,93 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   version="1.1"
-   width="1000"
-   height="750"
-   id="svg2"
-   xml:space="preserve"
-   inkscape:version="0.48.4 r9939"
-   sodipodi:docname="nikola.svg"><title
-     id="title2996">Nikola Logo</title><sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="1008"
-     id="namedview19"
-     showgrid="false"
-     inkscape:zoom="0.31466667"
-     inkscape:cx="-2.1186441"
-     inkscape:cy="375"
-     inkscape:window-x="-18"
-     inkscape:window-y="-3"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg2" /><metadata
-     id="metadata8"><rdf:RDF><cc:Work
-         rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title>Nikola Logo</dc:title><dc:date>April 4, 2014</dc:date><dc:creator><cc:Agent><dc:title>Dipaanna</dc:title></cc:Agent></dc:creator><dc:rights><cc:Agent><dc:title></dc:title></cc:Agent></dc:rights><dc:publisher><cc:Agent><dc:title>Nikola</dc:title></cc:Agent></dc:publisher><cc:license
-           rdf:resource="http://creativecommons.org/licenses/by-sa/3.0/" /><dc:description>Logo for Nikola: http://getnikola.com</dc:description></cc:Work><cc:License
-         rdf:about="http://creativecommons.org/licenses/by-sa/3.0/"><cc:permits
-           rdf:resource="http://creativecommons.org/ns#Reproduction" /><cc:permits
-           rdf:resource="http://creativecommons.org/ns#Distribution" /><cc:requires
-           rdf:resource="http://creativecommons.org/ns#Notice" /><cc:requires
-           rdf:resource="http://creativecommons.org/ns#Attribution" /><cc:permits
-           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" /><cc:requires
-           rdf:resource="http://creativecommons.org/ns#ShareAlike" /></cc:License></rdf:RDF></metadata><defs
-     id="defs6"><clipPath
-       id="clipPath18"><path
-         d="M 0,5999.97 0,0 l 7999.99,0 0,5999.97"
-         inkscape:connector-curvature="0"
-         id="path20" /></clipPath></defs><g
-     transform="matrix(1.25,0,0,-1.25,0,750)"
-     id="g10"><g
-       transform="scale(0.1,0.1)"
-       id="g12"><g
-         id="g14"><g
-           clip-path="url(#clipPath18)"
-           id="g16"><path
-             d="m 0,0 7999.99,0 0,5999.97 L 0,5999.97 0,0 z"
-             inkscape:connector-curvature="0"
-             id="path22"
-             style="fill:#3e4445;fill-opacity:1;fill-rule:nonzero;stroke:none" /><path
-             d="m 4438.07,3086.04 c -54.17,-53.66 -124.88,-80.51 -211.84,-80.51 l -27.14,0 c -87.64,0 -159.05,26.85 -213.75,80.51 -54.93,53.7 -82.3,143.42 -82.3,269.88 0,119.06 27.79,205.22 83.85,258.25 55.85,53.15 128.78,79.54 218.43,79.54 l 14.73,0 c 88.87,0 161.06,-26.39 216.41,-79.54 55.45,-53.03 83.11,-139.19 83.11,-258.25 0,-126.46 -27.25,-216.18 -81.5,-269.88 z m 176.06,641.99 c -102.81,91.96 -237.85,137.93 -405.27,137.93 l -11.79,-0.1 c -159.99,-3.57 -289.71,-49.53 -389.47,-137.83 -103.82,-91.83 -155.64,-220.98 -155.64,-387.09 0,-157.01 51.46,-280.96 154.75,-371.38 103.09,-90.66 234.8,-135.98 395.07,-135.98 l 21.87,0 c 158.64,0 289.06,45.32 391.33,135.98 102.2,90.42 153.23,214.37 153.23,371.38 0,166.11 -51.3,295.26 -154.08,387.09"
-             inkscape:connector-curvature="0"
-             id="path24"
-             style="fill:#cccfd5;fill-opacity:1;fill-rule:nonzero;stroke:none" /><path
-             d="m 2288.88,2833.58 238.359,0 0,1010.26 -238.359,0 0,-1010.26 z"
-             inkscape:connector-curvature="0"
-             id="path26"
-             style="fill:#cccfd5;fill-opacity:1;fill-rule:nonzero;stroke:none" /><path
-             d="m 1125.7,2833.58 0,1010.26 243.57,0 514.1,-679.26 0,679.26 232.31,0 0,-1010.26 -251.36,0 -506.22,664.31 0,-664.31 -232.4,0"
-             inkscape:connector-curvature="0"
-             id="path28"
-             style="fill:#cccfd5;fill-opacity:1;fill-rule:nonzero;stroke:none" /><path
-             d="m 2692.66,2833.58 238.379,0 0,1010.26 -238.379,0 0,-1010.26 z"
-             inkscape:connector-curvature="0"
-             id="path30"
-             style="fill:#cccfd5;fill-opacity:1;fill-rule:nonzero;stroke:none" /><path
-             d="m 2926.96,3326.12 459.72,505.09 317.21,0 -479.08,-505.09 485.55,-492.54 -291.38,0 -492.02,492.54"
-             inkscape:connector-curvature="0"
-             id="path32"
-             style="fill:#cccfd5;fill-opacity:1;fill-rule:nonzero;stroke:none" /><path
-             d="m 5142.88,3650.66 0,183.42 -244.62,0 0,-1000.5 987.99,0 364.51,764.35 270.34,-528.88 -78.37,613.38 -76.84,174.46 -239.78,0 -402.85,-853.72 -580.38,0 0,647.49"
-             inkscape:connector-curvature="0"
-             id="path34"
-             style="fill:#cccfd5;fill-opacity:1;fill-rule:nonzero;stroke:none" /><path
-             d="m 6550.5,3497.28 323.79,-665.13 -354.87,0 297.38,-698.14 -566.04,864.46 369.31,0 -69.57,498.81"
-             inkscape:connector-curvature="0"
-             id="path36"
-             style="fill:#f5ab14;fill-opacity:1;fill-rule:nonzero;stroke:none" /></g></g></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0, 0, 718.574, 305.074">
+<title>Nikola Logo</title>
+<defs>
+<clipPath>
+<path d="M0 5999.97v-5999.97h7999.99v5999.97"/>
+</clipPath>
+</defs>
+<path d="M414.046 186.07c-6.771 6.707-15.61 10.064-26.48 10.064h-3.393c-10.955 0-19.881-3.356-26.719-10.064-6.866-6.713-10.287-17.927-10.287-33.735 0-14.883 3.474-25.652 10.481-32.281 6.981-6.644 16.098-9.943 27.304-9.943h1.841c11.109 0 20.133 3.299 27.051 9.943 6.931 6.629 10.389 17.399 10.389 32.281 0 15.807-3.406 27.023-10.188 33.735zm22.008-80.249c-12.851-11.495-29.731-17.241-50.659-17.241l-1.474.013c-19.999.446-36.214 6.191-48.684 17.229-12.977 11.479-19.455 27.622-19.455 48.386 0 19.626 6.433 35.12 19.344 46.422 12.886 11.332 29.35 16.997 49.384 16.997h2.734c19.83 0 36.133-5.665 48.916-16.997 12.775-11.303 19.154-26.796 19.154-46.422 0-20.764-6.412-36.907-19.26-48.386" fill="#cccfd5"/>
+<path d="M145.398 217.627h29.795v-126.282h-29.795v126.282z" fill="#cccfd5"/>
+<path d="M0 217.627v-126.282h30.446l64.263 84.907v-84.907h29.039v126.282h-31.42l-63.278-83.039v83.039h-29.05" fill="#cccfd5"/>
+<path d="M195.87 217.627h29.797v-126.282h-29.797v126.282z" fill="#cccfd5"/>
+<path d="M225.157 156.06l57.465-63.136h39.651l-59.885 63.136 60.694 61.568h-36.422l-61.502-61.568" fill="#cccfd5"/>
+<path d="M502.147 115.493v-22.927h-30.578v125.063h123.499l45.564-95.544 33.792 66.11-9.796-76.672-9.605-21.808h-29.973l-50.356 106.715h-72.547v-80.936" fill="#cccfd5"/>
+<path d="M678.1 134.665l40.474 83.141h-44.359l37.172 87.267-70.755-108.058h46.164l-8.696-62.351" fill="#f5ab14"/>
+</svg>
