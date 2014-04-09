@@ -59,7 +59,6 @@ class Listings(Task):
         ignored_extensions = (".pyc", ".pyo")
 
         def render_listing(in_name, out_name, folders=[], files=[]):
-            link_name = ''
             if in_name:
                 with open(in_name, 'r') as fd:
                     try:
@@ -72,18 +71,18 @@ class Listings(Task):
                                                    lineanchors=utils.slugify(in_name),
                                                    anchorlinenos=True))
                 title = os.path.basename(in_name)
-                link_name = in_name
             else:
                 code = ''
                 title = ''
             crumbs = utils.get_crumbs(os.path.relpath(out_name,
                                                       kw['output_folder']),
                                       is_file=True)
+            permalink = self.site.link('listing', os.path.relpath(out_name, kw['output_folder']))
             context = {
                 'code': code,
                 'title': title,
                 'crumbs': crumbs,
-                'permalink': self.site.link('listing', link_name),
+                'permalink': permalink,
                 'lang': kw['default_lang'],
                 'folders': natsort.natsorted(folders),
                 'files': natsort.natsorted(files),
@@ -141,5 +140,5 @@ class Listings(Task):
                 }
 
     def listing_path(self, name, lang):
-        return [_f for _f in [self.site.config['LISTINGS_FOLDER'], name +
-                              '.html'] if _f]
+        path_parts = os.path.split(name)
+        return [_f for _f in path_parts if _f]

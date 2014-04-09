@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Add canonical link in listings.
 * Added support for new meta files that are the same format as 1-file metadata,
   allowing for greater flexibility (Issue #954)
 * Colorbox is now internationalized (Issue #1205)
