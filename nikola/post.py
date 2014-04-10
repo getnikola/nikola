@@ -497,7 +497,7 @@ class Post(object):
             text = self.text(teaser_only=True, strip_html=True)
             words_per_minute = 300
             words = len(text.split())
-            self._remaining_reading_time = self.reading_time - int(ceil(words / words_per_minute))
+            self._remaining_reading_time = self.reading_time - int(ceil(words / words_per_minute)) or 1
         return self._remaining_reading_time
 
     @property
