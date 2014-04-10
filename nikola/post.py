@@ -122,6 +122,8 @@ class Post(object):
         self.is_two_file = True
         self.hyphenate = self.config['HYPHENATE']
         self._reading_time = None
+        self._paragraph_count = None
+        self._remaining_paragraph_count = None
 
         default_metadata = get_meta(self, self.config['FILE_METADATA_REGEXP'])
 
@@ -396,11 +398,12 @@ class Post(object):
         else:
             return get_translation_candidate(self.config, self.base_path, sorted(self.translated_to)[0])
 
-    def text(self, lang=None, teaser_only=False, strip_html=False):
+    def text(self, lang=None, teaser_only=False, strip_html=False, show_read_more_link=True):
         """Read the post file for that language and return its contents.
 
         teaser_only=True breaks at the teaser marker and returns only the teaser.
         strip_html=True removes HTML tags
+        show_read_more_link=False does not add the Read more... link
         lang=None uses the last used to set locale
 
         All links in the returned HTML will be relative.
@@ -440,7 +443,7 @@ class Post(object):
         if teaser_only:
             teaser = TEASER_REGEXP.split(data)[0]
             if teaser != data:
-                if not strip_html:
+                if not strip_html and show_read_more_link:
                     if TEASER_REGEXP.search(data).groups()[-1]:
                         teaser += '<p class="more"><a href="{0}">{1}</a></p>'.format(
                             self.permalink(lang),
@@ -449,7 +452,9 @@ class Post(object):
                         teaser += self.config['READ_MORE_LINK'](lang).format(
                             link=self.permalink(lang),
                             read_more=self.messages[lang]["Read more"],
-                            reading_time=self.reading_time)
+                            reading_time=self.reading_time,
+                            paragraph_count=self.paragraph_count,
+                            remaining_paragraph_count=self.remaining_paragraph_count)
                 # This closes all open tags and sanitizes the broken HTML
                 document = lxml.html.fromstring(teaser)
                 data = lxml.html.tostring(document, encoding='unicode')
@@ -475,14 +480,52 @@ class Post(object):
 
     @property
     def reading_time(self):
-        """Reading time based on length of text.
-        """
+        """Reading time based on length of text."""
         if self._reading_time is None:
             text = self.text(strip_html=True)
             words_per_minute = 300
             words = len(text.split())
             self._reading_time = int(ceil(words / words_per_minute)) or 1
         return self._reading_time
+
+    @property
+    def paragraph_count(self):
+        """Return the paragraph count for this post."""
+        if self._paragraph_count is None:
+            # duplicated with Post.text()
+            lang = nikola.utils.LocaleBorg().current_lang
+            file_name = self._translated_file_path(lang)
+            with codecs.open(file_name, "r", "utf8") as post_file:
+                data = post_file.read().strip()
+            try:
+                document = lxml.html.fragment_fromstring(data, "body")
+            except lxml.etree.ParserError as e:
+                # if we don't catch this, it breaks later (Issue #374)
+                if str(e) == "Document is empty":
+                    return ""
+                # let other errors raise
+                raise(e)
+
+            # output is a float, for no real reason at all
+            self._paragraph_count = int(document.xpath('count(//p)'))
+        return self._paragraph_count
+
+    @property
+    def remaining_paragraph_count(self):
+        """Return the remaining paragraph count for this post (does not include teaser)."""
+        if self._paragraph_count is None:
+            try:
+                # Just asking self.text() is easier here.
+                document = lxml.html.fragment_fromstring(self.text(teaser_only=True, show_read_more_link=False), "body")
+            except lxml.etree.ParserError as e:
+                # if we don't catch this, it breaks later (Issue #374)
+                if str(e) == "Document is empty":
+                    return ""
+                # let other errors raise
+                raise(e)
+
+            self._remaining_paragraph_count = self.paragraph_count - int(document.xpath('count(//p)'))
+        return self._remaining_paragraph_count
 
     def source_link(self, lang=None):
         """Return absolute link to the post's source."""

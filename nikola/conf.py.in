@@ -341,11 +341,13 @@ THEME = ${THEME}
 
 # A HTML fragment with the Read more... link.  (translatable)
 # The following tags exist and are replaced for you:
-# {link}            A link to the full post page.
-# {read_more}       The string “Read more” in the current language.
-# {reading_time}    An estimate of how long it will take to read the post.
-# {{                A literal { (U+007B LEFT CURLY BRACKET)
-# }}                A literal } (U+007D RIGHT CURLY BRACKET)
+# {link}                        A link to the full post page.
+# {read_more}                   The string “Read more” in the current language.
+# {reading_time}                An estimate of how long it will take to read the post.
+# {paragraph_count}             The amount of paragraphs in the post.
+# {remaining_paragraph_count}   The amount of paragraphs in the post, sans the teaser.
+# {{                            A literal { (U+007B LEFT CURLY BRACKET)
+# }}                            A literal } (U+007D RIGHT CURLY BRACKET)
 READ_MORE_LINK = ${READ_MORE_LINK}
 
 # A HTML fragment describing the license, for the sidebar.
