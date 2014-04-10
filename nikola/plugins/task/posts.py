@@ -25,7 +25,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from copy import copy
-import nikola.post
 
 from nikola.plugin_categories import Task
 from nikola import utils
@@ -55,7 +54,6 @@ class RenderPosts(Task):
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
         }
 
-        nikola.post.READ_MORE_LINK = self.site.config['READ_MORE_LINK']
         yield self.group_task()
 
         for lang in kw["translations"]:
