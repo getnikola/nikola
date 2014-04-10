@@ -122,6 +122,7 @@ class Post(object):
         self.is_two_file = True
         self.hyphenate = self.config['HYPHENATE']
         self._reading_time = None
+        self._remaining_reading_time = None
         self._paragraph_count = None
         self._remaining_paragraph_count = None
 
@@ -524,7 +525,7 @@ class Post(object):
     @property
     def remaining_paragraph_count(self):
         """Return the remaining paragraph count for this post (does not include teaser)."""
-        if self._paragraph_count is None:
+        if self._remaining_paragraph_count is None:
             try:
                 # Just asking self.text() is easier here.
                 document = lxml.html.fragment_fromstring(self.text(teaser_only=True, show_read_more_link=False), "body")
