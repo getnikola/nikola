@@ -47,6 +47,8 @@ except ImportError:
 
 from math import ceil
 
+from nikola.nikola import DEFAULT_READ_MORE_LINK
+
 # for tearDown with _reload we cannot use 'from import' to get forLocaleBorg
 import nikola.utils
 from .utils import (
@@ -65,7 +67,7 @@ from .rc4 import rc4
 __all__ = ['Post']
 
 TEASER_REGEXP = re.compile('<!--\s*TEASER_END(:(.+))?\s*-->', re.IGNORECASE)
-READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
+READ_MORE_LINK = DEFAULT_READ_MORE_LINK
 
 
 class Post(object):
@@ -451,7 +453,8 @@ class Post(object):
                     else:
                         teaser += READ_MORE_LINK.format(
                             link=self.permalink(lang),
-                            read_more=self.messages[lang]["Read more"])
+                            read_more=self.messages[lang]["Read more"],
+                            reading_time=self.reading_time)
                 # This closes all open tags and sanitizes the broken HTML
                 document = lxml.html.fromstring(teaser)
                 data = lxml.html.tostring(document, encoding='unicode')

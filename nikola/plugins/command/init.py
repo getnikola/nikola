@@ -35,7 +35,7 @@ import textwrap
 from mako.template import Template
 
 import nikola
-from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, LEGAL_VALUES
+from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_READ_MORE_LINK, LEGAL_VALUES
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger, makedirs, STDERR_HANDLER, load_messages
 from nikola.winutils import fix_git_symlinked
@@ -58,6 +58,7 @@ SAMPLE_CONF = {
     'COMMENT_SYSTEM': 'disqus',
     'COMMENT_SYSTEM_ID': 'nikolademo',
     'TRANSLATIONS_PATTERN': DEFAULT_TRANSLATIONS_PATTERN,
+    'READ_MORE_LINK': DEFAULT_READ_MORE_LINK,
     'POSTS': """(
     ("posts/*.rst", "posts", "post.tmpl"),
     ("posts/*.txt", "posts", "post.tmpl"),
