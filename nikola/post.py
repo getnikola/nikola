@@ -47,8 +47,6 @@ except ImportError:
 
 from math import ceil
 
-from nikola.nikola import DEFAULT_READ_MORE_LINK
-
 # for tearDown with _reload we cannot use 'from import' to get forLocaleBorg
 import nikola.utils
 from .utils import (
@@ -67,7 +65,6 @@ from .rc4 import rc4
 __all__ = ['Post']
 
 TEASER_REGEXP = re.compile('<!--\s*TEASER_END(:(.+))?\s*-->', re.IGNORECASE)
-READ_MORE_LINK = DEFAULT_READ_MORE_LINK
 
 
 class Post(object):
@@ -329,8 +326,6 @@ class Post(object):
             with codecs.open(path, 'wb+', 'utf8') as outf:
                 outf.write(data)
 
-        global READ_MORE_LINK
-        READ_MORE_LINK = self.config['READ_MORE_LINK']
         dest = self.translated_base_path(lang)
         if not self.is_translation_available(lang) and not self.config['SHOW_UNTRANSLATED_POSTS']:
             return
@@ -451,7 +446,7 @@ class Post(object):
                             self.permalink(lang),
                             TEASER_REGEXP.search(data).groups()[-1])
                     else:
-                        teaser += READ_MORE_LINK.format(
+                        teaser += self.config['READ_MORE_LINK'](lang).format(
                             link=self.permalink(lang),
                             read_more=self.messages[lang]["Read more"],
                             reading_time=self.reading_time)

@@ -343,7 +343,8 @@ class Nikola(object):
                                       'SEARCH_FORM',
                                       'BODY_END',
                                       'EXTRA_HEAD_DATA',
-                                      'NAVIGATION_LINKS',)
+                                      'NAVIGATION_LINKS',
+                                      'READ_MORE_LINK',)
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
                                              'blog_title',
