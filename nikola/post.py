@@ -327,7 +327,8 @@ class Post(object):
             with codecs.open(path, 'wb+', 'utf8') as outf:
                 outf.write(data)
 
-        self.READ_MORE_LINK = self.config['READ_MORE_LINK']
+        global READ_MORE_LINK
+        READ_MORE_LINK = self.config['READ_MORE_LINK']
         dest = self.translated_base_path(lang)
         if not self.is_translation_available(lang) and not self.config['SHOW_UNTRANSLATED_POSTS']:
             return

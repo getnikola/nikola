@@ -58,6 +58,7 @@ class Indexes(Task):
             "indexes_pages": self.site.config['INDEXES_PAGES'],
             "indexes_pages_main": self.site.config['INDEXES_PAGES_MAIN'],
             "blog_title": self.site.config["BLOG_TITLE"],
+            "read_more_link": self.site.config["READ_MORE_LINK"],
         }
 
         template_name = "index.tmpl"
