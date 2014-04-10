@@ -27,6 +27,7 @@ dumber_replacements = [
     ["{% endif %}\n\\", "{% endif %}\n"]
 ]
 
+
 def jinjify(in_theme, out_theme):
     """Convert in_theme into a jinja version and put it in out_theme"""
 
