@@ -485,7 +485,7 @@ class Post(object):
         """Reading time based on length of text."""
         if self._reading_time is None:
             text = self.text(strip_html=True)
-            words_per_minute = 300
+            words_per_minute = 220
             words = len(text.split())
             self._reading_time = int(ceil(words / words_per_minute)) or 1
         return self._reading_time
@@ -495,7 +495,7 @@ class Post(object):
         """Remaining reading time based on length of text (does not include teaser)."""
         if self._remaining_reading_time is None:
             text = self.text(teaser_only=True, strip_html=True)
-            words_per_minute = 300
+            words_per_minute = 220
             words = len(text.split())
             self._remaining_reading_time = self.reading_time - int(ceil(words / words_per_minute)) or 1
         return self._remaining_reading_time
