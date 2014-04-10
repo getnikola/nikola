@@ -344,6 +344,7 @@ THEME = ${THEME}
 # {link}                        A link to the full post page.
 # {read_more}                   The string “Read more” in the current language.
 # {reading_time}                An estimate of how long it will take to read the post.
+# {remaining_reading_time}      An estimate of how long it will take to read the post, sans the teaser.
 # {paragraph_count}             The amount of paragraphs in the post.
 # {remaining_paragraph_count}   The amount of paragraphs in the post, sans the teaser.
 # {{                            A literal { (U+007B LEFT CURLY BRACKET)
