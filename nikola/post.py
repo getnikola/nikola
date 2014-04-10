@@ -45,6 +45,8 @@ try:
 except ImportError:
     pyphen = None
 
+from math import ceil
+
 # for tearDown with _reload we cannot use 'from import' to get forLocaleBorg
 import nikola.utils
 from .utils import (
@@ -478,9 +480,9 @@ class Post(object):
         """
         if self._reading_time is None:
             text = self.text(strip_html=True)
-            words_per_minute = 180
+            words_per_minute = 300
             words = len(text.split())
-            self._reading_time = int(round(words / words_per_minute)) or 1
+            self._reading_time = int(ceil(words / words_per_minute)) or 1
         return self._reading_time
 
     def source_link(self, lang=None):
