@@ -409,9 +409,9 @@ class Nikola(object):
 
         # Moot.it renamed themselves to muut.io
         # TODO: remove on v8?
-        if config.get('COMMENT_SYSTEM') == 'moot':
+        if self.config.get('COMMENT_SYSTEM') == 'moot':
             utils.LOGGER.warn('The moot comment system has been renamed to muut by the upstream.  Setting COMMENT_SYSTEM to "muut".')
-            config['COMMENT_SYSTEM'] = 'muut'
+            self.config['COMMENT_SYSTEM'] = 'muut'
 
         # PRETTY_URLS defaults to enabling STRIP_INDEXES unless explicitly disabled
         if self.config.get('PRETTY_URLS') and 'STRIP_INDEXES' not in config:
