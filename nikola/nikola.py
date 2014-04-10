@@ -90,7 +90,7 @@ LEGAL_VALUES = {
         'intensedebate',
         'isso',
         'livefyre',
-        'moot',
+        'muut',
     ],
     'TRANSLATIONS': {
         'bg': 'Bulgarian',
@@ -406,6 +406,12 @@ class Nikola(object):
             if 'SHOW_UNTRANSLATED_POSTS' in config:
                 utils.LOGGER.warn('HIDE_UNTRANSLATED_POSTS conflicts with SHOW_UNTRANSLATED_POSTS, ignoring HIDE_UNTRANSLATED_POSTS.')
             self.config['SHOW_UNTRANSLATED_POSTS'] = not config['HIDE_UNTRANSLATED_POSTS']
+
+        # Moot.it renamed themselves to muut.io
+        # TODO: remove on v8?
+        if config.get('COMMENT_SYSTEM') == 'moot':
+            utils.LOGGER.warn('The moot comment system has been renamed to muut by the upstream.  Setting COMMENT_SYSTEM to "muut".')
+            config['COMMENT_SYSTEM'] = 'muut'
 
         # PRETTY_URLS defaults to enabling STRIP_INDEXES unless explicitly disabled
         if self.config.get('PRETTY_URLS') and 'STRIP_INDEXES' not in config:

@@ -3,7 +3,7 @@
 <%namespace name="disqus" file="comments_helper_disqus.tmpl"/>
 <%namespace name="livefyre" file="comments_helper_livefyre.tmpl"/>
 <%namespace name="intensedebate" file="comments_helper_intensedebate.tmpl"/>
-<%namespace name="moot" file="comments_helper_moot.tmpl"/>
+<%namespace name="muut" file="comments_helper_muut.tmpl"/>
 <%namespace name="googleplus" file="comments_helper_googleplus.tmpl"/>
 <%namespace name="facebook" file="comments_helper_facebook.tmpl"/>
 <%namespace name="isso" file="comments_helper_isso.tmpl"/>
@@ -15,8 +15,8 @@
         ${livefyre.comment_form(url, title, identifier)}
     % elif comment_system == 'intensedebate':
         ${intensedebate.comment_form(url, title, identifier)}
-    % elif comment_system == 'moot':
-        ${moot.comment_form(url, title, identifier)}
+    % elif comment_system == 'muut':
+        ${muut.comment_form(url, title, identifier)}
     % elif comment_system == 'googleplus':
         ${googleplus.comment_form(url, title, identifier)}
     % elif comment_system == 'facebook':
@@ -33,8 +33,8 @@
         ${livefyre.comment_link(link, identifier)}
     % elif comment_system == 'intensedebate':
         ${intensedebate.comment_link(link, identifier)}
-    % elif comment_system == 'moot':
-        ${moot.comment_link(link, identifier)}
+    % elif comment_system == 'muut':
+        ${muut.comment_link(link, identifier)}
     % elif comment_system == 'googleplus':
         ${googleplus.comment_link(link, identifier)}
     % elif comment_system == 'facebook':
@@ -51,8 +51,8 @@
         ${livefyre.comment_link_script()}
     % elif comment_system == 'intensedebate':
         ${intensedebate.comment_link_script()}
-    % elif comment_system == 'moot':
-        ${moot.comment_link_script()}
+    % elif comment_system == 'muut':
+        ${muut.comment_link_script()}
     % elif comment_system == 'googleplus':
         ${googleplus.comment_link_script()}
     % elif comment_system == 'facebook':

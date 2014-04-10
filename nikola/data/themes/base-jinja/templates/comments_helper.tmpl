@@ -3,7 +3,7 @@
 {% import 'comments_helper_disqus.tmpl' as disqus with context %}
 {% import 'comments_helper_livefyre.tmpl' as livefyre with context %}
 {% import 'comments_helper_intensedebate.tmpl' as intensedebate with context %}
-{% import 'comments_helper_moot.tmpl' as moot with context %}
+{% import 'comments_helper_muut.tmpl' as muut with context %}
 {% import 'comments_helper_googleplus.tmpl' as googleplus with context %}
 {% import 'comments_helper_facebook.tmpl' as facebook with context %}
 {% import 'comments_helper_isso.tmpl' as isso with context %}
@@ -15,8 +15,8 @@
         {{ livefyre.comment_form(url, title, identifier) }}
     {% elif comment_system == 'intensedebate' %}
         {{ intensedebate.comment_form(url, title, identifier) }}
-    {% elif comment_system == 'moot' %}
-        {{ moot.comment_form(url, title, identifier) }}
+    {% elif comment_system == 'muut' %}
+        {{ muut.comment_form(url, title, identifier) }}
     {% elif comment_system == 'googleplus' %}
         {{ googleplus.comment_form(url, title, identifier) }}
     {% elif comment_system == 'facebook' %}
@@ -33,8 +33,8 @@
         {{ livefyre.comment_link(link, identifier) }}
     {% elif comment_system == 'intensedebate' %}
         {{ intensedebate.comment_link(link, identifier) }}
-    {% elif comment_system == 'moot' %}
-        {{ moot.comment_link(link, identifier) }}
+    {% elif comment_system == 'muut' %}
+        {{ muut.comment_link(link, identifier) }}
     {% elif comment_system == 'googleplus' %}
         {{ googleplus.comment_link(link, identifier) }}
     {% elif comment_system == 'facebook' %}
@@ -51,8 +51,8 @@
         {{ livefyre.comment_link_script() }}
     {% elif comment_system == 'intensedebate' %}
         {{ intensedebate.comment_link_script() }}
-    {% elif comment_system == 'moot' %}
-        {{ moot.comment_link_script() }}
+    {% elif comment_system == 'muut' %}
+        {{ muut.comment_link_script() }}
     {% elif comment_system == 'googleplus' %}
         {{ googleplus.comment_link_script() }}
     {% elif comment_system == 'facebook' %}
