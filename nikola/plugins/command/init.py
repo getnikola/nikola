@@ -192,7 +192,9 @@ def prepare_config(config):
     """Parse sample config with JSON."""
     p = config.copy()
     p.update(dict((k, json.dumps(v)) for k, v in p.items()
-             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS')))
+             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'READ_MORE_LINK')))
+    # READ_MORE_LINK requires some special treatment.
+    p['READ_MORE_LINK'] = "'" + p['READ_MORE_LINK'].replace("'", "\\'") + "'"
     return p
 
 
