@@ -58,6 +58,12 @@ import PyRSS2Gen as rss
 import lxml.html
 from yapsy.PluginManager import PluginManager
 
+# Default "Read more..." link
+DEFAULT_READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
+
+# Default pattern for translation files' names
+DEFAULT_TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
+
 from .post import Post
 from . import utils
 from .plugin_categories import (
@@ -77,9 +83,6 @@ from .utils import ColorfulStderrHandler
 config_changed = utils.config_changed
 
 __all__ = ['Nikola']
-
-# Default pattern for translation files' names
-DEFAULT_TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
 
 # We store legal values for some setting here.  For internal use.
 LEGAL_VALUES = {
@@ -277,7 +280,7 @@ class Nikola(object):
             'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
             'PRETTY_URLS': False,
             'FUTURE_IS_NOW': False,
-            'READ_MORE_LINK': '<p class="more"><a href="{link}">{read_more}…</a></p>',
+            'READ_MORE_LINK': DEFAULT_READ_MORE_LINK,
             'REDIRECTIONS': [],
             'RSS_LINK': None,
             'RSS_PATH': '',
@@ -340,7 +343,8 @@ class Nikola(object):
                                       'SEARCH_FORM',
                                       'BODY_END',
                                       'EXTRA_HEAD_DATA',
-                                      'NAVIGATION_LINKS',)
+                                      'NAVIGATION_LINKS',
+                                      'READ_MORE_LINK',)
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
                                              'blog_title',

@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Added reading_time tag for READ_MORE_LINK (Issue #1220)
 * Add canonical link in listings.
 * Added support for new meta files that are the same format as 1-file metadata,
   allowing for greater flexibility (Issue #954)
@@ -39,9 +40,9 @@ Features
   of which are languages, and values are (args, kwargs). (Issue #1112)
 * Certain settings are now translatable.  As of now, the settings are:
   BLOG_AUTHOR, BLOG_TITLE, BLOG_DESCRIPTION, LICENSE, CONTENT_FOOTER,
-  SOCIAL_BUTTONS_CODE, SEARCH_FORM, BODY_END, EXTRA_HEAD_DATA
-  (the up-to-date list is available in SITE.TRANSLATABLE_SETTINGS)
-  (Issues #851, #1057, #1061, #1112)
+  SOCIAL_BUTTONS_CODE, SEARCH_FORM, BODY_END, EXTRA_HEAD_DATA,
+  NAVIGATION_LINKS, READ_MORE_LINK (the up-to-date list is available in
+  SITE.TRANSLATABLE_SETTINGS) (Issues #851, #1057, #1061, #1112)
 * New Post.author() returns meta 'author' or BLOG_AUTHOR (Issue #1117)
 * Ship base-jinja, bootstrap-jinja, bootstrap3-jinja with Nikola (Issue #1104)
 * Invert ``HIDE_SOURCELINK`` and ``HIDE_UNTRANSLATED_POSTS`` into
