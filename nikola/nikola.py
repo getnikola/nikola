@@ -192,14 +192,9 @@ class Nikola(object):
         self._THEMES = None
         self.debug = DEBUG
         self.loghandlers = []
-        if not config:
-            self.configured = False
-            self.colorful = False
-            self.invariant = False
-        else:
-            self.configured = True
-            self.colorful = config.get('__colorful__', False)
-            self.invariant = config.get('__invariant__', False)
+        self.colorful = config.pop('__colorful__', False)
+        self.invariant = config.pop('__invariant__', False)
+        self.configured = bool(config)
 
         ColorfulStderrHandler._colorful = self.colorful
 

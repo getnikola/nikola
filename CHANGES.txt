@@ -64,6 +64,7 @@ Features
 Bugfixes
 --------
 
+* Fix site-dependent commands (they tried to run anyways) (Issue #1223)
 * Follow symlinks when walking trees (Issue #1206)
 * bootswatch_theme works again and does not try using server hostname=swatch (Issue #1202)
 * Make markdown extensions not break when markdown is not installed (Issue #1201)
