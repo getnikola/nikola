@@ -73,6 +73,7 @@ class CommandInstallPlugin(Command):
     doc_usage = "[[-u][--user] plugin_name] | [[-u] -l]"
     doc_purpose = "install plugins"
     output_dir = None
+    needs_config = False
     cmd_options = [
         {
             'name': 'list',
