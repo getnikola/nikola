@@ -58,6 +58,12 @@ import PyRSS2Gen as rss
 import lxml.html
 from yapsy.PluginManager import PluginManager
 
+# Default "Read more..." link
+DEFAULT_READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
+
+# Default pattern for translation files' names
+DEFAULT_TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
+
 from .post import Post
 from . import utils
 from .plugin_categories import (
@@ -78,9 +84,6 @@ config_changed = utils.config_changed
 
 __all__ = ['Nikola']
 
-# Default pattern for translation files' names
-DEFAULT_TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
-
 # We store legal values for some setting here.  For internal use.
 LEGAL_VALUES = {
     'COMMENT_SYSTEM': [
@@ -90,7 +93,7 @@ LEGAL_VALUES = {
         'intensedebate',
         'isso',
         'livefyre',
-        'moot',
+        'muut',
     ],
     'TRANSLATIONS': {
         'bg': 'Bulgarian',
@@ -129,6 +132,7 @@ LEGAL_VALUES = {
         cs='cs',
         cz='cs',
         de='de',
+        en='',
         es='es',
         et='et',
         fa='fa',
@@ -188,14 +192,12 @@ class Nikola(object):
         self._THEMES = None
         self.debug = DEBUG
         self.loghandlers = []
-        if not config:
-            self.configured = False
-            self.colorful = False
-            self.invariant = False
-        else:
-            self.configured = True
-            self.colorful = config.get('__colorful__', False)
-            self.invariant = config.get('__invariant__', False)
+        self.colorful = config.pop('__colorful__', False)
+        self.invariant = config.pop('__invariant__', False)
+        self.configured = bool(config)
+
+        config['__colorful__'] = self.colorful
+        config['__invariant__'] = self.invariant
 
         ColorfulStderrHandler._colorful = self.colorful
 
@@ -276,7 +278,7 @@ class Nikola(object):
             'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
             'PRETTY_URLS': False,
             'FUTURE_IS_NOW': False,
-            'READ_MORE_LINK': '<p class="more"><a href="{link}">{read_more}…</a></p>',
+            'READ_MORE_LINK': DEFAULT_READ_MORE_LINK,
             'REDIRECTIONS': [],
             'RSS_LINK': None,
             'RSS_PATH': '',
@@ -339,7 +341,8 @@ class Nikola(object):
                                       'SEARCH_FORM',
                                       'BODY_END',
                                       'EXTRA_HEAD_DATA',
-                                      'NAVIGATION_LINKS',)
+                                      'NAVIGATION_LINKS',
+                                      'READ_MORE_LINK',)
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
                                              'blog_title',
@@ -405,6 +408,12 @@ class Nikola(object):
             if 'SHOW_UNTRANSLATED_POSTS' in config:
                 utils.LOGGER.warn('HIDE_UNTRANSLATED_POSTS conflicts with SHOW_UNTRANSLATED_POSTS, ignoring HIDE_UNTRANSLATED_POSTS.')
             self.config['SHOW_UNTRANSLATED_POSTS'] = not config['HIDE_UNTRANSLATED_POSTS']
+
+        # Moot.it renamed themselves to muut.io
+        # TODO: remove on v8?
+        if self.config.get('COMMENT_SYSTEM') == 'moot':
+            utils.LOGGER.warn('The moot comment system has been renamed to muut by the upstream.  Setting COMMENT_SYSTEM to "muut".')
+            self.config['COMMENT_SYSTEM'] = 'muut'
 
         # PRETTY_URLS defaults to enabling STRIP_INDEXES unless explicitly disabled
         if self.config.get('PRETTY_URLS') and 'STRIP_INDEXES' not in config:

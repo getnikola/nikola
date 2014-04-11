@@ -13,11 +13,18 @@ dumb_replacements = [
     ["{% if isinstance(url, tuple) %}", "{% if url is mapping %}"],
     ["{% if any(post.is_mathjax for post in posts) %}", '{% if posts|selectattr("is_mathjax")|list %}'],
     ["json.dumps(title)", "title|tojson"],
-    [
-        '''<html{% if comment_system == 'facebook': xmlns:fb="http %}//ogp.me/ns/fb#" %endif lang="{{ lang }}">''',
-        '''<html{% if comment_system == 'facebook' %} xmlns:fb="http://ogp.me/ns/fb#" {%endif%} lang="{{ lang }}">'''
-    ],
     ["{{ parent.extra_head() }}", "{{ super() }}"],
+    ["prefix='\\", "prefix='"],
+    ["og: http://ogp.me/ns# \\", "og: http://ogp.me/ns#"],
+    ["article: http://ogp.me/ns/article# \\", "article: http://ogp.me/ns/article#"],
+    ["fb: http://ogp.me/ns/fb# \\", "fb: http://ogp.me/ns/fb#"],
+    ['dir="rtl" \\', 'dir="rtl"']
+]
+
+dumber_replacements = [
+    ["<html\n\\", "<html\n"],
+    ["\n'\\\n", "\n'\n"],
+    ["{% endif %}\n\\", "{% endif %}\n"]
 ]
 
 
@@ -44,6 +51,9 @@ def jinjify(in_theme, out_theme):
                 line = line.replace(*repl)
             lines.append(line)
         data = '\n'.join(lines)
+
+        for repl in dumber_replacements:
+            data = data.replace(*repl)
 
         with codecs.open(out_template, "wb+", "utf-8") as outf:
             outf.write(data + '\n')
