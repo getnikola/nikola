@@ -73,6 +73,7 @@ class CommandInstallPlugin(Command):
     doc_usage = "[[-u][--user] plugin_name] | [[-u] -l]"
     doc_purpose = "install plugins"
     output_dir = None
+    needs_config = False
     cmd_options = [
         {
             'name': 'list',
@@ -103,8 +104,8 @@ class CommandInstallPlugin(Command):
     def _execute(self, options, args):
         """Install plugin into current site."""
 
-        if not os.path.isfile('conf.py') and not options.get('user'):
-            LOGGER.info('No site found, assuming --user')
+        if not self.site.configured and not options.get('user'):
+            LOGGER.notice('No site found, assuming --user')
             options['user'] = True
 
         if options.get('user'):
