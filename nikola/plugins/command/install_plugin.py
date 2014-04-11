@@ -70,9 +70,9 @@ class CommandInstallPlugin(Command):
     """Install a plugin."""
 
     name = "install_plugin"
-    doc_usage = "[[-u] plugin_name] | [[-u] -l]"
-    doc_purpose = "install plugin into current site"
-    output_dir = 'plugins'
+    doc_usage = "[[-u][--user] plugin_name] | [[-u] -l]"
+    doc_purpose = "install plugins"
+    output_dir = None
     cmd_options = [
         {
             'name': 'list',
@@ -91,10 +91,27 @@ class CommandInstallPlugin(Command):
                     "http://plugins.getnikola.com/v7/plugins.json)",
             'default': 'http://plugins.getnikola.com/v7/plugins.json'
         },
+        {
+            'name': 'user',
+            'long': 'user',
+            'type': bool,
+            'help': "Install user-wide, available for all sites.",
+            'default': False
+        },
     ]
 
     def _execute(self, options, args):
         """Install plugin into current site."""
+
+        if not os.path.isfile('conf.py') and not options.get('user'):
+            LOGGER.info('No site found, assuming --user')
+            options['user'] = True
+
+        if options.get('user'):
+            self.output_dir = os.path.expanduser('~/.nikola/plugins')
+        else:
+            self.output_dir = 'plugins'
+
         if requests is None:
             utils.req_missing(['requests'], 'install plugins')
 
@@ -125,7 +142,7 @@ class CommandInstallPlugin(Command):
             LOGGER.info('Downloading: ' + data[name])
             zip_file = BytesIO()
             zip_file.write(requests.get(data[name]).content)
-            LOGGER.info('Extracting: {0} into plugins'.format(name))
+            LOGGER.info('Extracting: {0} into {1}'.format(name, self.output_dir))
             utils.extract_all(zip_file, 'plugins')
             dest_path = os.path.join('plugins', name)
         else:
