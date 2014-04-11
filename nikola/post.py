@@ -54,6 +54,7 @@ from .utils import (
     current_time,
     Functionary,
     LOGGER,
+    LocaleBorg,
     slugify,
     to_datetime,
     unicode_str,
@@ -332,11 +333,12 @@ class Post(object):
         dest = self.translated_base_path(lang)
         if not self.is_translation_available(lang) and not self.config['SHOW_UNTRANSLATED_POSTS']:
             return
-        else:
-            self.compile_html(
-                self.translated_source_path(lang),
-                dest,
-                self.is_two_file),
+        # Set the language to the right thing
+        LocaleBorg().set_locale(lang)
+        self.compile_html(
+            self.translated_source_path(lang),
+            dest,
+            self.is_two_file),
         if self.meta('password'):
             wrap_encrypt(dest, self.meta('password'))
         if self.publish_later:
