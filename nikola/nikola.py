@@ -285,7 +285,8 @@ class Nikola(object):
             'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
             'PRETTY_URLS': False,
             'FUTURE_IS_NOW': False,
-            'READ_MORE_LINK': DEFAULT_READ_MORE_LINK,
+            'INDEX_READ_MORE_LINK': DEFAULT_READ_MORE_LINK,
+            'RSS_READ_MORE_LINK': DEFAULT_READ_MORE_LINK,
             'REDIRECTIONS': [],
             'RSS_LINK': None,
             'RSS_PATH': '',
@@ -415,6 +416,20 @@ class Nikola(object):
             if 'SHOW_UNTRANSLATED_POSTS' in config:
                 utils.LOGGER.warn('HIDE_UNTRANSLATED_POSTS conflicts with SHOW_UNTRANSLATED_POSTS, ignoring HIDE_UNTRANSLATED_POSTS.')
             self.config['SHOW_UNTRANSLATED_POSTS'] = not config['HIDE_UNTRANSLATED_POSTS']
+
+        # READ_MORE_LINK has been split into INDEX_READ_MORE_LINK and RSS_READ_MORE_LINK
+        # TODO: remove on v8
+        if 'READ_MORE_LINK' in config:
+            utils.LOGGER.warn('The READ_MORE_LINK option is deprecated, use INDEX_READ_MORE_LINK and READ_MORE_LINK instead.')
+            if 'INDEX_READ_MORE_LINK' in config:
+                utils.LOGGER.warn('READ_MORE_LINK conflicts with INDEX_READ_MORE_LINK, ignoring READ_MORE_LINK.')
+            else:
+                self.config['INDEX_READ_MORE_LINK'] = config['READ_MORE_LINK']
+
+            if 'RSS_READ_MORE_LINK' in config:
+                utils.LOGGER.warn('READ_MORE_LINK conflicts with RSS_READ_MORE_LINK, ignoring READ_MORE_LINK.')
+            else:
+                self.config['RSS_READ_MORE_LINK'] = config['READ_MORE_LINK']
 
         # Moot.it renamed themselves to muut.io
         # TODO: remove on v8?
@@ -850,7 +865,7 @@ class Nikola(object):
         for post in timeline[:feed_length]:
             old_url_type = self.config['URL_TYPE']
             self.config['URL_TYPE'] = 'absolute'
-            data = post.text(lang, teaser_only=rss_teasers, strip_html=rss_plain)
+            data = post.text(lang, teaser_only=rss_teasers, strip_html=rss_plain, rss_read_more_link=True)
             if feed_url is not None and data:
                 # Massage the post's HTML (unless plain)
                 if not rss_plain:

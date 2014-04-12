@@ -339,7 +339,7 @@ THEME = ${THEME}
 # Show only teasers in the index pages? Defaults to False.
 # INDEX_TEASERS = False
 
-# A HTML fragment with the Read more... link.  (translatable)
+# HTML fragments with the Read more... link.
 # The following tags exist and are replaced for you:
 # {link}                        A link to the full post page.
 # {read_more}                   The string “Read more” in the current language.
@@ -349,7 +349,11 @@ THEME = ${THEME}
 # {remaining_paragraph_count}   The amount of paragraphs in the post, sans the teaser.
 # {{                            A literal { (U+007B LEFT CURLY BRACKET)
 # }}                            A literal } (U+007D RIGHT CURLY BRACKET)
-READ_MORE_LINK = ${READ_MORE_LINK}
+
+# 'Read more...' for the index page, if INDEX_TEASERS is True (translatable)
+INDEX_READ_MORE_LINK = ${READ_MORE_LINK}
+# 'Read more...' for the RSS_FEED, if RSS_TEASERS is True (translatable)
+RSS_READ_MORE_LINK = ${READ_MORE_LINK}
 
 # A HTML fragment describing the license, for the sidebar.
 # (translatable)
