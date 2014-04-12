@@ -101,14 +101,14 @@ class CommandInstallPlugin(Command):
         },
         {
             'name': 'upgrade',
-            'long': '--upgrade',
+            'long': 'upgrade',
             'type': bool,
             'help': "Upgrade all installed plugins.",
             'default': False
         },
         {
             'name': 'list_installed',
-            'long': '--list-installed',
+            'long': 'list-installed',
             'type': bool,
             'help': "List the installed plugins with their location.",
             'default': False
@@ -127,18 +127,20 @@ class CommandInstallPlugin(Command):
         else:
             self.output_dir = 'plugins'
 
-        if requests is None:
+        if requests is None:  # FIXME some things don't require requests
             utils.req_missing(['requests'], 'install plugins')
 
         listing = options['list']
         url = options['url']
+        list_installed = options['list_installed']  # FIXME: conflict with --list
+        upgrade = options['upgrade']  # FIXME: conflict with --list
         if args:
             name = args[0]
         else:
             name = None
 
-        if name is None and not listing:
-            LOGGER.error("This command needs either a plugin name or the -l option.")
+        if name is None and not listing and not upgrade and not list_installed:
+            LOGGER.error("This command needs either a plugin name or one of the -l, --upgrade or --list-installed options.")
             return False
         data = requests.get(url).text
         data = json.loads(data)
@@ -148,8 +150,18 @@ class CommandInstallPlugin(Command):
             for plugin in sorted(data.keys()):
                 print(plugin)
             return True
+        elif list_installed:
+            self.list_installed()
+        elif upgrade:
+            self.do_upgrade()
         else:
             self.do_install(name, data)
+
+    def list_installed(self):
+        from pdb import set_trace; set_trace()
+
+    def do_upgrade(self):
+        from pdb import set_trace; set_trace()
 
     def do_install(self, name, data):
         if name in data:
