@@ -124,6 +124,14 @@ LEGAL_VALUES = {
         'ur': 'Urdu',
         'zh_cn': 'Chinese (Simplified)',
     },
+    '_TRANSLATIONS_WITH_COUNTRY_SPECIFIERS': {
+        # This dict is used in `init` in case of locales that exist with a
+        # country specifier.  If there is no other locale that has the same
+        # language with a different country, ``nikola init`` (but nobody else!)
+        # will accept it, warning the user about it.
+        'pt': 'pt_br',
+        'zh': 'zh_cn'
+    },
     'RTL_LANGUAGES': ('fa', 'ur'),
     'COLORBOX_LOCALES': defaultdict(
         str,
