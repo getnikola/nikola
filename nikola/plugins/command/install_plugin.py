@@ -70,7 +70,7 @@ class CommandInstallPlugin(Command):
     """Install a plugin."""
 
     name = "install_plugin"
-    doc_usage = "[[-u][--user] plugin_name] | [[-u] -l]"
+    doc_usage = "[[-u][--user] plugin_name] | [[-u] [-l |--upgrade|--list-installed]]"
     doc_purpose = "install plugins"
     output_dir = None
     needs_config = False
@@ -97,6 +97,20 @@ class CommandInstallPlugin(Command):
             'long': 'user',
             'type': bool,
             'help': "Install user-wide, available for all sites.",
+            'default': False
+        },
+        {
+            'name': 'upgrade',
+            'long': '--upgrade',
+            'type': bool,
+            'help': "Upgrade all installed plugins.",
+            'default': False
+        },
+        {
+            'name': 'list_installed',
+            'long': '--list-installed',
+            'type': bool,
+            'help': "List the installed plugins with their location.",
             'default': False
         },
     ]
