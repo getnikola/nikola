@@ -119,7 +119,7 @@ class CommandInstallPlugin(Command):
         """Install plugin into current site."""
 
         if not self.site.configured and not options.get('user'):
-            LOGGER.notice('No site found, assuming --user')
+            LOGGER.notice('No site found, assuming --user')  # FIXME: only do this when installing
             options['user'] = True
 
         if options.get('user'):
@@ -158,7 +158,14 @@ class CommandInstallPlugin(Command):
             self.do_install(name, data)
 
     def list_installed(self):
-        from pdb import set_trace; set_trace()
+        for plugin in self.site.plugin_manager.getAllPlugins():
+            p = plugin.path
+            if os.path.isdir(p):
+                p = p + os.sep
+            else:
+                p = p + '.py'
+
+            print('{0} at {1}'.format(plugin.name, p))
 
     def do_upgrade(self):
         from pdb import set_trace; set_trace()
