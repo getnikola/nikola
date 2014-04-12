@@ -403,6 +403,7 @@ class TemplateHookRegistry(object):
         self._items = []
         self.name = name
         self.site = site
+        self.context = None
 
     def generate(self):
         """Generate items."""
@@ -410,6 +411,7 @@ class TemplateHookRegistry(object):
             if c:
                 if site:
                     kwargs['site'] = self.site
+                    kwargs['context'] = self.context
                 yield inp(*args, **kwargs)
             else:
                 yield inp
@@ -418,7 +420,7 @@ class TemplateHookRegistry(object):
         """Return items, in a string, separated by newlines."""
         return '\n'.join(self.generate())
 
-    def append(self, inp, wants_site=False, *args, **kwargs):
+    def append(self, inp, wants_site_and_context=False, *args, **kwargs):
         """
         Register an item.
 
@@ -433,7 +435,13 @@ class TemplateHookRegistry(object):
         is not callable.  Callability of `inp` is determined only once.
         """
         c = callable(inp)
-        self._items.append((c, inp, wants_site, args, kwargs))
+        self._items.append((c, inp, wants_site_and_context, args, kwargs))
+
+    def __hash__(self):
+        return config_changed({self.name: self._items})
+
+    def __str__(self):
+        return '<TemplateHookRegistry: {0}>'.format(self._items)
 
 
 class CustomEncoder(json.JSONEncoder):

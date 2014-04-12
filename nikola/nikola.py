@@ -721,6 +721,9 @@ class Nikola(object):
         local_context['is_rtl'] = local_context['lang'] in LEGAL_VALUES['RTL_LANGUAGES']
         # string, arguments
         local_context["formatmsg"] = lambda s, *a: s % a
+        for h in local_context['template_hooks'].values():
+            h.context = context
+
         data = self.template_system.render_template(
             template_name, None, local_context)
 
@@ -1199,6 +1202,10 @@ class Nikola(object):
         deps_dict['TRANSLATIONS'] = self.config['TRANSLATIONS']
         deps_dict['global'] = self.GLOBAL_CONTEXT
         deps_dict['comments'] = context['enable_comments']
+
+        for k, v in self.GLOBAL_CONTEXT['template_hooks'].items():
+            deps_dict['||template_hooks|{0}||'.format(k)] = v._items
+
         if post:
             deps_dict['post_translations'] = post.translated_to
 
@@ -1233,6 +1240,10 @@ class Nikola(object):
         deps_context["posts"] = [(p.meta[lang]['title'], p.permalink(lang)) for p in
                                  posts]
         deps_context["global"] = self.GLOBAL_CONTEXT
+
+        for k, v in self.GLOBAL_CONTEXT['template_hooks'].items():
+            deps_context['||template_hooks|{0}||'.format(k)] = v._items
+
         task = {
             'name': os.path.normpath(output_name),
             'targets': [output_name],

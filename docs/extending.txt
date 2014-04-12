@@ -436,3 +436,38 @@ Here's the relevant code from the tag plugin.
                               self.site.config['TAG_PATH'], self.slugify_name(name) + ".xml"] if
                 _f]
 
+Template Hooks
+==============
+
+Plugins can use a hook system for adding stuff into templates.  In order to use
+it, a plugin must register itself.  For example, in order to register a script into
+``extra_head``:
+
+.. code-block:: python
+
+    # In set_site
+    site.template_hooks['extra_head'].append('<script src="/assets/js/fancyplugin.js">')
+
+There is also another API available.  There is also another API that allows use
+of dynamically generated HTML.  The API is:
+
+.. code-block:: python
+
+    # In set_site
+    def generate_html_bit(name, type='js'):
+        return '<script src="/assets/{t}/{n}.{t}">'.format(n=name, t=type)
+
+    site.template_hooks['extra_head'].append(generate_html_bit, False, 'fancyplugin', type='js')
+
+The second argument to ``append()`` is set_site.  If it is set to True, a
+keyword argument of ``site`` is passed to the function.  It will overwrite
+any passed keyword arguments of the same name.
+
+The following hooks currently exist:
+
+* ``extra_head`` (not equal to the config option!)
+* ``body_end`` (not equal to the config option!)
+* ``page_header``
+* ``menu``
+* ``menu_alt`` (right-side menu in bootstrap, after ``menu`` in base)
+* ``page_footer``

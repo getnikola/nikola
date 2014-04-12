@@ -103,6 +103,15 @@ class Listings(Task):
         for root, dirs, files in os.walk(kw['listings_folder'], followlinks=True):
             files = [f for f in files if os.path.splitext(f)[-1] not in ignored_extensions]
 
+            uptodate = {1: self.site.GLOBAL_CONTEXT}
+
+            for k, v in self.site.GLOBAL_CONTEXT['template_hooks'].items():
+                uptodate['||template_hooks|{0}||'.format(k)] = v._items
+
+            uptodate2 = uptodate.copy()
+            uptodate2[2] = files
+            uptodate2[3] = dirs
+
             # Render all files
             out_name = os.path.join(
                 kw['output_folder'],
@@ -116,11 +125,7 @@ class Listings(Task):
                 'actions': [(render_listing, [None, out_name, dirs, files])],
                 # This is necessary to reflect changes in blog title,
                 # sidebar links, etc.
-                'uptodate': [utils.config_changed({
-                    1: self.site.GLOBAL_CONTEXT,
-                    2: files,
-                    3: dirs
-                })],
+                'uptodate': [utils.config_changed(uptodate2)],
                 'clean': True,
             }
             for f in files:
@@ -140,8 +145,7 @@ class Listings(Task):
                     'actions': [(render_listing, [in_name, out_name])],
                     # This is necessary to reflect changes in blog title,
                     # sidebar links, etc.
-                    'uptodate': [utils.config_changed(
-                        self.site.GLOBAL_CONTEXT)],
+                    'uptodate': [utils.config_changed(uptodate)],
                     'clean': True,
                 }
 
