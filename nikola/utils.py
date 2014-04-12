@@ -136,6 +136,7 @@ else:
 
 from doit import tools
 from unidecode import unidecode
+from pkg_resources import resource_filename
 
 import PyRSS2Gen as rss
 
@@ -425,8 +426,7 @@ def get_theme_path(theme):
     dir_name = os.path.join('themes', theme)
     if os.path.isdir(dir_name):
         return dir_name
-    dir_name = os.path.join(os.path.dirname(__file__),
-                            'data', 'themes', theme)
+    dir_name = resource_filename('nikola', os.path.join('data', 'themes', theme))
     if os.path.isdir(dir_name):
         return dir_name
     raise Exception("Can't find theme '{0}'".format(theme))

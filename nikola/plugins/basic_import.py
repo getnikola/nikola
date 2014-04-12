@@ -29,6 +29,7 @@ import codecs
 import csv
 import datetime
 import os
+from pkg_resources import resource_filename
 
 try:
     from urlparse import urlparse
@@ -95,7 +96,7 @@ class ImportMixin(object):
             utils.LOGGER.notice('The folder {0} already exists - assuming that this is a '
                                 'already existing Nikola site.'.format(self.output_folder))
 
-        filename = os.path.join(os.path.dirname(utils.__file__), 'conf.py.in')
+        filename = resource_filename('nikola', 'conf.py.in')
         # The 'strict_undefined=True' will give the missing symbol name if any,
         # (ex: NameError: 'THEME' is not defined )
         # for other errors from mako/runtime.py, you can add format_extensions=True ,

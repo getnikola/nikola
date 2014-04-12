@@ -28,6 +28,7 @@ from __future__ import print_function, unicode_literals
 import codecs
 from collections import defaultdict
 from copy import copy
+from pkg_resources import resource_filename
 import datetime
 import glob
 import locale
@@ -458,12 +459,12 @@ class Nikola(object):
         extra_plugins_dirs = self.config['EXTRA_PLUGINS_DIRS']
         if sys.version_info[0] == 3:
             places = [
-                os.path.join(os.path.dirname(__file__), 'plugins'),
+                resource_filename('nikola', 'plugins'),
                 os.path.join(os.getcwd(), 'plugins'),
             ] + [path for path in extra_plugins_dirs if path]
         else:
             places = [
-                os.path.join(os.path.dirname(__file__), utils.sys_encode('plugins')),
+                resource_filename('nikola', utils.sys_encode('plugins')),
                 os.path.join(os.getcwd(), utils.sys_encode('plugins')),
             ] + [utils.sys_encode(path) for path in extra_plugins_dirs if path]
 
