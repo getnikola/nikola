@@ -460,11 +460,13 @@ class Nikola(object):
             places = [
                 os.path.join(os.path.dirname(__file__), 'plugins'),
                 os.path.join(os.getcwd(), 'plugins'),
+                os.path.expanduser('~/.nikola/plugins'),
             ] + [path for path in extra_plugins_dirs if path]
         else:
             places = [
                 os.path.join(os.path.dirname(__file__), utils.sys_encode('plugins')),
                 os.path.join(os.getcwd(), utils.sys_encode('plugins')),
+                os.path.expanduser('~/.nikola/plugins'),
             ] + [utils.sys_encode(path) for path in extra_plugins_dirs if path]
 
         self.plugin_manager.setPluginPlaces(places)
