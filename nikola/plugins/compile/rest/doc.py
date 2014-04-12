@@ -48,7 +48,6 @@ def doc_role(name, rawtext, text, lineno, inliner,
 
     # split link's text and post's slug in role content
     has_explicit_title, title, slug = split_explicit_title(text)
-
     # check if the slug given is part of our blog posts/pages
     twin_slugs = False
     post = None
@@ -73,7 +72,6 @@ def doc_role(name, rawtext, text, lineno, inliner,
     if not has_explicit_title:
         # use post's title as link's text
         title = post.title()
-
     permalink = post.permalink()
     if twin_slugs:
         msg = inliner.reporter.warning(
