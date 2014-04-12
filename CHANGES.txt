@@ -64,6 +64,8 @@ Features
 Bugfixes
 --------
 
+* If an invalid language is specified, Nikola now shows a helpful error message
+  instead of a traceback (via Issue #1225)
 * Ensure the locale is set correctly when compiling posts (Issue #1219)
 * Fix site-dependent commands (they tried to run anyways) (Issue #1223)
 * Follow symlinks when walking trees (Issue #1206)
