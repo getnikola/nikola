@@ -168,7 +168,7 @@ class CommandInstallPlugin(Command):
             print('{0} at {1}'.format(plugin.name, p))
 
     def do_upgrade(self):
-        from pdb import set_trace; set_trace()
+        pass
 
     def do_install(self, name, data):
         if name in data:
