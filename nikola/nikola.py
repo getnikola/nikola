@@ -616,7 +616,7 @@ class Nikola(object):
             try:
                 self._THEMES = utils.get_theme_chain(self.config['THEME'])
             except Exception:
-                utils.LOGGER.warn('''Can't load theme "{0}", using 'bootstrap' instead.'''.format(self.config['THEME']))
+                utils.LOGGER.warn('''Cannot load theme "{0}", using 'bootstrap' instead.'''.format(self.config['THEME']))
                 self.config['THEME'] = 'bootstrap'
                 return self._get_themes()
             # Check consistency of USE_CDN and the current THEME (Issue #386)
@@ -631,9 +631,13 @@ class Nikola(object):
     THEMES = property(_get_themes)
 
     def _get_messages(self):
-        return utils.load_messages(self.THEMES,
-                                   self.translations,
-                                   self.default_lang)
+        try:
+            return utils.load_messages(self.THEMES,
+                                       self.translations,
+                                       self.default_lang)
+        except utils.LanguageNotFoundError as e:
+            utils.LOGGER.error('''Cannot load language "{0}".  Please make sure it is supported by Nikola itself, or that you have the appropriate messages files in your themes.'''.format(e.lang))
+            sys.exit(1)
 
     MESSAGES = property(_get_messages)
 
@@ -955,7 +959,7 @@ class Nikola(object):
         """slug path handler"""
         results = [p for p in self.timeline if p.meta('slug') == name]
         if not results:
-            utils.LOGGER.warning("Can't resolve path request for slug: {0}".format(name))
+            utils.LOGGER.warning("Cannot resolve path request for slug: {0}".format(name))
         else:
             if len(results) > 1:
                 utils.LOGGER.warning('Ambiguous path request for slug: {0}'.format(name))
@@ -965,7 +969,7 @@ class Nikola(object):
         """filename path handler"""
         results = [p for p in self.timeline if p.source_path == name]
         if not results:
-            utils.LOGGER.warning("Can't resolve path request for filename: {0}".format(name))
+            utils.LOGGER.warning("Cannot resolve path request for filename: {0}".format(name))
         else:
             if len(results) > 1:
                 utils.LOGGER.error("Ambiguous path request for filename: {0}".format(name))

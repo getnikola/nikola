@@ -465,6 +465,7 @@ def get_theme_chain(theme):
 
 warned = []
 
+
 class LanguageNotFoundError(Exception):
     def __init__(self, lang, orig):
         self.lang = lang
@@ -472,6 +473,7 @@ class LanguageNotFoundError(Exception):
 
     def __str__(self):
         return 'cannot find language {0}'.format(self.lang)
+
 
 def load_messages(themes, translations, default_lang):
     """ Load theme's messages into context.

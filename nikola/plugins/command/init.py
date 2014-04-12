@@ -303,7 +303,6 @@ class CommandInit(Command):
                 print("Type '?' (a question mark, sans quotes) to list available languages.")
                 lhandler(default, toconf, show_header=False)
 
-
         def chandler(default, toconf):
             print("You can configure comments now.  Type '?' (a question mark, sans quotes) to list available comment systems.  If you do not want any comments, just leave the field blank.")
             answer = ask('Comment system', '')
