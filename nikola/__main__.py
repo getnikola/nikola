@@ -246,7 +246,9 @@ class DoitNikola(DoitMain):
                     'doit_auto',
                     'dumpdb',
                     'forget',
-                    'ignore'
+                    'ignore',
+                    'run',
+                    'strace',
                 ):
             # Check for conf.py before launching run
             if not self.nikola.configured:
