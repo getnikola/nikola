@@ -33,6 +33,7 @@ import json
 import textwrap
 
 from mako.template import Template
+from pkg_resources import resource_filename
 
 import nikola
 from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_READ_MORE_LINK, LEGAL_VALUES
@@ -228,15 +229,13 @@ class CommandInit(Command):
 
     @classmethod
     def copy_sample_site(cls, target):
-        lib_path = cls.get_path_to_nikola_modules()
-        src = os.path.join(lib_path, 'data', 'samplesite')
+        src = resource_filename('nikola', os.path.join('data', 'samplesite'))
         shutil.copytree(src, target)
         fix_git_symlinked(src, target)
 
     @classmethod
     def create_configuration(cls, target):
-        lib_path = cls.get_path_to_nikola_modules()
-        template_path = os.path.join(lib_path, 'conf.py.in')
+        template_path = resource_filename('nikola', 'conf.py.in')
         conf_template = Template(filename=template_path)
         conf_path = os.path.join(target, 'conf.py')
         with codecs.open(conf_path, 'w+', 'utf8') as fd:
@@ -246,10 +245,6 @@ class CommandInit(Command):
     def create_empty_site(cls, target):
         for folder in ('files', 'galleries', 'listings', 'posts', 'stories'):
             makedirs(os.path.join(target, folder))
-
-    @staticmethod
-    def get_path_to_nikola_modules():
-        return os.path.dirname(nikola.__file__)
 
     @staticmethod
     def ask_questions(target):
