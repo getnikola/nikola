@@ -1516,57 +1516,6 @@ this set `THEME` in your ``conf.py`` to ``'site-planetoid'``.
 This is special in the case that it redirects users to the original URL of the post
 when they try to open a post.
 
-Local Search
-~~~~~~~~~~~~
-
-If you don't want to depend on Google or DuckDuckGo to implement search for you,
-or just want it to work even if you are offline, enable this plugin and the
-search will be performed client side.
-
-This plugin implements a Tipue-based local search for your site.
-
-To use it, enable local_search in ENABLED_EXTRAS in your sites conf.py
-
-After you build your site, you will have several new files in assets/css and assets/js
-and a tipue_search.html that you can use as a basis for using this in your site.
-
-For more information about how to customize it and use it, please refer to the tipue
-docs at http://www.tipue.com/search/
-
-Tipue is under an MIT license (see MIT-LICENSE.txt)
-
-Here's a set of example settings for conf.py that should work nicely with the "bootstrap" theme::
-
-    SEARCH_FORM = """
-    <span class="navbar-form pull-left">
-    <input type="text" id="tipue_search_input">
-    </span>"""
-
-    BODY_END = """
-    <script src="/assets/js/tipuesearch_set.js"></script>
-    <script src="/assets/js/tipuesearch.js"></script>
-    <script>
-    $(document).ready(function() {
-        $('#tipue_search_input').tipuesearch({
-            'mode': 'json',
-            'contentLocation': '/assets/js/tipuesearch_content.json',
-            'showUrl': false
-        });
-    });
-    </script>
-    """
-
-    EXTRA_HEAD_DATA = """
-    <link rel="stylesheet" type="text/css" href="/assets/css/tipuesearch.css">
-    <div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
-    """
-
-    ENABLED_EXTRAS = [ 'local_search' ]
-
-
-The <div> in EXTRA_HEAD_DATA is a hack but it will migrate into the <body> of the
-documents thanks to magic, and will hold the search results after the user searches.
-
 Mustache
 ~~~~~~~~
 

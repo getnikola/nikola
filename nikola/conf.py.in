@@ -569,37 +569,6 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # <!-- End of custom search -->
 #""" % SITE_URL
 
-# Also, there is a local search plugin you can use, based on Tipue, but it requires setting several
-# options:
-
-# SEARCH_FORM = """
-# <span class="navbar-form pull-left">
-# <input type="text" id="tipue_search_input">
-# </span>"""
-#
-# BODY_END = """
-# <script src="/assets/js/tipuesearch_set.js"></script>
-# <script src="/assets/js/tipuesearch.js"></script>
-# <script>
-# $(document).ready(function() {
-#     $('#tipue_search_input').tipuesearch({
-#         'mode': 'json',
-#         'contentLocation': '/assets/js/tipuesearch_content.json',
-#         'showUrl': false
-#     });
-# });
-# </script>
-# """
-
-# EXTRA_HEAD_DATA = """
-# <link rel="stylesheet" type="text/css" href="/assets/css/tipuesearch.css">
-# <div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
-# """
-# ENABLED_EXTRAS = ['local_search']
-#
-###### End of local search example
-
-
 # Use content distribution networks for jquery, twitter-bootstrap css and js,
 # and html5shiv (for older versions of Internet Explorer)
 # If this is True, jquery and html5shiv is served from the Google and twitter-
