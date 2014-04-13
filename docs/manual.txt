@@ -1516,13 +1516,6 @@ this set `THEME` in your ``conf.py`` to ``'site-planetoid'``.
 This is special in the case that it redirects users to the original URL of the post
 when they try to open a post.
 
-Mustache
-~~~~~~~~
-
-This task gives you a ``mustache.html`` file which lets you access your whole
-blog without reloading the page, using client-side templates. Makes it much
-faster and modern ;-)
-
 Custom Plugins
 --------------
 
