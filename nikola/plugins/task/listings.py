@@ -103,14 +103,14 @@ class Listings(Task):
         for root, dirs, files in os.walk(kw['listings_folder'], followlinks=True):
             files = [f for f in files if os.path.splitext(f)[-1] not in ignored_extensions]
 
-            uptodate = {1: self.site.GLOBAL_CONTEXT}
+            uptodate = {'c': self.site.GLOBAL_CONTEXT}
 
             for k, v in self.site.GLOBAL_CONTEXT['template_hooks'].items():
                 uptodate['||template_hooks|{0}||'.format(k)] = v._items
 
             uptodate2 = uptodate.copy()
-            uptodate2[2] = files
-            uptodate2[3] = dirs
+            uptodate2['f'] = files
+            uptodate2['d'] = dirs
 
             # Render all files
             out_name = os.path.join(
