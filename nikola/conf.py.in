@@ -351,9 +351,9 @@ THEME = ${THEME}
 # }}                            A literal } (U+007D RIGHT CURLY BRACKET)
 
 # 'Read more...' for the index page, if INDEX_TEASERS is True (translatable)
-INDEX_READ_MORE_LINK = ${READ_MORE_LINK}
+INDEX_READ_MORE_LINK = ${INDEX_READ_MORE_LINK}
 # 'Read more...' for the RSS_FEED, if RSS_TEASERS is True (translatable)
-RSS_READ_MORE_LINK = ${READ_MORE_LINK}
+RSS_READ_MORE_LINK = ${RSS_READ_MORE_LINK}
 
 # A HTML fragment describing the license, for the sidebar.
 # (translatable)
