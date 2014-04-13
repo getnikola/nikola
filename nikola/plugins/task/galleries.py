@@ -105,7 +105,6 @@ class Galleries(Task):
             'comments_in_galleries': self.site.config['COMMENTS_IN_GALLERIES'],
         }
 
-
         for k, v in self.site.GLOBAL_CONTEXT['template_hooks'].items():
             self.kw['||template_hooks|{0}||'.format(k)] = v._items
 
