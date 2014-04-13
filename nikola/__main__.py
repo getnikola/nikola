@@ -248,8 +248,7 @@ class DoitNikola(DoitMain):
                     'forget',
                     'ignore',
                     'run',
-                    'strace',
-                ):
+                    'strace'):
             # Check for conf.py before launching run
             if not self.nikola.configured:
                 LOGGER.error("This command needs to run inside an "
