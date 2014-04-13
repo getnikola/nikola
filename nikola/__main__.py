@@ -75,6 +75,7 @@ def main(args):
     # the output of that command (the new site) in an unknown directory that is
     # not the current working directory.  (does not apply to `version`)
     argname = args[0] if len(args) > 0 else None
+    # FIXME there are import plugins in the repo, so how do we handle this?
     if argname not in ['init', 'import_wordpress', 'import_feed',
                        'import_blogger', 'version']:
         root = get_root_dir()
