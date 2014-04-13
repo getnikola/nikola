@@ -851,11 +851,11 @@ CSS tweaking
     with a `custom theme <theming.html>`__.
 
     If you want to use LESS_ or Sass_ for your custom CSS, or the theme you use
-    contains LESS or Sass code that you want to override, create a ``less`` or
+    contains LESS or Sass code that you want to override, you will need to install
+    the `LESS plugin <http://plugins.getnikola.com/#less>`__ or
+    `SASS plugin <http://plugins.getnikola.com/#sass>`__ create a ``less`` or
     ``sass`` directory in your site root, put your ``.less`` or ``.scss`` files
-    there and a targets file containing the files you want compiled. Any
-    ``.less`` or ``.scss`` files from the theme chain that you want to use will
-    need to be included in your files.
+    there and a targets file containing the list of files you want compiled.
 
 .. _LESS: http://lesscss.org/
 .. _Sass: http://sass-lang.com/
