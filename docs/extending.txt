@@ -440,30 +440,7 @@ Template Hooks
 ==============
 
 Plugins can use a hook system for adding stuff into templates.  In order to use
-it, a plugin must register itself.  For example, in order to register a script into
-``extra_head``:
-
-.. code-block:: python
-
-    # In set_site
-    site.template_hooks['extra_head'].append('<script src="/assets/js/fancyplugin.js">')
-
-There is also another API available.  There is also another API that allows use
-of dynamically generated HTML.  The API is:
-
-.. code-block:: python
-
-    # In set_site
-    def generate_html_bit(name, type='js'):
-        return '<script src="/assets/{t}/{n}.{t}">'.format(n=name, t=type)
-
-    site.template_hooks['extra_head'].append(generate_html_bit, False, 'fancyplugin', type='js')
-
-The second argument to ``append()`` is set_site.  If it is set to True, a
-keyword argument of ``site`` is passed to the function.  It will overwrite
-any passed keyword arguments of the same name.
-
-The following hooks currently exist:
+it, a plugin must register itself.  The following hooks currently exist:
 
 * ``extra_head`` (not equal to the config option!)
 * ``body_end`` (not equal to the config option!)
@@ -471,3 +448,44 @@ The following hooks currently exist:
 * ``menu``
 * ``menu_alt`` (right-side menu in bootstrap, after ``menu`` in base)
 * ``page_footer``
+
+For example, in order to register a script into ``extra_head``:
+
+.. code-block:: python
+
+    # In set_site
+    site.template_hooks['extra_head'].append('<script src="/assets/js/fancyplugin.js">')
+
+There is also another API available.  It allows use of dynamically generated
+HTML:
+
+.. code-block:: python
+
+    # In set_site
+    def generate_html_bit(name, ftype='js'):
+        return '<script src="/assets/{t}/{n}.{t}">'.format(n=name, t=ftype)
+
+    site.template_hooks['extra_head'].append(generate_html_bit, False, 'fancyplugin', type='js')
+
+
+The second argument to ``append()`` is used to determine whether the function
+needs access to the current template context and the site.  If it it set to
+``True``, the function will also receive ``site`` and ``context`` keyword
+arguments.  Example use:
+
+
+.. code-block:: python
+
+    # In set_site
+    def greeting(addr, endswith='', site=None, context=None):
+        if context['lang'] == 'en':
+            greet = u'Hello'
+        elif context['lang'] == 'es':
+            greet = u'¡Hola'
+
+        t = u' BLOG_TITLE = {0}'.format(site.config['BLOG_TITLE'](context['lang']))
+
+        return u'<h3>{greet} {addr}{endswith}</h3>'.format(greet=greet, addr=addr,
+        endswith=endswith) + t
+
+    site.template_hooks['page_header'].append(greeting, True, u'Nikola Tesla', endswith=u'!')
