@@ -648,8 +648,6 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # ENABLED_EXTRAS = [
 #     'planetoid',
 #     'ipynb',
-#     'local_search',
-#     'render_mustache',
 # ]
 
 # List of regular expressions, links matching them will always be considered
