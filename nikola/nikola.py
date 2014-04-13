@@ -171,8 +171,6 @@ class Nikola(object):
     EXTRA_PLUGINS = [
         'planetoid',
         'ipynb',
-        'local_search',
-        'render_mustache',
     ]
 
     def __init__(self, **config):
