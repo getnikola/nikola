@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Support hooks in templates, for use by plugins (Issue #896)
 * Added reading_time, remaining_reading_time, paragraph_count,
   remaining_paragraph_count tags for READ_MORE_LINK (Issue #1220)
 * Add canonical link in listings.

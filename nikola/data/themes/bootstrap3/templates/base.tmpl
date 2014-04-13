@@ -6,6 +6,7 @@ ${base.html_headstart()}
 <%block name="extra_head">
 ### Leave this block alone.
 </%block>
+${template_hooks['extra_head']()}
 
 <body>
 
@@ -33,6 +34,7 @@ ${base.html_headstart()}
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                 ${base.html_navigation_links()}
+                ${template_hooks['menu']()}
             </ul>
             %if search_form:
                 ${search_form}
@@ -47,6 +49,7 @@ ${base.html_headstart()}
                 % if show_sourcelink:
                     <%block name="sourcelink"></%block>
                 %endif
+                ${template_hooks['menu_alt']()}
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container -->
@@ -58,12 +61,14 @@ ${base.html_headstart()}
     <div class="body-content">
         <!--Body content-->
         <div class="row">
+            ${template_hooks['page_header']()}
             <%block name="content"></%block>
         </div>
         <!--End of body content-->
 
         <footer>
             ${content_footer}
+            ${template_hooks['page_footer']()}
         </footer>
     </div>
 </div>
@@ -77,5 +82,6 @@ ${base.late_load_js()}
         ${notes.code()}
     % endif
 ${body_end}
+${template_hooks['body_end']()}
 </body>
 </html>
