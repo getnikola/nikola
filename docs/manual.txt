@@ -438,10 +438,8 @@ easier to keep it in a single location.
 
 The contents of your post have to be written (by default) in `reStructuredText <http://docutils.sf.net>`__
 but you can use a lot of different markups using the ``-f`` option. Currently
-Nikola supports bbcode, wiki, markdown, html, txt2tags, textile and more in addition
-to reStructuredText.
-
-For some of those plugins you will need to `install a plugin. <http://plugins.getnikola.com>`__
+Nikola supports markdown, reStructuredText, pandoc and HTML, and has
+support for bbcode, wiki, txt2tags, textile and more via `plugins <http://plugins.getnikola.com>`__
 
 You can control what markup compiler is used for each file extension with the ``COMPILERS``
 option. The default configuration expects them to be placed in ``posts`` but that can be
