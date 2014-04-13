@@ -388,7 +388,6 @@ Nikola also has other commands besides ``build``::
       nikola forget               clear successful run status from internal DB
       nikola help                 show help
       nikola ignore               ignore task (skip) on subsequent runs
-      nikola import_blogger       import a blogger dump
       nikola import_feed          import a RSS/Atom dump
       nikola import_wordpress     import a WordPress dump
       nikola init                 create a Nikola site in the specified folder
