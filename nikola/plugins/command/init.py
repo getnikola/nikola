@@ -379,12 +379,6 @@ class CommandInit(Command):
             try:
                 if not target:
                     target = st['target']
-                    try:
-                        from mock import MagicMock as mm
-                    except ImportError:
-                        mm = None  # NOQA
-                    if isinstance(target, mm):
-                        target = None
             except KeyError:
                 pass
 
