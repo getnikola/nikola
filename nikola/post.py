@@ -457,6 +457,7 @@ class Post(object):
                         teaser += l.format(
                             link=self.permalink(lang),
                             read_more=self.messages[lang]["Read more"],
+                            min_remaining_read=self.messages[lang]["%d min remaining to read"] % (self.remaining_reading_time),
                             reading_time=self.reading_time,
                             remaining_reading_time=self.remaining_reading_time,
                             paragraph_count=self.paragraph_count,

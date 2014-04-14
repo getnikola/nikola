@@ -60,7 +60,8 @@ import lxml.html
 from yapsy.PluginManager import PluginManager
 
 # Default "Read more..." link
-DEFAULT_READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
+DEFAULT_INDEX_READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
+DEFAULT_RSS_READ_MORE_LINK = '<p><a href="{link}">{read_more}…</a> ({min_remaining_read})</p>'
 
 # Default pattern for translation files' names
 DEFAULT_TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
@@ -285,8 +286,8 @@ class Nikola(object):
             'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
             'PRETTY_URLS': False,
             'FUTURE_IS_NOW': False,
-            'INDEX_READ_MORE_LINK': DEFAULT_READ_MORE_LINK,
-            'RSS_READ_MORE_LINK': DEFAULT_READ_MORE_LINK,
+            'INDEX_READ_MORE_LINK': DEFAULT_INDEX_READ_MORE_LINK,
+            'RSS_READ_MORE_LINK': DEFAULT_RSS_READ_MORE_LINK,
             'REDIRECTIONS': [],
             'RSS_LINK': None,
             'RSS_PATH': '',
@@ -350,7 +351,8 @@ class Nikola(object):
                                       'BODY_END',
                                       'EXTRA_HEAD_DATA',
                                       'NAVIGATION_LINKS',
-                                      'READ_MORE_LINK',)
+                                      'INDEX_READ_MORE_LINK',
+                                      'RSS_READ_MORE_LINK',)
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
                                              'blog_title',
