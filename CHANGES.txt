@@ -66,6 +66,7 @@ Features
 Bugfixes
 --------
 
+* Don't crash if a unknown kind of path/link is requested (Issue #1236)
 * Don't run ``clean`` and ``list`` outside sites (Issue #1232)
 * If an invalid language is specified, Nikola now shows a helpful error message
   instead of a traceback (via Issue #1225)

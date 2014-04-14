@@ -952,19 +952,23 @@ class Nikola(object):
         if lang is None:
             lang = utils.LocaleBorg().current_lang
 
-        path = self.path_handlers[kind](name, lang)
-        path = [os.path.normpath(p) for p in path if p != '.']  # Fix Issue #1028
+        try:
+            path = self.path_handlers[kind](name, lang)
+            path = [os.path.normpath(p) for p in path if p != '.']  # Fix Issue #1028
 
-        if is_link:
-            link = '/' + ('/'.join(path))
-            index_len = len(self.config['INDEX_FILE'])
-            if self.config['STRIP_INDEXES'] and \
-                    link[-(1 + index_len):] == '/' + self.config['INDEX_FILE']:
-                return link[:-index_len]
+            if is_link:
+                link = '/' + ('/'.join(path))
+                index_len = len(self.config['INDEX_FILE'])
+                if self.config['STRIP_INDEXES'] and \
+                        link[-(1 + index_len):] == '/' + self.config['INDEX_FILE']:
+                    return link[:-index_len]
+                else:
+                    return link
             else:
-                return link
-        else:
-            return os.path.join(*path)
+                return os.path.join(*path)
+        except KeyError:
+            LOGGER.warning("Unknown path request of kind: {0}".format(kind))
+            return ""
 
     def post_path(self, name, lang):
         """post_path path handler"""
