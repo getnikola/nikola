@@ -423,7 +423,7 @@ class Nikola(object):
         # READ_MORE_LINK has been split into INDEX_READ_MORE_LINK and RSS_READ_MORE_LINK
         # TODO: remove on v8
         if 'READ_MORE_LINK' in config:
-            utils.LOGGER.warn('The READ_MORE_LINK option is deprecated, use INDEX_READ_MORE_LINK and READ_MORE_LINK instead.')
+            utils.LOGGER.warn('The READ_MORE_LINK option is deprecated, use INDEX_READ_MORE_LINK and RSS_READ_MORE_LINK instead.')
             if 'INDEX_READ_MORE_LINK' in config:
                 utils.LOGGER.warn('READ_MORE_LINK conflicts with INDEX_READ_MORE_LINK, ignoring READ_MORE_LINK.')
             else:

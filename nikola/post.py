@@ -401,7 +401,7 @@ class Post(object):
         else:
             return get_translation_candidate(self.config, self.base_path, sorted(self.translated_to)[0])
 
-    def text(self, lang=None, teaser_only=False, strip_html=False, show_read_more_link=True, rss_read_more_link=True):
+    def text(self, lang=None, teaser_only=False, strip_html=False, show_read_more_link=True, rss_read_more_link=False):
         """Read the post file for that language and return its contents.
 
         teaser_only=True breaks at the teaser marker and returns only the teaser.
