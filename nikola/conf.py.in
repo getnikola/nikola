@@ -339,7 +339,7 @@ THEME = ${THEME}
 # Show only teasers in the index pages? Defaults to False.
 # INDEX_TEASERS = False
 
-# HTML fragments with the Read more... link.
+# HTML fragments with the Read more... links.
 # The following tags exist and are replaced for you:
 # {link}                        A link to the full post page.
 # {read_more}                   The string “Read more” in the current language.
