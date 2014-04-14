@@ -36,7 +36,7 @@ from mako.template import Template
 from pkg_resources import resource_filename
 
 import nikola
-from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_READ_MORE_LINK, LEGAL_VALUES
+from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_RSS_READ_MORE_LINK, LEGAL_VALUES
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger, makedirs, STDERR_HANDLER, load_messages
 from nikola.winutils import fix_git_symlinked
@@ -59,7 +59,8 @@ SAMPLE_CONF = {
     'COMMENT_SYSTEM': 'disqus',
     'COMMENT_SYSTEM_ID': 'nikolademo',
     'TRANSLATIONS_PATTERN': DEFAULT_TRANSLATIONS_PATTERN,
-    'READ_MORE_LINK': DEFAULT_READ_MORE_LINK,
+    'INDEX_READ_MORE_LINK': DEFAULT_INDEX_READ_MORE_LINK,
+    'RSS_READ_MORE_LINK': DEFAULT_RSS_READ_MORE_LINK,
     'POSTS': """(
     ("posts/*.rst", "posts", "post.tmpl"),
     ("posts/*.txt", "posts", "post.tmpl"),
@@ -193,9 +194,10 @@ def prepare_config(config):
     """Parse sample config with JSON."""
     p = config.copy()
     p.update(dict((k, json.dumps(v)) for k, v in p.items()
-             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'READ_MORE_LINK')))
-    # READ_MORE_LINK requires some special treatment.
-    p['READ_MORE_LINK'] = "'" + p['READ_MORE_LINK'].replace("'", "\\'") + "'"
+             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'INDEX_READ_MORE_LINK', 'RSS_READ_MORE_LINK')))
+    # READ_MORE_LINKs require some special treatment.
+    p['INDEX_READ_MORE_LINK'] = "'" + p['INDEX_READ_MORE_LINK'].replace("'", "\\'") + "'"
+    p['RSS_READ_MORE_LINK'] = "'" + p['RSS_READ_MORE_LINK'].replace("'", "\\'") + "'"
     return p
 
 

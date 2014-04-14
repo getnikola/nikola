@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Replaced ``READ_MORE_LINK`` with ``INDEX_READ_MORE_LINK`` and
+ ``RSS_READ_MORE_LINK`` (Issue #1222)
 * Added reading_time, remaining_reading_time, paragraph_count,
   remaining_paragraph_count tags for READ_MORE_LINK (Issue #1220)
 * Add canonical link in listings.
