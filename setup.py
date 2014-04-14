@@ -153,8 +153,8 @@ def install_manpages(root, prefix):
 
 
 def remove_old_files(self):
-    tree = os.path.join(self.install_lib, 'nikola', 'data')
-    tree2 = os.path.join('build', 'lib', 'nikola', 'data')
+    tree = os.path.join(self.install_lib, 'nikola')
+    tree2 = os.path.join('build', 'lib', 'nikola')
     try:
         shutil.rmtree(tree, ignore_errors=True)
     except:
