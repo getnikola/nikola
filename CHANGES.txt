@@ -108,6 +108,7 @@ Bugfixes
 * Catch keyboard exit while serving so traceback does not show (Issue #1124)
 * Support rescanning posts in the Nikola class (Issue #1100)
 * Use TIMEZONE with ``nikola new_post`` and ``nikola new_page``. (Issue #1088)
+* Fix ``nikola auto`` not watching changes in FILES_FOLDERS.
 
 New in v6.4.0
 =============

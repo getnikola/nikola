@@ -77,7 +77,7 @@ class CommandAuto(Command):
         for item in self.site.config['post_pages']:
             server.watch(os.path.dirname(item[0]), 'nikola build')
         for item in self.site.config['FILES_FOLDERS']:
-            server.watch(os.path.dirname(item), 'nikola build')
+            server.watch(item, 'nikola build')
 
         out_folder = self.site.config['OUTPUT_FOLDER']
         if options and options.get('browser'):
