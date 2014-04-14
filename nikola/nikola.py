@@ -967,7 +967,7 @@ class Nikola(object):
             else:
                 return os.path.join(*path)
         except KeyError:
-            LOGGER.warning("Unknown path request of kind: {0}".format(kind))
+            utils.LOGGER.warn("Unknown path request of kind: {0}".format(kind))
             return ""
 
     def post_path(self, name, lang):
