@@ -28,6 +28,10 @@ from __future__ import print_function, unicode_literals
 from operator import attrgetter
 import os
 import shutil
+try:
+    import readline  # NOQA
+except ImportError:
+    pass  # This is only so raw_input/input does nicer things if it's available
 import sys
 import traceback
 
