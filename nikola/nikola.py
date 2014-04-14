@@ -89,7 +89,7 @@ __all__ = ['Nikola']
 # We store legal values for some setting here.  For internal use.
 LEGAL_VALUES = {
     'COMMENT_SYSTEM': [
-        'none', # does nothing, lists well in SUPPORTED_COMMENT_SYSTEMS as way to disable comments
+        'none',  # does nothing, lists well in SUPPORTED_COMMENT_SYSTEMS as way to disable comments
         'disqus',
         'facebook',
         'googleplus',
