@@ -26,11 +26,12 @@
 
 from __future__ import print_function
 import codecs
+from io import BytesIO
 import os
 import json
 import shutil
 import subprocess
-from io import BytesIO
+import sys
 
 import pygments
 from pygments.lexers import PythonLexer
@@ -171,7 +172,7 @@ class CommandPlugin(Command):
         elif upgrade:
             self.do_upgrade(url)
         elif uninstall:
-            self.do_uninstall(name)
+            self.do_uninstall(uninstall)
         elif install:
             self.do_install(url, install)
 
@@ -296,3 +297,23 @@ class CommandPlugin(Command):
                 else:
                     print(indent(fh.read(), 4 * ' '))
         return True
+
+    def do_uninstall(self, name):
+        plugins = []
+        for plugin in self.site.plugin_manager.getAllPlugins():  # FIXME: this is repeated thrice
+            p = plugin.path
+            if os.path.isdir(p):
+                p = p + os.sep
+            else:
+                p = os.path.dirname(p)
+            if name == plugin.name:  # Uninstall this one
+                LOGGER.warning('About to uninstall plugin: {0}'.format(name))
+                LOGGER.warning('This will delete {0}'.format(p))
+                inpf = raw_input if sys.version_info[0] == 2 else input
+                sure = inpf('Are you sure? [y/n] ')
+                if sure == 'y':
+                    LOGGER.warning('Removing {0}'.format(p))
+                    shutil.rmtree(p)
+                return True
+        LOGGER.error('Unknown plugin: {0}'.format(name))
+        return False
