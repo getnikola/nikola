@@ -44,7 +44,7 @@ except ImportError:
 from nikola.plugin_categories import Command
 from nikola import utils
 
-LOGGER = utils.get_logger('install_plugin', utils.STDERR_HANDLER)
+LOGGER = utils.get_logger('plugin', utils.STDERR_HANDLER)
 
 
 # Stolen from textwrap in Python 3.3.2.
@@ -66,15 +66,22 @@ def indent(text, prefix, predicate=None):  # NOQA
     return ''.join(prefixed_lines())
 
 
-class CommandInstallPlugin(Command):
-    """Install a plugin."""
+class CommandPlugin(Command):
+    """Manage plugins."""
 
-    name = "install_plugin"
-    doc_usage = "[[-u][--user] plugin_name] | [[-u] [-l |--upgrade|--list-installed]]"
-    doc_purpose = "install plugins"
+    name = "plugin"
+    doc_usage = "[[-u][--user] --install name] | [[-u] [-l |--upgrade|--list-installed] | [--uninstall name]]"
+    doc_purpose = "manage plugins"
     output_dir = None
     needs_config = False
     cmd_options = [
+        {
+            'name': 'install',
+            'short': 'i',
+            'long': 'install',
+            'type': str,
+            'help': 'Install a plugin.'
+        },
         {
             'name': 'list',
             'short': 'l',
