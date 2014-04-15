@@ -53,7 +53,9 @@ from .utils import _reload, sys_decode, get_root_dir, req_missing, LOGGER, STRIC
 config = {}
 
 
-def main(args):
+def main(args=None):
+    if args is None:
+        args = sys.argv[1:]
     quiet = False
     if len(args) > 0 and args[0] == b'build' and b'--strict' in args:
         LOGGER.notice('Running in strict mode')
