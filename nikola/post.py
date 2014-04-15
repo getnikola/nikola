@@ -54,6 +54,7 @@ from .utils import (
     current_time,
     Functionary,
     LOGGER,
+    LocaleBorg,
     slugify,
     to_datetime,
     unicode_str,
@@ -332,11 +333,12 @@ class Post(object):
         dest = self.translated_base_path(lang)
         if not self.is_translation_available(lang) and not self.config['SHOW_UNTRANSLATED_POSTS']:
             return
-        else:
-            self.compile_html(
-                self.translated_source_path(lang),
-                dest,
-                self.is_two_file),
+        # Set the language to the right thing
+        LocaleBorg().set_locale(lang)
+        self.compile_html(
+            self.translated_source_path(lang),
+            dest,
+            self.is_two_file),
         if self.meta('password'):
             wrap_encrypt(dest, self.meta('password'))
         if self.publish_later:
@@ -399,12 +401,13 @@ class Post(object):
         else:
             return get_translation_candidate(self.config, self.base_path, sorted(self.translated_to)[0])
 
-    def text(self, lang=None, teaser_only=False, strip_html=False, show_read_more_link=True):
+    def text(self, lang=None, teaser_only=False, strip_html=False, show_read_more_link=True, rss_read_more_link=False):
         """Read the post file for that language and return its contents.
 
         teaser_only=True breaks at the teaser marker and returns only the teaser.
         strip_html=True removes HTML tags
         show_read_more_link=False does not add the Read more... link
+        rss_read_more_link=True uses RSS_READ_MORE_LINK instead of INDEX_READ_MORE_LINK
         lang=None uses the last used to set locale
 
         All links in the returned HTML will be relative.
@@ -450,9 +453,11 @@ class Post(object):
                             self.permalink(lang),
                             TEASER_REGEXP.search(data).groups()[-1])
                     else:
-                        teaser += self.config['READ_MORE_LINK'](lang).format(
+                        l = self.config['RSS_READ_MORE_LINK'](lang) if rss_read_more_link else self.config['INDEX_READ_MORE_LINK'](lang)
+                        teaser += l.format(
                             link=self.permalink(lang),
                             read_more=self.messages[lang]["Read more"],
+                            min_remaining_read=self.messages[lang]["%d min remaining to read"] % (self.remaining_reading_time),
                             reading_time=self.reading_time,
                             remaining_reading_time=self.remaining_reading_time,
                             paragraph_count=self.paragraph_count,

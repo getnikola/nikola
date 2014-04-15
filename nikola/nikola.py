@@ -28,6 +28,7 @@ from __future__ import print_function, unicode_literals
 import codecs
 from collections import defaultdict
 from copy import copy
+from pkg_resources import resource_filename
 import datetime
 import glob
 import locale
@@ -59,7 +60,8 @@ import lxml.html
 from yapsy.PluginManager import PluginManager
 
 # Default "Read more..." link
-DEFAULT_READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
+DEFAULT_INDEX_READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
+DEFAULT_RSS_READ_MORE_LINK = '<p><a href="{link}">{read_more}…</a> ({min_remaining_read})</p>'
 
 # Default pattern for translation files' names
 DEFAULT_TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
@@ -87,6 +89,7 @@ __all__ = ['Nikola']
 # We store legal values for some setting here.  For internal use.
 LEGAL_VALUES = {
     'COMMENT_SYSTEM': [
+        'none',  # does nothing, lists well in SUPPORTED_COMMENT_SYSTEMS as way to disable comments
         'disqus',
         'facebook',
         'googleplus',
@@ -123,6 +126,14 @@ LEGAL_VALUES = {
         ('tr', '!tr_TR'): 'Turkish',
         'ur': 'Urdu',
         'zh_cn': 'Chinese (Simplified)',
+    },
+    '_TRANSLATIONS_WITH_COUNTRY_SPECIFIERS': {
+        # This dict is used in `init` in case of locales that exist with a
+        # country specifier.  If there is no other locale that has the same
+        # language with a different country, ``nikola init`` (but nobody else!)
+        # will accept it, warning the user about it.
+        'pt': 'pt_br',
+        'zh': 'zh_cn'
     },
     'RTL_LANGUAGES': ('fa', 'ur'),
     'COLORBOX_LOCALES': defaultdict(
@@ -163,8 +174,6 @@ class Nikola(object):
     EXTRA_PLUGINS = [
         'planetoid',
         'ipynb',
-        'local_search',
-        'render_mustache',
     ]
 
     def __init__(self, **config):
@@ -278,7 +287,8 @@ class Nikola(object):
             'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
             'PRETTY_URLS': False,
             'FUTURE_IS_NOW': False,
-            'READ_MORE_LINK': DEFAULT_READ_MORE_LINK,
+            'INDEX_READ_MORE_LINK': DEFAULT_INDEX_READ_MORE_LINK,
+            'RSS_READ_MORE_LINK': DEFAULT_RSS_READ_MORE_LINK,
             'REDIRECTIONS': [],
             'RSS_LINK': None,
             'RSS_PATH': '',
@@ -342,7 +352,8 @@ class Nikola(object):
                                       'BODY_END',
                                       'EXTRA_HEAD_DATA',
                                       'NAVIGATION_LINKS',
-                                      'READ_MORE_LINK',)
+                                      'INDEX_READ_MORE_LINK',
+                                      'RSS_READ_MORE_LINK',)
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
                                              'blog_title',
@@ -409,6 +420,20 @@ class Nikola(object):
                 utils.LOGGER.warn('HIDE_UNTRANSLATED_POSTS conflicts with SHOW_UNTRANSLATED_POSTS, ignoring HIDE_UNTRANSLATED_POSTS.')
             self.config['SHOW_UNTRANSLATED_POSTS'] = not config['HIDE_UNTRANSLATED_POSTS']
 
+        # READ_MORE_LINK has been split into INDEX_READ_MORE_LINK and RSS_READ_MORE_LINK
+        # TODO: remove on v8
+        if 'READ_MORE_LINK' in config:
+            utils.LOGGER.warn('The READ_MORE_LINK option is deprecated, use INDEX_READ_MORE_LINK and RSS_READ_MORE_LINK instead.')
+            if 'INDEX_READ_MORE_LINK' in config:
+                utils.LOGGER.warn('READ_MORE_LINK conflicts with INDEX_READ_MORE_LINK, ignoring READ_MORE_LINK.')
+            else:
+                self.config['INDEX_READ_MORE_LINK'] = config['READ_MORE_LINK']
+
+            if 'RSS_READ_MORE_LINK' in config:
+                utils.LOGGER.warn('READ_MORE_LINK conflicts with RSS_READ_MORE_LINK, ignoring READ_MORE_LINK.')
+            else:
+                self.config['RSS_READ_MORE_LINK'] = config['READ_MORE_LINK']
+
         # Moot.it renamed themselves to muut.io
         # TODO: remove on v8?
         if self.config.get('COMMENT_SYSTEM') == 'moot':
@@ -458,13 +483,13 @@ class Nikola(object):
         extra_plugins_dirs = self.config['EXTRA_PLUGINS_DIRS']
         if sys.version_info[0] == 3:
             places = [
-                os.path.join(os.path.dirname(__file__), 'plugins'),
+                resource_filename('nikola', 'plugins'),
                 os.path.join(os.getcwd(), 'plugins'),
                 os.path.expanduser('~/.nikola/plugins'),
             ] + [path for path in extra_plugins_dirs if path]
         else:
             places = [
-                os.path.join(os.path.dirname(__file__), utils.sys_encode('plugins')),
+                resource_filename('nikola', utils.sys_encode('plugins')),
                 os.path.join(os.getcwd(), utils.sys_encode('plugins')),
                 os.path.expanduser('~/.nikola/plugins'),
             ] + [utils.sys_encode(path) for path in extra_plugins_dirs if path]
@@ -610,7 +635,7 @@ class Nikola(object):
             try:
                 self._THEMES = utils.get_theme_chain(self.config['THEME'])
             except Exception:
-                utils.LOGGER.warn('''Can't load theme "{0}", using 'bootstrap' instead.'''.format(self.config['THEME']))
+                utils.LOGGER.warn('''Cannot load theme "{0}", using 'bootstrap' instead.'''.format(self.config['THEME']))
                 self.config['THEME'] = 'bootstrap'
                 return self._get_themes()
             # Check consistency of USE_CDN and the current THEME (Issue #386)
@@ -625,9 +650,13 @@ class Nikola(object):
     THEMES = property(_get_themes)
 
     def _get_messages(self):
-        return utils.load_messages(self.THEMES,
-                                   self.translations,
-                                   self.default_lang)
+        try:
+            return utils.load_messages(self.THEMES,
+                                       self.translations,
+                                       self.default_lang)
+        except utils.LanguageNotFoundError as e:
+            utils.LOGGER.error('''Cannot load language "{0}".  Please make sure it is supported by Nikola itself, or that you have the appropriate messages files in your themes.'''.format(e.lang))
+            sys.exit(1)
 
     MESSAGES = property(_get_messages)
 
@@ -841,7 +870,7 @@ class Nikola(object):
         for post in timeline[:feed_length]:
             old_url_type = self.config['URL_TYPE']
             self.config['URL_TYPE'] = 'absolute'
-            data = post.text(lang, teaser_only=rss_teasers, strip_html=rss_plain)
+            data = post.text(lang, teaser_only=rss_teasers, strip_html=rss_plain, rss_read_more_link=True)
             if feed_url is not None and data:
                 # Massage the post's HTML (unless plain)
                 if not rss_plain:
@@ -925,19 +954,23 @@ class Nikola(object):
         if lang is None:
             lang = utils.LocaleBorg().current_lang
 
-        path = self.path_handlers[kind](name, lang)
-        path = [os.path.normpath(p) for p in path if p != '.']  # Fix Issue #1028
+        try:
+            path = self.path_handlers[kind](name, lang)
+            path = [os.path.normpath(p) for p in path if p != '.']  # Fix Issue #1028
 
-        if is_link:
-            link = '/' + ('/'.join(path))
-            index_len = len(self.config['INDEX_FILE'])
-            if self.config['STRIP_INDEXES'] and \
-                    link[-(1 + index_len):] == '/' + self.config['INDEX_FILE']:
-                return link[:-index_len]
+            if is_link:
+                link = '/' + ('/'.join(path))
+                index_len = len(self.config['INDEX_FILE'])
+                if self.config['STRIP_INDEXES'] and \
+                        link[-(1 + index_len):] == '/' + self.config['INDEX_FILE']:
+                    return link[:-index_len]
+                else:
+                    return link
             else:
-                return link
-        else:
-            return os.path.join(*path)
+                return os.path.join(*path)
+        except KeyError:
+            utils.LOGGER.warn("Unknown path request of kind: {0}".format(kind))
+            return ""
 
     def post_path(self, name, lang):
         """post_path path handler"""
@@ -949,7 +982,7 @@ class Nikola(object):
         """slug path handler"""
         results = [p for p in self.timeline if p.meta('slug') == name]
         if not results:
-            utils.LOGGER.warning("Can't resolve path request for slug: {0}".format(name))
+            utils.LOGGER.warning("Cannot resolve path request for slug: {0}".format(name))
         else:
             if len(results) > 1:
                 utils.LOGGER.warning('Ambiguous path request for slug: {0}'.format(name))
@@ -959,7 +992,7 @@ class Nikola(object):
         """filename path handler"""
         results = [p for p in self.timeline if p.source_path == name]
         if not results:
-            utils.LOGGER.warning("Can't resolve path request for filename: {0}".format(name))
+            utils.LOGGER.warning("Cannot resolve path request for filename: {0}".format(name))
         else:
             if len(results) > 1:
                 utils.LOGGER.error("Ambiguous path request for filename: {0}".format(name))

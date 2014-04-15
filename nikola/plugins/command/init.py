@@ -33,9 +33,10 @@ import json
 import textwrap
 
 from mako.template import Template
+from pkg_resources import resource_filename
 
 import nikola
-from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_READ_MORE_LINK, LEGAL_VALUES
+from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_RSS_READ_MORE_LINK, LEGAL_VALUES
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger, makedirs, STDERR_HANDLER, load_messages
 from nikola.winutils import fix_git_symlinked
@@ -58,7 +59,8 @@ SAMPLE_CONF = {
     'COMMENT_SYSTEM': 'disqus',
     'COMMENT_SYSTEM_ID': 'nikolademo',
     'TRANSLATIONS_PATTERN': DEFAULT_TRANSLATIONS_PATTERN,
-    'READ_MORE_LINK': DEFAULT_READ_MORE_LINK,
+    'INDEX_READ_MORE_LINK': DEFAULT_INDEX_READ_MORE_LINK,
+    'RSS_READ_MORE_LINK': DEFAULT_RSS_READ_MORE_LINK,
     'POSTS': """(
     ("posts/*.rst", "posts", "post.tmpl"),
     ("posts/*.txt", "posts", "post.tmpl"),
@@ -192,9 +194,10 @@ def prepare_config(config):
     """Parse sample config with JSON."""
     p = config.copy()
     p.update(dict((k, json.dumps(v)) for k, v in p.items()
-             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'READ_MORE_LINK')))
-    # READ_MORE_LINK requires some special treatment.
-    p['READ_MORE_LINK'] = "'" + p['READ_MORE_LINK'].replace("'", "\\'") + "'"
+             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'INDEX_READ_MORE_LINK', 'RSS_READ_MORE_LINK')))
+    # READ_MORE_LINKs require some special treatment.
+    p['INDEX_READ_MORE_LINK'] = "'" + p['INDEX_READ_MORE_LINK'].replace("'", "\\'") + "'"
+    p['RSS_READ_MORE_LINK'] = "'" + p['RSS_READ_MORE_LINK'].replace("'", "\\'") + "'"
     return p
 
 
@@ -228,15 +231,13 @@ class CommandInit(Command):
 
     @classmethod
     def copy_sample_site(cls, target):
-        lib_path = cls.get_path_to_nikola_modules()
-        src = os.path.join(lib_path, 'data', 'samplesite')
+        src = resource_filename('nikola', os.path.join('data', 'samplesite'))
         shutil.copytree(src, target)
         fix_git_symlinked(src, target)
 
     @classmethod
     def create_configuration(cls, target):
-        lib_path = cls.get_path_to_nikola_modules()
-        template_path = os.path.join(lib_path, 'conf.py.in')
+        template_path = resource_filename('nikola', 'conf.py.in')
         conf_template = Template(filename=template_path)
         conf_path = os.path.join(target, 'conf.py')
         with codecs.open(conf_path, 'w+', 'utf8') as fd:
@@ -246,10 +247,6 @@ class CommandInit(Command):
     def create_empty_site(cls, target):
         for folder in ('files', 'galleries', 'listings', 'posts', 'stories'):
             makedirs(os.path.join(target, folder))
-
-    @staticmethod
-    def get_path_to_nikola_modules():
-        return os.path.dirname(nikola.__file__)
 
     @staticmethod
     def ask_questions(target):
@@ -264,17 +261,23 @@ class CommandInit(Command):
             inp = inpf("{query}{default_q}: ".format(query=query, default_q=default_q)).strip()
             return inp if inp else default
 
-        def lhandler(default, toconf):
-            print("We will now ask you to provide the list of languages you want to use.")
-            print("Please list all the desired languages, comma-separated, using ISO 639-1 codes.  The first language will be used as the default.")
-            print("Type '?' (a question mark, sans quotes) to list available languages.")
+        def lhandler(default, toconf, show_header=True):
+            if show_header:
+                print("We will now ask you to provide the list of languages you want to use.")
+                print("Please list all the desired languages, comma-separated, using ISO 639-1 codes.  The first language will be used as the default.")
+                print("Type '?' (a question mark, sans quotes) to list available languages.")
             answer = ask('Language(s) to use', 'en')
             while answer.strip() == '?':
                 print('\n# Available languages:')
                 print(SAMPLE_CONF['_SUPPORTED_LANGUAGES'] + '\n')
                 answer = ask('Language(s) to use', 'en')
 
-            langs = answer.split(',')
+            langs = [i.strip().lower().replace('-', '_') for i in answer.split(',')]
+            for partial, full in LEGAL_VALUES['_TRANSLATIONS_WITH_COUNTRY_SPECIFIERS'].items():
+                if partial in langs:
+                    langs[langs.index(partial)] = full
+                    print("NOTICE: Assuming '{0}' instead of '{1}'.".format(full, partial))
+
             default = langs.pop(0)
             SAMPLE_CONF['DEFAULT_LANG'] = default
             # format_default_translations_config() is intelligent enough to
@@ -288,8 +291,14 @@ class CommandInit(Command):
                 tr[l] = './' + l
             # Assuming that base contains all the locales, and that base does
             # not inherit from anywhere.
-            messages = load_messages(['base'], tr, default)
-            SAMPLE_CONF['NAVIGATION_LINKS'] = format_navigation_links(langs, default, messages)
+            try:
+                messages = load_messages(['base'], tr, default)
+                SAMPLE_CONF['NAVIGATION_LINKS'] = format_navigation_links(langs, default, messages)
+            except nikola.utils.LanguageNotFoundError as e:
+                print("ERROR: the language '{0}' is not supported.".format(e.lang))
+                print("\nAre you sure you spelled the name correctly?  Names are case-sensitive and need to be reproduced as-is (complete with the country specifier, if any).")
+                print("Type '?' (a question mark, sans quotes) to list available languages.")
+                lhandler(default, toconf, show_header=False)
 
         def chandler(default, toconf):
             print("You can configure comments now.  Type '?' (a question mark, sans quotes) to list available comment systems.  If you do not want any comments, just leave the field blank.")
@@ -372,12 +381,6 @@ class CommandInit(Command):
             try:
                 if not target:
                     target = st['target']
-                    try:
-                        from mock import MagicMock as mm
-                    except ImportError:
-                        mm = None  # NOQA
-                    if isinstance(target, mm):
-                        target = None
             except KeyError:
                 pass
 
