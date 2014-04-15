@@ -149,7 +149,7 @@ class CommandPlugin(Command):
             upgrade,
             list_available,
             list_installed)].count(True)
-        if  command_count > 1 or command_count == 0:
+        if command_count > 1 or command_count == 0:
             print(self.help())
             return
 
@@ -226,7 +226,7 @@ class CommandPlugin(Command):
                     return False
                 else:
                     path = tail
-            self.do_install(url, name)  #FIXME this is very inefficient
+            self.do_install(url, name)  # FIXME this is very inefficient
 
     def do_install(self, url, name):
         data = requests.get(url).text
@@ -299,7 +299,6 @@ class CommandPlugin(Command):
         return True
 
     def do_uninstall(self, name):
-        plugins = []
         for plugin in self.site.plugin_manager.getAllPlugins():  # FIXME: this is repeated thrice
             p = plugin.path
             if os.path.isdir(p):
