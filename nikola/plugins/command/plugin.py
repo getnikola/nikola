@@ -173,7 +173,7 @@ class CommandPlugin(Command):
         elif uninstall:
             self.do_uninstall(name)
         elif install:
-            self.do_install(name)
+            self.do_install(url, install)
 
     def list_available(self, url):
         data = requests.get(url).text
@@ -201,13 +201,15 @@ class CommandPlugin(Command):
     def do_upgrade(self):
         pass
 
-    def do_install(self, name, data):
+    def do_install(self, url, name):
+        data = requests.get(url).text
+        data = json.loads(data)
         if name in data:
             utils.makedirs(self.output_dir)
             LOGGER.info('Downloading: ' + data[name])
             zip_file = BytesIO()
             zip_file.write(requests.get(data[name]).content)
-            LOGGER.info('Extracting: {0} into {1}'.format(name, self.output_dir))
+            LOGGER.info('Extracting: {0} into {1}/'.format(name, self.output_dir))
             utils.extract_all(zip_file, self.output_dir)
             dest_path = os.path.join(self.output_dir, name)
         else:
