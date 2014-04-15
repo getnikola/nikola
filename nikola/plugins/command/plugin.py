@@ -141,64 +141,62 @@ class CommandPlugin(Command):
         uninstall = options.get('uninstall')
         upgrade = options.get('upgrade')
         list_available = options.get('list')
-        list_installed = options.get('list-installed')
-        if [bool(x) for x in (
-                install,
-                uninstall,
-                upgrade,
-                list_available,
-                list_installed)].count(True) > 1:
-
+        list_installed = options.get('list_installed')
+        command_count = [bool(x) for x in (
+            install,
+            uninstall,
+            upgrade,
+            list_available,
+            list_installed)].count(True)
+        if  command_count > 1 or command_count == 0:
             print(self.help())
             return
 
-        if not self.site.configured and not options.get('user'):
-            LOGGER.notice('No site found, assuming --user')  # FIXME: only do this when installing
-            options['user'] = True
+        if not self.site.configured and not user_mode and install:
+            LOGGER.notice('No site found, assuming --user')
+            user_mode = True
 
-        if options.get('user'):
+        if user_mode:
             self.output_dir = os.path.expanduser('~/.nikola/plugins')
         else:
             self.output_dir = 'plugins'
 
-        if requests is None:  # FIXME some things don't require requests
-            utils.req_missing(['requests'], 'install plugins')
+        if (requests is None) and (install or list_available):
+            utils.req_missing(['requests'], 'install or list available plugins')
 
-        listing = options['list']
-        list_installed = options['list_installed']  # FIXME: conflict with --list
-        upgrade = options['upgrade']  # FIXME: conflict with --list
-        if args:
-            name = args[0]
-        else:
-            name = None
-
-        if name is None and not listing and not upgrade and not list_installed:
-            LOGGER.error("This command needs either a plugin name or one of the -l, --upgrade or --list-installed options.")
-            return False
-        data = requests.get(url).text
-        data = json.loads(data)
-        if listing:
-            print("Plugins:")
-            print("--------")
-            for plugin in sorted(data.keys()):
-                print(plugin)
-            return True
+        if list_available:
+            self.list_available(url)
         elif list_installed:
             self.list_installed()
         elif upgrade:
             self.do_upgrade()
-        else:
-            self.do_install(name, data)
+        elif uninstall:
+            self.do_uninstall(name)
+        elif install:
+            self.do_install(name)
+
+    def list_available(self, url):
+        data = requests.get(url).text
+        data = json.loads(data)
+        print("Available Plugins:")
+        print("------------------")
+        for plugin in sorted(data.keys()):
+            print(plugin)
+        return True
 
     def list_installed(self):
+        plugins = []
         for plugin in self.site.plugin_manager.getAllPlugins():
             p = plugin.path
             if os.path.isdir(p):
                 p = p + os.sep
             else:
                 p = p + '.py'
+            plugins.append([plugin.name, p])
 
-            print('{0} at {1}'.format(plugin.name, p))
+        plugins.sort()
+        for name, path in plugins:
+            print('{0} at {1}'.format(name, path))
 
     def do_upgrade(self):
         pass
