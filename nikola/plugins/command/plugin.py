@@ -80,7 +80,16 @@ class CommandPlugin(Command):
             'short': 'i',
             'long': 'install',
             'type': str,
-            'help': 'Install a plugin.'
+            'default': '',
+            'help': 'Install a plugin.',
+        },
+        {
+            'name': 'uninstall',
+            'long': 'uninstall',
+            'short': 'r',
+            'type': str,
+            'default': '',
+            'help': 'Uninstall a plugin.'
         },
         {
             'name': 'list',
@@ -124,6 +133,24 @@ class CommandPlugin(Command):
 
     def _execute(self, options, args):
         """Install plugin into current site."""
+        url = options['url']
+        user_mode = options['user']
+
+        # See the "mode" we need to operate in
+        install = options.get('install')
+        uninstall = options.get('uninstall')
+        upgrade = options.get('upgrade')
+        list_available = options.get('list')
+        list_installed = options.get('list-installed')
+        if [bool(x) for x in (
+                install,
+                uninstall,
+                upgrade,
+                list_available,
+                list_installed)].count(True) > 1:
+
+            print(self.help())
+            return
 
         if not self.site.configured and not options.get('user'):
             LOGGER.notice('No site found, assuming --user')  # FIXME: only do this when installing
@@ -138,7 +165,6 @@ class CommandPlugin(Command):
             utils.req_missing(['requests'], 'install plugins')
 
         listing = options['list']
-        url = options['url']
         list_installed = options['list_installed']  # FIXME: conflict with --list
         upgrade = options['upgrade']  # FIXME: conflict with --list
         if args:
