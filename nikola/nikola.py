@@ -906,7 +906,7 @@ class Nikola(object):
 
             """ Enclosure callback must returns tuple """
             if enclosure:
-                download_link, download_size, download_type = enclosure(post=post)
+                download_link, download_size, download_type = enclosure(post=post, lang=lang)
 
                 args['enclosure'] = rss.Enclosure(
                     download_link,
