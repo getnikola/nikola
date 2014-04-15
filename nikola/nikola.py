@@ -851,7 +851,7 @@ class Nikola(object):
         return result
 
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
-                             rss_teasers, rss_plain, feed_length=10, feed_url=None):
+                             rss_teasers, rss_plain, feed_length=10, feed_url=None, enclosure=None):
 
         """Takes all necessary data, and renders a RSS feed in output_path."""
         rss_obj = rss.RSS2(
@@ -903,6 +903,16 @@ class Nikola(object):
 
             if post.author(lang):
                 rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
+
+            """ Enclosure callback must returns tuple """
+            if enclosure:
+                download_link, download_size, download_type = enclosure(post=post)
+
+                args['enclosure'] = rss.Enclosure(
+                    download_link,
+                    download_size,
+                    download_type,
+                )
 
             items.append(utils.ExtendedItem(**args))
 
