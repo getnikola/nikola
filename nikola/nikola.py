@@ -1015,13 +1015,16 @@ class Nikola(object):
     def link(self, *args):
         return self.path(*args, is_link=True)
 
-    def abs_link(self, dst):
+    def abs_link(self, dst, protocol_relative=False):
         # Normalize
         if dst:  # Mako templates and empty strings evaluate to False
             dst = urljoin(self.config['BASE_URL'], dst.lstrip('/'))
         else:
             dst = self.config['BASE_URL']
-        return urlparse(dst).geturl()
+        url = urlparse(dst).geturl()
+        if protocol_relative:
+            url = url.split(":", 1)[1]
+        return url
 
     def rel_link(self, src, dst):
         # Normalize
