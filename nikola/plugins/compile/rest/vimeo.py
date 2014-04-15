@@ -49,9 +49,9 @@ class Plugin(RestExtension):
         return super(Plugin, self).set_site(site)
 
 
-CODE = """<iframe src="http://player.vimeo.com/video/{vimeo_id}"
+CODE = """<iframe src="//player.vimeo.com/video/{vimeo_id}"
 width="{width}" height="{height}"
-frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen>
+frameborder="0" webkitAllowFullScreen="webkitAllowFullScreen" mozallowfullscreen="mozallowfullscreen" allowFullScreen="allowFullScreen">
 </iframe>
 """
 
@@ -108,7 +108,7 @@ class Vimeo(Directive):
 
             if json:  # we can attempt to retrieve video attributes from vimeo
                 try:
-                    url = ('http://vimeo.com/api/v2/video/{0}'
+                    url = ('//vimeo.com/api/v2/video/{0}'
                            '.json'.format(self.arguments[0]))
                     data = requests.get(url).text
                     video_attributes = json.loads(data)[0]
