@@ -244,9 +244,6 @@ class DoitNikola(DoitMain):
             cmd_args = ['version']
             args = ['version']
         if len(args) == 0 or args[0] not in sub_cmds.keys() or \
-<<<<<<< HEAD
-                args[0] in ('build', 'list', 'clean'):
-=======
                 args[0] in (
                     'build',
                     'list',
@@ -257,7 +254,6 @@ class DoitNikola(DoitMain):
                     'ignore',
                     'run',
                     'strace'):
->>>>>>> master
             # Check for conf.py before launching run
             if not self.nikola.configured:
                 LOGGER.error("This command needs to run inside an "
