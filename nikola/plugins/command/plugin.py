@@ -169,7 +169,7 @@ class CommandPlugin(Command):
         elif list_installed:
             self.list_installed()
         elif upgrade:
-            self.do_upgrade()
+            self.do_upgrade(url)
         elif uninstall:
             self.do_uninstall(name)
         elif install:
@@ -198,8 +198,34 @@ class CommandPlugin(Command):
         for name, path in plugins:
             print('{0} at {1}'.format(name, path))
 
-    def do_upgrade(self):
-        pass
+    def do_upgrade(self, url):
+        LOGGER.warning('This is not very smart, it just reinstalls some plugins and hopes for the best')
+        data = requests.get(url).text
+        data = json.loads(data)
+        plugins = []
+        for plugin in self.site.plugin_manager.getAllPlugins():
+            p = plugin.path
+            if os.path.isdir(p):
+                p = p + os.sep
+            else:
+                p = p + '.py'
+            if plugin.name in data:
+                plugins.append([plugin.name, p])
+        print('Will upgrade {0} plugins: {1}'.format(len(plugins), ', '.join(n for n, _ in plugins)))
+        for name, path in plugins:
+            print('Upgrading {0}'.format(name))
+            p = path
+            while True:
+                tail, head = os.path.split(path)
+                if head == 'plugins':
+                    self.output_dir = path
+                    break
+                elif tail == '':
+                    LOGGER.error("Can't find the plugins folder for path: {0}".format(p))
+                    return False
+                else:
+                    path = tail
+            self.do_install(url, name)  #FIXME this is very inefficient
 
     def do_install(self, url, name):
         data = requests.get(url).text
