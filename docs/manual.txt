@@ -390,12 +390,12 @@ Nikola also has other commands besides ``build``::
       nikola ignore               ignore task (skip) on subsequent runs
       nikola import_wordpress     import a WordPress dump
       nikola init                 create a Nikola site in the specified folder
-      nikola plugin               manage plugins
       nikola install_theme        install theme into current site
       nikola list                 list tasks from dodo file
       nikola mincss               apply mincss to the generated site
       nikola new_post             create a new blog post or site page
       nikola orphans              list all orphans
+      nikola plugin               manage plugins
       nikola run                  run tasks
       nikola serve                start the test webserver
       nikola strace               use strace to list file_deps and targets
