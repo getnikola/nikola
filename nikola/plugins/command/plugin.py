@@ -310,7 +310,7 @@ class CommandPlugin(Command):
                 LOGGER.warning('This will delete {0}'.format(p))
                 inpf = raw_input if sys.version_info[0] == 2 else input
                 sure = inpf('Are you sure? [y/n] ')
-                if sure == 'y':
+                if sure.lower.startswith('y'):
                     LOGGER.warning('Removing {0}'.format(p))
                     shutil.rmtree(p)
                 return True
