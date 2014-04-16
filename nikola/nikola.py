@@ -80,7 +80,6 @@ from .plugin_categories import (
     SignalHandler,
 )
 
-from .utils import ColorfulStderrHandler
 
 config_changed = utils.config_changed
 
@@ -208,7 +207,16 @@ class Nikola(object):
         config['__colorful__'] = self.colorful
         config['__invariant__'] = self.invariant
 
-        ColorfulStderrHandler._colorful = self.colorful
+        self.template_hooks = {
+            'extra_head': utils.TemplateHookRegistry('extra_head', self),
+            'body_end': utils.TemplateHookRegistry('body_end', self),
+            'page_header': utils.TemplateHookRegistry('page_header', self),
+            'menu': utils.TemplateHookRegistry('menu', self),
+            'menu_alt': utils.TemplateHookRegistry('menu_alt', self),
+            'page_footer': utils.TemplateHookRegistry('page_footer', self),
+        }
+
+        utils.ColorfulStderrHandler._colorful = self.colorful
 
         # Maintain API
         utils.generic_rss_renderer = self.generic_rss_renderer
@@ -588,6 +596,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
 
         self._GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL')
+        self._GLOBAL_CONTEXT['template_hooks'] = self.template_hooks
         self._GLOBAL_CONTEXT['body_end'] = self.config.get('BODY_END')
         self._GLOBAL_CONTEXT['social_buttons_code'] = self.config.get('SOCIAL_BUTTONS_CODE')
         self._GLOBAL_CONTEXT['translations'] = self.config.get('TRANSLATIONS')
@@ -743,6 +752,9 @@ class Nikola(object):
         local_context['is_rtl'] = local_context['lang'] in LEGAL_VALUES['RTL_LANGUAGES']
         # string, arguments
         local_context["formatmsg"] = lambda s, *a: s % a
+        for h in local_context['template_hooks'].values():
+            h.context = context
+
         data = self.template_system.render_template(
             template_name, None, local_context)
 
@@ -853,7 +865,7 @@ class Nikola(object):
         return result
 
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
-                             rss_teasers, rss_plain, feed_length=10, feed_url=None):
+                             rss_teasers, rss_plain, feed_length=10, feed_url=None, enclosure=None):
 
         """Takes all necessary data, and renders a RSS feed in output_path."""
         rss_obj = rss.RSS2(
@@ -905,6 +917,16 @@ class Nikola(object):
 
             if post.author(lang):
                 rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
+
+            """ Enclosure callback must returns tuple """
+            if enclosure:
+                download_link, download_size, download_type = enclosure(post=post, lang=lang)
+
+                args['enclosure'] = rss.Enclosure(
+                    download_link,
+                    download_size,
+                    download_type,
+                )
 
             items.append(utils.ExtendedItem(**args))
 
@@ -1007,13 +1029,16 @@ class Nikola(object):
     def link(self, *args):
         return self.path(*args, is_link=True)
 
-    def abs_link(self, dst):
+    def abs_link(self, dst, protocol_relative=False):
         # Normalize
         if dst:  # Mako templates and empty strings evaluate to False
             dst = urljoin(self.config['BASE_URL'], dst.lstrip('/'))
         else:
             dst = self.config['BASE_URL']
-        return urlparse(dst).geturl()
+        url = urlparse(dst).geturl()
+        if protocol_relative:
+            url = url.split(":", 1)[1]
+        return url
 
     def rel_link(self, src, dst):
         # Normalize
@@ -1225,6 +1250,10 @@ class Nikola(object):
         deps_dict['TRANSLATIONS'] = self.config['TRANSLATIONS']
         deps_dict['global'] = self.GLOBAL_CONTEXT
         deps_dict['comments'] = context['enable_comments']
+
+        for k, v in self.GLOBAL_CONTEXT['template_hooks'].items():
+            deps_dict['||template_hooks|{0}||'.format(k)] = v._items
+
         if post:
             deps_dict['post_translations'] = post.translated_to
 
@@ -1259,6 +1288,10 @@ class Nikola(object):
         deps_context["posts"] = [(p.meta[lang]['title'], p.permalink(lang)) for p in
                                  posts]
         deps_context["global"] = self.GLOBAL_CONTEXT
+
+        for k, v in self.GLOBAL_CONTEXT['template_hooks'].items():
+            deps_context['||template_hooks|{0}||'.format(k)] = v._items
+
         task = {
             'name': os.path.normpath(output_name),
             'targets': [output_name],

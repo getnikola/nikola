@@ -5,6 +5,7 @@ Features
 --------
 
 * Much more powerful ``nikola plugin`` command (Issue #1189)
+* Support hooks in templates, for use by plugins (Issue #896)
 * Use readline if available (Issue #1238)
 * Replaced ``READ_MORE_LINK`` with ``INDEX_READ_MORE_LINK`` and
  ``RSS_READ_MORE_LINK`` (Issue #1222)
@@ -68,6 +69,7 @@ Features
 Bugfixes
 --------
 
+* Protocol relative embedded Vimeo and YouTube RST
 * Don't crash if a unknown kind of path/link is requested (Issue #1236)
 * Don't run ``clean`` and ``list`` outside sites (Issue #1232)
 * If an invalid language is specified, Nikola now shows a helpful error message

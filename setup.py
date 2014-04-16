@@ -45,14 +45,6 @@ with open('requirements-tests.txt', 'r') as fh:
     extras['tests'] = [l.strip() for l in fh][1:]
 
 # ########## platform specific stuff #############
-import platform
-platform_system = platform.system()
-
-scripts = ['scripts/nikola']
-# platform specific scripts
-if platform_system == "Windows":
-    scripts.append('scripts/nikola.bat')
-
 if sys.version_info[0] == 2 and sys.version_info[1] < 6:
     raise Exception('Python 2 version < 2.6 is not supported')
 elif sys.version_info[0] == 3 and sys.version_info[1] < 3:
@@ -195,7 +187,6 @@ setup(name='Nikola',
                 ],
       license='MIT',
       keywords='website, static',
-      scripts=scripts,
       classifiers=('Development Status :: 5 - Production/Stable',
                    'Environment :: Console',
                    'Environment :: Plugins',
@@ -225,4 +216,9 @@ setup(name='Nikola',
                'docs/theming.txt',
                'docs/extending.txt']),
       ],
+      entry_points = {
+          'console_scripts': [
+              'nikola = nikola.__main__:main'
+          ]
+      },
       )

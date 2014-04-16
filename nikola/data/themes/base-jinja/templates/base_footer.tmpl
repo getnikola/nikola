@@ -5,6 +5,7 @@
     {% if content_footer %}
         <footer id="footer" role="contentinfo">
             <p>{{ content_footer }}</p>
+            {{ template_hooks['page_footer']() }}
         </footer>
     {% endif %}
 {% endmacro %}

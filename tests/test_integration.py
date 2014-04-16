@@ -493,7 +493,7 @@ class InvariantBuildTest(EmptyBuildTest):
             pytest.skip('no baseline found')
         with cd(self.target_dir):
             try:
-                diff = subprocess.check_output(['diff', '-ur', good_path, 'output'])
+                diff = subprocess.check_output(['diff', '-ubwr', good_path, 'output'])
                 self.assertEqual(diff.strip(), '')
             except subprocess.CalledProcessError as exc:
                 print('Unexplained diff for the invariance test. (-canonical +built)')
