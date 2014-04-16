@@ -136,6 +136,7 @@ else:
 
 from doit import tools
 from unidecode import unidecode
+from pkg_resources import resource_filename
 
 import PyRSS2Gen as rss
 
@@ -486,8 +487,7 @@ def get_theme_path(theme):
     dir_name = os.path.join('themes', theme)
     if os.path.isdir(dir_name):
         return dir_name
-    dir_name = os.path.join(os.path.dirname(__file__),
-                            'data', 'themes', theme)
+    dir_name = resource_filename('nikola', os.path.join('data', 'themes', theme))
     if os.path.isdir(dir_name):
         return dir_name
     raise Exception("Can't find theme '{0}'".format(theme))
@@ -527,6 +527,15 @@ def get_theme_chain(theme):
 warned = []
 
 
+class LanguageNotFoundError(Exception):
+    def __init__(self, lang, orig):
+        self.lang = lang
+        self.orig = orig
+
+    def __str__(self):
+        return 'cannot find language {0}'.format(self.lang)
+
+
 def load_messages(themes, translations, default_lang):
     """ Load theme's messages into context.
 
@@ -542,18 +551,21 @@ def load_messages(themes, translations, default_lang):
         sys.path.insert(0, msg_folder)
         english = __import__('messages_en')
         for lang in list(translations.keys()):
-            # If we don't do the reload, the module is cached
-            translation = __import__('messages_' + lang)
-            reload(translation)
-            if sorted(translation.MESSAGES.keys()) !=\
-                    sorted(english.MESSAGES.keys()) and \
-                    lang not in warned:
-                warned.append(lang)
-                LOGGER.warn("Incomplete translation for language "
-                            "'{0}'.".format(lang))
-            messages[lang].update(english.MESSAGES)
-            messages[lang].update(translation.MESSAGES)
-            del(translation)
+            try:
+                translation = __import__('messages_' + lang)
+                # If we don't do the reload, the module is cached
+                reload(translation)
+                if sorted(translation.MESSAGES.keys()) !=\
+                        sorted(english.MESSAGES.keys()) and \
+                        lang not in warned:
+                    warned.append(lang)
+                    LOGGER.warn("Incomplete translation for language "
+                                "'{0}'.".format(lang))
+                messages[lang].update(english.MESSAGES)
+                messages[lang].update(translation.MESSAGES)
+                del(translation)
+            except ImportError as orig:
+                raise LanguageNotFoundError(lang, orig)
     sys.path = oldpath
     return messages
 

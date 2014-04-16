@@ -44,7 +44,7 @@ class Plugin(RestExtension):
 CODE = """\
 <iframe width="{width}"
 height="{height}"
-src="http://www.youtube.com/embed/{yid}?rel=0&amp;hd=1&amp;wmode=transparent"
+src="//www.youtube.com/embed/{yid}?rel=0&amp;hd=1&amp;wmode=transparent"
 ></iframe>"""
 
 

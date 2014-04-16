@@ -388,8 +388,6 @@ Nikola also has other commands besides ``build``::
       nikola forget               clear successful run status from internal DB
       nikola help                 show help
       nikola ignore               ignore task (skip) on subsequent runs
-      nikola import_blogger       import a blogger dump
-      nikola import_feed          import a RSS/Atom dump
       nikola import_wordpress     import a WordPress dump
       nikola init                 create a Nikola site in the specified folder
       nikola install_plugin       install plugin into current site
@@ -437,11 +435,11 @@ It can be placed in a separate file by using the ``-2`` option, but it's general
 easier to keep it in a single location.
 
 The contents of your post have to be written (by default) in `reStructuredText <http://docutils.sf.net>`__
-but you can use a lot of different markups using the ``-f`` option. Currently
-Nikola supports bbcode, wiki, markdown, html, txt2tags, textile and more in addition
-to reStructuredText.
+but you can use a lot of different markups using the ``-f`` option.
 
-For some of those plugins you will need to `install a plugin. <http://plugins.getnikola.com>`__
+Currently Nikola supports reStructuredText, Markdown, IPython Notebooks, HTML as input,
+can also use Pandoc for conversion, and has support for BBCode, CreoleWiki, txt2tags, Textile
+and more via `plugins <http://plugins.getnikola.com>`__.
 
 You can control what markup compiler is used for each file extension with the ``COMPILERS``
 option. The default configuration expects them to be placed in ``posts`` but that can be
@@ -853,11 +851,11 @@ CSS tweaking
     with a `custom theme <theming.html>`__.
 
     If you want to use LESS_ or Sass_ for your custom CSS, or the theme you use
-    contains LESS or Sass code that you want to override, create a ``less`` or
+    contains LESS or Sass code that you want to override, you will need to install
+    the `LESS plugin <http://plugins.getnikola.com/#less>`__ or
+    `SASS plugin <http://plugins.getnikola.com/#sass>`__ create a ``less`` or
     ``sass`` directory in your site root, put your ``.less`` or ``.scss`` files
-    there and a targets file containing the files you want compiled. Any
-    ``.less`` or ``.scss`` files from the theme chain that you want to use will
-    need to be included in your files.
+    there and a targets file containing the list of files you want compiled.
 
 .. _LESS: http://lesscss.org/
 .. _Sass: http://sass-lang.com/
@@ -1517,64 +1515,6 @@ There is a special theme for the planets called `site-planetoid`. To use
 this set `THEME` in your ``conf.py`` to ``'site-planetoid'``.
 This is special in the case that it redirects users to the original URL of the post
 when they try to open a post.
-
-Local Search
-~~~~~~~~~~~~
-
-If you don't want to depend on Google or DuckDuckGo to implement search for you,
-or just want it to work even if you are offline, enable this plugin and the
-search will be performed client side.
-
-This plugin implements a Tipue-based local search for your site.
-
-To use it, enable local_search in ENABLED_EXTRAS in your sites conf.py
-
-After you build your site, you will have several new files in assets/css and assets/js
-and a tipue_search.html that you can use as a basis for using this in your site.
-
-For more information about how to customize it and use it, please refer to the tipue
-docs at http://www.tipue.com/search/
-
-Tipue is under an MIT license (see MIT-LICENSE.txt)
-
-Here's a set of example settings for conf.py that should work nicely with the "bootstrap" theme::
-
-    SEARCH_FORM = """
-    <span class="navbar-form pull-left">
-    <input type="text" id="tipue_search_input">
-    </span>"""
-
-    BODY_END = """
-    <script src="/assets/js/tipuesearch_set.js"></script>
-    <script src="/assets/js/tipuesearch.js"></script>
-    <script>
-    $(document).ready(function() {
-        $('#tipue_search_input').tipuesearch({
-            'mode': 'json',
-            'contentLocation': '/assets/js/tipuesearch_content.json',
-            'showUrl': false
-        });
-    });
-    </script>
-    """
-
-    EXTRA_HEAD_DATA = """
-    <link rel="stylesheet" type="text/css" href="/assets/css/tipuesearch.css">
-    <div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
-    """
-
-    ENABLED_EXTRAS = [ 'local_search' ]
-
-
-The <div> in EXTRA_HEAD_DATA is a hack but it will migrate into the <body> of the
-documents thanks to magic, and will hold the search results after the user searches.
-
-Mustache
-~~~~~~~~
-
-This task gives you a ``mustache.html`` file which lets you access your whole
-blog without reloading the page, using client-side templates. Makes it much
-faster and modern ;-)
 
 Custom Plugins
 --------------

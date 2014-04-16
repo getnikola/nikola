@@ -58,7 +58,7 @@ class GenerateRSS(Task):
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "feed_length": self.site.config['FEED_LENGTH'],
             "tzinfo": self.site.tzinfo,
-            "read_more_link": self.site.config["READ_MORE_LINK"],
+            "rss_read_more_link": self.site.config["RSS_READ_MORE_LINK"],
         }
         self.site.scan_posts()
         # Check for any changes in the state of use_in_feeds for any post.

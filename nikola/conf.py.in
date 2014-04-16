@@ -339,17 +339,22 @@ THEME = ${THEME}
 # Show only teasers in the index pages? Defaults to False.
 # INDEX_TEASERS = False
 
-# A HTML fragment with the Read more... link.  (translatable)
+# HTML fragments with the Read more... links.
 # The following tags exist and are replaced for you:
 # {link}                        A link to the full post page.
 # {read_more}                   The string “Read more” in the current language.
 # {reading_time}                An estimate of how long it will take to read the post.
 # {remaining_reading_time}      An estimate of how long it will take to read the post, sans the teaser.
+# {min_remaining_read}          The string “{remaining_reading_time} min remaining to read” in the current language
 # {paragraph_count}             The amount of paragraphs in the post.
 # {remaining_paragraph_count}   The amount of paragraphs in the post, sans the teaser.
 # {{                            A literal { (U+007B LEFT CURLY BRACKET)
 # }}                            A literal } (U+007D RIGHT CURLY BRACKET)
-READ_MORE_LINK = ${READ_MORE_LINK}
+
+# 'Read more...' for the index page, if INDEX_TEASERS is True (translatable)
+INDEX_READ_MORE_LINK = ${INDEX_READ_MORE_LINK}
+# 'Read more...' for the RSS_FEED, if RSS_TEASERS is True (translatable)
+RSS_READ_MORE_LINK = ${RSS_READ_MORE_LINK}
 
 # A HTML fragment describing the license, for the sidebar.
 # (translatable)
@@ -569,37 +574,6 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # <!-- End of custom search -->
 #""" % SITE_URL
 
-# Also, there is a local search plugin you can use, based on Tipue, but it requires setting several
-# options:
-
-# SEARCH_FORM = """
-# <span class="navbar-form pull-left">
-# <input type="text" id="tipue_search_input">
-# </span>"""
-#
-# BODY_END = """
-# <script src="/assets/js/tipuesearch_set.js"></script>
-# <script src="/assets/js/tipuesearch.js"></script>
-# <script>
-# $(document).ready(function() {
-#     $('#tipue_search_input').tipuesearch({
-#         'mode': 'json',
-#         'contentLocation': '/assets/js/tipuesearch_content.json',
-#         'showUrl': false
-#     });
-# });
-# </script>
-# """
-
-# EXTRA_HEAD_DATA = """
-# <link rel="stylesheet" type="text/css" href="/assets/css/tipuesearch.css">
-# <div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
-# """
-# ENABLED_EXTRAS = ['local_search']
-#
-###### End of local search example
-
-
 # Use content distribution networks for jquery, twitter-bootstrap css and js,
 # and html5shiv (for older versions of Internet Explorer)
 # If this is True, jquery and html5shiv is served from the Google and twitter-
@@ -679,8 +653,6 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # ENABLED_EXTRAS = [
 #     'planetoid',
 #     'ipynb',
-#     'local_search',
-#     'render_mustache',
 # ]
 
 # List of regular expressions, links matching them will always be considered

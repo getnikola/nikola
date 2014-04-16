@@ -67,5 +67,6 @@ rafacarrascosa <https://github.com/rafacarrascosa>
 rbistolfi <https://github.com/rbistolfi>
 snaewe <https://github.com/snaewe>
 tolusonaike <https://github.com/tolusonaike>
+Thomas Burette <https://github.com/tburette>
 wimpr1m <https://github.com/wimpr1m>
 yarko <https://github.com/yarko>

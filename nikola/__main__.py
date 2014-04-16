@@ -28,6 +28,10 @@ from __future__ import print_function, unicode_literals
 from operator import attrgetter
 import os
 import shutil
+try:
+    import readline  # NOQA
+except ImportError:
+    pass  # This is only so raw_input/input does nicer things if it's available
 import sys
 import traceback
 
@@ -49,7 +53,9 @@ from .utils import _reload, sys_decode, get_root_dir, req_missing, LOGGER, STRIC
 config = {}
 
 
-def main(args):
+def main(args=None):
+    if args is None:
+        args = sys.argv[1:]
     quiet = False
     if len(args) > 0 and args[0] == b'build' and b'--strict' in args:
         LOGGER.notice('Running in strict mode')
@@ -75,6 +81,7 @@ def main(args):
     # the output of that command (the new site) in an unknown directory that is
     # not the current working directory.  (does not apply to `version`)
     argname = args[0] if len(args) > 0 else None
+    # FIXME there are import plugins in the repo, so how do we handle this?
     if argname not in ['init', 'import_wordpress', 'import_feed',
                        'import_blogger', 'version']:
         root = get_root_dir()
@@ -239,7 +246,16 @@ class DoitNikola(DoitMain):
             cmd_args = ['version']
             args = ['version']
         if len(args) == 0 or args[0] not in sub_cmds.keys() or \
-                args[0] == 'build':
+                args[0] in (
+                    'build',
+                    'list',
+                    'clean',
+                    'doit_auto',
+                    'dumpdb',
+                    'forget',
+                    'ignore',
+                    'run',
+                    'strace'):
             # Check for conf.py before launching run
             if not self.nikola.configured:
                 LOGGER.error("This command needs to run inside an "
