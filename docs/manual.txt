@@ -1561,7 +1561,7 @@ Then you also can uninstall your plugins::
     [2014-04-15T08:59:24Z] WARNING: plugin: About to uninstall plugin: tags
     [2014-04-15T08:59:24Z] WARNING: plugin: This will delete /home/ralsina/foo/plugins/tags
     Are you sure? [y/n] y
-    [2014-04-15T08:59:26Z] WARNING: plugin: Removing /home/ralsina/Desktop/foo/plugins/tags
+    [2014-04-15T08:59:26Z] WARNING: plugin: Removing /home/ralsina/foo/plugins/tags
 
 And upgrade them::
 
