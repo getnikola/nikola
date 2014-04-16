@@ -393,7 +393,6 @@ Nikola also has other commands besides ``build``::
       nikola install_plugin       install plugin into current site
       nikola install_theme        install theme into current site
       nikola list                 list tasks from dodo file
-      nikola mincss               apply mincss to the generated site
       nikola new_post             create a new blog post or site page
       nikola orphans              list all orphans
       nikola run                  run tasks
