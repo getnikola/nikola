@@ -2,12 +2,13 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
+    "%d min remaining to read": "",
     "Also available in:": "Na voljo tudi v:",
     "Archive": "Arhiv",
     "Categories": "Kategorije",
-    "Comments": "",
+    "Comments": "Komentarji",
     "LANGUAGE": "Slovenščina",
-    "Languages:": "",
+    "Languages:": "Jeziki:",
     "More posts about %s": "Več objav o %s",
     "Newer posts": "Novejše objave",
     "Next post": "Naslednja objava",
@@ -20,7 +21,7 @@ MESSAGES = {
     "Posts for year %s": "Objave za leto %s",
     "Posts for {month} {year}": "Objave za {month} {year}",
     "Previous post": "Prejšnja objava",
-    "Publication date": "",
+    "Publication date": "Datum objave",
     "RSS feed": "vir RSS",
     "Read in English": "Beri v slovenščini",
     "Read more": "Več o tem",

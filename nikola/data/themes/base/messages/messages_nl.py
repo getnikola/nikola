@@ -2,12 +2,13 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
+    "%d min remaining to read": "",
     "Also available in:": "Ook beschikbaar in:",
     "Archive": "Archief",
     "Categories": "Categorieën",
-    "Comments": "",
+    "Comments": "Commentaar",
     "LANGUAGE": "Nederlands",
-    "Languages:": "",
+    "Languages:": "Talen:",
     "More posts about %s": "Meer berichten over %s",
     "Newer posts": "Nieuwere berichten",
     "Next post": "Volgend bericht",
@@ -20,7 +21,7 @@ MESSAGES = {
     "Posts for year %s": "Berichten voor het jaar %s",
     "Posts for {month} {year}": "Berichten voor {month} {year}",
     "Previous post": "Vorig bericht",
-    "Publication date": "",
+    "Publication date": "Publicatiedatum",
     "RSS feed": "RSS-feed",
     "Read in English": "Lees in het Nederlands",
     "Read more": "Lees verder",
