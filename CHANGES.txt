@@ -68,6 +68,7 @@ Features
 Bugfixes
 --------
 
+* Redirect pages should have a body linking to the new location
 * The typogrify filter is now Python 3-compatible (Issue #1244)
 * Fix ``nikola auto`` not watching changes in FILES_FOLDERS (Issue #1241)
 * Protocol relative embedded Vimeo and YouTube RST
