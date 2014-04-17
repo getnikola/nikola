@@ -29,5 +29,4 @@ MESSAGES = {
     "Tags": "Tags",
     "old posts, page %d": "old posts, page %d",
     "page %d": "page %d",
-    "%d min remaining to read": "%d min remaining to read",
 }
