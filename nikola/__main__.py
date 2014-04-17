@@ -237,15 +237,32 @@ class DoitNikola(DoitMain):
         args = self.process_args(cmd_args)
         args = [sys_decode(arg) for arg in args]
 
-        if len(args) == 0 or any(arg in ["--help", '-h'] for arg in args):
+        if len(args) == 0:
             cmd_args = ['help']
             args = ['help']
             # Hide run because Nikola uses build
             sub_cmds.pop('run')
-        if len(args) == 0 or any(arg in ["--version", '-V'] for arg in args):
+
+        if '--help' in args or '-h' in args:
+            new_cmd_args = ['help'] + cmd_args
+            new_args = ['help'] + args
+
+            cmd_args = []
+            args = []
+
+            for arg in new_cmd_args:
+                if arg not in ('--help', '-h'):
+                    cmd_args.append(arg)
+            for arg in new_args:
+                if arg not in ('--help', '-h'):
+                    args.append(arg)
+            # Hide run because Nikola uses build
+            sub_cmds.pop('run')
+
+        if any(arg in ("--version", '-V') for arg in args):
             cmd_args = ['version']
             args = ['version']
-        if len(args) == 0 or args[0] not in sub_cmds.keys() or \
+        if args[0] not in sub_cmds.keys() or \
                 args[0] in (
                     'build',
                     'list',
