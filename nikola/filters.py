@@ -56,6 +56,7 @@ def apply_to_binary_file(f):
 
     return f_in_file
 
+
 def apply_to_text_file(f):
     """Take a function f that transforms a data argument, and returns
     a function that takes a filename and applies f to the contents,
@@ -189,7 +190,6 @@ def tidy(inplace):
 
 @apply_to_text_file
 def typogrify(data):
-    global typogrify_filter
     if typo is None:
         req_missing(['typogrify', 'use the typogrify filter'])
 
