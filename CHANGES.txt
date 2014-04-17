@@ -68,8 +68,10 @@ Features
 Bugfixes
 --------
 
+* ``nikola COMMAND -h/--help`` now outputs command help and not Nikola
+  help (showing the command help is standard behavior) (Issue #1245)
 * Fix ``nikola auto`` not watching changes in FILES_FOLDERS (Issue #1241)
-* Protocol relative embedded Vimeo and YouTube RST
+* Vimeo and YouTube embedding in reStructuredText is now protocol-relative
 * Don't crash if a unknown kind of path/link is requested (Issue #1236)
 * Don't run ``clean`` and ``list`` outside sites (Issue #1232)
 * If an invalid language is specified, Nikola now shows a helpful error message
