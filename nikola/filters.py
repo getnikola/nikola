@@ -29,6 +29,7 @@
 from .utils import req_missing
 from functools import wraps
 import os
+import codecs
 import re
 import shutil
 import subprocess
@@ -41,10 +42,10 @@ except ImportError:
     typo = None  # NOQA
 
 
-def apply_to_file(f):
-    """Takes a function f that transforms a data argument, and returns
+def apply_to_binary_file(f):
+    """Take a function f that transforms a data argument, and returns
     a function that takes a filename and applies f to the contents,
-    in place."""
+    in place.  Reads files in binary mode."""
     @wraps(f)
     def f_in_file(fname):
         with open(fname, 'rb') as inf:
@@ -55,16 +56,30 @@ def apply_to_file(f):
 
     return f_in_file
 
+def apply_to_text_file(f):
+    """Take a function f that transforms a data argument, and returns
+    a function that takes a filename and applies f to the contents,
+    in place.  Reads files in UTF-8."""
+    @wraps(f)
+    def f_in_file(fname):
+        with codecs.open(fname, 'r', 'utf-8') as inf:
+            data = inf.read()
+        data = f(data)
+        with codecs.open(fname, 'w+', 'utf-8') as outf:
+            outf.write(data)
+
+    return f_in_file
+
 
 def list_replace(the_list, find, replacement):
-    "Replaces all occurrences of ``find`` with ``replacement`` in ``the_list``"
+    "Replace all occurrences of ``find`` with ``replacement`` in ``the_list``"
     for i, v in enumerate(the_list):
         if v == find:
             the_list[i] = replacement
 
 
 def runinplace(command, infile):
-    """Runs a command in-place on a file.
+    """Run a command in-place on a file.
 
     command is a string of the form: "commandname %1 %2" and
     it will be execed with infile as %1 and a temporary file
@@ -172,7 +187,7 @@ def tidy(inplace):
                 assert False, line
 
 
-@apply_to_file
+@apply_to_text_file
 def typogrify(data):
     global typogrify_filter
     if typo is None:
