@@ -28,7 +28,7 @@ from __future__ import print_function, unicode_literals
 
 import os
 
-from nikola import __version__, Nikola
+from nikola import __version__
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger, STDERR_HANDLER, req_missing
 
@@ -80,8 +80,8 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
                 req_missing(['IPython'], 'use the IPython console')
             raise e  # That’s how _execute knows whether to try something else.
         else:
-            SITE = self.site  # NOQA
-            config = self.site.config  # NOQA
+            SITE = self.context['SITE']  # NOQA
+            conf = self.context['conf']  # NOQA
             commands = self.context['commands']  # NOQA
             IPython.embed(header=self.header.format('IPython'))
 
@@ -130,8 +130,7 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
 
         self.context = {
             'conf': self.site.config,
-            'SITE': self.site,
-            'Nikola': Nikola,
+            'site': self.site,
             'commands': commands,
         }
         if options['bpython']:
