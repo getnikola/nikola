@@ -70,6 +70,8 @@ Bugfixes
 
 * ``nikola COMMAND -h/--help`` now outputs command help and not Nikola
   help (showing the command help is standard behavior) (Issue #1245)
+* Redirect pages should have a body linking to the new location
+* The typogrify filter is now Python 3-compatible (Issue #1244)
 * Fix ``nikola auto`` not watching changes in FILES_FOLDERS (Issue #1241)
 * Vimeo and YouTube embedding in reStructuredText is now protocol-relative
 * Don't crash if a unknown kind of path/link is requested (Issue #1236)

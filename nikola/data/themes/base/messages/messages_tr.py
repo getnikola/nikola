@@ -2,12 +2,13 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
+    "%d min remaining to read": "",
     "Also available in:": "Şu dilde de mevcut:",
     "Archive": "Arşiv",
     "Categories": "Kategoriler",
-    "Comments": "",
+    "Comments": "Yorumlar",
     "LANGUAGE": "Türkçe",
-    "Languages:": "",
+    "Languages:": "Diller:",
     "More posts about %s": "%s ilgili diğer yazılar",
     "Newer posts": "Daha yeni yazılar",
     "Next post": "Sonraki yazı",
@@ -20,8 +21,8 @@ MESSAGES = {
     "Posts for year %s": "%s yılındaki yazılar",
     "Posts for {month} {year}": "{month} {year} göre yazılar",
     "Previous post": "Önceki yazı",
-    "Publication date": "",
-    "RSS feed": "",
+    "Publication date": "Yayınlanma tarihi",
+    "RSS feed": "RSS kaynağı",
     "Read in English": "Türkçe olarak oku",
     "Read more": "Devamını oku",
     "Source": "Kaynak",
