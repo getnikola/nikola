@@ -184,7 +184,6 @@ class Sitemap(LateTask):
                     outf.write(sitemapindex[k])
                 outf.write(sitemapindex_footer)
 
-
         # Yield a task to calculate the dependencies of the sitemap
         # Other tasks can depend on this output, instead of having
         # to scan locations.
@@ -216,7 +215,6 @@ class Sitemap(LateTask):
             "actions": [(write_sitemapindex,)],
             "uptodate": [config_changed(kw)],
             "clean": True,
-#            "task_dep": ["sitemap"],
             "file_dep": [sitemap_path]
         }
 
