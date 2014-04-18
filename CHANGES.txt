@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* More powerful console mode allows access to all nikola commands (Issue #830)
 * Support hooks in templates, for use by plugins (Issue #896)
 * Use readline if available (Issue #1238)
 * Replaced ``READ_MORE_LINK`` with ``INDEX_READ_MORE_LINK`` and
@@ -68,6 +69,7 @@ Features
 Bugfixes
 --------
 
+* Handle conf.py for import plugins more generically (Issue #1235)
 * ``nikola deploy`` works with DEPLOY_FUTURE = True (Issue #1249)
 * Removed EXTRA_PLUGINS and ENABLED_EXTRAS options (Issue #1247)
 * ``nikola COMMAND -h/--help`` now outputs command help and not Nikola
