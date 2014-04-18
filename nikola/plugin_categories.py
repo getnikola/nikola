@@ -42,6 +42,7 @@ __all__ = [
 
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
+from doit.cmdparse import CmdParse
 
 from .utils import LOGGER, first_line
 
@@ -106,7 +107,11 @@ class Command(BasePlugin, DoitCommand):
 
     def __call__(self, *args, **kwargs):
         """Useful for the console. Offer a function-like interface."""
-        self.execute(options=kwargs, args=args)
+        # Just set defaults
+        params, _ = CmdParse(self.options).parse([])
+        # Now set the real values
+        params.update(kwargs)
+        self.execute(options=params, args=args)
 
 def help(self):
     """return help text"""
