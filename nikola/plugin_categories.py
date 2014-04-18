@@ -113,6 +113,7 @@ class Command(BasePlugin, DoitCommand):
         params.update(kwargs)
         self.execute(options=params, args=args)
 
+
 def help(self):
     """return help text"""
     text = []

@@ -80,9 +80,9 @@ If no option (-b, -i, -p), it tries -i, then -b, then -p."""
                 req_missing(['IPython'], 'use the IPython console')
             raise e  # That’s how _execute knows whether to try something else.
         else:
-            SITE = self.site
-            config = self.site.config
-            commands = self.context['commands']
+            SITE = self.site  # NOQA
+            config = self.site.config  # NOQA
+            commands = self.context['commands']  # NOQA
             IPython.embed(header=self.header.format('IPython'))
 
     def bpython(self, willful=True):
