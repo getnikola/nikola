@@ -41,9 +41,9 @@ class CommandConsole(Command):
     shells = ['ipython', 'bpython', 'plain']
     doc_purpose = "start an interactive Python console with access to your site"
     doc_description = """\
-The site engine is accessible as `SITE`, and the config as `conf`.
-If no option (-b, -i, -p), it tries -i, then -b, then -p."""
-    header = "Nikola v" + __version__ + " -- {0} Console (conf = configuration, SITE = site engine, commands = nikola commands)"
+The site engine is accessible as `site`, the config file as `conf`, the parsed config as `site.config`, and commands are available as `commands`.
+If there is no console to use specified (as -b, -i, -p) it tries IPython, then falls back to bpython, and finally falls back to the plain Python console."""
+    header = "Nikola v" + __version__ + " -- {0} Console (conf = configuration file, site = site engine, site.config = parsed config, commands = nikola commands)"
     cmd_options = [
         {
             'name': 'bpython',
@@ -123,7 +123,10 @@ If no option (-b, -i, -p), it tries -i, then -b, then -p."""
         # Create nice object with all commands:
         commands = Commands()
         for cmd in self.site.plugin_manager.getPluginsOfCategory('Command'):
-            commands.__dict__[cmd.name] = cmd.plugin_object
+            setattr(commands, cmd.name, cmd.plugin_object)
+            commands.cmdnames.append(cmd.name)
+
+        commands.cmdnames.sort()
 
         self.context = {
             'conf': self.site.config,
@@ -147,4 +150,21 @@ If no option (-b, -i, -p), it tries -i, then -b, then -p."""
 
 
 class Commands(object):
-    pass
+
+    """An object for storing commands."""
+
+    cmdnames = []
+
+    def __repr__(self):
+        """Return useful and verbose help."""
+
+        return """\
+<Nikola Commands>
+
+    Sample usage:
+    >>> commands.check('-l')
+
+    Or, if you know the internal argument names:
+    >>> commands.check(list=True)
+
+Available commands: {0}.""".format(', '.join(self.cmdnames))
