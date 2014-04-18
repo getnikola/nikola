@@ -171,7 +171,6 @@ class Nikola(object):
     Takes a site config as argument on creation.
     """
     EXTRA_PLUGINS = [
-        'planetoid',
         'ipynb',
     ]
 

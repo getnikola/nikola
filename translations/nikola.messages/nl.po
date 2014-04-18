@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-03-22 10:56+0000\n"
+"PO-Revision-Date: 2014-04-17 14:46+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/nikola/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -37,7 +37,7 @@ msgid "Tags and Categories"
 msgstr "Tags en Categorieën"
 
 msgid "Comments"
-msgstr ""
+msgstr "Commentaar"
 
 msgid "Read more"
 msgstr "Lees verder"
@@ -75,7 +75,7 @@ msgid "Also available in:"
 msgstr "Ook beschikbaar in:"
 
 msgid "Languages:"
-msgstr ""
+msgstr "Talen:"
 
 msgid "Original site"
 msgstr "Originele site"
@@ -87,7 +87,7 @@ msgid "Archive"
 msgstr "Archief"
 
 msgid "Publication date"
-msgstr ""
+msgstr "Publicatiedatum"
 
 msgid "Posted:"
 msgstr "Geplaatst:"
@@ -103,3 +103,6 @@ msgstr "Geen berichten gevonden."
 
 msgid "RSS feed"
 msgstr "RSS-feed"
+
+msgid "%d min remaining to read"
+msgstr ""

@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-03-22 10:56+0000\n"
+"PO-Revision-Date: 2014-04-17 14:46+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "Language-Team: Slovenian (http://www.transifex.com/projects/p/nikola/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -37,7 +37,7 @@ msgid "Tags and Categories"
 msgstr "Značke in kategorije"
 
 msgid "Comments"
-msgstr ""
+msgstr "Komentarji"
 
 msgid "Read more"
 msgstr "Več o tem"
@@ -75,7 +75,7 @@ msgid "Also available in:"
 msgstr "Na voljo tudi v:"
 
 msgid "Languages:"
-msgstr ""
+msgstr "Jeziki:"
 
 msgid "Original site"
 msgstr "Izvorna spletna stran"
@@ -87,7 +87,7 @@ msgid "Archive"
 msgstr "Arhiv"
 
 msgid "Publication date"
-msgstr ""
+msgstr "Datum objave"
 
 msgid "Posted:"
 msgstr "Objavljeno:"
@@ -103,3 +103,6 @@ msgstr "Ni najdenih objav."
 
 msgid "RSS feed"
 msgstr "vir RSS"
+
+msgid "%d min remaining to read"
+msgstr ""

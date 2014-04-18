@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Translators:
+# Translators:
+# ralsina <ralsina@netmanagers.com.ar>, 2013
 # ralsina <ralsina@netmanagers.com.ar>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-03-21 12:18+0000\n"
+"PO-Revision-Date: 2014-04-17 14:46+0000\n"
 "Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,3 +102,6 @@ msgstr "No posts found."
 
 msgid "RSS feed"
 msgstr "RSS feed"
+
+msgid "%d min remaining to read"
+msgstr "%d min remaining to read"

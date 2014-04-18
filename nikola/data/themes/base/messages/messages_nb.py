@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
+    "%d min remaining to read": "",
     "Also available in:": "Også tilgjengelig på:",
     "Archive": "Arkiv",
     "Categories": "Kategorier",

@@ -392,7 +392,6 @@ Nikola also has other commands besides ``build``::
       nikola init                 create a Nikola site in the specified folder
       nikola install_theme        install theme into current site
       nikola list                 list tasks from dodo file
-      nikola mincss               apply mincss to the generated site
       nikola new_post             create a new blog post or site page
       nikola orphans              list all orphans
       nikola plugin               manage plugins
@@ -1484,37 +1483,6 @@ These are plugins that may not be widely used or that are a bit too radical or
 experimental for the general public.
 
 To enable them for your site please look for `ENABLED_EXTRAS` in your ``conf.py``.
-
-Planetoid
-~~~~~~~~~
-
-This plugin converts Nikola into the equivalent of `Planet <http://www.planetplanet.org/>`_
-a feed aggregator. It requires `PeeWee <https://github.com/coleifer/peewee>`_ and
-`Feedparser <http://code.google.com/p/feedparser/>`_ to work.
-
-It has a configuration option: PLANETOID_REFRESH which is the number of minutes
-before retrying a feed (defaults to 60).
-
-You need to create a ``feeds`` file containing the data of which feeds you want to
-aggregate. The format is very simple::
-
-   # Roberto Alsina
-   http://feeds2.feedburner.com/PostsInLateralOpinionAboutPython
-   Roberto Alsina
-
-#. Lines that start with ``#`` are comments and ignored.
-#. Lines that start with http are feed URLs.
-#. URL lines have to be followed by the "real name" of the feed.
-
-After all that is in place, just run ``nikola build`` and you'll get
-a planet.
-If you run ``nikola build`` for the first time you need to actually issue
-the command three times until the planet is build.
-
-There is a special theme for the planets called `site-planetoid`. To use
-this set `THEME` in your ``conf.py`` to ``'site-planetoid'``.
-This is special in the case that it redirects users to the original URL of the post
-when they try to open a post.
 
 Custom Plugins
 --------------

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
+    "%d min remaining to read": "",
     "Also available in:": "他の言語で読む：",
     "Archive": "過去の記事",
     "Categories": "カテゴリー",
