@@ -170,9 +170,6 @@ class Nikola(object):
 
     Takes a site config as argument on creation.
     """
-    EXTRA_PLUGINS = [
-        'ipynb',
-    ]
 
     def __init__(self, **config):
         """Setup proper environment for running tasks."""
@@ -215,8 +212,6 @@ class Nikola(object):
             'page_footer': utils.TemplateHookRegistry('page_footer', self),
         }
 
-        utils.ColorfulStderrHandler._colorful = self.colorful
-
         # Maintain API
         utils.generic_rss_renderer = self.generic_rss_renderer
 
@@ -255,7 +250,6 @@ class Nikola(object):
             'DISABLED_PLUGINS': (),
             'EXTRA_PLUGINS_DIRS': [],
             'COMMENT_SYSTEM_ID': 'nikolademo',
-            'ENABLED_EXTRAS': (),
             'EXTRA_HEAD_DATA': '',
             'FAVICONS': {},
             'FEED_LENGTH': 10,
@@ -434,12 +428,12 @@ class Nikola(object):
             if 'INDEX_READ_MORE_LINK' in config:
                 utils.LOGGER.warn('READ_MORE_LINK conflicts with INDEX_READ_MORE_LINK, ignoring READ_MORE_LINK.')
             else:
-                self.config['INDEX_READ_MORE_LINK'] = config['READ_MORE_LINK']
+                self.config['INDEX_READ_MORE_LINK'] = utils.TranslatableSetting('INDEX_READ_MORE_LINK', config['READ_MORE_LINK'], self.config['TRANSLATIONS'])
 
             if 'RSS_READ_MORE_LINK' in config:
                 utils.LOGGER.warn('READ_MORE_LINK conflicts with RSS_READ_MORE_LINK, ignoring READ_MORE_LINK.')
             else:
-                self.config['RSS_READ_MORE_LINK'] = config['READ_MORE_LINK']
+                self.config['RSS_READ_MORE_LINK'] = utils.TranslatableSetting('RSS_READ_MORE_LINK', config['READ_MORE_LINK'], self.config['TRANSLATIONS'])
 
         # Moot.it renamed themselves to muut.io
         # TODO: remove on v8?
@@ -516,9 +510,7 @@ class Nikola(object):
         self.commands = {}
         # Activate all command plugins
         for plugin_info in self.plugin_manager.getPluginsOfCategory("Command"):
-            if (plugin_info.name in self.config['DISABLED_PLUGINS']
-                or (plugin_info.name in self.EXTRA_PLUGINS and
-                    plugin_info.name not in self.config['ENABLED_EXTRAS'])):
+            if plugin_info.name in self.config['DISABLED_PLUGINS']:
                 self.plugin_manager.removePluginFromCategory(plugin_info, "Command")
                 continue
 
@@ -530,9 +522,7 @@ class Nikola(object):
         # Activate all task plugins
         for task_type in ["Task", "LateTask"]:
             for plugin_info in self.plugin_manager.getPluginsOfCategory(task_type):
-                if (plugin_info.name in self.config['DISABLED_PLUGINS']
-                    or (plugin_info.name in self.EXTRA_PLUGINS and
-                        plugin_info.name not in self.config['ENABLED_EXTRAS'])):
+                if plugin_info.name in self.config['DISABLED_PLUGINS']:
                     self.plugin_manager.removePluginFromCategory(plugin_info, task_type)
                     continue
                 self.plugin_manager.activatePluginByName(plugin_info.name)
@@ -540,9 +530,7 @@ class Nikola(object):
 
         # Activate all multiplier plugins
         for plugin_info in self.plugin_manager.getPluginsOfCategory("TaskMultiplier"):
-            if (plugin_info.name in self.config['DISABLED_PLUGINS']
-                or (plugin_info.name in self.EXTRA_PLUGINS and
-                    plugin_info.name not in self.config['ENABLED_EXTRAS'])):
+            if plugin_info.name in self.config['DISABLED_PLUGINS']:
                 self.plugin_manager.removePluginFromCategory(plugin_info, task_type)
                 continue
             self.plugin_manager.activatePluginByName(plugin_info.name)

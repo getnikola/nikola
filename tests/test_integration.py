@@ -483,6 +483,7 @@ class InvariantBuildTest(EmptyBuildTest):
         """Fill the site with demo content."""
         self.init_command.copy_sample_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
+        os.system('rm "{0}/stories/creating-a-theme.rst" "{0}/stories/extending.txt" "{0}/stories/internals.txt" "{0}/stories/manual.rst" "{0}/stories/social_buttons.txt" "{0}/stories/theming.rst" "{0}/stories/upgrading-to-v6.txt"'.format(self.target_dir))
 
     def test_invariance(self):
         """Compare the output to the canonical output."""

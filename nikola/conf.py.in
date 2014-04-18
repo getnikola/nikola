@@ -647,14 +647,6 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # repository.
 # EXTRA_PLUGINS_DIRS = []
 
-# Experimental plugins - use at your own risk.
-# They probably need some manual adjustments - please see their respective
-# readme.
-# ENABLED_EXTRAS = [
-#     'planetoid',
-#     'ipynb',
-# ]
-
 # List of regular expressions, links matching them will always be considered
 # valid by "nikola check -l"
 # LINK_CHECK_WHITELIST = []

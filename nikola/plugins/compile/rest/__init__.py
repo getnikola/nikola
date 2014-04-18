@@ -115,9 +115,7 @@ class CompileRest(PageCompiler):
 
     def set_site(self, site):
         for plugin_info in site.plugin_manager.getPluginsOfCategory("RestExtension"):
-            if (plugin_info.name in site.config['DISABLED_PLUGINS']
-                or (plugin_info.name in site.EXTRA_PLUGINS and
-                    plugin_info.name not in site.config['ENABLED_EXTRAS'])):
+            if plugin_info.name in site.config['DISABLED_PLUGINS']:
                 site.plugin_manager.removePluginFromCategory(plugin_info, "RestExtension")
                 continue
 
