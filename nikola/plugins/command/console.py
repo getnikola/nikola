@@ -80,7 +80,7 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
                 req_missing(['IPython'], 'use the IPython console')
             raise e  # That’s how _execute knows whether to try something else.
         else:
-            SITE = self.context['SITE']  # NOQA
+            site = self.context['site']  # NOQA
             conf = self.context['conf']  # NOQA
             commands = self.context['commands']  # NOQA
             IPython.embed(header=self.header.format('IPython'))
