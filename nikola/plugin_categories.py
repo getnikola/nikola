@@ -104,6 +104,9 @@ class Command(BasePlugin, DoitCommand):
         """
         raise NotImplementedError()
 
+    def __call__(self, *args, **kwargs):
+        """Useful for the console. Offer a function-like interface."""
+        self.execute(options=kwargs, args=args)
 
 def help(self):
     """return help text"""
