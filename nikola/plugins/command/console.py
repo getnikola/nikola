@@ -81,6 +81,7 @@ If no option (-b, -i, -p), it tries -i, then -b, then -p."""
             raise e  # That’s how _execute knows whether to try something else.
         else:
             SITE = self.site
+            config = self.site.config
             IPython.embed(header=self.header.format('IPython'))
 
     def bpython(self, willful=True):
@@ -92,22 +93,18 @@ If no option (-b, -i, -p), it tries -i, then -b, then -p."""
                 req_missing(['bpython'], 'use the bpython console')
             raise e  # That’s how _execute knows whether to try something else.
         else:
-            SITE = self.site
-            gl = {'conf': self.site.config, 'SITE': SITE, 'Nikola': Nikola}
-            bpython.embed(banner=self.header.format('bpython'), locals_=gl)
+            bpython.embed(banner=self.header.format('bpython'), locals_=self.context)
 
     def plain(self, willful=True):
         """Plain Python shell."""
         import code
-        SITE = self.site
-        gl = {'conf': self.site.config, 'SITE': SITE, 'Nikola': Nikola}
         try:
             import readline
         except ImportError:
             pass
         else:
             import rlcompleter
-            readline.set_completer(rlcompleter.Completer(gl).complete)
+            readline.set_completer(rlcompleter.Completer(self.context).complete)
             readline.parse_and_bind("tab:complete")
 
         pythonrc = os.environ.get("PYTHONSTARTUP")
@@ -117,11 +114,12 @@ If no option (-b, -i, -p), it tries -i, then -b, then -p."""
             except NameError:
                 pass
 
-        code.interact(local=gl, banner=self.header.format('Python'))
+        code.interact(local=self.context, banner=self.header.format('Python'))
 
     def _execute(self, options, args):
         """Start the console."""
         self.site.scan_posts()
+        self.context = {'conf': self.site.config, 'SITE': self.site, 'Nikola': Nikola}
         if options['bpython']:
             self.bpython(True)
         elif options['ipython']:
