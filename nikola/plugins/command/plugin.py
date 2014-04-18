@@ -70,6 +70,7 @@ def indent(text, prefix, predicate=None):  # NOQA
 class CommandPlugin(Command):
     """Manage plugins."""
 
+    json = None
     name = "plugin"
     doc_usage = "[[-u][--user] --install name] | [[-u] [-l |--upgrade|--list-installed] | [--uninstall name]]"
     doc_purpose = "manage plugins"
@@ -162,9 +163,6 @@ class CommandPlugin(Command):
         else:
             self.output_dir = 'plugins'
 
-        if (requests is None) and (install or list_available):
-            utils.req_missing(['requests'], 'install or list available plugins')
-
         if list_available:
             self.list_available(url)
         elif list_installed:
@@ -177,8 +175,7 @@ class CommandPlugin(Command):
             self.do_install(url, install)
 
     def list_available(self, url):
-        data = requests.get(url).text
-        data = json.loads(data)
+        data = self.get_json(url)
         print("Available Plugins:")
         print("------------------")
         for plugin in sorted(data.keys()):
@@ -201,8 +198,7 @@ class CommandPlugin(Command):
 
     def do_upgrade(self, url):
         LOGGER.warning('This is not very smart, it just reinstalls some plugins and hopes for the best')
-        data = requests.get(url).text
-        data = json.loads(data)
+        data = self.get_json(url)
         plugins = []
         for plugin in self.site.plugin_manager.getAllPlugins():
             p = plugin.path
@@ -226,11 +222,10 @@ class CommandPlugin(Command):
                     return False
                 else:
                     path = tail
-            self.do_install(url, name)  # FIXME this is very inefficient
+            self.do_install(url, name)
 
     def do_install(self, url, name):
-        data = requests.get(url).text
-        data = json.loads(data)
+        data = self.get_json(url)
         if name in data:
             utils.makedirs(self.output_dir)
             LOGGER.info('Downloading: ' + data[name])
@@ -316,3 +311,11 @@ class CommandPlugin(Command):
                 return True
         LOGGER.error('Unknown plugin: {0}'.format(name))
         return False
+
+    def get_json(self, url):
+        if self.json is not None:
+            return self.json
+        if (requests is None):
+            utils.req_missing(['requests'], 'install or list available plugins')
+        data = requests.get(url).text
+        data = json.loads(data)
