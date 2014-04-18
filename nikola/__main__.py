@@ -84,8 +84,7 @@ def main(args=None):
     # not the current working directory.  (does not apply to `version`)
     argname = args[0] if len(args) > 0 else None
     # FIXME there are import plugins in the repo, so how do we handle this?
-    if argname not in ['init', 'import_wordpress', 'import_feed',
-                       'import_blogger', 'version']:
+    if argname not in ['init', 'version'] and not argname.startswith('import_'):
         root = get_root_dir()
         if root:
             os.chdir(root)
