@@ -148,6 +148,9 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'sys_encode', 'sys_decode', 'makedirs', 'get_parent_theme_name',
            'demote_headers', 'get_translation_candidate', 'write_metadata']
 
+### Are you looking for 'generic_rss_renderer'?
+### It's defined in nikola.nikola.Nikola (the site object).
+
 
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
 

@@ -212,8 +212,6 @@ class Nikola(object):
             'page_footer': utils.TemplateHookRegistry('page_footer', self),
         }
 
-        utils.ColorfulStderrHandler._colorful = self.colorful
-
         # Maintain API
         utils.generic_rss_renderer = self.generic_rss_renderer
 
