@@ -81,7 +81,6 @@ If no option (-b, -i, -p), it tries -i, then -b, then -p."""
             raise e  # That’s how _execute knows whether to try something else.
         else:
             SITE = self.site
-            SITE.scan_posts()
             IPython.embed(header=self.header.format('IPython'))
 
     def bpython(self, willful=True):
@@ -94,7 +93,6 @@ If no option (-b, -i, -p), it tries -i, then -b, then -p."""
             raise e  # That’s how _execute knows whether to try something else.
         else:
             SITE = self.site
-            SITE.scan_posts()
             gl = {'conf': self.site.config, 'SITE': SITE, 'Nikola': Nikola}
             bpython.embed(banner=self.header.format('bpython'), locals_=gl)
 
@@ -102,7 +100,6 @@ If no option (-b, -i, -p), it tries -i, then -b, then -p."""
         """Plain Python shell."""
         import code
         SITE = self.site
-        SITE.scan_posts()
         gl = {'conf': self.site.config, 'SITE': SITE, 'Nikola': Nikola}
         try:
             import readline
@@ -124,6 +121,7 @@ If no option (-b, -i, -p), it tries -i, then -b, then -p."""
 
     def _execute(self, options, args):
         """Start the console."""
+        self.site.scan_posts()
         if options['bpython']:
             self.bpython(True)
         elif options['ipython']:
