@@ -43,7 +43,7 @@ class CommandConsole(Command):
     doc_description = """\
 The site engine is accessible as `SITE`, and the config as `conf`.
 If no option (-b, -i, -p), it tries -i, then -b, then -p."""
-    header = "Nikola v" + __version__ + " -- {0} Console (conf = configuration, SITE = site engine)"
+    header = "Nikola v" + __version__ + " -- {0} Console (conf = configuration, SITE = site engine, commands = nikola commands)"
     cmd_options = [
         {
             'name': 'bpython',
