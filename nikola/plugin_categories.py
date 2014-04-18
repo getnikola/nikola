@@ -42,7 +42,6 @@ __all__ = [
 
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
-from doit.cmdparse import CmdParse
 
 from .utils import LOGGER, first_line
 
