@@ -28,7 +28,7 @@ from __future__ import print_function, unicode_literals
 
 import os
 
-from nikola import __version__
+from nikola import __version__, Nikola
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger, STDERR_HANDLER, req_missing
 
@@ -73,72 +73,54 @@ If no option (-b, -i, -p), it tries -i, then -b, then -p."""
 
     def ipython(self, willful=True):
         """IPython shell."""
-        from nikola import Nikola
         try:
-            import conf
-        except ImportError:
-            LOGGER.error("No configuration found, cannot run the console.")
+            import IPython
+        except ImportError as e:
+            if willful:
+                req_missing(['IPython'], 'use the IPython console')
+            raise e  # That’s how _execute knows whether to try something else.
         else:
-            try:
-                import IPython
-            except ImportError as e:
-                if willful:
-                    req_missing(['IPython'], 'use the IPython console')
-                raise e  # That’s how _execute knows whether to try something else.
-            else:
-                SITE = Nikola(**conf.__dict__)
-                SITE.scan_posts()
-                IPython.embed(header=self.header.format('IPython'))
+            SITE = self.site
+            SITE.scan_posts()
+            IPython.embed(header=self.header.format('IPython'))
 
     def bpython(self, willful=True):
         """bpython shell."""
-        from nikola import Nikola
         try:
-            import conf
-        except ImportError:
-            LOGGER.error("No configuration found, cannot run the console.")
+            import bpython
+        except ImportError as e:
+            if willful:
+                req_missing(['bpython'], 'use the bpython console')
+            raise e  # That’s how _execute knows whether to try something else.
         else:
-            try:
-                import bpython
-            except ImportError as e:
-                if willful:
-                    req_missing(['bpython'], 'use the bpython console')
-                raise e  # That’s how _execute knows whether to try something else.
-            else:
-                SITE = Nikola(**conf.__dict__)
-                SITE.scan_posts()
-                gl = {'conf': conf, 'SITE': SITE, 'Nikola': Nikola}
-                bpython.embed(banner=self.header.format('bpython'), locals_=gl)
+            SITE = self.site
+            SITE.scan_posts()
+            gl = {'conf': self.site.config, 'SITE': SITE, 'Nikola': Nikola}
+            bpython.embed(banner=self.header.format('bpython'), locals_=gl)
 
     def plain(self, willful=True):
         """Plain Python shell."""
-        from nikola import Nikola
+        import code
+        SITE = self.site
+        SITE.scan_posts()
+        gl = {'conf': self.site.config, 'SITE': SITE, 'Nikola': Nikola}
         try:
-            import conf
-            SITE = Nikola(**conf.__dict__)
-            SITE.scan_posts()
-            gl = {'conf': conf, 'SITE': SITE, 'Nikola': Nikola}
+            import readline
         except ImportError:
-            LOGGER.error("No configuration found, cannot run the console.")
+            pass
         else:
-            import code
+            import rlcompleter
+            readline.set_completer(rlcompleter.Completer(gl).complete)
+            readline.parse_and_bind("tab:complete")
+
+        pythonrc = os.environ.get("PYTHONSTARTUP")
+        if pythonrc and os.path.isfile(pythonrc):
             try:
-                import readline
-            except ImportError:
+                execfile(pythonrc)  # NOQA
+            except NameError:
                 pass
-            else:
-                import rlcompleter
-                readline.set_completer(rlcompleter.Completer(gl).complete)
-                readline.parse_and_bind("tab:complete")
 
-            pythonrc = os.environ.get("PYTHONSTARTUP")
-            if pythonrc and os.path.isfile(pythonrc):
-                try:
-                    execfile(pythonrc)  # NOQA
-                except NameError:
-                    pass
-
-            code.interact(local=gl, banner=self.header.format('Python'))
+        code.interact(local=gl, banner=self.header.format('Python'))
 
     def _execute(self, options, args):
         """Start the console."""
