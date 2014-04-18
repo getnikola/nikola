@@ -121,12 +121,7 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
         """Start the console."""
         self.site.scan_posts()
         # Create nice object with all commands:
-        commands = Commands()
-        for cmd in self.site.plugin_manager.getPluginsOfCategory('Command'):
-            setattr(commands, cmd.name, cmd.plugin_object)
-            commands.cmdnames.append(cmd.name)
-
-        commands.cmdnames.sort()
+        commands = Commands(self.site.doit)
 
         self.context = {
             'conf': self.site.config,
@@ -148,11 +143,34 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
             raise ImportError
 
 
+class CommandWrapper(object):
+    """Converts commands into functions."""
+
+    def __init__(self, cmd, commands_object):
+        self.cmd = cmd
+        self.commands_object = commands_object
+
+    def __call__(self, *args, **kwargs):
+        if args:
+            self.commands_object._run([self.cmd] + list(args))
+
+
 class Commands(object):
 
     """An object for storing commands."""
 
-    cmdnames = []
+    def __init__(self, main):
+        """Takes a main instance, works as wrapper for commands."""
+        self.cmdnames = []
+        for k,v in main.get_commands().items():
+            self.cmdnames.append(k)
+            if k == 'run':
+                continue
+            setattr(self, k, CommandWrapper(k, self))
+        self.main = main
+
+    def _run(self, cmd_args):
+        self.main.run(cmd_args)
 
     def __repr__(self):
         """Return useful and verbose help."""
