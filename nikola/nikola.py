@@ -428,12 +428,12 @@ class Nikola(object):
             if 'INDEX_READ_MORE_LINK' in config:
                 utils.LOGGER.warn('READ_MORE_LINK conflicts with INDEX_READ_MORE_LINK, ignoring READ_MORE_LINK.')
             else:
-                self.config['INDEX_READ_MORE_LINK'] = config['READ_MORE_LINK']
+                self.config['INDEX_READ_MORE_LINK'] = utils.TranslatableSetting('INDEX_READ_MORE_LINK', config['READ_MORE_LINK'], self.config['TRANSLATIONS'])
 
             if 'RSS_READ_MORE_LINK' in config:
                 utils.LOGGER.warn('READ_MORE_LINK conflicts with RSS_READ_MORE_LINK, ignoring READ_MORE_LINK.')
             else:
-                self.config['RSS_READ_MORE_LINK'] = config['READ_MORE_LINK']
+                self.config['RSS_READ_MORE_LINK'] = utils.TranslatableSetting('RSS_READ_MORE_LINK', config['READ_MORE_LINK'], self.config['TRANSLATIONS'])
 
         # Moot.it renamed themselves to muut.io
         # TODO: remove on v8?
