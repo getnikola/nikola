@@ -69,6 +69,7 @@ Features
 Bugfixes
 --------
 
+* Handle conf.py for import plugins more generically (Issue #1235)
 * ``nikola COMMAND -h/--help`` now outputs command help and not Nikola
   help (showing the command help is standard behavior) (Issue #1245)
 * Redirect pages should have a body linking to the new location
