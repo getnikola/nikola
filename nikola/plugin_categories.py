@@ -108,7 +108,7 @@ class Command(BasePlugin, DoitCommand):
     def __call__(self, *args, **kwargs):
         """Useful for the console. Offer a function-like interface."""
         # Just set defaults
-        params, _ = CmdParse(self.options).parse([])
+        params, _ = CmdParse(self.options).parse(args)
         # Now set the real values
         params.update(kwargs)
         self.execute(options=params, args=args)

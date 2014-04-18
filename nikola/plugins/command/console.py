@@ -82,6 +82,7 @@ If no option (-b, -i, -p), it tries -i, then -b, then -p."""
         else:
             SITE = self.site
             config = self.site.config
+            commands = self.context['commands']
             IPython.embed(header=self.header.format('IPython'))
 
     def bpython(self, willful=True):
@@ -119,7 +120,17 @@ If no option (-b, -i, -p), it tries -i, then -b, then -p."""
     def _execute(self, options, args):
         """Start the console."""
         self.site.scan_posts()
-        self.context = {'conf': self.site.config, 'SITE': self.site, 'Nikola': Nikola}
+        # Create nice object with all commands:
+        commands = Commands()
+        for cmd in self.site.plugin_manager.getPluginsOfCategory('Command'):
+            commands.__dict__[cmd.name] = cmd.plugin_object
+
+        self.context = {
+            'conf': self.site.config,
+            'SITE': self.site,
+            'Nikola': Nikola,
+            'commands': commands,
+        }
         if options['bpython']:
             self.bpython(True)
         elif options['ipython']:
@@ -133,3 +144,7 @@ If no option (-b, -i, -p), it tries -i, then -b, then -p."""
                 except ImportError:
                     pass
             raise ImportError
+
+
+class Commands(object):
+    pass
