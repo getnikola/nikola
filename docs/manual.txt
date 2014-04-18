@@ -1476,14 +1476,6 @@ and the authors Twitter user ID is found below.
     }
 
 
-Extra Plugins
--------------
-
-These are plugins that may not be widely used or that are a bit too radical or
-experimental for the general public.
-
-To enable them for your site please look for `ENABLED_EXTRAS` in your ``conf.py``.
-
 Custom Plugins
 --------------
 
