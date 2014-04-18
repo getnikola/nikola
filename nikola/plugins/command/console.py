@@ -28,6 +28,8 @@ from __future__ import print_function, unicode_literals
 
 import os
 
+from doit.cmdparse import CmdParse
+
 from nikola import __version__
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger, STDERR_HANDLER, req_missing
@@ -155,12 +157,19 @@ class CommandWrapper(object):
             self.commands_object._run([self.cmd] + list(args))
         else:
             # Here's where the keyword magic would have to go
-            pass
+            self.commands_object._run_with_kw(self.cmd, *args, **kwargs)
 
 
 class Commands(object):
 
-    """An object for storing commands."""
+    """Nikola Commands.
+
+    Sample usage:
+    >>> commands.check('-l')
+
+    Or, if you know the internal argument names:
+    >>> commands.check(list=True)
+    """
 
     def __init__(self, main):
         """Takes a main instance, works as wrapper for commands."""
@@ -174,6 +183,12 @@ class Commands(object):
 
     def _run(self, cmd_args):
         self.main.run(cmd_args)
+
+    def _run_with_kw(self, cmd, *a, **kw):
+        cmd = self.main.sub_cmds[cmd]
+        options, _ = CmdParse(cmd.options).parse([])
+        options.update(kw)
+        cmd.execute(options=options, args=a)
 
     def __repr__(self):
         """Return useful and verbose help."""
