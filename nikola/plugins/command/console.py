@@ -151,8 +151,11 @@ class CommandWrapper(object):
         self.commands_object = commands_object
 
     def __call__(self, *args, **kwargs):
-        if args:
+        if args or (not args and not kwargs):
             self.commands_object._run([self.cmd] + list(args))
+        else:
+            # Here's where the keyword magic would have to go
+            pass
 
 
 class Commands(object):
