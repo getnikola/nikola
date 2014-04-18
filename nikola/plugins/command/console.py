@@ -165,10 +165,10 @@ class Commands(object):
     """Nikola Commands.
 
     Sample usage:
-    >>> commands.check('-l')
+    >>> commands.check('-l')                     # doctest: +SKIP
 
     Or, if you know the internal argument names:
-    >>> commands.check(list=True)
+    >>> commands.check(list=True)                # doctest: +SKIP
     """
 
     def __init__(self, main):
