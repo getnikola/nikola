@@ -331,7 +331,11 @@ class Nikola(object):
         self.config.update(config)
 
         # __builtins__ contains useless cruft
-        del self.config['__builtins__']
+        if '__builtins__' in self.config:
+            try:
+                del self.config['__builtins__']
+            except KeyError:
+                del self.config[b'__builtins__']
 
         self.config['__colorful__'] = self.colorful
         self.config['__invariant__'] = self.invariant
