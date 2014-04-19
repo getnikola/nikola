@@ -60,7 +60,7 @@ class RobotsFile(LateTask):
         def write_robots():
             with codecs.open(robots_path, 'wb+', 'utf8') as outf:
                 outf.write("Sitemap: {0}\n\n".format(sitemapindex_url))
-                if len(kw["robots_exclusions"]) > 0:
+                if kw["robots_exclusions"]:
                     outf.write("User-Agent: *\n")
                     for loc in kw["robots_exclusions"]:
                         outf.write("Disallow: {0}\n".format(loc))
