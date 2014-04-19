@@ -6,5 +6,5 @@ Module = robots
 Author = Daniel Aleksandersen
 Version = 0.1
 Website = http://getnikola.com
-Description = Generate robotx.txt exclusion file and promote sitemap.
+Description = Generate /robots.txt exclusion file and promote sitemap.
 
