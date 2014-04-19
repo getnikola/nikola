@@ -173,9 +173,9 @@ CommandWrapper
 
     def __init__(self, main):
         """Takes a main instance, works as wrapper for commands."""
-        self.cmdnames = []
+        self._cmdnames = []
         for k, v in main.get_commands().items():
-            self.cmdnames.append(k)
+            self._cmdnames.append(k)
             if k == 'run':
                 continue
             nc = type(
@@ -211,7 +211,7 @@ CommandWrapper
     Or, if you know the internal argument names:
     >>> commands.check(list=True)
 
-Available commands: {0}.""".format(', '.join(self.cmdnames))
+Available commands: {0}.""".format(', '.join(self._cmdnames))
 
 def options2docstring(name, options):
     result = ['Function wrapper for command %s' % name, 'arguments:']
