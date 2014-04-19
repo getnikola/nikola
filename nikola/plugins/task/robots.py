@@ -26,7 +26,6 @@
 
 from __future__ import print_function, absolute_import, unicode_literals
 import codecs
-import datetime
 import os
 try:
     from urlparse import urljoin, urlparse
@@ -35,6 +34,7 @@ except ImportError:
 
 from nikola.plugin_categories import LateTask
 from nikola import utils
+
 
 class RobotsFile(LateTask):
     """Generate a robots.txt."""
