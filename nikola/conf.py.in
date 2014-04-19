@@ -442,6 +442,12 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # if /2012 includes any files (including index.html)... add it to the sitemap
 # SITEMAP_INCLUDE_FILELESS_DIRS = True
 
+# List of files relative to the server root (!) that will be asked to be excluded
+# from indexing and other robotic spidering. * is supported. Will only be effective
+# if SITE_URL points to server root. The list is used to exclude resources from
+# /robots.txt and /sitemap.xml, and to inform search engines about /sitemapindex.xml.
+# ROBOTS_EXCLUSIONS = ["/archive.html", "/category/*.html"]
+
 # Instead of putting files in <slug>.html, put them in
 # <slug>/index.html. Also enables STRIP_INDEXES
 # This can be disabled on a per-page/post basis by adding

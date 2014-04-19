@@ -30,8 +30,10 @@ import datetime
 import os
 try:
     from urlparse import urljoin, urlparse
+    import robotparser as robotparser
 except ImportError:
     from urllib.parse import urljoin, urlparse  # NOQA
+    import urllib.robotparser as robotparser  # NOQA
 
 from nikola.plugin_categories import LateTask
 from nikola.utils import config_changed
@@ -109,7 +111,8 @@ class Sitemap(LateTask):
             "strip_indexes": self.site.config["STRIP_INDEXES"],
             "index_file": self.site.config["INDEX_FILE"],
             "sitemap_include_fileless_dirs": self.site.config["SITEMAP_INCLUDE_FILELESS_DIRS"],
-            "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.html', '.htm', '.xml', '.rss'])
+            "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.html', '.htm', '.xml', '.rss']),
+            "robots_exclusions": self.site.config["ROBOTS_EXCLUSIONS"]
         }
 
         output = kw['output_folder']
@@ -143,6 +146,8 @@ class Sitemap(LateTask):
                         if path.endswith(kw['index_file']) and kw['strip_indexes']:
                             # ignore index files when stripping urls
                             continue
+                        if not robot_fetch(path):
+                            continue
                         if path.endswith('.html') or path.endswith('.htm'):
                             if u'<!doctype html' not in codecs.open(real_path, 'r', 'utf8').read(1024).lower():
                                 # ignores "html" files without doctype
@@ -165,6 +170,14 @@ class Sitemap(LateTask):
                         lastmod = self.get_lastmod(real_path)
                         loc = urljoin(base_url, base_path + path)
                         urlset[loc] = loc_format.format(loc, lastmod)
+
+        def robot_fetch(path):
+            for rule in kw["robots_exclusions"]:
+                robot = robotparser.RobotFileParser()
+                robot.parse(["User-Agent: *", "Disallow: {0}".format(rule)])
+                if not robot.can_fetch("*", '/' + path):
+                    return False  # not robot food
+            return True
 
         def write_sitemap():
             # Have to rescan, because files may have been added between

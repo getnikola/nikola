@@ -291,6 +291,7 @@ class Nikola(object):
             'INDEX_READ_MORE_LINK': DEFAULT_INDEX_READ_MORE_LINK,
             'RSS_READ_MORE_LINK': DEFAULT_RSS_READ_MORE_LINK,
             'REDIRECTIONS': [],
+            'ROBOTS_EXCLUSIONS': [],
             'RSS_LINK': None,
             'RSS_PATH': '',
             'RSS_PLAIN': False,
