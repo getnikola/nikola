@@ -194,7 +194,10 @@ CommandWrapper
         cmd = self.main.sub_cmds[cmd]
         options, _ = CmdParse(cmd.options).parse([])
         options.update(kw)
-        cmd.execute(options=options, args=a)
+        if isinstance(cmd, Command):
+            cmd.execute(options=options, args=a)
+        else:  # Doit command
+            cmd.execute(options, a)
 
     def __repr__(self):
         """Return useful and verbose help."""
