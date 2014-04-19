@@ -78,6 +78,6 @@ class RobotsFile(LateTask):
                 "task_dep": ["sitemap"]
             }
         elif kw["robots_exclusions"]:
-            utils.LOGGER.warn('robots.txt not generated as it was copied from files. ROBOTS_EXCLUSIONS will not have any affect on the copied fie.')
+            utils.LOGGER.warn('Did not generate robots.txt as one already exists in FILES_FOLDERS. ROBOTS_EXCLUSIONS will not have any affect on the copied fie.')
         else:
-            utils.LOGGER.debug('robots.txt not generated as it was copied from files. sitemapindex.xml will not be automatically exposed in the file.')
+            utils.LOGGER.debug('Did not generate robots.txt as one already exists in FILES_FOLDERS.')
