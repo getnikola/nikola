@@ -67,7 +67,7 @@ class RobotsFile(LateTask):
 
         yield self.group_task()
 
-        if not utils.get_asset_path("robots.txt", []):
+        if not utils.get_asset_path("robots.txt", [], files_folders=kw["files_folders"]):
             yield {
                 "basename": self.name,
                 "name": robots_path,
