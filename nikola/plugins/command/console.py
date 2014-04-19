@@ -213,6 +213,7 @@ CommandWrapper
 
 Available commands: {0}.""".format(', '.join(self._cmdnames))
 
+
 def options2docstring(name, options):
     result = ['Function wrapper for command %s' % name, 'arguments:']
     for opt in options:
