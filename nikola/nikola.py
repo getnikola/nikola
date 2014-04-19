@@ -200,9 +200,6 @@ class Nikola(object):
         self.invariant = config.pop('__invariant__', False)
         self.configured = bool(config)
 
-        config['__colorful__'] = self.colorful
-        config['__invariant__'] = self.invariant
-
         self.template_hooks = {
             'extra_head': utils.TemplateHookRegistry('extra_head', self),
             'body_end': utils.TemplateHookRegistry('body_end', self),
@@ -335,10 +332,13 @@ class Nikola(object):
         # Remove cruft from config.
         # All we need are uppercase-starting strings (options) and the two
         # things we add in main().
-        confkeys = filter(lambda x: x[0] in string.uppercase, config) + ['__colorful__', '__invariant__']
+        confkeys = filter(lambda x: x[0] in string.uppercase, config)
 
         for k in confkeys:
             self.config[k] = config[k]
+
+        self.config['__colorful__'] = self.colorful
+        self.config['__invariant__'] = self.invariant
 
         # Make sure we have sane NAVIGATION_LINKS.
         if not self.config['NAVIGATION_LINKS']:
