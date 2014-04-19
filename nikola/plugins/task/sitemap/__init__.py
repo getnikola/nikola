@@ -37,7 +37,7 @@ from nikola.plugin_categories import LateTask
 from nikola.utils import config_changed
 
 
-header = """<?xml version="1.0" encoding="UTF-8"?>
+urlset_header = """<?xml version="1.0" encoding="UTF-8"?>
 <urlset
     xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -45,11 +45,29 @@ header = """<?xml version="1.0" encoding="UTF-8"?>
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 """
 
-url_format = """ <url>
+loc_format = """ <url>
   <loc>{0}</loc>
   <lastmod>{1}</lastmod>
  </url>
 """
+
+urlset_footer = "</urlset>"
+
+sitemapindex_header = """<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex
+    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+                        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+"""
+
+sitemap_format = """ <sitemap>
+  <loc>{0}</loc>
+  <lastmod>{1}</lastmod>
+ </sitemap>
+"""
+
+sitemapindex_footer = "</sitemapindex>"
 
 
 def get_base_path(base):
@@ -91,16 +109,19 @@ class Sitemap(LateTask):
             "strip_indexes": self.site.config["STRIP_INDEXES"],
             "index_file": self.site.config["INDEX_FILE"],
             "sitemap_include_fileless_dirs": self.site.config["SITEMAP_INCLUDE_FILELESS_DIRS"],
-            "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.html', '.htm', '.xml'])
+            "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.html', '.htm', '.xml', '.rss'])
         }
-        output_path = kw['output_folder']
-        sitemap_path = os.path.join(output_path, "sitemap.xml")
-        base_path = get_base_path(kw['base_url'])
-        locs = {}
 
         output = kw['output_folder']
         base_url = kw['base_url']
         mapped_exts = kw['mapped_extensions']
+
+        output_path = kw['output_folder']
+        sitemapindex_path = os.path.join(output_path, "sitemapindex.xml")
+        sitemap_path = os.path.join(output_path, "sitemap.xml")
+        base_path = get_base_path(kw['base_url'])
+        sitemapindex = {}
+        urlset = {}
 
         def scan_locs():
             for root, dirs, files in os.walk(output, followlinks=True):
@@ -112,7 +133,7 @@ class Sitemap(LateTask):
                 lastmod = self.get_lastmod(root)
                 loc = urljoin(base_url, base_path + path)
                 if kw['index_file'] in files and kw['strip_indexes']:  # ignore folders when not stripping urls
-                    locs[loc] = url_format.format(loc, lastmod)
+                    urlset[loc] = loc_format.format(loc, lastmod)
                 for fname in files:
                     if kw['strip_indexes'] and fname == kw['index_file']:
                         continue  # We already mapped the folder
@@ -127,33 +148,48 @@ class Sitemap(LateTask):
                                 # ignores "html" files without doctype
                                 # alexa-verify, google-site-verification, etc.
                                 continue
-                        if path.endswith('.xml'):
-                            if u'<rss' not in codecs.open(real_path, 'r', 'utf8').read(512):
-                                # ignores all XML files except those presumed to be RSS
+                        """ put RSS in sitemapindex[] instead of in urlset[], sitemap_path is included after it is generated """
+                        if path.endswith('.xml') or path.endswith('.rss'):
+                            if u'<rss' in codecs.open(real_path, 'r', 'utf8').read(512) or u'<urlset'and path != sitemap_path:
+                                path = path.replace(os.sep, '/')
+                                lastmod = self.get_lastmod(real_path)
+                                loc = urljoin(base_url, base_path + path)
+                                sitemapindex[loc] = sitemap_format.format(loc, lastmod)
                                 continue
+                            else:
+                                continue  # ignores all XML files except those presumed to be RSS
                         post = self.site.post_per_file.get(path)
                         if post and (post.is_draft or post.is_private or post.publish_later):
                             continue
                         path = path.replace(os.sep, '/')
                         lastmod = self.get_lastmod(real_path)
                         loc = urljoin(base_url, base_path + path)
-                        locs[loc] = url_format.format(loc, lastmod)
+                        urlset[loc] = loc_format.format(loc, lastmod)
 
         def write_sitemap():
             # Have to rescan, because files may have been added between
             # task dep scanning and task execution
             with codecs.open(sitemap_path, 'wb+', 'utf8') as outf:
-                outf.write(header)
-                for k in sorted(locs.keys()):
-                    outf.write(locs[k])
-                outf.write("</urlset>")
+                outf.write(urlset_header)
+                for k in sorted(urlset.keys()):
+                    outf.write(urlset[k])
+                outf.write(urlset_footer)
+            sitemap_url = urljoin(base_url, base_path + "sitemap.xml")
+            sitemapindex[sitemap_url] = sitemap_format.format(sitemap_url, self.get_lastmod(sitemap_path))
+
+        def write_sitemapindex():
+            with codecs.open(sitemapindex_path, 'wb+', 'utf8') as outf:
+                outf.write(sitemapindex_header)
+                for k in sorted(sitemapindex.keys()):
+                    outf.write(sitemapindex[k])
+                outf.write(sitemapindex_footer)
 
         # Yield a task to calculate the dependencies of the sitemap
         # Other tasks can depend on this output, instead of having
         # to scan locations.
         def scan_locs_task():
             scan_locs()
-            return {'locations': list(locs.keys())}
+            return {'locations': list(urlset.keys()) + list(sitemapindex.keys())}
 
         yield {
             "basename": "_scan_locs",
@@ -162,7 +198,7 @@ class Sitemap(LateTask):
         }
 
         yield self.group_task()
-        task = {
+        yield {
             "basename": "sitemap",
             "name": sitemap_path,
             "targets": [sitemap_path],
@@ -172,7 +208,15 @@ class Sitemap(LateTask):
             "task_dep": ["render_site"],
             "calc_dep": ["_scan_locs:sitemap"],
         }
-        yield task
+        yield {
+            "basename": "sitemap",
+            "name": sitemapindex_path,
+            "targets": [sitemapindex_path],
+            "actions": [(write_sitemapindex,)],
+            "uptodate": [config_changed(kw)],
+            "clean": True,
+            "file_dep": [sitemap_path]
+        }
 
     def get_lastmod(self, p):
         if self.site.invariant:

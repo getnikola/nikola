@@ -64,9 +64,30 @@ TRANSLATIONS_PATTERN = ${TRANSLATIONS_PATTERN}
 # (the same way you would do with a (translatable) setting.)
 NAVIGATION_LINKS = ${NAVIGATION_LINKS}
 
+# Name of the theme to use.
+THEME = ${THEME}
+
 ##############################################
 # Below this point, everything is optional
 ##############################################
+
+# Post's dates are considered in UTC by default, if you want to use
+# another time zone, please set TIMEZONE to match. Check the available
+# list from Wikipedia:
+# http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+# (eg. 'Europe/Zurich')
+# Also, if you want to use a different time zone in some of your posts,
+# you can use the ISO 8601/RFC 3339 format (ex. 2012-03-30T23:00:00+02:00)
+TIMEZONE = ${TIMEZONE}
+
+# If you want to use ISO 8601 (also valid RFC 3339) throughout Nikola
+# (especially in new_post), set this to True.
+# Note that this does not affect DATE_FORMAT.
+# FORCE_ISO8601 = False
+
+# Date format used to display post dates.
+# (str used by datetime.datetime.strftime)
+# DATE_FORMAT = '%Y-%m-%d %H:%M'
 
 # While nikola can select a sensible locale for each language,
 # sometimes explicit control can come handy.
@@ -292,9 +313,6 @@ REDIRECTIONS = ${REDIRECTIONS}
 # INDEXES_PAGES_MAIN = False # If True, INDEXES_PAGES is also displayed on
 #                            # the main (the newest) index page (index.html)
 
-# Name of the theme to use.
-THEME = ${THEME}
-
 # Color scheme to be used for code blocks. If your theme provides
 # "assets/css/code.css" this is ignored.
 # Can be any of autumn borland bw colorful default emacs friendly fruity manni
@@ -309,24 +327,6 @@ THEME = ${THEME}
 # between the slides
 # THEME_REVEAL_CONFIG_TRANSITION = 'cube'
 # You can also use: page/concave/linear/none/default
-
-# Post's dates are considered in UTC by default, if you want to use
-# another time zone, please set TIMEZONE to match. Check the available
-# list from Wikipedia:
-# http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-# (eg. 'Europe/Zurich')
-# Also, if you want to use a different time zone in some of your posts,
-# you can use the ISO 8601/RFC 3339 format (ex. 2012-03-30T23:00:00+02:00)
-# TIMEZONE = 'UTC'
-
-# If you want to use ISO 8601 (also valid RFC 3339) throughout Nikola
-# (especially in new_post), set this to True.
-# Note that this does not affect DATE_FORMAT.
-# FORCE_ISO8601 = False
-
-# Date format used to display post dates.
-# (str used by datetime.datetime.strftime)
-# DATE_FORMAT = '%Y-%m-%d %H:%M'
 
 # FAVICONS contains (name, file, size) tuples.
 # Used for create favicon link like this:
@@ -400,6 +400,7 @@ CONTENT_FOOTER_FORMATS = {
 # To use comments, you can choose between different third party comment
 # systems.  The following comment systems are supported by Nikola:
 ${_SUPPORTED_COMMENT_SYSTEMS}
+# You can leave this option blank to disable comments.
 COMMENT_SYSTEM = ${COMMENT_SYSTEM}
 # And you also need to add your COMMENT_SYSTEM_ID which
 # depends on what comment system you use. The default is
