@@ -66,12 +66,16 @@ class RobotsFile(LateTask):
                         outf.write("Disallow: {0}\n".format(loc))
 
         yield self.group_task()
-        yield {
-            "basename": "robots_file",
-            "name": robots_path,
-            "targets": [robots_path],
-            "actions": [(write_robots)],
-            "uptodate": [utils.config_changed(kw)],
-            "clean": True,
-            "task_dep": ["sitemap"]
-        }
+
+        if not utils.get_asset_path("robots.txt", []):
+            yield {
+                "basename": self.name,
+                "name": robots_path,
+                "targets": [robots_path],
+                "actions": [(write_robots)],
+                "uptodate": [utils.config_changed(kw)],
+                "clean": True,
+                "task_dep": ["sitemap"]
+            }
+        elif kw["robots_exclusions"]:
+            utils.LOGGER.warn('robots.txt not generated as it was copied from files. ROBOTS_EXCLUSIONS will not have any affect on the copied fie.')
