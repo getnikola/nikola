@@ -34,7 +34,6 @@ import glob
 import locale
 import os
 import sys
-import string
 try:
     from urlparse import urlparse, urlsplit, urljoin
 except ImportError:
@@ -329,13 +328,10 @@ class Nikola(object):
         # set global_context for template rendering
         self._GLOBAL_CONTEXT = {}
 
-        # Remove cruft from config.
-        # All we need are uppercase-starting strings (options) and the two
-        # things we add in main().
-        confkeys = filter(lambda x: x[0] in string.uppercase, config)
+        self.config.update(config)
 
-        for k in confkeys:
-            self.config[k] = config[k]
+        # __builtins__ contains useless cruft
+        del self.config['__builtins__']
 
         self.config['__colorful__'] = self.colorful
         self.config['__invariant__'] = self.invariant
