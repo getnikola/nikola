@@ -163,7 +163,7 @@ class CommandWrapper(object):
 class Commands(object):
 
     """Nikola Commands.
-
+CommandWrapper
     Sample usage:
     >>> commands.check('-l')                     # doctest: +SKIP
 
@@ -178,7 +178,13 @@ class Commands(object):
             self.cmdnames.append(k)
             if k == 'run':
                 continue
-            setattr(self, k, CommandWrapper(k, self))
+            nc = type(
+                bytes(k),
+                (CommandWrapper,),
+                {
+                    '__doc__': options2docstring(k, main.sub_cmds[k].options)
+                })
+            setattr(self, k, nc(k, self))
         self.main = main
 
     def _run(self, cmd_args):
@@ -203,3 +209,9 @@ class Commands(object):
     >>> commands.check(list=True)
 
 Available commands: {0}.""".format(', '.join(self.cmdnames))
+
+def options2docstring(name, options):
+    result = ['Function wrapper for command %s' % name, 'arguments:']
+    for opt in options:
+        result.append('{0} type {1} default {2}'.format(opt.name, opt.type.__name__, opt.default))
+    return '\n'.join(result)
