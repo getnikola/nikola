@@ -43,9 +43,9 @@ class CommandConsole(Command):
     shells = ['ipython', 'bpython', 'plain']
     doc_purpose = "start an interactive Python console with access to your site"
     doc_description = """\
-The site engine is accessible as `site`, the config file as `conf`, the parsed config as `site.config`, and commands are available as `commands`.
+The site engine is accessible as `site`, the config file as `conf`, and commands are available as `commands`.
 If there is no console to use specified (as -b, -i, -p) it tries IPython, then falls back to bpython, and finally falls back to the plain Python console."""
-    header = "Nikola v" + __version__ + " -- {0} Console (conf = configuration file, site = site engine, site.config = parsed config, commands = nikola commands)"
+    header = "Nikola v" + __version__ + " -- {0} Console (conf = configuration file, site = site engine, commands = nikola commands)"
     cmd_options = [
         {
             'name': 'bpython',
