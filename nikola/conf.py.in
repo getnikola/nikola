@@ -472,8 +472,6 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # SCHEDULE_RULE = ''
 # If True, use the scheduling rule to all posts by default
 # SCHEDULE_ALL = False
-# If True, schedules post to today if possible, even if scheduled hour is over
-# SCHEDULE_FORCE_TODAY = False
 
 # Do you want a add a Mathjax config file?
 # MATHJAX_CONFIG = ""
