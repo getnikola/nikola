@@ -18,3 +18,11 @@
     {{ code }}
 {% endif %}
 {% endblock %}
+
+{% block sourcelink %}
+{% if source_link %}
+    <li>
+    <a href="{{ source_link }}" id="sourcelink">{{ messages("Source") }}</a>
+    </li>
+{% endif %}
+{% endblock %}
