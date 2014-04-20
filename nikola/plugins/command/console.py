@@ -175,8 +175,8 @@ CommandWrapper
         """Takes a main instance, works as wrapper for commands."""
         self._cmdnames = []
         for k, v in main.get_commands().items():
-            self._cmdnames.append(k)
-            if k == 'run':
+            self.cmdnames.append(k)
+            if k in ['run', 'init']:
                 continue
             nc = type(
                 bytes(k),
