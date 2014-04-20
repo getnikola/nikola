@@ -230,6 +230,7 @@ class DoitNikola(DoitMain):
 
     def __init__(self, nikola, quiet=False):
         self.nikola = nikola
+        nikola.doit = self
         self.task_loader = self.TASK_LOADER(nikola, quiet)
 
     def get_commands(self):

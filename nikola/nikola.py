@@ -199,9 +199,6 @@ class Nikola(object):
         self.invariant = config.pop('__invariant__', False)
         self.configured = bool(config)
 
-        config['__colorful__'] = self.colorful
-        config['__invariant__'] = self.invariant
-
         self.template_hooks = {
             'extra_head': utils.TemplateHookRegistry('extra_head', self),
             'body_end': utils.TemplateHookRegistry('body_end', self),
@@ -333,6 +330,16 @@ class Nikola(object):
         self._GLOBAL_CONTEXT = {}
 
         self.config.update(config)
+
+        # __builtins__ contains useless cruft
+        if '__builtins__' in self.config:
+            try:
+                del self.config['__builtins__']
+            except KeyError:
+                del self.config[b'__builtins__']
+
+        self.config['__colorful__'] = self.colorful
+        self.config['__invariant__'] = self.invariant
 
         # Make sure we have sane NAVIGATION_LINKS.
         if not self.config['NAVIGATION_LINKS']:
@@ -1288,6 +1295,9 @@ class Nikola(object):
         }
 
         return utils.apply_filters(task, filters)
+
+    def __repr__(self):
+        return '<Nikola Site: {0}>'.format(self.config['BLOG_TITLE']())
 
 
 def sanitized_locales(locale_fallback, locale_default, locales, translations):
