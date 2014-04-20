@@ -239,7 +239,7 @@ class CommandCheck(Command):
         return failure
 
     def clean_files(self):
-        only_on_output, _ = self.real_scan_files()
+        only_on_output, _ = real_scan_files(self.site)
         for f in only_on_output:
             os.unlink(f)
         return True
