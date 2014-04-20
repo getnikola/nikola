@@ -26,11 +26,12 @@
 
 from __future__ import print_function
 import codecs
+from io import BytesIO
 import os
 import json
 import shutil
 import subprocess
-from io import BytesIO
+import sys
 
 import pygments
 from pygments.lexers import PythonLexer
@@ -44,7 +45,7 @@ except ImportError:
 from nikola.plugin_categories import Command
 from nikola import utils
 
-LOGGER = utils.get_logger('install_plugin', utils.STDERR_HANDLER)
+LOGGER = utils.get_logger('plugin', utils.STDERR_HANDLER)
 
 
 # Stolen from textwrap in Python 3.3.2.
@@ -66,14 +67,32 @@ def indent(text, prefix, predicate=None):  # NOQA
     return ''.join(prefixed_lines())
 
 
-class CommandInstallPlugin(Command):
-    """Install a plugin."""
+class CommandPlugin(Command):
+    """Manage plugins."""
 
-    name = "install_plugin"
-    doc_usage = "[[-u] plugin_name] | [[-u] -l]"
-    doc_purpose = "install plugin into current site"
-    output_dir = 'plugins'
+    json = None
+    name = "plugin"
+    doc_usage = "[[-u][--user] --install name] | [[-u] [-l |--upgrade|--list-installed] | [--uninstall name]]"
+    doc_purpose = "manage plugins"
+    output_dir = None
+    needs_config = False
     cmd_options = [
+        {
+            'name': 'install',
+            'short': 'i',
+            'long': 'install',
+            'type': str,
+            'default': '',
+            'help': 'Install a plugin.',
+        },
+        {
+            'name': 'uninstall',
+            'long': 'uninstall',
+            'short': 'r',
+            'type': str,
+            'default': '',
+            'help': 'Uninstall a plugin.'
+        },
         {
             'name': 'list',
             'short': 'l',
@@ -91,43 +110,130 @@ class CommandInstallPlugin(Command):
                     "http://plugins.getnikola.com/v7/plugins.json)",
             'default': 'http://plugins.getnikola.com/v7/plugins.json'
         },
+        {
+            'name': 'user',
+            'long': 'user',
+            'type': bool,
+            'help': "Install user-wide, available for all sites.",
+            'default': False
+        },
+        {
+            'name': 'upgrade',
+            'long': 'upgrade',
+            'type': bool,
+            'help': "Upgrade all installed plugins.",
+            'default': False
+        },
+        {
+            'name': 'list_installed',
+            'long': 'list-installed',
+            'type': bool,
+            'help': "List the installed plugins with their location.",
+            'default': False
+        },
     ]
 
     def _execute(self, options, args):
         """Install plugin into current site."""
-        if requests is None:
-            utils.req_missing(['requests'], 'install plugins')
-
-        listing = options['list']
         url = options['url']
-        if args:
-            name = args[0]
-        else:
-            name = None
+        user_mode = options['user']
 
-        if name is None and not listing:
-            LOGGER.error("This command needs either a plugin name or the -l option.")
-            return False
-        data = requests.get(url).text
-        data = json.loads(data)
-        if listing:
-            print("Plugins:")
-            print("--------")
-            for plugin in sorted(data.keys()):
-                print(plugin)
-            return True
-        else:
-            self.do_install(name, data)
+        # See the "mode" we need to operate in
+        install = options.get('install')
+        uninstall = options.get('uninstall')
+        upgrade = options.get('upgrade')
+        list_available = options.get('list')
+        list_installed = options.get('list_installed')
+        command_count = [bool(x) for x in (
+            install,
+            uninstall,
+            upgrade,
+            list_available,
+            list_installed)].count(True)
+        if command_count > 1 or command_count == 0:
+            print(self.help())
+            return
 
-    def do_install(self, name, data):
+        if not self.site.configured and not user_mode and install:
+            LOGGER.notice('No site found, assuming --user')
+            user_mode = True
+
+        if user_mode:
+            self.output_dir = os.path.expanduser('~/.nikola/plugins')
+        else:
+            self.output_dir = 'plugins'
+
+        if list_available:
+            self.list_available(url)
+        elif list_installed:
+            self.list_installed()
+        elif upgrade:
+            self.do_upgrade(url)
+        elif uninstall:
+            self.do_uninstall(uninstall)
+        elif install:
+            self.do_install(url, install)
+
+    def list_available(self, url):
+        data = self.get_json(url)
+        print("Available Plugins:")
+        print("------------------")
+        for plugin in sorted(data.keys()):
+            print(plugin)
+        return True
+
+    def list_installed(self):
+        plugins = []
+        for plugin in self.site.plugin_manager.getAllPlugins():
+            p = plugin.path
+            if os.path.isdir(p):
+                p = p + os.sep
+            else:
+                p = p + '.py'
+            plugins.append([plugin.name, p])
+
+        plugins.sort()
+        for name, path in plugins:
+            print('{0} at {1}'.format(name, path))
+
+    def do_upgrade(self, url):
+        LOGGER.warning('This is not very smart, it just reinstalls some plugins and hopes for the best')
+        data = self.get_json(url)
+        plugins = []
+        for plugin in self.site.plugin_manager.getAllPlugins():
+            p = plugin.path
+            if os.path.isdir(p):
+                p = p + os.sep
+            else:
+                p = p + '.py'
+            if plugin.name in data:
+                plugins.append([plugin.name, p])
+        print('Will upgrade {0} plugins: {1}'.format(len(plugins), ', '.join(n for n, _ in plugins)))
+        for name, path in plugins:
+            print('Upgrading {0}'.format(name))
+            p = path
+            while True:
+                tail, head = os.path.split(path)
+                if head == 'plugins':
+                    self.output_dir = path
+                    break
+                elif tail == '':
+                    LOGGER.error("Can't find the plugins folder for path: {0}".format(p))
+                    return False
+                else:
+                    path = tail
+            self.do_install(url, name)
+
+    def do_install(self, url, name):
+        data = self.get_json(url)
         if name in data:
             utils.makedirs(self.output_dir)
             LOGGER.info('Downloading: ' + data[name])
             zip_file = BytesIO()
             zip_file.write(requests.get(data[name]).content)
-            LOGGER.info('Extracting: {0} into plugins'.format(name))
-            utils.extract_all(zip_file, 'plugins')
-            dest_path = os.path.join('plugins', name)
+            LOGGER.info('Extracting: {0} into {1}/'.format(name, self.output_dir))
+            utils.extract_all(zip_file, self.output_dir)
+            dest_path = os.path.join(self.output_dir, name)
         else:
             try:
                 plugin_path = utils.get_plugin_path(name)
@@ -186,3 +292,30 @@ class CommandInstallPlugin(Command):
                 else:
                     print(indent(fh.read(), 4 * ' '))
         return True
+
+    def do_uninstall(self, name):
+        for plugin in self.site.plugin_manager.getAllPlugins():  # FIXME: this is repeated thrice
+            p = plugin.path
+            if os.path.isdir(p):
+                p = p + os.sep
+            else:
+                p = os.path.dirname(p)
+            if name == plugin.name:  # Uninstall this one
+                LOGGER.warning('About to uninstall plugin: {0}'.format(name))
+                LOGGER.warning('This will delete {0}'.format(p))
+                inpf = raw_input if sys.version_info[0] == 2 else input
+                sure = inpf('Are you sure? [y/n] ')
+                if sure.lower().startswith('y'):
+                    LOGGER.warning('Removing {0}'.format(p))
+                    shutil.rmtree(p)
+                return True
+        LOGGER.error('Unknown plugin: {0}'.format(name))
+        return False
+
+    def get_json(self, url):
+        if self.json is not None:
+            return self.json
+        if (requests is None):
+            utils.req_missing(['requests'], 'install or list available plugins')
+        data = requests.get(url).text
+        data = json.loads(data)

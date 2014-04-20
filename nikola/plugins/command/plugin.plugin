@@ -1,0 +1,10 @@
+[Core]
+Name = plugin
+Module = plugin
+
+[Documentation]
+Author = Roberto Alsina and Chris Warrick
+Version = 0.2
+Website = http://getnikola.com
+Description = Manage Nikola plugins
+
