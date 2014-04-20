@@ -70,7 +70,7 @@ class CommandGitHubDeploy(Command):
             'mv output/* .',
             'git add -A',
             'git commit -m "$(date)"',
-            'git push -f origin %s:%s' %(deploy_branch, deploy_branch),
+            'git push -f origin %s:%s' % (deploy_branch, deploy_branch),
             'git checkout %s' % source_branch,
             'git branch -D %s' % deploy_branch,
             'git push origin %s' % source_branch,
