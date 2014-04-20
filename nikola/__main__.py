@@ -47,13 +47,25 @@ from logbook import NullHandler
 
 from . import __version__
 from .nikola import Nikola
-from .utils import _reload, sys_decode, get_root_dir, req_missing, LOGGER, STRICT_HANDLER
+from .utils import _reload, sys_decode, get_root_dir, req_missing, LOGGER, STRICT_HANDLER, ColorfulStderrHandler
 
 
 config = {}
 
 
 def main(args=None):
+    colorful = False
+    if sys.stderr.isatty():
+        colorful = True
+        try:
+            import colorama
+            colorama.init()
+        except ImportError:
+            if os.name == 'nt':
+                colorful = False
+
+    ColorfulStderrHandler._colorful = colorful
+
     if args is None:
         args = sys.argv[1:]
     quiet = False
@@ -66,24 +78,13 @@ def main(args=None):
         quiet = True
     global config
 
-    colorful = False
-    if sys.stderr.isatty():
-        colorful = True
-        try:
-            import colorama
-            colorama.init()
-        except ImportError:
-            if os.name == 'nt':
-                colorful = False
-
     # Those commands do not require a `conf.py`.  (Issue #1132)
     # Moreover, actually having one somewhere in the tree can be bad, putting
     # the output of that command (the new site) in an unknown directory that is
     # not the current working directory.  (does not apply to `version`)
     argname = args[0] if len(args) > 0 else None
     # FIXME there are import plugins in the repo, so how do we handle this?
-    if argname not in ['init', 'import_wordpress', 'import_feed',
-                       'import_blogger', 'version']:
+    if argname not in ['init', 'version'] and not argname.startswith('import_'):
         root = get_root_dir()
         if root:
             os.chdir(root)
@@ -123,11 +124,17 @@ def main(args=None):
 
 
 class Help(DoitHelp):
-    """show Nikola usage instead of doit """
+    """show Nikola usage."""
 
     @staticmethod
     def print_usage(cmds):
         """print nikola "usage" (basic help) instructions"""
+        # Remove 'run'.  Nikola uses 'build', though we support 'run' for
+        # people used to it (eg. doit users).
+        # WARNING: 'run' is the vanilla doit command, without support for
+        #          --strict, --invariant and --quiet.
+        del cmds['run']
+
         print("Nikola is a tool to create static websites and blogs. For full documentation and more information, please visit http://getnikola.com/\n\n")
         print("Available commands:")
         for cmd in sorted(cmds.values(), key=attrgetter('name')):
@@ -222,6 +229,7 @@ class DoitNikola(DoitMain):
 
     def __init__(self, nikola, quiet=False):
         self.nikola = nikola
+        nikola.doit = self
         self.task_loader = self.TASK_LOADER(nikola, quiet)
 
     def get_commands(self):
@@ -240,8 +248,6 @@ class DoitNikola(DoitMain):
         if len(args) == 0:
             cmd_args = ['help']
             args = ['help']
-            # Hide run because Nikola uses build
-            sub_cmds.pop('run')
 
         if '--help' in args or '-h' in args:
             new_cmd_args = ['help'] + cmd_args
@@ -256,8 +262,6 @@ class DoitNikola(DoitMain):
             for arg in new_args:
                 if arg not in ('--help', '-h'):
                     args.append(arg)
-            # Hide run because Nikola uses build
-            sub_cmds.pop('run')
 
         if any(arg in ("--version", '-V') for arg in args):
             cmd_args = ['version']

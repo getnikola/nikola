@@ -31,6 +31,8 @@ import shutil
 import codecs
 import json
 import textwrap
+import datetime
+import dateutil.tz
 
 from mako.template import Template
 from pkg_resources import resource_filename
@@ -56,6 +58,7 @@ SAMPLE_CONF = {
     # "es": "./es",
 }""",
     'THEME': 'bootstrap3',
+    'TIMEZONE': 'UTC',
     'COMMENT_SYSTEM': 'disqus',
     'COMMENT_SYSTEM_ID': 'nikolademo',
     'TRANSLATIONS_PATTERN': DEFAULT_TRANSLATIONS_PATTERN,
@@ -261,6 +264,20 @@ class CommandInit(Command):
             inp = inpf("{query}{default_q}: ".format(query=query, default_q=default_q)).strip()
             return inp if inp else default
 
+        def ask_yesno(query, default=None):
+            if default is None:
+                default_q = ' [y/n]'
+            elif default is True:
+                default_q = ' [Y/n]'
+            elif default is False:
+                default_q = ' [y/N]'
+            inpf = raw_input if sys.version_info[0] == 2 else input
+            inp = inpf("{query}{default_q} ".format(query=query, default_q=default_q)).strip()
+            if inp:
+                return inp.lower().startswith('y')
+            else:
+                return default
+
         def lhandler(default, toconf, show_header=True):
             if show_header:
                 print("We will now ask you to provide the list of languages you want to use.")
@@ -295,10 +312,28 @@ class CommandInit(Command):
                 messages = load_messages(['base'], tr, default)
                 SAMPLE_CONF['NAVIGATION_LINKS'] = format_navigation_links(langs, default, messages)
             except nikola.utils.LanguageNotFoundError as e:
-                print("ERROR: the language '{0}' is not supported.".format(e.lang))
-                print("\nAre you sure you spelled the name correctly?  Names are case-sensitive and need to be reproduced as-is (complete with the country specifier, if any).")
-                print("Type '?' (a question mark, sans quotes) to list available languages.")
+                print("    ERROR: the language '{0}' is not supported.".format(e.lang))
+                print("    Are you sure you spelled the name correctly?  Names are case-sensitive and need to be reproduced as-is (complete with the country specifier, if any).")
+                print("\nType '?' (a question mark, sans quotes) to list available languages.")
                 lhandler(default, toconf, show_header=False)
+
+        def tzhandler(default, toconf):
+            print("\nPlease choose the correct time zone for your blog.  Nikola uses the tz database.")
+            print("You can find your time zone here:")
+            print("http://en.wikipedia.org/wiki/List_of_tz_database_time_zones")
+            print("")
+            answered = False
+            while not answered:
+                answer = ask('Time zone', 'UTC')
+                tz = dateutil.tz.gettz(answer)
+                if tz is not None:
+                    time = datetime.datetime.now(tz).strftime('%H:%M:%S')
+                    print("    Current time in {0}: {1}".format(answer, time))
+                    answered = ask_yesno("Use this time zone?", True)
+                else:
+                    print("    ERROR: Time zone not found.  Please try again.  Time zones are case-sensitive.")
+
+            SAMPLE_CONF['TIMEZONE'] = answer
 
         def chandler(default, toconf):
             print("You can configure comments now.  Type '?' (a question mark, sans quotes) to list available comment systems.  If you do not want any comments, just leave the field blank.")
@@ -310,7 +345,8 @@ class CommandInit(Command):
                 answer = ask('Comment system', '')
 
             while answer and answer not in LEGAL_VALUES['COMMENT_SYSTEM']:
-                print('ERROR: Not a legal value.')
+                if answer != '?':
+                    print('    ERROR: Nikola does not know this comment system.')
                 print('\n# Available comment systems:')
                 print(SAMPLE_CONF['_SUPPORTED_COMMENT_SYSTEMS'])
                 print('')
@@ -337,6 +373,7 @@ class CommandInit(Command):
             ('Site URL', 'http://getnikola.com/', True, 'SITE_URL'),
             ('Questions about languages and locales', None, None, None),
             (lhandler, None, True, True),
+            (tzhandler, None, True, True),
             ('Questions about comments', None, None, None),
             (chandler, None, True, True),
         ]
@@ -361,11 +398,11 @@ class CommandInit(Command):
                         SAMPLE_CONF[destination] = answer
                     if destination == '!target':
                         while not answer:
-                            print('ERROR: directory missing.\n')
+                            print('    ERROR: you need to specify a target directory.\n')
                             answer = ask(query, default)
                         STORAGE['target'] = answer
 
-        print("That's it, Nikola is now configured.  Make sure to edit conf.py to your liking.")
+        print("\nThat's it, Nikola is now configured.  Make sure to edit conf.py to your liking.")
         print("If you are looking for themes and addons, check out http://themes.getnikola.com/ and http://plugins.getnikola.com/.")
         print("Have fun!")
         return STORAGE

@@ -96,9 +96,27 @@ else:
 
 
 def req_missing(names, purpose, python=True, optional=False):
-    """Log that we are missing some requirements."""
+    """Log that we are missing some requirements.
+
+    `names` is a list/tuple/set of missing things.
+    `purpose` is a string, specifying the use of the missing things.
+              It completes the sentence:
+                  In order to {purpose}, you must install ...
+    `python` specifies whether the requirements are Python packages
+                               or other software.
+    `optional` specifies whether the things are required
+                                 (this is an error and we exit with code 5)
+                                 or not (this is just a warning).
+
+    Returns the message shown to the user (which you can usually discard).
+    If no names are specified, False is returned and nothing is shown
+    to the user.
+
+    """
     if not (isinstance(names, tuple) or isinstance(names, list) or isinstance(names, set)):
         names = (names,)
+    if not names:
+        return False
     if python:
         whatarethey_s = 'Python package'
         whatarethey_p = 'Python packages'
@@ -147,6 +165,9 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'TranslatableSetting', 'TemplateHookRegistry', 'LocaleBorg',
            'sys_encode', 'sys_decode', 'makedirs', 'get_parent_theme_name',
            'demote_headers', 'get_translation_candidate', 'write_metadata']
+
+# Are you looking for 'generic_rss_renderer'?
+# It's defined in nikola.nikola.Nikola (the site object).
 
 
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding

@@ -183,6 +183,7 @@ class Post(object):
             self._tags[lang] = [t for t in self._tags[lang] if t]
             if 'draft' in self._tags[lang]:
                 is_draft = True
+                LOGGER.debug('The post "{0}" is a draft.'.format(self.source_path))
                 self._tags[lang].remove('draft')
 
             # TODO: remove in v8
@@ -194,6 +195,7 @@ class Post(object):
 
             if 'private' in self._tags[lang]:
                 is_private = True
+                LOGGER.debug('The post "{0}" is private.'.format(self.source_path))
                 self._tags[lang].remove('private')
 
         # While draft comes from the tags, it's not really a tag

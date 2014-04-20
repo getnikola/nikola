@@ -61,10 +61,10 @@ class CommandDeploy(Command):
 
         deploy_drafts = self.site.config.get('DEPLOY_DRAFTS', True)
         deploy_future = self.site.config.get('DEPLOY_FUTURE', False)
+        undeployed_posts = []
         if not (deploy_drafts and deploy_future):
             # Remove drafts and future posts
             out_dir = self.site.config['OUTPUT_FOLDER']
-            undeployed_posts = []
             self.site.scan_posts()
             for post in self.site.timeline:
                 if (not deploy_drafts and post.is_draft) or \
@@ -112,9 +112,6 @@ class CommandDeploy(Command):
             True when it appears like deploy is being run after a clean.
 
         """
-
-        if undeployed is None:
-            undeployed = []
 
         event = {
             'last_deploy': last_deploy,
