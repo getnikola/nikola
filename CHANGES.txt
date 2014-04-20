@@ -72,6 +72,7 @@ Features
 Bugfixes
 --------
 
+* Give better error for unknown subcommands (Issue #1233)
 * Handle conf.py for import plugins more generically (Issue #1235)
 * Remove RSS files from the sitemap (Issue #804)
 * ``nikola deploy`` works with DEPLOY_FUTURE = True (Issue #1249)

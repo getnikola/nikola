@@ -46,9 +46,9 @@ from doit.cmd_auto import Auto as DoitAuto
 from logbook import NullHandler
 
 from . import __version__
+from .plugin_categories import Command
 from .nikola import Nikola
 from .utils import _reload, sys_decode, get_root_dir, req_missing, LOGGER, STRICT_HANDLER, ColorfulStderrHandler
-
 
 config = {}
 
@@ -266,18 +266,10 @@ class DoitNikola(DoitMain):
         if any(arg in ("--version", '-V') for arg in args):
             cmd_args = ['version']
             args = ['version']
-        if args[0] not in sub_cmds.keys() or \
-                args[0] in (
-                    'build',
-                    'list',
-                    'clean',
-                    'doit_auto',
-                    'dumpdb',
-                    'forget',
-                    'ignore',
-                    'run',
-                    'strace'):
-            # Check for conf.py before launching run
+        if args[0] not in sub_cmds.keys():
+            LOGGER.error("Unknown command {0}".format(args[0]))
+            return False
+        if not isinstance(sub_cmds[args[0]], Command):  # Is a doit command
             if not self.nikola.configured:
                 LOGGER.error("This command needs to run inside an "
                              "existing Nikola site.")
