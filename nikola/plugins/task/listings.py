@@ -148,6 +148,19 @@ class Listings(Task):
                     'uptodate': [utils.config_changed(uptodate)],
                     'clean': True,
                 }
+                if self.site.config['COPY_SOURCES']:
+                    out_name = os.path.join(
+                        kw['output_folder'],
+                        root,
+                        f)
+                    yield {
+                        'basename': self.name,
+                        'name': out_name,
+                        'file_dep': [in_name],
+                        'targets': [out_name],
+                        'actions': [(utils.copy_file, [in_name, out_name])],
+                        'clean': True,
+                    }
 
     def listing_path(self, name, lang):
         if not name.endswith('.html'):
