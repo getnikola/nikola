@@ -225,6 +225,11 @@ REDIRECTIONS = ${REDIRECTIONS}
 # To do manual deployment, set it to []
 # DEPLOY_COMMANDS = []
 
+# Branches to use for the GitHub deploy.
+# For user/organization pages, the deploy branch MUST be master.
+GITHUB_SOURCE_BRANCH = 'master'
+GITHUB_DEPLOY_BRANCH = 'gh-pages'
+
 # Where the output site should be located
 # If you don't use an absolute path, it will be considered as relative
 # to the location of conf.py

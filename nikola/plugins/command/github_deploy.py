@@ -56,19 +56,24 @@ class CommandGitHubDeploy(Command):
             CommandGitHubDeploy.name, self.site.loghandlers
         )
 
+        source_branch = self.site.config.get('GITHUB_SOURCE_BRANCH', 'master')
+        deploy_branch = self.site.config.get(
+            'GITHUB_DEPLOY_BRANCH', 'gh-pages'
+        )
+
         commands = [
             'nikola build',
             'nikola check -f --clean-files || true',
             'git checkout --orphan gh-pages',
             'git rm -rf .',
-            'git checkout master -- .gitignore',
+            'git checkout %s -- .gitignore' % source_branch,
             'mv output/* .',
             'git add -A',
             'git commit -m "$(date)"',
-            'git push -f origin gh-pages:gh-pages',
-            'git checkout master',
-            'git branch -D gh-pages',
-            'git push origin master',
+            'git push -f origin %s:%s' %(deploy_branch, deploy_branch),
+            'git checkout %s' % source_branch,
+            'git branch -D %s' % deploy_branch,
+            'git push origin %s' % source_branch,
         ]
 
         for command in commands:
