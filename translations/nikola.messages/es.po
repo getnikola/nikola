@@ -5,15 +5,16 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
 # ralsina <ralsina@netmanagers.com.ar>, 2013
-# ralsina <ralsina@netmanagers.com.ar>, 2013
+# ralsina <ralsina@netmanagers.com.ar>, 2013-2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-04-17 14:46+0000\n"
-"Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2014-04-20 16:45+0000\n"
+"Last-Translator: ralsina <ralsina@netmanagers.com.ar>\n"
 "Language-Team: Spanish (http://www.transifex.com/projects/p/nikola/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgid "Tags and Categories"
 msgstr "Tags y Categorías"
 
 msgid "Comments"
-msgstr ""
+msgstr "Comentarios"
 
 msgid "Read more"
 msgstr "Leer más"
@@ -75,7 +76,7 @@ msgid "Also available in:"
 msgstr "También disponible en:"
 
 msgid "Languages:"
-msgstr ""
+msgstr "Idiomas:"
 
 msgid "Original site"
 msgstr "Sitio original"
@@ -87,7 +88,7 @@ msgid "Archive"
 msgstr "Archivo"
 
 msgid "Publication date"
-msgstr ""
+msgstr "Fecha de publicación"
 
 msgid "Posted:"
 msgstr "Publicado:"
@@ -96,13 +97,13 @@ msgid "Posts for {month} {year}"
 msgstr "Posts de {month} {year}"
 
 msgid "Nothing found."
-msgstr ""
+msgstr "No encontrado"
 
 msgid "No posts found."
-msgstr ""
+msgstr "No se encontraron posts"
 
 msgid "RSS feed"
-msgstr ""
+msgstr "feed RSS"
 
 msgid "%d min remaining to read"
-msgstr ""
+msgstr "restan %d minutos"
