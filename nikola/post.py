@@ -456,7 +456,6 @@ class Post(object):
                             TEASER_REGEXP.search(data).groups()[-1])
                     else:
                         l = self.config['RSS_READ_MORE_LINK'](lang) if rss_read_more_link else self.config['INDEX_READ_MORE_LINK'](lang)
-                        print('===>', self.messages[lang]["%d min remaining to read"])
                         teaser += l.format(
                             link=self.permalink(lang),
                             read_more=self.messages[lang]["Read more"],
