@@ -1,7 +1,11 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="base.tmpl"/>
 <%namespace name="ui" file="crumbs.tmpl" import="bar"/>
-
+<%block name="sourcelink">
+    % if show_sourcelink:
+        <p class="sourceline"><a href="${source_link}" id="sourcelink">${messages("Source")}</a></p>
+    % endif
+</%block>
 <%block name="content">
 ${ui.bar(crumbs)}
 %if folders or files:

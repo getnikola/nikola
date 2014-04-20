@@ -84,6 +84,10 @@ class Listings(Task):
                     os.path.join(
                         kw['output_folder'],
                         kw['listings_folder'])))
+            if self.site.config['COPY_SOURCES']:
+                source_link = permalink[:-5]
+            else:
+                source_link = None
             context = {
                 'code': code,
                 'title': title,
@@ -93,6 +97,7 @@ class Listings(Task):
                 'folders': natsort.natsorted(folders),
                 'files': natsort.natsorted(files),
                 'description': title,
+                'source_link': source_link,
             }
             self.site.render_template('listing.tmpl', out_name,
                                       context)
