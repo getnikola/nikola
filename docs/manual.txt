@@ -390,11 +390,11 @@ Nikola also has other commands besides ``build``::
       nikola ignore               ignore task (skip) on subsequent runs
       nikola import_wordpress     import a WordPress dump
       nikola init                 create a Nikola site in the specified folder
-      nikola install_plugin       install plugin into current site
       nikola install_theme        install theme into current site
       nikola list                 list tasks from dodo file
       nikola new_post             create a new blog post or site page
       nikola orphans              list all orphans
+      nikola plugin               manage plugins
       nikola run                  run tasks
       nikola serve                start the test webserver
       nikola strace               use strace to list file_deps and targets
@@ -1489,10 +1489,10 @@ Getting Extra Plugins
 
 If you want extra plugins, there is also the `Plugins Index <http://plugins.getnikola.com/>`_.
 
-Similarly to themes, there is a nice, built-in command to install them —
-``install_plugin``::
+Similarly to themes, there is a nice, built-in command to manage them —
+``plugin``::
 
-    $ nikola install_plugin -l
+    $ nikola plugin -l
     Plugins:
     --------
     helloworld
@@ -1500,7 +1500,7 @@ Similarly to themes, there is a nice, built-in command to install them —
     ⋮
     ⋮
 
-    $ nikola install_plugin helloworld
+    $ nikola plugin --install helloworld
     [2013-10-12T16:51:56Z] NOTICE: install_plugin: Downloading: http://plugins.getnikola.com/v6/helloworld.zip
     [2013-10-12T16:51:58Z] NOTICE: install_plugin: Extracting: helloworld into plugins
     plugins/helloworld/requirements.txt
@@ -1515,6 +1515,29 @@ Similarly to themes, there is a nice, built-in command to install them —
         # Should the Hello World plugin say “BYE” instead?
         BYE_WORLD = False
 
+Then you also can uninstall your plugins::
+
+    $ nikola plugin --uninstall tags
+    [2014-04-15T08:59:24Z] WARNING: plugin: About to uninstall plugin: tags
+    [2014-04-15T08:59:24Z] WARNING: plugin: This will delete /home/ralsina/foo/plugins/tags
+    Are you sure? [y/n] y
+    [2014-04-15T08:59:26Z] WARNING: plugin: Removing /home/ralsina/foo/plugins/tags
+
+And upgrade them::
+
+    $ nikola plugin --upgrade
+    [2014-04-15T09:00:18Z] WARNING: plugin: This is not very smart, it just reinstalls some plugins and hopes for the best
+    Will upgrade 1 plugins: graphviz
+    Upgrading graphviz
+    [2014-04-15T09:00:20Z] INFO: plugin: Downloading: http://plugins.getnikola.com/v7/graphviz.zip
+    [2014-04-15T09:00:20Z] INFO: plugin: Extracting: graphviz into /home/ralsina/.nikola/plugins/
+    [2014-04-15T09:00:20Z] NOTICE: plugin: This plugin has third-party dependencies you need to install manually.
+    Contents of the requirements-nonpy.txt file:
+
+        Graphviz
+            http://www.graphviz.org/
+
+    You have to install those yourself or through a package manager.
 
 You can also share plugins you created with the community!  Visit the
 `GitHub repository <https://github.com/getnikola/plugins>`__ to find out more.

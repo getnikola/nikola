@@ -585,7 +585,9 @@ def load_messages(themes, translations, default_lang):
                     LOGGER.warn("Incomplete translation for language "
                                 "'{0}'.".format(lang))
                 messages[lang].update(english.MESSAGES)
-                messages[lang].update(translation.MESSAGES)
+                for k, v in translation.MESSAGES.items():
+                    if v:
+                        messages[lang][k] = v
                 del(translation)
             except ImportError as orig:
                 raise LanguageNotFoundError(lang, orig)

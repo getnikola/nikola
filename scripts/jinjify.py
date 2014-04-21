@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import codecs
 import glob
+import sys
 import os
 import re
 import json
@@ -212,6 +213,7 @@ def mako2jinja(input_file):
     return output
 
 if __name__ == "__main__":
-    import commandline
-    colorama.init()
-    commandline.run_as_main(jinjify)
+    if len(sys.argv) != 3:
+        print('ERROR: needs exactly two arguments, input and output directory.')
+    else:
+        jinjify(sys.argv[1], sys.argv[2])

@@ -46,9 +46,9 @@ from doit.cmd_auto import Auto as DoitAuto
 from logbook import NullHandler
 
 from . import __version__
+from .plugin_categories import Command
 from .nikola import Nikola
 from .utils import _reload, sys_decode, get_root_dir, req_missing, LOGGER, STRICT_HANDLER, ColorfulStderrHandler
-
 
 config = {}
 
@@ -84,8 +84,7 @@ def main(args=None):
     # not the current working directory.  (does not apply to `version`)
     argname = args[0] if len(args) > 0 else None
     # FIXME there are import plugins in the repo, so how do we handle this?
-    if argname not in ['init', 'import_wordpress', 'import_feed',
-                       'import_blogger', 'version']:
+    if argname not in ['init', 'version'] and not argname.startswith('import_'):
         root = get_root_dir()
         if root:
             os.chdir(root)
@@ -230,6 +229,7 @@ class DoitNikola(DoitMain):
 
     def __init__(self, nikola, quiet=False):
         self.nikola = nikola
+        nikola.doit = self
         self.task_loader = self.TASK_LOADER(nikola, quiet)
 
     def get_commands(self):
@@ -266,18 +266,10 @@ class DoitNikola(DoitMain):
         if any(arg in ("--version", '-V') for arg in args):
             cmd_args = ['version']
             args = ['version']
-        if args[0] not in sub_cmds.keys() or \
-                args[0] in (
-                    'build',
-                    'list',
-                    'clean',
-                    'doit_auto',
-                    'dumpdb',
-                    'forget',
-                    'ignore',
-                    'run',
-                    'strace'):
-            # Check for conf.py before launching run
+        if args[0] not in sub_cmds.keys():
+            LOGGER.error("Unknown command {0}".format(args[0]))
+            return False
+        if not isinstance(sub_cmds[args[0]], Command):  # Is a doit command
             if not self.nikola.configured:
                 LOGGER.error("This command needs to run inside an "
                              "existing Nikola site.")
