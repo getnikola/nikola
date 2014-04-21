@@ -16,4 +16,8 @@
 {% if code %}
     {{ code }}
 {% endif %}
+{% if source_link %}
+    <p class="sourceline"><a href="{{ source_link }}" id="sourcelink">{{ messages("Source") }}</a></p>
+{% endif %}
 {% endblock %}
+
