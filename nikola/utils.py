@@ -1145,6 +1145,7 @@ def write_metadata(data):
 
     return '\n'.join(meta)
 
+
 def ask(query, default=None):
     """Ask a question."""
     if default:
