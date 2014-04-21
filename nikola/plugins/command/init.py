@@ -26,22 +26,22 @@
 
 from __future__ import print_function
 import os
-import sys
 import shutil
 import codecs
 import json
 import textwrap
 import datetime
-import dateutil.tz
 
+import dateutil.tz
 from mako.template import Template
 from pkg_resources import resource_filename
 
 import nikola
 from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_RSS_READ_MORE_LINK, LEGAL_VALUES
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, makedirs, STDERR_HANDLER, load_messages
+from nikola.utils import ask, ask_yesno, get_logger, makedirs, STDERR_HANDLER, load_messages
 from nikola.winutils import fix_git_symlinked
+
 
 LOGGER = get_logger('init', STDERR_HANDLER)
 
@@ -254,30 +254,6 @@ class CommandInit(Command):
     @staticmethod
     def ask_questions(target):
         """Ask some questions about Nikola."""
-        def ask(query, default):
-            """Ask a question."""
-            if default:
-                default_q = ' [{0}]'.format(default)
-            else:
-                default_q = ''
-            inpf = raw_input if sys.version_info[0] == 2 else input
-            inp = inpf("{query}{default_q}: ".format(query=query, default_q=default_q)).strip()
-            return inp if inp else default
-
-        def ask_yesno(query, default=None):
-            if default is None:
-                default_q = ' [y/n]'
-            elif default is True:
-                default_q = ' [Y/n]'
-            elif default is False:
-                default_q = ' [y/N]'
-            inpf = raw_input if sys.version_info[0] == 2 else input
-            inp = inpf("{query}{default_q} ".format(query=query, default_q=default_q)).strip()
-            if inp:
-                return inp.lower().startswith('y')
-            else:
-                return default
-
         def lhandler(default, toconf, show_header=True):
             if show_header:
                 print("We will now ask you to provide the list of languages you want to use.")

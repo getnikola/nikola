@@ -1142,3 +1142,29 @@ def write_metadata(data):
     meta.append('')
 
     return '\n'.join(meta)
+
+
+def ask(query, default):
+    """Ask a question."""
+    if default:
+        default_q = ' [{0}]'.format(default)
+    else:
+        default_q = ''
+    inpf = raw_input if sys.version_info[0] == 2 else input
+    inp = inpf("{query}{default_q}: ".format(query=query, default_q=default_q)).strip()
+    return inp if inp else default
+
+
+def ask_yesno(query, default=None):
+    if default is None:
+        default_q = ' [y/n]'
+    elif default is True:
+        default_q = ' [Y/n]'
+    elif default is False:
+        default_q = ' [y/N]'
+    inpf = raw_input if sys.version_info[0] == 2 else input
+    inp = inpf("{query}{default_q} ".format(query=query, default_q=default_q)).strip()
+    if inp:
+        return inp.lower().startswith('y')
+    else:
+        return default

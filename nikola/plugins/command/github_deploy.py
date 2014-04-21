@@ -32,7 +32,7 @@ import sys
 
 from nikola.plugin_categories import Command
 from nikola.plugins.command.check import real_scan_files
-from nikola.utils import get_logger
+from nikola.utils import ask_yesno, get_logger
 from nikola.__main__ import main
 from nikola import __version__
 
@@ -65,11 +65,10 @@ class CommandGitHubDeploy(Command):
 
         message = (
             "Make sure you have all source files committed. Anything not "
-            "committed, and unknown to Nikola may be lost.  Do you want to "
-            "continue? (y/N) "
+            "committed, and unknown to Nikola may be lost.  Continue? "
         )
 
-        if not raw_input(message).lower().startswith('y'):
+        if not ask_yesno(message, False):
             return
 
         build = main(['build'])
