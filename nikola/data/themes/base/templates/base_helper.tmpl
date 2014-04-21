@@ -81,7 +81,7 @@ lang="${lang}">
 <%def name="html_feedlinks()">
     %if rss_link:
         ${rss_link}
-    %else:
+    %elif generate_rss:
         %if len(translations) > 1:
             %for language in translations:
                 <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${_link('rss', None, language)}">

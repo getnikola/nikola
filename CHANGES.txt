@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Added ``GENERATE_RSS`` setting to allow disabling RSS in Nikola (Issue #1236)
 * Link listings raw sources if COPY_SOURCES is True (Issue #1214)
 * Much more powerful ``nikola plugin`` command (Issue #1189)
 * More powerful console mode allows access to all nikola commands (Issue #830)

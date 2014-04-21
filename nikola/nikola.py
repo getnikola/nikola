@@ -243,7 +243,7 @@ class Nikola(object):
             'DATE_FORMAT': '%Y-%m-%d %H:%M',
             'DEFAULT_LANG': "en",
             'DEPLOY_COMMANDS': [],
-            'DISABLED_PLUGINS': (),
+            'DISABLED_PLUGINS': [],
             'EXTRA_PLUGINS_DIRS': [],
             'COMMENT_SYSTEM_ID': 'nikolademo',
             'EXTRA_HEAD_DATA': '',
@@ -288,6 +288,7 @@ class Nikola(object):
             'RSS_READ_MORE_LINK': DEFAULT_RSS_READ_MORE_LINK,
             'REDIRECTIONS': [],
             'ROBOTS_EXCLUSIONS': [],
+            'GENERATE_RSS': True,
             'RSS_LINK': None,
             'RSS_PATH': '',
             'RSS_PLAIN': False,
@@ -448,6 +449,14 @@ class Nikola(object):
             utils.LOGGER.warn('The moot comment system has been renamed to muut by the upstream.  Setting COMMENT_SYSTEM to "muut".')
             self.config['COMMENT_SYSTEM'] = 'muut'
 
+        # Disable RSS.  For a successful disable, we must have both the option
+        # false and the plugin disabled through the official means.
+        if 'generate_rss' in self.config['DISABLED_PLUGINS']:
+            self.config['GENERATE_RSS'] = False
+
+        if not self.config['GENERATE_RSS'] and 'generate_rss' not in self.config['DISABLED_PLUGINS']:
+            self.config['DISABLED_PLUGINS'].append('generate_rss')
+
         # PRETTY_URLS defaults to enabling STRIP_INDEXES unless explicitly disabled
         if self.config.get('PRETTY_URLS') and 'STRIP_INDEXES' not in config:
             self.config['STRIP_INDEXES'] = True
@@ -605,6 +614,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['transition'] = self.config.get('THEME_REVEAL_CONFIG_TRANSITION')
         self._GLOBAL_CONTEXT['content_footer'] = self.config.get(
             'CONTENT_FOOTER')
+        self._GLOBAL_CONTEXT['generate_rss'] = self.config.get('GENERATE_RSS')
         self._GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
         self._GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
 

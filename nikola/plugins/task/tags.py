@@ -61,9 +61,9 @@ class RenderTags(Task):
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
             "tag_pages_are_indexes": self.site.config['TAG_PAGES_ARE_INDEXES'],
-            "index_display_post_count":
-            self.site.config['INDEX_DISPLAY_POST_COUNT'],
+            "index_display_post_count": self.site.config['INDEX_DISPLAY_POST_COUNT'],
             "index_teasers": self.site.config['INDEX_TEASERS'],
+            "generate_rss": self.site.config['GENERATE_RSS'],
             "rss_teasers": self.site.config["RSS_TEASERS"],
             "rss_plain": self.site.config["RSS_PLAIN"],
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
@@ -90,7 +90,8 @@ class RenderTags(Task):
                     filtered_posts = post_list
                 else:
                     filtered_posts = [x for x in post_list if x.is_translation_available(lang)]
-                yield self.tag_rss(tag, lang, filtered_posts, kw, is_category)
+                if kw["generate_rss"]:
+                    yield self.tag_rss(tag, lang, filtered_posts, kw, is_category)
                 # Render HTML
                 if kw['tag_pages_are_indexes']:
                     yield self.tag_page_as_index(tag, lang, filtered_posts, kw, is_category)
@@ -205,12 +206,13 @@ class RenderTags(Task):
         num_pages = len(lists)
         for i, post_list in enumerate(lists):
             context = {}
-            # On a tag page, the feeds include the tag's feeds
-            rss_link = ("""<link rel="alternate" type="application/rss+xml" """
-                        """type="application/rss+xml" title="RSS for tag """
-                        """{0} ({1})" href="{2}">""".format(
-                            tag, lang, self.site.link(kind + "_rss", tag, lang)))
-            context['rss_link'] = rss_link
+            if kw["generate_rss"]:
+                # On a tag page, the feeds include the tag's feeds
+                rss_link = ("""<link rel="alternate" type="application/rss+xml" """
+                            """type="application/rss+xml" title="RSS for tag """
+                            """{0} ({1})" href="{2}">""".format(
+                                tag, lang, self.site.link(kind + "_rss", tag, lang)))
+                context['rss_link'] = rss_link
             output_name = os.path.join(kw['output_folder'],
                                        page_name(tag, i, lang))
             context["title"] = kw["messages"][lang][
