@@ -25,11 +25,16 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-import sys
+import os
+import shutil
 import subprocess
+import sys
 
 from nikola.plugin_categories import Command
+from nikola.plugins.command.check import real_scan_files
 from nikola.utils import get_logger
+from nikola.__main__ import main
+from nikola import __version__
 
 
 class CommandGitHubDeploy(Command):
@@ -41,7 +46,22 @@ class CommandGitHubDeploy(Command):
 
     logger = None
 
+    _deploy_branch = ''
+    _source_branch = ''
+
     def _execute(self, command, args):
+
+        self.logger = get_logger(
+            CommandGitHubDeploy.name, self.site.loghandlers
+        )
+        self._source_branch = self.site.config.get(
+            'GITHUB_SOURCE_BRANCH', 'master'
+        )
+        self._deploy_branch = self.site.config.get(
+            'GITHUB_DEPLOY_BRANCH', 'gh-pages'
+        )
+
+        self._ensure_git_repo()
 
         message = (
             "Make sure you have all source files committed. Anything not "
@@ -52,37 +72,129 @@ class CommandGitHubDeploy(Command):
         if not raw_input(message).lower().startswith('y'):
             return
 
-        self.logger = get_logger(
-            CommandGitHubDeploy.name, self.site.loghandlers
-        )
+        build = main(['build'])
+        if build != 0:
+            self.logger.error('Build failed, not deploying to GitHub')
+            sys.exit(build)
 
-        source_branch = self.site.config.get('GITHUB_SOURCE_BRANCH', 'master')
-        deploy_branch = self.site.config.get(
-            'GITHUB_DEPLOY_BRANCH', 'gh-pages'
+        only_on_output, _ = real_scan_files(self.site)
+        for f in only_on_output:
+            os.unlink(f)
+
+        self._checkout_deploy_branch()
+
+        self._copy_output()
+
+        self._commit_and_push()
+
+        return
+
+    def _commit_and_push(self):
+        """ Commit all the files and push. """
+
+        deploy = self._deploy_branch
+        source = self._source_branch
+
+        source_commit = subprocess.check_output(['git', 'rev-parse', source])
+        commit_message = (
+            'Nikola auto commit.\n\n'
+            'Source commit: %s'
+            'Nikola version: %s' % (source_commit, __version__)
         )
 
         commands = [
-            'nikola build',
-            'nikola check -f --clean-files || true',
-            'git checkout --orphan gh-pages',
-            'git rm -rf .',
-            'git checkout %s -- .gitignore' % source_branch,
-            'mv output/* .',
-            'git add -A',
-            'git commit -m "$(date)"',
-            'git push -f origin %s:%s' % (deploy_branch, deploy_branch),
-            'git checkout %s' % source_branch,
-            'git branch -D %s' % deploy_branch,
-            'git push origin %s' % source_branch,
+            ['git', 'add', '-A'],
+            ['git', 'commit', '-m', '%s' % commit_message],
+            ['git', 'push', 'origin', '%s:%s' % (deploy, deploy)],
+            ['git', 'checkout', '%s' % source],
         ]
 
         for command in commands:
             self.logger.info("==> {0}".format(command))
             try:
-                subprocess.check_call(command, shell=True)
+                subprocess.check_call(command)
             except subprocess.CalledProcessError as e:
-                self.logger.error('Failed deployment — command {0} '
-                                  'returned {1}'.format(e.cmd, e.returncode))
+                self.logger.error(
+                    'Failed GitHub deployment — command {0} '
+                    'returned {1}'.format(e.cmd, e.returncode)
+                )
                 sys.exit(e.returncode)
 
-        return
+    def _copy_output(self):
+        """ Copy all output to the top level directory. """
+        output_folder = self.site.config['OUTPUT_FOLDER']
+        for each in os.listdir(output_folder):
+            if os.path.exists(each):
+                if os.path.isdir(each):
+                    shutil.rmtree(each)
+
+                else:
+                    os.unlink(each)
+
+            shutil.move(os.path.join(output_folder, each), '.')
+
+    def _checkout_deploy_branch(self):
+        """ Check out the deploy branch
+
+        Creates an orphan branch if not present.
+
+        """
+
+        deploy = self._deploy_branch
+
+        try:
+            command = 'git show-ref --verify --quiet refs/heads/%s' % deploy
+            subprocess.check_call(command.split())
+        except subprocess.CalledProcessError:
+            self._create_orphan_deploy_branch()
+        else:
+            command = 'git checkout %s' % deploy
+            subprocess.check_call(command.split())
+
+    def _create_orphan_deploy_branch(self):
+        command = 'git checkout --orphan %s' % self._deploy_branch
+        result = subprocess.check_call(command.split())
+        if result != 0:
+            self.logger.error('Failed to create a deploy branch')
+            sys.exit(1)
+
+        result = subprocess.check_call('git rm -rf .'.split())
+        if result != 0:
+            self.logger.error('Failed to create a deploy branch')
+            sys.exit(1)
+
+        with open('.gitignore', 'w') as f:
+            f.write('%s\n' % self.site.config['OUTPUT_FOLDER'])
+            f.write('%s\n' % self.site.config['CACHE_FOLDER'])
+            f.write('*.pyc\n')
+            f.write('*.db\n')
+
+        subprocess.check_call('git add .gitignore'.split())
+        subprocess.check_call(['git', 'commit', '-m', 'Add .gitignore'])
+
+    def _ensure_git_repo(self):
+        """ Ensure that the site is a git-repo.
+
+        Also make sure that a remote with the name 'origin' exists.
+
+        """
+
+        try:
+            command = 'git remote'
+            remotes = subprocess.check_output(command.split())
+
+        except subprocess.CalledProcessError as e:
+            self.logger.notice('github_deploy needs a git repository!')
+            sys.exit(e.returncode)
+
+        except OSError as e:
+            import errno
+            self.logger.error('Running git failed with {0}'.format(e))
+            if e.errno == errno.ENOENT:
+                self.logger.notice('Is git on the PATH?')
+            sys.exit(1)
+
+        else:
+            if 'origin' not in remotes:
+                self.logger.error('Need a remote called "origin" configured')
+                sys.exit(1)
