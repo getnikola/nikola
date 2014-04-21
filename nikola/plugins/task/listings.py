@@ -84,6 +84,10 @@ class Listings(Task):
                     os.path.join(
                         kw['output_folder'],
                         kw['listings_folder'])))
+            if self.site.config['COPY_SOURCES']:
+                source_link = permalink[:-5]
+            else:
+                source_link = None
             context = {
                 'code': code,
                 'title': title,
@@ -93,6 +97,7 @@ class Listings(Task):
                 'folders': natsort.natsorted(folders),
                 'files': natsort.natsorted(files),
                 'description': title,
+                'source_link': source_link,
             }
             self.site.render_template('listing.tmpl', out_name,
                                       context)
@@ -148,6 +153,19 @@ class Listings(Task):
                     'uptodate': [utils.config_changed(uptodate)],
                     'clean': True,
                 }
+                if self.site.config['COPY_SOURCES']:
+                    out_name = os.path.join(
+                        kw['output_folder'],
+                        root,
+                        f)
+                    yield {
+                        'basename': self.name,
+                        'name': out_name,
+                        'file_dep': [in_name],
+                        'targets': [out_name],
+                        'actions': [(utils.copy_file, [in_name, out_name])],
+                        'clean': True,
+                    }
 
     def listing_path(self, name, lang):
         if not name.endswith('.html'):

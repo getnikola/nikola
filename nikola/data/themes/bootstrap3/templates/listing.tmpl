@@ -18,3 +18,11 @@ ${ui.bar(crumbs)}
     ${code}
 % endif
 </%block>
+
+<%block name="sourcelink">
+% if source_link:
+    <li>
+    <a href="${source_link}" id="sourcelink">${messages("Source")}</a>
+    </li>
+% endif
+</%block>

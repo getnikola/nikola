@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Link listings raw sources if COPY_SOURCES is True (Issue #1214)
 * Much more powerful ``nikola plugin`` command (Issue #1189)
 * More powerful console mode allows access to all nikola commands (Issue #830)
 * New ```ROBOTS_EXCLUSIONS``` option listing resources to exclude from sitemap
