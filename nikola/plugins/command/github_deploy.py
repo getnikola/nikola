@@ -39,7 +39,7 @@ from nikola import __version__
 
 class CommandGitHubDeploy(Command):
     """ Deploy site to GitHub pages. """
-    name = 'github-deploy'
+    name = 'github_deploy'
 
     doc_usage = ''
     doc_purpose = 'deploy the site to GitHub pages'
