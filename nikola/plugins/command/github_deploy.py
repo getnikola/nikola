@@ -103,9 +103,9 @@ class CommandGitHubDeploy(Command):
 
         commands = [
             ['git', 'add', '-A'],
-            ['git', 'commit', '-m', '%s' % commit_message],
+            ['git', 'commit', '-m', commit_message],
             ['git', 'push', 'origin', '%s:%s' % (deploy, deploy)],
-            ['git', 'checkout', '%s' % source],
+            ['git', 'checkout', source],
         ]
 
         for command in commands:
@@ -142,22 +142,19 @@ class CommandGitHubDeploy(Command):
         deploy = self._deploy_branch
 
         try:
-            command = 'git show-ref --verify --quiet refs/heads/%s' % deploy
-            subprocess.check_call(command.split())
+            subprocess.check_call(['git', 'show-ref', '--verify', '--quiet', 'refs/heads/%s' % deploy])
         except subprocess.CalledProcessError:
             self._create_orphan_deploy_branch()
         else:
-            command = 'git checkout %s' % deploy
-            subprocess.check_call(command.split())
+            subprocess.check_call(['git', 'checkout', deploy])
 
     def _create_orphan_deploy_branch(self):
-        command = 'git checkout --orphan %s' % self._deploy_branch
-        result = subprocess.check_call(command.split())
+        result = subprocess.check_call(['git', 'checkout', '--orphan', self._deploy_branch])
         if result != 0:
             self.logger.error('Failed to create a deploy branch')
             sys.exit(1)
 
-        result = subprocess.check_call('git rm -rf .'.split())
+        result = subprocess.check_call(['git', 'rm', '-rf', '.'])
         if result != 0:
             self.logger.error('Failed to create a deploy branch')
             sys.exit(1)
@@ -168,7 +165,7 @@ class CommandGitHubDeploy(Command):
             f.write('*.pyc\n')
             f.write('*.db\n')
 
-        subprocess.check_call('git add .gitignore'.split())
+        subprocess.check_call(['git', 'add', '.gitignore'])
         subprocess.check_call(['git', 'commit', '-m', 'Add .gitignore'])
 
     def _ensure_git_repo(self):
@@ -179,8 +176,7 @@ class CommandGitHubDeploy(Command):
         """
 
         try:
-            command = 'git remote'
-            remotes = subprocess.check_output(command.split())
+            remotes = subprocess.check_output(['git', 'remote'])
 
         except subprocess.CalledProcessError as e:
             self.logger.notice('github_deploy needs a git repository!')
