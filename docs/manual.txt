@@ -986,6 +986,34 @@ Other interesting ideas are using
 for that matter), using `lftp mirror <http://lftp.yar.ru/>`_ or unison, or Dropbox, or
 Ubuntu One. Any way you can think of to copy files from one place to another is good enough.
 
+Deploying to GitHub
+~~~~~~~~~~~~~~~~~~~
+
+Nikola provides a separate command ``github_deploy`` to deploy your
+site to GitHub pages.  The command builds the site, commits the
+output to a gh-pages branch and pushes the output to GitHub.
+
+The branch to use for committing the sources can be changed using the
+``GITHUB_DEPLOY_BRANCH`` option in your config.  For a
+user.github.io/organization.github.io, this MUST be set to ``master``,
+and the branch containing the sources must be changed to something
+else, like ``deploy``, using the ``GITHUB_SOURCE_BRANCH`` option.  The
+remote name to which the changes are pushed is ``origin`` by default,
+and can be changed using the ``GITHUB_REMOTE_NAME`` option.  You also,
+obviously, need to have ``git`` on your PATH, and should be able to
+push to the repository specified as the remote.
+
+This command performs the following actions, when it is run:
+
+1. Ensure that your site is a git repository, and git is on the PATH.
+2. Check for changes, and prompt the user to continue, if required.
+3. Build the site
+4. Clean any files that are "unknown" to Nikola.
+5. Create a deploy branch, if one doesn't exist.
+6. Commit the output to this branch.  (NOTE: Any untracked source
+   files, may get committed at this stage, on the wrong branch!)
+7. Push and deploy!
+
 Comments and Annotations
 ------------------------
 
