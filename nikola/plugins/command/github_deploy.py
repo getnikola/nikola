@@ -109,7 +109,7 @@ class CommandGitHubDeploy(Command):
         commands = [
             ['git', 'add', '-A'],
             ['git', 'commit', '-m', commit_message],
-            ['git', 'push', remote, '%s:%s' % (deploy, deploy)],
+            ['git', 'push', '-f', remote, '%s:%s' % (deploy, deploy)],
             ['git', 'checkout', source],
         ]
 
