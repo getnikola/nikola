@@ -84,7 +84,7 @@ def get_default_compiler(is_post, compilers, post_pages):
     return 'rest'
 
 
-def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=None, iso8601=False):
+def get_date(schedule=False, rule=None, last_date=None, tz=None, iso8601=False):
     """Returns a date stamp, given a recurrence rule.
 
     schedule - bool:
@@ -95,10 +95,6 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
 
     last_date - datetime:
         timestamp of the last post
-
-    force_today - bool:
-        tries to schedule a post to today, if possible, even if the scheduled
-        time has already passed in the day.
 
     tz - tzinfo:
         the timezone used for getting the current time.
@@ -124,9 +120,6 @@ def get_date(schedule=False, rule=None, last_date=None, force_today=False, tz=No
         except Exception:
             LOGGER.error('Unable to parse rule string, using current time.')
         else:
-            # Try to post today, instead of tomorrow, if no other post today.
-            if force_today:
-                now = now.replace(hour=0, minute=0, second=0, microsecond=0)
             date = rule_.after(max(now, last_date or now), last_date is None)
 
     offset = tz.utcoffset(now)
@@ -289,11 +282,10 @@ class CommandNewPost(Command):
         # Calculate the date to use for the content
         schedule = options['schedule'] or self.site.config['SCHEDULE_ALL']
         rule = self.site.config['SCHEDULE_RULE']
-        force_today = self.site.config['SCHEDULE_FORCE_TODAY']
         self.site.scan_posts()
         timeline = self.site.timeline
         last_date = None if not timeline else timeline[0].date
-        date = get_date(schedule, rule, last_date, force_today, self.site.tzinfo, self.site.config['FORCE_ISO8601'])
+        date = get_date(schedule, rule, last_date, self.site.tzinfo, self.site.config['FORCE_ISO8601'])
         data = {
             'title': title,
             'slug': slug,

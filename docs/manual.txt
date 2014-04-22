@@ -755,15 +755,6 @@ All these posts get queued up according to your schedule, but note
 that you will anyway need to build and deploy your site for the posts
 to appear online.  You can have a cron job that does this regularly.
 
-An additional setting (``SCHEDULE_FORCE_TODAY = True``) lets you tell
-Nikola to make the post today, if you run the ``new_post --schedule``
-after the scheduled hour has passed, and there is no other post
-at/after the scheduled hour.  Concretely, say, you run the ``nikola
-new_post -s`` command at 10am on a Monday (with the schedule rule set
-to the same as above), with no other post on Monday, at/after 7am,
-setting ``SCHEDULE_FORCE_TODAY = True`` will have your post scheduled
-to Monday, instead of being scheduled to Wednesday 7am.
-
 Post Types
 ~~~~~~~~~~
 

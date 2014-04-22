@@ -103,6 +103,7 @@ class Galleries(Task):
             'feed_length': self.site.config['FEED_LENGTH'],
             'tzinfo': self.site.tzinfo,
             'comments_in_galleries': self.site.config['COMMENTS_IN_GALLERIES'],
+            'generate_rss': self.site.config['GENERATE_RSS'],
         }
 
         for k, v in self.site.GLOBAL_CONTEXT['template_hooks'].items():
@@ -241,33 +242,34 @@ class Galleries(Task):
                 }, self.kw['filters'])
 
                 # RSS for the gallery
-                rss_dst = os.path.join(
-                    self.kw['output_folder'],
-                    self.site.path(
-                        "gallery_rss",
-                        os.path.relpath(gallery, self.kw['gallery_path']), lang))
-                rss_dst = os.path.normpath(rss_dst)
+                if self.kw["generate_rss"]:
+                    rss_dst = os.path.join(
+                        self.kw['output_folder'],
+                        self.site.path(
+                            "gallery_rss",
+                            os.path.relpath(gallery, self.kw['gallery_path']), lang))
+                    rss_dst = os.path.normpath(rss_dst)
 
-                yield utils.apply_filters({
-                    'basename': self.name,
-                    'name': rss_dst,
-                    'file_dep': file_dep,
-                    'targets': [rss_dst],
-                    'actions': [
-                        (self.gallery_rss, (
-                            image_list,
-                            img_titles,
-                            lang,
-                            self.site.link(
-                                "gallery_rss", os.path.basename(gallery), lang),
-                            rss_dst,
-                            context['title']
-                        ))],
-                    'clean': True,
-                    'uptodate': [utils.config_changed({
-                        1: self.kw,
-                    })],
-                }, self.kw['filters'])
+                    yield utils.apply_filters({
+                        'basename': self.name,
+                        'name': rss_dst,
+                        'file_dep': file_dep,
+                        'targets': [rss_dst],
+                        'actions': [
+                            (self.gallery_rss, (
+                                image_list,
+                                img_titles,
+                                lang,
+                                self.site.link(
+                                    "gallery_rss", os.path.basename(gallery), lang),
+                                rss_dst,
+                                context['title']
+                            ))],
+                        'clean': True,
+                        'uptodate': [utils.config_changed({
+                            1: self.kw,
+                        })],
+                    }, self.kw['filters'])
 
     def find_galleries(self):
         """Find all galleries to be processed according to conf.py"""
