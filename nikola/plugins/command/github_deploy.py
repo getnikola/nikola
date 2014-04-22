@@ -67,12 +67,7 @@ class CommandGitHubDeploy(Command):
 
         self._ensure_git_repo()
 
-        message = (
-            "Make sure you have all source files committed. Anything not "
-            "committed, and unknown to Nikola may be lost.  Continue? "
-        )
-
-        if not ask_yesno(message, False):
+        if not self._prompt_continue():
             return
 
         build = main(['build'])
@@ -147,14 +142,23 @@ class CommandGitHubDeploy(Command):
         deploy = self._deploy_branch
 
         try:
-            subprocess.check_call(['git', 'show-ref', '--verify', '--quiet', 'refs/heads/%s' % deploy])
+            subprocess.check_call(
+                [
+                    'git', 'show-ref', '--verify', '--quiet',
+                    'refs/heads/%s' % deploy
+                ]
+            )
         except subprocess.CalledProcessError:
             self._create_orphan_deploy_branch()
         else:
             subprocess.check_call(['git', 'checkout', deploy])
 
     def _create_orphan_deploy_branch(self):
-        result = subprocess.check_call(['git', 'checkout', '--orphan', self._deploy_branch])
+        """ Create an orphan deploy branch """
+
+        result = subprocess.check_call(
+            ['git', 'checkout', '--orphan', self._deploy_branch]
+        )
         if result != 0:
             self.logger.error('Failed to create a deploy branch')
             sys.exit(1)
@@ -200,3 +204,21 @@ class CommandGitHubDeploy(Command):
                     'Need a remote called "%s" configured' % self._remote_name
                 )
                 sys.exit(1)
+
+    def _prompt_continue(self):
+        """ Show uncommitted changes, and ask if user wants to continue. """
+
+        changes = subprocess.check_output(['git', 'status', '--porcelain'])
+        if changes.strip():
+            changes = subprocess.check_output(['git', 'status']).strip()
+            message = (
+                "You have the following changes:\n%s\n\n"
+                "Anything not committed, and unknown to Nikola may be lost, "
+                "or committed onto the wrong branch. Do you wish to continue?"
+            ) % changes
+            proceed = ask_yesno(message, False)
+
+        else:
+            proceed = True
+
+        return proceed
