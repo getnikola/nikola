@@ -48,6 +48,7 @@ class CommandGitHubDeploy(Command):
 
     _deploy_branch = ''
     _source_branch = ''
+    _remote_name = ''
 
     def _execute(self, command, args):
 
@@ -59,6 +60,9 @@ class CommandGitHubDeploy(Command):
         )
         self._deploy_branch = self.site.config.get(
             'GITHUB_DEPLOY_BRANCH', 'gh-pages'
+        )
+        self._remote_name = self.site.config.get(
+            'GITHUB_REMOTE_NAME', 'origin'
         )
 
         self._ensure_git_repo()
@@ -93,6 +97,7 @@ class CommandGitHubDeploy(Command):
 
         deploy = self._deploy_branch
         source = self._source_branch
+        remote = self._remote_name
 
         source_commit = subprocess.check_output(['git', 'rev-parse', source])
         commit_message = (
@@ -104,7 +109,7 @@ class CommandGitHubDeploy(Command):
         commands = [
             ['git', 'add', '-A'],
             ['git', 'commit', '-m', commit_message],
-            ['git', 'push', 'origin', '%s:%s' % (deploy, deploy)],
+            ['git', 'push', remote, '%s:%s' % (deploy, deploy)],
             ['git', 'checkout', source],
         ]
 
@@ -171,7 +176,7 @@ class CommandGitHubDeploy(Command):
     def _ensure_git_repo(self):
         """ Ensure that the site is a git-repo.
 
-        Also make sure that a remote with the name 'origin' exists.
+        Also make sure that a remote with the specified name exists.
 
         """
 
@@ -190,6 +195,8 @@ class CommandGitHubDeploy(Command):
             sys.exit(1)
 
         else:
-            if 'origin' not in remotes:
-                self.logger.error('Need a remote called "origin" configured')
+            if self._remote_name not in remotes:
+                self.logger.error(
+                    'Need a remote called "%s" configured' % self._remote_name
+                )
                 sys.exit(1)
