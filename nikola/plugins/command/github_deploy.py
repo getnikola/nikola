@@ -29,6 +29,7 @@ import os
 import shutil
 import subprocess
 import sys
+from textwrap import dedent
 
 from nikola.plugin_categories import Command
 from nikola.plugins.command.check import real_scan_files
@@ -43,6 +44,29 @@ class CommandGitHubDeploy(Command):
 
     doc_usage = ''
     doc_purpose = 'deploy the site to GitHub pages'
+    doc_description = dedent(
+        """\
+        This command can be used to deploy your site to GitHub pages.
+        It performs the following actions:
+
+        1. Ensure that your site is a git repository, and git is on the PATH.
+        2. Check for changes, and prompt the user to continue, if required.
+        3. Build the site
+        4. Clean any files that are "unknown" to Nikola.
+        5. Create a deploy branch, if one doesn't exist.
+        6. Commit the output to this branch.  (NOTE: Any untracked source
+           files, may get committed at this stage, on the wrong branch!)
+        7. Push and deploy!
+
+        NOTE: This command needs your site to be a git repository, with a
+        master branch (or a different branch, configured using
+        GITHUB_SOURCE_BRANCH if you are pushing to user.github
+        .io/organization.github.io pages) containing the sources of your
+        site.  You also, obviously, need to have `git` on your PATH,
+        and should be able to push to the repository specified as the remote
+        (origin, by default).
+        """
+    )
 
     logger = None
 
