@@ -1,0 +1,9 @@
+[Core]
+Name = github_deploy
+Module = github_deploy
+
+[Documentation]
+Author = Puneeth Chaganti
+Version = 0.1
+Website = http://getnikola.com
+Description = Deploy the site to GitHub pages.

@@ -71,6 +71,7 @@ Features
 * Use setuptools’ extras feature.  Use ``pip install nikola[extras]`` to
   install Nikola with extras (``requirements-extras.txt``, formerly
   ``requirements-full.txt`` -- note the name change!) (Issue #1089)
+* Add a ``github_deploy`` command to deploy to GitHub pages (Issue #1208)
 
 Bugfixes
 --------

@@ -145,6 +145,7 @@ if sys.version_info[0] == 3:
     bytes_str = bytes
     unicode_str = str
     unichr = chr
+    raw_input = input
     from imp import reload as _reload
 else:
     bytes_str = str
@@ -164,7 +165,8 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
            'TranslatableSetting', 'TemplateHookRegistry', 'LocaleBorg',
            'sys_encode', 'sys_decode', 'makedirs', 'get_parent_theme_name',
-           'demote_headers', 'get_translation_candidate', 'write_metadata']
+           'demote_headers', 'get_translation_candidate', 'write_metadata',
+           'ask', 'ask_yesno']
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -1144,3 +1146,34 @@ def write_metadata(data):
     meta.append('')
 
     return '\n'.join(meta)
+
+
+def ask(query, default=None):
+    """Ask a question."""
+    if default:
+        default_q = ' [{0}]'.format(default)
+    else:
+        default_q = ''
+    inp = raw_input("{query}{default_q}: ".format(query=query, default_q=default_q)).strip()
+    if inp or default is None:
+        return inp
+    else:
+        return default
+
+
+def ask_yesno(query, default=None):
+    """Ask a yes/no question."""
+    if default is None:
+        default_q = ' [y/n]'
+    elif default is True:
+        default_q = ' [Y/n]'
+    elif default is False:
+        default_q = ' [y/N]'
+    inp = raw_input("{query}{default_q} ".format(query=query, default_q=default_q)).strip()
+    if inp:
+        return inp.lower().startswith('y')
+    elif default is not None:
+        return default
+    else:
+        # Loop if no answer and no default.
+        return ask_yesno(query, default)
