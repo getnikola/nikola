@@ -48,6 +48,8 @@ class CopyAssets(Task):
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
             "code_color_scheme": self.site.config['CODE_COLOR_SCHEME'],
+            "code.css_selectors": ['pre.code', 'div.code pre'],
+            "code.css_close": "\ntable.codetable { width: 100%;} td.linenos {text-align: right; width: 4em;}\n",
         }
         has_code_css = False
         tasks = {}
@@ -74,8 +76,8 @@ class CopyAssets(Task):
                 formatter = get_formatter_by_name('html', style=kw["code_color_scheme"])
                 utils.makedirs(os.path.dirname(code_css_path))
                 with codecs.open(code_css_path, 'wb+', 'utf8') as outf:
-                    outf.write(formatter.get_style_defs(['pre.code', 'div.code pre']))
-                    outf.write("\ntable.codetable { width: 100%;} td.linenos {text-align: right; width: 4em;}\n")
+                    outf.write(formatter.get_style_defs(kw["code.css_selectors"]))
+                    outf.write(kw["code.css_close"])
 
             task = {
                 'basename': self.name,

@@ -76,6 +76,8 @@ Features
 Bugfixes
 --------
 
+* code.css was not rebuilt, even though there were changes in v6.4.0 to its
+  format (via Issue #1050)
 * Removed SCHEDULE_FORCE_TODAY option (Issue #984)
 * Give better error for unknown subcommands (Issue #1233)
 * Handle conf.py for import plugins more generically (Issue #1235)
