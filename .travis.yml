@@ -21,10 +21,13 @@ install:
   - "if [[ $NMODE == 'nikola' ]]; then scripts/getbaseline.sh $(scripts/getpyver.py short); fi"
   - "if [[ $NMODE == 'flake8' ]]; then pip install flake8; fi"
 # We run tests and nikola (to see if the command is executable) OR flake8.
+# We run `nikola` and `nikola help` because things may break due to human
+# errors in argument parsing (cf. 96e78dd)
 # WARNING: if you edit this, make sure to replicate your changes in dodo.py.
 script:
   - "if [[ $NMODE == 'nikola' ]]; then py.test --doctest-modules nikola/; fi"
   - "if [[ $NMODE == 'nikola' ]]; then py.test --cov nikola --cov-report term-missing tests/; fi"
+  - "if [[ $NMODE == 'nikola' ]]; then nikola; fi"
   - "if [[ $NMODE == 'nikola' ]]; then nikola help; fi"
   - "if [[ $NMODE == 'flake8' ]]; then flake8 nikola/; fi"
 after_success:
