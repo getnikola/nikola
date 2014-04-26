@@ -52,6 +52,7 @@ class RenderPosts(Task):
             "timeline": self.site.timeline,
             "default_lang": self.site.config["DEFAULT_LANG"],
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
+            "demote_headers": self.site.config['DEMOTE_HEADERS'],
         }
 
         yield self.group_task()
