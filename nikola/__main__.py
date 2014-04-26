@@ -84,7 +84,7 @@ def main(args=None):
     # not the current working directory.  (does not apply to `version`)
     argname = args[0] if len(args) > 0 else None
     # FIXME there are import plugins in the repo, so how do we handle this?
-    if argname not in ['init', 'version'] and not argname.startswith('import_'):
+    if argname and argname not in ['init', 'version'] and not argname.startswith('import_'):
         root = get_root_dir()
         if root:
             os.chdir(root)
@@ -269,7 +269,7 @@ class DoitNikola(DoitMain):
         if args[0] not in sub_cmds.keys():
             LOGGER.error("Unknown command {0}".format(args[0]))
             return False
-        if not isinstance(sub_cmds[args[0]], Command):  # Is a doit command
+        if not isinstance(sub_cmds[args[0]], (Command, Help)):  # Is a doit command
             if not self.nikola.configured:
                 LOGGER.error("This command needs to run inside an "
                              "existing Nikola site.")
