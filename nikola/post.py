@@ -495,7 +495,7 @@ class Post(object):
                     demote_headers(document, self.demote_headers)
                     data = strip_root_element(document)
                 except (lxml.etree.ParserError, IndexError):
-                    pass
+                    data = lxml.html.tostring(document, encoding='unicode')
 
         return data
 
