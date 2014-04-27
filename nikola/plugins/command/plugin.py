@@ -313,9 +313,11 @@ class CommandPlugin(Command):
         return False
 
     def get_json(self, url):
-        if self.json is not None:
-            return self.json
-        if (requests is None):
+        if requests is None:
             utils.req_missing(['requests'], 'install or list available plugins')
-        data = requests.get(url).text
-        data = json.loads(data)
+            return
+        if self.json is None:
+            data = requests.get(url).text
+            data = json.loads(data)
+            self.json = data
+        return self.json
