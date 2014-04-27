@@ -41,6 +41,7 @@ class RenderPages(Task):
             "translations": self.site.config["TRANSLATIONS"],
             "filters": self.site.config["FILTERS"],
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
+            "demote_headers": self.site.config['DEMOTE_HEADERS'],
         }
         self.site.scan_posts()
         yield self.group_task()
