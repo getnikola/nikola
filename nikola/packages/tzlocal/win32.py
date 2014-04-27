@@ -6,7 +6,7 @@ except ImportError:
     except ImportError:
         pass  # not windows
 
-from tzlocal.windows_tz import win_tz
+from .windows_tz import win_tz
 
 _cache_tz = None
 
