@@ -318,6 +318,5 @@ class CommandPlugin(Command):
             return
         if self.json is None:
             data = requests.get(url).text
-            data = json.loads(data)
-            self.json = data
+            self.json = json.loads(data)
         return self.json
