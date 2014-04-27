@@ -76,6 +76,7 @@ Features
 Bugfixes
 --------
 
+* not having typogrify installed now produces a valid error (Issue #1262)
 * Pages were not rebuilt when DEMOTE_HEADERS was changed (Issue #1261)
 * code.css was not rebuilt, even though there were changes in v6.4.0 to its
   format (via Issue #1050)

@@ -191,7 +191,7 @@ def tidy(inplace):
 @apply_to_text_file
 def typogrify(data):
     if typo is None:
-        req_missing(['typogrify', 'use the typogrify filter'])
+        req_missing(['typogrify'], 'use the typogrify filter')
 
     data = typo.amp(data)
     data = typo.widont(data)
