@@ -41,6 +41,7 @@ from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_INDEX_READ_MORE_
 from nikola.plugin_categories import Command
 from nikola.utils import ask, ask_yesno, get_logger, makedirs, STDERR_HANDLER, load_messages
 from nikola.winutils import fix_git_symlinked
+from nikola.packages.tzlocal import get_localzone
 
 
 LOGGER = get_logger('init', STDERR_HANDLER)
@@ -300,7 +301,11 @@ class CommandInit(Command):
             print("")
             answered = False
             while not answered:
-                answer = ask('Time zone', 'UTC')
+                try:
+                    lz = get_localzone()
+                except:
+                    lz = None
+                answer = ask('Time zone', lz if lz else "UTC")
                 tz = dateutil.tz.gettz(answer)
                 if tz is not None:
                     time = datetime.datetime.now(tz).strftime('%H:%M:%S')
@@ -344,7 +349,7 @@ class CommandInit(Command):
             ('Destination', None, False, '!target'),
             ('Site title', 'My Nikola Site', True, 'BLOG_TITLE'),
             ('Site author', 'Nikola Tesla', True, 'BLOG_AUTHOR'),
-            ('Site author’s e-mail', 'n.tesla@example.com', True, 'BLOG_EMAIL'),
+            ('Site author\'s e-mail', 'n.tesla@example.com', True, 'BLOG_EMAIL'),
             ('Site description', 'This is a demo site for Nikola.', True, 'BLOG_DESCRIPTION'),
             ('Site URL', 'http://getnikola.com/', True, 'SITE_URL'),
             ('Questions about languages and locales', None, None, None),
