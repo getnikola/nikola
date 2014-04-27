@@ -478,7 +478,7 @@ class Post(object):
                 try:
                     data = strip_root_element(document)
                 except IndexError:
-                    pass
+                    data = lxml.html.tostring(document, encoding='unicode')
 
         if data and strip_html:
             try:
