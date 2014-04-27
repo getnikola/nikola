@@ -5,6 +5,7 @@ import dateutil.tz
 
 _cache_tz = None
 
+
 def _get_localzone():
     """Tries to find the local timezone configuration.
 
@@ -29,7 +30,7 @@ def _get_localzone():
     try:
         # link will be something like /usr/share/zoneinfo/America/Los_Angeles.
         link = os.readlink('/etc/localtime')
-        tz = link[link.rfind('/', 0, link.rfind('/'))+1:]
+        tz = link[link.rfind('/', 0, link.rfind('/')) + 1:]
 
         if tz:
             dateutil.tz.gettz(tz)
@@ -96,17 +97,19 @@ def _get_localzone():
                 except:
                     pass
 
-    # No explicit setting existed. Use localtime
-    # Nikola cannot use this.
-    #for filename in ('etc/localtime', 'usr/local/etc/localtime'):
-        #tzpath = os.path.join(_root, filename)
+    # Nikola cannot use this thing below...
 
-        #if not os.path.exists(tzpath):
-            #continue
-        #with open(tzpath, 'rb') as tzfile:
-            #return pytz.tzfile.build_tzinfo('local', tzfile)
+    # No explicit setting existed. Use localtime
+    # for filename in ('etc/localtime', 'usr/local/etc/localtime'):
+        # tzpath = os.path.join(_root, filename)
+
+        # if not os.path.exists(tzpath):
+            # continue
+        # with open(tzpath, 'rb') as tzfile:
+            # return pytz.tzfile.build_tzinfo('local', tzfile)
 
     return None
+
 
 def get_localzone():
     """Get the computers configured local timezone, if any."""
@@ -115,9 +118,9 @@ def get_localzone():
         _cache_tz = _get_localzone()
     return _cache_tz
 
+
 def reload_localzone():
     """Reload the cached localzone. You need to call this if the timezone has changed."""
     global _cache_tz
     _cache_tz = _get_localzone()
     return _cache_tz
-
