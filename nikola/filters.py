@@ -30,7 +30,6 @@ from .utils import req_missing
 from functools import wraps
 import os
 import codecs
-import re
 import shutil
 import subprocess
 import tempfile
