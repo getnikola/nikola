@@ -1,9 +1,10 @@
 try:
     import _winreg as winreg
 except ImportError:
-    import winreg
-except ImportError:
-    pass  # not windows
+    try:
+        import winreg
+    except ImportError:
+        pass  # not windows
 
 from tzlocal.windows_tz import win_tz
 
