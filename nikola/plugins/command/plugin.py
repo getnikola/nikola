@@ -28,7 +28,6 @@ from __future__ import print_function
 import codecs
 from io import BytesIO
 import os
-import json
 import shutil
 import subprocess
 import sys
