@@ -316,6 +316,5 @@ class CommandPlugin(Command):
         if requests is None:
             utils.req_missing(['requests'], 'install or list available plugins', python=True, optional=False)
         if self.json is None:
-            data = requests.get(url).text
-            self.json = json.loads(data)
+            self.json = requests.get(url).json()
         return self.json
