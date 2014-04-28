@@ -344,7 +344,7 @@ class CommandInit(Command):
             ('Destination', None, False, '!target'),
             ('Site title', 'My Nikola Site', True, 'BLOG_TITLE'),
             ('Site author', 'Nikola Tesla', True, 'BLOG_AUTHOR'),
-            ('Site author’s e-mail', 'n.tesla@example.com', True, 'BLOG_EMAIL'),
+            ('Site author\'s e-mail', 'n.tesla@example.com', True, 'BLOG_EMAIL'),
             ('Site description', 'This is a demo site for Nikola.', True, 'BLOG_DESCRIPTION'),
             ('Site URL', 'http://getnikola.com/', True, 'SITE_URL'),
             ('Questions about languages and locales', None, None, None),
