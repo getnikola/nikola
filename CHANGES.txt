@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Remove tidy filter (it was broken due to tidy being ancient) (Issue #1164)
 * Added ``GENERATE_RSS`` setting to allow disabling RSS in Nikola (Issue #1236)
 * Link listings raw sources if COPY_SOURCES is True (Issue #1214)
 * Much more powerful ``nikola plugin`` command (Issue #1189)

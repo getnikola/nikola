@@ -30,7 +30,6 @@ from .utils import req_missing
 from functools import wraps
 import os
 import codecs
-import re
 import shutil
 import subprocess
 import tempfile
@@ -142,50 +141,6 @@ def optipng(infile):
 
 def jpegoptim(infile):
     return runinplace(r"jpegoptim -p --strip-all -q %1", infile)
-
-
-def tidy(inplace):
-    # Google site verifcation files are not HTML
-    if re.match(r"google[a-f0-9]+.html", os.path.basename(inplace)) \
-            and open(inplace).readline().startswith(
-                "google-site-verification:"):
-        return
-
-    # Tidy will give error exits, that we will ignore.
-    output = subprocess.check_output(
-        "tidy -m -w 90 --indent no --quote-marks"
-        "no --keep-time yes --tidy-mark no "
-        "--force-output yes '{0}'; exit 0".format(inplace), stderr=subprocess.STDOUT, shell=True)
-
-    for line in output.split("\n"):
-        if "Warning:" in line:
-            if '<meta> proprietary attribute "charset"' in line:
-                # We want to set it though.
-                continue
-            elif '<meta> lacks "content" attribute' in line:
-                # False alarm to me.
-                continue
-            elif '<div> anchor' in line and 'already defined' in line:
-                # Some seeming problem with JavaScript terminators.
-                continue
-            elif '<img> lacks "alt" attribute' in line:
-                # Happens in gallery code, probably can be tolerated.
-                continue
-            elif '<table> lacks "summary" attribute' in line:
-                # Happens for tables, TODO: Check this is normal.
-                continue
-            elif 'proprietary attribute "data-toggle"' in line or \
-                 'proprietary attribute "data-target"':
-                # Some of our own tricks
-                continue
-            else:
-                assert False, (inplace, line)
-        elif "Error:" in line:
-            if '<time> is not recognized' in line:
-                # False alarm, time is proper HTML5.
-                continue
-            else:
-                assert False, line
 
 
 @apply_to_text_file

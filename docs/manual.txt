@@ -1201,9 +1201,6 @@ optipng
 jpegoptim
    Compress JPEG files using `jpegoptim <http://www.kokkonen.net/tjko/projects.html>`_
 
-tidy
-   Apply `tidy <http://tidy.sourceforge.net/>`_ to HTML files
-
 typogrify
    Improve typography using `typogrify <https://github.com/mintchaos/typogrify>`_
 
