@@ -77,11 +77,11 @@ class Archive(Task):
                     post_list.reverse()
                     context["posts"] = post_list
                 else:  # Monthly archives, just list the months
-                    months = set([m.split('/')[1] for m in self.site.posts_per_month.keys() if m.startswith(str(year))])
+                    months = set([(m.split('/')[1], self.site.link("archive", m, lang)) for m in self.site.posts_per_month.keys() if m.startswith(str(year))])
                     months = sorted(list(months))
                     months.reverse()
                     template_name = "list.tmpl"
-                    context["items"] = [[nikola.utils.LocaleBorg().get_month_name(int(month), lang), month] for month in months]
+                    context["items"] = [[nikola.utils.LocaleBorg().get_month_name(int(month), lang), link] for month, link in months]
                     post_list = []
                 task = self.site.generic_post_list_renderer(
                     lang,
