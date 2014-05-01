@@ -502,12 +502,12 @@ class config_changed(tools.config_changed):
                                                            cls=CustomEncoder))
 
 
-def get_theme_path(theme):
+def get_theme_path(theme, _themes_dir='themes'):
     """Given a theme name, returns the path where its files are located.
 
     Looks in ./themes and in the place where themes go when installed.
     """
-    dir_name = os.path.join('themes', theme)
+    dir_name = os.path.join(_themes_dir, theme)
     if os.path.isdir(dir_name):
         return dir_name
     dir_name = resource_filename('nikola', os.path.join('data', 'themes', theme))
@@ -516,9 +516,9 @@ def get_theme_path(theme):
     raise Exception("Can't find theme '{0}'".format(theme))
 
 
-def get_template_engine(themes):
+def get_template_engine(themes, _themes_dir='themes'):
     for theme_name in themes:
-        engine_path = os.path.join(get_theme_path(theme_name), 'engine')
+        engine_path = os.path.join(get_theme_path(theme_name, _themes_dir), 'engine')
         if os.path.isfile(engine_path):
             with open(engine_path) as fd:
                 return fd.readlines()[0].strip()
@@ -526,20 +526,20 @@ def get_template_engine(themes):
     return 'mako'
 
 
-def get_parent_theme_name(theme_name):
-    parent_path = os.path.join(get_theme_path(theme_name), 'parent')
+def get_parent_theme_name(theme_name, _themes_dir='themes'):
+    parent_path = os.path.join(get_theme_path(theme_name, _themes_dir), 'parent')
     if os.path.isfile(parent_path):
         with open(parent_path) as fd:
             return fd.readlines()[0].strip()
     return None
 
 
-def get_theme_chain(theme):
+def get_theme_chain(theme, _themes_dir='themes'):
     """Create the full theme inheritance chain."""
     themes = [theme]
 
     while True:
-        parent = get_parent_theme_name(themes[-1])
+        parent = get_parent_theme_name(themes[-1], _themes_dir)
         # Avoid silly loops
         if parent is None or parent in themes:
             break
@@ -848,7 +848,7 @@ def get_crumbs(path, is_file=False, index_folder=None):
     return list(reversed(_crumbs))
 
 
-def get_asset_path(path, themes, files_folders={'files': ''}):
+def get_asset_path(path, themes, files_folders={'files': ''}, _themes_dir='themes'):
     """
     .. versionchanged:: 6.1.0
 
@@ -873,7 +873,7 @@ def get_asset_path(path, themes, files_folders={'files': ''}):
     """
     for theme_name in themes:
         candidate = os.path.join(
-            get_theme_path(theme_name),
+            get_theme_path(theme_name, _themes_dir),
             path
         )
         if os.path.isfile(candidate):
