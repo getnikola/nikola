@@ -46,6 +46,7 @@ except ImportError:  # docutils < 0.9 (Debian Sid For The Loss)
     class CodeBlock(Directive):
         required_arguments = 1
         has_content = True
+        option_spec = {}
         CODE = '<pre>{0}</pre>'
 
         def run(self):
