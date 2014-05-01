@@ -752,8 +752,7 @@ def get_tzname(dt):
 
 def current_time(tzinfo=None):
     if tzinfo is not None:
-        dt = datetime.datetime.utcnow()
-        dt = tzinfo.fromutc(dt)
+        dt = datetime.datetime.now(tzinfo)
     else:
         dt = datetime.datetime.now(dateutil.tz.tzlocal())
     return dt
