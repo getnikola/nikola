@@ -29,7 +29,7 @@ agustinhenze <https://github.com/agustinhenze>
 areski <https://github.com/areski>
 bwhmather <https://github.com/bwhmather>
 camboris <https://github.com/camboris>
-claxo <https://github.com/claxo>
+Claudio Canepa <https://github.com/ccanepa>
 clee <https://github.com/clee>
 damianavila <https://github.com/damianavila>
 dastagg <https://github.com/dastagg>
