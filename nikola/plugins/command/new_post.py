@@ -328,8 +328,6 @@ class CommandNewPost(Command):
         if not onefile:  # write metadata file
             with codecs.open(meta_path, "wb+", "utf8") as fd:
                 fd.write(utils.write_metadata(data))
-            with codecs.open(txt_path, "wb+", "utf8") as fd:
-                fd.write("Write your {0} here.".format(content_type))
             LOGGER.info("Your {0}'s metadata is at: {1}".format(content_type, meta_path))
             event['meta_path'] = meta_path
         LOGGER.info("Your {0}'s text is at: {1}".format(content_type, txt_path))
