@@ -95,7 +95,8 @@ else:
     logging.basicConfig(level=logging.INFO)
 
 
-import warnings, logbook.compat
+import warnings
+
 
 def showwarning(message, category, filename, lineno, file=None, line=None):
     """Show a warning (from the warnings subsystem) to the user."""
@@ -106,6 +107,7 @@ def showwarning(message, category, filename, lineno, file=None, line=None):
     get_logger(n, STDERR_HANDLER).warn('{0}:{1}: {2}'.format(filename, lineno, message))
 
 warnings.showwarning = showwarning
+
 
 def req_missing(names, purpose, python=True, optional=False):
     """Log that we are missing some requirements.
