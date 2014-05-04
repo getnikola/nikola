@@ -259,16 +259,12 @@ class CommandNewPost(Command):
 
         print("Creating New {0}".format(content_type.title()))
         print("-----------------\n")
-        if title is None:
-            inpf = raw_input if sys.version_info[0] == 2 else input
-            title = inpf("Enter title: ").strip()
-        else:
+        if title is not None:
             print("Title:", title)
-        if isinstance(title, utils.bytes_str):
-            try:
-                title = title.decode(sys.stdin.encoding)
-            except AttributeError:  # for tests
-                title = title.decode('utf-8')
+        else:
+            while not title:
+                title = utils.ask('Title')
+
         title = title.strip()
         if not path:
             slug = utils.slugify(title)
