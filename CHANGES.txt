@@ -1,9 +1,10 @@
-New in master
-=============
+New in v7.0.0-rc1
+=================
 
 Features
 --------
 
+* Add a ``github_deploy`` command to deploy to GitHub pages (Issue #1208)
 * Remove tidy filter (it was broken due to tidy being ancient) (Issue #1164)
 * Added ``GENERATE_RSS`` setting to allow disabling RSS in Nikola (Issue #1236)
 * Link listings raw sources if COPY_SOURCES is True (Issue #1214)
@@ -15,7 +16,7 @@ Features
 * Support hooks in templates, for use by plugins (Issue #896)
 * Use readline if available (Issue #1238)
 * Replaced ``READ_MORE_LINK`` with ``INDEX_READ_MORE_LINK`` and
- ``RSS_READ_MORE_LINK`` (Issue #1222)
+  ``RSS_READ_MORE_LINK`` (Issue #1222)
 * Added reading_time, remaining_reading_time, paragraph_count,
   remaining_paragraph_count tags for READ_MORE_LINK (Issue #1220)
 * Add canonical link in listings.
@@ -72,7 +73,6 @@ Features
 * Use setuptools’ extras feature.  Use ``pip install nikola[extras]`` to
   install Nikola with extras (``requirements-extras.txt``, formerly
   ``requirements-full.txt`` -- note the name change!) (Issue #1089)
-* Add a ``github_deploy`` command to deploy to GitHub pages (Issue #1208)
 
 Bugfixes
 --------

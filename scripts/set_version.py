@@ -23,7 +23,7 @@ def sed_like_thing(pattern, repl, path):
         outf.write(data)
 
 if __name__ == "__main__":
-    inpf = raw_input if sys.vesrion_info[0] == 2 else input
+    inpf = raw_input if sys.version_info[0] == 2 else input
     version = inpf("New version number (in format X.Y.Z): ").strip()
 
     for doc in glob.glob(os.path.join("docs/*.txt")):
