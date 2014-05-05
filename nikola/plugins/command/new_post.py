@@ -265,6 +265,12 @@ class CommandNewPost(Command):
             while not title:
                 title = utils.ask('Title')
 
+        if isinstance(title, utils.bytes_str):
+            try:
+                title = title.decode(sys.stdin.encoding)
+            except AttributeError:  # for tests
+                title = title.decode('utf-8')
+
         title = title.strip()
         if not path:
             slug = utils.slugify(title)
