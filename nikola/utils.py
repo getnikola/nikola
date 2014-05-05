@@ -485,7 +485,7 @@ class TemplateHookRegistry(object):
 class CustomEncoder(json.JSONEncoder):
     def default(self, obj):
         try:
-            return json.JSONEncoder.default(self, obj)
+            return super(CustomEncoder, self).default(obj)
         except TypeError:
             s = repr(obj).split('0x', 1)[0]
             return s
