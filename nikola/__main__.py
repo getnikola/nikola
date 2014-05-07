@@ -114,6 +114,7 @@ def main(args=None):
 
     config['__colorful__'] = colorful
     config['__invariant__'] = invariant
+    config['__quiet__'] = quiet
 
     site = Nikola(**config)
     _ = DoitNikola(site, quiet).run(args)

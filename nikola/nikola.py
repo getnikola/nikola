@@ -197,6 +197,7 @@ class Nikola(object):
         self.loghandlers = []
         self.colorful = config.pop('__colorful__', False)
         self.invariant = config.pop('__invariant__', False)
+        self.quiet = config.pop('__quiet__', False)
         self.configured = bool(config)
 
         self.template_hooks = {
@@ -340,6 +341,7 @@ class Nikola(object):
 
         self.config['__colorful__'] = self.colorful
         self.config['__invariant__'] = self.invariant
+        self.config['__quiet__'] = self.quiet
 
         # Make sure we have sane NAVIGATION_LINKS.
         if not self.config['NAVIGATION_LINKS']:
@@ -1131,12 +1133,14 @@ class Nikola(object):
         self.pages = []
 
         seen = set([])
-        print("Scanning posts", end='', file=sys.stderr)
+        if not self.quiet:
+            print("Scanning posts", end='', file=sys.stderr)
         slugged_tags = set([])
         quit = False
         for wildcard, destination, template_name, use_in_feeds in \
                 self.config['post_pages']:
-            print(".", end='', file=sys.stderr)
+            if not self.quiet:
+                print(".", end='', file=sys.stderr)
             dirname = os.path.dirname(wildcard)
             for dirpath, _, _ in os.walk(dirname, followlinks=True):
                 dest_dir = os.path.normpath(os.path.join(destination,
@@ -1219,7 +1223,8 @@ class Nikola(object):
         for i, p in enumerate(self.posts[:-1]):
             p.prev_post = self.posts[i + 1]
         self._scanned = True
-        print("done!", file=sys.stderr)
+        if not self.quiet:
+            print("done!", file=sys.stderr)
         if quit:
             sys.exit(1)
 
