@@ -114,6 +114,7 @@ def main(args=None):
 
     config['__colorful__'] = colorful
     config['__invariant__'] = invariant
+    config['__quiet__'] = quiet
 
     site = Nikola(**config)
     _ = DoitNikola(site, quiet).run(args)
@@ -211,6 +212,7 @@ class NikolaTaskLoader(TaskLoader):
         else:
             DOIT_CONFIG = {
                 'reporter': ExecutedOnlyReporter,
+                'outfile': sys.stderr,
             }
         DOIT_CONFIG['default_tasks'] = ['render_site', 'post_render']
         tasks = generate_tasks(
