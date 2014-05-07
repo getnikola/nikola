@@ -4,6 +4,8 @@ New in v7.0.0-rc1
 Features
 --------
 
+* New dependencies: ``natsort`` (natural sorting in galleries)
+  and ``dateutil`` (replaces ``pytz``)
 * Add a ``github_deploy`` command to deploy to GitHub pages (Issue #1208)
 * Remove tidy filter (it was broken due to tidy being ancient) (Issue #1164)
 * Added ``GENERATE_RSS`` setting to allow disabling RSS in Nikola (Issue #1236)
