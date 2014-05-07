@@ -17,7 +17,7 @@ env:
     NMODE=nikola
 install:
   - "if [[ $NMODE == 'nikola' ]]; then scripts/getwheelhouse.sh $(scripts/getpyver.py short); fi"
-  - "if [[ $NMODE == 'nikola' ]]; then pip install -r requirements-tests.txt; fi"
+  - "if [[ $NMODE == 'nikola' ]]; then pip install -r requirements-tests.txt; if [[ \"$?\" == '1' ]]; then cat /home/travis/.pip/pip.log; false; fi; fi"
   - "if [[ $NMODE == 'nikola' ]]; then pip install .; fi"
   - "if [[ $NMODE == 'nikola' ]]; then scripts/getbaseline.sh $(scripts/getpyver.py short); fi"
   - "if [[ $NMODE == 'flake8' ]]; then pip install flake8; fi"
