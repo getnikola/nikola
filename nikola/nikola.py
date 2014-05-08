@@ -1313,7 +1313,7 @@ class Nikola(object):
         return utils.apply_filters(task, filters)
 
     def __repr__(self):
-        return '<Nikola Site: {0}>'.format(self.config['BLOG_TITLE']())
+        return '<Nikola Site: {0!r}>'.format(self.config['BLOG_TITLE']())
 
 
 def sanitized_locales(locale_fallback, locale_default, locales, translations):
