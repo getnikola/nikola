@@ -1222,8 +1222,12 @@ class Commands(object):
             self._cmdnames.append(k)
             if k in ['run', 'init']:
                 continue
+            if sys.version_info[0] == 2:
+                k2 = bytes(k)
+            else:
+                k2 = k
             nc = type(
-                bytes(k),
+                k2,
                 (CommandWrapper,),
                 {
                     '__doc__': options2docstring(k, main.sub_cmds[k].options)
