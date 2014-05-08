@@ -28,8 +28,6 @@ from __future__ import print_function, unicode_literals
 
 import os
 
-from doit.cmdparse import CmdParse
-
 from nikola import __version__
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger, STDERR_HANDLER, req_missing
@@ -123,12 +121,11 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
         """Start the console."""
         self.site.scan_posts()
         # Create nice object with all commands:
-        commands = Commands(self.site.doit)
 
         self.context = {
             'conf': self.site.config,
             'site': self.site,
-            'commands': commands,
+            'commands': self.site.commands,
         }
         if options['bpython']:
             self.bpython(True)
@@ -143,79 +140,3 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
                 except ImportError:
                     pass
             raise ImportError
-
-
-class CommandWrapper(object):
-    """Converts commands into functions."""
-
-    def __init__(self, cmd, commands_object):
-        self.cmd = cmd
-        self.commands_object = commands_object
-
-    def __call__(self, *args, **kwargs):
-        if args or (not args and not kwargs):
-            self.commands_object._run([self.cmd] + list(args))
-        else:
-            # Here's where the keyword magic would have to go
-            self.commands_object._run_with_kw(self.cmd, *args, **kwargs)
-
-
-class Commands(object):
-
-    """Nikola Commands.
-CommandWrapper
-    Sample usage:
-    >>> commands.check('-l')                     # doctest: +SKIP
-
-    Or, if you know the internal argument names:
-    >>> commands.check(list=True)                # doctest: +SKIP
-    """
-
-    def __init__(self, main):
-        """Takes a main instance, works as wrapper for commands."""
-        self._cmdnames = []
-        for k, v in main.get_commands().items():
-            self._cmdnames.append(k)
-            if k in ['run', 'init']:
-                continue
-            nc = type(
-                bytes(k),
-                (CommandWrapper,),
-                {
-                    '__doc__': options2docstring(k, main.sub_cmds[k].options)
-                })
-            setattr(self, k, nc(k, self))
-        self.main = main
-
-    def _run(self, cmd_args):
-        self.main.run(cmd_args)
-
-    def _run_with_kw(self, cmd, *a, **kw):
-        cmd = self.main.sub_cmds[cmd]
-        options, _ = CmdParse(cmd.options).parse([])
-        options.update(kw)
-        if isinstance(cmd, Command):
-            cmd.execute(options=options, args=a)
-        else:  # Doit command
-            cmd.execute(options, a)
-
-    def __repr__(self):
-        """Return useful and verbose help."""
-
-        return """\
-<Nikola Commands>
-
-    Sample usage:
-    >>> commands.check('-l')
-
-    Or, if you know the internal argument names:
-    >>> commands.check(list=True)
-
-Available commands: {0}.""".format(', '.join(self._cmdnames))
-
-
-def options2docstring(name, options):
-    result = ['Function wrapper for command %s' % name, 'arguments:']
-    for opt in options:
-        result.append('{0} type {1} default {2}'.format(opt.name, opt.type.__name__, opt.default))
-    return '\n'.join(result)
