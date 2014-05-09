@@ -14,3 +14,4 @@ setuptools
 colorama
 natsort>=3.2.0
 configparser==3.3.0r2
+requests==2.2.1
