@@ -641,7 +641,7 @@ def _get_metadata_from_filename_by_regex(filename, metadata_regexp, unslugify_ti
         for key, value in match.groupdict().items():
             k = key.lower().strip()  # metadata must be lowercase
             if k == 'title' and unslugify_titles:
-                meta[k] = unslugify(value)
+                meta[k] = unslugify(value, discard_numbers=False)
             else:
                 meta[k] = value
 

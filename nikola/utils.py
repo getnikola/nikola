@@ -698,11 +698,14 @@ def slugify(value):
     return _slugify_hyphenate_re.sub('-', value)
 
 
-def unslugify(value):
+def unslugify(value, discard_numbers=True):
+    """Given a slug string (as a filename), return a human readable string.
+
+    If discard_numbers is True, numbers right at the beginning of input
+    will be removed.
     """
-    Given a slug string (as a filename), return a human readable string
-    """
-    value = re.sub('^[0-9]+', '', value)
+    if discard_numbers:
+        value = re.sub('^[0-9]+', '', value)
     value = re.sub('([_\-\.])', ' ', value)
     value = value.strip().capitalize()
     return value
