@@ -140,7 +140,7 @@ class Post(object):
             if lang != self.default_lang:
                 meta = defaultdict(lambda: '')
                 meta.update(default_metadata)
-                meta.update(get_meta(self, self.config['FILE_METADATA_REGEXP'], lang))
+                meta.update(get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'], lang))
                 self.meta[lang] = meta
 
         if not self.is_translation_available(self.default_lang):
