@@ -112,6 +112,11 @@ def main(args=None):
         except ImportError:
             req_missing(['freezegun'], 'perform invariant builds')
 
+    if config:
+        if os.path.exists('plugins') and not os.path.exists('plugins/__init__.py'):
+            with open('plugins/__init__.py', 'w') as fh:
+                fh.write('# Plugin modules go here.')
+
     config['__colorful__'] = colorful
     config['__invariant__'] = invariant
     config['__quiet__'] = quiet
