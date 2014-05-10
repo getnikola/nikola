@@ -32,6 +32,7 @@ from pygments import highlight
 from pygments.lexers import get_lexer_for_filename, TextLexer
 from pygments.formatters import HtmlFormatter
 import natsort
+import re
 
 from nikola.plugin_categories import Task
 from nikola import utils
@@ -66,10 +67,12 @@ class Listings(Task):
                     except:
                         lexer = TextLexer()
                     code = highlight(fd.read(), lexer,
-                                     HtmlFormatter(cssclass='code',
+                                     HtmlFormatter(cssclass='codehilite',
                                                    linenos="table", nowrap=False,
                                                    lineanchors=utils.slugify(in_name),
                                                    anchorlinenos=True))
+                    # duplicated with code in mdx_nikola.py
+                    code = re.sub('<div class="codehilite"><pre>(.*?)</pre></div>', '<pre class="code literal-block">\\1</pre>', code, flags=re.MULTILINE | re.DOTALL)
                 title = os.path.basename(in_name)
             else:
                 code = ''
