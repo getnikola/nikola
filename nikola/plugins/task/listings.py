@@ -38,8 +38,9 @@ from nikola.plugin_categories import Task
 from nikola import utils
 
 
-# FIXME: duplicated with mdx_nikola.py
-CODERE = re.compile('<div class="codehilite"><pre>(.*?)</pre></div>', flags=re.MULTILINE | re.DOTALL)
+# FIXME: (almost) duplicated with mdx_nikola.py
+CODERE = re.compile('<div class="code"><pre>(.*?)</pre></div>', flags=re.MULTILINE | re.DOTALL)
+
 
 class Listings(Task):
     """Render pretty listings."""
@@ -70,7 +71,7 @@ class Listings(Task):
                     except:
                         lexer = TextLexer()
                     code = highlight(fd.read(), lexer,
-                                     HtmlFormatter(cssclass='codehilite',
+                                     HtmlFormatter(cssclass='code',
                                                    linenos="table", nowrap=False,
                                                    lineanchors=utils.slugify(in_name),
                                                    anchorlinenos=True))
