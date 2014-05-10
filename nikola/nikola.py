@@ -313,6 +313,7 @@ class Nikola(object):
             'THEME_REVEAL_CONFIG_SUBTHEME': 'sky',
             'THEME_REVEAL_CONFIG_TRANSITION': 'cube',
             'THUMBNAIL_SIZE': 180,
+            'UNSLUGIFY_TITLES': False,  # WARNING: conf.py.in overrides this with True for backwards compatibility
             'URL_TYPE': 'rel_path',
             'USE_BUNDLES': True,
             'USE_CDN': False,
