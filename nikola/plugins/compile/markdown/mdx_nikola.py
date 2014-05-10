@@ -45,8 +45,7 @@ class NikolaPostProcessor(Postprocessor):
         # python-markdown's highlighter uses the class 'codehilite' to wrap
         # code, instead of the standard 'code'. None of the standard
         # pygments stylesheets use this class, so swap it to be 'code'
-        output = re.sub(r'(<div[^>]+class="[^"]*)codehilite([^>]+)',
-                        r'\1code\2', output)
+        output = re.sub('<div class="codehilite"><pre>(.*?)</pre></div>', '<pre class="code literal-block">\\1</pre>', output, flags=re.MULTILINE | re.DOTALL)
         return output
 
 

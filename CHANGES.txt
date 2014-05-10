@@ -80,6 +80,7 @@ Features
 Bugfixes
 --------
 
+* Markdown now outputs code in a reST-like fashion (Issue #1063)
 * Links in monthly archives did not have ``/index.html`` if STRIP_INDEXES
   was set to False (Issue #1263)
 * Fix lxml adding extra root tags being added by lxml by lxml.html.tostring

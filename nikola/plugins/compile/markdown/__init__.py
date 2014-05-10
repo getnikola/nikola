@@ -60,6 +60,7 @@ class CompileMarkdown(PageCompiler):
 
             site.plugin_manager.activatePluginByName(plugin_info.name)
             plugin_info.plugin_object.set_site(site)
+            self.extensions.append(plugin_info.plugin_object)
             plugin_info.plugin_object.short_help = plugin_info.description
 
         return super(CompileMarkdown, self).set_site(site)
