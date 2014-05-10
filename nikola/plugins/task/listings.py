@@ -38,6 +38,9 @@ from nikola.plugin_categories import Task
 from nikola import utils
 
 
+# FIXME: duplicated with mdx_nikola.py
+CODERE = re.compile('<div class="codehilite"><pre>(.*?)</pre></div>', flags=re.MULTILINE | re.DOTALL)
+
 class Listings(Task):
     """Render pretty listings."""
 
@@ -71,8 +74,9 @@ class Listings(Task):
                                                    linenos="table", nowrap=False,
                                                    lineanchors=utils.slugify(in_name),
                                                    anchorlinenos=True))
-                    # duplicated with code in mdx_nikola.py
-                    code = re.sub('<div class="codehilite"><pre>(.*?)</pre></div>', '<pre class="code literal-block">\\1</pre>', code, flags=re.MULTILINE | re.DOTALL)
+                # the pygments highlighter uses <div class="codehilite"><pre>
+                # for code.  We switch it to reST's <pre class="code">.
+                code = CODERE.sub('<pre class="code literal-block">\\1</pre>', code)
                 title = os.path.basename(in_name)
             else:
                 code = ''
