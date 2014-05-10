@@ -238,7 +238,7 @@ class DoitNikola(DoitMain):
         # core doit commands
         cmds = DoitMain.get_commands(self)
         # load nikola commands
-        for name, cmd in self.nikola.commands.items():
+        for name, cmd in self.nikola._commands.items():
             cmds[name] = cmd
         return cmds
 

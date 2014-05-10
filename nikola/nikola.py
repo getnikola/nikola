@@ -526,7 +526,7 @@ class Nikola(object):
         # Emit signal for SignalHandlers which need to start running immediately.
         signal('sighandlers_loaded').send(self)
 
-        self.commands = {}
+        self._commands = {}
         # Activate all command plugins
         for plugin_info in self.plugin_manager.getPluginsOfCategory("Command"):
             if plugin_info.name in self.config['DISABLED_PLUGINS']:
@@ -536,7 +536,7 @@ class Nikola(object):
             self.plugin_manager.activatePluginByName(plugin_info.name)
             plugin_info.plugin_object.set_site(self)
             plugin_info.plugin_object.short_help = plugin_info.description
-            self.commands[plugin_info.name] = plugin_info.plugin_object
+            self._commands[plugin_info.name] = plugin_info.plugin_object
 
         # Activate all task plugins
         for task_type in ["Task", "LateTask"]:
@@ -642,6 +642,7 @@ class Nikola(object):
                 "PageCompiler"):
             self.compilers[plugin_info.name] = \
                 plugin_info.plugin_object
+
         signal('configured').send(self)
 
     def _get_themes(self):
@@ -1122,6 +1123,7 @@ class Nikola(object):
         if self._scanned and not really:
             return
 
+        self.commands = utils.Commands(self.doit)
         self.global_data = {}
         self.posts = []
         self.posts_per_year = defaultdict(list)
