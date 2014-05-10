@@ -60,6 +60,7 @@ from .utils import (
     unicode_str,
     demote_headers,
     get_translation_candidate,
+    unslugify,
 )
 from .rc4 import rc4
 
@@ -127,7 +128,7 @@ class Post(object):
         self._paragraph_count = None
         self._remaining_paragraph_count = None
 
-        default_metadata = get_meta(self, self.config['FILE_METADATA_REGEXP'])
+        default_metadata = get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'])
 
         self.meta = Functionary(lambda: None, self.default_lang)
         self.meta[self.default_lang] = default_metadata
@@ -624,7 +625,7 @@ def re_meta(line, match=None):
         return (None,)
 
 
-def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
+def _get_metadata_from_filename_by_regex(filename, metadata_regexp, unslugify_titles):
     """
     Tries to ried the metadata from the filename based on the given re.
     This requires to use symbolic group names in the pattern.
@@ -638,7 +639,11 @@ def _get_metadata_from_filename_by_regex(filename, metadata_regexp):
     if match:
         # .items() for py3k compat.
         for key, value in match.groupdict().items():
-            meta[key.lower()] = value  # metadata must be lowercase
+            k = key.lower().strip()  # metadata must be lowercase
+            if k == 'title' and unslugify_titles:
+                meta[k] = unslugify(value)
+            else:
+                meta[k] = value
 
     return meta
 
@@ -767,11 +772,12 @@ def get_metadata_from_meta_file(path, config=None, lang=None):
         return {}
 
 
-def get_meta(post, file_metadata_regexp=None, lang=None):
+def get_meta(post, file_metadata_regexp=None, unslugify_titles=True, lang=None):
     """Get post's meta from source.
 
     If ``file_metadata_regexp`` is given it will be tried to read
     metadata from the filename.
+    If ``unslugify_titles`` is True, the extracted title (if any) will be unslugified, as is done in galleries.
     If any metadata is then found inside the file the metadata from the
     file will override previous findings.
     """
@@ -790,7 +796,8 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
 
     if file_metadata_regexp is not None:
         meta.update(_get_metadata_from_filename_by_regex(post.source_path,
-                                                         file_metadata_regexp))
+                                                         file_metadata_regexp,
+                                                         unslugify_titles))
 
     meta.update(get_metadata_from_file(post.source_path, config, lang))
 

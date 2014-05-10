@@ -4,6 +4,8 @@ New in v7.0.0-rc1
 Features
 --------
 
+* Added ``UNSLUGIFY_TLTES`` option for making titles fetched via the
+  filename regexp prettier (Issue #1282)
 * New dependencies: ``natsort`` (natural sorting in galleries)
   and ``dateutil`` (replaces ``pytz``)
 * Nikola.commands are now the user-friendly wrappers from console (Issue #1177)
