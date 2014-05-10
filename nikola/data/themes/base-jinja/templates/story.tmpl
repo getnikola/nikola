@@ -22,6 +22,7 @@
 <article class="storypage" itemscope="itemscope" itemtype="http://schema.org/Article">
     <header>
         {{ pheader.html_title() }}
+        {{ pheader.html_translations(post) }}
     </header>
     <div itemprop="articleBody text">
     {{ post.text() }}
