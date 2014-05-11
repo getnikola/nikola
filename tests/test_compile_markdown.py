@@ -55,9 +55,9 @@ class CompileMarkdownTests(BaseTestCase):
         expected_output = '''\
 <table class="codehilitetable"><tr><td class="linenos">\
 <div class="linenodiv"><pre>1</pre></div>\
-</td><td class="code"><div class="code">\
-<pre><span class="kn">from</span> <span class="nn">this</span>
-</pre></div>
+</td><td class="code"><pre class="code literal-block">\
+<span class="kn">from</span> <span class="nn">this</span>
+</pre>
 </td></tr></table>
 '''
 

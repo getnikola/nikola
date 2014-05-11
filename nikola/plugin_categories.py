@@ -239,11 +239,6 @@ class RestExtension(BasePlugin):
 class MarkdownExtension(BasePlugin):
     name = "dummy_markdown_extension"
 
-    def set_site(self, site):
-        from nikola.plugins.compile.markdown import CompileMarkdown
-        CompileMarkdown.extensions.append(self)
-        return super(MarkdownExtension, self).set_site(site)
-
 
 class SignalHandler(BasePlugin):
     name = "dummy_signal_handler"

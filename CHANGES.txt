@@ -82,13 +82,13 @@ Features
 Bugfixes
 --------
 
+* Markdown now outputs code in a reST-like fashion (Issue #1063)
+* code.css is back to supporting only ``pre.code`` (Issue #1063)
 * Links in monthly archives did not have ``/index.html`` if STRIP_INDEXES
   was set to False (Issue #1263)
 * Fix lxml adding extra root tags being added by lxml by lxml.html.tostring
 * Not having typogrify installed now produces a valid error (Issue #1262)
 * Pages were not rebuilt when DEMOTE_HEADERS was changed (Issue #1261)
-* code.css was not rebuilt, even though there were changes in v6.4.0 to its
-  format (via Issue #1050)
 * Removed SCHEDULE_FORCE_TODAY option (Issue #984)
 * Give better error for unknown subcommands (Issue #1233)
 * Handle conf.py for import plugins more generically (Issue #1235)

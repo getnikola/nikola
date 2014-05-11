@@ -48,7 +48,7 @@ class CopyAssets(Task):
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
             "code_color_scheme": self.site.config['CODE_COLOR_SCHEME'],
-            "code.css_selectors": ['pre.code', 'div.code pre'],
+            "code.css_selectors": 'pre.code',
             "code.css_close": "\ntable.codetable { width: 100%;} td.linenos {text-align: right; width: 4em;}\n",
         }
         has_code_css = False

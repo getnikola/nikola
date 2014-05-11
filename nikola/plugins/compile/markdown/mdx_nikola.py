@@ -37,16 +37,17 @@ except ImportError:
 
 from nikola.plugin_categories import MarkdownExtension
 
+# FIXME: duplicated with listings.py
+CODERE = re.compile('<div class="codehilite"><pre>(.*?)</pre></div>', flags=re.MULTILINE | re.DOTALL)
+
 
 class NikolaPostProcessor(Postprocessor):
     def run(self, text):
         output = text
 
-        # python-markdown's highlighter uses the class 'codehilite' to wrap
-        # code, instead of the standard 'code'. None of the standard
-        # pygments stylesheets use this class, so swap it to be 'code'
-        output = re.sub(r'(<div[^>]+class="[^"]*)codehilite([^>]+)',
-                        r'\1code\2', output)
+        # python-markdown's highlighter uses <div class="codehilite"><pre>
+        # for code.  We switch it to reST's <pre class="code">.
+        output = CODERE.sub('<pre class="code literal-block">\\1</pre>', output)
         return output
 
 
