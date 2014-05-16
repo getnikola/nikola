@@ -536,6 +536,14 @@ to your configuration::
         how-to-make-money
         2012/09/15 19:52:05
 
+   However, starting with Nikola v7, you can now use ``.meta`` files and put
+   all metadata you want, complete with the explanations — they look just like
+   the beginning of our reST files.
+
+        .. title: How to make money
+        .. slug: how-to-make-money
+        .. date: 2012/09/15 19:52:05
+
 If you are writing a multilingual site, you can also create a per-language
 post file (for example: ``how-to-make-money.es.txt`` with the default TRANSLATIONS_PATTERN, see below).
 This one can replace metadata of the default language, for example:
