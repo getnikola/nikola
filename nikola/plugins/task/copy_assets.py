@@ -45,13 +45,13 @@ class CopyAssets(Task):
 
         kw = {
             "themes": self.site.THEMES,
+            "files_folders": self.site.config['FILES_FOLDERS'],
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
             "code_color_scheme": self.site.config['CODE_COLOR_SCHEME'],
             "code.css_selectors": 'pre.code',
             "code.css_close": "\ntable.codetable { width: 100%;} td.linenos {text-align: right; width: 4em;}\n",
         }
-        has_code_css = False
         tasks = {}
         code_css_path = os.path.join(kw['output_folder'], 'assets', 'css', 'code.css')
 
@@ -63,14 +63,14 @@ class CopyAssets(Task):
             for task in utils.copy_tree(src, dst):
                 if task['name'] in tasks:
                     continue
-                has_code_css = task['targets'][0] == code_css_path
                 tasks[task['name']] = task
                 task['uptodate'] = [utils.config_changed(kw)]
                 task['basename'] = self.name
                 yield utils.apply_filters(task, kw['filters'])
 
-        if not has_code_css:  # Generate it
-
+        # Check whether or not there is a code.css file around.
+        if not utils.get_asset_path('assets/css/code.css', themes=kw['themes'],
+                                    files_folders=kw['files_folders']):
             def create_code_css():
                 from pygments.formatters import get_formatter_by_name
                 formatter = get_formatter_by_name('html', style=kw["code_color_scheme"])
