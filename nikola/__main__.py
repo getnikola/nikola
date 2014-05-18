@@ -227,6 +227,7 @@ class NikolaTaskLoader(TaskLoader):
         latetasks = generate_tasks(
             'post_render',
             self.nikola.gen_tasks('post_render', "LateTask", 'Group of tasks to be executes after site is rendered.'))
+        signal('initialized').send(self.nikola)
         return tasks + latetasks, DOIT_CONFIG
 
 
@@ -250,7 +251,6 @@ class DoitNikola(DoitMain):
 
     def run(self, cmd_args):
         sub_cmds = self.get_commands()
-        signal('initialized').send(self.nikola)
         args = self.process_args(cmd_args)
         args = [sys_decode(arg) for arg in args]
 
