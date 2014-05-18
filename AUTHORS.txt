@@ -7,6 +7,7 @@ do a PR :-)
                                                 -- Roberto Alsina
 
 
+Alberto Berti <https://github.com/azazel75>
 Aru Sahni <https://github.com/arusahni>
 Bluerise <https://github.com/Bluerise>
 Chris “Kwpolska” Warrick <https://github.com/Kwpolska>

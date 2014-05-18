@@ -1,3 +1,14 @@
+New in master
+=============
+
+Features
+--------
+
+* added missing ``initialized`` event (after tasks are loaded) (Issue #1291)
+
+Bugfixes
+--------
+
 New in v7.0.0
 =============
 
