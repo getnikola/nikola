@@ -10,6 +10,8 @@ Features
 Bugfixes
 --------
 
+* made ``files/assets/css/code.css` work again (Issue #1290)
+
 New in v7.0.0
 =============
 
