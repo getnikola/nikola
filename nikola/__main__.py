@@ -239,7 +239,6 @@ class DoitNikola(DoitMain):
         self.nikola = nikola
         nikola.doit = self
         self.task_loader = self.TASK_LOADER(nikola, quiet)
-        signal('initialized').send(self.nikola)
 
     def get_commands(self):
         # core doit commands
@@ -251,6 +250,7 @@ class DoitNikola(DoitMain):
 
     def run(self, cmd_args):
         sub_cmds = self.get_commands()
+        signal('initialized').send(self.nikola)
         args = self.process_args(cmd_args)
         args = [sys_decode(arg) for arg in args]
 
@@ -283,6 +283,7 @@ class DoitNikola(DoitMain):
                 LOGGER.error("This command needs to run inside an "
                              "existing Nikola site.")
                 return False
+
         return super(DoitNikola, self).run(cmd_args)
 
     @staticmethod
