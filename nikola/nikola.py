@@ -1228,6 +1228,9 @@ class Nikola(object):
         self._scanned = True
         if not self.quiet:
             print("done!", file=sys.stderr)
+
+        signal('scanned').send(self)
+
         if quit:
             sys.exit(1)
 

@@ -5,6 +5,7 @@ Features
 --------
 
 * added missing ``initialized`` event (after tasks are loaded) (Issue #1291)
+* added ``scanned`` signal (after posts are scanned) (via Issue #1291)
 
 Bugfixes
 --------
