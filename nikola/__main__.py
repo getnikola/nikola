@@ -56,14 +56,8 @@ config = {}
 
 def main(args=None):
     colorful = False
-    if sys.stderr.isatty():
+    if sys.stderr.isatty() and os.name != 'nt':
         colorful = True
-        try:
-            import colorama
-            colorama.init()
-        except ImportError:
-            if os.name == 'nt':
-                colorful = False
 
     ColorfulStderrHandler._colorful = colorful
 

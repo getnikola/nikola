@@ -4,12 +4,14 @@ New in master
 Features
 --------
 
-* added missing ``initialized`` event (after tasks are loaded) (Issue #1291)
 * added ``scanned`` signal (after posts are scanned) (via Issue #1291)
+* added missing ``initialized`` event (after tasks are loaded) (Issue #1291)
 
 Bugfixes
 --------
 
+* removed ``colorama`` and color support under Windows due to Unicode problems
+  (Issue #1288)
 * made ``files/assets/css/code.css` work again (Issue #1290)
 
 New in v7.0.0

@@ -11,5 +11,4 @@ PyRSS2Gen
 logbook
 blinker
 setuptools
-colorama
 natsort>=3.2.0
