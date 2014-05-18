@@ -44,6 +44,7 @@ from doit.cmd_run import Run as DoitRun
 from doit.cmd_clean import Clean as DoitClean
 from doit.cmd_auto import Auto as DoitAuto
 from logbook import NullHandler
+from blinker import signal
 
 from . import __version__
 from .plugin_categories import Command
@@ -226,8 +227,6 @@ class NikolaTaskLoader(TaskLoader):
         latetasks = generate_tasks(
             'post_render',
             self.nikola.gen_tasks('post_render', "LateTask", 'Group of tasks to be executes after site is rendered.'))
-        from blinker import signal
-        signal('initialized').send(self.nikola)
         return tasks + latetasks, DOIT_CONFIG
 
 
@@ -240,6 +239,7 @@ class DoitNikola(DoitMain):
         self.nikola = nikola
         nikola.doit = self
         self.task_loader = self.TASK_LOADER(nikola, quiet)
+        signal('initialized').send(self.nikola)
 
     def get_commands(self):
         # core doit commands
