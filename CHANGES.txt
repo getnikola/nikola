@@ -1,5 +1,17 @@
-New in v7.0.0-rc1
-=================
+New in master
+=============
+
+Features
+--------
+
+* added missing ``initialized`` event (after tasks are loaded) (Issue #1291)
+* added ``scanned`` signal (after posts are scanned) (via Issue #1291)
+
+Bugfixes
+--------
+
+New in v7.0.0
+=============
 
 Features
 --------

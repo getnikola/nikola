@@ -8,7 +8,7 @@
 Extending Nikola
 ================
 
-:Version: 7.0.0-rc1
+:Version: 7.0.0
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-info pull-right
@@ -369,6 +369,11 @@ RestExtension Plugins
 
 Implement directives for reStructuredText, see ``media.py`` for a simple example.
 
+MarkdownExtension Plugins
+-------------------------
+
+Implement Markdown extensions, see ``mdx_nikola.py`` for a simple example.
+
 SignalHandler Plugins
 ---------------------
 
@@ -383,15 +388,17 @@ Currently Nikola emits the following signals:
 ``sighandlers_loaded``
     Right after SignalHandler plugin activation.
 ``initialized``
-    Right after plugin activation.
+    When all tasks are loaded.
 ``configured``
     When all the configuration file is processed. Note that plugins are activated before this is emitted.
+``scanned``
+    After posts are scanned.
 ``new_post``
     When a new post is created, using the ``nikola new_post`` command.  The signal
     data contains the path of the file, and the metadata file (if there is one).
 ``deployed``
     When the ``nikola deploy`` command is run, and there is at least one new
-    entry/post since ``last_deploy``.  The signal data is of the form ::
+    entry/post since ``last_deploy``.  The signal data is of the form::
 
         {
          'last_deploy: # datetime object for the last deployed time,

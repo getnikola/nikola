@@ -44,6 +44,7 @@ from doit.cmd_run import Run as DoitRun
 from doit.cmd_clean import Clean as DoitClean
 from doit.cmd_auto import Auto as DoitAuto
 from logbook import NullHandler
+from blinker import signal
 
 from . import __version__
 from .plugin_categories import Command
@@ -251,6 +252,7 @@ class DoitNikola(DoitMain):
 
     def run(self, cmd_args):
         sub_cmds = self.get_commands()
+        signal('initialized').send(self.nikola)
         args = self.process_args(cmd_args)
         args = [sys_decode(arg) for arg in args]
 
@@ -283,6 +285,7 @@ class DoitNikola(DoitMain):
                 LOGGER.error("This command needs to run inside an "
                              "existing Nikola site.")
                 return False
+
         return super(DoitNikola, self).run(cmd_args)
 
     @staticmethod
