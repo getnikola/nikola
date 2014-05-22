@@ -352,4 +352,4 @@ class CommandNewPost(Command):
             if editor:
                 subprocess.call(to_run)
             else:
-                LOGGER.error('$EDITOR not set, cannot run editor.')
+                LOGGER.error('$EDITOR not set, cannot edit the post.  Please do it manually.')
