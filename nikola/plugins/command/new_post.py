@@ -30,6 +30,7 @@ import datetime
 import locale
 import os
 import sys
+import subprocess
 
 from blinker import signal
 import dateutil.tz
@@ -185,6 +186,13 @@ class CommandNewPost(Command):
             'help': 'Create the post with separate metadata (two file format)'
         },
         {
+            'name': 'edit',
+            'short': 'e',
+            'type': bool,
+            'default': False,
+            'help': 'Open the post (and meta file, if any) in $EDITOR after creation.'
+        },
+        {
             'name': 'content_format',
             'short': 'f',
             'long': 'format',
@@ -335,3 +343,13 @@ class CommandNewPost(Command):
         LOGGER.info("Your {0}'s text is at: {1}".format(content_type, txt_path))
 
         signal('new_' + content_type).send(self, **event)
+
+        if options['edit']:
+            editor = os.getenv('EDITOR')
+            to_run = [editor, txt_path]
+            if not onefile:
+                to_run.append(meta_path)
+            if editor:
+                subprocess.call(to_run)
+            else:
+                LOGGER.error('$EDITOR not set, cannot edit the post.  Please do it manually.')
