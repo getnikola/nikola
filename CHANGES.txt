@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* added ``-e``, ``--edit`` parameter to ``new_post`` and ``new_page`` to open
+  $EDITOR after creation (Issue #1294)
 * added ``scanned`` signal (after posts are scanned) (via Issue #1291)
 * added missing ``initialized`` event (after tasks are loaded) (Issue #1291)
 
