@@ -40,7 +40,7 @@ import json
 import shutil
 import subprocess
 import sys
-from zipfile import ZipFile as zip
+from zipfile import ZipFile as zipf
 try:
     from imp import reload
 except ImportError:
@@ -722,17 +722,18 @@ def extract_all(zipfile, path='themes'):
     pwd = os.getcwd()
     makedirs(path)
     os.chdir(path)
-    with zip(zipfile) as z:
-        namelist = z.namelist()
-        for f in namelist:
-            if f.endswith('/') and '..' in f:
-                raise UnsafeZipException('The zip file contains ".." and is '
-                                         'not safe to expand.')
-        for f in namelist:
-            if f.endswith('/'):
-                makedirs(f)
-            else:
-                z.extract(f)
+    z = zipf(zipfile)
+    namelist = z.namelist()
+    for f in namelist:
+        if f.endswith('/') and '..' in f:
+            raise UnsafeZipException('The zip file contains ".." and is '
+                                     'not safe to expand.')
+    for f in namelist:
+        if f.endswith('/'):
+            makedirs(f)
+        else:
+            z.extract(f)
+    z.close()
     os.chdir(pwd)
 
 
