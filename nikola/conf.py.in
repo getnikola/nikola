@@ -721,7 +721,8 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # PANDOC_OPTIONS = []
 
 # Social buttons. This is sample code for AddThis (which was the default for a
-# long time). Insert anything you want here, or even make it empty.
+# long time). Insert anything you want here, or even make it empty (which is
+# the default right now)
 # (translatable)
 # SOCIAL_BUTTONS_CODE = """
 # <!-- Social buttons -->
