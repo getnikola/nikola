@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* fixed theme/plugin installation under Python 2.6 (Issue #1298)
 * removed ``colorama`` and color support under Windows due to Unicode problems
   (Issue #1288)
 * made ``files/assets/css/code.css` work again (Issue #1290)
