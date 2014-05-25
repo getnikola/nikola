@@ -31,7 +31,7 @@ import codecs
 import json
 import textwrap
 import datetime
-
+import unidecode
 import dateutil.tz
 from mako.template import Template
 from pkg_resources import resource_filename
@@ -263,7 +263,11 @@ class CommandInit(Command):
             answer = ask('Language(s) to use', 'en')
             while answer.strip() == '?':
                 print('\n# Available languages:')
-                print(SAMPLE_CONF['_SUPPORTED_LANGUAGES'] + '\n')
+                try:
+                    print(SAMPLE_CONF['_SUPPORTED_LANGUAGES'] + '\n')
+                except UnicodeEncodeError:
+                    # avoid Unicode characters in supported language names
+                    print(unidecode.unidecode(SAMPLE_CONF['_SUPPORTED_LANGUAGES']) + '\n')
                 answer = ask('Language(s) to use', 'en')
 
             langs = [i.strip().lower().replace('-', '_') for i in answer.split(',')]

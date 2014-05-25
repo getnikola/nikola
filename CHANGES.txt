@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* made ``nikola init`` locale-independent (via Issues #1288, #1304)
 * fixed theme/plugin installation under Python 2.6 (Issue #1298)
 * removed ``colorama`` and color support under Windows due to Unicode problems
   (Issue #1288)
