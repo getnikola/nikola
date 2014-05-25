@@ -5,6 +5,7 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
 # Daniel <i18n@daniel.priv.no>, 2013
 msgid ""
 msgstr ""

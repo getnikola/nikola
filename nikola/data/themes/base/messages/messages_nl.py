@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "%d min remaining to read": "nog %d min leestijd ",
+    "%d min remaining to read": "%d min resterende leestijd ",
     "Also available in:": "Ook beschikbaar in:",
     "Archive": "Archief",
     "Categories": "Categorieën",
