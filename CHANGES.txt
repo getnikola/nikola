@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* “fixed” a weird bug which tried to find the __file__ of __builtin__
 * made ``nikola init`` locale-independent (via Issues #1288, #1304)
 * fixed theme/plugin installation under Python 2.6 (Issue #1298)
 * removed ``colorama`` and color support under Windows due to Unicode problems
