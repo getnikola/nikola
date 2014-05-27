@@ -64,9 +64,7 @@ class BasePlugin(IPlugin):
             mod_path = sys.modules[self.__class__.__module__].__file__
             mod_dir = os.path.dirname(mod_path)
             tmpl_dir = os.path.join(
-                mod_dir,
-                'templates',
-                self.site.template_system.name
+                mod_dir, 'templates', self.site.template_system.name
             )
             if os.path.isdir(tmpl_dir):
                 # Inject tmpl_dir low in the theme chain
@@ -76,6 +74,7 @@ class BasePlugin(IPlugin):
             # We couldn’t reproduce that, and really find the reason for this,
             # so let’s just ignore it and be done with it.
             pass
+
 
 class Command(BasePlugin, DoitCommand):
     """These plugins are exposed via the command line.
