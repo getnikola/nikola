@@ -469,12 +469,12 @@ class Nikola(object):
         self.default_lang = self.config['DEFAULT_LANG']
         self.translations = self.config['TRANSLATIONS']
 
-        locale_fallback, locale_default, locales = sanitized_locales(
-                                    self.config.get('LOCALE_FALLBACK', None),
-                                    self.config.get('LOCALE_DEFAULT', None),
-                                    self.config.get('LOCALES', {}),
-                                    self.translations)  # NOQA
-        utils.LocaleBorg.initialize(locales, self.default_lang)
+        if self.configured:
+            locale_fallback, locale_default, locales = sanitized_locales(
+                self.config.get('LOCALE_FALLBACK', None),
+                self.config.get('LOCALE_DEFAULT', None),
+                self.config.get('LOCALES', {}), self.translations)
+            utils.LocaleBorg.initialize(locales, self.default_lang)
 
         # BASE_URL defaults to SITE_URL
         if 'BASE_URL' not in self.config:
@@ -578,7 +578,10 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['url_type'] = self.config['URL_TYPE']
         self._GLOBAL_CONTEXT['timezone'] = self.tzinfo
         self._GLOBAL_CONTEXT['_link'] = self.link
-        self._GLOBAL_CONTEXT['set_locale'] = utils.LocaleBorg().set_locale
+        try:
+            self._GLOBAL_CONTEXT['set_locale'] = utils.LocaleBorg().set_locale
+        except utils.LocaleBorgUninitializedException:
+            self._GLOBAL_CONTEXT['set_locale'] = None
         self._GLOBAL_CONTEXT['rel_link'] = self.rel_link
         self._GLOBAL_CONTEXT['abs_link'] = self.abs_link
         self._GLOBAL_CONTEXT['exists'] = self.file_exists
