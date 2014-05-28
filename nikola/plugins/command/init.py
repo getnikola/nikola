@@ -40,7 +40,6 @@ import nikola
 from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_RSS_READ_MORE_LINK, LEGAL_VALUES
 from nikola.plugin_categories import Command
 from nikola.utils import ask, ask_yesno, get_logger, makedirs, STDERR_HANDLER, load_messages
-from nikola.winutils import fix_git_symlinked
 from nikola.packages.tzlocal import get_localzone
 
 
@@ -237,7 +236,6 @@ class CommandInit(Command):
     def copy_sample_site(cls, target):
         src = resource_filename('nikola', os.path.join('data', 'samplesite'))
         shutil.copytree(src, target)
-        fix_git_symlinked(src, target)
 
     @classmethod
     def create_configuration(cls, target):

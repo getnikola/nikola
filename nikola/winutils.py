@@ -29,75 +29,7 @@
 from __future__ import print_function, unicode_literals
 import os
 import shutil
-import sys
-# don't add imports outside stdlib, will be imported in setup.py
-
-
-def should_fix_git_symlinked():
-    """True if git symlinls markers should be filled with the real content"""
-    if sys.platform == 'win32':
-        path = (os.path.dirname(__file__) +
-                r'\data\samplesite\stories\theming.rst')
-        try:
-            if os.path.getsize(path) < 200:
-                return True
-        except Exception:
-            pass
-    return False
-
-
-def fix_git_symlinked(src, dst):
-    """fix git symlinked files in windows that had been copied from src to dst
-
-    Most (all?) of git implementations in windows store a symlink pointing
-    into the repo as a text file, the text being the relative path to the
-    file with the real content.
-
-    So, in a clone of nikola in windows the symlinked files will have the
-    wrong content.
-
-    The linux usage pattern for those files is 'copy to some dir, then use',
-    so we inspect after the copy and rewrite the wrong contents.
-
-    The goals are:
-       support running nikola from a clone without installing and without
-       making dirty the WC.
-
-       support install from the WC.
-
-       if possible and needed, support running the test suite without making
-       dirty the WC.
-    """
-    # if running from WC there should be a 'doc' dir sibling to nikola package
-    if not should_fix_git_symlinked():
-        return
-    # probabbly in a WC, so symlinks should be fixed
-    for root, dirs, files in os.walk(dst):
-        for name in files:
-            filename = os.path.join(root, name)
-
-            # detect if symlinked
-            try:
-                if not (2 < os.path.getsize(filename) < 500):
-                    continue
-                # which encoding uses a git symlink marker ? betting on default
-                with open(filename, 'r') as f:
-                    text = f.read()
-                if text[0] != '.':
-                    # de facto hint to skip binary files and exclude.meta
-                    continue
-            except Exception:
-                # probably encoding: content binary or encoding not defalt,
-                # also in py2.6 it can be path encoding
-                continue
-            dst_dir_relpath = os.path.dirname(os.path.relpath(filename, dst))
-            path = os.path.normpath(os.path.join(src, dst_dir_relpath, text))
-            if not os.path.exists(path):
-                continue
-            # most probably it is a git symlinked file
-
-            # copy original content to filename
-            shutil.copy(path, filename)
+# don't add imports to nikola code, will be imported in setup.py
 
 
 def is_file_into_dir(filename, dirname):
@@ -135,7 +67,7 @@ def fix_all_git_symlinked(topdir):
         all_bytes = f.read()
         text = all_bytes.decode('utf8')
     # expect each line a relpath from git or zip root,
-    # smoke test against relpaths against another base
+    # smoke test relpaths are relative to git root
     if text.startswith('.'):
         raise Exception(r'Bad data in \nikola\data\symlinked.txt')
     relnames = text.split('\n')

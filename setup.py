@@ -81,8 +81,8 @@ def expands_symlinks_for_windows():
     path to the file it points to. If not corrected, installing from a git
     clone will end with some files with bad content
 
-    After install the WC will be dirty (symlink markers rewroted with real
-    content)
+    After install the working copy  will be dirty (symlink markers rewroted with
+    real content)
     """
     if sys.platform != 'win32':
         return
@@ -98,7 +98,7 @@ def expands_symlinks_for_windows():
     print('WARNING: your working copy is now dirty by changes in samplesite, sphinx and themes')
     if failures:
         raise Exception("Error: \n\tnot all symlinked files could be fixed." +
-                        "\n\tYour best bet is to start for clean again.")
+                        "\n\tYour best bet is to start again from clean.")
 
 
 def install_manpages(root, prefix):
