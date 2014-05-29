@@ -149,9 +149,14 @@ class Sitemap(LateTask):
                         if not robot_fetch(path):
                             continue
                         if path.endswith('.html') or path.endswith('.htm'):
-                            if u'<!doctype html' not in codecs.open(real_path, 'r', 'utf8').read(1024).lower():
-                                # ignores "html" files without doctype
-                                # alexa-verify, google-site-verification, etc.
+                            try:
+                                if u'<!doctype html' not in codecs.open(real_path, 'r', 'utf8').read(1024).lower():
+                                    # ignores "html" files without doctype
+                                    # alexa-verify, google-site-verification, etc.
+                                    continue
+                            except UnicodeDecodeError:
+                                # ignore ancient files
+                                # most non-utf8 files are worthless anyways
                                 continue
                         """ put RSS in sitemapindex[] instead of in urlset[], sitemap_path is included after it is generated """
                         if path.endswith('.xml') or path.endswith('.rss'):
