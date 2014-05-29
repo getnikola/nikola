@@ -453,7 +453,7 @@ class Nikola(object):
 
         # Disable RSS.  For a successful disable, we must have both the option
         # false and the plugin disabled through the official means.
-        if 'generate_rss' in self.config['DISABLED_PLUGINS']:
+        if 'generate_rss' in self.config['DISABLED_PLUGINS'] and self.config['GENERATE_RSS'] is True:
             self.config['GENERATE_RSS'] = False
 
         if not self.config['GENERATE_RSS'] and 'generate_rss' not in self.config['DISABLED_PLUGINS']:
