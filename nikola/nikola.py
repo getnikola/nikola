@@ -1271,6 +1271,9 @@ class Nikola(object):
         for k, v in self.GLOBAL_CONTEXT['template_hooks'].items():
             deps_dict['||template_hooks|{0}||'.format(k)] = v._items
 
+        for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
+            deps_dict[k] = deps_dict['global'][k](lang)
+
         if post:
             deps_dict['post_translations'] = post.translated_to
 
@@ -1308,6 +1311,9 @@ class Nikola(object):
 
         for k, v in self.GLOBAL_CONTEXT['template_hooks'].items():
             deps_context['||template_hooks|{0}||'.format(k)] = v._items
+
+        for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
+            deps_context[k] = deps_context['global'][k](lang)
 
         task = {
             'name': os.path.normpath(output_name),

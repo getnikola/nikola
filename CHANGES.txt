@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* rebuild stuff on TranslatableSettings’ change (Issue #1297)
 * made bootstrap-jinja and bootstrap3-jinja work again, assets were missing
   (Issue #1309)
 * ignore non-utf8-encoded .html files in sitemaps (Issue #1308)
