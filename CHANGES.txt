@@ -12,6 +12,8 @@ Features
 Bugfixes
 --------
 
+* made bootstrap-jinja and bootstrap3-jinja work again, assets were missing
+  (Issue #1309)
 * ignore non-utf8-encoded .html files in sitemaps (Issue #1308)
 * fixed missing assets in Windows (Issue #1306)
 * locales are ignored if there is no config (via Issue #1304)
