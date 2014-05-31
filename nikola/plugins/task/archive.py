@@ -92,7 +92,12 @@ class Archive(Task):
                     context,
                 )
                 n = len(post_list) if 'posts' in context else len(months)
-                task_cfg = {1: task['uptodate'][0].config, 2: kw, 3: n}
+
+                deps_translatable = {}
+                for k in self.site._GLOBAL_CONTEXT_TRANSLATABLE:
+                    deps_translatable[k] = self.site.GLOBAL_CONTEXT[k](lang)
+
+                task_cfg = {1: task['uptodate'][0].config, 2: kw, 3: n, 4: deps_translatable}
                 task['uptodate'] = [config_changed(task_cfg)]
                 task['basename'] = self.name
                 yield task

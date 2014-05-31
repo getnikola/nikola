@@ -160,6 +160,9 @@ class Galleries(Task):
                         os.path.relpath(gallery, self.kw['gallery_path']), lang))
                 dst = os.path.normpath(dst)
 
+                for k in self.site._GLOBAL_CONTEXT_TRANSLATABLE:
+                    self.kw[k] = self.site.GLOBAL_CONTEXT[k](lang)
+
                 context = {}
                 context["lang"] = lang
                 if post:
