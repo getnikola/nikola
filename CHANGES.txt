@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* made github_deploy compatible with Python 3 (Issue #1311)
 * rebuild stuff on TranslatableSettings’ change (Issue #1297)
 * made bootstrap-jinja and bootstrap3-jinja work again, assets were missing
   (Issue #1309)

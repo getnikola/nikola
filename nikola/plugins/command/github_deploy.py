@@ -38,6 +38,11 @@ from nikola.__main__ import main
 from nikola import __version__
 
 
+def uni_check_output(*args, **kwargs):
+    o = subprocess.check_output(*args, **kwargs)
+    return o.decode('utf-8')
+
+
 class CommandGitHubDeploy(Command):
     """ Deploy site to GitHub pages. """
     name = 'github_deploy'
@@ -122,7 +127,7 @@ class CommandGitHubDeploy(Command):
         source = self._source_branch
         remote = self._remote_name
 
-        source_commit = subprocess.check_output(['git', 'rev-parse', source])
+        source_commit = uni_check_output(['git', 'rev-parse', source])
         commit_message = (
             'Nikola auto commit.\n\n'
             'Source commit: %s'
@@ -213,7 +218,7 @@ class CommandGitHubDeploy(Command):
         """
 
         try:
-            remotes = subprocess.check_output(['git', 'remote'])
+            remotes = uni_check_output(['git', 'remote'])
         except subprocess.CalledProcessError as e:
             self.logger.notice('github_deploy needs a git repository!')
             sys.exit(e.returncode)
@@ -237,7 +242,7 @@ class CommandGitHubDeploy(Command):
         subprocess.check_call(['git', 'checkout', source])
 
         output_folder = self.site.config['OUTPUT_FOLDER']
-        output_log = subprocess.check_output(
+        output_log = uni_check_output(
             ['git', 'ls-files', '--', output_folder]
         )
 
@@ -251,9 +256,9 @@ class CommandGitHubDeploy(Command):
     def _prompt_continue(self):
         """ Show uncommitted changes, and ask if user wants to continue. """
 
-        changes = subprocess.check_output(['git', 'status', '--porcelain'])
+        changes = uni_check_output(['git', 'status', '--porcelain'])
         if changes.strip():
-            changes = subprocess.check_output(['git', 'status']).strip()
+            changes = uni_check_output(['git', 'status']).strip()
             message = (
                 "You have the following changes:\n%s\n\n"
                 "Anything not committed, and unknown to Nikola may be lost, "
