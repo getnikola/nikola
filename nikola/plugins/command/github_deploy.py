@@ -214,18 +214,15 @@ class CommandGitHubDeploy(Command):
 
         try:
             remotes = subprocess.check_output(['git', 'remote'])
-
         except subprocess.CalledProcessError as e:
             self.logger.notice('github_deploy needs a git repository!')
             sys.exit(e.returncode)
-
         except OSError as e:
             import errno
             self.logger.error('Running git failed with {0}'.format(e))
             if e.errno == errno.ENOENT:
                 self.logger.notice('Is git on the PATH?')
             sys.exit(1)
-
         else:
             if self._remote_name not in remotes:
                 self.logger.error(
@@ -263,7 +260,6 @@ class CommandGitHubDeploy(Command):
                 "or committed onto the wrong branch. Do you wish to continue?"
             ) % changes
             proceed = ask_yesno(message, False)
-
         else:
             proceed = True
 
