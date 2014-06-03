@@ -1,7 +1,7 @@
 .. link:
 .. description:
 .. tags:
-.. date: 2013/08/27 18:20:55
+.. date: 2013-08-27 18:20:55 UTC-03:00
 .. title: A STUDY IN SCARLET.
 .. slug: a-study-in-scarlet
 

@@ -1,6 +1,6 @@
 .. title: Slides Demo
 .. slug: slides-demo
-.. date: 2012/12/27 10:16:20
+.. date: 2012-12-27 10:16:20 UTC-03:00
 .. tags: 
 .. link: 
 .. description: 
