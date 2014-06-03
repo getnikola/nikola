@@ -129,16 +129,13 @@ def get_date(schedule=False, rule=None, last_date=None, tz=None, iso8601=False):
     offset_min = offset_sec % 3600
     if iso8601:
         tz_str = '{0:+03d}:{1:02d}'.format(offset_hrs, offset_min // 60)
-        return date.strftime('%Y-%m-%dT%T') + tz_str
     else:
         if offset:
             tz_str = ' UTC{0:+03d}:{1:02d}'.format(offset_hrs, offset_min // 60)
         else:
             tz_str = ' UTC'
-        return date.strftime('{0} {1}'.format(
-            locale.nl_langinfo(locale.D_FMT),
-            locale.nl_langinfo(locale.T_FMT),
-        )) + tz_str
+
+    return date.strftime('%Y-%m-%d %H:%M:%S') + tz_str
 
 
 class CommandNewPost(Command):
