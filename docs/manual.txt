@@ -1,6 +1,6 @@
 .. title: The Nikola Handbook
 .. slug: handbook
-.. date: 2012/03/30 23:00
+.. date: 2012-03-30 23:00:00 UTC-03:00
 .. tags:
 .. link:
 .. description:
@@ -459,7 +459,7 @@ The content of that file is as follows::
 
     .. title: How to make money
     .. slug: how-to-make-money
-    .. date: 2012/09/15 19:52:05
+    .. date: 2012-09-15 19:52:05 UTC
     .. tags:
     .. link:
     .. description:
@@ -534,7 +534,7 @@ to your configuration::
 
         How to make money
         how-to-make-money
-        2012/09/15 19:52:05
+        2012-09-15 19:52:05 UTC
 
    However, starting with Nikola v7, you can now use ``.meta`` files and put
    all metadata you want, complete with the explanations — they look just like
@@ -542,7 +542,10 @@ to your configuration::
 
         .. title: How to make money
         .. slug: how-to-make-money
-        .. date: 2012/09/15 19:52:05
+        .. date: 2012-09-15 19:52:05 UTC
+
+   Both file formats are supported; however, the new format is preferred, if
+   possible.
 
 If you are writing a multilingual site, you can also create a per-language
 post file (for example: ``how-to-make-money.es.txt`` with the default TRANSLATIONS_PATTERN, see below).

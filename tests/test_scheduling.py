@@ -46,9 +46,7 @@ class TestScheduling(BaseTestCase):
     def test_get_date(self):
         from nikola.plugins.command.new_post import get_date
 
-        # This is now locale-dependent, so do it here, where
-        # locale is set.
-        FMT = '{0} {1} %Z'.format(
+        FMT = '%Y-%m-%d %H:%M:%S %Z'.format(
             locale.nl_langinfo(locale.D_FMT),
             locale.nl_langinfo(locale.T_FMT),
         )

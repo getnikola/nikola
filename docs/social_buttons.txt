@@ -1,6 +1,6 @@
 .. title: Alternative Social Buttons
 .. slug: social_buttons
-.. date: 2013/08/19 23:00
+.. date: 2013-08-19 23:00:00 UTC-03:00
 .. tags:
 .. link:
 .. description:
