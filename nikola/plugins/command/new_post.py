@@ -27,7 +27,6 @@
 from __future__ import unicode_literals, print_function
 import codecs
 import datetime
-import locale
 import os
 import sys
 import subprocess
