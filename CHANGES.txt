@@ -1,3 +1,14 @@
+New in master
+=============
+
+Features
+--------
+
+Bugfixes
+--------
+
+* Quietly ignore empty lines in bundles files
+
 New in v7.0.1
 =============
 

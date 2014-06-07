@@ -122,8 +122,12 @@ def get_theme_bundles(themes):
         if os.path.isfile(bundles_path):
             with open(bundles_path) as fd:
                 for line in fd:
-                    name, files = line.split('=')
-                    files = [f.strip() for f in files.split(',')]
-                    bundles[name.strip().replace('/', os.sep)] = files
+                    try:
+                        name, files = line.split('=')
+                        files = [f.strip() for f in files.split(',')]
+                        bundles[name.strip().replace('/', os.sep)] = files
+                    except ValueError:
+                        # for empty lines
+                        pass
                 break
     return bundles
