@@ -34,6 +34,7 @@ import glob
 import locale
 import os
 import sys
+import mimetypes
 try:
     from urlparse import urlparse, urlsplit, urljoin
 except ImportError:
@@ -161,6 +162,16 @@ LEGAL_VALUES = {
         zh_cn='zh-CN'
     )
 }
+
+
+def _enclosure(post, lang):
+    '''Default implementation of enclosures'''
+    enclosure = post.meta('enclosure', lang)
+    if enclosure:
+        length = 0
+        url = enclosure
+        mime = mimetypes.guess_type(url)[0]
+        return url, length, mime
 
 
 class Nikola(object):
@@ -875,7 +886,7 @@ class Nikola(object):
         return result
 
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
-                             rss_teasers, rss_plain, feed_length=10, feed_url=None, enclosure=None):
+                             rss_teasers, rss_plain, feed_length=10, feed_url=None, enclosure=_enclosure):
 
         """Takes all necessary data, and renders a RSS feed in output_path."""
         rss_obj = rss.RSS2(
@@ -929,14 +940,9 @@ class Nikola(object):
                 rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
 
             """ Enclosure callback must returns tuple """
-            if enclosure:
-                download_link, download_size, download_type = enclosure(post=post, lang=lang)
-
-                args['enclosure'] = rss.Enclosure(
-                    download_link,
-                    download_size,
-                    download_type,
-                )
+            has_enclosure = enclosure(post=post, lang=lang)
+            if has_enclosure:
+                args['enclosure'] = rss.Enclosure(*has_enclosure)
 
             items.append(utils.ExtendedItem(**args))
 
