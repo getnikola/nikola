@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Added support for enclosures (via optional enclosure metadata tag)
+
 Bugfixes
 --------
 
