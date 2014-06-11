@@ -940,9 +940,11 @@ class Nikola(object):
                 rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
 
             """ Enclosure callback must returns tuple """
-            has_enclosure = enclosure(post=post, lang=lang)
-            if has_enclosure:
-                args['enclosure'] = rss.Enclosure(*has_enclosure)
+            # enclosure callback returns None if post has no enclosure, or a
+            # 3-tuple of (url, length (0 is valid), mimetype)
+            enclosure_details = enclosure(post=post, lang=lang)
+            if enclosure_details is not None:
+                args['enclosure'] = rss.Enclosure(*enclosure_details)
 
             items.append(utils.ExtendedItem(**args))
 

@@ -4,7 +4,7 @@ New in master
 Features
 --------
 
-* Added support for enclosures (via optional enclosure metadata tag)
+* Added support for enclosures (via optional enclosure metadata tag) (Issue #1322)
 
 Bugfixes
 --------
