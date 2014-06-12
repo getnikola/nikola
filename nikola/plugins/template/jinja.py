@@ -55,6 +55,8 @@ class JinjaTemplates(TemplateSystem):
         self.lookup.lstrip_blocks = True
         self.lookup.filters['tojson'] = json.dumps
         self.lookup.globals['enumerate'] = enumerate
+        self.lookup.globals['isinstance'] = isinstance
+        self.lookup.globals['tuple'] = tuple
 
     def set_directories(self, directories, cache_folder):
         """Create a template lookup."""
