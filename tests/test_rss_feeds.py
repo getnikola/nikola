@@ -44,13 +44,16 @@ class RSSFeedTest(unittest.TestCase):
         self.blog_url = "http://some.blog"
 
         with mock.patch('nikola.post.get_meta',
-                        mock.Mock(return_value=({'title': 'post title',
-                                                 'slug': 'awesome_article',
-                                                 'date': '2012-10-01 22:41',
-                                                 'author': None,
-                                                 'tags': 'tags', 'link':
-                                                 'link', 'description':
-                                                 'description'}))):
+                        mock.Mock(return_value=(
+                            {'title': 'post title',
+                             'slug': 'awesome_article',
+                             'date': '2012-10-01 22:41',
+                             'author': None,
+                             'tags': 'tags',
+                             'link': 'link',
+                             'description': 'description',
+                             'enclosure': 'http://www.example.org/foo.mp3'}
+                        ))):
             with mock.patch('nikola.nikola.utils.os.path.isdir',
                             mock.Mock(return_value=True)):
                 with mock.patch('nikola.nikola.Post.text',
