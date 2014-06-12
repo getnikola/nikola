@@ -117,7 +117,7 @@ lang="{{ lang }}">
 
 {% macro html_navigation_links() %}
     {% for url, text in navigation_links[lang] %}
-        {% if url is mapping %}
+        {% if isinstance(url, tuple) %}
             <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ text }}<b class="caret"></b></a>
             <ul class="dropdown-menu">
             {% for suburl, text in url %}
