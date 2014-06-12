@@ -341,8 +341,8 @@ class CommandNewPost(Command):
         signal('new_' + content_type).send(self, **event)
 
         if options['edit']:
-            editor = os.getenv('EDITOR')
-            to_run = [editor, txt_path]
+            editor = os.getenv('EDITOR', '').split()
+            to_run = editor + [txt_path]
             if not onefile:
                 to_run.append(meta_path)
             if editor:
