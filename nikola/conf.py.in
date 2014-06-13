@@ -701,6 +701,12 @@ UNSLUGIFY_TITLES = True
 # (defaults to 1.)
 # DEMOTE_HEADERS = 1
 
+# If you don’t like slugified file names ([a-z0-9] and a literal dash),
+# and would prefer to use all the characters your file system allows.
+# USE WITH CARE!  This is also not guaranteed to be perfect, and may
+# sometimes crash Nikola, your web server, or eat your cat.
+# USE_SLUGIFY = True
+
 # You can configure the logging handlers installed as plugins or change the
 # log level of the default stderr handler.
 # WARNING: The stderr handler allows only the loglevels of 'INFO' and 'DEBUG'.

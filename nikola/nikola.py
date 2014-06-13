@@ -330,6 +330,7 @@ class Nikola(object):
             'USE_CDN': False,
             'USE_FILENAME_AS_TITLE': True,
             'USE_OPEN_GRAPH': True,
+            'USE_SLUGIFY': True,
             'TIMEZONE': 'UTC',
             'DEPLOY_DRAFTS': True,
             'DEPLOY_FUTURE': False,
@@ -399,6 +400,9 @@ class Nikola(object):
         # Handle CONTENT_FOOTER properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS.
         self.config['CONTENT_FOOTER'].langformat(self.config['CONTENT_FOOTER_FORMATS'])
+
+        # propagate USE_SLUGIFY
+        utils.USE_SLUGIFY = self.config['USE_SLUGIFY']
 
         # Make sure we have pyphen installed if we are using it
         if self.config.get('HYPHENATE') and pyphen is None:
@@ -1220,7 +1224,7 @@ class Nikola(object):
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.posts_per_tag[other_tag]])))
                                     quit = True
                             else:
-                                slugged_tags.add(utils.slugify(tag))
+                                slugged_tags.add(utils.slugify(tag, force=True))
                             self.posts_per_tag[tag].append(post)
                         self.posts_per_category[post.meta('category')].append(post)
                     else:
