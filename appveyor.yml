@@ -23,3 +23,6 @@ test_script:
   - "%PYTHON%/python.exe setup.py test"
   - "%PYTHON%/Scripts/nikola.exe"
   - "%PYTHON%/Scripts/nikola.exe help"
+  - "%PYTHON%/Scripts/nikola.exe init -qd demosite"
+  - "cd demosite"
+  - "%PYTHON%/Scripts/nikola.exe build"
