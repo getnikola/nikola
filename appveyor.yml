@@ -16,6 +16,8 @@ install:
 # can't install coverage etc.
   - "%PYTHON%/Scripts/pip.exe install -r requirements-extras.txt pytest mock freezegun"
   - "%PYTHON%/Scripts/pip.exe install ."
+    # temp workaround
+  - "%PYTHON%/Scripts/pip.exe uninstall -y webassets"
 
 test_script:
   - "%PYTHON%/python.exe --version"
