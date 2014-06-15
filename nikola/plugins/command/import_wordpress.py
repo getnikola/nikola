@@ -443,7 +443,7 @@ class CommandImportWordpress(Command, ImportMixin):
         elif content.strip():
             # If no content is found, no files are written.
             self.url_map[link] = (self.context['SITE_URL'] + out_folder + '/'
-                                  + slug + '.html')
+                                  + slug + '.html').replace(os.sep, '/')
             if hasattr(self, "separate_qtranslate_content") \
                and self.separate_qtranslate_content:
                 content_translations = separate_qtranslate_content(content)
