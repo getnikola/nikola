@@ -186,7 +186,10 @@ class TranslatedBuildTest(EmptyBuildTest):
         super(TranslatedBuildTest, self).__init__(*a, **kw)
         try:
             self.oldlocale = locale.getlocale()
-            locale.setlocale(locale.LC_ALL, ("pl_PL", "utf8"))
+            if sys.platform == 'nt':
+                locale.setlocale(locale.LC_ALL, 'Polish')
+            else:
+                locale.setlocale(locale.LC_ALL, ("pl_PL", "utf8"))
         except:
             pytest.skip()
 
