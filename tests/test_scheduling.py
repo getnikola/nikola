@@ -46,10 +46,7 @@ class TestScheduling(BaseTestCase):
     def test_get_date(self):
         from nikola.plugins.command.new_post import get_date
 
-        FMT = '%Y-%m-%d %H:%M:%S %Z'.format(
-            locale.nl_langinfo(locale.D_FMT),
-            locale.nl_langinfo(locale.T_FMT),
-        )
+        FMT = '%Y-%m-%d %H:%M:%S %Z'
         NOW = _NOW.strftime(FMT)
         TODAY = dateutil.parser.parse(NOW)
         RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
