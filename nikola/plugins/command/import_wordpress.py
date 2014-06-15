@@ -323,13 +323,15 @@ class CommandImportWordpress(Command, ImportMixin):
                 # your blogging into another site or system its not.
                 # Why don't they just use JSON?
                 if sys.version_info[0] == 2:
-                    metadata = phpserialize.loads(utils.sys_encode(meta_value.text))
-                    size_key = 'sizes'
-                    file_key = 'file'
+                    try:
+                        metadata = phpserialize.loads(utils.sys_encode(meta_value.text))
+                    except ValueError:
+                        # local encoding might be wrong sometimes
+                        metadata = phpserialize.loads(meta_value.text.encode('utf-8'))
                 else:
-                    metadata = phpserialize.loads(meta_value.text.encode('UTF-8'))
-                    size_key = b'sizes'
-                    file_key = b'file'
+                    metadata = phpserialize.loads(meta_value.text.encode('utf-8'))
+                size_key = b'sizes'
+                file_key = b'file'
 
                 if size_key not in metadata:
                     continue
