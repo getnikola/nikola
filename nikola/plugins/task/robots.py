@@ -51,13 +51,13 @@ class RobotsFile(LateTask):
             "robots_exclusions": self.site.config["ROBOTS_EXCLUSIONS"]
         }
 
-        if kw["site_url"] != urljoin(kw["site_url"], "/"):
-            utils.LOGGER.warn('robots.txt not ending up in server root, will be useless')
-
         sitemapindex_url = urljoin(kw["base_url"], "sitemapindex.xml")
         robots_path = os.path.join(kw['output_folder'], "robots.txt")
 
         def write_robots():
+            if kw["site_url"] != urljoin(kw["site_url"], "/"):
+                utils.LOGGER.warn('robots.txt not ending up in server root, will be useless')
+
             with codecs.open(robots_path, 'wb+', 'utf8') as outf:
                 outf.write("Sitemap: {0}\n\n".format(sitemapindex_url))
                 if kw["robots_exclusions"]:
