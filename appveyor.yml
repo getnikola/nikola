@@ -22,6 +22,7 @@ install:
 test_script:
   - "%PYTHON%/python.exe --version"
   - "%PYTHON%/Scripts/pip.exe --version"
-  - "%PYTHON%/python.exe setup.py test"
+  - "cd tests"
+  - "%PYTHON%/Scripts/py.test.exe"
   - "%PYTHON%/Scripts/nikola.exe"
   - "%PYTHON%/Scripts/nikola.exe help"
