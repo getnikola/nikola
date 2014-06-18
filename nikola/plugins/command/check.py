@@ -30,9 +30,9 @@ import re
 import sys
 try:
     from urllib import unquote
-    from urlparse import urlparse
+    from urlparse import urlparse, urljoin, urldefrag
 except ImportError:
-    from urllib.parse import unquote, urlparse  # NOQA
+    from urllib.parse import unquote, urlparse, urljoin, urldefrag  # NOQA
 
 import lxml.html
 
@@ -61,6 +61,15 @@ def real_scan_files(site):
     only_on_input = list(task_fnames - real_fnames)
 
     return (only_on_output, only_on_input)
+
+
+def fs_relpath_from_url_path(url_path):
+    """Expects as input an urlparse(s).path"""
+    url_path = unquote(url_path)
+    # in windows relative paths don't begin with os.sep
+    if sys.platform == 'win32' and len(url_path):
+        url_path = url_path[1:].replace('/', '\\')
+    return url_path
 
 
 class CommandCheck(Command):
@@ -142,6 +151,8 @@ class CommandCheck(Command):
         self.existing_targets.add(self.site.config['SITE_URL'])
         self.existing_targets.add(self.site.config['BASE_URL'])
         url_type = self.site.config['URL_TYPE']
+        if url_type == 'absolute':
+            url_netloc_to_root = urlparse(self.site.config['SITE_URL']).path
         try:
             filename = task.split(":")[-1]
             d = lxml.html.fromstring(open(filename).read())
@@ -149,6 +160,7 @@ class CommandCheck(Command):
                 target = l[0].attrib[l[1]]
                 if target == "#":
                     continue
+                target, _ = urldefrag(target)
                 parsed = urlparse(target)
 
                 # Absolute links when using only paths, skip.
@@ -159,24 +171,20 @@ class CommandCheck(Command):
                 if (parsed.scheme or target.startswith('//')) and parsed.netloc != base_url.netloc:
                     continue
 
-                if parsed.fragment:
-                    target = target.split('#')[0]
                 if url_type == 'rel_path':
                     target_filename = os.path.abspath(
                         os.path.join(os.path.dirname(filename), unquote(target)))
 
                 elif url_type in ('full_path', 'absolute'):
-                    target_filename = os.path.abspath(
-                        os.path.join(os.path.dirname(filename), parsed.path))
-                    if parsed.path in ['', '/']:
-                        target_filename = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.config['INDEX_FILE'])
-                    elif parsed.path.endswith('/'):  # abspath removes trailing slashes
-                        target_filename += '/{0}'.format(self.site.config['INDEX_FILE'])
-                    if target_filename.startswith(base_url.path):
-                        target_filename = target_filename[len(base_url.path):]
-                    target_filename = os.path.join(self.site.config['OUTPUT_FOLDER'], target_filename)
-                    if parsed.path in ['', '/']:
-                        target_filename = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.config['INDEX_FILE'])
+                    if url_type == 'absolute':
+                        # convert to 'full_path' case, ie url relative to root
+                        url_rel_path = target.path[len(url_netloc_to_root):]
+                    else:
+                        url_rel_path = target.path
+                    if url_rel_path == '' or url_rel_path.endswith('/'):
+                        url_rel_path = urljoin(url_rel_path, self.site.config['INDEX_FILE'])
+                    fs_rel_path = fs_relpath_from_url_path(url_rel_path)
+                    target_filename = os.path.join(self.site.config['OUTPUT_FOLDER'], fs_rel_path)
 
                 if any(re.match(x, target_filename) for x in self.whitelist):
                     continue
