@@ -15,14 +15,17 @@ install:
   - "%PYTHON%/Scripts/easy_install.exe %PYTHON%/get-lxml.exe"
 # can't install coverage etc.
   - "%PYTHON%/Scripts/pip.exe install -r requirements-extras.txt pytest mock freezegun"
-  - "%PYTHON%/Scripts/pip.exe install ."
+# temporary change, install with setup.py install so symlinks are expanned
+#  - "%PYTHON%/Scripts/pip.exe install ."
+  - "%PYTHON%/python.exe setup.py install"
+
     # temp workaround
   - "%PYTHON%/Scripts/pip.exe uninstall -y webassets"
 
 test_script:
+  - "set path=%PYTHON%/Scripts;%path%"
   - "%PYTHON%/python.exe --version"
   - "%PYTHON%/Scripts/pip.exe --version"
-  - "cd tests"
-  - "%PYTHON%/Scripts/py.test.exe"
-  - "%PYTHON%/Scripts/nikola.exe"
-  - "%PYTHON%/Scripts/nikola.exe help"
+  - "%PYTHON%/python.exe setup.py test"
+  - "%nikola"
+  - "%nikola help"
