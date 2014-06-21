@@ -89,3 +89,17 @@ Travis CI
 
 We also run our tests on `Travis CI <https://travis-ci.org/>`_.
 You can check the `current build status <https://travis-ci.org/getnikola/nikola>`_ there.
+
+
+Writing tests
+-------------
+
+* When adding new *.py files under tests/ , remember to include at the begining the lines::
+
+	# This code is so you can run the samples without installing the package,
+	# and should be before any import touching nikola, in any file under tests/
+	import os
+	import sys
+	sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+  Those lines allow to run the tests without installing nikola.
