@@ -1431,6 +1431,36 @@ and it will produce:
 
     Take a look at :doc:`creating-a-theme` to know how to do it.
 
+Post List
+~~~~~~~~~
+
+This directive can be used to generate a list of posts. You could use it, for
+example, to make a list of the latest 5 blog posts, or a list of all blog posts
+with the tag ``nikola``::
+
+   Here are my 5 latest and greatest blog posts:
+
+   .. post-list::
+      :start: -5
+
+   These are all my posts about Nikola:
+
+   .. post-list::
+      :tags: nikola
+
+Note that you can give the ``tags`` option a comma-separated list of tags, in
+which case the list will show all posts that have at least one of those tags.
+Other interesting options include ``stop`` (set it to ``-1``, for example, to
+show all but the last post); ``reverse`` (set to ``True`` to sort the list in
+chronological order, instead of the default latest-post-first); ``lang``
+(language to use for post titles and links); and ``slugs`` (allows you to filter
+by post slugs, instead of tags).
+
+The post list directive uses the ``post_list_directive.tmpl`` template file (or
+another one, if you use the ``template`` option) to generate the list's HTML. By
+default, this is an unordered list with dates and clickable post titles. See
+the template file in Nikola's base theme for an example of how this works.
+
 
 Importing Your WordPress Site Into Nikola
 -----------------------------------------
