@@ -59,9 +59,24 @@ TRANSLATIONS = ${TRANSLATIONS}
 
 TRANSLATIONS_PATTERN = ${TRANSLATIONS_PATTERN}
 
-# Links for the sidebar / navigation bar.
-# You should provide a key-value pair for each used language.
-# (the same way you would do with a (translatable) setting.)
+# Links for the sidebar / navigation bar.  (translatable)
+# This is a dict.  The keys are languages, and values are tuples.
+#
+# For regular links:
+#     ('http://example.com/', 'Text')
+#
+# For submenus:
+#     ((
+#         ('Sub 1', 'http://example.com/'),
+#         ('Sub 2', 'http://example.org/'),
+#     ), 'Top')
+#
+# WARNING: Support for submenus is theme-dependent.
+#          Only one level of submenus is supported.
+# WARNING: Some themes, including the default Bootstrap 3 theme,
+#          may present issues if the menu is too large.
+#          (in bootstrap3, the navbar can grow too large and cover contents.)
+
 NAVIGATION_LINKS = ${NAVIGATION_LINKS}
 
 # Name of the theme to use.

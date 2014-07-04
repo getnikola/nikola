@@ -898,6 +898,15 @@ Navigation Links
             ),
         }
 
+    .. note::
+
+       Support for submenus is theme-dependent.  Only one level of
+       submenus is supported.
+
+    .. note::
+       Some themes, including the default Bootstrap 3 theme, may
+       present issues if the menu is too large.  (in ``bootstrap3``, the
+       navbar can grow too large and cover contents.)
 
     The ``SEARCH_FORM`` option contains the HTML code for a search form based on
     duckduckgo.com which should always work, but feel free to change it to
