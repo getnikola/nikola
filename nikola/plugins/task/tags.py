@@ -169,7 +169,7 @@ class RenderTags(Task):
             else:
                 context["cat_items"] = None
             context["permalink"] = self.site.link("tag_index", None, lang)
-            context["description"] = None
+            context["description"] = context["title"]
             task = self.site.generic_post_list_renderer(
                 lang,
                 [],
@@ -231,7 +231,7 @@ class RenderTags(Task):
                     page_name(tag, i + 1, lang))
             context["permalink"] = self.site.link(kind, tag, lang)
             context["tag"] = tag
-            context["description"] = None
+            context["description"] = context["title"]
             task = self.site.generic_post_list_renderer(
                 lang,
                 post_list,
@@ -259,7 +259,7 @@ class RenderTags(Task):
         context["permalink"] = self.site.link(kind, tag, lang)
         context["tag"] = tag
         context["kind"] = kind
-        context["description"] = None
+        context["description"] = context["title"]
         task = self.site.generic_post_list_renderer(
             lang,
             post_list,
