@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Made posts that are directive-only work properly (Issue #1351)
 * Made ``nikola bootswatch_theme`` compatible with Jinja themes
 * Fix submenus in Jinja themes (Issue #1327)
 * Quietly ignore empty lines in bundles files
