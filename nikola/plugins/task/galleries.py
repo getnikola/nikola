@@ -153,6 +153,9 @@ class Galleries(Task):
 
             # Create index.html for each language
             for lang in self.kw['translations']:
+                # save navigation links as dependencies
+                self.kw['navigation_links|{0}'.format(lang)] = self.kw['global_context']['navigation_links'](lang)
+
                 dst = os.path.join(
                     self.kw['output_folder'],
                     self.site.path(
