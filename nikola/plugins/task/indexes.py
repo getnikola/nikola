@@ -147,20 +147,29 @@ class Indexes(Task):
                         groups[dirname].append(p)
                 for dirname, post_list in groups.items():
                     context = {}
-                    context["items"] = [
-                        (post.title(lang), post.permalink(lang))
-                        for post in post_list
-                    ]
+                    context["items"] = []
+                    should_render = True
                     output_name = os.path.join(kw['output_folder'], dirname, kw['index_file'])
-                    task = self.site.generic_post_list_renderer(lang, post_list,
-                                                                output_name,
-                                                                template_name,
-                                                                kw['filters'],
-                                                                context)
-                    task_cfg = {1: task['uptodate'][0].config, 2: kw}
-                    task['uptodate'] = [config_changed(task_cfg)]
-                    task['basename'] = self.name
-                    yield task
+                    short_destination = os.path.join(dirname, kw['index_file'])
+                    for post in post_list:
+                        # If there is an index.html pending to be created from
+                        # a story, do not generate the STORY_INDEX
+                        if post.destination_path(lang) == short_destination:
+                            should_render = False
+                        else:
+                            context["items"].append((post.title(lang),
+                                                     post.permalink(lang)))
+
+                    if should_render:
+                        task = self.site.generic_post_list_renderer(lang, post_list,
+                                                                    output_name,
+                                                                    template_name,
+                                                                    kw['filters'],
+                                                                    context)
+                        task_cfg = {1: task['uptodate'][0].config, 2: kw}
+                        task['uptodate'] = [config_changed(task_cfg)]
+                        task['basename'] = self.name
+                        yield task
 
     def index_path(self, name, lang):
         if name not in [None, 0]:

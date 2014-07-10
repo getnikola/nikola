@@ -1282,6 +1282,8 @@ class Nikola(object):
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             deps_dict[k] = deps_dict['global'][k](lang)
 
+        deps_dict['navigation_links'] = deps_dict['global']['navigation_links'](lang)
+
         if post:
             deps_dict['post_translations'] = post.translated_to
 
@@ -1322,6 +1324,8 @@ class Nikola(object):
 
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             deps_context[k] = deps_context['global'][k](lang)
+
+        deps_context['navigation_links'] = deps_context['global']['navigation_links'](lang)
 
         task = {
             'name': os.path.normpath(output_name),

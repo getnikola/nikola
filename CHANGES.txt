@@ -4,14 +4,17 @@ New in master
 Features
 --------
 
+* Don’t generate STORY_INDEX if there is a conflicting story
 * Added support for enclosures (via optional enclosure metadata tag) (Issue #1322)
 
 Bugfixes
 --------
 
 * Made posts that are directive-only work properly (Issue #1351)
+* Made mathjax work with stories (Issue #1355)
+* Fixed regeneration after change of ``NAVIGATION_LINKS``
 * Made ``nikola bootswatch_theme`` compatible with Jinja themes
-* Fix submenus in Jinja themes (Issue #1327)
+* Fixed submenus in Jinja themes (Issue #1327)
 * Quietly ignore empty lines in bundles files
 
 New in v7.0.1
