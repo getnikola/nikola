@@ -52,4 +52,4 @@ class CopyFiles(Task):
             for task in utils.copy_tree(src, real_dst, link_cutoff=dst):
                 task['basename'] = self.name
                 task['uptodate'] = [utils.config_changed(kw)]
-                yield utils.apply_filters(task, filters)
+                yield utils.apply_filters(task, filters, skip_ext=['.html'])
