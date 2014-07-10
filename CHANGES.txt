@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Made posts that are directive-only work properly (Issue #1351)
 * Made mathjax work with stories (Issue #1355)
 * Fixed regeneration after change of ``NAVIGATION_LINKS``
 * Made ``nikola bootswatch_theme`` compatible with Jinja themes
