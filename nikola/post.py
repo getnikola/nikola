@@ -546,9 +546,10 @@ class Post(object):
 
     def source_link(self, lang=None):
         """Return absolute link to the post's source."""
+        ext = self.source_ext(True)
         return "/" + self.destination_path(
             lang=lang,
-            extension=self.source_ext(),
+            extension=ext,
             sep='/')
 
     def destination_path(self, lang=None, extension='.html', sep=os.sep):
@@ -589,8 +590,20 @@ class Post(object):
         else:
             return link
 
-    def source_ext(self):
-        return os.path.splitext(self.source_path)[1]
+    def source_ext(self, prefix=False):
+        """
+        Return the source file extension.
+
+        If `prefix` is True, a `.src.` prefix will be added to the resulting extension
+        if it’s equal to the destination extension.
+        """
+
+        ext = os.path.splitext(self.source_path)[1]
+        if prefix and ext == self.compiler.extension():
+            # ext starts with a dot
+            return '.src' + ext
+        else:
+            return ext
 
 # Code that fetches metadata from different places
 
