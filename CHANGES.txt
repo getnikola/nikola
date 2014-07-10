@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Made mathjax work with stories (Issue #1355)
 * Fixed regeneration after change of ``NAVIGATION_LINKS``
 * Made ``nikola bootswatch_theme`` compatible with Jinja themes
 * Fixed submenus in Jinja themes (Issue #1327)
