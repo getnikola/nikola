@@ -7,7 +7,7 @@ MESSAGES = {
     "Archive": "Archiwum",
     "Categories": "Kategorie",
     "Comments": "Komentarze",
-    "LANGUAGE": "polski",
+    "LANGUAGE": "Polski",
     "Languages:": "Języki:",
     "More posts about %s": "Więcej postów o %s",
     "Newer posts": "Nowsze posty",
@@ -27,7 +27,7 @@ MESSAGES = {
     "Read more": "Czytaj więcej",
     "Source": "Źródło",
     "Tags and Categories": "Tagi i Kategorie",
-    "Tags": "Tags",
+    "Tags": "Tagi",
     "old posts, page %d": "stare posty, strona %d",
     "page %d": "strona %d",
 }
