@@ -157,6 +157,7 @@ body {
 	content: "";
 }
 .postpromonav .pager {
+	clear: both;
 	height: 1em;
 }
 .postpromonav .tags li,
@@ -169,6 +170,14 @@ body {
 .postpromonav .pager .next:dir(rtl) {
 	float: left;
 }
+
+.postpromonav .pager .previous {
+	float: left;
+}
+.postpromonav .pager .previous:dir(rtl) {
+	float: right;
+}
+
 .metadata p {
 	display: inline;
 }
