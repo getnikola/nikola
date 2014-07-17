@@ -84,10 +84,10 @@ class CommandServe(Command):
             httpd = HTTPServer((options['address'], options['port']),
                                OurHTTPRequestHandler)
             sa = httpd.socket.getsockname()
-            self.logger.info("Serving HTTP on {0} port {1} ...".format(*sa))
+            self.logger.info("Serving HTTP on {0} port {1}...".format(*sa))
             if options['browser']:
                 server_url = "http://{0}:{1}/".format(options['address'], options['port'])
-                self.logger.info("Opening {0} in the default web browser ...".format(server_url))
+                self.logger.info("Opening {0} in the default web browser...".format(server_url))
                 webbrowser.open(server_url)
             try:
                 httpd.serve_forever()

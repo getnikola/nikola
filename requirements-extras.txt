@@ -2,7 +2,7 @@
 requests>=1.0
 markdown
 Jinja2>=2.7
-livereload==2.1.0
+livereload==2.2.1
 pyphen
 micawber
 pygal
