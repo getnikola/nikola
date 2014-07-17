@@ -2,6 +2,7 @@
 requests>=1.0
 markdown
 Jinja2>=2.7
+tornado==3.2.2
 livereload==2.1.0
 pyphen
 micawber
