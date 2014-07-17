@@ -5,7 +5,7 @@ python-dateutil==2.2
 docutils==0.12
 mako==1.0.0
 unidecode==0.04.16
-lxml==3.35
+lxml==3.3.5
 yapsy==1.1.0.423
 PyRSS2Gen==1.1
 logbook==0.7.0
