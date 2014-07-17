@@ -6,8 +6,8 @@ In goes content, out comes a website, ready to deploy.
 .. image:: http://img.shields.io/pypi/v/Nikola.png
    :target: https://pypi.python.org/pypi/Nikola
 
-.. .. image:: http://img.shields.io/pypi/d/Nikola.png
-..   :target: https://pypi.python.org/pypi/Nikola
+.. image:: https://requires.io/github/getnikola/nikola/requirements.png?branch=master
+     :target: https://requires.io/github/getnikola/nikola/requirements/?branch=master
 
 .. image:: http://img.shields.io/travis/getnikola/nikola.png
    :target: https://travis-ci.org/getnikola/nikola
