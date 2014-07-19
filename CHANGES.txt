@@ -16,6 +16,7 @@ Bugfixes
 * Made ``nikola bootswatch_theme`` compatible with Jinja themes
 * Fixed submenus in Jinja themes (Issue #1327)
 * Quietly ignore empty lines in bundles files
+* Fixed wrong filter order in post_list plugin (Issue #1365)
 
 New in v7.0.1
 =============

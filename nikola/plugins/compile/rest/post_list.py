@@ -129,6 +129,7 @@ class PostList(Directive):
         else:
             post_list_id = self.options.get('id', 'post_list_' + uuid.uuid4().hex)
 
+        filtered_timeline = []
         posts = []
         step = -1 if reverse is None else None
         if show_all is None:
@@ -136,16 +137,20 @@ class PostList(Directive):
         else:
             timeline = [p for p in self.site.timeline if p.use_in_feeds]
 
-        for post in timeline[start:stop:step]:
+        for post in timeline:
             if tags:
                 cont = True
+                tags_lower = [t.lower() for t in post.tags]
                 for tag in tags:
-                    if tag in [t.lower() for t in post.tags]:
+                    if tag in tags_lower:
                         cont = False
 
                 if cont:
                     continue
 
+            filtered_timeline.append(post)
+
+        for post in filtered_timeline[start:stop:step]:
             if slugs:
                 cont = True
                 for slug in slugs:
