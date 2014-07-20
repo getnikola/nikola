@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Fixed importing WordPress blogs outside of / and without slugs (Issue #1364)
 * don’t forget query parts of links (Issue #1369)
 * Made posts that are directive-only work properly (Issue #1351)
 * Made mathjax work with stories (Issue #1355)
