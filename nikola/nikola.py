@@ -877,6 +877,10 @@ class Nikola(object):
         if not result:
             result = "."
 
+        # Don't forget the query part of the link
+        if parsed_dst.query:
+            result += "?" + parsed_dst.query
+
         # Don't forget the fragment (anchor) part of the link
         if parsed_dst.fragment:
             result += "#" + parsed_dst.fragment
