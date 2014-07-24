@@ -60,11 +60,8 @@ class Sources(Task):
                         continue
                     output_name = os.path.join(
                         kw['output_folder'], post.destination_path(
-                            lang, post.source_ext()))
+                            lang, post.source_ext(True)))
                     source = post.source_path
-                    dest_ext = self.site.get_compiler(post.source_path).extension()
-                    if dest_ext == post.source_ext():
-                        continue
                     if lang != kw["default_lang"]:
                         source_lang = utils.get_translation_candidate(self.site.config, source, lang)
                         if os.path.exists(source_lang):
