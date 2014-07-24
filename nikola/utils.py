@@ -769,7 +769,7 @@ def current_time(tzinfo=None):
     return dt
 
 
-def apply_filters(task, filters):
+def apply_filters(task, filters, skip_ext=None):
     """
     Given a task, checks its targets.
     If any of the targets has a filter that matches,
@@ -790,6 +790,8 @@ def apply_filters(task, filters):
 
     for target in task.get('targets', []):
         ext = os.path.splitext(target)[-1].lower()
+        if skip_ext and ext in skip_ext:
+            continue
         filter_ = filter_matches(ext)
         if filter_:
             for action in filter_:
