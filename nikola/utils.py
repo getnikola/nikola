@@ -85,6 +85,8 @@ STDERR_HANDLER = [ColorfulStderrHandler(
 LOGGER = get_logger('Nikola', STDERR_HANDLER)
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
 
+USE_SLUGIFY = True
+
 # This will block out the default handler and will hide all unwanted
 # messages, properly.
 logbook.NullHandler().push_application()
@@ -672,7 +674,7 @@ _slugify_strip_re = re.compile(r'[^\w\s-]')
 _slugify_hyphenate_re = re.compile(r'[-\s]+')
 
 
-def slugify(value):
+def slugify(value, force=False):
     """
     Normalizes string, converts to lowercase, removes non-alpha characters,
     and converts spaces to hyphens.
@@ -691,11 +693,26 @@ def slugify(value):
     """
     if not isinstance(value, unicode_str):
         raise ValueError("Not a unicode object: {0}".format(value))
-    value = unidecode(value)
-    # WARNING: this may not be python2/3 equivalent
-    # value = unicode(_slugify_strip_re.sub('', value).strip().lower())
-    value = str(_slugify_strip_re.sub('', value).strip().lower())
-    return _slugify_hyphenate_re.sub('-', value)
+    if USE_SLUGIFY or force:
+        # This is the standard state of slugify, which actually does some work.
+        # It is the preferred style, especially for Western languages.
+        value = unidecode(value)
+        value = str(_slugify_strip_re.sub('', value).strip().lower())
+        return _slugify_hyphenate_re.sub('-', value)
+    else:
+        # This is the “disarmed” state of slugify, which lets the user
+        # have any character they please (be it regular ASCII with spaces,
+        # or another alphabet entirely).  This might be bad in some
+        # environments, and as such, USE_SLUGIFY is better off being True!
+
+        # We still replace some characters, though.  In particular, we need
+        # to replace ? and #, which should not appear in URLs, and some
+        # Windows-unsafe characters.  This list might be even longer.
+        rc = '/\\?#"\'\r\n\t*:<>|"'
+
+        for c in rc:
+            value = value.replace(c, '-')
+        return value
 
 
 def unslugify(value, discard_numbers=True):
