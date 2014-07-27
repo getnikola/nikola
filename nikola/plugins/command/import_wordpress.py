@@ -158,6 +158,7 @@ class CommandImportWordpress(Command, ImportMixin):
 
         channel = self.get_channel_from_file(self.wordpress_export_file)
         self.context = self.populate_context(channel)
+        self.base_dir = urlparse(self.context['BASE_URL']).path
         conf_template = self.generate_base_site()
 
         # If user  has specified a custom pattern for translation files we
@@ -395,6 +396,11 @@ class CommandImportWordpress(Command, ImportMixin):
         # usually be UTF8
         if isinstance(path, utils.bytes_str):
             path = path.decode('utf8')
+
+        # Cut out the base directory.
+        if path.startswith(self.base_dir.strip('/')):
+            path = path.replace(self.base_dir.strip('/'), '', 1)
+
         pathlist = path.split('/')
         if parsed.query:  # if there are no nice URLs and query strings are used
             out_folder = os.path.join(*([out_folder] + pathlist))
@@ -445,8 +451,9 @@ class CommandImportWordpress(Command, ImportMixin):
             LOGGER.notice('Draft "{0}" will not be imported.'.format(title))
         elif content.strip():
             # If no content is found, no files are written.
-            self.url_map[link] = (self.context['SITE_URL'] + out_folder + '/'
-                                  + slug + '.html').replace(os.sep, '/')
+            self.url_map[link] = (self.context['SITE_URL'] +
+                                  out_folder.rstrip('/') + '/' + slug +
+                                  '.html').replace(os.sep, '/')
             if hasattr(self, "separate_qtranslate_content") \
                and self.separate_qtranslate_content:
                 content_translations = separate_qtranslate_content(content)

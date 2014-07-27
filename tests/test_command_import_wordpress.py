@@ -213,6 +213,7 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
             self.import_filename)
         self.import_command.context = self.import_command.populate_context(
             channel)
+        self.import_command.base_dir = ''
         self.import_command.output_folder = 'new_site'
         self.import_command.squash_newlines = True
         self.import_command.no_downloads = False
