@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Print full tracebacks for conf.py errors
 * Added ``USE_SLUGIFY`` (defaults to True).  If it’s False, Nikola allows and
   generates almost any Unicode character in page URLs (Issue #1321)
 * sources for .html files are now copied as .src.html (Issue #1354)

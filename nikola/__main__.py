@@ -90,8 +90,8 @@ def main(args=None):
         config = conf.__dict__
     except Exception:
         if os.path.exists('conf.py'):
-            msg = traceback.format_exc(0).splitlines()[1]
-            LOGGER.error('In conf.py line {0}: {1}'.format(sys.exc_info()[2].tb_lineno, msg))
+            msg = traceback.format_exc(0)
+            LOGGER.error('conf.py cannot be parsed.\n{0}'.format(msg))
             sys.exit(1)
         config = {}
 
