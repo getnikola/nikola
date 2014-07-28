@@ -134,6 +134,8 @@ def yui_compressor(infile):
 
     return runinplace(r'{} --nomunge %1 -o %2'.format(yuicompressor), infile)
 
+def closure_compiler(infile):
+	return runinplace(r'closure-compiler --warning_level QUIET --js %1 --js_output_file %2', infile)
 
 def optipng(infile):
     return runinplace(r"optipng -preserve -o2 -quiet %1", infile)
