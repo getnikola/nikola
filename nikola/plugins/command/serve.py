@@ -60,8 +60,8 @@ class CommandServe(Command):
             'short': 'a',
             'long': 'address',
             'type': str,
-            'default': '127.0.0.1',
-            'help': 'Address to bind (default: 127.0.0.1)',
+            'default': '',
+            'help': 'Address to bind (default: 0.0.0.0 – all local interfaces)',
         },
         {
             'name': 'browser',
@@ -86,7 +86,7 @@ class CommandServe(Command):
             sa = httpd.socket.getsockname()
             self.logger.info("Serving HTTP on {0} port {1}...".format(*sa))
             if options['browser']:
-                server_url = "http://{0}:{1}/".format(options['address'], options['port'])
+                server_url = "http://{0}:{1}/".format(*sa)
                 self.logger.info("Opening {0} in the default web browser...".format(server_url))
                 webbrowser.open(server_url)
             try:
