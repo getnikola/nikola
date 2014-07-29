@@ -1,7 +1,7 @@
 .. title: The Nikola Handbook
 .. slug: handbook
 .. date: 2012-03-30 23:00:00 UTC-03:00
-.. tags:
+.. tags: mathjax
 .. link:
 .. description:
 
@@ -1271,6 +1271,36 @@ reStructuredText Extensions
 
 Nikola includes support for a few directives and roles that are not part of docutils, but which
 we think are handy for website development.
+
+MathJax
+~~~~~~~
+
+Nikola supports math input via MathJax.  It uses the usual math roles and
+directives of reStructuredText.
+
+In order to use them in your posts, you **must** add the special ``mathjax`` tag.
+
+Inline mathematics (equivalent to single dollar signs or backslash-parentheses
+in LaTeX) are produced using the `math` **role**:
+
+Euler’s formula: :math:`e^{ix} = \cos x + i\sin x`
+
+::
+
+    Euler’s formula: :math:`e^{ix} = \cos x + i\sin x`
+
+Display mathematics (equivalent to double dollar signs or backslash-brackets in
+LaTeX) are produced using the `math` **directive**:
+
+.. math::
+
+   \int \frac{dx}{1+ax}=\frac{1}{a}\ln(1+ax)+C
+
+::
+
+   .. math::
+
+      \int \frac{dx}{1+ax}=\frac{1}{a}\ln(1+ax)+C
 
 Media
 ~~~~~
