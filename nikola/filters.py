@@ -34,7 +34,6 @@ import shutil
 import subprocess
 import tempfile
 import shlex
-import re
 
 try:
     import typogrify.filters as typo
@@ -135,8 +134,10 @@ def yui_compressor(infile):
 
     return runinplace(r'{} --nomunge %1 -o %2'.format(yuicompressor), infile)
 
+
 def closure_compiler(infile):
-	return runinplace(r'closure-compiler --warning_level QUIET --js %1 --js_output_file %2', infile)
+    return runinplace(r'closure-compiler --warning_level QUIET --js %1 --js_output_file %2', infile)
+
 
 def optipng(infile):
     return runinplace(r"optipng -preserve -o2 -quiet %1", infile)
@@ -151,6 +152,7 @@ def minify_lines(data):
     datalines = data.splitlines()
     datalines = [line.lstrip() for line in datalines if not (line.strip() == "")]
     return "\n".join(datalines)
+
 
 @apply_to_text_file
 def typogrify(data):
