@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Added ``minify_lines`` filter to strip leading whitespace and empty lines
 * Added Google Closure Compiler JavaScript filter
 * Print full tracebacks for conf.py errors
 * Added ``USE_SLUGIFY`` (defaults to True).  If it’s False, Nikola allows and

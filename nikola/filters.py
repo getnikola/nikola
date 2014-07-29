@@ -34,6 +34,7 @@ import shutil
 import subprocess
 import tempfile
 import shlex
+import re
 
 try:
     import typogrify.filters as typo
@@ -144,6 +145,12 @@ def optipng(infile):
 def jpegoptim(infile):
     return runinplace(r"jpegoptim -p --strip-all -q %1", infile)
 
+
+@apply_to_text_file
+def minify_lines(data):
+    datalines = data.splitlines()
+    datalines = [line.lstrip() for line in datalines if not (line.strip() == "")]
+    return "\n".join(datalines)
 
 @apply_to_text_file
 def typogrify(data):
