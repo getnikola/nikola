@@ -1224,8 +1224,14 @@ The currently available filters are:
         ".html": [apply_to_file(string.upper)]
       }
 
+minify_lines
+   Strips leading whitespace and blank lines. Useful for compacting HTML but pre-formatted text must be escaped manually.
+
 yui_compressor
-   Compress files using `YUI compressor <http://yui.github.io/yuicompressor/>`_
+   Compress CSS/JavaScrpit using `YUI compressor <http://yui.github.io/yuicompressor/>`_
+
+closure_compiler
+   Compile, compress, and optimize JavaScript `Google Closure Compiler <https://developers.google.com/closure/compiler/>`_
 
 optipng
    Compress PNG files using `optipng <http://optipng.sourceforge.net/>`_
