@@ -33,6 +33,7 @@ import codecs
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, write_metadata
+from hashlib import md5
 
 
 class CompilePhp(PageCompiler):
@@ -43,7 +44,9 @@ class CompilePhp(PageCompiler):
     def compile_html(self, source, dest, is_two_file=True):
         makedirs(os.path.dirname(dest))
         with codecs.open(dest, "w+", "utf8") as out_file:
-            out_file.write('<!-- __NIKOLA_PHP_TEMPLATE_INJECTION:{0}__ -->'.format(source))
+            with open(source, "rb") as in_file:
+                hash = md5(in_file.read()).hexdigest()
+                out_file.write('<!-- __NIKOLA_PHP_TEMPLATE_INJECTION source:{0} csum:{1}__ -->'.format(source, hash))
         return True
 
     def create_post(self, path, **kw):

@@ -171,7 +171,7 @@ def typogrify(data):
 @apply_to_text_file
 def php_template_injection(data):
     import re
-    template = re.search('<\!-- __NIKOLA_PHP_TEMPLATE_INJECTION\:(.*)__ -->', data)
+    template = re.search('<\!-- __NIKOLA_PHP_TEMPLATE_INJECTION source\:(.*) csum\:(.*)__ -->', data)
     if template:
         source = template.group(1)
         with codecs.open(source, "r", "utf8") as in_file:
