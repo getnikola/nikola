@@ -30,7 +30,6 @@ from __future__ import unicode_literals
 
 import os
 import codecs
-import re
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, write_metadata
@@ -44,7 +43,7 @@ class CompilePhp(PageCompiler):
     def compile_html(self, source, dest, is_two_file=True):
         makedirs(os.path.dirname(dest))
         with codecs.open(dest, "w+", "utf8") as out_file:
-            out_file.write('<!-- __NIKOLA_PHP_TEMPLATE_INJECTION:%s__ -->' % source)
+            out_file.write('<!-- __NIKOLA_PHP_TEMPLATE_INJECTION:{0}__ -->'.format(source))
         return True
 
     def create_post(self, path, **kw):
