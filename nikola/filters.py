@@ -167,6 +167,7 @@ def typogrify(data):
     data = typo.initial_quotes(data)
     return data
 
+
 @apply_to_text_file
 def php_template_injection(data):
     import re
