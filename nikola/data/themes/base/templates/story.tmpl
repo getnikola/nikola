@@ -4,6 +4,20 @@
 <%namespace name="comments" file="comments_helper.tmpl"/>
 <%inherit file="post.tmpl"/>
 
+<%block name="extra_head">
+    ${parent.extra_head()}
+    % if post.meta('keywords'):
+        <meta name="keywords" content="${post.meta('keywords')|h}">
+    % endif
+    <meta name="author" content="${post.author()}">
+    ${helper.open_graph_metadata(post)}
+    ${helper.twitter_card_information(post)}
+    ${helper.meta_translations(post)}
+    %if post.description():
+        <meta name="description" itemprop="description" content="${post.description()}">
+    %endif
+</%block>
+
 <%block name="content">
 <article class="storypage" itemscope="itemscope" itemtype="http://schema.org/Article">
     <header>
