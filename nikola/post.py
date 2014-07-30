@@ -575,7 +575,7 @@ class Post(object):
             lang = nikola.utils.LocaleBorg().current_lang
 
         # Let compilers override extension (e.g. the php compiler)
-        if (self.compiler.extension()):
+        if self.compiler.extension() != '.html':
             extension = self.compiler.extension()
 
         pieces = self.translations[lang].split(os.sep)
