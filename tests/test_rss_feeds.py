@@ -32,13 +32,12 @@ fake_conf['TRANSLATIONS_PATTERN'] = '{path}.{lang}.{ext}'
 class FakeCompiler(object):
     demote_headers = False
     compile_html = None
-    extension = '.html'
+    extension = lambda self: '.html'
 
 
 class RSSFeedTest(unittest.TestCase):
     def setUp(self):
         LocaleSupportInTesting.initialize_locales_for_testing('unilingual')
-
         self.blog_url = "http://some.blog"
 
         with mock.patch('nikola.post.get_meta',
@@ -68,15 +67,15 @@ class RSSFeedTest(unittest.TestCase):
                     opener_mock = mock.mock_open()
 
                     with mock.patch('nikola.nikola.codecs.open', opener_mock, create=True):
-                        nikola.nikola.utils.generic_rss_renderer('en',
-                                                                 "blog_title",
-                                                                 self.blog_url,
-                                                                 "blog_description",
-                                                                 [example_post,
-                                                                  ],
-                                                                 'testfeed.rss',
-                                                                 True,
-                                                                 False)
+                        nikola.nikola.Nikola().generic_rss_renderer('en',
+                                                                    "blog_title",
+                                                                    self.blog_url,
+                                                                    "blog_description",
+                                                                    [example_post,
+                                                                     ],
+                                                                    'testfeed.rss',
+                                                                    True,
+                                                                    False)
 
                     opener_mock.assert_called_once_with(
                         'testfeed.rss', 'wb+', 'utf-8')
