@@ -574,6 +574,10 @@ class Post(object):
         if lang is None:
             lang = nikola.utils.LocaleBorg().current_lang
 
+        # Let compilers override extension (e.g. the php compiler)
+        if (self.compiler.extension()):
+            extension = self.compiler.extension()
+
         pieces = self.translations[lang].split(os.sep)
         pieces += self.folder.split(os.sep)
         if self._has_pretty_url(lang):

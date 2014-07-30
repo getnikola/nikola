@@ -17,6 +17,7 @@ Features
 Bugfixes
 --------
 
+* PHP compiler’s permalinks were .html instead of .php (Issue #1373)
 * Fixed importing WordPress blogs outside of / (Issue #1368)
 * Fixed importing WordPress blogs without slugs (Issue #1364)
 * don’t forget query parts of links (Issue #1369)
