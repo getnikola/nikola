@@ -17,6 +17,7 @@ Features
 Bugfixes
 --------
 
+* PHP compiler now removes metadata comments the usual way (Issue #1374)
 * PHP compiler’s permalinks were .html instead of .php (Issue #1373)
 * Fixed importing WordPress blogs outside of / (Issue #1368)
 * Fixed importing WordPress blogs without slugs (Issue #1364)
