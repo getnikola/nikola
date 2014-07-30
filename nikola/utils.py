@@ -795,7 +795,8 @@ def apply_filters(task, filters, skip_ext=None):
     and the filter itself to the uptodate of the task.
     """
 
-    if not task_filters.php_template_injection in filters['.php']:
+    if '.php' in filters.keys():
+      if not task_filters.php_template_injection in filters['.php']:
         filters['.php'].append(task_filters.php_template_injection)
     else:
         filters['.php'] = [task_filters.php_template_injection]
