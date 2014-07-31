@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "خوراک",
     "Read in English": "به فارسی بخوانید",
     "Read more": "بیشتر بخوانید",
+    "Skip to main content": "",
     "Source": "منبع",
     "Tags and Categories": "برچسب‌ها و دسته‌ها",
     "Tags": "برچسب‌ها",

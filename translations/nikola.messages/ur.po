@@ -8,15 +8,15 @@
 # Translators:
 # seanpue <a@seanpue.com>, 2014
 # saadat, 2013
-# saadat <nastaliq@gmail.com>, 2013-2014
-# saadat <nastaliq@gmail.com>, 2013
+# Saadat M. <nastaliq@gmail.com>, 2013-2014
+# Saadat M. <nastaliq@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-04-27 07:36+0000\n"
-"Last-Translator: saadat <nastaliq@gmail.com>\n"
+"PO-Revision-Date: 2014-07-31 12:30+0000\n"
+"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Urdu (http://www.transifex.com/projects/p/nikola/language/ur/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,3 +109,6 @@ msgstr "آر ایس ایس فیڈ"
 
 msgid "%d min remaining to read"
 msgstr "%d منٹ کا مطالعہ باقی"
+
+msgid "Skip to main content"
+msgstr ""

@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "%d min remaining to read": "",
+    "%d min remaining to read": "%d min verbleiben zum Lesen",
     "Also available in:": "Auch verfügbar in:",
     "Archive": "Archiv",
     "Categories": "Kategorien",
@@ -25,9 +25,10 @@ MESSAGES = {
     "RSS feed": "RSS-Feed",
     "Read in English": "Auf Deutsch lesen",
     "Read more": "Weiterlesen",
+    "Skip to main content": "",
     "Source": "Source",
     "Tags and Categories": "Tags und Kategorien",
     "Tags": "Tags",
-    "old posts, page %d": "Vorherige Einträge, Seite %d",
+    "old posts, page %d": "Ältere Einträge, Seite %d",
     "page %d": "Seite %d",
 }

@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "",
     "Read in English": "Les på norsk",
     "Read more": "Les mer",
+    "Skip to main content": "",
     "Source": "Kilde",
     "Tags and Categories": "Merker og kategorier",
     "Tags": "Merker",

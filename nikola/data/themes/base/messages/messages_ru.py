@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "RSS лента",
     "Read in English": "Прочесть по-русски",
     "Read more": "Читать далее",
+    "Skip to main content": "",
     "Source": "Источник",
     "Tags and Categories": "Тэги и категории",
     "Tags": "Тэги",

@@ -105,3 +105,6 @@ msgstr "RSS feed"
 
 msgid "%d min remaining to read"
 msgstr "%d min remaining to read"
+
+msgid "Skip to main content"
+msgstr "Skip to main content"

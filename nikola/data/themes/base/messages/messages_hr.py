@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "RSS kanal",
     "Read in English": "Čitaj na hrvatskom",
     "Read more": "Čitaj dalje",
+    "Skip to main content": "",
     "Source": "Izvor",
     "Tags and Categories": "Tagovi i kategorije",
     "Tags": "Tagovi",

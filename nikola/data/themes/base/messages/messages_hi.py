@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "",
     "Read in English": "हिन्दी में पढ़िए",
     "Read more": "और पढ़िए",
+    "Skip to main content": "",
     "Source": "सोर्स",
     "Tags and Categories": "टैग्स और श्रेणियाँ",
     "Tags": "टैग्स",

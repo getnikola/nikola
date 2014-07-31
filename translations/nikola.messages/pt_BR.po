@@ -7,19 +7,19 @@
 # Translators:
 # Translators:
 # Thiago Cangussu <cangussu.thg@gmail.com>, 2014
-# schettino72 <schettino72@gmail.com>, 2013
-# Kwpolska <kwpolska@gmail.com>, 2013
-# Kwpolska <kwpolska@gmail.com>, 2013
-# ralsina <ralsina@netmanagers.com.ar>, 2013
-# ralsina <ralsina@netmanagers.com.ar>, 2013
-# schettino72 <schettino72@gmail.com>, 2013
+# eduardo <schettino72@gmail.com>, 2013
+# Chris Warrick <kwpolska@gmail.com>, 2013
+# Chris Warrick <kwpolska@gmail.com>, 2013
+# Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
+# Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
+# eduardo <schettino72@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-05-05 19:42+0000\n"
-"Last-Translator: Thiago Cangussu <cangussu.thg@gmail.com>\n"
+"PO-Revision-Date: 2014-07-31 12:30+0000\n"
+"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/nikola/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -112,3 +112,6 @@ msgstr "Feed RSS"
 
 msgid "%d min remaining to read"
 msgstr "%d mín restante para leitura"
+
+msgid "Skip to main content"
+msgstr ""

@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "آر ایس ایس فیڈ",
     "Read in English": "اردو میں پڑھیے",
     "Read more": "مزید پڑھیے",
+    "Skip to main content": "",
     "Source": "سورس",
     "Tags and Categories": "ٹیگز اور زمرے",
     "Tags": "ٹیگز",

@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "Flux RSS",
     "Read in English": "Lire en français",
     "Read more": "Lire la suite",
+    "Skip to main content": "",
     "Source": "Source",
     "Tags and Categories": "Étiquettes et catégories",
     "Tags": "Étiquettes",

@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Added a “Skip to content” link for accessibility (Issue #1345)
 * Added ``minify_lines`` filter to strip leading whitespace and empty lines
 * Added Google Closure Compiler JavaScript filter
 * Print full tracebacks for conf.py errors

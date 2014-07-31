@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "vir RSS",
     "Read in English": "Beri v slovenščini",
     "Read more": "Več o tem",
+    "Skip to main content": "",
     "Source": "Izvor",
     "Tags and Categories": "Značke in kategorije",
     "Tags": "Značke",
