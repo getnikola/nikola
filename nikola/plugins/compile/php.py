@@ -30,13 +30,10 @@ from __future__ import unicode_literals
 
 import os
 import codecs
-import re
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, write_metadata
-
-
-_META_SEPARATOR = '(' + os.linesep * 2 + '|' + ('\n' * 2) + '|' + ("\r\n" * 2) + ')'
+from hashlib import md5
 
 
 class CompilePhp(PageCompiler):
@@ -47,11 +44,9 @@ class CompilePhp(PageCompiler):
     def compile_html(self, source, dest, is_two_file=True):
         makedirs(os.path.dirname(dest))
         with codecs.open(dest, "w+", "utf8") as out_file:
-            with codecs.open(source, "r", "utf8") as in_file:
-                data = in_file.read()
-            if not is_two_file:
-                data = re.split(_META_SEPARATOR, data, maxsplit=1)[-1]
-            out_file.write(data)
+            with open(source, "rb") as in_file:
+                hash = md5(in_file.read()).hexdigest()
+                out_file.write('<!-- __NIKOLA_PHP_TEMPLATE_INJECTION source:{0} csum:{1}__ -->'.format(source, hash))
         return True
 
     def create_post(self, path, **kw):

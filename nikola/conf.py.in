@@ -274,11 +274,15 @@ REDIRECTIONS = ${REDIRECTIONS}
 # A python callable, which will be called with the filename as
 # argument.
 #
-# By default, there are no filters.
+# By default, only .php files uses filters to inject PHP into
+# Nikola’s templates. All other filters must be enabled through FILTERS.
 #
-# Many filters are shipped with Nikola.  A list is available in the manual:
+# Many filters are shipped with Nikola. A list is available in the manual:
 # <http://getnikola.com/handbook.html#post-processing-filters>
+#
+# from nikola import filters
 # FILTERS = {
+#    ".js": [filters.closure_compiler,],
 #    ".jpg": ["jpegoptim --strip-all -m75 -v %s"],
 # }
 

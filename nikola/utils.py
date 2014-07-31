@@ -172,6 +172,7 @@ else:
 from doit import tools
 from unidecode import unidecode
 from pkg_resources import resource_filename
+from nikola import filters as task_filters
 
 import PyRSS2Gen as rss
 
@@ -793,6 +794,12 @@ def apply_filters(task, filters, skip_ext=None):
     adds the filter commands to the commands of the task,
     and the filter itself to the uptodate of the task.
     """
+
+    if '.php' in filters.keys():
+        if task_filters.php_template_injection not in filters['.php']:
+            filters['.php'].append(task_filters.php_template_injection)
+    else:
+        filters['.php'] = [task_filters.php_template_injection]
 
     def filter_matches(ext):
         for key, value in list(filters.items()):
