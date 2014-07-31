@@ -57,7 +57,7 @@ class CompilePhp(PageCompiler):
         metadata = {}
         metadata.update(self.default_metadata)
         metadata.update(kw)
-        os.makedirs(os.path.dirname(path))
+        makedirs(os.path.dirname(path))
         if not content.endswith('\n'):
             content += '\n'
         with codecs.open(path, "wb+", "utf8") as fd:
