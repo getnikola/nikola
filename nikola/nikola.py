@@ -134,7 +134,7 @@ LEGAL_VALUES = {
         'pt': 'pt_br',
         'zh': 'zh_cn'
     },
-    'RTL_LANGUAGES': ('fa', 'ur'),
+    'RTL_LANGUAGES': ('ar', 'fa', 'ur'),
     'COLORBOX_LOCALES': defaultdict(
         str,
         bg='bg',
