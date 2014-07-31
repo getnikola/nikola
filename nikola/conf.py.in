@@ -282,7 +282,8 @@ REDIRECTIONS = ${REDIRECTIONS}
 #
 # from nikola import filters
 # FILTERS = {
-#    ".js": [filters.closure_compiler,],
+#    ".html": [filters.typogrify],
+#    ".js": [filters.closure_compiler],
 #    ".jpg": ["jpegoptim --strip-all -m75 -v %s"],
 # }
 
