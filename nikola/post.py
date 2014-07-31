@@ -422,6 +422,8 @@ class Post(object):
         file_name = self._translated_file_path(lang)
         with codecs.open(file_name, "r", "utf8") as post_file:
             data = post_file.read().strip()
+        if self.compiler.extension() == '.php':
+            return data
         try:
             document = lxml.html.fragment_fromstring(data, "body")
         except lxml.etree.ParserError as e:
