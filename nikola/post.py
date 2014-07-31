@@ -605,7 +605,8 @@ class Post(object):
         """
 
         ext = os.path.splitext(self.source_path)[1]
-        if prefix and ext == self.compiler.extension():
+        # do not publish PHP sources
+        if prefix and ext == '.html':
             # ext starts with a dot
             return '.src' + ext
         else:

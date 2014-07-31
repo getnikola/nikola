@@ -57,6 +57,17 @@ class CompilePhp(PageCompiler):
         metadata = {}
         metadata.update(self.default_metadata)
         metadata.update(kw)
+        if not metadata['description']:
+            # For PHP, a description must be set.  Otherwise, Nikola will
+            # take the first 200 characters of the post as the Open Graph
+            # description (og:description meta element)!
+            # If the PHP source leaks there:
+            # (a) The script will be executed multiple times
+            # (b) PHP may encounter a syntax error if it cuts too early,
+            #     therefore completely breaking the page
+            # Here, we just use the title.  The user should come up with
+            # something better, but just using the title does the job.
+            metadata['description'] = metadata['title']
         makedirs(os.path.dirname(path))
         if not content.endswith('\n'):
             content += '\n'

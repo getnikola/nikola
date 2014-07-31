@@ -61,6 +61,9 @@ class Sources(Task):
                     output_name = os.path.join(
                         kw['output_folder'], post.destination_path(
                             lang, post.source_ext(True)))
+                    # do not publish PHP sources
+                    if post.source_ext(True) == post.compiler.extension():
+                        continue
                     source = post.source_path
                     if lang != kw["default_lang"]:
                         source_lang = utils.get_translation_candidate(self.site.config, source, lang)
