@@ -46,7 +46,7 @@ class CompilePhp(PageCompiler):
         with codecs.open(dest, "w+", "utf8") as out_file:
             with open(source, "rb") as in_file:
                 hash = md5(in_file.read()).hexdigest()
-                out_file.write('<!-- __NIKOLA_PHP_TEMPLATE_INJECTION source:{0} csum:{1}__ -->'.format(source, hash))
+                out_file.write('<!-- __NIKOLA_PHP_TEMPLATE_INJECTION source:{0} checksum:{1}__ -->'.format(source, hash))
         return True
 
     def create_post(self, path, **kw):
