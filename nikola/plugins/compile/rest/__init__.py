@@ -87,7 +87,7 @@ class CompileRest(PageCompiler):
                 out_file.write(output)
             deps_path = dest + '.dep'
             if deps.list:
-                with io.open(deps_path, "wb+", encoding="utf8") as deps_file:
+                with io.open(deps_path, "w+", encoding="utf8") as deps_file:
                     deps_file.write('\n'.join(deps.list))
             else:
                 if os.path.isfile(deps_path):
