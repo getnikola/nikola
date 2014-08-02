@@ -130,7 +130,7 @@ class RepeatedPostsSetting(DemoBuildTest):
     def patch_site(self):
         """Set the SITE_URL to have a path"""
         conf_path = os.path.join(self.target_dir, "conf.py")
-        with io.open(conf_path, "ab", encoding="utf8") as outf:
+        with io.open(conf_path, "a", encoding="utf8") as outf:
             outf.write('\nPOSTS = (("posts/*.txt", "posts", "post.tmpl"),("posts/*.txt", "posts", "post.tmpl"))\n')
 
 
@@ -145,7 +145,7 @@ class FuturePostTest(EmptyBuildTest):
         self.init_command.create_configuration(self.target_dir)
 
         # Change COMMENT_SYSTEM_ID to not wait for 5 seconds
-        with io.open(os.path.join(self.target_dir, 'conf.py'), "ab+", encoding="utf8") as outf:
+        with io.open(os.path.join(self.target_dir, 'conf.py'), "a+", encoding="utf8") as outf:
             outf.write('\nCOMMENT_SYSTEM_ID = "nikolatest"\n')
 
         with io.open(os.path.join(self.target_dir, 'posts', 'empty1.txt'), "w+", encoding="utf8") as outf:
