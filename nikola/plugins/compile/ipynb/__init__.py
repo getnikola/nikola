@@ -71,7 +71,7 @@ class CompileIPynb(PageCompiler):
         makedirs(os.path.dirname(path))
         if onefile:
             raise Exception('The one-file format is not supported by this compiler.')
-        with io.open(path, "wb+", encoding="utf8") as fd:
+        with io.open(path, "w+", encoding="utf8") as fd:
             fd.write("""{
  "metadata": {
   "name": ""

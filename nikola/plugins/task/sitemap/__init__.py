@@ -187,7 +187,7 @@ class Sitemap(LateTask):
         def write_sitemap():
             # Have to rescan, because files may have been added between
             # task dep scanning and task execution
-            with io.open(sitemap_path, 'wb+', encoding='utf8') as outf:
+            with io.open(sitemap_path, 'w+', encoding='utf8') as outf:
                 outf.write(urlset_header)
                 for k in sorted(urlset.keys()):
                     outf.write(urlset[k])
@@ -196,7 +196,7 @@ class Sitemap(LateTask):
             sitemapindex[sitemap_url] = sitemap_format.format(sitemap_url, self.get_lastmod(sitemap_path))
 
         def write_sitemapindex():
-            with io.open(sitemapindex_path, 'wb+', encoding='utf8') as outf:
+            with io.open(sitemapindex_path, 'w+', encoding='utf8') as outf:
                 outf.write(sitemapindex_header)
                 for k in sorted(sitemapindex.keys()):
                     outf.write(sitemapindex[k])

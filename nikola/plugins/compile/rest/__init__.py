@@ -108,7 +108,7 @@ class CompileRest(PageCompiler):
         makedirs(os.path.dirname(path))
         if not content.endswith('\n'):
             content += '\n'
-        with io.open(path, "wb+", encoding="utf8") as fd:
+        with io.open(path, "w+", encoding="utf8") as fd:
             if onefile:
                 fd.write(write_metadata(metadata))
             fd.write('\n' + content)
