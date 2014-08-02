@@ -73,7 +73,7 @@ class ReSTExtensionTestCase(BaseTestCase):
         inf = os.path.join(tmpdir, 'inf')
         outf = os.path.join(tmpdir, 'outf')
         depf = os.path.join(tmpdir, 'outf.dep')
-        with io.open(inf, 'wb+', encoding='utf8') as f:
+        with io.open(inf, 'w+', encoding='utf8') as f:
             f.write(rst)
         self.html = self.compiler.compile_html(inf, outf)
         with io.open(outf, 'r', encoding='utf8') as f:

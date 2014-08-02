@@ -106,7 +106,7 @@ class DemoBuildTest(EmptyBuildTest):
         self.init_command.copy_sample_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
         # File for Issue #374 (empty post text)
-        with io.open(os.path.join(self.target_dir, 'posts', 'empty.txt'), "wb+", encoding="utf8") as outf:
+        with io.open(os.path.join(self.target_dir, 'posts', 'empty.txt'), "w+", encoding="utf8") as outf:
             outf.write(
                 ".. title: foobar\n"
                 ".. slug: foobar\n"
@@ -148,14 +148,14 @@ class FuturePostTest(EmptyBuildTest):
         with io.open(os.path.join(self.target_dir, 'conf.py'), "ab+", encoding="utf8") as outf:
             outf.write('\nCOMMENT_SYSTEM_ID = "nikolatest"\n')
 
-        with io.open(os.path.join(self.target_dir, 'posts', 'empty1.txt'), "wb+", encoding="utf8") as outf:
+        with io.open(os.path.join(self.target_dir, 'posts', 'empty1.txt'), "w+", encoding="utf8") as outf:
             outf.write(
                 ".. title: foo\n"
                 ".. slug: foo\n"
                 ".. date: %s\n" % (current_time() + datetime.timedelta(-1)).strftime('%Y-%m-%d %H:%M:%S')
             )
 
-        with io.open(os.path.join(self.target_dir, 'posts', 'empty2.txt'), "wb+", encoding="utf8") as outf:
+        with io.open(os.path.join(self.target_dir, 'posts', 'empty2.txt'), "w+", encoding="utf8") as outf:
             outf.write(
                 ".. title: bar\n"
                 ".. slug: bar\n"
@@ -224,11 +224,11 @@ class TranslationsPatternTest1(TranslatedBuildTest):
                   os.path.join(self.target_dir, "stories", "1.txt.%s" % self.ol)
                   )
         conf_path = os.path.join(self.target_dir, "conf.py")
-        with io.open(conf_path, "rb", encoding="utf-8") as inf:
+        with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
             data = data.replace('TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"',
                                 'TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"')
-        with io.open(conf_path, "wb+", encoding="utf8") as outf:
+        with io.open(conf_path, "w+", encoding="utf8") as outf:
             outf.write(data)
 
 
@@ -255,11 +255,11 @@ class TranslationsPatternTest2(TranslatedBuildTest):
         os.rename(os.path.join(self.target_dir, "stories", "1.%s.txt" % self.ol),
                   os.path.join(self.target_dir, "stories", "1.txt.%s" % self.ol)
                   )
-        with io.open(conf_path, "rb", encoding="utf-8") as inf:
+        with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
             data = data.replace('TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"',
                                 'TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"')
-        with io.open(conf_path, "wb+", encoding="utf8") as outf:
+        with io.open(conf_path, "w+", encoding="utf8") as outf:
             outf.write(data)
 
 
@@ -270,11 +270,11 @@ class RelativeLinkTest(DemoBuildTest):
     def patch_site(self):
         """Set the SITE_URL to have a path"""
         conf_path = os.path.join(self.target_dir, "conf.py")
-        with io.open(conf_path, "rb", encoding="utf-8") as inf:
+        with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
             data = data.replace('SITE_URL = "http://getnikola.com/"',
                                 'SITE_URL = "http://getnikola.com/foo/bar/"')
-        with io.open(conf_path, "wb+", encoding="utf8") as outf:
+        with io.open(conf_path, "w+", encoding="utf8") as outf:
             outf.write(data)
 
     def test_relative_links(self):
@@ -327,13 +327,13 @@ class TestCheckAbsoluteSubFolder(TestCheck):
     @classmethod
     def patch_site(self):
         conf_path = os.path.join(self.target_dir, "conf.py")
-        with io.open(conf_path, "rb", encoding="utf-8") as inf:
+        with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
             data = data.replace('SITE_URL = "http://getnikola.com/"',
                                 'SITE_URL = "http://getnikola.com/foo/"')
             data = data.replace("# URL_TYPE = 'rel_path'",
                                 "URL_TYPE = 'absolute'")
-        with io.open(conf_path, "wb+", encoding="utf8") as outf:
+        with io.open(conf_path, "w+", encoding="utf8") as outf:
             outf.write(data)
             outf.flush()
 
@@ -354,13 +354,13 @@ class TestCheckFullPathSubFolder(TestCheckAbsoluteSubFolder):
     @classmethod
     def patch_site(self):
         conf_path = os.path.join(self.target_dir, "conf.py")
-        with io.open(conf_path, "rb", encoding="utf-8") as inf:
+        with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
             data = data.replace('SITE_URL = "http://getnikola.com/"',
                                 'SITE_URL = "http://getnikola.com/foo/"')
             data = data.replace("# URL_TYPE = 'rel_path'",
                                 "URL_TYPE = 'full_path'")
-        with io.open(conf_path, "wb+", encoding="utf8") as outf:
+        with io.open(conf_path, "w+", encoding="utf8") as outf:
             outf.write(data)
             outf.flush()
 
@@ -378,7 +378,7 @@ class TestCheckFailure(DemoBuildTest):
 
     def test_check_files_fail(self):
         with cd(self.target_dir):
-            with io.open(os.path.join("output", "foobar"), "wb+", encoding="utf8") as outf:
+            with io.open(os.path.join("output", "foobar"), "w+", encoding="utf8") as outf:
                 outf.write("foo")
             try:
                 __main__.main(['check', '-f'])
@@ -393,7 +393,7 @@ class RelativeLinkTest2(DemoBuildTest):
     def patch_site(self):
         """Set the SITE_URL to have a path"""
         conf_path = os.path.join(self.target_dir, "conf.py")
-        with io.open(conf_path, "rb", encoding="utf-8") as inf:
+        with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
             data = data.replace('("stories/*.txt", "stories", "story.tmpl"),',
                                 '("stories/*.txt", "", "story.tmpl"),')
@@ -401,7 +401,7 @@ class RelativeLinkTest2(DemoBuildTest):
                                 '("stories/*.rst", "", "story.tmpl"),')
             data = data.replace('# INDEX_PATH = ""',
                                 'INDEX_PATH = "blog"')
-        with io.open(conf_path, "wb+", encoding="utf8") as outf:
+        with io.open(conf_path, "w+", encoding="utf8") as outf:
             outf.write(data)
             outf.flush()
 
@@ -434,11 +434,11 @@ class MonthlyArchiveTest(DemoBuildTest):
     def patch_site(self):
         """Set the SITE_URL to have a path"""
         conf_path = os.path.join(self.target_dir, "conf.py")
-        with io.open(conf_path, "rb", encoding="utf-8") as inf:
+        with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
             data = data.replace('# CREATE_MONTHLY_ARCHIVE = False',
                                 'CREATE_MONTHLY_ARCHIVE = True')
-        with io.open(conf_path, "wb+", encoding="utf8") as outf:
+        with io.open(conf_path, "w+", encoding="utf8") as outf:
             outf.write(data)
             outf.flush()
 
