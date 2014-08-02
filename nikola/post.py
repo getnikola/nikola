@@ -327,10 +327,10 @@ class Post(object):
 
         def wrap_encrypt(path, password):
             """Wrap a post with encryption."""
-            with io.open(path, 'rb+', encoding='utf8') as inf:
+            with io.open(path, 'r+', encoding='utf8') as inf:
                 data = inf.read() + "<!--tail-->"
             data = CRYPT.substitute(data=rc4(password, data))
-            with io.open(path, 'wb+', encoding='utf8') as outf:
+            with io.open(path, 'w+', encoding='utf8') as outf:
                 outf.write(data)
 
         dest = self.translated_base_path(lang)
@@ -354,7 +354,7 @@ class Post(object):
         """
         dep_path = self.base_path + '.dep'
         if os.path.isfile(dep_path):
-            with io.open(dep_path, 'rb+', encoding='utf8') as depf:
+            with io.open(dep_path, 'r+', encoding='utf8') as depf:
                 return [l.strip() for l in depf.readlines()]
         return []
 

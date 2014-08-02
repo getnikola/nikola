@@ -332,7 +332,7 @@ class CommandNewPost(Command):
         event = dict(path=txt_path)
 
         if not onefile:  # write metadata file
-            with io.open(meta_path, "wb+", encoding="utf8") as fd:
+            with io.open(meta_path, "w+", encoding="utf8") as fd:
                 fd.write(utils.write_metadata(data))
             LOGGER.info("Your {0}'s metadata is at: {1}".format(content_type, meta_path))
             event['meta_path'] = meta_path

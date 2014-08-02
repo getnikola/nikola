@@ -84,7 +84,7 @@ class CommandDeploy(Command):
 
         self.logger.info("Successful deployment")
         try:
-            with io.open(timestamp_path, 'rb', encoding='utf8') as inf:
+            with io.open(timestamp_path, 'r', encoding='utf8') as inf:
                 last_deploy = datetime.strptime(inf.read().strip(), "%Y-%m-%dT%H:%M:%S.%f")
                 clean = False
         except (IOError, Exception) as e:
@@ -96,7 +96,7 @@ class CommandDeploy(Command):
         self._emit_deploy_event(last_deploy, new_deploy, clean, undeployed_posts)
 
         # Store timestamp of successful deployment
-        with io.open(timestamp_path, 'wb+', encoding='utf8') as outf:
+        with io.open(timestamp_path, 'w+', encoding='utf8') as outf:
             outf.write(new_deploy.isoformat())
 
     def _emit_deploy_event(self, last_deploy, new_deploy, clean=False, undeployed=None):

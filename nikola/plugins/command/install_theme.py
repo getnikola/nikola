@@ -29,7 +29,6 @@ import os
 import io
 import json
 import shutil
-from io import BytesIO
 
 import pygments
 from pygments.lexers import PythonLexer
@@ -137,7 +136,7 @@ class CommandInstallTheme(Command):
         if name in data:
             utils.makedirs(self.output_dir)
             LOGGER.info('Downloading: ' + data[name])
-            zip_file = BytesIO()
+            zip_file = io.BytesIO()
             zip_file.write(requests.get(data[name]).content)
             LOGGER.info('Extracting: {0} into themes'.format(name))
             utils.extract_all(zip_file)
@@ -161,7 +160,7 @@ class CommandInstallTheme(Command):
         if os.path.exists(confpypath):
             LOGGER.notice('This theme has a sample config file.  Integrate it with yours in order to make this theme work!')
             print('Contents of the conf.py.sample file:\n')
-            with io.open(confpypath, 'rb', encoding='utf-8') as fh:
+            with io.open(confpypath, 'r', encoding='utf-8') as fh:
                 if self.site.colorful:
                     print(indent(pygments.highlight(
                         fh.read(), PythonLexer(), TerminalFormatter()),

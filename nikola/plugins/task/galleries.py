@@ -518,7 +518,7 @@ class Galleries(Task):
         rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
         dst_dir = os.path.dirname(output_path)
         utils.makedirs(dst_dir)
-        with io.open(output_path, "wb+", encoding="utf-8") as rss_file:
+        with io.open(output_path, "w+", encoding="utf-8") as rss_file:
             data = rss_obj.to_xml(encoding='utf-8')
             if isinstance(data, utils.bytes_str):
                 data = data.decode('utf-8')

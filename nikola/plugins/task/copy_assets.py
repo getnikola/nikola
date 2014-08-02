@@ -82,7 +82,7 @@ class CopyAssets(Task):
                 from pygments.formatters import get_formatter_by_name
                 formatter = get_formatter_by_name('html', style=kw["code_color_scheme"])
                 utils.makedirs(os.path.dirname(code_css_path))
-                with io.open(code_css_path, 'wb+', encoding='utf8') as outf:
+                with io.open(code_css_path, 'w+', encoding='utf8') as outf:
                     outf.write(kw["code.css_head"])
                     outf.write(formatter.get_style_defs(kw["code.css_selectors"]))
                     outf.write(kw["code.css_close"])

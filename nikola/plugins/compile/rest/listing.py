@@ -29,7 +29,7 @@
 
 
 from __future__ import unicode_literals
-from codecs import open as codecs_open  # for patching purposes
+import io
 import os
 try:
     from urlparse import urlunsplit
@@ -111,7 +111,7 @@ class Listing(Include):
         self.options['code'] = lang
         if 'linenos' in self.options:
             self.options['number-lines'] = self.options['linenos']
-        with codecs_open(fpath, 'rb+', 'utf8') as fileobject:
+        with io.open(fpath, 'r+', encoding='utf8') as fileobject:
             self.content = fileobject.read().splitlines()
         self.state.document.settings.record_dependencies.add(fpath)
         target = urlunsplit(("link", 'listing', fname, '', ''))

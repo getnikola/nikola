@@ -58,7 +58,7 @@ class RobotsFile(LateTask):
             if kw["site_url"] != urljoin(kw["site_url"], "/"):
                 utils.LOGGER.warn('robots.txt not ending up in server root, will be useless')
 
-            with io.open(robots_path, 'wb+', encoding='utf8') as outf:
+            with io.open(robots_path, 'w+', encoding='utf8') as outf:
                 outf.write("Sitemap: {0}\n\n".format(sitemapindex_url))
                 if kw["robots_exclusions"]:
                     outf.write("User-Agent: *\n")

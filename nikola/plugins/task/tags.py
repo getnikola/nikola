@@ -124,7 +124,7 @@ class RenderTags(Task):
 
         def write_tag_data(data):
             utils.makedirs(os.path.dirname(output_name))
-            with io.open(output_name, 'wb+', encoding='utf8') as fd:
+            with io.open(output_name, 'w+', encoding='utf8') as fd:
                 fd.write(json.dumps(data))
 
         task = {

@@ -257,7 +257,7 @@ class CommandPlugin(Command):
             except subprocess.CalledProcessError:
                 LOGGER.error('Could not install the dependencies.')
                 print('Contents of the requirements.txt file:\n')
-                with io.open(reqpath, 'rb', encoding='utf-8') as fh:
+                with io.open(reqpath, 'r', encoding='utf-8') as fh:
                     print(indent(fh.read(), 4 * ' '))
                 print('You have to install those yourself or through a '
                       'package manager.')
@@ -269,7 +269,7 @@ class CommandPlugin(Command):
                           'dependencies you need to install '
                           'manually.')
             print('Contents of the requirements-nonpy.txt file:\n')
-            with io.open(reqnpypath, 'rb', encoding='utf-8') as fh:
+            with io.open(reqnpypath, 'r', encoding='utf-8') as fh:
                 for l in fh.readlines():
                     i, j = l.split('::')
                     print(indent(i.strip(), 4 * ' '))
@@ -282,7 +282,7 @@ class CommandPlugin(Command):
         if os.path.exists(confpypath):
             LOGGER.notice('This plugin has a sample config file.  Integrate it with yours in order to make this plugin work!')
             print('Contents of the conf.py.sample file:\n')
-            with io.open(confpypath, 'rb', encoding='utf-8') as fh:
+            with io.open(confpypath, 'r', encoding='utf-8') as fh:
                 if self.site.colorful:
                     print(indent(pygments.highlight(
                         fh.read(), PythonLexer(), TerminalFormatter()),
