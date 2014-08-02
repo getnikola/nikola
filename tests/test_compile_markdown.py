@@ -5,7 +5,7 @@ import os
 import sys
 
 
-import codecs
+import io
 import shutil
 import tempfile
 import unittest
@@ -25,13 +25,13 @@ class CompileMarkdownTests(BaseTestCase):
         self.compiler.set_site(FakeSite())
 
     def compile(self, input_string):
-        with codecs.open(self.input_path, "w+", "utf8") as input_file:
+        with io.open(self.input_path, "w+", encoding="utf8") as input_file:
             input_file.write(input_string)
 
         self.compiler.compile_html(self.input_path, self.output_path)
 
         output_str = None
-        with codecs.open(self.output_path, "r", "utf8") as output_path:
+        with io.open(self.output_path, "r", encoding="utf8") as output_path:
             output_str = output_path.read()
 
         return output_str

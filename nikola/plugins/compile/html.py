@@ -28,7 +28,7 @@
 
 import os
 import re
-import codecs
+import io
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, write_metadata
@@ -43,8 +43,8 @@ class CompileHtml(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         makedirs(os.path.dirname(dest))
-        with codecs.open(dest, "w+", "utf8") as out_file:
-            with codecs.open(source, "r", "utf8") as in_file:
+        with io.open(dest, "w+", encoding="utf8") as out_file:
+            with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
             if not is_two_file:
                 data = re.split(_META_SEPARATOR, data, maxsplit=1)[-1]
@@ -62,7 +62,7 @@ class CompileHtml(PageCompiler):
         makedirs(os.path.dirname(path))
         if not content.endswith('\n'):
             content += '\n'
-        with codecs.open(path, "wb+", "utf8") as fd:
+        with io.open(path, "wb+", encoding="utf8") as fd:
             if onefile:
                 fd.write('<!--\n')
                 fd.write(write_metadata(metadata))

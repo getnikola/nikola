@@ -30,7 +30,7 @@ You will need, of course, to install pandoc
 
 """
 
-import codecs
+import io
 import os
 import subprocess
 
@@ -62,7 +62,7 @@ class CompilePandoc(PageCompiler):
         makedirs(os.path.dirname(path))
         if not content.endswith('\n'):
             content += '\n'
-        with codecs.open(path, "wb+", "utf8") as fd:
+        with io.open(path, "wb+", encoding="utf8") as fd:
             if onefile:
                 fd.write('<!--\n')
                 fd.write(write_metadata(metadata))

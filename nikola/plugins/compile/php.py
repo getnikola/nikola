@@ -29,7 +29,7 @@
 from __future__ import unicode_literals
 
 import os
-import codecs
+import io
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, write_metadata
@@ -43,7 +43,7 @@ class CompilePhp(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         makedirs(os.path.dirname(dest))
-        with codecs.open(dest, "w+", "utf8") as out_file:
+        with io.open(dest, "w+", encoding="utf8") as out_file:
             with open(source, "rb") as in_file:
                 hash = md5(in_file.read()).hexdigest()
                 out_file.write('<!-- __NIKOLA_PHP_TEMPLATE_INJECTION source:{0} checksum:{1}__ -->'.format(source, hash))
@@ -71,7 +71,7 @@ class CompilePhp(PageCompiler):
         makedirs(os.path.dirname(path))
         if not content.endswith('\n'):
             content += '\n'
-        with codecs.open(path, "wb+", "utf8") as fd:
+        with io.open(path, "wb+", encoding="utf8") as fd:
             if onefile:
                 fd.write('<!--\n')
                 fd.write(write_metadata(metadata))

@@ -25,7 +25,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function, absolute_import, unicode_literals
-import codecs
+import io
 import datetime
 import os
 try:
@@ -150,7 +150,7 @@ class Sitemap(LateTask):
                             continue
                         if path.endswith('.html') or path.endswith('.htm'):
                             try:
-                                if u'<!doctype html' not in codecs.open(real_path, 'r', 'utf8').read(1024).lower():
+                                if u'<!doctype html' not in io.open(real_path, 'r', encoding='utf8').read(1024).lower():
                                     # ignores "html" files without doctype
                                     # alexa-verify, google-site-verification, etc.
                                     continue
@@ -160,7 +160,7 @@ class Sitemap(LateTask):
                                 continue
                         """ put RSS in sitemapindex[] instead of in urlset[], sitemap_path is included after it is generated """
                         if path.endswith('.xml') or path.endswith('.rss'):
-                            if u'<rss' in codecs.open(real_path, 'r', 'utf8').read(512) or u'<urlset'and path != sitemap_path:
+                            if u'<rss' in io.open(real_path, 'r', encoding='utf8').read(512) or u'<urlset'and path != sitemap_path:
                                 path = path.replace(os.sep, '/')
                                 lastmod = self.get_lastmod(real_path)
                                 loc = urljoin(base_url, base_path + path)
@@ -187,7 +187,7 @@ class Sitemap(LateTask):
         def write_sitemap():
             # Have to rescan, because files may have been added between
             # task dep scanning and task execution
-            with codecs.open(sitemap_path, 'wb+', 'utf8') as outf:
+            with io.open(sitemap_path, 'wb+', encoding='utf8') as outf:
                 outf.write(urlset_header)
                 for k in sorted(urlset.keys()):
                     outf.write(urlset[k])
@@ -196,7 +196,7 @@ class Sitemap(LateTask):
             sitemapindex[sitemap_url] = sitemap_format.format(sitemap_url, self.get_lastmod(sitemap_path))
 
         def write_sitemapindex():
-            with codecs.open(sitemapindex_path, 'wb+', 'utf8') as outf:
+            with io.open(sitemapindex_path, 'wb+', encoding='utf8') as outf:
                 outf.write(sitemapindex_header)
                 for k in sorted(sitemapindex.keys()):
                     outf.write(sitemapindex[k])

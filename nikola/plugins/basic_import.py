@@ -25,7 +25,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import unicode_literals, print_function
-import codecs
+import io
 import csv
 import datetime
 import os
@@ -128,7 +128,7 @@ class ImportMixin(object):
             description = ""
 
         utils.makedirs(os.path.dirname(filename))
-        with codecs.open(filename, "w+", "utf8") as fd:
+        with io.open(filename, "w+", encoding="utf8") as fd:
             fd.write('{0}\n'.format(title))
             fd.write('{0}\n'.format(slug))
             fd.write('{0}\n'.format(post_date))
@@ -139,7 +139,7 @@ class ImportMixin(object):
     @staticmethod
     def write_urlmap_csv(output_file, url_map):
         utils.makedirs(os.path.dirname(output_file))
-        with codecs.open(output_file, 'w+', 'utf8') as fd:
+        with io.open(output_file, 'w+', encoding='utf8') as fd:
             csv_writer = csv.writer(fd)
             for item in url_map.items():
                 csv_writer.writerow(item)
@@ -159,7 +159,7 @@ class ImportMixin(object):
     @staticmethod
     def write_configuration(filename, rendered_template):
         utils.makedirs(os.path.dirname(filename))
-        with codecs.open(filename, 'w+', 'utf8') as fd:
+        with io.open(filename, 'w+', encoding='utf8') as fd:
             fd.write(rendered_template)
 
 

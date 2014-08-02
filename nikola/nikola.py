@@ -25,7 +25,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function, unicode_literals
-import codecs
+import io
 from collections import defaultdict
 from copy import copy
 from pkg_resources import resource_filename
@@ -961,7 +961,7 @@ class Nikola(object):
 
         dst_dir = os.path.dirname(output_path)
         utils.makedirs(dst_dir)
-        with codecs.open(output_path, "wb+", "utf-8") as rss_file:
+        with io.open(output_path, "wb+", encoding="utf-8") as rss_file:
             data = rss_obj.to_xml(encoding='utf-8')
             if isinstance(data, utils.bytes_str):
                 data = data.decode('utf-8')

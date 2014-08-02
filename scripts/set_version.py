@@ -4,7 +4,7 @@
 """Script to set the version number wherever it's needed before a release."""
 
 from __future__ import unicode_literals, print_function
-import codecs
+import io
 import os
 import re
 import sys
@@ -14,12 +14,12 @@ import glob
 def sed_like_thing(pattern, repl, path):
     """Like re.sub but applies to a file instead of a string."""
 
-    with codecs.open(path, 'rb', 'utf8') as inf:
+    with io.open(path, 'rb', encoding='utf8') as inf:
         data = inf.read()
 
     data = re.sub(pattern, repl, data)
 
-    with codecs.open(path, 'wb+', 'utf8') as outf:
+    with io.open(path, 'wb+', encoding='utf8') as outf:
         outf.write(data)
 
 if __name__ == "__main__":

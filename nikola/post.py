@@ -26,7 +26,7 @@
 
 from __future__ import unicode_literals, print_function, absolute_import
 
-import codecs
+import io
 from collections import defaultdict
 import datetime
 import os
@@ -327,10 +327,10 @@ class Post(object):
 
         def wrap_encrypt(path, password):
             """Wrap a post with encryption."""
-            with codecs.open(path, 'rb+', 'utf8') as inf:
+            with io.open(path, 'rb+', 'utf8') as inf:
                 data = inf.read() + "<!--tail-->"
             data = CRYPT.substitute(data=rc4(password, data))
-            with codecs.open(path, 'wb+', 'utf8') as outf:
+            with io.open(path, 'wb+', 'utf8') as outf:
                 outf.write(data)
 
         dest = self.translated_base_path(lang)
@@ -354,7 +354,7 @@ class Post(object):
         """
         dep_path = self.base_path + '.dep'
         if os.path.isfile(dep_path):
-            with codecs.open(dep_path, 'rb+', 'utf8') as depf:
+            with io.open(dep_path, 'rb+', 'utf8') as depf:
                 return [l.strip() for l in depf.readlines()]
         return []
 
@@ -420,7 +420,7 @@ class Post(object):
         if lang is None:
             lang = nikola.utils.LocaleBorg().current_lang
         file_name = self._translated_file_path(lang)
-        with codecs.open(file_name, "r", "utf8") as post_file:
+        with io.open(file_name, "r", "utf8") as post_file:
             data = post_file.read().strip()
         if self.compiler.extension() == '.php':
             return data
@@ -514,7 +514,7 @@ class Post(object):
             # duplicated with Post.text()
             lang = nikola.utils.LocaleBorg().current_lang
             file_name = self._translated_file_path(lang)
-            with codecs.open(file_name, "r", "utf8") as post_file:
+            with io.open(file_name, "r", "utf8") as post_file:
                 data = post_file.read().strip()
             try:
                 document = lxml.html.fragment_fromstring(data, "body")
@@ -660,7 +660,7 @@ def get_metadata_from_file(source_path, config=None, lang=None):
             source_path = get_translation_candidate(config, source_path, lang)
         elif lang:
             source_path += '.' + lang
-        with codecs.open(source_path, "r", "utf8") as meta_file:
+        with io.open(source_path, "r", encoding="utf8") as meta_file:
             meta_data = [x.strip() for x in meta_file.readlines()]
         return _get_metadata_from_file(meta_data)
     except (UnicodeDecodeError, UnicodeEncodeError):
@@ -728,7 +728,7 @@ def get_metadata_from_meta_file(path, config=None, lang=None):
     elif lang:
         meta_path += '.' + lang
     if os.path.isfile(meta_path):
-        with codecs.open(meta_path, "r", "utf8") as meta_file:
+        with io.open(meta_path, "r", encoding="utf8") as meta_file:
             meta_data = meta_file.readlines()
 
         # Detect new-style metadata.

@@ -31,7 +31,7 @@ import os
 import sys
 
 
-import codecs
+import io
 try:
     from io import StringIO
 except ImportError:
@@ -73,15 +73,15 @@ class ReSTExtensionTestCase(BaseTestCase):
         inf = os.path.join(tmpdir, 'inf')
         outf = os.path.join(tmpdir, 'outf')
         depf = os.path.join(tmpdir, 'outf.dep')
-        with codecs.open(inf, 'wb+', 'utf8') as f:
+        with io.open(inf, 'wb+', encoding='utf8') as f:
             f.write(rst)
         self.html = self.compiler.compile_html(inf, outf)
-        with codecs.open(outf, 'r', 'utf8') as f:
+        with io.open(outf, 'r', encoding='utf8') as f:
             self.html = f.read()
         os.unlink(inf)
         os.unlink(outf)
         if os.path.isfile(depf):
-            with codecs.open(depf, 'r', 'utf8') as f:
+            with io.open(depf, 'r', encoding='utf8') as f:
                 self.assertEqual(self.deps, f.read())
             os.unlink(depf)
         else:

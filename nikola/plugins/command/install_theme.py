@@ -26,7 +26,7 @@
 
 from __future__ import print_function
 import os
-import codecs
+import io
 import json
 import shutil
 from io import BytesIO
@@ -161,7 +161,7 @@ class CommandInstallTheme(Command):
         if os.path.exists(confpypath):
             LOGGER.notice('This theme has a sample config file.  Integrate it with yours in order to make this theme work!')
             print('Contents of the conf.py.sample file:\n')
-            with codecs.open(confpypath, 'rb', 'utf-8') as fh:
+            with io.open(confpypath, 'rb', encoding='utf-8') as fh:
                 if self.site.colorful:
                     print(indent(pygments.highlight(
                         fh.read(), PythonLexer(), TerminalFormatter()),
