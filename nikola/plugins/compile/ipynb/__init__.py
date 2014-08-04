@@ -27,7 +27,7 @@
 """Implementation of compile_html based on nbconvert."""
 
 from __future__ import unicode_literals, print_function
-import codecs
+import io
 import os
 
 try:
@@ -55,8 +55,8 @@ class CompileIPynb(PageCompiler):
         HTMLExporter.default_template = 'basic'
         c = Config(self.site.config['IPYNB_CONFIG'])
         exportHtml = HTMLExporter(config=c)
-        with codecs.open(dest, "w+", "utf8") as out_file:
-            with codecs.open(source, "r", "utf8") as in_file:
+        with io.open(dest, "w+", encoding="utf8") as out_file:
+            with io.open(source, "r", encoding="utf8") as in_file:
                 nb = in_file.read()
                 nb_json = nbformat.reads_json(nb)
             (body, resources) = exportHtml.from_notebook_node(nb_json)
@@ -71,7 +71,7 @@ class CompileIPynb(PageCompiler):
         makedirs(os.path.dirname(path))
         if onefile:
             raise Exception('The one-file format is not supported by this compiler.')
-        with codecs.open(path, "wb+", "utf8") as fd:
+        with io.open(path, "w+", encoding="utf8") as fd:
             fd.write("""{
  "metadata": {
   "name": ""

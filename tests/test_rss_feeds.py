@@ -66,7 +66,7 @@ class RSSFeedTest(unittest.TestCase):
 
                     opener_mock = mock.mock_open()
 
-                    with mock.patch('nikola.nikola.codecs.open', opener_mock, create=True):
+                    with mock.patch('nikola.nikola.io.open', opener_mock, create=True):
                         nikola.nikola.Nikola().generic_rss_renderer('en',
                                                                     "blog_title",
                                                                     self.blog_url,
@@ -78,7 +78,7 @@ class RSSFeedTest(unittest.TestCase):
                                                                     False)
 
                     opener_mock.assert_called_once_with(
-                        'testfeed.rss', 'wb+', 'utf-8')
+                        'testfeed.rss', 'w+', encoding='utf-8')
 
                     # Python 3 / unicode strings workaround
                     # lxml will complain if the encoding is specified in the

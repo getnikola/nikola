@@ -25,7 +25,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import unicode_literals
-import codecs
 import json
 import os
 try:
@@ -124,8 +123,8 @@ class RenderTags(Task):
 
         def write_tag_data(data):
             utils.makedirs(os.path.dirname(output_name))
-            with codecs.open(output_name, 'wb+', 'utf8') as fd:
-                fd.write(json.dumps(data))
+            with open(output_name, 'w+') as fd:
+                json.dump(data, fd)
 
         task = {
             'basename': str(self.name),

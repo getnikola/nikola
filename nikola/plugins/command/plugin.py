@@ -25,8 +25,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-import codecs
-from io import BytesIO
+import io
 import os
 import shutil
 import subprocess
@@ -228,7 +227,7 @@ class CommandPlugin(Command):
         if name in data:
             utils.makedirs(self.output_dir)
             LOGGER.info('Downloading: ' + data[name])
-            zip_file = BytesIO()
+            zip_file = io.BytesIO()
             zip_file.write(requests.get(data[name]).content)
             LOGGER.info('Extracting: {0} into {1}/'.format(name, self.output_dir))
             utils.extract_all(zip_file, self.output_dir)
@@ -258,7 +257,7 @@ class CommandPlugin(Command):
             except subprocess.CalledProcessError:
                 LOGGER.error('Could not install the dependencies.')
                 print('Contents of the requirements.txt file:\n')
-                with codecs.open(reqpath, 'rb', 'utf-8') as fh:
+                with io.open(reqpath, 'r', encoding='utf-8') as fh:
                     print(indent(fh.read(), 4 * ' '))
                 print('You have to install those yourself or through a '
                       'package manager.')
@@ -270,7 +269,7 @@ class CommandPlugin(Command):
                           'dependencies you need to install '
                           'manually.')
             print('Contents of the requirements-nonpy.txt file:\n')
-            with codecs.open(reqnpypath, 'rb', 'utf-8') as fh:
+            with io.open(reqnpypath, 'r', encoding='utf-8') as fh:
                 for l in fh.readlines():
                     i, j = l.split('::')
                     print(indent(i.strip(), 4 * ' '))
@@ -283,7 +282,7 @@ class CommandPlugin(Command):
         if os.path.exists(confpypath):
             LOGGER.notice('This plugin has a sample config file.  Integrate it with yours in order to make this plugin work!')
             print('Contents of the conf.py.sample file:\n')
-            with codecs.open(confpypath, 'rb', 'utf-8') as fh:
+            with io.open(confpypath, 'r', encoding='utf-8') as fh:
                 if self.site.colorful:
                     print(indent(pygments.highlight(
                         fh.read(), PythonLexer(), TerminalFormatter()),

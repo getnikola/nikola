@@ -25,7 +25,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import unicode_literals
-import codecs
+import io
 import os
 import re
 
@@ -58,8 +58,8 @@ class CompileRest(PageCompiler):
             req_missing(['docutils'], 'build this site (compile reStructuredText)')
         makedirs(os.path.dirname(dest))
         error_level = 100
-        with codecs.open(dest, "w+", "utf8") as out_file:
-            with codecs.open(source, "r", "utf8") as in_file:
+        with io.open(dest, "w+", encoding="utf8") as out_file:
+            with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
                 add_ln = 0
                 if not is_two_file:
@@ -87,7 +87,7 @@ class CompileRest(PageCompiler):
                 out_file.write(output)
             deps_path = dest + '.dep'
             if deps.list:
-                with codecs.open(deps_path, "wb+", "utf8") as deps_file:
+                with io.open(deps_path, "w+", encoding="utf8") as deps_file:
                     deps_file.write('\n'.join(deps.list))
             else:
                 if os.path.isfile(deps_path):
@@ -108,7 +108,7 @@ class CompileRest(PageCompiler):
         makedirs(os.path.dirname(path))
         if not content.endswith('\n'):
             content += '\n'
-        with codecs.open(path, "wb+", "utf8") as fd:
+        with io.open(path, "w+", encoding="utf8") as fd:
             if onefile:
                 fd.write(write_metadata(metadata))
             fd.write('\n' + content)
