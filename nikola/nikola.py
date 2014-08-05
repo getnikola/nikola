@@ -1216,10 +1216,11 @@ class Nikola(object):
                         self.posts_per_month[
                             '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post)
                         for tag in post.alltags:
-                            if utils.slugify(tag) in slugged_tags:
+                            _tag_slugified = utils.slugify(tag)
+                            if _tag_slugified in slugged_tags:
                                 if tag not in self.posts_per_tag:
                                     # Tags that differ only in case
-                                    other_tag = [k for k in self.posts_per_tag.keys() if k.lower() == tag.lower()][0]
+                                    other_tag = [existing for existing in self.posts_per_tag.keys() if utils.slugify(existing) == _tag_slugified][0]
                                     utils.LOGGER.error('You have tags that are too similar: {0} and {1}'.format(tag, other_tag))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.posts_per_tag[other_tag]])))
