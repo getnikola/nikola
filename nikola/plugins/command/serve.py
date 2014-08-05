@@ -156,7 +156,7 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
             return None
         self.send_response(200)
         self.send_header("Content-type", ctype)
-        if os.path.splitext(path) == '.svgz':
+        if os.path.splitext(path)[1] == '.svgz':
             # Special handling for svgz to make it work nice with browsers.
             self.send_header("Content-Encoding", 'gzip')
         fs = os.fstat(f.fileno())
