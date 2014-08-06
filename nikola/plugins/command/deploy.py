@@ -27,6 +27,7 @@
 from __future__ import print_function
 import io
 from datetime import datetime
+from dateutil.tz import gettz
 import os
 import sys
 import subprocess
@@ -35,7 +36,7 @@ import time
 from blinker import signal
 
 from nikola.plugin_categories import Command
-from nikola.utils import remove_file, get_logger
+from nikola.utils import get_logger, remove_file, unicode_str
 
 
 class CommandDeploy(Command):
@@ -97,7 +98,7 @@ class CommandDeploy(Command):
 
         # Store timestamp of successful deployment
         with io.open(timestamp_path, 'w+', encoding='utf8') as outf:
-            outf.write(new_deploy.isoformat())
+            outf.write(unicode_str(new_deploy.isoformat()))
 
     def _emit_deploy_event(self, last_deploy, new_deploy, clean=False, undeployed=None):
         """ Emit events for all timeline entries newer than last deploy.
@@ -120,9 +121,12 @@ class CommandDeploy(Command):
             'undeployed': undeployed
         }
 
+        if last_deploy.tzinfo is None:
+            last_deploy = last_deploy.replace(tzinfo=gettz('UTC'))
+
         deployed = [
             entry for entry in self.site.timeline
-            if entry.date > last_deploy.replace(tzinfo=self.site.tzinfo) and entry not in undeployed
+            if entry.date > last_deploy and entry not in undeployed
         ]
 
         event['deployed'] = deployed
