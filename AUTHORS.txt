@@ -73,3 +73,4 @@ wimpr1m <https://github.com/wimpr1m>
 yarko <https://github.com/yarko>
 Alex Walters <https://github.com/tritium21>
 Carsten Grohmann <https://github.com/CarstenGrohmann>
+Aurelien Naldi <https://github.com/aurelien-naldi>
