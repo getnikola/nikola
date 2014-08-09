@@ -246,7 +246,8 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
     pub.set_components(None, parser_name, writer_name)
     pub.process_programmatic_settings(
         settings_spec, settings_overrides, config_section)
-    pub.set_source(source, source_path)
+    pub.set_source(source, None)
+    pub.settings._nikola_source_path = source_path
     pub.set_destination(None, destination_path)
     pub.publish(enable_exit_status=enable_exit_status)
 
