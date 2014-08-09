@@ -83,7 +83,7 @@ class CompileRest(PageCompiler):
                         'syntax_highlight': 'short',
                         'math_output': 'mathjax',
                         'template': default_template_path,
-                    }, logger=self.logger, l_source=source, l_add_ln=add_ln)
+                    }, logger=self.logger, source_path=source, l_add_ln=add_ln)
                 out_file.write(output)
             deps_path = dest + '.dep'
             if deps.list:
@@ -213,7 +213,7 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
              parser=None, parser_name='restructuredtext', writer=None,
              writer_name='html', settings=None, settings_spec=None,
              settings_overrides=None, config_section=None,
-             enable_exit_status=None, logger=None, l_source='', l_add_ln=0):
+             enable_exit_status=None, logger=None, l_add_ln=0):
     """
     Set up & run a `Publisher`, and return a dictionary of document parts.
     Dictionary keys are the names of parts, and values are Unicode strings;
@@ -237,7 +237,7 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
         # logger    a logger from Nikola
         # source   source filename (docutils gets a string)
         # add_ln   amount of metadata lines (see comment in compile_html above)
-        reader.l_settings = {'logger': logger, 'source': l_source,
+        reader.l_settings = {'logger': logger, 'source': source_path,
                              'add_ln': l_add_ln}
 
     pub = docutils.core.Publisher(reader, parser, writer, settings=settings,
@@ -246,7 +246,8 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
     pub.set_components(None, parser_name, writer_name)
     pub.process_programmatic_settings(
         settings_spec, settings_overrides, config_section)
-    pub.set_source(source, source_path)
+    pub.set_source(source, None)
+    pub.settings._nikola_source_path = source_path
     pub.set_destination(None, destination_path)
     pub.publish(enable_exit_status=enable_exit_status)
 
