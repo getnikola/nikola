@@ -5,6 +5,7 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
 # Tomáš Prékop <info@pwn.sk>, 2014
 msgid ""
 msgstr ""

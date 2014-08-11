@@ -24,14 +24,14 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 import os
 import shutil
 import codecs
 import json
 import textwrap
 import datetime
-
+import unidecode
 import dateutil.tz
 from mako.template import Template
 from pkg_resources import resource_filename
@@ -40,7 +40,6 @@ import nikola
 from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_RSS_READ_MORE_LINK, LEGAL_VALUES
 from nikola.plugin_categories import Command
 from nikola.utils import ask, ask_yesno, get_logger, makedirs, STDERR_HANDLER, load_messages
-from nikola.winutils import fix_git_symlinked
 from nikola.packages.tzlocal import get_localzone
 
 
@@ -237,7 +236,6 @@ class CommandInit(Command):
     def copy_sample_site(cls, target):
         src = resource_filename('nikola', os.path.join('data', 'samplesite'))
         shutil.copytree(src, target)
-        fix_git_symlinked(src, target)
 
     @classmethod
     def create_configuration(cls, target):
@@ -263,7 +261,11 @@ class CommandInit(Command):
             answer = ask('Language(s) to use', 'en')
             while answer.strip() == '?':
                 print('\n# Available languages:')
-                print(SAMPLE_CONF['_SUPPORTED_LANGUAGES'] + '\n')
+                try:
+                    print(SAMPLE_CONF['_SUPPORTED_LANGUAGES'] + '\n')
+                except UnicodeEncodeError:
+                    # avoid Unicode characters in supported language names
+                    print(unidecode.unidecode(SAMPLE_CONF['_SUPPORTED_LANGUAGES']) + '\n')
                 answer = ask('Language(s) to use', 'en')
 
             langs = [i.strip().lower().replace('-', '_') for i in answer.split(',')]

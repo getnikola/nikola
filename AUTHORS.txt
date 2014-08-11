@@ -1,5 +1,5 @@
 These are the people who have committed code according to GitHub.
-There is probably someone missing if he send me code directly, and
+There is probably someone missing if he sent me code directly, and
 for that I am sorry because I believe in giving credit.
 If you are here and prefer to be listed in a different way, just
 do a PR :-)
@@ -12,6 +12,7 @@ Aru Sahni <https://github.com/arusahni>
 Bluerise <https://github.com/Bluerise>
 Chris “Kwpolska” Warrick <https://github.com/Kwpolska>
 Daniel Aleksandersen <https://github.com/Aeyoun>
+Dmitry Verkhoturov <https://github.com/paskal>
 DoctorMalboro <https://github.com/DoctorMalboro>
 Eduardo Schettino <https://github.com/schettino72>
 Evgeni Golov <https://github.com/evgeni>
@@ -59,7 +60,6 @@ notfoss <https://github.com/notfoss>
 numshub <https://github.com/numshub>
 onnodb <https://github.com/onnodb>
 pabluk <https://github.com/pabluk>
-paskal <https://github.com/paskal>
 punchagan <https://github.com/punchagan>
 quijot <https://github.com/quijot>
 quodlibetor <https://github.com/quodlibetor>
@@ -71,3 +71,4 @@ tolusonaike <https://github.com/tolusonaike>
 Thomas Burette <https://github.com/tburette>
 wimpr1m <https://github.com/wimpr1m>
 yarko <https://github.com/yarko>
+Alex Walters <https://github.com/tritium21>

@@ -5,9 +5,6 @@ import datetime
 import locale
 import os
 import sys
-# This code is so you can run the samples without installing the package,
-# and should be before any import touching nikola, in any file under tests/
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import dateutil.parser
 import dateutil.tz
@@ -46,12 +43,7 @@ class TestScheduling(BaseTestCase):
     def test_get_date(self):
         from nikola.plugins.command.new_post import get_date
 
-        # This is now locale-dependent, so do it here, where
-        # locale is set.
-        FMT = '{0} {1} %Z'.format(
-            locale.nl_langinfo(locale.D_FMT),
-            locale.nl_langinfo(locale.T_FMT),
-        )
+        FMT = '%Y-%m-%d %H:%M:%S %Z'
         NOW = _NOW.strftime(FMT)
         TODAY = dateutil.parser.parse(NOW)
         RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'

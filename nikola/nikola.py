@@ -34,6 +34,7 @@ import glob
 import locale
 import os
 import sys
+import mimetypes
 try:
     from urlparse import urlparse, urlsplit, urljoin
 except ImportError:
@@ -161,6 +162,16 @@ LEGAL_VALUES = {
         zh_cn='zh-CN'
     )
 }
+
+
+def _enclosure(post, lang):
+    '''Default implementation of enclosures'''
+    enclosure = post.meta('enclosure', lang)
+    if enclosure:
+        length = 0
+        url = enclosure
+        mime = mimetypes.guess_type(url)[0]
+        return url, length, mime
 
 
 class Nikola(object):
@@ -453,7 +464,7 @@ class Nikola(object):
 
         # Disable RSS.  For a successful disable, we must have both the option
         # false and the plugin disabled through the official means.
-        if 'generate_rss' in self.config['DISABLED_PLUGINS']:
+        if 'generate_rss' in self.config['DISABLED_PLUGINS'] and self.config['GENERATE_RSS'] is True:
             self.config['GENERATE_RSS'] = False
 
         if not self.config['GENERATE_RSS'] and 'generate_rss' not in self.config['DISABLED_PLUGINS']:
@@ -469,12 +480,12 @@ class Nikola(object):
         self.default_lang = self.config['DEFAULT_LANG']
         self.translations = self.config['TRANSLATIONS']
 
-        locale_fallback, locale_default, locales = sanitized_locales(
-                                    self.config.get('LOCALE_FALLBACK', None),
-                                    self.config.get('LOCALE_DEFAULT', None),
-                                    self.config.get('LOCALES', {}),
-                                    self.translations)  # NOQA
-        utils.LocaleBorg.initialize(locales, self.default_lang)
+        if self.configured:
+            locale_fallback, locale_default, locales = sanitized_locales(
+                self.config.get('LOCALE_FALLBACK', None),
+                self.config.get('LOCALE_DEFAULT', None),
+                self.config.get('LOCALES', {}), self.translations)
+            utils.LocaleBorg.initialize(locales, self.default_lang)
 
         # BASE_URL defaults to SITE_URL
         if 'BASE_URL' not in self.config:
@@ -578,7 +589,10 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['url_type'] = self.config['URL_TYPE']
         self._GLOBAL_CONTEXT['timezone'] = self.tzinfo
         self._GLOBAL_CONTEXT['_link'] = self.link
-        self._GLOBAL_CONTEXT['set_locale'] = utils.LocaleBorg().set_locale
+        try:
+            self._GLOBAL_CONTEXT['set_locale'] = utils.LocaleBorg().set_locale
+        except utils.LocaleBorgUninitializedException:
+            self._GLOBAL_CONTEXT['set_locale'] = None
         self._GLOBAL_CONTEXT['rel_link'] = self.rel_link
         self._GLOBAL_CONTEXT['abs_link'] = self.abs_link
         self._GLOBAL_CONTEXT['exists'] = self.file_exists
@@ -872,7 +886,7 @@ class Nikola(object):
         return result
 
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
-                             rss_teasers, rss_plain, feed_length=10, feed_url=None, enclosure=None):
+                             rss_teasers, rss_plain, feed_length=10, feed_url=None, enclosure=_enclosure):
 
         """Takes all necessary data, and renders a RSS feed in output_path."""
         rss_obj = rss.RSS2(
@@ -926,14 +940,11 @@ class Nikola(object):
                 rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
 
             """ Enclosure callback must returns tuple """
-            if enclosure:
-                download_link, download_size, download_type = enclosure(post=post, lang=lang)
-
-                args['enclosure'] = rss.Enclosure(
-                    download_link,
-                    download_size,
-                    download_type,
-                )
+            # enclosure callback returns None if post has no enclosure, or a
+            # 3-tuple of (url, length (0 is valid), mimetype)
+            enclosure_details = enclosure(post=post, lang=lang)
+            if enclosure_details is not None:
+                args['enclosure'] = rss.Enclosure(*enclosure_details)
 
             items.append(utils.ExtendedItem(**args))
 
@@ -1268,6 +1279,11 @@ class Nikola(object):
         for k, v in self.GLOBAL_CONTEXT['template_hooks'].items():
             deps_dict['||template_hooks|{0}||'.format(k)] = v._items
 
+        for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
+            deps_dict[k] = deps_dict['global'][k](lang)
+
+        deps_dict['navigation_links'] = deps_dict['global']['navigation_links'](lang)
+
         if post:
             deps_dict['post_translations'] = post.translated_to
 
@@ -1305,6 +1321,11 @@ class Nikola(object):
 
         for k, v in self.GLOBAL_CONTEXT['template_hooks'].items():
             deps_context['||template_hooks|{0}||'.format(k)] = v._items
+
+        for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
+            deps_context[k] = deps_context['global'][k](lang)
+
+        deps_context['navigation_links'] = deps_context['global']['navigation_links'](lang)
 
         task = {
             'name': os.path.normpath(output_name),

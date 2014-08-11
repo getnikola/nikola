@@ -2,11 +2,8 @@
 
 from __future__ import unicode_literals, absolute_import
 
-# This code is so you can run the samples without installing the package,
-# and should be before any import touching nikola, in any file under tests/
 import os
 import sys
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 
 from collections import defaultdict
@@ -44,13 +41,16 @@ class RSSFeedTest(unittest.TestCase):
         self.blog_url = "http://some.blog"
 
         with mock.patch('nikola.post.get_meta',
-                        mock.Mock(return_value=({'title': 'post title',
-                                                 'slug': 'awesome_article',
-                                                 'date': '2012-10-01 22:41',
-                                                 'author': None,
-                                                 'tags': 'tags', 'link':
-                                                 'link', 'description':
-                                                 'description'}))):
+                        mock.Mock(return_value=(
+                            {'title': 'post title',
+                             'slug': 'awesome_article',
+                             'date': '2012-10-01 22:41',
+                             'author': None,
+                             'tags': 'tags',
+                             'link': 'link',
+                             'description': 'description',
+                             'enclosure': 'http://www.example.org/foo.mp3'}
+                        ))):
             with mock.patch('nikola.nikola.utils.os.path.isdir',
                             mock.Mock(return_value=True)):
                 with mock.patch('nikola.nikola.Post.text',

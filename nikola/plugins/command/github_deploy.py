@@ -38,6 +38,11 @@ from nikola.__main__ import main
 from nikola import __version__
 
 
+def uni_check_output(*args, **kwargs):
+    o = subprocess.check_output(*args, **kwargs)
+    return o.decode('utf-8')
+
+
 class CommandGitHubDeploy(Command):
     """ Deploy site to GitHub pages. """
     name = 'github_deploy'
@@ -50,13 +55,15 @@ class CommandGitHubDeploy(Command):
         It performs the following actions:
 
         1. Ensure that your site is a git repository, and git is on the PATH.
-        2. Check for changes, and prompt the user to continue, if required.
-        3. Build the site
-        4. Clean any files that are "unknown" to Nikola.
-        5. Create a deploy branch, if one doesn't exist.
-        6. Commit the output to this branch.  (NOTE: Any untracked source
+        2. Ensure that the output directory is not committed on the
+           source branch.
+        3. Check for changes, and prompt the user to continue, if required.
+        4. Build the site
+        5. Clean any files that are "unknown" to Nikola.
+        6. Create a deploy branch, if one doesn't exist.
+        7. Commit the output to this branch.  (NOTE: Any untracked source
            files, may get committed at this stage, on the wrong branch!)
-        7. Push and deploy!
+        8. Push and deploy!
 
         NOTE: This command needs your site to be a git repository, with a
         master branch (or a different branch, configured using
@@ -91,6 +98,8 @@ class CommandGitHubDeploy(Command):
 
         self._ensure_git_repo()
 
+        self._exit_if_output_committed()
+
         if not self._prompt_continue():
             return
 
@@ -118,7 +127,7 @@ class CommandGitHubDeploy(Command):
         source = self._source_branch
         remote = self._remote_name
 
-        source_commit = subprocess.check_output(['git', 'rev-parse', source])
+        source_commit = uni_check_output(['git', 'rev-parse', source])
         commit_message = (
             'Nikola auto commit.\n\n'
             'Source commit: %s'
@@ -209,19 +218,16 @@ class CommandGitHubDeploy(Command):
         """
 
         try:
-            remotes = subprocess.check_output(['git', 'remote'])
-
+            remotes = uni_check_output(['git', 'remote'])
         except subprocess.CalledProcessError as e:
             self.logger.notice('github_deploy needs a git repository!')
             sys.exit(e.returncode)
-
         except OSError as e:
             import errno
             self.logger.error('Running git failed with {0}'.format(e))
             if e.errno == errno.ENOENT:
                 self.logger.notice('Is git on the PATH?')
             sys.exit(1)
-
         else:
             if self._remote_name not in remotes:
                 self.logger.error(
@@ -229,19 +235,36 @@ class CommandGitHubDeploy(Command):
                 )
                 sys.exit(1)
 
+    def _exit_if_output_committed(self):
+        """ Exit if the output folder is committed on the source branch. """
+
+        source = self._source_branch
+        subprocess.check_call(['git', 'checkout', source])
+
+        output_folder = self.site.config['OUTPUT_FOLDER']
+        output_log = uni_check_output(
+            ['git', 'ls-files', '--', output_folder]
+        )
+
+        if len(output_log.strip()) > 0:
+            self.logger.error(
+                'Output folder is committed on the source branch. '
+                'Cannot proceed until it is removed.'
+            )
+            sys.exit(1)
+
     def _prompt_continue(self):
         """ Show uncommitted changes, and ask if user wants to continue. """
 
-        changes = subprocess.check_output(['git', 'status', '--porcelain'])
+        changes = uni_check_output(['git', 'status', '--porcelain'])
         if changes.strip():
-            changes = subprocess.check_output(['git', 'status']).strip()
+            changes = uni_check_output(['git', 'status']).strip()
             message = (
                 "You have the following changes:\n%s\n\n"
                 "Anything not committed, and unknown to Nikola may be lost, "
                 "or committed onto the wrong branch. Do you wish to continue?"
             ) % changes
             proceed = ask_yesno(message, False)
-
         else:
             proceed = True
 

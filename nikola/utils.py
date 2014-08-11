@@ -40,7 +40,7 @@ import json
 import shutil
 import subprocess
 import sys
-from zipfile import ZipFile as zip
+from zipfile import ZipFile as zipf
 try:
     from imp import reload
 except ImportError:
@@ -722,17 +722,18 @@ def extract_all(zipfile, path='themes'):
     pwd = os.getcwd()
     makedirs(path)
     os.chdir(path)
-    with zip(zipfile) as z:
-        namelist = z.namelist()
-        for f in namelist:
-            if f.endswith('/') and '..' in f:
-                raise UnsafeZipException('The zip file contains ".." and is '
-                                         'not safe to expand.')
-        for f in namelist:
-            if f.endswith('/'):
-                makedirs(f)
-            else:
-                z.extract(f)
+    z = zipf(zipfile)
+    namelist = z.namelist()
+    for f in namelist:
+        if f.endswith('/') and '..' in f:
+            raise UnsafeZipException('The zip file contains ".." and is '
+                                     'not safe to expand.')
+    for f in namelist:
+        if f.endswith('/'):
+            makedirs(f)
+        else:
+            z.extract(f)
+    z.close()
     os.chdir(pwd)
 
 
@@ -897,6 +898,11 @@ def get_asset_path(path, themes, files_folders={'files': ''}, _themes_dir='theme
     return None
 
 
+class LocaleBorgUninitializedException(Exception):
+    def __init__(self):
+        super(LocaleBorgUninitializedException, self).__init__("Attempt to use LocaleBorg before initialization")
+
+
 class LocaleBorg(object):
     """
     Provides locale related services and autoritative current_lang,
@@ -931,6 +937,9 @@ class LocaleBorg(object):
     Examples: "Spanish", "French" can't do the full circle set / get / set
     That used to break calendar, but now seems is not the case, with month at least
     """
+
+    initialized = False
+
     @classmethod
     def initialize(cls, locales, initial_lang):
         """
@@ -965,7 +974,7 @@ class LocaleBorg(object):
 
     def __init__(self):
         if not self.initialized:
-            raise Exception("Attempt to use LocaleBorg before initialization")
+            raise LocaleBorgUninitializedException()
         self.__dict__ = self.__shared_state
 
     def set_locale(self, lang):

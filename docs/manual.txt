@@ -1,6 +1,6 @@
 .. title: The Nikola Handbook
 .. slug: handbook
-.. date: 2012/03/30 23:00
+.. date: 2012-03-30 23:00:00 UTC-03:00
 .. tags:
 .. link:
 .. description:
@@ -8,7 +8,7 @@
 The Nikola Handbook
 ===================
 
-:Version: 7.0.0
+:Version: 7.0.1
 
 .. class:: alert alert-info pull-right
 
@@ -459,7 +459,7 @@ The content of that file is as follows::
 
     .. title: How to make money
     .. slug: how-to-make-money
-    .. date: 2012/09/15 19:52:05
+    .. date: 2012-09-15 19:52:05 UTC
     .. tags:
     .. link:
     .. description:
@@ -534,7 +534,7 @@ to your configuration::
 
         How to make money
         how-to-make-money
-        2012/09/15 19:52:05
+        2012-09-15 19:52:05 UTC
 
    However, starting with Nikola v7, you can now use ``.meta`` files and put
    all metadata you want, complete with the explanations — they look just like
@@ -542,7 +542,10 @@ to your configuration::
 
         .. title: How to make money
         .. slug: how-to-make-money
-        .. date: 2012/09/15 19:52:05
+        .. date: 2012-09-15 19:52:05 UTC
+
+   Both file formats are supported; however, the new format is preferred, if
+   possible.
 
 If you are writing a multilingual site, you can also create a per-language
 post file (for example: ``how-to-make-money.es.txt`` with the default TRANSLATIONS_PATTERN, see below).
@@ -563,7 +566,7 @@ default set to::
 
 .. note:: Considered languages
 
-    nikola will only look for translation of input files for languages
+    Nikola will only look for translation of input files for languages
     specified in the TRANSLATIONS variable.
 
 You can edit these files with your favourite text editor, and once you are happy
@@ -895,6 +898,15 @@ Navigation Links
             ),
         }
 
+    .. note::
+
+       Support for submenus is theme-dependent.  Only one level of
+       submenus is supported.
+
+    .. note::
+       Some themes, including the default Bootstrap 3 theme, may
+       present issues if the menu is too large.  (in ``bootstrap3``, the
+       navbar can grow too large and cover contents.)
 
     The ``SEARCH_FORM`` option contains the HTML code for a search form based on
     duckduckgo.com which should always work, but feel free to change it to
@@ -1341,20 +1353,18 @@ To use this, you have to put your source code files inside ``listings`` or whate
 Will include the source code from ``foo.py``, highlight its syntax in python mode,
 and also create a ``listings/foo.py.html`` page and the listing will have a title linking to it.
 
-Listings support a few extra options so that you can display a fragment instead of the whole
-file in a document:
+Listings support the same options `reST includes`__ support (including
+various options for controlling which parts of the file are included), and also
+a ``linenos`` option for Sphinx compatibility.
 
-start-at
-    Takes a string, and starts displaying the code at the first line that matches it.
-start-before
-    Takes a string, and starts displaying the code right before the first line that matches it.
-end-at
-    Takes a string, and stops displaying the code at the first line that matches it.
-end-before
-    Takes a string, and stops displaying the code right before the first line that matches it.
+__ http://docutils.sourceforge.net/docs/ref/rst/directives.html#including-an-external-document-fragment
 
-If you set start-at and start-before, start-at wins. If you set end-at and end-before, end-at wins.
-If you make it so your listing ends before it starts, it's frowned upon and nothing will be shown.
+.. note::
+
+   Formerly, ``start-at`` and ``end-at`` options were supported; however,
+   they do not work anymore (since v6.1.0) and you should now use ``start-after``
+   and ``end-before``, respectively.  You can also use ``start-line`` and
+   ``end-line``.
 
 Gist
 ~~~~
@@ -1429,6 +1439,36 @@ If we want to use the post's title as the link's text, just do::
 and it will produce:
 
     Take a look at :doc:`creating-a-theme` to know how to do it.
+
+Post List
+~~~~~~~~~
+
+This directive can be used to generate a list of posts. You could use it, for
+example, to make a list of the latest 5 blog posts, or a list of all blog posts
+with the tag ``nikola``::
+
+   Here are my 5 latest and greatest blog posts:
+
+   .. post-list::
+      :start: -5
+
+   These are all my posts about Nikola:
+
+   .. post-list::
+      :tags: nikola
+
+Note that you can give the ``tags`` option a comma-separated list of tags, in
+which case the list will show all posts that have at least one of those tags.
+Other interesting options include ``stop`` (set it to ``-1``, for example, to
+show all but the last post); ``reverse`` (set to ``True`` to sort the list in
+chronological order, instead of the default latest-post-first); ``lang``
+(language to use for post titles and links); and ``slugs`` (allows you to filter
+by post slugs, instead of tags).
+
+The post list directive uses the ``post_list_directive.tmpl`` template file (or
+another one, if you use the ``template`` option) to generate the list's HTML. By
+default, this is an unordered list with dates and clickable post titles. See
+the template file in Nikola's base theme for an example of how this works.
 
 
 Importing Your WordPress Site Into Nikola

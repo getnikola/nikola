@@ -5,15 +5,16 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
 # Kwpolska <kwpolska@gmail.com>, 2013-2014
 # Kwpolska <kwpolska@gmail.com>, 2013
 # Kwpolska <kwpolska@gmail.com>, 2013
-# Niko <wenso@gmx.de>, 2013
+# Herr Amok <wenso@gmx.de>, 2013
 # ralsina <ralsina@netmanagers.com.ar>, 2013
 # ralsina <ralsina@netmanagers.com.ar>, 2013
 # udono <udono@gmx.net>, 2013
 # udono <udono@gmx.net>, 2013
-# Niko <wenso@gmx.de>, 2013
+# Herr Amok <wenso@gmx.de>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"

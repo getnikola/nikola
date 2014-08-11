@@ -3,7 +3,7 @@ Name = ipynb
 Module = ipynb
 
 [Documentation]
-Author = Damián Avila
+Author = Damian Avila
 Version = 1.0
 Website = http://www.oquanta.info
 Description = Compile IPython notebooks into HTML

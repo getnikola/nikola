@@ -59,9 +59,24 @@ TRANSLATIONS = ${TRANSLATIONS}
 
 TRANSLATIONS_PATTERN = ${TRANSLATIONS_PATTERN}
 
-# Links for the sidebar / navigation bar.
-# You should provide a key-value pair for each used language.
-# (the same way you would do with a (translatable) setting.)
+# Links for the sidebar / navigation bar.  (translatable)
+# This is a dict.  The keys are languages, and values are tuples.
+#
+# For regular links:
+#     ('http://example.com/', 'Text')
+#
+# For submenus:
+#     ((
+#         ('Sub 1', 'http://example.com/'),
+#         ('Sub 2', 'http://example.org/'),
+#     ), 'Top')
+#
+# WARNING: Support for submenus is theme-dependent.
+#          Only one level of submenus is supported.
+# WARNING: Some themes, including the default Bootstrap 3 theme,
+#          may present issues if the menu is too large.
+#          (in bootstrap3, the navbar can grow too large and cover contents.)
+
 NAVIGATION_LINKS = ${NAVIGATION_LINKS}
 
 # Name of the theme to use.
@@ -424,6 +439,9 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # ANNOTATIONS = False
 
 # Create index.html for story folders?
+# WARNING: if a story would conflict with the index file (usually
+#          caused by setting slug to `index`), the STORY_INDEX
+#          will not be generated for that directory.
 # STORY_INDEX = False
 # Enable comments on story pages?
 # COMMENTS_IN_STORIES = False
@@ -541,8 +559,8 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # Defaults to 10
 # INDEX_DISPLAY_POST_COUNT = 10
 
-# By default, Nikola generates RSS files for the website and for tags.
-# Set this to False to disable all that.
+# By default, Nikola generates RSS files for the website and for tags, and
+# links to it.  Set this to False to disable everything RSS-related.
 # GENERATE_RSS = True
 
 # RSS_LINK is a HTML fragment to link the RSS or Atom feeds. If set to None,

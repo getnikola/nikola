@@ -1,6 +1,6 @@
 .. title: Creating a Theme
 .. slug: creating-a-theme
-.. date: 2012/03/13 12:00
+.. date: 2012-03-13 12:00:00 UTC-03:00
 .. tags:
 .. link:
 .. description:

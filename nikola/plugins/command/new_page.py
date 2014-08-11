@@ -59,6 +59,13 @@ class CommandNewPage(Command):
             'help': 'Create the page with separate metadata (two file format)'
         },
         {
+            'name': 'edit',
+            'short': 'e',
+            'type': bool,
+            'default': False,
+            'help': 'Open the page (and meta file, if any) in $EDITOR after creation.'
+        },
+        {
             'name': 'content_format',
             'short': 'f',
             'long': 'format',

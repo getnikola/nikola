@@ -12,7 +12,6 @@ import os
 import subprocess
 import sys
 import shutil
-
 from setuptools import setup
 from setuptools.command.install import install
 from setuptools.command.test import test as TestCommand
@@ -52,10 +51,6 @@ elif sys.version_info[0] == 3 and sys.version_info[1] < 3:
 
 ##################################################
 
-if sys.version_info[0] == 2:
-    # in Python 3 this becomes a builtin, for Python 2 we need the backport
-    dependencies.append('configparser')
-
 # Provided as an attribute, so you can append to these instead
 # of replicating them:
 standard_exclude = ('*.pyc', '*$py.class', '*~', '.*', '*.bak')
@@ -79,42 +74,31 @@ def copy_messages():
         shutil.copytree(original_messages_directory, theme_messages_directory)
 
 
-def copy_symlinked_for_windows():
+def expands_symlinks_for_windows():
     """replaces the symlinked files with a copy of the original content.
 
     In windows (msysgit), a symlink is converted to a text file with a
     path to the file it points to. If not corrected, installing from a git
     clone will end with some files with bad content
 
-    After install the WC will be dirty (symlink markers rewroted with real
-    content)
+    After install the working copy  will be dirty (symlink markers rewroted with
+    real content)
     """
-
-    # essentially nikola.utils.should_fix_git_symlinked inlined, to not
-    # fiddle with sys.path / import unless really needed
     if sys.platform != 'win32':
-        return
-    path = (os.path.dirname(__file__) +
-            r'nikola\data\samplesite\stories\theming.rst')
-    try:
-        if os.path.getsize(path) < 200:
-            pass
-        else:
-            return
-    except Exception:
         return
 
     # apply the fix
-    localdir = os.path.dirname(__file__)
-    dst = os.path.join(localdir, 'nikola', 'data', 'samplesite')
-    src = dst
+    localdir = os.path.dirname(os.path.abspath(__file__))
     oldpath = sys.path[:]
     sys.path.insert(0, os.path.join(localdir, 'nikola'))
     winutils = __import__('winutils')
-    winutils.fix_git_symlinked(src, dst)
+    failures = winutils.fix_all_git_symlinked(localdir)
     sys.path = oldpath
     del sys.modules['winutils']
-    print('WARNING: your working copy is now dirty by changes in samplesite')
+    print('WARNING: your working copy is now dirty by changes in samplesite, sphinx and themes')
+    if failures:
+        raise Exception("Error: \n\tnot all symlinked files could be fixed." +
+                        "\n\tYour best bet is to start again from clean.")
 
 
 def install_manpages(root, prefix):
@@ -146,28 +130,22 @@ def install_manpages(root, prefix):
 
 def remove_old_files(self):
     tree = os.path.join(self.install_lib, 'nikola')
-    tree2 = os.path.join('build', 'lib', 'nikola')
     try:
         shutil.rmtree(tree, ignore_errors=True)
-    except:
-        pass
-
-    try:
-        shutil.rmtree(tree2, ignore_errors=True)
     except:
         pass
 
 
 class nikola_install(install):
     def run(self):
-        copy_symlinked_for_windows()
+        expands_symlinks_for_windows()
         remove_old_files(self)
         install.run(self)
         install_manpages(self.root, self.prefix)
 
 
 setup(name='Nikola',
-      version='7.0.0',
+      version='7.0.1',
       description='A modular, fast, simple, static website generator',
       long_description=open('README.rst').read(),
       author='Roberto Alsina and others',

@@ -1,6 +1,6 @@
 .. title: Theming Nikola
 .. slug: theming
-.. date: 2012/03/13 12:00
+.. date: 2012-03-13 12:00:00 UTC-03:00
 .. tags:
 .. link:
 .. description:
@@ -8,7 +8,7 @@
 Theming Nikola
 ==============
 
-:Version: 7.0.0
+:Version: 7.0.1
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-info pull-right

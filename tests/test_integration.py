@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function, absolute_import
 
-# This code is so you can run the samples without installing the package,
-# and should be before any import touching nikola, in any file under tests/
 import os
 import sys
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import codecs
 import locale
@@ -21,8 +18,11 @@ from nikola import __main__
 import nikola
 import nikola.plugins.command
 import nikola.plugins.command.init
+import nikola.utils
 
-from .base import BaseTestCase, cd
+from .base import BaseTestCase, cd, LocaleSupportInTesting
+
+LocaleSupportInTesting.initialize()
 
 
 class EmptyBuildTest(BaseTestCase):
@@ -33,6 +33,8 @@ class EmptyBuildTest(BaseTestCase):
     @classmethod
     def setUpClass(cls):
         """Setup a demo site."""
+        # for tests that need bilingual support override languaje_settings
+        cls.languaje_settings()
         cls.startdir = os.getcwd()
         cls.tmpdir = tempfile.mkdtemp()
         cls.target_dir = os.path.join(cls.tmpdir, "target")
@@ -40,6 +42,10 @@ class EmptyBuildTest(BaseTestCase):
         cls.fill_site()
         cls.patch_site()
         cls.build()
+
+    @classmethod
+    def languaje_settings(cls):
+        LocaleSupportInTesting.initialize_locales_for_testing("unilingual")
 
     @classmethod
     def fill_site(self):
@@ -79,6 +85,10 @@ class EmptyBuildTest(BaseTestCase):
             del sys.modules['conf']
         except KeyError:
             pass
+        # clear LocaleBorg state
+        nikola.utils.LocaleBorg.reset()
+        if hasattr(self.__class__, "ol"):
+            delattr(self.__class__, "ol")
 
     def test_build(self):
         """Ensure the build did something."""
@@ -182,26 +192,16 @@ class TranslatedBuildTest(EmptyBuildTest):
 
     dataname = "translated_titles"
 
-    def __init__(self, *a, **kw):
-        super(TranslatedBuildTest, self).__init__(*a, **kw)
-        try:
-            self.oldlocale = locale.getlocale()
-            locale.setlocale(locale.LC_ALL, ("pl_PL", "utf8"))
-        except:
-            pytest.skip()
-
     @classmethod
-    def tearDownClass(self):
-        try:
-            locale.setlocale(locale.LC_ALL, self.oldlocale)
-        except:
-            pass
-        super(TranslatedBuildTest, self).tearDownClass()
+    def languaje_settings(cls):
+        LocaleSupportInTesting.initialize_locales_for_testing("bilingual")
+        # the other languaje
+        cls.ol = LocaleSupportInTesting.langlocales["other"][0]
 
     def test_translated_titles(self):
         """Check that translated title is picked up."""
         en_file = os.path.join(self.target_dir, "output", "stories", "1.html")
-        pl_file = os.path.join(self.target_dir, "output", "pl", "stories", "1.html")
+        pl_file = os.path.join(self.target_dir, "output", self.ol, "stories", "1.html")
         # Files should be created
         self.assertTrue(os.path.isfile(en_file))
         self.assertTrue(os.path.isfile(pl_file))
@@ -220,8 +220,8 @@ class TranslationsPatternTest1(TranslatedBuildTest):
     @classmethod
     def patch_site(self):
         """Set the TRANSLATIONS_PATTERN to the old v6 default"""
-        os.rename(os.path.join(self.target_dir, "stories", "1.pl.txt"),
-                  os.path.join(self.target_dir, "stories", "1.txt.pl")
+        os.rename(os.path.join(self.target_dir, "stories", "1.%s.txt" % self.ol),
+                  os.path.join(self.target_dir, "stories", "1.txt.%s" % self.ol)
                   )
         conf_path = os.path.join(self.target_dir, "conf.py")
         with codecs.open(conf_path, "rb", "utf-8") as inf:
@@ -252,8 +252,8 @@ class TranslationsPatternTest2(TranslatedBuildTest):
     def patch_site(self):
         """Set the TRANSLATIONS_PATTERN to the old v6 default"""
         conf_path = os.path.join(self.target_dir, "conf.py")
-        os.rename(os.path.join(self.target_dir, "stories", "1.pl.txt"),
-                  os.path.join(self.target_dir, "stories", "1.txt.pl")
+        os.rename(os.path.join(self.target_dir, "stories", "1.%s.txt" % self.ol),
+                  os.path.join(self.target_dir, "stories", "1.txt.%s" % self.ol)
                   )
         with codecs.open(conf_path, "rb", "utf-8") as inf:
             data = inf.read()

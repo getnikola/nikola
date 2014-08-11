@@ -121,6 +121,12 @@ class Listings(Task):
             for k, v in self.site.GLOBAL_CONTEXT['template_hooks'].items():
                 uptodate['||template_hooks|{0}||'.format(k)] = v._items
 
+            for k in self.site._GLOBAL_CONTEXT_TRANSLATABLE:
+                uptodate[k] = self.site.GLOBAL_CONTEXT[k](kw['default_lang'])
+
+            # save navigation links as dependencies
+            uptodate['navigation_links'] = uptodate['c']['navigation_links'](kw['default_lang'])
+
             uptodate2 = uptodate.copy()
             uptodate2['f'] = files
             uptodate2['d'] = dirs

@@ -1,0 +1,31 @@
+# stolen from https://github.com/jakubroztocil/httpie/blob/master/appveyor.yml
+build: false
+environment:
+  matrix:
+    #- PYTHON: "C:/Python34"
+    - PYTHON: "C:/Python27"
+init:
+  - "ECHO %PYTHON%"
+  - ps: "ls C:/Python*"
+install:
+  - ps: (new-object net.webclient).DownloadFile('https://raw.github.com/pypa/pip/master/contrib/get-pip.py', 'C:/get-pip.py')
+  - "%PYTHON%/python.exe C:/get-pip.py"
+  - ps: (new-object net.webclient).DownloadFile('https://pypi.python.org/packages/2.7/l/lxml/lxml-3.3.5.win32-py2.7.exe', 'C:/Python27/get-lxml.exe')
+  #- ps: (new-object net.webclient).DownloadFile('http://www.lfd.uci.edu/~gohlke/pythonlibs/5hgp4h3m/lxml-3.3.5.win32-py3.4.exe', 'C:/Python34/get-lxml.exe')
+  - "%PYTHON%/Scripts/easy_install.exe %PYTHON%/get-lxml.exe"
+# can't install coverage etc.
+  - "%PYTHON%/Scripts/pip.exe install -r requirements-extras.txt pytest mock freezegun"
+# temporary change, install with setup.py install so symlinks are expanned
+#  - "%PYTHON%/Scripts/pip.exe install ."
+  - "%PYTHON%/python.exe setup.py install"
+
+    # temp workaround
+  - "%PYTHON%/Scripts/pip.exe uninstall -y webassets"
+
+test_script:
+  - "set path=%PYTHON%/Scripts;%path%"
+  - "%PYTHON%/python.exe --version"
+  - "%PYTHON%/Scripts/pip.exe --version"
+  - "%PYTHON%/python.exe setup.py test"
+  - "%nikola"
+  - "%nikola help"

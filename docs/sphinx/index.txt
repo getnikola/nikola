@@ -6,7 +6,7 @@ with the stable release.  The docs for the stable release are available `on
 the Nikola website <http://getnikola.com/documentation.html>`_.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 5
 
    manual
    upgrading-to-v6

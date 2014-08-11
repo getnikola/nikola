@@ -1,6 +1,6 @@
 .. title: A reStructuredText Reference
 .. slug: quickref
-.. date: 2012/03/30 23:00
+.. date: 2012-03-30 23:00:00 UTC-03:00
 .. tags: 
 .. link: 
 .. description: 

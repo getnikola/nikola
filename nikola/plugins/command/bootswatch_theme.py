@@ -82,9 +82,9 @@ class CommandBootswatchTheme(Command):
 
         # See if we need bootswatch for bootstrap v2 or v3
         themes = utils.get_theme_chain(parent)
-        if 'bootstrap3' not in themes:
+        if 'bootstrap3' not in themes or 'bootstrap3-jinja' not in themes:
             version = '2'
-        elif 'bootstrap' not in themes:
+        elif 'bootstrap' not in themes or 'bootstrap-jinja' not in themes:
             LOGGER.warn('"bootswatch_theme" only makes sense for themes that use bootstrap')
         elif 'bootstrap3-gradients' in themes or 'bootstrap3-gradients-jinja' in themes:
             LOGGER.warn('"bootswatch_theme" doesn\'t work well with the bootstrap3-gradients family')

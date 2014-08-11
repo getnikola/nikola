@@ -9,11 +9,8 @@
 __all__ = ["BaseTestCase", "cd", "LocaleSupportInTesting"]
 
 
-# This code is so you can run the samples without installing the package,
-# and should be before any import touching nikola, in any file under tests/
 import os
 import sys
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 
 from contextlib import contextmanager

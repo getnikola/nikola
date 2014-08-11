@@ -27,9 +27,9 @@
 from __future__ import unicode_literals, print_function
 import codecs
 import datetime
-import locale
 import os
 import sys
+import subprocess
 
 from blinker import signal
 import dateutil.tz
@@ -128,16 +128,13 @@ def get_date(schedule=False, rule=None, last_date=None, tz=None, iso8601=False):
     offset_min = offset_sec % 3600
     if iso8601:
         tz_str = '{0:+03d}:{1:02d}'.format(offset_hrs, offset_min // 60)
-        return date.strftime('%Y-%m-%dT%T') + tz_str
     else:
         if offset:
             tz_str = ' UTC{0:+03d}:{1:02d}'.format(offset_hrs, offset_min // 60)
         else:
             tz_str = ' UTC'
-        return date.strftime('{0} {1}'.format(
-            locale.nl_langinfo(locale.D_FMT),
-            locale.nl_langinfo(locale.T_FMT),
-        )) + tz_str
+
+    return date.strftime('%Y-%m-%d %H:%M:%S') + tz_str
 
 
 class CommandNewPost(Command):
@@ -183,6 +180,13 @@ class CommandNewPost(Command):
             'type': bool,
             'default': False,
             'help': 'Create the post with separate metadata (two file format)'
+        },
+        {
+            'name': 'edit',
+            'short': 'e',
+            'type': bool,
+            'default': False,
+            'help': 'Open the post (and meta file, if any) in $EDITOR after creation.'
         },
         {
             'name': 'content_format',
@@ -335,3 +339,13 @@ class CommandNewPost(Command):
         LOGGER.info("Your {0}'s text is at: {1}".format(content_type, txt_path))
 
         signal('new_' + content_type).send(self, **event)
+
+        if options['edit']:
+            editor = os.getenv('EDITOR', '').split()
+            to_run = editor + [txt_path]
+            if not onefile:
+                to_run.append(meta_path)
+            if editor:
+                subprocess.call(to_run)
+            else:
+                LOGGER.error('$EDITOR not set, cannot edit the post.  Please do it manually.')

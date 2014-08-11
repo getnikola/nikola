@@ -56,14 +56,8 @@ config = {}
 
 def main(args=None):
     colorful = False
-    if sys.stderr.isatty():
+    if sys.stderr.isatty() and os.name != 'nt':
         colorful = True
-        try:
-            import colorama
-            colorama.init()
-        except ImportError:
-            if os.name == 'nt':
-                colorful = False
 
     ColorfulStderrHandler._colorful = colorful
 
@@ -84,7 +78,6 @@ def main(args=None):
     # the output of that command (the new site) in an unknown directory that is
     # not the current working directory.  (does not apply to `version`)
     argname = args[0] if len(args) > 0 else None
-    # FIXME there are import plugins in the repo, so how do we handle this?
     if argname and argname not in ['init', 'version'] and not argname.startswith('import_'):
         root = get_root_dir()
         if root:
@@ -227,7 +220,6 @@ class NikolaTaskLoader(TaskLoader):
         latetasks = generate_tasks(
             'post_render',
             self.nikola.gen_tasks('post_render', "LateTask", 'Group of tasks to be executes after site is rendered.'))
-        from blinker import signal
         signal('initialized').send(self.nikola)
         return tasks + latetasks, DOIT_CONFIG
 
@@ -252,7 +244,6 @@ class DoitNikola(DoitMain):
 
     def run(self, cmd_args):
         sub_cmds = self.get_commands()
-        signal('initialized').send(self.nikola)
         args = self.process_args(cmd_args)
         args = [sys_decode(arg) for arg in args]
 

@@ -31,7 +31,7 @@
     <nav id="menu" role="navigation">
     <ul>
     {% for url, text in navigation_links[lang] %}
-        {% if url is mapping %}
+        {% if isinstance(url, tuple) %}
             <li> {{ text }}
             <ul>
             {% for suburl, text in url %}
