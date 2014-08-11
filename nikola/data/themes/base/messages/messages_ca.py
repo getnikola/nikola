@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "",
     "Read in English": "Llegeix-ho en català",
     "Read more": "Llegeix-ne més",
+    "Skip to main content": "",
     "Source": "Codi",
     "Tags and Categories": "",
     "Tags": "Etiquetes",

@@ -158,6 +158,7 @@ class CommandImportWordpress(Command, ImportMixin):
 
         channel = self.get_channel_from_file(self.wordpress_export_file)
         self.context = self.populate_context(channel)
+        self.base_dir = urlparse(self.context['BASE_URL']).path
         conf_template = self.generate_base_site()
 
         # If user  has specified a custom pattern for translation files we
@@ -387,26 +388,34 @@ class CommandImportWordpress(Command, ImportMixin):
         # link is something like http://foo.com/2012/09/01/hello-world/
         # So, take the path, utils.slugify it, and that's our slug
         link = get_text_tag(item, 'link', None)
-        path = unquote(urlparse(link).path.strip('/'))
+        parsed = urlparse(link)
+        path = unquote(parsed.path.strip('/'))
 
         # In python 2, path is a str. slug requires a unicode
         # object. According to wikipedia, unquoted strings will
         # usually be UTF8
         if isinstance(path, utils.bytes_str):
             path = path.decode('utf8')
+
+        # Cut out the base directory.
+        if path.startswith(self.base_dir.strip('/')):
+            path = path.replace(self.base_dir.strip('/'), '', 1)
+
         pathlist = path.split('/')
-        if len(pathlist) > 1:
-            out_folder = os.path.join(*([out_folder] + pathlist[:-1]))
-        slug = utils.slugify(pathlist[-1])
-        if not slug:  # it happens if the post has no "nice" URL
+        if parsed.query:  # if there are no nice URLs and query strings are used
+            out_folder = os.path.join(*([out_folder] + pathlist))
             slug = get_text_tag(
                 item, '{{{0}}}post_name'.format(wordpress_namespace), None)
-        if not slug:  # it *may* happen
-            slug = get_text_tag(
-                item, '{{{0}}}post_id'.format(wordpress_namespace), None)
-        if not slug:  # should never happen
-            LOGGER.error("Error converting post:", title)
-            return
+            if not slug:  # it *may* happen
+                slug = get_text_tag(
+                    item, '{{{0}}}post_id'.format(wordpress_namespace), None)
+            if not slug:  # should never happen
+                LOGGER.error("Error converting post:", title)
+                return
+        else:
+            if len(pathlist) > 1:
+                out_folder = os.path.join(*([out_folder] + pathlist[:-1]))
+            slug = utils.slugify(pathlist[-1])
 
         description = get_text_tag(item, 'description', '')
         post_date = get_text_tag(
@@ -442,8 +451,9 @@ class CommandImportWordpress(Command, ImportMixin):
             LOGGER.notice('Draft "{0}" will not be imported.'.format(title))
         elif content.strip():
             # If no content is found, no files are written.
-            self.url_map[link] = (self.context['SITE_URL'] + out_folder + '/'
-                                  + slug + '.html').replace(os.sep, '/')
+            self.url_map[link] = (self.context['SITE_URL'] +
+                                  out_folder.rstrip('/') + '/' + slug +
+                                  '.html').replace(os.sep, '/')
             if hasattr(self, "separate_qtranslate_content") \
                and self.separate_qtranslate_content:
                 content_translations = separate_qtranslate_content(content)

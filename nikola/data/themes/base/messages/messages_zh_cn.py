@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "",
     "Read in English": "中文版",
     "Read more": "更多",
+    "Skip to main content": "",
     "Source": "源代码",
     "Tags and Categories": "标签和分类",
     "Tags": "标签",

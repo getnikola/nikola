@@ -4,18 +4,35 @@ New in master
 Features
 --------
 
+* Added a “Skip to content” link for accessibility (Issue #1345)
+* Added ``minify_lines`` filter to strip leading whitespace and empty lines
+* Added Google Closure Compiler JavaScript filter
+* Print full tracebacks for conf.py errors
+* Added ``USE_SLUGIFY`` (defaults to True).  If it’s False, Nikola allows and
+  generates almost any Unicode character in page URLs (Issue #1321)
+* sources for .html files are now copied as .src.html (Issue #1354)
+* Copy files/*.html verbatim (skip filters)
 * Don’t generate STORY_INDEX if there is a conflicting story
 * Added support for enclosures (via optional enclosure metadata tag) (Issue #1322)
 
 Bugfixes
 --------
 
+* fix error message when tags that are too similar are found (Issues #1343, #1344)
+* serve .svgz with content-encoding: gzip (Issue #1380)
+* html5.js file for ancient IE now works outside of / (Issue #1372)
+* PHP compiler now removes metadata comments the usual way (Issue #1374)
+* PHP compiler’s permalinks were .html instead of .php (Issue #1373)
+* Fixed importing WordPress blogs outside of / (Issue #1368)
+* Fixed importing WordPress blogs without slugs (Issue #1364)
+* don’t forget query parts of links (Issue #1369)
 * Made posts that are directive-only work properly (Issue #1351)
 * Made mathjax work with stories (Issue #1355)
 * Fixed regeneration after change of ``NAVIGATION_LINKS``
 * Made ``nikola bootswatch_theme`` compatible with Jinja themes
 * Fixed submenus in Jinja themes (Issue #1327)
 * Quietly ignore empty lines in bundles files
+* Fixed wrong filter order in post_list plugin (Issue #1365)
 
 New in v7.0.1
 =============

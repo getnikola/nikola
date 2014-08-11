@@ -25,7 +25,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function, unicode_literals
-import codecs
+import io
 from collections import defaultdict
 from copy import copy
 from pkg_resources import resource_filename
@@ -134,7 +134,7 @@ LEGAL_VALUES = {
         'pt': 'pt_br',
         'zh': 'zh_cn'
     },
-    'RTL_LANGUAGES': ('fa', 'ur'),
+    'RTL_LANGUAGES': ('ar', 'fa', 'ur'),
     'COLORBOX_LOCALES': defaultdict(
         str,
         bg='bg',
@@ -330,6 +330,7 @@ class Nikola(object):
             'USE_CDN': False,
             'USE_FILENAME_AS_TITLE': True,
             'USE_OPEN_GRAPH': True,
+            'USE_SLUGIFY': True,
             'TIMEZONE': 'UTC',
             'DEPLOY_DRAFTS': True,
             'DEPLOY_FUTURE': False,
@@ -399,6 +400,9 @@ class Nikola(object):
         # Handle CONTENT_FOOTER properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS.
         self.config['CONTENT_FOOTER'].langformat(self.config['CONTENT_FOOTER_FORMATS'])
+
+        # propagate USE_SLUGIFY
+        utils.USE_SLUGIFY = self.config['USE_SLUGIFY']
 
         # Make sure we have pyphen installed if we are using it
         if self.config.get('HYPHENATE') and pyphen is None:
@@ -646,6 +650,7 @@ class Nikola(object):
             'SHOW_SOURCELINK')
         self._GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
         self._GLOBAL_CONTEXT['colorbox_locales'] = LEGAL_VALUES['COLORBOX_LOCALES']
+        self._GLOBAL_CONTEXT['url_replacer'] = self.url_replacer
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
@@ -877,6 +882,10 @@ class Nikola(object):
         if not result:
             result = "."
 
+        # Don't forget the query part of the link
+        if parsed_dst.query:
+            result += "?" + parsed_dst.query
+
         # Don't forget the fragment (anchor) part of the link
         if parsed_dst.fragment:
             result += "#" + parsed_dst.fragment
@@ -952,7 +961,7 @@ class Nikola(object):
 
         dst_dir = os.path.dirname(output_path)
         utils.makedirs(dst_dir)
-        with codecs.open(output_path, "wb+", "utf-8") as rss_file:
+        with io.open(output_path, "w+", encoding="utf-8") as rss_file:
             data = rss_obj.to_xml(encoding='utf-8')
             if isinstance(data, utils.bytes_str):
                 data = data.decode('utf-8')
@@ -1207,16 +1216,17 @@ class Nikola(object):
                         self.posts_per_month[
                             '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post)
                         for tag in post.alltags:
-                            if utils.slugify(tag) in slugged_tags:
+                            _tag_slugified = utils.slugify(tag)
+                            if _tag_slugified in slugged_tags:
                                 if tag not in self.posts_per_tag:
                                     # Tags that differ only in case
-                                    other_tag = [k for k in self.posts_per_tag.keys() if k.lower() == tag.lower()][0]
+                                    other_tag = [existing for existing in self.posts_per_tag.keys() if utils.slugify(existing) == _tag_slugified][0]
                                     utils.LOGGER.error('You have tags that are too similar: {0} and {1}'.format(tag, other_tag))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
                                     utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.posts_per_tag[other_tag]])))
                                     quit = True
                             else:
-                                slugged_tags.add(utils.slugify(tag))
+                                slugged_tags.add(utils.slugify(tag, force=True))
                             self.posts_per_tag[tag].append(post)
                         self.posts_per_category[post.meta('category')].append(post)
                     else:

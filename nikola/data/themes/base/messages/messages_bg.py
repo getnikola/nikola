@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "",
     "Read in English": "Прочетете на български",
     "Read more": "Прочети още",
+    "Skip to main content": "",
     "Source": "Source",
     "Tags and Categories": "Тагове и Категории",
     "Tags": "Тагове",

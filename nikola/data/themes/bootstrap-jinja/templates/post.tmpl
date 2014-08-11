@@ -7,7 +7,10 @@
 {% block extra_head %}
     {{ super() }}
     {% if post.meta('keywords') %}
-        <meta name="keywords" content="{{ post.meta('keywords')|e }}">
+    <meta name="keywords" content="{{ post.meta('keywords')|e }}">
+    {% endif %}
+    {% if post.description() %}
+    <meta name="description" itemprop="description" content="{{ post.description() }}">
     {% endif %}
     <meta name="author" content="{{ post.author() }}">
     {{ helper.open_graph_metadata(post) }}

@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "",
     "Read in English": "Legu ĝin en Esperanto",
     "Read more": "Legu plu",
+    "Skip to main content": "",
     "Source": "Fonto",
     "Tags and Categories": "Etikedoj kaj Kategorioj",
     "Tags": "Etikedoj",

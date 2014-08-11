@@ -9,6 +9,7 @@ ${base.html_headstart()}
 ${template_hooks['extra_head']()}
 </head>
 <body>
+<a href="#content" class="sr-only sr-only-focusable">${messages("Skip to main content")}</a>
 
 <!-- Menubar -->
 
@@ -57,7 +58,7 @@ ${template_hooks['extra_head']()}
     </div>
 </div>
 <!-- End of Menubar -->
-<div class="container-fluid" id="container-fluid">
+<div class="container-fluid" id="content">
     <!--Body content-->
     <div class="row-fluid">
     <div class="span2"></div>

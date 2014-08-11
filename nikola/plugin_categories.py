@@ -84,7 +84,7 @@ class Command(BasePlugin, DoitCommand):
 
     doc_purpose = "A short explanation."
     doc_usage = ""
-    doc_description = None  # None value will completely ommit line from doc
+    doc_description = None  # None value will completely omit line from doc
     # see http://python-doit.sourceforge.net/cmd_run.html#parameters
     cmd_options = ()
     needs_config = True

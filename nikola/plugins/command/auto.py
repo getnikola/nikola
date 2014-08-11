@@ -28,7 +28,6 @@ from __future__ import print_function, unicode_literals
 
 import os
 import subprocess
-import webbrowser
 
 from nikola.plugin_categories import Command
 from nikola.utils import req_missing
@@ -61,7 +60,7 @@ class CommandAuto(Command):
         try:
             from livereload import Server
         except ImportError:
-            req_missing(['livereload==2.1.0'], 'use the "auto" command')
+            req_missing(['livereload'], 'use the "auto" command')
             return
 
         # Run an initial build so we are up-to-date
@@ -81,6 +80,8 @@ class CommandAuto(Command):
 
         out_folder = self.site.config['OUTPUT_FOLDER']
         if options and options.get('browser'):
-            webbrowser.open('http://localhost:{0}'.format(port))
+            browser = True
+        else:
+            browser = False
 
-        server.serve(port, None, out_folder)
+            server.serve(port, None, out_folder, True, browser)

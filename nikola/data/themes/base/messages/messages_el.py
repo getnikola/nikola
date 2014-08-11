@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "",
     "Read in English": "Διαβάστε στα Ελληνικά",
     "Read more": "Διαβάστε περισσότερα",
+    "Skip to main content": "",
     "Source": "Πηγαίος κώδικας",
     "Tags and Categories": "Ετικέτες και κατηγορίες",
     "Tags": "Ετικέτες",

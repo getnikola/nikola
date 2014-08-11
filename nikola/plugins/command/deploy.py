@@ -25,8 +25,9 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
-import codecs
+import io
 from datetime import datetime
+from dateutil.tz import gettz
 import os
 import sys
 import subprocess
@@ -35,7 +36,7 @@ import time
 from blinker import signal
 
 from nikola.plugin_categories import Command
-from nikola.utils import remove_file, get_logger
+from nikola.utils import get_logger, remove_file, unicode_str
 
 
 class CommandDeploy(Command):
@@ -84,7 +85,7 @@ class CommandDeploy(Command):
 
         self.logger.info("Successful deployment")
         try:
-            with codecs.open(timestamp_path, 'rb', 'utf8') as inf:
+            with io.open(timestamp_path, 'r', encoding='utf8') as inf:
                 last_deploy = datetime.strptime(inf.read().strip(), "%Y-%m-%dT%H:%M:%S.%f")
                 clean = False
         except (IOError, Exception) as e:
@@ -96,8 +97,8 @@ class CommandDeploy(Command):
         self._emit_deploy_event(last_deploy, new_deploy, clean, undeployed_posts)
 
         # Store timestamp of successful deployment
-        with codecs.open(timestamp_path, 'wb+', 'utf8') as outf:
-            outf.write(new_deploy.isoformat())
+        with io.open(timestamp_path, 'w+', encoding='utf8') as outf:
+            outf.write(unicode_str(new_deploy.isoformat()))
 
     def _emit_deploy_event(self, last_deploy, new_deploy, clean=False, undeployed=None):
         """ Emit events for all timeline entries newer than last deploy.
@@ -120,9 +121,12 @@ class CommandDeploy(Command):
             'undeployed': undeployed
         }
 
+        if last_deploy.tzinfo is None:
+            last_deploy = last_deploy.replace(tzinfo=gettz('UTC'))
+
         deployed = [
             entry for entry in self.site.timeline
-            if entry.date > last_deploy.replace(tzinfo=self.site.tzinfo) and entry not in undeployed
+            if entry.date > last_deploy and entry not in undeployed
         ]
 
         event['deployed'] = deployed

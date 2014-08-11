@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "RSS syöte",
     "Read in English": "Lue suomeksi",
     "Read more": "Lue lisää",
+    "Skip to main content": "",
     "Source": "Lähde",
     "Tags and Categories": "Tagit ja kategoriat",
     "Tags": "Tagit",

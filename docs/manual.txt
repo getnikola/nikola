@@ -1,7 +1,7 @@
 .. title: The Nikola Handbook
 .. slug: handbook
 .. date: 2012-03-30 23:00:00 UTC-03:00
-.. tags:
+.. tags: mathjax
 .. link:
 .. description:
 
@@ -180,7 +180,7 @@ If you want to create a blog or a site, Nikola provides:
 * Google sitemap generation
 * Custom deployment (if it's a command, you can use it)
 * A (very) basic look and feel you can customize, and is even text-mode friendly
-* The input format is light markup (`reStructuredText <quickstart.html>`__ or
+* The input format is light markup (`reStructuredText <http://getnikola.com/quickstart.html>`__ or
   `Markdown <http://daringfireball.net/projects/markdown/>`_)
 * Easy-to-create image galleries
 * Support for displaying source code
@@ -309,7 +309,7 @@ Those source files are later converted to HTML
 The recommended formats are reStructuredText and Markdown, but there is also support
 for textile and WikiCreole and even for just writing HTML.
 
-.. note:: There is a great `quick tutorial to learn reStructuredText. <quickstart.html>`__
+.. note:: There is a great `quick tutorial to learn reStructuredText. <http://getnikola.com/quickstart.html>`__
 
 First, let's see how you "build" your site. Nikola comes with a minimal site to get you started.
 
@@ -1224,8 +1224,14 @@ The currently available filters are:
         ".html": [apply_to_file(string.upper)]
       }
 
+minify_lines
+   Strips leading whitespace and blank lines. Useful for compacting HTML but pre-formatted text must be escaped manually.
+
 yui_compressor
-   Compress files using `YUI compressor <http://yui.github.io/yuicompressor/>`_
+   Compress CSS/JavaScript using `YUI compressor <http://yui.github.io/yuicompressor/>`_
+
+closure_compiler
+   Compile, compress, and optimize JavaScript `Google Closure Compiler <https://developers.google.com/closure/compiler/>`_
 
 optipng
    Compress PNG files using `optipng <http://optipng.sourceforge.net/>`_
@@ -1271,6 +1277,36 @@ reStructuredText Extensions
 
 Nikola includes support for a few directives and roles that are not part of docutils, but which
 we think are handy for website development.
+
+MathJax
+~~~~~~~
+
+Nikola supports math input via MathJax.  It uses the usual math roles and
+directives of reStructuredText.
+
+In order to use them in your posts, you **must** add the special ``mathjax`` tag.
+
+Inline mathematics (equivalent to single dollar signs or backslash-parentheses
+in LaTeX) are produced using the `math` **role**:
+
+Euler’s formula: :math:`e^{ix} = \cos x + i\sin x`
+
+::
+
+    Euler’s formula: :math:`e^{ix} = \cos x + i\sin x`
+
+Display mathematics (equivalent to double dollar signs or backslash-brackets in
+LaTeX) are produced using the `math` **directive**:
+
+.. math::
+
+   \int \frac{dx}{1+ax}=\frac{1}{a}\ln(1+ax)+C
+
+::
+
+   .. math::
+
+      \int \frac{dx}{1+ax}=\frac{1}{a}\ln(1+ax)+C
 
 Media
 ~~~~~

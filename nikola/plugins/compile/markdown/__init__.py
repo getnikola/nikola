@@ -28,7 +28,7 @@
 
 from __future__ import unicode_literals
 
-import codecs
+import io
 import os
 import re
 
@@ -70,8 +70,8 @@ class CompileMarkdown(PageCompiler):
             req_missing(['markdown'], 'build this site (compile Markdown)')
         makedirs(os.path.dirname(dest))
         self.extensions += self.site.config.get("MARKDOWN_EXTENSIONS")
-        with codecs.open(dest, "w+", "utf8") as out_file:
-            with codecs.open(source, "r", "utf8") as in_file:
+        with io.open(dest, "w+", encoding="utf8") as out_file:
+            with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
             if not is_two_file:
                 data = re.split('(\n\n|\r\n\r\n)', data, maxsplit=1)[-1]
@@ -90,7 +90,7 @@ class CompileMarkdown(PageCompiler):
         makedirs(os.path.dirname(path))
         if not content.endswith('\n'):
             content += '\n'
-        with codecs.open(path, "wb+", "utf8") as fd:
+        with io.open(path, "w+", encoding="utf8") as fd:
             if onefile:
                 fd.write('<!-- \n')
                 fd.write(write_metadata(metadata))

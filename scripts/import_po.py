@@ -3,7 +3,7 @@
 """Download translations from transifex and regenerate files."""
 
 from __future__ import unicode_literals, print_function
-import codecs
+import io
 from glob import glob
 import os
 import sys
@@ -28,5 +28,5 @@ MESSAGES = {""".splitlines()
     lines.extend(sorted(lines2))
     lines.append("}\n")
     print("Generating:", outf)
-    with codecs.open(outf, "wb+", "utf8") as outfile:
+    with io.open(outf, "wb+", encoding="utf8") as outfile:
         outfile.write('\n'.join(lines))

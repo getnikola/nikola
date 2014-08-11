@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "%d min remaining to read": "",
+    "%d min remaining to read": "zostáva %d minút na čítanie",
     "Also available in:": "Tiež dostupné v:",
     "Archive": "Archív",
     "Categories": "Kategórie",
@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "RSS kanál",
     "Read in English": "Čítať v slovenčine",
     "Read more": "Čítať ďalej",
+    "Skip to main content": "",
     "Source": "Zdroj",
     "Tags and Categories": "Štítky a kategórie",
     "Tags": "Štítky",

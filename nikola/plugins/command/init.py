@@ -27,7 +27,7 @@
 from __future__ import print_function, unicode_literals
 import os
 import shutil
-import codecs
+import io
 import json
 import textwrap
 import datetime
@@ -242,7 +242,7 @@ class CommandInit(Command):
         template_path = resource_filename('nikola', 'conf.py.in')
         conf_template = Template(filename=template_path)
         conf_path = os.path.join(target, 'conf.py')
-        with codecs.open(conf_path, 'w+', 'utf8') as fd:
+        with io.open(conf_path, 'w+', encoding='utf8') as fd:
             fd.write(conf_template.render(**prepare_config(SAMPLE_CONF)))
 
     @classmethod

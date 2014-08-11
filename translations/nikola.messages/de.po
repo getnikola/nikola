@@ -6,22 +6,22 @@
 # Translators:
 # Translators:
 # Translators:
-# Kwpolska <kwpolska@gmail.com>, 2013-2014
-# Kwpolska <kwpolska@gmail.com>, 2013
-# Kwpolska <kwpolska@gmail.com>, 2013
-# Herr Amok <wenso@gmx.de>, 2013
-# ralsina <ralsina@netmanagers.com.ar>, 2013
-# ralsina <ralsina@netmanagers.com.ar>, 2013
-# udono <udono@gmx.net>, 2013
-# udono <udono@gmx.net>, 2013
-# Herr Amok <wenso@gmx.de>, 2013
+# Chris Warrick <kwpolska@gmail.com>, 2013-2014
+# Chris Warrick <kwpolska@gmail.com>, 2013
+# Chris Warrick <kwpolska@gmail.com>, 2013
+# amokleben <wenso@gmx.de>, 2013
+# Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
+# Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
+# Udo Spallek <udono@gmx.net>, 2013
+# Udo Spallek <udono@gmx.net>, 2013-2014
+# amokleben <wenso@gmx.de>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-04-17 14:46+0000\n"
-"Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2014-07-31 12:30+0000\n"
+"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/nikola/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,7 +57,7 @@ msgid "Next post"
 msgstr "Nächster Eintrag"
 
 msgid "old posts, page %d"
-msgstr "Vorherige Einträge, Seite %d"
+msgstr "Ältere Einträge, Seite %d"
 
 msgid "page %d"
 msgstr "Seite %d"
@@ -113,4 +113,7 @@ msgid "RSS feed"
 msgstr "RSS-Feed"
 
 msgid "%d min remaining to read"
+msgstr "%d min verbleiben zum Lesen"
+
+msgid "Skip to main content"
 msgstr ""

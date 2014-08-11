@@ -85,6 +85,8 @@ STDERR_HANDLER = [ColorfulStderrHandler(
 LOGGER = get_logger('Nikola', STDERR_HANDLER)
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
 
+USE_SLUGIFY = True
+
 # This will block out the default handler and will hide all unwanted
 # messages, properly.
 logbook.NullHandler().push_application()
@@ -170,6 +172,7 @@ else:
 from doit import tools
 from unidecode import unidecode
 from pkg_resources import resource_filename
+from nikola import filters as task_filters
 
 import PyRSS2Gen as rss
 
@@ -672,7 +675,7 @@ _slugify_strip_re = re.compile(r'[^\w\s-]')
 _slugify_hyphenate_re = re.compile(r'[-\s]+')
 
 
-def slugify(value):
+def slugify(value, force=False):
     """
     Normalizes string, converts to lowercase, removes non-alpha characters,
     and converts spaces to hyphens.
@@ -691,11 +694,26 @@ def slugify(value):
     """
     if not isinstance(value, unicode_str):
         raise ValueError("Not a unicode object: {0}".format(value))
-    value = unidecode(value)
-    # WARNING: this may not be python2/3 equivalent
-    # value = unicode(_slugify_strip_re.sub('', value).strip().lower())
-    value = str(_slugify_strip_re.sub('', value).strip().lower())
-    return _slugify_hyphenate_re.sub('-', value)
+    if USE_SLUGIFY or force:
+        # This is the standard state of slugify, which actually does some work.
+        # It is the preferred style, especially for Western languages.
+        value = unidecode(value)
+        value = str(_slugify_strip_re.sub('', value).strip().lower())
+        return _slugify_hyphenate_re.sub('-', value)
+    else:
+        # This is the “disarmed” state of slugify, which lets the user
+        # have any character they please (be it regular ASCII with spaces,
+        # or another alphabet entirely).  This might be bad in some
+        # environments, and as such, USE_SLUGIFY is better off being True!
+
+        # We still replace some characters, though.  In particular, we need
+        # to replace ? and #, which should not appear in URLs, and some
+        # Windows-unsafe characters.  This list might be even longer.
+        rc = '/\\?#"\'\r\n\t*:<>|"'
+
+        for c in rc:
+            value = value.replace(c, '-')
+        return value
 
 
 def unslugify(value, discard_numbers=True):
@@ -769,13 +787,19 @@ def current_time(tzinfo=None):
     return dt
 
 
-def apply_filters(task, filters):
+def apply_filters(task, filters, skip_ext=None):
     """
     Given a task, checks its targets.
     If any of the targets has a filter that matches,
     adds the filter commands to the commands of the task,
     and the filter itself to the uptodate of the task.
     """
+
+    if '.php' in filters.keys():
+        if task_filters.php_template_injection not in filters['.php']:
+            filters['.php'].append(task_filters.php_template_injection)
+    else:
+        filters['.php'] = [task_filters.php_template_injection]
 
     def filter_matches(ext):
         for key, value in list(filters.items()):
@@ -790,6 +814,8 @@ def apply_filters(task, filters):
 
     for target in task.get('targets', []):
         ext = os.path.splitext(target)[-1].lower()
+        if skip_ext and ext in skip_ext:
+            continue
         filter_ = filter_matches(ext)
         if filter_:
             for action in filter_:

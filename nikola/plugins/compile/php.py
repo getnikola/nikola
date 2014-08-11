@@ -29,11 +29,11 @@
 from __future__ import unicode_literals
 
 import os
-import shutil
-import codecs
+import io
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, write_metadata
+from hashlib import md5
 
 
 class CompilePhp(PageCompiler):
@@ -43,7 +43,11 @@ class CompilePhp(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         makedirs(os.path.dirname(dest))
-        shutil.copyfile(source, dest)
+        with io.open(dest, "w+", encoding="utf8") as out_file:
+            with open(source, "rb") as in_file:
+                hash = md5(in_file.read()).hexdigest()
+                out_file.write('<!-- __NIKOLA_PHP_TEMPLATE_INJECTION source:{0} checksum:{1}__ -->'.format(source, hash))
+        return True
 
     def create_post(self, path, **kw):
         content = kw.pop('content', None)
@@ -53,10 +57,21 @@ class CompilePhp(PageCompiler):
         metadata = {}
         metadata.update(self.default_metadata)
         metadata.update(kw)
-        os.makedirs(os.path.dirname(path))
+        if not metadata['description']:
+            # For PHP, a description must be set.  Otherwise, Nikola will
+            # take the first 200 characters of the post as the Open Graph
+            # description (og:description meta element)!
+            # If the PHP source leaks there:
+            # (a) The script will be executed multiple times
+            # (b) PHP may encounter a syntax error if it cuts too early,
+            #     therefore completely breaking the page
+            # Here, we just use the title.  The user should come up with
+            # something better, but just using the title does the job.
+            metadata['description'] = metadata['title']
+        makedirs(os.path.dirname(path))
         if not content.endswith('\n'):
             content += '\n'
-        with codecs.open(path, "wb+", "utf8") as fd:
+        with io.open(path, "w+", encoding="utf8") as fd:
             if onefile:
                 fd.write('<!--\n')
                 fd.write(write_metadata(metadata))

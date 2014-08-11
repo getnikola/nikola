@@ -24,7 +24,9 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import codecs
+from __future__ import unicode_literals
+
+import io
 import os
 
 from nikola.plugin_categories import Task
@@ -82,13 +84,13 @@ class CopyAssets(Task):
                 from pygments.formatters import get_formatter_by_name
                 formatter = get_formatter_by_name('html', style=kw["code_color_scheme"])
                 utils.makedirs(os.path.dirname(code_css_path))
-                with codecs.open(code_css_path, 'wb+', 'utf8') as outf:
+                with io.open(code_css_path, 'w+', encoding='utf8') as outf:
                     outf.write(kw["code.css_head"])
                     outf.write(formatter.get_style_defs(kw["code.css_selectors"]))
                     outf.write(kw["code.css_close"])
 
             if os.path.exists(code_css_path):
-                with codecs.open(code_css_path, 'r', 'utf-8') as fh:
+                with io.open(code_css_path, 'r', encoding='utf-8') as fh:
                     testcontents = fh.read(len(kw["code.css_head"])) == kw["code.css_head"]
             else:
                 testcontents = False

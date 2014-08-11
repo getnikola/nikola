@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "Kanał RSS",
     "Read in English": "Czytaj po polsku",
     "Read more": "Czytaj więcej",
+    "Skip to main content": "Przejdź do treści",
     "Source": "Źródło",
     "Tags and Categories": "Tagi i Kategorie",
     "Tags": "Tagi",

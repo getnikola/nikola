@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import codecs
+import io
 import glob
 import sys
 import os
@@ -42,7 +42,7 @@ def jinjify(in_theme, out_theme):
     lookup.loader = jinja2.FileSystemLoader([out_templates_path], encoding='utf-8')
     for template in glob.glob(os.path.join(in_templates_path, "*.tmpl")):
         out_template = os.path.join(out_templates_path, os.path.basename(template))
-        with codecs.open(template, "r", "utf-8") as inf:
+        with io.open(template, "r", encoding="utf-8") as inf:
             data = mako2jinja(inf)
 
         lines = []
@@ -55,7 +55,7 @@ def jinjify(in_theme, out_theme):
         for repl in dumber_replacements:
             data = data.replace(*repl)
 
-        with codecs.open(out_template, "wb+", "utf-8") as outf:
+        with io.open(out_template, "wb+", encoding="utf-8") as outf:
             outf.write(data + '\n')
 
         # Syntax check output

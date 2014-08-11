@@ -73,7 +73,7 @@ class Listings(Task):
                     code = highlight(fd.read(), lexer,
                                      HtmlFormatter(cssclass='code',
                                                    linenos="table", nowrap=False,
-                                                   lineanchors=utils.slugify(in_name),
+                                                   lineanchors=utils.slugify(in_name, force=True),
                                                    anchorlinenos=True))
                 # the pygments highlighter uses <div class="codehilite"><pre>
                 # for code.  We switch it to reST's <pre class="code">.

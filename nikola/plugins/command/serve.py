@@ -60,8 +60,8 @@ class CommandServe(Command):
             'short': 'a',
             'long': 'address',
             'type': str,
-            'default': '127.0.0.1',
-            'help': 'Address to bind (default: 127.0.0.1)',
+            'default': '',
+            'help': 'Address to bind (default: 0.0.0.0 – all local interfaces)',
         },
         {
             'name': 'browser',
@@ -84,10 +84,10 @@ class CommandServe(Command):
             httpd = HTTPServer((options['address'], options['port']),
                                OurHTTPRequestHandler)
             sa = httpd.socket.getsockname()
-            self.logger.info("Serving HTTP on {0} port {1} ...".format(*sa))
+            self.logger.info("Serving HTTP on {0} port {1}...".format(*sa))
             if options['browser']:
-                server_url = "http://{0}:{1}/".format(options['address'], options['port'])
-                self.logger.info("Opening {0} in the default web browser ...".format(server_url))
+                server_url = "http://{0}:{1}/".format(*sa)
+                self.logger.info("Opening {0} in the default web browser...".format(server_url))
                 webbrowser.open(server_url)
             try:
                 httpd.serve_forever()
@@ -156,6 +156,9 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
             return None
         self.send_response(200)
         self.send_header("Content-type", ctype)
+        if os.path.splitext(path)[1] == '.svgz':
+            # Special handling for svgz to make it work nice with browsers.
+            self.send_header("Content-Encoding", 'gzip')
         fs = os.fstat(f.fileno())
         self.send_header("Content-Length", str(fs[6]))
         self.send_header("Last-Modified", self.date_time_string(fs.st_mtime))

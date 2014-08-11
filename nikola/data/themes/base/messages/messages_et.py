@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "",
     "Read in English": "Loe eesti keeles",
     "Read more": "Loe veel",
+    "Skip to main content": "",
     "Source": "Lähtekood",
     "Tags and Categories": "Sildid ja kategooriad",
     "Tags": "Märksõnad",

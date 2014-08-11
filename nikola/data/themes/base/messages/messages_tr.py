@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "RSS kaynağı",
     "Read in English": "Türkçe olarak oku",
     "Read more": "Devamını oku",
+    "Skip to main content": "",
     "Source": "Kaynak",
     "Tags and Categories": "Etiketler ve Kategoriler",
     "Tags": "Etiketler",

@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "RSS フィード",
     "Read in English": "日本語で読む",
     "Read more": "続きを読む",
+    "Skip to main content": "",
     "Source": "ソース",
     "Tags and Categories": "タグとカテゴリー",
     "Tags": "タグ",

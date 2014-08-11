@@ -29,7 +29,7 @@
 from .utils import req_missing
 from functools import wraps
 import os
-import codecs
+import io
 import shutil
 import subprocess
 import tempfile
@@ -62,10 +62,10 @@ def apply_to_text_file(f):
     in place.  Reads files in UTF-8."""
     @wraps(f)
     def f_in_file(fname):
-        with codecs.open(fname, 'r', 'utf-8') as inf:
+        with io.open(fname, 'r', encoding='utf-8') as inf:
             data = inf.read()
         data = f(data)
-        with codecs.open(fname, 'w+', 'utf-8') as outf:
+        with io.open(fname, 'w+', encoding='utf-8') as outf:
             outf.write(data)
 
     return f_in_file
@@ -135,12 +135,23 @@ def yui_compressor(infile):
     return runinplace(r'{} --nomunge %1 -o %2'.format(yuicompressor), infile)
 
 
+def closure_compiler(infile):
+    return runinplace(r'closure-compiler --warning_level QUIET --js %1 --js_output_file %2', infile)
+
+
 def optipng(infile):
     return runinplace(r"optipng -preserve -o2 -quiet %1", infile)
 
 
 def jpegoptim(infile):
     return runinplace(r"jpegoptim -p --strip-all -q %1", infile)
+
+
+@apply_to_text_file
+def minify_lines(data):
+    datalines = data.splitlines()
+    datalines = [line.lstrip() for line in datalines if not (line.strip() == "")]
+    return "\n".join(datalines)
 
 
 @apply_to_text_file
@@ -155,3 +166,18 @@ def typogrify(data):
     # data = typo.caps(data)
     data = typo.initial_quotes(data)
     return data
+
+
+@apply_to_text_file
+def php_template_injection(data):
+    import re
+    template = re.search('<\!-- __NIKOLA_PHP_TEMPLATE_INJECTION source\:(.*) checksum\:(.*)__ -->', data)
+    if template:
+        source = template.group(1)
+        with io.open(source, "r", encoding="utf-8") as in_file:
+            phpdata = in_file.read()
+        _META_SEPARATOR = '(' + os.linesep * 2 + '|' + ('\n' * 2) + '|' + ("\r\n" * 2) + ')'
+        phpdata = re.split(_META_SEPARATOR, phpdata, maxsplit=1)[-1]
+        phpdata = re.sub(template.group(0), phpdata, data)
+
+    return phpdata

@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "RSS-feed",
     "Read in English": "Lees in het Nederlands",
     "Read more": "Lees verder",
+    "Skip to main content": "",
     "Source": "Bron",
     "Tags and Categories": "Tags en Categorieën",
     "Tags": "Tags",

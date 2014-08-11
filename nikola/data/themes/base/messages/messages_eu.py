@@ -25,6 +25,7 @@ MESSAGES = {
     "RSS feed": "",
     "Read in English": "Euskaraz irakurri",
     "Read more": "Irakurri gehiago",
+    "Skip to main content": "",
     "Source": "Iturria",
     "Tags and Categories": "Etiketak eta Kategoriak",
     "Tags": "Etiketak",
