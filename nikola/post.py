@@ -318,8 +318,10 @@ class Post(object):
         deps = []
         if self.default_lang in self.translated_to:
             deps.append(self.base_path)
+            deps.append(self.source_path)
         if lang != self.default_lang:
-            deps += [get_translation_candidate(self.config, self.base_path, lang)]
+            deps.append(get_translation_candidate(self.config, self.base_path, lang))
+            deps.append(get_translation_candidate(self.config, self.source_path, lang))
         return deps
 
     def compile(self, lang):

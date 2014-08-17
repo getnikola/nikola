@@ -18,6 +18,7 @@ Features
 Bugfixes
 --------
 
+* rebuild posts when metadata changes (Issue #1319)
 * fix error message when tags that are too similar are found (Issues #1343, #1344)
 * serve .svgz with content-encoding: gzip (Issue #1380)
 * html5.js file for ancient IE now works outside of / (Issue #1372)
