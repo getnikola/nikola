@@ -49,6 +49,7 @@ class Archive(Task):
             "filters": self.site.config['FILTERS'],
             "create_monthly_archive": self.site.config['CREATE_MONTHLY_ARCHIVE'],
             "create_single_archive": self.site.config['CREATE_SINGLE_ARCHIVE'],
+            "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS']
         }
         self.site.scan_posts()
         yield self.group_task()
@@ -60,6 +61,11 @@ class Archive(Task):
             # A bit of a hack.
             if kw['create_single_archive']:
                 archdata = {None: self.site.posts}
+
+            # Filter untranslated posts (Issue #1360)
+            if not kw["show_untranslated_posts"]:
+                for year, posts in archdata.items():
+                    archdata[year] = [p for p in posts if lang p.translated_to]
 
             for year, posts in archdata.items():
                 output_name = os.path.join(
