@@ -323,7 +323,7 @@ class Post(object):
             cand_1 = get_translation_candidate(self.config, self.source_path, lang)
             cand_2 = get_translation_candidate(self.config, self.base_path, lang)
             if os.path.exists(cand_1):
-                deps.append([cand_1, cand_2])
+                deps.extend([cand_1, cand_2])
         return deps
 
     def compile(self, lang):
