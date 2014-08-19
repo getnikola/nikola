@@ -94,8 +94,6 @@ class EmptyBuildTest(BaseTestCase):
         """Ensure the build did something."""
         index_path = os.path.join(
             self.target_dir, "output", "archive.html")
-        if not os.path.isfile(index_path):
-            import pdb; pdb.set_trace()
         self.assertTrue(os.path.isfile(index_path))
 
 
