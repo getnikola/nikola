@@ -119,7 +119,25 @@ Example using reStructuredText syntax:
     </div>
     </p>
 
-Example using hexidecimal ID and reStructuredText syntax:
+Example using hexidecimal ID with reStructuredText syntax:
+
+    >>> import markdown
+    >>> text = """
+    ... Text of the gist:
+    ... .. gist:: c4a43d6fdce612284ac0
+    ... """
+    >>> html = markdown.markdown(text, [GistExtension()])
+    >>> print(html)
+    <p>Text of the gist:
+    <div class="gist">
+    <script src="https://gist.github.com/c4a43d6fdce612284ac0.js"></script>
+    <noscript>
+    <pre>Moo</pre>
+    </noscript>
+    </div>
+    </p>
+
+Example using hexidecimal ID and filename with reStructuredText syntax:
 
     >>> import markdown
     >>> text = """
@@ -200,7 +218,7 @@ GIST_RAW_URL = "https://gist.githubusercontent.com/raw/{0}"
 GIST_FILE_RAW_URL = "https://gist.githubusercontent.com/raw/{0}/{1}"
 
 GIST_MD_RE = r'\[:gist:\s*(?P<gist_id>\S+)(?:\s*(?P<filename>.+?))?\s*\]'
-GIST_RST_RE = r'(?m)^\.\.\s*gist::\s*(?P<gist_id>[^\]\s]+)(?:\s*(?P<filename>.+))\s*$'
+GIST_RST_RE = r'(?m)^\.\.\s*gist::\s*(?P<gist_id>[^\]\s]+)(?:\s*(?P<filename>.+?))?\s*$'
 
 
 class GistFetchException(Exception):
