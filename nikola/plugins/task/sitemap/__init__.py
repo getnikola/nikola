@@ -160,7 +160,8 @@ class Sitemap(LateTask):
                                 continue
                         """ put RSS in sitemapindex[] instead of in urlset[], sitemap_path is included after it is generated """
                         if path.endswith('.xml') or path.endswith('.rss'):
-                            if u'<rss' in io.open(real_path, 'r', encoding='utf8').read(512) or u'<urlset'and path != sitemap_path:
+                            filehead = io.open(real_path, 'r', encoding='utf8').read(512)
+                            if u'<rss' in filehead or (u'<urlset' in filehead and path != sitemap_path):
                                 path = path.replace(os.sep, '/')
                                 lastmod = self.get_lastmod(real_path)
                                 loc = urljoin(base_url, base_path + path)
