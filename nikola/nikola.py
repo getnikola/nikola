@@ -1267,7 +1267,6 @@ class Nikola(object):
         context['title'] = post.title(lang)
         context['description'] = post.description(lang)
         context['permalink'] = post.permalink(lang)
-        context['page_list'] = self.pages
         if post.use_in_feeds:
             context['enable_comments'] = True
         else:

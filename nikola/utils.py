@@ -671,7 +671,7 @@ def remove_file(source):
 # slugify is copied from
 # http://code.activestate.com/recipes/
 # 577257-slugify-make-a-string-usable-in-a-url-or-filename/
-_slugify_strip_re = re.compile(r'[^\w\s-]')
+_slugify_strip_re = re.compile(r'[^+\w\s-]')
 _slugify_hyphenate_re = re.compile(r'[-\s]+')
 
 
