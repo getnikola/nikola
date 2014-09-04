@@ -22,6 +22,7 @@ Ondřej Grover <https://github.com/smartass101>
 Raimon Esteve <https://github.com/raimonesteve>
 Roberto Alsina <https://github.com/ralsina>
 Roman Imankulov <https://github.com/imankulov>
+Sean Pue <https://github.com/seanpue>
 StyXman <https://github.com/StyXman>
 Tim Chase <https://github.com/Gumnos>
 Tordek <https://github.com/Tordek>

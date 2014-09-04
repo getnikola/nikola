@@ -18,6 +18,7 @@ Features
 Bugfixes
 --------
 
+* Fixed some margins for RTL text (Issue #1399)
 * Fixed sitemapindex filtering of non-sitemap XMLs
 * rebuild posts when metadata changes (Issue #1319)
 * Allow + in slugs (Issue #1344)
