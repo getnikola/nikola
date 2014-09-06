@@ -51,7 +51,7 @@ class GitHubGist(Directive):
         url = "https://gist.github.com/raw/{0}".format(gistID)
         try:
             return requests.get(url).text
-        except:
+        except requests.exceptions.RequestException:
             raise self.error('cannot get gist for url=<{'
                              '0}>'.format(url))
 
