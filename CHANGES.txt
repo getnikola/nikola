@@ -1,4 +1,4 @@
-New in master
+New in v7.1.0
 =============
 
 Features
@@ -12,7 +12,7 @@ Features
 * Added ``USE_SLUGIFY`` (defaults to True).  If it’s False, Nikola allows and
   generates almost any Unicode character in page URLs (Issue #1321)
 * sources for .html files are now copied as .src.html (Issue #1354)
-* Copy files/*.html verbatim (skip filters)
+* Copy files/\*.html verbatim (skip filters)
 * Don’t generate STORY_INDEX if there is a conflicting story
 * Added support for enclosures (via optional enclosure metadata tag) (Issue #1322)
 
