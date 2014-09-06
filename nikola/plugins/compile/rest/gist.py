@@ -49,7 +49,11 @@ class GitHubGist(Directive):
 
     def get_raw_gist(self, gistID):
         url = "https://gist.github.com/raw/{0}".format(gistID)
-        return requests.get(url).text
+        try:
+            return requests.get(url).text
+        except:
+            raise self.error('cannot get gist for url=<{'
+                             '0}>'.format(url))
 
     def run(self):
         if 'https://' in self.arguments[0]:
