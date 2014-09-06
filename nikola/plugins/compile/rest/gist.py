@@ -52,8 +52,7 @@ class GitHubGist(Directive):
         try:
             return requests.get(url).text
         except requests.exceptions.RequestException:
-            raise self.error('cannot get gist for url=<{'
-                             '0}>'.format(url))
+            raise self.error('Cannot get gist for url={0}'.format(url))
 
     def run(self):
         if 'https://' in self.arguments[0]:
