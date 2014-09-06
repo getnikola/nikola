@@ -62,6 +62,7 @@ numshub <https://github.com/numshub>
 onnodb <https://github.com/onnodb>
 pabluk <https://github.com/pabluk>
 punchagan <https://github.com/punchagan>
+pwm1234 <https://github.com/pwm1234>
 quijot <https://github.com/quijot>
 quodlibetor <https://github.com/quodlibetor>
 quoth <https://github.com/quoth>
