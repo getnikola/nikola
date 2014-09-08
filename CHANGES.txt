@@ -7,6 +7,7 @@ Features
 Bugfixes
 --------
 
+* Fix files/\*.php (skip post/story-specific filters) (Issue #1403)
 * Warn about missing / in BASE_URL differently (explicit request to
   fix the config file)
 
