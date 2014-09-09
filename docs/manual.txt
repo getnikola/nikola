@@ -289,7 +289,7 @@ caveats:
    pre-built packages is possible through ``virtualenv --system-site-packages``.
 #. Windows has some differences over POSIX, which may cause some features to
    work incorrectly under Windows.  If any problems occur, please do not
-   hesitate to report them.  Some of the differeces include:
+   hesitate to report them.  Some of the differences include:
 
    * ``\`` as path separator (instead of ``/``)
    * the concept of HDD partitions and letters (instead of
@@ -400,7 +400,7 @@ Nikola also has other commands besides ``build``::
       nikola plugin               manage plugins
       nikola serve                start the test webserver
       nikola strace               use strace to list file_deps and targets
-      nikola tabcompletion        generate script for tab-complention
+      nikola tabcompletion        generate script for tab-completion
       nikola version              print the Nikola version number
 
       nikola help                 show help / reference
@@ -625,7 +625,7 @@ and ``PAGES`` configuration options::
     # From those files, a set of HTML fragment files will be generated:
     # cache/whatever/thing.html (and maybe cache/whatever/thing.html.es)
     #
-    # These files are combinated with the template to produce rendered
+    # These files are combined with the template to produce rendered
     # pages, which will be placed at
     # output / TRANSLATIONS[lang] / destination / pagename.html
     #
@@ -1261,7 +1261,7 @@ different ones, or about other web servers, please share!
 
       AddType text/css .css
 
-#. Optionally you can greate static compressed copies and save some CPU on your server
+#. Optionally you can create static compressed copies and save some CPU on your server
    with the GZIP_FILES option in Nikola.
 
 #. The webassets Nikola plugin can drastically decrease the number of CSS and JS files your site fetches.
