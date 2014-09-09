@@ -1015,8 +1015,8 @@ Here is an example, from my own site's deployment script::
 
 Other interesting ideas are using
 `git as a deployment mechanism <http://toroid.org/ams/git-website-howto>`_ (or any other VCS
-for that matter), using `lftp mirror <http://lftp.yar.ru/>`_ or unison, or Dropbox, or
-Ubuntu One. Any way you can think of to copy files from one place to another is good enough.
+for that matter), using `lftp mirror <http://lftp.yar.ru/>`_ or unison, or Dropbox.
+Any way you can think of to copy files from one place to another is good enough.
 
 Deploying to GitHub
 ~~~~~~~~~~~~~~~~~~~
