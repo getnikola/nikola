@@ -294,7 +294,7 @@ caveats:
    * ``\`` as path separator (instead of ``/``)
    * the concept of HDD partitions and letters (instead of
      seamless mounting under one root)
-   * some characters in paths are disallowed (although this shouldn't cause
+   * some characters in paths are disallowed (although this shouldn’t cause
      problems)
    * CR+LF (aka ``\r\n``) as the line separator (instead of LF ``\n``)
 
