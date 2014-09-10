@@ -1038,6 +1038,17 @@ class LocaleBorg(object):
         return s
 
 
+class ExtendedRSS2(rss.RSS2):
+    def publish_extensions(self, handler):
+        if self.self_url:
+            handler.startElement("atom:link", {
+                'href': self.self_url,
+                'rel': "self",
+                'type': "application/rss+xml"
+            })
+            handler.endElement("atom:link")
+
+
 class ExtendedItem(rss.RSSItem):
 
     def __init__(self, **kw):

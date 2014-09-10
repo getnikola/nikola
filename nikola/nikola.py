@@ -55,8 +55,6 @@ if DEBUG:
 else:
     logging.basicConfig(level=logging.ERROR)
 
-import PyRSS2Gen as rss
-
 import lxml.html
 from yapsy.PluginManager import PluginManager
 
@@ -898,7 +896,7 @@ class Nikola(object):
                              rss_teasers, rss_plain, feed_length=10, feed_url=None, enclosure=_enclosure):
 
         """Takes all necessary data, and renders a RSS feed in output_path."""
-        rss_obj = rss.RSS2(
+        rss_obj = utils.ExtendedRSS2(
             title=title,
             link=link,
             description=description,
@@ -944,6 +942,9 @@ class Nikola(object):
                 'categories': post._tags.get(lang, []),
                 'creator': post.author(lang),
             }
+
+            rss_obj.self_url = feed_url
+            rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
 
             if post.author(lang):
                 rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
