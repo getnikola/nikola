@@ -1040,10 +1040,11 @@ class LocaleBorg(object):
 
 class ExtendedRSS2(rss.RSS2):
     def publish(self, handler):
-        # TODO: href should be absolute path. should check that path exists before including the PI.
-        handler.processingInstruction("xml-stylesheet", 'type="text/xsl" href="/assets/xml/rss.xsl" media="all"')
+        if self.xsl_stylesheet_href:
+            handler.processingInstruction("xml-stylesheet", 'type="text/xsl" href="{0}" media="all"'.format(self.xsl_stylesheet_href))
         # old-style class in py2
         rss.RSS2.publish(self, handler)
+
     def publish_extensions(self, handler):
         if self.self_url:
             handler.startElement("atom:link", {
@@ -1052,6 +1053,9 @@ class ExtendedRSS2(rss.RSS2):
                 'type': "application/rss+xml"
             })
             handler.endElement("atom:link")
+
+    def xsl_stylesheet_href(self, href):
+        self.xsl_stylesheet_href = href
 
 
 class ExtendedItem(rss.RSSItem):
