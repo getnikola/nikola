@@ -4,9 +4,12 @@ New in master
 Features
 --------
 
+* XSL Transform RSS into pretty and helpful webpages when opened in browsers (Issue #1411)
+
 Bugfixes
 --------
 
+* Added back atom:link in RSS feeds
 * Fix files/\*.php (skip post/story-specific filters) (Issue #1403)
 * Warn about missing / in BASE_URL differently (explicit request to
   fix the config file)
