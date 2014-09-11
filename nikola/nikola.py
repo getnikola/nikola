@@ -945,13 +945,9 @@ class Nikola(object):
                 'creator': post.author(lang),
             }
 
-            rss_obj.self_url = feed_url
-            rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
-
             if post.author(lang):
                 rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
 
-            """ Enclosure callback must returns tuple """
             # enclosure callback returns None if post has no enclosure, or a
             # 3-tuple of (url, length (0 is valid), mimetype)
             enclosure_details = enclosure(post=post, lang=lang)
@@ -961,6 +957,8 @@ class Nikola(object):
             items.append(utils.ExtendedItem(**args))
 
         rss_obj.items = items
+        rss_obj.self_url = feed_url
+        rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
 
         dst_dir = os.path.dirname(output_path)
         utils.makedirs(dst_dir)
