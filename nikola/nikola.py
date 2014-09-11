@@ -55,6 +55,8 @@ if DEBUG:
 else:
     logging.basicConfig(level=logging.ERROR)
 
+import PyRSS2Gen as rss
+
 import lxml.html
 from yapsy.PluginManager import PluginManager
 
