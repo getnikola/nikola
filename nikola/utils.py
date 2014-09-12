@@ -1039,6 +1039,8 @@ class LocaleBorg(object):
 
 
 class ExtendedRSS2(rss.RSS2):
+    xsl_stylesheet_href = None
+
     def publish(self, handler):
         if self.xsl_stylesheet_href:
             handler.processingInstruction("xml-stylesheet", 'type="text/xsl" href="{0}" media="all"'.format(self.xsl_stylesheet_href))

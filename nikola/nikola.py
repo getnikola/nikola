@@ -907,7 +907,8 @@ class Nikola(object):
             language=lang
         )
 
-        rss_obj.xsl_stylesheet_href = self.url_replacer(feed_url, "/assets/xml/rss.xsl")
+        if feed_url:
+            rss_obj.xsl_stylesheet_href = self.url_replacer(feed_url, "/assets/xml/rss.xsl")
 
         items = []
 
