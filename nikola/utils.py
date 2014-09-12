@@ -1054,9 +1054,6 @@ class ExtendedRSS2(rss.RSS2):
             })
             handler.endElement("atom:link")
 
-    def xsl_stylesheet_href(self, href):
-        self.xsl_stylesheet_href = href
-
 
 class ExtendedItem(rss.RSSItem):
 
