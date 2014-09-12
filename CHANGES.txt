@@ -7,6 +7,7 @@ Features
 Bugfixes
 --------
 
+* Fix Nikola-based page redirects in Python 2 (Issue #1414)
 * Fix files/\*.php (skip post/story-specific filters) (Issue #1403)
 * Warn about missing / in BASE_URL differently (explicit request to
   fix the config file)
