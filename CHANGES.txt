@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Use destination folder names as titles for titleless listings
 * Fixed encoding problems in WordPress urlmap writer (Issue #1416)
 * Added back atom:link in RSS feeds
 * Fixed Nikola-based page redirects in Python 2 (Issue #1414)
