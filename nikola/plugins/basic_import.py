@@ -29,6 +29,7 @@ import io
 import csv
 import datetime
 import os
+import sys
 from pkg_resources import resource_filename
 
 try:
@@ -139,10 +140,16 @@ class ImportMixin(object):
     @staticmethod
     def write_urlmap_csv(output_file, url_map):
         utils.makedirs(os.path.dirname(output_file))
-        with io.open(output_file, 'w+', encoding='utf8') as fd:
-            csv_writer = csv.writer(fd)
-            for item in url_map.items():
-                csv_writer.writerow(item)
+        if sys.version_info[0] == 2:
+            with io.open(output_file, 'wb+') as fd:
+                csv_writer = csv.writer(fd)
+                for item in url_map.items():
+                    csv_writer.writerow(item)
+        else:
+            with open(output_file, 'w+') as fd:
+                csv_writer = csv.writer(fd)
+                for item in url_map.items():
+                    csv_writer.writerow(item)
 
     def get_configuration_output_path(self):
         if not self.import_into_existing_site:
