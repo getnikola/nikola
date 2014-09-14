@@ -81,7 +81,7 @@ def expands_symlinks_for_windows():
     path to the file it points to. If not corrected, installing from a git
     clone will end with some files with bad content
 
-    After install the working copy  will be dirty (symlink markers rewroted with
+    After install the working copy will be dirty (symlink markers overwritten with
     real content)
     """
     if sys.platform != 'win32':
@@ -95,8 +95,9 @@ def expands_symlinks_for_windows():
     failures = winutils.fix_all_git_symlinked(localdir)
     sys.path = oldpath
     del sys.modules['winutils']
-    print('WARNING: your working copy is now dirty by changes in samplesite, sphinx and themes')
-    if failures:
+    if failures != -1:
+        print('WARNING: your working copy is now dirty by changes in samplesite, sphinx and themes')
+    if failures > 0:
         raise Exception("Error: \n\tnot all symlinked files could be fixed." +
                         "\n\tYour best bet is to start again from clean.")
 
