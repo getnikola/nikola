@@ -208,7 +208,23 @@ class Sitemap(LateTask):
         # to scan locations.
         def scan_locs_task():
             scan_locs()
-            return {'locations': list(urlset.keys()) + list(sitemapindex.keys())}
+
+            # Generate a list of file dependencies for the actual generation
+            # task, so rebuilds are triggered.  (Issue #1032)
+            output = kw["output_folder"]
+            file_dep = []
+
+            for i in urlset.keys():
+                p = os.path.join(output, urlparse(i).path.lstrip('/'))
+                if not p.endswith('sitemap.xml'):
+                    file_dep.append(p)
+
+            for i in sitemapindex.keys():
+                p = os.path.join(output, urlparse(i).path.lstrip('/'))
+                if not p.endswith('sitemap.xml'):
+                    file_dep.append(p)
+
+            return {'file_dep': file_dep}
 
         yield {
             "basename": "_scan_locs",
