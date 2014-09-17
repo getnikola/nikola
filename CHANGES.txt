@@ -4,11 +4,13 @@ New in master
 Features
 --------
 
+* Expose publishing date, tags, and more in Open Graph
 * XSL Transform RSS into pretty and helpful webpages when opened in browsers (Issue #1411)
 
 Bugfixes
 --------
 
+* Open Graph properly uses latest RDFa in HTML – fixes validation
 * Fix sitemap generation (Issue #1397 via #1032)
 * Use destination folder names as titles for titleless listings
 * Fixed problems with installation from .tar.gz under Windows (Issue #1417)
