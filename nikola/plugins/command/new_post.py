@@ -116,7 +116,7 @@ def get_date(schedule=False, rule=None, last_date=None, tz=None, iso8601=False):
             rrule = None  # NOQA
     if schedule and rrule and rule:
         try:
-            rule_ = rrule.rrulestr(rule, dtstart=last_date)
+            rule_ = rrule.rrulestr(rule, dtstart=last_date or date)
         except Exception:
             LOGGER.error('Unable to parse rule string, using current time.')
         else:
