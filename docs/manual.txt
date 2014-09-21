@@ -517,6 +517,16 @@ to your configuration::
        The post will be encrypted and invisible until the reader enters the password.
        Also, the post's sourcecode will not be available.
 
+   previewimage
+       Designate a preview or other representative image path relative to BASE_URL
+       for use with Open Graph for posts. Adds the image when sharing on social
+       media and many other uses.
+
+           .. previewimage: images/looks_great_on_facebook.png
+
+       The image can be of any size and dimension (services will crop and adapt)
+       but should less than 1 MB and be larger than 300x300 (ideally 600x600).
+
    template
        Will change the template used to render this page/post specific page. Example::
 
