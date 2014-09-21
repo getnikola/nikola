@@ -493,10 +493,29 @@ to your configuration::
 
    Nikola will also use other metadata fields:
 
+   author
+       Author of the post, will be used in the RSS feed and possibly in the post
+       display (theme-dependent)
+
+   annotations / noannotations
+       Override the value of the ``ANNOTATIONS`` option for this specific post or page.
+
+   category
+       Like tags, except each post can have only one, and they usually have
+       more descriptive names.
+
+   hidetitle
+       Set "True" if you do not want to see the **story** title as a
+       heading of the page (does not work for posts).
+
    nocomments
        Set to "True" to disable comments. Example::
 
            .. nocomments: True
+
+   password
+       The post will be encrypted and invisible until the reader enters the password.
+       Also, the post's sourcecode will not be available.
 
    template
        Will change the template used to render this page/post specific page. Example::
@@ -505,25 +524,6 @@ to your configuration::
 
        That template needs to either be part of the theme, or be placed in a ``templates/``
        folder inside your site.
-
-   password
-       The post will be encrypted and invisible until the reader enters the password.
-       Also, the post's sourcecode will not be available.
-
-   category
-       Like tags, except each post can have only one, and they usually have
-       more descriptive names.
-
-   annotations / noannotations
-       Override the value of the ``ANNOTATIONS`` option for this specific post or page.
-
-   author
-       Author of the post, will be used in the RSS feed and possibly in the post
-       display (theme-dependent)
-
-   hidetitle
-       Set "True" if you do not want to see the **story** title as a
-       heading of the page (does not work for posts).
 
 .. note:: The Two-File Format
 
