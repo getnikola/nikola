@@ -13,6 +13,12 @@
     <meta name="description" itemprop="description" content="{{ post.description() }}">
     {% endif %}
     <meta name="author" content="{{ post.author() }}">
+    {% if post.prev_post %}
+        <link rel="prev" href="{{ post.prev_post.permalink() }}" title="{{ post.prev_post.title() }}" type="text/html">
+    {% endif %}
+    {% if post.next_post %}
+        <link rel="next" href="{{ post.next_post.permalink() }}" title="{{ post.next_post.title() }}" type="text/html">
+    {% endif %}
     {{ helper.open_graph_metadata(post) }}
     {{ helper.twitter_card_information(post) }}
     {{ helper.meta_translations(post) }}

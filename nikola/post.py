@@ -600,6 +600,18 @@ class Post(object):
         else:
             return link
 
+    @property
+    def previewimage(self, lang=None):
+        if lang is None:
+            lang = nikola.utils.LocaleBorg().current_lang
+
+        image_path = self.meta[lang]['previewimage']
+
+        if not image_path:
+            return None
+
+        return urljoin(self.base_url, image_path)
+
     def source_ext(self, prefix=False):
         """
         Return the source file extension.

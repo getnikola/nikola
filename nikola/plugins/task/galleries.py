@@ -520,7 +520,10 @@ class Galleries(Task):
             generator='http://getnikola.com/',
             language=lang
         )
+
         rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
+        rss_obj.self_url = make_url(permalink)
+        rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
         dst_dir = os.path.dirname(output_path)
         utils.makedirs(dst_dir)
         with io.open(output_path, "w+", encoding="utf-8") as rss_file:

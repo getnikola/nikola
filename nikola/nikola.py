@@ -496,7 +496,7 @@ class Nikola(object):
             self.config['BASE_URL'] = self.config.get('SITE_URL')
         # BASE_URL should *always* end in /
         if self.config['BASE_URL'] and self.config['BASE_URL'][-1] != '/':
-            utils.LOGGER.warn("Your BASE_URL doesn't end in / -- adding it.")
+            utils.LOGGER.warn("Your BASE_URL doesn't end in / -- adding it, but please fix it in your config file!")
 
         # We use one global tzinfo object all over Nikola.
         self.tzinfo = dateutil.tz.gettz(self.config['TIMEZONE'])
@@ -898,7 +898,7 @@ class Nikola(object):
                              rss_teasers, rss_plain, feed_length=10, feed_url=None, enclosure=_enclosure):
 
         """Takes all necessary data, and renders a RSS feed in output_path."""
-        rss_obj = rss.RSS2(
+        rss_obj = utils.ExtendedRSS2(
             title=title,
             link=link,
             description=description,
@@ -906,6 +906,9 @@ class Nikola(object):
             generator='http://getnikola.com/',
             language=lang
         )
+
+        if feed_url:
+            rss_obj.xsl_stylesheet_href = self.url_replacer(feed_url, "/assets/xml/rss.xsl")
 
         items = []
 
@@ -948,7 +951,6 @@ class Nikola(object):
             if post.author(lang):
                 rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
 
-            """ Enclosure callback must returns tuple """
             # enclosure callback returns None if post has no enclosure, or a
             # 3-tuple of (url, length (0 is valid), mimetype)
             enclosure_details = enclosure(post=post, lang=lang)
@@ -958,6 +960,8 @@ class Nikola(object):
             items.append(utils.ExtendedItem(**args))
 
         rss_obj.items = items
+        rss_obj.self_url = feed_url
+        rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
 
         dst_dir = os.path.dirname(output_path)
         utils.makedirs(dst_dir)

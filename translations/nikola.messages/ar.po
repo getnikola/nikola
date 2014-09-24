@@ -6,13 +6,14 @@
 # Translators:
 # Translators:
 # Translators:
+# darkwise <za3boud@yahoo.fr>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2013-03-15 15:29+0000\n"
-"Last-Translator: Kwpolska <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2014-08-14 21:30+0000\n"
+"Last-Translator: darkwise <za3boud@yahoo.fr>\n"
 "Language-Team: Arabic (http://www.transifex.com/projects/p/nikola/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,25 +22,25 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 msgid "More posts about %s"
-msgstr ""
+msgstr "المزيد من المقالات حول %s"
 
 msgid "LANGUAGE"
-msgstr ""
+msgstr "العربيّة"
 
 msgid "Tags"
 msgstr ""
 
 msgid "Categories"
-msgstr ""
+msgstr "الأصناف"
 
 msgid "Tags and Categories"
 msgstr ""
 
 msgid "Comments"
-msgstr ""
+msgstr "التّعليقات"
 
 msgid "Read more"
-msgstr ""
+msgstr "قراءة المزيد"
 
 msgid "Posts about %s"
 msgstr ""

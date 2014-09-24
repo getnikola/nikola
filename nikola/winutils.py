@@ -29,6 +29,7 @@
 from __future__ import print_function, unicode_literals
 import os
 import shutil
+import io
 # don't add imports to nikola code, will be imported in setup.py
 
 
@@ -63,9 +64,14 @@ def fix_all_git_symlinked(topdir):
     Weakness: if interrupted of fail amidst a directory copy, next run will not
     see the missing files.
     """
-    with open(topdir + r'\nikola\data\symlinked.txt', 'rb') as f:
-        all_bytes = f.read()
-        text = all_bytes.decode('utf8')
+    # Determine whether or not symlinks need fixing (they don’t if installing
+    # from a .tar.gz file)
+    with io.open(topdir + r'\nikola\data\symlink-test-link.txt', 'r', encoding='utf-8') as f:
+        text = f.read()
+        if text.startswith("NIKOLA_SYMLINKS=OK"):
+            return -1
+    with io.open(topdir + r'\nikola\data\symlinked.txt', 'r', encoding='utf-8') as f:
+        text = f.read()
     # expect each line a relpath from git or zip root,
     # smoke test relpaths are relative to git root
     if text.startswith('.'):
@@ -86,7 +92,7 @@ def fix_all_git_symlinked(topdir):
             continue
 
         # build src path and do some basic validation
-        with open(os.path.join(topdir, dst), 'r') as f:
+        with io.open(os.path.join(topdir, dst), 'r', encoding='utf-8') as f:
             text = f.read()
         dst_dir = os.path.dirname(dst)
         try:

@@ -47,6 +47,13 @@ lang="{{ lang }}">
         <meta property="fb:app_id" content="{{ comment_system_id }}">
     {% endif %}
 
+    {% if prevlink %}
+        <link rel="prev" href="{{ prevlink }}" type="text/html">
+    {% endif %}
+    {% if nextlink %}
+        <link rel="next" href="{{ nextlink }}" type="text/html">
+    {% endif %}
+
     {{ mathjax_config }}
     {% if use_cdn %}
         <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->

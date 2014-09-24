@@ -23,7 +23,7 @@ BLOG_TITLE = ${BLOG_TITLE}  # (translatable)
 # This is the main URL for your site. It will be used
 # in a prominent link
 SITE_URL = ${SITE_URL}
-# This is the URL where nikola's output will be deployed.
+# This is the URL where Nikola's output will be deployed.
 # If not set, defaults to SITE_URL
 # BASE_URL = ${SITE_URL}
 BLOG_EMAIL = ${BLOG_EMAIL}
@@ -104,7 +104,7 @@ TIMEZONE = ${TIMEZONE}
 # (str used by datetime.datetime.strftime)
 # DATE_FORMAT = '%Y-%m-%d %H:%M'
 
-# While nikola can select a sensible locale for each language,
+# While Nikola can select a sensible locale for each language,
 # sometimes explicit control can come handy.
 # In this file we express locales in the string form that
 # python's locales will accept in your OS, by example
@@ -129,7 +129,7 @@ TIMEZONE = ${TIMEZONE}
 # From those files, a set of HTML fragment files will be generated:
 # cache/whatever/thing.html (and maybe cache/whatever/thing.html.es)
 #
-# These files are combinated with the template to produce rendered
+# These files are combined with the template to produce rendered
 # pages, which will be placed at
 # output / TRANSLATIONS[lang] / destination / pagename.html
 #
@@ -525,7 +525,7 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 
 # Do you want to customize the nbconversion of your IPython notebook?
 # IPYNB_CONFIG = {}
-# With the following example configuracion you can use a custom jinja template
+# With the following example configuration you can use a custom jinja template
 # called `toggle.tpl` which has to be located in your site/blog main folder:
 # IPYNB_CONFIG = {'Exporter':{'template_file': 'toggle'}}
 
@@ -579,9 +579,9 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # Strip HTML in the RSS feed? Default to False
 # RSS_PLAIN = False
 
-# A search form to search this site, for the sidebar. You can use a google
+# A search form to search this site, for the sidebar. You can use a Google
 # custom search (http://www.google.com/cse/)
-# Or a duckduckgo search: https://duckduckgo.com/search_box.html
+# Or a DuckDuckGo search: https://duckduckgo.com/search_box.html
 # Default is no search form.
 # (translatable)
 # SEARCH_FORM = ""
@@ -604,9 +604,9 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # <!-- End of custom search -->
 # """ % SITE_URL
 #
-# If you prefer a google search form, here's an example that should just work:
+# If you prefer a Google search form, here's an example that should just work:
 # SEARCH_FORM = """
-# <!-- Custom search with google-->
+# <!-- Custom search with Google-->
 # <form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
 # <input type="hidden" name="q" value="site:%s" />
 # <input type="text" name="q" maxlength="255" results="0" placeholder="Search"/>

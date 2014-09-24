@@ -14,12 +14,12 @@ import glob
 def sed_like_thing(pattern, repl, path):
     """Like re.sub but applies to a file instead of a string."""
 
-    with io.open(path, 'rb', encoding='utf8') as inf:
+    with io.open(path, 'r', encoding='utf8') as inf:
         data = inf.read()
 
     data = re.sub(pattern, repl, data)
 
-    with io.open(path, 'wb+', encoding='utf8') as outf:
+    with io.open(path, 'w+', encoding='utf8') as outf:
         outf.write(data)
 
 if __name__ == "__main__":

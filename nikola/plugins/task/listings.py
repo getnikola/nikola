@@ -81,7 +81,7 @@ class Listings(Task):
                 title = os.path.basename(in_name)
             else:
                 code = ''
-                title = ''
+                title = os.path.split(os.path.dirname(out_name))[1]
             crumbs = utils.get_crumbs(os.path.relpath(out_name,
                                                       kw['output_folder']),
                                       is_file=True)

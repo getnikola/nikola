@@ -33,8 +33,8 @@ class EmptyBuildTest(BaseTestCase):
     @classmethod
     def setUpClass(cls):
         """Setup a demo site."""
-        # for tests that need bilingual support override languaje_settings
-        cls.languaje_settings()
+        # for tests that need bilingual support override language_settings
+        cls.language_settings()
         cls.startdir = os.getcwd()
         cls.tmpdir = tempfile.mkdtemp()
         cls.target_dir = os.path.join(cls.tmpdir, "target")
@@ -44,7 +44,7 @@ class EmptyBuildTest(BaseTestCase):
         cls.build()
 
     @classmethod
-    def languaje_settings(cls):
+    def language_settings(cls):
         LocaleSupportInTesting.initialize_locales_for_testing("unilingual")
 
     @classmethod
@@ -193,9 +193,9 @@ class TranslatedBuildTest(EmptyBuildTest):
     dataname = "translated_titles"
 
     @classmethod
-    def languaje_settings(cls):
+    def language_settings(cls):
         LocaleSupportInTesting.initialize_locales_for_testing("bilingual")
-        # the other languaje
+        # the other language
         cls.ol = LocaleSupportInTesting.langlocales["other"][0]
 
     def test_translated_titles(self):

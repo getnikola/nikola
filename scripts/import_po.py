@@ -28,5 +28,5 @@ MESSAGES = {""".splitlines()
     lines.extend(sorted(lines2))
     lines.append("}\n")
     print("Generating:", outf)
-    with io.open(outf, "wb+", encoding="utf8") as outfile:
+    with io.open(outf, "w+", encoding="utf8") as outfile:
         outfile.write('\n'.join(lines))

@@ -10,7 +10,7 @@
         {{ pheader.html_title() }}
         {{ pheader.html_translations(post) }}
     </header>
-    <div itemprop="articleBody text">
+    <div class="e-content entry-content" itemprop="articleBody text">
     {{ post.text() }}
     </div>
     {% if site_has_comments and enable_comments and not post.meta('nocomments') %}

@@ -1038,6 +1038,25 @@ class LocaleBorg(object):
         return s
 
 
+class ExtendedRSS2(rss.RSS2):
+    xsl_stylesheet_href = None
+
+    def publish(self, handler):
+        if self.xsl_stylesheet_href:
+            handler.processingInstruction("xml-stylesheet", 'type="text/xsl" href="{0}" media="all"'.format(self.xsl_stylesheet_href))
+        # old-style class in py2
+        rss.RSS2.publish(self, handler)
+
+    def publish_extensions(self, handler):
+        if self.self_url:
+            handler.startElement("atom:link", {
+                'href': self.self_url,
+                'rel': "self",
+                'type': "application/rss+xml"
+            })
+            handler.endElement("atom:link")
+
+
 class ExtendedItem(rss.RSSItem):
 
     def __init__(self, **kw):
