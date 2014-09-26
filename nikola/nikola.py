@@ -1148,7 +1148,10 @@ class Nikola(object):
         if self._scanned and not really:
             return
 
-        self.commands = utils.Commands(self.doit)
+        try:
+            self.commands = utils.Commands(self.doit)
+        except AttributeError:
+            self.commands = None
         self.global_data = {}
         self.posts = []
         self.posts_per_year = defaultdict(list)
