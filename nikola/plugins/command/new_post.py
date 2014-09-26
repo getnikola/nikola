@@ -272,7 +272,7 @@ class CommandNewPost(Command):
         if isinstance(title, utils.bytes_str):
             try:
                 title = title.decode(sys.stdin.encoding)
-            except AttributeError:  # for tests
+            except (AttributeError, TypeError):  # for tests
                 title = title.decode('utf-8')
 
         title = title.strip()
@@ -282,7 +282,7 @@ class CommandNewPost(Command):
             if isinstance(path, utils.bytes_str):
                 try:
                     path = path.decode(sys.stdin.encoding)
-                except AttributeError:  # for tests
+                except (AttributeError, TypeError):  # for tests
                     path = path.decode('utf-8')
             slug = utils.slugify(os.path.splitext(os.path.basename(path))[0])
         # Calculate the date to use for the content
