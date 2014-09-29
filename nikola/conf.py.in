@@ -63,13 +63,16 @@ TRANSLATIONS_PATTERN = ${TRANSLATIONS_PATTERN}
 # This is a dict.  The keys are languages, and values are tuples.
 #
 # For regular links:
-#     ('http://example.com/', 'Text')
+#     ('http://getnikola.com/', 'Nikola Homepage')
 #
 # For submenus:
-#     ((
-#         ('Sub 1', 'http://example.com/'),
-#         ('Sub 2', 'http://example.org/'),
-#     ), 'Top')
+#     (
+#         (
+#             ('http://apple.com/', 'Apple'),
+#             ('http://orange.com/', 'Orange'),
+#         ),
+#         'Fruits'
+#     )
 #
 # WARNING: Support for submenus is theme-dependent.
 #          Only one level of submenus is supported.
