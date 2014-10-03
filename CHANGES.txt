@@ -22,6 +22,7 @@ Bugfixes
 * Fixed files/\*.php (skip post/story-specific filters) (Issue #1403)
 * Warn about missing / in BASE_URL differently (explicit request to
   fix the config file)
+* Fix broken ``auto -b`` option (Issue #1437)
 
 New in v7.1.0
 =============
