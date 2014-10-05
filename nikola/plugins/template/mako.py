@@ -115,7 +115,7 @@ class MakoTemplates(TemplateSystem):
     def render_template_to_string(self, template, context):
         """ Render template to a string using context. """
 
-        context = context.update(self.filters)
+        context.update(self.filters)
 
         return Template(template).render(**context)
 
