@@ -11,7 +11,8 @@ Features
 Bugfixes
 --------
 
-* Handle better ``new_post --format=pandoc`` when pandoc is not defined (Issue #1422) 
+* Never rebase while pulling in `github_deploy`
+* Handle better ``new_post --format=pandoc`` when pandoc is not defined (Issue #1422)
 * Open Graph properly uses latest RDFa in HTML – fixes validation
 * Fix sitemap generation (Issue #1397 via #1032)
 * Use destination folder names as titles for titleless listings
