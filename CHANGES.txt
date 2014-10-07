@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Fix bootswatch creation version check (Issue #1441)
 * Never rebase while pulling in `github_deploy`
 * Handle better ``new_post --format=pandoc`` when pandoc is not defined (Issue #1422)
 * Open Graph properly uses latest RDFa in HTML – fixes validation
