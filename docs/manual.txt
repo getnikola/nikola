@@ -690,7 +690,7 @@ In reStructuredText::
 
    .. TEASER_END
 
-In Markdown::
+In Markdown (or basically, the resulting HTML of any format)::
 
    <!-- TEASER_END -->
 
