@@ -268,6 +268,7 @@ class Nikola(object):
             'FORCE_ISO8601': False,
             'GALLERY_PATH': 'galleries',
             'GALLERY_SORT_BY_DATE': True,
+            'GLOBAL_CONTEXT_FILLER': [],
             'GZIP_COMMAND': None,
             'GZIP_FILES': False,
             'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js', '.json', '.xml'),
@@ -780,6 +781,9 @@ class Nikola(object):
         local_context["formatmsg"] = lambda s, *a: s % a
         for h in local_context['template_hooks'].values():
             h.context = context
+
+        for func in self.config['GLOBAL_CONTEXT_FILLER']:
+            func(local_context, template_name)
 
         data = self.template_system.render_template(
             template_name, None, local_context)
