@@ -151,6 +151,8 @@ class Indexes(Task):
                     should_render = True
                     output_name = os.path.join(kw['output_folder'], dirname, kw['index_file'])
                     short_destination = os.path.join(dirname, kw['index_file'])
+                    context["permalink"] = '/' + short_destination.replace('\\', '/')
+
                     for post in post_list:
                         # If there is an index.html pending to be created from
                         # a story, do not generate the STORY_INDEX

@@ -84,4 +84,4 @@ class CommandAuto(Command):
         else:
             browser = False
 
-            server.serve(port, None, out_folder, True, browser)
+        server.serve(port=port, host=None, root=out_folder, debug=True, open_url=browser)

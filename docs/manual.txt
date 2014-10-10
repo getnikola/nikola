@@ -690,7 +690,7 @@ In reStructuredText::
 
    .. TEASER_END
 
-In Markdown::
+In Markdown (or basically, the resulting HTML of any format)::
 
    <!-- TEASER_END -->
 
@@ -1496,7 +1496,7 @@ with the tag ``nikola``::
    Here are my 5 latest and greatest blog posts:
 
    .. post-list::
-      :start: -5
+      :stop: 5
 
    These are all my posts about Nikola:
 
@@ -1505,7 +1505,7 @@ with the tag ``nikola``::
 
 Note that you can give the ``tags`` option a comma-separated list of tags, in
 which case the list will show all posts that have at least one of those tags.
-Other interesting options include ``stop`` (set it to ``-1``, for example, to
+Other interesting options include ``start`` (set it to ``1``, for example, to
 show all but the last post); ``reverse`` (set to ``True`` to sort the list in
 chronological order, instead of the default latest-post-first); ``lang``
 (language to use for post titles and links); and ``slugs`` (allows you to filter

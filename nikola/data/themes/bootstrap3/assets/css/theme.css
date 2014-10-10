@@ -103,6 +103,12 @@ h4, h5, h6 {
     padding-top: 60px;
 }
 
+h1.panel-title, h2.panel-title, h3.panel-title, h4.panel-title, h5.panel-title, h6.panel-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+}
+
 .image-block {
     display: inline-block;
 }
