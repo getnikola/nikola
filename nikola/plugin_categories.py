@@ -252,6 +252,7 @@ class ConfigPlugin(BasePlugin):
     """A plugin that can edit config (or modify the site) on-the-fly."""
     name = "dummy_config_plugin"
 
+
 class Importer(Command):
     """Basic structure for importing data into Nikola.
 

@@ -590,13 +590,17 @@ class Nikola(object):
                 self.plugin_manager.activatePluginByName(plugin_info.name)
                 plugin_info.plugin_object.set_site(self)
 
-        # Activate all required ConfigPlugins
-        for plugin_info in self.plugin_manager.getPluginsOfCategory("ConfigPlugin"):
-            if plugin_info.name in self.config.get('DISABLED_PLUGINS'):
-                self.plugin_manager.removePluginFromCategory(plugin_info, "ConfigPlugin")
-            else:
-                self.plugin_manager.activatePluginByName(plugin_info.name)
-                plugin_info.plugin_object.set_site(self)
+        try:
+            # Activate all required ConfigPlugins
+            for plugin_info in self.plugin_manager.getPluginsOfCategory("ConfigPlugin"):
+                if plugin_info.name in self.config.get('DISABLED_PLUGINS'):
+                    self.plugin_manager.removePluginFromCategory(plugin_info, "ConfigPlugin")
+                else:
+                    self.plugin_manager.activatePluginByName(plugin_info.name)
+                    plugin_info.plugin_object.set_site(self)
+        except KeyError:
+            # No ConfigPlugins in core
+            pass
 
         self._GLOBAL_CONTEXT['url_type'] = self.config['URL_TYPE']
         self._GLOBAL_CONTEXT['timezone'] = self.tzinfo
