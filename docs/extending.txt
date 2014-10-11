@@ -418,6 +418,13 @@ Currently Nikola emits the following signals:
          'undeployed': # all files not deployed since they are either future posts/drafts
         }
 
+ConfigPlugin Plugins
+--------------------
+
+Does nothing specific, can be used to modify the site object (and thus the config).
+
+Put all the magic you want in ``set_site()``, and don’t forget to run the one
+from ``super()``.
 
 Plugin Index
 ============

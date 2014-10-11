@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New ``ConfigPlugin`` category (without any specific behavior by default)
 * New meta property “previewimage” for use with Open Graph (Issue #1421)
 * Expose publishing date, tags, and more in Open Graph
 * XSL Transform RSS into pretty and helpful webpages when opened in browsers (Issue #1411)
