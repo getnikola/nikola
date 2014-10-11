@@ -533,45 +533,21 @@ class Nikola(object):
         self.plugin_manager.setPluginPlaces(places)
         self.plugin_manager.collectPlugins()
 
-        # Activate all required SignalHandler plugins
-        for plugin_info in self.plugin_manager.getPluginsOfCategory("SignalHandler"):
-            if plugin_info.name in self.config.get('DISABLED_PLUGINS'):
-                self.plugin_manager.removePluginFromCategory(plugin_info, "SignalHandler")
-            else:
-                self.plugin_manager.activatePluginByName(plugin_info.name)
-                plugin_info.plugin_object.set_site(self)
+        self._activate_plugins_of_category("SignalHandler")
 
         # Emit signal for SignalHandlers which need to start running immediately.
         signal('sighandlers_loaded').send(self)
 
         self._commands = {}
-        # Activate all command plugins
-        for plugin_info in self.plugin_manager.getPluginsOfCategory("Command"):
-            if plugin_info.name in self.config['DISABLED_PLUGINS']:
-                self.plugin_manager.removePluginFromCategory(plugin_info, "Command")
-                continue
 
-            self.plugin_manager.activatePluginByName(plugin_info.name)
-            plugin_info.plugin_object.set_site(self)
+        command_plugins = self._activate_plugins_of_category("Command")
+        for plugin_info in command_plugins:
             plugin_info.plugin_object.short_help = plugin_info.description
             self._commands[plugin_info.name] = plugin_info.plugin_object
 
-        # Activate all task plugins
-        for task_type in ["Task", "LateTask"]:
-            for plugin_info in self.plugin_manager.getPluginsOfCategory(task_type):
-                if plugin_info.name in self.config['DISABLED_PLUGINS']:
-                    self.plugin_manager.removePluginFromCategory(plugin_info, task_type)
-                    continue
-                self.plugin_manager.activatePluginByName(plugin_info.name)
-                plugin_info.plugin_object.set_site(self)
-
-        # Activate all multiplier plugins
-        for plugin_info in self.plugin_manager.getPluginsOfCategory("TaskMultiplier"):
-            if plugin_info.name in self.config['DISABLED_PLUGINS']:
-                self.plugin_manager.removePluginFromCategory(plugin_info, task_type)
-                continue
-            self.plugin_manager.activatePluginByName(plugin_info.name)
-            plugin_info.plugin_object.set_site(self)
+        self._activate_plugins_of_category("Task")
+        self._activate_plugins_of_category("LateTask")
+        self._activate_plugins_of_category("TaskMultiplier")
 
         compilers = defaultdict(set)
         # Also add aliases for combinations with TRANSLATIONS_PATTERN
@@ -665,15 +641,20 @@ class Nikola(object):
             self.compilers[plugin_info.name] = \
                 plugin_info.plugin_object
 
-        # Activate all required ConfigPlugins
-        for plugin_info in self.plugin_manager.getPluginsOfCategory("ConfigPlugin"):
+        self._activate_plugins_of_category("ConfigPlugin")
+
+        signal('configured').send(self)
+
+    def _activate_plugins_of_category(self, category):
+        plugins = []
+        for plugin_info in self.plugin_manager.getPluginsOfCategory(category):
             if plugin_info.name in self.config.get('DISABLED_PLUGINS'):
-                self.plugin_manager.removePluginFromCategory(plugin_info, "ConfigPlugin")
+                self.plugin_manager.removePluginFromCategory(plugin_info, category)
             else:
                 self.plugin_manager.activatePluginByName(plugin_info.name)
                 plugin_info.plugin_object.set_site(self)
-
-        signal('configured').send(self)
+                plugins.append(plugin_info)
+        return plugins
 
     def _get_themes(self):
         if self._THEMES is None:
