@@ -79,6 +79,7 @@ from .plugin_categories import (
     TaskMultiplier,
     TemplateSystem,
     SignalHandler,
+    ConfigPlugin,
 )
 
 
@@ -512,6 +513,7 @@ class Nikola(object):
             "RestExtension": RestExtension,
             "MarkdownExtension": MarkdownExtension,
             "SignalHandler": SignalHandler,
+            "ConfigPlugin": ConfigPlugin,
         })
         self.plugin_manager.setPluginInfoExtension('plugin')
         extra_plugins_dirs = self.config['EXTRA_PLUGINS_DIRS']
@@ -590,18 +592,6 @@ class Nikola(object):
                 self.plugin_manager.activatePluginByName(plugin_info.name)
                 plugin_info.plugin_object.set_site(self)
 
-        try:
-            # Activate all required ConfigPlugins
-            for plugin_info in self.plugin_manager.getPluginsOfCategory("ConfigPlugin"):
-                if plugin_info.name in self.config.get('DISABLED_PLUGINS'):
-                    self.plugin_manager.removePluginFromCategory(plugin_info, "ConfigPlugin")
-                else:
-                    self.plugin_manager.activatePluginByName(plugin_info.name)
-                    plugin_info.plugin_object.set_site(self)
-        except KeyError:
-            # No ConfigPlugins in core
-            pass
-
         self._GLOBAL_CONTEXT['url_type'] = self.config['URL_TYPE']
         self._GLOBAL_CONTEXT['timezone'] = self.tzinfo
         self._GLOBAL_CONTEXT['_link'] = self.link
@@ -674,6 +664,14 @@ class Nikola(object):
                 "PageCompiler"):
             self.compilers[plugin_info.name] = \
                 plugin_info.plugin_object
+
+        # Activate all required ConfigPlugins
+        for plugin_info in self.plugin_manager.getPluginsOfCategory("ConfigPlugin"):
+            if plugin_info.name in self.config.get('DISABLED_PLUGINS'):
+                self.plugin_manager.removePluginFromCategory(plugin_info, "ConfigPlugin")
+            else:
+                self.plugin_manager.activatePluginByName(plugin_info.name)
+                plugin_info.plugin_object.set_site(self)
 
         signal('configured').send(self)
 
