@@ -646,6 +646,7 @@ class Nikola(object):
         signal('configured').send(self)
 
     def _activate_plugins_of_category(self, category):
+        """Activate all the plugins of a given category and return them."""
         plugins = []
         for plugin_info in self.plugin_manager.getPluginsOfCategory(category):
             if plugin_info.name in self.config.get('DISABLED_PLUGINS'):
