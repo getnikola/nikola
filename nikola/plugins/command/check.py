@@ -163,6 +163,10 @@ class CommandCheck(Command):
                 target, _ = urldefrag(target)
                 parsed = urlparse(target)
 
+                # Warn about links from https to http (mixed-security)
+                if base_url.netloc == parsed.netloc and base_url.scheme == "https" and parsed.scheme == "http":
+                    self.logger.warn("Mixed-content security for link in {0}: {1}".format(filename, target))
+
                 # Absolute links when using only paths, skip.
                 if (parsed.scheme or target.startswith('//')) and url_type in ('rel_path', 'full_path'):
                     continue

@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* `nikola check -l` will warn about mixed-security (HTTP on HTTPS)
 * New ``ConfigPlugin`` category (without any specific behavior by default)
 * New meta property “previewimage” for use with Open Graph (Issue #1421)
 * Expose publishing date, tags, and more in Open Graph
