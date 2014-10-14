@@ -156,11 +156,11 @@ class CommandCheck(Command):
         try:
             filename = task.split(":")[-1]
 
-            if filename.startswith('cache'):
+            if filename.startswith(self.site.config['CACHE_FOLDER']):
                 # Do not look at links in the cache, which are not parsed by
                 # anyone and may result in false positives.  Problems arise
-                # with galleries, for example. (Issue #1446)
-                self.logger.notice("Ignoring {0}".format(filename))
+                # with galleries, for example.  Full rationale: (Issue #1446)
+                self.logger.notice("Ignoring {0} (in cache, links may be incorrect)".format(filename))
                 return False
 
             d = lxml.html.fromstring(open(filename).read())
