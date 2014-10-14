@@ -159,7 +159,7 @@ class CommandCheck(Command):
             if filename.startswith(self.site.config['CACHE_FOLDER']):
                 # Do not look at links in the cache, which are not parsed by
                 # anyone and may result in false positives.  Problems arise
-                # with galleries, for example.  Full rationale: (Issue #1446)
+                # with galleries, for example.  Full rationale: (Issue #1447)
                 self.logger.notice("Ignoring {0} (in cache, links may be incorrect)".format(filename))
                 return False
 
