@@ -134,7 +134,6 @@ class Listings(Task):
             uptodate2['f'] = files
             uptodate2['d'] = dirs
 
-
             # Render all files
             out_name = os.path.join(
                 kw['output_folder'],
