@@ -58,6 +58,7 @@ class Listings(Task):
             "listings_folder": self.site.config["LISTINGS_FOLDER"],
             "output_folder": self.site.config["OUTPUT_FOLDER"],
             "index_file": self.site.config["INDEX_FILE"],
+            "strip_indexes": self.site.config['STRIP_INDEXES'],
         }
 
         # Things to ignore in listings
@@ -127,9 +128,12 @@ class Listings(Task):
             # save navigation links as dependencies
             uptodate['navigation_links'] = uptodate['c']['navigation_links'](kw['default_lang'])
 
+            uptodate['kw'] = kw
+
             uptodate2 = uptodate.copy()
             uptodate2['f'] = files
             uptodate2['d'] = dirs
+
 
             # Render all files
             out_name = os.path.join(
