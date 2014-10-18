@@ -329,6 +329,7 @@ class Nikola(object):
             'URL_TYPE': 'rel_path',
             'USE_BUNDLES': True,
             'USE_CDN': False,
+            'USE_CDN_WARNING': True,
             'USE_FILENAME_AS_TITLE': True,
             'USE_OPEN_GRAPH': True,
             'USE_SLUGIFY': True,
@@ -666,7 +667,7 @@ class Nikola(object):
                 self.config['THEME'] = 'bootstrap'
                 return self._get_themes()
             # Check consistency of USE_CDN and the current THEME (Issue #386)
-            if self.config['USE_CDN']:
+            if self.config['USE_CDN'] and self.config['USE_CDN_WARNING']:
                 bootstrap_path = utils.get_asset_path(os.path.join(
                     'assets', 'css', 'bootstrap.min.css'), self._THEMES)
                 if bootstrap_path and bootstrap_path.split(os.sep)[-4] not in ['bootstrap', 'bootstrap3']:

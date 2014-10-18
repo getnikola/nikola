@@ -625,6 +625,12 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # external resources.
 # USE_CDN = False
 
+# Check for USE_CDN compatibility.
+# If you are using custom themes, have configured the CSS properly and are
+# receiving warnings about incompatibility but believe they are incorrect, you
+# can set this to False.
+# USE_CDN_WARNING = True
+
 # Extra things you want in the pages HEAD tag. This will be added right
 # before </head>
 # (translatable)

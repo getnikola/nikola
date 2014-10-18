@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* New ``USE_CDN_WARNING`` setting to block warnings about potential
+  ``USE_CDN`` misuse (defaults to True)
 * ``nikola check -l`` will warn about mixed-security (HTTP on HTTPS)
 * New ``ConfigPlugin`` category (without any specific behavior by default)
 * New meta property “previewimage” for use with Open Graph (Issue #1421)
