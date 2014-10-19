@@ -43,9 +43,9 @@ class CommandDeploy(Command):
     """Deploy site."""
     name = "deploy"
 
-    doc_usage = ""
+    doc_usage = "[[preset [preset...]]"
     doc_purpose = "deploy the site"
-
+    doc_description = "Deploy the site by executing deploy commands from the presets listed on the command line.  If no presets are specified, `default` is executed."
     logger = None
 
     def _execute(self, command, args):
@@ -74,14 +74,29 @@ class CommandDeploy(Command):
                     remove_file(os.path.join(out_dir, post.source_path))
                     undeployed_posts.append(post)
 
-        for command in self.site.config['DEPLOY_COMMANDS']:
-            self.logger.info("==> {0}".format(command))
+        if args:
+            presets = args
+        else:
+            presets = ['default']
+
+        # test for preset existence
+        for preset in presets:
             try:
-                subprocess.check_call(command, shell=True)
-            except subprocess.CalledProcessError as e:
-                self.logger.error('Failed deployment — command {0} '
-                                  'returned {1}'.format(e.cmd, e.returncode))
-                sys.exit(e.returncode)
+                self.site.config['DEPLOY_COMMANDS'][preset]
+            except:
+                self.logger.error('No such preset: {0}'.format(preset))
+                sys.exit(255)
+
+        for preset in presets:
+            self.logger.info("=> preset '{0}'".format(preset))
+            for command in self.site.config['DEPLOY_COMMANDS'][preset]:
+                self.logger.info("==> {0}".format(command))
+                try:
+                    subprocess.check_call(command, shell=True)
+                except subprocess.CalledProcessError as e:
+                    self.logger.error('Failed deployment — command {0} '
+                                      'returned {1}'.format(e.cmd, e.returncode))
+                    sys.exit(e.returncode)
 
         self.logger.info("Successful deployment")
         try:

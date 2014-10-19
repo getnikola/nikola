@@ -1013,15 +1013,19 @@ Nikola doesn't really have a concept of deployment. However, if you can specify 
 deployment procedure as a series of commands, you can put them in the ``DEPLOY_COMMANDS``
 option, and run them with ``nikola deploy``.
 
+You can have multiple deployment presets.  If you run ``nikola deploy``, the
+``default`` preset is executed.  You can also specify the names of presets
+you want to run (eg. ``nikola deploy default``, multiple presets are allowed).
+
 One caveat is that if any command has a % in it, you should double them.
 
 Here is an example, from my own site's deployment script::
 
-    DEPLOY_COMMANDS = [
+    DEPLOY_COMMANDS = {'default': [
         'rsync -rav --delete output/ ralsina@lateral.netmanagers.com.ar:/srv/www/lateral',
         'rdiff-backup output ~/blog-backup',
         "links -dump 'http://www.twingly.com/ping2?url=lateral.netmanagers.com.ar'",
-    ]
+    ]}
 
 Other interesting ideas are using
 `git as a deployment mechanism <http://toroid.org/ams/git-website-howto>`_ (or any other VCS
