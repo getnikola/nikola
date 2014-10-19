@@ -75,7 +75,7 @@ class CommandDeploy(Command):
                     undeployed_posts.append(post)
 
         if args:
-            presets = args[0]
+            presets = args
         else:
             presets = ['default']
 
