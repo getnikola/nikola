@@ -79,6 +79,14 @@ class CommandDeploy(Command):
         else:
             presets = ['default']
 
+        # test for preset existence
+        for preset in presets:
+            try:
+                self.site.config['DEPLOY_COMMANDS'][preset]
+            except:
+                self.logger.error('No such preset: {0}'.format(preset))
+                sys.exit(255)
+
         for preset in presets:
             self.logger.info("=> preset '{0}'".format(preset))
             for command in self.site.config['DEPLOY_COMMANDS'][preset]:
