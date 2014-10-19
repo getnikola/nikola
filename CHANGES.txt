@@ -4,6 +4,9 @@ New in master
 Features
 --------
 
+* New ``GLOBAL_CONTEXT_FILLER`` setting, functions listed there will
+  be called with the local context and the template name before
+  template rendering. (Issue #1451)
 * New ``USE_CDN_WARNING`` setting to block warnings about potential
   ``USE_CDN`` misuse (defaults to True)
 * ``nikola check -l`` will warn about mixed-security (HTTP on HTTPS)
