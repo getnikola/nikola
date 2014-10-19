@@ -255,7 +255,7 @@ class Nikola(object):
             'CREATE_SINGLE_ARCHIVE': False,
             'DATE_FORMAT': '%Y-%m-%d %H:%M',
             'DEFAULT_LANG': "en",
-            'DEPLOY_COMMANDS': [],
+            'DEPLOY_COMMANDS': {'default': []},
             'DISABLED_PLUGINS': [],
             'EXTRA_PLUGINS_DIRS': [],
             'COMMENT_SYSTEM_ID': 'nikolademo',
@@ -500,6 +500,14 @@ class Nikola(object):
         # BASE_URL should *always* end in /
         if self.config['BASE_URL'] and self.config['BASE_URL'][-1] != '/':
             utils.LOGGER.warn("Your BASE_URL doesn't end in / -- adding it, but please fix it in your config file!")
+
+        # todo: remove in v8
+        if not isinstance(self.config['DEPLOY_COMMANDS'], dict):
+            utils.LOGGER.warn("A single list as DEPLOY_COMMANDS is deprecated.  DEPLOY_COMMANDS should be a dict, with deploy preset names as keys and lists of commands as values.")
+            utils.LOGGER.warn("The key `default` is used by `nikola deploy`:")
+            self.config['DEPLOY_COMMANDS'] = {'default': self.config['DEPLOY_COMMANDS']}
+            utils.LOGGER.warn("The above can be used as `nikola deploy` or `nikola deploy default`.  Multiple presets are accepted.")
+            utils.LOGGER.warn("DEPLOY_COMMANDS = {0}".format(self.config['DEPLOY_COMMANDS']))
 
         # We use one global tzinfo object all over Nikola.
         self.tzinfo = dateutil.tz.gettz(self.config['TIMEZONE'])

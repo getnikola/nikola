@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Allow presets usage with ``nikola deploy`` — ``DEPLOY_COMMANDS`` is
+  now a dict of {preset: commands} (Issue #1452)
 * New ``GLOBAL_CONTEXT_FILLER`` setting, functions listed there will
   be called with the local context and the template name before
   template rendering. (Issue #1451)
