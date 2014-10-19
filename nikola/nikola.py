@@ -506,8 +506,8 @@ class Nikola(object):
             utils.LOGGER.warn("A single list as DEPLOY_COMMANDS is deprecated.  DEPLOY_COMMANDS should be a dict, with deploy preset names as keys and lists of commands as values.")
             utils.LOGGER.warn("The key `default` is used by `nikola deploy`:")
             self.config['DEPLOY_COMMANDS'] = {'default': self.config['DEPLOY_COMMANDS']}
-            utils.LOGGER.warn("The above can be used as `nikola deploy` or `nikola deploy default`.  Multiple presets are accepted.")
             utils.LOGGER.warn("DEPLOY_COMMANDS = {0}".format(self.config['DEPLOY_COMMANDS']))
+            utils.LOGGER.info("(The above can be used with `nikola deploy` or `nikola deploy default`.  Multiple presets are accepted.)")
 
         # We use one global tzinfo object all over Nikola.
         self.tzinfo = dateutil.tz.gettz(self.config['TIMEZONE'])
