@@ -80,7 +80,7 @@ class GenerateRSS(Task):
 
             feed_url = urljoin(self.site.config['BASE_URL'], self.site.link("rss", None, lang).lstrip('/'))
 
-            yield {
+            task = {
                 'basename': 'generate_rss',
                 'name': os.path.normpath(output_name),
                 'file_dep': deps,
@@ -94,6 +94,7 @@ class GenerateRSS(Task):
                 'clean': True,
                 'uptodate': [utils.config_changed(kw)],
             }
+            yield utils.apply_filters(task, kw['filters'])
 
     def rss_path(self, name, lang):
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],

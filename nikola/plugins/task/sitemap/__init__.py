@@ -36,7 +36,7 @@ except ImportError:
     import urllib.robotparser as robotparser  # NOQA
 
 from nikola.plugin_categories import LateTask
-from nikola.utils import config_changed
+from nikola.utils import config_changed, apply_filters
 
 
 urlset_header = """<?xml version="1.0" encoding="UTF-8"?>
@@ -112,7 +112,8 @@ class Sitemap(LateTask):
             "index_file": self.site.config["INDEX_FILE"],
             "sitemap_include_fileless_dirs": self.site.config["SITEMAP_INCLUDE_FILELESS_DIRS"],
             "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.html', '.htm', '.xml', '.rss']),
-            "robots_exclusions": self.site.config["ROBOTS_EXCLUSIONS"]
+            "robots_exclusions": self.site.config["ROBOTS_EXCLUSIONS"],
+            "filters": self.site.config["FILTERS"],
         }
 
         output = kw['output_folder']
@@ -237,7 +238,7 @@ class Sitemap(LateTask):
         }
 
         yield self.group_task()
-        yield {
+        yield apply_filters({
             "basename": "sitemap",
             "name": sitemap_path,
             "targets": [sitemap_path],
@@ -246,8 +247,8 @@ class Sitemap(LateTask):
             "clean": True,
             "task_dep": ["render_site"],
             "calc_dep": ["_scan_locs:sitemap"],
-        }
-        yield {
+        }, kw['filters'])
+        yield apply_filters({
             "basename": "sitemap",
             "name": sitemapindex_path,
             "targets": [sitemapindex_path],
@@ -255,7 +256,7 @@ class Sitemap(LateTask):
             "uptodate": [config_changed(kw)],
             "clean": True,
             "file_dep": [sitemap_path]
-        }
+        }, kw['filters'])
 
     def get_lastmod(self, p):
         if self.site.invariant:
