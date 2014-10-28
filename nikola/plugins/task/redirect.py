@@ -64,8 +64,8 @@ class Redirect(Task):
 def create_redirect(src, dst):
     utils.makedirs(os.path.dirname(src))
     with io.open(src, "w+", encoding="utf8") as fd:
-        fd.write('<!DOCTYPE html>\n<head>\n<title>Redirecting...</title>\n'
-                 '<meta charset="utf-8">\n<meta name="robots" '
+        fd.write('<!DOCTYPE html>\n<head>\n<meta charset="utf-8">\n'
+                 '<title>Redirecting...</title>\n<meta name="robots" '
                  'content="noindex">\n<meta http-equiv="refresh" content="0; '
                  'url={0}">\n</head>\n<body>\n<p>Page moved '
-                 '<a href="{0}">here</a></p>\n</body>'.format(dst))
+                 '<a href="{0}">here</a>.</p>\n</body>'.format(dst))
