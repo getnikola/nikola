@@ -3,5 +3,5 @@ mock==1.0.1
 coverage==3.7.1
 pytest==2.6.4
 pytest-cov==1.8.0
-freezegun==0.2.1
+freezegun==0.2.2
 python-coveralls==2.4.3
