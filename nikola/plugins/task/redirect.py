@@ -44,6 +44,7 @@ class Redirect(Task):
         kw = {
             'redirections': self.site.config['REDIRECTIONS'],
             'output_folder': self.site.config['OUTPUT_FOLDER'],
+            'filters': self.site.config['FILTERS'],
         }
 
         yield self.group_task()
