@@ -100,7 +100,7 @@ def main(args=None):
     if len(args) > 0 and args[0] == b'build' and b'--invariant' in args:
         try:
             import freezegun
-            freeze = freezegun.freeze_time("2014-01-01")
+            freeze = freezegun.freeze_time("2038-01-01")
             freeze.start()
             invariant = True
         except ImportError:

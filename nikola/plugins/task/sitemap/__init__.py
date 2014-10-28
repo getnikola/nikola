@@ -260,7 +260,7 @@ class Sitemap(LateTask):
 
     def get_lastmod(self, p):
         if self.site.invariant:
-            return '2014-01-01'
+            return '2038-01-01'
         else:
             return datetime.datetime.fromtimestamp(os.stat(p).st_mtime).isoformat().split('T')[0]
 
