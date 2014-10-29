@@ -843,7 +843,17 @@ def hyphenate(dom, lang):
         hyphenator = pyphen.Pyphen(lang=lang)
         for tag in ('p', 'li', 'span'):
             for node in dom.xpath("//%s[not(parent::pre)]" % tag):
-                insert_hyphens(node, hyphenator)
+                math_found = False
+                if node.getchildren():
+                    for child in node.getchildren():
+                        if child.tag == 'span' and child.get('class') and 'math' in child.get('class'):
+                            math_found = True
+                else:
+                    if child.get('class') and 'math' in child.get('class'):
+                        math_found = True
+                if not math_found:
+                    print(node.text, math_found)
+                    insert_hyphens(node, hyphenator)
     return dom
 
 
