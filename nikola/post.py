@@ -849,7 +849,7 @@ def hyphenate(dom, lang):
                         if child.tag == 'span' and 'math' in child.get('class', []):
                             math_found = True
                 else:
-                    if 'math' in child.get('class', []):
+                    if 'math' in node.get('class', []):
                         math_found = True
                 if not math_found:
                     insert_hyphens(node, hyphenator)
