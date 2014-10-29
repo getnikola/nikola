@@ -846,13 +846,12 @@ def hyphenate(dom, lang):
                 math_found = False
                 if node.getchildren():
                     for child in node.getchildren():
-                        if child.tag == 'span' and child.get('class') and 'math' in child.get('class'):
+                        if child.tag == 'span' and 'math' in child.get('class', []):
                             math_found = True
                 else:
                     if child.get('class') and 'math' in child.get('class'):
                         math_found = True
                 if not math_found:
-                    print(node.text, math_found)
                     insert_hyphens(node, hyphenator)
     return dom
 
