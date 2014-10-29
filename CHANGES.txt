@@ -20,6 +20,7 @@ Features
 Bugfixes
 --------
 
+* disabled hyphenation for paragraphs with inline math (Issue #1461)
 * Support filters for all tasks (Issue #1459)
 * Don’t check cache/ in ``nikola check -l`` (Issue #1447)
 * Fix new_post for pandoc format (Issue #1445)
