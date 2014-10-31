@@ -259,6 +259,10 @@ REDIRECTIONS = ${REDIRECTIONS}
 # The name of the remote where you wish to push to, using github_deploy.
 # GITHUB_REMOTE_NAME = 'origin'
 
+# If you really care about history in the GitHub Pages branch, you can
+# set this to True to `git pull` before changes are made.
+# GITHUB_PULL_BEFORE_COMMIT = False
+
 # Where the output site should be located
 # If you don't use an absolute path, it will be considered as relative
 # to the location of conf.py
