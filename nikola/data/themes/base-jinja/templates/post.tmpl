@@ -10,7 +10,7 @@
     <meta name="keywords" content="{{ post.meta('keywords')|e }}">
     {% endif %}
     {% if post.description() %}
-    <meta name="description" itemprop="description" content="{{ post.description() }}">
+    <meta name="description" content="{{ post.description() }}">
     {% endif %}
     <meta name="author" content="{{ post.author() }}">
     {% if post.prev_post %}
