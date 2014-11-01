@@ -67,7 +67,7 @@ lang="{{ lang }}">
 {% macro late_load_js() %}
     {% if use_bundles %}
         {% if use_cdn %}
-            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
             <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
             <script src="/assets/js/all.js"></script>
         {% else %}
@@ -75,7 +75,7 @@ lang="{{ lang }}">
         {% endif %}
     {% else %}
         {% if use_cdn %}
-            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
             <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
         {% else %}
             <script src="/assets/js/jquery.min.js"></script>
