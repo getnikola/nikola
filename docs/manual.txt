@@ -505,8 +505,8 @@ to your configuration::
        more descriptive names.
 
    hidetitle
-       Set "True" if you do not want to see the **story** title as a
-       heading of the page (does not work for posts).
+       Set "True" if you do not want to see the **page** title as a
+       heading of the output html file (does not work for posts).
 
    nocomments
        Set to "True" to disable comments. Example::

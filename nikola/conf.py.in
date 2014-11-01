@@ -458,8 +458,8 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # the "noannotations" metadata.
 # ANNOTATIONS = False
 
-# Create index.html for story folders?
-# WARNING: if a story would conflict with the index file (usually
+# Create index.html for page (story) folders?
+# WARNING: if a page would conflict with the index file (usually
 #          caused by setting slug to `index`), the STORY_INDEX
 #          will not be generated for that directory.
 # STORY_INDEX = False
