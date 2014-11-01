@@ -1,10 +1,6 @@
 ## -*- coding: utf-8 -*-
-<%!
-    import json
-    translations = {
-        'es': 'es_ES',
-    }
-%>
+
+<%! import json %>
 
 <%def name="comment_form(url, title, identifier)">
     %if comment_system_id:
@@ -17,7 +13,11 @@
         disqus_title=${json.dumps(title)},
         disqus_identifier="${identifier}",
         disqus_config = function () {
-            this.language = "${translations.get(lang, lang)}";
+        %if lang == 'es':
+            this.language = "es_ES";
+        %else:
+            this.language = "${lang}";
+        %endif
         };
         (function() {
             var dsq = document.createElement('script'); dsq.async = true;

@@ -22,6 +22,7 @@ dumb_replacements = [
 ]
 
 dumber_replacements = [
+    ['<%! import json %>\n\n', ''],
     ["<html\n\\", "<html\n"],
     ["\n'\\\n", "\n'\n"],
     ["{% endif %}\n\\", "{% endif %}\n"]
