@@ -21,13 +21,14 @@ Features
 Bugfixes
 --------
 
+* Don’t pull by default in ``github_deploy`` (Issue #1464)
 * disabled hyphenation for paragraphs with inline math (Issue #1461)
 * Support filters for all tasks (Issue #1459)
 * Don’t check cache/ in ``nikola check -l`` (Issue #1447)
 * Fix new_post for pandoc format (Issue #1445)
 * Fix STORY_INDEX generation (Issue #1444)
 * Fix bootswatch creation version check (Issue #1441)
-* Never rebase while pulling in `github_deploy`
+* Never rebase while pulling in ``github_deploy``
 * Handle better ``new_post --format=pandoc`` when pandoc is not defined (Issue #1422)
 * Open Graph properly uses latest RDFa in HTML – fixes validation
 * Fix sitemap generation (Issue #1397 via #1032)
