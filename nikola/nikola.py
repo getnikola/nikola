@@ -33,6 +33,7 @@ import datetime
 import glob
 import locale
 import os
+import json
 import sys
 import mimetypes
 try:
@@ -161,7 +162,33 @@ LEGAL_VALUES = {
         sl='si',  # country code is si, language code is sl, colorbox is wrong
         tr='tr',
         zh_cn='zh-CN'
-    )
+    ),
+    'MOMENTJS_LOCALES': defaultdict(
+        str,
+        bg='bg',
+        ca='ca',
+        cs='cs',
+        cz='cs',
+        de='de',
+        en='',
+        es='es',
+        et='et',
+        fa='fa',
+        fi='fi',
+        fr='fr',
+        hr='hr',
+        it='it',
+        ja='ja',
+        nb='nb',
+        nl='nl',
+        pt_br='pt-br',
+        pl='pl',
+        ru='ru',
+        sk='sk',
+        sl='sl',
+        tr='tr',
+        zh_cn='zh-cn'
+    ),
 }
 
 
@@ -254,6 +281,8 @@ class Nikola(object):
             'CREATE_MONTHLY_ARCHIVE': False,
             'CREATE_SINGLE_ARCHIVE': False,
             'DATE_FORMAT': '%Y-%m-%d %H:%M',
+            'JS_DATE_FORMAT': 'YYYY-MM-DD HH:mm',
+            'DATE_FANCINESS': 0,
             'DEFAULT_LANG': "en",
             'DEPLOY_COMMANDS': {'default': []},
             'DISABLED_PLUGINS': [],
@@ -595,8 +624,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
         self._GLOBAL_CONTEXT['use_cdn'] = self.config.get("USE_CDN")
         self._GLOBAL_CONTEXT['favicons'] = self.config['FAVICONS']
-        self._GLOBAL_CONTEXT['date_format'] = self.config.get(
-            'DATE_FORMAT', '%Y-%m-%d %H:%M')
+        self._GLOBAL_CONTEXT['date_format'] = self.config.get('DATE_FORMAT')
         self._GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
         self._GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
         self._GLOBAL_CONTEXT['show_blog_title'] = self.config.get('SHOW_BLOG_TITLE')
@@ -637,7 +665,10 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['show_sourcelink'] = self.config.get(
             'SHOW_SOURCELINK')
         self._GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
+        self._GLOBAL_CONTEXT['date_fanciness'] = self.config.get('DATE_FANCINESS')
+        self._GLOBAL_CONTEXT['js_date_format'] = json.dumps(self.config.get('JS_DATE_FORMAT'))
         self._GLOBAL_CONTEXT['colorbox_locales'] = LEGAL_VALUES['COLORBOX_LOCALES']
+        self._GLOBAL_CONTEXT['momentjs_locales'] = LEGAL_VALUES['MOMENTJS_LOCALES']
         self._GLOBAL_CONTEXT['url_replacer'] = self.url_replacer
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))

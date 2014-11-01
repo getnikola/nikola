@@ -263,10 +263,10 @@ Note that many other distros/operating systems (including Arch Linux,
 \*BSD and OS X) do not require such packages, as C headers are included
 with the base distribution of Python.
 
-Installation on Linux, Mac OS X, \*BSD, and any other POSIX-compatible OS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Installation on Linux/Mac OS X/etc.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-(we obviously support all.)
+(any POSIX-compatible OS will do.)
 
 Using ``pip`` should suffice.  You may also want to use distribution- or
 system-specific packages for our dependencies.
@@ -938,6 +938,60 @@ SOCIAL_BUTTONS_CODE
     The ``SOCIAL_BUTTONS_CODE`` option lets you define a HTML snippet that will be added
     at the bottom of body. It defaults to a snippet for AddThis, but you can
     really put anything there. See `social_buttons.html` for more details.
+
+Fancy Dates
+-----------
+
+Nikola can use various styles for presenting dates.
+
+DATE_FORMAT
+    The date format to use if there is no JS or fancy dates are off.  Compatible with Python’s ``strftime()`` syntax.
+
+JS_DATE_FORMAT
+    The date format to use if fancy dates are on.  Compatible with ``moment.js` syntax.
+
+DATE_FANCINESS = 0
+    Fancy dates are off, and DATE_FORMAT is used.
+
+DATE_FANCINESS = 1
+    Dates are recalculated in user’s timezone.  Requires JavaScript.
+
+DATE_FANCINESS = 2
+    Dates are recalculated as relative time (eg. 2 days ago).  Requires JavaScript.
+
+In order to use fancy dates, your theme must support them.  The built-in Bootstrap family supports it, but other themes might not by default.
+
+For Mako:
+
+.. code:: html
+
+    <!-- required scripts -- best handled with bundles -->
+    <script src="/assets/js/moment-with-locales.min.js"></script>
+    <script src="/assets/js/fancydates.js"></script>
+
+    <!-- fancy dates code -->
+    <script>
+    moment.locale("${momentjs_locales[lang]}");
+    fancydates(${date_fanciness}, ${js_date_format});
+    </script>
+    <!-- end fancy dates code -->
+
+
+For Jinja2:
+
+.. code:: html
+
+    <!-- required scripts -- best handled with bundles -->
+    <script src="/assets/js/moment-with-locales.min.js"></script>
+    <script src="/assets/js/fancydates.js"></script>
+
+    <!-- fancy dates code -->
+    <script>
+    moment.locale("{{ momentjs_locales[lang] }}");
+    fancydates({{ date_fanciness }}, {{ js_date_format }});
+    </script>
+    <!-- end fancy dates code -->
+
 
 Adding Files
 ------------
