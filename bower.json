@@ -9,8 +9,8 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "bootstrap": "~3.2.0",
+    "bootstrap": "~3.3.0",
     "jquery": "<2.0.0",
-    "jquery-colorbox": "~1.5.10"
+    "jquery-colorbox": "~1.5.14"
   }
 }

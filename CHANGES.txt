@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Updated to Bootstrap v3.3.0
 * Allow presets usage with ``nikola deploy`` — ``DEPLOY_COMMANDS`` is
   now a dict of {preset: commands} (Issue #1452)
 * New ``GLOBAL_CONTEXT_FILLER`` setting, functions listed there will
