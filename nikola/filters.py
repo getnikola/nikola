@@ -160,8 +160,22 @@ def typogrify(data):
         req_missing(['typogrify'], 'use the typogrify filter')
 
     data = typo.amp(data)
-    # disabled because typogrify widow prevention caused broken headline wrapping, see issue #1465
-    # data = typo.widont(data)
+    data = typo.widont(data)
+    data = typo.smartypants(data)
+    # Disabled because of typogrify bug where it breaks <title>
+    # data = typo.caps(data)
+    data = typo.initial_quotes(data)
+    return data
+
+
+@apply_to_text_file
+def typogrify_sans_widont(data):
+    # typogrify with widont disabled because it caused broken headline
+    # wrapping, see issue #1465
+    if typo is None:
+        req_missing(['typogrify'], 'use the typogrify_sans_widont filter')
+
+    data = typo.amp(data)
     data = typo.smartypants(data)
     # Disabled because of typogrify bug where it breaks <title>
     # data = typo.caps(data)
