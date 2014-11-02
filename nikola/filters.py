@@ -160,7 +160,8 @@ def typogrify(data):
         req_missing(['typogrify'], 'use the typogrify filter')
 
     data = typo.amp(data)
-    data = typo.widont(data)
+    # disabled because typogrify widow prevention caused broken headline wrapping, see issue #1465
+    # data = typo.widont(data)
     data = typo.smartypants(data)
     # Disabled because of typogrify bug where it breaks <title>
     # data = typo.caps(data)
