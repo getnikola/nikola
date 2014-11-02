@@ -76,6 +76,12 @@
 
 {{ base.late_load_js() }}
     <script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+    <!-- fancy dates -->
+    <script>
+    moment.locale("{{ momentjs_locales[lang] }}");
+    fancydates({{ date_fanciness }}, {{ js_date_format }});
+    </script>
+    <!-- end fancy dates -->
     {% block extra_js %}{% endblock %}
     {% if annotations and post and not post.meta('noannotations') %}
         {{ notes.code() }}
