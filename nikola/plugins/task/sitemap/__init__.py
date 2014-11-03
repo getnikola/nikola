@@ -216,14 +216,14 @@ class Sitemap(LateTask):
             file_dep = []
 
             for i in urlset.keys():
-                p = os.path.join(output, urlparse(i).path.lstrip('/'))
+                p = os.path.join(output, urlparse(i).path.replace(base_path, '', 1))
                 if not p.endswith('sitemap.xml') and not os.path.isdir(p):
                     file_dep.append(p)
                 if os.path.isdir(p) and os.path.exists(os.path.join(p, 'index.html')):
                     file_dep.append(p + 'index.html')
 
             for i in sitemapindex.keys():
-                p = os.path.join(output, urlparse(i).path.lstrip('/'))
+                p = os.path.join(output, urlparse(i).path.replace(base_path, '', 1))
                 if not p.endswith('sitemap.xml') and not os.path.isdir(p):
                     file_dep.append(p)
                 if os.path.isdir(p) and os.path.exists(os.path.join(p, 'index.html')):
