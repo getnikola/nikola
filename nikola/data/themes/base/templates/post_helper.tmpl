@@ -48,7 +48,7 @@
     <meta property="og:description" content="${post.text(strip_html=True)[:200]|h}">
     %endif
     %if post.previewimage:
-    <meta property="og:image" content="${post.previewimage}">
+    <meta property="og:image" content="${url_replacer(post.previewimage, '/assets/js/html5.js', lang)}">
     %endif
     <meta property="og:type" content="article">
 ### Will only work with Pintrest and breaks everywhere else who expect a [Facebook] URI.
