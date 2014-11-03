@@ -320,6 +320,7 @@ class CommandNewPost(Command):
         d_name = os.path.dirname(txt_path)
         utils.makedirs(d_name)
         metadata = self.site.config['ADDITIONAL_METADATA']
+        data.update(metadata)
 
         # Override onefile if not really supported.
         if not compiler_plugin.supports_onefile and onefile:

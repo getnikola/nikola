@@ -7,6 +7,7 @@ Features
 Bugfixes
 --------
 
+* Use ADDITIONAL_METADATA with the two-file format (Issue #1471)
 * Make previewimage compatible with sites deployed to subdirectories
   (Issue #1473)
 * Make sitemaps work on sites deployed to subdirectories (Issue #1472)
