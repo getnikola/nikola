@@ -1217,7 +1217,7 @@ def ask(query, default=None):
         default_q = ' [{0}]'.format(default)
     else:
         default_q = ''
-    inp = raw_input("{query}{default_q}: ".format(query=query, default_q=default_q)).strip()
+    inp = raw_input("{query}{default_q}: ".format(query=query, default_q=default_q).encode('utf-8')).strip()
     if inp or default is None:
         return inp
     else:
@@ -1232,7 +1232,7 @@ def ask_yesno(query, default=None):
         default_q = ' [Y/n]'
     elif default is False:
         default_q = ' [y/N]'
-    inp = raw_input("{query}{default_q} ".format(query=query, default_q=default_q)).strip()
+    inp = raw_input("{query}{default_q} ".format(query=query, default_q=default_q).encode('utf-8')).strip()
     if inp:
         return inp.lower().startswith('y')
     elif default is not None:
