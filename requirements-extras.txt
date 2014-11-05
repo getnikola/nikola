@@ -2,7 +2,7 @@
 requests>=2.2.0
 Markdown>=2.4.0
 Jinja2>=2.7.2
-livereload==2.3.1
+livereload==2.3.2
 pyphen>=0.9.1
 micawber>=0.3.0
 pygal==1.5.1
