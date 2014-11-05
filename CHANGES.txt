@@ -7,6 +7,7 @@ Features
 Bugfixes
 --------
 
+* Fix ANNOTATIONS not working at all (Issue #1477)
 * Fix asking questions with Unicode chars in Python 2 (Issue #1476)
 * Use ADDITIONAL_METADATA with the two-file format (Issue #1471)
 * Make previewimage compatible with sites deployed to subdirectories
