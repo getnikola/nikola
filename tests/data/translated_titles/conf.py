@@ -625,8 +625,8 @@ COMMENT_SYSTEM_ID = "nikolademo"
 
 
 # Use content distribution networks for jquery and twitter-bootstrap css and js
-# If this is True, jquery is served from the Google CDN and twitter-bootstrap
-# is served from the NetDNA CDN
+# If this is True, jquery and html5shiv are served from the Google CDN and
+# Bootstrap is served from BootstrapCDN (provided by MaxCDN)
 # Set this to False if you want to host your site without requiring access to
 # external resources.
 # USE_CDN = False
