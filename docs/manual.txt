@@ -920,10 +920,10 @@ Navigation Links
        navbar can grow too large and cover contents.)
 
     .. note::
-        
+
         If you link to directories, make sure to follow ``STRIP_INDEXES``.  If
         it’s set to ``True``, end your links with a ``/``, otherwise end them
-        with ``/index.html`` — or else they won’t be hilighted.
+        with ``/index.html`` — or else they won’t be hilighted when active.
 
     The ``SEARCH_FORM`` option contains the HTML code for a search form based on
     duckduckgo.com which should always work, but feel free to change it to

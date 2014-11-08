@@ -82,7 +82,7 @@ TRANSLATIONS_PATTERN = ${TRANSLATIONS_PATTERN}
 # WARNING: If you link to directories, make sure to follow
 #          ``STRIP_INDEXES``.  If it’s set to ``True``, end your links
 #          with a ``/``, otherwise end them with ``/index.html`` — or
-#          else they won’t be hilighted.
+#          else they won’t be hilighted when active.
 
 NAVIGATION_LINKS = ${NAVIGATION_LINKS}
 
