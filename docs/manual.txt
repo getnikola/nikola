@@ -1726,8 +1726,19 @@ You can use the plugins in this repository without installing them into your
 site, by cloning the repository and adding the path of the plugins directory to
 the ``EXTRA_PLUGINS_DIRS`` list in your configuration.
 
+Advanced Features
+-----------------
+
+Debugging
+~~~~~~~~~
+
+For pdb debugging in Nikola, you should use ``doit.tools.set_trace()`` instead
+of the usual pdb call.  By default, doit (and thus Nikola) redirects stdout and
+stderr.  Thus, you must use the different call.  (Alternatively, you could run
+with ``nikola build -v 2``, which disables the redirections.)
+
 Shell Tab Completion
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 Since Nikola is a command line tool, and this is the 21st century, it's handy to have smart tab-completion
 so that you don't have to type the full commands.
