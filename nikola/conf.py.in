@@ -79,6 +79,10 @@ TRANSLATIONS_PATTERN = ${TRANSLATIONS_PATTERN}
 # WARNING: Some themes, including the default Bootstrap 3 theme,
 #          may present issues if the menu is too large.
 #          (in bootstrap3, the navbar can grow too large and cover contents.)
+# WARNING: If you link to directories, make sure to follow
+#          ``STRIP_INDEXES``.  If it’s set to ``True``, end your links
+#          with a ``/``, otherwise end them with ``/index.html`` — or
+#          else they won’t be hilighted.
 
 NAVIGATION_LINKS = ${NAVIGATION_LINKS}
 

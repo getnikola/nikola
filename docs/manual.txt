@@ -914,9 +914,16 @@ Navigation Links
        submenus is supported.
 
     .. note::
+
        Some themes, including the default Bootstrap 3 theme, may
        present issues if the menu is too large.  (in ``bootstrap3``, the
        navbar can grow too large and cover contents.)
+
+    .. note::
+        
+        If you link to directories, make sure to follow ``STRIP_INDEXES``.  If
+        it’s set to ``True``, end your links with a ``/``, otherwise end them
+        with ``/index.html`` — or else they won’t be hilighted.
 
     The ``SEARCH_FORM`` option contains the HTML code for a search form based on
     duckduckgo.com which should always work, but feel free to change it to
