@@ -3,6 +3,9 @@ New in master
 
 Features
 --------
+* Added an INFER_MISSING_DATE option to allow for the building of posts without
+  an explicitly defined date (for example, if you were using GitHub pages to
+  write a post instead of `nikola new_post`).
 
 Bugfixes
 --------
