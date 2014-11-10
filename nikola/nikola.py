@@ -310,6 +310,7 @@ class Nikola(object):
             'INDEXES_PAGES': "",
             'INDEXES_PAGES_MAIN': False,
             'INDEX_PATH': '',
+            'INFER_MISSING_DATE': False,
             'IPYNB_CONFIG': {},
             'LESS_COMPILER': 'lessc',
             'LESS_OPTIONS': [],
