@@ -32,6 +32,7 @@ import datetime
 import os
 import re
 import string
+import subprocess
 try:
     from urlparse import urljoin
 except ImportError:
@@ -153,6 +154,17 @@ class Post(object):
             # For stories we don't *really* need a date
             if self.config['__invariant__']:
                 default_metadata['date'] = datetime.datetime(2013, 12, 31, 23, 59, 59, tzinfo=tzinfo)
+            else:
+                default_metadata['date'] = datetime.datetime.utcfromtimestamp(
+                    os.stat(self.source_path).st_ctime).replace(tzinfo=dateutil.tz.tzutc()).astimezone(tzinfo)
+
+        if self.config['INFER_MISSING_DATE']:
+            last_git_commit_date = subprocess.check_output([
+                'git', '--no-pager', 'log', '-1', '--format=%ai',
+                self.source_path])
+            if last_git_commit_date:
+                default_metadata['date'] = dateutil.parser.parse(
+                    last_git_commit_date).replace(tzinfo=dateutil.tz.tzutc()).astimezone(tzinfo)
             else:
                 default_metadata['date'] = datetime.datetime.utcfromtimestamp(
                     os.stat(self.source_path).st_ctime).replace(tzinfo=dateutil.tz.tzutc()).astimezone(tzinfo)

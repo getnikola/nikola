@@ -750,6 +750,13 @@ UNSLUGIFY_TITLES = True
 # sometimes crash Nikola, your web server, or eat your cat.
 # USE_SLUGIFY = True
 
+# If you would like Nikola to guess what the date of a post is, instead of
+# aborting the build on a missing date, you should enable this option.  If the
+# file is in git, the most recent date it was committed will be used;
+# otherwise, it will be the most recent modified date of the file in the
+# filesystem it is being built in.
+# INFER_MISSING_DATE = True
+
 # You can configure the logging handlers installed as plugins or change the
 # log level of the default stderr handler.
 # WARNING: The stderr handler allows only the loglevels of 'INFO' and 'DEBUG'.
