@@ -303,7 +303,7 @@ class CommandInit(Command):
                 lhandler(default, toconf, show_header=False)
 
         def tzhandler(default, toconf):
-            print("\nPlease choose the correct time zone for your blog.  Nikola uses the tz database.")
+            print("\nPlease choose the correct time zone for your blog. Nikola uses the tz database.")
             print("You can find your time zone here:")
             print("http://en.wikipedia.org/wiki/List_of_tz_database_time_zones")
             print("")
