@@ -150,7 +150,6 @@ class RenderTags(Task):
             has_categories = True
         else:
             has_categories = False
-        utils.LOGGER.info(repr(tags))
         template_name = "tags.tmpl"
         kw['tags'] = tags
         kw['categories'] = categories
