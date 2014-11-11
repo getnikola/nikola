@@ -5,7 +5,7 @@ Features
 --------
 
 * New option TAGINDEX_MINIMUM_POSTS allows hiding unpopular tags from
-  the tag index page
+  the tag index page (Issue #1484)
 
 Bugfixes
 --------
