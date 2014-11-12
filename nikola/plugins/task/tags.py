@@ -67,7 +67,7 @@ class RenderTags(Task):
             "rss_plain": self.site.config["RSS_PLAIN"],
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "feed_length": self.site.config['FEED_LENGTH'],
-            "tagindex_minimum_post_count": self.site.config['TAGINDEX_MINIMUM_POSTS'],
+            "taglist_minimum_post_count": self.site.config['TAGLIST_MINIMUM_POSTS'],
             "tzinfo": self.site.tzinfo,
         }
 
@@ -141,7 +141,7 @@ class RenderTags(Task):
     def list_tags_page(self, kw):
         """a global "all your tags/categories" page for each language"""
         tags = list([tag for tag in self.site.posts_per_tag.keys()
-                     if len(self.site.posts_per_tag[tag]) >= kw["tagindex_minimum_post_count"]])
+                     if len(self.site.posts_per_tag[tag]) >= kw["taglist_minimum_post_count"]])
         categories = list(self.site.posts_per_category.keys())
         # We want our tags to be sorted case insensitive
         tags.sort(key=lambda a: a.lower())
