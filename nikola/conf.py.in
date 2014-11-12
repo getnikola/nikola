@@ -211,6 +211,12 @@ COMPILERS = ${COMPILERS}
 # the posts themselves. If set to False, it will be just a list of links.
 # TAG_PAGES_ARE_INDEXES = False
 
+# Only include tags on the tag list/overview page if there are at least
+# TAGLIST_MINIMUM_POSTS number of posts or more with every tag. Every tag
+# page is still generated, linked from posts, and included in the sitemap.
+# However, more obscure tags can be hidden from the tag index page.
+# TAGLIST_MINIMUM_POSTS = 1
+
 # Final location for the main blog page and sibling paginated pages is
 # output / TRANSLATION[lang] / INDEX_PATH / index-*.html
 # INDEX_PATH = ""
