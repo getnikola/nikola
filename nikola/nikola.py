@@ -1274,8 +1274,9 @@ class Nikola(object):
                         self.posts_per_category[post.meta('category')].append(post)
                     else:
                         self.pages.append(post)
-                    self.post_per_file[post.destination_path(lang=lang)] = post
-                    self.post_per_file[post.destination_path(lang=lang, extension=post.source_ext())] = post
+                    for lang in self.config['TRANSLATIONS'].keys():
+                        self.post_per_file[post.destination_path(lang=lang)] = post
+                        self.post_per_file[post.destination_path(lang=lang, extension=post.source_ext())] = post
 
         # Sort everything.
         self.timeline.sort(key=lambda p: p.date)

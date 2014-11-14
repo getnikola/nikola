@@ -4,12 +4,16 @@ New in master
 Features
 --------
 
+* Add `robots` meta tag with value `noindex` for drafts (Issue #1489)
 * New option TAGLIST_MINIMUM_POSTS allows hiding unpopular tags from
   the tag index page (Issue #1484)
 
 Bugfixes
 --------
 
+* Make sure drafts don’t appear in sitemaps with multiple languages
+  (Issue #1489)
+* Make site.posts_per_file cover all languages (Issues #1270, #1489)
 * Fix ANNOTATIONS not working at all (Issue #1477)
 * Fix asking questions with Unicode chars in Python 2 (Issue #1476)
 * Use ADDITIONAL_METADATA with the two-file format (Issue #1471)
