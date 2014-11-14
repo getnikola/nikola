@@ -708,13 +708,13 @@ UNSLUGIFY_TITLES = True
 #
 # IMPORTANT:
 # Please note, that you need to opt-in for using Twitter Cards!
-# To do this please visit
-# https://dev.twitter.com/form/participate-twitter-cards
+# To do this please visit https://cards-dev.twitter.com/validator
 #
 # Uncomment and modify to following lines to match your accounts.
 # Specifying the id for either 'site' or 'creator' will be preferred
 # over the cleartext username. Specifying an ID is not necessary.
-# Displaying images is currently not supported.
+# Images displayed come from the `previewimage` meta tag.
+# You can specify the card type by using the `card` parameter in TWITTER_CARD.
 # TWITTER_CARD = {
 #     # 'use_twitter_cards': True,  # enable Twitter Cards
 #     # 'site': '@website',  # twitter nick for the website
