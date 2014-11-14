@@ -1637,6 +1637,8 @@ Instead a new file with a timestamp at the end of the filename will be created.
 Using Twitter Cards
 -------------------
 
+Nikola supports Twitter Card summaries, but they are disabled by default.
+
 Twitter Cards enable you to show additional information in Tweets that link
 to you content.
 Nikola supports `Twitter Cards <https://dev.twitter.com/docs/cards>`_.
@@ -1645,23 +1647,24 @@ They are implemented to use *Open Graph* tags whenever possible.
 .. admonition:: Important
 
     To use Twitter Cards you need to opt-in on Twitter.
-    To do so please use the form that can be found at https://dev.twitter.com/form/participate-twitter-cards
+    To do so, please visit https://cards-dev.twitter.com/validator
 
-To enable and configure your use of Twitter Cards please modify the
-corresponding lines in your ``conf.py``.
-An example configuration that uses the Twitter nickname of the website
-and the authors Twitter user ID is found below.
+Images displayed come from the `previewimage` meta tag.
+
+You can specify the card type by using the `card` parameter in TWITTER_CARD.
+
+To enable and configure your use of Twitter Cards, please modify the
+corresponding lines in your ``conf.py``:
 
 .. code-block:: python
 
     TWITTER_CARD = {
-        'use_twitter_cards': True,  # enable Twitter Cards / Open Graph
-        'site': '@website',  # twitter nick for the website
-        # 'site:id': 123456,  # Same as site, but the website's Twitter user ID instead.
-        # 'creator': '@username',  # Username for the content creator / author.
-        'creator:id': 654321,  # Same as creator, but the Twitter user's ID.
+        'use_twitter_cards': True,  # enable Twitter Cards
+        'card': 'summary',          # Card type, you can also use 'summary_large_image',
+                                    # see https://dev.twitter.com/cards/types
+        'site': '@website',         # twitter nick for the website
+        'creator': '@username',     # Username for the content creator / author.
     }
-
 
 Custom Plugins
 --------------
