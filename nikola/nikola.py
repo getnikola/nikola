@@ -839,7 +839,7 @@ class Nikola(object):
         with open(output_name, "wb+") as post_file:
             post_file.write(data)
 
-    def url_replacer(self, src, dst, lang=None):
+    def url_replacer(self, src, dst, lang=None, url_type=None):
         """URL mangler.
 
         * Replaces link:// URLs with real links
@@ -851,13 +851,15 @@ class Nikola(object):
         src is the URL where this link is used
         dst is the link to be mangled
         lang is used for language-sensitive URLs in link://
-
+        url_type is used to determine final link appearance, defaulting to URL_TYPE from config
         """
         parsed_src = urlsplit(src)
         src_elems = parsed_src.path.split('/')[1:]
         dst_url = urlparse(dst)
         if lang is None:
             lang = self.default_lang
+        if url_type is None:
+            url_type = self.config.get('URL_TYPE')
 
         # Refuse to replace links that are full URLs.
         if dst_url.netloc:
@@ -880,10 +882,10 @@ class Nikola(object):
 
         # Avoid empty links.
         if src == dst:
-            if self.config.get('URL_TYPE') == 'absolute':
+            if url_type == 'absolute':
                 dst = urljoin(self.config['BASE_URL'], dst.lstrip('/'))
                 return dst
-            elif self.config.get('URL_TYPE') == 'full_path':
+            elif url_type == 'full_path':
                 dst = urljoin(self.config['BASE_URL'], dst.lstrip('/'))
                 return urlparse(dst).path
             else:
@@ -892,13 +894,13 @@ class Nikola(object):
         # Check that link can be made relative, otherwise return dest
         parsed_dst = urlsplit(dst)
         if parsed_src[:2] != parsed_dst[:2]:
-            if self.config.get('URL_TYPE') == 'absolute':
+            if url_type == 'absolute':
                 dst = urljoin(self.config['BASE_URL'], dst)
             return dst
 
-        if self.config.get('URL_TYPE') in ('full_path', 'absolute'):
+        if url_type in ('full_path', 'absolute'):
             dst = urljoin(self.config['BASE_URL'], dst.lstrip('/'))
-            if self.config.get('URL_TYPE') == 'full_path':
+            if url_type == 'full_path':
                 parsed = urlparse(urljoin(self.config['BASE_URL'], dst.lstrip('/')))
                 if parsed.fragment:
                     dst = '{0}#{1}'.format(parsed.path, parsed.fragment)
