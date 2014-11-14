@@ -79,6 +79,16 @@
     %elif 'creator' in twitter_card:
     <meta name="twitter:creator" content="${twitter_card['creator']}">
     %endif
+    <meta property="twitter:title" content="${post.title()[:70]|h}">
+    %if post.description():
+    <meta property="twitter:description" content="${post.description()[:200]|h}">
+    %else:
+    <meta property="twitter:description" content="${post.text(strip_html=True)[:200]|h}">
+    %endif
+    %if post.previewimage:
+    <meta property="twitter:image" content="${url_replacer(permalink, post.previewimage, lang)}">
+    <meta property="twitter:image:src" content="${url_replacer(permalink, post.previewimage, lang)}">
+    %endif
 %endif
 </%def>
 
