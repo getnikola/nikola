@@ -952,8 +952,6 @@ class Nikola(object):
         items = []
 
         for post in timeline[:feed_length]:
-            old_url_type = self.config['URL_TYPE']
-            self.config['URL_TYPE'] = 'absolute'
             data = post.text(lang, teaser_only=rss_teasers, strip_html=rss_plain, rss_read_more_link=True)
             if feed_url is not None and data:
                 # Massage the post's HTML (unless plain)
@@ -961,7 +959,7 @@ class Nikola(object):
                     # FIXME: this is duplicated with code in Post.text()
                     try:
                         doc = lxml.html.document_fromstring(data)
-                        doc.rewrite_links(lambda dst: self.url_replacer(post.permalink(), dst, lang))
+                        doc.rewrite_links(lambda dst: self.url_replacer(post.permalink(), dst, lang, 'absolute'))
                         try:
                             body = doc.body
                             data = (body.text or '') + ''.join(
@@ -974,7 +972,6 @@ class Nikola(object):
                             data = ""
                         else:  # let other errors raise
                             raise(e)
-            self.config['URL_TYPE'] = old_url_type
             args = {
                 'title': post.title(lang),
                 'link': post.permalink(lang, absolute=True),
