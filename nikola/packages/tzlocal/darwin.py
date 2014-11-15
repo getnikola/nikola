@@ -1,17 +1,26 @@
 from __future__ import with_statement
 import os
 import dateutil.tz
+import subprocess
 
 _cache_tz = None
 
 
 def _get_localzone():
-    tzname = os.popen("systemsetup -gettimezone").read().replace("Time Zone: ", "").strip()
+    tzname = subprocess.check_output(["systemsetup", "-gettimezone"]).decode('utf-8')
+    tzname = tzname.replace("Time Zone: ", "")
+    # OS X 10.9+, this command is root-only
+    if 'exiting!' in tzname:
+        tzname = ''
+
     if not tzname:
         # link will be something like /usr/share/zoneinfo/America/Los_Angeles.
         link = os.readlink("/etc/localtime")
         tzname = link[link.rfind('/', 0, link.rfind('/')) + 1:]
+    tzname = tzname.strip()
     try:
+        # test the name
+        assert tzname
         dateutil.tz.gettz(tzname)
         return tzname
     except:
