@@ -41,23 +41,23 @@ class Archive(Task):
         site.register_path_handler('archive', self.archive_path)
         return super(Archive, self).set_site(site)
 
-    def _prepare_task(self, kw, name, lang, post_list, items, template_name,
+    def _prepare_task(self, kw, name, lang, posts, items, template_name,
                       title, deps_translatable = None):
         # name: used to build permalink and destination
-        # post_list, items: posts or items; only one of them should be used,
-        #                   the other be None
+        # posts, items: posts or items; only one of them should be used,
+        #               the other be None
         # template_name: name of the template to use
         # title: the (translated) title for the generated page
         # deps_translatable: dependencies (None if not added)
-        assert post_list != None or items != None
+        assert posts != None or items != None
 
         context = {}
         context["lang"] = lang
         context["title"] = title
         context["permalink"] = self.site.link("archive", name, lang)
-        if post_list != None:
-            context["posts"] = post_list
-            n = len(post_list)
+        if posts != None:
+            context["posts"] = posts
+            n = len(posts)
         else:
             context["items"] = items
             n = len(items)
@@ -78,10 +78,10 @@ class Archive(Task):
         task['basename'] = self.name
         return task
 
-    def _generate_postlist_task(self, kw, name, lang, posts, title, deps_translatable = None):
-        post_list = sorted(posts, key=lambda a: a.date)
-        post_list.reverse()
-        yield self._prepare_task(kw, name, lang, post_list, None, "list_post.tmpl", title, deps_translatable)
+    def _generate_posts_task(self, kw, name, lang, posts, title, deps_translatable = None):
+        posts = sorted(posts, key=lambda a: a.date)
+        posts.reverse()
+        yield self._prepare_task(kw, name, lang, posts, None, "list_post.tmpl", title, deps_translatable)
 
     def gen_tasks(self):
         kw = {
@@ -121,7 +121,7 @@ class Archive(Task):
                 for k in self.site._GLOBAL_CONTEXT_TRANSLATABLE:
                     deps_translatable[k] = self.site.GLOBAL_CONTEXT[k](lang)
                 if not kw["create_monthly_archive"] or kw["create_full_archives"]:
-                    yield self._generate_postlist_task(kw, year, lang, posts, title, deps_translatable)
+                    yield self._generate_posts_task(kw, year, lang, posts, title, deps_translatable)
                 else:
                     months = set([(m.split('/')[1], self.site.link("archive", m, lang)) for m in self.site.posts_per_month.keys() if m.startswith(str(year))])
                     months = sorted(list(months))
@@ -137,7 +137,7 @@ class Archive(Task):
                 if kw["create_monthly_archive"] or kw["create_full_archives"]:
                     title = kw["messages"][lang]["Posts for {month} {year}"].format(
                         year=year, month=nikola.utils.LocaleBorg().get_month_name(int(month), lang))
-                    yield self._generate_postlist_task(kw, yearmonth, lang, posts, title)
+                    yield self._generate_posts_task(kw, yearmonth, lang, posts, title)
 
                 if not kw["create_full_archives"] and not kw["add_day_archives"]:
                     continue  # Just to avoid nesting the other loop in this if
@@ -150,7 +150,7 @@ class Archive(Task):
                 for day, posts in days.items():
                     title = kw["messages"][lang]["Posts for {month} {day}, {year}"].format(
                         year=year, month=nikola.utils.LocaleBorg().get_month_name(int(month), lang), day=day)
-                    yield self._generate_postlist_task(kw, yearmonth + '/{0:02d}'.format(day), lang, posts, title)
+                    yield self._generate_posts_task(kw, yearmonth + '/{0:02d}'.format(day), lang, posts, title)
 
         if not kw['create_single_archive'] and not kw['create_full_archives']:
             # And an "all your years" page for yearly and monthly archives
