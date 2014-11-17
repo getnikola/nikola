@@ -9,6 +9,7 @@ Features
   the tag index page (Issue #1484)
 * New options CREATE_FULL_ARCHIVES and ADD_DAY_ARCHIVES which allow
   to create non-hierarchical archives and archives for days, respectively
+  (Issue #1494)
 
 Bugfixes
 --------

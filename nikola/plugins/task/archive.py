@@ -102,10 +102,10 @@ class Archive(Task):
         for lang in kw["translations"]:
             if kw['create_single_archive'] and not kw['create_full_archives']:
                 # if we are creating one single archive
-                archdata = { }
+                archdata = {}
             else:
                 # if we are not creating one single archive, start with all years
-                archdata = dict(self.site.posts_per_year) # create a copy
+                archdata = self.site.posts_per_year.copy()
             if kw['create_single_archive'] or kw['create_full_archives']:
                 # if we are creating one single archive, or full archives
                 archdata[None] = self.site.posts # for create_single_archive
