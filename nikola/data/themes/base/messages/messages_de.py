@@ -20,6 +20,7 @@ MESSAGES = {
     "Posts about %s": "Einträge über %s",
     "Posts for year %s": "Einträge aus dem Jahr %s",
     "Posts for {month} {year}": "Einträge aus {month} {year}",
+    "Posts for {month} {day}, {year}" : "Einträge vom {day}. {month} {year}",
     "Previous post": "Vorheriger Eintrag",
     "Publication date": "Veröffentlichungsdatum",
     "RSS feed": "RSS-Feed",
