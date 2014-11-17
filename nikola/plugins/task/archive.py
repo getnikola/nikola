@@ -109,7 +109,6 @@ class Archive(Task):
             if kw['create_single_archive'] or kw['create_full_archives']:
                 # if we are creating one single archive, or full archives
                 archdata[None] = self.site.posts # for create_single_archive
-            template_name = "list_post.tmpl"
 
             for year, posts in archdata.items():
                 # Add archive per year or total archive
