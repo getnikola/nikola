@@ -447,6 +447,49 @@ class MonthlyArchiveTest(DemoBuildTest):
         self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'target', 'output', '2012', '03', 'index.html')))
 
 
+class DayArchiveTest(DemoBuildTest):
+    """Check that per-day archives build and are correct."""
+
+    @classmethod
+    def patch_site(self):
+        """Set the SITE_URL to have a path"""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with io.open(conf_path, "r", encoding="utf-8") as inf:
+            data = inf.read()
+            data = data.replace('# CREATE_DAILY_ARCHIVE = False',
+                                'CREATE_DAILY_ARCHIVE = True')
+        with io.open(conf_path, "w+", encoding="utf8") as outf:
+            outf.write(data)
+            outf.flush()
+
+    def test_day_archive(self):
+        """See that it builds"""
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'target', 'output', '2012', '03', '30', 'index.html')))
+
+
+class FullArchiveTest(DemoBuildTest):
+    """Check that full archives build and are correct."""
+
+    @classmethod
+    def patch_site(self):
+        """Set the SITE_URL to have a path"""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with io.open(conf_path, "r", encoding="utf-8") as inf:
+            data = inf.read()
+            data = data.replace('# CREATE_FULL_ARCHIVES = False',
+                                'CREATE_FULL_ARCHIVES = True')
+        with io.open(conf_path, "w+", encoding="utf8") as outf:
+            outf.write(data)
+            outf.flush()
+
+    def test_full_archive(self):
+        """See that it builds"""
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'target', 'output', 'archive.html')))
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'target', 'output', '2012', 'index.html')))
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'target', 'output', '2012', '03', 'index.html')))
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'target', 'output', '2012', '03', '30', 'index.html')))
+
+
 class SubdirRunningTest(DemoBuildTest):
     """Check that running nikola from subdir works."""
 

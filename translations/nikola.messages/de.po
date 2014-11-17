@@ -104,6 +104,9 @@ msgstr "Veröffentlicht:"
 msgid "Posts for {month} {year}"
 msgstr "Einträge aus {month} {year}"
 
+msgid "Posts for {month} {day}, {year}"
+msgstr "Einträge vom {day}. {month} {year}"
+
 msgid "Nothing found."
 msgstr "Nichts gefunden."
 

@@ -94,6 +94,9 @@ msgstr "Posted:"
 msgid "Posts for {month} {year}"
 msgstr "Posts for {month} {year}"
 
+msgid "Posts for {month} {day}, {year}"
+msgstr "Posts for {month} {day}, {year}"
+
 msgid "Nothing found."
 msgstr "Nothing found."
 

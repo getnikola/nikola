@@ -30,6 +30,7 @@ def task_locale():
     def set_nikola_test_locales():
         try:
             out = subprocess.check_output(['locale', '-a'])
+            out = out.decode('utf-8')
             locales = []
             languages = set()
             for line in out.splitlines():

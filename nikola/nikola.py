@@ -280,6 +280,8 @@ class Nikola(object):
             'COPY_SOURCES': True,
             'CREATE_MONTHLY_ARCHIVE': False,
             'CREATE_SINGLE_ARCHIVE': False,
+            'CREATE_FULL_ARCHIVES': False,
+            'CREATE_DAILY_ARCHIVE': False,
             'DATE_FORMAT': '%Y-%m-%d %H:%M',
             'JS_DATE_FORMAT': 'YYYY-MM-DD HH:mm',
             'DATE_FANCINESS': 0,
