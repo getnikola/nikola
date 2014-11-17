@@ -92,7 +92,7 @@ class Archive(Task):
             "create_monthly_archive": self.site.config['CREATE_MONTHLY_ARCHIVE'],
             "create_single_archive": self.site.config['CREATE_SINGLE_ARCHIVE'],
             "create_full_archives": self.site.config['CREATE_FULL_ARCHIVES'],
-            "add_day_archives": self.site.config['ADD_DAY_ARCHIVES'],
+            "create_daily_archive": self.site.config['CREATE_DAILY_ARCHIVE'],
         }
         self.site.scan_posts()
         yield self.group_task()
@@ -128,7 +128,7 @@ class Archive(Task):
                     items = [[nikola.utils.LocaleBorg().get_month_name(int(month), lang), link] for month, link in months]
                     yield self._prepare_task(kw, year, lang, None, items, "list.tmpl", title, deps_translatable)
 
-            if not kw["create_monthly_archive"] and not kw["create_full_archives"] and not kw["add_day_archives"]:
+            if not kw["create_monthly_archive"] and not kw["create_full_archives"] and not kw["create_daily_archive"]:
                 continue  # Just to avoid nesting the other loop in this if
             for yearmonth, posts in self.site.posts_per_month.items():
                 # Add archive per month
@@ -138,7 +138,7 @@ class Archive(Task):
                         year=year, month=nikola.utils.LocaleBorg().get_month_name(int(month), lang))
                     yield self._generate_posts_task(kw, yearmonth, lang, posts, title)
 
-                if not kw["create_full_archives"] and not kw["add_day_archives"]:
+                if not kw["create_full_archives"] and not kw["create_daily_archive"]:
                     continue  # Just to avoid nesting the other loop in this if
                 # Add archive per day
                 days = dict()

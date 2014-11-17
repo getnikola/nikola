@@ -229,7 +229,7 @@ COMPILERS = ${COMPILERS}
 # (overrides both CREATE_MONTHLY_ARCHIVE and CREATE_SINGLE_ARCHIVE)
 # CREATE_FULL_ARCHIVES = False
 # If monthly archives or full archives are created, adds also one archive per day
-# ADD_DAY_ARCHIVES = False
+# CREATE_DAILY_ARCHIVE = False
 # Final locations for the archives are:
 # output / TRANSLATION[lang] / ARCHIVE_PATH / ARCHIVE_FILENAME
 # output / TRANSLATION[lang] / ARCHIVE_PATH / YEAR / index.html

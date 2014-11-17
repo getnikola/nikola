@@ -456,8 +456,8 @@ class DayArchiveTest(DemoBuildTest):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
-            data = data.replace('# ADD_DAY_ARCHIVES = False',
-                                'ADD_DAY_ARCHIVES = True')
+            data = data.replace('# CREATE_DAILY_ARCHIVE = False',
+                                'CREATE_DAILY_ARCHIVE = True')
         with io.open(conf_path, "w+", encoding="utf8") as outf:
             outf.write(data)
             outf.flush()
