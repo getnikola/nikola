@@ -7,6 +7,8 @@ Features
 * Add `robots` meta tag with value `noindex` for drafts (Issue #1489)
 * New option TAGLIST_MINIMUM_POSTS allows hiding unpopular tags from
   the tag index page (Issue #1484)
+* New options CREATE_FULL_ARCHIVES and ADD_DAY_ARCHIVES which allow
+  to create non-hierarchical archives and archives for days, respectively
 
 Bugfixes
 --------
