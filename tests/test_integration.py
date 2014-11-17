@@ -482,7 +482,7 @@ class FullArchiveTest(DemoBuildTest):
             outf.write(data)
             outf.flush()
 
-    def test_day_archive(self):
+    def test_full_archive(self):
         """See that it builds"""
         self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'target', 'output', 'archive.html')))
         self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'target', 'output', '2012', 'index.html')))
