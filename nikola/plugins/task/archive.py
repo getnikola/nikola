@@ -42,20 +42,20 @@ class Archive(Task):
         return super(Archive, self).set_site(site)
 
     def _prepare_task(self, kw, name, lang, posts, items, template_name,
-                      title, deps_translatable = None):
+                      title, deps_translatable=None):
         # name: used to build permalink and destination
         # posts, items: posts or items; only one of them should be used,
         #               the other be None
         # template_name: name of the template to use
         # title: the (translated) title for the generated page
         # deps_translatable: dependencies (None if not added)
-        assert posts != None or items != None
+        assert posts is not None or items is not None
 
         context = {}
         context["lang"] = lang
         context["title"] = title
         context["permalink"] = self.site.link("archive", name, lang)
-        if posts != None:
+        if posts is not None:
             context["posts"] = posts
             n = len(posts)
         else:
@@ -64,21 +64,20 @@ class Archive(Task):
         task = self.site.generic_post_list_renderer(
             lang,
             [],
-            os.path.join(kw['output_folder'],
-                self.site.path("archive", name, lang)),
+            os.path.join(kw['output_folder'], self.site.path("archive", name, lang)),
             template_name,
             kw['filters'],
             context,
         )
 
         task_cfg = {1: task['uptodate'][0].config, 2: kw, 3: n}
-        if deps_translatable != None:
+        if deps_translatable is not None:
             task_cfg[4] = deps_translatable
         task['uptodate'] = [config_changed(task_cfg)]
         task['basename'] = self.name
         return task
 
-    def _generate_posts_task(self, kw, name, lang, posts, title, deps_translatable = None):
+    def _generate_posts_task(self, kw, name, lang, posts, title, deps_translatable=None):
         posts = sorted(posts, key=lambda a: a.date)
         posts.reverse()
         yield self._prepare_task(kw, name, lang, posts, None, "list_post.tmpl", title, deps_translatable)
@@ -108,7 +107,7 @@ class Archive(Task):
                 archdata = self.site.posts_per_year.copy()
             if kw['create_single_archive'] or kw['create_full_archives']:
                 # if we are creating one single archive, or full archives
-                archdata[None] = self.site.posts # for create_single_archive
+                archdata[None] = self.site.posts  # for create_single_archive
 
             for year, posts in archdata.items():
                 # Add archive per year or total archive
@@ -157,8 +156,7 @@ class Archive(Task):
             years.sort(reverse=True)
             kw['years'] = years
             for lang in kw["translations"]:
-                items = [(y, self.site.link("archive", y, lang))
-                                    for y in years]
+                items = [(y, self.site.link("archive", y, lang)) for y in years]
                 yield self._prepare_task(kw, None, lang, None, items, "list.tmpl", kw["messages"][lang]["Archive"])
 
     def archive_path(self, name, lang):
