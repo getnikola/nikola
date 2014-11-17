@@ -422,6 +422,12 @@ INDEX_READ_MORE_LINK = ${INDEX_READ_MORE_LINK}
 # 'Read more...' for the RSS_FEED, if RSS_TEASERS is True (translatable)
 RSS_READ_MORE_LINK = ${RSS_READ_MORE_LINK}
 
+# Append a URL query to the RSS_READ_MORE_LINK and the //rss/item/link in
+# RSS feeds. Minimum example for Piwik "pk_campaign=rss" and Google Analytics
+# "utm_source=rss&utm_medium=rss&utm_campaign=rss". Advanced option used for
+# traffic source tracking.
+RSS_LINKS_APPEND_QUERY = False
+
 # A HTML fragment describing the license, for the sidebar.
 # (translatable)
 LICENSE = ""

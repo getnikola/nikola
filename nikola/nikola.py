@@ -329,6 +329,7 @@ class Nikola(object):
             'FUTURE_IS_NOW': False,
             'INDEX_READ_MORE_LINK': DEFAULT_INDEX_READ_MORE_LINK,
             'RSS_READ_MORE_LINK': DEFAULT_RSS_READ_MORE_LINK,
+            'RSS_LINKS_APPEND_QUERY': False,
             'REDIRECTIONS': [],
             'ROBOTS_EXCLUSIONS': [],
             'GENERATE_RSS': True,
@@ -934,7 +935,8 @@ class Nikola(object):
         return result
 
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
-                             rss_teasers, rss_plain, feed_length=10, feed_url=None, enclosure=_enclosure):
+                             rss_teasers, rss_plain, feed_length=10, feed_url=None,
+                             enclosure=_enclosure, rss_links_append_query=None):
 
         """Takes all necessary data, and renders a RSS feed in output_path."""
         rss_obj = utils.ExtendedRSS2(
@@ -952,7 +954,8 @@ class Nikola(object):
         items = []
 
         for post in timeline[:feed_length]:
-            data = post.text(lang, teaser_only=rss_teasers, strip_html=rss_plain, rss_read_more_link=True)
+            data = post.text(lang, teaser_only=rss_teasers, strip_html=rss_plain,
+                             rss_read_more_link=True, rss_links_append_query=rss_links_append_query)
             if feed_url is not None and data:
                 # Massage the post's HTML (unless plain)
                 if not rss_plain:
@@ -974,24 +977,25 @@ class Nikola(object):
                             raise(e)
             args = {
                 'title': post.title(lang),
-                'link': post.permalink(lang, absolute=True),
+                'link': post.permalink(lang, absolute=True, query=rss_links_append_query),
                 'description': data,
-                'guid': post.permalink(lang, absolute=True),
                 # PyRSS2Gen's pubDate is GMT time.
                 'pubDate': (post.date if post.date.tzinfo is None else
                             post.date.astimezone(dateutil.tz.tzutc())),
                 'categories': post._tags.get(lang, []),
                 'creator': post.author(lang),
+                'guid': post.permalink(lang, absolute=True),
             }
 
             if post.author(lang):
                 rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
 
-            # enclosure callback returns None if post has no enclosure, or a
-            # 3-tuple of (url, length (0 is valid), mimetype)
-            enclosure_details = enclosure(post=post, lang=lang)
-            if enclosure_details is not None:
-                args['enclosure'] = rss.Enclosure(*enclosure_details)
+            if enclosure:
+                # enclosure callback returns None if post has no enclosure, or a
+                # 3-tuple of (url, length (0 is valid), mimetype)
+                enclosure_details = enclosure(post=post, lang=lang)
+                if enclosure_details is not None:
+                    args['enclosure'] = rss.Enclosure(*enclosure_details)
 
             items.append(utils.ExtendedItem(**args))
 

@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* New advanced option RSS_LINKS_APPEND_QUERY for tracking traffic
+  from RSS subscribers
 * Add `robots` meta tag with value `noindex` for drafts (Issue #1489)
 * New option TAGLIST_MINIMUM_POSTS allows hiding unpopular tags from
   the tag index page (Issue #1484)

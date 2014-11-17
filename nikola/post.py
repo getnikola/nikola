@@ -408,7 +408,8 @@ class Post(object):
         else:
             return get_translation_candidate(self.config, self.base_path, sorted(self.translated_to)[0])
 
-    def text(self, lang=None, teaser_only=False, strip_html=False, show_read_more_link=True, rss_read_more_link=False):
+    def text(self, lang=None, teaser_only=False, strip_html=False, show_read_more_link=True,
+             rss_read_more_link=False, rss_links_append_query=None):
         """Read the post file for that language and return its contents.
 
         teaser_only=True breaks at the teaser marker and returns only the teaser.
@@ -458,7 +459,7 @@ class Post(object):
                     else:
                         l = self.config['RSS_READ_MORE_LINK'](lang) if rss_read_more_link else self.config['INDEX_READ_MORE_LINK'](lang)
                         teaser += l.format(
-                            link=self.permalink(lang),
+                            link=self.permalink(lang, query=rss_links_append_query),
                             read_more=self.messages[lang]["Read more"],
                             min_remaining_read=self.messages[lang]["%d min remaining to read"] % (self.remaining_reading_time),
                             reading_time=self.reading_time,
@@ -578,7 +579,7 @@ class Post(object):
             path = path[2:]
         return path
 
-    def permalink(self, lang=None, absolute=False, extension='.html'):
+    def permalink(self, lang=None, absolute=False, extension='.html', query=None):
         if lang is None:
             lang = nikola.utils.LocaleBorg().current_lang
 
@@ -598,9 +599,10 @@ class Post(object):
             link = urljoin(self.base_url, link[1:])
         index_len = len(self.index_file)
         if self.strip_indexes and link[-(1 + index_len):] == '/' + self.index_file:
-            return link[:-index_len]
-        else:
-            return link
+            link = link[:-index_len]
+        if query:
+            link = link + "?" + query
+        return link
 
     @property
     def previewimage(self, lang=None):
