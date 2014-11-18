@@ -19,6 +19,7 @@ MESSAGES = {
     "Posted:": "Argitaratuta:",
     "Posts about %s": "%s-ri buruzko postak",
     "Posts for year %s": "%s. urteko postak",
+    "Posts for {month} {day}, {year}": "",
     "Posts for {month} {year}": "{year}ko {month}ren postak",
     "Previous post": "Aurreko posta",
     "Publication date": "",

@@ -19,6 +19,7 @@ MESSAGES = {
     "Posted:": "Publisert:",
     "Posts about %s": "Innlegg om %s",
     "Posts for year %s": "Innlegg fra %s",
+    "Posts for {month} {day}, {year}": "",
     "Posts for {month} {year}": "Innlegg fra {month} {year}",
     "Previous post": "Forrige innlegg",
     "Publication date": "",

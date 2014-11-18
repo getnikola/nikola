@@ -19,6 +19,7 @@ MESSAGES = {
     "Posted:": "投稿日時：",
     "Posts about %s": "%sについての記事",
     "Posts for year %s": "%s年の記事",
+    "Posts for {month} {day}, {year}": "",
     "Posts for {month} {year}": "{year}年{month}月の記事",
     "Previous post": "前の記事",
     "Publication date": "投稿日",

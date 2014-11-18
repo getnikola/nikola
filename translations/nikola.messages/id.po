@@ -6,9 +6,7 @@
 # Translators:
 # Translators:
 # Translators:
-# Batuhan Büyükgüzel <bbuyukguzel@gmail.com>, 2013-2014
-# Caner Başaran <basaran.caner@gmail.com>, 2013-2014
-# Caner Başaran <basaran.caner@gmail.com>, 2013
+# Willy Sudiarto Raharjo <willysr@slackware-id.org>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
@@ -16,101 +14,101 @@ msgstr ""
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
 "PO-Revision-Date: 2014-11-18 08:42+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
-"Language-Team: Turkish (http://www.transifex.com/projects/p/nikola/language/tr/)\n"
+"Language-Team: Indonesian (http://www.transifex.com/projects/p/nikola/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: tr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "More posts about %s"
-msgstr "%s ilgili diğer yazılar"
+msgstr "Lebih banyak tulisan tentang %s"
 
 msgid "LANGUAGE"
-msgstr "Türkçe"
+msgstr "Inggris"
 
 msgid "Tags"
-msgstr "Etiketler"
+msgstr "Tag"
 
 msgid "Categories"
-msgstr "Kategoriler"
+msgstr "Kategori"
 
 msgid "Tags and Categories"
-msgstr "Etiketler ve Kategoriler"
+msgstr "Tag dan Kategori"
 
 msgid "Comments"
-msgstr "Yorumlar"
+msgstr "Komentar"
 
 msgid "Read more"
-msgstr "Devamını oku"
+msgstr "Baca selengkapnya"
 
 msgid "Posts about %s"
-msgstr "%s ile ilgili yazılar"
+msgstr "Tulisan tentang %s"
 
 msgid "Next post"
-msgstr "Sonraki yazı"
+msgstr "Tulisan berikutnya"
 
 msgid "old posts, page %d"
-msgstr "eski yazılar, sayfa %d"
+msgstr "tulisan lama, halaman %d"
 
 msgid "page %d"
-msgstr "sayfa %d"
+msgstr "halaman %d"
 
 msgid "Source"
-msgstr "Kaynak"
+msgstr "Sumber"
 
 #. Here your translation should not say English but the name of your language
 #. instead
 msgid "Read in English"
-msgstr "Türkçe olarak oku"
+msgstr "Baca dalam bahasa Inggris"
 
 msgid "Posts for year %s"
-msgstr "%s yılındaki yazılar"
+msgstr "Tulisan untuk tahun %s"
 
 msgid "Newer posts"
-msgstr "Daha yeni yazılar"
+msgstr "Tulisan lebih baru"
 
 msgid "Previous post"
-msgstr "Önceki yazı"
+msgstr "Tulisan sebelumnya"
 
 msgid "Also available in:"
-msgstr "Şu dilde de mevcut:"
+msgstr "Juga tersedia dalam:"
 
 msgid "Languages:"
-msgstr "Diller:"
+msgstr "Bahasa:"
 
 msgid "Original site"
-msgstr "Orjinal web sayfası"
+msgstr "Situs orisinal"
 
 msgid "Older posts"
-msgstr "Daha eski yazılar"
+msgstr "Tulisan lebih lama"
 
 msgid "Archive"
-msgstr "Arşiv"
+msgstr "Arsip"
 
 msgid "Publication date"
-msgstr "Yayınlanma tarihi"
+msgstr "Tanggal publikasi"
 
 msgid "Posted:"
-msgstr "Yayın tarihi:"
+msgstr "Ditulis oleh:"
 
 msgid "Posts for {month} {year}"
-msgstr "{month} {year} göre yazılar"
+msgstr "Tulisan untuk {month} {year}"
 
 msgid "Posts for {month} {day}, {year}"
 msgstr ""
 
 msgid "Nothing found."
-msgstr "Hiçbir şey bulunamadı."
+msgstr "Tidak ditemukan."
 
 msgid "No posts found."
-msgstr "Yazı bulunamadı."
+msgstr "Tidak ada tulisan yang ditemukan."
 
 msgid "RSS feed"
-msgstr "RSS kaynağı"
+msgstr "Sindikasi RSS"
 
 msgid "%d min remaining to read"
-msgstr "%d dakikalık okuma"
+msgstr "%d menit tersisa untuk membaca"
 
 msgid "Skip to main content"
-msgstr "Ana içeriğe geç"
+msgstr "Lanjutkan ke konten utama"

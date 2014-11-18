@@ -4,6 +4,11 @@ New in master
 Features
 --------
 
+* Added Danish translation (by mikkelkristiansen)
+* Added Indonesian translation (by Willy Sudiarto Raharjo)
+* Added Korean translation (by Dong Geun)
+* Added Serbian translation (by Ivan Radeljic)
+* Added Swedish translation (by Johan Sommerfeld)
 * New advanced option RSS_LINKS_APPEND_QUERY for tracking traffic
   from RSS subscribers
 * Add `robots` meta tag with value `noindex` for drafts (Issue #1489)

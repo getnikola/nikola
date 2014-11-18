@@ -19,6 +19,7 @@ MESSAGES = {
     "Posted:": "Geplaatst:",
     "Posts about %s": "Berichten over %s",
     "Posts for year %s": "Berichten voor het jaar %s",
+    "Posts for {month} {day}, {year}": "",
     "Posts for {month} {year}": "Berichten voor {month} {year}",
     "Previous post": "Vorig bericht",
     "Publication date": "Publicatiedatum",
