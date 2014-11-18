@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Added Arabic translation (by darkwise)
 * Added Danish translation (by mikkelkristiansen)
 * Added Indonesian translation (by Willy Sudiarto Raharjo)
 * Added Korean translation (by Dong Geun)

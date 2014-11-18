@@ -100,6 +100,7 @@ LEGAL_VALUES = {
         'muut',
     ],
     'TRANSLATIONS': {
+        'ar': 'Arabic',
         'bg': 'Bulgarian',
         'ca': 'Catalan',
         ('cs', 'cz'): 'Czech',
@@ -144,6 +145,7 @@ LEGAL_VALUES = {
     'RTL_LANGUAGES': ('ar', 'fa', 'ur'),
     'COLORBOX_LOCALES': defaultdict(
         str,
+        ar='ar',
         bg='bg',
         ca='ca',
         cs='cs',
@@ -175,6 +177,7 @@ LEGAL_VALUES = {
     ),
     'MOMENTJS_LOCALES': defaultdict(
         str,
+        ar='ar',
         bg='bg',
         ca='ca',
         cs='cs',
