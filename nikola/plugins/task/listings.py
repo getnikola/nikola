@@ -214,5 +214,17 @@ class Listings(Task):
     def listing_path(self, name, lang):
         if not name.endswith('.html'):
             name += '.html'
-        path_parts = [self.site.config['LISTINGS_FOLDER']] + list(os.path.split(name))
+        if name in self.proper_input_file_mapping:
+            name = self.proper_input_file_mapping[name]
+        elif name in self.improper_input_file_mapping:
+            if len(self.improper_input_file_mapping[name]) > 1:
+                utils.LOGGER.error("Using non-unique listing name '{0}', which maps to more than one listing name ({1})!".format(name, str(self.improper_input_file_mapping[name])))
+                raise Exception("Using non-unique listing name '{0}', which maps to more than one listing name!".format(name))
+            if len(self.site.config['LISTINGS_FOLDERS']) > 1:
+                utils.LOGGER.warn("Using listings names in site.link() without input directory prefix while configuration's LISTINGS_FOLDERS has more than one entries.")
+            name = self.improper_input_file_mapping[name][0]
+        else:
+            utils.LOGGER.error("Unknown listing name {0}!".format(name))
+            raise Exception("Unknown listing name {0}!".format(name))
+        path_parts = list(os.path.split(name))
         return [_f for _f in path_parts if _f]
