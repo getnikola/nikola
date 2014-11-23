@@ -21,6 +21,8 @@ Features
 * New option LISTINGS_FOLDERS (which replaces LISTINGS_FOLDER) which
   allows to separate input and output folder names for listings, and
   allows to have more than one listings folder (Issue #1499)
+* ReST listing directive now honors alternative listings folder names
+  (Issue #1499)
 
 Bugfixes
 --------
@@ -34,8 +36,6 @@ Bugfixes
 * Make previewimage compatible with sites deployed to subdirectories
   (Issue #1473)
 * Make sitemaps work on sites deployed to subdirectories (Issue #1472)
-* ReST listing directive now honors alternative listings folder names
-  (Issue #1499)
 
 New in v7.2.0
 =============

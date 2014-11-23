@@ -63,17 +63,17 @@ class Listings(Task):
         }
 
         # Verify that no folder in LISTINGS_FOLDERS appears twice (neither on input nor output side)
-        self.input_folders = set()
-        self.output_folders = set()
-        for input_folder, output_folder in kw['listings_folders'].items():
-            if input_folder in self.input_folders:
-                utils.LOGGER.error("Listings input folder '{0}' specified more than once!".format(input_folder))
-                raise Exception("Listings input folder '{0}' specified more than once!".format(input_folder))
-            if output_folder in self.output_folders:
-                utils.LOGGER.error("Listings output folder '{0}' specified more than once!".format(output_folder))
-                raise Exception("Listings output folder '{0}' specified more than once!".format(output_folder))
-            self.input_folders.add(input_folder)
-            self.output_folders.add(output_folder)
+        self.input_folders = list(kw['listings_folders'].items())
+        self.output_folders = list(kw['listings_folders'].keys())
+        self.input_folders_s = set(kw['listings_folders'].items())
+        self.output_folders_s = set(kw['listings_folders'].keys())
+
+        if (len(self.input_folders) != len(self.input_folders_s))
+            utils.LOGGER.error("A listings input folder was specified multiple times, exiting.")
+            exit(1)
+        elif (len(self.output_folders) != len(self.output_folders_s)):
+            utils.LOGGER.error("A listings output folder was specified multiple times, exiting.")
+            exit(1)
 
         # Things to ignore in listings
         ignored_extensions = (".pyc", ".pyo")
