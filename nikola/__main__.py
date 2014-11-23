@@ -83,7 +83,7 @@ def main(args=None):
         if arg[:7] == '--conf=':
             conf_filename = arg[7:]
             LOGGER.info("Using config file '{0}'".format(conf_filename))
-            args = args[:index] + args[index + 1:]
+            del args[index]
             break
 
     # Those commands do not require a `conf.py`.  (Issue #1132)
