@@ -49,7 +49,12 @@ from blinker import signal
 from . import __version__
 from .plugin_categories import Command
 from .nikola import Nikola
-from .utils import _reload, sys_decode, get_root_dir, req_missing, LOGGER, STRICT_HANDLER, ColorfulStderrHandler
+from .utils import sys_decode, get_root_dir, req_missing, LOGGER, STRICT_HANDLER, ColorfulStderrHandler
+
+if sys.version_info[0] == 3:
+    import importlib.machinery
+else:
+    import imp
 
 config = {}
 
@@ -73,6 +78,14 @@ def main(args=None):
         quiet = True
     global config
 
+    conf_filename = 'conf.py'
+    for index, arg in enumerate(args):
+        if arg[:7] == '--conf=':
+            conf_filename = arg[7:]
+            LOGGER.info("Using config file '{0}'".format(conf_filename))
+            del args[index]
+            break
+
     # Those commands do not require a `conf.py`.  (Issue #1132)
     # Moreover, actually having one somewhere in the tree can be bad, putting
     # the output of that command (the new site) in an unknown directory that is
@@ -82,17 +95,25 @@ def main(args=None):
         root = get_root_dir()
         if root:
             os.chdir(root)
+        needs_config_file = True
+    else:
+        needs_config_file = False
 
     sys.path.append('')
     try:
-        import conf
-        _reload(conf)
+        if sys.version_info[0] == 3:
+            loader = importlib.machinery.SourceFileLoader("conf", conf_filename)
+            conf = loader.load_module()
+        else:
+            conf = imp.load_source("conf", conf_filename)
         config = conf.__dict__
     except Exception:
-        if os.path.exists('conf.py'):
+        if os.path.exists(conf_filename):
             msg = traceback.format_exc(0)
-            LOGGER.error('conf.py cannot be parsed.\n{0}'.format(msg))
+            LOGGER.error('"{0}" cannot be parsed.\n{1}'.format(conf_filename, msg))
             sys.exit(1)
+        elif needs_config_file:
+            LOGGER.warn('Cannot find configuration file "{0}".'.format(conf_filename))
         config = {}
 
     invariant = False
@@ -114,6 +135,7 @@ def main(args=None):
     config['__colorful__'] = colorful
     config['__invariant__'] = invariant
     config['__quiet__'] = quiet
+    config['__configuration_filename__'] = conf_filename
 
     site = Nikola(**config)
     _ = DoitNikola(site, quiet).run(args)
