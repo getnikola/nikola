@@ -1,0 +1,9 @@
+[Core]
+Name = rest_thumbnail
+Module = thumbnail
+
+[Documentation]
+Author = Pelle Nilsson
+Version = 0.1
+Website = http://getnikola.com
+Description = reST directive to facilitate enlargeable images with thumbnails
