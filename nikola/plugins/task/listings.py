@@ -51,6 +51,12 @@ class Listings(Task):
         site.register_path_handler('listing', self.listing_path)
         return super(Listings, self).set_site(site)
 
+    def register_output_name(self, input_folder, rel_name, rel_output_name):
+        if rel_name not in self.improper_input_file_mapping:
+            self.improper_input_file_mapping[rel_name] = []
+        self.improper_input_file_mapping[rel_name].append(rel_output_name)
+        self.proper_input_file_mapping[os.path.join(input_folder, rel_name)] = rel_output_name
+
     def gen_tasks(self):
         """Render pretty code listings."""
         kw = {
