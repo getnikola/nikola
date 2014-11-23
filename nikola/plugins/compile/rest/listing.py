@@ -60,6 +60,9 @@ from nikola.plugin_categories import RestExtension
 # Add sphinx compatibility option
 CodeBlock.option_spec['linenos'] = directives.unchanged
 
+global NIKOLA_HACK__LISTINGS_FOLDERS
+NIKOLA_HACK__LISTINGS_FOLDERS = {'listings': 'listings'}
+
 
 class FlexibleCodeBlock(CodeBlock):
 
@@ -112,11 +115,11 @@ class Listing(Include):
         if len(NIKOLA_HACK__LISTINGS_FOLDERS) == 1:
             listings_folder = list(NIKOLA_HACK__LISTINGS_FOLDERS.keys())[0]
             if fname.startswith(listings_folder):
-                fpath = os.path.join(fname) # new syntax: specify folder name
-            else
-                fpath = os.path.join(listings_folder, fname) # old syntax: don't specify folder name
+                fpath = os.path.join(fname)  # new syntax: specify folder name
+            else:
+                fpath = os.path.join(listings_folder, fname)  # old syntax: don't specify folder name
         else:
-            fpath = os.path.join(fname) # must be new syntax: specify folder name
+            fpath = os.path.join(fname)  # must be new syntax: specify folder name
         self.arguments.insert(0, fpath)
         self.options['code'] = lang
         if 'linenos' in self.options:
