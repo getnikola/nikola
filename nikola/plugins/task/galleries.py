@@ -199,6 +199,8 @@ class Galleries(Task):
                         ft = fpost.title(lang) or folder
                     else:
                         ft = folder
+                    if not folder.endswith('/'):
+                        folder += '/'
                     folders.append((folder, ft))
 
                 context["folders"] = natsort.natsorted(folders)
