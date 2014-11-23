@@ -60,9 +60,6 @@ from nikola.plugin_categories import RestExtension
 # Add sphinx compatibility option
 CodeBlock.option_spec['linenos'] = directives.unchanged
 
-global NIKOLA_HACK__LISTINGS_FOLDERS
-NIKOLA_HACK__LISTINGS_FOLDERS = {'listings': 'listings'}
-
 
 class FlexibleCodeBlock(CodeBlock):
 
@@ -85,8 +82,7 @@ class Plugin(RestExtension):
         directives.register_directive('code-block', CodeBlock)
         directives.register_directive('sourcecode', CodeBlock)
         directives.register_directive('listing', Listing)
-        global NIKOLA_HACK__LISTINGS_FOLDERS
-        NIKOLA_HACK__LISTINGS_FOLDERS = site.config['LISTINGS_FOLDERS']
+        Listing.folders = site.config['LISTINGS_FOLDERS']
         return super(Plugin, self).set_site(site)
 
 # Add sphinx compatibility option
@@ -111,9 +107,8 @@ class Listing(Include):
     def run(self):
         fname = self.arguments.pop(0)
         lang = self.arguments.pop(0)
-        global NIKOLA_HACK__LISTINGS_FOLDERS
-        if len(NIKOLA_HACK__LISTINGS_FOLDERS) == 1:
-            listings_folder = list(NIKOLA_HACK__LISTINGS_FOLDERS.keys())[0]
+        if len(self.folders) == 1:
+            listings_folder = next(iter(self.folders.keys()))
             if fname.startswith(listings_folder):
                 fpath = os.path.join(fname)  # new syntax: specify folder name
             else:
