@@ -68,10 +68,10 @@ class Listings(Task):
         self.input_folders_s = set(kw['listings_folders'].items())
         self.output_folders_s = set(kw['listings_folders'].keys())
 
-        if (len(self.input_folders) != len(self.input_folders_s))
+        if len(self.input_folders) != len(self.input_folders_s):
             utils.LOGGER.error("A listings input folder was specified multiple times, exiting.")
             exit(1)
-        elif (len(self.output_folders) != len(self.output_folders_s)):
+        elif len(self.output_folders) != len(self.output_folders_s):
             utils.LOGGER.error("A listings output folder was specified multiple times, exiting.")
             exit(1)
 
@@ -131,7 +131,17 @@ class Listings(Task):
 
         self.improper_input_file_mapping = dict()
         self.proper_input_file_mapping = dict()
+        # improper_input_file_mapping maps a relative input file (relative to
+        # its corresponding input directory) to a list of the output files.
+        # Since several input directories can contain files of the same name,
+        # a list is needed. This is needed for compatibility to previous Nikola
+        # versions, where there was no need to specify the input directory name
+        # when asking for a link via site.link('listing', ...).
         template_deps = self.site.template_system.template_deps('listing.tmpl')
+        # proper_input_file_mapping maps relative input file (relative to CWD)
+        # to a generated output file. Since we don't allow an input directory
+        # to appear more than once in LISTINGS_FOLDERS, we can map directly to
+        # a file name (and not a list of files).
         for input_folder, output_folder in kw['listings_folders'].items():
             for root, dirs, files in os.walk(input_folder, followlinks=True):
                 files = [f for f in files if os.path.splitext(f)[-1] not in ignored_extensions]
@@ -214,8 +224,11 @@ class Listings(Task):
     def listing_path(self, name, lang):
         name += '.html'
         if name in self.proper_input_file_mapping:
+            # If the name shows up in this dict, everything's fine.
             name = self.proper_input_file_mapping[name]
         elif name in self.improper_input_file_mapping:
+            # If the name shows up in this dict, we have to check for
+            # ambiguities.
             if len(self.improper_input_file_mapping[name]) > 1:
                 utils.LOGGER.error("Using non-unique listing name '{0}', which maps to more than one listing name ({1})!".format(name, str(self.improper_input_file_mapping[name])))
                 raise Exception("Using non-unique listing name '{0}', which maps to more than one listing name!".format(name))
