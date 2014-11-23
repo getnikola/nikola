@@ -107,7 +107,7 @@ class Listings(Task):
                     os.path.relpath(
                         out_name,
                         os.path.join(
-                            kw['output_folder'], 
+                            kw['output_folder'],
                             output_folder))))
             if self.site.config['COPY_SOURCES']:
                 source_link = permalink[:-5]
@@ -154,7 +154,7 @@ class Listings(Task):
                 uptodate2['d'] = dirs
 
                 # Compute relative path; can't use os.path.relpath() here as it
-                rel_path = root[len(input_folder):] # returns "." instead of ""
+                rel_path = root[len(input_folder):]  # returns "." instead of ""
                 if rel_path[:1] == os.sep:
                     rel_path = rel_path[1:]
 
