@@ -110,10 +110,10 @@ def main(args=None):
     except Exception:
         if os.path.exists(conf_filename):
             msg = traceback.format_exc(0)
-            LOGGER.error('{0} cannot be parsed.\n{1}'.format(conf_filename, msg))
+            LOGGER.error('"{0}" cannot be parsed.\n{1}'.format(conf_filename, msg))
             sys.exit(1)
         elif needs_config_file:
-            LOGGER.warn('Cannot find configuration file {0}.'.format(conf_filename))
+            LOGGER.warn('Cannot find configuration file "{0}".'.format(conf_filename))
         config = {}
 
     invariant = False
