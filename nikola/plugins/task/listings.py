@@ -212,8 +212,7 @@ class Listings(Task):
                         }, kw["filters"])
 
     def listing_path(self, name, lang):
-        if not name.endswith('.html'):
-            name += '.html'
+        name += '.html'
         if name in self.proper_input_file_mapping:
             name = self.proper_input_file_mapping[name]
         elif name in self.improper_input_file_mapping:
