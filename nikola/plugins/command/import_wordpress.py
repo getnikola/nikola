@@ -28,6 +28,7 @@ from __future__ import unicode_literals, print_function
 import os
 import re
 import sys
+import datetime
 from lxml import etree
 
 try:
@@ -399,7 +400,12 @@ class CommandImportWordpress(Command, ImportMixin):
         description = get_text_tag(item, 'description', '')
         post_date = get_text_tag(
             item, '{{{0}}}post_date'.format(wordpress_namespace), None)
-        dt = utils.to_datetime(post_date)
+        try:
+            dt = utils.to_datetime(post_date)
+        except ValueError:
+            dt = datetime.datetime(1970, 01, 01, 00, 00, 00)
+            LOGGER.error('Malformed date "{0}" in "{1}", assuming 1970-01-01 00:00:00 instead.'.format(post_date, slug))
+
         if dt.tzinfo and self.timezone is None:
             self.timezone = utils.get_tzname(dt)
         status = get_text_tag(
