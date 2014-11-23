@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* New command line option --conf= to specify the configuration file
+  (default is conf.py) (Issue #1501)
 * Added Arabic translation (by darkwise)
 * Added Danish translation (by mikkelkristiansen)
 * Added Indonesian translation (by Willy Sudiarto Raharjo)
@@ -18,8 +20,6 @@ Features
 * New options CREATE_FULL_ARCHIVES and CREATE_DAILY_ARCHIVE which allow
   to create non-hierarchical archives and archives for days, respectively
   (Issue #1494)
-* New command line option --conf= to specify the configuration file
-  (default is conf.py) (Issue #1501)
 
 Bugfixes
 --------
