@@ -186,7 +186,7 @@ class Listings(Task):
                     'name': out_name,
                     'file_dep': template_deps,
                     'targets': [out_name],
-                    'actions': [(render_listing, [None, out_name, dirs, files])],
+                    'actions': [(render_listing, [None, out_name, input_folder, output_folder, dirs, files])],
                     # This is necessary to reflect changes in blog title,
                     # sidebar links, etc.
                     'uptodate': [utils.config_changed(uptodate2)],
@@ -209,7 +209,7 @@ class Listings(Task):
                         'name': out_name,
                         'file_dep': template_deps + [in_name],
                         'targets': [out_name],
-                        'actions': [(render_listing, [in_name, out_name])],
+                        'actions': [(render_listing, [in_name, out_name, input_folder, output_folder])],
                         # This is necessary to reflect changes in blog title,
                         # sidebar links, etc.
                         'uptodate': [utils.config_changed(uptodate)],
