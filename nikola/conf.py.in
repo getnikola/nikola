@@ -563,7 +563,8 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # MathJax.Hub.Config({
 #     tex2jax: {
 #         inlineMath: [ ['$','$'], ["\\\(","\\\)"] ],
-#         displayMath: [ ['$$','$$'], ["\\\[","\\\]"] ]
+#         displayMath: [ ['$$','$$'], ["\\\[","\\\]"] ],
+#         processEscapes: true
 #     },
 #     displayAlign: 'left', // Change this to 'center' to center equations.
 #     "HTML-CSS": {
