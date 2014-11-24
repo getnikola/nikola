@@ -657,7 +657,7 @@ and ``PAGES`` configuration options::
 
 ``new_post`` will use the *first* path in ``POSTS`` (or ``PAGES`` if ``-p`` is
 supplied) that ends with the extension of your desired markup format (as
-defined in ``COMPILERS`` in conf.py) as the directory that the new post will be
+defined in ``COMPILERS`` in ``conf.py``) as the directory that the new post will be
 written into.  If no such entry can be found, the post won’t be created.
 
 The ``new_post`` command supports some options::
@@ -855,6 +855,11 @@ them.  For those options, two types of values can be provided:
 
  * a string, which will be used for all languages
  * a dict of language-value pairs, to have different values in each language
+
+.. note:: It is possible to load the configuration from another file by specifying
+          ``--conf=path/to/other.file`` on Nikola's command line. For example, to
+          build your blog using the configuration file ``configurations/test.config``,
+          you have to execute ``nikola build --conf=configurations/test.config``.
 
 Customizing Your Site
 ---------------------
