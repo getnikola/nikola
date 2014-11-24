@@ -216,7 +216,9 @@ class Listings(Task):
                         'clean': True,
                     }, kw["filters"])
                     if self.site.config['COPY_SOURCES']:
+                        rel_name = os.path.join(rel_path, f)
                         rel_output_name = os.path.join(output_folder, rel_path, f)
+                        self.register_output_name(input_folder, rel_name, rel_output_name)
                         out_name = os.path.join(kw['output_folder'], rel_output_name)
                         yield utils.apply_filters({
                             'basename': self.name,
@@ -237,7 +239,7 @@ class Listings(Task):
             # ambiguities.
             if len(self.improper_input_file_mapping[name]) > 1:
                 utils.LOGGER.error("Using non-unique listing name '{0}', which maps to more than one listing name ({1})!".format(name, str(self.improper_input_file_mapping[name])))
-                raise Exception("Using non-unique listing name '{0}', which maps to more than one listing name!".format(name))
+                exit(1)
             if len(self.site.config['LISTINGS_FOLDERS']) > 1:
                 utils.LOGGER.warn("Using listings names in site.link() without input directory prefix while configuration's LISTINGS_FOLDERS has more than one entries.")
             name = self.improper_input_file_mapping[name][0]
