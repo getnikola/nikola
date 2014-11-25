@@ -111,12 +111,12 @@ class Listings(Task):
                 os.path.join(
                     input_folder,
                     os.path.relpath(
-                        out_name,
+                        out_name[:-5], # remove '.html'
                         os.path.join(
                             kw['output_folder'],
                             output_folder))))
             if self.site.config['COPY_SOURCES']:
-                source_link = permalink[:-5]
+                source_link = permalink[:-5] # remove '.html'
             else:
                 source_link = None
             context = {
@@ -230,7 +230,8 @@ class Listings(Task):
                         }, kw["filters"])
 
     def listing_path(self, name, lang):
-        name += '.html'
+        if not name.endswith('/' + self.site.config["INDEX_FILE"]):
+            name += '.html'
         if name in self.proper_input_file_mapping:
             # If the name shows up in this dict, everything's fine.
             name = self.proper_input_file_mapping[name]
