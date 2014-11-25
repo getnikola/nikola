@@ -114,7 +114,7 @@ class RenderTags(Task):
             tag_posts = dict(posts=[{'title': post.meta[post.default_lang]['title'],
                                      'date': post.date.strftime('%m/%d/%Y'),
                                      'isodate': post.date.isoformat(),
-                                     'url': post.base_path.replace('cache', '')}
+                                     'url': post.permalink(post.default_lang)}
                                     for post in reversed(sorted(self.site.timeline, key=lambda post: post.date))
                                     if tag in post.alltags])
             tag_cloud_data[tag] = [len(posts), self.site.link(
