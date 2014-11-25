@@ -26,14 +26,13 @@
 
 from __future__ import print_function
 import os
-import shutil
 import subprocess
 import sys
 from textwrap import dedent
 
 from nikola.plugin_categories import Command
 from nikola.plugins.command.check import real_scan_files
-from nikola.utils import ask_yesno, get_logger, req_missing
+from nikola.utils import get_logger, req_missing
 from nikola.__main__ import main
 from nikola import __version__
 
