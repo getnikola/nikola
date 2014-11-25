@@ -33,7 +33,7 @@ from textwrap import dedent
 
 from nikola.plugin_categories import Command
 from nikola.plugins.command.check import real_scan_files
-from nikola.utils import ask_yesno, get_logger
+from nikola.utils import ask_yesno, get_logger, req_missing
 from nikola.__main__ import main
 from nikola import __version__
 
@@ -41,6 +41,13 @@ from nikola import __version__
 def uni_check_output(*args, **kwargs):
     o = subprocess.check_output(*args, **kwargs)
     return o.decode('utf-8')
+
+
+def check_ghp_import_installed():
+    try:
+        subprocess.check_output(['ghp-import', '-h'])
+    except OSError:
+        req_missing('ghp-import', 'deploy the site to GitHub pages')
 
 
 class CommandGitHubDeploy(Command):
@@ -52,26 +59,9 @@ class CommandGitHubDeploy(Command):
     doc_description = dedent(
         """\
         This command can be used to deploy your site to GitHub pages.
-        It performs the following actions:
 
-        1. Ensure that your site is a git repository, and git is on the PATH.
-        2. Ensure that the output directory is not committed on the
-           source branch.
-        3. Check for changes, and prompt the user to continue, if required.
-        4. Build the site
-        5. Clean any files that are "unknown" to Nikola.
-        6. Create a deploy branch, if one doesn't exist.
-        7. Commit the output to this branch.  (NOTE: Any untracked source
-           files, may get committed at this stage, on the wrong branch!)
-        8. Push and deploy!
+        It uses ghp-import to do this task.
 
-        NOTE: This command needs your site to be a git repository, with a
-        master branch (or a different branch, configured using
-        GITHUB_SOURCE_BRANCH if you are pushing to user.github
-        .io/organization.github.io pages) containing the sources of your
-        site.  You also, obviously, need to have `git` on your PATH,
-        and should be able to push to the repository specified as the remote
-        (origin, by default).
         """
     )
 
@@ -99,26 +89,21 @@ class CommandGitHubDeploy(Command):
             'GITHUB_PULL_BEFORE_COMMIT', False
         )
 
-        self._ensure_git_repo()
+        # Check if ghp-import is installed
+        check_ghp_import_installed()
 
-        self._exit_if_output_committed()
-
-        if not self._prompt_continue():
-            return
-
+        # Build before
         build = main(['build'])
         if build != 0:
             self.logger.error('Build failed, not deploying to GitHub')
             sys.exit(build)
 
+        # Clean non-target files
         only_on_output, _ = real_scan_files(self.site)
         for f in only_on_output:
             os.unlink(f)
 
-        self._checkout_deploy_branch()
-
-        self._copy_output()
-
+        # Commit and push
         self._commit_and_push()
 
         return
@@ -136,142 +121,16 @@ class CommandGitHubDeploy(Command):
             'Source commit: %s'
             'Nikola version: %s' % (source_commit, __version__)
         )
-
-        commands = [
-            ['git', 'add', '-A'],
-            ['git', 'commit', '-m', commit_message],
-            ['git', 'push', '--force', remote, '%s:%s' % (deploy, deploy)],
-            ['git', 'checkout', source],
-        ]
-
-        if self._pull_before_commit:
-            commands.insert(0, ['git', 'pull', '--rebase=false', remote, '%s:%s' % (deploy, deploy)])
-
-        for command in commands:
-            self.logger.info("==> {0}".format(command))
-            try:
-                subprocess.check_call(command)
-            except subprocess.CalledProcessError as e:
-                self.logger.error(
-                    'Failed GitHub deployment — command {0} '
-                    'returned {1}'.format(e.cmd, e.returncode)
-                )
-                sys.exit(e.returncode)
-
-    def _copy_output(self):
-        """ Copy all output to the top level directory. """
         output_folder = self.site.config['OUTPUT_FOLDER']
-        for each in os.listdir(output_folder):
-            if os.path.exists(each):
-                if os.path.isdir(each):
-                    shutil.rmtree(each)
 
-                else:
-                    os.unlink(each)
+        command = ['ghp-import', '-n', '-m', commit_message, '-p', '-r', remote, '-b', deploy, output_folder]
 
-            shutil.move(os.path.join(output_folder, each), '.')
-
-    def _checkout_deploy_branch(self):
-        """ Check out the deploy branch
-
-        Creates an orphan branch if not present.
-
-        """
-
-        deploy = self._deploy_branch
-
+        self.logger.info("==> {0}".format(command))
         try:
-            subprocess.check_call(
-                [
-                    'git', 'show-ref', '--verify', '--quiet',
-                    'refs/heads/%s' % deploy
-                ]
-            )
-        except subprocess.CalledProcessError:
-            self._create_orphan_deploy_branch()
-        else:
-            subprocess.check_call(['git', 'checkout', deploy])
-
-    def _create_orphan_deploy_branch(self):
-        """ Create an orphan deploy branch """
-
-        result = subprocess.check_call(
-            ['git', 'checkout', '--orphan', self._deploy_branch]
-        )
-        if result != 0:
-            self.logger.error('Failed to create a deploy branch')
-            sys.exit(1)
-
-        result = subprocess.check_call(['git', 'rm', '-rf', '.'])
-        if result != 0:
-            self.logger.error('Failed to create a deploy branch')
-            sys.exit(1)
-
-        with open('.gitignore', 'w') as f:
-            f.write('%s\n' % self.site.config['OUTPUT_FOLDER'])
-            f.write('%s\n' % self.site.config['CACHE_FOLDER'])
-            f.write('*.pyc\n')
-            f.write('*.db\n')
-
-        subprocess.check_call(['git', 'add', '.gitignore'])
-        subprocess.check_call(['git', 'commit', '-m', 'Add .gitignore'])
-
-    def _ensure_git_repo(self):
-        """ Ensure that the site is a git-repo.
-
-        Also make sure that a remote with the specified name exists.
-
-        """
-
-        try:
-            remotes = uni_check_output(['git', 'remote'])
+            subprocess.check_call(command)
         except subprocess.CalledProcessError as e:
-            self.logger.notice('github_deploy needs a git repository!')
-            sys.exit(e.returncode)
-        except OSError as e:
-            import errno
-            self.logger.error('Running git failed with {0}'.format(e))
-            if e.errno == errno.ENOENT:
-                self.logger.notice('Is git on the PATH?')
-            sys.exit(1)
-        else:
-            if self._remote_name not in remotes:
-                self.logger.error(
-                    'Need a remote called "%s" configured' % self._remote_name
-                )
-                sys.exit(1)
-
-    def _exit_if_output_committed(self):
-        """ Exit if the output folder is committed on the source branch. """
-
-        source = self._source_branch
-        subprocess.check_call(['git', 'checkout', source])
-
-        output_folder = self.site.config['OUTPUT_FOLDER']
-        output_log = uni_check_output(
-            ['git', 'ls-files', '--', output_folder]
-        )
-
-        if len(output_log.strip()) > 0:
             self.logger.error(
-                'Output folder is committed on the source branch. '
-                'Cannot proceed until it is removed.'
+                'Failed GitHub deployment — command {0} '
+                'returned {1}'.format(e.cmd, e.returncode)
             )
-            sys.exit(1)
-
-    def _prompt_continue(self):
-        """ Show uncommitted changes, and ask if user wants to continue. """
-
-        changes = uni_check_output(['git', 'status', '--porcelain'])
-        if changes.strip():
-            changes = uni_check_output(['git', 'status']).strip()
-            message = (
-                "You have the following changes:\n%s\n\n"
-                "Anything not committed, and unknown to Nikola may be lost, "
-                "or committed onto the wrong branch. Do you wish to continue?"
-            ) % changes
-            proceed = ask_yesno(message, False)
-        else:
-            proceed = True
-
-        return proceed
+            sys.exit(e.returncode)
