@@ -44,8 +44,8 @@ with open('requirements-tests.txt', 'r') as fh:
     extras['tests'] = [l.strip() for l in fh][1:]
 
 # ########## platform specific stuff #############
-if sys.version_info[0] == 2 and sys.version_info[1] < 6:
-    raise Exception('Python 2 version < 2.6 is not supported')
+if sys.version_info[0] == 2 and sys.version_info[1] < 7:
+    raise Exception('Python 2 version < 2.7 is not supported')
 elif sys.version_info[0] == 3 and sys.version_info[1] < 3:
     raise Exception('Python 3 version < 3.3 is not supported')
 
@@ -177,7 +177,6 @@ setup(name='Nikola',
                    'Operating System :: POSIX',
                    'Operating System :: Unix',
                    'Programming Language :: Python',
-                   'Programming Language :: Python :: 2.6',
                    'Programming Language :: Python :: 2.7',
                    'Programming Language :: Python :: 3.3',
                    'Programming Language :: Python :: 3.4',
