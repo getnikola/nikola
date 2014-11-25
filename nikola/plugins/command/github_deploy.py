@@ -66,32 +66,16 @@ class CommandGitHubDeploy(Command):
 
     logger = None
 
-    _deploy_branch = ''
-    _source_branch = ''
-    _remote_name = ''
-
     def _execute(self, command, args):
 
         self.logger = get_logger(
             CommandGitHubDeploy.name, self.site.loghandlers
         )
-        self._source_branch = self.site.config.get(
-            'GITHUB_SOURCE_BRANCH', 'master'
-        )
-        self._deploy_branch = self.site.config.get(
-            'GITHUB_DEPLOY_BRANCH', 'gh-pages'
-        )
-        self._remote_name = self.site.config.get(
-            'GITHUB_REMOTE_NAME', 'origin'
-        )
-        self._pull_before_commit = self.site.config.get(
-            'GITHUB_PULL_BEFORE_COMMIT', False
-        )
 
         # Check if ghp-import is installed
         check_ghp_import_installed()
 
-        # Build before
+        # Build before deploying
         build = main(['build'])
         if build != 0:
             self.logger.error('Build failed, not deploying to GitHub')
@@ -110,10 +94,9 @@ class CommandGitHubDeploy(Command):
     def _commit_and_push(self):
         """ Commit all the files and push. """
 
-        deploy = self._deploy_branch
-        source = self._source_branch
-        remote = self._remote_name
-
+        source = self.site.config.get('GITHUB_SOURCE_BRANCH', 'master')
+        deploy = self.site.config.get('GITHUB_DEPLOY_BRANCH', 'gh-pages')
+        remote = self.site.config.get('GITHUB_REMOTE_NAME', 'origin')
         source_commit = uni_check_output(['git', 'rev-parse', source])
         commit_message = (
             'Nikola auto commit.\n\n'
