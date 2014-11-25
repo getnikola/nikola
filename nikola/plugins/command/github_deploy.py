@@ -46,18 +46,18 @@ def check_ghp_import_installed():
     try:
         subprocess.check_output(['ghp-import', '-h'])
     except OSError:
-        req_missing('ghp-import', 'deploy the site to GitHub pages')
+        req_missing('ghp-import', 'deploy the site to GitHub Pages')
 
 
 class CommandGitHubDeploy(Command):
-    """ Deploy site to GitHub pages. """
+    """ Deploy site to GitHub Pages. """
     name = 'github_deploy'
 
     doc_usage = ''
-    doc_purpose = 'deploy the site to GitHub pages'
+    doc_purpose = 'deploy the site to GitHub Pages'
     doc_description = dedent(
         """\
-        This command can be used to deploy your site to GitHub pages.
+        This command can be used to deploy your site to GitHub Pages.
 
         It uses ghp-import to do this task.
 
@@ -94,9 +94,9 @@ class CommandGitHubDeploy(Command):
     def _commit_and_push(self):
         """ Commit all the files and push. """
 
-        source = self.site.config.get('GITHUB_SOURCE_BRANCH', 'master')
-        deploy = self.site.config.get('GITHUB_DEPLOY_BRANCH', 'gh-pages')
-        remote = self.site.config.get('GITHUB_REMOTE_NAME', 'origin')
+        source = self.site.config['GITHUB_SOURCE_BRANCH']
+        deploy = self.site.config['GITHUB_DEPLOY_BRANCH']
+        remote = self.site.config['GITHUB_REMOTE_NAME']
         source_commit = uni_check_output(['git', 'rev-parse', source])
         commit_message = (
             'Nikola auto commit.\n\n'

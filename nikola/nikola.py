@@ -392,6 +392,9 @@ class Nikola(object):
             'SCHEDULE_RULE': '',
             'LOGGING_HANDLERS': {'stderr': {'loglevel': 'WARNING', 'bubble': True}},
             'DEMOTE_HEADERS': 1,
+            'GITHUB_SOURCE_BRANCH': 'master',
+            'GITHUB_DEPLOY_BRANCH': 'gh-pages',
+            'GITHUB_REMOTE_NAME': 'origin',
         }
 
         # set global_context for template rendering
