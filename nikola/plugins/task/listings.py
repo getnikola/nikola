@@ -111,12 +111,12 @@ class Listings(Task):
                 os.path.join(
                     input_folder,
                     os.path.relpath(
-                        out_name[:-5], # remove '.html'
+                        out_name[:-5],  # remove '.html'
                         os.path.join(
                             kw['output_folder'],
                             output_folder))))
             if self.site.config['COPY_SOURCES']:
-                source_link = permalink[:-5] # remove '.html'
+                source_link = permalink[:-5]  # remove '.html'
             else:
                 source_link = None
             context = {
