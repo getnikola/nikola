@@ -46,6 +46,8 @@ def check_ghp_import_installed():
     try:
         subprocess.check_output(['ghp-import', '-h'])
     except OSError:
+        # req_missing defaults to `python=True` — and it’s meant to be like this.
+        # `ghp-import` is installed via pip, but the only way to use it is by executing the script it installs.
         req_missing('ghp-import', 'deploy the site to GitHub Pages')
 
 
