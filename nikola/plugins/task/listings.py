@@ -68,16 +68,8 @@ class Listings(Task):
             "filters": self.site.config["FILTERS"],
         }
 
-        # Verify that no folder in LISTINGS_FOLDERS appears twice (neither on input nor output side)
-        self.input_folders = list(kw['listings_folders'].items())
-        self.output_folders = list(kw['listings_folders'].keys())
-        self.input_folders_s = set(kw['listings_folders'].items())
-        self.output_folders_s = set(kw['listings_folders'].keys())
-
-        if len(self.input_folders) != len(self.input_folders_s):
-            utils.LOGGER.error("A listings input folder was specified multiple times, exiting.")
-            exit(1)
-        elif len(self.output_folders) != len(self.output_folders_s):
+        # Verify that no folder in GALLER appears twice (on output side)
+        if len(set(kw['listings_folders'].values())) != len(kw['listings_folders']):
             utils.LOGGER.error("A listings output folder was specified multiple times, exiting.")
             exit(1)
 
