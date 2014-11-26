@@ -868,10 +868,10 @@ There are lots of things you can do to personalize your website, but let's see
 the easy ones!
 
 CSS tweaking
-    Using the default configuration, you can create a ``files/assets/css/custom.css``
-    file and then it will be loaded from the ``<head>`` blocks of your site
-    pages.  Create it and put your CSS code there, for minimal disruption of the
-    provided CSS files.
+    Using the default configuration, you can create a ``assets/css/custom.css``
+    file under ``files/`` or in your theme and then it will be loaded from the
+    ``<head>`` blocks of your site pages.  Create it and put your CSS code there,
+    for minimal disruption of the provided CSS files.
 
     If you feel tempted to touch other files in assets, you probably will be better off
     with a `custom theme <theming.html>`__.
