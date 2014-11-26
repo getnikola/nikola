@@ -533,9 +533,9 @@ class Nikola(object):
             self.config['STRIP_INDEXES'] = True
 
         if 'LISTINGS_FOLDER' in config:
-            if 'LISTINGS_FOLDERS' not in config:
+            if self.config['LISTINGS_FOLDERS'] == {'listings': 'listings'}:
                 utils.LOGGER.warn("LISTINGS_FOLDER should not be used any more; use LISTINGS_FOLDERS instead.")
-                config['LISTINGS_FOLDERS'] = {config['LISTINGS_FOLDER']: config['LISTINGS_FOLDER']}
+                self.config['LISTINGS_FOLDERS'] = {self.config['LISTINGS_FOLDER']: self.config['LISTINGS_FOLDER']}
             else:
                 utils.LOGGER.error("LISTINGS_FOLDER and LISTINGS_FOLDERS are both specified. Aborting.")
                 return
