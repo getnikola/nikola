@@ -12,4 +12,3 @@ logbook>=0.7.0
 blinker>=1.3
 setuptools>=5.4.1
 natsort>=3.3.0
-ghp-import>=0.4.1
