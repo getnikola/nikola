@@ -19,6 +19,7 @@ MESSAGES = {
     "Posted:": "Публиковано:",
     "Posts about %s": "Публикации относно %s",
     "Posts for year %s": "Публикации за %s година",
+    "Posts for {month} {day}, {year}": "",
     "Posts for {month} {year}": "Публикации за {month} {year}",
     "Previous post": "Предишна публикация",
     "Publication date": "",

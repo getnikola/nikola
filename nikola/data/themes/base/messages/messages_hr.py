@@ -19,6 +19,7 @@ MESSAGES = {
     "Posted:": "Objavljeno:",
     "Posts about %s": "Postovi o %s",
     "Posts for year %s": "Postovi za godinu %s",
+    "Posts for {month} {day}, {year}": "",
     "Posts for {month} {year}": "Postovi za {month} {year}",
     "Previous post": "Prethodni post",
     "Publication date": "Nadnevak objave",

@@ -33,8 +33,8 @@ class EmptyBuildTest(BaseTestCase):
     @classmethod
     def setUpClass(cls):
         """Setup a demo site."""
-        # for tests that need bilingual support override languaje_settings
-        cls.languaje_settings()
+        # for tests that need bilingual support override language_settings
+        cls.language_settings()
         cls.startdir = os.getcwd()
         cls.tmpdir = tempfile.mkdtemp()
         cls.target_dir = os.path.join(cls.tmpdir, "target")
@@ -44,7 +44,7 @@ class EmptyBuildTest(BaseTestCase):
         cls.build()
 
     @classmethod
-    def languaje_settings(cls):
+    def language_settings(cls):
         LocaleSupportInTesting.initialize_locales_for_testing("unilingual")
 
     @classmethod
@@ -193,9 +193,9 @@ class TranslatedBuildTest(EmptyBuildTest):
     dataname = "translated_titles"
 
     @classmethod
-    def languaje_settings(cls):
+    def language_settings(cls):
         LocaleSupportInTesting.initialize_locales_for_testing("bilingual")
-        # the other languaje
+        # the other language
         cls.ol = LocaleSupportInTesting.langlocales["other"][0]
 
     def test_translated_titles(self):
@@ -445,6 +445,49 @@ class MonthlyArchiveTest(DemoBuildTest):
     def test_monthly_archive(self):
         """See that it builds"""
         self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'target', 'output', '2012', '03', 'index.html')))
+
+
+class DayArchiveTest(DemoBuildTest):
+    """Check that per-day archives build and are correct."""
+
+    @classmethod
+    def patch_site(self):
+        """Set the SITE_URL to have a path"""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with io.open(conf_path, "r", encoding="utf-8") as inf:
+            data = inf.read()
+            data = data.replace('# CREATE_DAILY_ARCHIVE = False',
+                                'CREATE_DAILY_ARCHIVE = True')
+        with io.open(conf_path, "w+", encoding="utf8") as outf:
+            outf.write(data)
+            outf.flush()
+
+    def test_day_archive(self):
+        """See that it builds"""
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'target', 'output', '2012', '03', '30', 'index.html')))
+
+
+class FullArchiveTest(DemoBuildTest):
+    """Check that full archives build and are correct."""
+
+    @classmethod
+    def patch_site(self):
+        """Set the SITE_URL to have a path"""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with io.open(conf_path, "r", encoding="utf-8") as inf:
+            data = inf.read()
+            data = data.replace('# CREATE_FULL_ARCHIVES = False',
+                                'CREATE_FULL_ARCHIVES = True')
+        with io.open(conf_path, "w+", encoding="utf8") as outf:
+            outf.write(data)
+            outf.flush()
+
+    def test_full_archive(self):
+        """See that it builds"""
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'target', 'output', 'archive.html')))
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'target', 'output', '2012', 'index.html')))
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'target', 'output', '2012', '03', 'index.html')))
+        self.assertTrue(os.path.isfile(os.path.join(self.tmpdir, 'target', 'output', '2012', '03', '30', 'index.html')))
 
 
 class SubdirRunningTest(DemoBuildTest):

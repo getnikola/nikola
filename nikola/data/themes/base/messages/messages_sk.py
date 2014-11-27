@@ -19,6 +19,7 @@ MESSAGES = {
     "Posted:": "Zverejnené:",
     "Posts about %s": "Príspevky o %s",
     "Posts for year %s": "Príspevky z roku %s",
+    "Posts for {month} {day}, {year}": "",
     "Posts for {month} {year}": "Príspevky za mesiac {month} z roku {year}",
     "Previous post": "Predchádzajúci príspevok",
     "Publication date": "Dátum zverejnenia",

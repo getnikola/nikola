@@ -51,7 +51,9 @@ def filter_post_pages(compiler, is_post, compilers, post_pages):
     filtered = [entry for entry in post_pages if entry[3] == is_post]
 
     # These are the extensions supported by the required format
-    extensions = compilers[compiler]
+    extensions = compilers.get(compiler)
+    if extensions is None:
+        raise Exception('Unknown format {0}'.format(compiler))
 
     # Throw away the post_pages with the wrong extensions
     filtered = [entry for entry in filtered if any([ext in entry[0] for ext in
@@ -116,7 +118,7 @@ def get_date(schedule=False, rule=None, last_date=None, tz=None, iso8601=False):
             rrule = None  # NOQA
     if schedule and rrule and rule:
         try:
-            rule_ = rrule.rrulestr(rule, dtstart=last_date)
+            rule_ = rrule.rrulestr(rule, dtstart=last_date or date)
         except Exception:
             LOGGER.error('Unable to parse rule string, using current time.')
         else:
@@ -272,7 +274,7 @@ class CommandNewPost(Command):
         if isinstance(title, utils.bytes_str):
             try:
                 title = title.decode(sys.stdin.encoding)
-            except AttributeError:  # for tests
+            except (AttributeError, TypeError):  # for tests
                 title = title.decode('utf-8')
 
         title = title.strip()
@@ -282,7 +284,7 @@ class CommandNewPost(Command):
             if isinstance(path, utils.bytes_str):
                 try:
                     path = path.decode(sys.stdin.encoding)
-                except AttributeError:  # for tests
+                except (AttributeError, TypeError):  # for tests
                     path = path.decode('utf-8')
             slug = utils.slugify(os.path.splitext(os.path.basename(path))[0])
         # Calculate the date to use for the content
@@ -318,6 +320,7 @@ class CommandNewPost(Command):
         d_name = os.path.dirname(txt_path)
         utils.makedirs(d_name)
         metadata = self.site.config['ADDITIONAL_METADATA']
+        data.update(metadata)
 
         # Override onefile if not really supported.
         if not compiler_plugin.supports_onefile and onefile:

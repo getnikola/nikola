@@ -48,7 +48,7 @@ Now we can already build and test the site::
 
     $ nikola build && nikola serve
 
-.. figure:: http://ralsina.com.ar/galleries/monospace-tut/monospace-1.png
+.. figure:: http://ralsina.me/galleries/monospace-tut/monospace-1.png
    :height: 400px
 
    This is the default "bootstrap" theme.
@@ -198,7 +198,7 @@ Monospace is a two-column-with-footer layout, so let's copy the basics from its 
         ${body_end}
     </body>
 
-.. figure:: http://ralsina.com.ar/galleries/monospace-tut/monospace-2.png
+.. figure:: http://ralsina.me/galleries/monospace-tut/monospace-2.png
 
    Yikes!
 
@@ -244,7 +244,7 @@ few selectors:
 
 This will (after we rebuild it) make the site looks different of course, and getting closer to our goal:
 
-.. figure:: http://ralsina.com.ar/galleries/monospace-tut/monospace-3.png
+.. figure:: http://ralsina.me/galleries/monospace-tut/monospace-3.png
    :height: 400px
 
    Monospaced allright.
@@ -319,7 +319,7 @@ box, add links for the posts tags, move the date there, etc.
     </%block>
 
 
-.. figure:: http://ralsina.com.ar/galleries/monospace-tut/monospace-4.png
+.. figure:: http://ralsina.me/galleries/monospace-tut/monospace-4.png
    :height: 400px
 
    Close enough!
@@ -370,7 +370,7 @@ Then if we click on the post title, we will see some broken details in the metad
     </%block>
 
 
-.. figure:: http://ralsina.com.ar/galleries/monospace-tut/monospace-5.png
+.. figure:: http://ralsina.me/galleries/monospace-tut/monospace-5.png
    :height: 400px
 
    Details, details.

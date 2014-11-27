@@ -8,7 +8,7 @@
 Extending Nikola
 ================
 
-:Version: 7.0.1
+:Version: 7.2.0
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-info pull-right
@@ -205,31 +205,41 @@ a stub for a hypothetical system called "Templater":
         # name has to match Name in the .plugin file
         name = "templater"
 
+        # A list of directories where the templates will be
+        # located. Most template systems have some sort of
+        # template loading tool that can use this.
+        def set_directories(self, directories, cache_folder):
+            """Sets the list of folders where templates are located and cache."""
+            pass
+
         # You *must* implement this, even if to return []
         # It should return a list of all the files that,
         # when changed, may affect the template's output.
         # usually this involves template inheritance and
         # inclusion.
-        def get_deps(self, filename):
+        def template_deps(self, template_name):
+            """Returns filenames which are dependencies for a template."""
             return []
 
-        # A list of directories where the templates will be
-        # located. Most template systems have some sort of
-        # template loading tool that can use this.
+        def render_template(self, template_name, output_name, context):
+            """Renders template to a file using context.
 
-        def set_directories(self, directories):
-            """Create a template lookup."""
+            This must save the data to output_name *and* return it
+            so that the caller may do additional processing.
+            """
             pass
 
         # The method that does the actual rendering.
         # template_name is the name of the template file,
-        # output_name is the file for the output, context
-        # is a dictionary containing the data the template
+        # context is a dictionary containing the data the template
         # uses for rendering.
+        def render_template_to_string(self, template, context):
+            """Renders template to a string using context. """
+            pass
 
-        def render_template(self, template_name, output_name,
-            context, global_context):
-            """Render the template into output_name using context."""
+        def inject_directory(self, directory):
+            """Injects the directory with the lowest priority in the
+            template search mechanism."""
             pass
 
 
@@ -408,6 +418,13 @@ Currently Nikola emits the following signals:
          'undeployed': # all files not deployed since they are either future posts/drafts
         }
 
+ConfigPlugin Plugins
+--------------------
+
+Does nothing specific, can be used to modify the site object (and thus the config).
+
+Put all the magic you want in ``set_site()``, and don’t forget to run the one
+from ``super()``.
 
 Plugin Index
 ============

@@ -65,6 +65,42 @@ Example with filename:
     </div>
     </p>
 
+Basic Example with hexidecimal id:
+
+    >>> import markdown
+    >>> text = """
+    ... Text of the gist:
+    ... [:gist: c4a43d6fdce612284ac0]
+    ... """
+    >>> html = markdown.markdown(text, [GistExtension()])
+    >>> print(html)
+    <p>Text of the gist:
+    <div class="gist">
+    <script src="https://gist.github.com/c4a43d6fdce612284ac0.js"></script>
+    <noscript>
+    <pre>Moo</pre>
+    </noscript>
+    </div>
+    </p>
+
+Example with hexidecimal id filename:
+
+    >>> import markdown
+    >>> text = """
+    ... Text of the gist:
+    ... [:gist: c4a43d6fdce612284ac0 cow.txt]
+    ... """
+    >>> html = markdown.markdown(text, [GistExtension()])
+    >>> print(html)
+    <p>Text of the gist:
+    <div class="gist">
+    <script src="https://gist.github.com/c4a43d6fdce612284ac0.js?file=cow.txt"></script>
+    <noscript>
+    <pre>Moo</pre>
+    </noscript>
+    </div>
+    </p>
+
 Example using reStructuredText syntax:
 
     >>> import markdown
@@ -83,6 +119,42 @@ Example using reStructuredText syntax:
     </div>
     </p>
 
+Example using hexidecimal ID with reStructuredText syntax:
+
+    >>> import markdown
+    >>> text = """
+    ... Text of the gist:
+    ... .. gist:: c4a43d6fdce612284ac0
+    ... """
+    >>> html = markdown.markdown(text, [GistExtension()])
+    >>> print(html)
+    <p>Text of the gist:
+    <div class="gist">
+    <script src="https://gist.github.com/c4a43d6fdce612284ac0.js"></script>
+    <noscript>
+    <pre>Moo</pre>
+    </noscript>
+    </div>
+    </p>
+
+Example using hexidecimal ID and filename with reStructuredText syntax:
+
+    >>> import markdown
+    >>> text = """
+    ... Text of the gist:
+    ... .. gist:: c4a43d6fdce612284ac0 cow.txt
+    ... """
+    >>> html = markdown.markdown(text, [GistExtension()])
+    >>> print(html)
+    <p>Text of the gist:
+    <div class="gist">
+    <script src="https://gist.github.com/c4a43d6fdce612284ac0.js?file=cow.txt"></script>
+    <noscript>
+    <pre>Moo</pre>
+    </noscript>
+    </div>
+    </p>
+
 Error Case: non-existent Gist ID:
 
     >>> import markdown
@@ -95,7 +167,8 @@ Error Case: non-existent Gist ID:
     <p>Text of the gist:
     <div class="gist">
     <script src="https://gist.github.com/0.js"></script>
-    <noscript><!-- WARNING: Received a 404 response from Gist URL: https://gist.github.com/raw/0 --></noscript>
+    <noscript><!-- WARNING: Received a 404 response from Gist URL: \
+https://gist.githubusercontent.com/raw/0 --></noscript>
     </div>
     </p>
 
@@ -111,7 +184,8 @@ Error Case:  non-existent file:
     <p>Text of the gist:
     <div class="gist">
     <script src="https://gist.github.com/4747847.js?file=doesntexist.py"></script>
-    <noscript><!-- WARNING: Received a 404 response from Gist URL: https://gist.github.com/raw/4747847/doesntexist.py --></noscript>
+    <noscript><!-- WARNING: Received a 404 response from Gist URL: \
+https://gist.githubusercontent.com/raw/4747847/doesntexist.py --></noscript>
     </div>
     </p>
 
@@ -140,11 +214,11 @@ except ImportError:
 
 GIST_JS_URL = "https://gist.github.com/{0}.js"
 GIST_FILE_JS_URL = "https://gist.github.com/{0}.js?file={1}"
-GIST_RAW_URL = "https://gist.github.com/raw/{0}"
-GIST_FILE_RAW_URL = "https://gist.github.com/raw/{0}/{1}"
+GIST_RAW_URL = "https://gist.githubusercontent.com/raw/{0}"
+GIST_FILE_RAW_URL = "https://gist.githubusercontent.com/raw/{0}/{1}"
 
-GIST_MD_RE = r'\[:gist:\s*(?P<gist_id>\d+)(?:\s*(?P<filename>.+?))?\s*\]'
-GIST_RST_RE = r'(?m)^\.\.\s*gist::\s*(?P<gist_id>\d+)(?:\s*(?P<filename>.+))\s*$'
+GIST_MD_RE = r'\[:gist:\s*(?P<gist_id>\S+)(?:\s*(?P<filename>.+?))?\s*\]'
+GIST_RST_RE = r'(?m)^\.\.\s*gist::\s*(?P<gist_id>[^\]\s]+)(?:\s*(?P<filename>.+?))?\s*$'
 
 
 class GistFetchException(Exception):
@@ -244,6 +318,5 @@ def makeExtension(configs=None):
 if __name__ == '__main__':
     import doctest
 
-    # Silence user warnings thrown by tests:
     doctest.testmod(optionflags=(doctest.NORMALIZE_WHITESPACE +
                                  doctest.REPORT_NDIFF))

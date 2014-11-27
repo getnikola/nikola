@@ -19,6 +19,7 @@ MESSAGES = {
     "Posted:": "पोस्टेड:",
     "Posts about %s": "%s के बारे में पोस्टें",
     "Posts for year %s": "साल %s की पोस्टें",
+    "Posts for {month} {day}, {year}": "",
     "Posts for {month} {year}": "{month} {year} की पोस्टें",
     "Previous post": "पिछली पोस्ट",
     "Publication date": "",

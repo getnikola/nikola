@@ -19,6 +19,7 @@ MESSAGES = {
     "Posted:": "Publicado:",
     "Posts about %s": "Posts sobre %s",
     "Posts for year %s": "Posts do ano %s",
+    "Posts for {month} {day}, {year}": "",
     "Posts for {month} {year}": "Posts de {month} {year}",
     "Previous post": "Post anterior",
     "Publication date": "Data de publicação",

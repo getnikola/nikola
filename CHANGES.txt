@@ -4,6 +4,89 @@ New in master
 Features
 --------
 
+* New command line option --conf= to specify the configuration file
+  (default is conf.py) (Issue #1501)
+* Added Arabic translation (by darkwise)
+* Added Danish translation (by mikkelkristiansen)
+* Added Indonesian translation (by Willy Sudiarto Raharjo)
+* Added Korean translation (by Dong Geun)
+* Added Serbian translation (by Ivan Radeljic)
+* Added Swedish translation (by Johan Sommerfeld)
+* New advanced option RSS_LINKS_APPEND_QUERY for tracking traffic
+  from RSS subscribers
+* Add `robots` meta tag with value `noindex` for drafts (Issue #1489)
+* New option TAGLIST_MINIMUM_POSTS allows hiding unpopular tags from
+  the tag index page (Issue #1484)
+* New options CREATE_FULL_ARCHIVES and CREATE_DAILY_ARCHIVE which allow
+  to create non-hierarchical archives and archives for days, respectively
+  (Issue #1494)
+
+Bugfixes
+--------
+
+* Respect SHOW_UNTRANSLATED_POSTS=False in archives (Issue #1360)
+* Make sure drafts don’t appear in sitemaps with multiple languages
+  (Issue #1489)
+* Make site.posts_per_file cover all languages (Issues #1270, #1489)
+* Fix ANNOTATIONS not working at all (Issue #1477)
+* Fix asking questions with Unicode chars in Python 2 (Issue #1476)
+* Use ADDITIONAL_METADATA with the two-file format (Issue #1471)
+* Make previewimage compatible with sites deployed to subdirectories
+  (Issue #1473)
+* Make sitemaps work on sites deployed to subdirectories (Issue #1472)
+
+New in v7.2.0
+=============
+
+Features
+--------
+
+* Added support for fancy dates via moment.js (Issue #1256)
+* Updates: jQuery v1.11.1, Bootstrap v3.3.0
+* Allow presets usage with ``nikola deploy`` — ``DEPLOY_COMMANDS`` is
+  now a dict of {preset: commands} (Issue #1452)
+* New ``GLOBAL_CONTEXT_FILLER`` setting, functions listed there will
+  be called with the local context and the template name before
+  template rendering. (Issue #1451)
+* New ``USE_CDN_WARNING`` setting to block warnings about potential
+  ``USE_CDN`` misuse (defaults to True)
+* ``nikola check -l`` will warn about mixed-security (HTTP on HTTPS)
+* New ``ConfigPlugin`` category (without any specific behavior by default)
+* New meta property “previewimage” for use with Open Graph (Issue #1421)
+* Expose publishing date, tags, and more in Open Graph
+* XSL Transform RSS into pretty and helpful webpages when opened in browsers (Issue #1411)
+
+Bugfixes
+--------
+
+* Don’t pull by default in ``github_deploy`` (Issue #1464)
+* disabled hyphenation for paragraphs with inline math (Issue #1461)
+* Support filters for all tasks (Issue #1459)
+* Don’t check cache/ in ``nikola check -l`` (Issue #1447)
+* Fix new_post for pandoc format (Issue #1445)
+* Fix STORY_INDEX generation (Issue #1444)
+* Fix bootswatch creation version check (Issue #1441)
+* Never rebase while pulling in ``github_deploy``
+* Handle better ``new_post --format=pandoc`` when pandoc is not defined (Issue #1422)
+* Open Graph properly uses latest RDFa in HTML – fixes validation
+* Fix sitemap generation (Issue #1397 via #1032)
+* Use destination folder names as titles for titleless listings
+* Fixed problems with installation from .tar.gz under Windows (Issue #1417)
+* Fixed encoding problems in WordPress urlmap writer (Issue #1416)
+* Added back atom:link in RSS feeds
+* Fixed Nikola-based page redirects in Python 2 (Issue #1414)
+* Fixed files/\*.php (skip post/story-specific filters) (Issue #1403)
+* Warn about missing / in BASE_URL differently (explicit request to
+  fix the config file)
+* Fix broken ``auto -b`` option (Issue #1437)
+
+New in v7.1.0
+=============
+
+Features
+--------
+
+* Error out when reST gists cannot be downloaded (Issue #1402)
 * Added a “Skip to content” link for accessibility (Issue #1345)
 * Added ``minify_lines`` filter to strip leading whitespace and empty lines
 * Added Google Closure Compiler JavaScript filter
@@ -11,14 +94,15 @@ Features
 * Added ``USE_SLUGIFY`` (defaults to True).  If it’s False, Nikola allows and
   generates almost any Unicode character in page URLs (Issue #1321)
 * sources for .html files are now copied as .src.html (Issue #1354)
-* Copy files/*.html verbatim (skip filters)
+* Copy files/\*.html verbatim (skip filters)
 * Don’t generate STORY_INDEX if there is a conflicting story
 * Added support for enclosures (via optional enclosure metadata tag) (Issue #1322)
 
 Bugfixes
 --------
 
-* Respect SHOW_UNTRANSLATED_POSTS=False in archives (Issue #1360)
+* Fixed some margins for RTL text (Issue #1399)
+* Fixed sitemapindex filtering of non-sitemap XMLs
 * rebuild posts when metadata changes (Issue #1319)
 * Allow + in slugs (Issue #1344)
 * fix error message when tags that are too similar are found (Issues #1343, #1344)

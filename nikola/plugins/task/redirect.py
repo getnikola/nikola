@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import unicode_literals
+
 import io
 import os
 
@@ -42,25 +44,28 @@ class Redirect(Task):
         kw = {
             'redirections': self.site.config['REDIRECTIONS'],
             'output_folder': self.site.config['OUTPUT_FOLDER'],
+            'filters': self.site.config['FILTERS'],
         }
 
         yield self.group_task()
         if kw['redirections']:
             for src, dst in kw["redirections"]:
                 src_path = os.path.join(kw["output_folder"], src)
-                yield {
+                yield utils.apply_filters({
                     'basename': self.name,
                     'name': src_path,
                     'targets': [src_path],
                     'actions': [(create_redirect, (src_path, dst))],
                     'clean': True,
                     'uptodate': [utils.config_changed(kw)],
-                }
+                }, kw["filters"])
 
 
 def create_redirect(src, dst):
     utils.makedirs(os.path.dirname(src))
     with io.open(src, "w+", encoding="utf8") as fd:
-        fd.write('<!DOCTYPE html><head><title>Redirecting...</title>'
-                 '<meta http-equiv="refresh" content="0; '
-                 'url={0}"></head><body><p>Page moved <a href="{0}">here</a></p></body>'.format(dst))
+        fd.write('<!DOCTYPE html>\n<head>\n<meta charset="utf-8">\n'
+                 '<title>Redirecting...</title>\n<meta name="robots" '
+                 'content="noindex">\n<meta http-equiv="refresh" content="0; '
+                 'url={0}">\n</head>\n<body>\n<p>Page moved '
+                 '<a href="{0}">here</a>.</p>\n</body>'.format(dst))

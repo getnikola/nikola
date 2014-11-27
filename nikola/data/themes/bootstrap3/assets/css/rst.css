@@ -109,6 +109,12 @@ div.line-block div.line-block {
   margin-bottom: 0 ;
   margin-left: 1.5em }
 
+html[dir="rtl"] div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-right: 1.5em  ;
+  margin-left: 0 }
+
 div.sidebar {
   margin: 0 0 0.5em 1em ;
   border: medium outset ;

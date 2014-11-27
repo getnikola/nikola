@@ -28,6 +28,7 @@ from __future__ import unicode_literals, print_function
 import os
 import re
 import sys
+import datetime
 from lxml import etree
 
 try:
@@ -186,26 +187,6 @@ class CommandImportWordpress(Command, ImportMixin):
                                  rendered_template)
 
     @classmethod
-    def _glue_xml_lines(cls, xml):
-        new_xml = xml[0]
-        previous_line_ended_in_newline = new_xml.endswith(b'\n')
-        previous_line_was_indentet = False
-        for line in xml[1:]:
-            if (re.match(b'^[ \t]+', line) and previous_line_ended_in_newline):
-                new_xml = b''.join((new_xml, line))
-                previous_line_was_indentet = True
-            elif previous_line_was_indentet:
-                new_xml = b''.join((new_xml, line))
-                previous_line_was_indentet = False
-            else:
-                new_xml = b'\n'.join((new_xml, line))
-                previous_line_was_indentet = False
-
-            previous_line_ended_in_newline = line.endswith(b'\n')
-
-        return new_xml
-
-    @classmethod
     def read_xml_file(cls, filename):
         xml = []
 
@@ -215,8 +196,7 @@ class CommandImportWordpress(Command, ImportMixin):
                 if b'<atom:link rel=' in line:
                     continue
                 xml.append(line)
-
-        return cls._glue_xml_lines(xml)
+        return b'\n'.join(xml)
 
     @classmethod
     def get_channel_from_file(cls, filename):
@@ -420,7 +400,12 @@ class CommandImportWordpress(Command, ImportMixin):
         description = get_text_tag(item, 'description', '')
         post_date = get_text_tag(
             item, '{{{0}}}post_date'.format(wordpress_namespace), None)
-        dt = utils.to_datetime(post_date)
+        try:
+            dt = utils.to_datetime(post_date)
+        except ValueError:
+            dt = datetime.datetime(1970, 1, 1, 0, 0, 0)
+            LOGGER.error('Malformed date "{0}" in "{1}", assuming 1970-01-01 00:00:00 instead.'.format(post_date, slug))
+
         if dt.tzinfo and self.timezone is None:
             self.timezone = utils.get_tzname(dt)
         status = get_text_tag(

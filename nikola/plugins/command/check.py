@@ -155,6 +155,14 @@ class CommandCheck(Command):
             url_netloc_to_root = urlparse(self.site.config['SITE_URL']).path
         try:
             filename = task.split(":")[-1]
+
+            if filename.startswith(self.site.config['CACHE_FOLDER']):
+                # Do not look at links in the cache, which are not parsed by
+                # anyone and may result in false positives.  Problems arise
+                # with galleries, for example.  Full rationale: (Issue #1447)
+                self.logger.notice("Ignoring {0} (in cache, links may be incorrect)".format(filename))
+                return False
+
             d = lxml.html.fromstring(open(filename).read())
             for l in d.iterlinks():
                 target = l[0].attrib[l[1]]
@@ -162,6 +170,10 @@ class CommandCheck(Command):
                     continue
                 target, _ = urldefrag(target)
                 parsed = urlparse(target)
+
+                # Warn about links from https to http (mixed-security)
+                if base_url.netloc == parsed.netloc and base_url.scheme == "https" and parsed.scheme == "http":
+                    self.logger.warn("Mixed-content security for link in {0}: {1}".format(filename, target))
 
                 # Absolute links when using only paths, skip.
                 if (parsed.scheme or target.startswith('//')) and url_type in ('rel_path', 'full_path'):

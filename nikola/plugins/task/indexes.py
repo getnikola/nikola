@@ -135,6 +135,7 @@ class Indexes(Task):
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
             "index_file": self.site.config['INDEX_FILE'],
+            "strip_indexes": self.site.config['STRIP_INDEXES'],
         }
         template_name = "list.tmpl"
         for lang in kw["translations"]:
@@ -151,6 +152,12 @@ class Indexes(Task):
                     should_render = True
                     output_name = os.path.join(kw['output_folder'], dirname, kw['index_file'])
                     short_destination = os.path.join(dirname, kw['index_file'])
+                    link = short_destination.replace('\\', '/')
+                    index_len = len(kw['index_file'])
+                    if kw['strip_indexes'] and link[-(1 + index_len):] == '/' + kw['index_file']:
+                        link = link[:-index_len]
+                    context["permalink"] = link
+
                     for post in post_list:
                         # If there is an index.html pending to be created from
                         # a story, do not generate the STORY_INDEX

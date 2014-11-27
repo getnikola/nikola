@@ -19,6 +19,7 @@ MESSAGES = {
     "Posted:": "Αναρτήθηκε:",
     "Posts about %s": "Αναρτήσεις για %s",
     "Posts for year %s": "Αναρτήσεις για το έτος %s",
+    "Posts for {month} {day}, {year}": "",
     "Posts for {month} {year}": "Αναρτήσεις για τον {month} του {year}",
     "Previous post": "Προηγούμενη ανάρτηση",
     "Publication date": "",

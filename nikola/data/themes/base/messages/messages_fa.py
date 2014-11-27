@@ -19,6 +19,7 @@ MESSAGES = {
     "Posted:": "ارسال شده:",
     "Posts about %s": "ارسال‌ها دربارهٔ %s",
     "Posts for year %s": "ارسال‌ها برای سال %s",
+    "Posts for {month} {day}, {year}": "",
     "Posts for {month} {year}": "ارسال برای {month} {year}",
     "Previous post": "ارسال پیشین",
     "Publication date": "تاریخ انتشار",

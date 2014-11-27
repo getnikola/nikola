@@ -169,6 +169,21 @@ def typogrify(data):
 
 
 @apply_to_text_file
+def typogrify_sans_widont(data):
+    # typogrify with widont disabled because it caused broken headline
+    # wrapping, see issue #1465
+    if typo is None:
+        req_missing(['typogrify'], 'use the typogrify_sans_widont filter')
+
+    data = typo.amp(data)
+    data = typo.smartypants(data)
+    # Disabled because of typogrify bug where it breaks <title>
+    # data = typo.caps(data)
+    data = typo.initial_quotes(data)
+    return data
+
+
+@apply_to_text_file
 def php_template_injection(data):
     import re
     template = re.search('<\!-- __NIKOLA_PHP_TEMPLATE_INJECTION source\:(.*) checksum\:(.*)__ -->', data)
@@ -179,5 +194,6 @@ def php_template_injection(data):
         _META_SEPARATOR = '(' + os.linesep * 2 + '|' + ('\n' * 2) + '|' + ("\r\n" * 2) + ')'
         phpdata = re.split(_META_SEPARATOR, phpdata, maxsplit=1)[-1]
         phpdata = re.sub(template.group(0), phpdata, data)
-
-    return phpdata
+        return phpdata
+    else:
+        return data

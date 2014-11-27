@@ -23,7 +23,7 @@ BLOG_TITLE = ${BLOG_TITLE}  # (translatable)
 # This is the main URL for your site. It will be used
 # in a prominent link
 SITE_URL = ${SITE_URL}
-# This is the URL where nikola's output will be deployed.
+# This is the URL where Nikola's output will be deployed.
 # If not set, defaults to SITE_URL
 # BASE_URL = ${SITE_URL}
 BLOG_EMAIL = ${BLOG_EMAIL}
@@ -63,19 +63,26 @@ TRANSLATIONS_PATTERN = ${TRANSLATIONS_PATTERN}
 # This is a dict.  The keys are languages, and values are tuples.
 #
 # For regular links:
-#     ('http://example.com/', 'Text')
+#     ('http://getnikola.com/', 'Nikola Homepage')
 #
 # For submenus:
-#     ((
-#         ('Sub 1', 'http://example.com/'),
-#         ('Sub 2', 'http://example.org/'),
-#     ), 'Top')
+#     (
+#         (
+#             ('http://apple.com/', 'Apple'),
+#             ('http://orange.com/', 'Orange'),
+#         ),
+#         'Fruits'
+#     )
 #
 # WARNING: Support for submenus is theme-dependent.
 #          Only one level of submenus is supported.
 # WARNING: Some themes, including the default Bootstrap 3 theme,
 #          may present issues if the menu is too large.
 #          (in bootstrap3, the navbar can grow too large and cover contents.)
+# WARNING: If you link to directories, make sure to follow
+#          ``STRIP_INDEXES``.  If it’s set to ``True``, end your links
+#          with a ``/``, otherwise end them with ``/index.html`` — or
+#          else they won’t be hilighted when active.
 
 NAVIGATION_LINKS = ${NAVIGATION_LINKS}
 
@@ -104,7 +111,20 @@ TIMEZONE = ${TIMEZONE}
 # (str used by datetime.datetime.strftime)
 # DATE_FORMAT = '%Y-%m-%d %H:%M'
 
-# While nikola can select a sensible locale for each language,
+# Date format used to display post dates, if local dates are used.
+# (str used by moment.js)
+# JS_DATE_FORMAT = 'YYYY-MM-DD HH:mm'
+
+# Date fanciness.
+#
+# 0 = using DATE_FORMAT and TIMEZONE
+# 1 = using JS_DATE_FORMAT and local user time (via moment.js)
+# 2 = using a string like “2 days ago”
+#
+# Your theme must support it, bootstrap and bootstrap3 already do.
+# DATE_FANCINESS = 0
+
+# While Nikola can select a sensible locale for each language,
 # sometimes explicit control can come handy.
 # In this file we express locales in the string form that
 # python's locales will accept in your OS, by example
@@ -129,7 +149,7 @@ TIMEZONE = ${TIMEZONE}
 # From those files, a set of HTML fragment files will be generated:
 # cache/whatever/thing.html (and maybe cache/whatever/thing.html.es)
 #
-# These files are combinated with the template to produce rendered
+# These files are combined with the template to produce rendered
 # pages, which will be placed at
 # output / TRANSLATIONS[lang] / destination / pagename.html
 #
@@ -191,6 +211,12 @@ COMPILERS = ${COMPILERS}
 # the posts themselves. If set to False, it will be just a list of links.
 # TAG_PAGES_ARE_INDEXES = False
 
+# Only include tags on the tag list/overview page if there are at least
+# TAGLIST_MINIMUM_POSTS number of posts or more with every tag. Every tag
+# page is still generated, linked from posts, and included in the sitemap.
+# However, more obscure tags can be hidden from the tag index page.
+# TAGLIST_MINIMUM_POSTS = 1
+
 # Final location for the main blog page and sibling paginated pages is
 # output / TRANSLATION[lang] / INDEX_PATH / index-*.html
 # INDEX_PATH = ""
@@ -199,10 +225,16 @@ COMPILERS = ${COMPILERS}
 # CREATE_MONTHLY_ARCHIVE = False
 # Create one large archive instead of per-year
 # CREATE_SINGLE_ARCHIVE = False
+# Create year, month, and day archives each with a (long) list of posts
+# (overrides both CREATE_MONTHLY_ARCHIVE and CREATE_SINGLE_ARCHIVE)
+# CREATE_FULL_ARCHIVES = False
+# If monthly archives or full archives are created, adds also one archive per day
+# CREATE_DAILY_ARCHIVE = False
 # Final locations for the archives are:
 # output / TRANSLATION[lang] / ARCHIVE_PATH / ARCHIVE_FILENAME
 # output / TRANSLATION[lang] / ARCHIVE_PATH / YEAR / index.html
 # output / TRANSLATION[lang] / ARCHIVE_PATH / YEAR / MONTH / index.html
+# output / TRANSLATION[lang] / ARCHIVE_PATH / YEAR / MONTH / DAY / index.html
 # ARCHIVE_PATH = ""
 # ARCHIVE_FILENAME = "archive.html"
 
@@ -232,13 +264,21 @@ COMPILERS = ${COMPILERS}
 # If you don't need any of these, just set to []
 REDIRECTIONS = ${REDIRECTIONS}
 
-# Commands to execute to deploy. Can be anything, for example,
-# you may use rsync:
+# Presets of commands to execute to deploy. Can be anything, for
+# example, you may use rsync:
 # "rsync -rav --delete output/ joe@my.site:/srv/www/site"
 # And then do a backup, or run `nikola ping` from the `ping`
-# plugin (`nikola install_plugin ping`).
-# To do manual deployment, set it to []
-# DEPLOY_COMMANDS = []
+# plugin (`nikola plugin -i ping`).  Or run `nikola check -l`.
+# You may also want to use github_deploy (see below).
+# You can define multiple presets and specify them as arguments
+# to `nikola deploy`.  If no arguments are specified, a preset
+# named `default` will be executed.  You canuse as many presets
+# in a `nikola deploy` command as you like.
+# DEPLOY_COMMANDS = {
+#     'default': [
+#         "rsync -rav --delete output/ joe@my.site:/srv/www/site",
+#     ]
+# }
 
 # For user.github.io/organization.github.io pages, the DEPLOY branch
 # MUST be 'master', and 'gh-pages' for other repositories.
@@ -247,6 +287,10 @@ REDIRECTIONS = ${REDIRECTIONS}
 
 # The name of the remote where you wish to push to, using github_deploy.
 # GITHUB_REMOTE_NAME = 'origin'
+
+# If you really care about history in the GitHub Pages branch, you can
+# set this to True to `git pull` before changes are made.
+# GITHUB_PULL_BEFORE_COMMIT = False
 
 # Where the output site should be located
 # If you don't use an absolute path, it will be considered as relative
@@ -384,6 +428,12 @@ INDEX_READ_MORE_LINK = ${INDEX_READ_MORE_LINK}
 # 'Read more...' for the RSS_FEED, if RSS_TEASERS is True (translatable)
 RSS_READ_MORE_LINK = ${RSS_READ_MORE_LINK}
 
+# Append a URL query to the RSS_READ_MORE_LINK and the //rss/item/link in
+# RSS feeds. Minimum example for Piwik "pk_campaign=rss" and Google Analytics
+# "utm_source=rss&utm_medium=rss&utm_campaign=rss". Advanced option used for
+# traffic source tracking.
+RSS_LINKS_APPEND_QUERY = False
+
 # A HTML fragment describing the license, for the sidebar.
 # (translatable)
 LICENSE = ""
@@ -443,8 +493,8 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # the "noannotations" metadata.
 # ANNOTATIONS = False
 
-# Create index.html for story folders?
-# WARNING: if a story would conflict with the index file (usually
+# Create index.html for page (story) folders?
+# WARNING: if a page would conflict with the index file (usually
 #          caused by setting slug to `index`), the STORY_INDEX
 #          will not be generated for that directory.
 # STORY_INDEX = False
@@ -513,7 +563,8 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # MathJax.Hub.Config({
 #     tex2jax: {
 #         inlineMath: [ ['$','$'], ["\\\(","\\\)"] ],
-#         displayMath: [ ['$$','$$'], ["\\\[","\\\]"] ]
+#         displayMath: [ ['$$','$$'], ["\\\[","\\\]"] ],
+#         processEscapes: true
 #     },
 #     displayAlign: 'left', // Change this to 'center' to center equations.
 #     "HTML-CSS": {
@@ -525,7 +576,7 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 
 # Do you want to customize the nbconversion of your IPython notebook?
 # IPYNB_CONFIG = {}
-# With the following example configuracion you can use a custom jinja template
+# With the following example configuration you can use a custom jinja template
 # called `toggle.tpl` which has to be located in your site/blog main folder:
 # IPYNB_CONFIG = {'Exporter':{'template_file': 'toggle'}}
 
@@ -579,9 +630,9 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # Strip HTML in the RSS feed? Default to False
 # RSS_PLAIN = False
 
-# A search form to search this site, for the sidebar. You can use a google
+# A search form to search this site, for the sidebar. You can use a Google
 # custom search (http://www.google.com/cse/)
-# Or a duckduckgo search: https://duckduckgo.com/search_box.html
+# Or a DuckDuckGo search: https://duckduckgo.com/search_box.html
 # Default is no search form.
 # (translatable)
 # SEARCH_FORM = ""
@@ -604,9 +655,9 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # <!-- End of custom search -->
 # """ % SITE_URL
 #
-# If you prefer a google search form, here's an example that should just work:
+# If you prefer a Google search form, here's an example that should just work:
 # SEARCH_FORM = """
-# <!-- Custom search with google-->
+# <!-- Custom search with Google-->
 # <form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
 # <input type="hidden" name="q" value="site:%s" />
 # <input type="text" name="q" maxlength="255" results="0" placeholder="Search"/>
@@ -616,11 +667,17 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 
 # Use content distribution networks for jquery, twitter-bootstrap css and js,
 # and html5shiv (for older versions of Internet Explorer)
-# If this is True, jquery and html5shiv is served from the Google and twitter-
-# bootstrap is served from the NetDNA CDN
+# If this is True, jquery and html5shiv are served from the Google CDN and
+# Bootstrap is served from BootstrapCDN (provided by MaxCDN)
 # Set this to False if you want to host your site without requiring access to
 # external resources.
 # USE_CDN = False
+
+# Check for USE_CDN compatibility.
+# If you are using custom themes, have configured the CSS properly and are
+# receiving warnings about incompatibility but believe they are incorrect, you
+# can set this to False.
+# USE_CDN_WARNING = True
 
 # Extra things you want in the pages HEAD tag. This will be added right
 # before </head>
@@ -658,26 +715,23 @@ UNSLUGIFY_TITLES = True
 # Open Graph is enabled by default.
 # USE_OPEN_GRAPH = True
 
-# Nikola supports Twitter Card summaries
-# Twitter cards are disabled by default. They make it possible for you to
-# attach media to Tweets that link to your content.
+# Nikola supports Twitter Card summaries, but they are disabled by default.
+# They make it possible for you to attach media to Tweets that link
+# to your content.
 #
 # IMPORTANT:
 # Please note, that you need to opt-in for using Twitter Cards!
-# To do this please visit
-# https://dev.twitter.com/form/participate-twitter-cards
+# To do this please visit https://cards-dev.twitter.com/validator
 #
 # Uncomment and modify to following lines to match your accounts.
-# Specifying the id for either 'site' or 'creator' will be preferred
-# over the cleartext username. Specifying an ID is not necessary.
-# Displaying images is currently not supported.
+# Images displayed come from the `previewimage` meta tag.
+# You can specify the card type by using the `card` parameter in TWITTER_CARD.
 # TWITTER_CARD = {
 #     # 'use_twitter_cards': True,  # enable Twitter Cards
-#     # 'site': '@website',  # twitter nick for the website
-#     # 'site:id': 123456,  # Same as site, but the website's Twitter user ID
-#                           # instead.
-#     # 'creator': '@username',  # Username for the content creator / author.
-#     # 'creator:id': 654321,  # Same as creator, but the Twitter user's ID.
+#     # 'card': 'summary',          # Card type, you can also use 'summary_large_image',
+#                                   # see https://dev.twitter.com/cards/types
+#     # 'site': '@website',         # twitter nick for the website
+#     # 'creator': '@username',     # Username for the content creator / author.
 # }
 
 # If webassets is installed, bundle JS and CSS to make site loading faster
@@ -740,3 +794,8 @@ LOGGING_HANDLERS = {
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
 GLOBAL_CONTEXT = {}
+
+# Add functions here and they will be called with template
+# GLOBAL_CONTEXT as parameter when the template is about to be
+# rendered
+GLOBAL_CONTEXT_FILLER = []

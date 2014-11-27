@@ -1,0 +1,114 @@
+# Messages in Nikola
+# Copyright (C) 2012-2013
+# This file is distributed under the same license as the Nikola package.
+# 
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Dong Geun <dglee2@gmail.com>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Nikola\n"
+"Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
+"POT-Creation-Date: 2013-03-15 12:24-0300\n"
+"PO-Revision-Date: 2014-11-18 08:42+0000\n"
+"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"Language-Team: Korean (http://www.transifex.com/projects/p/nikola/language/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "More posts about %s"
+msgstr "%s에 대한 또다른 포스트"
+
+msgid "LANGUAGE"
+msgstr "영어"
+
+msgid "Tags"
+msgstr "태그"
+
+msgid "Categories"
+msgstr "분류"
+
+msgid "Tags and Categories"
+msgstr "태그와 분류"
+
+msgid "Comments"
+msgstr "댓글"
+
+msgid "Read more"
+msgstr "더 읽기"
+
+msgid "Posts about %s"
+msgstr "%s에 대한 포스트"
+
+msgid "Next post"
+msgstr "다음 포스트"
+
+msgid "old posts, page %d"
+msgstr "이전 포스트, 페이지 %d"
+
+msgid "page %d"
+msgstr "페이지 %d"
+
+msgid "Source"
+msgstr "원문"
+
+#. Here your translation should not say English but the name of your language
+#. instead
+msgid "Read in English"
+msgstr "영어로 읽기"
+
+msgid "Posts for year %s"
+msgstr "%s년도 포스트"
+
+msgid "Newer posts"
+msgstr "최신 포스트"
+
+msgid "Previous post"
+msgstr "이전 포스트"
+
+msgid "Also available in:"
+msgstr ""
+
+msgid "Languages:"
+msgstr "언어:"
+
+msgid "Original site"
+msgstr "출처"
+
+msgid "Older posts"
+msgstr "옛날 포스트"
+
+msgid "Archive"
+msgstr "저장소"
+
+msgid "Publication date"
+msgstr "발간일"
+
+msgid "Posted:"
+msgstr ""
+
+msgid "Posts for {month} {year}"
+msgstr "{year}년 {month}월에 쓴 포스트"
+
+msgid "Posts for {month} {day}, {year}"
+msgstr ""
+
+msgid "Nothing found."
+msgstr "검색 결과 없음."
+
+msgid "No posts found."
+msgstr "검색된 포스트 없음."
+
+msgid "RSS feed"
+msgstr "RSS 목록"
+
+msgid "%d min remaining to read"
+msgstr "읽기 %d분 남음."
+
+msgid "Skip to main content"
+msgstr "주 콘텐츠로 바로가기"

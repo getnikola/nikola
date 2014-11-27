@@ -67,6 +67,7 @@ class RenderTags(Task):
             "rss_plain": self.site.config["RSS_PLAIN"],
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "feed_length": self.site.config['FEED_LENGTH'],
+            "taglist_minimum_post_count": self.site.config['TAGLIST_MINIMUM_POSTS'],
             "tzinfo": self.site.tzinfo,
         }
 
@@ -113,7 +114,7 @@ class RenderTags(Task):
             tag_posts = dict(posts=[{'title': post.meta[post.default_lang]['title'],
                                      'date': post.date.strftime('%m/%d/%Y'),
                                      'isodate': post.date.isoformat(),
-                                     'url': post.base_path.replace('cache', '')}
+                                     'url': post.permalink(post.default_lang)}
                                     for post in reversed(sorted(self.site.timeline, key=lambda post: post.date))
                                     if tag in post.alltags])
             tag_cloud_data[tag] = [len(posts), self.site.link(
@@ -135,11 +136,12 @@ class RenderTags(Task):
         task['targets'] = [output_name]
         task['actions'] = [(write_tag_data, [tag_cloud_data])]
         task['clean'] = True
-        yield task
+        yield utils.apply_filters(task, kw['filters'])
 
     def list_tags_page(self, kw):
         """a global "all your tags/categories" page for each language"""
-        tags = list(self.site.posts_per_tag.keys())
+        tags = list([tag for tag in self.site.posts_per_tag.keys()
+                     if len(self.site.posts_per_tag[tag]) >= kw["taglist_minimum_post_count"]])
         categories = list(self.site.posts_per_category.keys())
         # We want our tags to be sorted case insensitive
         tags.sort(key=lambda a: a.lower())
@@ -285,7 +287,7 @@ class RenderTags(Task):
         post_list.reverse()
         for post in post_list:
             deps += post.deps(lang)
-        return {
+        task = {
             'basename': str(self.name),
             'name': output_name,
             'file_dep': deps,
@@ -299,6 +301,7 @@ class RenderTags(Task):
             'uptodate': [utils.config_changed(kw)],
             'task_dep': ['render_posts'],
         }
+        return utils.apply_filters(task, kw['filters'])
 
     def slugify_name(self, name):
         if self.site.config['SLUG_TAG_PATH']:

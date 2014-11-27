@@ -36,7 +36,7 @@ except ImportError:
     import urllib.robotparser as robotparser  # NOQA
 
 from nikola.plugin_categories import LateTask
-from nikola.utils import config_changed
+from nikola.utils import config_changed, apply_filters
 
 
 urlset_header = """<?xml version="1.0" encoding="UTF-8"?>
@@ -112,7 +112,8 @@ class Sitemap(LateTask):
             "index_file": self.site.config["INDEX_FILE"],
             "sitemap_include_fileless_dirs": self.site.config["SITEMAP_INCLUDE_FILELESS_DIRS"],
             "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.html', '.htm', '.xml', '.rss']),
-            "robots_exclusions": self.site.config["ROBOTS_EXCLUSIONS"]
+            "robots_exclusions": self.site.config["ROBOTS_EXCLUSIONS"],
+            "filters": self.site.config["FILTERS"],
         }
 
         output = kw['output_folder']
@@ -160,7 +161,8 @@ class Sitemap(LateTask):
                                 continue
                         """ put RSS in sitemapindex[] instead of in urlset[], sitemap_path is included after it is generated """
                         if path.endswith('.xml') or path.endswith('.rss'):
-                            if u'<rss' in io.open(real_path, 'r', encoding='utf8').read(512) or u'<urlset'and path != sitemap_path:
+                            filehead = io.open(real_path, 'r', encoding='utf8').read(512)
+                            if u'<rss' in filehead or (u'<urlset' in filehead and path != sitemap_path):
                                 path = path.replace(os.sep, '/')
                                 lastmod = self.get_lastmod(real_path)
                                 loc = urljoin(base_url, base_path + path)
@@ -207,7 +209,27 @@ class Sitemap(LateTask):
         # to scan locations.
         def scan_locs_task():
             scan_locs()
-            return {'locations': list(urlset.keys()) + list(sitemapindex.keys())}
+
+            # Generate a list of file dependencies for the actual generation
+            # task, so rebuilds are triggered.  (Issue #1032)
+            output = kw["output_folder"]
+            file_dep = []
+
+            for i in urlset.keys():
+                p = os.path.join(output, urlparse(i).path.replace(base_path, '', 1))
+                if not p.endswith('sitemap.xml') and not os.path.isdir(p):
+                    file_dep.append(p)
+                if os.path.isdir(p) and os.path.exists(os.path.join(p, 'index.html')):
+                    file_dep.append(p + 'index.html')
+
+            for i in sitemapindex.keys():
+                p = os.path.join(output, urlparse(i).path.replace(base_path, '', 1))
+                if not p.endswith('sitemap.xml') and not os.path.isdir(p):
+                    file_dep.append(p)
+                if os.path.isdir(p) and os.path.exists(os.path.join(p, 'index.html')):
+                    file_dep.append(p + 'index.html')
+
+            return {'file_dep': file_dep}
 
         yield {
             "basename": "_scan_locs",
@@ -216,7 +238,7 @@ class Sitemap(LateTask):
         }
 
         yield self.group_task()
-        yield {
+        yield apply_filters({
             "basename": "sitemap",
             "name": sitemap_path,
             "targets": [sitemap_path],
@@ -225,8 +247,8 @@ class Sitemap(LateTask):
             "clean": True,
             "task_dep": ["render_site"],
             "calc_dep": ["_scan_locs:sitemap"],
-        }
-        yield {
+        }, kw['filters'])
+        yield apply_filters({
             "basename": "sitemap",
             "name": sitemapindex_path,
             "targets": [sitemapindex_path],
@@ -234,11 +256,11 @@ class Sitemap(LateTask):
             "uptodate": [config_changed(kw)],
             "clean": True,
             "file_dep": [sitemap_path]
-        }
+        }, kw['filters'])
 
     def get_lastmod(self, p):
         if self.site.invariant:
-            return '2014-01-01'
+            return '2038-01-01'
         else:
             return datetime.datetime.fromtimestamp(os.stat(p).st_mtime).isoformat().split('T')[0]
 

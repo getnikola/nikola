@@ -33,6 +33,7 @@ import datetime
 import glob
 import locale
 import os
+import json
 import sys
 import mimetypes
 try:
@@ -79,6 +80,7 @@ from .plugin_categories import (
     TaskMultiplier,
     TemplateSystem,
     SignalHandler,
+    ConfigPlugin,
 )
 
 
@@ -98,9 +100,11 @@ LEGAL_VALUES = {
         'muut',
     ],
     'TRANSLATIONS': {
+        'ar': 'Arabic',
         'bg': 'Bulgarian',
         'ca': 'Catalan',
         ('cs', 'cz'): 'Czech',
+        'da': 'Danish',
         'de': 'German',
         ('el', '!gr'): 'Greek',
         'en': 'English',
@@ -113,8 +117,10 @@ LEGAL_VALUES = {
         'fr': 'French',
         'hi': 'Hindi',
         'hr': 'Croatian',
+        'id': 'Indonesian',
         'it': 'Italian',
         ('ja', '!jp'): 'Japanese',
+        'ko': 'Korean',
         'nb': 'Norwegian Bokmål',
         'nl': 'Dutch',
         'pl': 'Polish',
@@ -122,6 +128,8 @@ LEGAL_VALUES = {
         'ru': 'Russian',
         'sk': 'Slovak',
         'sl': 'Slovene',
+        'sr': 'Serbian (Cyrillic)',
+        'sv': 'Swedish',
         ('tr', '!tr_TR'): 'Turkish',
         'ur': 'Urdu',
         'zh_cn': 'Chinese (Simplified)',
@@ -137,10 +145,12 @@ LEGAL_VALUES = {
     'RTL_LANGUAGES': ('ar', 'fa', 'ur'),
     'COLORBOX_LOCALES': defaultdict(
         str,
+        ar='ar',
         bg='bg',
         ca='ca',
         cs='cs',
         cz='cs',
+        da='da',
         de='de',
         en='',
         es='es',
@@ -149,8 +159,10 @@ LEGAL_VALUES = {
         fi='fi',
         fr='fr',
         hr='hr',
+        id='id',
         it='it',
         ja='ja',
+        ko='kr',  # kr is South Korea, ko is the Korean language
         nb='no',
         nl='nl',
         pt_br='pt-br',
@@ -158,9 +170,43 @@ LEGAL_VALUES = {
         ru='ru',
         sk='sk',
         sl='si',  # country code is si, language code is sl, colorbox is wrong
+        sr='sr',  # warning: this is serbian in Latin alphabet
+        sv='sv',
         tr='tr',
         zh_cn='zh-CN'
-    )
+    ),
+    'MOMENTJS_LOCALES': defaultdict(
+        str,
+        ar='ar',
+        bg='bg',
+        ca='ca',
+        cs='cs',
+        cz='cs',
+        da='da',
+        de='de',
+        en='',
+        es='es',
+        et='et',
+        fa='fa',
+        fi='fi',
+        fr='fr',
+        hr='hr',
+        id='id',
+        it='it',
+        ja='ja',
+        ko='ko',
+        nb='nb',
+        nl='nl',
+        pt_br='pt-br',
+        pl='pl',
+        ru='ru',
+        sk='sk',
+        sl='sl',
+        sr='sr-cyrl',
+        sv='sv',
+        tr='tr',
+        zh_cn='zh-cn'
+    ),
 }
 
 
@@ -252,9 +298,13 @@ class Nikola(object):
             'COPY_SOURCES': True,
             'CREATE_MONTHLY_ARCHIVE': False,
             'CREATE_SINGLE_ARCHIVE': False,
+            'CREATE_FULL_ARCHIVES': False,
+            'CREATE_DAILY_ARCHIVE': False,
             'DATE_FORMAT': '%Y-%m-%d %H:%M',
+            'JS_DATE_FORMAT': 'YYYY-MM-DD HH:mm',
+            'DATE_FANCINESS': 0,
             'DEFAULT_LANG': "en",
-            'DEPLOY_COMMANDS': [],
+            'DEPLOY_COMMANDS': {'default': []},
             'DISABLED_PLUGINS': [],
             'EXTRA_PLUGINS_DIRS': [],
             'COMMENT_SYSTEM_ID': 'nikolademo',
@@ -268,6 +318,7 @@ class Nikola(object):
             'FORCE_ISO8601': False,
             'GALLERY_PATH': 'galleries',
             'GALLERY_SORT_BY_DATE': True,
+            'GLOBAL_CONTEXT_FILLER': [],
             'GZIP_COMMAND': None,
             'GZIP_FILES': False,
             'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js', '.json', '.xml'),
@@ -298,6 +349,7 @@ class Nikola(object):
             'FUTURE_IS_NOW': False,
             'INDEX_READ_MORE_LINK': DEFAULT_INDEX_READ_MORE_LINK,
             'RSS_READ_MORE_LINK': DEFAULT_RSS_READ_MORE_LINK,
+            'RSS_LINKS_APPEND_QUERY': False,
             'REDIRECTIONS': [],
             'ROBOTS_EXCLUSIONS': [],
             'GENERATE_RSS': True,
@@ -319,6 +371,7 @@ class Nikola(object):
             'SITEMAP_INCLUDE_FILELESS_DIRS': True,
             'TAG_PATH': 'categories',
             'TAG_PAGES_ARE_INDEXES': False,
+            'TAGLIST_MINIMUM_POSTS': 1,
             'TEMPLATE_FILTERS': {},
             'THEME': 'bootstrap',
             'THEME_REVEAL_CONFIG_SUBTHEME': 'sky',
@@ -328,6 +381,7 @@ class Nikola(object):
             'URL_TYPE': 'rel_path',
             'USE_BUNDLES': True,
             'USE_CDN': False,
+            'USE_CDN_WARNING': True,
             'USE_FILENAME_AS_TITLE': True,
             'USE_OPEN_GRAPH': True,
             'USE_SLUGIFY': True,
@@ -496,7 +550,15 @@ class Nikola(object):
             self.config['BASE_URL'] = self.config.get('SITE_URL')
         # BASE_URL should *always* end in /
         if self.config['BASE_URL'] and self.config['BASE_URL'][-1] != '/':
-            utils.LOGGER.warn("Your BASE_URL doesn't end in / -- adding it.")
+            utils.LOGGER.warn("Your BASE_URL doesn't end in / -- adding it, but please fix it in your config file!")
+
+        # todo: remove in v8
+        if not isinstance(self.config['DEPLOY_COMMANDS'], dict):
+            utils.LOGGER.warn("A single list as DEPLOY_COMMANDS is deprecated.  DEPLOY_COMMANDS should be a dict, with deploy preset names as keys and lists of commands as values.")
+            utils.LOGGER.warn("The key `default` is used by `nikola deploy`:")
+            self.config['DEPLOY_COMMANDS'] = {'default': self.config['DEPLOY_COMMANDS']}
+            utils.LOGGER.warn("DEPLOY_COMMANDS = {0}".format(self.config['DEPLOY_COMMANDS']))
+            utils.LOGGER.info("(The above can be used with `nikola deploy` or `nikola deploy default`.  Multiple presets are accepted.)")
 
         # We use one global tzinfo object all over Nikola.
         self.tzinfo = dateutil.tz.gettz(self.config['TIMEZONE'])
@@ -512,6 +574,7 @@ class Nikola(object):
             "RestExtension": RestExtension,
             "MarkdownExtension": MarkdownExtension,
             "SignalHandler": SignalHandler,
+            "ConfigPlugin": ConfigPlugin,
         })
         self.plugin_manager.setPluginInfoExtension('plugin')
         extra_plugins_dirs = self.config['EXTRA_PLUGINS_DIRS']
@@ -531,45 +594,21 @@ class Nikola(object):
         self.plugin_manager.setPluginPlaces(places)
         self.plugin_manager.collectPlugins()
 
-        # Activate all required SignalHandler plugins
-        for plugin_info in self.plugin_manager.getPluginsOfCategory("SignalHandler"):
-            if plugin_info.name in self.config.get('DISABLED_PLUGINS'):
-                self.plugin_manager.removePluginFromCategory(plugin_info, "SignalHandler")
-            else:
-                self.plugin_manager.activatePluginByName(plugin_info.name)
-                plugin_info.plugin_object.set_site(self)
+        self._activate_plugins_of_category("SignalHandler")
 
         # Emit signal for SignalHandlers which need to start running immediately.
         signal('sighandlers_loaded').send(self)
 
         self._commands = {}
-        # Activate all command plugins
-        for plugin_info in self.plugin_manager.getPluginsOfCategory("Command"):
-            if plugin_info.name in self.config['DISABLED_PLUGINS']:
-                self.plugin_manager.removePluginFromCategory(plugin_info, "Command")
-                continue
 
-            self.plugin_manager.activatePluginByName(plugin_info.name)
-            plugin_info.plugin_object.set_site(self)
+        command_plugins = self._activate_plugins_of_category("Command")
+        for plugin_info in command_plugins:
             plugin_info.plugin_object.short_help = plugin_info.description
             self._commands[plugin_info.name] = plugin_info.plugin_object
 
-        # Activate all task plugins
-        for task_type in ["Task", "LateTask"]:
-            for plugin_info in self.plugin_manager.getPluginsOfCategory(task_type):
-                if plugin_info.name in self.config['DISABLED_PLUGINS']:
-                    self.plugin_manager.removePluginFromCategory(plugin_info, task_type)
-                    continue
-                self.plugin_manager.activatePluginByName(plugin_info.name)
-                plugin_info.plugin_object.set_site(self)
-
-        # Activate all multiplier plugins
-        for plugin_info in self.plugin_manager.getPluginsOfCategory("TaskMultiplier"):
-            if plugin_info.name in self.config['DISABLED_PLUGINS']:
-                self.plugin_manager.removePluginFromCategory(plugin_info, task_type)
-                continue
-            self.plugin_manager.activatePluginByName(plugin_info.name)
-            plugin_info.plugin_object.set_site(self)
+        self._activate_plugins_of_category("Task")
+        self._activate_plugins_of_category("LateTask")
+        self._activate_plugins_of_category("TaskMultiplier")
 
         compilers = defaultdict(set)
         # Also add aliases for combinations with TRANSLATIONS_PATTERN
@@ -607,8 +646,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
         self._GLOBAL_CONTEXT['use_cdn'] = self.config.get("USE_CDN")
         self._GLOBAL_CONTEXT['favicons'] = self.config['FAVICONS']
-        self._GLOBAL_CONTEXT['date_format'] = self.config.get(
-            'DATE_FORMAT', '%Y-%m-%d %H:%M')
+        self._GLOBAL_CONTEXT['date_format'] = self.config.get('DATE_FORMAT')
         self._GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
         self._GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
         self._GLOBAL_CONTEXT['show_blog_title'] = self.config.get('SHOW_BLOG_TITLE')
@@ -649,7 +687,10 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['show_sourcelink'] = self.config.get(
             'SHOW_SOURCELINK')
         self._GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
+        self._GLOBAL_CONTEXT['date_fanciness'] = self.config.get('DATE_FANCINESS')
+        self._GLOBAL_CONTEXT['js_date_format'] = json.dumps(self.config.get('JS_DATE_FORMAT'))
         self._GLOBAL_CONTEXT['colorbox_locales'] = LEGAL_VALUES['COLORBOX_LOCALES']
+        self._GLOBAL_CONTEXT['momentjs_locales'] = LEGAL_VALUES['MOMENTJS_LOCALES']
         self._GLOBAL_CONTEXT['url_replacer'] = self.url_replacer
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
@@ -663,7 +704,21 @@ class Nikola(object):
             self.compilers[plugin_info.name] = \
                 plugin_info.plugin_object
 
+        self._activate_plugins_of_category("ConfigPlugin")
+
         signal('configured').send(self)
+
+    def _activate_plugins_of_category(self, category):
+        """Activate all the plugins of a given category and return them."""
+        plugins = []
+        for plugin_info in self.plugin_manager.getPluginsOfCategory(category):
+            if plugin_info.name in self.config.get('DISABLED_PLUGINS'):
+                self.plugin_manager.removePluginFromCategory(plugin_info, category)
+            else:
+                self.plugin_manager.activatePluginByName(plugin_info.name)
+                plugin_info.plugin_object.set_site(self)
+                plugins.append(plugin_info)
+        return plugins
 
     def _get_themes(self):
         if self._THEMES is None:
@@ -674,7 +729,7 @@ class Nikola(object):
                 self.config['THEME'] = 'bootstrap'
                 return self._get_themes()
             # Check consistency of USE_CDN and the current THEME (Issue #386)
-            if self.config['USE_CDN']:
+            if self.config['USE_CDN'] and self.config['USE_CDN_WARNING']:
                 bootstrap_path = utils.get_asset_path(os.path.join(
                     'assets', 'css', 'bootstrap.min.css'), self._THEMES)
                 if bootstrap_path and bootstrap_path.split(os.sep)[-4] not in ['bootstrap', 'bootstrap3']:
@@ -781,6 +836,9 @@ class Nikola(object):
         for h in local_context['template_hooks'].values():
             h.context = context
 
+        for func in self.config['GLOBAL_CONTEXT_FILLER']:
+            func(local_context, template_name)
+
         data = self.template_system.render_template(
             template_name, None, local_context)
 
@@ -802,7 +860,7 @@ class Nikola(object):
         with open(output_name, "wb+") as post_file:
             post_file.write(data)
 
-    def url_replacer(self, src, dst, lang=None):
+    def url_replacer(self, src, dst, lang=None, url_type=None):
         """URL mangler.
 
         * Replaces link:// URLs with real links
@@ -814,13 +872,15 @@ class Nikola(object):
         src is the URL where this link is used
         dst is the link to be mangled
         lang is used for language-sensitive URLs in link://
-
+        url_type is used to determine final link appearance, defaulting to URL_TYPE from config
         """
         parsed_src = urlsplit(src)
         src_elems = parsed_src.path.split('/')[1:]
         dst_url = urlparse(dst)
         if lang is None:
             lang = self.default_lang
+        if url_type is None:
+            url_type = self.config.get('URL_TYPE')
 
         # Refuse to replace links that are full URLs.
         if dst_url.netloc:
@@ -843,10 +903,10 @@ class Nikola(object):
 
         # Avoid empty links.
         if src == dst:
-            if self.config.get('URL_TYPE') == 'absolute':
+            if url_type == 'absolute':
                 dst = urljoin(self.config['BASE_URL'], dst.lstrip('/'))
                 return dst
-            elif self.config.get('URL_TYPE') == 'full_path':
+            elif url_type == 'full_path':
                 dst = urljoin(self.config['BASE_URL'], dst.lstrip('/'))
                 return urlparse(dst).path
             else:
@@ -855,13 +915,13 @@ class Nikola(object):
         # Check that link can be made relative, otherwise return dest
         parsed_dst = urlsplit(dst)
         if parsed_src[:2] != parsed_dst[:2]:
-            if self.config.get('URL_TYPE') == 'absolute':
+            if url_type == 'absolute':
                 dst = urljoin(self.config['BASE_URL'], dst)
             return dst
 
-        if self.config.get('URL_TYPE') in ('full_path', 'absolute'):
+        if url_type in ('full_path', 'absolute'):
             dst = urljoin(self.config['BASE_URL'], dst.lstrip('/'))
-            if self.config.get('URL_TYPE') == 'full_path':
+            if url_type == 'full_path':
                 parsed = urlparse(urljoin(self.config['BASE_URL'], dst.lstrip('/')))
                 if parsed.fragment:
                     dst = '{0}#{1}'.format(parsed.path, parsed.fragment)
@@ -895,10 +955,11 @@ class Nikola(object):
         return result
 
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
-                             rss_teasers, rss_plain, feed_length=10, feed_url=None, enclosure=_enclosure):
+                             rss_teasers, rss_plain, feed_length=10, feed_url=None,
+                             enclosure=_enclosure, rss_links_append_query=None):
 
         """Takes all necessary data, and renders a RSS feed in output_path."""
-        rss_obj = rss.RSS2(
+        rss_obj = utils.ExtendedRSS2(
             title=title,
             link=link,
             description=description,
@@ -907,19 +968,21 @@ class Nikola(object):
             language=lang
         )
 
+        if feed_url:
+            rss_obj.xsl_stylesheet_href = self.url_replacer(feed_url, "/assets/xml/rss.xsl")
+
         items = []
 
         for post in timeline[:feed_length]:
-            old_url_type = self.config['URL_TYPE']
-            self.config['URL_TYPE'] = 'absolute'
-            data = post.text(lang, teaser_only=rss_teasers, strip_html=rss_plain, rss_read_more_link=True)
+            data = post.text(lang, teaser_only=rss_teasers, strip_html=rss_plain,
+                             rss_read_more_link=True, rss_links_append_query=rss_links_append_query)
             if feed_url is not None and data:
                 # Massage the post's HTML (unless plain)
                 if not rss_plain:
                     # FIXME: this is duplicated with code in Post.text()
                     try:
                         doc = lxml.html.document_fromstring(data)
-                        doc.rewrite_links(lambda dst: self.url_replacer(post.permalink(), dst, lang))
+                        doc.rewrite_links(lambda dst: self.url_replacer(post.permalink(), dst, lang, 'absolute'))
                         try:
                             body = doc.body
                             data = (body.text or '') + ''.join(
@@ -932,32 +995,33 @@ class Nikola(object):
                             data = ""
                         else:  # let other errors raise
                             raise(e)
-            self.config['URL_TYPE'] = old_url_type
             args = {
                 'title': post.title(lang),
-                'link': post.permalink(lang, absolute=True),
+                'link': post.permalink(lang, absolute=True, query=rss_links_append_query),
                 'description': data,
-                'guid': post.permalink(lang, absolute=True),
                 # PyRSS2Gen's pubDate is GMT time.
                 'pubDate': (post.date if post.date.tzinfo is None else
                             post.date.astimezone(dateutil.tz.tzutc())),
                 'categories': post._tags.get(lang, []),
                 'creator': post.author(lang),
+                'guid': post.permalink(lang, absolute=True),
             }
 
             if post.author(lang):
                 rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
 
-            """ Enclosure callback must returns tuple """
-            # enclosure callback returns None if post has no enclosure, or a
-            # 3-tuple of (url, length (0 is valid), mimetype)
-            enclosure_details = enclosure(post=post, lang=lang)
-            if enclosure_details is not None:
-                args['enclosure'] = rss.Enclosure(*enclosure_details)
+            if enclosure:
+                # enclosure callback returns None if post has no enclosure, or a
+                # 3-tuple of (url, length (0 is valid), mimetype)
+                enclosure_details = enclosure(post=post, lang=lang)
+                if enclosure_details is not None:
+                    args['enclosure'] = rss.Enclosure(*enclosure_details)
 
             items.append(utils.ExtendedItem(**args))
 
         rss_obj.items = items
+        rss_obj.self_url = feed_url
+        rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
 
         dst_dir = os.path.dirname(output_path)
         utils.makedirs(dst_dir)
@@ -1144,7 +1208,10 @@ class Nikola(object):
         if self._scanned and not really:
             return
 
-        self.commands = utils.Commands(self.doit)
+        try:
+            self.commands = utils.Commands(self.doit)
+        except AttributeError:
+            self.commands = None
         self.global_data = {}
         self.posts = []
         self.posts_per_year = defaultdict(list)
@@ -1231,8 +1298,9 @@ class Nikola(object):
                         self.posts_per_category[post.meta('category')].append(post)
                     else:
                         self.pages.append(post)
-                    self.post_per_file[post.destination_path(lang=lang)] = post
-                    self.post_per_file[post.destination_path(lang=lang, extension=post.source_ext())] = post
+                    for lang in self.config['TRANSLATIONS'].keys():
+                        self.post_per_file[post.destination_path(lang=lang)] = post
+                        self.post_per_file[post.destination_path(lang=lang, extension=post.source_ext())] = post
 
         # Sort everything.
         self.timeline.sort(key=lambda p: p.date)
@@ -1267,7 +1335,6 @@ class Nikola(object):
         context['title'] = post.title(lang)
         context['description'] = post.description(lang)
         context['permalink'] = post.permalink(lang)
-        context['page_list'] = self.pages
         if post.use_in_feeds:
             context['enable_comments'] = True
         else:

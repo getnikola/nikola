@@ -1038,6 +1038,25 @@ class LocaleBorg(object):
         return s
 
 
+class ExtendedRSS2(rss.RSS2):
+    xsl_stylesheet_href = None
+
+    def publish(self, handler):
+        if self.xsl_stylesheet_href:
+            handler.processingInstruction("xml-stylesheet", 'type="text/xsl" href="{0}" media="all"'.format(self.xsl_stylesheet_href))
+        # old-style class in py2
+        rss.RSS2.publish(self, handler)
+
+    def publish_extensions(self, handler):
+        if self.self_url:
+            handler.startElement("atom:link", {
+                'href': self.self_url,
+                'rel': "self",
+                'type': "application/rss+xml"
+            })
+            handler.endElement("atom:link")
+
+
 class ExtendedItem(rss.RSSItem):
 
     def __init__(self, **kw):
@@ -1198,7 +1217,10 @@ def ask(query, default=None):
         default_q = ' [{0}]'.format(default)
     else:
         default_q = ''
-    inp = raw_input("{query}{default_q}: ".format(query=query, default_q=default_q)).strip()
+    if sys.version_info[0] == 3:
+        inp = raw_input("{query}{default_q}: ".format(query=query, default_q=default_q)).strip()
+    else:
+        inp = raw_input("{query}{default_q}: ".format(query=query, default_q=default_q).encode('utf-8')).strip()
     if inp or default is None:
         return inp
     else:
@@ -1213,7 +1235,10 @@ def ask_yesno(query, default=None):
         default_q = ' [Y/n]'
     elif default is False:
         default_q = ' [y/N]'
-    inp = raw_input("{query}{default_q} ".format(query=query, default_q=default_q)).strip()
+    if sys.version_info[0] == 3:
+        inp = raw_input("{query}{default_q} ".format(query=query, default_q=default_q)).strip()
+    else:
+        inp = raw_input("{query}{default_q} ".format(query=query, default_q=default_q).encode('utf-8')).strip()
     if inp:
         return inp.lower().startswith('y')
     elif default is not None:

@@ -22,6 +22,7 @@ dumb_replacements = [
 ]
 
 dumber_replacements = [
+    ['<%! import json %>\n\n', ''],
     ["<html\n\\", "<html\n"],
     ["\n'\\\n", "\n'\n"],
     ["{% endif %}\n\\", "{% endif %}\n"]
@@ -55,7 +56,7 @@ def jinjify(in_theme, out_theme):
         for repl in dumber_replacements:
             data = data.replace(*repl)
 
-        with io.open(out_template, "wb+", encoding="utf-8") as outf:
+        with io.open(out_template, "w+", encoding="utf-8") as outf:
             outf.write(data + '\n')
 
         # Syntax check output
@@ -212,7 +213,16 @@ def mako2jinja(input_file):
     return output
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print('ERROR: needs exactly two arguments, input and output directory.')
+    if len(sys.argv) == 1:
+        print('Performing standard conversions:')
+        for m, j in (
+            ('nikola/data/themes/base', 'nikola/data/themes/base-jinja'),
+            ('nikola/data/themes/bootstrap', 'nikola/data/themes/bootstrap-jinja'),
+            ('nikola/data/themes/bootstrap3', 'nikola/data/themes/bootstrap3-jinja')
+        ):
+            print('    {0} -> {1}'.format(m, j))
+            jinjify(m, j)
+    elif len(sys.argv) != 3:
+        print('ERROR: needs input and output directory, or no arguments for default conversions.')
     else:
         jinjify(sys.argv[1], sys.argv[2])

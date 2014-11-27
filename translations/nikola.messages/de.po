@@ -6,9 +6,11 @@
 # Translators:
 # Translators:
 # Translators:
+# amokleben <wenso@gmx.de>, 2013
 # Chris Warrick <kwpolska@gmail.com>, 2013-2014
 # Chris Warrick <kwpolska@gmail.com>, 2013
 # Chris Warrick <kwpolska@gmail.com>, 2013
+# Martin Bless <martin.bless@gmail.com>, 2014
 # amokleben <wenso@gmx.de>, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
@@ -20,7 +22,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-07-31 12:30+0000\n"
+"PO-Revision-Date: 2014-11-18 15:01+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/nikola/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -103,6 +105,9 @@ msgstr "Veröffentlicht:"
 msgid "Posts for {month} {year}"
 msgstr "Einträge aus {month} {year}"
 
+msgid "Posts for {month} {day}, {year}"
+msgstr "Einträge vom {day}. {month} {year}"
+
 msgid "Nothing found."
 msgstr "Nichts gefunden."
 
@@ -116,4 +121,4 @@ msgid "%d min remaining to read"
 msgstr "%d min verbleiben zum Lesen"
 
 msgid "Skip to main content"
-msgstr ""
+msgstr "Springe zum Hauptinhalt"

@@ -59,6 +59,7 @@ class GenerateRSS(Task):
             "feed_length": self.site.config['FEED_LENGTH'],
             "tzinfo": self.site.tzinfo,
             "rss_read_more_link": self.site.config["RSS_READ_MORE_LINK"],
+            "rss_links_append_query": self.site.config["RSS_LINKS_APPEND_QUERY"],
         }
         self.site.scan_posts()
         # Check for any changes in the state of use_in_feeds for any post.
@@ -80,7 +81,7 @@ class GenerateRSS(Task):
 
             feed_url = urljoin(self.site.config['BASE_URL'], self.site.link("rss", None, lang).lstrip('/'))
 
-            yield {
+            task = {
                 'basename': 'generate_rss',
                 'name': os.path.normpath(output_name),
                 'file_dep': deps,
@@ -88,12 +89,14 @@ class GenerateRSS(Task):
                 'actions': [(utils.generic_rss_renderer,
                             (lang, kw["blog_title"](lang), kw["site_url"],
                              kw["blog_description"](lang), posts, output_name,
-                             kw["rss_teasers"], kw["rss_plain"], kw['feed_length'], feed_url))],
+                             kw["rss_teasers"], kw["rss_plain"], kw['feed_length'], feed_url,
+                             None, kw["rss_links_append_query"]))],
 
                 'task_dep': ['render_posts'],
                 'clean': True,
                 'uptodate': [utils.config_changed(kw)],
             }
+            yield utils.apply_filters(task, kw['filters'])
 
     def rss_path(self, name, lang):
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],

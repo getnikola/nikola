@@ -1,5 +1,6 @@
 ## -*- coding: utf-8 -*-
 
+<%namespace name="notes" file="annotation_helper.tmpl" import="*" />
 <%def name="html_headstart()">
 <!DOCTYPE html>
 <html
@@ -47,6 +48,13 @@ lang="${lang}">
         <meta property="fb:app_id" content="${comment_system_id}">
     % endif
 
+    %if prevlink:
+        <link rel="prev" href="${prevlink}" type="text/html">
+    %endif
+    %if nextlink:
+        <link rel="next" href="${nextlink}" type="text/html">
+    %endif
+
     ${mathjax_config}
     %if use_cdn:
         <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -62,7 +70,7 @@ lang="${lang}">
     %if use_bundles:
         %if use_cdn:
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-            <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+            <script src="//maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
             <script src="/assets/js/all.js"></script>
         %else:
             <script src="/assets/js/all-nocdn.js"></script>
@@ -70,10 +78,12 @@ lang="${lang}">
     %else:
         %if use_cdn:
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-            <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+            <script src="//maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
         %else:
             <script src="/assets/js/jquery.min.js"></script>
             <script src="/assets/js/bootstrap.min.js"></script>
+            <script src="/assets/js/moment-with-locales.min.js"></script>
+            <script src="/assets/js/fancydates.js"></script>
         %endif
         <script src="/assets/js/jquery.colorbox-min.js"></script>
     %endif
@@ -87,14 +97,14 @@ lang="${lang}">
 <%def name="html_stylesheets()">
     %if use_bundles:
         %if use_cdn:
-            <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+            <link href="//maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
             <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
         %else:
             <link href="/assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
         %endif
     %else:
         %if use_cdn:
-            <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+            <link href="//maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
         %else:
             <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
             <link href="/assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">

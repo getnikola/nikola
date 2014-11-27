@@ -2,28 +2,24 @@
 
 <%def name="html_headstart()">
 <!DOCTYPE html>
-<html
-\
-% if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']) or (comment_system == 'facebook'):
+<html \
 prefix='\
 %if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']):
-og: http://ogp.me/ns# \
-%endif
-%if use_open_graph:
-article: http://ogp.me/ns/article# \
+og: http://ogp.me/ns# article: http://ogp.me/ns/article# \
 %endif
 %if comment_system == 'facebook':
-fb: http://ogp.me/ns/fb# \
+fb: http://ogp.me/ns/fb#
 %endif
-'\
+' \
+%if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']):
+vocab="http://ogp.me/ns" \
 %endif
-\
 % if is_rtl:
 dir="rtl" \
 % endif
 \
 lang="${lang}">
-    <head>
+<head>
     <meta charset="utf-8">
     %if description:
     <meta name="description" content="${description}">
@@ -46,6 +42,13 @@ lang="${lang}">
     % if comment_system == 'facebook':
         <meta property="fb:app_id" content="${comment_system_id}">
     % endif
+
+    %if prevlink:
+        <link rel="prev" href="${prevlink}" type="text/html">
+    %endif
+    %if nextlink:
+        <link rel="next" href="${nextlink}" type="text/html">
+    %endif
 
     ${mathjax_config}
     %if use_cdn:

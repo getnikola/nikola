@@ -41,6 +41,47 @@ class Archive(Task):
         site.register_path_handler('archive', self.archive_path)
         return super(Archive, self).set_site(site)
 
+    def _prepare_task(self, kw, name, lang, posts, items, template_name,
+                      title, deps_translatable=None):
+        # name: used to build permalink and destination
+        # posts, items: posts or items; only one of them should be used,
+        #               the other be None
+        # template_name: name of the template to use
+        # title: the (translated) title for the generated page
+        # deps_translatable: dependencies (None if not added)
+        assert posts is not None or items is not None
+
+        context = {}
+        context["lang"] = lang
+        context["title"] = title
+        context["permalink"] = self.site.link("archive", name, lang)
+        if posts is not None:
+            context["posts"] = posts
+            n = len(posts)
+        else:
+            context["items"] = items
+            n = len(items)
+        task = self.site.generic_post_list_renderer(
+            lang,
+            [],
+            os.path.join(kw['output_folder'], self.site.path("archive", name, lang)),
+            template_name,
+            kw['filters'],
+            context,
+        )
+
+        task_cfg = {1: task['uptodate'][0].config, 2: kw, 3: n}
+        if deps_translatable is not None:
+            task_cfg[4] = deps_translatable
+        task['uptodate'] = [config_changed(task_cfg)]
+        task['basename'] = self.name
+        return task
+
+    def _generate_posts_task(self, kw, name, lang, posts, title, deps_translatable=None):
+        posts = sorted(posts, key=lambda a: a.date)
+        posts.reverse()
+        yield self._prepare_task(kw, name, lang, posts, None, "list_post.tmpl", title, deps_translatable)
+
     def gen_tasks(self):
         kw = {
             "messages": self.site.MESSAGES,
@@ -49,18 +90,25 @@ class Archive(Task):
             "filters": self.site.config['FILTERS'],
             "create_monthly_archive": self.site.config['CREATE_MONTHLY_ARCHIVE'],
             "create_single_archive": self.site.config['CREATE_SINGLE_ARCHIVE'],
-            "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS']
+            "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
+            "create_full_archives": self.site.config['CREATE_FULL_ARCHIVES'],
+            "create_daily_archive": self.site.config['CREATE_DAILY_ARCHIVE'],
         }
         self.site.scan_posts()
         yield self.group_task()
         # TODO add next/prev links for years
-        if kw['create_monthly_archive'] and kw['create_single_archive']:
+        if (kw['create_monthly_archive'] and kw['create_single_archive']) and not kw['create_full_archives']:
             raise Exception('Cannot create monthly and single archives at the same time.')
         for lang in kw["translations"]:
-            archdata = self.site.posts_per_year
-            # A bit of a hack.
-            if kw['create_single_archive']:
-                archdata = {None: self.site.posts}
+            if kw['create_single_archive'] and not kw['create_full_archives']:
+                # if we are creating one single archive
+                archdata = {}
+            else:
+                # if we are not creating one single archive, start with all years
+                archdata = self.site.posts_per_year.copy()
+            if kw['create_single_archive'] or kw['create_full_archives']:
+                # if we are creating one single archive, or full archives
+                archdata[None] = self.site.posts  # for create_single_archive
 
             # Filter untranslated posts (Issue #1360)
             if not kw["show_untranslated_posts"]:
@@ -68,103 +116,54 @@ class Archive(Task):
                     archdata[year] = [p for p in posts if lang in p.translated_to]
 
             for year, posts in archdata.items():
-                output_name = os.path.join(
-                    kw['output_folder'], self.site.path("archive", year, lang))
-                context = {}
-                context["lang"] = lang
+                # Add archive per year or total archive
                 if year:
-                    context["title"] = kw["messages"][lang]["Posts for year %s"] % year
+                    title = kw["messages"][lang]["Posts for year %s"] % year
                 else:
-                    context["title"] = kw["messages"][lang]["Archive"]
-                context["permalink"] = self.site.link("archive", year, lang)
-                if not kw["create_monthly_archive"]:
-                    template_name = "list_post.tmpl"
-                    post_list = sorted(posts, key=lambda a: a.date)
-                    post_list.reverse()
-                    context["posts"] = post_list
-                else:  # Monthly archives, just list the months
-                    months = set([(m.split('/')[1], self.site.link("archive", m, lang)) for m in self.site.posts_per_month.keys() if m.startswith(str(year))])
-                    months = sorted(list(months))
-                    months.reverse()
-                    template_name = "list.tmpl"
-                    context["items"] = [[nikola.utils.LocaleBorg().get_month_name(int(month), lang), link] for month, link in months]
-                    post_list = []
-                task = self.site.generic_post_list_renderer(
-                    lang,
-                    [],
-                    output_name,
-                    template_name,
-                    kw['filters'],
-                    context,
-                )
-                n = len(post_list) if 'posts' in context else len(months)
-
+                    title = kw["messages"][lang]["Archive"]
                 deps_translatable = {}
                 for k in self.site._GLOBAL_CONTEXT_TRANSLATABLE:
                     deps_translatable[k] = self.site.GLOBAL_CONTEXT[k](lang)
+                if not kw["create_monthly_archive"] or kw["create_full_archives"]:
+                    yield self._generate_posts_task(kw, year, lang, posts, title, deps_translatable)
+                else:
+                    months = set([(m.split('/')[1], self.site.link("archive", m, lang)) for m in self.site.posts_per_month.keys() if m.startswith(str(year))])
+                    months = sorted(list(months))
+                    months.reverse()
+                    items = [[nikola.utils.LocaleBorg().get_month_name(int(month), lang), link] for month, link in months]
+                    yield self._prepare_task(kw, year, lang, None, items, "list.tmpl", title, deps_translatable)
 
-                task_cfg = {1: task['uptodate'][0].config, 2: kw, 3: n, 4: deps_translatable}
-                task['uptodate'] = [config_changed(task_cfg)]
-                task['basename'] = self.name
-                yield task
-
-            if not kw["create_monthly_archive"]:
+            if not kw["create_monthly_archive"] and not kw["create_full_archives"] and not kw["create_daily_archive"]:
                 continue  # Just to avoid nesting the other loop in this if
-            template_name = "list_post.tmpl"
             for yearmonth, posts in self.site.posts_per_month.items():
-                output_name = os.path.join(
-                    kw['output_folder'], self.site.path("archive", yearmonth,
-                                                        lang))
+                # Add archive per month
                 year, month = yearmonth.split('/')
-                post_list = sorted(posts, key=lambda a: a.date)
-                post_list.reverse()
-                context = {}
-                context["lang"] = lang
-                context["posts"] = post_list
-                context["permalink"] = self.site.link("archive", year, lang)
+                if kw["create_monthly_archive"] or kw["create_full_archives"]:
+                    title = kw["messages"][lang]["Posts for {month} {year}"].format(
+                        year=year, month=nikola.utils.LocaleBorg().get_month_name(int(month), lang))
+                    yield self._generate_posts_task(kw, yearmonth, lang, posts, title)
 
-                context["title"] = kw["messages"][lang]["Posts for {month} {year}"].format(
-                    year=year, month=nikola.utils.LocaleBorg().get_month_name(int(month), lang))
-                task = self.site.generic_post_list_renderer(
-                    lang,
-                    post_list,
-                    output_name,
-                    template_name,
-                    kw['filters'],
-                    context,
-                )
-                task_cfg = {1: task['uptodate'][0].config, 2: kw, 3: len(post_list)}
-                task['uptodate'] = [config_changed(task_cfg)]
-                task['basename'] = self.name
-                yield task
+                if not kw["create_full_archives"] and not kw["create_daily_archive"]:
+                    continue  # Just to avoid nesting the other loop in this if
+                # Add archive per day
+                days = dict()
+                for p in posts:
+                    if p.date.day not in days:
+                        days[p.date.day] = list()
+                    days[p.date.day].append(p)
+                for day, posts in days.items():
+                    title = kw["messages"][lang]["Posts for {month} {day}, {year}"].format(
+                        year=year, month=nikola.utils.LocaleBorg().get_month_name(int(month), lang), day=day)
+                    yield self._generate_posts_task(kw, yearmonth + '/{0:02d}'.format(day), lang, posts, title)
 
-        if not kw['create_single_archive']:
+        if not kw['create_single_archive'] and not kw['create_full_archives']:
             # And an "all your years" page for yearly and monthly archives
             years = list(self.site.posts_per_year.keys())
             years.sort(reverse=True)
-            template_name = "list.tmpl"
             kw['years'] = years
             for lang in kw["translations"]:
-                context = {}
-                output_name = os.path.join(
-                    kw['output_folder'], self.site.path("archive", None,
-                                                        lang))
-                context["title"] = kw["messages"][lang]["Archive"]
-                context["items"] = [(y, self.site.link("archive", y, lang))
-                                    for y in years]
-                context["permalink"] = self.site.link("archive", None, lang)
-                task = self.site.generic_post_list_renderer(
-                    lang,
-                    [],
-                    output_name,
-                    template_name,
-                    kw['filters'],
-                    context,
-                )
-                task_cfg = {1: task['uptodate'][0].config, 2: kw, 3: len(years)}
-                task['uptodate'] = [config_changed(task_cfg)]
-                task['basename'] = self.name
-                yield task
+                items = [(y, self.site.link("archive", y, lang)) for y in years]
+                yield self._prepare_task(kw, None, lang, None, items, "list.tmpl", kw["messages"][lang]["Archive"])
 
     def archive_path(self, name, lang):
         if name:

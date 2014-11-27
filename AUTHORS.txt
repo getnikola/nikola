@@ -22,6 +22,7 @@ Ondřej Grover <https://github.com/smartass101>
 Raimon Esteve <https://github.com/raimonesteve>
 Roberto Alsina <https://github.com/ralsina>
 Roman Imankulov <https://github.com/imankulov>
+Sean Pue <https://github.com/seanpue>
 StyXman <https://github.com/StyXman>
 Tim Chase <https://github.com/Gumnos>
 Tordek <https://github.com/Tordek>
@@ -40,6 +41,7 @@ dhruvbaldawa <https://github.com/dhruvbaldawa>
 dmoisset <https://github.com/dmoisset>
 edwinsteele <https://github.com/edwinsteele>
 ermeaney <https://github.com/ermeney>
+Felix Fontein <https://github.com/felixfontein>
 fisadev <https://github.com/fisadev>
 fizyk <https://github.com/fizyk>
 ivanov <https://github.com/ivanov>
@@ -61,6 +63,7 @@ numshub <https://github.com/numshub>
 onnodb <https://github.com/onnodb>
 pabluk <https://github.com/pabluk>
 punchagan <https://github.com/punchagan>
+pwm1234 <https://github.com/pwm1234>
 quijot <https://github.com/quijot>
 quodlibetor <https://github.com/quodlibetor>
 quoth <https://github.com/quoth>
@@ -74,3 +77,4 @@ yarko <https://github.com/yarko>
 Alex Walters <https://github.com/tritium21>
 Carsten Grohmann <https://github.com/CarstenGrohmann>
 Aurelien Naldi <https://github.com/aurelien-naldi>
+Andreas Linz <https://github.com/KLINGTdotNET>

@@ -95,6 +95,9 @@ class CommandGitHubDeploy(Command):
         self._remote_name = self.site.config.get(
             'GITHUB_REMOTE_NAME', 'origin'
         )
+        self._pull_before_commit = self.site.config.get(
+            'GITHUB_PULL_BEFORE_COMMIT', False
+        )
 
         self._ensure_git_repo()
 
@@ -137,9 +140,12 @@ class CommandGitHubDeploy(Command):
         commands = [
             ['git', 'add', '-A'],
             ['git', 'commit', '-m', commit_message],
-            ['git', 'push', '-f', remote, '%s:%s' % (deploy, deploy)],
+            ['git', 'push', '--force', remote, '%s:%s' % (deploy, deploy)],
             ['git', 'checkout', source],
         ]
+
+        if self._pull_before_commit:
+            commands.insert(0, ['git', 'pull', '--rebase=false', remote, '%s:%s' % (deploy, deploy)])
 
         for command in commands:
             self.logger.info("==> {0}".format(command))

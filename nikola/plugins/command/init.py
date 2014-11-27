@@ -237,13 +237,19 @@ class CommandInit(Command):
         src = resource_filename('nikola', os.path.join('data', 'samplesite'))
         shutil.copytree(src, target)
 
-    @classmethod
-    def create_configuration(cls, target):
+    @staticmethod
+    def create_configuration(target):
         template_path = resource_filename('nikola', 'conf.py.in')
         conf_template = Template(filename=template_path)
         conf_path = os.path.join(target, 'conf.py')
         with io.open(conf_path, 'w+', encoding='utf8') as fd:
             fd.write(conf_template.render(**prepare_config(SAMPLE_CONF)))
+
+    @staticmethod
+    def create_configuration_to_string():
+        template_path = resource_filename('nikola', 'conf.py.in')
+        conf_template = Template(filename=template_path)
+        return conf_template.render(**prepare_config(SAMPLE_CONF))
 
     @classmethod
     def create_empty_site(cls, target):
@@ -297,7 +303,7 @@ class CommandInit(Command):
                 lhandler(default, toconf, show_header=False)
 
         def tzhandler(default, toconf):
-            print("\nPlease choose the correct time zone for your blog.  Nikola uses the tz database.")
+            print("\nPlease choose the correct time zone for your blog. Nikola uses the tz database.")
             print("You can find your time zone here:")
             print("http://en.wikipedia.org/wiki/List_of_tz_database_time_zones")
             print("")

@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-07-31 12:30+0000\n"
+"PO-Revision-Date: 2014-11-18 08:42+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/nikola/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -98,6 +98,9 @@ msgstr "发表于："
 
 msgid "Posts for {month} {year}"
 msgstr "{year}年{month}月文章"
+
+msgid "Posts for {month} {day}, {year}"
+msgstr ""
 
 msgid "Nothing found."
 msgstr ""

@@ -58,6 +58,8 @@ class Listings(Task):
             "listings_folder": self.site.config["LISTINGS_FOLDER"],
             "output_folder": self.site.config["OUTPUT_FOLDER"],
             "index_file": self.site.config["INDEX_FILE"],
+            "strip_indexes": self.site.config['STRIP_INDEXES'],
+            "filters": self.site.config["FILTERS"],
         }
 
         # Things to ignore in listings
@@ -81,7 +83,7 @@ class Listings(Task):
                 title = os.path.basename(in_name)
             else:
                 code = ''
-                title = ''
+                title = os.path.split(os.path.dirname(out_name))[1]
             crumbs = utils.get_crumbs(os.path.relpath(out_name,
                                                       kw['output_folder']),
                                       is_file=True)
@@ -127,6 +129,8 @@ class Listings(Task):
             # save navigation links as dependencies
             uptodate['navigation_links'] = uptodate['c']['navigation_links'](kw['default_lang'])
 
+            uptodate['kw'] = kw
+
             uptodate2 = uptodate.copy()
             uptodate2['f'] = files
             uptodate2['d'] = dirs
@@ -136,7 +140,7 @@ class Listings(Task):
                 kw['output_folder'],
                 root, kw['index_file']
             )
-            yield {
+            yield utils.apply_filters({
                 'basename': self.name,
                 'name': out_name,
                 'file_dep': template_deps,
@@ -146,7 +150,7 @@ class Listings(Task):
                 # sidebar links, etc.
                 'uptodate': [utils.config_changed(uptodate2)],
                 'clean': True,
-            }
+            }, kw["filters"])
             for f in files:
                 ext = os.path.splitext(f)[-1]
                 if ext in ignored_extensions:
@@ -156,7 +160,7 @@ class Listings(Task):
                     kw['output_folder'],
                     root,
                     f) + '.html'
-                yield {
+                yield utils.apply_filters({
                     'basename': self.name,
                     'name': out_name,
                     'file_dep': template_deps + [in_name],
@@ -166,20 +170,20 @@ class Listings(Task):
                     # sidebar links, etc.
                     'uptodate': [utils.config_changed(uptodate)],
                     'clean': True,
-                }
+                }, kw["filters"])
                 if self.site.config['COPY_SOURCES']:
                     out_name = os.path.join(
                         kw['output_folder'],
                         root,
                         f)
-                    yield {
+                    yield utils.apply_filters({
                         'basename': self.name,
                         'name': out_name,
                         'file_dep': [in_name],
                         'targets': [out_name],
                         'actions': [(utils.copy_file, [in_name, out_name])],
                         'clean': True,
-                    }
+                    }, kw["filters"])
 
     def listing_path(self, name, lang):
         if not name.endswith('.html'):

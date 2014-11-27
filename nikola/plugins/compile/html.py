@@ -26,13 +26,14 @@
 
 """Implementation of compile_html for HTML source files."""
 
+from __future__ import unicode_literals
+
 import os
 import re
 import io
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, write_metadata
-
 
 _META_SEPARATOR = '(' + os.linesep * 2 + '|' + ('\n' * 2) + '|' + ("\r\n" * 2) + ')'
 
