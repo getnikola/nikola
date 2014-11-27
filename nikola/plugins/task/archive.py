@@ -90,6 +90,7 @@ class Archive(Task):
             "filters": self.site.config['FILTERS'],
             "create_monthly_archive": self.site.config['CREATE_MONTHLY_ARCHIVE'],
             "create_single_archive": self.site.config['CREATE_SINGLE_ARCHIVE'],
+            "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "create_full_archives": self.site.config['CREATE_FULL_ARCHIVES'],
             "create_daily_archive": self.site.config['CREATE_DAILY_ARCHIVE'],
         }
@@ -108,6 +109,11 @@ class Archive(Task):
             if kw['create_single_archive'] or kw['create_full_archives']:
                 # if we are creating one single archive, or full archives
                 archdata[None] = self.site.posts  # for create_single_archive
+
+            # Filter untranslated posts (Issue #1360)
+            if not kw["show_untranslated_posts"]:
+                for year, posts in archdata.items():
+                    archdata[year] = [p for p in posts if lang in p.translated_to]
 
             for year, posts in archdata.items():
                 # Add archive per year or total archive

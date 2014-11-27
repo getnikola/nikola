@@ -24,6 +24,7 @@ Features
 Bugfixes
 --------
 
+* Respect SHOW_UNTRANSLATED_POSTS=False in archives (Issue #1360)
 * Make sure drafts don’t appear in sitemaps with multiple languages
   (Issue #1489)
 * Make site.posts_per_file cover all languages (Issues #1270, #1489)
