@@ -110,12 +110,11 @@ class Archive(Task):
                 # if we are creating one single archive, or full archives
                 archdata[None] = self.site.posts  # for create_single_archive
 
-            # Filter untranslated posts (Issue #1360)
-            if not kw["show_untranslated_posts"]:
-                for year, posts in archdata.items():
+            for year, posts in archdata.items():
+                # Filter untranslated posts (Issue #1360)
+                if not kw["show_untranslated_posts"]:
                     archdata[year] = [p for p in posts if lang in p.translated_to]
 
-            for year, posts in archdata.items():
                 # Add archive per year or total archive
                 if year:
                     title = kw["messages"][lang]["Posts for year %s"] % year
@@ -138,6 +137,11 @@ class Archive(Task):
             for yearmonth, posts in self.site.posts_per_month.items():
                 # Add archive per month
                 year, month = yearmonth.split('/')
+
+                # Filter untranslated posts (via Issue #1360)
+                if not kw["show_untranslated_posts"]:
+                    posts = [p for p in posts if lang in p.translated_to]
+
                 if kw["create_monthly_archive"] or kw["create_full_archives"]:
                     title = kw["messages"][lang]["Posts for {month} {year}"].format(
                         year=year, month=nikola.utils.LocaleBorg().get_month_name(int(month), lang))
