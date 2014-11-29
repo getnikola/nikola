@@ -877,7 +877,10 @@ def get_crumbs(path, is_file=False, index_folder=None):
         for i, crumb in enumerate(crumbs[::-1]):
             if folder[-1] == os.sep:
                 folder = folder[:-1]
-            index_post = index_folder.parse_index(folder)
+            # We don't care about the created Post() object except for its title;
+            # hence, the input_folder and output_folder given to
+            # index_folder.parse_index() don't matter
+            index_post = index_folder.parse_index(folder, '', '')
             folder = folder.replace(crumb, '')
             if index_post:
                 crumb = index_post.title() or crumb

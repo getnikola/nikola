@@ -364,9 +364,13 @@ REDIRECTIONS = ${REDIRECTIONS}
 # Image Gallery Options
 # #############################################################################
 
-# Galleries are folders in galleries/
-# Final location of galleries will be output / GALLERY_PATH / gallery_name
-# GALLERY_PATH = "galleries"
+# One or more folders containing galleries. The format is a dictionary of
+# {"source": "relative_destination"}, where galleries are looked for in
+# "source/" and the results will be located in
+# "OUTPUT_PATH/relative_destination/gallery_name"
+# Default is:
+# GALLERY_FOLDERS = {"galleries": "galleries"}
+# More gallery options:
 # THUMBNAIL_SIZE = 180
 # MAX_IMAGE_SIZE = 1280
 # USE_FILENAME_AS_TITLE = True
