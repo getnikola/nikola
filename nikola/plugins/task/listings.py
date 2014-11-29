@@ -261,5 +261,7 @@ class Listings(Task):
         else:
             utils.LOGGER.error("Unknown listing name {0}!".format(namep))
             sys.exit(1)
+        if not name.endswith('/' + self.site.config["INDEX_FILE"]):
+            name += '.html'
         path_parts = list(os.path.split(name))
         return [_f for _f in path_parts if _f]
