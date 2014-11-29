@@ -537,11 +537,11 @@ class Nikola(object):
 
         if 'LISTINGS_FOLDER' in config:
             if 'LISTINGS_FOLDERS' not in config:
-                utils.LOGGER.warn("LISTINGS_FOLDER should not be used any more; use LISTINGS_FOLDERS instead.")
+                utils.LOGGER.warn("The LISTINGS_FOLDER option is deprecated, use LISTINGS_FOLDERS instead.")
                 self.config['LISTINGS_FOLDERS'] = {self.config['LISTINGS_FOLDER']: self.config['LISTINGS_FOLDER']}
+                utils.LOGGER.warn("LISTINGS_FOLDERS = {0}".format(self.config['LISTINGS_FOLDERS']))
             else:
-                utils.LOGGER.error("LISTINGS_FOLDER and LISTINGS_FOLDERS are both specified. Aborting.")
-                return
+                utils.LOGGER.warn("Both LISTINGS_FOLDER and LISTINGS_FOLDERS are specified, ignoring LISTINGS_FOLDER.")
 
         if not self.config.get('COPY_SOURCES'):
             self.config['SHOW_SOURCELINK'] = False
