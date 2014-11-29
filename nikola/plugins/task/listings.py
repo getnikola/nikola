@@ -72,7 +72,6 @@ class Listings(Task):
 
         # Verify that no folder in LISTINGS_FOLDERS appears twice (on output side)
         appearing_paths = set()
-        utils.LOGGER.info(self.kw['listings_folders'])
         for source, dest in self.kw['listings_folders'].items():
             if source in appearing_paths or dest in appearing_paths:
                 problem = source if source in appearing_paths else dest
