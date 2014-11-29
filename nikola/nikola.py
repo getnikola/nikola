@@ -335,7 +335,7 @@ class Nikola(object):
             'LESS_OPTIONS': [],
             'LICENSE': '',
             'LINK_CHECK_WHITELIST': [],
-            'LISTINGS_FOLDER': 'listings',
+            'LISTINGS_FOLDERS': {'listings': 'listings'},
             'LOGO_URL': '',
             'NAVIGATION_LINKS': {},
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],
@@ -534,6 +534,14 @@ class Nikola(object):
         # PRETTY_URLS defaults to enabling STRIP_INDEXES unless explicitly disabled
         if self.config.get('PRETTY_URLS') and 'STRIP_INDEXES' not in config:
             self.config['STRIP_INDEXES'] = True
+
+        if 'LISTINGS_FOLDER' in config:
+            if 'LISTINGS_FOLDERS' not in config:
+                utils.LOGGER.warn("LISTINGS_FOLDER should not be used any more; use LISTINGS_FOLDERS instead.")
+                self.config['LISTINGS_FOLDERS'] = {self.config['LISTINGS_FOLDER']: self.config['LISTINGS_FOLDER']}
+            else:
+                utils.LOGGER.error("LISTINGS_FOLDER and LISTINGS_FOLDERS are both specified. Aborting.")
+                return
 
         if not self.config.get('COPY_SOURCES'):
             self.config['SHOW_SOURCELINK'] = False
