@@ -404,7 +404,8 @@ class CommandImportWordpress(Command, ImportMixin):
             dt = utils.to_datetime(post_date)
         except ValueError:
             dt = datetime.datetime(1970, 1, 1, 0, 0, 0)
-            LOGGER.error('Malformed date "{0}" in "{1}", assuming 1970-01-01 00:00:00 instead.'.format(post_date, slug))
+            LOGGER.error('Malformed date "{0}" in "{1}" [{2}], assuming 1970-01-01 00:00:00 instead.'.format(post_date, title, slug))
+            post_date = dt.strftime('%Y-%m-%d %H:%M:%S')
 
         if dt.tzinfo and self.timezone is None:
             self.timezone = utils.get_tzname(dt)
