@@ -82,6 +82,7 @@ class Plugin(RestExtension):
         directives.register_directive('code-block', CodeBlock)
         directives.register_directive('sourcecode', CodeBlock)
         directives.register_directive('listing', Listing)
+        Listing.folders = site.config['LISTINGS_FOLDERS']
         return super(Plugin, self).set_site(site)
 
 # Add sphinx compatibility option
@@ -106,7 +107,14 @@ class Listing(Include):
     def run(self):
         fname = self.arguments.pop(0)
         lang = self.arguments.pop(0)
-        fpath = os.path.join('listings', fname)
+        if len(self.folders) == 1:
+            listings_folder = next(iter(self.folders.keys()))
+            if fname.startswith(listings_folder):
+                fpath = os.path.join(fname)  # new syntax: specify folder name
+            else:
+                fpath = os.path.join(listings_folder, fname)  # old syntax: don't specify folder name
+        else:
+            fpath = os.path.join(fname)  # must be new syntax: specify folder name
         self.arguments.insert(0, fpath)
         self.options['code'] = lang
         if 'linenos' in self.options:
@@ -114,7 +122,7 @@ class Listing(Include):
         with io.open(fpath, 'r+', encoding='utf8') as fileobject:
             self.content = fileobject.read().splitlines()
         self.state.document.settings.record_dependencies.add(fpath)
-        target = urlunsplit(("link", 'listing', fname, '', ''))
+        target = urlunsplit(("link", 'listing', fpath, '', ''))
         generated_nodes = (
             [core.publish_doctree('`{0} <{1}>`_'.format(fname, target))[0]])
         generated_nodes += self.get_code_from_file(fileobject)
