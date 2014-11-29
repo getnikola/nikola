@@ -118,10 +118,10 @@ class Listings(Task):
                     except:
                         lexer = TextLexer()
                     code = highlight(fd.read(), lexer,
-                                    HtmlFormatter(cssclass='code',
-                                                linenos="table", nowrap=False,
-                                                lineanchors=utils.slugify(in_name, force=True),
-                                                anchorlinenos=True))
+                                     HtmlFormatter(cssclass='code',
+                                                   linenos="table", nowrap=False,
+                                                   lineanchors=utils.slugify(in_name, force=True),
+                                                   anchorlinenos=True))
                 # the pygments highlighter uses <div class="codehilite"><pre>
                 # for code.  We switch it to reST's <pre class="code">.
                 code = CODERE.sub('<pre class="code literal-block">\\1</pre>', code)
@@ -130,8 +130,8 @@ class Listings(Task):
                 code = ''
                 title = os.path.split(os.path.dirname(out_name))[1]
             crumbs = utils.get_crumbs(os.path.relpath(out_name,
-                                                    self.kw['output_folder']),
-                                    is_file=True)
+                                                      self.kw['output_folder']),
+                                      is_file=True)
             permalink = self.site.link(
                 'listing',
                 os.path.join(
@@ -156,8 +156,7 @@ class Listings(Task):
                 'description': title,
                 'source_link': source_link,
             }
-            self.site.render_template('listing.tmpl', out_name,
-                                    context)
+            self.site.render_template('listing.tmpl', out_name, context)
 
         yield self.group_task()
 
