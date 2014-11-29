@@ -1,3 +1,5 @@
+import os
+
 from docutils.parsers.rst import Directive, directives
 from docutils.parsers.rst.directives.images import Image
 
@@ -18,5 +20,9 @@ class Thumbnail(Image):
     option_spec = Image.option_spec.copy()
 
     def run(self):
+        uri = directives.uri(self.arguments[0])
+        self.options['target'] = uri
+        self.arguments[0] = '.thumbnail'.join(os.path.splitext(uri))
         (image_node,) = Image.run(self)
         return [image_node]
+
