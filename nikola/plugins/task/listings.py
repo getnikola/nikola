@@ -71,9 +71,15 @@ class Listings(Task):
         }
 
         # Verify that no folder in LISTINGS_FOLDERS appears twice (on output side)
-        if len(set(self.kw['listings_folders'].values())) != len(self.kw['listings_folders']):
-            utils.LOGGER.error("A listings output folder was specified multiple times, exiting.")
-            sys.exit(1)
+        appearing_paths = set()
+        utils.LOGGER.info(self.kw['listings_folders'])
+        for source, dest in self.kw['listings_folders'].items():
+            if source in appearing_paths or dest in appearing_paths:
+                problem = source if source in appearing_paths else dest
+                utils.LOGGER.error("The listings input or output folder '{0}' appears in more than one entry in LISTINGS_FOLDERS, exiting.".format(problem))
+                sys.exit(1)
+            appearing_paths.add(source)
+            appearing_paths.add(dest)
 
         # improper_input_file_mapping maps a relative input file (relative to
         # its corresponding input directory) to a list of the output files.
