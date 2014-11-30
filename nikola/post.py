@@ -122,13 +122,14 @@ class Post(object):
         self.skip_untranslated = not self.config['SHOW_UNTRANSLATED_POSTS']
         self._template_name = template_name
         self.is_two_file = True
+        self.newstylemeta = True
         self.hyphenate = self.config['HYPHENATE']
         self._reading_time = None
         self._remaining_reading_time = None
         self._paragraph_count = None
         self._remaining_paragraph_count = None
 
-        default_metadata = get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'])
+        default_metadata, self.newstylemeta = get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'])
 
         self.meta = Functionary(lambda: None, self.default_lang)
         self.meta[self.default_lang] = default_metadata
@@ -140,7 +141,9 @@ class Post(object):
             if lang != self.default_lang:
                 meta = defaultdict(lambda: '')
                 meta.update(default_metadata)
-                meta.update(get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'], lang))
+                _meta, _nsm = get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'], lang)
+                self.newstylemeta = self.newstylemeta and _nsm
+                meta.update(_meta)
                 self.meta[lang] = meta
 
         if not self.is_translation_available(self.default_lang):
@@ -764,7 +767,7 @@ def get_metadata_from_meta_file(path, config=None, lang=None):
         if newstylemeta:
             # New-style metadata is basically the same as reading metadata from
             # a 1-file post.
-            return get_metadata_from_file(path, config, lang)
+            return get_metadata_from_file(path, config, lang), newstylemeta
         else:
             while len(meta_data) < 7:
                 meta_data.append("")
@@ -788,7 +791,7 @@ def get_metadata_from_meta_file(path, config=None, lang=None):
             if _type:
                 meta['type'] = _type
 
-            return meta
+            return meta, newstylemeta
 
     elif lang:
         # Metadata file doesn't exist, but not default language,
@@ -796,7 +799,7 @@ def get_metadata_from_meta_file(path, config=None, lang=None):
         # This makes the 2-file format detection more reliable (Issue #525)
         return get_metadata_from_meta_file(path, config, lang=None)
     else:
-        return {}
+        return {}, True
 
 
 def get_meta(post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
@@ -810,15 +813,18 @@ def get_meta(post, file_metadata_regexp=None, unslugify_titles=False, lang=None)
     """
     meta = defaultdict(lambda: '')
 
+    newstylemeta = True
+
     try:
         config = post.config
     except AttributeError:
         config = None
 
-    meta.update(get_metadata_from_meta_file(post.metadata_path, config, lang))
+    _, newstylemeta = get_metadata_from_meta_file(post.metadata_path, config, lang)
+    meta.update(_)
 
     if meta:
-        return meta
+        return meta, newstylemeta
     post.is_two_file = False
 
     if file_metadata_regexp is not None:
@@ -841,7 +847,7 @@ def get_meta(post, file_metadata_regexp=None, unslugify_titles=False, lang=None)
             meta['title'] = os.path.splitext(
                 os.path.basename(post.source_path))[0]
 
-    return meta
+    return meta, newstylemeta
 
 
 def hyphenate(dom, lang):
