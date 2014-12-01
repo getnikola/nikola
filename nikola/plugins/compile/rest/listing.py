@@ -67,8 +67,6 @@ class FlexibleCodeBlock(CodeBlock):
             self.options['number-lines'] = self.options['linenos']
         if 'tab-width' in self.options:
             self.content = [x.replace('\t', ' ' * self.options['tab-width']) for x in self.content]
-
-
         return super(FlexibleCodeBlock, self).run()
 CodeBlock = FlexibleCodeBlock
 # Add useful stuff to code directive
