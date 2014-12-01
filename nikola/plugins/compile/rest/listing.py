@@ -66,8 +66,14 @@ class FlexibleCodeBlock(CodeBlock):
     def run(self):
         if 'linenos' in self.options:
             self.options['number-lines'] = self.options['linenos']
+        if 'tab-width' in self.options:
+            print "foo"
         return super(FlexibleCodeBlock, self).run()
 CodeBlock = FlexibleCodeBlock
+# Add useful stuff to code directive
+cb_spec = CodeBlock.option_spec
+cb_spec['tab-width'] = directives.nonnegative_int
+
 
 
 class Plugin(RestExtension):
@@ -84,6 +90,7 @@ class Plugin(RestExtension):
         directives.register_directive('listing', Listing)
         Listing.folders = site.config['LISTINGS_FOLDERS']
         return super(Plugin, self).set_site(site)
+
 
 # Add sphinx compatibility option
 listing_spec = Include.option_spec
