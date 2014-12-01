@@ -31,6 +31,7 @@ import glob
 import json
 import mimetypes
 import os
+import sys
 try:
     from urlparse import urljoin
 except ImportError:
@@ -338,11 +339,6 @@ class Galleries(Task):
 
         # gallery_path is "gallery/foo/name"
         for gallery_path, input_folder, _ in self.gallery_list:
-            if gallery_path == input_folder:
-                gallery_name = ''
-                # special case, because relpath will return '.' in this case
-            else:
-                gallery_name = os.path.relpath(gallery_path, input_folder)
             # have to use dirname because site.path returns .../index.html
             output_gallery = os.path.dirname(
                 os.path.join(
