@@ -1214,7 +1214,7 @@ class Nikola(object):
             'task_dep': task_dep
         }
 
-    def scan_posts(self, really=False):
+    def scan_posts(self, really=False, ignore_quit=False):
         """Scan all the posts."""
         if self._scanned and not really:
             return
@@ -1331,7 +1331,7 @@ class Nikola(object):
 
         signal('scanned').send(self)
 
-        if quit:
+        if quit and not ignore_quit:
             sys.exit(1)
 
     def generic_page_renderer(self, lang, post, filters):
