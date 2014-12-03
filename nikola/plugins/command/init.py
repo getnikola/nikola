@@ -33,8 +33,10 @@ import textwrap
 import datetime
 import unidecode
 import dateutil.tz
+import dateutil.zoneinfo
 from mako.template import Template
 from pkg_resources import resource_filename
+import tarfile
 
 import nikola
 from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_RSS_READ_MORE_LINK, LEGAL_VALUES
@@ -315,6 +317,18 @@ class CommandInit(Command):
                     lz = None
                 answer = ask('Time zone', lz if lz else "UTC")
                 tz = dateutil.tz.gettz(answer)
+
+                if tz is None:
+                    print("    WARNING: Time zone not found.  Searching most common timezones for a match.")
+                    zonesfile = tarfile.TarFile.open(os.path.join(dateutil.zoneinfo.ZONEINFOFILE))
+                    zonenames = [zone for zone in zonesfile.getnames() if answer.lower() in zone.lower()]
+                    if len(zonenames) == 1:
+                        tz = dateutil.tz.gettz(zonenames[0])
+                    elif len(zonenames) > 1:
+                        print("    Could not pick one timezone. Choose one of the following:")
+                        print('        ' + '\n        '.join(zonenames))
+                        continue
+
                 if tz is not None:
                     time = datetime.datetime.now(tz).strftime('%H:%M:%S')
                     print("    Current time in {0}: {1}".format(answer, time))
