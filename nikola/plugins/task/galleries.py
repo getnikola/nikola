@@ -106,7 +106,7 @@ class Galleries(Task):
 
         return super(Galleries, self).set_site(site)
 
-    def find_gallery_path(self, name):
+    def _find_gallery_path(self, name):
         # The system using self.proper_gallery_links and self.improper_gallery_links
         # is similar as in listings.py.
         if name in self.proper_gallery_links:
@@ -123,13 +123,13 @@ class Galleries(Task):
         exit(1)
 
     def gallery_path(self, name, lang):
-        gallery_path = self.find_gallery_path(name)
+        gallery_path = self._find_gallery_path(name)
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
                 list(os.path.split(gallery_path)) +
                 [self.site.config['INDEX_FILE']] if _f]
 
     def gallery_rss_path(self, name, lang):
-        gallery_path = self.find_gallery_path(name)
+        gallery_path = self._find_gallery_path(name)
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
                 list(os.path.split(gallery_path)) +
                 ['rss.xml'] if _f]
@@ -329,10 +329,12 @@ class Galleries(Task):
             else:
                 gallery_name = os.path.relpath(gallery_path, input_folder)
 
-            self.proper_gallery_links[gallery_path] = os.path.join(output_folder, gallery_name)
+            output_path = os.path.join(output_folder, gallery_name)
+            self.proper_gallery_links[gallery_path] = output_path
+            self.proper_gallery_links[output_path] = output_path
             if gallery_name not in self.improper_gallery_links:
                 self.improper_gallery_links[gallery_name] = list()
-            self.improper_gallery_links[gallery_name].append(os.path.join(output_folder, gallery_name))
+            self.improper_gallery_links[gallery_name].append(output_path)
 
     def create_galleries(self):
         """Given a list of galleries, create the output folders."""
