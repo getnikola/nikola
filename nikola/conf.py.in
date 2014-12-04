@@ -224,7 +224,7 @@ COMPILERS = ${COMPILERS}
 # TAG_PAGES_DESCRIPTIONS = {
 #    DEFAULT_LANG: {
 #        "blogging": "Meta-blog posts about blogging about blogging.",
-"        "open source": "My contributions to my many, varied, ever-changing, and eternal libre software projects."
+#        "open source": "My contributions to my many, varied, ever-changing, and eternal libre software projects."
 #    },
 #}
 
