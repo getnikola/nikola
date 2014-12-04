@@ -60,6 +60,7 @@ class RenderTags(Task):
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
             "tag_pages_are_indexes": self.site.config['TAG_PAGES_ARE_INDEXES'],
+            "tag_pages_descriptions": self.site.config['TAG_PAGES_DESCRIPTIONS'],
             "index_display_post_count": self.site.config['INDEX_DISPLAY_POST_COUNT'],
             "index_teasers": self.site.config['INDEX_TEASERS'],
             "generate_rss": self.site.config['GENERATE_RSS'],
@@ -232,7 +233,9 @@ class RenderTags(Task):
                     page_name(tag, i + 1, lang))
             context["permalink"] = self.site.link(kind, tag, lang)
             context["tag"] = tag
-            context["description"] = context["title"]
+            context["description"] = None
+            if lang in kw["tag_pages_descriptions"] and tag in kw["tag_pages_descriptions"][lang]:
+                context["description"] = kw["tag_pages_descriptions"][lang][tag]
             task = self.site.generic_post_list_renderer(
                 lang,
                 post_list,
@@ -260,7 +263,9 @@ class RenderTags(Task):
         context["permalink"] = self.site.link(kind, tag, lang)
         context["tag"] = tag
         context["kind"] = kind
-        context["description"] = context["title"]
+        context["description"] = None
+        if lang in kw["tag_pages_descriptions"] and tag in kw["tag_pages_descriptions"][lang]:
+            context["description"] = kw["tag_pages_descriptions"][lang][tag]
         task = self.site.generic_post_list_renderer(
             lang,
             post_list,

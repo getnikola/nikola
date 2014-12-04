@@ -17,6 +17,9 @@
 <article class="tagpage">
     <header>
         <h1>${title}</h1>
+        %if description:
+        <p>${description}</p>
+        %endif
         <div class="metadata">
             %if len(translations) > 1 and generate_rss:
                 %for language in translations:

@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* New option TAG_PAGES_DESCRIPTIONS for optionally making individual
+  tag pages more unique and interesting (Issue #1486)
 * New option LISTINGS_FOLDERS (which replaces LISTINGS_FOLDER) which
   allows to separate input and output folder names for listings, and
   allows to have more than one listings folder (Issue #1499)
