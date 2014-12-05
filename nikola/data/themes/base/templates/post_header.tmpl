@@ -9,7 +9,7 @@
 </%def>
 
 <%def name="html_translations(post)">
-    % if len(translations) > 1:
+    % if len(post.translated_to) > 1:
         <div class="metadata posttranslations translations">
             <h3 class="posttranslations-intro">${messages("Also available in:")}</h3>
             % for langname in translations.keys():
