@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New tab-width option in code-block directive (Issue #1514)
 * New option TAG_PAGES_DESCRIPTIONS for optionally making individual
   tag pages more unique and interesting (Issue #1486)
 * New option LISTINGS_FOLDERS (which replaces LISTINGS_FOLDER) which

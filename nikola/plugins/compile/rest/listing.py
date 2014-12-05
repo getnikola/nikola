@@ -62,12 +62,16 @@ CodeBlock.option_spec['linenos'] = directives.unchanged
 
 
 class FlexibleCodeBlock(CodeBlock):
-
     def run(self):
         if 'linenos' in self.options:
             self.options['number-lines'] = self.options['linenos']
+        if 'tab-width' in self.options:
+            self.content = [x.replace('\t', ' ' * self.options['tab-width']) for x in self.content]
         return super(FlexibleCodeBlock, self).run()
 CodeBlock = FlexibleCodeBlock
+# Add useful stuff to code directive
+cb_spec = CodeBlock.option_spec
+cb_spec['tab-width'] = directives.nonnegative_int
 
 
 class Plugin(RestExtension):
@@ -79,11 +83,13 @@ class Plugin(RestExtension):
         # Even though listings don't use CodeBlock anymore, I am
         # leaving these to make the code directive work with
         # docutils < 0.9
+        directives.register_directive('code', CodeBlock)
         directives.register_directive('code-block', CodeBlock)
         directives.register_directive('sourcecode', CodeBlock)
         directives.register_directive('listing', Listing)
         Listing.folders = site.config['LISTINGS_FOLDERS']
         return super(Plugin, self).set_site(site)
+
 
 # Add sphinx compatibility option
 listing_spec = Include.option_spec
