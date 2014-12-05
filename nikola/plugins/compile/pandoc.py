@@ -48,7 +48,7 @@ class CompilePandoc(PageCompiler):
     def compile_html(self, source, dest, is_two_file=True):
         makedirs(os.path.dirname(dest))
         try:
-            subprocess.check_call(('pandoc', '-o', dest, source))
+            subprocess.check_call(['pandoc', '-o', dest, source] + self.site.config['PANDOC_OPTIONS'])
         except OSError as e:
             if e.strreror == 'No such file or directory':
                 req_missing(['pandoc'], 'build this site (compile with pandoc)', python=False)
