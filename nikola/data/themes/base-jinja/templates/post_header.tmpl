@@ -9,7 +9,7 @@
 {% endmacro %}
 
 {% macro html_translations(post) %}
-    {% if translations|length > 1 %}
+    {% if post.translated_to|length > 1 %}
         <div class="metadata posttranslations translations">
             <h3 class="posttranslations-intro">{{ messages("Also available in:") }}</h3>
             {% for langname in translations.keys() %}

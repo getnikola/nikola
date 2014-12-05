@@ -371,6 +371,7 @@ class Nikola(object):
             'SITEMAP_INCLUDE_FILELESS_DIRS': True,
             'TAG_PATH': 'categories',
             'TAG_PAGES_ARE_INDEXES': False,
+            'TAG_PAGES_DESCRIPTIONS': {},
             'TAGLIST_MINIMUM_POSTS': 1,
             'TEMPLATE_FILTERS': {},
             'THEME': 'bootstrap',
@@ -1214,7 +1215,7 @@ class Nikola(object):
             'task_dep': task_dep
         }
 
-    def scan_posts(self, really=False):
+    def scan_posts(self, really=False, ignore_quit=False):
         """Scan all the posts."""
         if self._scanned and not really:
             return
@@ -1331,7 +1332,7 @@ class Nikola(object):
 
         signal('scanned').send(self)
 
-        if quit:
+        if quit and not ignore_quit:
             sys.exit(1)
 
     def generic_page_renderer(self, lang, post, filters):
