@@ -50,6 +50,9 @@ class ScaleImage(Task, ImageProcessor):
             for src_name in files:
                 if src_name in ('.DS_Store', 'Thumbs.db'):
                     continue
+                if (not src_name.lower().endswith(tuple(self.image_ext_list))
+                    and not src_name.upper().endswith(tuple(self.image_ext_list))):
+                    continue
                 dst_file = os.path.join(dst_dir, src_name)
                 src_file = os.path.join(root, src_name)
                 yield {
@@ -74,6 +77,9 @@ class ScaleImage(Task, ImageProcessor):
             'output_folder': self.site.config['OUTPUT_FOLDER'],
             'filters': self.site.config['FILTERS'],
         }
+
+        self.image_ext_list = self.image_ext_list_builtin
+        self.image_ext_list.extend(self.site.config.get('EXTRA_IMAGE_EXTENSIONS', []))
 
         yield self.group_task()
         for src in self.kw['image_folders']:
