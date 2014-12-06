@@ -118,9 +118,8 @@ class Galleries(Task):
             self.logger.error("Gallery name '{0}' is not unique! Possible output paths: {1}".format(name, candidates))
         else:
             self.logger.error("Unknown gallery '{0}'!".format(name))
-            self.logger.info("Properly known galleries: " + str(list(self.proper_gallery_links.keys())))
-            self.logger.info("Improperly known galleries: " + str(list(self.improper_gallery_links.keys())))
-        exit(1)
+            self.logger.info("Known galleries: " + str(list(self.proper_gallery_links.keys())))
+        sys.exit(1)
 
     def gallery_path(self, name, lang):
         gallery_path = self._find_gallery_path(name)
