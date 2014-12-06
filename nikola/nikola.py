@@ -345,6 +345,7 @@ class Nikola(object):
             'OUTPUT_FOLDER': 'output',
             'POSTS': (("posts/*.txt", "posts", "post.tmpl"),),
             'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
+            'PANDOC_OPTIONS': [],
             'PRETTY_URLS': False,
             'FUTURE_IS_NOW': False,
             'INDEX_READ_MORE_LINK': DEFAULT_INDEX_READ_MORE_LINK,

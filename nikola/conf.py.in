@@ -169,7 +169,7 @@ PAGES = ${PAGES}
 # FILES_FOLDERS = {'files': ''}
 # Which means copy 'files' into 'output'
 
-# One or more folders containing listings to be processed and stored into 
+# One or more folders containing listings to be processed and stored into
 # the output. The format is a dictionary of {source: relative destination}.
 # Default is:
 # LISTINGS_FOLDERS = {'listings': 'listings'}
@@ -599,6 +599,11 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # Note: most Nikola-specific extensions are done via the Nikola plugin system,
 #       with the MarkdownExtension class and should not be added here.
 # MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite']
+
+# Extra options to pass to the pandoc comand.
+# by default, it's empty, is a list of strings, for example
+# ['-F', 'pandoc-citeproc', '--bibliography=/Users/foo/references.bib']
+# PANDOC_OPTIONS = []
 
 # Social buttons. This is sample code for AddThis (which was the default for a
 # long time). Insert anything you want here, or even make it empty.
