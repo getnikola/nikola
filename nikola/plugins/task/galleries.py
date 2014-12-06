@@ -552,7 +552,7 @@ class Galleries(Task):
         """
 
         def make_url(url):
-            return urljoin(self.site.config['BASE_URL'], self.site.link("rss", None, lang).lstrip('/'))
+            return urljoin(self.site.config['BASE_URL'], url.lstrip('/'))
 
         items = []
         for img, srcimg, title in list(zip(dest_img_list, img_list, img_titles))[:self.kw["feed_length"]]:
