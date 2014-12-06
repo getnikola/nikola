@@ -34,6 +34,8 @@ _image_size_cache = {}
 class ImageProcessor(object):
     """Apply image operations."""
 
+    image_ext_list_builtin = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.bmp', '.tiff']
+
     def resize_image(self, src, dst, max_size):
         """Make a copy of the image in the requested size."""
         if not Image:

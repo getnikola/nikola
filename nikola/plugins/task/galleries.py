@@ -140,7 +140,7 @@ class Galleries(Task, ImageProcessor):
         if Image is None:
             req_missing(['pillow'], 'render galleries')
 
-        self.image_ext_list = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.bmp', '.tiff']
+        self.image_ext_list = self.image_ext_list_builtin
         self.image_ext_list.extend(self.site.config.get('EXTRA_IMAGE_EXTENSIONS', []))
 
         for k, v in self.site.GLOBAL_CONTEXT['template_hooks'].items():
