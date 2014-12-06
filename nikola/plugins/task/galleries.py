@@ -331,6 +331,17 @@ class Galleries(Task):
             output_path = os.path.join(output_folder, gallery_name)
             self.proper_gallery_links[gallery_path] = output_path
             self.proper_gallery_links[output_path] = output_path
+
+            # If the input and output names differ, the gallery is accessible
+            # only by `input` and `output/`.
+            output_path_noslash = output_path[:-1]
+            if output_path_noslash not in self.proper_gallery_links:
+                self.proper_gallery_links[output_path_noslash] = output_path
+
+            gallery_path_slash = gallery_path + '/'
+            if gallery_path_slash not in self.proper_gallery_links:
+                self.proper_gallery_links[gallery_path_slash] = output_path
+
             if gallery_name not in self.improper_gallery_links:
                 self.improper_gallery_links[gallery_name] = list()
             self.improper_gallery_links[gallery_name].append(output_path)
