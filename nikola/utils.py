@@ -517,7 +517,7 @@ class config_changed(tools.config_changed):
         task.value_savers.append(lambda: {self.identifier: self.config_digest})
 
     def __call__(self, task, values):
-        """return True if confing values are UNCHANGED"""
+        """Return True if confing values are UNCHANGED"""
         self.config_digest = self._calc_digest()
         last_success = values.get(self.identifier)
         if last_success is None:
