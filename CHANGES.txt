@@ -4,6 +4,10 @@ New in master
 Features
 --------
 
+* The ``utils.config_changed`` function now takes an optional extra
+  argument, ``identifier``, used to identify the source of a specific
+  dependency save.  As such, ALL your files will be rebuilt after
+  upgrading. (Issue #1526 via #1521)
 * New option GALLERY_FOLDERS replacing GALLERY_PATH (Issue #1511)
 * New PANDOC_OPTIONS option (Issue #1492)
 * New tab-width option in code-block directive (Issue #1514)
