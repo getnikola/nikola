@@ -37,7 +37,7 @@ def rest_deps(post, task):
     dependencies into a .dep file. This file is read and incorporated when calling
     post.fragment_deps(), and only available /after/ compiling the fragment.
     """
-    task.file_dep.update(post.fragment_deps())
+    task.file_dep.update(post.fragment_deps(post.default_lang))
 
 
 class RenderPosts(Task):
