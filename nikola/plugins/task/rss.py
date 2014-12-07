@@ -94,7 +94,7 @@ class GenerateRSS(Task):
 
                 'task_dep': ['render_posts'],
                 'clean': True,
-                'uptodate': [utils.config_changed(kw)],
+                'uptodate': [utils.config_changed(kw, 'plugins.task.rss')],
             }
             yield utils.apply_filters(task, kw['filters'])
 

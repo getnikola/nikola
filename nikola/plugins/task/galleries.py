@@ -247,7 +247,7 @@ class Galleries(Task):
                         'targets': [post.translated_base_path(lang)],
                         'file_dep': post.fragment_deps(lang),
                         'actions': [(post.compile, [lang])],
-                        'uptodate': [utils.config_changed(self.kw)]
+                        'uptodate': [utils.config_changed(self.kw, 'plugins.task.galleries__post')]
                     }
                     context['post'] = post
                 else:
@@ -276,7 +276,7 @@ class Galleries(Task):
                         1: self.kw,
                         2: self.site.config["COMMENTS_IN_GALLERIES"],
                         3: context,
-                    })],
+                    }, 'plugins.task.galleries__gallery')],
                 }, self.kw['filters'])
 
                 # RSS for the gallery
@@ -304,7 +304,7 @@ class Galleries(Task):
                         'clean': True,
                         'uptodate': [utils.config_changed({
                             1: self.kw,
-                        })],
+                        }, 'plugins.task.galleries__rss')],
                     }, self.kw['filters'])
 
     def find_galleries(self):
@@ -364,7 +364,7 @@ class Galleries(Task):
                 'actions': [(utils.makedirs, (output_gallery,))],
                 'targets': [output_gallery],
                 'clean': True,
-                'uptodate': [utils.config_changed(self.kw)],
+                'uptodate': [utils.config_changed(self.kw, 'plugins.task.galleries__mkdir')],
             }
 
     def parse_index(self, gallery, input_folder, output_folder):
@@ -452,7 +452,7 @@ class Galleries(Task):
             'clean': True,
             'uptodate': [utils.config_changed({
                 1: self.kw['thumbnail_size']
-            })],
+            }, 'plugins.task.galleries__resize_thumb')],
         }, self.kw['filters'])
 
         yield utils.apply_filters({
@@ -467,7 +467,7 @@ class Galleries(Task):
             'clean': True,
             'uptodate': [utils.config_changed({
                 1: self.kw['max_image_size']
-            })],
+            }, 'plugins.task.galleries__resize_max')],
         }, self.kw['filters'])
 
     def remove_excluded_image(self, img, input_folder):
@@ -491,7 +491,7 @@ class Galleries(Task):
                 (utils.remove_file, (thumb_path,))
             ],
             'clean': True,
-            'uptodate': [utils.config_changed(self.kw)],
+            'uptodate': [utils.config_changed(self.kw, 'plugins.task.galleries__clean_thumb')],
         }, self.kw['filters'])
 
         yield utils.apply_filters({
@@ -501,7 +501,7 @@ class Galleries(Task):
                 (utils.remove_file, (img_path,))
             ],
             'clean': True,
-            'uptodate': [utils.config_changed(self.kw)],
+            'uptodate': [utils.config_changed(self.kw, 'plugins.task.galleries__clean_file')],
         }, self.kw['filters'])
 
     def render_gallery_index(

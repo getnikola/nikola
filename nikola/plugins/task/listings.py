@@ -206,7 +206,7 @@ class Listings(Task):
                     'actions': [(render_listing, [None, out_name, input_folder, output_folder, dirs, files])],
                     # This is necessary to reflect changes in blog title,
                     # sidebar links, etc.
-                    'uptodate': [utils.config_changed(uptodate2)],
+                    'uptodate': [utils.config_changed(uptodate2, 'plugins.task.listings__folder')],
                     'clean': True,
                 }, self.kw["filters"])
                 for f in files:
@@ -229,7 +229,7 @@ class Listings(Task):
                         'actions': [(render_listing, [in_name, out_name, input_folder, output_folder])],
                         # This is necessary to reflect changes in blog title,
                         # sidebar links, etc.
-                        'uptodate': [utils.config_changed(uptodate)],
+                        'uptodate': [utils.config_changed(uptodate, 'plugins.task.listings__source')],
                         'clean': True,
                     }, self.kw["filters"])
                     if self.site.config['COPY_SOURCES']:
