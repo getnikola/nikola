@@ -472,7 +472,7 @@ class TemplateHookRegistry(object):
         self._items.append((c, inp, wants_site_and_context, args, kwargs))
 
     def __hash__(self):
-        return config_changed({self.name: self._items})
+        return hash(config_changed({self.name: self._items})._hash_digest())
 
     def __str__(self):
         return '<TemplateHookRegistry: {0}>'.format(self._items)
