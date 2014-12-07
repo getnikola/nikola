@@ -285,10 +285,12 @@ class RenderTags(Task):
                          self.site.path(kind + "_rss", tag, lang)))
         feed_url = urljoin(self.site.config['BASE_URL'], self.site.link(kind + "_rss", tag, lang).lstrip('/'))
         deps = []
+        deps_uptodate = []
         post_list = sorted(posts, key=lambda a: a.date)
         post_list.reverse()
         for post in post_list:
             deps += post.deps(lang)
+            deps_uptodate += post.deps_uptodate(lang)
         task = {
             'basename': str(self.name),
             'name': output_name,
@@ -300,7 +302,7 @@ class RenderTags(Task):
                          output_name, kw["rss_teasers"], kw["rss_plain"], kw['feed_length'],
                          feed_url))],
             'clean': True,
-            'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.tags:rss')],
+            'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.tags:rss')] + deps_uptodate,
             'task_dep': ['render_posts'],
         }
         return utils.apply_filters(task, kw['filters'])

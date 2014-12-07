@@ -317,7 +317,7 @@ class Post(object):
         return self.meta[lang]['description']
 
     def deps(self, lang):
-        """Return a list of dependencies to build this post's page."""
+        """Return a list of file dependencies to build this post's page."""
         deps = []
         if self.default_lang in self.translated_to:
             deps.append(self.base_path)
@@ -327,6 +327,16 @@ class Post(object):
             cand_2 = get_translation_candidate(self.config, self.base_path, lang)
             if os.path.exists(cand_1):
                 deps.extend([cand_1, cand_2])
+        # ...
+        return deps
+
+    def deps_uptodate(self, lang):
+        """Return a list of uptodate dependencies to build this post's page.
+
+        These dependencies should be included in ``uptodate`` for the task
+        which generates the page."""
+        deps = []
+        # ...
         return deps
 
     def compile(self, lang):
@@ -355,8 +365,8 @@ class Post(object):
             LOGGER.notice('{0} is scheduled to be published in the future ({1})'.format(
                 self.source_path, self.date))
 
-    def extra_deps(self):
-        """get extra depepencies from .dep files
+    def _extra_deps(self):
+        """get extra file depepencies from .dep files
         This file is created by ReST
         """
         dep_path = self.base_path + '.dep'
@@ -366,18 +376,29 @@ class Post(object):
         return []
 
     def fragment_deps(self, lang):
-        """Return a list of dependencies to build this post's fragment."""
+        """Return a list of uptodate dependencies to build this post's fragment.
+
+        These dependencies should be included in ``uptodate`` for the task
+        which generates the fragment."""
         deps = []
         if self.default_lang in self.translated_to:
             deps.append(self.source_path)
         if os.path.isfile(self.metadata_path):
             deps.append(self.metadata_path)
-        deps.extend(self.extra_deps())
+        deps.extend(self._extra_deps())
         lang_deps = []
         if lang != self.default_lang:
             lang_deps = [get_translation_candidate(self.config, d, lang) for d in deps]
             deps += lang_deps
-        return [d for d in deps if os.path.exists(d)]
+        deps = [d for d in deps if os.path.exists(d)]
+        # ...
+        return deps
+
+    def fragment_deps_uptodate(self, lang):
+        """Return a list of file dependencies to build this post's fragment."""
+        deps = []
+        # ...
+        return deps
 
     def is_translation_available(self, lang):
         """Return true if the translation actually exists."""

@@ -247,7 +247,7 @@ class Galleries(Task):
                         'targets': [post.translated_base_path(lang)],
                         'file_dep': post.fragment_deps(lang),
                         'actions': [(post.compile, [lang])],
-                        'uptodate': [utils.config_changed(self.kw, 'nikola.plugins.task.galleries:post')]
+                        'uptodate': [utils.config_changed(self.kw, 'nikola.plugins.task.galleries:post')] + post.fragment_deps_uptodate(lang)
                     }
                     context['post'] = post
                 else:
