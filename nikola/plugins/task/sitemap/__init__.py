@@ -243,7 +243,7 @@ class Sitemap(LateTask):
             "name": sitemap_path,
             "targets": [sitemap_path],
             "actions": [(write_sitemap,)],
-            "uptodate": [config_changed(kw)],
+            "uptodate": [config_changed(kw, 'nikola.plugins.task.sitemap:write')],
             "clean": True,
             "task_dep": ["render_site"],
             "calc_dep": ["_scan_locs:sitemap"],
@@ -253,7 +253,7 @@ class Sitemap(LateTask):
             "name": sitemapindex_path,
             "targets": [sitemapindex_path],
             "actions": [(write_sitemapindex,)],
-            "uptodate": [config_changed(kw)],
+            "uptodate": [config_changed(kw, 'nikola.plugins.task.sitemap:write_index')],
             "clean": True,
             "file_dep": [sitemap_path]
         }, kw['filters'])
