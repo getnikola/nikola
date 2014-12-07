@@ -71,6 +71,6 @@ class RenderPosts(Task):
                                 (rest_deps, (post,)),
                                 ],
                     'clean': True,
-                    'uptodate': [utils.config_changed(deps_dict, 'plugins.task.posts')],
+                    'uptodate': [utils.config_changed(deps_dict, 'nikola.plugins.task.posts')],
                 }
                 yield task

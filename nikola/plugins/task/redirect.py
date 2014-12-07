@@ -57,7 +57,7 @@ class Redirect(Task):
                     'targets': [src_path],
                     'actions': [(create_redirect, (src_path, dst))],
                     'clean': True,
-                    'uptodate': [utils.config_changed(kw, 'plugins.task.redirect')],
+                    'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.redirect')],
                 }, kw["filters"])
 
 

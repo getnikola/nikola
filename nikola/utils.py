@@ -494,7 +494,7 @@ class config_changed(tools.config_changed):
         super(config_changed, self).__init__(config)
         self.identifier = '_config_changed'
         if identifier is not None:
-            self.identifier += '__' + identifier
+            self.identifier += ':' + identifier
 
     def _calc_digest(self):
         if isinstance(self.config, str):

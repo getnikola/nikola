@@ -1392,7 +1392,7 @@ class Nikola(object):
             'actions': [(self.render_template, [post.template_name,
                                                 output_name, context])],
             'clean': True,
-            'uptodate': [config_changed(deps_dict, 'Nikola.generic_post_renderer')],
+            'uptodate': [config_changed(deps_dict, 'nikola.Nikola.generic_post_renderer')],
         }
 
         yield utils.apply_filters(task, filters)
@@ -1432,7 +1432,7 @@ class Nikola(object):
             'actions': [(self.render_template, [template_name, output_name,
                                                 context])],
             'clean': True,
-            'uptodate': [config_changed(deps_context, 'Nikola.generic_post_list_renderer')]
+            'uptodate': [config_changed(deps_context, 'nikola.Nikola.generic_post_list_renderer')]
         }
 
         return utils.apply_filters(task, filters)

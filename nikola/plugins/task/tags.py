@@ -133,7 +133,7 @@ class RenderTags(Task):
             'name': str(output_name)
         }
 
-        task['uptodate'] = [utils.config_changed(tag_cloud_data, 'plugins.task.tags__tagdata')]
+        task['uptodate'] = [utils.config_changed(tag_cloud_data, 'nikola.plugins.task.tags:tagdata')]
         task['targets'] = [output_name]
         task['actions'] = [(write_tag_data, [tag_cloud_data])]
         task['clean'] = True
@@ -180,7 +180,7 @@ class RenderTags(Task):
                 kw['filters'],
                 context,
             )
-            task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'plugins.task.tags__page')]
+            task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.tags:page')]
             task['basename'] = str(self.name)
             yield task
 
@@ -243,7 +243,7 @@ class RenderTags(Task):
                 kw['filters'],
                 context,
             )
-            task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'plugins.task.tags__index')]
+            task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.tags:index')]
             task['basename'] = str(self.name)
 
             yield task
@@ -272,7 +272,7 @@ class RenderTags(Task):
             kw['filters'],
             context,
         )
-        task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'plugins.task.tags__list')]
+        task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.tags:list')]
         task['basename'] = str(self.name)
         yield task
 
@@ -300,7 +300,7 @@ class RenderTags(Task):
                          output_name, kw["rss_teasers"], kw["rss_plain"], kw['feed_length'],
                          feed_url))],
             'clean': True,
-            'uptodate': [utils.config_changed(kw, 'plugins.task.tags__rss')],
+            'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.tags:rss')],
             'task_dep': ['render_posts'],
         }
         return utils.apply_filters(task, kw['filters'])

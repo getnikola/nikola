@@ -72,7 +72,7 @@ class CopyAssets(Task):
                 if task['name'] in tasks:
                     continue
                 tasks[task['name']] = task
-                task['uptodate'] = [utils.config_changed(kw, 'plugins.task.copy_assets')]
+                task['uptodate'] = [utils.config_changed(kw, 'nikola.plugins.task.copy_assets')]
                 task['basename'] = self.name
                 if code_css_input:
                     task['file_dep'] = [code_css_input]
@@ -99,7 +99,7 @@ class CopyAssets(Task):
                 'basename': self.name,
                 'name': code_css_path,
                 'targets': [code_css_path],
-                'uptodate': [utils.config_changed(kw, 'plugins.task.copy_assets'), testcontents],
+                'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.copy_assets'), testcontents],
                 'actions': [(create_code_css, [])],
                 'clean': True,
             }

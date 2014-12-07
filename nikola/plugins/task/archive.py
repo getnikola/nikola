@@ -73,7 +73,7 @@ class Archive(Task):
         task_cfg = {1: task['uptodate'][0].config, 2: kw, 3: n}
         if deps_translatable is not None:
             task_cfg[4] = deps_translatable
-        task['uptodate'] = [config_changed(task_cfg, 'plugins.task.archive')]
+        task['uptodate'] = [config_changed(task_cfg, 'nikola.plugins.task.archive')]
         task['basename'] = self.name
         return task
 
