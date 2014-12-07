@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2014 Pelle Nilsson and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
