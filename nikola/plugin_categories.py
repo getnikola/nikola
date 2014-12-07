@@ -27,6 +27,7 @@
 from __future__ import absolute_import
 import sys
 import os
+import io
 
 __all__ = [
     'Command',
@@ -222,6 +223,21 @@ class PageCompiler(BasePlugin):
         'description': '',
         'type': 'text',
     }
+
+    def get_extra_dependencies(self, source, is_two_file=False):
+        """Get extra file depepencies from .dep files.
+
+        This file is created by ReST. A file retrieving this information
+        was originally in Nikola's Post class. Page compilers are encouraged
+        to override the default implementation of get_extra_dependencies to
+        return an empty list, or return a list of extra dependencies with
+        other means.
+        """
+        dep_path = source + '.dep'
+        if os.path.isfile(dep_path):
+            with io.open(dep_path, 'r+', encoding='utf8') as depf:
+                return [l.strip() for l in depf.readlines()]
+        return []
 
     def compile_html(self, source, dest, is_two_file=False):
         """Compile the source, save it on dest."""
