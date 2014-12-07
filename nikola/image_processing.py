@@ -28,6 +28,8 @@ from __future__ import unicode_literals
 import datetime
 import os
 
+from nikola import utils
+
 Image = None
 try:
     from PIL import Image, ExifTags  # NOQA
