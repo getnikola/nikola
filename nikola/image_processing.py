@@ -25,18 +25,9 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import unicode_literals
-import io
 import datetime
-import glob
-import json
-import mimetypes
 import os
-try:
-    from urlparse import urljoin
-except ImportError:
-    from urllib.parse import urljoin  # NOQA
 
-import natsort
 Image = None
 try:
     from PIL import Image, ExifTags  # NOQA
@@ -47,14 +38,6 @@ except ImportError:
         Image = _Image
     except ImportError:
         pass
-
-import PyRSS2Gen as rss
-
-#from nikola import utils
-#from nikola.post import Post
-#from nikola.utils import req_missing
-
-_image_size_cache = {}
 
 
 class ImageProcessor(object):
