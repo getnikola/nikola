@@ -472,7 +472,7 @@ class TemplateHookRegistry(object):
         self._items.append((c, inp, wants_site_and_context, args, kwargs))
 
     def __hash__(self):
-        return config_changed({self.name: self._items})
+        return hash(config_changed({self.name: self._items})._hash_digest())
 
     def __str__(self):
         return '<TemplateHookRegistry: {0}>'.format(self._items)
@@ -490,6 +490,12 @@ class CustomEncoder(json.JSONEncoder):
 class config_changed(tools.config_changed):
     """ A copy of doit's but using pickle instead of serializing manually."""
 
+    def __init__(self, config, identifier=None):
+        super(config_changed, self).__init__(config)
+        self.identifier = '_config_changed'
+        if identifier is not None:
+            self.identifier += ':' + identifier
+
     def _calc_digest(self):
         if isinstance(self.config, str):
             return self.config
@@ -506,6 +512,17 @@ class config_changed(tools.config_changed):
             raise Exception('Invalid type of config_changed parameter -- got '
                             '{0}, must be string or dict'.format(type(
                                 self.config)))
+
+    def configure_task(self, task):
+        task.value_savers.append(lambda: {self.identifier: self.config_digest})
+
+    def __call__(self, task, values):
+        """Return True if confing values are UNCHANGED"""
+        self.config_digest = self._calc_digest()
+        last_success = values.get(self.identifier)
+        if last_success is None:
+            return False
+        return (last_success == self.config_digest)
 
     def __repr__(self):
         return "Change with config: {0}".format(json.dumps(self.config,

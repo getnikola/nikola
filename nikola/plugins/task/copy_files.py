@@ -51,5 +51,5 @@ class CopyFiles(Task):
             real_dst = os.path.join(dst, kw['files_folders'][src])
             for task in utils.copy_tree(src, real_dst, link_cutoff=dst):
                 task['basename'] = self.name
-                task['uptodate'] = [utils.config_changed(kw)]
+                task['uptodate'] = [utils.config_changed(kw, 'nikola.plugins.task.copy_files')]
                 yield utils.apply_filters(task, filters, skip_ext=['.html'])

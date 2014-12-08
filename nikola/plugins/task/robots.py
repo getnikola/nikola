@@ -74,7 +74,7 @@ class RobotsFile(LateTask):
                 "name": robots_path,
                 "targets": [robots_path],
                 "actions": [(write_robots)],
-                "uptodate": [utils.config_changed(kw)],
+                "uptodate": [utils.config_changed(kw, 'nikola.plugins.task.robots')],
                 "clean": True,
                 "task_dep": ["sitemap"]
             }, kw["filters"])

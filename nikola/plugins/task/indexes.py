@@ -122,8 +122,7 @@ class Indexes(Task):
                     kw['filters'],
                     context,
                 )
-                task_cfg = {1: task['uptodate'][0].config, 2: kw}
-                task['uptodate'] = [config_changed(task_cfg)]
+                task['uptodate'] = task['uptodate'] + [config_changed(kw, 'nikola.plugins.task.indexes')]
                 task['basename'] = 'render_indexes'
                 yield task
 
@@ -173,8 +172,7 @@ class Indexes(Task):
                                                                     template_name,
                                                                     kw['filters'],
                                                                     context)
-                        task_cfg = {1: task['uptodate'][0].config, 2: kw}
-                        task['uptodate'] = [config_changed(task_cfg)]
+                        task['uptodate'] = task['uptodate'] + [config_changed(kw, 'nikola.plugins.task.indexes')]
                         task['basename'] = self.name
                         yield task
 

@@ -51,9 +51,7 @@ class RenderPages(Task):
                     continue
                 for task in self.site.generic_page_renderer(lang, post,
                                                             kw["filters"]):
-                    task['uptodate'] = [config_changed({
-                        1: task['uptodate'][0].config,
-                        2: kw})]
+                    task['uptodate'] = task['uptodate'] + [config_changed(kw, 'nikola.plugins.task.pages')]
                     task['basename'] = self.name
                     task['task_dep'] = ['render_posts']
                     yield task

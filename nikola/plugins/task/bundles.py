@@ -107,7 +107,7 @@ class BuildBundles(LateTask):
                         utils.config_changed({
                             1: kw,
                             2: file_dep
-                        })],
+                        }, 'nikola.plugins.task.bundles')],
                     'clean': True,
                 }
                 yield utils.apply_filters(task, kw['filters'])

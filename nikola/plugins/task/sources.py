@@ -80,5 +80,5 @@ class Sources(Task):
                             'targets': [output_name],
                             'actions': [(utils.copy_file, (source, output_name))],
                             'clean': True,
-                            'uptodate': [utils.config_changed(kw)],
+                            'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.sources')],
                         }
