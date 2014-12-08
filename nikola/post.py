@@ -373,10 +373,10 @@ class Post(object):
         for dep in deps_list:
             if dep[0]:
                 # callable
-                result = deps.append(dep[1]())
+                result = dep[1]()
             else:
                 # can add directly
-                result = deps.append(dep[1])
+                result = dep[1]
             # if result is a list, add its contents
             if type(result) == list:
                 deps.extend(result)

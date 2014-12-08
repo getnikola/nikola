@@ -49,6 +49,9 @@ class CompileIPynb(PageCompiler):
     supports_onefile = False
     demote_headers = True
 
+    def register_extra_dependencies(self, post):
+        pass
+
     def compile_html(self, source, dest, is_two_file=True):
         if flag is None:
             req_missing(['ipython>=1.1.0'], 'build this site (compile ipynb)')

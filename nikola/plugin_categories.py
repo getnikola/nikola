@@ -224,6 +224,15 @@ class PageCompiler(BasePlugin):
         'type': 'text',
     }
 
+    def _read_extra_deps(self, post):
+        """For internal use only: reads contents of .dep file"""
+        dep_path = post.base_path + '.dep'
+        if os.path.isfile(dep_path):
+            with io.open(dep_path, 'r+', encoding='utf8') as depf:
+                deps = [l.strip() for l in depf.readlines()]
+                return deps
+        return []
+
     def register_extra_dependencies(self, post):
         """Get extra file depepencies from .dep files.
 
@@ -233,15 +242,8 @@ class PageCompiler(BasePlugin):
         to do nothing, or make appropriate calls to the post's functions.
         """
 
-        def extra_deps():
-            dep_path = post.base_path + '.dep'
-            if os.path.isfile(dep_path):
-                with io.open(dep_path, 'r+', encoding='utf8') as depf:
-                    deps = [l.strip() for l in depf.readlines()]
-                    return deps
-            return []
-
-        post.add_dependency(extra_deps, 'fragment')
+        LOGGER.warn("The page compiler '" + self.name + "' does not support the new extra dependency registration facility.")
+        post.add_dependency(lambda: self._read_extra_deps(post), 'fragment')
 
     def compile_html(self, source, dest, is_two_file=False):
         """Compile the source, save it on dest."""

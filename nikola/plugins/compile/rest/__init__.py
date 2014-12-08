@@ -51,6 +51,9 @@ class CompileRest(PageCompiler):
     demote_headers = True
     logger = None
 
+    def register_extra_dependencies(self, post):
+        post.add_dependency(lambda: self._read_extra_deps(post), 'fragment')
+
     def compile_html(self, source, dest, is_two_file=True):
         """Compile reSt into HTML."""
 
