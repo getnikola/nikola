@@ -224,7 +224,7 @@ class PageCompiler(BasePlugin):
         'type': 'text',
     }
 
-    def get_extra_dependencies(self, source, is_two_file=False):
+    def get_extra_dependencies(self, base_path, translated_source_path, is_two_file=False):
         """Get extra file depepencies from .dep files.
 
         This file is created by ReST. A file retrieving this information
@@ -233,10 +233,11 @@ class PageCompiler(BasePlugin):
         return an empty list, or return a list of extra dependencies with
         other means.
         """
-        dep_path = source + '.dep'
+        dep_path = base_path + '.dep'
         if os.path.isfile(dep_path):
             with io.open(dep_path, 'r+', encoding='utf8') as depf:
-                return [l.strip() for l in depf.readlines()]
+                deps = [l.strip() for l in depf.readlines()]
+                return deps
         return []
 
     def compile_html(self, source, dest, is_two_file=False):

@@ -375,7 +375,7 @@ class Post(object):
             deps.append(self.source_path)
         if os.path.isfile(self.metadata_path):
             deps.append(self.metadata_path)
-        deps.extend(self.compiler.get_extra_dependencies(self.translated_source_path(lang), self.is_two_file))
+        deps.extend(self.compiler.get_extra_dependencies(self.base_path, self.translated_source_path(lang), self.is_two_file))
         lang_deps = []
         if lang != self.default_lang:
             lang_deps = [get_translation_candidate(self.config, d, lang) for d in deps]
