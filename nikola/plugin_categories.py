@@ -224,21 +224,24 @@ class PageCompiler(BasePlugin):
         'type': 'text',
     }
 
-    def get_extra_dependencies(self, base_path, translated_source_path, is_two_file=False):
+    def register_extra_dependencies(self, post):
         """Get extra file depepencies from .dep files.
 
         This file is created by ReST. A file retrieving this information
         was originally in Nikola's Post class. Page compilers are encouraged
-        to override the default implementation of get_extra_dependencies to
-        return an empty list, or return a list of extra dependencies with
-        other means.
+        to override the default implementation of register_extra_dependencies
+        to do nothing, or make appropriate calls to the post's functions.
         """
-        dep_path = base_path + '.dep'
-        if os.path.isfile(dep_path):
-            with io.open(dep_path, 'r+', encoding='utf8') as depf:
-                deps = [l.strip() for l in depf.readlines()]
-                return deps
-        return []
+
+        def extra_deps():
+            dep_path = post.base_path + '.dep'
+            if os.path.isfile(dep_path):
+                with io.open(dep_path, 'r+', encoding='utf8') as depf:
+                    deps = [l.strip() for l in depf.readlines()]
+                    return deps
+            return []
+
+        post.add_dependency(extra_deps, 'fragment')
 
     def compile_html(self, source, dest, is_two_file=False):
         """Compile the source, save it on dest."""
