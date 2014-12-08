@@ -27,7 +27,6 @@
 from __future__ import absolute_import
 import sys
 import os
-import io
 
 __all__ = [
     'Command',
@@ -224,26 +223,12 @@ class PageCompiler(BasePlugin):
         'type': 'text',
     }
 
-    def _read_extra_deps(self, post):
-        """For internal use only: reads contents of .dep file"""
-        dep_path = post.base_path + '.dep'
-        if os.path.isfile(dep_path):
-            with io.open(dep_path, 'r+', encoding='utf8') as depf:
-                deps = [l.strip() for l in depf.readlines()]
-                return deps
-        return []
-
     def register_extra_dependencies(self, post):
-        """Get extra file depepencies from .dep files.
+        """Add additional dependencies to the post object.
 
-        This file is created by ReST. A file retrieving this information
-        was originally in Nikola's Post class. Page compilers are encouraged
-        to override the default implementation of register_extra_dependencies
-        to do nothing, or make appropriate calls to the post's functions.
-        """
-
-        LOGGER.warn("The page compiler '" + self.name + "' does not support the new extra dependency registration facility.")
-        post.add_dependency(lambda: self._read_extra_deps(post), 'fragment')
+        Current main use is the ReST page compiler, which puts extra
+        dependencies into a .deb file."""
+        pass
 
     def compile_html(self, source, dest, is_two_file=False):
         """Compile the source, save it on dest."""

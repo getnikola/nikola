@@ -65,9 +65,6 @@ class CompileMarkdown(PageCompiler):
 
         return super(CompileMarkdown, self).set_site(site)
 
-    def register_extra_dependencies(self, post):
-        pass
-
     def compile_html(self, source, dest, is_two_file=True):
         if markdown is None:
             req_missing(['markdown'], 'build this site (compile Markdown)')

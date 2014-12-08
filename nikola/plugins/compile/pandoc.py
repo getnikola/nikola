@@ -45,9 +45,6 @@ class CompilePandoc(PageCompiler):
 
     name = "pandoc"
 
-    def register_extra_dependencies(self, post):
-        pass
-
     def compile_html(self, source, dest, is_two_file=True):
         makedirs(os.path.dirname(dest))
         try:

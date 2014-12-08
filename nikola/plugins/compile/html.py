@@ -42,9 +42,6 @@ class CompileHtml(PageCompiler):
     """Compile HTML into HTML."""
     name = "html"
 
-    def register_extra_dependencies(self, post):
-        pass
-
     def compile_html(self, source, dest, is_two_file=True):
         makedirs(os.path.dirname(dest))
         with io.open(dest, "w+", encoding="utf8") as out_file:
