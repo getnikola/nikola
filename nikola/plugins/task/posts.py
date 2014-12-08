@@ -30,14 +30,14 @@ from nikola.plugin_categories import Task
 from nikola import utils
 
 
-def rest_deps(post, task):
+def update_deps(post, lang, task):
     """Updates file dependencies as they might have been updated during compilation.
 
     This is done for example by the ReST page compiler, which writes its
     dependencies into a .dep file. This file is read and incorporated when calling
     post.fragment_deps(), and only available /after/ compiling the fragment.
     """
-    task.file_dep.update(post.fragment_deps(post.default_lang))
+    task.file_dep.update(post.fragment_deps(lang))
 
 
 class RenderPosts(Task):
@@ -69,7 +69,7 @@ class RenderPosts(Task):
                     'file_dep': post.fragment_deps(lang),
                     'targets': [dest],
                     'actions': [(post.compile, (lang, )),
-                                (rest_deps, (post,)),
+                                (update_deps, (post, lang, )),
                                 ],
                     'clean': True,
                     'uptodate': [utils.config_changed(deps_dict, 'nikola.plugins.task.posts')] + post.fragment_deps_uptodate(lang),
