@@ -124,14 +124,14 @@ class ImportMixin(object):
             fd.write(html.tostring(doc, encoding='utf8'))
 
     @staticmethod
-    def write_metadata(filename, title, slug, post_date, description, tags, other={}):
+    def write_metadata(filename, title, slug, post_date, description, tags, **kwargs):
         if not description:
             description = ""
 
         utils.makedirs(os.path.dirname(filename))
         with io.open(filename, "w+", encoding="utf8") as fd:
             data = {'title': title, 'slug': slug, 'date': post_date, 'tags': ','.join(tags), 'description': description}
-            data.update(other)
+            data.update(kwargs)
             fd.write(utils.write_metadata(data))
 
     @staticmethod
