@@ -115,13 +115,17 @@ class ImportMixin(object):
         return content
 
     @classmethod
-    def write_content(cls, filename, content):
-        doc = html.document_fromstring(content)
-        doc.rewrite_links(replacer)
+    def write_content(cls, filename, content, rewrite_html=True):
+        if rewrite_html:
+            doc = html.document_fromstring(content)
+            doc.rewrite_links(replacer)
+            content = html.tostring(doc, encoding='utf8')
+        else:
+            content = content.encode('utf-8')
 
         utils.makedirs(os.path.dirname(filename))
         with open(filename, "wb+") as fd:
-            fd.write(html.tostring(doc, encoding='utf8'))
+            fd.write(content)
 
     @staticmethod
     def write_metadata(filename, title, slug, post_date, description, tags, **kwargs):
