@@ -1226,7 +1226,13 @@ The gallery pages are generated using the ``gallery.tmpl`` template, and you can
 customize it there (you could switch to another lightbox instead of colorbox, change
 its settings, change the layout, etc.).
 
-The ``conf.py`` options affecting gallery pages are these::
+Images to be used in normal posts can be placed in the ``images`` folder. These
+images will be processed and have thumbnails created just as for galleries, but will
+then be copied directly to the corresponding path in the ``output`` directory, so you
+can reference it from whatever page you like, most easily using the ``thumbnail``
+reST extension. If you don't want thumbnails, just use the ``files`` folder instead.
+
+The ``conf.py`` options affecting images and gallery pages are these::
 
     # One or more folders containing galleries. The format is a dictionary of
     # {"source": "relative_destination"}, where galleries are looked for in
@@ -1234,7 +1240,14 @@ The ``conf.py`` options affecting gallery pages are these::
     # "OUTPUT_PATH/relative_destination/gallery_name"
     # Default is:
     GALLERY_FOLDERS = {"galleries": "galleries"}
-    # More gallery options:
+    # One or more folders containing images. The format is again a dictionary of
+    # {"source": "relative_destination"}. Images will be scaled down if necessary so
+    # that neither width nor height is greater than MAX_IMAGE_SIZE and copied to
+    # destination folder. A thumbnail will also be created in the same folder with
+    # ``.thumbnail`` inserted in the file name before the file extension
+    # (e.g. ``tesla.thumbnail.jpg``).
+    IMAGE_FOLDERS = {'images': ''}
+    # More image/gallery options:
     THUMBNAIL_SIZE = 180
     MAX_IMAGE_SIZE = 1280
     USE_FILENAME_AS_TITLE = True
@@ -1503,6 +1516,27 @@ Producing this:
 .. gist:: 2395294
 
 This degrades gracefully if the browser doesn't support JavaScript.
+
+Thumbnails
+~~~~~~~~~~
+
+To include an image placed in the ``images`` folder, use the
+``thumbnail`` directive, like this::
+
+    .. thumbnail:: tesla.jpg
+
+The small thumbnail will be placed in the page, and it will be linked to the bigger
+version of the image when clicked, using
+`colorbox <http://www.jacklmoore.com/colorbox>`_ by default. All options supported by
+the reST `image <http://docutils.sourceforge.net/docs/ref/rst/directives.html#image>`_
+directive are supported (except ``target``). If a body element is provided, the
+thumbnail will mimic the behavior of the
+`figure <http://docutils.sourceforge.net/docs/ref/rst/directives.html#figure>`_
+directive instead::
+
+    .. thumbnail:: tesla.jpg
+
+       Nikola Tesla, the man that invented the 20th century.
 
 Slideshows
 ~~~~~~~~~~
