@@ -472,7 +472,7 @@ class TemplateHookRegistry(object):
         self._items.append((c, inp, wants_site_and_context, args, kwargs))
 
     def __hash__(self):
-        return hash(config_changed({self.name: self._items})._hash_digest())
+        return hash(config_changed({self.name: self._items})._calc_digest())
 
     def __str__(self):
         return '<TemplateHookRegistry: {0}>'.format(self._items)
@@ -514,15 +514,14 @@ class config_changed(tools.config_changed):
                                 self.config)))
 
     def configure_task(self, task):
-        task.value_savers.append(lambda: {self.identifier: self.config_digest})
+        task.value_savers.append(lambda: {self.identifier: self._calc_digest()})
 
     def __call__(self, task, values):
         """Return True if config values are unchanged."""
-        self.config_digest = self._calc_digest()
         last_success = values.get(self.identifier)
         if last_success is None:
             return False
-        return (last_success == self.config_digest)
+        return (last_success == self._calc_digest())
 
     def __repr__(self):
         return "Change with config: {0}".format(json.dumps(self.config,

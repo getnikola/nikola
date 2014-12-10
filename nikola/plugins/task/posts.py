@@ -30,13 +30,14 @@ from nikola.plugin_categories import Task
 from nikola import utils
 
 
-def rest_deps(post, task):
-    """Add extra_deps from ReST into task.
+def update_deps(post, lang, task):
+    """Updates file dependencies as they might have been updated during compilation.
 
-    The .dep file is created by ReST so not available before the task starts
-    to execute.
+    This is done for example by the ReST page compiler, which writes its
+    dependencies into a .dep file. This file is read and incorporated when calling
+    post.fragment_deps(), and only available /after/ compiling the fragment.
     """
-    task.file_dep.update(post.extra_deps())
+    task.file_dep.update(post.fragment_deps(lang))
 
 
 class RenderPosts(Task):
@@ -68,9 +69,9 @@ class RenderPosts(Task):
                     'file_dep': post.fragment_deps(lang),
                     'targets': [dest],
                     'actions': [(post.compile, (lang, )),
-                                (rest_deps, (post,)),
+                                (update_deps, (post, lang, )),
                                 ],
                     'clean': True,
-                    'uptodate': [utils.config_changed(deps_dict, 'nikola.plugins.task.posts')],
+                    'uptodate': [utils.config_changed(deps_dict, 'nikola.plugins.task.posts')] + post.fragment_deps_uptodate(lang),
                 }
                 yield task

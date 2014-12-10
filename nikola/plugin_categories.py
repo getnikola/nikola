@@ -223,6 +223,13 @@ class PageCompiler(BasePlugin):
         'type': 'text',
     }
 
+    def register_extra_dependencies(self, post):
+        """Add additional dependencies to the post object.
+
+        Current main use is the ReST page compiler, which puts extra
+        dependencies into a .deb file."""
+        pass
+
     def compile_html(self, source, dest, is_two_file=False):
         """Compile the source, save it on dest."""
         raise NotImplementedError()
