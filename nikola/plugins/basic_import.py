@@ -115,22 +115,28 @@ class ImportMixin(object):
         return content
 
     @classmethod
-    def write_content(cls, filename, content):
-        doc = html.document_fromstring(content)
-        doc.rewrite_links(replacer)
+    def write_content(cls, filename, content, rewrite_html=True):
+        if rewrite_html:
+            doc = html.document_fromstring(content)
+            doc.rewrite_links(replacer)
+            content = html.tostring(doc, encoding='utf8')
+        else:
+            content = content.encode('utf-8')
 
         utils.makedirs(os.path.dirname(filename))
         with open(filename, "wb+") as fd:
-            fd.write(html.tostring(doc, encoding='utf8'))
+            fd.write(content)
 
     @staticmethod
-    def write_metadata(filename, title, slug, post_date, description, tags):
+    def write_metadata(filename, title, slug, post_date, description, tags, **kwargs):
         if not description:
             description = ""
 
         utils.makedirs(os.path.dirname(filename))
         with io.open(filename, "w+", encoding="utf8") as fd:
-            fd.write(utils.write_metadata({'title': title, 'slug': slug, 'date': post_date, 'tags': ','.join(tags), 'description': description}))
+            data = {'title': title, 'slug': slug, 'date': post_date, 'tags': ','.join(tags), 'description': description}
+            data.update(kwargs)
+            fd.write(utils.write_metadata(data))
 
     @staticmethod
     def write_urlmap_csv(output_file, url_map):
