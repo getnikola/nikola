@@ -323,6 +323,7 @@ class Nikola(object):
             'GZIP_FILES': False,
             'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js', '.json', '.xml'),
             'HYPHENATE': False,
+            'IMAGE_FOLDERS': {'images': ''},
             'INDEX_DISPLAY_POST_COUNT': 10,
             'INDEX_FILE': 'index.html',
             'INDEX_TEASERS': False,

@@ -34,6 +34,8 @@ Features
 * New options CREATE_FULL_ARCHIVES and CREATE_DAILY_ARCHIVE which allow
   to create non-hierarchical archives and archives for days, respectively
   (Issue #1494)
+* New plugin for creating image thumbnails, and a corresponding reST
+  plugin (Issue #1527)
 
 Bugfixes
 --------
