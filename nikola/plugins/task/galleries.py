@@ -40,11 +40,10 @@ except ImportError:
 import natsort
 Image = None
 try:
-    from PIL import Image, ExifTags  # NOQA
+    from PIL import Image  # NOQA
 except ImportError:
     try:
         import Image as _Image
-        import ExifTags
         Image = _Image
     except ImportError:
         pass
@@ -592,4 +591,3 @@ class Galleries(Task, ImageProcessor):
             if isinstance(data, utils.bytes_str):
                 data = data.decode('utf-8')
             rss_file.write(data)
-
