@@ -137,6 +137,9 @@ class Sitemap(LateTask):
                 lastmod = self.get_lastmod(root)
                 loc = urljoin(base_url, base_path + path)
                 if kw['index_file'] in files and kw['strip_indexes']:  # ignore folders when not stripping urls
+                    post = self.site.post_per_file.get(path + kw['index_file'])
+                    if post and (post.is_draft or post.is_private or post.publish_later):
+                        continue
                     urlset[loc] = loc_format.format(loc, lastmod)
                 for fname in files:
                     if kw['strip_indexes'] and fname == kw['index_file']:
