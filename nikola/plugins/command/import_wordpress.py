@@ -106,8 +106,11 @@ class CommandImportWordpress(Command, ImportMixin):
         },
     ]
 
-    def _execute(self, options={}, args=[]):
+    def _execute(self, options=None, args=None):
         """Import a WordPress blog from an export file into a Nikola site."""
+        options = options or {}
+        args = args or []
+
         if not args:
             print(self.help())
             return
