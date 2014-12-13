@@ -115,7 +115,10 @@ class Listings(Task):
         # Things to ignore in listings
         ignored_extensions = (".pyc", ".pyo")
 
-        def render_listing(in_name, out_name, input_folder, output_folder, folders=[], files=[]):
+        def render_listing(in_name, out_name, input_folder, output_folder, folders=None, files=None):
+            folders = folders or []
+            files = files or []
+
             if in_name:
                 with open(in_name, 'r') as fd:
                     try:

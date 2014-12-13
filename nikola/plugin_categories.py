@@ -93,9 +93,12 @@ class Command(BasePlugin, DoitCommand):
         BasePlugin.__init__(self, *args, **kwargs)
         DoitCommand.__init__(self)
 
-    def execute(self, options={}, args=[]):
+    def execute(self, options=None, args=None):
         """Check if the command can run in the current environment,
         fail if needed, or call _execute."""
+        options = options or {}
+        args = args or []
+
         if self.needs_config and not self.site.configured:
             LOGGER.error("This command needs to run inside an existing Nikola site.")
             return False
