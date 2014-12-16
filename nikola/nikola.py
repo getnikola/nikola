@@ -279,6 +279,10 @@ class Nikola(object):
             'BLOG_DESCRIPTION': 'Default Description',
             'BODY_END': "",
             'CACHE_FOLDER': 'cache',
+            'CATEGORY_PATH': None,  # None means: same as TAG_PATH
+            'CATEGORY_PAGES_ARE_INDEXES': None,  # None means: same as TAG_PAGES_ARE_INDEXES
+            'CATEGORY_PAGES_DESCRIPTIONS': {},
+            'CATEGORY_PREFIX': 'cat_',
             'CODE_COLOR_SCHEME': 'default',
             'COMMENT_SYSTEM': 'disqus',
             'COMMENTS_IN_GALLERIES': False,
@@ -389,6 +393,7 @@ class Nikola(object):
             'USE_OPEN_GRAPH': True,
             'USE_SLUGIFY': True,
             'TIMEZONE': 'UTC',
+            'WRITE_TAG_CLOUD': True,
             'DEPLOY_DRAFTS': True,
             'DEPLOY_FUTURE': False,
             'SCHEDULE_ALL': False,
@@ -556,6 +561,11 @@ class Nikola(object):
 
         if not self.config.get('COPY_SOURCES'):
             self.config['SHOW_SOURCELINK'] = False
+
+        if self.config['CATEGORY_PATH'] is None:
+            self.config['CATEGORY_PATH'] = self.config['TAG_PATH']
+        if self.config['CATEGORY_PAGES_ARE_INDEXES'] is None:
+            self.config['CATEGORY_PAGES_ARE_INDEXES'] = self.config['TAG_PAGES_ARE_INDEXES']
 
         self.default_lang = self.config['DEFAULT_LANG']
         self.translations = self.config['TRANSLATIONS']

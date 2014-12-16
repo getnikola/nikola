@@ -4,6 +4,9 @@ New in master
 Features
 --------
 
+* Tag and category pages are now more separated. The prefix for
+  category pages can be changed and the folder can be modified
+  independently of the tags' folder.
 * The ``utils.config_changed`` function now takes an optional extra
   argument, ``identifier``, used to identify the source of a specific
   dependency save.  As such, ALL your files will be rebuilt after

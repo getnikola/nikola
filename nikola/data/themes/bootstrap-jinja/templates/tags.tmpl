@@ -4,7 +4,9 @@
 {% block content %}
 <h1>{{ title }}</h1>
 {% if cat_items %}
-    <h2>{{ messages("Categories") }}</h2>
+    {% if items %}
+        <h2>{{ messages("Categories") }}</h2>
+    {% endif %}
     <ul class="unstyled">
     {% for text, link in cat_items %}
         {% if text %}
