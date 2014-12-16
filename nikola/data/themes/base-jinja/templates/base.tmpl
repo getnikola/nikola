@@ -14,7 +14,7 @@
 <a href="#content" class="sr-only sr-only-focusable">{{ messages("Skip to main content") }}</a>
     <div id="container">
          {{ header.html_header() }}
-         <main id="content">
+         <main id="content" role="main">
             {% block content %}{% endblock %}
          </main>
          {{ footer.html_footer() }}
