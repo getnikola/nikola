@@ -64,6 +64,30 @@ class Indexes(Task):
         template_name = "index.tmpl"
         posts = self.site.posts
         for lang in kw["translations"]:
+            def page_link(i):
+                return self.site.link("index", i, lang)
+
+            def page_path(i):
+                return self.site.path("index", i, lang)
+
+            def page_title(i):
+                indexes_title = kw['indexes_title'] or kw['blog_title'](lang)
+                if kw["indexes_pages_main"]:
+                    ipages_i = i + 1
+                    ipages_msg = "page %d"
+                else:
+                    ipages_i = i
+                    ipages_msg = "old posts, page %d"
+                if kw["indexes_pages"]:
+                    indexes_pages = kw["indexes_pages"] % ipages_i
+                else:
+                    indexes_pages = " (" + \
+                        kw["messages"][lang][ipages_msg] % ipages_i + ")"
+                if i > 0 or kw["indexes_pages_main"]:
+                    return indexes_title + indexes_pages
+                else:
+                    return indexes_title
+
             # Split in smaller lists
             lists = []
             if kw["show_untranslated_posts"]:
@@ -78,42 +102,22 @@ class Indexes(Task):
             num_pages = len(lists)
             for i, post_list in enumerate(lists):
                 context = {}
-                indexes_title = kw['indexes_title'] or kw['blog_title'](lang)
-                if kw["indexes_pages_main"]:
-                    ipages_i = i + 1
-                    ipages_msg = "page %d"
-                else:
-                    ipages_i = i
-                    ipages_msg = "old posts, page %d"
-                if kw["indexes_pages"]:
-                    indexes_pages = kw["indexes_pages"] % ipages_i
-                else:
-                    indexes_pages = " (" + \
-                        kw["messages"][lang][ipages_msg] % ipages_i + ")"
-                if i > 0 or kw["indexes_pages_main"]:
-                    context["title"] = indexes_title + indexes_pages
-                else:
-                    context["title"] = indexes_title
+                context["title"] = page_title(i)
                 context["prevlink"] = None
                 context["nextlink"] = None
                 context['index_teasers'] = kw['index_teasers']
-                if i == 0:  # index.html page
-                    context["prevlink"] = None
-                    if num_pages > 1:
-                        context["nextlink"] = "index-{0}.html".format(num_pages - 1)
-                    else:
-                        context["nextlink"] = None
-                else:  # index-x.html pages
-                    if i > 1:
-                        context["nextlink"] = "index-{0}.html".format(i - 1)
+                if i > 0:
                     if i < num_pages - 1:
-                        context["prevlink"] = "index-{0}.html".format(i + 1)
+                        context["prevlink"] = page_link(i + 1)
                     elif i == num_pages - 1:
-                        context["prevlink"] = "index.html"
-                context["permalink"] = self.site.link("index", i, lang)
-                output_name = os.path.join(
-                    kw['output_folder'], self.site.path("index", i,
-                                                        lang))
+                        context["prevlink"] = page_link(0)
+                if num_pages > 1:
+                    if i > 0:
+                        context["nextlink"] = page_link(i - 1)
+                    elif i == 0:
+                        context["nextlink"] = page_link(num_pages - 1)
+                context["permalink"] = page_link(i)
+                output_name = os.path.join(kw['output_folder'], page_path(i))
                 task = self.site.generic_post_list_renderer(
                     lang,
                     post_list,

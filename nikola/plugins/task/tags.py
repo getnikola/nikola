@@ -220,12 +220,20 @@ class RenderTags(Task):
 
         kind = "category" if is_category else "tag"
 
-        def page_name(tagname, i, lang):
-            """Given tag, n, returns a page name."""
+        def page_link(i):
+            name = self.site.link(kind, tag, lang)
+            if i:
+                name = name.replace('.html', '-{0}.html'.format(i))
+            return name
+
+        def page_path(i):
             name = self.site.path(kind, tag, lang)
             if i:
                 name = name.replace('.html', '-{0}.html'.format(i))
             return name
+
+        def page_title(i):
+            return kw["messages"][lang]["Posts about %s"] % tag
 
         # FIXME: deduplicate this with render_indexes
         template_name = "tagindex.tmpl"
@@ -235,37 +243,31 @@ class RenderTags(Task):
             lists.append(post_list[:kw["index_display_post_count"]])
             post_list = post_list[kw["index_display_post_count"]:]
         num_pages = len(lists)
+        context_source = {}
+        if kw["generate_rss"]:
+            # On a tag page, the feeds include the tag's feeds
+            rss_link = ("""<link rel="alternate" type="application/rss+xml" """
+                        """type="application/rss+xml" title="RSS for tag """
+                        """{0} ({1})" href="{2}">""".format(
+                            tag, lang, self.site.link(kind + "_rss", tag, lang)))
+            context_source['rss_link'] = rss_link
+        context_source["tag"] = tag
+        context_source["description"] = None
+        descriptions = kw["category_pages_descriptions"] if is_category else kw["tag_pages_descriptions"]
+        if lang in descriptions and tag in descriptions[lang]:
+            context_source["description"] = descriptions[lang][tag]
         for i, post_list in enumerate(lists):
-            context = {}
-            if kw["generate_rss"]:
-                # On a tag page, the feeds include the tag's feeds
-                rss_link = ("""<link rel="alternate" type="application/rss+xml" """
-                            """type="application/rss+xml" title="RSS for tag """
-                            """{0} ({1})" href="{2}">""".format(
-                                tag, lang, self.site.link(kind + "_rss", tag, lang)))
-                context['rss_link'] = rss_link
-            output_name = os.path.join(kw['output_folder'],
-                                       page_name(tag, i, lang))
-            context["title"] = kw["messages"][lang][
-                "Posts about %s"] % tag
+            context = context_source.copy()
+            context["title"] = page_title(i)
             context["prevlink"] = None
             context["nextlink"] = None
             context['index_teasers'] = kw['index_teasers']
-            if i > 1:
-                context["prevlink"] = os.path.basename(
-                    page_name(tag, i - 1, lang))
-            if i == 1:
-                context["prevlink"] = os.path.basename(
-                    page_name(tag, 0, lang))
+            if i >= 1:
+                context["prevlink"] = page_link(i - 1)
             if i < num_pages - 1:
-                context["nextlink"] = os.path.basename(
-                    page_name(tag, i + 1, lang))
-            context["permalink"] = self.site.link(kind, tag, lang)
-            context["tag"] = tag
-            context["description"] = None
-            descriptions = kw["category_pages_descriptions"] if is_category else kw["tag_pages_descriptions"]
-            if lang in descriptions and tag in descriptions[lang]:
-                context["description"] = descriptions[lang][tag]
+                context["nextlink"] = page_link(i + 1)
+            context["permalink"] = page_link(i)
+            output_name = os.path.join(kw['output_folder'], page_path(i))
             task = self.site.generic_post_list_renderer(
                 lang,
                 post_list,
@@ -276,7 +278,6 @@ class RenderTags(Task):
             )
             task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.tags:index')]
             task['basename'] = str(self.name)
-
             yield task
 
     def tag_page_as_list(self, tag, lang, post_list, kw, is_category):
