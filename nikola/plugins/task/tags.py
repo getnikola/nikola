@@ -87,7 +87,7 @@ class RenderTags(Task):
         if self.site.config['CATEGORY_PATH'] == self.site.config['TAG_PATH']:
             tags = {self.slugify_name(tag): tag for tag in self.site.posts_per_tag.keys()}
             categories = {self.site.config['CATEGORY_PREFIX'] + self.slugify_name(category): category for category in self.site.posts_per_category.keys()}
-            intersect = tags.keys() & categories.keys()
+            intersect = set(tags.keys()) & set(categories.keys())
             if len(intersect) > 0:
                 for slug in intersect:
                     utils.LOGGER.error("Category '{0}' and tag '{1}' both have the same slug '{2}'!".format(categories[slug], tags[slug], slug))
