@@ -1212,7 +1212,7 @@ def get_translation_candidate(config, path, lang):
 
 def write_metadata(data):
     """Write metadata."""
-    order = ('title', 'slug', 'date', 'tags', 'link', 'description', 'type')
+    order = ('title', 'slug', 'date', 'tags', 'category', 'link', 'description', 'type')
     f = '.. {0}: {1}'
     meta = []
     for k in order:

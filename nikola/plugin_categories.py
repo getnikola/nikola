@@ -214,13 +214,12 @@ class PageCompiler(BasePlugin):
     name = "dummy compiler"
     demote_headers = False
     supports_onefile = True
-    default_metadata = {}
-
     default_metadata = {
         'title': '',
         'slug': '',
         'date': '',
         'tags': '',
+        'category': '',
         'link': '',
         'description': '',
         'type': 'text',
