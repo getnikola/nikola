@@ -27,6 +27,7 @@
 from __future__ import unicode_literals
 import json
 import os
+import sys
 try:
     from urlparse import urljoin
 except ImportError:
@@ -82,6 +83,15 @@ class RenderTags(Task):
 
         if not self.site.posts_per_tag and not self.site.posts_per_category:
             return
+
+        if self.site.config['CATEGORY_PATH'] == self.site.config['TAG_PATH']:
+            tags = {self.slugify_name(tag): tag for tag in self.site.posts_per_tag.keys()}
+            categories = {self.site.config['CATEGORY_PREFIX'] + self.slugify_name(category): category for category in self.site.posts_per_category.keys()}
+            intersect = tags.keys() & categories.keys()
+            if len(intersect) > 0:
+                for slug in intersect:
+                    utils.LOGGER.error("Category '{0}' and tag '{1}' both have the same slug '{2}'!".format(categories[slug], tags[slug], slug))
+                sys.exit(1)
 
         tag_list = list(self.site.posts_per_tag.items())
         cat_list = list(self.site.posts_per_category.items())
