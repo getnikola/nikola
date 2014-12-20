@@ -433,6 +433,12 @@ REDIRECTIONS = ${REDIRECTIONS}
 # INDEXES_PAGES = ""         # If this is empty, defaults to '[old posts,] page %d' (see above)
 # INDEXES_PAGES_MAIN = False # If True, INDEXES_PAGES is also displayed on
 #                            # the main (the newest) index page (index.html)
+# INDEXES_PAGES_STARTING_WITH_LAST = True # If True, index-1.html has the oldest posts,
+#                                         # index-2.html the second-oldest posts, etc.,
+#                                         # and index.html has the newest posts.
+#                                         # If False, index-1.html has the second-newest
+#                                         # posts, index-2.html the third-newest, and
+#                                         # index-n.html the oldest posts.
 
 # Color scheme to be used for code blocks. If your theme provides
 # "assets/css/code.css" this is ignored.

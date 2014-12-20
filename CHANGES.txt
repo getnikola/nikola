@@ -4,6 +4,10 @@ New in master
 Features
 --------
 
+* Added new option INDEXES_PAGES_STARTING_WITH_LAST which allows to
+  define the page ordering for indices (Issue #1537). Also, if tag
+  pages are created as indices, they will behave more close to the
+  default indices.
 * Use ``table`` line-numbering style with reST code, making
   copy-pasting code possible (Issue #1285)
 * Tag and category pages are now more separated. The prefix for
