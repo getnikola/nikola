@@ -279,6 +279,10 @@ class Nikola(object):
             'BLOG_DESCRIPTION': 'Default Description',
             'BODY_END': "",
             'CACHE_FOLDER': 'cache',
+            'CATEGORY_PATH': None,  # None means: same as TAG_PATH
+            'CATEGORY_PAGES_ARE_INDEXES': None,  # None means: same as TAG_PAGES_ARE_INDEXES
+            'CATEGORY_PAGES_DESCRIPTIONS': {},
+            'CATEGORY_PREFIX': 'cat_',
             'CODE_COLOR_SCHEME': 'default',
             'COMMENT_SYSTEM': 'disqus',
             'COMMENTS_IN_GALLERIES': False,
@@ -389,6 +393,7 @@ class Nikola(object):
             'USE_OPEN_GRAPH': True,
             'USE_SLUGIFY': True,
             'TIMEZONE': 'UTC',
+            'WRITE_TAG_CLOUD': True,
             'DEPLOY_DRAFTS': True,
             'DEPLOY_FUTURE': False,
             'SCHEDULE_ALL': False,
@@ -557,6 +562,11 @@ class Nikola(object):
         if not self.config.get('COPY_SOURCES'):
             self.config['SHOW_SOURCELINK'] = False
 
+        if self.config['CATEGORY_PATH'] is None:
+            self.config['CATEGORY_PATH'] = self.config['TAG_PATH']
+        if self.config['CATEGORY_PAGES_ARE_INDEXES'] is None:
+            self.config['CATEGORY_PAGES_ARE_INDEXES'] = self.config['TAG_PAGES_ARE_INDEXES']
+
         self.default_lang = self.config['DEFAULT_LANG']
         self.translations = self.config['TRANSLATIONS']
 
@@ -581,6 +591,14 @@ class Nikola(object):
             self.config['DEPLOY_COMMANDS'] = {'default': self.config['DEPLOY_COMMANDS']}
             utils.LOGGER.warn("DEPLOY_COMMANDS = {0}".format(self.config['DEPLOY_COMMANDS']))
             utils.LOGGER.info("(The above can be used with `nikola deploy` or `nikola deploy default`.  Multiple presets are accepted.)")
+
+
+        # todo: remove and change default in v8
+        if 'BLOG_TITLE' in config and 'WRITE_TAG_CLOUD' not in config:
+            # BLOG_TITLE is a hack, otherwise it would be displayed
+            # when conf.py does not exist
+            utils.LOGGER.warn("WRITE_TAG_CLOUD is not set in your config.  Defaulting to True (== writing tag_cloud_data.json).")
+            utils.LOGGER.warn("Please explicitly add the setting to your conf.py with the desired value, as the setting will default to False in the future.")
 
         # We use one global tzinfo object all over Nikola.
         self.tzinfo = dateutil.tz.gettz(self.config['TIMEZONE'])
