@@ -79,11 +79,6 @@ class RenderTags(Task):
             "tzinfo": self.site.tzinfo,
         }
 
-        if kw['tag_pages_are_indexes']:
-            kw["indexes_pages"] = self.site.config['INDEXES_PAGES']
-            kw["indexes_pages_main"] = self.site.config['INDEXES_PAGES_MAIN']
-            kw["indexes_pages_starting_with_last"] = self.site.config['INDEXES_PAGES_STARTING_WITH_LAST']
-
         self.site.scan_posts()
         yield self.group_task()
 
@@ -252,73 +247,8 @@ class RenderTags(Task):
             context_source["description"] = descriptions[lang][tag]
         indexes_title = kw["messages"][lang]["Posts about %s"] % tag
         template_name = "tagindex.tmpl"
-        # FIXME: deduplicate this with render_indexes
 
-        # Split in smaller lists
-        lists = []
-        if kw["indexes_pages_starting_with_last"]:
-            lists.append(post_list[:kw["index_display_post_count"]])
-            post_list = post_list[kw["index_display_post_count"]:]
-            while post_list:
-                lists.append(post_list[-kw["index_display_post_count"]:])
-                post_list = post_list[:-kw["index_display_post_count"]]
-        else:
-            while post_list:
-                lists.append(post_list[:kw["index_display_post_count"]])
-                post_list = post_list[kw["index_display_post_count"]:]
-        num_pages = len(lists)
->>>>>>> Added new option INDEXES_PAGES_STARTING_WITH_LAST.
-        for i, post_list in enumerate(lists):
-            context = context_source.copy()
-            if kw["indexes_pages_starting_with_last"]:
-                ipages_i = i if i > 0 else num_pages
-            else:
-                ipages_i = i + 1 if kw["indexes_pages_main"] else i
-            if kw["indexes_pages"]:
-                indexes_pages = kw["indexes_pages"] % ipages_i
-            else:
-                if kw["indexes_pages_main"]:
-                    ipages_msg = "page %d"
-                else:
-                    ipages_msg = "old posts, page %d"
-                indexes_pages = " (" + \
-                    kw["messages"][lang][ipages_msg] % ipages_i + ")"
-            if i > 0 or kw["indexes_pages_main"]:
-                context["title"] = indexes_title + indexes_pages
-            else:
-                context["title"] = indexes_title
-            context["prevlink"] = None
-            context["nextlink"] = None
-            context['index_teasers'] = kw['index_teasers']
-            if kw["indexes_pages_starting_with_last"]:
-                if i > 0:
-                    if i < num_pages - 1:
-                        context["prevlink"] = page_link(i + 1, num_pages)
-                    elif i == num_pages - 1:
-                        context["prevlink"] = page_link(0, num_pages)
-                if num_pages > 1:
-                    if i > 1:
-                        context["nextlink"] = page_link(i - 1, num_pages)
-                    elif i == 0:
-                        context["nextlink"] = page_link(num_pages - 1, num_pages)
-            else:
-                if i >= 1:
-                    context["prevlink"] = page_link(i - 1, num_pages)
-                if i < num_pages - 1:
-                    context["nextlink"] = page_link(i + 1, num_pages)
-            context["permalink"] = page_link(i, num_pages)
-            output_name = os.path.join(kw['output_folder'], page_path(i, num_pages))
-            task = self.site.generic_post_list_renderer(
-                lang,
-                post_list,
-                output_name,
-                template_name,
-                kw['filters'],
-                context,
-            )
-            task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.tags:index')]
-            task['basename'] = str(self.name)
-            yield task
+        yield self.site.generic_index_renderer(lang, post_list, indexes_title, template_name, context_source, kw, str(self.name), page_link, page_path)
 
     def tag_page_as_list(self, tag, lang, post_list, kw, is_category):
         """We render a single flat link list with this tag's posts"""
