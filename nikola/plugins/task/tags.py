@@ -61,8 +61,11 @@ class RenderTags(Task):
             "messages": self.site.MESSAGES,
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
+            'tag_path': self.site.config['TAG_PATH'],
             "tag_pages_are_indexes": self.site.config['TAG_PAGES_ARE_INDEXES'],
             "tag_pages_descriptions": self.site.config['TAG_PAGES_DESCRIPTIONS'],
+            'category_path': self.site.config['CATEGORY_PATH'],
+            'category_prefix': self.site.config['CATEGORY_PREFIX'],
             "category_pages_are_indexes": self.site.config['CATEGORY_PAGES_ARE_INDEXES'],
             "category_pages_descriptions": self.site.config['CATEGORY_PAGES_DESCRIPTIONS'],
             "index_display_post_count": self.site.config['INDEX_DISPLAY_POST_COUNT'],
@@ -84,9 +87,9 @@ class RenderTags(Task):
         if not self.site.posts_per_tag and not self.site.posts_per_category:
             return
 
-        if self.site.config['CATEGORY_PATH'] == self.site.config['TAG_PATH']:
+        if kw['category_path'] == kw['tag_path']:
             tags = {self.slugify_name(tag): tag for tag in self.site.posts_per_tag.keys()}
-            categories = {self.site.config['CATEGORY_PREFIX'] + self.slugify_name(category): category for category in self.site.posts_per_category.keys()}
+            categories = {kw['category_prefix'] + self.slugify_name(category): category for category in self.site.posts_per_category.keys()}
             intersect = set(tags.keys()) & set(categories.keys())
             if len(intersect) > 0:
                 for slug in intersect:
