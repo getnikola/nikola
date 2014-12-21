@@ -29,7 +29,7 @@ import os
 # for tearDown with _reload we cannot use 'import from' to access LocaleBorg
 import nikola.utils
 from nikola.plugin_categories import Task
-from nikola.utils import config_changed
+from nikola.utils import config_changed, adjust_name_for_index
 
 
 class Archive(Task):
@@ -80,7 +80,23 @@ class Archive(Task):
     def _generate_posts_task(self, kw, name, lang, posts, title, deps_translatable=None):
         posts = sorted(posts, key=lambda a: a.date)
         posts.reverse()
-        yield self._prepare_task(kw, name, lang, posts, None, "list_post.tmpl", title, deps_translatable)
+        if kw['archives_are_indexes']:
+            uptodate = []
+            if deps_translatable is not None:
+                uptodate += [config_changed(deps_translatable, 'nikola.plugins.task.archive')]
+            yield self.site.generic_index_renderer(
+                lang,
+                posts,
+                title,
+                "archiveindex.tmpl",
+                {},
+                kw,
+                str(self.name),
+                lambda i, num_pages: adjust_name_for_index(self.site.link("archive", name, lang), i, kw['index_file']),
+                lambda i, num_pages: adjust_name_for_index(self.site.path("archive", name, lang), i, kw['index_file']),
+                uptodate)
+        else:
+            yield self._prepare_task(kw, name, lang, posts, None, "list_post.tmpl", title, deps_translatable)
 
     def gen_tasks(self):
         kw = {
@@ -88,11 +104,15 @@ class Archive(Task):
             "translations": self.site.config['TRANSLATIONS'],
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
+            "archives_are_indexes": self.site.config['ARCHIVES_ARE_INDEXES'],
             "create_monthly_archive": self.site.config['CREATE_MONTHLY_ARCHIVE'],
             "create_single_archive": self.site.config['CREATE_SINGLE_ARCHIVE'],
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "create_full_archives": self.site.config['CREATE_FULL_ARCHIVES'],
             "create_daily_archive": self.site.config['CREATE_DAILY_ARCHIVE'],
+            "pretty_urls": self.site.config['PRETTY_URLS'],
+            "strip_indexes": self.site.config['STRIP_INDEXES'],
+            "index_file": self.site.config['INDEX_FILE'],
         }
         self.site.scan_posts()
         yield self.group_task()

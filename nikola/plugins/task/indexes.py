@@ -29,7 +29,7 @@ from collections import defaultdict
 import os
 
 from nikola.plugin_categories import Task
-from nikola.utils import config_changed
+from nikola.utils import config_changed, adjust_name_for_index
 
 
 class Indexes(Task):
@@ -47,16 +47,11 @@ class Indexes(Task):
 
         kw = {
             "translations": self.site.config['TRANSLATIONS'],
-            "index_display_post_count":
-            self.site.config['INDEX_DISPLAY_POST_COUNT'],
             "messages": self.site.MESSAGES,
-            "index_teasers": self.site.config['INDEX_TEASERS'],
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "indexes_title": self.site.config['INDEXES_TITLE'],
-            "indexes_pages": self.site.config['INDEXES_PAGES'],
-            "indexes_pages_main": self.site.config['INDEXES_PAGES_MAIN'],
             "blog_title": self.site.config["BLOG_TITLE"],
             "rss_read_more_link": self.site.config["RSS_READ_MORE_LINK"],
         }
@@ -64,67 +59,20 @@ class Indexes(Task):
         template_name = "index.tmpl"
         posts = self.site.posts
         for lang in kw["translations"]:
-            # Split in smaller lists
-            lists = []
+            def page_link(i, num_pages):
+                return self.site.link("index", i, lang)
+
+            def page_path(i, num_pages):
+                return self.site.path("index", i, lang)
+
             if kw["show_untranslated_posts"]:
                 filtered_posts = posts
             else:
                 filtered_posts = [x for x in posts if x.is_translation_available(lang)]
-            lists.append(filtered_posts[:kw["index_display_post_count"]])
-            filtered_posts = filtered_posts[kw["index_display_post_count"]:]
-            while filtered_posts:
-                lists.append(filtered_posts[-kw["index_display_post_count"]:])
-                filtered_posts = filtered_posts[:-kw["index_display_post_count"]]
-            num_pages = len(lists)
-            for i, post_list in enumerate(lists):
-                context = {}
-                indexes_title = kw['indexes_title'] or kw['blog_title'](lang)
-                if kw["indexes_pages_main"]:
-                    ipages_i = i + 1
-                    ipages_msg = "page %d"
-                else:
-                    ipages_i = i
-                    ipages_msg = "old posts, page %d"
-                if kw["indexes_pages"]:
-                    indexes_pages = kw["indexes_pages"] % ipages_i
-                else:
-                    indexes_pages = " (" + \
-                        kw["messages"][lang][ipages_msg] % ipages_i + ")"
-                if i > 0 or kw["indexes_pages_main"]:
-                    context["title"] = indexes_title + indexes_pages
-                else:
-                    context["title"] = indexes_title
-                context["prevlink"] = None
-                context["nextlink"] = None
-                context['index_teasers'] = kw['index_teasers']
-                if i == 0:  # index.html page
-                    context["prevlink"] = None
-                    if num_pages > 1:
-                        context["nextlink"] = "index-{0}.html".format(num_pages - 1)
-                    else:
-                        context["nextlink"] = None
-                else:  # index-x.html pages
-                    if i > 1:
-                        context["nextlink"] = "index-{0}.html".format(i - 1)
-                    if i < num_pages - 1:
-                        context["prevlink"] = "index-{0}.html".format(i + 1)
-                    elif i == num_pages - 1:
-                        context["prevlink"] = "index.html"
-                context["permalink"] = self.site.link("index", i, lang)
-                output_name = os.path.join(
-                    kw['output_folder'], self.site.path("index", i,
-                                                        lang))
-                task = self.site.generic_post_list_renderer(
-                    lang,
-                    post_list,
-                    output_name,
-                    template_name,
-                    kw['filters'],
-                    context,
-                )
-                task['uptodate'] = task['uptodate'] + [config_changed(kw, 'nikola.plugins.task.indexes')]
-                task['basename'] = 'render_indexes'
-                yield task
+
+            indexes_title = kw['indexes_title'] or kw['blog_title'](lang)
+
+            yield self.site.generic_index_renderer(lang, filtered_posts, indexes_title, template_name, {}, kw, 'render_indexes', page_link, page_path)
 
         if not self.site.config["STORY_INDEX"]:
             return
@@ -177,12 +125,7 @@ class Indexes(Task):
                         yield task
 
     def index_path(self, name, lang):
-        if name not in [None, 0]:
-            return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                                  self.site.config['INDEX_PATH'],
-                                  'index-{0}.html'.format(name)] if _f]
-        else:
-            return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                                  self.site.config['INDEX_PATH'],
-                                  self.site.config['INDEX_FILE']]
-                    if _f]
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['INDEX_PATH'],
+                              adjust_name_for_index(self.site.config['INDEX_FILE'],
+                                                    name)] if _f]

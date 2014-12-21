@@ -279,6 +279,11 @@ WRITE_TAG_CLOUD = True
 # ARCHIVE_PATH = ""
 # ARCHIVE_FILENAME = "archive.html"
 
+# If ARCHIVES_ARE_INDEXES is set to True, each archive page which contains a list
+# of posts will contain the posts themselves. If set to False, it will be just a
+# list of links.
+# ARCHIVES_ARE_INDEXES = False
+
 # URLs to other posts/pages can take 3 forms:
 # rel_path: a relative URL to the current page/post (default)
 # full_path: a URL with the full path from the root
@@ -429,10 +434,21 @@ REDIRECTIONS = ${REDIRECTIONS}
 # Data about post-per-page indexes.
 # INDEXES_PAGES defaults to 'old posts, page %d' or 'page %d' (translated),
 # depending on the value of INDEXES_PAGES_MAIN.
-# INDEXES_TITLE = ""         # If this is empty, defaults to BLOG_TITLE
-# INDEXES_PAGES = ""         # If this is empty, defaults to '[old posts,] page %d' (see above)
-# INDEXES_PAGES_MAIN = False # If True, INDEXES_PAGES is also displayed on
-#                            # the main (the newest) index page (index.html)
+# INDEXES_TITLE = ""          # If this is empty, defaults to BLOG_TITLE
+# INDEXES_PAGES = ""          # If this is empty, defaults to '[old posts,] page %d' (see above)
+# INDEXES_PAGES_MAIN = False  # If True, INDEXES_PAGES is also displayed on
+#                             # the main (the newest) index page (index.html)
+# INDEXES_PAGES_STATIC = True # If True, index-1.html has the oldest posts,
+#                             # index-2.html the second-oldest posts, etc., and
+#                             # index.html has the newest posts. This ensures
+#                             # that all posts on index-x.html will forever
+#                             # stay on that page, now matter how many new
+#                             # posts are added.
+#                             # If False, index-1.html has the second-newest
+#                             # posts, index-2.html the third-newest, and
+#                             # index-n.html the oldest posts. When this is
+#                             # active, old posts can be moved to other index
+#                             # pages when new posts are added.
 
 # Color scheme to be used for code blocks. If your theme provides
 # "assets/css/code.css" this is ignored.
