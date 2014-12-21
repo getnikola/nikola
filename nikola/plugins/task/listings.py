@@ -31,16 +31,10 @@ import os
 
 from pygments import highlight
 from pygments.lexers import get_lexer_for_filename, TextLexer
-from pygments.formatters import HtmlFormatter
 import natsort
-import re
 
 from nikola.plugin_categories import Task
 from nikola import utils
-
-
-# FIXME: (almost) duplicated with mdx_nikola.py
-CODERE = re.compile('<div class="code"><pre>(.*?)</pre></div>', flags=re.MULTILINE | re.DOTALL)
 
 
 class Listings(Task):
@@ -122,14 +116,7 @@ class Listings(Task):
                         lexer = get_lexer_for_filename(in_name)
                     except:
                         lexer = TextLexer()
-                    code = highlight(fd.read(), lexer,
-                                     HtmlFormatter(cssclass='code',
-                                                   linenos="table", nowrap=False,
-                                                   lineanchors=utils.slugify(in_name, force=True),
-                                                   anchorlinenos=True))
-                # the pygments highlighter uses <div class="codehilite"><pre>
-                # for code.  We switch it to reST's <pre class="code">.
-                code = CODERE.sub('<pre class="code literal-block">\\1</pre>', code)
+                    code = highlight(fd.read(), lexer, utils.NikolaPygmentsHTML(in_name))
                 title = os.path.basename(in_name)
             else:
                 code = ''

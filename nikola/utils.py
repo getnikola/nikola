@@ -50,6 +50,7 @@ import dateutil.parser
 import dateutil.tz
 import logbook
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
+from pygments.formatters import HtmlFormatter
 
 from nikola import DEBUG
 
@@ -1349,3 +1350,33 @@ def options2docstring(name, options):
     for opt in options:
         result.append('{0} type {1} default {2}'.format(opt.name, opt.type.__name__, opt.default))
     return '\n'.join(result)
+
+
+class NikolaPygmentsHTML(HtmlFormatter):
+    """A Nikola-specific modification of Pygments’ HtmlFormatter."""
+    def __init__(self, anchor_ref, classes=None, linenos='table', linenostart=1):
+        if classes is None:
+            classes = ['code', 'literal-block']
+        self.nclasses = classes
+        super(NikolaPygmentsHTML, self).__init__(
+            cssclass='code', linenos=linenos, linenostart=linenostart, nowrap=False,
+            lineanchors=slugify(anchor_ref, force=True), anchorlinenos=True)
+
+    def wrap(self, source, outfile):
+        """
+        Wrap the ``source``, which is a generator yielding
+        individual lines, in custom generators.
+        """
+
+        style = []
+        if self.prestyles:
+            style.append(self.prestyles)
+        if self.noclasses:
+            style.append('line-height: 125%')
+        style = '; '.join(style)
+        classes = ' '.join(self.nclasses)
+
+        yield 0, ('<pre class="{0}"'.format(classes) + (style and ' style="{0}"'.format(style)) + '>')
+        for tup in source:
+            yield tup
+        yield 0, '</pre>'

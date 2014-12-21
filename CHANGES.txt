@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Use ``table`` line-numbering style with reST code, making
+  copy-pasting code possible (Issue #1285)
 * Tag and category pages are now more separated. The prefix for
   category pages can be changed and the folder can be modified
   independently of the tags' folder. (Issue #1535)
@@ -33,12 +35,12 @@ Features
 * Added Swedish translation (by Johan Sommerfeld)
 * New advanced option RSS_LINKS_APPEND_QUERY for tracking traffic
   from RSS subscribers
-* Add `robots` meta tag with value `noindex` for drafts (Issue #1489)
+* Add ``robots`` meta tag with value ``noindex`` for drafts (Issue #1489)
 * New option TAGLIST_MINIMUM_POSTS allows hiding unpopular tags from
   the tag index page (Issue #1484)
-* New options CREATE_FULL_ARCHIVES and CREATE_DAILY_ARCHIVE which allow
-  to create non-hierarchical archives and archives for days, respectively
-  (Issue #1494)
+* New options CREATE_FULL_ARCHIVES and CREATE_DAILY_ARCHIVE which
+  allow to create non-hierarchical archives and archives for days,
+  respectively (Issue #1494)
 * New plugin for creating image thumbnails, and a corresponding reST
   plugin (Issue #1527)
 
