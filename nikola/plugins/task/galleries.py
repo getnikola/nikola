@@ -275,7 +275,7 @@ class Galleries(Task, ImageProcessor):
                     'uptodate': [utils.config_changed({
                         1: self.kw,
                         2: self.site.config["COMMENTS_IN_GALLERIES"],
-                        3: context,
+                        3: context.copy(),
                     }, 'nikola.plugins.task.galleries:gallery')],
                 }, self.kw['filters'])
 
