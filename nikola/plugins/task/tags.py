@@ -68,8 +68,6 @@ class RenderTags(Task):
             'category_prefix': self.site.config['CATEGORY_PREFIX'],
             "category_pages_are_indexes": self.site.config['CATEGORY_PAGES_ARE_INDEXES'],
             "category_pages_descriptions": self.site.config['CATEGORY_PAGES_DESCRIPTIONS'],
-            "index_display_post_count": self.site.config['INDEX_DISPLAY_POST_COUNT'],
-            "index_teasers": self.site.config['INDEX_TEASERS'],
             "generate_rss": self.site.config['GENERATE_RSS'],
             "rss_teasers": self.site.config["RSS_TEASERS"],
             "rss_plain": self.site.config["RSS_PLAIN"],

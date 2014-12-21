@@ -1481,6 +1481,8 @@ class Nikola(object):
         # Update kw
         kw = kw.copy()
         kw["tag_pages_are_indexes"] = self.config['TAG_PAGES_ARE_INDEXES']
+        kw["index_display_post_count"] = self.config['INDEX_DISPLAY_POST_COUNT']
+        kw["index_teasers"] = self.config['INDEX_TEASERS']
         kw["indexes_pages"] = self.config['INDEXES_PAGES']
         kw["indexes_pages_main"] = self.config['INDEXES_PAGES_MAIN']
         kw["indexes_pages_static"] = self.config['INDEXES_PAGES_STATIC']

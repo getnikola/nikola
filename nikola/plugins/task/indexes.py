@@ -47,10 +47,7 @@ class Indexes(Task):
 
         kw = {
             "translations": self.site.config['TRANSLATIONS'],
-            "index_display_post_count":
-            self.site.config['INDEX_DISPLAY_POST_COUNT'],
             "messages": self.site.MESSAGES,
-            "index_teasers": self.site.config['INDEX_TEASERS'],
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
