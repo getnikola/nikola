@@ -723,7 +723,7 @@ Bugfixes
 * Added .rst to the default reStructuredText extensions (via Issue #542)
 * Moved the sample site to the new one-file format (Issue #542)
 * Escape HTML in titles (Issue #537)
-* Fixed issues with index pages indices (Issue #532)
+* Fixed issues with index pages indexes (Issue #532)
 * Fixed IPython plugin to work with the latest IPython.nbconvert machinery
 * Fixed failing build because of hidden folders and files inside post folder
 
