@@ -1458,7 +1458,7 @@ class Nikola(object):
 
         return utils.apply_filters(task, filters)
 
-    def generic_index_renderer(self, lang, posts, indexes_title, template_name, context_source, kw, basename, page_link, page_path):
+    def generic_index_renderer(self, lang, posts, indexes_title, template_name, context_source, kw, basename, page_link, page_path, additional_dependencies=[]):
         # Update kw
         kw = kw.copy()
         kw["tag_pages_are_indexes"] = self.config['TAG_PAGES_ARE_INDEXES']
@@ -1527,7 +1527,7 @@ class Nikola(object):
                 kw['filters'],
                 context,
             )
-            task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.tags:index')]
+            task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.tags:index')] + additional_dependencies
             task['basename'] = basename
             yield task
 

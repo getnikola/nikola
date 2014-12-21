@@ -1380,3 +1380,9 @@ class NikolaPygmentsHTML(HtmlFormatter):
         for tup in source:
             yield tup
         yield 0, '</pre>'
+
+
+def adjust_name_for_index(name, i):
+    if i:
+        name = name.replace('.html', '-{0}.html'.format(i))
+    return name
