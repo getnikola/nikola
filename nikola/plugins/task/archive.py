@@ -81,6 +81,9 @@ class Archive(Task):
         posts = sorted(posts, key=lambda a: a.date)
         posts.reverse()
         if kw['archives_are_indexes']:
+            uptodate = []
+            if deps_translatable is not None:
+                uptodate += [config_changed(deps_translatable, 'nikola.plugins.task.archive')]
             yield self.site.generic_index_renderer(
                 lang,
                 posts,
@@ -91,7 +94,7 @@ class Archive(Task):
                 str(self.name),
                 lambda i, num_pages: adjust_name_for_index(self.site.link("archive", name, lang), i, kw['index_file']),
                 lambda i, num_pages: adjust_name_for_index(self.site.path("archive", name, lang), i, kw['index_file']),
-                [config_changed(deps_translatable, 'nikola.plugins.task.archive')])
+                uptodate)
         else:
             yield self._prepare_task(kw, name, lang, posts, None, "list_post.tmpl", title, deps_translatable)
 
