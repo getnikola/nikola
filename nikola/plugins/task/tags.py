@@ -75,6 +75,9 @@ class RenderTags(Task):
             "feed_length": self.site.config['FEED_LENGTH'],
             "taglist_minimum_post_count": self.site.config['TAGLIST_MINIMUM_POSTS'],
             "tzinfo": self.site.tzinfo,
+            "pretty_urls": self.site.config['PRETTY_URLS'],
+            "strip_indexes": self.site.config['STRIP_INDEXES'],
+            "index_file": self.site.config['INDEX_FILE'],
         }
 
         self.site.scan_posts()
@@ -219,10 +222,10 @@ class RenderTags(Task):
         kind = "category" if is_category else "tag"
 
         def page_link(i, num_pages):
-            return utils.adjust_name_for_index(self.site.link(kind, tag, lang), i)
+            return utils.adjust_name_for_index(self.site.link(kind, tag, lang), i, kw['index_file'])
 
         def page_path(i, num_pages):
-            return utils.adjust_name_for_index(self.site.path(kind, tag, lang), i)
+            return utils.adjust_name_for_index(self.site.path(kind, tag, lang), i, kw['index_file'])
 
         context_source = {}
         if kw["generate_rss"]:

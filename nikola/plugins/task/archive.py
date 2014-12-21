@@ -89,8 +89,8 @@ class Archive(Task):
                 {},
                 kw,
                 str(self.name),
-                lambda i, num_pages: adjust_name_for_index(self.site.link("archive", name, lang), i),
-                lambda i, num_pages: adjust_name_for_index(self.site.path("archive", name, lang), i),
+                lambda i, num_pages: adjust_name_for_index(self.site.link("archive", name, lang), i, kw['index_file']),
+                lambda i, num_pages: adjust_name_for_index(self.site.path("archive", name, lang), i, kw['index_file']),
                 [config_changed(deps_translatable, 'nikola.plugins.task.archive')])
         else:
             yield self._prepare_task(kw, name, lang, posts, None, "list_post.tmpl", title, deps_translatable)
@@ -107,6 +107,9 @@ class Archive(Task):
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "create_full_archives": self.site.config['CREATE_FULL_ARCHIVES'],
             "create_daily_archive": self.site.config['CREATE_DAILY_ARCHIVE'],
+            "pretty_urls": self.site.config['PRETTY_URLS'],
+            "strip_indexes": self.site.config['STRIP_INDEXES'],
+            "index_file": self.site.config['INDEX_FILE'],
         }
         self.site.scan_posts()
         yield self.group_task()

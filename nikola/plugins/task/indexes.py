@@ -29,7 +29,7 @@ from collections import defaultdict
 import os
 
 from nikola.plugin_categories import Task
-from nikola.utils import config_changed
+from nikola.utils import config_changed, adjust_name_for_index
 
 
 class Indexes(Task):
@@ -125,12 +125,7 @@ class Indexes(Task):
                         yield task
 
     def index_path(self, name, lang):
-        if name not in [None, 0]:
-            return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                                  self.site.config['INDEX_PATH'],
-                                  'index-{0}.html'.format(name)] if _f]
-        else:
-            return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                                  self.site.config['INDEX_PATH'],
-                                  self.site.config['INDEX_FILE']]
-                    if _f]
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['INDEX_PATH'],
+                              adjust_name_for_index(self.site.config['INDEX_FILE'],
+                                                    name)] if _f]
