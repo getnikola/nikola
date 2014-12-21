@@ -279,6 +279,11 @@ WRITE_TAG_CLOUD = True
 # ARCHIVE_PATH = ""
 # ARCHIVE_FILENAME = "archive.html"
 
+# If ARCHIVES_ARE_INDEXES is set to True, each archive page which contains a list
+# of posts will contain the posts themselves. If set to False, it will be just a
+# list of links.
+# ARCHIVES_ARE_INDEXES = False
+
 # URLs to other posts/pages can take 3 forms:
 # rel_path: a relative URL to the current page/post (default)
 # full_path: a URL with the full path from the root
