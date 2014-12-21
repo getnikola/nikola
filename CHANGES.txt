@@ -8,9 +8,9 @@ Features
   which list posts to be rendered with the post contents.
   (Issue #1537)
 * Added new option INDEXES_PAGES_STATIC which allows to define the
-  page ordering for indices (Issue #1537). Also, if tag pages are
-  created as indices, they will behave more close to the
-  default indices.
+  page ordering for indexes (Issue #1537). Also, if tag pages are
+  created as indexes, they will behave more close to the
+  default indexes.
 * Use ``table`` line-numbering style with reST code, making
   copy-pasting code possible (Issue #1285)
 * Tag and category pages are now more separated. The prefix for
