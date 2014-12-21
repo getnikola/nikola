@@ -334,7 +334,7 @@ class Nikola(object):
             'INDEXES_TITLE': "",
             'INDEXES_PAGES': "",
             'INDEXES_PAGES_MAIN': False,
-            'INDEXES_PAGES_STARTING_WITH_LAST': True,
+            'INDEXES_PAGES_STATIC': True,
             'INDEX_PATH': '',
             'IPYNB_CONFIG': {},
             'LESS_COMPILER': 'lessc',
@@ -1464,11 +1464,11 @@ class Nikola(object):
         kw["tag_pages_are_indexes"] = self.config['TAG_PAGES_ARE_INDEXES']
         kw["indexes_pages"] = self.config['INDEXES_PAGES']
         kw["indexes_pages_main"] = self.config['INDEXES_PAGES_MAIN']
-        kw["indexes_pages_starting_with_last"] = self.config['INDEXES_PAGES_STARTING_WITH_LAST']
+        kw["indexes_pages_static"] = self.config['INDEXES_PAGES_STATIC']
 
         # Split in smaller lists
         lists = []
-        if kw["indexes_pages_starting_with_last"]:
+        if kw["indexes_pages_static"]:
             lists.append(posts[:kw["index_display_post_count"]])
             posts = posts[kw["index_display_post_count"]:]
             while posts:
@@ -1481,7 +1481,7 @@ class Nikola(object):
         num_pages = len(lists)
         for i, post_list in enumerate(lists):
             context = context_source.copy()
-            if kw["indexes_pages_starting_with_last"]:
+            if kw["indexes_pages_static"]:
                 ipages_i = i if i > 0 else num_pages
             else:
                 ipages_i = i + 1 if kw["indexes_pages_main"] else i
@@ -1501,7 +1501,7 @@ class Nikola(object):
             context["prevlink"] = None
             context["nextlink"] = None
             context['index_teasers'] = kw['index_teasers']
-            if kw["indexes_pages_starting_with_last"]:
+            if kw["indexes_pages_static"]:
                 if i > 0:
                     if i < num_pages - 1:
                         context["prevlink"] = page_link(i + 1, num_pages)
