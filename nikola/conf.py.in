@@ -438,7 +438,7 @@ REDIRECTIONS = ${REDIRECTIONS}
 # INDEXES_PAGES = ""          # If this is empty, defaults to '[old posts,] page %d' (see above)
 # INDEXES_PAGES_MAIN = False  # If True, INDEXES_PAGES is also displayed on
 #                             # the main (the newest) index page (index.html)
-# INDEXES_PAGES_STATIC = True # If True, index-1.html has the oldest posts,
+# INDEXES_STATIC = True       # If True, index-1.html has the oldest posts,
 #                             # index-2.html the second-oldest posts, etc., and
 #                             # index.html has the newest posts. This ensures
 #                             # that all posts on index-x.html will forever

@@ -7,7 +7,7 @@ Features
 * Added new option ARCHIVES_ARE_INDEXES which allows archive pages
   which list posts to be rendered with the post contents.
   (Issue #1537)
-* Added new option INDEXES_PAGES_STATIC which allows to define the
+* Added new option INDEXES_STATIC which allows to define the
   page ordering for indexes (Issue #1537). Also, if tag pages are
   created as indexes, they will behave more close to the
   default indexes.
