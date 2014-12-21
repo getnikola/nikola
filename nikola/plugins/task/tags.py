@@ -219,10 +219,10 @@ class RenderTags(Task):
         kind = "category" if is_category else "tag"
 
         def page_link(i, num_pages):
-            return utils.adjust_name_for_index(self.site.link(kind, tag, lang))
+            return utils.adjust_name_for_index(self.site.link(kind, tag, lang), i)
 
         def page_path(i, num_pages):
-            return utils.adjust_name_for_index(self.site.path(kind, tag, lang))
+            return utils.adjust_name_for_index(self.site.path(kind, tag, lang), i)
 
         context_source = {}
         if kw["generate_rss"]:
