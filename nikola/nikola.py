@@ -1459,6 +1459,25 @@ class Nikola(object):
         return utils.apply_filters(task, filters)
 
     def generic_index_renderer(self, lang, posts, indexes_title, template_name, context_source, kw, basename, page_link, page_path, additional_dependencies=[]):
+        """Creates an index page.
+
+        lang: The language
+        posts: A list of posts
+        indexes_title: Title
+        template_name: Name of template file
+        context_source: This will be copied and extended and used as every
+                        page's context
+        kw: An extended version will be used for uptodate dependencies
+        basename: Basename for task
+        page_link: A function accepting an index i and the number of pages,
+                   which creates a link to the i-th page (where i ranges
+                   between 0 and num_pages-1).
+        page_path: A function accepting an index i and the number of pages,
+                   which creates a path to the i-th page (where i ranges
+                   between 0 and num_pages-1).
+        additional_dependencies: a list of dependencies which will be added
+                   to task['uptodate']
+        """
         # Update kw
         kw = kw.copy()
         kw["tag_pages_are_indexes"] = self.config['TAG_PAGES_ARE_INDEXES']
