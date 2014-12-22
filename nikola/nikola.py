@@ -443,7 +443,8 @@ class Nikola(object):
                                       'EXTRA_HEAD_DATA',
                                       'NAVIGATION_LINKS',
                                       'INDEX_READ_MORE_LINK',
-                                      'RSS_READ_MORE_LINK',)
+                                      'RSS_READ_MORE_LINK',
+                                      'INDEXES_TITLE',)
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
                                              'blog_title',

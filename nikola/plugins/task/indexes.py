@@ -70,7 +70,7 @@ class Indexes(Task):
             else:
                 filtered_posts = [x for x in posts if x.is_translation_available(lang)]
 
-            indexes_title = kw['indexes_title'] or kw['blog_title'](lang)
+            indexes_title = kw['indexes_title'](lang) or kw['blog_title'](lang)
 
             yield self.site.generic_index_renderer(lang, filtered_posts, indexes_title, template_name, {}, kw, 'render_indexes', page_link, page_path)
 

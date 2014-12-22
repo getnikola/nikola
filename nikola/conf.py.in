@@ -434,7 +434,7 @@ REDIRECTIONS = ${REDIRECTIONS}
 # Data about post-per-page indexes.
 # INDEXES_PAGES defaults to 'old posts, page %d' or 'page %d' (translated),
 # depending on the value of INDEXES_PAGES_MAIN.
-# INDEXES_TITLE = ""          # If this is empty, defaults to BLOG_TITLE
+# INDEXES_TITLE = ""          # (translatable) If this is empty, defaults to BLOG_TITLE
 # INDEXES_PAGES = ""          # If this is empty, defaults to '[old posts,] page %d' (see above)
 # INDEXES_PAGES_MAIN = False  # If True, INDEXES_PAGES is also displayed on
 #                             # the main (the newest) index page (index.html)
