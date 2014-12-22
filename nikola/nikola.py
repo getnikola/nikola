@@ -1486,7 +1486,7 @@ class Nikola(object):
         kw["tag_pages_are_indexes"] = self.config['TAG_PAGES_ARE_INDEXES']
         kw["index_display_post_count"] = self.config['INDEX_DISPLAY_POST_COUNT']
         kw["index_teasers"] = self.config['INDEX_TEASERS']
-        kw["indexes_pages"] = self.config['INDEXES_PAGES']
+        kw["indexes_pages"] = self.config['INDEXES_PAGES'](lang)
         kw["indexes_pages_main"] = self.config['INDEXES_PAGES_MAIN']
         kw["indexes_static"] = self.config['INDEXES_STATIC']
 
@@ -1509,8 +1509,8 @@ class Nikola(object):
                 ipages_i = i if i > 0 else num_pages
             else:
                 ipages_i = i + 1 if kw["indexes_pages_main"] else i
-            if kw["indexes_pages"](lang):
-                indexes_pages = kw["indexes_pages"](lang) % ipages_i
+            if kw["indexes_pages"]:
+                indexes_pages = kw["indexes_pages"] % ipages_i
             else:
                 if kw["indexes_pages_main"]:
                     ipages_msg = "page %d"
