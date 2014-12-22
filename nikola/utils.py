@@ -212,7 +212,7 @@ def makedirs(path):
     if not path or os.path.isdir(path):
         return
     if os.path.exists(path):
-        raise OSError('Path {0} already exists and is not a folder.')
+        raise OSError('Path {0} already exists and is not a folder.'.format(path))
     os.makedirs(path)
 
 
