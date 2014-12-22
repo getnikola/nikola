@@ -596,7 +596,7 @@ class Nikola(object):
 
         # todo: remove and change default in v8
         if 'BLOG_TITLE' in config and 'WRITE_TAG_CLOUD' not in config:
-            # BLOG_TITLE is a hack, otherwise it would be displayed
+            # BLOG_TITLE is a hack, otherwise the warning would be displayed
             # when conf.py does not exist
             utils.LOGGER.warn("WRITE_TAG_CLOUD is not set in your config.  Defaulting to True (== writing tag_cloud_data.json).")
             utils.LOGGER.warn("Please explicitly add the setting to your conf.py with the desired value, as the setting will default to False in the future.")
