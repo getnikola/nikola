@@ -444,7 +444,8 @@ class Nikola(object):
                                       'NAVIGATION_LINKS',
                                       'INDEX_READ_MORE_LINK',
                                       'RSS_READ_MORE_LINK',
-                                      'INDEXES_TITLE',)
+                                      'INDEXES_TITLE',
+                                      'INDEXES_PAGES',)
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
                                              'blog_title',
@@ -1508,8 +1509,8 @@ class Nikola(object):
                 ipages_i = i if i > 0 else num_pages
             else:
                 ipages_i = i + 1 if kw["indexes_pages_main"] else i
-            if kw["indexes_pages"]:
-                indexes_pages = kw["indexes_pages"] % ipages_i
+            if kw["indexes_pages"](lang):
+                indexes_pages = kw["indexes_pages"](lang) % ipages_i
             else:
                 if kw["indexes_pages_main"]:
                     ipages_msg = "page %d"

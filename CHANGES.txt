@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* INDEXES_TITLE and INDEXES_PAGES are translatable (Issue #1544)
 * Added new option ARCHIVES_ARE_INDEXES which allows archive pages
   which list posts to be rendered with the post contents.
   (Issue #1537)
