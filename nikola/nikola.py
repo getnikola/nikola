@@ -443,7 +443,9 @@ class Nikola(object):
                                       'EXTRA_HEAD_DATA',
                                       'NAVIGATION_LINKS',
                                       'INDEX_READ_MORE_LINK',
-                                      'RSS_READ_MORE_LINK',)
+                                      'RSS_READ_MORE_LINK',
+                                      'INDEXES_TITLE',
+                                      'INDEXES_PAGES',)
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
                                              'blog_title',
@@ -1484,7 +1486,7 @@ class Nikola(object):
         kw["tag_pages_are_indexes"] = self.config['TAG_PAGES_ARE_INDEXES']
         kw["index_display_post_count"] = self.config['INDEX_DISPLAY_POST_COUNT']
         kw["index_teasers"] = self.config['INDEX_TEASERS']
-        kw["indexes_pages"] = self.config['INDEXES_PAGES']
+        kw["indexes_pages"] = self.config['INDEXES_PAGES'](lang)
         kw["indexes_pages_main"] = self.config['INDEXES_PAGES_MAIN']
         kw["indexes_static"] = self.config['INDEXES_STATIC']
 
