@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Added warning about ``password`` in posts being insecure
+  (Issue #1547)
 * INDEXES_TITLE and INDEXES_PAGES are translatable (Issue #1544)
 * Added new option ARCHIVES_ARE_INDEXES which allows archive pages
   which list posts to be rendered with the post contents.
@@ -43,7 +45,8 @@ Features
 * Added Swedish translation (by Johan Sommerfeld)
 * New advanced option RSS_LINKS_APPEND_QUERY for tracking traffic
   from RSS subscribers
-* Add ``robots`` meta tag with value ``noindex`` for drafts (Issue #1489)
+* Add ``robots`` meta tag with value ``noindex`` for drafts
+  (Issue #1489)
 * New option TAGLIST_MINIMUM_POSTS allows hiding unpopular tags from
   the tag index page (Issue #1484)
 * New options CREATE_FULL_ARCHIVES and CREATE_DAILY_ARCHIVE which
@@ -65,7 +68,8 @@ Bugfixes
 * Use ADDITIONAL_METADATA with the two-file format (Issue #1471)
 * Make previewimage compatible with sites deployed to subdirectories
   (Issue #1473)
-* Make sitemaps work on sites deployed to subdirectories (Issue #1472)
+* Make sitemaps work on sites deployed to subdirectories
+  (Issue #1472)
 
 New in v7.2.0
 =============

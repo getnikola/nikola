@@ -517,6 +517,10 @@ to your configuration::
        The post will be encrypted and invisible until the reader enters the password.
        Also, the post's sourcecode will not be available.
 
+       WARNING: **DO NOT** use for real confidential data.  The algorithm used (RC4) is insecure.  The implementation may also be easily brute-forced.  Please consider using something else if you need *real* encryption!
+
+       More information: `Issue #1547 <https://github.com/getnikola/nikola/issues/1547>`_
+
    previewimage
        Designate a preview or other representative image path relative to BASE_URL
        for use with Open Graph for posts. Adds the image when sharing on social
