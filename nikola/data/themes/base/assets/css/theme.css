@@ -283,3 +283,5 @@ img {
 	overflow: visible;
 	clip: auto;
 }
+
+pre.code, code { white-space: pre; word-wrap: normal; overflow: auto; }
