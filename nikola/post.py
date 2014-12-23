@@ -430,7 +430,7 @@ class Post(object):
             dest,
             self.is_two_file),
         if self.meta('password'):
-            # TODO: get rid of this feature one day (warning added in v7.3.0.)
+            # TODO: get rid of this feature one day (v8?; warning added in v7.3.0.)
             LOGGER.warn("The post {0} is using the `password` attribute, which may stop working in the future.")
             LOGGER.warn("Please consider switching to a more secure method of encryption.")
             LOGGER.warn("More details: https://github.com/getnikola/nikola/issues/1547")
