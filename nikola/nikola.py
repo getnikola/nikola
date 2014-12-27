@@ -1528,28 +1528,28 @@ class Nikola(object):
             context["prevlink"] = None
             context["nextlink"] = None
             context['index_teasers'] = kw['index_teasers']
-            prev = None
-            next = None
+            prevlink = None
+            nextlink = None
             if kw["indexes_static"]:
                 if i > 0:
                     if i < num_pages - 1:
-                        prev = i + 1
+                        prevlink = i + 1
                     elif i == num_pages - 1:
-                        prev = 0
+                        prevlink = 0
                 if num_pages > 1:
                     if i > 1:
-                        next = i - 1
+                        nextlink = i - 1
                     elif i == 0:
-                        next = num_pages - 1
+                        nextlink = num_pages - 1
             else:
                 if i >= 1:
-                    prev = i - 1
+                    prevlink = i - 1
                 if i < num_pages - 1:
-                    next = i + 1
-            if prev is not None:
-                context["prevlink"] = page_link(prev, utils.get_displayed_page_number(prev, num_pages, self), num_pages, False)
-            if next is not None:
-                context["nextlink"] = page_link(next, utils.get_displayed_page_number(next, num_pages, self), num_pages, False)
+                    nextlink = i + 1
+            if prevlink is not None:
+                context["prevlink"] = page_link(prev, utils.get_displayed_page_number(prevlink, num_pages, self), num_pages, False)
+            if nextlink is not None:
+                context["nextlink"] = page_link(next, utils.get_displayed_page_number(nextlink, num_pages, self), num_pages, False)
             context["permalink"] = page_link(i, ipages_i, num_pages, False)
             output_name = os.path.join(kw['output_folder'], page_path(i, ipages_i, num_pages, False))
             task = self.generic_post_list_renderer(
