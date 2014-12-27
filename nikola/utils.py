@@ -1397,8 +1397,8 @@ def adjust_name_for_index_path_list(path_list, i, displayed_i, site, force_addit
         path_list = path_list.copy()
         if force_addition and not i:
             i = 0
-        extension = '.' + index_file.split('.')[-1]
-        if len(path_list) == 0 or not path_list[-1].endswith(extension):
+        extension = os.path.splitext(index_file)[-1]
+        if len(path_list) == 0 or not path_list[-1].endswith(extension) or path_list[-1] == '':
             path_list.append(index_file)
         path_list[-1] = path_list[-1][:-len(extension)] + '-{0}'.format(i) + extension
     return path_list
@@ -1423,10 +1423,7 @@ def adjust_name_for_index_path(name, i, displayed_i, site, force_addition=False)
 
 
 def adjust_name_for_index_link(name, i, displayed_i, site, force_addition=False):
-    link = name.split('/')
-    if len(link) > 0 and link[-1] == '' and site.config["STRIP_INDEXES"]:
-        link[-1] = site.config["INDEX_FILE"]
-    link = adjust_name_for_index_path_list(link, i, displayed_i, site, force_addition)
+    link = adjust_name_for_index_path_list(name.split('/'), i, displayed_i, site, force_addition)
     if len(link) > 0 and link[-1] == site.config["INDEX_FILE"] and site.config["STRIP_INDEXES"]:
         link[-1] = ''
     return '/'.join(link)
