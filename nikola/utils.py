@@ -1398,7 +1398,9 @@ def adjust_name_for_index_path_list(path_list, i, displayed_i, site, force_addit
         if force_addition and not i:
             i = 0
         extension = os.path.splitext(index_file)[-1]
-        if len(path_list) == 0 or not path_list[-1].endswith(extension) or path_list[-1] == '':
+        if len(path_list) > 0 and path_list[-1] == '':
+            path_list[-1] = index_file
+        elif len(path_list) == 0 or not path_list[-1].endswith(extension):
             path_list.append(index_file)
         path_list[-1] = '{0}-{1}{2}'.format(os.path.splitext(path_list[-1]), i, extension)
     return path_list
