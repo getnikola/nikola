@@ -1547,9 +1547,9 @@ class Nikola(object):
                 if i < num_pages - 1:
                     nextlink = i + 1
             if prevlink is not None:
-                context["prevlink"] = page_link(prev, utils.get_displayed_page_number(prevlink, num_pages, self), num_pages, False)
+                context["prevlink"] = page_link(prevlink, utils.get_displayed_page_number(prevlink, num_pages, self), num_pages, False)
             if nextlink is not None:
-                context["nextlink"] = page_link(next, utils.get_displayed_page_number(nextlink, num_pages, self), num_pages, False)
+                context["nextlink"] = page_link(nextlink, utils.get_displayed_page_number(nextlink, num_pages, self), num_pages, False)
             context["permalink"] = page_link(i, ipages_i, num_pages, False)
             output_name = os.path.join(kw['output_folder'], page_path(i, ipages_i, num_pages, False))
             task = self.generic_post_list_renderer(
