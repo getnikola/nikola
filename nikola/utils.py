@@ -1382,9 +1382,47 @@ class NikolaPygmentsHTML(HtmlFormatter):
         yield 0, '</pre>'
 
 
-def adjust_name_for_index(name, i, index_file='index.html'):
-    if i:
-        if not name.endswith(index_file.split('.')[-1]):
-            name = name + index_file
-        name = name.replace('.html', '-{0}.html'.format(i))
-    return name
+def get_displayed_page_number(i, num_pages, site):
+    if not i:
+        i = 0
+    if site.config["INDEXES_STATIC"]:
+        return i if i > 0 else num_pages
+    else:
+        return i + 1 if site.config["INDEXES_PAGES_MAIN"] else i
+
+
+def adjust_name_for_index_path_list(path_list, i, displayed_i, site, force_addition=False):
+    index_file = site.config["INDEX_FILE"]
+    if i or force_addition:
+        if force_addition and not i:
+            i = 0
+        extension = '.' + index_file.split('.')[-1]
+        if len(path_list) == 0 or not path_list[-1].endswith(extension):
+            path_list.append(index_file)
+        path_list[-1] = path_list[-1][:-len(extension)] + '-{0}'.format(i) + extension
+    return path_list
+
+
+def os_path_split(path):
+    result = []
+    while True:
+        previous_path = path
+        path, tail = os.path.split(path)
+        if path == previous_path and tail == '':
+            result.insert(0, path)
+            break
+        result.insert(0, tail)
+        if len(path) == 0:
+            break
+    return result
+
+
+def adjust_name_for_index_path(name, i, displayed_i, site, force_addition=False):
+    return os.path.join(*adjust_name_for_index_path_list(os_path_split(name), i, displayed_i, site, force_addition))
+
+
+def adjust_name_for_index_link(name, i, displayed_i, site, force_addition=False):
+    link = adjust_name_for_index_path_list(name.split('/'), i, displayed_i, site, force_addition)
+    if len(link) > 0 and link[-1] == site.config["INDEX_FILE"] and site.config["STRIP_INDEXES"]:
+        link[-1] = ''
+    return '/'.join(link)
