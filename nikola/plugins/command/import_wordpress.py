@@ -235,9 +235,15 @@ class CommandImportWordpress(Command, ImportMixin):
             '{{{0}}}author_display_name'.format(wordpress_namespace),
             "Joe Example")
         context['POSTS'] = '''(
+            ("posts/*.rst", "posts", "post.tmpl"),
+            ("posts/*.txt", "posts", "post.tmpl"),
+            ("posts/*.md", "posts", "post.tmpl"),
             ("posts/*.wp", "posts", "post.tmpl"),
         )'''
         context['PAGES'] = '''(
+            ("stories/*.rst", "stories", "story.tmpl"),
+            ("stories/*.txt", "stories", "story.tmpl"),
+            ("stories/*.md", "stories", "story.tmpl"),
             ("stories/*.wp", "stories", "story.tmpl"),
         )'''
         context['COMPILERS'] = '''{
