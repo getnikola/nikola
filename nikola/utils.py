@@ -593,7 +593,7 @@ def load_messages(themes, translations, default_lang):
     and "younger" themes have priority.
     """
     messages = Functionary(dict, default_lang)
-    oldpath = sys.path[:]
+    oldpath = list(sys.path)
     for theme_name in themes[::-1]:
         msg_folder = os.path.join(get_theme_path(theme_name), 'messages')
         default_folder = os.path.join(get_theme_path('base'), 'messages')
@@ -1394,7 +1394,7 @@ def get_displayed_page_number(i, num_pages, site):
 def adjust_name_for_index_path_list(path_list, i, displayed_i, site, force_addition=False):
     index_file = site.config["INDEX_FILE"]
     if i or force_addition:
-        path_list = path_list.copy()
+        path_list = list(path_list)
         if force_addition and not i:
             i = 0
         extension = os.path.splitext(index_file)[-1]
