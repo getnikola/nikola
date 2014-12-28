@@ -1472,14 +1472,20 @@ class Nikola(object):
                         page's context
         kw: An extended version will be used for uptodate dependencies
         basename: Basename for task
-        page_link: A function accepting an index i and the number of pages,
+        page_link: A function accepting an index i, the displayed page number,
+                   the number of pages, and a boolean force_addition
                    which creates a link to the i-th page (where i ranges
-                   between 0 and num_pages-1).
-        page_path: A function accepting an index i and the number of pages,
-                   which creates a path to the i-th page (where i ranges
-                   between 0 and num_pages-1).
+                   between 0 and num_pages-1). The displayed page (between 1
+                   and num_pages) is the number (optionally) displayed as
+                   'page %d' on the rendered page. If force_addition is True,
+                   the appendum (inserting '-%d' etc.) should be done also for
+                   i == 0.
+        page_path: A function accepting an index i, the displayed page number,
+                   the number of pages, and a boolean force_addition,
+                   which creates a path to the i-th page. All arguments are
+                   as the ones for page_link.
         additional_dependencies: a list of dependencies which will be added
-                   to task['uptodate']
+                                 to task['uptodate']
         """
         # Update kw
         kw = kw.copy()
@@ -1505,10 +1511,7 @@ class Nikola(object):
         num_pages = len(lists)
         for i, post_list in enumerate(lists):
             context = context_source.copy()
-            if kw["indexes_static"]:
-                ipages_i = i if i > 0 else num_pages
-            else:
-                ipages_i = i + 1 if kw["indexes_pages_main"] else i
+            ipages_i = utils.get_displayed_page_number(i, num_pages, self)
             if kw["indexes_pages"]:
                 indexes_pages = kw["indexes_pages"] % ipages_i
             else:
@@ -1525,24 +1528,30 @@ class Nikola(object):
             context["prevlink"] = None
             context["nextlink"] = None
             context['index_teasers'] = kw['index_teasers']
+            prevlink = None
+            nextlink = None
             if kw["indexes_static"]:
                 if i > 0:
                     if i < num_pages - 1:
-                        context["prevlink"] = page_link(i + 1, num_pages)
+                        prevlink = i + 1
                     elif i == num_pages - 1:
-                        context["prevlink"] = page_link(0, num_pages)
+                        prevlink = 0
                 if num_pages > 1:
                     if i > 1:
-                        context["nextlink"] = page_link(i - 1, num_pages)
+                        nextlink = i - 1
                     elif i == 0:
-                        context["nextlink"] = page_link(num_pages - 1, num_pages)
+                        nextlink = num_pages - 1
             else:
                 if i >= 1:
-                    context["prevlink"] = page_link(i - 1, num_pages)
+                    prevlink = i - 1
                 if i < num_pages - 1:
-                    context["nextlink"] = page_link(i + 1, num_pages)
-            context["permalink"] = page_link(i, num_pages)
-            output_name = os.path.join(kw['output_folder'], page_path(i, num_pages))
+                    nextlink = i + 1
+            if prevlink is not None:
+                context["prevlink"] = page_link(prevlink, utils.get_displayed_page_number(prevlink, num_pages, self), num_pages, False)
+            if nextlink is not None:
+                context["nextlink"] = page_link(nextlink, utils.get_displayed_page_number(nextlink, num_pages, self), num_pages, False)
+            context["permalink"] = page_link(i, ipages_i, num_pages, False)
+            output_name = os.path.join(kw['output_folder'], page_path(i, ipages_i, num_pages, False))
             task = self.generic_post_list_renderer(
                 lang,
                 post_list,

@@ -29,7 +29,7 @@ import os
 # for tearDown with _reload we cannot use 'import from' to access LocaleBorg
 import nikola.utils
 from nikola.plugin_categories import Task
-from nikola.utils import config_changed, adjust_name_for_index
+from nikola.utils import config_changed, adjust_name_for_index_path, adjust_name_for_index_link
 
 
 class Archive(Task):
@@ -92,8 +92,8 @@ class Archive(Task):
                 {},
                 kw,
                 str(self.name),
-                lambda i, num_pages: adjust_name_for_index(self.site.link("archive", name, lang), i, kw['index_file']),
-                lambda i, num_pages: adjust_name_for_index(self.site.path("archive", name, lang), i, kw['index_file']),
+                lambda i, displayed_i, num_pages, force_addition: adjust_name_for_index_link(self.site.link("archive", name, lang), i, displayed_i, self.site, force_addition),
+                lambda i, displayed_i, num_pages, force_addition: adjust_name_for_index_path(self.site.path("archive", name, lang), i, displayed_i, self.site, force_addition),
                 uptodate)
         else:
             yield self._prepare_task(kw, name, lang, posts, None, "list_post.tmpl", title, deps_translatable)

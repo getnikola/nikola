@@ -29,7 +29,7 @@ from collections import defaultdict
 import os
 
 from nikola.plugin_categories import Task
-from nikola.utils import config_changed, adjust_name_for_index
+from nikola import utils
 
 
 class Indexes(Task):
@@ -51,6 +51,7 @@ class Indexes(Task):
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
+            "index_display_post_count": self.site.config['INDEX_DISPLAY_POST_COUNT'],
             "indexes_title": self.site.config['INDEXES_TITLE'],
             "blog_title": self.site.config["BLOG_TITLE"],
             "rss_read_more_link": self.site.config["RSS_READ_MORE_LINK"],
@@ -58,12 +59,13 @@ class Indexes(Task):
 
         template_name = "index.tmpl"
         posts = self.site.posts
+        self.number_of_pages = dict()
         for lang in kw["translations"]:
-            def page_link(i, num_pages):
-                return self.site.link("index", i, lang)
+            def page_link(i, displayed_i, num_pages, force_addition):
+                return utils.adjust_name_for_index_link(self.site.link("index", None, lang), i, displayed_i, self.site, force_addition)
 
-            def page_path(i, num_pages):
-                return self.site.path("index", i, lang)
+            def page_path(i, displayed_i, num_pages, force_addition):
+                return utils.adjust_name_for_index_path(self.site.path("index", None, lang), i, displayed_i, self.site, force_addition)
 
             if kw["show_untranslated_posts"]:
                 filtered_posts = posts
@@ -71,6 +73,7 @@ class Indexes(Task):
                 filtered_posts = [x for x in posts if x.is_translation_available(lang)]
 
             indexes_title = kw['indexes_title'](lang) or kw['blog_title'](lang)
+            self.number_of_pages[lang] = (len(filtered_posts) + kw['index_display_post_count'] - 1) // kw['index_display_post_count']
 
             yield self.site.generic_index_renderer(lang, filtered_posts, indexes_title, template_name, {}, kw, 'render_indexes', page_link, page_path)
 
@@ -120,12 +123,14 @@ class Indexes(Task):
                                                                     template_name,
                                                                     kw['filters'],
                                                                     context)
-                        task['uptodate'] = task['uptodate'] + [config_changed(kw, 'nikola.plugins.task.indexes')]
+                        task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.indexes')]
                         task['basename'] = self.name
                         yield task
 
     def index_path(self, name, lang):
-        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['INDEX_PATH'],
-                              adjust_name_for_index(self.site.config['INDEX_FILE'],
-                                                    name)] if _f]
+        return utils.adjust_name_for_index_path_list([_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                                                                    self.site.config['INDEX_PATH'],
+                                                                    self.site.config['INDEX_FILE']] if _f],
+                                                     name,
+                                                     utils.get_displayed_page_number(name, self.number_of_pages[lang], self.site),
+                                                     self.site)
