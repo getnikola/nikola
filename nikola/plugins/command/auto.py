@@ -72,10 +72,13 @@ class CommandAuto(Command):
         server.watch('conf.py', 'nikola build')
         server.watch('themes/', 'nikola build')
         server.watch('templates/', 'nikola build')
-        server.watch(self.site.config['GALLERY_PATH'], 'nikola build')
         for item in self.site.config['post_pages']:
             server.watch(os.path.dirname(item[0]), 'nikola build')
         for item in self.site.config['FILES_FOLDERS']:
+            server.watch(item, 'nikola build')
+        for item in self.site.config['GALLERY_FOLDERS']:
+            server.watch(item, 'nikola build')
+        for item in self.site.config['LISTINGS_FOLDERS']:
             server.watch(item, 'nikola build')
 
         out_folder = self.site.config['OUTPUT_FOLDER']
