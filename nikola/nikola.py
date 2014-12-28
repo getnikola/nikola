@@ -1562,7 +1562,7 @@ class Nikola(object):
                 kw['filters'],
                 context,
             )
-            task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.tags:index')] + additional_dependencies
+            task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.nikola.Nikola.generic_index_renderer')] + additional_dependencies
             task['basename'] = basename
             yield task
 
