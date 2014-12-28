@@ -466,6 +466,10 @@ REDIRECTIONS = ${REDIRECTIONS}
 #                                 #                      main page);
 #                                 #     {index_file} --> value of option INDEX_FILE
 #                                 # are made.
+#                                 # Note that in case INDEXES_PAGES_MAIN is set to True,
+#                                 # a redirection will be created for the full URL with
+#                                 # the page number of the main page to the normal
+#                                 # (shorter) main page URL.
 
 # Color scheme to be used for code blocks. If your theme provides
 # "assets/css/code.css" this is ignored.

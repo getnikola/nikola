@@ -1566,6 +1566,19 @@ class Nikola(object):
             task['basename'] = basename
             yield task
 
+        if kw["indexes_pages_main"] and self.config["INDEXES_PRETTY_PAGE_URL"]:
+            # create redirection
+            output_name = os.path.join(kw['output_folder'], page_path(0, utils.get_displayed_page_number(0, num_pages, self), num_pages, True))
+            link = page_link(0, utils.get_displayed_page_number(0, num_pages, self), num_pages, False)
+            yield utils.apply_filters({
+                'basename': basename,
+                'name': output_name,
+                'targets': [output_name],
+                'actions': [(utils.create_redirect, (output_name, link))],
+                'clean': True,
+                'uptodate': [utils.config_changed(kw, 'nikola.nikola.Nikola.generic_index_renderer')],
+            }, kw["filters"])
+
     def __repr__(self):
         return '<Nikola Site: {0!r}>'.format(self.config['BLOG_TITLE']())
 
