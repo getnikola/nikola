@@ -88,7 +88,7 @@ def main(args=None):
         quiet = True
     global config
 
-    if conf_filename_changed and not quiet:
+    if conf_filename_changed:
         LOGGER.info("Using config file '{0}'".format(conf_filename))
 
     # Those commands do not require a `conf.py`.  (Issue #1132)
