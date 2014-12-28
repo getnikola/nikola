@@ -68,6 +68,16 @@ def main(args=None):
 
     if args is None:
         args = sys.argv[1:]
+
+    conf_filename = 'conf.py'
+    conf_filename_changed = False
+    for index, arg in enumerate(args):
+        if arg[:7] == '--conf=':
+            del args[index]
+            conf_filename = arg[7:]
+            conf_filename_changed = True
+            break
+
     quiet = False
     if len(args) > 0 and args[0] == b'build' and b'--strict' in args:
         LOGGER.notice('Running in strict mode')
@@ -78,13 +88,8 @@ def main(args=None):
         quiet = True
     global config
 
-    conf_filename = 'conf.py'
-    for index, arg in enumerate(args):
-        if arg[:7] == '--conf=':
-            conf_filename = arg[7:]
-            LOGGER.info("Using config file '{0}'".format(conf_filename))
-            del args[index]
-            break
+    if conf_filename_changed:
+        LOGGER.info("Using config file '{0}'".format(conf_filename))
 
     # Those commands do not require a `conf.py`.  (Issue #1132)
     # Moreover, actually having one somewhere in the tree can be bad, putting
