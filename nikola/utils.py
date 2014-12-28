@@ -209,11 +209,20 @@ def sys_decode(thing):
 
 def makedirs(path):
     """Create a folder."""
-    if not path or os.path.isdir(path):
+    if not path:
         return
     if os.path.exists(path):
-        raise OSError('Path {0} already exists and is not a folder.'.format(path))
-    os.makedirs(path)
+        if not os.path.isdir(path):
+            raise OSError('Path {0} already exists and is not a folder.'.format(path))
+        else:
+            return
+    try:
+        os.makedirs(path)
+        return
+    except Exception:
+        if os.path.isdir(path):
+            return
+        raise
 
 
 class Functionary(defaultdict):
