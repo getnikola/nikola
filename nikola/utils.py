@@ -186,7 +186,8 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'demote_headers', 'get_translation_candidate', 'write_metadata',
            'ask', 'ask_yesno', 'options2docstring', 'os_path_split',
            'get_displayed_page_number', 'adjust_name_for_index_path_list',
-           'adjust_name_for_index_path', 'adjust_name_for_index_link']
+           'adjust_name_for_index_path', 'adjust_name_for_index_link',
+           'NikolaPygmentsHTML']
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
