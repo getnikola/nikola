@@ -449,6 +449,9 @@ REDIRECTIONS = ${REDIRECTIONS}
 #                             # index-n.html the oldest posts. When this is
 #                             # active, old posts can be moved to other index
 #                             # pages when new posts are added.
+# INDEXES_PRETTY_PAGE_URL = False  # If both this and PRETTY_URLS are set to True,
+#                                  # will generate URLs of the form  page/2/index.html
+#                                  # instead of index-2.html.
 
 # Color scheme to be used for code blocks. If your theme provides
 # "assets/css/code.css" this is ignored.

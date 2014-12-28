@@ -335,6 +335,7 @@ class Nikola(object):
             'INDEXES_TITLE': "",
             'INDEXES_PAGES': "",
             'INDEXES_PAGES_MAIN': False,
+            'INDEXES_PRETTY_PAGE_URL': False,
             'INDEXES_STATIC': True,
             'INDEX_PATH': '',
             'IPYNB_CONFIG': {},
