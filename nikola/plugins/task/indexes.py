@@ -62,10 +62,10 @@ class Indexes(Task):
         self.number_of_pages = dict()
         for lang in kw["translations"]:
             def page_link(i, displayed_i, num_pages, force_addition):
-                return utils.adjust_name_for_index_link(self.site.link("index", None, lang), i, displayed_i, self.site, force_addition)
+                return utils.adjust_name_for_index_link(self.site.link("index", None, lang), i, displayed_i, lang, self.site, force_addition)
 
             def page_path(i, displayed_i, num_pages, force_addition):
-                return utils.adjust_name_for_index_path(self.site.path("index", None, lang), i, displayed_i, self.site, force_addition)
+                return utils.adjust_name_for_index_path(self.site.path("index", None, lang), i, displayed_i, lang, self.site, force_addition)
 
             if kw["show_untranslated_posts"]:
                 filtered_posts = posts
@@ -133,4 +133,5 @@ class Indexes(Task):
                                                                     self.site.config['INDEX_FILE']] if _f],
                                                      name,
                                                      utils.get_displayed_page_number(name, self.number_of_pages[lang], self.site),
+                                                     lang,
                                                      self.site)
