@@ -1402,7 +1402,7 @@ def adjust_name_for_index_path_list(path_list, i, displayed_i, site, force_addit
             path_list[-1] = index_file
         elif len(path_list) == 0 or not path_list[-1].endswith(extension):
             path_list.append(index_file)
-        path_list[-1] = '{0}-{1}{2}'.format(os.path.splitext(path_list[-1]), i, extension)
+        path_list[-1] = '{0}-{1}{2}'.format(os.path.splitext(path_list[-1])[0], i, extension)
     return path_list
 
 
