@@ -449,9 +449,14 @@ REDIRECTIONS = ${REDIRECTIONS}
 #                             # index-n.html the oldest posts. When this is
 #                             # active, old posts can be moved to other index
 #                             # pages when new posts are added.
-# INDEXES_PRETTY_PAGE_URL = False  # If both this and PRETTY_URLS are set to True,
-#                                  # will generate URLs of the form  page/2/index.html
-#                                  # instead of index-2.html.
+# INDEXES_PRETTY_PAGE_URL = False                      # If both this and PRETTY_URLS are set to True,
+#                                                      # will generate URLs of a form like page/2/index.html
+#                                                      # (precise form specified in INDEXES_PRETTY_PAGE_FORMAT)
+#                                                      # instead of index-2.html.
+# INDEXES_PRETTY_PAGE_FORMAT = ['page', '{0}', '{1}']  # Specifies the form of the prettified URLs for
+#                                                      # page numbers. The following replacements are made:
+#                                                      # {0} is replaced with the page number
+#                                                      # {1} is replaced with INDEX_FILE
 
 # Color scheme to be used for code blocks. If your theme provides
 # "assets/css/code.css" this is ignored.
