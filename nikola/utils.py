@@ -32,6 +32,7 @@ import calendar
 import datetime
 import dateutil.tz
 import hashlib
+import io
 import locale
 import logging
 import os
@@ -187,7 +188,7 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'ask', 'ask_yesno', 'options2docstring', 'os_path_split',
            'get_displayed_page_number', 'adjust_name_for_index_path_list',
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
-           'NikolaPygmentsHTML']
+           'NikolaPygmentsHTML', 'create_redirect']
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -1454,3 +1455,13 @@ def adjust_name_for_index_link(name, i, displayed_i, lang, site, force_addition=
     if len(link) > 0 and link[-1] == site.config["INDEX_FILE"] and site.config["STRIP_INDEXES"]:
         link[-1] = ''
     return '/'.join(link)
+
+
+def create_redirect(src, dst):
+    makedirs(os.path.dirname(src))
+    with io.open(src, "w+", encoding="utf8") as fd:
+        fd.write('<!DOCTYPE html>\n<head>\n<meta charset="utf-8">\n'
+                 '<title>Redirecting...</title>\n<meta name="robots" '
+                 'content="noindex">\n<meta http-equiv="refresh" content="0; '
+                 'url={0}">\n</head>\n<body>\n<p>Page moved '
+                 '<a href="{0}">here</a>.</p>\n</body>'.format(dst))
