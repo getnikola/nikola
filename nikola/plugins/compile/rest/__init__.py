@@ -124,7 +124,8 @@ class CompileRest(PageCompiler):
         with io.open(path, "w+", encoding="utf8") as fd:
             if onefile:
                 fd.write(write_metadata(metadata))
-            fd.write('\n' + content)
+                fd.write('\n')
+            fd.write(content)
 
     def set_site(self, site):
         for plugin_info in site.plugin_manager.getPluginsOfCategory("RestExtension"):

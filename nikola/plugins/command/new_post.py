@@ -207,12 +207,12 @@ class CommandNewPost(Command):
             'help': 'Schedule the post based on recurrence rule'
         },
         {
-            'name': 'file',
+            'name': 'import',
             'short': 'i',
-            'long': 'file',
+            'long': 'import',
             'type': str,
             'default': '',
-            'help': 'Can import existing file'
+            'help': 'Import an existing file instead of creating a placeholder'
         },
 
     ]
@@ -241,7 +241,7 @@ class CommandNewPost(Command):
         tags = options['tags']
         onefile = options['onefile']
         twofile = options['twofile']
-        exist_file = options['file'] or None
+        import_file = options['import']
 
         if is_page:
             LOGGER = PAGELOGGER
@@ -272,12 +272,12 @@ class CommandNewPost(Command):
                                   self.site.config['COMPILERS'],
                                   self.site.config['post_pages'])
 
-        if exist_file is not None:
-            # Current it only affect `ipynb` format
-            print("Import Existed {0}".format(content_type.title()))
+        if import_file:
+            print("Importing Existing {xx}".format(xx=content_type.title()))
+            print("-----------------------\n")
         else:
-            print("Creating New {0}".format(content_type.title()))
-        print("-----------------\n")
+            print("Creating New {xx}".format(xx=content_type.title()))
+            print("-----------------\n")
         if title is not None:
             print("Title:", title)
         else:
@@ -340,11 +340,16 @@ class CommandNewPost(Command):
             onefile = False
             LOGGER.warn('This compiler does not support one-file posts.')
 
-        content = "Write your {0} here.".format('page' if is_page else 'post')
+        if import_file:
+            with io.open(import_file, 'r', encoding='utf-8') as fh:
+                content = fh.read()
+        else:
+            # ipynb's create_post depends on this exact string, take care
+            # if you're changing it
+            content = "Write your {0} here.".format('page' if is_page else 'post')
         compiler_plugin.create_post(
             txt_path, content=content, onefile=onefile, title=title,
-            slug=slug, date=date, tags=tags, is_page=is_page,
-            exist_file=exist_file, **metadata)
+            slug=slug, date=date, tags=tags, is_page=is_page, **metadata)
 
         event = dict(path=txt_path)
 

@@ -64,21 +64,18 @@ class CompileIPynb(PageCompiler):
             out_file.write(body)
 
     def create_post(self, path, **kw):
-        # content and onefile are ignored by ipynb.
-        kw.pop('content', None)
+        content = kw.pop('content', None)
         onefile = kw.pop('onefile', False)
+        # is_page is not needed to create the file
         kw.pop('is_page', False)
-        exist_file = kw.pop('exist_file')
 
         makedirs(os.path.dirname(path))
         if onefile:
             raise Exception('The one-file format is not supported by this compiler.')
-        if exist_file is not None and os.path.exists(exist_file):
-            with io.open(exist_file) as efd:
-                with io.open(path, "w+", encoding="utf8") as fd:
-                    fd.writelines(efd.readlines())
-        else:
-            with io.open(path, "w+", encoding="utf8") as fd:
+        with io.open(path, "w+", encoding="utf8") as fd:
+            if not content.startswith("Write your"):
+                fd.write(content)
+            else:
                 fd.write("""{
  "metadata": {
   "name": ""

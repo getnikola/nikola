@@ -78,3 +78,4 @@ Alex Walters <https://github.com/tritium21>
 Carsten Grohmann <https://github.com/CarstenGrohmann>
 Aurelien Naldi <https://github.com/aurelien-naldi>
 Andreas Linz <https://github.com/KLINGTdotNET>
+小明 <https://github.com/dongweiming>

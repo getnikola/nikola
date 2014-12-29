@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Added ``-i``, ``--import`` argument to ``new_post`` for importing
+  existing post contents (Issue #1385)
 * Added warning about ``password`` in posts being insecure
   (Issue #1547)
 * INDEXES_TITLE and INDEXES_PAGES are translatable (Issue #1544)

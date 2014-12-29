@@ -74,6 +74,14 @@ class CommandNewPage(Command):
             'help': 'Markup format for the page, one of rest, markdown, wiki, '
                     'bbcode, html, textile, txt2tags',
         },
+        {
+            'name': 'import',
+            'short': 'i',
+            'long': 'import',
+            'type': str,
+            'default': '',
+            'help': 'Import an existing file instead of creating a placeholder'
+        },
     ]
 
     def _execute(self, options, args):
