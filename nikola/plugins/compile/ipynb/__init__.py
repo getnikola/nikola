@@ -29,6 +29,9 @@
 from __future__ import unicode_literals, print_function
 import io
 import os
+import threading
+import webbrowser
+from urlparse import urljoin
 
 try:
     from IPython.nbconvert.exporters import HTMLExporter
@@ -71,7 +74,8 @@ class CompileIPynb(PageCompiler):
 
         makedirs(os.path.dirname(path))
         if onefile:
-            raise Exception('The one-file format is not supported by this compiler.')
+            raise Exception(
+                'The one-file format is not supported by this compiler.')
         with io.open(path, "w+", encoding="utf8") as fd:
             fd.write("""{
  "metadata": {
@@ -95,3 +99,21 @@ class CompileIPynb(PageCompiler):
   }
  ]
 }""")
+
+        browser_cfg = self.site.config['IPYNB_CONFIG'].get('Browser', None)
+        connection_url = browser_cfg.get('connection_url', None)
+        if browser_cfg is None:
+            return
+
+        try:
+            browser = webbrowser.get(browser_cfg.get('browser', None))
+        except webbrowser.Error as e:
+            print('No web browser found: {0}.'.format(e))
+            browser = None
+
+        if browser is not None and connection_url is not None:
+            filename = os.path.basename(path)
+            url = urljoin(connection_url, filename)
+            b = lambda: browser.open(url, new=2)
+            print('This Notebook is running at: {0}'.format(url))
+            threading.Thread(target=b).start()
