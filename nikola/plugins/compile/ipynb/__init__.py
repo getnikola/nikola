@@ -68,12 +68,18 @@ class CompileIPynb(PageCompiler):
         kw.pop('content', None)
         onefile = kw.pop('onefile', False)
         kw.pop('is_page', False)
+        exist_file = kw.pop('exist_file')
 
         makedirs(os.path.dirname(path))
         if onefile:
             raise Exception('The one-file format is not supported by this compiler.')
-        with io.open(path, "w+", encoding="utf8") as fd:
-            fd.write("""{
+        if exist_file is not None and os.path.exists(exist_file):
+            with io.open(exist_file) as efd:
+                with io.open(path, "w+", encoding="utf8") as fd:
+                    fd.writelines(efd.readlines())
+        else:
+            with io.open(path, "w+", encoding="utf8") as fd:
+                fd.write("""{
  "metadata": {
   "name": ""
  },

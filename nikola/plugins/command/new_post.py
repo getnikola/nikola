@@ -206,6 +206,14 @@ class CommandNewPost(Command):
             'default': False,
             'help': 'Schedule the post based on recurrence rule'
         },
+        {
+            'name': 'file',
+            'short': 'i',
+            'long': 'file',
+            'type': str,
+            'default': '',
+            'help': 'Can import existing file'
+        },
 
     ]
 
@@ -233,6 +241,7 @@ class CommandNewPost(Command):
         tags = options['tags']
         onefile = options['onefile']
         twofile = options['twofile']
+        exist_file = options['file'] or None
 
         if is_page:
             LOGGER = PAGELOGGER
@@ -263,7 +272,11 @@ class CommandNewPost(Command):
                                   self.site.config['COMPILERS'],
                                   self.site.config['post_pages'])
 
-        print("Creating New {0}".format(content_type.title()))
+        if exist_file is not None:
+            # Current it only affect `ipynb` format
+            print("Import Existed {0}".format(content_type.title()))
+        else:
+            print("Creating New {0}".format(content_type.title()))
         print("-----------------\n")
         if title is not None:
             print("Title:", title)
@@ -330,7 +343,8 @@ class CommandNewPost(Command):
         content = "Write your {0} here.".format('page' if is_page else 'post')
         compiler_plugin.create_post(
             txt_path, content=content, onefile=onefile, title=title,
-            slug=slug, date=date, tags=tags, is_page=is_page, **metadata)
+            slug=slug, date=date, tags=tags, is_page=is_page,
+            exist_file=exist_file, **metadata)
 
         event = dict(path=txt_path)
 
