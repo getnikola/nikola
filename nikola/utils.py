@@ -1416,11 +1416,9 @@ def adjust_name_for_index_path_list(path_list, i, displayed_i, lang, site, force
         elif len(path_list) == 0 or not path_list[-1].endswith(extension):
             path_list.append(index_file)
         if site.config["PRETTY_URLS"] and site.config["INDEXES_PRETTY_PAGE_URL"] and path_list[-1] == index_file:
-            path_schema = site.config["INDEXES_PRETTY_PAGE_URL"]
-            if type(path_schema) == dict and lang in path_schema:
-                path_schema = path_schema[lang]
-            if type(path_schema) not in {list, tuple}:
-                path_schema = None
+            path_schema = site.config["INDEXES_PRETTY_PAGE_URL"](lang)
+            if type(path_schema) == str:
+                path_schema = [path_schema]
         else:
             path_schema = None
         if path_schema is not None:

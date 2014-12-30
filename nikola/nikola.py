@@ -447,7 +447,8 @@ class Nikola(object):
                                       'INDEX_READ_MORE_LINK',
                                       'RSS_READ_MORE_LINK',
                                       'INDEXES_TITLE',
-                                      'INDEXES_PAGES',)
+                                      'INDEXES_PAGES',
+                                      'INDEXES_PRETTY_PAGE_URL',)
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
                                              'blog_title',
