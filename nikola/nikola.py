@@ -1497,6 +1497,7 @@ class Nikola(object):
         kw["indexes_pages"] = self.config['INDEXES_PAGES'](lang)
         kw["indexes_pages_main"] = self.config['INDEXES_PAGES_MAIN']
         kw["indexes_static"] = self.config['INDEXES_STATIC']
+        kw['indexes_prety_page_url'] = self.config["INDEXES_PRETTY_PAGE_URL"]
 
         # Split in smaller lists
         lists = []
@@ -1566,7 +1567,7 @@ class Nikola(object):
             task['basename'] = basename
             yield task
 
-        if kw["indexes_pages_main"] and self.config["INDEXES_PRETTY_PAGE_URL"]:
+        if kw["indexes_pages_main"] and kw['indexes_prety_page_url'](lang):
             # create redirection
             output_name = os.path.join(kw['output_folder'], page_path(0, utils.get_displayed_page_number(0, num_pages, self), num_pages, True))
             link = page_link(0, utils.get_displayed_page_number(0, num_pages, self), num_pages, False)
