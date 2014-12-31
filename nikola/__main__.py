@@ -249,7 +249,7 @@ class NikolaTaskLoader(TaskLoader):
             self.nikola.gen_tasks('render_site', "Task", 'Group of tasks to render the site.'))
         latetasks = generate_tasks(
             'post_render',
-            self.nikola.gen_tasks('post_render', "LateTask", 'Group of tasks to be executes after site is rendered.'))
+            self.nikola.gen_tasks('post_render', "LateTask", 'Group of tasks to be executed after site is rendered.'))
         signal('initialized').send(self.nikola)
         return earlytasks + tasks + latetasks, DOIT_CONFIG
 
