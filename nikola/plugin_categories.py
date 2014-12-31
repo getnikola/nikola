@@ -30,7 +30,7 @@ import os
 
 __all__ = [
     'Command',
-    'EarlyTask'
+    'EarlyTask',
     'LateTask',
     'PageCompiler',
     'RestExtension',
