@@ -32,6 +32,7 @@ import calendar
 import datetime
 import dateutil.tz
 import hashlib
+import io
 import locale
 import logging
 import os
@@ -187,7 +188,7 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'ask', 'ask_yesno', 'options2docstring', 'os_path_split',
            'get_displayed_page_number', 'adjust_name_for_index_path_list',
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
-           'NikolaPygmentsHTML']
+           'NikolaPygmentsHTML', 'create_redirect']
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -1403,18 +1404,29 @@ def get_displayed_page_number(i, num_pages, site):
         return i + 1 if site.config["INDEXES_PAGES_MAIN"] else i
 
 
-def adjust_name_for_index_path_list(path_list, i, displayed_i, site, force_addition=False):
+def adjust_name_for_index_path_list(path_list, i, displayed_i, lang, site, force_addition=False):
     index_file = site.config["INDEX_FILE"]
     if i or force_addition:
         path_list = list(path_list)
         if force_addition and not i:
             i = 0
-        extension = os.path.splitext(index_file)[-1]
+        _, extension = os.path.splitext(index_file)
         if len(path_list) > 0 and path_list[-1] == '':
             path_list[-1] = index_file
         elif len(path_list) == 0 or not path_list[-1].endswith(extension):
             path_list.append(index_file)
-        path_list[-1] = '{0}-{1}{2}'.format(os.path.splitext(path_list[-1])[0], i, extension)
+        if site.config["PRETTY_URLS"] and site.config["INDEXES_PRETTY_PAGE_URL"](lang) and path_list[-1] == index_file:
+            path_schema = site.config["INDEXES_PRETTY_PAGE_URL"](lang)
+            if isinstance(path_schema, (bytes_str, unicode_str)):
+                path_schema = [path_schema]
+        else:
+            path_schema = None
+        if path_schema is not None:
+            del path_list[-1]
+            for entry in path_schema:
+                path_list.append(entry.format(number=displayed_i, old_number=i, index_file=index_file))
+        else:
+            path_list[-1] = '{0}-{1}{2}'.format(os.path.splitext(path_list[-1])[0], i, extension)
     return path_list
 
 
@@ -1432,12 +1444,22 @@ def os_path_split(path):
     return result
 
 
-def adjust_name_for_index_path(name, i, displayed_i, site, force_addition=False):
-    return os.path.join(*adjust_name_for_index_path_list(os_path_split(name), i, displayed_i, site, force_addition))
+def adjust_name_for_index_path(name, i, displayed_i, lang, site, force_addition=False):
+    return os.path.join(*adjust_name_for_index_path_list(os_path_split(name), i, displayed_i, lang, site, force_addition))
 
 
-def adjust_name_for_index_link(name, i, displayed_i, site, force_addition=False):
-    link = adjust_name_for_index_path_list(name.split('/'), i, displayed_i, site, force_addition)
+def adjust_name_for_index_link(name, i, displayed_i, lang, site, force_addition=False):
+    link = adjust_name_for_index_path_list(name.split('/'), i, displayed_i, lang, site, force_addition)
     if len(link) > 0 and link[-1] == site.config["INDEX_FILE"] and site.config["STRIP_INDEXES"]:
         link[-1] = ''
     return '/'.join(link)
+
+
+def create_redirect(src, dst):
+    makedirs(os.path.dirname(src))
+    with io.open(src, "w+", encoding="utf8") as fd:
+        fd.write('<!DOCTYPE html>\n<head>\n<meta charset="utf-8">\n'
+                 '<title>Redirecting...</title>\n<meta name="robots" '
+                 'content="noindex">\n<meta http-equiv="refresh" content="0; '
+                 'url={0}">\n</head>\n<body>\n<p>Page moved '
+                 '<a href="{0}">here</a>.</p>\n</body>'.format(dst))

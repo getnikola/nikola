@@ -434,21 +434,45 @@ REDIRECTIONS = ${REDIRECTIONS}
 # Data about post-per-page indexes.
 # INDEXES_PAGES defaults to ' old posts, page %d' or ' page %d' (translated),
 # depending on the value of INDEXES_PAGES_MAIN.
-# INDEXES_TITLE = ""          # (translatable) If this is empty, defaults to BLOG_TITLE
-# INDEXES_PAGES = ""          # (translatable) If this is empty, defaults to ' [old posts,] page %d' (see above)
-# INDEXES_PAGES_MAIN = False  # If True, INDEXES_PAGES is also displayed on
-#                             # the main (the newest) index page (index.html)
-# INDEXES_STATIC = True       # If True, index-1.html has the oldest posts,
-#                             # index-2.html the second-oldest posts, etc., and
-#                             # index.html has the newest posts. This ensures
-#                             # that all posts on index-x.html will forever
-#                             # stay on that page, now matter how many new
-#                             # posts are added.
-#                             # If False, index-1.html has the second-newest
-#                             # posts, index-2.html the third-newest, and
-#                             # index-n.html the oldest posts. When this is
-#                             # active, old posts can be moved to other index
-#                             # pages when new posts are added.
+#
+# (translatable) If the following is empty, defaults to BLOG_TITLE:
+# INDEXES_TITLE = ""
+#
+# (translatable) If the following is empty, defaults to ' [old posts,] page %d' (see above):
+# INDEXES_PAGES = ""
+#
+# If the following is True, INDEXES_PAGES is also displayed on the main (the
+# newest) index page (index.html):
+# INDEXES_PAGES_MAIN = False
+#
+# If the following is True, index-1.html has the oldest posts, index-2.html the
+# second-oldest posts, etc., and index.html has the newest posts. This ensures
+# that all posts on index-x.html will forever stay on that page, now matter how
+# many new posts are added.
+# If False, index-1.html has the second-newest posts, index-2.html the third-newest,
+# and index-n.html the oldest posts. When this is active, old posts can be moved
+# to other index pages when new posts are added.
+# INDEXES_STATIC = True
+#
+# (translatable) If PRETTY_URLS is set to True, this setting will be used to create
+# more pretty URLs for index pages, such as page/2/index.html instead of index-2.html.
+# Valid values for this settings are:
+#   * False,
+#   * a list or tuple, specifying the path to be generated,
+#   * a dictionary mapping languages to lists or tuples.
+# Every list or tuple must consist of strings which are used to combine the path;
+# for example:
+#     ['page', '{number}', '{index_file}']
+# The replacements
+#     {number}     --> (logical) page number;
+#     {old_number} --> the page number inserted into index-n.html before (zero for
+#                      the main page);
+#     {index_file} --> value of option INDEX_FILE
+# are made.
+# Note that in case INDEXES_PAGES_MAIN is set to True, a redirection will be created
+# for the full URL with the page number of the main page to the normal (shorter) main
+# page URL.
+# INDEXES_PRETTY_PAGE_URL = False
 
 # Color scheme to be used for code blocks. If your theme provides
 # "assets/css/code.css" this is ignored.

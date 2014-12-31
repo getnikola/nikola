@@ -335,6 +335,7 @@ class Nikola(object):
             'INDEXES_TITLE': "",
             'INDEXES_PAGES': "",
             'INDEXES_PAGES_MAIN': False,
+            'INDEXES_PRETTY_PAGE_URL': False,
             'INDEXES_STATIC': True,
             'INDEX_PATH': '',
             'IPYNB_CONFIG': {},
@@ -445,7 +446,8 @@ class Nikola(object):
                                       'INDEX_READ_MORE_LINK',
                                       'RSS_READ_MORE_LINK',
                                       'INDEXES_TITLE',
-                                      'INDEXES_PAGES',)
+                                      'INDEXES_PAGES',
+                                      'INDEXES_PRETTY_PAGE_URL',)
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
                                              'blog_title',
@@ -1495,6 +1497,7 @@ class Nikola(object):
         kw["indexes_pages"] = self.config['INDEXES_PAGES'](lang)
         kw["indexes_pages_main"] = self.config['INDEXES_PAGES_MAIN']
         kw["indexes_static"] = self.config['INDEXES_STATIC']
+        kw['indexes_prety_page_url'] = self.config["INDEXES_PRETTY_PAGE_URL"]
 
         # Split in smaller lists
         lists = []
@@ -1560,9 +1563,22 @@ class Nikola(object):
                 kw['filters'],
                 context,
             )
-            task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.tags:index')] + additional_dependencies
+            task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.nikola.Nikola.generic_index_renderer')] + additional_dependencies
             task['basename'] = basename
             yield task
+
+        if kw["indexes_pages_main"] and kw['indexes_prety_page_url'](lang):
+            # create redirection
+            output_name = os.path.join(kw['output_folder'], page_path(0, utils.get_displayed_page_number(0, num_pages, self), num_pages, True))
+            link = page_link(0, utils.get_displayed_page_number(0, num_pages, self), num_pages, False)
+            yield utils.apply_filters({
+                'basename': basename,
+                'name': output_name,
+                'targets': [output_name],
+                'actions': [(utils.create_redirect, (output_name, link))],
+                'clean': True,
+                'uptodate': [utils.config_changed(kw, 'nikola.nikola.Nikola.generic_index_renderer')],
+            }, kw["filters"])
 
     def __repr__(self):
         return '<Nikola Site: {0!r}>'.format(self.config['BLOG_TITLE']())

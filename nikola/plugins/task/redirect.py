@@ -26,7 +26,6 @@
 
 from __future__ import unicode_literals
 
-import io
 import os
 
 from nikola.plugin_categories import Task
@@ -55,17 +54,7 @@ class Redirect(Task):
                     'basename': self.name,
                     'name': src_path,
                     'targets': [src_path],
-                    'actions': [(create_redirect, (src_path, dst))],
+                    'actions': [(utils.create_redirect, (src_path, dst))],
                     'clean': True,
                     'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.redirect')],
                 }, kw["filters"])
-
-
-def create_redirect(src, dst):
-    utils.makedirs(os.path.dirname(src))
-    with io.open(src, "w+", encoding="utf8") as fd:
-        fd.write('<!DOCTYPE html>\n<head>\n<meta charset="utf-8">\n'
-                 '<title>Redirecting...</title>\n<meta name="robots" '
-                 'content="noindex">\n<meta http-equiv="refresh" content="0; '
-                 'url={0}">\n</head>\n<body>\n<p>Page moved '
-                 '<a href="{0}">here</a>.</p>\n</body>'.format(dst))
