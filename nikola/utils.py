@@ -1417,7 +1417,7 @@ def adjust_name_for_index_path_list(path_list, i, displayed_i, lang, site, force
             path_list.append(index_file)
         if site.config["PRETTY_URLS"] and site.config["INDEXES_PRETTY_PAGE_URL"](lang) and path_list[-1] == index_file:
             path_schema = site.config["INDEXES_PRETTY_PAGE_URL"](lang)
-            if type(path_schema) == str:
+            if isinstance(path_schema, (bytes_str, unicode_str)):
                 path_schema = [path_schema]
         else:
             path_schema = None
