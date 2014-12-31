@@ -25,6 +25,7 @@ nikola.utils.LOGGER.handlers.append(logbook.TestHandler())
 from yapsy.PluginManager import PluginManager
 from nikola.plugin_categories import (
     Command,
+    EarlyTask,
     Task,
     LateTask,
     TemplateSystem,
@@ -208,6 +209,7 @@ class FakeSite(object):
         self.EXTRA_PLUGINS = self.config['EXTRA_PLUGINS']
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,
+            "EarlyTask": EarlyTask,
             "Task": Task,
             "LateTask": LateTask,
             "TemplateSystem": TemplateSystem,
