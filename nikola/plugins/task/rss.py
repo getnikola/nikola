@@ -51,6 +51,7 @@ class GenerateRSS(Task):
             "filters": self.site.config["FILTERS"],
             "blog_title": self.site.config["BLOG_TITLE"],
             "site_url": self.site.config["SITE_URL"],
+            "base_url": self.site.config["BASE_URL"],
             "blog_description": self.site.config["BLOG_DESCRIPTION"],
             "output_folder": self.site.config["OUTPUT_FOLDER"],
             "rss_teasers": self.site.config["RSS_TEASERS"],

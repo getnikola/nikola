@@ -58,6 +58,7 @@ class RenderTags(Task):
             "translations": self.site.config["TRANSLATIONS"],
             "blog_title": self.site.config["BLOG_TITLE"],
             "site_url": self.site.config["SITE_URL"],
+            "base_url": self.site.config["BASE_URL"],
             "messages": self.site.MESSAGES,
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],

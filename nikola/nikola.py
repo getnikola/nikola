@@ -1017,7 +1017,8 @@ class Nikola(object):
         )
 
         if feed_url:
-            rss_obj.xsl_stylesheet_href = self.url_replacer(feed_url, "/assets/xml/rss.xsl")
+            absurl = '/' + feed_url[len(self.config['BASE_URL']):]
+            rss_obj.xsl_stylesheet_href = self.url_replacer(absurl, "/assets/xml/rss.xsl")
 
         items = []
 
