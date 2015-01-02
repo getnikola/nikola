@@ -63,6 +63,8 @@ Features
 Bugfixes
 --------
 
+* Fixed ``rss.xsl`` path for blogs not deployed to server root
+  (Issue #1563)
 * Respect SHOW_UNTRANSLATED_POSTS = False in archives
   and for untranslated source files (Issue #1360)
 * Make sure drafts don’t appear in sitemaps with multiple languages
