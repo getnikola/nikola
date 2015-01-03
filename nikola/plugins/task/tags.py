@@ -84,7 +84,7 @@ class RenderTags(Task):
         self.site.scan_posts()
         yield self.group_task()
 
-        yield self.list_tags_page(kw)  # this also adds category and tag list to kw
+        yield self.list_tags_page(kw)
 
         if not self.site.posts_per_tag and not self.site.posts_per_category:
             return
@@ -169,6 +169,7 @@ class RenderTags(Task):
         has_tags = (tags != ['']) and include_tags
         has_categories = (categories != ['']) and include_categories
         template_name = "tags.tmpl"
+        kw = kw.copy()
         if include_tags:
             kw['tags'] = tags
         if include_categories:
