@@ -316,7 +316,6 @@ class CommandNewPost(Command):
                 except (AttributeError, TypeError):  # for tests
                     author = author.decode('utf-8')
 
-
         # Calculate the date to use for the content
         schedule = options['schedule'] or self.site.config['SCHEDULE_ALL']
         rule = self.site.config['SCHEDULE_RULE']
