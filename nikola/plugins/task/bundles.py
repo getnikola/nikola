@@ -44,10 +44,10 @@ class BuildBundles(LateTask):
 
     def set_site(self, site):
         self.logger = utils.get_logger('bundles', site.loghandlers)
-        if webassets is None and self.site.config['USE_BUNDLES']:
+        if webassets is None and site.config['USE_BUNDLES']:
             utils.req_missing(['webassets'], 'USE_BUNDLES', optional=True)
             self.logger.warn('Setting USE_BUNDLES to False.')
-            self.site.config['USE_BUNDLES'] = False
+            site.config['USE_BUNDLES'] = False
         super(BuildBundles, self).set_site(site)
 
     def gen_tasks(self):
