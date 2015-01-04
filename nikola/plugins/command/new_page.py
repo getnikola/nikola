@@ -45,6 +45,14 @@ class CommandNewPage(Command):
             'help': 'Title for the page.'
         },
         {
+            'name': 'author',
+            'short': 'a',
+            'long': 'author',
+            'type': str,
+            'default': '',
+            'help': 'Author of the post.'
+        },
+        {
             'name': 'onefile',
             'short': '1',
             'type': bool,

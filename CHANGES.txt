@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Added ``-a``, ``--author`` option to set post author field
 * Added option INDEXES_PRETTY_PAGE_URL to make URLs for indexes
   pages more pretty. (Issue #1548)
 * Added ``-i``, ``--import`` argument to ``new_post`` for importing
