@@ -10,6 +10,7 @@ init:
 install:
   - ps: (new-object net.webclient).DownloadFile('https://raw.github.com/pypa/pip/master/contrib/get-pip.py', 'C:/get-pip.py')
   - "%PYTHON%/python.exe C:/get-pip.py"
+  - "%PYTHON%/Scripts/pip.exe install --upgrade setuptools"
   - "%PYTHON%/Scripts/pip.exe install -r requirements-extras.txt pytest mock freezegun"
   - "%PYTHON%/python.exe setup.py install"
 
