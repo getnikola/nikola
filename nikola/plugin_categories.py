@@ -30,7 +30,6 @@ import os
 
 __all__ = [
     'Command',
-    'EarlyTask',
     'LateTask',
     'PageCompiler',
     'RestExtension',
@@ -159,12 +158,6 @@ class Task(BaseTask):
     """Plugins of this type are task generators."""
 
     name = "dummy_task"
-
-
-class EarlyTask(BaseTask):
-    """Plugins of this type are executed before all plugins of type Task."""
-
-    name = "dummy_earlytask"
 
 
 class LateTask(BaseTask):

@@ -72,7 +72,6 @@ from .post import Post
 from . import utils
 from .plugin_categories import (
     Command,
-    EarlyTask,
     LateTask,
     PageCompiler,
     RestExtension,
@@ -612,7 +611,6 @@ class Nikola(object):
 
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,
-            "EarlyTask": EarlyTask,
             "Task": Task,
             "LateTask": LateTask,
             "TemplateSystem": TemplateSystem,
@@ -653,7 +651,6 @@ class Nikola(object):
             plugin_info.plugin_object.short_help = plugin_info.description
             self._commands[plugin_info.name] = plugin_info.plugin_object
 
-        self._activate_plugins_of_category("EarlyTask")
         self._activate_plugins_of_category("Task")
         self._activate_plugins_of_category("LateTask")
         self._activate_plugins_of_category("TaskMultiplier")
