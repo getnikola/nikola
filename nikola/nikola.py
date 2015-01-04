@@ -872,6 +872,14 @@ class Nikola(object):
         return compile_html
 
     def render_template(self, template_name, output_name, context):
+        """Render a template with the global context.
+
+        If ``output_name`` is None, will return a string and all URL
+        normalization will be ignored (including the link:// scheme).
+        If ``output_name`` is a string, URLs will be normalized and
+        the resultant HTML will be saved to the named file (path must
+        start with OUTPUT_FOLDER).
+        """
         local_context = {}
         local_context["template_name"] = template_name
         local_context.update(self.GLOBAL_CONTEXT)
@@ -889,6 +897,9 @@ class Nikola(object):
 
         data = self.template_system.render_template(
             template_name, None, local_context)
+
+        if output_name is None:
+            return data
 
         assert output_name.startswith(
             self.config["OUTPUT_FOLDER"])
