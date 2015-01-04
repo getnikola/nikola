@@ -28,7 +28,6 @@ from __future__ import print_function
 import os
 import io
 import json
-import shutil
 
 import pygments
 from pygments.lexers import PythonLexer
