@@ -328,7 +328,7 @@ class CommandNewPost(Command):
         if (not onefile and os.path.isfile(meta_path)) or \
                 os.path.isfile(txt_path):
             LOGGER.error("The title already exists!")
-            exit()
+            exit(8)
 
         d_name = os.path.dirname(txt_path)
         utils.makedirs(d_name)
