@@ -58,6 +58,9 @@ else:
 
 config = {}
 
+# DO NOT USE unless you know what you are doing!
+_RETURN_DOITNIKOLA = False
+
 
 def main(args=None):
     colorful = False
@@ -144,7 +147,10 @@ def main(args=None):
     config['__configuration_filename__'] = conf_filename
 
     site = Nikola(**config)
-    _ = DoitNikola(site, quiet).run(args)
+    DN = DoitNikola(site, quiet)
+    if _RETURN_DOITNIKOLA:
+        return DN
+    _ = DN.run(args)
 
     if site.invariant:
         freeze.stop()
