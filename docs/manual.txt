@@ -238,8 +238,7 @@ libxml/xmlversion.h: No such file or directory`` when running ``pip install -r r
 
 Debian systems::
 
-    sudo apt-get install libxml2-dev
-    sudo apt-get install libxslt1-dev
+    sudo apt-get install libxml2-dev libxslt1-dev
 
 Red Hat/RPM-based systems::
 
