@@ -397,14 +397,14 @@ class TranslatableSetting(object):
                     # We create temporary TranslatableSettings and replace the
                     # values with them.
                     if isinstance(a, dict):
-                        a = TranslatableSetting('NULL', a)
+                        a = TranslatableSetting('NULL', a, self.translations)
                         args.append(a(l))
                     else:
                         args.append(a)
 
                 for k, v in okwargs.items():
                     if isinstance(v, dict):
-                        v = TranslatableSetting('NULL', v)
+                        v = TranslatableSetting('NULL', v, self.translations)
                         kwargs.update({k: v(l)})
                     else:
                         kwargs.update({k: v})
