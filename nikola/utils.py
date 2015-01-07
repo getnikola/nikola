@@ -382,8 +382,10 @@ class TranslatableSetting(object):
                 for a in f[0] + tuple(f[1].values()):
                     if isinstance(a, dict):
                         langkeys += list(a)
+
             # Now that we know all this, we go through all the languages we have.
             allvalues = set(keys + langkeys + list(self.values))
+            self.values['__orig__'] = self.values[self.default_lang]
             for l in allvalues:
                 if l in keys:
                     oargs, okwargs = formats[l]
@@ -409,7 +411,10 @@ class TranslatableSetting(object):
                     else:
                         kwargs.update({k: v})
 
-                self.values[l] = self.values[l].format(*args, **kwargs)
+                if l in self.values:
+                    self.values[l] = self.values[l].format(*args, **kwargs)
+                else:
+                    self.values[l] = self.values['__orig__'].format(*args, **kwargs)
                 self.values.default_factory = lambda: self.values[self.default_lang]
 
         return self

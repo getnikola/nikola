@@ -63,6 +63,7 @@ Features
 Bugfixes
 --------
 
+* Fixed a ``TranslatableSetting.langformat`` race condition
 * Fixed ``TranslatableSetting`` instantiation in
   ``TranslatableSetting.langformat`` (Issue #1571)
 * Fixed ``rss.xsl`` path for blogs not deployed to server root
