@@ -230,19 +230,18 @@ __ https://aur.archlinux.org/packages/python2-nikola/
 __ https://aur.archlinux.org/packages/python-nikola-git/
 __ https://aur.archlinux.org/packages/python2-nikola-git/
 
-libxml/libxslt errors
-~~~~~~~~~~~~~~~~~~~~~
+libxml/libxslt (files missing) errors
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you get a ``ERROR: /bin/sh: 1: xslt-config: not found`` or ``fatal error:
-libxml/xmlversion.h: No such file or directory`` when running ``pip install -r requirements.txt``, install *libxml* and *libxslt* libraries, like so:
+If you get errors about various files missing while compiling ``lxml``, you must install headers for the ``libxml``, ``libxslt`` and ``zlib`` libraries, like so:
 
 Debian systems::
 
-    sudo apt-get install libxml2-dev libxslt1-dev
+    sudo apt-get install libxml2-dev libxslt1-dev zlib1g-dev
 
 Red Hat/RPM-based systems::
 
-    sudo yum install libxslt-devel libxml2-devel
+    sudo yum install libxslt-devel libxml2-devel zlib-devel
 
 Python.h not found
 ~~~~~~~~~~~~~~~~~~
