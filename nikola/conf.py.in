@@ -82,7 +82,7 @@ TRANSLATIONS_PATTERN = ${TRANSLATIONS_PATTERN}
 # WARNING: If you link to directories, make sure to follow
 #          ``STRIP_INDEXES``.  If it’s set to ``True``, end your links
 #          with a ``/``, otherwise end them with ``/index.html`` — or
-#          else they won’t be hilighted when active.
+#          else they won’t be highlighted when active.
 
 NAVIGATION_LINKS = ${NAVIGATION_LINKS}
 
@@ -97,7 +97,7 @@ THEME = ${THEME}
 # another time zone, please set TIMEZONE to match. Check the available
 # list from Wikipedia:
 # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-# (eg. 'Europe/Zurich')
+# (e.g. 'Europe/Zurich')
 # Also, if you want to use a different time zone in some of your posts,
 # you can use the ISO 8601/RFC 3339 format (ex. 2012-03-30T23:00:00+02:00)
 TIMEZONE = ${TIMEZONE}
@@ -128,9 +128,9 @@ TIMEZONE = ${TIMEZONE}
 # sometimes explicit control can come handy.
 # In this file we express locales in the string form that
 # python's locales will accept in your OS, by example
-# "en_US.utf8" in unix-like OS, "English_United States" in Windows.
+# "en_US.utf8" in Unix-like OS, "English_United States" in Windows.
 # LOCALES = dict mapping language --> explicit locale for the languages
-# in TRANSLATIONS. You can ommit one or more keys.
+# in TRANSLATIONS. You can omit one or more keys.
 # LOCALE_FALLBACK = locale to use when an explicit locale is unavailable
 # LOCALE_DEFAULT = locale to use for languages not mentioned in LOCALES; if
 # not set the default Nikola mapping is used.
@@ -141,7 +141,7 @@ TIMEZONE = ${TIMEZONE}
 # (whatever/thing.txt).
 #
 # That fragment could have an associated metadata file (whatever/thing.meta),
-# and optionally translated files (example for spanish, with code "es"):
+# and optionally translated files (example for Spanish, with code "es"):
 #     whatever/thing.es.txt and whatever/thing.es.meta
 #
 #     This assumes you use the default TRANSLATIONS_PATTERN.
@@ -181,7 +181,7 @@ PAGES = ${PAGES}
 #
 # 'rest' is reStructuredText
 # 'markdown' is MarkDown
-# 'html' assumes the file is html and just copies it
+# 'html' assumes the file is HTML and just copies it
 COMPILERS = ${COMPILERS}
 
 # Create by default posts in one file format?
@@ -318,7 +318,7 @@ REDIRECTIONS = ${REDIRECTIONS}
 # You may also want to use github_deploy (see below).
 # You can define multiple presets and specify them as arguments
 # to `nikola deploy`.  If no arguments are specified, a preset
-# named `default` will be executed.  You canuse as many presets
+# named `default` will be executed.  You can use as many presets
 # in a `nikola deploy` command as you like.
 # DEPLOY_COMMANDS = {
 #     'default': [
@@ -715,7 +715,7 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 
 # RSS_LINK is a HTML fragment to link the RSS or Atom feeds. If set to None,
 # the base.tmpl will use the feed Nikola generates. However, you may want to
-# change it for a feedburner feed or something else.
+# change it for a FeedBurner feed or something else.
 # RSS_LINK = None
 
 # Show only teasers in the RSS feed? Default to True
@@ -759,9 +759,9 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # <!-- End of custom search -->
 #""" % SITE_URL
 
-# Use content distribution networks for jquery, twitter-bootstrap css and js,
+# Use content distribution networks for jQuery, twitter-bootstrap css and js,
 # and html5shiv (for older versions of Internet Explorer)
-# If this is True, jquery and html5shiv are served from the Google CDN and
+# If this is True, jQuery and html5shiv are served from the Google CDN and
 # Bootstrap is served from BootstrapCDN (provided by MaxCDN)
 # Set this to False if you want to host your site without requiring access to
 # external resources.
