@@ -4,7 +4,7 @@ Module = install_theme
 
 [Documentation]
 Author = Roberto Alsina
-Version = 0.1
+Version = 1.0
 Website = http://getnikola.com
 Description = Install a theme into the current site.
 

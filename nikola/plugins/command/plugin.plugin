@@ -4,7 +4,7 @@ Module = plugin
 
 [Documentation]
 Author = Roberto Alsina and Chris Warrick
-Version = 0.2
+Version = 1.0
 Website = http://getnikola.com
 Description = Manage Nikola plugins
 

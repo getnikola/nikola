@@ -4,7 +4,7 @@ Module = rss
 
 [Documentation]
 Author = Roberto Alsina
-Version = 0.1
+Version = 1.0
 Website = http://getnikola.com
 Description = Generate RSS feeds.
 
