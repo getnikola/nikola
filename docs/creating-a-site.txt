@@ -1,5 +1,5 @@
 .. slug: creating-a-site-not-a-blog-with-nikola
-.. date: 2013/03/01 12:49:41
+.. date: 2015-01-10 10:00:00 UTC
 .. tags: nikola, python
 .. link:
 .. description:
@@ -65,8 +65,9 @@ And now we are ready to create our first page::
     Creating New Page
     -----------------
 
-    Enter title: index
-    Your post's text is at:  pages/index.txt
+    Title: index
+    Scanning posts....done!
+    [1970-01-01T00:00:00Z] INFO: new_page: Your page's text is at: stories/index.rst
 
 .. note:: The ``-p`` option in the ``nikola new_post`` command means we are creating a page and not a blog post.
 
@@ -116,25 +117,24 @@ you can use anything you like from it:
 
     .. title: Welcome To The Fake Site
     .. slug: index
-    .. date: 2013/03/01 10:26:17
+    .. date: 1970-01-01 00:00:00 UTC
     .. tags:
     .. link:
     .. description: Fake Site version 1, welcome page!
 
 
-    .. class:: jumbotron span6
+    .. class:: jumbotron col-md-6
 
     .. admonition:: This is a Fake Site
 
         It pretends to be about things, but is really just an example.
-        So, don't click this button, it leads nowhere.
 
-        .. class:: btn
+        .. raw:: html
 
-        Click Me!
+           <a href="https://getnikola.com/" class="btn btn-primary btn-lg">Click Me!</a>
 
 
-    .. class:: span5
+    .. class:: col-md-5
 
     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris non nunc turpis.
     Phasellus a ullamcorper leo. Sed fringilla dapibus orci eu ornare. Quisque
@@ -146,8 +146,6 @@ you can use anything you like from it:
     semper vel velit. Phasellus consectetur orci vel tortor tempus imperdiet. Class
     aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
     himenaeos.
-
-    [And more in the same vein]
 
 .. admonition:: TIP: Nice URLs
 
