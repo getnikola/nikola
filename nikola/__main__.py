@@ -91,9 +91,6 @@ def main(args=None):
         quiet = True
     global config
 
-    if conf_filename_changed:
-        LOGGER.info("Using config file '{0}'".format(conf_filename))
-
     # Those commands do not require a `conf.py`.  (Issue #1132)
     # Moreover, actually having one somewhere in the tree can be bad, putting
     # the output of that command (the new site) in an unknown directory that is
@@ -125,6 +122,9 @@ def main(args=None):
             LOGGER.error('Cannot find configuration file "{0}".'.format(conf_filename))
             sys.exit(1)
         config = {}
+
+    if conf_filename_changed:
+        LOGGER.info("Using config file '{0}'".format(conf_filename))
 
     invariant = False
 
