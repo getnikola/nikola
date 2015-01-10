@@ -121,8 +121,9 @@ def main(args=None):
             msg = traceback.format_exc(0)
             LOGGER.error('"{0}" cannot be parsed.\n{1}'.format(conf_filename, msg))
             sys.exit(1)
-        elif needs_config_file:
-            LOGGER.warn('Cannot find configuration file "{0}".'.format(conf_filename))
+        elif needs_config_file and conf_filename_changed:
+            LOGGER.error('Cannot find configuration file "{0}".'.format(conf_filename))
+            sys.exit(1)
         config = {}
 
     invariant = False
