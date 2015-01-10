@@ -43,8 +43,8 @@ from nikola.utils import get_logger
 
 def _call_nikola_list(site, arguments):
     command = ["nikola"]
-    if site.config['__configuration_filename__'] != 'conf.py':
-        command.append('--conf=' + site.config['__configuration_filename__'])
+    if site.configuration_filename != 'conf.py':
+        command.append('--conf=' + site.configuration_filename)
     command.extend(["list", "--all"])
     result = []
     for task in subprocess.Popen(command, shell=False, stdout=subprocess.PIPE).stdout.readlines():

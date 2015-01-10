@@ -255,6 +255,7 @@ class Nikola(object):
         self.colorful = config.pop('__colorful__', False)
         self.invariant = config.pop('__invariant__', False)
         self.quiet = config.pop('__quiet__', False)
+        self.configuration_filename = config.pop('__configuration_filename__', False)
         self.configured = bool(config)
 
         self.template_hooks = {
