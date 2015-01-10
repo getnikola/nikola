@@ -1261,7 +1261,7 @@ class Nikola(object):
             'task_dep': task_dep
         }
 
-    def scan_posts(self, really=False, ignore_quit=False):
+    def scan_posts(self, really=False, ignore_quit=False, quiet=False):
         """Scan all the posts."""
         if self._scanned and not really:
             return
@@ -1281,13 +1281,13 @@ class Nikola(object):
         self.pages = []
 
         seen = set([])
-        if not self.quiet:
+        if not self.quiet and not quiet:
             print("Scanning posts", end='', file=sys.stderr)
         slugged_tags = set([])
         quit = False
         for wildcard, destination, template_name, use_in_feeds in \
                 self.config['post_pages']:
-            if not self.quiet:
+            if not self.quiet and not quiet:
                 print(".", end='', file=sys.stderr)
             dirname = os.path.dirname(wildcard)
             for dirpath, _, _ in os.walk(dirname, followlinks=True):
@@ -1373,7 +1373,7 @@ class Nikola(object):
         for i, p in enumerate(self.posts[:-1]):
             p.prev_post = self.posts[i + 1]
         self._scanned = True
-        if not self.quiet:
+        if not self.quiet and not quiet:
             print("done!", file=sys.stderr)
 
         signal('scanned').send(self)
