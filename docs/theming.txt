@@ -68,10 +68,9 @@ parent
 
     I recommend this:
 
-    * If your theme uses bootstrap, inherit the ``bootstrap`` theme.
-    * If your theme uses bootstrap3, inherit the ``bootstrap3`` theme.
+    * If your theme uses Bootstrap 3, inherit the ``bootstrap3`` theme.
     * If your theme uses Jinja as a template engine, inherit ``base-jinja``
-      or ``bootstrap-jinja`` (available at http://themes.nikola.ralsina.com.ar)
+      or ``bootstrap3-jinja``
     * In any other case, inherit ``base``.
 
 And these optional files:
@@ -84,7 +83,7 @@ bundles
     A text file containing a list of files to be turned into bundles using WebAssets.
     For example::
 
-        assets/css/all.css=bootstrap.css,bootstrap-responsive.css,rst.css,code.css,colorbox.css,custom.css
+        assets/css/all.css=bootstrap.css,rst.css,code.css,colorbox.css,custom.css
 
     This creates a file called "assets/css/all.css" in your output that is the
     combination of all the other file paths, relative to the output file.
@@ -117,29 +116,31 @@ These are the templates that come with the included themes:
     This template defines the basic page layout for the site. It's mostly plain HTML
     but defines a few blocks that can be re-defined by inheriting templates.
 
-    It has some separate pieces defined in ``base_helper.tmpl`` so they can be
-    easily overriden. For example, the Bootstrap theme adds a ``bootstrap_helper.tmpl``
-    and then uses it to override things defined in base theme's ``base_helper.tmpl``
+    It has some separate pieces defined in ``base_helper.tmpl``,
+    ``base_header.tmpl`` and ``base_footer.tmpl`` so they can be
+    easily overriden.
 
 ``index.tmpl``
     Template used to render the multipost indexes. The posts are in a ``posts`` variable.
     Some functionality is in the ``index_helper.tmpl`` helper template.
 
+``archiveindex.tmpl``
+    Used to display archives, if ``ARCHIVES_ARE_INDEXES`` is True.
+    By default, it just inherits ``index.tmpl``.
+
 ``comments_helper.tmpl``
     This template handles comments. You should probably never touch it :-)
-    It uses a bunch of helper templates, one for each supported comment system:
-    ``disqus_helper.tmpl`` ``facebook_helper.tmpl`` ``googleplus_helper.tmpl``
-    ``intensedebate_helper.tmpl`` ``isso_helper.tmpl`` ``livefyre_helper.tmpl``
-    ``moot_helper.tmpl``
+    It uses a bunch of helper templates, one for each supported comment system
+    (all of which start with ``comments_helper``)
 
-``crumbs.tmpl`` ``slides.tmpl``
+``crumbs.tmpl``, ``slides.tmpl``
     These templates help render specific UI items, and can be tweaked as needed.
 
 ``gallery.tmpl``
     Template used for image galleries. Interesting data includes:
 
-    * ``text``: A descriptive text for the gallery.
-    * ``crumbs``: A list of ``link, crumb`` to implement a crumbbar.
+    * ``post``: A post object, containing descriptive ``post.text()`` for the gallery.
+    * ``crumbs``: A list of ``link, crumb`` to implement breadcrumbs.
     * ``folders``: A list of folders to implement hierarchical gallery navigation.
     * ``enable_comments``: To enable/disable comments in galleries.
     * ``thumbnail_size``: The ``THUMBNAIL_SIZE`` option.
@@ -159,25 +160,30 @@ These are the templates that come with the included themes:
 ``list_post.tmpl``
     Template used to display generic lists of posts, which it gets in ``posts``.
 
+``listing.tmpl``
+    Used to display code listings.
+
 ``post.tmpl``
     Template used by default for blog posts, gets the data in a ``post`` object
     which is an instance of the Post class. Some functionality is in the
-    ``post_helper.tmpl`` template.
+    ``post_helper.tmpl`` and ``post_header.tmpl`` templates.
+
+``post_list_directive.tmpl``
+    Template used by the ``post_list`` reStructuredText directive.
 
 ``story.tmpl``
     Used for pages that are not part of a blog, usually a cleaner, less
     intrusive layout than ``post.tmpl``, but same parameters.
 
-``listing.tmpl``
-    Used to display code listings.
-
-``tags.tmpl``
-    Used to display the list of tags and categories. ``tag.tmpl`` is used to show the contents
-    of a single tag or category.
+``tag.tmpl``
+    Used to show the contents of a single tag or category.
 
 ``tagindex.tmpl``
-    Used to display tag indexes, if ``TAG_PAGES_ARE_INDEXES`` is True.
+    Used to show the contents of a single tag or category, if ``TAG_PAGES_ARE_INDEXES`` is True.
     By default, it just inherits ``index.tmpl``.
+
+``tags.tmpl``
+    Used to display the list of tags and categories.
 
 You can add other templates for specific pages, which the user can then use in his ``POSTS``
 or ``PAGES`` option in ``conf.py``. Also, keep in mind that your theme is yours,
