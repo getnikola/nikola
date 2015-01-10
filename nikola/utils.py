@@ -74,9 +74,9 @@ def get_logger(name, handlers):
     l = logbook.Logger(name)
     for h in handlers:
         if isinstance(h, list):
-            l.handlers = h
+            l.handlers += h
         else:
-            l.handlers = [h]
+            l.handlers.append(h)
     return l
 
 
