@@ -63,6 +63,7 @@ Features
 Bugfixes
 --------
 
+* Don’t classify unpublished posts as pages (Issue #1577)
 * Fixed a ``TranslatableSetting.langformat`` race condition
 * Fixed ``TranslatableSetting`` instantiation in
   ``TranslatableSetting.langformat`` (Issue #1571)

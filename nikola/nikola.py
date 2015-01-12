@@ -240,6 +240,7 @@ class Nikola(object):
         self.strict = False
         self.global_data = {}
         self.posts = []
+        self.all_posts = []
         self.posts_per_year = defaultdict(list)
         self.posts_per_month = defaultdict(list)
         self.posts_per_tag = defaultdict(list)
@@ -1272,6 +1273,7 @@ class Nikola(object):
             self.commands = None
         self.global_data = {}
         self.posts = []
+        self.all_posts = []
         self.posts_per_year = defaultdict(list)
         self.posts_per_month = defaultdict(list)
         self.posts_per_tag = defaultdict(list)
@@ -1354,8 +1356,13 @@ class Nikola(object):
                                 slugged_tags.add(utils.slugify(tag, force=True))
                             self.posts_per_tag[tag].append(post)
                         self.posts_per_category[post.meta('category')].append(post)
+
+                    if post.is_post:
+                        # unpublished posts
+                        self.all_posts.append(post)
                     else:
                         self.pages.append(post)
+
                     for lang in self.config['TRANSLATIONS'].keys():
                         self.post_per_file[post.destination_path(lang=lang)] = post
                         self.post_per_file[post.destination_path(lang=lang, extension=post.source_ext())] = post
@@ -1365,6 +1372,8 @@ class Nikola(object):
         self.timeline.reverse()
         self.posts.sort(key=lambda p: p.date)
         self.posts.reverse()
+        self.all_posts.sort(key=lambda p: p.date)
+        self.all_posts.reverse()
         self.pages.sort(key=lambda p: p.date)
         self.pages.reverse()
 
