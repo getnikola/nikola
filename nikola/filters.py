@@ -149,7 +149,7 @@ def jpegoptim(infile):
 
 @apply_to_text_file
 def minify_lines(data):
-    return data;
+    return data
 
 
 @apply_to_text_file
