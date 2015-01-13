@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2012-2015 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -58,6 +58,9 @@ else:
 
 config = {}
 
+# DO NOT USE unless you know what you are doing!
+_RETURN_DOITNIKOLA = False
+
 
 def main(args=None):
     colorful = False
@@ -68,6 +71,16 @@ def main(args=None):
 
     if args is None:
         args = sys.argv[1:]
+
+    conf_filename = 'conf.py'
+    conf_filename_changed = False
+    for index, arg in enumerate(args):
+        if arg[:7] == '--conf=':
+            del args[index]
+            conf_filename = arg[7:]
+            conf_filename_changed = True
+            break
+
     quiet = False
     if len(args) > 0 and args[0] == b'build' and b'--strict' in args:
         LOGGER.notice('Running in strict mode')
@@ -78,14 +91,6 @@ def main(args=None):
         quiet = True
     global config
 
-    conf_filename = 'conf.py'
-    for index, arg in enumerate(args):
-        if arg[:7] == '--conf=':
-            conf_filename = arg[7:]
-            LOGGER.info("Using config file '{0}'".format(conf_filename))
-            del args[index]
-            break
-
     # Those commands do not require a `conf.py`.  (Issue #1132)
     # Moreover, actually having one somewhere in the tree can be bad, putting
     # the output of that command (the new site) in an unknown directory that is
@@ -95,7 +100,8 @@ def main(args=None):
         root = get_root_dir()
         if root:
             os.chdir(root)
-        needs_config_file = True
+        # help does not need a config file, but can use one.
+        needs_config_file = argname != 'help'
     else:
         needs_config_file = False
 
@@ -112,9 +118,13 @@ def main(args=None):
             msg = traceback.format_exc(0)
             LOGGER.error('"{0}" cannot be parsed.\n{1}'.format(conf_filename, msg))
             sys.exit(1)
-        elif needs_config_file:
-            LOGGER.warn('Cannot find configuration file "{0}".'.format(conf_filename))
+        elif needs_config_file and conf_filename_changed:
+            LOGGER.error('Cannot find configuration file "{0}".'.format(conf_filename))
+            sys.exit(1)
         config = {}
+
+    if conf_filename_changed:
+        LOGGER.info("Using config file '{0}'".format(conf_filename))
 
     invariant = False
 
@@ -138,7 +148,10 @@ def main(args=None):
     config['__configuration_filename__'] = conf_filename
 
     site = Nikola(**config)
-    _ = DoitNikola(site, quiet).run(args)
+    DN = DoitNikola(site, quiet)
+    if _RETURN_DOITNIKOLA:
+        return DN
+    _ = DN.run(args)
 
     if site.invariant:
         freeze.stop()
@@ -241,7 +254,7 @@ class NikolaTaskLoader(TaskLoader):
             self.nikola.gen_tasks('render_site', "Task", 'Group of tasks to render the site.'))
         latetasks = generate_tasks(
             'post_render',
-            self.nikola.gen_tasks('post_render', "LateTask", 'Group of tasks to be executes after site is rendered.'))
+            self.nikola.gen_tasks('post_render', "LateTask", 'Group of tasks to be executed after site is rendered.'))
         signal('initialized').send(self.nikola)
         return tasks + latetasks, DOIT_CONFIG
 

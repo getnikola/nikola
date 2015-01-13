@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2015 Roberto Alsina and others.
+# Copyright © 2014-2015 Pelle Nilsson and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -24,40 +24,46 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import os
 
-from docutils import nodes
-from docutils.parsers.rst import Directive, directives
-
-try:
-    import micawber
-except ImportError:
-    micawber = None  # NOQA
-
+from docutils.parsers.rst import directives
+from docutils.parsers.rst.directives.images import Image, Figure
 
 from nikola.plugin_categories import RestExtension
-from nikola.utils import req_missing
 
 
 class Plugin(RestExtension):
 
-    name = "rest_media"
+    name = "rest_thumbnail"
 
     def set_site(self, site):
         self.site = site
-        directives.register_directive('media', Media)
+        directives.register_directive('thumbnail', Thumbnail)
         return super(Plugin, self).set_site(site)
 
 
-class Media(Directive):
-    """ Restructured text extension for inserting any sort of media using micawber."""
-    has_content = False
-    required_arguments = 1
-    optional_arguments = 999
+class Thumbnail(Figure):
+
+    def align(argument):
+        return directives.choice(argument, Image.align_values)
+
+    def figwidth_value(argument):
+        if argument.lower() == 'image':
+            return 'image'
+        else:
+            return directives.length_or_percentage_or_unitless(argument, 'px')
+
+    option_spec = Image.option_spec.copy()
+    option_spec['figwidth'] = figwidth_value
+    option_spec['figclass'] = directives.class_option
+    has_content = True
 
     def run(self):
-        if micawber is None:
-            msg = req_missing(['micawber'], 'use the media directive', optional=True)
-            return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
-
-        providers = micawber.bootstrap_basic()
-        return [nodes.raw('', micawber.parse_text(" ".join(self.arguments), providers), format='html')]
+        uri = directives.uri(self.arguments[0])
+        self.options['target'] = uri
+        self.arguments[0] = '.thumbnail'.join(os.path.splitext(uri))
+        if self.content:
+            (node,) = Figure.run(self)
+        else:
+            (node,) = Image.run(self)
+        return [node]

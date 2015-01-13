@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2012-2015 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -33,6 +33,7 @@ try:
     from urlparse import urlparse, urljoin, urldefrag
 except ImportError:
     from urllib.parse import unquote, urlparse, urljoin, urldefrag  # NOQA
+import subprocess
 
 import lxml.html
 
@@ -40,12 +41,23 @@ from nikola.plugin_categories import Command
 from nikola.utils import get_logger
 
 
+def _call_nikola_list(site, arguments):
+    command = ["nikola"]
+    if site.configuration_filename != 'conf.py':
+        command.append('--conf=' + site.configuration_filename)
+    command.extend(["list", "--all"])
+    result = []
+    for task in subprocess.Popen(command, shell=False, stdout=subprocess.PIPE).stdout.readlines():
+        result.append(task.decode('utf-8'))
+    return result
+
+
 def real_scan_files(site):
     task_fnames = set([])
     real_fnames = set([])
     output_folder = site.config['OUTPUT_FOLDER']
     # First check that all targets are generated in the right places
-    for task in os.popen('nikola list --all', 'r').readlines():
+    for task in _call_nikola_list(site, ["--all"]):
         task = task.strip()
         if output_folder in task and ':' in task:
             fname = task.split(':', 1)[-1]
@@ -163,7 +175,7 @@ class CommandCheck(Command):
                 self.logger.notice("Ignoring {0} (in cache, links may be incorrect)".format(filename))
                 return False
 
-            d = lxml.html.fromstring(open(filename).read())
+            d = lxml.html.fromstring(open(filename, 'rb').read())
             for l in d.iterlinks():
                 target = l[0].attrib[l[1]]
                 if target == "#":
@@ -209,7 +221,7 @@ class CommandCheck(Command):
                         self.logger.warn("Broken link in {0}: {1}".format(filename, target))
                         if find_sources:
                             self.logger.warn("Possible sources:")
-                            self.logger.warn(os.popen('nikola list --deps ' + task, 'r').read())
+                            self.logger.warn("\n".join(_call_nikola_list(self.site, ["--deps", task])))
                             self.logger.warn("===============================\n")
         except Exception as exc:
             self.logger.error("Error with: {0} {1}".format(filename, exc))
@@ -220,7 +232,7 @@ class CommandCheck(Command):
         self.logger.info("===============\n")
         self.logger.notice("{0} mode".format(self.site.config['URL_TYPE']))
         failure = False
-        for task in os.popen('nikola list --all', 'r').readlines():
+        for task in _call_nikola_list(self.site, ["--all"]):
             task = task.strip()
             if task.split(':')[0] in (
                     'render_tags', 'render_archive',

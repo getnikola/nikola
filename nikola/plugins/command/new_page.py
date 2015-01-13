@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina, Chris Warrick and others.
+# Copyright © 2012-2015 Roberto Alsina, Chris Warrick and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -45,6 +45,14 @@ class CommandNewPage(Command):
             'help': 'Title for the page.'
         },
         {
+            'name': 'author',
+            'short': 'a',
+            'long': 'author',
+            'type': str,
+            'default': '',
+            'help': 'Author of the post.'
+        },
+        {
             'name': 'onefile',
             'short': '1',
             'type': bool,
@@ -73,6 +81,14 @@ class CommandNewPage(Command):
             'default': '',
             'help': 'Markup format for the page, one of rest, markdown, wiki, '
                     'bbcode, html, textile, txt2tags',
+        },
+        {
+            'name': 'import',
+            'short': 'i',
+            'long': 'import',
+            'type': str,
+            'default': '',
+            'help': 'Import an existing file instead of creating a placeholder'
         },
     ]
 

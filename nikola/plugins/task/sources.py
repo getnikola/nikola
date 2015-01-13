@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2012-2015 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -80,5 +80,5 @@ class Sources(Task):
                             'targets': [output_name],
                             'actions': [(utils.copy_file, (source, output_name))],
                             'clean': True,
-                            'uptodate': [utils.config_changed(kw)],
+                            'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.sources')],
                         }

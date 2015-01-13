@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2012-2015 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -149,9 +149,7 @@ def jpegoptim(infile):
 
 @apply_to_text_file
 def minify_lines(data):
-    datalines = data.splitlines()
-    datalines = [line.lstrip() for line in datalines if not (line.strip() == "")]
-    return "\n".join(datalines)
+    return data
 
 
 @apply_to_text_file

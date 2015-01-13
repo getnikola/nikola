@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2012-2015 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -137,6 +137,9 @@ class Sitemap(LateTask):
                 lastmod = self.get_lastmod(root)
                 loc = urljoin(base_url, base_path + path)
                 if kw['index_file'] in files and kw['strip_indexes']:  # ignore folders when not stripping urls
+                    post = self.site.post_per_file.get(path + kw['index_file'])
+                    if post and (post.is_draft or post.is_private or post.publish_later):
+                        continue
                     urlset[loc] = loc_format.format(loc, lastmod)
                 for fname in files:
                     if kw['strip_indexes'] and fname == kw['index_file']:
@@ -243,7 +246,7 @@ class Sitemap(LateTask):
             "name": sitemap_path,
             "targets": [sitemap_path],
             "actions": [(write_sitemap,)],
-            "uptodate": [config_changed(kw)],
+            "uptodate": [config_changed(kw, 'nikola.plugins.task.sitemap:write')],
             "clean": True,
             "task_dep": ["render_site"],
             "calc_dep": ["_scan_locs:sitemap"],
@@ -253,7 +256,7 @@ class Sitemap(LateTask):
             "name": sitemapindex_path,
             "targets": [sitemapindex_path],
             "actions": [(write_sitemapindex,)],
-            "uptodate": [config_changed(kw)],
+            "uptodate": [config_changed(kw, 'nikola.plugins.task.sitemap:write_index')],
             "clean": True,
             "file_dep": [sitemap_path]
         }, kw['filters'])

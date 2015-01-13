@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2012-2015 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -128,6 +128,10 @@ class Post(object):
         self._remaining_reading_time = None
         self._paragraph_count = None
         self._remaining_paragraph_count = None
+        self._dependency_file_fragment = defaultdict(list)
+        self._dependency_file_page = defaultdict(list)
+        self._dependency_uptodate_fragment = defaultdict(list)
+        self._dependency_uptodate_page = defaultdict(list)
 
         default_metadata, self.newstylemeta = get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'])
 
@@ -211,6 +215,9 @@ class Post(object):
 
         # If mathjax is a tag, then enable mathjax rendering support
         self.is_mathjax = 'mathjax' in self.tags
+
+        # Register potential extra dependencies
+        self.compiler.register_extra_dependencies(self)
 
     def __repr__(self):
         return '<Post: {0}>'.format(self.source_path)
@@ -316,8 +323,69 @@ class Post(object):
             lang = nikola.utils.LocaleBorg().current_lang
         return self.meta[lang]['description']
 
+    def add_dependency(self, dependency, add='both', lang=None):
+        """Adds a file dependency for tasks using that post.
+
+        The ``dependency`` should be a string specifying a path, or a callable
+        which returns such a string or a list of strings.
+
+        The ``add`` parameter can be 'both', 'fragment' or 'page', to indicate
+        that this dependency shall be used
+         * when rendering the fragment to HTML ('fragment' and 'both'), or
+         * when creating a page with parts of the ``Post`` embedded, which
+           includes the HTML resulting from compiling the fragment ('page' or
+           'both').
+
+        If ``lang`` is not specified, this dependency is added for all languages."""
+        if add not in {'fragment', 'page', 'both'}:
+            raise Exception("Add parameter is '{0}', but must be either 'fragment', 'page', or 'both'.".format(add))
+        if add == 'fragment' or add == 'both':
+            self._dependency_file_fragment[lang].append((type(dependency) != str, dependency))
+        if add == 'page' or add == 'both':
+            self._dependency_file_page[lang].append((type(dependency) != str, dependency))
+
+    def add_dependency_uptodate(self, dependency, is_callable=False, add='both', lang=None):
+        """Adds a dependency for task's ``uptodate`` for tasks using that post.
+
+        This can be for example an ``utils.config_changed`` object, or a list of
+        such objects.
+
+        The ``is_callable`` parameter specifies whether ``dependency`` is a
+        callable which generates an entry or a list of entries for the ``uptodate``
+        list, or whether it is an entry which can directly be added (as a single
+        object or a list of objects).
+
+        The ``add`` parameter can be 'both', 'fragment' or 'page', to indicate
+        that this dependency shall be used
+         * when rendering the fragment to HTML ('fragment' and 'both'), or
+         * when creating a page with parts of the ``Post`` embedded, which
+           includes the HTML resulting from compiling the fragment ('page' or
+           'both').
+
+        If ``lang`` is not specified, this dependency is added for all languages."""
+        if add == 'fragment' or add == 'both':
+            self._dependency_uptodate_fragment[lang].append((is_callable, dependency))
+        if add == 'page' or add == 'both':
+            self._dependency_uptodate_page[lang].append((is_callable, dependency))
+
+    def _get_dependencies(self, deps_list):
+        deps = []
+        for dep in deps_list:
+            if dep[0]:
+                # callable
+                result = dep[1]()
+            else:
+                # can add directly
+                result = dep[1]
+            # if result is a list, add its contents
+            if type(result) == list:
+                deps.extend(result)
+            else:
+                deps.append(result)
+        return deps
+
     def deps(self, lang):
-        """Return a list of dependencies to build this post's page."""
+        """Return a list of file dependencies to build this post's page."""
         deps = []
         if self.default_lang in self.translated_to:
             deps.append(self.base_path)
@@ -327,6 +395,18 @@ class Post(object):
             cand_2 = get_translation_candidate(self.config, self.base_path, lang)
             if os.path.exists(cand_1):
                 deps.extend([cand_1, cand_2])
+        deps += self._get_dependencies(self._dependency_file_page[lang])
+        deps += self._get_dependencies(self._dependency_file_page[None])
+        return deps
+
+    def deps_uptodate(self, lang):
+        """Return a list of uptodate dependencies to build this post's page.
+
+        These dependencies should be included in ``uptodate`` for the task
+        which generates the page."""
+        deps = []
+        deps += self._get_dependencies(self._dependency_uptodate_page[lang])
+        deps += self._get_dependencies(self._dependency_uptodate_page[None])
         return deps
 
     def compile(self, lang):
@@ -350,34 +430,40 @@ class Post(object):
             dest,
             self.is_two_file),
         if self.meta('password'):
+            # TODO: get rid of this feature one day (v8?; warning added in v7.3.0.)
+            LOGGER.warn("The post {0} is using the `password` attribute, which may stop working in the future.")
+            LOGGER.warn("Please consider switching to a more secure method of encryption.")
+            LOGGER.warn("More details: https://github.com/getnikola/nikola/issues/1547")
             wrap_encrypt(dest, self.meta('password'))
         if self.publish_later:
             LOGGER.notice('{0} is scheduled to be published in the future ({1})'.format(
                 self.source_path, self.date))
 
-    def extra_deps(self):
-        """get extra depepencies from .dep files
-        This file is created by ReST
-        """
-        dep_path = self.base_path + '.dep'
-        if os.path.isfile(dep_path):
-            with io.open(dep_path, 'r+', encoding='utf8') as depf:
-                return [l.strip() for l in depf.readlines()]
-        return []
-
     def fragment_deps(self, lang):
-        """Return a list of dependencies to build this post's fragment."""
+        """Return a list of uptodate dependencies to build this post's fragment.
+
+        These dependencies should be included in ``uptodate`` for the task
+        which generates the fragment."""
         deps = []
         if self.default_lang in self.translated_to:
             deps.append(self.source_path)
         if os.path.isfile(self.metadata_path):
             deps.append(self.metadata_path)
-        deps.extend(self.extra_deps())
         lang_deps = []
         if lang != self.default_lang:
             lang_deps = [get_translation_candidate(self.config, d, lang) for d in deps]
             deps += lang_deps
-        return [d for d in deps if os.path.exists(d)]
+        deps = [d for d in deps if os.path.exists(d)]
+        deps += self._get_dependencies(self._dependency_file_fragment[lang])
+        deps += self._get_dependencies(self._dependency_file_fragment[None])
+        return deps
+
+    def fragment_deps_uptodate(self, lang):
+        """Return a list of file dependencies to build this post's fragment."""
+        deps = []
+        deps += self._get_dependencies(self._dependency_uptodate_fragment[lang])
+        deps += self._get_dependencies(self._dependency_uptodate_fragment[None])
+        return deps
 
     def is_translation_available(self, lang):
         """Return true if the translation actually exists."""

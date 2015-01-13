@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2012-2015 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -51,6 +51,7 @@ class GenerateRSS(Task):
             "filters": self.site.config["FILTERS"],
             "blog_title": self.site.config["BLOG_TITLE"],
             "site_url": self.site.config["SITE_URL"],
+            "base_url": self.site.config["BASE_URL"],
             "blog_description": self.site.config["BLOG_DESCRIPTION"],
             "output_folder": self.site.config["OUTPUT_FOLDER"],
             "rss_teasers": self.site.config["RSS_TEASERS"],
@@ -72,12 +73,14 @@ class GenerateRSS(Task):
             output_name = os.path.join(kw['output_folder'],
                                        self.site.path("rss", None, lang))
             deps = []
+            deps_uptodate = []
             if kw["show_untranslated_posts"]:
                 posts = self.site.posts[:10]
             else:
                 posts = [x for x in self.site.posts if x.is_translation_available(lang)][:10]
             for post in posts:
                 deps += post.deps(lang)
+                deps_uptodate += post.deps_uptodate(lang)
 
             feed_url = urljoin(self.site.config['BASE_URL'], self.site.link("rss", None, lang).lstrip('/'))
 
@@ -94,7 +97,7 @@ class GenerateRSS(Task):
 
                 'task_dep': ['render_posts'],
                 'clean': True,
-                'uptodate': [utils.config_changed(kw)],
+                'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.rss')] + deps_uptodate,
             }
             yield utils.apply_filters(task, kw['filters'])
 

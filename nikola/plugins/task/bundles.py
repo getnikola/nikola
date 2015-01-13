@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2012-2015 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -43,11 +43,12 @@ class BuildBundles(LateTask):
     name = "create_bundles"
 
     def set_site(self, site):
-        super(BuildBundles, self).set_site(site)
-        if webassets is None and self.site.config['USE_BUNDLES']:
+        self.logger = utils.get_logger('bundles', site.loghandlers)
+        if webassets is None and site.config['USE_BUNDLES']:
             utils.req_missing(['webassets'], 'USE_BUNDLES', optional=True)
-            utils.LOGGER.warn('Setting USE_BUNDLES to False.')
-            self.site.config['USE_BUNDLES'] = False
+            self.logger.warn('Setting USE_BUNDLES to False.')
+            site.config['USE_BUNDLES'] = False
+        super(BuildBundles, self).set_site(site)
 
     def gen_tasks(self):
         """Bundle assets using WebAssets."""
@@ -74,7 +75,12 @@ class BuildBundles(LateTask):
                 bundle = webassets.Bundle(*inputs, output=os.path.basename(output))
                 env.register(output, bundle)
                 # This generates the file
-                env[output].urls()
+                try:
+                    env[output].urls()
+                except Exception as e:
+                    self.logger.error("Failed to build bundles.")
+                    self.logger.exception(e)
+                    self.logger.notice("Try running ``nikola clean`` and building again.")
             else:
                 with open(os.path.join(out_dir, os.path.basename(output)), 'wb+'):
                     pass  # Create empty file
@@ -107,7 +113,7 @@ class BuildBundles(LateTask):
                         utils.config_changed({
                             1: kw,
                             2: file_dep
-                        })],
+                        }, 'nikola.plugins.task.bundles')],
                     'clean': True,
                 }
                 yield utils.apply_filters(task, kw['filters'])

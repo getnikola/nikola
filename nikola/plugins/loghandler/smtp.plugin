@@ -4,6 +4,6 @@ Module = smtp
 
 [Documentation]
 Author = Daniel Devine
-Version = 0.1
+Version = 1.0
 Website = http://getnikola.com
 Description = Log over smtp (email).

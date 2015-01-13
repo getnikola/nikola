@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2012-2015 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -50,6 +50,19 @@ class CompileRest(PageCompiler):
     name = "rest"
     demote_headers = True
     logger = None
+
+    def _read_extra_deps(self, post):
+        """Reads contents of .dep file and returns them as a list"""
+        dep_path = post.base_path + '.dep'
+        if os.path.isfile(dep_path):
+            with io.open(dep_path, 'r+', encoding='utf8') as depf:
+                deps = [l.strip() for l in depf.readlines()]
+                return deps
+        return []
+
+    def register_extra_dependencies(self, post):
+        """Adds dependency to post object to check .dep file."""
+        post.add_dependency(lambda: self._read_extra_deps(post), 'fragment')
 
     def compile_html(self, source, dest, is_two_file=True):
         """Compile reSt into HTML."""
@@ -111,7 +124,8 @@ class CompileRest(PageCompiler):
         with io.open(path, "w+", encoding="utf8") as fd:
             if onefile:
                 fd.write(write_metadata(metadata))
-            fd.write('\n' + content)
+                fd.write('\n')
+            fd.write(content)
 
     def set_site(self, site):
         for plugin_info in site.plugin_manager.getPluginsOfCategory("RestExtension"):

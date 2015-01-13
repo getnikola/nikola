@@ -92,23 +92,6 @@ article.post-micro {
     font-size: 1.5em;
 }
 
-/* fix anchors for headers */
-h1, h2, h3 {
-    margin-top: -40px;
-    padding-top: 60px;
-}
-
-h4, h5, h6 {
-    margin-top: -50px;
-    padding-top: 60px;
-}
-
-h1.panel-title, h2.panel-title, h3.panel-title, h4.panel-title, h5.panel-title, h6.panel-title {
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 0;
-}
-
 .image-block {
     display: inline-block;
 }

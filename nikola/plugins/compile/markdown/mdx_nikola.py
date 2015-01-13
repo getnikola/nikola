@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2012-2015 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -37,7 +37,6 @@ except ImportError:
 
 from nikola.plugin_categories import MarkdownExtension
 
-# FIXME: duplicated with listings.py
 CODERE = re.compile('<div class="codehilite"><pre>(.*?)</pre></div>', flags=re.MULTILINE | re.DOTALL)
 
 
@@ -47,6 +46,7 @@ class NikolaPostProcessor(Postprocessor):
 
         # python-markdown's highlighter uses <div class="codehilite"><pre>
         # for code.  We switch it to reST's <pre class="code">.
+        # TODO: monkey-patch for CodeHilite that uses nikola.utils.NikolaPygmentsHTML
         output = CODERE.sub('<pre class="code literal-block">\\1</pre>', output)
         return output
 

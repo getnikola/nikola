@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2012-2015 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -31,16 +31,10 @@ import os
 
 from pygments import highlight
 from pygments.lexers import get_lexer_for_filename, TextLexer
-from pygments.formatters import HtmlFormatter
 import natsort
-import re
 
 from nikola.plugin_categories import Task
 from nikola import utils
-
-
-# FIXME: (almost) duplicated with mdx_nikola.py
-CODERE = re.compile('<div class="code"><pre>(.*?)</pre></div>', flags=re.MULTILINE | re.DOTALL)
 
 
 class Listings(Task):
@@ -122,14 +116,7 @@ class Listings(Task):
                         lexer = get_lexer_for_filename(in_name)
                     except:
                         lexer = TextLexer()
-                    code = highlight(fd.read(), lexer,
-                                     HtmlFormatter(cssclass='code',
-                                                   linenos="table", nowrap=False,
-                                                   lineanchors=utils.slugify(in_name, force=True),
-                                                   anchorlinenos=True))
-                # the pygments highlighter uses <div class="codehilite"><pre>
-                # for code.  We switch it to reST's <pre class="code">.
-                code = CODERE.sub('<pre class="code literal-block">\\1</pre>', code)
+                    code = highlight(fd.read(), lexer, utils.NikolaPygmentsHTML(in_name))
                 title = os.path.basename(in_name)
             else:
                 code = ''
@@ -206,7 +193,7 @@ class Listings(Task):
                     'actions': [(render_listing, [None, out_name, input_folder, output_folder, dirs, files])],
                     # This is necessary to reflect changes in blog title,
                     # sidebar links, etc.
-                    'uptodate': [utils.config_changed(uptodate2)],
+                    'uptodate': [utils.config_changed(uptodate2, 'nikola.plugins.task.listings:folder')],
                     'clean': True,
                 }, self.kw["filters"])
                 for f in files:
@@ -229,7 +216,7 @@ class Listings(Task):
                         'actions': [(render_listing, [in_name, out_name, input_folder, output_folder])],
                         # This is necessary to reflect changes in blog title,
                         # sidebar links, etc.
-                        'uptodate': [utils.config_changed(uptodate)],
+                        'uptodate': [utils.config_changed(uptodate, 'nikola.plugins.task.listings:source')],
                         'clean': True,
                     }, self.kw["filters"])
                     if self.site.config['COPY_SOURCES']:

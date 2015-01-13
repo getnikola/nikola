@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2012-2015 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -31,6 +31,7 @@
 from __future__ import unicode_literals
 import io
 import os
+import uuid
 try:
     from urlparse import urlunsplit
 except ImportError:
@@ -39,39 +40,87 @@ except ImportError:
 from docutils import core
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
+from docutils.parsers.rst.roles import set_classes
 from docutils.parsers.rst.directives.misc import Include
-try:
-    from docutils.parsers.rst.directives.body import CodeBlock
-except ImportError:  # docutils < 0.9 (Debian Sid For The Loss)
-    class CodeBlock(Directive):
-        required_arguments = 1
-        has_content = True
-        option_spec = {}
-        CODE = '<pre>{0}</pre>'
 
-        def run(self):
-            """ Required by the Directive interface. Create docutils nodes """
-            return [nodes.raw('', self.CODE.format('\n'.join(self.content)), format='html')]
-    directives.register_directive('code', CodeBlock)
+from pygments.lexers import get_lexer_by_name
+import pygments
+import pygments.util
+
+from nikola import utils
 
 
-from nikola.plugin_categories import RestExtension
+# A sanitized version of docutils.parsers.rst.directives.body.CodeBlock.
+class CodeBlock(Directive):
+    """Parse and mark up content of a code block."""
+    optional_arguments = 1
+    option_spec = {'class': directives.class_option,
+                   'name': directives.unchanged,
+                   'number-lines': directives.unchanged,  # integer or None
+                   'linenos': directives.unchanged,
+                   'tab-width': directives.nonnegative_int}
+    has_content = True
 
-# Add sphinx compatibility option
-CodeBlock.option_spec['linenos'] = directives.unchanged
-
-
-class FlexibleCodeBlock(CodeBlock):
     def run(self):
+        self.assert_has_content()
+
         if 'linenos' in self.options:
             self.options['number-lines'] = self.options['linenos']
         if 'tab-width' in self.options:
             self.content = [x.replace('\t', ' ' * self.options['tab-width']) for x in self.content]
-        return super(FlexibleCodeBlock, self).run()
-CodeBlock = FlexibleCodeBlock
-# Add useful stuff to code directive
-cb_spec = CodeBlock.option_spec
-cb_spec['tab-width'] = directives.nonnegative_int
+
+        if self.arguments:
+            language = self.arguments[0]
+        else:
+            language = 'text'
+        set_classes(self.options)
+        classes = ['code']
+        if language:
+            classes.append(language)
+        if 'classes' in self.options:
+            classes.extend(self.options['classes'])
+
+        code = '\n'.join(self.content)
+
+        try:
+            lexer = get_lexer_by_name(language)
+        except pygments.util.ClassNotFound:
+            raise self.error('Cannot find pygments lexer for language "{0}"'.format(language))
+
+        if 'number-lines' in self.options:
+            linenos = 'table'
+            # optional argument `startline`, defaults to 1
+            try:
+                linenostart = int(self.options['number-lines'] or 1)
+            except ValueError:
+                raise self.error(':number-lines: with non-integer start value')
+        else:
+            linenos = False
+            linenostart = 1  # actually unused
+
+        if self.site.invariant:  # for testing purposes
+            anchor_ref = 'rest_code_' + 'fixedvaluethatisnotauuid'
+        else:
+            anchor_ref = 'rest_code_' + uuid.uuid4().hex
+
+        formatter = utils.NikolaPygmentsHTML(anchor_ref=anchor_ref, classes=classes, linenos=linenos, linenostart=linenostart)
+        out = pygments.highlight(code, lexer, formatter)
+        node = nodes.raw('', out, format='html')
+
+        self.add_name(node)
+        # if called from "include", set the source
+        if 'source' in self.options:
+            node.attributes['source'] = self.options['source']
+
+        return [node]
+
+# Monkey-patch: replace insane docutils CodeBlock with our implementation.
+import docutils.parsers.rst.directives.body
+import docutils.parsers.rst.directives.misc
+docutils.parsers.rst.directives.body.CodeBlock = CodeBlock
+docutils.parsers.rst.directives.misc.CodeBlock = CodeBlock
+
+from nikola.plugin_categories import RestExtension
 
 
 class Plugin(RestExtension):
@@ -83,6 +132,7 @@ class Plugin(RestExtension):
         # Even though listings don't use CodeBlock anymore, I am
         # leaving these to make the code directive work with
         # docutils < 0.9
+        CodeBlock.site = site
         directives.register_directive('code', CodeBlock)
         directives.register_directive('code-block', CodeBlock)
         directives.register_directive('sourcecode', CodeBlock)

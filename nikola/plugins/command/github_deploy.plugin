@@ -4,6 +4,6 @@ Module = github_deploy
 
 [Documentation]
 Author = Puneeth Chaganti
-Version = 0.1
+Version = 1,0
 Website = http://getnikola.com
 Description = Deploy the site to GitHub pages.

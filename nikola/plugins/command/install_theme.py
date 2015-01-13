@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2012-2015 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -28,7 +28,6 @@ from __future__ import print_function
 import os
 import io
 import json
-import shutil
 
 import pygments
 from pygments.lexers import PythonLexer
@@ -135,27 +134,22 @@ class CommandInstallTheme(Command):
     def do_install(self, name, data):
         if name in data:
             utils.makedirs(self.output_dir)
-            LOGGER.info('Downloading: ' + data[name])
+            LOGGER.info("Downloading '{0}'".format(data[name]))
             zip_file = io.BytesIO()
             zip_file.write(requests.get(data[name]).content)
-            LOGGER.info('Extracting: {0} into themes'.format(name))
+            LOGGER.info("Extracting '{0}' into themes/".format(name))
             utils.extract_all(zip_file)
-            dest_path = os.path.join('themes', name)
+            dest_path = os.path.join(self.output_dir, name)
         else:
+            dest_path = os.path.join(self.output_dir, name)
             try:
                 theme_path = utils.get_theme_path(name)
-            except:
-                LOGGER.error("Can't find theme " + name)
-                return False
+                LOGGER.error("Theme '{0}' is already installed in {1}".format(name, theme_path))
+            except Exception:
+                LOGGER.error("Can't find theme {0}".format(name))
 
-            utils.makedirs(self.output_dir)
-            dest_path = os.path.join(self.output_dir, name)
-            if os.path.exists(dest_path):
-                LOGGER.error("{0} is already installed".format(name))
-                return False
+            return False
 
-            LOGGER.info('Copying {0} into themes'.format(theme_path))
-            shutil.copytree(theme_path, dest_path)
         confpypath = os.path.join(dest_path, 'conf.py.sample')
         if os.path.exists(confpypath):
             LOGGER.notice('This theme has a sample config file.  Integrate it with yours in order to make this theme work!')

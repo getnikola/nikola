@@ -5,6 +5,7 @@
 .. author: Roberto Alsina
 .. link: http://getnikola.com
 .. description:
+.. category: nikola
 
 .. figure:: http://farm1.staticflickr.com/138/352972944_4f9d568680.jpg
    :target: http://farm1.staticflickr.com/138/352972944_4f9d568680_z.jpg?zz=1

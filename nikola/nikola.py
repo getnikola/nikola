@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2012-2015 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -240,6 +240,7 @@ class Nikola(object):
         self.strict = False
         self.global_data = {}
         self.posts = []
+        self.all_posts = []
         self.posts_per_year = defaultdict(list)
         self.posts_per_month = defaultdict(list)
         self.posts_per_tag = defaultdict(list)
@@ -255,6 +256,7 @@ class Nikola(object):
         self.colorful = config.pop('__colorful__', False)
         self.invariant = config.pop('__invariant__', False)
         self.quiet = config.pop('__quiet__', False)
+        self.configuration_filename = config.pop('__configuration_filename__', False)
         self.configured = bool(config)
 
         self.template_hooks = {
@@ -274,11 +276,16 @@ class Nikola(object):
             'ANNOTATIONS': False,
             'ARCHIVE_PATH': "",
             'ARCHIVE_FILENAME': "archive.html",
+            'ARCHIVES_ARE_INDEXES': False,
             'BLOG_AUTHOR': 'Default Author',
             'BLOG_TITLE': 'Default Title',
             'BLOG_DESCRIPTION': 'Default Description',
             'BODY_END': "",
             'CACHE_FOLDER': 'cache',
+            'CATEGORY_PATH': None,  # None means: same as TAG_PATH
+            'CATEGORY_PAGES_ARE_INDEXES': None,  # None means: same as TAG_PAGES_ARE_INDEXES
+            'CATEGORY_PAGES_DESCRIPTIONS': {},
+            'CATEGORY_PREFIX': 'cat_',
             'CODE_COLOR_SCHEME': 'default',
             'COMMENT_SYSTEM': 'disqus',
             'COMMENTS_IN_GALLERIES': False,
@@ -316,19 +323,22 @@ class Nikola(object):
             'FILES_FOLDERS': {'files': ''},
             'FILTERS': {},
             'FORCE_ISO8601': False,
-            'GALLERY_PATH': 'galleries',
+            'GALLERY_FOLDERS': {'galleries': 'galleries'},
             'GALLERY_SORT_BY_DATE': True,
             'GLOBAL_CONTEXT_FILLER': [],
             'GZIP_COMMAND': None,
             'GZIP_FILES': False,
             'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js', '.json', '.xml'),
             'HYPHENATE': False,
+            'IMAGE_FOLDERS': {'images': ''},
             'INDEX_DISPLAY_POST_COUNT': 10,
             'INDEX_FILE': 'index.html',
             'INDEX_TEASERS': False,
             'INDEXES_TITLE': "",
             'INDEXES_PAGES': "",
             'INDEXES_PAGES_MAIN': False,
+            'INDEXES_PRETTY_PAGE_URL': False,
+            'INDEXES_STATIC': True,
             'INDEX_PATH': '',
             'IPYNB_CONFIG': {},
             'LESS_COMPILER': 'lessc',
@@ -345,6 +355,7 @@ class Nikola(object):
             'OUTPUT_FOLDER': 'output',
             'POSTS': (("posts/*.txt", "posts", "post.tmpl"),),
             'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
+            'PANDOC_OPTIONS': [],
             'PRETTY_URLS': False,
             'FUTURE_IS_NOW': False,
             'INDEX_READ_MORE_LINK': DEFAULT_INDEX_READ_MORE_LINK,
@@ -387,6 +398,7 @@ class Nikola(object):
             'USE_OPEN_GRAPH': True,
             'USE_SLUGIFY': True,
             'TIMEZONE': 'UTC',
+            'WRITE_TAG_CLOUD': True,
             'DEPLOY_DRAFTS': True,
             'DEPLOY_FUTURE': False,
             'SCHEDULE_ALL': False,
@@ -434,7 +446,10 @@ class Nikola(object):
                                       'EXTRA_HEAD_DATA',
                                       'NAVIGATION_LINKS',
                                       'INDEX_READ_MORE_LINK',
-                                      'RSS_READ_MORE_LINK',)
+                                      'RSS_READ_MORE_LINK',
+                                      'INDEXES_TITLE',
+                                      'INDEXES_PAGES',
+                                      'INDEXES_PRETTY_PAGE_URL',)
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
                                              'blog_title',
@@ -544,8 +559,21 @@ class Nikola(object):
             else:
                 utils.LOGGER.warn("Both LISTINGS_FOLDER and LISTINGS_FOLDERS are specified, ignoring LISTINGS_FOLDER.")
 
+        if 'GALLERY_PATH' in config:
+            if 'GALLERY_FOLDERS' not in config:
+                utils.LOGGER.warn("The GALLERY_PATH option is deprecated, use GALLERY_FOLDERS instead.")
+                self.config['GALLERY_FOLDERS'] = {self.config['GALLERY_PATH']: self.config['GALLERY_PATH']}
+                utils.LOGGER.warn("GALLERY_FOLDERS = {0}".format(self.config['GALLERY_FOLDERS']))
+            else:
+                utils.LOGGER.warn("Both GALLERY_PATH and GALLERY_FOLDERS are specified, ignoring GALLERY_PATH.")
+
         if not self.config.get('COPY_SOURCES'):
             self.config['SHOW_SOURCELINK'] = False
+
+        if self.config['CATEGORY_PATH'] is None:
+            self.config['CATEGORY_PATH'] = self.config['TAG_PATH']
+        if self.config['CATEGORY_PAGES_ARE_INDEXES'] is None:
+            self.config['CATEGORY_PAGES_ARE_INDEXES'] = self.config['TAG_PAGES_ARE_INDEXES']
 
         self.default_lang = self.config['DEFAULT_LANG']
         self.translations = self.config['TRANSLATIONS']
@@ -571,6 +599,13 @@ class Nikola(object):
             self.config['DEPLOY_COMMANDS'] = {'default': self.config['DEPLOY_COMMANDS']}
             utils.LOGGER.warn("DEPLOY_COMMANDS = {0}".format(self.config['DEPLOY_COMMANDS']))
             utils.LOGGER.info("(The above can be used with `nikola deploy` or `nikola deploy default`.  Multiple presets are accepted.)")
+
+        # todo: remove and change default in v8
+        if 'BLOG_TITLE' in config and 'WRITE_TAG_CLOUD' not in config:
+            # BLOG_TITLE is a hack, otherwise the warning would be displayed
+            # when conf.py does not exist
+            utils.LOGGER.warn("WRITE_TAG_CLOUD is not set in your config.  Defaulting to True (== writing tag_cloud_data.json).")
+            utils.LOGGER.warn("Please explicitly add the setting to your conf.py with the desired value, as the setting will default to False in the future.")
 
         # We use one global tzinfo object all over Nikola.
         self.tzinfo = dateutil.tz.gettz(self.config['TIMEZONE'])
@@ -836,6 +871,14 @@ class Nikola(object):
         return compile_html
 
     def render_template(self, template_name, output_name, context):
+        """Render a template with the global context.
+
+        If ``output_name`` is None, will return a string and all URL
+        normalization will be ignored (including the link:// scheme).
+        If ``output_name`` is a string, URLs will be normalized and
+        the resultant HTML will be saved to the named file (path must
+        start with OUTPUT_FOLDER).
+        """
         local_context = {}
         local_context["template_name"] = template_name
         local_context.update(self.GLOBAL_CONTEXT)
@@ -853,6 +896,9 @@ class Nikola(object):
 
         data = self.template_system.render_template(
             template_name, None, local_context)
+
+        if output_name is None:
+            return data
 
         assert output_name.startswith(
             self.config["OUTPUT_FOLDER"])
@@ -981,7 +1027,8 @@ class Nikola(object):
         )
 
         if feed_url:
-            rss_obj.xsl_stylesheet_href = self.url_replacer(feed_url, "/assets/xml/rss.xsl")
+            absurl = '/' + feed_url[len(self.config['BASE_URL']):]
+            rss_obj.xsl_stylesheet_href = self.url_replacer(absurl, "/assets/xml/rss.xsl")
 
         items = []
 
@@ -1215,7 +1262,7 @@ class Nikola(object):
             'task_dep': task_dep
         }
 
-    def scan_posts(self, really=False, ignore_quit=False):
+    def scan_posts(self, really=False, ignore_quit=False, quiet=False):
         """Scan all the posts."""
         if self._scanned and not really:
             return
@@ -1226,6 +1273,7 @@ class Nikola(object):
             self.commands = None
         self.global_data = {}
         self.posts = []
+        self.all_posts = []
         self.posts_per_year = defaultdict(list)
         self.posts_per_month = defaultdict(list)
         self.posts_per_tag = defaultdict(list)
@@ -1235,13 +1283,13 @@ class Nikola(object):
         self.pages = []
 
         seen = set([])
-        if not self.quiet:
+        if not self.quiet and not quiet:
             print("Scanning posts", end='', file=sys.stderr)
         slugged_tags = set([])
         quit = False
         for wildcard, destination, template_name, use_in_feeds in \
                 self.config['post_pages']:
-            if not self.quiet:
+            if not self.quiet and not quiet:
                 print(".", end='', file=sys.stderr)
             dirname = os.path.dirname(wildcard)
             for dirpath, _, _ in os.walk(dirname, followlinks=True):
@@ -1308,8 +1356,13 @@ class Nikola(object):
                                 slugged_tags.add(utils.slugify(tag, force=True))
                             self.posts_per_tag[tag].append(post)
                         self.posts_per_category[post.meta('category')].append(post)
+
+                    if post.is_post:
+                        # unpublished posts
+                        self.all_posts.append(post)
                     else:
                         self.pages.append(post)
+
                     for lang in self.config['TRANSLATIONS'].keys():
                         self.post_per_file[post.destination_path(lang=lang)] = post
                         self.post_per_file[post.destination_path(lang=lang, extension=post.source_ext())] = post
@@ -1319,6 +1372,8 @@ class Nikola(object):
         self.timeline.reverse()
         self.posts.sort(key=lambda p: p.date)
         self.posts.reverse()
+        self.all_posts.sort(key=lambda p: p.date)
+        self.all_posts.reverse()
         self.pages.sort(key=lambda p: p.date)
         self.pages.reverse()
 
@@ -1327,7 +1382,7 @@ class Nikola(object):
         for i, p in enumerate(self.posts[:-1]):
             p.prev_post = self.posts[i + 1]
         self._scanned = True
-        if not self.quiet:
+        if not self.quiet and not quiet:
             print("done!", file=sys.stderr)
 
         signal('scanned').send(self)
@@ -1383,7 +1438,7 @@ class Nikola(object):
             'actions': [(self.render_template, [post.template_name,
                                                 output_name, context])],
             'clean': True,
-            'uptodate': [config_changed(deps_dict)],
+            'uptodate': [config_changed(deps_dict, 'nikola.nikola.Nikola.generic_post_renderer')] + post.deps_uptodate(lang),
         }
 
         yield utils.apply_filters(task, filters)
@@ -1393,8 +1448,10 @@ class Nikola(object):
         """Renders pages with lists of posts."""
 
         deps = self.template_system.template_deps(template_name)
+        uptodate_deps = []
         for post in posts:
             deps += post.deps(lang)
+            uptodate_deps += post.deps_uptodate(lang)
         context = {}
         context["posts"] = posts
         context["title"] = self.config['BLOG_TITLE'](lang)
@@ -1423,10 +1480,127 @@ class Nikola(object):
             'actions': [(self.render_template, [template_name, output_name,
                                                 context])],
             'clean': True,
-            'uptodate': [config_changed(deps_context)]
+            'uptodate': [config_changed(deps_context, 'nikola.nikola.Nikola.generic_post_list_renderer')] + uptodate_deps
         }
 
         return utils.apply_filters(task, filters)
+
+    def generic_index_renderer(self, lang, posts, indexes_title, template_name, context_source, kw, basename, page_link, page_path, additional_dependencies=[]):
+        """Creates an index page.
+
+        lang: The language
+        posts: A list of posts
+        indexes_title: Title
+        template_name: Name of template file
+        context_source: This will be copied and extended and used as every
+                        page's context
+        kw: An extended version will be used for uptodate dependencies
+        basename: Basename for task
+        page_link: A function accepting an index i, the displayed page number,
+                   the number of pages, and a boolean force_addition
+                   which creates a link to the i-th page (where i ranges
+                   between 0 and num_pages-1). The displayed page (between 1
+                   and num_pages) is the number (optionally) displayed as
+                   'page %d' on the rendered page. If force_addition is True,
+                   the appendum (inserting '-%d' etc.) should be done also for
+                   i == 0.
+        page_path: A function accepting an index i, the displayed page number,
+                   the number of pages, and a boolean force_addition,
+                   which creates a path to the i-th page. All arguments are
+                   as the ones for page_link.
+        additional_dependencies: a list of dependencies which will be added
+                                 to task['uptodate']
+        """
+        # Update kw
+        kw = kw.copy()
+        kw["tag_pages_are_indexes"] = self.config['TAG_PAGES_ARE_INDEXES']
+        kw["index_display_post_count"] = self.config['INDEX_DISPLAY_POST_COUNT']
+        kw["index_teasers"] = self.config['INDEX_TEASERS']
+        kw["indexes_pages"] = self.config['INDEXES_PAGES'](lang)
+        kw["indexes_pages_main"] = self.config['INDEXES_PAGES_MAIN']
+        kw["indexes_static"] = self.config['INDEXES_STATIC']
+        kw['indexes_prety_page_url'] = self.config["INDEXES_PRETTY_PAGE_URL"]
+
+        # Split in smaller lists
+        lists = []
+        if kw["indexes_static"]:
+            lists.append(posts[:kw["index_display_post_count"]])
+            posts = posts[kw["index_display_post_count"]:]
+            while posts:
+                lists.append(posts[-kw["index_display_post_count"]:])
+                posts = posts[:-kw["index_display_post_count"]]
+        else:
+            while posts:
+                lists.append(posts[:kw["index_display_post_count"]])
+                posts = posts[kw["index_display_post_count"]:]
+        num_pages = len(lists)
+        for i, post_list in enumerate(lists):
+            context = context_source.copy()
+            ipages_i = utils.get_displayed_page_number(i, num_pages, self)
+            if kw["indexes_pages"]:
+                indexes_pages = kw["indexes_pages"] % ipages_i
+            else:
+                if kw["indexes_pages_main"]:
+                    ipages_msg = "page %d"
+                else:
+                    ipages_msg = "old posts, page %d"
+                indexes_pages = " (" + \
+                    kw["messages"][lang][ipages_msg] % ipages_i + ")"
+            if i > 0 or kw["indexes_pages_main"]:
+                context["title"] = indexes_title + indexes_pages
+            else:
+                context["title"] = indexes_title
+            context["prevlink"] = None
+            context["nextlink"] = None
+            context['index_teasers'] = kw['index_teasers']
+            prevlink = None
+            nextlink = None
+            if kw["indexes_static"]:
+                if i > 0:
+                    if i < num_pages - 1:
+                        prevlink = i + 1
+                    elif i == num_pages - 1:
+                        prevlink = 0
+                if num_pages > 1:
+                    if i > 1:
+                        nextlink = i - 1
+                    elif i == 0:
+                        nextlink = num_pages - 1
+            else:
+                if i >= 1:
+                    prevlink = i - 1
+                if i < num_pages - 1:
+                    nextlink = i + 1
+            if prevlink is not None:
+                context["prevlink"] = page_link(prevlink, utils.get_displayed_page_number(prevlink, num_pages, self), num_pages, False)
+            if nextlink is not None:
+                context["nextlink"] = page_link(nextlink, utils.get_displayed_page_number(nextlink, num_pages, self), num_pages, False)
+            context["permalink"] = page_link(i, ipages_i, num_pages, False)
+            output_name = os.path.join(kw['output_folder'], page_path(i, ipages_i, num_pages, False))
+            task = self.generic_post_list_renderer(
+                lang,
+                post_list,
+                output_name,
+                template_name,
+                kw['filters'],
+                context,
+            )
+            task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.nikola.Nikola.generic_index_renderer')] + additional_dependencies
+            task['basename'] = basename
+            yield task
+
+        if kw["indexes_pages_main"] and kw['indexes_prety_page_url'](lang):
+            # create redirection
+            output_name = os.path.join(kw['output_folder'], page_path(0, utils.get_displayed_page_number(0, num_pages, self), num_pages, True))
+            link = page_link(0, utils.get_displayed_page_number(0, num_pages, self), num_pages, False)
+            yield utils.apply_filters({
+                'basename': basename,
+                'name': output_name,
+                'targets': [output_name],
+                'actions': [(utils.create_redirect, (output_name, link))],
+                'clean': True,
+                'uptodate': [utils.config_changed(kw, 'nikola.nikola.Nikola.generic_index_renderer')],
+            }, kw["filters"])
 
     def __repr__(self):
         return '<Nikola Site: {0!r}>'.format(self.config['BLOG_TITLE']())

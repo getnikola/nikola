@@ -17,6 +17,10 @@ so we get good support for slides and galleries.
 
 I will try to create a theme that looks like `Vinicius Massuchetto's Monospace Theme <http://wordpress.org/themes/monospace>`_.
 
+.. danger::
+
+   This document is outdated!  Recommendations in this post may not work!
+
 .. TEASER_END
 
 Starting The Theme

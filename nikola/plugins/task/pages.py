@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2012-2015 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -51,9 +51,7 @@ class RenderPages(Task):
                     continue
                 for task in self.site.generic_page_renderer(lang, post,
                                                             kw["filters"]):
-                    task['uptodate'] = [config_changed({
-                        1: task['uptodate'][0].config,
-                        2: kw})]
+                    task['uptodate'] = task['uptodate'] + [config_changed(kw, 'nikola.plugins.task.pages')]
                     task['basename'] = self.name
                     task['task_dep'] = ['render_posts']
                     yield task

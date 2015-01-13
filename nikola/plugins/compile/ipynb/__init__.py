@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2013-2014 Damián Avila and others.
+# Copyright © 2013-2015 Damián Avila and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -64,16 +64,19 @@ class CompileIPynb(PageCompiler):
             out_file.write(body)
 
     def create_post(self, path, **kw):
-        # content and onefile are ignored by ipynb.
-        kw.pop('content', None)
+        content = kw.pop('content', None)
         onefile = kw.pop('onefile', False)
+        # is_page is not needed to create the file
         kw.pop('is_page', False)
 
         makedirs(os.path.dirname(path))
         if onefile:
             raise Exception('The one-file format is not supported by this compiler.')
         with io.open(path, "w+", encoding="utf8") as fd:
-            fd.write("""{
+            if not content.startswith("Write your"):
+                fd.write(content)
+            else:
+                fd.write("""{
  "metadata": {
   "name": ""
  },

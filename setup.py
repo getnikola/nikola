@@ -1,11 +1,5 @@
 #!/usr/bin/env python
 
-# find_package data is
-# (c) 2005 Ian Bicking and contributors; written for Paste
-# (http://pythonpaste.org)
-# Licensed under the MIT license:
-# http://www.opensource.org/licenses/mit-license.php
-
 # Don't use __future__ in this script, it breaks buildout
 # from __future__ import print_function
 import os

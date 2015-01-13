@@ -4,7 +4,7 @@ Module = php
 
 [Documentation]
 Author = Roberto Alsina
-Version = 0.1
+Version = 1.0
 Website = http://getnikola.com
 Description = Compile PHP into HTML (just copy and name the file .php)
 

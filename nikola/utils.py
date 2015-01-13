@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2012-2015 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -32,6 +32,7 @@ import calendar
 import datetime
 import dateutil.tz
 import hashlib
+import io
 import locale
 import logging
 import os
@@ -50,6 +51,7 @@ import dateutil.parser
 import dateutil.tz
 import logbook
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
+from pygments.formatters import HtmlFormatter
 
 from nikola import DEBUG
 
@@ -72,9 +74,9 @@ def get_logger(name, handlers):
     l = logbook.Logger(name)
     for h in handlers:
         if isinstance(h, list):
-            l.handlers = h
+            l.handlers += h
         else:
-            l.handlers = [h]
+            l.handlers.append(h)
     return l
 
 
@@ -183,7 +185,10 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'TranslatableSetting', 'TemplateHookRegistry', 'LocaleBorg',
            'sys_encode', 'sys_decode', 'makedirs', 'get_parent_theme_name',
            'demote_headers', 'get_translation_candidate', 'write_metadata',
-           'ask', 'ask_yesno']
+           'ask', 'ask_yesno', 'options2docstring', 'os_path_split',
+           'get_displayed_page_number', 'adjust_name_for_index_path_list',
+           'adjust_name_for_index_path', 'adjust_name_for_index_link',
+           'NikolaPygmentsHTML', 'create_redirect']
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -208,11 +213,20 @@ def sys_decode(thing):
 
 def makedirs(path):
     """Create a folder."""
-    if not path or os.path.isdir(path):
+    if not path:
         return
     if os.path.exists(path):
-        raise OSError('Path {0} already exists and is not a folder.')
-    os.makedirs(path)
+        if not os.path.isdir(path):
+            raise OSError('Path {0} already exists and is not a folder.'.format(path))
+        else:
+            return
+    try:
+        os.makedirs(path)
+        return
+    except Exception:
+        if os.path.isdir(path):
+            return
+        raise
 
 
 class Functionary(defaultdict):
@@ -368,8 +382,10 @@ class TranslatableSetting(object):
                 for a in f[0] + tuple(f[1].values()):
                     if isinstance(a, dict):
                         langkeys += list(a)
+
             # Now that we know all this, we go through all the languages we have.
             allvalues = set(keys + langkeys + list(self.values))
+            self.values['__orig__'] = self.values[self.default_lang]
             for l in allvalues:
                 if l in keys:
                     oargs, okwargs = formats[l]
@@ -383,19 +399,22 @@ class TranslatableSetting(object):
                     # We create temporary TranslatableSettings and replace the
                     # values with them.
                     if isinstance(a, dict):
-                        a = TranslatableSetting('NULL', a)
+                        a = TranslatableSetting('NULL', a, self.translations)
                         args.append(a(l))
                     else:
                         args.append(a)
 
                 for k, v in okwargs.items():
                     if isinstance(v, dict):
-                        v = TranslatableSetting('NULL', v)
+                        v = TranslatableSetting('NULL', v, self.translations)
                         kwargs.update({k: v(l)})
                     else:
                         kwargs.update({k: v})
 
-                self.values[l] = self.values[l].format(*args, **kwargs)
+                if l in self.values:
+                    self.values[l] = self.values[l].format(*args, **kwargs)
+                else:
+                    self.values[l] = self.values['__orig__'].format(*args, **kwargs)
                 self.values.default_factory = lambda: self.values[self.default_lang]
 
         return self
@@ -472,7 +491,7 @@ class TemplateHookRegistry(object):
         self._items.append((c, inp, wants_site_and_context, args, kwargs))
 
     def __hash__(self):
-        return config_changed({self.name: self._items})
+        return hash(config_changed({self.name: self._items})._calc_digest())
 
     def __str__(self):
         return '<TemplateHookRegistry: {0}>'.format(self._items)
@@ -490,6 +509,12 @@ class CustomEncoder(json.JSONEncoder):
 class config_changed(tools.config_changed):
     """ A copy of doit's but using pickle instead of serializing manually."""
 
+    def __init__(self, config, identifier=None):
+        super(config_changed, self).__init__(config)
+        self.identifier = '_config_changed'
+        if identifier is not None:
+            self.identifier += ':' + identifier
+
     def _calc_digest(self):
         if isinstance(self.config, str):
             return self.config
@@ -506,6 +531,16 @@ class config_changed(tools.config_changed):
             raise Exception('Invalid type of config_changed parameter -- got '
                             '{0}, must be string or dict'.format(type(
                                 self.config)))
+
+    def configure_task(self, task):
+        task.value_savers.append(lambda: {self.identifier: self._calc_digest()})
+
+    def __call__(self, task, values):
+        """Return True if config values are unchanged."""
+        last_success = values.get(self.identifier)
+        if last_success is None:
+            return False
+        return (last_success == self._calc_digest())
 
     def __repr__(self):
         return "Change with config: {0}".format(json.dumps(self.config,
@@ -576,7 +611,7 @@ def load_messages(themes, translations, default_lang):
     and "younger" themes have priority.
     """
     messages = Functionary(dict, default_lang)
-    oldpath = sys.path[:]
+    oldpath = list(sys.path)
     for theme_name in themes[::-1]:
         msg_folder = os.path.join(get_theme_path(theme_name), 'messages')
         default_folder = os.path.join(get_theme_path('base'), 'messages')
@@ -877,7 +912,10 @@ def get_crumbs(path, is_file=False, index_folder=None):
         for i, crumb in enumerate(crumbs[::-1]):
             if folder[-1] == os.sep:
                 folder = folder[:-1]
-            index_post = index_folder.parse_index(folder)
+            # We don't care about the created Post() object except for its title;
+            # hence, the input_folder and output_folder given to
+            # index_folder.parse_index() don't matter
+            index_post = index_folder.parse_index(folder, '', '')
             folder = folder.replace(crumb, '')
             if index_post:
                 crumb = index_post.title() or crumb
@@ -1193,7 +1231,7 @@ def get_translation_candidate(config, path, lang):
 
 def write_metadata(data):
     """Write metadata."""
-    order = ('title', 'slug', 'date', 'tags', 'link', 'description', 'type')
+    order = ('title', 'slug', 'date', 'tags', 'category', 'link', 'description', 'type')
     f = '.. {0}: {1}'
     meta = []
     for k in order:
@@ -1330,3 +1368,103 @@ def options2docstring(name, options):
     for opt in options:
         result.append('{0} type {1} default {2}'.format(opt.name, opt.type.__name__, opt.default))
     return '\n'.join(result)
+
+
+class NikolaPygmentsHTML(HtmlFormatter):
+    """A Nikola-specific modification of Pygments’ HtmlFormatter."""
+    def __init__(self, anchor_ref, classes=None, linenos='table', linenostart=1):
+        if classes is None:
+            classes = ['code', 'literal-block']
+        self.nclasses = classes
+        super(NikolaPygmentsHTML, self).__init__(
+            cssclass='code', linenos=linenos, linenostart=linenostart, nowrap=False,
+            lineanchors=slugify(anchor_ref, force=True), anchorlinenos=True)
+
+    def wrap(self, source, outfile):
+        """
+        Wrap the ``source``, which is a generator yielding
+        individual lines, in custom generators.
+        """
+
+        style = []
+        if self.prestyles:
+            style.append(self.prestyles)
+        if self.noclasses:
+            style.append('line-height: 125%')
+        style = '; '.join(style)
+        classes = ' '.join(self.nclasses)
+
+        yield 0, ('<pre class="{0}"'.format(classes) + (style and ' style="{0}"'.format(style)) + '>')
+        for tup in source:
+            yield tup
+        yield 0, '</pre>'
+
+
+def get_displayed_page_number(i, num_pages, site):
+    if not i:
+        i = 0
+    if site.config["INDEXES_STATIC"]:
+        return i if i > 0 else num_pages
+    else:
+        return i + 1 if site.config["INDEXES_PAGES_MAIN"] else i
+
+
+def adjust_name_for_index_path_list(path_list, i, displayed_i, lang, site, force_addition=False):
+    index_file = site.config["INDEX_FILE"]
+    if i or force_addition:
+        path_list = list(path_list)
+        if force_addition and not i:
+            i = 0
+        _, extension = os.path.splitext(index_file)
+        if len(path_list) > 0 and path_list[-1] == '':
+            path_list[-1] = index_file
+        elif len(path_list) == 0 or not path_list[-1].endswith(extension):
+            path_list.append(index_file)
+        if site.config["PRETTY_URLS"] and site.config["INDEXES_PRETTY_PAGE_URL"](lang) and path_list[-1] == index_file:
+            path_schema = site.config["INDEXES_PRETTY_PAGE_URL"](lang)
+            if isinstance(path_schema, (bytes_str, unicode_str)):
+                path_schema = [path_schema]
+        else:
+            path_schema = None
+        if path_schema is not None:
+            del path_list[-1]
+            for entry in path_schema:
+                path_list.append(entry.format(number=displayed_i, old_number=i, index_file=index_file))
+        else:
+            path_list[-1] = '{0}-{1}{2}'.format(os.path.splitext(path_list[-1])[0], i, extension)
+    return path_list
+
+
+def os_path_split(path):
+    result = []
+    while True:
+        previous_path = path
+        path, tail = os.path.split(path)
+        if path == previous_path and tail == '':
+            result.insert(0, path)
+            break
+        result.insert(0, tail)
+        if len(path) == 0:
+            break
+    return result
+
+
+def adjust_name_for_index_path(name, i, displayed_i, lang, site, force_addition=False):
+    return os.path.join(*adjust_name_for_index_path_list(os_path_split(name), i, displayed_i, lang, site, force_addition))
+
+
+def adjust_name_for_index_link(name, i, displayed_i, lang, site, force_addition=False):
+    link = adjust_name_for_index_path_list(name.split('/'), i, displayed_i, lang, site, force_addition)
+    if len(link) > 0 and link[-1] == site.config["INDEX_FILE"] and site.config["STRIP_INDEXES"]:
+        link[-1] = ''
+    return '/'.join(link)
+
+
+def create_redirect(src, dst):
+    makedirs(os.path.dirname(src))
+    with io.open(src, "w+", encoding="utf8") as fd:
+        fd.write('<!DOCTYPE html>\n<head>\n<meta charset="utf-8">\n'
+                 '<title>Redirecting...</title>\n<meta name="robots" '
+                 'content="noindex">\n<meta http-equiv="refresh" content="0; '
+                 'url={0}">\n</head>\n<body>\n<p>Page moved '
+                 '<a href="{0}">here</a>.</p>\n</body>'.format(dst))

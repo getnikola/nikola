@@ -10,7 +10,7 @@ do a PR :-)
 Alberto Berti <https://github.com/azazel75>
 Aru Sahni <https://github.com/arusahni>
 Bluerise <https://github.com/Bluerise>
-Chris “Kwpolska” Warrick <https://github.com/Kwpolska>
+Chris Warrick <https://github.com/Kwpolska>
 Daniel Aleksandersen <https://github.com/Aeyoun>
 Dmitry Verkhoturov <https://github.com/paskal>
 DoctorMalboro <https://github.com/DoctorMalboro>
@@ -78,3 +78,4 @@ Alex Walters <https://github.com/tritium21>
 Carsten Grohmann <https://github.com/CarstenGrohmann>
 Aurelien Naldi <https://github.com/aurelien-naldi>
 Andreas Linz <https://github.com/KLINGTdotNET>
+小明 <https://github.com/dongweiming>

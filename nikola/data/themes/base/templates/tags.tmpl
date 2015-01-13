@@ -7,7 +7,9 @@
         <h1>${title}</h1>
     </header>
     % if cat_items:
-        <h2>${messages("Categories")}</h2>
+        % if items:
+            <h2>${messages("Categories")}</h2>
+        % endif
         <ul class="postlist">
         % for text, link in cat_items:
             % if text:

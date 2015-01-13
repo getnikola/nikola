@@ -4,7 +4,7 @@ Module = tags
 
 [Documentation]
 Author = Roberto Alsina
-Version = 0.2
+Version = 1.0
 Website = http://getnikola.com
 Description = Render the tag pages and feeds.
 

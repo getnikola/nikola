@@ -1,0 +1,9 @@
+[Core]
+Name = scale_images
+Module = scale_images
+
+[Documentation]
+Author = Pelle Nilsson
+Version = 1.0
+Website = http://getnikola.com
+Description = Create down-scaled images and thumbnails.

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Roberto Alsina and others.
+# Copyright © 2012-2015 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -163,6 +163,14 @@ class CommandNewPost(Command):
             'help': 'Title for the post.'
         },
         {
+            'name': 'author',
+            'short': 'a',
+            'long': 'author',
+            'type': str,
+            'default': '',
+            'help': 'Author of the post.'
+        },
+        {
             'name': 'tags',
             'long': 'tags',
             'type': str,
@@ -206,6 +214,14 @@ class CommandNewPost(Command):
             'default': False,
             'help': 'Schedule the post based on recurrence rule'
         },
+        {
+            'name': 'import',
+            'short': 'i',
+            'long': 'import',
+            'type': str,
+            'default': '',
+            'help': 'Import an existing file instead of creating a placeholder'
+        },
 
     ]
 
@@ -230,9 +246,11 @@ class CommandNewPost(Command):
         is_post = not is_page
         content_type = 'page' if is_page else 'post'
         title = options['title'] or None
+        author = options['author'] or ''
         tags = options['tags']
         onefile = options['onefile']
         twofile = options['twofile']
+        import_file = options['import']
 
         if is_page:
             LOGGER = PAGELOGGER
@@ -263,8 +281,12 @@ class CommandNewPost(Command):
                                   self.site.config['COMPILERS'],
                                   self.site.config['post_pages'])
 
-        print("Creating New {0}".format(content_type.title()))
-        print("-----------------\n")
+        if import_file:
+            print("Importing Existing {xx}".format(xx=content_type.title()))
+            print("-----------------------\n")
+        else:
+            print("Creating New {xx}".format(xx=content_type.title()))
+            print("-----------------\n")
         if title is not None:
             print("Title:", title)
         else:
@@ -287,6 +309,13 @@ class CommandNewPost(Command):
                 except (AttributeError, TypeError):  # for tests
                     path = path.decode('utf-8')
             slug = utils.slugify(os.path.splitext(os.path.basename(path))[0])
+
+        if isinstance(author, utils.bytes_str):
+                try:
+                    author = author.decode(sys.stdin.encoding)
+                except (AttributeError, TypeError):  # for tests
+                    author = author.decode('utf-8')
+
         # Calculate the date to use for the content
         schedule = options['schedule'] or self.site.config['SCHEDULE_ALL']
         rule = self.site.config['SCHEDULE_RULE']
@@ -315,11 +344,14 @@ class CommandNewPost(Command):
         if (not onefile and os.path.isfile(meta_path)) or \
                 os.path.isfile(txt_path):
             LOGGER.error("The title already exists!")
-            exit()
+            exit(8)
 
         d_name = os.path.dirname(txt_path)
         utils.makedirs(d_name)
-        metadata = self.site.config['ADDITIONAL_METADATA']
+        metadata = {}
+        if author:
+            metadata['author'] = author
+        metadata.update(self.site.config['ADDITIONAL_METADATA'])
         data.update(metadata)
 
         # Override onefile if not really supported.
@@ -327,7 +359,13 @@ class CommandNewPost(Command):
             onefile = False
             LOGGER.warn('This compiler does not support one-file posts.')
 
-        content = "Write your {0} here.".format('page' if is_page else 'post')
+        if import_file:
+            with io.open(import_file, 'r', encoding='utf-8') as fh:
+                content = fh.read()
+        else:
+            # ipynb's create_post depends on this exact string, take care
+            # if you're changing it
+            content = "Write your {0} here.".format('page' if is_page else 'post')
         compiler_plugin.create_post(
             txt_path, content=content, onefile=onefile, title=title,
             slug=slug, date=date, tags=tags, is_page=is_page, **metadata)
