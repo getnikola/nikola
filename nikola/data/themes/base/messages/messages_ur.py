@@ -19,7 +19,7 @@ MESSAGES = {
     "Posted:": "اشاعت:",
     "Posts about %s": "%s کے بارے میں تحاریر",
     "Posts for year %s": "سال %s کی تحاریر",
-    "Posts for {month} {day}, {year}": "",
+    "Posts for {month} {day}, {year}": "{day} {month}، {year} کی تحاریر",
     "Posts for {month} {year}": "{month} {year} کی تحاریر",
     "Previous post": "پچھلی تحریر",
     "Publication date": "تاریخِ اشاعت",
