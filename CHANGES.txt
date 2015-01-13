@@ -63,6 +63,7 @@ Features
 Bugfixes
 --------
 
+* Handle over-and-under-lined titles in rst for guessing title (Issue #1539)
 * Don't apply colorbox to figures if they are of islink class. (Issue #1536)
 * Turned minify_lines into a no-op (Issue #1497)
 * Don’t classify unpublished posts as pages (Issue #1577)
