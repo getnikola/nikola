@@ -32,6 +32,7 @@ Features
 Bugfixes
 --------
 
+* Handle over-and-under-lined titles in rst fr guessing title (Issue #1539)
 * Respect SHOW_UNTRANSLATED_POSTS = False in archives
   and for untranslated source files (Issue #1360)
 * Make sure drafts don’t appear in sitemaps with multiple languages

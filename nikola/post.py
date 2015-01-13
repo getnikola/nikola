@@ -700,6 +700,8 @@ def _get_metadata_from_file(meta_data):
     >>> g = _get_metadata_from_file
     >>> list(g([]).values())
     []
+    >>> str(g(["======","FooBar","======"])["title"])
+    'FooBar'
     >>> str(g(["FooBar","======"])["title"])
     'FooBar'
     >>> str(g(["#FooBar"])["title"])
@@ -734,6 +736,10 @@ def _get_metadata_from_file(meta_data):
         if 'title' not in meta:
             if re_rst_title.findall(line) and i > 0:
                 meta['title'] = meta_data[i - 1].strip()
+        if 'title' not in meta:
+            if (re_rst_title.findall(line) and i >= 0 and
+                    re_rst_title.findall(meta_data[i + 2])):
+                meta['title'] = meta_data[i + 1].strip()
         if 'title' not in meta:
             if re_md_title.findall(line):
                 meta['title'] = re_md_title.findall(line)[0]
