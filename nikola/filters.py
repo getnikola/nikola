@@ -149,9 +149,7 @@ def jpegoptim(infile):
 
 @apply_to_text_file
 def minify_lines(data):
-    datalines = data.splitlines()
-    datalines = [line.lstrip() for line in datalines if not (line.strip() == "")]
-    return "\n".join(datalines)
+    return data;
 
 
 @apply_to_text_file

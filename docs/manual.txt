@@ -1319,7 +1319,7 @@ The currently available filters are:
       }
 
 minify_lines
-   Strips leading whitespace and blank lines. Useful for compacting HTML but pre-formatted text must be escaped manually.
+   **THIS FILTER HAS BEEN TURNED INTO A NOOP** and currently does nothing. 
 
 yui_compressor
    Compress CSS/JavaScript using `YUI compressor <http://yui.github.io/yuicompressor/>`_
