@@ -63,6 +63,7 @@ Features
 Bugfixes
 --------
 
+* Don't apply colorbox to figures if they are of islink class. (Issue #1536)
 * Turned minify_lines into a no-op (Issue #1497)
 * Don’t classify unpublished posts as pages (Issue #1577)
 * Fixed a ``TranslatableSetting.langformat`` race condition
