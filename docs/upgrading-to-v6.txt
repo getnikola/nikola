@@ -8,7 +8,7 @@
 Upgrading to v6
 ===============
 
-:Version: 7.2.0
+:Version: 7.3.0
 
 .. class:: lead
 
