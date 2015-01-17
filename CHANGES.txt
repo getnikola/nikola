@@ -1,3 +1,14 @@
+New in master
+=============
+
+Features
+--------
+
+Bugfixes
+--------
+
+* Fixed compatibility with IPython 3.x (Issue #1581)
+
 New in v7.3.0
 =============
 
