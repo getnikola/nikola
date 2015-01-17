@@ -31,8 +31,15 @@ import io
 import os
 
 try:
+    import IPython
     from IPython.nbconvert.exporters import HTMLExporter
-    from IPython.nbformat import current as nbformat
+    if IPython.version_info[0] >= 3:     # API changed with 3.0.0
+        from IPython import nbformat
+        current_nbformat = nbformat.current_nbformat
+    else:
+        import IPython.nbformat.current as nbformat
+        current_nbformat = 'json'
+
     from IPython.config import Config
     flag = True
 except ImportError:
@@ -58,8 +65,7 @@ class CompileIPynb(PageCompiler):
         exportHtml = HTMLExporter(config=c)
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with io.open(source, "r", encoding="utf8") as in_file:
-                nb = in_file.read()
-                nb_json = nbformat.reads_json(nb)
+                nb_json = nbformat.read(in_file, current_nbformat)
             (body, resources) = exportHtml.from_notebook_node(nb_json)
             out_file.write(body)
 
