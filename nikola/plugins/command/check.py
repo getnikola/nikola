@@ -47,7 +47,12 @@ def _call_nikola_list(site, arguments):
         command.append('--conf=' + site.configuration_filename)
     command.extend(["list", "--all"])
     result = []
-    for task in subprocess.Popen(command, shell=False, stdout=subprocess.PIPE).stdout.readlines():
+    if os.name == 'nt':
+        shell = True
+        command = command.join(' ')
+    else:
+        shell = False
+    for task in subprocess.Popen(command, shell=shell, stdout=subprocess.PIPE).stdout.readlines():
         result.append(task.decode('utf-8'))
     return result
 
