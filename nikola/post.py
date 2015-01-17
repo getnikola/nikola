@@ -362,7 +362,14 @@ class Post(object):
            includes the HTML resulting from compiling the fragment ('page' or
            'both').
 
-        If ``lang`` is not specified, this dependency is added for all languages."""
+        If ``lang`` is not specified, this dependency is added for all languages.
+
+        Example:
+
+        post.add_dependency_uptodate(
+            utils.config_changed({1: some_data}, 'uniqueid'), False, 'page')
+
+        """
         if add == 'fragment' or add == 'both':
             self._dependency_uptodate_fragment[lang].append((is_callable, dependency))
         if add == 'page' or add == 'both':
