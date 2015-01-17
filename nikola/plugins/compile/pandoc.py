@@ -70,3 +70,7 @@ class CompilePandoc(PageCompiler):
                 fd.write(write_metadata(metadata))
                 fd.write('-->\n\n')
             fd.write(content)
+
+    def register_extra_dependencies(self, post):
+        """Adds dependency to post object to check .dep file."""
+        post.add_dependency_uptodate(self.site.config['PANDOC_OPTIONS'])

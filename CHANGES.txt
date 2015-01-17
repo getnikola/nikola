@@ -10,6 +10,7 @@ Bugfixes
 --------
 
 * Fixed compatibility with IPython 3.x (Issue #1581)
+* Compilers mark tasks as out of date if compiler-specific options and plugins change (Issue #1523)
 
 New in v7.3.0
 =============
