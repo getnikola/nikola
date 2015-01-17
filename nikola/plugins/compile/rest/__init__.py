@@ -41,7 +41,7 @@ except ImportError:
     has_docutils = False
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import get_logger, makedirs, req_missing, write_metadata
+from nikola.utils import get_logger, makedirs, req_missing, write_metadata, config_changed
 
 
 class CompileRest(PageCompiler):
@@ -63,7 +63,7 @@ class CompileRest(PageCompiler):
     def register_extra_dependencies(self, post):
         """Adds dependency to post object to check .dep file."""
         post.add_dependency(lambda: self._read_extra_deps(post), 'fragment')
-        post.add_dependency_uptodate(self.enabled_plugins)
+        post.add_dependency_uptodate(config_changed({1: self.enabled_plugins}))
 
     def compile_html(self, source, dest, is_two_file=True):
         """Compile reSt into HTML."""

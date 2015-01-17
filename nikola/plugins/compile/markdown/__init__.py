@@ -41,7 +41,7 @@ except ImportError:
     podcast_extension = None
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing, write_metadata
+from nikola.utils import makedirs, req_missing, write_metadata, config_changed
 
 
 class CompileMarkdown(PageCompiler):
@@ -101,4 +101,4 @@ class CompileMarkdown(PageCompiler):
 
     def register_extra_dependencies(self, post):
         """Adds dependency to post object to check .dep file."""
-        post.add_dependency_uptodate(self.enabled_extensions)
+        post.add_dependency_uptodate(config_changed({1: self.enabled_extensions}))

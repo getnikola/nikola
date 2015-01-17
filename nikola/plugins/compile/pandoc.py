@@ -37,7 +37,7 @@ import os
 import subprocess
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import req_missing, makedirs, write_metadata
+from nikola.utils import req_missing, makedirs, write_metadata, config_changed
 
 
 class CompilePandoc(PageCompiler):
@@ -73,4 +73,4 @@ class CompilePandoc(PageCompiler):
 
     def register_extra_dependencies(self, post):
         """Adds dependency to post object to check .dep file."""
-        post.add_dependency_uptodate(self.site.config['PANDOC_OPTIONS'])
+        post.add_dependency_uptodate(config_changed({1: self.site.config['PANDOC_OPTIONS']}))
