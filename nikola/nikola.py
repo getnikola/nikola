@@ -1021,7 +1021,7 @@ class Nikola(object):
             title=title,
             link=link,
             description=description,
-            lastBuildDate=datetime.datetime.now(),
+            lastBuildDate=datetime.datetime.utcnow(),
             generator='http://getnikola.com/',
             language=lang
         )

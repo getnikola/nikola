@@ -575,7 +575,7 @@ class Galleries(Task, ImageProcessor):
             title=title,
             link=make_url(permalink),
             description='',
-            lastBuildDate=datetime.datetime.now(),
+            lastBuildDate=datetime.datetime.utcnow(),
             items=items,
             generator='http://getnikola.com/',
             language=lang
