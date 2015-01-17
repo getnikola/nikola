@@ -64,7 +64,7 @@ class CompileMarkdown(PageCompiler):
             self.extensions.append(plugin_info.plugin_object)
             plugin_info.plugin_object.short_help = plugin_info.description
 
-        self.enabled_extensions += self.site.config.get("MARKDOWN_EXTENSIONS")
+        self.enabled_extensions += site.config.get("MARKDOWN_EXTENSIONS")
         return super(CompileMarkdown, self).set_site(site)
 
     def compile_html(self, source, dest, is_two_file=True):
