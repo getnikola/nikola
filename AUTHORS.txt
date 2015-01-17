@@ -1,82 +1,102 @@
-These are the people who have committed code according to GitHub.
-There is probably someone missing if he sent me code directly, and
-for that I am sorry because I believe in giving credit.
-If you are here and prefer to be listed in a different way, just
-do a PR :-)
-
-                                                -- Roberto Alsina
-
-
+Agustin Henze <https://github.com/agustinhenze>
 Alberto Berti <https://github.com/azazel75>
-Aru Sahni <https://github.com/arusahni>
-Bluerise <https://github.com/Bluerise>
-Chris Warrick <https://github.com/Kwpolska>
-Daniel Aleksandersen <https://github.com/Aeyoun>
-Dmitry Verkhoturov <https://github.com/paskal>
-DoctorMalboro <https://github.com/DoctorMalboro>
-Eduardo Schettino <https://github.com/schettino72>
-Evgeni Golov <https://github.com/evgeni>
-Kay Hayen <https://github.com/kayhayen>
-Niko Wenselowski <https://github.com/okin>
-Ondřej Grover <https://github.com/smartass101>
-Raimon Esteve <https://github.com/raimonesteve>
-Roberto Alsina <https://github.com/ralsina>
-Roman Imankulov <https://github.com/imankulov>
-Sean Pue <https://github.com/seanpue>
-StyXman <https://github.com/StyXman>
-Tim Chase <https://github.com/Gumnos>
-Tordek <https://github.com/Tordek>
-Troy Toman <https://github.com/troytoman>
-Zhaojun Meng <https://github.com/zhaojunmeng>
-agustinhenze <https://github.com/agustinhenze>
-areski <https://github.com/areski>
-bwhmather <https://github.com/bwhmather>
-camboris <https://github.com/camboris>
-Claudio Canepa <https://github.com/ccanepa>
-clee <https://github.com/clee>
-damianavila <https://github.com/damianavila>
-dastagg <https://github.com/dastagg>
-dflock <https://github.com/dflock>
-dhruvbaldawa <https://github.com/dhruvbaldawa>
-dmoisset <https://github.com/dmoisset>
-edwinsteele <https://github.com/edwinsteele>
-ermeaney <https://github.com/ermeney>
-Felix Fontein <https://github.com/felixfontein>
-fisadev <https://github.com/fisadev>
-fizyk <https://github.com/fizyk>
-ivanov <https://github.com/ivanov>
-ivanteoh <https://github.com/ivanteoh>
-jerrykan <https://github.com/jerrykan>
-kadefor <https://github.com/kadefor>
-koniiiik <https://github.com/koniiiik>
-kotnik <https://github.com/kotnik>
-localvoid <https://github.com/localvoid>
-marcelomd <https://github.com/marcelomd>
-marianoguerra <https://github.com/marianoguerra>
-mattgaviota <https://github.com/mattgaviota>
-mgaitan <https://github.com/mgaitan>
-mrabbitt <https://github.com/mrabbitt>
-neiesc <https://github.com/neiesc>
-neilmb <https://github.com/neilmb>
-notfoss <https://github.com/notfoss>
-numshub <https://github.com/numshub>
-onnodb <https://github.com/onnodb>
-pabluk <https://github.com/pabluk>
-punchagan <https://github.com/punchagan>
-pwm1234 <https://github.com/pwm1234>
-quijot <https://github.com/quijot>
-quodlibetor <https://github.com/quodlibetor>
-quoth <https://github.com/quoth>
-rafacarrascosa <https://github.com/rafacarrascosa>
-rbistolfi <https://github.com/rbistolfi>
-snaewe <https://github.com/snaewe>
-tolusonaike <https://github.com/tolusonaike>
-Thomas Burette <https://github.com/tburette>
-wimpr1m <https://github.com/wimpr1m>
-yarko <https://github.com/yarko>
+Alex Popescu <https://github.com/al3xandru>
 Alex Walters <https://github.com/tritium21>
-Carsten Grohmann <https://github.com/CarstenGrohmann>
-Aurelien Naldi <https://github.com/aurelien-naldi>
 Andreas Linz <https://github.com/KLINGTdotNET>
-小明 <https://github.com/dongweiming>
+Areski Belaid <https://github.com/areski>
+Aru Sahni <https://github.com/arusahni>
+Aurelien Naldi <https://github.com/aurelien-naldi>
+Ben Mather <https://github.com/bwhmather>
+Boris Kaul <https://github.com/localvoid>
+Brandon W. Maister <https://github.com/quodlibetor>
+Carsten Grohmann <https://github.com/CarstenGrohmann>
+Casey M. Bessette <https://github.com/caseybessette>
+Chris Lee <https://github.com/clee>
+Chris Warrick <https://github.com/Kwpolska>
+Claudio Canepa <https://github.com/ccanepa>
+Damien Tournoud <https://github.com/damz>
+Damián Avila <https://github.com/damianavila>
+Daniel Aleksandersen <https://github.com/Aeyoun>
+Daniel Devine <https://github.com/DDevine>
+Daniel F. Moisset <https://github.com/dmoisset>
+David Beath <https://github.com/DBeath>
+Dhruv Baldawa <https://github.com/dhruvbaldawa>
+Dmitry Verkhoturov <https://github.com/paskal>
+Duncan Lock <https://github.com/dflock>
+Edinei Cavalcanti <https://github.com/neiesc>
+Eduardo Schettino <https://github.com/schettino72>
+Edwin Steele <https://github.com/edwinsteele>
+Emilien Klein <https://github.com/e2jk>
+Evgeni Golov <https://github.com/evgeni>
+Felix Fontein <https://github.com/felixfontein>
+Felix Schwarz <https://github.com/FelixSchwarz>
+Grzegorz Śliwiński <https://github.com/fizyk>
+Guillermo O. Freschi <https://github.com/Tordek>
+Hardening <https://github.com/hardening>
+Ivan Teoh <https://github.com/ivanteoh>
+John Kristensen <https://github.com/jerrykan>
+Joshua Barratt <https://github.com/jbarratt>
+Juan Pedro Fisanotti <https://github.com/fisadev>
+Kade For <https://github.com/kadefor>
+Kay Hayen <https://github.com/kayhayen>
+Leandro Poblet <https://github.com/DoctorMalboro>
+Luis Miguel Morillas <https://github.com/lmorillas>
+Manuel Kaufmann <https://github.com/humitos>
+Marcelo MD <https://github.com/marcelomd>
+Marcos Dione <https://github.com/StyXman>
+Mariano Guerra <https://github.com/marianoguerra>
+Mario Pozzo <https://github.com/camboris>
+Mark Eichin <https://github.com/eichin>
+Martin Bless <https://github.com/marble>
+Martin Wimpress <https://github.com/wimpr1m>
+Martín Gaitán <https://github.com/mgaitan>
+Matias Novoa <https://github.com/mattgaviota>
+Michael Joseph <https://github.com/michaeljoseph>
 Michael McNeil Forbes <https://github.com/mforbes>
+Michal Petrucha <https://github.com/koniiiik>
+Miguel Ángel García <https://github.com/magmax>
+Neil MartinsenBurrell <https://github.com/neilmb>
+Niko Wenselowski <https://github.com/okin>
+Nikola Kotur <https://github.com/kotnik>
+Ondřej Grover <https://github.com/smartass101>
+Onno Broekmans <https://github.com/onnodb>
+Pablo Seminario <https://github.com/pabluk>
+Patrick Wildt <https://github.com/Bluerise>
+Paul Ivanov <https://github.com/ivanov>
+Pelle Nilsson <https://github.com/pellenilsson>
+Pierpaolo Da Fieno <https://github.com/numshub>
+Puneeth Chaganti <https://github.com/punchagan>
+Raimon Esteve <https://github.com/raimonesteve>
+Ramiro Morales <https://github.com/ramiro>
+Roberto Alsina <https://github.com/ralsina>
+Rodrigo Bistolfi <https://github.com/rbistolfi>
+Roger Binns <https://github.com/rogerbinns>
+Roman Faizullin <https://github.com/faizrr>
+Roman Imankulov <https://github.com/imankulov>
+Santiago Pestarini <https://github.com/quijot>
+Sean Pue <https://github.com/seanpue>
+Simon van der Veldt <https://github.com/simonvanderveldt>
+Stefan Näwe <https://github.com/snaewe>
+Thibauld Nion <https://github.com/tibonihoo>
+Thomas Burette <https://github.com/tburette>
+Tim Chase <https://github.com/Gumnos>
+Tolu Sonaike <https://github.com/tolusonaike>
+Troy Toman <https://github.com/troytoman>
+Udo Spallek <https://github.com/udono>
+Yaşar Arabacı <https://github.com/yasar11732>
+Yasuhiko Shiga <https://github.com/quoth>
+Zhaojun Meng <https://github.com/zhaojunmeng>
+dastagg <https://github.com/dastagg>
+dastagg <https://github.com/dastagg>
+ermeaney <https://github.com/ermeaney>
+follower <https://github.com/follower>
+lbiaggi <https://github.com/lbiaggi>
+mrabbitt <https://github.com/mrabbitt>
+nlaurens <https://github.com/nlaurens>
+notfoss <https://github.com/notfoss>
+phora <https://github.com/phora>
+pmav99 <https://github.com/pmav99>
+pwm1234 <https://github.com/pwm1234>
+rafacarrascosa <https://github.com/rafacarrascosa>
+yarko <https://github.com/yarko>
+小明 <https://github.com/dongweiming>
