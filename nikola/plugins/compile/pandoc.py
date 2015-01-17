@@ -73,4 +73,4 @@ class CompilePandoc(PageCompiler):
 
     def register_extra_dependencies(self, post):
         """Adds dependency to post object to check .dep file."""
-        post.add_dependency_uptodate(config_changed({1: self.site.config['PANDOC_OPTIONS']}))
+        post.add_dependency_uptodate(config_changed({1: self.site.config['PANDOC_OPTIONS']}, self.name))

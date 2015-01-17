@@ -63,7 +63,7 @@ class CompileRest(PageCompiler):
     def register_extra_dependencies(self, post):
         """Adds dependency to post object to check .dep file."""
         post.add_dependency(lambda: self._read_extra_deps(post), 'fragment')
-        post.add_dependency_uptodate(config_changed({1: self.enabled_plugins}))
+        post.add_dependency_uptodate(config_changed({1: self.enabled_plugins}, self.name))
 
     def compile_html(self, source, dest, is_two_file=True):
         """Compile reSt into HTML."""
