@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Added RSS feeds to gallery HEAD (part of Issue #786)
+
 Bugfixes
 --------
 
