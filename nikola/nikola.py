@@ -234,6 +234,7 @@ class Nikola(object):
         self.path_handlers = {
             'slug': self.slug_path,
             'post_path': self.post_path,
+            'root': self.root_path,
             'filename': self.filename_path,
         }
 
@@ -1093,12 +1094,13 @@ class Nikola(object):
     def path(self, kind, name, lang=None, is_link=False):
         """Build the path to a certain kind of page.
 
-        These are mostly defined by plugins by registering via
-        the register_path_handler method, except for slug and
-        post_path which are defined in this class' init method.
+        These are mostly defined by plugins by registering via the
+        register_path_handler method, except for slug, post_path, root
+        and filename which are defined in this class' init method.
 
         Here's some of the others, for historical reasons:
 
+        * root (name is ignored)
         * tag_index (name is ignored)
         * tag (and name is the tag name)
         * tag_rss (name is the tag name)
@@ -1149,6 +1151,14 @@ class Nikola(object):
         return [_f for _f in [self.config['TRANSLATIONS'][lang],
                               os.path.dirname(name),
                               self.config['INDEX_FILE']] if _f]
+
+    def root_path(self, name, lang):
+        """root_path path handler"""
+        d = self.config['TRANSLATIONS'][lang]
+        if d:
+            return [d, '']
+        else:
+            return []
 
     def slug_path(self, name, lang):
         """slug path handler"""

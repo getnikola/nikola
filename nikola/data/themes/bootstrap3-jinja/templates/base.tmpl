@@ -22,7 +22,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ abs_link('/') }}">
+            <a class="navbar-brand" href="{{ abs_link(_link("root", None, lang)) }}">
             {% if logo_url %}
                 <img src="{{ logo_url }}" alt="{{ blog_title }}" id="logo">
             {% endif %}
