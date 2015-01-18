@@ -45,6 +45,9 @@ class CompilePandoc(PageCompiler):
 
     name = "pandoc"
 
+    def set_site(self, site):
+        self.config_dependencies = [self.site.config['PANDOC_OPTIONS']]
+
     def compile_html(self, source, dest, is_two_file=True):
         makedirs(os.path.dirname(dest))
         try:
@@ -70,7 +73,3 @@ class CompilePandoc(PageCompiler):
                 fd.write(write_metadata(metadata))
                 fd.write('-->\n\n')
             fd.write(content)
-
-    def register_extra_dependencies(self, post):
-        """Adds dependency to post object to check .dep file."""
-        post.add_dependency_uptodate(config_changed({1: self.site.config['PANDOC_OPTIONS']}, self.name))

@@ -414,6 +414,7 @@ class Post(object):
         deps = []
         deps += self._get_dependencies(self._dependency_uptodate_page[lang])
         deps += self._get_dependencies(self._dependency_uptodate_page[None])
+        deps += self.compiler.config_dependencies
         return deps
 
     def compile(self, lang):

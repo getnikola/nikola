@@ -53,18 +53,18 @@ class CompileMarkdown(PageCompiler):
     site = None
 
     def set_site(self, site):
-        self.enabled_extensions = []
+        self.config_dependencies = []
         for plugin_info in site.plugin_manager.getPluginsOfCategory("MarkdownExtension"):
             if plugin_info.name in site.config['DISABLED_PLUGINS']:
                 site.plugin_manager.removePluginFromCategory(plugin_info, "MarkdownExtension")
                 continue
-            self.enabled_extensions.append(plugin_info.name)
+            self.config_dependencies.append(plugin_info.name)
             site.plugin_manager.activatePluginByName(plugin_info.name)
             plugin_info.plugin_object.set_site(site)
             self.extensions.append(plugin_info.plugin_object)
             plugin_info.plugin_object.short_help = plugin_info.description
 
-        self.enabled_extensions += site.config.get("MARKDOWN_EXTENSIONS")
+        self.config_dependencies.append(site.config.get("MARKDOWN_EXTENSIONS"))
         return super(CompileMarkdown, self).set_site(site)
 
     def compile_html(self, source, dest, is_two_file=True):
@@ -98,7 +98,3 @@ class CompileMarkdown(PageCompiler):
                 fd.write(write_metadata(metadata))
                 fd.write('-->\n\n')
             fd.write(content)
-
-    def register_extra_dependencies(self, post):
-        """Adds dependency to post object to check .dep file."""
-        post.add_dependency_uptodate(config_changed({1: self.enabled_extensions}, self.name))

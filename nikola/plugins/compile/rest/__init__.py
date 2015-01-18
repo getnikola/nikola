@@ -63,7 +63,6 @@ class CompileRest(PageCompiler):
     def register_extra_dependencies(self, post):
         """Adds dependency to post object to check .dep file."""
         post.add_dependency(lambda: self._read_extra_deps(post), 'fragment')
-        post.add_dependency_uptodate(config_changed({1: self.enabled_plugins}, self.name))
 
     def compile_html(self, source, dest, is_two_file=True):
         """Compile reSt into HTML."""
@@ -129,14 +128,14 @@ class CompileRest(PageCompiler):
             fd.write(content)
 
     def set_site(self, site):
-        self.enabled_plugins = []
+        self.config_dependencies = []
         for plugin_info in site.plugin_manager.getPluginsOfCategory("RestExtension"):
             if plugin_info.name in site.config['DISABLED_PLUGINS']:
                 site.plugin_manager.removePluginFromCategory(plugin_info, "RestExtension")
                 continue
 
             site.plugin_manager.activatePluginByName(plugin_info.name)
-            self.enabled_plugins.append(plugin_info.name)
+            self.config_dependencies.append(plugin_info.name)
             plugin_info.plugin_object.set_site(site)
             plugin_info.plugin_object.short_help = plugin_info.description
 
