@@ -35,6 +35,7 @@ import hashlib
 import io
 import locale
 import logging
+import natsort
 import os
 import re
 import json
@@ -1241,8 +1242,8 @@ def write_metadata(data):
             pass
 
     # Leftover metadata (user-specified/non-default).
-    for k, v in data.items():
-        meta.append(f.format(k, v))
+    for k in natsort.natsorted(list(data.keys())):
+        meta.append(f.format(k, data[k]))
 
     meta.append('')
 
