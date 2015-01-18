@@ -57,7 +57,9 @@ from blinker import signal
 from .post import Post  # NOQA
 from . import DEBUG, utils
 from .plugin_categories import (
+    BaseTask,
     Command,
+    EarlyTask,
     LateTask,
     PageCompiler,
     RestExtension,
@@ -663,8 +665,10 @@ class Nikola(object):
 
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,
-            "Task": Task,
-            "LateTask": LateTask,
+            "BaseTask": BaseTask,
+            "EarlyTask": EarlyTask,  # sub-category of BaseTask
+            "LateTask": LateTask,  # sub-category of BaseTask
+            "Task": Task,  # sub-category of BaseTask
             "TemplateSystem": TemplateSystem,
             "PageCompiler": PageCompiler,
             "TaskMultiplier": TaskMultiplier,
@@ -705,8 +709,15 @@ class Nikola(object):
             self._commands[plugin_info.name] = plugin_info.plugin_object
 
         self._activate_plugins_of_category("PostScanner")
-        self._activate_plugins_of_category("Task")
-        self._activate_plugins_of_category("LateTask")
+        task_plugins = self._activate_plugins_of_category("BaseTask")
+        self.task_stages = defaultdict(list)
+        for plugin_info in task_plugins:
+            # Note that the serach for BaseTask plugins also finds Task plugins,
+            # LateTask plugins, and EarlyTask plugins. Since we gave them own
+            # categories, the definitions of Task, LateTask and EarlyTask
+            # themselves won't be incorrectly detected as plugins.
+            stage = plugin_info.plugin_object.stage
+            self.task_stages[stage].append(plugin_info.plugin_object)
         self._activate_plugins_of_category("TaskMultiplier")
 
         compilers = defaultdict(set)
@@ -1324,7 +1335,13 @@ class Nikola(object):
             task['targets'] = [os.path.normpath(t) for t in targets]
         return task
 
-    def gen_tasks(self, name, plugin_category, doc=''):
+    def get_task_stages(self):
+        return sorted(list(self.task_stages.keys()))
+
+    def get_stage_plugin_objects(self, stage):
+        return self.task_stages[stage]
+
+    def gen_task(self, name, plugin_object):
 
         def flatten(task):
             if isinstance(task, dict):
@@ -1335,30 +1352,21 @@ class Nikola(object):
                         yield ft
 
         task_dep = []
-        for pluginInfo in self.plugin_manager.getPluginsOfCategory(plugin_category):
-            for task in flatten(pluginInfo.plugin_object.gen_tasks()):
-                assert 'basename' in task
-                task = self.clean_task_paths(task)
-                if 'task_dep' not in task:
-                    task['task_dep'] = []
-                task['task_dep'].extend(self.injected_deps[task['basename']])
-                yield task
-                for multi in self.plugin_manager.getPluginsOfCategory("TaskMultiplier"):
-                    flag = False
-                    for task in multi.plugin_object.process(task, name):
-                        flag = True
-                        yield self.clean_task_paths(task)
-                    if flag:
-                        task_dep.append('{0}_{1}'.format(name, multi.plugin_object.name))
-            if pluginInfo.plugin_object.is_default:
-                task_dep.append(pluginInfo.plugin_object.name)
-        yield {
-            'basename': name,
-            'doc': doc,
-            'actions': None,
-            'clean': True,
-            'task_dep': task_dep
-        }
+        tasks = []
+        for task in flatten(plugin_object.gen_tasks()):
+            assert 'basename' in task
+            task = self.clean_task_paths(task)
+            if 'task_dep' not in task:
+                task['task_dep'] = []
+            tasks.append(task)
+            for multi in self.plugin_manager.getPluginsOfCategory("TaskMultiplier"):
+                flag = False
+                for task in multi.plugin_object.process(task, name):
+                    flag = True
+                    tasks.append(self.clean_task_paths(task))
+                if flag:
+                    task_dep.append('{0}_{1}'.format(name, multi.plugin_object.name))
+        return tasks, task_dep
 
     def parse_category_name(self, category_name):
         if self.config['CATEGORY_ALLOW_HIERARCHIES']:
@@ -1570,6 +1578,7 @@ class Nikola(object):
         task = {
             'name': os.path.normpath(output_name),
             'targets': [output_name],
+            'task_dep': ['render_posts'],
             'file_dep': deps,
             'actions': [(self.render_template, [template_name, output_name,
                                                 context])],
@@ -1841,6 +1850,7 @@ class Nikola(object):
                 kw['filters'],
                 context,
             )
+            task['task_dep'] = ['render_posts']
             task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.nikola.Nikola.generic_index_renderer')] + additional_dependencies
             task['basename'] = basename
             yield task

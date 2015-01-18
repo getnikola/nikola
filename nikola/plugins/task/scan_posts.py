@@ -25,32 +25,19 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import unicode_literals
-from nikola.plugin_categories import Task
-from nikola.utils import config_changed
+
+from nikola.plugin_categories import BaseTask
 
 
-class RenderPages(Task):
-    """Render pages into output."""
+class ScanPosts(BaseTask):
+    """Just scans for posts."""
 
-    name = "render_pages"
+    name = "scan_posts"
+
+    stage = 0
 
     def gen_tasks(self):
-        """Build final pages from metadata and HTML fragments."""
-        kw = {
-            "post_pages": self.site.config["post_pages"],
-            "translations": self.site.config["TRANSLATIONS"],
-            "filters": self.site.config["FILTERS"],
-            "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
-            "demote_headers": self.site.config['DEMOTE_HEADERS'],
-        }
+        """Scan for posts."""
+        self.site.scan_posts(True)
+
         yield self.group_task()
-        for lang in kw["translations"]:
-            for post in self.site.timeline:
-                if not kw["show_untranslated_posts"] and not post.is_translation_available(lang):
-                    continue
-                for task in self.site.generic_page_renderer(lang, post,
-                                                            kw["filters"]):
-                    task['uptodate'] = task['uptodate'] + [config_changed(kw, 'nikola.plugins.task.pages')]
-                    task['basename'] = self.name
-                    task['task_dep'] = ['render_posts']
-                    yield task

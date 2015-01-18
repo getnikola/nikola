@@ -47,7 +47,6 @@ class RenderPosts(Task):
 
     def gen_tasks(self):
         """Build HTML fragments from metadata and text."""
-        self.site.scan_posts()
         kw = {
             "translations": self.site.config["TRANSLATIONS"],
             "timeline": self.site.timeline,

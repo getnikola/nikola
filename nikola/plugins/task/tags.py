@@ -85,7 +85,6 @@ class RenderTags(Task):
             "index_file": self.site.config['INDEX_FILE'],
         }
 
-        self.site.scan_posts()
         yield self.group_task()
 
         yield self.list_tags_page(kw)

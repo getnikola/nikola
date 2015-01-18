@@ -43,7 +43,6 @@ class Indexes(Task):
         return super(Indexes, self).set_site(site)
 
     def gen_tasks(self):
-        self.site.scan_posts()
         yield self.group_task()
 
         kw = {
