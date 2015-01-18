@@ -9,6 +9,7 @@ import os
 import re
 import sys
 import glob
+import subprocess
 
 
 def sed_like_thing(pattern, repl, path):
@@ -34,4 +35,5 @@ if __name__ == "__main__":
     sed_like_thing("release = .*", "release = '{0}'".format(version), os.path.join('docs', 'sphinx', 'conf.py'))
     sed_like_thing('__version__ = ".*"', '__version__ = "{0}"'.format(version), os.path.join('nikola', '__init__.py'))
     sed_like_thing('New in master', 'New in v{0}'.format(version), 'CHANGES.txt')
-    os.system("help2man -h help -N --version-string='{0}' nikola > {1}".format(version, os.path.join('docs', 'man', 'nikola.1')))
+    subprocess.call(["help2man", "-N", "--version-string={0}".format(version), "-n", "static site and blog generator", "-o", os.path.join('docs', 'man', 'nikola.1'), "nikola"])
+    subprocess.call(["gzip", "-f", os.path.join('docs', 'man', 'nikola.1')])
