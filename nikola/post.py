@@ -37,7 +37,7 @@ try:
 except ImportError:
     from urllib.parse import urljoin  # NOQA
 
-from . import tools
+from . import utils
 
 import dateutil.tz
 import lxml.html
@@ -416,7 +416,7 @@ class Post(object):
         deps = []
         deps += self._get_dependencies(self._dependency_uptodate_page[lang])
         deps += self._get_dependencies(self._dependency_uptodate_page[None])
-        deps.add(tools.config_changed({1: sorted(self.compiler.config_dependencies)}, 'nikola.post.Post.deps_uptodate:compiler:' + self.source_path))
+        deps.add(utils.config_changed({1: sorted(self.compiler.config_dependencies)}, 'nikola.post.Post.deps_uptodate:compiler:' + self.source_path))
         return deps
 
     def compile(self, lang):
@@ -473,7 +473,7 @@ class Post(object):
         deps = []
         deps += self._get_dependencies(self._dependency_uptodate_fragment[lang])
         deps += self._get_dependencies(self._dependency_uptodate_fragment[None])
-        deps.add(tools.config_changed({1: sorted(self.compiler.config_dependencies)}, 'nikola.post.Post.deps_uptodate:compiler:' + self.source_path))
+        deps.add(utils.config_changed({1: sorted(self.compiler.config_dependencies)}, 'nikola.post.Post.deps_uptodate:compiler:' + self.source_path))
         return deps
 
     def is_translation_available(self, lang):
