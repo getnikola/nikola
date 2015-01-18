@@ -41,7 +41,7 @@ except ImportError:
     has_docutils = False
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import get_logger, makedirs, req_missing, write_metadata, config_changed
+from nikola.utils import get_logger, makedirs, req_missing, write_metadata
 
 
 class CompileRest(PageCompiler):

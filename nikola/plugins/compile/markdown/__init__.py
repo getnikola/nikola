@@ -41,7 +41,7 @@ except ImportError:
     podcast_extension = None
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing, write_metadata, config_changed
+from nikola.utils import makedirs, req_missing, write_metadata
 
 
 class CompileMarkdown(PageCompiler):

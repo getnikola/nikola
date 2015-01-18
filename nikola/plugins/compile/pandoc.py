@@ -37,7 +37,7 @@ import os
 import subprocess
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import req_missing, makedirs, write_metadata, config_changed
+from nikola.utils import req_missing, makedirs, write_metadata
 
 
 class CompilePandoc(PageCompiler):
