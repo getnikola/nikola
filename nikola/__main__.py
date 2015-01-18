@@ -46,6 +46,7 @@ from doit.cmd_run import Run as DoitRun
 from doit.cmd_clean import Clean as DoitClean
 from doit.cmd_completion import TabCompletion
 from doit.cmd_auto import Auto as DoitAuto
+from doit.task import Task, DelayedLoader
 from logbook import NullHandler
 from blinker import signal
 
@@ -260,6 +261,84 @@ class NikolaTaskLoader(TaskLoader):
         self.nikola = nikola
         self.quiet = quiet
 
+    def _get_stage_info(self, stage):
+        if stage == -10:
+            post_name = 'pre_scanning'
+            pre_name = 'pre_scanning_pre'
+            doc = 'Group of tasks to be run before scanning for posts'
+        elif stage == 0:
+            post_name = 'scanning'
+            pre_name = 'scanning_pre'
+            doc = 'Task scanning for posts'
+        elif stage == 10:
+            post_name = 'render_site'
+            pre_name = 'render_site_pre'
+            doc = 'Group of tasks to render the site.'
+        elif stage == 100:
+            post_name = 'post_render'
+            pre_name = 'post_render_pre'
+            doc = 'Group of tasks to be executed after site is rendered.'
+        else:
+            post_name = 'stage_{0}_done'.format(stage)
+            pre_name = 'stage_{0}_pre'.format(stage)
+            doc = 'Stage {0} tasks'.format(stage)
+        return pre_name, post_name, doc
+
+    def _add_task_dep(self, task, dep):
+        if 'task_dep' not in task:
+            task['task_dep'] = []
+        task['task_dep'].append(dep)
+
+    def _generate_plugin_task(self, plugin_object, post_name):
+        tasks, task_dep_ = self.nikola.gen_task(post_name, plugin_object)
+        for task in tasks:
+            yield task
+        yield {
+            'basename': plugin_object.name,
+            'name': 'base_task[{0}]'.format(plugin_object.name),
+            'doc': 'Base task for {0}'.format(plugin_object.name),
+            'task_dep': task_dep_,
+            'actions': None,
+        }
+
+    def _generate_plugin_generator_task(self, plugin_object, pre_name, post_name):
+        return Task(plugin_object.name, None, loader=DelayedLoader(lambda: self._generate_plugin_task(plugin_object, post_name), executed=pre_name))
+
+    def _generate_stage_tasks(self, stage, previous_stage=None, make_delayed=False):
+        pre_name, post_name, doc = self._get_stage_info(stage)
+        pre_task = {
+            'basename': pre_name,
+            'name': None,
+            'doc': 'Initial waiting task for tasks in group "{0}"'.format(post_name),
+            'clean': True,
+        }
+        if previous_stage is not None:
+            _, last_post_name, _ = self._get_stage_info(previous_stage)
+            pre_task['task_dep'] = [last_post_name]
+        yield pre_task
+
+        task_dep = []
+        for plugin_object in self.nikola.get_stage_plugin_objects(stage):
+            this_task_deps = [plugin_object.name]
+            if make_delayed:
+                yield self._generate_plugin_generator_task(plugin_object, pre_name, post_name)
+            else:
+                tasks, task_dep_ = self.nikola.gen_task(post_name, plugin_object)
+                this_task_deps += task_dep_
+                for task in tasks:
+                    self._add_task_dep(task, pre_name)
+                    yield task
+            if plugin_object.is_default:
+                task_dep.extend(this_task_deps)
+
+        yield {
+            'basename': post_name,
+            'name': None,
+            'doc': doc,
+            'clean': True,
+            'task_dep': task_dep
+        }
+
     def load_tasks(self, cmd, opt_values, pos_args):
         """Load Nikola tasks."""
         if self.quiet:
@@ -272,16 +351,20 @@ class NikolaTaskLoader(TaskLoader):
                 'reporter': ExecutedOnlyReporter,
                 'outfile': sys.stderr,
             }
-        DOIT_CONFIG['default_tasks'] = ['render_site', 'post_render']
+        stages = self.nikola.get_task_stages()
+        DOIT_CONFIG['default_tasks'] = []
         DOIT_CONFIG.update(self.nikola._doit_config)
-        tasks = generate_tasks(
-            'render_site',
-            self.nikola.gen_tasks('render_site', "Task", 'Group of tasks to render the site.'))
-        latetasks = generate_tasks(
-            'post_render',
-            self.nikola.gen_tasks('post_render', "LateTask", 'Group of tasks to be executed after site is rendered.'))
+        tasks = []
+        previous_stage = None
+        for stage in stages:
+            _, name, _ = self._get_stage_info(stage)
+            DOIT_CONFIG['default_tasks'].append(name)
+            tasks.extend(generate_tasks(
+                name,
+                self._generate_stage_tasks(stage, previous_stage, cmd.execute_tasks and previous_stage is not None)))
+            previous_stage = stage
         signal('initialized').send(self.nikola)
-        return tasks + latetasks, DOIT_CONFIG
+        return tasks, DOIT_CONFIG
 
 
 class DoitNikola(DoitMain):

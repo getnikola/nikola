@@ -1,0 +1,10 @@
+[Core]
+Name = scan_posts
+Module = scan_posts
+
+[Documentation]
+Author = Roberto Alsina and others
+Version = 1.0
+Website = http://getnikola.com
+Description = Scans posts.
+

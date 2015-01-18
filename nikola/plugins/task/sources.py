@@ -46,7 +46,6 @@ class Sources(Task):
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
         }
 
-        self.site.scan_posts()
         yield self.group_task()
         if self.site.config['COPY_SOURCES']:
             for lang in kw["translations"]:

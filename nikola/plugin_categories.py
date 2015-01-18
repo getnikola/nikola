@@ -166,6 +166,9 @@ class BaseTask(BasePlugin):
     # the others have to be specifie in the command line.
     is_default = True
 
+    # at which stage to run
+    stage = 10
+
     def gen_tasks(self):
         """Generate tasks."""
         raise NotImplementedError()
@@ -179,16 +182,28 @@ class BaseTask(BasePlugin):
         }
 
 
+class EarlyTask(BaseTask):
+    """Plugins of this type are task generators which are executed before tasks are generated."""
+
+    name = "dummy_task"
+
+    stage = -10
+
+
 class Task(BaseTask):
     """Task generator."""
 
     name = "dummy_task"
+
+    stage = 10
 
 
 class LateTask(BaseTask):
     """Late task generator (plugin executed after all Task plugins)."""
 
     name = "dummy_latetask"
+
+    stage = 100
 
 
 class TemplateSystem(BasePlugin):
