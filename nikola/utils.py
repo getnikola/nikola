@@ -1242,7 +1242,7 @@ def write_metadata(data):
             pass
 
     # Leftover metadata (user-specified/non-default).
-    for k in natsort.natsorted(list(data.keys())):
+    for k in natsort.natsorted(list(data.keys()), alg=natsort.ns.F | natsort.ns.IC):
         meta.append(f.format(k, data[k]))
 
     meta.append('')
