@@ -96,33 +96,6 @@ def expands_symlinks_for_windows():
                         "\n\tYour best bet is to start again from clean.")
 
 
-def install_manpages(root, prefix):
-    try:
-        man_pages = [
-            ('docs/man/nikola.1', 'share/man/man1/nikola.1'),
-        ]
-        join = os.path.join
-        normpath = os.path.normpath
-        if root is not None:
-            prefix = os.path.realpath(root) + os.path.sep + prefix
-        for src, dst in man_pages:
-            path_dst = join(normpath(prefix), normpath(dst))
-            try:
-                os.makedirs(os.path.dirname(path_dst))
-            except OSError:
-                pass
-            rst2man_cmd = ['rst2man.py', 'rst2man']
-            for rst2man in rst2man_cmd:
-                try:
-                    subprocess.call([rst2man, src, path_dst])
-                except OSError:
-                    continue
-                else:
-                    break
-    except Exception as e:
-        print("Not installing the man pages:", e)
-
-
 def remove_old_files(self):
     tree = os.path.join(self.install_lib, 'nikola')
     try:
@@ -136,7 +109,6 @@ class nikola_install(install):
         expands_symlinks_for_windows()
         remove_old_files(self)
         install.run(self)
-        install_manpages(self.root, self.prefix)
 
 
 setup(name='Nikola',
@@ -187,6 +159,7 @@ setup(name='Nikola',
                'docs/manual.txt',
                'docs/theming.txt',
                'docs/extending.txt']),
+              ('share/man/man1', ['docs/man/nikola.1.gz']),
       ],
       entry_points = {
           'console_scripts': [
