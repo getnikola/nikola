@@ -49,7 +49,7 @@ def _call_nikola_list(site, arguments):
     result = []
     if os.name == 'nt':
         shell = True
-        command = command.join(' ')
+        command = ' '.join(command)
     else:
         shell = False
     for task in subprocess.Popen(command, shell=shell, stdout=subprocess.PIPE).stdout.readlines():
