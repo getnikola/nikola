@@ -4,11 +4,14 @@ New in v7.3.0
 Features
 --------
 
+* Added ``root`` path handler (via Issues #1008, #1573)
 * Added RSS feeds to gallery HEAD (part of Issue #786)
 
 Bugfixes
 --------
 
+* Links to languages point to site root and not the blog (Issue #1008)
+* Brand link is now language-specific (Issue #1573)
 * Fixed compatibility with IPython 3.x (Issue #1581)
 * Compilers mark tasks as out of date if compiler-specific options and plugins change (Issue #1523)
 
