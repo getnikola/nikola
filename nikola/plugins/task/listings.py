@@ -143,8 +143,10 @@ class Listings(Task):
                 'crumbs': crumbs,
                 'permalink': permalink,
                 'lang': self.kw['default_lang'],
-                'folders': natsort.natsorted(folders),
-                'files': natsort.natsorted(files),
+                'folders': natsort.natsorted(
+                    folders, alg=natsort.ns.L | natsort.ns.F | natsort.ns.IC),
+                'files': natsort.natsorted(
+                    files, alg=natsort.ns.L | natsort.ns.F | natsort.ns.IC),
                 'description': title,
                 'source_link': source_link,
             }
