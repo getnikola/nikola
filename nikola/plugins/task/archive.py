@@ -133,7 +133,7 @@ class Archive(Task):
             for year, posts in archdata.items():
                 # Filter untranslated posts (Issue #1360)
                 if not kw["show_untranslated_posts"]:
-                    archdata[year] = [p for p in posts if lang in p.translated_to]
+                    posts = [p for p in posts if lang in p.translated_to]
 
                 # Add archive per year or total archive
                 if year:
