@@ -235,7 +235,7 @@ class Galleries(Task, ImageProcessor):
                     folders.append((folder, ft))
 
                 context["folders"] = natsort.natsorted(
-                    folders, alg=natsort.ns.L | natsort.ns.F | natsort.ns.IC)
+                    folders, alg=natsort.ns.F | natsort.ns.IC)
                 context["crumbs"] = crumbs
                 context["permalink"] = self.site.link("gallery", gallery, lang)
                 context["enable_comments"] = self.kw['comments_in_galleries']
