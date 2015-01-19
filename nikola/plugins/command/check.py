@@ -33,27 +33,35 @@ try:
     from urlparse import urlparse, urljoin, urldefrag
 except ImportError:
     from urllib.parse import unquote, urlparse, urljoin, urldefrag  # NOQA
-import subprocess
+
+from io import TextIOWrapper, BytesIO
 
 import lxml.html
 
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger
+from nikola import __main__
 
 
 def _call_nikola_list(site, arguments):
-    command = ["nikola"]
+    command_args = []
     if site.configuration_filename != 'conf.py':
-        command.append('--conf=' + site.configuration_filename)
-    command.extend(["list", "--all"])
-    result = []
-    if os.name == 'nt':
-        shell = True
-        command = ' '.join(command)
-    else:
-        shell = False
-    for task in subprocess.Popen(command, shell=shell, stdout=subprocess.PIPE).stdout.readlines():
-        result.append(task.decode('utf-8'))
+        command_args.append('--conf=' + site.configuration_filename)
+    command_args.extend(["list", "--all"])
+
+    with TextIOWrapper(BytesIO(), sys.stdout.encoding) as grabber, TextIOWrapper(BytesIO(), sys.stdout.encoding) as grabber2:
+        stdout_save = sys.stdout
+        stderr_save = sys.stderr
+        try:
+            sys.stdout = grabber
+            sys.stderr = grabber2
+            __main__.main(command_args)
+        finally:
+            sys.stdout = stdout_save
+            sys.stderr = stderr_save
+
+        grabber.seek(0)
+        result = grabber.readlines()
     return result
 
 
