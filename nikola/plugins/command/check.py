@@ -42,11 +42,13 @@ from nikola.utils import get_logger
 
 def _call_nikola_list(site, arguments):
     l = site.doit.sub_cmds['list']
+
     class NotReallyAStream(object):
-        """Unbreaking IO and Unicode."""
+        """A massive hack."""
         out = []
         def write(self, t):
             self.out.append(t)
+
     oldstream = l.outstream
     newstream = NotReallyAStream()
     try:
