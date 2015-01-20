@@ -34,35 +34,27 @@ try:
 except ImportError:
     from urllib.parse import unquote, urlparse, urljoin, urldefrag  # NOQA
 
-from io import TextIOWrapper, BytesIO
-
 import lxml.html
 
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger
-from nikola import __main__
 
 
 def _call_nikola_list(site, arguments):
-    command_args = []
-    if site.configuration_filename != 'conf.py':
-        command_args.append('--conf=' + site.configuration_filename)
-    command_args.extend(["list", "--all"])
-
-    with TextIOWrapper(BytesIO(), sys.stdout.encoding) as grabber, TextIOWrapper(BytesIO(), sys.stdout.encoding) as grabber2:
-        stdout_save = sys.stdout
-        stderr_save = sys.stderr
-        try:
-            sys.stdout = grabber
-            sys.stderr = grabber2
-            __main__.main(command_args)
-        finally:
-            sys.stdout = stdout_save
-            sys.stderr = stderr_save
-
-        grabber.seek(0)
-        result = grabber.readlines()
-    return result
+    l = site.doit.sub_cmds['list']
+    class NotReallyAStream(object):
+        """Unbreaking IO and Unicode."""
+        out = ''
+        def write(self, t):
+            self.out += t
+    oldstream = l.outstream
+    newstream = NotReallyAStream()
+    try:
+        l.outstream = newstream
+        l.parse_execute(arguments)
+        return newstream.out
+    finally:
+        l.outstream = oldstream
 
 
 def real_scan_files(site):
@@ -70,7 +62,7 @@ def real_scan_files(site):
     real_fnames = set([])
     output_folder = site.config['OUTPUT_FOLDER']
     # First check that all targets are generated in the right places
-    for task in _call_nikola_list(site, ["--all"]):
+    for task in _call_nikola_list(site, ["--all"]).split('\n'):
         task = task.strip()
         if output_folder in task and ':' in task:
             fname = task.split(':', 1)[-1]
