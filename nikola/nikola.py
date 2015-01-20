@@ -1530,6 +1530,7 @@ class Nikola(object):
         kw["indexes_pages_main"] = self.config['INDEXES_PAGES_MAIN']
         kw["indexes_static"] = self.config['INDEXES_STATIC']
         kw['indexes_prety_page_url'] = self.config["INDEXES_PRETTY_PAGE_URL"]
+        kw['demote_headers'] = self.config['DEMOTE_HEADERS']
 
         # Split in smaller lists
         lists = []
