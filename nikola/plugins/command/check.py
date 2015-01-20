@@ -44,9 +44,9 @@ def _call_nikola_list(site, arguments):
     l = site.doit.sub_cmds['list']
     class NotReallyAStream(object):
         """Unbreaking IO and Unicode."""
-        out = ''
+        out = []
         def write(self, t):
-            self.out += t
+            self.out.append(t)
     oldstream = l.outstream
     newstream = NotReallyAStream()
     try:
@@ -62,7 +62,7 @@ def real_scan_files(site):
     real_fnames = set([])
     output_folder = site.config['OUTPUT_FOLDER']
     # First check that all targets are generated in the right places
-    for task in _call_nikola_list(site, ["--all"]).split('\n'):
+    for task in _call_nikola_list(site, ["--all"]):
         task = task.strip()
         if output_folder in task and ':' in task:
             fname = task.split(':', 1)[-1]
