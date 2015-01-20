@@ -46,6 +46,7 @@ def _call_nikola_list(site, arguments):
     class NotReallyAStream(object):
         """A massive hack."""
         out = []
+
         def write(self, t):
             self.out.append(t)
 
