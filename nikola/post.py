@@ -37,6 +37,8 @@ try:
 except ImportError:
     from urllib.parse import urljoin  # NOQA
 
+from . import utils
+
 import dateutil.tz
 import lxml.html
 import natsort
@@ -363,7 +365,14 @@ class Post(object):
            includes the HTML resulting from compiling the fragment ('page' or
            'both').
 
-        If ``lang`` is not specified, this dependency is added for all languages."""
+        If ``lang`` is not specified, this dependency is added for all languages.
+
+        Example:
+
+        post.add_dependency_uptodate(
+            utils.config_changed({1: some_data}, 'uniqueid'), False, 'page')
+
+        """
         if add == 'fragment' or add == 'both':
             self._dependency_uptodate_fragment[lang].append((is_callable, dependency))
         if add == 'page' or add == 'both':
@@ -408,6 +417,7 @@ class Post(object):
         deps = []
         deps += self._get_dependencies(self._dependency_uptodate_page[lang])
         deps += self._get_dependencies(self._dependency_uptodate_page[None])
+        deps.append(utils.config_changed({1: sorted(self.compiler.config_dependencies)}, 'nikola.post.Post.deps_uptodate:compiler:' + self.source_path))
         return deps
 
     def compile(self, lang):
@@ -464,6 +474,7 @@ class Post(object):
         deps = []
         deps += self._get_dependencies(self._dependency_uptodate_fragment[lang])
         deps += self._get_dependencies(self._dependency_uptodate_fragment[None])
+        deps.append(utils.config_changed({1: sorted(self.compiler.config_dependencies)}, 'nikola.post.Post.deps_uptodate:compiler:' + self.source_path))
         return deps
 
     def is_translation_available(self, lang):

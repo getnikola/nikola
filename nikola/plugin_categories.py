@@ -224,6 +224,7 @@ class PageCompiler(BasePlugin):
         'description': '',
         'type': 'text',
     }
+    config_dependencies = []
 
     def register_extra_dependencies(self, post):
         """Add additional dependencies to the post object.
