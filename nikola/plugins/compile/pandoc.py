@@ -46,7 +46,7 @@ class CompilePandoc(PageCompiler):
     name = "pandoc"
 
     def set_site(self, site):
-        self.config_dependencies = [self.site.config['PANDOC_OPTIONS']]
+        self.config_dependencies = [str(self.site.config['PANDOC_OPTIONS'])]
 
     def compile_html(self, source, dest, is_two_file=True):
         makedirs(os.path.dirname(dest))
