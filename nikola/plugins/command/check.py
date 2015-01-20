@@ -34,35 +34,30 @@ try:
 except ImportError:
     from urllib.parse import unquote, urlparse, urljoin, urldefrag  # NOQA
 
-from io import TextIOWrapper, BytesIO
-
 import lxml.html
 
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger
-from nikola import __main__
 
 
 def _call_nikola_list(site, arguments):
-    command_args = []
-    if site.configuration_filename != 'conf.py':
-        command_args.append('--conf=' + site.configuration_filename)
-    command_args.extend(["list", "--all"])
+    l = site.doit.sub_cmds['list']
 
-    with TextIOWrapper(BytesIO(), sys.stdout.encoding) as grabber, TextIOWrapper(BytesIO(), sys.stdout.encoding) as grabber2:
-        stdout_save = sys.stdout
-        stderr_save = sys.stderr
-        try:
-            sys.stdout = grabber
-            sys.stderr = grabber2
-            __main__.main(command_args)
-        finally:
-            sys.stdout = stdout_save
-            sys.stderr = stderr_save
+    class NotReallyAStream(object):
+        """A massive hack."""
+        out = []
 
-        grabber.seek(0)
-        result = grabber.readlines()
-    return result
+        def write(self, t):
+            self.out.append(t)
+
+    oldstream = l.outstream
+    newstream = NotReallyAStream()
+    try:
+        l.outstream = newstream
+        l.parse_execute(arguments)
+        return newstream.out
+    finally:
+        l.outstream = oldstream
 
 
 def real_scan_files(site):
