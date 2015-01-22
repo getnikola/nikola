@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Fix ``.islink`` detection for galleries (via Issue #1536)
 * Links to languages point to site root and not the blog (Issue #1008)
 * Brand link is now language-specific (Issue #1573)
 * Fixed compatibility with IPython 3.x (Issue #1581)
