@@ -30,7 +30,7 @@ def _get_localzone():
     try:
         # link will be something like /usr/share/zoneinfo/America/Los_Angeles.
         link = os.readlink('/etc/localtime')
-        tz = link[link.rfind('/', 0, link.rfind('/')) + 1:]
+        tz = link.split('zoneinfo/')[-1]
 
         if tz:
             dateutil.tz.gettz(tz)

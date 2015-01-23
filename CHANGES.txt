@@ -10,12 +10,14 @@ Features
 Bugfixes
 --------
 
+* Correctly read sub-timezones in ``nikola init`` (via Issue #1599)
 * Fix zoneinfo reading in ``nikola init`` (Issue #1599)
 * Fix ``.islink`` detection for galleries (via Issue #1536)
 * Links to languages point to site root and not the blog (Issue #1008)
 * Brand link is now language-specific (Issue #1573)
 * Fixed compatibility with IPython 3.x (Issue #1581)
-* Compilers mark tasks as out of date if compiler-specific options and plugins change (Issue #1523)
+* Compilers mark tasks as out of date if compiler-specific options and
+  plugins change (Issue #1523)
 
 New in v7.3.0
 =============
