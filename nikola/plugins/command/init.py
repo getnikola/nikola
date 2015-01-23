@@ -319,13 +319,15 @@ class CommandInit(Command):
                 tz = dateutil.tz.gettz(answer)
 
                 if tz is None:
-                    print("    WARNING: Time zone not found.  Searching most common timezones for a match.")
-                    zonesfile = tarfile.TarFile.open(os.path.join(dateutil.zoneinfo.ZONEINFOFILE))
+                    print("    WARNING: Time zone not found.  Searching list of time zones for a match.")
+                    zonesfile = tarfile.open(fileobj=dateutil.zoneinfo.getzoneinfofile_stream())
                     zonenames = [zone for zone in zonesfile.getnames() if answer.lower() in zone.lower()]
                     if len(zonenames) == 1:
                         tz = dateutil.tz.gettz(zonenames[0])
+                        answer = zonenames[0]
+                        print("    Picking '{0}'.".format(answer))
                     elif len(zonenames) > 1:
-                        print("    Could not pick one timezone. Choose one of the following:")
+                        print("    The following time zones match your query:")
                         print('        ' + '\n        '.join(zonenames))
                         continue
 
@@ -334,7 +336,7 @@ class CommandInit(Command):
                     print("    Current time in {0}: {1}".format(answer, time))
                     answered = ask_yesno("Use this time zone?", True)
                 else:
-                    print("    ERROR: Time zone not found.  Please try again.  Time zones are case-sensitive.")
+                    print("    ERROR: No matches found.  Please try again.")
 
             SAMPLE_CONF['TIMEZONE'] = answer
 
