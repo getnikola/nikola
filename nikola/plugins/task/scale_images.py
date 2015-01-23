@@ -36,6 +36,10 @@ class ScaleImage(Task, ImageProcessor):
 
     name = "scale_images"
 
+    def set_site(self, site):
+        self.logger = utils.get_logger('scale_images', site.loghandlers)
+        return super(ScaleImage, self).set_site(site)
+
     def process_tree(self, src, dst):
         """Processes all images in a src tree and put the (possibly) rescaled
         images in the dst folder."""
