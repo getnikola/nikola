@@ -50,6 +50,10 @@ __ http://users.getnikola.com/
 .. _image galleries: http://getnikola.com/galleries/demo/
 __ https://www.transifex.com/projects/p/nikola/
 
+Nikola Architecture
+-------------------
+.. image:: /docs/architecture/nikola-architecture-draw-io.png
+
 Installation Instructions
 -------------------------
 
