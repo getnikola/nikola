@@ -34,6 +34,9 @@ class FakeCompiler(object):
     compile_html = None
     extension = lambda self: '.html'
 
+    def read_metadata(*args, **kwargs):
+        return {}
+
     def register_extra_dependencies(self, post):
         pass
 

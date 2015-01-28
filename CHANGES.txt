@@ -26,6 +26,7 @@ New in v7.3.0
 Features
 --------
 
+* Added possibility for plugins to define how to read metadata from files
 * Added ``-a``, ``--author`` option to set post author field
 * Added option INDEXES_PRETTY_PAGE_URL to make URLs for indexes
   pages more pretty. (Issue #1548)

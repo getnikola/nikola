@@ -9,6 +9,7 @@ Aurelien Naldi <https://github.com/aurelien-naldi>
 Ben Mather <https://github.com/bwhmather>
 Boris Kaul <https://github.com/localvoid>
 Brandon W. Maister <https://github.com/quodlibetor>
+Bussonnier Matthias <https://gtihub.com/carreau>
 Carsten Grohmann <https://github.com/CarstenGrohmann>
 Casey M. Bessette <https://github.com/caseybessette>
 Chris Lee <https://github.com/clee>

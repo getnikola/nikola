@@ -374,6 +374,10 @@ They must provide:
 If the compiler produces something other than HTML files, it should also implement ``extension`` which
 returns the preferred extension for the output file.
 
+These plugin can also be used to extract metadata from file. To do so, the
+plugin may implement ``read_metadata`` that will return a dict containing some
+metadata contained in the file.
+
 RestExtension Plugins
 ---------------------
 
