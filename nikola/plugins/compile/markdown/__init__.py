@@ -76,7 +76,7 @@ class CompileMarkdown(PageCompiler):
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
             if not is_two_file:
-                data = re.split('(\n\n|\r\n\r\n)', data, maxsplit=1)[-1]
+                data = re.split('(\-\->)', data, maxsplit=1)[-1]
             output = markdown(data, self.extensions)
             out_file.write(output)
 
