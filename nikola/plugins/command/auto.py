@@ -63,23 +63,29 @@ class CommandAuto(Command):
             req_missing(['livereload'], 'use the "auto" command')
             return
 
+        arguments = ['build']
+        if self.site.configuration_filename != 'conf.py':
+            arguments = ['--conf=' + self.site.configuration_filename] + arguments
+
+        command_line = 'nikola' + ' '.join(arguments)
+
         # Run an initial build so we are up-to-date
-        subprocess.call(("nikola", "build"))
+        subprocess.call(["nikola"] + arguments)
 
         port = options and options.get('port')
 
         server = Server()
-        server.watch('conf.py', 'nikola build')
-        server.watch('themes/', 'nikola build')
-        server.watch('templates/', 'nikola build')
+        server.watch(self.site.configuration_filename, command_line)
+        server.watch('themes/', command_line)
+        server.watch('templates/', command_line)
         for item in self.site.config['post_pages']:
-            server.watch(os.path.dirname(item[0]), 'nikola build')
+            server.watch(os.path.dirname(item[0]), command_line)
         for item in self.site.config['FILES_FOLDERS']:
-            server.watch(item, 'nikola build')
+            server.watch(item, command_line)
         for item in self.site.config['GALLERY_FOLDERS']:
-            server.watch(item, 'nikola build')
+            server.watch(item, command_line)
         for item in self.site.config['LISTINGS_FOLDERS']:
-            server.watch(item, 'nikola build')
+            server.watch(item, command_line)
 
         out_folder = self.site.config['OUTPUT_FOLDER']
         if options and options.get('browser'):
