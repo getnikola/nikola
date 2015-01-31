@@ -68,8 +68,8 @@ class ScaleImage(Task, ImageProcessor):
                 }
 
     def process_image(self, src, dst):
-        self.resize_image(src, dst, self.kw['max_image_size'])
-        self.resize_image(src, '.thumbnail'.join(os.path.splitext(dst)), self.kw['thumbnail_size'])
+        self.resize_image(src, dst, self.kw['max_image_size'], False)
+        self.resize_image(src, '.thumbnail'.join(os.path.splitext(dst)), self.kw['thumbnail_size'], False)
 
     def gen_tasks(self):
         """Copy static files into the output folder."""
