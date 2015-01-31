@@ -335,6 +335,7 @@ class Nikola(object):
             'INDEX_DISPLAY_POST_COUNT': 10,
             'INDEX_FILE': 'index.html',
             'INDEX_TEASERS': False,
+            'IMAGE_THUMBNAIL_SIZE': 400,
             'INDEXES_TITLE': "",
             'INDEXES_PAGES': "",
             'INDEXES_PAGES_MAIN': False,

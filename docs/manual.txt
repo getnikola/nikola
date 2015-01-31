@@ -1251,6 +1251,7 @@ The ``conf.py`` options affecting images and gallery pages are these::
     IMAGE_FOLDERS = {'images': ''}
     # More image/gallery options:
     THUMBNAIL_SIZE = 180
+    IMAGE_THUMBNAIL_SIZE = 400
     MAX_IMAGE_SIZE = 1280
     USE_FILENAME_AS_TITLE = True
     EXTRA_IMAGE_EXTENSIONS = []
