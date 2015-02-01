@@ -1141,8 +1141,8 @@ Nikola supports several third party comment systems:
 * `isso <http://posativ.org/isso/>`_
 
 By default it will use DISQUS, but you can change by setting ``COMMENT_SYSTEM``
-to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus" or
-"facebook"
+to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus",
+"facebook" or "isso"
 
 .. sidebar:: ``COMMENT_SYSTEM_ID``
 
