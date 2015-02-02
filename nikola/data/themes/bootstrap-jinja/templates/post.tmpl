@@ -14,10 +14,10 @@
     {% endif %}
     <meta name="author" content="{{ post.author() }}">
     {% if post.prev_post %}
-        <link rel="prev" href="{{ post.prev_post.permalink() }}" title="{{ post.prev_post.title() }}" type="text/html">
+        <link rel="prev" href="{{ post.prev_post.permalink() }}" title="{{ post.prev_post.title()|e }}" type="text/html">
     {% endif %}
     {% if post.next_post %}
-        <link rel="next" href="{{ post.next_post.permalink() }}" title="{{ post.next_post.title() }}" type="text/html">
+        <link rel="next" href="{{ post.next_post.permalink() }}" title="{{ post.next_post.title()|e }}" type="text/html">
     {% endif %}
     {% if post.is_draft %}
         <meta name="robots" content="noindex">
