@@ -4,7 +4,7 @@
 
 <%def name="html_title()">
 %if title and not post.meta('hidetitle'):
-    <h1 class="p-name entry-title" itemprop="headline name"><a href="${post.permalink()}" class="u-url">${title|h}</a></h1>
+    <h1 class="p-name entry-title" itemprop="headline name"><a href="${post.permalink()}" class="u-url">${post.title()|h}</a></h1>
 %endif
 </%def>
 

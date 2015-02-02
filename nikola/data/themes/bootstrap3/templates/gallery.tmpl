@@ -7,7 +7,7 @@
 <%block name="content">
     ${ui.bar(crumbs)}
     %if title:
-    <h1>${title}</h1>
+    <h1>${title|h}</h1>
     %endif
     %if post:
     <p>
@@ -17,8 +17,7 @@
     %if folders:
     <ul>
     % for folder, ftitle in folders:
-        <li><a href="${folder}"><i class="glyphicon
-        glyphicon-folder-open"></i>&nbsp;${ftitle}</a></li>
+        <li><a href="${folder}"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;${ftitle}</a></li>
     % endfor
     </ul>
     %endif
