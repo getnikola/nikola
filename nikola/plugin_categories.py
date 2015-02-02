@@ -245,6 +245,12 @@ class PageCompiler(BasePlugin):
         """The preferred extension for the output of this compiler."""
         return ".html"
 
+    def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
+        """
+        Read the metadata from a post, and return a metadata dict
+        """
+        return {}
+
 
 class RestExtension(BasePlugin):
     name = "dummy_rest_extension"

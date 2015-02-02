@@ -69,6 +69,19 @@ class CompileIPynb(PageCompiler):
             (body, resources) = exportHtml.from_notebook_node(nb_json)
             out_file.write(body)
 
+    def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
+        """read metadata directly from ipynb file.
+
+        As ipynb file support arbitrary metadata as json, the metadata used by Nikola
+        will be assume to be in the 'nikola' subfield.
+        """
+        source = post.source_path
+        with io.open(source, "r", encoding="utf8") as in_file:
+            nb_json = nbformat.read(in_file, current_nbformat)
+        # metadata shoudl always exist, but we never know
+        # if Someone craft an ipynb by hand.
+        return nb_json.get('metadata', {}).get('nikola', {})
+
     def create_post(self, path, **kw):
         content = kw.pop('content', None)
         onefile = kw.pop('onefile', False)
