@@ -250,7 +250,7 @@ If you want to do something that depends on the data in your site, you
 probably want to do a Task plugin, which will make it be part of the
 ``nikola build`` command. There are the currently available tasks, all
 provided by plugins:
-
+T
 .. sidebar:: Other Tasks
 
     There are also ``LateTask`` plugins, which are executed later,
@@ -374,8 +374,8 @@ They must provide:
 If the compiler produces something other than HTML files, it should also implement ``extension`` which
 returns the preferred extension for the output file.
 
-These plugin can also be used to extract metadata from file. To do so, the
-plugin may implement ``read_metadata`` that will return a dict containing some
+These plugins can also be used to extract metadata from file. To do so, the
+plugin may implement ``read_metadata`` that will return a dict containing the
 metadata contained in the file.
 
 RestExtension Plugins
