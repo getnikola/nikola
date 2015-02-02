@@ -16,7 +16,7 @@ def _get_localzone():
     if not tzname:
         # link will be something like /usr/share/zoneinfo/America/Los_Angeles.
         link = os.readlink("/etc/localtime")
-        tzname = link[link.rfind('/', 0, link.rfind('/')) + 1:]
+        tzname = link.split('zoneinfo/')[-1]
     tzname = tzname.strip()
     try:
         # test the name
