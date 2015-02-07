@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Fix ``nikola deploy`` when there is no cache (Issue #1615)
 * Report issues in scale_images properly (Issue #1598)
 * Correctly read sub-timezones in ``nikola init`` (via Issue #1599)
 * Fix zoneinfo reading in ``nikola init`` (Issue #1599)
