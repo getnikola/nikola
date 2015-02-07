@@ -165,8 +165,8 @@ LEGAL_VALUES = {
         ko='kr',  # kr is South Korea, ko is the Korean language
         nb='no',
         nl='nl',
-        pt_br='pt-br',
         pl='pl',
+        pt_br='pt-br',
         ru='ru',
         sk='sk',
         sl='si',  # country code is si, language code is sl, colorbox is wrong
@@ -197,8 +197,8 @@ LEGAL_VALUES = {
         ko='ko',
         nb='nb',
         nl='nl',
-        pt_br='pt-br',
         pl='pl',
+        pt_br='pt-br',
         ru='ru',
         sk='sk',
         sl='sl',
@@ -207,6 +207,30 @@ LEGAL_VALUES = {
         tr='tr',
         zh_cn='zh-cn'
     ),
+    'PYPHEN_LOCALES': {
+        'bg': 'bg',
+        'ca': 'ca',
+        'cs': 'cs',
+        'cz': 'cs',
+        'da': 'da',
+        'de': 'de',
+        'el': 'el',
+        'en': 'en',
+        'es': 'es',
+        'et': 'et',
+        'fr': 'fr',
+        'hr': 'hr',
+        'it': 'it',
+        'nb': 'nb',
+        'nl': 'nl',
+        'pl': 'pl',
+        'pt_br': 'pt_BR',
+        'ru': 'ru',
+        'sk': 'sk',
+        'sl': 'sl',
+        'sr': 'sr',
+        'sv': 'sv',
+    },
 }
 
 

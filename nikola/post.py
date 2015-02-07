@@ -955,9 +955,18 @@ def get_meta(post, file_metadata_regexp=None, unslugify_titles=False, lang=None)
     return meta, newstylemeta
 
 
-def hyphenate(dom, lang):
-    if pyphen is not None:
-        hyphenator = pyphen.Pyphen(lang=lang)
+def hyphenate(dom, _lang):
+    # circular import prevention
+    from .nikola import LEGAL_VALUES
+    lang = LEGAL_VALUES['PYPHEN_LOCALES'].get(_lang, pyphen.language_fallback(_lang))
+    if pyphen is not None and lang is not None:
+        # If pyphen does exist, we tell the user when configuring the site.
+        # If it does not support a language, we ignore it quietly.
+        try:
+            hyphenator = pyphen.Pyphen(lang=lang)
+        except KeyError:
+            LOGGER.error("Cannot find hyphenation dictoniaries for {0} (from {1}).".format(lang, _lang))
+            LOGGER.error("Pyphen cannot be installed to ~/.local (pip install --user).")
         for tag in ('p', 'li', 'span'):
             for node in dom.xpath("//%s[not(parent::pre)]" % tag):
                 math_found = False

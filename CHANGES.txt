@@ -10,6 +10,8 @@ Features
 Bugfixes
 --------
 
+* Use pyphen properly when there are no dictionaries for this language
+  (Issue #1613)
 * Fix ``nikola deploy`` when there is no cache (Issue #1615)
 * Report issues in scale_images properly (Issue #1598)
 * Correctly read sub-timezones in ``nikola init`` (via Issue #1599)
