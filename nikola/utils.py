@@ -615,7 +615,7 @@ def load_messages(themes, translations, default_lang):
             try:
                 translation = __import__('messages_' + lang)
                 # If we don't do the reload, the module is cached
-                reload(translation)
+                _reload(translation)
                 if sorted(translation.MESSAGES.keys()) !=\
                         sorted(english.MESSAGES.keys()) and \
                         lang not in warned:
