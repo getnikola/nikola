@@ -41,35 +41,20 @@ try:
 except ImportError:
     from urllib.parse import urlparse, urlsplit, urljoin  # NOQA
 
-from blinker import signal
 try:
     import pyphen
 except ImportError:
     pyphen = None
+
 import dateutil.tz
-
 import logging
-from . import DEBUG
-
-if DEBUG:
-    logging.basicConfig(level=logging.DEBUG)
-else:
-    logging.basicConfig(level=logging.ERROR)
-
 import PyRSS2Gen as rss
-
 import lxml.html
 from yapsy.PluginManager import PluginManager
-
-# Default "Read more..." link
-DEFAULT_INDEX_READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
-DEFAULT_RSS_READ_MORE_LINK = '<p><a href="{link}">{read_more}…</a> ({min_remaining_read})</p>'
-
-# Default pattern for translation files' names
-DEFAULT_TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
+from blinker import signal
 
 from .post import Post
-from . import utils
+from . import DEBUG, utils
 from .plugin_categories import (
     Command,
     LateTask,
@@ -82,6 +67,18 @@ from .plugin_categories import (
     SignalHandler,
     ConfigPlugin,
 )
+
+if DEBUG:
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.ERROR)
+
+# Default "Read more..." link
+DEFAULT_INDEX_READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
+DEFAULT_RSS_READ_MORE_LINK = '<p><a href="{link}">{read_more}…</a> ({min_remaining_read})</p>'
+
+# Default pattern for translation files' names
+DEFAULT_TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
 
 
 config_changed = utils.config_changed

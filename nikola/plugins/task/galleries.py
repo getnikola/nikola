@@ -38,7 +38,6 @@ except ImportError:
     from urllib.parse import urljoin  # NOQA
 
 import natsort
-Image = None
 try:
     from PIL import Image  # NOQA
 except ImportError:
@@ -46,7 +45,7 @@ except ImportError:
         import Image as _Image
         Image = _Image
     except ImportError:
-        pass
+        Image = None
 
 import PyRSS2Gen as rss
 
