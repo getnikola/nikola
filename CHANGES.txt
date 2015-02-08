@@ -4,11 +4,12 @@ New in master
 Features
 --------
 
+* Separate new option IMAGE_THUMBNAIL_SIZE for setting size of
+  thumbnails created by scale_images plugin (Issue #1606)
+* Don't create larger thumbnails for panorama images in scale_images
+  (Issue #1606)
 * Added ``root`` path handler (via Issues #1008, #1573)
 * Added RSS feeds to gallery HEAD (part of Issue #786)
-* Separate new option IMAGE_THUMBNAIL_SIZE for setting size of
-  thumbnails created by scale_images plugin. Also don't create larger
-  thumbnails for panorama images in scale_images.
 
 Bugfixes
 --------
