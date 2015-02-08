@@ -37,6 +37,8 @@ try:
 except ImportError:
     from urllib.parse import urlunsplit  # NOQA
 
+import docutils.parsers.rst.directives.body
+import docutils.parsers.rst.directives.misc
 from docutils import core
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
@@ -48,6 +50,7 @@ import pygments
 import pygments.util
 
 from nikola import utils
+from nikola.plugin_categories import RestExtension
 
 
 # A sanitized version of docutils.parsers.rst.directives.body.CodeBlock.
@@ -115,12 +118,8 @@ class CodeBlock(Directive):
         return [node]
 
 # Monkey-patch: replace insane docutils CodeBlock with our implementation.
-import docutils.parsers.rst.directives.body
-import docutils.parsers.rst.directives.misc
 docutils.parsers.rst.directives.body.CodeBlock = CodeBlock
 docutils.parsers.rst.directives.misc.CodeBlock = CodeBlock
-
-from nikola.plugin_categories import RestExtension
 
 
 class Plugin(RestExtension):

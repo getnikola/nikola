@@ -27,7 +27,6 @@
 """Utility functions."""
 
 from __future__ import print_function, unicode_literals, absolute_import
-from collections import defaultdict, Callable
 import calendar
 import datetime
 import dateutil.tz
@@ -42,19 +41,49 @@ import json
 import shutil
 import subprocess
 import sys
-from zipfile import ZipFile as zipf
-try:
-    from imp import reload
-except ImportError:
-    pass
-
 import dateutil.parser
 import dateutil.tz
 import logbook
+import warnings
+import PyRSS2Gen as rss
+from collections import defaultdict, Callable
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
 from pygments.formatters import HtmlFormatter
+from zipfile import ZipFile as zipf
+from doit import tools
+from unidecode import unidecode
+from pkg_resources import resource_filename
+from doit.cmdparse import CmdParse
 
 from nikola import DEBUG
+
+__all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
+           'copy_file', 'slugify', 'unslugify', 'to_datetime', 'apply_filters',
+           'config_changed', 'get_crumbs', 'get_tzname', 'get_asset_path',
+           '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
+           'TranslatableSetting', 'TemplateHookRegistry', 'LocaleBorg',
+           'sys_encode', 'sys_decode', 'makedirs', 'get_parent_theme_name',
+           'demote_headers', 'get_translation_candidate', 'write_metadata',
+           'ask', 'ask_yesno', 'options2docstring', 'os_path_split',
+           'get_displayed_page_number', 'adjust_name_for_index_path_list',
+           'adjust_name_for_index_path', 'adjust_name_for_index_link',
+           'NikolaPygmentsHTML', 'create_redirect']
+
+# Are you looking for 'generic_rss_renderer'?
+# It's defined in nikola.nikola.Nikola (the site object).
+
+if sys.version_info[0] == 3:
+    # Python 3
+    bytes_str = bytes
+    unicode_str = str
+    unichr = chr
+    raw_input = input
+    from imp import reload as _reload
+else:
+    bytes_str = str
+    unicode_str = unicode  # NOQA
+    _reload = reload  # NOQA
+    unichr = unichr
 
 
 class ApplicationWarning(Exception):
@@ -98,9 +127,6 @@ if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
 else:
     logging.basicConfig(level=logging.INFO)
-
-
-import warnings
 
 
 def showwarning(message, category, filename, lineno, file=None, line=None):
@@ -159,42 +185,8 @@ def req_missing(names, purpose, python=True, optional=False):
 
     return msg
 
-if sys.version_info[0] == 3:
-    # Python 3
-    bytes_str = bytes
-    unicode_str = str
-    unichr = chr
-    raw_input = input
-    from imp import reload as _reload
-else:
-    bytes_str = str
-    unicode_str = unicode  # NOQA
-    _reload = reload  # NOQA
-    unichr = unichr
 
-from doit import tools
-from unidecode import unidecode
-from pkg_resources import resource_filename
-from nikola import filters as task_filters
-
-import PyRSS2Gen as rss
-
-__all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
-           'copy_file', 'slugify', 'unslugify', 'to_datetime', 'apply_filters',
-           'config_changed', 'get_crumbs', 'get_tzname', 'get_asset_path',
-           '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
-           'TranslatableSetting', 'TemplateHookRegistry', 'LocaleBorg',
-           'sys_encode', 'sys_decode', 'makedirs', 'get_parent_theme_name',
-           'demote_headers', 'get_translation_candidate', 'write_metadata',
-           'ask', 'ask_yesno', 'options2docstring', 'os_path_split',
-           'get_displayed_page_number', 'adjust_name_for_index_path_list',
-           'adjust_name_for_index_path', 'adjust_name_for_index_link',
-           'NikolaPygmentsHTML', 'create_redirect']
-
-# Are you looking for 'generic_rss_renderer'?
-# It's defined in nikola.nikola.Nikola (the site object).
-
-
+from nikola import filters as task_filters  # NOQA
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
 
 
@@ -623,7 +615,7 @@ def load_messages(themes, translations, default_lang):
             try:
                 translation = __import__('messages_' + lang)
                 # If we don't do the reload, the module is cached
-                reload(translation)
+                _reload(translation)
                 if sorted(translation.MESSAGES.keys()) !=\
                         sorted(english.MESSAGES.keys()) and \
                         lang not in warned:
@@ -1287,10 +1279,6 @@ def ask_yesno(query, default=None):
         return ask_yesno(query, default)
 
 
-from nikola.plugin_categories import Command
-from doit.cmdparse import CmdParse
-
-
 class CommandWrapper(object):
     """Converts commands into functions."""
 
@@ -1341,6 +1329,8 @@ class Commands(object):
         self.main.run(cmd_args)
 
     def _run_with_kw(self, cmd, *a, **kw):
+        # cyclic import hack
+        from nikola.plugin_categories import Command
         cmd = self.main.sub_cmds[cmd]
         options, _ = CmdParse(cmd.options).parse([])
         options.update(kw)

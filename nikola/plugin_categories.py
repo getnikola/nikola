@@ -28,6 +28,11 @@ from __future__ import absolute_import
 import sys
 import os
 
+from yapsy.IPlugin import IPlugin
+from doit.cmd_base import Command as DoitCommand
+
+from .utils import LOGGER, first_line
+
 __all__ = [
     'Command',
     'LateTask',
@@ -39,11 +44,6 @@ __all__ = [
     'TemplateSystem',
     'SignalHandler'
 ]
-
-from yapsy.IPlugin import IPlugin
-from doit.cmd_base import Command as DoitCommand
-
-from .utils import LOGGER, first_line
 
 
 class BasePlugin(IPlugin):
