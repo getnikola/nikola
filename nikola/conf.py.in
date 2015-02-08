@@ -420,12 +420,13 @@ REDIRECTIONS = ${REDIRECTIONS}
 # GALLERY_SORT_BY_DATE = True
 #
 # Folders containing images to be used in normal posts or
-# pages. Images will be scaled down according to THUMBNAIL_SIZE and
-# MAX_IMAGE_SIZE options, but will have to be referenced manually to
-# be visible on the site. The format is a dictionary of {source:
+# pages. Images will be scaled down according to IMAGE_THUMBNAIL_SIZE
+# and MAX_IMAGE_SIZE options, but will have to be referenced manually
+# to be visible on the site. The format is a dictionary of {source:
 # relative destination}.
 #
 # IMAGE_FOLDERS = {'images': ''}
+# IMAGE_THUMBNAIL_SIZE = 400
 
 # #############################################################################
 # HTML fragments and diverse things that are used by the templates

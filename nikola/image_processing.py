@@ -47,7 +47,7 @@ class ImageProcessor(object):
 
     image_ext_list_builtin = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.bmp', '.tiff']
 
-    def resize_image(self, src, dst, max_size):
+    def resize_image(self, src, dst, max_size, bigger_panoramas=True):
         """Make a copy of the image in the requested size."""
         if not Image:
             utils.copy_file(src, dst)
@@ -58,7 +58,7 @@ class ImageProcessor(object):
             size = max_size, max_size
 
             # Panoramas get larger thumbnails because they look *awful*
-            if w > 2 * h:
+            if bigger_panoramas and w > 2 * h:
                 size = min(w, max_size * 4), min(w, max_size * 4)
 
             try:
