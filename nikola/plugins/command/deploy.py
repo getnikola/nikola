@@ -36,7 +36,7 @@ import time
 from blinker import signal
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, remove_file, unicode_str
+from nikola.utils import get_logger, remove_file, unicode_str, makedirs
 
 
 class CommandDeploy(Command):
@@ -111,7 +111,7 @@ class CommandDeploy(Command):
         new_deploy = datetime.utcnow()
         self._emit_deploy_event(last_deploy, new_deploy, clean, undeployed_posts)
 
-        os.makedirs(self.site.config['CACHE_FOLDER'])
+        makedirs(self.site.config['CACHE_FOLDER'])
         # Store timestamp of successful deployment
         with io.open(timestamp_path, 'w+', encoding='utf8') as outf:
             outf.write(unicode_str(new_deploy.isoformat()))
