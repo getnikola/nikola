@@ -1619,13 +1619,48 @@ with the tag ``nikola``::
    .. post-list::
       :tags: nikola
 
-Note that you can give the ``tags`` option a comma-separated list of tags, in
-which case the list will show all posts that have at least one of those tags.
-Other interesting options include ``start`` (set it to ``1``, for example, to
-show all but the last post); ``reverse`` (set to ``True`` to sort the list in
-chronological order, instead of the default latest-post-first); ``lang``
-(language to use for post titles and links); and ``slugs`` (allows you to filter
-by post slugs, instead of tags).
+The following options are recognized:
+
+* ``start`` : integer
+      The index of the first post to show.
+      A negative value like ``-3`` will show the *last* three posts in the
+      post-list.
+      Defaults to None.
+
+* ``stop`` : integer
+      The index of the last post to show.
+      A value negative value like ``-1`` will show every post, but not the
+      *last* in the post-list.
+      Defaults to None.
+
+* ``reverse`` : flag
+      Reverse the order of the post-list.
+      Defaults is to not reverse the order of posts.
+
+* ``tags`` : string [, string...]
+      Filter posts to show only posts having at least one of the ``tags``.
+
+      Defaults to None.
+
+* ``slugs`` : string [, string...]
+      Filter posts to show only posts having at least one of the ``slugs``.
+      Defaults to None.
+
+* ``all`` : flag
+      Shows all posts and pages in the post list.
+      Defaults to show only posts with set *use_in_feeds*.
+
+* ``lang`` : string
+      The language of post *titles* and *links*.
+      Defaults to default language.
+
+* ``template`` : string
+      The name of an alternative template to render the post-list.
+      Defaults to ``post_list_directive.tmpl``
+
+* ``id`` : string
+      A manual id for the post list.
+      Defaults to a random name composed by ``'post_list_' + uuid.uuid4().hex``.
 
 The post list directive uses the ``post_list_directive.tmpl`` template file (or
 another one, if you use the ``template`` option) to generate the list's HTML. By
