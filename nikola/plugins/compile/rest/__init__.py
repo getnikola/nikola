@@ -41,7 +41,7 @@ except ImportError:
     has_docutils = False
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import get_logger, makedirs, req_missing, write_metadata
+from nikola.utils import unicode_str, get_logger, makedirs, req_missing, write_metadata
 
 
 class CompileRest(PageCompiler):
@@ -97,6 +97,10 @@ class CompileRest(PageCompiler):
                         'math_output': 'mathjax',
                         'template': default_template_path,
                     }, logger=self.logger, source_path=source, l_add_ln=add_ln)
+                if not isinstance(output, unicode_str):
+                    # To prevent some weird bugs here or there.
+                    # Original issue: empty files.  `output` became a bytestring.
+                    output = output.decode('utf-8')
                 out_file.write(output)
             deps_path = dest + '.dep'
             if deps.list:
