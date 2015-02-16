@@ -271,8 +271,7 @@ class CommandImportWordpress(Command, ImportMixin):
         link = get_text_tag(item, '{{{0}}}link'.format(wordpress_namespace),
                             'foo')
         path = urlparse(url).path
-        dst_path = os.path.join(*([self.output_folder, 'files']
-                                  + list(path.split('/'))))
+        dst_path = os.path.join(*([self.output_folder, 'files'] + list(path.split('/'))))
         dst_dir = os.path.dirname(dst_path)
         utils.makedirs(dst_dir)
         LOGGER.info("Downloading {0} => {1}".format(url, dst_path))
@@ -327,8 +326,7 @@ class CommandImportWordpress(Command, ImportMixin):
                     url = '/'.join([source_path, filename.decode('utf-8')])
 
                     path = urlparse(url).path
-                    dst_path = os.path.join(*([self.output_folder, 'files']
-                                              + list(path.split('/'))))
+                    dst_path = os.path.join(*([self.output_folder, 'files'] + list(path.split('/'))))
                     dst_dir = os.path.dirname(dst_path)
                     utils.makedirs(dst_dir)
                     LOGGER.info("Downloading {0} => {1}".format(url, dst_path))

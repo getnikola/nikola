@@ -114,8 +114,7 @@ class JinjaTemplates(TemplateSystem):
                 ast = self.lookup.parse(source)
                 dep_names = meta.find_referenced_templates(ast)
                 for dep_name in dep_names:
-                    if (dep_name not in visited_templates
-                            and dep_name is not None):
+                    if (dep_name not in visited_templates and dep_name is not None):
                         visited_templates.add(dep_name)
                         queue.append(dep_name)
             self.dependency_cache[template_name] = deps

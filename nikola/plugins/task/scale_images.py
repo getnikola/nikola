@@ -54,8 +54,7 @@ class ScaleImage(Task, ImageProcessor):
             for src_name in files:
                 if src_name in ('.DS_Store', 'Thumbs.db'):
                     continue
-                if (not src_name.lower().endswith(tuple(self.image_ext_list))
-                        and not src_name.upper().endswith(tuple(self.image_ext_list))):
+                if (not src_name.lower().endswith(tuple(self.image_ext_list)) and not src_name.upper().endswith(tuple(self.image_ext_list))):
                     continue
                 dst_file = os.path.join(dst_dir, src_name)
                 src_file = os.path.join(root, src_name)
