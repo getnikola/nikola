@@ -5,7 +5,13 @@
 <nav class="breadcrumbs">
 <ul class="breadcrumb">
     % for link, text in crumbs:
-        <li><a href="${link}">${text}</a></li>
+        % if text != 'index.html':
+            % if link == '#':
+                <li>${text}</li>
+            % else:
+                <li><a href="${link}">${text}</a></li>
+            % endif
+        % endif
     % endfor
 </ul>
 </nav>
