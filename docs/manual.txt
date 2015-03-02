@@ -1526,7 +1526,9 @@ Thumbnails
 To include an image placed in the ``images`` folder (or other folders defined in ``IMAGE_FOLDERS``), use the
 ``thumbnail`` directive, like this::
 
-    .. thumbnail:: tesla.jpg
+    .. thumbnail:: ../tesla.jpg
+
+(make sure to check the file paths!)
 
 The small thumbnail will be placed in the page, and it will be linked to the bigger
 version of the image when clicked, using
@@ -1537,7 +1539,7 @@ thumbnail will mimic the behavior of the
 `figure <http://docutils.sourceforge.net/docs/ref/rst/directives.html#figure>`_
 directive instead::
 
-    .. thumbnail:: tesla.jpg
+    .. thumbnail:: ../tesla.jpg
 
        Nikola Tesla, the man that invented the 20th century.
 
