@@ -25,7 +25,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from __future__ import unicode_literals
 
-import os
 import uuid
 
 from docutils import nodes
