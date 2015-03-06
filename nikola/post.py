@@ -933,11 +933,13 @@ def get_meta(post, file_metadata_regexp=None, unslugify_titles=False, lang=None)
                                                          file_metadata_regexp,
                                                          unslugify_titles))
 
-    meta.update(get_metadata_from_file(post.source_path, config, lang))
-
     if getattr(post, 'compiler', None):
         compiler_meta = post.compiler.read_metadata(post, file_metadata_regexp, unslugify_titles, lang)
         meta.update(compiler_meta)
+
+    if not post.is_two_file:
+        # Meta file has precedence over file, which can contain garbage.
+        meta.update(get_metadata_from_file(post.source_path, config, lang))
 
     if lang is None:
         # Only perform these checks for the default language
