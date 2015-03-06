@@ -888,7 +888,10 @@ class Nikola(object):
                          "handle '{0}' extensions.".format(ext))
 
             lang = langs[0]
-            compile_html = self.compilers[lang]
+            try:
+                compile_html = self.compilers[lang]
+            except KeyError:
+                exit("Cannot find '{0}' compiler; it might require an extra plugin -- do you have it installed?".format(lang))
             self.inverse_compilers[ext] = compile_html
 
         return compile_html

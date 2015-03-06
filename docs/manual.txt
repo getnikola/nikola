@@ -305,7 +305,8 @@ Getting Started
 To create posts and pages in Nikola, you write them in one of the supported input formats.
 Those source files are later converted to HTML
 The recommended formats are reStructuredText and Markdown, but there is also support
-for textile and WikiCreole and even for just writing HTML.
+for Textile and WikiCreole and even for just writing HTML.  For more details,
+read  `Configuring other input formats`_.
 
 .. note:: There is a great `quick tutorial to learn reStructuredText. <http://getnikola.com/quickstart.html>`__
 
@@ -439,6 +440,7 @@ but you can use a lot of different markups using the ``-f`` option.
 Currently Nikola supports reStructuredText, Markdown, IPython Notebooks, HTML as input,
 can also use Pandoc for conversion, and has support for BBCode, CreoleWiki, txt2tags, Textile
 and more via `plugins <http://plugins.getnikola.com>`__.
+For more details, read  `Configuring other input formats`_.
 
 You can control what markup compiler is used for each file extension with the ``COMPILERS``
 option. The default configuration expects them to be placed in ``posts`` but that can be
@@ -797,6 +799,24 @@ styles the following types in the default themes:
 +-----------------+----------------------------+------------------+
 | micro           | “small” (short) posts      | big serif font   |
 +-----------------+----------------------------+------------------+
+
+Configuring other input formats
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In order to use input formats other than reStructuredText, you need some extra
+setup.
+
+1. Make sure you have the compiler for the input format you want.  Some
+   input formats are supported out-of-the-box, but others must be installed from
+   the Plugins repository.  You may also need some extra dependencies.  You
+   will get helpful errors if you try to build when missing something.
+2. You must ensure the compiler and your desired input file extension is included
+   in the ``COMPILERS`` dict and does not conflict with any other format.  This
+   is extremely important for the pandoc compiler.
+3. Finally, you must configure the ``POSTS`` and ``PAGES`` tuples.  Follow the
+   instructions and the format set by pre-existing entries.  Make sure to use
+   the same extension as is set in ``COMPILERS`` and configure the outputs
+   properly.
 
 Creating a Page
 ---------------
