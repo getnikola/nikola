@@ -25,6 +25,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from __future__ import unicode_literals
 
+import os
 import uuid
 
 from docutils import nodes
@@ -159,6 +160,8 @@ class PostList(Directive):
 
                 if cont:
                     continue
+
+            self.state.document.settings.record_dependencies.add(post.translated_base_path(lang))
 
             posts += [post]
 
