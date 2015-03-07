@@ -52,7 +52,8 @@ __ https://www.transifex.com/projects/p/nikola/
 
 Nikola Architecture
 -------------------
-.. image:: /docs/architecture/nikola-architecture-draw-io.png
+
+.. image:: https://getnikola.com/images/architecture.png
 
 Installation Instructions
 -------------------------

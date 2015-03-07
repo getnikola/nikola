@@ -140,3 +140,8 @@ themes
     To change how the generated site looks, you can create custom themes.
 
 And of course, you can also replace or extend each of the existing plugins.
+
+Nikola Architecture
+===================
+
+.. thumbnail:: https://getnikola.com/images/architecture.png
