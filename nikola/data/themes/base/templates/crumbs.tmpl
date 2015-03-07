@@ -5,7 +5,7 @@
 <nav class="breadcrumbs">
 <ul class="breadcrumb">
     % for link, text in crumbs:
-        % if text != 'index.html':
+        % if text != index_file:
             % if link == '#':
                 <li>${text}</li>
             % else:
