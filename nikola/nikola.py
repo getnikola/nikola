@@ -1473,7 +1473,7 @@ class Nikola(object):
             'actions': [(self.render_template, [post.template_name,
                                                 output_name, context])],
             'clean': True,
-            'uptodate': [config_changed(deps_dict, 'nikola.nikola.Nikola.generic_post_renderer')] + post.deps_uptodate(lang),
+            'uptodate': [config_changed(deps_dict, 'nikola.nikola.Nikola.generic_page_renderer')] + post.deps_uptodate(lang),
         }
 
         yield utils.apply_filters(task, filters)
