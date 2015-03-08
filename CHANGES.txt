@@ -1,3 +1,14 @@
+New in master
+=============
+
+Features
+--------
+
+Bugfixes
+--------
+
+* Listings in posts now work in Windows (Issue #1631)
+
 New in v7.3.1
 =============
 

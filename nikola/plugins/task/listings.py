@@ -236,6 +236,7 @@ class Listings(Task):
                         }, self.kw["filters"])
 
     def listing_path(self, namep, lang):
+        namep = namep.replace('/', os.sep)
         nameh = namep + '.html'
         for name in (namep, nameh):
             if name in self.proper_input_file_mapping:

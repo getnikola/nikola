@@ -160,7 +160,8 @@ class Listing(Include):
     option_spec = listing_spec
 
     def run(self):
-        fname = self.arguments.pop(0)
+        _fname = self.arguments.pop(0)
+        fname = _fname.replace('/', os.sep)
         lang = self.arguments.pop(0)
         if len(self.folders) == 1:
             listings_folder = next(iter(self.folders.keys()))
@@ -177,9 +178,9 @@ class Listing(Include):
         with io.open(fpath, 'r+', encoding='utf8') as fileobject:
             self.content = fileobject.read().splitlines()
         self.state.document.settings.record_dependencies.add(fpath)
-        target = urlunsplit(("link", 'listing', fpath, '', ''))
+        target = urlunsplit(("link", 'listing', fpath.replace('\\', '/'), '', ''))
         generated_nodes = (
-            [core.publish_doctree('`{0} <{1}>`_'.format(fname, target))[0]])
+            [core.publish_doctree('`{0} <{1}>`_'.format(_fname, target))[0]])
         generated_nodes += self.get_code_from_file(fileobject)
         return generated_nodes
 
