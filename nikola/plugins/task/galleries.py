@@ -254,8 +254,11 @@ class Galleries(Task, ImageProcessor):
                     context['post'] = None
                 file_dep = self.site.template_system.template_deps(
                     template_name) + image_list + thumbs
+                file_dep_dest = self.site.template_system.template_deps(
+                    template_name) + dest_img_list + thumbs
                 if post:
                     file_dep += [post.translated_base_path(l) for l in self.kw['translations']]
+                    file_dep_dest += [post.translated_base_path(l) for l in self.kw['translations']]
 
                 yield utils.apply_filters({
                     'basename': self.name,
@@ -289,7 +292,7 @@ class Galleries(Task, ImageProcessor):
                     yield utils.apply_filters({
                         'basename': self.name,
                         'name': rss_dst,
-                        'file_dep': file_dep,
+                        'file_dep': file_dep_dest,
                         'targets': [rss_dst],
                         'actions': [
                             (self.gallery_rss, (
