@@ -1431,7 +1431,7 @@ URL of the page.  For example here are two random videos::
 
     .. media:: http://vimeo.com/72425090
 
-    .. youtube:: http://www.youtube.com/watch?v=wyRpAat5oz0
+    .. media:: http://www.youtube.com/watch?v=wyRpAat5oz0
 
 It supports Instagram, Flickr, Github gists, Funny or Die, and dozens more, thanks to `Micawber <https://github.com/coleifer/micawber>`_
 
