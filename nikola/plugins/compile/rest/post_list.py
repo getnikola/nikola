@@ -30,6 +30,8 @@ import uuid
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
+from natsort import natsorted
+
 from nikola import utils
 from nikola.plugin_categories import RestExtension
 
@@ -52,7 +54,7 @@ class PostList(Directive):
     Post List
     =========
     :Directive Arguments: None.
-    :Directive Options: lang, start, stop, reverse, sort, sortnum, tags, template, id
+    :Directive Options: lang, start, stop, reverse, sort, tags, template, id
     :Directive Content: None.
 
     Provides a reStructuredText directive to create a list of posts.
@@ -78,11 +80,7 @@ class PostList(Directive):
         Defaults is to not reverse the order of posts.
 
     ``sort``: string
-        Sort post list by one of its attribute, usually ``title``.
-        Defaults to None.
-
-    ``sortnum``: string
-        Sort post list by one of its numeric attribute, usually ``prio``.
+        Sort post list by one of each post's attributes, usually ``title`` or a custom ``prio``.
         Defaults to None.
 
     ``tags`` : string [, string...]
@@ -114,7 +112,6 @@ class PostList(Directive):
         'stop': int,
         'reverse': directives.flag,
         'sort': directives.unchanged,
-        'sortnum': directives.unchanged,
         'tags': directives.unchanged,
         'slugs': directives.unchanged,
         'all': directives.flag,
@@ -135,7 +132,6 @@ class PostList(Directive):
         lang = self.options.get('lang', utils.LocaleBorg().current_lang)
         template = self.options.get('template', 'post_list_directive.tmpl')
         sort = self.options.get('sort')
-        sortnum = self.options.get('sortnum')
         if self.site.invariant:  # for testing purposes
             post_list_id = self.options.get('id', 'post_list_' + 'fixedvaluethatisnotauuid')
         else:
@@ -163,10 +159,7 @@ class PostList(Directive):
             filtered_timeline.append(post)
 
         if sort:
-            filtered_timeline.sort(key=lambda post: post.meta[lang][sort])
-
-        if sortnum:
-            filtered_timeline.sort(key=lambda post: int(post.meta[lang].get(sortnum, 0)))
+            filtered_timeline = natsorted(filtered_timeline, key=lambda post: post.meta[lang][sort])
 
         for post in filtered_timeline[start:stop:step]:
             if slugs:

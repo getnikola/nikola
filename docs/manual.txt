@@ -1660,11 +1660,7 @@ The following options are recognized:
       Defaults is to not reverse the order of posts.
 
 * ``sort``: string
-      Sort post list alphabetically by one of its attribute, usually ``title``.
-      Defaults to None.
-
-* ``sortnum`: string
-      Sort post list numerically by one of its numeric attribute, usually ``prio``.
+      Sort post list by one of each post's attributes, usually ``title`` or a custom ``prio``.
       Defaults to None.
 
 * ``tags`` : string [, string...]
