@@ -166,7 +166,7 @@ class PostList(Directive):
             filtered_timeline.sort(key=lambda post: post.meta[lang][sort])
 
         if sortnum:
-            filtered_timeline.sort(key=lambda post: int(post.meta[lang].get(sortnum,0)))
+            filtered_timeline.sort(key=lambda post: int(post.meta[lang].get(sortnum, 0)))
 
         for post in filtered_timeline[start:stop:step]:
             if slugs:
