@@ -52,7 +52,7 @@ class PostList(Directive):
     Post List
     =========
     :Directive Arguments: None.
-    :Directive Options: lang, start, stop, reverse, tags, template, id
+    :Directive Options: lang, start, stop, reverse, sort, sortnum, tags, template, id
     :Directive Content: None.
 
     Provides a reStructuredText directive to create a list of posts.
@@ -76,6 +76,14 @@ class PostList(Directive):
     ``reverse`` : flag
         Reverse the order of the post-list.
         Defaults is to not reverse the order of posts.
+
+    ``sort``: string
+        Sort post list by one of its attribute, usually ``title``.
+        Defaults to None.
+
+    ``sortnum``: string
+        Sort post list by one of its numeric attribute, usually ``prio``.
+        Defaults to None.
 
     ``tags`` : string [, string...]
         Filter posts to show only posts having at least one of the ``tags``.
@@ -105,6 +113,8 @@ class PostList(Directive):
         'start': int,
         'stop': int,
         'reverse': directives.flag,
+        'sort': directives.unchanged,
+        'sortnum': directives.unchanged,
         'tags': directives.unchanged,
         'slugs': directives.unchanged,
         'all': directives.flag,
@@ -124,6 +134,8 @@ class PostList(Directive):
         show_all = self.options.get('all', False)
         lang = self.options.get('lang', utils.LocaleBorg().current_lang)
         template = self.options.get('template', 'post_list_directive.tmpl')
+        sort = self.options.get('sort')
+        sortnum = self.options.get('sortnum')
         if self.site.invariant:  # for testing purposes
             post_list_id = self.options.get('id', 'post_list_' + 'fixedvaluethatisnotauuid')
         else:
@@ -149,6 +161,12 @@ class PostList(Directive):
                     continue
 
             filtered_timeline.append(post)
+
+        if sort:
+            filtered_timeline.sort(key=lambda post: post.meta[lang][sort])
+
+        if sortnum:
+            filtered_timeline.sort(key=lambda post: int(post.meta[lang][sortnum]) if post.meta[lang][sortnum] else 0)
 
         for post in filtered_timeline[start:stop:step]:
             if slugs:

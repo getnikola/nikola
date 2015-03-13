@@ -1659,6 +1659,14 @@ The following options are recognized:
       Reverse the order of the post-list.
       Defaults is to not reverse the order of posts.
 
+* ``sort``: string
+      Sort post list alphabetically by one of its attribute, usually ``title``.
+      Defaults to None.
+
+* ``sortnum`: string
+      Sort post list numerically by one of its numeric attribute, usually ``prio``.
+      Defaults to None.
+
 * ``tags`` : string [, string...]
       Filter posts to show only posts having at least one of the ``tags``.
 
