@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Add a ``sort`` parameter to the post-list directive. Uses natsort to sort posts in list.
+
 Bugfixes
 --------
 

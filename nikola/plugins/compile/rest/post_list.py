@@ -30,6 +30,8 @@ import uuid
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
+from natsort import natsorted
+
 from nikola import utils
 from nikola.plugin_categories import RestExtension
 
@@ -52,7 +54,7 @@ class PostList(Directive):
     Post List
     =========
     :Directive Arguments: None.
-    :Directive Options: lang, start, stop, reverse, tags, template, id
+    :Directive Options: lang, start, stop, reverse, sort, tags, template, id
     :Directive Content: None.
 
     Provides a reStructuredText directive to create a list of posts.
@@ -76,6 +78,10 @@ class PostList(Directive):
     ``reverse`` : flag
         Reverse the order of the post-list.
         Defaults is to not reverse the order of posts.
+
+    ``sort``: string
+        Sort post list by one of each post's attributes, usually ``title`` or a custom ``prio``.
+        Defaults to None.
 
     ``tags`` : string [, string...]
         Filter posts to show only posts having at least one of the ``tags``.
@@ -105,6 +111,7 @@ class PostList(Directive):
         'start': int,
         'stop': int,
         'reverse': directives.flag,
+        'sort': directives.unchanged,
         'tags': directives.unchanged,
         'slugs': directives.unchanged,
         'all': directives.flag,
@@ -124,6 +131,7 @@ class PostList(Directive):
         show_all = self.options.get('all', False)
         lang = self.options.get('lang', utils.LocaleBorg().current_lang)
         template = self.options.get('template', 'post_list_directive.tmpl')
+        sort = self.options.get('sort')
         if self.site.invariant:  # for testing purposes
             post_list_id = self.options.get('id', 'post_list_' + 'fixedvaluethatisnotauuid')
         else:
@@ -149,6 +157,9 @@ class PostList(Directive):
                     continue
 
             filtered_timeline.append(post)
+
+        if sort:
+            filtered_timeline = natsorted(filtered_timeline, key=lambda post: post.meta[lang][sort])
 
         for post in filtered_timeline[start:stop:step]:
             if slugs:
