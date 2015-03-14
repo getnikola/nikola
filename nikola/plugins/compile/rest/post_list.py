@@ -80,8 +80,8 @@ class PostList(Directive):
         Defaults is to not reverse the order of posts.
 
     ``sort``: string
-        Sort post list by one of each post's attributes, usually ``title`` or a custom ``prio``.
-        Defaults to None.
+        Sort post list by one of each post's attributes, usually ``title`` or a
+        custom ``priority``.  Defaults to None (chronological sorting).
 
     ``tags`` : string [, string...]
         Filter posts to show only posts having at least one of the ``tags``.
