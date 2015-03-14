@@ -22,6 +22,7 @@ Daniel Devine <https://github.com/DDevine>
 Daniel F. Moisset <https://github.com/dmoisset>
 David Beath <https://github.com/DBeath>
 Dhruv Baldawa <https://github.com/dhruvbaldawa>
+Dirk Engling <https://github.com/erdgeist>
 Dmitry Verkhoturov <https://github.com/paskal>
 Duncan Lock <https://github.com/dflock>
 Edinei Cavalcanti <https://github.com/neiesc>
