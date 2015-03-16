@@ -1327,16 +1327,19 @@ The currently available filters are:
       def yui_compressor(infile):
           return runinplace(r'yui-compressor --nomunge %1 -o %2', infile)
 
-   You can turn any function into a filter using ``apply_to_file``.
+   You can turn any function into a filter using ``apply_to_text_file`` (for
+   text files to be read in UTF-8) and ``apply_to_binary_file`` (for files to
+   be read in binary mode).
+
    As a silly example, this would make everything uppercase and totally break
    your website:
 
    .. code-block:: python
 
       import string
-      from nikola.filters import apply_to_file
+      from nikola.filters import apply_to_text_file
       FILTERS = {
-        ".html": [apply_to_file(string.upper)]
+        ".html": [apply_to_text_file(string.upper)]
       }
 
 minify_lines
