@@ -13,6 +13,8 @@ nikola/data/samplesite/stories/manual.rst
 nikola/data/samplesite/stories/social_buttons.txt
 nikola/data/samplesite/stories/theming.rst
 nikola/data/samplesite/stories/upgrading-to-v6.txt
+nikola/data/symlink-test-link.txt
+nikola/data/themes/base/assets/js/moment-with-locales.min.js
 nikola/data/themes/base/messages/messages_cz.py
 nikola/data/themes/bootstrap-jinja/assets/css/bootstrap-responsive.css
 nikola/data/themes/bootstrap-jinja/assets/css/bootstrap-responsive.min.css
