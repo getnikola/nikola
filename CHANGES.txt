@@ -10,6 +10,8 @@ Features
 Bugfixes
 --------
 
+* Update jquery-colorbox
+* Fix symlinks for moment.js in Windows
 * Fix code.css bundling in Windows
 * Listings in posts now work in Windows (Issue #1631)
 
