@@ -726,10 +726,11 @@ Drafts
 If you add a "draft" tag to a post, then it will not be shown in indexes and feeds.
 It *will* be compiled, and if you deploy it it *will* be made available, so use
 with care. If you wish your drafts to be not available in your deployed site, you
-can set ``DEPLOY_DRAFTS = False`` in your configuration.
+can set ``DEPLOY_DRAFTS = False`` in your configuration. This will not work if
+lazily include ``nikola build`` in your ``DEPLOY_COMMANDS``.
 
 Also if a post has a date in the future, it will not be shown in indexes until
-you rebuild after that date. This behaviour can be disabled by setting
+you rebuild after that date. This behavior can be disabled by setting
 ``FUTURE_IS_NOW = True`` in your configuration, which will make future posts be
 published immediately.  Posts dated in the future are *not* deployed by default
 (when ``FUTURE_IS_NOW = False``).  To make future posts available in the
