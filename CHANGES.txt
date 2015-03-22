@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Instruct browsers to prefetch newest post when visiting the front page
 * Add a ``sort`` parameter to the post-list directive to sort posts in
   the list using natsort. (Issue #1635)
 
