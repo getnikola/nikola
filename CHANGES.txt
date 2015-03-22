@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Fix build command in ``nikola auto`` (Issue #1641)
 * Update Bootstrap to v3.3.4
 * Update jquery-colorbox
 * Fix symlinks for moment.js in Windows
