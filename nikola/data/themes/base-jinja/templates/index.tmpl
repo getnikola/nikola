@@ -5,7 +5,7 @@
 
 {% block extra_head %}
     {{ super() }}
-    {% if permalink == '/' or permalink == '/' + index_file %}
+    {% if posts and (permalink == '/' or permalink == '/' + index_file) %}
         <link rel="prefetch" href="{{ posts[0].permalink() }}" type="text/html">
     {% endif %}
 {% endblock %}
