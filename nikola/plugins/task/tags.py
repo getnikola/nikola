@@ -130,6 +130,8 @@ class RenderTags(Task):
         # Tag cloud json file
         tag_cloud_data = {}
         for tag, posts in self.site.posts_per_tag.items():
+            if tag in self.site.config['HIDDEN_TAGS']:
+                continue
             tag_posts = dict(posts=[{'title': post.meta[post.default_lang]['title'],
                                      'date': post.date.strftime('%m/%d/%Y'),
                                      'isodate': post.date.isoformat(),

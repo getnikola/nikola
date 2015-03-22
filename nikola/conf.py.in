@@ -233,7 +233,7 @@ WRITE_TAG_CLOUD = True
 
 
 # If you do not want to display a tag publicly, you can mark it as hidden.
-# The tag will not be displayed on the tag list page and on posts.
+# The tag will not be displayed on the tag list page, the tag cloud and posts.
 # Tag pages will still be generated.
 HIDDEN_TAGS = ['mathjax']
 
