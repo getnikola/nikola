@@ -3,6 +3,13 @@
 {% import 'comments_helper.tmpl' as comments with context %}
 {% extends 'base.tmpl' %}
 
+{% block extra_head %}
+    {{ super() }}
+    {% if permalink == '/' or permalink == '/' + index_file %}
+        <link rel="prefetch" href="{{ posts[0].permalink() }}" type="text/html">
+    {% endif %}
+{% endblock %}
+
 {% block content %}
 <div class="postindex">
 {% for post in posts %}
