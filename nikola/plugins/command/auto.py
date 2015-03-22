@@ -67,7 +67,7 @@ class CommandAuto(Command):
         if self.site.configuration_filename != 'conf.py':
             arguments = ['--conf=' + self.site.configuration_filename] + arguments
 
-        command_line = 'nikola' + ' '.join(arguments)
+        command_line = 'nikola ' + ' '.join(arguments)
 
         # Run an initial build so we are up-to-date
         subprocess.call(["nikola"] + arguments)
