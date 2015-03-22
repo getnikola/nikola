@@ -14,7 +14,9 @@
     %if post.tags:
         <ul itemprop="keywords" class="tags">
         %for tag in post.tags:
-           <li><a class="tag p-category" href="${_link('tag', tag)}" rel="tag">${tag}</a></li>
+          % if tag not in hidden_tags:
+            <li><a class="tag p-category" href="${_link('tag', tag)}" rel="tag">${tag}</a></li>
+          % endif
         %endfor
         </ul>
     %endif

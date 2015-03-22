@@ -231,6 +231,12 @@ WRITE_TAG_CLOUD = True
 #    },
 #}
 
+
+# If you do not want to display a tag publicly, you can mark it as hidden.
+# The tag will not be displayed on the tag list page and on posts.
+# Tag pages will still be generated.
+HIDDEN_TAGS = ['mathjax']
+
 # Only include tags on the tag list/overview page if there are at least
 # TAGLIST_MINIMUM_POSTS number of posts or more with every tag. Every tag
 # page is still generated, linked from posts, and included in the sitemap.
@@ -257,6 +263,11 @@ WRITE_TAG_CLOUD = True
 #        "open source": "My contributions to my many, varied, ever-changing, and eternal libre software projects."
 #    },
 #}
+
+# If you do not want to display a category publicly, you can mark it as hidden.
+# The category will not be displayed on the category list page.
+# Category pages will still be generated.
+HIDDEN_CATEGORIES = []
 
 # Final location for the main blog page and sibling paginated pages is
 # output / TRANSLATION[lang] / INDEX_PATH / index-*.html

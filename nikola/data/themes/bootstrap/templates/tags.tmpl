@@ -9,7 +9,7 @@
     % endif
     <ul class="unstyled">
     % for text, link in cat_items:
-        % if text:
+        % if text and text not in hidden_categories:
             <li><a class="reference badge" href="${link}">${text}</a></li>
         % endif
     % endfor
@@ -21,7 +21,9 @@
 % if items:
     <ul class="list-inline">
     % for text, link in items:
-        <li><a class="reference badge" href="${link}">${text}</a></li>
+        % if text not in hidden_tags:
+            <li><a class="reference badge" href="${link}">${text}</a></li>
+        % endif
     % endfor
     </ul>
 % endif

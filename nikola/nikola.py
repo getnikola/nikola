@@ -351,6 +351,8 @@ class Nikola(object):
             'GZIP_COMMAND': None,
             'GZIP_FILES': False,
             'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js', '.json', '.xml'),
+            'HIDDEN_TAGS': [],
+            'HIDDEN_CATEGORIES': [],
             'HYPHENATE': False,
             'IMAGE_FOLDERS': {'images': ''},
             'INDEX_DISPLAY_POST_COUNT': 10,
@@ -762,6 +764,8 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['js_date_format'] = json.dumps(self.config.get('JS_DATE_FORMAT'))
         self._GLOBAL_CONTEXT['colorbox_locales'] = LEGAL_VALUES['COLORBOX_LOCALES']
         self._GLOBAL_CONTEXT['momentjs_locales'] = LEGAL_VALUES['MOMENTJS_LOCALES']
+        self._GLOBAL_CONTEXT['hidden_tags'] = self.config.get('HIDDEN_TAGS')
+        self._GLOBAL_CONTEXT['hidden_categories'] = self.config.get('HIDDEN_CATEGORIES')
         self._GLOBAL_CONTEXT['url_replacer'] = self.url_replacer
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))

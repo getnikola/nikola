@@ -12,7 +12,7 @@
         {% endif %}
         <ul class="postlist">
         {% for text, link in cat_items %}
-            {% if text %}
+            {% if text and text not in hidden_categories %}
                 <li><a class="reference" href="{{ link }}">{{ text }}</a></li>
             {% endif %}
         {% endfor %}
@@ -24,7 +24,9 @@
     {% if items %}
         <ul class="postlist">
         {% for text, link in items %}
-            <li><a class="reference listtitle" href="{{ link }}">{{ text }}</a></li>
+            {% if text not in hidden_tags %}
+                <li><a class="reference listtitle" href="{{ link }}">{{ text }}</a></li>
+            {% endif %}
         {% endfor %}
         </ul>
     {% endif %}
