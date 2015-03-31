@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Produce Unicode output in ``nikola init`` (via Issue #1644)
 * Add ``HIDDEN_TAGS`` and ``HIDDEN_CATEGORIES`` settings to hide some
   tags and categories (eg. ``mathjax``) from view (Issue #1640)
 * Instruct browsers to prefetch newest post when visiting the front page

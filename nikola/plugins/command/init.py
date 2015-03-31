@@ -188,7 +188,7 @@ def format_navigation_links(additional_languages, default_lang, messages):
     pairs.append(f.format('DEFAULT_LANG', '', get_msg(default_lang)))
 
     for l in additional_languages:
-        pairs.append(f.format(json.dumps(l), '/' + l, get_msg(l)))
+        pairs.append(f.format(json.dumps(l, ensure_ascii=False), '/' + l, get_msg(l)))
 
     return u'{{\n{0}\n}}'.format('\n\n'.join(pairs))
 
@@ -198,7 +198,7 @@ def format_navigation_links(additional_languages, default_lang, messages):
 def prepare_config(config):
     """Parse sample config with JSON."""
     p = config.copy()
-    p.update(dict((k, json.dumps(v)) for k, v in p.items()
+    p.update(dict((k, json.dumps(v, ensure_ascii=False)) for k, v in p.items()
              if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'INDEX_READ_MORE_LINK', 'RSS_READ_MORE_LINK')))
     # READ_MORE_LINKs require some special treatment.
     p['INDEX_READ_MORE_LINK'] = "'" + p['INDEX_READ_MORE_LINK'].replace("'", "\\'") + "'"
@@ -399,6 +399,10 @@ class CommandInit(Command):
                     query(default, toconf)
                 else:
                     answer = ask(query, default)
+                    try:
+                        answer = answer.decode('utf-8')
+                    except (AttributeError, UnicodeDecodeError):
+                        pass
                     if toconf:
                         SAMPLE_CONF[destination] = answer
                     if destination == '!target':
