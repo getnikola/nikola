@@ -174,3 +174,8 @@ article.post-micro {
 .row {
     margin: 0;
 }
+
+/* for alignment with Bootstrap's .entry-content styling */
+.entry-summary {
+  margin-top: 1em;
+}
