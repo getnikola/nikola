@@ -171,7 +171,9 @@ class PostList(Directive):
                 if cont:
                     continue
 
-            self.state.document.settings.record_dependencies.add(post.translated_base_path(lang))
+            bp = post.translated_base_path(lang)
+            if os.path.exists(bp):
+                self.state.document.settings.record_dependencies.add(bp)
 
             posts += [post]
 

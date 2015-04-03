@@ -14,6 +14,8 @@ Features
 Bugfixes
 --------
 
+* Check if files exists before adding them as post-list dependencies
+  (Issue #1646)
 * Fix build command in ``nikola auto`` (Issue #1641)
 * Update Bootstrap to v3.3.4
 * Update jquery-colorbox
