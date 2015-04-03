@@ -600,7 +600,12 @@ class Post(object):
             text = self.text(strip_html=True)
             words_per_minute = 220
             words = len(text.split())
-            self._reading_time = int(ceil(words / words_per_minute)) or 1
+            markup = lxml.html.fromstring(self.text(strip_html=False))
+            embeddables = [".//img", ".//picture", ".//video", ".//audio", ".//object", ".//iframe"]
+            media_time = 0
+            for embedded in embeddables:
+                media_time += (len(markup.findall(embedded)) * 0.33) # +20 seconds
+            self._reading_time = int(ceil((words / words_per_minute) + media_time)) or 1
         return self._reading_time
 
     @property

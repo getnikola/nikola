@@ -22,6 +22,7 @@ Bugfixes
 * Fix symlinks for moment.js in Windows
 * Fix code.css bundling in Windows
 * Listings in posts now work in Windows (Issue #1631)
+* Add 20 seconds to reading time per embedded media
 
 New in v7.3.1
 =============
