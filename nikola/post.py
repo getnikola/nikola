@@ -604,7 +604,7 @@ class Post(object):
             embeddables = [".//img", ".//picture", ".//video", ".//audio", ".//object", ".//iframe"]
             media_time = 0
             for embedded in embeddables:
-                media_time += (len(markup.findall(embedded)) * 0.33) # +20 seconds
+                media_time += (len(markup.findall(embedded)) * 0.33)  # +20 seconds
             self._reading_time = int(ceil((words / words_per_minute) + media_time)) or 1
         return self._reading_time
 
