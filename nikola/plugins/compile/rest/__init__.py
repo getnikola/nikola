@@ -96,7 +96,7 @@ class CompileRest(PageCompiler):
                         'syntax_highlight': 'short',
                         'math_output': 'mathjax',
                         'template': default_template_path,
-                    }, logger=self.logger, source_path=source, l_add_ln=add_ln)
+                    }, logger=self.logger, source_path=source, l_add_ln=add_ln, site=self.site)
                 if not isinstance(output, unicode_str):
                     # To prevent some weird bugs here or there.
                     # Original issue: empty files.  `output` became a bytestring.
@@ -132,6 +132,7 @@ class CompileRest(PageCompiler):
             fd.write(content)
 
     def set_site(self, site):
+        self.site = site
         self.config_dependencies = []
         for plugin_info in site.plugin_manager.getPluginsOfCategory("RestExtension"):
             if plugin_info.name in site.config['DISABLED_PLUGINS']:
@@ -179,6 +180,13 @@ def get_observer(settings):
 
 
 class NikolaReader(docutils.readers.standalone.Reader):
+
+    def __init__(self, *args, **kwargs):
+        self.transforms = kwargs.pop('transforms', [])
+        docutils.readers.standalone.Reader.__init__(self, *args, **kwargs)
+
+    def get_transforms(self):
+        return docutils.readers.standalone.Reader(self).get_transforms() + self.transforms
 
     def new_document(self):
         """Create and return a new empty document tree (root node)."""
@@ -233,7 +241,7 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
              parser=None, parser_name='restructuredtext', writer=None,
              writer_name='html', settings=None, settings_spec=None,
              settings_overrides=None, config_section=None,
-             enable_exit_status=None, logger=None, l_add_ln=0):
+             enable_exit_status=None, logger=None, l_add_ln=0, site=None):
     """
     Set up & run a `Publisher`, and return a dictionary of document parts.
     Dictionary keys are the names of parts, and values are Unicode strings;
@@ -251,7 +259,8 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
              reStructuredText syntax errors.
     """
     if reader is None:
-        reader = NikolaReader()
+        transforms = getattr(site, 'transforms', [])
+        reader = NikolaReader(transforms=transforms)
         # For our custom logging, we have special needs and special settings we
         # specify here.
         # logger    a logger from Nikola
