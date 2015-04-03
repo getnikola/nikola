@@ -1344,7 +1344,7 @@ The currently available filters are:
       }
 
 minify_lines
-   **THIS FILTER HAS BEEN TURNED INTO A NOOP** and currently does nothing. 
+   **THIS FILTER HAS BEEN TURNED INTO A NOOP** and currently does nothing.
 
 yui_compressor
    Compress CSS/JavaScript using `YUI compressor <http://yui.github.io/yuicompressor/>`_
@@ -1697,6 +1697,11 @@ another one, if you use the ``template`` option) to generate the list's HTML. By
 default, this is an unordered list with dates and clickable post titles. See
 the template file in Nikola's base theme for an example of how this works.
 
+The list may fail to update in some cases, please run ``nikola build -a`` with
+the appropriate path if this happens.
+
+We recommend using stories with dates in the past (1970-01-01) to avoid
+dependency issues.
 
 Importing Your WordPress Site Into Nikola
 -----------------------------------------
