@@ -210,9 +210,9 @@ class CommandCheck(Command):
                 elif url_type in ('full_path', 'absolute'):
                     if url_type == 'absolute':
                         # convert to 'full_path' case, ie url relative to root
-                        url_rel_path = target.path[len(url_netloc_to_root):]
+                        url_rel_path = parsed.path[len(url_netloc_to_root):]
                     else:
-                        url_rel_path = target.path
+                        url_rel_path = target[1:] if target and target[0] == '/' else target
                     if url_rel_path == '' or url_rel_path.endswith('/'):
                         url_rel_path = urljoin(url_rel_path, self.site.config['INDEX_FILE'])
                     fs_rel_path = fs_relpath_from_url_path(url_rel_path)
