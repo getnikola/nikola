@@ -616,6 +616,7 @@ class Nikola(object):
         # BASE_URL should *always* end in /
         if self.config['BASE_URL'] and self.config['BASE_URL'][-1] != '/':
             utils.LOGGER.warn("Your BASE_URL doesn't end in / -- adding it, but please fix it in your config file!")
+            self.config['BASE_URL'] += '/'
 
         # todo: remove in v8
         if not isinstance(self.config['DEPLOY_COMMANDS'], dict):
