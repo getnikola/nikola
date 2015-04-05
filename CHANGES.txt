@@ -14,8 +14,6 @@ Features
 Bugfixes
 --------
 
-* Fix ``nikola check -l`` for absolute and full-path URL styles
-  (Issue #1650)
 * Check if files exists before adding them as post-list dependencies
   (Issue #1646)
 * Fix build command in ``nikola auto`` (Issue #1641)
