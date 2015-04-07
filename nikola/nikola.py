@@ -281,6 +281,7 @@ class Nikola(object):
         self.configuration_filename = config.pop('__configuration_filename__', False)
         self.configured = bool(config)
 
+        self.rst_transforms = []
         self.template_hooks = {
             'extra_head': utils.TemplateHookRegistry('extra_head', self),
             'body_end': utils.TemplateHookRegistry('body_end', self),

@@ -96,7 +96,7 @@ class CompileRest(PageCompiler):
                         'syntax_highlight': 'short',
                         'math_output': 'mathjax',
                         'template': default_template_path,
-                    }, logger=self.logger, source_path=source, l_add_ln=add_ln, site=self.site)
+                    }, logger=self.logger, source_path=source, l_add_ln=add_ln, transforms=self.site.rst_transforms)
                 if not isinstance(output, unicode_str):
                     # To prevent some weird bugs here or there.
                     # Original issue: empty files.  `output` became a bytestring.
@@ -132,7 +132,6 @@ class CompileRest(PageCompiler):
             fd.write(content)
 
     def set_site(self, site):
-        self.site = site
         self.config_dependencies = []
         for plugin_info in site.plugin_manager.getPluginsOfCategory("RestExtension"):
             if plugin_info.name in site.config['DISABLED_PLUGINS']:
@@ -241,7 +240,7 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
              parser=None, parser_name='restructuredtext', writer=None,
              writer_name='html', settings=None, settings_spec=None,
              settings_overrides=None, config_section=None,
-             enable_exit_status=None, logger=None, l_add_ln=0, site=None):
+             enable_exit_status=None, logger=None, l_add_ln=0, transforms=None):
     """
     Set up & run a `Publisher`, and return a dictionary of document parts.
     Dictionary keys are the names of parts, and values are Unicode strings;
@@ -259,7 +258,6 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
              reStructuredText syntax errors.
     """
     if reader is None:
-        transforms = getattr(site, 'transforms', [])
         reader = NikolaReader(transforms=transforms)
         # For our custom logging, we have special needs and special settings we
         # specify here.
