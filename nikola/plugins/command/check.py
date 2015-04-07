@@ -88,7 +88,7 @@ def fs_relpath_from_url_path(url_path):
     url_path = unquote(url_path)
     # in windows relative paths don't begin with os.sep
     if sys.platform == 'win32' and len(url_path):
-        url_path = url_path[1:].replace('/', '\\')
+        url_path = url_path.replace('/', '\\')
     return url_path
 
 
