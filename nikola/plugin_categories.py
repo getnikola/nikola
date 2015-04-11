@@ -80,7 +80,7 @@ class Command(BasePlugin, DoitCommand):
     """These plugins are exposed via the command line.
     They implement the doit Command interface."""
 
-    name = "dummy_command"
+    name = _name = "dummy_command"
 
     doc_purpose = "A short explanation."
     doc_usage = ""
@@ -91,7 +91,10 @@ class Command(BasePlugin, DoitCommand):
 
     def __init__(self, *args, **kwargs):
         BasePlugin.__init__(self, *args, **kwargs)
-        DoitCommand.__init__(self)
+
+    def __call__(self, config=None, **kwargs):
+        DoitCommand.__init__(self, config, **kwargs)
+        return self
 
     def execute(self, options=None, args=None):
         """Check if the command can run in the current environment,
