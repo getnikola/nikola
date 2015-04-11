@@ -91,6 +91,7 @@ class Command(BasePlugin, DoitCommand):
 
     def __init__(self, *args, **kwargs):
         BasePlugin.__init__(self, *args, **kwargs)
+        DoitCommand.__init__(self)
 
     def __call__(self, config=None, **kwargs):
         DoitCommand.__init__(self, config, **kwargs)
@@ -123,7 +124,7 @@ def help(self):
     text.append('')
 
     text.append("Options:")
-    for opt in self.options:
+    for opt in self.cmdparser.options:
         text.extend(opt.help_doc())
 
     if self.doc_description is not None:
