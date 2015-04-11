@@ -80,7 +80,7 @@ class Command(BasePlugin, DoitCommand):
     """These plugins are exposed via the command line.
     They implement the doit Command interface."""
 
-    name = _name = "dummy_command"
+    name = "dummy_command"
 
     doc_purpose = "A short explanation."
     doc_usage = ""
