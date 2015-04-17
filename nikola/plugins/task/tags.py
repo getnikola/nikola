@@ -263,8 +263,10 @@ class RenderTags(Task):
         context["tag"] = tag
         context["kind"] = kind
         context["description"] = None
-        if lang in kw["tag_pages_descriptions"] and tag in kw["tag_pages_descriptions"][lang]:
-            context["description"] = kw["tag_pages_descriptions"][lang][tag]
+        descriptions = (kw["category_pages_descriptions"] if is_category
+                        else kw["tag_pages_descriptions"])
+        if lang in descriptions and tag in descriptions[lang]:
+            context["description"] = descriptions[lang][tag]
         task = self.site.generic_post_list_renderer(
             lang,
             post_list,
