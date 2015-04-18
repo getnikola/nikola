@@ -75,9 +75,9 @@ class GenerateRSS(Task):
             deps = []
             deps_uptodate = []
             if kw["show_untranslated_posts"]:
-                posts = self.site.posts[:10]
+                posts = self.site.posts[:kw['feed_length']]
             else:
-                posts = [x for x in self.site.posts if x.is_translation_available(lang)][:10]
+                posts = [x for x in self.site.posts if x.is_translation_available(lang)][:kw['feed_length']]
             for post in posts:
                 deps += post.deps(lang)
                 deps_uptodate += post.deps_uptodate(lang)
