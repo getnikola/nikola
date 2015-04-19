@@ -90,42 +90,42 @@ class Indexes(Task):
         template_name = "list.tmpl"
         for lang in kw["translations"]:
             # Need to group by folder to avoid duplicated tasks (Issue #758)
-                # Group all pages by path prefix
-                groups = defaultdict(list)
-                for p in self.site.timeline:
-                    if not p.is_post:
-                        dirname = os.path.dirname(p.destination_path(lang))
-                        groups[dirname].append(p)
-                for dirname, post_list in groups.items():
-                    context = {}
-                    context["items"] = []
-                    should_render = True
-                    output_name = os.path.join(kw['output_folder'], dirname, kw['index_file'])
-                    short_destination = os.path.join(dirname, kw['index_file'])
-                    link = short_destination.replace('\\', '/')
-                    index_len = len(kw['index_file'])
-                    if kw['strip_indexes'] and link[-(1 + index_len):] == '/' + kw['index_file']:
-                        link = link[:-index_len]
-                    context["permalink"] = link
+            # Group all pages by path prefix
+            groups = defaultdict(list)
+            for p in self.site.timeline:
+                if not p.is_post:
+                    dirname = os.path.dirname(p.destination_path(lang))
+                    groups[dirname].append(p)
+            for dirname, post_list in groups.items():
+                context = {}
+                context["items"] = []
+                should_render = True
+                output_name = os.path.join(kw['output_folder'], dirname, kw['index_file'])
+                short_destination = os.path.join(dirname, kw['index_file'])
+                link = short_destination.replace('\\', '/')
+                index_len = len(kw['index_file'])
+                if kw['strip_indexes'] and link[-(1 + index_len):] == '/' + kw['index_file']:
+                    link = link[:-index_len]
+                context["permalink"] = link
 
-                    for post in post_list:
-                        # If there is an index.html pending to be created from
-                        # a story, do not generate the STORY_INDEX
-                        if post.destination_path(lang) == short_destination:
-                            should_render = False
-                        else:
-                            context["items"].append((post.title(lang),
-                                                     post.permalink(lang)))
+                for post in post_list:
+                    # If there is an index.html pending to be created from
+                    # a story, do not generate the STORY_INDEX
+                    if post.destination_path(lang) == short_destination:
+                        should_render = False
+                    else:
+                        context["items"].append((post.title(lang),
+                                                 post.permalink(lang)))
 
-                    if should_render:
-                        task = self.site.generic_post_list_renderer(lang, post_list,
-                                                                    output_name,
-                                                                    template_name,
-                                                                    kw['filters'],
-                                                                    context)
-                        task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.indexes')]
-                        task['basename'] = self.name
-                        yield task
+                if should_render:
+                    task = self.site.generic_post_list_renderer(lang, post_list,
+                                                                output_name,
+                                                                template_name,
+                                                                kw['filters'],
+                                                                context)
+                    task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.indexes')]
+                    task['basename'] = self.name
+                    yield task
 
     def index_path(self, name, lang):
         return utils.adjust_name_for_index_path_list([_f for _f in [self.site.config['TRANSLATIONS'][lang],
