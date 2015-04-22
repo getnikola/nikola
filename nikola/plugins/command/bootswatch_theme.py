@@ -26,6 +26,7 @@
 
 from __future__ import print_function
 import os
+import sys
 
 try:
     import requests
@@ -57,7 +58,7 @@ class CommandBootswatchTheme(Command):
         {
             'name': 'swatch',
             'short': 's',
-            'default': 'slate',
+            'default': '',
             'type': str,
             'help': 'Name of the swatch from bootswatch.com.'
         },
@@ -77,6 +78,9 @@ class CommandBootswatchTheme(Command):
 
         name = options['name']
         swatch = options['swatch']
+        if not swatch:
+            LOGGER.error('The -s option is mandatory')
+            sys.exit(1)
         parent = options['parent']
         version = ''
 
