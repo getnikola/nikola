@@ -488,8 +488,35 @@ REDIRECTIONS = ${REDIRECTIONS}
 
 # Color scheme to be used for code blocks. If your theme provides
 # "assets/css/code.css" this is ignored.
-# Can be any of autumn borland bw colorful default emacs friendly fruity manni
-# monokai murphy native pastie perldoc rrt tango trac vim vs
+# Can be any of:
+# algol
+# algol_nu
+# arduino
+# autumn 
+# borland 
+# bw 
+# colorful 
+# default 
+# emacs 
+# friendly 
+# fruity 
+# igor
+# lovelace
+# manni
+# monokai 
+# murphy 
+# native 
+# paraiso_dark
+# paraiso_light
+# pastie 
+# perldoc 
+# rrt 
+# tango 
+# trac 
+# vim 
+# vs
+# xcode
+$ This list MAY be incomplete since pygments adds styles every now and then.
 # CODE_COLOR_SCHEME = 'default'
 
 # If you use 'site-reveal' theme you can select several subthemes
