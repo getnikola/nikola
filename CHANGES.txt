@@ -1,3 +1,9 @@
+New in v7.3.1.1
+===============
+
+* Emergency release to pin doit version to 0.27.0
+* No code changes since v7.3.1 (not even ``nikola --version``)
+
 New in v7.3.1
 =============
 
