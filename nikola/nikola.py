@@ -381,6 +381,7 @@ class Nikola(object):
             'OUTPUT_FOLDER': 'output',
             'POSTS': (("posts/*.txt", "posts", "post.tmpl"),),
             'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
+            'PAGES_LATEST_POSTS_COUNT': 10,
             'PANDOC_OPTIONS': [],
             'PRETTY_URLS': False,
             'FUTURE_IS_NOW': False,
@@ -769,6 +770,8 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['hidden_tags'] = self.config.get('HIDDEN_TAGS')
         self._GLOBAL_CONTEXT['hidden_categories'] = self.config.get('HIDDEN_CATEGORIES')
         self._GLOBAL_CONTEXT['url_replacer'] = self.url_replacer
+        self._GLOBAL_CONTEXT['pages_latest_posts_count'] = self.config[
+            'PAGES_LATEST_POSTS_COUNT']
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
@@ -1432,7 +1435,7 @@ class Nikola(object):
         if quit and not ignore_quit:
             sys.exit(1)
 
-    def generic_page_renderer(self, lang, post, filters):
+    def generic_page_renderer(self, lang, post, filters, latest_posts):
         """Render post fragments to final HTML pages."""
         context = {}
         deps = post.deps(lang) + \
@@ -1448,6 +1451,7 @@ class Nikola(object):
             context['enable_comments'] = True
         else:
             context['enable_comments'] = self.config['COMMENTS_IN_STORIES']
+        context['latest_posts'] = latest_posts
         extension = self.get_compiler(post.source_path).extension()
         output_name = os.path.join(self.config['OUTPUT_FOLDER'],
                                    post.destination_path(lang, extension))

@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "Merker",
     "old posts, page %d": "eldre innlegg, side %d",
     "page %d": "side %d",
+    "Latest posts": "Nye innlegg",
 }

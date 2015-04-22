@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "标签",
     "old posts, page %d": "旧文章页 %d",
     "page %d": "",
+    "Latest posts": "最新的文章",
 }

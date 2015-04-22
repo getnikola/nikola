@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "Etiquetas",
     "old posts, page %d": "publicaciones antiguas, página %d",
     "page %d": "página %d",
+    "Latest posts": "Últimas publicaciones",
 }

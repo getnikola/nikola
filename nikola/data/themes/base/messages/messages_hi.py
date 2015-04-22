@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "टैग्स",
     "old posts, page %d": "पुरानी पोस्टें, पृष्‍ठ %d",
     "page %d": "पृष्‍ठ %d",
+    "Latest posts": "नवीनतम पोस्ट",
 }

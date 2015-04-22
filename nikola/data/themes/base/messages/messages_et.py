@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "Märksõnad",
     "old posts, page %d": "vanade postituste, leht %d",
     "page %d": "leht %d",
+    "Latest posts": "Viimased postitused",
 }

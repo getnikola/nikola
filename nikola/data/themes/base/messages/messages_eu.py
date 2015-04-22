@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "Etiketak",
     "old posts, page %d": "Post zaharren, orria %d",
     "page %d": "orria %d",
+    "Latest posts": "Azken argitalpenak",
 }

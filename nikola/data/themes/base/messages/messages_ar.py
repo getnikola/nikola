@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "تصنيفات",
     "old posts, page %d": "مقالات قديمة, صفحة d%",
     "page %d": "صفحة d%",
+    "Latest posts": "آخر المشاركات",
 }

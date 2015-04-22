@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "Etikedoj",
     "old posts, page %d": "paĝo de malnovaj artikoloj %d",
     "page %d": "paĝo %d",
+    "Latest posts": "Novaj artikoloj",
 }

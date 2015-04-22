@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "태그",
     "old posts, page %d": "이전 포스트, 페이지 %d",
     "page %d": "페이지 %d",
+    "Latest posts": "최신 글",
 }

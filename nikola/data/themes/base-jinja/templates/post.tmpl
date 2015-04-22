@@ -45,6 +45,14 @@
         {{ comments.comment_form(post.permalink(absolute=True), post.title(), post._base_path) }}
         </section>
     {% endif %}
+    {% if len(latest_posts) > 0 %}
+        <h2>{{ messages("Latest posts") }}</h2>
+        <ul>
+            {% for latest_post in latest_posts %}
+            <li class="latest"><a href="{{ latest_post.permalink() }}" rel="bookmark">{{ latest_post.title()|e }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
     {{ helper.mathjax_script(post) }}
 </article>
 {{ comments.comment_link_script() }}

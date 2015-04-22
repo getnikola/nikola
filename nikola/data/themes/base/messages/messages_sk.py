@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "Štítky",
     "old posts, page %d": "staré príspevky, strana %d",
     "page %d": "stránka %d",
+    "Latest posts": "Najnovšie príspevky",
 }

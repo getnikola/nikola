@@ -631,6 +631,9 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # Enable comments on picture gallery pages?
 # COMMENTS_IN_GALLERIES = False
 
+# Number of Latest posts in pages
+# PAGES_LATEST_POSTS_COUNT = 10
+
 # What file should be used for directory indexes?
 # Defaults to index.html
 # Common other alternatives: default.html for IIS, index.php
