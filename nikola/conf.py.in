@@ -516,7 +516,7 @@ REDIRECTIONS = ${REDIRECTIONS}
 # vim 
 # vs
 # xcode
-$ This list MAY be incomplete since pygments adds styles every now and then.
+# This list MAY be incomplete since pygments adds styles every now and then.
 # CODE_COLOR_SCHEME = 'default'
 
 # If you use 'site-reveal' theme you can select several subthemes
