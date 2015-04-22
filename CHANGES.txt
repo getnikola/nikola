@@ -15,6 +15,7 @@ Features
 Bugfixes
 --------
 
+* Don't default to any swatch in bootswatch_theme (Issue #1656)
 * Fix ``nikola check -l`` for absolute and full-path URL styles
   (Issue #1650)
 * Really add missing trailing slashes in ``BASE_URL`` (Issue #1651)
