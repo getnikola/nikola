@@ -142,7 +142,7 @@ LEGAL_VALUES = {
         # language with a different country, ``nikola init`` (but nobody else!)
         # will accept it, warning the user about it.
         'pt': 'pt_br',
-        'zh': 'zh_cn'
+        'zh': 'zh_cn',
         'zh': 'zh_TW'
     },
     'RTL_LANGUAGES': ('ar', 'fa', 'ur'),
