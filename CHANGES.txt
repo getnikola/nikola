@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New translations (az, fil, tl, uk, zh_TW)
 * Add reStructuredText transform support (Issue #1647)
 * Produce Unicode output in ``nikola init`` (via Issue #1644)
 * Add ``HIDDEN_TAGS`` and ``HIDDEN_CATEGORIES`` settings to hide some

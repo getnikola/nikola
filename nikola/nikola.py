@@ -98,6 +98,7 @@ LEGAL_VALUES = {
     ],
     'TRANSLATIONS': {
         'ar': 'Arabic',
+        'az': 'Azerbaijani',
         'bg': 'Bulgarian',
         'ca': 'Catalan',
         ('cs', 'cz'): 'Czech',
@@ -111,6 +112,7 @@ LEGAL_VALUES = {
         'eu': 'Basque',
         'fa': 'Persian',
         'fi': 'Finnish',
+        'fil': 'Filipino',
         'fr': 'French',
         'hi': 'Hindi',
         'hr': 'Croatian',
@@ -128,8 +130,11 @@ LEGAL_VALUES = {
         'sr': 'Serbian (Cyrillic)',
         'sv': 'Swedish',
         ('tr', '!tr_TR'): 'Turkish',
+        'tl': 'Tagalog',
         'ur': 'Urdu',
+        'uk': 'Ukrainian',
         'zh_cn': 'Chinese (Simplified)',
+        'zh_TW': 'Chinese (Taiwan)',
     },
     '_TRANSLATIONS_WITH_COUNTRY_SPECIFIERS': {
         # This dict is used in `init` in case of locales that exist with a
@@ -138,6 +143,7 @@ LEGAL_VALUES = {
         # will accept it, warning the user about it.
         'pt': 'pt_br',
         'zh': 'zh_cn'
+        'zh': 'zh_TW'
     },
     'RTL_LANGUAGES': ('ar', 'fa', 'ur'),
     'COLORBOX_LOCALES': defaultdict(

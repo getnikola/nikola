@@ -19,7 +19,7 @@ MESSAGES = {
     "Posted:": "Yayın tarihi:",
     "Posts about %s": "%s ile ilgili yazılar",
     "Posts for year %s": "%s yılındaki yazılar",
-    "Posts for {month} {day}, {year}": "",
+    "Posts for {month} {day}, {year}": "{month} {day}, {year} 'den beri olan yazılar",
     "Posts for {month} {year}": "{month} {year} göre yazılar",
     "Previous post": "Önceki yazı",
     "Publication date": "Yayınlanma tarihi",

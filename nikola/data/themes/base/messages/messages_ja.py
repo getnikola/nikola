@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "%d min remaining to read": "",
+    "%d min remaining to read": "読込むまで残り %d 分",
     "Also available in:": "他の言語で読む：",
     "Archive": "過去の記事",
     "Categories": "カテゴリー",
@@ -19,14 +19,14 @@ MESSAGES = {
     "Posted:": "投稿日時：",
     "Posts about %s": "%sについての記事",
     "Posts for year %s": "%s年の記事",
-    "Posts for {month} {day}, {year}": "",
+    "Posts for {month} {day}, {year}": "{year}年{month}月{day}日の記事",
     "Posts for {month} {year}": "{year}年{month}月の記事",
     "Previous post": "前の記事",
     "Publication date": "投稿日",
     "RSS feed": "RSS フィード",
     "Read in English": "日本語で読む",
     "Read more": "続きを読む",
-    "Skip to main content": "",
+    "Skip to main content": "メインコンテンツをスキップ",
     "Source": "ソース",
     "Tags and Categories": "タグとカテゴリー",
     "Tags": "タグ",
