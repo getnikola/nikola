@@ -5,12 +5,7 @@
 window.onload = function () {
   setTimeout(function () {
     var script = document.createElement("script");
-    if (location.protocol == 'https:') {
-        scriptbase = "https://c328740.ssl.cf1.rackcdn.com/";
-    } else {
-        scriptbase = "http://cdn.mathjax.org/";
-    }
-    script.src  = scriptbase + "mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("body")[0].appendChild(script);
   },1)
 }
