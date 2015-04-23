@@ -436,7 +436,7 @@ REDIRECTIONS = ${REDIRECTIONS}
 # to be visible on the site. The format is a dictionary of {source:
 # relative destination}.
 #
-# IMAGE_FOLDERS = {'images': ''}
+IMAGE_FOLDERS = {'images': 'images'}
 # IMAGE_THUMBNAIL_SIZE = 400
 
 # #############################################################################
