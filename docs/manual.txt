@@ -538,6 +538,9 @@ to your configuration::
 
        That template needs to either be part of the theme, or be placed in a ``templates/``
        folder inside your site.
+       
+    enclosure
+        Add an enclosure to this post when it's used in RSS. See `more information about enclosures <http://en.wikipedia.org/wiki/RSS_enclosure>`__
 
 .. note:: The Two-File Format
 
@@ -1251,11 +1254,9 @@ its settings, change the layout, etc.).
 
 Images to be used in normal posts can be placed in the ``images`` folder. These
 images will be processed and have thumbnails created just as for galleries, but will
-then be copied directly to the corresponding path in the ``output/images`` directory, so you
+then be copied directly to the corresponding path in the ``output`` directory, so you
 can reference it from whatever page you like, most easily using the ``thumbnail``
 reST extension. If you don't want thumbnails, just use the ``files`` folder instead.
-You can also adjust the output path, eg. to put your images alongside posts
-(helpful if using ``PRETTY_URLS``)
 
 The ``conf.py`` options affecting images and gallery pages are these::
 
@@ -1271,7 +1272,7 @@ The ``conf.py`` options affecting images and gallery pages are these::
     # destination folder. A thumbnail will also be created in the same folder with
     # ``.thumbnail`` inserted in the file name before the file extension
     # (e.g. ``tesla.thumbnail.jpg``).
-    IMAGE_FOLDERS = {'images': 'images'}
+    IMAGE_FOLDERS = {'images': ''}
     # More image/gallery options:
     THUMBNAIL_SIZE = 180
     IMAGE_THUMBNAIL_SIZE = 400
