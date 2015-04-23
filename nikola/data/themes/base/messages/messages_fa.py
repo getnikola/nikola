@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "برچسب‌ها",
     "old posts, page %d": "صفحهٔ ارسال‌های قدیمی %d",
     "page %d": "برگه %d",
+    "Latest posts": "واپسین نوشته‌ها",
 }

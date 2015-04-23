@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "Tagit",
     "old posts, page %d": "vanhoja postauksia, sivu %d",
     "page %d": "sivu %d",
+    "Latest posts": "Uusimmat artikkelit",
 }

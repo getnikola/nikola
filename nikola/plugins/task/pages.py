@@ -42,15 +42,24 @@ class RenderPages(Task):
             "filters": self.site.config["FILTERS"],
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "demote_headers": self.site.config['DEMOTE_HEADERS'],
+            "pages_latest_posts_count": self.site.config[
+                'PAGES_LATEST_POSTS_COUNT'],
         }
         self.site.scan_posts()
         yield self.group_task()
+        posts = self.site.posts
         for lang in kw["translations"]:
+            if kw["show_untranslated_posts"]:
+                filtered_posts = posts[:kw["pages_latest_posts_count"]]
+            else:
+                filtered_posts = [x for x in posts
+                                  if x.is_translation_available(lang)][
+                                          :kw["pages_latest_posts_count"]]
             for post in self.site.timeline:
                 if not kw["show_untranslated_posts"] and not post.is_translation_available(lang):
                     continue
-                for task in self.site.generic_page_renderer(lang, post,
-                                                            kw["filters"]):
+                for task in self.site.generic_page_renderer(
+                        lang, post, kw["filters"], filtered_posts):
                     task['uptodate'] = task['uptodate'] + [config_changed(kw, 'nikola.plugins.task.pages')]
                     task['basename'] = self.name
                     task['task_dep'] = ['render_posts']

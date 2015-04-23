@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "タグ",
     "old posts, page %d": "前の記事 %dページ目",
     "page %d": "ページ %d",
+    "Latest posts": "最新の投稿",
 }

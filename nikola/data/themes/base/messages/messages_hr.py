@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "Tagovi",
     "old posts, page %d": "stari postovi, stranice %d",
     "page %d": "stranice %d",
+    "Latest posts": "Najnovije postove",
 }

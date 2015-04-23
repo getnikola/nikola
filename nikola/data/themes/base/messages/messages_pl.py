@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "Tagi",
     "old posts, page %d": "stare posty, strona %d",
     "page %d": "strona %d",
+    "Latest posts": "Ostatnie wpisy",
 }

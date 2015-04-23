@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "Tag",
     "old posts, page %d": "tulisan lama, halaman %d",
     "page %d": "halaman %d",
+    "Latest posts": "Pos-pos terbaru",
 }

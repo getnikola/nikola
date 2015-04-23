@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "ٹیگز",
     "old posts, page %d": "پرانی تحاریر صفحہ %d",
     "page %d": "صفحہ %d",
+    "Latest posts": "تازہ ترین مراسلہ",
 }

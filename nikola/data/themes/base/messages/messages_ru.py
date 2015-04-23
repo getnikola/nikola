@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "Тэги",
     "old posts, page %d": "%d страница со старыми записями",
     "page %d": "%d страница",
+    "Latest posts": "Последние записи",
 }

@@ -32,4 +32,5 @@ MESSAGES = {
     "Tags": "Nøgleord",
     "old posts, page %d": "gamle indlæg, side %d",
     "page %d": "side %d",
+    "Latest posts": "nyeste indlæg",
 }
