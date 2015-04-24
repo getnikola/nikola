@@ -55,13 +55,13 @@ lang="{{ lang }}">
         <link rel="next" href="{{ nextlink }}" type="text/html">
     {% endif %}
 
-    {{ mathjax_config }}
     {% if use_cdn %}
         <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
     {% else %}
         <!--[if lt IE 9]><script src="{{ url_replacer(permalink, '/assets/js/html5.js', lang) }}"></script><![endif]-->
     {% endif %}
-
+    <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.2.0/katex.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/contrib/auto-render.min.js"></script>
     {{ extra_head_data }}
 {% endmacro %}
 
@@ -91,6 +91,9 @@ lang="{{ lang }}">
         <script src="/assets/js/colorbox-i18n/jquery.colorbox-{{ colorbox_locales[lang] }}.js"></script>
     {% endif %}
     {{ social_buttons_code }}
+    <script>
+        renderMathInElement(document.body);
+    </script>
 {% endmacro %}
 
 
@@ -122,6 +125,7 @@ lang="{{ lang }}">
     {% elif not annotations and post and post.meta('annotations') %}
         {{ notes.css() }}
     {% endif %}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.2.0/katex.min.css">
 {% endmacro %}
 
 
