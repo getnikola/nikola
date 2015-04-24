@@ -1308,7 +1308,7 @@ class Commands(object):
     def __init__(self, main):
         """Takes a main instance, works as wrapper for commands."""
         self._cmdnames = []
-        for k, v in main.get_commands().items():
+        for k, v in {}.items(): # main.get_commands().items():
             self._cmdnames.append(k)
             if k in ['run', 'init']:
                 continue
