@@ -37,9 +37,9 @@ import json
 import sys
 import mimetypes
 try:
-    from urlparse import urlparse, urlsplit, urljoin
+    from urlparse import urlparse, urlsplit, urlunsplit, urljoin, unquote
 except ImportError:
-    from urllib.parse import urlparse, urlsplit, urljoin  # NOQA
+    from urllib.parse import urlparse, urlsplit, urlunsplit, urljoin, unquote  # NOQA
 
 try:
     import pyphen
@@ -625,6 +625,15 @@ class Nikola(object):
             utils.LOGGER.warn("Your BASE_URL doesn't end in / -- adding it, but please fix it in your config file!")
             self.config['BASE_URL'] += '/'
 
+        try:
+            _bnl = urlsplit(self.config['BASE_URL']).netloc
+            _bnl.encode('ascii')
+            urlsplit(self.config['SITE_URL']).netloc.encode('ascii')
+        except (UnicodeEncodeError, UnicodeDecodeError):
+            utils.LOGGER.error("Your BASE_URL or SITE_URL contains an IDN expressed in Unicode.  Please convert it to Punycode.")
+            utils.LOGGER.error("Punycode of {}: {}".format(_bnl, _bnl.encode('idna')))
+            sys.exit(1)
+
         # todo: remove in v8
         if not isinstance(self.config['DEPLOY_COMMANDS'], dict):
             utils.LOGGER.warn("A single list as DEPLOY_COMMANDS is deprecated.  DEPLOY_COMMANDS should be a dict, with deploy preset names as keys and lists of commands as values.")
@@ -984,6 +993,24 @@ class Nikola(object):
             if dst_url.scheme == 'link':  # Magic link
                 dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'), lang)
             else:
+                print(dst)
+                if '%' in dst_url.netloc:
+                    # convert lxml percent-encoded garbage to punycode
+                    nl = unquote(dst_url.netloc)
+                    try:
+                        nl = nl.decode('utf-8')
+                    except AttributeError:
+                        # python 3: already unicode
+                        pass
+
+                    nl = nl.encode('idna')
+
+                    dst = urlunsplit((dst_url.scheme,
+                                      nl,
+                                      dst_url.path,
+                                      dst_url.query,
+                                      dst_url.fragment))
+                    print(dst)
                 return dst
         elif dst_url.scheme == 'link':  # Magic absolute path link:
             dst = dst_url.path
