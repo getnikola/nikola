@@ -492,28 +492,28 @@ IMAGE_FOLDERS = {'images': 'images'}
 # algol
 # algol_nu
 # arduino
-# autumn 
-# borland 
-# bw 
-# colorful 
-# default 
-# emacs 
-# friendly 
-# fruity 
+# autumn
+# borland
+# bw
+# colorful
+# default
+# emacs
+# friendly
+# fruity
 # igor
 # lovelace
 # manni
-# monokai 
-# murphy 
-# native 
+# monokai
+# murphy
+# native
 # paraiso_dark
 # paraiso_light
-# pastie 
-# perldoc 
-# rrt 
-# tango 
-# trac 
-# vim 
+# pastie
+# perldoc
+# rrt
+# tango
+# trac
+# vim
 # vs
 # xcode
 # This list MAY be incomplete since pygments adds styles every now and then.
@@ -721,7 +721,8 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # PANDOC_OPTIONS = []
 
 # Social buttons. This is sample code for AddThis (which was the default for a
-# long time). Insert anything you want here, or even make it empty.
+# long time). Insert anything you want here, or even make it empty (which is
+# the default right now)
 # (translatable)
 # SOCIAL_BUTTONS_CODE = """
 # <!-- Social buttons -->
