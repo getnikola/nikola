@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* AddThis is no longer added by default to users’ sites
 * New translations (az, fil, tl, uk, zh_TW)
 * Add reStructuredText transform support (Issue #1647)
 * Produce Unicode output in ``nikola init`` (via Issue #1644)
