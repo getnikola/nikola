@@ -1,0 +1,171 @@
+## -*- coding: utf-8 -*-
+
+<%namespace name="notes" file="annotation_helper.tmpl" import="*" />
+<%def name="html_headstart()">
+<!DOCTYPE html>
+<html
+\
+% if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']) or (comment_system == 'facebook'):
+prefix='\
+%if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']):
+og: http://ogp.me/ns# \
+%endif
+%if use_open_graph:
+article: http://ogp.me/ns/article# \
+%endif
+%if comment_system == 'facebook':
+fb: http://ogp.me/ns/fb# \
+%endif
+'\
+%endif
+\
+% if is_rtl:
+dir="rtl" \
+% endif
+\
+lang="${lang}">
+    <head>
+    <meta charset="utf-8">
+    %if description:
+    <meta name="description" content="${description}">
+    %endif
+    <meta name="viewport" content="width=device-width">
+    <title>${title|striphtml} | ${blog_title|striphtml}</title>
+
+    ${html_stylesheets()}
+    ${html_feedlinks()}
+    %if permalink:
+      <link rel="canonical" href="${abs_link(permalink)}">
+    %endif
+
+    %if favicons:
+        %for name, file, size in favicons:
+            <link rel="${name}" href="${file}" sizes="${size}"/>
+        %endfor
+    %endif
+
+    % if comment_system == 'facebook':
+        <meta property="fb:app_id" content="${comment_system_id}">
+    % endif
+
+    %if prevlink:
+        <link rel="prev" href="${prevlink}" type="text/html">
+    %endif
+    %if nextlink:
+        <link rel="next" href="${nextlink}" type="text/html">
+    %endif
+
+    ${mathjax_config}
+    %if use_cdn:
+        <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    %else:
+        <!--[if lt IE 9]><script src="${url_replacer(permalink, '/assets/js/html5.js', lang)}"></script><![endif]-->
+    %endif
+
+    ${extra_head_data}
+</%def>
+
+
+<%def name="late_load_js()">
+    %if use_bundles:
+        %if use_cdn:
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+            <script src="//maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+            <script src="/assets/js/all.js"></script>
+        %else:
+            <script src="/assets/js/all-nocdn.js"></script>
+        %endif
+    %else:
+        %if use_cdn:
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+            <script src="//maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        %else:
+            <script src="/assets/js/jquery.min.js"></script>
+            <script src="/assets/js/bootstrap.min.js"></script>
+            <script src="/assets/js/moment-with-locales.min.js"></script>
+            <script src="/assets/js/fancydates.js"></script>
+        %endif
+        <script src="/assets/js/jquery.colorbox-min.js"></script>
+    %endif
+    %if colorbox_locales[lang]:
+        <script src="/assets/js/colorbox-i18n/jquery.colorbox-${colorbox_locales[lang]}.js"></script>
+    %endif
+    ${social_buttons_code}
+</%def>
+
+
+<%def name="html_stylesheets()">
+    %if use_bundles:
+        %if use_cdn:
+            <link href="//maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+            <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
+        %else:
+            <link href="/assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+        %endif
+    %else:
+        %if use_cdn:
+            <link href="//maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+        %else:
+            <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+            <link href="/assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
+        %endif
+        <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
+        <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
+        <link href="/assets/css/colorbox.css" rel="stylesheet" type="text/css">
+        <link href="/assets/css/theme.css" rel="stylesheet" type="text/css">
+        %if has_custom_css:
+            <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
+        %endif
+    %endif
+    % if annotations and post and not post.meta('noannotations'):
+        ${notes.css()}
+    % elif not annotations and post and post.meta('annotations'):
+        ${notes.css()}
+    % endif
+</%def>
+
+
+<%def name="html_navigation_links()">
+    %for url, text in navigation_links[lang]:
+        % if isinstance(url, tuple):
+            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">${text}<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+            %for suburl, text in url:
+                % if rel_link(permalink, suburl) == "#":
+                    <li class="active"><a href="${permalink}">${text}</a>
+                %else:
+                    <li><a href="${suburl}">${text}</a>
+                %endif
+            %endfor
+            </ul>
+        % else:
+            % if rel_link(permalink, url) == "#":
+                <li class="active"><a href="${permalink}">${text}</a>
+            %else:
+                <li><a href="${url}">${text}</a>
+            %endif
+        % endif
+    %endfor
+</%def>
+
+<%def name="html_feedlinks()">
+    %if rss_link:
+        ${rss_link}
+    %elif generate_rss:
+        %if len(translations) > 1:
+            %for language in translations:
+                <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${_link('rss', None, language)}">
+            %endfor
+        %else:
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="${_link('rss', None)}">
+        %endif
+    %endif
+</%def>
+
+<%def name="html_translations()">
+    %for langname in translations.keys():
+        %if langname != lang:
+            <li><a href="${abs_link(_link("root", None, langname))}" rel="alternate" hreflang="${langname}">${messages("LANGUAGE", langname)}</a></li>
+        %endif
+    %endfor
+</%def>
