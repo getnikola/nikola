@@ -94,6 +94,7 @@ class Command(BasePlugin, DoitCommand):
         DoitCommand.__init__(self)
 
     def __call__(self, config=None, **kwargs):
+        self._doitargs = kwargs
         DoitCommand.__init__(self, config, **kwargs)
         return self
 
