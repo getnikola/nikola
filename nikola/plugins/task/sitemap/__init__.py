@@ -70,7 +70,7 @@ sitemap_format = """ <sitemap>
  </sitemap>
 """
 
-alternates_format = """<xhtml:link 
+alternates_format = """<xhtml:link
                  rel="alternate"
                  hreflang="{0}"
                  href="{1}"
