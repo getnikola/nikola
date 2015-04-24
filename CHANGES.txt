@@ -17,6 +17,8 @@ Features
 Bugfixes
 --------
 
+* Encode IDNs to Punycode in ``nikola init`` and in links;
+  show an error if the site URL is not Punycode (Issue #1644)
 * Make ``images`` the default output directory for IMAGE_FOLDERS
   (Issue #1663)
 * Don't default to any swatch in bootswatch_theme (Issue #1656)
