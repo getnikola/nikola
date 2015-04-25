@@ -1,2 +1,3 @@
 assets/css/all.css=rst.css,code.css,theme.css,custom.css
-assets/css/all-nocdn.css=rst.css,code.css,theme.css,custom.css
+assets/css/all-nocdn.css=rst.css,code.css,theme.css,custom.css,katex.min.css
+assets/js/all-nocdn.js=katex.min.js,katex-auto-render.min.js

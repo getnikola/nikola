@@ -80,6 +80,18 @@ DEFAULT_RSS_READ_MORE_LINK = '<p><a href="{link}">{read_more}…</a> ({min_remai
 # Default pattern for translation files' names
 DEFAULT_TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
 
+# Default KaTeX config
+KATEX_CONFIG = r"""
+<script type="text/javascript">
+    renderMathInElement(document.body, {delimiters: [
+      {left: "\\begin{equation*}", right: "\\end{equation*}", display: true},
+      {left: "\\[", right: "\\]", display: true},
+      {left: "\\(", right: "\\)", display: false},
+      {left: "$latex ", right: "$", display: false}
+    ]})
+</script>
+"""
+
 
 config_changed = utils.config_changed
 
@@ -373,6 +385,7 @@ class Nikola(object):
             'INDEXES_STATIC': True,
             'INDEX_PATH': '',
             'IPYNB_CONFIG': {},
+            'KATEX_CONFIG': KATEX_CONFIG,
             'LESS_COMPILER': 'lessc',
             'LESS_OPTIONS': [],
             'LICENSE': '',
@@ -382,7 +395,6 @@ class Nikola(object):
             'NAVIGATION_LINKS': {},
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],
             'MAX_IMAGE_SIZE': 1280,
-            'MATHJAX_CONFIG': '',
             'OLD_THEME_SUPPORT': True,
             'OUTPUT_FOLDER': 'output',
             'POSTS': (("posts/*.txt", "posts", "post.tmpl"),),
@@ -634,7 +646,7 @@ class Nikola(object):
             utils.LOGGER.error("Punycode of {}: {}".format(_bnl, _bnl.encode('idna')))
             sys.exit(1)
 
-        # todo: remove in v8
+        # TODO: remove in v8
         if not isinstance(self.config['DEPLOY_COMMANDS'], dict):
             utils.LOGGER.warn("A single list as DEPLOY_COMMANDS is deprecated.  DEPLOY_COMMANDS should be a dict, with deploy preset names as keys and lists of commands as values.")
             utils.LOGGER.warn("The key `default` is used by `nikola deploy`:")
@@ -642,12 +654,18 @@ class Nikola(object):
             utils.LOGGER.warn("DEPLOY_COMMANDS = {0}".format(self.config['DEPLOY_COMMANDS']))
             utils.LOGGER.info("(The above can be used with `nikola deploy` or `nikola deploy default`.  Multiple presets are accepted.)")
 
-        # todo: remove and change default in v8
+        # TODO: remove and change default in v8
         if 'BLOG_TITLE' in config and 'WRITE_TAG_CLOUD' not in config:
             # BLOG_TITLE is a hack, otherwise the warning would be displayed
             # when conf.py does not exist
             utils.LOGGER.warn("WRITE_TAG_CLOUD is not set in your config.  Defaulting to True (== writing tag_cloud_data.json).")
             utils.LOGGER.warn("Please explicitly add the setting to your conf.py with the desired value, as the setting will default to False in the future.")
+
+        # TODO: remove in v8
+        if 'MATHJAX_CONFIG' in config:
+            utils.LOGGER.warn("MATHJAX_CONFIG is deprecated, because Nikola switched to KaTeX.  Please set KATEX_CONFIG according to your needs.")
+            utils.LOGGER.warn("More information: http://getnikola.com/handbook.html#math")
+            utils.LOGGER.warn("Some math ($/$$-delimited, in particular) will fail to render!")
 
         # We use one global tzinfo object all over Nikola.
         self.tzinfo = dateutil.tz.gettz(self.config['TIMEZONE'])
@@ -745,6 +763,7 @@ class Nikola(object):
 
         # TODO: remove in v8
         self._GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
+        self._GLOBAL_CONTEXT['mathjax_config'] = self.config.get('MATHJAX_CONFIG')
 
         self._GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL')
         self._GLOBAL_CONTEXT['template_hooks'] = self.template_hooks
@@ -756,8 +775,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['comment_system'] = self.config.get('COMMENT_SYSTEM')
         self._GLOBAL_CONTEXT['comment_system_id'] = self.config.get('COMMENT_SYSTEM_ID')
         self._GLOBAL_CONTEXT['site_has_comments'] = bool(self.config.get('COMMENT_SYSTEM'))
-        self._GLOBAL_CONTEXT['mathjax_config'] = self.config.get(
-            'MATHJAX_CONFIG')
+        self._GLOBAL_CONTEXT['katex_config'] = self.config.get('KATEX_CONFIG')
         self._GLOBAL_CONTEXT['subtheme'] = self.config.get('THEME_REVEAL_CONFIG_SUBTHEME')
         self._GLOBAL_CONTEXT['transition'] = self.config.get('THEME_REVEAL_CONFIG_TRANSITION')
         self._GLOBAL_CONTEXT['content_footer'] = self.config.get(

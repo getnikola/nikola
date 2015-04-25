@@ -682,25 +682,24 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # If True, use the scheduling rule to all posts by default
 # SCHEDULE_ALL = False
 
-# Do you want a add a Mathjax config file?
-# MATHJAX_CONFIG = ""
-
-# If you are using the compile-ipynb plugin, just add this one:
-# MATHJAX_CONFIG = """
-# <script type="text/x-mathjax-config">
-# MathJax.Hub.Config({
-#     tex2jax: {
-#         inlineMath: [ ['$','$'], ["\\\(","\\\)"] ],
-#         displayMath: [ ['$$','$$'], ["\\\[","\\\]"] ],
-#         processEscapes: true
-#     },
-#     displayAlign: 'left', // Change this to 'center' to center equations.
-#     "HTML-CSS": {
-#         styles: {'.MathJax_Display': {"margin": 0}}
-#     }
-# });
-# </script>
-# """
+# KaTeX configuration.  By default, we support the standard LaTeX delimiters
+# \(inline\) and \[display\], $latex inline$ for WordPress.com converts and
+# the equation* environment for the reStructuredText math directive
+# We DO NOT support the old, deprecated and error-prone
+# $inline$ and $$display$$ delimiters.
+# If you want to use them, please add them manually, like this:
+#     {left: "$$", right: "$$", display: true},
+#     {left: "$", right: "$", display: false}
+KATEX_CONFIG = r"""
+<script type="text/javascript">
+    renderMathInElement(document.body, {delimiters: [
+      {left: "\\begin{equation*}", right: "\\end{equation*}", display: true},
+      {left: "\\[", right: "\\]", display: true},
+      {left: "\\(", right: "\\)", display: false},
+      {left: "$latex ", right: "$", display: false}
+    ]})
+</script>
+"""
 
 # Do you want to customize the nbconversion of your IPython notebook?
 # IPYNB_CONFIG = {}

@@ -1,7 +1,6 @@
 .. title: The Nikola Handbook
 .. slug: handbook
 .. date: 2012-03-30 23:00:00 UTC-03:00
-.. tags: mathjax
 .. link:
 .. description:
 
@@ -1395,41 +1394,82 @@ different ones, or about other web servers, please share!
 #. The USE_CDN option offloads standard JavaScript and CSS files to a CDN so they are not
    downloaded from your server.
 
-reStructuredText Extensions
----------------------------
+Math
+----
 
-Nikola includes support for a few directives and roles that are not part of docutils, but which
-we think are handy for website development.
+Nikola supports math input via KaTeX.  It is activated via the math roles and
+directives of reStructuredText and the usual LaTeX delimiters (``\(inline\)``
+and ``\[display\]``) for other input formats.
 
-MathJax
-~~~~~~~
+KaTeX may need some special configuration.  By default, we support the standard
+LaTeX delimiters ``\(inline\)`` and ``\[display\]``, ``$latex inline$`` for
+WordPress.com converts and the ``equation*`` environment for the
+reStructuredText math directive.  The following configuration is used to
+achieve that:
 
-Nikola supports math input via MathJax.  It uses the usual math roles and
-directives of reStructuredText.
+.. code:: python
 
-In order to use them in your posts, you **must** add the special ``mathjax`` tag.
+    KATEX_CONFIG = r"""
+    <script type="text/javascript">
+        renderMathInElement(document.body, {delimiters: [
+        {left: "\\begin{equation*}", right: "\\end{equation*}", display: true},
+        {left: "\\[", right: "\\]", display: true},
+        {left: "\\(", right: "\\)", display: false},
+        {left: "$latex ", right: "$", display: false}
+        ]})
+    </script>
+    """
 
-Inline mathematics (equivalent to single dollar signs or backslash-parentheses
-in LaTeX) are produced using the `math` **role**:
+We **DO NOT** support the old, deprecated and error-prone ``$inline$`` and
+``$$display$$`` delimiters. If you want to use them, please add them manually,
+like this:
+
+.. code:: javascript
+
+    {left: "$$", right: "$$", display: true},
+    {left: "$", right: "$", display: false}
+
+
+Inline mathematics are produced using the reST `math` **role** or the ``\(…\)`` delimiters:
 
 Euler’s formula: :math:`e^{ix} = \cos x + i\sin x`
 
-::
+In reST:
+
+.. code:: restructuredtext
 
     Euler’s formula: :math:`e^{ix} = \cos x + i\sin x`
 
-Display mathematics (equivalent to double dollar signs or backslash-brackets in
-LaTeX) are produced using the `math` **directive**:
+In other input formats::
+
+    Euler’s formula: \(e^{ix} = \cos x + i\sin x\)
+
+Display mathematics are produced using the reST `math` **directive** or the ``\[…\]`` delimiters:
 
 .. math::
 
    \int \frac{dx}{1+ax}=\frac{1}{a}\ln(1+ax)+C
+
+
+In reST:
 
 ::
 
    .. math::
 
       \int \frac{dx}{1+ax}=\frac{1}{a}\ln(1+ax)+C
+
+In other input formats:
+
+::
+
+    \[\int \frac{dx}{1+ax}=\frac{1}{a}\ln(1+ax)+C\]
+
+reStructuredText Extensions
+---------------------------
+
+Nikola includes support for a few directives and roles that are not part of docutils, but which
+we think are handy for website development.
 
 Media
 ~~~~~

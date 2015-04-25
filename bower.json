@@ -12,6 +12,7 @@
     "bootstrap": "~3.3.2",
     "jquery": "<2.0.0",
     "jquery-colorbox": "~1.5.14",
-    "moment": "~2.8.4"
+    "moment": "~2.8.4",
+    "katex-build": "~0.3.0"
   }
 }
