@@ -283,7 +283,6 @@ It turns out ``bootstrap`` doesn' have one of those! That's because it inherits 
         % endfor
         ${helper.html_pager()}
         ${comments.comment_link_script()}
-        ${helper.mathjax_script(posts)}
     </%block>
 
 So, let's tweak that to be closer to the original. We put the post's metadata in a
