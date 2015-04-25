@@ -1315,10 +1315,6 @@ class Nikola(object):
         if self._scanned and not really:
             return
 
-        try:
-            self.commands = utils.Commands(self.doit)
-        except AttributeError:
-            self.commands = None
         self.global_data = {}
         self.posts = []
         self.all_posts = []
