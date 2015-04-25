@@ -60,8 +60,6 @@ lang="${lang}">
     %else:
         <!--[if lt IE 9]><script src="${url_replacer(permalink, '/assets/js/html5.js', lang)}"></script><![endif]-->
     %endif
-    <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/contrib/auto-render.min.js"></script>
     ${extra_head_data}
 </%def>
 
@@ -71,6 +69,8 @@ lang="${lang}">
         %if use_cdn:
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
             <script src="//maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/contrib/auto-render.min.js"></script>
             <script src="/assets/js/all.js"></script>
         %else:
             <script src="/assets/js/all-nocdn.js"></script>
@@ -79,13 +79,17 @@ lang="${lang}">
         %if use_cdn:
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
             <script src="//maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/contrib/auto-render.min.js"></script>
         %else:
             <script src="/assets/js/jquery.min.js"></script>
             <script src="/assets/js/bootstrap.min.js"></script>
-            <script src="/assets/js/moment-with-locales.min.js"></script>
-            <script src="/assets/js/fancydates.js"></script>
+            <script src="/assets/js/katex.min.js"></script>
+            <script src="/assets/js/katex-auto-render.min.js"></script>
         %endif
         <script src="/assets/js/jquery.colorbox-min.js"></script>
+        <script src="/assets/js/moment-with-locales.min.js"></script>
+        <script src="/assets/js/fancydates.js"></script>
     %endif
     %if colorbox_locales[lang]:
         <script src="/assets/js/colorbox-i18n/jquery.colorbox-${colorbox_locales[lang]}.js"></script>
@@ -99,6 +103,7 @@ lang="${lang}">
     %if use_bundles:
         %if use_cdn:
             <link href="//maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
             <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
         %else:
             <link href="/assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
@@ -106,9 +111,11 @@ lang="${lang}">
     %else:
         %if use_cdn:
             <link href="//maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
         %else:
             <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
             <link href="/assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
+            <link href="/assets/css/katex.min.css" rel="stylesheet" type="text/css">
         %endif
         <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
@@ -123,7 +130,6 @@ lang="${lang}">
     % elif not annotations and post and post.meta('annotations'):
         ${notes.css()}
     % endif
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
 </%def>
 
 

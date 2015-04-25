@@ -55,12 +55,21 @@ lang="${lang}">
     %else:
         <!--[if lt IE 9]><script src="${url_replacer(permalink, '/assets/js/html5.js', lang)}"></script><![endif]-->
     %endif
-    <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/contrib/auto-render.min.js"></script>
     ${extra_head_data}
 </%def>
 
 <%def name="late_load_js()">
+    %if use_cdn:
+        <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/contrib/auto-render.min.js"></script>
+    %else:
+        % if use_bundles:
+            <script src="/assets/js/all-nocdn.js"></script>
+        % else:
+            <script src="/assets/js/katex.min.js"></script>
+            <script src="/assets/js/katex-auto-render.min.js"></script>
+        % endif
+    %endif
     ${social_buttons_code}
     ${katex_config}
 </%def>
@@ -68,11 +77,17 @@ lang="${lang}">
 <%def name="html_stylesheets()">
     %if use_bundles:
         %if use_cdn:
+            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
             <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
         %else:
             <link href="/assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
         %endif
     %else:
+        %if use_cdn:
+            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
+        %else:
+            <link href="/assets/css/katex.min.css" rel="stylesheet" type="text/css">
+        % endif
         <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/theme.css" rel="stylesheet" type="text/css">
@@ -80,7 +95,6 @@ lang="${lang}">
             <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
         %endif
     %endif
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
 </%def>
 
 <%def name="html_feedlinks()">
