@@ -60,7 +60,7 @@ lang="{{ lang }}">
     {% else %}
         <!--[if lt IE 9]><script src="{{ url_replacer(permalink, '/assets/js/html5.js', lang) }}"></script><![endif]-->
     {% endif %}
-    <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.2.0/katex.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/contrib/auto-render.min.js"></script>
     {{ extra_head_data }}
 {% endmacro %}
@@ -90,29 +90,7 @@ lang="{{ lang }}">
         <script src="/assets/js/colorbox-i18n/jquery.colorbox-{{ colorbox_locales[lang] }}.js"></script>
     {% endif %}
     {{ social_buttons_code }}
-    <script>
-        renderMathInElement(document.body);
-        <script>
-            renderMathInElement(document.body);
-            (function(){
-            $(".math").each(function() {
-                var texTxt = $(this).text();
-                el = $(this).get(0);
-                if(el.tagName == "DIV"){
-                    addDisp = "\\displaystyle";
-                } else {
-                    addDisp = "";
-                }
-                try {
-                    katex.render(addDisp+texTxt, el);
-                }
-                catch(err) {
-                    $(this).html("<span class='err'>"+err);
-                }
-            }); 
-            })();
-        </script>
-    </script>
+    {{ katex_config }}
 {% endmacro %}
 
 
@@ -143,6 +121,7 @@ lang="{{ lang }}">
     {% elif not annotations and post and post.meta('annotations') %}
         {{ notes.css() }}
     {% endif %}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
 {% endmacro %}
 
 {% macro html_navigation_links() %}
