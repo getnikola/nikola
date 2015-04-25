@@ -122,8 +122,8 @@ class ReSTExtensionTestCaseTestCase(ReSTExtensionTestCase):
 class MathTestCase(ReSTExtensionTestCase):
     sample = ':math:`e^{ix} = \cos x + i\sin x`'
 
-    def test_mathjax(self):
-        """ Test that math is outputting MathJax."""
+    def test_math(self):
+        """ Test that math is outputting correct and compatible data."""
         self.basic_test()
         self.assertHTMLContains("span", attributes={"class": "math"},
                                 text="\(e^{ix} = \cos x + i\sin x\)")

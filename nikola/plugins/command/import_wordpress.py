@@ -434,9 +434,6 @@ class CommandImportWordpress(Command, ImportMixin):
                 continue
             tags.append(text)
 
-        if '$latex' in content:
-            tags.append('mathjax')
-
         if is_draft and self.exclude_drafts:
             LOGGER.notice('Draft "{0}" will not be imported.'.format(title))
         elif content.strip():
