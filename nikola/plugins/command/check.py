@@ -142,7 +142,7 @@ class CommandCheck(Command):
     def _execute(self, options, args):
         """Check the generated site."""
         self.logger = get_logger('check', self.site.loghandlers)
-        self.l = self._doitargs['cmds']['list'](config=self.config, **self._doitargs)
+        self.l = self._doitargs['cmds'].get_plugin('list')(config=self.config, **self._doitargs)
 
         if not options['links'] and not options['files'] and not options['clean']:
             print(self.help())

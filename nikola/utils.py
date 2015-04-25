@@ -1311,7 +1311,7 @@ class Commands(object):
         self._main = main
         self._config = config
         self._doitargs = doitargs
-        for k, v in self._main.get_cmds().items():
+        for k, v in self._doitargs['cmds'].to_dict().items():
             # cleanup: run is doit-only, init is useless in an existing site
             if k in ['run', 'init']:
                 continue
@@ -1342,7 +1342,7 @@ class Commands(object):
     def _run_with_kw(self, cmd, *a, **kw):
         # cyclic import hack
         from nikola.plugin_categories import Command
-        cmd = self._main.get_cmds()[cmd]
+        cmd = self._doitargs['cmds'].get_plugin(cmd)
         try:
             opt = cmd.get_options()
         except TypeError:
