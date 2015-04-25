@@ -74,7 +74,7 @@ def main(args=None):
     conf_filename = 'conf.py'
     conf_filename_changed = False
     for index, arg in enumerate(args):
-        if arg[:7] == '--conf=':
+        if arg[:7] == b'--conf=':
             del args[index]
             conf_filename = arg[7:]
             conf_filename_changed = True
