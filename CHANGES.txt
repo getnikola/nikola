@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Compatibility with doit v0.28.0 (Issue #1655)
 * AddThis is no longer added by default to users’ sites
 * New translations (az, fil, tl, uk, zh_TW)
 * Add reStructuredText transform support (Issue #1647)

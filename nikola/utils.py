@@ -1305,34 +1305,51 @@ class Commands(object):
     >>> commands.check(list=True)                # doctest: +SKIP
     """
 
-    def __init__(self, main):
+    def __init__(self, main, config, doitargs):
         """Takes a main instance, works as wrapper for commands."""
         self._cmdnames = []
-        for k, v in main.get_commands().items():
-            self._cmdnames.append(k)
+        self._main = main
+        self._config = config
+        self._doitargs = doitargs
+        for k, v in self._doitargs['cmds'].to_dict().items():
+            # cleanup: run is doit-only, init is useless in an existing site
             if k in ['run', 'init']:
                 continue
             if sys.version_info[0] == 2:
                 k2 = bytes(k)
             else:
                 k2 = k
+
+            self._cmdnames.append(k)
+
+            try:
+                # nikola command: already instantiated (singleton)
+                opt = v.get_options()
+            except TypeError:
+                # doit command: needs some help
+                opt = v(config=self._config, **self._doitargs).get_options()
             nc = type(
                 k2,
                 (CommandWrapper,),
                 {
-                    '__doc__': options2docstring(k, main.sub_cmds[k].options)
+                    '__doc__': options2docstring(k, opt)
                 })
             setattr(self, k, nc(k, self))
-        self.main = main
 
     def _run(self, cmd_args):
-        self.main.run(cmd_args)
+        self._main.run(cmd_args)
 
     def _run_with_kw(self, cmd, *a, **kw):
         # cyclic import hack
         from nikola.plugin_categories import Command
-        cmd = self.main.sub_cmds[cmd]
-        options, _ = CmdParse(cmd.options).parse([])
+        cmd = self._doitargs['cmds'].get_plugin(cmd)
+        try:
+            opt = cmd.get_options()
+        except TypeError:
+            cmd = cmd(config=self._config, **self._doitargs)
+            opt = cmd.get_options()
+
+        options, _ = CmdParse(opt).parse([])
         options.update(kw)
         if isinstance(cmd, Command):
             cmd.execute(options=options, args=a)
