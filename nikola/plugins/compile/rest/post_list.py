@@ -180,6 +180,7 @@ class PostList(Directive):
 
         if not posts:
             return []
+        self.state.document.settings.record_dependencies.add("####MAGIC####TIMELINE")
 
         template_data = {
             'lang': lang,
