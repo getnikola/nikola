@@ -104,7 +104,7 @@ class CompileRest(PageCompiler):
                 out_file.write(output)
             deps_path = dest + '.dep'
             if deps.list:
-                deps.list = [p for p in deps.list if p != dest]  #Don't depend on yourself (#1671)
+                deps.list = [p for p in deps.list if p != dest]  # Don't depend on yourself (#1671)
                 with io.open(deps_path, "w+", encoding="utf8") as deps_file:
                     deps_file.write('\n'.join(deps.list))
             else:
