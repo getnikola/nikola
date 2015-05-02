@@ -1635,6 +1635,13 @@ and it will produce:
 Post List
 ~~~~~~~~~
 
+.. WARNING:: 
+
+   Any post or page that uses this directive will **never** be considered up-to-date,
+   meaning that every time you build the site, that post/page and everything that
+   depends on it (tag pages, RSS feeds, sitemap, etc.) will be rebuilt.
+
+
 This directive can be used to generate a list of posts. You could use it, for
 example, to make a list of the latest 5 blog posts, or a list of all blog posts
 with the tag ``nikola``::

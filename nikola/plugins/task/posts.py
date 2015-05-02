@@ -37,7 +37,11 @@ def update_deps(post, lang, task):
     dependencies into a .dep file. This file is read and incorporated when calling
     post.fragment_deps(), and only available /after/ compiling the fragment.
     """
-    task.file_dep.update(post.fragment_deps(lang))
+    task.file_dep.update([p for p in post.fragment_deps(lang) if not p.startswith("####MAGIC####")])
+
+
+def dependence_on_timeline(post, lang):
+    return "####MAGIC####TIMELINE" not in post.fragment_deps(lang)
 
 
 class RenderPosts(Task):
@@ -63,15 +67,19 @@ class RenderPosts(Task):
             deps_dict.pop('timeline')
             for post in kw['timeline']:
                 dest = post.translated_base_path(lang)
+                file_dep = [p for p in post.fragment_deps(lang) if not p.startswith("####MAGIC####")]
                 task = {
                     'basename': self.name,
                     'name': dest,
-                    'file_dep': post.fragment_deps(lang),
+                    'file_dep': file_dep,
                     'targets': [dest],
                     'actions': [(post.compile, (lang, )),
                                 (update_deps, (post, lang, )),
                                 ],
                     'clean': True,
-                    'uptodate': [utils.config_changed(deps_dict, 'nikola.plugins.task.posts')] + post.fragment_deps_uptodate(lang),
+                    'uptodate': [
+                        utils.config_changed(deps_dict, 'nikola.plugins.task.posts'),
+                        lambda p=post, l=lang: dependence_on_timeline(p, l)
+                    ] + post.fragment_deps_uptodate(lang),
                 }
                 yield task

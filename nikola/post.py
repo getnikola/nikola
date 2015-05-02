@@ -526,8 +526,16 @@ class Post(object):
         if lang is None:
             lang = nikola.utils.LocaleBorg().current_lang
         file_name = self._translated_file_path(lang)
+
+        # Yes, we compile it and screw it.
+        # This may be controversial, but the user (or someone) is asking for the post text
+        # and the post should not just refuse to give it.
+        if not os.path.isfile(file_name):
+            self.compile(lang)
+
         with io.open(file_name, "r", encoding="utf8") as post_file:
             data = post_file.read().strip()
+
         if self.compiler.extension() == '.php':
             return data
         try:

@@ -19,6 +19,9 @@ Features
 Bugfixes
 --------
 
+* Posts/Pages that use post-list will never be up to date (Issue #1671)
+* Support using post.text() in post_list_directive.tmpl (Issue #1671)
+* Avoid recursive dep when using post-list in a post (Issue #1671)
 * Encode IDNs to Punycode in ``nikola init`` and in links;
   show an error if the site URL is not Punycode (Issue #1644)
 * Make ``images`` the default output directory for IMAGE_FOLDERS
