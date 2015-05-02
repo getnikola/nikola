@@ -49,8 +49,7 @@ urlset_header = """<?xml version="1.0" encoding="UTF-8"?>
 
 loc_format = """ <url>
   <loc>{0}</loc>
-  <lastmod>{1}</lastmod>
-  {2}
+  <lastmod>{1}</lastmod>{2}
  </url>
 """
 
@@ -70,11 +69,7 @@ sitemap_format = """ <sitemap>
  </sitemap>
 """
 
-alternates_format = """<xhtml:link
-                 rel="alternate"
-                 hreflang="{0}"
-                 href="{1}"
-                 />"""
+alternates_format = """\n  <xhtml:link rel="alternate" hreflang="{0}" href="{1}" />"""
 
 
 sitemapindex_footer = "</sitemapindex>"
@@ -156,7 +151,7 @@ class Sitemap(LateTask):
                             if loc == alt_url:
                                 continue
                             alternates.append(alternates_format.format(lang, alt_url))
-                    urlset[loc] = loc_format.format(loc, lastmod, '\n'.join(alternates))
+                    urlset[loc] = loc_format.format(loc, lastmod, ''.join(alternates))
                 for fname in files:
                     if kw['strip_indexes'] and fname == kw['index_file']:
                         continue  # We already mapped the folder
