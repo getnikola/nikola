@@ -50,6 +50,7 @@ urlset_header = """<?xml version="1.0" encoding="UTF-8"?>
 loc_format = """ <url>
   <loc>{0}</loc>
   <lastmod>{1}</lastmod>
+  {2}
  </url>
 """
 
@@ -68,6 +69,13 @@ sitemap_format = """ <sitemap>
   <lastmod>{1}</lastmod>
  </sitemap>
 """
+
+alternates_format = """<xhtml:link
+                 rel="alternate"
+                 hreflang="{0}"
+                 href="{1}"
+                 />"""
+
 
 sitemapindex_footer = "</sitemapindex>"
 
@@ -114,6 +122,7 @@ class Sitemap(LateTask):
             "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.html', '.htm', '.xml', '.rss']),
             "robots_exclusions": self.site.config["ROBOTS_EXCLUSIONS"],
             "filters": self.site.config["FILTERS"],
+            "translations": self.site.config["TRANSLATIONS"],
         }
 
         output = kw['output_folder']
@@ -140,7 +149,14 @@ class Sitemap(LateTask):
                     post = self.site.post_per_file.get(path + kw['index_file'])
                     if post and (post.is_draft or post.is_private or post.publish_later):
                         continue
-                    urlset[loc] = loc_format.format(loc, lastmod)
+                    alternates = []
+                    if post:
+                        for lang in kw['translations']:
+                            alt_url = post.permalink(lang=lang, absolute=True)
+                            if loc == alt_url:
+                                continue
+                            alternates.append(alternates_format.format(lang, alt_url))
+                    urlset[loc] = loc_format.format(loc, lastmod, '\n'.join(alternates))
                 for fname in files:
                     if kw['strip_indexes'] and fname == kw['index_file']:
                         continue  # We already mapped the folder
@@ -179,7 +195,14 @@ class Sitemap(LateTask):
                         path = path.replace(os.sep, '/')
                         lastmod = self.get_lastmod(real_path)
                         loc = urljoin(base_url, base_path + path)
-                        urlset[loc] = loc_format.format(loc, lastmod)
+                        alternates = []
+                        if post:
+                            for lang in kw['translations']:
+                                alt_url = post.permalink(lang=lang, absolute=True)
+                                if loc == alt_url:
+                                    continue
+                                alternates.append(alternates_format.format(lang, alt_url))
+                        urlset[loc] = loc_format.format(loc, lastmod, '\n'.join(alternates))
 
         def robot_fetch(path):
             for rule in kw["robots_exclusions"]:
