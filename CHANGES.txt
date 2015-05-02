@@ -4,6 +4,11 @@ New in master
 Features
 --------
 
+* New option GENERATE_ATOM, off by default
+* Current and archive Atom feeds for indexes and category/tag indexes (RFC-4287 and RFC-5005)
+* Atom feed auto-discovery in HTML indexes and category/tag indexes
+* .atom included in the sitemap index
+* New post metadata "updated", inherits "date" if unset
 * Multilingual sitemaps (Issue #1610)
 * Compatibility with doit v0.28.0 (Issue #1655)
 * AddThis is no longer added by default to users’ sites

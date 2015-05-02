@@ -388,7 +388,7 @@ REDIRECTIONS = ${REDIRECTIONS}
 # side optimization for very high traffic sites or low memory servers.
 # GZIP_FILES = False
 # File extensions that will be compressed
-# GZIP_EXTENSIONS = ('.txt', '.htm', '.html', '.css', '.js', '.json', '.xml')
+# GZIP_EXTENSIONS = ('.txt', '.htm', '.html', '.css', '.js', '.json', '.atom', '.xml')
 # Use an external gzip command? None means no.
 # Example: GZIP_COMMAND = "pigz -k {filename}"
 # GZIP_COMMAND = None
@@ -556,10 +556,10 @@ INDEX_READ_MORE_LINK = ${INDEX_READ_MORE_LINK}
 # 'Read more...' for the RSS_FEED, if RSS_TEASERS is True (translatable)
 RSS_READ_MORE_LINK = ${RSS_READ_MORE_LINK}
 
-# Append a URL query to the RSS_READ_MORE_LINK and the //rss/item/link in
-# RSS feeds. Minimum example for Piwik "pk_campaign=rss" and Google Analytics
-# "utm_source=rss&utm_medium=rss&utm_campaign=rss". Advanced option used for
-# traffic source tracking.
+# Append a URL query to the RSS_READ_MORE_LINK in Atom and RSS feeds. Advanced
+# option used for traffic source tracking. Minimum example for use with Piwik:
+# "pk_campaign=rss" and for use with Google Analytics
+# "utm_source=feed&utm_medium=feed&utm_campaign=feed".
 RSS_LINKS_APPEND_QUERY = False
 
 # A HTML fragment describing the license, for the sidebar.
@@ -753,12 +753,21 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # links to it.  Set this to False to disable everything RSS-related.
 # GENERATE_RSS = True
 
+# By default, Nikola does not generates Atom files for indexes and links to
+# them. Generate Atom for tags by setting TAG_PAGES_ARE_INDEXES to True. 
+# Atom feeds are built based on INDEX_DISPLAY_POST_COUNT and not FEED_LENGHT
+# Switch between plain-text summaries and full HTML content using the
+# RSS_TEASER option. RSS_LINKS_APPEND_QUERY is also respected. Atom feeds
+# are generated even for old indexes and have pagination link relations
+# between each other. Old Atom feeds were no changes are marked as archived.
+# GENERATE_ATOM = False
+
 # RSS_LINK is a HTML fragment to link the RSS or Atom feeds. If set to None,
 # the base.tmpl will use the feed Nikola generates. However, you may want to
 # change it for a FeedBurner feed or something else.
 # RSS_LINK = None
 
-# Show only teasers in the RSS feed? Default to True
+# Show only teasers in the RSS and Atom feeds? Default to True
 # RSS_TEASERS = True
 
 # Strip HTML in the RSS feed? Default to False
