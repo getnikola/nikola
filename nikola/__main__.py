@@ -25,7 +25,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function, unicode_literals
-from operator import attrgetter
 import os
 import shutil
 try:
@@ -75,7 +74,7 @@ def main(args=None):
     conf_filename = 'conf.py'
     conf_filename_changed = False
     for index, arg in enumerate(args):
-        if arg[:7] == '--conf=':
+        if arg[:7] == b'--conf=':
             del args[index]
             conf_filename = arg[7:]
             conf_filename_changed = True
@@ -172,8 +171,9 @@ class Help(DoitHelp):
 
         print("Nikola is a tool to create static websites and blogs. For full documentation and more information, please visit http://getnikola.com/\n\n")
         print("Available commands:")
-        for cmd in sorted(cmds.values(), key=attrgetter('name')):
-            print("  nikola %-*s %s" % (20, cmd.name, cmd.doc_purpose))
+        for cmd_name in sorted(cmds.keys()):
+            cmd = cmds[cmd_name]
+            print("  nikola {:20s} {}".format(cmd_name, cmd.doc_purpose))
         print("")
         print("  nikola help                 show help / reference")
         print("  nikola help <command>       show command usage")
@@ -265,20 +265,21 @@ class DoitNikola(DoitMain):
     TASK_LOADER = NikolaTaskLoader
 
     def __init__(self, nikola, quiet=False):
+        super(DoitNikola, self).__init__()
         self.nikola = nikola
         nikola.doit = self
         self.task_loader = self.TASK_LOADER(nikola, quiet)
 
-    def get_commands(self):
+    def get_cmds(self):
         # core doit commands
-        cmds = DoitMain.get_commands(self)
+        cmds = DoitMain.get_cmds(self)
         # load nikola commands
         for name, cmd in self.nikola._commands.items():
             cmds[name] = cmd
         return cmds
 
     def run(self, cmd_args):
-        sub_cmds = self.get_commands()
+        sub_cmds = self.get_cmds()
         args = self.process_args(cmd_args)
         args = [sys_decode(arg) for arg in args]
 
@@ -306,7 +307,7 @@ class DoitNikola(DoitMain):
         if args[0] not in sub_cmds.keys():
             LOGGER.error("Unknown command {0}".format(args[0]))
             return 3
-        if not isinstance(sub_cmds[args[0]], (Command, Help)):  # Is a doit command
+        if sub_cmds[args[0]] is not Help and not isinstance(sub_cmds[args[0]], Command):  # Is a doit command
             if not self.nikola.configured:
                 LOGGER.error("This command needs to run inside an "
                              "existing Nikola site.")

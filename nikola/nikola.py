@@ -37,9 +37,9 @@ import json
 import sys
 import mimetypes
 try:
-    from urlparse import urlparse, urlsplit, urljoin
+    from urlparse import urlparse, urlsplit, urlunsplit, urljoin, unquote
 except ImportError:
-    from urllib.parse import urlparse, urlsplit, urljoin  # NOQA
+    from urllib.parse import urlparse, urlsplit, urlunsplit, urljoin, unquote  # NOQA
 
 try:
     import pyphen
@@ -407,7 +407,7 @@ class Nikola(object):
             'SHOW_SOURCELINK': True,
             'SHOW_UNTRANSLATED_POSTS': True,
             'SLUG_TAG_PATH': True,
-            'SOCIAL_BUTTONS_CODE': SOCIAL_BUTTONS_CODE,
+            'SOCIAL_BUTTONS_CODE': '',
             'SITE_URL': 'http://getnikola.com/',
             'STORY_INDEX': False,
             'STRIP_INDEXES': False,
@@ -624,6 +624,15 @@ class Nikola(object):
         if self.config['BASE_URL'] and self.config['BASE_URL'][-1] != '/':
             utils.LOGGER.warn("Your BASE_URL doesn't end in / -- adding it, but please fix it in your config file!")
             self.config['BASE_URL'] += '/'
+
+        try:
+            _bnl = urlsplit(self.config['BASE_URL']).netloc
+            _bnl.encode('ascii')
+            urlsplit(self.config['SITE_URL']).netloc.encode('ascii')
+        except (UnicodeEncodeError, UnicodeDecodeError):
+            utils.LOGGER.error("Your BASE_URL or SITE_URL contains an IDN expressed in Unicode.  Please convert it to Punycode.")
+            utils.LOGGER.error("Punycode of {}: {}".format(_bnl, _bnl.encode('idna')))
+            sys.exit(1)
 
         # todo: remove in v8
         if not isinstance(self.config['DEPLOY_COMMANDS'], dict):
@@ -984,6 +993,24 @@ class Nikola(object):
             if dst_url.scheme == 'link':  # Magic link
                 dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'), lang)
             else:
+                print(dst)
+                if '%' in dst_url.netloc:
+                    # convert lxml percent-encoded garbage to punycode
+                    nl = unquote(dst_url.netloc)
+                    try:
+                        nl = nl.decode('utf-8')
+                    except AttributeError:
+                        # python 3: already unicode
+                        pass
+
+                    nl = nl.encode('idna')
+
+                    dst = urlunsplit((dst_url.scheme,
+                                      nl,
+                                      dst_url.path,
+                                      dst_url.query,
+                                      dst_url.fragment))
+                    print(dst)
                 return dst
         elif dst_url.scheme == 'link':  # Magic absolute path link:
             dst = dst_url.path
@@ -1315,10 +1342,6 @@ class Nikola(object):
         if self._scanned and not really:
             return
 
-        try:
-            self.commands = utils.Commands(self.doit)
-        except AttributeError:
-            self.commands = None
         self.global_data = {}
         self.posts = []
         self.all_posts = []
@@ -1829,18 +1852,3 @@ _windows_locale_guesses = {
     "tr_tr": "Turkish",
     "zh_cn": "Chinese_China",  # Chinese (Simplified)
 }
-
-
-SOCIAL_BUTTONS_CODE = """
-<!-- Social buttons -->
-<div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
-<a class="addthis_button_more">Share</a>
-<ul><li><a class="addthis_button_facebook"></a>
-<li><a class="addthis_button_google_plusone_share"></a>
-<li><a class="addthis_button_linkedin"></a>
-<li><a class="addthis_button_twitter"></a>
-</ul>
-</div>
-<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
-<!-- End of social buttons -->
-"""

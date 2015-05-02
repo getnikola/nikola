@@ -5,6 +5,8 @@ Features
 --------
 
 * Multilingual sitemaps (Issue #1610)
+* Compatibility with doit v0.28.0 (Issue #1655)
+* AddThis is no longer added by default to users’ sites
 * New translations (az, fil, tl, uk, zh_TW)
 * Add reStructuredText transform support (Issue #1647)
 * Produce Unicode output in ``nikola init`` (via Issue #1644)
@@ -17,6 +19,8 @@ Features
 Bugfixes
 --------
 
+* Encode IDNs to Punycode in ``nikola init`` and in links;
+  show an error if the site URL is not Punycode (Issue #1644)
 * Make ``images`` the default output directory for IMAGE_FOLDERS
   (Issue #1663)
 * Don't default to any swatch in bootswatch_theme (Issue #1656)

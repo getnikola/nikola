@@ -39,7 +39,7 @@ from pkg_resources import resource_filename
 import tarfile
 
 import nikola
-from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_RSS_READ_MORE_LINK, LEGAL_VALUES
+from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_RSS_READ_MORE_LINK, LEGAL_VALUES, urlsplit, urlunsplit
 from nikola.plugin_categories import Command
 from nikola.utils import ask, ask_yesno, get_logger, makedirs, STDERR_HANDLER, load_messages
 from nikola.packages.tzlocal import get_localzone
@@ -261,6 +261,36 @@ class CommandInit(Command):
     @staticmethod
     def ask_questions(target):
         """Ask some questions about Nikola."""
+        def urlhandler(default, toconf):
+            answer = ask('Site URL', 'http://getnikola.com/')
+            try:
+                answer = answer.decode('utf-8')
+            except (AttributeError, UnicodeDecodeError):
+                pass
+            if not answer.startswith(u'http'):
+                print("    ERROR: You must specify a protocol (http or https).")
+                urlhandler(default, toconf)
+                return
+            if not answer.endswith('/'):
+                print("    The URL does not end in '/' -- adding it.")
+                answer += '/'
+
+            dst_url = urlsplit(answer)
+            try:
+                dst_url.netloc.encode('ascii')
+            except (UnicodeEncodeError, UnicodeDecodeError):
+                # The IDN contains characters beyond ASCII.  We must convert it
+                # to Punycode. (Issue #1644)
+                nl = dst_url.netloc.encode('idna')
+                answer = urlunsplit((dst_url.scheme,
+                                     nl,
+                                     dst_url.path,
+                                     dst_url.query,
+                                     dst_url.fragment))
+                print("    Converting to Punycode:", answer)
+
+            SAMPLE_CONF['SITE_URL'] = answer
+
         def lhandler(default, toconf, show_header=True):
             if show_header:
                 print("We will now ask you to provide the list of languages you want to use.")
@@ -375,7 +405,7 @@ class CommandInit(Command):
             ('Site author', 'Nikola Tesla', True, 'BLOG_AUTHOR'),
             ('Site author\'s e-mail', 'n.tesla@example.com', True, 'BLOG_EMAIL'),
             ('Site description', 'This is a demo site for Nikola.', True, 'BLOG_DESCRIPTION'),
-            ('Site URL', 'http://getnikola.com/', True, 'SITE_URL'),
+            (urlhandler, None, True, True),
             ('Questions about languages and locales', None, None, None),
             (lhandler, None, True, True),
             (tzhandler, None, True, True),
