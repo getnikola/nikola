@@ -345,7 +345,7 @@ class Nikola(object):
             'EXTRA_PLUGINS_DIRS': [],
             'COMMENT_SYSTEM_ID': 'nikolademo',
             'EXTRA_HEAD_DATA': '',
-            'FAVICONS': {},
+            'FAVICONS': (),
             'FEED_LENGTH': 10,
             'FILE_METADATA_REGEXP': None,
             'ADDITIONAL_METADATA': {},
