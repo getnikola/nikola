@@ -75,7 +75,6 @@ class BasePlugin(IPlugin):
             # so let’s just ignore it and be done with it.
             pass
 
-
 class Command(BasePlugin, DoitCommand):
     """These plugins are exposed via the command line.
     They implement the doit Command interface."""
