@@ -1323,8 +1323,6 @@ class Nikola(object):
                 if 'task_dep' not in task:
                     task['task_dep'] = []
                 task['task_dep'].extend(self.injected_deps[task['basename']])
-                if task['task_dep']:
-                    print(task['basename'], task['task_dep'])
                 yield task
                 for multi in self.plugin_manager.getPluginsOfCategory("TaskMultiplier"):
                     flag = False
