@@ -79,6 +79,7 @@ class BasePlugin(IPlugin):
         """Add 'dependency' to the target task's task_deps"""
         self.site.injected_deps[target].append(dependency)
 
+
 class Command(BasePlugin, DoitCommand):
     """These plugins are exposed via the command line.
     They implement the doit Command interface."""
