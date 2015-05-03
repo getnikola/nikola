@@ -26,6 +26,7 @@
 
 from __future__ import unicode_literals
 
+import json
 import os
 
 try:
@@ -43,12 +44,32 @@ class BuildBundles(LateTask):
     name = "create_bundles"
 
     def set_site(self, site):
+        cdnjs_path = os.path.join(os.path.dirname(__file__), 'cdnjsdata.json')
+        with open(cdnjs_path) as fd:
+            self.cdnjs = json.load(fd)
         self.logger = utils.get_logger('bundles', site.loghandlers)
         if webassets is None and site.config['USE_BUNDLES']:
             utils.req_missing(['webassets'], 'USE_BUNDLES', optional=True)
             self.logger.warn('Setting USE_BUNDLES to False.')
             site.config['USE_BUNDLES'] = False
+        self.cdn_js_urls = []
+        self.cdn_css_urls = []
+            
         super(BuildBundles, self).set_site(site)
+
+    def url_from_entry(self, entry):
+        """Turn a bundles entry into a URL from cdnjs"""
+        if entry in self.cdnjs:
+            url = self.cdnjs[entry]
+        elif '::' in entry:
+            # It's like twitter-bootstrap::bootstrap.css
+            # The 1st part is in cdnjs but the name in the URL is different
+            key, fname = entry.split('::')
+            url = self.cdnjs[key]
+            url = '/'.join(url.split('/')[:-1]) + '/' + fname
+        else:
+            url = None
+        return url
 
     def gen_tasks(self):
         """Bundle assets using WebAssets."""
@@ -61,6 +82,7 @@ class BuildBundles(LateTask):
             'themes': self.site.THEMES,
             'files_folders': self.site.config['FILES_FOLDERS'],
             'code_color_scheme': self.site.config['CODE_COLOR_SCHEME'],
+            'use_cdn': self.site.config['USE_CDN'],
         }
 
         def build_bundle(output, inputs):
@@ -89,6 +111,28 @@ class BuildBundles(LateTask):
         if (webassets is not None and self.site.config['USE_BUNDLES'] is not
                 False):
             for name, _files in kw['theme_bundles'].items():
+                
+                # If using a CDN, remove those files that will be delivered by the CDN
+                t_files = []
+                if kw['use_cdn']:
+                    # Using a CDN, move CDN-able files into cdn_*_url lists
+                    for i in _files:
+                        url = self.url_from_entry(i)
+                        if url is None:
+                            t_files.append(i)
+                        else:
+                            if url.endswith('js'):
+                                cdn_js_urls.append(url)
+                            else:
+                                cdn_css_urls.append(url)
+                else:  # No CDN, remove the package::file notation
+                    for i in _files:
+                        if '::' in i:
+                            i = i.split('::')[-1]
+                        t_files.append(i)
+                        
+                _files = t_files
+                    
                 output_path = os.path.join(kw['output_folder'], name)
                 dname = os.path.dirname(name)
                 files = []
