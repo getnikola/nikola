@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Plugins can manipulate task dependencies (Issue #1679)
 * Four new filters: html_tidy_nowrap, html_tidy_wrap, html_tidy_wrap_attr,
   and html_tidy_mini for prettification and minification. Requires tidy5.
 * Multilingual sitemaps (Issue #1610)
