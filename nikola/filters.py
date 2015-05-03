@@ -168,7 +168,7 @@ def _html_tidy_runner(infile, options):
     try:
         status = runinplace(r"tidy5 " + options, infile)
     except subprocess.CalledProcessError as err:
-        status = 0 if err.returncode is 1 else err.returncode
+        status = 0 if err.returncode == 1 else err.returncode
     return status
 
 
