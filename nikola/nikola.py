@@ -1101,9 +1101,15 @@ class Nikola(object):
 
         items = []
 
+        feed_append_query = None
+        if rss_links_append_query:
+            feed_append_query = rss_links_append_query.format(
+                feedRelUri='/' + feed_url[len(self.config['BASE_URL']):],
+                feedFormat="rss")
+
         for post in timeline[:feed_length]:
             data = post.text(lang, teaser_only=rss_teasers, strip_html=rss_plain,
-                             rss_read_more_link=True, rss_links_append_query=rss_links_append_query)
+                             rss_read_more_link=True, rss_links_append_query=feed_append_query)
             if feed_url is not None and data:
                 # Massage the post's HTML (unless plain)
                 if not rss_plain:
@@ -1125,7 +1131,7 @@ class Nikola(object):
                             raise(e)
             args = {
                 'title': post.title(lang),
-                'link': post.permalink(lang, absolute=True, query=rss_links_append_query),
+                'link': post.permalink(lang, absolute=True, query=feed_append_query),
                 'description': data,
                 # PyRSS2Gen's pubDate is GMT time.
                 'pubDate': (post.date if post.date.tzinfo is None else
@@ -1642,9 +1648,15 @@ class Nikola(object):
         feed_generator.set("uri", "http://getnikola.com/")
         feed_generator.text = "Nikola"
 
+        feed_append_query = None
+        if self.config["RSS_LINKS_APPEND_QUERY"]:
+            feed_append_query = self.config["RSS_LINKS_APPEND_QUERY"].format(
+                feedRelUri=context["feedlink"],
+                feedFormat="atom")
+
         for post in posts:
             data = post.text(lang, teaser_only=self.config["RSS_TEASERS"], strip_html=self.config["RSS_TEASERS"],
-                             rss_read_more_link=True, rss_links_append_query=self.config["RSS_LINKS_APPEND_QUERY"])
+                             rss_read_more_link=True, rss_links_append_query=feed_append_query)
             if not self.config["RSS_TEASERS"]:
                 # FIXME: this is duplicated with code in Post.text() and generic_rss_renderer
                 try:
@@ -1677,7 +1689,7 @@ class Nikola(object):
             entry_author_name.text = post.author(lang)
             entry_root.append(atom_link("alternate", "text/html",
                               post.permalink(lang, absolute=True,
-                                             query=self.config["RSS_LINKS_APPEND_QUERY"])))
+                                             query=feed_append_query)))
             if self.config["RSS_TEASERS"]:
                 entry_summary = lxml.etree.SubElement(entry_root, "summary")
                 entry_summary.text = data

@@ -557,9 +557,13 @@ INDEX_READ_MORE_LINK = ${INDEX_READ_MORE_LINK}
 RSS_READ_MORE_LINK = ${RSS_READ_MORE_LINK}
 
 # Append a URL query to the RSS_READ_MORE_LINK in Atom and RSS feeds. Advanced
-# option used for traffic source tracking. Minimum example for use with Piwik:
-# "pk_campaign=rss" and for use with Google Analytics
-# "utm_source=feed&utm_medium=feed&utm_campaign=feed".
+# option used for traffic source tracking.
+# Minimum example for use with Piwik: "pk_campaign=feed"
+# The following tags exist and are replaced for you:
+# {feedRelUri}                  A relative link to the feed.
+# {feedFormat}                  The name of the syndication format.
+# Example using replacement for use with Google Analytics:
+# "utm_source={feedRelUri}&utm_medium=nikola_feed&utm_campaign={feedFormat}_feed"
 RSS_LINKS_APPEND_QUERY = False
 
 # A HTML fragment describing the license, for the sidebar.

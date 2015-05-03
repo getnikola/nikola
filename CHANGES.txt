@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Substitutions for RSS_LINKS_APPEND_QUERY for identifying
+  the source feed (feedRelUri) and  the kind of feed (feedFormat).
 * New option GENERATE_ATOM, off by default
 * Current and archive Atom feeds for indexes and category/tag indexes (RFC-4287 and RFC-5005)
 * Atom feed auto-discovery in HTML indexes and category/tag indexes
@@ -24,6 +26,7 @@ Features
 Bugfixes
 --------
 
+* RSS_LINKS_APPEND_QUERY not working in RSS feeds for tags
 * Don’t use sets for ``FAVICONS`` (Issue #1674)
 * Posts/Pages that use post-list will never be up to date (Issue #1671)
 * Support using post.text() in post_list_directive.tmpl (Issue #1671)
