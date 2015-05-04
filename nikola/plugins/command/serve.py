@@ -107,7 +107,7 @@ class CommandServe(Command):
                 OurHTTP = HTTPServer
 
             httpd = OurHTTP((options['address'], options['port']),
-                             OurHTTPRequestHandler)
+                            OurHTTPRequestHandler)
             sa = httpd.socket.getsockname()
             self.logger.info("Serving HTTP on {0} port {1}...".format(*sa))
             if options['browser']:
