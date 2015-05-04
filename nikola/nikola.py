@@ -286,6 +286,7 @@ class Nikola(object):
         self.quiet = config.pop('__quiet__', False)
         self.configuration_filename = config.pop('__configuration_filename__', False)
         self.configured = bool(config)
+        self.injected_deps = defaultdict(list)
 
         self.rst_transforms = []
         self.template_hooks = {
@@ -1319,6 +1320,9 @@ class Nikola(object):
             for task in flatten(pluginInfo.plugin_object.gen_tasks()):
                 assert 'basename' in task
                 task = self.clean_task_paths(task)
+                if 'task_dep' not in task:
+                    task['task_dep'] = []
+                task['task_dep'].extend(self.injected_deps[task['basename']])
                 yield task
                 for multi in self.plugin_manager.getPluginsOfCategory("TaskMultiplier"):
                     flag = False

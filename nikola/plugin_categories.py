@@ -75,6 +75,10 @@ class BasePlugin(IPlugin):
             # so let’s just ignore it and be done with it.
             pass
 
+    def inject_dependency(self, target, dependency):
+        """Add 'dependency' to the target task's task_deps"""
+        self.site.injected_deps[target].append(dependency)
+
 
 class Command(BasePlugin, DoitCommand):
     """These plugins are exposed via the command line.
