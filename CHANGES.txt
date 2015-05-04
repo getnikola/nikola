@@ -5,6 +5,7 @@ Features
 --------
 
 * Plugins can manipulate task dependencies (Issue #1679)
+* LINK_CHECK_WHITELIST now works with output relative and full fs paths
 * Four new filters: html_tidy_nowrap, html_tidy_wrap, html_tidy_wrap_attr,
   and html_tidy_mini for prettification and minification. Requires tidy5.
 * Multilingual sitemaps (Issue #1610)
@@ -22,6 +23,7 @@ Features
 Bugfixes
 --------
 
+* `nikola check -l` didn’t scan posts
 * Don’t use sets for ``FAVICONS`` (Issue #1674)
 * Posts/Pages that use post-list will never be up to date (Issue #1671)
 * Support using post.text() in post_list_directive.tmpl (Issue #1671)

@@ -217,7 +217,7 @@ class CommandCheck(Command):
                     fs_rel_path = fs_relpath_from_url_path(url_rel_path)
                     target_filename = os.path.join(self.site.config['OUTPUT_FOLDER'], fs_rel_path)
 
-                if any(re.match(x, target_filename) for x in self.whitelist):
+                if any(re.search(x, target_filename) for x in self.whitelist):
                     continue
                 elif target_filename not in self.existing_targets:
                     if os.path.exists(target_filename):
@@ -244,7 +244,7 @@ class CommandCheck(Command):
             if task.split(':')[0] in (
                     'render_tags', 'render_archive',
                     'render_galleries', 'render_indexes',
-                    'render_pages'
+                    'render_pages', 'render_posts',
                     'render_site') and '.html' in task:
                 if self.analyze(task, find_sources):
                     failure = True
