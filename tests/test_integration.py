@@ -116,12 +116,12 @@ class DemoBuildTest(EmptyBuildTest):
     def test_index_in_sitemap(self):
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
         sitemap_data = io.open(sitemap_path, "r", encoding="utf8").read()
-        self.assertTrue('<loc>http://getnikola.com/index.html</loc>' in sitemap_data)
+        self.assertTrue('<loc>https://example.com/index.html</loc>' in sitemap_data)
 
     def test_avoid_double_slash_in_rss(self):
         rss_path = os.path.join(self.target_dir, "output", "rss.xml")
         rss_data = io.open(rss_path, "r", encoding="utf8").read()
-        self.assertFalse('http://getnikola.com//' in rss_data)
+        self.assertFalse('https://example.com//' in rss_data)
 
 
 class RepeatedPostsSetting(DemoBuildTest):
@@ -272,8 +272,8 @@ class RelativeLinkTest(DemoBuildTest):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
-            data = data.replace('SITE_URL = "http://getnikola.com/"',
-                                'SITE_URL = "http://getnikola.com/foo/bar/"')
+            data = data.replace('SITE_URL = "https://example.com/"',
+                                'SITE_URL = "https://example.com/foo/bar/"')
         with io.open(conf_path, "w+", encoding="utf8") as outf:
             outf.write(data)
 
@@ -295,8 +295,8 @@ class RelativeLinkTest(DemoBuildTest):
         """Test that the correct path is in sitemap, and not the wrong one."""
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
         sitemap_data = io.open(sitemap_path, "r", encoding="utf8").read()
-        self.assertFalse('<loc>http://getnikola.com/</loc>' in sitemap_data)
-        self.assertTrue('<loc>http://getnikola.com/foo/bar/index.html</loc>' in sitemap_data)
+        self.assertFalse('<loc>https://example.com/</loc>' in sitemap_data)
+        self.assertTrue('<loc>https://example.com/foo/bar/index.html</loc>' in sitemap_data)
 
 
 class TestCheck(DemoBuildTest):
@@ -321,7 +321,7 @@ class TestCheckAbsoluteSubFolder(TestCheck):
     """Validate links in a site which is:
 
     * built in URL_TYPE="absolute"
-    * deployable to a subfolder (BASE_URL="http://getnikola.com/foo/")
+    * deployable to a subfolder (BASE_URL="https://example.com/foo/")
     """
 
     @classmethod
@@ -329,8 +329,8 @@ class TestCheckAbsoluteSubFolder(TestCheck):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
-            data = data.replace('SITE_URL = "http://getnikola.com/"',
-                                'SITE_URL = "http://getnikola.com/foo/"')
+            data = data.replace('SITE_URL = "https://example.com/"',
+                                'SITE_URL = "https://example.com/foo/"')
             data = data.replace("# URL_TYPE = 'rel_path'",
                                 "URL_TYPE = 'absolute'")
         with io.open(conf_path, "w+", encoding="utf8") as outf:
@@ -341,14 +341,14 @@ class TestCheckAbsoluteSubFolder(TestCheck):
         """Test that the correct path is in sitemap, and not the wrong one."""
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
         sitemap_data = io.open(sitemap_path, "r", encoding="utf8").read()
-        self.assertTrue('<loc>http://getnikola.com/foo/index.html</loc>' in sitemap_data)
+        self.assertTrue('<loc>https://example.com/foo/index.html</loc>' in sitemap_data)
 
 
 class TestCheckFullPathSubFolder(TestCheckAbsoluteSubFolder):
     """Validate links in a site which is:
 
     * built in URL_TYPE="full_path"
-    * deployable to a subfolder (BASE_URL="http://getnikola.com/foo/")
+    * deployable to a subfolder (BASE_URL="https://example.com/foo/")
     """
 
     @classmethod
@@ -356,8 +356,8 @@ class TestCheckFullPathSubFolder(TestCheckAbsoluteSubFolder):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
-            data = data.replace('SITE_URL = "http://getnikola.com/"',
-                                'SITE_URL = "http://getnikola.com/foo/"')
+            data = data.replace('SITE_URL = "https://example.com/"',
+                                'SITE_URL = "https://example.com/foo/"')
             data = data.replace("# URL_TYPE = 'rel_path'",
                                 "URL_TYPE = 'full_path'")
         with io.open(conf_path, "w+", encoding="utf8") as outf:
@@ -423,8 +423,8 @@ class RelativeLinkTest2(DemoBuildTest):
         """Test that the correct path is in sitemap, and not the wrong one."""
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
         sitemap_data = io.open(sitemap_path, "r", encoding="utf8").read()
-        self.assertFalse('<loc>http://getnikola.com/</loc>' in sitemap_data)
-        self.assertTrue('<loc>http://getnikola.com/blog/index.html</loc>' in sitemap_data)
+        self.assertFalse('<loc>https://example.com/</loc>' in sitemap_data)
+        self.assertTrue('<loc>https://example.com/blog/index.html</loc>' in sitemap_data)
 
 
 class MonthlyArchiveTest(DemoBuildTest):

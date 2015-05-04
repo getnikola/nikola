@@ -147,6 +147,31 @@ def jpegoptim(infile):
     return runinplace(r"jpegoptim -p --strip-all -q %1", infile)
 
 
+def html_tidy_nowrap(infile):
+    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes no --sort-attributes alpha --wrap 0 --wrap-sections no --tidy-mark no -modify %1")
+
+
+def html_tidy_wrap(infile):
+    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes no --sort-attributes alpha --wrap 80 --wrap-sections no --tidy-mark no -modify %1")
+
+
+def html_tidy_wrap_attr(infile):
+    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes yes --sort-attributes alpha --wrap 80 --wrap-sections no --tidy-mark no -modify %1")
+
+
+def html_tidy_mini(infile):
+    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 --indent-attributes no --sort-attributes alpha --wrap 0 --wrap-sections no --tidy-mark no -modify %1")
+
+
+def _html_tidy_runner(infile, options):
+    """ Warnings (returncode 1) are not critical, and *everything* is a warning """
+    try:
+        status = runinplace(r"tidy5 " + options, infile)
+    except subprocess.CalledProcessError as err:
+        status = 0 if err.returncode == 1 else err.returncode
+    return status
+
+
 @apply_to_text_file
 def minify_lines(data):
     return data

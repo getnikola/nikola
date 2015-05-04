@@ -287,6 +287,7 @@ class Nikola(object):
         self.quiet = config.pop('__quiet__', False)
         self.configuration_filename = config.pop('__configuration_filename__', False)
         self.configured = bool(config)
+        self.injected_deps = defaultdict(list)
 
         self.rst_transforms = []
         self.template_hooks = {
@@ -410,7 +411,7 @@ class Nikola(object):
             'SHOW_UNTRANSLATED_POSTS': True,
             'SLUG_TAG_PATH': True,
             'SOCIAL_BUTTONS_CODE': '',
-            'SITE_URL': 'http://getnikola.com/',
+            'SITE_URL': 'https://example.com/',
             'STORY_INDEX': False,
             'STRIP_INDEXES': False,
             'SITEMAP_INCLUDE_FILELESS_DIRS': True,
@@ -1328,6 +1329,9 @@ class Nikola(object):
             for task in flatten(pluginInfo.plugin_object.gen_tasks()):
                 assert 'basename' in task
                 task = self.clean_task_paths(task)
+                if 'task_dep' not in task:
+                    task['task_dep'] = []
+                task['task_dep'].extend(self.injected_deps[task['basename']])
                 yield task
                 for multi in self.plugin_manager.getPluginsOfCategory("TaskMultiplier"):
                     flag = False

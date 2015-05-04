@@ -11,6 +11,11 @@ Features
 * Atom feed auto-discovery in HTML indexes and category/tag indexes
 * .atom included in the sitemap index
 * New post metadata "updated", inherits "date" if unset
+* Set default new site URL to https://example.com/
+* Plugins can manipulate task dependencies (Issue #1679)
+* LINK_CHECK_WHITELIST now works with output relative and full fs paths
+* Four new filters: html_tidy_nowrap, html_tidy_wrap, html_tidy_wrap_attr,
+  and html_tidy_mini for prettification and minification. Requires tidy5.
 * Multilingual sitemaps (Issue #1610)
 * Compatibility with doit v0.28.0 (Issue #1655)
 * AddThis is no longer added by default to users’ sites
@@ -27,6 +32,7 @@ Bugfixes
 --------
 
 * RSS_LINKS_APPEND_QUERY not working in RSS feeds for tags
+* `nikola check -l` didn’t scan posts
 * Don’t use sets for ``FAVICONS`` (Issue #1674)
 * Posts/Pages that use post-list will never be up to date (Issue #1671)
 * Support using post.text() in post_list_directive.tmpl (Issue #1671)
