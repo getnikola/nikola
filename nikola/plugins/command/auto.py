@@ -36,7 +36,7 @@ from nikola.utils import req_missing
 class CommandAuto(Command):
     """Start debugging console."""
     name = "auto"
-    doc_purpose = "automatically detect site changes, rebuild and optionally refresh a browser"
+    doc_purpose = "Builds and serves a site. Automatically detect site changes, rebuilds, and optionally refresh a browser."
     cmd_options = [
         {
             'name': 'port',
