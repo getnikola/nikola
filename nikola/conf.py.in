@@ -758,12 +758,12 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # GENERATE_RSS = True
 
 # By default, Nikola does not generates Atom files for indexes and links to
-# them. Generate Atom for tags by setting TAG_PAGES_ARE_INDEXES to True. 
-# Atom feeds are built based on INDEX_DISPLAY_POST_COUNT and not FEED_LENGHT
+# them. Generate Atom for tags by setting TAG_PAGES_ARE_INDEXES to True.
+# Atom feeds are built based on INDEX_DISPLAY_POST_COUNT and not FEED_LENGTH
 # Switch between plain-text summaries and full HTML content using the
 # RSS_TEASER option. RSS_LINKS_APPEND_QUERY is also respected. Atom feeds
 # are generated even for old indexes and have pagination link relations
-# between each other. Old Atom feeds were no changes are marked as archived.
+# between each other. Old Atom feeds with no changes are marked as archived.
 # GENERATE_ATOM = False
 
 # RSS_LINK is a HTML fragment to link the RSS or Atom feeds. If set to None,

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:dc="http://purl.org/dc/elements/1.1/" version="1.0">	
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:dc="http://purl.org/dc/elements/1.1/" version="1.0">
 <xsl:output method="xml"/>
 <xsl:template match="/">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
@@ -7,7 +7,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width"/>
 <title><xsl:value-of select="feed/title"/> (Atom feed)</title>
-<style><![CDATA[html{margin:0;pdding:0;}body{color:hsl(180,1%,31%);font-family:Helvetica,Arial,sans-serif;font-size:17px;line-height:1.4;margin:5%;max-width:35rem;padding:0;}input{min-width:20rem;margin-left:.2rem;padding-left:.2rem;padding-right:.2rem;}ol{list-style-type:disc;padding-left:1rem;}h2{font-size:22px;font-weight:inherit;}]]></style>
+<style><![CDATA[html{margin:0;padding:0;}body{color:hsl(180,1%,31%);font-family:Helvetica,Arial,sans-serif;font-size:17px;line-height:1.4;margin:5%;max-width:35rem;padding:0;}input{min-width:20rem;margin-left:.2rem;padding-left:.2rem;padding-right:.2rem;}ol{list-style-type:disc;padding-left:1rem;}h2{font-size:22px;font-weight:inherit;}]]></style>
 </head>
 <body>
 <h1><xsl:value-of select="feed/title"/> (Atom feed)</h1>
@@ -18,7 +18,7 @@
 </p>
 <p>Preview of the feed’s current headlines:</p>
 <ol>
-<xsl:for-each select="feed/entry">       
+<xsl:for-each select="feed/entry">
 <li><h2><a><xsl:attribute name="href"><xsl:value-of select="link[@rel='alternate']/@href"/></xsl:attribute><xsl:value-of select="title"/></a></h2></li>
 </xsl:for-each>
 </ol>
