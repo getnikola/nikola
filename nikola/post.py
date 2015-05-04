@@ -166,6 +166,14 @@ class Post(object):
                 default_metadata['date'] = datetime.datetime.utcfromtimestamp(
                     os.stat(self.source_path).st_ctime).replace(tzinfo=dateutil.tz.tzutc()).astimezone(tzinfo)
 
+        # If time zone is set, build localized datetime.
+        self.date = to_datetime(self.meta[self.default_lang]['date'], tzinfo)
+
+        if 'updated' not in default_metadata:
+            default_metadata['updated'] = default_metadata.get('date', None)
+
+        self.updated = to_datetime(default_metadata['updated'])
+
         if 'title' not in default_metadata or 'slug' not in default_metadata \
                 or 'date' not in default_metadata:
             raise OSError("You must set a title (found '{0}'), a slug (found "
@@ -178,9 +186,6 @@ class Post(object):
         if 'type' not in default_metadata:
             # default value is 'text'
             default_metadata['type'] = 'text'
-
-        # If time zone is set, build localized datetime.
-        self.date = to_datetime(self.meta[self.default_lang]['date'], tzinfo)
 
         self.publish_later = False if self.current_time is None else self.date >= self.current_time
 
@@ -287,13 +292,19 @@ class Post(object):
     def template_name(self):
         return self.meta('template') or self._template_name
 
-    def formatted_date(self, date_format):
+    def formatted_date(self, date_format, date=None):
         """Return the formatted date, as unicode."""
-        fmt_date = self.date.strftime(date_format)
+        if date:
+            fmt_date = date.strftime(date_format)
+        else:
+            fmt_date = self.date.strftime(date_format)
         # Issue #383, this changes from py2 to py3
         if isinstance(fmt_date, bytes_str):
             fmt_date = fmt_date.decode('utf8')
         return fmt_date
+
+    def formatted_updated(self, date_format):
+        return self.formatted_date(date_format, self.updated)
 
     def title(self, lang=None):
         """Return localized title.
@@ -526,8 +537,16 @@ class Post(object):
         if lang is None:
             lang = nikola.utils.LocaleBorg().current_lang
         file_name = self._translated_file_path(lang)
+
+        # Yes, we compile it and screw it.
+        # This may be controversial, but the user (or someone) is asking for the post text
+        # and the post should not just refuse to give it.
+        if not os.path.isfile(file_name):
+            self.compile(lang)
+
         with io.open(file_name, "r", encoding="utf8") as post_file:
             data = post_file.read().strip()
+
         if self.compiler.extension() == '.php':
             return data
         try:
@@ -880,7 +899,7 @@ def get_metadata_from_meta_file(path, config=None, lang=None):
         else:
             while len(meta_data) < 7:
                 meta_data.append("")
-            (title, slug, date, tags, link, description, _type) = [
+            (title, slug, date, updated, tags, link, description, _type) = [
                 x.strip() for x in meta_data][:7]
 
             meta = {}
@@ -891,6 +910,8 @@ def get_metadata_from_meta_file(path, config=None, lang=None):
                 meta['slug'] = slug
             if date:
                 meta['date'] = date
+            if updated:
+                meta['updated'] = updated
             if tags:
                 meta['tags'] = tags
             if link:

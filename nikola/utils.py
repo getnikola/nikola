@@ -1305,34 +1305,51 @@ class Commands(object):
     >>> commands.check(list=True)                # doctest: +SKIP
     """
 
-    def __init__(self, main):
+    def __init__(self, main, config, doitargs):
         """Takes a main instance, works as wrapper for commands."""
         self._cmdnames = []
-        for k, v in main.get_commands().items():
-            self._cmdnames.append(k)
+        self._main = main
+        self._config = config
+        self._doitargs = doitargs
+        for k, v in self._doitargs['cmds'].to_dict().items():
+            # cleanup: run is doit-only, init is useless in an existing site
             if k in ['run', 'init']:
                 continue
             if sys.version_info[0] == 2:
                 k2 = bytes(k)
             else:
                 k2 = k
+
+            self._cmdnames.append(k)
+
+            try:
+                # nikola command: already instantiated (singleton)
+                opt = v.get_options()
+            except TypeError:
+                # doit command: needs some help
+                opt = v(config=self._config, **self._doitargs).get_options()
             nc = type(
                 k2,
                 (CommandWrapper,),
                 {
-                    '__doc__': options2docstring(k, main.sub_cmds[k].options)
+                    '__doc__': options2docstring(k, opt)
                 })
             setattr(self, k, nc(k, self))
-        self.main = main
 
     def _run(self, cmd_args):
-        self.main.run(cmd_args)
+        self._main.run(cmd_args)
 
     def _run_with_kw(self, cmd, *a, **kw):
         # cyclic import hack
         from nikola.plugin_categories import Command
-        cmd = self.main.sub_cmds[cmd]
-        options, _ = CmdParse(cmd.options).parse([])
+        cmd = self._doitargs['cmds'].get_plugin(cmd)
+        try:
+            opt = cmd.get_options()
+        except TypeError:
+            cmd = cmd(config=self._config, **self._doitargs)
+            opt = cmd.get_options()
+
+        options, _ = CmdParse(opt).parse([])
         options.update(kw)
         if isinstance(cmd, Command):
             cmd.execute(options=options, args=a)
@@ -1400,13 +1417,14 @@ def get_displayed_page_number(i, num_pages, site):
         return i + 1 if site.config["INDEXES_PAGES_MAIN"] else i
 
 
-def adjust_name_for_index_path_list(path_list, i, displayed_i, lang, site, force_addition=False):
+def adjust_name_for_index_path_list(path_list, i, displayed_i, lang, site, force_addition=False, extension=None):
     index_file = site.config["INDEX_FILE"]
     if i or force_addition:
         path_list = list(path_list)
         if force_addition and not i:
             i = 0
-        _, extension = os.path.splitext(index_file)
+        if not extension:
+            _, extension = os.path.splitext(index_file)
         if len(path_list) > 0 and path_list[-1] == '':
             path_list[-1] = index_file
         elif len(path_list) == 0 or not path_list[-1].endswith(extension):
@@ -1440,14 +1458,15 @@ def os_path_split(path):
     return result
 
 
-def adjust_name_for_index_path(name, i, displayed_i, lang, site, force_addition=False):
-    return os.path.join(*adjust_name_for_index_path_list(os_path_split(name), i, displayed_i, lang, site, force_addition))
+def adjust_name_for_index_path(name, i, displayed_i, lang, site, force_addition=False, extension=None):
+    return os.path.join(*adjust_name_for_index_path_list(os_path_split(name), i, displayed_i, lang, site, force_addition, extension))
 
 
-def adjust_name_for_index_link(name, i, displayed_i, lang, site, force_addition=False):
-    link = adjust_name_for_index_path_list(name.split('/'), i, displayed_i, lang, site, force_addition)
-    if len(link) > 0 and link[-1] == site.config["INDEX_FILE"] and site.config["STRIP_INDEXES"]:
-        link[-1] = ''
+def adjust_name_for_index_link(name, i, displayed_i, lang, site, force_addition=False, extension=None):
+    link = adjust_name_for_index_path_list(name.split('/'), i, displayed_i, lang, site, force_addition, extension)
+    if not extension == ".atom":
+        if len(link) > 0 and link[-1] == site.config["INDEX_FILE"] and site.config["STRIP_INDEXES"]:
+            link[-1] = ''
     return '/'.join(link)
 
 

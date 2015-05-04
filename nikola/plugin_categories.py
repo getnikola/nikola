@@ -75,6 +75,10 @@ class BasePlugin(IPlugin):
             # so let’s just ignore it and be done with it.
             pass
 
+    def inject_dependency(self, target, dependency):
+        """Add 'dependency' to the target task's task_deps"""
+        self.site.injected_deps[target].append(dependency)
+
 
 class Command(BasePlugin, DoitCommand):
     """These plugins are exposed via the command line.
@@ -92,6 +96,11 @@ class Command(BasePlugin, DoitCommand):
     def __init__(self, *args, **kwargs):
         BasePlugin.__init__(self, *args, **kwargs)
         DoitCommand.__init__(self)
+
+    def __call__(self, config=None, **kwargs):
+        self._doitargs = kwargs
+        DoitCommand.__init__(self, config, **kwargs)
+        return self
 
     def execute(self, options=None, args=None):
         """Check if the command can run in the current environment,
@@ -120,7 +129,7 @@ def help(self):
     text.append('')
 
     text.append("Options:")
-    for opt in self.options:
+    for opt in self.cmdparser.options:
         text.extend(opt.help_doc())
 
     if self.doc_description is not None:

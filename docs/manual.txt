@@ -1182,7 +1182,8 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus",
    * For Facebook, you need to `create an app
      <https://developers.facebook.com/apps>` (turn off sandbox mode!)
      and get an **App ID**
-   * For isso, it is the URL of isso (must be world-accessible and **have a trailing slash**,
+   * For isso, it is the URL of isso (must be world-accessible, encoded with
+     Punycode (if using Internationalized Domain Names) and **have a trailing slash**,
      default ``http://localhost:8080/``)
 
 To use comments in a visible site, you should register with the service and
@@ -1228,7 +1229,7 @@ You can disable comments for a post by adding a "nocomments" metadata field to i
     #639).
 
 An alternative or complement to comments are annotations. Nikola integrates
-the annotation service provided by `AnnotateIt. <annotateit.org>`_
+the annotation service provided by `AnnotateIt. <http://annotateit.org/>`_
 To use it, set the ``ANNOTATIONS`` option to True. This is specially useful
 if you want feedback on specific parts of your writing.
 
@@ -1272,7 +1273,7 @@ The ``conf.py`` options affecting images and gallery pages are these::
     # destination folder. A thumbnail will also be created in the same folder with
     # ``.thumbnail`` inserted in the file name before the file extension
     # (e.g. ``tesla.thumbnail.jpg``).
-    IMAGE_FOLDERS = {'images': ''}
+    IMAGE_FOLDERS = {'images': 'images'}
     # More image/gallery options:
     THUMBNAIL_SIZE = 180
     IMAGE_THUMBNAIL_SIZE = 400
@@ -1345,6 +1346,18 @@ The currently available filters are:
       FILTERS = {
         ".html": [apply_to_text_file(string.upper)]
       }
+
+html_tidy_nowrap
+   Prettify HTML 5 documents with `tidy5 <http://www.html-tidy.org/>`_
+
+html_tidy_wrap
+   Prettify HTML 5 documents wrapped at 80 characters with `tidy5 <http://www.html-tidy.org/>`_
+
+html_tidy_wrap_attr
+   Prettify HTML 5 documents and wrap lines and attributes with `tidy5 <http://www.html-tidy.org/>`_
+
+html_tidy_mini
+   Minify HTML 5 into smaller documents with `tidy5 <http://www.html-tidy.org/>`_
 
 minify_lines
    **THIS FILTER HAS BEEN TURNED INTO A NOOP** and currently does nothing.
@@ -1633,6 +1646,13 @@ and it will produce:
 
 Post List
 ~~~~~~~~~
+
+.. WARNING:: 
+
+   Any post or page that uses this directive will **never** be considered up-to-date,
+   meaning that every time you build the site, that post/page and everything that
+   depends on it (tag pages, RSS feeds, sitemap, etc.) will be rebuilt.
+
 
 This directive can be used to generate a list of posts. You could use it, for
 example, to make a list of the latest 5 blog posts, or a list of all blog posts

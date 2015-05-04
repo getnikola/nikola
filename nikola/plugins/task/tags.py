@@ -46,8 +46,10 @@ class RenderTags(Task):
         site.register_path_handler('tag_index', self.tag_index_path)
         site.register_path_handler('category_index', self.category_index_path)
         site.register_path_handler('tag', self.tag_path)
+        site.register_path_handler('tag_atom', self.tag_atom_path)
         site.register_path_handler('tag_rss', self.tag_rss_path)
         site.register_path_handler('category', self.category_path)
+        site.register_path_handler('category_atom', self.category_atom_path)
         site.register_path_handler('category_rss', self.category_rss_path)
         return super(RenderTags, self).set_site(site)
 
@@ -72,6 +74,7 @@ class RenderTags(Task):
             "generate_rss": self.site.config['GENERATE_RSS'],
             "rss_teasers": self.site.config["RSS_TEASERS"],
             "rss_plain": self.site.config["RSS_PLAIN"],
+            "rss_link_append_query": self.site.config["RSS_LINKS_APPEND_QUERY"],
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "feed_length": self.site.config['FEED_LENGTH'],
             "taglist_minimum_post_count": self.site.config['TAGLIST_MINIMUM_POSTS'],
@@ -225,11 +228,13 @@ class RenderTags(Task):
 
         kind = "category" if is_category else "tag"
 
-        def page_link(i, displayed_i, num_pages, force_addition):
-            return utils.adjust_name_for_index_link(self.site.link(kind, tag, lang), i, displayed_i, lang, self.site, force_addition)
+        def page_link(i, displayed_i, num_pages, force_addition, extension=None):
+            feed = "_atom" if extension == ".atom" else ""
+            return utils.adjust_name_for_index_link(self.site.link(kind + feed, tag, lang), i, displayed_i, lang, self.site, force_addition, extension)
 
-        def page_path(i, displayed_i, num_pages, force_addition):
-            return utils.adjust_name_for_index_path(self.site.path(kind, tag, lang), i, displayed_i, lang, self.site, force_addition)
+        def page_path(i, displayed_i, num_pages, force_addition, extension=None):
+            feed = "_atom" if extension == ".atom" else ""
+            return utils.adjust_name_for_index_path(self.site.path(kind + feed, tag, lang), i, displayed_i, lang, self.site, force_addition, extension)
 
         context_source = {}
         if kw["generate_rss"]:
@@ -303,7 +308,7 @@ class RenderTags(Task):
                         (lang, "{0} ({1})".format(kw["blog_title"](lang), tag),
                          kw["site_url"], None, post_list,
                          output_name, kw["rss_teasers"], kw["rss_plain"], kw['feed_length'],
-                         feed_url))],
+                         feed_url, None, kw["rss_link_append_query"]))],
             'clean': True,
             'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.tags:rss')] + deps_uptodate,
             'task_dep': ['render_posts'],
@@ -338,6 +343,11 @@ class RenderTags(Task):
                 self.site.config['TAG_PATH'],
                 self.slugify_name(name) + ".html"] if _f]
 
+    def tag_atom_path(self, name, lang):
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['TAG_PATH'], self.slugify_name(name) + ".atom"] if
+                _f]
+
     def tag_rss_path(self, name, lang):
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                               self.site.config['TAG_PATH'], self.slugify_name(name) + ".xml"] if
@@ -354,6 +364,11 @@ class RenderTags(Task):
                                   self.site.config['CATEGORY_PATH'],
                                   self.site.config['CATEGORY_PREFIX'] + self.slugify_name(name) + ".html"] if
                     _f]
+
+    def category_atom_path(self, name, lang):
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                              self.site.config['CATEGORY_PATH'], self.site.config['CATEGORY_PREFIX'] + self.slugify_name(name) + ".atom"] if
+                _f]
 
     def category_rss_path(self, name, lang):
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
