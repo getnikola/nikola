@@ -39,6 +39,7 @@ class Indexes(Task):
 
     def set_site(self, site):
         site.register_path_handler('index', self.index_path)
+        site.register_path_handler('index_atom', self.index_atom_path)
         return super(Indexes, self).set_site(site)
 
     def gen_tasks(self):
@@ -54,18 +55,22 @@ class Indexes(Task):
             "index_display_post_count": self.site.config['INDEX_DISPLAY_POST_COUNT'],
             "indexes_title": self.site.config['INDEXES_TITLE'],
             "blog_title": self.site.config["BLOG_TITLE"],
-            "rss_read_more_link": self.site.config["RSS_READ_MORE_LINK"],
+            "generate_atom": self.site.config["GENERATE_ATOM"],
         }
 
         template_name = "index.tmpl"
         posts = self.site.posts
         self.number_of_pages = dict()
         for lang in kw["translations"]:
-            def page_link(i, displayed_i, num_pages, force_addition):
-                return utils.adjust_name_for_index_link(self.site.link("index", None, lang), i, displayed_i, lang, self.site, force_addition)
+            def page_link(i, displayed_i, num_pages, force_addition, extension=None):
+                feed = "_atom" if extension == ".atom" else ""
+                return utils.adjust_name_for_index_link(self.site.link("index" + feed, None, lang), i, displayed_i,
+                                                        lang, self.site, force_addition, extension)
 
-            def page_path(i, displayed_i, num_pages, force_addition):
-                return utils.adjust_name_for_index_path(self.site.path("index", None, lang), i, displayed_i, lang, self.site, force_addition)
+            def page_path(i, displayed_i, num_pages, force_addition, extension=None):
+                feed = "_atom" if extension == ".atom" else ""
+                return utils.adjust_name_for_index_path(self.site.path("index" + feed, None, lang), i, displayed_i,
+                                                        lang, self.site, force_addition, extension)
 
             if kw["show_untranslated_posts"]:
                 filtered_posts = posts
@@ -127,11 +132,21 @@ class Indexes(Task):
                         task['basename'] = self.name
                         yield task
 
-    def index_path(self, name, lang):
+    def index_path(self, name, lang, is_feed=False):
+        extension = None
+        if is_feed:
+            extension = ".atom"
+            index_file = os.path.splitext(self.site.config['INDEX_FILE'])[0] + extension
+        else:
+            index_file = self.site.config['INDEX_FILE']
         return utils.adjust_name_for_index_path_list([_f for _f in [self.site.config['TRANSLATIONS'][lang],
                                                                     self.site.config['INDEX_PATH'],
-                                                                    self.site.config['INDEX_FILE']] if _f],
+                                                                    index_file] if _f],
                                                      name,
                                                      utils.get_displayed_page_number(name, self.number_of_pages[lang], self.site),
                                                      lang,
-                                                     self.site)
+                                                     self.site,
+                                                     extension=extension)
+
+    def index_atom_path(self, name, lang):
+        return self.index_path(name, lang, is_feed=True)

@@ -4,6 +4,13 @@ New in master
 Features
 --------
 
+* Substitutions for RSS_LINKS_APPEND_QUERY for identifying
+  the source feed (feedRelUri) and  the kind of feed (feedFormat).
+* New option GENERATE_ATOM, off by default
+* Current and archive Atom feeds for indexes; category, tag, and archive indexes (RFC-4287 and RFC-5005)
+* Atom feed auto-discovery in HTML indexes and category/tag indexes
+* .atom included in the sitemap index
+* New post metadata "updated", inherits "date" if unset
 * Allow IPv6 in `nikola auto` (Issue #1682)
 * Allow IPv6 in `nikola serve` (Issue #1682)
 * Set default new site URL to https://example.com/
@@ -26,6 +33,7 @@ Features
 Bugfixes
 --------
 
+* RSS_LINKS_APPEND_QUERY not working in RSS feeds for tags
 * `nikola check -l` didn’t scan posts
 * Don’t use sets for ``FAVICONS`` (Issue #1674)
 * Posts/Pages that use post-list will never be up to date (Issue #1671)

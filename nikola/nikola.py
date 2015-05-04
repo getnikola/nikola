@@ -49,6 +49,7 @@ except ImportError:
 import dateutil.tz
 import logging
 import PyRSS2Gen as rss
+import lxml.etree
 import lxml.html
 from yapsy.PluginManager import PluginManager
 from blinker import signal
@@ -396,6 +397,7 @@ class Nikola(object):
             'RSS_LINKS_APPEND_QUERY': False,
             'REDIRECTIONS': [],
             'ROBOTS_EXCLUSIONS': [],
+            'GENERATE_ATOM': False,
             'GENERATE_RSS': True,
             'RSS_LINK': None,
             'RSS_PATH': '',
@@ -763,6 +765,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['transition'] = self.config.get('THEME_REVEAL_CONFIG_TRANSITION')
         self._GLOBAL_CONTEXT['content_footer'] = self.config.get(
             'CONTENT_FOOTER')
+        self._GLOBAL_CONTEXT['generate_atom'] = self.config.get('GENERATE_ATOM')
         self._GLOBAL_CONTEXT['generate_rss'] = self.config.get('GENERATE_RSS')
         self._GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
         self._GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
@@ -1099,9 +1102,15 @@ class Nikola(object):
 
         items = []
 
+        feed_append_query = None
+        if rss_links_append_query:
+            feed_append_query = rss_links_append_query.format(
+                feedRelUri='/' + feed_url[len(self.config['BASE_URL']):],
+                feedFormat="rss")
+
         for post in timeline[:feed_length]:
             data = post.text(lang, teaser_only=rss_teasers, strip_html=rss_plain,
-                             rss_read_more_link=True, rss_links_append_query=rss_links_append_query)
+                             rss_read_more_link=True, rss_links_append_query=feed_append_query)
             if feed_url is not None and data:
                 # Massage the post's HTML (unless plain)
                 if not rss_plain:
@@ -1123,7 +1132,7 @@ class Nikola(object):
                             raise(e)
             args = {
                 'title': post.title(lang),
-                'link': post.permalink(lang, absolute=True, query=rss_links_append_query),
+                'link': post.permalink(lang, absolute=True, query=feed_append_query),
                 'description': data,
                 # PyRSS2Gen's pubDate is GMT time.
                 'pubDate': (post.date if post.date.tzinfo is None else
@@ -1560,6 +1569,153 @@ class Nikola(object):
 
         return utils.apply_filters(task, filters)
 
+    def atom_feed_renderer(self, lang, posts, output_path, filters,
+                           extra_context):
+        """Renders Atom feeds and archives with lists of posts. Feeds are
+           considered archives when no future updates to them are expected"""
+
+        def atom_link(link_rel, link_type, link_href):
+            link = lxml.etree.Element("link")
+            link.set("rel", link_rel)
+            link.set("type", link_type)
+            link.set("href", link_href)
+            return link
+
+        deps = []
+        uptodate_deps = []
+        for post in posts:
+            deps += post.deps(lang)
+            uptodate_deps += post.deps_uptodate(lang)
+        context = {}
+        context["posts"] = posts
+        context["title"] = self.config['BLOG_TITLE'](lang)
+        context["description"] = self.config['BLOG_DESCRIPTION'](lang)
+        context["lang"] = lang
+        context["prevlink"] = None
+        context["nextlink"] = None
+        context["is_feed_stale"] = None
+        context.update(extra_context)
+        deps_context = copy(context)
+        deps_context["posts"] = [(p.meta[lang]['title'], p.permalink(lang)) for p in
+                                 posts]
+        deps_context["global"] = self.GLOBAL_CONTEXT
+
+        for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
+            deps_context[k] = deps_context['global'][k](lang)
+
+        deps_context['navigation_links'] = deps_context['global']['navigation_links'](lang)
+
+        nslist = {}
+        if context["is_feed_stale"] or (not context["feedpagenum"] == context["feedpagecount"] - 1 and not context["feedpagenum"] == 0):
+            nslist["fh"] = "http://purl.org/syndication/history/1.0"
+        if not self.config["RSS_TEASERS"]:
+            nslist["xh"] = "http://www.w3.org/1999/xhtml"
+        feed_xsl_link = self.abs_link("/assets/xml/atom.xsl")
+        feed_root = lxml.etree.Element("feed", nsmap=nslist)
+        feed_root.addprevious(lxml.etree.ProcessingInstruction(
+            "xml-stylesheet",
+            'href="' + feed_xsl_link + '" type="text/xsl media="all"'))
+        feed_root.set("{http://www.w3.org/XML/1998/namespace}lang", lang)
+        feed_root.set("xmlns", "http://www.w3.org/2005/Atom")
+        feed_title = lxml.etree.SubElement(feed_root, "title")
+        feed_title.text = context["title"]
+        feed_id = lxml.etree.SubElement(feed_root, "id")
+        feed_id.text = self.abs_link(context["feedlink"])
+        feed_updated = lxml.etree.SubElement(feed_root, "updated")
+        feed_updated.text = datetime.datetime.now(tz=dateutil.tz.tzutc()).replace(microsecond=0).isoformat()
+        feed_author = lxml.etree.SubElement(feed_root, "author")
+        feed_author_name = lxml.etree.SubElement(feed_author, "name")
+        feed_author_name.text = self.config["BLOG_AUTHOR"](lang)
+        feed_root.append(atom_link("self", "application/atom+xml",
+                                   self.abs_link(context["feedlink"])))
+        # Older is "next" and newer is "previous" in paginated feeds (opposite of archived)
+        if "nextfeedlink" in context:
+            feed_root.append(atom_link("next", "application/atom+xml",
+                                       self.abs_link(context["nextfeedlink"])))
+        if "prevfeedlink" in context:
+            feed_root.append(atom_link("previous", "application/atom+xml",
+                                       self.abs_link(context["prevfeedlink"])))
+        if context["is_feed_stale"] or not context["feedpagenum"] == 0:
+            feed_root.append(atom_link("current", "application/atom+xml",
+                             self.abs_link(context["currentfeedlink"])))
+            # Older is "prev-archive" and newer is "next-archive" in archived feeds (opposite of paginated)
+            if "prevfeedlink" in context and (context["is_feed_stale"] or not context["feedpagenum"] == context["feedpagecount"] - 1):
+                feed_root.append(atom_link("next-archive", "application/atom+xml",
+                                           self.abs_link(context["prevfeedlink"])))
+            if "nextfeedlink" in context:
+                feed_root.append(atom_link("prev-archive", "application/atom+xml",
+                                           self.abs_link(context["nextfeedlink"])))
+            if context["is_feed_stale"] or not context["feedpagenum"] == context["feedpagecount"] - 1:
+                lxml.etree.SubElement(feed_root, "{http://purl.org/syndication/history/1.0}archive")
+        feed_root.append(atom_link("alternate", "text/html",
+                                   self.abs_link(context["permalink"])))
+        feed_generator = lxml.etree.SubElement(feed_root, "generator")
+        feed_generator.set("uri", "http://getnikola.com/")
+        feed_generator.text = "Nikola"
+
+        feed_append_query = None
+        if self.config["RSS_LINKS_APPEND_QUERY"]:
+            feed_append_query = self.config["RSS_LINKS_APPEND_QUERY"].format(
+                feedRelUri=context["feedlink"],
+                feedFormat="atom")
+
+        for post in posts:
+            data = post.text(lang, teaser_only=self.config["RSS_TEASERS"], strip_html=self.config["RSS_TEASERS"],
+                             rss_read_more_link=True, rss_links_append_query=feed_append_query)
+            if not self.config["RSS_TEASERS"]:
+                # FIXME: this is duplicated with code in Post.text() and generic_rss_renderer
+                try:
+                    doc = lxml.html.document_fromstring(data)
+                    doc.rewrite_links(lambda dst: self.url_replacer(post.permalink(), dst, lang, 'absolute'))
+                    try:
+                        body = doc.body
+                        data = (body.text or '') + ''.join(
+                            [lxml.html.tostring(child, encoding='unicode')
+                                for child in body.iterchildren()])
+                    except IndexError:  # No body there, it happens sometimes
+                        data = ''
+                except lxml.etree.ParserError as e:
+                    if str(e) == "Document is empty":
+                        data = ""
+                    else:  # let other errors raise
+                        raise(e)
+
+            entry_root = lxml.etree.SubElement(feed_root, "entry")
+            entry_title = lxml.etree.SubElement(entry_root, "title")
+            entry_title.text = post.title(lang)
+            entry_id = lxml.etree.SubElement(entry_root, "id")
+            entry_id.text = post.permalink(lang, absolute=True)
+            entry_updated = lxml.etree.SubElement(entry_root, "updated")
+            entry_updated.text = post.updated.isoformat()
+            entry_published = lxml.etree.SubElement(entry_root, "published")
+            entry_published.text = post.date.isoformat()
+            entry_author = lxml.etree.SubElement(entry_root, "author")
+            entry_author_name = lxml.etree.SubElement(entry_author, "name")
+            entry_author_name.text = post.author(lang)
+            entry_root.append(atom_link("alternate", "text/html",
+                              post.permalink(lang, absolute=True,
+                                             query=feed_append_query)))
+            if self.config["RSS_TEASERS"]:
+                entry_summary = lxml.etree.SubElement(entry_root, "summary")
+                entry_summary.text = data
+            else:
+                entry_content = lxml.etree.SubElement(entry_root, "content")
+                entry_content.set("type", "xhtml")
+                entry_content_nsdiv = lxml.etree.SubElement(entry_content, "{http://www.w3.org/1999/xhtml}div")
+                entry_content_nsdiv.text = data
+            for category in post.tags:
+                entry_category = lxml.etree.SubElement(entry_root, "category")
+                entry_category.set("term", utils.slugify(category))
+                entry_category.set("label", category)
+
+        dst_dir = os.path.dirname(output_path)
+        utils.makedirs(dst_dir)
+        with io.open(output_path, "w+", encoding="utf-8") as atom_file:
+            data = lxml.etree.tostring(feed_root.getroottree(), encoding="UTF-8", pretty_print=True, xml_declaration=True)
+            if isinstance(data, utils.bytes_str):
+                data = data.decode('utf-8')
+            atom_file.write(data)
+
     def generic_index_renderer(self, lang, posts, indexes_title, template_name, context_source, kw, basename, page_link, page_path, additional_dependencies=[]):
         """Creates an index page.
 
@@ -1596,6 +1752,10 @@ class Nikola(object):
         kw["indexes_static"] = self.config['INDEXES_STATIC']
         kw['indexes_prety_page_url'] = self.config["INDEXES_PRETTY_PAGE_URL"]
         kw['demote_headers'] = self.config['DEMOTE_HEADERS']
+        kw['generate_atom'] = self.config["GENERATE_ATOM"]
+        kw['feed_link_append_query'] = self.config["RSS_LINKS_APPEND_QUERY"]
+        kw['feed_teasers'] = self.config["RSS_TEASERS"]
+        kw['currentfeed'] = None
 
         # Split in smaller lists
         lists = []
@@ -1648,9 +1808,19 @@ class Nikola(object):
                 if i < num_pages - 1:
                     nextlink = i + 1
             if prevlink is not None:
-                context["prevlink"] = page_link(prevlink, utils.get_displayed_page_number(prevlink, num_pages, self), num_pages, False)
+                context["prevlink"] = page_link(prevlink,
+                                                utils.get_displayed_page_number(prevlink, num_pages, self),
+                                                num_pages, False)
+                context["prevfeedlink"] = page_link(prevlink,
+                                                    utils.get_displayed_page_number(prevlink, num_pages, self),
+                                                    num_pages, False, extension=".atom")
             if nextlink is not None:
-                context["nextlink"] = page_link(nextlink, utils.get_displayed_page_number(nextlink, num_pages, self), num_pages, False)
+                context["nextlink"] = page_link(nextlink,
+                                                utils.get_displayed_page_number(nextlink, num_pages, self),
+                                                num_pages, False)
+                context["nextfeedlink"] = page_link(nextlink,
+                                                    utils.get_displayed_page_number(nextlink, num_pages, self),
+                                                    num_pages, False, extension=".atom")
             context["permalink"] = page_link(i, ipages_i, num_pages, False)
             output_name = os.path.join(kw['output_folder'], page_path(i, ipages_i, num_pages, False))
             task = self.generic_post_list_renderer(
@@ -1664,6 +1834,30 @@ class Nikola(object):
             task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.nikola.Nikola.generic_index_renderer')] + additional_dependencies
             task['basename'] = basename
             yield task
+
+            if kw['generate_atom']:
+                atom_output_name = os.path.join(kw['output_folder'], page_path(i, ipages_i, num_pages, False, extension=".atom"))
+                context["feedlink"] = page_link(i, ipages_i, num_pages, False, extension=".atom")
+                if not kw["currentfeed"]:
+                    kw["currentfeed"] = context["feedlink"]
+                context["currentfeedlink"] = kw["currentfeed"]
+                context["feedpagenum"] = i
+                context["feedpagecount"] = num_pages
+                atom_task = {
+                    "basename": basename,
+                    "file_dep": [output_name],
+                    "name": atom_output_name,
+                    "targets": [atom_output_name],
+                    "actions": [(self.atom_feed_renderer,
+                                (lang,
+                                 post_list,
+                                 atom_output_name,
+                                 kw['filters'],
+                                 context,))],
+                    "clean": True,
+                    "uptodate": [utils.config_changed(kw, 'nikola.nikola.Nikola.atom_feed_renderer')] + additional_dependencies
+                }
+                yield utils.apply_filters(atom_task, kw['filters'])
 
         if kw["indexes_pages_main"] and kw['indexes_prety_page_url'](lang):
             # create redirection
