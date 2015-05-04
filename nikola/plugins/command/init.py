@@ -50,7 +50,7 @@ LOGGER = get_logger('init', STDERR_HANDLER)
 SAMPLE_CONF = {
     'BLOG_AUTHOR': "Your Name",
     'BLOG_TITLE': "Demo Site",
-    'SITE_URL': "http://getnikola.com/",
+    'SITE_URL': "https://example.com/",
     'BLOG_EMAIL': "joe@demo.site",
     'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
     'DEFAULT_LANG': "en",
@@ -262,7 +262,7 @@ class CommandInit(Command):
     def ask_questions(target):
         """Ask some questions about Nikola."""
         def urlhandler(default, toconf):
-            answer = ask('Site URL', 'http://getnikola.com/')
+            answer = ask('Site URL', 'https://example.com/')
             try:
                 answer = answer.decode('utf-8')
             except (AttributeError, UnicodeDecodeError):

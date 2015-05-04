@@ -409,7 +409,7 @@ class Nikola(object):
             'SHOW_UNTRANSLATED_POSTS': True,
             'SLUG_TAG_PATH': True,
             'SOCIAL_BUTTONS_CODE': '',
-            'SITE_URL': 'http://getnikola.com/',
+            'SITE_URL': 'https://example.com/',
             'STORY_INDEX': False,
             'STRIP_INDEXES': False,
             'SITEMAP_INCLUDE_FILELESS_DIRS': True,
