@@ -97,10 +97,13 @@ class CommandServe(Command):
             os.chdir(out_dir)
             if '[' in options['address']:
                 options['address'] = options['address'].strip('[').strip(']')
+                ipv6 = True
                 OurHTTP = IPv6Server
             elif options['ipv6']:
+                ipv6 = True
                 OurHTTP = IPv6Server
             else:
+                ipv6 = False
                 OurHTTP = HTTPServer
 
             httpd = OurHTTP((options['address'], options['port']),
@@ -108,7 +111,10 @@ class CommandServe(Command):
             sa = httpd.socket.getsockname()
             self.logger.info("Serving HTTP on {0} port {1}...".format(*sa))
             if options['browser']:
-                server_url = "http://{0}:{1}/".format(*sa)
+                if ipv6:
+                    server_url = "http://[{0}]:{1}/".format(*sa)
+                else:
+                    server_url = "http://{0}:{1}/".format(*sa)
                 self.logger.info("Opening {0} in the default web browser...".format(server_url))
                 webbrowser.open(server_url)
             try:

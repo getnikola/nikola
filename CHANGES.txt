@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Allow IPv6 in `nikola auto` (Issue #1682)
 * Allow IPv6 in `nikola serve` (Issue #1682)
 * Set default new site URL to https://example.com/
 * Plugins can manipulate task dependencies (Issue #1679)

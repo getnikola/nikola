@@ -39,6 +39,22 @@ class CommandAuto(Command):
     doc_purpose = "automatically detect site changes, rebuild and optionally refresh a browser"
     cmd_options = [
         {
+            'name': 'port',
+            'short': 'p',
+            'long': 'port',
+            'default': 8000,
+            'type': int,
+            'help': 'Port nummber (default: 8000)',
+        },
+        {
+            'name': 'address',
+            'short': 'a',
+            'long': 'address',
+            'type': str,
+            'default': '',
+            'help': 'Address to bind (default: 0.0.0.0 – all local IPv4 interfaces)',
+        },
+        {
             'name': 'browser',
             'short': 'b',
             'type': bool,
@@ -46,12 +62,12 @@ class CommandAuto(Command):
             'default': False,
         },
         {
-            'name': 'port',
-            'short': 'p',
-            'long': 'port',
-            'default': 8000,
-            'type': int,
-            'help': 'Port nummber (default: 8000)',
+            'name': 'ipv6',
+            'short': '6',
+            'long': 'ipv6',
+            'default': False,
+            'type': bool,
+            'help': 'Use IPv6',
         },
     ]
 
@@ -93,4 +109,11 @@ class CommandAuto(Command):
         else:
             browser = False
 
-        server.serve(port=port, host=None, root=out_folder, debug=True, open_url=browser)
+        if options['ipv6']:
+            dhost = '::'
+        else:
+            dhost = None
+
+        host = options['address'].strip('[').strip(']') or dhost
+
+        server.serve(port=port, host=host, root=out_folder, debug=True, open_url=browser)
