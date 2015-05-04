@@ -26,6 +26,7 @@
 
 from __future__ import print_function
 import os
+import socket
 import webbrowser
 try:
     from BaseHTTPServer import HTTPServer
@@ -36,6 +37,11 @@ except ImportError:
 
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger
+
+
+class IPv6Server(HTTPServer):
+    """An IPv6 HTTPServer."""
+    address_family = socket.AF_INET6
 
 
 class CommandServe(Command):
@@ -53,7 +59,7 @@ class CommandServe(Command):
             'long': 'port',
             'default': 8000,
             'type': int,
-            'help': 'Port nummber (default: 8000)',
+            'help': 'Port number (default: 8000)',
         },
         {
             'name': 'address',
@@ -61,7 +67,7 @@ class CommandServe(Command):
             'long': 'address',
             'type': str,
             'default': '',
-            'help': 'Address to bind (default: 0.0.0.0 – all local interfaces)',
+            'help': 'Address to bind (default: 0.0.0.0 – all local IPv4 interfaces)',
         },
         {
             'name': 'browser',
@@ -70,7 +76,15 @@ class CommandServe(Command):
             'type': bool,
             'default': False,
             'help': 'Open the test server in a web browser',
-        }
+        },
+        {
+            'name': 'ipv6',
+            'short': '6',
+            'long': 'ipv6',
+            'type': bool,
+            'default': False,
+            'help': 'Use IPv6',
+        },
     )
 
     def _execute(self, options, args):
@@ -81,8 +95,16 @@ class CommandServe(Command):
             self.logger.error("Missing '{0}' folder?".format(out_dir))
         else:
             os.chdir(out_dir)
-            httpd = HTTPServer((options['address'], options['port']),
-                               OurHTTPRequestHandler)
+            if '[' in options['address']:
+                options['address'] = options['address'].strip('[').strip(']')
+                OurHTTP = IPv6Server
+            elif options['ipv6']:
+                OurHTTP = IPv6Server
+            else:
+                OurHTTP = HTTPServer
+
+            httpd = OurHTTP((options['address'], options['port']),
+                             OurHTTPRequestHandler)
             sa = httpd.socket.getsockname()
             self.logger.info("Serving HTTP on {0} port {1}...".format(*sa))
             if options['browser']:
