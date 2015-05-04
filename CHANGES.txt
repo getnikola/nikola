@@ -21,6 +21,7 @@ Features
 Bugfixes
 --------
 
+* `nikola check -l` didn’t scan posts
 * Don’t use sets for ``FAVICONS`` (Issue #1674)
 * Posts/Pages that use post-list will never be up to date (Issue #1671)
 * Support using post.text() in post_list_directive.tmpl (Issue #1671)

@@ -244,7 +244,7 @@ class CommandCheck(Command):
             if task.split(':')[0] in (
                     'render_tags', 'render_archive',
                     'render_galleries', 'render_indexes',
-                    'render_pages'
+                    'render_pages', 'render_posts',
                     'render_site') and '.html' in task:
                 if self.analyze(task, find_sources):
                     failure = True
