@@ -28,6 +28,7 @@ import os
 
 # for tearDown with _reload we cannot use 'import from' to access LocaleBorg
 import nikola.utils
+import datetime
 from nikola.plugin_categories import Task
 from nikola.utils import config_changed, adjust_name_for_index_path, adjust_name_for_index_link
 
@@ -39,6 +40,7 @@ class Archive(Task):
 
     def set_site(self, site):
         site.register_path_handler('archive', self.archive_path)
+        site.register_path_handler('archive_atom', self.archive_atom_path)
         return super(Archive, self).set_site(site)
 
     def _prepare_task(self, kw, name, lang, posts, items, template_name,
@@ -81,6 +83,16 @@ class Archive(Task):
         posts = sorted(posts, key=lambda a: a.date)
         posts.reverse()
         if kw['archives_are_indexes']:
+            def page_link(i, displayed_i, num_pages, force_addition, extension=None):
+                feed = "_atom" if extension == ".atom" else ""
+                return adjust_name_for_index_link(self.site.link("archive" + feed, name, lang), i, displayed_i,
+                                                  lang, self.site, force_addition, extension)
+
+            def page_path(i, displayed_i, num_pages, force_addition, extension=None):
+                feed = "_atom" if extension == ".atom" else ""
+                return adjust_name_for_index_path(self.site.path("archive" + feed, name, lang), i, displayed_i,
+                                                  lang, self.site, force_addition, extension)
+
             uptodate = []
             if deps_translatable is not None:
                 uptodate += [config_changed(deps_translatable, 'nikola.plugins.task.archive')]
@@ -89,11 +101,12 @@ class Archive(Task):
                 posts,
                 title,
                 "archiveindex.tmpl",
-                {},
+                {"archive_name": name,
+                 "is_feed_stale": kw["is_feed_stale"]},
                 kw,
                 str(self.name),
-                lambda i, displayed_i, num_pages, force_addition: adjust_name_for_index_link(self.site.link("archive", name, lang), i, displayed_i, lang, self.site, force_addition),
-                lambda i, displayed_i, num_pages, force_addition: adjust_name_for_index_path(self.site.path("archive", name, lang), i, displayed_i, lang, self.site, force_addition),
+                page_link,
+                page_path,
                 uptodate)
         else:
             yield self._prepare_task(kw, name, lang, posts, None, "list_post.tmpl", title, deps_translatable)
@@ -113,6 +126,7 @@ class Archive(Task):
             "pretty_urls": self.site.config['PRETTY_URLS'],
             "strip_indexes": self.site.config['STRIP_INDEXES'],
             "index_file": self.site.config['INDEX_FILE'],
+            "generate_atom": self.site.config["GENERATE_ATOM"],
         }
         self.site.scan_posts()
         yield self.group_task()
@@ -138,8 +152,10 @@ class Archive(Task):
                 # Add archive per year or total archive
                 if year:
                     title = kw["messages"][lang]["Posts for year %s"] % year
+                    kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y") != year)
                 else:
                     title = kw["messages"][lang]["Archive"]
+                    kw["is_feed_stale"] = False
                 deps_translatable = {}
                 for k in self.site._GLOBAL_CONTEXT_TRANSLATABLE:
                     deps_translatable[k] = self.site.GLOBAL_CONTEXT[k](lang)
@@ -157,6 +173,8 @@ class Archive(Task):
             for yearmonth, posts in self.site.posts_per_month.items():
                 # Add archive per month
                 year, month = yearmonth.split('/')
+
+                kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y/%m") != yearmonth)
 
                 # Filter untranslated posts (via Issue #1360)
                 if not kw["show_untranslated_posts"]:
@@ -189,12 +207,22 @@ class Archive(Task):
                 items = [(y, self.site.link("archive", y, lang)) for y in years]
                 yield self._prepare_task(kw, None, lang, None, items, "list.tmpl", kw["messages"][lang]["Archive"])
 
-    def archive_path(self, name, lang):
+    def archive_path(self, name, lang, is_feed=False):
+        if is_feed:
+            extension = ".atom"
+            archive_file = os.path.splitext(self.site.config['ARCHIVE_FILENAME'])[0] + extension
+            index_file = os.path.splitext(self.site.config['INDEX_FILE'])[0] + extension
+        else:
+            archive_file = self.site.config['ARCHIVE_FILENAME']
+            index_file = self.site.config['INDEX_FILE']
         if name:
             return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                                   self.site.config['ARCHIVE_PATH'], name,
-                                  self.site.config['INDEX_FILE']] if _f]
+                                  index_file] if _f]
         else:
             return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                                   self.site.config['ARCHIVE_PATH'],
-                                  self.site.config['ARCHIVE_FILENAME']] if _f]
+                                  archive_file] if _f]
+
+    def archive_atom_path(self, name, lang):
+        return self.archive_path(name, lang, is_feed=True)
