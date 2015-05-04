@@ -321,7 +321,7 @@ class TestCheckAbsoluteSubFolder(TestCheck):
     """Validate links in a site which is:
 
     * built in URL_TYPE="absolute"
-    * deployable to a subfolder (BASE_URL="http://getnikola.com/foo/")
+    * deployable to a subfolder (BASE_URL="http://demo.getnikola.com/foo/")
     """
 
     @classmethod
@@ -330,7 +330,7 @@ class TestCheckAbsoluteSubFolder(TestCheck):
         with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
             data = data.replace('SITE_URL = "http://getnikola.com/"',
-                                'SITE_URL = "http://getnikola.com/foo/"')
+                                'SITE_URL = "http://demo.getnikola.com/foo/"')
             data = data.replace("# URL_TYPE = 'rel_path'",
                                 "URL_TYPE = 'absolute'")
         with io.open(conf_path, "w+", encoding="utf8") as outf:
@@ -341,14 +341,14 @@ class TestCheckAbsoluteSubFolder(TestCheck):
         """Test that the correct path is in sitemap, and not the wrong one."""
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
         sitemap_data = io.open(sitemap_path, "r", encoding="utf8").read()
-        self.assertTrue('<loc>http://getnikola.com/foo/index.html</loc>' in sitemap_data)
+        self.assertTrue('<loc>http://demo.getnikola.com/foo/index.html</loc>' in sitemap_data)
 
 
 class TestCheckFullPathSubFolder(TestCheckAbsoluteSubFolder):
     """Validate links in a site which is:
 
     * built in URL_TYPE="full_path"
-    * deployable to a subfolder (BASE_URL="http://getnikola.com/foo/")
+    * deployable to a subfolder (BASE_URL="http://demo.getnikola.com/foo/")
     """
 
     @classmethod
@@ -357,7 +357,7 @@ class TestCheckFullPathSubFolder(TestCheckAbsoluteSubFolder):
         with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
             data = data.replace('SITE_URL = "http://getnikola.com/"',
-                                'SITE_URL = "http://getnikola.com/foo/"')
+                                'SITE_URL = "http://demo.getnikola.com/foo/"')
             data = data.replace("# URL_TYPE = 'rel_path'",
                                 "URL_TYPE = 'full_path'")
         with io.open(conf_path, "w+", encoding="utf8") as outf:
