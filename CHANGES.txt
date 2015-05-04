@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* LINK_CHECK_WHITELIST now works with output relative and full fs paths
 * Four new filters: html_tidy_nowrap, html_tidy_wrap, html_tidy_wrap_attr,
   and html_tidy_mini for prettification and minification. Requires tidy5.
 * Multilingual sitemaps (Issue #1610)
