@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Use static navbars in bootstrap3 themes
+
 Bugfixes
 --------
 
