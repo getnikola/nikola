@@ -538,7 +538,7 @@ to your configuration::
 
        That template needs to either be part of the theme, or be placed in a ``templates/``
        folder inside your site.
-       
+
     enclosure
         Add an enclosure to this post when it's used in RSS. See `more information about enclosures <http://en.wikipedia.org/wiki/RSS_enclosure>`__
 
@@ -1269,19 +1269,23 @@ The ``conf.py`` options affecting images and gallery pages are these::
     # "OUTPUT_PATH/relative_destination/gallery_name"
     # Default is:
     GALLERY_FOLDERS = {"galleries": "galleries"}
-    # One or more folders containing images. The format is again a dictionary of
-    # {"source": "relative_destination"}. Images will be scaled down if necessary so
-    # that neither width nor height is greater than MAX_IMAGE_SIZE and copied to
-    # destination folder. A thumbnail will also be created in the same folder with
-    # ``.thumbnail`` inserted in the file name before the fileposts extension
-    # (e.g. ``tesla.thumbnail.jpg``).
-    IMAGE_FOLDERS = {'images': 'images'}
-    # More image/gallery options:
+    # More gallery options:
     THUMBNAIL_SIZE = 180
-    IMAGE_THUMBNAIL_SIZE = 400
     MAX_IMAGE_SIZE = 1280
     USE_FILENAME_AS_TITLE = True
     EXTRA_IMAGE_EXTENSIONS = []
+
+    # If set to False, it will sort by filename instead. Defaults to True
+    GALLERY_SORT_BY_DATE = True
+
+    # Folders containing images to be used in normal posts or pages. Images will be
+    # scaled down according to IMAGE_THUMBNAIL_SIZE and MAX_IMAGE_SIZE options, but
+    # will have to be referenced manually to be visible on the site
+    # (the thumbnail has ``.thumbnail`` added before the file extension).
+    # The format is a dictionary of {source: relative destination}.
+
+    IMAGE_FOLDERS = {'images': 'images'}
+    IMAGE_THUMBNAIL_SIZE = 400
 
 If you add a file in ``galleries/gallery_name/index.txt`` its contents will be
 converted to HTML and inserted above the images in the gallery page. The
@@ -1649,7 +1653,7 @@ and it will produce:
 Post List
 ~~~~~~~~~
 
-.. WARNING:: 
+.. WARNING::
 
    Any post or page that uses this directive will **never** be considered up-to-date,
    meaning that every time you build the site, that post/page and everything that
