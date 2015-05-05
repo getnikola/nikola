@@ -33,6 +33,7 @@ Features
 Bugfixes
 --------
 
+* Make ``.islink`` work properly (via Issue #1536)
 * RSS_LINKS_APPEND_QUERY not working in RSS feeds for tags
 * `nikola check -l` didn’t scan posts
 * Don’t use sets for ``FAVICONS`` (Issue #1674)
