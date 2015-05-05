@@ -897,10 +897,10 @@ def get_metadata_from_meta_file(path, config=None, lang=None):
             # a 1-file post.
             return get_metadata_from_file(path, config, lang), newstylemeta
         else:
-            while len(meta_data) < 7:
+            while len(meta_data) < 8:
                 meta_data.append("")
             (title, slug, date, updated, tags, link, description, _type) = [
-                x.strip() for x in meta_data][:7]
+                x.strip() for x in meta_data][:8]
 
             meta = {}
 

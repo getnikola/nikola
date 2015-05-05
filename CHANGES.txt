@@ -1,3 +1,11 @@
+New in master
+=============
+
+Bugfixes
+--------
+
+* Fix very old metadata format support (Issue #1689)
+
 New in v7.4.0
 =============
 
