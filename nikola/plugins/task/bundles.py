@@ -132,6 +132,8 @@ class BuildBundles(Task):
                         t_files.append(i)
 
                 _files = t_files
+                self.site.GLOBAL_CONTEXT['cdn_js_urls'] = self.cdn_js_urls
+                self.site.GLOBAL_CONTEXT['cdn_css_urls'] = self.cdn_css_urls
 
                 output_path = os.path.join(kw['output_folder'], name)
                 dname = os.path.dirname(name)

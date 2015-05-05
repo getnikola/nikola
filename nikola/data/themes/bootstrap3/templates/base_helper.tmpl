@@ -68,12 +68,14 @@ lang="${lang}">
 <%def name="late_load_js()">
     %if use_bundles:
         %if use_cdn:
-            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-            <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+            % for url in cdn_js_urls:
+                <script src="${url}"></script>
+            % endfor
         %endif
         <script src="/assets/js/all.js"></script>
     %else:
         %if use_cdn:
+            FOO
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
             <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
         %else:
@@ -94,12 +96,14 @@ lang="${lang}">
 <%def name="html_stylesheets()">
     %if use_bundles:
         %if use_cdn:
-            <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+            % for url in cdn_css_urls:
+                <link href="${url}" rel="stylesheet">
+            % endfor
         %endif
         <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
     %else:
         %if use_cdn:
-            <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+-            <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
         %else:
             <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         %endif
