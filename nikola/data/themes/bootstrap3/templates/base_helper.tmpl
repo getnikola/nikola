@@ -70,10 +70,8 @@ lang="${lang}">
         %if use_cdn:
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
             <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-            <script src="/assets/js/all.js"></script>
-        %else:
-            <script src="/assets/js/all-nocdn.js"></script>
         %endif
+        <script src="/assets/js/all.js"></script>
     %else:
         %if use_cdn:
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -97,10 +95,8 @@ lang="${lang}">
     %if use_bundles:
         %if use_cdn:
             <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
-            <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
-        %else:
-            <link href="/assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
         %endif
+        <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
     %else:
         %if use_cdn:
             <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">

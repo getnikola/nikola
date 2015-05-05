@@ -1,2 +1,2 @@
 assets/css/all.css=twitter-bootstrap::bootstrap.css,rst.css,code.css,jquery.colorbox::colorbox.css,theme.css,custom.css
-assets/js/all.js=jquery,twitter-bootstrap,jquery,jquery.colorbox,moment-js::moment-with-locales.min.js,fancydates.js
+assets/js/all.js=jquery,twitter-bootstrap,jquery,jquery.colorbox,moment.js::moment-with-locales.min.js,fancydates.js
