@@ -160,6 +160,15 @@ lang="${lang}">
             <link rel="alternate" type="application/rss+xml" title="RSS" href="${_link('rss', None)}">
         %endif
     %endif
+    %if generate_atom:
+        %if len(translations) > 1:
+            %for language in translations:
+                <link rel="alternate" type="application/atom+xml" title="Atom (${language})" href="${_link('index_atom', None, language)}">
+            %endfor
+        %else:
+            <link rel="alternate" type="application/atom+xml" title="Atom" href="${_link('index_atom', None)}">
+        %endif
+    %endif
 </%def>
 
 <%def name="html_translations()">

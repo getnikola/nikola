@@ -1,2 +1,13 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'index.tmpl' %}
+
+{% block extra_head %}
+    {{ super() }}
+    {% if translations|length > 1 and generate_atom %}
+        {% for language in translations %}
+            <link rel="alternate" type="application/atom+xml" title="Atom for the {{ tag }} section ({{ language }})" href="{{ _link(kind + "_atom", tag, language) }}">
+        {% endfor %}
+    {% elif generate_atom %}
+        <link rel="alternate" type="application/atom+xml" title="Atom for the {{ tag }} section" href="{{ _link("tag" + "_atom", tag) }}">
+    {% endif %}
+{% endblock %}
