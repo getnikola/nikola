@@ -74,7 +74,7 @@
     {{ template_hooks['page_footer']() }}
 </div>
 {{ base.late_load_js() }}
-    <script>$('a.image-reference:not(.islink)').colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+    <script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
     <!-- fancy dates -->
     <script>
     moment.locale("{{ momentjs_locales[lang] }}");
