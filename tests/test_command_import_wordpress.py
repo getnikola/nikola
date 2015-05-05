@@ -302,16 +302,16 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
 
     def test_transforming_content(self):
         """Applying markup conversions to content."""
-        transform_sourcecode = mock.MagicMock()
+        transform_code = mock.MagicMock()
         transform_caption = mock.MagicMock()
         transform_newlines = mock.MagicMock()
 
-        with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_sourcecode', transform_sourcecode):
+        with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_code', transform_code):
             with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_caption', transform_caption):
                 with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_multiple_newlines', transform_newlines):
                     self.import_command.transform_content("random content")
 
-        self.assertTrue(transform_sourcecode.called)
+        self.assertTrue(transform_code.called)
         self.assertTrue(transform_caption.called)
         self.assertTrue(transform_newlines.called)
 
@@ -325,7 +325,7 @@ import sys
 print sys.version
 [/sourcecode]"""
 
-        content = self.import_command.transform_sourcecode(content)
+        content = self.import_command.transform_code(content)
 
         self.assertFalse('[/sourcecode]' in content)
         self.assertFalse('[sourcecode language=' in content)
