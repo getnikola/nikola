@@ -34,11 +34,11 @@ try:
 except ImportError:
     webassets = None  # NOQA
 
-from nikola.plugin_categories import LateTask
+from nikola.plugin_categories import Task
 from nikola import utils
 
 
-class BuildBundles(LateTask):
+class BuildBundles(Task):
     """Bundle assets using WebAssets."""
 
     name = "create_bundles"
@@ -54,8 +54,8 @@ class BuildBundles(LateTask):
             site.config['USE_BUNDLES'] = False
         self.cdn_js_urls = []
         self.cdn_css_urls = []
-            
         super(BuildBundles, self).set_site(site)
+        self.inject_dependency('render_pages', 'create_bundles')
 
     def url_from_entry(self, entry):
         """Turn a bundles entry into a URL from cdnjs"""
@@ -111,7 +111,7 @@ class BuildBundles(LateTask):
         if (webassets is not None and self.site.config['USE_BUNDLES'] is not
                 False):
             for name, _files in kw['theme_bundles'].items():
-                
+
                 # If using a CDN, remove those files that will be delivered by the CDN
                 t_files = []
                 if kw['use_cdn']:
@@ -122,17 +122,17 @@ class BuildBundles(LateTask):
                             t_files.append(i)
                         else:
                             if url.endswith('js'):
-                                cdn_js_urls.append(url)
+                                self.cdn_js_urls.append(url)
                             else:
-                                cdn_css_urls.append(url)
+                                self.cdn_css_urls.append(url)
                 else:  # No CDN, remove the package::file notation
                     for i in _files:
                         if '::' in i:
                             i = i.split('::')[-1]
                         t_files.append(i)
-                        
+
                 _files = t_files
-                    
+
                 output_path = os.path.join(kw['output_folder'], name)
                 dname = os.path.dirname(name)
                 files = []
