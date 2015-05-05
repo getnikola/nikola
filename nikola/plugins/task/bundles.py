@@ -56,6 +56,14 @@ class BuildBundles(Task):
         self.cdn_css_urls = []
         super(BuildBundles, self).set_site(site)
         self.inject_dependency('render_pages', 'create_bundles')
+        self.site.GLOBAL_CONTEXT['cdn_url'] = self.local_or_cdn_url_from_entry
+
+    def local_or_cdn_url_from_entry(self, entry, use_cdn, default):
+        """Given a JS or CSS entry, returns a URL. Returns default if use_cdn is False."""
+        url = self.url_from_entry(entry)
+        if url is None:
+            return default
+        return url
 
     def url_from_entry(self, entry):
         """Turn a bundles entry into a URL from cdnjs"""
