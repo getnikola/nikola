@@ -183,7 +183,7 @@ class CommandCheck(Command):
         url_type = self.site.config['URL_TYPE']
 
         if check_remote and requests is None:
-            utils.req_missing(['requests'], 'check remote links.')
+            utils.req_missing(['requests'], 'check remote links')
 
         if url_type in ('absolute', 'full_path'):
             url_netloc_to_root = urlparse(self.site.config['BASE_URL']).path
