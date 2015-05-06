@@ -5,6 +5,7 @@ Features
 --------
 
 * New -r option for the link checker to check remote links (Issue #1684)
+* Use static navbars in bootstrap3 and bootstrap themes
 
 Bugfixes
 --------
