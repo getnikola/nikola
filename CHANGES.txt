@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* New -r option for the link checker to check remote links (Issue #1684)
+
 Bugfixes
 --------
 
