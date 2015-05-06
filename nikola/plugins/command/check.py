@@ -35,10 +35,13 @@ except ImportError:
     from urllib.parse import unquote, urlparse, urljoin, urldefrag  # NOQA
 
 import lxml.html
-import requests
+try:
+    import requests
+except ImportError:
+    requests = None
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger
+from nikola.utils import get_logger, req_missing
 
 
 def _call_nikola_list(l, site, arguments):
@@ -178,6 +181,10 @@ class CommandCheck(Command):
         self.existing_targets.add(self.site.config['SITE_URL'])
         self.existing_targets.add(self.site.config['BASE_URL'])
         url_type = self.site.config['URL_TYPE']
+
+        if check_remote and requests is None:
+            utils.req_missing(['requests'], 'check remote links.')
+
         if url_type in ('absolute', 'full_path'):
             url_netloc_to_root = urlparse(self.site.config['BASE_URL']).path
         try:
