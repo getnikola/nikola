@@ -802,7 +802,41 @@ class Nikola(object):
 
         self._activate_plugins_of_category("ConfigPlugin")
 
+        # CDN support
+        cdnjs_path = os.path.join(os.path.dirname(__file__), 'cdnjsdata.json')
+        with open(cdnjs_path) as fd:
+            self.cdnjs = json.load(fd)
+
+        self.cdn_js_urls = []
+        self.cdn_css_urls = []
+
+        self.GLOBAL_CONTEXT['cdn_js_urls'] = self.cdn_js_urls
+        self.GLOBAL_CONTEXT['cdn_css_urls'] = self.cdn_css_urls
+        self.GLOBAL_CONTEXT['cdn_url'] = self.local_or_cdn_url_from_entry
         signal('configured').send(self)
+
+    def local_or_cdn_url_from_entry(self, entry, use_cdn, default):
+        """Given a JS or CSS entry, returns a URL. Returns default if use_cdn is False."""
+        # FIXME get use_cdn from settings
+        if use_cdn:
+            url = self.url_from_entry(entry)
+            if url is None:
+                return default
+        return url
+
+    def url_from_entry(self, entry):
+        """Turn a bundles entry into a URL from cdnjs"""
+        if entry in self.cdnjs:
+            url = self.cdnjs[entry]
+        elif '::' in entry:
+            # It's like twitter-bootstrap::bootstrap.css
+            # The 1st part is in cdnjs but the name in the URL is different
+            key, fname = entry.split('::')
+            url = self.cdnjs[key]
+            url = '/'.join(url.split('/')[:-1]) + '/' + fname
+        else:
+            url = None
+        return url
 
     def _activate_plugins_of_category(self, category):
         """Activate all the plugins of a given category and return them."""

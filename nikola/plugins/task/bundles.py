@@ -44,40 +44,13 @@ class BuildBundles(Task):
     name = "create_bundles"
 
     def set_site(self, site):
-        cdnjs_path = os.path.join(os.path.dirname(__file__), 'cdnjsdata.json')
-        with open(cdnjs_path) as fd:
-            self.cdnjs = json.load(fd)
         self.logger = utils.get_logger('bundles', site.loghandlers)
         if webassets is None and site.config['USE_BUNDLES']:
             utils.req_missing(['webassets'], 'USE_BUNDLES', optional=True)
             self.logger.warn('Setting USE_BUNDLES to False.')
             site.config['USE_BUNDLES'] = False
-        self.cdn_js_urls = []
-        self.cdn_css_urls = []
         super(BuildBundles, self).set_site(site)
         self.inject_dependency('render_pages', 'create_bundles')
-        self.site.GLOBAL_CONTEXT['cdn_url'] = self.local_or_cdn_url_from_entry
-
-    def local_or_cdn_url_from_entry(self, entry, use_cdn, default):
-        """Given a JS or CSS entry, returns a URL. Returns default if use_cdn is False."""
-        url = self.url_from_entry(entry)
-        if url is None:
-            return default
-        return url
-
-    def url_from_entry(self, entry):
-        """Turn a bundles entry into a URL from cdnjs"""
-        if entry in self.cdnjs:
-            url = self.cdnjs[entry]
-        elif '::' in entry:
-            # It's like twitter-bootstrap::bootstrap.css
-            # The 1st part is in cdnjs but the name in the URL is different
-            key, fname = entry.split('::')
-            url = self.cdnjs[key]
-            url = '/'.join(url.split('/')[:-1]) + '/' + fname
-        else:
-            url = None
-        return url
 
     def gen_tasks(self):
         """Bundle assets using WebAssets."""
@@ -125,14 +98,14 @@ class BuildBundles(Task):
                 if kw['use_cdn']:
                     # Using a CDN, move CDN-able files into cdn_*_url lists
                     for i in _files:
-                        url = self.url_from_entry(i)
+                        url = self.site.url_from_entry(i)
                         if url is None:
                             t_files.append(i)
                         else:
                             if url.endswith('js'):
-                                self.cdn_js_urls.append(url)
+                                self.site.cdn_js_urls.append(url)
                             else:
-                                self.cdn_css_urls.append(url)
+                                self.site.cdn_css_urls.append(url)
                 else:  # No CDN, remove the package::file notation
                     for i in _files:
                         if '::' in i:
@@ -140,8 +113,6 @@ class BuildBundles(Task):
                         t_files.append(i)
 
                 _files = t_files
-                self.site.GLOBAL_CONTEXT['cdn_js_urls'] = self.cdn_js_urls
-                self.site.GLOBAL_CONTEXT['cdn_css_urls'] = self.cdn_css_urls
 
                 output_path = os.path.join(kw['output_folder'], name)
                 dname = os.path.dirname(name)
