@@ -81,7 +81,7 @@ lang="${lang}">
         <script src="${cdn_url('jquery.colorbox', use_cdn, '/assets/js/jquery.colorbox-min.js')}"></script>
     %endif
     %if colorbox_locales[lang]:
-        <script src="${cdn_url('jquery.colorbox::i18n/jquery.colorbox-'+colorbox_locales[lang]+'.js', use_cdn, '/assets/js/colorbox-i18n/jquery.colorbox-'+colorbox_locales[lang]}+'.js')}"></script>
+        <script src="${cdn_url('jquery.colorbox::i18n/jquery.colorbox-'+colorbox_locales[lang]+'.js', use_cdn, '/assets/js/colorbox-i18n/jquery.colorbox-'+colorbox_locales[lang] +'.js')}"></script>
     %endif
     ${social_buttons_code}
 </%def>
