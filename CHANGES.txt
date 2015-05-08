@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Handle strange URLs, like ed2k:// (Issue #1695)
 * Fix very old metadata format support (Issue #1689)
 
 New in v7.4.0
