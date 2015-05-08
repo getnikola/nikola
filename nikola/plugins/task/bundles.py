@@ -26,6 +26,7 @@
 
 from __future__ import unicode_literals
 
+import json
 import os
 
 try:
@@ -33,11 +34,11 @@ try:
 except ImportError:
     webassets = None  # NOQA
 
-from nikola.plugin_categories import LateTask
+from nikola.plugin_categories import Task
 from nikola import utils
 
 
-class BuildBundles(LateTask):
+class BuildBundles(Task):
     """Bundle assets using WebAssets."""
 
     name = "create_bundles"
@@ -49,6 +50,7 @@ class BuildBundles(LateTask):
             self.logger.warn('Setting USE_BUNDLES to False.')
             site.config['USE_BUNDLES'] = False
         super(BuildBundles, self).set_site(site)
+        self.inject_dependency('render_pages', 'create_bundles')
 
     def gen_tasks(self):
         """Bundle assets using WebAssets."""
@@ -61,6 +63,7 @@ class BuildBundles(LateTask):
             'themes': self.site.THEMES,
             'files_folders': self.site.config['FILES_FOLDERS'],
             'code_color_scheme': self.site.config['CODE_COLOR_SCHEME'],
+            'use_cdn': self.site.config['USE_CDN'],
         }
 
         def build_bundle(output, inputs):
@@ -89,6 +92,28 @@ class BuildBundles(LateTask):
         if (webassets is not None and self.site.config['USE_BUNDLES'] is not
                 False):
             for name, _files in kw['theme_bundles'].items():
+
+                # If using a CDN, remove those files that will be delivered by the CDN
+                t_files = []
+                if kw['use_cdn']:
+                    # Using a CDN, move CDN-able files into cdn_*_url lists
+                    for i in _files:
+                        url = self.site.url_from_entry(i)
+                        if url is None:
+                            t_files.append(i)
+                        else:
+                            if url.endswith('js'):
+                                self.site.cdn_js_urls.append(url)
+                            else:
+                                self.site.cdn_css_urls.append(url)
+                else:  # No CDN, remove the package::file notation
+                    for i in _files:
+                        if '::' in i:
+                            i = i.split('::')[-1]
+                        t_files.append(i)
+
+                _files = t_files
+
                 output_path = os.path.join(kw['output_folder'], name)
                 dname = os.path.dirname(name)
                 files = []
