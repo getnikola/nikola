@@ -1,16 +1,21 @@
 #!/usr/bin/env python
 
 import json
-import subprocess
 
-links = {}
-data = subprocess.check_output(['links', '-dump', 'https://cdnjs.com/'])
-for l in data.splitlines():
-    l = l.strip()
-    if not 'https' in l:
+from natsort import versorted
+import requests
+
+packages = requests.get('http://cdnjs.com/packages.json').json()['packages']
+
+data = {}
+
+for p in packages:
+    try:
+        name = p['name']
+        version = versorted([v['version'] for v in p['assets']])[-1]
+        data[name] = version
+    except:
+        print "can't parse: ", name
         continue
-    name, url = [x.strip() for x in l.split('https:')]
-    links[name] = url
-    
-json.dump(links,open('cdnjsdata.json', 'w'))
 
+json.dump(data, open('cdnjsdata.json', 'wb'))
