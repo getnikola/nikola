@@ -42,7 +42,7 @@ PAGELOGGER = utils.get_logger('new_page', utils.STDERR_HANDLER)
 LOGGER = POSTLOGGER
 
 
-def filter_post_pages(compiler, is_post, compilers, post_pages):
+def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_names):
     """Given a compiler ("markdown", "rest"), and whether it's meant for
     a post or a page, and compilers, return the correct entry from
     post_pages."""
@@ -53,6 +53,8 @@ def filter_post_pages(compiler, is_post, compilers, post_pages):
     # These are the extensions supported by the required format
     extensions = compilers.get(compiler)
     if extensions is None:
+        if compiler in compiler_names:
+            raise Exception("There is a {0} compiler available, but it's not set in your COMPILERS option.".format(compiler))
         raise Exception('Unknown format {0}'.format(compiler))
 
     # Throw away the post_pages with the wrong extensions
@@ -279,7 +281,8 @@ class CommandNewPost(Command):
         # Guess where we should put this
         entry = filter_post_pages(content_format, is_post,
                                   self.site.config['COMPILERS'],
-                                  self.site.config['post_pages'])
+                                  self.site.config['post_pages'],
+                                  compiler_names)
 
         if import_file:
             print("Importing Existing {xx}".format(xx=content_type.title()))
