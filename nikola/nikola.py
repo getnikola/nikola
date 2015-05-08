@@ -992,12 +992,16 @@ class Nikola(object):
         if url_type is None:
             url_type = self.config.get('URL_TYPE')
 
+        if dst_url.scheme and dst_url.scheme not in ['http', 'https', 'link']:
+            return dst
+
         # Refuse to replace links that are full URLs.
         if dst_url.netloc:
             if dst_url.scheme == 'link':  # Magic link
                 dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'), lang)
+            # Assuming the site is served over one of these, and
+            # since those are the only URLs we want to rewrite...
             else:
-                print(dst)
                 if '%' in dst_url.netloc:
                     # convert lxml percent-encoded garbage to punycode
                     nl = unquote(dst_url.netloc)
@@ -1006,7 +1010,6 @@ class Nikola(object):
                     except AttributeError:
                         # python 3: already unicode
                         pass
-
                     nl = nl.encode('idna')
 
                     dst = urlunsplit((dst_url.scheme,
@@ -1014,7 +1017,6 @@ class Nikola(object):
                                       dst_url.path,
                                       dst_url.query,
                                       dst_url.fragment))
-                    print(dst)
                 return dst
         elif dst_url.scheme == 'link':  # Magic absolute path link:
             dst = dst_url.path
