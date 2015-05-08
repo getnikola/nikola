@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Scanning of posts refactored out of core (Issue #1700)
 * Handle strange URLs, like ed2k:// (Issue #1695)
 * Fix very old metadata format support (Issue #1689)
 

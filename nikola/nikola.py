@@ -1352,129 +1352,14 @@ class Nikola(object):
             'task_dep': task_dep
         }
 
-    def scan_posts(self, really=False, ignore_quit=False, quiet=False):
+    def scan_posts(self):
         """Scan all the posts."""
-        if self._scanned and not really:
+        # FIXME this is temporary while moving things out to a plugin
+        # Why doesn't getPluginByName work????
+        if self._scanned:
             return
-
-        self.global_data = {}
-        self.posts = []
-        self.all_posts = []
-        self.posts_per_year = defaultdict(list)
-        self.posts_per_month = defaultdict(list)
-        self.posts_per_tag = defaultdict(list)
-        self.posts_per_category = defaultdict(list)
-        self.post_per_file = {}
-        self.timeline = []
-        self.pages = []
-
-        seen = set([])
-        if not self.quiet and not quiet:
-            print("Scanning posts", end='', file=sys.stderr)
-        slugged_tags = set([])
-        quit = False
-        for wildcard, destination, template_name, use_in_feeds in \
-                self.config['post_pages']:
-            if not self.quiet and not quiet:
-                print(".", end='', file=sys.stderr)
-            dirname = os.path.dirname(wildcard)
-            for dirpath, _, _ in os.walk(dirname, followlinks=True):
-                dest_dir = os.path.normpath(os.path.join(destination,
-                                            os.path.relpath(dirpath, dirname)))  # output/destination/foo/
-                # Get all the untranslated paths
-                dir_glob = os.path.join(dirpath, os.path.basename(wildcard))  # posts/foo/*.rst
-                untranslated = glob.glob(dir_glob)
-                # And now get all the translated paths
-                translated = set([])
-                for lang in self.config['TRANSLATIONS'].keys():
-                    if lang == self.config['DEFAULT_LANG']:
-                        continue
-                    lang_glob = utils.get_translation_candidate(self.config, dir_glob, lang)  # posts/foo/*.LANG.rst
-                    translated = translated.union(set(glob.glob(lang_glob)))
-                # untranslated globs like *.rst often match translated paths too, so remove them
-                # and ensure x.rst is not in the translated set
-                untranslated = set(untranslated) - translated
-
-                # also remove from translated paths that are translations of
-                # paths in untranslated_list, so x.es.rst is not in the untranslated set
-                for p in untranslated:
-                    translated = translated - set([utils.get_translation_candidate(self.config, p, l) for l in self.config['TRANSLATIONS'].keys()])
-
-                full_list = list(translated) + list(untranslated)
-                # We eliminate from the list the files inside any .ipynb folder
-                full_list = [p for p in full_list
-                             if not any([x.startswith('.')
-                                         for x in p.split(os.sep)])]
-
-                for base_path in full_list:
-                    if base_path in seen:
-                        continue
-                    else:
-                        seen.add(base_path)
-                    post = Post(
-                        base_path,
-                        self.config,
-                        dest_dir,
-                        use_in_feeds,
-                        self.MESSAGES,
-                        template_name,
-                        self.get_compiler(base_path)
-                    )
-                    self.timeline.append(post)
-                    self.global_data[post.source_path] = post
-                    if post.use_in_feeds:
-                        self.posts.append(post)
-                        self.posts_per_year[
-                            str(post.date.year)].append(post)
-                        self.posts_per_month[
-                            '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post)
-                        for tag in post.alltags:
-                            _tag_slugified = utils.slugify(tag)
-                            if _tag_slugified in slugged_tags:
-                                if tag not in self.posts_per_tag:
-                                    # Tags that differ only in case
-                                    other_tag = [existing for existing in self.posts_per_tag.keys() if utils.slugify(existing) == _tag_slugified][0]
-                                    utils.LOGGER.error('You have tags that are too similar: {0} and {1}'.format(tag, other_tag))
-                                    utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
-                                    utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.posts_per_tag[other_tag]])))
-                                    quit = True
-                            else:
-                                slugged_tags.add(utils.slugify(tag, force=True))
-                            self.posts_per_tag[tag].append(post)
-                        self.posts_per_category[post.meta('category')].append(post)
-
-                    if post.is_post:
-                        # unpublished posts
-                        self.all_posts.append(post)
-                    else:
-                        self.pages.append(post)
-
-                    for lang in self.config['TRANSLATIONS'].keys():
-                        self.post_per_file[post.destination_path(lang=lang)] = post
-                        self.post_per_file[post.destination_path(lang=lang, extension=post.source_ext())] = post
-
-        # Sort everything.
-        self.timeline.sort(key=lambda p: p.date)
-        self.timeline.reverse()
-        self.posts.sort(key=lambda p: p.date)
-        self.posts.reverse()
-        self.all_posts.sort(key=lambda p: p.date)
-        self.all_posts.reverse()
-        self.pages.sort(key=lambda p: p.date)
-        self.pages.reverse()
-
-        for i, p in enumerate(self.posts[1:]):
-            p.next_post = self.posts[i]
-        for i, p in enumerate(self.posts[:-1]):
-            p.prev_post = self.posts[i + 1]
-        self._scanned = True
-        if not self.quiet and not quiet:
-            print("done!", file=sys.stderr)
-
-        signal('scanned').send(self)
-
-        if quit and not ignore_quit:
-            sys.exit(1)
+        p = [p for p in self.plugin_manager.getPluginsOfCategory('Task') if p.name == 'scan_posts'][0]
+        list(p.plugin_object.gen_tasks())
 
     def generic_page_renderer(self, lang, post, filters):
         """Render post fragments to final HTML pages."""
