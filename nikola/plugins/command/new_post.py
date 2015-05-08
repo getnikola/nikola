@@ -54,8 +54,10 @@ def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_names):
     extensions = compilers.get(compiler)
     if extensions is None:
         if compiler in compiler_names:
-            raise Exception("There is a {0} compiler available, but it's not set in your COMPILERS option.".format(compiler))
-        raise Exception('Unknown format {0}'.format(compiler))
+            LOGGER.error("There is a {0} compiler available, but it's not set in your COMPILERS option.".format(compiler))
+        else:
+            LOGGER.error('Unknown format {0}'.format(compiler))
+        sys.exit(1)
 
     # Throw away the post_pages with the wrong extensions
     filtered = [entry for entry in filtered if any([ext in entry[0] for ext in
@@ -63,10 +65,11 @@ def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_names):
 
     if not filtered:
         type_name = "post" if is_post else "page"
-        raise Exception("Can't find a way, using your configuration, to create "
+        LOGGER.error("Can't find a way, using your configuration, to create "
                         "a {0} in format {1}. You may want to tweak "
                         "COMPILERS or {2}S in conf.py".format(
                             type_name, compiler, type_name.upper()))
+        sys.exit(1)
     return filtered[0]
 
 
