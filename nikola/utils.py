@@ -1311,7 +1311,11 @@ class Commands(object):
         self._main = main
         self._config = config
         self._doitargs = doitargs
-        for k, v in self._doitargs['cmds'].to_dict().items():
+        try:
+            cmdict = self._doitargs['cmds'].to_dict()
+        except AttributeError:  # not a doit PluginDict
+            cmdict = self._doitargs['cmds']
+        for k, v in cmdict.items():
             # cleanup: run is doit-only, init is useless in an existing site
             if k in ['run', 'init']:
                 continue
@@ -1342,7 +1346,10 @@ class Commands(object):
     def _run_with_kw(self, cmd, *a, **kw):
         # cyclic import hack
         from nikola.plugin_categories import Command
-        cmd = self._doitargs['cmds'].get_plugin(cmd)
+        try:
+            cmd = self._doitargs['cmds'].get_plugin(cmd)
+        except AttributeError:  # not a doit PluginDict
+            cmd = self._doitargs['cmds'][cmd]
         try:
             opt = cmd.get_options()
         except TypeError:
