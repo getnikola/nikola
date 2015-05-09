@@ -79,6 +79,13 @@ class BasePlugin(IPlugin):
         """Add 'dependency' to the target task's task_deps"""
         self.site.injected_deps[target].append(dependency)
 
+class PostScanner(BasePlugin):
+    """The scan method of these plugins is called by Nikola.scan_posts."""
+
+    def scan(self):
+        """Load posts into the timeline."""
+        raise NotImplementedError()
+
 
 class Command(BasePlugin, DoitCommand):
     """These plugins are exposed via the command line.

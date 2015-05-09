@@ -1358,8 +1358,8 @@ class Nikola(object):
         # Why doesn't getPluginByName work????
         if self._scanned:
             return
-        p = [p for p in self.plugin_manager.getPluginsOfCategory('Task') if p.name == 'scan_posts'][0]
-        list(p.plugin_object.gen_tasks())
+        for p in self.plugin_manager.getPluginsOfCategory('PostScanner'):
+            p.plugin_object.scan()
 
     def generic_page_renderer(self, lang, post, filters):
         """Render post fragments to final HTML pages."""

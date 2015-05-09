@@ -32,17 +32,17 @@ import sys
 
 from blinker import signal
 
-from nikola.plugin_categories import Task
+from nikola.plugin_categories import PostScanner
 from nikola import utils
 from nikola.post import Post
 
 
-class ScanPosts(Task):
+class ScanPosts(PostScanner):
     """Render pages into output."""
 
     name = "scan_posts"
 
-    def gen_tasks(self):
+    def scan(self):
         """Build final pages from metadata and HTML fragments."""
         kw = {
             "post_pages": self.site.config["post_pages"],
@@ -73,7 +73,7 @@ class ScanPosts(Task):
             if not self.site.quiet:
                 print(".", end='', file=sys.stderr)
             dirname = os.path.dirname(wildcard)
-            for dirpath, _, _ in os.walk(dirname, followlinks=True):
+            for dirpath, _, _ in os.walk(dirname, followlinks=True ):
                 dest_dir = os.path.normpath(os.path.join(destination,
                                             os.path.relpath(dirpath, dirname)))  # output/destination/foo/
                 # Get all the untranslated paths
