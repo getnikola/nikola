@@ -25,12 +25,9 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import unicode_literals, print_function
-from collections import defaultdict
 import glob
 import os
 import sys
-
-from blinker import signal
 
 from nikola.plugin_categories import PostScanner
 from nikola import utils
@@ -44,13 +41,6 @@ class ScanPosts(PostScanner):
 
     def scan(self):
         """Build final pages from metadata and HTML fragments."""
-        kw = {
-            "post_pages": self.site.config["post_pages"],
-            "translations": self.site.config["TRANSLATIONS"],
-            "filters": self.site.config["FILTERS"],
-            "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
-            "demote_headers": self.site.config['DEMOTE_HEADERS'],
-        }
 
         seen = set([])
         if not self.site.quiet:
@@ -64,7 +54,7 @@ class ScanPosts(PostScanner):
             if not self.site.quiet:
                 print(".", end='', file=sys.stderr)
             dirname = os.path.dirname(wildcard)
-            for dirpath, _, _ in os.walk(dirname, followlinks=True ):
+            for dirpath, _, _ in os.walk(dirname, followlinks=True):
                 dest_dir = os.path.normpath(os.path.join(destination,
                                             os.path.relpath(dirpath, dirname)))  # output/destination/foo/
                 # Get all the untranslated paths

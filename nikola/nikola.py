@@ -1356,7 +1356,7 @@ class Nikola(object):
     def scan_posts(self, really=False, ignore_quit=False, quiet=False):
         """Scan all the posts.
 
-        Ignoring ignore_quit and quiet right now because noone uses them?
+        Ignoring quiet.
         """
         # FIXME this is temporary while moving things out to a plugin
         if self._scanned and not really:
@@ -1380,6 +1380,7 @@ class Nikola(object):
             self.timeline.extend(timeline)
             self.global_data.update(global_data)
 
+        quit = False
         # Classify posts per year/tag/month/whatever
         slugged_tags = set([])
         for post in self.timeline:
@@ -1426,7 +1427,8 @@ class Nikola(object):
         self._scanned = True
         if not self.quiet:
             print("done!", file=sys.stderr)
-
+        if quit and not ignore_quit:
+            sys.exit(1)
         signal('scanned').send(self)
 
     def generic_page_renderer(self, lang, post, filters):
