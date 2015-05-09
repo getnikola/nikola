@@ -1358,7 +1358,6 @@ class Nikola(object):
 
         Ignoring quiet.
         """
-        # FIXME this is temporary while moving things out to a plugin
         if self._scanned and not really:
             return
 
