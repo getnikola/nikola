@@ -59,7 +59,6 @@ class ScanPosts(PostScanner):
         timeline = []
         global_data = {}
 
-        quit = False
         for wildcard, destination, template_name, use_in_feeds in \
                 self.site.config['post_pages']:
             if not self.site.quiet:
