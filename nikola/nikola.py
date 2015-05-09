@@ -30,7 +30,6 @@ from collections import defaultdict
 from copy import copy
 from pkg_resources import resource_filename
 import datetime
-import glob
 import locale
 import os
 import json
@@ -54,7 +53,6 @@ import lxml.html
 from yapsy.PluginManager import PluginManager
 from blinker import signal
 
-from .post import Post
 from . import DEBUG, utils
 from .plugin_categories import (
     Command,
@@ -67,6 +65,7 @@ from .plugin_categories import (
     TemplateSystem,
     SignalHandler,
     ConfigPlugin,
+    PostScanner,
 )
 
 if DEBUG:
@@ -667,6 +666,7 @@ class Nikola(object):
             "MarkdownExtension": MarkdownExtension,
             "SignalHandler": SignalHandler,
             "ConfigPlugin": ConfigPlugin,
+            "PostScanner": PostScanner,
         })
         self.plugin_manager.setPluginInfoExtension('plugin')
         extra_plugins_dirs = self.config['EXTRA_PLUGINS_DIRS']

@@ -42,7 +42,9 @@ __all__ = [
     'Task',
     'TaskMultiplier',
     'TemplateSystem',
-    'SignalHandler'
+    'SignalHandler',
+    'ConfigPlugin',
+    'PostScanner',
 ]
 
 
@@ -78,6 +80,7 @@ class BasePlugin(IPlugin):
     def inject_dependency(self, target, dependency):
         """Add 'dependency' to the target task's task_deps"""
         self.site.injected_deps[target].append(dependency)
+
 
 class PostScanner(BasePlugin):
     """The scan method of these plugins is called by Nikola.scan_posts."""
