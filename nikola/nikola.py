@@ -1353,10 +1353,13 @@ class Nikola(object):
             'task_dep': task_dep
         }
 
-    def scan_posts(self):
-        """Scan all the posts."""
+    def scan_posts(self, really=False, ignore_quit=False, quiet=False):
+        """Scan all the posts.
+
+        Ignoring ignore_quit and quiet right now because noone uses them?
+        """
         # FIXME this is temporary while moving things out to a plugin
-        if self._scanned:
+        if self._scanned and not really:
             return
 
         # Reset things
