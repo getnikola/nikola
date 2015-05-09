@@ -66,9 +66,9 @@ def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_names):
     if not filtered:
         type_name = "post" if is_post else "page"
         LOGGER.error("Can't find a way, using your configuration, to create "
-                        "a {0} in format {1}. You may want to tweak "
-                        "COMPILERS or {2}S in conf.py".format(
-                            type_name, compiler, type_name.upper()))
+                     "a {0} in format {1}. You may want to tweak "
+                     "COMPILERS or {2}S in conf.py".format(
+                         type_name, compiler, type_name.upper()))
         sys.exit(1)
     return filtered[0]
 
