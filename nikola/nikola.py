@@ -266,7 +266,6 @@ class Nikola(object):
         }
 
         self.strict = False
-        self.global_data = {}
         self.posts = []
         self.all_posts = []
         self.posts_per_year = defaultdict(list)
@@ -1362,7 +1361,6 @@ class Nikola(object):
             return
 
         # Reset things
-        self.global_data = {}
         self.posts = []
         self.all_posts = []
         self.posts_per_year = defaultdict(list)
@@ -1374,10 +1372,9 @@ class Nikola(object):
         self.pages = []
 
         for p in self.plugin_manager.getPluginsOfCategory('PostScanner'):
-            timeline, global_data = p.plugin_object.scan()
+            timeline = p.plugin_object.scan()
             # FIXME: can there be conflicts here?
             self.timeline.extend(timeline)
-            self.global_data.update(global_data)
 
         quit = False
         # Classify posts per year/tag/month/whatever

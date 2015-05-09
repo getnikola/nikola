@@ -89,7 +89,7 @@ class PostScanner(BasePlugin):
         """Creates a list of posts from some source. Returns timeline, global_data:
 
         timeline is a list of Post objects
-        global_data is a dictionary where keys are source paths and values are posts. 
+        global_data is a dictionary where keys are source paths and values are posts.
         """
         raise NotImplementedError()
 

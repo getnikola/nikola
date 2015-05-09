@@ -47,7 +47,6 @@ class ScanPosts(PostScanner):
             print("Scanning posts", end='', file=sys.stderr)
 
         timeline = []
-        global_data = {}
 
         for wildcard, destination, template_name, use_in_feeds in \
                 self.site.config['post_pages']:
@@ -97,6 +96,5 @@ class ScanPosts(PostScanner):
                         self.site.get_compiler(base_path)
                     )
                     timeline.append(post)
-                    global_data[post.source_path] = post
 
-        return timeline, global_data
+        return timeline
