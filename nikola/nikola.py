@@ -1355,11 +1355,82 @@ class Nikola(object):
     def scan_posts(self):
         """Scan all the posts."""
         # FIXME this is temporary while moving things out to a plugin
-        # Why doesn't getPluginByName work????
         if self._scanned:
             return
+
+        # Reset things
+        self.global_data = {}
+        self.posts = []
+        self.all_posts = []
+        self.posts_per_year = defaultdict(list)
+        self.posts_per_month = defaultdict(list)
+        self.posts_per_tag = defaultdict(list)
+        self.posts_per_category = defaultdict(list)
+        self.post_per_file = {}
+        self.timeline = []
+        self.pages = []
+
         for p in self.plugin_manager.getPluginsOfCategory('PostScanner'):
-            p.plugin_object.scan()
+            timeline, global_data = p.plugin_object.scan()
+            # FIXME: can there be conflicts here?
+            self.timeline.extend(timeline)
+            self.global_data.update(global_data)
+
+        slugged_tags = set([])
+        for post in self.timeline:
+            if post.use_in_feeds:
+                self.site.posts.append(post)
+                self.site.posts_per_year[
+                    str(post.date.year)].append(post)
+                self.site.posts_per_month[
+                    '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post)
+                for tag in post.alltags:
+                    _tag_slugified = utils.slugify(tag)
+                    if _tag_slugified in slugged_tags:
+                        if tag not in self.site.posts_per_tag:
+                            # Tags that differ only in case
+                            other_tag = [existing for existing in self.site.posts_per_tag.keys() if utils.slugify(existing) == _tag_slugified][0]
+                            utils.LOGGER.error('You have tags that are too similar: {0} and {1}'.format(tag, other_tag))
+                            utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
+                            utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.site.posts_per_tag[other_tag]])))
+                            quit = True
+                    else:
+                        slugged_tags.add(utils.slugify(tag, force=True))
+                    self.site.posts_per_tag[tag].append(post)
+                self.site.posts_per_category[post.meta('category')].append(post)
+
+            if post.is_post:
+                # unpublished posts
+                self.site.all_posts.append(post)
+            else:
+                self.site.pages.append(post)
+
+            for lang in self.site.config['TRANSLATIONS'].keys():
+                self.site.post_per_file[post.destination_path(lang=lang)] = post
+                self.site.post_per_file[post.destination_path(lang=lang, extension=post.source_ext())] = post
+
+        # Sort everything.
+        self.timeline.sort(key=lambda p: p.date)
+        self.timeline.reverse()
+        self.posts.sort(key=lambda p: p.date)
+        self.posts.reverse()
+        self.all_posts.sort(key=lambda p: p.date)
+        self.all_posts.reverse()
+        self.pages.sort(key=lambda p: p.date)
+        self.pages.reverse()
+
+        for i, p in enumerate(self.site.posts[1:]):
+            p.next_post = self.site.posts[i]
+        for i, p in enumerate(self.site.posts[:-1]):
+            p.prev_post = self.site.posts[i + 1]
+        self.site._scanned = True
+        if not self.site.quiet:
+            print("done!", file=sys.stderr)
+
+        signal('scanned').send(self)
+
+        if quit and not ignore_quit:
+            sys.exit(1)
 
     def generic_page_renderer(self, lang, post, filters):
         """Render post fragments to final HTML pages."""
