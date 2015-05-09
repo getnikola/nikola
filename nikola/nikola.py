@@ -53,7 +53,7 @@ import lxml.html
 from yapsy.PluginManager import PluginManager
 from blinker import signal
 
-from .post import Post
+from .post import Post  # NOQA
 from . import DEBUG, utils
 from .plugin_categories import (
     Command,
