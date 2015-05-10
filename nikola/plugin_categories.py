@@ -86,11 +86,7 @@ class PostScanner(BasePlugin):
     """The scan method of these plugins is called by Nikola.scan_posts."""
 
     def scan(self):
-        """Creates a list of posts from some source. Returns timeline, global_data:
-
-        timeline is a list of Post objects
-        global_data is a dictionary where keys are source paths and values are posts.
-        """
+        """Creates a list of posts from some source. Returns a list of Post objects."""
         raise NotImplementedError()
 
 

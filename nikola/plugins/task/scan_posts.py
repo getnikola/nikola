@@ -40,7 +40,7 @@ class ScanPosts(PostScanner):
     name = "scan_posts"
 
     def scan(self):
-        """Build final pages from metadata and HTML fragments."""
+        """Create list of posts from POSTS and PAGES options."""
 
         seen = set([])
         if not self.site.quiet:
