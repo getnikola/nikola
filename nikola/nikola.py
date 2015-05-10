@@ -1412,8 +1412,9 @@ class Nikola(object):
             self.posts_per_category[self.category_path_to_category_name(current_path)].append(post)
 
     def _sort_category_hierarchy(self):
-        self.category_hierarchy_lookup = {}
         # First create a hierarchy of TreeNodes
+        self.category_hierarchy_lookup = {}
+
         def create_hierarchy(cat_hierarchy, parent=None):
             result = []
             for name, children in cat_hierarchy.items():
@@ -1425,6 +1426,7 @@ class Nikola(object):
                 if node.category_name not in self.config.get('HIDDEN_CATEGORIES'):
                     result.append(node)
             return natsort.natsorted(result, key=lambda e: e.name, alg=natsort.ns.F | natsort.ns.IC)
+
         root_list = create_hierarchy(self.category_hierarchy)
         # Next, flatten the hierarchy
         self.category_hierarchy = utils.flatten_tree_structure(root_list)
