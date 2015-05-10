@@ -20,10 +20,10 @@
         {% if description %}
         <p>{{ description }}</p>
         {% endif %}
-        {% if subcategories: %}
+        {% if subcategories %}
         {{ messages('Subcategories:') }}
         <ul>
-            {% for name, link in subcategories: %}
+            {% for name, link in subcategories %}
             <li><a href="{{ link }}">{{ name }}</a></li>
             {% endfor %}
         </ul>
