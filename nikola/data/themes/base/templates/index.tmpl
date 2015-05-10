@@ -11,6 +11,14 @@
 </%block>
 
 <%block name="content">
+%if subcategories:
+${messages('Subcategories:')}
+<ul>
+    %for name, link in subcategories:
+    <li><a href="${link}">${name}</a></li>
+    %endfor
+</ul>
+%endif
 <div class="postindex">
 % for post in posts:
     <article class="h-entry post-${post.meta('type')}">
