@@ -95,7 +95,8 @@ class RenderTags(Task):
 
         if kw['category_path'] == kw['tag_path']:
             tags = {self.slugify_tag_name(tag): tag for tag in self.site.posts_per_tag.keys()}
-            categories = {self.slugify_category_name(category)[0]: category for category in self.site.posts_per_category.keys()}
+            cats = {tuple(self.slugify_category_name(category)): category for category in self.site.posts_per_category.keys()}
+            categories = {k[0]: v for k, v in cats.items() if len(k) == 1}
             intersect = set(tags.keys()) & set(categories.keys())
             if len(intersect) > 0:
                 for slug in intersect:
