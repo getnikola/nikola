@@ -102,6 +102,18 @@ class RenderTags(Task):
                     utils.LOGGER.error("Category '{0}' and tag '{1}' both have the same slug '{2}'!".format('/'.join(categories[slug]), tags[slug], slug))
                 sys.exit(1)
 
+        # Test for category slug clashes
+        categories = {}
+        for category in self.site.posts_per_category.keys():
+            slug = tuple(self.slugify_category_name(category))
+            if slug in categories:
+                other_category = categories[slug]
+                utils.LOGGER.error('You have categories that are too similar: {0} and {1}'.format(category, other_category))
+                utils.LOGGER.error('Category {0} is used in: {1}'.format(category, ', '.join([p.source_path for p in self.posts_per_category[category]])))
+                utils.LOGGER.error('Category {0} is used in: {1}'.format(other_category, ', '.join([p.source_path for p in self.posts_per_category[other_category]])))
+                pass
+            categories[slug] = category
+
         tag_list = list(self.site.posts_per_tag.items())
         cat_list = list(self.site.posts_per_category.items())
 
