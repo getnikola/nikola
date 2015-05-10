@@ -42,7 +42,7 @@ PAGELOGGER = utils.get_logger('new_page', utils.STDERR_HANDLER)
 LOGGER = POSTLOGGER
 
 
-def filter_post_pages(compiler, is_post, compilers, post_pages):
+def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_names):
     """Given a compiler ("markdown", "rest"), and whether it's meant for
     a post or a page, and compilers, return the correct entry from
     post_pages."""
@@ -53,7 +53,11 @@ def filter_post_pages(compiler, is_post, compilers, post_pages):
     # These are the extensions supported by the required format
     extensions = compilers.get(compiler)
     if extensions is None:
-        raise Exception('Unknown format {0}'.format(compiler))
+        if compiler in compiler_names:
+            LOGGER.error("There is a {0} compiler available, but it's not set in your COMPILERS option.".format(compiler))
+        else:
+            LOGGER.error('Unknown format {0}'.format(compiler))
+        sys.exit(1)
 
     # Throw away the post_pages with the wrong extensions
     filtered = [entry for entry in filtered if any([ext in entry[0] for ext in
@@ -61,10 +65,11 @@ def filter_post_pages(compiler, is_post, compilers, post_pages):
 
     if not filtered:
         type_name = "post" if is_post else "page"
-        raise Exception("Can't find a way, using your configuration, to create "
-                        "a {0} in format {1}. You may want to tweak "
-                        "COMPILERS or {2}S in conf.py".format(
-                            type_name, compiler, type_name.upper()))
+        LOGGER.error("Can't find a way, using your configuration, to create "
+                     "a {0} in format {1}. You may want to tweak "
+                     "COMPILERS or {2}S in conf.py".format(
+                         type_name, compiler, type_name.upper()))
+        sys.exit(1)
     return filtered[0]
 
 
@@ -271,7 +276,7 @@ class CommandNewPost(Command):
                 self.site.config['post_pages'])
 
         if content_format not in compiler_names:
-            LOGGER.error("Unknown {0} format {1}".format(content_type, content_format))
+            LOGGER.error("Unknown {0} format {1}, maybe you need to install a plugin?".format(content_type, content_format))
             return
         compiler_plugin = self.site.plugin_manager.getPluginByName(
             content_format, "PageCompiler").plugin_object
@@ -279,7 +284,8 @@ class CommandNewPost(Command):
         # Guess where we should put this
         entry = filter_post_pages(content_format, is_post,
                                   self.site.config['COMPILERS'],
-                                  self.site.config['post_pages'])
+                                  self.site.config['post_pages'],
+                                  compiler_names)
 
         if import_file:
             print("Importing Existing {xx}".format(xx=content_type.title()))

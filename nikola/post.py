@@ -69,6 +69,7 @@ from .rc4 import rc4
 __all__ = ['Post']
 
 TEASER_REGEXP = re.compile('<!--\s*TEASER_END(:(.+))?\s*-->', re.IGNORECASE)
+_UPGRADE_METADATA_ADVERTISED = False
 
 
 class Post(object):
@@ -875,6 +876,7 @@ def _get_metadata_from_file(meta_data):
 
 def get_metadata_from_meta_file(path, config=None, lang=None):
     """Takes a post path, and gets data from a matching .meta file."""
+    global _UPGRADE_METADATA_ADVERTISED
     meta_path = os.path.splitext(path)[0] + '.meta'
     if lang and config:
         meta_path = get_translation_candidate(config, meta_path, lang)
@@ -897,6 +899,10 @@ def get_metadata_from_meta_file(path, config=None, lang=None):
             # a 1-file post.
             return get_metadata_from_file(path, config, lang), newstylemeta
         else:
+            if not _UPGRADE_METADATA_ADVERTISED:
+                LOGGER.warn("Some posts on your site have old-style metadata. You should upgrade them to the new format, with support for extra fields.")
+                LOGGER.warn("Install the 'upgrade_metadata' plugin (with 'nikola plugin -i upgrade_metadata') and run 'nikola upgrade_metadata'.")
+                _UPGRADE_METADATA_ADVERTISED = True
             while len(meta_data) < 7:
                 meta_data.append("")
             (title, slug, date, tags, link, description, _type) = [
