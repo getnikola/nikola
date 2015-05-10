@@ -77,10 +77,10 @@ def jinjify(in_theme, out_theme):
     if child in mappings:
         parent = mappings[child]
 
-    with open(os.path.join(out_theme, "parent"), "wb+") as outf:
+    with io.open(os.path.join(out_theme, "parent"), "w+", encoding='utf-8') as outf:
         outf.write(parent + '\n')
 
-    with open(os.path.join(out_theme, "engine"), "wb+") as outf:
+    with io.open(os.path.join(out_theme, "engine"), "w+", encoding='utf-8') as outf:
         outf.write("jinja\n")
 
     # Copy assets
