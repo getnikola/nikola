@@ -345,7 +345,7 @@ class CommandNewPost(Command):
         if not path:
             txt_path = os.path.join(output_path, slug + suffix)
         else:
-            txt_path = path
+            txt_path = os.path.join(self.site.original_cwd, path)
 
         if (not onefile and os.path.isfile(meta_path)) or \
                 os.path.isfile(txt_path):
