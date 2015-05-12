@@ -7,6 +7,7 @@ Features
 Bugfixes
 --------
 
+* Timeline checksum for whole-timeline dependencies (Issue #1688)
 * new_post paths are now relative to CWD (Issue #1325)
 
 New in v7.4.1
