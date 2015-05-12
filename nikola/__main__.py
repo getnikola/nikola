@@ -90,6 +90,8 @@ def main(args=None):
         quiet = True
     global config
 
+    original_cwd = os.getcwd()
+
     # Those commands do not require a `conf.py`.  (Issue #1132)
     # Moreover, actually having one somewhere in the tree can be bad, putting
     # the output of that command (the new site) in an unknown directory that is
@@ -145,6 +147,7 @@ def main(args=None):
     config['__invariant__'] = invariant
     config['__quiet__'] = quiet
     config['__configuration_filename__'] = conf_filename
+    config['__cwd__'] = original_cwd
 
     site = Nikola(**config)
     DN = DoitNikola(site, quiet)

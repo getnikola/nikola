@@ -286,6 +286,7 @@ class Nikola(object):
         self.invariant = config.pop('__invariant__', False)
         self.quiet = config.pop('__quiet__', False)
         self._doit_config = config.pop('DOIT_CONFIG', {})
+        self.original_cwd = config.pop('__cwd__', False)
         self.configuration_filename = config.pop('__configuration_filename__', False)
         self.configured = bool(config)
         self.injected_deps = defaultdict(list)
