@@ -62,6 +62,7 @@ _RETURN_DOITNIKOLA = False
 
 
 def main(args=None):
+
     colorful = False
     if sys.stderr.isatty() and os.name != 'nt':
         colorful = True
@@ -238,16 +239,16 @@ class NikolaTaskLoader(TaskLoader):
         self.quiet = quiet
 
     def load_tasks(self, cmd, opt_values, pos_args):
-        if self.quiet:
-            DOIT_CONFIG = {
-                'verbosity': 0,
-                'reporter': 'zero',
-            }
+        if 'DOIT_CONFIG' in config:
+            DOIT_CONFIG = config['DOIT_CONFIG']
         else:
-            DOIT_CONFIG = {
-                'reporter': ExecutedOnlyReporter,
-                'outfile': sys.stderr,
-            }
+            DOIT_CONFIG = {}
+        if self.quiet:
+            DOIT_CONFIG['verbosity'] = 0
+            DOIT_CONFIG['reporter'] = 'zero'
+        else:
+            DOIT_CONFIG['reporter'] = ExecutedOnlyReporter
+            DOIT_CONFIG['outfile'] = sys.stderr
         DOIT_CONFIG['default_tasks'] = ['render_site', 'post_render']
         tasks = generate_tasks(
             'render_site',
