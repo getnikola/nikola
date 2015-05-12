@@ -241,12 +241,12 @@ class NikolaTaskLoader(TaskLoader):
         if self.quiet:
             DOIT_CONFIG = {
                 'verbosity': 0,
-                'reporter': 'zero'
+                'reporter': 'zero',
             }
         else:
             DOIT_CONFIG = {
                 'reporter': ExecutedOnlyReporter,
-                'outfile': sys.stderr
+                'outfile': sys.stderr,
             }
         DOIT_CONFIG['default_tasks'] = ['render_site', 'post_render']
         DOIT_CONFIG.update(self.nikola._doit_config)
