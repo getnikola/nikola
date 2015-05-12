@@ -62,7 +62,6 @@ _RETURN_DOITNIKOLA = False
 
 
 def main(args=None):
-
     colorful = False
     if sys.stderr.isatty() and os.name != 'nt':
         colorful = True
