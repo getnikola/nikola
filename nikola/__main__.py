@@ -239,7 +239,7 @@ class NikolaTaskLoader(TaskLoader):
         self.quiet = quiet
 
     def load_tasks(self, cmd, opt_values, pos_args):
-        DOIT_CONFIG = config.get('DOIT_CONFIG',{})
+        DOIT_CONFIG = config.get('DOIT_CONFIG', {})
         if self.quiet:
             DOIT_CONFIG['verbosity'] = 0
             DOIT_CONFIG['reporter'] = 'zero'
