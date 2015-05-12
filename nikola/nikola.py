@@ -1358,45 +1358,17 @@ class Nikola(object):
 
     def parse_category_name(self, category_name):
         if self.config['CATEGORY_ALLOW_HIERARCHIES']:
-            result = []
-            current = ''
-            index = 0
-            next_backslash = category_name.find('\\', index)
-            next_slash = category_name.find('/', index)
-            while index < len(category_name):
-                if next_backslash == -1 and next_slash == -1:
-                    current += category_name[index:]
-                    index = len(category_name)
-                elif next_slash >= 0 and (next_backslash == -1 or next_backslash > next_slash):
-                    result.append(current + category_name[index:next_slash])
-                    current = ''
-                    index = next_slash + 1
-                    next_slash = category_name.find('/', index)
-                else:
-                    if len(category_name) == next_backslash + 1:
-                        utils.LOGGER.error("Unexpected '\\' in '{0}' at last position!".format(category_name))
-                        sys.exit(1)
-                    esc_ch = category_name[next_backslash + 1]
-                    if esc_ch not in {'/', '\\'}:
-                        utils.LOGGER.error("Unknown escape sequence '\\{0}' in '{1}'!".format(esc_ch, category_name))
-                        sys.exit(1)
-                    current += category_name[index:next_backslash] + esc_ch
-                    index = next_backslash + 2
-                    next_backslash = category_name.find('\\', index)
-                    if esc_ch == '/':
-                        next_slash = category_name.find('/', index)
-            if len(current) > 0:
-                result.append(current)
-            return result
+            try:
+                return utils.parse_escaped_hierarchical_category_name(category_name)
+            except Exception as e:
+                utils.LOGGER.error(str(e))
+                sys.exit(1)
         else:
             return [category_name] if len(category_name) > 0 else []
 
     def category_path_to_category_name(self, category_path):
         if self.config['CATEGORY_ALLOW_HIERARCHIES']:
-            def escape(s):
-                return s.replace('\\', '\\\\').replace('/', '\\/')
-
-            return '/'.join([escape(p) for p in category_path])
+            return utils.join_hierarchical_category_path(category_path)
         else:
             return ''.join(category_path)
 

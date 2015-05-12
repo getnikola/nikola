@@ -1573,3 +1573,41 @@ def flatten_tree_structure(root_list):
     if last_element is not None:
         last_element.indent_change_after = -level
     return elements
+
+
+def parse_escaped_hierarchical_category_name(category_name):
+    result = []
+    current = None
+    index = 0
+    next_backslash = category_name.find('\\', index)
+    next_slash = category_name.find('/', index)
+    while index < len(category_name):
+        if next_backslash == -1 and next_slash == -1:
+            current = (current if current else "") + category_name[index:]
+            index = len(category_name)
+        elif next_slash >= 0 and (next_backslash == -1 or next_backslash > next_slash):
+            result.append((current if current else "") + category_name[index:next_slash])
+            current = ''
+            index = next_slash + 1
+            next_slash = category_name.find('/', index)
+        else:
+            if len(category_name) == next_backslash + 1:
+                raise Exception("Unexpected '\\' in '{0}' at last position!".format(category_name))
+            esc_ch = category_name[next_backslash + 1]
+            if esc_ch not in {'/', '\\'}:
+                raise Exception("Unknown escape sequence '\\{0}' in '{1}'!".format(esc_ch, category_name))
+            current = (current if current else "") + category_name[index:next_backslash] + esc_ch
+            index = next_backslash + 2
+            next_backslash = category_name.find('\\', index)
+            if esc_ch == '/':
+                next_slash = category_name.find('/', index)
+    if current is not None:
+        result.append(current)
+    return result
+
+
+def join_hierarchical_category_path(category_path):
+    def escape(s):
+        return s.replace('\\', '\\\\').replace('/', '\\/')
+
+    return '/'.join([escape(p) for p in category_path])
