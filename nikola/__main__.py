@@ -238,14 +238,18 @@ class NikolaTaskLoader(TaskLoader):
         self.quiet = quiet
 
     def load_tasks(self, cmd, opt_values, pos_args):
-        DOIT_CONFIG = config.get('DOIT_CONFIG', {})
         if self.quiet:
-            DOIT_CONFIG['verbosity'] = 0
-            DOIT_CONFIG['reporter'] = 'zero'
+            DOIT_CONFIG = {
+                'verbosity': 0,
+                'reporter': 'zero'
+            }
         else:
-            DOIT_CONFIG['reporter'] = ExecutedOnlyReporter
-            DOIT_CONFIG['outfile'] = sys.stderr
+            DOIT_CONFIG = {
+                'reporter': ExecutedOnlyReporter,
+                'outfile': sys.stderr
+            }
         DOIT_CONFIG['default_tasks'] = ['render_site', 'post_render']
+        DOIT_CONFIG.update(self.nikola._doit_config)
         tasks = generate_tasks(
             'render_site',
             self.nikola.gen_tasks('render_site', "Task", 'Group of tasks to render the site.'))
