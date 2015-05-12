@@ -30,7 +30,7 @@ from nikola.plugin_categories import Task
 from nikola import utils
 
 
-def update_deps(post, lang, deps_dict, timeline, task):
+def update_deps(post, lang, task):
     """Updates file dependencies as they might have been updated during compilation.
 
     This is done for example by the ReST page compiler, which writes its
@@ -82,7 +82,7 @@ class RenderPosts(Task):
                     'file_dep': file_dep,
                     'targets': [dest],
                     'actions': [(post.compile, (lang, )),
-                                (update_deps, (post, lang, deps_dict, kw['timeline'], )),
+                                (update_deps, (post, lang, )),
                                 ],
                     'clean': True,
                     'uptodate': [
