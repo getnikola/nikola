@@ -1,3 +1,14 @@
+New in master
+=============
+
+Features
+--------
+
+Bugfixes
+--------
+* new_post paths are now relative to CWD (Issue #1325)
+
+
 New in v7.4.1
 =============
 
@@ -11,7 +22,6 @@ Features
 Bugfixes
 --------
 
-* new_post paths are now relative to CWD (Issue #1325)
 * Handle strange URLs, like ed2k:// (Issue #1695)
 * Fix very old metadata format support (Issue #1689)
 
