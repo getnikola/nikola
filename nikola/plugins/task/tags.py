@@ -28,6 +28,7 @@ from __future__ import unicode_literals
 import json
 import os
 import sys
+import natsort
 try:
     from urlparse import urljoin
 except ImportError:
@@ -93,13 +94,30 @@ class RenderTags(Task):
             return
 
         if kw['category_path'] == kw['tag_path']:
-            tags = {self.slugify_name(tag): tag for tag in self.site.posts_per_tag.keys()}
-            categories = {kw['category_prefix'] + self.slugify_name(category): category for category in self.site.posts_per_category.keys()}
+            tags = {self.slugify_tag_name(tag): tag for tag in self.site.posts_per_tag.keys()}
+            cats = {tuple(self.slugify_category_name(category)): category for category in self.site.posts_per_category.keys()}
+            categories = {k[0]: v for k, v in cats.items() if len(k) == 1}
             intersect = set(tags.keys()) & set(categories.keys())
             if len(intersect) > 0:
                 for slug in intersect:
-                    utils.LOGGER.error("Category '{0}' and tag '{1}' both have the same slug '{2}'!".format(categories[slug], tags[slug], slug))
+                    utils.LOGGER.error("Category '{0}' and tag '{1}' both have the same slug '{2}'!".format('/'.join(categories[slug]), tags[slug], slug))
                 sys.exit(1)
+
+        # Test for category slug clashes
+        categories = {}
+        for category in self.site.posts_per_category.keys():
+            slug = tuple(self.slugify_category_name(category))
+            for part in slug:
+                if len(part) == 0:
+                    utils.LOGGER.error("Category '{0}' yields invalid slug '{1}'!".format(category, '/'.join(slug)))
+                    sys.exit(1)
+            if slug in categories:
+                other_category = categories[slug]
+                utils.LOGGER.error('You have categories that are too similar: {0} and {1}'.format(category, other_category))
+                utils.LOGGER.error('Category {0} is used in: {1}'.format(category, ', '.join([p.source_path for p in self.posts_per_category[category]])))
+                utils.LOGGER.error('Category {0} is used in: {1}'.format(other_category, ', '.join([p.source_path for p in self.posts_per_category[other_category]])))
+                sys.exit(1)
+            categories[slug] = category
 
         tag_list = list(self.site.posts_per_tag.items())
         cat_list = list(self.site.posts_per_category.items())
@@ -124,10 +142,8 @@ class RenderTags(Task):
             for task in render_lists(tag, posts, False):
                 yield task
 
-        for tag, posts in cat_list:
-            if tag == '':  # This is uncategorized posts
-                continue
-            for task in render_lists(tag, posts, True):
+        for path, posts in cat_list:
+            for task in render_lists(path, posts, True):
                 yield task
 
         # Tag cloud json file
@@ -165,14 +181,12 @@ class RenderTags(Task):
 
     def _create_tags_page(self, kw, include_tags=True, include_categories=True):
         """a global "all your tags/categories" page for each language"""
-        tags = list([tag for tag in self.site.posts_per_tag.keys()
-                     if len(self.site.posts_per_tag[tag]) >= kw["taglist_minimum_post_count"]])
-        categories = list(self.site.posts_per_category.keys())
-        # We want our tags to be sorted case insensitive
-        tags.sort(key=lambda a: a.lower())
-        categories.sort(key=lambda a: a.lower())
-        has_tags = (tags != ['']) and include_tags
-        has_categories = (categories != ['']) and include_categories
+        tags = natsort.natsorted([tag for tag in self.site.posts_per_tag.keys()
+                                  if len(self.site.posts_per_tag[tag]) >= kw["taglist_minimum_post_count"]],
+                                 alg=natsort.ns.F | natsort.ns.IC)
+        categories = [cat.category_name for cat in self.site.category_hierarchy]
+        has_tags = (tags != []) and include_tags
+        has_categories = (categories != []) and include_categories
         template_name = "tags.tmpl"
         kw = kw.copy()
         if include_tags:
@@ -198,6 +212,11 @@ class RenderTags(Task):
             if has_categories:
                 context["cat_items"] = [(tag, self.site.link("category", tag, lang)) for tag
                                         in categories]
+                context['cat_hierarchy'] = [(node.name, node.category_name, node.category_path,
+                                             self.site.link("category", node.category_name),
+                                             node.indent_levels, node.indent_change_before,
+                                             node.indent_change_after)
+                                            for node in self.site.category_hierarchy]
             else:
                 context["cat_items"] = None
             context["permalink"] = self.site.link("tag_index" if has_tags else "category_index", None, lang)
@@ -222,6 +241,20 @@ class RenderTags(Task):
             yield self._create_tags_page(kw, False, True)
             yield self._create_tags_page(kw, True, False)
 
+    def _get_title(self, tag, is_category):
+        if is_category:
+            return self.site.parse_category_name(tag)[-1]
+        else:
+            return tag
+
+    def _get_description(self, tag, is_category, kw, lang):
+        descriptions = kw["category_pages_descriptions"] if is_category else kw["tag_pages_descriptions"]
+        return descriptions[lang][tag] if lang in descriptions and tag in descriptions[lang] else None
+
+    def _get_subcategories(self, category):
+        node = self.site.category_hierarchy_lookup[category]
+        return [(child.name, self.site.link("category", child.category_name)) for child in node.children]
+
     def tag_page_as_index(self, tag, lang, post_list, kw, is_category):
         """render a sort of index page collection using only this
         tag's posts."""
@@ -244,12 +277,15 @@ class RenderTags(Task):
                         """{0} ({1})" href="{2}">""".format(
                             tag, lang, self.site.link(kind + "_rss", tag, lang)))
             context_source['rss_link'] = rss_link
-        context_source["tag"] = tag
-        context_source["description"] = None
-        descriptions = kw["category_pages_descriptions"] if is_category else kw["tag_pages_descriptions"]
-        if lang in descriptions and tag in descriptions[lang]:
-            context_source["description"] = descriptions[lang][tag]
-        indexes_title = kw["messages"][lang]["Posts about %s"] % tag
+        title = self._get_title(tag, is_category)
+        if is_category:
+            context_source["category"] = tag
+            context_source["category_path"] = self.site.parse_category_name(tag)
+        context_source["tag"] = title
+        indexes_title = kw["messages"][lang]["Posts about %s"] % title
+        context_source["description"] = self._get_description(tag, is_category, kw, lang)
+        if is_category:
+            context_source["subcategories"] = self._get_subcategories(tag)
         template_name = "tagindex.tmpl"
 
         yield self.site.generic_index_renderer(lang, post_list, indexes_title, template_name, context_source, kw, str(self.name), page_link, page_path)
@@ -262,16 +298,19 @@ class RenderTags(Task):
             kind, tag, lang))
         context = {}
         context["lang"] = lang
-        context["title"] = kw["messages"][lang]["Posts about %s"] % tag
+        title = self._get_title(tag, is_category)
+        if is_category:
+            context["category"] = tag
+            context["category_path"] = self.site.parse_category_name(tag)
+        context["tag"] = title
+        context["title"] = kw["messages"][lang]["Posts about %s"] % title
         context["posts"] = post_list
         context["permalink"] = self.site.link(kind, tag, lang)
-        context["tag"] = tag
         context["kind"] = kind
-        context["description"] = None
-        descriptions = (kw["category_pages_descriptions"] if is_category
-                        else kw["tag_pages_descriptions"])
-        if lang in descriptions and tag in descriptions[lang]:
-            context["description"] = descriptions[lang][tag]
+        context["description"] = self._get_description(tag, is_category, kw, lang)
+        if is_category:
+            context["subcategories"] = self._get_subcategories(tag)
+            print(tag, context["subcategories"])
         task = self.site.generic_post_list_renderer(
             lang,
             post_list,
@@ -305,7 +344,7 @@ class RenderTags(Task):
             'file_dep': deps,
             'targets': [output_name],
             'actions': [(utils.generic_rss_renderer,
-                        (lang, "{0} ({1})".format(kw["blog_title"](lang), tag),
+                        (lang, "{0} ({1})".format(kw["blog_title"](lang), self._get_title(tag, is_category)),
                          kw["site_url"], None, post_list,
                          output_name, kw["rss_teasers"], kw["rss_plain"], kw['feed_length'],
                          feed_url, None, kw["rss_link_append_query"]))],
@@ -315,7 +354,7 @@ class RenderTags(Task):
         }
         return utils.apply_filters(task, kw['filters'])
 
-    def slugify_name(self, name):
+    def slugify_tag_name(self, name):
         if self.site.config['SLUG_TAG_PATH']:
             name = utils.slugify(name)
         return name
@@ -335,42 +374,54 @@ class RenderTags(Task):
             return [_f for _f in [
                 self.site.config['TRANSLATIONS'][lang],
                 self.site.config['TAG_PATH'],
-                self.slugify_name(name),
+                self.slugify_tag_name(name),
                 self.site.config['INDEX_FILE']] if _f]
         else:
             return [_f for _f in [
                 self.site.config['TRANSLATIONS'][lang],
                 self.site.config['TAG_PATH'],
-                self.slugify_name(name) + ".html"] if _f]
+                self.slugify_tag_name(name) + ".html"] if _f]
 
     def tag_atom_path(self, name, lang):
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['TAG_PATH'], self.slugify_name(name) + ".atom"] if
+                              self.site.config['TAG_PATH'], self.slugify_tag_name(name) + ".atom"] if
                 _f]
 
     def tag_rss_path(self, name, lang):
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['TAG_PATH'], self.slugify_name(name) + ".xml"] if
+                              self.site.config['TAG_PATH'], self.slugify_tag_name(name) + ".xml"] if
                 _f]
+
+    def slugify_category_name(self, name):
+        path = self.site.parse_category_name(name)
+        if self.site.config['CATEGORY_OUTPUT_FLAT_HIERARCHY']:
+            path = path[-1:]  # only the leaf
+        result = [self.slugify_tag_name(part) for part in path]
+        result[0] = self.site.config['CATEGORY_PREFIX'] + result[0]
+        if not self.site.config['PRETTY_URLS']:
+            result = ['-'.join(result)]
+        return result
+
+    def _add_extension(self, path, extension):
+        path[-1] += extension
+        return path
 
     def category_path(self, name, lang):
         if self.site.config['PRETTY_URLS']:
             return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                                  self.site.config['CATEGORY_PATH'],
-                                  self.site.config['CATEGORY_PREFIX'] + self.slugify_name(name),
-                                  self.site.config['INDEX_FILE']] if _f]
+                                  self.site.config['CATEGORY_PATH']] if
+                    _f] + self.slugify_category_name(name) + [self.site.config['INDEX_FILE']]
         else:
             return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                                  self.site.config['CATEGORY_PATH'],
-                                  self.site.config['CATEGORY_PREFIX'] + self.slugify_name(name) + ".html"] if
-                    _f]
+                                  self.site.config['CATEGORY_PATH']] if
+                    _f] + self._add_extension(self.slugify_category_name(name), ".html")
 
     def category_atom_path(self, name, lang):
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['CATEGORY_PATH'], self.site.config['CATEGORY_PREFIX'] + self.slugify_name(name) + ".atom"] if
-                _f]
+                              self.site.config['CATEGORY_PATH']] if
+                _f] + self._add_extension(self.slugify_category_name(name), ".atom")
 
     def category_rss_path(self, name, lang):
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['CATEGORY_PATH'], self.site.config['CATEGORY_PREFIX'] + self.slugify_name(name) + ".xml"] if
-                _f]
+                              self.site.config['CATEGORY_PATH']] if
+                _f] + self._add_extension(self.slugify_category_name(name), ".xml")

@@ -122,3 +122,6 @@ msgstr "%d min verbleiben zum Lesen"
 
 msgid "Skip to main content"
 msgstr "Springe zum Hauptinhalt"
+
+msgid "Subcategories:"
+msgstr "Unterkategorien:"

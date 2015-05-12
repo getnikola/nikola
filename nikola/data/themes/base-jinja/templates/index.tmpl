@@ -11,6 +11,7 @@
 {% endblock %}
 
 {% block content %}
+{% block content_header %}{% endblock %}
 <div class="postindex">
 {% for post in posts %}
     <article class="h-entry post-{{ post.meta('type') }}">
