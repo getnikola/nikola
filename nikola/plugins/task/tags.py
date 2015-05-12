@@ -107,12 +107,16 @@ class RenderTags(Task):
         categories = {}
         for category in self.site.posts_per_category.keys():
             slug = tuple(self.slugify_category_name(category))
+            for part in slug:
+                if len(part) == 0:
+                    utils.LOGGER.error("Category '{0}' yields invalid slug '{1}'!".format(category, '/'.join(slug)))
+                    sys.exit(1)
             if slug in categories:
                 other_category = categories[slug]
                 utils.LOGGER.error('You have categories that are too similar: {0} and {1}'.format(category, other_category))
                 utils.LOGGER.error('Category {0} is used in: {1}'.format(category, ', '.join([p.source_path for p in self.posts_per_category[category]])))
                 utils.LOGGER.error('Category {0} is used in: {1}'.format(other_category, ', '.join([p.source_path for p in self.posts_per_category[other_category]])))
-                pass
+                sys.exit(1)
             categories[slug] = category
 
         tag_list = list(self.site.posts_per_tag.items())

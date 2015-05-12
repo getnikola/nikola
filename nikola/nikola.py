@@ -1378,7 +1378,7 @@ class Nikola(object):
                         sys.exit(1)
                     esc_ch = category_name[next_backslash + 1]
                     if esc_ch not in {'/', '\\'}:
-                        utils.LOGGER.error("Unknown escape sequence '\\{0}' in '{1}' at last position!".format(esc_ch, category_name))
+                        utils.LOGGER.error("Unknown escape sequence '\\{0}' in '{1}'!".format(esc_ch, category_name))
                         sys.exit(1)
                     current += category_name[index:next_backslash] + esc_ch
                     index = next_backslash + 2
