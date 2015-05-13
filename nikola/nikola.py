@@ -387,7 +387,7 @@ class Nikola(object):
             'LISTINGS_FOLDERS': {'listings': 'listings'},
             'LOGO_URL': '',
             'NAVIGATION_LINKS': {},
-            'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],
+            'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],  # FIXME: Add 'extras' in v8
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
             'OLD_THEME_SUPPORT': True,
