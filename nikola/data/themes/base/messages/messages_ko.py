@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "더 읽기",
     "Skip to main content": "주 콘텐츠로 바로가기",
     "Source": "원문",
+    "Subcategories:": "",
     "Tags and Categories": "태그와 분류",
     "Tags": "태그",
     "old posts, page %d": "이전 포스트, 페이지 %d",

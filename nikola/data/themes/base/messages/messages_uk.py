@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "Читати далі",
     "Skip to main content": "Перейти до основного матеріалу",
     "Source": "Джерело",
+    "Subcategories:": "",
     "Tags and Categories": "Теги і категорії",
     "Tags": "Теги",
     "old posts, page %d": "старі статті, сторінка %d",

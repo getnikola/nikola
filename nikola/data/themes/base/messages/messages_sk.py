@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "Čítať ďalej",
     "Skip to main content": "Skočiť na hlavný obsah",
     "Source": "Zdroj",
+    "Subcategories:": "",
     "Tags and Categories": "Štítky a kategórie",
     "Tags": "Štítky",
     "old posts, page %d": "staré príspevky, strana %d",

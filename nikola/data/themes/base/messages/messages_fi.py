@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "Lue lisää",
     "Skip to main content": "Hyppää sisältöön",
     "Source": "Lähde",
+    "Subcategories:": "",
     "Tags and Categories": "Tagit ja kategoriat",
     "Tags": "Tagit",
     "old posts, page %d": "vanhoja postauksia, sivu %d",

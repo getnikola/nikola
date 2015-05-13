@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "Читать далее",
     "Skip to main content": "Перейти к главному содержимому",
     "Source": "Источник",
+    "Subcategories:": "",
     "Tags and Categories": "Тэги и категории",
     "Tags": "Тэги",
     "old posts, page %d": "%d страница со старыми записями",
