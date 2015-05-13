@@ -4,6 +4,9 @@ New in master
 Features
 --------
 
+* Allowing category hierarchies via new option CATEGORY_ALLOW_HIERARCHIES
+  (Issue #1520)
+
 Bugfixes
 --------
 
@@ -15,8 +18,6 @@ New in v7.4.1
 Features
 --------
 
-* Allowing category hierarchies via new option CATEGORY_ALLOW_HIERARCHIES
-  (Issue #1520)
 * Better handling of missing/unconfigured compilers (Issue #1704)
 * New -r option for the link checker to check remote links (Issue #1684)
 * Use static navbars in bootstrap3 and bootstrap themes
