@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "Čitaj dalje",
     "Skip to main content": "",
     "Source": "Izvor",
+    "Subcategories:": "",
     "Tags and Categories": "Tagovi i kategorije",
     "Tags": "Tagovi",
     "old posts, page %d": "stari postovi, stranice %d",

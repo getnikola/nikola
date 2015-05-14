@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "بیشتر بخوانید",
     "Skip to main content": "متن اصلی را نادیده بگیر",
     "Source": "منبع",
+    "Subcategories:": "",
     "Tags and Categories": "برچسب‌ها و دسته‌ها",
     "Tags": "برچسب‌ها",
     "old posts, page %d": "صفحهٔ ارسال‌های قدیمی %d",

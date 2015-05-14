@@ -10,13 +10,21 @@
         {% if items %}
             <h2>{{ messages("Categories") }}</h2>
         {% endif %}
-        <ul class="postlist">
-        {% for text, link in cat_items %}
-            {% if text and text not in hidden_categories %}
-                <li><a class="reference" href="{{ link }}">{{ text }}</a></li>
+        {% for text, full_name, path, link, indent_levels, indent_change_before, indent_change_after in cat_hierarchy %}
+            {% for i in range(indent_change_before) %}
+                <ul class="postlist">
+            {% endfor %}
+            <li><a class="reference" href="{{ link }}">{{ text }}</a>
+            {% if indent_change_after <= 0 %}
+                </li>
             {% endif %}
+            {% for i in range(-indent_change_after) %}
+                </ul>
+                {% if i + 1 < indent_levels|length %}
+                    </li>
+                {% endif %}
+            {% endfor %}
         {% endfor %}
-        </ul>
         {% if items %}
             <h2>{{ messages("Tags") }}</h2>
         {% endif %}

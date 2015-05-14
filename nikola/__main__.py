@@ -252,6 +252,7 @@ class NikolaTaskLoader(TaskLoader):
                 'outfile': sys.stderr,
             }
         DOIT_CONFIG['default_tasks'] = ['render_site', 'post_render']
+        DOIT_CONFIG.update(self.nikola._doit_config)
         tasks = generate_tasks(
             'render_site',
             self.nikola.gen_tasks('render_site', "Task", 'Group of tasks to render the site.'))

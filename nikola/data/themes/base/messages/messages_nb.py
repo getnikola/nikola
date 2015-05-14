@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "Les mer",
     "Skip to main content": "",
     "Source": "Kilde",
+    "Subcategories:": "",
     "Tags and Categories": "Merker og kategorier",
     "Tags": "Merker",
     "old posts, page %d": "eldre innlegg, side %d",

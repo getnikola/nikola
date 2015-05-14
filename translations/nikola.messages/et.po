@@ -6,6 +6,7 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
 # Chris Warrick <kwpolska@gmail.com>, 2014
 # Chris Warrick <kwpolska@gmail.com>, 2014
 # Lauri Võsandi <lauri.vosandi@gmail.com>, 2013
@@ -14,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-11-18 08:42+0000\n"
+"PO-Revision-Date: 2015-05-13 14:33+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Estonian (http://www.transifex.com/projects/p/nikola/language/et/)\n"
 "MIME-Version: 1.0\n"
@@ -26,6 +27,8 @@ msgstr ""
 msgid "More posts about %s"
 msgstr "Veel postitusi %s kohta"
 
+#. Here your translation should NOT say English but the name of your language
+#. instead
 msgid "LANGUAGE"
 msgstr "Eesti"
 
@@ -59,7 +62,7 @@ msgstr "leht %d"
 msgid "Source"
 msgstr "Lähtekood"
 
-#. Here your translation should not say English but the name of your language
+#. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "Read in English"
 msgstr "Loe eesti keeles"
@@ -113,4 +116,7 @@ msgid "%d min remaining to read"
 msgstr ""
 
 msgid "Skip to main content"
+msgstr ""
+
+msgid "Subcategories:"
 msgstr ""

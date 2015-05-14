@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "続きを読む",
     "Skip to main content": "メインコンテンツをスキップ",
     "Source": "ソース",
+    "Subcategories:": "",
     "Tags and Categories": "タグとカテゴリー",
     "Tags": "タグ",
     "old posts, page %d": "前の記事 %dページ目",

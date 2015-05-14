@@ -4,10 +4,14 @@ New in master
 Features
 --------
 
+* Allowing category hierarchies via new option CATEGORY_ALLOW_HIERARCHIES
+  (Issue #1520)
+
 Bugfixes
 --------
 
 * The post-list directive only triggers rebuilds if timeline changes (Issue #1688)
+* Exclude `<meta content="noindex" name="robots">` from sitemaps
 * new_post paths are now relative to CWD (Issue #1325)
 
 New in v7.4.1

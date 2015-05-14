@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "Devamını oku",
     "Skip to main content": "Ana içeriğe geç",
     "Source": "Kaynak",
+    "Subcategories:": "",
     "Tags and Categories": "Etiketler ve Kategoriler",
     "Tags": "Etiketler",
     "old posts, page %d": "eski yazılar, sayfa %d",

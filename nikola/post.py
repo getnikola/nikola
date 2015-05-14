@@ -1001,15 +1001,15 @@ def hyphenate(dom, _lang):
             LOGGER.error("Pyphen cannot be installed to ~/.local (pip install --user).")
         for tag in ('p', 'li', 'span'):
             for node in dom.xpath("//%s[not(parent::pre)]" % tag):
-                math_found = False
+                skip_node = False
+                skippable_nodes = ['kbd', 'code', 'samp', 'mark', 'math', 'data', 'ruby', 'svg']
                 if node.getchildren():
                     for child in node.getchildren():
-                        if child.tag == 'span' and 'math' in child.get('class', []):
-                            math_found = True
-                else:
-                    if 'math' in node.get('class', []):
-                        math_found = True
-                if not math_found:
+                        if child.tag in skippable_nodes or (child.tag == 'span' and 'math' in child.get('class', [])):
+                            skip_node = True
+                elif 'math' in node.get('class', []):
+                    skip_node = True
+                if not skip_node:
                     insert_hyphens(node, hyphenator)
     return dom
 

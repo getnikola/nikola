@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "Läs mer",
     "Skip to main content": "hoppa till huvudinehåll",
     "Source": "Källa",
+    "Subcategories:": "",
     "Tags and Categories": "Taggar och Kategorier",
     "Tags": "Taggar",
     "old posts, page %d": "gamla inlägg, sida %d",
