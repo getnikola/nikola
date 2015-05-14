@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Exclude `<meta content="noindex" name="robots">` from sitemaps
 * new_post paths are now relative to CWD (Issue #1325)
 
 New in v7.4.1
