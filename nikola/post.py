@@ -234,7 +234,7 @@ class Post(object):
         # Calculate a hash that represents most data about the post
         m = hashlib.md5()
         # source_path modification date (to avoid reading it)
-        m.update(str(os.stat(self.source_path).st_mtime))
+        m.update(repr(os.stat(self.source_path).st_mtime))
         m.update(json.dumps(self.meta, cls=utils.CustomEncoder, sort_keys=True))
         return '<Post: {0} {1}>'.format(self.source_path, m.hexdigest())
 
