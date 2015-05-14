@@ -1659,7 +1659,8 @@ Post List
    every time a post is added or deleted, causing maybe unnecessary rebuilds.
 
    On the other hand, it will sometimes **not** be considered out of date if
-   a post title or content changes, so it can sometimes be shown outdated.
+   a post content changes, so it can sometimes be shown outdated, in those
+   cases, use ``nikola build -a`` to force a total rebuild.
 
 
 This directive can be used to generate a list of posts. You could use it, for
