@@ -1655,9 +1655,11 @@ Post List
 
 .. WARNING::
 
-   Any post or page that uses this directive will **never** be considered up-to-date,
-   meaning that every time you build the site, that post/page and everything that
-   depends on it (tag pages, RSS feeds, sitemap, etc.) will be rebuilt.
+   Any post or page that uses this directive will be considered out of date,
+   every time a post is added or deleted, causing maybe unnecessary rebuilds.
+
+   On the other hand, it will sometimes **not** be considered out of date if
+   a post title or content changes, so it can sometimes be shown outdated.
 
 
 This directive can be used to generate a list of posts. You could use it, for
