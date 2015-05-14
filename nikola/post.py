@@ -234,8 +234,8 @@ class Post(object):
         # Calculate a hash that represents most data about the post
         m = hashlib.md5()
         # source_path modification date (to avoid reading it)
-        m.update(repr(os.stat(self.source_path).st_mtime))
-        m.update(json.dumps(self.meta, cls=utils.CustomEncoder, sort_keys=True))
+        m.update(utils.unicode_str(os.stat(self.source_path).st_mtime).encode('utf-8'))
+        m.update(utils.unicode_str(json.dumps(self.meta, cls=utils.CustomEncoder, sort_keys=True)).encode('utf-8'))
         return '<Post: {0} {1}>'.format(self.source_path, m.hexdigest())
 
     def _has_pretty_url(self, lang):

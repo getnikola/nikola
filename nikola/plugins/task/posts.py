@@ -66,7 +66,7 @@ class RenderPosts(Task):
             'basename': self.name,
             'name': 'timeline_changes',
             'actions': [tl_ch],
-            'uptodate': [utils.config_changed(str(kw['timeline']))],
+            'uptodate': [utils.config_changed({1: kw['timeline']})],
         }
 
         for lang in kw["translations"]:
