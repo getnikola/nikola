@@ -407,9 +407,11 @@ Currently Nikola emits the following signals:
     When all the configuration file is processed. Note that plugins are activated before this is emitted.
 ``scanned``
     After posts are scanned.
-``new_post``
-    When a new post is created, using the ``nikola new_post`` command.  The signal
+``new_post`` / ``new_page``
+    When a new post is created, using the ``nikola new_post``/``nikola new_page`` commands.  The signal
     data contains the path of the file, and the metadata file (if there is one).
+``existing_post`` / ``existing_page``
+    When a new post fails to be created due to a title conflict. Contains the same data as ``new_post``.
 ``deployed``
     When the ``nikola deploy`` command is run, and there is at least one new
     entry/post since ``last_deploy``.  The signal data is of the form::
