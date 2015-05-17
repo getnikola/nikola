@@ -270,14 +270,14 @@ class RenderTags(Task):
             return utils.adjust_name_for_index_path(self.site.path(kind + feed, tag, lang), i, displayed_i, lang, self.site, force_addition, extension)
 
         context_source = {}
+        title = self._get_title(tag, is_category)
         if kw["generate_rss"]:
             # On a tag page, the feeds include the tag's feeds
             rss_link = ("""<link rel="alternate" type="application/rss+xml" """
                         """type="application/rss+xml" title="RSS for tag """
                         """{0} ({1})" href="{2}">""".format(
-                            tag, lang, self.site.link(kind + "_rss", tag, lang)))
+                            title, lang, self.site.link(kind + "_rss", tag, lang)))
             context_source['rss_link'] = rss_link
-        title = self._get_title(tag, is_category)
         if is_category:
             context_source["category"] = tag
             context_source["category_path"] = self.site.parse_category_name(tag)
