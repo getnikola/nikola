@@ -114,8 +114,8 @@ class RenderTags(Task):
             if slug in categories:
                 other_category = categories[slug]
                 utils.LOGGER.error('You have categories that are too similar: {0} and {1}'.format(category, other_category))
-                utils.LOGGER.error('Category {0} is used in: {1}'.format(category, ', '.join([p.source_path for p in self.posts_per_category[category]])))
-                utils.LOGGER.error('Category {0} is used in: {1}'.format(other_category, ', '.join([p.source_path for p in self.posts_per_category[other_category]])))
+                utils.LOGGER.error('Category {0} is used in: {1}'.format(category, ', '.join([p.source_path for p in self.site.posts_per_category[category]])))
+                utils.LOGGER.error('Category {0} is used in: {1}'.format(other_category, ', '.join([p.source_path for p in self.site.posts_per_category[other_category]])))
                 sys.exit(1)
             categories[slug] = category
 
