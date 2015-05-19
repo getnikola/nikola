@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* The post-list directive only triggers rebuilds if timeline changes (Issue #1688)
 * Don’t check the same remote URL more than once (Issue #1732)
 * All remotely checked links resulted in incorrect warnings (`nikola check -lr`)
 * Exclude `<meta content="noindex" name="robots">` from sitemaps
