@@ -173,6 +173,7 @@ class CommandCheck(Command):
             sys.exit(1)
 
     existing_targets = set([])
+    checked_remote_targets = []
 
     def analyze(self, task, find_sources=False, check_remote=False):
         rv = False
@@ -215,11 +216,16 @@ class CommandCheck(Command):
                         ((parsed.scheme or target.startswith('//')) and url_type in ('rel_path', 'full_path')):
                     if not check_remote or parsed.scheme not in ["http", "https"]:
                         continue
-                    if parsed.netloc == base_url.netloc:
+                    if parsed.netloc == base_url.netloc:  # absolute URL to self.site
                         continue
+                    if target in self.checked_remote_targets:  # already checked this exact target
+                        continue
+                    self.checked_remote_targets.append(target)
+
                     # Check the remote link works
                     req_headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0 (Nikola)'}  # I’m a real boy!
                     resp = requests.head(target, headers=req_headers)
+
                     if resp.status_code > 399:  # Error
                         self.logger.warn("Broken link in {0}: {1} [Error {2}]".format(filename, target, resp.status_code))
                         continue
