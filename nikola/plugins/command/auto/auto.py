@@ -49,11 +49,6 @@ from nikola.plugin_categories import Command
 from nikola.utils import req_missing
 
 LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
-LRJS_SNIPPET = '''<script>document.write('<script src="http://'
-    + (location.host || 'localhost').split(':')[0]
-    + ':{0}/livereload.js?snipver=1"></'
-    + 'script>')</script>
-</head>'''
 MASK = pyinotify.IN_DELETE | pyinotify.IN_CREATE | pyinotify.IN_MODIFY
 error_signal = signal('error')
 refresh_signal = signal('refresh')
@@ -99,7 +94,6 @@ class CommandAuto(Command):
 
     def _execute(self, options, args):
         """Start the watcher."""
-        global LRJS_SNIPPET
 
         arguments = ['build']
         if self.site.configuration_filename != 'conf.py':
@@ -111,7 +105,11 @@ class CommandAuto(Command):
         subprocess.call(["nikola"] + arguments)
 
         port = options and options.get('port')
-        LRJS_SNIPPET = LRJS_SNIPPET.format(port)
+        self.snippet = '''<script>document.write('<script src="http://'
+            + (location.host || 'localhost').split(':')[0]
+            + ':{0}/livereload.js?snipver=1"></'
+            + 'script>')</script>
+        </head>'''.format(port)
 
         watched = [
             self.site.configuration_filename,
@@ -200,7 +198,7 @@ class CommandAuto(Command):
         if os.path.isfile(f_path):
             with open(f_path) as fd:
                 start_response(b'200 OK', [(b'Content-type', mimetype)])
-                return inject_js(mimetype, fd.read())
+                return self.inject_js(mimetype, fd.read())
         elif p_uri.path == '/livereload.js':
             with open(LRJS_PATH) as fd:
                 start_response(b'200 OK', [(b'Content-type', mimetype)])
@@ -209,12 +207,12 @@ class CommandAuto(Command):
         return ['404 {0}'.format(uri)]
 
 
-def inject_js(mimetype, data):
-    """Inject livereload.js in HTML files."""
-    if mimetype == 'text/html':
-        # FIXME: use re.IGNORECASE
-        data = data.replace('</head>', LRJS_SNIPPET, 1)
-    return data
+    def inject_js(self, mimetype, data):
+        """Inject livereload.js in HTML files."""
+        if mimetype == 'text/html':
+            # FIXME: use re.IGNORECASE
+            data = data.replace('</head>', self.snippet, 1)
+        return data
 
 
 pending = []
