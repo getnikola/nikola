@@ -218,7 +218,7 @@ class CommandCheck(Command):
                     if parsed.netloc == base_url.netloc:
                         continue
                     # Check the remote link works
-                    req_headers = {'User-Agent':'Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0 (Nikola)'}  # I’m a real boy!
+                    req_headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0 (Nikola)'}  # I’m a real boy!
                     resp = requests.head(target, headers=req_headers)
                     if resp.status_code > 399:  # Error
                         self.logger.warn("Broken link in {0}: {1} [Error {2}]".format(filename, target, resp.status_code))
