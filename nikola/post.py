@@ -29,6 +29,8 @@ from __future__ import unicode_literals, print_function, absolute_import
 import io
 from collections import defaultdict
 import datetime
+import hashlib
+import json
 import os
 import re
 import string
@@ -229,7 +231,12 @@ class Post(object):
         self.compiler.register_extra_dependencies(self)
 
     def __repr__(self):
-        return '<Post: {0}>'.format(self.source_path)
+        # Calculate a hash that represents most data about the post
+        m = hashlib.md5()
+        # source_path modification date (to avoid reading it)
+        m.update(utils.unicode_str(os.stat(self.source_path).st_mtime).encode('utf-8'))
+        m.update(utils.unicode_str(json.dumps(self.meta, cls=utils.CustomEncoder, sort_keys=True)).encode('utf-8'))
+        return '<Post: {0} {1}>'.format(self.source_path, m.hexdigest())
 
     def _has_pretty_url(self, lang):
         if self.pretty_urls and \
@@ -1001,15 +1008,15 @@ def hyphenate(dom, _lang):
             LOGGER.error("Pyphen cannot be installed to ~/.local (pip install --user).")
         for tag in ('p', 'li', 'span'):
             for node in dom.xpath("//%s[not(parent::pre)]" % tag):
-                math_found = False
+                skip_node = False
+                skippable_nodes = ['kbd', 'code', 'samp', 'mark', 'math', 'data', 'ruby', 'svg']
                 if node.getchildren():
                     for child in node.getchildren():
-                        if child.tag == 'span' and 'math' in child.get('class', []):
-                            math_found = True
-                else:
-                    if 'math' in node.get('class', []):
-                        math_found = True
-                if not math_found:
+                        if child.tag in skippable_nodes or (child.tag == 'span' and 'math' in child.get('class', [])):
+                            skip_node = True
+                elif 'math' in node.get('class', []):
+                    skip_node = True
+                if not skip_node:
                     insert_hyphens(node, hyphenator)
     return dom
 

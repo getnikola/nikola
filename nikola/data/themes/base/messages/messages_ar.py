@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "قراءة المزيد",
     "Skip to main content": "انتقل إلى المحتوى الرئيسي",
     "Source": "المصدر",
+    "Subcategories:": "",
     "Tags and Categories": "تصنيفات و فئات",
     "Tags": "تصنيفات",
     "old posts, page %d": "مقالات قديمة, صفحة d%",

@@ -163,21 +163,33 @@ class Sitemap(LateTask):
                             continue
                         if not robot_fetch(path):
                             continue
+
+                        filehead = io.open(real_path, 'r', encoding='utf8').read(1024)
+
                         if path.endswith('.html') or path.endswith('.htm'):
                             try:
-                                if u'<!doctype html' not in io.open(real_path, 'r', encoding='utf8').read(1024).lower():
-                                    # ignores "html" files without doctype
-                                    # alexa-verify, google-site-verification, etc.
+
+                                """ ignores "html" files without doctype """
+                                if u'<!doctype html' not in filehead.lower():
                                     continue
+
+                                """ ignores "html" files with noindex robot directives """
+                                robots_directives = [u'<meta content="noindex" name="robots"',
+                                                     u'<meta content="none" name="robots"',
+                                                     u'<meta name="robots" content="noindex"',
+                                                     u'<meta name="robots" content="none"']
+                                if any([robot_directive in filehead.lower() for robot_directive in robots_directives]):
+                                    continue
+
                             except UnicodeDecodeError:
                                 # ignore ancient files
                                 # most non-utf8 files are worthless anyways
                                 continue
+
                         """ put Atom and RSS in sitemapindex[] instead of in urlset[], sitemap_path is included after it is generated """
                         if path.endswith('.xml') or path.endswith('.atom') or path.endswith('.rss'):
                             known_elm_roots = (u'<feed', u'<rss', u'<urlset')
-                            filehead = io.open(real_path, 'r', encoding='utf8').read(512)
-                            if any([elm_root in filehead for elm_root in known_elm_roots]) and path != sitemap_path:
+                            if any([elm_root in filehead.lower() for elm_root in known_elm_roots]) and path != sitemap_path:
                                 path = path.replace(os.sep, '/')
                                 lastmod = self.get_lastmod(real_path)
                                 loc = urljoin(base_url, base_path + path)

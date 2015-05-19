@@ -6,6 +6,7 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
 # Joes Staal <joes@staalkemade.net>, 2013
 # Joes Staal <joes@staalkemade.net>, 2013-2014
 msgid ""
@@ -13,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-11-18 08:42+0000\n"
+"PO-Revision-Date: 2015-05-13 14:33+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/nikola/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -25,6 +26,8 @@ msgstr ""
 msgid "More posts about %s"
 msgstr "Meer berichten over %s"
 
+#. Here your translation should NOT say English but the name of your language
+#. instead
 msgid "LANGUAGE"
 msgstr "Nederlands"
 
@@ -58,7 +61,7 @@ msgstr "pagina %d"
 msgid "Source"
 msgstr "Bron"
 
-#. Here your translation should not say English but the name of your language
+#. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "Read in English"
 msgstr "Lees in het Nederlands"
@@ -113,3 +116,6 @@ msgstr "%d min resterende leestijd "
 
 msgid "Skip to main content"
 msgstr "Ga door naar de hoofdinhoud"
+
+msgid "Subcategories:"
+msgstr ""

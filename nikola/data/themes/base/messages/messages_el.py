@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "Διαβάστε περισσότερα",
     "Skip to main content": "",
     "Source": "Πηγαίος κώδικας",
+    "Subcategories:": "",
     "Tags and Categories": "Ετικέτες και κατηγορίες",
     "Tags": "Ετικέτες",
     "old posts, page %d": "σελίδα παλαιότερων αναρτήσεων %d",

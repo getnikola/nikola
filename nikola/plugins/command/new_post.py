@@ -345,10 +345,17 @@ class CommandNewPost(Command):
         if not path:
             txt_path = os.path.join(output_path, slug + suffix)
         else:
-            txt_path = path
+            txt_path = os.path.join(self.site.original_cwd, path)
 
         if (not onefile and os.path.isfile(meta_path)) or \
                 os.path.isfile(txt_path):
+
+            # Emit an event when a post exists
+            event = dict(path=txt_path)
+            if not onefile:  # write metadata file
+                event['meta_path'] = meta_path
+            signal('existing_' + content_type).send(self, **event)
+
             LOGGER.error("The title already exists!")
             exit(8)
 

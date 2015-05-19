@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "Lees verder",
     "Skip to main content": "Ga door naar de hoofdinhoud",
     "Source": "Bron",
+    "Subcategories:": "",
     "Tags and Categories": "Tags en Categorieën",
     "Tags": "Tags",
     "old posts, page %d": "oude berichten, pagina %d",

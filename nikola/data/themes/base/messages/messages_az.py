@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "Davamı",
     "Skip to main content": "Əsas mövzuya keç",
     "Source": "Mənbə",
+    "Subcategories:": "",
     "Tags and Categories": "Teqlər və Kateqoriyalar",
     "Tags": "Teqlər",
     "old posts, page %d": "köhnə yazılar, səhifə %s",

@@ -6,13 +6,14 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
 # Daniel <i18n@daniel.priv.no>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-11-18 08:42+0000\n"
+"PO-Revision-Date: 2015-05-13 14:33+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/projects/p/nikola/language/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -24,6 +25,8 @@ msgstr ""
 msgid "More posts about %s"
 msgstr "Flere innlegg om %s"
 
+#. Here your translation should NOT say English but the name of your language
+#. instead
 msgid "LANGUAGE"
 msgstr "norsk"
 
@@ -57,7 +60,7 @@ msgstr "side %d"
 msgid "Source"
 msgstr "Kilde"
 
-#. Here your translation should not say English but the name of your language
+#. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "Read in English"
 msgstr "Les på norsk"
@@ -111,4 +114,7 @@ msgid "%d min remaining to read"
 msgstr ""
 
 msgid "Skip to main content"
+msgstr ""
+
+msgid "Subcategories:"
 msgstr ""

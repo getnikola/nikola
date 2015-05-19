@@ -34,6 +34,7 @@ import locale
 import os
 import json
 import sys
+import natsort
 import mimetypes
 try:
     from urlparse import urlparse, urlsplit, urlunsplit, urljoin, unquote
@@ -284,6 +285,8 @@ class Nikola(object):
         self.colorful = config.pop('__colorful__', False)
         self.invariant = config.pop('__invariant__', False)
         self.quiet = config.pop('__quiet__', False)
+        self._doit_config = config.pop('DOIT_CONFIG', {})
+        self.original_cwd = config.pop('__cwd__', False)
         self.configuration_filename = config.pop('__configuration_filename__', False)
         self.configured = bool(config)
         self.injected_deps = defaultdict(list)
@@ -316,6 +319,8 @@ class Nikola(object):
             'CATEGORY_PAGES_ARE_INDEXES': None,  # None means: same as TAG_PAGES_ARE_INDEXES
             'CATEGORY_PAGES_DESCRIPTIONS': {},
             'CATEGORY_PREFIX': 'cat_',
+            'CATEGORY_ALLOW_HIERARCHIES': False,
+            'CATEGORY_OUTPUT_FLAT_HIERARCHY': False,
             'CODE_COLOR_SCHEME': 'default',
             'COMMENT_SYSTEM': 'disqus',
             'COMMENTS_IN_GALLERIES': False,
@@ -381,7 +386,7 @@ class Nikola(object):
             'LISTINGS_FOLDERS': {'listings': 'listings'},
             'LOGO_URL': '',
             'NAVIGATION_LINKS': {},
-            'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],
+            'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],  # FIXME: Add 'extras' in v8
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
             'OLD_THEME_SUPPORT': True,
@@ -965,7 +970,8 @@ class Nikola(object):
         src = "/".join(src.split(os.sep))
 
         utils.makedirs(os.path.dirname(output_name))
-        doc = lxml.html.document_fromstring(data)
+        parser = lxml.html.HTMLParser(remove_blank_text=True)
+        doc = lxml.html.document_fromstring(data, parser)
         doc.rewrite_links(lambda dst: self.url_replacer(src, dst, context['lang']))
         data = b'<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='utf8', method='html', pretty_print=True)
         with open(output_name, "wb+") as post_file:
@@ -1353,6 +1359,53 @@ class Nikola(object):
             'task_dep': task_dep
         }
 
+    def parse_category_name(self, category_name):
+        if self.config['CATEGORY_ALLOW_HIERARCHIES']:
+            try:
+                return utils.parse_escaped_hierarchical_category_name(category_name)
+            except Exception as e:
+                utils.LOGGER.error(str(e))
+                sys.exit(1)
+        else:
+            return [category_name] if len(category_name) > 0 else []
+
+    def category_path_to_category_name(self, category_path):
+        if self.config['CATEGORY_ALLOW_HIERARCHIES']:
+            return utils.join_hierarchical_category_path(category_path)
+        else:
+            return ''.join(category_path)
+
+    def _add_post_to_category(self, post, category_name):
+        category_path = self.parse_category_name(category_name)
+        current_path = []
+        current_subtree = self.category_hierarchy
+        for current in category_path:
+            current_path.append(current)
+            if current not in current_subtree:
+                current_subtree[current] = {}
+            current_subtree = current_subtree[current]
+            self.posts_per_category[self.category_path_to_category_name(current_path)].append(post)
+
+    def _sort_category_hierarchy(self):
+        # First create a hierarchy of TreeNodes
+        self.category_hierarchy_lookup = {}
+
+        def create_hierarchy(cat_hierarchy, parent=None):
+            result = []
+            for name, children in cat_hierarchy.items():
+                node = utils.TreeNode(name, parent)
+                node.children = create_hierarchy(children, node)
+                node.category_path = [pn.name for pn in node.get_path()]
+                node.category_name = self.category_path_to_category_name(node.category_path)
+                self.category_hierarchy_lookup[node.category_name] = node
+                if node.category_name not in self.config.get('HIDDEN_CATEGORIES'):
+                    result.append(node)
+            return natsort.natsorted(result, key=lambda e: e.name, alg=natsort.ns.F | natsort.ns.IC)
+
+        root_list = create_hierarchy(self.category_hierarchy)
+        # Next, flatten the hierarchy
+        self.category_hierarchy = utils.flatten_tree_structure(root_list)
+
     def scan_posts(self, really=False, ignore_quit=False, quiet=False):
         """Scan all the posts.
 
@@ -1368,6 +1421,7 @@ class Nikola(object):
         self.posts_per_month = defaultdict(list)
         self.posts_per_tag = defaultdict(list)
         self.posts_per_category = defaultdict(list)
+        self.category_hierarchy = {}
         self.post_per_file = {}
         self.timeline = []
         self.pages = []
@@ -1378,6 +1432,7 @@ class Nikola(object):
             self.timeline.extend(timeline)
 
         quit = False
+<<<<<<< HEAD
         # Classify posts per year/tag/month/whatever
         slugged_tags = set([])
         for post in self.timeline:
@@ -1396,6 +1451,81 @@ class Nikola(object):
                             utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
                             utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.posts_per_tag[other_tag]])))
                             quit = True
+=======
+        for wildcard, destination, template_name, use_in_feeds in \
+                self.config['post_pages']:
+            if not self.quiet and not quiet:
+                print(".", end='', file=sys.stderr)
+            dirname = os.path.dirname(wildcard)
+            for dirpath, _, _ in os.walk(dirname, followlinks=True):
+                dest_dir = os.path.normpath(os.path.join(destination,
+                                            os.path.relpath(dirpath, dirname)))  # output/destination/foo/
+                # Get all the untranslated paths
+                dir_glob = os.path.join(dirpath, os.path.basename(wildcard))  # posts/foo/*.rst
+                untranslated = glob.glob(dir_glob)
+                # And now get all the translated paths
+                translated = set([])
+                for lang in self.config['TRANSLATIONS'].keys():
+                    if lang == self.config['DEFAULT_LANG']:
+                        continue
+                    lang_glob = utils.get_translation_candidate(self.config, dir_glob, lang)  # posts/foo/*.LANG.rst
+                    translated = translated.union(set(glob.glob(lang_glob)))
+                # untranslated globs like *.rst often match translated paths too, so remove them
+                # and ensure x.rst is not in the translated set
+                untranslated = set(untranslated) - translated
+
+                # also remove from translated paths that are translations of
+                # paths in untranslated_list, so x.es.rst is not in the untranslated set
+                for p in untranslated:
+                    translated = translated - set([utils.get_translation_candidate(self.config, p, l) for l in self.config['TRANSLATIONS'].keys()])
+
+                full_list = list(translated) + list(untranslated)
+                # We eliminate from the list the files inside any .ipynb folder
+                full_list = [p for p in full_list
+                             if not any([x.startswith('.')
+                                         for x in p.split(os.sep)])]
+
+                for base_path in full_list:
+                    if base_path in seen:
+                        continue
+                    else:
+                        seen.add(base_path)
+                    post = Post(
+                        base_path,
+                        self.config,
+                        dest_dir,
+                        use_in_feeds,
+                        self.MESSAGES,
+                        template_name,
+                        self.get_compiler(base_path)
+                    )
+                    self.timeline.append(post)
+                    self.global_data[post.source_path] = post
+                    if post.use_in_feeds:
+                        self.posts.append(post)
+                        self.posts_per_year[
+                            str(post.date.year)].append(post)
+                        self.posts_per_month[
+                            '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post)
+                        for tag in post.alltags:
+                            _tag_slugified = utils.slugify(tag)
+                            if _tag_slugified in slugged_tags:
+                                if tag not in self.posts_per_tag:
+                                    # Tags that differ only in case
+                                    other_tag = [existing for existing in self.posts_per_tag.keys() if utils.slugify(existing) == _tag_slugified][0]
+                                    utils.LOGGER.error('You have tags that are too similar: {0} and {1}'.format(tag, other_tag))
+                                    utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
+                                    utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.posts_per_tag[other_tag]])))
+                                    quit = True
+                            else:
+                                slugged_tags.add(utils.slugify(tag, force=True))
+                            self.posts_per_tag[tag].append(post)
+                        self._add_post_to_category(post, post.meta('category'))
+
+                    if post.is_post:
+                        # unpublished posts
+                        self.all_posts.append(post)
+>>>>>>> master
                     else:
                         slugged_tags.add(utils.slugify(tag, force=True))
                     self.posts_per_tag[tag].append(post)
@@ -1412,10 +1542,22 @@ class Nikola(object):
                 self.post_per_file[post.destination_path(lang=lang, extension=post.source_ext())] = post
 
         # Sort everything.
+<<<<<<< HEAD
 
         for thing in self.timeline, self.posts, self.all_posts, self.pages:
             thing.sort(key=lambda p: p.date)
             thing.reverse()
+=======
+        self.timeline.sort(key=lambda p: p.date)
+        self.timeline.reverse()
+        self.posts.sort(key=lambda p: p.date)
+        self.posts.reverse()
+        self.all_posts.sort(key=lambda p: p.date)
+        self.all_posts.reverse()
+        self.pages.sort(key=lambda p: p.date)
+        self.pages.reverse()
+        self._sort_category_hierarchy()
+>>>>>>> master
 
         for i, p in enumerate(self.posts[1:]):
             p.next_post = self.posts[i]

@@ -102,3 +102,5 @@ pwm1234 <https://github.com/pwm1234>
 rafacarrascosa <https://github.com/rafacarrascosa>
 yarko <https://github.com/yarko>
 小明 <https://github.com/dongweiming>
+Brad Miller <https://github.com/bnmnetp>
+

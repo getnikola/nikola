@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "Irakurri gehiago",
     "Skip to main content": "",
     "Source": "Iturria",
+    "Subcategories:": "",
     "Tags and Categories": "Etiketak eta Kategoriak",
     "Tags": "Etiketak",
     "old posts, page %d": "Post zaharren, orria %d",

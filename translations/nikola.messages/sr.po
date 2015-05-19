@@ -6,13 +6,14 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
 # Ivan Radeljic <radeljicivan85@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-11-18 08:42+0000\n"
+"PO-Revision-Date: 2015-05-13 14:33+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Serbian (http://www.transifex.com/projects/p/nikola/language/sr/)\n"
 "MIME-Version: 1.0\n"
@@ -24,6 +25,8 @@ msgstr ""
 msgid "More posts about %s"
 msgstr "Више постова о %s"
 
+#. Here your translation should NOT say English but the name of your language
+#. instead
 msgid "LANGUAGE"
 msgstr "Српски"
 
@@ -57,7 +60,7 @@ msgstr "страна %d"
 msgid "Source"
 msgstr "Извор"
 
-#. Here your translation should not say English but the name of your language
+#. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "Read in English"
 msgstr "Прочитај на српском"
@@ -112,3 +115,6 @@ msgstr "%d минута је преостало за читање"
 
 msgid "Skip to main content"
 msgstr "Прескочи на главни садржај"
+
+msgid "Subcategories:"
+msgstr ""

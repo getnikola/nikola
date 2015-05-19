@@ -250,6 +250,16 @@ HIDDEN_TAGS = ['mathjax']
 # CATEGORY_PATH = "categories"
 # CATEGORY_PREFIX = "cat_"
 
+# If CATEGORY_ALLOW_HIERARCHIES is set to True, categories can be organized in
+# hierarchies. For a post, the whole path in the hierarchy must be specified,
+# using a forward slash ('/') to separate paths. Use a backslash ('\') to escape
+# a forward slash or a backslash (i.e. '\//\\' is a path specifying the
+# subcategory called '\' of the top-level category called '/').
+# CATEGORY_ALLOW_HIERARCHIES = False
+# If CATEGORY_OUTPUT_FLAT_HIERARCHY is set to True, the output written to output
+# contains only the name of the leaf category and not the whole path.
+# CATEGORY_OUTPUT_FLAT_HIERARCHY = False
+
 # If CATEGORY_PAGES_ARE_INDEXES is set to True, each category's page will contain
 # the posts themselves. If set to False, it will be just a list of links.
 # CATEGORY_PAGES_ARE_INDEXES = False
@@ -717,7 +727,8 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # done in the code, hope you don't mind ;-)
 # Note: most Nikola-specific extensions are done via the Nikola plugin system,
 #       with the MarkdownExtension class and should not be added here.
-# MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite']
+# The default is ['fenced_code', 'codehilite']
+MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extras']
 
 # Extra options to pass to the pandoc comand.
 # by default, it's empty, is a list of strings, for example
