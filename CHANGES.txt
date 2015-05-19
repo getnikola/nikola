@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Cleaner formatting of HTML output
 * Allowing category hierarchies via new option CATEGORY_ALLOW_HIERARCHIES
   (Issue #1520)
 
