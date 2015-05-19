@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* All remotely checked links resulted in incorrect warnings (`nikola check -lr`)
 * Exclude `<meta content="noindex" name="robots">` from sitemaps
 * new_post paths are now relative to CWD (Issue #1325)
 
