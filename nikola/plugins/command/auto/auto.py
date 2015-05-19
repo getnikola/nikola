@@ -74,7 +74,7 @@ class CommandAuto(Command):
             'short': 'a',
             'long': 'address',
             'type': str,
-            'default': '',
+            'default': '0.0.0.0',
             'help': 'Address to bind (default: 0.0.0.0 – all local IPv4 interfaces)',
         },
         {
