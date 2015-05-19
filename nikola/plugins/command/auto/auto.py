@@ -30,7 +30,6 @@ import json
 import mimetypes
 import os
 import subprocess
-import sys
 try:
     from urlparse import urlparse
 except ImportError:
@@ -40,10 +39,13 @@ import wsgiref.util
 
 from blinker import signal
 import pyinotify
-from ws4py.websocket import WebSocket
-from ws4py.server.wsgirefserver import WSGIServer, WebSocketWSGIRequestHandler
-from ws4py.server.wsgiutils import WebSocketWSGIApplication
-from ws4py.messaging import TextMessage
+try:
+    from ws4py.websocket import WebSocket
+    from ws4py.server.wsgirefserver import WSGIServer, WebSocketWSGIRequestHandler
+    from ws4py.server.wsgiutils import WebSocketWSGIApplication
+    from ws4py.messaging import TextMessage
+except ImportError:
+    WebSocket = None
 
 from nikola.plugin_categories import Command
 from nikola.utils import req_missing
@@ -95,11 +97,15 @@ class CommandAuto(Command):
     def _execute(self, options, args):
         """Start the watcher."""
 
+        if WebSocket is None:
+            req_missing(['ws4py'], 'use the "auto" command')
+            return
+
         arguments = ['build']
         if self.site.configuration_filename != 'conf.py':
             arguments = ['--conf=' + self.site.configuration_filename] + arguments
 
-        command_line = 'nikola ' + ' '.join(arguments)
+        self.command_line = 'nikola ' + ' '.join(arguments)
 
         # Run an initial build so we are up-to-date
         subprocess.call(["nikola"] + arguments)
@@ -157,14 +163,15 @@ class CommandAuto(Command):
         class Mixed(WebSocketWSGIApplication):
             """A class that supports WS and HTTP protocols in the same port."""
             def __call__(self, environ, start_response):
-                uri = wsgiref.util.request_uri(environ)
                 if environ.get('HTTP_UPGRADE') is None:
                     return parent.serve_static(environ, start_response)
                 return super(Mixed, self).__call__(environ, start_response)
 
-        ws = make_server('', port, server_class=WSGIServer,
-                        handler_class=WebSocketWSGIRequestHandler,
-                        app=Mixed(handler_cls=LRSocket))
+        ws = make_server(
+            host, port, server_class=WSGIServer,
+            handler_class=WebSocketWSGIRequestHandler,
+            app=Mixed(handler_cls=LRSocket)
+        )
         ws.initialize_websockets_manager()
         print("Serving on port {0}...".format(port))
 
@@ -173,9 +180,8 @@ class CommandAuto(Command):
         except KeyboardInterrupt:
             ws.server_close()
 
-
     def do_rebuild(self, event):
-        p = subprocess.Popen('nikola build', shell=True, stderr=subprocess.PIPE)
+        p = subprocess.Popen(self.command_line, shell=True, stderr=subprocess.PIPE)
         if p.wait() != 0:
             error_signal.send(error=p.stderr.read())
 
@@ -202,10 +208,9 @@ class CommandAuto(Command):
         elif p_uri.path == '/livereload.js':
             with open(LRJS_PATH) as fd:
                 start_response(b'200 OK', [(b'Content-type', mimetype)])
-                return inject_js(mimetype, fd.read())
+                return self.inject_js(mimetype, fd.read())
         start_response(b'404 ERR', [])
         return ['404 {0}'.format(uri)]
-
 
     def inject_js(self, mimetype, data):
         """Inject livereload.js in HTML files."""
@@ -216,6 +221,7 @@ class CommandAuto(Command):
 
 
 pending = []
+
 
 class LRSocket(WebSocket):
     """Speak Livereload protocol."""
