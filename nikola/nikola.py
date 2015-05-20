@@ -184,6 +184,7 @@ LEGAL_VALUES = {
         str,
         ar='ar',
         bg='bg',
+        bn='bn',
         ca='ca',
         cs='cs',
         cz='cs',
