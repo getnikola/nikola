@@ -1453,7 +1453,7 @@ class Nikola(object):
                     else:
                         slugged_tags.add(utils.slugify(tag, force=True))
                     self.posts_per_tag[tag].append(post)
-                self.posts_per_category[post.meta('category')].append(post)
+                self._add_post_to_category(post, post.meta('category'))
 
             if post.is_post:
                 # unpublished posts
