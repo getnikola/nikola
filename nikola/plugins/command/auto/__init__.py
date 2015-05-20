@@ -50,7 +50,7 @@ except ImportError:
     WebSocket = None
 
 from nikola.plugin_categories import Command
-from nikola.utils import req_missing
+from nikola.utils import req_missing, get_logger
 
 LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
 MASK = pyinotify.IN_DELETE | pyinotify.IN_CREATE | pyinotify.IN_MODIFY
@@ -61,6 +61,7 @@ refresh_signal = signal('refresh')
 class CommandAuto(Command):
     """Start debugging console."""
     name = "auto"
+    logger = None
     doc_purpose = "builds and serves a site; automatically detects site changes, rebuilds, and optionally refreshes a browser"
     cmd_options = [
         {
@@ -98,6 +99,8 @@ class CommandAuto(Command):
 
     def _execute(self, options, args):
         """Start the watcher."""
+
+        self.logger = get_logger('auto', self.site.loghandlers)
 
         if WebSocket is None:
             req_missing(['ws4py'], 'use the "auto" command')
@@ -175,7 +178,7 @@ class CommandAuto(Command):
             app=Mixed(handler_cls=LRSocket)
         )
         ws.initialize_websockets_manager()
-        print("Serving on port {0}...".format(port))
+        self.logger.info("Serving on port {0}...".format(port))
 
         # Yes, this is racy
         if browser:
@@ -189,17 +192,18 @@ class CommandAuto(Command):
     def do_rebuild(self, event):
         p = subprocess.Popen(self.command_line, shell=True, stderr=subprocess.PIPE)
         if p.wait() != 0:
-            error_signal.send(error=p.stderr.read())
+            error = p.stderr.read()
+            self.logger.error(error)
+            error_signal.send(error=error)
 
     def do_refresh(self, event):
-        print('REFRESHING: ', event.pathname)
+        self.logger.info('REFRESHING: ', event.pathname)
         p = os.path.relpath(event.pathname, os.path.abspath(self.site.config['OUTPUT_FOLDER']))
         refresh_signal.send(path=p)
 
     def serve_static(self, environ, start_response):
         """Trivial static file server."""
         uri = wsgiref.util.request_uri(environ)
-        print('====>', uri)
         p_uri = urlparse(uri)
         f_path = os.path.join(self.site.config['OUTPUT_FOLDER'], *p_uri.path.split('/'))
         mimetype = mimetypes.guess_type(uri)[0] or b'text/html'
@@ -238,7 +242,7 @@ class LRSocket(WebSocket):
 
     def received_message(self, message):
         message = json.loads(message.data)
-        print('<---', message)
+        self.logger.info('<---', message)
         response = None
         if message['command'] == 'hello':  # Handshake
             response = {
@@ -249,11 +253,11 @@ class LRSocket(WebSocket):
                 'serverName': 'nikola-livereload',
             }
         elif message['command'] == 'info':  # Someone connected
-            print('****** ', 'Browser Connected: %s' % message.get('url'))
-            print('****** ', 'sending {0} pending messages'.format(len(pending)))
+            self.logger.info('****** ', 'Browser Connected: %s' % message.get('url'))
+            self.logger.info('****** ', 'sending {0} pending messages'.format(len(pending)))
             while pending:
                 msg = pending.pop()
-                print('--->', msg.data)
+                self.logger.info('--->', msg.data)
                 self.send(msg, msg.is_binary)
         else:
             response = {
@@ -262,7 +266,7 @@ class LRSocket(WebSocket):
             }
         if response is not None:
             response = json.dumps(response)
-            print('--->', response)
+            self.logger.info('--->', response)
             response = TextMessage(response)
             self.send(response, response.is_binary)
 
@@ -275,7 +279,7 @@ class LRSocket(WebSocket):
             'path': p,
         }
         response = json.dumps(message)
-        print('--->', p)
+        self.logger.info('--->', p)
         response = TextMessage(response)
         if self.stream is None:  # No client connected or whatever
             pending.append(response)
@@ -284,7 +288,6 @@ class LRSocket(WebSocket):
 
     def send_error(self, sender, error=None):
         """Send reload requests to the client."""
-        print('ERRRRRRRR', error)
         if self.stream is None:  # No client connected or whatever
             return
         message = {
