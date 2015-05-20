@@ -29,6 +29,7 @@ from __future__ import print_function
 import json
 import mimetypes
 import os
+import re
 import subprocess
 try:
     from urlparse import urlparse
@@ -220,8 +221,7 @@ class CommandAuto(Command):
     def inject_js(self, mimetype, data):
         """Inject livereload.js in HTML files."""
         if mimetype == 'text/html':
-            # FIXME: use re.IGNORECASE
-            data = data.replace('</head>', self.snippet, 1)
+            data = re.sub('</head>', self.snippet, data, 1, re.IGNORECASE)
         return data
 
 
