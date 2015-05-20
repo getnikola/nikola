@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Cleaner formatting of HTML output
 * Allowing category hierarchies via new option CATEGORY_ALLOW_HIERARCHIES
   (Issue #1520)
 
@@ -11,7 +12,10 @@ Bugfixes
 --------
 
 * Use a global directory for gallery images, ignoring translations (Issue #1726)
-* Exclude ``<meta content="noindex" name="robots">`` from sitemaps
+* The post-list directive only triggers rebuilds if timeline changes (Issue #1688)
+* Don’t check the same remote URL more than once (Issue #1732)
+* All remotely checked links resulted in incorrect warnings (`nikola check -lr`)
+* Exclude `<meta content="noindex" name="robots">` from sitemaps
 * new_post paths are now relative to CWD (Issue #1325)
 
 New in v7.4.1

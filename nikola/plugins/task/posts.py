@@ -40,10 +40,6 @@ def update_deps(post, lang, task):
     task.file_dep.update([p for p in post.fragment_deps(lang) if not p.startswith("####MAGIC####")])
 
 
-def dependence_on_timeline(post, lang):
-    return "####MAGIC####TIMELINE" not in post.fragment_deps(lang)
-
-
 class RenderPosts(Task):
     """Build HTML fragments from metadata and text."""
 
@@ -59,13 +55,25 @@ class RenderPosts(Task):
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "demote_headers": self.site.config['DEMOTE_HEADERS'],
         }
+        self.tl_changed = False
 
         yield self.group_task()
+
+        def tl_ch():
+            self.tl_changed = True
+
+        yield {
+            'basename': self.name,
+            'name': 'timeline_changes',
+            'actions': [tl_ch],
+            'uptodate': [utils.config_changed({1: kw['timeline']})],
+        }
 
         for lang in kw["translations"]:
             deps_dict = copy(kw)
             deps_dict.pop('timeline')
             for post in kw['timeline']:
+
                 dest = post.translated_base_path(lang)
                 file_dep = [p for p in post.fragment_deps(lang) if not p.startswith("####MAGIC####")]
                 task = {
@@ -79,7 +87,15 @@ class RenderPosts(Task):
                     'clean': True,
                     'uptodate': [
                         utils.config_changed(deps_dict, 'nikola.plugins.task.posts'),
-                        lambda p=post, l=lang: dependence_on_timeline(p, l)
+                        lambda p=post, l=lang: self.dependence_on_timeline(p, l)
                     ] + post.fragment_deps_uptodate(lang),
+                    'task_dep': ['render_posts:timeline_changes']
                 }
                 yield task
+
+    def dependence_on_timeline(self, post, lang):
+        if "####MAGIC####TIMELINE" not in post.fragment_deps(lang):
+            return True  # No dependency on timeline
+        elif self.tl_changed:
+            return False  # Timeline changed
+        return True
