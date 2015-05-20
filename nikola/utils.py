@@ -1149,7 +1149,7 @@ def get_root_dir():
     root = os.getcwd()
 
     while True:
-        if os.path.exists(os.path.join(root, 'conf.py')):
+        if os.path.exists(os.path.join(root, b'conf.py')):
             return root
         else:
             basedir = os.path.split(root)[0]
