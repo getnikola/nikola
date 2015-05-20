@@ -35,6 +35,7 @@ import locale
 import os
 import json
 import sys
+import natsort
 import mimetypes
 try:
     from urlparse import urlparse, urlsplit, urlunsplit, urljoin, unquote
@@ -285,6 +286,8 @@ class Nikola(object):
         self.colorful = config.pop('__colorful__', False)
         self.invariant = config.pop('__invariant__', False)
         self.quiet = config.pop('__quiet__', False)
+        self._doit_config = config.pop('DOIT_CONFIG', {})
+        self.original_cwd = config.pop('__cwd__', False)
         self.configuration_filename = config.pop('__configuration_filename__', False)
         self.configured = bool(config)
         self.injected_deps = defaultdict(list)
@@ -317,6 +320,8 @@ class Nikola(object):
             'CATEGORY_PAGES_ARE_INDEXES': None,  # None means: same as TAG_PAGES_ARE_INDEXES
             'CATEGORY_PAGES_DESCRIPTIONS': {},
             'CATEGORY_PREFIX': 'cat_',
+            'CATEGORY_ALLOW_HIERARCHIES': False,
+            'CATEGORY_OUTPUT_FLAT_HIERARCHY': False,
             'CODE_COLOR_SCHEME': 'default',
             'COMMENT_SYSTEM': 'disqus',
             'COMMENTS_IN_GALLERIES': False,
@@ -382,7 +387,7 @@ class Nikola(object):
             'LISTINGS_FOLDERS': {'listings': 'listings'},
             'LOGO_URL': '',
             'NAVIGATION_LINKS': {},
-            'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],
+            'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],  # FIXME: Add 'extras' in v8
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
             'OLD_THEME_SUPPORT': True,
@@ -964,7 +969,8 @@ class Nikola(object):
         src = "/".join(src.split(os.sep))
 
         utils.makedirs(os.path.dirname(output_name))
-        doc = lxml.html.document_fromstring(data)
+        parser = lxml.html.HTMLParser(remove_blank_text=True)
+        doc = lxml.html.document_fromstring(data, parser)
         doc.rewrite_links(lambda dst: self.url_replacer(src, dst, context['lang']))
         data = b'<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='utf8', method='html', pretty_print=True)
         with open(output_name, "wb+") as post_file:
@@ -992,12 +998,16 @@ class Nikola(object):
         if url_type is None:
             url_type = self.config.get('URL_TYPE')
 
+        if dst_url.scheme and dst_url.scheme not in ['http', 'https', 'link']:
+            return dst
+
         # Refuse to replace links that are full URLs.
         if dst_url.netloc:
             if dst_url.scheme == 'link':  # Magic link
                 dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'), lang)
+            # Assuming the site is served over one of these, and
+            # since those are the only URLs we want to rewrite...
             else:
-                print(dst)
                 if '%' in dst_url.netloc:
                     # convert lxml percent-encoded garbage to punycode
                     nl = unquote(dst_url.netloc)
@@ -1006,7 +1016,6 @@ class Nikola(object):
                     except AttributeError:
                         # python 3: already unicode
                         pass
-
                     nl = nl.encode('idna')
 
                     dst = urlunsplit((dst_url.scheme,
@@ -1014,7 +1023,6 @@ class Nikola(object):
                                       dst_url.path,
                                       dst_url.query,
                                       dst_url.fragment))
-                    print(dst)
                 return dst
         elif dst_url.scheme == 'link':  # Magic absolute path link:
             dst = dst_url.path
@@ -1350,6 +1358,53 @@ class Nikola(object):
             'task_dep': task_dep
         }
 
+    def parse_category_name(self, category_name):
+        if self.config['CATEGORY_ALLOW_HIERARCHIES']:
+            try:
+                return utils.parse_escaped_hierarchical_category_name(category_name)
+            except Exception as e:
+                utils.LOGGER.error(str(e))
+                sys.exit(1)
+        else:
+            return [category_name] if len(category_name) > 0 else []
+
+    def category_path_to_category_name(self, category_path):
+        if self.config['CATEGORY_ALLOW_HIERARCHIES']:
+            return utils.join_hierarchical_category_path(category_path)
+        else:
+            return ''.join(category_path)
+
+    def _add_post_to_category(self, post, category_name):
+        category_path = self.parse_category_name(category_name)
+        current_path = []
+        current_subtree = self.category_hierarchy
+        for current in category_path:
+            current_path.append(current)
+            if current not in current_subtree:
+                current_subtree[current] = {}
+            current_subtree = current_subtree[current]
+            self.posts_per_category[self.category_path_to_category_name(current_path)].append(post)
+
+    def _sort_category_hierarchy(self):
+        # First create a hierarchy of TreeNodes
+        self.category_hierarchy_lookup = {}
+
+        def create_hierarchy(cat_hierarchy, parent=None):
+            result = []
+            for name, children in cat_hierarchy.items():
+                node = utils.TreeNode(name, parent)
+                node.children = create_hierarchy(children, node)
+                node.category_path = [pn.name for pn in node.get_path()]
+                node.category_name = self.category_path_to_category_name(node.category_path)
+                self.category_hierarchy_lookup[node.category_name] = node
+                if node.category_name not in self.config.get('HIDDEN_CATEGORIES'):
+                    result.append(node)
+            return natsort.natsorted(result, key=lambda e: e.name, alg=natsort.ns.F | natsort.ns.IC)
+
+        root_list = create_hierarchy(self.category_hierarchy)
+        # Next, flatten the hierarchy
+        self.category_hierarchy = utils.flatten_tree_structure(root_list)
+
     def scan_posts(self, really=False, ignore_quit=False, quiet=False):
         """Scan all the posts."""
         if self._scanned and not really:
@@ -1362,6 +1417,7 @@ class Nikola(object):
         self.posts_per_month = defaultdict(list)
         self.posts_per_tag = defaultdict(list)
         self.posts_per_category = defaultdict(list)
+        self.category_hierarchy = {}
         self.post_per_file = {}
         self.timeline = []
         self.pages = []
@@ -1439,7 +1495,7 @@ class Nikola(object):
                             else:
                                 slugged_tags.add(utils.slugify(tag, force=True))
                             self.posts_per_tag[tag].append(post)
-                        self.posts_per_category[post.meta('category')].append(post)
+                        self._add_post_to_category(post, post.meta('category'))
 
                     if post.is_post:
                         # unpublished posts
@@ -1460,6 +1516,7 @@ class Nikola(object):
         self.all_posts.reverse()
         self.pages.sort(key=lambda p: p.date)
         self.pages.reverse()
+        self._sort_category_hierarchy()
 
         for i, p in enumerate(self.posts[1:]):
             p.next_post = self.posts[i]

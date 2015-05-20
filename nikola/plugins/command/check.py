@@ -35,9 +35,13 @@ except ImportError:
     from urllib.parse import unquote, urlparse, urljoin, urldefrag  # NOQA
 
 import lxml.html
+try:
+    import requests
+except ImportError:
+    requests = None
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger
+from nikola.utils import get_logger, req_missing
 
 
 def _call_nikola_list(l, site, arguments):
@@ -137,6 +141,14 @@ class CommandCheck(Command):
             'default': False,
             'help': 'Be more verbose.',
         },
+        {
+            'name': 'remote',
+            'long': 'remote',
+            'short': 'r',
+            'type': bool,
+            'default': False,
+            'help': 'Check that remote links work.',
+        },
     ]
 
     def _execute(self, options, args):
@@ -152,7 +164,7 @@ class CommandCheck(Command):
         else:
             self.logger.level = 4
         if options['links']:
-            failure = self.scan_links(options['find_sources'])
+            failure = self.scan_links(options['find_sources'], options['remote'])
         if options['files']:
             failure = self.scan_files()
         if options['clean']:
@@ -161,14 +173,19 @@ class CommandCheck(Command):
             sys.exit(1)
 
     existing_targets = set([])
+    checked_remote_targets = {}
 
-    def analyze(self, task, find_sources=False):
+    def analyze(self, task, find_sources=False, check_remote=False):
         rv = False
         self.whitelist = [re.compile(x) for x in self.site.config['LINK_CHECK_WHITELIST']]
         base_url = urlparse(self.site.config['BASE_URL'])
         self.existing_targets.add(self.site.config['SITE_URL'])
         self.existing_targets.add(self.site.config['BASE_URL'])
         url_type = self.site.config['URL_TYPE']
+
+        if check_remote and requests is None:
+            req_missing(['requests'], 'check remote links')
+
         if url_type in ('absolute', 'full_path'):
             url_netloc_to_root = urlparse(self.site.config['BASE_URL']).path
         try:
@@ -193,12 +210,29 @@ class CommandCheck(Command):
                 if base_url.netloc == parsed.netloc and base_url.scheme == "https" and parsed.scheme == "http":
                     self.logger.warn("Mixed-content security for link in {0}: {1}".format(filename, target))
 
-                # Absolute links when using only paths, skip.
-                if (parsed.scheme or target.startswith('//')) and url_type in ('rel_path', 'full_path'):
-                    continue
-
                 # Absolute links to other domains, skip
-                if (parsed.scheme or target.startswith('//')) and parsed.netloc != base_url.netloc:
+                # Absolute links when using only paths, skip.
+                if ((parsed.scheme or target.startswith('//')) and parsed.netloc != base_url.netloc) or \
+                        ((parsed.scheme or target.startswith('//')) and url_type in ('rel_path', 'full_path')):
+                    if not check_remote or parsed.scheme not in ["http", "https"]:
+                        continue
+                    if parsed.netloc == base_url.netloc:  # absolute URL to self.site
+                        continue
+                    if target in self.checked_remote_targets:  # already checked this exact target
+                        if self.checked_remote_targets[target] > 399:
+                            self.logger.warn("Broken link in {0}: {1} [Error {2}]".format(filename, target, self.checked_remote_targets[target]))
+                        continue
+                    # Check the remote link works
+                    req_headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0 (Nikola)'}  # I’m a real boy!
+                    resp = requests.head(target, headers=req_headers)
+                    self.checked_remote_targets[target] = resp.status_code
+                    if resp.status_code > 399:  # Error
+                        self.logger.warn("Broken link in {0}: {1} [Error {2}]".format(filename, target, resp.status_code))
+                        continue
+                    elif resp.status_code <= 399:  # The address leads *somewhere* that is not an error
+                        self.logger.debug("Successfully checked remote link in {0}: {1} [HTTP: {2}]".format(filename, target, resp.status_code))
+                        continue
+                    self.logger.warn("Could not check remote link in {0}: {1} [Unknown problem]".format(filename, target))
                     continue
 
                 if url_type == 'rel_path':
@@ -234,7 +268,7 @@ class CommandCheck(Command):
             self.logger.error("Error with: {0} {1}".format(filename, exc))
         return rv
 
-    def scan_links(self, find_sources=False):
+    def scan_links(self, find_sources=False, check_remote=False):
         self.logger.info("Checking Links:")
         self.logger.info("===============\n")
         self.logger.notice("{0} mode".format(self.site.config['URL_TYPE']))
@@ -246,7 +280,7 @@ class CommandCheck(Command):
                     'render_galleries', 'render_indexes',
                     'render_pages', 'render_posts',
                     'render_site') and '.html' in task:
-                if self.analyze(task, find_sources):
+                if self.analyze(task, find_sources, check_remote):
                     failure = True
         if not failure:
             self.logger.info("All links checked.")

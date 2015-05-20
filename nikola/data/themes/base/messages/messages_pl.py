@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "Czytaj więcej",
     "Skip to main content": "Przejdź do treści",
     "Source": "Źródło",
+    "Subcategories:": "Podkategorie:",
     "Tags and Categories": "Tagi i Kategorie",
     "Tags": "Tagi",
     "old posts, page %d": "stare posty, strona %d",

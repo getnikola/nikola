@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "Legu plu",
     "Skip to main content": "",
     "Source": "Fonto",
+    "Subcategories:": "",
     "Tags and Categories": "Etikedoj kaj Kategorioj",
     "Tags": "Etikedoj",
     "old posts, page %d": "paĝo de malnovaj artikoloj %d",

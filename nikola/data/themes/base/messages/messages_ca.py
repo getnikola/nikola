@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "Llegeix-ne més",
     "Skip to main content": "Vés al comentari principal",
     "Source": "Codi",
+    "Subcategories:": "",
     "Tags and Categories": "Etiquetes i Categories",
     "Tags": "Etiquetes",
     "old posts, page %d": "entrades antigues, pàgina %d",

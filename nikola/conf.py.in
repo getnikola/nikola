@@ -63,7 +63,7 @@ TRANSLATIONS_PATTERN = ${TRANSLATIONS_PATTERN}
 # This is a dict.  The keys are languages, and values are tuples.
 #
 # For regular links:
-#     ('http://getnikola.com/', 'Nikola Homepage')
+#     ('https://getnikola.com/', 'Nikola Homepage')
 #
 # For submenus:
 #     (
@@ -250,6 +250,16 @@ HIDDEN_TAGS = ['mathjax']
 # CATEGORY_PATH = "categories"
 # CATEGORY_PREFIX = "cat_"
 
+# If CATEGORY_ALLOW_HIERARCHIES is set to True, categories can be organized in
+# hierarchies. For a post, the whole path in the hierarchy must be specified,
+# using a forward slash ('/') to separate paths. Use a backslash ('\') to escape
+# a forward slash or a backslash (i.e. '\//\\' is a path specifying the
+# subcategory called '\' of the top-level category called '/').
+# CATEGORY_ALLOW_HIERARCHIES = False
+# If CATEGORY_OUTPUT_FLAT_HIERARCHY is set to True, the output written to output
+# contains only the name of the leaf category and not the whole path.
+# CATEGORY_OUTPUT_FLAT_HIERARCHY = False
+
 # If CATEGORY_PAGES_ARE_INDEXES is set to True, each category's page will contain
 # the posts themselves. If set to False, it will be just a list of links.
 # CATEGORY_PAGES_ARE_INDEXES = False
@@ -375,7 +385,7 @@ REDIRECTIONS = ${REDIRECTIONS}
 # Nikola’s templates. All other filters must be enabled through FILTERS.
 #
 # Many filters are shipped with Nikola. A list is available in the manual:
-# <http://getnikola.com/handbook.html#post-processing-filters>
+# <https://getnikola.com/handbook.html#post-processing-filters>
 #
 # from nikola import filters
 # FILTERS = {
@@ -430,12 +440,12 @@ REDIRECTIONS = ${REDIRECTIONS}
 # If set to False, it will sort by filename instead. Defaults to True
 # GALLERY_SORT_BY_DATE = True
 #
-# Folders containing images to be used in normal posts or
-# pages. Images will be scaled down according to IMAGE_THUMBNAIL_SIZE
-# and MAX_IMAGE_SIZE options, but will have to be referenced manually
-# to be visible on the site. The format is a dictionary of {source:
-# relative destination}.
-#
+# Folders containing images to be used in normal posts or pages. Images will be
+# scaled down according to IMAGE_THUMBNAIL_SIZE and MAX_IMAGE_SIZE options, but
+# will have to be referenced manually to be visible on the site
+# (the thumbnail has ``.thumbnail`` added before the file extension).
+# The format is a dictionary of {source: relative destination}.
+
 IMAGE_FOLDERS = {'images': 'images'}
 # IMAGE_THUMBNAIL_SIZE = 400
 
@@ -581,7 +591,7 @@ LICENSE = ""
 # (translatable)
 CONTENT_FOOTER = 'Contents &copy; {date} \
         <a href="mailto:{email}">{author}</a> - Powered by \
-        <a href="http://getnikola.com" rel="nofollow">Nikola</a> \
+        <a href="https://getnikola.com" rel="nofollow">Nikola</a> \
         {license}'
 
 # Things that will be passed to CONTENT_FOOTER.format().  This is done
@@ -717,7 +727,8 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # done in the code, hope you don't mind ;-)
 # Note: most Nikola-specific extensions are done via the Nikola plugin system,
 #       with the MarkdownExtension class and should not be added here.
-# MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite']
+# The default is ['fenced_code', 'codehilite']
+MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extras']
 
 # Extra options to pass to the pandoc comand.
 # by default, it's empty, is a list of strings, for example

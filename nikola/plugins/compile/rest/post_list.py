@@ -27,11 +27,10 @@ from __future__ import unicode_literals
 
 import os
 import uuid
+import natsort
 
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
-
-from natsort import natsorted
 
 from nikola import utils
 from nikola.plugin_categories import RestExtension
@@ -160,7 +159,7 @@ class PostList(Directive):
             filtered_timeline.append(post)
 
         if sort:
-            filtered_timeline = natsorted(filtered_timeline, key=lambda post: post.meta[lang][sort])
+            filtered_timeline = natsort.natsorted(filtered_timeline, key=lambda post: post.meta[lang][sort], alg=natsort.ns.F | natsort.ns.IC)
 
         for post in filtered_timeline[start:stop:step]:
             if slugs:

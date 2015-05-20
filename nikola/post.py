@@ -29,6 +29,8 @@ from __future__ import unicode_literals, print_function, absolute_import
 import io
 from collections import defaultdict
 import datetime
+import hashlib
+import json
 import os
 import re
 import string
@@ -69,6 +71,7 @@ from .rc4 import rc4
 __all__ = ['Post']
 
 TEASER_REGEXP = re.compile('<!--\s*TEASER_END(:(.+))?\s*-->', re.IGNORECASE)
+_UPGRADE_METADATA_ADVERTISED = False
 
 
 class Post(object):
@@ -228,7 +231,12 @@ class Post(object):
         self.compiler.register_extra_dependencies(self)
 
     def __repr__(self):
-        return '<Post: {0}>'.format(self.source_path)
+        # Calculate a hash that represents most data about the post
+        m = hashlib.md5()
+        # source_path modification date (to avoid reading it)
+        m.update(utils.unicode_str(os.stat(self.source_path).st_mtime).encode('utf-8'))
+        m.update(utils.unicode_str(json.dumps(self.meta, cls=utils.CustomEncoder, sort_keys=True)).encode('utf-8'))
+        return '<Post: {0} {1}>'.format(self.source_path, m.hexdigest())
 
     def _has_pretty_url(self, lang):
         if self.pretty_urls and \
@@ -875,6 +883,7 @@ def _get_metadata_from_file(meta_data):
 
 def get_metadata_from_meta_file(path, config=None, lang=None):
     """Takes a post path, and gets data from a matching .meta file."""
+    global _UPGRADE_METADATA_ADVERTISED
     meta_path = os.path.splitext(path)[0] + '.meta'
     if lang and config:
         meta_path = get_translation_candidate(config, meta_path, lang)
@@ -897,9 +906,13 @@ def get_metadata_from_meta_file(path, config=None, lang=None):
             # a 1-file post.
             return get_metadata_from_file(path, config, lang), newstylemeta
         else:
+            if not _UPGRADE_METADATA_ADVERTISED:
+                LOGGER.warn("Some posts on your site have old-style metadata. You should upgrade them to the new format, with support for extra fields.")
+                LOGGER.warn("Install the 'upgrade_metadata' plugin (with 'nikola plugin -i upgrade_metadata') and run 'nikola upgrade_metadata'.")
+                _UPGRADE_METADATA_ADVERTISED = True
             while len(meta_data) < 7:
                 meta_data.append("")
-            (title, slug, date, updated, tags, link, description, _type) = [
+            (title, slug, date, tags, link, description, _type) = [
                 x.strip() for x in meta_data][:7]
 
             meta = {}
@@ -910,8 +923,6 @@ def get_metadata_from_meta_file(path, config=None, lang=None):
                 meta['slug'] = slug
             if date:
                 meta['date'] = date
-            if updated:
-                meta['updated'] = updated
             if tags:
                 meta['tags'] = tags
             if link:
@@ -997,15 +1008,15 @@ def hyphenate(dom, _lang):
             LOGGER.error("Pyphen cannot be installed to ~/.local (pip install --user).")
         for tag in ('p', 'li', 'span'):
             for node in dom.xpath("//%s[not(parent::pre)]" % tag):
-                math_found = False
+                skip_node = False
+                skippable_nodes = ['kbd', 'code', 'samp', 'mark', 'math', 'data', 'ruby', 'svg']
                 if node.getchildren():
                     for child in node.getchildren():
-                        if child.tag == 'span' and 'math' in child.get('class', []):
-                            math_found = True
-                else:
-                    if 'math' in node.get('class', []):
-                        math_found = True
-                if not math_found:
+                        if child.tag in skippable_nodes or (child.tag == 'span' and 'math' in child.get('class', [])):
+                            skip_node = True
+                elif 'math' in node.get('class', []):
+                    skip_node = True
+                if not skip_node:
                     insert_hyphens(node, hyphenator)
     return dom
 

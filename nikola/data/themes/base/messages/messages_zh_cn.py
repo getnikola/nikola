@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "更多",
     "Skip to main content": "",
     "Source": "源代码",
+    "Subcategories:": "",
     "Tags and Categories": "标签和分类",
     "Tags": "标签",
     "old posts, page %d": "旧文章页 %d",

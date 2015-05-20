@@ -6,6 +6,7 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
 # amokleben <wenso@gmx.de>, 2013
 # Chris Warrick <kwpolska@gmail.com>, 2013-2014
 # Chris Warrick <kwpolska@gmail.com>, 2013
@@ -22,7 +23,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-11-18 15:01+0000\n"
+"PO-Revision-Date: 2015-05-13 14:33+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/nikola/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -34,6 +35,8 @@ msgstr ""
 msgid "More posts about %s"
 msgstr "Weitere Einträge über %s"
 
+#. Here your translation should NOT say English but the name of your language
+#. instead
 msgid "LANGUAGE"
 msgstr "Deutsch"
 
@@ -67,7 +70,7 @@ msgstr "Seite %d"
 msgid "Source"
 msgstr "Source"
 
-#. Here your translation should not say English but the name of your language
+#. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "Read in English"
 msgstr "Auf Deutsch lesen"
@@ -122,3 +125,6 @@ msgstr "%d min verbleiben zum Lesen"
 
 msgid "Skip to main content"
 msgstr "Springe zum Hauptinhalt"
+
+msgid "Subcategories:"
+msgstr "Unterkategorien:"

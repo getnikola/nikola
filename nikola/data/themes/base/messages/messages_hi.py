@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "और पढ़िए",
     "Skip to main content": "मुख्य सामग्री पर जाएँ",
     "Source": "सोर्स",
+    "Subcategories:": "",
     "Tags and Categories": "टैग्स और श्रेणियाँ",
     "Tags": "टैग्स",
     "old posts, page %d": "पुरानी पोस्टें, पृष्‍ठ %d",

@@ -5,6 +5,42 @@ Features
 --------
 
 * Support [code] in wordpress importers (Issue #1186)
+* Cleaner formatting of HTML output
+* Allowing category hierarchies via new option CATEGORY_ALLOW_HIERARCHIES
+  (Issue #1520)
+
+Bugfixes
+--------
+
+* The post-list directive only triggers rebuilds if timeline changes (Issue #1688)
+* Don’t check the same remote URL more than once (Issue #1732)
+* All remotely checked links resulted in incorrect warnings (`nikola check -lr`)
+* Exclude `<meta content="noindex" name="robots">` from sitemaps
+* new_post paths are now relative to CWD (Issue #1325)
+
+New in v7.4.1
+=============
+
+Features
+--------
+
+* Better handling of missing/unconfigured compilers (Issue #1704)
+* New -r option for the link checker to check remote links (Issue #1684)
+* Use static navbars in bootstrap3 and bootstrap themes
+
+Bugfixes
+--------
+
+* Handle strange URLs, like ed2k:// (Issue #1695)
+* Fix very old metadata format support (Issue #1689)
+
+New in v7.4.0
+=============
+
+Features
+--------
+
+>>>>>>> master
 * Substitutions for RSS_LINKS_APPEND_QUERY for identifying
   the source feed (feedRelUri) and  the kind of feed (feedFormat).
 * New option GENERATE_ATOM, off by default
@@ -35,6 +71,7 @@ Features
 Bugfixes
 --------
 
+* Make ``.islink`` work properly (via Issue #1536)
 * RSS_LINKS_APPEND_QUERY not working in RSS feeds for tags
 * `nikola check -l` didn’t scan posts
 * Don’t use sets for ``FAVICONS`` (Issue #1674)

@@ -28,6 +28,7 @@ MESSAGES = {
     "Read more": "Loe veel",
     "Skip to main content": "",
     "Source": "Lähtekood",
+    "Subcategories:": "",
     "Tags and Categories": "Sildid ja kategooriad",
     "Tags": "Märksõnad",
     "old posts, page %d": "vanade postituste, leht %d",

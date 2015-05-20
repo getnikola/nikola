@@ -57,7 +57,7 @@ from doit.cmdparse import CmdParse
 
 from nikola import DEBUG
 
-__all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
+__all__ = ['CustomEncoder', 'get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'copy_file', 'slugify', 'unslugify', 'to_datetime', 'apply_filters',
            'config_changed', 'get_crumbs', 'get_tzname', 'get_asset_path',
            '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
@@ -67,7 +67,9 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'ask', 'ask_yesno', 'options2docstring', 'os_path_split',
            'get_displayed_page_number', 'adjust_name_for_index_path_list',
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
-           'NikolaPygmentsHTML', 'create_redirect']
+           'NikolaPygmentsHTML', 'create_redirect', 'TreeNode',
+           'flatten_tree_structure', 'parse_escaped_hierarchical_category_name',
+           'join_hierarchical_category_path']
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -1311,7 +1313,11 @@ class Commands(object):
         self._main = main
         self._config = config
         self._doitargs = doitargs
-        for k, v in self._doitargs['cmds'].to_dict().items():
+        try:
+            cmdict = self._doitargs['cmds'].to_dict()
+        except AttributeError:  # not a doit PluginDict
+            cmdict = self._doitargs['cmds']
+        for k, v in cmdict.items():
             # cleanup: run is doit-only, init is useless in an existing site
             if k in ['run', 'init']:
                 continue
@@ -1342,7 +1348,10 @@ class Commands(object):
     def _run_with_kw(self, cmd, *a, **kw):
         # cyclic import hack
         from nikola.plugin_categories import Command
-        cmd = self._doitargs['cmds'].get_plugin(cmd)
+        try:
+            cmd = self._doitargs['cmds'].get_plugin(cmd)
+        except AttributeError:  # not a doit PluginDict
+            cmd = self._doitargs['cmds'][cmd]
         try:
             opt = cmd.get_options()
         except TypeError:
@@ -1478,3 +1487,128 @@ def create_redirect(src, dst):
                  'content="noindex">\n<meta http-equiv="refresh" content="0; '
                  'url={0}">\n</head>\n<body>\n<p>Page moved '
                  '<a href="{0}">here</a>.</p>\n</body>'.format(dst))
+
+
+class TreeNode(object):
+    indent_levels = None  # use for formatting comments as tree
+    indent_change_before = 0  # use for formatting comments as tree
+    indent_change_after = 0  # use for formatting comments as tree
+
+    # The indent levels and changes allow to render a tree structure
+    # without keeping track of all that information during rendering.
+    #
+    # The indent_change_before is the different between the current
+    # comment's level and the previous comment's level; if the number
+    # is positive, the current level is indented further in, and if it
+    # is negative, it is indented further out. Positive values can be
+    # used to open HTML tags for each opened level.
+    #
+    # The indent_change_after is the difference between the next
+    # comment's level and the current comment's level. Negative values
+    # can be used to close HTML tags for each closed level.
+    #
+    # The indent_levels list contains one entry (index, count) per
+    # level, informing about the index of the current comment on that
+    # level and the count of comments on that level (before a comment
+    # of a higher level comes). This information can be used to render
+    # tree indicators, for example to generate a tree such as:
+    #
+    # +--- [(0,3)]
+    # +-+- [(1,3)]
+    # | +--- [(1,3), (0,2)]
+    # | +-+- [(1,3), (1,2)]
+    # |   +--- [(1,3), (1,2), (0, 1)]
+    # +-+- [(2,3)]
+    #   +- [(2,3), (0,1)]
+    #
+    # (The lists used as labels represent the content of the
+    # indent_levels property for that node.)
+
+    def __init__(self, name, parent=None):
+        self.name = name
+        self.parent = parent
+        self.children = []
+
+    def get_path(self):
+        path = []
+        curr = self
+        while curr is not None:
+            path.append(curr)
+            curr = curr.parent
+        return reversed(path)
+
+    def get_children(self):
+        return self.children
+
+
+def flatten_tree_structure(root_list):
+    elements = []
+
+    def generate(input_list, indent_levels_so_far):
+        for index, element in enumerate(input_list):
+            # add to destination
+            elements.append(element)
+            # compute and set indent levels
+            indent_levels = indent_levels_so_far + [(index, len(input_list))]
+            element.indent_levels = indent_levels
+            # add children
+            children = element.get_children()
+            element.children_count = len(children)
+            generate(children, indent_levels)
+
+    generate(root_list, [])
+    # Add indent change counters
+    level = 0
+    last_element = None
+    for element in elements:
+        new_level = len(element.indent_levels)
+        # Compute level change before this element
+        change = new_level - level
+        if last_element is not None:
+            last_element.indent_change_after = change
+        element.indent_change_before = change
+        # Update variables
+        level = new_level
+        last_element = element
+    # Set level change after last element
+    if last_element is not None:
+        last_element.indent_change_after = -level
+    return elements
+
+
+def parse_escaped_hierarchical_category_name(category_name):
+    result = []
+    current = None
+    index = 0
+    next_backslash = category_name.find('\\', index)
+    next_slash = category_name.find('/', index)
+    while index < len(category_name):
+        if next_backslash == -1 and next_slash == -1:
+            current = (current if current else "") + category_name[index:]
+            index = len(category_name)
+        elif next_slash >= 0 and (next_backslash == -1 or next_backslash > next_slash):
+            result.append((current if current else "") + category_name[index:next_slash])
+            current = ''
+            index = next_slash + 1
+            next_slash = category_name.find('/', index)
+        else:
+            if len(category_name) == next_backslash + 1:
+                raise Exception("Unexpected '\\' in '{0}' at last position!".format(category_name))
+            esc_ch = category_name[next_backslash + 1]
+            if esc_ch not in {'/', '\\'}:
+                raise Exception("Unknown escape sequence '\\{0}' in '{1}'!".format(esc_ch, category_name))
+            current = (current if current else "") + category_name[index:next_backslash] + esc_ch
+            index = next_backslash + 2
+            next_backslash = category_name.find('\\', index)
+            if esc_ch == '/':
+                next_slash = category_name.find('/', index)
+    if current is not None:
+        result.append(current)
+    return result
+
+
+def join_hierarchical_category_path(category_path):
+    def escape(s):
+        return s.replace('\\', '\\\\').replace('/', '\\/')
+
+    return '/'.join([escape(p) for p in category_path])
