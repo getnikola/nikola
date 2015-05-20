@@ -34,6 +34,7 @@ try:
     from urlparse import urlparse
 except ImportError:
     from urllib.parse import urlparse  # NOQA
+import webbrowser
 from wsgiref.simple_server import make_server
 import wsgiref.util
 
@@ -174,6 +175,10 @@ class CommandAuto(Command):
         )
         ws.initialize_websockets_manager()
         print("Serving on port {0}...".format(port))
+
+        # Yes, this is racy
+        if browser:
+            webbrowser.open('http://{0}:{1}'.format(host, port))
 
         try:
             ws.serve_forever()
