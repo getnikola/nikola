@@ -66,6 +66,7 @@ class Galleries(Task, ImageProcessor):
 
     def set_site(self, site):
         site.register_path_handler('gallery', self.gallery_path)
+        site.register_path_handler('gallery_global', self.gallery_global_path)
         site.register_path_handler('gallery_rss', self.gallery_rss_path)
 
         self.logger = utils.get_logger('render_galleries', site.loghandlers)
@@ -124,6 +125,11 @@ class Galleries(Task, ImageProcessor):
         gallery_path = self._find_gallery_path(name)
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
                 list(os.path.split(gallery_path)) +
+                [self.site.config['INDEX_FILE']] if _f]
+
+    def gallery_global_path(self, name, lang):
+        gallery_path = self._find_gallery_path(name)
+        return [_f for _f in list(os.path.split(gallery_path)) +
                 [self.site.config['INDEX_FILE']] if _f]
 
     def gallery_rss_path(self, name, lang):
@@ -429,7 +435,7 @@ class Galleries(Task, ImageProcessor):
         output_gallery = os.path.dirname(
             os.path.join(
                 self.kw["output_folder"],
-                self.site.path("gallery", gallery_name)))
+                self.site.path("gallery_global", gallery_name)))
         # Do thumbnails and copy originals
         # img is "galleries/name/image_name.jpg"
         # img_name is "image_name.jpg"
@@ -481,7 +487,7 @@ class Galleries(Task, ImageProcessor):
         output_folder = os.path.dirname(
             os.path.join(
                 self.kw["output_folder"],
-                self.site.path("gallery", os.path.dirname(img))))
+                self.site.path("gallery_global", os.path.dirname(img))))
         img = os.path.relpath(img, input_folder)
         img_path = os.path.join(output_folder, os.path.basename(img))
         fname, ext = os.path.splitext(img_path)
