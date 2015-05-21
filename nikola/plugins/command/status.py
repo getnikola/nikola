@@ -76,6 +76,8 @@ class CommandDeploy(Command):
 
             if fmod_since_deployment > 0:
                 print("{0} output files modified since last deployment {1} ago.".format(str(fmod_since_deployment), last_deploy_offsetstr))
+            else:
+                print("Last deployment {0} ago.".format(last_deploy_offsetstr))
 
         posts_count = len(self.site.all_posts)
         posts_drafts = 0
