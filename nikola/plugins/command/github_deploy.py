@@ -25,6 +25,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
+from datetime import datetime
 import os
 import subprocess
 import sys
@@ -32,7 +33,7 @@ from textwrap import dedent
 
 from nikola.plugin_categories import Command
 from nikola.plugins.command.check import real_scan_files
-from nikola.utils import get_logger, req_missing
+from nikola.utils import get_logger, req_missing, makedirs, unicode_str
 from nikola.__main__ import main
 from nikola import __version__
 
@@ -119,3 +120,12 @@ class CommandGitHubDeploy(Command):
                 'returned {1}'.format(e.cmd, e.returncode)
             )
             sys.exit(e.returncode)
+
+        self.logger.info("Successful deployment")
+
+        # Store timestamp of successful deployment
+        timestamp_path = os.path.join(self.site.config["CACHE_FOLDER"], "lastdeploy")
+        new_deploy = datetime.utcnow()
+        makedirs(self.site.config["CACHE_FOLDER"])
+        with io.open(timestamp_path, "w+", encoding="utf8") as outf:
+            outf.write(unicode_str(new_deploy.isoformat()))
