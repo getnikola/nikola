@@ -13,6 +13,6 @@
     "jquery": "<2.0.0",
     "jquery-colorbox": "~1.6.0",
     "moment": "~2.10.3",
-    "livereload-js": ""
+    "livereload-js": "~2.2.1"
   }
 }
