@@ -29,9 +29,6 @@ import io
 import os
 from datetime import datetime
 from dateutil.tz import gettz, tzlocal
-import time
-
-from nikola import __version__
 
 from nikola.plugin_categories import Command
 
@@ -55,17 +52,17 @@ class CommandDeploy(Command):
             with io.open(timestamp_path, "r", encoding="utf8") as inf:
                 last_deploy = datetime.strptime(inf.read().strip(), "%Y-%m-%dT%H:%M:%S.%f")
                 last_deploy_offset = datetime.utcnow() - last_deploy
-        except (IOError, Exception) as e:
+        except (IOError, Exception):
             print("It does not seem like you’ve ever deployed the site (or cache missing).")
 
         if last_deploy:
 
             if last_deploy_offset.days > 0:
-                last_deploy_offsetstr ="{0} days and {1} hours".format(str(int(last_deploy_offset.days)), str(int(last_deploy_offset.seconds/60/60)))
-            elif last_deploy_offset.seconds/60/60 > 0:
-                last_deploy_offsetstr = "{0} hours and {1} minutes".format(str(int(last_deploy_offset.seconds/60/60)), str(int(last_deploy_offset.seconds/60 - ((last_deploy_offset.seconds/60)//60)*60)))
+                last_deploy_offsetstr ="{0} days and {1} hours".format(str(int(last_deploy_offset.days)), str(int(last_deploy_offset.seconds / 60 / 60)))
+            elif last_deploy_offset.seconds / 60 / 60 > 0:
+                last_deploy_offsetstr = "{0} hours and {1} minutes".format(str(int(last_deploy_offset.seconds / 60 / 60)), str(int(last_deploy_offset.seconds / 60 - ((last_deploy_offset.seconds / 60) // 60) * 60)))
             else:
-                last_deploy_offsetstr = "{0} minutes".format(str(int(last_deploy_offset.seconds/60 - ((last_deploy_offset.seconds/60)//60)*60)))
+                last_deploy_offsetstr = "{0} minutes".format(str(int(last_deploy_offset.seconds / 60 - ((last_deploy_offset.seconds / 60) // 60) * 60)))
 
             fmod_since_deployment = 0
             for root, dirs, files in os.walk(self.site.config["OUTPUT_FOLDER"], followlinks=True):
@@ -96,12 +93,12 @@ class CommandDeploy(Command):
 
         if posts_scheduled > 0 and post_scheduled_nearest_offset is not None:
             if post_scheduled_nearest_offset.days > 0:
-                nearest_scheduled_timestr = "{0} days and {1} hours".format(str(int(post_scheduled_nearest_offset.days)), str(int(post_scheduled_nearest_offset.seconds/60/60)))
+                nearest_scheduled_timestr = "{0} days and {1} hours".format(str(int(post_scheduled_nearest_offset.days)), str(int(post_scheduled_nearest_offset.seconds / 60 / 60)))
 
-            elif post_scheduled_nearest_offset.seconds/60/60 > 0:
-                nearest_scheduled_timestr = "{0} hours and {1} minutes".format(str(int(post_scheduled_nearest_offset.seconds/60/60)), str(int(post_scheduled_nearest_offset.seconds/60/60)), str(int(((post_scheduled_nearest_offset.seconds/60)//60)*60)))
+            elif post_scheduled_nearest_offset.seconds / 60 / 60 > 0:
+                nearest_scheduled_timestr = "{0} hours and {1} minutes".format(str(int(post_scheduled_nearest_offset.seconds / 60 / 60)), str(int(post_scheduled_nearest_offset.seconds / 60 / 60)), str(int(((post_scheduled_nearest_offset.seconds / 60) // 60) * 60)))
             else:
-                nearest_scheduled_timestr = "{0} minutes".format(str(int(((post_scheduled_nearest_offset.seconds/60)//60)*60)))
+                nearest_scheduled_timestr = "{0} minutes".format(str(int(((post_scheduled_nearest_offset.seconds / 60) // 60) * 60)))
             print("{0} to next scheduled post.".format(nearest_scheduled_timestr))
 
         print("{0:,} posts in total, {1:,} scheduled, and {2:,} drafts.".format(posts_count, posts_scheduled, posts_drafts))
