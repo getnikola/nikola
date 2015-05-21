@@ -57,7 +57,7 @@ from doit.cmdparse import CmdParse
 
 from nikola import DEBUG
 
-__all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
+__all__ = ['CustomEncoder', 'get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'copy_file', 'slugify', 'unslugify', 'to_datetime', 'apply_filters',
            'config_changed', 'get_crumbs', 'get_tzname', 'get_asset_path',
            '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
