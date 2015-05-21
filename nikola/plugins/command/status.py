@@ -28,7 +28,7 @@ from __future__ import print_function
 import io
 import os
 from datetime import datetime
-from dateutil.tz import gettz
+from dateutil.tz import gettz, tzlocal
 import time
 
 from nikola import __version__
@@ -74,7 +74,7 @@ class CommandDeploy(Command):
                 for fname in files:
                     fpath = os.path.join(root, fname)
                     fmodtime = datetime.fromtimestamp(os.stat(fpath).st_mtime)
-                    if fmodtime > last_deploy:
+                    if fmodtime.replace(tzinfo=tzlocal()) > last_deploy.replace(tzinfo=gettz("UTC")).astimezone(tz=tzlocal()):
                         fmod_since_deployment = fmod_since_deployment + 1
 
             if fmod_since_deployment > 0:
