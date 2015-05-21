@@ -26,6 +26,7 @@
 
 from __future__ import print_function
 from datetime import datetime
+import io
 import os
 import subprocess
 import sys
