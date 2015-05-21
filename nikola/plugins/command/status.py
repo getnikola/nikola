@@ -58,7 +58,7 @@ class CommandDeploy(Command):
         if last_deploy:
 
             if last_deploy_offset.days > 0:
-                last_deploy_offsetstr ="{0} days and {1} hours".format(str(int(last_deploy_offset.days)), str(int(last_deploy_offset.seconds / 60 / 60)))
+                last_deploy_offsetstr = "{0} days and {1} hours".format(str(int(last_deploy_offset.days)), str(int(last_deploy_offset.seconds / 60 / 60)))
             elif last_deploy_offset.seconds / 60 / 60 > 0:
                 last_deploy_offsetstr = "{0} hours and {1} minutes".format(str(int(last_deploy_offset.seconds / 60 / 60)), str(int(last_deploy_offset.seconds / 60 - ((last_deploy_offset.seconds / 60) // 60) * 60)))
             else:
