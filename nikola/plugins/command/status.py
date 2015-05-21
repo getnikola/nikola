@@ -37,7 +37,6 @@ class CommandDeploy(Command):
     """ Site status. """
     name = "status"
 
-    doc_usage = "[[preset [preset...]]"
     doc_purpose = "display site status"
     doc_description = "Show information about the posts and site deployment."
     logger = None
@@ -57,13 +56,6 @@ class CommandDeploy(Command):
 
         if last_deploy:
 
-            if last_deploy_offset.days > 0:
-                last_deploy_offsetstr = "{0} days and {1} hours".format(str(int(last_deploy_offset.days)), str(int(last_deploy_offset.seconds / 60 / 60)))
-            elif last_deploy_offset.seconds / 60 / 60 > 0:
-                last_deploy_offsetstr = "{0} hours and {1} minutes".format(str(int(last_deploy_offset.seconds / 60 / 60)), str(int(last_deploy_offset.seconds / 60 - ((last_deploy_offset.seconds / 60) // 60) * 60)))
-            else:
-                last_deploy_offsetstr = "{0} minutes".format(str(int(last_deploy_offset.seconds / 60 - ((last_deploy_offset.seconds / 60) // 60) * 60)))
-
             fmod_since_deployment = 0
             for root, dirs, files in os.walk(self.site.config["OUTPUT_FOLDER"], followlinks=True):
                 if not dirs and not files:
@@ -75,14 +67,14 @@ class CommandDeploy(Command):
                         fmod_since_deployment = fmod_since_deployment + 1
 
             if fmod_since_deployment > 0:
-                print("{0} output files modified since last deployment {1} ago.".format(str(fmod_since_deployment), last_deploy_offsetstr))
+                print("{0} output files modified since last deployment {1} ago.".format(str(fmod_since_deployment), self.human_time(last_deploy_offset)))
             else:
-                print("Last deployment {0} ago.".format(last_deploy_offsetstr))
+                print("Last deployment {0} ago.".format(self.human_time(last_deploy_offset)))
 
         posts_count = len(self.site.all_posts)
         posts_drafts = 0
         posts_scheduled = 0
-        post_scheduled_nearest_offset = None
+        nearest_scheduled_offset = None
 
         for post in self.site.all_posts:
             if post.is_draft:
@@ -90,17 +82,21 @@ class CommandDeploy(Command):
             if post.publish_later:
                 posts_scheduled = posts_scheduled + 1
                 post_due_offset = post.date - datetime.utcnow().replace(tzinfo=gettz("UTC"))
-                if (post_scheduled_nearest_offset is None) or (post_due_offset.seconds < post_scheduled_nearest_offset.seconds):
-                    post_scheduled_nearest_offset = post_due_offset
+                if (nearest_scheduled_offset is None) or (post_due_offset.seconds < nearest_scheduled_offset.seconds):
+                    nearest_scheduled_offset = post_due_offset
 
-        if posts_scheduled > 0 and post_scheduled_nearest_offset is not None:
-            if post_scheduled_nearest_offset.days > 0:
-                nearest_scheduled_timestr = "{0} days and {1} hours".format(str(int(post_scheduled_nearest_offset.days)), str(int(post_scheduled_nearest_offset.seconds / 60 / 60)))
+        if posts_scheduled > 0 and nearest_scheduled_offset is not None:
+            print("{0} to next scheduled post.".format(self.human_time(nearest_scheduled_offset)))
+        print("{0} posts in total, {1} scheduled, and {2} drafts.".format(posts_count, posts_scheduled, posts_drafts))
 
-            elif post_scheduled_nearest_offset.seconds / 60 / 60 > 0:
-                nearest_scheduled_timestr = "{0} hours and {1} minutes".format(str(int(post_scheduled_nearest_offset.seconds / 60 / 60)), str(int(post_scheduled_nearest_offset.seconds / 60 / 60)), str(int(((post_scheduled_nearest_offset.seconds / 60) // 60) * 60)))
-            else:
-                nearest_scheduled_timestr = "{0} minutes".format(str(int(((post_scheduled_nearest_offset.seconds / 60) // 60) * 60)))
-            print("{0} to next scheduled post.".format(nearest_scheduled_timestr))
-
-        print("{0:,} posts in total, {1:,} scheduled, and {2:,} drafts.".format(posts_count, posts_scheduled, posts_drafts))
+    def human_time(self, dt):
+        days = dt.days
+        hours = dt.seconds / 60 // 60
+        minutes = dt.seconds / 60 - (hours * 60)
+        if days > 0:
+            return "{0:.0f} days and {1:.0f} hours".format(days, hours)
+        elif hours > 0:
+            return "{0:.0f} hours and {1:.0f} minutes".format(hours, minutes)
+        elif minutes:
+            return "{0:.0f} minutes".format(minutes)
+        return False
