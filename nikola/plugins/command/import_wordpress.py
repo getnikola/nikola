@@ -335,13 +335,30 @@ class CommandImportWordpress(Command, ImportMixin):
                     links[url] = '/' + dst_url
                     links[url] = '/' + dst_url
 
-    @staticmethod
-    def transform_sourcecode(content):
-        new_content = re.sub('\[sourcecode language="([^"]+)"\]',
-                             "\n~~~~~~~~~~~~{.\\1}\n", content)
-        new_content = new_content.replace('[/sourcecode]',
-                                          "\n~~~~~~~~~~~~\n")
-        return new_content
+    code_re1 = re.compile(r'\[code.* lang.*?="(.*?)?".*\](.*?)\[/code\]', re.DOTALL | re.MULTILINE)
+    code_re2 = re.compile(r'\[sourcecode.* lang.*?="(.*?)?".*\](.*?)\[/sourcecode\]', re.DOTALL | re.MULTILINE)
+    code_re3 = re.compile(r'\[code.*?\](.*?)\[/code\]', re.DOTALL | re.MULTILINE)
+    code_re4 = re.compile(r'\[sourcecode.*?\](.*?)\[/sourcecode\]', re.DOTALL | re.MULTILINE)
+
+    def transform_code(self, content):
+        # http://en.support.wordpress.com/code/posting-source-code/. There are
+        # a ton of things not supported here. We only do a basic [code
+        # lang="x"] -> ```x translation, and remove quoted html entities (<,
+        # >, &, and ").
+        def replacement(m):
+            language = m.group(1) or ''
+            code = m.group(2)
+            code = code.replace('&amp;', '&')
+            code = code.replace('&gt;', '>')
+            code = code.replace('&lt;', '<')
+            code = code.replace('&quot;', '"')
+            return '```{language}\n{code}\n```'.format(language=language, code=code)
+
+        content = self.code_re1.sub(replacement, content)
+        content = self.code_re2.sub(replacement, content)
+        content = self.code_re3.sub(replacement, content)
+        content = self.code_re4.sub(replacement, content)
+        return content
 
     @staticmethod
     def transform_caption(content):
@@ -358,10 +375,10 @@ class CommandImportWordpress(Command, ImportMixin):
             return content
 
     def transform_content(self, content):
-        new_content = self.transform_sourcecode(content)
-        new_content = self.transform_caption(new_content)
-        new_content = self.transform_multiple_newlines(new_content)
-        return new_content
+        content = self.transform_code(content)
+        content = self.transform_caption(content)
+        content = self.transform_multiple_newlines(content)
+        return content
 
     def import_item(self, item, wordpress_namespace, out_folder=None):
         """Takes an item from the feed and creates a post file."""
