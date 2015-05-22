@@ -335,7 +335,10 @@ class CommandImportWordpress(Command, ImportMixin):
                     links[url] = '/' + dst_url
                     links[url] = '/' + dst_url
 
-    code_re = re.compile(r'\[(?:source)?code(?: lang(?:uage)?="(.*?)")?\](.*?)\[/code\]', re.DOTALL | re.MULTILINE)
+    code_re1 = re.compile(r'\[code.* lang.*?="(.*?)?".*\](.*?)\[/code\]', re.DOTALL | re.MULTILINE)
+    code_re2 = re.compile(r'\[sourcecode.* lang.*?="(.*?)?".*\](.*?)\[/sourcecode\]', re.DOTALL | re.MULTILINE)
+    code_re3 = re.compile(r'\[code.*?\](.*?)\[/code\]', re.DOTALL | re.MULTILINE)
+    code_re4 = re.compile(r'\[sourcecode.*?\](.*?)\[/sourcecode\]', re.DOTALL | re.MULTILINE)
 
     def transform_code(self, content):
         # http://en.support.wordpress.com/code/posting-source-code/. There are
@@ -351,7 +354,11 @@ class CommandImportWordpress(Command, ImportMixin):
             code = code.replace('&quot;', '"')
             return '```{language}\n{code}\n```'.format(language=language, code=code)
 
-        return self.code_re.sub(replacement, content)
+        content = self.code_re1.sub(replacement, content)
+        content = self.code_re2.sub(replacement, content)
+        content = self.code_re3.sub(replacement, content)
+        content = self.code_re4.sub(replacement, content)
+        return content
 
     @staticmethod
     def transform_caption(content):

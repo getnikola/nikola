@@ -228,13 +228,13 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
 
 Some source code.
 
-~~~~~~~~~~~~{.Python}
+```Python
 
 import sys
 
 print sys.version
 
-~~~~~~~~~~~~
+```
 
 The end.
 
@@ -331,15 +331,12 @@ print sys.version
         self.assertFalse('[sourcecode language=' in content)
 
         replaced_content = """Hello World.
-
 ```Python
 
 import sys
 print sys.version
 
-```
-"""
-
+```"""
         self.assertEqual(content, replaced_content)
 
     def test_transform_caption(self):
