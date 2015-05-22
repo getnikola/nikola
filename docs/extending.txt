@@ -432,6 +432,13 @@ Does nothing specific, can be used to modify the site object (and thus the confi
 Put all the magic you want in ``set_site()``, and don’t forget to run the one
 from ``super()``.
 
+PostScanner Plugins
+-------------------
+
+Get posts and stories from "somewhere" to be added to the timeline.
+The only currently existing plugin of this kind reads them from disk.
+
+
 Plugin Index
 ============
 

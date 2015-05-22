@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Scanning of posts refactored out of core (Issue #1700)
 * github_deploy records lastdeploy timestamp like regular deploy
 * Use a global directory for gallery images, ignoring translations (Issue #1726)
 * The post-list directive only triggers rebuilds if timeline changes (Issue #1688)
