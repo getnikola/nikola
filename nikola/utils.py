@@ -1148,8 +1148,13 @@ def get_root_dir():
     """Find root directory of nikola installation by looking for conf.py"""
     root = os.getcwd()
 
+    if sys.version_info[0] == 2:
+        confname = b'conf.py'
+    else:
+        confname = 'conf.py'
+
     while True:
-        if os.path.exists(os.path.join(root, 'conf.py')):
+        if os.path.exists(os.path.join(root, confname)):
             return root
         else:
             basedir = os.path.split(root)[0]

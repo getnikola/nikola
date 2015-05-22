@@ -1,0 +1,9 @@
+[Core]
+Name = status
+Module = status
+
+[Documentation]
+Author = Daniel Aleksandersen
+Version = 1.0
+Website = https://getnikola.com
+Description = Site status

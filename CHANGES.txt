@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New `nikola status` command
 * Cleaner formatting of HTML output
 * Allowing category hierarchies via new option CATEGORY_ALLOW_HIERARCHIES
   (Issue #1520)
@@ -12,6 +13,8 @@ Bugfixes
 --------
 
 * Scanning of posts refactored out of core (Issue #1700)
+* github_deploy records lastdeploy timestamp like regular deploy
+* Use a global directory for gallery images, ignoring translations (Issue #1726)
 * The post-list directive only triggers rebuilds if timeline changes (Issue #1688)
 * Don’t check the same remote URL more than once (Issue #1732)
 * All remotely checked links resulted in incorrect warnings (`nikola check -lr`)
