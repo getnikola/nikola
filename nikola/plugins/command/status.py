@@ -47,6 +47,8 @@ class CommandDeploy(Command):
 
         timestamp_path = os.path.join(self.site.config["CACHE_FOLDER"], "lastdeploy")
 
+        last_deploy = None
+
         try:
             with io.open(timestamp_path, "r", encoding="utf8") as inf:
                 last_deploy = datetime.strptime(inf.read().strip(), "%Y-%m-%dT%H:%M:%S.%f")
