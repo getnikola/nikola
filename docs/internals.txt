@@ -95,17 +95,14 @@ posts are added into RSS feeds and stories are not. All of them are in a list ca
 "the timeline" formed by objects of class ``Post``.
 
 When you are creating a task that needs the list of posts and/or stories (for example,
-the RSS creation plugin), your plugin should call ``self.site.scan_posts()`` to ensure
-the timeline is created and available in ``self.site.timeline``. You should not modify
-the timeline, because it will cause consistency issues.
+the RSS creation plugin) on task execution time, your plugin should call ``self.site.scan_posts()``
+in ``gen_tasks`` to ensure the timeline is created and available in 
+``self.site.timeline``. You should not modify the timeline, because it will cause consistency issues.
 
 .. sidebar:: scan_posts
 
-   The scan_posts function is what reads your site and creates the timeline.
-
-   I am considering moving scan_posts off the core and into its own plugin
-   so it can be replaced (for example, by a version that reads a database
-   instead of scanning a folder tree).
+   The ``Nikola.scan_posts`` function can be used in plugins to force the
+   timeline creation, for example, while creating the tasks.
 
 Your plugin can use the timeline to generate "stuff" (technical term). For example,
 Nikola comes with plugins that use the timeline to create a website (surprised?).

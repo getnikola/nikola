@@ -30,7 +30,6 @@ from collections import defaultdict
 from copy import copy
 from pkg_resources import resource_filename
 import datetime
-import glob
 import locale
 import os
 import json
@@ -55,7 +54,7 @@ import lxml.html
 from yapsy.PluginManager import PluginManager
 from blinker import signal
 
-from .post import Post
+from .post import Post  # NOQA
 from . import DEBUG, utils
 from .plugin_categories import (
     Command,
@@ -68,6 +67,7 @@ from .plugin_categories import (
     TemplateSystem,
     SignalHandler,
     ConfigPlugin,
+    PostScanner,
 )
 
 if DEBUG:
@@ -184,6 +184,7 @@ LEGAL_VALUES = {
         str,
         ar='ar',
         bg='bg',
+        bn='bn',
         ca='ca',
         cs='cs',
         cz='cs',
@@ -268,7 +269,6 @@ class Nikola(object):
         }
 
         self.strict = False
-        self.global_data = {}
         self.posts = []
         self.all_posts = []
         self.posts_per_year = defaultdict(list)
@@ -672,6 +672,7 @@ class Nikola(object):
             "MarkdownExtension": MarkdownExtension,
             "SignalHandler": SignalHandler,
             "ConfigPlugin": ConfigPlugin,
+            "PostScanner": PostScanner,
         })
         self.plugin_manager.setPluginInfoExtension('plugin')
         extra_plugins_dirs = self.config['EXTRA_PLUGINS_DIRS']
@@ -703,6 +704,7 @@ class Nikola(object):
             plugin_info.plugin_object.short_help = plugin_info.description
             self._commands[plugin_info.name] = plugin_info.plugin_object
 
+        self._activate_plugins_of_category("PostScanner")
         self._activate_plugins_of_category("Task")
         self._activate_plugins_of_category("LateTask")
         self._activate_plugins_of_category("TaskMultiplier")
@@ -1406,11 +1408,14 @@ class Nikola(object):
         self.category_hierarchy = utils.flatten_tree_structure(root_list)
 
     def scan_posts(self, really=False, ignore_quit=False, quiet=False):
-        """Scan all the posts."""
+        """Scan all the posts.
+
+        Ignoring quiet.
+        """
         if self._scanned and not really:
             return
 
-        self.global_data = {}
+        # Reset things
         self.posts = []
         self.all_posts = []
         self.posts_per_year = defaultdict(list)
@@ -1422,100 +1427,50 @@ class Nikola(object):
         self.timeline = []
         self.pages = []
 
-        seen = set([])
-        if not self.quiet and not quiet:
-            print("Scanning posts", end='', file=sys.stderr)
-        slugged_tags = set([])
+        for p in self.plugin_manager.getPluginsOfCategory('PostScanner'):
+            timeline = p.plugin_object.scan()
+            # FIXME: can there be conflicts here?
+            self.timeline.extend(timeline)
+
         quit = False
-        for wildcard, destination, template_name, use_in_feeds in \
-                self.config['post_pages']:
-            if not self.quiet and not quiet:
-                print(".", end='', file=sys.stderr)
-            dirname = os.path.dirname(wildcard)
-            for dirpath, _, _ in os.walk(dirname, followlinks=True):
-                dest_dir = os.path.normpath(os.path.join(destination,
-                                            os.path.relpath(dirpath, dirname)))  # output/destination/foo/
-                # Get all the untranslated paths
-                dir_glob = os.path.join(dirpath, os.path.basename(wildcard))  # posts/foo/*.rst
-                untranslated = glob.glob(dir_glob)
-                # And now get all the translated paths
-                translated = set([])
-                for lang in self.config['TRANSLATIONS'].keys():
-                    if lang == self.config['DEFAULT_LANG']:
-                        continue
-                    lang_glob = utils.get_translation_candidate(self.config, dir_glob, lang)  # posts/foo/*.LANG.rst
-                    translated = translated.union(set(glob.glob(lang_glob)))
-                # untranslated globs like *.rst often match translated paths too, so remove them
-                # and ensure x.rst is not in the translated set
-                untranslated = set(untranslated) - translated
-
-                # also remove from translated paths that are translations of
-                # paths in untranslated_list, so x.es.rst is not in the untranslated set
-                for p in untranslated:
-                    translated = translated - set([utils.get_translation_candidate(self.config, p, l) for l in self.config['TRANSLATIONS'].keys()])
-
-                full_list = list(translated) + list(untranslated)
-                # We eliminate from the list the files inside any .ipynb folder
-                full_list = [p for p in full_list
-                             if not any([x.startswith('.')
-                                         for x in p.split(os.sep)])]
-
-                for base_path in full_list:
-                    if base_path in seen:
-                        continue
+        # Classify posts per year/tag/month/whatever
+        slugged_tags = set([])
+        for post in self.timeline:
+            if post.use_in_feeds:
+                self.posts.append(post)
+                self.posts_per_year[str(post.date.year)].append(post)
+                self.posts_per_month[
+                    '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post)
+                for tag in post.alltags:
+                    _tag_slugified = utils.slugify(tag)
+                    if _tag_slugified in slugged_tags:
+                        if tag not in self.posts_per_tag:
+                            # Tags that differ only in case
+                            other_tag = [existing for existing in self.posts_per_tag.keys() if utils.slugify(existing) == _tag_slugified][0]
+                            utils.LOGGER.error('You have tags that are too similar: {0} and {1}'.format(tag, other_tag))
+                            utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
+                            utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.posts_per_tag[other_tag]])))
+                            quit = True
                     else:
-                        seen.add(base_path)
-                    post = Post(
-                        base_path,
-                        self.config,
-                        dest_dir,
-                        use_in_feeds,
-                        self.MESSAGES,
-                        template_name,
-                        self.get_compiler(base_path)
-                    )
-                    self.timeline.append(post)
-                    self.global_data[post.source_path] = post
-                    if post.use_in_feeds:
-                        self.posts.append(post)
-                        self.posts_per_year[
-                            str(post.date.year)].append(post)
-                        self.posts_per_month[
-                            '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post)
-                        for tag in post.alltags:
-                            _tag_slugified = utils.slugify(tag)
-                            if _tag_slugified in slugged_tags:
-                                if tag not in self.posts_per_tag:
-                                    # Tags that differ only in case
-                                    other_tag = [existing for existing in self.posts_per_tag.keys() if utils.slugify(existing) == _tag_slugified][0]
-                                    utils.LOGGER.error('You have tags that are too similar: {0} and {1}'.format(tag, other_tag))
-                                    utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
-                                    utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.posts_per_tag[other_tag]])))
-                                    quit = True
-                            else:
-                                slugged_tags.add(utils.slugify(tag, force=True))
-                            self.posts_per_tag[tag].append(post)
-                        self._add_post_to_category(post, post.meta('category'))
+                        slugged_tags.add(utils.slugify(tag, force=True))
+                    self.posts_per_tag[tag].append(post)
+                self._add_post_to_category(post, post.meta('category'))
 
-                    if post.is_post:
-                        # unpublished posts
-                        self.all_posts.append(post)
-                    else:
-                        self.pages.append(post)
+            if post.is_post:
+                # unpublished posts
+                self.all_posts.append(post)
+            else:
+                self.pages.append(post)
 
-                    for lang in self.config['TRANSLATIONS'].keys():
-                        self.post_per_file[post.destination_path(lang=lang)] = post
-                        self.post_per_file[post.destination_path(lang=lang, extension=post.source_ext())] = post
+            for lang in self.config['TRANSLATIONS'].keys():
+                self.post_per_file[post.destination_path(lang=lang)] = post
+                self.post_per_file[post.destination_path(lang=lang, extension=post.source_ext())] = post
 
         # Sort everything.
-        self.timeline.sort(key=lambda p: p.date)
-        self.timeline.reverse()
-        self.posts.sort(key=lambda p: p.date)
-        self.posts.reverse()
-        self.all_posts.sort(key=lambda p: p.date)
-        self.all_posts.reverse()
-        self.pages.sort(key=lambda p: p.date)
-        self.pages.reverse()
+
+        for thing in self.timeline, self.posts, self.all_posts, self.pages:
+            thing.sort(key=lambda p: p.date)
+            thing.reverse()
         self._sort_category_hierarchy()
 
         for i, p in enumerate(self.posts[1:]):
@@ -1523,13 +1478,11 @@ class Nikola(object):
         for i, p in enumerate(self.posts[:-1]):
             p.prev_post = self.posts[i + 1]
         self._scanned = True
-        if not self.quiet and not quiet:
+        if not self.quiet:
             print("done!", file=sys.stderr)
-
-        signal('scanned').send(self)
-
         if quit and not ignore_quit:
             sys.exit(1)
+        signal('scanned').send(self)
 
     def generic_page_renderer(self, lang, post, filters):
         """Render post fragments to final HTML pages."""
