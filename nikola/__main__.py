@@ -74,7 +74,6 @@ def main(args=None):
     oargs = args
     args = [sys_decode(arg) for arg in args]
 
-
     conf_filename = 'conf.py'
     conf_filename_bytes = b'conf.py'
     conf_filename_changed = False
