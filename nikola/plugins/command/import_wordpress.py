@@ -335,7 +335,7 @@ class CommandImportWordpress(Command, ImportMixin):
                     links[url] = '/' + dst_url
                     links[url] = '/' + dst_url
 
-    code_re = re.compile(r'\[(?:source)?code(?: lang(?:uage)?="(.*?)")?\](.*?)\[/code\]', re.DOTALL)
+    code_re = re.compile(r'\[(?:source)?code(?: lang(?:uage)?="(.*?)")?\](.*?)\[/code\]', re.DOTALL | re.MULTILINE)
 
     def transform_code(self, content):
         # http://en.support.wordpress.com/code/posting-source-code/. There are

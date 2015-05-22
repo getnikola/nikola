@@ -332,12 +332,12 @@ print sys.version
 
         replaced_content = """Hello World.
 
-~~~~~~~~~~~~{.Python}
+```Python
 
 import sys
 print sys.version
 
-~~~~~~~~~~~~
+```
 """
 
         self.assertEqual(content, replaced_content)
