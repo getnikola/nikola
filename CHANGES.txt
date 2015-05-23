@@ -4,8 +4,9 @@ New in master
 Features
 --------
 
+* New `nikola rst2html` command (Issue #1710)
+* New `nikola status` command (Issue #1740)
 * Support [code] in wordpress importers (Issue #1186)
-* New `nikola status` command
 * Cleaner formatting of HTML output
 * Allowing category hierarchies via new option CATEGORY_ALLOW_HIERARCHIES
   (Issue #1520)
