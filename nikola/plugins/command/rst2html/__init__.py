@@ -62,6 +62,6 @@ class CommandRst2Html(Command):
         html = b'<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='utf8', method='html', pretty_print=True)
         print(html)
         if error_level < 3:
-            return 0
+            exit(0)
         else:
-            return 1
+            exit(1)
