@@ -235,7 +235,11 @@ class Post(object):
         m = hashlib.md5()
         # source_path modification date (to avoid reading it)
         m.update(utils.unicode_str(os.stat(self.source_path).st_mtime).encode('utf-8'))
-        m.update(utils.unicode_str(json.dumps(self.meta, cls=utils.CustomEncoder, sort_keys=True)).encode('utf-8'))
+        clean_meta = {}
+        for k, v in self.meta.items():
+            if v:
+                clean_meta[k] = v
+        m.update(utils.unicode_str(json.dumps(clean_meta, cls=utils.CustomEncoder, sort_keys=True)).encode('utf-8'))
         return '<Post: {0} {1}>'.format(self.source_path, m.hexdigest())
 
     def _has_pretty_url(self, lang):
