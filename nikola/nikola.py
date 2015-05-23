@@ -1470,13 +1470,13 @@ class Nikola(object):
                         dest,
                         self.post_per_file[dest].source_path,
                         post.source_path))
-                    sys.exit(1)
+                    quit = True
                 if (src_dest in self.post_per_file) and self.config['COPY_SOURCES']:
                     utils.LOGGER.error('Two posts are trying to generate {0}: {1} and {2}'.format(
                         src_dest,
                         self.post_per_file[dest].source_path,
                         post.source_path))
-                    sys.exit(1)
+                    quit = True
                 self.post_per_file[dest] = post
                 self.post_per_file[src_dest] = post
 
