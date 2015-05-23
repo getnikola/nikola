@@ -67,7 +67,7 @@ Nikola can do:
 * A blog (`example <http://ralsina.me>`__)
 * Your company's site
 * Your personal site
-* A software project's site (`example <http://getnikola.com>`__)
+* A software project's site (`example <https://getnikola.com>`__)
 * A book's site
 
 Since Nikola-based sites don't run any code on the server, there is no way to process
@@ -91,13 +91,13 @@ Getting Help
 
 .. class:: lead
 
-`Get help here! <http://getnikola.com/contact.html>`_
+`Get help here! <https://getnikola.com/contact.html>`_
 
 TL;DR:
 
 * You can file bugs at `the issue tracker <https://github.com/getnikola/nikola/issues>`__
 * You can discuss Nikola at the `nikola-discuss google group <http://groups.google.com/group/nikola-discuss>`_
-* You can subscribe to `the Nikola Blog <http://getnikola.com/blog>`_
+* You can subscribe to `the Nikola Blog <https://getnikola.com/blog>`_
 * You can follow `Nikola on Twitter <https://twitter.com/GetNikola>`_
 
 Why Static?
@@ -180,7 +180,7 @@ If you want to create a blog or a site, Nikola provides:
 * Google sitemap generation
 * Custom deployment (if it's a command, you can use it)
 * A (very) basic look and feel you can customize, and is even text-mode friendly
-* The input format is light markup (`reStructuredText <http://getnikola.com/quickstart.html>`__ or
+* The input format is light markup (`reStructuredText <https://getnikola.com/quickstart.html>`__ or
   `Markdown <http://daringfireball.net/projects/markdown/>`_)
 * Easy-to-create image galleries
 * Support for displaying source code
@@ -308,7 +308,7 @@ The recommended formats are reStructuredText and Markdown, but there is also sup
 for Textile and WikiCreole and even for just writing HTML.  For more details,
 read  `Configuring other input formats`_.
 
-.. note:: There is a great `quick tutorial to learn reStructuredText. <http://getnikola.com/quickstart.html>`__
+.. note:: There is a great `quick tutorial to learn reStructuredText. <https://getnikola.com/quickstart.html>`__
 
 First, let's see how you "build" your site. Nikola comes with a minimal site to get you started.
 
@@ -372,7 +372,7 @@ and even individual files like ``nikola build output/index.html``
 Nikola also has other commands besides ``build``::
 
     $ nikola help
-    Nikola is a tool to create static websites and blogs. For full documentation and more information, please visit http://getnikola.com/
+    Nikola is a tool to create static websites and blogs. For full documentation and more information, please visit https://getnikola.com/
 
 
     Available commands:
@@ -439,7 +439,7 @@ but you can use a lot of different markups using the ``-f`` option.
 
 Currently Nikola supports reStructuredText, Markdown, IPython Notebooks, HTML as input,
 can also use Pandoc for conversion, and has support for BBCode, CreoleWiki, txt2tags, Textile
-and more via `plugins <http://plugins.getnikola.com>`__.
+and more via `plugins <https://plugins.getnikola.com>`__.
 For more details, read  `Configuring other input formats`_.
 
 You can control what markup compiler is used for each file extension with the ``COMPILERS``
@@ -620,7 +620,7 @@ Currently supported languages are:
 * Urdu
 
 If you wish to add support for more languages, check out the instructions
-at the `theming guide <http://getnikola.com/theming.html>`_.
+at the `theming guide <https://getnikola.com/theming.html>`_.
 
 The post page is generated using the ``post.tmpl`` template, which you can use
 to customize the output.
@@ -872,7 +872,7 @@ You surely want to edit these options::
     # Data about this site
     BLOG_AUTHOR = "Your Name"  # (translatable)
     BLOG_TITLE = "Demo Site"  # (translatable)
-    SITE_URL = "http://getnikola.com/"
+    SITE_URL = "https://getnikola.com/"
     BLOG_EMAIL = "joe@demo.site"
     BLOG_DESCRIPTION = "This is a demo site for Nikola."  # (translatable)
 
@@ -904,8 +904,8 @@ CSS tweaking
 
     If you want to use LESS_ or Sass_ for your custom CSS, or the theme you use
     contains LESS or Sass code that you want to override, you will need to install
-    the `LESS plugin <http://plugins.getnikola.com/#less>`__ or
-    `SASS plugin <http://plugins.getnikola.com/#sass>`__ create a ``less`` or
+    the `LESS plugin <https://plugins.getnikola.com/#less>`__ or
+    `SASS plugin <https://plugins.getnikola.com/#sass>`__ create a ``less`` or
     ``sass`` directory in your site root, put your ``.less`` or ``.scss`` files
     there and a targets file containing the list of files you want compiled.
 
@@ -1057,7 +1057,7 @@ Getting More Themes
 -------------------
 
 There are a few themes for Nikola. They are available at
-the `Themes Index <http://themes.getnikola.com/>`_.
+the `Themes Index <https://themes.getnikola.com/>`_.
 Nikola has a built-in theme download/install mechanism to install those themes — the ``install_theme`` command::
 
     $ nikola install_theme -l
@@ -1070,7 +1070,7 @@ Nikola has a built-in theme download/install mechanism to install those themes �
 
     $ nikola install_theme blogtxt
     [2013-10-12T16:46:13Z] NOTICE: install_theme: Downloading:
-    http://themes.getnikola.com/v6/blogtxt.zip
+    https://themes.getnikola.com/v6/blogtxt.zip
     [2013-10-12T16:46:15Z] NOTICE: install_theme: Extracting: blogtxt into themes
 
 And there you are, you now have themes/blogtxt installed. It's very
@@ -1830,7 +1830,7 @@ directories listed in the ``EXTRA_PLUGINS_DIRS`` configuration variable.
 Getting Extra Plugins
 ---------------------
 
-If you want extra plugins, there is also the `Plugins Index <http://plugins.getnikola.com/>`_.
+If you want extra plugins, there is also the `Plugins Index <https://plugins.getnikola.com/>`_.
 
 Similarly to themes, there is a nice, built-in command to manage them —
 ``plugin``::
@@ -1844,7 +1844,7 @@ Similarly to themes, there is a nice, built-in command to manage them —
     ⋮
 
     $ nikola plugin --install helloworld
-    [2013-10-12T16:51:56Z] NOTICE: install_plugin: Downloading: http://plugins.getnikola.com/v6/helloworld.zip
+    [2013-10-12T16:51:56Z] NOTICE: install_plugin: Downloading: https://plugins.getnikola.com/v6/helloworld.zip
     [2013-10-12T16:51:58Z] NOTICE: install_plugin: Extracting: helloworld into plugins
     plugins/helloworld/requirements.txt
     [2013-10-12T16:51:58Z] NOTICE: install_plugin: This plugin has Python dependencies.
@@ -1872,7 +1872,7 @@ And upgrade them::
     [2014-04-15T09:00:18Z] WARNING: plugin: This is not very smart, it just reinstalls some plugins and hopes for the best
     Will upgrade 1 plugins: graphviz
     Upgrading graphviz
-    [2014-04-15T09:00:20Z] INFO: plugin: Downloading: http://plugins.getnikola.com/v7/graphviz.zip
+    [2014-04-15T09:00:20Z] INFO: plugin: Downloading: https://plugins.getnikola.com/v7/graphviz.zip
     [2014-04-15T09:00:20Z] INFO: plugin: Extracting: graphviz into /home/ralsina/.nikola/plugins/
     [2014-04-15T09:00:20Z] NOTICE: plugin: This plugin has third-party dependencies you need to install manually.
     Contents of the requirements-nonpy.txt file:

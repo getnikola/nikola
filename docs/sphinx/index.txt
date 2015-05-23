@@ -3,7 +3,7 @@ Nikola Documentation
 
 Those are the docs for the current GitHub master.  It might be incompatible
 with the stable release.  The docs for the stable release are available `on
-the Nikola website <http://getnikola.com/documentation.html>`_.
+the Nikola website <https://getnikola.com/documentation.html>`_.
 
 .. toctree::
    :maxdepth: 5

@@ -178,7 +178,7 @@ class Help(DoitHelp):
         #          --strict, --invariant and --quiet.
         del cmds['run']
 
-        print("Nikola is a tool to create static websites and blogs. For full documentation and more information, please visit http://getnikola.com/\n\n")
+        print("Nikola is a tool to create static websites and blogs. For full documentation and more information, please visit https://getnikola.com/\n\n")
         print("Available commands:")
         for cmd_name in sorted(cmds.keys()):
             cmd = cmds[cmd_name]

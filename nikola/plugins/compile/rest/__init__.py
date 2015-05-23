@@ -231,7 +231,7 @@ def add_node(node, visit_function=None, depart_function=None):
         def depart_Math(self, node):
             self.body.append('</math>')
 
-    For full example, you can refer to `Microdata plugin <http://plugins.getnikola.com/#microdata>`_
+    For full example, you can refer to `Microdata plugin <https://plugins.getnikola.com/#microdata>`_
     """
     docutils.nodes._add_node_class_names([node.__name__])
     if visit_function:

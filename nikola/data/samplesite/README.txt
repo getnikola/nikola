@@ -1,6 +1,6 @@
-This folder contains the source used to generate a static site by nikola.
+This folder contains the source used to generate a static site using Nikola.
 
-Installation and documentation at http://getnikola.com
+Installation and documentation at https://getnikola.com/
 
 Configuration file for the site is `conf.py`.
 
@@ -12,7 +12,7 @@ To see it::
 
     nikola serve
 
-And point your browser to http://localhost:8000
+And point your browser to http://localhost:8000/
 
 
 To check all available commands::

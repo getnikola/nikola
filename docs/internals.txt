@@ -26,7 +26,7 @@ Nikola is a Pile of Plugins
 
     There are several kinds of plugins, all implementing interfaces defined in
     ``nikola/plugin_categories.py`` and documented in
-    `Extending Nikola <http://getnikola.com/extending.html>`_
+    `Extending Nikola <https://getnikola.com/extending.html>`_
 
     If your plugin has a dependency, please make sure it doesn't make Nikola
     throw an exception when the dependency is missing. Try to fail gracefully

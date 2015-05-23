@@ -2,7 +2,7 @@
 .. slug: bootstrap-demo
 .. date: 2012-03-30 23:00:00 UTC-03:00
 .. tags: bootstrap, demo
-.. link: http://getnikola.com
+.. link: https://getnikola.com
 .. description:
 
 

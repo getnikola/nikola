@@ -38,7 +38,7 @@ When you run ``nikola --help`` you will see something like this::
 
     $ nikola help
     Nikola is a tool to create static websites and blogs. For full documentation and more
-    information, please visit http://getnikola.com
+    information, please visit https://getnikola.com/
 
 
     Available commands:
@@ -87,7 +87,7 @@ First, the ``serve.plugin`` file:
     [Documentation]
     Author = Roberto Alsina
     Version = 0.1
-    Website = http://getnikola.com
+    Website = https://getnikola.com
     Description = Start test server.
 
 .. note:: If you want to publish your plugin on the Plugin Index, `read
@@ -179,7 +179,7 @@ First, you have to create a .plugin file. Here's the one for the Mako plugin:
     [Documentation]
     Author = Roberto Alsina
     Version = 0.1
-    Website = http://getnikola.com
+    Website = https://getnikola.com
     Description = Support for Mako templates.
 
 .. note:: If you want to publish your plugin on the Plugin Index, `read
@@ -300,7 +300,7 @@ in the logical ways:
     [Documentation]
     Author = Roberto Alsina
     Version = 0.1
-    Website = http://getnikola.com
+    Website = https://getnikola.com
     Description = Copy theme assets into output.
 
 
@@ -442,7 +442,7 @@ The only currently existing plugin of this kind reads them from disk.
 Plugin Index
 ============
 
-There is a `plugin index <http://plugins.getnikola.com/>`__, which stores all
+There is a `plugin index <https://plugins.getnikola.com/>`__, which stores all
 of the plugins for Nikola people wanted to share with the world.
 
 You may want to read the `README for the Index

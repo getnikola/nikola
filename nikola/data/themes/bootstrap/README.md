@@ -3,7 +3,7 @@ A "website-done-with-bootstrap" theme, so to speak.
 Has a fixed navigation bar at top that displays the NAVIGATION_LINKS
 setting and supports nested menus.
 
-This theme is used in Nikola's website: http://getnikola.com
+This theme is used in Nikola's website: https://getnikola.com
 
 Important: To fit in the bootstrap navigation bar, the search form needs the
 navbar-form and pull-left CSS classes applied. Here is an example with Nikola's

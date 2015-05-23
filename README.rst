@@ -33,7 +33,7 @@ It has many features, but here are some of the nicer ones:
 * `Blogs, with tags, feeds, archives, comments, etc.`__
 * `Themable`_
 * Fast builds, thanks to `doit`_
-* Flexible, extensible via plugins
+* Flexible, extensible via the dozens of `available plugins`_
 * Small codebase (programmers can understand all of Nikola core in a day)
 * `reStructuredText`_ or Markdown as input language (also Wiki, BBCode, Textile, and HTML)
 * Easy `image galleries`_ (just drop files in a folder!)
@@ -42,12 +42,13 @@ It has many features, but here are some of the nicer ones:
 * Doesn't reinvent wheels, leverages existing tools.
 * Python 2.7, 3.3 and 3.4 compatible.
 
-.. _Nikola Handbook: http://getnikola.com/handbook.html#why-static
-__ http://users.getnikola.com/
-.. _Themable: http://themes.getnikola.com
+.. _Nikola Handbook: https://getnikola.com/handbook.html#why-static
+__ https://users.getnikola.com/
+.. _Themable: https://themes.getnikola.com
 .. _doit: http://pydoit.org
-.. _reStructuredText: http://getnikola.com/quickstart.html
-.. _image galleries: http://getnikola.com/galleries/demo/
+.. _available plugins: https://plugins.getnikola.com/
+.. _reStructuredText: https://getnikola.com/quickstart.html
+.. _image galleries: https://getnikola.com/galleries/demo/
 __ https://www.transifex.com/projects/p/nikola/
 
 Nikola Architecture
@@ -70,4 +71,4 @@ For tests (see tests/README.rst for more details)::
 
     pip install Nikola[extras,tests]
 
-For more information, see http://getnikola.com/
+For more information, see https://getnikola.com/
