@@ -1469,7 +1469,7 @@ class Nikola(object):
         # Sort everything.
 
         for thing in self.timeline, self.posts, self.all_posts, self.pages:
-            thing.sort(key=lambda p: p.date)
+            thing.sort(key=lambda p: (p.date, p.source_path))
             thing.reverse()
         self._sort_category_hierarchy()
 
