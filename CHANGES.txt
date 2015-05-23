@@ -44,7 +44,6 @@ New in v7.4.0
 Features
 --------
 
->>>>>>> master
 * Substitutions for RSS_LINKS_APPEND_QUERY for identifying
   the source feed (feedRelUri) and  the kind of feed (feedFormat).
 * New option GENERATE_ATOM, off by default
@@ -62,7 +61,6 @@ Features
 * Multilingual sitemaps (Issue #1610)
 * Compatibility with doit v0.28.0 (Issue #1655)
 * AddThis is no longer added by default to users’ sites
->>>>>>> master
 * New translations (az, fil, tl, uk, zh_TW)
 * Add reStructuredText transform support (Issue #1647)
 * Produce Unicode output in ``nikola init`` (via Issue #1644)
