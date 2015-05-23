@@ -1463,8 +1463,22 @@ class Nikola(object):
                 self.pages.append(post)
 
             for lang in self.config['TRANSLATIONS'].keys():
-                self.post_per_file[post.destination_path(lang=lang)] = post
-                self.post_per_file[post.destination_path(lang=lang, extension=post.source_ext())] = post
+                dest = post.destination_path(lang=lang)
+                src_dest = post.destination_path(lang=lang, extension=post.source_ext())
+                if dest in self.post_per_file:
+                    utils.LOGGER.error('Two posts are trying to generate {0}: {1} and {2}'.format(
+                        dest,
+                        self.post_per_file[dest].source_path,
+                        post.source_path))
+                    sys.exit(1)
+                if (src_dest in self.post_per_file) and self.config['COPY_SOURCES']:
+                    utils.LOGGER.error('Two posts are trying to generate {0}: {1} and {2}'.format(
+                        src_dest,
+                        self.post_per_file[dest].source_path,
+                        post.source_path))
+                    sys.exit(1)
+                self.post_per_file[dest] = post
+                self.post_per_file[src_dest] = post
 
         # Sort everything.
 
