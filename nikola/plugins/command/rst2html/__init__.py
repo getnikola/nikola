@@ -32,6 +32,7 @@ from pkg_resources import resource_filename
 from mako.template import Template
 from nikola.plugin_categories import Command
 
+
 class CommandRst2Html(Command):
     """Compile reStructuredText to HTML, using Nikola architecture."""
 
