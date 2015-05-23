@@ -83,9 +83,12 @@ def jinjify(in_theme, out_theme):
     with io.open(os.path.join(out_theme, "engine"), "w+", encoding='utf-8') as outf:
         outf.write(u"jinja\n")
 
-    # Copy assets
-    # shutil.rmtree(os.path.join(out_theme, "assets"))
-    # shutil.copytree(os.path.join(in_theme, "assets"), os.path.join(out_theme, "assets"))
+    # Copy assets in bootstrap/bootstrap3
+    if child in ('bootstrap-jinja', 'bootstrap3-jinja'):
+        shutil.rmtree(os.path.join(out_theme, "assets"))
+        shutil.copytree(
+            os.path.join(in_theme, "assets"), os.path.join(out_theme, "assets"),
+            symlinks=True)
 
     # Copy bundles
     # shutil.copy(os.path.join(in_theme, "bundles"), os.path.join(out_theme, "bundles"))
