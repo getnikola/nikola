@@ -64,9 +64,39 @@ class CompileRest(PageCompiler):
         """Adds dependency to post object to check .dep file."""
         post.add_dependency(lambda: self._read_extra_deps(post), 'fragment')
 
-    def compile_html(self, source, dest, is_two_file=True):
-        """Compile reSt into HTML."""
+    def compile_html_string(self, data, source_path=None, is_two_file=True):
+        """Compile reSt into HTML strings."""
+        add_ln = 0
+        if not is_two_file:
+            spl = re.split('(\n\n|\r\n\r\n)', data, maxsplit=1)
+            data = spl[-1]
+            if len(spl) != 1:
+                # If errors occur, this will be added to the line
+                # number reported by docutils so the line number
+                # matches the actual line number (off by 7 with default
+                # metadata, could be more or less depending on the post
+                # author).
+                add_ln = len(spl[0].splitlines()) + 1
 
+        default_template_path = os.path.join(os.path.dirname(__file__), 'template.txt')
+        output, error_level, deps = rst2html(
+            data, settings_overrides={
+                'initial_header_level': 1,
+                'record_dependencies': True,
+                'stylesheet_path': None,
+                'link_stylesheet': True,
+                'syntax_highlight': 'short',
+                'math_output': 'mathjax',
+                'template': default_template_path,
+            }, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms)
+        if not isinstance(output, unicode_str):
+            # To prevent some weird bugs here or there.
+            # Original issue: empty files.  `output` became a bytestring.
+            output = output.decode('utf-8')
+        return output, error_level, deps
+
+    def compile_html(self, source, dest, is_two_file=True):
+        """Compile reSt into HTML files."""
         if not has_docutils:
             req_missing(['docutils'], 'build this site (compile reStructuredText)')
         makedirs(os.path.dirname(dest))
@@ -74,33 +104,7 @@ class CompileRest(PageCompiler):
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
-                add_ln = 0
-                if not is_two_file:
-                    spl = re.split('(\n\n|\r\n\r\n)', data, maxsplit=1)
-                    data = spl[-1]
-                    if len(spl) != 1:
-                        # If errors occur, this will be added to the line
-                        # number reported by docutils so the line number
-                        # matches the actual line number (off by 7 with default
-                        # metadata, could be more or less depending on the post
-                        # author).
-                        add_ln = len(spl[0].splitlines()) + 1
-
-                default_template_path = os.path.join(os.path.dirname(__file__), 'template.txt')
-                output, error_level, deps = rst2html(
-                    data, settings_overrides={
-                        'initial_header_level': 1,
-                        'record_dependencies': True,
-                        'stylesheet_path': None,
-                        'link_stylesheet': True,
-                        'syntax_highlight': 'short',
-                        'math_output': 'mathjax',
-                        'template': default_template_path,
-                    }, logger=self.logger, source_path=source, l_add_ln=add_ln, transforms=self.site.rst_transforms)
-                if not isinstance(output, unicode_str):
-                    # To prevent some weird bugs here or there.
-                    # Original issue: empty files.  `output` became a bytestring.
-                    output = output.decode('utf-8')
+                output, error_level, deps = self.compile_html_string(data, source, is_two_file)
                 out_file.write(output)
             deps_path = dest + '.dep'
             if deps.list:
