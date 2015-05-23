@@ -7,17 +7,17 @@ bower update
 pushd nikola/data/themes/bootstrap3/assets/js/
 ln -sf ../../../../../../bower_components/bootstrap/dist/js/*js .
 rm npm.js
-git add *js
+git add .
 popd
 
 pushd nikola/data/themes/bootstrap3/assets/css/
 ln -sf ../../../../../../bower_components/bootstrap/dist/css/* .
-git add *
+git add .
 popd
 
 pushd nikola/data/themes/bootstrap3/assets/fonts/
 ln -sf ../../../../../../bower_components/bootstrap/dist/fonts/* .
-git add *
+git add .
 popd
 
 # Link moment.js to base theme
@@ -26,10 +26,10 @@ ln -sf ../../../../../../bower_components/moment/min/moment-with-locales.min.js 
 git add moment-with-locales.min.js
 popd
 
-# Link JQuery to bootstrap theme
+# Link jQuery to bootstrap theme
 pushd nikola/data/themes/bootstrap/assets/js
 ln -sf ../../../../../../bower_components/jquery/dist/* .
-git add *
+git add .
 popd
 
 
@@ -41,7 +41,7 @@ popd
 
 pushd nikola/data/themes/bootstrap/assets/js/colorbox-i18n
 ln -sf ../../../../../../../bower_components/jquery-colorbox/i18n/* .
-git add *
+git add .
 popd
 
 pushd nikola/data/themes/bootstrap/assets/css/
@@ -51,6 +51,7 @@ popd
 
 pushd nikola/data/themes/bootstrap/assets/css/images/
 ln -sf ../../../../../../../bower_components/jquery-colorbox/example3/images/* .
-git add *
+git add .
 popd
 
+git commit -am 'bower update'
