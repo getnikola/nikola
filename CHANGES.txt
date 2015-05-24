@@ -14,6 +14,7 @@ Features
 Bugfixes
 --------
 
+* Avoid some rebuild loops (Issue #1747)
 * Better error if two posts/pages output conflict (Issue #1749)
 * Scanning of posts refactored out of core (Issue #1700)
 * github_deploy records lastdeploy timestamp like regular deploy
