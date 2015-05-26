@@ -200,7 +200,7 @@ class Post(object):
                 list(set([x.strip() for x in self.meta[lang]['tags'].split(',')])),
                 alg=natsort.ns.F | natsort.ns.IC)
             self._tags[lang] = [t for t in self._tags[lang] if t]
-            if 'draft' in self._tags[lang]:
+            if 'draft' in [_.lower() for _ in self._tags[lang]]:
                 is_draft = True
                 LOGGER.debug('The post "{0}" is a draft.'.format(self.source_path))
                 self._tags[lang].remove('draft')

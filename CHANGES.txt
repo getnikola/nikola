@@ -14,6 +14,7 @@ Features
 Bugfixes
 --------
 
+* Treat special-purpose “draft” tag case-insensitive
 * Avoid some rebuild loops (Issue #1747)
 * Better error if two posts/pages output conflict (Issue #1749)
 * Scanning of posts refactored out of core (Issue #1700)
