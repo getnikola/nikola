@@ -133,7 +133,7 @@ class Listings(Task):
                         os.path.join(
                             self.kw['output_folder'],
                             output_folder))))
-            if self.site.config['COPY_SOURCES']:
+            if self.site.config['COPY_SOURCES'] and in_name:
                 source_link = permalink[:-5]  # remove '.html'
             else:
                 source_link = None
