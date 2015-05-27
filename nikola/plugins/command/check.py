@@ -25,6 +25,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
+from collections import defaultdict
 import os
 import re
 import sys
@@ -47,11 +48,14 @@ from nikola.utils import get_logger, req_missing
 
 def _call_nikola_list(site):
     files = []
+    deps = defaultdict(list)
     for task in generate_tasks('render_site', site.gen_tasks('render_site', "Task", '')):
         files.extend(task.targets)
+        for target in task.targets:
+            deps[target].extend(task.file_dep)
     for task in generate_tasks('post_render', site.gen_tasks('render_site', "LateTask", '')):
         files.extend(task.targets)
-    return files
+    return files, deps
 
 
 def real_scan_files(site):
@@ -59,7 +63,7 @@ def real_scan_files(site):
     real_fnames = set([])
     output_folder = site.config['OUTPUT_FOLDER']
     # First check that all targets are generated in the right places
-    for fname in _call_nikola_list(site):
+    for fname in _call_nikola_list(site)[0]:
         fname = fname.strip()
         if fname.startswith(output_folder):
             task_fnames.add(fname)
@@ -173,6 +177,10 @@ class CommandCheck(Command):
         self.existing_targets.add(self.site.config['BASE_URL'])
         url_type = self.site.config['URL_TYPE']
 
+        deps = {}
+        if find_sources:
+            deps = _call_nikola_list(self.site)[1]
+
         if check_remote and requests is None:
             req_missing(['requests'], 'check remote links')
 
@@ -252,7 +260,7 @@ class CommandCheck(Command):
                         self.logger.warn("Broken link in {0}: {1}".format(filename, target))
                         if find_sources:
                             self.logger.warn("Possible sources:")
-                            self.logger.warn("\n".join(_call_nikola_list(self.site)))
+                            self.logger.warn("\n".join(deps[filename]))
                             self.logger.warn("===============================\n")
         except Exception as exc:
             self.logger.error("Error with: {0} {1}".format(filename, exc))
@@ -265,7 +273,7 @@ class CommandCheck(Command):
         failure = False
         # Maybe we should just examine all HTML files
         output_folder = self.site.config['OUTPUT_FOLDER']
-        for fname in _call_nikola_list(self.site):
+        for fname in _call_nikola_list(self.site)[0]:
             if fname.startswith(output_folder) and '.html' == fname[-5:]:
                 if self.analyze(fname, find_sources, check_remote):
                     failure = True
