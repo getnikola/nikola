@@ -34,6 +34,7 @@ try:
 except ImportError:
     from urllib.parse import unquote, urlparse, urljoin, urldefrag  # NOQA
 
+from doit.loader import generate_tasks
 import lxml.html
 try:
     import requests
@@ -44,33 +45,22 @@ from nikola.plugin_categories import Command
 from nikola.utils import get_logger, req_missing
 
 
-def _call_nikola_list(l, site, arguments):
-    class NotReallyAStream(object):
-        """A massive hack."""
-        out = []
+def _call_nikola_list(site):
+    files = []
+    for task in generate_tasks('render_site', site.gen_tasks('render_site', "Task", '')):
+        files.extend(task.targets)
+    for task in generate_tasks('post_render', site.gen_tasks('render_site', "LateTask", '')):
+        files.extend(task.targets)
+    return files
 
-        def write(self, t):
-            self.out.append(t)
-
-    oldstream = l.outstream
-    newstream = NotReallyAStream()
-    try:
-        l.outstream = newstream
-        l.parse_execute(arguments)
-        return newstream.out
-    finally:
-        l.outstream = oldstream
-
-
-def real_scan_files(l, site):
+def real_scan_files(site):
     task_fnames = set([])
     real_fnames = set([])
     output_folder = site.config['OUTPUT_FOLDER']
     # First check that all targets are generated in the right places
-    for task in _call_nikola_list(l, site, ["--all"]):
-        task = task.strip()
-        if output_folder in task and ':' in task:
-            fname = task.split(':', 1)[-1]
+    for fname in _call_nikola_list(site):
+        fname = fname.strip()
+        if output_folder in fname:
             task_fnames.add(fname)
     # And now check that there are no non-target files
     for root, dirs, files in os.walk(output_folder, followlinks=True):
@@ -154,7 +144,6 @@ class CommandCheck(Command):
     def _execute(self, options, args):
         """Check the generated site."""
         self.logger = get_logger('check', self.site.loghandlers)
-        self.l = self._doitargs['cmds'].get_plugin('list')(config=self.config, **self._doitargs)
 
         if not options['links'] and not options['files'] and not options['clean']:
             print(self.help())
@@ -262,7 +251,7 @@ class CommandCheck(Command):
                         self.logger.warn("Broken link in {0}: {1}".format(filename, target))
                         if find_sources:
                             self.logger.warn("Possible sources:")
-                            self.logger.warn("\n".join(_call_nikola_list(self.l, self.site, ["--deps", task])))
+                            self.logger.warn("\n".join(_call_nikola_list(self.site)))
                             self.logger.warn("===============================\n")
         except Exception as exc:
             self.logger.error("Error with: {0} {1}".format(filename, exc))
@@ -273,7 +262,7 @@ class CommandCheck(Command):
         self.logger.info("===============\n")
         self.logger.notice("{0} mode".format(self.site.config['URL_TYPE']))
         failure = False
-        for task in _call_nikola_list(self.l, self.site, ["--all"]):
+        for task in _call_nikola_list(self.site):
             task = task.strip()
             if task.split(':')[0] in (
                     'render_tags', 'render_archive',
@@ -290,7 +279,7 @@ class CommandCheck(Command):
         failure = False
         self.logger.info("Checking Files:")
         self.logger.info("===============\n")
-        only_on_output, only_on_input = real_scan_files(self.l, self.site)
+        only_on_output, only_on_input = real_scan_files(self.site)
 
         # Ignore folders
         only_on_output = [p for p in only_on_output if not os.path.isdir(p)]
@@ -312,7 +301,7 @@ class CommandCheck(Command):
         return failure
 
     def clean_files(self):
-        only_on_output, _ = real_scan_files(self.l, self.site)
+        only_on_output, _ = real_scan_files(self.site)
         for f in only_on_output:
             os.unlink(f)
         return True
