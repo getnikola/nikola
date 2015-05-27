@@ -61,7 +61,7 @@ def real_scan_files(site):
     # First check that all targets are generated in the right places
     for fname in _call_nikola_list(site):
         fname = fname.strip()
-        if output_folder in fname:
+        if fname.startswith(output_folder):
             task_fnames.add(fname)
     # And now check that there are no non-target files
     for root, dirs, files in os.walk(output_folder, followlinks=True):
@@ -266,7 +266,7 @@ class CommandCheck(Command):
         # Maybe we should just examine all HTML files
         output_folder = self.site.config['OUTPUT_FOLDER']
         for fname in _call_nikola_list(self.site):
-            if output_folder in fname and '.html' in fname:
+            if fname.startswith(output_folder) and '.html' == fname[-5:]:
                 if self.analyze(fname, find_sources, check_remote):
                     failure = True
         if not failure:
