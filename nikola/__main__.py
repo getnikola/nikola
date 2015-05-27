@@ -48,7 +48,7 @@ from blinker import signal
 from . import __version__
 from .plugin_categories import Command
 from .nikola import Nikola
-from .utils import sys_decode, get_root_dir, req_missing, LOGGER, STRICT_HANDLER, ColorfulStderrHandler
+from .utils import sys_decode, sys_encode, get_root_dir, req_missing, LOGGER, STRICT_HANDLER, ColorfulStderrHandler
 
 if sys.version_info[0] == 3:
     import importlib.machinery
@@ -71,20 +71,26 @@ def main(args=None):
     if args is None:
         args = sys.argv[1:]
 
+    oargs = args
+    args = [sys_decode(arg) for arg in args]
+
     conf_filename = 'conf.py'
+    conf_filename_bytes = b'conf.py'
     conf_filename_changed = False
     for index, arg in enumerate(args):
-        if arg[:7] == b'--conf=':
+        if arg[:7] == '--conf=':
             del args[index]
+            del oargs[index]
             conf_filename = arg[7:]
+            conf_filename_bytes = sys_encode(arg[7:])
             conf_filename_changed = True
             break
 
     quiet = False
-    if len(args) > 0 and args[0] == b'build' and b'--strict' in args:
+    if len(args) > 0 and args[0] == 'build' and '--strict' in args:
         LOGGER.notice('Running in strict mode')
         STRICT_HANDLER.push_application()
-    if len(args) > 0 and args[0] == b'build' and b'-q' in args or b'--quiet' in args:
+    if len(args) > 0 and args[0] == 'build' and '-q' in args or '--quiet' in args:
         nullhandler = NullHandler()
         nullhandler.push_application()
         quiet = True
@@ -112,7 +118,7 @@ def main(args=None):
             loader = importlib.machinery.SourceFileLoader("conf", conf_filename)
             conf = loader.load_module()
         else:
-            conf = imp.load_source("conf", conf_filename)
+            conf = imp.load_source("conf", conf_filename_bytes)
         config = conf.__dict__
     except Exception:
         if os.path.exists(conf_filename):
@@ -129,7 +135,7 @@ def main(args=None):
 
     invariant = False
 
-    if len(args) > 0 and args[0] == b'build' and b'--invariant' in args:
+    if len(args) > 0 and args[0] == 'build' and '--invariant' in args:
         try:
             import freezegun
             freeze = freezegun.freeze_time("2038-01-01")
@@ -153,7 +159,7 @@ def main(args=None):
     DN = DoitNikola(site, quiet)
     if _RETURN_DOITNIKOLA:
         return DN
-    _ = DN.run(args)
+    _ = DN.run(oargs)
 
     if site.invariant:
         freeze.stop()
@@ -172,7 +178,7 @@ class Help(DoitHelp):
         #          --strict, --invariant and --quiet.
         del cmds['run']
 
-        print("Nikola is a tool to create static websites and blogs. For full documentation and more information, please visit http://getnikola.com/\n\n")
+        print("Nikola is a tool to create static websites and blogs. For full documentation and more information, please visit https://getnikola.com/\n\n")
         print("Available commands:")
         for cmd_name in sorted(cmds.keys()):
             cmd = cmds[cmd_name]

@@ -442,7 +442,7 @@ class CommandInit(Command):
                         STORAGE['target'] = answer
 
         print("\nThat's it, Nikola is now configured.  Make sure to edit conf.py to your liking.")
-        print("If you are looking for themes and addons, check out http://themes.getnikola.com/ and http://plugins.getnikola.com/.")
+        print("If you are looking for themes and addons, check out https://themes.getnikola.com/ and https://plugins.getnikola.com/.")
         print("Have fun!")
         return STORAGE
 

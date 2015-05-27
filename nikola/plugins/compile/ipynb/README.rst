@@ -8,7 +8,7 @@
     (or ``ipython-xkcd``, if you want xkcd styling)
 
     More info here about themes:
-    http://getnikola.com/handbook.html#getting-more-themes
+    https://getnikola.com/handbook.html#getting-more-themes
 
     If you want to use your own theme, copy the ``ipython.min.css`` and
     ``nikola_ipython.css`` files from ``ipython`` to your theme (and include them

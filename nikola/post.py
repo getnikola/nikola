@@ -200,7 +200,7 @@ class Post(object):
                 list(set([x.strip() for x in self.meta[lang]['tags'].split(',')])),
                 alg=natsort.ns.F | natsort.ns.IC)
             self._tags[lang] = [t for t in self._tags[lang] if t]
-            if 'draft' in self._tags[lang]:
+            if 'draft' in [_.lower() for _ in self._tags[lang]]:
                 is_draft = True
                 LOGGER.debug('The post "{0}" is a draft.'.format(self.source_path))
                 self._tags[lang].remove('draft')
@@ -235,7 +235,14 @@ class Post(object):
         m = hashlib.md5()
         # source_path modification date (to avoid reading it)
         m.update(utils.unicode_str(os.stat(self.source_path).st_mtime).encode('utf-8'))
-        m.update(utils.unicode_str(json.dumps(self.meta, cls=utils.CustomEncoder, sort_keys=True)).encode('utf-8'))
+        clean_meta = {}
+        for k, v in self.meta.items():
+            sub_meta = {}
+            clean_meta[k] = sub_meta
+            for kk, vv in v.items():
+                if vv:
+                    sub_meta[kk] = vv
+        m.update(utils.unicode_str(json.dumps(clean_meta, cls=utils.CustomEncoder, sort_keys=True)).encode('utf-8'))
         return '<Post: {0} {1}>'.format(self.source_path, m.hexdigest())
 
     def _has_pretty_url(self, lang):
