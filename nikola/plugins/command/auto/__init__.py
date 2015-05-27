@@ -211,7 +211,7 @@ class CommandAuto(Command):
         if os.path.isdir(f_path):
             f_path = os.path.join(f_path, self.site.config['INDEX_FILE'])
 
-        if puri.path == '/robots.txt':
+        if p_uri.path == '/robots.txt':
             start_response(b'200 OK', [(b'Content-type', 'txt/plain')])
             return '''User-Agent: *\nDisallow: /\n'''
         elif os.path.isfile(f_path):
