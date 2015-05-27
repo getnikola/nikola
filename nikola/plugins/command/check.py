@@ -53,6 +53,7 @@ def _call_nikola_list(site):
         files.extend(task.targets)
     return files
 
+
 def real_scan_files(site):
     task_fnames = set([])
     real_fnames = set([])
