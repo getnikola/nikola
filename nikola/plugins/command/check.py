@@ -164,7 +164,7 @@ class CommandCheck(Command):
     existing_targets = set([])
     checked_remote_targets = {}
 
-    def analyze(self, task, find_sources=False, check_remote=False):
+    def analyze(self, fname, find_sources=False, check_remote=False):
         rv = False
         self.whitelist = [re.compile(x) for x in self.site.config['LINK_CHECK_WHITELIST']]
         base_url = urlparse(self.site.config['BASE_URL'])
@@ -178,7 +178,7 @@ class CommandCheck(Command):
         if url_type in ('absolute', 'full_path'):
             url_netloc_to_root = urlparse(self.site.config['BASE_URL']).path
         try:
-            filename = task.split(":")[-1]
+            filename = fname
 
             if filename.startswith(self.site.config['CACHE_FOLDER']):
                 # Do not look at links in the cache, which are not parsed by
@@ -262,14 +262,11 @@ class CommandCheck(Command):
         self.logger.info("===============\n")
         self.logger.notice("{0} mode".format(self.site.config['URL_TYPE']))
         failure = False
-        for task in _call_nikola_list(self.site):
-            task = task.strip()
-            if task.split(':')[0] in (
-                    'render_tags', 'render_archive',
-                    'render_galleries', 'render_indexes',
-                    'render_pages', 'render_posts',
-                    'render_site') and '.html' in task:
-                if self.analyze(task, find_sources, check_remote):
+        # Maybe we should just examine all HTML files
+        output_folder = self.site.config['OUTPUT_FOLDER']
+        for fname in _call_nikola_list(self.site):
+            if output_folder in fname and '.html' in fname:
+                if self.analyze(fname, find_sources, check_remote):
                     failure = True
         if not failure:
             self.logger.info("All links checked.")
