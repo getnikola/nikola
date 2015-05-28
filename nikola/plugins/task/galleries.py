@@ -25,6 +25,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import unicode_literals
+import codecs
 import io
 import datetime
 import glob
@@ -68,6 +69,7 @@ class Galleries(Task, ImageProcessor):
         site.register_path_handler('gallery', self.gallery_path)
         site.register_path_handler('gallery_global', self.gallery_global_path)
         site.register_path_handler('gallery_rss', self.gallery_rss_path)
+        site.register_path_handler('gallery_json', self.gallery_json_path)
 
         self.logger = utils.get_logger('render_galleries', site.loghandlers)
 
@@ -138,6 +140,12 @@ class Galleries(Task, ImageProcessor):
                 list(os.path.split(gallery_path)) +
                 ['rss.xml'] if _f]
 
+    def gallery_json_path(self, name, lang):
+        gallery_path = self._find_gallery_path(name)
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
+                list(os.path.split(gallery_path)) +
+                ['index.json'] if _f]
+
     def gen_tasks(self):
         """Render image galleries."""
 
@@ -197,7 +205,7 @@ class Galleries(Task, ImageProcessor):
 
                 dst = os.path.join(
                     self.kw['output_folder'],
-                    self.site.path("gallery", gallery, lang))
+                    self.site.path("gallery_json", gallery, lang))
                 dst = os.path.normpath(dst)
 
                 for k in self.site._GLOBAL_CONTEXT_TRANSLATABLE:
@@ -272,10 +280,9 @@ class Galleries(Task, ImageProcessor):
                     'file_dep': file_dep,
                     'targets': [dst],
                     'actions': [
-                        (self.render_gallery_index, (
+                        (self.render_gallery_json, (
                             template_name,
                             dst,
-                            context,
                             dest_img_list,
                             img_titles,
                             thumbs,
@@ -552,6 +559,45 @@ class Galleries(Task, ImageProcessor):
         context['photo_array'] = photo_array
         context['photo_array_json'] = json.dumps(photo_array)
         self.site.render_template(template_name, output_name, context)
+
+    def render_gallery_json(
+            self,
+            template_name,
+            output_name,
+            img_list,
+            img_titles,
+            thumbs,
+            file_dep):
+        """Build the gallery index."""
+
+        # The photo array needs to be created here, because
+        # it relies on thumbnails already being created on
+        # output
+
+        def url_from_path(p):
+            url = '/'.join(os.path.relpath(p, os.path.dirname(output_name) + os.sep).split(os.sep))
+            return url
+
+        photo_array = []
+        for img, thumb, title in zip(img_list, thumbs, img_titles):
+            w, h = _image_size_cache.get(thumb, (None, None))
+            if w is None:
+                im = Image.open(thumb)
+                w, h = im.size
+                _image_size_cache[thumb] = w, h
+            # Thumbs are files in output, we need URLs
+            photo_array.append({
+                'url': url_from_path(img),
+                'url_thumb': url_from_path(thumb),
+                'title': title,
+                'size': {
+                    'w': w,
+                    'h': h
+                },
+            })
+
+        with codecs.open(output_name, 'wb', 'utf8') as outf:
+            json.dump(photo_array, outf)
 
     def gallery_rss(self, img_list, dest_img_list, img_titles, lang, permalink, output_path, title):
         """Create a RSS showing the latest images in the gallery.
