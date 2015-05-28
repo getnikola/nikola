@@ -55,6 +55,8 @@ def _call_nikola_list(site):
             deps[target].extend(task.file_dep)
     for task in generate_tasks('post_render', site.gen_tasks('render_site', "LateTask", '')):
         files.extend(task.targets)
+        for target in task.targets:
+            deps[target].extend(task.file_dep)
     return files, deps
 
 
