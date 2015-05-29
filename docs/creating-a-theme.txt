@@ -752,9 +752,9 @@ which makes sites load faster. To do that, your theme needs a ``bundles`` file w
     outputfile1.js=thing1.js,thing2.js,...
     outputfile2.css=thing1.css,thing2.css,...
 
-For this theme, it should be like this::
+For the Lanyon theme, it should be like this::
 
-    assets/css/all.css=rst.css,code.css,lanyon.css,poole.css
+    assets/css/all.css=rst.css,code.css,lanyon.css,poole.css,custom.css
 
 **Note:** Some themes also support the ``USE_CDN`` option meaning that in some cases it will load one bundle with all CSS and in other will load some CSS files
 from a CDN and others from a bundle. This is complicated and probably not worth the effort.
