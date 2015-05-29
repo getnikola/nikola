@@ -22,14 +22,9 @@
     {% endfor %}
     </ul>
     {% endif %}
-    {% if photo_array %}
-    <ul class="thumbnails">
-        {% for image in photo_array %}
-            <li><a href="{{ image['url'] }}" class="thumbnail image-reference" title="{{ image['title'] }}">
-                <img src="{{ image['url_thumb'] }}" alt="{{ image['title'] }}" /></a>
-        {% endfor %}
-    </ul>
-    {% endif %}
+
+    <div id="gallery_container"></div>
+
 {% if site_has_comments and enable_comments %}
     {{ comments.comment_form(None, permalink, title) }}
 {% endif %}
@@ -37,5 +32,68 @@
 
 {% block extra_head %}
 {{ super() }}
+<!-- FIXME: this goes in some CSS -->
+<style type="text/css">
+.image-block {
+    display: inline-block;
+}
+.flowr_row {
+    width: 100%;
+}
+</style>
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function createGallery() {
+    jQuery.getScript("/assets/js/flowr.plugin.js");
+    jQuery.getJSON('index.json', success = function(data) {
+        $("#gallery_container").flowr({
+        data : data,
+        height : {{ thumbnail_size }}*.6,
+        padding: 5,
+        rows: -1,
+        render : function(params) {
+            // Just return a div, string or a dom object, anything works fine
+            img = $("<img />").attr({
+                'src': params.itemData.url_thumb,
+                'width' : params.width,
+                'height' : params.height
+            }).css('max-width', '100%');
+            link = $( "<a></a>").attr({
+                'href': params.itemData.url,
+                'class': 'image-reference'
+            });
+            div = $("<div />").addClass('image-block').attr({
+                'title': params.itemData.title,
+                'data-toggle': "tooltip",
+            });
+            link.append(img);
+            div.append(link);
+//             div.hover(div.tooltip());
+            return div;
+        },
+        itemWidth : function(data) { return data.size.w; },
+        itemHeight : function(data) { return data.size.h; },
+        complete : function(params) {
+            if( jsonContent.length > params.renderedItems ) {
+                nextRenderList = jsonContent.slice( params.renderedItems );
+            }
+        }
+    });
+})};
+
+// Load JQuery if it's not there already
+if(typeof jQuery=='undefined') {
+    var headTag = document.getElementsByTagName("head")[0];
+    var jqTag = document.createElement('script');
+    jqTag.type = 'text/javascript';
+    jqTag.src = '//code.jquery.com/jquery-1.11.3.min.js';
+    jqTag.onload = createGallery;
+    headTag.appendChild(jqTag);
+} else {
+     createGallery();
+}
+</script>
 {% endblock %}

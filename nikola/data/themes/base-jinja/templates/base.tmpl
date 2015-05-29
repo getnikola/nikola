@@ -22,5 +22,6 @@
     {{ body_end }}
     {{ template_hooks['body_end']() }}
     {{ base.late_load_js() }}
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
