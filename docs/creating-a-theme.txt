@@ -746,11 +746,11 @@ Doing the same for layout-reverse, sidebar-overlay and the rest is left as an ex
 Bundles
 -------
 
-If you have ``WebAssets`` installed and the ``USE_BUNDLES`` option set to True, Nikola can put several CSS or JS files together in a larger file,
+If you have ``webassets`` installed and the ``USE_BUNDLES`` option set to True, Nikola can put several CSS or JS files together in a larger file,
 which makes sites load faster. To do that, your theme needs a ``bundles`` file where the syntax is::
 
-    outputfile1.js: thing1.js, thing2.js, ...
-    outputfile2.css: thing1.css, thing2.css, ...
+    outputfile1.js=thing1.js,thing2.js,...
+    outputfile2.css=thing1.css,thing2.css,...
 
 For this theme, it should be like this::
 
