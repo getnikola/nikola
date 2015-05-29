@@ -51,7 +51,7 @@ function createGallery() {
     jQuery.getJSON('index.json', success = function(data) {
         $("#gallery_container").flowr({
         data : data,
-        height : 600*.6,
+        height : ${thumbnail_size}*.6,
         padding: 5,
         rows: -1,
         render : function(params) {
