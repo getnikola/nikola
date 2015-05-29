@@ -203,10 +203,14 @@ class Galleries(Task, ImageProcessor):
                 # save navigation links as dependencies
                 self.kw['navigation_links|{0}'.format(lang)] = self.kw['global_context']['navigation_links'](lang)
 
-                dst = os.path.join(
+                dst_json = os.path.join(
                     self.kw['output_folder'],
                     self.site.path("gallery_json", gallery, lang))
-                dst = os.path.normpath(dst)
+                dst_json = os.path.normpath(dst_json)
+                dst_index = os.path.join(
+                    self.kw['output_folder'],
+                    self.site.path("gallery", gallery, lang))
+                dst_index = os.path.normpath(dst_index)
 
                 for k in self.site._GLOBAL_CONTEXT_TRANSLATABLE:
                     self.kw[k] = self.site.GLOBAL_CONTEXT[k](lang)
@@ -276,13 +280,15 @@ class Galleries(Task, ImageProcessor):
 
                 yield utils.apply_filters({
                     'basename': self.name,
-                    'name': dst,
+                    'name': dst_index,
                     'file_dep': file_dep,
-                    'targets': [dst],
+                    'targets': [dst_index, dst_json],
                     'actions': [
-                        (self.render_gallery_json, (
+                        (self.render_gallery_index, (
                             template_name,
-                            dst,
+                            dst_index,
+                            dst_json,
+                            context,
                             dest_img_list,
                             img_titles,
                             thumbs,
@@ -523,7 +529,8 @@ class Galleries(Task, ImageProcessor):
     def render_gallery_index(
             self,
             template_name,
-            output_name,
+            index_name,
+            json_name,
             context,
             img_list,
             img_titles,
@@ -536,7 +543,7 @@ class Galleries(Task, ImageProcessor):
         # output
 
         def url_from_path(p):
-            url = '/'.join(os.path.relpath(p, os.path.dirname(output_name) + os.sep).split(os.sep))
+            url = '/'.join(os.path.relpath(p, os.path.dirname(index_name) + os.sep).split(os.sep))
             return url
 
         photo_array = []
@@ -558,45 +565,8 @@ class Galleries(Task, ImageProcessor):
             })
         context['photo_array'] = photo_array
         context['photo_array_json'] = json.dumps(photo_array)
-        self.site.render_template(template_name, output_name, context)
-
-    def render_gallery_json(
-            self,
-            template_name,
-            output_name,
-            img_list,
-            img_titles,
-            thumbs,
-            file_dep):
-        """Build the gallery index."""
-
-        # The photo array needs to be created here, because
-        # it relies on thumbnails already being created on
-        # output
-
-        def url_from_path(p):
-            url = '/'.join(os.path.relpath(p, os.path.dirname(output_name) + os.sep).split(os.sep))
-            return url
-
-        photo_array = []
-        for img, thumb, title in zip(img_list, thumbs, img_titles):
-            w, h = _image_size_cache.get(thumb, (None, None))
-            if w is None:
-                im = Image.open(thumb)
-                w, h = im.size
-                _image_size_cache[thumb] = w, h
-            # Thumbs are files in output, we need URLs
-            photo_array.append({
-                'url': url_from_path(img),
-                'url_thumb': url_from_path(thumb),
-                'title': title,
-                'size': {
-                    'w': w,
-                    'h': h
-                },
-            })
-
-        with codecs.open(output_name, 'wb', 'utf8') as outf:
+        self.site.render_template(template_name, index_name, context)
+        with codecs.open(json_name, 'wb', 'utf8') as outf:
             json.dump(photo_array, outf)
 
     def gallery_rss(self, img_list, dest_img_list, img_titles, lang, permalink, output_path, title):
