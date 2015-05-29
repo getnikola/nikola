@@ -40,7 +40,7 @@ So::
     # Look at it
     jekyll serve & google-chrome http://localhost:4000
 
-If you do not want to install Jekyll, you can also see it in action at http://lanyon.getpoole.com/
+If you **do not want to install Jekyll**, you can also see it in action at http://lanyon.getpoole.com/
 
 Some things jump to my mind:
 
@@ -51,10 +51,10 @@ Some things jump to my mind:
 Also, from looking at `the project’s README <https://github.com/poole/lanyon/blob/master/README.md>`__
 it supports some nice configuration options:
 
-1. color schemes
-2. reverse layout
-3. sidebar overlay instead of push
-4. show the sidebar open by default, or based on a page’s metadata
+1. Color schemes
+2. Reverse layout
+3. Sidebar overlay instead of push
+4. Open the sidebar by default, or on a per-page basis by using its metadata
 
 Let’s try to make all those nice things survive the porting.
 
@@ -103,6 +103,7 @@ First, we create a site with some content in it. We’ll use the ``nikola init``
     [2015-05-28T16:02:08Z] INFO: init: A new site with example data has been created at lanyon-port.
     [2015-05-28T16:02:08Z] INFO: init: See README.txt in that folder for more information.
 
+
 Then, we create an empty theme inheriting from base. This theme will use Mako templates. If you prefer Jinja2,
 then you should use ``base-jinja`` instead::
 
@@ -111,7 +112,7 @@ then you should use ``base-jinja`` instead::
     $ mkdir themes/lanyon
     $ echo base > themes/lanyon/parent
 
-Edit conf.py and set ``THEME = 'lanyon'``. Also set ``USE_BUNDLES = False`` (just do it for now, we’ll get to bundles later).
+Edit ``conf.py`` and set ``THEME = 'lanyon'``. Also set ``USE_BUNDLES = False`` (just do it for now, we’ll get to bundles later).
 
 You can now build that site using ``nikola build`` and it will look like this:
 
@@ -187,8 +188,8 @@ Luckily, since this is all under a very liberal license, we can just copy these 
 Nikola, adapting the paths a little so that they follow our conventions::
 
     $ mkdir -p themes/lanyon/assets/css
-    $ cp ../lanyon/public/css/lanyon.css themes/lanyon/assets/css/
     $ cp ../lanyon/public/css/poole.css themes/lanyon/assets/css/
+    $ cp ../lanyon/public/css/lanyon.css themes/lanyon/assets/css/
 
 Notice I am *not* copying ``syntax.css``? That’s because Nikola handles that styles for syntax highlighting
 in a particular way, using a setting called ``CODE_COLOR_SCHEME`` where you can configure
@@ -235,8 +236,8 @@ And we will change it so it uses the lanyon styles instead of theme.css (again, 
             <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
         %else:
             <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
-            <link href="/assets/css/lanyon.css" rel="stylesheet" type="text/css">
             <link href="/assets/css/poole.css" rel="stylesheet" type="text/css">
+            <link href="/assets/css/lanyon.css" rel="stylesheet" type="text/css">
             <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
             %if has_custom_css:
                 <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
@@ -593,7 +594,7 @@ that. So, let’s use them. There is a ``html_site_title`` function in
       </div>
 
 That’s a ``<h1>`` instead of a ``<h3>`` like Lanyon does, but hey, it’s the
-right thing to do. If you want to go with an ``<h3>>`, just
+right thing to do. If you want to go with an ``<h3>``, just
 change ``html_site_title`` itself.
 
 And now we more or less have the correct page layout and styles. Except for a
@@ -719,8 +720,6 @@ the Lanyon original:
     ${helper.mathjax_script(posts)}
     </%block>
 
-Some of the typography problems were caused by loading ``lanyon.css`` and ``poole.css`` in the wrong order all the way back at the beginning of this tutorial.
-
 With these changes, it looks… similar?
 
 .. figure:: https://getnikola.com/images/lanyon-6.thumbnail.png
@@ -800,7 +799,7 @@ which makes sites load faster. To do that, your theme needs a ``bundles`` file w
 
 For the Lanyon theme, it should be like this::
 
-    assets/css/all.css=rst.css,code.css,lanyon.css,poole.css,custom.css
+    assets/css/all.css=rst.css,code.css,poole.css,lanyon.css,custom.css
 
 **Note:** Some themes also support the ``USE_CDN`` option meaning that in some cases it will load one bundle with all CSS and in other will load some CSS files
 from a CDN and others from a bundle. This is complicated and probably not worth the effort.
