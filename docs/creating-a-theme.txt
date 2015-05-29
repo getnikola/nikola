@@ -10,21 +10,21 @@
 Nikola is a static site and blog generator. So is Jekyll. While I like what we have done with Nikola,
 I do admit that Jekyll (and others!) have many more, and nicer themes than Nikola does.
 
-This document is an attempt at making it easier for 3rd parties (that means you people! ;-) to
+This document is an attempt at making it easier for 3rd parties (that means *you* people! ;-) to
 create themes. Since I **suck** at designing websites, I asked for opinions on themes to port,
-and got some feedback. Since this is **Not So Hard (TM)** I will try to make time to port a few
+and got some feedback. Since this is **Not So Hard™**, I will try to make time to port a few
 and see what happens.
 
-Today's theme is `Lanyon <https://github.com/poole/lanyon>`__ which is written by `@mdo <https://twitter.com/mdo>`__
+Today’s theme is `Lanyon <https://github.com/poole/lanyon>`__ which is written by `@mdo <https://twitter.com/mdo>`__
 and released under a MIT license, which is liberal enough.
 
-So, let's get started.
+So, let’s get started.
 
 Checking It Out
 ---------------
 
 The first step in porting a theme is making the original theme work. Lanyon is awesome in that its
-`github prohject <https://github.com/poole/lanyon>`__ is a full site!
+`GitHub project <https://github.com/poole/lanyon>`__ is a full site!
 
 So::
 
@@ -40,30 +40,30 @@ So::
     # Look at it
     jekyll serve & google-chrome http://localhost:4000
 
-If you want, you can also see it in action at http://lanyon.getpoole.com/
+If you do not want to install Jekyll, you can also see it in action at http://lanyon.getpoole.com/
 
 Some things jump to my mind:
 
-1) This is one fine looking theme
-2) Very clear and readable
-3) Nice hidden navigation-thingy
+1. This is one fine looking theme
+2. Very clear and readable
+3. Nice hidden navigation-thingy
 
-Also, from looking at `the project's README <https://github.com/poole/lanyon/blob/master/README.md>`__
+Also, from looking at `the project’s README <https://github.com/poole/lanyon/blob/master/README.md>`__
 it supports some nice configuration options:
 
-1) color scheme themes
-2) reverse layout
-3) sidebar overlay instead of push
-4) show the sidebar open by default, or based on a page's metadata
+1. color schemes
+2. reverse layout
+3. sidebar overlay instead of push
+4. show the sidebar open by default, or based on a page’s metadata
 
-Let's try to make all those nice things survive the porting.
+Let’s try to make all those nice things survive the porting.
 
 Starting From Somewhere
 -----------------------
 
 Nikola has a nice, clean, base theme from which you can start when writing your own theme.
 Why start from that instead of from a clean slate? Because theme inheritance is going to save you a ton of work,
-that's why. If you start from scratch you won't be able to build **anything** until you have a bunch of
+that’s why. If you start from scratch you won’t be able to build **anything** until you have a bunch of
 templates written. Starting from base, you just need to hack on the things you **need** to change.
 
 First, we create a site with some content in it. We’ll use the ``nikola init`` wizard (with the ``--demo`` option) for that::
@@ -104,27 +104,27 @@ First, we create a site with some content in it. We’ll use the ``nikola init``
     [2015-05-28T16:02:08Z] INFO: init: See README.txt in that folder for more information.
 
 Then, we create an empty theme inheriting from base. This theme will use Mako templates. If you prefer Jinja2,
-then you should use base-jinja instead::
+then you should use ``base-jinja`` instead::
 
     $ cd lanyon-port/
     $ mkdir themes
     $ mkdir themes/lanyon
     $ echo base > themes/lanyon/parent
 
-Edit conf.py and set ``THEME = 'lanyon'``. Also set ``USE_BUNDLES = False`` (just do it for now, we'll get to bundles later).
+Edit conf.py and set ``THEME = 'lanyon'``. Also set ``USE_BUNDLES = False`` (just do it for now, we’ll get to bundles later).
 
 You can now build that site using ``nikola build`` and it will look like this:
 
-.. figure:: /images/lanyon-0.thumbnail.png
-   :target: /images/lanyon-0.png
+.. figure:: https://getnikola.com/images/lanyon-0.thumbnail.png
+   :target: https://getnikola.com/images/lanyon-0.png
 
    This is just the base theme.
 
 Basic CSS
 ---------
 
-The next step is to know exactly how Lanyon's pages work. To do this, we read its HTML.
-First let's look at the head element:
+The next step is to know exactly how Lanyon’s pages work. To do this, we read its HTML.
+First let’s look at the head element:
 
 .. code:: html
 
@@ -184,22 +184,23 @@ see something fairly similar:
 
 
 Luckily, since this is all under a very liberal license, we can just copy these CSS files into
-Nikola, adapting a little the paths so that they follow
-our conventions::
+Nikola, adapting the paths a little so that they follow our conventions::
 
     $ mkdir -p themes/lanyon/assets/css
     $ cp ../lanyon/public/css/lanyon.css themes/lanyon/assets/css/
     $ cp ../lanyon/public/css/poole.css themes/lanyon/assets/css/
 
-Notice I am *not* copying ``syntax.css``? That's because Nikola handles that styles for syntax highlighting
+Notice I am *not* copying ``syntax.css``? That’s because Nikola handles that styles for syntax highlighting
 in a particular way, using a setting called ``CODE_COLOR_SCHEME`` where you can configure
 what color scheme the syntax highlighter uses. You can use your own ``assets/css/code.css`` if you
-don't like the provided ones.
+don’t like the provided ones.
 
-But how do I tell **our** lanyon theme to use those CSS files instead of whatever it's using now?
-By giving our theme its own base_helper.tmpl
+But how do I tell **our** lanyon theme to use those CSS files instead of whatever it’s using now?
+By giving our theme its own base_helper.tmpl.
 
-That file is a **template** used to generate parts of the pages. It's large and complicated but we don't need to change a lot of it. First, get it from `Nikola's source code <https://github.com/getnikola/nikola/blob/master/nikola/data/themes/base/templates/base_helper.tmpl>`__ and put a copy in ``themes/lanyon/templates/base_helper.tmpl``::
+That file is a **template** used to generate parts of the pages. It’s large and
+complicated but we don’t need to change a lot of it. First, get it from
+`Nikola’s source code <https://github.com/getnikola/nikola/blob/master/nikola/data/themes/base/templates/base_helper.tmpl>`__ and put a copy in ``themes/lanyon/templates/base_helper.tmpl``::
 
     $ mkdir themes/lanyon/templates
     $ curl https://raw.githubusercontent.com/getnikola/nikola/master/nikola/data/themes/base/templates/base_helper.tmpl > themes/lanyon/templates/base_helper.tmpl
@@ -244,17 +245,17 @@ And we will change it so it uses the lanyon styles instead of theme.css (again, 
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400">
     </%def>
 
-.. figure:: /images/lanyon-1.thumbnail.png
-   :target: /images/lanyon-1.png
+.. figure:: https://getnikola.com/images/lanyon-1.thumbnail.png
+   :target: https://getnikola.com/images/lanyon-1.png
 
-   You may say this looks like crap. Don't worry, we are just starting :-)
+   You may say this looks like crap. Don’t worry, we are just starting :-)
 
 Page Layout
 -----------
 
 This is trickier but should be no problem for people with a basic understanding of HTML and a desire to make a theme!
 
-Lanyon's content is split in two parts: a sidebar and the rest. The sidebar looks like this (shortened for comprehension):
+Lanyon’s content is split in two parts: a sidebar and the rest. The sidebar looks like this (shortened for comprehension):
 
 .. code:: html
 
@@ -280,7 +281,7 @@ So, a plain body, with an input element that controls the sidebar, a div which i
 Inside that, div.sidebar-item for items, and a nav with "navigational links". This is followed by the "masthead" and
 the content itself, which we will look at in a bit.
 
-If we look for the equivalent code in Nikola's side, we see this:
+If we look for the equivalent code in Nikola’s side, we see this:
 
 .. code:: html
 
@@ -297,9 +298,9 @@ If we look for the equivalent code in Nikola's side, we see this:
 So Nikola has the "masthead" above the nav element, and uses list elements in nav instead of bare links.
 Not all that different is it?
 
-Let's make it lanyon-like! We will need 2 more templates: `base.tmpl <https://github.com/getnikola/nikola/blob/master/nikola/data/themes/base/templates/base.tmpl>`__ and `base_header.tmpl <https://github.com/getnikola/nikola/blob/master/nikola/data/themes/base/templates/base_header.tmpl>`__. Get them and put them in your ``themes/lanyon/templates`` folder.
+Let’s make it lanyon-like! We will need 2 more templates: `base.tmpl <https://github.com/getnikola/nikola/blob/master/nikola/data/themes/base/templates/base.tmpl>`__ and `base_header.tmpl <https://github.com/getnikola/nikola/blob/master/nikola/data/themes/base/templates/base_header.tmpl>`__. Get them and put them in your ``themes/lanyon/templates`` folder.
 
-Let's look at ``base.tmpl`` first. It's short and nice, it looks like a webpage without
+Let’s look at ``base.tmpl`` first. It’s short and nice, it looks like a webpage without
 all the interesting stuff:
 
 .. code:: html+mako
@@ -377,13 +378,15 @@ So, first, lets change that base template to be more lanyon-like:
     </body>
     </html>
 
-.. figure:: /images/lanyon-2.thumbnail.png
-   :target: /images/lanyon-2.png
+.. figure:: https://getnikola.com/images/lanyon-2.thumbnail.png
+   :target: https://getnikola.com/images/lanyon-2.png
 
-   And that's after I exposed the sidebar by clicking on an invisible widget!
+   And that’s after I exposed the sidebar by clicking on an invisible widget!
 
-One problem, which causes that yellow color in the sidebar is a CSS conflict. We are loading rst.css which specifies
-the background color of ``div.sidebar`` which is more specific than lanyon.css, which specifies for ``.sidebar`` alone.
+One problem, which causes that yellow color in the sidebar is a CSS conflict.
+We are loading ``rst.css`` which specifies
+the background color of ``div.sidebar`` which is more specific than
+``lanyon.css``, which specifies for ``.sidebar`` alone.
 
 There are many ways to fix this, I chose to change lanyon.css to also use div.sidebar:
 
@@ -415,14 +418,14 @@ Another problem is that the contents of the nav element are wrong. They are not 
         </nav>
     </%def>
 
-**Note: this means this theme will not support submenus in navigation. If you want that, I'll happily take a patch.**
+**Note: this means this theme will not support submenus in navigation. If you want that, I’ll happily take a patch.**
 
-.. figure:: /images/lanyon-3.thumbnail.png
-   :target: /images/lanyon-3.png
+.. figure:: https://getnikola.com/images/lanyon-3.thumbnail.png
+   :target: https://getnikola.com/images/lanyon-3.png
 
    Starting to see a resemblance?
 
-Now let's look at the content. In Lanyon, this is how the "main" content looks:
+Now let’s look at the content. In Lanyon, this is how the "main" content looks:
 
 .. code:: html
 
@@ -450,8 +453,9 @@ Now let's look at the content. In Lanyon, this is how the "main" content looks:
     </body>
     </html>
 
-Everything inside the "container content" div is ...  the content. The rest is a masthead with the site title
-and at the bottom a label for the sidebar's toggle. Easy to do in ``base.tmpl`` (only showing relevant part):
+Everything inside the "container content" div is… the content. The rest is a masthead with the site title
+and at the bottom a label for the sidebar toggle. Easy to do in ``base.tmpl``
+(only showing the relevant part):
 
 .. code:: html+mako
 
@@ -479,100 +483,105 @@ and at the bottom a label for the sidebar's toggle. Easy to do in ``base.tmpl`` 
     </body>
     </html>
 
-.. figure:: /images/lanyon-4.thumbnail.png
-   :target: /images/lanyon-4.png
+.. figure:: https://getnikola.com/images/lanyon-4.thumbnail.png
+   :target: https://getnikola.com/images/lanyon-4.png
 
    Getting there!
 
-The sidebar looks bad because of yet more CSS conflicts with rst.css. By adding some extra styling in lanyon.css, it will look better.
+The sidebar looks bad because of yet more CSS conflicts with ``rst.css``. By
+adding some extra styling in ``lanyon.css``, it will look better.
 
 .. code:: css
 
     /* Style and "hide" the sidebar */
-    div.sidebar,.sidebar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: -14rem;
-    width: 14rem;
-    visibility: hidden;
-    overflow-y: auto;
-    padding: 0;
-    margin: 0;
-    border: none;
-    font-family: "PT Sans", Helvetica, Arial, sans-serif;
-    font-size: .875rem; /* 15px */
-    color: rgba(255,255,255,.6);
-    background-color: #202020;
-    -webkit-transition: all .3s ease-in-out;
-            transition: all .3s ease-in-out;
+    div.sidebar, .sidebar {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: -14rem;
+      width: 14rem;
+      visibility: hidden;
+      overflow-y: auto;
+      padding: 0;
+      margin: 0;
+      border: none;
+      font-family: "PT Sans", Helvetica, Arial, sans-serif;
+      font-size: .875rem; /* 15px */
+      color: rgba(255,255,255,.6);
+      background-color: #202020;
+      -webkit-transition: all .3s ease-in-out;
+              transition: all .3s ease-in-out;
     }
 
-Also, the accessibility link on top is visible when it should not. That's because we removed "theme.css" from the base theme, and with it, we lost a couple of classes. We can add them in lanyon.css, along with others used by other
+Also, the accessibility link on top is visible when it should not. That’s
+because we removed ``theme.css`` from the base theme, and with it, we lost a
+couple of classes. We can add them in ``lanyon.css``, along with others used by other
 pieces of the site:
 
 .. code:: css
 
     .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            border: 0;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
     }
 
     .sr-only-focusable:active,
     .sr-only-focusable:focus {
-            position: static;
-            width: auto;
-            height: auto;
-            margin: 0;
-            overflow: visible;
-            clip: auto;
+      position: static;
+      width: auto;
+      height: auto;
+      margin: 0;
+      overflow: visible;
+      clip: auto;
     }
 
     .breadcrumb {
-            padding: 8px 15px;
-            margin-bottom: 20px;
-            list-style: none;
+      padding: 8px 15px;
+      margin-bottom: 20px;
+      list-style: none;
     }
 
     .breadcrumb > li {
-            display: inline-block;
-            margin-right: 0;
-            margin-left: 0;
+      display: inline-block;
+      margin-right: 0;
+      margin-left: 0;
     }
 
     .breadcrumb > li:after {
-            content: ' / ';
-            color: #888;
+      content: ' / ';
+      color: #888;
     }
 
     .breadcrumb > li:last-of-type:after {
-            content: '';
-            margin-left: 0;
+      content: '';
+      margin-left: 0;
     }
 
     .thumbnails > li {
-            display: inline-block;
-            margin-right: 10px;
+      display: inline-block;
+      margin-right: 10px;
     }
 
     .thumbnails > li:last-of-type {
-            margin-right: 0;
+      margin-right: 0;
     }
 
 
-.. figure:: /images/lanyon-5.thumbnail.png
-   :target: /images/lanyon-5.png
+.. figure:: https://getnikola.com/images/lanyon-5.thumbnail.png
+   :target: https://getnikola.com/images/lanyon-5.png
 
    Little by little, things look better.
 
-One clear problem is that the title "Lanyon A Jekyll theme" is set in the theme itself. We don't do that sort of things
-in Nikola, we have settings for that. So, let's use it. There is a ``html_site_title`` function in ``base_helper.tmpl`` which is just the thing. So we change base.tmpl to use it:
+One clear problem is that the title "Lanyon · A Jekyll theme" is set in the
+theme itself. We don’t do that sort of thing in Nikola, we have settings for
+that. So, let’s use them. There is a ``html_site_title`` function in
+``base_helper.tmpl`` which is just the thing. So we change base.tmpl to use it:
 
 .. code:: html+mako
 
@@ -583,10 +592,12 @@ in Nikola, we have settings for that. So, let's use it. There is a ``html_site_t
         </div>
       </div>
 
-That's a H1 instead of a H3 like Lanyon does, but hey, it's the right thing to do. If you want to go with an H3, just
+That’s a ``<h1>`` instead of a ``<h3>`` like Lanyon does, but hey, it’s the
+right thing to do. If you want to go with an ``<h3>>`, just
 change ``html_site_title`` itself.
 
-And now we more or less have the correct page layout and styles. Except for a rather large thing...
+And now we more or less have the correct page layout and styles. Except for a
+rather large thing…
 
 Typography
 ----------
@@ -594,7 +605,7 @@ Typography
 You can see in the previous screenshot that text still looks quite different in our port: Serif versus Sans-Serif
 content, and the titles have different colors!
 
-Let's start with the titles. Here's how they look in Lanyon:
+Let’s start with the titles. Here’s how they look in Lanyon:
 
 .. code:: html
 
@@ -619,9 +630,11 @@ So, it looks like we will have to fix ``html_site_title`` after all:
         </h3>
     </%def>
 
-As for the actual content, that's not in any of the templates we have seen so far. The page you see is an
-"index.tmpl" page, which means it's a list of blog posts shown one below the other. Obviously it's not doing
-things in the way the Lanyon CSS expects it to. Here's the original, which you can find in Nikola's source
+As for the actual content, that’s not in any of the templates we have seen so far. The page you see is an
+"index.tmpl" page, which means it’s a list of blog posts shown one below the
+other. Obviously it’s not doing
+things in the way the Lanyon CSS expects it to. Here’s the original, which you
+can find in Nikola’s source
 code:
 
 .. code:: html+mako
@@ -708,14 +721,14 @@ the Lanyon original:
 
 Some of the typography problems were caused by loading ``lanyon.css`` and ``poole.css`` in the wrong order all the way back at the beginning of this tutorial.
 
-With these changes, it looks ... similar?
+With these changes, it looks… similar?
 
-.. figure:: /images/lanyon-6.thumbnail.png
-   :target: /images/lanyon-6.png
+.. figure:: https://getnikola.com/images/lanyon-6.thumbnail.png
+   :target: https://getnikola.com/images/lanyon-6.png
 
    It does!
 
-Similar changes (basically adding classnames to elements) needed to be done in ``post_header.tmpl``:
+Similar changes (basically adding class names to elements) needed to be done in ``post_header.tmpl``:
 
 .. code:: html+mako
 
@@ -740,10 +753,10 @@ Customization
 -------------
 
 The original Lanyon theme supports some personalization options. It suggests you do them by tweaking the templates, and
-you *can* do that in Nikola's port also. But we prefer to use options for that, so that you can get a later, better
+you *can* also do that in the Nikola port. But we prefer to use options for that, so that you can get a later, better
 version of the theme and it will still "just work".
 
-Let's see the color schemes first. They apply easily, just tweak your ``body`` element like this:
+Let’s see the color schemes first. They apply easily, just tweak your ``body`` element like this:
 
 .. code:: html
 
@@ -761,7 +774,7 @@ We can tweak ``base.tmpl`` to do just that:
     <body>
     %endif
 
-And then we can put the options in conf.py's ``GLOBAL_CONTEXT``:
+And then we can put the options in conf.py’s ``GLOBAL_CONTEXT``:
 
 .. code:: python
 
@@ -769,12 +782,12 @@ And then we can put the options in conf.py's ``GLOBAL_CONTEXT``:
         "lanyon_subtheme": "theme-base-08"
     }
 
-.. figure:: /images/lanyon-7.thumbnail.png
-   :target: /images/lanyon-7.png
+.. figure:: https://getnikola.com/images/lanyon-7.thumbnail.png
+   :target: https://getnikola.com/images/lanyon-7.png
 
    Look at it, all themed up.
 
-Doing the same for layout-reverse, sidebar-overlay and the rest is left as an excercise for the reader.
+Doing the same for layout-reverse, sidebar-overlay and the rest is left as an exercise for the reader.
 
 Bundles
 -------
@@ -795,6 +808,6 @@ from a CDN and others from a bundle. This is complicated and probably not worth 
 The End
 -------
 
-And that's it, that's a whole theme. Eventually, once people start using it, they will notice small broken details, which will need handling one at a time.
+And that’s it, that’s a whole theme. Eventually, once people start using it, they will notice small broken details, which will need handling one at a time.
 
 This theme should be available in http://themes.getnikola.com#lanyon and you can see it in action at https://themes.getnikola.com/v7/lanyon/index.html
