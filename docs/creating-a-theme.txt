@@ -508,7 +508,8 @@ The sidebar looks bad because of yet more CSS conflicts with rst.css. By adding 
             transition: all .3s ease-in-out;
     }
 
-Also, the accessibility link on top is visible when it should not. That's because we removed "theme.css" from the base theme, and with it, we lost a couple of classes. We can add them in lanyon.css:
+Also, the accessibility link on top is visible when it should not. That's because we removed "theme.css" from the base theme, and with it, we lost a couple of classes. We can add them in lanyon.css, along with others used by other
+pieces of the site:
 
 .. code:: css
 
@@ -532,6 +533,38 @@ Also, the accessibility link on top is visible when it should not. That's becaus
             overflow: visible;
             clip: auto;
     }
+
+    .breadcrumb {
+            padding: 8px 15px;
+            margin-bottom: 20px;
+            list-style: none;
+    }
+
+    .breadcrumb > li {
+            display: inline-block;
+            margin-right: 0;
+            margin-left: 0;
+    }
+
+    .breadcrumb > li:after {
+            content: ' / ';
+            color: #888;
+    }
+
+    .breadcrumb > li:last-of-type:after {
+            content: '';
+            margin-left: 0;
+    }
+
+    .thumbnails > li {
+            display: inline-block;
+            margin-right: 10px;
+    }
+
+    .thumbnails > li:last-of-type {
+            margin-right: 0;
+    }
+
 
 .. figure:: /images/lanyon-5.thumbnail.png
    :target: /images/lanyon-5.png
