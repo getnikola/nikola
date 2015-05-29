@@ -22,42 +22,34 @@
     </ul>
     %endif
 
-<div id="gallery_container"></div>
-%if photo_array:
-<noscript>
-<ul class="thumbnails">
-    %for image in photo_array:
-        <li><a href="${image['url']}" class="thumbnail image-reference" title="${image['title']}">
-            <img src="${image['url_thumb']}" alt="${image['title']}" /></a>
-    %endfor
-</ul>
-</noscript>
-%endif
+    <div id="gallery_container"></div>
+
 %if site_has_comments and enable_comments:
-${comments.comment_form(None, permalink, title)}
+    ${comments.comment_form(None, permalink, title)}
 %endif
 </%block>
 
 <%block name="extra_head">
 ${parent.extra_head()}
-<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
+<!-- FIXME: this goes in some CSS -->
 <style type="text/css">
-    .image-block {
-        display: inline-block;
-    }
-    .flowr_row {
-        width: 100%;
-    }
-    </style>
+.image-block {
+    display: inline-block;
+}
+.flowr_row {
+    width: 100%;
+}
+</style>
+<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 </%block>
 
-
 <%block name="extra_js">
-<script src="/assets/js/flowr.plugin.js"></script>
 <script>
-jsonContent = ${photo_array_json};
-$("#gallery_container").flowr({
-        data : jsonContent,
+function createGallery() {
+    jQuery.getScript("/assets/js/flowr.plugin.js");
+    jQuery.getJSON('index.json', success = function(data) {
+        $("#gallery_container").flowr({
+        data : data,
         height : ${thumbnail_size}*.6,
         padding: 5,
         rows: -1,
@@ -78,7 +70,7 @@ $("#gallery_container").flowr({
             });
             link.append(img);
             div.append(link);
-            div.hover(div.tooltip());
+//             div.hover(div.tooltip());
             return div;
         },
         itemWidth : function(data) { return data.size.w; },
@@ -89,6 +81,19 @@ $("#gallery_container").flowr({
             }
         }
     });
+})};
+
+// Load JQuery if it's not there already
+if(typeof jQuery=='undefined') {
+    var headTag = document.getElementsByTagName("head")[0];
+    var jqTag = document.createElement('script');
+    jqTag.type = 'text/javascript';
+    jqTag.src = '//code.jquery.com/jquery-1.11.3.min.js';
+    jqTag.onload = createGallery;
+    headTag.appendChild(jqTag);
+} else {
+     createGallery();
+}
 $("a.image-reference").colorbox({rel:"gal", maxWidth:"100%",maxHeight:"100%",scalePhotos:true});
 </script>
 </%block>
