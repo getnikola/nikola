@@ -66,6 +66,7 @@ ERROR {}
 </html>
 '''
 
+
 class CommandAuto(Command):
     """Start debugging console."""
     name = "auto"
