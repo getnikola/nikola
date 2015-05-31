@@ -195,7 +195,8 @@ class CommandAuto(Command):
         try:
             ws.serve_forever()
         except KeyboardInterrupt:
-            ws.server_close()
+            self.logger.info("Server is shutting down.")
+            exit(130)
 
     def do_rebuild(self, event):
         p = subprocess.Popen(self.command_line, shell=True, stderr=subprocess.PIPE)
