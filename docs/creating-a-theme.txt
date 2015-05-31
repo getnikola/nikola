@@ -194,7 +194,7 @@ Nikola, adapting the paths a little so that they follow our conventions::
 Notice I am *not* copying ``syntax.css``? That’s because Nikola handles that styles for syntax highlighting
 in a particular way, using a setting called ``CODE_COLOR_SCHEME`` where you can configure
 what color scheme the syntax highlighter uses. You can use your own ``assets/css/code.css`` if you
-don’t like the provided ones.
+don’t like the provided ones.  Nikola **requires** ``assets/css/rst.css`` and ``assets/css/code.css`` to function properly.
 
 But how do I tell **our** lanyon theme to use those CSS files instead of whatever it’s using now?
 By giving our theme its own base_helper.tmpl.
