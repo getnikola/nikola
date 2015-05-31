@@ -85,8 +85,8 @@ class CommandAuto(Command):
             'short': 'a',
             'long': 'address',
             'type': str,
-            'default': '0.0.0.0',
-            'help': 'Address to bind (default: 0.0.0.0 – all local IPv4 interfaces)',
+            'default': '127.0.0.1',
+            'help': 'Address to bind (default: 127.0.0.1 – localhost)',
         },
         {
             'name': 'browser',
