@@ -14,6 +14,7 @@ Features
 Bugfixes
 --------
 
+* Extract ``nikola check`` target list from actual task list instead of parsing (Issue #1758)
 * Treat special-purpose “draft” tag case-insensitive
 * Avoid some rebuild loops (Issue #1747)
 * Better error if two posts/pages output conflict (Issue #1749)
