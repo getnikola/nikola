@@ -57,6 +57,14 @@ MASK = pyinotify.IN_DELETE | pyinotify.IN_CREATE | pyinotify.IN_MODIFY
 error_signal = signal('error')
 refresh_signal = signal('refresh')
 
+ERROR_N = '''<html>
+<head>
+</head>
+<boody>
+ERROR {}
+</body>
+</html>
+'''
 
 class CommandAuto(Command):
     """Start debugging console."""
@@ -223,7 +231,7 @@ class CommandAuto(Command):
                 start_response(b'200 OK', [(b'Content-type', mimetype)])
                 return self.inject_js(mimetype, fd.read())
         start_response(b'404 ERR', [])
-        return ['404 {0}'.format(uri)]
+        return self.inject_js('text/html', ERROR_N.format(404).format(uri))
 
     def inject_js(self, mimetype, data):
         """Inject livereload.js in HTML files."""
