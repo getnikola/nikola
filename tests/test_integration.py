@@ -232,6 +232,24 @@ class TranslationsPatternTest1(TranslatedBuildTest):
             outf.write(data)
 
 
+class RedirectionsTest1(EmptyBuildTest):
+    """Check REDIRECTS"""
+
+    @classmethod
+    def patch_site(self):
+        """"""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with io.open(conf_path, "a", encoding="utf8") as outf:
+            outf.write("""\n\nREDIRECTS = [ ("posts/foo.html", "/foo/bar.html"), ]\n\n""")
+
+    @classmethod
+    def fill_site(self):
+        target_path = os.path.join(self.target_dir, "files", "foo", "bar.html")
+        nikola.utils.makedirs(os.path.join(self.target_dir, "files", "foo"))
+        with io.open(target_path, "w+", encoding="utf8") as outf:
+            outf.write("foo")
+
+
 class MissingDefaultLanguageTest(TranslatedBuildTest):
     """Make sure posts only in secondary languages work."""
 
