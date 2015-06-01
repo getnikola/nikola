@@ -58,17 +58,18 @@ class ScaleImage(Task, ImageProcessor):
                     continue
                 dst_file = os.path.join(dst_dir, src_name)
                 src_file = os.path.join(root, src_name)
+                thumb_file = '.thumbnail'.join(os.path.splitext(dst_file))
                 yield {
                     'name': dst_file,
                     'file_dep': [src_file],
-                    'targets': [dst_file],
-                    'actions': [(self.process_image, (src_file, dst_file))],
+                    'targets': [dst_file, thumb_file],
+                    'actions': [(self.process_image, (src_file, dst_file, thumb_file))],
                     'clean': True,
                 }
 
-    def process_image(self, src, dst):
+    def process_image(self, src, dst, thumb):
         self.resize_image(src, dst, self.kw['max_image_size'], False)
-        self.resize_image(src, '.thumbnail'.join(os.path.splitext(dst)), self.kw['image_thumbnail_size'], False)
+        self.resize_image(src, thumb, self.kw['image_thumbnail_size'], False)
 
     def gen_tasks(self):
         """Copy static files into the output folder."""
