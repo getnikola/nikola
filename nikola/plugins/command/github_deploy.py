@@ -86,8 +86,7 @@ class CommandGitHubDeploy(Command):
             sys.exit(build)
 
         # Clean non-target files
-        l = self._doitargs['cmds'].get_plugin('list')(config=self.config, **self._doitargs)
-        only_on_output, _ = real_scan_files(l, self.site)
+        only_on_output, _ = real_scan_files(self.site)
         for f in only_on_output:
             os.unlink(f)
 
