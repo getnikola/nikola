@@ -238,7 +238,7 @@ class CommandCheck(Command):
                 if url_type == 'rel_path':
                     if target.startswith('/'):
                         target_filename = os.path.abspath(
-                            os.path.join(os.path.dirname(filename), unquote(target.lstrip('/')))
+                            os.path.join(os.path.dirname(filename), unquote(target.lstrip('/'))))
                     else:  # Relative path
                         target_filename = os.path.abspath(
                             os.path.join(os.path.dirname(filename), unquote(target)))
