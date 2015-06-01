@@ -236,9 +236,12 @@ class CommandCheck(Command):
                     continue
 
                 if url_type == 'rel_path':
-                    target = target.lstrip('/')
-                    target_filename = os.path.abspath(
-                        os.path.join(os.path.dirname(filename), unquote(target)))
+                    if target.startswith('/'):
+                        target_filename = os.path.abspath(
+                            os.path.join(os.path.dirname(filename), unquote(target.lstrip('/')))
+                    else:  # Relative path
+                        target_filename = os.path.abspath(
+                            os.path.join(os.path.dirname(filename), unquote(target)))
 
                 elif url_type in ('full_path', 'absolute'):
                     if url_type == 'absolute':
