@@ -236,6 +236,7 @@ class CommandCheck(Command):
                     continue
 
                 if url_type == 'rel_path':
+                    target = target.lstrip('/')
                     target_filename = os.path.abspath(
                         os.path.join(os.path.dirname(filename), unquote(target)))
 
