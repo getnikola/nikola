@@ -28,6 +28,7 @@
 
 from __future__ import unicode_literals, print_function
 import io
+import json
 import os
 
 try:
@@ -53,7 +54,6 @@ class CompileIPynb(PageCompiler):
     """Compile IPynb into HTML."""
 
     name = "ipynb"
-    supports_onefile = False
     demote_headers = True
 
     def compile_html(self, source, dest, is_two_file=True):
@@ -82,38 +82,47 @@ class CompileIPynb(PageCompiler):
         # the user crafted the ipynb by hand and did not add it.
         return nb_json.get('metadata', {}).get('nikola', {})
 
-    def create_post(self, path, **kw):
+    def create_post(self, path, kernel, **kw):
         content = kw.pop('content', None)
         onefile = kw.pop('onefile', False)
         # is_page is not needed to create the file
         kw.pop('is_page', False)
 
+        metadata = {}
+        metadata.update(self.default_metadata)
+        metadata.update(kw)
+
         makedirs(os.path.dirname(path))
-        if onefile:
-            raise Exception('The one-file format is not supported by this compiler.')
         with io.open(path, "w+", encoding="utf8") as fd:
-            if not content.startswith("Write your"):
-                fd.write(content)
+            kernel_meta = [kernel.capitalize(), kernel, kernel]
+            if onefile:
+                kernel_meta.append(json.dumps(metadata, sort_keys=True, indent=2))
             else:
-                fd.write("""{
- "metadata": {
-  "name": ""
- },
- "nbformat": 3,
- "nbformat_minor": 0,
- "worksheets": [
+                empty = {}
+                kernel_meta.append(json.dumps(empty))
+
+            fd.write(NOTEBOOK_TEMPLATE % tuple(kernel_meta))
+
+NOTEBOOK_TEMPLATE = """{
+ "cells": [
   {
-   "cells": [
-    {
-     "cell_type": "code",
-     "collapsed": false,
-     "input": [],
-     "language": "python",
-     "metadata": {},
-     "outputs": []
-    }
-   ],
-   "metadata": {}
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": []
   }
- ]
-}""")
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "%s",
+   "language": "%s",
+   "name": "%s"
+  },
+  "nikola": %s
+ },
+ "nbformat": 4,
+ "nbformat_minor": 0
+}"""
