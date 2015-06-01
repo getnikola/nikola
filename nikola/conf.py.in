@@ -645,6 +645,21 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # Enable comments on picture gallery pages?
 # COMMENTS_IN_GALLERIES = False
 
+# Use a thumbnail (defined by ".. previewimage:") in list of galleries
+# for each gallery
+GALLERIES_USE_THUMBNAIL = True
+
+# Columns of thumbnails list in galleries index
+GALLERIES_COLUMNS = 3
+
+# Image to use as thumbnail for those galleries that doesn't have one
+# None: show a grey square
+# '/url/to/file': show the image in that url
+GALLERIES_DEFAULT_THUMBNAIL = None
+
+# HTML title for /GALLERY_FOLDERS/index.html (translatable)
+GALLERY_INDEX_TITLE = "galleries"
+
 # What file should be used for directory indexes?
 # Defaults to index.html
 # Common other alternatives: default.html for IIS, index.php

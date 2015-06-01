@@ -87,6 +87,10 @@ class Galleries(Task, ImageProcessor):
             'tzinfo': site.tzinfo,
             'comments_in_galleries': site.config['COMMENTS_IN_GALLERIES'],
             'generate_rss': site.config['GENERATE_RSS'],
+            'gallery_index_title': site.config['GALLERY_INDEX_TITLE'],
+            'galleries_use_thumbnail': site.config['GALLERIES_USE_THUMBNAIL'],
+            'galleries_columns': site.config['GALLERIES_COLUMNS'],
+            'galleries_default_thumbnail': site.config['GALLERIES_DEFAULT_THUMBNAIL'],
         }
 
         # Verify that no folder in GALLERY_FOLDERS appears twice
@@ -208,7 +212,9 @@ class Galleries(Task, ImageProcessor):
                 if post:
                     context["title"] = post.title(lang)
                 else:
-                    context["title"] = os.path.basename(gallery)
+                    # TODO: make this translatable
+                    context["title"] = self.kw['gallery_index_title']
+
                 context["description"] = None
 
                 image_name_list = [os.path.basename(p) for p in image_list]
@@ -237,13 +243,20 @@ class Galleries(Task, ImageProcessor):
                         ft = folder
                     if not folder.endswith('/'):
                         folder += '/'
-                    folders.append((folder, ft))
+                    if self.kw['galleries_use_thumbnail']:
+                        folders.append((folder, ft, fpost))
+                    else:
+                        folders.append((folder, ft))
 
                 context["folders"] = natsort.natsorted(
                     folders, alg=natsort.ns.F | natsort.ns.IC)
                 context["crumbs"] = crumbs
                 context["permalink"] = self.site.link("gallery", gallery, lang)
                 context["enable_comments"] = self.kw['comments_in_galleries']
+                context["thumbnail_size"] = self.kw["thumbnail_size"]
+                context["galleries_use_thumbnail"] = self.kw["galleries_use_thumbnail"]
+                context["galleries_columns"] = self.kw["galleries_columns"]
+                context["galleries_default_thumbnail"] = self.kw["galleries_default_thumbnail"]
                 context["thumbnail_size"] = self.kw["thumbnail_size"]
 
                 if post:
