@@ -249,6 +249,15 @@ class RedirectionsTest1(EmptyBuildTest):
         with io.open(target_path, "w+", encoding="utf8") as outf:
             outf.write("foo")
 
+class RedirectionsTest2(EmptyBuildTest):
+    """Check REDIRECTS"""
+
+    @classmethod
+    def patch_site(self):
+        """"""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with io.open(conf_path, "a", encoding="utf8") as outf:
+            outf.write("""\n\nREDIRECTS = [ ("foo.html", "http://www.example.com/"), ]\n\n""")
 
 class MissingDefaultLanguageTest(TranslatedBuildTest):
     """Make sure posts only in secondary languages work."""
