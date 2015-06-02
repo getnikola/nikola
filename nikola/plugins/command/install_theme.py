@@ -88,6 +88,14 @@ class CommandInstallTheme(Command):
                     "https://themes.getnikola.com/v7/themes.json)",
             'default': 'https://themes.getnikola.com/v7/themes.json'
         },
+        {
+            'name': 'getpath',
+            'short': 'g',
+            'long': 'get-path',
+            'type': bool,
+            'default': False,
+            'help': "Print the path for installed theme",
+        },
     ]
 
     def _execute(self, options, args):
@@ -101,6 +109,14 @@ class CommandInstallTheme(Command):
             name = args[0]
         else:
             name = None
+
+        if options['getpath'] and name:
+            path = utils.get_theme_path(name)
+            if path:
+                print(path)
+            else:
+                print('not installed')
+            exit(0)
 
         if name is None and not listing:
             LOGGER.error("This command needs either a theme name or the -l option.")
