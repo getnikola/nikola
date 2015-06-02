@@ -187,10 +187,15 @@ class CommandAuto(Command):
             app=Mixed(handler_cls=LRSocket)
         )
         ws.initialize_websockets_manager()
-        self.logger.info("Serving on port {0}...".format(port))
-
-        # Yes, this is racy
+        self.logger.info("Serving HTTP on {0} port {1}...".format(host, port))
         if browser:
+            if options['ipv6'] or '::' in host:
+                server_url = "http://[{0}]:{1}/".format(host, port)
+            else:
+                server_url = "http://{0}:{1}/".format(host, port)
+
+            self.logger.info("Opening {0} in the default web browser...".format(server_url))
+            # Yes, this is racy
             webbrowser.open('http://{0}:{1}'.format(host, port))
 
         try:
