@@ -40,7 +40,6 @@ from wsgiref.simple_server import make_server
 import wsgiref.util
 
 from blinker import signal
-import pyinotify
 try:
     from ws4py.websocket import WebSocket
     from ws4py.server.wsgirefserver import WSGIServer, WebSocketWSGIRequestHandler
@@ -48,6 +47,11 @@ try:
     from ws4py.messaging import TextMessage
 except ImportError:
     WebSocket = None
+try:
+    import pyinotify
+except ImportError:
+    pyinotify = None
+
 
 from nikola.plugin_categories import Command
 from nikola.utils import req_missing, get_logger
@@ -113,6 +117,9 @@ class CommandAuto(Command):
 
         if WebSocket is None:
             req_missing(['ws4py'], 'use the "auto" command')
+            return
+        if pyinotify is None:
+            req_missing(['pyinotify'], 'use the "auto" command')
             return
 
         arguments = ['build']
