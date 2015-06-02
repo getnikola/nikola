@@ -4,7 +4,7 @@ New in master
 Features
 --------
 
-* New gallery implementation (Issue #1765)
+* New gallery implementation (Issue #1764, Issue #1623)
 * New --get-path option for ``nikola install_theme`` (Issue #1762)
 * New `nikola rst2html` command (Issue #1710)
 * New `nikola status` command (Issue #1740)
