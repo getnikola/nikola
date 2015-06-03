@@ -225,7 +225,7 @@ class Post(object):
             and not self.publish_later
 
         # If mathjax is a tag, then enable mathjax rendering support
-        self.is_mathjax = 'mathjax' in self.tags
+        self.is_mathjax = ('mathjax' in self.tags) or (self.compiler.name == 'ipynb')
 
         # Register potential extra dependencies
         self.compiler.register_extra_dependencies(self)
