@@ -224,7 +224,7 @@ class Post(object):
         self.use_in_feeds = use_in_feeds and not is_draft and not is_private \
             and not self.publish_later
 
-        # If mathjax is a tag, then enable mathjax rendering support
+        # If mathjax is a tag, or it's a ipynb post, then enable mathjax rendering support
         self.is_mathjax = ('mathjax' in self.tags) or (self.compiler.name == 'ipynb')
 
         # Register potential extra dependencies
