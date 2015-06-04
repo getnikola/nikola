@@ -7,7 +7,7 @@
     % for link, text in crumbs:
         % if text != index_file:
             % if link == '#':
-                <li>${text.rsplit('.html', maxsplit=1)[0]}</li>
+                <li>${text.rsplit('.html', 1)[0]}</li>
             % else:
                 <li><a href="${link}">${text}</a></li>
             % endif
