@@ -146,7 +146,6 @@ def optipng(infile):
 def jpegoptim(infile):
     return runinplace(r"jpegoptim -p --strip-all -q %1", infile)
 
-
 def html_tidy_nowrap(infile):
     return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes no --sort-attributes alpha --wrap 0 --wrap-sections no --tidy-mark no -modify %1")
 
@@ -171,6 +170,33 @@ def _html_tidy_runner(infile, options):
         status = 0 if err.returncode == 1 else err.returncode
     return status
 
+
+@apply_to_text_file
+def html5lib_minify(data):
+    import html5lib
+    import html5lib.serializer
+    data = html5lib.serializer.serialize(html5lib.parse(data, treebuilder='lxml'),
+                                         tree='lxml',
+                                         quote_attr_values=False,
+                                         omit_optional_tags=True,
+                                         minimize_boolean_attributes=True,
+                                         strip_whitespace=True,
+                                         alphabetical_attributes=True,
+                                         escape_lt_in_attrs=True)
+    return data
+
+@apply_to_text_file
+def html5lib_xmllike(data):
+    import html5lib
+    import html5lib.serializer
+    data = html5lib.serializer.serialize(html5lib.parse(data, treebuilder='lxml'),
+                                         tree='lxml',
+                                         quote_attr_values=True,
+                                         omit_optional_tags=False,
+                                         strip_whitespace=False,
+                                         alphabetical_attributes=True,
+                                         escape_lt_in_attrs=True)
+    return data
 
 @apply_to_text_file
 def minify_lines(data):
