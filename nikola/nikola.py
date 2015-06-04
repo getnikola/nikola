@@ -803,7 +803,7 @@ class Nikola(object):
 
         self._GLOBAL_CONTEXT['needs_ipython_css'] = False
         for i in self.config['post_pages']:
-            if os.path.splitext(i[0])[0] in self.config['COMPILERS'].get('ipynb', []):
+            if os.path.splitext(i[0])[1] in self.config['COMPILERS'].get('ipynb', []):
                 self._GLOBAL_CONTEXT['needs_ipython_css'] = True
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
