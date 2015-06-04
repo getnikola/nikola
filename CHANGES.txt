@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Add ipython support to the default themes (Issue #1782)
+* Automatically mark ipynb posts/pages as requiring mathjax (Issue #1782)
 * New --get-path option for ``nikola install_theme`` (Issue #1762)
 * New `nikola rst2html` command (Issue #1710)
 * New `nikola status` command (Issue #1740)
@@ -15,7 +17,6 @@ Features
 Bugfixes
 --------
 
-* Automatically mark ipynb posts/pages as requiring mathjax (Issue #1782)
 * Extract ``nikola check`` target list from actual task list instead of parsing (Issue #1758)
 * Treat special-purpose “draft” tag case-insensitive
 * Avoid some rebuild loops (Issue #1747)
