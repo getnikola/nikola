@@ -258,5 +258,5 @@ class Listings(Task):
             sys.exit(1)
         if not name.endswith(os.sep + self.site.config["INDEX_FILE"]):
             name += '.html'
-        path_parts = list(os.path.split(name))
+        path_parts = name.split(os.sep)
         return [_f for _f in path_parts if _f]
