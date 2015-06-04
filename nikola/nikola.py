@@ -796,6 +796,16 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['hidden_categories'] = self.config.get('HIDDEN_CATEGORIES')
         self._GLOBAL_CONTEXT['url_replacer'] = self.url_replacer
 
+        # IPython theme configuration.  If a website can potentially have ipynb
+        # posts (as determined by checking POSTS/PAGES against ipynb
+        # extensions), we should enable the IPython CSS (leaving that up to the
+        # theme itself).
+
+        self._GLOBAL_CONTEXT['needs_ipython_css'] = False
+        for i in self.config['post_pages']:
+            if os.path.splitext(i[0])[0] in self.config['COMPILERS'].get('ipynb', []):
+                self._GLOBAL_CONTEXT['needs_ipython_css'] = True
+
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
         # Load compiler plugins
