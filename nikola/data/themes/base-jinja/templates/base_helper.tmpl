@@ -79,6 +79,10 @@ lang="{{ lang }}">
             <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
         {% endif %}
     {% endif %}
+    {% if needs_ipython_css %}
+        <link href="/assets/css/ipython.min.css" rel="stylesheet" type="text/css">
+        <link href="/assets/css/nikola_ipython.css" rel="stylesheet" type="text/css">
+    {% endif %}
 {% endmacro %}
 
 {% macro html_feedlinks() %}
