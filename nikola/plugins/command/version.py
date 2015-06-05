@@ -61,7 +61,7 @@ class CommandVersion(Command):
     def _execute(self, options={}, args=None):
         """Print the version number."""
         print("Nikola v" + __version__)
-        if options['check']:
+        if options.get('check'):
             if requests is None:
                 req_missing(['requests'], 'check for updates')
                 exit(1)
