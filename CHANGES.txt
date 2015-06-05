@@ -5,6 +5,8 @@ Features
 --------
 
 * New gallery implementation (Issue #1764, Issue #1623)
+* Add ipython support to the default themes (Issue #1782)
+* Automatically mark ipynb posts/pages as requiring mathjax (Issue #1782)
 * New --get-path option for ``nikola install_theme`` (Issue #1762)
 * New `nikola rst2html` command (Issue #1710)
 * New `nikola status` command (Issue #1740)

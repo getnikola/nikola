@@ -126,18 +126,18 @@ class Galleries(Task, ImageProcessor):
     def gallery_path(self, name, lang):
         gallery_path = self._find_gallery_path(name)
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
-                list(os.path.split(gallery_path)) +
+                gallery_path.split(os.sep) +
                 [self.site.config['INDEX_FILE']] if _f]
 
     def gallery_global_path(self, name, lang):
         gallery_path = self._find_gallery_path(name)
-        return [_f for _f in list(os.path.split(gallery_path)) +
+        return [_f for _f in gallery_path.split(os.sep) +
                 [self.site.config['INDEX_FILE']] if _f]
 
     def gallery_rss_path(self, name, lang):
         gallery_path = self._find_gallery_path(name)
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
-                list(os.path.split(gallery_path)) +
+                gallery_path.split(os.sep) +
                 ['rss.xml'] if _f]
 
     def gallery_json_path(self, name, lang):
