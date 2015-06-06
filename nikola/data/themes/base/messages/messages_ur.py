@@ -28,7 +28,7 @@ MESSAGES = {
     "Read more": "مزید پڑھیں",
     "Skip to main content": "مرکزی متن پر جائیں",
     "Source": "سورس",
-    "Subcategories:": "",
+    "Subcategories:": "ذیلی زمرے",
     "Tags and Categories": "ٹیگز اور زمرے",
     "Tags": "ٹیگز",
     "old posts, page %d": "پرانی تحاریر صفحہ %d",
