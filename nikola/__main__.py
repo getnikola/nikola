@@ -302,7 +302,18 @@ class NikolaTaskLoader(TaskLoader):
         }
 
     def _generate_plugin_generator_task(self, plugin_object, pre_name, post_name):
-        return Task(plugin_object.name, None, loader=DelayedLoader(lambda: self._generate_plugin_task(plugin_object, post_name), executed=pre_name))
+        regex = plugin_object.gen_target_regex()
+        regexes = [regex]
+        for multi in self.nikola.plugin_manager.getPluginsOfCategory("TaskMultiplier"):
+            r = multi.plugin_object.extend_target_regex(regex)
+            if r:
+                regexes.append(r)
+        if len(regexes) > 1:
+            regex = '(?:' + '|'.join(regexes) + ')'
+        return Task(plugin_object.name, None,
+                    loader=DelayedLoader(lambda: self._generate_plugin_task(plugin_object, post_name),
+                                         executed=pre_name,
+                                         target_regex=regex))
 
     def _generate_stage_tasks(self, stage, previous_stage=None, make_delayed=False):
         pre_name, post_name, doc = self._get_stage_info(stage)
