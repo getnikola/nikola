@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "še %d min za branje preostanka",
+    "(active)": "",
     "Also available in:": "Na voljo tudi v:",
     "Archive": "Arhiv",
     "Categories": "Kategorije",
