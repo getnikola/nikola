@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "%d دقیقه برای خواندن باقی مانده",
+    "(active)": "",
     "Also available in:": "همچنین قابل دسترس از:",
     "Archive": "آرشیو",
     "Categories": "دسته‌ها",

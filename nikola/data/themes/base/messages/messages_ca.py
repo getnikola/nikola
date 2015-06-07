@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "% min recordar per a llegir",
+    "(active)": "",
     "Also available in:": "També disponibles en:",
     "Archive": "Arxiu",
     "Categories": "Categories",

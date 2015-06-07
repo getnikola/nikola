@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "",
+    "(active)": "",
     "Also available in:": "Saadaval ka:",
     "Archive": "Arhiiv",
     "Categories": "Kategooriad",
