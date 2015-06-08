@@ -41,11 +41,8 @@ import natsort
 try:
     from PIL import Image  # NOQA
 except ImportError:
-    try:
-        import Image as _Image
-        Image = _Image
-    except ImportError:
-        Image = None
+    import Image as _Image
+    Image = _Image
 
 import PyRSS2Gen as rss
 
@@ -140,9 +137,6 @@ class Galleries(Task, ImageProcessor):
 
     def gen_tasks(self):
         """Render image galleries."""
-
-        if Image is None:
-            req_missing(['pillow'], 'render galleries')
 
         self.image_ext_list = self.image_ext_list_builtin
         self.image_ext_list.extend(self.site.config.get('EXTRA_IMAGE_EXTENSIONS', []))
