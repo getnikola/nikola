@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "%d menit tersisa untuk membaca",
+    "(active)": "",
     "Also available in:": "Juga tersedia dalam:",
     "Archive": "Arsip",
     "Categories": "Kategori",

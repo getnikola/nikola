@@ -118,3 +118,7 @@ msgstr "Skip to main content"
 
 msgid "Subcategories:"
 msgstr "Subcategories:"
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
+msgstr "(active)"

@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "Il reste encore %d min. de lecture",
+    "(active)": "",
     "Also available in:": "Également disponible en:",
     "Archive": "Archives",
     "Categories": "Catégories",
@@ -28,7 +29,7 @@ MESSAGES = {
     "Read more": "Lire la suite",
     "Skip to main content": "Aller au contenu principal",
     "Source": "Source",
-    "Subcategories:": "",
+    "Subcategories:": "Sous-catégories",
     "Tags and Categories": "Étiquettes et catégories",
     "Tags": "Étiquettes",
     "old posts, page %d": "anciens articles, page %d",

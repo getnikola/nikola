@@ -114,7 +114,6 @@ LEGAL_VALUES = {
         'eu': 'Basque',
         'fa': 'Persian',
         'fi': 'Finnish',
-        'fil': 'Filipino',
         'fr': 'French',
         'hi': 'Hindi',
         'hr': 'Croatian',
@@ -132,11 +131,9 @@ LEGAL_VALUES = {
         'sr': 'Serbian (Cyrillic)',
         'sv': 'Swedish',
         ('tr', '!tr_TR'): 'Turkish',
-        'tl': 'Tagalog',
         'ur': 'Urdu',
         'uk': 'Ukrainian',
         'zh_cn': 'Chinese (Simplified)',
-        'zh_TW': 'Chinese (Taiwan)',
     },
     '_TRANSLATIONS_WITH_COUNTRY_SPECIFIERS': {
         # This dict is used in `init` in case of locales that exist with a
@@ -145,7 +142,6 @@ LEGAL_VALUES = {
         # will accept it, warning the user about it.
         'pt': 'pt_br',
         'zh': 'zh_cn',
-        'zh': 'zh_TW'
     },
     'RTL_LANGUAGES': ('ar', 'fa', 'ur'),
     'COLORBOX_LOCALES': defaultdict(
@@ -178,6 +174,7 @@ LEGAL_VALUES = {
         sr='sr',  # warning: this is serbian in Latin alphabet
         sv='sv',
         tr='tr',
+        uk='uk',
         zh_cn='zh-CN'
     ),
     'MOMENTJS_LOCALES': defaultdict(
@@ -642,7 +639,7 @@ class Nikola(object):
             utils.LOGGER.error("Punycode of {}: {}".format(_bnl, _bnl.encode('idna')))
             sys.exit(1)
 
-        # todo: remove in v8
+        # TODO: remove in v8
         if not isinstance(self.config['DEPLOY_COMMANDS'], dict):
             utils.LOGGER.warn("A single list as DEPLOY_COMMANDS is deprecated.  DEPLOY_COMMANDS should be a dict, with deploy preset names as keys and lists of commands as values.")
             utils.LOGGER.warn("The key `default` is used by `nikola deploy`:")
@@ -650,7 +647,7 @@ class Nikola(object):
             utils.LOGGER.warn("DEPLOY_COMMANDS = {0}".format(self.config['DEPLOY_COMMANDS']))
             utils.LOGGER.info("(The above can be used with `nikola deploy` or `nikola deploy default`.  Multiple presets are accepted.)")
 
-        # todo: remove and change default in v8
+        # TODO: remove and change default in v8
         if 'BLOG_TITLE' in config and 'WRITE_TAG_CLOUD' not in config:
             # BLOG_TITLE is a hack, otherwise the warning would be displayed
             # when conf.py does not exist

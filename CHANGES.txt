@@ -5,6 +5,14 @@ Features
 --------
 
 * New ``nikola version --check`` option (Issue #1767)
+
+New in v7.5.0
+=============
+
+Features
+--------
+
+* Make default themes more accessible (Issue #377)
 * Add ipython support to the default themes (Issue #1782)
 * Automatically mark ipynb posts/pages as requiring mathjax (Issue #1782)
 * New --get-path option for ``nikola install_theme`` (Issue #1762)
@@ -18,6 +26,7 @@ Features
 Bugfixes
 --------
 
+* Dropped empty languages (fil, tl, zh_TW)
 * Extract ``nikola check`` target list from actual task list instead of parsing (Issue #1758)
 * Treat special-purpose “draft” tag case-insensitive
 * Avoid some rebuild loops (Issue #1747)

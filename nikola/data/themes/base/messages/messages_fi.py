@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "%d minuuttia lukuaikaa",
+    "(active)": "",
     "Also available in:": "Saatavilla myös:",
     "Archive": "Arkisto",
     "Categories": "Kategoriat",

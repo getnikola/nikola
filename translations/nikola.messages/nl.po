@@ -8,13 +8,13 @@
 # Translators:
 # Translators:
 # Joes Staal <joes@staalkemade.net>, 2013
-# Joes Staal <joes@staalkemade.net>, 2013-2014
+# Joes Staal <joes@staalkemade.net>, 2013-2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-05-13 14:33+0000\n"
+"PO-Revision-Date: 2015-06-07 15:59+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/nikola/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -100,7 +100,7 @@ msgid "Posts for {month} {year}"
 msgstr "Berichten voor {month} {year}"
 
 msgid "Posts for {month} {day}, {year}"
-msgstr ""
+msgstr "Berichten voor {month} {day}, {year}"
 
 msgid "Nothing found."
 msgstr "Niets gevonden."
@@ -118,4 +118,8 @@ msgid "Skip to main content"
 msgstr "Ga door naar de hoofdinhoud"
 
 msgid "Subcategories:"
+msgstr "Subcategorieën"
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
 msgstr ""
