@@ -28,15 +28,11 @@ from __future__ import print_function
 import os
 import io
 import json
+import requests
 
 import pygments
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter
-
-try:
-    import requests
-except ImportError:
-    requests = None  # NOQA
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -100,9 +96,6 @@ class CommandInstallTheme(Command):
 
     def _execute(self, options, args):
         """Install theme into current site."""
-        if requests is None:
-            utils.req_missing(['requests'], 'install themes')
-
         listing = options['list']
         url = options['url']
         if args:

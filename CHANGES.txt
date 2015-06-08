@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* ``requests`` is now required for all Nikola sites
 * New ``nikola version --check`` option (Issue #1767)
 
 New in v7.5.0

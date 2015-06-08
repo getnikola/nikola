@@ -28,15 +28,11 @@
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
-try:
-    import requests
-except ImportError:
-    requests = None  # NOQA
+import requests
 import json
 
 
 from nikola.plugin_categories import RestExtension
-from nikola.utils import req_missing
 
 
 class Plugin(RestExtension):
@@ -94,10 +90,6 @@ class Vimeo(Directive):
         return [nodes.raw('', CODE.format(**options), format='html')]
 
     def check_modules(self):
-        msg = None
-        if requests is None:
-            msg = req_missing(['requests'], 'use the vimeo directive', optional=True)
-            return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
         return None
 
     def set_video_size(self):
