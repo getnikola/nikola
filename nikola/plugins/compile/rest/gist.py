@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 # This file is public domain according to its author, Brian Hsu
 
+import requests
 from docutils.parsers.rst import Directive, directives
 from docutils import nodes
-
-try:
-    import requests
-except ImportError:
-    requests = None  # NOQA
 
 from nikola.plugin_categories import RestExtension
 from nikola.utils import req_missing
@@ -64,22 +60,15 @@ class GitHubGist(Directive):
 
         if 'file' in self.options:
             filename = self.options['file']
-            if requests is not None:
-                rawGist = (self.get_raw_gist_with_filename(gistID, filename))
+            rawGist = (self.get_raw_gist_with_filename(gistID, filename))
             embedHTML = ('<script src="https://gist.github.com/{0}.js'
                          '?file={1}"></script>').format(gistID, filename)
         else:
-            if requests is not None:
-                rawGist = (self.get_raw_gist(gistID))
+            rawGist = (self.get_raw_gist(gistID))
             embedHTML = ('<script src="https://gist.github.com/{0}.js">'
                          '</script>').format(gistID)
 
-        if requests is None:
-            reqnode = nodes.raw(
-                '', req_missing('requests', 'have inline gist source',
-                                optional=True), format='html')
-        else:
-            reqnode = nodes.literal_block('', rawGist)
+        reqnode = nodes.literal_block('', rawGist)
 
         return [nodes.raw('', embedHTML, format='html'),
                 nodes.raw('', '<noscript>', format='html'),

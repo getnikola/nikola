@@ -27,10 +27,7 @@
 from __future__ import print_function
 
 import lxml
-try:
-    import requests
-except ImportError:
-    requests = None
+import requests
 
 from nikola.plugin_categories import Command
 from nikola.utils import req_missing
@@ -62,9 +59,6 @@ class CommandVersion(Command):
         """Print the version number."""
         print("Nikola v" + __version__)
         if options.get('check'):
-            if requests is None:
-                req_missing(['requests'], 'check for updates')
-                exit(1)
             data = requests.get(URL).text
             doc = lxml.etree.fromstring(data.encode('utf8'))
             revision = doc.findall('*//{http://usefulinc.com/ns/doap#}revision')[0].text
