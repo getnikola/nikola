@@ -68,4 +68,7 @@ class CommandVersion(Command):
             data = requests.get(URL).text
             doc = lxml.etree.fromstring(data.encode('utf8'))
             revision = doc.findall('*//{http://usefulinc.com/ns/doap#}revision')[0].text
-            print("Latest version is: ", revision)
+            if revision == __version__:
+                print("Nikola is up-to-date")
+            else:
+                print("The latest version of Nikola is v{0} -- please upgrade using `pip install --upgrade Nikola=={0}` or your system package manager".format(revision))
