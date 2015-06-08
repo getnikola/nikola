@@ -47,6 +47,7 @@ import logbook
 import warnings
 import PyRSS2Gen as rss
 from collections import defaultdict, Callable
+from logbook.compat import redirect_logging
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
 from pygments.formatters import HtmlFormatter
 from zipfile import ZipFile as zipf
@@ -123,7 +124,6 @@ STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
 
 USE_SLUGIFY = True
 
-from logbook.compat import redirect_logging
 redirect_logging()
 
 if DEBUG:
