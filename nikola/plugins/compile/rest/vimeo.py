@@ -33,7 +33,6 @@ import json
 
 
 from nikola.plugin_categories import RestExtension
-from nikola.utils import req_missing
 
 
 class Plugin(RestExtension):
@@ -91,7 +90,6 @@ class Vimeo(Directive):
         return [nodes.raw('', CODE.format(**options), format='html')]
 
     def check_modules(self):
-        msg = None
         return None
 
     def set_video_size(self):

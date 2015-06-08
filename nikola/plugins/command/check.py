@@ -40,7 +40,7 @@ import lxml.html
 import requests
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, req_missing
+from nikola.utils import get_logger
 
 
 def _call_nikola_list(site):

@@ -37,7 +37,7 @@ import docutils.readers.standalone
 import docutils.writers.html4css1
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import unicode_str, get_logger, makedirs, req_missing, write_metadata
+from nikola.utils import unicode_str, get_logger, makedirs, write_metadata
 
 
 class CompileRest(PageCompiler):

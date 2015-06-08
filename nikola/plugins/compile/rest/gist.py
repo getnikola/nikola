@@ -6,7 +6,6 @@ from docutils.parsers.rst import Directive, directives
 from docutils import nodes
 
 from nikola.plugin_categories import RestExtension
-from nikola.utils import req_missing
 
 
 class Plugin(RestExtension):

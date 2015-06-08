@@ -50,7 +50,6 @@ from nikola.plugin_categories import Task
 from nikola import utils
 from nikola.image_processing import ImageProcessor
 from nikola.post import Post
-from nikola.utils import req_missing
 
 _image_size_cache = {}
 

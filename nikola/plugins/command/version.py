@@ -30,7 +30,6 @@ import lxml
 import requests
 
 from nikola.plugin_categories import Command
-from nikola.utils import req_missing
 from nikola import __version__
 
 URL = 'https://pypi.python.org/pypi?:action=doap&name=Nikola'
