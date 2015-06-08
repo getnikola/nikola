@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Remove logging handlers (Issue #1797)
 * New ``nikola version --check`` option (Issue #1767)
 
 New in v7.5.0
