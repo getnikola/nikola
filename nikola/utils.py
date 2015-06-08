@@ -116,14 +116,15 @@ STDERR_HANDLER = [ColorfulStderrHandler(
     level=logbook.INFO if not DEBUG else logbook.DEBUG,
     format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
 )]
+
+
 LOGGER = get_logger('Nikola', STDERR_HANDLER)
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
 
 USE_SLUGIFY = True
 
-# This will block out the default handler and will hide all unwanted
-# messages, properly.
-logbook.NullHandler().push_application()
+from logbook.compat import redirect_logging
+redirect_logging()
 
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)

@@ -37,7 +37,7 @@ class ScaleImage(Task, ImageProcessor):
     name = "scale_images"
 
     def set_site(self, site):
-        self.logger = utils.get_logger('scale_images', site.loghandlers)
+        self.logger = utils.get_logger('scale_images', utils.STDERR_HANDLER)
         return super(ScaleImage, self).set_site(site)
 
     def process_tree(self, src, dst):

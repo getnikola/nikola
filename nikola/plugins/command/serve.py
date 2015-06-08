@@ -36,7 +36,7 @@ except ImportError:
     from http.server import SimpleHTTPRequestHandler  # NOQA
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger
+from nikola.utils import get_logger, STDERR_HANDLER
 
 
 class IPv6Server(HTTPServer):
@@ -89,7 +89,7 @@ class CommandServe(Command):
 
     def _execute(self, options, args):
         """Start test server."""
-        self.logger = get_logger('serve', self.site.loghandlers)
+        self.logger = get_logger('serve', STDERR_HANDLER)
         out_dir = self.site.config['OUTPUT_FOLDER']
         if not os.path.isdir(out_dir):
             self.logger.error("Missing '{0}' folder?".format(out_dir))

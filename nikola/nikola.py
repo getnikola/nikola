@@ -279,7 +279,6 @@ class Nikola(object):
         self._template_system = None
         self._THEMES = None
         self.debug = DEBUG
-        self.loghandlers = []
         self.colorful = config.pop('__colorful__', False)
         self.invariant = config.pop('__invariant__', False)
         self.quiet = config.pop('__quiet__', False)

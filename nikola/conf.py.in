@@ -924,26 +924,6 @@ UNSLUGIFY_TITLES = True
 # sometimes crash Nikola, your web server, or eat your cat.
 # USE_SLUGIFY = True
 
-# You can configure the logging handlers installed as plugins or change the
-# log level of the default stderr handler.
-# WARNING: The stderr handler allows only the loglevels of 'INFO' and 'DEBUG'.
-#          This is done for safety reasons, as blocking out anything other
-#          than 'DEBUG' may hide important information and break the user
-#          experience!
-
-LOGGING_HANDLERS = {
-    'stderr': {'loglevel': 'INFO', 'bubble': True},
-    # 'smtp': {
-    #     'from_addr': 'test-errors@example.com',
-    #     'recipients': ('test@example.com'),
-    #     'credentials':('testusername', 'password'),
-    #     'server_addr': ('127.0.0.1', 25),
-    #     'secure': (),
-    #     'level': 'DEBUG',
-    #     'bubble': True
-    # }
-}
-
 # Templates will use those filters, along with the defaults.
 # Consult your engine's documentation on filters if you need help defining
 # those.
