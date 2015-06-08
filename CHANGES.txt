@@ -1,3 +1,11 @@
+New in master
+=============
+
+Features
+--------
+
+* New ``nikola version --check`` option (Issue #1767)
+
 New in v7.5.0
 =============
 
