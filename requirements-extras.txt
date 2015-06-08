@@ -1,5 +1,4 @@
 -r requirements.txt
-requests>=2.2.0
 Markdown>=2.4.0
 Jinja2>=2.7.2
 livereload==2.3.2
