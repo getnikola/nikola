@@ -270,6 +270,13 @@ class PageCompiler(BasePlugin):
         """
         return {}
 
+    def split_metadata(self, data):
+        """Split data from metadata in the raw post content.
+
+        This splits in the first empty line that is NOT at the beginning
+        of the document."""
+
+        return re.split('(\n\n|\r\n\r\n)', data.lstrip(), maxsplit=1)
 
 class RestExtension(BasePlugin):
     name = "dummy_rest_extension"

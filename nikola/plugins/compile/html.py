@@ -35,8 +35,6 @@ import io
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, write_metadata
 
-_META_SEPARATOR = '(' + os.linesep * 2 + '|' + ('\n' * 2) + '|' + ("\r\n" * 2) + ')'
-
 
 class CompileHtml(PageCompiler):
     """Compile HTML into HTML."""
@@ -48,7 +46,7 @@ class CompileHtml(PageCompiler):
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
             if not is_two_file:
-                data = re.split(_META_SEPARATOR, data, maxsplit=1)[-1]
+                _, data = self.split_metadata(data)
             out_file.write(data)
         return True
 
