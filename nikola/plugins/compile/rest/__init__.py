@@ -64,15 +64,8 @@ class CompileRest(PageCompiler):
         """Compile reSt into HTML strings."""
         add_ln = 0
         if not is_two_file:
-            spl = re.split('(\n\n|\r\n\r\n)', data, maxsplit=1)
-            data = spl[-1]
-            if len(spl) != 1:
-                # If errors occur, this will be added to the line
-                # number reported by docutils so the line number
-                # matches the actual line number (off by 7 with default
-                # metadata, could be more or less depending on the post
-                # author).
-                add_ln = len(spl[0].splitlines()) + 1
+            m_data, data = self.split_metadata(data)
+            add_ln = len(m_data.splitlines()) + 1
 
         default_template_path = os.path.join(os.path.dirname(__file__), 'template.txt')
         output, error_level, deps = rst2html(
