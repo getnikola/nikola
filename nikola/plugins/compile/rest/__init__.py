@@ -61,6 +61,9 @@ class CompileRest(PageCompiler):
 
     def compile_html_string(self, data, source_path=None, is_two_file=True):
         """Compile reSt into HTML strings."""
+        # If errors occur, this will be added to the line number reported by
+        # docutils so the line number matches the actual line number (off by
+        # 7 with default metadata, could be more or less depending on the post).
         add_ln = 0
         if not is_two_file:
             m_data, data = self.split_metadata(data)
