@@ -276,8 +276,10 @@ class PageCompiler(BasePlugin):
 
         This splits in the first empty line that is NOT at the beginning
         of the document."""
-
-        return re.split('(\n\n|\r\n\r\n)', data.lstrip(), maxsplit=1)
+        splitted = re.split('(\n\n|\r\n\r\n)', data.lstrip(), maxsplit=1)
+        if len(splitted) == 1:
+            return '', splitted[0]
+        return splitted
 
 
 class RestExtension(BasePlugin):
