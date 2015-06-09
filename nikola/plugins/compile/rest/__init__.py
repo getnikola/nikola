@@ -27,7 +27,6 @@
 from __future__ import unicode_literals
 import io
 import os
-import re
 
 import docutils.core
 import docutils.nodes

@@ -27,6 +27,7 @@
 from __future__ import absolute_import
 import sys
 import os
+import re
 
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
@@ -277,6 +278,7 @@ class PageCompiler(BasePlugin):
         of the document."""
 
         return re.split('(\n\n|\r\n\r\n)', data.lstrip(), maxsplit=1)
+
 
 class RestExtension(BasePlugin):
     name = "dummy_rest_extension"
