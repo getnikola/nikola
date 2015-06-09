@@ -29,19 +29,15 @@ import io
 import os
 import re
 
-try:
-    import docutils.core
-    import docutils.nodes
-    import docutils.utils
-    import docutils.io
-    import docutils.readers.standalone
-    import docutils.writers.html4css1
-    has_docutils = True
-except ImportError:
-    has_docutils = False
+import docutils.core
+import docutils.nodes
+import docutils.utils
+import docutils.io
+import docutils.readers.standalone
+import docutils.writers.html4css1
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import unicode_str, get_logger, makedirs, req_missing, write_metadata
+from nikola.utils import unicode_str, get_logger, makedirs, write_metadata
 
 
 class CompileRest(PageCompiler):
@@ -97,8 +93,6 @@ class CompileRest(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         """Compile reSt into HTML files."""
-        if not has_docutils:
-            req_missing(['docutils'], 'build this site (compile reStructuredText)')
         makedirs(os.path.dirname(dest))
         error_level = 100
         with io.open(dest, "w+", encoding="utf8") as out_file:

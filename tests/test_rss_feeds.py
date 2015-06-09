@@ -33,6 +33,7 @@ class FakeCompiler(object):
     demote_headers = False
     compile_html = None
     extension = lambda self: '.html'
+    name = "fake"
 
     def read_metadata(*args, **kwargs):
         return {}

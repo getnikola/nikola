@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "Залишилось читати %d хвилин",
+    "(active)": "",
     "Also available in:": "Іншою мовою:",
     "Archive": "Архів",
     "Categories": "Категорії",

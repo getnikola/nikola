@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "%d dakikalık okuma",
+    "(active)": "",
     "Also available in:": "Şu dilde de mevcut:",
     "Archive": "Arşiv",
     "Categories": "Kategoriler",

@@ -117,6 +117,10 @@ lang="{{ lang }}">
             <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
         {% endif %}
     {% endif %}
+    {% if needs_ipython_css %}
+        <link href="/assets/css/ipython.min.css" rel="stylesheet" type="text/css">
+        <link href="/assets/css/nikola_ipython.css" rel="stylesheet" type="text/css">
+    {% endif %}
     {% if annotations and post and not post.meta('noannotations') %}
         {{ notes.css() }}
     {% elif not annotations and post and post.meta('annotations') %}
@@ -132,7 +136,7 @@ lang="{{ lang }}">
             <ul class="dropdown-menu">
             {% for suburl, text in url %}
                 {% if rel_link(permalink, suburl) == "#" %}
-                    <li class="active"><a href="{{ permalink }}">{{ text }}</a>
+                    <li class="active"><a href="{{ permalink }}">{{ text }} <span class="sr-only">{{ messages("(active)", langname) }}</span></a>
                 {% else %}
                     <li><a href="{{ suburl }}">{{ text }}</a>
                 {% endif %}
@@ -140,7 +144,7 @@ lang="{{ lang }}">
             </ul>
         {% else %}
             {% if rel_link(permalink, url) == "#" %}
-                <li class="active"><a href="{{ permalink }}">{{ text }}</a>
+                <li class="active"><a href="{{ permalink }}">{{ text }} <span class="sr-only">{{ messages("(active)", langname) }}</span></a>
             {% else %}
                 <li><a href="{{ url }}">{{ text }}</a>
             {% endif %}

@@ -29,6 +29,7 @@ import os
 import re
 import sys
 import datetime
+import requests
 from lxml import etree
 
 try:
@@ -36,11 +37,6 @@ try:
     from urllib import unquote
 except ImportError:
     from urllib.parse import urlparse, unquote  # NOQA
-
-try:
-    import requests
-except ImportError:
-    requests = None  # NOQA
 
 try:
     import phpserialize
@@ -150,11 +146,7 @@ class CommandImportWordpress(Command, ImportMixin):
                         package=modulename)
                 )
 
-            if requests is None and phpserialize is None:
-                req_missing(['requests', 'phpserialize'], 'import WordPress dumps without --no-downloads')
-            elif requests is None:
-                req_missing(['requests'], 'import WordPress dumps without --no-downloads')
-            elif phpserialize is None:
+            if phpserialize is None:
                 req_missing(['phpserialize'], 'import WordPress dumps without --no-downloads')
 
         channel = self.get_channel_from_file(self.wordpress_export_file)

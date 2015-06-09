@@ -173,6 +173,35 @@ def _html_tidy_runner(infile, options):
 
 
 @apply_to_text_file
+def html5lib_minify(data):
+    import html5lib
+    import html5lib.serializer
+    data = html5lib.serializer.serialize(html5lib.parse(data, treebuilder='lxml'),
+                                         tree='lxml',
+                                         quote_attr_values=False,
+                                         omit_optional_tags=True,
+                                         minimize_boolean_attributes=True,
+                                         strip_whitespace=True,
+                                         alphabetical_attributes=True,
+                                         escape_lt_in_attrs=True)
+    return data
+
+
+@apply_to_text_file
+def html5lib_xmllike(data):
+    import html5lib
+    import html5lib.serializer
+    data = html5lib.serializer.serialize(html5lib.parse(data, treebuilder='lxml'),
+                                         tree='lxml',
+                                         quote_attr_values=True,
+                                         omit_optional_tags=False,
+                                         strip_whitespace=False,
+                                         alphabetical_attributes=True,
+                                         escape_lt_in_attrs=True)
+    return data
+
+
+@apply_to_text_file
 def minify_lines(data):
     return data
 

@@ -37,13 +37,10 @@ except ImportError:
 
 from doit.loader import generate_tasks
 import lxml.html
-try:
-    import requests
-except ImportError:
-    requests = None
+import requests
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, req_missing
+from nikola.utils import get_logger
 
 
 def _call_nikola_list(site):
@@ -182,9 +179,6 @@ class CommandCheck(Command):
         deps = {}
         if find_sources:
             deps = _call_nikola_list(self.site)[1]
-
-        if check_remote and requests is None:
-            req_missing(['requests'], 'check remote links')
 
         if url_type in ('absolute', 'full_path'):
             url_netloc_to_root = urlparse(self.site.config['BASE_URL']).path
