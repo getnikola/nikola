@@ -279,7 +279,7 @@ class PageCompiler(BasePlugin):
         splitted = re.split('(\n\n|\r\n\r\n)', data.lstrip(), maxsplit=1)
         if len(splitted) == 1:
             return '', splitted[0]
-        return splitted
+        return splitted[0], splitted[-1]
 
 
 class RestExtension(BasePlugin):
