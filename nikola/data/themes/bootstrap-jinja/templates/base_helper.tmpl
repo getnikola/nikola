@@ -136,7 +136,7 @@ lang="{{ lang }}">
             <ul class="dropdown-menu">
             {% for suburl, text in url %}
                 {% if rel_link(permalink, suburl) == "#" %}
-                    <li class="active"><a href="{{ permalink }}">{{ text }}</a>
+                    <li class="active"><a href="{{ permalink }}">{{ text }} <span class="sr-only">{{ messages("(active)", langname) }}</span></a>
                 {% else %}
                     <li><a href="{{ suburl }}">{{ text }}</a>
                 {% endif %}
@@ -144,7 +144,7 @@ lang="{{ lang }}">
             </ul>
         {% else %}
             {% if rel_link(permalink, url) == "#" %}
-                <li class="active"><a href="{{ permalink }}">{{ text }}</a>
+                <li class="active"><a href="{{ permalink }}">{{ text }} <span class="sr-only">{{ messages("(active)", langname) }}</span></a>
             {% else %}
                 <li><a href="{{ url }}">{{ text }}</a>
             {% endif %}

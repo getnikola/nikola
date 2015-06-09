@@ -1,14 +1,13 @@
 .. title: The Nikola Handbook
 .. slug: handbook
 .. date: 2012-03-30 23:00:00 UTC-03:00
-.. tags: mathjax
 .. link:
 .. description:
 
 The Nikola Handbook
 ===================
 
-:Version: 7.4.1
+:Version: 7.5.0
 
 .. class:: alert alert-info pull-right
 
@@ -1413,41 +1412,76 @@ different ones, or about other web servers, please share!
 #. The USE_CDN option offloads standard JavaScript and CSS files to a CDN so they are not
    downloaded from your server.
 
-reStructuredText Extensions
----------------------------
+Math
+----
 
-Nikola includes support for a few directives and roles that are not part of docutils, but which
-we think are handy for website development.
+Nikola supports math input via MathJax.  It is activated via the math roles and
+directives of reStructuredText and the usual LaTeX delimiters (``\(inline\)``
+and ``\[display\]``) for other input formats.
 
-MathJax
-~~~~~~~
+We **DO NOT** support the old, deprecated and error-prone ``$inline$``
+delimiters by default. If you want to use them, please add them manually,
+like this:
 
-Nikola supports math input via MathJax.  It uses the usual math roles and
-directives of reStructuredText.
+.. code:: python
 
-In order to use them in your posts, you **must** add the special ``mathjax`` tag.
+   """
+    MATHJAX_CONFIG = """
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\\(","\\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\\[","\\\]"] ],
+            processEscapes: true
+        },
+        displayAlign: 'left', // Change this to 'center' to center equations.
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}}
+        }
+    });
+    </script>
+    """
 
-Inline mathematics (equivalent to single dollar signs or backslash-parentheses
-in LaTeX) are produced using the `math` **role**:
+Inline mathematics are produced using the reST `math` **role** or the ``\(…\)`` delimiters:
 
 Euler’s formula: :math:`e^{ix} = \cos x + i\sin x`
 
-::
+In reST:
+
+.. code:: restructuredtext
 
     Euler’s formula: :math:`e^{ix} = \cos x + i\sin x`
 
-Display mathematics (equivalent to double dollar signs or backslash-brackets in
-LaTeX) are produced using the `math` **directive**:
+In other input formats::
+
+    Euler’s formula: \(e^{ix} = \cos x + i\sin x\)
+
+Display mathematics are produced using the reST `math` **directive** or the ``\[…\]`` delimiters:
 
 .. math::
 
    \int \frac{dx}{1+ax}=\frac{1}{a}\ln(1+ax)+C
+
+
+In reST:
 
 ::
 
    .. math::
 
       \int \frac{dx}{1+ax}=\frac{1}{a}\ln(1+ax)+C
+
+In other input formats:
+
+::
+
+    \[\int \frac{dx}{1+ax}=\frac{1}{a}\ln(1+ax)+C\]
+
+reStructuredText Extensions
+---------------------------
+
+Nikola includes support for a few directives and roles that are not part of docutils, but which
+we think are handy for website development.
 
 Media
 ~~~~~

@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "पढ़ने में %d मिनट बाकी",
+    "(active)": "",
     "Also available in:": "उपलब्ध भाषाएँ:",
     "Archive": "आर्काइव",
     "Categories": "श्रेणियाँ",
