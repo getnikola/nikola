@@ -27,6 +27,7 @@
 from __future__ import absolute_import
 import sys
 import os
+import re
 
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
@@ -269,6 +270,17 @@ class PageCompiler(BasePlugin):
         Read the metadata from a post, and return a metadata dict
         """
         return {}
+
+    def split_metadata(self, data):
+        """Split data from metadata in the raw post content.
+
+        This splits in the first empty line that is NOT at the beginning
+        of the document."""
+        split_result = re.split('(\n\n|\r\n\r\n)', data.lstrip(), maxsplit=1)
+        if len(split_result) == 1:
+            return '', split_result[0]
+        # ['metadata', '\n\n', 'post content']
+        return split_result[0], split_result[-1]
 
 
 class RestExtension(BasePlugin):
