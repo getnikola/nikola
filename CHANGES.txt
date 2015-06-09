@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New implementation of the ``nikola auto`` command.
 * ``requests`` is now required for all Nikola sites
 * New ``nikola version --check`` option (Issue #1767)
 
