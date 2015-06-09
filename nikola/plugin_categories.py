@@ -276,11 +276,11 @@ class PageCompiler(BasePlugin):
 
         This splits in the first empty line that is NOT at the beginning
         of the document."""
-        splitted = re.split('(\n\n|\r\n\r\n)', data.lstrip(), maxsplit=1)
-        if len(splitted) == 1:
-            return '', splitted[0]
+        split_result = re.split('(\n\n|\r\n\r\n)', data.lstrip(), maxsplit=1)
+        if len(split_result) == 1:
+            return '', split_result[0]
         # ['metadata', '\n\n', 'post content']
-        return splitted[0], splitted[-1]
+        return split_result[0], split_result[-1]
 
 
 class RestExtension(BasePlugin):
