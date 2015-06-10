@@ -46,7 +46,7 @@ try:
     from ws4py.server.wsgiutils import WebSocketWSGIApplication
     from ws4py.messaging import TextMessage
 except ImportError:
-    WebSocket = None
+    WebSocket = object
 try:
     import pyinotify
 except ImportError:
@@ -115,7 +115,7 @@ class CommandAuto(Command):
 
         self.logger = get_logger('auto', self.site.loghandlers)
 
-        if WebSocket is None:
+        if WebSocket is object:
             req_missing(['ws4py'], 'use the "auto" command')
             return
         if pyinotify is None:
