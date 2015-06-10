@@ -556,6 +556,7 @@ class Galleries(Task, ImageProcessor):
                     'h': h
                 },
             })
+        context['photo_array'] = photo_array
         self.site.render_template(template_name, index_name, context)
         with codecs.open(json_name, 'wb', 'utf8') as outf:
             json.dump(photo_array, outf)
