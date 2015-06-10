@@ -661,7 +661,7 @@ class Nikola(object):
             utils.LOGGER.warn("Error getting TZ: {}", exc)
             self.tzinfo = dateutil.tz.gettz()
         self.config['__tzinfo__'] = self.tzinfo
-        
+
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,
             "Task": Task,
