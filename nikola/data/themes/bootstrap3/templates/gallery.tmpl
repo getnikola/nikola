@@ -22,6 +22,16 @@
     </ul>
     %endif
 
+    <noscript>
+    %if photo_array:
+    <ul class="thumbnails">
+        %for image in photo_array:
+            <li><a href="${image['url']}" class="thumbnail image-reference" title="${image['title']}">
+                <img src="${image['url_thumb']}" alt="${image['title']}" /></a>
+        %endfor
+    </ul>
+    %endif
+    </noscript>
     <div id="gallery_container"></div>
 
 %if site_has_comments and enable_comments:
