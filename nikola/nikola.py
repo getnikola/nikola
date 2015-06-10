@@ -1028,11 +1028,6 @@ class Nikola(object):
                     nl = nl.encode('idna')
                     if isinstance(nl, utils.bytes_str):
                         nl = nl.decode('latin-1')  # so idna stays unchanged
-                    print(repr((dst_url.scheme,
-                                      nl,
-                                      dst_url.path,
-                                      dst_url.query,
-                                      dst_url.fragment)))
                     dst = urlunsplit((dst_url.scheme,
                                       nl,
                                       dst_url.path,
