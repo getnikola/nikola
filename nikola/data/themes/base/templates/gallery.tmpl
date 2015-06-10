@@ -98,7 +98,11 @@ if(typeof jQuery=='undefined') {
     var headTag = document.getElementsByTagName("head")[0];
     var jqTag = document.createElement('script');
     jqTag.type = 'text/javascript';
-    jqTag.src = '//code.jquery.com/jquery-1.11.3.min.js';
+    % if use_cdn
+    jqTag.src = '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js';
+    % else
+    jqTag.src = '/assets/js/jquery.min.js';
+    % endif
     jqTag.onload = createGallery;
     headTag.appendChild(jqTag);
 } else {
