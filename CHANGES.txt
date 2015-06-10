@@ -24,7 +24,6 @@ Features
 --------
 
 * Make default themes more accessible (Issue #377)
->>>>>>> master
 * Add ipython support to the default themes (Issue #1782)
 * Automatically mark ipynb posts/pages as requiring mathjax (Issue #1782)
 * New --get-path option for ``nikola install_theme`` (Issue #1762)
