@@ -54,6 +54,15 @@
 {% endblock %}
 
 {% block extra_js %}
+
+<script>
+{% if use_cdn %}
+    window.jQuery || document.write("<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'>\x3C/script>")
+{% else %}
+    window.jQuery || document.write("<script src='/assets/js/jquery.min.js'>\x3C/script>")
+{% endif %}
+</script>
+
 <script>
 function createGallery() {
     jQuery.getScript("/assets/js/flowr.plugin.js");
@@ -93,16 +102,7 @@ function createGallery() {
     });
 })};
 
-// Load JQuery if it's not there already
-if(typeof jQuery=='undefined') {
-    var headTag = document.getElementsByTagName("head")[0];
-    var jqTag = document.createElement('script');
-    jqTag.type = 'text/javascript';
-    jqTag.src = '//code.jquery.com/jquery-1.11.3.min.js';
-    jqTag.onload = createGallery;
-    headTag.appendChild(jqTag);
-} else {
-     createGallery();
-}
+createGallery();
+
 </script>
 {% endblock %}
