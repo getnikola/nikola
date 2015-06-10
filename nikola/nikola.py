@@ -1026,7 +1026,8 @@ class Nikola(object):
                         # python 3: already unicode
                         pass
                     nl = nl.encode('idna')
-
+                    if isinstance(nl, utils.bytes_str):
+                        nl = nl.decode('latin-1')  # so idna stays unchanged
                     dst = urlunsplit((dst_url.scheme,
                                       nl,
                                       dst_url.path,
