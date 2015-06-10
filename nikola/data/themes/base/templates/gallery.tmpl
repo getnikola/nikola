@@ -22,6 +22,7 @@
     % endfor
     </ul>
     %endif
+    <noscript>
     %if photo_array:
     <ul class="thumbnails">
         %for image in photo_array:
@@ -30,6 +31,9 @@
         %endfor
     </ul>
     %endif
+    </noscript>
+    <div id="gallery_container"></div>
+
 %if site_has_comments and enable_comments:
     ${comments.comment_form(None, permalink, title)}
 %endif
@@ -37,5 +41,68 @@
 
 <%block name="extra_head">
 ${parent.extra_head()}
+<!-- FIXME: this goes in some CSS -->
+<style type="text/css">
+.image-block {
+    display: inline-block;
+}
+.flowr_row {
+    width: 100%;
+}
+</style>
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
+</%block>
+
+<%block name="extra_js">
+
+<script>
+%if use_cdn:
+    window.jQuery || document.write("<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'>\x3C/script>")
+%else:
+    window.jQuery || document.write("<script src='/assets/js/jquery.min.js'>\x3C/script>")
+%endif
+</script>
+
+<script>
+function createGallery() {
+    jQuery.getScript("/assets/js/flowr.plugin.js");
+    jQuery.getJSON('index.json', success = function(data) {
+        $("#gallery_container").flowr({
+        data : data,
+        height : ${thumbnail_size}*.6,
+        padding: 5,
+        rows: -1,
+        render : function(params) {
+            // Just return a div, string or a dom object, anything works fine
+            img = $("<img />").attr({
+                'src': params.itemData.url_thumb,
+                'width' : params.width,
+                'height' : params.height
+            }).css('max-width', '100%');
+            link = $( "<a></a>").attr({
+                'href': params.itemData.url,
+                'class': 'image-reference'
+            });
+            div = $("<div />").addClass('image-block').attr({
+                'title': params.itemData.title,
+                'data-toggle': "tooltip",
+            });
+            link.append(img);
+            div.append(link);
+//             div.hover(div.tooltip());
+            return div;
+        },
+        itemWidth : function(data) { return data.size.w; },
+        itemHeight : function(data) { return data.size.h; },
+        complete : function(params) {
+            if( jsonContent.length > params.renderedItems ) {
+                nextRenderList = jsonContent.slice( params.renderedItems );
+            }
+        }
+    });
+})};
+
+createGallery();
+
+</script>
 </%block>

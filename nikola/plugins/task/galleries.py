@@ -25,6 +25,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import unicode_literals
+import codecs
 import io
 import datetime
 import glob
@@ -64,6 +65,7 @@ class Galleries(Task, ImageProcessor):
         site.register_path_handler('gallery', self.gallery_path)
         site.register_path_handler('gallery_global', self.gallery_global_path)
         site.register_path_handler('gallery_rss', self.gallery_rss_path)
+        site.register_path_handler('gallery_json', self.gallery_json_path)
 
         self.logger = utils.get_logger('render_galleries', site.loghandlers)
 
@@ -134,6 +136,12 @@ class Galleries(Task, ImageProcessor):
                 gallery_path.split(os.sep) +
                 ['rss.xml'] if _f]
 
+    def gallery_json_path(self, name, lang):
+        gallery_path = self._find_gallery_path(name)
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
+                list(os.path.split(gallery_path)) +
+                ['index.json'] if _f]
+
     def gen_tasks(self):
         """Render image galleries."""
 
@@ -188,10 +196,14 @@ class Galleries(Task, ImageProcessor):
                 # save navigation links as dependencies
                 self.kw['navigation_links|{0}'.format(lang)] = self.kw['global_context']['navigation_links'](lang)
 
-                dst = os.path.join(
+                dst_json = os.path.join(
+                    self.kw['output_folder'],
+                    self.site.path("gallery_json", gallery, lang))
+                dst_json = os.path.normpath(dst_json)
+                dst_index = os.path.join(
                     self.kw['output_folder'],
                     self.site.path("gallery", gallery, lang))
-                dst = os.path.normpath(dst)
+                dst_index = os.path.normpath(dst_index)
 
                 for k in self.site._GLOBAL_CONTEXT_TRANSLATABLE:
                     self.kw[k] = self.site.GLOBAL_CONTEXT[k](lang)
@@ -261,13 +273,14 @@ class Galleries(Task, ImageProcessor):
 
                 yield utils.apply_filters({
                     'basename': self.name,
-                    'name': dst,
+                    'name': dst_index,
                     'file_dep': file_dep,
-                    'targets': [dst],
+                    'targets': [dst_index, dst_json],
                     'actions': [
                         (self.render_gallery_index, (
                             template_name,
-                            dst,
+                            dst_index,
+                            dst_json,
                             context,
                             dest_img_list,
                             img_titles,
@@ -509,7 +522,8 @@ class Galleries(Task, ImageProcessor):
     def render_gallery_index(
             self,
             template_name,
-            output_name,
+            index_name,
+            json_name,
             context,
             img_list,
             img_titles,
@@ -522,7 +536,7 @@ class Galleries(Task, ImageProcessor):
         # output
 
         def url_from_path(p):
-            url = '/'.join(os.path.relpath(p, os.path.dirname(output_name) + os.sep).split(os.sep))
+            url = '/'.join(os.path.relpath(p, os.path.dirname(index_name) + os.sep).split(os.sep))
             return url
 
         photo_array = []
@@ -543,8 +557,9 @@ class Galleries(Task, ImageProcessor):
                 },
             })
         context['photo_array'] = photo_array
-        context['photo_array_json'] = json.dumps(photo_array)
-        self.site.render_template(template_name, output_name, context)
+        self.site.render_template(template_name, index_name, context)
+        with codecs.open(json_name, 'wb', 'utf8') as outf:
+            json.dump(photo_array, outf)
 
     def gallery_rss(self, img_list, dest_img_list, img_titles, lang, permalink, output_path, title):
         """Create a RSS showing the latest images in the gallery.
