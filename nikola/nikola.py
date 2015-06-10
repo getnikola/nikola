@@ -655,9 +655,13 @@ class Nikola(object):
             utils.LOGGER.warn("Please explicitly add the setting to your conf.py with the desired value, as the setting will default to False in the future.")
 
         # We use one global tzinfo object all over Nikola.
-        self.tzinfo = dateutil.tz.gettz(self.config['TIMEZONE'])
+        try:
+            self.tzinfo = dateutil.tz.gettz(self.config['TIMEZONE'])
+        except Exception as exc:
+            utils.LOGGER.warn("Error getting TZ: {}", exc)
+            self.tzinfo = dateutil.tz.gettz()
         self.config['__tzinfo__'] = self.tzinfo
-
+        
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,
             "Task": Task,

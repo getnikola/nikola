@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Handle rare gettz failure (Issue #1806)
 * Handle missing ws4py better in auto plugin (Issue #1803)
 * IDNA mixing unicode/bytes in python 3 (Issue #1802)
 * Cleaner splitting of metadata in onefile posts (Issue #973)
