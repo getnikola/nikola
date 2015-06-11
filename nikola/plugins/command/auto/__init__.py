@@ -124,14 +124,13 @@ class CommandAuto(Command):
         elif pyinotify is None:
             req_missing(['pyinotify'], 'use the "auto" command')
 
-        arguments = ['build']
+        self.cmd_arguments = ['build']
         if self.site.configuration_filename != 'conf.py':
-            arguments = ['--conf=' + self.site.configuration_filename] + arguments
+            self.cmd_arguments = ['--conf=' + self.site.configuration_filename] + self.cmd_arguments
 
-        self.command_line = 'nikola ' + ' '.join(arguments)
 
         # Run an initial build so we are up-to-date
-        subprocess.call(["nikola"] + arguments)
+        subprocess.call(["nikola"] + self.cmd_arguments)
 
         port = options and options.get('port')
         self.snippet = '''<script>document.write('<script src="http://'
@@ -214,7 +213,7 @@ class CommandAuto(Command):
             exit(130)
 
     def do_rebuild(self, event):
-        p = subprocess.Popen(self.command_line, shell=True, stderr=subprocess.PIPE)
+        p = subprocess.Popen(self.cmd_arguments, stderr=subprocess.PIPE)
         if p.wait() != 0:
             error = p.stderr.read()
             self.logger.error(error)
