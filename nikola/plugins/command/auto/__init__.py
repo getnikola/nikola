@@ -128,7 +128,6 @@ class CommandAuto(Command):
         if self.site.configuration_filename != 'conf.py':
             self.cmd_arguments = ['--conf=' + self.site.configuration_filename] + self.cmd_arguments
 
-
         # Run an initial build so we are up-to-date
         subprocess.call(["nikola"] + self.cmd_arguments)
 
@@ -210,7 +209,9 @@ class CommandAuto(Command):
             ws.serve_forever()
         except KeyboardInterrupt:
             self.logger.info("Server is shutting down.")
-            exit(130)
+            # This is a hack, but something is locking up in a futex
+            # and exit() doesn't work.
+            os.kill(os.getpid(), 15)
 
     def do_rebuild(self, event):
         p = subprocess.Popen(self.cmd_arguments, stderr=subprocess.PIPE)
