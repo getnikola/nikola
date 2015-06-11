@@ -321,7 +321,7 @@ class DoitNikola(DoitMain):
             for c in sub_cmds.keys():
                 d = lev(c, args[0])
                 sugg[d].append(c)
-            LOGGER.info('Maybe you mean "{}"?', '" or "'.join(sugg[min(sugg.keys())]))
+            LOGGER.info('Did you mean "{}"?', '" or "'.join(sugg[min(sugg.keys())]))
             return 3
         if sub_cmds[args[0]] is not Help and not isinstance(sub_cmds[args[0]], Command):  # Is a doit command
             if not self.nikola.configured:
