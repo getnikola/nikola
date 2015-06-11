@@ -10,3 +10,4 @@ webassets>=0.10.1
 ipython[notebook]>=1.2.1
 ghp-import>=0.4.1
 ws4py==0.3.4
+pyinotify==0.9.6
