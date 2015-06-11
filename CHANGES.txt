@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Log properly in ``nikola auto`` (Issue #1812)
 * Handle rare gettz failure (Issue #1806)
 * Handle missing dependencies better in auto plugin (Issues #1803, #1809)
 * IDNA mixing unicode/bytes in python 3 (Issue #1802)

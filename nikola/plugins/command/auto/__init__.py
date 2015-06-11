@@ -115,6 +115,7 @@ class CommandAuto(Command):
         """Start the watcher."""
 
         self.logger = get_logger('auto', self.site.loghandlers)
+        LRSocket.logger = self.logger
 
         if WebSocket is object and pyinotify is None:
             req_missing(['ws4py', 'pyinotify'], 'use the "auto" command')
@@ -220,7 +221,7 @@ class CommandAuto(Command):
             error_signal.send(error=error)
 
     def do_refresh(self, event):
-        self.logger.info('REFRESHING: ', event.pathname)
+        self.logger.info('REFRESHING: {0}'.format(event.pathname))
         p = os.path.relpath(event.pathname, os.path.abspath(self.site.config['OUTPUT_FOLDER']))
         refresh_signal.send(path=p)
 
@@ -268,7 +269,7 @@ class LRSocket(WebSocket):
 
     def received_message(self, message):
         message = json.loads(message.data)
-        self.logger.info('<---', message)
+        self.logger.info('<--- {0}'.format(message))
         response = None
         if message['command'] == 'hello':  # Handshake
             response = {
@@ -279,11 +280,11 @@ class LRSocket(WebSocket):
                 'serverName': 'nikola-livereload',
             }
         elif message['command'] == 'info':  # Someone connected
-            self.logger.info('****** ', 'Browser Connected: %s' % message.get('url'))
-            self.logger.info('****** ', 'sending {0} pending messages'.format(len(pending)))
+            self.logger.info('****** Browser connected: {0}'.format(message.get('url')))
+            self.logger.info('****** sending {0} pending messages'.format(len(pending)))
             while pending:
                 msg = pending.pop()
-                self.logger.info('--->', msg.data)
+                self.logger.info('---> {0}'.format(msg.data))
                 self.send(msg, msg.is_binary)
         else:
             response = {
@@ -292,7 +293,7 @@ class LRSocket(WebSocket):
             }
         if response is not None:
             response = json.dumps(response)
-            self.logger.info('--->', response)
+            self.logger.info('---> {0}'.format(response))
             response = TextMessage(response)
             self.send(response, response.is_binary)
 
@@ -305,7 +306,7 @@ class LRSocket(WebSocket):
             'path': p,
         }
         response = json.dumps(message)
-        self.logger.info('--->', p)
+        self.logger.info('---> {0}'.format(p))
         response = TextMessage(response)
         if self.stream is None:  # No client connected or whatever
             pending.append(response)
