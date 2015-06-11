@@ -272,18 +272,6 @@ Note that many other distros/operating systems (including Arch Linux,
 \*BSD and OS X) do not require such packages, as C headers are included
 with the base distribution of Python.
 
-Installation on Linux/Mac OS X/etc.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-(any POSIX-compatible OS will do.)
-
-Using ``pip`` should suffice.  You may also want to use distribution- or
-system-specific packages for our dependencies.
-
-There are **no known issues or caveats** on those OSes.  Keep in mind that most
-of our developers run Linux on a daily basis and may not have the full
-knowledge required to resolve issues relating to your operating system.
-
 Installation on Windows and Windows support
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
