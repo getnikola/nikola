@@ -218,16 +218,28 @@ After that, run ``nikola init --demo sitename`` and that will run the setup
 wizard, which will create a folder called ``sitename`` containing a functional
 demo site.
 
-Nikola is packaged for some Linux distributions, you may get that instead. e.g.
-If you are running Arch Linux, there are AUR packages, available in Python 2/3
-and stable/git master flavors: `python-nikola`__ / `python2-nikola`__ for the
-latest stable release or `python-nikola-git`__ / `python2-nikola-git`__ for the
-GitHub master.  (only one package may be installed at the same time.)
+Linux packages
+~~~~~~~~~~~~~~
+
+Nikola is packaged for some Linux distributions, you may get that instead of
+installing via ``pip``.  Keep in mind that those packages might be
+**outdated** and that we don’t support versions that are too old.  Proceed with
+care!
+
+* Arch Linux (AUR): `python-nikola`__ / `python2-nikola`__ for the
+  latest stable release or `python-nikola-git`__ / `python2-nikola-git`__ for the
+  GitHub master.  (official Nikola-supported packages)
+* Fedora: `python-nikola`__ (incl. python3-nikola)
+* Debian and derivatives: `nikola`__
+* Gentoo: `www-apps/nikola`__
 
 __ https://aur.archlinux.org/packages/python-nikola/
 __ https://aur.archlinux.org/packages/python2-nikola/
 __ https://aur.archlinux.org/packages/python-nikola-git/
 __ https://aur.archlinux.org/packages/python2-nikola-git/
+__ https://admin.fedoraproject.org/pkgdb/package/python-nikola/
+__ https://packages.debian.org/sid/nikola
+__ https://packages.gentoo.org/package/www-apps/nikola
 
 libxml/libxslt (files missing) errors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
