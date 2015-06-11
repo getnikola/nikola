@@ -49,15 +49,16 @@ except ImportError:
     WebSocket = object
 try:
     import pyinotify
+    MASK = pyinotify.IN_DELETE | pyinotify.IN_CREATE | pyinotify.IN_MODIFY
 except ImportError:
     pyinotify = None
+    MASK = None
 
 
 from nikola.plugin_categories import Command
 from nikola.utils import req_missing, get_logger
 
 LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
-MASK = pyinotify.IN_DELETE | pyinotify.IN_CREATE | pyinotify.IN_MODIFY
 error_signal = signal('error')
 refresh_signal = signal('refresh')
 
@@ -115,12 +116,12 @@ class CommandAuto(Command):
 
         self.logger = get_logger('auto', self.site.loghandlers)
 
-        if WebSocket is object:
+        if WebSocket is object and pyinotify is None:
+            req_missing(['ws4py', 'pyinotify'], 'use the "auto" command')
+        elif WebSocket is object:
             req_missing(['ws4py'], 'use the "auto" command')
-            return
-        if pyinotify is None:
+        elif pyinotify is None:
             req_missing(['pyinotify'], 'use the "auto" command')
-            return
 
         arguments = ['build']
         if self.site.configuration_filename != 'conf.py':

@@ -13,7 +13,7 @@ Bugfixes
 --------
 
 * Handle rare gettz failure (Issue #1806)
-* Handle missing ws4py better in auto plugin (Issue #1803)
+* Handle missing dependencies better in auto plugin (Issues #1803, #1809)
 * IDNA mixing unicode/bytes in python 3 (Issue #1802)
 * Cleaner splitting of metadata in onefile posts (Issue #973)
 * It's markdown extra, not extras (Issue #1799)
