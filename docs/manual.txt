@@ -1483,6 +1483,13 @@ reStructuredText Extensions
 Nikola includes support for a few directives and roles that are not part of docutils, but which
 we think are handy for website development.
 
+Includes
+~~~~~~~~
+
+Nikola supports the standard reStructuredText ``include`` directive, but with a
+catch: filenames are relative to **Nikola site root** (directory with ``conf.py``)
+instead of the post location (eg. ``posts/`` directory)!
+
 Media
 ~~~~~
 
