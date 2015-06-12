@@ -138,19 +138,19 @@ class CommandAuto(Command):
             + 'script>')</script>
         </head>'''.format(port)
 
-        watched = [
-            self.site.configuration_filename,
+        # Do not duplicate entries -- otherwise, multiple rebuilds are triggered
+        watched = set([
             'themes/',
             'templates/',
-        ]
+        ])
         for item in self.site.config['post_pages']:
-            watched.append(os.path.dirname(item[0]))
+            watched.add(os.path.dirname(item[0]))
         for item in self.site.config['FILES_FOLDERS']:
-            watched.append(item)
+            watched.add(item)
         for item in self.site.config['GALLERY_FOLDERS']:
-            watched.append(item)
+            watched.add(item)
         for item in self.site.config['LISTINGS_FOLDERS']:
-            watched.append(item)
+            watched.add(item)
 
         out_folder = self.site.config['OUTPUT_FOLDER']
         if options and options.get('browser'):
