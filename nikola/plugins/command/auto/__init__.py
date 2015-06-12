@@ -219,11 +219,15 @@ class CommandAuto(Command):
             os.kill(os.getpid(), 15)
 
     def do_rebuild(self, event):
+        self.logger.info('REBUILDING SITE (from {0})'.format(event.src_path))
         p = subprocess.Popen(self.cmd_arguments, stderr=subprocess.PIPE)
         if p.wait() != 0:
             error = p.stderr.read()
             self.logger.error(error)
             error_signal.send(error=error)
+        else:
+            error = p.stderr.read()
+            print(error)
 
     def do_refresh(self, event):
         self.logger.info('REFRESHING: {0}'.format(event.src_path))
