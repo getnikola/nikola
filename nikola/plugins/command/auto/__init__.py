@@ -124,12 +124,12 @@ class CommandAuto(Command):
         elif pyinotify is None:
             req_missing(['pyinotify'], 'use the "auto" command')
 
-        self.cmd_arguments = ['build']
+        self.cmd_arguments = ['nikola', 'build']
         if self.site.configuration_filename != 'conf.py':
             self.cmd_arguments = ['--conf=' + self.site.configuration_filename] + self.cmd_arguments
 
         # Run an initial build so we are up-to-date
-        subprocess.call(["nikola"] + self.cmd_arguments)
+        subprocess.call(self.cmd_arguments)
 
         port = options and options.get('port')
         self.snippet = '''<script>document.write('<script src="http://'
