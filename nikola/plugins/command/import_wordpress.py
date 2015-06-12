@@ -283,7 +283,6 @@ class CommandImportWordpress(Command, ImportMixin):
             return
 
         additional_metadata = item.findall('{{{0}}}postmeta'.format(wordpress_namespace))
-
         if additional_metadata is None:
             return
 
@@ -446,8 +445,15 @@ class CommandImportWordpress(Command, ImportMixin):
         if '$latex' in content:
             tags.append('mathjax')
 
+        # Find post format if it's there
+        post_format = 'wp'
+        format_tag = [x for x in item.findall('*//{%s}meta_key' % wordpress_namespace) if x.text == '_tc_post_format']
+        if format_tag:
+            post_format = format_tag[0].getparent().find('{%s}meta_value' % wordpress_namespace).text
+
         if is_draft and self.exclude_drafts:
             LOGGER.notice('Draft "{0}" will not be imported.'.format(title))
+
         elif content.strip():
             # If no content is found, no files are written.
             self.url_map[link] = (self.context['SITE_URL'] +
@@ -474,7 +480,8 @@ class CommandImportWordpress(Command, ImportMixin):
                     out_meta_filename = slug + '.meta'
                     out_content_filename = slug + '.wp'
                     meta_slug = slug
-                content = self.transform_content(content)
+                if post_format == 'wp':
+                    content = self.transform_content(content)
                 self.write_metadata(os.path.join(self.output_folder, out_folder,
                                                  out_meta_filename),
                                     title, meta_slug, post_date, description, tags)

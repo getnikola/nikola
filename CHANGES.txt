@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Support pure markdown posts in WP import (Issue #484)
 * Make auto shutdown with ctrl-c (Issue #1811)
 * Log properly in ``nikola auto`` (Issue #1812)
 * Handle rare gettz failure (Issue #1806)
