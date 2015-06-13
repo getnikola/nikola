@@ -1,11 +1,19 @@
 New in master
 =============
 
+Features
+--------
+
+* Add support for ``html_tidy_withconfig`` to use a ``tidy5.conf`` file
+  (Issue #1795)
+* Change default tidy5 filters not to drop empty elements (Issue #1795)
+* Apply per-post filters via metadata (Issue #914)
+
 Bugfixes
 --------
 
 * Fix crash in wordpress code importer (Issue #1819)
-* Wrong command was called in nikola auto.
+* Call correct command in ``nikola auto``
 
 New in v7.5.1
 =============
@@ -14,7 +22,7 @@ Features
 --------
 
 * Suggest misspelled commands (Issue #1807)
-* New implementation of the ``nikola auto`` command.
+* New implementation of the ``nikola auto`` command
 * ``requests`` is now required for all Nikola sites
 * New ``nikola version --check`` option (Issue #1767)
 
