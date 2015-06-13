@@ -181,6 +181,10 @@ article.post-micro {
         font-family: Garamond, Junicode, serif;
     }
 
+    body {
+        font-size: 12pt;
+    }
+
     article .entry-title a[href]:after,
     article .metadata a[href]:after,
     article .tags a[href]:after {
