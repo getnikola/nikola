@@ -37,6 +37,9 @@ body {
 	body {
 		font-family: Garamond, serif;
 	}
+	.hidden-print {
+		display: none !important;
+	}
 }
 
 #container {
