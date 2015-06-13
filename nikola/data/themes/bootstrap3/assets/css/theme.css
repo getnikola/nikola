@@ -178,6 +178,10 @@ article.post-micro {
 
 /* hat tip bootstrap/html5 boilerplate */
 @media print {
+    *, *:before, *:after {
+        font-family: Junicode, Garamond, serif;
+    }
+
     article .entry-title a[href]:after,
     article .metadata a[href]:after,
     article .tags a[href]:after {
