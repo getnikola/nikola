@@ -1,6 +1,11 @@
 New in Master
 =============
 
+Features
+--------
+
+* Add redirection for tags in Wordpress importer (Issue #1168)
+
 Bugfixes
 --------
 
