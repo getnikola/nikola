@@ -1,4 +1,4 @@
-New in Master
+New in master
 =============
 
 Bugfixes
