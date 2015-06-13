@@ -1367,6 +1367,9 @@ html_tidy_wrap_attr
 html_tidy_mini
    Minify HTML 5 into smaller documents with `tidy5 <http://www.html-tidy.org/>`_
 
+html_tidy_withconfig
+   Run `tidy5 <http://www.html-tidy.org/>`_ with ``tidy5.conf`` as the config file (supplied by user)
+
 html5lib_minify
    Minify HTML5 using html5lib_minify
 
