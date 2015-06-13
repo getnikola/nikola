@@ -4,6 +4,7 @@ New in v7.5.1
 Features
 --------
 
+* Apply per-post filters via metadata (Issue #914)
 * Suggest misspelled commands (Issue #1807)
 * New implementation of the ``nikola auto`` command.
 * ``requests`` is now required for all Nikola sites
