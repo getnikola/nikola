@@ -101,8 +101,10 @@ class RenderPosts(Task):
                         continue
                     if f.startswith('filters.'):  # A function from the filters module
                         f = f[8:]
-                        if f in filters.__dict__:
-                            flist.append(filters.__dict__[f])
+                        try:
+                            flist.append(getattr(filters, f))
+                        except AttributeError:
+                            pass
                     else:
                         flist.append(f)
                 yield utils.apply_filters(task, {os.path.splitext(dest): flist})

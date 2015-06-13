@@ -1374,7 +1374,7 @@ html5lib_xmllike
    Format using html5lib
 
 typogrify
-   Use a `tipogrify filter <http://static.mintchaos.com/projects/typogrify/>`__
+   Improve typography using `typogrify <http://static.mintchaos.com/projects/typogrify/>`__
 
 typogrify_sans_widont
    Same as typogrify without the widont filter
@@ -1394,8 +1394,6 @@ optipng
 jpegoptim
    Compress JPEG files using `jpegoptim <http://www.kokkonen.net/tjko/projects.html>`_
 
-typogrify
-   Improve typography using `typogrify <https://github.com/mintchaos/typogrify>`_
 
 You can apply filters to specific posts or pages by using the ``filters`` metadata field::
 
