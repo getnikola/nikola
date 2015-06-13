@@ -503,6 +503,9 @@ to your configuration::
        Like tags, except each post can have only one, and they usually have
        more descriptive names.
 
+   filters
+       See the `Post Processing Filters`_ section.
+
    hidetitle
        Set "True" if you do not want to see the **page** title as a
        heading of the output html file (does not work for posts).
@@ -1364,6 +1367,21 @@ html_tidy_wrap_attr
 html_tidy_mini
    Minify HTML 5 into smaller documents with `tidy5 <http://www.html-tidy.org/>`_
 
+html_tidy_withconfig
+   Run `tidy5 <http://www.html-tidy.org/>`_ with ``tidy5.conf`` as the config file (supplied by user)
+
+html5lib_minify
+   Minify HTML5 using html5lib_minify
+
+html5lib_xmllike
+   Format using html5lib
+
+typogrify
+   Improve typography using `typogrify <http://static.mintchaos.com/projects/typogrify/>`__
+
+typogrify_sans_widont
+   Same as typogrify without the widont filter
+
 minify_lines
    **THIS FILTER HAS BEEN TURNED INTO A NOOP** and currently does nothing.
 
@@ -1379,8 +1397,11 @@ optipng
 jpegoptim
    Compress JPEG files using `jpegoptim <http://www.kokkonen.net/tjko/projects.html>`_
 
-typogrify
-   Improve typography using `typogrify <https://github.com/mintchaos/typogrify>`_
+
+You can apply filters to specific posts or pages by using the ``filters`` metadata field::
+
+  .. filters:: filters.html_tidy_nowrap, "sed s/foo/bar"
+
 
 
 Optimizing Your Website
