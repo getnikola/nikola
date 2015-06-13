@@ -58,8 +58,7 @@ except ImportError:
 
 
 from nikola.plugin_categories import Command
-from nikola.utils import req_missing, get_logger
-
+from nikola.utils import req_missing, get_logger, get_theme_path
 LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
 error_signal = signal('error')
 refresh_signal = signal('refresh')
@@ -142,9 +141,8 @@ class CommandAuto(Command):
 
         # Do not duplicate entries -- otherwise, multiple rebuilds are triggered
         watched = set([
-            'themes/',
             'templates/',
-        ])
+        ] + [os.path.join(get_theme_path(name), "templates") for name in self.site.THEMES])
         for item in self.site.config['post_pages']:
             watched.add(os.path.dirname(item[0]))
         for item in self.site.config['FILES_FOLDERS']:
