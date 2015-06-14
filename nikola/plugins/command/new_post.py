@@ -213,14 +213,6 @@ class CommandNewPost(Command):
                     'bbcode, html, textile, txt2tags',
         },
         {
-            'name': 'kernel',
-            'short': 'k',
-            'long': 'kernel',
-            'type': str,
-            'default': 'python',
-            'help': 'Jupyter kernel to start/use with your post (needs ipynb)',
-        },
-        {
             'name': 'schedule',
             'short': 's',
             'type': bool,
@@ -264,7 +256,6 @@ class CommandNewPost(Command):
         onefile = options['onefile']
         twofile = options['twofile']
         import_file = options['import']
-        kernel = options['kernel']
 
         if is_page:
             LOGGER = PAGELOGGER
@@ -390,8 +381,7 @@ class CommandNewPost(Command):
             content = "Write your {0} here.".format('page' if is_page else 'post')
         compiler_plugin.create_post(
             txt_path, content=content, onefile=onefile, title=title,
-            slug=slug, date=date, tags=tags, is_page=is_page, kernel=kernel,
-            **metadata)
+            slug=slug, date=date, tags=tags, is_page=is_page, **metadata)
 
         event = dict(path=txt_path)
 
