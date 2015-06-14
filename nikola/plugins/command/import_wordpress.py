@@ -171,11 +171,9 @@ class CommandImportWordpress(Command, ImportMixin):
         for tag in self.all_tags:
             tag = utils.slugify(tag.decode('utf8'))
             src_url = '{}tag/{}'.format(self.context['SITE_URL'], tag)
-            # FIXME: this should check for PRETTY_URLs in existing config
-            # probably reading that belongs in the Mixin
-            if True:
-                dst_url = self.context['SITE_URL'] + 'categories/' + tag + '.html'
-            self.url_map[src_url] = dst_url
+            dst_url = self.site.link('tag', tag)
+            if src_url != dst_url:
+                self.url_map[src_url] = dst_url
 
         self.write_urlmap_csv(
             os.path.join(self.output_folder, 'url_map.csv'), self.url_map)
