@@ -82,7 +82,7 @@ class CompileIPynb(PageCompiler):
         # the user crafted the ipynb by hand and did not add it.
         return nb_json.get('metadata', {}).get('nikola', {})
 
-    def create_post(self, path, kernel, **kw):
+    def create_post(self, path, **kw):
         content = kw.pop('content', None)
         onefile = kw.pop('onefile', False)
         # is_page is not needed to create the file
@@ -93,36 +93,18 @@ class CompileIPynb(PageCompiler):
         metadata.update(kw)
 
         makedirs(os.path.dirname(path))
+
+        if IPython.version_info[0] >= 3:
+            nb = nbformat.v4.new_notebook()
+        else:
+            nb = nbformat.v3.nbbase.new_notebook()
+
+        if onefile:
+            nb["metadata"]["nikola"] = metadata
+
         with io.open(path, "w+", encoding="utf8") as fd:
-            kernel_meta = [kernel.capitalize(), kernel, kernel]
-            if onefile:
-                kernel_meta.append(json.dumps(metadata, sort_keys=True, indent=2))
+            if IPython.version_info[0] >= 3:
+                nbformat.write(nb, fd, 4)
             else:
-                empty = {}
-                kernel_meta.append(json.dumps(empty))
+                nbformat.write(nb, fd, 'ipynb')
 
-            fd.write(NOTEBOOK_TEMPLATE % tuple(kernel_meta))
-
-NOTEBOOK_TEMPLATE = """{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "collapsed": true
-   },
-   "outputs": [],
-   "source": []
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "%s",
-   "language": "%s",
-   "name": "%s"
-  },
-  "nikola": %s
- },
- "nbformat": 4,
- "nbformat_minor": 0
-}"""
