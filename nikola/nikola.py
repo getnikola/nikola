@@ -615,12 +615,11 @@ class Nikola(object):
         self.default_lang = self.config['DEFAULT_LANG']
         self.translations = self.config['TRANSLATIONS']
 
-        if self.configured:
-            locale_fallback, locale_default, locales = sanitized_locales(
-                self.config.get('LOCALE_FALLBACK', None),
-                self.config.get('LOCALE_DEFAULT', None),
-                self.config.get('LOCALES', {}), self.translations)
-            utils.LocaleBorg.initialize(locales, self.default_lang)
+        locale_fallback, locale_default, locales = sanitized_locales(
+            self.config.get('LOCALE_FALLBACK', None),
+            self.config.get('LOCALE_DEFAULT', None),
+            self.config.get('LOCALES', {}), self.translations)
+        utils.LocaleBorg.initialize(locales, self.default_lang)
 
         # BASE_URL defaults to SITE_URL
         if 'BASE_URL' not in self.config:

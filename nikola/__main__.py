@@ -108,7 +108,8 @@ def main(args=None):
         root = get_root_dir()
         if root:
             os.chdir(root)
-        needs_config_file = (argname != 'help')
+        # Help and imports don't require config, but can use one if it exists
+        needs_config_file = (argname != 'help') and not argname.startswith('import_')
     else:
         needs_config_file = False
 
@@ -154,7 +155,6 @@ def main(args=None):
     config['__quiet__'] = quiet
     config['__configuration_filename__'] = conf_filename
     config['__cwd__'] = original_cwd
-
     site = Nikola(**config)
     DN = DoitNikola(site, quiet)
     if _RETURN_DOITNIKOLA:
