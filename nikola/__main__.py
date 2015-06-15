@@ -108,8 +108,7 @@ def main(args=None):
         root = get_root_dir()
         if root:
             os.chdir(root)
-        # help does not need a config file, but can use one.
-        needs_config_file = argname != 'help'
+        needs_config_file = (argname != 'help')
     else:
         needs_config_file = False
 

@@ -101,6 +101,7 @@ class CommandImportWordpress(Command, ImportMixin):
             'help': "The pattern for translation files names",
         },
     ]
+    all_tags = set([])
 
     def _execute(self, options={}, args=[]):
         """Import a WordPress blog from an export file into a Nikola site."""
@@ -165,6 +166,15 @@ class CommandImportWordpress(Command, ImportMixin):
             self.extra_languages)
         self.context['REDIRECTIONS'] = self.configure_redirections(
             self.url_map)
+
+        # Add tag redirects
+        for tag in self.all_tags:
+            tag = utils.slugify(tag.decode('utf8'))
+            src_url = '{}tag/{}'.format(self.context['SITE_URL'], tag)
+            dst_url = self.site.link('tag', tag)
+            if src_url != dst_url:
+                self.url_map[src_url] = dst_url
+
         self.write_urlmap_csv(
             os.path.join(self.output_folder, 'url_map.csv'), self.url_map)
         rendered_template = conf_template.render(**prepare_config(self.context))
@@ -336,9 +346,13 @@ class CommandImportWordpress(Command, ImportMixin):
         # a ton of things not supported here. We only do a basic [code
         # lang="x"] -> ```x translation, and remove quoted html entities (<,
         # >, &, and ").
-        def replacement(m):
-            language = m.group(1) or ''
-            code = m.group(2)
+        def replacement(m, c=content):
+            if len(m.groups()) == 1:
+                language = ''
+                code = m.group(0)
+            else:
+                language = m.group(1) or ''
+                code = m.group(2)
             code = code.replace('&amp;', '&')
             code = code.replace('&gt;', '>')
             code = code.replace('&lt;', '<')
@@ -441,6 +455,7 @@ class CommandImportWordpress(Command, ImportMixin):
             if text == 'Uncategorized':
                 continue
             tags.append(text)
+            self.all_tags.add(text)
 
         if '$latex' in content:
             tags.append('mathjax')
