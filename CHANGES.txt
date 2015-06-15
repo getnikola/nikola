@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Use ``watchdog`` in ``nikola auto`` (Issue #1810)
 * Add redirection for tags in Wordpress importer (Issue #1168)
 * Add support for ``html_tidy_withconfig`` to use a ``tidy5.conf`` file
   (Issue #1795)

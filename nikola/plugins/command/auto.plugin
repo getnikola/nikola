@@ -4,6 +4,6 @@ Module = auto
 
 [Documentation]
 Author = Roberto Alsina
-Version = 1.0
+Version = 2.1.0
 Website = http://getnikola.com
 Description = Automatically detect site changes, rebuild and optionally refresh a browser.

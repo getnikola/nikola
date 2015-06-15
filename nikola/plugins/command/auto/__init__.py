@@ -48,16 +48,17 @@ try:
 except ImportError:
     WebSocket = object
 try:
-    import pyinotify
-    MASK = pyinotify.IN_DELETE | pyinotify.IN_CREATE | pyinotify.IN_MODIFY
+    import watchdog
+    from watchdog.observers import Observer
+    from watchdog.events import FileSystemEventHandler, PatternMatchingEventHandler
 except ImportError:
-    pyinotify = None
-    MASK = None
+    watchdog = None
+    FileSystemEventHandler = object
+    PatternMatchingEventHandler = object
 
 
 from nikola.plugin_categories import Command
-from nikola.utils import req_missing, get_logger
-
+from nikola.utils import req_missing, get_logger, get_theme_path
 LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
 error_signal = signal('error')
 refresh_signal = signal('refresh')
@@ -117,12 +118,12 @@ class CommandAuto(Command):
         self.logger = get_logger('auto', self.site.loghandlers)
         LRSocket.logger = self.logger
 
-        if WebSocket is object and pyinotify is None:
-            req_missing(['ws4py', 'pyinotify'], 'use the "auto" command')
+        if WebSocket is object and watchdog is None:
+            req_missing(['ws4py', 'watchdog'], 'use the "auto" command')
         elif WebSocket is object:
             req_missing(['ws4py'], 'use the "auto" command')
-        elif pyinotify is None:
-            req_missing(['pyinotify'], 'use the "auto" command')
+        elif watchdog is None:
+            req_missing(['watchdog'], 'use the "auto" command')
 
         self.cmd_arguments = ['nikola', 'build']
         if self.site.configuration_filename != 'conf.py':
@@ -138,19 +139,18 @@ class CommandAuto(Command):
             + 'script>')</script>
         </head>'''.format(port)
 
-        watched = [
-            self.site.configuration_filename,
-            'themes/',
+        # Do not duplicate entries -- otherwise, multiple rebuilds are triggered
+        watched = set([
             'templates/',
-        ]
+        ] + [get_theme_path(name) for name in self.site.THEMES])
         for item in self.site.config['post_pages']:
-            watched.append(os.path.dirname(item[0]))
+            watched.add(os.path.dirname(item[0]))
         for item in self.site.config['FILES_FOLDERS']:
-            watched.append(item)
+            watched.add(item)
         for item in self.site.config['GALLERY_FOLDERS']:
-            watched.append(item)
+            watched.add(item)
         for item in self.site.config['LISTINGS_FOLDERS']:
-            watched.append(item)
+            watched.add(item)
 
         out_folder = self.site.config['OUTPUT_FOLDER']
         if options and options.get('browser'):
@@ -165,19 +165,22 @@ class CommandAuto(Command):
 
         host = options['address'].strip('[').strip(']') or dhost
 
-        # Start watchers that trigger reloads
-        reload_wm = pyinotify.WatchManager()
-        reload_notifier = pyinotify.ThreadedNotifier(reload_wm, self.do_refresh)
-        reload_notifier.start()
-        reload_wm.add_watch(out_folder, MASK, rec=True)  # Watch output folders
+        # Instantiate global observer
+        observer = Observer()
+        # Watch output folders and trigger reloads
+        observer.schedule(OurWatchHandler(self.do_refresh), out_folder, recursive=True)
 
-        # Start watchers that trigger rebuilds
-        rebuild_wm = pyinotify.WatchManager()
-        rebuild_notifier = pyinotify.ThreadedNotifier(rebuild_wm, self.do_rebuild)
-        rebuild_notifier.start()
+        # Watch input folders and trigger rebuilds
         for p in watched:
             if os.path.exists(p):
-                rebuild_wm.add_watch(p, MASK, rec=True)  # Watch input folders
+                observer.schedule(OurWatchHandler(self.do_rebuild), p, recursive=True)
+
+        # Watch config file (a bit of a hack, but we need a directory)
+        _conf_fn = os.path.abspath(self.site.configuration_filename or 'conf.py')
+        _conf_dn = os.path.dirname(_conf_fn)
+        observer.schedule(ConfigWatchHandler(_conf_fn, self.do_rebuild), _conf_dn, recursive=False)
+
+        observer.start()
 
         parent = self
 
@@ -214,15 +217,19 @@ class CommandAuto(Command):
             os.kill(os.getpid(), 15)
 
     def do_rebuild(self, event):
+        self.logger.info('REBUILDING SITE (from {0})'.format(event.src_path))
         p = subprocess.Popen(self.cmd_arguments, stderr=subprocess.PIPE)
         if p.wait() != 0:
             error = p.stderr.read()
             self.logger.error(error)
             error_signal.send(error=error)
+        else:
+            error = p.stderr.read()
+            print(error)
 
     def do_refresh(self, event):
-        self.logger.info('REFRESHING: {0}'.format(event.pathname))
-        p = os.path.relpath(event.pathname, os.path.abspath(self.site.config['OUTPUT_FOLDER']))
+        self.logger.info('REFRESHING: {0}'.format(event.src_path))
+        p = os.path.relpath(event.src_path, os.path.abspath(self.site.config['OUTPUT_FOLDER']))
         refresh_signal.send(path=p)
 
     def serve_static(self, environ, start_response):
@@ -327,3 +334,32 @@ class LRSocket(WebSocket):
             pending.append(response)
         else:
             self.send(response, response.is_binary)
+
+
+class OurWatchHandler(FileSystemEventHandler):
+
+    """A Nikola-specific handler for Watchdog."""
+
+    def __init__(self, function):
+        """Initialize the handler."""
+        self.function = function
+        super(OurWatchHandler, self).__init__()
+
+    def on_any_event(self, event):
+        """Call the provided function on any event."""
+        self.function(event)
+
+
+class ConfigWatchHandler(FileSystemEventHandler):
+
+    """A Nikola-specific handler for Watchdog that handles the config file (as a workaround)."""
+
+    def __init__(self, configuration_filename, function):
+        """Initialize the handler."""
+        self.configuration_filename = configuration_filename
+        self.function = function
+
+    def on_any_event(self, event):
+        """Call the provided function on any event."""
+        if event._src_path == self.configuration_filename:
+            self.function(event)
