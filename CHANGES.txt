@@ -13,6 +13,7 @@ Features
 Bugfixes
 --------
 
+* Read configuration when importing into an existing site (Issue #1823)
 * Fix crash in wordpress code importer (Issue #1819)
 * Call correct command in ``nikola auto``
 
