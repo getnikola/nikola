@@ -55,7 +55,8 @@ class CompileIPynb(PageCompiler):
 
     name = "ipynb"
     demote_headers = True
-    #import pdb; pdb.set_trace()
+    kernelspec = None
+    language_info = None
 
     def compile_html(self, source, dest, is_two_file=True):
         if flag is None:
@@ -83,10 +84,6 @@ class CompileIPynb(PageCompiler):
         # the user crafted the ipynb by hand and did not add it.
         return nb_json.get('metadata', {}).get('nikola', {})
 
-    def set_kernel_metadata(self, nb_object):
-        """Set kernel-related metadata for ipynb files."""
-        pass
-
     def create_post(self, path, **kw):
         content = kw.pop('content', None)
         onefile = kw.pop('onefile', False)
@@ -107,7 +104,10 @@ class CompileIPynb(PageCompiler):
         if onefile:
             nb["metadata"]["nikola"] = metadata
 
-        self.set_kernel_metadata(nb)
+        if self.kernelspec is not None:
+            nb["metadata"]["kernelspec"] = self.kernelspec
+        if self.language_info is not None:
+            nb["metadata"]["language_info"] = self.language_info
 
         with io.open(path, "w+", encoding="utf8") as fd:
             if IPython.version_info[0] >= 3:
