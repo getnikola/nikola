@@ -1,6 +1,6 @@
 [Core]
 Name = ipynb
-Module = ipynb/ipynb
+Module = ipynb
 
 [Documentation]
 Author = Damian Avila
