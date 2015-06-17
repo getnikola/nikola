@@ -96,8 +96,10 @@ class CompileIPynb(PageCompiler):
 
         if IPython.version_info[0] >= 3:
             nb = nbformat.v4.new_notebook()
+            nb["cells"] = [nbformat.v4.new_code_cell(content)]
         else:
             nb = nbformat.v3.nbbase.new_notebook()
+            nb["cells"] = [nbformat.v3.nbbase.new_code_cell(content)]
 
         if onefile:
             nb["metadata"]["nikola"] = metadata
@@ -202,4 +204,3 @@ ipython_language_info["python2"] = python2_language_info
 ipython_language_info["python3"] = python3_language_info
 ipython_language_info["julia"] = julia_language_info
 ipython_language_info["r"] = r_language_info
-

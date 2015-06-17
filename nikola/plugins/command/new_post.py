@@ -385,8 +385,6 @@ class CommandNewPost(Command):
             with io.open(import_file, 'r', encoding='utf-8') as fh:
                 content = fh.read()
         else:
-            # ipynb's create_post depends on this exact string, take care
-            # if you're changing it
             content = "Write your {0} here.".format('page' if is_page else 'post')
         compiler_plugin.create_post(
             txt_path, content=content, onefile=onefile, title=title,
