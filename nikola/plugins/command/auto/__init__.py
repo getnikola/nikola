@@ -212,9 +212,8 @@ class CommandAuto(Command):
             ws.serve_forever()
         except KeyboardInterrupt:
             self.logger.info("Server is shutting down.")
-            # This is a hack, but something is locking up in a futex
-            # and exit() doesn't work.
-            os.kill(os.getpid(), 15)
+            observer.stop()
+            observer.join()
 
     def do_rebuild(self, event):
         self.logger.info('REBUILDING SITE (from {0})'.format(event.src_path))
