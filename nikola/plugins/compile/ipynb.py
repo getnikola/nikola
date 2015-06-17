@@ -28,7 +28,6 @@
 
 from __future__ import unicode_literals, print_function
 import io
-import json
 import os
 
 try:
@@ -45,7 +44,7 @@ try:
     flag = True
 except ImportError:
     flag = None
-    
+
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, req_missing
 
