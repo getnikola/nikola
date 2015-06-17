@@ -268,6 +268,10 @@ class CommandNewPost(Command):
             onefile = self.site.config.get('ONE_FILE_POSTS', True)
 
         content_format = options['content_format']
+        content_subformat = None
+
+        if "@" in content_format:
+            content_format, content_subformat = tuple(content_format.split("@"))
 
         if not content_format:  # Issue #400
             content_format = get_default_compiler(
@@ -366,6 +370,11 @@ class CommandNewPost(Command):
             metadata['author'] = author
         metadata.update(self.site.config['ADDITIONAL_METADATA'])
         data.update(metadata)
+
+        # ipynb plugin needs the ipython kernel info. We get the kernel name
+        # from the content_subformat and pass it to the compiler in the metadata
+        if content_format == "ipynb" and content_subformat is not None:
+            metadata["ipython_kernel"] = content_subformat
 
         # Override onefile if not really supported.
         if not compiler_plugin.supports_onefile and onefile:
