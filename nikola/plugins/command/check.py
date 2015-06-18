@@ -192,6 +192,10 @@ class CommandCheck(Command):
                 self.logger.notice("Ignoring {0} (in cache, links may be incorrect)".format(filename))
                 return False
 
+            if not os.path.exists(fname):
+                # Quietly ignore files that don’t exist; use `nikola check -f` instead (Issue #1831)
+                return False
+
             d = lxml.html.fromstring(open(filename, 'rb').read())
             for l in d.iterlinks():
                 target = l[2]
