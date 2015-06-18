@@ -144,7 +144,7 @@ class Archive(Task):
                 # if we are creating one single archive, or full archives
                 archdata[None] = self.site.posts  # for create_single_archive
 
-            years = [_ for _ in archdata.keys()]
+            years = list(archdata.keys())
             years.sort()  # Issue #1833
             for year in years:
                 posts = archdata[year]
