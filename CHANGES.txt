@@ -15,6 +15,7 @@ Features
 Bugfixes
 --------
 
+* Don’t rebuild all tag or category pages when changing tag/category descriptions
 * Fix crash in wordpress code importer (Issue #1819)
 * Call correct command in ``nikola auto``
 
