@@ -144,7 +144,11 @@ class Archive(Task):
                 # if we are creating one single archive, or full archives
                 archdata[None] = self.site.posts  # for create_single_archive
 
-            for year, posts in archdata.items():
+            years = [_ for _ in archdata.keys()]
+            years.sort()  # Issue #1833
+            for year in years:
+                posts = archdata[year]
+
                 # Filter untranslated posts (Issue #1360)
                 if not kw["show_untranslated_posts"]:
                     posts = [p for p in posts if lang in p.translated_to]
