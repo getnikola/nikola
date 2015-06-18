@@ -53,7 +53,6 @@ class CompileIPynb(PageCompiler):
     """Compile IPynb into HTML."""
 
     name = "ipynb"
-    supports_onefile = False
     demote_headers = True
 
     def compile_html(self, source, dest, is_two_file=True):
@@ -85,35 +84,123 @@ class CompileIPynb(PageCompiler):
     def create_post(self, path, **kw):
         content = kw.pop('content', None)
         onefile = kw.pop('onefile', False)
+        kernel = kw.pop('ipython_kernel', None)
         # is_page is not needed to create the file
         kw.pop('is_page', False)
 
+        metadata = {}
+        metadata.update(self.default_metadata)
+        metadata.update(kw)
+
         makedirs(os.path.dirname(path))
+
+        if IPython.version_info[0] >= 3:
+            nb = nbformat.v4.new_notebook()
+            nb["cells"] = [nbformat.v4.new_code_cell(content)]
+        else:
+            nb = nbformat.v3.nbbase.new_notebook()
+            nb["cells"] = [nbformat.v3.nbbase.new_code_cell(content)]
+
         if onefile:
-            raise Exception('The one-file format is not supported by this compiler.')
+            nb["metadata"]["nikola"] = metadata
+
+        if kernel is not None:
+            nb["metadata"]["kernelspec"] = ipython_kernel_spec[kernel]
+            nb["metadata"]["language_info"] = ipython_language_info[kernel]
+
         with io.open(path, "w+", encoding="utf8") as fd:
-            if not content.startswith("Write your"):
-                fd.write(content)
+            if IPython.version_info[0] >= 3:
+                nbformat.write(nb, fd, 4)
             else:
-                fd.write("""{
- "metadata": {
-  "name": ""
- },
- "nbformat": 3,
- "nbformat_minor": 0,
- "worksheets": [
-  {
-   "cells": [
-    {
-     "cell_type": "code",
-     "collapsed": false,
-     "input": [],
-     "language": "python",
-     "metadata": {},
-     "outputs": []
-    }
-   ],
-   "metadata": {}
-  }
- ]
-}""")
+                nbformat.write(nb, fd, 'ipynb')
+
+# python2 nb metadata info
+
+python2_kernelspec = {
+    "display_name": "Python 2",
+    "language": "python",
+    "name": "python2"
+}
+
+python2_codemirror_mode = {
+    "name": "ipython",
+    "version": 2
+}
+
+python2_language_info = {
+    "codemirror_mode": python2_codemirror_mode,
+    "file_extension": ".py",
+    "mimetype": "text/x-python",
+    "name": "python",
+    "nbconvert_exporter": "python",
+    "pygments_lexer": "ipython2",
+    "version": "2.7.10"
+}
+
+# python3 nb metadata info
+
+python3_kernelspec = {
+    "display_name": "Python 3",
+    "language": "python",
+    "name": "python3"
+}
+
+python3_codemirror_mode = {
+    "name": "ipython",
+    "version": 3
+}
+
+python3_language_info = {
+    "codemirror_mode": python3_codemirror_mode,
+    "file_extension": ".py",
+    "mimetype": "text/x-python",
+    "name": "python",
+    "nbconvert_exporter": "python",
+    "pygments_lexer": "ipython3",
+    "version": "3.4.3"
+}
+
+# julia nb metadata info
+
+julia_kernelspec = {
+    "display_name": "Julia 0.3.2",
+    "language": "julia",
+    "name": "julia-0.3"
+}
+
+julia_language_info = {
+    "name": "julia",
+    "version": "0.3.2"
+}
+
+# r nb metadata info
+
+r_kernelspec = {
+    "display_name": "R",
+    "language": "R",
+    "name": "ir"
+}
+
+r_language_info = {
+    "codemirror_mode": "r",
+    "file_extension": ".r",
+    "mimetype": "text/x-r-source",
+    "name": "R",
+    "pygments_lexer": "r",
+    "version": "3.1.3"
+}
+
+# main ipython_kernel_spec dict to map the correct metadata
+# with the kernel name from the markup defined by the user
+
+ipython_kernel_spec = {}
+ipython_kernel_spec["python2"] = python2_kernelspec
+ipython_kernel_spec["python3"] = python3_kernelspec
+ipython_kernel_spec["julia"] = julia_kernelspec
+ipython_kernel_spec["r"] = r_kernelspec
+
+ipython_language_info = {}
+ipython_language_info["python2"] = python2_language_info
+ipython_language_info["python3"] = python3_language_info
+ipython_language_info["julia"] = julia_language_info
+ipython_language_info["r"] = r_language_info
