@@ -841,9 +841,12 @@ config option:
 IPython Notebook/Jupyter
 ````````````````````````
 
-To use IPython Notebooks (a.k.a. Jupyter) as posts/pages, make sure ``ipynb``
-is in your ``COMPILERS`` and that the ``.ipynb`` extension is defined in ``POSTS``
-and ``PAGES``.
+To use Jupyter notebooks (previously known as IPython notebooks) as posts/pages,
+make sure ``ipynb`` is in your ``COMPILERS`` and that the ``.ipynb`` extension
+is defined in ``POSTS`` and ``PAGES``.
+
+The ``-f`` argument to ``new_post`` should be used in the ``ipynb@KERNEL`` format.
+It defaults to Python in the version used by Nikola if not specified.
 
 HTML
 ````

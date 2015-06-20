@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Support other kernels for ipynb/Jupyter using
+  ``nikola new_post -f ipynb@kernel`` (Issues #1774, #1834)
 * Add distinct styling for the site footer in bootstrap3
 * Bootstrap v3.3.5 (Issue #1828)
 * Use ``watchdog`` in ``nikola auto`` (Issue #1810)
