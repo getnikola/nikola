@@ -3,8 +3,8 @@ Name = ipynb
 Module = ipynb
 
 [Documentation]
-Author = Damian Avila and others
-Version = 1.1
-Website = http://www.damian.oquanta.info
+Author = Damian Avila, Chris Warrick and others
+Version = 2.0.0
+Website = http://www.damian.oquanta.info/
 Description = Compile IPython notebooks into Nikola posts
 
