@@ -191,7 +191,7 @@ IPYNB_KERNELS = {
     },
 
     "r": {
-        "kernelspec":  {
+        "kernelspec": {
             "display_name": "R",
             "language": "R",
             "name": "ir"
@@ -205,4 +205,4 @@ IPYNB_KERNELS = {
             "version": "3.1.3"
         }
     },
-    }
+}
