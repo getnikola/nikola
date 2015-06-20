@@ -79,8 +79,8 @@ class CompileIPynb(PageCompiler):
         source = post.source_path
         with io.open(source, "r", encoding="utf8") as in_file:
             nb_json = nbformat.read(in_file, current_nbformat)
-        # metadata should always exist, but we never know if
-        # the user crafted the ipynb by hand and did not add it.
+        # Metadata might not exist in two-file posts or in hand-crafted
+        # .ipynb files.
         return nb_json.get('metadata', {}).get('nikola', {})
 
     def create_post(self, path, **kw):
