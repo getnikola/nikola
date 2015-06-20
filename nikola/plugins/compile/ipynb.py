@@ -37,9 +37,11 @@ try:
     if IPython.version_info[0] >= 3:     # API changed with 3.0.0
         from IPython import nbformat
         current_nbformat = nbformat.current_nbformat
+        from IPython.kernel import kernelspec
     else:
         import IPython.nbformat.current as nbformat
         current_nbformat = 'json'
+        kernelspec = None
 
     from IPython.config import Config
     flag = True
@@ -115,16 +117,27 @@ class CompileIPynb(PageCompiler):
                 nb = nbformat.new_notebook()
                 nb["worksheets"] = [nbformat.new_worksheet(cells=[nbformat.new_text_cell('markdown', [content])])]
 
-            if kernel is None:
-                kernel = self.default_kernel
-                self.logger.notice('No kernel specified, assuming "{0}".'.format(kernel))
+            if kernelspec is not None:
+                if kernel is None:
+                    kernel = self.default_kernel
+                    self.logger.notice('No kernel specified, assuming "{0}".'.format(kernel))
 
-            if kernel not in IPYNB_KERNELS:
-                self.logger.error('Unknown kernel "{0}". Maybe you mispelled it?'.format(kernel))
-                self.logger.info("Available kernels: {0}".format(", ".join(sorted(IPYNB_KERNELS))))
-                raise Exception('Unknown kernel "{0}"'.format(kernel))
+                IPYNB_KERNELS = {}
+                ksm = kernelspec.KernelSpecManager()
+                for k in ksm.find_kernel_specs():
+                    IPYNB_KERNELS[k] = ksm.get_kernel_spec(k).to_dict()
+                    IPYNB_KERNELS[k]['name'] = k
+                    del IPYNB_KERNELS[k]['argv']
 
-            nb["metadata"].update(IPYNB_KERNELS[kernel])
+                if kernel not in IPYNB_KERNELS:
+                    self.logger.error('Unknown kernel "{0}". Maybe you mispelled it?'.format(kernel))
+                    self.logger.info("Available kernels: {0}".format(", ".join(sorted(IPYNB_KERNELS))))
+                    raise Exception('Unknown kernel "{0}"'.format(kernel))
+
+                nb["metadata"]["kernelspec"] = IPYNB_KERNELS[kernel]
+            else:
+                # Older IPython versions don’t need kernelspecs.
+                pass
 
         if onefile:
             nb["metadata"]["nikola"] = metadata
@@ -134,75 +147,3 @@ class CompileIPynb(PageCompiler):
                 nbformat.write(nb, fd, 4)
             else:
                 nbformat.write(nb, fd, 'ipynb')
-
-# python2 nb metadata info
-
-IPYNB_KERNELS = {
-    "python2": {
-        "kernelspec": {
-            "display_name": "Python 2",
-            "language": "python",
-            "name": "python2"
-        },
-        "language_info": {
-            "codemirror_mode": {
-                "name": "ipython",
-                "version": 2
-            },
-            "file_extension": ".py",
-            "mimetype": "text/x-python",
-            "name": "python",
-            "nbconvert_exporter": "python",
-            "pygments_lexer": "ipython2",
-            "version": "2.7.10"
-        },
-    },
-
-    "python3": {
-        "kernelspec": {
-            "display_name": "Python 3",
-            "language": "python",
-            "name": "python3"
-        },
-        "language_info": {
-            "codemirror_mode": {
-                "name": "ipython",
-                "version": 3
-            },
-            "file_extension": ".py",
-            "mimetype": "text/x-python",
-            "name": "python",
-            "nbconvert_exporter": "python",
-            "pygments_lexer": "ipython3",
-            "version": "3.4.3"
-        },
-    },
-
-    "julia": {
-        "kernelspec": {
-            "display_name": "Julia 0.3.2",
-            "language": "julia",
-            "name": "julia-0.3"
-        },
-        "language_info": {
-            "name": "julia",
-            "version": "0.3.2"
-        }
-    },
-
-    "r": {
-        "kernelspec": {
-            "display_name": "R",
-            "language": "R",
-            "name": "ir"
-        },
-        "language_info": {
-            "codemirror_mode": "r",
-            "file_extension": ".r",
-            "mimetype": "text/x-r-source",
-            "name": "R",
-            "pygments_lexer": "r",
-            "version": "3.1.3"
-        }
-    },
-}
