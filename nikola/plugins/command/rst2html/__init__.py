@@ -39,6 +39,7 @@ class CommandRst2Html(Command):
     name = "rst2html"
     doc_usage = "infile"
     doc_purpose = "compile reStructuredText to HTML files"
+    needs_config = False
 
     def _execute(self, options, args):
         """Compile reStructuredText to standalone HTML files."""
