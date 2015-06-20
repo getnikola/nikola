@@ -271,7 +271,7 @@ class CommandNewPost(Command):
         content_subformat = None
 
         if "@" in content_format:
-            content_format, content_subformat = tuple(content_format.split("@"))
+            content_format, content_subformat = content_format.split("@")
 
         if not content_format:  # Issue #400
             content_format = get_default_compiler(
