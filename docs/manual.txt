@@ -824,6 +824,56 @@ setup.
    the same extension as is set in ``COMPILERS`` and configure the outputs
    properly.
 
+Markdown
+````````
+
+To use Markdown in your posts/pages, make sure ``markdown`` is in your
+``COMPILERS`` and that at least one of your desired extensions is defined in
+``POSTS`` and ``PAGES``.
+
+You can use Python-Markdown extensions by setting the ``MARKDOWN_EXTENSIONS``
+config option:
+
+.. code:: python
+
+    MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
+
+IPython Notebook/Jupyter
+````````````````````````
+
+To use IPython Notebooks (a.k.a. Jupyter) as posts/pages, make sure ``ipynb``
+is in your ``COMPILERS`` and that the ``.ipynb`` extension is defined in ``POSTS``
+and ``PAGES``.
+
+HTML
+````
+
+To use plain HTML in your posts/pages, make sure ``html`` is in your
+``COMPILERS``
+and that the ``.html`` extension is defined in ``POSTS`` and ``PAGES``.
+
+PHP
+```
+
+There are two ways of using PHP within Nikola:
+
+1. To use PHP in your posts/pages (inside your site, with the theme and
+   everything), make sure ``php`` is in your ``COMPILERS`` and that the ``.php``
+   extension is defined in ``POSTS`` and ``PAGES``.
+2. To use PHP as standalone files (without any modifications), put them in
+   ``files/`` (or whatever ``FILES_FOLDERS`` is configured to).
+
+Pandoc
+``````
+
+To use Pandoc, you must uncomment the entry in ``COMPILERS`` and set the
+extensions list to your desired extensions while also removing them from their
+original compilers.  The input format is inferred from the extension by Pandoc.
+
+Using Pandoc for reStructuredText, Markdown and other input formats that have a
+standalone Nikola plugin is **not recommended** as it disables plugins and
+extensions that are usually provided by Nikola.
+
 Creating a Page
 ---------------
 
