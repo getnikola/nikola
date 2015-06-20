@@ -29,6 +29,7 @@
 from __future__ import unicode_literals, print_function
 import io
 import os
+import sys
 
 try:
     import IPython
@@ -46,7 +47,7 @@ except ImportError:
     flag = None
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing
+from nikola.utils import makedirs, req_missing, get_logger
 
 
 class CompileIPynb(PageCompiler):
@@ -54,6 +55,11 @@ class CompileIPynb(PageCompiler):
 
     name = "ipynb"
     demote_headers = True
+    default_kernel = 'python2' if sys.version_info[0] == 2 else 'python3'
+
+    def set_site(self, site):
+        self.logger = get_logger('compile_ipynb', site.loghandlers)
+        super(CompileIPynb, self).set_site(site)
 
     def compile_html(self, source, dest, is_two_file=True):
         if flag is None:
@@ -107,6 +113,15 @@ class CompileIPynb(PageCompiler):
 
         if onefile:
             nb["metadata"]["nikola"] = metadata
+
+        if kernel is None:
+            kernel = self.default_kernel
+            self.logger.notice('No kernel specified, assuming "{0}".'.format(kernel))
+
+        if kernel not in IPYNB_KERNELS:
+            self.logger.error('Unknown kernel "{0}". Maybe you mispelled it?'.format(kernel))
+            self.logger.info("Available kernels: {0}".format(", ".join(sorted(IPYNB_KERNELS))))
+            raise Exception('Unknown kernel "{0}"'.format(kernel))
 
         nb["metadata"].update(IPYNB_KERNELS[kernel])
 
