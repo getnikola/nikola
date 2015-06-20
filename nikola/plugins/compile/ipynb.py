@@ -104,9 +104,7 @@ class CompileIPynb(PageCompiler):
         if onefile:
             nb["metadata"]["nikola"] = metadata
 
-        if kernel is not None:
-            nb["metadata"]["kernelspec"] = ipython_kernel_spec[kernel]
-            nb["metadata"]["language_info"] = ipython_language_info[kernel]
+        nb["metadata"].update(IPYNB_KERNELS[kernel])
 
         with io.open(path, "w+", encoding="utf8") as fd:
             if IPython.version_info[0] >= 3:
@@ -116,91 +114,72 @@ class CompileIPynb(PageCompiler):
 
 # python2 nb metadata info
 
-python2_kernelspec = {
-    "display_name": "Python 2",
-    "language": "python",
-    "name": "python2"
-}
+IPYNB_KERNELS = {
+    "python2": {
+        "kernelspec": {
+            "display_name": "Python 2",
+            "language": "python",
+            "name": "python2"
+        },
+        "language_info": {
+            "codemirror_mode": {
+                "name": "ipython",
+                "version": 2
+            },
+            "file_extension": ".py",
+            "mimetype": "text/x-python",
+            "name": "python",
+            "nbconvert_exporter": "python",
+            "pygments_lexer": "ipython2",
+            "version": "2.7.10"
+        },
+    },
 
-python2_codemirror_mode = {
-    "name": "ipython",
-    "version": 2
-}
+    "python3": {
+        "kernelspec": {
+            "display_name": "Python 3",
+            "language": "python",
+            "name": "python3"
+        },
+        "language_info": {
+            "codemirror_mode": {
+                "name": "ipython",
+                "version": 3
+            },
+            "file_extension": ".py",
+            "mimetype": "text/x-python",
+            "name": "python",
+            "nbconvert_exporter": "python",
+            "pygments_lexer": "ipython3",
+            "version": "3.4.3"
+        },
+    },
 
-python2_language_info = {
-    "codemirror_mode": python2_codemirror_mode,
-    "file_extension": ".py",
-    "mimetype": "text/x-python",
-    "name": "python",
-    "nbconvert_exporter": "python",
-    "pygments_lexer": "ipython2",
-    "version": "2.7.10"
-}
+    "julia": {
+        "kernelspec": {
+            "display_name": "Julia 0.3.2",
+            "language": "julia",
+            "name": "julia-0.3"
+        },
+        "language_info": {
+            "name": "julia",
+            "version": "0.3.2"
+        }
+    },
 
-# python3 nb metadata info
-
-python3_kernelspec = {
-    "display_name": "Python 3",
-    "language": "python",
-    "name": "python3"
-}
-
-python3_codemirror_mode = {
-    "name": "ipython",
-    "version": 3
-}
-
-python3_language_info = {
-    "codemirror_mode": python3_codemirror_mode,
-    "file_extension": ".py",
-    "mimetype": "text/x-python",
-    "name": "python",
-    "nbconvert_exporter": "python",
-    "pygments_lexer": "ipython3",
-    "version": "3.4.3"
-}
-
-# julia nb metadata info
-
-julia_kernelspec = {
-    "display_name": "Julia 0.3.2",
-    "language": "julia",
-    "name": "julia-0.3"
-}
-
-julia_language_info = {
-    "name": "julia",
-    "version": "0.3.2"
-}
-
-# r nb metadata info
-
-r_kernelspec = {
-    "display_name": "R",
-    "language": "R",
-    "name": "ir"
-}
-
-r_language_info = {
-    "codemirror_mode": "r",
-    "file_extension": ".r",
-    "mimetype": "text/x-r-source",
-    "name": "R",
-    "pygments_lexer": "r",
-    "version": "3.1.3"
-}
-
-# main ipython_kernel_spec dict to map the correct metadata
-# with the kernel name from the markup defined by the user
-
-ipython_kernel_spec = {}
-ipython_kernel_spec["python2"] = python2_kernelspec
-ipython_kernel_spec["python3"] = python3_kernelspec
-ipython_kernel_spec["julia"] = julia_kernelspec
-ipython_kernel_spec["r"] = r_kernelspec
-
-ipython_language_info = {}
-ipython_language_info["python2"] = python2_language_info
-ipython_language_info["python3"] = python3_language_info
-ipython_language_info["julia"] = julia_language_info
-ipython_language_info["r"] = r_language_info
+    "r": {
+        "kernelspec":  {
+            "display_name": "R",
+            "language": "R",
+            "name": "ir"
+        },
+        "language_info": {
+            "codemirror_mode": "r",
+            "file_extension": ".r",
+            "mimetype": "text/x-r-source",
+            "name": "R",
+            "pygments_lexer": "r",
+            "version": "3.1.3"
+        }
+    },
+    }
