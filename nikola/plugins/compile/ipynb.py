@@ -104,26 +104,30 @@ class CompileIPynb(PageCompiler):
 
         makedirs(os.path.dirname(path))
 
-        if IPython.version_info[0] >= 3:
-            nb = nbformat.v4.new_notebook()
-            nb["cells"] = [nbformat.v4.new_markdown_cell(content)]
+        if content.startswith("{"):
+            # .ipynb imported file, guaranteed to start with "{" because it’s JSON.
+            nb = nbformat.reads(content, current_nbformat)
         else:
-            nb = nbformat.v3.nbbase.new_notebook()
-            nb["cells"] = [nbformat.v3.nbbase.new_markdown_cell(content)]
+            if IPython.version_info[0] >= 3:
+                nb = nbformat.v4.new_notebook()
+                nb["cells"] = [nbformat.v4.new_markdown_cell(content)]
+            else:
+                nb = nbformat.v3.nbbase.new_notebook()
+                nb["cells"] = [nbformat.v3.nbbase.new_markdown_cell(content)]
+
+            if kernel is None:
+                kernel = self.default_kernel
+                self.logger.notice('No kernel specified, assuming "{0}".'.format(kernel))
+
+            if kernel not in IPYNB_KERNELS:
+                self.logger.error('Unknown kernel "{0}". Maybe you mispelled it?'.format(kernel))
+                self.logger.info("Available kernels: {0}".format(", ".join(sorted(IPYNB_KERNELS))))
+                raise Exception('Unknown kernel "{0}"'.format(kernel))
+
+            nb["metadata"].update(IPYNB_KERNELS[kernel])
 
         if onefile:
             nb["metadata"]["nikola"] = metadata
-
-        if kernel is None:
-            kernel = self.default_kernel
-            self.logger.notice('No kernel specified, assuming "{0}".'.format(kernel))
-
-        if kernel not in IPYNB_KERNELS:
-            self.logger.error('Unknown kernel "{0}". Maybe you mispelled it?'.format(kernel))
-            self.logger.info("Available kernels: {0}".format(", ".join(sorted(IPYNB_KERNELS))))
-            raise Exception('Unknown kernel "{0}"'.format(kernel))
-
-        nb["metadata"].update(IPYNB_KERNELS[kernel])
 
         with io.open(path, "w+", encoding="utf8") as fd:
             if IPython.version_info[0] >= 3:
