@@ -4,6 +4,57 @@ New in master
 Features
 --------
 
+* Add distinct styling for the site footer in bootstrap3
+* Bootstrap v3.3.5 (Issue #1828)
+* Use ``watchdog`` in ``nikola auto`` (Issue #1810)
+* Add redirection for tags in Wordpress importer (Issue #1168)
+* Add support for ``html_tidy_withconfig`` to use a ``tidy5.conf`` file
+  (Issue #1795)
+* Change default tidy5 filters not to drop empty elements (Issue #1795)
+* Apply per-post filters via metadata (Issue #914)
+
+Bugfixes
+--------
+
+* Unnecessary rebuilds of yearly archives (Issue #1833)
+* Quietly ignore non-existent files in ``nikola check -l`` (Issue #1831)
+* Don’t rebuild all tag or category pages when changing tag/category descriptions
+* Fix crash in wordpress code importer (Issue #1819)
+* Call correct command in ``nikola auto``
+
+New in v7.5.1
+=============
+
+Features
+--------
+
+* Suggest misspelled commands (Issue #1807)
+* New implementation of the ``nikola auto`` command
+* ``requests`` is now required for all Nikola sites
+* New ``nikola version --check`` option (Issue #1767)
+
+Bugfixes
+--------
+
+* Support pure markdown posts in WP import (Issue #484)
+* Make auto shutdown with ctrl-c (Issue #1811)
+* Log properly in ``nikola auto`` (Issue #1812)
+* Handle rare gettz failure (Issue #1806)
+* Handle missing dependencies better in auto plugin (Issues #1803, #1809)
+* IDNA mixing unicode/bytes in python 3 (Issue #1802)
+* Cleaner splitting of metadata in onefile posts (Issue #973)
+* It's markdown extra, not extras (Issue #1799)
+
+New in v7.5.0
+=============
+
+Features
+--------
+
+* Make default themes more accessible (Issue #377)
+* Add ipython support to the default themes (Issue #1782)
+* Automatically mark ipynb posts/pages as requiring mathjax (Issue #1782)
+* New --get-path option for ``nikola install_theme`` (Issue #1762)
 * New `nikola rst2html` command (Issue #1710)
 * New `nikola status` command (Issue #1740)
 * Support [code] in wordpress importers (Issue #1186)
@@ -14,6 +65,7 @@ Features
 Bugfixes
 --------
 
+* Dropped empty languages (fil, tl, zh_TW)
 * Extract ``nikola check`` target list from actual task list instead of parsing (Issue #1758)
 * Treat special-purpose “draft” tag case-insensitive
 * Avoid some rebuild loops (Issue #1747)

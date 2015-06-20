@@ -37,13 +37,10 @@ except ImportError:
 
 from doit.loader import generate_tasks
 import lxml.html
-try:
-    import requests
-except ImportError:
-    requests = None
+import requests
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, req_missing
+from nikola.utils import get_logger
 
 
 def _call_nikola_list(site):
@@ -183,9 +180,6 @@ class CommandCheck(Command):
         if find_sources:
             deps = _call_nikola_list(self.site)[1]
 
-        if check_remote and requests is None:
-            req_missing(['requests'], 'check remote links')
-
         if url_type in ('absolute', 'full_path'):
             url_netloc_to_root = urlparse(self.site.config['BASE_URL']).path
         try:
@@ -198,9 +192,13 @@ class CommandCheck(Command):
                 self.logger.notice("Ignoring {0} (in cache, links may be incorrect)".format(filename))
                 return False
 
+            if not os.path.exists(fname):
+                # Quietly ignore files that don’t exist; use `nikola check -f` instead (Issue #1831)
+                return False
+
             d = lxml.html.fromstring(open(filename, 'rb').read())
             for l in d.iterlinks():
-                target = l[0].attrib[l[1]]
+                target = l[2]
                 if target == "#":
                     continue
                 target, _ = urldefrag(target)
@@ -236,8 +234,12 @@ class CommandCheck(Command):
                     continue
 
                 if url_type == 'rel_path':
-                    target_filename = os.path.abspath(
-                        os.path.join(os.path.dirname(filename), unquote(target)))
+                    if target.startswith('/'):
+                        target_filename = os.path.abspath(
+                            os.path.join(self.site.config['OUTPUT_FOLDER'], unquote(target.lstrip('/'))))
+                    else:  # Relative path
+                        target_filename = os.path.abspath(
+                            os.path.join(os.path.dirname(filename), unquote(target)))
 
                 elif url_type in ('full_path', 'absolute'):
                     if url_type == 'absolute':

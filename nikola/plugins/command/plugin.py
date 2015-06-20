@@ -30,15 +30,11 @@ import os
 import shutil
 import subprocess
 import sys
+import requests
 
 import pygments
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter
-
-try:
-    import requests
-except ImportError:
-    requests = None  # NOQA
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -311,8 +307,6 @@ class CommandPlugin(Command):
         return False
 
     def get_json(self, url):
-        if requests is None:
-            utils.req_missing(['requests'], 'install or list available plugins', python=True, optional=False)
         if self.json is None:
             self.json = requests.get(url).json()
         return self.json

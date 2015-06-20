@@ -50,6 +50,14 @@ class CommandDeploy(Command):
             'help': 'List all drafts',
         },
         {
+            'name': 'list_modified',
+            'short': 'm',
+            'long': 'list-modified',
+            'type': bool,
+            'default': False,
+            'help': 'List all modified files since last deployment',
+        },
+        {
             'name': 'list_scheduled',
             'short': 's',
             'long': 'list-scheduled',
@@ -76,7 +84,7 @@ class CommandDeploy(Command):
 
         if last_deploy:
 
-            fmod_since_deployment = 0
+            fmod_since_deployment = []
             for root, dirs, files in os.walk(self.site.config["OUTPUT_FOLDER"], followlinks=True):
                 if not dirs and not files:
                     continue
@@ -84,10 +92,13 @@ class CommandDeploy(Command):
                     fpath = os.path.join(root, fname)
                     fmodtime = datetime.fromtimestamp(os.stat(fpath).st_mtime)
                     if fmodtime.replace(tzinfo=tzlocal()) > last_deploy.replace(tzinfo=gettz("UTC")).astimezone(tz=tzlocal()):
-                        fmod_since_deployment = fmod_since_deployment + 1
+                        fmod_since_deployment.append(fpath)
 
-            if fmod_since_deployment > 0:
-                print("{0} output files modified since last deployment {1} ago.".format(str(fmod_since_deployment), self.human_time(last_deploy_offset)))
+            if len(fmod_since_deployment) > 0:
+                print("{0} output files modified since last deployment {1} ago.".format(str(len(fmod_since_deployment)), self.human_time(last_deploy_offset)))
+                if options['list_modified']:
+                    for fpath in fmod_since_deployment:
+                        print("Modified: '{0}'".format(fpath))
             else:
                 print("Last deployment {0} ago.".format(self.human_time(last_deploy_offset)))
 

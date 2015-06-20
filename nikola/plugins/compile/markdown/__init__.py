@@ -30,7 +30,6 @@ from __future__ import unicode_literals
 
 import io
 import os
-import re
 
 try:
     from markdown import markdown
@@ -76,7 +75,7 @@ class CompileMarkdown(PageCompiler):
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
             if not is_two_file:
-                data = re.split('(\n\n|\r\n\r\n)', data, maxsplit=1)[-1]
+                _, data = self.split_metadata(data)
             output = markdown(data, self.extensions)
             out_file.write(output)
 

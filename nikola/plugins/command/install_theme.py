@@ -28,15 +28,11 @@ from __future__ import print_function
 import os
 import io
 import json
+import requests
 
 import pygments
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter
-
-try:
-    import requests
-except ImportError:
-    requests = None  # NOQA
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -88,19 +84,32 @@ class CommandInstallTheme(Command):
                     "https://themes.getnikola.com/v7/themes.json)",
             'default': 'https://themes.getnikola.com/v7/themes.json'
         },
+        {
+            'name': 'getpath',
+            'short': 'g',
+            'long': 'get-path',
+            'type': bool,
+            'default': False,
+            'help': "Print the path for installed theme",
+        },
     ]
 
     def _execute(self, options, args):
         """Install theme into current site."""
-        if requests is None:
-            utils.req_missing(['requests'], 'install themes')
-
         listing = options['list']
         url = options['url']
         if args:
             name = args[0]
         else:
             name = None
+
+        if options['getpath'] and name:
+            path = utils.get_theme_path(name)
+            if path:
+                print(path)
+            else:
+                print('not installed')
+            exit(0)
 
         if name is None and not listing:
             LOGGER.error("This command needs either a theme name or the -l option.")

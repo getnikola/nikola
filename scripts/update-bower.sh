@@ -54,6 +54,4 @@ ln -sf ../../../../../../../bower_components/jquery-colorbox/example3/images/* .
 git add .
 popd
 
-scrpits/generate_symlinked_list.sh
-
-git commit -am 'bower update'
+scripts/generate_symlinked_list.sh

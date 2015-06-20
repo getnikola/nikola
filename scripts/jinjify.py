@@ -78,7 +78,7 @@ def jinjify(in_theme, out_theme):
         parent = mappings[child]
 
     with io.open(os.path.join(out_theme, "parent"), "w+", encoding='utf-8') as outf:
-        outf.write(unicode(parent) + u'\n')
+        outf.write(u'{0}\n'.format(parent))
 
     with io.open(os.path.join(out_theme, "engine"), "w+", encoding='utf-8') as outf:
         outf.write(u"jinja\n")

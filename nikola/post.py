@@ -224,8 +224,8 @@ class Post(object):
         self.use_in_feeds = use_in_feeds and not is_draft and not is_private \
             and not self.publish_later
 
-        # If mathjax is a tag, then enable mathjax rendering support
-        self.is_mathjax = 'mathjax' in self.tags
+        # If mathjax is a tag, or it's a ipynb post, then enable mathjax rendering support
+        self.is_mathjax = ('mathjax' in self.tags) or (self.compiler.name == 'ipynb')
 
         # Register potential extra dependencies
         self.compiler.register_extra_dependencies(self)
@@ -243,7 +243,7 @@ class Post(object):
                 if vv:
                     sub_meta[kk] = vv
         m.update(utils.unicode_str(json.dumps(clean_meta, cls=utils.CustomEncoder, sort_keys=True)).encode('utf-8'))
-        return '<Post: {0} {1}>'.format(self.source_path, m.hexdigest())
+        return '<Post: {0!r} {1}>'.format(self.source_path, m.hexdigest())
 
     def _has_pretty_url(self, lang):
         if self.pretty_urls and \

@@ -1,14 +1,13 @@
 .. title: The Nikola Handbook
 .. slug: handbook
 .. date: 2012-03-30 23:00:00 UTC-03:00
-.. tags: mathjax
 .. link:
 .. description:
 
 The Nikola Handbook
 ===================
 
-:Version: 7.4.1
+:Version: 7.5.1
 
 .. class:: alert alert-info pull-right
 
@@ -219,16 +218,28 @@ After that, run ``nikola init --demo sitename`` and that will run the setup
 wizard, which will create a folder called ``sitename`` containing a functional
 demo site.
 
-Nikola is packaged for some Linux distributions, you may get that instead. e.g.
-If you are running Arch Linux, there are AUR packages, available in Python 2/3
-and stable/git master flavors: `python-nikola`__ / `python2-nikola`__ for the
-latest stable release or `python-nikola-git`__ / `python2-nikola-git`__ for the
-GitHub master.  (only one package may be installed at the same time.)
+Linux packages
+~~~~~~~~~~~~~~
+
+Nikola is packaged for some Linux distributions, you may get that instead of
+installing via ``pip``.  Keep in mind that those packages might be
+**outdated** and that we don’t support versions that are too old.  Proceed with
+care!
+
+* Arch Linux (AUR): `python-nikola`__ / `python2-nikola`__ for the
+  latest stable release or `python-nikola-git`__ / `python2-nikola-git`__ for the
+  GitHub master.  (official Nikola-supported packages)
+* Fedora: `python-nikola`__ (incl. python3-nikola)
+* Debian and derivatives: `nikola`__
+* Gentoo: `www-apps/nikola`__
 
 __ https://aur.archlinux.org/packages/python-nikola/
 __ https://aur.archlinux.org/packages/python2-nikola/
 __ https://aur.archlinux.org/packages/python-nikola-git/
 __ https://aur.archlinux.org/packages/python2-nikola-git/
+__ https://admin.fedoraproject.org/pkgdb/package/python-nikola/
+__ https://packages.debian.org/sid/nikola
+__ https://packages.gentoo.org/package/www-apps/nikola
 
 libxml/libxslt (files missing) errors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -260,18 +271,6 @@ Red Hat/RPM-based systems::
 Note that many other distros/operating systems (including Arch Linux,
 \*BSD and OS X) do not require such packages, as C headers are included
 with the base distribution of Python.
-
-Installation on Linux/Mac OS X/etc.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-(any POSIX-compatible OS will do.)
-
-Using ``pip`` should suffice.  You may also want to use distribution- or
-system-specific packages for our dependencies.
-
-There are **no known issues or caveats** on those OSes.  Keep in mind that most
-of our developers run Linux on a daily basis and may not have the full
-knowledge required to resolve issues relating to your operating system.
 
 Installation on Windows and Windows support
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -503,6 +502,9 @@ to your configuration::
    category
        Like tags, except each post can have only one, and they usually have
        more descriptive names.
+
+   filters
+       See the `Post Processing Filters`_ section.
 
    hidetitle
        Set "True" if you do not want to see the **page** title as a
@@ -1365,6 +1367,21 @@ html_tidy_wrap_attr
 html_tidy_mini
    Minify HTML 5 into smaller documents with `tidy5 <http://www.html-tidy.org/>`_
 
+html_tidy_withconfig
+   Run `tidy5 <http://www.html-tidy.org/>`_ with ``tidy5.conf`` as the config file (supplied by user)
+
+html5lib_minify
+   Minify HTML5 using html5lib_minify
+
+html5lib_xmllike
+   Format using html5lib
+
+typogrify
+   Improve typography using `typogrify <http://static.mintchaos.com/projects/typogrify/>`__
+
+typogrify_sans_widont
+   Same as typogrify without the widont filter
+
 minify_lines
    **THIS FILTER HAS BEEN TURNED INTO A NOOP** and currently does nothing.
 
@@ -1380,8 +1397,11 @@ optipng
 jpegoptim
    Compress JPEG files using `jpegoptim <http://www.kokkonen.net/tjko/projects.html>`_
 
-typogrify
-   Improve typography using `typogrify <https://github.com/mintchaos/typogrify>`_
+
+You can apply filters to specific posts or pages by using the ``filters`` metadata field::
+
+  .. filters:: filters.html_tidy_nowrap, "sed s/foo/bar"
+
 
 
 Optimizing Your Website
@@ -1413,41 +1433,83 @@ different ones, or about other web servers, please share!
 #. The USE_CDN option offloads standard JavaScript and CSS files to a CDN so they are not
    downloaded from your server.
 
-reStructuredText Extensions
----------------------------
+Math
+----
 
-Nikola includes support for a few directives and roles that are not part of docutils, but which
-we think are handy for website development.
+Nikola supports math input via MathJax.  It is activated via the math roles and
+directives of reStructuredText and the usual LaTeX delimiters (``\(inline\)``
+and ``\[display\]``) for other input formats.
 
-MathJax
-~~~~~~~
+We **DO NOT** support the old, deprecated and error-prone ``$inline$``
+delimiters by default. If you want to use them, please add them manually,
+like this:
 
-Nikola supports math input via MathJax.  It uses the usual math roles and
-directives of reStructuredText.
+.. code:: python
 
-In order to use them in your posts, you **must** add the special ``mathjax`` tag.
+   """
+    MATHJAX_CONFIG = """
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\\(","\\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\\[","\\\]"] ],
+            processEscapes: true
+        },
+        displayAlign: 'left', // Change this to 'center' to center equations.
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}}
+        }
+    });
+    </script>
+    """
 
-Inline mathematics (equivalent to single dollar signs or backslash-parentheses
-in LaTeX) are produced using the `math` **role**:
+Inline mathematics are produced using the reST `math` **role** or the ``\(…\)`` delimiters:
 
 Euler’s formula: :math:`e^{ix} = \cos x + i\sin x`
 
-::
+In reST:
+
+.. code:: restructuredtext
 
     Euler’s formula: :math:`e^{ix} = \cos x + i\sin x`
 
-Display mathematics (equivalent to double dollar signs or backslash-brackets in
-LaTeX) are produced using the `math` **directive**:
+In other input formats::
+
+    Euler’s formula: \(e^{ix} = \cos x + i\sin x\)
+
+Display mathematics are produced using the reST `math` **directive** or the ``\[…\]`` delimiters:
 
 .. math::
 
    \int \frac{dx}{1+ax}=\frac{1}{a}\ln(1+ax)+C
+
+
+In reST:
 
 ::
 
    .. math::
 
       \int \frac{dx}{1+ax}=\frac{1}{a}\ln(1+ax)+C
+
+In other input formats:
+
+::
+
+    \[\int \frac{dx}{1+ax}=\frac{1}{a}\ln(1+ax)+C\]
+
+reStructuredText Extensions
+---------------------------
+
+Nikola includes support for a few directives and roles that are not part of docutils, but which
+we think are handy for website development.
+
+Includes
+~~~~~~~~
+
+Nikola supports the standard reStructuredText ``include`` directive, but with a
+catch: filenames are relative to **Nikola site root** (directory with ``conf.py``)
+instead of the post location (eg. ``posts/`` directory)!
 
 Media
 ~~~~~
