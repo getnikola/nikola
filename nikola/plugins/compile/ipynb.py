@@ -112,8 +112,8 @@ class CompileIPynb(PageCompiler):
                 nb = nbformat.v4.new_notebook()
                 nb["cells"] = [nbformat.v4.new_markdown_cell(content)]
             else:
-                nb = nbformat.v3.nbbase.new_notebook()
-                nb["cells"] = [nbformat.v3.nbbase.new_markdown_cell(content)]
+                nb = nbformat.new_notebook()
+                nb["worksheets"] = [nbformat.new_worksheet(cells=[nbformat.new_text_cell('markdown', [content])])]
 
             if kernel is None:
                 kernel = self.default_kernel
