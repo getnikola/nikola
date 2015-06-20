@@ -106,10 +106,10 @@ class CompileIPynb(PageCompiler):
 
         if IPython.version_info[0] >= 3:
             nb = nbformat.v4.new_notebook()
-            nb["cells"] = [nbformat.v4.new_code_cell(content)]
+            nb["cells"] = [nbformat.v4.new_markdown_cell(content)]
         else:
             nb = nbformat.v3.nbbase.new_notebook()
-            nb["cells"] = [nbformat.v3.nbbase.new_code_cell(content)]
+            nb["cells"] = [nbformat.v3.nbbase.new_markdown_cell(content)]
 
         if onefile:
             nb["metadata"]["nikola"] = metadata
