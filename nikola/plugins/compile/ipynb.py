@@ -63,7 +63,7 @@ class CompileIPynb(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         if flag is None:
-            req_missing(['ipython[notebook]>=1.1.0'], 'build this site (compile ipynb)')
+            req_missing(['ipython[notebook]>=2.0.0'], 'build this site (compile ipynb)')
         makedirs(os.path.dirname(dest))
         HTMLExporter.default_template = 'basic'
         c = Config(self.site.config['IPYNB_CONFIG'])
@@ -81,7 +81,7 @@ class CompileIPynb(PageCompiler):
         will be assume to be in the 'nikola' subfield.
         """
         if flag is None:
-            req_missing(['ipython[notebook]>=1.1.0'], 'build this site (compile ipynb)')
+            req_missing(['ipython[notebook]>=2.0.0'], 'build this site (compile ipynb)')
         source = post.source_path
         with io.open(source, "r", encoding="utf8") as in_file:
             nb_json = nbformat.read(in_file, current_nbformat)
@@ -91,7 +91,7 @@ class CompileIPynb(PageCompiler):
 
     def create_post(self, path, **kw):
         if flag is None:
-            req_missing(['ipython[notebook]>=1.1.0'], 'build this site (compile ipynb)')
+            req_missing(['ipython[notebook]>=2.0.0'], 'build this site (compile ipynb)')
         content = kw.pop('content', None)
         onefile = kw.pop('onefile', False)
         kernel = kw.pop('ipython_kernel', None)
