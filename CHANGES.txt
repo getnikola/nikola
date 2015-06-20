@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Add distinct styling for the site footer in bootstrap3
 * Bootstrap v3.3.5 (Issue #1828)
 * Use ``watchdog`` in ``nikola auto`` (Issue #1810)
 * Add redirection for tags in Wordpress importer (Issue #1168)
