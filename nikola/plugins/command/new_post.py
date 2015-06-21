@@ -43,11 +43,11 @@ POSTLOGGER = utils.get_logger('new_post', utils.STDERR_HANDLER)
 PAGELOGGER = utils.get_logger('new_page', utils.STDERR_HANDLER)
 LOGGER = POSTLOGGER
 
+
 def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_names, compilers_raw=None):
     """Given a compiler ("markdown", "rest"), and whether it's meant for
     a post or a page, and compilers, return the correct entry from
     post_pages."""
-
 
     # compilers_raw is used only for passing to print_compilers, but we can fill
     # in the old version ifneeded
@@ -141,6 +141,7 @@ Compilers marked with ! and ~ require additional configuration:
     ! not in the PAGES/POSTS tuples (unused)
     ~ not in the COMPILERS dict (disabled)
 Read more: {0}""".format(COMPILERS_DOC_LINK))
+
 
 def get_default_compiler(is_post, compilers, post_pages):
     """Given compilers and post_pages, return a reasonable
