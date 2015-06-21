@@ -182,3 +182,32 @@ article.post-micro {
     color: #777;
     border-top: 1px solid #e5e5e5;
 }
+
+/* hat tip bootstrap/html5 boilerplate */
+@media print {
+    *, *:before, *:after {
+        font-family: Garamond, Junicode, serif;
+    }
+
+    body {
+        font-size: 12pt;
+    }
+
+    article .entry-title a[href]:after,
+    article .metadata a[href]:after,
+    article .tags a[href]:after {
+        content: "";
+    }
+
+    article .metadata .sourceline {
+        display: none;
+    }
+
+    article .metadata .linkline a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    .navbar {
+        display: none;
+    }
+}

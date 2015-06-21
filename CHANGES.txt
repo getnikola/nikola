@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Add print CSS to all default themes (Issue #1817)
 * Support other kernels for ipynb/Jupyter using
   ``nikola new_post -f ipynb@kernel`` (Issues #1774, #1834)
 * Add distinct styling for the site footer in bootstrap3
