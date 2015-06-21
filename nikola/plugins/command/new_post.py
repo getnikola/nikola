@@ -118,8 +118,8 @@ def print_compilers(compilers_raw, post_pages, compiler_objs):
 
     print("Available input formats:\n")
 
-    name_width = max([len(i[0]) for i in parsed_list] + [4]) # 4 == len('NAME')
-    fname_width = max([len(i[1]) for i in parsed_list] + [11]) # 11 == len('DESCRIPTION')
+    name_width = max([len(i[0]) for i in parsed_list] + [4])  # 4 == len('NAME')
+    fname_width = max([len(i[1]) for i in parsed_list] + [11])  # 11 == len('DESCRIPTION')
 
     print((' {0:<' + str(name_width) + '}  {1:<' + str(fname_width) + '}  EXTENSIONS\n').format('NAME', 'DESCRIPTION'))
 
