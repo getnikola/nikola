@@ -30,6 +30,7 @@ import datetime
 import os
 import sys
 import subprocess
+import operator
 
 from blinker import signal
 import dateutil.tz
@@ -37,15 +38,21 @@ import dateutil.tz
 from nikola.plugin_categories import Command
 from nikola import utils
 
+COMPILERS_DOC_LINK = 'https://getnikola.com/handbook.html#configuring-other-input-formats'
 POSTLOGGER = utils.get_logger('new_post', utils.STDERR_HANDLER)
 PAGELOGGER = utils.get_logger('new_page', utils.STDERR_HANDLER)
 LOGGER = POSTLOGGER
 
-
-def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_names):
+def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_names, compilers_raw=None):
     """Given a compiler ("markdown", "rest"), and whether it's meant for
     a post or a page, and compilers, return the correct entry from
     post_pages."""
+
+
+    # compilers_raw is used only for passing to print_compilers, but we can fill
+    # in the old version ifneeded
+    if compilers_raw is None:
+        compilers_raw = compilers
 
     # First throw away all the post_pages with the wrong is_post
     filtered = [entry for entry in post_pages if entry[3] == is_post]
@@ -55,8 +62,10 @@ def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_names):
     if extensions is None:
         if compiler in compiler_names:
             LOGGER.error("There is a {0} compiler available, but it's not set in your COMPILERS option.".format(compiler))
+            LOGGER.info("Read more: {0}".format(COMPILERS_DOC_LINK))
         else:
             LOGGER.error('Unknown format {0}'.format(compiler))
+            print_compilers(compilers_raw, post_pages, compiler_names)
         sys.exit(1)
 
     # Throw away the post_pages with the wrong extensions
@@ -69,9 +78,69 @@ def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_names):
                      "a {0} in format {1}. You may want to tweak "
                      "COMPILERS or {2}S in conf.py".format(
                          type_name, compiler, type_name.upper()))
+        LOGGER.info("Read more: {0}".format(COMPILERS_DOC_LINK))
+
         sys.exit(1)
     return filtered[0]
 
+
+def print_compilers(compilers_raw, post_pages, compiler_names):
+    """
+    List all available compilers in a human-friendly format.
+
+    :param compilers_raw: The compilers dict, mapping compiler names to tuples of extensions
+    :param post_pages: The post_pages structure
+    :param compiler_names: Names of all installed compiler plugins
+    """
+
+    # We use compilers_raw, because the normal dict can contain
+    # garbage coming from the translation candidate implementation.
+    # Entries are in format: (name, extensions, used_in_post_pages)
+    parsed_compilers = {'used': [], 'unused': [], 'disabled': []}
+
+    for compiler_name in compiler_names:
+        if compiler_name not in compilers_raw:
+            parsed_compilers['disabled'].append((compiler_name, (), False))
+        else:
+            # stolen from filter_post_pages
+            extensions = compilers_raw[compiler_name]
+            filtered = [entry for entry in post_pages if any(
+                [ext in entry[0] for ext in extensions])]
+            if filtered:
+                parsed_compilers['used'].append((compiler_name, extensions, True))
+            else:
+                parsed_compilers['unused'].append((compiler_name, extensions, False))
+
+    # Sort compilers alphabetically by name, just so it’s prettier (and
+    # deterministic)
+    parsed_compilers['used'].sort(key=operator.itemgetter(0))
+    parsed_compilers['unused'].sort(key=operator.itemgetter(0))
+    parsed_compilers['disabled'].sort(key=operator.itemgetter(0))
+
+    # We also group the compilers by status for readability.
+    parsed_list = parsed_compilers['used'] + parsed_compilers['unused'] + parsed_compilers['disabled']
+
+    print("Available input formats:\n")
+
+    width = max([len(i[0]) for i in parsed_list])
+
+    print((' {0:<' + str(width) + '}  EXTENSIONS\n').format('NAME'))
+
+    for name, extensions, used in parsed_list:
+        flag = ' ' if used else '!'
+        flag = flag if extensions else '~'
+
+        extensions = ', '.join(extensions) if extensions else '(disabled: not in COMPILERS)'
+
+        print(('{flag}{name:<' + str(width) + '}  {extensions}').format(flag=flag, name=name, extensions=extensions))
+
+    print("""
+More compilers are available in the Plugins Index.
+
+Compilers marked with ! and ~ require additional configuration:
+    ! not in the PAGES/POSTS tuples (unused)
+    ~ not in the COMPILERS dict (disabled)
+Read more: {0}""".format(COMPILERS_DOC_LINK))
 
 def get_default_compiler(is_post, compilers, post_pages):
     """Given compilers and post_pages, return a reasonable
@@ -209,8 +278,15 @@ class CommandNewPost(Command):
             'long': 'format',
             'type': str,
             'default': '',
-            'help': 'Markup format for the post, one of rest, markdown, wiki, '
-                    'bbcode, html, textile, txt2tags',
+            'help': 'Markup format for the post (use --available-formats for list)',
+        },
+        {
+            'name': 'available-formats',
+            'short': 'F',
+            'long': 'available-formats',
+            'type': bool,
+            'default': False,
+            'help': 'List all available input formats'
         },
         {
             'name': 'schedule',
@@ -256,6 +332,11 @@ class CommandNewPost(Command):
         onefile = options['onefile']
         twofile = options['twofile']
         import_file = options['import']
+        wants_available = options['available-formats']
+
+        if wants_available:
+            print_compilers(self.site.config['_COMPILERS_RAW'], self.site.config['post_pages'], compiler_names)
+            return
 
         if is_page:
             LOGGER = PAGELOGGER
@@ -281,6 +362,7 @@ class CommandNewPost(Command):
 
         if content_format not in compiler_names:
             LOGGER.error("Unknown {0} format {1}, maybe you need to install a plugin?".format(content_type, content_format))
+            print_compilers(self.site.config['_COMPILERS_RAW'], self.site.config['post_pages'], compiler_names)
             return
         compiler_plugin = self.site.plugin_manager.getPluginByName(
             content_format, "PageCompiler").plugin_object
@@ -289,7 +371,8 @@ class CommandNewPost(Command):
         entry = filter_post_pages(content_format, is_post,
                                   self.site.config['COMPILERS'],
                                   self.site.config['post_pages'],
-                                  compiler_names)
+                                  compiler_names,
+                                  self.site.config['_COMPILERS_RAW'])
 
         if import_file:
             print("Importing Existing {xx}".format(xx=content_type.title()))

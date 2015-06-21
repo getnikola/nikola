@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Add ``-F``, ``--available-compilers`` option to ``nikola new_post``
+  and ``nikola new_page`` (Issue #1837)
 * Add print CSS to all default themes (Issue #1817)
 * Support other kernels for ipynb/Jupyter using
   ``nikola new_post -f ipynb@kernel`` (Issues #1774, #1834)

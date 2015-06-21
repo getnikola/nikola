@@ -710,6 +710,11 @@ class Nikola(object):
         self._activate_plugins_of_category("LateTask")
         self._activate_plugins_of_category("TaskMultiplier")
 
+        # Store raw compilers for internal use (need a copy for that)
+        self.config['_COMPILERS_RAW'] = {}
+        for k, v in self.config['COMPILERS'].items():
+            self.config['_COMPILERS_RAW'][k] = list(v)
+
         compilers = defaultdict(set)
         # Also add aliases for combinations with TRANSLATIONS_PATTERN
         for compiler, exts in self.config['COMPILERS'].items():
