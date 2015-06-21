@@ -905,19 +905,20 @@ Static indexes
 ``````````````
 
 Nikola uses *static indexes* by default.  This means that ``index-1.html`` has
-the latest posts, and the newest posts are in ``index-N.html``, where ``N`` is
-the highest number.  Only the page with the highest number and the main page
-(``index-N.html`` and ``index.html``) are rebuilt (the others remain
-unchanged).  The page that appears when you click *Older posts* on the index
-page, ``index-N.html``, might contain **less than 10 posts** if there are not
-enough posts to fill up all pages.
+the oldest posts, and the newest posts past the first 10 are in
+``index-N.html``, where ``N`` is the highest number.  Only the page with the
+highest number and the main page (``index-N.html`` and ``index.html``) are
+rebuilt (the others remain unchanged).  The page that appears when you click
+*Older posts* on the index page, ``index-N.html``, might contain **less than 10
+posts** if there are not enough posts to fill up all pages.
 
 This can be disabled by setting ``INDEXES_STATIC`` to ``False``.  In that mode,
-``index-1.html`` contains all the newest posts and will always contain 10 posts
-(unless you have less than 20).  The last page, ``index-N.html``, contains the
-oldest posts, and might contain less than 10 posts.  This is how many blog
-engines and CMSes behave.  Note that this will lead to rebuilding all index
-pages, which might be a problem for larger blogs (with a lot of index pages).
+``index-1.html`` contains all the newest posts past the first 10 and will
+always contain 10 posts (unless you have less than 20).  The last page,
+``index-N.html``, contains the oldest posts, and might contain less than 10
+posts.  This is how many blog engines and CMSes behave.  Note that this will
+lead to rebuilding all index pages, which might be a problem for larger blogs
+(with a lot of index pages).
 
 Creating a Page
 ---------------
