@@ -38,6 +38,7 @@ from nikola.utils import makedirs, write_metadata
 class CompileHtml(PageCompiler):
     """Compile HTML into HTML."""
     name = "html"
+    friendly_name = "HTML"
 
     def compile_html(self, source, dest, is_two_file=True):
         makedirs(os.path.dirname(dest))

@@ -40,9 +40,10 @@ from nikola.utils import unicode_str, get_logger, makedirs, write_metadata
 
 
 class CompileRest(PageCompiler):
-    """Compile reSt into HTML."""
+    """Compile reStructuredText into HTML."""
 
     name = "rest"
+    friendly_name = "reStructuredText"
     demote_headers = True
     logger = None
 
