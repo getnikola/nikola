@@ -19,6 +19,7 @@ Features
 Bugfixes
 --------
 
+* Don’t crash on non-UTF-8 files during sitemap generation (Issue #1842)
 * Unnecessary rebuilds of yearly archives (Issue #1833)
 * Quietly ignore non-existent files in ``nikola check -l`` (Issue #1831)
 * Don’t rebuild all tag or category pages when changing tag/category descriptions
