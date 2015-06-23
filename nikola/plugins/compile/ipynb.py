@@ -56,6 +56,7 @@ class CompileIPynb(PageCompiler):
     """Compile IPynb into HTML."""
 
     name = "ipynb"
+    friendly_name = "Jupyter/IPython Notebook"
     demote_headers = True
     default_kernel = 'python2' if sys.version_info[0] == 2 else 'python3'
 
