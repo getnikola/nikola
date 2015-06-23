@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Enable ``PRETTY_URLS`` by default on new sites created by the wizard
+  (Issue #1838)
 * Add ``-F``, ``--available-compilers`` option to ``nikola new_post``
   and ``nikola new_page`` (Issue #1837)
 * Add print CSS to all default themes (Issue #1817)
