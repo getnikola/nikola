@@ -1,4 +1,4 @@
-.. title: Help, Bugs, Contact
+.. title: Support and Contact
 .. slug: contact
 .. date: 1970-01-01 15:00:00
 .. description: Get help using Nikola, or contact us.

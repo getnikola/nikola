@@ -824,6 +824,102 @@ setup.
    the same extension as is set in ``COMPILERS`` and configure the outputs
    properly.
 
+Markdown
+````````
+
+To use Markdown in your posts/pages, make sure ``markdown`` is in your
+``COMPILERS`` and that at least one of your desired extensions is defined in
+``POSTS`` and ``PAGES``.
+
+You can use Python-Markdown extensions by setting the ``MARKDOWN_EXTENSIONS``
+config option:
+
+.. code:: python
+
+    MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
+
+IPython Notebook/Jupyter
+````````````````````````
+
+To use Jupyter notebooks (previously known as IPython Notebooks) as posts/pages,
+make sure ``ipynb`` is in your ``COMPILERS`` and that the ``.ipynb`` extension
+is defined in ``POSTS`` and ``PAGES``.
+
+The ``-f`` argument to ``new_post`` should be used in the ``ipynb@KERNEL`` format.
+It defaults to Python in the version used by Nikola if not specified.
+
+HTML
+````
+
+To use plain HTML in your posts/pages, make sure ``html`` is in your
+``COMPILERS``
+and that the ``.html`` extension is defined in ``POSTS`` and ``PAGES``.
+
+PHP
+```
+
+There are two ways of using PHP within Nikola:
+
+1. To use PHP in your posts/pages (inside your site, with the theme and
+   everything), make sure ``php`` is in your ``COMPILERS`` and that the ``.php``
+   extension is defined in ``POSTS`` and ``PAGES``.
+2. To use PHP as standalone files (without any modifications), put them in
+   ``files/`` (or whatever ``FILES_FOLDERS`` is configured to).
+
+Pandoc
+``````
+
+To use Pandoc, you must uncomment the entry in ``COMPILERS`` and set the
+extensions list to your desired extensions while also removing them from their
+original compilers.  The input format is inferred from the extension by Pandoc.
+
+Using Pandoc for reStructuredText, Markdown and other input formats that have a
+standalone Nikola plugin is **not recommended** as it disables plugins and
+extensions that are usually provided by Nikola.
+
+Indexes
+~~~~~~~
+
+All your posts that are not drafts, private or dated in the future, will be
+shown in indexes.
+
+Settings
+````````
+
+Indexes are put in the ``INDEX_PATH`` directory, which defaults to an empty
+string (site root).  The “main” index is ``index.html``, and all the further
+indexes are ``index-*.html``, respectively.
+
+By default, 10 posts are displayed on an index page.  This can be changed with
+``INDEX_DISPLAY_POST_COUNT``.  Indexes can show full posts or just the teasers,
+as controlled by the ``INDEX_TEASERS`` setting (defaults to ``False``).
+
+Titles of the pages can be controlled by using ``INDEXES_TITLES``,
+``INDEXES_PAGES`` and ``INDEXES_PAGES_MAIN`` settings.
+
+Categories and tags use simple lists by default that show only titles and
+dates; however, you can switch them to full indexes by using
+``CATEGORY_PAGES_ARE_INDEXES`` and ``TAG_PAGES_ARE_INDEXES``, respectively.
+
+Static indexes
+``````````````
+
+Nikola uses *static indexes* by default.  This means that ``index-1.html`` has
+the oldest posts, and the newest posts past the first 10 are in
+``index-N.html``, where ``N`` is the highest number.  Only the page with the
+highest number and the main page (``index-N.html`` and ``index.html``) are
+rebuilt (the others remain unchanged).  The page that appears when you click
+*Older posts* on the index page, ``index-N.html``, might contain **less than 10
+posts** if there are not enough posts to fill up all pages.
+
+This can be disabled by setting ``INDEXES_STATIC`` to ``False``.  In that mode,
+``index-1.html`` contains all the newest posts past the first 10 and will
+always contain 10 posts (unless you have less than 20).  The last page,
+``index-N.html``, contains the oldest posts, and might contain less than 10
+posts.  This is how many blog engines and CMSes behave.  Note that this will
+lead to rebuilding all index pages, which might be a problem for larger blogs
+(with a lot of index pages).
+
 Creating a Page
 ---------------
 

@@ -231,7 +231,8 @@ class TaskMultiplier(BasePlugin):
 class PageCompiler(BasePlugin):
     """Plugins that compile text files into HTML."""
 
-    name = "dummy compiler"
+    name = "dummy_compiler"
+    friendly_name = ''
     demote_headers = False
     supports_onefile = True
     default_metadata = {

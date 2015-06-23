@@ -40,25 +40,6 @@ from nikola import utils
 LOGGER = utils.get_logger('install_theme', utils.STDERR_HANDLER)
 
 
-# Stolen from textwrap in Python 3.3.2.
-def indent(text, prefix, predicate=None):  # NOQA
-    """Adds 'prefix' to the beginning of selected lines in 'text'.
-
-    If 'predicate' is provided, 'prefix' will only be added to the lines
-    where 'predicate(line)' is True. If 'predicate' is not provided,
-    it will default to adding 'prefix' to all non-empty lines that do not
-    consist solely of whitespace characters.
-    """
-    if predicate is None:
-        def predicate(line):
-            return line.strip()
-
-    def prefixed_lines():
-        for line in text.splitlines(True):
-            yield (prefix + line if predicate(line) else line)
-    return ''.join(prefixed_lines())
-
-
 class CommandInstallTheme(Command):
     """Install a theme."""
 
@@ -165,9 +146,9 @@ class CommandInstallTheme(Command):
             print('Contents of the conf.py.sample file:\n')
             with io.open(confpypath, 'r', encoding='utf-8') as fh:
                 if self.site.colorful:
-                    print(indent(pygments.highlight(
+                    print(utils.indent(pygments.highlight(
                         fh.read(), PythonLexer(), TerminalFormatter()),
                         4 * ' '))
                 else:
-                    print(indent(fh.read(), 4 * ' '))
+                    print(utils.indent(fh.read(), 4 * ' '))
         return True

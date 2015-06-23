@@ -4,6 +4,16 @@ New in master
 Features
 --------
 
+* Enable ``PRETTY_URLS`` by default on new sites created by the wizard
+  (Issue #1838)
+* Add ``-F``, ``--available-compilers`` option to ``nikola new_post``
+  and ``nikola new_page`` (Issue #1837)
+* Add print CSS to all default themes (Issue #1817)
+* Support other kernels for ipynb/Jupyter using
+  ``nikola new_post -f ipynb@kernel`` (Issues #1774, #1834)
+* Add distinct styling for the site footer in bootstrap3
+* Bootstrap v3.3.5 (Issue #1828)
+* Use ``watchdog`` in ``nikola auto`` (Issue #1810)
 * Add redirection for tags in Wordpress importer (Issue #1168)
 * Add support for ``html_tidy_withconfig`` to use a ``tidy5.conf`` file
   (Issue #1795)
@@ -14,6 +24,10 @@ Bugfixes
 --------
 
 * Read configuration when importing into an existing site (Issue #1823)
+* Don’t crash on non-UTF-8 files during sitemap generation (Issue #1842)
+* Unnecessary rebuilds of yearly archives (Issue #1833)
+* Quietly ignore non-existent files in ``nikola check -l`` (Issue #1831)
+* Don’t rebuild all tag or category pages when changing tag/category descriptions
 * Fix crash in wordpress code importer (Issue #1819)
 * Call correct command in ``nikola auto``
 

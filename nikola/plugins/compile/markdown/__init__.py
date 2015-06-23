@@ -44,9 +44,10 @@ from nikola.utils import makedirs, req_missing, write_metadata
 
 
 class CompileMarkdown(PageCompiler):
-    """Compile markdown into HTML."""
+    """Compile Markdown into HTML."""
 
     name = "markdown"
+    friendly_name = "Markdown"
     demote_headers = True
     extensions = []
     site = None

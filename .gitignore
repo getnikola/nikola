@@ -20,3 +20,6 @@ __pycache__/
 
 # pyenv
 .python-version
+
+# GitHub token
+.pypt/gh-token

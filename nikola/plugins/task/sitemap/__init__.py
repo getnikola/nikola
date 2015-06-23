@@ -164,31 +164,28 @@ class Sitemap(LateTask):
                         if not robot_fetch(path):
                             continue
 
-                        filehead = io.open(real_path, 'r', encoding='utf8').read(1024)
+                        # read in binary mode to make ancient files work
+                        fh = open(real_path, 'rb')
+                        filehead = fh.read(1024)
+                        fh.close()
 
                         if path.endswith('.html') or path.endswith('.htm'):
-                            try:
-
-                                """ ignores "html" files without doctype """
-                                if u'<!doctype html' not in filehead.lower():
-                                    continue
-
-                                """ ignores "html" files with noindex robot directives """
-                                robots_directives = [u'<meta content="noindex" name="robots"',
-                                                     u'<meta content="none" name="robots"',
-                                                     u'<meta name="robots" content="noindex"',
-                                                     u'<meta name="robots" content="none"']
-                                if any([robot_directive in filehead.lower() for robot_directive in robots_directives]):
-                                    continue
-
-                            except UnicodeDecodeError:
-                                # ignore ancient files
-                                # most non-utf8 files are worthless anyways
+                            """ ignores "html" files without doctype """
+                            if b'<!doctype html' not in filehead.lower():
                                 continue
 
-                        """ put Atom and RSS in sitemapindex[] instead of in urlset[], sitemap_path is included after it is generated """
+                            """ ignores "html" files with noindex robot directives """
+                            robots_directives = [b'<meta content="noindex" name="robots"',
+                                                 b'<meta content="none" name="robots"',
+                                                 b'<meta name="robots" content="noindex"',
+                                                 b'<meta name="robots" content="none"']
+                            if any([robot_directive in filehead.lower() for robot_directive in robots_directives]):
+                                continue
+
+                        # put Atom and RSS in sitemapindex[] instead of in urlset[],
+                        # sitemap_path is included after it is generated
                         if path.endswith('.xml') or path.endswith('.atom') or path.endswith('.rss'):
-                            known_elm_roots = (u'<feed', u'<rss', u'<urlset')
+                            known_elm_roots = (b'<feed', b'<rss', b'<urlset')
                             if any([elm_root in filehead.lower() for elm_root in known_elm_roots]) and path != sitemap_path:
                                 path = path.replace(os.sep, '/')
                                 lastmod = self.get_lastmod(real_path)

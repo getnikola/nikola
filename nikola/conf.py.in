@@ -477,7 +477,7 @@ IMAGE_FOLDERS = {'images': 'images'}
 # INDEXES_STATIC = True
 #
 # (translatable) If PRETTY_URLS is set to True, this setting will be used to create
-# more pretty URLs for index pages, such as page/2/index.html instead of index-2.html.
+# prettier URLs for index pages, such as page/2/index.html instead of index-2.html.
 # Valid values for this settings are:
 #   * False,
 #   * a list or tuple, specifying the path to be generated,
@@ -672,12 +672,12 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # /robots.txt and /sitemap.xml, and to inform search engines about /sitemapindex.xml.
 # ROBOTS_EXCLUSIONS = ["/archive.html", "/category/*.html"]
 
-# Instead of putting files in <slug>.html, put them in
-# <slug>/index.html. Also enables STRIP_INDEXES
+# Instead of putting files in <slug>.html, put them in <slug>/index.html.
+# No web server configuration is required. Also enables STRIP_INDEXES.
 # This can be disabled on a per-page/post basis by adding
 #    .. pretty_url: False
-# to the metadata
-# PRETTY_URLS = False
+# to the metadata.
+PRETTY_URLS = ${PRETTY_URLS}
 
 # If True, publish future dated posts right away instead of scheduling them.
 # Defaults to False.

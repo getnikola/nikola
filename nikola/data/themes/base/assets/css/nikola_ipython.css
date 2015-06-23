@@ -52,10 +52,6 @@ div.text_cell_render {
   margin: 0 0 0px;
 }
 
-h1, h2, h3, .metadata p {
-margin-left: 15px;
-}
-
 .highlight .hll { background-color: #ffffcc }
 .highlight  { background: #f8f8f8; }
 .highlight .c { color: #408080; font-style: italic } /* Comment */

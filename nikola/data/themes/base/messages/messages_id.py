@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "%d menit tersisa untuk membaca",
-    "(active)": "",
+    "(active)": "(aktif)",
     "Also available in:": "Juga tersedia dalam:",
     "Archive": "Arsip",
     "Categories": "Kategori",
@@ -29,7 +29,7 @@ MESSAGES = {
     "Read more": "Baca selengkapnya",
     "Skip to main content": "Lanjutkan ke konten utama",
     "Source": "Sumber",
-    "Subcategories:": "",
+    "Subcategories:": "Sub kategori:",
     "Tags and Categories": "Tag dan Kategori",
     "Tags": "Tag",
     "old posts, page %d": "tulisan lama, halaman %d",

@@ -44,6 +44,7 @@ class CompilePandoc(PageCompiler):
     """Compile markups into HTML using pandoc."""
 
     name = "pandoc"
+    friendly_name = "pandoc"
 
     def set_site(self, site):
         self.config_dependencies = [str(site.config['PANDOC_OPTIONS'])]
