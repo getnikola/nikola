@@ -19,7 +19,7 @@ All You Need to Know
 
 After you have Nikola `installed <#installing-nikola>`_:
 
-Create a empty site (with a setup wizard):
+Create an empty site (with a setup wizard):
     ``nikola init mysite``
 
 You can create a site with demo files in it with ``nikola init --demo mysite``
@@ -31,6 +31,7 @@ Create a post:
 
 Edit the post:
     The filename should be in the output of the previous command.
+    You can also use ``nikola new_post -e`` to open an editor automatically.
 
 Build the site:
      ``nikola build``
@@ -39,7 +40,7 @@ Start the test server:
      ``nikola serve``
 
 See the site:
-     http://127.0.0.1:8000
+     http://127.0.0.1:8000/
 
 That should get you going. If you want to know more, this manual will always be here
 for you.
