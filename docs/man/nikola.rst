@@ -17,6 +17,8 @@ Create an empty site (with a setup wizard):
 
     ``nikola init mysite``
 
+(You can create a site with demo files in it with ``nikola init --demo mysite``)
+
 Create a post (inside the ``mysite`` directory):
 
     ``nikola new_post``
@@ -25,13 +27,9 @@ Build the site:
 
     ``nikola build``
 
-Start the test server:
+Start the test server and open a browser:
 
-    ``nikola serve``
-
-See the site:
-
-    ``xdg-open http://127.0.0.1:8000/``
+    ``nikola serve -b``
 
 
 DESCRIPTION
@@ -43,7 +41,7 @@ create a folder full of HTML files. If you upload that folder to a
 server, you will have a rather full-featured website, done with little
 effort.
 
-It's original goal is to create blogs, but it supports most kind of
+Its original goal is to create blogs, but it supports most kind of
 sites, and can be used as a CMS, as long as what you present to the
 user is your own content instead of something the user generates.
 
@@ -101,9 +99,9 @@ The most basic commands needed to get by are:
 ``nikola auto [-p PORT] [-a ADDRESS] [-b|--browser] [-6|--ipv6]``
     start development web server with automated rebuilds and reloads
 ``nikola plugin [options]``
-    manage plugins from the Plugins Index
+    manage plugins from the Plugins Index (https://plugins.getnikola.com/)
 ``nikola install_theme [name]``
-    install themes from the Themes Index
+    install themes from the Themes Index (https://themes.getnikola.com/)
 
 Use ``nikola help`` to get a list of all commands.
 
