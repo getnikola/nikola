@@ -61,7 +61,7 @@ def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_objs, c
         else:
             LOGGER.error('Unknown format {0}'.format(compiler))
             print_compilers(compilers_raw, post_pages, compiler_objs)
-        sys.exit(1)
+        return False
 
     # Throw away the post_pages with the wrong extensions
     filtered = [entry for entry in filtered if any([ext in entry[0] for ext in
@@ -75,7 +75,7 @@ def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_objs, c
                          type_name, compiler, type_name.upper()))
         LOGGER.info("Read more: {0}".format(COMPILERS_DOC_LINK))
 
-        sys.exit(1)
+        return False
     return filtered[0]
 
 
@@ -372,6 +372,9 @@ class CommandNewPost(Command):
                                   self.site.compilers,
                                   self.site.config['_COMPILERS_RAW'])
 
+        if entry is False:
+            return 1
+
         if import_file:
             print("Importing Existing {xx}".format(xx=content_type.title()))
             print("-----------------------\n")
@@ -442,7 +445,7 @@ class CommandNewPost(Command):
             signal('existing_' + content_type).send(self, **event)
 
             LOGGER.error("The title already exists!")
-            exit(8)
+            return 8
 
         d_name = os.path.dirname(txt_path)
         utils.makedirs(d_name)

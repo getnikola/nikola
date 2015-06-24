@@ -83,7 +83,7 @@ class CommandGitHubDeploy(Command):
         build = main(['build'])
         if build != 0:
             self.logger.error('Build failed, not deploying to GitHub')
-            sys.exit(build)
+            return build
 
         # Clean non-target files
         only_on_output, _ = real_scan_files(self.site)
@@ -119,7 +119,7 @@ class CommandGitHubDeploy(Command):
                 'Failed GitHub deployment — command {0} '
                 'returned {1}'.format(e.cmd, e.returncode)
             )
-            sys.exit(e.returncode)
+            return e.returncode
 
         self.logger.info("Successful deployment")
 

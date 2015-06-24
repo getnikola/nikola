@@ -163,7 +163,7 @@ class CommandCheck(Command):
         if options['clean']:
             failure = self.clean_files()
         if failure:
-            sys.exit(1)
+            return 1
 
     existing_targets = set([])
     checked_remote_targets = {}

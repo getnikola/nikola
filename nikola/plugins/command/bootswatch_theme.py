@@ -73,7 +73,7 @@ class CommandBootswatchTheme(Command):
         swatch = options['swatch']
         if not swatch:
             LOGGER.error('The -s option is mandatory')
-            sys.exit(1)
+            return 1
         parent = options['parent']
         version = ''
 

@@ -90,7 +90,7 @@ class CommandInstallTheme(Command):
                 print(path)
             else:
                 print('not installed')
-            exit(0)
+            return 0
 
         if name is None and not listing:
             LOGGER.error("This command needs either a theme name or the -l option.")
