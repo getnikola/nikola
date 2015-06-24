@@ -3,6 +3,6 @@ mock==1.0.1
 coverage==3.7.1
 pytest==2.7.2
 pytest-cov==1.8.1
-freezegun==0.3.3
+freezegun==0.3.4
 python-coveralls==2.5.0
 colorama==0.3.3
