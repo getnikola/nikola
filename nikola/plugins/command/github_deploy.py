@@ -29,7 +29,6 @@ from datetime import datetime
 import io
 import os
 import subprocess
-import sys
 from textwrap import dedent
 
 from nikola.plugin_categories import Command

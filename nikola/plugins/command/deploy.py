@@ -29,7 +29,6 @@ import io
 from datetime import datetime
 from dateutil.tz import gettz
 import os
-import sys
 import subprocess
 import time
 
