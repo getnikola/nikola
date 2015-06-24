@@ -19,7 +19,7 @@ All You Need to Know
 
 After you have Nikola `installed <#installing-nikola>`_:
 
-Create a empty site (with a setup wizard):
+Create an empty site (with a setup wizard):
     ``nikola init mysite``
 
 You can create a site with demo files in it with ``nikola init --demo mysite``
@@ -31,15 +31,14 @@ Create a post:
 
 Edit the post:
     The filename should be in the output of the previous command.
+    You can also use ``nikola new_post -e`` to open an editor automatically.
 
 Build the site:
      ``nikola build``
 
-Start the test server:
-     ``nikola serve``
+Start the test server and open a browser (http://127.0.0.1:8000/):
+     ``nikola serve -b``
 
-See the site:
-     http://127.0.0.1:8000
 
 That should get you going. If you want to know more, this manual will always be here
 for you.
@@ -57,7 +56,7 @@ that it takes some texts you wrote, and uses them to create a folder full
 of HTML files. If you upload that folder to a server, you will have a
 rather full-featured website, done with little effort.
 
-It's original goal is to create blogs, but it supports most kind of sites, and
+Its original goal is to create blogs, but it supports most kind of sites, and
 can be used as a CMS, as long as what you present to the user is your own content
 instead of something the user generates.
 

@@ -98,6 +98,7 @@ class CommandAuto(Command):
         {
             'name': 'browser',
             'short': 'b',
+            'long': 'browser',
             'type': bool,
             'help': 'Start a web browser.',
             'default': False,

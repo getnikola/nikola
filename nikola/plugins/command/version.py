@@ -40,7 +40,7 @@ class CommandVersion(Command):
 
     name = "version"
 
-    doc_usage = ""
+    doc_usage = "[--check]"
     needs_config = False
     doc_purpose = "print the Nikola version number"
     cmd_options = [

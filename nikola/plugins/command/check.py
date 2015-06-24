@@ -94,7 +94,7 @@ class CommandCheck(Command):
     name = "check"
     logger = None
 
-    doc_usage = "-l [--find-sources] | -f"
+    doc_usage = "[-v] (-l [--find-sources] [-r] | -f [--clean-files])"
     doc_purpose = "check links and files in the generated site"
     cmd_options = [
         {
