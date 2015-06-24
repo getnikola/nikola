@@ -32,6 +32,8 @@ MESSAGES = {
     "Subcategories:": "",
     "Tags and Categories": "Sildid ja kategooriad",
     "Tags": "Märksõnad",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "vanade postituste, leht %d",
     "page %d": "leht %d",
 }

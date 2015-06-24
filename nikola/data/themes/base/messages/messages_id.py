@@ -32,6 +32,8 @@ MESSAGES = {
     "Subcategories:": "Sub kategori:",
     "Tags and Categories": "Tag dan Kategori",
     "Tags": "Tag",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "tulisan lama, halaman %d",
     "page %d": "halaman %d",
 }

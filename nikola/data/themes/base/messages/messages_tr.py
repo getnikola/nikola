@@ -32,6 +32,8 @@ MESSAGES = {
     "Subcategories:": "",
     "Tags and Categories": "Etiketler ve Kategoriler",
     "Tags": "Etiketler",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "eski yazılar, sayfa %d",
     "page %d": "sayfa %d",
 }

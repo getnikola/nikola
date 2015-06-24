@@ -32,6 +32,8 @@ MESSAGES = {
     "Subcategories:": "Unterkategorien:",
     "Tags and Categories": "Tags und Kategorien",
     "Tags": "Tags",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "Ältere Einträge, Seite %d",
     "page %d": "Seite %d",
 }

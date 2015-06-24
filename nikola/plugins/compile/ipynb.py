@@ -108,7 +108,7 @@ class CompileIPynb(PageCompiler):
         makedirs(os.path.dirname(path))
 
         if content.startswith("{"):
-            # .ipynb imported file, guaranteed to start with "{" because it’s JSON.
+            # imported .ipynb file, guaranteed to start with "{" because it’s JSON.
             nb = nbformat.reads(content, current_nbformat)
         else:
             if IPython.version_info[0] >= 3:

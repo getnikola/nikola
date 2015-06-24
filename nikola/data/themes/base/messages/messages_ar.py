@@ -32,6 +32,8 @@ MESSAGES = {
     "Subcategories:": "",
     "Tags and Categories": "تصنيفات و فئات",
     "Tags": "تصنيفات",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "مقالات قديمة, صفحة d%",
     "page %d": "صفحة d%",
 }

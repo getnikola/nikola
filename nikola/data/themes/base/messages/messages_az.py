@@ -32,6 +32,8 @@ MESSAGES = {
     "Subcategories:": "",
     "Tags and Categories": "Teqlər və Kateqoriyalar",
     "Tags": "Teqlər",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "köhnə yazılar, səhifə %s",
     "page %d": "səhifə %d",
 }

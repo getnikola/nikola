@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-06-07 15:59+0000\n"
+"PO-Revision-Date: 2015-06-24 12:06+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Estonian (http://www.transifex.com/projects/p/nikola/language/et/)\n"
 "MIME-Version: 1.0\n"
@@ -123,4 +123,12 @@ msgstr ""
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
+msgstr ""
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr ""
+
+#. Default content for a new page
+msgid "Write your page here."
 msgstr ""
