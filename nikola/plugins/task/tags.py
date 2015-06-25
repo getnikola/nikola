@@ -67,11 +67,9 @@ class RenderTags(Task):
             "filters": self.site.config['FILTERS'],
             'tag_path': self.site.config['TAG_PATH'],
             "tag_pages_are_indexes": self.site.config['TAG_PAGES_ARE_INDEXES'],
-            "tag_pages_descriptions": self.site.config['TAG_PAGES_DESCRIPTIONS'],
             'category_path': self.site.config['CATEGORY_PATH'],
             'category_prefix': self.site.config['CATEGORY_PREFIX'],
             "category_pages_are_indexes": self.site.config['CATEGORY_PAGES_ARE_INDEXES'],
-            "category_pages_descriptions": self.site.config['CATEGORY_PAGES_DESCRIPTIONS'],
             "generate_rss": self.site.config['GENERATE_RSS'],
             "rss_teasers": self.site.config["RSS_TEASERS"],
             "rss_plain": self.site.config["RSS_PLAIN"],
@@ -247,8 +245,8 @@ class RenderTags(Task):
         else:
             return tag
 
-    def _get_description(self, tag, is_category, kw, lang):
-        descriptions = kw["category_pages_descriptions"] if is_category else kw["tag_pages_descriptions"]
+    def _get_description(self, tag, is_category, lang):
+        descriptions = self.site.config['CATEGORY_PAGES_DESCRIPTIONS'] if is_category else self.site.config['TAG_PAGES_DESCRIPTIONS']
         return descriptions[lang][tag] if lang in descriptions and tag in descriptions[lang] else None
 
     def _get_subcategories(self, category):
@@ -283,7 +281,7 @@ class RenderTags(Task):
             context_source["category_path"] = self.site.parse_category_name(tag)
         context_source["tag"] = title
         indexes_title = kw["messages"][lang]["Posts about %s"] % title
-        context_source["description"] = self._get_description(tag, is_category, kw, lang)
+        context_source["description"] = self._get_description(tag, is_category, lang)
         if is_category:
             context_source["subcategories"] = self._get_subcategories(tag)
         template_name = "tagindex.tmpl"
@@ -307,7 +305,7 @@ class RenderTags(Task):
         context["posts"] = post_list
         context["permalink"] = self.site.link(kind, tag, lang)
         context["kind"] = kind
-        context["description"] = self._get_description(tag, is_category, kw, lang)
+        context["description"] = self._get_description(tag, is_category, lang)
         if is_category:
             context["subcategories"] = self._get_subcategories(tag)
         task = self.site.generic_post_list_renderer(

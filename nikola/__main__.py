@@ -25,6 +25,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function, unicode_literals
+from collections import defaultdict
 import os
 import shutil
 try:
@@ -107,8 +108,7 @@ def main(args=None):
         root = get_root_dir()
         if root:
             os.chdir(root)
-        # help does not need a config file, but can use one.
-        needs_config_file = argname != 'help'
+        needs_config_file = (argname != 'help')
     else:
         needs_config_file = False
 
@@ -124,10 +124,10 @@ def main(args=None):
         if os.path.exists(conf_filename):
             msg = traceback.format_exc(0)
             LOGGER.error('"{0}" cannot be parsed.\n{1}'.format(conf_filename, msg))
-            sys.exit(1)
+            return 1
         elif needs_config_file and conf_filename_changed:
             LOGGER.error('Cannot find configuration file "{0}".'.format(conf_filename))
-            sys.exit(1)
+            return 1
         config = {}
 
     if conf_filename_changed:
@@ -316,18 +316,30 @@ class DoitNikola(DoitMain):
             args = ['version']
         if args[0] not in sub_cmds.keys():
             LOGGER.error("Unknown command {0}".format(args[0]))
+            sugg = defaultdict(list)
+            for c in sub_cmds.keys():
+                d = lev(c, args[0])
+                sugg[d].append(c)
+            LOGGER.info('Did you mean "{}"?', '" or "'.join(sugg[min(sugg.keys())]))
             return 3
         if sub_cmds[args[0]] is not Help and not isinstance(sub_cmds[args[0]], Command):  # Is a doit command
             if not self.nikola.configured:
                 LOGGER.error("This command needs to run inside an "
                              "existing Nikola site.")
                 return 3
-
         return super(DoitNikola, self).run(cmd_args)
 
     @staticmethod
     def print_version():
         print("Nikola v" + __version__)
+
+
+# Stolen from http://stackoverflow.com/questions/4173579/implementing-levenshtein-distance-in-python
+def lev(a, b):
+    if not a or not b:
+        return max(len(a), len(b))
+    return min(lev(a[1:], b[1:]) + (a[0] != b[0]), lev(a[1:], b) + 1, lev(a, b[1:]) + 1)
+
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))

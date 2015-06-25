@@ -26,12 +26,7 @@
 
 from __future__ import print_function
 import os
-import sys
-
-try:
-    import requests
-except ImportError:
-    requests = None  # NOQA
+import requests
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -73,14 +68,11 @@ class CommandBootswatchTheme(Command):
 
     def _execute(self, options, args):
         """Given a swatch name and a parent theme, creates a custom theme."""
-        if requests is None:
-            utils.req_missing(['requests'], 'install Bootswatch themes')
-
         name = options['name']
         swatch = options['swatch']
         if not swatch:
             LOGGER.error('The -s option is mandatory')
-            sys.exit(1)
+            return 1
         parent = options['parent']
         version = ''
 

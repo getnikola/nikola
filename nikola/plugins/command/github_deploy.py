@@ -29,7 +29,6 @@ from datetime import datetime
 import io
 import os
 import subprocess
-import sys
 from textwrap import dedent
 
 from nikola.plugin_categories import Command
@@ -50,7 +49,7 @@ def check_ghp_import_installed():
     except OSError:
         # req_missing defaults to `python=True` — and it’s meant to be like this.
         # `ghp-import` is installed via pip, but the only way to use it is by executing the script it installs.
-        req_missing('ghp-import', 'deploy the site to GitHub Pages')
+        req_missing(['ghp-import'], 'deploy the site to GitHub Pages')
 
 
 class CommandGitHubDeploy(Command):
@@ -83,7 +82,7 @@ class CommandGitHubDeploy(Command):
         build = main(['build'])
         if build != 0:
             self.logger.error('Build failed, not deploying to GitHub')
-            sys.exit(build)
+            return build
 
         # Clean non-target files
         only_on_output, _ = real_scan_files(self.site)
@@ -119,7 +118,7 @@ class CommandGitHubDeploy(Command):
                 'Failed GitHub deployment — command {0} '
                 'returned {1}'.format(e.cmd, e.returncode)
             )
-            sys.exit(e.returncode)
+            return e.returncode
 
         self.logger.info("Successful deployment")
 

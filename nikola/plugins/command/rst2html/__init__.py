@@ -39,6 +39,7 @@ class CommandRst2Html(Command):
     name = "rst2html"
     doc_usage = "infile"
     doc_purpose = "compile reStructuredText to HTML files"
+    needs_config = False
 
     def _execute(self, options, args):
         """Compile reStructuredText to standalone HTML files."""
@@ -63,6 +64,6 @@ class CommandRst2Html(Command):
         html = b'<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='utf8', method='html', pretty_print=True)
         print(html)
         if error_level < 3:
-            exit(0)
+            return 0
         else:
-            exit(1)
+            return 1

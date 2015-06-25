@@ -12,14 +12,16 @@
    :class: thumbnail
    :alt: Nikola Tesla Corner by nicwest, on Flickr
 
-If you can see this in a web browser, it means you have managed to install Nikola,
+If you can see this in a web browser, it means you managed to install Nikola,
 and build a site using it. Congratulations!
 
-* You can read the manual `here </stories/handbook.html>`__
-* You can learn more about Nikola at https://getnikola.com/
-* You can see a demo photo gallery `here </galleries/demo/index.html>`__
-* Demo usage of listings `here </stories/listings-demo.html>`__
-* Demo of slideshows `here </stories/slides-demo.html>`__
-* Demo of Bootstrap `here </stories/bootstrap-demo.html>`__
+Next steps:
 
-Send feedback to ralsina@netmanagers.com.ar!
+* `Read the manual </stories/handbook.html>`__
+* `Visit the Nikola website to learn more <https://getnikola.com>`__
+* `See a demo photo gallery </galleries/demo/index.html>`__
+* `See a demo listing </stories/listings-demo.html>`__
+* `See a demo slideshow </stories/slides-demo.html>`__
+* `See a demo of the Bootstrap theme </stories/bootstrap-demo.html>`__
+
+Send feedback to info@getnikola.com!

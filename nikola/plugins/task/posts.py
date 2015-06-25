@@ -25,9 +25,10 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from copy import copy
+import os
 
 from nikola.plugin_categories import Task
-from nikola import utils
+from nikola import filters, utils
 
 
 def update_deps(post, lang, task):
@@ -91,7 +92,22 @@ class RenderPosts(Task):
                     ] + post.fragment_deps_uptodate(lang),
                     'task_dep': ['render_posts:timeline_changes']
                 }
-                yield task
+
+                # Apply filters specified in the metadata
+                ff = [x.strip() for x in post.meta('filters', lang).split(',')]
+                flist = []
+                for i, f in enumerate(ff):
+                    if not f:
+                        continue
+                    if f.startswith('filters.'):  # A function from the filters module
+                        f = f[8:]
+                        try:
+                            flist.append(getattr(filters, f))
+                        except AttributeError:
+                            pass
+                    else:
+                        flist.append(f)
+                yield utils.apply_filters(task, {os.path.splitext(dest): flist})
 
     def dependence_on_timeline(self, post, lang):
         if "####MAGIC####TIMELINE" not in post.fragment_deps(lang):

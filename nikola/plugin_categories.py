@@ -27,6 +27,7 @@
 from __future__ import absolute_import
 import sys
 import os
+import re
 
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
@@ -121,7 +122,7 @@ class Command(BasePlugin, DoitCommand):
         if self.needs_config and not self.site.configured:
             LOGGER.error("This command needs to run inside an existing Nikola site.")
             return False
-        self._execute(options, args)
+        return self._execute(options, args)
 
     def _execute(self, options, args):
         """Do whatever this command does.
@@ -230,7 +231,8 @@ class TaskMultiplier(BasePlugin):
 class PageCompiler(BasePlugin):
     """Plugins that compile text files into HTML."""
 
-    name = "dummy compiler"
+    name = "dummy_compiler"
+    friendly_name = ''
     demote_headers = False
     supports_onefile = True
     default_metadata = {
@@ -269,6 +271,17 @@ class PageCompiler(BasePlugin):
         Read the metadata from a post, and return a metadata dict
         """
         return {}
+
+    def split_metadata(self, data):
+        """Split data from metadata in the raw post content.
+
+        This splits in the first empty line that is NOT at the beginning
+        of the document."""
+        split_result = re.split('(\n\n|\r\n\r\n)', data.lstrip(), maxsplit=1)
+        if len(split_result) == 1:
+            return '', split_result[0]
+        # ['metadata', '\n\n', 'post content']
+        return split_result[0], split_result[-1]
 
 
 class RestExtension(BasePlugin):

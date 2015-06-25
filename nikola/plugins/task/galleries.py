@@ -41,11 +41,8 @@ import natsort
 try:
     from PIL import Image  # NOQA
 except ImportError:
-    try:
-        import Image as _Image
-        Image = _Image
-    except ImportError:
-        Image = None
+    import Image as _Image
+    Image = _Image
 
 import PyRSS2Gen as rss
 
@@ -53,7 +50,6 @@ from nikola.plugin_categories import Task
 from nikola import utils
 from nikola.image_processing import ImageProcessor
 from nikola.post import Post
-from nikola.utils import req_missing
 
 _image_size_cache = {}
 
@@ -124,25 +120,22 @@ class Galleries(Task, ImageProcessor):
     def gallery_path(self, name, lang):
         gallery_path = self._find_gallery_path(name)
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
-                list(os.path.split(gallery_path)) +
+                gallery_path.split(os.sep) +
                 [self.site.config['INDEX_FILE']] if _f]
 
     def gallery_global_path(self, name, lang):
         gallery_path = self._find_gallery_path(name)
-        return [_f for _f in list(os.path.split(gallery_path)) +
+        return [_f for _f in gallery_path.split(os.sep) +
                 [self.site.config['INDEX_FILE']] if _f]
 
     def gallery_rss_path(self, name, lang):
         gallery_path = self._find_gallery_path(name)
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
-                list(os.path.split(gallery_path)) +
+                gallery_path.split(os.sep) +
                 ['rss.xml'] if _f]
 
     def gen_tasks(self):
         """Render image galleries."""
-
-        if Image is None:
-            req_missing(['pillow'], 'render galleries')
 
         self.image_ext_list = self.image_ext_list_builtin
         self.image_ext_list.extend(self.site.config.get('EXTRA_IMAGE_EXTENSIONS', []))

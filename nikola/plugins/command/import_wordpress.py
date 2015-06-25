@@ -29,6 +29,7 @@ import os
 import re
 import sys
 import datetime
+import requests
 from lxml import etree
 
 try:
@@ -36,11 +37,6 @@ try:
     from urllib import unquote
 except ImportError:
     from urllib.parse import urlparse, unquote  # NOQA
-
-try:
-    import requests
-except ImportError:
-    requests = None  # NOQA
 
 try:
     import phpserialize
@@ -105,6 +101,7 @@ class CommandImportWordpress(Command, ImportMixin):
             'help': "The pattern for translation files names",
         },
     ]
+    all_tags = set([])
 
     def _execute(self, options={}, args=[]):
         """Import a WordPress blog from an export file into a Nikola site."""
@@ -150,11 +147,7 @@ class CommandImportWordpress(Command, ImportMixin):
                         package=modulename)
                 )
 
-            if requests is None and phpserialize is None:
-                req_missing(['requests', 'phpserialize'], 'import WordPress dumps without --no-downloads')
-            elif requests is None:
-                req_missing(['requests'], 'import WordPress dumps without --no-downloads')
-            elif phpserialize is None:
+            if phpserialize is None:
                 req_missing(['phpserialize'], 'import WordPress dumps without --no-downloads')
 
         channel = self.get_channel_from_file(self.wordpress_export_file)
@@ -173,6 +166,15 @@ class CommandImportWordpress(Command, ImportMixin):
             self.extra_languages)
         self.context['REDIRECTIONS'] = self.configure_redirections(
             self.url_map)
+
+        # Add tag redirects
+        for tag in self.all_tags:
+            tag = utils.slugify(tag.decode('utf8'))
+            src_url = '{}tag/{}'.format(self.context['SITE_URL'], tag)
+            dst_url = self.site.link('tag', tag)
+            if src_url != dst_url:
+                self.url_map[src_url] = dst_url
+
         self.write_urlmap_csv(
             os.path.join(self.output_folder, 'url_map.csv'), self.url_map)
         rendered_template = conf_template.render(**prepare_config(self.context))
@@ -291,7 +293,6 @@ class CommandImportWordpress(Command, ImportMixin):
             return
 
         additional_metadata = item.findall('{{{0}}}postmeta'.format(wordpress_namespace))
-
         if additional_metadata is None:
             return
 
@@ -345,9 +346,13 @@ class CommandImportWordpress(Command, ImportMixin):
         # a ton of things not supported here. We only do a basic [code
         # lang="x"] -> ```x translation, and remove quoted html entities (<,
         # >, &, and ").
-        def replacement(m):
-            language = m.group(1) or ''
-            code = m.group(2)
+        def replacement(m, c=content):
+            if len(m.groups()) == 1:
+                language = ''
+                code = m.group(0)
+            else:
+                language = m.group(1) or ''
+                code = m.group(2)
             code = code.replace('&amp;', '&')
             code = code.replace('&gt;', '>')
             code = code.replace('&lt;', '<')
@@ -450,12 +455,20 @@ class CommandImportWordpress(Command, ImportMixin):
             if text == 'Uncategorized':
                 continue
             tags.append(text)
+            self.all_tags.add(text)
 
         if '$latex' in content:
             tags.append('mathjax')
 
+        # Find post format if it's there
+        post_format = 'wp'
+        format_tag = [x for x in item.findall('*//{%s}meta_key' % wordpress_namespace) if x.text == '_tc_post_format']
+        if format_tag:
+            post_format = format_tag[0].getparent().find('{%s}meta_value' % wordpress_namespace).text
+
         if is_draft and self.exclude_drafts:
             LOGGER.notice('Draft "{0}" will not be imported.'.format(title))
+
         elif content.strip():
             # If no content is found, no files are written.
             self.url_map[link] = (self.context['SITE_URL'] +
@@ -482,7 +495,8 @@ class CommandImportWordpress(Command, ImportMixin):
                     out_meta_filename = slug + '.meta'
                     out_content_filename = slug + '.wp'
                     meta_slug = slug
-                content = self.transform_content(content)
+                if post_format == 'wp':
+                    content = self.transform_content(content)
                 self.write_metadata(os.path.join(self.output_folder, out_folder,
                                                  out_meta_filename),
                                     title, meta_slug, post_date, description, tags)

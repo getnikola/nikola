@@ -28,39 +28,16 @@ from __future__ import print_function
 import os
 import io
 import json
+import requests
 
 import pygments
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter
 
-try:
-    import requests
-except ImportError:
-    requests = None  # NOQA
-
 from nikola.plugin_categories import Command
 from nikola import utils
 
 LOGGER = utils.get_logger('install_theme', utils.STDERR_HANDLER)
-
-
-# Stolen from textwrap in Python 3.3.2.
-def indent(text, prefix, predicate=None):  # NOQA
-    """Adds 'prefix' to the beginning of selected lines in 'text'.
-
-    If 'predicate' is provided, 'prefix' will only be added to the lines
-    where 'predicate(line)' is True. If 'predicate' is not provided,
-    it will default to adding 'prefix' to all non-empty lines that do not
-    consist solely of whitespace characters.
-    """
-    if predicate is None:
-        def predicate(line):
-            return line.strip()
-
-    def prefixed_lines():
-        for line in text.splitlines(True):
-            yield (prefix + line if predicate(line) else line)
-    return ''.join(prefixed_lines())
 
 
 class CommandInstallTheme(Command):
@@ -88,19 +65,32 @@ class CommandInstallTheme(Command):
                     "https://themes.getnikola.com/v7/themes.json)",
             'default': 'https://themes.getnikola.com/v7/themes.json'
         },
+        {
+            'name': 'getpath',
+            'short': 'g',
+            'long': 'get-path',
+            'type': bool,
+            'default': False,
+            'help': "Print the path for installed theme",
+        },
     ]
 
     def _execute(self, options, args):
         """Install theme into current site."""
-        if requests is None:
-            utils.req_missing(['requests'], 'install themes')
-
         listing = options['list']
         url = options['url']
         if args:
             name = args[0]
         else:
             name = None
+
+        if options['getpath'] and name:
+            path = utils.get_theme_path(name)
+            if path:
+                print(path)
+            else:
+                print('not installed')
+            return 0
 
         if name is None and not listing:
             LOGGER.error("This command needs either a theme name or the -l option.")
@@ -156,9 +146,9 @@ class CommandInstallTheme(Command):
             print('Contents of the conf.py.sample file:\n')
             with io.open(confpypath, 'r', encoding='utf-8') as fh:
                 if self.site.colorful:
-                    print(indent(pygments.highlight(
+                    print(utils.indent(pygments.highlight(
                         fh.read(), PythonLexer(), TerminalFormatter()),
                         4 * ' '))
                 else:
-                    print(indent(fh.read(), 4 * ' '))
+                    print(utils.indent(fh.read(), 4 * ' '))
         return True

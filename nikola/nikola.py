@@ -114,7 +114,6 @@ LEGAL_VALUES = {
         'eu': 'Basque',
         'fa': 'Persian',
         'fi': 'Finnish',
-        'fil': 'Filipino',
         'fr': 'French',
         'hi': 'Hindi',
         'hr': 'Croatian',
@@ -132,11 +131,9 @@ LEGAL_VALUES = {
         'sr': 'Serbian (Cyrillic)',
         'sv': 'Swedish',
         ('tr', '!tr_TR'): 'Turkish',
-        'tl': 'Tagalog',
         'ur': 'Urdu',
         'uk': 'Ukrainian',
         'zh_cn': 'Chinese (Simplified)',
-        'zh_TW': 'Chinese (Taiwan)',
     },
     '_TRANSLATIONS_WITH_COUNTRY_SPECIFIERS': {
         # This dict is used in `init` in case of locales that exist with a
@@ -145,7 +142,6 @@ LEGAL_VALUES = {
         # will accept it, warning the user about it.
         'pt': 'pt_br',
         'zh': 'zh_cn',
-        'zh': 'zh_TW'
     },
     'RTL_LANGUAGES': ('ar', 'fa', 'ur'),
     'COLORBOX_LOCALES': defaultdict(
@@ -178,6 +174,7 @@ LEGAL_VALUES = {
         sr='sr',  # warning: this is serbian in Latin alphabet
         sv='sv',
         tr='tr',
+        uk='uk',
         zh_cn='zh-CN'
     ),
     'MOMENTJS_LOCALES': defaultdict(
@@ -642,7 +639,7 @@ class Nikola(object):
             utils.LOGGER.error("Punycode of {}: {}".format(_bnl, _bnl.encode('idna')))
             sys.exit(1)
 
-        # todo: remove in v8
+        # TODO: remove in v8
         if not isinstance(self.config['DEPLOY_COMMANDS'], dict):
             utils.LOGGER.warn("A single list as DEPLOY_COMMANDS is deprecated.  DEPLOY_COMMANDS should be a dict, with deploy preset names as keys and lists of commands as values.")
             utils.LOGGER.warn("The key `default` is used by `nikola deploy`:")
@@ -650,7 +647,7 @@ class Nikola(object):
             utils.LOGGER.warn("DEPLOY_COMMANDS = {0}".format(self.config['DEPLOY_COMMANDS']))
             utils.LOGGER.info("(The above can be used with `nikola deploy` or `nikola deploy default`.  Multiple presets are accepted.)")
 
-        # todo: remove and change default in v8
+        # TODO: remove and change default in v8
         if 'BLOG_TITLE' in config and 'WRITE_TAG_CLOUD' not in config:
             # BLOG_TITLE is a hack, otherwise the warning would be displayed
             # when conf.py does not exist
@@ -658,7 +655,11 @@ class Nikola(object):
             utils.LOGGER.warn("Please explicitly add the setting to your conf.py with the desired value, as the setting will default to False in the future.")
 
         # We use one global tzinfo object all over Nikola.
-        self.tzinfo = dateutil.tz.gettz(self.config['TIMEZONE'])
+        try:
+            self.tzinfo = dateutil.tz.gettz(self.config['TIMEZONE'])
+        except Exception as exc:
+            utils.LOGGER.warn("Error getting TZ: {}", exc)
+            self.tzinfo = dateutil.tz.gettz()
         self.config['__tzinfo__'] = self.tzinfo
 
         self.plugin_manager = PluginManager(categories_filter={
@@ -708,6 +709,11 @@ class Nikola(object):
         self._activate_plugins_of_category("Task")
         self._activate_plugins_of_category("LateTask")
         self._activate_plugins_of_category("TaskMultiplier")
+
+        # Store raw compilers for internal use (need a copy for that)
+        self.config['_COMPILERS_RAW'] = {}
+        for k, v in self.config['COMPILERS'].items():
+            self.config['_COMPILERS_RAW'][k] = list(v)
 
         compilers = defaultdict(set)
         # Also add aliases for combinations with TRANSLATIONS_PATTERN
@@ -795,6 +801,16 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['hidden_tags'] = self.config.get('HIDDEN_TAGS')
         self._GLOBAL_CONTEXT['hidden_categories'] = self.config.get('HIDDEN_CATEGORIES')
         self._GLOBAL_CONTEXT['url_replacer'] = self.url_replacer
+
+        # IPython theme configuration.  If a website can potentially have ipynb
+        # posts (as determined by checking POSTS/PAGES against ipynb
+        # extensions), we should enable the IPython CSS (leaving that up to the
+        # theme itself).
+
+        self._GLOBAL_CONTEXT['needs_ipython_css'] = False
+        for i in self.config['post_pages']:
+            if os.path.splitext(i[0])[1] in self.config['COMPILERS'].get('ipynb', []):
+                self._GLOBAL_CONTEXT['needs_ipython_css'] = True
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
@@ -1019,7 +1035,8 @@ class Nikola(object):
                         # python 3: already unicode
                         pass
                     nl = nl.encode('idna')
-
+                    if isinstance(nl, utils.bytes_str):
+                        nl = nl.decode('latin-1')  # so idna stays unchanged
                     dst = urlunsplit((dst_url.scheme,
                                       nl,
                                       dst_url.path,

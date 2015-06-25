@@ -9,14 +9,15 @@
 # Translators:
 # seanpue <a@seanpue.com>, 2014
 # saadat, 2013
-# Saadat M. <nastaliq@gmail.com>, 2013-2014
-# Saadat M. <nastaliq@gmail.com>, 2013
+# Saadat M. <saadat@saadatmand.pk>, 2013-2014
+# Saadat M. <saadat@saadatmand.pk>, 2015
+# Saadat M. <saadat@saadatmand.pk>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-05-13 14:33+0000\n"
+"PO-Revision-Date: 2015-06-07 15:59+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Urdu (http://www.transifex.com/projects/p/nikola/language/ur/)\n"
 "MIME-Version: 1.0\n"
@@ -120,4 +121,8 @@ msgid "Skip to main content"
 msgstr "مرکزی متن پر جائیں"
 
 msgid "Subcategories:"
+msgstr "ذیلی زمرے"
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
 msgstr ""

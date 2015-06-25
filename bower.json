@@ -12,6 +12,7 @@
     "bootstrap": "~3.3.4",
     "jquery": "<2.0.0",
     "jquery-colorbox": "~1.6.0",
-    "moment": "~2.10.3"
+    "moment": "~2.10.3",
+    "livereload-js": "~2.2.1"
   }
 }
