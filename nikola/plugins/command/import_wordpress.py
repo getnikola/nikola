@@ -550,7 +550,7 @@ def get_text_tag(tag, name, default):
     if tag is None:
         return default
     t = tag.find(name)
-    if t is not None:
+    if t is not None and t.text is not None:
         return t.text
     else:
         return default
