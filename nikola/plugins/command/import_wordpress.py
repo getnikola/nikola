@@ -84,6 +84,13 @@ class CommandImportWordpress(Command, ImportMixin):
             'help': "Do not try to download files for the import",
         },
         {
+            'name': 'download_auth',
+            'long': 'download-auth',
+            'default': None,
+            'type': str,
+            'help': "Specify username and password for HTTP authentication (separated by ':')",
+        },
+        {
             'name': 'separate_qtranslate_content',
             'long': 'qtranslate',
             'default': False,
@@ -130,6 +137,14 @@ class CommandImportWordpress(Command, ImportMixin):
 
         self.exclude_drafts = options.get('exclude_drafts', False)
         self.no_downloads = options.get('no_downloads', False)
+
+        self.auth = None
+        if options.get('download_auth', None) is not None:
+            username_password = options.get('download_auth')
+            self.auth = tuple(username_password.split(':', 1))
+            if len(self.auth) < 2:
+                print("Please specify HTTP authentication credentials in the form username:password.")
+                return False
 
         self.separate_qtranslate_content = options.get('separate_qtranslate_content')
         self.translations_pattern = options.get('translations_pattern')
@@ -262,8 +277,12 @@ class CommandImportWordpress(Command, ImportMixin):
             return
 
         try:
+            request = requests.get(url, auth=self.auth)
+            if request.status_code >= 400:
+                LOGGER.warn("Downloading {0} to {1} failed with HTTP status code {2}".format(url, dst_path, request.status_code))
+                return
             with open(dst_path, 'wb+') as fd:
-                fd.write(requests.get(url).content)
+                fd.write(request.content)
         except requests.exceptions.ConnectionError as err:
             LOGGER.warn("Downloading {0} to {1} failed: {2}".format(url, dst_path, err))
 
