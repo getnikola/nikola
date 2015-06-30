@@ -184,7 +184,7 @@ class CommandImportWordpress(Command, ImportMixin):
 
         # Add tag redirects
         for tag in self.all_tags:
-            tag = utils.slugify(tag.decode('utf8'))
+            tag = tag.decode('utf8')
             src_url = '{}tag/{}'.format(self.context['SITE_URL'], tag)
             dst_url = self.site.link('tag', tag)
             if src_url != dst_url:

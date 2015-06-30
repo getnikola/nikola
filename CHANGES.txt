@@ -23,6 +23,7 @@ Features
 Bugfixes
 --------
 
+* Read configuration when importing into an existing site (Issue #1823)
 * Don’t crash on non-UTF-8 files during sitemap generation (Issue #1842)
 * Unnecessary rebuilds of yearly archives (Issue #1833)
 * Quietly ignore non-existent files in ``nikola check -l`` (Issue #1831)
