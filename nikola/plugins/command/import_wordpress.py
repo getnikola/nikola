@@ -184,7 +184,11 @@ class CommandImportWordpress(Command, ImportMixin):
 
         # Add tag redirects
         for tag in self.all_tags:
-            tag = tag.decode('utf8')
+            try:
+                tag_str = tag.decode('utf8')
+            except AttributeError:
+                tag_str = tag
+            tag = utils.slugify(tag_str)
             src_url = '{}tag/{}'.format(self.context['SITE_URL'], tag)
             dst_url = self.site.link('tag', tag)
             if src_url != dst_url:
@@ -416,11 +420,10 @@ class CommandImportWordpress(Command, ImportMixin):
         parsed = urlparse(link)
         path = unquote(parsed.path.strip('/'))
 
-        # In python 2, path is a str. slug requires a unicode
-        # object. According to wikipedia, unquoted strings will
-        # usually be UTF8
-        if isinstance(path, utils.bytes_str):
+        try:
             path = path.decode('utf8')
+        except AttributeError:
+            pass
 
         # Cut out the base directory.
         if path.startswith(self.base_dir.strip('/')):
@@ -550,7 +553,7 @@ def get_text_tag(tag, name, default):
     if tag is None:
         return default
     t = tag.find(name)
-    if t is not None:
+    if t is not None and t.text is not None:
         return t.text
     else:
         return default
