@@ -139,7 +139,7 @@ class CommandImportWordpress(Command, ImportMixin):
         self.no_downloads = options.get('no_downloads', False)
 
         self.auth = None
-        if options.get('download_auth', None) is not None:
+        if options.get('download_auth') is not None:
             username_password = options.get('download_auth')
             self.auth = tuple(username_password.split(':', 1))
             if len(self.auth) < 2:
