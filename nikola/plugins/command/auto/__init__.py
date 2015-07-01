@@ -244,17 +244,17 @@ class CommandAuto(Command):
 
         if p_uri.path == '/robots.txt':
             start_response('200 OK', [('Content-type', 'text/plain')])
-            return '''User-Agent: *\nDisallow: /\n'''
+            return ['User-Agent: *\nDisallow: /\n']
         elif os.path.isfile(f_path):
             with open(f_path, 'rb') as fd:
                 start_response('200 OK', [('Content-type', mimetype)])
-                return self.inject_js(mimetype, fd.read())
+                return [self.inject_js(mimetype, fd.read())]
         elif p_uri.path == '/livereload.js':
-            with open(LRJS_PATH) as fd:
+            with open(LRJS_PATH, 'rb') as fd:
                 start_response('200 OK', [('Content-type', mimetype)])
-                return self.inject_js(mimetype, fd.read())
+                return [self.inject_js(mimetype, fd.read())]
         start_response('404 ERR', [])
-        return self.inject_js('text/html', ERROR_N.format(404).format(uri))
+        return [self.inject_js('text/html', ERROR_N.format(404).format(uri))]
 
     def inject_js(self, mimetype, data):
         """Inject livereload.js in HTML files."""
@@ -276,7 +276,7 @@ class LRSocket(WebSocket):
         super(LRSocket, self).__init__(*a, **kw)
 
     def received_message(self, message):
-        message = json.loads(message.data)
+        message = json.loads(message.data.decode('utf8'))
         self.logger.info('<--- {0}'.format(message))
         response = None
         if message['command'] == 'hello':  # Handshake
