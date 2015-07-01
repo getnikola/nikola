@@ -243,10 +243,10 @@ class CommandAuto(Command):
             f_path = os.path.join(f_path, self.site.config['INDEX_FILE'])
 
         if p_uri.path == '/robots.txt':
-            start_response('200 OK', [('Content-type', 'txt/plain')])
+            start_response('200 OK', [('Content-type', 'text/plain')])
             return '''User-Agent: *\nDisallow: /\n'''
         elif os.path.isfile(f_path):
-            with open(f_path) as fd:
+            with open(f_path, 'rb') as fd:
                 start_response('200 OK', [('Content-type', mimetype)])
                 return self.inject_js(mimetype, fd.read())
         elif p_uri.path == '/livereload.js':
@@ -259,7 +259,8 @@ class CommandAuto(Command):
     def inject_js(self, mimetype, data):
         """Inject livereload.js in HTML files."""
         if mimetype == 'text/html':
-            data = re.sub('</head>', self.snippet, data, 1, re.IGNORECASE)
+            data = re.sub('</head>', self.snippet, data.decode('utf8'), 1, re.IGNORECASE)
+            data = data.encode('utf8')
         return data
 
 
