@@ -23,6 +23,7 @@ Features
 Bugfixes
 --------
 
+* Nikola auto was broken in python 3 (Issue #1830)
 * Read configuration when importing into an existing site (Issue #1823)
 * Don’t crash on non-UTF-8 files during sitemap generation (Issue #1842)
 * Unnecessary rebuilds of yearly archives (Issue #1833)

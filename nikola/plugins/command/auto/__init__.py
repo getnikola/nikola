@@ -237,29 +237,30 @@ class CommandAuto(Command):
         uri = wsgiref.util.request_uri(environ)
         p_uri = urlparse(uri)
         f_path = os.path.join(self.site.config['OUTPUT_FOLDER'], *p_uri.path.split('/'))
-        mimetype = mimetypes.guess_type(uri)[0] or b'text/html'
+        mimetype = mimetypes.guess_type(uri)[0] or 'text/html'
 
         if os.path.isdir(f_path):
             f_path = os.path.join(f_path, self.site.config['INDEX_FILE'])
 
         if p_uri.path == '/robots.txt':
-            start_response(b'200 OK', [(b'Content-type', 'txt/plain')])
-            return '''User-Agent: *\nDisallow: /\n'''
+            start_response('200 OK', [('Content-type', 'text/plain')])
+            return ['User-Agent: *\nDisallow: /\n']
         elif os.path.isfile(f_path):
-            with open(f_path) as fd:
-                start_response(b'200 OK', [(b'Content-type', mimetype)])
-                return self.inject_js(mimetype, fd.read())
+            with open(f_path, 'rb') as fd:
+                start_response('200 OK', [('Content-type', mimetype)])
+                return [self.inject_js(mimetype, fd.read())]
         elif p_uri.path == '/livereload.js':
-            with open(LRJS_PATH) as fd:
-                start_response(b'200 OK', [(b'Content-type', mimetype)])
-                return self.inject_js(mimetype, fd.read())
-        start_response(b'404 ERR', [])
-        return self.inject_js('text/html', ERROR_N.format(404).format(uri))
+            with open(LRJS_PATH, 'rb') as fd:
+                start_response('200 OK', [('Content-type', mimetype)])
+                return [self.inject_js(mimetype, fd.read())]
+        start_response('404 ERR', [])
+        return [self.inject_js('text/html', ERROR_N.format(404).format(uri))]
 
     def inject_js(self, mimetype, data):
         """Inject livereload.js in HTML files."""
         if mimetype == 'text/html':
-            data = re.sub('</head>', self.snippet, data, 1, re.IGNORECASE)
+            data = re.sub('</head>', self.snippet, data.decode('utf8'), 1, re.IGNORECASE)
+            data = data.encode('utf8')
         return data
 
 
@@ -275,7 +276,7 @@ class LRSocket(WebSocket):
         super(LRSocket, self).__init__(*a, **kw)
 
     def received_message(self, message):
-        message = json.loads(message.data)
+        message = json.loads(message.data.decode('utf8'))
         self.logger.info('<--- {0}'.format(message))
         response = None
         if message['command'] == 'hello':  # Handshake
