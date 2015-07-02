@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "%d min resterende leestijd ",
-    "(active)": "",
+    "(active)": "(actief)",
     "Also available in:": "Ook beschikbaar in:",
     "Archive": "Archief",
     "Categories": "Categorieën",
@@ -32,6 +32,8 @@ MESSAGES = {
     "Subcategories:": "Subcategorieën",
     "Tags and Categories": "Tags en Categorieën",
     "Tags": "Tags",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "oude berichten, pagina %d",
     "page %d": "pagina %d",
 }

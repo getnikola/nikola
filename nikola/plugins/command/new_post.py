@@ -469,7 +469,10 @@ class CommandNewPost(Command):
             with io.open(import_file, 'r', encoding='utf-8') as fh:
                 content = fh.read()
         else:
-            content = "Write your {0} here.".format('page' if is_page else 'post')
+            if is_page:
+                content = self.site.MESSAGES[self.site.default_lang]["Write your page here."]
+            else:
+                content = self.site.MESSAGES[self.site.default_lang]["Write your post here."]
         compiler_plugin.create_post(
             txt_path, content=content, onefile=onefile, title=title,
             slug=slug, date=date, tags=tags, is_page=is_page, **metadata)

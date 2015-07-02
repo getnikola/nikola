@@ -32,6 +32,8 @@ MESSAGES = {
     "Subcategories:": "ذیلی زمرے",
     "Tags and Categories": "ٹیگز اور زمرے",
     "Tags": "ٹیگز",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "پرانی تحاریر صفحہ %d",
     "page %d": "صفحہ %d",
 }

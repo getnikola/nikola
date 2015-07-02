@@ -32,6 +32,8 @@ MESSAGES = {
     "Subcategories:": "",
     "Tags and Categories": "标签和分类",
     "Tags": "标签",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "旧文章页 %d",
     "page %d": "",
 }

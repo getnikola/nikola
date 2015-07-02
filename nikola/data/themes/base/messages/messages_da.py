@@ -32,6 +32,8 @@ MESSAGES = {
     "Subcategories:": "",
     "Tags and Categories": "Nøgleord og kategorier",
     "Tags": "Nøgleord",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "gamle indlæg, side %d",
     "page %d": "side %d",
 }
