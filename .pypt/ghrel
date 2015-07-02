@@ -84,7 +84,7 @@ r = requests.post(
     headers=HEADERS)
 
 if r.status_code == 201:
-    print("GitHub Release created: {0}".format(r.json()['url']))
+    print("GitHub Release created: {0}".format(r.json()['html_url']))
 else:
     print("GitHub Release failed: {0}".format(r.text))
     exit(1)
