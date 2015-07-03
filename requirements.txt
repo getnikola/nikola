@@ -1,4 +1,4 @@
-doit==0.28.0
+doit>=0.28.0
 Pygments>=1.6
 Pillow>=2.4.0
 python-dateutil==2.4.2
@@ -6,7 +6,7 @@ docutils>=0.12
 mako>=1.0.0
 unidecode>=0.04.16
 lxml>=3.3.5
-Yapsy==1.11.223
+Yapsy>=1.11.223
 PyRSS2Gen>=1.1
 logbook>=0.7.0
 blinker>=1.3
