@@ -57,21 +57,19 @@ div.abstract p.topic-title {
 div.admonition, div.attention, div.caution, div.danger, div.error,
 div.hint, div.important, div.note, div.tip, div.warning {
   margin: 2em ;
-  border: medium outset ;
+  border: thin ;
   padding: 1em }
 
 div.admonition p.admonition-title, div.hint p.admonition-title,
 div.important p.admonition-title, div.note p.admonition-title,
 div.tip p.admonition-title {
-  font-weight: bold ;
-  font-family: sans-serif }
+  font-weight: bold }
 
 div.attention p.admonition-title, div.caution p.admonition-title,
 div.danger p.admonition-title, div.error p.admonition-title,
 div.warning p.admonition-title, .code .error {
   color: red ;
-  font-weight: bold ;
-  font-family: sans-serif }
+  font-weight: bold }
 
 /* Uncomment (and remove this text!) to get reduced vertical space in
    compound paragraphs.
@@ -119,7 +117,7 @@ html[dir="rtl"] div.line-block div.line-block {
 
 div.sidebar {
   margin: 0 0 0.5em 1em ;
-  border: medium outset ;
+  border: thin ;
   padding: 1em ;
   background-color: #ffffee ;
   width: 40% ;
@@ -127,7 +125,6 @@ div.sidebar {
   clear: right }
 
 div.sidebar p.rubric {
-  font-family: sans-serif ;
   font-size: medium }
 
 div.system-messages {
@@ -137,7 +134,7 @@ div.system-messages h1 {
   color: red }
 
 div.system-message {
-  border: medium outset ;
+  border: thin ;
   padding: 1em }
 
 div.system-message p.system-message-title {
@@ -232,12 +229,10 @@ p.rubric {
   text-align: center }
 
 p.sidebar-title {
-  font-family: sans-serif ;
   font-weight: bold ;
   font-size: larger }
 
 p.sidebar-subtitle {
-  font-family: sans-serif ;
   font-weight: bold }
 
 p.topic-title {
@@ -260,15 +255,12 @@ pre.code .inserted, code .inserted { background-color: #A3D289}
 */
 
 span.classifier {
-  font-family: sans-serif ;
   font-style: oblique }
 
 span.classifier-delimiter {
-  font-family: sans-serif ;
   font-weight: bold }
 
-span.interpreted {
-  font-family: sans-serif }
+span.interpreted { }
 
 span.option {
   white-space: nowrap }
