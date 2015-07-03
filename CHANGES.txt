@@ -1,3 +1,14 @@
+New in master
+=============
+
+Features
+--------
+
+Bugfixes
+--------
+
+* Fix spurious warnings about posts published in the future (Issue #1850)
+
 New in v7.6.0
 =============
 
