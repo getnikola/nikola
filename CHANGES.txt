@@ -7,6 +7,7 @@ Features
 Bugfixes
 --------
 
+* Remove gap between line numbers and code (Issue #1859)
 * Fix spurious warnings about posts published in the future (Issue #1850)
 
 New in v7.6.0

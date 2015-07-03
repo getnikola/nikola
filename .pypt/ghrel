@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 # Kw’s Release Tools/Python Project Template
-# GitHub Releases Creator
+# GitHub Release Creator
 # Copyright © 2013-2015, Chris Warrick.
 # All rights reserved.
 #
@@ -33,58 +33,78 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Arguments:
-# FILE BASEDIR REPO TAG
-
 """
 Create GitHub releases out of changelogs.
 
-Usage: .pypt/commitlog FILE BASEDIR REPO TAG, where
+Usage: .pypt/commitlog FILE BASEDIR REPOSITORY TAG, where
     FILE is the path to the file to use, which can be
         a plain .md file or a CMFN file,
     BASEDIR is the project directory,
-    REPO is the full GitHub repository name (user/repo),
+    REPOSITORY is the full GitHub repository name (user/repo),
     TAG is the tag to write to.
     All paths should be absolute.
 """
 
+import argparse
+import json
 import re
 import requests
-import json
+import sys
 from os.path import join as pjoin
-from sys import argv
 
-_script, FILE, BASEDIR, REPO, TAG = argv
 
-with open(pjoin(BASEDIR, '.pypt', 'gh-token')) as fh:
-    TOKEN = fh.read().strip()
+def main():
+    """ghrel main function."""
+    parser = argparse.ArgumentParser(
+        description="GitHub Release Creator "
+                    "(part of Chris Warrick's Python Project Template)")
+    parser.add_argument('filename', metavar='FILE', nargs=1,
+                        help='File to parse (Markdown or commitlog)')
+    parser.add_argument('basedir', metavar='BASEDIR', nargs=1,
+                        help='Project directory (must contain .pypt/gh-token)')
+    parser.add_argument('repo', metavar='REPOSITORY', nargs=1,
+                        help='GitHub repository (owner/repo)')
+    parser.add_argument('tag', metavar='TAG', nargs=1,
+                        help='Tag to create release for (vX.Y.Z)')
+    args = parser.parse_args()
+    # nargs gets you lists, not strings
+    filename = args.filename[0]
+    basedir = args.basedir[0]
+    repo = args.repo[0]
+    tag = args.tag[0]
 
-HEADERS = {
-    'User-Agent': 'Kwpolska/python-project-template',
-    'Authorization': 'token ' + TOKEN,
-}
+    with open(pjoin(basedir, '.pypt', 'gh-token')) as fh:
+        token = fh.read().strip()
 
-with open(FILE) as fh:
-    fdata = fh.read()
-    e = re.findall(
-        '#~ CHANGELOG MESSAGE START ~#\n(.*?)\n#~ CHANGELOG MESSAGE END ~#',
-        fdata, flags=re.S)
+    headers = {
+        'User-Agent': 'Kwpolska/python-project-template',
+        'Authorization': 'token ' + token,
+    }
 
-    if e:
-        # parse as a CMFN file, replace backticks (reST->Markdown)
-        message = e[0].replace('``', '`')
+    with open(filename) as fh:
+        fdata = fh.read()
+        e = re.findall(
+            '#~ CHANGELOG MESSAGE START ~#\n(.*?)\n'
+            '#~ CHANGELOG MESSAGE END ~#',
+            fdata, flags=re.S)
+
+        if e:
+            # parse as a CMFN file, replace backticks (reST -> Markdown)
+            message = e[0].replace('``', '`')
+        else:
+            # parse as a plain Markdown file
+            message = fdata
+
+    r = requests.post(
+        'https://api.github.com/repos/{0}/releases'.format(repo),
+        data=json.dumps({'tag_name': tag, 'body': message}),
+        headers=headers)
+
+    if r.status_code == 201:
+        print("GitHub Release created: {0}".format(r.json()['html_url']))
     else:
-        # parse as a plain Markdown file
-        message = fdata
+        print("GitHub Release failed: {0}".format(r.text))
+        return 1
 
-
-r = requests.post(
-    'https://api.github.com/repos/{0}/releases'.format(REPO),
-    data=json.dumps({'tag_name': TAG, 'body': message}),
-    headers=HEADERS)
-
-if r.status_code == 201:
-    print("GitHub Release created: {0}".format(r.json()['html_url']))
-else:
-    print("GitHub Release failed: {0}".format(r.text))
-    exit(1)
+if __name__ == '__main__':
+    sys.exit(main())
