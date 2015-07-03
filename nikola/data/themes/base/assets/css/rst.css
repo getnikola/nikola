@@ -255,7 +255,7 @@ pre.code .inserted, code .inserted { background-color: #A3D289}
 */
 
 span.classifier {
-  font-style: oblique }
+  font-style: italic }
 
 span.classifier-delimiter {
   font-weight: bold }
