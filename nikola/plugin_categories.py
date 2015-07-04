@@ -303,7 +303,6 @@ class CompilerExtension(BasePlugin):
     compiler_name = "dummy_compiler"
 
 
-
 class RestExtension(CompilerExtension):
     name = "dummy_rest_extension"
     compiler_name = "rest"
