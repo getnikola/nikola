@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-06-24 12:31+0000\n"
+"PO-Revision-Date: 2015-07-04 18:27+0000\n"
 "Last-Translator: Nicola Larosa <transifex@teknico.net>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/nikola/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,7 @@ msgstr "Altri articoli collegati %s"
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "LANGUAGE"
-msgstr "Inglese"
+msgstr "Italiano"
 
 msgid "Tags"
 msgstr "Tag"
@@ -43,7 +43,7 @@ msgid "Categories"
 msgstr "Categorie"
 
 msgid "Tags and Categories"
-msgstr "Tag e Categorie"
+msgstr "Tag e categorie"
 
 msgid "Comments"
 msgstr "Commenti"
