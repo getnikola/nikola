@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Modern reST stylesheets, based in part on Bootstrap 3 (Issue #1150)
+
 Bugfixes
 --------
 
