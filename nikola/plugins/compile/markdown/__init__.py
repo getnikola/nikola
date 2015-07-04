@@ -54,13 +54,8 @@ class CompileMarkdown(PageCompiler):
 
     def set_site(self, site):
         self.config_dependencies = []
-        for plugin_info in site.plugin_manager.getPluginsOfCategory("MarkdownExtension"):
-            if plugin_info.name in site.config['DISABLED_PLUGINS']:
-                site.plugin_manager.removePluginFromCategory(plugin_info, "MarkdownExtension")
-                continue
+        for plugin_info in site.activate_compiler_extensions('markdown'):
             self.config_dependencies.append(plugin_info.name)
-            site.plugin_manager.activatePluginByName(plugin_info.name)
-            plugin_info.plugin_object.set_site(site)
             self.extensions.append(plugin_info.plugin_object)
             plugin_info.plugin_object.short_help = plugin_info.description
 

@@ -30,8 +30,7 @@ from nikola.plugin_categories import (
     TemplateSystem,
     PageCompiler,
     TaskMultiplier,
-    RestExtension,
-    MarkdownExtension
+    CompilerExtension
 )
 
 
@@ -213,8 +212,7 @@ class FakeSite(object):
             "TemplateSystem": TemplateSystem,
             "PageCompiler": PageCompiler,
             "TaskMultiplier": TaskMultiplier,
-            "RestExtension": RestExtension,
-            "MarkdownExtension": MarkdownExtension,
+            "CompilerExtension": CompilerExtension
         })
         self.loghandlers = [nikola.utils.STDERR_HANDLER]
         self.plugin_manager.setPluginInfoExtension('plugin')
@@ -238,6 +236,9 @@ class FakeSite(object):
         # This is to make plugin initialization happy
         self.template_system = self
         self.name = 'mako'
+
+    def activate_compiler_extensions(self, compiler_name):
+        return []
 
     def render_template(self, name, _, context):
         return('<img src="IMG.jpg">')

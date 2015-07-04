@@ -61,8 +61,6 @@ from .plugin_categories import (
     LateTask,
     PageCompiler,
     CompilerExtension,
-    RestExtension,
-    MarkdownExtension,
     Task,
     TaskMultiplier,
     TemplateSystem,
@@ -670,8 +668,6 @@ class Nikola(object):
             "PageCompiler": PageCompiler,
             "TaskMultiplier": TaskMultiplier,
             "CompilerExtension": CompilerExtension,
-            "RestExtension": RestExtension,
-            "MarkdownExtension": MarkdownExtension,
             "SignalHandler": SignalHandler,
             "ConfigPlugin": ConfigPlugin,
             "PostScanner": PostScanner,
@@ -730,6 +726,7 @@ class Nikola(object):
             self.config['COMPILERS'][k] = sorted(list(v))
 
         # Activate all required compiler plugins
+        self.compiler_extensions = self._activate_plugins_of_category("CompilerExtension")
         for plugin_info in self.plugin_manager.getPluginsOfCategory("PageCompiler"):
             if plugin_info.name in self.config["COMPILERS"].keys():
                 self.plugin_manager.activatePluginByName(plugin_info.name)
@@ -837,6 +834,14 @@ class Nikola(object):
             else:
                 self.plugin_manager.activatePluginByName(plugin_info.name)
                 plugin_info.plugin_object.set_site(self)
+                plugins.append(plugin_info)
+        return plugins
+
+    def activate_compiler_extensions(self, compiler_name):
+        """Activate all the compiler extension plugins for a given compiler and return them."""
+        plugins = []
+        for plugin_info in self.compiler_extensions:
+            if plugin_info.plugin_object.compiler_name == compiler_name:
                 plugins.append(plugin_info)
         return plugins
 
