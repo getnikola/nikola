@@ -492,56 +492,55 @@ to your configuration::
    Nikola will also use other metadata fields:
 
    author
-       Author of the post, will be used in the RSS feed and possibly in the post
-       display (theme-dependent)
+      Author of the post, will be used in the RSS feed and possibly in the post
+      display (theme-dependent)
 
    annotations / noannotations
-       Override the value of the ``ANNOTATIONS`` option for this specific post or page.
+      Override the value of the ``ANNOTATIONS`` option for this specific post or page.
 
    category
-       Like tags, except each post can have only one, and they usually have
-       more descriptive names.
+      Like tags, except each post can have only one, and they usually have
+      more descriptive names.
 
    filters
-       See the `Post Processing Filters`_ section.
+      See the `Post Processing Filters`_ section.
 
    hidetitle
-       Set "True" if you do not want to see the **page** title as a
-       heading of the output html file (does not work for posts).
+      Set "True" if you do not want to see the **page** title as a
+      heading of the output html file (does not work for posts).
 
    nocomments
-       Set to "True" to disable comments. Example::
+      Set to "True" to disable comments. Example::
 
-           .. nocomments: True
+          .. nocomments: True
 
    password
-       The post will be encrypted and invisible until the reader enters the password.
-       Also, the post's sourcecode will not be available.
+      The post will be encrypted and invisible until the reader enters the password.
+      Also, the post's sourcecode will not be available.
 
-       WARNING: **DO NOT** use for real confidential data.  The algorithm used (RC4) is insecure.  The implementation may also be easily brute-forced.  Please consider using something else if you need *real* encryption!
+      WARNING: **DO NOT** use for real confidential data.  The algorithm used (RC4) is insecure.  The implementation may also be easily brute-forced.  Please consider using something else if you need *real* encryption!
 
-       More information: `Issue #1547 <https://github.com/getnikola/nikola/issues/1547>`_
+      More information: `Issue #1547 <https://github.com/getnikola/nikola/issues/1547>`_
 
    previewimage
-       Designate a preview or other representative image path relative to BASE_URL
-       for use with Open Graph for posts. Adds the image when sharing on social
-       media and many other uses.
+      Designate a preview or other representative image path relative to BASE_URL
+      for use with Open Graph for posts. Adds the image when sharing on social
+      media and many other uses. ::
 
-           .. previewimage: images/looks_great_on_facebook.png
+          .. previewimage: images/looks_great_on_facebook.png
 
-       The image can be of any size and dimension (services will crop and adapt)
-       but should less than 1 MB and be larger than 300x300 (ideally 600x600).
+      The image can be of any size and dimension (services will crop and adapt)
+      but should less than 1 MB and be larger than 300x300 (ideally 600x600).
 
    template
-       Will change the template used to render this page/post specific page. Example::
+      Change the template used to render this page/post specific page. That
+      template needs to either be part of the theme, or be placed in a
+      ``templates/`` folder inside your site. ::
 
-           .. template: story.tmpl
+          .. template: story.tmpl
 
-       That template needs to either be part of the theme, or be placed in a ``templates/``
-       folder inside your site.
-
-    enclosure
-        Add an enclosure to this post when it's used in RSS. See `more information about enclosures <http://en.wikipedia.org/wiki/RSS_enclosure>`__
+   enclosure
+       Add an enclosure to this post when it's used in RSS. See `more information about enclosures <http://en.wikipedia.org/wiki/RSS_enclosure>`__
 
 .. note:: The Two-File Format
 
@@ -556,11 +555,11 @@ to your configuration::
 
    However, starting with Nikola v7, you can now use ``.meta`` files and put
    all metadata you want, complete with the explanations — they look just like
-   the beginning of our reST files.
+   the beginning of our reST files. ::
 
-        .. title: How to make money
-        .. slug: how-to-make-money
-        .. date: 2012-09-15 19:52:05 UTC
+       .. title: How to make money
+       .. slug: how-to-make-money
+       .. date: 2012-09-15 19:52:05 UTC
 
    Both file formats are supported; however, the new format is preferred, if
    possible.
@@ -797,6 +796,8 @@ types affect the look of your posts, by adding a ``post-YOURINPUTHERE``
 CSS class to the post.  Each post can have one and exactly one type.  Nikola
 styles the following types in the default themes:
 
+.. class:: table table-bordered
+
 +-----------------+----------------------------+------------------+
 | Name(s)         | Description                | Styling          |
 +=================+============================+==================+
@@ -976,13 +977,13 @@ You surely want to edit these options::
 Some options are demarked with a (translatable) comment above or right next to
 them.  For those options, two types of values can be provided:
 
- * a string, which will be used for all languages
- * a dict of language-value pairs, to have different values in each language
+* a string, which will be used for all languages
+* a dict of language-value pairs, to have different values in each language
 
 .. note:: It is possible to load the configuration from another file by specifying
           ``--conf=path/to/other.file`` on Nikola's command line. For example, to
-          build your blog using the configuration file ``configurations/test.config``,
-          you have to execute ``nikola build --conf=configurations/test.config``.
+          build your blog using the configuration file ``configurations/test.conf.py``,
+          you have to execute ``nikola build --conf=configurations/test.conf.py``.
 
 Customizing Your Site
 ---------------------
@@ -1038,20 +1039,16 @@ Navigation Links
 
     .. note::
 
-       Support for submenus is theme-dependent.  Only one level of
-       submenus is supported.
+       1. Support for submenus is theme-dependent.  Only one level of
+          submenus is supported.
 
-    .. note::
+       2. Some themes, including the default Bootstrap 3 theme, may
+          present issues if the menu is too large.  (in ``bootstrap3``, the
+          navbar can grow too large and cover contents.)
 
-       Some themes, including the default Bootstrap 3 theme, may
-       present issues if the menu is too large.  (in ``bootstrap3``, the
-       navbar can grow too large and cover contents.)
-
-    .. note::
-
-        If you link to directories, make sure to follow ``STRIP_INDEXES``.  If
-        it’s set to ``True``, end your links with a ``/``, otherwise end them
-        with ``/index.html`` — or else they won’t be hilighted when active.
+       3. If you link to directories, make sure to follow ``STRIP_INDEXES``.  If
+          it’s set to ``True``, end your links with a ``/``, otherwise end them
+          with ``/index.html`` — or else they won’t be hilighted when active.
 
     The ``SEARCH_FORM`` option contains the HTML code for a search form based on
     duckduckgo.com which should always work, but feel free to change it to
@@ -1138,8 +1135,8 @@ with files Nikola generates (it will give an error).
 
 .. admonition:: Important
 
-   Don't put any files manually in ``output/``. Ever. Really. Maybe someday Nikola
-   will just wipe ``output/`` and then you will be sorry. So, please don't do that.
+   Don't put any files manually in ``output/``. Ever. Really.
+   Maybe someday Nikola will just wipe ``output/`` (when you run ``nikola check -f --clean-files``) and then you will be sorry. So, please don't do that.
 
 If you want to copy more than one folder of static files into ``output`` you can
 change the FILES_FOLDERS option::
@@ -1541,7 +1538,6 @@ like this:
 
 .. code:: python
 
-   """
     MATHJAX_CONFIG = """
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -1556,7 +1552,6 @@ like this:
         }
     });
     </script>
-    """
 
 Inline mathematics are produced using the reST `math` **role** or the ``\(…\)`` delimiters:
 
