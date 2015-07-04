@@ -261,15 +261,18 @@ class Post(object):
             tags.extend(self._tags[l])
         return list(set(tags))
 
-    @property
-    def tags(self):
-        lang = nikola.utils.LocaleBorg().current_lang
+    def tags_for_language(self, lang):
         if lang in self._tags:
             return self._tags[lang]
         elif self.default_lang in self._tags:
             return self._tags[self.default_lang]
         else:
             return []
+
+    @property
+    def tags(self):
+        lang = nikola.utils.LocaleBorg().current_lang
+        return self.tags_for_language(lang)
 
     @property
     def prev_post(self):

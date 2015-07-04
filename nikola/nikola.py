@@ -273,6 +273,7 @@ class Nikola(object):
         self.posts_per_month = defaultdict(list)
         self.posts_per_tag = defaultdict(list)
         self.posts_per_category = defaultdict(list)
+        self.tags_per_language = defaultdict(list)
         self.post_per_file = {}
         self.timeline = []
         self.pages = []
@@ -1440,6 +1441,7 @@ class Nikola(object):
         self.posts_per_month = defaultdict(list)
         self.posts_per_tag = defaultdict(list)
         self.posts_per_category = defaultdict(list)
+        self.tags_per_language = defaultdict(list)
         self.category_hierarchy = {}
         self.post_per_file = {}
         self.timeline = []
@@ -1472,6 +1474,8 @@ class Nikola(object):
                     else:
                         slugged_tags.add(utils.slugify(tag, force=True))
                     self.posts_per_tag[tag].append(post)
+                for lang in post.translated_to:
+                    self.tags_per_language[lang].extend(post.tags_for_language(lang))
                 self._add_post_to_category(post, post.meta('category'))
 
             if post.is_post:
@@ -1497,6 +1501,8 @@ class Nikola(object):
                     quit = True
                 self.post_per_file[dest] = post
                 self.post_per_file[src_dest] = post
+                # deduplicate tags_per_language
+                self.tags_per_language[lang] = list(set(self.tags_per_language[lang]))
 
         # Sort everything.
 
