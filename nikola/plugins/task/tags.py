@@ -187,8 +187,8 @@ class RenderTags(Task):
             kw['categories'] = categories
         for lang in kw["translations"]:
             tags = natsort.natsorted([tag for tag in self.site.tags_per_language[lang]
-                                    if len(self.site.posts_per_tag[tag]) >= kw["taglist_minimum_post_count"]],
-                                    alg=natsort.ns.F | natsort.ns.IC)
+                                      if len(self.site.posts_per_tag[tag]) >= kw["taglist_minimum_post_count"]],
+                                     alg=natsort.ns.F | natsort.ns.IC)
             has_tags = (tags != []) and include_tags
             if include_tags:
                 kw['tags'] = tags
