@@ -2,6 +2,9 @@
 Name = rest_vimeo
 Module = vimeo
 
+[Nikola]
+Compiler = rest
+
 [Documentation]
 Description = Vimeo directive
 

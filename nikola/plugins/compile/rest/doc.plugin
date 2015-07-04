@@ -2,6 +2,9 @@
 Name = rest_doc
 Module = doc
 
+[Nikola]
+Compiler = rest
+
 [Documentation]
 Author = Manuel Kaufmann
 Version = 0.1
