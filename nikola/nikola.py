@@ -1474,7 +1474,7 @@ class Nikola(object):
                     else:
                         slugged_tags.add(utils.slugify(tag, force=True))
                     self.posts_per_tag[tag].append(post)
-                for lang in post.translated_to:
+                for lang in self.config['TRANSLATIONS'].keys():
                     self.tags_per_language[lang].extend(post.tags_for_language(lang))
                 self._add_post_to_category(post, post.meta('category'))
 

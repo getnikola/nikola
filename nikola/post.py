@@ -264,6 +264,8 @@ class Post(object):
     def tags_for_language(self, lang):
         if lang in self._tags:
             return self._tags[lang]
+        elif lang not in self.translated_to and self.skip_untranslated:
+            return []
         elif self.default_lang in self._tags:
             return self._tags[self.default_lang]
         else:
