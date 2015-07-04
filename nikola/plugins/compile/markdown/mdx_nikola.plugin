@@ -2,6 +2,9 @@
 Name = mdx_nikola
 Module = mdx_nikola
 
+[Nikola]
+Compiler = markdown
+
 [Documentation]
 Author = Roberto Alsina
 Version = 0.1

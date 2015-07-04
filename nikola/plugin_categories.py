@@ -284,12 +284,34 @@ class PageCompiler(BasePlugin):
         return split_result[0], split_result[-1]
 
 
-class RestExtension(BasePlugin):
+class CompilerExtension(BasePlugin):
+
+    """An extension for a Nikola compiler.
+
+    If you intend to implement those in your own compiler, you can:
+    (a) create a new plugin class for them; or
+    (b) use this class and filter them yourself.
+    If you choose (b), you should the compiler name to the .plugin
+    file in the Nikola/Compiler section and filter all plugins of
+    this category, getting the compiler name with:
+        p.details.get('Nikola', 'Compiler')
+    Note that not all compiler plugins have this option and you might
+    need to catch configparser.NoOptionError exceptions.
+    """
+
+    name = "dummy_compiler_extension"
+    compiler_name = "dummy_compiler"
+
+
+
+class RestExtension(CompilerExtension):
     name = "dummy_rest_extension"
+    compiler_name = "rest"
 
 
-class MarkdownExtension(BasePlugin):
+class MarkdownExtension(CompilerExtension):
     name = "dummy_markdown_extension"
+    compiler_name = "markdown"
 
 
 class SignalHandler(BasePlugin):

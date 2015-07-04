@@ -2,6 +2,9 @@
 Name = rest_post_list
 Module = post_list
 
+[Nikola]
+Compiler = rest
+
 [Documentation]
 Author = Udo Spallek
 Version = 0.1

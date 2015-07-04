@@ -2,6 +2,9 @@
 Name = rest_thumbnail
 Module = thumbnail
 
+[Nikola]
+Compiler = rest
+
 [Documentation]
 Author = Pelle Nilsson
 Version = 0.1
