@@ -84,7 +84,7 @@ class PodcastExtension(MarkdownExtension, Extension):
         md.registerExtension(self)
 
 
-def makeExtension(configs=None):
+def makeExtension(configs=None):  # pragma: no cover
     return PodcastExtension(configs)
 
 if __name__ == '__main__':

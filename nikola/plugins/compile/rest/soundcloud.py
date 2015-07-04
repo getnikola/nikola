@@ -57,7 +57,7 @@ class SoundCloud(Directive):
 
     def check_content(self):
         """ Emit a deprecation warning if there is content """
-        if self.content:
+        if self.content:  # pragma: no cover
             raise self.warning("This directive does not accept content. The "
                                "'key=value' format for options is deprecated, "
                                "use ':key: value' instead")

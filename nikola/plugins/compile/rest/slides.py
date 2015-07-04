@@ -50,7 +50,7 @@ class Slides(Directive):
     has_content = True
 
     def run(self):
-        if len(self.content) == 0:
+        if len(self.content) == 0:  # pragma: no cover
             return
 
         if self.site.invariant:  # for testing purposes

@@ -58,5 +58,5 @@ class NikolaExtension(MarkdownExtension, Extension):
         md.registerExtension(self)
 
 
-def makeExtension(configs=None):
+def makeExtension(configs=None):  # pragma: no cover
     return NikolaExtension(configs)
