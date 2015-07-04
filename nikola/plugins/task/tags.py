@@ -179,19 +179,19 @@ class RenderTags(Task):
 
     def _create_tags_page(self, kw, include_tags=True, include_categories=True):
         """a global "all your tags/categories" page for each language"""
-        tags = natsort.natsorted([tag for tag in self.site.posts_per_tag.keys()
-                                  if len(self.site.posts_per_tag[tag]) >= kw["taglist_minimum_post_count"]],
-                                 alg=natsort.ns.F | natsort.ns.IC)
         categories = [cat.category_name for cat in self.site.category_hierarchy]
-        has_tags = (tags != []) and include_tags
         has_categories = (categories != []) and include_categories
         template_name = "tags.tmpl"
         kw = kw.copy()
-        if include_tags:
-            kw['tags'] = tags
         if include_categories:
             kw['categories'] = categories
         for lang in kw["translations"]:
+            tags = natsort.natsorted([tag for tag in self.site.tags_per_language[lang]
+                                      if len(self.site.posts_per_tag[tag]) >= kw["taglist_minimum_post_count"]],
+                                     alg=natsort.ns.F | natsort.ns.IC)
+            has_tags = (tags != []) and include_tags
+            if include_tags:
+                kw['tags'] = tags
             output_name = os.path.join(
                 kw['output_folder'], self.site.path('tag_index' if has_tags else 'category_index', None, lang))
             output_name = output_name
