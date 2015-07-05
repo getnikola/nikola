@@ -35,8 +35,8 @@ nikola/data/themes/bootstrap3/assets/css/bootstrap.css
 nikola/data/themes/bootstrap3/assets/css/bootstrap.css.map
 nikola/data/themes/bootstrap3/assets/css/bootstrap.min.css
 nikola/data/themes/bootstrap3/assets/css/colorbox.css
-nikola/data/themes/bootstrap3/assets/css/controls.png
-nikola/data/themes/bootstrap3/assets/css/loading.gif
+nikola/data/themes/bootstrap3/assets/css/images/controls.png
+nikola/data/themes/bootstrap3/assets/css/images/loading.gif
 nikola/data/themes/bootstrap3/assets/fonts/glyphicons-halflings-regular.eot
 nikola/data/themes/bootstrap3/assets/fonts/glyphicons-halflings-regular.svg
 nikola/data/themes/bootstrap3/assets/fonts/glyphicons-halflings-regular.ttf
