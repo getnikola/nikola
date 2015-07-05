@@ -30,7 +30,9 @@ from nikola.plugin_categories import (
     TemplateSystem,
     PageCompiler,
     TaskMultiplier,
-    CompilerExtension
+    CompilerExtension,
+    MarkdownExtension,
+    RestExtension
 )
 
 
@@ -212,7 +214,9 @@ class FakeSite(object):
             "TemplateSystem": TemplateSystem,
             "PageCompiler": PageCompiler,
             "TaskMultiplier": TaskMultiplier,
-            "CompilerExtension": CompilerExtension
+            "CompilerExtension": CompilerExtension,
+            "MarkdownExtension": MarkdownExtension,
+            "RestExtension": RestExtension
         })
         self.loghandlers = [nikola.utils.STDERR_HANDLER]
         self.plugin_manager.setPluginInfoExtension('plugin')
