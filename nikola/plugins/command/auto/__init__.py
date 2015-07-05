@@ -181,7 +181,10 @@ class CommandAuto(Command):
         _conf_dn = os.path.dirname(_conf_fn)
         observer.schedule(ConfigWatchHandler(_conf_fn, self.do_rebuild), _conf_dn, recursive=False)
 
-        observer.start()
+        try:
+            observer.start()
+        except KeyboardInterrupt:
+            pass
 
         parent = self
 

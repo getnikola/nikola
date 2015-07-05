@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Surpress wincing when auto is aborted during rebuilding
 * Show tags only from the current language on tag listing pages (Issue #1856)
 * Remove gap between line numbers and code (Issue #1859)
 * Fix spurious warnings about posts published in the future (Issue #1850)
