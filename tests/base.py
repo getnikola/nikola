@@ -34,6 +34,7 @@ from nikola.plugin_categories import (
     MarkdownExtension,
     RestExtension
 )
+import nikola
 
 
 if sys.version_info < (2, 7):
@@ -242,17 +243,7 @@ class FakeSite(object):
         self.template_system = self
         self.name = 'mako'
 
-    def _activate_plugins_of_category(self, category):
-        """Activate all the plugins of a given category and return them."""
-        plugins = []
-        for plugin_info in self.plugin_manager.getPluginsOfCategory(category):
-            if plugin_info.name in self.config.get('DISABLED_PLUGINS'):
-                self.plugin_manager.removePluginFromCategory(plugin_info, category)
-            else:
-                self.plugin_manager.activatePluginByName(plugin_info.name)
-                plugin_info.plugin_object.set_site(self)
-                plugins.append(plugin_info)
-        return plugins
+    _activate_plugins_of_category = nikola.Nikola._activate_plugins_of_category
 
     def render_template(self, name, _, context):
         return('<img src="IMG.jpg">')
