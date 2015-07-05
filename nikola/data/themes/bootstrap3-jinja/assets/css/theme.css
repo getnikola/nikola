@@ -51,12 +51,6 @@ div.figure > a > img {
     margin-right: auto;
 }
 
-div.sidebar, div.admonition, div.attention, div.caution, div.danger, div.error, div.hint, div.important, div.note, div.tip, div.warning {
-    /* Issue 277 */
-    border: 1px solid #aaa;
-    border-radius: 5px;
-}
-
 blockquote p, blockquote {
   font-size: 17.5px;
   font-weight: 300;
