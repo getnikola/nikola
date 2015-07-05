@@ -292,7 +292,6 @@ class PageCompiler(BasePlugin):
         return plugins
 
 
-
 class CompilerExtension(BasePlugin):
 
     """An extension for a Nikola compiler.
