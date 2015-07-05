@@ -1,4 +1,4 @@
-A bootstrap3 version of the bootstrap theme.
+A theme based on Bootstrap 3.
 
 There is a variant called bootstrap3-gradients which uses an extra CSS
 file for a *visually enhanced experience* (according to Bootstrap

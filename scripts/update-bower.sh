@@ -27,29 +27,29 @@ git add moment-with-locales.min.js
 popd
 
 # Link jQuery to bootstrap theme
-pushd nikola/data/themes/bootstrap/assets/js
+pushd nikola/data/themes/bootstrap3/assets/js
 ln -sf ../../../../../../bower_components/jquery/dist/* .
 git add .
 popd
 
 
 # Link colorbox into bootstrap theme
-pushd nikola/data/themes/bootstrap/assets/js
+pushd nikola/data/themes/bootstrap3/assets/js
 ln -sf ../../../../../../bower_components/jquery-colorbox/jquery.colorbox.js .
 git add jquery.colorbox.js
 popd
 
-pushd nikola/data/themes/bootstrap/assets/js/colorbox-i18n
+pushd nikola/data/themes/bootstrap3/assets/js/colorbox-i18n
 ln -sf ../../../../../../../bower_components/jquery-colorbox/i18n/* .
 git add .
 popd
 
-pushd nikola/data/themes/bootstrap/assets/css/
+pushd nikola/data/themes/bootstrap3/assets/css/
 ln -sf ../../../../../../bower_components/jquery-colorbox/example3/colorbox.css .
 git add colorbox.css
 popd
 
-pushd nikola/data/themes/bootstrap/assets/css/images/
+pushd nikola/data/themes/bootstrap3/assets/css/images/
 ln -sf ../../../../../../../bower_components/jquery-colorbox/example3/images/* .
 git add .
 popd

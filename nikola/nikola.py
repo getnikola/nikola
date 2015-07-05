@@ -424,7 +424,7 @@ class Nikola(object):
             'TAG_PAGES_DESCRIPTIONS': {},
             'TAGLIST_MINIMUM_POSTS': 1,
             'TEMPLATE_FILTERS': {},
-            'THEME': 'bootstrap',
+            'THEME': 'bootstrap3',
             'THEME_REVEAL_CONFIG_SUBTHEME': 'sky',
             'THEME_REVEAL_CONFIG_TRANSITION': 'cube',
             'THUMBNAIL_SIZE': 180,
@@ -846,8 +846,8 @@ class Nikola(object):
             try:
                 self._THEMES = utils.get_theme_chain(self.config['THEME'])
             except Exception:
-                utils.LOGGER.warn('''Cannot load theme "{0}", using 'bootstrap' instead.'''.format(self.config['THEME']))
-                self.config['THEME'] = 'bootstrap'
+                utils.LOGGER.warn('''Cannot load theme "{0}", using 'bootstrap3' instead.'''.format(self.config['THEME']))
+                self.config['THEME'] = 'bootstrap3'
                 return self._get_themes()
             # Check consistency of USE_CDN and the current THEME (Issue #386)
             if self.config['USE_CDN'] and self.config['USE_CDN_WARNING']:

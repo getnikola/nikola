@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Delete old ``bootstrap`` theme (use ``bootstrap3`` instead)
 * Screen reader-friendly navbar collapses and dropdowns (Issue #1863)
 * Modern reST stylesheets, based in part on Bootstrap 3 (Issue #1150)
 
