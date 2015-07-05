@@ -49,7 +49,7 @@ except ImportError:
     flag = None
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing, get_logger
+from nikola.utils import makedirs, req_missing, get_logger, STDERR_HANDLER
 
 
 class CompileIPynb(PageCompiler):
@@ -61,7 +61,7 @@ class CompileIPynb(PageCompiler):
     default_kernel = 'python2' if sys.version_info[0] == 2 else 'python3'
 
     def set_site(self, site):
-        self.logger = get_logger('compile_ipynb', site.loghandlers)
+        self.logger = get_logger('compile_ipynb', STDERR_HANDLER)
         super(CompileIPynb, self).set_site(site)
 
     def compile_html(self, source, dest, is_two_file=True):

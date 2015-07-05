@@ -58,7 +58,7 @@ except ImportError:
 
 
 from nikola.plugin_categories import Command
-from nikola.utils import req_missing, get_logger, get_theme_path
+from nikola.utils import req_missing, get_logger, get_theme_path, STDERR_HANDLER
 LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
 error_signal = signal('error')
 refresh_signal = signal('refresh')
@@ -116,7 +116,7 @@ class CommandAuto(Command):
     def _execute(self, options, args):
         """Start the watcher."""
 
-        self.logger = get_logger('auto', self.site.loghandlers)
+        self.logger = get_logger('auto', STDERR_HANDLER)
         LRSocket.logger = self.logger
 
         if WebSocket is object and watchdog is None:
