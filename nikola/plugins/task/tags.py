@@ -67,11 +67,9 @@ class RenderTags(Task):
             "filters": self.site.config['FILTERS'],
             'tag_path': self.site.config['TAG_PATH'],
             "tag_pages_are_indexes": self.site.config['TAG_PAGES_ARE_INDEXES'],
-            "tag_pages_descriptions": self.site.config['TAG_PAGES_DESCRIPTIONS'],
             'category_path': self.site.config['CATEGORY_PATH'],
             'category_prefix': self.site.config['CATEGORY_PREFIX'],
             "category_pages_are_indexes": self.site.config['CATEGORY_PAGES_ARE_INDEXES'],
-            "category_pages_descriptions": self.site.config['CATEGORY_PAGES_DESCRIPTIONS'],
             "generate_rss": self.site.config['GENERATE_RSS'],
             "rss_teasers": self.site.config["RSS_TEASERS"],
             "rss_plain": self.site.config["RSS_PLAIN"],
@@ -181,19 +179,19 @@ class RenderTags(Task):
 
     def _create_tags_page(self, kw, include_tags=True, include_categories=True):
         """a global "all your tags/categories" page for each language"""
-        tags = natsort.natsorted([tag for tag in self.site.posts_per_tag.keys()
-                                  if len(self.site.posts_per_tag[tag]) >= kw["taglist_minimum_post_count"]],
-                                 alg=natsort.ns.F | natsort.ns.IC)
         categories = [cat.category_name for cat in self.site.category_hierarchy]
-        has_tags = (tags != []) and include_tags
         has_categories = (categories != []) and include_categories
         template_name = "tags.tmpl"
         kw = kw.copy()
-        if include_tags:
-            kw['tags'] = tags
         if include_categories:
             kw['categories'] = categories
         for lang in kw["translations"]:
+            tags = natsort.natsorted([tag for tag in self.site.tags_per_language[lang]
+                                      if len(self.site.posts_per_tag[tag]) >= kw["taglist_minimum_post_count"]],
+                                     alg=natsort.ns.F | natsort.ns.IC)
+            has_tags = (tags != []) and include_tags
+            if include_tags:
+                kw['tags'] = tags
             output_name = os.path.join(
                 kw['output_folder'], self.site.path('tag_index' if has_tags else 'category_index', None, lang))
             output_name = output_name
@@ -247,8 +245,8 @@ class RenderTags(Task):
         else:
             return tag
 
-    def _get_description(self, tag, is_category, kw, lang):
-        descriptions = kw["category_pages_descriptions"] if is_category else kw["tag_pages_descriptions"]
+    def _get_description(self, tag, is_category, lang):
+        descriptions = self.site.config['CATEGORY_PAGES_DESCRIPTIONS'] if is_category else self.site.config['TAG_PAGES_DESCRIPTIONS']
         return descriptions[lang][tag] if lang in descriptions and tag in descriptions[lang] else None
 
     def _get_subcategories(self, category):
@@ -283,7 +281,7 @@ class RenderTags(Task):
             context_source["category_path"] = self.site.parse_category_name(tag)
         context_source["tag"] = title
         indexes_title = kw["messages"][lang]["Posts about %s"] % title
-        context_source["description"] = self._get_description(tag, is_category, kw, lang)
+        context_source["description"] = self._get_description(tag, is_category, lang)
         if is_category:
             context_source["subcategories"] = self._get_subcategories(tag)
         template_name = "tagindex.tmpl"
@@ -307,7 +305,7 @@ class RenderTags(Task):
         context["posts"] = post_list
         context["permalink"] = self.site.link(kind, tag, lang)
         context["kind"] = kind
-        context["description"] = self._get_description(tag, is_category, kw, lang)
+        context["description"] = self._get_description(tag, is_category, lang)
         if is_category:
             context["subcategories"] = self._get_subcategories(tag)
         task = self.site.generic_post_list_renderer(

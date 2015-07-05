@@ -32,6 +32,8 @@ MESSAGES = {
     "Subcategories:": "",
     "Tags and Categories": "Tagovi i kategorije",
     "Tags": "Tagovi",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "stari postovi, stranice %d",
     "page %d": "stranice %d",
 }

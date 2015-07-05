@@ -218,7 +218,7 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
         self.assertTrue(write_metadata.called)
         write_metadata.assert_any_call(
             'new_site/stories/kontakt.meta'.replace('/', os.sep), 'Kontakt',
-            'kontakt', '2009-07-16 20:20:32', None, [])
+            'kontakt', '2009-07-16 20:20:32', '', [])
 
         self.assertTrue(write_content.called)
         write_content.assert_any_call('new_site/posts/2007/04/hoert.wp'.replace('/', os.sep),

@@ -29,6 +29,7 @@ import os
 import re
 import sys
 import datetime
+import requests
 from lxml import etree
 
 try:
@@ -36,11 +37,6 @@ try:
     from urllib import unquote
 except ImportError:
     from urllib.parse import urlparse, unquote  # NOQA
-
-try:
-    import requests
-except ImportError:
-    requests = None  # NOQA
 
 try:
     import phpserialize
@@ -88,6 +84,13 @@ class CommandImportWordpress(Command, ImportMixin):
             'help': "Do not try to download files for the import",
         },
         {
+            'name': 'download_auth',
+            'long': 'download-auth',
+            'default': None,
+            'type': str,
+            'help': "Specify username and password for HTTP authentication (separated by ':')",
+        },
+        {
             'name': 'separate_qtranslate_content',
             'long': 'qtranslate',
             'default': False,
@@ -105,6 +108,7 @@ class CommandImportWordpress(Command, ImportMixin):
             'help': "The pattern for translation files names",
         },
     ]
+    all_tags = set([])
 
     def _execute(self, options={}, args=[]):
         """Import a WordPress blog from an export file into a Nikola site."""
@@ -134,6 +138,14 @@ class CommandImportWordpress(Command, ImportMixin):
         self.exclude_drafts = options.get('exclude_drafts', False)
         self.no_downloads = options.get('no_downloads', False)
 
+        self.auth = None
+        if options.get('download_auth') is not None:
+            username_password = options.get('download_auth')
+            self.auth = tuple(username_password.split(':', 1))
+            if len(self.auth) < 2:
+                print("Please specify HTTP authentication credentials in the form username:password.")
+                return False
+
         self.separate_qtranslate_content = options.get('separate_qtranslate_content')
         self.translations_pattern = options.get('translations_pattern')
 
@@ -150,11 +162,7 @@ class CommandImportWordpress(Command, ImportMixin):
                         package=modulename)
                 )
 
-            if requests is None and phpserialize is None:
-                req_missing(['requests', 'phpserialize'], 'import WordPress dumps without --no-downloads')
-            elif requests is None:
-                req_missing(['requests'], 'import WordPress dumps without --no-downloads')
-            elif phpserialize is None:
+            if phpserialize is None:
                 req_missing(['phpserialize'], 'import WordPress dumps without --no-downloads')
 
         channel = self.get_channel_from_file(self.wordpress_export_file)
@@ -173,6 +181,19 @@ class CommandImportWordpress(Command, ImportMixin):
             self.extra_languages)
         self.context['REDIRECTIONS'] = self.configure_redirections(
             self.url_map)
+
+        # Add tag redirects
+        for tag in self.all_tags:
+            try:
+                tag_str = tag.decode('utf8')
+            except AttributeError:
+                tag_str = tag
+            tag = utils.slugify(tag_str)
+            src_url = '{}tag/{}'.format(self.context['SITE_URL'], tag)
+            dst_url = self.site.link('tag', tag)
+            if src_url != dst_url:
+                self.url_map[src_url] = dst_url
+
         self.write_urlmap_csv(
             os.path.join(self.output_folder, 'url_map.csv'), self.url_map)
         rendered_template = conf_template.render(**prepare_config(self.context))
@@ -260,8 +281,12 @@ class CommandImportWordpress(Command, ImportMixin):
             return
 
         try:
+            request = requests.get(url, auth=self.auth)
+            if request.status_code >= 400:
+                LOGGER.warn("Downloading {0} to {1} failed with HTTP status code {2}".format(url, dst_path, request.status_code))
+                return
             with open(dst_path, 'wb+') as fd:
-                fd.write(requests.get(url).content)
+                fd.write(request.content)
         except requests.exceptions.ConnectionError as err:
             LOGGER.warn("Downloading {0} to {1} failed: {2}".format(url, dst_path, err))
 
@@ -291,7 +316,6 @@ class CommandImportWordpress(Command, ImportMixin):
             return
 
         additional_metadata = item.findall('{{{0}}}postmeta'.format(wordpress_namespace))
-
         if additional_metadata is None:
             return
 
@@ -345,9 +369,13 @@ class CommandImportWordpress(Command, ImportMixin):
         # a ton of things not supported here. We only do a basic [code
         # lang="x"] -> ```x translation, and remove quoted html entities (<,
         # >, &, and ").
-        def replacement(m):
-            language = m.group(1) or ''
-            code = m.group(2)
+        def replacement(m, c=content):
+            if len(m.groups()) == 1:
+                language = ''
+                code = m.group(0)
+            else:
+                language = m.group(1) or ''
+                code = m.group(2)
             code = code.replace('&amp;', '&')
             code = code.replace('&gt;', '>')
             code = code.replace('&lt;', '<')
@@ -392,11 +420,10 @@ class CommandImportWordpress(Command, ImportMixin):
         parsed = urlparse(link)
         path = unquote(parsed.path.strip('/'))
 
-        # In python 2, path is a str. slug requires a unicode
-        # object. According to wikipedia, unquoted strings will
-        # usually be UTF8
-        if isinstance(path, utils.bytes_str):
+        try:
             path = path.decode('utf8')
+        except AttributeError:
+            pass
 
         # Cut out the base directory.
         if path.startswith(self.base_dir.strip('/')):
@@ -450,12 +477,20 @@ class CommandImportWordpress(Command, ImportMixin):
             if text == 'Uncategorized':
                 continue
             tags.append(text)
+            self.all_tags.add(text)
 
         if '$latex' in content:
             tags.append('mathjax')
 
+        # Find post format if it's there
+        post_format = 'wp'
+        format_tag = [x for x in item.findall('*//{%s}meta_key' % wordpress_namespace) if x.text == '_tc_post_format']
+        if format_tag:
+            post_format = format_tag[0].getparent().find('{%s}meta_value' % wordpress_namespace).text
+
         if is_draft and self.exclude_drafts:
             LOGGER.notice('Draft "{0}" will not be imported.'.format(title))
+
         elif content.strip():
             # If no content is found, no files are written.
             self.url_map[link] = (self.context['SITE_URL'] +
@@ -482,7 +517,8 @@ class CommandImportWordpress(Command, ImportMixin):
                     out_meta_filename = slug + '.meta'
                     out_content_filename = slug + '.wp'
                     meta_slug = slug
-                content = self.transform_content(content)
+                if post_format == 'wp':
+                    content = self.transform_content(content)
                 self.write_metadata(os.path.join(self.output_folder, out_folder,
                                                  out_meta_filename),
                                     title, meta_slug, post_date, description, tags)
@@ -517,7 +553,7 @@ def get_text_tag(tag, name, default):
     if tag is None:
         return default
     t = tag.find(name)
-    if t is not None:
+    if t is not None and t.text is not None:
         return t.text
     else:
         return default

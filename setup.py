@@ -6,7 +6,7 @@ import os
 import subprocess
 import sys
 import shutil
-from setuptools import setup
+from setuptools import setup, find_packages
 from setuptools.command.install import install
 from setuptools.command.test import test as TestCommand
 
@@ -112,23 +112,13 @@ class nikola_install(install):
 
 
 setup(name='Nikola',
-      version='7.5.0',
+      version='7.6.0',
       description='A modular, fast, simple, static website generator',
       long_description=open('README.rst').read(),
       author='Roberto Alsina and others',
       author_email='ralsina@netmanagers.com.ar',
       url='https://getnikola.com/',
-      packages=['nikola',
-                'nikola.plugins',
-                'nikola.plugins.command',
-                'nikola.plugins.compile',
-                'nikola.plugins.compile.ipynb',
-                'nikola.plugins.compile.markdown',
-                'nikola.plugins.compile.rest',
-                'nikola.plugins.task',
-                'nikola.plugins.task.sitemap',
-                'nikola.plugins.template',
-                ],
+      packages=find_packages(exclude=('tests',)),
       license='MIT',
       keywords='website, static',
       classifiers=('Development Status :: 5 - Production/Stable',

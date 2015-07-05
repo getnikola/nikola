@@ -75,7 +75,7 @@ class Youtube(Directive):
         return [nodes.raw('', CODE.format(**options), format='html')]
 
     def check_content(self):
-        if self.content:
+        if self.content:  # pragma: no cover
             raise self.warning("This directive does not accept content. The "
                                "'key=value' format for options is deprecated, "
                                "use ':key: value' instead")

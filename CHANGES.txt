@@ -5,7 +5,74 @@ Features
 --------
 
 * Remove logging handlers (Issue #1797)
+* Screen reader-friendly navbar collapses and dropdowns (Issue #1863)
+* Modern reST stylesheets, based in part on Bootstrap 3 (Issue #1150)
+
+Bugfixes
+--------
+
+* Surpress wincing when auto is aborted during rebuilding
+* Show tags only from the current language on tag listing pages (Issue #1856)
+* Remove gap between line numbers and code (Issue #1859)
+* Fix spurious warnings about posts published in the future (Issue #1850)
+
+New in v7.6.0
+=============
+
+Features
+--------
+
+* Translate ``Write your post here.`` to default language (Issue #1621)
+* Enable ``PRETTY_URLS`` by default on new sites created by the wizard
+  (Issue #1838)
+* Add ``-F``, ``--available-compilers`` option to ``nikola new_post``
+  and ``nikola new_page`` (Issue #1837)
+* Add print CSS to all default themes (Issue #1817)
+* Support other kernels for ipynb/Jupyter using
+  ``nikola new_post -f ipynb@kernel`` (Issues #1774, #1834)
+* Add distinct styling for the site footer in bootstrap3
+* Bootstrap v3.3.5 (Issue #1828)
+* Use ``watchdog`` in ``nikola auto`` (Issue #1810)
+* Add redirection for tags in Wordpress importer (Issue #1168)
+* Add support for ``html_tidy_withconfig`` to use a ``tidy5.conf`` file
+  (Issue #1795)
+* Change default tidy5 filters not to drop empty elements (Issue #1795)
+* Apply per-post filters via metadata (Issue #914)
+
+Bugfixes
+--------
+
+* Nikola auto was broken in python 3 (Issue #1830)
+* Read configuration when importing into an existing site (Issue #1823)
+* Don’t crash on non-UTF-8 files during sitemap generation (Issue #1842)
+* Unnecessary rebuilds of yearly archives (Issue #1833)
+* Quietly ignore non-existent files in ``nikola check -l`` (Issue #1831)
+* Don’t rebuild all tag or category pages when changing tag/category descriptions
+* Fix crash in wordpress code importer (Issue #1819)
+* Call correct command in ``nikola auto``
+
+New in v7.5.1
+=============
+
+Features
+--------
+
+* Suggest misspelled commands (Issue #1807)
+* New implementation of the ``nikola auto`` command
+* ``requests`` is now required for all Nikola sites
 * New ``nikola version --check`` option (Issue #1767)
+
+Bugfixes
+--------
+
+* Support pure markdown posts in WP import (Issue #484)
+* Make auto shutdown with ctrl-c (Issue #1811)
+* Log properly in ``nikola auto`` (Issue #1812)
+* Handle rare gettz failure (Issue #1806)
+* Handle missing dependencies better in auto plugin (Issues #1803, #1809)
+* IDNA mixing unicode/bytes in python 3 (Issue #1802)
+* Cleaner splitting of metadata in onefile posts (Issue #973)
+* It's markdown extra, not extras (Issue #1799)
 
 New in v7.5.0
 =============

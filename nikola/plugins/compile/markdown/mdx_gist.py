@@ -203,14 +203,11 @@ except ImportError:
     Extension = Pattern = object
 
 from nikola.plugin_categories import MarkdownExtension
-from nikola.utils import get_logger, req_missing, STDERR_HANDLER
+from nikola.utils import get_logger, STDERR_HANDLER
+
+import requests
 
 LOGGER = get_logger('compile_markdown.mdx_gist', STDERR_HANDLER)
-
-try:
-    import requests
-except ImportError:
-    requests = None  # NOQA
 
 GIST_JS_URL = "https://gist.github.com/{0}.js"
 GIST_FILE_JS_URL = "https://gist.github.com/{0}.js?file={1}"
@@ -261,32 +258,27 @@ class GistPattern(Pattern):
         gist_elem.set('class', 'gist')
         script_elem = etree.SubElement(gist_elem, 'script')
 
-        if requests:
-            noscript_elem = etree.SubElement(gist_elem, 'noscript')
+        noscript_elem = etree.SubElement(gist_elem, 'noscript')
 
-            try:
-                if gist_file:
-                    script_elem.set('src', GIST_FILE_JS_URL.format(
-                        gist_id, gist_file))
-                    raw_gist = (self.get_raw_gist_with_filename(
-                        gist_id, gist_file))
+        try:
+            if gist_file:
+                script_elem.set('src', GIST_FILE_JS_URL.format(
+                    gist_id, gist_file))
+                raw_gist = (self.get_raw_gist_with_filename(
+                    gist_id, gist_file))
 
-                else:
-                    script_elem.set('src', GIST_JS_URL.format(
-                        gist_id))
-                    raw_gist = (self.get_raw_gist(gist_id))
+            else:
+                script_elem.set('src', GIST_JS_URL.format(gist_id))
+                raw_gist = (self.get_raw_gist(gist_id))
 
-                # Insert source as <pre/> within <noscript>
-                pre_elem = etree.SubElement(noscript_elem, 'pre')
-                pre_elem.text = AtomicString(raw_gist)
+            # Insert source as <pre/> within <noscript>
+            pre_elem = etree.SubElement(noscript_elem, 'pre')
+            pre_elem.text = AtomicString(raw_gist)
 
-            except GistFetchException as e:
-                LOGGER.warn(e.message)
-                warning_comment = etree.Comment(' WARNING: {0} '.format(e.message))
-                noscript_elem.append(warning_comment)
-
-        else:
-            req_missing('requests', 'have inline gist source', optional=True)
+        except GistFetchException as e:
+            LOGGER.warn(e.message)
+            warning_comment = etree.Comment(' WARNING: {0} '.format(e.message))
+            noscript_elem.append(warning_comment)
 
         return gist_elem
 
@@ -312,7 +304,7 @@ class GistExtension(MarkdownExtension, Extension):
         md.registerExtension(self)
 
 
-def makeExtension(configs=None):
+def makeExtension(configs=None):  # pragma: no cover
     return GistExtension(configs)
 
 if __name__ == '__main__':

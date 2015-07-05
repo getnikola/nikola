@@ -27,27 +27,23 @@
 from __future__ import unicode_literals
 import io
 import os
-import re
 
-try:
-    import docutils.core
-    import docutils.nodes
-    import docutils.utils
-    import docutils.io
-    import docutils.readers.standalone
-    import docutils.writers.html4css1
-    has_docutils = True
-except ImportError:
-    has_docutils = False
+import docutils.core
+import docutils.nodes
+import docutils.utils
+import docutils.io
+import docutils.readers.standalone
+import docutils.writers.html4css1
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import unicode_str, get_logger, makedirs, req_missing, write_metadata, STDERR_HANDLER
+from nikola.utils import unicode_str, get_logger, makedirs, write_metadata, STDERR_HANDLER
 
 
 class CompileRest(PageCompiler):
-    """Compile reSt into HTML."""
+    """Compile reStructuredText into HTML."""
 
     name = "rest"
+    friendly_name = "reStructuredText"
     demote_headers = True
     logger = None
 
@@ -66,17 +62,13 @@ class CompileRest(PageCompiler):
 
     def compile_html_string(self, data, source_path=None, is_two_file=True):
         """Compile reSt into HTML strings."""
+        # If errors occur, this will be added to the line number reported by
+        # docutils so the line number matches the actual line number (off by
+        # 7 with default metadata, could be more or less depending on the post).
         add_ln = 0
         if not is_two_file:
-            spl = re.split('(\n\n|\r\n\r\n)', data, maxsplit=1)
-            data = spl[-1]
-            if len(spl) != 1:
-                # If errors occur, this will be added to the line
-                # number reported by docutils so the line number
-                # matches the actual line number (off by 7 with default
-                # metadata, could be more or less depending on the post
-                # author).
-                add_ln = len(spl[0].splitlines()) + 1
+            m_data, data = self.split_metadata(data)
+            add_ln = len(m_data.splitlines()) + 1
 
         default_template_path = os.path.join(os.path.dirname(__file__), 'template.txt')
         output, error_level, deps = rst2html(
@@ -97,8 +89,6 @@ class CompileRest(PageCompiler):
 
     def compile_html(self, source, dest, is_two_file=True):
         """Compile reSt into HTML files."""
-        if not has_docutils:
-            req_missing(['docutils'], 'build this site (compile reStructuredText)')
         makedirs(os.path.dirname(dest))
         error_level = 100
         with io.open(dest, "w+", encoding="utf8") as out_file:

@@ -121,7 +121,7 @@ class CommandServe(Command):
                 httpd.serve_forever()
             except KeyboardInterrupt:
                 self.logger.info("Server is shutting down.")
-                exit(130)
+                return 130
 
 
 class OurHTTPRequestHandler(SimpleHTTPRequestHandler):

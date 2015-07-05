@@ -2,6 +2,9 @@
 Name = rest_youtube
 Module = youtube
 
+[Nikola]
+Compiler = rest
+
 [Documentation]
 Version = 0.1
 Description = Youtube directive

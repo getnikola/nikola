@@ -24,6 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import copy
 import os
 
 # for tearDown with _reload we cannot use 'import from' to access LocaleBorg
@@ -72,7 +73,7 @@ class Archive(Task):
             context,
         )
 
-        task_cfg = {1: kw, 2: n}
+        task_cfg = {1: copy.copy(kw), 2: n}
         if deps_translatable is not None:
             task_cfg[3] = deps_translatable
         task['uptodate'] = task['uptodate'] + [config_changed(task_cfg, 'nikola.plugins.task.archive')]
@@ -200,6 +201,8 @@ class Archive(Task):
 
         if not kw['create_single_archive'] and not kw['create_full_archives']:
             # And an "all your years" page for yearly and monthly archives
+            if "is_feed_stale" in kw:
+                del kw["is_feed_stale"]
             years = list(self.site.posts_per_year.keys())
             years.sort(reverse=True)
             kw['years'] = years

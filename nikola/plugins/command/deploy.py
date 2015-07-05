@@ -29,7 +29,6 @@ import io
 from datetime import datetime
 from dateutil.tz import gettz
 import os
-import sys
 import subprocess
 import time
 
@@ -85,7 +84,7 @@ class CommandDeploy(Command):
                 self.site.config['DEPLOY_COMMANDS'][preset]
             except:
                 self.logger.error('No such preset: {0}'.format(preset))
-                sys.exit(255)
+                return 255
 
         for preset in presets:
             self.logger.info("=> preset '{0}'".format(preset))
@@ -96,7 +95,7 @@ class CommandDeploy(Command):
                 except subprocess.CalledProcessError as e:
                     self.logger.error('Failed deployment — command {0} '
                                       'returned {1}'.format(e.cmd, e.returncode))
-                    sys.exit(e.returncode)
+                    return e.returncode
 
         self.logger.info("Successful deployment")
         try:

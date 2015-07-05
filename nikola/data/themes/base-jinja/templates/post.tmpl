@@ -40,7 +40,7 @@
     </nav>
     </aside>
     {% if not post.meta('nocomments') and site_has_comments %}
-        <section class="comments">
+        <section class="comments hidden-print">
         <h2>{{ messages("Comments") }}</h2>
         {{ comments.comment_form(post.permalink(absolute=True), post.title(), post._base_path) }}
         </section>

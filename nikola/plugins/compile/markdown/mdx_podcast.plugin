@@ -2,6 +2,9 @@
 Name = mdx_podcast
 Module = mdx_podcast
 
+[Nikola]
+Compiler = markdown
+
 [Documentation]
 Author = Roberto Alsina
 Version = 0.1

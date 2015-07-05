@@ -32,6 +32,8 @@ MESSAGES = {
     "Subcategories:": "",
     "Tags and Categories": "Etiketak eta Kategoriak",
     "Tags": "Etiketak",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "Post zaharren, orria %d",
     "page %d": "orria %d",
 }

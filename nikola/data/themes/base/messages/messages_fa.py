@@ -32,6 +32,8 @@ MESSAGES = {
     "Subcategories:": "",
     "Tags and Categories": "برچسب‌ها و دسته‌ها",
     "Tags": "برچسب‌ها",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "صفحهٔ ارسال‌های قدیمی %d",
     "page %d": "برگه %d",
 }

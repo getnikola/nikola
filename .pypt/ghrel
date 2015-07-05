@@ -1,0 +1,110 @@
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+# Kw’s Release Tools/Python Project Template
+# GitHub Release Creator
+# Copyright © 2013-2015, Chris Warrick.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions, and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions, and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#
+# 3. Neither the name of the author of this software nor the names of
+#    contributors to this software may be used to endorse or promote
+#    products derived from this software without specific prior written
+#    consent.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+"""
+Create GitHub releases out of changelogs.
+
+Usage: .pypt/commitlog FILE BASEDIR REPOSITORY TAG, where
+    FILE is the path to the file to use, which can be
+        a plain .md file or a CMFN file,
+    BASEDIR is the project directory,
+    REPOSITORY is the full GitHub repository name (user/repo),
+    TAG is the tag to write to.
+    All paths should be absolute.
+"""
+
+import argparse
+import json
+import re
+import requests
+import sys
+from os.path import join as pjoin
+
+
+def main():
+    """ghrel main function."""
+    parser = argparse.ArgumentParser(
+        description="GitHub Release Creator "
+                    "(part of Chris Warrick's Python Project Template)")
+    parser.add_argument('filename', metavar='FILE', nargs=1,
+                        help='File to parse (Markdown or commitlog)')
+    parser.add_argument('basedir', metavar='BASEDIR', nargs=1,
+                        help='Project directory (must contain .pypt/gh-token)')
+    parser.add_argument('repo', metavar='REPOSITORY', nargs=1,
+                        help='GitHub repository (owner/repo)')
+    parser.add_argument('tag', metavar='TAG', nargs=1,
+                        help='Tag to create release for (vX.Y.Z)')
+    args = parser.parse_args()
+    # nargs gets you lists, not strings
+    filename = args.filename[0]
+    basedir = args.basedir[0]
+    repo = args.repo[0]
+    tag = args.tag[0]
+
+    with open(pjoin(basedir, '.pypt', 'gh-token')) as fh:
+        token = fh.read().strip()
+
+    headers = {
+        'User-Agent': 'Kwpolska/python-project-template',
+        'Authorization': 'token ' + token,
+    }
+
+    with open(filename) as fh:
+        fdata = fh.read()
+        e = re.findall(
+            '#~ CHANGELOG MESSAGE START ~#\n(.*?)\n'
+            '#~ CHANGELOG MESSAGE END ~#',
+            fdata, flags=re.S)
+
+        if e:
+            # parse as a CMFN file, replace backticks (reST -> Markdown)
+            message = e[0].replace('``', '`')
+        else:
+            # parse as a plain Markdown file
+            message = fdata
+
+    r = requests.post(
+        'https://api.github.com/repos/{0}/releases'.format(repo),
+        data=json.dumps({'tag_name': tag, 'body': message}),
+        headers=headers)
+
+    if r.status_code == 201:
+        print("GitHub Release created: {0}".format(r.json()['html_url']))
+    else:
+        print("GitHub Release failed: {0}".format(r.text))
+        return 1
+
+if __name__ == '__main__':
+    sys.exit(main())

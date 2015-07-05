@@ -32,6 +32,8 @@ MESSAGES = {
     "Subcategories:": "",
     "Tags and Categories": "Štítky a kategórie",
     "Tags": "Štítky",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "staré príspevky, strana %d",
     "page %d": "stránka %d",
 }

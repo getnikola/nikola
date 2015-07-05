@@ -32,6 +32,8 @@ MESSAGES = {
     "Subcategories:": "",
     "Tags and Categories": "タグとカテゴリー",
     "Tags": "タグ",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "前の記事 %dページ目",
     "page %d": "ページ %d",
 }

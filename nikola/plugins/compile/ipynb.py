@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2013-2015 Damián Avila and others.
+# Copyright © 2013-2015 Damián Avila, Chris Warrick and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -29,6 +29,7 @@
 from __future__ import unicode_literals, print_function
 import io
 import os
+import sys
 
 try:
     import IPython
@@ -36,9 +37,11 @@ try:
     if IPython.version_info[0] >= 3:     # API changed with 3.0.0
         from IPython import nbformat
         current_nbformat = nbformat.current_nbformat
+        from IPython.kernel import kernelspec
     else:
         import IPython.nbformat.current as nbformat
         current_nbformat = 'json'
+        kernelspec = None
 
     from IPython.config import Config
     flag = True
@@ -46,19 +49,24 @@ except ImportError:
     flag = None
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing
+from nikola.utils import makedirs, req_missing, get_logger
 
 
 class CompileIPynb(PageCompiler):
     """Compile IPynb into HTML."""
 
     name = "ipynb"
-    supports_onefile = False
+    friendly_name = "Jupyter/IPython Notebook"
     demote_headers = True
+    default_kernel = 'python2' if sys.version_info[0] == 2 else 'python3'
+
+    def set_site(self, site):
+        self.logger = get_logger('compile_ipynb', site.loghandlers)
+        super(CompileIPynb, self).set_site(site)
 
     def compile_html(self, source, dest, is_two_file=True):
         if flag is None:
-            req_missing(['ipython>=1.1.0'], 'build this site (compile ipynb)')
+            req_missing(['ipython[notebook]>=2.0.0'], 'build this site (compile ipynb)')
         makedirs(os.path.dirname(dest))
         HTMLExporter.default_template = 'basic'
         c = Config(self.site.config['IPYNB_CONFIG'])
@@ -75,45 +83,68 @@ class CompileIPynb(PageCompiler):
         As ipynb file support arbitrary metadata as json, the metadata used by Nikola
         will be assume to be in the 'nikola' subfield.
         """
+        if flag is None:
+            req_missing(['ipython[notebook]>=2.0.0'], 'build this site (compile ipynb)')
         source = post.source_path
         with io.open(source, "r", encoding="utf8") as in_file:
             nb_json = nbformat.read(in_file, current_nbformat)
-        # metadata should always exist, but we never know if
-        # the user crafted the ipynb by hand and did not add it.
+        # Metadata might not exist in two-file posts or in hand-crafted
+        # .ipynb files.
         return nb_json.get('metadata', {}).get('nikola', {})
 
     def create_post(self, path, **kw):
+        if flag is None:
+            req_missing(['ipython[notebook]>=2.0.0'], 'build this site (compile ipynb)')
         content = kw.pop('content', None)
         onefile = kw.pop('onefile', False)
+        kernel = kw.pop('ipython_kernel', None)
         # is_page is not needed to create the file
         kw.pop('is_page', False)
 
+        metadata = {}
+        metadata.update(self.default_metadata)
+        metadata.update(kw)
+
         makedirs(os.path.dirname(path))
-        if onefile:
-            raise Exception('The one-file format is not supported by this compiler.')
-        with io.open(path, "w+", encoding="utf8") as fd:
-            if not content.startswith("Write your"):
-                fd.write(content)
+
+        if content.startswith("{"):
+            # imported .ipynb file, guaranteed to start with "{" because it’s JSON.
+            nb = nbformat.reads(content, current_nbformat)
+        else:
+            if IPython.version_info[0] >= 3:
+                nb = nbformat.v4.new_notebook()
+                nb["cells"] = [nbformat.v4.new_markdown_cell(content)]
             else:
-                fd.write("""{
- "metadata": {
-  "name": ""
- },
- "nbformat": 3,
- "nbformat_minor": 0,
- "worksheets": [
-  {
-   "cells": [
-    {
-     "cell_type": "code",
-     "collapsed": false,
-     "input": [],
-     "language": "python",
-     "metadata": {},
-     "outputs": []
-    }
-   ],
-   "metadata": {}
-  }
- ]
-}""")
+                nb = nbformat.new_notebook()
+                nb["worksheets"] = [nbformat.new_worksheet(cells=[nbformat.new_text_cell('markdown', [content])])]
+
+            if kernelspec is not None:
+                if kernel is None:
+                    kernel = self.default_kernel
+                    self.logger.notice('No kernel specified, assuming "{0}".'.format(kernel))
+
+                IPYNB_KERNELS = {}
+                ksm = kernelspec.KernelSpecManager()
+                for k in ksm.find_kernel_specs():
+                    IPYNB_KERNELS[k] = ksm.get_kernel_spec(k).to_dict()
+                    IPYNB_KERNELS[k]['name'] = k
+                    del IPYNB_KERNELS[k]['argv']
+
+                if kernel not in IPYNB_KERNELS:
+                    self.logger.error('Unknown kernel "{0}". Maybe you mispelled it?'.format(kernel))
+                    self.logger.info("Available kernels: {0}".format(", ".join(sorted(IPYNB_KERNELS))))
+                    raise Exception('Unknown kernel "{0}"'.format(kernel))
+
+                nb["metadata"]["kernelspec"] = IPYNB_KERNELS[kernel]
+            else:
+                # Older IPython versions don’t need kernelspecs.
+                pass
+
+        if onefile:
+            nb["metadata"]["nikola"] = metadata
+
+        with io.open(path, "w+", encoding="utf8") as fd:
+            if IPython.version_info[0] >= 3:
+                nbformat.write(nb, fd, 4)
+            else:
+                nbformat.write(nb, fd, 'ipynb')

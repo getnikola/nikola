@@ -27,13 +27,9 @@
 from __future__ import print_function
 
 import lxml
-try:
-    import requests
-except ImportError:
-    requests = None
+import requests
 
 from nikola.plugin_categories import Command
-from nikola.utils import req_missing
 from nikola import __version__
 
 URL = 'https://pypi.python.org/pypi?:action=doap&name=Nikola'
@@ -44,7 +40,7 @@ class CommandVersion(Command):
 
     name = "version"
 
-    doc_usage = ""
+    doc_usage = "[--check]"
     needs_config = False
     doc_purpose = "print the Nikola version number"
     cmd_options = [
@@ -62,9 +58,6 @@ class CommandVersion(Command):
         """Print the version number."""
         print("Nikola v" + __version__)
         if options.get('check'):
-            if requests is None:
-                req_missing(['requests'], 'check for updates')
-                exit(1)
             data = requests.get(URL).text
             doc = lxml.etree.fromstring(data.encode('utf8'))
             revision = doc.findall('*//{http://usefulinc.com/ns/doap#}revision')[0].text

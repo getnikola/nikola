@@ -79,8 +79,15 @@ class CommandNewPage(Command):
             'long': 'format',
             'type': str,
             'default': '',
-            'help': 'Markup format for the page, one of rest, markdown, wiki, '
-                    'bbcode, html, textile, txt2tags',
+            'help': 'Markup format for the page (use --available-formats for list)',
+        },
+        {
+            'name': 'available-formats',
+            'short': 'F',
+            'long': 'available-formats',
+            'type': bool,
+            'default': False,
+            'help': 'List all available input formats'
         },
         {
             'name': 'import',
@@ -94,6 +101,7 @@ class CommandNewPage(Command):
 
     def _execute(self, options, args):
         """Create a new page."""
+        # Defaults for some values that don’t apply to pages and the is_page option (duh!)
         options['tags'] = ''
         options['schedule'] = False
         options['is_page'] = True

@@ -40,6 +40,7 @@ class CompilePhp(PageCompiler):
     """Compile PHP into PHP."""
 
     name = "php"
+    friendly_name = "PHP"
 
     def compile_html(self, source, dest, is_two_file=True):
         makedirs(os.path.dirname(dest))

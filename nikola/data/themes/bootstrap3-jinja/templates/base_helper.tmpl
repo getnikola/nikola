@@ -69,7 +69,7 @@ lang="{{ lang }}">
     {% if use_bundles %}
         {% if use_cdn %}
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-            <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+            <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
             <script src="/assets/js/all.js"></script>
         {% else %}
             <script src="/assets/js/all-nocdn.js"></script>
@@ -77,7 +77,7 @@ lang="{{ lang }}">
     {% else %}
         {% if use_cdn %}
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-            <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+            <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
         {% else %}
             <script src="/assets/js/jquery.min.js"></script>
             <script src="/assets/js/bootstrap.min.js"></script>
@@ -96,14 +96,14 @@ lang="{{ lang }}">
 {% macro html_stylesheets() %}
     {% if use_bundles %}
         {% if use_cdn %}
-            <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+            <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
             <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
         {% else %}
             <link href="/assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
         {% endif %}
     {% else %}
         {% if use_cdn %}
-            <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+            <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
         {% else %}
             <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         {% endif %}
@@ -129,11 +129,11 @@ lang="{{ lang }}">
 {% macro html_navigation_links() %}
     {% for url, text in navigation_links[lang] %}
         {% if isinstance(url, tuple) %}
-            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ text }} <b class="caret"></b></a>
+            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ text }} <b class="caret"></b></a>
             <ul class="dropdown-menu">
             {% for suburl, text in url %}
                 {% if rel_link(permalink, suburl) == "#" %}
-                    <li class="active"><a href="{{ permalink }}">{{ text }} <span class="sr-only">{{ messages("(active)", langname) }}</span></a>
+                    <li class="active"><a href="{{ permalink }}">{{ text }} <span class="sr-only">{{ messages("(active)", lang) }}</span></a>
                 {% else %}
                     <li><a href="{{ suburl }}">{{ text }}</a>
                 {% endif %}
@@ -141,7 +141,7 @@ lang="{{ lang }}">
             </ul>
         {% else %}
             {% if rel_link(permalink, url) == "#" %}
-                <li class="active"><a href="{{ permalink }}">{{ text }} <span class="sr-only">{{ messages("(active)", langname) }}</span></a>
+                <li class="active"><a href="{{ permalink }}">{{ text }} <span class="sr-only">{{ messages("(active)", lang) }}</span></a>
             {% else %}
                 <li><a href="{{ url }}">{{ text }}</a>
             {% endif %}

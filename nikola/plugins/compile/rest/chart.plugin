@@ -2,6 +2,9 @@
 Name = rest_chart
 Module = chart
 
+[Nikola]
+Compiler = rest
+
 [Documentation]
 Author = Roberto Alsina
 Version = 0.1

@@ -2,6 +2,9 @@
 Name = rest_slides
 Module = slides
 
+[Nikola]
+Compiler = rest
+
 [Documentation]
 Author = Roberto Alsina
 Version = 0.1

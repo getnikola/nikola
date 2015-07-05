@@ -134,3 +134,4 @@ nikola/data/themes/bootstrap3/assets/fonts/glyphicons-halflings-regular.woff
 nikola/data/themes/bootstrap3/assets/fonts/glyphicons-halflings-regular.woff2
 nikola/data/themes/bootstrap3/assets/js/bootstrap.js
 nikola/data/themes/bootstrap3/assets/js/bootstrap.min.js
+nikola/plugins/command/auto/livereload.js

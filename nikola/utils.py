@@ -70,7 +70,7 @@ __all__ = ['CustomEncoder', 'get_theme_path', 'get_theme_chain', 'load_messages'
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
            'NikolaPygmentsHTML', 'create_redirect', 'TreeNode',
            'flatten_tree_structure', 'parse_escaped_hierarchical_category_name',
-           'join_hierarchical_category_path']
+           'join_hierarchical_category_path', 'indent']
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -1618,3 +1618,22 @@ def join_hierarchical_category_path(category_path):
         return s.replace('\\', '\\\\').replace('/', '\\/')
 
     return '/'.join([escape(p) for p in category_path])
+
+
+# Stolen from textwrap in Python 3.4.3.
+def indent(text, prefix, predicate=None):
+    """Adds 'prefix' to the beginning of selected lines in 'text'.
+
+    If 'predicate' is provided, 'prefix' will only be added to the lines
+    where 'predicate(line)' is True. If 'predicate' is not provided,
+    it will default to adding 'prefix' to all non-empty lines that do not
+    consist solely of whitespace characters.
+    """
+    if predicate is None:
+        def predicate(line):
+            return line.strip()
+
+    def prefixed_lines():
+        for line in text.splitlines(True):
+            yield (prefix + line if predicate(line) else line)
+    return ''.join(prefixed_lines())

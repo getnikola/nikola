@@ -122,3 +122,11 @@ msgstr "Subcategories:"
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
 msgstr "(active)"
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr "Write your post here."
+
+#. Default content for a new page
+msgid "Write your page here."
+msgstr "Write your page here."

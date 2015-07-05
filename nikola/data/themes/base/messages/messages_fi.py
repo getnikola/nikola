@@ -32,6 +32,8 @@ MESSAGES = {
     "Subcategories:": "",
     "Tags and Categories": "Tagit ja kategoriat",
     "Tags": "Tagit",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "vanhoja postauksia, sivu %d",
     "page %d": "sivu %d",
 }

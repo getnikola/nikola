@@ -2,6 +2,9 @@
 Name = rest_media
 Module = media
 
+[Nikola]
+Compiler = rest
+
 [Documentation]
 Author = Roberto Alsina
 Version = 0.1

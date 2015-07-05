@@ -30,6 +30,7 @@ import datetime
 import os
 import sys
 import subprocess
+import operator
 
 from blinker import signal
 import dateutil.tz
@@ -37,12 +38,13 @@ import dateutil.tz
 from nikola.plugin_categories import Command
 from nikola import utils
 
+COMPILERS_DOC_LINK = 'https://getnikola.com/handbook.html#configuring-other-input-formats'
 POSTLOGGER = utils.get_logger('new_post', utils.STDERR_HANDLER)
 PAGELOGGER = utils.get_logger('new_page', utils.STDERR_HANDLER)
 LOGGER = POSTLOGGER
 
 
-def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_names):
+def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_objs, compilers_raw):
     """Given a compiler ("markdown", "rest"), and whether it's meant for
     a post or a page, and compilers, return the correct entry from
     post_pages."""
@@ -53,11 +55,13 @@ def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_names):
     # These are the extensions supported by the required format
     extensions = compilers.get(compiler)
     if extensions is None:
-        if compiler in compiler_names:
+        if compiler in compiler_objs:
             LOGGER.error("There is a {0} compiler available, but it's not set in your COMPILERS option.".format(compiler))
+            LOGGER.info("Read more: {0}".format(COMPILERS_DOC_LINK))
         else:
             LOGGER.error('Unknown format {0}'.format(compiler))
-        sys.exit(1)
+            print_compilers(compilers_raw, post_pages, compiler_objs)
+        return False
 
     # Throw away the post_pages with the wrong extensions
     filtered = [entry for entry in filtered if any([ext in entry[0] for ext in
@@ -69,8 +73,71 @@ def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_names):
                      "a {0} in format {1}. You may want to tweak "
                      "COMPILERS or {2}S in conf.py".format(
                          type_name, compiler, type_name.upper()))
-        sys.exit(1)
+        LOGGER.info("Read more: {0}".format(COMPILERS_DOC_LINK))
+
+        return False
     return filtered[0]
+
+
+def print_compilers(compilers_raw, post_pages, compiler_objs):
+    """
+    List all available compilers in a human-friendly format.
+
+    :param compilers_raw: The compilers dict, mapping compiler names to tuples of extensions
+    :param post_pages: The post_pages structure
+    :param compilers_objs: Compiler objects
+    """
+
+    # We use compilers_raw, because the normal dict can contain
+    # garbage coming from the translation candidate implementation.
+    # Entries are in format: (name, extensions, used_in_post_pages)
+    parsed_compilers = {'used': [], 'unused': [], 'disabled': []}
+
+    for compiler_name, compiler_obj in compiler_objs.items():
+        fname = compiler_obj.friendly_name or compiler_name
+        if compiler_name not in compilers_raw:
+            parsed_compilers['disabled'].append((compiler_name, fname, (), False))
+        else:
+            # stolen from filter_post_pages
+            extensions = compilers_raw[compiler_name]
+            filtered = [entry for entry in post_pages if any(
+                [ext in entry[0] for ext in extensions])]
+            if filtered:
+                parsed_compilers['used'].append((compiler_name, fname, extensions, True))
+            else:
+                parsed_compilers['unused'].append((compiler_name, fname, extensions, False))
+
+    # Sort compilers alphabetically by name, just so it’s prettier (and
+    # deterministic)
+    parsed_compilers['used'].sort(key=operator.itemgetter(0))
+    parsed_compilers['unused'].sort(key=operator.itemgetter(0))
+    parsed_compilers['disabled'].sort(key=operator.itemgetter(0))
+
+    # We also group the compilers by status for readability.
+    parsed_list = parsed_compilers['used'] + parsed_compilers['unused'] + parsed_compilers['disabled']
+
+    print("Available input formats:\n")
+
+    name_width = max([len(i[0]) for i in parsed_list] + [4])  # 4 == len('NAME')
+    fname_width = max([len(i[1]) for i in parsed_list] + [11])  # 11 == len('DESCRIPTION')
+
+    print((' {0:<' + str(name_width) + '}  {1:<' + str(fname_width) + '}  EXTENSIONS\n').format('NAME', 'DESCRIPTION'))
+
+    for name, fname, extensions, used in parsed_list:
+        flag = ' ' if used else '!'
+        flag = flag if extensions else '~'
+
+        extensions = ', '.join(extensions) if extensions else '(disabled: not in COMPILERS)'
+
+        print(('{flag}{name:<' + str(name_width) + '}  {fname:<' + str(fname_width) + '}  {extensions}').format(flag=flag, name=name, fname=fname, extensions=extensions))
+
+    print("""
+More compilers are available in the Plugins Index.
+
+Compilers marked with ! and ~ require additional configuration:
+    ! not in the PAGES/POSTS tuples (unused)
+    ~ not in the COMPILERS dict (disabled)
+Read more: {0}""".format(COMPILERS_DOC_LINK))
 
 
 def get_default_compiler(is_post, compilers, post_pages):
@@ -209,8 +276,15 @@ class CommandNewPost(Command):
             'long': 'format',
             'type': str,
             'default': '',
-            'help': 'Markup format for the post, one of rest, markdown, wiki, '
-                    'bbcode, html, textile, txt2tags',
+            'help': 'Markup format for the post (use --available-formats for list)',
+        },
+        {
+            'name': 'available-formats',
+            'short': 'F',
+            'long': 'available-formats',
+            'type': bool,
+            'default': False,
+            'help': 'List all available input formats'
         },
         {
             'name': 'schedule',
@@ -256,6 +330,11 @@ class CommandNewPost(Command):
         onefile = options['onefile']
         twofile = options['twofile']
         import_file = options['import']
+        wants_available = options['available-formats']
+
+        if wants_available:
+            print_compilers(self.site.config['_COMPILERS_RAW'], self.site.config['post_pages'], self.site.compilers)
+            return
 
         if is_page:
             LOGGER = PAGELOGGER
@@ -268,6 +347,10 @@ class CommandNewPost(Command):
             onefile = self.site.config.get('ONE_FILE_POSTS', True)
 
         content_format = options['content_format']
+        content_subformat = None
+
+        if "@" in content_format:
+            content_format, content_subformat = content_format.split("@")
 
         if not content_format:  # Issue #400
             content_format = get_default_compiler(
@@ -277,6 +360,7 @@ class CommandNewPost(Command):
 
         if content_format not in compiler_names:
             LOGGER.error("Unknown {0} format {1}, maybe you need to install a plugin?".format(content_type, content_format))
+            print_compilers(self.site.config['_COMPILERS_RAW'], self.site.config['post_pages'], self.site.compilers)
             return
         compiler_plugin = self.site.plugin_manager.getPluginByName(
             content_format, "PageCompiler").plugin_object
@@ -285,7 +369,11 @@ class CommandNewPost(Command):
         entry = filter_post_pages(content_format, is_post,
                                   self.site.config['COMPILERS'],
                                   self.site.config['post_pages'],
-                                  compiler_names)
+                                  self.site.compilers,
+                                  self.site.config['_COMPILERS_RAW'])
+
+        if entry is False:
+            return 1
 
         if import_file:
             print("Importing Existing {xx}".format(xx=content_type.title()))
@@ -357,7 +445,7 @@ class CommandNewPost(Command):
             signal('existing_' + content_type).send(self, **event)
 
             LOGGER.error("The title already exists!")
-            exit(8)
+            return 8
 
         d_name = os.path.dirname(txt_path)
         utils.makedirs(d_name)
@@ -366,6 +454,11 @@ class CommandNewPost(Command):
             metadata['author'] = author
         metadata.update(self.site.config['ADDITIONAL_METADATA'])
         data.update(metadata)
+
+        # ipynb plugin needs the ipython kernel info. We get the kernel name
+        # from the content_subformat and pass it to the compiler in the metadata
+        if content_format == "ipynb" and content_subformat is not None:
+            metadata["ipython_kernel"] = content_subformat
 
         # Override onefile if not really supported.
         if not compiler_plugin.supports_onefile and onefile:
@@ -376,9 +469,10 @@ class CommandNewPost(Command):
             with io.open(import_file, 'r', encoding='utf-8') as fh:
                 content = fh.read()
         else:
-            # ipynb's create_post depends on this exact string, take care
-            # if you're changing it
-            content = "Write your {0} here.".format('page' if is_page else 'post')
+            if is_page:
+                content = self.site.MESSAGES[self.site.default_lang]["Write your page here."]
+            else:
+                content = self.site.MESSAGES[self.site.default_lang]["Write your post here."]
         compiler_plugin.create_post(
             txt_path, content=content, onefile=onefile, title=title,
             slug=slug, date=date, tags=tags, is_page=is_page, **metadata)

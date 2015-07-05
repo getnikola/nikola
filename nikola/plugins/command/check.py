@@ -37,13 +37,10 @@ except ImportError:
 
 from doit.loader import generate_tasks
 import lxml.html
-try:
-    import requests
-except ImportError:
-    requests = None
+import requests
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, req_missing, STDERR_HANDLER
+from nikola.utils import get_logger, STDERR_HANDLER
 
 
 def _call_nikola_list(site):
@@ -97,7 +94,7 @@ class CommandCheck(Command):
     name = "check"
     logger = None
 
-    doc_usage = "-l [--find-sources] | -f"
+    doc_usage = "[-v] (-l [--find-sources] [-r] | -f [--clean-files])"
     doc_purpose = "check links and files in the generated site"
     cmd_options = [
         {
@@ -166,7 +163,7 @@ class CommandCheck(Command):
         if options['clean']:
             failure = self.clean_files()
         if failure:
-            sys.exit(1)
+            return 1
 
     existing_targets = set([])
     checked_remote_targets = {}
@@ -183,9 +180,6 @@ class CommandCheck(Command):
         if find_sources:
             deps = _call_nikola_list(self.site)[1]
 
-        if check_remote and requests is None:
-            req_missing(['requests'], 'check remote links')
-
         if url_type in ('absolute', 'full_path'):
             url_netloc_to_root = urlparse(self.site.config['BASE_URL']).path
         try:
@@ -196,6 +190,10 @@ class CommandCheck(Command):
                 # anyone and may result in false positives.  Problems arise
                 # with galleries, for example.  Full rationale: (Issue #1447)
                 self.logger.notice("Ignoring {0} (in cache, links may be incorrect)".format(filename))
+                return False
+
+            if not os.path.exists(fname):
+                # Quietly ignore files that don’t exist; use `nikola check -f` instead (Issue #1831)
                 return False
 
             d = lxml.html.fromstring(open(filename, 'rb').read())

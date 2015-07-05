@@ -60,6 +60,7 @@ from .plugin_categories import (
     Command,
     LateTask,
     PageCompiler,
+    CompilerExtension,
     RestExtension,
     MarkdownExtension,
     Task,
@@ -272,6 +273,7 @@ class Nikola(object):
         self.posts_per_month = defaultdict(list)
         self.posts_per_tag = defaultdict(list)
         self.posts_per_category = defaultdict(list)
+        self.tags_per_language = defaultdict(list)
         self.post_per_file = {}
         self.timeline = []
         self.pages = []
@@ -614,12 +616,11 @@ class Nikola(object):
         self.default_lang = self.config['DEFAULT_LANG']
         self.translations = self.config['TRANSLATIONS']
 
-        if self.configured:
-            locale_fallback, locale_default, locales = sanitized_locales(
-                self.config.get('LOCALE_FALLBACK', None),
-                self.config.get('LOCALE_DEFAULT', None),
-                self.config.get('LOCALES', {}), self.translations)
-            utils.LocaleBorg.initialize(locales, self.default_lang)
+        locale_fallback, locale_default, locales = sanitized_locales(
+            self.config.get('LOCALE_FALLBACK', None),
+            self.config.get('LOCALE_DEFAULT', None),
+            self.config.get('LOCALES', {}), self.translations)
+        utils.LocaleBorg.initialize(locales, self.default_lang)
 
         # BASE_URL defaults to SITE_URL
         if 'BASE_URL' not in self.config:
@@ -654,7 +655,11 @@ class Nikola(object):
             utils.LOGGER.warn("Please explicitly add the setting to your conf.py with the desired value, as the setting will default to False in the future.")
 
         # We use one global tzinfo object all over Nikola.
-        self.tzinfo = dateutil.tz.gettz(self.config['TIMEZONE'])
+        try:
+            self.tzinfo = dateutil.tz.gettz(self.config['TIMEZONE'])
+        except Exception as exc:
+            utils.LOGGER.warn("Error getting TZ: {}", exc)
+            self.tzinfo = dateutil.tz.gettz()
         self.config['__tzinfo__'] = self.tzinfo
 
         self.plugin_manager = PluginManager(categories_filter={
@@ -664,6 +669,7 @@ class Nikola(object):
             "TemplateSystem": TemplateSystem,
             "PageCompiler": PageCompiler,
             "TaskMultiplier": TaskMultiplier,
+            "CompilerExtension": CompilerExtension,
             "RestExtension": RestExtension,
             "MarkdownExtension": MarkdownExtension,
             "SignalHandler": SignalHandler,
@@ -704,6 +710,11 @@ class Nikola(object):
         self._activate_plugins_of_category("Task")
         self._activate_plugins_of_category("LateTask")
         self._activate_plugins_of_category("TaskMultiplier")
+
+        # Store raw compilers for internal use (need a copy for that)
+        self.config['_COMPILERS_RAW'] = {}
+        for k, v in self.config['COMPILERS'].items():
+            self.config['_COMPILERS_RAW'][k] = list(v)
 
         compilers = defaultdict(set)
         # Also add aliases for combinations with TRANSLATIONS_PATTERN
@@ -1025,7 +1036,8 @@ class Nikola(object):
                         # python 3: already unicode
                         pass
                     nl = nl.encode('idna')
-
+                    if isinstance(nl, utils.bytes_str):
+                        nl = nl.decode('latin-1')  # so idna stays unchanged
                     dst = urlunsplit((dst_url.scheme,
                                       nl,
                                       dst_url.path,
@@ -1108,7 +1120,7 @@ class Nikola(object):
             link=link,
             description=description,
             lastBuildDate=datetime.datetime.utcnow(),
-            generator='http://getnikola.com/',
+            generator='https://getnikola.com/',
             language=lang
         )
 
@@ -1428,6 +1440,7 @@ class Nikola(object):
         self.posts_per_month = defaultdict(list)
         self.posts_per_tag = defaultdict(list)
         self.posts_per_category = defaultdict(list)
+        self.tags_per_language = defaultdict(list)
         self.category_hierarchy = {}
         self.post_per_file = {}
         self.timeline = []
@@ -1460,6 +1473,8 @@ class Nikola(object):
                     else:
                         slugged_tags.add(utils.slugify(tag, force=True))
                     self.posts_per_tag[tag].append(post)
+                for lang in self.config['TRANSLATIONS'].keys():
+                    self.tags_per_language[lang].extend(post.tags_for_language(lang))
                 self._add_post_to_category(post, post.meta('category'))
 
             if post.is_post:
@@ -1485,6 +1500,8 @@ class Nikola(object):
                     quit = True
                 self.post_per_file[dest] = post
                 self.post_per_file[src_dest] = post
+                # deduplicate tags_per_language
+                self.tags_per_language[lang] = list(set(self.tags_per_language[lang]))
 
         # Sort everything.
 

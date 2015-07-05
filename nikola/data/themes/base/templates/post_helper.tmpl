@@ -24,7 +24,7 @@
 
 <%def name="html_pager(post)">
     %if post.prev_post or post.next_post:
-        <ul class="pager">
+        <ul class="pager hidden-print">
         %if post.prev_post:
             <li class="previous">
                 <a href="${post.prev_post.permalink()}" rel="prev" title="${post.prev_post.title()|h}">${messages("Previous post")}</a>

@@ -53,6 +53,7 @@ SAMPLE_CONF = {
     'SITE_URL': "https://example.com/",
     'BLOG_EMAIL': "joe@demo.site",
     'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
+    'PRETTY_URLS': False,
     'DEFAULT_LANG': "en",
     'TRANSLATIONS': """{
     DEFAULT_LANG: "",
@@ -199,10 +200,12 @@ def prepare_config(config):
     """Parse sample config with JSON."""
     p = config.copy()
     p.update(dict((k, json.dumps(v, ensure_ascii=False)) for k, v in p.items()
-             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'INDEX_READ_MORE_LINK', 'RSS_READ_MORE_LINK')))
+             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'INDEX_READ_MORE_LINK', 'RSS_READ_MORE_LINK', 'PRETTY_URLS')))
     # READ_MORE_LINKs require some special treatment.
     p['INDEX_READ_MORE_LINK'] = "'" + p['INDEX_READ_MORE_LINK'].replace("'", "\\'") + "'"
     p['RSS_READ_MORE_LINK'] = "'" + p['RSS_READ_MORE_LINK'].replace("'", "\\'") + "'"
+    # json would make that `true` instead of `True`
+    p['PRETTY_URLS'] = str(p['PRETTY_URLS'])
     return p
 
 
@@ -290,6 +293,9 @@ class CommandInit(Command):
                 print("    Converting to Punycode:", answer)
 
             SAMPLE_CONF['SITE_URL'] = answer
+
+        def prettyhandler(default, toconf):
+            SAMPLE_CONF['PRETTY_URLS'] = ask_yesno('Enable pretty URLs (/page/ instead of /page.html) that don’t need web server configuration?', default=True)
 
         def lhandler(default, toconf, show_header=True):
             if show_header:
@@ -406,6 +412,7 @@ class CommandInit(Command):
             ('Site author\'s e-mail', 'n.tesla@example.com', True, 'BLOG_EMAIL'),
             ('Site description', 'This is a demo site for Nikola.', True, 'BLOG_DESCRIPTION'),
             (urlhandler, None, True, True),
+            (prettyhandler, None, True, True),
             ('Questions about languages and locales', None, None, None),
             (lhandler, None, True, True),
             (tzhandler, None, True, True),
