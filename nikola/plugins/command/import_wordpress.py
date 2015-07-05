@@ -70,6 +70,20 @@ class CommandImportWordpress(Command, ImportMixin):
             'help': "Don't import drafts",
         },
         {
+            'name': 'exclude_privates',
+            'long': 'exclude-privates',
+            'default': False,
+            'type': bool,
+            'help': "Don't import private posts",
+        },
+        {
+            'name': 'include_empty_items',
+            'long': 'include-empty-items',
+            'default': False,
+            'type': bool,
+            'help': "Include empty posts and pages",
+        },
+        {
             'name': 'squash_newlines',
             'long': 'squash-newlines',
             'default': False,
@@ -110,12 +124,7 @@ class CommandImportWordpress(Command, ImportMixin):
     ]
     all_tags = set([])
 
-    def _execute(self, options={}, args=[]):
-        """Import a WordPress blog from an export file into a Nikola site."""
-        if not args:
-            print(self.help())
-            return
-
+    def _read_options(self, options, args):
         options['filename'] = args.pop(0)
 
         if args and ('output_folder' not in args or
@@ -136,7 +145,9 @@ class CommandImportWordpress(Command, ImportMixin):
         self.output_folder = options.get('output_folder', 'new_site')
 
         self.exclude_drafts = options.get('exclude_drafts', False)
+        self.exclude_privates = options.get('exclude_privates', False)
         self.no_downloads = options.get('no_downloads', False)
+        self.import_empty_items = options.get('include_empty_items', False)
 
         self.auth = None
         if options.get('download_auth') is not None:
@@ -148,6 +159,30 @@ class CommandImportWordpress(Command, ImportMixin):
 
         self.separate_qtranslate_content = options.get('separate_qtranslate_content')
         self.translations_pattern = options.get('translations_pattern')
+        return True
+
+    def _prepare(self, channel):
+        self.context = self.populate_context(channel)
+        self.base_dir = urlparse(self.context['BASE_URL']).path
+
+    def _adjust_config_template(self, channel, rendered_template):
+        rendered_template = re.sub('# REDIRECTIONS = ', 'REDIRECTIONS = ',
+                                   rendered_template)
+
+        if self.timezone:
+            rendered_template = re.sub('# TIMEZONE = \'UTC\'',
+                                       'TIMEZONE = \'' + self.timezone + '\'',
+                                       rendered_template)
+        return rendered_template
+
+    def _execute(self, options={}, args=[]):
+        """Import a WordPress blog from an export file into a Nikola site."""
+        if not args:
+            print(self.help())
+            return False
+
+        if not self._read_options(options, args):
+            return False
 
         # A place holder where extra language (if detected) will be stored
         self.extra_languages = set()
@@ -166,8 +201,7 @@ class CommandImportWordpress(Command, ImportMixin):
                 req_missing(['phpserialize'], 'import WordPress dumps without --no-downloads')
 
         channel = self.get_channel_from_file(self.wordpress_export_file)
-        self.context = self.populate_context(channel)
-        self.base_dir = urlparse(self.context['BASE_URL']).path
+        self._prepare(channel)
         conf_template = self.generate_base_site()
 
         # If user  has specified a custom pattern for translation files we
@@ -197,13 +231,7 @@ class CommandImportWordpress(Command, ImportMixin):
         self.write_urlmap_csv(
             os.path.join(self.output_folder, 'url_map.csv'), self.url_map)
         rendered_template = conf_template.render(**prepare_config(self.context))
-        rendered_template = re.sub('# REDIRECTIONS = ', 'REDIRECTIONS = ',
-                                   rendered_template)
-
-        if self.timezone:
-            rendered_template = re.sub('# TIMEZONE = \'UTC\'',
-                                       'TIMEZONE = \'' + self.timezone + '\'',
-                                       rendered_template)
+        rendered_template = self._adjust_config_template(channel, rendered_template)
         self.write_configuration(self.get_configuration_output_path(),
                                  rendered_template)
 
@@ -259,17 +287,15 @@ class CommandImportWordpress(Command, ImportMixin):
             ("posts/*.rst", "posts", "post.tmpl"),
             ("posts/*.txt", "posts", "post.tmpl"),
             ("posts/*.md", "posts", "post.tmpl"),
-            ("posts/*.wp", "posts", "post.tmpl"),
         )'''
         context['PAGES'] = '''(
             ("stories/*.rst", "stories", "story.tmpl"),
             ("stories/*.txt", "stories", "story.tmpl"),
             ("stories/*.md", "stories", "story.tmpl"),
-            ("stories/*.wp", "stories", "story.tmpl"),
         )'''
         context['COMPILERS'] = '''{
         "rest": ('.txt', '.rst'),
-        "markdown": ('.md', '.mdown', '.markdown', '.wp'),
+        "markdown": ('.md', '.mdown', '.markdown'),
         "html": ('.html', '.htm')
         }
         '''
@@ -305,7 +331,7 @@ class CommandImportWordpress(Command, ImportMixin):
         links[link] = '/' + dst_url
         links[url] = '/' + dst_url
 
-        self.download_additional_image_sizes(
+        return [path] + self.download_additional_image_sizes(
             item,
             wordpress_namespace,
             os.path.dirname(url)
@@ -313,12 +339,13 @@ class CommandImportWordpress(Command, ImportMixin):
 
     def download_additional_image_sizes(self, item, wordpress_namespace, source_path):
         if phpserialize is None:
-            return
+            return []
 
         additional_metadata = item.findall('{{{0}}}postmeta'.format(wordpress_namespace))
         if additional_metadata is None:
-            return
+            return []
 
+        result = []
         for element in additional_metadata:
             meta_key = element.find('{{{0}}}meta_key'.format(wordpress_namespace))
             if meta_key is not None and meta_key.text == '_wp_attachment_metadata':
@@ -357,7 +384,8 @@ class CommandImportWordpress(Command, ImportMixin):
                     self.download_url_content_to_file(url, dst_path)
                     dst_url = '/'.join(dst_path.split(os.sep)[2:])
                     links[url] = '/' + dst_url
-                    links[url] = '/' + dst_url
+                    result.append(path)
+        return result
 
     code_re1 = re.compile(r'\[code.* lang.*?="(.*?)?".*\](.*?)\[/code\]', re.DOTALL | re.MULTILINE)
     code_re2 = re.compile(r'\[sourcecode.* lang.*?="(.*?)?".*\](.*?)\[/sourcecode\]', re.DOTALL | re.MULTILINE)
@@ -402,11 +430,21 @@ class CommandImportWordpress(Command, ImportMixin):
         else:
             return content
 
-    def transform_content(self, content):
-        content = self.transform_code(content)
-        content = self.transform_caption(content)
-        content = self.transform_multiple_newlines(content)
-        return content
+    def transform_content(self, content, post_format):
+        if post_format == 'wp':
+            content = self.transform_code(content)
+            content = self.transform_caption(content)
+            content = self.transform_multiple_newlines(content)
+            return content, 'md'
+        else:
+            # FIXME ???
+            return content, 'md'
+
+    def _create_metadata(self, status, excerpt, tags, categories):
+        other_meta = {'wp-status': status}
+        if excerpt is not None:
+            other_meta['excerpt'] = excerpt
+        return tags + categories, other_meta
 
     def import_item(self, item, wordpress_namespace, out_folder=None):
         """Takes an item from the feed and creates a post file."""
@@ -439,7 +477,7 @@ class CommandImportWordpress(Command, ImportMixin):
                     item, '{{{0}}}post_id'.format(wordpress_namespace), None)
             if not slug:  # should never happen
                 LOGGER.error("Error converting post:", title)
-                return
+                return False
         else:
             if len(pathlist) > 1:
                 out_folder = os.path.join(*([out_folder] + pathlist[:-1]))
@@ -461,23 +499,42 @@ class CommandImportWordpress(Command, ImportMixin):
             item, '{{{0}}}status'.format(wordpress_namespace), 'publish')
         content = get_text_tag(
             item, '{http://purl.org/rss/1.0/modules/content/}encoded', '')
+        excerpt = get_text_tag(
+            item, '{http://wordpress.org/export/1.2/excerpt/}encoded', None)
+
+        if excerpt is not None:
+            if len(excerpt) == 0:
+                excerpt = None
 
         tags = []
+        categories = []
         if status == 'trash':
             LOGGER.warn('Trashed post "{0}" will not be imported.'.format(title))
-            return
+            return False
+        elif status == 'private':
+            tags.append('private')
+            is_draft = False
+            is_private = True
         elif status != 'publish':
             tags.append('draft')
             is_draft = True
+            is_private = False
         else:
             is_draft = False
+            is_private = False
 
         for tag in item.findall('category'):
             text = tag.text
-            if text == 'Uncategorized':
+            type = 'category'
+            if 'domain' in tag.attrib:
+                type = tag.attrib['domain']
+            if text == 'Uncategorized' and type == 'category':
                 continue
-            tags.append(text)
             self.all_tags.add(text)
+            if type == 'category':
+                categories.append(type)
+            else:
+                tags.append(text)
 
         if '$latex' in content:
             tags.append('mathjax')
@@ -490,8 +547,11 @@ class CommandImportWordpress(Command, ImportMixin):
 
         if is_draft and self.exclude_drafts:
             LOGGER.notice('Draft "{0}" will not be imported.'.format(title))
-
-        elif content.strip():
+            return False
+        elif is_private and self.exclude_privates:
+            LOGGER.notice('Private post "{0}" will not be imported.'.format(title))
+            return False
+        elif content.strip() or self.import_empty_items:
             # If no content is found, no files are written.
             self.url_map[link] = (self.context['SITE_URL'] +
                                   out_folder.rstrip('/') + '/' + slug +
@@ -503,32 +563,34 @@ class CommandImportWordpress(Command, ImportMixin):
                 content_translations = {"": content}
             default_language = self.context["DEFAULT_LANG"]
             for lang, content in content_translations.items():
+                content, extension = self.transform_content(content, post_format)
                 if lang:
                     out_meta_filename = slug + '.meta'
                     if lang == default_language:
-                        out_content_filename = slug + '.wp'
+                        out_content_filename = slug + '.' + extension
                     else:
                         out_content_filename \
                             = utils.get_translation_candidate(self.context,
-                                                              slug + ".wp", lang)
+                                                              slug + "." + extension, lang)
                         self.extra_languages.add(lang)
                     meta_slug = slug
                 else:
                     out_meta_filename = slug + '.meta'
-                    out_content_filename = slug + '.wp'
+                    out_content_filename = slug + '.' + extension
                     meta_slug = slug
-                if post_format == 'wp':
-                    content = self.transform_content(content)
+                tags, other_meta = self._create_metadata(status, excerpt, tags, categories)
                 self.write_metadata(os.path.join(self.output_folder, out_folder,
                                                  out_meta_filename),
-                                    title, meta_slug, post_date, description, tags)
+                                    title, meta_slug, post_date, description, tags, **other_meta)
                 self.write_content(
                     os.path.join(self.output_folder,
                                  out_folder, out_content_filename),
                     content)
+            return (out_folder, slug)
         else:
             LOGGER.warn('Not going to import "{0}" because it seems to contain'
                         ' no content.'.format(title))
+            return False
 
     def process_item(self, item):
         # The namespace usually is something like:
