@@ -214,6 +214,7 @@ class FakeSite(object):
             "TaskMultiplier": TaskMultiplier,
             "CompilerExtension": CompilerExtension
         })
+        self.compiler_extensions = []
         self.loghandlers = [nikola.utils.STDERR_HANDLER]
         self.plugin_manager.setPluginInfoExtension('plugin')
         if sys.version_info[0] == 3:
@@ -236,9 +237,6 @@ class FakeSite(object):
         # This is to make plugin initialization happy
         self.template_system = self
         self.name = 'mako'
-
-    def activate_compiler_extensions(self, compiler_name):
-        return []
 
     def render_template(self, name, _, context):
         return('<img src="IMG.jpg">')

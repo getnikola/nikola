@@ -53,14 +53,14 @@ class CompileMarkdown(PageCompiler):
     site = None
 
     def set_site(self, site):
+        super(CompileMarkdown, self).set_site(site)
         self.config_dependencies = []
-        for plugin_info in site.activate_compiler_extensions('markdown'):
+        for plugin_info in self.get_compiler_extensions():
             self.config_dependencies.append(plugin_info.name)
             self.extensions.append(plugin_info.plugin_object)
             plugin_info.plugin_object.short_help = plugin_info.description
 
         self.config_dependencies.append(str(sorted(site.config.get("MARKDOWN_EXTENSIONS"))))
-        return super(CompileMarkdown, self).set_site(site)
 
     def compile_html(self, source, dest, is_two_file=True):
         if markdown is None:

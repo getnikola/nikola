@@ -837,14 +837,6 @@ class Nikola(object):
                 plugins.append(plugin_info)
         return plugins
 
-    def activate_compiler_extensions(self, compiler_name):
-        """Activate all the compiler extension plugins for a given compiler and return them."""
-        plugins = []
-        for plugin_info in self.compiler_extensions:
-            if plugin_info.plugin_object.compiler_name == compiler_name:
-                plugins.append(plugin_info)
-        return plugins
-
     def _get_themes(self):
         if self._THEMES is None:
             try:

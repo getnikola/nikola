@@ -127,16 +127,15 @@ class CompileRest(PageCompiler):
             fd.write(content)
 
     def set_site(self, site):
+        super(CompileRest, self).set_site(site)
         self.config_dependencies = []
-        for plugin_info in site.activate_compiler_extensions('rest'):
+        for plugin_info in self.get_compiler_extensions():
             self.config_dependencies.append(plugin_info.name)
             plugin_info.plugin_object.short_help = plugin_info.description
 
         self.logger = get_logger('compile_rest', site.loghandlers)
         if not site.debug:
             self.logger.level = 4
-
-        return super(CompileRest, self).set_site(site)
 
 
 def get_observer(settings):
