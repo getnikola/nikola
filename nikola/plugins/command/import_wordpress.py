@@ -636,7 +636,7 @@ class CommandImportWordpress(Command, ImportMixin):
                 with io.open(destination, "wb") as file:
                     file.write(json.dumps(self.attachments[post_id]).encode('utf-8'))
             else:
-                LOGGER.warn("Found attachments for post or page #{0}, but didn't find find or page. (Attachments: {1})".format(post_id, [e[0] for _, e in self.attachments[post_id].items()]))
+                LOGGER.warn("Found attachments for post or page #{0}, but didn't find post or page. (Attachments: {1})".format(post_id, [e[0] for _, e in self.attachments[post_id].items()]))
 
 
 def get_text_tag(tag, name, default):
