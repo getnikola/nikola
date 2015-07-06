@@ -623,6 +623,10 @@ class CommandImportWordpress(Command, ImportMixin):
             if out_folder_slug:
                 self.posts_pages[post_id] = (post_type, out_folder_slug[0], out_folder_slug[1])
 
+    def write_attachments_info(self, path, attachments):
+        with io.open(path, "wb") as file:
+            file.write(json.dumps(attachments).encode('utf-8'))
+
     def import_posts(self, channel):
         self.posts_pages = {}
         self.attachments = defaultdict(dict)
@@ -633,8 +637,7 @@ class CommandImportWordpress(Command, ImportMixin):
             if post_id in self.posts_pages:
                 destination = os.path.join(self.output_folder, self.posts_pages[post_id][1],
                                            self.posts_pages[post_id][2] + ".attachments.json")
-                with io.open(destination, "wb") as file:
-                    file.write(json.dumps(self.attachments[post_id]).encode('utf-8'))
+                self.write_attachments_info(destination, self.attachments[post_id])
             else:
                 LOGGER.warn("Found attachments for post or page #{0}, but didn't find post or page. (Attachments: {1})".format(post_id, [e[0] for _, e in self.attachments[post_id].items()]))
 
