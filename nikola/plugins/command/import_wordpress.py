@@ -29,8 +29,11 @@ import os
 import re
 import sys
 import datetime
+import io
+import json
 import requests
 from lxml import etree
+from collections import defaultdict
 
 try:
     from urlparse import urlparse
@@ -598,17 +601,42 @@ class CommandImportWordpress(Command, ImportMixin):
         wordpress_namespace = item.nsmap['wp']
         post_type = get_text_tag(
             item, '{{{0}}}post_type'.format(wordpress_namespace), 'post')
+        post_id = int(get_text_tag(
+            item, '{{{0}}}post_id'.format(wordpress_namespace), "0"))
+        parent_id = get_text_tag(
+            item, '{{{0}}}post_parent'.format(wordpress_namespace), None)
 
         if post_type == 'attachment':
-            self.import_attachment(item, wordpress_namespace)
-        elif post_type == 'post':
-            self.import_item(item, wordpress_namespace, 'posts')
+            files = self.import_attachment(item, wordpress_namespace)
+            # If parent was found, store relation with imported files
+            if parent_id is not None:
+                self.attachments[int(parent_id)][post_id] = files
+            else:
+                LOGGER.warn("Attachment #{0} ({1}) has no parent!".format(post_id, files))
         else:
-            self.import_item(item, wordpress_namespace, 'stories')
+            if post_type == 'post':
+                out_folder_slug = self.import_item(item, wordpress_namespace, 'posts')
+            else:
+                post_type = 'page'
+                out_folder_slug = self.import_item(item, wordpress_namespace, 'stories')
+            # If post was exported, store data
+            if out_folder_slug:
+                self.posts_pages[post_id] = (post_type, out_folder_slug[0], out_folder_slug[1])
 
     def import_posts(self, channel):
+        self.posts_pages = {}
+        self.attachments = defaultdict(dict)
         for item in channel.findall('item'):
             self.process_item(item)
+        # Assign attachments to posts
+        for post_id in self.attachments:
+            if post_id in self.posts_pages:
+                destination = os.path.join(self.output_folder, self.posts_pages[post_id][1],
+                                           self.posts_pages[post_id][2] + ".attachments.json")
+                with io.open(destination, "wb") as file:
+                    file.write(json.dumps(self.attachments[post_id]).encode('utf-8'))
+            else:
+                LOGGER.warn("Found attachments for post or page #{0}, but didn't find find or page. (Attachments: {1})".format(post_id, [e[0] for _, e in self.attachments[post_id].items()]))
 
 
 def get_text_tag(tag, name, default):
