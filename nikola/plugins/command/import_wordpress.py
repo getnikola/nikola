@@ -574,8 +574,8 @@ class CommandImportWordpress(Command, ImportMixin):
                 try:
                     content, extension = self.transform_content(content, post_format)
                 except:
-                    LOGGER.error('Cannot interpret post "{0}" (language {1}) with post ' +
-                                 'format {2}!'.format(os.path.join(out_folder, slug), lang, post_format))
+                    LOGGER.error(('Cannot interpret post "{0}" (language {1}) with post ' +
+                                  'format {2}!').format(os.path.join(out_folder, slug), lang, post_format))
                     return False
                 if lang:
                     out_meta_filename = slug + '.meta'
@@ -601,8 +601,8 @@ class CommandImportWordpress(Command, ImportMixin):
                     content)
             return (out_folder, slug)
         else:
-            LOGGER.warn('Not going to import "{0}" because it seems to contain'
-                        ' no content.'.format(title))
+            LOGGER.warn(('Not going to import "{0}" because it seems to contain'
+                         ' no content.').format(title))
             return False
 
     def process_item(self, item):
@@ -649,8 +649,8 @@ class CommandImportWordpress(Command, ImportMixin):
                                            self.posts_pages[post_id][2] + ".attachments.json")
                 self.write_attachments_info(destination, self.attachments[post_id])
             else:
-                LOGGER.warn("Found attachments for post or page #{0}, but didn't find post or page. " +
-                            "(Attachments: {1})".format(post_id, [e[0] for _, e in self.attachments[post_id].items()]))
+                LOGGER.warn(("Found attachments for post or page #{0}, but didn't find post or page. " +
+                             "(Attachments: {1})").format(post_id, [e[0] for _, e in self.attachments[post_id].items()]))
 
 
 def get_text_tag(tag, name, default):
