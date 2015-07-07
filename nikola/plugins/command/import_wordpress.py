@@ -124,6 +124,13 @@ class CommandImportWordpress(Command, ImportMixin):
             'type': str,
             'help': "The pattern for translation files names",
         },
+        {
+            'name': 'export_categories_as_categories',
+            'long': 'export-categories-as-categories',
+            'default': False,
+            'type': bool,
+            'help': "Export categories as categories, instead of treating them as tags",
+        },
     ]
     all_tags = set([])
 
@@ -152,6 +159,8 @@ class CommandImportWordpress(Command, ImportMixin):
         self.no_downloads = options.get('no_downloads', False)
         self.import_empty_items = options.get('include_empty_items', False)
 
+        self.export_categories_as_categories = options.get('export_categories_as_categories', False)
+
         self.auth = None
         if options.get('download_auth') is not None:
             username_password = options.get('download_auth')
@@ -168,6 +177,22 @@ class CommandImportWordpress(Command, ImportMixin):
         self.context = self.populate_context(channel)
         self.base_dir = urlparse(self.context['BASE_URL']).path
 
+        if self.export_categories_as_categories:
+            wordpress_namespace = channel.nsmap['wp']
+            cat_map = dict()
+            for cat in channel.findall('{{{0}}}category'.format(wordpress_namespace)):
+                # cat_id = get_text_tag(cat, '{{{0}}}term_id'.format(wordpress_namespace), None)
+                cat_slug = get_text_tag(cat, '{{{0}}}category_nicename'.format(wordpress_namespace), None)
+                cat_parent_slug = get_text_tag(cat, '{{{0}}}category_parent'.format(wordpress_namespace), None)
+                cat_name = get_text_tag(cat, '{{{0}}}cat_name'.format(wordpress_namespace), None)
+                cat_path = [cat_name]
+                if cat_parent_slug in cat_map:
+                    cat_path = cat_map[cat_parent_slug] + cat_path
+                cat_map[cat_slug] = cat_path
+            self._category_paths = dict()
+            for cat, path in cat_map.items():
+                self._category_paths[cat] = utils.join_hierarchical_category_path(path)
+
     def _adjust_config_template(self, channel, rendered_template):
         rendered_template = re.sub('# REDIRECTIONS = ', 'REDIRECTIONS = ',
                                    rendered_template)
@@ -176,6 +201,13 @@ class CommandImportWordpress(Command, ImportMixin):
             rendered_template = re.sub('# TIMEZONE = \'UTC\'',
                                        'TIMEZONE = \'' + self.timezone + '\'',
                                        rendered_template)
+
+        if self.export_categories_as_categories:
+            rendered_template = re.sub('(# |)CATEGORY_ALLOW_HIERARCHIES = (True|False)', 'CATEGORY_ALLOW_HIERARCHIES = True',
+                                       rendered_template)
+            rendered_template = re.sub('(# |)CATEGORY_OUTPUT_FLAT_HIERARCHY = (True|False)', 'CATEGORY_OUTPUT_FLAT_HIERARCHY = True',
+                                       rendered_template)
+
         return rendered_template
 
     def _execute(self, options={}, args=[]):
@@ -446,11 +478,27 @@ class CommandImportWordpress(Command, ImportMixin):
         else:
             return None
 
-    def _create_metadata(self, status, excerpt, tags, categories):
+    def _create_metadata(self, status, excerpt, tags, categories, post_name=None):
         other_meta = {'wp-status': status}
         if excerpt is not None:
             other_meta['excerpt'] = excerpt
-        return tags + categories, other_meta
+        if self.export_categories_as_categories:
+            cats = []
+            for text in categories:
+                if text in self._category_paths:
+                    cats.append(self._category_paths[text])
+                else:
+                    cats.append(utils.join_hierarchical_category_path([text]))
+            other_meta['categories'] = ','.join(cats)
+            if len(cats) > 0:
+                other_meta['category'] = cats[0]
+                if len(cats) > 1:
+                    LOGGER.warn(('Post "{0}" has more than one category! ' +
+                                 'Will only use the first one.').format(post_name))
+            tags_cats = tags
+        else:
+            tags_cats = tags + categories
+        return tags_cats, other_meta
 
     def import_item(self, item, wordpress_namespace, out_folder=None):
         """Takes an item from the feed and creates a post file."""
@@ -591,7 +639,8 @@ class CommandImportWordpress(Command, ImportMixin):
                     out_meta_filename = slug + '.meta'
                     out_content_filename = slug + '.' + extension
                     meta_slug = slug
-                tags, other_meta = self._create_metadata(status, excerpt, tags, categories)
+                tags, other_meta = self._create_metadata(status, excerpt, tags, categories,
+                                                         post=os.path.join(out_folder, slug))
                 self.write_metadata(os.path.join(self.output_folder, out_folder,
                                                  out_meta_filename),
                                     title, meta_slug, post_date, description, tags, **other_meta)
