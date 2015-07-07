@@ -439,9 +439,12 @@ class CommandImportWordpress(Command, ImportMixin):
             content = self.transform_caption(content)
             content = self.transform_multiple_newlines(content)
             return content, 'md'
-        else:
-            # FIXME ???
+        elif post_format == 'markdown':
             return content, 'md'
+        elif post_format == 'none':
+            return content, 'html'
+        else:
+            return None
 
     def _create_metadata(self, status, excerpt, tags, categories):
         other_meta = {'wp-status': status}
@@ -547,6 +550,8 @@ class CommandImportWordpress(Command, ImportMixin):
         format_tag = [x for x in item.findall('*//{%s}meta_key' % wordpress_namespace) if x.text == '_tc_post_format']
         if format_tag:
             post_format = format_tag[0].getparent().find('{%s}meta_value' % wordpress_namespace).text
+            if post_format == 'wpautop':
+                post_format = 'wp'
 
         if is_draft and self.exclude_drafts:
             LOGGER.notice('Draft "{0}" will not be imported.'.format(title))
@@ -566,7 +571,12 @@ class CommandImportWordpress(Command, ImportMixin):
                 content_translations = {"": content}
             default_language = self.context["DEFAULT_LANG"]
             for lang, content in content_translations.items():
-                content, extension = self.transform_content(content, post_format)
+                try:
+                    content, extension = self.transform_content(content, post_format)
+                except:
+                    LOGGER.error('Cannot interpret post "{0}" (language {1}) with post ' +
+                                 'format {2}!'.format(os.path.join(out_folder, slug), lang, post_format))
+                    return False
                 if lang:
                     out_meta_filename = slug + '.meta'
                     if lang == default_language:
@@ -639,7 +649,8 @@ class CommandImportWordpress(Command, ImportMixin):
                                            self.posts_pages[post_id][2] + ".attachments.json")
                 self.write_attachments_info(destination, self.attachments[post_id])
             else:
-                LOGGER.warn("Found attachments for post or page #{0}, but didn't find post or page. (Attachments: {1})".format(post_id, [e[0] for _, e in self.attachments[post_id].items()]))
+                LOGGER.warn("Found attachments for post or page #{0}, but didn't find post or page. " +
+                            "(Attachments: {1})".format(post_id, [e[0] for _, e in self.attachments[post_id].items()]))
 
 
 def get_text_tag(tag, name, default):
