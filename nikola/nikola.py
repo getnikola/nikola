@@ -677,7 +677,7 @@ class Nikola(object):
             "ConfigPlugin": ConfigPlugin,
             "PostScanner": PostScanner,
         })
-        self.plugin_manager.setPluginInfoExtension('plugin')
+        self.plugin_manager.getPluginLocator().setPluginInfoExtension('plugin')
         extra_plugins_dirs = self.config['EXTRA_PLUGINS_DIRS']
         if sys.version_info[0] == 3:
             places = [
@@ -692,7 +692,7 @@ class Nikola(object):
                 os.path.expanduser('~/.nikola/plugins'),
             ] + [utils.sys_encode(path) for path in extra_plugins_dirs if path]
 
-        self.plugin_manager.setPluginPlaces(places)
+        self.plugin_manager.getPluginLocator().setPluginPlaces(places)
         self.plugin_manager.collectPlugins()
 
         self._activate_plugins_of_category("SignalHandler")
