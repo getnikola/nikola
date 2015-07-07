@@ -131,6 +131,13 @@ class CommandImportWordpress(Command, ImportMixin):
             'type': bool,
             'help': "Export categories as categories, instead of treating them as tags",
         },
+        {
+            'name': 'export_comments',
+            'long': 'export-comments',
+            'default': False,
+            'type': bool,
+            'help': "Export comments as .wpcomment files",
+        },
     ]
     all_tags = set([])
 
@@ -160,6 +167,7 @@ class CommandImportWordpress(Command, ImportMixin):
         self.import_empty_items = options.get('include_empty_items', False)
 
         self.export_categories_as_categories = options.get('export_categories_as_categories', False)
+        self.export_comments = options.get('export_comments', False)
 
         self.auth = None
         if options.get('download_auth') is not None:
@@ -478,6 +486,59 @@ class CommandImportWordpress(Command, ImportMixin):
         else:
             return None
 
+    def _extract_comment(self, comment, wordpress_namespace):
+        id = int(get_text_tag(comment, "{{{0}}}comment_id".format(wordpress_namespace), None))
+        author = get_text_tag(comment, "{{{0}}}comment_author".format(wordpress_namespace), None)
+        author_email = get_text_tag(comment, "{{{0}}}comment_author_email".format(wordpress_namespace), None)
+        author_url = get_text_tag(comment, "{{{0}}}comment_author_url".format(wordpress_namespace), None)
+        author_IP = get_text_tag(comment, "{{{0}}}comment_author_IP".format(wordpress_namespace), None)
+        # date = get_text_tag(comment, "{{{0}}}comment_date".format(wordpress_namespace), None)
+        date_gmt = get_text_tag(comment, "{{{0}}}comment_date_gmt".format(wordpress_namespace), None)
+        content = get_text_tag(comment, "{{{0}}}comment_content".format(wordpress_namespace), None)
+        approved = get_text_tag(comment, "{{{0}}}comment_approved".format(wordpress_namespace), '0')
+        if approved == '0':
+            approved = 'hold'
+        elif approved == '1':
+            approved = 'approved'
+        elif approved == 'spam' or approved == 'trash':
+            pass
+        else:
+            LOGGER.warn("Unknown comment approved status: " + str(approved))
+        parent = int(get_text_tag(comment, "{{{0}}}comment_parent".format(wordpress_namespace), 0))
+        if parent == 0:
+            parent = None
+        user_id = int(get_text_tag(comment, "{{{0}}}comment_user_id".format(wordpress_namespace), 0))
+        if user_id == 0:
+            user_id = None
+
+        if approved == 'trash' or approved == 'spam':
+            return None
+
+        return {"id": id, "status": str(approved), "approved": approved == "approved",
+                "author": author, "email": author_email, "url": author_url, "ip": author_IP,
+                "date": date_gmt, "content": content, "parent": parent, "user_id": user_id}
+
+    def _write_comment(self, filename, comment):
+        def write_header_line(fd, header_field, header_content):
+            if header_content is None:
+                return
+            header_content = str(header_content).replace('\n', ' ')
+            line = '.. ' + header_field + ': ' + header_content + '\n'
+            fd.write(line.encode('utf8'))
+
+        with open(filename, "wb+") as fd:
+            write_header_line(fd, "id", comment["id"])
+            write_header_line(fd, "status", comment["status"])
+            write_header_line(fd, "approved", comment["approved"])
+            write_header_line(fd, "author", comment["author"])
+            write_header_line(fd, "author_email", comment["email"])
+            write_header_line(fd, "author_url", comment["url"])
+            write_header_line(fd, "author_IP", comment["ip"])
+            write_header_line(fd, "date_utc", comment["date"])
+            write_header_line(fd, "parent_id", comment["parent"])
+            write_header_line(fd, "wordpress_user_id", comment["user_id"])
+            fd.write(('\n' + comment['content']).encode('utf8'))
+
     def _create_metadata(self, status, excerpt, tags, categories, post_name=None):
         other_meta = {'wp-status': status}
         if excerpt is not None:
@@ -640,7 +701,7 @@ class CommandImportWordpress(Command, ImportMixin):
                     out_content_filename = slug + '.' + extension
                     meta_slug = slug
                 tags, other_meta = self._create_metadata(status, excerpt, tags, categories,
-                                                         post=os.path.join(out_folder, slug))
+                                                         post_name=os.path.join(out_folder, slug))
                 self.write_metadata(os.path.join(self.output_folder, out_folder,
                                                  out_meta_filename),
                                     title, meta_slug, post_date, description, tags, **other_meta)
@@ -648,6 +709,18 @@ class CommandImportWordpress(Command, ImportMixin):
                     os.path.join(self.output_folder,
                                  out_folder, out_content_filename),
                     content)
+
+            if self.export_comments:
+                comments = []
+                for tag in item.findall('{{{0}}}comment'.format(wordpress_namespace)):
+                    comment = self._extract_comment(tag, wordpress_namespace)
+                    if comment is not None:
+                        comments.append(comment)
+
+                for comment in comments:
+                    comment_filename = slug + "." + str(comment['id']) + ".wpcomment"
+                    self._write_comment(os.path.join(self.output_folder, out_folder, comment_filename), comment)
+
             return (out_folder, slug)
         else:
             LOGGER.warn(('Not going to import "{0}" because it seems to contain'

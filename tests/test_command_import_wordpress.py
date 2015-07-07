@@ -194,6 +194,8 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
         self.import_command.output_folder = 'new_site'
         self.import_command.squash_newlines = True
         self.import_command.no_downloads = False
+        self.import_command.export_categories_as_categories = False
+        self.import_command.export_comments = False
 
         # Ensuring clean results
         self.import_command.url_map = {}
