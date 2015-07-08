@@ -70,6 +70,14 @@ class CommandServe(Command):
             'help': 'Address to bind (default: 0.0.0.0 – all local IPv4 interfaces)',
         },
         {
+            'name': 'detach',
+            'short': 'd',
+            'long': 'detach',
+            'type': bool,
+            'default': False,
+            'help': 'Detach from TTY (work in the background)',
+        },
+        {
             'name': 'browser',
             'short': 'b',
             'long': 'browser',
@@ -117,16 +125,34 @@ class CommandServe(Command):
                     server_url = "http://{0}:{1}/".format(*sa)
                 self.logger.info("Opening {0} in the default web browser...".format(server_url))
                 webbrowser.open(server_url)
-            try:
-                httpd.serve_forever()
-            except KeyboardInterrupt:
-                self.logger.info("Server is shutting down.")
-                return 130
+            if options['detach']:
+                OurHTTPRequestHandler.quiet = True
+                pid = os.fork()
+                if pid == 0:
+                    httpd.serve_forever()
+                else:
+                    self.logger.info("Detached with PID {0}. Run `kill {0}` to stop the server.".format(pid))
+            else:
+                try:
+                    httpd.serve_forever()
+                except KeyboardInterrupt:
+                    self.logger.info("Server is shutting down.")
+                    return 130
 
 
 class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
+    """A request handler, modified for Nikola."""
     extensions_map = dict(SimpleHTTPRequestHandler.extensions_map)
     extensions_map[""] = "text/plain"
+    quiet = False
+
+    def log_message(self, *args):
+        """Log messages.  Or not, depending on a setting."""
+        if self.quiet:
+            return
+        else:
+            # Old-style class in Python 2.7, cannot use super()
+            return SimpleHTTPRequestHandler.log_message(self, *args)
 
     # NOTICE: this is a patched version of send_head() to disable all sorts of
     # caching.  `nikola serve` is a development server, hence caching should
