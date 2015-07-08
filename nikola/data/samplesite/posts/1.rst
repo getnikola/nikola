@@ -20,8 +20,8 @@ Next steps:
 * `Read the manual </stories/handbook.html>`__
 * `Visit the Nikola website to learn more <https://getnikola.com>`__
 * `See a demo photo gallery </galleries/demo/index.html>`__
-* `See a demo listing </stories/listings-demo.html>`__
-* `See a demo slideshow </stories/slides-demo.html>`__
-* `See a demo of the Bootstrap theme </stories/bootstrap-demo.html>`__
+* `See a demo listing </stories/listings-demo/index.html>`__
+* `See a demo slideshow </stories/slides-demo/index.html>`__
+* `See a demo of the Bootstrap theme </stories/bootstrap-demo/index.html>`__
 
 Send feedback to info@getnikola.com!
