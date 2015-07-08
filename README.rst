@@ -65,10 +65,10 @@ Assuming you have pip installed::
 
 For optional features::
 
-    pip install 'Nikola[extras]'
+    pip install "Nikola[extras]"
 
 For tests (see tests/README.rst for more details)::
 
-    pip install 'Nikola[extras,tests]'
+    pip install "Nikola[extras,tests]"
 
 For more information, see https://getnikola.com/
