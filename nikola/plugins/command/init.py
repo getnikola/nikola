@@ -54,6 +54,7 @@ SAMPLE_CONF = {
     'BLOG_EMAIL': "joe@demo.site",
     'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
     'PRETTY_URLS': False,
+    'STRIP_INDEXES': False,
     'DEFAULT_LANG': "en",
     'TRANSLATIONS': """{
     DEFAULT_LANG: "",
@@ -102,6 +103,7 @@ SAMPLE_CONF = {
 }""",
     'REDIRECTIONS': [],
 }
+
 
 # Generate a list of supported languages here.
 # Ugly code follows.
@@ -164,12 +166,12 @@ def format_default_translations_config(additional_languages):
     return "{{\n{0}\n}}".format("\n".join(lang_paths))
 
 
-def format_navigation_links(additional_languages, default_lang, messages):
+def format_navigation_links(additional_languages, default_lang, messages, strip_indexes=False):
     """Return the string to configure NAVIGATION_LINKS."""
     f = u"""\
     {0}: (
         ("{1}/archive.html", "{2[Archive]}"),
-        ("{1}/categories/index.html", "{2[Tags]}"),
+        ("{1}/categories/{3}", "{2[Tags]}"),
         ("{1}/rss.xml", "{2[RSS feed]}"),
     ),"""
 
@@ -185,11 +187,16 @@ def format_navigation_links(additional_languages, default_lang, messages):
                 fmsg[i] = i
         return fmsg
 
+    if strip_indexes:
+        index_html = ''
+    else:
+        index_html = 'index.html'
+
     # handle the default language
-    pairs.append(f.format('DEFAULT_LANG', '', get_msg(default_lang)))
+    pairs.append(f.format('DEFAULT_LANG', '', get_msg(default_lang), index_html))
 
     for l in additional_languages:
-        pairs.append(f.format(json.dumps(l, ensure_ascii=False), '/' + l, get_msg(l)))
+        pairs.append(f.format(json.dumps(l, ensure_ascii=False), '/' + l, get_msg(l), index_html))
 
     return u'{{\n{0}\n}}'.format('\n\n'.join(pairs))
 
@@ -200,12 +207,13 @@ def prepare_config(config):
     """Parse sample config with JSON."""
     p = config.copy()
     p.update(dict((k, json.dumps(v, ensure_ascii=False)) for k, v in p.items()
-             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'INDEX_READ_MORE_LINK', 'RSS_READ_MORE_LINK', 'PRETTY_URLS')))
+             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'INDEX_READ_MORE_LINK', 'RSS_READ_MORE_LINK', 'STRIP_INDEXES', 'PRETTY_URLS')))
     # READ_MORE_LINKs require some special treatment.
     p['INDEX_READ_MORE_LINK'] = "'" + p['INDEX_READ_MORE_LINK'].replace("'", "\\'") + "'"
     p['RSS_READ_MORE_LINK'] = "'" + p['RSS_READ_MORE_LINK'].replace("'", "\\'") + "'"
     # json would make that `true` instead of `True`
     p['PRETTY_URLS'] = str(p['PRETTY_URLS'])
+    p['STRIP_INDEXES'] = str(p['STRIP_INDEXES'])
     return p
 
 
@@ -296,6 +304,7 @@ class CommandInit(Command):
 
         def prettyhandler(default, toconf):
             SAMPLE_CONF['PRETTY_URLS'] = ask_yesno('Enable pretty URLs (/page/ instead of /page.html) that don’t need web server configuration?', default=True)
+            SAMPLE_CONF['STRIP_INDEXES'] = SAMPLE_CONF['PRETTY_URLS']
 
         def lhandler(default, toconf, show_header=True):
             if show_header:
@@ -333,7 +342,7 @@ class CommandInit(Command):
             # not inherit from anywhere.
             try:
                 messages = load_messages(['base'], tr, default)
-                SAMPLE_CONF['NAVIGATION_LINKS'] = format_navigation_links(langs, default, messages)
+                SAMPLE_CONF['NAVIGATION_LINKS'] = format_navigation_links(langs, default, messages, SAMPLE_CONF['STRIP_INDEXES'])
             except nikola.utils.LanguageNotFoundError as e:
                 print("    ERROR: the language '{0}' is not supported.".format(e.lang))
                 print("    Are you sure you spelled the name correctly?  Names are case-sensitive and need to be reproduced as-is (complete with the country specifier, if any).")
