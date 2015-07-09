@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Fix links in sample post (Issue #1874)
 * Don't use deprecated Yapsy methods (Isue #1868)
 * Surpress wincing when auto is aborted during rebuilding
 * Show tags only from the current language on tag listing pages (Issue #1856)
