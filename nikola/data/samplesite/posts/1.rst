@@ -17,11 +17,11 @@ and build a site using it. Congratulations!
 
 Next steps:
 
-* `Read the manual <link://slug/handbook>`__
+* :doc:`Read the manual <handbook>`
 * `Visit the Nikola website to learn more <https://getnikola.com>`__
 * `See a demo photo gallery <link://gallery/demo>`__
-* `See a demo listing <link://slug/listings-demo>`__
-* `See a demo slideshow <link://slug/slides-demo>`__
-* `See a demo of the Bootstrap theme <link://slug/bootstrap-demo>`__
+* :doc:`See a demo listing <listings-demo>`
+* :doc:`See a demo slideshow <slides-demo>`
+* :doc:`See a demo of the Bootstrap theme <bootstrap-demo>`
 
 Send feedback to info@getnikola.com!
