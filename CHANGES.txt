@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Use provided teaser format (``*_READ_MORE_LINK``) with custom teaser text
+  (Issue #1879)
 * Delete old ``bootstrap`` theme (use ``bootstrap3`` instead)
 * Screen reader-friendly navbar collapses and dropdowns (Issue #1863)
 * Modern reST stylesheets, based in part on Bootstrap 3 (Issue #1150)
