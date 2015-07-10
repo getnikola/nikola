@@ -593,19 +593,18 @@ class Post(object):
             if teaser != data:
                 if not strip_html and show_read_more_link:
                     if TEASER_REGEXP.search(data).groups()[-1]:
-                        teaser += '<p class="more"><a href="{0}">{1}</a></p>'.format(
-                            self.permalink(lang),
-                            TEASER_REGEXP.search(data).groups()[-1])
+                        teaser_text = TEASER_REGEXP.search(data).groups()[-1]
                     else:
-                        l = self.config['RSS_READ_MORE_LINK'](lang) if rss_read_more_link else self.config['INDEX_READ_MORE_LINK'](lang)
-                        teaser += l.format(
-                            link=self.permalink(lang, query=rss_links_append_query),
-                            read_more=self.messages[lang]["Read more"],
-                            min_remaining_read=self.messages[lang]["%d min remaining to read"] % (self.remaining_reading_time),
-                            reading_time=self.reading_time,
-                            remaining_reading_time=self.remaining_reading_time,
-                            paragraph_count=self.paragraph_count,
-                            remaining_paragraph_count=self.remaining_paragraph_count)
+                        teaser_text = self.messages[lang]["Read more"]
+                    l = self.config['RSS_READ_MORE_LINK'](lang) if rss_read_more_link else self.config['INDEX_READ_MORE_LINK'](lang)
+                    teaser += l.format(
+                        link=self.permalink(lang, query=rss_links_append_query),
+                        read_more=teaser_text,
+                        min_remaining_read=self.messages[lang]["%d min remaining to read"] % (self.remaining_reading_time),
+                        reading_time=self.reading_time,
+                        remaining_reading_time=self.remaining_reading_time,
+                        paragraph_count=self.paragraph_count,
+                        remaining_paragraph_count=self.remaining_paragraph_count)
                 # This closes all open tags and sanitizes the broken HTML
                 document = lxml.html.fromstring(teaser)
                 try:

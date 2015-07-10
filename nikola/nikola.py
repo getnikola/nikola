@@ -61,8 +61,8 @@ from .plugin_categories import (
     LateTask,
     PageCompiler,
     CompilerExtension,
-    RestExtension,
     MarkdownExtension,
+    RestExtension,
     Task,
     TaskMultiplier,
     TemplateSystem,
@@ -671,13 +671,13 @@ class Nikola(object):
             "PageCompiler": PageCompiler,
             "TaskMultiplier": TaskMultiplier,
             "CompilerExtension": CompilerExtension,
-            "RestExtension": RestExtension,
             "MarkdownExtension": MarkdownExtension,
+            "RestExtension": RestExtension,
             "SignalHandler": SignalHandler,
             "ConfigPlugin": ConfigPlugin,
             "PostScanner": PostScanner,
         })
-        self.plugin_manager.setPluginInfoExtension('plugin')
+        self.plugin_manager.getPluginLocator().setPluginInfoExtension('plugin')
         extra_plugins_dirs = self.config['EXTRA_PLUGINS_DIRS']
         if sys.version_info[0] == 3:
             places = [
@@ -692,7 +692,7 @@ class Nikola(object):
                 os.path.expanduser('~/.nikola/plugins'),
             ] + [utils.sys_encode(path) for path in extra_plugins_dirs if path]
 
-        self.plugin_manager.setPluginPlaces(places)
+        self.plugin_manager.getPluginLocator().setPluginPlaces(places)
         self.plugin_manager.collectPlugins()
 
         self._activate_plugins_of_category("SignalHandler")
@@ -731,6 +731,7 @@ class Nikola(object):
             self.config['COMPILERS'][k] = sorted(list(v))
 
         # Activate all required compiler plugins
+        self.compiler_extensions = self._activate_plugins_of_category("CompilerExtension")
         for plugin_info in self.plugin_manager.getPluginsOfCategory("PageCompiler"):
             if plugin_info.name in self.config["COMPILERS"].keys():
                 self.plugin_manager.activatePluginByName(plugin_info.name)
@@ -831,6 +832,7 @@ class Nikola(object):
 
     def _activate_plugins_of_category(self, category):
         """Activate all the plugins of a given category and return them."""
+        # this code duplicated in tests/base.py
         plugins = []
         for plugin_info in self.plugin_manager.getPluginsOfCategory(category):
             if plugin_info.name in self.config.get('DISABLED_PLUGINS'):

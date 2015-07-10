@@ -36,7 +36,7 @@ Edit the post:
 Build the site:
      ``nikola build``
 
-Start the test server and open a browser (http://127.0.0.1:8000/):
+Start the test server and open a browser:
      ``nikola serve -b``
 
 
@@ -201,14 +201,14 @@ of how to "get" something for your specific operating system are left to you.
 
 The short version is::
 
-    pip install nikola
+    pip install Nikola
 
 Note that you need Python v2.7 or newer OR v3.3 or newer.
 
 Some features require **extra dependencies**.  You can install them all in bulk
 by doing::
 
-    pip install nikola[extras]
+    pip install "Nikola[extras]"
 
 Alternatively, you can install those packages one-by-one, when required (Nikola
 will tell you what packages are needed)

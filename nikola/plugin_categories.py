@@ -283,6 +283,14 @@ class PageCompiler(BasePlugin):
         # ['metadata', '\n\n', 'post content']
         return split_result[0], split_result[-1]
 
+    def get_compiler_extensions(self):
+        """Activate all the compiler extension plugins for a given compiler and return them."""
+        plugins = []
+        for plugin_info in self.site.compiler_extensions:
+            if plugin_info.plugin_object.compiler_name == self.name:
+                plugins.append(plugin_info)
+        return plugins
+
 
 class CompilerExtension(BasePlugin):
 

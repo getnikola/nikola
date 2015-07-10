@@ -105,6 +105,9 @@ class DemoBuildTest(EmptyBuildTest):
         """Fill the site with demo content."""
         self.init_command.copy_sample_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
+        src1 = os.path.join(os.path.dirname(__file__), 'data', '1-nolinks.rst')
+        dst1 = os.path.join(self.target_dir, 'posts', '1.rst')
+        shutil.copy(src1, dst1)
         # File for Issue #374 (empty post text)
         with io.open(os.path.join(self.target_dir, 'posts', 'empty.txt'), "w+", encoding="utf8") as outf:
             outf.write(
@@ -526,6 +529,9 @@ class InvariantBuildTest(EmptyBuildTest):
         """Fill the site with demo content."""
         self.init_command.copy_sample_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
+        src1 = os.path.join(os.path.dirname(__file__), 'data', '1-nolinks.rst')
+        dst1 = os.path.join(self.target_dir, 'posts', '1.rst')
+        shutil.copy(src1, dst1)
         os.system('rm "{0}/stories/creating-a-theme.rst" "{0}/stories/extending.txt" "{0}/stories/internals.txt" "{0}/stories/manual.rst" "{0}/stories/social_buttons.txt" "{0}/stories/theming.rst" "{0}/stories/upgrading-to-v6.txt"'.format(self.target_dir))
 
     def test_invariance(self):
