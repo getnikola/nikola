@@ -36,7 +36,7 @@ import docutils.readers.standalone
 import docutils.writers.html4css1
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import unicode_str, get_logger, makedirs, write_metadata
+from nikola.utils import unicode_str, get_logger, makedirs, write_metadata, STDERR_HANDLER
 
 
 class CompileRest(PageCompiler):
@@ -133,7 +133,7 @@ class CompileRest(PageCompiler):
             self.config_dependencies.append(plugin_info.name)
             plugin_info.plugin_object.short_help = plugin_info.description
 
-        self.logger = get_logger('compile_rest', site.loghandlers)
+        self.logger = get_logger('compile_rest', STDERR_HANDLER)
         if not site.debug:
             self.logger.level = 4
 

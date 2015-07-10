@@ -281,7 +281,7 @@ class Nikola(object):
         self._template_system = None
         self._THEMES = None
         self.debug = DEBUG
-        self.loghandlers = []
+        self.loghandlers = utils.STDERR_HANDLER  # TODO remove on v8
         self.colorful = config.pop('__colorful__', False)
         self.invariant = config.pop('__invariant__', False)
         self.quiet = config.pop('__quiet__', False)

@@ -40,7 +40,7 @@ import lxml.html
 import requests
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger
+from nikola.utils import get_logger, STDERR_HANDLER
 
 
 def _call_nikola_list(site):
@@ -147,7 +147,7 @@ class CommandCheck(Command):
 
     def _execute(self, options, args):
         """Check the generated site."""
-        self.logger = get_logger('check', self.site.loghandlers)
+        self.logger = get_logger('check', STDERR_HANDLER)
 
         if not options['links'] and not options['files'] and not options['clean']:
             print(self.help())

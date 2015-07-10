@@ -49,7 +49,7 @@ from blinker import signal
 from . import __version__
 from .plugin_categories import Command
 from .nikola import Nikola
-from .utils import sys_decode, sys_encode, get_root_dir, req_missing, LOGGER, STRICT_HANDLER, ColorfulStderrHandler
+from .utils import sys_decode, sys_encode, get_root_dir, req_missing, LOGGER, STRICT_HANDLER, STDERR_HANDLER, ColorfulStderrHandler
 
 if sys.version_info[0] == 3:
     import importlib.machinery
@@ -88,13 +88,18 @@ def main(args=None):
             break
 
     quiet = False
+    strict = False
     if len(args) > 0 and args[0] == 'build' and '--strict' in args:
         LOGGER.notice('Running in strict mode')
         STRICT_HANDLER.push_application()
+        strict = True
     if len(args) > 0 and args[0] == 'build' and '-q' in args or '--quiet' in args:
-        nullhandler = NullHandler()
-        nullhandler.push_application()
+        NullHandler().push_application()
         quiet = True
+    if not quiet and not strict:
+        NullHandler().push_application()
+        STDERR_HANDLER[0].push_application()
+
     global config
 
     original_cwd = os.getcwd()

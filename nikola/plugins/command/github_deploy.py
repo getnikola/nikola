@@ -33,7 +33,7 @@ from textwrap import dedent
 
 from nikola.plugin_categories import Command
 from nikola.plugins.command.check import real_scan_files
-from nikola.utils import get_logger, req_missing, makedirs, unicode_str
+from nikola.utils import get_logger, req_missing, makedirs, unicode_str, STDERR_HANDLER
 from nikola.__main__ import main
 from nikola import __version__
 
@@ -71,9 +71,7 @@ class CommandGitHubDeploy(Command):
 
     def _execute(self, command, args):
 
-        self.logger = get_logger(
-            CommandGitHubDeploy.name, self.site.loghandlers
-        )
+        self.logger = get_logger(CommandGitHubDeploy.name, STDERR_HANDLER)
 
         # Check if ghp-import is installed
         check_ghp_import_installed()

@@ -35,7 +35,7 @@ import time
 from blinker import signal
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, remove_file, unicode_str, makedirs
+from nikola.utils import get_logger, remove_file, unicode_str, makedirs, STDERR_HANDLER
 
 
 class CommandDeploy(Command):
@@ -48,7 +48,7 @@ class CommandDeploy(Command):
     logger = None
 
     def _execute(self, command, args):
-        self.logger = get_logger('deploy', self.site.loghandlers)
+        self.logger = get_logger('deploy', STDERR_HANDLER)
         # Get last successful deploy date
         timestamp_path = os.path.join(self.site.config['CACHE_FOLDER'], 'lastdeploy')
         if self.site.config['COMMENT_SYSTEM_ID'] == 'nikolademo':
