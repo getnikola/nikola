@@ -206,7 +206,7 @@ then your theme will need a custom ``messages`` folder.
 -------------------------------------------------------------------
 
 .. note::
-    The LESS and Sass compilers will be moved to the Plugins Index in
+    The LESS and Sass compilers were moved to the Plugins Index in
     Nikola v7.0.0.
 
 If you want to use those CSS extensions, you can — just store your files
