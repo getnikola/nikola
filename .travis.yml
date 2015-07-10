@@ -1,9 +1,13 @@
 before_install:
-  - "if [[ $NMODE == 'nikola' ]]; then sudo apt-get update -qq || true; fi"
-  - "if [[ $NMODE == 'nikola' ]]; then sudo apt-get --reinstall install -qq language-pack-en-base language-pack-pl-base; fi"
   - "pip install --upgrade pip wheel"
 language: python
 cache: apt
+sudo: false
+addons:
+    apt:
+        packages:
+            - language-pack-en-base
+            - language-pack-pl-base
 python:
   - "2.7"
   - "3.3"
