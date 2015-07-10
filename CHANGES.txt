@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Add ``-d``, ``--detach`` option to ``nikola serve`` (Issue #1871)
 * Use provided teaser format (``*_READ_MORE_LINK``) with custom teaser text
   (Issue #1879)
 * Delete old ``bootstrap`` theme (use ``bootstrap3`` instead)
