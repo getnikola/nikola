@@ -229,7 +229,7 @@ WRITE_TAG_CLOUD = True
 #        "blogging": "Meta-blog posts about blogging about blogging.",
 #        "open source": "My contributions to my many, varied, ever-changing, and eternal libre software projects."
 #    },
-#}
+# }
 
 
 # If you do not want to display a tag publicly, you can mark it as hidden.
@@ -272,7 +272,7 @@ HIDDEN_TAGS = ['mathjax']
 #        "blogging": "Meta-blog posts about blogging about blogging.",
 #        "open source": "My contributions to my many, varied, ever-changing, and eternal libre software projects."
 #    },
-#}
+# }
 
 # If you do not want to display a category publicly, you can mark it as hidden.
 # The category will not be displayed on the category list page.
@@ -820,7 +820,7 @@ MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
 # <input type="text" name="q" maxlength="255" results="0" placeholder="Search"/>
 # </form>
 # <!-- End of custom search -->
-#""" % SITE_URL
+# """ % SITE_URL
 
 # Use content distribution networks for jQuery, twitter-bootstrap css and js,
 # and html5shiv (for older versions of Internet Explorer)
