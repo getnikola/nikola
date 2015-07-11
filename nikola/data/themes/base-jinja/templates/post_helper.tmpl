@@ -2,7 +2,7 @@
 
 {% macro meta_translations(post) %}
     {% if translations|length > 1 %}
-        {% for langname in translations.keys() %}
+        {% for langname in translations|sort %}
             {% if langname != lang and post.is_translation_available(langname) %}
                 <link rel="alternate" hreflang="{{ langname }}" href="{{ post.permalink(langname) }}">
             {% endif %}

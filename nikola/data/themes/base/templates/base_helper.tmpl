@@ -90,7 +90,7 @@ lang="${lang}">
         ${rss_link}
     %elif generate_rss:
         %if len(translations) > 1:
-            %for language in translations:
+            %for language in sorted(translations):
                 <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${_link('rss', None, language)}">
             %endfor
         %else:
@@ -99,7 +99,7 @@ lang="${lang}">
     %endif
     %if generate_atom:
         %if len(translations) > 1:
-            %for language in translations:
+            %for language in sorted(translations):
                 <link rel="alternate" type="application/atom+xml" title="Atom (${language})" href="${_link('index_atom', None, language)}">
             %endfor
         %else:
@@ -110,7 +110,7 @@ lang="${lang}">
 
 <%def name="html_translations()">
     <ul class="translations">
-    %for langname in translations.keys():
+    %for langname in sorted(translations):
         %if langname != lang:
             <li><a href="${abs_link(_link("root", None, langname))}" rel="alternate" hreflang="${langname}">${messages("LANGUAGE", langname)}</a></li>
         %endif

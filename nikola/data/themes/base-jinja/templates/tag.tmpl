@@ -4,7 +4,7 @@
 {% block extra_head %}
     {{ super() }}
     {% if translations|length > 1 and generate_rss %}
-        {% for language in translations %}
+        {% for language in translations|sort %}
             <link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for {{ kind }} {{ tag }} ({{ language }})" href="{{ _link(kind + "_rss", tag, language) }}">
         {% endfor %}
     {% elif generate_rss %}
@@ -30,7 +30,7 @@
         {% endif %}
         <div class="metadata">
             {% if translations|length > 1 and generate_rss %}
-                {% for language in translations %}
+                {% for language in translations|sort %}
                 <p class="feedlink">
                     <a href="{{ _link(kind + "_rss", tag, language) }}" hreflang="{{ language }}" type="application/rss+xml">{{ messages('RSS feed', language) }} ({{ language }})</a>&nbsp;
                 </p>
