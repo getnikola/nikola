@@ -501,7 +501,7 @@ class CustomEncoder(json.JSONEncoder):
         try:
             return super(CustomEncoder, self).default(obj)
         except TypeError:
-            if isinstance(obj, set):
+            if isinstance(obj, (set, frozenset)):
                 return self.encode(sorted(list(obj)))
             else:
                 s = repr(obj).split('0x', 1)[0]
