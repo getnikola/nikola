@@ -25,9 +25,9 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import unicode_literals
-import io
 import datetime
 import glob
+import io
 import json
 import mimetypes
 import os
@@ -246,7 +246,7 @@ class Galleries(Task, ImageProcessor):
                         'targets': [post.translated_base_path(lang)],
                         'file_dep': post.fragment_deps(lang),
                         'actions': [(post.compile, [lang])],
-                        'uptodate': [utils.config_changed(self.kw, 'nikola.plugins.task.galleries:post')] + post.fragment_deps_uptodate(lang)
+                        'uptodate': [utils.config_changed(self.kw.copy(), 'nikola.plugins.task.galleries:post')] + post.fragment_deps_uptodate(lang)
                     }
                     context['post'] = post
                 else:
@@ -275,7 +275,7 @@ class Galleries(Task, ImageProcessor):
                             file_dep))],
                     'clean': True,
                     'uptodate': [utils.config_changed({
-                        1: self.kw,
+                        1: self.kw.copy(),
                         2: self.site.config["COMMENTS_IN_GALLERIES"],
                         3: context.copy(),
                     }, 'nikola.plugins.task.galleries:gallery')],
@@ -305,7 +305,7 @@ class Galleries(Task, ImageProcessor):
                             ))],
                         'clean': True,
                         'uptodate': [utils.config_changed({
-                            1: self.kw,
+                            1: self.kw.copy(),
                         }, 'nikola.plugins.task.galleries:rss')],
                     }, self.kw['filters'])
 
@@ -366,7 +366,7 @@ class Galleries(Task, ImageProcessor):
                 'actions': [(utils.makedirs, (output_gallery,))],
                 'targets': [output_gallery],
                 'clean': True,
-                'uptodate': [utils.config_changed(self.kw, 'nikola.plugins.task.galleries:mkdir')],
+                'uptodate': [utils.config_changed(self.kw.copy(), 'nikola.plugins.task.galleries:mkdir')],
             }
 
     def parse_index(self, gallery, input_folder, output_folder):
@@ -493,7 +493,7 @@ class Galleries(Task, ImageProcessor):
                 (utils.remove_file, (thumb_path,))
             ],
             'clean': True,
-            'uptodate': [utils.config_changed(self.kw, 'nikola.plugins.task.galleries:clean_thumb')],
+            'uptodate': [utils.config_changed(self.kw.copy(), 'nikola.plugins.task.galleries:clean_thumb')],
         }, self.kw['filters'])
 
         yield utils.apply_filters({
@@ -503,7 +503,7 @@ class Galleries(Task, ImageProcessor):
                 (utils.remove_file, (img_path,))
             ],
             'clean': True,
-            'uptodate': [utils.config_changed(self.kw, 'nikola.plugins.task.galleries:clean_file')],
+            'uptodate': [utils.config_changed(self.kw.copy(), 'nikola.plugins.task.galleries:clean_file')],
         }, self.kw['filters'])
 
     def render_gallery_index(
