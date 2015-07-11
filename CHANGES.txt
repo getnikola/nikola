@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Always return unicode in slugify (Issue #1885)
 * Remove logging handlers (Issue #1797)
 * Add ``-d``, ``--detach`` option to ``nikola serve`` (Issue #1871)
 * Use provided teaser format (``*_READ_MORE_LINK``) with custom teaser text
