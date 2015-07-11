@@ -740,7 +740,7 @@ def slugify(value, force=False):
         # We still replace some characters, though.  In particular, we need
         # to replace ? and #, which should not appear in URLs, and some
         # Windows-unsafe characters.  This list might be even longer.
-        rc = '/\\?#"\'\r\n\t*:<>|"'
+        rc = '/\\?#"\'\r\n\t*:<>|'
 
         for c in rc:
             value = value.replace(c, '-')
