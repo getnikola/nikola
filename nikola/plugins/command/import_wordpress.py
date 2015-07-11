@@ -57,7 +57,8 @@ from nikola.plugins.command import plugin
 LOGGER = utils.get_logger('import_wordpress', utils.STDERR_HANDLER)
 
 
-def install_plugin(site, plugin_name, output_dir=None):
+def install_plugin(site, plugin_name, output_dir=None, show_install_notes=False):
+    LOGGER.notice("Installing plugin '{0}'".format(plugin_name))
     plugin_installer = plugin.CommandPlugin()
     plugin_installer.set_site(site)
     options = {}
@@ -65,6 +66,7 @@ def install_plugin(site, plugin_name, output_dir=None):
         options[option['name']] = option['default']
     options['install'] = plugin_name
     options['output_dir'] = output_dir
+    options['show_install_notes'] = show_install_notes
     if not plugin_installer.execute(options=options):
         return False
     site.plugin_manager.collectPlugins()
