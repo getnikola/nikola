@@ -137,17 +137,19 @@ class CommandPlugin(Command):
             self.output_dir = os.path.expanduser('~/.nikola/plugins')
         else:
             self.output_dir = 'plugins'
+        if options.get('output_dir') is not None:
+            self.output_dir = options.get('output_dir')
 
         if list_available:
-            self.list_available(url)
+            return self.list_available(url)
         elif list_installed:
-            self.list_installed()
+            return self.list_installed()
         elif upgrade:
-            self.do_upgrade(url)
+            return self.do_upgrade(url)
         elif uninstall:
-            self.do_uninstall(uninstall)
+            return self.do_uninstall(uninstall)
         elif install:
-            self.do_install(url, install)
+            return self.do_install(url, install)
 
     def list_available(self, url):
         data = self.get_json(url)
@@ -170,6 +172,7 @@ class CommandPlugin(Command):
         plugins.sort()
         for name, path in plugins:
             print('{0} at {1}'.format(name, path))
+        return True
 
     def do_upgrade(self, url):
         LOGGER.warning('This is not very smart, it just reinstalls some plugins and hopes for the best')
@@ -198,6 +201,7 @@ class CommandPlugin(Command):
                 else:
                     path = tail
             self.do_install(url, name)
+        return True
 
     def do_install(self, url, name):
         data = self.get_json(url)
