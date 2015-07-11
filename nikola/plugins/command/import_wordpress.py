@@ -245,15 +245,6 @@ class CommandImportWordpress(Command, ImportMixin):
                 LOGGER.error("Please note that the WordPress post compiler is licensed under the GPL v2.")
                 return False
 
-        if self.use_wordpress_compiler:
-            if self.install_wordpress_compiler:
-                if not install_plugin(self.site, 'wordpress_compiler', output_dir=os.path.join(self.output_folder, 'plugins')):
-                    return False
-            else:
-                LOGGER.warn("Make sure to install the WordPress page compiler via")
-                LOGGER.warn("    nikola plugin -i wordpress_compiler")
-                LOGGER.warn("in your imported blog's folder ({0}), if you haven't installed it system-wide or user-wide. Otherwise, your newly imported blog won't compile.".format(self.output_folder))
-
         return True
 
     def _prepare(self, channel):
@@ -339,6 +330,15 @@ class CommandImportWordpress(Command, ImportMixin):
         rendered_template = conf_template.render(**prepare_config(self.context))
         self.write_configuration(self.get_configuration_output_path(),
                                  rendered_template)
+
+        if self.use_wordpress_compiler:
+            if self.install_wordpress_compiler:
+                if not install_plugin(self.site, 'wordpress_compiler', output_dir=os.path.join(self.output_folder, 'plugins')):
+                    return False
+            else:
+                LOGGER.warn("Make sure to install the WordPress page compiler via")
+                LOGGER.warn("    nikola plugin -i wordpress_compiler")
+                LOGGER.warn("in your imported blog's folder ({0}), if you haven't installed it system-wide or user-wide. Otherwise, your newly imported blog won't compile.".format(self.output_folder))
 
     @classmethod
     def read_xml_file(cls, filename):
