@@ -729,9 +729,9 @@ def slugify(value, force=False):
     if USE_SLUGIFY or force:
         # This is the standard state of slugify, which actually does some work.
         # It is the preferred style, especially for Western languages.
-        value = unidecode(value)
-        value = str(_slugify_strip_re.sub('', value).strip().lower())
-        return _slugify_hyphenate_re.sub('-', value)
+        value = unicode_str(unidecode(value))
+        value = _slugify_strip_re.sub('', value, re.UNICODE).strip().lower()
+        return _slugify_hyphenate_re.sub('-', value, re.UNICODE)
     else:
         # This is the “disarmed” state of slugify, which lets the user
         # have any character they please (be it regular ASCII with spaces,
@@ -741,7 +741,7 @@ def slugify(value, force=False):
         # We still replace some characters, though.  In particular, we need
         # to replace ? and #, which should not appear in URLs, and some
         # Windows-unsafe characters.  This list might be even longer.
-        rc = '/\\?#"\'\r\n\t*:<>|"'
+        rc = '/\\?#"\'\r\n\t*:<>|'
 
         for c in rc:
             value = value.replace(c, '-')
