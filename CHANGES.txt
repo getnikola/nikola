@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Add ``--no-server`` option to ``nikola auto`` (Issue #1883)
 * Always return unicode in slugify (Issue #1885)
 * Remove logging handlers (Issue #1797)
 * Add ``-d``, ``--detach`` option to ``nikola serve`` (Issue #1871)

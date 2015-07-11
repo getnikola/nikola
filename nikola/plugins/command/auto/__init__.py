@@ -31,6 +31,7 @@ import mimetypes
 import os
 import re
 import subprocess
+import time
 try:
     from urlparse import urlparse
 except ImportError:
@@ -77,6 +78,7 @@ class CommandAuto(Command):
     """Start debugging console."""
     name = "auto"
     logger = None
+    has_server = True
     doc_purpose = "builds and serves a site; automatically detects site changes, rebuilds, and optionally refreshes a browser"
     cmd_options = [
         {
@@ -100,7 +102,7 @@ class CommandAuto(Command):
             'short': 'b',
             'long': 'browser',
             'type': bool,
-            'help': 'Start a web browser.',
+            'help': 'Start a web browser',
             'default': False,
         },
         {
@@ -110,6 +112,13 @@ class CommandAuto(Command):
             'default': False,
             'type': bool,
             'help': 'Use IPv6',
+        },
+        {
+            'name': 'no-server',
+            'long': 'no-server',
+            'default': False,
+            'type': bool,
+            'help': 'Disable the server, automate rebuilds only'
         },
     ]
 
@@ -166,10 +175,14 @@ class CommandAuto(Command):
 
         host = options['address'].strip('[').strip(']') or dhost
 
+        # Server can be disabled (Issue #1883)
+        self.has_server = not options['no-server']
+
         # Instantiate global observer
         observer = Observer()
-        # Watch output folders and trigger reloads
-        observer.schedule(OurWatchHandler(self.do_refresh), out_folder, recursive=True)
+        if self.has_server:
+            # Watch output folders and trigger reloads
+            observer.schedule(OurWatchHandler(self.do_refresh), out_folder, recursive=True)
 
         # Watch input folders and trigger rebuilds
         for p in watched:
@@ -182,6 +195,7 @@ class CommandAuto(Command):
         observer.schedule(ConfigWatchHandler(_conf_fn, self.do_rebuild), _conf_dn, recursive=False)
 
         try:
+            self.logger.info("Watching files for changes...")
             observer.start()
         except KeyboardInterrupt:
             pass
@@ -195,29 +209,41 @@ class CommandAuto(Command):
                     return parent.serve_static(environ, start_response)
                 return super(Mixed, self).__call__(environ, start_response)
 
-        ws = make_server(
-            host, port, server_class=WSGIServer,
-            handler_class=WebSocketWSGIRequestHandler,
-            app=Mixed(handler_cls=LRSocket)
-        )
-        ws.initialize_websockets_manager()
-        self.logger.info("Serving HTTP on {0} port {1}...".format(host, port))
-        if browser:
-            if options['ipv6'] or '::' in host:
-                server_url = "http://[{0}]:{1}/".format(host, port)
-            else:
-                server_url = "http://{0}:{1}/".format(host, port)
+        if self.has_server:
+            ws = make_server(
+                host, port, server_class=WSGIServer,
+                handler_class=WebSocketWSGIRequestHandler,
+                app=Mixed(handler_cls=LRSocket)
+            )
+            ws.initialize_websockets_manager()
+            self.logger.info("Serving HTTP on {0} port {1}...".format(host, port))
+            if browser:
+                if options['ipv6'] or '::' in host:
+                    server_url = "http://[{0}]:{1}/".format(host, port)
+                else:
+                    server_url = "http://{0}:{1}/".format(host, port)
 
-            self.logger.info("Opening {0} in the default web browser...".format(server_url))
-            # Yes, this is racy
-            webbrowser.open('http://{0}:{1}'.format(host, port))
+                self.logger.info("Opening {0} in the default web browser...".format(server_url))
+                # Yes, this is racy
+                webbrowser.open('http://{0}:{1}'.format(host, port))
 
-        try:
-            ws.serve_forever()
-        except KeyboardInterrupt:
-            self.logger.info("Server is shutting down.")
-            observer.stop()
-            observer.join()
+            try:
+                ws.serve_forever()
+            except KeyboardInterrupt:
+                self.logger.info("Server is shutting down.")
+                observer.stop()
+                observer.join()
+        else:
+            # Workaround: can’t have nothing running (instant exit)
+            #    but also can’t join threads (no way to exit)
+            # The joys of threading.
+            try:
+                while True:
+                    time.sleep(1)
+            except KeyboardInterrupt:
+                self.logger.info("Shutting down.")
+                observer.stop()
+                observer.join()
 
     def do_rebuild(self, event):
         self.logger.info('REBUILDING SITE (from {0})'.format(event.src_path))
