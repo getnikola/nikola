@@ -18,7 +18,8 @@ dumb_replacements = [
     ["og: http://ogp.me/ns# \\", "og: http://ogp.me/ns#"],
     ["article: http://ogp.me/ns/article# \\", "article: http://ogp.me/ns/article#"],
     ["fb: http://ogp.me/ns/fb# \\", "fb: http://ogp.me/ns/fb#"],
-    ['dir="rtl" \\', 'dir="rtl"']
+    ['dir="rtl" \\', 'dir="rtl"'],
+    ['sorted(translations)', 'translations|sort'],
 ]
 
 dumber_replacements = [
