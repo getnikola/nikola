@@ -201,23 +201,6 @@ class CommandImportWordpress(Command, ImportMixin):
             for cat, path in cat_map.items():
                 self._category_paths[cat] = utils.join_hierarchical_category_path(path)
 
-    def _adjust_config_template(self, channel, rendered_template):
-        rendered_template = re.sub('# REDIRECTIONS = ', 'REDIRECTIONS = ',
-                                   rendered_template)
-
-        if self.timezone:
-            rendered_template = re.sub('# TIMEZONE = \'UTC\'',
-                                       'TIMEZONE = \'' + self.timezone + '\'',
-                                       rendered_template)
-
-        if self.export_categories_as_categories:
-            rendered_template = re.sub('(# |)CATEGORY_ALLOW_HIERARCHIES = (True|False)', 'CATEGORY_ALLOW_HIERARCHIES = True',
-                                       rendered_template)
-            rendered_template = re.sub('(# |)CATEGORY_OUTPUT_FLAT_HIERARCHY = (True|False)', 'CATEGORY_OUTPUT_FLAT_HIERARCHY = True',
-                                       rendered_template)
-
-        return rendered_template
-
     def _execute(self, options={}, args=[]):
         """Import a WordPress blog from an export file into a Nikola site."""
         if not args:
@@ -258,6 +241,11 @@ class CommandImportWordpress(Command, ImportMixin):
             self.extra_languages)
         self.context['REDIRECTIONS'] = self.configure_redirections(
             self.url_map)
+        if self.timezone:
+            self.context['TIMEZONE'] = self.timezone
+        if self.export_categories_as_categories:
+            self.context['CATEGORY_ALLOW_HIERARCHIES'] = True
+            self.context['CATEGORY_OUTPUT_FLAT_HIERARCHY'] = True
 
         # Add tag redirects
         for tag in self.all_tags:
@@ -274,7 +262,6 @@ class CommandImportWordpress(Command, ImportMixin):
         self.write_urlmap_csv(
             os.path.join(self.output_folder, 'url_map.csv'), self.url_map)
         rendered_template = conf_template.render(**prepare_config(self.context))
-        rendered_template = self._adjust_config_template(channel, rendered_template)
         self.write_configuration(self.get_configuration_output_path(),
                                  rendered_template)
 
