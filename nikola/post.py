@@ -438,7 +438,7 @@ class Post(object):
                 deps.extend([cand_1, cand_2])
         deps += self._get_dependencies(self._dependency_file_page[lang])
         deps += self._get_dependencies(self._dependency_file_page[None])
-        return deps
+        return sorted(deps)
 
     def deps_uptodate(self, lang):
         """Return a list of uptodate dependencies to build this post's page.
@@ -498,7 +498,7 @@ class Post(object):
         deps = [d for d in deps if os.path.exists(d)]
         deps += self._get_dependencies(self._dependency_file_fragment[lang])
         deps += self._get_dependencies(self._dependency_file_fragment[None])
-        return deps
+        return sorted(deps)
 
     def fragment_deps_uptodate(self, lang):
         """Return a list of file dependencies to build this post's fragment."""

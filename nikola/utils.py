@@ -492,13 +492,19 @@ class TemplateHookRegistry(object):
     def __str__(self):
         return '<TemplateHookRegistry: {0}>'.format(self._items)
 
+    def __repr__(self):
+        return '<TemplateHookRegistry: {0}>'.format(self.name)
+
 
 class CustomEncoder(json.JSONEncoder):
     def default(self, obj):
         try:
             return super(CustomEncoder, self).default(obj)
         except TypeError:
-            s = repr(obj).split('0x', 1)[0]
+            if isinstance(obj, set):
+                return self.encode(sorted(list(obj)))
+            else:
+                s = repr(obj).split('0x', 1)[0]
             return s
 
 
