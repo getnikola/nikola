@@ -540,7 +540,8 @@ class config_changed(tools.config_changed):
 
     def __repr__(self):
         return "Change with config: {0}".format(json.dumps(self.config,
-                                                           cls=CustomEncoder))
+                                                           cls=CustomEncoder,
+                                                           sort_keys=True))
 
 
 def get_theme_path(theme, _themes_dir='themes'):

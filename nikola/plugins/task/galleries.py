@@ -543,7 +543,7 @@ class Galleries(Task, ImageProcessor):
                 },
             })
         context['photo_array'] = photo_array
-        context['photo_array_json'] = json.dumps(photo_array)
+        context['photo_array_json'] = json.dumps(photo_array, sort_keys=True)
         self.site.render_template(template_name, output_name, context)
 
     def gallery_rss(self, img_list, dest_img_list, img_titles, lang, permalink, output_path, title):
