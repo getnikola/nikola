@@ -65,6 +65,8 @@ SAMPLE_CONF = {
     'TIMEZONE': 'UTC',
     'COMMENT_SYSTEM': 'disqus',
     'COMMENT_SYSTEM_ID': 'nikolademo',
+    'CATEGORY_ALLOW_HIERARCHIES': False,
+    'CATEGORY_OUTPUT_FLAT_HIERARCHY': False,
     'TRANSLATIONS_PATTERN': DEFAULT_TRANSLATIONS_PATTERN,
     'INDEX_READ_MORE_LINK': DEFAULT_INDEX_READ_MORE_LINK,
     'RSS_READ_MORE_LINK': DEFAULT_RSS_READ_MORE_LINK,
@@ -201,19 +203,18 @@ def format_navigation_links(additional_languages, default_lang, messages, strip_
     return u'{{\n{0}\n}}'.format('\n\n'.join(pairs))
 
 
-# In order to ensure proper escaping, all variables but the three
-# pre-formatted ones are handled by json.dumps().
+# In order to ensure proper escaping, all variables but the pre-formatted ones
+# are handled by json.dumps().
 def prepare_config(config):
     """Parse sample config with JSON."""
     p = config.copy()
-    p.update(dict((k, json.dumps(v, ensure_ascii=False)) for k, v in p.items()
-             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'INDEX_READ_MORE_LINK', 'RSS_READ_MORE_LINK', 'STRIP_INDEXES', 'PRETTY_URLS')))
+    p.update({k: json.dumps(v, ensure_ascii=False) for k, v in p.items()
+             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'INDEX_READ_MORE_LINK', 'RSS_READ_MORE_LINK')})
     # READ_MORE_LINKs require some special treatment.
     p['INDEX_READ_MORE_LINK'] = "'" + p['INDEX_READ_MORE_LINK'].replace("'", "\\'") + "'"
     p['RSS_READ_MORE_LINK'] = "'" + p['RSS_READ_MORE_LINK'].replace("'", "\\'") + "'"
-    # json would make that `true` instead of `True`
-    p['PRETTY_URLS'] = str(p['PRETTY_URLS'])
-    p['STRIP_INDEXES'] = str(p['STRIP_INDEXES'])
+    # fix booleans and None
+    p.update({k: str(v) for k, v in config.items() if isinstance(v, bool) or v is None})
     return p
 
 
