@@ -183,10 +183,12 @@ class Galleries(Task, ImageProcessor):
 
             crumbs = utils.get_crumbs(gallery, index_folder=self)
 
-            # Create index.html for each language
             for lang in self.kw['translations']:
                 # save navigation links as dependencies
                 self.kw['navigation_links|{0}'.format(lang)] = self.kw['global_context']['navigation_links'](lang)
+
+            # Create index.html for each language
+            for lang in self.kw['translations']:
 
                 dst = os.path.join(
                     self.kw['output_folder'],
@@ -268,7 +270,7 @@ class Galleries(Task, ImageProcessor):
                         (self.render_gallery_index, (
                             template_name,
                             dst,
-                            context,
+                            context.copy(),
                             dest_img_list,
                             img_titles,
                             thumbs,
