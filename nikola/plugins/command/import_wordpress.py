@@ -138,6 +138,13 @@ class CommandImportWordpress(Command, ImportMixin):
             'type': bool,
             'help': "Export comments as .wpcomment files",
         },
+        {
+            'name': 'transform_to_html',
+            'long': 'transform-to-html',
+            'default': False,
+            'type': bool,
+            'help': "Uses WordPress page compiler to transform WordPress posts directly to HTML during import",
+        }
     ]
     all_tags = set([])
 
@@ -169,16 +176,34 @@ class CommandImportWordpress(Command, ImportMixin):
         self.export_categories_as_categories = options.get('export_categories_as_categories', False)
         self.export_comments = options.get('export_comments', False)
 
+        self.transform_to_html = options.get('transform_to_html', False)
+
         self.auth = None
         if options.get('download_auth') is not None:
             username_password = options.get('download_auth')
             self.auth = tuple(username_password.split(':', 1))
             if len(self.auth) < 2:
-                print("Please specify HTTP authentication credentials in the form username:password.")
+                LOGGER.error("Please specify HTTP authentication credentials in the form username:password.")
                 return False
 
         self.separate_qtranslate_content = options.get('separate_qtranslate_content')
         self.translations_pattern = options.get('translations_pattern')
+
+        if self.transform_to_html:
+            self.wordpress_page_compiler = None
+            for plugin_info in self.site.plugin_manager.getPluginsOfCategory('PageCompiler'):
+                if plugin_info.name == 'wordpress':
+                    if not plugin_info.is_activated:
+                        self.site.plugin_manager.activatePluginByName(plugin_info.name)
+                        plugin_info.plugin_object.set_site(self.site)
+                    self.wordpress_page_compiler = plugin_info.plugin_object
+                    break
+            if not self.wordpress_page_compiler:
+                LOGGER.error("To compile WordPress posts to HTML, the WordPress post compiler is needed. You can install it via:")
+                LOGGER.error("    nikola plugin -i wordpress_compiler")
+                LOGGER.error("Please note that the WordPress post compiler is licensed under the GPL v2.")
+                return False
+
         return True
 
     def _prepare(self, channel):
@@ -283,8 +308,7 @@ class CommandImportWordpress(Command, ImportMixin):
         channel = tree.find('channel')
         return channel
 
-    @staticmethod
-    def populate_context(channel):
+    def populate_context(self, channel):
         wordpress_namespace = channel.nsmap['wp']
 
         context = SAMPLE_CONF.copy()
@@ -313,16 +337,18 @@ class CommandImportWordpress(Command, ImportMixin):
             author,
             '{{{0}}}author_display_name'.format(wordpress_namespace),
             "Joe Example")
-        context['POSTS'] = '''(
-            ("posts/*.rst", "posts", "post.tmpl"),
-            ("posts/*.txt", "posts", "post.tmpl"),
-            ("posts/*.md", "posts", "post.tmpl"),
-        )'''
-        context['PAGES'] = '''(
-            ("stories/*.rst", "stories", "story.tmpl"),
-            ("stories/*.txt", "stories", "story.tmpl"),
-            ("stories/*.md", "stories", "story.tmpl"),
-        )'''
+        extensions = ['rst', 'txt', 'md']
+        if self.transform_to_html:
+            extensions.append('html')
+        POSTS = '(\n'
+        PAGES = '(\n'
+        for extension in extensions:
+            POSTS += '    ("posts/*.{0}", "posts", "post.tmpl"),\n'.format(extension)
+            PAGES += '    ("stories/*.{0}", "stories", "story.tmpl"),\n'.format(extension)
+        POSTS += ')\n'
+        PAGES += ')\n'
+        context['POSTS'] = POSTS
+        context['PAGES'] = PAGES
         context['COMPILERS'] = '''{
         "rest": ('.txt', '.rst'),
         "markdown": ('.md', '.mdown', '.markdown'),
@@ -462,10 +488,14 @@ class CommandImportWordpress(Command, ImportMixin):
 
     def transform_content(self, content, post_format):
         if post_format == 'wp':
-            content = self.transform_code(content)
-            content = self.transform_caption(content)
-            content = self.transform_multiple_newlines(content)
-            return content, 'md'
+            if self.transform_to_html:
+                content = self.wordpress_page_compiler.compile_to_string(content)
+                return content, 'html'
+            else:
+                content = self.transform_code(content)
+                content = self.transform_caption(content)
+                content = self.transform_multiple_newlines(content)
+                return content, 'md'
         elif post_format == 'markdown':
             return content, 'md'
         elif post_format == 'none':
