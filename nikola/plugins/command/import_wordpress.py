@@ -52,8 +52,23 @@ from nikola.utils import req_missing
 from nikola.plugins.basic_import import ImportMixin, links
 from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
 from nikola.plugins.command.init import SAMPLE_CONF, prepare_config, format_default_translations_config
+from nikola.plugins.command import plugin
 
 LOGGER = utils.get_logger('import_wordpress', utils.STDERR_HANDLER)
+
+
+def install_plugin(site, plugin_name, output_dir=None):
+    plugin_installer = plugin.CommandPlugin()
+    plugin_installer.set_site(site)
+    options = {}
+    for option in plugin_installer.cmd_options:
+        options[option['name']] = option['default']
+    options['install'] = plugin_name
+    options['output_dir'] = output_dir
+    if not plugin_installer.execute(options=options):
+        return False
+    site.plugin_manager.collectPlugins()
+    return True
 
 
 class CommandImportWordpress(Command, ImportMixin):
@@ -152,8 +167,24 @@ class CommandImportWordpress(Command, ImportMixin):
             'type': bool,
             'help': "Instead of converting posts to markdown, leave them as is and use the WordPress page compiler",
         },
+        {
+            'name': 'install_wordpress_compiler',
+            'long': 'install-wordpress-compiler',
+            'default': False,
+            'type': bool,
+            'help': "Automatically installs the WordPress page compiler (either locally or in the new site) if required by other options.\nWarning: the compiler is GPL software!",
+        },
     ]
     all_tags = set([])
+
+    def _find_wordpress_compiler(self):
+        for plugin_info in self.site.plugin_manager.getPluginsOfCategory('PageCompiler'):
+            if plugin_info.name == 'wordpress':
+                if not plugin_info.is_activated:
+                    self.site.plugin_manager.activatePluginByName(plugin_info.name)
+                    plugin_info.plugin_object.set_site(self.site)
+                self.wordpress_page_compiler = plugin_info.plugin_object
+                break
 
     def _read_options(self, options, args):
         options['filename'] = args.pop(0)
@@ -185,6 +216,8 @@ class CommandImportWordpress(Command, ImportMixin):
 
         self.transform_to_html = options.get('transform_to_html', False)
         self.use_wordpress_compiler = options.get('use_wordpress_compiler', False)
+        self.install_wordpress_compiler = options.get('install_wordpress_compiler', False)
+        self.wordpress_page_compiler = None
 
         self.auth = None
         if options.get('download_auth') is not None:
@@ -200,25 +233,26 @@ class CommandImportWordpress(Command, ImportMixin):
         if self.transform_to_html and self.use_wordpress_compiler:
             LOGGER.warn("It does not make sense to combine --transform-to-html with --use-wordpress-compiler, as the first converts all posts to HTML and the latter option affects zero posts.")
 
-        if self.use_wordpress_compiler:
-            LOGGER.warn("Make sure to install the WordPress page compiler via")
-            LOGGER.warn("    nikola plugin -i wordpress_compiler")
-            LOGGER.warn("in your imported blog's folder ({0}), if you haven't installed it system-wide or user-wide. Otherwise, your newly imported blog won't compile.".format(self.output_folder))
-
         if self.transform_to_html:
-            self.wordpress_page_compiler = None
-            for plugin_info in self.site.plugin_manager.getPluginsOfCategory('PageCompiler'):
-                if plugin_info.name == 'wordpress':
-                    if not plugin_info.is_activated:
-                        self.site.plugin_manager.activatePluginByName(plugin_info.name)
-                        plugin_info.plugin_object.set_site(self.site)
-                    self.wordpress_page_compiler = plugin_info.plugin_object
-                    break
+            self._find_wordpress_compiler()
+            if not self.wordpress_page_compiler and self.install_wordpress_compiler:
+                if not install_plugin(self.site, 'wordpress_compiler', output_dir='plugins'):  # local install
+                    return False
+                self._find_wordpress_compiler()
             if not self.wordpress_page_compiler:
                 LOGGER.error("To compile WordPress posts to HTML, the WordPress post compiler is needed. You can install it via:")
                 LOGGER.error("    nikola plugin -i wordpress_compiler")
                 LOGGER.error("Please note that the WordPress post compiler is licensed under the GPL v2.")
                 return False
+
+        if self.use_wordpress_compiler:
+            if self.install_wordpress_compiler:
+                if not install_plugin(self.site, 'wordpress_compiler', output_dir=os.path.join(self.output_folder, 'plugins')):
+                    return False
+            else:
+                LOGGER.warn("Make sure to install the WordPress page compiler via")
+                LOGGER.warn("    nikola plugin -i wordpress_compiler")
+                LOGGER.warn("in your imported blog's folder ({0}), if you haven't installed it system-wide or user-wide. Otherwise, your newly imported blog won't compile.".format(self.output_folder))
 
         return True
 
