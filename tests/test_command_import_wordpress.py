@@ -172,6 +172,8 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
     def test_populate_context(self):
         channel = self.import_command.get_channel_from_file(
             self.import_filename)
+        self.import_command.transform_to_html = False
+        self.import_command.use_wordpress_compiler = False
         context = self.import_command.populate_context(channel)
 
         for required_key in ('POSTS', 'PAGES', 'COMPILERS'):
@@ -188,14 +190,16 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
     def test_importing_posts_and_attachments(self):
         channel = self.import_command.get_channel_from_file(
             self.import_filename)
-        self.import_command.context = self.import_command.populate_context(
-            channel)
         self.import_command.base_dir = ''
         self.import_command.output_folder = 'new_site'
         self.import_command.squash_newlines = True
         self.import_command.no_downloads = False
         self.import_command.export_categories_as_categories = False
         self.import_command.export_comments = False
+        self.import_command.transform_to_html = False
+        self.import_command.use_wordpress_compiler = False
+        self.import_command.context = self.import_command.populate_context(
+            channel)
 
         # Ensuring clean results
         self.import_command.url_map = {}
@@ -242,7 +246,7 @@ print sys.version
 
 The end.
 
-""")
+""", True)
 
         self.assertTrue(write_attachments_info.called)
         write_attachments_info.assert_any_call('new_site/posts/2008/07/arzt-und-pfusch-s-i-c-k.attachments.json'.replace('/', os.sep),
@@ -253,7 +257,7 @@ The end.
             'new_site/posts/2008/07/arzt-und-pfusch-s-i-c-k.md'.replace('/', os.sep),
             '''<img class="size-full wp-image-10 alignright" title="Arzt+Pfusch - S.I.C.K." src="http://some.blog/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png" alt="Arzt+Pfusch - S.I.C.K." width="210" height="209" />Arzt+Pfusch - S.I.C.K.Gerade bin ich \xfcber das Album <em>S.I.C.K</em> von <a title="Arzt+Pfusch" href="http://www.arztpfusch.com/" target="_blank">Arzt+Pfusch</a> gestolpert, welches Arzt+Pfusch zum Download f\xfcr lau anbieten. Das Album steht unter einer Creative Commons <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/de/">BY-NC-ND</a>-Lizenz.
 
-Die Ladung <em>noisebmstupidevildustrial</em> gibts als MP3s mit <a href="http://www.archive.org/download/dmp005/dmp005_64kb_mp3.zip">64kbps</a> und <a href="http://www.archive.org/download/dmp005/dmp005_vbr_mp3.zip">VBR</a>, als Ogg Vorbis und als FLAC (letztere <a href="http://www.archive.org/details/dmp005">hier</a>). <a href="http://www.archive.org/download/dmp005/dmp005-artwork.zip">Artwork</a> und <a href="http://www.archive.org/download/dmp005/dmp005-lyrics.txt">Lyrics</a> gibts nochmal einzeln zum Download.''')
+Die Ladung <em>noisebmstupidevildustrial</em> gibts als MP3s mit <a href="http://www.archive.org/download/dmp005/dmp005_64kb_mp3.zip">64kbps</a> und <a href="http://www.archive.org/download/dmp005/dmp005_vbr_mp3.zip">VBR</a>, als Ogg Vorbis und als FLAC (letztere <a href="http://www.archive.org/details/dmp005">hier</a>). <a href="http://www.archive.org/download/dmp005/dmp005-artwork.zip">Artwork</a> und <a href="http://www.archive.org/download/dmp005/dmp005-lyrics.txt">Lyrics</a> gibts nochmal einzeln zum Download.''', True)
         write_content.assert_any_call(
             'new_site/stories/kontakt.md'.replace('/', os.sep), """<h1>Datenschutz</h1>
 
@@ -273,7 +277,7 @@ Ich erhebe und speichere automatisch in meine Server Log Files Informationen, di
 
 </ul>
 
-Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammenf\xfchrung dieser Daten mit anderen Datenquellen wird nicht vorgenommen, die Daten werden einzig zu statistischen Zwecken erhoben.""")
+Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammenf\xfchrung dieser Daten mit anderen Datenquellen wird nicht vorgenommen, die Daten werden einzig zu statistischen Zwecken erhoben.""", True)
 
         self.assertTrue(len(self.import_command.url_map) > 0)
 
@@ -314,6 +318,9 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
         transform_code = mock.MagicMock()
         transform_caption = mock.MagicMock()
         transform_newlines = mock.MagicMock()
+
+        self.import_command.transform_to_html = False
+        self.import_command.use_wordpress_compiler = False
 
         with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_code', transform_code):
             with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_caption', transform_caption):

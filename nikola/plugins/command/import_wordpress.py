@@ -144,7 +144,14 @@ class CommandImportWordpress(Command, ImportMixin):
             'default': False,
             'type': bool,
             'help': "Uses WordPress page compiler to transform WordPress posts directly to HTML during import",
-        }
+        },
+        {
+            'name': 'use_wordpress_compiler',
+            'long': 'use-wordpress-compiler',
+            'default': False,
+            'type': bool,
+            'help': "Instead of converting posts to markdown, leave them as is and use the WordPress page compiler",
+        },
     ]
     all_tags = set([])
 
@@ -177,6 +184,7 @@ class CommandImportWordpress(Command, ImportMixin):
         self.export_comments = options.get('export_comments', False)
 
         self.transform_to_html = options.get('transform_to_html', False)
+        self.use_wordpress_compiler = options.get('use_wordpress_compiler', False)
 
         self.auth = None
         if options.get('download_auth') is not None:
@@ -188,6 +196,14 @@ class CommandImportWordpress(Command, ImportMixin):
 
         self.separate_qtranslate_content = options.get('separate_qtranslate_content')
         self.translations_pattern = options.get('translations_pattern')
+
+        if self.transform_to_html and self.use_wordpress_compiler:
+            LOGGER.warn("It does not make sense to combine --transform-to-html with --use-wordpress-compiler, as the first converts all posts to HTML and the latter option affects zero posts.")
+
+        if self.use_wordpress_compiler:
+            LOGGER.warn("Make sure to install the WordPress page compiler via")
+            LOGGER.warn("    nikola plugin -i wordpress_compiler")
+            LOGGER.warn("in your imported blog's folder ({0}), if you haven't installed it system-wide or user-wide. Otherwise, your newly imported blog won't compile.".format(self.output_folder))
 
         if self.transform_to_html:
             self.wordpress_page_compiler = None
@@ -349,12 +365,14 @@ class CommandImportWordpress(Command, ImportMixin):
         PAGES += ')\n'
         context['POSTS'] = POSTS
         context['PAGES'] = PAGES
-        context['COMPILERS'] = '''{
-        "rest": ('.txt', '.rst'),
-        "markdown": ('.md', '.mdown', '.markdown'),
-        "html": ('.html', '.htm')
-        }
-        '''
+        COMPILERS = '{\n'
+        COMPILERS += '''    "rest": ('.txt', '.rst'),''' + '\n'
+        COMPILERS += '''    "markdown": ('.md', '.mdown', '.markdown')''' + '\n'
+        COMPILERS += '''    "html": ('.html', '.htm'),''' + '\n'
+        if self.use_wordpress_compiler:
+            COMPILERS += '''    "wordpress": ('.wp'),''' + '\n'
+        COMPILERS += '}'
+        context['COMPILERS'] = COMPILERS
 
         return context
 
@@ -490,16 +508,18 @@ class CommandImportWordpress(Command, ImportMixin):
         if post_format == 'wp':
             if self.transform_to_html:
                 content = self.wordpress_page_compiler.compile_to_string(content)
-                return content, 'html'
+                return content, 'html', True
+            elif self.use_wordpress_compiler:
+                return content, 'wp', False
             else:
                 content = self.transform_code(content)
                 content = self.transform_caption(content)
                 content = self.transform_multiple_newlines(content)
-                return content, 'md'
+                return content, 'md', True
         elif post_format == 'markdown':
-            return content, 'md'
+            return content, 'md', True
         elif post_format == 'none':
-            return content, 'html'
+            return content, 'html', True
         else:
             return None
 
@@ -698,7 +718,7 @@ class CommandImportWordpress(Command, ImportMixin):
             default_language = self.context["DEFAULT_LANG"]
             for lang, content in content_translations.items():
                 try:
-                    content, extension = self.transform_content(content, post_format)
+                    content, extension, rewrite_html = self.transform_content(content, post_format)
                 except:
                     LOGGER.error(('Cannot interpret post "{0}" (language {1}) with post ' +
                                   'format {2}!').format(os.path.join(out_folder, slug), lang, post_format))
@@ -725,7 +745,8 @@ class CommandImportWordpress(Command, ImportMixin):
                 self.write_content(
                     os.path.join(self.output_folder,
                                  out_folder, out_content_filename),
-                    content)
+                    content,
+                    rewrite_html)
 
             if self.export_comments:
                 comments = []
