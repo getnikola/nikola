@@ -4,6 +4,21 @@ New in master
 Features
 --------
 
+* Several improvements to WordPress importer (PR #1867):
+  * Allowing to export categories and category hierarchy with
+    --export-categories-as-categories
+  * Allowing to exclude private posts, and allowing to include empty posts
+  * Allowing to use HTTP authentication for downloads with --download-auth
+    (PR #1848)
+  * Allowing to export comments with --export-comments
+  * Allowing to use WordPress page compiler to directly convert posts
+    to HTML on import with --transform-to-html
+  * Allowing to use WordPress page compiler on imported site instead of
+    converting posts to markdown with --use-wordpress-compiler
+  * Allowing to automatically install the WordPress page compiler when
+    needed with --install-wordpress-compiler
+  * Exporting information on attachments per post as JSON
+  * Exporting post status and excerpt
 * New ‘pagekind’ variable available to identify different kind of pages from theme templates
 * Add ``--no-server`` option to ``nikola auto`` (Issue #1883)
 * Always return unicode in slugify (Issue #1885)
