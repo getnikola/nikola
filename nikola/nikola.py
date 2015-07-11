@@ -1567,7 +1567,7 @@ class Nikola(object):
 
         task = {
             'name': os.path.normpath(output_name),
-            'file_dep': deps,
+            'file_dep': sorted(deps),
             'targets': [output_name],
             'actions': [(self.render_template, [post.template_name,
                                                 output_name, context])],
@@ -1581,7 +1581,8 @@ class Nikola(object):
                                    template_name, filters, extra_context):
         """Renders pages with lists of posts."""
 
-        deps = self.template_system.template_deps(template_name)
+        deps = []
+        deps += self.template_system.template_deps(template_name)
         uptodate_deps = []
         for post in posts:
             deps += post.deps(lang)
@@ -1610,7 +1611,7 @@ class Nikola(object):
         task = {
             'name': os.path.normpath(output_name),
             'targets': [output_name],
-            'file_dep': deps,
+            'file_dep': sorted(deps),
             'actions': [(self.render_template, [template_name, output_name,
                                                 context])],
             'clean': True,
