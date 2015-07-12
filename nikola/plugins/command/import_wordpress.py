@@ -79,6 +79,8 @@ def install_plugin(site, plugin_name, output_dir=None, show_install_notes=False)
         return False
     # Let the plugin manager find newly installed plugins
     site.plugin_manager.collectPlugins()
+    # Re-scan for compiler extensions
+    site.compiler_extensions = site._activate_plugins_of_category("CompilerExtension")
     return True
 
 
