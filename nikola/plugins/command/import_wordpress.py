@@ -401,9 +401,9 @@ class CommandImportWordpress(Command, ImportMixin):
             author,
             '{{{0}}}author_display_name'.format(wordpress_namespace),
             "Joe Example")
-        extensions = ['rst', 'txt', 'md']
-        if self.transform_to_html:
-            extensions.append('html')
+        extensions = ['rst', 'txt', 'md', 'html']
+        if self.use_wordpress_compiler:
+            extensions.append('wp')
         POSTS = '(\n'
         PAGES = '(\n'
         for extension in extensions:
