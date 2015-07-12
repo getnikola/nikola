@@ -453,11 +453,13 @@ class CommandImportWordpress(Command, ImportMixin):
         links[link] = '/' + dst_url
         links[url] = '/' + dst_url
 
-        return [path] + self.download_additional_image_sizes(
+        result = {}
+        result['files'] = [path] + self.download_additional_image_sizes(
             item,
             wordpress_namespace,
             os.path.dirname(url)
         )
+        return result
 
     def download_additional_image_sizes(self, item, wordpress_namespace, source_path):
         if phpserialize is None:
@@ -835,12 +837,12 @@ class CommandImportWordpress(Command, ImportMixin):
         wordpress_namespace, post_type, post_id, parent_id = self._extract_item_info(item)
 
         if post_type == 'attachment':
-            files = self.import_attachment(item, wordpress_namespace)
+            data = self.import_attachment(item, wordpress_namespace)
             # If parent was found, store relation with imported files
             if parent_id is not None and int(parent_id) != 0:
-                self.attachments[int(parent_id)][post_id] = files
+                self.attachments[int(parent_id)][post_id] = data
             else:
-                LOGGER.warn("Attachment #{0} ({1}) has no parent!".format(post_id, files))
+                LOGGER.warn("Attachment #{0} ({1}) has no parent!".format(post_id, data['files']))
 
     def write_attachments_info(self, path, attachments):
         with io.open(path, "wb") as file:
