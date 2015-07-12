@@ -180,13 +180,14 @@ class CommandImportWordpress(Command, ImportMixin):
     all_tags = set([])
 
     def _find_wordpress_compiler(self):
-        for plugin_info in self.site.plugin_manager.getPluginsOfCategory('PageCompiler'):
-            if plugin_info.name == 'wordpress':
-                if not plugin_info.is_activated:
-                    self.site.plugin_manager.activatePluginByName(plugin_info.name)
-                    plugin_info.plugin_object.set_site(self.site)
-                self.wordpress_page_compiler = plugin_info.plugin_object
-                break
+        if self.wordpress_page_compiler is not None:
+            return
+        plugin_info = self.site.plugin_manager.getPluginByName('wordpress', 'PageCompiler')
+        if plugin_info is not None:
+            if not plugin_info.is_activated:
+                self.site.plugin_manager.activatePluginByName(plugin_info.name)
+                plugin_info.plugin_object.set_site(self.site)
+            self.wordpress_page_compiler = plugin_info.plugin_object
 
     def _read_options(self, options, args):
         options['filename'] = args.pop(0)
