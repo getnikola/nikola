@@ -837,7 +837,7 @@ class CommandImportWordpress(Command, ImportMixin):
         if post_type == 'attachment':
             files = self.import_attachment(item, wordpress_namespace)
             # If parent was found, store relation with imported files
-            if parent_id is not None:
+            if parent_id is not None and int(parent_id) != 0:
                 self.attachments[int(parent_id)][post_id] = files
             else:
                 LOGGER.warn("Attachment #{0} ({1}) has no parent!".format(post_id, files))
