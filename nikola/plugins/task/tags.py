@@ -310,7 +310,7 @@ class RenderTags(Task):
         context["description"] = self._get_description(tag, is_category, lang)
         if is_category:
             context["subcategories"] = self._get_subcategories(tag)
-        context_source["pagekind"] = ["list", "tag_page"]
+        context["pagekind"] = ["list", "tag_page"]
         task = self.site.generic_post_list_renderer(
             lang,
             post_list,
