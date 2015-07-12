@@ -52,15 +52,23 @@ from nikola.utils import req_missing
 from nikola.plugins.basic_import import ImportMixin, links
 from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
 from nikola.plugins.command.init import SAMPLE_CONF, prepare_config, format_default_translations_config
-from nikola.plugins.command import plugin
 
 LOGGER = utils.get_logger('import_wordpress', utils.STDERR_HANDLER)
 
 
 def install_plugin(site, plugin_name, output_dir=None, show_install_notes=False):
     LOGGER.notice("Installing plugin '{0}'".format(plugin_name))
-    plugin_installer = plugin.CommandPlugin()
-    plugin_installer.set_site(site)
+    # Get hold of the 'plugin' plugin
+    plugin_installer_info = site.plugin_manager.getPluginByName('plugin', 'Command')
+    if plugin_installer_info is None:
+        LOGGER.error('Internal error: cannot find the "plugin" plugin which is supposed to come with Nikola!')
+        return False
+    if not plugin_installer_info.is_activated:
+        # Someone might have disabled the plugin in the `conf.py` used
+        site.plugin_manager.activatePluginByName(plugin_installer_info.name)
+        plugin_installer_info.plugin_object.set_site(site)
+    plugin_installer = plugin_installer_info.plugin_object
+    # Try to install the requested plugin
     options = {}
     for option in plugin_installer.cmd_options:
         options[option['name']] = option['default']
@@ -69,6 +77,7 @@ def install_plugin(site, plugin_name, output_dir=None, show_install_notes=False)
     options['show_install_notes'] = show_install_notes
     if not plugin_installer.execute(options=options):
         return False
+    # Let the plugin manager find newly installed plugins
     site.plugin_manager.collectPlugins()
     return True
 
