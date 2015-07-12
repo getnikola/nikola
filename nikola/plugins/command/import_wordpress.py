@@ -550,10 +550,16 @@ class CommandImportWordpress(Command, ImportMixin):
         else:
             return content
 
-    def transform_content(self, content, post_format):
+    def transform_content(self, content, post_format, attachments):
         if post_format == 'wp':
             if self.transform_to_html:
-                content = self.wordpress_page_compiler.compile_to_string(content)
+                additional_data = {}
+                if attachments is not None:
+                    additional_data['attachments'] = attachments
+                try:
+                    content = self.wordpress_page_compiler.compile_to_string(content, additional_data=additional_data)
+                except TypeError:  # old versions of the plugin don't support the additional argument
+                    content = self.wordpress_page_compiler.compile_to_string(content)
                 return content, 'html', True
             elif self.use_wordpress_compiler:
                 return content, 'wp', False
@@ -644,7 +650,7 @@ class CommandImportWordpress(Command, ImportMixin):
             tags_cats = tags + categories
         return tags_cats, other_meta
 
-    def import_item(self, item, wordpress_namespace, out_folder=None):
+    def import_postpage_item(self, item, wordpress_namespace, out_folder=None, attachments=None):
         """Takes an item from the feed and creates a post file."""
         if out_folder is None:
             out_folder = 'posts'
@@ -764,7 +770,7 @@ class CommandImportWordpress(Command, ImportMixin):
             default_language = self.context["DEFAULT_LANG"]
             for lang, content in content_translations.items():
                 try:
-                    content, extension, rewrite_html = self.transform_content(content, post_format)
+                    content, extension, rewrite_html = self.transform_content(content, post_format, attachments)
                 except:
                     LOGGER.error(('Cannot interpret post "{0}" (language {1}) with post ' +
                                   'format {2}!').format(os.path.join(out_folder, slug), lang, post_format))
@@ -811,7 +817,7 @@ class CommandImportWordpress(Command, ImportMixin):
                          ' no content.').format(title))
             return False
 
-    def process_item(self, item):
+    def _extract_item_info(self, item):
         # The namespace usually is something like:
         # http://wordpress.org/export/1.2/
         wordpress_namespace = item.nsmap['wp']
@@ -821,6 +827,10 @@ class CommandImportWordpress(Command, ImportMixin):
             item, '{{{0}}}post_id'.format(wordpress_namespace), "0"))
         parent_id = get_text_tag(
             item, '{{{0}}}post_parent'.format(wordpress_namespace), None)
+        return wordpress_namespace, post_type, post_id, parent_id
+
+    def process_item_if_attachment(self, item):
+        wordpress_namespace, post_type, post_id, parent_id = self._extract_item_info(item)
 
         if post_type == 'attachment':
             files = self.import_attachment(item, wordpress_namespace)
@@ -829,34 +839,42 @@ class CommandImportWordpress(Command, ImportMixin):
                 self.attachments[int(parent_id)][post_id] = files
             else:
                 LOGGER.warn("Attachment #{0} ({1}) has no parent!".format(post_id, files))
-        else:
+
+    def process_item_if_post_or_page(self, item):
+        wordpress_namespace, post_type, post_id, parent_id = self._extract_item_info(item)
+
+        if post_type != 'attachment':
+            # Get attachments for post
+            attachments = self.attachments.pop(post_id, None)
+            # Import item
             if post_type == 'post':
-                out_folder_slug = self.import_item(item, wordpress_namespace, 'posts')
+                out_folder_slug = self.import_postpage_item(item, wordpress_namespace, 'posts', attachments)
             else:
-                post_type = 'page'
-                out_folder_slug = self.import_item(item, wordpress_namespace, 'stories')
-            # If post was exported, store data
-            if out_folder_slug:
-                self.posts_pages[post_id] = (post_type, out_folder_slug[0], out_folder_slug[1])
+                out_folder_slug = self.import_postpage_item(item, wordpress_namespace, 'stories', attachments)
+            # Process attachment data
+            if attachments is not None:
+                # If post was exported, store data
+                if out_folder_slug:
+                    destination = os.path.join(self.output_folder, out_folder_slug[0],
+                                               out_folder_slug[1] + ".attachments.json")
+                    self.write_attachments_info(destination, attachments)
 
     def write_attachments_info(self, path, attachments):
         with io.open(path, "wb") as file:
             file.write(json.dumps(attachments).encode('utf-8'))
 
     def import_posts(self, channel):
-        self.posts_pages = {}
         self.attachments = defaultdict(dict)
+        # First process attachments
         for item in channel.findall('item'):
-            self.process_item(item)
+            self.process_item_if_attachment(item)
+        # Next process posts
+        for item in channel.findall('item'):
+            self.process_item_if_post_or_page(item)
         # Assign attachments to posts
         for post_id in self.attachments:
-            if post_id in self.posts_pages:
-                destination = os.path.join(self.output_folder, self.posts_pages[post_id][1],
-                                           self.posts_pages[post_id][2] + ".attachments.json")
-                self.write_attachments_info(destination, self.attachments[post_id])
-            else:
-                LOGGER.warn(("Found attachments for post or page #{0}, but didn't find post or page. " +
-                             "(Attachments: {1})").format(post_id, [e[0] for _, e in self.attachments[post_id].items()]))
+            LOGGER.warn(("Found attachments for post or page #{0}, but didn't find post or page. " +
+                         "(Attachments: {1})").format(post_id, [e[0] for _, e in self.attachments[post_id].items()]))
 
 
 def get_text_tag(tag, name, default):
