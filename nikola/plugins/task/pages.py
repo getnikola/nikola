@@ -50,9 +50,9 @@ class RenderPages(Task):
                 if not kw["show_untranslated_posts"] and not post.is_translation_available(lang):
                     continue
                 if post.is_post:
-                    context = {'pagekind': ['post_page',]}
+                    context = {'pagekind': ['post_page']}
                 else:
-                    context = {'pagekind': ['pages_page',]}
+                    context = {'pagekind': ['story_page']}
                 for task in self.site.generic_page_renderer(lang, post, kw["filters"], context):
                     task['uptodate'] = task['uptodate'] + [config_changed(kw, 'nikola.plugins.task.pages')]
                     task['basename'] = self.name

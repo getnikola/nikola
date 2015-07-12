@@ -1536,7 +1536,7 @@ class Nikola(object):
         context['title'] = post.title(lang)
         context['description'] = post.description(lang)
         context['permalink'] = post.permalink(lang)
-        if not 'pagekind' in context:
+        if 'pagekind' not in context:
             context['pagekind'] = ['generic_page']
         if post.use_in_feeds:
             context['enable_comments'] = True
@@ -1825,7 +1825,7 @@ class Nikola(object):
         num_pages = len(lists)
         for i, post_list in enumerate(lists):
             context = context_source.copy()
-            if not 'pagekind' in context:
+            if 'pagekind' not in context:
                 context['pagekind'] = ['index']
             ipages_i = utils.get_displayed_page_number(i, num_pages, self)
             if kw["indexes_pages"]:

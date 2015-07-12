@@ -116,7 +116,7 @@ class Indexes(Task):
                         link = link[:-index_len]
                     context["permalink"] = link
                     context["pagekind"] = ["list"]
-                    if dirnme == "/":
+                    if dirname == "/":
                         context["pagekind"].append("front_page")
 
                     for post in post_list:
