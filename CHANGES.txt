@@ -18,6 +18,8 @@ Features
 Bugfixes
 --------
 
+* Fixed superfluous rebuild problems with Python 3. Note that this will cause
+  rebuilds for most sites. (Issue #1887)
 * Fix links in sample post (Issue #1874)
 * Don't use deprecated Yapsy methods (Isue #1868)
 * Surpress wincing when auto is aborted during rebuilding
