@@ -415,7 +415,7 @@ class CommandImportWordpress(Command, ImportMixin):
         context['PAGES'] = PAGES
         COMPILERS = '{\n'
         COMPILERS += '''    "rest": ('.txt', '.rst'),''' + '\n'
-        COMPILERS += '''    "markdown": ('.md', '.mdown', '.markdown')''' + '\n'
+        COMPILERS += '''    "markdown": ('.md', '.mdown', '.markdown'),''' + '\n'
         COMPILERS += '''    "html": ('.html', '.htm'),''' + '\n'
         if self.use_wordpress_compiler:
             COMPILERS += '''    "wordpress": ('.wp'),''' + '\n'
@@ -842,6 +842,10 @@ class CommandImportWordpress(Command, ImportMixin):
             else:
                 LOGGER.warn("Attachment #{0} ({1}) has no parent!".format(post_id, files))
 
+    def write_attachments_info(self, path, attachments):
+        with io.open(path, "wb") as file:
+            file.write(json.dumps(attachments).encode('utf-8'))
+
     def process_item_if_post_or_page(self, item):
         wordpress_namespace, post_type, post_id, parent_id = self._extract_item_info(item)
 
@@ -860,10 +864,6 @@ class CommandImportWordpress(Command, ImportMixin):
                     destination = os.path.join(self.output_folder, out_folder_slug[0],
                                                out_folder_slug[1] + ".attachments.json")
                     self.write_attachments_info(destination, attachments)
-
-    def write_attachments_info(self, path, attachments):
-        with io.open(path, "wb") as file:
-            file.write(json.dumps(attachments).encode('utf-8'))
 
     def import_posts(self, channel):
         self.attachments = defaultdict(dict)
