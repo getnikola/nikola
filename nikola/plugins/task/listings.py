@@ -149,6 +149,7 @@ class Listings(Task):
                     files, alg=natsort.ns.F | natsort.ns.IC),
                 'description': title,
                 'source_link': source_link,
+                'pagekind': ['listing'],
             }
             self.site.render_template('listing.tmpl', out_name, context)
 

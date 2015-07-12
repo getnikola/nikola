@@ -1524,9 +1524,9 @@ class Nikola(object):
             sys.exit(1)
         signal('scanned').send(self)
 
-    def generic_page_renderer(self, lang, post, filters):
+    def generic_page_renderer(self, lang, post, filters, context=None):
         """Render post fragments to final HTML pages."""
-        context = {}
+        context = context.copy() if context else {}
         deps = post.deps(lang) + \
             self.template_system.template_deps(post.template_name)
         deps.extend(utils.get_asset_path(x, self.THEMES) for x in ('bundles', 'parent', 'engine'))
@@ -1536,6 +1536,8 @@ class Nikola(object):
         context['title'] = post.title(lang)
         context['description'] = post.description(lang)
         context['permalink'] = post.permalink(lang)
+        if not 'pagekind' in context:
+            context['pagekind'] = ['generic_page']
         if post.use_in_feeds:
             context['enable_comments'] = True
         else:
@@ -1823,6 +1825,8 @@ class Nikola(object):
         num_pages = len(lists)
         for i, post_list in enumerate(lists):
             context = context_source.copy()
+            if not 'pagekind' in context:
+                context['pagekind'] = ['index']
             ipages_i = utils.get_displayed_page_number(i, num_pages, self)
             if kw["indexes_pages"]:
                 indexes_pages = kw["indexes_pages"] % ipages_i

@@ -80,7 +80,10 @@ class Indexes(Task):
             indexes_title = kw['indexes_title'](lang) or kw['blog_title'](lang)
             self.number_of_pages[lang] = (len(filtered_posts) + kw['index_display_post_count'] - 1) // kw['index_display_post_count']
 
-            yield self.site.generic_index_renderer(lang, filtered_posts, indexes_title, template_name, {}, kw, 'render_indexes', page_link, page_path)
+            context = {}
+            context["pagekind"] = ["index"]
+
+            yield self.site.generic_index_renderer(lang, filtered_posts, indexes_title, template_name, context, kw, 'render_indexes', page_link, page_path)
 
         if not self.site.config["STORY_INDEX"]:
             return
@@ -112,6 +115,9 @@ class Indexes(Task):
                     if kw['strip_indexes'] and link[-(1 + index_len):] == '/' + kw['index_file']:
                         link = link[:-index_len]
                     context["permalink"] = link
+                    context["pagekind"] = ["list"]
+                    if dirnme == "/":
+                        context["pagekind"].append("front_page")
 
                     for post in post_list:
                         # If there is an index.html pending to be created from

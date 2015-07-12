@@ -219,6 +219,7 @@ class RenderTags(Task):
                 context["cat_items"] = None
             context["permalink"] = self.site.link("tag_index" if has_tags else "category_index", None, lang)
             context["description"] = context["title"]
+            context["pagekind"] = ["list", "tags_page"]
             task = self.site.generic_post_list_renderer(
                 lang,
                 [],
@@ -284,6 +285,7 @@ class RenderTags(Task):
         context_source["description"] = self._get_description(tag, is_category, lang)
         if is_category:
             context_source["subcategories"] = self._get_subcategories(tag)
+        context_source["pagekind"] = ["index", "tag_page"]
         template_name = "tagindex.tmpl"
 
         yield self.site.generic_index_renderer(lang, post_list, indexes_title, template_name, context_source, kw, str(self.name), page_link, page_path)
@@ -308,6 +310,7 @@ class RenderTags(Task):
         context["description"] = self._get_description(tag, is_category, lang)
         if is_category:
             context["subcategories"] = self._get_subcategories(tag)
+        context_source["pagekind"] = ["list", "tag_page"]
         task = self.site.generic_post_list_renderer(
             lang,
             post_list,

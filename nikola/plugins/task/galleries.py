@@ -240,6 +240,7 @@ class Galleries(Task, ImageProcessor):
                 context["permalink"] = self.site.link("gallery", gallery, lang)
                 context["enable_comments"] = self.kw['comments_in_galleries']
                 context["thumbnail_size"] = self.kw["thumbnail_size"]
+                context["pagekind"] = ["gallery_front"]
 
                 if post:
                     yield {
@@ -260,6 +261,8 @@ class Galleries(Task, ImageProcessor):
                 if post:
                     file_dep += [post.translated_base_path(l) for l in self.kw['translations']]
                     file_dep_dest += [post.translated_base_path(l) for l in self.kw['translations']]
+
+                context["pagekind"] = ["gallery_page"]
 
                 yield utils.apply_filters({
                     'basename': self.name,

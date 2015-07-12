@@ -58,6 +58,7 @@ class Archive(Task):
         context["lang"] = lang
         context["title"] = title
         context["permalink"] = self.site.link("archive", name, lang)
+        context["pagekind"] = ["list", "archive_page"]
         if posts is not None:
             context["posts"] = posts
             n = len(posts)
@@ -97,13 +98,15 @@ class Archive(Task):
             uptodate = []
             if deps_translatable is not None:
                 uptodate += [config_changed(deps_translatable, 'nikola.plugins.task.archive')]
+            context = {"archive_name": name,
+                       "is_feed_stale": kw["is_feed_stale"],
+                       "pagekind": ["index", "archive_page"]}
             yield self.site.generic_index_renderer(
                 lang,
                 posts,
                 title,
                 "archiveindex.tmpl",
-                {"archive_name": name,
-                 "is_feed_stale": kw["is_feed_stale"]},
+                context,
                 kw,
                 str(self.name),
                 page_link,
