@@ -119,6 +119,7 @@ class CommandPlugin(Command):
         upgrade = options.get('upgrade')
         list_available = options.get('list')
         list_installed = options.get('list_installed')
+        show_install_notes = options.get('show_install_notes', True)
         command_count = [bool(x) for x in (
             install,
             uninstall,
@@ -129,25 +130,28 @@ class CommandPlugin(Command):
             print(self.help())
             return
 
-        if not self.site.configured and not user_mode and install:
-            LOGGER.notice('No site found, assuming --user')
-            user_mode = True
-
-        if user_mode:
-            self.output_dir = os.path.expanduser('~/.nikola/plugins')
+        if options.get('output_dir') is not None:
+            self.output_dir = options.get('output_dir')
         else:
-            self.output_dir = 'plugins'
+            if not self.site.configured and not user_mode and install:
+                LOGGER.notice('No site found, assuming --user')
+                user_mode = True
+
+            if user_mode:
+                self.output_dir = os.path.expanduser('~/.nikola/plugins')
+            else:
+                self.output_dir = 'plugins'
 
         if list_available:
-            self.list_available(url)
+            return self.list_available(url)
         elif list_installed:
-            self.list_installed()
+            return self.list_installed()
         elif upgrade:
-            self.do_upgrade(url)
+            return self.do_upgrade(url)
         elif uninstall:
-            self.do_uninstall(uninstall)
+            return self.do_uninstall(uninstall)
         elif install:
-            self.do_install(url, install)
+            return self.do_install(url, install, show_install_notes)
 
     def list_available(self, url):
         data = self.get_json(url)
@@ -170,6 +174,7 @@ class CommandPlugin(Command):
         plugins.sort()
         for name, path in plugins:
             print('{0} at {1}'.format(name, path))
+        return True
 
     def do_upgrade(self, url):
         LOGGER.warning('This is not very smart, it just reinstalls some plugins and hopes for the best')
@@ -198,8 +203,9 @@ class CommandPlugin(Command):
                 else:
                     path = tail
             self.do_install(url, name)
+        return True
 
-    def do_install(self, url, name):
+    def do_install(self, url, name, show_install_notes=True):
         data = self.get_json(url)
         if name in data:
             utils.makedirs(self.output_dir)
@@ -256,7 +262,7 @@ class CommandPlugin(Command):
             print('You have to install those yourself or through a package '
                   'manager.')
         confpypath = os.path.join(dest_path, 'conf.py.sample')
-        if os.path.exists(confpypath):
+        if os.path.exists(confpypath) and show_install_notes:
             LOGGER.notice('This plugin has a sample config file.  Integrate it with yours in order to make this plugin work!')
             print('Contents of the conf.py.sample file:\n')
             with io.open(confpypath, 'r', encoding='utf-8') as fh:

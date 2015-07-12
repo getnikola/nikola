@@ -1908,15 +1908,47 @@ the following:
 
   This is also useful for DISQUS thread migration!
 
-* Will try to convert the content of your posts. This is *not* error free, because
-  WordPress uses some unholy mix of HTML and strange things. Currently we are treating it
-  as markdown, which does a reasonable job of it.
+* Allows you to export your comments with each post
+* Exports information on attachments per post
+* There are different methods to transfer the content of your posts:
 
-  You will find your old posts in ``new_site/posts/post-title.wp`` in case you need to fix
-  any of them.
+  - You can convert them to HTML with the WordPress page compiler plugin
+    for Nikola. This will format the posts including supported shortcodes
+    the same way as WordPress does. Use the ``--transform-to-html`` option
+    to convert your posts to HTML.
+
+    If you use this option, you do not need to install the plugin
+    permanently. You can ask Nikola to install the plugin into the subdirectory
+    ``plugins`` of the current working directory by specifying
+    the ``--install-wordpress-compiler`` option.
+
+  - You can leave the posts the way they are and use the WordPress page
+    compiler plugin to render them when building your new blog. This also
+    allows you to create new posts using the WordPress syntax, or to manually
+    add more shortcode plugins later. Use the ``--use-wordpress-compiler``
+    option to not touch your posts.
+
+    If you want to use this option, you have to install the plugin permanently.
+    You can ask Nikola to install the plugin into your new site by specifying
+    the ``--install-wordpress-compiler`` option.
+
+  - You can let Nikola convert your posts to Markdown. This is *not* error
+    free, because WordPress uses some unholy mix of HTML and strange things.
+    This is the default option and requires no plugins.
+
+  You will find your old posts in ``new_site/posts/post-title.html`` in the first case,
+  ``new_site/posts/post-title.wp`` in the second case or ``new_site/posts/post-title.md``
+  in the last case if you need to edit or fix any of them.
+
+  Please note that the page compiler currently only supports the ``[code]`` shortcode,
+  but other shortcodes can be supported via plugins.
+
+  Also note that the WordPress page compiler is licensed under GPL v2 since
+  it uses code from WordPress itself, while Nikola is licensed under the more
+  liberal MIT license.
 
 This feature is a work in progress, and the only way to improve it is to have it used for
-as many sites as possible and make it work better each time, so I am happy to get requests
+as many sites as possible and make it work better each time, so we are happy to get requests
 about it.
 
 .. [#] The dump needs to be in 1.2 format. You can check by reading it, it should say
