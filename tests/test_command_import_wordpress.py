@@ -250,8 +250,15 @@ The end.
 
         self.assertTrue(write_attachments_info.called)
         write_attachments_info.assert_any_call('new_site/posts/2008/07/arzt-und-pfusch-s-i-c-k.attachments.json'.replace('/', os.sep),
-                                               {10: ['/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png',
-                                                     '/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover-150x150.png']})
+                                               {10: {'wordpress_user_name': 'Niko',
+                                                     'files_meta': [{'width': 300, 'height': 299},
+                                                                    {'width': b'150', 'size': 'thumbnail', 'height': b'150'}],
+                                                     'excerpt': 'Arzt+Pfusch - S.I.C.K.',
+                                                     'date_utc': '2009-07-16 19:40:37',
+                                                     'content': 'Das Cover von Arzt+Pfusch - S.I.C.K.',
+                                                     'files': ['/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png',
+                                                               '/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover-150x150.png'],
+                                                      'title': 'Arzt+Pfusch - S.I.C.K.'}})
 
         write_content.assert_any_call(
             'new_site/posts/2008/07/arzt-und-pfusch-s-i-c-k.md'.replace('/', os.sep),

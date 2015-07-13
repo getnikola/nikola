@@ -17,7 +17,7 @@ Features
     converting posts to markdown with --use-wordpress-compiler
   * Allowing to automatically install the WordPress page compiler when
     needed with --install-wordpress-compiler
-  * Exporting information on attachments per post as JSON
+  * Exporting information on attachments per post as JSON (#1867 and #1888)
   * Exporting post status and excerpt
 * New ‘pagekind’ variable available to identify different kind of pages from theme templates
 * Add ``--no-server`` option to ``nikola auto`` (Issue #1883)
