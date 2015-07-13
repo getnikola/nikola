@@ -930,9 +930,9 @@ class Nikola(object):
                      len([ext_ for ext_ in exts if source_name.endswith(ext_)]) > 0]
             if len(langs) != 1:
                 if len(set(langs)) > 1:
-                    exit("Your file extension->compiler definition is"
-                         "ambiguous.\nPlease remove one of the file extensions"
-                         "from 'COMPILERS' in conf.py\n(The error is in"
+                    exit("Your file extension->compiler definition is "
+                         "ambiguous.\nPlease remove one of the file extensions "
+                         "from 'COMPILERS' in conf.py\n(The error is in "
                          "one of {0})".format(', '.join(langs)))
                 elif len(langs) > 1:
                     langs = langs[:1]
