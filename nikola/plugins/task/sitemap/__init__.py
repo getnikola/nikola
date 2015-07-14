@@ -42,6 +42,7 @@ from nikola.utils import config_changed, apply_filters
 urlset_header = """<?xml version="1.0" encoding="UTF-8"?>
 <urlset
     xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
@@ -58,6 +59,7 @@ urlset_footer = "</urlset>"
 sitemapindex_header = """<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex
     xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
@@ -118,6 +120,7 @@ class Sitemap(LateTask):
             "robots_exclusions": self.site.config["ROBOTS_EXCLUSIONS"],
             "filters": self.site.config["FILTERS"],
             "translations": self.site.config["TRANSLATIONS"],
+            "sitemap_plugin_revision": 1,
         }
 
         output = kw['output_folder']

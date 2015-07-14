@@ -33,6 +33,7 @@ Features
 Bugfixes
 --------
 
+* Add missing ``xmlns:xhtml`` namespace to sitemaps (Issue #1890)
 * Fixed superfluous rebuild problems with Python 3. Note that this will cause
   rebuilds for most sites. (Issue #1887)
 * Fix links in sample post (Issue #1874)
