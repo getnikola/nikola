@@ -75,7 +75,7 @@ def install_plugin(site, plugin_name, output_dir=None, show_install_notes=False)
     options['install'] = plugin_name
     options['output_dir'] = output_dir
     options['show_install_notes'] = show_install_notes
-    if not plugin_installer.execute(options=options):
+    if plugin_installer.execute(options=options) > 0:
         return False
     # Let the plugin manager find newly installed plugins
     site.plugin_manager.collectPlugins()

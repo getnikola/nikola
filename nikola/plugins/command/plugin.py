@@ -128,7 +128,7 @@ class CommandPlugin(Command):
             list_installed)].count(True)
         if command_count > 1 or command_count == 0:
             print(self.help())
-            return
+            return 2
 
         if options.get('output_dir') is not None:
             self.output_dir = options.get('output_dir')
@@ -159,7 +159,7 @@ class CommandPlugin(Command):
         print("------------------")
         for plugin in sorted(data.keys()):
             print(plugin)
-        return True
+        return 0
 
     def list_installed(self):
         plugins = []
@@ -174,7 +174,7 @@ class CommandPlugin(Command):
         plugins.sort()
         for name, path in plugins:
             print('{0} at {1}'.format(name, path))
-        return True
+        return 0
 
     def do_upgrade(self, url):
         LOGGER.warning('This is not very smart, it just reinstalls some plugins and hopes for the best')
@@ -199,11 +199,11 @@ class CommandPlugin(Command):
                     break
                 elif tail == '':
                     LOGGER.error("Can't find the plugins folder for path: {0}".format(p))
-                    return False
+                    return 1
                 else:
                     path = tail
             self.do_install(url, name)
-        return True
+        return 0
 
     def do_install(self, url, name, show_install_notes=True):
         data = self.get_json(url)
@@ -220,13 +220,13 @@ class CommandPlugin(Command):
                 plugin_path = utils.get_plugin_path(name)
             except:
                 LOGGER.error("Can't find plugin " + name)
-                return False
+                return 1
 
             utils.makedirs(self.output_dir)
             dest_path = os.path.join(self.output_dir, name)
             if os.path.exists(dest_path):
                 LOGGER.error("{0} is already installed".format(name))
-                return False
+                return 1
 
             LOGGER.info('Copying {0} into plugins'.format(plugin_path))
             shutil.copytree(plugin_path, dest_path)
@@ -272,7 +272,7 @@ class CommandPlugin(Command):
                         4 * ' '))
                 else:
                     print(utils.indent(fh.read(), 4 * ' '))
-        return True
+        return 0
 
     def do_uninstall(self, name):
         for plugin in self.site.plugin_manager.getAllPlugins():  # FIXME: this is repeated thrice
@@ -289,9 +289,10 @@ class CommandPlugin(Command):
                 if sure.lower().startswith('y'):
                     LOGGER.warning('Removing {0}'.format(p))
                     shutil.rmtree(p)
-                return True
+                    return 0
+                return 1
         LOGGER.error('Unknown plugin: {0}'.format(name))
-        return False
+        return 1
 
     def get_json(self, url):
         if self.json is None:
