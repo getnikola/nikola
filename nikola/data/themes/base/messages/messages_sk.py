@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "zostáva %d minút na čítanie",
-    "(active)": "",
+    "(active)": "(aktívne)",
     "Also available in:": "Tiež dostupné v:",
     "Archive": "Archív",
     "Categories": "Kategórie",
@@ -20,7 +20,7 @@ MESSAGES = {
     "Posted:": "Zverejnené:",
     "Posts about %s": "Príspevky o %s",
     "Posts for year %s": "Príspevky z roku %s",
-    "Posts for {month} {day}, {year}": "Príspevky z dňa {day}. {month} {year}",
+    "Posts for {month} {day}, {year}": "Príspevky zo dňa {day}. {month} {year}",
     "Posts for {month} {year}": "Príspevky za mesiac {month} z roku {year}",
     "Previous post": "Predchádzajúci príspevok",
     "Publication date": "Dátum zverejnenia",
@@ -29,11 +29,11 @@ MESSAGES = {
     "Read more": "Čítať ďalej",
     "Skip to main content": "Skočiť na hlavný obsah",
     "Source": "Zdroj",
-    "Subcategories:": "",
+    "Subcategories:": "Podkategórie:",
     "Tags and Categories": "Štítky a kategórie",
     "Tags": "Štítky",
-    "Write your page here.": "",
-    "Write your post here.": "",
+    "Write your page here.": "Tu napíšte svoju stránku.",
+    "Write your post here.": "Tu napíšte svoj príspevok.",
     "old posts, page %d": "staré príspevky, strana %d",
     "page %d": "stránka %d",
 }

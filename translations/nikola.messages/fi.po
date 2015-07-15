@@ -9,14 +9,15 @@
 # Translators:
 # ekari <eero.kari@gmail.com>, 2013
 # ekari <eero.kari@gmail.com>, 2013-2014
+# Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-06-24 12:06+0000\n"
-"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
-"Language-Team: Finnish (http://www.transifex.com/projects/p/nikola/language/fi/)\n"
+"PO-Revision-Date: 2015-07-13 21:20+0000\n"
+"Last-Translator: Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>\n"
+"Language-Team: Finnish (http://www.transifex.com/p/nikola/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -73,7 +74,7 @@ msgid "Newer posts"
 msgstr "Uudempia postauksia"
 
 msgid "Previous post"
-msgstr "Vanhempia postauksia"
+msgstr "Edellinen postaus"
 
 msgid "Also available in:"
 msgstr "Saatavilla myös:"
@@ -109,7 +110,7 @@ msgid "No posts found."
 msgstr "Postauksia ei löytynyt."
 
 msgid "RSS feed"
-msgstr "RSS syöte"
+msgstr "RSS-syöte"
 
 msgid "%d min remaining to read"
 msgstr "%d minuuttia lukuaikaa"
@@ -118,11 +119,11 @@ msgid "Skip to main content"
 msgstr "Hyppää sisältöön"
 
 msgid "Subcategories:"
-msgstr ""
+msgstr "Alakategoriat:"
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr ""
+msgstr "(aktiivinen)"
 
 #. Default content for a new post
 msgid "Write your post here."
