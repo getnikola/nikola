@@ -1,3 +1,11 @@
+New in master
+=============
+
+Bugfixes
+--------
+
+Minor improvements in the extending document.
+
 New in v7.6.1
 =============
 
