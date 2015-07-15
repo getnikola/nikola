@@ -12,7 +12,7 @@ In goes content, out comes a website, ready to deploy.
 .. image:: http://img.shields.io/travis/getnikola/nikola.svg
    :target: https://travis-ci.org/getnikola/nikola
 
-.. image:: http://img.shields.io/coveralls/getnikola/nikola.svg
+.. image:: http://img.shields.io/coveralls/getnikola/nikola.png
   :target: https://coveralls.io/r/getnikola/nikola?branch=master
 
 .. image:: http://img.shields.io/badge/license-MIT-green.svg
