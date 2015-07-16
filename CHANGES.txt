@@ -33,6 +33,8 @@ Features
 Bugfixes
 --------
 
+* Use ``http`` as fallback in plugin/theme installers if a SSL error occurs
+  (Issue getnikola/nikola-themes#49)
 * Add missing ``xmlns:xhtml`` namespace to sitemaps (Issue #1890)
 * Fixed superfluous rebuild problems with Python 3. Note that this will cause
   rebuilds for most sites. (Issue #1887)
