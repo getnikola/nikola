@@ -30,6 +30,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 import requests
 
 import pygments
@@ -209,9 +210,18 @@ class CommandPlugin(Command):
         data = self.get_json(url)
         if name in data:
             utils.makedirs(self.output_dir)
-            LOGGER.info('Downloading: ' + data[name])
+            url = data[name]
+            LOGGER.info("Downloading '{0}'".format(url))
+            try:
+                zip_data = requests.get(url).content
+            except requests.exceptions.SSLError:
+                LOGGER.warning("SSL error, using http instead of https (press ^C to abort)")
+                time.sleep(1)
+                url = url.replace('http', 'https', 1)
+                zip_data = requests.get(url).content
+
             zip_file = io.BytesIO()
-            zip_file.write(requests.get(data[name]).content)
+            zip_file.write(zip_data)
             LOGGER.info('Extracting: {0} into {1}/'.format(name, self.output_dir))
             utils.extract_all(zip_file, self.output_dir)
             dest_path = os.path.join(self.output_dir, name)
@@ -296,5 +306,11 @@ class CommandPlugin(Command):
 
     def get_json(self, url):
         if self.json is None:
-            self.json = requests.get(url).json()
+            try:
+                self.json = requests.get(url).json()
+            except requests.exceptions.SSLError:
+                LOGGER.warning("SSL error, using http instead of https (press ^C to abort)")
+                time.sleep(1)
+                url = url.replace('http', 'https', 1)
+                self.json = requests.get(url).json()
         return self.json
