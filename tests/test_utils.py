@@ -18,13 +18,13 @@ class dummy(object):
 
 class GetMetaTest(unittest.TestCase):
     def test_getting_metadata_from_content(self):
-        file_metadata = [".. title: Nikola needs more tests!\n",
-                         ".. slug: write-tests-now\n",
-                         ".. date: 2012/09/15 19:52:05\n",
-                         ".. tags:\n",
-                         ".. link:\n",
-                         ".. description:\n",
-                         "Post content\n"]
+        file_metadata = ".. title: Nikola needs more tests!\n"\
+                        ".. slug: write-tests-now\n"\
+                        ".. date: 2012/09/15 19:52:05\n"\
+                        ".. tags:\n"\
+                        ".. link:\n"\
+                        ".. description:\n"\
+                        "Post content\n"
 
         opener_mock = mock.mock_open(read_data=file_metadata)
         opener_mock.return_value.readlines.return_value = file_metadata
@@ -45,13 +45,13 @@ class GetMetaTest(unittest.TestCase):
         self.assertTrue(nsm)
 
     def test_get_title_from_rest(self):
-        file_metadata = [".. slug: write-tests-now\n",
-                         ".. date: 2012/09/15 19:52:05\n",
-                         ".. tags:\n",
-                         ".. link:\n",
-                         ".. description:\n",
-                         "Post Title\n",
-                         "----------\n"]
+        file_metadata = ".. slug: write-tests-now\n"\
+                        ".. date: 2012/09/15 19:52:05\n"\
+                        ".. tags:\n"\
+                        ".. link:\n"\
+                        ".. description:\n\n"\
+                        "Post Title\n"\
+                        "----------\n"
 
         opener_mock = mock.mock_open(read_data=file_metadata)
         opener_mock.return_value.readlines.return_value = file_metadata
@@ -72,11 +72,11 @@ class GetMetaTest(unittest.TestCase):
         self.assertTrue(nsm)
 
     def test_get_title_from_fname(self):
-        file_metadata = [".. slug: write-tests-now\n",
-                         ".. date: 2012/09/15 19:52:05\n",
-                         ".. tags:\n",
-                         ".. link:\n",
-                         ".. description:\n"]
+        file_metadata = ".. slug: write-tests-now\n"\
+                        ".. date: 2012/09/15 19:52:05\n"\
+                        ".. tags:\n"\
+                        ".. link:\n"\
+                        ".. description:\n"
 
         opener_mock = mock.mock_open(read_data=file_metadata)
         opener_mock.return_value.readlines.return_value = file_metadata
@@ -97,12 +97,12 @@ class GetMetaTest(unittest.TestCase):
         self.assertTrue(nsm)
 
     def test_use_filename_as_slug_fallback(self):
-        file_metadata = [".. title: Nikola needs more tests!\n",
-                         ".. date: 2012/09/15 19:52:05\n",
-                         ".. tags:\n",
-                         ".. link:\n",
-                         ".. description:\n",
-                         "Post content\n"]
+        file_metadata = ".. title: Nikola needs more tests!\n"\
+                        ".. date: 2012/09/15 19:52:05\n"\
+                        ".. tags:\n"\
+                        ".. link:\n"\
+                        ".. description:\n\n"\
+                        "Post content\n"
 
         opener_mock = mock.mock_open(read_data=file_metadata)
         opener_mock.return_value.readlines.return_value = file_metadata
@@ -113,7 +113,6 @@ class GetMetaTest(unittest.TestCase):
 
         with mock.patch('nikola.post.io.open', opener_mock, create=True):
             meta, nsm = get_meta(post, 'Slugify this')
-
         self.assertEqual('Nikola needs more tests!', meta['title'])
         self.assertEqual('slugify-this', meta['slug'])
         self.assertEqual('2012/09/15 19:52:05', meta['date'])
