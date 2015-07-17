@@ -249,7 +249,7 @@ class TranslatableSettingsTest(unittest.TestCase):
         except NameError:  # Python 3
             u = str(S)
 
-        cn = S()      #   no language specified
+        cn = S()      # no language specified
         cr = S('xx')  # real language specified
         cf = S('zz')  # fake language specified
 
