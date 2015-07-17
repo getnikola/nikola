@@ -4,7 +4,6 @@ New in master
 Bugfixes
 --------
 
-* Support  Mock 1.1.4 (Issue #1894)
 * Fix reSt and markdown title extraction from documents (Issue #1895)
 * Minor improvements in the extending document.
 * Re-add the hack to kill nikola auto on ^C (Issue #1893)
