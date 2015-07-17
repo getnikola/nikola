@@ -4,7 +4,8 @@ New in master
 Bugfixes
 --------
 
-Minor improvements in the extending document.
+* Minor improvements in the extending document.
+* Re-add the hack to kill nikola auto on ^C (Issue #1893)
 
 New in v7.6.1
 =============

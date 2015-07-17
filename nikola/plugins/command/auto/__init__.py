@@ -231,8 +231,9 @@ class CommandAuto(Command):
                 ws.serve_forever()
             except KeyboardInterrupt:
                 self.logger.info("Server is shutting down.")
-                observer.stop()
-                observer.join()
+                # This is a hack, but something is locking up in a futex
+                # and exit() doesn't work.
+                os.kill(os.getpid(), 15)
         else:
             # Workaround: can’t have nothing running (instant exit)
             #    but also can’t join threads (no way to exit)
@@ -242,8 +243,9 @@ class CommandAuto(Command):
                     time.sleep(1)
             except KeyboardInterrupt:
                 self.logger.info("Shutting down.")
-                observer.stop()
-                observer.join()
+                # This is a hack, but something is locking up in a futex
+                # and exit() doesn't work.
+                os.kill(os.getpid(), 15)
 
     def do_rebuild(self, event):
         self.logger.info('REBUILDING SITE (from {0})'.format(event.src_path))
