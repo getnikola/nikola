@@ -254,7 +254,7 @@ class CommandAuto(Command):
         errord = error.decode('utf-8')
         if p.wait() != 0:
             self.logger.error(errord)
-            error_signal.send(error=error)
+            error_signal.send(error=errord)
         else:
             print(errord)
 
