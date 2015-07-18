@@ -285,7 +285,7 @@ class CommandAuto(Command):
                 start_response('200 OK', [('Content-type', mimetype)])
                 return [self.inject_js(mimetype, fd.read())]
         start_response('404 ERR', [])
-        return [self.inject_js('text/html', ERROR_N.format(404).format(uri))]
+        return [self.inject_js('text/html', ERROR_N.format(404).format(uri).encode('utf-8'))]
 
     def inject_js(self, mimetype, data):
         """Inject livereload.js in HTML files."""
