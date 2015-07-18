@@ -275,7 +275,7 @@ class CommandAuto(Command):
 
         if p_uri.path == '/robots.txt':
             start_response('200 OK', [('Content-type', 'text/plain')])
-            return ['User-Agent: *\nDisallow: /\n']
+            return ['User-Agent: *\nDisallow: /\n'.encode('utf-8')]
         elif os.path.isfile(f_path):
             with open(f_path, 'rb') as fd:
                 start_response('200 OK', [('Content-type', mimetype)])
