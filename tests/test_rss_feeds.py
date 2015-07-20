@@ -91,9 +91,12 @@ class RSSFeedTest(unittest.TestCase):
                     # lxml will complain if the encoding is specified in the
                     # xml when running with unicode strings.
                     # We do not include this in our content.
-                    open_handle = opener_mock()
-                    file_content = [call[1][0]
-                                    for call in open_handle.mock_calls[1:-1]][0]
+                    try:
+                        file_content = [
+                            call[1][0]
+                            for call in opener_mock.mock_calls[2:-1]][0]
+                    except IndexError:
+                        import pdb; pdb.set_trace()
                     splitted_content = file_content.split('\n')
                     self.encoding_declaration = splitted_content[0]
                     content_without_encoding_declaration = splitted_content[1:]

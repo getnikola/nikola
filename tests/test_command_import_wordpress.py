@@ -2,8 +2,6 @@
 from __future__ import unicode_literals, absolute_import
 
 import os
-import sys
-
 
 import unittest
 import mock
@@ -441,21 +439,18 @@ newlines.
         self.assertTrue(self.import_command.name in config_path_with_timestamp)
 
     def test_write_content_does_not_detroy_text(self):
-        content = b"""<h1>Installation</h1>
-Follow the instructions <a title="Installing Jenkins" href="https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins">described here</a>.
-
-<h1>Plugins</h1>
-There are many plugins.
-<h2>Violations</h2>
-You can use the <a title="Jenkins Plugin: Violations" href="https://wiki.jenkins-ci.org/display/JENKINS/Violations">Violations</a> plugin."""
+        content = b"""FOO"""
         open_mock = mock.mock_open()
         with mock.patch('nikola.plugins.basic_import.open', open_mock, create=True):
             self.import_command.write_content('some_file', content)
 
-        open_mock.assert_called_once_with('some_file', 'wb+')
-        call_context = open_mock()
-        call_context.write.assert_called_once_with(
-            content.join([b'<html><body>', b'</body></html>']))
+        #import pdb; pdb.set_trace()
+        open_mock.assert_has_calls([
+            mock.call(u'some_file', u'wb+'),
+            mock.call().__enter__(),
+            mock.call().write(b'<html><body><p>FOO</p></body></html>'),
+            mock.call().__exit__(None, None, None)]
+        )
 
     def test_configure_redirections(self):
         """

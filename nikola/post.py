@@ -853,10 +853,12 @@ def _get_metadata_from_file(meta_data):
     False
     >>> 'title' in g(["",".. title: FooBar"])  # for #520
     True
+    >>> 'title' in g([".. foo: bar","","FooBar", "------"])  # for #1895
+    True
 
     """
     meta = {}
-
+    seen_meta_flag = False
     re_md_title = re.compile(r'^{0}([^{0}].*)'.format(re.escape('#')))
     # Assuming rst titles are going to be at least 4 chars long
     # otherwise this detects things like ''' wich breaks other markups.
@@ -868,7 +870,7 @@ def _get_metadata_from_file(meta_data):
         # and since we are here because it's a 1-file post
         # let's be flexible on what we accept, so, skip empty
         # first lines.
-        if not line and i > 0:
+        if not line and not seen_meta_flag and i > 0:
             break
         if 'title' not in meta:
             match = re_meta(line, 'title')
@@ -888,6 +890,7 @@ def _get_metadata_from_file(meta_data):
         match = re_meta(line)
         if match[0]:
             meta[match[0]] = match[1]
+            seen_meta_flag = True
 
     return meta
 
