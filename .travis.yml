@@ -27,7 +27,7 @@ install:
 # We run tests and nikola (to see if the command is executable) OR flake8.
 # We run `nikola` and `nikola help` because things may break due to human
 # errors in argument parsing (cf. 96e78dd)
-# WARNING: if you edit this, make sure to replicate your changes in dodo.py.
+# WARNING: if you edit this, make sure to replicate your changes in dodo.py and appveyor.yml.
 script:
   - "if [[ $NMODE == 'nikola' ]]; then py.test --doctest-modules nikola/; fi"
   - "if [[ $NMODE == 'nikola' ]]; then py.test --cov nikola --cov-report term-missing tests/; fi"
