@@ -836,36 +836,23 @@ def get_metadata_from_file(source_path, config=None, lang=None):
 
 
 def _get_metadata_from_file(meta_data):
-    """Parse file contents and obtain metadata.
-
-    >>> g = _get_metadata_from_file
-    >>> list(g([]).values())
-    []
-    >>> str(g(["======","FooBar","======"])["title"])
-    'FooBar'
-    >>> str(g(["FooBar","======"])["title"])
-    'FooBar'
-    >>> str(g(["#FooBar"])["title"])
-    'FooBar'
-    >>> str(g([".. title: FooBar"])["title"])
-    'FooBar'
-    >>> 'title' in g(["","",".. title: FooBar"])
-    False
-    >>> 'title' in g(["",".. title: FooBar"])  # for #520
-    True
-    >>> 'title' in g([".. foo: bar","","FooBar", "------"])  # for #1895
-    True
-    >>> 1 == 0
-    True
-
     """
+    Extract metadata from a post's source file.
+    """
+    meta = {}
+    if not meta_data:
+        return meta
+    
+    re_md_title = re.compile(r'^{0}([^{0}].*)'.format(re.escape('#')))
+    # Assuming rst titles are going to be at least 4 chars long
+    # otherwise this detects things like ''' wich breaks other markups.
+    re_rst_title = re.compile(r'^([{0}]{{4,}})'.format(re.escape(
+        string.punctuation)))
 
     # Skip up to one empty line at the beginning (for txt2tags)
-
     if not meta_data[0]:
         meta_data = meta_data[1:]
 
-    meta = {}
 
     # First, get metadata from the beginning of the file,
     # up to first empty line

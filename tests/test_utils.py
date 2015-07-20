@@ -322,5 +322,18 @@ class TranslatableSettingsTest(unittest.TestCase):
         self.assertEqual(inp['zz'], cn)
 
 
+def test_get_metadata_from_file():
+    # These were doctests and not running :-P
+    from nikola.post import _get_metadata_from_file
+    g = _get_metadata_from_file
+    assert list(g([]).values()) == []
+    assert str(g(["======","FooBar","======"])["title"]) == 'FooBar'
+    assert str(g(["FooBar","======"])["title"]) == 'FooBar'
+    assert str(g(["#FooBar"])["title"]) == 'FooBar'
+    assert str(g([".. title: FooBar"])["title"]) == 'FooBar'
+    assert 'title' not in g(["","",".. title: FooBar"])
+    assert 'title' in g(["",".. title: FooBar"])
+    assert 'title' in g([".. foo: bar","","FooBar", "------"])
+
 if __name__ == '__main__':
     unittest.main()
