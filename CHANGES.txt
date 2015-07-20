@@ -4,7 +4,7 @@ New in master
 Bugfixes
 --------
 
-* Fix reSt and markdown title extraction from documents (Issue #1895)
+* Fix reSt and markdown title extraction from documents (Issue #1895, #1898)
 * Minor improvements in the extending document.
 * Re-add the hack to kill nikola auto on ^C (Issue #1893)
 

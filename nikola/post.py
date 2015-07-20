@@ -857,40 +857,38 @@ def _get_metadata_from_file(meta_data):
     True
 
     """
+
+    # Skip up to one empty line at the beginning (for txt2tags)
+
+    if not meta_data[0]:
+        meta_data = meta_data[1:]
+
     meta = {}
-    seen_meta_flag = False
-    re_md_title = re.compile(r'^{0}([^{0}].*)'.format(re.escape('#')))
-    # Assuming rst titles are going to be at least 4 chars long
-    # otherwise this detects things like ''' wich breaks other markups.
-    re_rst_title = re.compile(r'^([{0}]{{4,}})'.format(re.escape(
-        string.punctuation)))
+
+    # First, get metadata from the beginning of the file,
+    # up to first empty line
 
     for i, line in enumerate(meta_data):
-        # txt2tags requires an empty line at the beginning
-        # and since we are here because it's a 1-file post
-        # let's be flexible on what we accept, so, skip empty
-        # first lines.
-        if not line and not seen_meta_flag and i > 0:
+        if not line:
             break
-        if 'title' not in meta:
-            match = re_meta(line, 'title')
-            if match[0]:
-                meta['title'] = match[1]
-        if 'title' not in meta:
-            if re_rst_title.findall(line) and i > 0:
-                meta['title'] = meta_data[i - 1].strip()
-        if 'title' not in meta:
-            if (re_rst_title.findall(line) and i >= 0 and
-                    re_rst_title.findall(meta_data[i + 2])):
-                meta['title'] = meta_data[i + 1].strip()
-        if 'title' not in meta:
-            if re_md_title.findall(line):
-                meta['title'] = re_md_title.findall(line)[0]
-
         match = re_meta(line)
         if match[0]:
             meta[match[0]] = match[1]
             seen_meta_flag = True
+
+    # If we have no title, try to get it from document
+    if 'title' not in meta:
+        for j, line in enumerate(meta_data[i:]):
+            if re_rst_title.findall(line) and i > 0:
+                meta['title'] = meta_data[i - 1].strip()
+                break
+            if (re_rst_title.findall(line) and i >= 0 and
+                    re_rst_title.findall(meta_data[i + 2])):
+                meta['title'] = meta_data[i + 1].strip()
+                break
+            if re_md_title.findall(line):
+                meta['title'] = re_md_title.findall(line)[0]
+                break
 
     return meta
 
