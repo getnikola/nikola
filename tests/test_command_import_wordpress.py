@@ -444,7 +444,6 @@ newlines.
         with mock.patch('nikola.plugins.basic_import.open', open_mock, create=True):
             self.import_command.write_content('some_file', content)
 
-        #import pdb; pdb.set_trace()
         open_mock.assert_has_calls([
             mock.call(u'some_file', u'wb+'),
             mock.call().__enter__(),

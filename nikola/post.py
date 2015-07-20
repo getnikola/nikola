@@ -855,6 +855,8 @@ def _get_metadata_from_file(meta_data):
     True
     >>> 'title' in g([".. foo: bar","","FooBar", "------"])  # for #1895
     True
+    >>> 1 == 0
+    True
 
     """
 
