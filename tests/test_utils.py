@@ -27,7 +27,6 @@ class GetMetaTest(unittest.TestCase):
                         "Post content\n"
 
         opener_mock = mock.mock_open(read_data=file_metadata)
-        opener_mock.return_value.readlines.return_value = file_metadata
 
         post = dummy()
         post.source_path = 'file_with_metadata'
@@ -54,7 +53,6 @@ class GetMetaTest(unittest.TestCase):
                         "----------\n"
 
         opener_mock = mock.mock_open(read_data=file_metadata)
-        opener_mock.return_value.readlines.return_value = file_metadata
 
         post = dummy()
         post.source_path = 'file_with_metadata'
@@ -79,7 +77,6 @@ class GetMetaTest(unittest.TestCase):
                         ".. description:\n"
 
         opener_mock = mock.mock_open(read_data=file_metadata)
-        opener_mock.return_value.readlines.return_value = file_metadata
 
         post = dummy()
         post.source_path = 'file_with_metadata'
@@ -105,7 +102,6 @@ class GetMetaTest(unittest.TestCase):
                         "Post content\n"
 
         opener_mock = mock.mock_open(read_data=file_metadata)
-        opener_mock.return_value.readlines.return_value = file_metadata
 
         post = dummy()
         post.source_path = 'Slugify this'
