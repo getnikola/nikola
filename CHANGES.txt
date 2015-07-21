@@ -1,10 +1,14 @@
 New in master
 =============
 
+Features
+--------
+
 Bugfixes
 --------
 
-* Fix reSt and markdown title extraction from documents (Issue #1895, #1898)
+* Fix PRETTY_URLS prompt for Windows (Issue #1901)
+* Fix reST and Markdown title extraction from documents (Issue #1895, #1898)
 * Minor improvements in the extending document.
 * Re-add the hack to kill nikola auto on ^C (Issue #1893)
 

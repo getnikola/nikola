@@ -304,7 +304,7 @@ class CommandInit(Command):
             SAMPLE_CONF['SITE_URL'] = answer
 
         def prettyhandler(default, toconf):
-            SAMPLE_CONF['PRETTY_URLS'] = ask_yesno('Enable pretty URLs (/page/ instead of /page.html) that don’t need web server configuration?', default=True)
+            SAMPLE_CONF['PRETTY_URLS'] = ask_yesno('Enable pretty URLs (/page/ instead of /page.html) that don\'t need web server configuration?', default=True)
             SAMPLE_CONF['STRIP_INDEXES'] = SAMPLE_CONF['PRETTY_URLS']
 
         def lhandler(default, toconf, show_header=True):
