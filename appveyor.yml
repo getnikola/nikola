@@ -8,7 +8,7 @@ init:
   - "ECHO %PYTHON%"
   - ps: "ls C:/Python*"
 install:
-  - "%PYTHON%/Scripts/pip.exe install -r requirements-tests.txt"
+  - "%PYTHON%/Scripts/pip.exe install -r requirements-extras.txt pytest mock freezegun"
   - "%PYTHON%/Scripts/pip.exe install ."
 
 test_script:
