@@ -2,7 +2,7 @@
 {% import 'base_helper.tmpl' as base with context %}
 
 {% macro html_header() %}
-    <header id="header" role="banner">
+    <header id="header">
         {{ html_site_title() }}
         {{ html_translation_header() }}
         {{ html_navigation_links() }}
@@ -28,7 +28,7 @@
 {% endmacro %}
 
 {% macro html_navigation_links() %}
-    <nav id="menu" role="navigation">
+    <nav id="menu">
     <ul>
     {% for url, text in navigation_links[lang] %}
         {% if isinstance(url, tuple) %}
