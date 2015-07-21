@@ -27,6 +27,7 @@
 from __future__ import print_function, absolute_import, unicode_literals
 import io
 import datetime
+import dateutil.tz
 import os
 try:
     from urlparse import urljoin, urlparse
@@ -120,6 +121,7 @@ class Sitemap(LateTask):
             "robots_exclusions": self.site.config["ROBOTS_EXCLUSIONS"],
             "filters": self.site.config["FILTERS"],
             "translations": self.site.config["TRANSLATIONS"],
+            "tzinfo": self.site.config['__tzinfo__'],
             "sitemap_plugin_revision": 1,
         }
 
@@ -296,7 +298,11 @@ class Sitemap(LateTask):
         if self.site.invariant:
             return '2038-01-01'
         else:
-            return datetime.datetime.fromtimestamp(os.stat(p).st_mtime).isoformat().split('T')[0]
+            # RFC 3339 (web ISO 8601 profile) represented in UTC with Zulu
+            # zone desgignator as recommeded for sitemaps. Second and
+            # microsecond precision is stripped for compatibility.
+            lastmod = datetime.datetime.utcfromtimestamp(os.stat(p).st_mtime).replace(tzinfo=dateutil.tz.gettz('UTC'), second=0, microsecond=0).isoformat().replace('+00:00', 'Z')
+            return lastmod
 
 if __name__ == '__main__':
     import doctest

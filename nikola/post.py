@@ -314,10 +314,16 @@ class Post(object):
 
     def formatted_date(self, date_format, date=None):
         """Return the formatted date, as unicode."""
-        if date:
-            fmt_date = date.strftime(date_format)
+
+        date = date if date else self.date
+
+        if date_format == 'webiso':
+            # Formatted after RFC 3339 (web ISO 8501 profile) with Zulu
+            # zone desgignator for times in UTC and no microsecond precision.
+            fmt_date = date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
         else:
-            fmt_date = self.date.strftime(date_format)
+            fmt_date = date.strftime(date_format)
+
         # Issue #383, this changes from py2 to py3
         if isinstance(fmt_date, bytes_str):
             fmt_date = fmt_date.decode('utf8')
