@@ -976,6 +976,8 @@ def get_meta(post, file_metadata_regexp=None, unslugify_titles=False, lang=None)
                                                          file_metadata_regexp,
                                                          unslugify_titles))
 
+    compiler_meta = {}
+
     if getattr(post, 'compiler', None):
         compiler_meta = post.compiler.read_metadata(post, file_metadata_regexp, unslugify_titles, lang)
         meta.update(compiler_meta)
