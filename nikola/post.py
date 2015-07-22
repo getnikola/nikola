@@ -980,8 +980,9 @@ def get_meta(post, file_metadata_regexp=None, unslugify_titles=False, lang=None)
         compiler_meta = post.compiler.read_metadata(post, file_metadata_regexp, unslugify_titles, lang)
         meta.update(compiler_meta)
 
-    if not post.is_two_file:
+    if not post.is_two_file and not compiler_meta:
         # Meta file has precedence over file, which can contain garbage.
+        # Moreover, we should not to talk to the file if we have compiler meta.
         meta.update(get_metadata_from_file(post.source_path, config, lang))
 
     if lang is None:
