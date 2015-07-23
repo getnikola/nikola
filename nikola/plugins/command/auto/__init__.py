@@ -248,6 +248,11 @@ class CommandAuto(Command):
                 os.kill(os.getpid(), 15)
 
     def do_rebuild(self, event):
+        fname = os.path.basename(event.src_path)
+        if (fname.endswith('~') or
+                fname.startswith('.') or
+                os.path.isdir(event.src_path)):  # Skip on folders, these are usually duplicates
+            return
         self.logger.info('REBUILDING SITE (from {0})'.format(event.src_path))
         p = subprocess.Popen(self.cmd_arguments, stderr=subprocess.PIPE)
         error = p.stderr.read()
