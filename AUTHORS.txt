@@ -1,106 +1,105 @@
-Agustin Henze <https://github.com/agustinhenze>
-Alberto Berti <https://github.com/azazel75>
-Alex Popescu <https://github.com/al3xandru>
-Alex Walters <https://github.com/tritium21>
-Andreas Linz <https://github.com/KLINGTdotNET>
-Areski Belaid <https://github.com/areski>
-Aru Sahni <https://github.com/arusahni>
-Aurelien Naldi <https://github.com/aurelien-naldi>
-Ben Mather <https://github.com/bwhmather>
-Boris Kaul <https://github.com/localvoid>
-Brandon W. Maister <https://github.com/quodlibetor>
-Bussonnier Matthias <https://gtihub.com/carreau>
-Carsten Grohmann <https://github.com/CarstenGrohmann>
-Casey M. Bessette <https://github.com/caseybessette>
-Chris Lee <https://github.com/clee>
-Chris Warrick <https://github.com/Kwpolska>
-Claudio Canepa <https://github.com/ccanepa>
-Damien Tournoud <https://github.com/damz>
-Damián Avila <https://github.com/damianavila>
-Daniel Aleksandersen <https://github.com/Aeyoun>
-Daniel Devine <https://github.com/DDevine>
-Daniel F. Moisset <https://github.com/dmoisset>
-David Beath <https://github.com/DBeath>
-Dhruv Baldawa <https://github.com/dhruvbaldawa>
-Dirk Engling <https://github.com/erdgeist>
-Dmitry Verkhoturov <https://github.com/paskal>
-Duncan Lock <https://github.com/dflock>
-Edinei Cavalcanti <https://github.com/neiesc>
-Eduardo Schettino <https://github.com/schettino72>
-Edwin Steele <https://github.com/edwinsteele>
-Emilien Klein <https://github.com/e2jk>
-Evgeni Golov <https://github.com/evgeni>
-Felix Fontein <https://github.com/felixfontein>
-Felix Schwarz <https://github.com/FelixSchwarz>
-Grzegorz Śliwiński <https://github.com/fizyk>
-Guillermo O. Freschi <https://github.com/Tordek>
-Hardening <https://github.com/hardening>
-Ivan Teoh <https://github.com/ivanteoh>
-John Kristensen <https://github.com/jerrykan>
-Joshua Barratt <https://github.com/jbarratt>
-Juan Pedro Fisanotti <https://github.com/fisadev>
-Kade For <https://github.com/kadefor>
-Kay Hayen <https://github.com/kayhayen>
-Leandro Poblet <https://github.com/DoctorMalboro>
-Luis Miguel Morillas <https://github.com/lmorillas>
-Manuel Kaufmann <https://github.com/humitos>
-Marcelo MD <https://github.com/marcelomd>
-Marcos Dione <https://github.com/StyXman>
-Mariano Guerra <https://github.com/marianoguerra>
-Mario Pozzo <https://github.com/camboris>
-Mark Eichin <https://github.com/eichin>
-Martin Bless <https://github.com/marble>
-Martin Wimpress <https://github.com/wimpr1m>
-Martín Gaitán <https://github.com/mgaitan>
-Matias Novoa <https://github.com/mattgaviota>
-Michael Joseph <https://github.com/michaeljoseph>
-Michael McNeil Forbes <https://github.com/mforbes>
-Michal Petrucha <https://github.com/koniiiik>
-Miguel Ángel García <https://github.com/magmax>
-Neil MartinsenBurrell <https://github.com/neilmb>
-Niko Wenselowski <https://github.com/okin>
-Nikola Kotur <https://github.com/kotnik>
-Ondřej Grover <https://github.com/smartass101>
-Onno Broekmans <https://github.com/onnodb>
-Pablo Seminario <https://github.com/pabluk>
-Patrick Wildt <https://github.com/Bluerise>
-Paul Ivanov <https://github.com/ivanov>
-Pelle Nilsson <https://github.com/pellenilsson>
-Pierpaolo Da Fieno <https://github.com/numshub>
-Puneeth Chaganti <https://github.com/punchagan>
-Raimon Esteve <https://github.com/raimonesteve>
-Ramiro Morales <https://github.com/ramiro>
-Roberto Alsina <https://github.com/ralsina>
-Rodrigo Bistolfi <https://github.com/rbistolfi>
-Roger Binns <https://github.com/rogerbinns>
-Roman Faizullin <https://github.com/faizrr>
-Roman Imankulov <https://github.com/imankulov>
-Santiago Pestarini <https://github.com/quijot>
-Sean Pue <https://github.com/seanpue>
-Simon van der Veldt <https://github.com/simonvanderveldt>
-Stefan Näwe <https://github.com/snaewe>
-Thibauld Nion <https://github.com/tibonihoo>
-Thomas Burette <https://github.com/tburette>
-Tim Chase <https://github.com/Gumnos>
-Tolu Sonaike <https://github.com/tolusonaike>
-Troy Toman <https://github.com/troytoman>
-Udo Spallek <https://github.com/udono>
-Yaşar Arabacı <https://github.com/yasar11732>
-Yasuhiko Shiga <https://github.com/quoth>
-Zhaojun Meng <https://github.com/zhaojunmeng>
-dastagg <https://github.com/dastagg>
-dastagg <https://github.com/dastagg>
-ermeaney <https://github.com/ermeaney>
-follower <https://github.com/follower>
-lbiaggi <https://github.com/lbiaggi>
-mrabbitt <https://github.com/mrabbitt>
-nlaurens <https://github.com/nlaurens>
-notfoss <https://github.com/notfoss>
-phora <https://github.com/phora>
-pmav99 <https://github.com/pmav99>
-pwm1234 <https://github.com/pwm1234>
-rafacarrascosa <https://github.com/rafacarrascosa>
-yarko <https://github.com/yarko>
-小明 <https://github.com/dongweiming>
-Brad Miller <https://github.com/bnmnetp>
-
+* `Agustin Henze <https://github.com/agustinhenze>`_
+* `Alberto Berti <https://github.com/azazel75>`_
+* `Alex Popescu <https://github.com/al3xandru>`_
+* `Alex Walters <https://github.com/tritium21>`_
+* `Andreas Linz <https://github.com/KLINGTdotNET>`_
+* `Areski Belaid <https://github.com/areski>`_
+* `Aru Sahni <https://github.com/arusahni>`_
+* `Aurelien Naldi <https://github.com/aurelien-naldi>`_
+* `Ben Mather <https://github.com/bwhmather>`_
+* `Boris Kaul <https://github.com/localvoid>`_
+* `Brandon W. Maister <https://github.com/quodlibetor>`_
+* `Bussonnier Matthias <https://gtihub.com/carreau>`_
+* `Carsten Grohmann <https://github.com/CarstenGrohmann>`_
+* `Casey M. Bessette <https://github.com/caseybessette>`_
+* `Chris Lee <https://github.com/clee>`_
+* `Chris Warrick <https://github.com/Kwpolska>`_
+* `Claudio Canepa <https://github.com/ccanepa>`_
+* `Damien Tournoud <https://github.com/damz>`_
+* `Damián Avila <https://github.com/damianavila>`_
+* `Daniel Aleksandersen <https://github.com/Aeyoun>`_
+* `Daniel Devine <https://github.com/DDevine>`_
+* `Daniel F. Moisset <https://github.com/dmoisset>`_
+* `David Beath <https://github.com/DBeath>`_
+* `Dhruv Baldawa <https://github.com/dhruvbaldawa>`_
+* `Dirk Engling <https://github.com/erdgeist>`_
+* `Dmitry Verkhoturov <https://github.com/paskal>`_
+* `Duncan Lock <https://github.com/dflock>`_
+* `Edinei Cavalcanti <https://github.com/neiesc>`_
+* `Eduardo Schettino <https://github.com/schettino72>`_
+* `Edwin Steele <https://github.com/edwinsteele>`_
+* `Emilien Klein <https://github.com/e2jk>`_
+* `Evgeni Golov <https://github.com/evgeni>`_
+* `Felix Fontein <https://github.com/felixfontein>`_
+* `Felix Schwarz <https://github.com/FelixSchwarz>`_
+* `Grzegorz Śliwiński <https://github.com/fizyk>`_
+* `Guillermo O. Freschi <https://github.com/Tordek>`_
+* `Hardening <https://github.com/hardening>`_
+* `Ivan Teoh <https://github.com/ivanteoh>`_
+* `John Kristensen <https://github.com/jerrykan>`_
+* `Joshua Barratt <https://github.com/jbarratt>`_
+* `Juan Pedro Fisanotti <https://github.com/fisadev>`_
+* `Kade For <https://github.com/kadefor>`_
+* `Kay Hayen <https://github.com/kayhayen>`_
+* `Leandro Poblet <https://github.com/DoctorMalboro>`_
+* `Luis Miguel Morillas <https://github.com/lmorillas>`_
+* `Manuel Kaufmann <https://github.com/humitos>`_
+* `Marcelo MD <https://github.com/marcelomd>`_
+* `Marcos Dione <https://github.com/StyXman>`_
+* `Mariano Guerra <https://github.com/marianoguerra>`_
+* `Mario Pozzo <https://github.com/camboris>`_
+* `Mark Eichin <https://github.com/eichin>`_
+* `Martin Bless <https://github.com/marble>`_
+* `Martin Wimpress <https://github.com/wimpr1m>`_
+* `Martín Gaitán <https://github.com/mgaitan>`_
+* `Matias Novoa <https://github.com/mattgaviota>`_
+* `Michael Joseph <https://github.com/michaeljoseph>`_
+* `Michael McNeil Forbes <https://github.com/mforbes>`_
+* `Michal Petrucha <https://github.com/koniiiik>`_
+* `Miguel Ángel García <https://github.com/magmax>`_
+* `Neil MartinsenBurrell <https://github.com/neilmb>`_
+* `Niko Wenselowski <https://github.com/okin>`_
+* `Nikola Kotur <https://github.com/kotnik>`_
+* `Ondřej Grover <https://github.com/smartass101>`_
+* `Onno Broekmans <https://github.com/onnodb>`_
+* `Pablo Seminario <https://github.com/pabluk>`_
+* `Patrick Wildt <https://github.com/Bluerise>`_
+* `Paul Ivanov <https://github.com/ivanov>`_
+* `Pelle Nilsson <https://github.com/pellenilsson>`_
+* `Pierpaolo Da Fieno <https://github.com/numshub>`_
+* `Puneeth Chaganti <https://github.com/punchagan>`_
+* `Raimon Esteve <https://github.com/raimonesteve>`_
+* `Ramiro Morales <https://github.com/ramiro>`_
+* `Roberto Alsina <https://github.com/ralsina>`_
+* `Rodrigo Bistolfi <https://github.com/rbistolfi>`_
+* `Roger Binns <https://github.com/rogerbinns>`_
+* `Roman Faizullin <https://github.com/faizrr>`_
+* `Roman Imankulov <https://github.com/imankulov>`_
+* `Santiago Pestarini <https://github.com/quijot>`_
+* `Sean Pue <https://github.com/seanpue>`_
+* `Simon van der Veldt <https://github.com/simonvanderveldt>`_
+* `Stefan Näwe <https://github.com/snaewe>`_
+* `Thibauld Nion <https://github.com/tibonihoo>`_
+* `Thomas Burette <https://github.com/tburette>`_
+* `Tim Chase <https://github.com/Gumnos>`_
+* `Tolu Sonaike <https://github.com/tolusonaike>`_
+* `Troy Toman <https://github.com/troytoman>`_
+* `Udo Spallek <https://github.com/udono>`_
+* `Yaşar Arabacı <https://github.com/yasar11732>`_
+* `Yasuhiko Shiga <https://github.com/quoth>`_
+* `Zhaojun Meng <https://github.com/zhaojunmeng>`_
+* `dastagg <https://github.com/dastagg>`_
+* `dastagg <https://github.com/dastagg>`_
+* `ermeaney <https://github.com/ermeaney>`_
+* `follower <https://github.com/follower>`_
+* `lbiaggi <https://github.com/lbiaggi>`_
+* `mrabbitt <https://github.com/mrabbitt>`_
+* `nlaurens <https://github.com/nlaurens>`_
+* `notfoss <https://github.com/notfoss>`_
+* `phora <https://github.com/phora>`_
+* `pmav99 <https://github.com/pmav99>`_
+* `pwm1234 <https://github.com/pwm1234>`_
+* `rafacarrascosa <https://github.com/rafacarrascosa>`_
+* `yarko <https://github.com/yarko>`_
+* `小明 <https://github.com/dongweiming>`_
+* `Brad Miller <https://github.com/bnmnetp>`_
