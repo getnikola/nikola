@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Remove empty directories with nikola check --clean-files (Issue #1873)
+
 Bugfixes
 --------
 

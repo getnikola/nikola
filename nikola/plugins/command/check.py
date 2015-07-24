@@ -313,5 +313,19 @@ class CommandCheck(Command):
     def clean_files(self):
         only_on_output, _ = real_scan_files(self.site)
         for f in only_on_output:
+            self.logger.info('removed: {0}'.format(f))
             os.unlink(f)
+
+        # Find empty directories and remove them
+        output_folder = self.site.config['OUTPUT_FOLDER']
+        all_dirs = []
+        for root, dirs, files in os.walk(output_folder, followlinks=True):
+            all_dirs.append(root)
+        all_dirs.sort(key=len, reverse=True)
+        for d in all_dirs:
+            try:
+                os.rmdir(d)
+                self.logger.info('removed: {0}/'.format(d))
+            except OSError:
+                pass
         return True
