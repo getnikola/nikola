@@ -31,6 +31,7 @@ import mimetypes
 import os
 import re
 import subprocess
+import sys
 import time
 try:
     from urlparse import urlparse
@@ -43,7 +44,7 @@ import wsgiref.util
 from blinker import signal
 try:
     from ws4py.websocket import WebSocket
-    from ws4py.server.wsgirefserver import WSGIServer, WebSocketWSGIRequestHandler
+    from ws4py.server.wsgirefserver import WSGIServer, WebSocketWSGIRequestHandler, WebSocketWSGIHandler
     from ws4py.server.wsgiutils import WebSocketWSGIApplication
     from ws4py.messaging import TextMessage
 except ImportError:
@@ -406,3 +407,22 @@ class ConfigWatchHandler(FileSystemEventHandler):
         """Call the provided function on any event."""
         if event._src_path == self.configuration_filename:
             self.function(event)
+
+
+# Monkeypatch to hide Broken Pipe Errors
+
+f = WebSocketWSGIHandler.finish_response
+
+if sys.version_info[0] == 3:
+    EX = BrokenPipeError  # NOQA
+else:
+    EX = IOError
+
+
+def finish_response(self):
+    try:
+        f(self)
+    except EX:  # On Python3 this is a BrokenPipeException
+        pass
+
+WebSocketWSGIHandler.finish_response = finish_response
