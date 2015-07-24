@@ -422,7 +422,7 @@ else:
 def finish_response(self):
     try:
         f(self)
-    except EX:  # On Python3 this is a BrokenPipeException
+    except EX:  # Client closed the connection, not a real error
         pass
 
 WebSocketWSGIHandler.finish_response = finish_response

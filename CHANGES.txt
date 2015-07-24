@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Avoid Broken Pipe error in nikola auto (Issue #1906)
 * Don't auto-rebuild on changes to ".foo" or "foo~" or changes in folders.
 * auto should also rebuild in response to move events
 * Don’t get metadata from file if compiler-specific metadata exist (Issue #1904)
