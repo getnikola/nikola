@@ -248,12 +248,15 @@ class CommandAuto(Command):
                 os.kill(os.getpid(), 15)
 
     def do_rebuild(self, event):
-        fname = os.path.basename(event.src_path)
+        # Move events have a dest_path, some editors like gedit use a
+        # move on larger save operations for write protection
+        event_path = event.dest_path if hasattr(event, 'dest_path') else event.src_path
+        fname = os.path.basename(event_path)
         if (fname.endswith('~') or
                 fname.startswith('.') or
-                os.path.isdir(event.src_path)):  # Skip on folders, these are usually duplicates
+                os.path.isdir(event_path)):  # Skip on folders, these are usually duplicates
             return
-        self.logger.info('REBUILDING SITE (from {0})'.format(event.src_path))
+        self.logger.info('REBUILDING SITE (from {0})'.format(event_path))
         p = subprocess.Popen(self.cmd_arguments, stderr=subprocess.PIPE)
         error = p.stderr.read()
         errord = error.decode('utf-8')
@@ -266,7 +269,7 @@ class CommandAuto(Command):
     def do_refresh(self, event):
         # Move events have a dest_path, some editors like gedit use a
         # move on larger save operations for write protection
-        event_path = event.dest_path if event.dest_path else event.src_path
+        event_path = event.dest_path if hasattr(event, 'dest_path') else event.src_path
         self.logger.info('REFRESHING: {0}'.format(event_path))
         p = os.path.relpath(event_path, os.path.abspath(self.site.config['OUTPUT_FOLDER']))
         refresh_signal.send(path=p)
