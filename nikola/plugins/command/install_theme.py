@@ -100,7 +100,7 @@ class CommandInstallTheme(Command):
         except requests.exceptions.SSLError:
             LOGGER.warning("SSL error, using http instead of https (press ^C to abort)")
             time.sleep(1)
-            url = url.replace('http', 'https', 1)
+            url = url.replace('https', 'http', 1)
             data = requests.get(url).json()
         if listing:
             print("Themes:")
@@ -136,7 +136,7 @@ class CommandInstallTheme(Command):
             except requests.exceptions.SSLError:
                 LOGGER.warning("SSL error, using http instead of https (press ^C to abort)")
                 time.sleep(1)
-                url = url.replace('http', 'https', 1)
+                url = url.replace('https', 'http', 1)
                 zip_data = requests.get(url).content
 
             zip_file = io.BytesIO()
