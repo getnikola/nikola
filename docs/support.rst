@@ -13,12 +13,13 @@ Help and Support
 ================
 
 1. A `mailing list`_, nikola-discuss on Google Groups exists.
-2. There is an IRC channel, #nikola on Freenode.  You can find many
+2. There is an IRC channel: #nikola on Freenode.  You can find many
    developers and volunteers (users) there which are there to provide
-   help, if they are around and read your message.
+   help, if they are around and read your message.  The channel is
+   `publicly logged <https://irclogs.getnikola.com/>`_.
 3. You can also contact `@GetNikola <http://twitter.com/GetNikola>`_ on
    Twitter.
-4. If you are experiencing a bug, [1]_ you should report it on GitHub (see
+4. If you are experiencing a bug, you should report it on GitHub (see
    below).
 
 Plugins and Themes
@@ -46,7 +47,7 @@ the `mailing list`_, especially if they require further discussion.
 Administrativia
 ===============
 
-If you are in need of getting administrativia [2]_ resolved, you may want
+If you are in need of getting administrativia resolved, you may want
 to e-mail info@getnikola.com and therefore contact the people behind the
 project.  Note that this email **may not** be used for support matters.
 Messages are forwarded to all three administrators, the names and
@@ -55,6 +56,8 @@ find below.
 
 Administrators
 --------------
+
+.. class:: table table-bordered
 
 +----------------+-----------------+-----------+-----------------------+
 | Name           | GitHub Nickname | Location  | E-mail                |
@@ -65,9 +68,6 @@ Administrators
 +----------------+-----------------+-----------+-----------------------+
 | Chris Warrick  | Kwpolska        | Poland    | chris@getnikola.com   |
 +----------------+-----------------+-----------+-----------------------+
-
-.. [1] `As defined on Wikipedia. <http://en.wikipedia.org/wiki/Software_bug>`_
-.. [2] `administrative matters <http://en.wiktionary.org/wiki/administrativia>`_
 
 .. _mailing list: http://groups.google.com/group/nikola-discuss
 .. _Issue tracker: https://github.com/getnikola/nikola/issues
