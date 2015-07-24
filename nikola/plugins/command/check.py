@@ -313,7 +313,7 @@ class CommandCheck(Command):
     def clean_files(self):
         only_on_output, _ = real_scan_files(self.site)
         for f in only_on_output:
-            self.logger.info('removed: %s' % f)
+            self.logger.info('removed: {0}'.format(f))
             os.unlink(f)
 
         # Find empty directories and remove them
@@ -325,7 +325,7 @@ class CommandCheck(Command):
         for d in all_dirs:
             try:
                 os.rmdir(d)
-                self.logger.info('removed: %s/' % d)
+                self.logger.info('removed: {0}/'.format(d))
             except OSError:
                 pass
         return True
