@@ -259,8 +259,11 @@ class CommandAuto(Command):
             print(errord)
 
     def do_refresh(self, event):
-        self.logger.info('REFRESHING: {0}'.format(event.src_path))
-        p = os.path.relpath(event.src_path, os.path.abspath(self.site.config['OUTPUT_FOLDER']))
+        # Move events have a dest_path, some editors like gedit use a
+        # move on larger save operations for write protection
+        event_path = event.dest_path if event.dest_path else event.src_path
+        self.logger.info('REFRESHING: {0}'.format(event_path))
+        p = os.path.relpath(event_path, os.path.abspath(self.site.config['OUTPUT_FOLDER']))
         refresh_signal.send(path=p)
 
     def serve_static(self, environ, start_response):
