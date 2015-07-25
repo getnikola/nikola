@@ -10,6 +10,7 @@
 * `Boris Kaul <https://github.com/localvoid>`_
 * `Brandon W. Maister <https://github.com/quodlibetor>`_
 * `Bussonnier Matthias <https://gtihub.com/carreau>`_
+* `Carlos Martín Sánchez <https://github.com/carlosvin>`_
 * `Carsten Grohmann <https://github.com/CarstenGrohmann>`_
 * `Casey M. Bessette <https://github.com/caseybessette>`_
 * `Chris Lee <https://github.com/clee>`_

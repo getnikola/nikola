@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Make the Google Search example prettier, integrating well with
+  Bootstrap 3 (Issue #1912)
 * Add categories filter to post list directive (via Issue #1889)
 * Remove empty directories with nikola check --clean-files (Issue #1873)
 
