@@ -54,7 +54,7 @@ class PostList(Directive):
     Post List
     =========
     :Directive Arguments: None.
-    :Directive Options: lang, start, stop, reverse, sort, tags, template, id
+    :Directive Options: lang, start, stop, reverse, sort, tags, categories, slugs, all, template, id
     :Directive Content: None.
 
     Provides a reStructuredText directive to create a list of posts.
@@ -87,6 +87,10 @@ class PostList(Directive):
         Filter posts to show only posts having at least one of the ``tags``.
         Defaults to None.
 
+    ``categories`` : string [, string...]
+        Filter posts to show only posts having one of the ``categories``.
+        Defaults to None.
+
     ``slugs`` : string [, string...]
         Filter posts to show only posts having at least one of the ``slugs``.
         Defaults to None.
@@ -113,6 +117,7 @@ class PostList(Directive):
         'reverse': directives.flag,
         'sort': directives.unchanged,
         'tags': directives.unchanged,
+        'categories': directives.unchanged,
         'slugs': directives.unchanged,
         'all': directives.flag,
         'lang': directives.unchanged,
@@ -126,6 +131,8 @@ class PostList(Directive):
         reverse = self.options.get('reverse', False)
         tags = self.options.get('tags')
         tags = [t.strip().lower() for t in tags.split(',')] if tags else []
+        categories = self.options.get('categories')
+        categories = [c.strip().lower() for c in categories.split(',')] if categories else []
         slugs = self.options.get('slugs')
         slugs = [s.strip() for s in slugs.split(',')] if slugs else []
         show_all = self.options.get('all', False)
@@ -144,6 +151,9 @@ class PostList(Directive):
             timeline = [p for p in self.site.timeline]
         else:
             timeline = [p for p in self.site.timeline if p.use_in_feeds]
+
+        if categories:
+            timeline = [p for p in timeline if p.meta('category', lang=lang).lower() in categories]
 
         for post in timeline:
             if tags:

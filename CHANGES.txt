@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Add categories filter to post list directive (via Issue #1889)
 * Remove empty directories with nikola check --clean-files (Issue #1873)
 
 Bugfixes
