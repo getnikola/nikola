@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Include .php files in sitemaps
 * Retry all client errors (4xx) to HEAD as GET reques when checking remote links
 * Graceful fallback in ``nikola serve --detach`` on Windows (Issue #1913)
 * Don't auto-rebuild on changes to ".foo" or "foo~" or changes in folders
