@@ -224,8 +224,8 @@ class CommandCheck(Command):
                     # Check the remote link works
                     req_headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0 (Nikola)'}  # I’m a real boy!
                     resp = requests.head(target, headers=req_headers)
-                    # HEAD is not understood, so retry with a full GET after a half a second
-                    if resp.status_code == 405:
+                    # Retry client errors (4xx) as GET requests
+                    if resp.status_code => 400 and resp.status_code <= 499:
                         time.sleep(0.5)
                         resp = requests.get(target, headers=req_headers)
 

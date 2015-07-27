@@ -12,7 +12,7 @@ Features
 Bugfixes
 --------
 
-* Retry HEAD as GET requests if server returns 405 when checking remote links
+* Retry all client errors (4xx) to HEAD as GET reques when checking remote links
 * Graceful fallback in ``nikola serve --detach`` on Windows (Issue #1913)
 * Don't auto-rebuild on changes to ".foo" or "foo~" or changes in folders
 * auto should also rebuild in response to move events
