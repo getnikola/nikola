@@ -29,6 +29,7 @@ from collections import defaultdict
 import os
 import re
 import sys
+import time
 try:
     from urllib import unquote
     from urlparse import urlparse, urljoin, urldefrag
@@ -223,6 +224,11 @@ class CommandCheck(Command):
                     # Check the remote link works
                     req_headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0 (Nikola)'}  # I’m a real boy!
                     resp = requests.head(target, headers=req_headers)
+                    # HEAD is not understood, so retry with a full GET after a half a second
+                    if resp.status_code == 405:
+                        time.sleep(0.5)
+                        resp = requests.get(target, headers=req_headers)
+
                     self.checked_remote_targets[target] = resp.status_code
                     if resp.status_code > 399:  # Error
                         self.logger.warn("Broken link in {0}: {1} [Error {2}]".format(filename, target, resp.status_code))
