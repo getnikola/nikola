@@ -24,7 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Mako template handlers"""
+"""Mako template handler."""
+
 from __future__ import unicode_literals, print_function, absolute_import
 import os
 import shutil
@@ -43,7 +44,8 @@ LOGGER = get_logger('mako', STDERR_HANDLER)
 
 
 class MakoTemplates(TemplateSystem):
-    """Wrapper for Mako templates."""
+
+    """Support for Mako templates."""
 
     name = "mako"
 
@@ -54,6 +56,7 @@ class MakoTemplates(TemplateSystem):
     cache_dir = None
 
     def get_deps(self, filename):
+        """Get dependencies for a template (internal function)."""
         text = util.read_file(filename)
         lex = lexer.Lexer(text=text, filename=filename)
         lex.parse()
@@ -67,7 +70,7 @@ class MakoTemplates(TemplateSystem):
         return deps
 
     def set_directories(self, directories, cache_folder):
-        """Set directories and create a template lookup."""
+        """Create a new template lookup with set directories."""
         cache_dir = os.path.join(cache_folder, '.mako.tmp')
         # Workaround for a Mako bug, Issue #825
         if sys.version_info[0] == 2:
@@ -83,21 +86,20 @@ class MakoTemplates(TemplateSystem):
         self.create_lookup()
 
     def inject_directory(self, directory):
-        """if it's not there, add the directory to the lookup with lowest priority, and
-        recreate the lookup."""
+        """Add a directory to the lookup and recreate it if it’s not there yet."""
         if directory not in self.directories:
             self.directories.append(directory)
             self.create_lookup()
 
     def create_lookup(self):
-        """Create a template lookup object."""
+        """Create a template lookup."""
         self.lookup = TemplateLookup(
             directories=self.directories,
             module_directory=self.cache_dir,
             output_encoding='utf-8')
 
     def set_site(self, site):
-        """Sets the site."""
+        """Set the Nikola site."""
         self.site = site
         self.filters.update(self.site.config['TEMPLATE_FILTERS'])
 
@@ -113,14 +115,12 @@ class MakoTemplates(TemplateSystem):
         return data
 
     def render_template_to_string(self, template, context):
-        """ Render template to a string using context. """
-
+        """Render template to a string using context."""
         context.update(self.filters)
-
         return Template(template).render(**context)
 
     def template_deps(self, template_name):
-        """Returns filenames which are dependencies for a template."""
+        """Generate list of dependencies for a template."""
         # We can cache here because dependencies should
         # not change between runs
         if self.cache.get(template_name, None) is None:
@@ -134,4 +134,5 @@ class MakoTemplates(TemplateSystem):
 
 
 def striphtml(text):
+    """Strip HTML tags from text."""
     return Markup(text).striptags()

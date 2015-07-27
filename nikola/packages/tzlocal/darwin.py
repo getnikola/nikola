@@ -1,4 +1,5 @@
-from __future__ import with_statement
+"""tzlocal for OS X."""
+
 import os
 import dateutil.tz
 import subprocess

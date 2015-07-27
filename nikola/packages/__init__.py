@@ -1,1 +1,1 @@
-# Packages vendored in by Nikola.
+"""Third-party packages for Nikola."""

@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""The default post scanner."""
+
 from __future__ import unicode_literals, print_function
 import glob
 import os
@@ -35,7 +37,8 @@ from nikola.post import Post
 
 
 class ScanPosts(PostScanner):
-    """Render pages into output."""
+
+    """Scan posts in the site."""
 
     name = "scan_posts"
 

@@ -24,7 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Utility functions to help you run filters on files."""
+"""Utility functions to help run filters on files."""
 
 from .utils import req_missing
 from functools import wraps
@@ -42,9 +42,12 @@ except ImportError:
 
 
 def apply_to_binary_file(f):
-    """Take a function f that transforms a data argument, and returns
+    """Apply a filter to a binary file.
+
+    Take a function f that transforms a data argument, and returns
     a function that takes a filename and applies f to the contents,
-    in place.  Reads files in binary mode."""
+    in place.  Reads files in binary mode.
+    """
     @wraps(f)
     def f_in_file(fname):
         with open(fname, 'rb') as inf:
@@ -57,9 +60,12 @@ def apply_to_binary_file(f):
 
 
 def apply_to_text_file(f):
-    """Take a function f that transforms a data argument, and returns
+    """Apply a filter to a text file.
+
+    Take a function f that transforms a data argument, and returns
     a function that takes a filename and applies f to the contents,
-    in place.  Reads files in UTF-8."""
+    in place.  Reads files in UTF-8.
+    """
     @wraps(f)
     def f_in_file(fname):
         with io.open(fname, 'r', encoding='utf-8') as inf:
@@ -72,7 +78,7 @@ def apply_to_text_file(f):
 
 
 def list_replace(the_list, find, replacement):
-    "Replace all occurrences of ``find`` with ``replacement`` in ``the_list``"
+    """Replace all occurrences of ``find`` with ``replacement`` in ``the_list``."""
     for i, v in enumerate(the_list):
         if v == find:
             the_list[i] = replacement
@@ -93,7 +99,6 @@ def runinplace(command, infile):
 
     You can also supply command as a list.
     """
-
     if not isinstance(command, list):
         command = shlex.split(command)
 
@@ -118,6 +123,7 @@ def runinplace(command, infile):
 
 
 def yui_compressor(infile):
+    """Run YUI Compressor on a file."""
     yuicompressor = False
     try:
         subprocess.call('yui-compressor', stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
@@ -136,39 +142,48 @@ def yui_compressor(infile):
 
 
 def closure_compiler(infile):
+    """Run closure-compiler on a file."""
     return runinplace(r'closure-compiler --warning_level QUIET --js %1 --js_output_file %2', infile)
 
 
 def optipng(infile):
+    """Run optipng on a file."""
     return runinplace(r"optipng -preserve -o2 -quiet %1", infile)
 
 
 def jpegoptim(infile):
+    """Run jpegoptim on a file."""
     return runinplace(r"jpegoptim -p --strip-all -q %1", infile)
 
 
 def html_tidy_withconfig(infile):
+    """Run HTML Tidy with tidy5.conf as config file."""
     return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent -config tidy5.conf -modify %1")
 
 
 def html_tidy_nowrap(infile):
+    """Run HTML Tidy without line wrapping."""
     return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes no --sort-attributes alpha --wrap 0 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1")
 
 
 def html_tidy_wrap(infile):
+    """Run HTML Tidy with line wrapping."""
     return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes no --sort-attributes alpha --wrap 80 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1")
 
 
 def html_tidy_wrap_attr(infile):
+    """Run HTML tidy with line wrapping and attribute indentation."""
     return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes yes --sort-attributes alpha --wrap 80 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1")
 
 
 def html_tidy_mini(infile):
+    """Run HTML tidy with minimal settings."""
     return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 --indent-attributes no --sort-attributes alpha --wrap 0 --wrap-sections no --tidy-mark no --drop-empty-elements no -modify %1")
 
 
 def _html_tidy_runner(infile, options):
-    """ Warnings (returncode 1) are not critical, and *everything* is a warning """
+    """Run HTML Tidy."""
+    # Warnings (returncode 1) are not critical, and *everything* is a warning.
     try:
         status = runinplace(r"tidy5 " + options, infile)
     except subprocess.CalledProcessError as err:
@@ -178,6 +193,7 @@ def _html_tidy_runner(infile, options):
 
 @apply_to_text_file
 def html5lib_minify(data):
+    """Minify with html5lib."""
     import html5lib
     import html5lib.serializer
     data = html5lib.serializer.serialize(html5lib.parse(data, treebuilder='lxml'),
@@ -193,6 +209,7 @@ def html5lib_minify(data):
 
 @apply_to_text_file
 def html5lib_xmllike(data):
+    """Transform document to an XML-like form with html5lib."""
     import html5lib
     import html5lib.serializer
     data = html5lib.serializer.serialize(html5lib.parse(data, treebuilder='lxml'),
@@ -207,11 +224,13 @@ def html5lib_xmllike(data):
 
 @apply_to_text_file
 def minify_lines(data):
+    """Do nothing -- deprecated filter."""
     return data
 
 
 @apply_to_text_file
 def typogrify(data):
+    """Prettify text with typogrify."""
     if typo is None:
         req_missing(['typogrify'], 'use the typogrify filter')
 
@@ -226,6 +245,7 @@ def typogrify(data):
 
 @apply_to_text_file
 def typogrify_sans_widont(data):
+    """Prettify text with typogrify, skipping the widont filter."""
     # typogrify with widont disabled because it caused broken headline
     # wrapping, see issue #1465
     if typo is None:
@@ -241,6 +261,7 @@ def typogrify_sans_widont(data):
 
 @apply_to_text_file
 def php_template_injection(data):
+    """Insert PHP code into Nikola templates."""
     import re
     template = re.search('<\!-- __NIKOLA_PHP_TEMPLATE_INJECTION source\:(.*) checksum\:(.*)__ -->', data)
     if template:
