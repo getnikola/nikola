@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Create a new site."""
+
 from __future__ import print_function, unicode_literals
 import os
 import shutil
@@ -158,8 +160,7 @@ SAMPLE_CONF['_SUPPORTED_COMMENT_SYSTEMS'] = '\n'.join(textwrap.wrap(
 
 
 def format_default_translations_config(additional_languages):
-    """Return the string to configure the TRANSLATIONS config variable to
-    make each additional language visible on the generated site."""
+    """Adapt TRANSLATIONS setting for all additional languages."""
     if not additional_languages:
         return SAMPLE_CONF["TRANSLATIONS"]
     lang_paths = ['    DEFAULT_LANG: "",']
@@ -248,11 +249,13 @@ class CommandInit(Command):
 
     @classmethod
     def copy_sample_site(cls, target):
+        """Copy sample site data to target directory."""
         src = resource_filename('nikola', os.path.join('data', 'samplesite'))
         shutil.copytree(src, target)
 
     @staticmethod
     def create_configuration(target):
+        """Create configuration file."""
         template_path = resource_filename('nikola', 'conf.py.in')
         conf_template = Template(filename=template_path)
         conf_path = os.path.join(target, 'conf.py')
@@ -261,12 +264,14 @@ class CommandInit(Command):
 
     @staticmethod
     def create_configuration_to_string():
+        """Return configuration file as a string."""
         template_path = resource_filename('nikola', 'conf.py.in')
         conf_template = Template(filename=template_path)
         return conf_template.render(**prepare_config(SAMPLE_CONF))
 
     @classmethod
     def create_empty_site(cls, target):
+        """Create an empty site with directories only."""
         for folder in ('files', 'galleries', 'listings', 'posts', 'stories'):
             makedirs(os.path.join(target, folder))
 

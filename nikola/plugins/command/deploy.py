@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Deploy site."""
+
 from __future__ import print_function
 import io
 from datetime import datetime
@@ -39,7 +41,9 @@ from nikola.utils import get_logger, remove_file, unicode_str, makedirs, STDERR_
 
 
 class CommandDeploy(Command):
+
     """Deploy site."""
+
     name = "deploy"
 
     doc_usage = "[[preset [preset...]]"
@@ -48,6 +52,7 @@ class CommandDeploy(Command):
     logger = None
 
     def _execute(self, command, args):
+        """Execute the deploy command."""
         self.logger = get_logger('deploy', STDERR_HANDLER)
         # Get last successful deploy date
         timestamp_path = os.path.join(self.site.config['CACHE_FOLDER'], 'lastdeploy')
@@ -116,7 +121,7 @@ class CommandDeploy(Command):
             outf.write(unicode_str(new_deploy.isoformat()))
 
     def _emit_deploy_event(self, last_deploy, new_deploy, clean=False, undeployed=None):
-        """ Emit events for all timeline entries newer than last deploy.
+        """Emit events for all timeline entries newer than last deploy.
 
         last_deploy: datetime
             Time stamp of the last successful deployment.
@@ -128,7 +133,6 @@ class CommandDeploy(Command):
             True when it appears like deploy is being run after a clean.
 
         """
-
         event = {
             'last_deploy': last_deploy,
             'new_deploy': new_deploy,

@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Manage plugins."""
+
 from __future__ import print_function
 import io
 import os
@@ -43,6 +45,7 @@ LOGGER = utils.get_logger('plugin', utils.STDERR_HANDLER)
 
 
 class CommandPlugin(Command):
+
     """Manage plugins."""
 
     json = None
@@ -154,6 +157,7 @@ class CommandPlugin(Command):
             return self.do_install(url, install, show_install_notes)
 
     def list_available(self, url):
+        """List all available plugins."""
         data = self.get_json(url)
         print("Available Plugins:")
         print("------------------")
@@ -162,6 +166,7 @@ class CommandPlugin(Command):
         return 0
 
     def list_installed(self):
+        """List installed plugins."""
         plugins = []
         for plugin in self.site.plugin_manager.getAllPlugins():
             p = plugin.path
@@ -177,6 +182,7 @@ class CommandPlugin(Command):
         return 0
 
     def do_upgrade(self, url):
+        """Upgrade all installed plugins."""
         LOGGER.warning('This is not very smart, it just reinstalls some plugins and hopes for the best')
         data = self.get_json(url)
         plugins = []
@@ -206,6 +212,7 @@ class CommandPlugin(Command):
         return 0
 
     def do_install(self, url, name, show_install_notes=True):
+        """Download and install a plugin."""
         data = self.get_json(url)
         if name in data:
             utils.makedirs(self.output_dir)
@@ -284,6 +291,7 @@ class CommandPlugin(Command):
         return 0
 
     def do_uninstall(self, name):
+        """Uninstall a plugin."""
         for plugin in self.site.plugin_manager.getAllPlugins():  # FIXME: this is repeated thrice
             p = plugin.path
             if os.path.isdir(p):
@@ -303,6 +311,7 @@ class CommandPlugin(Command):
         return 1
 
     def get_json(self, url):
+        """Download the JSON file with all plugins."""
         if self.json is None:
             try:
                 self.json = requests.get(url).json()

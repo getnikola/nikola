@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Compile reStructuredText to HTML, using Nikola architecture."""
+
 from __future__ import unicode_literals, print_function
 
 import io
@@ -34,6 +36,7 @@ from nikola.plugin_categories import Command
 
 
 class CommandRst2Html(Command):
+
     """Compile reStructuredText to HTML, using Nikola architecture."""
 
     name = "rst2html"

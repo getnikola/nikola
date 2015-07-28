@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Display site status."""
+
 from __future__ import print_function
 import io
 import os
@@ -33,8 +35,10 @@ from dateutil.tz import gettz, tzlocal
 from nikola.plugin_categories import Command
 
 
-class CommandDeploy(Command):
-    """ Site status. """
+class CommandStatus(Command):
+
+    """Display site status."""
+
     name = "status"
 
     doc_purpose = "display site status"
@@ -69,7 +73,7 @@ class CommandDeploy(Command):
     ]
 
     def _execute(self, options, args):
-
+        """Display site status."""
         self.site.scan_posts()
 
         timestamp_path = os.path.join(self.site.config["CACHE_FOLDER"], "lastdeploy")
@@ -128,6 +132,7 @@ class CommandDeploy(Command):
         print("{0} posts in total, {1} scheduled, and {2} drafts.".format(posts_count, len(posts_scheduled), len(posts_drafts)))
 
     def human_time(self, dt):
+        """Translate time into a human-friendly representation."""
         days = dt.days
         hours = dt.seconds / 60 // 60
         minutes = dt.seconds / 60 - (hours * 60)

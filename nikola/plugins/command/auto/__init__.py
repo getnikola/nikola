@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Automatic rebuilds for Nikola."""
+
 from __future__ import print_function
 
 import json
@@ -75,7 +77,9 @@ ERROR {}
 
 
 class CommandAuto(Command):
-    """Start debugging console."""
+
+    """Automatic rebuilds for Nikola."""
+
     name = "auto"
     logger = None
     has_server = True
@@ -124,7 +128,6 @@ class CommandAuto(Command):
 
     def _execute(self, options, args):
         """Start the watcher."""
-
         self.logger = get_logger('auto', STDERR_HANDLER)
         LRSocket.logger = self.logger
 
@@ -203,7 +206,9 @@ class CommandAuto(Command):
         parent = self
 
         class Mixed(WebSocketWSGIApplication):
-            """A class that supports WS and HTTP protocols in the same port."""
+
+            """A class that supports WS and HTTP protocols on the same port."""
+
             def __call__(self, environ, start_response):
                 if environ.get('HTTP_UPGRADE') is None:
                     return parent.serve_static(environ, start_response)
@@ -248,6 +253,7 @@ class CommandAuto(Command):
                 os.kill(os.getpid(), 15)
 
     def do_rebuild(self, event):
+        """Rebuild the site."""
         # Move events have a dest_path, some editors like gedit use a
         # move on larger save operations for write protection
         event_path = event.dest_path if hasattr(event, 'dest_path') else event.src_path
@@ -267,6 +273,7 @@ class CommandAuto(Command):
             print(errord)
 
     def do_refresh(self, event):
+        """Refresh the page."""
         # Move events have a dest_path, some editors like gedit use a
         # move on larger save operations for write protection
         event_path = event.dest_path if hasattr(event, 'dest_path') else event.src_path
@@ -310,14 +317,17 @@ pending = []
 
 
 class LRSocket(WebSocket):
+
     """Speak Livereload protocol."""
 
     def __init__(self, *a, **kw):
+        """Initialize protocol handler."""
         refresh_signal.connect(self.notify)
         error_signal.connect(self.send_error)
         super(LRSocket, self).__init__(*a, **kw)
 
     def received_message(self, message):
+        """Handle received message."""
         message = json.loads(message.data.decode('utf8'))
         self.logger.info('<--- {0}'.format(message))
         response = None

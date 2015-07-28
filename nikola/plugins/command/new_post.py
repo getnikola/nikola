@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Create a new post."""
+
 from __future__ import unicode_literals, print_function
 import io
 import datetime
@@ -45,10 +47,13 @@ LOGGER = POSTLOGGER
 
 
 def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_objs, compilers_raw):
-    """Given a compiler ("markdown", "rest"), and whether it's meant for
-    a post or a page, and compilers, return the correct entry from
-    post_pages."""
+    """Return the correct entry from post_pages.
 
+    Information based on:
+    * selected compilers
+    * available compilers
+    * post/page status
+    """
     # First throw away all the post_pages with the wrong is_post
     filtered = [entry for entry in post_pages if entry[3] == is_post]
 
@@ -80,14 +85,12 @@ def filter_post_pages(compiler, is_post, compilers, post_pages, compiler_objs, c
 
 
 def print_compilers(compilers_raw, post_pages, compiler_objs):
-    """
-    List all available compilers in a human-friendly format.
+    """List all available compilers in a human-friendly format.
 
     :param compilers_raw: The compilers dict, mapping compiler names to tuples of extensions
     :param post_pages: The post_pages structure
     :param compilers_objs: Compiler objects
     """
-
     # We use compilers_raw, because the normal dict can contain
     # garbage coming from the translation candidate implementation.
     # Entries are in format: (name, extensions, used_in_post_pages)
@@ -141,10 +144,7 @@ Read more: {0}""".format(COMPILERS_DOC_LINK))
 
 
 def get_default_compiler(is_post, compilers, post_pages):
-    """Given compilers and post_pages, return a reasonable
-    default compiler for this kind of post/page.
-    """
-
+    """Given compilers and post_pages, return a reasonable default compiler for this kind of post/page."""
     # First throw away all the post_pages with the wrong is_post
     filtered = [entry for entry in post_pages if entry[3] == is_post]
 
@@ -159,7 +159,7 @@ def get_default_compiler(is_post, compilers, post_pages):
 
 
 def get_date(schedule=False, rule=None, last_date=None, tz=None, iso8601=False):
-    """Returns a date stamp, given a recurrence rule.
+    """Return a date stamp, given a recurrence rule.
 
     schedule - bool:
         whether to use the recurrence rule or not
@@ -177,7 +177,6 @@ def get_date(schedule=False, rule=None, last_date=None, tz=None, iso8601=False):
         whether to force ISO 8601 dates (instead of locale-specific ones)
 
     """
-
     if tz is None:
         tz = dateutil.tz.tzlocal()
     date = now = datetime.datetime.now(tz)
@@ -212,6 +211,7 @@ def get_date(schedule=False, rule=None, last_date=None, tz=None, iso8601=False):
 
 
 class CommandNewPost(Command):
+
     """Create a new post."""
 
     name = "new_post"

@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Import a WordPress dump."""
+
 from __future__ import unicode_literals, print_function
 import os
 import re
@@ -57,6 +59,7 @@ LOGGER = utils.get_logger('import_wordpress', utils.STDERR_HANDLER)
 
 
 def install_plugin(site, plugin_name, output_dir=None, show_install_notes=False):
+    """Install a Nikola plugin."""
     LOGGER.notice("Installing plugin '{0}'".format(plugin_name))
     # Get hold of the 'plugin' plugin
     plugin_installer_info = site.plugin_manager.getPluginByName('plugin', 'Command')
@@ -85,6 +88,7 @@ def install_plugin(site, plugin_name, output_dir=None, show_install_notes=False)
 
 
 class CommandImportWordpress(Command, ImportMixin):
+
     """Import a WordPress dump."""
 
     name = "import_wordpress"
@@ -191,6 +195,7 @@ class CommandImportWordpress(Command, ImportMixin):
     all_tags = set([])
 
     def _find_wordpress_compiler(self):
+        """Find WordPress compiler plugin."""
         if self.wordpress_page_compiler is not None:
             return
         plugin_info = self.site.plugin_manager.getPluginByName('wordpress', 'PageCompiler')
@@ -201,6 +206,7 @@ class CommandImportWordpress(Command, ImportMixin):
             self.wordpress_page_compiler = plugin_info.plugin_object
 
     def _read_options(self, options, args):
+        """Read command-line options."""
         options['filename'] = args.pop(0)
 
         if args and ('output_folder' not in args or
@@ -262,6 +268,7 @@ class CommandImportWordpress(Command, ImportMixin):
         return True
 
     def _prepare(self, channel):
+        """Prepare context and category hierarchy."""
         self.context = self.populate_context(channel)
         self.base_dir = urlparse(self.context['BASE_URL']).path
 
@@ -356,6 +363,7 @@ class CommandImportWordpress(Command, ImportMixin):
 
     @classmethod
     def read_xml_file(cls, filename):
+        """Read XML file into memory."""
         xml = []
 
         with open(filename, 'rb') as fd:
@@ -368,11 +376,13 @@ class CommandImportWordpress(Command, ImportMixin):
 
     @classmethod
     def get_channel_from_file(cls, filename):
+        """Get channel from XML file."""
         tree = etree.fromstring(cls.read_xml_file(filename))
         channel = tree.find('channel')
         return channel
 
     def populate_context(self, channel):
+        """Populate context with config for the site."""
         wordpress_namespace = channel.nsmap['wp']
 
         context = SAMPLE_CONF.copy()
@@ -425,6 +435,7 @@ class CommandImportWordpress(Command, ImportMixin):
         return context
 
     def download_url_content_to_file(self, url, dst_path):
+        """Download some content (attachments) to a file."""
         if self.no_downloads:
             return
 
@@ -439,6 +450,7 @@ class CommandImportWordpress(Command, ImportMixin):
             LOGGER.warn("Downloading {0} to {1} failed: {2}".format(url, dst_path, err))
 
     def import_attachment(self, item, wordpress_namespace):
+        """Import an attachment to the site."""
         # Download main image
         url = get_text_tag(
             item, '{{{0}}}attachment_url'.format(wordpress_namespace), 'foo')
@@ -587,6 +599,7 @@ class CommandImportWordpress(Command, ImportMixin):
     code_re4 = re.compile(r'\[sourcecode.*?\](.*?)\[/sourcecode\]', re.DOTALL | re.MULTILINE)
 
     def transform_code(self, content):
+        """Transform code blocks."""
         # http://en.support.wordpress.com/code/posting-source-code/. There are
         # a ton of things not supported here. We only do a basic [code
         # lang="x"] -> ```x translation, and remove quoted html entities (<,
@@ -612,19 +625,21 @@ class CommandImportWordpress(Command, ImportMixin):
 
     @staticmethod
     def transform_caption(content):
+        """Transform captions."""
         new_caption = re.sub(r'\[/caption\]', '', content)
         new_caption = re.sub(r'\[caption.*\]', '', new_caption)
 
         return new_caption
 
     def transform_multiple_newlines(self, content):
-        """Replaces multiple newlines with only two."""
+        """Replace multiple newlines with only two."""
         if self.squash_newlines:
             return re.sub(r'\n{3,}', r'\n\n', content)
         else:
             return content
 
     def transform_content(self, content, post_format, attachments):
+        """Transform content into appropriate format."""
         if post_format == 'wp':
             if self.transform_to_html:
                 additional_data = {}
@@ -650,6 +665,7 @@ class CommandImportWordpress(Command, ImportMixin):
             return None
 
     def _extract_comment(self, comment, wordpress_namespace):
+        """Extract comment from dump."""
         id = int(get_text_tag(comment, "{{{0}}}comment_id".format(wordpress_namespace), None))
         author = get_text_tag(comment, "{{{0}}}comment_author".format(wordpress_namespace), None)
         author_email = get_text_tag(comment, "{{{0}}}comment_author_email".format(wordpress_namespace), None)
@@ -682,7 +698,9 @@ class CommandImportWordpress(Command, ImportMixin):
                 "date": date_gmt, "content": content, "parent": parent, "user_id": user_id}
 
     def _write_comment(self, filename, comment):
+        """Write comment to file."""
         def write_header_line(fd, header_field, header_content):
+            """Write comment header line."""
             if header_content is None:
                 return
             header_content = str(header_content).replace('\n', ' ')
@@ -703,6 +721,7 @@ class CommandImportWordpress(Command, ImportMixin):
             fd.write(('\n' + comment['content']).encode('utf8'))
 
     def _create_metadata(self, status, excerpt, tags, categories, post_name=None):
+        """Create post metadata."""
         other_meta = {'wp-status': status}
         if excerpt is not None:
             other_meta['excerpt'] = excerpt
@@ -725,7 +744,7 @@ class CommandImportWordpress(Command, ImportMixin):
         return tags_cats, other_meta
 
     def import_postpage_item(self, item, wordpress_namespace, out_folder=None, attachments=None):
-        """Takes an item from the feed and creates a post file."""
+        """Take an item from the feed and creates a post file."""
         if out_folder is None:
             out_folder = 'posts'
 
@@ -892,6 +911,7 @@ class CommandImportWordpress(Command, ImportMixin):
             return False
 
     def _extract_item_info(self, item):
+        """Extract information about an item."""
         # The namespace usually is something like:
         # http://wordpress.org/export/1.2/
         wordpress_namespace = item.nsmap['wp']
@@ -904,6 +924,7 @@ class CommandImportWordpress(Command, ImportMixin):
         return wordpress_namespace, post_type, post_id, parent_id
 
     def process_item_if_attachment(self, item):
+        """Process attachments."""
         wordpress_namespace, post_type, post_id, parent_id = self._extract_item_info(item)
 
         if post_type == 'attachment':
@@ -915,10 +936,12 @@ class CommandImportWordpress(Command, ImportMixin):
                 LOGGER.warn("Attachment #{0} ({1}) has no parent!".format(post_id, data['files']))
 
     def write_attachments_info(self, path, attachments):
+        """Write attachments info file."""
         with io.open(path, "wb") as file:
             file.write(json.dumps(attachments).encode('utf-8'))
 
     def process_item_if_post_or_page(self, item):
+        """Process posts and pages."""
         wordpress_namespace, post_type, post_id, parent_id = self._extract_item_info(item)
 
         if post_type != 'attachment':
@@ -938,6 +961,7 @@ class CommandImportWordpress(Command, ImportMixin):
                     self.write_attachments_info(destination, attachments)
 
     def import_posts(self, channel):
+        """Import posts into the site."""
         self.attachments = defaultdict(dict)
         # First process attachments
         for item in channel.findall('item'):
@@ -952,6 +976,7 @@ class CommandImportWordpress(Command, ImportMixin):
 
 
 def get_text_tag(tag, name, default):
+    """Get the text of an XML tag."""
     if tag is None:
         return default
     t = tag.find(name)
@@ -962,9 +987,10 @@ def get_text_tag(tag, name, default):
 
 
 def separate_qtranslate_content(text):
-    """Parse the content of a wordpress post or page and separate
-    the various language specific contents when they are delimited
-    with qtranslate tags: <!--:LL-->blabla<!--:-->"""
+    """Parse the content of a wordpress post or page and separate qtranslate languages.
+
+    qtranslate tags: <!--:LL-->blabla<!--:-->
+    """
     # TODO: uniformize qtranslate tags <!--/en--> => <!--:-->
     qt_start = "<!--:"
     qt_end = "-->"

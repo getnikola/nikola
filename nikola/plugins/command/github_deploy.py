@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Deploy site to GitHub Pages."""
+
 from __future__ import print_function
 from datetime import datetime
 import io
@@ -39,11 +41,13 @@ from nikola import __version__
 
 
 def uni_check_output(*args, **kwargs):
+    """Run command and return output as Unicode (UTf-8)."""
     o = subprocess.check_output(*args, **kwargs)
     return o.decode('utf-8')
 
 
 def check_ghp_import_installed():
+    """Check if ghp-import is installed."""
     try:
         subprocess.check_output(['ghp-import', '-h'])
     except OSError:
@@ -53,7 +57,9 @@ def check_ghp_import_installed():
 
 
 class CommandGitHubDeploy(Command):
-    """ Deploy site to GitHub Pages. """
+
+    """Deploy site to GitHub Pages."""
+
     name = 'github_deploy'
 
     doc_usage = ''
@@ -70,7 +76,7 @@ class CommandGitHubDeploy(Command):
     logger = None
 
     def _execute(self, command, args):
-
+        """Run the deployment."""
         self.logger = get_logger(CommandGitHubDeploy.name, STDERR_HANDLER)
 
         # Check if ghp-import is installed
@@ -93,8 +99,7 @@ class CommandGitHubDeploy(Command):
         return
 
     def _commit_and_push(self):
-        """ Commit all the files and push. """
-
+        """Commit all the files and push."""
         source = self.site.config['GITHUB_SOURCE_BRANCH']
         deploy = self.site.config['GITHUB_DEPLOY_BRANCH']
         remote = self.site.config['GITHUB_REMOTE_NAME']

@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Start test server."""
+
 from __future__ import print_function
 import os
 import socket
@@ -40,11 +42,14 @@ from nikola.utils import get_logger, STDERR_HANDLER
 
 
 class IPv6Server(HTTPServer):
+
     """An IPv6 HTTPServer."""
+
     address_family = socket.AF_INET6
 
 
 class CommandServe(Command):
+
     """Start test server."""
 
     name = "serve"
@@ -147,7 +152,9 @@ class CommandServe(Command):
 
 
 class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
+
     """A request handler, modified for Nikola."""
+
     extensions_map = dict(SimpleHTTPRequestHandler.extensions_map)
     extensions_map[""] = "text/plain"
     quiet = False

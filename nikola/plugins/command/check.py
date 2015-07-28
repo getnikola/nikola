@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Check the generated site."""
+
 from __future__ import print_function
 from collections import defaultdict
 import os
@@ -58,6 +60,7 @@ def _call_nikola_list(site):
 
 
 def real_scan_files(site):
+    """Scan for files."""
     task_fnames = set([])
     real_fnames = set([])
     output_folder = site.config['OUTPUT_FOLDER']
@@ -80,7 +83,8 @@ def real_scan_files(site):
 
 
 def fs_relpath_from_url_path(url_path):
-    """Expects as input an urlparse(s).path"""
+    """Create a filesystem relative path from an URL path."""
+    # Expects as input an urlparse(s).path
     url_path = unquote(url_path)
     # in windows relative paths don't begin with os.sep
     if sys.platform == 'win32' and len(url_path):
@@ -89,6 +93,7 @@ def fs_relpath_from_url_path(url_path):
 
 
 class CommandCheck(Command):
+
     """Check the generated site."""
 
     name = "check"
@@ -169,6 +174,7 @@ class CommandCheck(Command):
     checked_remote_targets = {}
 
     def analyze(self, fname, find_sources=False, check_remote=False):
+        """Analyze links on a page."""
         rv = False
         self.whitelist = [re.compile(x) for x in self.site.config['LINK_CHECK_WHITELIST']]
         base_url = urlparse(self.site.config['BASE_URL'])
@@ -271,6 +277,7 @@ class CommandCheck(Command):
         return rv
 
     def scan_links(self, find_sources=False, check_remote=False):
+        """Check links on the site."""
         self.logger.info("Checking Links:")
         self.logger.info("===============\n")
         self.logger.notice("{0} mode".format(self.site.config['URL_TYPE']))
@@ -286,6 +293,7 @@ class CommandCheck(Command):
         return failure
 
     def scan_files(self):
+        """Check files in the site, find missing and orphaned files."""
         failure = False
         self.logger.info("Checking Files:")
         self.logger.info("===============\n")
@@ -311,6 +319,7 @@ class CommandCheck(Command):
         return failure
 
     def clean_files(self):
+        """Remove orphaned files."""
         only_on_output, _ = real_scan_files(self.site)
         for f in only_on_output:
             self.logger.info('removed: {0}'.format(f))
