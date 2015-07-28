@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Don't assume things are HTML in auto mode (Issue #1915)
 * Don’t rebuild Atom syndication files unnecessarily often
 * Include .php files in sitemaps
 * Retry all client errors (4xx) to HEAD as GET reques when checking remote links
