@@ -34,7 +34,7 @@ script:
   - "if [[ $NMODE == 'nikola' ]]; then nikola; fi"
   - "if [[ $NMODE == 'nikola' ]]; then nikola help; fi"
   - "if [[ $NMODE == 'flake8' ]]; then flake8 nikola/; fi"
-  - "if [[ $NMODE == 'flake8' ]]; then pep257 --count --match-dir='(?!^\.)(?!data).*' nikola/; fi"
+  - "if [[ $NMODE == 'flake8' ]]; then pep257 --count --match-dir='(?!^\\\\.)(?!data).*' nikola/; fi"
 after_success:
   - "if [[ $NMODE == 'nikola' ]]; then coveralls; fi"
 notifications:
