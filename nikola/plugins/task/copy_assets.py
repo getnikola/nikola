@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Copy theme assets into output."""
+
 from __future__ import unicode_literals
 
 import io
@@ -34,6 +36,7 @@ from nikola import utils
 
 
 class CopyAssets(Task):
+
     """Copy theme assets into output."""
 
     name = "copy_assets"
@@ -44,7 +47,6 @@ class CopyAssets(Task):
         If a file is present on two themes, use the version
         from the "youngest" theme.
         """
-
         kw = {
             "themes": self.site.THEMES,
             "files_folders": self.site.config['FILES_FOLDERS'],

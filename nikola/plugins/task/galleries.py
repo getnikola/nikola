@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Render image galleries."""
+
 from __future__ import unicode_literals
 import datetime
 import glob
@@ -55,12 +57,14 @@ _image_size_cache = {}
 
 
 class Galleries(Task, ImageProcessor):
+
     """Render image galleries."""
 
     name = 'render_galleries'
     dates = {}
 
     def set_site(self, site):
+        """Set Nikola site."""
         site.register_path_handler('gallery', self.gallery_path)
         site.register_path_handler('gallery_global', self.gallery_global_path)
         site.register_path_handler('gallery_rss', self.gallery_rss_path)
@@ -118,17 +122,20 @@ class Galleries(Task, ImageProcessor):
         sys.exit(1)
 
     def gallery_path(self, name, lang):
+        """Return a gallery path."""
         gallery_path = self._find_gallery_path(name)
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
                 gallery_path.split(os.sep) +
                 [self.site.config['INDEX_FILE']] if _f]
 
     def gallery_global_path(self, name, lang):
+        """Return the global gallery path, which contains images."""
         gallery_path = self._find_gallery_path(name)
         return [_f for _f in gallery_path.split(os.sep) +
                 [self.site.config['INDEX_FILE']] if _f]
 
     def gallery_rss_path(self, name, lang):
+        """Return path to the RSS file for a gallery."""
         gallery_path = self._find_gallery_path(name)
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
                 gallery_path.split(os.sep) +
@@ -136,7 +143,6 @@ class Galleries(Task, ImageProcessor):
 
     def gen_tasks(self):
         """Render image galleries."""
-
         self.image_ext_list = self.image_ext_list_builtin
         self.image_ext_list.extend(self.site.config.get('EXTRA_IMAGE_EXTENSIONS', []))
 
@@ -315,16 +321,14 @@ class Galleries(Task, ImageProcessor):
                     }, self.kw['filters'])
 
     def find_galleries(self):
-        """Find all galleries to be processed according to conf.py"""
-
+        """Find all galleries to be processed according to conf.py."""
         self.gallery_list = []
         for input_folder, output_folder in self.kw['gallery_folders'].items():
             for root, dirs, files in os.walk(input_folder, followlinks=True):
                 self.gallery_list.append((root, input_folder, output_folder))
 
     def create_galleries_paths(self):
-        """Given a list of galleries, puts their paths into self.gallery_links."""
-
+        """Given a list of galleries, put their paths into self.gallery_links."""
         # gallery_path is "gallery/foo/name"
         self.proper_gallery_links = dict()
         self.improper_gallery_links = dict()
@@ -355,7 +359,6 @@ class Galleries(Task, ImageProcessor):
 
     def create_galleries(self):
         """Given a list of galleries, create the output folders."""
-
         # gallery_path is "gallery/foo/name"
         for gallery_path, input_folder, _ in self.gallery_list:
             # have to use dirname because site.path returns .../index.html
@@ -375,8 +378,7 @@ class Galleries(Task, ImageProcessor):
             }
 
     def parse_index(self, gallery, input_folder, output_folder):
-        """Returns a Post object if there is an index.txt."""
-
+        """Return a Post object if there is an index.txt."""
         index_path = os.path.join(gallery, "index.txt")
         destination = os.path.join(
             self.kw["output_folder"], output_folder,
@@ -402,6 +404,7 @@ class Galleries(Task, ImageProcessor):
         return post
 
     def get_excluded_images(self, gallery_path):
+        """Get list of excluded images."""
         exclude_path = os.path.join(gallery_path, "exclude.meta")
 
         try:
@@ -414,7 +417,7 @@ class Galleries(Task, ImageProcessor):
         return excluded_image_list
 
     def get_image_list(self, gallery_path):
-
+        """Get list of included images."""
         # Gather image_list contains "gallery/name/image_name.jpg"
         image_list = []
 
@@ -429,6 +432,7 @@ class Galleries(Task, ImageProcessor):
         return image_list
 
     def create_target_images(self, img, input_path):
+        """Copy images to output."""
         gallery_name = os.path.dirname(img)
         output_gallery = os.path.dirname(
             os.path.join(
@@ -478,6 +482,7 @@ class Galleries(Task, ImageProcessor):
         }, self.kw['filters'])
 
     def remove_excluded_image(self, img, input_folder):
+        """Remove excluded images."""
         # Remove excluded images
         # img is something like input_folder/demo/tesla2_lg.jpg so it's the *source* path
         # and we should remove both the large and thumbnail *destination* paths
@@ -521,7 +526,6 @@ class Galleries(Task, ImageProcessor):
             thumbs,
             file_dep):
         """Build the gallery index."""
-
         # The photo array needs to be created here, because
         # it relies on thumbnails already being created on
         # output
@@ -557,7 +561,6 @@ class Galleries(Task, ImageProcessor):
         This doesn't use generic_rss_renderer because it
         doesn't involve Post objects.
         """
-
         def make_url(url):
             return urljoin(self.site.config['BASE_URL'], url.lstrip('/'))
 

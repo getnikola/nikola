@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Render the post archives."""
+
 import copy
 import os
 
@@ -35,17 +37,20 @@ from nikola.utils import config_changed, adjust_name_for_index_path, adjust_name
 
 
 class Archive(Task):
+
     """Render the post archives."""
 
     name = "render_archive"
 
     def set_site(self, site):
+        """Set Nikola site."""
         site.register_path_handler('archive', self.archive_path)
         site.register_path_handler('archive_atom', self.archive_atom_path)
         return super(Archive, self).set_site(site)
 
     def _prepare_task(self, kw, name, lang, posts, items, template_name,
                       title, deps_translatable=None):
+        """Prepare an archive task."""
         # name: used to build permalink and destination
         # posts, items: posts or items; only one of them should be used,
         #               the other be None
@@ -82,6 +87,7 @@ class Archive(Task):
         return task
 
     def _generate_posts_task(self, kw, name, lang, posts, title, deps_translatable=None):
+        """Genereate a task for an archive with posts."""
         posts = sorted(posts, key=lambda a: a.date)
         posts.reverse()
         if kw['archives_are_indexes']:
@@ -116,6 +122,7 @@ class Archive(Task):
             yield self._prepare_task(kw, name, lang, posts, None, "list_post.tmpl", title, deps_translatable)
 
     def gen_tasks(self):
+        """Generate archive tasks."""
         kw = {
             "messages": self.site.MESSAGES,
             "translations": self.site.config['TRANSLATIONS'],
@@ -214,6 +221,7 @@ class Archive(Task):
                 yield self._prepare_task(kw, None, lang, None, items, "list.tmpl", kw["messages"][lang]["Archive"])
 
     def archive_path(self, name, lang, is_feed=False):
+        """Return archive paths."""
         if is_feed:
             extension = ".atom"
             archive_file = os.path.splitext(self.site.config['ARCHIVE_FILENAME'])[0] + extension
@@ -231,4 +239,5 @@ class Archive(Task):
                                   archive_file] if _f]
 
     def archive_atom_path(self, name, lang):
+        """Return Atom archive paths."""
         return self.archive_path(name, lang, is_feed=True)

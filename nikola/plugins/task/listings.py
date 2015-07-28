@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Render code listings."""
+
 from __future__ import unicode_literals, print_function
 
 import sys
@@ -38,7 +40,8 @@ from nikola import utils
 
 
 class Listings(Task):
-    """Render pretty listings."""
+
+    """Render code listings."""
 
     name = "render_listings"
 
@@ -51,6 +54,7 @@ class Listings(Task):
         self.proper_input_file_mapping[rel_output_name] = rel_output_name
 
     def set_site(self, site):
+        """Set Nikola site."""
         site.register_path_handler('listing', self.listing_path)
 
         # We need to prepare some things for the listings path handler to work.
@@ -105,7 +109,6 @@ class Listings(Task):
 
     def gen_tasks(self):
         """Render pretty code listings."""
-
         # Things to ignore in listings
         ignored_extensions = (".pyc", ".pyo")
 
@@ -237,6 +240,7 @@ class Listings(Task):
                         }, self.kw["filters"])
 
     def listing_path(self, namep, lang):
+        """Return path to a listing."""
         namep = namep.replace('/', os.sep)
         nameh = namep + '.html'
         for name in (namep, nameh):

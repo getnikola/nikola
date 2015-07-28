@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Generate a sitemap."""
+
 from __future__ import print_function, absolute_import, unicode_literals
 import io
 import datetime
@@ -79,7 +81,7 @@ sitemapindex_footer = "</sitemapindex>"
 
 
 def get_base_path(base):
-    """returns the path of a base URL if it contains one.
+    """Return the path of a base URL if it contains one.
 
     >>> get_base_path('http://some.site') == '/'
     True
@@ -104,6 +106,7 @@ def get_base_path(base):
 
 
 class Sitemap(LateTask):
+
     """Generate a sitemap."""
 
     name = "sitemap"
@@ -137,6 +140,7 @@ class Sitemap(LateTask):
         urlset = {}
 
         def scan_locs():
+            """Scan site locations."""
             for root, dirs, files in os.walk(output, followlinks=True):
                 if not dirs and not files and not kw['sitemap_include_fileless_dirs']:
                     continue  # Totally empty, not on sitemap
@@ -215,6 +219,7 @@ class Sitemap(LateTask):
                         urlset[loc] = loc_format.format(loc, lastmod, '\n'.join(alternates))
 
         def robot_fetch(path):
+            """Check if robots can fetch a file."""
             for rule in kw["robots_exclusions"]:
                 robot = robotparser.RobotFileParser()
                 robot.parse(["User-Agent: *", "Disallow: {0}".format(rule)])
@@ -223,6 +228,7 @@ class Sitemap(LateTask):
             return True
 
         def write_sitemap():
+            """Write sitemap to file."""
             # Have to rescan, because files may have been added between
             # task dep scanning and task execution
             with io.open(sitemap_path, 'w+', encoding='utf8') as outf:
@@ -234,16 +240,19 @@ class Sitemap(LateTask):
             sitemapindex[sitemap_url] = sitemap_format.format(sitemap_url, self.get_lastmod(sitemap_path))
 
         def write_sitemapindex():
+            """Write sitemap index."""
             with io.open(sitemapindex_path, 'w+', encoding='utf8') as outf:
                 outf.write(sitemapindex_header)
                 for k in sorted(sitemapindex.keys()):
                     outf.write(sitemapindex[k])
                 outf.write(sitemapindex_footer)
 
-        # Yield a task to calculate the dependencies of the sitemap
-        # Other tasks can depend on this output, instead of having
-        # to scan locations.
         def scan_locs_task():
+            """Yield a task to calculate the dependencies of the sitemap.
+
+            Other tasks can depend on this output, instead of having
+            to scan locations.
+            """
             scan_locs()
 
             # Generate a list of file dependencies for the actual generation
@@ -295,6 +304,7 @@ class Sitemap(LateTask):
         }, kw['filters'])
 
     def get_lastmod(self, p):
+        """Get last modification date."""
         if self.site.invariant:
             return '2038-01-01'
         else:
