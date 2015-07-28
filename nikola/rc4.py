@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-    A RC4 encryption library (used for password-protected posts)
-    ---
+A RC4 encryption library (used for password-protected posts).
+
+Original RC4 code license:
+
     Copyright (C) 2012 Bo Zhu http://about.bozhu.me
 
     Permission is hereby granted, free of charge, to any person obtaining a
@@ -28,6 +30,7 @@ import sys
 
 
 def KSA(key):
+    """Run Key Scheduling Algorithm."""
     keylength = len(key)
 
     S = list(range(256))
@@ -41,6 +44,7 @@ def KSA(key):
 
 
 def PRGA(S):
+    """Run Pseudo-Random Generation Algorithm."""
     i = 0
     j = 0
     while True:
@@ -53,16 +57,17 @@ def PRGA(S):
 
 
 def RC4(key):
+    """Generate RC4 keystream."""
     S = KSA(key)
     return PRGA(S)
 
 
 def rc4(key, string):
     """Encrypt things.
+
     >>> print(rc4("Key", "Plaintext"))
     u/MW6NlArwrT
     """
-
     string.encode('utf8')
     key.encode('utf8')
 

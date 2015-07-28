@@ -44,7 +44,6 @@ class ScanPosts(PostScanner):
 
     def scan(self):
         """Create list of posts from POSTS and PAGES options."""
-
         seen = set([])
         if not self.site.quiet:
             print("Scanning posts", end='', file=sys.stderr)
