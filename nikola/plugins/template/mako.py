@@ -86,7 +86,7 @@ class MakoTemplates(TemplateSystem):
         self.create_lookup()
 
     def inject_directory(self, directory):
-        """Add a directory to the lookup and recreate it if it’s not there yet."""
+        """Add a directory to the lookup and recreate it if it's not there yet."""
         if directory not in self.directories:
             self.directories.append(directory)
             self.create_lookup()

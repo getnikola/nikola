@@ -784,7 +784,7 @@ class Post(object):
         """Return the source file extension.
 
         If `prefix` is True, a `.src.` prefix will be added to the resulting extension
-        if it’s equal to the destination extension.
+        if it's equal to the destination extension.
         """
         ext = os.path.splitext(self.source_path)[1]
         # do not publish PHP sources

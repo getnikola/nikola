@@ -365,7 +365,7 @@ class DoitNikola(DoitMain):
 
 
 def levenshtein(s1, s2):
-    """Calculate the Levenshtein distance of two strings.
+    u"""Calculate the Levenshtein distance of two strings.
 
     Implementation from Wikibooks:
     https://en.wikibooks.org/w/index.php?title=Algorithm_Implementation/Strings/Levenshtein_distance&oldid=2974448#Python

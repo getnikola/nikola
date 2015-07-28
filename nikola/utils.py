@@ -732,7 +732,7 @@ _slugify_hyphenate_re = re.compile(r'[-\s]+')
 
 
 def slugify(value, force=False):
-    """Normalize string, convert to lowercase, remove non-alpha characters, convert spaces to hyphens.
+    u"""Normalize string, convert to lowercase, remove non-alpha characters, convert spaces to hyphens.
 
     From Django's "django/template/defaultfilters.py".
 
@@ -1434,7 +1434,7 @@ def options2docstring(name, options):
 
 class NikolaPygmentsHTML(HtmlFormatter):
 
-    """A Nikola-specific modification of Pygments’ HtmlFormatter."""
+    """A Nikola-specific modification of Pygments' HtmlFormatter."""
 
     def __init__(self, anchor_ref, classes=None, linenos='table', linenostart=1):
         """Initialize formatter."""
