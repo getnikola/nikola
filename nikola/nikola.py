@@ -1931,8 +1931,8 @@ class Nikola(object):
                 context["feedpagecount"] = num_pages
                 atom_task = {
                     "basename": basename,
-                    "file_dep": [output_name],
                     "name": atom_output_name,
+                    "file_dep": sorted([_.base_path for _ in post_list]),
                     "targets": [atom_output_name],
                     "actions": [(self.atom_feed_renderer,
                                 (lang,

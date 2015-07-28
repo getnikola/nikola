@@ -120,7 +120,7 @@ class Sitemap(LateTask):
             "strip_indexes": self.site.config["STRIP_INDEXES"],
             "index_file": self.site.config["INDEX_FILE"],
             "sitemap_include_fileless_dirs": self.site.config["SITEMAP_INCLUDE_FILELESS_DIRS"],
-            "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.atom', '.html', '.htm', '.xml', '.rss']),
+            "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.atom', '.html', '.htm', '.php', '.xml', '.rss']),
             "robots_exclusions": self.site.config["ROBOTS_EXCLUSIONS"],
             "filters": self.site.config["FILTERS"],
             "translations": self.site.config["TRANSLATIONS"],
@@ -178,7 +178,7 @@ class Sitemap(LateTask):
                         filehead = fh.read(1024)
                         fh.close()
 
-                        if path.endswith('.html') or path.endswith('.htm'):
+                        if path.endswith('.html') or path.endswith('.htm') or path.endswith('.php'):
                             """ ignores "html" files without doctype """
                             if b'<!doctype html' not in filehead.lower():
                                 continue
