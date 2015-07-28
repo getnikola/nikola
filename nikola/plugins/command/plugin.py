@@ -29,7 +29,6 @@ import io
 import os
 import shutil
 import subprocess
-import sys
 import time
 import requests
 
@@ -294,9 +293,8 @@ class CommandPlugin(Command):
             if name == plugin.name:  # Uninstall this one
                 LOGGER.warning('About to uninstall plugin: {0}'.format(name))
                 LOGGER.warning('This will delete {0}'.format(p))
-                inpf = raw_input if sys.version_info[0] == 2 else input
-                sure = inpf('Are you sure? [y/n] ')
-                if sure.lower().startswith('y'):
+                sure = utils.ask_yesno('Are you sure?')
+                if sure:
                     LOGGER.warning('Removing {0}'.format(p))
                     shutil.rmtree(p)
                     return 0
