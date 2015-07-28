@@ -24,6 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Media directive for reStructuredText."""
 
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
@@ -40,21 +41,27 @@ from nikola.utils import req_missing
 
 class Plugin(RestExtension):
 
+    """Plugin for reST media directive."""
+
     name = "rest_media"
 
     def set_site(self, site):
+        """Set Nikola site."""
         self.site = site
         directives.register_directive('media', Media)
         return super(Plugin, self).set_site(site)
 
 
 class Media(Directive):
-    """ Restructured text extension for inserting any sort of media using micawber."""
+
+    """reST extension for inserting any sort of media using micawber."""
+
     has_content = False
     required_arguments = 1
     optional_arguments = 999
 
     def run(self):
+        """Run media directive."""
         if micawber is None:
             msg = req_missing(['micawber'], 'use the media directive', optional=True)
             return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]

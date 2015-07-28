@@ -70,7 +70,7 @@ from .utils import (
 )
 from .rc4 import rc4
 
-__all__ = ['Post']
+__all__ = ('Post',)
 
 TEASER_REGEXP = re.compile('<!--\s*TEASER_END(:(.+))?\s*-->', re.IGNORECASE)
 _UPGRADE_METADATA_ADVERTISED = False

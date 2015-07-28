@@ -37,12 +37,14 @@ from hashlib import md5
 
 
 class CompilePhp(PageCompiler):
+
     """Compile PHP into PHP."""
 
     name = "php"
     friendly_name = "PHP"
 
     def compile_html(self, source, dest, is_two_file=True):
+        """Compile source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with open(source, "rb") as in_file:
@@ -51,6 +53,7 @@ class CompilePhp(PageCompiler):
         return True
 
     def create_post(self, path, **kw):
+        """Create a new post."""
         content = kw.pop('content', None)
         onefile = kw.pop('onefile', False)
         # is_page is not used by create_post as of now.
@@ -80,4 +83,5 @@ class CompilePhp(PageCompiler):
             fd.write(content)
 
     def extension(self):
+        """Return extension used for PHP files."""
         return ".php"

@@ -36,7 +36,7 @@ from doit.cmd_base import Command as DoitCommand
 
 from .utils import LOGGER, first_line
 
-__all__ = [
+__all__ = (
     'Command',
     'LateTask',
     'PageCompiler',
@@ -48,7 +48,7 @@ __all__ = [
     'SignalHandler',
     'ConfigPlugin',
     'PostScanner',
-]
+)
 
 
 class BasePlugin(IPlugin):

@@ -88,7 +88,7 @@ DEFAULT_TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
 
 config_changed = utils.config_changed
 
-__all__ = ['Nikola']
+__all__ = ('Nikola',)
 
 # We store legal values for some setting here.  For internal use.
 LEGAL_VALUES = {

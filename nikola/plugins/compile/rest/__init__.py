@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""reStructuredText compiler for Nikola."""
+
 from __future__ import unicode_literals
 import io
 import os
@@ -40,6 +42,7 @@ from nikola.utils import unicode_str, get_logger, makedirs, write_metadata, STDE
 
 
 class CompileRest(PageCompiler):
+
     """Compile reStructuredText into HTML."""
 
     name = "rest"
@@ -48,7 +51,7 @@ class CompileRest(PageCompiler):
     logger = None
 
     def _read_extra_deps(self, post):
-        """Reads contents of .dep file and returns them as a list"""
+        """Read contents of .dep file and returns them as a list."""
         dep_path = post.base_path + '.dep'
         if os.path.isfile(dep_path):
             with io.open(dep_path, 'r+', encoding='utf8') as depf:
@@ -57,11 +60,11 @@ class CompileRest(PageCompiler):
         return []
 
     def register_extra_dependencies(self, post):
-        """Adds dependency to post object to check .dep file."""
+        """Add dependency to post object to check .dep file."""
         post.add_dependency(lambda: self._read_extra_deps(post), 'fragment')
 
     def compile_html_string(self, data, source_path=None, is_two_file=True):
-        """Compile reSt into HTML strings."""
+        """Compile reST into HTML strings."""
         # If errors occur, this will be added to the line number reported by
         # docutils so the line number matches the actual line number (off by
         # 7 with default metadata, could be more or less depending on the post).
@@ -88,7 +91,7 @@ class CompileRest(PageCompiler):
         return output, error_level, deps
 
     def compile_html(self, source, dest, is_two_file=True):
-        """Compile reSt into HTML files."""
+        """Compile source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         error_level = 100
         with io.open(dest, "w+", encoding="utf8") as out_file:
@@ -110,6 +113,7 @@ class CompileRest(PageCompiler):
             return False
 
     def create_post(self, path, **kw):
+        """Create a new post."""
         content = kw.pop('content', None)
         onefile = kw.pop('onefile', False)
         # is_page is not used by create_post as of now.
@@ -127,6 +131,7 @@ class CompileRest(PageCompiler):
             fd.write(content)
 
     def set_site(self, site):
+        """Set Nikola site."""
         super(CompileRest, self).set_site(site)
         self.config_dependencies = []
         for plugin_info in self.get_compiler_extensions():
@@ -168,11 +173,15 @@ def get_observer(settings):
 
 class NikolaReader(docutils.readers.standalone.Reader):
 
+    """Nikola-specific docutils reader."""
+
     def __init__(self, *args, **kwargs):
+        """Initialize the reader."""
         self.transforms = kwargs.pop('transforms', [])
         docutils.readers.standalone.Reader.__init__(self, *args, **kwargs)
 
     def get_transforms(self):
+        """Get docutils transforms."""
         return docutils.readers.standalone.Reader(self).get_transforms() + self.transforms
 
     def new_document(self):
@@ -184,8 +193,8 @@ class NikolaReader(docutils.readers.standalone.Reader):
 
 
 def add_node(node, visit_function=None, depart_function=None):
-    """
-    Register a Docutils node class.
+    """Register a Docutils node class.
+
     This function is completely optional. It is a same concept as
     `Sphinx add_node function <http://sphinx-doc.org/ext/appapi.html#sphinx.application.Sphinx.add_node>`_.
 
@@ -229,8 +238,8 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
              writer_name='html', settings=None, settings_spec=None,
              settings_overrides=None, config_section=None,
              enable_exit_status=None, logger=None, l_add_ln=0, transforms=None):
-    """
-    Set up & run a `Publisher`, and return a dictionary of document parts.
+    """Set up & run a ``Publisher``, and return a dictionary of document parts.
+
     Dictionary keys are the names of parts, and values are Unicode strings;
     encoding is up to the client.  For programmatic use with string I/O.
 

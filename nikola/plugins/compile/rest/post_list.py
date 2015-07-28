@@ -23,6 +23,9 @@
 # OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+"""Post list directive for reStructuredText."""
+
 from __future__ import unicode_literals
 
 import os
@@ -40,9 +43,13 @@ from nikola.plugin_categories import RestExtension
 
 
 class Plugin(RestExtension):
+
+    """Plugin for reST post-list directive."""
+
     name = "rest_post_list"
 
     def set_site(self, site):
+        """Set Nikola site."""
         self.site = site
         directives.register_directive('post-list', PostList)
         PostList.site = site
@@ -50,14 +57,15 @@ class Plugin(RestExtension):
 
 
 class PostList(Directive):
-    """
+
+    """Provide a reStructuredText directive to create a list of posts.
+
     Post List
     =========
     :Directive Arguments: None.
     :Directive Options: lang, start, stop, reverse, sort, tags, categories, slugs, all, template, id
     :Directive Content: None.
 
-    Provides a reStructuredText directive to create a list of posts.
     The posts appearing in the list can be filtered by options.
     *List slicing* is provided with the *start*, *stop* and *reverse* options.
 
@@ -111,6 +119,7 @@ class PostList(Directive):
         A manual id for the post list.
         Defaults to a random name composed by 'post_list_' + uuid.uuid4().hex.
     """
+
     option_spec = {
         'start': int,
         'stop': int,
@@ -126,6 +135,7 @@ class PostList(Directive):
     }
 
     def run(self):
+        """Run post-list directive."""
         start = self.options.get('start')
         stop = self.options.get('stop')
         reverse = self.options.get('reverse', False)
