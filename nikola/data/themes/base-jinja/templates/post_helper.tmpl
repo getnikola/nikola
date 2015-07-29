@@ -57,7 +57,7 @@
 {#     %if post.author(): #}
 {#     <meta property="article:author" content="{{ post.author() }}"> #}
 {#     %endif #}
-    {% if post.formatted_date('webiso') %}
+    {% if post.date.isoformat() %}
     <meta property="article:published_time" content="{{ post.formatted_date('webiso') }}">
     {% endif %}
     {% if post.tags %}
