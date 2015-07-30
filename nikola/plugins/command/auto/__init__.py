@@ -286,7 +286,9 @@ class CommandAuto(Command):
         uri = wsgiref.util.request_uri(environ)
         p_uri = urlparse(uri)
         f_path = os.path.join(self.site.config['OUTPUT_FOLDER'], *p_uri.path.split('/'))
-        mimetype = mimetypes.guess_type(uri)[0] or 'application/octet-stream'
+
+        # ‘Pretty’ URIs and root are assumed to be HTML
+        mimetype = 'text/html' if uri.endswith('/') else mimetypes.guess_type(uri)[0] or 'application/octet-stream'
 
         if os.path.isdir(f_path):
             f_path = os.path.join(f_path, self.site.config['INDEX_FILE'])
