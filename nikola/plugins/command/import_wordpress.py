@@ -526,15 +526,15 @@ class CommandImportWordpress(Command, ImportMixin):
                                         return
                                 dst_meta[our_key] = value
 
-                        add('aperture', b'aperture', is_int=True, ignore_zero=True)
+                        add('aperture', b'aperture', is_float=True, ignore_zero=True)
                         add('credit', b'credit')
                         add('camera', b'camera')
                         add('caption', b'caption')
-                        add('created_timestamp', b'created_timestamp', is_int=True, ignore_zero=True)
+                        add('created_timestamp', b'created_timestamp', is_float=True, ignore_zero=True)
                         add('copyright', b'copyright')
-                        add('focal_length', b'focal_length', is_int=True, ignore_zero=True)
-                        add('iso', b'iso', is_int=True, ignore_zero=True)
-                        add('shutter_speed', b'shutter_speed', is_int=False, ignore_zero=True, is_float=True)
+                        add('focal_length', b'focal_length', is_float=True, ignore_zero=True)
+                        add('iso', b'iso', is_float=True, ignore_zero=True)
+                        add('shutter_speed', b'shutter_speed', ignore_zero=True, is_float=True)
                         add('title', b'title')
 
                         if len(dst_meta) > 0:
