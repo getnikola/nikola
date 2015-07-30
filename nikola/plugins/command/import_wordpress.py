@@ -509,11 +509,15 @@ class CommandImportWordpress(Command, ImportMixin):
                         image_meta = metadata[meta_key]
                         dst_meta = {}
 
-                        def add(our_key, wp_key, is_int=False, ignore_zero=False):
+                        def add(our_key, wp_key, is_int=False, ignore_zero=False, is_float=False):
                             if wp_key in image_meta:
                                 value = image_meta[wp_key]
                                 if is_int:
                                     value = int(value)
+                                    if ignore_zero and value == 0:
+                                        return
+                                elif is_float:
+                                    value = float(value)
                                     if ignore_zero and value == 0:
                                         return
                                 else:
@@ -530,7 +534,7 @@ class CommandImportWordpress(Command, ImportMixin):
                         add('copyright', b'copyright')
                         add('focal_length', b'focal_length', is_int=True, ignore_zero=True)
                         add('iso', b'iso', is_int=True, ignore_zero=True)
-                        add('shutter_speed', b'shutter_speed', is_int=False, ignore_zero=True)
+                        add('shutter_speed', b'shutter_speed', is_int=False, ignore_zero=True, is_float=True)
                         add('title', b'title')
 
                         if len(dst_meta) > 0:
