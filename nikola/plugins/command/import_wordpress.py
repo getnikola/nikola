@@ -530,7 +530,7 @@ class CommandImportWordpress(Command, ImportMixin):
                         add('copyright', b'copyright')
                         add('focal_length', b'focal_length', is_int=True, ignore_zero=True)
                         add('iso', b'iso', is_int=True, ignore_zero=True)
-                        add('shutter_speed', b'shutter_speed', is_int=True, ignore_zero=True)
+                        add('shutter_speed', b'shutter_speed', is_int=False, ignore_zero=True)
                         add('title', b'title')
 
                         if len(dst_meta) > 0:
