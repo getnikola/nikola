@@ -1,10 +1,16 @@
-New in Master
+New in master
 =============
+
+Features
+--------
+
+* Render Jupyter notebooks (ipynb) in listings (Issue #1900)
 
 Bugfixes
 --------
 
-* Handle non-integer shutter speeds in WP importer (Issue #1917)
+* Handle non-integer shutter speeds and other variables in WordPress
+  importer (Issue #1917)
 
 
 New in v7.6.2

@@ -30,6 +30,7 @@ from __future__ import unicode_literals, print_function
 
 import sys
 import os
+import lxml.html
 
 from pygments import highlight
 from pygments.lexers import get_lexer_for_filename, TextLexer
@@ -113,7 +114,17 @@ class Listings(Task):
         ignored_extensions = (".pyc", ".pyo")
 
         def render_listing(in_name, out_name, input_folder, output_folder, folders=[], files=[]):
-            if in_name:
+            needs_ipython_css = False
+            if in_name and in_name.endswith('.ipynb'):
+                # Special handling: render ipynbs in listings (Issue #1900)
+                ipynb_compiler = self.site.plugin_manager.getPluginByName("ipynb", "PageCompiler").plugin_object
+                ipynb_raw = ipynb_compiler.compile_html_string(in_name, True)
+                ipynb_html = lxml.html.fromstring(ipynb_raw)
+                # The raw HTML contains garbage (scripts and styles), we can’t leave it in
+                code = lxml.html.tostring(ipynb_html.xpath('//*[@id="notebook"]')[0], encoding='unicode')
+                title = os.path.basename(in_name)
+                needs_ipython_css = True
+            elif in_name:
                 with open(in_name, 'r') as fd:
                     try:
                         lexer = get_lexer_for_filename(in_name)
@@ -154,6 +165,10 @@ class Listings(Task):
                 'source_link': source_link,
                 'pagekind': ['listing'],
             }
+            if needs_ipython_css:
+                # If someone does not have ipynb posts and only listings, we
+                # need to enable ipynb CSS for ipynb listings.
+                context['needs_ipython_css'] = True
             self.site.render_template('listing.tmpl', out_name, context)
 
         yield self.group_task()
