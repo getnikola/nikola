@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* <base href> resolve common relative resource loading issues
 * Handle non-integer shutter speeds and other variables in WordPress
   importer (Issue #1917)
 
