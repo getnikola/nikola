@@ -1017,7 +1017,7 @@ class Nikola(object):
         utils.makedirs(os.path.dirname(output_name))
         parser = lxml.html.HTMLParser(remove_blank_text=True)
         doc = lxml.html.document_fromstring(data, parser)
-        doc.rewrite_links(lambda dst: self.url_replacer(src, dst, context['lang']), resolve_base_href=False)
+        doc.rewrite_links(lambda dst: self.url_replacer(src, dst, context['lang']))
         data = b'<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='utf8', method='html', pretty_print=True)
         with open(output_name, "wb+") as post_file:
             post_file.write(data)
