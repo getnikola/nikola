@@ -34,7 +34,9 @@ of Nikola.
 Command Plugins
 ---------------
 
-When you run ``nikola --help`` you will see something like this::
+When you run ``nikola --help`` you will see something like this:
+
+.. code-block:: console
 
     $ nikola help
     Nikola is a tool to create static websites and blogs. For full documentation and more
@@ -146,7 +148,9 @@ For your own plugin, just change the values in a sensible way. The
                 httpd.serve_forever()
 
 As mentioned above, a plugin can have options, which the user can see by doing
-``nikola help command`` and can later use, for example::
+``nikola help command`` and can later use, for example:
+
+.. code-block:: console
 
     $ nikola help serve
     Purpose: start the test webserver
@@ -258,7 +262,7 @@ T
     and ``TaskMultiplier`` plugins that take a task and create
     more tasks out of it.
 
-::
+.. code-block:: console
 
     $ nikola list
     Scanning posts....done!
@@ -384,14 +388,17 @@ RestExtension Plugins
 
 Implement directives for reStructuredText, see `media.py <https://github.com/getnikola/nikola/blob/master/nikola/plugins/compile/rest/media.py>`__ for a simple example.
 
-If your output depends on a config value, you need to make your post record a dependency on a pseudo-path like this::
+If your output depends on a config value, you need to make your post record a dependency on a pseudo-path, like this:
+
+.. code-block:: text
 
     ####MAGIC####CONFIG:OPTIONNAME
 
 Then, whenever the ``OPTIONNAME`` option is changed in conf.py, the file will be rebuilt.
 
-If your directive depends or may depend on the whole timeline like, for example, the post-list directive, where adding new posts
-to the site could make it stale, you should record a dependency on the pseudo-path ``####MAGIC####TIMELINE``
+If your directive depends or may depend on the whole timeline (like the post-list directive, where adding new posts
+to the site could make it stale), you should record a dependency on the
+pseudo-path ``####MAGIC####TIMELINE``.
 
 MarkdownExtension Plugins
 -------------------------
