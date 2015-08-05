@@ -184,11 +184,11 @@ class Sitemap(LateTask):
                                 continue
 
                             """ ignores "html" files with noindex robot directives """
-                            robots_directives = [b'<meta content="noindex" name="robots"',
-                                                 b'<meta content="none" name="robots"',
-                                                 b'<meta name="robots" content="noindex"',
-                                                 b'<meta name="robots" content="none"']
-                            if any([robot_directive in filehead.lower() for robot_directive in robots_directives]):
+                            robots_directives = [b'<meta content=noindex name=robots',
+                                                 b'<meta content=none name=robots',
+                                                 b'<meta name=robots content=noindex',
+                                                 b'<meta name=robots content=none']
+                            if any([robot_directive in filehead.lower().replace('"', '')s for robot_directive in robots_directives]):
                                 continue
 
                         # put Atom and RSS in sitemapindex[] instead of in urlset[],
