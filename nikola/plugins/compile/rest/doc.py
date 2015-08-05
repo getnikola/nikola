@@ -24,6 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""reST role for linking to other documents."""
 
 from docutils import nodes
 from docutils.parsers.rst import roles
@@ -34,9 +35,12 @@ from nikola.plugin_categories import RestExtension
 
 class Plugin(RestExtension):
 
+    """Plugin for doc role."""
+
     name = 'rest_doc'
 
     def set_site(self, site):
+        """Set Nikola site."""
         self.site = site
         roles.register_canonical_role('doc', doc_role)
         doc_role.site = site
@@ -45,7 +49,7 @@ class Plugin(RestExtension):
 
 def doc_role(name, rawtext, text, lineno, inliner,
              options={}, content=[]):
-
+    """Handle the doc role."""
     # split link's text and post's slug in role content
     has_explicit_title, title, slug = split_explicit_title(text)
     # check if the slug given is part of our blog posts/pages
@@ -82,5 +86,6 @@ def doc_role(name, rawtext, text, lineno, inliner,
 
 
 def make_link_node(rawtext, text, url, options):
+    """Make a reST link node."""
     node = nodes.reference(rawtext, text, refuri=url, *options)
     return node

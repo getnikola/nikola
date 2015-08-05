@@ -44,6 +44,7 @@ from nikola.utils import makedirs, req_missing, write_metadata
 
 
 class CompileMarkdown(PageCompiler):
+
     """Compile Markdown into HTML."""
 
     name = "markdown"
@@ -53,6 +54,7 @@ class CompileMarkdown(PageCompiler):
     site = None
 
     def set_site(self, site):
+        """Set Nikola site."""
         super(CompileMarkdown, self).set_site(site)
         self.config_dependencies = []
         for plugin_info in self.get_compiler_extensions():
@@ -63,6 +65,7 @@ class CompileMarkdown(PageCompiler):
         self.config_dependencies.append(str(sorted(site.config.get("MARKDOWN_EXTENSIONS"))))
 
     def compile_html(self, source, dest, is_two_file=True):
+        """Compile source file into HTML and save as dest."""
         if markdown is None:
             req_missing(['markdown'], 'build this site (compile Markdown)')
         makedirs(os.path.dirname(dest))
@@ -76,6 +79,7 @@ class CompileMarkdown(PageCompiler):
             out_file.write(output)
 
     def create_post(self, path, **kw):
+        """Create a new post."""
         content = kw.pop('content', None)
         onefile = kw.pop('onefile', False)
         # is_page is not used by create_post as of now.

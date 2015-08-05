@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Print Nikola version."""
+
 from __future__ import print_function
 
 import lxml
@@ -36,7 +38,8 @@ URL = 'https://pypi.python.org/pypi?:action=doap&name=Nikola'
 
 
 class CommandVersion(Command):
-    """Print the version."""
+
+    """Print Nikola version."""
 
     name = "version"
 

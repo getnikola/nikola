@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Copy page sources into the output."""
+
 import os
 
 from nikola.plugin_categories import Task
@@ -31,20 +33,13 @@ from nikola import utils
 
 
 class Sources(Task):
+
     """Copy page sources into the output."""
 
     name = "render_sources"
 
     def gen_tasks(self):
-        """Publish the page sources into the output.
-
-        Required keyword arguments:
-
-        translations
-        default_lang
-        post_pages
-        output_folder
-        """
+        """Publish the page sources into the output."""
         kw = {
             "translations": self.site.config["TRANSLATIONS"],
             "output_folder": self.site.config["OUTPUT_FOLDER"],

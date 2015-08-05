@@ -4,18 +4,43 @@ New in master
 Features
 --------
 
-* Remove empty directories with nikola check --clean-files (Issue #1873)
+* Render Jupyter notebooks (ipynb) in listings (Issue #1900)
 
 Bugfixes
 --------
 
 * Avoid Broken Pipe error in nikola auto (Issue #1906)
+* "nikola auto" serving implicit index.html with wrong mime type (Issue #1921)
+* Handle non-integer shutter speeds and other variables in WordPress
+  importer (Issue #1917)
+
+
+New in v7.6.2
+=============
+
+Features
+--------
+
+* Make the Google Search example prettier, integrating well with
+  Bootstrap 3 (Issue #1912)
+* Add categories filter to post list directive (via Issue #1889)
+* Remove empty directories with nikola check --clean-files (Issue #1873)
+
+Bugfixes
+--------
+
 * Don't auto-rebuild on changes to ".foo" or "foo~" or changes in folders.
+* Don't assume things are HTML in auto mode (Issue #1915)
+* Don’t rebuild Atom syndication files unnecessarily often
+* Include .php files in sitemaps
+* Retry all client errors (4xx) to HEAD as GET reques when checking remote links
+* Graceful fallback in ``nikola serve --detach`` on Windows (Issue #1913)
+* Don't auto-rebuild on changes to ".foo" or "foo~" or changes in folders
 * auto should also rebuild in response to move events
 * Don’t get metadata from file if compiler-specific metadata exist (Issue #1904)
 * Fix PRETTY_URLS prompt for Windows (Issue #1901)
 * Fix reST and Markdown title extraction from documents (Issue #1895, #1898)
-* Minor improvements in the extending document.
+* Minor improvements to the extending document
 * Re-add the hack to kill nikola auto on ^C (Issue #1893)
 
 New in v7.6.1

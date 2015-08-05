@@ -27,7 +27,6 @@
 """Implementation of compile_html based on pandoc.
 
 You will need, of course, to install pandoc
-
 """
 
 from __future__ import unicode_literals
@@ -41,16 +40,19 @@ from nikola.utils import req_missing, makedirs, write_metadata
 
 
 class CompilePandoc(PageCompiler):
+
     """Compile markups into HTML using pandoc."""
 
     name = "pandoc"
     friendly_name = "pandoc"
 
     def set_site(self, site):
+        """Set Nikola site."""
         self.config_dependencies = [str(site.config['PANDOC_OPTIONS'])]
         super(CompilePandoc, self).set_site(site)
 
     def compile_html(self, source, dest, is_two_file=True):
+        """Compile source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         try:
             subprocess.check_call(['pandoc', '-o', dest, source] + self.site.config['PANDOC_OPTIONS'])
@@ -59,6 +61,7 @@ class CompilePandoc(PageCompiler):
                 req_missing(['pandoc'], 'build this site (compile with pandoc)', python=False)
 
     def create_post(self, path, **kw):
+        """Create a new post."""
         content = kw.pop('content', None)
         onefile = kw.pop('onefile', False)
         # is_page is not used by create_post as of now.

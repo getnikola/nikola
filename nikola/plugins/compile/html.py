@@ -36,11 +36,14 @@ from nikola.utils import makedirs, write_metadata
 
 
 class CompileHtml(PageCompiler):
+
     """Compile HTML into HTML."""
+
     name = "html"
     friendly_name = "HTML"
 
     def compile_html(self, source, dest, is_two_file=True):
+        """Compile source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with io.open(source, "r", encoding="utf8") as in_file:
@@ -51,6 +54,7 @@ class CompileHtml(PageCompiler):
         return True
 
     def create_post(self, path, **kw):
+        """Create a new post."""
         content = kw.pop('content', None)
         onefile = kw.pop('onefile', False)
         # is_page is not used by create_post as of now.

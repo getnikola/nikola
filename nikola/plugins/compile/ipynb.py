@@ -53,6 +53,7 @@ from nikola.utils import makedirs, req_missing, get_logger, STDERR_HANDLER
 
 
 class CompileIPynb(PageCompiler):
+
     """Compile IPynb into HTML."""
 
     name = "ipynb"
@@ -61,24 +62,30 @@ class CompileIPynb(PageCompiler):
     default_kernel = 'python2' if sys.version_info[0] == 2 else 'python3'
 
     def set_site(self, site):
+        """Set Nikola site."""
         self.logger = get_logger('compile_ipynb', STDERR_HANDLER)
         super(CompileIPynb, self).set_site(site)
 
-    def compile_html(self, source, dest, is_two_file=True):
+    def compile_html_string(self, source, is_two_file=True):
+        """Export notebooks as HTML strings."""
         if flag is None:
             req_missing(['ipython[notebook]>=2.0.0'], 'build this site (compile ipynb)')
-        makedirs(os.path.dirname(dest))
         HTMLExporter.default_template = 'basic'
         c = Config(self.site.config['IPYNB_CONFIG'])
         exportHtml = HTMLExporter(config=c)
+        with io.open(source, "r", encoding="utf8") as in_file:
+            nb_json = nbformat.read(in_file, current_nbformat)
+        (body, resources) = exportHtml.from_notebook_node(nb_json)
+        return body
+
+    def compile_html(self, source, dest, is_two_file=True):
+        """Compile source file into HTML and save as dest."""
+        makedirs(os.path.dirname(dest))
         with io.open(dest, "w+", encoding="utf8") as out_file:
-            with io.open(source, "r", encoding="utf8") as in_file:
-                nb_json = nbformat.read(in_file, current_nbformat)
-            (body, resources) = exportHtml.from_notebook_node(nb_json)
-            out_file.write(body)
+            out_file.write(self.compile_html_string(source, is_two_file))
 
     def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
-        """read metadata directly from ipynb file.
+        """Read metadata directly from ipynb file.
 
         As ipynb file support arbitrary metadata as json, the metadata used by Nikola
         will be assume to be in the 'nikola' subfield.
@@ -93,6 +100,7 @@ class CompileIPynb(PageCompiler):
         return nb_json.get('metadata', {}).get('nikola', {})
 
     def create_post(self, path, **kw):
+        """Create a new post."""
         if flag is None:
             req_missing(['ipython[notebook]>=2.0.0'], 'build this site (compile ipynb)')
         content = kw.pop('content', None)

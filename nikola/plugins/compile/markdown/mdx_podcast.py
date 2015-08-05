@@ -24,21 +24,19 @@
 # Inspired by "[Python] reStructuredText GitHub Podcast directive"
 # (https://gist.github.com/brianhsu/1407759), public domain by Brian Hsu
 
-from __future__ import print_function, unicode_literals
-
-
-'''
-Extension to Python Markdown for Embedded Audio
+"""
+Extension to Python Markdown for Embedded Audio.
 
 Basic Example:
 
 >>> import markdown
->>> text = """[podcast]http://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3[/podcast]"""
+>>> text = "[podcast]http://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3[/podcast]"
 >>> html = markdown.markdown(text, [PodcastExtension()])
 >>> print(html)
-<p><audio src="http://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3"></audio></p>
-'''
+<p><audio controls=""><source src="http://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3" type="audio/mpeg"></source></audio></p>
+"""
 
+from __future__ import print_function, unicode_literals
 from nikola.plugin_categories import MarkdownExtension
 try:
     from markdown.extensions import Extension
@@ -53,12 +51,15 @@ PODCAST_RE = r'\[podcast\](?P<url>.+)\[/podcast\]'
 
 
 class PodcastPattern(Pattern):
-    """ InlinePattern for footnote markers in a document's body text. """
+
+    """InlinePattern for footnote markers in a document's body text."""
 
     def __init__(self, pattern, configs):
+        """Initialize pattern."""
         Pattern.__init__(self, pattern)
 
     def handleMatch(self, m):
+        """Handle pattern matches."""
         url = m.group('url').strip()
         audio_elem = etree.Element('audio')
         audio_elem.set('controls', '')
@@ -69,7 +70,11 @@ class PodcastPattern(Pattern):
 
 
 class PodcastExtension(MarkdownExtension, Extension):
+
+    """"Podcast extension for Markdown."""
+
     def __init__(self, configs={}):
+        """Initialize extension."""
         # set extension defaults
         self.config = {}
 
@@ -78,6 +83,7 @@ class PodcastExtension(MarkdownExtension, Extension):
             self.setConfig(key, value)
 
     def extendMarkdown(self, md, md_globals):
+        """Extend Markdown."""
         podcast_md_pattern = PodcastPattern(PODCAST_RE, self.getConfigs())
         podcast_md_pattern.md = md
         md.inlinePatterns.add('podcast', podcast_md_pattern, "<not_strong")
@@ -85,6 +91,7 @@ class PodcastExtension(MarkdownExtension, Extension):
 
 
 def makeExtension(configs=None):  # pragma: no cover
+    """Make Markdown extension."""
     return PodcastExtension(configs)
 
 if __name__ == '__main__':

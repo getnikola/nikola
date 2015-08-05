@@ -24,7 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Markdown Extension for Nikola-specific post-processing"""
+"""Markdown Extension for Nikola-specific post-processing."""
+
 from __future__ import unicode_literals
 import re
 try:
@@ -41,7 +42,11 @@ CODERE = re.compile('<div class="codehilite"><pre>(.*?)</pre></div>', flags=re.M
 
 
 class NikolaPostProcessor(Postprocessor):
+
+    """Nikola-specific post-processing for Markdown."""
+
     def run(self, text):
+        """Run the postprocessor."""
         output = text
 
         # python-markdown's highlighter uses <div class="codehilite"><pre>
@@ -52,11 +57,16 @@ class NikolaPostProcessor(Postprocessor):
 
 
 class NikolaExtension(MarkdownExtension, Extension):
+
+    """Extension for injecting the postprocessor."""
+
     def extendMarkdown(self, md, md_globals):
+        """Extend Markdown with the postprocessor."""
         pp = NikolaPostProcessor()
         md.postprocessors.add('nikola_post_processor', pp, '_end')
         md.registerExtension(self)
 
 
 def makeExtension(configs=None):  # pragma: no cover
+    """Make extension."""
     return NikolaExtension(configs)

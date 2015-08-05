@@ -25,7 +25,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-""" Define and register a listing directive using the existing CodeBlock """
+"""Define and register a listing directive using the existing CodeBlock."""
 
 
 from __future__ import unicode_literals
@@ -55,7 +55,9 @@ from nikola.plugin_categories import RestExtension
 
 # A sanitized version of docutils.parsers.rst.directives.body.CodeBlock.
 class CodeBlock(Directive):
+
     """Parse and mark up content of a code block."""
+
     optional_arguments = 1
     option_spec = {'class': directives.class_option,
                    'name': directives.unchanged,
@@ -65,6 +67,7 @@ class CodeBlock(Directive):
     has_content = True
 
     def run(self):
+        """Run code block directive."""
         self.assert_has_content()
 
         if 'linenos' in self.options:
@@ -124,9 +127,12 @@ docutils.parsers.rst.directives.misc.CodeBlock = CodeBlock
 
 class Plugin(RestExtension):
 
+    """Plugin for listing directive."""
+
     name = "rest_listing"
 
     def set_site(self, site):
+        """Set Nikola site."""
         self.site = site
         # Even though listings don't use CodeBlock anymore, I am
         # leaving these to make the code directive work with
@@ -146,7 +152,8 @@ listing_spec['linenos'] = directives.unchanged
 
 
 class Listing(Include):
-    """ listing directive: create a highlighted block of code from a file in listings/
+
+    """Create a highlighted block of code from a file in listings/.
 
     Usage:
 
@@ -154,12 +161,14 @@ class Listing(Include):
            :number-lines:
 
     """
+
     has_content = False
     required_arguments = 1
     optional_arguments = 1
     option_spec = listing_spec
 
     def run(self):
+        """Run listing directive."""
         _fname = self.arguments.pop(0)
         fname = _fname.replace('/', os.sep)
         lang = self.arguments.pop(0)
@@ -185,9 +194,9 @@ class Listing(Include):
         return generated_nodes
 
     def get_code_from_file(self, data):
-        """ Create CodeBlock nodes from file object content """
+        """Create CodeBlock nodes from file object content."""
         return super(Listing, self).run()
 
     def assert_has_content(self):
-        """ Listing has no content, override check from superclass """
+        """Listing has no content, override check from superclass."""
         pass

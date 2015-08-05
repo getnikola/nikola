@@ -24,11 +24,14 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Check the generated site."""
+
 from __future__ import print_function
 from collections import defaultdict
 import os
 import re
 import sys
+import time
 try:
     from urllib import unquote
     from urlparse import urlparse, urljoin, urldefrag
@@ -58,6 +61,7 @@ def _call_nikola_list(site):
 
 
 def real_scan_files(site):
+    """Scan for files."""
     task_fnames = set([])
     real_fnames = set([])
     output_folder = site.config['OUTPUT_FOLDER']
@@ -80,7 +84,8 @@ def real_scan_files(site):
 
 
 def fs_relpath_from_url_path(url_path):
-    """Expects as input an urlparse(s).path"""
+    """Create a filesystem relative path from an URL path."""
+    # Expects as input an urlparse(s).path
     url_path = unquote(url_path)
     # in windows relative paths don't begin with os.sep
     if sys.platform == 'win32' and len(url_path):
@@ -89,6 +94,7 @@ def fs_relpath_from_url_path(url_path):
 
 
 class CommandCheck(Command):
+
     """Check the generated site."""
 
     name = "check"
@@ -169,6 +175,7 @@ class CommandCheck(Command):
     checked_remote_targets = {}
 
     def analyze(self, fname, find_sources=False, check_remote=False):
+        """Analyze links on a page."""
         rv = False
         self.whitelist = [re.compile(x) for x in self.site.config['LINK_CHECK_WHITELIST']]
         base_url = urlparse(self.site.config['BASE_URL'])
@@ -223,6 +230,11 @@ class CommandCheck(Command):
                     # Check the remote link works
                     req_headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0 (Nikola)'}  # I’m a real boy!
                     resp = requests.head(target, headers=req_headers)
+                    # Retry client errors (4xx) as GET requests
+                    if resp.status_code >= 400 and resp.status_code <= 499:
+                        time.sleep(0.5)
+                        resp = requests.get(target, headers=req_headers)
+
                     self.checked_remote_targets[target] = resp.status_code
                     if resp.status_code > 399:  # Error
                         self.logger.warn("Broken link in {0}: {1} [Error {2}]".format(filename, target, resp.status_code))
@@ -271,6 +283,7 @@ class CommandCheck(Command):
         return rv
 
     def scan_links(self, find_sources=False, check_remote=False):
+        """Check links on the site."""
         self.logger.info("Checking Links:")
         self.logger.info("===============\n")
         self.logger.notice("{0} mode".format(self.site.config['URL_TYPE']))
@@ -286,6 +299,7 @@ class CommandCheck(Command):
         return failure
 
     def scan_files(self):
+        """Check files in the site, find missing and orphaned files."""
         failure = False
         self.logger.info("Checking Files:")
         self.logger.info("===============\n")
@@ -311,6 +325,7 @@ class CommandCheck(Command):
         return failure
 
     def clean_files(self):
+        """Remove orphaned files."""
         only_on_output, _ = real_scan_files(self.site)
         for f in only_on_output:
             self.logger.info('removed: {0}'.format(f))

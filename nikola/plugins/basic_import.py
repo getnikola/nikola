@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Mixin for importer plugins."""
+
 from __future__ import unicode_literals, print_function
 import io
 import csv
@@ -46,6 +48,7 @@ links = {}
 
 
 class ImportMixin(object):
+
     """Mixin with common used methods."""
 
     name = "import_mixin"
@@ -68,12 +71,14 @@ class ImportMixin(object):
 
     @classmethod
     def get_channel_from_file(cls, filename):
+        """Get channel from XML file."""
         tree = etree.fromstring(cls.read_xml_file(filename))
         channel = tree.find('channel')
         return channel
 
     @staticmethod
     def configure_redirections(url_map):
+        """Configure redirections from an url_map."""
         redirections = []
         for k, v in url_map.items():
             if not k[-1] == '/':
@@ -90,6 +95,7 @@ class ImportMixin(object):
         return redirections
 
     def generate_base_site(self):
+        """Generate a base Nikola site."""
         if not os.path.exists(self.output_folder):
             os.system('nikola init -q ' + self.output_folder)
         else:
@@ -108,14 +114,17 @@ class ImportMixin(object):
 
     @staticmethod
     def populate_context(channel):
+        """Populate context with settings."""
         raise NotImplementedError("Must be implemented by a subclass.")
 
     @classmethod
     def transform_content(cls, content):
+        """Transform content to a Nikola-friendly format."""
         return content
 
     @classmethod
     def write_content(cls, filename, content, rewrite_html=True):
+        """Write content to file."""
         if rewrite_html:
             doc = html.document_fromstring(content)
             doc.rewrite_links(replacer)
@@ -129,6 +138,7 @@ class ImportMixin(object):
 
     @staticmethod
     def write_metadata(filename, title, slug, post_date, description, tags, **kwargs):
+        """Write metadata to meta file."""
         if not description:
             description = ""
 
@@ -140,6 +150,7 @@ class ImportMixin(object):
 
     @staticmethod
     def write_urlmap_csv(output_file, url_map):
+        """Write urlmap to csv file."""
         utils.makedirs(os.path.dirname(output_file))
         fmode = 'wb+' if sys.version_info[0] == 2 else 'w+'
         with io.open(output_file, fmode) as fd:
@@ -148,6 +159,7 @@ class ImportMixin(object):
                 csv_writer.writerow(item)
 
     def get_configuration_output_path(self):
+        """Get path for the output configuration file."""
         if not self.import_into_existing_site:
             filename = 'conf.py'
         else:
@@ -161,10 +173,12 @@ class ImportMixin(object):
 
     @staticmethod
     def write_configuration(filename, rendered_template):
+        """Write the configuration file."""
         utils.makedirs(os.path.dirname(filename))
         with io.open(filename, 'w+', encoding='utf8') as fd:
             fd.write(rendered_template)
 
 
 def replacer(dst):
+    """Replace links."""
     return links.get(dst, dst)

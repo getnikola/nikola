@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Slides directive for reStructuredText."""
+
 from __future__ import unicode_literals
 
 import uuid
@@ -36,9 +38,12 @@ from nikola.plugin_categories import RestExtension
 
 class Plugin(RestExtension):
 
+    """Plugin for reST slides directive."""
+
     name = "rest_slides"
 
     def set_site(self, site):
+        """Set Nikola site."""
         self.site = site
         directives.register_directive('slides', Slides)
         Slides.site = site
@@ -46,10 +51,13 @@ class Plugin(RestExtension):
 
 
 class Slides(Directive):
-    """ Restructured text extension for inserting slideshows."""
+
+    """reST extension for inserting slideshows."""
+
     has_content = True
 
     def run(self):
+        """Run the slides directive."""
         if len(self.content) == 0:  # pragma: no cover
             return
 

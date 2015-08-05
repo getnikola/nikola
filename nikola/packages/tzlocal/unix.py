@@ -1,3 +1,5 @@
+"""tzlocal for UNIX."""
+
 from __future__ import with_statement
 import os
 import re
@@ -7,7 +9,7 @@ _cache_tz = None
 
 
 def _get_localzone():
-    """Tries to find the local timezone configuration.
+    """Try to find the local timezone configuration.
 
     This method prefers finding the timezone name and passing that to pytz,
     over passing in the localtime file, as in the later case the zoneinfo
@@ -15,8 +17,8 @@ def _get_localzone():
 
     The parameter _root makes the function look for files like /etc/localtime
     beneath the _root directory. This is primarily used by the tests.
-    In normal usage you call the function without parameters."""
-
+    In normal usage you call the function without parameters.
+    """
     tz = os.environ.get('TZ')
     if tz and tz[0] == ':':
         tz = tz[1:]

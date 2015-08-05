@@ -21,7 +21,14 @@ def task_flake8():
     """flake8 - static check for python files"""
     yield {
         'name': os.path.join(os.getcwd(), 'nikola'),
-        'actions': ['flake8 --ignore=E501 nikola/'],
+        'actions': ['flake8 nikola/'],
+    }
+
+def task_pep257():
+    """pep257 -- static check for docstring style"""
+    yield {
+        'name': os.path.join(os.getcwd(), 'nikola'),
+        'actions': ["pep257 --count --match-dir='(?!^\.)(?!data).*' nikola/"],
     }
 
 

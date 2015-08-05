@@ -24,7 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""windows utilities to workaround problems with symlinks in a git clone"""
+"""windows utilities to workaround problems with symlinks in a git clone."""
 
 from __future__ import print_function, unicode_literals
 import os
@@ -34,6 +34,7 @@ import io
 
 
 def is_file_into_dir(filename, dirname):
+    """Check if a file is in directory."""
     try:
         res = not os.path.relpath(filename, dirname).startswith('.')
     except ValueError:
@@ -42,7 +43,7 @@ def is_file_into_dir(filename, dirname):
 
 
 def fix_all_git_symlinked(topdir):
-    """inplace conversion of git symlinks to real content
+    """Convert git symlinks to real content.
 
     Most (all?) of git implementations in windows store a symlink pointing
     into the repo as a text file, the text being the relative path to the

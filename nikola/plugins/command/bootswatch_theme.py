@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Given a swatch name from bootswatch.com and a parent theme, creates a custom theme."""
+
 from __future__ import print_function
 import os
 import requests
@@ -35,6 +37,7 @@ LOGGER = utils.get_logger('bootswatch_theme', utils.STDERR_HANDLER)
 
 
 class CommandBootswatchTheme(Command):
+
     """Given a swatch name from bootswatch.com and a parent theme, creates a custom theme."""
 
     name = "bootswatch_theme"

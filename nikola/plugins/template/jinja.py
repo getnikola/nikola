@@ -24,8 +24,10 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Jinja template handlers"""
 
+"""Jinja template handler."""
+
+from __future__ import unicode_literals
 import os
 import json
 from collections import deque
@@ -40,14 +42,15 @@ from nikola.utils import makedirs, req_missing
 
 
 class JinjaTemplates(TemplateSystem):
-    """Wrapper for Jinja2 templates."""
+
+    """Support for Jinja2 templates."""
 
     name = "jinja"
     lookup = None
     dependency_cache = {}
 
     def __init__(self):
-        """ initialize Jinja2 wrapper with extended set of filters"""
+        """Initialize Jinja2 environment with extended set of filters."""
         if jinja2 is None:
             return
         self.lookup = jinja2.Environment()
@@ -59,26 +62,25 @@ class JinjaTemplates(TemplateSystem):
         self.lookup.globals['tuple'] = tuple
 
     def set_directories(self, directories, cache_folder):
-        """Create a template lookup."""
+        """Create a new template lookup with set directories."""
         if jinja2 is None:
             req_missing(['jinja2'], 'use this theme')
         self.directories = directories
         self.create_lookup()
 
     def inject_directory(self, directory):
-        """if it's not there, add the directory to the lookup with lowest priority, and
-        recreate the lookup."""
+        """Add a directory to the lookup and recreate it if it's not there yet."""
         if directory not in self.directories:
             self.directories.append(directory)
             self.create_lookup()
 
     def create_lookup(self):
-        """Create a template lookup object."""
+        """Create a template lookup."""
         self.lookup.loader = jinja2.FileSystemLoader(self.directories,
                                                      encoding='utf-8')
 
     def set_site(self, site):
-        """Sets the site."""
+        """Set the Nikola site."""
         self.site = site
         self.lookup.filters.update(self.site.config['TEMPLATE_FILTERS'])
 
@@ -99,6 +101,7 @@ class JinjaTemplates(TemplateSystem):
         return self.lookup.from_string(template).render(**context)
 
     def template_deps(self, template_name):
+        """Generate list of dependencies for a template."""
         # Cache the lists of dependencies for each template name.
         if self.dependency_cache.get(template_name) is None:
             # Use a breadth-first search to find all templates this one

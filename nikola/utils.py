@@ -58,7 +58,7 @@ from doit.cmdparse import CmdParse
 
 from nikola import DEBUG
 
-__all__ = ['CustomEncoder', 'get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
+__all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'copy_file', 'slugify', 'unslugify', 'to_datetime', 'apply_filters',
            'config_changed', 'get_crumbs', 'get_tzname', 'get_asset_path',
            '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
@@ -70,7 +70,7 @@ __all__ = ['CustomEncoder', 'get_theme_path', 'get_theme_chain', 'load_messages'
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
            'NikolaPygmentsHTML', 'create_redirect', 'TreeNode',
            'flatten_tree_structure', 'parse_escaped_hierarchical_category_name',
-           'join_hierarchical_category_path', 'indent']
+           'join_hierarchical_category_path', 'indent')
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -94,7 +94,9 @@ class ApplicationWarning(Exception):
 
 
 class ColorfulStderrHandler(ColorizedStderrHandler):
+
     """Stream handler with colors."""
+
     _colorful = False
 
     def should_colorize(self, record):
@@ -133,7 +135,7 @@ else:
 
 
 def showwarning(message, category, filename, lineno, file=None, line=None):
-    """Show a warning (from the warnings subsystem) to the user."""
+    """Show a warning (from the warnings module) to the user."""
     try:
         n = category.__name__
     except AttributeError:
@@ -201,14 +203,14 @@ def sys_encode(thing):
 
 
 def sys_decode(thing):
-    """Returns unicode."""
+    """Return Unicode."""
     if isinstance(thing, bytes_str):
         return thing.decode(ENCODING)
     return thing
 
 
 def makedirs(path):
-    """Create a folder."""
+    """Create a folder and its parents if needed (mkdir -p)."""
     if not path:
         return
     if os.path.exists(path):
@@ -230,13 +232,12 @@ class Functionary(defaultdict):
     """Class that looks like a function, but is a defaultdict."""
 
     def __init__(self, default, default_lang):
+        """Initialize a functionary."""
         super(Functionary, self).__init__(default)
         self.default_lang = default_lang
 
     def __call__(self, key, lang=None):
-        """When called as a function, take an optional lang
-        and return self[lang][key]."""
-
+        """When called as a function, take an optional lang and return self[lang][key]."""
         if lang is None:
             lang = LocaleBorg().current_lang
         return self[lang][key]
@@ -244,8 +245,7 @@ class Functionary(defaultdict):
 
 class TranslatableSetting(object):
 
-    """
-    A setting that can be translated.
+    """A setting that can be translated.
 
     You can access it via: SETTING(lang).  You can omit lang, in which
     case Nikola will ask LocaleBorg, unless you set SETTING.lang,
@@ -259,7 +259,6 @@ class TranslatableSetting(object):
 
     The underlying structure is a defaultdict.  The language that
     is the default value of the dict is provided with __init__().
-    If you need access the underlying dict (you generally don’t,
     """
 
     # WARNING: This is generally not used and replaced with a call to
@@ -277,6 +276,7 @@ class TranslatableSetting(object):
             return self().__getattribute__(attr)
 
     def __dir__(self):
+        """Return the available methods of TranslatableSettings and strings."""
         return list(set(self.__dict__).union(set(dir(str))))
 
     def __init__(self, name, inp, translations):
@@ -287,7 +287,6 @@ class TranslatableSetting(object):
         * a string               -- the same will be used for all languages
         * a dict ({lang: value}) -- each language will use the value specified;
                                     if there is none, default_lang is used.
-
         """
         self.name = name
         self._inp = inp
@@ -323,8 +322,7 @@ class TranslatableSetting(object):
                 return self.default_lang
 
     def __call__(self, lang=None):
-        """
-        Return the value in the requested language.
+        """Return the value in the requested language.
 
         While lang is None, self.lang (currently set language) is used.
         Otherwise, the standard algorithm is used (see above).
@@ -336,11 +334,11 @@ class TranslatableSetting(object):
             return self.values[lang]
 
     def __str__(self):
-        """Return the value in the currently set language.  (deprecated)"""
+        """Return the value in the currently set language (deprecated)."""
         return self.values[self.get_lang()]
 
     def __unicode__(self):
-        """Return the value in the currently set language.  (deprecated)"""
+        """Return the value in the currently set language (deprecated)."""
         return self.values[self.get_lang()]
 
     def __repr__(self):
@@ -434,8 +432,7 @@ class TranslatableSetting(object):
 
 class TemplateHookRegistry(object):
 
-    """
-    A registry for template hooks.
+    r"""A registry for template hooks.
 
     Usage:
 
@@ -443,7 +440,7 @@ class TemplateHookRegistry(object):
     >>> r.append('Hello!')
     >>> r.append(lambda x: 'Hello ' + x + '!', False, 'world')
     >>> str(r())  # str() call is not recommended in real use
-    'Hello!\\nHello world!'
+    'Hello!\nHello world!'
     >>>
     """
 
@@ -487,17 +484,24 @@ class TemplateHookRegistry(object):
         self._items.append((c, inp, wants_site_and_context, args, kwargs))
 
     def __hash__(self):
+        """Return hash of a registry."""
         return hash(config_changed({self.name: self._items})._calc_digest())
 
     def __str__(self):
+        """Stringify a registry."""
         return '<TemplateHookRegistry: {0}>'.format(self._items)
 
     def __repr__(self):
+        """Provide the representation of a registry."""
         return '<TemplateHookRegistry: {0}>'.format(self.name)
 
 
 class CustomEncoder(json.JSONEncoder):
+
+    """Custom JSON encoder."""
+
     def default(self, obj):
+        """Default encoding handler."""
         try:
             return super(CustomEncoder, self).default(obj)
         except TypeError:
@@ -509,15 +513,18 @@ class CustomEncoder(json.JSONEncoder):
 
 
 class config_changed(tools.config_changed):
-    """ A copy of doit's but using pickle instead of serializing manually."""
+
+    """A copy of doit's config_changed, using pickle instead of serializing manually."""
 
     def __init__(self, config, identifier=None):
+        """Initialize config_changed."""
         super(config_changed, self).__init__(config)
         self.identifier = '_config_changed'
         if identifier is not None:
             self.identifier += ':' + identifier
 
     def _calc_digest(self):
+        """Calculate a config_changed digest."""
         if isinstance(self.config, str):
             return self.config
         elif isinstance(self.config, dict):
@@ -535,6 +542,7 @@ class config_changed(tools.config_changed):
                                 self.config)))
 
     def configure_task(self, task):
+        """Configure a task with a digest."""
         task.value_savers.append(lambda: {self.identifier: self._calc_digest()})
 
     def __call__(self, task, values):
@@ -545,13 +553,14 @@ class config_changed(tools.config_changed):
         return (last_success == self._calc_digest())
 
     def __repr__(self):
+        """Provide a representation of config_changed."""
         return "Change with config: {0}".format(json.dumps(self.config,
                                                            cls=CustomEncoder,
                                                            sort_keys=True))
 
 
 def get_theme_path(theme, _themes_dir='themes'):
-    """Given a theme name, returns the path where its files are located.
+    """Return the path where the given theme's files are located.
 
     Looks in ./themes and in the place where themes go when installed.
     """
@@ -565,6 +574,7 @@ def get_theme_path(theme, _themes_dir='themes'):
 
 
 def get_template_engine(themes, _themes_dir='themes'):
+    """Get template engine used by a given theme."""
     for theme_name in themes:
         engine_path = os.path.join(get_theme_path(theme_name, _themes_dir), 'engine')
         if os.path.isfile(engine_path):
@@ -575,6 +585,7 @@ def get_template_engine(themes, _themes_dir='themes'):
 
 
 def get_parent_theme_name(theme_name, _themes_dir='themes'):
+    """Get name of parent theme."""
     parent_path = os.path.join(get_theme_path(theme_name, _themes_dir), 'parent')
     if os.path.isfile(parent_path):
         with open(parent_path) as fd:
@@ -595,20 +606,25 @@ def get_theme_chain(theme, _themes_dir='themes'):
     return themes
 
 
-warned = []
+language_incomplete_warned = []
 
 
 class LanguageNotFoundError(Exception):
+
+    """An exception thrown if language is not found."""
+
     def __init__(self, lang, orig):
+        """Initialize exception."""
         self.lang = lang
         self.orig = orig
 
     def __str__(self):
+        """Stringify the exception."""
         return 'cannot find language {0}'.format(self.lang)
 
 
 def load_messages(themes, translations, default_lang):
-    """ Load theme's messages into context.
+    """Load theme's messages into context.
 
     All the messages from parent themes are loaded,
     and "younger" themes have priority.
@@ -628,8 +644,8 @@ def load_messages(themes, translations, default_lang):
                 _reload(translation)
                 if sorted(translation.MESSAGES.keys()) !=\
                         sorted(english.MESSAGES.keys()) and \
-                        lang not in warned:
-                    warned.append(lang)
+                        lang not in language_incomplete_warned:
+                    language_incomplete_warned.append(lang)
                     LOGGER.warn("Incomplete translation for language "
                                 "'{0}'.".format(lang))
                 messages[lang].update(english.MESSAGES)
@@ -681,6 +697,7 @@ def copy_tree(src, dst, link_cutoff=None):
 
 
 def copy_file(source, dest, cutoff=None):
+    """Copy a file from source to dest. If link target starts with `cutoff`, symlinks are used."""
     dst_dir = os.path.dirname(dest)
     makedirs(dst_dir)
     if os.path.islink(source):
@@ -701,6 +718,7 @@ def copy_file(source, dest, cutoff=None):
 
 
 def remove_file(source):
+    """Remove file or directory."""
     if os.path.isdir(source):
         shutil.rmtree(source)
     elif os.path.isfile(source) or os.path.islink(source):
@@ -714,13 +732,11 @@ _slugify_hyphenate_re = re.compile(r'[-\s]+')
 
 
 def slugify(value, force=False):
-    """
-    Normalizes string, converts to lowercase, removes non-alpha characters,
-    and converts spaces to hyphens.
+    u"""Normalize string, convert to lowercase, remove non-alpha characters, convert spaces to hyphens.
 
     From Django's "django/template/defaultfilters.py".
 
-    >>> print(slugify('\xe1\xe9\xed.\xf3\xfa'))
+    >>> print(slugify('áéí.óú'))
     aeiou
 
     >>> print(slugify('foo/bar'))
@@ -728,7 +744,6 @@ def slugify(value, force=False):
 
     >>> print(slugify('foo bar'))
     foo-bar
-
     """
     if not isinstance(value, unicode_str):
         raise ValueError("Not a unicode object: {0}".format(value))
@@ -771,10 +786,14 @@ def unslugify(value, discard_numbers=True):
 # python < 2.6
 
 class UnsafeZipException(Exception):
+
+    """Exception for unsafe zip files."""
+
     pass
 
 
 def extract_all(zipfile, path='themes'):
+    """Extract all files from a zip file."""
     pwd = os.getcwd()
     makedirs(path)
     os.chdir(path)
@@ -794,6 +813,7 @@ def extract_all(zipfile, path='themes'):
 
 
 def to_datetime(value, tzinfo=None):
+    """Convert string to datetime."""
     try:
         if not isinstance(value, datetime.datetime):
             # dateutil does bad things with TZs like UTC-03:00.
@@ -808,8 +828,7 @@ def to_datetime(value, tzinfo=None):
 
 
 def get_tzname(dt):
-    """
-    Given a datetime value, find the name of the time zone.
+    """Given a datetime value, find the name of the time zone.
 
     DEPRECATED: This thing returned basically the 1st random zone
     that matched the offset.
@@ -818,6 +837,7 @@ def get_tzname(dt):
 
 
 def current_time(tzinfo=None):
+    """Get current time."""
     if tzinfo is not None:
         dt = datetime.datetime.now(tzinfo)
     else:
@@ -826,13 +846,12 @@ def current_time(tzinfo=None):
 
 
 def apply_filters(task, filters, skip_ext=None):
-    """
-    Given a task, checks its targets.
-    If any of the targets has a filter that matches,
+    """Apply filters to a task.
+
+    If any of the targets of the given task has a filter that matches,
     adds the filter commands to the commands of the task,
     and the filter itself to the uptodate of the task.
     """
-
     if '.php' in filters.keys():
         if task_filters.php_template_injection not in filters['.php']:
             filters['.php'].append(task_filters.php_template_injection)
@@ -870,6 +889,7 @@ def apply_filters(task, filters, skip_ext=None):
 
 def get_crumbs(path, is_file=False, index_folder=None):
     """Create proper links for a crumb bar.
+
     index_folder is used if you want to use title from index file
     instead of folder name as breadcrumb text.
 
@@ -897,7 +917,6 @@ def get_crumbs(path, is_file=False, index_folder=None):
     >>> print('|'.join(crumbs[2]))
     #|bar
     """
-
     crumbs = path.split(os.sep)
     _crumbs = []
     if is_file:
@@ -927,14 +946,11 @@ def get_crumbs(path, is_file=False, index_folder=None):
 
 
 def get_asset_path(path, themes, files_folders={'files': ''}, _themes_dir='themes'):
-    """
-    .. versionchanged:: 6.1.0
+    """Return the "real", absolute path to the asset.
 
-    Checks which theme provides the path with the given asset,
-    and returns the "real", absolute path to the asset.
-
+    By default, it checks which theme provides the asset.
     If the asset is not provided by a theme, then it will be checked for
-    in the FILES_FOLDERS
+    in the FILES_FOLDERS.
 
     >>> print(get_asset_path('assets/css/rst.css', ['bootstrap3', 'base']))
     /.../nikola/data/themes/base/assets/css/rst.css
@@ -966,16 +982,20 @@ def get_asset_path(path, themes, files_folders={'files': ''}, _themes_dir='theme
 
 
 class LocaleBorgUninitializedException(Exception):
+
+    """Exception for unitialized LocaleBorg."""
+
     def __init__(self):
+        """Initialize exception."""
         super(LocaleBorgUninitializedException, self).__init__("Attempt to use LocaleBorg before initialization")
 
 
 class LocaleBorg(object):
-    """
-    Provides locale related services and autoritative current_lang,
-    where current_lang is the last lang for which the locale was set.
 
-    current_lang is meant to be set only by LocaleBorg.set_locale
+    """Provide locale related services and autoritative current_lang.
+
+    current_lang is the last lang for which the locale was set
+    and is meant to be set only by LocaleBorg.set_locale.
 
     python's locale code should not be directly called from code outside of
     LocaleBorg, they are compatibilty issues with py version and OS support
@@ -1009,7 +1029,8 @@ class LocaleBorg(object):
 
     @classmethod
     def initialize(cls, locales, initial_lang):
-        """
+        """Initialize LocaleBorg.
+
         locales : dict with lang: locale_n
             the same keys as in nikola's TRANSLATIONS
             locale_n a sanitized locale, meaning
@@ -1033,19 +1054,23 @@ class LocaleBorg(object):
 
     @classmethod
     def reset(cls):
-        """used in testing to not leak state between tests"""
+        """Reset LocaleBorg.
+
+        Used in testing to prevent leaking state between tests.
+        """
         cls.locales = {}
         cls.encodings = {}
         cls.__shared_state = {'current_lang': None}
         cls.initialized = False
 
     def __init__(self):
+        """Initialize."""
         if not self.initialized:
             raise LocaleBorgUninitializedException()
         self.__dict__ = self.__shared_state
 
     def set_locale(self, lang):
-        """Sets the locale for language lang, returns ''
+        """Set the locale for language lang, returns an empty string.
 
         in linux the locale encoding is set to utf8,
         in windows that cannot be guaranted.
@@ -1061,7 +1086,7 @@ class LocaleBorg(object):
         return ''
 
     def get_month_name(self, month_no, lang):
-        """returns localized month name in an unicode string"""
+        """Return localized month name in an unicode string."""
         if sys.version_info[0] == 3:  # Python 3
             with calendar.different_locale(self.locales[lang]):
                 s = calendar.month_name[month_no]
@@ -1080,15 +1105,20 @@ class LocaleBorg(object):
 
 
 class ExtendedRSS2(rss.RSS2):
+
+    """Extended RSS class."""
+
     xsl_stylesheet_href = None
 
     def publish(self, handler):
+        """Publish a feed."""
         if self.xsl_stylesheet_href:
             handler.processingInstruction("xml-stylesheet", 'type="text/xsl" href="{0}" media="all"'.format(self.xsl_stylesheet_href))
         # old-style class in py2
         rss.RSS2.publish(self, handler)
 
     def publish_extensions(self, handler):
+        """Publish extensions."""
         if self.self_url:
             handler.startElement("atom:link", {
                 'href': self.self_url,
@@ -1100,12 +1130,16 @@ class ExtendedRSS2(rss.RSS2):
 
 class ExtendedItem(rss.RSSItem):
 
+    """Extended RSS item."""
+
     def __init__(self, **kw):
+        """Initialize RSS item."""
         self.creator = kw.pop('creator')
         # It's an old style class
         return rss.RSSItem.__init__(self, **kw)
 
     def publish_extensions(self, handler):
+        """Publish extensions."""
         if self.creator:
             handler.startElement("dc:creator", {})
             handler.characters(self.creator)
@@ -1119,7 +1153,7 @@ explicit_title_re = re.compile(r'^(.+?)\s*(?<!\x00)<(.*?)>$', re.DOTALL)
 def split_explicit_title(text):
     """Split role content into title and target, if given.
 
-       From Sphinx's "sphinx/util/nodes.py"
+    From Sphinx's "sphinx/util/nodes.py"
     """
     match = explicit_title_re.match(text)
     if match:
@@ -1128,7 +1162,7 @@ def split_explicit_title(text):
 
 
 def first_line(doc):
-    """extract first non-blank line from text, to extract docstring title"""
+    """Extract first non-blank line from text, to extract docstring title."""
     if doc is not None:
         for line in doc.splitlines():
             striped = line.strip()
@@ -1153,7 +1187,7 @@ def demote_headers(doc, level=1):
 
 
 def get_root_dir():
-    """Find root directory of nikola installation by looking for conf.py"""
+    """Find root directory of nikola site by looking for conf.py."""
     root = os.getcwd()
 
     if sys.version_info[0] == 2:
@@ -1175,9 +1209,7 @@ def get_root_dir():
 
 
 def get_translation_candidate(config, path, lang):
-    """
-    Return a possible path where we can find the translated version of some page
-    based on the TRANSLATIONS_PATTERN configuration variable.
+    """Return a possible path where we can find the translated version of some page, based on the TRANSLATIONS_PATTERN configuration variable.
 
     >>> config = {'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}', 'DEFAULT_LANG': 'en', 'TRANSLATIONS': {'es':'1', 'en': 1}}
     >>> print(get_translation_candidate(config, '*.rst', 'es'))
@@ -1208,7 +1240,6 @@ def get_translation_candidate(config, path, lang):
     cache/posts/fancy.post.html
     >>> print(get_translation_candidate(config, 'cache/posts/fancy.post.html', 'es'))
     cache/posts/fancy.post.html.es
-
     """
     # FIXME: this is rather slow and this function is called A LOT
     # Convert the pattern into a regexp
@@ -1295,6 +1326,7 @@ def ask_yesno(query, default=None):
 
 
 class CommandWrapper(object):
+
     """Converts commands into functions."""
 
     def __init__(self, cmd, commands_object):
@@ -1321,7 +1353,7 @@ class Commands(object):
     """
 
     def __init__(self, main, config, doitargs):
-        """Takes a main instance, works as wrapper for commands."""
+        """Take a main instance, work as wrapper for commands."""
         self._cmdnames = []
         self._main = main
         self._config = config
@@ -1380,7 +1412,6 @@ class Commands(object):
 
     def __repr__(self):
         """Return useful and verbose help."""
-
         return """\
 <Nikola Commands>
 
@@ -1394,6 +1425,7 @@ Available commands: {0}.""".format(', '.join(self._cmdnames))
 
 
 def options2docstring(name, options):
+    """Translate options to a docstring."""
     result = ['Function wrapper for command %s' % name, 'arguments:']
     for opt in options:
         result.append('{0} type {1} default {2}'.format(opt.name, opt.type.__name__, opt.default))
@@ -1401,8 +1433,11 @@ def options2docstring(name, options):
 
 
 class NikolaPygmentsHTML(HtmlFormatter):
-    """A Nikola-specific modification of Pygments’ HtmlFormatter."""
+
+    """A Nikola-specific modification of Pygments' HtmlFormatter."""
+
     def __init__(self, anchor_ref, classes=None, linenos='table', linenostart=1):
+        """Initialize formatter."""
         if classes is None:
             classes = ['code', 'literal-block']
         self.nclasses = classes
@@ -1411,11 +1446,7 @@ class NikolaPygmentsHTML(HtmlFormatter):
             lineanchors=slugify(anchor_ref, force=True), anchorlinenos=True)
 
     def wrap(self, source, outfile):
-        """
-        Wrap the ``source``, which is a generator yielding
-        individual lines, in custom generators.
-        """
-
+        """Wrap the ``source``, which is a generator yielding individual lines, in custom generators."""
         style = []
         if self.prestyles:
             style.append(self.prestyles)
@@ -1431,6 +1462,7 @@ class NikolaPygmentsHTML(HtmlFormatter):
 
 
 def get_displayed_page_number(i, num_pages, site):
+    """Get page number to be displayed for entry `i`."""
     if not i:
         i = 0
     if site.config["INDEXES_STATIC"]:
@@ -1440,6 +1472,7 @@ def get_displayed_page_number(i, num_pages, site):
 
 
 def adjust_name_for_index_path_list(path_list, i, displayed_i, lang, site, force_addition=False, extension=None):
+    """Retrurn a path list for a given index page."""
     index_file = site.config["INDEX_FILE"]
     if i or force_addition:
         path_list = list(path_list)
@@ -1467,6 +1500,7 @@ def adjust_name_for_index_path_list(path_list, i, displayed_i, lang, site, force
 
 
 def os_path_split(path):
+    """Split a path."""
     result = []
     while True:
         previous_path = path
@@ -1481,10 +1515,12 @@ def os_path_split(path):
 
 
 def adjust_name_for_index_path(name, i, displayed_i, lang, site, force_addition=False, extension=None):
+    """Return file name for a given index file."""
     return os.path.join(*adjust_name_for_index_path_list(os_path_split(name), i, displayed_i, lang, site, force_addition, extension))
 
 
 def adjust_name_for_index_link(name, i, displayed_i, lang, site, force_addition=False, extension=None):
+    """Return link for a given index file."""
     link = adjust_name_for_index_path_list(name.split('/'), i, displayed_i, lang, site, force_addition, extension)
     if not extension == ".atom":
         if len(link) > 0 and link[-1] == site.config["INDEX_FILE"] and site.config["STRIP_INDEXES"]:
@@ -1493,6 +1529,7 @@ def adjust_name_for_index_link(name, i, displayed_i, lang, site, force_addition=
 
 
 def create_redirect(src, dst):
+    """"Create a redirection."""
     makedirs(os.path.dirname(src))
     with io.open(src, "w+", encoding="utf8") as fd:
         fd.write('<!DOCTYPE html>\n<head>\n<meta charset="utf-8">\n'
@@ -1503,6 +1540,9 @@ def create_redirect(src, dst):
 
 
 class TreeNode(object):
+
+    """A tree node."""
+
     indent_levels = None  # use for formatting comments as tree
     indent_change_before = 0  # use for formatting comments as tree
     indent_change_after = 0  # use for formatting comments as tree
@@ -1538,11 +1578,13 @@ class TreeNode(object):
     # indent_levels property for that node.)
 
     def __init__(self, name, parent=None):
+        """Initialize node."""
         self.name = name
         self.parent = parent
         self.children = []
 
     def get_path(self):
+        """Get path."""
         path = []
         curr = self
         while curr is not None:
@@ -1551,10 +1593,12 @@ class TreeNode(object):
         return reversed(path)
 
     def get_children(self):
+        """Get children of a node."""
         return self.children
 
 
 def flatten_tree_structure(root_list):
+    """Flatten a tree."""
     elements = []
 
     def generate(input_list, indent_levels_so_far):
@@ -1590,6 +1634,7 @@ def flatten_tree_structure(root_list):
 
 
 def parse_escaped_hierarchical_category_name(category_name):
+    """Parse a category name."""
     result = []
     current = None
     index = 0
@@ -1621,6 +1666,7 @@ def parse_escaped_hierarchical_category_name(category_name):
 
 
 def join_hierarchical_category_path(category_path):
+    """Join a category path."""
     def escape(s):
         return s.replace('\\', '\\\\').replace('/', '\\/')
 
@@ -1629,7 +1675,7 @@ def join_hierarchical_category_path(category_path):
 
 # Stolen from textwrap in Python 3.4.3.
 def indent(text, prefix, predicate=None):
-    """Adds 'prefix' to the beginning of selected lines in 'text'.
+    """Add 'prefix' to the beginning of selected lines in 'text'.
 
     If 'predicate' is provided, 'prefix' will only be added to the lines
     where 'predicate(line)' is True. If 'predicate' is not provided,

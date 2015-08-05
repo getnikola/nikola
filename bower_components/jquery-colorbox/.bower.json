@@ -37,12 +37,12 @@
     "example4/index.html",
     "example5/index.html"
   ],
-  "version": "1.6.2",
-  "_release": "1.6.2",
+  "version": "1.6.3",
+  "_release": "1.6.3",
   "_resolution": {
     "type": "version",
-    "tag": "1.6.2",
-    "commit": "b14397fd611c10ee8969c4e25535ced62cf97ace"
+    "tag": "1.6.3",
+    "commit": "f08f0ac16996b14e4ce681e0a08befc129b93924"
   },
   "_source": "git://github.com/jackmoore/colorbox.git",
   "_target": "~1.6.0",

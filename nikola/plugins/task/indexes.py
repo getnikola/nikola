@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Render the blog indexes."""
+
 from __future__ import unicode_literals
 from collections import defaultdict
 import os
@@ -33,16 +35,19 @@ from nikola import utils
 
 
 class Indexes(Task):
+
     """Render the blog indexes."""
 
     name = "render_indexes"
 
     def set_site(self, site):
+        """Set Nikola site."""
         site.register_path_handler('index', self.index_path)
         site.register_path_handler('index_atom', self.index_atom_path)
         return super(Indexes, self).set_site(site)
 
     def gen_tasks(self):
+        """Render the blog indexes."""
         self.site.scan_posts()
         yield self.group_task()
 
@@ -139,6 +144,7 @@ class Indexes(Task):
                         yield task
 
     def index_path(self, name, lang, is_feed=False):
+        """Return path to an index."""
         extension = None
         if is_feed:
             extension = ".atom"
@@ -155,4 +161,5 @@ class Indexes(Task):
                                                      extension=extension)
 
     def index_atom_path(self, name, lang):
+        """Return path to an Atom index."""
         return self.index_path(name, lang, is_feed=True)

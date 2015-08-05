@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Start test server."""
+
 from __future__ import print_function
 import os
 import socket
@@ -40,11 +42,14 @@ from nikola.utils import get_logger, STDERR_HANDLER
 
 
 class IPv6Server(HTTPServer):
+
     """An IPv6 HTTPServer."""
+
     address_family = socket.AF_INET6
 
 
 class CommandServe(Command):
+
     """Start test server."""
 
     name = "serve"
@@ -127,11 +132,17 @@ class CommandServe(Command):
                 webbrowser.open(server_url)
             if options['detach']:
                 OurHTTPRequestHandler.quiet = True
-                pid = os.fork()
-                if pid == 0:
-                    httpd.serve_forever()
-                else:
-                    self.logger.info("Detached with PID {0}. Run `kill {0}` to stop the server.".format(pid))
+                try:
+                    pid = os.fork()
+                    if pid == 0:
+                        httpd.serve_forever()
+                    else:
+                        self.logger.info("Detached with PID {0}. Run `kill {0}` to stop the server.".format(pid))
+                except AttributeError as e:
+                    if os.name == 'nt':
+                        self.logger.warning("Detaching is not available on Windows, server is running in the foreground.")
+                    else:
+                        raise e
             else:
                 try:
                     httpd.serve_forever()
@@ -141,7 +152,9 @@ class CommandServe(Command):
 
 
 class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
+
     """A request handler, modified for Nikola."""
+
     extensions_map = dict(SimpleHTTPRequestHandler.extensions_map)
     extensions_map[""] = "text/plain"
     quiet = False

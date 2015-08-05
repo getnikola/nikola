@@ -23,6 +23,9 @@
 # OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+"""Post list directive for reStructuredText."""
+
 from __future__ import unicode_literals
 
 import os
@@ -40,9 +43,13 @@ from nikola.plugin_categories import RestExtension
 
 
 class Plugin(RestExtension):
+
+    """Plugin for reST post-list directive."""
+
     name = "rest_post_list"
 
     def set_site(self, site):
+        """Set Nikola site."""
         self.site = site
         directives.register_directive('post-list', PostList)
         PostList.site = site
@@ -50,14 +57,15 @@ class Plugin(RestExtension):
 
 
 class PostList(Directive):
-    """
+
+    """Provide a reStructuredText directive to create a list of posts.
+
     Post List
     =========
     :Directive Arguments: None.
-    :Directive Options: lang, start, stop, reverse, sort, tags, template, id
+    :Directive Options: lang, start, stop, reverse, sort, tags, categories, slugs, all, template, id
     :Directive Content: None.
 
-    Provides a reStructuredText directive to create a list of posts.
     The posts appearing in the list can be filtered by options.
     *List slicing* is provided with the *start*, *stop* and *reverse* options.
 
@@ -87,6 +95,10 @@ class PostList(Directive):
         Filter posts to show only posts having at least one of the ``tags``.
         Defaults to None.
 
+    ``categories`` : string [, string...]
+        Filter posts to show only posts having one of the ``categories``.
+        Defaults to None.
+
     ``slugs`` : string [, string...]
         Filter posts to show only posts having at least one of the ``slugs``.
         Defaults to None.
@@ -107,12 +119,14 @@ class PostList(Directive):
         A manual id for the post list.
         Defaults to a random name composed by 'post_list_' + uuid.uuid4().hex.
     """
+
     option_spec = {
         'start': int,
         'stop': int,
         'reverse': directives.flag,
         'sort': directives.unchanged,
         'tags': directives.unchanged,
+        'categories': directives.unchanged,
         'slugs': directives.unchanged,
         'all': directives.flag,
         'lang': directives.unchanged,
@@ -121,11 +135,14 @@ class PostList(Directive):
     }
 
     def run(self):
+        """Run post-list directive."""
         start = self.options.get('start')
         stop = self.options.get('stop')
         reverse = self.options.get('reverse', False)
         tags = self.options.get('tags')
         tags = [t.strip().lower() for t in tags.split(',')] if tags else []
+        categories = self.options.get('categories')
+        categories = [c.strip().lower() for c in categories.split(',')] if categories else []
         slugs = self.options.get('slugs')
         slugs = [s.strip() for s in slugs.split(',')] if slugs else []
         show_all = self.options.get('all', False)
@@ -144,6 +161,9 @@ class PostList(Directive):
             timeline = [p for p in self.site.timeline]
         else:
             timeline = [p for p in self.site.timeline if p.use_in_feeds]
+
+        if categories:
+            timeline = [p for p in timeline if p.meta('category', lang=lang).lower() in categories]
 
         for post in timeline:
             if tags:

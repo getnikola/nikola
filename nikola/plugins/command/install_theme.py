@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Install a theme."""
+
 from __future__ import print_function
 import os
 import io
@@ -41,6 +43,7 @@ LOGGER = utils.get_logger('install_theme', utils.STDERR_HANDLER)
 
 
 class CommandInstallTheme(Command):
+
     """Install a theme."""
 
     name = "install_theme"
@@ -127,6 +130,7 @@ class CommandInstallTheme(Command):
                 LOGGER.notice('Remember to set THEME="{0}" in conf.py to use this theme.'.format(origname))
 
     def do_install(self, name, data):
+        """Download and install a theme."""
         if name in data:
             utils.makedirs(self.output_dir)
             url = data[name]

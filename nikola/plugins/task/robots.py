@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Generate a robots.txt file."""
+
 from __future__ import print_function, absolute_import, unicode_literals
 import io
 import os
@@ -37,12 +39,13 @@ from nikola import utils
 
 
 class RobotsFile(LateTask):
-    """Generate a robots.txt."""
+
+    """Generate a robots.txt file."""
 
     name = "robots_file"
 
     def gen_tasks(self):
-        """Generate a robots.txt."""
+        """Generate a robots.txt file."""
         kw = {
             "base_url": self.site.config["BASE_URL"],
             "site_url": self.site.config["SITE_URL"],

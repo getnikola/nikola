@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""The main function of Nikola."""
+
 from __future__ import print_function, unicode_literals
 from collections import defaultdict
 import os
@@ -63,6 +65,7 @@ _RETURN_DOITNIKOLA = False
 
 
 def main(args=None):
+    """Run Nikola."""
     colorful = False
     if sys.stderr.isatty() and os.name != 'nt':
         colorful = True
@@ -172,11 +175,12 @@ def main(args=None):
 
 
 class Help(DoitHelp):
-    """show Nikola usage."""
+
+    """Show Nikola usage."""
 
     @staticmethod
     def print_usage(cmds):
-        """print nikola "usage" (basic help) instructions"""
+        """Print nikola "usage" (basic help) instructions."""
         # Remove 'run'.  Nikola uses 'build', though we support 'run' for
         # people used to it (eg. doit users).
         # WARNING: 'run' is the vanilla doit command, without support for
@@ -195,8 +199,11 @@ class Help(DoitHelp):
 
 
 class Build(DoitRun):
-    """expose "run" command as "build" for backward compatibility"""
+
+    """Expose "run" command as "build" for backwards compatibility."""
+
     def __init__(self, *args, **kw):
+        """Initialize Build."""
         opts = list(self.cmd_options)
         opts.append(
             {
@@ -231,9 +238,11 @@ class Build(DoitRun):
 
 
 class Clean(DoitClean):
-    """A clean that removes cache/"""
+
+    """Clean site, including the cache directory."""
 
     def clean_tasks(self, tasks, dryrun):
+        """Clean tasks."""
         if not dryrun and config:
             cache_folder = config.get('CACHE_FOLDER', 'cache')
             if os.path.exists(cache_folder):
@@ -246,12 +255,16 @@ DoitAuto.name = 'doit_auto'
 
 
 class NikolaTaskLoader(TaskLoader):
-    """custom task loader to get tasks from Nikola instead of dodo.py file"""
+
+    """Nikola-specific task loader."""
+
     def __init__(self, nikola, quiet=False):
+        """Initialize the loader."""
         self.nikola = nikola
         self.quiet = quiet
 
     def load_tasks(self, cmd, opt_values, pos_args):
+        """Load Nikola tasks."""
         if self.quiet:
             DOIT_CONFIG = {
                 'verbosity': 0,
@@ -275,17 +288,22 @@ class NikolaTaskLoader(TaskLoader):
 
 
 class DoitNikola(DoitMain):
+
+    """Nikola-specific implementation of DoitMain."""
+
     # overwite help command
     DOIT_CMDS = list(DoitMain.DOIT_CMDS) + [Help, Build, Clean, DoitAuto]
     TASK_LOADER = NikolaTaskLoader
 
     def __init__(self, nikola, quiet=False):
+        """Initialzie DoitNikola."""
         super(DoitNikola, self).__init__()
         self.nikola = nikola
         nikola.doit = self
         self.task_loader = self.TASK_LOADER(nikola, quiet)
 
     def get_cmds(self):
+        """Get commands."""
         # core doit commands
         cmds = DoitMain.get_cmds(self)
         # load nikola commands
@@ -294,6 +312,7 @@ class DoitNikola(DoitMain):
         return cmds
 
     def run(self, cmd_args):
+        """Run Nikola."""
         sub_cmds = self.get_cmds()
         args = self.process_args(cmd_args)
         args = [sys_decode(arg) for arg in args]
@@ -341,11 +360,12 @@ class DoitNikola(DoitMain):
 
     @staticmethod
     def print_version():
+        """Print Nikola version."""
         print("Nikola v" + __version__)
 
 
 def levenshtein(s1, s2):
-    """Calculate the Levenshtein distance of two strings.
+    u"""Calculate the Levenshtein distance of two strings.
 
     Implementation from Wikibooks:
     https://en.wikibooks.org/w/index.php?title=Algorithm_Implementation/Strings/Levenshtein_distance&oldid=2974448#Python

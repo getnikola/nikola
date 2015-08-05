@@ -24,12 +24,15 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Create a new page."""
+
 from __future__ import unicode_literals, print_function
 
 from nikola.plugin_categories import Command
 
 
 class CommandNewPage(Command):
+
     """Create a new page."""
 
     name = "new_page"

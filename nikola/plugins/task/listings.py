@@ -24,10 +24,13 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Render code listings."""
+
 from __future__ import unicode_literals, print_function
 
 import sys
 import os
+import lxml.html
 
 from pygments import highlight
 from pygments.lexers import get_lexer_for_filename, TextLexer
@@ -38,7 +41,8 @@ from nikola import utils
 
 
 class Listings(Task):
-    """Render pretty listings."""
+
+    """Render code listings."""
 
     name = "render_listings"
 
@@ -51,6 +55,7 @@ class Listings(Task):
         self.proper_input_file_mapping[rel_output_name] = rel_output_name
 
     def set_site(self, site):
+        """Set Nikola site."""
         site.register_path_handler('listing', self.listing_path)
 
         # We need to prepare some things for the listings path handler to work.
@@ -105,12 +110,21 @@ class Listings(Task):
 
     def gen_tasks(self):
         """Render pretty code listings."""
-
         # Things to ignore in listings
         ignored_extensions = (".pyc", ".pyo")
 
         def render_listing(in_name, out_name, input_folder, output_folder, folders=[], files=[]):
-            if in_name:
+            needs_ipython_css = False
+            if in_name and in_name.endswith('.ipynb'):
+                # Special handling: render ipynbs in listings (Issue #1900)
+                ipynb_compiler = self.site.plugin_manager.getPluginByName("ipynb", "PageCompiler").plugin_object
+                ipynb_raw = ipynb_compiler.compile_html_string(in_name, True)
+                ipynb_html = lxml.html.fromstring(ipynb_raw)
+                # The raw HTML contains garbage (scripts and styles), we can’t leave it in
+                code = lxml.html.tostring(ipynb_html.xpath('//*[@id="notebook"]')[0], encoding='unicode')
+                title = os.path.basename(in_name)
+                needs_ipython_css = True
+            elif in_name:
                 with open(in_name, 'r') as fd:
                     try:
                         lexer = get_lexer_for_filename(in_name)
@@ -151,6 +165,10 @@ class Listings(Task):
                 'source_link': source_link,
                 'pagekind': ['listing'],
             }
+            if needs_ipython_css:
+                # If someone does not have ipynb posts and only listings, we
+                # need to enable ipynb CSS for ipynb listings.
+                context['needs_ipython_css'] = True
             self.site.render_template('listing.tmpl', out_name, context)
 
         yield self.group_task()
@@ -237,6 +255,7 @@ class Listings(Task):
                         }, self.kw["filters"])
 
     def listing_path(self, namep, lang):
+        """Return path to a listing."""
         namep = namep.replace('/', os.sep)
         nameh = namep + '.html'
         for name in (namep, nameh):

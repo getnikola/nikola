@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Start debugging console."""
+
 from __future__ import print_function, unicode_literals
 
 import os
@@ -36,7 +38,9 @@ LOGGER = get_logger('console', STDERR_HANDLER)
 
 
 class CommandConsole(Command):
+
     """Start debugging console."""
+
     name = "console"
     shells = ['ipython', 'bpython', 'plain']
     doc_purpose = "start an interactive Python console with access to your site"

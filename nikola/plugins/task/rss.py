@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Generate RSS feeds."""
+
 from __future__ import unicode_literals, print_function
 import os
 try:
@@ -36,11 +38,13 @@ from nikola.plugin_categories import Task
 
 
 class GenerateRSS(Task):
+
     """Generate RSS feeds."""
 
     name = "generate_rss"
 
     def set_site(self, site):
+        """Set Nikola site."""
         site.register_path_handler('rss', self.rss_path)
         return super(GenerateRSS, self).set_site(site)
 
@@ -102,5 +106,6 @@ class GenerateRSS(Task):
             yield utils.apply_filters(task, kw['filters'])
 
     def rss_path(self, name, lang):
+        """Return RSS path."""
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                               self.site.config['RSS_PATH'], 'rss.xml'] if _f]
