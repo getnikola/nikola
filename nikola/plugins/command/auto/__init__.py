@@ -301,19 +301,31 @@ class CommandAuto(Command):
         elif os.path.isfile(f_path):
             with open(f_path, 'rb') as fd:
                 start_response('200 OK', [('Content-type', mimetype)])
-                return [self.inject_js(mimetype, fd.read())]
+                return [self.file_filter(mimetype, fd.read())]
         elif p_uri.path == '/livereload.js':
             with open(LRJS_PATH, 'rb') as fd:
                 start_response('200 OK', [('Content-type', mimetype)])
-                return [self.inject_js(mimetype, fd.read())]
+                return [self.file_filter(mimetype, fd.read())]
         start_response('404 ERR', [])
-        return [self.inject_js('text/html', ERROR_N.format(404).format(uri).encode('utf-8'))]
+        return [self.file_filter('text/html', ERROR_N.format(404).format(uri).encode('utf-8'))]
 
-    def inject_js(self, mimetype, data):
-        """Inject livereload.js in HTML files."""
+    """Apply necessary changes to document before serving."""
+    def file_filter(self, mimetype, data):
         if mimetype == 'text/html':
-            data = re.sub('</head>', self.snippet, data.decode('utf8'), 1, re.IGNORECASE)
+            data = data.decode('utf8')
+            data = self.remove_base_tag(data)
+            data = self.inject_js(data)
             data = data.encode('utf8')
+        return data
+
+    """Inject livereload.js."""
+    def inject_js(self, data):
+        data = re.sub('</head>', self.snippet, data, 1, re.IGNORECASE)
+        return data
+
+    """Comment out any <base> to allow local resolution of relative URLs."""
+    def remove_base_tag(self, data):
+        data = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', data, re.IGNORECASE)
         return data
 
 
