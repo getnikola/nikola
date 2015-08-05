@@ -188,7 +188,8 @@ class Sitemap(LateTask):
                                                  b'<meta content=none name=robots',
                                                  b'<meta name=robots content=noindex',
                                                  b'<meta name=robots content=none']
-                            if any([robot_directive in filehead.lower().replace('"', '') for robot_directive in robots_directives]):
+                            lowquothead = filehead.lower().decode('utf-8').replace('"', '').encode('utf-8')
+                            if any([robot_directive in lowquothead for robot_directive in robots_directives]):
                                 continue
 
                         # put Atom and RSS in sitemapindex[] instead of in urlset[],
