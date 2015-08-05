@@ -309,8 +309,8 @@ class CommandAuto(Command):
         start_response('404 ERR', [])
         return [self.file_filter('text/html', ERROR_N.format(404).format(uri).encode('utf-8'))]
 
-    """Apply necessary changes to document before serving."""
     def file_filter(self, mimetype, data):
+        """Apply necessary changes to document before serving."""
         if mimetype == 'text/html':
             data = data.decode('utf8')
             data = self.remove_base_tag(data)
@@ -318,13 +318,13 @@ class CommandAuto(Command):
             data = data.encode('utf8')
         return data
 
-    """Inject livereload.js."""
     def inject_js(self, data):
+        """Inject livereload.js."""
         data = re.sub('</head>', self.snippet, data, 1, re.IGNORECASE)
         return data
 
-    """Comment out any <base> to allow local resolution of relative URLs."""
     def remove_base_tag(self, data):
+        """Comment out any <base> to allow local resolution of relative URLs."""
         data = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', data, re.IGNORECASE)
         return data
 
