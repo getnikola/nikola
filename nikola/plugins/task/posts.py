@@ -77,7 +77,11 @@ class RenderPosts(Task):
             deps_dict = copy(kw)
             deps_dict.pop('timeline')
             for post in kw['timeline']:
-
+                # Extra config dependencies picked from config
+                for p in post.fragment_deps(lang):
+                    if p.startswith('####MAGIC####CONFIG:'):
+                        k = p.split('####MAGIC####CONFIG:', 1)[-1]
+                        deps_dict[k] = self.site.config.get(k)
                 dest = post.translated_base_path(lang)
                 file_dep = [p for p in post.fragment_deps(lang) if not p.startswith("####MAGIC####")]
                 task = {
