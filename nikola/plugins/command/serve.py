@@ -30,7 +30,6 @@ from __future__ import print_function
 import os
 import re
 import socket
-import tempfile
 import webbrowser
 try:
     from BaseHTTPServer import HTTPServer
