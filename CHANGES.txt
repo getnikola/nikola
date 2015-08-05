@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Avoid Broken Pipe error in nikola auto (Issue #1906)
 * "nikola auto" serving implicit index.html with wrong mime type (Issue #1921)
 * Handle non-integer shutter speeds and other variables in WordPress
   importer (Issue #1917)
@@ -28,6 +29,7 @@ Features
 Bugfixes
 --------
 
+* Don't auto-rebuild on changes to ".foo" or "foo~" or changes in folders.
 * Don't assume things are HTML in auto mode (Issue #1915)
 * Don’t rebuild Atom syndication files unnecessarily often
 * Include .php files in sitemaps
