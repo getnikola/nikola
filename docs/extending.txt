@@ -384,6 +384,15 @@ RestExtension Plugins
 
 Implement directives for reStructuredText, see `media.py <https://github.com/getnikola/nikola/blob/master/nikola/plugins/compile/rest/media.py>`__ for a simple example.
 
+If your output depends on a config value, you need to make your post record a dependency on a pseudo-path like this::
+
+    ####MAGIC####CONFIG:OPTIONNAME
+
+Then, whenever the ``OPTIONNAME`` option is changed in conf.py, the file will be rebuilt.
+
+If your directive depends or may depend on the whole timeline like, for example, the post-list directive, where adding new posts
+to the site could make it stale, you should record a dependency on the pseudo-path ``####MAGIC####TIMELINE``
+
 MarkdownExtension Plugins
 -------------------------
 

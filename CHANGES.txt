@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Added mechanism for rest extensions to depend on configuration options
+  (Issue #1919)
 * Render Jupyter notebooks (ipynb) in listings (Issue #1900)
 
 Bugfixes
