@@ -37,8 +37,9 @@ import sys
 import time
 try:
     from urlparse import urlparse
+    from urllib2 import unquote
 except ImportError:
-    from urllib.parse import urlparse  # NOQA
+    from urllib.parse import urlparse, unquote  # NOQA
 import webbrowser
 from wsgiref.simple_server import make_server
 import wsgiref.util
@@ -286,7 +287,7 @@ class CommandAuto(Command):
         """Trivial static file server."""
         uri = wsgiref.util.request_uri(environ)
         p_uri = urlparse(uri)
-        f_path = os.path.join(self.site.config['OUTPUT_FOLDER'], *p_uri.path.split('/'))
+        f_path = os.path.join(self.site.config['OUTPUT_FOLDER'], *[unquote(x) for x in p_uri.path.split('/')])
 
         # ‘Pretty’ URIs and root are assumed to be HTML
         mimetype = 'text/html' if uri.endswith('/') else mimetypes.guess_type(uri)[0] or 'application/octet-stream'
