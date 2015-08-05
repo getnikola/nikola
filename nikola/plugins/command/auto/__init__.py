@@ -433,6 +433,7 @@ else:
 
 
 def finish_response(self):
+    """Monkeypatched finish_response that ignores broken pipes."""
     try:
         f(self)
     except EX:  # Client closed the connection, not a real error
