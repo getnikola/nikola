@@ -231,15 +231,15 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
 
         filtered_bytes = None
         if ctype == 'text/html':
-            """Comment out any <base> to allow local resolution of relative URLs."""
+            # Comment out any <base> to allow local resolution of relative URLs.
             data = f.read().decode('utf8')
             f.close()
             data = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', data, re.IGNORECASE)
             data = data.encode('utf8')
             f = StringIO()
             f.write(data)
+            filtered_bytes = len(data)
             f.seek(0)
-            filtered_bytes = f.tell()
 
         self.send_response(200)
         self.send_header("Content-type", ctype)
