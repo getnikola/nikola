@@ -26,6 +26,7 @@ dir="rtl"
 lang="{{ lang }}">
     <head>
     <meta charset="utf-8">
+    <base href="{{ abs_link(permalink) }}">
     {% if description %}
     <meta name="description" content="{{ description }}">
     {% endif %}
@@ -34,9 +35,7 @@ lang="{{ lang }}">
 
     {{ html_stylesheets() }}
     {{ html_feedlinks() }}
-    {% if permalink %}
-      <link rel="canonical" href="{{ abs_link(permalink) }}">
-    {% endif %}
+    <link rel="canonical" href="{{ abs_link(permalink) }}">
 
     {% if favicons %}
         {% for name, file, size in favicons %}
