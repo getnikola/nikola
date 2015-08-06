@@ -58,7 +58,7 @@ class Archive(Task):
         # title: the (translated) title for the generated page
         # deps_translatable: dependencies (None if not added)
         assert posts is not None or items is not None
-
+        task_cfg = [copy.copy(kw)]
         context = {}
         context["lang"] = lang
         context["title"] = title
@@ -66,10 +66,12 @@ class Archive(Task):
         context["pagekind"] = ["list", "archive_page"]
         if posts is not None:
             context["posts"] = posts
-            n = len(posts)
+            # Depend on all post metadata because it can be used in templates (Issue #1931)
+            task_cfg.append(repr(p) for p in posts)
         else:
+            # Depend on the content of items, to rebuild if links change (Issue #1931)
             context["items"] = items
-            n = len(items)
+            task_cfg.append(items)
         task = self.site.generic_post_list_renderer(
             lang,
             [],
@@ -79,7 +81,7 @@ class Archive(Task):
             context,
         )
 
-        task_cfg = {1: copy.copy(kw), 2: n}
+        task_cfg = {i: x for i, x in enumerate(task_cfg)}
         if deps_translatable is not None:
             task_cfg[3] = deps_translatable
         task['uptodate'] = task['uptodate'] + [config_changed(task_cfg, 'nikola.plugins.task.archive')]
