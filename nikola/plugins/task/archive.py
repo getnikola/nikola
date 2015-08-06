@@ -67,7 +67,7 @@ class Archive(Task):
         if posts is not None:
             context["posts"] = posts
             # Depend on all post metadata because it can be used in templates (Issue #1931)
-            task_cfg.append(repr(p) for p in posts)
+            task_cfg.append([repr(p) for p in posts])
         else:
             # Depend on the content of items, to rebuild if links change (Issue #1931)
             context["items"] = items
