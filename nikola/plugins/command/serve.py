@@ -28,6 +28,7 @@
 
 from __future__ import print_function
 import os
+import re
 import socket
 import webbrowser
 try:
@@ -36,6 +37,12 @@ try:
 except ImportError:
     from http.server import HTTPServer  # NOQA
     from http.server import SimpleHTTPRequestHandler  # NOQA
+
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import BytesIO as StringIO  # NOQA
+
 
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger, STDERR_HANDLER
@@ -221,14 +228,31 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
         except IOError:
             self.send_error(404, "File not found")
             return None
+
+        filtered_bytes = None
+        if ctype == 'text/html':
+            """Comment out any <base> to allow local resolution of relative URLs."""
+            data = f.read().decode('utf8')
+            f.close()
+            data = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', data, re.IGNORECASE)
+            data = data.encode('utf8')
+            f = StringIO()
+            f.write(data)
+            f.seek(0)
+            filtered_bytes = f.tell()
+
         self.send_response(200)
         self.send_header("Content-type", ctype)
         if os.path.splitext(path)[1] == '.svgz':
             # Special handling for svgz to make it work nice with browsers.
             self.send_header("Content-Encoding", 'gzip')
-        fs = os.fstat(f.fileno())
-        self.send_header("Content-Length", str(fs[6]))
-        self.send_header("Last-Modified", self.date_time_string(fs.st_mtime))
+
+        if filtered_bytes is None:
+            fs = os.fstat(f.fileno())
+            self.send_header('Content-Length', str(fs[6]))
+        else:
+            self.send_header('Content-Length', filtered_bytes)
+
         # begin no-cache patch
         # For standard requests.
         self.send_header("Cache-Control", "no-cache, no-store, "
