@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Rebuild archives when post slugs and titles change (Issue #1931)
 * Handle special characters in URLs in nikola auto (Issue #1925)
 * Avoid Broken Pipe error in nikola auto (Issue #1906)
 * "nikola auto" serving implicit index.html with wrong mime type (Issue #1921)
