@@ -294,6 +294,7 @@ class CommandAuto(Command):
 
         if os.path.isdir(f_path):
             f_path = os.path.join(f_path, self.site.config['INDEX_FILE'])
+            mimetype = 'text/html'
 
         if p_uri.path == '/robots.txt':
             start_response('200 OK', [('Content-type', 'text/plain')])
