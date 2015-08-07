@@ -293,6 +293,9 @@ class CommandAuto(Command):
         mimetype = 'text/html' if uri.endswith('/') else mimetypes.guess_type(uri)[0] or 'application/octet-stream'
 
         if os.path.isdir(f_path):
+            if not f_path.endswith('/'):  # Redirect to avoid breakage
+                start_response('301 Redirect', [('Location', p_uri.path + '/')])
+                return []
             f_path = os.path.join(f_path, self.site.config['INDEX_FILE'])
             mimetype = 'text/html'
 
