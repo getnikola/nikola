@@ -2,8 +2,8 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "%d min remaining to read": "",
-    "(active)": "",
+    "%d min remaining to read": "%d minuta preostalo za čitanje",
+    "(active)": "(aktivno)",
     "Also available in:": "Također dostupno i u:",
     "Archive": "Arhiva",
     "Categories": "Kategorije",
@@ -27,9 +27,9 @@ MESSAGES = {
     "RSS feed": "RSS kanal",
     "Read in English": "Čitaj na hrvatskom",
     "Read more": "Čitaj dalje",
-    "Skip to main content": "",
+    "Skip to main content": "Preskoči na glavni sadržaj",
     "Source": "Izvor",
-    "Subcategories:": "",
+    "Subcategories:": "Podkategorije:",
     "Tags and Categories": "Tagovi i kategorije",
     "Tags": "Tagovi",
     "Write your page here.": "",
