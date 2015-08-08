@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New translations: Serbian and Bosnian, by saleone
 * Added mechanism for rest extensions to depend on configuration options
   (Issue #1919)
 * Render Jupyter notebooks (ipynb) in listings (Issue #1900)
