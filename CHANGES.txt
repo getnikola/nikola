@@ -5,6 +5,7 @@ Bugfixes
 --------
 
 * Ignore sliced multibyte characters when reading metadata for sitemaps
+* Fix NameError caused by failed import in auto plugin.
 
 New in v7.6.3
 =============

@@ -438,21 +438,25 @@ class ConfigWatchHandler(FileSystemEventHandler):
             self.function(event)
 
 
-# Monkeypatch to hide Broken Pipe Errors
+try:
+    # Monkeypatch to hide Broken Pipe Errors
+    f = WebSocketWSGIHandler.finish_response
 
-f = WebSocketWSGIHandler.finish_response
-
-if sys.version_info[0] == 3:
-    EX = BrokenPipeError  # NOQA
-else:
-    EX = IOError
+    if sys.version_info[0] == 3:
+        EX = BrokenPipeError  # NOQA
+    else:
+        EX = IOError
 
 
-def finish_response(self):
-    """Monkeypatched finish_response that ignores broken pipes."""
-    try:
-        f(self)
-    except EX:  # Client closed the connection, not a real error
-        pass
+    def finish_response(self):
+        """Monkeypatched finish_response that ignores broken pipes."""
+        try:
+            f(self)
+        except EX:  # Client closed the connection, not a real error
+            pass
 
-WebSocketWSGIHandler.finish_response = finish_response
+    WebSocketWSGIHandler.finish_response = finish_response
+except NameError:
+    # In case there is no WebSocketWSGIHandler because of a failed import.
+    pass
+
