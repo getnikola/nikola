@@ -447,7 +447,6 @@ try:
     else:
         EX = IOError
 
-
     def finish_response(self):
         """Monkeypatched finish_response that ignores broken pipes."""
         try:
@@ -459,4 +458,3 @@ try:
 except NameError:
     # In case there is no WebSocketWSGIHandler because of a failed import.
     pass
-
