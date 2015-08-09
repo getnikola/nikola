@@ -1,3 +1,11 @@
+New in Master
+=============
+
+Bugfixes
+--------
+
+* Ignore sliced multibyte characters when reading metadata for sitemaps
+
 New in v7.6.3
 =============
 
