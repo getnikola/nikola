@@ -188,7 +188,7 @@ class Sitemap(LateTask):
                                                  b'<meta content=none name=robots',
                                                  b'<meta name=robots content=noindex',
                                                  b'<meta name=robots content=none']
-                            lowquothead = filehead.lower().decode('utf-8').replace('"', '').encode('utf-8')
+                            lowquothead = filehead.lower().decode('utf-8', 'ignore').replace('"', '').encode('utf-8')
                             if any([robot_directive in lowquothead for robot_directive in robots_directives]):
                                 continue
 

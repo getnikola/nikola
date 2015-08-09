@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Ignore sliced multibyte characters when reading metadata for sitemaps
 * Handle folders without trailing slashes in nikola auto (Issue #1933)
 * Set a base element to aid relative URL resolution, stripped on-the-fly
   when using the auto or serve command to view site locally. (Issue #1922)
