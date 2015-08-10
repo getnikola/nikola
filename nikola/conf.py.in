@@ -546,7 +546,7 @@ IMAGE_FOLDERS = {'images': 'images'}
 #     ("icon", "/icon_128x128.png", "128x128"),
 # )
 
-# Show only teasers in the index pages? Defaults to False.
+# Activate teasers in the index pages? Defaults to False.
 # INDEX_TEASERS = False
 
 # HTML fragments with the Read more... links.
@@ -781,7 +781,7 @@ MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
 # change it for a FeedBurner feed or something else.
 # RSS_LINK = None
 
-# Show only teasers in the RSS and Atom feeds? Default to True
+# Activate teasers in the RSS and Atom feeds? Default to True
 # RSS_TEASERS = True
 
 # Strip HTML in the RSS feed? Default to False
