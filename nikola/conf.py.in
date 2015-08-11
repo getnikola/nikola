@@ -781,7 +781,7 @@ MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
 # change it for a FeedBurner feed or something else.
 # RSS_LINK = None
 
-# Show teasers (instead of full posts) in feeds? Defaults to False.
+# Show teasers (instead of full posts) in feeds? Defaults to True.
 # RSS_TEASERS = True
 
 # Strip HTML in the RSS feed? Default to False
