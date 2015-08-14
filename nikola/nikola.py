@@ -745,7 +745,10 @@ class Nikola(object):
 
         self.plugin_manager.getPluginLocator().setPluginPlaces(places)
         self.plugin_manager.locatePlugins()
+        # Remove compilers we don't use
         self.plugin_manager._candidates = [p for p in self.plugin_manager._candidates if p[-1].name not in bad_compilers]
+        # Remove blacklisted plugins
+        self.plugin_manager._candidates = [p for p in self.plugin_manager._candidates if p[-1].name not in self.config['DISABLED_PLUGINS']]
         self.plugin_manager.loadPlugins()
 
         self._activate_plugins_of_category("SignalHandler")
@@ -870,12 +873,9 @@ class Nikola(object):
         # this code duplicated in tests/base.py
         plugins = []
         for plugin_info in self.plugin_manager.getPluginsOfCategory(category):
-            if plugin_info.name in self.config.get('DISABLED_PLUGINS'):
-                self.plugin_manager.removePluginFromCategory(plugin_info, category)
-            else:
-                self.plugin_manager.activatePluginByName(plugin_info.name)
-                plugin_info.plugin_object.set_site(self)
-                plugins.append(plugin_info)
+            self.plugin_manager.activatePluginByName(plugin_info.name)
+            plugin_info.plugin_object.set_site(self)
+            plugins.append(plugin_info)
         return plugins
 
     def _get_themes(self):
