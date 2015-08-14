@@ -716,8 +716,37 @@ class Nikola(object):
                 os.path.expanduser('~/.nikola/plugins'),
             ] + [utils.sys_encode(path) for path in extra_plugins_dirs if path]
 
+
+        # Store raw compilers for internal use (need a copy for that)
+        self.config['_COMPILERS_RAW'] = {}
+        for k, v in self.config['COMPILERS'].items():
+            self.config['_COMPILERS_RAW'][k] = list(v)
+
+        compilers = defaultdict(set)
+        # Also add aliases for combinations with TRANSLATIONS_PATTERN
+        for compiler, exts in self.config['COMPILERS'].items():
+            for ext in exts:
+                compilers[compiler].add(ext)
+                for lang in self.config['TRANSLATIONS'].keys():
+                    candidate = utils.get_translation_candidate(self.config, "f" + ext, lang)
+                    compilers[compiler].add(candidate)
+
+        # Avoid redundant compilers
+        # Remove compilers that match nothing in POSTS/PAGES
+        # And put them in "bad compilers"
+        pp_exts = set([os.path.splitext(x[0])[1] for x in self.config['post_pages']])
+        self.config['COMPILERS']={}
+        bad_compilers = set([])
+        for k, v in compilers.items():
+            if pp_exts.intersection(v):
+                self.config['COMPILERS'][k] = sorted(list(v))
+            else:
+                bad_compilers.add(k)
+
         self.plugin_manager.getPluginLocator().setPluginPlaces(places)
-        self.plugin_manager.collectPlugins()
+        self.plugin_manager.locatePlugins()
+        self.plugin_manager._candidates = [p for p in self.plugin_manager._candidates if p[-1].name not in bad_compilers]
+        self.plugin_manager.loadPlugins()
 
         self._activate_plugins_of_category("SignalHandler")
 
@@ -735,24 +764,6 @@ class Nikola(object):
         self._activate_plugins_of_category("Task")
         self._activate_plugins_of_category("LateTask")
         self._activate_plugins_of_category("TaskMultiplier")
-
-        # Store raw compilers for internal use (need a copy for that)
-        self.config['_COMPILERS_RAW'] = {}
-        for k, v in self.config['COMPILERS'].items():
-            self.config['_COMPILERS_RAW'][k] = list(v)
-
-        compilers = defaultdict(set)
-        # Also add aliases for combinations with TRANSLATIONS_PATTERN
-        for compiler, exts in self.config['COMPILERS'].items():
-            for ext in exts:
-                compilers[compiler].add(ext)
-                for lang in self.config['TRANSLATIONS'].keys():
-                    candidate = utils.get_translation_candidate(self.config, "f" + ext, lang)
-                    compilers[compiler].add(candidate)
-
-        # Avoid redundant compilers
-        for k, v in compilers.items():
-            self.config['COMPILERS'][k] = sorted(list(v))
 
         # Activate all required compiler plugins
         self.compiler_extensions = self._activate_plugins_of_category("CompilerExtension")
