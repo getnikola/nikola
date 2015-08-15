@@ -785,6 +785,23 @@ class Nikola(object):
                 self.plugin_manager.activatePluginByName(plugin_info.name)
                 plugin_info.plugin_object.set_site(self)
 
+        self._set_global_context()
+
+        # Load compiler plugins
+        self.compilers = {}
+        self.inverse_compilers = {}
+
+        for plugin_info in self.plugin_manager.getPluginsOfCategory(
+                "PageCompiler"):
+            self.compilers[plugin_info.name] = \
+                plugin_info.plugin_object
+
+        self._activate_plugins_of_category("ConfigPlugin")
+
+        signal('configured').send(self)
+
+
+    def _set_global_context(self):
         self._GLOBAL_CONTEXT['url_type'] = self.config['URL_TYPE']
         self._GLOBAL_CONTEXT['timezone'] = self.tzinfo
         self._GLOBAL_CONTEXT['_link'] = self.link
@@ -853,30 +870,13 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['hidden_categories'] = self.config.get('HIDDEN_CATEGORIES')
         self._GLOBAL_CONTEXT['url_replacer'] = self.url_replacer
 
-        # IPython theme configuration.  If a website can potentially have ipynb
-        # posts (as determined by checking POSTS/PAGES against ipynb
-        # extensions), we should enable the IPython CSS (leaving that up to the
-        # theme itself).
+        # IPython theme configuration.  If a website has ipynb enabled in post_pages
+        # we should enable the IPython CSS (leaving that up to the theme itself).
 
-        self._GLOBAL_CONTEXT['needs_ipython_css'] = False
-        for i in self.config['post_pages']:
-            if os.path.splitext(i[0])[1] in self.config['COMPILERS'].get('ipynb', []):
-                self._GLOBAL_CONTEXT['needs_ipython_css'] = True
+        self._GLOBAL_CONTEXT['needs_ipython_css'] = 'ipynb' in self.config['COMPILERS']
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
-        # Load compiler plugins
-        self.compilers = {}
-        self.inverse_compilers = {}
-
-        for plugin_info in self.plugin_manager.getPluginsOfCategory(
-                "PageCompiler"):
-            self.compilers[plugin_info.name] = \
-                plugin_info.plugin_object
-
-        self._activate_plugins_of_category("ConfigPlugin")
-
-        signal('configured').send(self)
 
     def _activate_plugins_of_category(self, category):
         """Activate all the plugins of a given category and return them."""
