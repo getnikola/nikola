@@ -313,7 +313,6 @@ class DoitNikola(DoitMain):
 
     def run(self, cmd_args):
         """Run Nikola."""
-        sub_cmds = self.get_cmds()
         args = self.process_args(cmd_args)
         args = [sys_decode(arg) for arg in args]
 
@@ -335,6 +334,13 @@ class DoitNikola(DoitMain):
                 if arg not in ('--help', '-h'):
                     args.append(arg)
 
+        if args[0] == 'help':
+            self.nikola.init_plugins(commands_only=True)
+        else:
+            self.nikola.init_plugins()
+
+        sub_cmds = self.get_cmds()
+
         if any(arg in ("--version", '-V') for arg in args):
             cmd_args = ['version']
             args = ['version']
@@ -345,12 +351,14 @@ class DoitNikola(DoitMain):
             for c in sub_filtered:
                 d = levenshtein(c, args[0])
                 sugg[d].append(c)
-            best_sugg = sugg[min(sugg.keys())]
-            if len(best_sugg) == 1:
-                LOGGER.info('Did you mean "{}"?'.format(best_sugg[0]))
-            else:
-                LOGGER.info('Did you mean "{}" or "{}"?'.format('", "'.join(best_sugg[:-1]), best_sugg[-1]))
+            if sugg.keys():
+                best_sugg = sugg[min(sugg.keys())]
+                if len(best_sugg) == 1:
+                    LOGGER.info('Did you mean "{}"?'.format(best_sugg[0]))
+                else:
+                    LOGGER.info('Did you mean "{}" or "{}"?'.format('", "'.join(best_sugg[:-1]), best_sugg[-1]))
             return 3
+
         if sub_cmds[args[0]] is not Help and not isinstance(sub_cmds[args[0]], Command):  # Is a doit command
             if not self.nikola.configured:
                 LOGGER.error("This command needs to run inside an "

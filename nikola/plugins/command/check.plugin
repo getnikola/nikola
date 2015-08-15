@@ -1,10 +1,13 @@
 [Core]
-Name = check
-Module = check
+name = check
+module = check
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Check the generated site
+author = Roberto Alsina
+version = 1.0
+website = http://getnikola.com
+description = Check the generated site
+
+[Nikola]
+plugincategory = Command
 

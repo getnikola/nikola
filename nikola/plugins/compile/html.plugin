@@ -1,10 +1,13 @@
 [Core]
-Name = html
-Module = html
+name = html
+module = html
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Compile HTML into HTML (just copy)
+author = Roberto Alsina
+version = 1.0
+website = http://getnikola.com
+description = Compile HTML into HTML (just copy)
 
+[Nikola]
+plugincategory = Compiler
+friendlyname = HTML

@@ -466,18 +466,22 @@ class CommandNewPost(Command):
                     False
                 ])
 
-        for name in self.site.disabled_compilers:
+        for name, (_, _, pi) in self.site.disabled_compilers.items():
+            if pi.details.has_option('Nikola', 'Friendlyname'):
+                f_name = pi.details.get('Nikola', 'Friendlyname')
+            else:
+                f_name = name
             if name in compilers_raw:
                 unused_compilers.append([
                     name,
-                    name,
+                    f_name,
                     compilers_raw[name],
                     False
                 ])
             else:
                 disabled_compilers.append([
                     name,
-                    name,
+                    f_name,
                     (),
                     False
                 ])

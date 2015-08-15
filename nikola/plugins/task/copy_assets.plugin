@@ -1,10 +1,13 @@
 [Core]
-Name = copy_assets
-Module = copy_assets
+name = copy_assets
+module = copy_assets
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Copy theme assets into output.
+author = Roberto Alsina
+version = 1.0
+website = http://getnikola.com
+description = Copy theme assets into output.
+
+[Nikola]
+plugincategory = Task
 

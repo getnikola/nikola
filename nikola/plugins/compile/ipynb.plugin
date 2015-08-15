@@ -1,10 +1,13 @@
 [Core]
-Name = ipynb
-Module = ipynb
+name = ipynb
+module = ipynb
 
 [Documentation]
-Author = Damian Avila, Chris Warrick and others
-Version = 2.0.0
-Website = http://www.damian.oquanta.info/
-Description = Compile IPython notebooks into Nikola posts
+author = Damian Avila, Chris Warrick and others
+version = 2.0.0
+website = http://www.damian.oquanta.info/
+description = Compile IPython notebooks into Nikola posts
 
+[Nikola]
+plugincategory = Compiler
+friendlyname = Jupyter/IPython Notebook

@@ -1,13 +1,14 @@
 [Core]
-Name = rest_gist
-Module = gist
+name = rest_gist
+module = gist
 
 [Nikola]
-Compiler = rest
+compiler = rest
+plugincategory = CompilerExtension
 
 [Documentation]
-Author = Roberto Alsina
-Version = 0.1
-Website = http://getnikola.com
-Description = Gist directive
+author = Roberto Alsina
+version = 0.1
+website = http://getnikola.com
+description = Gist directive
 

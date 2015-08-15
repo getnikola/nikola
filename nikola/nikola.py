@@ -687,6 +687,37 @@ class Nikola(object):
             self.tzinfo = dateutil.tz.gettz()
         self.config['__tzinfo__'] = self.tzinfo
 
+        # Store raw compilers for internal use (need a copy for that)
+        self.config['_COMPILERS_RAW'] = {}
+        for k, v in self.config['COMPILERS'].items():
+            self.config['_COMPILERS_RAW'][k] = list(v)
+
+        compilers = defaultdict(set)
+        # Also add aliases for combinations with TRANSLATIONS_PATTERN
+        for compiler, exts in self.config['COMPILERS'].items():
+            for ext in exts:
+                compilers[compiler].add(ext)
+                for lang in self.config['TRANSLATIONS'].keys():
+                    candidate = utils.get_translation_candidate(self.config, "f" + ext, lang)
+                    compilers[compiler].add(candidate)
+
+        # Avoid redundant compilers
+        # Remove compilers that match nothing in POSTS/PAGES
+        # And put them in "bad compilers"
+        pp_exts = set([os.path.splitext(x[0])[1] for x in self.config['post_pages']])
+        self.config['COMPILERS'] = {}
+        self.disabled_compilers = {}
+        self.bad_compilers = set([])
+        for k, v in compilers.items():
+            if pp_exts.intersection(v):
+                self.config['COMPILERS'][k] = sorted(list(v))
+            else:
+                self.bad_compilers.add(k)
+
+        self._set_global_context()
+
+    def init_plugins(self, commands_only=False):
+        """Load plugins as needed."""
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,
             "Task": Task,
@@ -716,50 +747,34 @@ class Nikola(object):
                 os.path.expanduser('~/.nikola/plugins'),
             ] + [utils.sys_encode(path) for path in extra_plugins_dirs if path]
 
-        # Store raw compilers for internal use (need a copy for that)
-        self.config['_COMPILERS_RAW'] = {}
-        for k, v in self.config['COMPILERS'].items():
-            self.config['_COMPILERS_RAW'][k] = list(v)
-
-        compilers = defaultdict(set)
-        # Also add aliases for combinations with TRANSLATIONS_PATTERN
-        for compiler, exts in self.config['COMPILERS'].items():
-            for ext in exts:
-                compilers[compiler].add(ext)
-                for lang in self.config['TRANSLATIONS'].keys():
-                    candidate = utils.get_translation_candidate(self.config, "f" + ext, lang)
-                    compilers[compiler].add(candidate)
-
-        # Avoid redundant compilers
-        # Remove compilers that match nothing in POSTS/PAGES
-        # And put them in "bad compilers"
-        pp_exts = set([os.path.splitext(x[0])[1] for x in self.config['post_pages']])
-        self.config['COMPILERS'] = {}
-        self.disabled_compilers = {}
-        bad_compilers = set([])
-        for k, v in compilers.items():
-            if pp_exts.intersection(v):
-                self.config['COMPILERS'][k] = sorted(list(v))
-            else:
-                bad_compilers.add(k)
-
         self.plugin_manager.getPluginLocator().setPluginPlaces(places)
         self.plugin_manager.locatePlugins()
         bad_candidates = set([])
         for p in self.plugin_manager._candidates:
-            # Remove compilers we don't use
-            if p[-1].name in bad_compilers:
-                bad_candidates.add(p)
-                self.disabled_compilers[p[-1].name] = p
-                utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
-            # Remove blacklisted plugins
-            if p[-1].name in self.config['DISABLED_PLUGINS']:
-                bad_candidates.add(p)
-                utils.LOGGER.debug('Not loading disabled plugin {}', p[-1].name)
-            # Remove compiler extensions we don't need
-            if p[-1].details.has_option('Nikola', 'compiler') and p[-1].details.get('Nikola', 'compiler') in self.disabled_compilers:
-                bad_candidates.add(p)
-                utils.LOGGER.debug('Not loading comopiler extension {}', p[-1].name)
+            if commands_only:
+                if p[-1].details.has_option('Nikola', 'plugincategory'):
+                    # FIXME TemplateSystem should not be needed
+                    if p[-1].details.get('Nikola', 'PluginCategory') not in {'Command', 'Template'}:
+                        bad_candidates.add(p)
+            else:  # Not commands-only
+                # Remove compilers we don't use
+                if p[-1].name in self.bad_compilers:
+                    bad_candidates.add(p)
+                    self.disabled_compilers[p[-1].name] = p
+                    utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
+                if p[-1].name not in self.config['COMPILERS'] and \
+                        p[-1].details.has_option('Nikola', 'plugincategory') and p[-1].details.get('Nikola', 'PluginCategory') == 'Compiler':
+                    bad_candidates.add(p)
+                    self.disabled_compilers[p[-1].name] = p
+                    utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
+                # Remove blacklisted plugins
+                if p[-1].name in self.config['DISABLED_PLUGINS']:
+                    bad_candidates.add(p)
+                    utils.LOGGER.debug('Not loading disabled plugin {}', p[-1].name)
+                # Remove compiler extensions we don't need
+                if p[-1].details.has_option('Nikola', 'compiler') and p[-1].details.get('Nikola', 'compiler') in self.disabled_compilers:
+                    bad_candidates.add(p)
+                    utils.LOGGER.debug('Not loading comopiler extension {}', p[-1].name)
         self.plugin_manager._candidates = list(set(self.plugin_manager._candidates) - bad_candidates)
         self.plugin_manager.loadPlugins()
 
@@ -787,6 +802,21 @@ class Nikola(object):
                 self.plugin_manager.activatePluginByName(plugin_info.name)
                 plugin_info.plugin_object.set_site(self)
 
+        # Load compiler plugins
+        self.compilers = {}
+        self.inverse_compilers = {}
+
+        for plugin_info in self.plugin_manager.getPluginsOfCategory(
+                "PageCompiler"):
+            self.compilers[plugin_info.name] = \
+                plugin_info.plugin_object
+
+        self._activate_plugins_of_category("ConfigPlugin")
+
+        signal('configured').send(self)
+
+    def _set_global_context(self):
+        """Create global context from configuration."""
         self._GLOBAL_CONTEXT['url_type'] = self.config['URL_TYPE']
         self._GLOBAL_CONTEXT['timezone'] = self.tzinfo
         self._GLOBAL_CONTEXT['_link'] = self.link
@@ -855,30 +885,12 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['hidden_categories'] = self.config.get('HIDDEN_CATEGORIES')
         self._GLOBAL_CONTEXT['url_replacer'] = self.url_replacer
 
-        # IPython theme configuration.  If a website can potentially have ipynb
-        # posts (as determined by checking POSTS/PAGES against ipynb
-        # extensions), we should enable the IPython CSS (leaving that up to the
-        # theme itself).
+        # IPython theme configuration.  If a website has ipynb enabled in post_pages
+        # we should enable the IPython CSS (leaving that up to the theme itself).
 
-        self._GLOBAL_CONTEXT['needs_ipython_css'] = False
-        for i in self.config['post_pages']:
-            if os.path.splitext(i[0])[1] in self.config['COMPILERS'].get('ipynb', []):
-                self._GLOBAL_CONTEXT['needs_ipython_css'] = True
+        self._GLOBAL_CONTEXT['needs_ipython_css'] = 'ipynb' in self.config['COMPILERS']
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
-
-        # Load compiler plugins
-        self.compilers = {}
-        self.inverse_compilers = {}
-
-        for plugin_info in self.plugin_manager.getPluginsOfCategory(
-                "PageCompiler"):
-            self.compilers[plugin_info.name] = \
-                plugin_info.plugin_object
-
-        self._activate_plugins_of_category("ConfigPlugin")
-
-        signal('configured').send(self)
 
     def _activate_plugins_of_category(self, category):
         """Activate all the plugins of a given category and return them."""

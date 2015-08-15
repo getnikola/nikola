@@ -1,9 +1,13 @@
 [Core]
-Name = jinja
-Module = jinja
+name = jinja
+module = jinja
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Support for Jinja2 templates.
+author = Roberto Alsina
+version = 1.0
+website = http://getnikola.com
+description = Support for Jinja2 templates.
+
+[Nikola]
+plugincategory = Template
+

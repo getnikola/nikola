@@ -1,13 +1,14 @@
 [Core]
-Name = rest_chart
-Module = chart
+name = rest_chart
+module = chart
 
 [Nikola]
-Compiler = rest
+compiler = rest
+plugincategory = CompilerExtension
 
 [Documentation]
-Author = Roberto Alsina
-Version = 0.1
-Website = http://getnikola.com
-Description = Chart directive based in PyGal
+author = Roberto Alsina
+version = 0.1
+website = http://getnikola.com
+description = Chart directive based in PyGal
 

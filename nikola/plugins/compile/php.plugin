@@ -1,10 +1,13 @@
 [Core]
-Name = php
-Module = php
+name = php
+module = php
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Compile PHP into HTML (just copy and name the file .php)
+author = Roberto Alsina
+version = 1.0
+website = http://getnikola.com
+description = Compile PHP into HTML (just copy and name the file .php)
 
+[Nikola]
+plugincategory = Compiler
+friendlyname = PHP

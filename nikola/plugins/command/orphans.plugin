@@ -1,10 +1,13 @@
 [Core]
-Name = orphans
-Module = orphans
+name = orphans
+module = orphans
 
 [Documentation]
-Author = Roberto Alsina, Chris Warrick
-Version = 1.0
-Website = http://getnikola.com
-Description = List all orphans
+author = Roberto Alsina, Chris Warrick
+version = 1.0
+website = http://getnikola.com
+description = List all orphans
+
+[Nikola]
+plugincategory = Command
 
