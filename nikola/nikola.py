@@ -745,10 +745,21 @@ class Nikola(object):
 
         self.plugin_manager.getPluginLocator().setPluginPlaces(places)
         self.plugin_manager.locatePlugins()
-        # Remove compilers we don't use
-        self.plugin_manager._candidates = [p for p in self.plugin_manager._candidates if p[-1].name not in bad_compilers]
-        # Remove blacklisted plugins
-        self.plugin_manager._candidates = [p for p in self.plugin_manager._candidates if p[-1].name not in self.config['DISABLED_PLUGINS']]
+        bad_candidates = set([])
+        for p in self.plugin_manager._candidates:
+            # Remove compilers we don't use
+            if p[-1].name in bad_compilers:
+                bad_candidates.add(p)
+                utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
+            # Remove blacklisted plugins
+            if p[-1].name in self.config['DISABLED_PLUGINS']:
+                bad_candidates.add(p)
+                utils.LOGGER.debug('Not loading disabled plugin {}', p[-1].name)
+            # Remove compiler extensions we don't need
+            if p[-1].details.has_option('Nikola', 'compiler') and p[-1].details.get('Nikola', 'compiler') in bad_compilers:
+                bad_candidates.add(p)
+                utils.LOGGER.debug('Not loading comopiler extension {}', p[-1].name)
+        self.plugin_manager._candidates = list(set(self.plugin_manager._candidates) - bad_candidates)
         self.plugin_manager.loadPlugins()
 
         self._activate_plugins_of_category("SignalHandler")
