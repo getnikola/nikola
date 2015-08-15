@@ -86,6 +86,7 @@
 * `Tolu Sonaike <https://github.com/tolusonaike>`_
 * `Troy Toman <https://github.com/troytoman>`_
 * `Udo Spallek <https://github.com/udono>`_
+* `Yamila Moreno <https://github.com/yamila-moreno>`_
 * `Yaşar Arabacı <https://github.com/yasar11732>`_
 * `Yasuhiko Shiga <https://github.com/quoth>`_
 * `Zhaojun Meng <https://github.com/zhaojunmeng>`_
