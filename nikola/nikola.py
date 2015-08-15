@@ -735,20 +735,22 @@ class Nikola(object):
         # And put them in "bad compilers"
         pp_exts = set([os.path.splitext(x[0])[1] for x in self.config['post_pages']])
         self.config['COMPILERS'] = {}
-        self.disabled_compilers = set([])
+        self.disabled_compilers = {}
+        bad_compilers = set([])
         for k, v in compilers.items():
             if pp_exts.intersection(v):
                 self.config['COMPILERS'][k] = sorted(list(v))
             else:
-                self.disabled_compilers.add(k)
+                bad_compilers.add(k)
 
         self.plugin_manager.getPluginLocator().setPluginPlaces(places)
         self.plugin_manager.locatePlugins()
         bad_candidates = set([])
         for p in self.plugin_manager._candidates:
             # Remove compilers we don't use
-            if p[-1].name in self.disabled_compilers:
+            if p[-1].name in bad_compilers:
                 bad_candidates.add(p)
+                self.disabled_compilers[p[-1].name] = p
                 utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
             # Remove blacklisted plugins
             if p[-1].name in self.config['DISABLED_PLUGINS']:

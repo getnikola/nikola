@@ -408,7 +408,6 @@ class CommandNewPost(Command):
         compilers = self.site.config['COMPILERS']
         post_pages = self.site.config['post_pages']
         compiler_objs = self.site.compilers
-        compilers_raw = self.site.config['_COMPILERS_RAW']
 
         # First throw away all the post_pages with the wrong is_post
         filtered = [entry for entry in post_pages if entry[3] == is_post]
@@ -431,9 +430,9 @@ class CommandNewPost(Command):
         if not filtered:
             type_name = "post" if is_post else "page"
             LOGGER.error("Can't find a way, using your configuration, to create "
-                        "a {0} in format {1}. You may want to tweak "
-                        "COMPILERS or {2}S in conf.py".format(
-                            type_name, compiler, type_name.upper()))
+                         "a {0} in format {1}. You may want to tweak "
+                         "COMPILERS or {2}S in conf.py".format(
+                             type_name, compiler, type_name.upper()))
             LOGGER.info("Read more: {0}".format(COMPILERS_DOC_LINK))
 
             return False
@@ -451,33 +450,49 @@ class CommandNewPost(Command):
         # Entries are in format: (name, extensions, used_in_post_pages)
 
         compilers_raw = self.site.config['_COMPILERS_RAW']
-        post_pages = self.site.config['post_pages']
-        compiler_objs = self.site.compilers
 
-        parsed_compilers = {'used': [], 'unused': [], 'disabled': []}
+        used_compilers = []
+        unused_compilers = []
+        disabled_compilers = []
 
-        for compiler_name, compiler_obj in compiler_objs.items():
-            fname = compiler_obj.friendly_name or compiler_name
-            if compiler_name not in compilers_raw:
-                parsed_compilers['disabled'].append((compiler_name, fname, (), False))
+        for name, plugin in self.site.compilers.items():
+            if name in compilers_raw:
+                used_compilers.append([
+                    name,
+                    plugin.friendly_name or name,
+                    compilers_raw[name],
+                    True
+                ])
             else:
-                # stolen from filter_post_pages
-                extensions = compilers_raw[compiler_name]
-                filtered = [entry for entry in post_pages if any(
-                    [ext in entry[0] for ext in extensions])]
-                if filtered:
-                    parsed_compilers['used'].append((compiler_name, fname, extensions, True))
-                else:
-                    parsed_compilers['unused'].append((compiler_name, fname, extensions, False))
+                disabled_compilers.append([
+                    name,
+                    plugin.friendly_name or name,
+                    (),
+                    False
+                ])
 
-        # Sort compilers alphabetically by name, just so it’s prettier (and
-        # deterministic)
-        parsed_compilers['used'].sort(key=operator.itemgetter(0))
-        parsed_compilers['unused'].sort(key=operator.itemgetter(0))
-        parsed_compilers['disabled'].sort(key=operator.itemgetter(0))
+        for name in self.site.disabled_compilers:
+            if name in compilers_raw:
+                unused_compilers.append([
+                    name,
+                    name,
+                    compilers_raw[name],
+                    False
+                ])
+            else:
+                disabled_compilers.append([
+                    name,
+                    name,
+                    (),
+                    False
+                ])
+
+        used_compilers.sort(key=operator.itemgetter(0))
+        unused_compilers.sort(key=operator.itemgetter(0))
+        disabled_compilers.sort(key=operator.itemgetter(0))
 
         # We also group the compilers by status for readability.
-        parsed_list = parsed_compilers['used'] + parsed_compilers['unused'] + parsed_compilers['disabled']
+        parsed_list = used_compilers + unused_compilers + disabled_compilers
 
         print("Available input formats:\n")
 
