@@ -718,7 +718,6 @@ class Nikola(object):
 
     def _init_plugins(self):
         """Load plugins as needed."""
-
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,
             "Task": Task,
@@ -805,7 +804,6 @@ class Nikola(object):
 
     def _set_global_context(self):
         """Create global context from configuration."""
-
         self._GLOBAL_CONTEXT['url_type'] = self.config['URL_TYPE']
         self._GLOBAL_CONTEXT['timezone'] = self.tzinfo
         self._GLOBAL_CONTEXT['_link'] = self.link
