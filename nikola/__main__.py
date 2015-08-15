@@ -338,7 +338,6 @@ class DoitNikola(DoitMain):
             self.nikola.init_plugins(commands_only=True)
         else:
             self.nikola.init_plugins()
-        import pdb; pdb.set_trace()
 
         sub_cmds = self.get_cmds()
 
