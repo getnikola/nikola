@@ -1052,10 +1052,14 @@ class Nikola(object):
         utils.makedirs(os.path.dirname(output_name))
         parser = lxml.html.HTMLParser(remove_blank_text=True)
         doc = lxml.html.document_fromstring(data, parser)
-        doc.rewrite_links(lambda dst: self.url_replacer(src, dst, context['lang']), resolve_base_href=False)
+        self.rewrite_links(doc, src, context['lang'])
         data = b'<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='utf8', method='html', pretty_print=True)
         with open(output_name, "wb+") as post_file:
             post_file.write(data)
+
+    def rewrite_links(self, doc, src, lang):
+        """Replace links in document to point to the right places."""
+        doc.rewrite_links(lambda dst: self.url_replacer(src, dst, lang), resolve_base_href=False)
 
     def url_replacer(self, src, dst, lang=None, url_type=None):
         """Mangle URLs.
