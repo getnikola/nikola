@@ -715,7 +715,6 @@ class Nikola(object):
                 self.bad_compilers.add(k)
 
         self._set_global_context()
-        self.init_plugins()
 
     def init_plugins(self, commands_only=False):
         """Load plugins as needed."""
@@ -754,7 +753,8 @@ class Nikola(object):
         for p in self.plugin_manager._candidates:
             if commands_only:
                 if p[-1].details.has_option('Nikola', 'plugincategory'):
-                    if p[-1].details.get('Nikola', 'PluginCategory') != 'Command':
+                    # FIXME TemplateSystem should not be needed
+                    if p[-1].details.get('Nikola', 'PluginCategory') not in {'Command', 'Template'}:
                         bad_candidates.add(p)
             else:  # Not commands-only
                 # Remove compilers we don't use
