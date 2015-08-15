@@ -800,7 +800,6 @@ class Nikola(object):
 
         signal('configured').send(self)
 
-
     def _set_global_context(self):
         self._GLOBAL_CONTEXT['url_type'] = self.config['URL_TYPE']
         self._GLOBAL_CONTEXT['timezone'] = self.tzinfo
@@ -876,7 +875,6 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['needs_ipython_css'] = 'ipynb' in self.config['COMPILERS']
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
-
 
     def _activate_plugins_of_category(self, category):
         """Activate all the plugins of a given category and return them."""
