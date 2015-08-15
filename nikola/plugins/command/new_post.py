@@ -440,10 +440,6 @@ class CommandNewPost(Command):
 
     def print_compilers(self):
         """List all available compilers in a human-friendly format.
-
-        :param compilers_raw: The compilers dict, mapping compiler names to tuples of extensions
-        :param post_pages: The post_pages structure
-        :param compilers_objs: Compiler objects
         """
         # We use compilers_raw, because the normal dict can contain
         # garbage coming from the translation candidate implementation.
