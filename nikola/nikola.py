@@ -687,6 +687,38 @@ class Nikola(object):
             self.tzinfo = dateutil.tz.gettz()
         self.config['__tzinfo__'] = self.tzinfo
 
+        # Store raw compilers for internal use (need a copy for that)
+        self.config['_COMPILERS_RAW'] = {}
+        for k, v in self.config['COMPILERS'].items():
+            self.config['_COMPILERS_RAW'][k] = list(v)
+
+        compilers = defaultdict(set)
+        # Also add aliases for combinations with TRANSLATIONS_PATTERN
+        for compiler, exts in self.config['COMPILERS'].items():
+            for ext in exts:
+                compilers[compiler].add(ext)
+                for lang in self.config['TRANSLATIONS'].keys():
+                    candidate = utils.get_translation_candidate(self.config, "f" + ext, lang)
+                    compilers[compiler].add(candidate)
+
+        # Avoid redundant compilers
+        # Remove compilers that match nothing in POSTS/PAGES
+        # And put them in "bad compilers"
+        pp_exts = set([os.path.splitext(x[0])[1] for x in self.config['post_pages']])
+        self.config['COMPILERS'] = {}
+        self.bad_compilers = set([])
+        for k, v in compilers.items():
+            if pp_exts.intersection(v):
+                self.config['COMPILERS'][k] = sorted(list(v))
+            else:
+                self.bad_compilers.add(k)
+
+        self._set_global_context()
+        self._init_plugins()
+
+    def _init_plugins(self):
+        """Load plugins as needed."""
+
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,
             "Task": Task,
@@ -715,39 +747,12 @@ class Nikola(object):
                 os.path.join(os.getcwd(), utils.sys_encode('plugins')),
                 os.path.expanduser('~/.nikola/plugins'),
             ] + [utils.sys_encode(path) for path in extra_plugins_dirs if path]
-
-        # Store raw compilers for internal use (need a copy for that)
-        self.config['_COMPILERS_RAW'] = {}
-        for k, v in self.config['COMPILERS'].items():
-            self.config['_COMPILERS_RAW'][k] = list(v)
-
-        compilers = defaultdict(set)
-        # Also add aliases for combinations with TRANSLATIONS_PATTERN
-        for compiler, exts in self.config['COMPILERS'].items():
-            for ext in exts:
-                compilers[compiler].add(ext)
-                for lang in self.config['TRANSLATIONS'].keys():
-                    candidate = utils.get_translation_candidate(self.config, "f" + ext, lang)
-                    compilers[compiler].add(candidate)
-
-        # Avoid redundant compilers
-        # Remove compilers that match nothing in POSTS/PAGES
-        # And put them in "bad compilers"
-        pp_exts = set([os.path.splitext(x[0])[1] for x in self.config['post_pages']])
-        self.config['COMPILERS'] = {}
-        bad_compilers = set([])
-        for k, v in compilers.items():
-            if pp_exts.intersection(v):
-                self.config['COMPILERS'][k] = sorted(list(v))
-            else:
-                bad_compilers.add(k)
-
         self.plugin_manager.getPluginLocator().setPluginPlaces(places)
         self.plugin_manager.locatePlugins()
         bad_candidates = set([])
         for p in self.plugin_manager._candidates:
             # Remove compilers we don't use
-            if p[-1].name in bad_compilers:
+            if p[-1].name in self.bad_compilers:
                 bad_candidates.add(p)
                 utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
             # Remove blacklisted plugins
@@ -755,7 +760,7 @@ class Nikola(object):
                 bad_candidates.add(p)
                 utils.LOGGER.debug('Not loading disabled plugin {}', p[-1].name)
             # Remove compiler extensions we don't need
-            if p[-1].details.has_option('Nikola', 'compiler') and p[-1].details.get('Nikola', 'compiler') in bad_compilers:
+            if p[-1].details.has_option('Nikola', 'compiler') and p[-1].details.get('Nikola', 'compiler') in self.bad_compilers:
                 bad_candidates.add(p)
                 utils.LOGGER.debug('Not loading comopiler extension {}', p[-1].name)
         self.plugin_manager._candidates = list(set(self.plugin_manager._candidates) - bad_candidates)
@@ -785,8 +790,6 @@ class Nikola(object):
                 self.plugin_manager.activatePluginByName(plugin_info.name)
                 plugin_info.plugin_object.set_site(self)
 
-        self._set_global_context()
-
         # Load compiler plugins
         self.compilers = {}
         self.inverse_compilers = {}
@@ -801,6 +804,8 @@ class Nikola(object):
         signal('configured').send(self)
 
     def _set_global_context(self):
+        """Create global context from configuration."""
+
         self._GLOBAL_CONTEXT['url_type'] = self.config['URL_TYPE']
         self._GLOBAL_CONTEXT['timezone'] = self.tzinfo
         self._GLOBAL_CONTEXT['_link'] = self.link
