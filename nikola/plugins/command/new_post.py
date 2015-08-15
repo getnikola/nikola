@@ -439,8 +439,7 @@ class CommandNewPost(Command):
         return filtered[0]
 
     def print_compilers(self):
-        """List all available compilers in a human-friendly format.
-        """
+        """List all available compilers in a human-friendly format."""
         # We use compilers_raw, because the normal dict can contain
         # garbage coming from the translation candidate implementation.
         # Entries are in format: (name, extensions, used_in_post_pages)
