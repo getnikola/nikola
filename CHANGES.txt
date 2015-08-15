@@ -1,6 +1,11 @@
 New in Master
 =============
 
+Features
+--------
+
+* New option to use custom, and several TEASER_ENDs
+
 Bugfixes
 --------
 

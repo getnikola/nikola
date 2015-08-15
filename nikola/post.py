@@ -605,11 +605,12 @@ class Post(object):
             data = lxml.html.tostring(document, encoding='unicode')
 
         if teaser_only:
-            teaser = TEASER_REGEXP.split(data)[0]
+            teaser_regexp = self.config.get('TEASER_REGEXP', TEASER_REGEXP)
+            teaser = teaser_regexp.split(data)[0]
             if teaser != data:
                 if not strip_html and show_read_more_link:
-                    if TEASER_REGEXP.search(data).groups()[-1]:
-                        teaser_text = TEASER_REGEXP.search(data).groups()[-1]
+                    if teaser_regexp.search(data).groups()[-1]:
+                        teaser_text = teaser_regexp.search(data).groups()[-1]
                     else:
                         teaser_text = self.messages[lang]["Read more"]
                     l = self.config['RSS_READ_MORE_LINK'](lang) if rss_read_more_link else self.config['INDEX_READ_MORE_LINK'](lang)

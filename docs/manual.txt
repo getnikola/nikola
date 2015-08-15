@@ -352,7 +352,7 @@ to your configuration:
    However, starting with Nikola v7, you can now use ``.meta`` files and put
    all metadata you want, complete with the explanations — they look just like
    the beginning of our reST files.
-      
+
       .. code:: restructuredtext
 
          .. title: How to make money
@@ -496,6 +496,13 @@ change that text, you can use a custom teaser:
 .. code:: restructuredtext
 
     .. TEASER_END: click to read the rest of the article
+
+You can override the default value for `TEASER_END` in `conf.py`:
+
+..code:: python
+
+    import re
+    TEASER_REGEXP = re.compile('<!--\s*(more|TEASER_END)(:(.+))?\s*-->', re.IGNORECASE)
 
 Or you can completely customize the link using the ``READ_MORE_LINK`` option
 
