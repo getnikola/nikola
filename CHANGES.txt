@@ -4,6 +4,7 @@ New in Master
 Bugfixes
 --------
 
+* Make Nikola startup faster by not loading useless plugins (Issue #1825)
 * Ignore sliced multibyte characters when reading metadata for sitemaps
 * Fix NameError caused by failed import in auto plugin.
 
