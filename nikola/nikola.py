@@ -706,12 +706,13 @@ class Nikola(object):
         # And put them in "bad compilers"
         pp_exts = set([os.path.splitext(x[0])[1] for x in self.config['post_pages']])
         self.config['COMPILERS'] = {}
-        self.bad_compilers = set([])
+        self.disabled_compilers = {}
+        bad_compilers = set([])
         for k, v in compilers.items():
             if pp_exts.intersection(v):
                 self.config['COMPILERS'][k] = sorted(list(v))
             else:
-                self.bad_compilers.add(k)
+                bad_compilers.add(k)
 
         self._set_global_context()
         self._init_plugins()
@@ -746,6 +747,7 @@ class Nikola(object):
                 os.path.join(os.getcwd(), utils.sys_encode('plugins')),
                 os.path.expanduser('~/.nikola/plugins'),
             ] + [utils.sys_encode(path) for path in extra_plugins_dirs if path]
+
         self.plugin_manager.getPluginLocator().setPluginPlaces(places)
         self.plugin_manager.locatePlugins()
         bad_candidates = set([])
@@ -753,13 +755,14 @@ class Nikola(object):
             # Remove compilers we don't use
             if p[-1].name in self.bad_compilers:
                 bad_candidates.add(p)
+                self.disabled_compilers[p[-1].name] = p
                 utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
             # Remove blacklisted plugins
             if p[-1].name in self.config['DISABLED_PLUGINS']:
                 bad_candidates.add(p)
                 utils.LOGGER.debug('Not loading disabled plugin {}', p[-1].name)
             # Remove compiler extensions we don't need
-            if p[-1].details.has_option('Nikola', 'compiler') and p[-1].details.get('Nikola', 'compiler') in self.bad_compilers:
+            if p[-1].details.has_option('Nikola', 'compiler') and p[-1].details.get('Nikola', 'compiler') in self.disabled_compilers:
                 bad_candidates.add(p)
                 utils.LOGGER.debug('Not loading comopiler extension {}', p[-1].name)
         self.plugin_manager._candidates = list(set(self.plugin_manager._candidates) - bad_candidates)
