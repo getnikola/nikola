@@ -716,7 +716,6 @@ class Nikola(object):
                 os.path.expanduser('~/.nikola/plugins'),
             ] + [utils.sys_encode(path) for path in extra_plugins_dirs if path]
 
-
         # Store raw compilers for internal use (need a copy for that)
         self.config['_COMPILERS_RAW'] = {}
         for k, v in self.config['COMPILERS'].items():
@@ -735,7 +734,7 @@ class Nikola(object):
         # Remove compilers that match nothing in POSTS/PAGES
         # And put them in "bad compilers"
         pp_exts = set([os.path.splitext(x[0])[1] for x in self.config['post_pages']])
-        self.config['COMPILERS']={}
+        self.config['COMPILERS'] = {}
         bad_compilers = set([])
         for k, v in compilers.items():
             if pp_exts.intersection(v):
