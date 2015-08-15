@@ -757,6 +757,11 @@ class Nikola(object):
                 bad_candidates.add(p)
                 self.disabled_compilers[p[-1].name] = p
                 utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
+            if p[-1].name not in self.config['COMPILERS'] and \
+                    p[-1].details.has_option('Nikola', 'plugincategory') and p[-1].details.get('Nikola', 'PluginCategory') == 'Compiler':
+                bad_candidates.add(p)
+                self.disabled_compilers[p[-1].name] = p
+                utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
             # Remove blacklisted plugins
             if p[-1].name in self.config['DISABLED_PLUGINS']:
                 bad_candidates.add(p)
