@@ -1,10 +1,13 @@
 [Core]
-Name = render_tags
-Module = tags
+name = render_tags
+module = tags
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Render the tag pages and feeds.
+author = Roberto Alsina
+version = 1.0
+website = http://getnikola.com
+description = Render the tag pages and feeds.
+
+[Nikola]
+plugincategory = Task
 

@@ -1,10 +1,11 @@
 [Core]
-Name = rest_vimeo
-Module = vimeo
+name = rest_vimeo
+module = vimeo
 
 [Nikola]
-Compiler = rest
+compiler = rest
+plugincategory = CompilerExtension
 
 [Documentation]
-Description = Vimeo directive
+description = Vimeo directive
 

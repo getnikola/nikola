@@ -1,12 +1,14 @@
 [Core]
-Name = mdx_gist
-Module = mdx_gist
+name = mdx_gist
+module = mdx_gist
 
 [Nikola]
-Compiler = markdown
+compiler = markdown
+plugincategory = CompilerExtension
 
 [Documentation]
-Author = Roberto Alsina
-Version = 0.1
-Website = http://getnikola.com
-Description = Extension for embedding gists
+author = Roberto Alsina
+version = 0.1
+website = http://getnikola.com
+description = Extension for embedding gists
+

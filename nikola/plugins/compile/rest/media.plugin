@@ -1,13 +1,14 @@
 [Core]
-Name = rest_media
-Module = media
+name = rest_media
+module = media
 
 [Nikola]
-Compiler = rest
+compiler = rest
+plugincategory = CompilerExtension
 
 [Documentation]
-Author = Roberto Alsina
-Version = 0.1
-Website = http://getnikola.com
-Description = Directive to support oembed via micawber
+author = Roberto Alsina
+version = 0.1
+website = http://getnikola.com
+description = Directive to support oembed via micawber
 

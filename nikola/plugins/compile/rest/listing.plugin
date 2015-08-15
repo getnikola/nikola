@@ -1,13 +1,14 @@
 [Core]
-Name = rest_listing
-Module = listing
+name = rest_listing
+module = listing
 
 [Nikola]
-Compiler = rest
+compiler = rest
+plugincategory = CompilerExtension
 
 [Documentation]
-Author = Roberto Alsina
-Version = 0.1
-Website = http://getnikola.com
-Description = Extension for source listings
+author = Roberto Alsina
+version = 0.1
+website = http://getnikola.com
+description = Extension for source listings
 

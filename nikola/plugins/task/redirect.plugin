@@ -1,10 +1,13 @@
 [Core]
-Name = redirect
-Module = redirect
+name = redirect
+module = redirect
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Create redirect pages.
+author = Roberto Alsina
+version = 1.0
+website = http://getnikola.com
+description = Create redirect pages.
+
+[Nikola]
+plugincategory = Task
 

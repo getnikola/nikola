@@ -1,10 +1,13 @@
 [Core]
-Name = import_wordpress
-Module = import_wordpress
+name = import_wordpress
+module = import_wordpress
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Import a wordpress site from a XML dump (requires markdown).
+author = Roberto Alsina
+version = 1.0
+website = http://getnikola.com
+description = Import a wordpress site from a XML dump (requires markdown).
+
+[Nikola]
+plugincategory = Command
 

@@ -1,10 +1,13 @@
 [Core]
-Name = generate_rss
-Module = rss
+name = generate_rss
+module = rss
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Generate RSS feeds.
+author = Roberto Alsina
+version = 1.0
+website = http://getnikola.com
+description = Generate RSS feeds.
+
+[Nikola]
+plugincategory = Task
 

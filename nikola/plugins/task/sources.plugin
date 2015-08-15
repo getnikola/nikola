@@ -1,10 +1,13 @@
 [Core]
-Name = render_sources
-Module = sources
+name = render_sources
+module = sources
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Copy page sources into the output.
+author = Roberto Alsina
+version = 1.0
+website = http://getnikola.com
+description = Copy page sources into the output.
+
+[Nikola]
+plugincategory = Task
 

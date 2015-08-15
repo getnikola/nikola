@@ -1,10 +1,13 @@
 [Core]
-Name = render_listings
-Module = listings
+name = render_listings
+module = listings
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Render code listings into output
+author = Roberto Alsina
+version = 1.0
+website = http://getnikola.com
+description = Render code listings into output
+
+[Nikola]
+plugincategory = Task
 

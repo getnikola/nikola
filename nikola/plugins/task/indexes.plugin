@@ -1,10 +1,13 @@
 [Core]
-Name = render_indexes
-Module = indexes
+name = render_indexes
+module = indexes
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Generates the blog's index pages.
+author = Roberto Alsina
+version = 1.0
+website = http://getnikola.com
+description = Generates the blog's index pages.
+
+[Nikola]
+plugincategory = Task
 
