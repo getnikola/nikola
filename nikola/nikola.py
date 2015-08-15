@@ -707,12 +707,12 @@ class Nikola(object):
         pp_exts = set([os.path.splitext(x[0])[1] for x in self.config['post_pages']])
         self.config['COMPILERS'] = {}
         self.disabled_compilers = {}
-        bad_compilers = set([])
+        self.bad_compilers = set([])
         for k, v in compilers.items():
             if pp_exts.intersection(v):
                 self.config['COMPILERS'][k] = sorted(list(v))
             else:
-                bad_compilers.add(k)
+                self.bad_compilers.add(k)
 
         self._set_global_context()
         self._init_plugins()
