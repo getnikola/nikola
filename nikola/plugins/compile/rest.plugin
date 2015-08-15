@@ -10,4 +10,4 @@ description = Compile reSt into HTML
 
 [Nikola]
 plugincategory = Compiler
-
+friendlyname = reStructuredText

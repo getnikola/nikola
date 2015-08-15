@@ -10,4 +10,4 @@ description = Compile HTML into HTML (just copy)
 
 [Nikola]
 plugincategory = Compiler
-
+friendlyname = HTML

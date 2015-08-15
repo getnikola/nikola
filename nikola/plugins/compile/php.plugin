@@ -10,4 +10,4 @@ description = Compile PHP into HTML (just copy and name the file .php)
 
 [Nikola]
 plugincategory = Compiler
-
+friendlyname = PHP

@@ -10,4 +10,4 @@ description = Compile IPython notebooks into Nikola posts
 
 [Nikola]
 plugincategory = Compiler
-
+friendlyname = Jupyter/IPython Notebook
