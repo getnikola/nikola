@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Make STORY_INDEX work together with PRETTY_URLS (Issue #1949)
 * Refactor new_post to match lazy plugin loading (Issue #1943)
 * Make Nikola startup faster by not loading useless plugins (Issue #1825)
 * Ignore sliced multibyte characters when reading metadata for sitemaps

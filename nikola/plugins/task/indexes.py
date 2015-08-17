@@ -101,13 +101,17 @@ class Indexes(Task):
             "strip_indexes": self.site.config['STRIP_INDEXES'],
         }
         template_name = "list.tmpl"
+        index_len = len(kw['index_file'])
         for lang in kw["translations"]:
             # Need to group by folder to avoid duplicated tasks (Issue #758)
                 # Group all pages by path prefix
                 groups = defaultdict(list)
                 for p in self.site.timeline:
                     if not p.is_post:
-                        dirname = os.path.dirname(p.destination_path(lang))
+                        destpath = p.destination_path(lang)
+                        if destpath[-(1 + index_len):] == '/' + kw['index_file']:
+                            destpath = destpath[:-(1 + index_len)]
+                        dirname = os.path.dirname(destpath)
                         groups[dirname].append(p)
                 for dirname, post_list in groups.items():
                     context = {}
@@ -116,7 +120,6 @@ class Indexes(Task):
                     output_name = os.path.join(kw['output_folder'], dirname, kw['index_file'])
                     short_destination = os.path.join(dirname, kw['index_file'])
                     link = short_destination.replace('\\', '/')
-                    index_len = len(kw['index_file'])
                     if kw['strip_indexes'] and link[-(1 + index_len):] == '/' + kw['index_file']:
                         link = link[:-index_len]
                     context["permalink"] = link
