@@ -221,6 +221,10 @@ and more via plugins — for more details, read the `input format documentation
 <#multiple-input-formats>`__.
 You can learn reStructuredText syntax with the `reST quickstart <https://getnikola.com/quickstart.html>`__.
 
+Please note that Nikola does not guarantee support for encodings other than
+UTF-8. We recommend converting your input files to that encoding.  It will
+prevent bugs, and Nikola will write UTF-8 output anyway.
+
 You can control what markup compiler is used for each file extension with the ``COMPILERS``
 option. The default configuration expects them to be placed in ``posts`` but that can be
 changed (see below, the ``POSTS`` and ``PAGES`` options)
