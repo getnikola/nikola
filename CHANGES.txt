@@ -1,10 +1,10 @@
-New in Master
+New in master
 =============
 
 Features
 --------
 
-* New option to use custom, and several TEASER_ENDs
+* New option to use custom, and several ``TEASER_END`` values
 
 Bugfixes
 --------

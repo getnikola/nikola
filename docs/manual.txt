@@ -501,14 +501,16 @@ change that text, you can use a custom teaser:
 
     .. TEASER_END: click to read the rest of the article
 
-You can override the default value for `TEASER_END` in `conf.py`:
+You can override the default value for ``TEASER_END`` in ``conf.py`` — for
+example, the following example will work for ``.. more``, and will be
+compatible with both WordPress and Nikola posts:
 
 ..code:: python
 
     import re
     TEASER_REGEXP = re.compile('<!--\s*(more|TEASER_END)(:(.+))?\s*-->', re.IGNORECASE)
 
-Or you can completely customize the link using the ``READ_MORE_LINK`` option
+Or you can completely customize the link using the ``READ_MORE_LINK`` option.
 
 .. code:: python
 
