@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Update suggested license to its latest version (Issue #1950)
 * Add Punjabi language, by Jasdeep Singh (Issue #1940)
 * New option to use custom, and several ``TEASER_END`` values
 
