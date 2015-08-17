@@ -126,6 +126,7 @@ LEGAL_VALUES = {
         'ko': 'Korean',
         'nb': 'Norwegian Bokmål',
         'nl': 'Dutch',
+        'pa': 'Punjabi',
         'pl': 'Polish',
         'pt_br': 'Portuguese (Brasil)',
         'ru': 'Russian',

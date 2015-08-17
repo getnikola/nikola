@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Add Punjabi language, by Jasdeep Singh (Issue #1940)
 * New option to use custom, and several ``TEASER_END`` values
 
 Bugfixes
