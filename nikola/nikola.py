@@ -1059,7 +1059,12 @@ class Nikola(object):
 
     def rewrite_links(self, doc, src, lang):
         """Replace links in document to point to the right places."""
+
+        # First let lxml replace most of them
         doc.rewrite_links(lambda dst: self.url_replacer(src, dst, lang), resolve_base_href=False)
+
+        # lxml ignores srcset in img and source elements, so do that by hand
+        import pdb; pdb.set_trace()
 
     def url_replacer(self, src, dst, lang=None, url_type=None):
         """Mangle URLs.
