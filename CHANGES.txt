@@ -12,7 +12,7 @@ Features
 Bugfixes
 --------
 
-* Make LINK_CHECK_WHITELIST  apply to remote link checks
+* Make LINK_CHECK_WHITELIST apply to remote link checks
 * Make STORY_INDEX work together with PRETTY_URLS (Issue #1949)
 * Refactor new_post to match lazy plugin loading (Issue #1943)
 * Make Nikola startup faster by not loading useless plugins (Issue #1825)

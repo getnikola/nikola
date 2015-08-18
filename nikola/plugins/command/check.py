@@ -224,8 +224,12 @@ class CommandCheck(Command):
                     if parsed.netloc == base_url.netloc:  # absolute URL to self.site
                         continue
                     if target in self.checked_remote_targets:  # already checked this exact target
-                        if self.checked_remote_targets[target] > 399:
-                            self.logger.warn("Broken link in {0}: {1} [Error {2}]".format(filename, target, self.checked_remote_targets[target]))
+                        if self.checked_remote_targets[target] in [301, 307]:
+                            self.logger.warn("Remote link PERMANENTLY redirected in {0}: {1} [Error {2}]".format(filename, target, self.checked_remote_targets[target]))
+                        elif self.checked_remote_targets[target] in [302, 308]:
+                            self.logger.info("Remote link temporarily redirected in {1}: {2} [HTTP: {3}]".format(filename, target, self.checked_remote_targets[target]))
+                        elif self.checked_remote_targets[target] > 399:
+                            self.logger.error("Broken link in {0}: {1} [Error {2}]".format(filename, target, self.checked_remote_targets[target]))
                         continue
 
                     # Skip whitelisted targets
@@ -234,30 +238,31 @@ class CommandCheck(Command):
 
                     # Check the remote link works
                     req_headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0 (Nikola)'}  # I’m a real boy!
-                    resp = requests.head(target, headers=req_headers)
+                    resp = requests.head(target, headers=req_headers, allow_redirects=False)
 
-                    # Retry client errors (4xx) as GET requests
+                    # Retry client errors (4xx) as GET requests because many servers are broken
                     if resp.status_code >= 400 and resp.status_code <= 499:
                         time.sleep(0.5)
-                        resp = requests.get(target, headers=req_headers)
+                        resp = requests.get(target, headers=req_headers, allow_redirects=False)
 
                     # Follow redirects and see where they lead, redirects to errors will be reported twice
                     if resp.status_code in [301, 302, 307, 308]:
                         redir_status_code = resp.status_code
                         time.sleep(0.5)
-                        resp = requests.head(target, headers=req_headers, allow_redirects=True)
+                        # Known redirects are retested using GET because IIS servers otherwise get HEADaches
+                        resp = requests.get(target, headers=req_headers, allow_redirects=True)
                         # Permanent redirects should be updated
                         if redir_status_code in [301, 308]:
-                            self.logger.error("Remote link moved PERMANENTLY to \"{0}\" and should be updated in {1}: {2} [HTTP: {3}]".format(resp.url, filename, target, redir_status_code))
+                            self.logger.warn("Remote link moved PERMANENTLY to \"{0}\" and should be updated in {1}: {2} [HTTP: {3}]".format(resp.url, filename, target, redir_status_code))
                         if redir_status_code in [302, 307]:
-                            self.logger.warn("Remote link temporarily redirected to \"{0}\" in {1}: {2} [HTTP: {3}]".format(resp.url, filename, target, redir_status_code))
+                            self.logger.info("Remote link temporarily redirected to \"{0}\" in {1}: {2} [HTTP: {3}]".format(resp.url, filename, target, redir_status_code))
                         self.checked_remote_targets[resp.url] = resp.status_code
                         self.checked_remote_targets[target] = redir_status_code
                     else:
                         self.checked_remote_targets[target] = resp.status_code
 
                     if resp.status_code > 399:  # Error
-                        self.logger.warn("Broken link in {0}: {1} [Error {2}]".format(filename, target, resp.status_code))
+                        self.logger.error("Broken link in {0}: {1} [Error {2}]".format(filename, target, resp.status_code))
                         continue
                     elif resp.status_code <= 399:  # The address leads *somewhere* that is not an error
                         self.logger.debug("Successfully checked remote link in {0}: {1} [HTTP: {2}]".format(filename, target, resp.status_code))
