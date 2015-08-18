@@ -227,6 +227,11 @@ class CommandCheck(Command):
                         if self.checked_remote_targets[target] > 399:
                             self.logger.warn("Broken link in {0}: {1} [Error {2}]".format(filename, target, self.checked_remote_targets[target]))
                         continue
+
+                    # Skip whitelisted targets
+                    if any(re.search(_, target) for _ in self.whitelist):
+                        continue
+
                     # Check the remote link works
                     req_headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0 (Nikola)'}  # I’m a real boy!
                     resp = requests.head(target, headers=req_headers)
