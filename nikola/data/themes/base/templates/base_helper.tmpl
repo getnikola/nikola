@@ -26,7 +26,11 @@ lang="${lang}">
     <meta name="description" content="${description}">
     %endif
     <meta name="viewport" content="width=device-width">
-    <title>${title|striphtml} | ${blog_title|striphtml}</title>
+    %if title == blog_title:
+        <title>${blog_title|h}</title>
+    %else:
+        <title>${title|h} | ${blog_title|h}</title>
+    %endif
 
     ${html_stylesheets()}
     ${html_feedlinks()}
