@@ -66,7 +66,6 @@ class MakoTemplates(TemplateSystem):
             keyword = getattr(n, 'keyword', None)
             if keyword in ["inherit", "namespace"] or isinstance(n, parsetree.IncludeTag):
                 deps.append(n.attributes['file'])
-            # TODO: include tags are not handled
         return deps
 
     def set_directories(self, directories, cache_folder):
