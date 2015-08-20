@@ -987,7 +987,10 @@ def get_meta(post, file_metadata_regexp=None, unslugify_titles=False, lang=None)
     compiler_meta = {}
 
     if getattr(post, 'compiler', None):
-        compiler_meta = post.compiler.read_metadata(post, file_metadata_regexp, unslugify_titles, lang)
+        try:
+            compiler_meta = post.compiler.read_metadata(post, file_metadata_regexp, unslugify_titles, lang)
+        except StopIteration as e:
+            raise RuntimeError from e
         meta.update(compiler_meta)
 
     if not post.is_two_file and not compiler_meta:
