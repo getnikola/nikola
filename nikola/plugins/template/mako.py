@@ -32,7 +32,7 @@ import shutil
 import sys
 import tempfile
 
-from mako import util, lexer
+from mako import util, lexer, parsetree
 from mako.lookup import TemplateLookup
 from mako.template import Template
 from markupsafe import Markup  # It's ok, Mako requires it
@@ -64,7 +64,7 @@ class MakoTemplates(TemplateSystem):
         deps = []
         for n in lex.template.nodes:
             keyword = getattr(n, 'keyword', None)
-            if keyword in ["inherit", "namespace"]:
+            if keyword in ["inherit", "namespace"] or isinstance(n, parsetree.IncludeTag):
                 deps.append(n.attributes['file'])
             # TODO: include tags are not handled
         return deps
