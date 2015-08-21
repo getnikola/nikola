@@ -1065,7 +1065,12 @@ class Nikola(object):
         doc.rewrite_links(lambda dst: self.url_replacer(src, dst, lang), resolve_base_href=False)
 
         # lxml ignores srcset in img and source elements, so do that by hand
-        import pdb; pdb.set_trace()
+        objs = list(doc.findall('*//img')) + list(doc.findall('*//source'))
+        for obj in objs:
+            if 'srcset' in obj.attrib:
+                urls = obj.attrib['srcset'].split(',')
+                urls = [self.url_replacer(src, dst, lang) for dst in urls]
+                obj.set('srcset', ', '.join(urls))
 
     def url_replacer(self, src, dst, lang=None, url_type=None):
         """Mangle URLs.
