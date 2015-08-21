@@ -1067,7 +1067,6 @@ class Nikola(object):
         objs = list(doc.findall('*//img')) + list(doc.findall('*//source'))
         for obj in objs:
             if 'srcset' in obj.attrib:
-                from doit.tools import set_trace; set_trace()
                 urls = [u.strip() for u in obj.attrib['srcset'].split(',')]
                 urls = [self.url_replacer(src, dst, lang) for dst in urls]
                 obj.set('srcset', ', '.join(urls))
