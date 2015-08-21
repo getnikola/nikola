@@ -1,14 +1,22 @@
-New in Master
+New in master
 =============
 
 Features
 --------
 
-* New option to use custom, and several TEASER_ENDs
+* Checking remote links also checks redirects (nikola check -lr)
+* Update suggested license to its latest version (Issue #1950)
+* Add Punjabi language, by Jasdeep Singh (Issue #1940)
+* New option to use custom, and several ``TEASER_END`` values
 
 Bugfixes
 --------
 
+* Add dependencies for include tag in Mako (Issue #1956)
+* Don’t duplicate BLOG_TITLE in the front page title (Issue #1952)
+* Escape instad of strip HTML in titles (Issue #1952)
+* Make LINK_CHECK_WHITELIST apply to remote link checks
+* Make STORY_INDEX work together with PRETTY_URLS (Issue #1949)
 * Refactor new_post to match lazy plugin loading (Issue #1943)
 * Make Nikola startup faster by not loading useless plugins (Issue #1825)
 * Ignore sliced multibyte characters when reading metadata for sitemaps

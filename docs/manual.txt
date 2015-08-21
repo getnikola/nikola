@@ -3,6 +3,7 @@
 .. date: 2012-03-30 23:00:00 UTC-03:00
 .. link:
 .. description:
+.. tags: mathjax
 
 The Nikola Handbook
 ===================
@@ -220,6 +221,10 @@ can also use Pandoc for conversion, and has support for BBCode, CreoleWiki, txt2
 and more via plugins — for more details, read the `input format documentation
 <#multiple-input-formats>`__.
 You can learn reStructuredText syntax with the `reST quickstart <https://getnikola.com/quickstart.html>`__.
+
+Please note that Nikola does not guarantee support for encodings other than
+UTF-8. We recommend converting your input files to that encoding.  It will
+prevent bugs, and Nikola will write UTF-8 output anyway.
 
 You can control what markup compiler is used for each file extension with the ``COMPILERS``
 option. The default configuration expects them to be placed in ``posts`` but that can be
@@ -497,14 +502,16 @@ change that text, you can use a custom teaser:
 
     .. TEASER_END: click to read the rest of the article
 
-You can override the default value for `TEASER_END` in `conf.py`:
+You can override the default value for ``TEASER_END`` in ``conf.py`` — for
+example, the following example will work for ``.. more``, and will be
+compatible with both WordPress and Nikola posts:
 
 ..code:: python
 
     import re
     TEASER_REGEXP = re.compile('<!--\s*(more|TEASER_END)(:(.+))?\s*-->', re.IGNORECASE)
 
-Or you can completely customize the link using the ``READ_MORE_LINK`` option
+Or you can completely customize the link using the ``READ_MORE_LINK`` option.
 
 .. code:: python
 

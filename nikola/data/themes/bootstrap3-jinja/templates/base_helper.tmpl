@@ -31,7 +31,11 @@ lang="{{ lang }}">
     <meta name="description" content="{{ description }}">
     {% endif %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ title|e }} | {{ blog_title|e }}</title>
+    {% if title == blog_title %}
+        <title>{{ blog_title|e }}</title>
+    {% else %}
+        <title>{{ title|e }} | {{ blog_title|e }}</title>
+    {% endif %}
 
     {{ html_stylesheets() }}
     {{ html_feedlinks() }}
