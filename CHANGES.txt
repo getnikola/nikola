@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Rewrite srcset links (Issue #1939)
 * Add dependencies for include tag in Mako (Issue #1956)
 * Don’t duplicate BLOG_TITLE in the front page title (Issue #1952)
 * Escape instad of strip HTML in titles (Issue #1952)
