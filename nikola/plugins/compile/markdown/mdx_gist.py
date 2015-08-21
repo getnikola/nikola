@@ -22,7 +22,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 # Warning: URL formats of "raw" gists are undocummented and subject to change.
-# See also:  http://developer.github.com/v3/gists/
+# See also:  https://developer.github.com/v3/gists/
 #
 # Inspired by "[Python] reStructuredText GitHub Gist directive"
 # (https://gist.github.com/brianhsu/1407759), public domain by Brian Hsu

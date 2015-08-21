@@ -30,10 +30,10 @@ Extension to Python Markdown for Embedded Audio.
 Basic Example:
 
 >>> import markdown
->>> text = "[podcast]http://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3[/podcast]"
+>>> text = "[podcast]https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3[/podcast]"
 >>> html = markdown.markdown(text, [PodcastExtension()])
 >>> print(html)
-<p><audio controls=""><source src="http://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3" type="audio/mpeg"></source></audio></p>
+<p><audio controls=""><source src="https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3" type="audio/mpeg"></source></audio></p>
 """
 
 from __future__ import print_function, unicode_literals

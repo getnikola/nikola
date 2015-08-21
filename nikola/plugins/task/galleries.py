@@ -587,7 +587,7 @@ class Galleries(Task, ImageProcessor):
             description='',
             lastBuildDate=datetime.datetime.utcnow(),
             items=items,
-            generator='http://getnikola.com/',
+            generator='https://getnikola.com/',
             language=lang
         )
 

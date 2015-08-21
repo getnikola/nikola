@@ -5,7 +5,7 @@ module = pandoc
 [Documentation]
 author = Roberto Alsina
 version = 1.0
-website = http://getnikola.com
+website = https://getnikola.com/
 description = Compile markups into HTML using pandoc
 
 [Nikola]

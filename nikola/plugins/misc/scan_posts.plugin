@@ -5,6 +5,6 @@ Module = scan_posts
 [Documentation]
 Author = Roberto Alsina
 Version = 1.0
-Website = http://getnikola.com
+Website = https://getnikola.com/
 Description = Scan posts and create timeline
 

@@ -9,6 +9,6 @@ plugincategory = CompilerExtension
 [Documentation]
 author = Pelle Nilsson
 version = 0.1
-website = http://getnikola.com
+website = https://getnikola.com/
 description = reST directive to facilitate enlargeable images with thumbnails
 
