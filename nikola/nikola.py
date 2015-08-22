@@ -1783,7 +1783,7 @@ class Nikola(object):
         feed_root.append(atom_link("alternate", "text/html",
                                    self.abs_link(context["permalink"])))
         feed_generator = lxml.etree.SubElement(feed_root, "generator")
-        feed_generator.set("uri", "http://getnikola.com/")
+        feed_generator.set("uri", "https://getnikola.com/")
         feed_generator.text = "Nikola"
 
         feed_append_query = None

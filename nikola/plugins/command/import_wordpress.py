@@ -801,7 +801,7 @@ class CommandImportWordpress(Command, ImportMixin):
         content = get_text_tag(
             item, '{http://purl.org/rss/1.0/modules/content/}encoded', '')
         excerpt = get_text_tag(
-            item, '{https://wordpress.org/export/1.2/excerpt/}encoded', None)
+            item, '{http://wordpress.org/export/1.2/excerpt/}encoded', None)
 
         if excerpt is not None:
             if len(excerpt) == 0:
@@ -917,7 +917,7 @@ class CommandImportWordpress(Command, ImportMixin):
     def _extract_item_info(self, item):
         """Extract information about an item."""
         # The namespace usually is something like:
-        # https://wordpress.org/export/1.2/
+        # http://wordpress.org/export/1.2/
         wordpress_namespace = item.nsmap['wp']
         post_type = get_text_tag(
             item, '{{{0}}}post_type'.format(wordpress_namespace), 'post')
