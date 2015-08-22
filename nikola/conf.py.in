@@ -68,8 +68,8 @@ TRANSLATIONS_PATTERN = ${TRANSLATIONS_PATTERN}
 # For submenus:
 #     (
 #         (
-#             ('http://apple.com/', 'Apple'),
-#             ('http://orange.com/', 'Orange'),
+#             ('https://apple.com/', 'Apple'),
+#             ('https://orange.com/', 'Orange'),
 #         ),
 #         'Fruits'
 #     )
@@ -96,7 +96,7 @@ THEME = ${THEME}
 # Post's dates are considered in UTC by default, if you want to use
 # another time zone, please set TIMEZONE to match. Check the available
 # list from Wikipedia:
-# http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+# https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 # (e.g. 'Europe/Zurich')
 # Also, if you want to use a different time zone in some of your posts,
 # you can use the ISO 8601/RFC 3339 format (ex. 2012-03-30T23:00:00+02:00)
@@ -580,12 +580,12 @@ RSS_LINKS_APPEND_QUERY = False
 # (translatable)
 LICENSE = ""
 # I recommend using the Creative Commons' wizard:
-# http://creativecommons.org/choose/
+# https://creativecommons.org/choose/
 # LICENSE = """
-# <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+# <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 # <img alt="Creative Commons License BY-NC-SA"
 # style="border-width:0; margin-bottom:12px;"
-# src="http://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"></a>"""
+# src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"></a>"""
 
 # A small copyright notice for the page footer (in HTML).
 # (translatable)
@@ -788,7 +788,7 @@ MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
 # RSS_PLAIN = False
 
 # A search form to search this site, for the sidebar. You can use a Google
-# custom search (http://www.google.com/cse/)
+# custom search (https://www.google.com/cse/)
 # Or a DuckDuckGo search: https://duckduckgo.com/search_box.html
 # Default is no search form.
 # (translatable)
@@ -815,7 +815,7 @@ MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
 # If you prefer a Google search form, here's an example that should just work:
 # SEARCH_FORM = """
 # <!-- Google custom search -->
-# <form method="get" action="http://www.google.com/search" class="navbar-form navbar-right" role="search">
+# <form method="get" action="https://www.google.com/search" class="navbar-form navbar-right" role="search">
 # <div class="form-group">
 # <input type="text" name="q" class="form-control" placeholder="Search">
 # </div>

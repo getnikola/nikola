@@ -358,7 +358,7 @@ class CommandInit(Command):
         def tzhandler(default, toconf):
             print("\nPlease choose the correct time zone for your blog. Nikola uses the tz database.")
             print("You can find your time zone here:")
-            print("http://en.wikipedia.org/wiki/List_of_tz_database_time_zones")
+            print("https://en.wikipedia.org/wiki/List_of_tz_database_time_zones")
             print("")
             answered = False
             while not answered:

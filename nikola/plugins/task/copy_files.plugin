@@ -5,7 +5,7 @@ module = copy_files
 [Documentation]
 author = Roberto Alsina
 version = 1.0
-website = http://getnikola.com
+website = https://getnikola.com/
 description = Copy static files into the output.
 
 [Nikola]

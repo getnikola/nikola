@@ -5,7 +5,7 @@ module = sitemap
 [Documentation]
 author = Roberto Alsina
 version = 1.0
-website = http://getnikola.com
+website = https://getnikola.com/
 description = Generate google sitemap.
 
 [Nikola]

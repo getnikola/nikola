@@ -196,7 +196,7 @@ def add_node(node, visit_function=None, depart_function=None):
     """Register a Docutils node class.
 
     This function is completely optional. It is a same concept as
-    `Sphinx add_node function <http://sphinx-doc.org/ext/appapi.html#sphinx.application.Sphinx.add_node>`_.
+    `Sphinx add_node function <http://sphinx-doc.org/extdev/appapi.html#sphinx.application.Sphinx.add_node>`_.
 
     For example::
 

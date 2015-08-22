@@ -5,7 +5,7 @@ module = jinja
 [Documentation]
 author = Roberto Alsina
 version = 1.0
-website = http://getnikola.com
+website = https://getnikola.com/
 description = Support for Jinja2 templates.
 
 [Nikola]
