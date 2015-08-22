@@ -8,7 +8,7 @@
 The Nikola Handbook
 ===================
 
-:Version: 7.6.3
+:Version: 7.6.4
 
 .. class:: alert alert-info pull-right
 
