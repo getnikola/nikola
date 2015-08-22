@@ -231,6 +231,13 @@ WRITE_TAG_CLOUD = True
 #    },
 # }
 
+# Set special titles for tag pages. The default is "Posts about TAG".
+# TAG_PAGES_TITLES = {
+#    DEFAULT_LANG: {
+#        "blogging": "Meta-posts about blogging",
+#        "open source": "Posts about open source software"
+#    },
+# }
 
 # If you do not want to display a tag publicly, you can mark it as hidden.
 # The tag will not be displayed on the tag list page, the tag cloud and posts.
@@ -271,6 +278,14 @@ CATEGORY_OUTPUT_FLAT_HIERARCHY = ${CATEGORY_OUTPUT_FLAT_HIERARCHY}
 #    DEFAULT_LANG: {
 #        "blogging": "Meta-blog posts about blogging about blogging.",
 #        "open source": "My contributions to my many, varied, ever-changing, and eternal libre software projects."
+#    },
+# }
+
+# Set special titles for category pages. The default is "Posts about CATEGORY".
+# CATEGORY_PAGES_TITLES = {
+#    DEFAULT_LANG: {
+#        "blogging": "Meta-posts about blogging",
+#        "open source": "Posts about open source software"
 #    },
 # }
 

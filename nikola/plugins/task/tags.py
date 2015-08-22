@@ -84,6 +84,10 @@ class RenderTags(Task):
             "pretty_urls": self.site.config['PRETTY_URLS'],
             "strip_indexes": self.site.config['STRIP_INDEXES'],
             "index_file": self.site.config['INDEX_FILE'],
+            "category_pages_descriptions": self.site.config['CATEGORY_PAGES_DESCRIPTIONS'],
+            "category_pages_titles": self.site.config['CATEGORY_PAGES_TITLES'],
+            "tag_pages_descriptions": self.site.config['TAG_PAGES_DESCRIPTIONS'],
+            "tag_pages_titles": self.site.config['TAG_PAGES_TITLES'],
         }
 
         self.site.scan_posts()
@@ -251,6 +255,10 @@ class RenderTags(Task):
         else:
             return tag
 
+    def _get_indexes_title(self, tag, is_category, lang, messages):
+        titles = self.site.config['CATEGORY_PAGES_TITLES'] if is_category else self.site.config['TAG_PAGES_TITLES']
+        return titles[lang][tag] if lang in titles and tag in titles[lang] else messages[lang]["Posts about %s"] % tag
+
     def _get_description(self, tag, is_category, lang):
         descriptions = self.site.config['CATEGORY_PAGES_DESCRIPTIONS'] if is_category else self.site.config['TAG_PAGES_DESCRIPTIONS']
         return descriptions[lang][tag] if lang in descriptions and tag in descriptions[lang] else None
@@ -284,7 +292,7 @@ class RenderTags(Task):
             context_source["category"] = tag
             context_source["category_path"] = self.site.parse_category_name(tag)
         context_source["tag"] = title
-        indexes_title = kw["messages"][lang]["Posts about %s"] % title
+        indexes_title = self._get_indexes_title(title, is_category, lang, kw["messages"])
         context_source["description"] = self._get_description(tag, is_category, lang)
         if is_category:
             context_source["subcategories"] = self._get_subcategories(tag)
@@ -306,7 +314,7 @@ class RenderTags(Task):
             context["category"] = tag
             context["category_path"] = self.site.parse_category_name(tag)
         context["tag"] = title
-        context["title"] = kw["messages"][lang]["Posts about %s"] % title
+        context["title"] = self._get_indexes_title(title, is_category, lang, kw["messages"])
         context["posts"] = post_list
         context["permalink"] = self.site.link(kind, tag, lang)
         context["kind"] = kind
