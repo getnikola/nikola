@@ -300,11 +300,14 @@ class CommandAuto(Command):
             mimetype = 'text/html'
 
         if p_uri.path == '/robots.txt':
-            start_response('200 OK', [('Content-type', 'text/plain')])
+            start_response('200 OK', [('Content-type', 'text/plain; charset=UTF-8')])
             return ['User-Agent: *\nDisallow: /\n'.encode('utf-8')]
         elif os.path.isfile(f_path):
             with open(f_path, 'rb') as fd:
-                start_response('200 OK', [('Content-type', mimetype)])
+                if mimetype.startswith('text/') or mimetype.endswith('+xml'):
+                    start_response('200 OK', [('Content-type', "{0}; charset=UTF-8".format(mimetype))])
+                else:
+                    start_response('200 OK', [('Content-type', mimetype)])
                 return [self.file_filter(mimetype, fd.read())]
         elif p_uri.path == '/livereload.js':
             with open(LRJS_PATH, 'rb') as fd:
