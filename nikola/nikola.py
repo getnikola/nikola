@@ -1807,16 +1807,15 @@ class Nikola(object):
         return task
 
     def get_task_stages(self):
-        """Returns list of stages."""
+        """Return list of stages."""
         return sorted(list(self.task_stages.keys()))
 
     def get_stage_plugin_objects(self, stage):
-        """Returns all plugin objects for a given stage."""
+        """Return all plugin objects for a given stage."""
         return self.task_stages[stage]
 
     def gen_task(self, name, plugin_object):
         """Generate tasks for a specific plugin object."""
-
         def flatten(task):
             """Flatten lists of tasks."""
             if isinstance(task, dict):
