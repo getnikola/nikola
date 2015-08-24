@@ -242,7 +242,10 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
             f.seek(0)
 
         self.send_response(200)
-        self.send_header("Content-type", ctype)
+        if ctype.startswith('text/') or ctype.endswith('+xml'):
+            self.send_header("Content-Type", "{0}; charset=UTF-8".format(ctype))
+        else:
+            self.send_header("Content-Type", ctype)
         if os.path.splitext(path)[1] == '.svgz':
             # Special handling for svgz to make it work nice with browsers.
             self.send_header("Content-Encoding", 'gzip')
