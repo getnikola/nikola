@@ -1,0 +1,13 @@
+## -*- coding: utf-8 -*-
+<%inherit file="index.tmpl"/>
+
+<%block name="extra_head">
+    ${parent.extra_head()}
+    %if len(tranlations) > 1 and generate_atom:
+        %for language in sorted(translations):
+            <link rel="alternate" type="application/atom+xml" title="Atom for the ${author} section (${language})" href="${_link(kind + "_atom", author, language)}">
+        %endfor
+    %elif generate_atom:
+        <link rel="alternate" type="application/atom+xml" title="Atom for the ${author} section" href="${_link("author" + "_atom", author)}">
+    %endif
+</%block>
