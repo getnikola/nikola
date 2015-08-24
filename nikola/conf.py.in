@@ -353,7 +353,7 @@ HIDDEN_CATEGORIES = []
 # output / TRANSLATION[lang] / AUTHOR_PATH / index.html (list of tags)
 # output / TRANSLATION[lang] / AUTHOR_PATH / author.html (list of posts for a tag)
 # output / TRANSLATION[lang] / AUTHOR_PATH / author.xml (RSS feed for a tag)
-# TAG_PATH = "authors"
+# AUTHOR_PATH = "authors"
 
 # If AUTHOR_PAGES_ARE_INDEXES is set to True, each author's page will contain
 # the posts themselves. If set to False, it will be just a list of links.
