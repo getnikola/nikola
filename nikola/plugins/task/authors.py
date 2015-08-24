@@ -122,7 +122,6 @@ class RenderAuthors(Task):
             kw['authors'] = authors
             output_name = os.path.join(
                 kw['output_folder'], self.site.path('author_index', None, lang))
-            output_name = output_name
             context = {}
             if has_authors:
                 context["title"] = kw["messages"][lang]["Authors"]

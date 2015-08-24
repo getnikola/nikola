@@ -203,7 +203,6 @@ class RenderTags(Task):
                 kw['tags'] = tags
             output_name = os.path.join(
                 kw['output_folder'], self.site.path('tag_index' if has_tags else 'category_index', None, lang))
-            output_name = output_name
             context = {}
             if has_categories and has_tags:
                 context["title"] = kw["messages"][lang]["Tags and Categories"]
