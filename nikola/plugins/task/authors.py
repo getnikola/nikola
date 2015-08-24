@@ -127,10 +127,10 @@ class RenderAuthors(Task):
                 context["title"] = kw["messages"][lang]["Authors"]
                 context["items"] = [(author, self.site.link("author", author, lang)) for author
                                     in authors]
+                context["description"] = context["title"]
             else:
                 context["items"] = None
             context["permalink"] = self.site.link("author_index", None, lang)
-            context["description"] = context["title"]
             context["pagekind"] = ["list", "authors_page"]
             task = self.site.generic_post_list_renderer(
                 lang,
