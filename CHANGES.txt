@@ -7,6 +7,12 @@ Features
 * New ``TAG_PAGES_TITLES`` and ``CATEGORY_PAGES_TITLES`` options
   (Issue #1962)
 
+Bugfixes
+--------
+
+* Add dependency on metadata file for 2-file posts (Issue #1968)
+
+
 New in v7.6.4
 =============
 
