@@ -286,7 +286,7 @@ class RenderAuthors(Task):
         return path
 
     def _posts_per_author(self):
-        """Return a dict of posts per author"""
+        """Return a dict of posts per author."""
         if self.posts_per_author is None:
             self.posts_per_author = defaultdict(list)
             for post in self.site.timeline:
