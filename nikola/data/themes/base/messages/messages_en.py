@@ -36,4 +36,6 @@ MESSAGES = {
     "Write your post here.": "Write your post here.",
     "old posts, page %d": "old posts, page %d",
     "page %d": "page %d",
+    "Authors": "Authors",
+    "Posts by %s": "Posts by %s"
 }
