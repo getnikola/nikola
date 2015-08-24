@@ -335,6 +335,10 @@ class Nikola(object):
             'ARCHIVE_PATH': "",
             'ARCHIVE_FILENAME': "archive.html",
             'ARCHIVES_ARE_INDEXES': False,
+            'AUTHOR_PATH': 'authors',
+            'AUTHOR_PAGES_ARE_INDEXES': False,
+            'AUTHOR_PAGES_DESCRIPTIONS': {},
+            'AUTHORLIST_MINIMUM_POSTS': 1,
             'BLOG_AUTHOR': 'Default Author',
             'BLOG_TITLE': 'Default Title',
             'BLOG_DESCRIPTION': 'Default Description',
@@ -389,6 +393,7 @@ class Nikola(object):
             'GZIP_COMMAND': None,
             'GZIP_FILES': False,
             'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js', '.json', '.xml'),
+            'HIDDEN_AUTHORS': [],
             'HIDDEN_TAGS': [],
             'HIDDEN_CATEGORIES': [],
             'HYPHENATE': False,
@@ -438,6 +443,7 @@ class Nikola(object):
             'SHOW_BLOG_TITLE': True,
             'SHOW_SOURCELINK': True,
             'SHOW_UNTRANSLATED_POSTS': True,
+            'SLUG_AUTHOR_PATH': True,
             'SLUG_TAG_PATH': True,
             'SOCIAL_BUTTONS_CODE': '',
             'SITE_URL': 'https://example.com/',
@@ -828,6 +834,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['rel_link'] = self.rel_link
         self._GLOBAL_CONTEXT['abs_link'] = self.abs_link
         self._GLOBAL_CONTEXT['exists'] = self.file_exists
+        self._GLOBAL_CONTEXT['SLUG_AUTHOR_PATH'] = self.config['SLUG_AUTHOR_PATH']
         self._GLOBAL_CONTEXT['SLUG_TAG_PATH'] = self.config['SLUG_TAG_PATH']
         self._GLOBAL_CONTEXT['annotations'] = self.config['ANNOTATIONS']
         self._GLOBAL_CONTEXT['index_display_post_count'] = self.config[
@@ -884,6 +891,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['momentjs_locales'] = LEGAL_VALUES['MOMENTJS_LOCALES']
         self._GLOBAL_CONTEXT['hidden_tags'] = self.config.get('HIDDEN_TAGS')
         self._GLOBAL_CONTEXT['hidden_categories'] = self.config.get('HIDDEN_CATEGORIES')
+        self._GLOBAL_CONTEXT['hidden_authors'] = self.config.get('HIDDEN_AUTHORS')
         self._GLOBAL_CONTEXT['url_replacer'] = self.url_replacer
 
         # IPython theme configuration.  If a website has ipynb enabled in post_pages
