@@ -53,7 +53,7 @@ class Archive(Task):
         """Prepare an archive task."""
         # name: used to build permalink and destination
         # posts, items: posts or items; only one of them should be used,
-        #               the other be None
+        #               the other should be None
         # template_name: name of the template to use
         # title: the (translated) title for the generated page
         # deps_translatable: dependencies (None if not added)
