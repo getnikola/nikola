@@ -7,9 +7,10 @@ Features
 * New ``TAG_PAGES_TITLES`` and ``CATEGORY_PAGES_TITLES`` options
   (Issue #1962)
 
-Bugixes
--------
+Bugfixes
+--------
 
+* Add dependency on metadata file for 2-file posts (Issue #1968)
 * Set UTF-8 charset in Content-Type or text/* and *+xml (Issue #1966)
 
 New in v7.6.4
