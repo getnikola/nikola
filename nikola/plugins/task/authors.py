@@ -105,7 +105,7 @@ class RenderAuthors(Task):
                 if kw['author_pages_are_indexes']:
                     yield self.author_page_as_index(author, lang, filtered_posts, kw)
                 else:
-                    yield self.author_page_as_list(tag, lang, filtered_posts, kw)
+                    yield self.author_page_as_list(author, lang, filtered_posts, kw)
 
         for author, posts in author_list:
             for task in render_lists(author, posts):
