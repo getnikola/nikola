@@ -153,7 +153,8 @@ class RenderAuthors(Task):
         return author
 
     def _get_description(self, author, lang):
-        return author
+        descriptions = self.site.config['AUTHOR_PAGES_DESCRIPTIONS']
+        return descriptions[lang][author] if lang in descriptions and author in descriptions[lang] else None
 
     def author_page_as_index(self, author, lang, post_list, kw):
         """Render a sort of index page collection using only this author's posts."""
