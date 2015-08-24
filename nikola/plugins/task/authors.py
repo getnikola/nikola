@@ -45,7 +45,7 @@ class RenderAuthors(Task):
 
     name = "render_authors"
     posts_per_author = None
-    
+
     def set_site(self, site):
         """Set Nikola site."""
         site.register_path_handler('author_index', self.author_index_path)
@@ -83,7 +83,7 @@ class RenderAuthors(Task):
 
         yield self.list_authors_page(kw)
 
-        if not self._posts_per_author(): # this may be self.site.posts_per_author
+        if not self._posts_per_author():  # this may be self.site.posts_per_author
             return
 
         author_list = list(self._posts_per_author().items())
@@ -115,7 +115,7 @@ class RenderAuthors(Task):
         kw = kw.copy()
         for lang in kw["translations"]:
             authors = natsort.natsorted([author for author in self._posts_per_author().keys()],
-                                     alg=natsort.ns.F | natsort.ns.IC)
+                                        alg=natsort.ns.F | natsort.ns.IC)
             has_authors = (authors != [])
             kw['authors'] = authors
             output_name = os.path.join(
