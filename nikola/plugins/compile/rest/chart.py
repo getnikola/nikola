@@ -152,13 +152,11 @@ class Chart(Directive):
             options[k] = literal_eval(v)
 
         chart = getattr(pygal, self.arguments[0])(style=style)
+        if _site and _site.invariant:
+            chart.no_prefix = True
         chart.config(**options)
         for line in self.content:
             label, series = literal_eval('({0})'.format(line))
             chart.add(label, series)
         data = chart.render().decode('utf8')
-        if _site and _site.invariant:
-            import re
-            data = re.sub('id="chart-[a-f0-9\-]+"', 'id="chart-foobar"', data)
-            data = re.sub('#chart-[a-f0-9\-]+', '#chart-foobar', data)
         return [nodes.raw('', data, format='html')]
