@@ -193,6 +193,73 @@ require whatever data you want.
 Also, you can specify a custom template to be used by a post or page via the ``template`` metadata,
 and custom templates can be added in the ``templates/`` folder of your site.
 
+Identifying and customizing different kinds of pages with a shared template
+---------------------------------------------------------------------------
+
+Nikola provides a `pagekind` in each template contexts that can be used to
+modify shared templates based on the context it’s being used. For example,
+the ``base_helper.tmpl`` is used in all pages, ``indexes.tmpl`` is used in
+many contexts and you may want to add or remove something from only one of
+these contexts.
+
+Example of conditionally loading different resources on all index pages
+(archives, author pages, and tag pages), and others again o the front page
+and in every post pages:
+
+.. code:: html+mako
+
+    <head>
+        …
+        % if 'index' in pagekind:
+            <link href="/assets/css/multicolumn.css" rel="stylesheet">
+        % endif
+        % if 'front_page' in pagekind:
+            <link href="/assets/css/fancy_homepage.css" rel="stylesheet">
+            <script src="/assets/js/post_carousel.js"></script>
+        % endif
+        % if 'post_page' in pagekind:
+            <link href="/assets/css/article.css" rel="stylesheet">
+            <script src="/assets/js/comment_system.js"></script>
+        % endif
+    </head>
+
+Promoting visits to the front page when visiting other filtered
+``index.tmpl`` page variants such as author pages and tag pages. This
+could have been included in ``index.tmpl`` or maybe in ``base.tmpl``
+depending on what you want to achieve.
+
+.. code:: html+mako
+
+    % if 'index' in pagekind:
+        % if 'author_page' in postkind:
+            <p>These posts were written by ${author}. See posts by all
+               authors on the <a href="/">front page</a>.</p>
+        % elif 'tag_page' in postkind:
+            <p>This is a filtered selection of posts tagged “${tag}”, visit
+               the <a href="/">front page</a> to see all posts.</p>
+        % endif
+    % endif
+
+
+List of page kinds provided by default plugins:
+
+* front_page
+* index
+* index, archive_page
+* index, author_page
+* index, tag_page
+* list
+* list, archive_page
+* list, author_page
+* list, tag_page
+* list, tags_page
+* post_page
+* story_page
+* listing
+* generic_page
+* gallery_front
+* gallery_page
+
 Messages and Translations
 -------------------------
 
