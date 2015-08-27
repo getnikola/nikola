@@ -1678,8 +1678,9 @@ def colorize_str_from_base_color(string, base_color):
     """ Find a perceptual similar color from a base color based on the hash of a sring.
 
         Make up to 16 attempts (number of bytes returned by hashing) at picking a
-        hue for our color at least 27° away from the base color, leaving lightness
-        and saturation untouched using HUSL colorspace. """
+        hue for our color at least 27 deg removed from the base color, leaving
+        lightness and saturation untouched using HUSL colorspace.
+    """
     def hash_str(string, pos):
         return hashlib.md5(string.encode('utf-8')).digest()[pos]
 
@@ -1687,15 +1688,15 @@ def colorize_str_from_base_color(string, base_color):
         return min(abs(dega - degb), abs((degb - dega) + 360))
 
     def husl_similar_from_base(string, base_color):
-        h,s,l = husl.hex_to_husl(base_color)
+        h, s, l = husl.hex_to_husl(base_color)
         old_h = h
         idx = 0
         while degreediff(old_h, h) < 27 and idx < 16:
             print("%i: %f vs %f (diff %f)" % (idx, h, old_h, degreediff(old_h, h)))
             h = 360.0 * (float(hash_str(string, idx)) / 255)
             idx += 1
-        print(str(h) + husl.husl_to_hex(h,s,l))
-        return husl.husl_to_hex(h,s,l)
+        print(str(h) + husl.husl_to_hex(h, s, l))
+        return husl.husl_to_hex(h, s, l)
 
     return husl_similar_from_base(string, base_color)
 

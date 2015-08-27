@@ -746,6 +746,7 @@ class Post(object):
         return path
 
     def category_color(self, lang=None):
+        """ Return the color of the post's category. """
         slug = self.category_slug(lang)
         if slug in self.config['POSTS_CATEGORY_COLORS'](lang):
             return self.config['POSTS_CATEGORY_COLORS'](lang)[slug]
@@ -753,14 +754,16 @@ class Post(object):
         return utils.colorize_str_from_base_color(slug, base)
 
     def category_link(self, lang=None):
+        """ Return the link to the post's category. """
         slug = self.category_slug(lang)
         if not self.pretty_urls:
-            link = urljoin('/'+ slug + '/', self.index_file)
+            link = urljoin('/' + slug + '/', self.index_file)
         else:
             link = '/' + slug + '/'
         return link
 
     def category_name(self, lang=None):
+        """ Return the name of the post's category. """
         slug = self.category_slug(lang)
         if slug in self.config['POSTS_CATEGORY_NAME'](lang):
             name = self.config['POSTS_CATEGORY_NAME'](lang)[slug]
@@ -769,6 +772,7 @@ class Post(object):
         return name
 
     def category_slug(self, lang=None):
+        """ Return the slug for the post's category. """
         if not self.config['POSTS_CATEGORY_FROM_META']:
             dest = self.destination_path(lang)
             if dest[-(1 + len(self.index_file)):] == '/' + self.index_file:

@@ -38,9 +38,7 @@ from nikola.plugin_categories import Task
 from nikola import utils
 
 
-
 class Indexes(Task):
-
     """Render the blog indexes."""
 
     name = "render_indexes"
@@ -117,7 +115,7 @@ class Indexes(Task):
 
                 for dirname, post_list in groups.items():
 
-                    if not lang in self.number_of_pages_cat:
+                    if lang not in self.number_of_pages_cat:
                         self.number_of_pages_cat[lang] = dict()
                     self.number_of_pages_cat[lang][dirname] = (len(post_list) + kw['index_display_post_count'] - 1) // kw['index_display_post_count']
 
