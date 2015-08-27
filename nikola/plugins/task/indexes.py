@@ -112,47 +112,49 @@ class Indexes(Task):
                 if not len(groups.items()) > 1:
                     continue
 
-                for dirname, post_list in groups.items():
+                for category_slug, post_list in groups.items():
                     if lang not in self.number_of_pages_cat:
                         self.number_of_pages_cat[lang] = dict()
-                    self.number_of_pages_cat[lang][dirname] = (len(post_list) + kw['index_display_post_count'] - 1) // kw['index_display_post_count']
+                    self.number_of_pages_cat[lang][category_slug] = (len(post_list) + kw['index_display_post_count'] - 1) // kw['index_display_post_count']
 
                     def cat_link(i, displayed_i, num_pages, force_addition, extension=None):
                         feed = "_atom" if extension == ".atom" else ""
-                        return utils.adjust_name_for_index_link(self.site.link("cat_index" + feed, dirname, lang), i, displayed_i,
+                        return utils.adjust_name_for_index_link(self.site.link("cat_index" + feed, category_slug, lang), i, displayed_i,
                                                                 lang, self.site, force_addition, extension)
 
                     def cat_path(i, displayed_i, num_pages, force_addition, extension=None):
                         feed = "_atom" if extension == ".atom" else ""
-                        return utils.adjust_name_for_index_path(self.site.path("cat_index" + feed, dirname, lang), i, displayed_i,
+                        return utils.adjust_name_for_index_path(self.site.path("cat_index" + feed, category_slug, lang), i, displayed_i,
                                                                 lang, self.site, force_addition, extension)
 
                     context = {}
 
-                    short_destination = os.path.join(dirname, kw['index_file'])
+                    short_destination = os.path.join(category_slug, kw['index_file'])
                     link = short_destination.replace('\\', '/')
                     if kw['strip_indexes'] and link[-(1 + index_len):] == '/' + kw['index_file']:
                         link = link[:-index_len]
                     context["permalink"] = link
                     context["pagekind"] = ["posts_category_page"]
-                    context["description"] = self.site.config['POSTS_CATEGORY_DESCRIPTIONS'](lang)[dirname] if dirname in self.site.config['POSTS_CATEGORY_DESCRIPTIONS'](lang) else ""
+                    context["description"] = self.site.config['POSTS_CATEGORY_DESCRIPTIONS'](lang)[category_slug] if category_slug in self.site.config['POSTS_CATEGORY_DESCRIPTIONS'](lang) else ""
 
                     if kw["posts_category_are_indexes"]:
                         context["pagekind"].append("index")
                         kw["posts_category_title"] = self.site.config['POSTS_CATEGORY_TITLE'](lang)
-                        if type(kw["posts_category_title"]) is dict:
-                            if dirname in kw["posts_category_title"]:
-                                indexes_title = kw["posts_category_title"][dirname]
-                        elif type(kw["posts_category_title"]) is str:
-                            indexes_title = kw["posts_category_title"]
-                        if not indexes_title:
-                            indexes_title = post_list[0].category_name(lang)
-                        indexes_title = indexes_title.format(post_list[0].category_name(lang))
 
-                        task = self.site.generic_index_renderer(lang, post_list, indexes_title, "categoryindex.tmpl", context, kw, self.name, cat_link, cat_path)
+                        category_title = None
+                        if type(kw["posts_category_title"]) is dict:
+                            if category_slug in kw["posts_category_title"]:
+                                category_title = kw["posts_category_title"][category_slug]
+                        elif type(kw["posts_category_title"]) is str:
+                            category_title = kw["posts_category_title"]
+                        if not category_title:
+                            category_title = post_list[0].category_name(lang)
+                        category_title = category_title.format(post_list[0].category_name(lang))
+
+                        task = self.site.generic_index_renderer(lang, post_list, category_title, "categoryindex.tmpl", context, kw, self.name, cat_link, cat_path)
                     else:
                         context["pagekind"].append("list")
-                        output_name = os.path.join(kw['output_folder'], dirname, kw['index_file'])
+                        output_name = os.path.join(kw['output_folder'], category_slug, kw['index_file'])
                         task = self.site.generic_post_list_renderer(lang, post_list, output_name, "list.tmpl", kw['filters'], context)
                         task['uptodate'] = [utils.config_changed(kw, 'nikola.plugins.task.indexes')]
                         task['basename'] = self.name
@@ -179,7 +181,7 @@ class Indexes(Task):
                         destpath = p.destination_path(lang)
                         if destpath[-(1 + index_len):] == '/' + kw['index_file']:
                             destpath = destpath[:-(1 + index_len)]
-                        dirname = os.path.dirname(destpath)
+                        s = os.path.dirname(destpath)
                         groups[dirname].append(p)
                 for dirname, post_list in groups.items():
                     context = {}
