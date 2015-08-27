@@ -418,6 +418,12 @@ class Nikola(object):
             'OLD_THEME_SUPPORT': True,
             'OUTPUT_FOLDER': 'output',
             'POSTS': (("posts/*.txt", "posts", "post.tmpl"),),
+            'POSTS_CATEGORIES': True,
+            'POSTS_CATEGORY_ARE_INDEXES': True,
+            'POSTS_CATEGORY_DESCRIPTIONS': "",
+            'POSTS_CATEGORY_FROM_META': False,
+            'POSTS_CATEGORY_NAME': "",
+            'POSTS_CATEGORY_TITLE': "%s",
             'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
             'PANDOC_OPTIONS': [],
             'PRETTY_URLS': False,
@@ -452,6 +458,7 @@ class Nikola(object):
             'TAGLIST_MINIMUM_POSTS': 1,
             'TEMPLATE_FILTERS': {},
             'THEME': 'bootstrap3',
+            'THEME_COLOR': '#5670d4',  # light "corporate blue"
             'THEME_REVEAL_CONFIG_SUBTHEME': 'sky',
             'THEME_REVEAL_CONFIG_TRANSITION': 'cube',
             'THUMBNAIL_SIZE': 180,
@@ -514,6 +521,10 @@ class Nikola(object):
                                       'INDEX_READ_MORE_LINK',
                                       'RSS_READ_MORE_LINK',
                                       'INDEXES_TITLE',
+                                      'POSTS_CATEGORY_COLORS',
+                                      'POSTS_CATEGORY_DESCRIPTIONS',
+                                      'POSTS_CATEGORY_NAME',
+                                      'POSTS_CATEGORY_TITLE',
                                       'INDEXES_PAGES',
                                       'INDEXES_PRETTY_PAGE_URL',)
 
@@ -837,6 +848,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['index_file'] = self.config['INDEX_FILE']
         self._GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
         self._GLOBAL_CONTEXT['use_cdn'] = self.config.get("USE_CDN")
+        self._GLOBAL_CONTEXT['theme_color'] = self.config.get("THEME_COLOR")
         self._GLOBAL_CONTEXT['favicons'] = self.config['FAVICONS']
         self._GLOBAL_CONTEXT['date_format'] = self.config.get('DATE_FORMAT')
         self._GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
@@ -1310,7 +1322,6 @@ class Nikola(object):
         try:
             path = self.path_handlers[kind](name, lang)
             path = [os.path.normpath(p) for p in path if p != '.']  # Fix Issue #1028
-
             if is_link:
                 link = '/' + ('/'.join(path))
                 index_len = len(self.config['INDEX_FILE'])

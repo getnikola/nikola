@@ -4,6 +4,17 @@ New in master
 Features
 --------
 
+* New ``THEME_COLOR`` option for customizing themes from a primary color
+  (Issue #1980)
+* New ``POSTS`` output subfolders now generate categories by deault
+  (Issue #1980)
+* New ``POSTS_CATEGORIES`` and ``POSTS_CATEGORY_*`` options for
+  configuring the new category pages (Issue #1980)
+* For themers: Each ``post`` are now asssociated with category_color,
+  category_link, and category_name (Issue #1980)
+* Each new category page has a auto-assigned color based on shifting
+  the hue of ``THEME_COLOR`` based on a hash of the category name,
+  can be overwritten with ``POSTS_CATEGORY_COLORS`` option (Issue #1980)
 * New ``TAG_PAGES_TITLES`` and ``CATEGORY_PAGES_TITLES`` options
   (Issue #1962)
 

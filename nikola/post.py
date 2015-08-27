@@ -745,6 +745,42 @@ class Post(object):
             path = path[2:]
         return path
 
+    def category_color(self, lang=None):
+        slug = self.category_slug(lang)
+        if slug in self.config['POSTS_CATEGORY_COLORS'](lang):
+            return self.config['POSTS_CATEGORY_COLORS'](lang)[slug]
+        base = self.config['THEME_COLOR']
+        return utils.colorize_str_from_base_color(slug, base)
+
+    def category_link(self, lang=None):
+        slug = self.category_slug(lang)
+        if not self.pretty_urls:
+            link = urljoin('/'+ slug + '/', self.index_file)
+        else:
+            link = '/' + slug + '/'
+        return link
+
+    def category_name(self, lang=None):
+        slug = self.category_slug(lang)
+        if slug in self.config['POSTS_CATEGORY_NAME'](lang):
+            name = self.config['POSTS_CATEGORY_NAME'](lang)[slug]
+        else:
+            name = slug.replace('-', ' ').title()
+        return name
+
+    def category_slug(self, lang=None):
+        if not self.config['POSTS_CATEGORY_FROM_META']:
+            dest = self.destination_path(lang)
+            if dest[-(1 + len(self.index_file)):] == '/' + self.index_file:
+                dest = dest[:-(1 + len(self.index_file))]
+            dirname = os.path.dirname(dest)
+            slug = dirname
+            if not dirname or dirname == '.':
+                slug = self.messages[lang]["uncategorized"]
+        else:
+            slug = self.meta[lang]['category'].split(',')[0] if 'category' in self.meta[lang] else self.messages[lang]["uncategorized"]
+        return slug
+
     def permalink(self, lang=None, absolute=False, extension='.html', query=None):
         """Return permalink for a post."""
         if lang is None:

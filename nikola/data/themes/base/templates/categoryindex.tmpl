@@ -1,0 +1,21 @@
+## -*- coding: utf-8 -*-
+<%inherit file="index.tmpl"/>
+
+<%block name="extra_head">
+    ${parent.extra_head()}
+    % if generate_atom:
+        <link rel="alternate" type="application/atom+xml" title="Atom for the ${posts[0].category_name()} section" href="/FIXME">
+    % endif
+</%block>
+
+<%block name="content">
+<div class="categoryindex">
+    <header style="background: ${posts[0].category_color()}">
+        <h2><a href="${posts[0].category_link()}">${posts[0].category_name()}</a></h2>
+        % if generate_atom:
+            <p class="feedlink"><a href="${_link('cat_index_atom', posts[0].category_slug())}" type="application/atom+xml">${messages('updates')}</a></p>
+        % endif
+    </header>    
+    ${parent.content()}
+</article>
+</%block>
