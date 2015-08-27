@@ -39,6 +39,7 @@ from nikola import utils
 
 
 class Indexes(Task):
+
     """Render the blog indexes."""
 
     name = "render_indexes"
