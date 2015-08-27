@@ -245,13 +245,15 @@ List of page kinds provided by default plugins:
 
 * front_page
 * index
-* index, main_index
 * index, archive_page
 * index, author_page
+* index, main_index
+* index, posts_category_page
 * index, tag_page
 * list
 * list, archive_page
 * list, author_page
+* list, posts_category_page
 * list, tag_page
 * list, tags_page
 * post_page
