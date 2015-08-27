@@ -181,7 +181,7 @@ class Indexes(Task):
                         destpath = p.destination_path(lang)
                         if destpath[-(1 + index_len):] == '/' + kw['index_file']:
                             destpath = destpath[:-(1 + index_len)]
-                        s = os.path.dirname(destpath)
+                        dirname = os.path.dirname(destpath)
                         groups[dirname].append(p)
                 for dirname, post_list in groups.items():
                     context = {}
