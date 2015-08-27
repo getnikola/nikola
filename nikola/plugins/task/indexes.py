@@ -95,7 +95,7 @@ class Indexes(Task):
             self.number_of_pages[lang] = (len(filtered_posts) + kw['index_display_post_count'] - 1) // kw['index_display_post_count']
 
             context = {}
-            context["pagekind"] = ["index"]
+            context["pagekind"] = ["main_index", "index"]
 
             yield self.site.generic_index_renderer(lang, filtered_posts, indexes_title, template_name, context, kw, 'render_indexes', page_link, page_path)
 

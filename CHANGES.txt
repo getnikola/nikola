@@ -21,6 +21,8 @@ Features
 Bugfixes
 --------
 
+* ``pagekind["main_index"]`` set on the main indexes to differentiate
+  them from all the other indexes.
 * Add dependency on metadata file for 2-file posts (Issue #1968)
 * Set UTF-8 charset in Content-Type or text/* and *+xml (Issue #1966)
 
