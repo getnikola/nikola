@@ -1677,9 +1677,9 @@ def join_hierarchical_category_path(category_path):
 def colorize_str_from_base_color(string, base_color):
     """ Find a perceptual similar color from a base color based on the hash of a sring.
 
-        Make up to 16 attempts (number of bytes returned by hashing) at picking a
-        hue for our color at least 27 deg removed from the base color, leaving
-        lightness and saturation untouched using HUSL colorspace.
+    Make up to 16 attempts (number of bytes returned by hashing) at picking a
+    hue for our color at least 27 deg removed from the base color, leaving
+    lightness and saturation untouched using HUSL colorspace.
     """
     def hash_str(string, pos):
         return hashlib.md5(string.encode('utf-8')).digest()[pos]
