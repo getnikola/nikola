@@ -102,8 +102,6 @@ class Indexes(Task):
             if self.site.config['POSTS_CATEGORIES']:
 
                 kw["posts_category_are_indexes"] = self.site.config['POSTS_CATEGORY_ARE_INDEXES']
-                kw["posts_category_title"] = self.site.config['POSTS_CATEGORY_TITLE'](lang)
-
                 index_len = len(kw['index_file'])
 
                 groups = defaultdict(list)
@@ -115,7 +113,6 @@ class Indexes(Task):
                     continue
 
                 for dirname, post_list in groups.items():
-
                     if lang not in self.number_of_pages_cat:
                         self.number_of_pages_cat[lang] = dict()
                     self.number_of_pages_cat[lang][dirname] = (len(post_list) + kw['index_display_post_count'] - 1) // kw['index_display_post_count']
@@ -142,7 +139,16 @@ class Indexes(Task):
 
                     if kw["posts_category_are_indexes"]:
                         context["pagekind"].append("index")
-                        indexes_title = post_list[0].category_name(lang)  # all posts in the list share category name
+                        kw["posts_category_title"] = self.site.config['POSTS_CATEGORY_TITLE'](lang)
+                        if type(kw["posts_category_title"]) is dict:
+                            if dirname in kw["posts_category_title"]:
+                                indexes_title = kw["posts_category_title"][dirname]
+                        elif type(kw["posts_category_title"]) is str:
+                            indexes_title = kw["posts_category_title"]
+                        if not indexes_title:
+                            indexes_title = post_list[0].category_name(lang)
+                        indexes_title = indexes_title.format(post_list[0].category_name(lang))
+
                         task = self.site.generic_index_renderer(lang, post_list, indexes_title, "categoryindex.tmpl", context, kw, self.name, cat_link, cat_path)
                     else:
                         context["pagekind"].append("list")
