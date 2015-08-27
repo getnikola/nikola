@@ -1692,10 +1692,8 @@ def colorize_str_from_base_color(string, base_color):
         old_h = h
         idx = 0
         while degreediff(old_h, h) < 27 and idx < 16:
-            print("%i: %f vs %f (diff %f)" % (idx, h, old_h, degreediff(old_h, h)))
             h = 360.0 * (float(hash_str(string, idx)) / 255)
             idx += 1
-        print(str(h) + husl.husl_to_hex(h, s, l))
         return husl.husl_to_hex(h, s, l)
 
     return husl_similar_from_base(string, base_color)
