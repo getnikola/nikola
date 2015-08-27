@@ -10,7 +10,7 @@
 
 {% block content %}
 <div class="categoryindex">
-    <header style="background: {{ posts[0].category_color() }}">
+    <header>
         <h2><a href="{{ posts[0].category_link() }}">{{ title }}</a></h2>
         {% if generate_atom %}
             <p class="feedlink"><a href="{{ _link('cat_index_atom', posts[0].category_slug()) }}" type="application/atom+xml">{{ messages('updates') }}</a></p>
