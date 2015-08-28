@@ -193,6 +193,29 @@ require whatever data you want.
 Also, you can specify a custom template to be used by a post or page via the ``template`` metadata,
 and custom templates can be added in the ``templates/`` folder of your site.
 
+Customizing themes to user color preferece and category colors
+--------------------------------------------------------------
+
+The user’s preference for theme color is exposed in templates as
+``theme_color`` set in the ``THEME_COLOR`` option.
+
+Each category has an assigned color that is either set by the user or auto
+selected by adjusting the hue of the user’s ``THEME_COLOR``. The color is
+exposed in templates through ``post.category_color(lang)``. The function that
+generates the colors from strings and any given color (by category name and
+theme color for categories) is expoed through the
+``colorize_str_from_base_color(string, hex_color)`` function
+
+Hex color values, like that returned by the theme or category color can be
+altered in the HSL colorspace through the function
+``color_hsl_adjust_hex(hex_string, adjust_h, adjust_s, adjust_l)``.
+Adjustments are given in values between 1.0 and -1.0. For example, the theme
+color can be made lighter using:
+
+.. code:: html+mako
+
+    <span style="color:${color_hsl_adjust_hex(theme_color, adjust_l=0.05)}">
+
 Identifying and customizing different kinds of pages with a shared template
 ---------------------------------------------------------------------------
 
