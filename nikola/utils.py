@@ -1675,7 +1675,7 @@ def join_hierarchical_category_path(category_path):
 
 
 def colorize_str_from_base_color(string, base_color):
-    """Find a perceptual similar color from a base color based on the hash of a sring.
+    """Find a perceptual similar color from a base color based on the hash of a string.
 
     Make up to 16 attempts (number of bytes returned by hashing) at picking a
     hue for our color at least 27 deg removed from the base color, leaving
@@ -1698,6 +1698,20 @@ def colorize_str_from_base_color(string, base_color):
 
     return husl_similar_from_base(string, base_color)
 
+def color_hsl_adjust_hex(hexstr, adjust_h=None, adjust_s=None, adjust_l=None):
+    """Adjust a hex color using HSL arguments, adjustments in percentages 1.0 to -1.0. Returns a hex color."""
+    h, s, l = husl.hex_to_husl(hexstr)
+
+    if adjust_h:
+        h = h + (adjust_h * 360.0)
+
+    if adjust_s:
+        s = s + (adjust_s * 100.0)
+
+    if adjust_l:
+        l = l + (adjust_l * 100.0)
+
+    return husl.husl_to_hex(h, s, l)
 
 # Stolen from textwrap in Python 3.4.3.
 def indent(text, prefix, predicate=None):

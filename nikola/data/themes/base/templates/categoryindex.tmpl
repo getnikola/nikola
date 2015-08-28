@@ -13,7 +13,7 @@
     <header>
         <h2><a href="${posts[0].category_link()}">${title}</a></h2>
         % if generate_atom:
-            <p class="feedlink"><a href="${_link('cat_index_atom', posts[0].category_slug())}" type="application/atom+xml">${messages('updates')}</a></p>
+            <p class="feedlink"><a href="${_link('cat_index_atom', posts[0].category_slug())}" type="application/atom+xml">${messages('Updates')}</a></p>
         % endif
     </header>    
     ${parent.content()}

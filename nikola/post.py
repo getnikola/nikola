@@ -780,9 +780,9 @@ class Post(object):
             dirname = os.path.dirname(dest)
             slug = dirname
             if not dirname or dirname == '.':
-                slug = self.messages[lang]["uncategorized"]
+                slug = self.messages[lang]["Uncategorized"]
         else:
-            slug = self.meta[lang]['category'].split(',')[0] if 'category' in self.meta[lang] else self.messages[lang]["uncategorized"]
+            slug = self.meta[lang]['category'].split(',')[0] if 'category' in self.meta[lang] else self.messages[lang]["Uncategorized"]
         return slug
 
     def permalink(self, lang=None, absolute=False, extension='.html', query=None):

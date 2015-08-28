@@ -36,6 +36,6 @@ MESSAGES = {
     "Write your post here.": "Write your post here.",
     "old posts, page %d": "old posts, page %d",
     "page %d": "page %d",
-    "uncategorized": "Uncategorized",
-    "updates": "Updates"
+    "Uncategorized": "Uncategorized",
+    "Updates": "Updates"
 }
