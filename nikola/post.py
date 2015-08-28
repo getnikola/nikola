@@ -771,7 +771,7 @@ class Post(object):
             name = slug.replace('-', ' ').title()
         return name
 
-    def setion_slug(self, lang=None):
+    def section_slug(self, lang=None):
         """Return the slug for the post's section."""
         if not self.config['POSTS_SECTION_FROM_META']:
             dest = self.destination_path(lang)
