@@ -90,7 +90,7 @@ NAVIGATION_LINKS = ${NAVIGATION_LINKS}
 THEME = ${THEME}
 
 # Primary color of your theme. This will be used to customize your theme and
-# auto-generate related colors in POSTS_CATEGORY_COLORS. Must be a HEX value.
+# auto-generate related colors in POSTS_SECTION_COLORS. Must be a HEX value.
 THEME_COLOR = '#5670d4'
 
 ##############################################
@@ -212,52 +212,52 @@ COMPILERS = ${COMPILERS}
 # Warning: this option will change its default value to False in v8!
 WRITE_TAG_CLOUD = True
 
-# Generate pages for categories. The site must have at least two categories
-# for this option to take effect. It wouldn't build for just one category.
-POSTS_CATEGORIES = True
+# Generate pages for each section. The site must have at least two categories
+# for this option to take effect. It wouldn't build for just one section.
+POSTS_SECTIONS = True
 
 # Setting this to False generates a list page instead of an index. Indexes
 # are the default and will apply GENERATE_ATOM if set.
-# POSTS_CATEGORY_ARE_INDEXES = True
+# POSTS_SECTIONS_ARE_INDEXES = True
 
-# Each post and category page will have an associated color that can be used
+# Each post and section page will have an associated color that can be used
 # to style them with a recognizable color detail across your site. A color
-# is assigned to  each category based on shifting the hue of your THEME_COLOR
+# is assigned to  each section based on shifting the hue of your THEME_COLOR
 # at least 7.5 % while leaving the lightness and saturation untouched in the
 # HUSL colorspace. You can overwrite colors by assigning them colors in HEX.
-# POSTS_CATEGORY_COLORS = {
+# POSTS_SECTION_COLORS = {
 #     DEFAULT_LANG: {
 #         'posts':  '#49b11bf',
 #         'reviews':   '#ffe200',
 #     },
 # }
 
-# Associate a description with a category. For use in meta description on
-# category index pages or elsewhere in themes.
-# POSTS_CATEGORY_DESCRIPTIONS = {
+# Associate a description with a section. For use in meta description on
+# section index pages or elsewhere in themes.
+# POSTS_SECTION_DESCRIPTIONS = {
 #     DEFAULT_LANG: {
 #         'how-to': 'Learn how-to things properly with these amazing tutorials.',
 #     },
 # }
 
-# Categories are determined by their output directory set in POSTS by default,
+# Sections are determined by their output directory as set in POSTS by default,
 # but can alternatively be determined from file metadata instead.
-# POSTS_CATEGORY_FROM_META = False
+# POSTS_SECTION_FROM_META = False
 
 # Names are determined from the output directory name automatically or the
 # metadata label. Unless overwritten below, names will use title cased and
 # hyphens replaced by spaces.
-# POSTS_CATEGORY_NAME = {
+# POSTS_SECTION_NAME = {
 #    DEFAULT_LANG: {
 #        'posts': 'Blog Posts',
 #        'uncategorized': 'Odds and Ends',
 #    },
 # }
 
-# Titles for per-category index pages. Can be either one string where "%s"
-# is substituted or the POSTS_CATEGORY_NAME, or a dict of categories. Note
-# that the INDEX_PAGES option is also applied to category page titles.
-# POSTS_CATEGORY_TITLE = {
+# Titles for per-section index pages. Can be either one string where "%s"
+# is substituted or the POSTS_SECTION_NAME, or a dict of sections. Note
+# that the INDEX_PAGES option is also applied to section page titles.
+# POSTS_SECTION_TITLE = {
 #     DEFAULT_LANG: {
 #         'how-to': 'How-to and Tutorials',
 #     },

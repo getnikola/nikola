@@ -8,15 +8,15 @@ Features
   (Issue #1980)
 * New ``color_hsl_adjust_hex`` and ``colorize_str_from_base_color``
   functions available in themes (Issue #1980)
-* New ``POSTS`` output subfolders now generate categories by deault
+* New ``POSTS`` output subfolders now generate sections by deault
   (Issue #1980)
-* New ``POSTS_CATEGORIES`` and ``POSTS_CATEGORY_*`` options for
-  configuring the new category pages (Issue #1980)
-* For themers: Each ``post`` are now asssociated with category_color,
-  category_link, and category_name (Issue #1980)
-* Each new category page has a auto-assigned color based on shifting
-  the hue of ``THEME_COLOR`` based on a hash of the category name,
-  can be overwritten with ``POSTS_CATEGORY_COLORS`` option (Issue #1980)
+* New ``POSTS_SECTIONS`` and ``POSTS_SECTION_*`` options for
+  configuring the section pages (Issue #1980)
+* For themers: Each ``post`` are now asssociated with section_color,
+  section_link, and section_name (Issue #1980)
+* Each new section page has a auto-assigned color based on shifting
+  the hue of ``THEME_COLOR`` based on a hash of the section name,
+  can be overwritten with ``POSTS_SECTION_COLORS`` option (Issue #1980)
 * New ``TAG_PAGES_TITLES`` and ``CATEGORY_PAGES_TITLES`` options
   (Issue #1962)
 

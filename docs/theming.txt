@@ -193,20 +193,20 @@ require whatever data you want.
 Also, you can specify a custom template to be used by a post or page via the ``template`` metadata,
 and custom templates can be added in the ``templates/`` folder of your site.
 
-Customizing themes to user color preferece and category colors
---------------------------------------------------------------
+Customizing themes to user color preferece and section colors
+-------------------------------------------------------------
 
 The user’s preference for theme color is exposed in templates as
 ``theme_color`` set in the ``THEME_COLOR`` option.
 
-Each category has an assigned color that is either set by the user or auto
+Each section has an assigned color that is either set by the user or auto
 selected by adjusting the hue of the user’s ``THEME_COLOR``. The color is
-exposed in templates through ``post.category_color(lang)``. The function that
-generates the colors from strings and any given color (by category name and
-theme color for categories) is expoed through the
+exposed in templates through ``post.section_color(lang)``. The function that
+generates the colors from strings and any given color (by section name and
+theme color for sections) is expoed through the
 ``colorize_str_from_base_color(string, hex_color)`` function
 
-Hex color values, like that returned by the theme or category color can be
+Hex color values, like that returned by the theme or section color can be
 altered in the HSL colorspace through the function
 ``color_hsl_adjust_hex(hex_string, adjust_h, adjust_s, adjust_l)``.
 Adjustments are given in values between 1.0 and -1.0. For example, the theme
@@ -271,12 +271,12 @@ List of page kinds provided by default plugins:
 * index, archive_page
 * index, author_page
 * index, main_index
-* index, posts_category_page
+* index, section_page
 * index, tag_page
 * list
 * list, archive_page
 * list, author_page
-* list, posts_category_page
+* list, section_page
 * list, tag_page
 * list, tags_page
 * post_page

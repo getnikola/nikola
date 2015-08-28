@@ -745,35 +745,35 @@ class Post(object):
             path = path[2:]
         return path
 
-    def category_color(self, lang=None):
-        """Return the color of the post's category."""
-        slug = self.category_slug(lang)
-        if slug in self.config['POSTS_CATEGORY_COLORS'](lang):
-            return self.config['POSTS_CATEGORY_COLORS'](lang)[slug]
+    def section_color(self, lang=None):
+        """Return the color of the post's section."""
+        slug = self.section_slug(lang)
+        if slug in self.config['POSTS_SECTION_COLORS'](lang):
+            return self.config['POSTS_SECTION_COLORS'](lang)[slug]
         base = self.config['THEME_COLOR']
         return utils.colorize_str_from_base_color(slug, base)
 
-    def category_link(self, lang=None):
-        """Return the link to the post's category."""
-        slug = self.category_slug(lang)
+    def section_link(self, lang=None):
+        """Return the link to the post's section."""
+        slug = self.section_slug(lang)
         if not self.pretty_urls:
             link = urljoin('/' + slug + '/', self.index_file)
         else:
             link = '/' + slug + '/'
         return link
 
-    def category_name(self, lang=None):
-        """Return the name of the post's category."""
-        slug = self.category_slug(lang)
-        if slug in self.config['POSTS_CATEGORY_NAME'](lang):
-            name = self.config['POSTS_CATEGORY_NAME'](lang)[slug]
+    def section_name(self, lang=None):
+        """Return the name of the post's section."""
+        slug = self.section_slug(lang)
+        if slug in self.config['POSTS_SECTION_NAME'](lang):
+            name = self.config['POSTS_SECTION_NAME'](lang)[slug]
         else:
             name = slug.replace('-', ' ').title()
         return name
 
-    def category_slug(self, lang=None):
-        """Return the slug for the post's category."""
-        if not self.config['POSTS_CATEGORY_FROM_META']:
+    def setion_slug(self, lang=None):
+        """Return the slug for the post's section."""
+        if not self.config['POSTS_SECTION_FROM_META']:
             dest = self.destination_path(lang)
             if dest[-(1 + len(self.index_file)):] == '/' + self.index_file:
                 dest = dest[:-(1 + len(self.index_file))]
@@ -782,7 +782,7 @@ class Post(object):
             if not dirname or dirname == '.':
                 slug = self.messages[lang]["Uncategorized"]
         else:
-            slug = self.meta[lang]['category'].split(',')[0] if 'category' in self.meta[lang] else self.messages[lang]["Uncategorized"]
+            slug = self.meta[lang]['section'].split(',')[0] if 'section' in self.meta[lang] else self.messages[lang]["Uncategorized"]
         return slug
 
     def permalink(self, lang=None, absolute=False, extension='.html', query=None):
