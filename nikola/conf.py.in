@@ -254,7 +254,7 @@ POSTS_SECTIONS = True
 #    },
 # }
 
-# Titles for per-section index pages. Can be either one string where "%s"
+# Titles for per-section index pages. Can be either one string where "{name}"
 # is substituted or the POSTS_SECTION_NAME, or a dict of sections. Note
 # that the INDEX_PAGES option is also applied to section page titles.
 # POSTS_SECTION_TITLE = {

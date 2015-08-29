@@ -423,7 +423,7 @@ class Nikola(object):
             'POSTS_SECTION_DESCRIPTIONS': "",
             'POSTS_SECTION_FROM_META': False,
             'POSTS_SECTION_NAME': "",
-            'POSTS_SECTION_TITLE': "%s",
+            'POSTS_SECTION_TITLE': "{name}",
             'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
             'PANDOC_OPTIONS': [],
             'PRETTY_URLS': False,

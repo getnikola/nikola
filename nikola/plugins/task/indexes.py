@@ -149,7 +149,7 @@ class Indexes(Task):
                             section_title = kw["posts_section_title"]
                         if not section_title:
                             section_title = post_list[0].section_name(lang)
-                        section_title = section_title.format(post_list[0].section_name(lang))
+                        section_title = section_title.format(name=post_list[0].section_name(lang))
 
                         task = self.site.generic_index_renderer(lang, post_list, section_title, "sectionindex.tmpl", context, kw, self.name, cat_link, cat_path)
                     else:
