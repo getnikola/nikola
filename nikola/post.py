@@ -783,7 +783,7 @@ class Post(object):
                 slug = self.messages[lang]["Uncategorized"]
         else:
             slug = self.meta[lang]['section'].split(',')[0] if 'section' in self.meta[lang] else self.messages[lang]["Uncategorized"]
-        return slug
+        return slug.replace(' ', '-').lower()
 
     def permalink(self, lang=None, absolute=False, extension='.html', query=None):
         """Return permalink for a post."""
