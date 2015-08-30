@@ -130,3 +130,10 @@ msgstr "Write your post here."
 #. Default content for a new page
 msgid "Write your page here."
 msgstr "Write your page here."
+
+msgid "Uncategorized"
+msgstr "Uncategorized"
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr "Updates"
