@@ -334,7 +334,7 @@ class RenderTags(Task):
         yield task
 
         if self.site.config['GENERATE_ATOM']:
-            self.atom_feed_list(kind, tag, lang, post_list, context, kw)
+            yield self.atom_feed_list(kind, tag, lang, post_list, context, kw)
 
     def atom_feed_list(self, kind, tag, lang, post_list, context, kw):
         """Generate atom feeds for tag lists."""
@@ -354,7 +354,7 @@ class RenderTags(Task):
             'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.tags:atom')],
             'task_dep': ['render_posts'],
         }
-        yield task
+        return task
 
     def tag_rss(self, tag, lang, posts, kw, is_category):
         """Create a RSS feed for a single tag in a given language."""
