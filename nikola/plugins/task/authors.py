@@ -82,7 +82,9 @@ class RenderAuthors(Task):
         yield self.group_task()
         self.site.scan_posts()
 
-        if self.site.config["ENABLE_AUTHOR_PAGES"] and len(self._posts_per_author()) > 1:
+        generate_author_pages = self.site.config["ENABLE_AUTHOR_PAGES"] and len(self._posts_per_author()) > 1
+        self.site.GLOBAL_CONTEXT["author_pages_generated"] = generate_author_pages
+        if generate_author_pages:
             yield self.list_authors_page(kw)
 
             if not self._posts_per_author():  # this may be self.site.posts_per_author

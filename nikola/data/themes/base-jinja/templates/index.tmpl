@@ -18,7 +18,13 @@
     <header>
         <h1 class="p-name entry-title"><a href="{{ post.permalink() }}" class="u-url">{{ post.title()|e }}</a></h1>
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">{{ post.author() }}</span></p>
+            <p class="byline author vcard"><span class="byline-name fn">
+            {% if author_pages_generated %}
+                <a href="{{_link('author', post.author())}}">{{ post.author() }}</a>
+            {% else %}
+                {{ post.author() }}
+            {% endif %}
+            </span></p>
             <p class="dateline"><a href="{{ post.permalink() }}" rel="bookmark"><time class="published dt-published" datetime="{{ post.formatted_date('webiso') }}" title="{{ post.formatted_date(date_format) }}">{{ post.formatted_date(date_format) }}</time></a></p>
             {% if not post.meta('nocomments') and site_has_comments %}
                 <p class="commentline">{{ comments.comment_link(post.permalink(), post._base_path) }}
