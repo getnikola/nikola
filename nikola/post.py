@@ -745,6 +745,46 @@ class Post(object):
             path = path[2:]
         return path
 
+    def section_color(self, lang=None):
+        """Return the color of the post's section."""
+        slug = self.section_slug(lang)
+        if slug in self.config['POSTS_SECTION_COLORS'](lang):
+            return self.config['POSTS_SECTION_COLORS'](lang)[slug]
+        base = self.config['THEME_COLOR']
+        return utils.colorize_str_from_base_color(slug, base)
+
+    def section_link(self, lang=None):
+        """Return the link to the post's section."""
+        slug = self.section_slug(lang)
+        if not self.pretty_urls:
+            link = urljoin('/' + slug + '/', self.index_file)
+        else:
+            link = '/' + slug + '/'
+        return link
+
+    def section_name(self, lang=None):
+        """Return the name of the post's section."""
+        slug = self.section_slug(lang)
+        if slug in self.config['POSTS_SECTION_NAME'](lang):
+            name = self.config['POSTS_SECTION_NAME'](lang)[slug]
+        else:
+            name = slug.replace('-', ' ').title()
+        return name
+
+    def section_slug(self, lang=None):
+        """Return the slug for the post's section."""
+        if not self.config['POSTS_SECTION_FROM_META']:
+            dest = self.destination_path(lang)
+            if dest[-(1 + len(self.index_file)):] == '/' + self.index_file:
+                dest = dest[:-(1 + len(self.index_file))]
+            dirname = os.path.dirname(dest)
+            slug = dirname
+            if not dirname or dirname == '.':
+                slug = self.messages[lang]["Uncategorized"]
+        else:
+            slug = self.meta[lang]['section'].split(',')[0] if 'section' in self.meta[lang] else self.messages[lang]["Uncategorized"]
+        return slug.replace(' ', '-').lower()
+
     def permalink(self, lang=None, absolute=False, extension='.html', query=None):
         """Return permalink for a post."""
         if lang is None:
