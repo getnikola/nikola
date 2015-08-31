@@ -1,0 +1,10 @@
+[Core]
+Name = render_authors
+Module = authors
+
+[Documentation]
+Author = Juanjo Conti
+Version = 0.1
+Website = http://getnikola.com
+Description = Render the author pages and feeds.
+

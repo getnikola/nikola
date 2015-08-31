@@ -349,6 +349,36 @@ CATEGORY_OUTPUT_FLAT_HIERARCHY = ${CATEGORY_OUTPUT_FLAT_HIERARCHY}
 # Category pages will still be generated.
 HIDDEN_CATEGORIES = []
 
+# If ENABLE_AUTHOR_PAGES is set to True and there is more than one
+# author, author pages are generated.
+# ENABLE_AUTHOR_PAGES = True
+
+# Final locations are:
+# output / TRANSLATION[lang] / AUTHOR_PATH / index.html (list of tags)
+# output / TRANSLATION[lang] / AUTHOR_PATH / author.html (list of posts for a tag)
+# output / TRANSLATION[lang] / AUTHOR_PATH / author.xml (RSS feed for a tag)
+# AUTHOR_PATH = "authors"
+
+# If AUTHOR_PAGES_ARE_INDEXES is set to True, each author's page will contain
+# the posts themselves. If set to False, it will be just a list of links.
+# AUTHOR_PAGES_ARE_INDEXES = False
+
+# Set descriptions for author pages to make them more interesting. The
+# default is no description. The value is used in the meta description
+# and displayed underneath the author list or index page’s title.
+# AUTHOR_PAGES_DESCRIPTIONS = {
+#    DEFAULT_LANG: {
+#        "Juanjo Conti": "Python coder and writer.",
+#        "Roberto Alsina": "Nikola father."
+#    },
+# }
+
+
+# If you do not want to display an author publicly, you can mark it as hidden.
+# The author will not be displayed on the author list page and posts.
+# Tag pages will still be generated.
+HIDDEN_AUTHORS = ['Guest']
+
 # Final location for the main blog page and sibling paginated pages is
 # output / TRANSLATION[lang] / INDEX_PATH / index-*.html
 # INDEX_PATH = ""
@@ -388,9 +418,13 @@ HIDDEN_CATEGORIES = []
 # Number of posts in RSS feeds
 # FEED_LENGTH = 10
 
-# Slug the Tag URL easier for users to type, special characters are
+# Slug the Tag URL. Easier for users to type, special characters are
 # often removed or replaced as well.
 # SLUG_TAG_PATH = True
+
+# Slug the Author URL. Easier for users to type, special characters are
+# often removed or replaced as well.
+# SLUG_AUTHOR_PATH = True
 
 # A list of redirection tuples, [("foo/from.html", "/bar/to.html")].
 #

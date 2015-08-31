@@ -37,5 +37,7 @@ MESSAGES = {
     "old posts, page %d": "old posts, page %d",
     "page %d": "page %d",
     "Uncategorized": "Uncategorized",
-    "Updates": "Updates"
+    "Updates": "Updates",
+    "Authors": "Authors",
+    "Posts by %s": "Posts by %s"
 }
