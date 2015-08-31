@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Atom feeds for tag lists (Issue #1686)
 * New ``THEME_COLOR`` option for customizing themes from a primary color
   (Issue #1980)
 * New ``color_hsl_adjust_hex`` and ``colorize_str_from_base_color``

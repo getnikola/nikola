@@ -333,6 +333,29 @@ class RenderTags(Task):
         task['basename'] = str(self.name)
         yield task
 
+        if self.site.config['GENERATE_ATOM']:
+            self.atom_feed_list(kind, lang, post_list, context)
+
+
+    def atom_feed_list(self, kind, lang, post_list, context):
+        if kind == 'tag':
+            context['feedlink'] = self.site.abs_link(self.site.path('tag_atom', tag, lang))
+            feed_path = os.path.join(kw['output_folder'], self.site.path('tag_atom', tag, lang))
+        elif kind == 'category':
+            context['feedlink'] = self.site.abs_link(self.site.path('category_atom', tag, lang))
+            feed_path = os.path.join(kw['output_folder'], self.site.path('category_atom', tag, lang))
+
+        task = {
+            'basename': str(self.name),
+            'name': feed_path,
+            'targets': [feed_path],
+            'actions': [(self.site.atom_feed_renderer, (lang, post_list, feed_path, kw['filters'], context))],
+            'clean': True,
+            'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.tags:atom')],
+            'task_dep': ['render_posts'],
+        }
+        yield task
+
     def tag_rss(self, tag, lang, posts, kw, is_category):
         """Create a RSS feed for a single tag in a given language."""
         kind = "category" if is_category else "tag"

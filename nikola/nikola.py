@@ -1778,7 +1778,7 @@ class Nikola(object):
         deps_context['navigation_links'] = deps_context['global']['navigation_links'](lang)
 
         nslist = {}
-        if context["is_feed_stale"] or (not context["feedpagenum"] == context["feedpagecount"] - 1 and not context["feedpagenum"] == 0):
+        if context["is_feed_stale"] or "feedpagenum" in context and (not context["feedpagenum"] == context["feedpagecount"] - 1 and not context["feedpagenum"] == 0):
             nslist["fh"] = "http://purl.org/syndication/history/1.0"
         if not self.config["RSS_TEASERS"]:
             nslist["xh"] = "http://www.w3.org/1999/xhtml"
@@ -1807,17 +1807,17 @@ class Nikola(object):
         if "prevfeedlink" in context:
             feed_root.append(atom_link("previous", "application/atom+xml",
                                        self.abs_link(context["prevfeedlink"])))
-        if context["is_feed_stale"] or not context["feedpagenum"] == 0:
+        if context["is_feed_stale"] or "feedpagenum" in context and not context["feedpagenum"] == 0:
             feed_root.append(atom_link("current", "application/atom+xml",
                              self.abs_link(context["currentfeedlink"])))
             # Older is "prev-archive" and newer is "next-archive" in archived feeds (opposite of paginated)
-            if "prevfeedlink" in context and (context["is_feed_stale"] or not context["feedpagenum"] == context["feedpagecount"] - 1):
+            if "prevfeedlink" in context and (context["is_feed_stale"] or "feedpagenum" in context and not context["feedpagenum"] == context["feedpagecount"] - 1):
                 feed_root.append(atom_link("next-archive", "application/atom+xml",
                                            self.abs_link(context["prevfeedlink"])))
             if "nextfeedlink" in context:
                 feed_root.append(atom_link("prev-archive", "application/atom+xml",
                                            self.abs_link(context["nextfeedlink"])))
-            if context["is_feed_stale"] or not context["feedpagenum"] == context["feedpagecount"] - 1:
+            if context["is_feed_stale"] or "feedpagenum" and not context["feedpagenum"] == context["feedpagecount"] - 1:
                 lxml.etree.SubElement(feed_root, "{http://purl.org/syndication/history/1.0}archive")
         feed_root.append(atom_link("alternate", "text/html",
                                    self.abs_link(context["permalink"])))
