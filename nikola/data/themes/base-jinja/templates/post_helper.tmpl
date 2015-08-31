@@ -86,8 +86,11 @@
 
 {% macro mathjax_script(post) %}
     {% if post.is_mathjax %}
+        <script type="text/javascript"
+          src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        </script>
         <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});</script>
-        <script src="/assets/js/mathjax.js"></script>
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script>
     {% endif %}
 {% endmacro %}

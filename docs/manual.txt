@@ -1392,8 +1392,8 @@ Math
 ----
 
 Nikola supports math input via MathJax.  It is activated via the math roles and
-directives of reStructuredText and the usual LaTeX delimiters (``\(inline\)``
-and ``\[display\]``) for other input formats.
+directives of reStructuredText and the usual LaTeX delimiters
+(backslash-parentheses, backslash-brackets) for other input formats.
 
 To use mathematics in a post, you must add the ``mathjax`` tag.
 
@@ -1419,7 +1419,8 @@ like this:
     </script>
     """
 
-Inline mathematics are produced using the reST `math` **role** or the ``\(…\)`` delimiters:
+Inline mathematics are produced using the reST `math` **role** or the LaTeX
+backslash-parentheses delimiters:
 
 Euler’s formula: :math:`e^{ix} = \cos x + i\sin x`
 
@@ -1435,7 +1436,8 @@ In other input formats:
 
     Euler’s formula: \(e^{ix} = \cos x + i\sin x\)
 
-Display mathematics are produced using the reST `math` **directive** or the ``\[…\]`` delimiters:
+Display mathematics are produced using the reST `math` **directive** or the
+LaTeX backslash-brackets delimiters:
 
 .. math::
 
