@@ -48,10 +48,11 @@ class RenderAuthors(Task):
 
     def set_site(self, site):
         """Set Nikola site."""
-        site.register_path_handler('author_index', self.author_index_path)
-        site.register_path_handler('author', self.author_path)
-        site.register_path_handler('author_atom', self.author_atom_path)
-        site.register_path_handler('author_rss', self.author_rss_path)
+        if site.config["ENABLE_AUTHOR_PAGES"]:
+            site.register_path_handler('author_index', self.author_index_path)
+            site.register_path_handler('author', self.author_path)
+            site.register_path_handler('author_atom', self.author_atom_path)
+            site.register_path_handler('author_rss', self.author_rss_path)
         return super(RenderAuthors, self).set_site(site)
 
     def gen_tasks(self):
@@ -78,36 +79,37 @@ class RenderAuthors(Task):
             "index_file": self.site.config['INDEX_FILE'],
         }
 
-        self.site.scan_posts()
         yield self.group_task()
+        self.site.scan_posts()
 
-        yield self.list_authors_page(kw)
+        if self.site.config["ENABLE_AUTHOR_PAGES"] and len(self._posts_per_author()) > 1:
+            yield self.list_authors_page(kw)
 
-        if not self._posts_per_author():  # this may be self.site.posts_per_author
-            return
+            if not self._posts_per_author():  # this may be self.site.posts_per_author
+                return
 
-        author_list = list(self._posts_per_author().items())
+            author_list = list(self._posts_per_author().items())
 
-        def render_lists(author, posts):
-            """Render author pages as RSS files and lists/indexes."""
-            post_list = sorted(posts, key=lambda a: a.date)
-            post_list.reverse()
-            for lang in kw["translations"]:
-                if kw["show_untranslated_posts"]:
-                    filtered_posts = post_list
-                else:
-                    filtered_posts = [x for x in post_list if x.is_translation_available(lang)]
-                if kw["generate_rss"]:
-                    yield self.author_rss(author, lang, filtered_posts, kw)
-                # Render HTML
-                if kw['author_pages_are_indexes']:
-                    yield self.author_page_as_index(author, lang, filtered_posts, kw)
-                else:
-                    yield self.author_page_as_list(author, lang, filtered_posts, kw)
+            def render_lists(author, posts):
+                """Render author pages as RSS files and lists/indexes."""
+                post_list = sorted(posts, key=lambda a: a.date)
+                post_list.reverse()
+                for lang in kw["translations"]:
+                    if kw["show_untranslated_posts"]:
+                        filtered_posts = post_list
+                    else:
+                        filtered_posts = [x for x in post_list if x.is_translation_available(lang)]
+                    if kw["generate_rss"]:
+                        yield self.author_rss(author, lang, filtered_posts, kw)
+                    # Render HTML
+                    if kw['author_pages_are_indexes']:
+                        yield self.author_page_as_index(author, lang, filtered_posts, kw)
+                    else:
+                        yield self.author_page_as_list(author, lang, filtered_posts, kw)
 
-        for author, posts in author_list:
-            for task in render_lists(author, posts):
-                yield task
+            for author, posts in author_list:
+                for task in render_lists(author, posts):
+                    yield task
 
     def _create_authors_page(self, kw):
         """Create a global "all authors" page for each language."""
