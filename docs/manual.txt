@@ -1395,6 +1395,8 @@ Nikola supports math input via MathJax.  It is activated via the math roles and
 directives of reStructuredText and the usual LaTeX delimiters (``\(inline\)``
 and ``\[display\]``) for other input formats.
 
+To use mathematics in a post, you must add the ``mathjax`` tag.
+
 We **DO NOT** support the old, deprecated and error-prone ``$inline$``
 delimiters by default. If you want to use them, please add them manually,
 like this:
