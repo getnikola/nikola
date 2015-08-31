@@ -336,7 +336,6 @@ class RenderTags(Task):
         if self.site.config['GENERATE_ATOM']:
             self.atom_feed_list(kind, tag, lang, post_list, context, kw)
 
-
     def atom_feed_list(self, kind, tag, lang, post_list, context, kw):
         """Generate atom feeds for tag lists."""
         if kind == 'tag':
