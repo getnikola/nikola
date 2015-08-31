@@ -174,7 +174,7 @@ class RenderAuthors(Task):
         if kw["generate_rss"]:
             # On a author page, the feeds include the author's feeds
             rss_link = ("""<link rel="alternate" type="application/rss+xml" """
-                        """type="application/rss+xml" title="RSS for author """
+                        """title="RSS for author """
                         """{0} ({1})" href="{2}">""".format(
                             title, lang, self.site.link(kind + "_rss", author, lang)))
             context_source['rss_link'] = rss_link

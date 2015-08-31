@@ -283,7 +283,7 @@ class RenderTags(Task):
         if kw["generate_rss"]:
             # On a tag page, the feeds include the tag's feeds
             rss_link = ("""<link rel="alternate" type="application/rss+xml" """
-                        """type="application/rss+xml" title="RSS for tag """
+                        """title="RSS for tag """
                         """{0} ({1})" href="{2}">""".format(
                             title, lang, self.site.link(kind + "_rss", tag, lang)))
             context_source['rss_link'] = rss_link
