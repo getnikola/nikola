@@ -337,8 +337,11 @@ class CommandImportWordpress(Command, ImportMixin):
         # Add tag redirects
         for tag in self.all_tags:
             try:
-                tag_str = tag.decode('utf8')
-            except (AttributeError, UnicodeEncodeError):
+                if isinstance(tag, utils.bytes_str):
+                    tag_str = tag.decode('utf8', 'replace')
+                else:
+                    tag_str = tag
+            except AttributeError:
                 tag_str = tag
             tag = utils.slugify(tag_str)
             src_url = '{}tag/{}'.format(self.context['SITE_URL'], tag)
@@ -760,8 +763,12 @@ class CommandImportWordpress(Command, ImportMixin):
         path = unquote(parsed.path.strip('/'))
 
         try:
-            path = path.decode('utf8')
-        except (AttributeError, UnicodeEncodeError):
+            if isinstance(path, utils.bytes_str):
+                path = path.decode('utf8', 'replace')
+            else:
+                path = path
+        except AttributeError:
+            pdb.set_trace()
             pass
 
         # Cut out the base directory.
