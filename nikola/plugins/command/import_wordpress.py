@@ -338,7 +338,7 @@ class CommandImportWordpress(Command, ImportMixin):
         for tag in self.all_tags:
             try:
                 tag_str = tag.decode('utf8')
-            except AttributeError:
+            except (AttributeError, UnicodeEncodeError):
                 tag_str = tag
             tag = utils.slugify(tag_str)
             src_url = '{}tag/{}'.format(self.context['SITE_URL'], tag)
@@ -761,7 +761,7 @@ class CommandImportWordpress(Command, ImportMixin):
 
         try:
             path = path.decode('utf8')
-        except AttributeError:
+        except (AttributeError, UnicodeEncodeError):
             pass
 
         # Cut out the base directory.
