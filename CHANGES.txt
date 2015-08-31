@@ -19,10 +19,13 @@ Features
   can be overwritten with ``POSTS_SECTION_COLORS`` option (Issue #1980)
 * New ``TAG_PAGES_TITLES`` and ``CATEGORY_PAGES_TITLES`` options
   (Issue #1962)
+* Add Bosnian and Serbian (Latin) languages, by Saša Savić [bs, sr_latin]
+* Add Portuguese (Portugal) language, by jamatos [pt]
 
 Bugfixes
 --------
 
+* Clean up translations for third party components
 * ``pagekind["main_index"]`` set on the main indexes to differentiate
   them from all the other indexes.
 * Add dependency on metadata file for 2-file posts (Issue #1968)

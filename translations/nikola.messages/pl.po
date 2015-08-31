@@ -17,9 +17,9 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-06-24 12:13+0000\n"
+"PO-Revision-Date: 2015-08-31 07:55+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
-"Language-Team: Polish (http://www.transifex.com/projects/p/nikola/language/pl/)\n"
+"Language-Team: Polish (http://www.transifex.com/ralsina/nikola/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -134,3 +134,16 @@ msgstr "Tu wpisz treść postu."
 #. Default content for a new page
 msgid "Write your page here."
 msgstr "Tu wpisz treść strony."
+
+msgid "Uncategorized"
+msgstr "Nieskategoryzowane"
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr "Aktualności"
+
+msgid "Authors"
+msgstr "Autorzy"
+
+msgid "Posts by %s"
+msgstr "Posty autora %s"

@@ -33,7 +33,7 @@
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">
                 {% if author_pages_generated %}
-                    <a href="{{_link('author', post.author())}}">{{ post.author() }}</a>
+                    <a href="{{ _link('author', post.author()) }}">{{ post.author() }}</a>
                 {% else %}
                     {{ post.author() }}
                 {% endif %}

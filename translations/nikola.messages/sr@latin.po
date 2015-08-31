@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-07-30 18:51+0000\n"
-"Last-Translator: Saša Savić <sasa.savic@protonmail.com>\n"
+"PO-Revision-Date: 2015-08-31 07:51+0000\n"
+"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/ralsina/nikola/language/sr@latin/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -130,3 +130,16 @@ msgstr "Vašu objavu napišite ovdje."
 #. Default content for a new page
 msgid "Write your page here."
 msgstr "Vašu stranicu napišite ovdje."
+
+msgid "Uncategorized"
+msgstr ""
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr ""
+
+msgid "Authors"
+msgstr ""
+
+msgid "Posts by %s"
+msgstr ""

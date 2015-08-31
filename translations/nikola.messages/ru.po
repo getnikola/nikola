@@ -10,6 +10,7 @@
 # Dmitry Verkhoturov <paskal.07@gmail.com>, 2014
 # Max Arnold <lwarxx@gmail.com>, 2013
 # Max Arnold <lwarxx@gmail.com>, 2013
+# Oleksandr Fedorov, 2015
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
 msgid ""
@@ -17,9 +18,9 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-06-24 12:06+0000\n"
+"PO-Revision-Date: 2015-08-31 07:51+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
-"Language-Team: Russian (http://www.transifex.com/projects/p/nikola/language/ru/)\n"
+"Language-Team: Russian (http://www.transifex.com/ralsina/nikola/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -103,7 +104,7 @@ msgid "Posts for {month} {year}"
 msgstr "Записи за {month} {year}"
 
 msgid "Posts for {month} {day}, {year}"
-msgstr ""
+msgstr "Записи за {day} {month} {year}"
 
 msgid "Nothing found."
 msgstr "Ничего не найдено."
@@ -121,16 +122,29 @@ msgid "Skip to main content"
 msgstr "Перейти к главному содержимому"
 
 msgid "Subcategories:"
-msgstr ""
+msgstr "Подкатегории:"
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr ""
+msgstr "(активная)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr ""
+msgstr "Создайте Вашу запись здесь."
 
 #. Default content for a new page
 msgid "Write your page here."
+msgstr "Создайте Вашу страницу здесь."
+
+msgid "Uncategorized"
+msgstr ""
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr ""
+
+msgid "Authors"
+msgstr ""
+
+msgid "Posts by %s"
 msgstr ""

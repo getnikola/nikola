@@ -137,3 +137,9 @@ msgstr "Uncategorized"
 #. Used for feeds of any format
 msgid "Updates"
 msgstr "Updates"
+
+msgid "Authors"
+msgstr "Authors"
+
+msgid "Posts by %s"
+msgstr "Posts by %s"

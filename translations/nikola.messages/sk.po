@@ -15,9 +15,9 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-07-14 10:25+0000\n"
-"Last-Translator: Michal Kaukic <misolietavec@gmail.com>\n"
-"Language-Team: Slovak (http://www.transifex.com/p/nikola/language/sk/)\n"
+"PO-Revision-Date: 2015-08-31 07:51+0000\n"
+"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"Language-Team: Slovak (http://www.transifex.com/ralsina/nikola/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -132,3 +132,16 @@ msgstr "Tu napíšte svoj príspevok."
 #. Default content for a new page
 msgid "Write your page here."
 msgstr "Tu napíšte svoju stránku."
+
+msgid "Uncategorized"
+msgstr ""
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr ""
+
+msgid "Authors"
+msgstr ""
+
+msgid "Posts by %s"
+msgstr ""
