@@ -334,10 +334,11 @@ class RenderTags(Task):
         yield task
 
         if self.site.config['GENERATE_ATOM']:
-            self.atom_feed_list(kind, lang, post_list, context)
+            self.atom_feed_list(kind, tag, lang, post_list, context, kw)
 
 
-    def atom_feed_list(self, kind, lang, post_list, context):
+    def atom_feed_list(self, kind, tag, lang, post_list, context, kw):
+        """Generate atom feeds for tag lists."""
         if kind == 'tag':
             context['feedlink'] = self.site.abs_link(self.site.path('tag_atom', tag, lang))
             feed_path = os.path.join(kw['output_folder'], self.site.path('tag_atom', tag, lang))
