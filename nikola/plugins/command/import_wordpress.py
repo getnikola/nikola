@@ -833,7 +833,7 @@ class CommandImportWordpress(Command, ImportMixin):
                 continue
             self.all_tags.add(text)
             if type == 'category':
-                categories.append(type)
+                categories.append(text)
             else:
                 tags.append(text)
 
