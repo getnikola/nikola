@@ -380,6 +380,7 @@ class Nikola(object):
             'DISABLED_PLUGINS': [],
             'EXTRA_PLUGINS_DIRS': [],
             'COMMENT_SYSTEM_ID': 'nikolademo',
+            'ENABLE_AUTHOR_PAGES': True,
             'EXTRA_HEAD_DATA': '',
             'FAVICONS': (),
             'FEED_LENGTH': 10,
