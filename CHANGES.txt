@@ -4,7 +4,7 @@ New in master
 Features
 --------
 
-* Render author pages (PR #1972)
+* Render author pages (Issue #1972)
 * Atom feeds for tag lists (Issue #1686)
 * New ``THEME_COLOR`` option for customizing themes from a primary color
   (Issue #1980)
