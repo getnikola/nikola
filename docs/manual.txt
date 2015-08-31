@@ -169,6 +169,7 @@ Nikola provides the following features:
   * Indexes
   * RSS and Atom feeds
   * Tags and categories, with pages and feeds
+  * Author pages, with pages and feeds (not generated if ``ENABLE_AUTHOR_PAGES`` is set to ``False`` or there is only one author)
   * Archives with custom granularity (yearly or monthly)
   * `Comments`_
   * Client-side tag clouds (needs manual configuration)
@@ -634,6 +635,9 @@ Titles of the pages can be controlled by using ``INDEXES_TITLES``,
 Categories and tags use simple lists by default that show only titles and
 dates; however, you can switch them to full indexes by using
 ``CATEGORY_PAGES_ARE_INDEXES`` and ``TAG_PAGES_ARE_INDEXES``, respectively.
+
+Something similar happens with authors. To use full indexes in authors set 
+``AUTHOR_PAGES_ARE_INDEXES`` to ``True``.
 
 Static indexes
 ``````````````
