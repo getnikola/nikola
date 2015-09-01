@@ -768,7 +768,6 @@ class CommandImportWordpress(Command, ImportMixin):
             else:
                 path = path
         except AttributeError:
-            pdb.set_trace()
             pass
 
         # Cut out the base directory.
