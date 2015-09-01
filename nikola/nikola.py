@@ -1104,7 +1104,7 @@ class Nikola(object):
         doc.rewrite_links(lambda dst: self.url_replacer(src, dst, lang), resolve_base_href=False)
 
         # lxml ignores srcset in img and source elements, so do that by hand
-        objs = list(doc.findall('(*//img|*//source)'))
+        objs = list(doc.xpath('(*//img|*//source)'))
         for obj in objs:
             if 'srcset' in obj.attrib:
                 urls = [u.strip() for u in obj.attrib['srcset'].split(',')]
