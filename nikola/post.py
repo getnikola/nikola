@@ -773,6 +773,9 @@ class Post(object):
 
     def section_slug(self, lang=None):
         """Return the slug for the post's section."""
+        if lang is None:
+            lang = nikola.utils.LocaleBorg().current_lang
+
         if not self.config['POSTS_SECTION_FROM_META']:
             dest = self.destination_path(lang)
             if dest[-(1 + len(self.index_file)):] == '/' + self.index_file:
