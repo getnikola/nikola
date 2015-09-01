@@ -28,6 +28,7 @@ Features
 Bugfixes
 --------
 
+* Link checker should check all absolute URLs to self (Issue #1991) 
 * Check ``img|source[@srcset]`` as part of ``check -l``  (Issue #1989)
 * Clean up translations for third party components
 * ``pagekind["main_index"]`` set on the main indexes to differentiate

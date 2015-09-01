@@ -217,6 +217,11 @@ class CommandCheck(Command):
                 if target == "#":
                     continue
                 target, _ = urldefrag(target)
+
+                # absolute URL to root-relative
+                if target.startswith(base_url.geturl()):
+                    target = target.replace(base_url.geturl(), '/')
+
                 parsed = urlparse(target)
 
                 # Warn about links from https to http (mixed-security)
@@ -228,8 +233,6 @@ class CommandCheck(Command):
                 if ((parsed.scheme or target.startswith('//')) and parsed.netloc != base_url.netloc) or \
                         ((parsed.scheme or target.startswith('//')) and url_type in ('rel_path', 'full_path')):
                     if not check_remote or parsed.scheme not in ["http", "https"]:
-                        continue
-                    if parsed.netloc == base_url.netloc:  # absolute URL to self.site
                         continue
                     if target in self.checked_remote_targets:  # already checked this exact target
                         if self.checked_remote_targets[target] in [301, 307]:
