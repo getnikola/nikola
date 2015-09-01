@@ -77,7 +77,9 @@ class CopyAssets(Task):
                 task['uptodate'] = [utils.config_changed(kw, 'nikola.plugins.task.copy_assets')]
                 task['basename'] = self.name
                 if code_css_input:
-                    task['file_dep'] = [code_css_input]
+                    if 'file_dep' not in task:
+                        task['file_dep'] = []
+                    task['file_dep'].append(code_css_input)
                 yield utils.apply_filters(task, kw['filters'])
 
         # Check whether or not there is a code.css file around.
