@@ -1889,7 +1889,7 @@ Using Twitter Cards
 Nikola supports Twitter Card summaries, but they are disabled by default.
 
 Twitter Cards enable you to show additional information in Tweets that link
-to you content.
+to your content.
 Nikola supports `Twitter Cards <https://dev.twitter.com/docs/cards>`_.
 They are implemented to use *Open Graph* tags whenever possible.
 
