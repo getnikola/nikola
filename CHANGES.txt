@@ -28,6 +28,7 @@ Features
 Bugfixes
 --------
 
+* If webassets is not installed, use unbundled assets (Issue #1992)
 * Check links in Atom and sitemap files (Issue #1993) 
 * Link checker should check all absolute URLs to self (Issue #1991) 
 * Check ``img|source[@srcset]`` as part of ``check -l``  (Issue #1989)
