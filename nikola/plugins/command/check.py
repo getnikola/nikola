@@ -204,7 +204,15 @@ class CommandCheck(Command):
                 return False
 
             d = lxml.html.fromstring(open(filename, 'rb').read())
-            for l in d.iterlinks():
+            extra_objs = lxml.html.fromstring('html')
+
+            # Turn elements with a srcset attribute into individual img elements with src attributes
+            for obj in list(d.xpath('(*//img|*//source)')):
+                if 'srcset' in obj.attrib:
+                    for srcset_item in obj.attrib['srcset'].split(','):
+                        extra_objs.append(lxml.etree.Element('img', src=srcset_item.strip().split(' ')[-0]))
+
+            for l in list(d.iterlinks()) + list(extra_objs.iterlinks()):
                 target = l[2]
                 if target == "#":
                     continue
