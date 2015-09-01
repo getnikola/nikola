@@ -203,16 +203,34 @@ class CommandCheck(Command):
                 # Quietly ignore files that don’t exist; use `nikola check -f` instead (Issue #1831)
                 return False
 
-            d = lxml.html.fromstring(open(filename, 'rb').read())
-            extra_objs = lxml.html.fromstring('html')
+            if '.html' == fname[-5:]:  # DISABLED
+                d = lxml.html.fromstring(open(filename, 'rb').read())
+                extra_objs = lxml.html.fromstring('<html/>')
 
-            # Turn elements with a srcset attribute into individual img elements with src attributes
-            for obj in list(d.xpath('(*//img|*//source)')):
-                if 'srcset' in obj.attrib:
-                    for srcset_item in obj.attrib['srcset'].split(','):
-                        extra_objs.append(lxml.etree.Element('img', src=srcset_item.strip().split(' ')[-0]))
+                # Turn elements with a srcset attribute into individual img elements with src attributes
+                for obj in list(d.xpath('(*//img|*//source)')):
+                    if 'srcset' in obj.attrib:
+                        for srcset_item in obj.attrib['srcset'].split(','):
+                            extra_objs.append(lxml.etree.Element('img', src=srcset_item.strip().split(' ')[0]))
+                link_elements = list(d.iterlinks()) + list(extra_objs.iterlinks())
+            # Extract links from XML formats to minimal HTML, allowing those to go through the link checks
+            elif '.atom' == filename[-5:]:
+                d = lxml.etree.parse(filename)
+                link_elements = lxml.html.fromstring('<html/>')
+                for elm in d.findall('*//{http://www.w3.org/2005/Atom}link'):
+                    feed_link = elm.attrib['href'].split('?')[0].strip()  # strip RSS_LINKS_APPEND_QUERY
+                    link_elements.append(lxml.etree.Element('a', href=feed_link))
+                link_elements = list(link_elements.iterlinks())
+            elif filename.endswith('sitemap.xml') or filename.endswith('sitemapindex.xml'):
+                d = lxml.etree.parse(filename)
+                link_elements = lxml.html.fromstring('<html/>')
+                for elm in d.getroot().findall("*//{http://www.sitemaps.org/schemas/sitemap/0.9}loc"):
+                    link_elements.append(lxml.etree.Element('a', href=elm.text.strip()))
+                link_elements = list(link_elements.iterlinks())
+            else:  # unsupported file type
+                return False
 
-            for l in list(d.iterlinks()) + list(extra_objs.iterlinks()):
+            for l in link_elements:
                 target = l[2]
                 if target == "#":
                     continue
@@ -327,9 +345,16 @@ class CommandCheck(Command):
         # Maybe we should just examine all HTML files
         output_folder = self.site.config['OUTPUT_FOLDER']
         for fname in _call_nikola_list(self.site)[0]:
-            if fname.startswith(output_folder) and '.html' == fname[-5:]:
-                if self.analyze(fname, find_sources, check_remote):
-                    failure = True
+            if fname.startswith(output_folder):
+                if '.html' == fname[-5:]:
+                    if self.analyze(fname, find_sources, check_remote):
+                        failure = True
+                if '.atom' == fname[-5:]:
+                    if self.analyze(fname, find_sources, False):
+                        failure = True
+                if fname.endswith('sitemap.xml') or fname.endswith('sitemapindex.xml'):
+                    if self.analyze(fname, find_sources, False):
+                        failure = True
         if not failure:
             self.logger.info("All links checked.")
         return failure
