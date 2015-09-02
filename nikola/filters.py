@@ -39,7 +39,9 @@ try:
     import typogrify.filters as typo
 except ImportError:
     typo = None  # NOQA
+import requests
 
+from utils import LOGGER
 
 def apply_to_binary_file(f):
     """Apply a filter to a binary file.
@@ -273,4 +275,30 @@ def php_template_injection(data):
         phpdata = re.sub(template.group(0), phpdata, data)
         return phpdata
     else:
+        return data
+
+
+@apply_to_text_file
+def cssminify(data):
+    """Minify CSS using http://cssminifier.com/"""
+    try:
+        url = 'http://cssminifier.com/raw'
+        _data = {'input': data}
+        response = requests.post(url, data=_data)
+        return response.text
+    except Exception as exc:
+        LOGGER.error("can't use cssminifier.com: {}", exc)
+        return data
+
+
+@apply_to_text_file
+def jsminify(data):
+    """Minify JS using http://javascript-minifier.com/"""
+    try:
+        url = 'http://javascript-minifier.com/raw'
+        _data = {'input': data}
+        response = requests.post(url, data=_data)
+        return response.text
+    except Exception as exc:
+        LOGGER.error("can't use javascript-minifier.com: {}", exc)
         return data
