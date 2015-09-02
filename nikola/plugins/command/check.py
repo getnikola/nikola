@@ -236,7 +236,9 @@ class CommandCheck(Command):
                     continue
                 target, _ = urldefrag(target)
 
-
+                if any([urlparse(target).netloc.endswith(_) for _ in ['example.com', 'example.net', 'example.org']]):
+                    self.logger.info("Not testing example address \"{0}\".".format(target))
+                    continue
 
                 # absolute URL to root-relative
                 if target.startswith(base_url.geturl()):
