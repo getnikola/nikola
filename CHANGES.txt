@@ -28,6 +28,7 @@ Features
 Bugfixes
 --------
 
+* Make nikola tabcompletion work outside sites (Issue #1983)
 * If webassets is not installed, use unbundled assets (Issue #1992)
 * Check links in Atom and sitemap files (Issue #1993) 
 * Link checker should check all absolute URLs to self (Issue #1991) 

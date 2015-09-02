@@ -44,6 +44,7 @@ from doit.doit_cmd import DoitMain
 from doit.cmd_help import Help as DoitHelp
 from doit.cmd_run import Run as DoitRun
 from doit.cmd_clean import Clean as DoitClean
+from doit.cmd_completion import TabCompletion
 from doit.cmd_auto import Auto as DoitAuto
 from logbook import NullHandler
 from blinker import signal
@@ -359,7 +360,7 @@ class DoitNikola(DoitMain):
                     LOGGER.info('Did you mean "{}" or "{}"?'.format('", "'.join(best_sugg[:-1]), best_sugg[-1]))
             return 3
 
-        if sub_cmds[args[0]] is not Help and not isinstance(sub_cmds[args[0]], Command):  # Is a doit command
+        if not sub_cmds[args[0]] in (Help, Command, TabCompletion):
             if not self.nikola.configured:
                 LOGGER.error("This command needs to run inside an "
                              "existing Nikola site.")
