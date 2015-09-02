@@ -193,8 +193,8 @@ require whatever data you want.
 Also, you can specify a custom template to be used by a post or page via the ``template`` metadata,
 and custom templates can be added in the ``templates/`` folder of your site.
 
-Customizing themes to user color preferece and section colors
--------------------------------------------------------------
+Customizing themes to user color preference and section colors
+--------------------------------------------------------------
 
 The user’s preference for theme color is exposed in templates as
 ``theme_color`` set in the ``THEME_COLOR`` option.
