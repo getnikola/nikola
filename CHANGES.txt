@@ -29,6 +29,7 @@ Features
 Bugfixes
 --------
 
+* Fix display of categories list in bootstrap theme (Issue #2002)
 * If webassets is not installed, use unbundled assets (Issue #1992)
 * Check links in Atom and sitemap files (Issue #1993) 
 * Link checker should check all absolute URLs to self (Issue #1991) 
