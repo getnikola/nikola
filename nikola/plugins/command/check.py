@@ -236,6 +236,8 @@ class CommandCheck(Command):
                     continue
                 target, _ = urldefrag(target)
 
+
+
                 # absolute URL to root-relative
                 if target.startswith(base_url.geturl()):
                     target = target.replace(base_url.geturl(), '/')
@@ -344,6 +346,10 @@ class CommandCheck(Command):
         failure = False
         # Maybe we should just examine all HTML files
         output_folder = self.site.config['OUTPUT_FOLDER']
+
+        if urlparse(self.site.config['BASE_URL']).netloc == 'example.com':
+            self.logger.error("You've not changed the SITE_URL (or BASE_URL) setting from \"example.com\"!")
+
         for fname in _call_nikola_list(self.site)[0]:
             if fname.startswith(output_folder):
                 if '.html' == fname[-5:]:
