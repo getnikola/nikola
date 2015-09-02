@@ -26,7 +26,6 @@
 
 """Utility functions to help run filters on files."""
 
-from .utils import req_missing
 from functools import wraps
 import os
 import io
@@ -41,7 +40,8 @@ except ImportError:
     typo = None  # NOQA
 import requests
 
-from utils import LOGGER
+from .utils import req_missing, LOGGER
+
 
 def apply_to_binary_file(f):
     """Apply a filter to a binary file.
