@@ -5,10 +5,10 @@
     ${parent.extra_head()}
     %if len(translations) > 1 and generate_rss:
         %for language in sorted(translations):
-            <link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for ${kind} ${author} (${language})" href="${_link(kind + "_rss", author, language)}">
+            <link rel="alternate" type="application/rss+xml" title="RSS for ${kind} ${author} (${language})" href="${_link(kind + "_rss", author, language)}">
         %endfor
     %elif generate_rss:
-        <link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for ${kind} ${author}" href="${_link(kind + "_rss", author)}">
+        <link rel="alternate" type="application/rss+xml" title="RSS for ${kind} ${author}" href="${_link(kind + "_rss", author)}">
     %endif
 </%block>
 
