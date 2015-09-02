@@ -360,7 +360,7 @@ class DoitNikola(DoitMain):
                     LOGGER.info('Did you mean "{}" or "{}"?'.format('", "'.join(best_sugg[:-1]), best_sugg[-1]))
             return 3
 
-        if not sub_cmds[args[0]] in (Help, Command, TabCompletion):
+        if not sub_cmds[args[0]] in (Help, TabCompletion) and not isinstance(sub_cmds[args[0]], Command):
             if not self.nikola.configured:
                 LOGGER.error("This command needs to run inside an "
                              "existing Nikola site.")
