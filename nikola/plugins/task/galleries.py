@@ -36,8 +36,9 @@ import os
 import sys
 try:
     from urlparse import urljoin
+    from urllib import quote
 except ImportError:
-    from urllib.parse import urljoin  # NOQA
+    from urllib.parse import urljoin, quote  # NOQA
 
 import natsort
 try:
@@ -87,6 +88,7 @@ class Galleries(Task, ImageProcessor):
             'tzinfo': site.tzinfo,
             'comments_in_galleries': site.config['COMMENTS_IN_GALLERIES'],
             'generate_rss': site.config['GENERATE_RSS'],
+            'use_urlencoding': site.config['USE_URLENCODING'],
         }
 
         # Verify that no folder in GALLERY_FOLDERS appears twice
@@ -272,6 +274,7 @@ class Galleries(Task, ImageProcessor):
                 context["enable_comments"] = self.kw['comments_in_galleries']
                 context["thumbnail_size"] = self.kw["thumbnail_size"]
                 context["pagekind"] = ["gallery_front"]
+                context["use_urlencoding"] = self.kw["use_urlencoding"]
 
                 if post:
                     yield {
@@ -557,6 +560,8 @@ class Galleries(Task, ImageProcessor):
 
         def url_from_path(p):
             url = '/'.join(os.path.relpath(p, os.path.dirname(output_name) + os.sep).split(os.sep))
+            if self.kw['use_urlencoding']:
+                url = quote(url.encode('utf-8'))
             return url
 
         photo_array = []

@@ -77,6 +77,7 @@ class RenderAuthors(Task):
             "pretty_urls": self.site.config['PRETTY_URLS'],
             "strip_indexes": self.site.config['STRIP_INDEXES'],
             "index_file": self.site.config['INDEX_FILE'],
+            "use_urlencoding": self.site.config['USE_URLENCODING'],
         }
 
         yield self.group_task()

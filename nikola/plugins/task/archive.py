@@ -140,6 +140,7 @@ class Archive(Task):
             "strip_indexes": self.site.config['STRIP_INDEXES'],
             "index_file": self.site.config['INDEX_FILE'],
             "generate_atom": self.site.config["GENERATE_ATOM"],
+            "use_urlencoding": self.site.config['USE_URLENCODING'],
         }
         self.site.scan_posts()
         yield self.group_task()

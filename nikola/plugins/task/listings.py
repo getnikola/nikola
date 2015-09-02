@@ -67,6 +67,7 @@ class Listings(Task):
             "index_file": site.config["INDEX_FILE"],
             "strip_indexes": site.config['STRIP_INDEXES'],
             "filters": site.config["FILTERS"],
+            "use_urlencoding": site.config['USE_URLENCODING'],
         }
 
         # Verify that no folder in LISTINGS_FOLDERS appears twice (on output side)
@@ -164,6 +165,7 @@ class Listings(Task):
                 'description': title,
                 'source_link': source_link,
                 'pagekind': ['listing'],
+                'use_urlencoding': self.kw['use_urlencoding'],
             }
             if needs_ipython_css:
                 # If someone does not have ipynb posts and only listings, we

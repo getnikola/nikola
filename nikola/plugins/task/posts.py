@@ -58,6 +58,7 @@ class RenderPosts(Task):
             "default_lang": self.site.config["DEFAULT_LANG"],
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "demote_headers": self.site.config['DEMOTE_HEADERS'],
+            "use_urlencoding": self.site.config['USE_URLENCODING'],
         }
         self.tl_changed = False
 

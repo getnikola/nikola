@@ -40,8 +40,9 @@ import natsort
 import mimetypes
 try:
     from urlparse import urlparse, urlsplit, urlunsplit, urljoin, unquote
+    from urllib import quote
 except ImportError:
-    from urllib.parse import urlparse, urlsplit, urlunsplit, urljoin, unquote  # NOQA
+    from urllib.parse import urlparse, urlsplit, urlunsplit, urljoin, unquote, quote  # NOQA
 
 try:
     import pyphen
@@ -493,6 +494,7 @@ class Nikola(object):
             'USE_FILENAME_AS_TITLE': True,
             'USE_OPEN_GRAPH': True,
             'USE_SLUGIFY': True,
+            'USE_URLENCODING': False,
             'TIMEZONE': 'UTC',
             'WRITE_TAG_CLOUD': True,
             'DEPLOY_DRAFTS': True,
@@ -1355,9 +1357,10 @@ class Nikola(object):
                 index_len = len(self.config['INDEX_FILE'])
                 if self.config['STRIP_INDEXES'] and \
                         link[-(1 + index_len):] == '/' + self.config['INDEX_FILE']:
-                    return link[:-index_len]
-                else:
-                    return link
+                    link = link[:-index_len]
+                if self.config['USE_URLENCODING']:
+                    link = quote(link.encode('utf-8'))
+                return link
             else:
                 return os.path.join(*path)
         except KeyError:
