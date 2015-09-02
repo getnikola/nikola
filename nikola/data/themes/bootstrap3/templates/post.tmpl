@@ -10,9 +10,9 @@
     <meta name="keywords" content="${post.meta('keywords')|h}">
     % endif
     %if post.description():
-    <meta name="description" itemprop="description" content="${post.description()}">
+    <meta name="description" itemprop="description" content="${post.description()|h}">
     %endif
-    <meta name="author" content="${post.author()}">
+    <meta name="author" content="${post.author()|h}">
     %if post.prev_post:
         <link rel="prev" href="${post.prev_post.permalink()}" title="${post.prev_post.title()|h}" type="text/html">
     %endif

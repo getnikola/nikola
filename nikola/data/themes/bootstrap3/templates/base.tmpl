@@ -24,11 +24,11 @@ ${template_hooks['extra_head']()}
             </button>
             <a class="navbar-brand" href="${abs_link(_link("root", None, lang))}">
             %if logo_url:
-                <img src="${logo_url}" alt="${blog_title}" id="logo">
+                <img src="${logo_url}" alt="${blog_title|h}" id="logo">
             %endif
 
             % if show_blog_title:
-                <span id="blog-title">${blog_title}</span>
+                <span id="blog-title">${blog_title|h}</span>
             % endif
             </a>
         </div><!-- /.navbar-header -->
