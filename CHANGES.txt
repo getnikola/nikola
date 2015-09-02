@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New support for online CSS and JS minifying services (Issue #1999)
 * Make <base> tag optional with USE_BASE_TAG flag (Issue #1985)
 * Render author pages (Issue #1972)
 * Atom feeds for tag lists (Issue #1686)
