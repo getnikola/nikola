@@ -280,7 +280,7 @@ def php_template_injection(data):
 
 @apply_to_text_file
 def cssminify(data):
-    """Minify CSS using http://cssminifier.com/"""
+    """Minify CSS using http://cssminifier.com/."""
     try:
         url = 'http://cssminifier.com/raw'
         _data = {'input': data}
@@ -293,7 +293,7 @@ def cssminify(data):
 
 @apply_to_text_file
 def jsminify(data):
-    """Minify JS using http://javascript-minifier.com/"""
+    """Minify JS using http://javascript-minifier.com/."""
     try:
         url = 'http://javascript-minifier.com/raw'
         _data = {'input': data}
