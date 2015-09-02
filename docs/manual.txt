@@ -1350,6 +1350,11 @@ optipng
 jpegoptim
    Compress JPEG files using `jpegoptim <http://www.kokkonen.net/tjko/projects.html>`_
 
+cssminify
+   Minify CSS using http://cssminifier.com/ (requires internet access)
+
+jsminify
+   Minify JS using http://javascript-minifier.com/ (requires internet access)
 
 You can apply filters to specific posts or pages by using the ``filters`` metadata field:
 
