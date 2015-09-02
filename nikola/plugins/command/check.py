@@ -234,7 +234,7 @@ class CommandCheck(Command):
                 target = l[2]
                 if target == "#":
                     continue
-                target, _ = urldefrag(target)
+                target = urldefrag(target)[0]
 
                 if any([urlparse(target).netloc.endswith(_) for _ in ['example.com', 'example.net', 'example.org']]):
                     self.logger.info("Not testing example address \"{0}\".".format(target))
