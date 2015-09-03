@@ -53,14 +53,20 @@ def _call_nikola_list(site, cache=None):
             return cache['files'], cache['deps']
     files = []
     deps = defaultdict(list)
-    for task in generate_tasks('render_site', site.gen_tasks('render_site', "Task", '')):
-        files.extend(task.targets)
-        for target in task.targets:
-            deps[target].extend(task.file_dep)
-    for task in generate_tasks('post_render', site.gen_tasks('render_site', "LateTask", '')):
-        files.extend(task.targets)
-        for target in task.targets:
-            deps[target].extend(task.file_dep)
+
+    def gen_tasks(post_name, stage):
+        for plugin_object in site.get_stage_plugin_objects(stage):
+            tasks, _ = site.gen_task(post_name, plugin_object)
+            for task in tasks:
+                yield task
+
+    for stage in site.get_task_stages():
+        post_name = 'stage_{0}_done'.format(stage)
+        for task in generate_tasks(post_name, gen_tasks(post_name, stage)):
+            files.extend(task.targets)
+            for target in task.targets:
+                deps[target].extend(task.file_dep)
+
     if cache is not None:
         cache['files'] = files
         cache['deps'] = deps
