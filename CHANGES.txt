@@ -29,6 +29,7 @@ Features
 Bugfixes
 --------
 
+* Make nikola tabcompletion work outside sites (Issue #1983)
 * Fix display of categories list in bootstrap theme (Issue #2002)
 * If webassets is not installed, use unbundled assets (Issue #1992)
 * Check links in Atom and sitemap files (Issue #1993) 
