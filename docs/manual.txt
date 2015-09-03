@@ -4,6 +4,7 @@
 .. link:
 .. description:
 .. tags: mathjax
+.. author: The Nikola Team
 
 The Nikola Handbook
 ===================

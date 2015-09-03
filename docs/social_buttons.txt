@@ -4,6 +4,7 @@
 .. tags:
 .. link:
 .. description:
+.. author: The Nikola Team
 
 Using Alternative Social Buttons with Nikola
 ============================================

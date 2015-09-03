@@ -2,6 +2,7 @@
 .. slug: contact
 .. date: 1970-01-01 15:00:00
 .. description: Get help using Nikola, or contact us.
+.. author: The Nikola Team
 
 :Version: 7.5.1
 

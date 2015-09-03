@@ -4,6 +4,7 @@
 .. link:
 .. description:
 .. title: Creating a Site (Not a Blog) with Nikola
+.. author: The Nikola Team
 
 Creating a Site (Not a Blog) with Nikola
 ========================================
