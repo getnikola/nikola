@@ -5,10 +5,10 @@
     {{ super() }}
     {% if translations|length > 1 and generate_rss %}
         {% for language in translations|sort %}
-            <link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for {{ kind }} {{ tag }} ({{ language }})" href="{{ _link(kind + "_rss", tag, language) }}">
+            <link rel="alternate" type="application/rss+xml" title="RSS for {{ kind }} {{ tag }} ({{ language }})" href="{{ _link(kind + "_rss", tag, language) }}">
         {% endfor %}
     {% elif generate_rss %}
-        <link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for {{ kind }} {{ tag }}" href="{{ _link(kind + "_rss", tag) }}">
+        <link rel="alternate" type="application/rss+xml" title="RSS for {{ kind }} {{ tag }}" href="{{ _link(kind + "_rss", tag) }}">
     {% endif %}
 {% endblock %}
 
