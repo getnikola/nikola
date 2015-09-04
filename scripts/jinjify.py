@@ -14,6 +14,7 @@ dumb_replacements = [
     ["{% if any(post.is_mathjax for post in posts) %}", '{% if posts|selectattr("is_mathjax")|list %}'],
     ["json.dumps(title)", "title|tojson"],
     ["{{ parent.extra_head() }}", "{{ super() }}"],
+    ["{{ parent.content() }}", "{{ super() }}"],
     ["prefix='\\", "prefix='"],
     ["og: http://ogp.me/ns# \\", "og: http://ogp.me/ns#"],
     ["article: http://ogp.me/ns/article# \\", "article: http://ogp.me/ns/article#"],

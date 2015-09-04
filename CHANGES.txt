@@ -6,6 +6,8 @@ Features
 
 * Made TAG_PATH translatable (Issue #1914)
 * Made CATEGORY_PATH translatable (Issue #1914)
+* Display post counts for archive links (Issue #2011)
+* Document link/path handlers (Issue #2008)
 
 Bugfixes
 --------
