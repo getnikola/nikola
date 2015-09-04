@@ -811,7 +811,7 @@ class Nikola(object):
                 # Remove compiler extensions we don't need
                 if p[-1].details.has_option('Nikola', 'compiler') and p[-1].details.get('Nikola', 'compiler') in self.disabled_compilers:
                     bad_candidates.add(p)
-                    utils.LOGGER.debug('Not loading comopiler extension {}', p[-1].name)
+                    utils.LOGGER.debug('Not loading compiler extension {}', p[-1].name)
         self.plugin_manager._candidates = list(set(self.plugin_manager._candidates) - bad_candidates)
         self.plugin_manager.loadPlugins()
 
@@ -1365,7 +1365,9 @@ class Nikola(object):
             return ""
 
     def post_path(self, name, lang):
-        """Link to the destination of an element in the POSTS/PAGES settings. For example:
+        """Link to the destination of an element in the POSTS/PAGES settings.
+
+        Example:
 
         link://post_path/posts => /blog
         """
@@ -1374,10 +1376,12 @@ class Nikola(object):
                               self.config['INDEX_FILE']] if _f]
 
     def root_path(self, name, lang):
-        """Link to the current language's root. For example:
+        """Link to the current language's root.
+
+        Example:
 
         link://root_path => /
-        
+
         link://root_path => /translations/spanish/
         """
         d = self.config['TRANSLATIONS'][lang]
@@ -1387,7 +1391,9 @@ class Nikola(object):
             return []
 
     def slug_path(self, name, lang):
-        """A link to a post with given slug, if not ambiguous. For example:
+        """A link to a post with given slug, if not ambiguous.
+
+        Example:
 
         links://slug/yellow-camaro => /posts/cars/awful/yellow-camaro/index.html
         """
@@ -1400,7 +1406,9 @@ class Nikola(object):
             return [_f for _f in results[0].permalink(lang).split('/') if _f]
 
     def filename_path(self, name, lang):
-        """Link to post or story by source filename. For example:
+        """Link to post or story by source filename.
+
+        Example:
 
         link://filename/manual.txt => /docs/handbook.html
         """

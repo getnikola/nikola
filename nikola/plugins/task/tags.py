@@ -394,7 +394,9 @@ class RenderTags(Task):
         return name
 
     def tag_index_path(self, name, lang):
-        """A link to the tag index. For example:
+        """A link to the tag index.
+
+        Example:
 
         link://tag_index => /tags/index.html
         """
@@ -403,7 +405,9 @@ class RenderTags(Task):
                               self.site.config['INDEX_FILE']] if _f]
 
     def category_index_path(self, name, lang):
-        """A link to the category index. For example:
+        """A link to the category index.
+
+        Example:
 
         link://category_index => /categories/index.html
         """
@@ -412,7 +416,9 @@ class RenderTags(Task):
                               self.site.config['INDEX_FILE']] if _f]
 
     def tag_path(self, name, lang):
-        """A link to a tag's page. For example:
+        """A link to a tag's page.
+
+        Example:
 
         link://tag/cats => /tags/cats.html
         """
@@ -429,7 +435,9 @@ class RenderTags(Task):
                 self.slugify_tag_name(name) + ".html"] if _f]
 
     def tag_atom_path(self, name, lang):
-        """A link to a tag's Atom feed. For example:
+        """A link to a tag's Atom feed.
+
+        Example:
 
         link://tag_atom/cats => /tags/cats.atom
         """
@@ -438,7 +446,9 @@ class RenderTags(Task):
                 _f]
 
     def tag_rss_path(self, name, lang):
-        """A link to a tag's RSS feed. For example:
+        """A link to a tag's RSS feed.
+
+        Example:
 
         link://tag_rss/cats => /tags/cats.xml
         """
@@ -462,7 +472,9 @@ class RenderTags(Task):
         return path
 
     def category_path(self, name, lang):
-        """A link to a category. For example:
+        """A link to a category.
+
+        Example:
 
         link://category/dogs => /categories/dogs.html
         """
@@ -476,7 +488,9 @@ class RenderTags(Task):
                     _f] + self._add_extension(self.slugify_category_name(name), ".html")
 
     def category_atom_path(self, name, lang):
-        """A link to a category's Atom feed. For example:
+        """A link to a category's Atom feed.
+
+        Example:
 
         link://category_atom/dogs => /categories/dogs.atom
         """
@@ -485,7 +499,9 @@ class RenderTags(Task):
                 _f] + self._add_extension(self.slugify_category_name(name), ".atom")
 
     def category_rss_path(self, name, lang):
-        """A link to a category's RSS feed. For example:
+        """A link to a category's RSS feed.
+
+        Example:
 
         link://category_rss/dogs => /categories/dogs.xml
         """

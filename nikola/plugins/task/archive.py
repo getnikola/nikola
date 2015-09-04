@@ -223,7 +223,9 @@ class Archive(Task):
                 yield self._prepare_task(kw, None, lang, None, items, "list.tmpl", kw["messages"][lang]["Archive"])
 
     def archive_path(self, name, lang, is_feed=False):
-        """Link to archive path, name is the year. For example:
+        """Link to archive path, name is the year.
+
+        Example:
 
         link://archive/2013 => /archives/2013/index.html
         """
@@ -244,7 +246,9 @@ class Archive(Task):
                                   archive_file] if _f]
 
     def archive_atom_path(self, name, lang):
-        """Link to atom archive path, name is the year. For example:
+        """Link to atom archive path, name is the year.
+
+        Example:
 
         link://archive_atom/2013 => /archives/2013/index.atom
         """

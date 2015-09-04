@@ -217,7 +217,9 @@ class Indexes(Task):
                         yield task
 
     def index_path(self, name, lang, is_feed=False):
-        """Link to a numbered index. For example:
+        """Link to a numbered index.
+
+        Example:
 
         link://index/3 => /index-3.html
         """
@@ -237,7 +239,9 @@ class Indexes(Task):
                                                      extension=extension)
 
     def index_section_path(self, name, lang, is_feed=False):
-        """Link to the index for a section. For example:
+        """Link to the index for a section.
+
+        Example:
 
         link://section_index/cars => /cars/index.html
         """
@@ -258,14 +262,18 @@ class Indexes(Task):
                                                      extension=extension)
 
     def index_atom_path(self, name, lang):
-        """Link to a numbered Atom index. For example:
+        """Link to a numbered Atom index.
+
+        Example:
 
         link://index_atom/3 => /index-3.atom
         """
         return self.index_path(name, lang, is_feed=True)
 
     def index_section_atom_path(self, name, lang):
-        """Link to the Atom index for a section. For example:
+        """Link to the Atom index for a section.
+
+        Example:
 
         link://section_index_atom/cars => /cars/index.atom
         """
