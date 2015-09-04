@@ -8,8 +8,11 @@
     </header>
     {% if items %}
     <ul class="postlist">
-    {% for text, link in items %}
+    {% for text, link, count in items %}
         <li><a href="{{ link }}">{{ text }}</a>
+        {% if count %}
+            ({{ count }})
+        {% endif %}
     {% endfor %}
     </ul>
     {% else %}

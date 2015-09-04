@@ -16,6 +16,6 @@
             <p class="feedlink"><a href="{{ _link('section_index_atom', posts[0].section_slug()) }}" type="application/atom+xml">{{ messages('Updates') }}</a></p>
         {% endif %}
     </header>    
-    {{ parent.content() }}
+    {{ super() }}
 </article>
 {% endblock %}
