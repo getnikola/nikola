@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Document link/path handlers (Issue #2008)
+
 Bugfixes
 --------
 
