@@ -257,9 +257,9 @@ class CommandCheck(Command):
                     if not check_remote or parsed.scheme not in ["http", "https"]:
                         continue
                     if target in self.checked_remote_targets:  # already checked this exact target
-                        if self.checked_remote_targets[target] in [301, 307]:
+                        if self.checked_remote_targets[target] in [301, 308]:
                             self.logger.warn("Remote link PERMANENTLY redirected in {0}: {1} [Error {2}]".format(filename, target, self.checked_remote_targets[target]))
-                        elif self.checked_remote_targets[target] in [302, 308]:
+                        elif self.checked_remote_targets[target] in [302, 307]:
                             self.logger.info("Remote link temporarily redirected in {1}: {2} [HTTP: {3}]".format(filename, target, self.checked_remote_targets[target]))
                         elif self.checked_remote_targets[target] > 399:
                             self.logger.error("Broken link in {0}: {1} [Error {2}]".format(filename, target, self.checked_remote_targets[target]))
