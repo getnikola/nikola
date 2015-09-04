@@ -1,3 +1,11 @@
+New in master
+=============
+
+Bugfixes
+--------
+
+* Don't add stories to author pages (Issue #2007)
+
 New in v7.7.0
 =============
 
