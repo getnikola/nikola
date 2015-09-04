@@ -31,6 +31,7 @@ import io
 import datetime
 import dateutil.tz
 import os
+import sys
 try:
     from urlparse import urljoin, urlparse
     import robotparser as robotparser
@@ -224,8 +225,12 @@ class Sitemap(LateTask):
             for rule in kw["robots_exclusions"]:
                 robot = robotparser.RobotFileParser()
                 robot.parse(["User-Agent: *", "Disallow: {0}".format(rule)])
-                if not robot.can_fetch("*", '/' + path):
-                    return False  # not robot food
+                if sys.version_info[0] == 3:
+                    if not robot.can_fetch("*", '/' + path):
+                        return False  # not robot food
+                else:
+                    if not robot.can_fetch("*", ('/' + path).encode('utf-8')):
+                        return False  # not robot food
             return True
 
         def write_sitemap():

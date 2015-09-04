@@ -1,3 +1,15 @@
+New in master
+=============
+
+Features
+--------
+
+Bugfixes
+--------
+
+* Use Unicode strings for WordPress comment headers (Issue #2019)
+* Don't add stories to author pages (Issue #2007)
+
 New in v7.7.0
 =============
 

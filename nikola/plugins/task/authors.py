@@ -304,5 +304,6 @@ class RenderAuthors(Task):
         if self.posts_per_author is None:
             self.posts_per_author = defaultdict(list)
             for post in self.site.timeline:
-                self.posts_per_author[post.author()].append(post)
+                if post.is_post:
+                    self.posts_per_author[post.author()].append(post)
         return self.posts_per_author

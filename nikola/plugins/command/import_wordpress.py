@@ -50,7 +50,7 @@ except ImportError:
 
 from nikola.plugin_categories import Command
 from nikola import utils
-from nikola.utils import req_missing
+from nikola.utils import req_missing, unicode_str
 from nikola.plugins.basic_import import ImportMixin, links
 from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
 from nikola.plugins.command.init import SAMPLE_CONF, prepare_config, format_default_translations_config
@@ -689,7 +689,7 @@ class CommandImportWordpress(Command, ImportMixin):
         elif approved == 'spam' or approved == 'trash':
             pass
         else:
-            LOGGER.warn("Unknown comment approved status: " + str(approved))
+            LOGGER.warn("Unknown comment approved status: {0}".format(approved))
         parent = int(get_text_tag(comment, "{{{0}}}comment_parent".format(wordpress_namespace), 0))
         if parent == 0:
             parent = None
@@ -710,7 +710,7 @@ class CommandImportWordpress(Command, ImportMixin):
             """Write comment header line."""
             if header_content is None:
                 return
-            header_content = str(header_content).replace('\n', ' ')
+            header_content = unicode_str(header_content).replace('\n', ' ')
             line = '.. ' + header_field + ': ' + header_content + '\n'
             fd.write(line.encode('utf8'))
 
@@ -911,7 +911,7 @@ class CommandImportWordpress(Command, ImportMixin):
                         comments.append(comment)
 
                 for comment in comments:
-                    comment_filename = slug + "." + str(comment['id']) + ".wpcomment"
+                    comment_filename = "{0}.{1}.wpcomment".format(slug, comment['id'])
                     self._write_comment(os.path.join(self.output_folder, out_folder, comment_filename), comment)
 
             return (out_folder, slug)
