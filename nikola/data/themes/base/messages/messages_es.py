@@ -23,7 +23,7 @@ MESSAGES = {
     "Posts by %s": "",
     "Posts for year %s": "Publicaciones del año %s",
     "Posts for {month} {day}, {year}": "Publicaciones de {day}, {month}, {year}",
-    "Posts for {month} {year}": "Posts de {month} {year}",
+    "Posts for {month} {year}": "Publicaciones de {month} {year}",
     "Previous post": "Publicación anterior",
     "Publication date": "Fecha de publicación",
     "RSS feed": "Canal RSS",
