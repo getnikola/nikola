@@ -6,7 +6,6 @@ n.init_plugins()
 
 print """.. title: Path Handlers for Nikola
 .. slug: path-handlers
-.. tags: mathjax
 .. author: The Nikola Team
 
 Nikola supports special links with the syntax ``link://kind/name``. Here is
