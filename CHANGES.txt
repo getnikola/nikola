@@ -1553,22 +1553,4 @@ Features
 * Image descriptions in galleries
 * Image exclusion in galleries
 * Special "draft" tag
-* Pretty code listings ("code galleries")
-* Page descriptions
-* Easy theme tuning via Bootswatch
-* Support for WebAssets bundles
-* "Filters" for powerful file post-processing
-
-Bugfixes
---------
-
-* Improved HTML output
-* Support multiple time formats in post metadata
-* Slugify tag names for URLs
-* Archive path and filename configurable
-* Galleries sorted by date (supports EXIF)
-* Rotate gallery thumbnails (EXIF)
-* Tag feeds in tag pages
-* Colorbox support in restructured text figures
-* Fix for content displaying too wide
-* Changelog
+* Pretty code l
