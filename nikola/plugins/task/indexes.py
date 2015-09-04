@@ -204,7 +204,8 @@ class Indexes(Task):
                             should_render = False
                         else:
                             context["items"].append((post.title(lang),
-                                                     post.permalink(lang)))
+                                                     post.permalink(lang),
+                                                     None))
 
                     if should_render:
                         task = self.site.generic_post_list_renderer(lang, post_list,
