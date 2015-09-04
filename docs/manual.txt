@@ -207,6 +207,15 @@ To set Nikola up and create your first site, read the `Getting Started Guide <ht
 Creating a Blog Post
 --------------------
 
+.. sidebar:: Magic Links
+
+   You will want to do things like "link from one post to another" or "link to an image gallery",
+   etc. Sure, you can just figure out the URLs for each thing and use that. Or you can use
+   Nikola's special link URLs. Those are done using the syntax ``link://kind/name`` and
+   a full list of the included ones is `here <link://slug/path-handlers>`__ (BTW, I linked
+   to that using ``link://slug/path-handlers``)
+
+
 To create a new post, the easiest way is to run ``nikola new_post``. You  will
 be asked for a title for your post, and it will tell you where the post's file
 is located.
@@ -637,7 +646,7 @@ Categories and tags use simple lists by default that show only titles and
 dates; however, you can switch them to full indexes by using
 ``CATEGORY_PAGES_ARE_INDEXES`` and ``TAG_PAGES_ARE_INDEXES``, respectively.
 
-Something similar happens with authors. To use full indexes in authors, set 
+Something similar happens with authors. To use full indexes in authors, set
 ``AUTHOR_PAGES_ARE_INDEXES`` to ``True``.
 
 Static indexes

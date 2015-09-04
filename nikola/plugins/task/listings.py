@@ -255,7 +255,16 @@ class Listings(Task):
                         }, self.kw["filters"])
 
     def listing_path(self, namep, lang):
-        """Return path to a listing."""
+        """A link to a listing.
+
+        It will try to use the file name if it's not ambiguous, or the file path.
+
+        Example:
+
+        link://listing/hello.py => /listings/tutorial/hello.py.html
+
+        link://listing/tutorial/hello.py => /listings/tutorial/hello.py.html
+        """
         namep = namep.replace('/', os.sep)
         nameh = namep + '.html'
         for name in (namep, nameh):

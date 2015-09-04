@@ -252,13 +252,23 @@ class RenderAuthors(Task):
         return name
 
     def author_index_path(self, name, lang):
-        """Return path to the author index."""
+        """Link to the author's index.
+
+        Example:
+
+        link://authors/ => /authors/index.html
+        """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                               self.site.config['AUTHOR_PATH'],
                               self.site.config['INDEX_FILE']] if _f]
 
     def author_path(self, name, lang):
-        """Return path to an author."""
+        """Link to an author's page.
+
+        Example:
+
+        link://author/joe => /authors/joe.html
+        """
         if self.site.config['PRETTY_URLS']:
             return [_f for _f in [
                 self.site.config['TRANSLATIONS'][lang],
@@ -272,13 +282,23 @@ class RenderAuthors(Task):
                 self.slugify_author_name(name) + ".html"] if _f]
 
     def author_atom_path(self, name, lang):
-        """Return path to an author Atom feed."""
+        """Link to an author's Atom feed.
+
+        Example:
+
+        link://author_atom/joe => /authors/joe.atom
+        """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                               self.site.config['AUTHOR_PATH'], self.slugify_author_name(name) + ".atom"] if
                 _f]
 
     def author_rss_path(self, name, lang):
-        """Return path to an author RSS feed."""
+        """Link to an author's RSS feed.
+
+        Example:
+
+        link://author_rss/joe => /authors/joe.rss
+        """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                               self.site.config['AUTHOR_PATH'], self.slugify_author_name(name) + ".xml"] if
                 _f]

@@ -394,19 +394,34 @@ class RenderTags(Task):
         return name
 
     def tag_index_path(self, name, lang):
-        """Return path to the tag index."""
+        """A link to the tag index.
+
+        Example:
+
+        link://tag_index => /tags/index.html
+        """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                               self.site.config['TAG_PATH'],
                               self.site.config['INDEX_FILE']] if _f]
 
     def category_index_path(self, name, lang):
-        """Return path to the category index."""
+        """A link to the category index.
+
+        Example:
+
+        link://category_index => /categories/index.html
+        """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                               self.site.config['CATEGORY_PATH'],
                               self.site.config['INDEX_FILE']] if _f]
 
     def tag_path(self, name, lang):
-        """Return path to a tag."""
+        """A link to a tag's page.
+
+        Example:
+
+        link://tag/cats => /tags/cats.html
+        """
         if self.site.config['PRETTY_URLS']:
             return [_f for _f in [
                 self.site.config['TRANSLATIONS'][lang],
@@ -420,13 +435,23 @@ class RenderTags(Task):
                 self.slugify_tag_name(name) + ".html"] if _f]
 
     def tag_atom_path(self, name, lang):
-        """Return path to a tag Atom feed."""
+        """A link to a tag's Atom feed.
+
+        Example:
+
+        link://tag_atom/cats => /tags/cats.atom
+        """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                               self.site.config['TAG_PATH'], self.slugify_tag_name(name) + ".atom"] if
                 _f]
 
     def tag_rss_path(self, name, lang):
-        """Return path to a tag RSS feed."""
+        """A link to a tag's RSS feed.
+
+        Example:
+
+        link://tag_rss/cats => /tags/cats.xml
+        """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                               self.site.config['TAG_PATH'], self.slugify_tag_name(name) + ".xml"] if
                 _f]
@@ -447,7 +472,12 @@ class RenderTags(Task):
         return path
 
     def category_path(self, name, lang):
-        """Return path to a category."""
+        """A link to a category.
+
+        Example:
+
+        link://category/dogs => /categories/dogs.html
+        """
         if self.site.config['PRETTY_URLS']:
             return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                                   self.site.config['CATEGORY_PATH']] if
@@ -458,13 +488,23 @@ class RenderTags(Task):
                     _f] + self._add_extension(self.slugify_category_name(name), ".html")
 
     def category_atom_path(self, name, lang):
-        """Return path to a category Atom feed."""
+        """A link to a category's Atom feed.
+
+        Example:
+
+        link://category_atom/dogs => /categories/dogs.atom
+        """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                               self.site.config['CATEGORY_PATH']] if
                 _f] + self._add_extension(self.slugify_category_name(name), ".atom")
 
     def category_rss_path(self, name, lang):
-        """Return path to a category RSS feed."""
+        """A link to a category's RSS feed.
+
+        Example:
+
+        link://category_rss/dogs => /categories/dogs.xml
+        """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                               self.site.config['CATEGORY_PATH']] if
                 _f] + self._add_extension(self.slugify_category_name(name), ".xml")
