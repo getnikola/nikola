@@ -532,8 +532,7 @@ class InvariantBuildTest(EmptyBuildTest):
         src1 = os.path.join(os.path.dirname(__file__), 'data', '1-nolinks.rst')
         dst1 = os.path.join(self.target_dir, 'posts', '1.rst')
         shutil.copy(src1, dst1)
-        os.system('rm "{0}/stories/creating-a-theme.rst" "{0}/stories/extending.txt" "{0}/stories/internals.txt" "{0}/stories/manual.rst" "{0}/stories/social_buttons.txt" "{0}/stories/theming.rst" "{0}/stories/upgrading-to-v6.txt"'.format(self.target_dir))
-
+        os.system('rm "{0}/stories/creating-a-theme.rst" "{0}/stories/extending.txt" "{0}/stories/internals.txt" "{0}/stories/manual.rst" "{0}/stories/social_buttons.txt" "{0}/stories/theming.rst" "{0}/stories/path_handlers.txt"'.format(self.target_dir))
     def test_invariance(self):
         """Compare the output to the canonical output."""
         if sys.version_info[0:2] != (2, 7):
