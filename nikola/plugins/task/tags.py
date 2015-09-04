@@ -396,7 +396,7 @@ class RenderTags(Task):
     def tag_index_path(self, name, lang):
         """Return path to the tag index."""
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['TAG_PATH'],
+                              self.site.config['TAG_PATH'][lang],
                               self.site.config['INDEX_FILE']] if _f]
 
     def category_index_path(self, name, lang):
@@ -410,25 +410,25 @@ class RenderTags(Task):
         if self.site.config['PRETTY_URLS']:
             return [_f for _f in [
                 self.site.config['TRANSLATIONS'][lang],
-                self.site.config['TAG_PATH'],
+                self.site.config['TAG_PATH'][lang],
                 self.slugify_tag_name(name),
                 self.site.config['INDEX_FILE']] if _f]
         else:
             return [_f for _f in [
                 self.site.config['TRANSLATIONS'][lang],
-                self.site.config['TAG_PATH'],
+                self.site.config['TAG_PATH'][lang],
                 self.slugify_tag_name(name) + ".html"] if _f]
 
     def tag_atom_path(self, name, lang):
         """Return path to a tag Atom feed."""
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['TAG_PATH'], self.slugify_tag_name(name) + ".atom"] if
+                              self.site.config['TAG_PATH'][lang], self.slugify_tag_name(name) + ".atom"] if
                 _f]
 
     def tag_rss_path(self, name, lang):
         """Return path to a tag RSS feed."""
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['TAG_PATH'], self.slugify_tag_name(name) + ".xml"] if
+                              self.site.config['TAG_PATH'][lang], self.slugify_tag_name(name) + ".xml"] if
                 _f]
 
     def slugify_category_name(self, name):
@@ -450,21 +450,21 @@ class RenderTags(Task):
         """Return path to a category."""
         if self.site.config['PRETTY_URLS']:
             return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                                  self.site.config['CATEGORY_PATH']] if
+                                  self.site.config['CATEGORY_PATH'][lang]] if
                     _f] + self.slugify_category_name(name) + [self.site.config['INDEX_FILE']]
         else:
             return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                                  self.site.config['CATEGORY_PATH']] if
+                                  self.site.config['CATEGORY_PATH'][lang]] if
                     _f] + self._add_extension(self.slugify_category_name(name), ".html")
 
     def category_atom_path(self, name, lang):
         """Return path to a category Atom feed."""
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['CATEGORY_PATH']] if
+                              self.site.config['CATEGORY_PATH'][lang]] if
                 _f] + self._add_extension(self.slugify_category_name(name), ".atom")
 
     def category_rss_path(self, name, lang):
         """Return path to a category RSS feed."""
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['CATEGORY_PATH']] if
+                              self.site.config['CATEGORY_PATH'][lang]] if
                 _f] + self._add_extension(self.slugify_category_name(name), ".xml")
