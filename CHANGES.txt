@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Allow inheriting templates with theme name (Issue #1814)
 * Display post counts for archive links (Issue #2011)
 * Document link/path handlers (Issue #2008)
 
