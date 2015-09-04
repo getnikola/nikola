@@ -137,14 +137,15 @@ class Galleries(Task, ImageProcessor):
                 [self.site.config['INDEX_FILE']] if _f]
 
     def gallery_global_path(self, name, lang):
-        """Link to the global gallery path (in the site root), which contains all the images
-        in galleries (there is only one copy of an image on multilingual blogs)
+        """Link to the global gallery path, which contains all the images in galleries.
+
+        There is only one copy of an image on multilingual blogs, in the site root.
 
         link://gallery_global/london => /galleries/trips/london/index.html
 
         link://gallery_global/trips/london => /galleries/trips/london/index.html
 
-        (a gallery link could lead to eg. /en/galleries/trips/london/index.html)
+        (a ``gallery`` link could lead to eg. /en/galleries/trips/london/index.html)
         """
         gallery_path = self._find_gallery_path(name)
         return [_f for _f in gallery_path.split(os.sep) +
