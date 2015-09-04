@@ -674,7 +674,7 @@ class Nikola(object):
         if not self.config.get('COPY_SOURCES'):
             self.config['SHOW_SOURCELINK'] = False
 
-        if self.config['CATEGORY_PATH'] is None:
+        if self.config['CATEGORY_PATH']._inp is None:
             self.config['CATEGORY_PATH'] = self.config['TAG_PATH']
         if self.config['CATEGORY_PAGES_ARE_INDEXES'] is None:
             self.config['CATEGORY_PAGES_ARE_INDEXES'] = self.config['TAG_PAGES_ARE_INDEXES']
