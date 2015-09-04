@@ -287,7 +287,7 @@ class RenderAuthors(Task):
                 _f]
 
     def author_rss_path(self, name, lang):
-        """Link to an author's RSS feed. For example::
+        """Link to an author's RSS feed. For example:
 
         link://author_rss/joe => /authors/joe.rss
         """
