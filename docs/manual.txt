@@ -207,6 +207,15 @@ To set Nikola up and create your first site, read the `Getting Started Guide <ht
 Creating a Blog Post
 --------------------
 
+.. sidebar:: Magic Links
+
+   You will want to do things like "link from one post to another" or "link to an image gallery",
+   etc. Sure, you can just figure out the URLs for each thing and use that. Or you can use
+   Nikola's special link URLs. Those are done using the syntax ``link://kind/name`` and
+   a full list of the included ones is `here <link://slug/path-handlers>`__ (BTW, I linked
+   to that using ``link://slug/path-handlers``)
+
+
 To create a new post, the easiest way is to run ``nikola new_post``. You  will
 be asked for a title for your post, and it will tell you where the post's file
 is located.
@@ -270,15 +279,6 @@ will become a CSS class of the ``<article>`` element for this post.  Defaults to
 
 You can add your own metadata fields in the same manner, if you use a theme that
 supports them (for example: ``.. author: John Doe``)
-
-.. sidebar:: Magic Links
-
-   You will want to do things like "link from one post to another" or "link to an image gallery",
-   etc. Sure, you can just figure out the URLs for each thing and use that. Or you can use
-   Nikola's special links. Those are done using the syntax ``link://kind/name`` and
-   a full list of the included ones is `here <link://slug/path-handlers>`__ (BTW, I linked
-   to that using ``link://slug/path-handlers``
-
 
 To add these metadata fields to all new posts by default, you can set the
 variable ``ADDITIONAL_METADATA`` in your configuration.  For example, you can
