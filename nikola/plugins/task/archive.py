@@ -175,10 +175,10 @@ class Archive(Task):
                 if not kw["create_monthly_archive"] or kw["create_full_archives"]:
                     yield self._generate_posts_task(kw, year, lang, posts, title, deps_translatable)
                 else:
-                    months = set([(m.split('/')[1], self.site.link("archive", m, lang)) for m in self.site.posts_per_month.keys() if m.startswith(str(year))])
+                    months = set([(m.split('/')[1], self.site.link("archive", m, lang), len(self.site.posts_per_month[m])) for m in self.site.posts_per_month.keys() if m.startswith(str(year))])
                     months = sorted(list(months))
                     months.reverse()
-                    items = [[nikola.utils.LocaleBorg().get_month_name(int(month), lang), link] for month, link in months]
+                    items = [[nikola.utils.LocaleBorg().get_month_name(int(month), lang), link, count] for month, link, count in months]
                     yield self._prepare_task(kw, year, lang, None, items, "list.tmpl", title, deps_translatable)
 
             if not kw["create_monthly_archive"] and not kw["create_full_archives"] and not kw["create_daily_archive"]:
@@ -219,7 +219,7 @@ class Archive(Task):
             years.sort(reverse=True)
             kw['years'] = years
             for lang in kw["translations"]:
-                items = [(y, self.site.link("archive", y, lang)) for y in years]
+                items = [(y, self.site.link("archive", y, lang), len(self.site.posts_per_year[y])) for y in years]
                 yield self._prepare_task(kw, None, lang, None, items, "list.tmpl", kw["messages"][lang]["Archive"])
 
     def archive_path(self, name, lang, is_feed=False):
