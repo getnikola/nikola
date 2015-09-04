@@ -1365,13 +1365,20 @@ class Nikola(object):
             return ""
 
     def post_path(self, name, lang):
-        """Handle post_path paths."""
+        """Link to the destination of an element in the POSTS/PAGES settings. For example:
+
+        link://post_path/posts => /blog
+        """
         return [_f for _f in [self.config['TRANSLATIONS'][lang],
                               os.path.dirname(name),
                               self.config['INDEX_FILE']] if _f]
 
     def root_path(self, name, lang):
-        """Handle root_path paths."""
+        """Link to the current language's root. For example:
+
+        link://root_path => /
+        link://root_path => /translations/spanish/
+        """
         d = self.config['TRANSLATIONS'][lang]
         if d:
             return [d, '']
@@ -1379,7 +1386,10 @@ class Nikola(object):
             return []
 
     def slug_path(self, name, lang):
-        """Handle slug paths."""
+        """A link to a post with given slug, if not ambiguous. For example:
+
+        links://slug/yellow-camaro => /posts/cars/awful/yellow-camaro/index.html
+        """
         results = [p for p in self.timeline if p.meta('slug') == name]
         if not results:
             utils.LOGGER.warning("Cannot resolve path request for slug: {0}".format(name))
@@ -1389,7 +1399,10 @@ class Nikola(object):
             return [_f for _f in results[0].permalink(lang).split('/') if _f]
 
     def filename_path(self, name, lang):
-        """Handle filename paths."""
+        """Link to post or story by source filename. For example:
+
+        link://filename/manual.txt => /docs/handbook.html
+        """
         results = [p for p in self.timeline if p.source_path == name]
         if not results:
             utils.LOGGER.warning("Cannot resolve path request for filename: {0}".format(name))
