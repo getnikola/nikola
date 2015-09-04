@@ -223,7 +223,10 @@ class Archive(Task):
                 yield self._prepare_task(kw, None, lang, None, items, "list.tmpl", kw["messages"][lang]["Archive"])
 
     def archive_path(self, name, lang, is_feed=False):
-        """Return archive paths."""
+        """Link to archive path, name is the year. For example:
+
+        link://archive/2013 => /archives/2013/index.html
+        """
         if is_feed:
             extension = ".atom"
             archive_file = os.path.splitext(self.site.config['ARCHIVE_FILENAME'])[0] + extension
@@ -241,5 +244,8 @@ class Archive(Task):
                                   archive_file] if _f]
 
     def archive_atom_path(self, name, lang):
-        """Return Atom archive paths."""
+        """Link to atom archive path, name is the year. For example:
+
+        link://archive_atom/2013 => /archives/2013/index.atom
+        """
         return self.archive_path(name, lang, is_feed=True)

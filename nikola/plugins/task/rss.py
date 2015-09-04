@@ -106,6 +106,9 @@ class GenerateRSS(Task):
             yield utils.apply_filters(task, kw['filters'])
 
     def rss_path(self, name, lang):
-        """Return RSS path."""
+        """A link to the RSS feed path. For example:
+
+        link://rss => /blog/rss.xml
+        """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                               self.site.config['RSS_PATH'], 'rss.xml'] if _f]

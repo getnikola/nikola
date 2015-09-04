@@ -122,20 +122,36 @@ class Galleries(Task, ImageProcessor):
         sys.exit(1)
 
     def gallery_path(self, name, lang):
-        """Return a gallery path."""
+        """Link to an image gallery's path.
+
+        It will try to find a gallery with that name if it's not ambiguous
+        or with that path. For example:
+
+        link://gallery/london => /galleries/trips/london/index.html
+
+        link://gallery/trips/london => /galleries/trips/london/index.html
+        """
         gallery_path = self._find_gallery_path(name)
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
                 gallery_path.split(os.sep) +
                 [self.site.config['INDEX_FILE']] if _f]
 
     def gallery_global_path(self, name, lang):
-        """Return the global gallery path, which contains images."""
+        """Link to the global gallery path, which contains all the images."""
         gallery_path = self._find_gallery_path(name)
         return [_f for _f in gallery_path.split(os.sep) +
                 [self.site.config['INDEX_FILE']] if _f]
 
     def gallery_rss_path(self, name, lang):
-        """Return path to the RSS file for a gallery."""
+        """Link to an image gallery's RSS feed.
+
+        It will try to find a gallery with that name if it's not ambiguous
+        or with that path. For example:
+
+        link://gallery_rss/london => /galleries/trips/london/rss.xml
+
+        link://gallery_rss/trips/london => /galleries/trips/london/rss.xml
+        """
         gallery_path = self._find_gallery_path(name)
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
                 gallery_path.split(os.sep) +
