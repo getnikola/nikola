@@ -552,6 +552,7 @@ class Nikola(object):
                                       'INDEXES_PRETTY_PAGE_URL',
                                       # PATH options (Issue #1914)
                                       'TAG_PATH',
+                                      'CATEGORY_PATH',
                                       )
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
