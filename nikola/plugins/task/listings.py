@@ -259,6 +259,7 @@ class Listings(Task):
         it's not ambiguous, or the file path. For example:
 
         link://listing/hello.py => /listings/tutorial/hello.py.html
+        
         link://listing/tutorial/hello.py => /listings/tutorial/hello.py.html
         """
         namep = namep.replace('/', os.sep)

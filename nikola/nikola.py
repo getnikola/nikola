@@ -1377,6 +1377,7 @@ class Nikola(object):
         """Link to the current language's root. For example:
 
         link://root_path => /
+        
         link://root_path => /translations/spanish/
         """
         d = self.config['TRANSLATIONS'][lang]

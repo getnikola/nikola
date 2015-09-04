@@ -1,0 +1,183 @@
+.. title: Path Handlers for Nikola
+.. slug: path-handlers
+.. tags: mathjax
+.. author: The Nikola Team
+
+Nikola supports special links with the syntax ``link://kind/name``. Here is
+the description for all the supported kinds.
+
+
+section_index_atom
+    Link to the Atom index for a section. For example:
+    
+    link://section_index_atom/cars => /cars/index.atom
+    
+
+tag
+    A link to a tag's page. For example:
+    
+    link://tag/cats => /tags/cats.html
+    
+
+author_rss
+    Link to an author's RSS feed. For example::
+    
+    link://author_rss/joe => /authors/joe.rss
+    
+
+archive
+    Link to archive path, name is the year. For example:
+    
+    link://archive/2013 => /archives/2013/index.html
+    
+
+tag_rss
+    A link to a tag's RSS feed. For example:
+    
+    link://tag_rss/cats => /tags/cats.xml
+    
+
+category
+    A link to a category. For example:
+    
+    link://category/dogs => /categories/dogs.html
+    
+
+index
+    Link to a numbered index. For example:
+    
+    link://index/3 => /index-3.html
+    
+
+author
+    Link to an author's page. For example:
+    
+    link://author/joe => /authors/joe.html
+    
+
+gallery_rss
+    Link to an image gallery's RSS feed.
+    
+    It will try to find a gallery with that name if it's not ambiguous
+    or with that path. For example:
+    
+    link://gallery_rss/london => /galleries/trips/london/rss.xml
+    
+    link://gallery_rss/trips/london => /galleries/trips/london/rss.xml
+    
+
+author_index
+    Link to the author's index. For example:
+    
+    link://authors/ => /authors/index.html
+    
+
+filename
+    Link to post or story by source filename. For example:
+    
+    link://filename/manual.txt => /docs/handbook.html
+    
+
+section_index
+    Link to the index for a section. For example:
+    
+    link://section_index/cars => /cars/index.html
+    
+
+gallery_global
+    Link to the global gallery path, which contains all the images.
+
+listing
+    A link to a listing. It will try to use the file name if
+    it's not ambiguous, or the file path. For example:
+    
+    link://listing/hello.py => /listings/tutorial/hello.py.html
+    
+    link://listing/tutorial/hello.py => /listings/tutorial/hello.py.html
+    
+
+tag_index
+    A link to the tag index. For example:
+    
+    link://tag_index => /tags/index.html
+    
+
+post_path
+    Link to the destination of an element in the POSTS/PAGES settings. For example:
+    
+    link://post_path/posts => /blog
+    
+
+category_atom
+    A link to a category's Atom feed. For example:
+    
+    link://category_atom/dogs => /categories/dogs.atom
+    
+
+category_index
+    A link to the category index. For example:
+    
+    link://category_index => /categories/index.html
+    
+
+author_atom
+    Link to an author's Atom feed. For example:
+    
+    link://author_atom/joe => /authors/joe.atom
+    
+
+category_rss
+    A link to a category's RSS feed. For example:
+    
+    link://category_rss/dogs => /categories/dogs.xml
+    
+
+index_atom
+    Link to a numbered Atom index. For example:
+    
+    link://index_atom/3 => /index-3.atom
+    
+
+tag_atom
+    A link to a tag's Atom feed. For example:
+    
+    link://tag_atom/cats => /tags/cats.atom
+    
+
+archive_atom
+    Link to atom archive path, name is the year. For example:
+    
+    link://archive_atom/2013 => /archives/2013/index.atom
+    
+
+gallery
+    Link to an image gallery's path.
+    
+    It will try to find a gallery with that name if it's not ambiguous
+    or with that path. For example:
+    
+    link://gallery/london => /galleries/trips/london/index.html
+    
+    link://gallery/trips/london => /galleries/trips/london/index.html
+    
+
+rss
+    A link to the RSS feed path. For example:
+    
+    link://rss => /blog/rss.xml
+    
+
+slug
+    A link to a post with given slug, if not ambiguous. For example:
+    
+    links://slug/yellow-camaro => /posts/cars/awful/yellow-camaro/index.html
+    
+
+root
+    Link to the current language's root. For example:
+    
+    link://root_path => /
+    
+    link://root_path => /translations/spanish/
+    
+

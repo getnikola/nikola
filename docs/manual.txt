@@ -271,6 +271,15 @@ will become a CSS class of the ``<article>`` element for this post.  Defaults to
 You can add your own metadata fields in the same manner, if you use a theme that
 supports them (for example: ``.. author: John Doe``)
 
+.. sidebar:: Magic Links
+
+   You will want to do things like "link from one post to another" or "link to an image gallery",
+   etc. Sure, you can just figure out the URLs for each thing and use that. Or you can use
+   Nikola's special links. Those are done using the syntax ``link://kind/name`` and
+   a full list of the included ones is `here <link://slug/path-handlers>`__ (BTW, I linked
+   to that using ``link://slug/path-handlers``
+
+
 To add these metadata fields to all new posts by default, you can set the
 variable ``ADDITIONAL_METADATA`` in your configuration.  For example, you can
 add the author metadata to all new posts by default, by adding the following
@@ -637,7 +646,7 @@ Categories and tags use simple lists by default that show only titles and
 dates; however, you can switch them to full indexes by using
 ``CATEGORY_PAGES_ARE_INDEXES`` and ``TAG_PAGES_ARE_INDEXES``, respectively.
 
-Something similar happens with authors. To use full indexes in authors, set 
+Something similar happens with authors. To use full indexes in authors, set
 ``AUTHOR_PAGES_ARE_INDEXES`` to ``True``.
 
 Static indexes
