@@ -45,6 +45,7 @@ import requests
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger, STDERR_HANDLER
 
+
 def _call_nikola_list(site):
     files = []
     deps = defaultdict(list)
