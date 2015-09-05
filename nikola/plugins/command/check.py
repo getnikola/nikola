@@ -45,7 +45,6 @@ import requests
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger, STDERR_HANDLER
 
-
 def _call_nikola_list(site):
     files = []
     deps = defaultdict(list)
@@ -178,6 +177,7 @@ class CommandCheck(Command):
         """Analyze links on a page."""
         rv = False
         self.whitelist = [re.compile(x) for x in self.site.config['LINK_CHECK_WHITELIST']]
+        self.internal_redirects = [urljoin('/', _[0]) for _ in self.site.config['REDIRECTIONS']]
         base_url = urlparse(self.site.config['BASE_URL'])
         self.existing_targets.add(self.site.config['SITE_URL'])
         self.existing_targets.add(self.site.config['BASE_URL'])
@@ -249,6 +249,12 @@ class CommandCheck(Command):
                 # Warn about links from https to http (mixed-security)
                 if base_url.netloc == parsed.netloc and base_url.scheme == "https" and parsed.scheme == "http":
                     self.logger.warn("Mixed-content security for link in {0}: {1}".format(filename, target))
+
+                # Link to an internal REDIRECTIONS page
+                if target in self.internal_redirects:
+                    redir_status_code = 301
+                    redir_target = [_dest for _target, _dest in self.site.config['REDIRECTIONS'] if urljoin('/', _target) == target][0]
+                    self.logger.warn("Remote link moved PERMANENTLY to \"{0}\" and should be updated in {1}: {2} [HTTP: 301]".format(redir_target, filename, target))
 
                 # Absolute links to other domains, skip
                 # Absolute links when using only paths, skip.
