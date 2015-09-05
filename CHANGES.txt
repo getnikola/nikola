@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Made TAG_PATH translatable (Issue #1914)
+* Made CATEGORY_PATH translatable (Issue #1914)
 * Display post counts for archive links (Issue #2011)
 * Document link/path handlers (Issue #2008)
 
@@ -47,8 +49,8 @@ Bugfixes
 * Make nikola tabcompletion work outside sites (Issue #1983)
 * Fix display of categories list in bootstrap theme (Issue #2002)
 * If webassets is not installed, use unbundled assets (Issue #1992)
-* Check links in Atom and sitemap files (Issue #1993) 
-* Link checker should check all absolute URLs to self (Issue #1991) 
+* Check links in Atom and sitemap files (Issue #1993)
+* Link checker should check all absolute URLs to self (Issue #1991)
 * Check ``img|source[@srcset]`` as part of ``check -l``  (Issue #1989)
 * Clean up translations for third party components
 * ``pagekind["main_index"]`` set on the main indexes to differentiate

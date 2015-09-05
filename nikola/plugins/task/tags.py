@@ -401,7 +401,7 @@ class RenderTags(Task):
         link://tag_index => /tags/index.html
         """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['TAG_PATH'],
+                              self.site.config['TAG_PATH'][lang],
                               self.site.config['INDEX_FILE']] if _f]
 
     def category_index_path(self, name, lang):
@@ -412,7 +412,7 @@ class RenderTags(Task):
         link://category_index => /categories/index.html
         """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['CATEGORY_PATH'],
+                              self.site.config['CATEGORY_PATH'][lang],
                               self.site.config['INDEX_FILE']] if _f]
 
     def tag_path(self, name, lang):
@@ -425,13 +425,13 @@ class RenderTags(Task):
         if self.site.config['PRETTY_URLS']:
             return [_f for _f in [
                 self.site.config['TRANSLATIONS'][lang],
-                self.site.config['TAG_PATH'],
+                self.site.config['TAG_PATH'][lang],
                 self.slugify_tag_name(name),
                 self.site.config['INDEX_FILE']] if _f]
         else:
             return [_f for _f in [
                 self.site.config['TRANSLATIONS'][lang],
-                self.site.config['TAG_PATH'],
+                self.site.config['TAG_PATH'][lang],
                 self.slugify_tag_name(name) + ".html"] if _f]
 
     def tag_atom_path(self, name, lang):
@@ -442,7 +442,7 @@ class RenderTags(Task):
         link://tag_atom/cats => /tags/cats.atom
         """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['TAG_PATH'], self.slugify_tag_name(name) + ".atom"] if
+                              self.site.config['TAG_PATH'][lang], self.slugify_tag_name(name) + ".atom"] if
                 _f]
 
     def tag_rss_path(self, name, lang):
@@ -453,7 +453,7 @@ class RenderTags(Task):
         link://tag_rss/cats => /tags/cats.xml
         """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['TAG_PATH'], self.slugify_tag_name(name) + ".xml"] if
+                              self.site.config['TAG_PATH'][lang], self.slugify_tag_name(name) + ".xml"] if
                 _f]
 
     def slugify_category_name(self, name):
@@ -480,11 +480,11 @@ class RenderTags(Task):
         """
         if self.site.config['PRETTY_URLS']:
             return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                                  self.site.config['CATEGORY_PATH']] if
+                                  self.site.config['CATEGORY_PATH'][lang]] if
                     _f] + self.slugify_category_name(name) + [self.site.config['INDEX_FILE']]
         else:
             return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                                  self.site.config['CATEGORY_PATH']] if
+                                  self.site.config['CATEGORY_PATH'][lang]] if
                     _f] + self._add_extension(self.slugify_category_name(name), ".html")
 
     def category_atom_path(self, name, lang):
@@ -495,7 +495,7 @@ class RenderTags(Task):
         link://category_atom/dogs => /categories/dogs.atom
         """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['CATEGORY_PATH']] if
+                              self.site.config['CATEGORY_PATH'][lang]] if
                 _f] + self._add_extension(self.slugify_category_name(name), ".atom")
 
     def category_rss_path(self, name, lang):
@@ -506,5 +506,5 @@ class RenderTags(Task):
         link://category_rss/dogs => /categories/dogs.xml
         """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['CATEGORY_PATH']] if
+                              self.site.config['CATEGORY_PATH'][lang]] if
                 _f] + self._add_extension(self.slugify_category_name(name), ".xml")
