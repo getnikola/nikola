@@ -1010,7 +1010,6 @@ class Nikola(object):
                 [os.path.join(utils.get_theme_path(name), "templates") for name in self.THEMES] +\
                 list(set([os.path.dirname(utils.get_theme_path(name)) for name in self.THEMES]))
 
-            print(lookup_dirs)
             self._template_system.set_directories(lookup_dirs,
                                                   self.config['CACHE_FOLDER'])
             self._template_system.set_site(self)

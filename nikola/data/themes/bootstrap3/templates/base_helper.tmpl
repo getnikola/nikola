@@ -1,5 +1,5 @@
 ## -*- coding: utf-8 -*-
-<%inherit file="base/templates/base_helper.tmpl"/>
+<%namespace file="base/templates/base_helper.tmpl" import="*"/>
 <%namespace name="notes" file="annotation_helper.tmpl" import="*" />
 <%def name="html_headstart()">
 <!DOCTYPE html>
@@ -154,7 +154,3 @@ lang="${lang}">
         % endif
     %endfor
 </%def>
-
-<%def name="html_feedlinks()"/>
-<%def name="html_translations()"/>
-
