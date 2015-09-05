@@ -168,12 +168,13 @@ class CommandCheck(Command):
             self.logger.level = 1
         else:
             self.logger.level = 4
+        failure = False
         if options['links']:
-            failure = self.scan_links(options['find_sources'], options['remote'])
+            failure |= self.scan_links(options['find_sources'], options['remote'])
         if options['files']:
-            failure = self.scan_files()
+            failure |= self.scan_files()
         if options['clean']:
-            failure = self.clean_files()
+            failure |= self.clean_files()
         if failure:
             return 1
 
