@@ -1,5 +1,5 @@
 {#  -*- coding: utf-8 -*- #}
-
+{% extends 'base-jinja/templates/base_helper.tmpl' %}
 {% import 'annotation_helper.tmpl' as notes with context %}
 {% macro html_headstart() %}
 <!DOCTYPE html>
@@ -155,33 +155,7 @@ lang="{{ lang }}">
     {% endfor %}
 {% endmacro %}
 
-{% macro html_feedlinks() %}
-    {% if rss_link %}
-        {{ rss_link }}
-    {% elif generate_rss %}
-        {% if translations|length > 1 %}
-            {% for language in translations|sort %}
-                <link rel="alternate" type="application/rss+xml" title="RSS ({{ language }})" href="{{ _link('rss', None, language) }}">
-            {% endfor %}
-        {% else %}
-            <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ _link('rss', None) }}">
-        {% endif %}
-    {% endif %}
-    {% if generate_atom %}
-        {% if translations|length > 1 %}
-            {% for language in translations|sort %}
-                <link rel="alternate" type="application/atom+xml" title="Atom ({{ language }})" href="{{ _link('index_atom', None, language) }}">
-            {% endfor %}
-        {% else %}
-            <link rel="alternate" type="application/atom+xml" title="Atom" href="{{ _link('index_atom', None) }}">
-        {% endif %}
-    {% endif %}
-{% endmacro %}
 
-{% macro html_translations() %}
-    {% for langname in translations|sort %}
-        {% if langname != lang %}
-            <li><a href="{{ abs_link(_link("root", None, langname)) }}" rel="alternate" hreflang="{{ langname }}">{{ messages("LANGUAGE", langname) }}</a></li>
-        {% endif %}
-    {% endfor %}
+{% macro html_feedlinks() %}
+    {{ parent.html_feedlinks() }}
 {% endmacro %}
