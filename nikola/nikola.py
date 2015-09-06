@@ -572,6 +572,14 @@ class Nikola(object):
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
 
+        # We first have to massage JS_DATE_FORMAT, otherwise we run into trouble
+        if 'JS_DATE_FORMAT' in self.config:
+            if isinstance(self.config['JS_DATE_FORMAT'], dict):
+                for k in self.config['JS_DATE_FORMAT']:
+                    self.config['JS_DATE_FORMAT'][k] = json.dumps(self.config['JS_DATE_FORMAT'][k])
+            else:
+                self.config['JS_DATE_FORMAT'] = json.dumps(self.config['JS_DATE_FORMAT'])
+
         for i in self.TRANSLATABLE_SETTINGS:
             try:
                 self.config[i] = utils.TranslatableSetting(i, self.config[i], self.config['TRANSLATIONS'])
@@ -928,7 +936,7 @@ class Nikola(object):
             'SHOW_SOURCELINK')
         self._GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
         self._GLOBAL_CONTEXT['date_fanciness'] = self.config.get('DATE_FANCINESS')
-        self._GLOBAL_CONTEXT['js_date_format'] = json.dumps(self.config.get('JS_DATE_FORMAT'))
+        self._GLOBAL_CONTEXT['js_date_format'] = self.config.get('JS_DATE_FORMAT')
         self._GLOBAL_CONTEXT['colorbox_locales'] = LEGAL_VALUES['COLORBOX_LOCALES']
         self._GLOBAL_CONTEXT['momentjs_locales'] = LEGAL_VALUES['MOMENTJS_LOCALES']
         self._GLOBAL_CONTEXT['hidden_tags'] = self.config.get('HIDDEN_TAGS')
