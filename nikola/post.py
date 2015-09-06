@@ -781,12 +781,16 @@ class Post(object):
             if dest[-(1 + len(self.index_file)):] == '/' + self.index_file:
                 dest = dest[:-(1 + len(self.index_file))]
             dirname = os.path.dirname(dest)
-            slug = dirname
-            if not dirname or dirname == '.':
+            slug = dest.split(os.sep)
+            if not slug or dirname == '.':
                 slug = self.messages[lang]["Uncategorized"]
+            elif lang == slug[0]:
+                slug = slug[1]
+            else:
+                slug = slug[0]
         else:
             slug = self.meta[lang]['section'].split(',')[0] if 'section' in self.meta[lang] else self.messages[lang]["Uncategorized"]
-        return slug.replace(' ', '-').lower()
+        return utils.slugify(slug)
 
     def permalink(self, lang=None, absolute=False, extension='.html', query=None):
         """Return permalink for a post."""

@@ -75,7 +75,7 @@ class Indexes(Task):
         posts = self.site.posts
         self.number_of_pages = dict()
         self.number_of_pages_section = dict()
-        for lang in kw["translations"]:
+        for     lang in kw["translations"]:
             def page_link(i, displayed_i, num_pages, force_addition, extension=None):
                 feed = "_atom" if extension == ".atom" else ""
                 return utils.adjust_name_for_index_link(self.site.link("index" + feed, None, lang), i, displayed_i,
