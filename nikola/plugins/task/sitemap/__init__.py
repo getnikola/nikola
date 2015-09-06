@@ -155,7 +155,7 @@ class Sitemap(LateTask):
                     sitemap_path = os.path.join(root, "sitemap.xml")
                 else:
                     sitemap_path = os.path.join(output_path, "sitemap.xml")
-                if not sitemap_path in urlset:
+                if sitemap_path not in urlset:
                     urlset[sitemap_path] = {}
                     sitemapindex[sitemap_path] = sitemap_format.format(self.site.abs_link(os.path.relpath(sitemap_path, output_path)), self.get_lastmod(sitemap_path))
 
