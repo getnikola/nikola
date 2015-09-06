@@ -8,6 +8,7 @@ Features
 * Made CATEGORY_PATH translatable (Issue #1914)
 * Display post counts for archive links (Issue #2011)
 * Document link/path handlers (Issue #2008)
+* Made DATE_FORMAT and JS_DATE_FORMAT translatable (Issue #2032)
 
 Bugfixes
 --------
