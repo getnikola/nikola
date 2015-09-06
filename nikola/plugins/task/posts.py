@@ -78,7 +78,7 @@ class RenderPosts(Task):
             deps_dict.pop('timeline')
             for post in kw['timeline']:
                 if not post.is_translation_available(lang) and not self.site.config['SHOW_UNTRANSLATED_POSTS']:
-                    return
+                    continue
                 # Extra config dependencies picked from config
                 for p in post.fragment_deps(lang):
                     if p.startswith('####MAGIC####CONFIG:'):
