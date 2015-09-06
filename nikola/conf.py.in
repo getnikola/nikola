@@ -140,11 +140,11 @@ TIMEZONE = ${TIMEZONE}
 # Note that this does not affect DATE_FORMAT.
 # FORCE_ISO8601 = False
 
-# (Translatable) Date format used to display post dates.
+# Date format used to display post dates. (translatable)
 # (str used by datetime.datetime.strftime)
 # DATE_FORMAT = '%Y-%m-%d %H:%M'
 
-# Date format used to display post dates, if local dates are used.
+# Date format used to display post dates, if local dates are used. (translatable)
 # (str used by moment.js)
 # JS_DATE_FORMAT = 'YYYY-MM-DD HH:mm'
 

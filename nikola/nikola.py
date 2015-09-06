@@ -554,6 +554,7 @@ class Nikola(object):
                                       'TAG_PATH',
                                       'CATEGORY_PATH',
                                       'DATE_FORMAT',
+                                      'JS_DATE_FORMAT',
                                       )
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
@@ -566,7 +567,8 @@ class Nikola(object):
                                              'search_form',
                                              'body_end',
                                              'extra_head_data',
-                                             'date_format',)
+                                             'date_format',
+                                             'js_date_format',)
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
 
