@@ -140,7 +140,7 @@ TIMEZONE = ${TIMEZONE}
 # Note that this does not affect DATE_FORMAT.
 # FORCE_ISO8601 = False
 
-# Date format used to display post dates.
+# (Translatable) Date format used to display post dates.
 # (str used by datetime.datetime.strftime)
 # DATE_FORMAT = '%Y-%m-%d %H:%M'
 

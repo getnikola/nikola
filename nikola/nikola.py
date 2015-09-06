@@ -553,6 +553,7 @@ class Nikola(object):
                                       # PATH options (Issue #1914)
                                       'TAG_PATH',
                                       'CATEGORY_PATH',
+                                      'DATE_FORMAT',
                                       )
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
@@ -564,7 +565,8 @@ class Nikola(object):
                                              'social_buttons_code',
                                              'search_form',
                                              'body_end',
-                                             'extra_head_data',)
+                                             'extra_head_data',
+                                             'date_format',)
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
 
