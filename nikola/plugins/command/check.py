@@ -46,7 +46,10 @@ from nikola.plugin_categories import Command
 from nikola.utils import get_logger, STDERR_HANDLER
 
 
-def _call_nikola_list(site):
+def _call_nikola_list(site, cache=None):
+    if cache is not None:
+        if 'files' in cache and 'deps' in cache:
+            return cache['files'], cache['deps']
     files = []
     deps = defaultdict(list)
     for task in generate_tasks('render_site', site.gen_tasks('render_site', "Task", '')):
@@ -57,16 +60,19 @@ def _call_nikola_list(site):
         files.extend(task.targets)
         for target in task.targets:
             deps[target].extend(task.file_dep)
+    if cache is not None:
+        cache['files'] = files
+        cache['deps'] = deps
     return files, deps
 
 
-def real_scan_files(site):
+def real_scan_files(site, cache=None):
     """Scan for files."""
     task_fnames = set([])
     real_fnames = set([])
     output_folder = site.config['OUTPUT_FOLDER']
     # First check that all targets are generated in the right places
-    for fname in _call_nikola_list(site)[0]:
+    for fname in _call_nikola_list(site, cache)[0]:
         fname = fname.strip()
         if fname.startswith(output_folder):
             task_fnames.add(fname)
@@ -162,17 +168,19 @@ class CommandCheck(Command):
             self.logger.level = 1
         else:
             self.logger.level = 4
+        failure = False
         if options['links']:
-            failure = self.scan_links(options['find_sources'], options['remote'])
+            failure |= self.scan_links(options['find_sources'], options['remote'])
         if options['files']:
-            failure = self.scan_files()
+            failure |= self.scan_files()
         if options['clean']:
-            failure = self.clean_files()
+            failure |= self.clean_files()
         if failure:
             return 1
 
     existing_targets = set([])
     checked_remote_targets = {}
+    cache = {}
 
     def analyze(self, fname, find_sources=False, check_remote=False):
         """Analyze links on a page."""
@@ -186,7 +194,7 @@ class CommandCheck(Command):
 
         deps = {}
         if find_sources:
-            deps = _call_nikola_list(self.site)[1]
+            deps = _call_nikola_list(self.site, self.cache)[1]
 
         if url_type in ('absolute', 'full_path'):
             url_netloc_to_root = urlparse(self.site.config['BASE_URL']).path
@@ -359,7 +367,7 @@ class CommandCheck(Command):
         if urlparse(self.site.config['BASE_URL']).netloc == 'example.com':
             self.logger.error("You've not changed the SITE_URL (or BASE_URL) setting from \"example.com\"!")
 
-        for fname in _call_nikola_list(self.site)[0]:
+        for fname in _call_nikola_list(self.site, self.cache)[0]:
             if fname.startswith(output_folder):
                 if '.html' == fname[-5:]:
                     if self.analyze(fname, find_sources, check_remote):
@@ -379,7 +387,7 @@ class CommandCheck(Command):
         failure = False
         self.logger.info("Checking Files:")
         self.logger.info("===============\n")
-        only_on_output, only_on_input = real_scan_files(self.site)
+        only_on_output, only_on_input = real_scan_files(self.site, self.cache)
 
         # Ignore folders
         only_on_output = [p for p in only_on_output if not os.path.isdir(p)]
@@ -402,7 +410,7 @@ class CommandCheck(Command):
 
     def clean_files(self):
         """Remove orphaned files."""
-        only_on_output, _ = real_scan_files(self.site)
+        only_on_output, _ = real_scan_files(self.site, self.cache)
         for f in only_on_output:
             self.logger.info('removed: {0}'.format(f))
             os.unlink(f)
