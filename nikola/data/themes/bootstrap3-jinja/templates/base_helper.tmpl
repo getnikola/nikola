@@ -1,74 +1,9 @@
 {#  -*- coding: utf-8 -*- #}
-{% extends 'base-jinja/templates/base_helper.tmpl' %}
+{% extends 'base/templates/base_helper.tmpl' %}
 {% import 'annotation_helper.tmpl' as notes with context %}
+
 {% macro html_headstart() %}
-<!DOCTYPE html>
-<html
-
-{% if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']) or (comment_system == 'facebook') %}
-prefix='
-{% if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']) %}
-og: http://ogp.me/ns#
-{% endif %}
-{% if use_open_graph %}
-article: http://ogp.me/ns/article#
-{% endif %}
-{% if comment_system == 'facebook' %}
-fb: http://ogp.me/ns/fb#
-{% endif %}
-'
-{% endif %}
-
-{% if is_rtl %}
-dir="rtl"
-{% endif %}
-
-lang="{{ lang }}">
-    <head>
-    <meta charset="utf-8">
-    {% if use_base_tag %}
-    <base href="{{ abs_link(permalink) }}">
-    {% endif %}
-    {% if description %}
-    <meta name="description" content="{{ description }}">
-    {% endif %}
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% if title == blog_title %}
-        <title>{{ blog_title|e }}</title>
-    {% else %}
-        <title>{{ title|e }} | {{ blog_title|e }}</title>
-    {% endif %}
-
-    {{ html_stylesheets() }}
-    <meta content="{{ theme_color }}" name="theme-color">
-    {{ html_feedlinks() }}
-    <link rel="canonical" href="{{ abs_link(permalink) }}">
-
-    {% if favicons %}
-        {% for name, file, size in favicons %}
-            <link rel="{{ name }}" href="{{ file }}" sizes="{{ size }}"/>
-        {% endfor %}
-    {% endif %}
-
-    {% if comment_system == 'facebook' %}
-        <meta property="fb:app_id" content="{{ comment_system_id }}">
-    {% endif %}
-
-    {% if prevlink %}
-        <link rel="prev" href="{{ prevlink }}" type="text/html">
-    {% endif %}
-    {% if nextlink %}
-        <link rel="next" href="{{ nextlink }}" type="text/html">
-    {% endif %}
-
-    {{ mathjax_config }}
-    {% if use_cdn %}
-        <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-    {% else %}
-        <!--[if lt IE 9]><script src="{{ url_replacer(permalink, '/assets/js/html5.js', lang) }}"></script><![endif]-->
-    {% endif %}
-
-    {{ extra_head_data }}
+    {{ parent.html_headstart() }}
 {% endmacro %}
 
 {% macro late_load_js() %}
@@ -97,7 +32,6 @@ lang="{{ lang }}">
     {% endif %}
     {{ social_buttons_code }}
 {% endmacro %}
-
 
 {% macro html_stylesheets() %}
     {% if use_bundles %}
@@ -132,6 +66,18 @@ lang="{{ lang }}">
     {% endif %}
 {% endmacro %}
 
+{% macro html_feedlinks() %}
+    {{ parent.html_feedlinks() }}
+{% endmacro %}
+
+{% macro html_translations() %}
+    {% for langname in translations|sort %}
+        {% if langname != lang %}
+            <li><a href="{{ abs_link(_link("root", None, langname)) }}" rel="alternate" hreflang="{{ langname }}">{{ messages("LANGUAGE", langname) }}</a></li>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
 {% macro html_navigation_links() %}
     {% for url, text in navigation_links[lang] %}
         {% if isinstance(url, tuple) %}
@@ -153,9 +99,4 @@ lang="{{ lang }}">
             {% endif %}
         {% endif %}
     {% endfor %}
-{% endmacro %}
-
-
-{% macro html_feedlinks() %}
-    {{ parent.html_feedlinks() }}
 {% endmacro %}
