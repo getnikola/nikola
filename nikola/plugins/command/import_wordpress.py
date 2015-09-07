@@ -763,10 +763,10 @@ class CommandImportWordpress(Command, ImportMixin):
     def _sanitize(self, tag, is_category):
         if self.tag_saniziting_strategy == 'lower':
             return tag.lower()
-        if tag.lower() not in _tag_sanitize_map[is_category]:
-            _tag_sanitize_map[is_category][tag.lower()] = [tag]
+        if tag.lower() not in self._tag_sanitize_map[is_category]:
+            self._tag_sanitize_map[is_category][tag.lower()] = [tag]
             return tag
-        previous = _tag_sanitize_map[is_category][tag.lower()]
+        previous = self._tag_sanitize_map[is_category][tag.lower()]
         if self.tag_saniziting_strategy == 'first':
             if tag != previous[0]:
                 LOGGER.warn("Changing spelling of {0} name '{1}' to {2}.".format('category' if is_category else 'tag', tag, previous[0]))
