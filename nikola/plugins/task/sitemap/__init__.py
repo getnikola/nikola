@@ -140,6 +140,9 @@ class Sitemap(LateTask):
         urlset = {}
 
         def scan_locs():
+            # No need to run this more than once
+            if urlset:
+                return True
             """Scan site locations."""
             for root, dirs, files in os.walk(output, followlinks=True):
                 if not dirs and not files and not kw['sitemap_include_fileless_dirs']:
@@ -290,6 +293,8 @@ class Sitemap(LateTask):
 
             return {'file_dep': file_dep}
 
+        scan_locs()
+
         yield {
             "basename": "_scan_locs",
             "name": "sitemap",
@@ -297,8 +302,6 @@ class Sitemap(LateTask):
         }
 
         yield self.group_task()
-
-        scan_locs()
 
         for sitemap_path in sorted(urlset.keys()):
             # TODO: Fix issue #1683
