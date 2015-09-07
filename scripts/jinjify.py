@@ -30,9 +30,40 @@ dumber_replacements = [
     ["{% endif %}\n\\", "{% endif %}\n"]
 ]
 
-
 def jinjify(in_theme, out_theme):
     """Convert in_theme into a jinja version and put it in out_theme"""
+
+
+    parent = os.path.basename(in_theme.rstrip('/'))
+    child = os.path.basename(out_theme.rstrip('/'))
+    mappings = {
+        'base-jinja': 'base',
+        'bootstrap3-jinja': 'base-jinja',
+    }
+
+    if child in mappings:
+        parent = mappings[child]
+
+    with io.open(os.path.join(out_theme, "parent"), "w+", encoding='utf-8') as outf:
+        outf.write(u'{0}\n'.format(parent))
+
+    with io.open(os.path.join(out_theme, "engine"), "w+", encoding='utf-8') as outf:
+        outf.write(u"jinja\n")
+
+    # Copy assets in bootstrap/bootstrap3
+    if child == 'bootstrap3-jinja':
+        shutil.rmtree(os.path.join(out_theme, "assets"))
+        shutil.copytree(
+            os.path.join(in_theme, "assets"), os.path.join(out_theme, "assets"),
+            symlinks=True)
+
+    # Copy bundles
+    # shutil.copy(os.path.join(in_theme, "bundles"), os.path.join(out_theme, "bundles"))
+
+    # Copy README
+    if os.path.isfile(os.path.join(in_theme, "README.md")):
+        shutil.copy(os.path.join(in_theme, "README.md"), os.path.join(out_theme, "README.md"))
+
 
     in_templates_path = os.path.join(in_theme, "templates")
     out_templates_path = os.path.join(out_theme, "templates")
@@ -68,36 +99,6 @@ def jinjify(in_theme, out_theme):
         except Exception as e:
             error("Syntax error in {0}:{1}".format(out_template, e.lineno))
 
-    parent = os.path.basename(in_theme.rstrip('/'))
-    child = os.path.basename(out_theme.rstrip('/'))
-    mappings = {
-        'base-jinja': 'base',
-        'bootstrap3-jinja': 'base-jinja',
-    }
-
-    if child in mappings:
-        parent = mappings[child]
-
-    with io.open(os.path.join(out_theme, "parent"), "w+", encoding='utf-8') as outf:
-        outf.write(u'{0}\n'.format(parent))
-
-    with io.open(os.path.join(out_theme, "engine"), "w+", encoding='utf-8') as outf:
-        outf.write(u"jinja\n")
-
-    # Copy assets in bootstrap/bootstrap3
-    if child == 'bootstrap3-jinja':
-        shutil.rmtree(os.path.join(out_theme, "assets"))
-        shutil.copytree(
-            os.path.join(in_theme, "assets"), os.path.join(out_theme, "assets"),
-            symlinks=True)
-
-    # Copy bundles
-    # shutil.copy(os.path.join(in_theme, "bundles"), os.path.join(out_theme, "bundles"))
-
-    # Copy README
-    if os.path.isfile(os.path.join(in_theme, "README.md")):
-        shutil.copy(os.path.join(in_theme, "README.md"), os.path.join(out_theme, "README.md"))
-
 
 def error(msg):
     print(colorama.Fore.RED + "ERROR:" + msg)
@@ -132,6 +133,7 @@ def mako2jinja(input_file):
     filter_h = re.compile(r'\|h', re.IGNORECASE)
     filter_striphtml = re.compile(r'\|striphtml', re.IGNORECASE)
     filter_u = re.compile(r'\|u', re.IGNORECASE)
+
 
     comment_single_line = re.compile(r'^.*##(.*?)$', re.IGNORECASE)
 
@@ -201,7 +203,9 @@ def mako2jinja(input_file):
         elif m_namspace:
             output += m_namspace.expand(r"\1{% import '\3' as \2 with context %}\4") + '\n'
         elif m_inherit:
-            output += m_inherit.expand(r"{% extends '\2' %}\3") + '\n'
+            groups = list(m_inherit.groups())
+            groups[1] = fix_path(groups[1])
+            output += ("{}{{% extends '{}' %}}{}").format(*groups) + '\n'
 
         elif m_block_single_line:
             output += m_block_single_line.expand(r'\1{% block \2 %}\3{% endblock %}\4') + '\n'
@@ -215,6 +219,13 @@ def mako2jinja(input_file):
             output += line
 
     return output
+
+
+def fix_path(p):
+    """Change base to base-jinja in template paths."""
+
+    # FIXME this could definitely be smarter...
+    return p.replace('base/templates/', 'base-jinja/templates/')
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
