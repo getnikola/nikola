@@ -155,6 +155,9 @@ lang="${lang}">
     %endfor
 </%def>
 
+<%def name="html_translations()">
+    ${parent.html_translations()}
+</%def>
 
 <%def name="html_feedlinks()">
     ${parent.html_feedlinks()}
