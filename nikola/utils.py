@@ -71,7 +71,7 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_chain', 'load_messages'
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
            'NikolaPygmentsHTML', 'create_redirect', 'TreeNode',
            'flatten_tree_structure', 'parse_escaped_hierarchical_category_name',
-           'join_hierarchical_category_path', 'indent')
+           'join_hierarchical_category_path', 'indent', 'formatted_date')
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -1732,3 +1732,18 @@ def indent(text, prefix, predicate=None):
         for line in text.splitlines(True):
             yield (prefix + line if predicate(line) else line)
     return ''.join(prefixed_lines())
+
+
+def formatted_date(date_format, date):
+    """Return the formatted date as unicode."""
+    if date_format == 'webiso':
+        # Formatted after RFC 3339 (web ISO 8501 profile) with Zulu
+        # zone desgignator for times in UTC and no microsecond precision.
+        fmt_date = date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
+    else:
+        fmt_date = date.strftime(date_format)
+
+    # Issue #383, this changes from py2 to py3
+    if isinstance(fmt_date, bytes_str):
+        fmt_date = fmt_date.decode('utf8')
+    return fmt_date

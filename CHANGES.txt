@@ -5,12 +5,17 @@ Features
 --------
 
 * Allow inheriting templates with theme name (Issue #1814)
+* Made TAG_PATH translatable (Issue #1914)
+* Made CATEGORY_PATH translatable (Issue #1914)
 * Display post counts for archive links (Issue #2011)
 * Document link/path handlers (Issue #2008)
+* Made DATE_FORMAT and JS_DATE_FORMAT translatable (Issue #2032)
 
 Bugfixes
 --------
 
+* Multi-lingual and multi-level directories confused section slug
+  detection (Issue #2023)
 * Use Unicode strings for WordPress comment headers (Issue #2019)
 * Don't add stories to author pages (Issue #2007)
 
@@ -48,8 +53,8 @@ Bugfixes
 * Make nikola tabcompletion work outside sites (Issue #1983)
 * Fix display of categories list in bootstrap theme (Issue #2002)
 * If webassets is not installed, use unbundled assets (Issue #1992)
-* Check links in Atom and sitemap files (Issue #1993) 
-* Link checker should check all absolute URLs to self (Issue #1991) 
+* Check links in Atom and sitemap files (Issue #1993)
+* Link checker should check all absolute URLs to self (Issue #1991)
 * Check ``img|source[@srcset]`` as part of ``check -l``  (Issue #1989)
 * Clean up translations for third party components
 * ``pagekind["main_index"]`` set on the main indexes to differentiate

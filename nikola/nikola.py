@@ -549,7 +549,13 @@ class Nikola(object):
                                       'POSTS_SECTION_NAME',
                                       'POSTS_SECTION_TITLE',
                                       'INDEXES_PAGES',
-                                      'INDEXES_PRETTY_PAGE_URL',)
+                                      'INDEXES_PRETTY_PAGE_URL',
+                                      # PATH options (Issue #1914)
+                                      'TAG_PATH',
+                                      'CATEGORY_PATH',
+                                      'DATE_FORMAT',
+                                      'JS_DATE_FORMAT',
+                                      )
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
                                              'blog_title',
@@ -560,9 +566,19 @@ class Nikola(object):
                                              'social_buttons_code',
                                              'search_form',
                                              'body_end',
-                                             'extra_head_data',)
+                                             'extra_head_data',
+                                             'date_format',
+                                             'js_date_format',)
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
+
+        # We first have to massage JS_DATE_FORMAT, otherwise we run into trouble
+        if 'JS_DATE_FORMAT' in self.config:
+            if isinstance(self.config['JS_DATE_FORMAT'], dict):
+                for k in self.config['JS_DATE_FORMAT']:
+                    self.config['JS_DATE_FORMAT'][k] = json.dumps(self.config['JS_DATE_FORMAT'][k])
+            else:
+                self.config['JS_DATE_FORMAT'] = json.dumps(self.config['JS_DATE_FORMAT'])
 
         for i in self.TRANSLATABLE_SETTINGS:
             try:
@@ -670,7 +686,7 @@ class Nikola(object):
         if not self.config.get('COPY_SOURCES'):
             self.config['SHOW_SOURCELINK'] = False
 
-        if self.config['CATEGORY_PATH'] is None:
+        if self.config['CATEGORY_PATH']._inp is None:
             self.config['CATEGORY_PATH'] = self.config['TAG_PATH']
         if self.config['CATEGORY_PAGES_ARE_INDEXES'] is None:
             self.config['CATEGORY_PAGES_ARE_INDEXES'] = self.config['TAG_PAGES_ARE_INDEXES']
@@ -920,7 +936,7 @@ class Nikola(object):
             'SHOW_SOURCELINK')
         self._GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
         self._GLOBAL_CONTEXT['date_fanciness'] = self.config.get('DATE_FANCINESS')
-        self._GLOBAL_CONTEXT['js_date_format'] = json.dumps(self.config.get('JS_DATE_FORMAT'))
+        self._GLOBAL_CONTEXT['js_date_format'] = self.config.get('JS_DATE_FORMAT')
         self._GLOBAL_CONTEXT['colorbox_locales'] = LEGAL_VALUES['COLORBOX_LOCALES']
         self._GLOBAL_CONTEXT['momentjs_locales'] = LEGAL_VALUES['MOMENTJS_LOCALES']
         self._GLOBAL_CONTEXT['hidden_tags'] = self.config.get('HIDDEN_TAGS')
@@ -1820,7 +1836,7 @@ class Nikola(object):
         feed_id = lxml.etree.SubElement(feed_root, "id")
         feed_id.text = self.abs_link(context["feedlink"])
         feed_updated = lxml.etree.SubElement(feed_root, "updated")
-        feed_updated.text = post.formatted_date('webiso', datetime.datetime.now(tz=dateutil.tz.tzutc()))
+        feed_updated.text = utils.formatted_date('webiso', datetime.datetime.now(tz=dateutil.tz.tzutc()))
         feed_author = lxml.etree.SubElement(feed_root, "author")
         feed_author_name = lxml.etree.SubElement(feed_author, "name")
         feed_author_name.text = self.config["BLOG_AUTHOR"](lang)

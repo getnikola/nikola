@@ -56,7 +56,6 @@ from math import ceil
 # for tearDown with _reload we cannot use 'from import' to get forLocaleBorg
 import nikola.utils
 from .utils import (
-    bytes_str,
     current_time,
     Functionary,
     LOGGER,
@@ -324,19 +323,7 @@ class Post(object):
 
     def formatted_date(self, date_format, date=None):
         """Return the formatted date as unicode."""
-        date = date if date else self.date
-
-        if date_format == 'webiso':
-            # Formatted after RFC 3339 (web ISO 8501 profile) with Zulu
-            # zone desgignator for times in UTC and no microsecond precision.
-            fmt_date = date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
-        else:
-            fmt_date = date.strftime(date_format)
-
-        # Issue #383, this changes from py2 to py3
-        if isinstance(fmt_date, bytes_str):
-            fmt_date = fmt_date.decode('utf8')
-        return fmt_date
+        return utils.formatted_date(date_format, date if date else self.date)
 
     def formatted_updated(self, date_format):
         """Return the updated date as unicode."""
@@ -781,12 +768,16 @@ class Post(object):
             if dest[-(1 + len(self.index_file)):] == '/' + self.index_file:
                 dest = dest[:-(1 + len(self.index_file))]
             dirname = os.path.dirname(dest)
-            slug = dirname
-            if not dirname or dirname == '.':
+            slug = dest.split(os.sep)
+            if not slug or dirname == '.':
                 slug = self.messages[lang]["Uncategorized"]
+            elif lang == slug[0]:
+                slug = slug[1]
+            else:
+                slug = slug[0]
         else:
             slug = self.meta[lang]['section'].split(',')[0] if 'section' in self.meta[lang] else self.messages[lang]["Uncategorized"]
-        return slug.replace(' ', '-').lower()
+        return utils.slugify(slug)
 
     def permalink(self, lang=None, absolute=False, extension='.html', query=None):
         """Return permalink for a post."""
