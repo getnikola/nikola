@@ -156,7 +156,11 @@ lang="${lang}">
 </%def>
 
 <%def name="html_translations()">
-    ${parent.html_translations()}
+    %for langname in sorted(translations):
+        %if langname != lang:
+            <li><a href="${abs_link(_link("root", None, langname))}" rel="alternate" hreflang="${langname}">${messages("LANGUAGE", langname)}</a></li>
+        %endif
+    %endfor
 </%def>
 
 <%def name="html_feedlinks()">
