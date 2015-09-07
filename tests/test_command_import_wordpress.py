@@ -196,6 +196,7 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
         self.import_command.export_comments = False
         self.import_command.transform_to_html = False
         self.import_command.use_wordpress_compiler = False
+        self.import_command.tag_saniziting_strategy = 'first'
         self.import_command.context = self.import_command.populate_context(
             channel)
 
