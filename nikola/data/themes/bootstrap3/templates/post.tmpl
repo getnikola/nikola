@@ -2,7 +2,7 @@
 <%namespace name="helper" file="post_helper.tmpl"/>
 <%namespace name="pheader" file="post_header.tmpl"/>
 <%namespace name="comments" file="comments_helper.tmpl"/>
-<%namespace name="base" file="base/templates/post.tmpl"/>
+<%namespace name="basepost" file="base/templates/post.tmpl"/>
 <%inherit file="base.tmpl"/>
 
 <%block name="sourcelink">
@@ -14,9 +14,9 @@
 </%block>
 
 <%block name="extra_head">
-${base.extra_head()}
+${basepost.extra_head()}
 </%block>
 
 <%block name="content">
-${base.content()}
+${basepost.content()}
 </%block>
