@@ -170,7 +170,7 @@ def mako2jinja(input_file):
         m_if_end = if_end.search(line)
         m_for_start = for_start.search(line)
         m_for_end = for_end.search(line)
-        m_namspace = namespace.search(line)
+        m_namespace = namespace.search(line)
         m_inherit = inherit.search(line)
         m_block_single_line = block_single_line.search(line)
         m_block_start = block_start.search(line)
@@ -200,8 +200,10 @@ def mako2jinja(input_file):
         elif m_for_end:
             output += m_for_end.expand(r'\1{% endfor %}\2') + '\n'
 
-        elif m_namspace:
-            output += m_namspace.expand(r"\1{% import '\3' as \2 with context %}\4") + '\n'
+        elif m_namespace:
+            groups = list(m_namespace.groups())
+            groups[2] = fix_path(groups[2])
+            output += ("{0}{{% import '{2}' as {1} with context %}}{3}").format(*groups) + '\n'
         elif m_inherit:
             groups = list(m_inherit.groups())
             groups[1] = fix_path(groups[1])
