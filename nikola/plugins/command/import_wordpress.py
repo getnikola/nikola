@@ -191,6 +191,12 @@ class CommandImportWordpress(Command, ImportMixin):
             'type': bool,
             'help': "Automatically installs the WordPress page compiler (either locally or in the new site) if required by other options.\nWarning: the compiler is GPL software!",
         },
+        {
+            'name': 'tag_saniziting_strategy',
+            'long': 'tag-saniziting-strategy',
+            'default': 'first',
+            'help': 'lower: Convert all tag and category names to lower case\nfirst: Keep first spelling of tag or category name',
+        },
     ]
     all_tags = set([])
 
@@ -238,6 +244,8 @@ class CommandImportWordpress(Command, ImportMixin):
         self.use_wordpress_compiler = options.get('use_wordpress_compiler', False)
         self.install_wordpress_compiler = options.get('install_wordpress_compiler', False)
         self.wordpress_page_compiler = None
+
+        self.tag_saniziting_strategy = options.get('tag_saniziting_strategy', 'first')
 
         self.auth = None
         if options.get('download_auth') is not None:
@@ -750,6 +758,24 @@ class CommandImportWordpress(Command, ImportMixin):
             tags_cats = tags + categories
         return tags_cats, other_meta
 
+    _tag_sanitize_map = {True: {}, False: {}}
+
+    def _sanitize(self, tag, is_category):
+        if self.tag_saniziting_strategy == 'lower':
+            return tag.lower()
+        if tag.lower() not in self._tag_sanitize_map[is_category]:
+            self._tag_sanitize_map[is_category][tag.lower()] = [tag]
+            return tag
+        previous = self._tag_sanitize_map[is_category][tag.lower()]
+        if self.tag_saniziting_strategy == 'first':
+            if tag != previous[0]:
+                LOGGER.warn("Changing spelling of {0} name '{1}' to {2}.".format('category' if is_category else 'tag', tag, previous[0]))
+            return previous[0]
+        else:
+            LOGGER.error("Unknown tag sanitizing strategy '{0}'!".format(self.tag_saniziting_strategy))
+            sys.exit(1)
+        return tag
+
     def import_postpage_item(self, item, wordpress_namespace, out_folder=None, attachments=None):
         """Take an item from the feed and creates a post file."""
         if out_folder is None:
@@ -837,7 +863,6 @@ class CommandImportWordpress(Command, ImportMixin):
                 type = tag.attrib['domain']
             if text == 'Uncategorized' and type == 'category':
                 continue
-            self.all_tags.add(text)
             if type == 'category':
                 categories.append(text)
             else:
@@ -845,6 +870,16 @@ class CommandImportWordpress(Command, ImportMixin):
 
         if '$latex' in content:
             tags.append('mathjax')
+
+        for i, cat in enumerate(categories[:]):
+            cat = self._sanitize(cat, True)
+            categories[i] = cat
+            self.all_tags.add(cat)
+
+        for i, tag in enumerate(tags[:]):
+            tag = self._sanitize(tag, False)
+            tags[i] = tag
+            self.all_tags.add(tag)
 
         # Find post format if it's there
         post_format = 'wp'
