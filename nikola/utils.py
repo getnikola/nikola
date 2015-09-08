@@ -62,6 +62,7 @@ from pygments.formatters import HtmlFormatter
 from zipfile import ZipFile as zipf
 from doit import tools
 from unidecode import unidecode
+from unicodedata import normalize as unicodenormalize
 from pkg_resources import resource_filename
 from doit.cmdparse import CmdParse
 
@@ -793,8 +794,9 @@ def unslugify(value, discard_numbers=True):
 
 def encodelink(iri):
     """Given an encoded or unencoded link string, return an encoded string suitable for use as a link in HTML and XML."""
-    link = OrderedDict(urlparse(iri).__dict__)
-    link['path'] = urlquote(urlunquote(link['path']))
+    iri = unicodenormalize('NFC', iri)
+    link = OrderedDict(urlparse(iri)._asdict())
+    link['path'] = urlquote(urlunquote(link['path']).encode('utf-8'))
     try:
         link['netloc'] = link['netloc'].encode('utf-8').decode('idna').encode('idna').decode('utf-8')
     except UnicodeDecodeError:
