@@ -1041,6 +1041,8 @@ class LocaleBorg(object):
         assert initial_lang is not None and initial_lang in locales
         cls.reset()
         cls.locales = locales
+        cls.month_name_handlers = []
+        cls.formatted_date_handlers = []
 
         # needed to decode some localized output in py2x
         encodings = {}
@@ -1063,6 +1065,15 @@ class LocaleBorg(object):
         cls.encodings = {}
         cls.__shared_state = {'current_lang': None}
         cls.initialized = False
+        cls.month_name_handlers = []
+        cls.formatted_date_handlers = []
+
+    @classmethod
+    def add_handler(cls, month_name_handler, formatted_date_handler):
+        if month_name_handler is not None:
+            cls.month_name_handlers.append(month_name_handler)
+        if formatted_date_handler is not None:
+            cls.formatted_date_handlers.append(formatted_date_handler)
 
     def __init__(self):
         """Initialize."""
@@ -1088,6 +1099,10 @@ class LocaleBorg(object):
 
     def get_month_name(self, month_no, lang):
         """Return localized month name in an unicode string."""
+        for handler in self.month_name_handlers:
+            res = handler(month_no, lang)
+            if res is not None:
+                return res
         if sys.version_info[0] == 3:  # Python 3
             with calendar.different_locale(self.locales[lang]):
                 s = calendar.month_name[month_no]
@@ -1106,12 +1121,20 @@ class LocaleBorg(object):
 
     def formatted_date(self, date_format, date):
         """Return the formatted date as unicode."""
-        if date_format == 'webiso':
-            # Formatted after RFC 3339 (web ISO 8501 profile) with Zulu
-            # zone desgignator for times in UTC and no microsecond precision.
-            fmt_date = date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
-        else:
-            fmt_date = date.strftime(date_format)
+        fmt_date = None
+        # First check handlers
+        for handler in self.formatted_date_handlers:
+            fmt_date = handler(date_format, date, self.__shared_state['current_lang'])
+            if fmt_date is not None:
+                break
+        # If no handler was able to format the date, ask Python
+        if fmt_date is None:
+            if date_format == 'webiso':
+                # Formatted after RFC 3339 (web ISO 8501 profile) with Zulu
+                # zone desgignator for times in UTC and no microsecond precision.
+                fmt_date = date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
+            else:
+                fmt_date = date.strftime(date_format)
 
         # Issue #383, this changes from py2 to py3
         if isinstance(fmt_date, bytes_str):
