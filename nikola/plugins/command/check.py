@@ -212,7 +212,7 @@ class CommandCheck(Command):
                 # Quietly ignore files that don’t exist; use `nikola check -f` instead (Issue #1831)
                 return False
 
-            if '.html' == fname[-5:]:  # DISABLED
+            if '.html' == fname[-5:]:
                 d = lxml.html.fromstring(open(filename, 'rb').read())
                 extra_objs = lxml.html.fromstring('<html/>')
 
@@ -340,6 +340,7 @@ class CommandCheck(Command):
 
                 if any(re.search(x, target_filename) for x in self.whitelist):
                     continue
+
                 elif target_filename not in self.existing_targets:
                     if os.path.exists(target_filename):
                         self.logger.notice("Good link {0} => {1}".format(target, target_filename))
