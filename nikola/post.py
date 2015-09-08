@@ -707,8 +707,6 @@ class Post(object):
     def source_link(self, lang=None):
         """Return absolute link to the post's source."""
         ext = self.source_ext(True)
-
-
         link = "/" + self.destination_path(lang=lang, extension=ext, sep='/')
         link = utils.encodelink(link)
         return link

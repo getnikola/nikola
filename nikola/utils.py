@@ -805,6 +805,7 @@ def encodelink(iri):
 # A very slightly safer version of zip.extractall that works on
 # python < 2.6
 
+
 class UnsafeZipException(Exception):
 
     """Exception for unsafe zip files."""
