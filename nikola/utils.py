@@ -71,7 +71,7 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_chain', 'load_messages'
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
            'NikolaPygmentsHTML', 'create_redirect', 'TreeNode',
            'flatten_tree_structure', 'parse_escaped_hierarchical_category_name',
-           'join_hierarchical_category_path', 'indent', 'formatted_date')
+           'join_hierarchical_category_path', 'indent')
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -1041,6 +1041,8 @@ class LocaleBorg(object):
         assert initial_lang is not None and initial_lang in locales
         cls.reset()
         cls.locales = locales
+        cls.month_name_handlers = []
+        cls.formatted_date_handlers = []
 
         # needed to decode some localized output in py2x
         encodings = {}
@@ -1063,6 +1065,29 @@ class LocaleBorg(object):
         cls.encodings = {}
         cls.__shared_state = {'current_lang': None}
         cls.initialized = False
+        cls.month_name_handlers = []
+        cls.formatted_date_handlers = []
+
+    @classmethod
+    def add_handler(cls, month_name_handler=None, formatted_date_handler=None):
+        """Allow to add month name and formatted date handlers.
+
+        If month_name_handler is not None, it is expected to be a callable
+        which accepts (month_no, lang) and returns either a string or None.
+
+        If formatted_date_handler is not None, it is expected to be a callable
+        which accepts (date_format, date, lang) and returns either a string or
+        None.
+
+        A handler is expected to either return the correct result for the given
+        language and data, or return None to indicate it is not able to do the
+        job. In that case, the next handler is asked, and finally the default
+        implementation is used.
+        """
+        if month_name_handler is not None:
+            cls.month_name_handlers.append(month_name_handler)
+        if formatted_date_handler is not None:
+            cls.formatted_date_handlers.append(formatted_date_handler)
 
     def __init__(self):
         """Initialize."""
@@ -1088,6 +1113,10 @@ class LocaleBorg(object):
 
     def get_month_name(self, month_no, lang):
         """Return localized month name in an unicode string."""
+        for handler in self.month_name_handlers:
+            res = handler(month_no, lang)
+            if res is not None:
+                return res
         if sys.version_info[0] == 3:  # Python 3
             with calendar.different_locale(self.locales[lang]):
                 s = calendar.month_name[month_no]
@@ -1103,6 +1132,28 @@ class LocaleBorg(object):
         # paranoid about calendar ending in the wrong locale (windows)
         self.set_locale(self.current_lang)
         return s
+
+    def formatted_date(self, date_format, date):
+        """Return the formatted date as unicode."""
+        fmt_date = None
+        # First check handlers
+        for handler in self.formatted_date_handlers:
+            fmt_date = handler(date_format, date, self.__shared_state['current_lang'])
+            if fmt_date is not None:
+                break
+        # If no handler was able to format the date, ask Python
+        if fmt_date is None:
+            if date_format == 'webiso':
+                # Formatted after RFC 3339 (web ISO 8501 profile) with Zulu
+                # zone desgignator for times in UTC and no microsecond precision.
+                fmt_date = date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
+            else:
+                fmt_date = date.strftime(date_format)
+
+        # Issue #383, this changes from py2 to py3
+        if isinstance(fmt_date, bytes_str):
+            fmt_date = fmt_date.decode('utf8')
+        return fmt_date
 
 
 class ExtendedRSS2(rss.RSS2):
@@ -1732,18 +1783,3 @@ def indent(text, prefix, predicate=None):
         for line in text.splitlines(True):
             yield (prefix + line if predicate(line) else line)
     return ''.join(prefixed_lines())
-
-
-def formatted_date(date_format, date):
-    """Return the formatted date as unicode."""
-    if date_format == 'webiso':
-        # Formatted after RFC 3339 (web ISO 8501 profile) with Zulu
-        # zone desgignator for times in UTC and no microsecond precision.
-        fmt_date = date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
-    else:
-        fmt_date = date.strftime(date_format)
-
-    # Issue #383, this changes from py2 to py3
-    if isinstance(fmt_date, bytes_str):
-        fmt_date = fmt_date.decode('utf8')
-    return fmt_date
