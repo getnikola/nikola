@@ -760,7 +760,7 @@ def slugify(value, force=False):
         # This is the standard state of slugify, which actually does some work.
         # It is the preferred style, especially for Western languages.
         value = unicode_str(unidecode(value))
-        value = _slugify_strip_re.sub('', value, re.UNICODE).strip()
+        value = _slugify_strip_re.sub('', value, re.UNICODE).strip().lower()
         return _slugify_hyphenate_re.sub('-', value, re.UNICODE)
     else:
         # This is the “disarmed” state of slugify, which lets the user
@@ -775,7 +775,7 @@ def slugify(value, force=False):
 
         for c in rc:
             value = value.replace(c, '-')
-        return value.lower()
+        return value
 
 
 def unslugify(value, discard_numbers=True):
