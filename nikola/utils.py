@@ -1069,7 +1069,21 @@ class LocaleBorg(object):
         cls.formatted_date_handlers = []
 
     @classmethod
-    def add_handler(cls, month_name_handler, formatted_date_handler):
+    def add_handler(cls, month_name_handler=None, formatted_date_handler=None):
+        """Allow to add month name and formatted date handlers.
+
+        If month_name_handler is not None, it is expected to be a callable
+        which accepts (month_no, lang) and returns either a string or None.
+
+        If formatted_date_handler is not None, it is expected to be a callable
+        which accepts (date_format, date, lang) and returns either a string or
+        None.
+
+        A handler is expected to either return the correct result for the given
+        language and data, or return None to indicate it is not able to do the
+        job. In that case, the next handler is asked, and finally the default
+        implementation is used.
+        """
         if month_name_handler is not None:
             cls.month_name_handlers.append(month_name_handler)
         if formatted_date_handler is not None:
