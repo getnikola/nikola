@@ -1834,7 +1834,7 @@ class Nikola(object):
         feed_id = lxml.etree.SubElement(feed_root, "id")
         feed_id.text = self.abs_link(context["feedlink"])
         feed_updated = lxml.etree.SubElement(feed_root, "updated")
-        feed_updated.text = utils.formatted_date('webiso', datetime.datetime.now(tz=dateutil.tz.tzutc()))
+        feed_updated.text = utils.LocaleBorg().formatted_date('webiso', datetime.datetime.now(tz=dateutil.tz.tzutc()))
         feed_author = lxml.etree.SubElement(feed_root, "author")
         feed_author_name = lxml.etree.SubElement(feed_author, "name")
         feed_author_name.text = self.config["BLOG_AUTHOR"](lang)

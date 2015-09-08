@@ -323,7 +323,7 @@ class Post(object):
 
     def formatted_date(self, date_format, date=None):
         """Return the formatted date as unicode."""
-        return utils.formatted_date(date_format, date if date else self.date)
+        return utils.LocaleBorg().formatted_date(date_format, date if date else self.date)
 
     def formatted_updated(self, date_format):
         """Return the updated date as unicode."""
