@@ -323,8 +323,9 @@ class CommandCheck(Command):
                         target_filename = os.path.abspath(
                             os.path.join(self.site.config['OUTPUT_FOLDER'], unquote(target.lstrip('/'))))
                     else:  # Relative path
+                        unquoted_target = unquote(target).encode('utf-8') if sys.version_info.major >= 3 else unquote(target).decode('utf-8')
                         target_filename = os.path.abspath(
-                            os.path.join(os.path.dirname(filename), unquote(target)))
+                            os.path.join(os.path.dirname(filename).encode('utf-8'), unquoted_target))
 
                 elif url_type in ('full_path', 'absolute'):
                     if url_type == 'absolute':
@@ -343,7 +344,7 @@ class CommandCheck(Command):
 
                 elif target_filename not in self.existing_targets:
                     if os.path.exists(target_filename):
-                        self.logger.notice("Good link {0} => {1}".format(target, target_filename))
+                        self.logger.notice(u"Good link {0} => {1}".format(target, target_filename))
                         self.existing_targets.add(target_filename)
                     else:
                         rv = True
@@ -353,7 +354,7 @@ class CommandCheck(Command):
                             self.logger.warn("\n".join(deps[filename]))
                             self.logger.warn("===============================\n")
         except Exception as exc:
-            self.logger.error("Error with: {0} {1}".format(filename, exc))
+            self.logger.error(u"Error with: {0} {1}".format(filename, exc))
         return rv
 
     def scan_links(self, find_sources=False, check_remote=False):
