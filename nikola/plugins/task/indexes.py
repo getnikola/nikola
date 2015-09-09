@@ -46,11 +46,22 @@ class Indexes(Task):
 
     def set_site(self, site):
         """Set Nikola site."""
+        self.number_of_pages = dict()
+        self.number_of_pages_section = {lang: dict() for lang in site.config['TRANSLATIONS']}
         site.register_path_handler('index', self.index_path)
         site.register_path_handler('index_atom', self.index_atom_path)
         site.register_path_handler('section_index', self.index_section_path)
         site.register_path_handler('section_index_atom', self.index_section_atom_path)
         return super(Indexes, self).set_site(site)
+
+    def _get_filtered_posts(self, language, show_untranslated_posts):
+        if show_untranslated_posts:
+            return self.site.posts
+        else:
+            return [x for x in self.site.posts if x.is_translation_available(language)]
+
+    def _compute_number_of_pages(self, filtered_posts, posts_count):
+        return min(1, (len(filtered_posts) + posts_count - 1) // posts_count)
 
     def gen_tasks(self):
         """Render the blog indexes."""
@@ -73,8 +84,6 @@ class Indexes(Task):
 
         template_name = "index.tmpl"
         posts = self.site.posts
-        self.number_of_pages = dict()
-        self.number_of_pages_section = dict()
         for lang in kw["translations"]:
             def page_link(i, displayed_i, num_pages, force_addition, extension=None):
                 feed = "_atom" if extension == ".atom" else ""
@@ -86,13 +95,10 @@ class Indexes(Task):
                 return utils.adjust_name_for_index_path(self.site.path("index" + feed, None, lang), i, displayed_i,
                                                         lang, self.site, force_addition, extension)
 
-            if kw["show_untranslated_posts"]:
-                filtered_posts = posts
-            else:
-                filtered_posts = [x for x in posts if x.is_translation_available(lang)]
+            filtered_posts = self._get_filtered_posts(language, kw["show_untranslated_posts"])
 
             indexes_title = kw['indexes_title'](lang) or kw['blog_title'](lang)
-            self.number_of_pages[lang] = (len(filtered_posts) + kw['index_display_post_count'] - 1) // kw['index_display_post_count']
+            self.number_of_pages[lang] = self._compute_number_of_pages(filtered_posts, kw['index_display_post_count'])
 
             context = {}
             context["pagekind"] = ["main_index", "index"]
@@ -113,9 +119,7 @@ class Indexes(Task):
                     continue
 
                 for section_slug, post_list in groups.items():
-                    if lang not in self.number_of_pages_section:
-                        self.number_of_pages_section[lang] = dict()
-                    self.number_of_pages_section[lang][section_slug] = (len(post_list) + kw['index_display_post_count'] - 1) // kw['index_display_post_count']
+                    self.number_of_pages_section[lang][section_slug] = self._compute_number_of_pages(post_list, kw['index_display_post_count'])
 
                     def cat_link(i, displayed_i, num_pages, force_addition, extension=None):
                         feed = "_atom" if extension == ".atom" else ""
@@ -230,11 +234,16 @@ class Indexes(Task):
             index_file = os.path.splitext(self.site.config['INDEX_FILE'])[0] + extension
         else:
             index_file = self.site.config['INDEX_FILE']
+        if lang in self.number_of_pages:
+            number_of_pages = self.number_of_pages[lang]
+        else:
+            number_of_pages = self._compute_number_of_pages(self._get_filtered_posts(lang, self.site.config['SHOW_UNTRANSLATED_POSTS']), self.site.config['INDEX_DISPLAY_POST_COUNT'])
+            self.number_of_pages[lang] = number_of_pages
         return utils.adjust_name_for_index_path_list([_f for _f in [self.site.config['TRANSLATIONS'][lang],
                                                                     self.site.config['INDEX_PATH'],
                                                                     index_file] if _f],
                                                      name,
-                                                     utils.get_displayed_page_number(name, self.number_of_pages[lang], self.site),
+                                                     utils.get_displayed_page_number(name, self.number_of_pages, self.site),
                                                      lang,
                                                      self.site,
                                                      extension=extension)
@@ -253,11 +262,17 @@ class Indexes(Task):
             index_file = os.path.splitext(self.site.config['INDEX_FILE'])[0] + extension
         else:
             index_file = self.site.config['INDEX_FILE']
+        if name in self.number_of_pages_section[lang]:
+            number_of_pages = self.number_of_pages_section[lang][name]
+        else:
+            posts = [post for post in self._get_filtered_posts(lang, self.site.config['SHOW_UNTRANSLATED_POSTS']) if p.section_slug(lang) == name]
+            number_of_pages = self._compute_number_of_pages(posts, self.site.config['INDEX_DISPLAY_POST_COUNT'])
+            self.number_of_pages_section[lang][name] = number_of_pages
         return utils.adjust_name_for_index_path_list([_f for _f in [self.site.config['TRANSLATIONS'][lang],
                                                                     name,
                                                                     index_file] if _f],
                                                      None,
-                                                     utils.get_displayed_page_number(None, self.number_of_pages_section[lang][name], self.site),
+                                                     utils.get_displayed_page_number(None, number_of_pages, self.site),
                                                      lang,
                                                      self.site,
                                                      extension=extension)
