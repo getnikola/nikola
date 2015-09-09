@@ -563,9 +563,12 @@ class Galleries(Task, ImageProcessor):
         for img, thumb, title in zip(img_list, thumbs, img_titles):
             w, h = _image_size_cache.get(thumb, (None, None))
             if w is None:
-                im = Image.open(thumb)
-                w, h = im.size
-                _image_size_cache[thumb] = w, h
+                if os.path.splitext(thumb)[1] in ['.svg', '.svgz']:
+                    w, h = 200, 200
+                else:
+                    im = Image.open(thumb)
+                    w, h = im.size
+                    _image_size_cache[thumb] = w, h
             # Thumbs are files in output, we need URLs
             photo_array.append({
                 'url': url_from_path(img),

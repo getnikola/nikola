@@ -52,7 +52,7 @@ class ImageProcessor(object):
 
     def resize_image(self, src, dst, max_size, bigger_panoramas=True):
         """Make a copy of the image in the requested size."""
-        if not Image:
+        if not Image or os.path.splitext(src)[1] in ['.svg', '.svgz']:
             utils.copy_file(src, dst)
             return
         im = Image.open(src)
