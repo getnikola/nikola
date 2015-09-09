@@ -83,7 +83,6 @@ class Indexes(Task):
         }
 
         template_name = "index.tmpl"
-        posts = self.site.posts
         for lang in kw["translations"]:
             def page_link(i, displayed_i, num_pages, force_addition, extension=None):
                 feed = "_atom" if extension == ".atom" else ""
@@ -265,7 +264,7 @@ class Indexes(Task):
         if name in self.number_of_pages_section[lang]:
             number_of_pages = self.number_of_pages_section[lang][name]
         else:
-            posts = [post for post in self._get_filtered_posts(lang, self.site.config['SHOW_UNTRANSLATED_POSTS']) if p.section_slug(lang) == name]
+            posts = [post for post in self._get_filtered_posts(lang, self.site.config['SHOW_UNTRANSLATED_POSTS']) if post.section_slug(lang) == name]
             number_of_pages = self._compute_number_of_pages(posts, self.site.config['INDEX_DISPLAY_POST_COUNT'])
             self.number_of_pages_section[lang][name] = number_of_pages
         return utils.adjust_name_for_index_path_list([_f for _f in [self.site.config['TRANSLATIONS'][lang],
