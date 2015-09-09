@@ -54,11 +54,11 @@ class Indexes(Task):
         site.register_path_handler('section_index_atom', self.index_section_atom_path)
         return super(Indexes, self).set_site(site)
 
-    def _get_filtered_posts(self, language, show_untranslated_posts):
+    def _get_filtered_posts(self, lang, show_untranslated_posts):
         if show_untranslated_posts:
             return self.site.posts
         else:
-            return [x for x in self.site.posts if x.is_translation_available(language)]
+            return [x for x in self.site.posts if x.is_translation_available(lang)]
 
     def _compute_number_of_pages(self, filtered_posts, posts_count):
         return min(1, (len(filtered_posts) + posts_count - 1) // posts_count)
@@ -95,7 +95,7 @@ class Indexes(Task):
                 return utils.adjust_name_for_index_path(self.site.path("index" + feed, None, lang), i, displayed_i,
                                                         lang, self.site, force_addition, extension)
 
-            filtered_posts = self._get_filtered_posts(language, kw["show_untranslated_posts"])
+            filtered_posts = self._get_filtered_posts(lang, kw["show_untranslated_posts"])
 
             indexes_title = kw['indexes_title'](lang) or kw['blog_title'](lang)
             self.number_of_pages[lang] = self._compute_number_of_pages(filtered_posts, kw['index_display_post_count'])
