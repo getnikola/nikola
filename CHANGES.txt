@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Plugins can declare JS and CSS assets to be bundled (Issue #656)
 * Support SVG in galleries (Issue #1605)
 * Allow inheriting templates with theme name (Issue #1814)
 * Made TAG_PATH translatable (Issue #1914)

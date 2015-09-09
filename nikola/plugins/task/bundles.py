@@ -122,13 +122,19 @@ class BuildBundles(LateTask):
                 yield utils.apply_filters(task, kw['filters'])
 
 
-def get_theme_bundles(themes):
+def get_all_bundles(site):
     """Given a theme chain, return the bundle definitions."""
     bundles = {}
-    for theme_name in themes:
-        bundles_path = os.path.join(
-            utils.get_theme_path(theme_name), 'bundles')
-        if os.path.isfile(bundles_path):
+    themes = filter(
+        os.path.isfile,
+        [os.path.join(utils.get_theme_path(theme_name), 'bundles') for theme_name in site.THEMES]
+    )
+    plugins = filter(
+        os.path.isfile, 
+        [os.path.join(p.path, 'bundles') for p in site.plugin_manager.getAllPlugins()]
+    )
+    
+    for bundles_path in themes:
             with open(bundles_path) as fd:
                 for line in fd:
                     try:
@@ -139,4 +145,21 @@ def get_theme_bundles(themes):
                         # for empty lines
                         pass
                 break
+    return bundles
+
+def get_plugin_bundles(site):
+    """Get all the bundles declared by all the plugins in the site."""
+    bundles = {}
+    
+    bundles_paths = filter(os.path.isfile, bundles_paths)
+    for p in bundles_paths:
+        with open(p) as fd:
+            for line in fd:
+                try:
+                    name, files = line.split('=')
+                    files = [f.strip() for f in files.split(',')]
+                    bundles[name.strip().replace('/', os.sep)] = files
+                except ValueError:
+                    # for empty lines
+                    pass
     return bundles
