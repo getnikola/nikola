@@ -14,6 +14,7 @@ Features
 Bugfixes
 --------
 
+* Monitor plugins/ in ``nikola auto`` (Issue #2044)
 * Multi-lingual and multi-level directories confused section slug
   detection (Issue #2023)
 * Use Unicode strings for WordPress comment headers (Issue #2019)
