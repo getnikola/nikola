@@ -1,0 +1,145 @@
+# Messages in Nikola
+# Copyright (C) 2012-2013
+# This file is distributed under the same license as the Nikola package.
+# 
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# knulp <knulphaller@gmail.com>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Nikola\n"
+"Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
+"POT-Creation-Date: 2013-03-15 12:24-0300\n"
+"PO-Revision-Date: 2015-08-31 07:51+0000\n"
+"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"Language-Team: Azerbaijani (http://www.transifex.com/ralsina/nikola/language/az/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: az\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "More posts about %s"
+msgstr "%s ilə bağlı digər yazılar"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "LANGUAGE"
+msgstr "Azərbaycan dili"
+
+msgid "Tags"
+msgstr "Teqlər"
+
+msgid "Categories"
+msgstr "Kateqoriyalar"
+
+msgid "Tags and Categories"
+msgstr "Teqlər və Kateqoriyalar"
+
+msgid "Comments"
+msgstr "Şərhlər"
+
+msgid "Read more"
+msgstr "Davamı"
+
+msgid "Posts about %s"
+msgstr "%s ilə bağlı yazılar"
+
+msgid "Next post"
+msgstr "Növbəti yazı"
+
+msgid "old posts, page %d"
+msgstr "köhnə yazılar, səhifə %s"
+
+msgid "page %d"
+msgstr "səhifə %d"
+
+msgid "Source"
+msgstr "Mənbə"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "Read in English"
+msgstr "Azərbaycan dilində oxu"
+
+msgid "Posts for year %s"
+msgstr "%s ilindəki yazılar"
+
+msgid "Newer posts"
+msgstr "Yeni yazılar"
+
+msgid "Previous post"
+msgstr "Əvvəlki yazı"
+
+msgid "Also available in:"
+msgstr "Həmçinin mövcuddur:"
+
+msgid "Languages:"
+msgstr "Dillər:"
+
+msgid "Original site"
+msgstr "Original sayt"
+
+msgid "Older posts"
+msgstr "Köhnə yazılar"
+
+msgid "Archive"
+msgstr "Arxiv"
+
+msgid "Publication date"
+msgstr "Buraxılış tarixi"
+
+msgid "Posted:"
+msgstr "yazılma tarixi:"
+
+msgid "Posts for {month} {year}"
+msgstr "{month} {year} üçün yazılar"
+
+msgid "Posts for {month} {day}, {year}"
+msgstr "{month} {day}, {year} üçün yazılar"
+
+msgid "Nothing found."
+msgstr "Heç nə tapılmadı"
+
+msgid "No posts found."
+msgstr "Heç bir yazı tapılmadı"
+
+msgid "RSS feed"
+msgstr "RSS"
+
+msgid "%d min remaining to read"
+msgstr "%d dəqiqəlik oxuma"
+
+msgid "Skip to main content"
+msgstr "Əsas mövzuya keç"
+
+msgid "Subcategories:"
+msgstr ""
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
+msgstr ""
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr ""
+
+#. Default content for a new page
+msgid "Write your page here."
+msgstr ""
+
+msgid "Uncategorized"
+msgstr ""
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr ""
+
+msgid "Authors"
+msgstr ""
+
+msgid "Posts by %s"
+msgstr ""

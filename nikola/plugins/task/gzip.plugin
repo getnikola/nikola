@@ -1,10 +1,13 @@
 [Core]
-Name = gzip
-Module = gzip
+name = gzip
+module = gzip
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Create gzipped copies of files
+author = Roberto Alsina
+version = 1.0
+website = https://getnikola.com/
+description = Create gzipped copies of files
+
+[Nikola]
+plugincategory = Task
 

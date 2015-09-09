@@ -29,30 +29,32 @@
 from __future__ import unicode_literals
 
 import os
-import re
 import io
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, write_metadata
 
-_META_SEPARATOR = '(' + os.linesep * 2 + '|' + ('\n' * 2) + '|' + ("\r\n" * 2) + ')'
-
 
 class CompileHtml(PageCompiler):
+
     """Compile HTML into HTML."""
+
     name = "html"
+    friendly_name = "HTML"
 
     def compile_html(self, source, dest, is_two_file=True):
+        """Compile source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
             if not is_two_file:
-                data = re.split(_META_SEPARATOR, data, maxsplit=1)[-1]
+                _, data = self.split_metadata(data)
             out_file.write(data)
         return True
 
     def create_post(self, path, **kw):
+        """Create a new post."""
         content = kw.pop('content', None)
         onefile = kw.pop('onefile', False)
         # is_page is not used by create_post as of now.

@@ -24,19 +24,17 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Install a theme."""
+
 from __future__ import print_function
 import os
 import io
-import json
+import time
+import requests
 
 import pygments
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter
-
-try:
-    import requests
-except ImportError:
-    requests = None  # NOQA
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -44,26 +42,8 @@ from nikola import utils
 LOGGER = utils.get_logger('install_theme', utils.STDERR_HANDLER)
 
 
-# Stolen from textwrap in Python 3.3.2.
-def indent(text, prefix, predicate=None):  # NOQA
-    """Adds 'prefix' to the beginning of selected lines in 'text'.
-
-    If 'predicate' is provided, 'prefix' will only be added to the lines
-    where 'predicate(line)' is True. If 'predicate' is not provided,
-    it will default to adding 'prefix' to all non-empty lines that do not
-    consist solely of whitespace characters.
-    """
-    if predicate is None:
-        def predicate(line):
-            return line.strip()
-
-    def prefixed_lines():
-        for line in text.splitlines(True):
-            yield (prefix + line if predicate(line) else line)
-    return ''.join(prefixed_lines())
-
-
 class CommandInstallTheme(Command):
+
     """Install a theme."""
 
     name = "install_theme"
@@ -85,16 +65,21 @@ class CommandInstallTheme(Command):
             'long': 'url',
             'type': str,
             'help': "URL for the theme repository (default: "
-                    "http://themes.getnikola.com/v7/themes.json)",
-            'default': 'http://themes.getnikola.com/v7/themes.json'
+                    "https://themes.getnikola.com/v7/themes.json)",
+            'default': 'https://themes.getnikola.com/v7/themes.json'
+        },
+        {
+            'name': 'getpath',
+            'short': 'g',
+            'long': 'get-path',
+            'type': bool,
+            'default': False,
+            'help': "Print the path for installed theme",
         },
     ]
 
     def _execute(self, options, args):
         """Install theme into current site."""
-        if requests is None:
-            utils.req_missing(['requests'], 'install themes')
-
         listing = options['list']
         url = options['url']
         if args:
@@ -102,11 +87,24 @@ class CommandInstallTheme(Command):
         else:
             name = None
 
+        if options['getpath'] and name:
+            path = utils.get_theme_path(name)
+            if path:
+                print(path)
+            else:
+                print('not installed')
+            return 0
+
         if name is None and not listing:
             LOGGER.error("This command needs either a theme name or the -l option.")
             return False
-        data = requests.get(url).text
-        data = json.loads(data)
+        try:
+            data = requests.get(url).json()
+        except requests.exceptions.SSLError:
+            LOGGER.warning("SSL error, using http instead of https (press ^C to abort)")
+            time.sleep(1)
+            url = url.replace('https', 'http', 1)
+            data = requests.get(url).json()
         if listing:
             print("Themes:")
             print("-------")
@@ -132,11 +130,21 @@ class CommandInstallTheme(Command):
                 LOGGER.notice('Remember to set THEME="{0}" in conf.py to use this theme.'.format(origname))
 
     def do_install(self, name, data):
+        """Download and install a theme."""
         if name in data:
             utils.makedirs(self.output_dir)
-            LOGGER.info("Downloading '{0}'".format(data[name]))
+            url = data[name]
+            LOGGER.info("Downloading '{0}'".format(url))
+            try:
+                zip_data = requests.get(url).content
+            except requests.exceptions.SSLError:
+                LOGGER.warning("SSL error, using http instead of https (press ^C to abort)")
+                time.sleep(1)
+                url = url.replace('https', 'http', 1)
+                zip_data = requests.get(url).content
+
             zip_file = io.BytesIO()
-            zip_file.write(requests.get(data[name]).content)
+            zip_file.write(zip_data)
             LOGGER.info("Extracting '{0}' into themes/".format(name))
             utils.extract_all(zip_file)
             dest_path = os.path.join(self.output_dir, name)
@@ -156,9 +164,9 @@ class CommandInstallTheme(Command):
             print('Contents of the conf.py.sample file:\n')
             with io.open(confpypath, 'r', encoding='utf-8') as fh:
                 if self.site.colorful:
-                    print(indent(pygments.highlight(
+                    print(utils.indent(pygments.highlight(
                         fh.read(), PythonLexer(), TerminalFormatter()),
                         4 * ' '))
                 else:
-                    print(indent(fh.read(), 4 * ' '))
+                    print(utils.indent(fh.read(), 4 * ' '))
         return True

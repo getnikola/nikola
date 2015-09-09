@@ -1,10 +1,13 @@
 [Core]
-Name = install_theme
-Module = install_theme
+name = install_theme
+module = install_theme
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Install a theme into the current site.
+author = Roberto Alsina
+version = 1.0
+website = https://getnikola.com/
+description = Install a theme into the current site.
+
+[Nikola]
+plugincategory = Command
 

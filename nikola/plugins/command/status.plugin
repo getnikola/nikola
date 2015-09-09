@@ -1,0 +1,13 @@
+[Core]
+name = status
+module = status
+
+[Documentation]
+author = Daniel Aleksandersen
+version = 1.0
+website = https://getnikola.com
+description = Site status
+
+[Nikola]
+plugincategory = Command
+

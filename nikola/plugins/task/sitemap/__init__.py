@@ -24,10 +24,14 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Generate a sitemap."""
+
 from __future__ import print_function, absolute_import, unicode_literals
 import io
 import datetime
+import dateutil.tz
 import os
+import sys
 try:
     from urlparse import urljoin, urlparse
     import robotparser as robotparser
@@ -42,6 +46,7 @@ from nikola.utils import config_changed, apply_filters
 urlset_header = """<?xml version="1.0" encoding="UTF-8"?>
 <urlset
     xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
@@ -49,7 +54,7 @@ urlset_header = """<?xml version="1.0" encoding="UTF-8"?>
 
 loc_format = """ <url>
   <loc>{0}</loc>
-  <lastmod>{1}</lastmod>
+  <lastmod>{1}</lastmod>{2}
  </url>
 """
 
@@ -58,6 +63,7 @@ urlset_footer = "</urlset>"
 sitemapindex_header = """<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex
     xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
@@ -69,11 +75,14 @@ sitemap_format = """ <sitemap>
  </sitemap>
 """
 
+alternates_format = """\n  <xhtml:link rel="alternate" hreflang="{0}" href="{1}" />"""
+
+
 sitemapindex_footer = "</sitemapindex>"
 
 
 def get_base_path(base):
-    """returns the path of a base URL if it contains one.
+    """Return the path of a base URL if it contains one.
 
     >>> get_base_path('http://some.site') == '/'
     True
@@ -98,6 +107,7 @@ def get_base_path(base):
 
 
 class Sitemap(LateTask):
+
     """Generate a sitemap."""
 
     name = "sitemap"
@@ -111,9 +121,12 @@ class Sitemap(LateTask):
             "strip_indexes": self.site.config["STRIP_INDEXES"],
             "index_file": self.site.config["INDEX_FILE"],
             "sitemap_include_fileless_dirs": self.site.config["SITEMAP_INCLUDE_FILELESS_DIRS"],
-            "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.html', '.htm', '.xml', '.rss']),
+            "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.atom', '.html', '.htm', '.php', '.xml', '.rss']),
             "robots_exclusions": self.site.config["ROBOTS_EXCLUSIONS"],
             "filters": self.site.config["FILTERS"],
+            "translations": self.site.config["TRANSLATIONS"],
+            "tzinfo": self.site.config['__tzinfo__'],
+            "sitemap_plugin_revision": 1,
         }
 
         output = kw['output_folder']
@@ -128,6 +141,7 @@ class Sitemap(LateTask):
         urlset = {}
 
         def scan_locs():
+            """Scan site locations."""
             for root, dirs, files in os.walk(output, followlinks=True):
                 if not dirs and not files and not kw['sitemap_include_fileless_dirs']:
                     continue  # Totally empty, not on sitemap
@@ -140,7 +154,14 @@ class Sitemap(LateTask):
                     post = self.site.post_per_file.get(path + kw['index_file'])
                     if post and (post.is_draft or post.is_private or post.publish_later):
                         continue
-                    urlset[loc] = loc_format.format(loc, lastmod)
+                    alternates = []
+                    if post:
+                        for lang in kw['translations']:
+                            alt_url = post.permalink(lang=lang, absolute=True)
+                            if loc == alt_url:
+                                continue
+                            alternates.append(alternates_format.format(lang, alt_url))
+                    urlset[loc] = loc_format.format(loc, lastmod, ''.join(alternates))
                 for fname in files:
                     if kw['strip_indexes'] and fname == kw['index_file']:
                         continue  # We already mapped the folder
@@ -152,20 +173,31 @@ class Sitemap(LateTask):
                             continue
                         if not robot_fetch(path):
                             continue
-                        if path.endswith('.html') or path.endswith('.htm'):
-                            try:
-                                if u'<!doctype html' not in io.open(real_path, 'r', encoding='utf8').read(1024).lower():
-                                    # ignores "html" files without doctype
-                                    # alexa-verify, google-site-verification, etc.
-                                    continue
-                            except UnicodeDecodeError:
-                                # ignore ancient files
-                                # most non-utf8 files are worthless anyways
+
+                        # read in binary mode to make ancient files work
+                        fh = open(real_path, 'rb')
+                        filehead = fh.read(1024)
+                        fh.close()
+
+                        if path.endswith('.html') or path.endswith('.htm') or path.endswith('.php'):
+                            """ ignores "html" files without doctype """
+                            if b'<!doctype html' not in filehead.lower():
                                 continue
-                        """ put RSS in sitemapindex[] instead of in urlset[], sitemap_path is included after it is generated """
-                        if path.endswith('.xml') or path.endswith('.rss'):
-                            filehead = io.open(real_path, 'r', encoding='utf8').read(512)
-                            if u'<rss' in filehead or (u'<urlset' in filehead and path != sitemap_path):
+
+                            """ ignores "html" files with noindex robot directives """
+                            robots_directives = [b'<meta content=noindex name=robots',
+                                                 b'<meta content=none name=robots',
+                                                 b'<meta name=robots content=noindex',
+                                                 b'<meta name=robots content=none']
+                            lowquothead = filehead.lower().decode('utf-8', 'ignore').replace('"', '').encode('utf-8')
+                            if any([robot_directive in lowquothead for robot_directive in robots_directives]):
+                                continue
+
+                        # put Atom and RSS in sitemapindex[] instead of in urlset[],
+                        # sitemap_path is included after it is generated
+                        if path.endswith('.xml') or path.endswith('.atom') or path.endswith('.rss'):
+                            known_elm_roots = (b'<feed', b'<rss', b'<urlset')
+                            if any([elm_root in filehead.lower() for elm_root in known_elm_roots]) and path != sitemap_path:
                                 path = path.replace(os.sep, '/')
                                 lastmod = self.get_lastmod(real_path)
                                 loc = urljoin(base_url, base_path + path)
@@ -179,17 +211,30 @@ class Sitemap(LateTask):
                         path = path.replace(os.sep, '/')
                         lastmod = self.get_lastmod(real_path)
                         loc = urljoin(base_url, base_path + path)
-                        urlset[loc] = loc_format.format(loc, lastmod)
+                        alternates = []
+                        if post:
+                            for lang in kw['translations']:
+                                alt_url = post.permalink(lang=lang, absolute=True)
+                                if loc == alt_url:
+                                    continue
+                                alternates.append(alternates_format.format(lang, alt_url))
+                        urlset[loc] = loc_format.format(loc, lastmod, '\n'.join(alternates))
 
         def robot_fetch(path):
+            """Check if robots can fetch a file."""
             for rule in kw["robots_exclusions"]:
                 robot = robotparser.RobotFileParser()
                 robot.parse(["User-Agent: *", "Disallow: {0}".format(rule)])
-                if not robot.can_fetch("*", '/' + path):
-                    return False  # not robot food
+                if sys.version_info[0] == 3:
+                    if not robot.can_fetch("*", '/' + path):
+                        return False  # not robot food
+                else:
+                    if not robot.can_fetch("*", ('/' + path).encode('utf-8')):
+                        return False  # not robot food
             return True
 
         def write_sitemap():
+            """Write sitemap to file."""
             # Have to rescan, because files may have been added between
             # task dep scanning and task execution
             with io.open(sitemap_path, 'w+', encoding='utf8') as outf:
@@ -201,16 +246,19 @@ class Sitemap(LateTask):
             sitemapindex[sitemap_url] = sitemap_format.format(sitemap_url, self.get_lastmod(sitemap_path))
 
         def write_sitemapindex():
+            """Write sitemap index."""
             with io.open(sitemapindex_path, 'w+', encoding='utf8') as outf:
                 outf.write(sitemapindex_header)
                 for k in sorted(sitemapindex.keys()):
                     outf.write(sitemapindex[k])
                 outf.write(sitemapindex_footer)
 
-        # Yield a task to calculate the dependencies of the sitemap
-        # Other tasks can depend on this output, instead of having
-        # to scan locations.
         def scan_locs_task():
+            """Yield a task to calculate the dependencies of the sitemap.
+
+            Other tasks can depend on this output, instead of having
+            to scan locations.
+            """
             scan_locs()
 
             # Generate a list of file dependencies for the actual generation
@@ -262,10 +310,15 @@ class Sitemap(LateTask):
         }, kw['filters'])
 
     def get_lastmod(self, p):
+        """Get last modification date."""
         if self.site.invariant:
             return '2038-01-01'
         else:
-            return datetime.datetime.fromtimestamp(os.stat(p).st_mtime).isoformat().split('T')[0]
+            # RFC 3339 (web ISO 8601 profile) represented in UTC with Zulu
+            # zone desgignator as recommeded for sitemaps. Second and
+            # microsecond precision is stripped for compatibility.
+            lastmod = datetime.datetime.utcfromtimestamp(os.stat(p).st_mtime).replace(tzinfo=dateutil.tz.gettz('UTC'), second=0, microsecond=0).isoformat().replace('+00:00', 'Z')
+            return lastmod
 
 if __name__ == '__main__':
     import doctest

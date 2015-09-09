@@ -1,9 +1,14 @@
 [Core]
-Name = rest_thumbnail
-Module = thumbnail
+name = rest_thumbnail
+module = thumbnail
+
+[Nikola]
+compiler = rest
+plugincategory = CompilerExtension
 
 [Documentation]
-Author = Pelle Nilsson
-Version = 0.1
-Website = http://getnikola.com
-Description = reST directive to facilitate enlargeable images with thumbnails
+author = Pelle Nilsson
+version = 0.1
+website = https://getnikola.com/
+description = reST directive to facilitate enlargeable images with thumbnails
+

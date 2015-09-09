@@ -115,3 +115,31 @@ msgstr "%d min remaining to read"
 
 msgid "Skip to main content"
 msgstr "Skip to main content"
+
+msgid "Subcategories:"
+msgstr "Subcategories:"
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
+msgstr "(active)"
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr "Write your post here."
+
+#. Default content for a new page
+msgid "Write your page here."
+msgstr "Write your page here."
+
+msgid "Uncategorized"
+msgstr "Uncategorized"
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr "Updates"
+
+msgid "Authors"
+msgstr "Authors"
+
+msgid "Posts by %s"
+msgstr "Posts by %s"

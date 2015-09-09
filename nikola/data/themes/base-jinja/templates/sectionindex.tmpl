@@ -1,0 +1,21 @@
+{#  -*- coding: utf-8 -*- #}
+{% extends 'index.tmpl' %}
+
+{% block extra_head %}
+    {{ super() }}
+    {% if generate_atom %}
+        <link rel="alternate" type="application/atom+xml" title="Atom for the {{ posts[0].section_name() }} section" href="{{ _link('section_index_atom', posts[0].section_slug()) }}">
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="sectionindex">
+    <header>
+        <h2><a href="{{ posts[0].section_link() }}">{{ title }}</a></h2>
+        {% if generate_atom %}
+            <p class="feedlink"><a href="{{ _link('section_index_atom', posts[0].section_slug()) }}" type="application/atom+xml">{{ messages('Updates') }}</a></p>
+        {% endif %}
+    </header>    
+    {{ super() }}
+</article>
+{% endblock %}

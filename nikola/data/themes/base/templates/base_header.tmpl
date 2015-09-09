@@ -2,7 +2,7 @@
 <%namespace name="base" file="base_helper.tmpl" import="*"/>
 
 <%def name="html_header()">
-    <header id="header" role="banner">
+    <header id="header">
         ${html_site_title()}
         ${html_translation_header()}
         ${html_navigation_links()}
@@ -28,7 +28,7 @@
 </%def>
 
 <%def name="html_navigation_links()">
-    <nav id="menu" role="navigation">
+    <nav id="menu">
     <ul>
     %for url, text in navigation_links[lang]:
         % if isinstance(url, tuple):
@@ -36,7 +36,7 @@
             <ul>
             %for suburl, text in url:
                 % if rel_link(permalink, suburl) == "#":
-                    <li class="active"><a href="${permalink}">${text}</a></li>
+                    <li class="active"><a href="${permalink}">${text} <span class="sr-only">${messages("(active)", lang)}</span></a></li>
                 %else:
                     <li><a href="${suburl}">${text}</a></li>
                 %endif
@@ -44,7 +44,7 @@
             </ul>
         % else:
             % if rel_link(permalink, url) == "#":
-                <li class="active"><a href="${permalink}">${text}</a></li>
+                <li class="active"><a href="${permalink}">${text} <span class="sr-only">${messages("(active)", lang)}</span></a></li>
             %else:
                 <li><a href="${url}">${text}</a></li>
             %endif

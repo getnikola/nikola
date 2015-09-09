@@ -24,21 +24,19 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Manage plugins."""
+
 from __future__ import print_function
 import io
 import os
 import shutil
 import subprocess
-import sys
+import time
+import requests
 
 import pygments
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter
-
-try:
-    import requests
-except ImportError:
-    requests = None  # NOQA
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -46,26 +44,8 @@ from nikola import utils
 LOGGER = utils.get_logger('plugin', utils.STDERR_HANDLER)
 
 
-# Stolen from textwrap in Python 3.3.2.
-def indent(text, prefix, predicate=None):  # NOQA
-    """Adds 'prefix' to the beginning of selected lines in 'text'.
-
-    If 'predicate' is provided, 'prefix' will only be added to the lines
-    where 'predicate(line)' is True. If 'predicate' is not provided,
-    it will default to adding 'prefix' to all non-empty lines that do not
-    consist solely of whitespace characters.
-    """
-    if predicate is None:
-        def predicate(line):
-            return line.strip()
-
-    def prefixed_lines():
-        for line in text.splitlines(True):
-            yield (prefix + line if predicate(line) else line)
-    return ''.join(prefixed_lines())
-
-
 class CommandPlugin(Command):
+
     """Manage plugins."""
 
     json = None
@@ -105,8 +85,8 @@ class CommandPlugin(Command):
             'long': 'url',
             'type': str,
             'help': "URL for the plugin repository (default: "
-                    "http://plugins.getnikola.com/v7/plugins.json)",
-            'default': 'http://plugins.getnikola.com/v7/plugins.json'
+                    "https://plugins.getnikola.com/v7/plugins.json)",
+            'default': 'https://plugins.getnikola.com/v7/plugins.json'
         },
         {
             'name': 'user',
@@ -142,6 +122,7 @@ class CommandPlugin(Command):
         upgrade = options.get('upgrade')
         list_available = options.get('list')
         list_installed = options.get('list_installed')
+        show_install_notes = options.get('show_install_notes', True)
         command_count = [bool(x) for x in (
             install,
             uninstall,
@@ -150,37 +131,42 @@ class CommandPlugin(Command):
             list_installed)].count(True)
         if command_count > 1 or command_count == 0:
             print(self.help())
-            return
+            return 2
 
-        if not self.site.configured and not user_mode and install:
-            LOGGER.notice('No site found, assuming --user')
-            user_mode = True
-
-        if user_mode:
-            self.output_dir = os.path.expanduser('~/.nikola/plugins')
+        if options.get('output_dir') is not None:
+            self.output_dir = options.get('output_dir')
         else:
-            self.output_dir = 'plugins'
+            if not self.site.configured and not user_mode and install:
+                LOGGER.notice('No site found, assuming --user')
+                user_mode = True
+
+            if user_mode:
+                self.output_dir = os.path.expanduser('~/.nikola/plugins')
+            else:
+                self.output_dir = 'plugins'
 
         if list_available:
-            self.list_available(url)
+            return self.list_available(url)
         elif list_installed:
-            self.list_installed()
+            return self.list_installed()
         elif upgrade:
-            self.do_upgrade(url)
+            return self.do_upgrade(url)
         elif uninstall:
-            self.do_uninstall(uninstall)
+            return self.do_uninstall(uninstall)
         elif install:
-            self.do_install(url, install)
+            return self.do_install(url, install, show_install_notes)
 
     def list_available(self, url):
+        """List all available plugins."""
         data = self.get_json(url)
         print("Available Plugins:")
         print("------------------")
         for plugin in sorted(data.keys()):
             print(plugin)
-        return True
+        return 0
 
     def list_installed(self):
+        """List installed plugins."""
         plugins = []
         for plugin in self.site.plugin_manager.getAllPlugins():
             p = plugin.path
@@ -193,8 +179,10 @@ class CommandPlugin(Command):
         plugins.sort()
         for name, path in plugins:
             print('{0} at {1}'.format(name, path))
+        return 0
 
     def do_upgrade(self, url):
+        """Upgrade all installed plugins."""
         LOGGER.warning('This is not very smart, it just reinstalls some plugins and hopes for the best')
         data = self.get_json(url)
         plugins = []
@@ -217,18 +205,29 @@ class CommandPlugin(Command):
                     break
                 elif tail == '':
                     LOGGER.error("Can't find the plugins folder for path: {0}".format(p))
-                    return False
+                    return 1
                 else:
                     path = tail
             self.do_install(url, name)
+        return 0
 
-    def do_install(self, url, name):
+    def do_install(self, url, name, show_install_notes=True):
+        """Download and install a plugin."""
         data = self.get_json(url)
         if name in data:
             utils.makedirs(self.output_dir)
-            LOGGER.info('Downloading: ' + data[name])
+            url = data[name]
+            LOGGER.info("Downloading '{0}'".format(url))
+            try:
+                zip_data = requests.get(url).content
+            except requests.exceptions.SSLError:
+                LOGGER.warning("SSL error, using http instead of https (press ^C to abort)")
+                time.sleep(1)
+                url = url.replace('https', 'http', 1)
+                zip_data = requests.get(url).content
+
             zip_file = io.BytesIO()
-            zip_file.write(requests.get(data[name]).content)
+            zip_file.write(zip_data)
             LOGGER.info('Extracting: {0} into {1}/'.format(name, self.output_dir))
             utils.extract_all(zip_file, self.output_dir)
             dest_path = os.path.join(self.output_dir, name)
@@ -237,13 +236,13 @@ class CommandPlugin(Command):
                 plugin_path = utils.get_plugin_path(name)
             except:
                 LOGGER.error("Can't find plugin " + name)
-                return False
+                return 1
 
             utils.makedirs(self.output_dir)
             dest_path = os.path.join(self.output_dir, name)
             if os.path.exists(dest_path):
                 LOGGER.error("{0} is already installed".format(name))
-                return False
+                return 1
 
             LOGGER.info('Copying {0} into plugins'.format(plugin_path))
             shutil.copytree(plugin_path, dest_path)
@@ -258,7 +257,7 @@ class CommandPlugin(Command):
                 LOGGER.error('Could not install the dependencies.')
                 print('Contents of the requirements.txt file:\n')
                 with io.open(reqpath, 'r', encoding='utf-8') as fh:
-                    print(indent(fh.read(), 4 * ' '))
+                    print(utils.indent(fh.read(), 4 * ' '))
                 print('You have to install those yourself or through a '
                       'package manager.')
             else:
@@ -272,26 +271,27 @@ class CommandPlugin(Command):
             with io.open(reqnpypath, 'r', encoding='utf-8') as fh:
                 for l in fh.readlines():
                     i, j = l.split('::')
-                    print(indent(i.strip(), 4 * ' '))
-                    print(indent(j.strip(), 8 * ' '))
+                    print(utils.indent(i.strip(), 4 * ' '))
+                    print(utils.indent(j.strip(), 8 * ' '))
                     print()
 
             print('You have to install those yourself or through a package '
                   'manager.')
         confpypath = os.path.join(dest_path, 'conf.py.sample')
-        if os.path.exists(confpypath):
+        if os.path.exists(confpypath) and show_install_notes:
             LOGGER.notice('This plugin has a sample config file.  Integrate it with yours in order to make this plugin work!')
             print('Contents of the conf.py.sample file:\n')
             with io.open(confpypath, 'r', encoding='utf-8') as fh:
                 if self.site.colorful:
-                    print(indent(pygments.highlight(
+                    print(utils.indent(pygments.highlight(
                         fh.read(), PythonLexer(), TerminalFormatter()),
                         4 * ' '))
                 else:
-                    print(indent(fh.read(), 4 * ' '))
-        return True
+                    print(utils.indent(fh.read(), 4 * ' '))
+        return 0
 
     def do_uninstall(self, name):
+        """Uninstall a plugin."""
         for plugin in self.site.plugin_manager.getAllPlugins():  # FIXME: this is repeated thrice
             p = plugin.path
             if os.path.isdir(p):
@@ -301,18 +301,23 @@ class CommandPlugin(Command):
             if name == plugin.name:  # Uninstall this one
                 LOGGER.warning('About to uninstall plugin: {0}'.format(name))
                 LOGGER.warning('This will delete {0}'.format(p))
-                inpf = raw_input if sys.version_info[0] == 2 else input
-                sure = inpf('Are you sure? [y/n] ')
-                if sure.lower().startswith('y'):
+                sure = utils.ask_yesno('Are you sure?')
+                if sure:
                     LOGGER.warning('Removing {0}'.format(p))
                     shutil.rmtree(p)
-                return True
+                    return 0
+                return 1
         LOGGER.error('Unknown plugin: {0}'.format(name))
-        return False
+        return 1
 
     def get_json(self, url):
-        if requests is None:
-            utils.req_missing(['requests'], 'install or list available plugins', python=True, optional=False)
+        """Download the JSON file with all plugins."""
         if self.json is None:
-            self.json = requests.get(url).json()
+            try:
+                self.json = requests.get(url).json()
+            except requests.exceptions.SSLError:
+                LOGGER.warning("SSL error, using http instead of https (press ^C to abort)")
+                time.sleep(1)
+                url = url.replace('https', 'http', 1)
+                self.json = requests.get(url).json()
         return self.json

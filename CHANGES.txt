@@ -5,6 +5,323 @@ Features
 --------
 
 * Plugins can declare JS and CSS assets to be bundled (Issue #656)
+* Support SVG in galleries (Issue #1605)
+* Allow inheriting templates with theme name (Issue #1814)
+* Made TAG_PATH translatable (Issue #1914)
+* Made CATEGORY_PATH translatable (Issue #1914)
+* Display post counts for archive links (Issue #2011)
+* Document link/path handlers (Issue #2008)
+* Made DATE_FORMAT and JS_DATE_FORMAT translatable (Issue #2032)
+
+Bugfixes
+--------
+
+* Monitor plugins/ in ``nikola auto`` (Issue #2044)
+* Multi-lingual and multi-level directories confused section slug
+  detection (Issue #2023)
+* Use Unicode strings for WordPress comment headers (Issue #2019)
+* Don't add stories to author pages (Issue #2007)
+
+New in v7.7.0
+=============
+
+Features
+--------
+
+* New support for online CSS and JS minifying services (Issue #1999)
+* Make <base> tag optional with USE_BASE_TAG flag (Issue #1985)
+* Render author pages (Issue #1972)
+* Atom feeds for tag lists (Issue #1686)
+* New ``THEME_COLOR`` option for customizing themes from a primary color
+  (Issue #1980)
+* New ``color_hsl_adjust_hex`` and ``colorize_str_from_base_color``
+  functions available in themes (Issue #1980)
+* New ``POSTS`` output subfolders now generate sections by deault
+  (Issue #1980)
+* New ``POSTS_SECTIONS`` and ``POSTS_SECTION_*`` options for
+  configuring the section pages (Issue #1980)
+* For themers: Each ``post`` are now asssociated with section_color,
+  section_link, and section_name (Issue #1980)
+* Each new section page has a auto-assigned color based on shifting
+  the hue of ``THEME_COLOR`` based on a hash of the section name,
+  can be overwritten with ``POSTS_SECTION_COLORS`` option (Issue #1980)
+* New ``TAG_PAGES_TITLES`` and ``CATEGORY_PAGES_TITLES`` options
+  (Issue #1962)
+* Add Bosnian and Serbian (Latin) languages, by Saša Savić [bs, sr_latin]
+* Add Portuguese (Portugal) language, by jamatos [pt]
+
+Bugfixes
+--------
+
+* Make nikola tabcompletion work outside sites (Issue #1983)
+* Fix display of categories list in bootstrap theme (Issue #2002)
+* If webassets is not installed, use unbundled assets (Issue #1992)
+* Check links in Atom and sitemap files (Issue #1993)
+* Link checker should check all absolute URLs to self (Issue #1991)
+* Check ``img|source[@srcset]`` as part of ``check -l``  (Issue #1989)
+* Clean up translations for third party components
+* ``pagekind["main_index"]`` set on the main indexes to differentiate
+  them from all the other indexes.
+* Add dependency on metadata file for 2-file posts (Issue #1968)
+* Set UTF-8 charset in Content-Type or text/* and *+xml (Issue #1966)
+
+New in v7.6.4
+=============
+
+Features
+--------
+
+* Checking remote links also checks redirects (nikola check -lr)
+* Update suggested license to its latest version (Issue #1950)
+* Add Punjabi language, by Jasdeep Singh (Issue #1940)
+* New option to use custom, and several ``TEASER_END`` values
+
+Bugfixes
+--------
+
+* Rewrite srcset links (Issue #1939)
+* Add dependencies for include tag in Mako (Issue #1956)
+* Don’t duplicate BLOG_TITLE in the front page title (Issue #1952)
+* Escape instad of strip HTML in titles (Issue #1952)
+* Make LINK_CHECK_WHITELIST apply to remote link checks
+* Make STORY_INDEX work together with PRETTY_URLS (Issue #1949)
+* Refactor new_post to match lazy plugin loading (Issue #1943)
+* Make Nikola startup faster by not loading useless plugins (Issue #1825)
+* Ignore sliced multibyte characters when reading metadata for sitemaps
+* Fix NameError caused by failed import in auto plugin.
+
+New in v7.6.3
+=============
+
+Features
+--------
+
+* New translations: Serbian and Bosnian, by saleone
+* Added mechanism for rest extensions to depend on configuration options
+  (Issue #1919)
+* Render Jupyter notebooks (ipynb) in listings (Issue #1900)
+
+Bugfixes
+--------
+
+* Ignore sliced multibyte characters when reading metadata for sitemaps
+* Handle folders without trailing slashes in nikola auto (Issue #1933)
+* Set a base element to aid relative URL resolution, stripped on-the-fly
+  when using the auto or serve command to view site locally. (Issue #1922)
+* Rebuild archives when post slugs and titles change (Issue #1931)
+* Handle special characters in URLs in nikola auto (Issue #1925)
+* Avoid Broken Pipe error in nikola auto (Issue #1906)
+* "nikola auto" serving implicit index.html with wrong mime type (Issue #1921)
+* Handle non-integer shutter speeds and other variables in WordPress
+  importer (Issue #1917)
+
+
+New in v7.6.2
+=============
+
+Features
+--------
+
+* Make the Google Search example prettier, integrating well with
+  Bootstrap 3 (Issue #1912)
+* Add categories filter to post list directive (via Issue #1889)
+* Remove empty directories with nikola check --clean-files (Issue #1873)
+
+Bugfixes
+--------
+
+* Don't auto-rebuild on changes to ".foo" or "foo~" or changes in folders.
+* Don't assume things are HTML in auto mode (Issue #1915)
+* Don’t rebuild Atom syndication files unnecessarily often
+* Include .php files in sitemaps
+* Retry all client errors (4xx) to HEAD as GET reques when checking remote links
+* Graceful fallback in ``nikola serve --detach`` on Windows (Issue #1913)
+* Don't auto-rebuild on changes to ".foo" or "foo~" or changes in folders
+* auto should also rebuild in response to move events
+* Don’t get metadata from file if compiler-specific metadata exist (Issue #1904)
+* Fix PRETTY_URLS prompt for Windows (Issue #1901)
+* Fix reST and Markdown title extraction from documents (Issue #1895, #1898)
+* Minor improvements to the extending document
+* Re-add the hack to kill nikola auto on ^C (Issue #1893)
+
+New in v7.6.1
+=============
+
+Features
+--------
+
+* Several improvements to WordPress importer (PR #1867):
+
+  * Allowing to export categories and category hierarchy with
+    --export-categories-as-categories
+  * Allowing to exclude private posts, and allowing to include empty posts
+  * Allowing to use HTTP authentication for downloads with --download-auth
+    (PR #1848)
+  * Allowing to export comments with --export-comments
+  * Allowing to use WordPress page compiler to directly convert posts
+    to HTML on import with --transform-to-html
+  * Allowing to use WordPress page compiler on imported site instead of
+    converting posts to markdown with --use-wordpress-compiler
+  * Allowing to automatically install the WordPress page compiler when
+    needed with --install-wordpress-compiler
+  * Exporting information on attachments per post as JSON (#1867 and #1888)
+  * Exporting post status and excerpt
+
+* New ‘pagekind’ variable available to identify different kind of pages from theme templates
+* Add ``--no-server`` option to ``nikola auto`` (Issue #1883)
+* Always return unicode in slugify (Issue #1885)
+* Remove logging handlers (Issue #1797)
+* Add ``-d``, ``--detach`` option to ``nikola serve`` (Issue #1871)
+* Use provided teaser format (``*_READ_MORE_LINK``) with custom teaser text
+  (Issue #1879)
+* Delete old ``bootstrap`` theme (use ``bootstrap3`` instead)
+* Screen reader-friendly navbar collapses and dropdowns (Issue #1863)
+* Modern reST stylesheets, based in part on Bootstrap 3 (Issue #1150)
+
+Bugfixes
+--------
+
+* Use ``http`` as fallback in plugin/theme installers if a SSL error occurs
+  (Issue getnikola/nikola-themes#49)
+* Add missing ``xmlns:xhtml`` namespace to sitemaps (Issue #1890)
+* Fixed superfluous rebuild problems with Python 3. Note that this will cause
+  rebuilds for most sites. (Issue #1887)
+* Fix links in sample post (Issue #1874)
+* Don't use deprecated Yapsy methods (Isue #1868)
+* Surpress wincing when auto is aborted during rebuilding
+* Show tags only from the current language on tag listing pages (Issue #1856)
+* Remove gap between line numbers and code (Issue #1859)
+* Fix spurious warnings about posts published in the future (Issue #1850)
+
+New in v7.6.0
+=============
+
+Features
+--------
+
+* Translate ``Write your post here.`` to default language (Issue #1621)
+* Enable ``PRETTY_URLS`` by default on new sites created by the wizard
+  (Issue #1838)
+* Add ``-F``, ``--available-compilers`` option to ``nikola new_post``
+  and ``nikola new_page`` (Issue #1837)
+* Add print CSS to all default themes (Issue #1817)
+* Support other kernels for ipynb/Jupyter using
+  ``nikola new_post -f ipynb@kernel`` (Issues #1774, #1834)
+* Add distinct styling for the site footer in bootstrap3
+* Bootstrap v3.3.5 (Issue #1828)
+* Use ``watchdog`` in ``nikola auto`` (Issue #1810)
+* Add redirection for tags in Wordpress importer (Issue #1168)
+* Add support for ``html_tidy_withconfig`` to use a ``tidy5.conf`` file
+  (Issue #1795)
+* Change default tidy5 filters not to drop empty elements (Issue #1795)
+* Apply per-post filters via metadata (Issue #914)
+
+Bugfixes
+--------
+
+* Nikola auto was broken in python 3 (Issue #1830)
+* Read configuration when importing into an existing site (Issue #1823)
+* Don’t crash on non-UTF-8 files during sitemap generation (Issue #1842)
+* Unnecessary rebuilds of yearly archives (Issue #1833)
+* Quietly ignore non-existent files in ``nikola check -l`` (Issue #1831)
+* Don’t rebuild all tag or category pages when changing tag/category descriptions
+* Fix crash in wordpress code importer (Issue #1819)
+* Call correct command in ``nikola auto``
+
+New in v7.5.1
+=============
+
+Features
+--------
+
+* Suggest misspelled commands (Issue #1807)
+* New implementation of the ``nikola auto`` command
+* ``requests`` is now required for all Nikola sites
+* New ``nikola version --check`` option (Issue #1767)
+
+Bugfixes
+--------
+
+* Support pure markdown posts in WP import (Issue #484)
+* Make auto shutdown with ctrl-c (Issue #1811)
+* Log properly in ``nikola auto`` (Issue #1812)
+* Handle rare gettz failure (Issue #1806)
+* Handle missing dependencies better in auto plugin (Issues #1803, #1809)
+* IDNA mixing unicode/bytes in python 3 (Issue #1802)
+* Cleaner splitting of metadata in onefile posts (Issue #973)
+* It's markdown extra, not extras (Issue #1799)
+
+New in v7.5.0
+=============
+
+Features
+--------
+
+* Make default themes more accessible (Issue #377)
+* Add ipython support to the default themes (Issue #1782)
+* Automatically mark ipynb posts/pages as requiring mathjax (Issue #1782)
+* New --get-path option for ``nikola install_theme`` (Issue #1762)
+* New `nikola rst2html` command (Issue #1710)
+* New `nikola status` command (Issue #1740)
+* Support [code] in wordpress importers (Issue #1186)
+* Cleaner formatting of HTML output
+* Allowing category hierarchies via new option CATEGORY_ALLOW_HIERARCHIES
+  (Issue #1520)
+
+Bugfixes
+--------
+
+* Dropped empty languages (fil, tl, zh_TW)
+* Extract ``nikola check`` target list from actual task list instead of parsing (Issue #1758)
+* Treat special-purpose “draft” tag case-insensitive
+* Avoid some rebuild loops (Issue #1747)
+* Better error if two posts/pages output conflict (Issue #1749)
+* Scanning of posts refactored out of core (Issue #1700)
+* github_deploy records lastdeploy timestamp like regular deploy
+* Use a global directory for gallery images, ignoring translations (Issue #1726)
+* The post-list directive only triggers rebuilds if timeline changes (Issue #1688)
+* Don’t check the same remote URL more than once (Issue #1732)
+* All remotely checked links resulted in incorrect warnings (`nikola check -lr`)
+* Exclude `<meta content="noindex" name="robots">` from sitemaps
+* new_post paths are now relative to CWD (Issue #1325)
+
+New in v7.4.1
+=============
+
+Features
+--------
+
+* Better handling of missing/unconfigured compilers (Issue #1704)
+* New -r option for the link checker to check remote links (Issue #1684)
+* Use static navbars in bootstrap3 and bootstrap themes
+
+Bugfixes
+--------
+
+* Handle strange URLs, like ed2k:// (Issue #1695)
+* Fix very old metadata format support (Issue #1689)
+
+New in v7.4.0
+=============
+
+Features
+--------
+
+* Substitutions for RSS_LINKS_APPEND_QUERY for identifying
+  the source feed (feedRelUri) and  the kind of feed (feedFormat).
+* New option GENERATE_ATOM, off by default
+* Current and archive Atom feeds for indexes; category, tag, and archive indexes (RFC-4287 and RFC-5005)
+* Atom feed auto-discovery in HTML indexes and category/tag indexes
+* .atom included in the sitemap index
+* New post metadata "updated", inherits "date" if unset
+* Allow IPv6 in `nikola auto` (Issue #1682)
+* Allow IPv6 in `nikola serve` (Issue #1682)
+* Set default new site URL to https://example.com/
+* Plugins can manipulate task dependencies (Issue #1679)
+* LINK_CHECK_WHITELIST now works with output relative and full fs paths
+* Four new filters: html_tidy_nowrap, html_tidy_wrap, html_tidy_wrap_attr,
+  and html_tidy_mini for prettification and minification. Requires tidy5.
+* Multilingual sitemaps (Issue #1610)
 * Compatibility with doit v0.28.0 (Issue #1655)
 * AddThis is no longer added by default to users’ sites
 * New translations (az, fil, tl, uk, zh_TW)
@@ -19,6 +336,13 @@ Features
 Bugfixes
 --------
 
+* Make ``.islink`` work properly (via Issue #1536)
+* RSS_LINKS_APPEND_QUERY not working in RSS feeds for tags
+* `nikola check -l` didn’t scan posts
+* Don’t use sets for ``FAVICONS`` (Issue #1674)
+* Posts/Pages that use post-list will never be up to date (Issue #1671)
+* Support using post.text() in post_list_directive.tmpl (Issue #1671)
+* Avoid recursive dep when using post-list in a post (Issue #1671)
 * Encode IDNs to Punycode in ``nikola init`` and in links;
   show an error if the site URL is not Punycode (Issue #1644)
 * Make ``images`` the default output directory for IMAGE_FOLDERS

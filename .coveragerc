@@ -1,6 +1,6 @@
 [run]
 source = nikola
-omit = /tmp/*, _*
+omit = /tmp/*, _*, nikola/packages*, nikola/data*, nikola/winutils*
 [report]
 exclude_lines =
     pragma: no cover

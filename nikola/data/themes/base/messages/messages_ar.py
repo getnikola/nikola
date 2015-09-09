@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "",
+    "(active)": "",
     "Also available in:": "أيضا متوفر في:",
     "Archive": "الأرشيف",
+    "Authors": "",
     "Categories": "فئات",
     "Comments": "التّعليقات",
     "LANGUAGE": "العربيّة",
@@ -18,6 +20,7 @@ MESSAGES = {
     "Original site": "الموقع الأصلي",
     "Posted:": "نشر:",
     "Posts about %s": "مقالات عن s%",
+    "Posts by %s": "",
     "Posts for year %s": "مقالات سنة s%",
     "Posts for {month} {day}, {year}": "",
     "Posts for {month} {year}": "",
@@ -28,8 +31,13 @@ MESSAGES = {
     "Read more": "قراءة المزيد",
     "Skip to main content": "انتقل إلى المحتوى الرئيسي",
     "Source": "المصدر",
+    "Subcategories:": "",
     "Tags and Categories": "تصنيفات و فئات",
     "Tags": "تصنيفات",
+    "Uncategorized": "",
+    "Updates": "",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "مقالات قديمة, صفحة d%",
     "page %d": "صفحة d%",
 }

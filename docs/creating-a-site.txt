@@ -4,6 +4,7 @@
 .. link:
 .. description:
 .. title: Creating a Site (Not a Blog) with Nikola
+.. author: The Nikola Team
 
 Creating a Site (Not a Blog) with Nikola
 ========================================
@@ -43,7 +44,7 @@ configuration file:
     BLOG_TITLE = "Not a Blog"
     # This is the main URL for your site. It will be used
     # in a prominent link
-    SITE_URL = "http://getnikola.com/"
+    SITE_URL = "https://getnikola.com/"
     BLOG_EMAIL = "ralsina@example.com"
     BLOG_DESCRIPTION = "This is a demo site (not a blog) for Nikola."
 
@@ -105,7 +106,7 @@ doesn’t matter at all in stories. ``description`` is useful for SEO purposes
 if you care for that.
 
 And below, the content. By default you are expected to use
-`reStructuredText <http://getnikola.com/quickstart.html>`_ but
+`reStructuredText <https://getnikola.com/quickstart.html>`_ but
 Nikola supports a ton of formats, including Markdown, plain HTML, BBCode,
 Wiki, and Textile.
 

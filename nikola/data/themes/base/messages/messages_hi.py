@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "पढ़ने में %d मिनट बाकी",
+    "(active)": "",
     "Also available in:": "उपलब्ध भाषाएँ:",
     "Archive": "आर्काइव",
+    "Authors": "",
     "Categories": "श्रेणियाँ",
     "Comments": "टिप्पणियाँ",
     "LANGUAGE": "हिन्दी",
@@ -18,6 +20,7 @@ MESSAGES = {
     "Original site": "असली साइट",
     "Posted:": "पोस्टेड:",
     "Posts about %s": "%s के बारे में पोस्टें",
+    "Posts by %s": "",
     "Posts for year %s": "साल %s की पोस्टें",
     "Posts for {month} {day}, {year}": "{day} {month} {year} की पोस्टें",
     "Posts for {month} {year}": "{month} {year} की पोस्टें",
@@ -28,8 +31,13 @@ MESSAGES = {
     "Read more": "और पढ़िए",
     "Skip to main content": "मुख्य सामग्री पर जाएँ",
     "Source": "सोर्स",
+    "Subcategories:": "",
     "Tags and Categories": "टैग्स और श्रेणियाँ",
     "Tags": "टैग्स",
+    "Uncategorized": "",
+    "Updates": "",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "पुरानी पोस्टें, पृष्‍ठ %d",
     "page %d": "पृष्‍ठ %d",
 }

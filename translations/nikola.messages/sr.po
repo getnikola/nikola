@@ -6,15 +6,17 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
 # Ivan Radeljic <radeljicivan85@gmail.com>, 2014
+# Saša Savić <sasa.savic@protonmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-11-18 08:42+0000\n"
+"PO-Revision-Date: 2015-08-31 07:51+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
-"Language-Team: Serbian (http://www.transifex.com/projects/p/nikola/language/sr/)\n"
+"Language-Team: Serbian (http://www.transifex.com/ralsina/nikola/language/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,6 +26,8 @@ msgstr ""
 msgid "More posts about %s"
 msgstr "Више постова о %s"
 
+#. Here your translation should NOT say English but the name of your language
+#. instead
 msgid "LANGUAGE"
 msgstr "Српски"
 
@@ -57,7 +61,7 @@ msgstr "страна %d"
 msgid "Source"
 msgstr "Извор"
 
-#. Here your translation should not say English but the name of your language
+#. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "Read in English"
 msgstr "Прочитај на српском"
@@ -96,7 +100,7 @@ msgid "Posts for {month} {year}"
 msgstr "Постови за {month} {year}"
 
 msgid "Posts for {month} {day}, {year}"
-msgstr ""
+msgstr "Објаве за {month} {day}, {year}"
 
 msgid "Nothing found."
 msgstr "Није ништа пронађено."
@@ -112,3 +116,31 @@ msgstr "%d минута је преостало за читање"
 
 msgid "Skip to main content"
 msgstr "Прескочи на главни садржај"
+
+msgid "Subcategories:"
+msgstr "Подкатегорије:"
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
+msgstr "(активно)"
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr "Вашу објаву напишите овдје."
+
+#. Default content for a new page
+msgid "Write your page here."
+msgstr "Вашу страницу напишите овдје."
+
+msgid "Uncategorized"
+msgstr ""
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr ""
+
+msgid "Authors"
+msgstr ""
+
+msgid "Posts by %s"
+msgstr ""

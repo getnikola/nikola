@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "",
+    "(active)": "",
     "Also available in:": "Eskuragarria hemen ere:",
     "Archive": "Artxiboa",
+    "Authors": "",
     "Categories": "Kategoriak",
     "Comments": "",
     "LANGUAGE": "Euskara",
@@ -18,6 +20,7 @@ MESSAGES = {
     "Original site": "Jatorrizko orria",
     "Posted:": "Argitaratuta:",
     "Posts about %s": "%s-ri buruzko postak",
+    "Posts by %s": "",
     "Posts for year %s": "%s. urteko postak",
     "Posts for {month} {day}, {year}": "",
     "Posts for {month} {year}": "{year}ko {month}ren postak",
@@ -28,8 +31,13 @@ MESSAGES = {
     "Read more": "Irakurri gehiago",
     "Skip to main content": "",
     "Source": "Iturria",
+    "Subcategories:": "",
     "Tags and Categories": "Etiketak eta Kategoriak",
     "Tags": "Etiketak",
+    "Uncategorized": "",
+    "Updates": "",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "Post zaharren, orria %d",
     "page %d": "orria %d",
 }

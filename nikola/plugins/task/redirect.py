@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Generate redirections."""
+
 from __future__ import unicode_literals
 
 import os
@@ -33,13 +35,13 @@ from nikola import utils
 
 
 class Redirect(Task):
-    """Generate redirections"""
+
+    """Generate redirections."""
 
     name = "redirect"
 
     def gen_tasks(self):
         """Generate redirections tasks."""
-
         kw = {
             'redirections': self.site.config['REDIRECTIONS'],
             'output_folder': self.site.config['OUTPUT_FOLDER'],

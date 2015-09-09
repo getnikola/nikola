@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "% min recordar per a llegir",
+    "(active)": "",
     "Also available in:": "També disponibles en:",
     "Archive": "Arxiu",
+    "Authors": "",
     "Categories": "Categories",
     "Comments": "Comentaris",
     "LANGUAGE": "Català",
@@ -18,6 +20,7 @@ MESSAGES = {
     "Original site": "Lloc original",
     "Posted:": "Publicat:",
     "Posts about %s": "Entrades sobre %s",
+    "Posts by %s": "",
     "Posts for year %s": "Entrades de l'any %s",
     "Posts for {month} {day}, {year}": "",
     "Posts for {month} {year}": "Publicat en {month} {year}",
@@ -28,8 +31,13 @@ MESSAGES = {
     "Read more": "Llegeix-ne més",
     "Skip to main content": "Vés al comentari principal",
     "Source": "Codi",
+    "Subcategories:": "",
     "Tags and Categories": "Etiquetes i Categories",
     "Tags": "Etiquetes",
+    "Uncategorized": "",
+    "Updates": "",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "entrades antigues, pàgina %d",
     "page %d": "pàgina %d",
 }

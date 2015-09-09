@@ -4,11 +4,12 @@
 .. tags:
 .. link:
 .. description:
+.. author: The Nikola Team
 
 Extending Nikola
 ================
 
-:Version: 7.3.1
+:Version: 7.7.0
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-info pull-right
@@ -34,11 +35,13 @@ of Nikola.
 Command Plugins
 ---------------
 
-When you run ``nikola --help`` you will see something like this::
+When you run ``nikola --help`` you will see something like this:
+
+.. code-block:: console
 
     $ nikola help
     Nikola is a tool to create static websites and blogs. For full documentation and more
-    information, please visit http://getnikola.com
+    information, please visit https://getnikola.com/
 
 
     Available commands:
@@ -87,7 +90,7 @@ First, the ``serve.plugin`` file:
     [Documentation]
     Author = Roberto Alsina
     Version = 0.1
-    Website = http://getnikola.com
+    Website = https://getnikola.com
     Description = Start test server.
 
 .. note:: If you want to publish your plugin on the Plugin Index, `read
@@ -146,7 +149,9 @@ For your own plugin, just change the values in a sensible way. The
                 httpd.serve_forever()
 
 As mentioned above, a plugin can have options, which the user can see by doing
-``nikola help command`` and can later use, for example::
+``nikola help command`` and can later use, for example:
+
+.. code-block:: console
 
     $ nikola help serve
     Purpose: start the test webserver
@@ -179,7 +184,7 @@ First, you have to create a .plugin file. Here's the one for the Mako plugin:
     [Documentation]
     Author = Roberto Alsina
     Version = 0.1
-    Website = http://getnikola.com
+    Website = https://getnikola.com
     Description = Support for Mako templates.
 
 .. note:: If you want to publish your plugin on the Plugin Index, `read
@@ -242,6 +247,7 @@ a stub for a hypothetical system called "Templater":
             template search mechanism."""
             pass
 
+You can see a real example in `the Jinja plugin <https://github.com/getnikola/nikola/blob/master/nikola/plugins/template/jinja.py>`__
 
 Task Plugins
 ------------
@@ -257,7 +263,7 @@ T
     and ``TaskMultiplier`` plugins that take a task and create
     more tasks out of it.
 
-::
+.. code-block:: console
 
     $ nikola list
     Scanning posts....done!
@@ -300,7 +306,7 @@ in the logical ways:
     [Documentation]
     Author = Roberto Alsina
     Version = 0.1
-    Website = http://getnikola.com
+    Website = https://getnikola.com
     Description = Copy theme assets into output.
 
 
@@ -361,7 +367,7 @@ PageCompiler Plugins
 --------------------
 
 These plugins implement markup languages, they take sources for posts or pages and
-create HTML or other output files. A good example is the ``misaka`` plugin.
+create HTML or other output files. A good example is `the misaka plugin. <https://github.com/getnikola/plugins/tree/master/v7/misaka>`__
 
 They must provide:
 
@@ -381,12 +387,27 @@ metadata contained in the file.
 RestExtension Plugins
 ---------------------
 
-Implement directives for reStructuredText, see ``media.py`` for a simple example.
+Implement directives for reStructuredText, see `media.py <https://github.com/getnikola/nikola/blob/master/nikola/plugins/compile/rest/media.py>`__ for a simple example.
+
+If your output depends on a config value, you need to make your post record a dependency on a pseudo-path, like this:
+
+.. code-block:: text
+
+    ####MAGIC####CONFIG:OPTIONNAME
+
+Then, whenever the ``OPTIONNAME`` option is changed in conf.py, the file will be rebuilt.
+
+If your directive depends or may depend on the whole timeline (like the post-list directive, where adding new posts
+to the site could make it stale), you should record a dependency on the
+pseudo-path ``####MAGIC####TIMELINE``.
 
 MarkdownExtension Plugins
 -------------------------
 
-Implement Markdown extensions, see ``mdx_nikola.py`` for a simple example.
+Implement Markdown extensions, see `mdx_nikola.py <https://github.com/getnikola/nikola/blob/master/nikola/plugins/compile/markdown/mdx_nikola.py>`__ for a simple example.
+
+Note that python markdown extensions are often also available as separate packages. This is only meant to ship extensions
+along with Nikola.
 
 SignalHandler Plugins
 ---------------------
@@ -407,9 +428,11 @@ Currently Nikola emits the following signals:
     When all the configuration file is processed. Note that plugins are activated before this is emitted.
 ``scanned``
     After posts are scanned.
-``new_post``
-    When a new post is created, using the ``nikola new_post`` command.  The signal
+``new_post`` / ``new_page``
+    When a new post is created, using the ``nikola new_post``/``nikola new_page`` commands.  The signal
     data contains the path of the file, and the metadata file (if there is one).
+``existing_post`` / ``existing_page``
+    When a new post fails to be created due to a title conflict. Contains the same data as ``new_post``.
 ``deployed``
     When the ``nikola deploy`` command is run, and there is at least one new
     entry/post since ``last_deploy``.  The signal data is of the form::
@@ -422,18 +445,27 @@ Currently Nikola emits the following signals:
          'undeployed': # all files not deployed since they are either future posts/drafts
         }
 
+One example is the `deploy_hooks plugin. <https://github.com/getnikola/plugins/tree/master/v6/deploy_hooks>`__
+
 ConfigPlugin Plugins
 --------------------
 
 Does nothing specific, can be used to modify the site object (and thus the config).
 
 Put all the magic you want in ``set_site()``, and don’t forget to run the one
-from ``super()``.
+from ``super()``. Example  plugin: `navstories <https://github.com/getnikola/plugins/tree/master/v7/navstories>`__
+
+PostScanner Plugins
+-------------------
+
+Get posts and stories from "somewhere" to be added to the timeline.
+The only currently existing plugin of this kind reads them from disk.
+
 
 Plugin Index
 ============
 
-There is a `plugin index <http://plugins.getnikola.com/>`__, which stores all
+There is a `plugin index <https://plugins.getnikola.com/>`__, which stores all
 of the plugins for Nikola people wanted to share with the world.
 
 You may want to read the `README for the Index

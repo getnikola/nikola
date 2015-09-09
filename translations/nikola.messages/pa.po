@@ -1,0 +1,145 @@
+# Messages in Nikola
+# Copyright (C) 2012-2013
+# This file is distributed under the same license as the Nikola package.
+# 
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# jasdeep <jsbhangra@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Nikola\n"
+"Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
+"POT-Creation-Date: 2013-03-15 12:24-0300\n"
+"PO-Revision-Date: 2015-08-31 07:51+0000\n"
+"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"Language-Team: Panjabi (Punjabi) (http://www.transifex.com/ralsina/nikola/language/pa/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pa\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "More posts about %s"
+msgstr "%s ਬਾਰੇ ਹੋਰ ਲਿਖਤਾਂ"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "LANGUAGE"
+msgstr "ਅੰਗਰੇਜ਼ੀ"
+
+msgid "Tags"
+msgstr "ਟੈਗ"
+
+msgid "Categories"
+msgstr "ਸ਼੍ਰੇਣੀ"
+
+msgid "Tags and Categories"
+msgstr "ਟੈਗ ਅਤੇ ਸ਼੍ਰੇਣੀਆਂ"
+
+msgid "Comments"
+msgstr "ਟਿੱਪਣੀਆਂ"
+
+msgid "Read more"
+msgstr "ਹੋਰ ਪੜ੍ਹੋ"
+
+msgid "Posts about %s"
+msgstr "%s ਬਾਰੇ ਲਿਖਤਾਂ"
+
+msgid "Next post"
+msgstr "ਅਗਲੀ ਲਿਖਤ"
+
+msgid "old posts, page %d"
+msgstr "ਪੁਰਾਣੀਆਂ ਲਿਖਤਾਂ , ਸਫ਼ਾ %d"
+
+msgid "page %d"
+msgstr "ਸਫ਼ਾ %d"
+
+msgid "Source"
+msgstr "ਮੂਲ"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "Read in English"
+msgstr "ਅੰਗਰੇਜ਼ੀ ਵਿੱਚ ਪੜ੍ਹੋ"
+
+msgid "Posts for year %s"
+msgstr "ਸਾਲ %s ਦੀਆਂ ਲਿਖਤਾਂ"
+
+msgid "Newer posts"
+msgstr "ਨਵੀਆਂ ਲਿਖਤਾਂ"
+
+msgid "Previous post"
+msgstr "ਪਿਛਲੀ ਲਿਖਤ"
+
+msgid "Also available in:"
+msgstr "ਹੋਰ  ਉਪਲਬਧ ਬੋਲੀਆਂ:"
+
+msgid "Languages:"
+msgstr "ਬੋਲੀਆਂ:"
+
+msgid "Original site"
+msgstr "ਅਸਲ ਸਾਈਟ"
+
+msgid "Older posts"
+msgstr "ਪੁਰਾਣੀਆਂ ਲਿਖਤਾਂ"
+
+msgid "Archive"
+msgstr "ਆਰਕਾਈਵ"
+
+msgid "Publication date"
+msgstr "ਛਪਾਈ ਦੀ ਤਰੀਕ"
+
+msgid "Posted:"
+msgstr "ਲਿਖਤ ਛਪੀ:"
+
+msgid "Posts for {month} {year}"
+msgstr "{month} {year} ਦੀਆਂ ਲਿਖਤਾਂ"
+
+msgid "Posts for {month} {day}, {year}"
+msgstr "{day} {month} {year} ਦੀਆਂ ਲਿਖਤਾਂ"
+
+msgid "Nothing found."
+msgstr "ਕੁਝ ਨਹੀਂ ਲੱਭਿਆ |"
+
+msgid "No posts found."
+msgstr "ਕੋਈ ਲਿਖਤ ਨਹੀਂ ਲੱਭੀ |"
+
+msgid "RSS feed"
+msgstr "ਆਰ ਐੱਸ ਐੱਸ ਫੀਡ"
+
+msgid "%d min remaining to read"
+msgstr "ਪੜਣ ਲਈ  %d ਮਿੰਟ ਬਾਕੀ"
+
+msgid "Skip to main content"
+msgstr "ਮੁੱਖ ਸਮੱਗਰੀ ਵੱਲ ਜਾਓ"
+
+msgid "Subcategories:"
+msgstr "ਉਪਸ਼੍ਰੇਣੀਆਂ:"
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
+msgstr "(ਚਲੰਤ)"
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr "ਆਪਣੀ ਲਿਖਤ ਏਥੇ ਲਿਖੋ |"
+
+#. Default content for a new page
+msgid "Write your page here."
+msgstr "ਆਪਣਾ ਸਫ਼ਾ ਏਥੇ ਲਿਖੋ |"
+
+msgid "Uncategorized"
+msgstr ""
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr ""
+
+msgid "Authors"
+msgstr ""
+
+msgid "Posts by %s"
+msgstr ""

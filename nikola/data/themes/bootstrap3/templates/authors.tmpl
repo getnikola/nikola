@@ -1,0 +1,17 @@
+## -*- coding: utf-8 -*-
+<%inherit file="base.tmpl"/>
+
+<%block name="content">
+<article class="authorindex">
+% if items:
+    <h2>${messages("Authors")}</h2>
+    <ul class="list-inline">
+    % for text, link in items:
+        % if text not in hidden_authors:
+            <li><a class="reference badge" href="${link}">${text}</a></li>
+        % endif
+    % endfor
+    </ul>
+% endif
+</article>
+</%block>

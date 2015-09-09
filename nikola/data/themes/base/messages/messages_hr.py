@@ -2,9 +2,11 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "%d min remaining to read": "",
+    "%d min remaining to read": "%d minuta preostalo za čitanje",
+    "(active)": "(aktivno)",
     "Also available in:": "Također dostupno i u:",
     "Archive": "Arhiva",
+    "Authors": "",
     "Categories": "Kategorije",
     "Comments": "Komentari",
     "LANGUAGE": "hrvatski",
@@ -18,6 +20,7 @@ MESSAGES = {
     "Original site": "Izvorna stranica",
     "Posted:": "Objavljeno:",
     "Posts about %s": "Postovi o %s",
+    "Posts by %s": "",
     "Posts for year %s": "Postovi za godinu %s",
     "Posts for {month} {day}, {year}": "",
     "Posts for {month} {year}": "Postovi za {month} {year}",
@@ -26,10 +29,15 @@ MESSAGES = {
     "RSS feed": "RSS kanal",
     "Read in English": "Čitaj na hrvatskom",
     "Read more": "Čitaj dalje",
-    "Skip to main content": "",
+    "Skip to main content": "Preskoči na glavni sadržaj",
     "Source": "Izvor",
+    "Subcategories:": "Podkategorije:",
     "Tags and Categories": "Tagovi i kategorije",
     "Tags": "Tagovi",
+    "Uncategorized": "",
+    "Updates": "",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "stari postovi, stranice %d",
     "page %d": "stranice %d",
 }

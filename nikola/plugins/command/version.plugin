@@ -1,9 +1,13 @@
 [Core]
-Name = version
-Module = version
+name = version
+module = version
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Show nikola version
+author = Roberto Alsina
+version = 1.0
+website = https://getnikola.com/
+description = Show nikola version
+
+[Nikola]
+plugincategory = Command
+

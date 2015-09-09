@@ -1,0 +1,13 @@
+[Core]
+name = rst2html
+module = rst2html
+
+[Documentation]
+author = Chris Warrick
+version = 1.0
+website = https://getnikola.com/
+description = Compile reStructuredText to HTML using the Nikola architecture
+
+[Nikola]
+plugincategory = Command
+

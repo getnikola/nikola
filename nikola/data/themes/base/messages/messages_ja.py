@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "読込むまで残り %d 分",
+    "(active)": "",
     "Also available in:": "他の言語で読む：",
     "Archive": "過去の記事",
+    "Authors": "",
     "Categories": "カテゴリー",
     "Comments": "コメント",
     "LANGUAGE": "日本語",
@@ -18,6 +20,7 @@ MESSAGES = {
     "Original site": "元のサイト",
     "Posted:": "投稿日時：",
     "Posts about %s": "%sについての記事",
+    "Posts by %s": "",
     "Posts for year %s": "%s年の記事",
     "Posts for {month} {day}, {year}": "{year}年{month}月{day}日の記事",
     "Posts for {month} {year}": "{year}年{month}月の記事",
@@ -28,8 +31,13 @@ MESSAGES = {
     "Read more": "続きを読む",
     "Skip to main content": "メインコンテンツをスキップ",
     "Source": "ソース",
+    "Subcategories:": "",
     "Tags and Categories": "タグとカテゴリー",
     "Tags": "タグ",
+    "Uncategorized": "",
+    "Updates": "",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "前の記事 %dページ目",
     "page %d": "ページ %d",
 }

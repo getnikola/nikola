@@ -21,7 +21,14 @@ def task_flake8():
     """flake8 - static check for python files"""
     yield {
         'name': os.path.join(os.getcwd(), 'nikola'),
-        'actions': ['flake8 --ignore=E501 nikola/'],
+        'actions': ['flake8 nikola/'],
+    }
+
+def task_pep257():
+    """pep257 -- static check for docstring style"""
+    yield {
+        'name': os.path.join(os.getcwd(), 'nikola'),
+        'actions': ["pep257 --count --match-dir='(?!^\.)(?!data).*' nikola/"],
     }
 
 
@@ -38,7 +45,7 @@ def task_locale():
                     lang = line.split('_')[0]
                     if lang not in languages:
                         try:
-                            locale.setlocale(locale.LC_ALL, line)
+                            locale.setlocale(locale.LC_ALL, str(line))
                         except:
                             continue
                         languages.add(lang)

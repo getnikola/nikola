@@ -1,0 +1,10 @@
+[Core]
+Name = scan_posts
+Module = scan_posts
+
+[Documentation]
+Author = Roberto Alsina
+Version = 1.0
+Website = https://getnikola.com/
+Description = Scan posts and create timeline
+

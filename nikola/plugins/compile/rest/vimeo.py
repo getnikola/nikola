@@ -24,26 +24,26 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Vimeo directive for reStructuredText."""
 
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
-try:
-    import requests
-except ImportError:
-    requests = None  # NOQA
+import requests
 import json
 
 
 from nikola.plugin_categories import RestExtension
-from nikola.utils import req_missing
 
 
 class Plugin(RestExtension):
 
+    """Plugin for vimeo reST directive."""
+
     name = "rest_vimeo"
 
     def set_site(self, site):
+        """Set Nikola site."""
         self.site = site
         directives.register_directive('vimeo', Vimeo)
         return super(Plugin, self).set_site(site)
@@ -60,14 +60,16 @@ VIDEO_DEFAULT_WIDTH = 281
 
 
 class Vimeo(Directive):
-    """ Restructured text extension for inserting vimeo embedded videos
 
-        Usage:
-            .. vimeo:: 20241459
-               :height: 400
-               :width: 600
+    """reST extension for inserting vimeo embedded videos.
+
+    Usage:
+        .. vimeo:: 20241459
+           :height: 400
+           :width: 600
 
     """
+
     has_content = True
     required_arguments = 1
     option_spec = {
@@ -79,6 +81,7 @@ class Vimeo(Directive):
     request_size = True
 
     def run(self):
+        """Run the vimeo directive."""
         self.check_content()
         options = {
             'vimeo_id': self.arguments[0],
@@ -94,13 +97,11 @@ class Vimeo(Directive):
         return [nodes.raw('', CODE.format(**options), format='html')]
 
     def check_modules(self):
-        msg = None
-        if requests is None:
-            msg = req_missing(['requests'], 'use the vimeo directive', optional=True)
-            return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
+        """Check modules."""
         return None
 
     def set_video_size(self):
+        """Set video size."""
         # Only need to make a connection if width and height aren't provided
         if 'height' not in self.options or 'width' not in self.options:
             self.options['height'] = VIDEO_DEFAULT_HEIGHT
@@ -119,6 +120,7 @@ class Vimeo(Directive):
                     pass
 
     def check_content(self):
+        """Check if content exists."""
         if self.content:
             raise self.warning("This directive does not accept content. The "
                                "'key=value' format for options is deprecated, "

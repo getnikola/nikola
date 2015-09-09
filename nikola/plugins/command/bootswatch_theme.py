@@ -24,14 +24,11 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Given a swatch name from bootswatch.com and a parent theme, creates a custom theme."""
+
 from __future__ import print_function
 import os
-import sys
-
-try:
-    import requests
-except ImportError:
-    requests = None  # NOQA
+import requests
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -40,6 +37,7 @@ LOGGER = utils.get_logger('bootswatch_theme', utils.STDERR_HANDLER)
 
 
 class CommandBootswatchTheme(Command):
+
     """Given a swatch name from bootswatch.com and a parent theme, creates a custom theme."""
 
     name = "bootswatch_theme"
@@ -73,14 +71,11 @@ class CommandBootswatchTheme(Command):
 
     def _execute(self, options, args):
         """Given a swatch name and a parent theme, creates a custom theme."""
-        if requests is None:
-            utils.req_missing(['requests'], 'install Bootswatch themes')
-
         name = options['name']
         swatch = options['swatch']
         if not swatch:
             LOGGER.error('The -s option is mandatory')
-            sys.exit(1)
+            return 1
         parent = options['parent']
         version = ''
 
@@ -96,7 +91,7 @@ class CommandBootswatchTheme(Command):
         LOGGER.info("Creating '{0}' theme from '{1}' and '{2}'".format(name, swatch, parent))
         utils.makedirs(os.path.join('themes', name, 'assets', 'css'))
         for fname in ('bootstrap.min.css', 'bootstrap.css'):
-            url = 'http://bootswatch.com'
+            url = 'https://bootswatch.com'
             if version:
                 url += '/' + version
             url = '/'.join((url, swatch, fname))

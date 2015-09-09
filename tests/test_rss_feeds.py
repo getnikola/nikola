@@ -33,6 +33,7 @@ class FakeCompiler(object):
     demote_headers = False
     compile_html = None
     extension = lambda self: '.html'
+    name = "fake"
 
     def read_metadata(*args, **kwargs):
         return {}
@@ -90,9 +91,9 @@ class RSSFeedTest(unittest.TestCase):
                     # lxml will complain if the encoding is specified in the
                     # xml when running with unicode strings.
                     # We do not include this in our content.
-                    open_handle = opener_mock()
-                    file_content = [call[1][0]
-                                    for call in open_handle.mock_calls[1:-1]][0]
+                    file_content = [
+                        call[1][0]
+                        for call in opener_mock.mock_calls[2:-1]][0]
                     splitted_content = file_content.split('\n')
                     self.encoding_declaration = splitted_content[0]
                     content_without_encoding_declaration = splitted_content[1:]

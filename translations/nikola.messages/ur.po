@@ -9,16 +9,17 @@
 # Translators:
 # seanpue <a@seanpue.com>, 2014
 # saadat, 2013
-# Saadat M. <nastaliq@gmail.com>, 2013-2014
-# Saadat M. <nastaliq@gmail.com>, 2013
+# Saadat M. <saadat@saadatmand.pk>, 2013-2014
+# Saadat M. <saadat@saadatmand.pk>, 2015
+# Saadat M. <saadat@saadatmand.pk>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2014-12-12 02:00+0000\n"
-"Last-Translator: Saadat M. <nastaliq@gmail.com>\n"
-"Language-Team: Urdu (http://www.transifex.com/projects/p/nikola/language/ur/)\n"
+"PO-Revision-Date: 2015-08-31 07:51+0000\n"
+"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"Language-Team: Urdu (http://www.transifex.com/ralsina/nikola/language/ur/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -118,3 +119,31 @@ msgstr "%d منٹ کا مطالعہ باقی"
 
 msgid "Skip to main content"
 msgstr "مرکزی متن پر جائیں"
+
+msgid "Subcategories:"
+msgstr "ذیلی زمرے"
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
+msgstr "(فعال)"
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr "اپنی تحریر یہاں لکھیں۔"
+
+#. Default content for a new page
+msgid "Write your page here."
+msgstr "اپنے صفحے کا متن یہاں لکھیں۔"
+
+msgid "Uncategorized"
+msgstr ""
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr ""
+
+msgid "Authors"
+msgstr ""
+
+msgid "Posts by %s"
+msgstr ""

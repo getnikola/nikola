@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Resize images and create thumbnails for them."""
+
 import os
 
 from nikola.plugin_categories import Task
@@ -32,17 +34,18 @@ from nikola import utils
 
 
 class ScaleImage(Task, ImageProcessor):
-    """Copy static files into the output folder."""
+
+    """Resize images and create thumbnails for them."""
 
     name = "scale_images"
 
     def set_site(self, site):
-        self.logger = utils.get_logger('scale_images', site.loghandlers)
+        """Set Nikola site."""
+        self.logger = utils.get_logger('scale_images', utils.STDERR_HANDLER)
         return super(ScaleImage, self).set_site(site)
 
     def process_tree(self, src, dst):
-        """Processes all images in a src tree and put the (possibly) rescaled
-        images in the dst folder."""
+        """Process all images in a src tree and put the (possibly) rescaled images in the dst folder."""
         ignore = set(['.svn'])
         base_len = len(src.split(os.sep))
         for root, dirs, files in os.walk(src, followlinks=True):
@@ -58,21 +61,22 @@ class ScaleImage(Task, ImageProcessor):
                     continue
                 dst_file = os.path.join(dst_dir, src_name)
                 src_file = os.path.join(root, src_name)
+                thumb_file = '.thumbnail'.join(os.path.splitext(dst_file))
                 yield {
                     'name': dst_file,
                     'file_dep': [src_file],
-                    'targets': [dst_file],
-                    'actions': [(self.process_image, (src_file, dst_file))],
+                    'targets': [dst_file, thumb_file],
+                    'actions': [(self.process_image, (src_file, dst_file, thumb_file))],
                     'clean': True,
                 }
 
-    def process_image(self, src, dst):
+    def process_image(self, src, dst, thumb):
+        """Resize an image."""
         self.resize_image(src, dst, self.kw['max_image_size'], False)
-        self.resize_image(src, '.thumbnail'.join(os.path.splitext(dst)), self.kw['image_thumbnail_size'], False)
+        self.resize_image(src, thumb, self.kw['image_thumbnail_size'], False)
 
     def gen_tasks(self):
         """Copy static files into the output folder."""
-
         self.kw = {
             'image_thumbnail_size': self.site.config['IMAGE_THUMBNAIL_SIZE'],
             'max_image_size': self.site.config['MAX_IMAGE_SIZE'],

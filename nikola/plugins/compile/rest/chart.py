@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Chart directive for reSTructuredText."""
+
 from ast import literal_eval
 
 from docutils import nodes
@@ -42,9 +44,12 @@ _site = None
 
 class Plugin(RestExtension):
 
+    """Plugin for chart role."""
+
     name = "rest_chart"
 
     def set_site(self, site):
+        """Set Nikola site."""
         global _site
         _site = self.site = site
         directives.register_directive('chart', Chart)
@@ -52,17 +57,18 @@ class Plugin(RestExtension):
 
 
 class Chart(Directive):
-    """ Restructured text extension for inserting charts as SVG
 
-        Usage:
-            .. chart:: Bar
-               :title: 'Browser usage evolution (in %)'
-               :x_labels: ["2002", "2003", "2004", "2005", "2006", "2007"]
+    """reStructuredText extension for inserting charts as SVG.
 
-               'Firefox', [None, None, 0, 16.6, 25, 31]
-               'Chrome',  [None, None, None, None, None, None]
-               'IE',      [85.8, 84.6, 84.7, 74.5, 66, 58.6]
-               'Others',  [14.2, 15.4, 15.3, 8.9, 9, 10.4]
+    Usage:
+        .. chart:: Bar
+           :title: 'Browser usage evolution (in %)'
+           :x_labels: ["2002", "2003", "2004", "2005", "2006", "2007"]
+
+           'Firefox', [None, None, 0, 16.6, 25, 31]
+           'Chrome',  [None, None, None, None, None, None]
+           'IE',      [85.8, 84.6, 84.7, 74.5, 66, 58.6]
+           'Others',  [14.2, 15.4, 15.3, 8.9, 9, 10.4]
     """
 
     has_content = True
@@ -129,6 +135,7 @@ class Chart(Directive):
     }
 
     def run(self):
+        """Run the directive."""
         if pygal is None:
             msg = req_missing(['pygal'], 'use the Chart directive', optional=True)
             return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
@@ -145,13 +152,11 @@ class Chart(Directive):
             options[k] = literal_eval(v)
 
         chart = getattr(pygal, self.arguments[0])(style=style)
+        if _site and _site.invariant:
+            chart.no_prefix = True
         chart.config(**options)
         for line in self.content:
             label, series = literal_eval('({0})'.format(line))
             chart.add(label, series)
         data = chart.render().decode('utf8')
-        if _site and _site.invariant:
-            import re
-            data = re.sub('id="chart-[a-f0-9\-]+"', 'id="chart-foobar"', data)
-            data = re.sub('#chart-[a-f0-9\-]+', '#chart-foobar', data)
         return [nodes.raw('', data, format='html')]

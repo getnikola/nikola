@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""YouTube directive for reStructuredText."""
+
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
@@ -33,9 +35,12 @@ from nikola.plugin_categories import RestExtension
 
 class Plugin(RestExtension):
 
+    """Plugin for the youtube directive."""
+
     name = "rest_youtube"
 
     def set_site(self, site):
+        """Set Nikola site."""
         self.site = site
         directives.register_directive('youtube', Youtube)
         return super(Plugin, self).set_site(site)
@@ -49,7 +54,8 @@ src="//www.youtube.com/embed/{yid}?rel=0&amp;hd=1&amp;wmode=transparent"
 
 
 class Youtube(Directive):
-    """ Restructured text extension for inserting youtube embedded videos
+
+    """reST extension for inserting youtube embedded videos.
 
     Usage:
         .. youtube:: lyViVmaBQDg
@@ -57,6 +63,7 @@ class Youtube(Directive):
            :width: 600
 
     """
+
     has_content = True
     required_arguments = 1
     option_spec = {
@@ -65,6 +72,7 @@ class Youtube(Directive):
     }
 
     def run(self):
+        """Run the youtube directive."""
         self.check_content()
         options = {
             'yid': self.arguments[0],
@@ -75,7 +83,8 @@ class Youtube(Directive):
         return [nodes.raw('', CODE.format(**options), format='html')]
 
     def check_content(self):
-        if self.content:
+        """Check if content exists."""
+        if self.content:  # pragma: no cover
             raise self.warning("This directive does not accept content. The "
                                "'key=value' format for options is deprecated, "
                                "use ':key: value' instead")

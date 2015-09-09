@@ -24,8 +24,12 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Start test server."""
+
 from __future__ import print_function
 import os
+import re
+import socket
 import webbrowser
 try:
     from BaseHTTPServer import HTTPServer
@@ -34,11 +38,25 @@ except ImportError:
     from http.server import HTTPServer  # NOQA
     from http.server import SimpleHTTPRequestHandler  # NOQA
 
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import BytesIO as StringIO  # NOQA
+
+
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger
+from nikola.utils import get_logger, STDERR_HANDLER
+
+
+class IPv6Server(HTTPServer):
+
+    """An IPv6 HTTPServer."""
+
+    address_family = socket.AF_INET6
 
 
 class CommandServe(Command):
+
     """Start test server."""
 
     name = "serve"
@@ -53,7 +71,7 @@ class CommandServe(Command):
             'long': 'port',
             'default': 8000,
             'type': int,
-            'help': 'Port nummber (default: 8000)',
+            'help': 'Port number (default: 8000)',
         },
         {
             'name': 'address',
@@ -61,7 +79,15 @@ class CommandServe(Command):
             'long': 'address',
             'type': str,
             'default': '',
-            'help': 'Address to bind (default: 0.0.0.0 – all local interfaces)',
+            'help': 'Address to bind (default: 0.0.0.0 – all local IPv4 interfaces)',
+        },
+        {
+            'name': 'detach',
+            'short': 'd',
+            'long': 'detach',
+            'type': bool,
+            'default': False,
+            'help': 'Detach from TTY (work in the background)',
         },
         {
             'name': 'browser',
@@ -70,35 +96,83 @@ class CommandServe(Command):
             'type': bool,
             'default': False,
             'help': 'Open the test server in a web browser',
-        }
+        },
+        {
+            'name': 'ipv6',
+            'short': '6',
+            'long': 'ipv6',
+            'type': bool,
+            'default': False,
+            'help': 'Use IPv6',
+        },
     )
 
     def _execute(self, options, args):
         """Start test server."""
-        self.logger = get_logger('serve', self.site.loghandlers)
+        self.logger = get_logger('serve', STDERR_HANDLER)
         out_dir = self.site.config['OUTPUT_FOLDER']
         if not os.path.isdir(out_dir):
             self.logger.error("Missing '{0}' folder?".format(out_dir))
         else:
             os.chdir(out_dir)
-            httpd = HTTPServer((options['address'], options['port']),
-                               OurHTTPRequestHandler)
+            if '[' in options['address']:
+                options['address'] = options['address'].strip('[').strip(']')
+                ipv6 = True
+                OurHTTP = IPv6Server
+            elif options['ipv6']:
+                ipv6 = True
+                OurHTTP = IPv6Server
+            else:
+                ipv6 = False
+                OurHTTP = HTTPServer
+
+            httpd = OurHTTP((options['address'], options['port']),
+                            OurHTTPRequestHandler)
             sa = httpd.socket.getsockname()
             self.logger.info("Serving HTTP on {0} port {1}...".format(*sa))
             if options['browser']:
-                server_url = "http://{0}:{1}/".format(*sa)
+                if ipv6:
+                    server_url = "http://[{0}]:{1}/".format(*sa)
+                else:
+                    server_url = "http://{0}:{1}/".format(*sa)
                 self.logger.info("Opening {0} in the default web browser...".format(server_url))
                 webbrowser.open(server_url)
-            try:
-                httpd.serve_forever()
-            except KeyboardInterrupt:
-                self.logger.info("Server is shutting down.")
-                exit(130)
+            if options['detach']:
+                OurHTTPRequestHandler.quiet = True
+                try:
+                    pid = os.fork()
+                    if pid == 0:
+                        httpd.serve_forever()
+                    else:
+                        self.logger.info("Detached with PID {0}. Run `kill {0}` to stop the server.".format(pid))
+                except AttributeError as e:
+                    if os.name == 'nt':
+                        self.logger.warning("Detaching is not available on Windows, server is running in the foreground.")
+                    else:
+                        raise e
+            else:
+                try:
+                    httpd.serve_forever()
+                except KeyboardInterrupt:
+                    self.logger.info("Server is shutting down.")
+                    return 130
 
 
 class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
+
+    """A request handler, modified for Nikola."""
+
     extensions_map = dict(SimpleHTTPRequestHandler.extensions_map)
     extensions_map[""] = "text/plain"
+    quiet = False
+
+    def log_message(self, *args):
+        """Log messages.  Or not, depending on a setting."""
+        if self.quiet:
+            return
+        else:
+            # Old-style class in Python 2.7, cannot use super()
+            return SimpleHTTPRequestHandler.log_message(self, *args)
 
     # NOTICE: this is a patched version of send_head() to disable all sorts of
     # caching.  `nikola serve` is a development server, hence caching should
@@ -154,14 +228,34 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
         except IOError:
             self.send_error(404, "File not found")
             return None
+
+        filtered_bytes = None
+        if ctype == 'text/html':
+            # Comment out any <base> to allow local resolution of relative URLs.
+            data = f.read().decode('utf8')
+            f.close()
+            data = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', data, re.IGNORECASE)
+            data = data.encode('utf8')
+            f = StringIO()
+            f.write(data)
+            filtered_bytes = len(data)
+            f.seek(0)
+
         self.send_response(200)
-        self.send_header("Content-type", ctype)
+        if ctype.startswith('text/') or ctype.endswith('+xml'):
+            self.send_header("Content-Type", "{0}; charset=UTF-8".format(ctype))
+        else:
+            self.send_header("Content-Type", ctype)
         if os.path.splitext(path)[1] == '.svgz':
             # Special handling for svgz to make it work nice with browsers.
             self.send_header("Content-Encoding", 'gzip')
-        fs = os.fstat(f.fileno())
-        self.send_header("Content-Length", str(fs[6]))
-        self.send_header("Last-Modified", self.date_time_string(fs.st_mtime))
+
+        if filtered_bytes is None:
+            fs = os.fstat(f.fileno())
+            self.send_header('Content-Length', str(fs[6]))
+        else:
+            self.send_header('Content-Length', filtered_bytes)
+
         # begin no-cache patch
         # For standard requests.
         self.send_header("Cache-Control", "no-cache, no-store, "

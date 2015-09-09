@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "읽기 %d분 남음.",
+    "(active)": "",
     "Also available in:": "",
     "Archive": "저장소",
+    "Authors": "",
     "Categories": "분류",
     "Comments": "댓글",
     "LANGUAGE": "영어",
@@ -18,6 +20,7 @@ MESSAGES = {
     "Original site": "출처",
     "Posted:": "",
     "Posts about %s": "%s에 대한 포스트",
+    "Posts by %s": "",
     "Posts for year %s": "%s년도 포스트",
     "Posts for {month} {day}, {year}": "",
     "Posts for {month} {year}": "{year}년 {month}월에 쓴 포스트",
@@ -28,8 +31,13 @@ MESSAGES = {
     "Read more": "더 읽기",
     "Skip to main content": "주 콘텐츠로 바로가기",
     "Source": "원문",
+    "Subcategories:": "",
     "Tags and Categories": "태그와 분류",
     "Tags": "태그",
+    "Uncategorized": "",
+    "Updates": "",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "이전 포스트, 페이지 %d",
     "page %d": "페이지 %d",
 }

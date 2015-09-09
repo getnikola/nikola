@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "%d منٹ کا مطالعہ باقی",
+    "(active)": "(فعال)",
     "Also available in:": "ان زبانوں میں بھی دستیاب:",
     "Archive": "آرکائیو",
+    "Authors": "",
     "Categories": "زمرے",
     "Comments": "تبصرے",
     "LANGUAGE": "اردو",
@@ -18,6 +20,7 @@ MESSAGES = {
     "Original site": "اصلی سائٹ",
     "Posted:": "اشاعت:",
     "Posts about %s": "%s کے بارے میں تحاریر",
+    "Posts by %s": "",
     "Posts for year %s": "سال %s کی تحاریر",
     "Posts for {month} {day}, {year}": "{day} {month}، {year} کی تحاریر",
     "Posts for {month} {year}": "{month} {year} کی تحاریر",
@@ -28,8 +31,13 @@ MESSAGES = {
     "Read more": "مزید پڑھیں",
     "Skip to main content": "مرکزی متن پر جائیں",
     "Source": "سورس",
+    "Subcategories:": "ذیلی زمرے",
     "Tags and Categories": "ٹیگز اور زمرے",
     "Tags": "ٹیگز",
+    "Uncategorized": "",
+    "Updates": "",
+    "Write your page here.": "اپنے صفحے کا متن یہاں لکھیں۔",
+    "Write your post here.": "اپنی تحریر یہاں لکھیں۔",
     "old posts, page %d": "پرانی تحاریر صفحہ %d",
     "page %d": "صفحہ %d",
 }

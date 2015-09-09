@@ -2,8 +2,6 @@
 from __future__ import unicode_literals, absolute_import
 
 import os
-import sys
-
 
 import unittest
 import mock
@@ -172,6 +170,8 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
     def test_populate_context(self):
         channel = self.import_command.get_channel_from_file(
             self.import_filename)
+        self.import_command.transform_to_html = False
+        self.import_command.use_wordpress_compiler = False
         context = self.import_command.populate_context(channel)
 
         for required_key in ('POSTS', 'PAGES', 'COMPILERS'):
@@ -188,12 +188,17 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
     def test_importing_posts_and_attachments(self):
         channel = self.import_command.get_channel_from_file(
             self.import_filename)
-        self.import_command.context = self.import_command.populate_context(
-            channel)
         self.import_command.base_dir = ''
         self.import_command.output_folder = 'new_site'
         self.import_command.squash_newlines = True
         self.import_command.no_downloads = False
+        self.import_command.export_categories_as_categories = False
+        self.import_command.export_comments = False
+        self.import_command.transform_to_html = False
+        self.import_command.use_wordpress_compiler = False
+        self.import_command.tag_saniziting_strategy = 'first'
+        self.import_command.context = self.import_command.populate_context(
+            channel)
 
         # Ensuring clean results
         self.import_command.url_map = {}
@@ -201,13 +206,15 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
 
         write_metadata = mock.MagicMock()
         write_content = mock.MagicMock()
+        write_attachments_info = mock.MagicMock()
         download_mock = mock.MagicMock()
 
         with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.write_content', write_content):
             with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.write_metadata', write_metadata):
                 with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.download_url_content_to_file', download_mock):
-                    with mock.patch('nikola.plugins.command.import_wordpress.os.makedirs'):
-                        self.import_command.import_posts(channel)
+                    with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.write_attachments_info', write_attachments_info):
+                        with mock.patch('nikola.plugins.command.import_wordpress.os.makedirs'):
+                            self.import_command.import_posts(channel)
 
         self.assertTrue(download_mock.called)
         qpath = 'new_site/files/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png'
@@ -218,35 +225,47 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
         self.assertTrue(write_metadata.called)
         write_metadata.assert_any_call(
             'new_site/stories/kontakt.meta'.replace('/', os.sep), 'Kontakt',
-            'kontakt', '2009-07-16 20:20:32', None, [])
+            'kontakt', '2009-07-16 20:20:32', '', [], **{'wp-status': 'publish'})
 
         self.assertTrue(write_content.called)
-        write_content.assert_any_call('new_site/posts/2007/04/hoert.wp'.replace('/', os.sep),
+        write_content.assert_any_call('new_site/posts/2007/04/hoert.md'.replace('/', os.sep),
                                       """An image.
 
 <img class="size-full wp-image-16" title="caption test" src="http://some.blog/wp-content/uploads/2009/07/caption_test.jpg" alt="caption test" width="739" height="517" />
 
 Some source code.
 
-~~~~~~~~~~~~{.Python}
+```Python
 
 import sys
 
 print sys.version
 
-~~~~~~~~~~~~
+```
 
 The end.
 
-""")
+""", True)
+
+        self.assertTrue(write_attachments_info.called)
+        write_attachments_info.assert_any_call('new_site/posts/2008/07/arzt-und-pfusch-s-i-c-k.attachments.json'.replace('/', os.sep),
+                                               {10: {'wordpress_user_name': 'Niko',
+                                                     'files_meta': [{'width': 300, 'height': 299},
+                                                                    {'width': b'150', 'size': 'thumbnail', 'height': b'150'}],
+                                                     'excerpt': 'Arzt+Pfusch - S.I.C.K.',
+                                                     'date_utc': '2009-07-16 19:40:37',
+                                                     'content': 'Das Cover von Arzt+Pfusch - S.I.C.K.',
+                                                     'files': ['/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png',
+                                                               '/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover-150x150.png'],
+                                                      'title': 'Arzt+Pfusch - S.I.C.K.'}})
 
         write_content.assert_any_call(
-            'new_site/posts/2008/07/arzt-und-pfusch-s-i-c-k.wp'.replace('/', os.sep),
+            'new_site/posts/2008/07/arzt-und-pfusch-s-i-c-k.md'.replace('/', os.sep),
             '''<img class="size-full wp-image-10 alignright" title="Arzt+Pfusch - S.I.C.K." src="http://some.blog/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png" alt="Arzt+Pfusch - S.I.C.K." width="210" height="209" />Arzt+Pfusch - S.I.C.K.Gerade bin ich \xfcber das Album <em>S.I.C.K</em> von <a title="Arzt+Pfusch" href="http://www.arztpfusch.com/" target="_blank">Arzt+Pfusch</a> gestolpert, welches Arzt+Pfusch zum Download f\xfcr lau anbieten. Das Album steht unter einer Creative Commons <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/de/">BY-NC-ND</a>-Lizenz.
 
-Die Ladung <em>noisebmstupidevildustrial</em> gibts als MP3s mit <a href="http://www.archive.org/download/dmp005/dmp005_64kb_mp3.zip">64kbps</a> und <a href="http://www.archive.org/download/dmp005/dmp005_vbr_mp3.zip">VBR</a>, als Ogg Vorbis und als FLAC (letztere <a href="http://www.archive.org/details/dmp005">hier</a>). <a href="http://www.archive.org/download/dmp005/dmp005-artwork.zip">Artwork</a> und <a href="http://www.archive.org/download/dmp005/dmp005-lyrics.txt">Lyrics</a> gibts nochmal einzeln zum Download.''')
+Die Ladung <em>noisebmstupidevildustrial</em> gibts als MP3s mit <a href="http://www.archive.org/download/dmp005/dmp005_64kb_mp3.zip">64kbps</a> und <a href="http://www.archive.org/download/dmp005/dmp005_vbr_mp3.zip">VBR</a>, als Ogg Vorbis und als FLAC (letztere <a href="http://www.archive.org/details/dmp005">hier</a>). <a href="http://www.archive.org/download/dmp005/dmp005-artwork.zip">Artwork</a> und <a href="http://www.archive.org/download/dmp005/dmp005-lyrics.txt">Lyrics</a> gibts nochmal einzeln zum Download.''', True)
         write_content.assert_any_call(
-            'new_site/stories/kontakt.wp'.replace('/', os.sep), """<h1>Datenschutz</h1>
+            'new_site/stories/kontakt.md'.replace('/', os.sep), """<h1>Datenschutz</h1>
 
 Ich erhebe und speichere automatisch in meine Server Log Files Informationen, die dein Browser an mich \xfcbermittelt. Dies sind:
 
@@ -264,7 +283,7 @@ Ich erhebe und speichere automatisch in meine Server Log Files Informationen, di
 
 </ul>
 
-Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammenf\xfchrung dieser Daten mit anderen Datenquellen wird nicht vorgenommen, die Daten werden einzig zu statistischen Zwecken erhoben.""")
+Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammenf\xfchrung dieser Daten mit anderen Datenquellen wird nicht vorgenommen, die Daten werden einzig zu statistischen Zwecken erhoben.""", True)
 
         self.assertTrue(len(self.import_command.url_map) > 0)
 
@@ -302,16 +321,19 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
 
     def test_transforming_content(self):
         """Applying markup conversions to content."""
-        transform_sourcecode = mock.MagicMock()
+        transform_code = mock.MagicMock()
         transform_caption = mock.MagicMock()
         transform_newlines = mock.MagicMock()
 
-        with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_sourcecode', transform_sourcecode):
+        self.import_command.transform_to_html = False
+        self.import_command.use_wordpress_compiler = False
+
+        with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_code', transform_code):
             with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_caption', transform_caption):
                 with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_multiple_newlines', transform_newlines):
-                    self.import_command.transform_content("random content")
+                    self.import_command.transform_content("random content", "wp", None)
 
-        self.assertTrue(transform_sourcecode.called)
+        self.assertTrue(transform_code.called)
         self.assertTrue(transform_caption.called)
         self.assertTrue(transform_newlines.called)
 
@@ -325,21 +347,18 @@ import sys
 print sys.version
 [/sourcecode]"""
 
-        content = self.import_command.transform_sourcecode(content)
+        content = self.import_command.transform_code(content)
 
         self.assertFalse('[/sourcecode]' in content)
         self.assertFalse('[sourcecode language=' in content)
 
         replaced_content = """Hello World.
-
-~~~~~~~~~~~~{.Python}
+```Python
 
 import sys
 print sys.version
 
-~~~~~~~~~~~~
-"""
-
+```"""
         self.assertEqual(content, replaced_content)
 
     def test_transform_caption(self):
@@ -421,21 +440,17 @@ newlines.
         self.assertTrue(self.import_command.name in config_path_with_timestamp)
 
     def test_write_content_does_not_detroy_text(self):
-        content = b"""<h1>Installation</h1>
-Follow the instructions <a title="Installing Jenkins" href="https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins">described here</a>.
-
-<h1>Plugins</h1>
-There are many plugins.
-<h2>Violations</h2>
-You can use the <a title="Jenkins Plugin: Violations" href="https://wiki.jenkins-ci.org/display/JENKINS/Violations">Violations</a> plugin."""
+        content = b"""FOO"""
         open_mock = mock.mock_open()
         with mock.patch('nikola.plugins.basic_import.open', open_mock, create=True):
             self.import_command.write_content('some_file', content)
 
-        open_mock.assert_called_once_with('some_file', 'wb+')
-        call_context = open_mock()
-        call_context.write.assert_called_once_with(
-            content.join([b'<html><body>', b'</body></html>']))
+        open_mock.assert_has_calls([
+            mock.call(u'some_file', u'wb+'),
+            mock.call().__enter__(),
+            mock.call().write(b'<html><body><p>FOO</p></body></html>'),
+            mock.call().__exit__(None, None, None)]
+        )
 
     def test_configure_redirections(self):
         """

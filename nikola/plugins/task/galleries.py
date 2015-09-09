@@ -24,10 +24,12 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Render image galleries."""
+
 from __future__ import unicode_literals
-import io
 import datetime
 import glob
+import io
 import json
 import mimetypes
 import os
@@ -41,11 +43,8 @@ import natsort
 try:
     from PIL import Image  # NOQA
 except ImportError:
-    try:
-        import Image as _Image
-        Image = _Image
-    except ImportError:
-        Image = None
+    import Image as _Image
+    Image = _Image
 
 import PyRSS2Gen as rss
 
@@ -53,22 +52,24 @@ from nikola.plugin_categories import Task
 from nikola import utils
 from nikola.image_processing import ImageProcessor
 from nikola.post import Post
-from nikola.utils import req_missing
 
 _image_size_cache = {}
 
 
 class Galleries(Task, ImageProcessor):
+
     """Render image galleries."""
 
     name = 'render_galleries'
     dates = {}
 
     def set_site(self, site):
+        """Set Nikola site."""
         site.register_path_handler('gallery', self.gallery_path)
+        site.register_path_handler('gallery_global', self.gallery_global_path)
         site.register_path_handler('gallery_rss', self.gallery_rss_path)
 
-        self.logger = utils.get_logger('render_galleries', site.loghandlers)
+        self.logger = utils.get_logger('render_galleries', utils.STDERR_HANDLER)
 
         self.kw = {
             'thumbnail_size': site.config['THUMBNAIL_SIZE'],
@@ -121,23 +122,52 @@ class Galleries(Task, ImageProcessor):
         sys.exit(1)
 
     def gallery_path(self, name, lang):
+        """Link to an image gallery's path.
+
+        It will try to find a gallery with that name if it's not ambiguous
+        or with that path. For example:
+
+        link://gallery/london => /galleries/trips/london/index.html
+
+        link://gallery/trips/london => /galleries/trips/london/index.html
+        """
         gallery_path = self._find_gallery_path(name)
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
-                list(os.path.split(gallery_path)) +
+                gallery_path.split(os.sep) +
+                [self.site.config['INDEX_FILE']] if _f]
+
+    def gallery_global_path(self, name, lang):
+        """Link to the global gallery path, which contains all the images in galleries.
+
+        There is only one copy of an image on multilingual blogs, in the site root.
+
+        link://gallery_global/london => /galleries/trips/london/index.html
+
+        link://gallery_global/trips/london => /galleries/trips/london/index.html
+
+        (a ``gallery`` link could lead to eg. /en/galleries/trips/london/index.html)
+        """
+        gallery_path = self._find_gallery_path(name)
+        return [_f for _f in gallery_path.split(os.sep) +
                 [self.site.config['INDEX_FILE']] if _f]
 
     def gallery_rss_path(self, name, lang):
+        """Link to an image gallery's RSS feed.
+
+        It will try to find a gallery with that name if it's not ambiguous
+        or with that path. For example:
+
+        link://gallery_rss/london => /galleries/trips/london/rss.xml
+
+        link://gallery_rss/trips/london => /galleries/trips/london/rss.xml
+        """
         gallery_path = self._find_gallery_path(name)
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
-                list(os.path.split(gallery_path)) +
+                gallery_path.split(os.sep) +
                 ['rss.xml'] if _f]
 
     def gen_tasks(self):
         """Render image galleries."""
-
-        if Image is None:
-            req_missing(['pillow'], 'render galleries')
-
         self.image_ext_list = self.image_ext_list_builtin
         self.image_ext_list.extend(self.site.config.get('EXTRA_IMAGE_EXTENSIONS', []))
 
@@ -184,10 +214,12 @@ class Galleries(Task, ImageProcessor):
 
             crumbs = utils.get_crumbs(gallery, index_folder=self)
 
-            # Create index.html for each language
             for lang in self.kw['translations']:
                 # save navigation links as dependencies
                 self.kw['navigation_links|{0}'.format(lang)] = self.kw['global_context']['navigation_links'](lang)
+
+            # Create index.html for each language
+            for lang in self.kw['translations']:
 
                 dst = os.path.join(
                     self.kw['output_folder'],
@@ -239,6 +271,7 @@ class Galleries(Task, ImageProcessor):
                 context["permalink"] = self.site.link("gallery", gallery, lang)
                 context["enable_comments"] = self.kw['comments_in_galleries']
                 context["thumbnail_size"] = self.kw["thumbnail_size"]
+                context["pagekind"] = ["gallery_front"]
 
                 if post:
                     yield {
@@ -247,7 +280,7 @@ class Galleries(Task, ImageProcessor):
                         'targets': [post.translated_base_path(lang)],
                         'file_dep': post.fragment_deps(lang),
                         'actions': [(post.compile, [lang])],
-                        'uptodate': [utils.config_changed(self.kw, 'nikola.plugins.task.galleries:post')] + post.fragment_deps_uptodate(lang)
+                        'uptodate': [utils.config_changed(self.kw.copy(), 'nikola.plugins.task.galleries:post')] + post.fragment_deps_uptodate(lang)
                     }
                     context['post'] = post
                 else:
@@ -260,6 +293,8 @@ class Galleries(Task, ImageProcessor):
                     file_dep += [post.translated_base_path(l) for l in self.kw['translations']]
                     file_dep_dest += [post.translated_base_path(l) for l in self.kw['translations']]
 
+                context["pagekind"] = ["gallery_page"]
+
                 yield utils.apply_filters({
                     'basename': self.name,
                     'name': dst,
@@ -269,14 +304,14 @@ class Galleries(Task, ImageProcessor):
                         (self.render_gallery_index, (
                             template_name,
                             dst,
-                            context,
+                            context.copy(),
                             dest_img_list,
                             img_titles,
                             thumbs,
                             file_dep))],
                     'clean': True,
                     'uptodate': [utils.config_changed({
-                        1: self.kw,
+                        1: self.kw.copy(),
                         2: self.site.config["COMMENTS_IN_GALLERIES"],
                         3: context.copy(),
                     }, 'nikola.plugins.task.galleries:gallery')],
@@ -306,21 +341,19 @@ class Galleries(Task, ImageProcessor):
                             ))],
                         'clean': True,
                         'uptodate': [utils.config_changed({
-                            1: self.kw,
+                            1: self.kw.copy(),
                         }, 'nikola.plugins.task.galleries:rss')],
                     }, self.kw['filters'])
 
     def find_galleries(self):
-        """Find all galleries to be processed according to conf.py"""
-
+        """Find all galleries to be processed according to conf.py."""
         self.gallery_list = []
         for input_folder, output_folder in self.kw['gallery_folders'].items():
             for root, dirs, files in os.walk(input_folder, followlinks=True):
                 self.gallery_list.append((root, input_folder, output_folder))
 
     def create_galleries_paths(self):
-        """Given a list of galleries, puts their paths into self.gallery_links."""
-
+        """Given a list of galleries, put their paths into self.gallery_links."""
         # gallery_path is "gallery/foo/name"
         self.proper_gallery_links = dict()
         self.improper_gallery_links = dict()
@@ -351,7 +384,6 @@ class Galleries(Task, ImageProcessor):
 
     def create_galleries(self):
         """Given a list of galleries, create the output folders."""
-
         # gallery_path is "gallery/foo/name"
         for gallery_path, input_folder, _ in self.gallery_list:
             # have to use dirname because site.path returns .../index.html
@@ -367,12 +399,11 @@ class Galleries(Task, ImageProcessor):
                 'actions': [(utils.makedirs, (output_gallery,))],
                 'targets': [output_gallery],
                 'clean': True,
-                'uptodate': [utils.config_changed(self.kw, 'nikola.plugins.task.galleries:mkdir')],
+                'uptodate': [utils.config_changed(self.kw.copy(), 'nikola.plugins.task.galleries:mkdir')],
             }
 
     def parse_index(self, gallery, input_folder, output_folder):
-        """Returns a Post object if there is an index.txt."""
-
+        """Return a Post object if there is an index.txt."""
         index_path = os.path.join(gallery, "index.txt")
         destination = os.path.join(
             self.kw["output_folder"], output_folder,
@@ -398,6 +429,7 @@ class Galleries(Task, ImageProcessor):
         return post
 
     def get_excluded_images(self, gallery_path):
+        """Get list of excluded images."""
         exclude_path = os.path.join(gallery_path, "exclude.meta")
 
         try:
@@ -410,7 +442,7 @@ class Galleries(Task, ImageProcessor):
         return excluded_image_list
 
     def get_image_list(self, gallery_path):
-
+        """Get list of included images."""
         # Gather image_list contains "gallery/name/image_name.jpg"
         image_list = []
 
@@ -425,11 +457,12 @@ class Galleries(Task, ImageProcessor):
         return image_list
 
     def create_target_images(self, img, input_path):
+        """Copy images to output."""
         gallery_name = os.path.dirname(img)
         output_gallery = os.path.dirname(
             os.path.join(
                 self.kw["output_folder"],
-                self.site.path("gallery", gallery_name)))
+                self.site.path("gallery_global", gallery_name)))
         # Do thumbnails and copy originals
         # img is "galleries/name/image_name.jpg"
         # img_name is "image_name.jpg"
@@ -474,6 +507,7 @@ class Galleries(Task, ImageProcessor):
         }, self.kw['filters'])
 
     def remove_excluded_image(self, img, input_folder):
+        """Remove excluded images."""
         # Remove excluded images
         # img is something like input_folder/demo/tesla2_lg.jpg so it's the *source* path
         # and we should remove both the large and thumbnail *destination* paths
@@ -481,7 +515,7 @@ class Galleries(Task, ImageProcessor):
         output_folder = os.path.dirname(
             os.path.join(
                 self.kw["output_folder"],
-                self.site.path("gallery", os.path.dirname(img))))
+                self.site.path("gallery_global", os.path.dirname(img))))
         img = os.path.relpath(img, input_folder)
         img_path = os.path.join(output_folder, os.path.basename(img))
         fname, ext = os.path.splitext(img_path)
@@ -494,7 +528,7 @@ class Galleries(Task, ImageProcessor):
                 (utils.remove_file, (thumb_path,))
             ],
             'clean': True,
-            'uptodate': [utils.config_changed(self.kw, 'nikola.plugins.task.galleries:clean_thumb')],
+            'uptodate': [utils.config_changed(self.kw.copy(), 'nikola.plugins.task.galleries:clean_thumb')],
         }, self.kw['filters'])
 
         yield utils.apply_filters({
@@ -504,7 +538,7 @@ class Galleries(Task, ImageProcessor):
                 (utils.remove_file, (img_path,))
             ],
             'clean': True,
-            'uptodate': [utils.config_changed(self.kw, 'nikola.plugins.task.galleries:clean_file')],
+            'uptodate': [utils.config_changed(self.kw.copy(), 'nikola.plugins.task.galleries:clean_file')],
         }, self.kw['filters'])
 
     def render_gallery_index(
@@ -517,7 +551,6 @@ class Galleries(Task, ImageProcessor):
             thumbs,
             file_dep):
         """Build the gallery index."""
-
         # The photo array needs to be created here, because
         # it relies on thumbnails already being created on
         # output
@@ -530,9 +563,12 @@ class Galleries(Task, ImageProcessor):
         for img, thumb, title in zip(img_list, thumbs, img_titles):
             w, h = _image_size_cache.get(thumb, (None, None))
             if w is None:
-                im = Image.open(thumb)
-                w, h = im.size
-                _image_size_cache[thumb] = w, h
+                if os.path.splitext(thumb)[1] in ['.svg', '.svgz']:
+                    w, h = 200, 200
+                else:
+                    im = Image.open(thumb)
+                    w, h = im.size
+                    _image_size_cache[thumb] = w, h
             # Thumbs are files in output, we need URLs
             photo_array.append({
                 'url': url_from_path(img),
@@ -544,7 +580,7 @@ class Galleries(Task, ImageProcessor):
                 },
             })
         context['photo_array'] = photo_array
-        context['photo_array_json'] = json.dumps(photo_array)
+        context['photo_array_json'] = json.dumps(photo_array, sort_keys=True)
         self.site.render_template(template_name, output_name, context)
 
     def gallery_rss(self, img_list, dest_img_list, img_titles, lang, permalink, output_path, title):
@@ -553,7 +589,6 @@ class Galleries(Task, ImageProcessor):
         This doesn't use generic_rss_renderer because it
         doesn't involve Post objects.
         """
-
         def make_url(url):
             return urljoin(self.site.config['BASE_URL'], url.lstrip('/'))
 
@@ -580,7 +615,7 @@ class Galleries(Task, ImageProcessor):
             description='',
             lastBuildDate=datetime.datetime.utcnow(),
             items=items,
-            generator='http://getnikola.com/',
+            generator='https://getnikola.com/',
             language=lang
         )
 

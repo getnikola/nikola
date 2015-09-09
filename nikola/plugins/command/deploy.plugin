@@ -1,9 +1,13 @@
 [Core]
-Name = deploy
-Module = deploy
+name = deploy
+module = deploy
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Deploy the site
+author = Roberto Alsina
+version = 1.0
+website = https://getnikola.com/
+description = Deploy the site
+
+[Nikola]
+plugincategory = Command
+

@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Copy theme assets into output."""
+
 from __future__ import unicode_literals
 
 import io
@@ -34,6 +36,7 @@ from nikola import utils
 
 
 class CopyAssets(Task):
+
     """Copy theme assets into output."""
 
     name = "copy_assets"
@@ -44,7 +47,6 @@ class CopyAssets(Task):
         If a file is present on two themes, use the version
         from the "youngest" theme.
         """
-
         kw = {
             "themes": self.site.THEMES,
             "files_folders": self.site.config['FILES_FOLDERS'],
@@ -75,7 +77,9 @@ class CopyAssets(Task):
                 task['uptodate'] = [utils.config_changed(kw, 'nikola.plugins.task.copy_assets')]
                 task['basename'] = self.name
                 if code_css_input:
-                    task['file_dep'] = [code_css_input]
+                    if 'file_dep' not in task:
+                        task['file_dep'] = []
+                    task['file_dep'].append(code_css_input)
                 yield utils.apply_filters(task, kw['filters'])
 
         # Check whether or not there is a code.css file around.

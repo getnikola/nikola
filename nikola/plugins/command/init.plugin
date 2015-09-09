@@ -1,9 +1,13 @@
 [Core]
-Name = init
-Module = init
+name = init
+module = init
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Create a new site.
+author = Roberto Alsina
+version = 1.0
+website = https://getnikola.com/
+description = Create a new site.
+
+[Nikola]
+plugincategory = Command
+

@@ -19,9 +19,9 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-02-23 23:57+0000\n"
-"Last-Translator: Mika Kobayashi\n"
-"Language-Team: Japanese (http://www.transifex.com/projects/p/nikola/language/ja/)\n"
+"PO-Revision-Date: 2015-08-31 07:51+0000\n"
+"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"Language-Team: Japanese (http://www.transifex.com/ralsina/nikola/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -121,3 +121,31 @@ msgstr "読込むまで残り %d 分"
 
 msgid "Skip to main content"
 msgstr "メインコンテンツをスキップ"
+
+msgid "Subcategories:"
+msgstr ""
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
+msgstr ""
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr ""
+
+#. Default content for a new page
+msgid "Write your page here."
+msgstr ""
+
+msgid "Uncategorized"
+msgstr ""
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr ""
+
+msgid "Authors"
+msgstr ""
+
+msgid "Posts by %s"
+msgstr ""

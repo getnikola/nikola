@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Create a new site."""
+
 from __future__ import print_function, unicode_literals
 import os
 import shutil
@@ -50,9 +52,11 @@ LOGGER = get_logger('init', STDERR_HANDLER)
 SAMPLE_CONF = {
     'BLOG_AUTHOR': "Your Name",
     'BLOG_TITLE': "Demo Site",
-    'SITE_URL': "http://getnikola.com/",
+    'SITE_URL': "https://example.com/",
     'BLOG_EMAIL': "joe@demo.site",
     'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
+    'PRETTY_URLS': False,
+    'STRIP_INDEXES': False,
     'DEFAULT_LANG': "en",
     'TRANSLATIONS': """{
     DEFAULT_LANG: "",
@@ -63,6 +67,8 @@ SAMPLE_CONF = {
     'TIMEZONE': 'UTC',
     'COMMENT_SYSTEM': 'disqus',
     'COMMENT_SYSTEM_ID': 'nikolademo',
+    'CATEGORY_ALLOW_HIERARCHIES': False,
+    'CATEGORY_OUTPUT_FLAT_HIERARCHY': False,
     'TRANSLATIONS_PATTERN': DEFAULT_TRANSLATIONS_PATTERN,
     'INDEX_READ_MORE_LINK': DEFAULT_INDEX_READ_MORE_LINK,
     'RSS_READ_MORE_LINK': DEFAULT_RSS_READ_MORE_LINK,
@@ -101,6 +107,7 @@ SAMPLE_CONF = {
 }""",
     'REDIRECTIONS': [],
 }
+
 
 # Generate a list of supported languages here.
 # Ugly code follows.
@@ -153,8 +160,7 @@ SAMPLE_CONF['_SUPPORTED_COMMENT_SYSTEMS'] = '\n'.join(textwrap.wrap(
 
 
 def format_default_translations_config(additional_languages):
-    """Return the string to configure the TRANSLATIONS config variable to
-    make each additional language visible on the generated site."""
+    """Adapt TRANSLATIONS setting for all additional languages."""
     if not additional_languages:
         return SAMPLE_CONF["TRANSLATIONS"]
     lang_paths = ['    DEFAULT_LANG: "",']
@@ -163,12 +169,12 @@ def format_default_translations_config(additional_languages):
     return "{{\n{0}\n}}".format("\n".join(lang_paths))
 
 
-def format_navigation_links(additional_languages, default_lang, messages):
+def format_navigation_links(additional_languages, default_lang, messages, strip_indexes=False):
     """Return the string to configure NAVIGATION_LINKS."""
     f = u"""\
     {0}: (
         ("{1}/archive.html", "{2[Archive]}"),
-        ("{1}/categories/index.html", "{2[Tags]}"),
+        ("{1}/categories/{3}", "{2[Tags]}"),
         ("{1}/rss.xml", "{2[RSS feed]}"),
     ),"""
 
@@ -184,25 +190,32 @@ def format_navigation_links(additional_languages, default_lang, messages):
                 fmsg[i] = i
         return fmsg
 
+    if strip_indexes:
+        index_html = ''
+    else:
+        index_html = 'index.html'
+
     # handle the default language
-    pairs.append(f.format('DEFAULT_LANG', '', get_msg(default_lang)))
+    pairs.append(f.format('DEFAULT_LANG', '', get_msg(default_lang), index_html))
 
     for l in additional_languages:
-        pairs.append(f.format(json.dumps(l, ensure_ascii=False), '/' + l, get_msg(l)))
+        pairs.append(f.format(json.dumps(l, ensure_ascii=False), '/' + l, get_msg(l), index_html))
 
     return u'{{\n{0}\n}}'.format('\n\n'.join(pairs))
 
 
-# In order to ensure proper escaping, all variables but the three
-# pre-formatted ones are handled by json.dumps().
+# In order to ensure proper escaping, all variables but the pre-formatted ones
+# are handled by json.dumps().
 def prepare_config(config):
     """Parse sample config with JSON."""
     p = config.copy()
-    p.update(dict((k, json.dumps(v, ensure_ascii=False)) for k, v in p.items()
-             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'INDEX_READ_MORE_LINK', 'RSS_READ_MORE_LINK')))
+    p.update({k: json.dumps(v, ensure_ascii=False) for k, v in p.items()
+             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'INDEX_READ_MORE_LINK', 'RSS_READ_MORE_LINK')})
     # READ_MORE_LINKs require some special treatment.
     p['INDEX_READ_MORE_LINK'] = "'" + p['INDEX_READ_MORE_LINK'].replace("'", "\\'") + "'"
     p['RSS_READ_MORE_LINK'] = "'" + p['RSS_READ_MORE_LINK'].replace("'", "\\'") + "'"
+    # fix booleans and None
+    p.update({k: str(v) for k, v in config.items() if isinstance(v, bool) or v is None})
     return p
 
 
@@ -236,11 +249,13 @@ class CommandInit(Command):
 
     @classmethod
     def copy_sample_site(cls, target):
+        """Copy sample site data to target directory."""
         src = resource_filename('nikola', os.path.join('data', 'samplesite'))
         shutil.copytree(src, target)
 
     @staticmethod
     def create_configuration(target):
+        """Create configuration file."""
         template_path = resource_filename('nikola', 'conf.py.in')
         conf_template = Template(filename=template_path)
         conf_path = os.path.join(target, 'conf.py')
@@ -249,12 +264,14 @@ class CommandInit(Command):
 
     @staticmethod
     def create_configuration_to_string():
+        """Return configuration file as a string."""
         template_path = resource_filename('nikola', 'conf.py.in')
         conf_template = Template(filename=template_path)
         return conf_template.render(**prepare_config(SAMPLE_CONF))
 
     @classmethod
     def create_empty_site(cls, target):
+        """Create an empty site with directories only."""
         for folder in ('files', 'galleries', 'listings', 'posts', 'stories'):
             makedirs(os.path.join(target, folder))
 
@@ -262,7 +279,7 @@ class CommandInit(Command):
     def ask_questions(target):
         """Ask some questions about Nikola."""
         def urlhandler(default, toconf):
-            answer = ask('Site URL', 'http://getnikola.com/')
+            answer = ask('Site URL', 'https://example.com/')
             try:
                 answer = answer.decode('utf-8')
             except (AttributeError, UnicodeDecodeError):
@@ -290,6 +307,10 @@ class CommandInit(Command):
                 print("    Converting to Punycode:", answer)
 
             SAMPLE_CONF['SITE_URL'] = answer
+
+        def prettyhandler(default, toconf):
+            SAMPLE_CONF['PRETTY_URLS'] = ask_yesno('Enable pretty URLs (/page/ instead of /page.html) that don\'t need web server configuration?', default=True)
+            SAMPLE_CONF['STRIP_INDEXES'] = SAMPLE_CONF['PRETTY_URLS']
 
         def lhandler(default, toconf, show_header=True):
             if show_header:
@@ -327,7 +348,7 @@ class CommandInit(Command):
             # not inherit from anywhere.
             try:
                 messages = load_messages(['base'], tr, default)
-                SAMPLE_CONF['NAVIGATION_LINKS'] = format_navigation_links(langs, default, messages)
+                SAMPLE_CONF['NAVIGATION_LINKS'] = format_navigation_links(langs, default, messages, SAMPLE_CONF['STRIP_INDEXES'])
             except nikola.utils.LanguageNotFoundError as e:
                 print("    ERROR: the language '{0}' is not supported.".format(e.lang))
                 print("    Are you sure you spelled the name correctly?  Names are case-sensitive and need to be reproduced as-is (complete with the country specifier, if any).")
@@ -337,7 +358,7 @@ class CommandInit(Command):
         def tzhandler(default, toconf):
             print("\nPlease choose the correct time zone for your blog. Nikola uses the tz database.")
             print("You can find your time zone here:")
-            print("http://en.wikipedia.org/wiki/List_of_tz_database_time_zones")
+            print("https://en.wikipedia.org/wiki/List_of_tz_database_time_zones")
             print("")
             answered = False
             while not answered:
@@ -406,6 +427,7 @@ class CommandInit(Command):
             ('Site author\'s e-mail', 'n.tesla@example.com', True, 'BLOG_EMAIL'),
             ('Site description', 'This is a demo site for Nikola.', True, 'BLOG_DESCRIPTION'),
             (urlhandler, None, True, True),
+            (prettyhandler, None, True, True),
             ('Questions about languages and locales', None, None, None),
             (lhandler, None, True, True),
             (tzhandler, None, True, True),
@@ -442,7 +464,7 @@ class CommandInit(Command):
                         STORAGE['target'] = answer
 
         print("\nThat's it, Nikola is now configured.  Make sure to edit conf.py to your liking.")
-        print("If you are looking for themes and addons, check out http://themes.getnikola.com/ and http://plugins.getnikola.com/.")
+        print("If you are looking for themes and addons, check out https://themes.getnikola.com/ and https://plugins.getnikola.com/.")
         print("Have fun!")
         return STORAGE
 

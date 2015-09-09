@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Process images."""
+
 from __future__ import unicode_literals
 import datetime
 import os
@@ -43,13 +45,14 @@ except ImportError:
 
 
 class ImageProcessor(object):
+
     """Apply image operations."""
 
     image_ext_list_builtin = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.bmp', '.tiff']
 
     def resize_image(self, src, dst, max_size, bigger_panoramas=True):
         """Make a copy of the image in the requested size."""
-        if not Image:
+        if not Image or os.path.splitext(src)[1] in ['.svg', '.svgz']:
             utils.copy_file(src, dst)
             return
         im = Image.open(src)

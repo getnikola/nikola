@@ -3,23 +3,25 @@
 .. date: 2012-03-30 23:00:00 UTC-03:00
 .. tags: nikola, python, demo, blog
 .. author: Roberto Alsina
-.. link: http://getnikola.com
+.. link: https://getnikola.com/
 .. description:
 .. category: nikola
 
-.. figure:: http://farm1.staticflickr.com/138/352972944_4f9d568680.jpg
-   :target: http://farm1.staticflickr.com/138/352972944_4f9d568680_z.jpg?zz=1
+.. figure:: https://farm1.staticflickr.com/138/352972944_4f9d568680.jpg
+   :target: https://farm1.staticflickr.com/138/352972944_4f9d568680_z.jpg?zz=1
    :class: thumbnail
    :alt: Nikola Tesla Corner by nicwest, on Flickr
 
-If you can see this in a web browser, it means you have managed to install Nikola,
+If you can see this in a web browser, it means you managed to install Nikola,
 and build a site using it. Congratulations!
 
-* You can read the manual `here </stories/handbook.html>`__
-* You can learn more about Nikola at http://getnikola.com
-* You can see a demo photo gallery `here </galleries/demo/index.html>`__
-* Demo usage of listings `here </stories/listings-demo.html>`__
-* Demo of slideshows `here </stories/slides-demo.html>`__
-* Demo of Bootstrap `here </stories/bootstrap-demo.html>`__
+Next steps:
 
-Send feedback to ralsina@netmanagers.com.ar!
+* :doc:`Read the manual <handbook>`
+* `Visit the Nikola website to learn more <https://getnikola.com>`__
+* `See a demo photo gallery <link://gallery/demo>`__
+* :doc:`See a demo listing <listings-demo>`
+* :doc:`See a demo slideshow <slides-demo>`
+* :doc:`See a demo of the Bootstrap theme <bootstrap-demo>`
+
+Send feedback to info@getnikola.com!

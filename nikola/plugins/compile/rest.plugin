@@ -1,10 +1,13 @@
 [Core]
-Name = rest
-Module = rest
+name = rest
+module = rest
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Compile reSt into HTML
+author = Roberto Alsina
+version = 1.0
+website = https://getnikola.com/
+description = Compile reSt into HTML
 
+[Nikola]
+plugincategory = Compiler
+friendlyname = reStructuredText

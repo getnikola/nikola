@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "Il reste encore %d min. de lecture",
+    "(active)": "(actif)",
     "Also available in:": "Également disponible en:",
     "Archive": "Archives",
+    "Authors": "",
     "Categories": "Catégories",
     "Comments": "Commentaires",
     "LANGUAGE": "Français",
@@ -18,6 +20,7 @@ MESSAGES = {
     "Original site": "Site d'origine",
     "Posted:": "Publié:",
     "Posts about %s": "Articles sur %s",
+    "Posts by %s": "",
     "Posts for year %s": "Articles de l'année %s",
     "Posts for {month} {day}, {year}": "Articles du {day} {month} {year}",
     "Posts for {month} {year}": "Articles de {month} {year}",
@@ -28,8 +31,13 @@ MESSAGES = {
     "Read more": "Lire la suite",
     "Skip to main content": "Aller au contenu principal",
     "Source": "Source",
+    "Subcategories:": "Sous-catégories",
     "Tags and Categories": "Étiquettes et catégories",
     "Tags": "Étiquettes",
+    "Uncategorized": "",
+    "Updates": "",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "anciens articles, page %d",
     "page %d": "page %d",
 }

@@ -30,8 +30,9 @@ from nikola.plugin_categories import (
     TemplateSystem,
     PageCompiler,
     TaskMultiplier,
-    RestExtension,
-    MarkdownExtension
+    CompilerExtension,
+    MarkdownExtension,
+    RestExtension
 )
 
 
@@ -213,10 +214,11 @@ class FakeSite(object):
             "TemplateSystem": TemplateSystem,
             "PageCompiler": PageCompiler,
             "TaskMultiplier": TaskMultiplier,
-            "RestExtension": RestExtension,
+            "CompilerExtension": CompilerExtension,
             "MarkdownExtension": MarkdownExtension,
+            "RestExtension": RestExtension
         })
-        self.loghandlers = [nikola.utils.STDERR_HANDLER]
+        self.loghandlers = nikola.utils.STDERR_HANDLER  # TODO remove on v8
         self.plugin_manager.setPluginInfoExtension('plugin')
         if sys.version_info[0] == 3:
             places = [
@@ -228,6 +230,7 @@ class FakeSite(object):
             ]
         self.plugin_manager.setPluginPlaces(places)
         self.plugin_manager.collectPlugins()
+        self.compiler_extensions = self._activate_plugins_of_category("CompilerExtension")
 
         self.timeline = [
             FakePost(title='Fake post',
@@ -238,6 +241,19 @@ class FakeSite(object):
         # This is to make plugin initialization happy
         self.template_system = self
         self.name = 'mako'
+
+    def _activate_plugins_of_category(self, category):
+        """Activate all the plugins of a given category and return them."""
+        # this code duplicated in nikola/nikola.py
+        plugins = []
+        for plugin_info in self.plugin_manager.getPluginsOfCategory(category):
+            if plugin_info.name in self.config.get('DISABLED_PLUGINS'):
+                self.plugin_manager.removePluginFromCategory(plugin_info, category)
+            else:
+                self.plugin_manager.activatePluginByName(plugin_info.name)
+                plugin_info.plugin_object.set_site(self)
+                plugins.append(plugin_info)
+        return plugins
 
     def render_template(self, name, _, context):
         return('<img src="IMG.jpg">')

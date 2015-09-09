@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "%d dakikalık okuma",
+    "(active)": "",
     "Also available in:": "Şu dilde de mevcut:",
     "Archive": "Arşiv",
+    "Authors": "",
     "Categories": "Kategoriler",
     "Comments": "Yorumlar",
     "LANGUAGE": "Türkçe",
@@ -18,6 +20,7 @@ MESSAGES = {
     "Original site": "Orjinal web sayfası",
     "Posted:": "Yayın tarihi:",
     "Posts about %s": "%s ile ilgili yazılar",
+    "Posts by %s": "",
     "Posts for year %s": "%s yılındaki yazılar",
     "Posts for {month} {day}, {year}": "{month} {day}, {year} 'den beri olan yazılar",
     "Posts for {month} {year}": "{month} {year} göre yazılar",
@@ -28,8 +31,13 @@ MESSAGES = {
     "Read more": "Devamını oku",
     "Skip to main content": "Ana içeriğe geç",
     "Source": "Kaynak",
+    "Subcategories:": "",
     "Tags and Categories": "Etiketler ve Kategoriler",
     "Tags": "Etiketler",
+    "Uncategorized": "",
+    "Updates": "",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "eski yazılar, sayfa %d",
     "page %d": "sayfa %d",
 }

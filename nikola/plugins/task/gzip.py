@@ -35,12 +35,14 @@ from nikola.plugin_categories import TaskMultiplier
 
 
 class GzipFiles(TaskMultiplier):
+
     """If appropiate, create tasks to create gzipped versions of files."""
 
     name = "gzip"
     is_default = True
 
     def process(self, task, prefix):
+        """Process tasks."""
         if not self.site.config['GZIP_FILES']:
             return []
         if task.get('name') is None:
@@ -70,6 +72,7 @@ class GzipFiles(TaskMultiplier):
 
 
 def create_gzipped_copy(in_path, out_path, command=None):
+    """Create gzipped copy of in_path and save it as out_path."""
     if command:
         subprocess.check_call(shlex.split(command.format(filename=in_path)))
     else:

@@ -22,20 +22,20 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 # Warning: URL formats of "raw" gists are undocummented and subject to change.
-# See also:  http://developer.github.com/v3/gists/
+# See also:  https://developer.github.com/v3/gists/
 #
 # Inspired by "[Python] reStructuredText GitHub Gist directive"
 # (https://gist.github.com/brianhsu/1407759), public domain by Brian Hsu
-'''
-Extension to Python Markdown for Embedded Gists (gist.github.com)
+"""
+Extension to Python Markdown for Embedded Gists (gist.github.com).
 
 Basic Example:
 
     >>> import markdown
-    >>> text = """
+    >>> text = '''
     ... Text of the gist:
     ... [:gist: 4747847]
-    ... """
+    ... '''
     >>> html = markdown.markdown(text, [GistExtension()])
     >>> print(html)
     <p>Text of the gist:
@@ -50,10 +50,10 @@ Basic Example:
 Example with filename:
 
     >>> import markdown
-    >>> text = """
+    >>> text = '''
     ... Text of the gist:
     ... [:gist: 4747847 zen.py]
-    ... """
+    ... '''
     >>> html = markdown.markdown(text, [GistExtension()])
     >>> print(html)
     <p>Text of the gist:
@@ -68,10 +68,10 @@ Example with filename:
 Basic Example with hexidecimal id:
 
     >>> import markdown
-    >>> text = """
+    >>> text = '''
     ... Text of the gist:
     ... [:gist: c4a43d6fdce612284ac0]
-    ... """
+    ... '''
     >>> html = markdown.markdown(text, [GistExtension()])
     >>> print(html)
     <p>Text of the gist:
@@ -86,10 +86,10 @@ Basic Example with hexidecimal id:
 Example with hexidecimal id filename:
 
     >>> import markdown
-    >>> text = """
+    >>> text = '''
     ... Text of the gist:
     ... [:gist: c4a43d6fdce612284ac0 cow.txt]
-    ... """
+    ... '''
     >>> html = markdown.markdown(text, [GistExtension()])
     >>> print(html)
     <p>Text of the gist:
@@ -104,10 +104,10 @@ Example with hexidecimal id filename:
 Example using reStructuredText syntax:
 
     >>> import markdown
-    >>> text = """
+    >>> text = '''
     ... Text of the gist:
     ... .. gist:: 4747847 zen.py
-    ... """
+    ... '''
     >>> html = markdown.markdown(text, [GistExtension()])
     >>> print(html)
     <p>Text of the gist:
@@ -122,10 +122,10 @@ Example using reStructuredText syntax:
 Example using hexidecimal ID with reStructuredText syntax:
 
     >>> import markdown
-    >>> text = """
+    >>> text = '''
     ... Text of the gist:
     ... .. gist:: c4a43d6fdce612284ac0
-    ... """
+    ... '''
     >>> html = markdown.markdown(text, [GistExtension()])
     >>> print(html)
     <p>Text of the gist:
@@ -140,10 +140,10 @@ Example using hexidecimal ID with reStructuredText syntax:
 Example using hexidecimal ID and filename with reStructuredText syntax:
 
     >>> import markdown
-    >>> text = """
+    >>> text = '''
     ... Text of the gist:
     ... .. gist:: c4a43d6fdce612284ac0 cow.txt
-    ... """
+    ... '''
     >>> html = markdown.markdown(text, [GistExtension()])
     >>> print(html)
     <p>Text of the gist:
@@ -158,38 +158,36 @@ Example using hexidecimal ID and filename with reStructuredText syntax:
 Error Case: non-existent Gist ID:
 
     >>> import markdown
-    >>> text = """
+    >>> text = '''
     ... Text of the gist:
     ... [:gist: 0]
-    ... """
+    ... '''
     >>> html = markdown.markdown(text, [GistExtension()])
     >>> print(html)
     <p>Text of the gist:
     <div class="gist">
     <script src="https://gist.github.com/0.js"></script>
-    <noscript><!-- WARNING: Received a 404 response from Gist URL: \
-https://gist.githubusercontent.com/raw/0 --></noscript>
+    <noscript><!-- WARNING: Received a 404 response from Gist URL: https://gist.githubusercontent.com/raw/0 --></noscript>
     </div>
     </p>
 
 Error Case:  non-existent file:
 
     >>> import markdown
-    >>> text = """
+    >>> text = '''
     ... Text of the gist:
     ... [:gist: 4747847 doesntexist.py]
-    ... """
+    ... '''
     >>> html = markdown.markdown(text, [GistExtension()])
     >>> print(html)
     <p>Text of the gist:
     <div class="gist">
     <script src="https://gist.github.com/4747847.js?file=doesntexist.py"></script>
-    <noscript><!-- WARNING: Received a 404 response from Gist URL: \
-https://gist.githubusercontent.com/raw/4747847/doesntexist.py --></noscript>
+    <noscript><!-- WARNING: Received a 404 response from Gist URL: https://gist.githubusercontent.com/raw/4747847/doesntexist.py --></noscript>
     </div>
     </p>
+"""
 
-'''
 from __future__ import unicode_literals, print_function
 
 try:
@@ -203,14 +201,11 @@ except ImportError:
     Extension = Pattern = object
 
 from nikola.plugin_categories import MarkdownExtension
-from nikola.utils import get_logger, req_missing, STDERR_HANDLER
+from nikola.utils import get_logger, STDERR_HANDLER
+
+import requests
 
 LOGGER = get_logger('compile_markdown.mdx_gist', STDERR_HANDLER)
-
-try:
-    import requests
-except ImportError:
-    requests = None  # NOQA
 
 GIST_JS_URL = "https://gist.github.com/{0}.js"
 GIST_FILE_JS_URL = "https://gist.github.com/{0}.js?file={1}"
@@ -222,20 +217,26 @@ GIST_RST_RE = r'(?m)^\.\.\s*gist::\s*(?P<gist_id>[^\]\s]+)(?:\s*(?P<filename>.+?
 
 
 class GistFetchException(Exception):
-    '''Raised when attempt to fetch content of a Gist from github.com fails.'''
+
+    """Raised when attempt to fetch content of a Gist from github.com fails."""
+
     def __init__(self, url, status_code):
+        """Initialize the exception."""
         Exception.__init__(self)
         self.message = 'Received a {0} response from Gist URL: {1}'.format(
             status_code, url)
 
 
 class GistPattern(Pattern):
-    """ InlinePattern for footnote markers in a document's body text. """
+
+    """InlinePattern for footnote markers in a document's body text."""
 
     def __init__(self, pattern, configs):
+        """Initialize the pattern."""
         Pattern.__init__(self, pattern)
 
     def get_raw_gist_with_filename(self, gist_id, filename):
+        """Get raw gist text for a filename."""
         url = GIST_FILE_RAW_URL.format(gist_id, filename)
         resp = requests.get(url)
 
@@ -245,6 +246,7 @@ class GistPattern(Pattern):
         return resp.text
 
     def get_raw_gist(self, gist_id):
+        """Get raw gist text."""
         url = GIST_RAW_URL.format(gist_id)
         resp = requests.get(url)
 
@@ -254,6 +256,7 @@ class GistPattern(Pattern):
         return resp.text
 
     def handleMatch(self, m):
+        """Handle pattern match."""
         gist_id = m.group('gist_id')
         gist_file = m.group('filename')
 
@@ -261,38 +264,37 @@ class GistPattern(Pattern):
         gist_elem.set('class', 'gist')
         script_elem = etree.SubElement(gist_elem, 'script')
 
-        if requests:
-            noscript_elem = etree.SubElement(gist_elem, 'noscript')
+        noscript_elem = etree.SubElement(gist_elem, 'noscript')
 
-            try:
-                if gist_file:
-                    script_elem.set('src', GIST_FILE_JS_URL.format(
-                        gist_id, gist_file))
-                    raw_gist = (self.get_raw_gist_with_filename(
-                        gist_id, gist_file))
+        try:
+            if gist_file:
+                script_elem.set('src', GIST_FILE_JS_URL.format(
+                    gist_id, gist_file))
+                raw_gist = (self.get_raw_gist_with_filename(
+                    gist_id, gist_file))
 
-                else:
-                    script_elem.set('src', GIST_JS_URL.format(
-                        gist_id))
-                    raw_gist = (self.get_raw_gist(gist_id))
+            else:
+                script_elem.set('src', GIST_JS_URL.format(gist_id))
+                raw_gist = (self.get_raw_gist(gist_id))
 
-                # Insert source as <pre/> within <noscript>
-                pre_elem = etree.SubElement(noscript_elem, 'pre')
-                pre_elem.text = AtomicString(raw_gist)
+            # Insert source as <pre/> within <noscript>
+            pre_elem = etree.SubElement(noscript_elem, 'pre')
+            pre_elem.text = AtomicString(raw_gist)
 
-            except GistFetchException as e:
-                LOGGER.warn(e.message)
-                warning_comment = etree.Comment(' WARNING: {0} '.format(e.message))
-                noscript_elem.append(warning_comment)
-
-        else:
-            req_missing('requests', 'have inline gist source', optional=True)
+        except GistFetchException as e:
+            LOGGER.warn(e.message)
+            warning_comment = etree.Comment(' WARNING: {0} '.format(e.message))
+            noscript_elem.append(warning_comment)
 
         return gist_elem
 
 
 class GistExtension(MarkdownExtension, Extension):
+
+    """Gist extension for Markdown."""
+
     def __init__(self, configs={}):
+        """Initialize the extension."""
         # set extension defaults
         self.config = {}
 
@@ -301,6 +303,7 @@ class GistExtension(MarkdownExtension, Extension):
             self.setConfig(key, value)
 
     def extendMarkdown(self, md, md_globals):
+        """Extend Markdown."""
         gist_md_pattern = GistPattern(GIST_MD_RE, self.getConfigs())
         gist_md_pattern.md = md
         md.inlinePatterns.add('gist', gist_md_pattern, "<not_strong")
@@ -312,7 +315,8 @@ class GistExtension(MarkdownExtension, Extension):
         md.registerExtension(self)
 
 
-def makeExtension(configs=None):
+def makeExtension(configs=None):  # pragma: no cover
+    """Make Markdown extension."""
     return GistExtension(configs)
 
 if __name__ == '__main__':

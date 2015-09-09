@@ -1,10 +1,13 @@
 [Core]
-Name = copy_files
-Module = copy_files
+name = copy_files
+module = copy_files
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Copy static files into the output.
+author = Roberto Alsina
+version = 1.0
+website = https://getnikola.com/
+description = Copy static files into the output.
+
+[Nikola]
+plugincategory = Task
 

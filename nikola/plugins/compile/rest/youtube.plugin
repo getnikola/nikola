@@ -1,8 +1,12 @@
 [Core]
-Name = rest_youtube
-Module = youtube
+name = rest_youtube
+module = youtube
+
+[Nikola]
+compiler = rest
+plugincategory = CompilerExtension
 
 [Documentation]
-Version = 0.1
-Description = Youtube directive
+version = 0.1
+description = Youtube directive
 

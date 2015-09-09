@@ -1,11 +1,12 @@
 {
   "name": "jquery",
-  "version": "1.11.2",
+  "version": "1.11.3",
   "main": "dist/jquery.js",
   "license": "MIT",
   "ignore": [
     "**/.*",
     "build",
+    "dist/cdn",
     "speed",
     "test",
     "*.md",
@@ -25,11 +26,11 @@
     "library"
   ],
   "homepage": "https://github.com/jquery/jquery",
-  "_release": "1.11.2",
+  "_release": "1.11.3",
   "_resolution": {
     "type": "version",
-    "tag": "1.11.2",
-    "commit": "9690801db01709bfbff5f977d07fb7cc14472908"
+    "tag": "1.11.3",
+    "commit": "1472290917f17af05e98007136096784f9051fab"
   },
   "_source": "git://github.com/jquery/jquery.git",
   "_target": "<2.0.0",

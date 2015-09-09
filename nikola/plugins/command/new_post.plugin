@@ -1,10 +1,13 @@
 [Core]
-Name = new_post
-Module = new_post
+name = new_post
+module = new_post
 
 [Documentation]
-Author = Roberto Alsina
-Version = 1.0
-Website = http://getnikola.com
-Description = Create a new post.
+author = Roberto Alsina
+version = 1.0
+website = https://getnikola.com/
+description = Create a new post.
+
+[Nikola]
+plugincategory = Command
 

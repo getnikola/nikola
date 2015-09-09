@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Copy static files into the output folder."""
+
 import os
 
 from nikola.plugin_categories import Task
@@ -31,13 +33,13 @@ from nikola import utils
 
 
 class CopyFiles(Task):
+
     """Copy static files into the output folder."""
 
     name = "copy_files"
 
     def gen_tasks(self):
         """Copy static files into the output folder."""
-
         kw = {
             'files_folders': self.site.config['FILES_FOLDERS'],
             'output_folder': self.site.config['OUTPUT_FOLDER'],

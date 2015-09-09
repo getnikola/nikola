@@ -24,35 +24,42 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Deploy site to GitHub Pages."""
+
 from __future__ import print_function
+from datetime import datetime
+import io
 import os
 import subprocess
-import sys
 from textwrap import dedent
 
 from nikola.plugin_categories import Command
 from nikola.plugins.command.check import real_scan_files
-from nikola.utils import get_logger, req_missing
+from nikola.utils import get_logger, req_missing, makedirs, unicode_str, STDERR_HANDLER
 from nikola.__main__ import main
 from nikola import __version__
 
 
 def uni_check_output(*args, **kwargs):
+    """Run command and return output as Unicode (UTf-8)."""
     o = subprocess.check_output(*args, **kwargs)
     return o.decode('utf-8')
 
 
 def check_ghp_import_installed():
+    """Check if ghp-import is installed."""
     try:
         subprocess.check_output(['ghp-import', '-h'])
     except OSError:
         # req_missing defaults to `python=True` — and it’s meant to be like this.
         # `ghp-import` is installed via pip, but the only way to use it is by executing the script it installs.
-        req_missing('ghp-import', 'deploy the site to GitHub Pages')
+        req_missing(['ghp-import'], 'deploy the site to GitHub Pages')
 
 
 class CommandGitHubDeploy(Command):
-    """ Deploy site to GitHub Pages. """
+
+    """Deploy site to GitHub Pages."""
+
     name = 'github_deploy'
 
     doc_usage = ''
@@ -69,10 +76,8 @@ class CommandGitHubDeploy(Command):
     logger = None
 
     def _execute(self, command, args):
-
-        self.logger = get_logger(
-            CommandGitHubDeploy.name, self.site.loghandlers
-        )
+        """Run the deployment."""
+        self.logger = get_logger(CommandGitHubDeploy.name, STDERR_HANDLER)
 
         # Check if ghp-import is installed
         check_ghp_import_installed()
@@ -81,7 +86,7 @@ class CommandGitHubDeploy(Command):
         build = main(['build'])
         if build != 0:
             self.logger.error('Build failed, not deploying to GitHub')
-            sys.exit(build)
+            return build
 
         # Clean non-target files
         only_on_output, _ = real_scan_files(self.site)
@@ -94,8 +99,7 @@ class CommandGitHubDeploy(Command):
         return
 
     def _commit_and_push(self):
-        """ Commit all the files and push. """
-
+        """Commit all the files and push."""
         source = self.site.config['GITHUB_SOURCE_BRANCH']
         deploy = self.site.config['GITHUB_DEPLOY_BRANCH']
         remote = self.site.config['GITHUB_REMOTE_NAME']
@@ -117,4 +121,13 @@ class CommandGitHubDeploy(Command):
                 'Failed GitHub deployment — command {0} '
                 'returned {1}'.format(e.cmd, e.returncode)
             )
-            sys.exit(e.returncode)
+            return e.returncode
+
+        self.logger.info("Successful deployment")
+
+        # Store timestamp of successful deployment
+        timestamp_path = os.path.join(self.site.config["CACHE_FOLDER"], "lastdeploy")
+        new_deploy = datetime.utcnow()
+        makedirs(self.site.config["CACHE_FOLDER"])
+        with io.open(timestamp_path, "w+", encoding="utf8") as outf:
+            outf.write(unicode_str(new_deploy.isoformat()))

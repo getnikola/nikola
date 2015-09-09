@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Thumbnail directive for reStructuredText."""
+
 import os
 
 from docutils.parsers.rst import directives
@@ -34,9 +36,12 @@ from nikola.plugin_categories import RestExtension
 
 class Plugin(RestExtension):
 
+    """Plugin for thumbnail directive."""
+
     name = "rest_thumbnail"
 
     def set_site(self, site):
+        """Set Nikola site."""
         self.site = site
         directives.register_directive('thumbnail', Thumbnail)
         return super(Plugin, self).set_site(site)
@@ -44,10 +49,14 @@ class Plugin(RestExtension):
 
 class Thumbnail(Figure):
 
+    """Thumbnail directive for reST."""
+
     def align(argument):
+        """Return thumbnail alignment."""
         return directives.choice(argument, Image.align_values)
 
     def figwidth_value(argument):
+        """Return figure width."""
         if argument.lower() == 'image':
             return 'image'
         else:
@@ -59,6 +68,7 @@ class Thumbnail(Figure):
     has_content = True
 
     def run(self):
+        """Run the thumbnail directive."""
         uri = directives.uri(self.arguments[0])
         self.options['target'] = uri
         self.arguments[0] = '.thumbnail'.join(os.path.splitext(uri))

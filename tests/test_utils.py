@@ -18,16 +18,15 @@ class dummy(object):
 
 class GetMetaTest(unittest.TestCase):
     def test_getting_metadata_from_content(self):
-        file_metadata = [".. title: Nikola needs more tests!\n",
-                         ".. slug: write-tests-now\n",
-                         ".. date: 2012/09/15 19:52:05\n",
-                         ".. tags:\n",
-                         ".. link:\n",
-                         ".. description:\n",
-                         "Post content\n"]
+        file_metadata = ".. title: Nikola needs more tests!\n"\
+                        ".. slug: write-tests-now\n"\
+                        ".. date: 2012/09/15 19:52:05\n"\
+                        ".. tags:\n"\
+                        ".. link:\n"\
+                        ".. description:\n"\
+                        "Post content\n"
 
         opener_mock = mock.mock_open(read_data=file_metadata)
-        opener_mock.return_value.readlines.return_value = file_metadata
 
         post = dummy()
         post.source_path = 'file_with_metadata'
@@ -45,16 +44,15 @@ class GetMetaTest(unittest.TestCase):
         self.assertTrue(nsm)
 
     def test_get_title_from_rest(self):
-        file_metadata = [".. slug: write-tests-now\n",
-                         ".. date: 2012/09/15 19:52:05\n",
-                         ".. tags:\n",
-                         ".. link:\n",
-                         ".. description:\n",
-                         "Post Title\n",
-                         "----------\n"]
+        file_metadata = ".. slug: write-tests-now\n"\
+                        ".. date: 2012/09/15 19:52:05\n"\
+                        ".. tags:\n"\
+                        ".. link:\n"\
+                        ".. description:\n\n"\
+                        "Post Title\n"\
+                        "----------\n"
 
         opener_mock = mock.mock_open(read_data=file_metadata)
-        opener_mock.return_value.readlines.return_value = file_metadata
 
         post = dummy()
         post.source_path = 'file_with_metadata'
@@ -72,14 +70,13 @@ class GetMetaTest(unittest.TestCase):
         self.assertTrue(nsm)
 
     def test_get_title_from_fname(self):
-        file_metadata = [".. slug: write-tests-now\n",
-                         ".. date: 2012/09/15 19:52:05\n",
-                         ".. tags:\n",
-                         ".. link:\n",
-                         ".. description:\n"]
+        file_metadata = ".. slug: write-tests-now\n"\
+                        ".. date: 2012/09/15 19:52:05\n"\
+                        ".. tags:\n"\
+                        ".. link:\n"\
+                        ".. description:\n"
 
         opener_mock = mock.mock_open(read_data=file_metadata)
-        opener_mock.return_value.readlines.return_value = file_metadata
 
         post = dummy()
         post.source_path = 'file_with_metadata'
@@ -97,15 +94,14 @@ class GetMetaTest(unittest.TestCase):
         self.assertTrue(nsm)
 
     def test_use_filename_as_slug_fallback(self):
-        file_metadata = [".. title: Nikola needs more tests!\n",
-                         ".. date: 2012/09/15 19:52:05\n",
-                         ".. tags:\n",
-                         ".. link:\n",
-                         ".. description:\n",
-                         "Post content\n"]
+        file_metadata = ".. title: Nikola needs more tests!\n"\
+                        ".. date: 2012/09/15 19:52:05\n"\
+                        ".. tags:\n"\
+                        ".. link:\n"\
+                        ".. description:\n\n"\
+                        "Post content\n"
 
         opener_mock = mock.mock_open(read_data=file_metadata)
-        opener_mock.return_value.readlines.return_value = file_metadata
 
         post = dummy()
         post.source_path = 'Slugify this'
@@ -113,7 +109,6 @@ class GetMetaTest(unittest.TestCase):
 
         with mock.patch('nikola.post.io.open', opener_mock, create=True):
             meta, nsm = get_meta(post, 'Slugify this')
-
         self.assertEqual('Nikola needs more tests!', meta['title'])
         self.assertEqual('slugify-this', meta['slug'])
         self.assertEqual('2012/09/15 19:52:05', meta['date'])
@@ -250,7 +245,7 @@ class TranslatableSettingsTest(unittest.TestCase):
         except NameError:  # Python 3
             u = str(S)
 
-        cn = S()      #   no language specified
+        cn = S()      # no language specified
         cr = S('xx')  # real language specified
         cf = S('zz')  # fake language specified
 
@@ -322,6 +317,19 @@ class TranslatableSettingsTest(unittest.TestCase):
         self.assertEqual(inp['zz'], u)
         self.assertEqual(inp['zz'], cn)
 
+
+def test_get_metadata_from_file():
+    # These were doctests and not running :-P
+    from nikola.post import _get_metadata_from_file
+    g = _get_metadata_from_file
+    assert list(g([]).values()) == []
+    assert str(g(["======","FooBar","======"])["title"]) == 'FooBar'
+    assert str(g(["FooBar","======"])["title"]) == 'FooBar'
+    assert str(g(["#FooBar"])["title"]) == 'FooBar'
+    assert str(g([".. title: FooBar"])["title"]) == 'FooBar'
+    assert 'title' not in g(["","",".. title: FooBar"])
+    assert 'title' in g(["",".. title: FooBar"])
+    assert 'title' in g([".. foo: bar","","FooBar", "------"])
 
 if __name__ == '__main__':
     unittest.main()

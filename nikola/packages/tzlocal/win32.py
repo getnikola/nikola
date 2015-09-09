@@ -1,3 +1,5 @@
+"""tzlocal for Windows."""
+
 try:
     import _winreg as winreg
 except ImportError:
@@ -22,6 +24,7 @@ def valuestodict(key):
 
 
 def get_localzone_name():
+    """Get local time zone name."""
     # Windows is special. It has unique time zone names (in several
     # meanings of the word) available, but unfortunately, they can be
     # translated to the language of the operating system, so we need to
@@ -78,7 +81,7 @@ def get_localzone_name():
 
 
 def get_localzone():
-    """Returns the zoneinfo-based tzinfo object that matches the Windows-configured timezone."""
+    """Return the zoneinfo-based tzinfo object that matches the Windows-configured timezone."""
     global _cache_tz
     if _cache_tz is None:
         _cache_tz = get_localzone_name()

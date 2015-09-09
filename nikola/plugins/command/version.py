@@ -24,21 +24,47 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Print Nikola version."""
+
 from __future__ import print_function
+
+import lxml
+import requests
 
 from nikola.plugin_categories import Command
 from nikola import __version__
 
+URL = 'https://pypi.python.org/pypi?:action=doap&name=Nikola'
+
 
 class CommandVersion(Command):
-    """Print the version."""
+
+    """Print Nikola version."""
 
     name = "version"
 
-    doc_usage = ""
+    doc_usage = "[--check]"
     needs_config = False
     doc_purpose = "print the Nikola version number"
+    cmd_options = [
+        {
+            'name': 'check',
+            'long': 'check',
+            'short': '',
+            'default': False,
+            'type': bool,
+            'help': "Check for new versions.",
+        }
+    ]
 
     def _execute(self, options={}, args=None):
         """Print the version number."""
         print("Nikola v" + __version__)
+        if options.get('check'):
+            data = requests.get(URL).text
+            doc = lxml.etree.fromstring(data.encode('utf8'))
+            revision = doc.findall('*//{http://usefulinc.com/ns/doap#}revision')[0].text
+            if revision == __version__:
+                print("Nikola is up-to-date")
+            else:
+                print("The latest version of Nikola is v{0} -- please upgrade using `pip install --upgrade Nikola=={0}` or your system package manager".format(revision))

@@ -23,10 +23,10 @@ BLOG_AUTHOR = "Your Name"  # (translatable)
 BLOG_TITLE = "Demo Site"  # (translatable)
 # This is the main URL for your site. It will be used
 # in a prominent link
-SITE_URL = "http://getnikola.com/"
+SITE_URL = "https://example.com/"
 # This is the URL where nikola's output will be deployed.
 # If not set, defaults to SITE_URL
-# BASE_URL = "http://getnikola.com/"
+# BASE_URL = "https://example.com/"
 BLOG_EMAIL = "joe@demo.site"
 BLOG_DESCRIPTION = "This is a demo site for Nikola."  # (translatable)
 
@@ -279,7 +279,7 @@ REDIRECTIONS = []
 # By default, there are no filters.
 #
 # Many filters are shipped with Nikola.  A list is available in the manual:
-# <http://getnikola.com/handbook.html#post-processing-filters>
+# <https://getnikola.com/handbook.html#post-processing-filters>
 # FILTERS = {
 #    ".jpg": ["jpegoptim --strip-all -m75 -v %s"],
 # }
@@ -394,7 +394,7 @@ LICENSE = ""
 
 # A small copyright notice for the page footer (in HTML).
 # (translatable)
-CONTENT_FOOTER = 'Contents &copy; {date}         <a href="mailto:{email}">{author}</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         {license}'
+CONTENT_FOOTER = 'Contents &copy; {date}         <a href="mailto:{email}">{author}</a> - Powered by         <a href="https://getnikola.com/" rel="nofollow">Nikola</a>         {license}'
 
 # Things that will be passed to CONTENT_FOOTER.format().  This is done
 # for translatability, as dicts are not formattable.  Nikola will

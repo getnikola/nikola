@@ -31,6 +31,7 @@ import calendar
 import datetime
 import dateutil.tz
 import hashlib
+import husl
 import io
 import locale
 import logging
@@ -47,6 +48,7 @@ import logbook
 import warnings
 import PyRSS2Gen as rss
 from collections import defaultdict, Callable
+from logbook.compat import redirect_logging
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
 from pygments.formatters import HtmlFormatter
 from zipfile import ZipFile as zipf
@@ -57,7 +59,7 @@ from doit.cmdparse import CmdParse
 
 from nikola import DEBUG
 
-__all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
+__all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'copy_file', 'slugify', 'unslugify', 'to_datetime', 'apply_filters',
            'config_changed', 'get_crumbs', 'get_tzname', 'get_asset_path',
            '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
@@ -67,7 +69,9 @@ __all__ = ['get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'ask', 'ask_yesno', 'options2docstring', 'os_path_split',
            'get_displayed_page_number', 'adjust_name_for_index_path_list',
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
-           'NikolaPygmentsHTML', 'create_redirect']
+           'NikolaPygmentsHTML', 'create_redirect', 'TreeNode',
+           'flatten_tree_structure', 'parse_escaped_hierarchical_category_name',
+           'join_hierarchical_category_path', 'indent')
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -91,7 +95,9 @@ class ApplicationWarning(Exception):
 
 
 class ColorfulStderrHandler(ColorizedStderrHandler):
+
     """Stream handler with colors."""
+
     _colorful = False
 
     def should_colorize(self, record):
@@ -114,14 +120,14 @@ STDERR_HANDLER = [ColorfulStderrHandler(
     level=logbook.INFO if not DEBUG else logbook.DEBUG,
     format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
 )]
+
+
 LOGGER = get_logger('Nikola', STDERR_HANDLER)
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
 
 USE_SLUGIFY = True
 
-# This will block out the default handler and will hide all unwanted
-# messages, properly.
-logbook.NullHandler().push_application()
+redirect_logging()
 
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
@@ -130,7 +136,7 @@ else:
 
 
 def showwarning(message, category, filename, lineno, file=None, line=None):
-    """Show a warning (from the warnings subsystem) to the user."""
+    """Show a warning (from the warnings module) to the user."""
     try:
         n = category.__name__
     except AttributeError:
@@ -198,14 +204,14 @@ def sys_encode(thing):
 
 
 def sys_decode(thing):
-    """Returns unicode."""
+    """Return Unicode."""
     if isinstance(thing, bytes_str):
         return thing.decode(ENCODING)
     return thing
 
 
 def makedirs(path):
-    """Create a folder."""
+    """Create a folder and its parents if needed (mkdir -p)."""
     if not path:
         return
     if os.path.exists(path):
@@ -227,13 +233,12 @@ class Functionary(defaultdict):
     """Class that looks like a function, but is a defaultdict."""
 
     def __init__(self, default, default_lang):
+        """Initialize a functionary."""
         super(Functionary, self).__init__(default)
         self.default_lang = default_lang
 
     def __call__(self, key, lang=None):
-        """When called as a function, take an optional lang
-        and return self[lang][key]."""
-
+        """When called as a function, take an optional lang and return self[lang][key]."""
         if lang is None:
             lang = LocaleBorg().current_lang
         return self[lang][key]
@@ -241,8 +246,7 @@ class Functionary(defaultdict):
 
 class TranslatableSetting(object):
 
-    """
-    A setting that can be translated.
+    """A setting that can be translated.
 
     You can access it via: SETTING(lang).  You can omit lang, in which
     case Nikola will ask LocaleBorg, unless you set SETTING.lang,
@@ -256,7 +260,6 @@ class TranslatableSetting(object):
 
     The underlying structure is a defaultdict.  The language that
     is the default value of the dict is provided with __init__().
-    If you need access the underlying dict (you generally don’t,
     """
 
     # WARNING: This is generally not used and replaced with a call to
@@ -274,6 +277,7 @@ class TranslatableSetting(object):
             return self().__getattribute__(attr)
 
     def __dir__(self):
+        """Return the available methods of TranslatableSettings and strings."""
         return list(set(self.__dict__).union(set(dir(str))))
 
     def __init__(self, name, inp, translations):
@@ -284,7 +288,6 @@ class TranslatableSetting(object):
         * a string               -- the same will be used for all languages
         * a dict ({lang: value}) -- each language will use the value specified;
                                     if there is none, default_lang is used.
-
         """
         self.name = name
         self._inp = inp
@@ -320,8 +323,7 @@ class TranslatableSetting(object):
                 return self.default_lang
 
     def __call__(self, lang=None):
-        """
-        Return the value in the requested language.
+        """Return the value in the requested language.
 
         While lang is None, self.lang (currently set language) is used.
         Otherwise, the standard algorithm is used (see above).
@@ -333,11 +335,11 @@ class TranslatableSetting(object):
             return self.values[lang]
 
     def __str__(self):
-        """Return the value in the currently set language.  (deprecated)"""
+        """Return the value in the currently set language (deprecated)."""
         return self.values[self.get_lang()]
 
     def __unicode__(self):
-        """Return the value in the currently set language.  (deprecated)"""
+        """Return the value in the currently set language (deprecated)."""
         return self.values[self.get_lang()]
 
     def __repr__(self):
@@ -431,8 +433,7 @@ class TranslatableSetting(object):
 
 class TemplateHookRegistry(object):
 
-    """
-    A registry for template hooks.
+    r"""A registry for template hooks.
 
     Usage:
 
@@ -440,7 +441,7 @@ class TemplateHookRegistry(object):
     >>> r.append('Hello!')
     >>> r.append(lambda x: 'Hello ' + x + '!', False, 'world')
     >>> str(r())  # str() call is not recommended in real use
-    'Hello!\\nHello world!'
+    'Hello!\nHello world!'
     >>>
     """
 
@@ -484,31 +485,47 @@ class TemplateHookRegistry(object):
         self._items.append((c, inp, wants_site_and_context, args, kwargs))
 
     def __hash__(self):
+        """Return hash of a registry."""
         return hash(config_changed({self.name: self._items})._calc_digest())
 
     def __str__(self):
+        """Stringify a registry."""
         return '<TemplateHookRegistry: {0}>'.format(self._items)
+
+    def __repr__(self):
+        """Provide the representation of a registry."""
+        return '<TemplateHookRegistry: {0}>'.format(self.name)
 
 
 class CustomEncoder(json.JSONEncoder):
+
+    """Custom JSON encoder."""
+
     def default(self, obj):
+        """Default encoding handler."""
         try:
             return super(CustomEncoder, self).default(obj)
         except TypeError:
-            s = repr(obj).split('0x', 1)[0]
+            if isinstance(obj, (set, frozenset)):
+                return self.encode(sorted(list(obj)))
+            else:
+                s = repr(obj).split('0x', 1)[0]
             return s
 
 
 class config_changed(tools.config_changed):
-    """ A copy of doit's but using pickle instead of serializing manually."""
+
+    """A copy of doit's config_changed, using pickle instead of serializing manually."""
 
     def __init__(self, config, identifier=None):
+        """Initialize config_changed."""
         super(config_changed, self).__init__(config)
         self.identifier = '_config_changed'
         if identifier is not None:
             self.identifier += ':' + identifier
 
     def _calc_digest(self):
+        """Calculate a config_changed digest."""
         if isinstance(self.config, str):
             return self.config
         elif isinstance(self.config, dict):
@@ -526,6 +543,7 @@ class config_changed(tools.config_changed):
                                 self.config)))
 
     def configure_task(self, task):
+        """Configure a task with a digest."""
         task.value_savers.append(lambda: {self.identifier: self._calc_digest()})
 
     def __call__(self, task, values):
@@ -536,12 +554,14 @@ class config_changed(tools.config_changed):
         return (last_success == self._calc_digest())
 
     def __repr__(self):
+        """Provide a representation of config_changed."""
         return "Change with config: {0}".format(json.dumps(self.config,
-                                                           cls=CustomEncoder))
+                                                           cls=CustomEncoder,
+                                                           sort_keys=True))
 
 
 def get_theme_path(theme, _themes_dir='themes'):
-    """Given a theme name, returns the path where its files are located.
+    """Return the path where the given theme's files are located.
 
     Looks in ./themes and in the place where themes go when installed.
     """
@@ -555,6 +575,7 @@ def get_theme_path(theme, _themes_dir='themes'):
 
 
 def get_template_engine(themes, _themes_dir='themes'):
+    """Get template engine used by a given theme."""
     for theme_name in themes:
         engine_path = os.path.join(get_theme_path(theme_name, _themes_dir), 'engine')
         if os.path.isfile(engine_path):
@@ -565,6 +586,7 @@ def get_template_engine(themes, _themes_dir='themes'):
 
 
 def get_parent_theme_name(theme_name, _themes_dir='themes'):
+    """Get name of parent theme."""
     parent_path = os.path.join(get_theme_path(theme_name, _themes_dir), 'parent')
     if os.path.isfile(parent_path):
         with open(parent_path) as fd:
@@ -585,20 +607,25 @@ def get_theme_chain(theme, _themes_dir='themes'):
     return themes
 
 
-warned = []
+language_incomplete_warned = []
 
 
 class LanguageNotFoundError(Exception):
+
+    """An exception thrown if language is not found."""
+
     def __init__(self, lang, orig):
+        """Initialize exception."""
         self.lang = lang
         self.orig = orig
 
     def __str__(self):
+        """Stringify the exception."""
         return 'cannot find language {0}'.format(self.lang)
 
 
 def load_messages(themes, translations, default_lang):
-    """ Load theme's messages into context.
+    """Load theme's messages into context.
 
     All the messages from parent themes are loaded,
     and "younger" themes have priority.
@@ -618,8 +645,8 @@ def load_messages(themes, translations, default_lang):
                 _reload(translation)
                 if sorted(translation.MESSAGES.keys()) !=\
                         sorted(english.MESSAGES.keys()) and \
-                        lang not in warned:
-                    warned.append(lang)
+                        lang not in language_incomplete_warned:
+                    language_incomplete_warned.append(lang)
                     LOGGER.warn("Incomplete translation for language "
                                 "'{0}'.".format(lang))
                 messages[lang].update(english.MESSAGES)
@@ -671,6 +698,7 @@ def copy_tree(src, dst, link_cutoff=None):
 
 
 def copy_file(source, dest, cutoff=None):
+    """Copy a file from source to dest. If link target starts with `cutoff`, symlinks are used."""
     dst_dir = os.path.dirname(dest)
     makedirs(dst_dir)
     if os.path.islink(source):
@@ -691,6 +719,7 @@ def copy_file(source, dest, cutoff=None):
 
 
 def remove_file(source):
+    """Remove file or directory."""
     if os.path.isdir(source):
         shutil.rmtree(source)
     elif os.path.isfile(source) or os.path.islink(source):
@@ -704,13 +733,11 @@ _slugify_hyphenate_re = re.compile(r'[-\s]+')
 
 
 def slugify(value, force=False):
-    """
-    Normalizes string, converts to lowercase, removes non-alpha characters,
-    and converts spaces to hyphens.
+    u"""Normalize string, convert to lowercase, remove non-alpha characters, convert spaces to hyphens.
 
     From Django's "django/template/defaultfilters.py".
 
-    >>> print(slugify('\xe1\xe9\xed.\xf3\xfa'))
+    >>> print(slugify('áéí.óú'))
     aeiou
 
     >>> print(slugify('foo/bar'))
@@ -718,16 +745,15 @@ def slugify(value, force=False):
 
     >>> print(slugify('foo bar'))
     foo-bar
-
     """
     if not isinstance(value, unicode_str):
         raise ValueError("Not a unicode object: {0}".format(value))
     if USE_SLUGIFY or force:
         # This is the standard state of slugify, which actually does some work.
         # It is the preferred style, especially for Western languages.
-        value = unidecode(value)
-        value = str(_slugify_strip_re.sub('', value).strip().lower())
-        return _slugify_hyphenate_re.sub('-', value)
+        value = unicode_str(unidecode(value))
+        value = _slugify_strip_re.sub('', value, re.UNICODE).strip().lower()
+        return _slugify_hyphenate_re.sub('-', value, re.UNICODE)
     else:
         # This is the “disarmed” state of slugify, which lets the user
         # have any character they please (be it regular ASCII with spaces,
@@ -737,7 +763,7 @@ def slugify(value, force=False):
         # We still replace some characters, though.  In particular, we need
         # to replace ? and #, which should not appear in URLs, and some
         # Windows-unsafe characters.  This list might be even longer.
-        rc = '/\\?#"\'\r\n\t*:<>|"'
+        rc = '/\\?#"\'\r\n\t*:<>|'
 
         for c in rc:
             value = value.replace(c, '-')
@@ -761,10 +787,14 @@ def unslugify(value, discard_numbers=True):
 # python < 2.6
 
 class UnsafeZipException(Exception):
+
+    """Exception for unsafe zip files."""
+
     pass
 
 
 def extract_all(zipfile, path='themes'):
+    """Extract all files from a zip file."""
     pwd = os.getcwd()
     makedirs(path)
     os.chdir(path)
@@ -784,6 +814,7 @@ def extract_all(zipfile, path='themes'):
 
 
 def to_datetime(value, tzinfo=None):
+    """Convert string to datetime."""
     try:
         if not isinstance(value, datetime.datetime):
             # dateutil does bad things with TZs like UTC-03:00.
@@ -798,8 +829,7 @@ def to_datetime(value, tzinfo=None):
 
 
 def get_tzname(dt):
-    """
-    Given a datetime value, find the name of the time zone.
+    """Given a datetime value, find the name of the time zone.
 
     DEPRECATED: This thing returned basically the 1st random zone
     that matched the offset.
@@ -808,6 +838,7 @@ def get_tzname(dt):
 
 
 def current_time(tzinfo=None):
+    """Get current time."""
     if tzinfo is not None:
         dt = datetime.datetime.now(tzinfo)
     else:
@@ -816,13 +847,12 @@ def current_time(tzinfo=None):
 
 
 def apply_filters(task, filters, skip_ext=None):
-    """
-    Given a task, checks its targets.
-    If any of the targets has a filter that matches,
+    """Apply filters to a task.
+
+    If any of the targets of the given task has a filter that matches,
     adds the filter commands to the commands of the task,
     and the filter itself to the uptodate of the task.
     """
-
     if '.php' in filters.keys():
         if task_filters.php_template_injection not in filters['.php']:
             filters['.php'].append(task_filters.php_template_injection)
@@ -860,6 +890,7 @@ def apply_filters(task, filters, skip_ext=None):
 
 def get_crumbs(path, is_file=False, index_folder=None):
     """Create proper links for a crumb bar.
+
     index_folder is used if you want to use title from index file
     instead of folder name as breadcrumb text.
 
@@ -887,7 +918,6 @@ def get_crumbs(path, is_file=False, index_folder=None):
     >>> print('|'.join(crumbs[2]))
     #|bar
     """
-
     crumbs = path.split(os.sep)
     _crumbs = []
     if is_file:
@@ -917,25 +947,22 @@ def get_crumbs(path, is_file=False, index_folder=None):
 
 
 def get_asset_path(path, themes, files_folders={'files': ''}, _themes_dir='themes'):
-    """
-    .. versionchanged:: 6.1.0
+    """Return the "real", absolute path to the asset.
 
-    Checks which theme provides the path with the given asset,
-    and returns the "real", absolute path to the asset.
-
+    By default, it checks which theme provides the asset.
     If the asset is not provided by a theme, then it will be checked for
-    in the FILES_FOLDERS
+    in the FILES_FOLDERS.
 
-    >>> print(get_asset_path('assets/css/rst.css', ['bootstrap', 'base']))
+    >>> print(get_asset_path('assets/css/rst.css', ['bootstrap3', 'base']))
     /.../nikola/data/themes/base/assets/css/rst.css
 
-    >>> print(get_asset_path('assets/css/theme.css', ['bootstrap', 'base']))
-    /.../nikola/data/themes/bootstrap/assets/css/theme.css
+    >>> print(get_asset_path('assets/css/theme.css', ['bootstrap3', 'base']))
+    /.../nikola/data/themes/bootstrap3/assets/css/theme.css
 
-    >>> print(get_asset_path('nikola.py', ['bootstrap', 'base'], {'nikola': ''}))
+    >>> print(get_asset_path('nikola.py', ['bootstrap3', 'base'], {'nikola': ''}))
     /.../nikola/nikola.py
 
-    >>> print(get_asset_path('nikola/nikola.py', ['bootstrap', 'base'], {'nikola':'nikola'}))
+    >>> print(get_asset_path('nikola/nikola.py', ['bootstrap3', 'base'], {'nikola':'nikola'}))
     None
 
     """
@@ -956,16 +983,20 @@ def get_asset_path(path, themes, files_folders={'files': ''}, _themes_dir='theme
 
 
 class LocaleBorgUninitializedException(Exception):
+
+    """Exception for unitialized LocaleBorg."""
+
     def __init__(self):
+        """Initialize exception."""
         super(LocaleBorgUninitializedException, self).__init__("Attempt to use LocaleBorg before initialization")
 
 
 class LocaleBorg(object):
-    """
-    Provides locale related services and autoritative current_lang,
-    where current_lang is the last lang for which the locale was set.
 
-    current_lang is meant to be set only by LocaleBorg.set_locale
+    """Provide locale related services and autoritative current_lang.
+
+    current_lang is the last lang for which the locale was set
+    and is meant to be set only by LocaleBorg.set_locale.
 
     python's locale code should not be directly called from code outside of
     LocaleBorg, they are compatibilty issues with py version and OS support
@@ -999,7 +1030,8 @@ class LocaleBorg(object):
 
     @classmethod
     def initialize(cls, locales, initial_lang):
-        """
+        """Initialize LocaleBorg.
+
         locales : dict with lang: locale_n
             the same keys as in nikola's TRANSLATIONS
             locale_n a sanitized locale, meaning
@@ -1009,6 +1041,8 @@ class LocaleBorg(object):
         assert initial_lang is not None and initial_lang in locales
         cls.reset()
         cls.locales = locales
+        cls.month_name_handlers = []
+        cls.formatted_date_handlers = []
 
         # needed to decode some localized output in py2x
         encodings = {}
@@ -1023,19 +1057,46 @@ class LocaleBorg(object):
 
     @classmethod
     def reset(cls):
-        """used in testing to not leak state between tests"""
+        """Reset LocaleBorg.
+
+        Used in testing to prevent leaking state between tests.
+        """
         cls.locales = {}
         cls.encodings = {}
         cls.__shared_state = {'current_lang': None}
         cls.initialized = False
+        cls.month_name_handlers = []
+        cls.formatted_date_handlers = []
+
+    @classmethod
+    def add_handler(cls, month_name_handler=None, formatted_date_handler=None):
+        """Allow to add month name and formatted date handlers.
+
+        If month_name_handler is not None, it is expected to be a callable
+        which accepts (month_no, lang) and returns either a string or None.
+
+        If formatted_date_handler is not None, it is expected to be a callable
+        which accepts (date_format, date, lang) and returns either a string or
+        None.
+
+        A handler is expected to either return the correct result for the given
+        language and data, or return None to indicate it is not able to do the
+        job. In that case, the next handler is asked, and finally the default
+        implementation is used.
+        """
+        if month_name_handler is not None:
+            cls.month_name_handlers.append(month_name_handler)
+        if formatted_date_handler is not None:
+            cls.formatted_date_handlers.append(formatted_date_handler)
 
     def __init__(self):
+        """Initialize."""
         if not self.initialized:
             raise LocaleBorgUninitializedException()
         self.__dict__ = self.__shared_state
 
     def set_locale(self, lang):
-        """Sets the locale for language lang, returns ''
+        """Set the locale for language lang, returns an empty string.
 
         in linux the locale encoding is set to utf8,
         in windows that cannot be guaranted.
@@ -1051,7 +1112,11 @@ class LocaleBorg(object):
         return ''
 
     def get_month_name(self, month_no, lang):
-        """returns localized month name in an unicode string"""
+        """Return localized month name in an unicode string."""
+        for handler in self.month_name_handlers:
+            res = handler(month_no, lang)
+            if res is not None:
+                return res
         if sys.version_info[0] == 3:  # Python 3
             with calendar.different_locale(self.locales[lang]):
                 s = calendar.month_name[month_no]
@@ -1068,17 +1133,44 @@ class LocaleBorg(object):
         self.set_locale(self.current_lang)
         return s
 
+    def formatted_date(self, date_format, date):
+        """Return the formatted date as unicode."""
+        fmt_date = None
+        # First check handlers
+        for handler in self.formatted_date_handlers:
+            fmt_date = handler(date_format, date, self.__shared_state['current_lang'])
+            if fmt_date is not None:
+                break
+        # If no handler was able to format the date, ask Python
+        if fmt_date is None:
+            if date_format == 'webiso':
+                # Formatted after RFC 3339 (web ISO 8501 profile) with Zulu
+                # zone desgignator for times in UTC and no microsecond precision.
+                fmt_date = date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
+            else:
+                fmt_date = date.strftime(date_format)
+
+        # Issue #383, this changes from py2 to py3
+        if isinstance(fmt_date, bytes_str):
+            fmt_date = fmt_date.decode('utf8')
+        return fmt_date
+
 
 class ExtendedRSS2(rss.RSS2):
+
+    """Extended RSS class."""
+
     xsl_stylesheet_href = None
 
     def publish(self, handler):
+        """Publish a feed."""
         if self.xsl_stylesheet_href:
             handler.processingInstruction("xml-stylesheet", 'type="text/xsl" href="{0}" media="all"'.format(self.xsl_stylesheet_href))
         # old-style class in py2
         rss.RSS2.publish(self, handler)
 
     def publish_extensions(self, handler):
+        """Publish extensions."""
         if self.self_url:
             handler.startElement("atom:link", {
                 'href': self.self_url,
@@ -1090,12 +1182,16 @@ class ExtendedRSS2(rss.RSS2):
 
 class ExtendedItem(rss.RSSItem):
 
+    """Extended RSS item."""
+
     def __init__(self, **kw):
+        """Initialize RSS item."""
         self.creator = kw.pop('creator')
         # It's an old style class
         return rss.RSSItem.__init__(self, **kw)
 
     def publish_extensions(self, handler):
+        """Publish extensions."""
         if self.creator:
             handler.startElement("dc:creator", {})
             handler.characters(self.creator)
@@ -1109,7 +1205,7 @@ explicit_title_re = re.compile(r'^(.+?)\s*(?<!\x00)<(.*?)>$', re.DOTALL)
 def split_explicit_title(text):
     """Split role content into title and target, if given.
 
-       From Sphinx's "sphinx/util/nodes.py"
+    From Sphinx's "sphinx/util/nodes.py"
     """
     match = explicit_title_re.match(text)
     if match:
@@ -1118,7 +1214,7 @@ def split_explicit_title(text):
 
 
 def first_line(doc):
-    """extract first non-blank line from text, to extract docstring title"""
+    """Extract first non-blank line from text, to extract docstring title."""
     if doc is not None:
         for line in doc.splitlines():
             striped = line.strip()
@@ -1143,11 +1239,16 @@ def demote_headers(doc, level=1):
 
 
 def get_root_dir():
-    """Find root directory of nikola installation by looking for conf.py"""
+    """Find root directory of nikola site by looking for conf.py."""
     root = os.getcwd()
 
+    if sys.version_info[0] == 2:
+        confname = b'conf.py'
+    else:
+        confname = 'conf.py'
+
     while True:
-        if os.path.exists(os.path.join(root, 'conf.py')):
+        if os.path.exists(os.path.join(root, confname)):
             return root
         else:
             basedir = os.path.split(root)[0]
@@ -1160,9 +1261,7 @@ def get_root_dir():
 
 
 def get_translation_candidate(config, path, lang):
-    """
-    Return a possible path where we can find the translated version of some page
-    based on the TRANSLATIONS_PATTERN configuration variable.
+    """Return a possible path where we can find the translated version of some page, based on the TRANSLATIONS_PATTERN configuration variable.
 
     >>> config = {'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}', 'DEFAULT_LANG': 'en', 'TRANSLATIONS': {'es':'1', 'en': 1}}
     >>> print(get_translation_candidate(config, '*.rst', 'es'))
@@ -1193,7 +1292,6 @@ def get_translation_candidate(config, path, lang):
     cache/posts/fancy.post.html
     >>> print(get_translation_candidate(config, 'cache/posts/fancy.post.html', 'es'))
     cache/posts/fancy.post.html.es
-
     """
     # FIXME: this is rather slow and this function is called A LOT
     # Convert the pattern into a regexp
@@ -1280,6 +1378,7 @@ def ask_yesno(query, default=None):
 
 
 class CommandWrapper(object):
+
     """Converts commands into functions."""
 
     def __init__(self, cmd, commands_object):
@@ -1306,12 +1405,16 @@ class Commands(object):
     """
 
     def __init__(self, main, config, doitargs):
-        """Takes a main instance, works as wrapper for commands."""
+        """Take a main instance, work as wrapper for commands."""
         self._cmdnames = []
         self._main = main
         self._config = config
         self._doitargs = doitargs
-        for k, v in self._doitargs['cmds'].to_dict().items():
+        try:
+            cmdict = self._doitargs['cmds'].to_dict()
+        except AttributeError:  # not a doit PluginDict
+            cmdict = self._doitargs['cmds']
+        for k, v in cmdict.items():
             # cleanup: run is doit-only, init is useless in an existing site
             if k in ['run', 'init']:
                 continue
@@ -1342,7 +1445,10 @@ class Commands(object):
     def _run_with_kw(self, cmd, *a, **kw):
         # cyclic import hack
         from nikola.plugin_categories import Command
-        cmd = self._doitargs['cmds'].get_plugin(cmd)
+        try:
+            cmd = self._doitargs['cmds'].get_plugin(cmd)
+        except AttributeError:  # not a doit PluginDict
+            cmd = self._doitargs['cmds'][cmd]
         try:
             opt = cmd.get_options()
         except TypeError:
@@ -1358,7 +1464,6 @@ class Commands(object):
 
     def __repr__(self):
         """Return useful and verbose help."""
-
         return """\
 <Nikola Commands>
 
@@ -1372,6 +1477,7 @@ Available commands: {0}.""".format(', '.join(self._cmdnames))
 
 
 def options2docstring(name, options):
+    """Translate options to a docstring."""
     result = ['Function wrapper for command %s' % name, 'arguments:']
     for opt in options:
         result.append('{0} type {1} default {2}'.format(opt.name, opt.type.__name__, opt.default))
@@ -1379,8 +1485,11 @@ def options2docstring(name, options):
 
 
 class NikolaPygmentsHTML(HtmlFormatter):
-    """A Nikola-specific modification of Pygments’ HtmlFormatter."""
+
+    """A Nikola-specific modification of Pygments' HtmlFormatter."""
+
     def __init__(self, anchor_ref, classes=None, linenos='table', linenostart=1):
+        """Initialize formatter."""
         if classes is None:
             classes = ['code', 'literal-block']
         self.nclasses = classes
@@ -1389,11 +1498,7 @@ class NikolaPygmentsHTML(HtmlFormatter):
             lineanchors=slugify(anchor_ref, force=True), anchorlinenos=True)
 
     def wrap(self, source, outfile):
-        """
-        Wrap the ``source``, which is a generator yielding
-        individual lines, in custom generators.
-        """
-
+        """Wrap the ``source``, which is a generator yielding individual lines, in custom generators."""
         style = []
         if self.prestyles:
             style.append(self.prestyles)
@@ -1409,6 +1514,7 @@ class NikolaPygmentsHTML(HtmlFormatter):
 
 
 def get_displayed_page_number(i, num_pages, site):
+    """Get page number to be displayed for entry `i`."""
     if not i:
         i = 0
     if site.config["INDEXES_STATIC"]:
@@ -1417,13 +1523,15 @@ def get_displayed_page_number(i, num_pages, site):
         return i + 1 if site.config["INDEXES_PAGES_MAIN"] else i
 
 
-def adjust_name_for_index_path_list(path_list, i, displayed_i, lang, site, force_addition=False):
+def adjust_name_for_index_path_list(path_list, i, displayed_i, lang, site, force_addition=False, extension=None):
+    """Retrurn a path list for a given index page."""
     index_file = site.config["INDEX_FILE"]
     if i or force_addition:
         path_list = list(path_list)
         if force_addition and not i:
             i = 0
-        _, extension = os.path.splitext(index_file)
+        if not extension:
+            _, extension = os.path.splitext(index_file)
         if len(path_list) > 0 and path_list[-1] == '':
             path_list[-1] = index_file
         elif len(path_list) == 0 or not path_list[-1].endswith(extension):
@@ -1444,6 +1552,7 @@ def adjust_name_for_index_path_list(path_list, i, displayed_i, lang, site, force
 
 
 def os_path_split(path):
+    """Split a path."""
     result = []
     while True:
         previous_path = path
@@ -1457,18 +1566,22 @@ def os_path_split(path):
     return result
 
 
-def adjust_name_for_index_path(name, i, displayed_i, lang, site, force_addition=False):
-    return os.path.join(*adjust_name_for_index_path_list(os_path_split(name), i, displayed_i, lang, site, force_addition))
+def adjust_name_for_index_path(name, i, displayed_i, lang, site, force_addition=False, extension=None):
+    """Return file name for a given index file."""
+    return os.path.join(*adjust_name_for_index_path_list(os_path_split(name), i, displayed_i, lang, site, force_addition, extension))
 
 
-def adjust_name_for_index_link(name, i, displayed_i, lang, site, force_addition=False):
-    link = adjust_name_for_index_path_list(name.split('/'), i, displayed_i, lang, site, force_addition)
-    if len(link) > 0 and link[-1] == site.config["INDEX_FILE"] and site.config["STRIP_INDEXES"]:
-        link[-1] = ''
+def adjust_name_for_index_link(name, i, displayed_i, lang, site, force_addition=False, extension=None):
+    """Return link for a given index file."""
+    link = adjust_name_for_index_path_list(name.split('/'), i, displayed_i, lang, site, force_addition, extension)
+    if not extension == ".atom":
+        if len(link) > 0 and link[-1] == site.config["INDEX_FILE"] and site.config["STRIP_INDEXES"]:
+            link[-1] = ''
     return '/'.join(link)
 
 
 def create_redirect(src, dst):
+    """"Create a redirection."""
     makedirs(os.path.dirname(src))
     with io.open(src, "w+", encoding="utf8") as fd:
         fd.write('<!DOCTYPE html>\n<head>\n<meta charset="utf-8">\n'
@@ -1476,3 +1589,197 @@ def create_redirect(src, dst):
                  'content="noindex">\n<meta http-equiv="refresh" content="0; '
                  'url={0}">\n</head>\n<body>\n<p>Page moved '
                  '<a href="{0}">here</a>.</p>\n</body>'.format(dst))
+
+
+class TreeNode(object):
+
+    """A tree node."""
+
+    indent_levels = None  # use for formatting comments as tree
+    indent_change_before = 0  # use for formatting comments as tree
+    indent_change_after = 0  # use for formatting comments as tree
+
+    # The indent levels and changes allow to render a tree structure
+    # without keeping track of all that information during rendering.
+    #
+    # The indent_change_before is the different between the current
+    # comment's level and the previous comment's level; if the number
+    # is positive, the current level is indented further in, and if it
+    # is negative, it is indented further out. Positive values can be
+    # used to open HTML tags for each opened level.
+    #
+    # The indent_change_after is the difference between the next
+    # comment's level and the current comment's level. Negative values
+    # can be used to close HTML tags for each closed level.
+    #
+    # The indent_levels list contains one entry (index, count) per
+    # level, informing about the index of the current comment on that
+    # level and the count of comments on that level (before a comment
+    # of a higher level comes). This information can be used to render
+    # tree indicators, for example to generate a tree such as:
+    #
+    # +--- [(0,3)]
+    # +-+- [(1,3)]
+    # | +--- [(1,3), (0,2)]
+    # | +-+- [(1,3), (1,2)]
+    # |   +--- [(1,3), (1,2), (0, 1)]
+    # +-+- [(2,3)]
+    #   +- [(2,3), (0,1)]
+    #
+    # (The lists used as labels represent the content of the
+    # indent_levels property for that node.)
+
+    def __init__(self, name, parent=None):
+        """Initialize node."""
+        self.name = name
+        self.parent = parent
+        self.children = []
+
+    def get_path(self):
+        """Get path."""
+        path = []
+        curr = self
+        while curr is not None:
+            path.append(curr)
+            curr = curr.parent
+        return reversed(path)
+
+    def get_children(self):
+        """Get children of a node."""
+        return self.children
+
+
+def flatten_tree_structure(root_list):
+    """Flatten a tree."""
+    elements = []
+
+    def generate(input_list, indent_levels_so_far):
+        for index, element in enumerate(input_list):
+            # add to destination
+            elements.append(element)
+            # compute and set indent levels
+            indent_levels = indent_levels_so_far + [(index, len(input_list))]
+            element.indent_levels = indent_levels
+            # add children
+            children = element.get_children()
+            element.children_count = len(children)
+            generate(children, indent_levels)
+
+    generate(root_list, [])
+    # Add indent change counters
+    level = 0
+    last_element = None
+    for element in elements:
+        new_level = len(element.indent_levels)
+        # Compute level change before this element
+        change = new_level - level
+        if last_element is not None:
+            last_element.indent_change_after = change
+        element.indent_change_before = change
+        # Update variables
+        level = new_level
+        last_element = element
+    # Set level change after last element
+    if last_element is not None:
+        last_element.indent_change_after = -level
+    return elements
+
+
+def parse_escaped_hierarchical_category_name(category_name):
+    """Parse a category name."""
+    result = []
+    current = None
+    index = 0
+    next_backslash = category_name.find('\\', index)
+    next_slash = category_name.find('/', index)
+    while index < len(category_name):
+        if next_backslash == -1 and next_slash == -1:
+            current = (current if current else "") + category_name[index:]
+            index = len(category_name)
+        elif next_slash >= 0 and (next_backslash == -1 or next_backslash > next_slash):
+            result.append((current if current else "") + category_name[index:next_slash])
+            current = ''
+            index = next_slash + 1
+            next_slash = category_name.find('/', index)
+        else:
+            if len(category_name) == next_backslash + 1:
+                raise Exception("Unexpected '\\' in '{0}' at last position!".format(category_name))
+            esc_ch = category_name[next_backslash + 1]
+            if esc_ch not in {'/', '\\'}:
+                raise Exception("Unknown escape sequence '\\{0}' in '{1}'!".format(esc_ch, category_name))
+            current = (current if current else "") + category_name[index:next_backslash] + esc_ch
+            index = next_backslash + 2
+            next_backslash = category_name.find('\\', index)
+            if esc_ch == '/':
+                next_slash = category_name.find('/', index)
+    if current is not None:
+        result.append(current)
+    return result
+
+
+def join_hierarchical_category_path(category_path):
+    """Join a category path."""
+    def escape(s):
+        return s.replace('\\', '\\\\').replace('/', '\\/')
+
+    return '/'.join([escape(p) for p in category_path])
+
+
+def colorize_str_from_base_color(string, base_color):
+    """Find a perceptual similar color from a base color based on the hash of a string.
+
+    Make up to 16 attempts (number of bytes returned by hashing) at picking a
+    hue for our color at least 27 deg removed from the base color, leaving
+    lightness and saturation untouched using HUSL colorspace.
+    """
+    def hash_str(string, pos):
+        return hashlib.md5(string.encode('utf-8')).digest()[pos]
+
+    def degreediff(dega, degb):
+        return min(abs(dega - degb), abs((degb - dega) + 360))
+
+    def husl_similar_from_base(string, base_color):
+        h, s, l = husl.hex_to_husl(base_color)
+        old_h = h
+        idx = 0
+        while degreediff(old_h, h) < 27 and idx < 16:
+            h = 360.0 * (float(hash_str(string, idx)) / 255)
+            idx += 1
+        return husl.husl_to_hex(h, s, l)
+
+    return husl_similar_from_base(string, base_color)
+
+
+def color_hsl_adjust_hex(hexstr, adjust_h=None, adjust_s=None, adjust_l=None):
+    """Adjust a hex color using HSL arguments, adjustments in percentages 1.0 to -1.0. Returns a hex color."""
+    h, s, l = husl.hex_to_husl(hexstr)
+
+    if adjust_h:
+        h = h + (adjust_h * 360.0)
+
+    if adjust_s:
+        s = s + (adjust_s * 100.0)
+
+    if adjust_l:
+        l = l + (adjust_l * 100.0)
+
+    return husl.husl_to_hex(h, s, l)
+
+
+# Stolen from textwrap in Python 3.4.3.
+def indent(text, prefix, predicate=None):
+    """Add 'prefix' to the beginning of selected lines in 'text'.
+
+    If 'predicate' is provided, 'prefix' will only be added to the lines
+    where 'predicate(line)' is True. If 'predicate' is not provided,
+    it will default to adding 'prefix' to all non-empty lines that do not
+    consist solely of whitespace characters.
+    """
+    if predicate is None:
+        def predicate(line):
+            return line.strip()
+
+    def prefixed_lines():
+        for line in text.splitlines(True):
+            yield (prefix + line if predicate(line) else line)
+    return ''.join(prefixed_lines())

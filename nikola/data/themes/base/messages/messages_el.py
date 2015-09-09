@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "",
+    "(active)": "",
     "Also available in:": "Διαθέσιμο και στα:",
     "Archive": "Αρχείο",
+    "Authors": "",
     "Categories": "Κατηγορίες",
     "Comments": "Σχόλια",
     "LANGUAGE": "Ελληνικά",
@@ -18,6 +20,7 @@ MESSAGES = {
     "Original site": "Ιστοσελίδα αρχικής ανάρτησης",
     "Posted:": "Αναρτήθηκε:",
     "Posts about %s": "Αναρτήσεις για %s",
+    "Posts by %s": "",
     "Posts for year %s": "Αναρτήσεις για το έτος %s",
     "Posts for {month} {day}, {year}": "Αναρτήσεις στις {day} {month}, {year}",
     "Posts for {month} {year}": "Αναρτήσεις για τον {month} του {year}",
@@ -28,8 +31,13 @@ MESSAGES = {
     "Read more": "Διαβάστε περισσότερα",
     "Skip to main content": "",
     "Source": "Πηγαίος κώδικας",
+    "Subcategories:": "",
     "Tags and Categories": "Ετικέτες και κατηγορίες",
     "Tags": "Ετικέτες",
+    "Uncategorized": "",
+    "Updates": "",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "σελίδα παλαιότερων αναρτήσεων %d",
     "page %d": "σελίδα %d",
 }

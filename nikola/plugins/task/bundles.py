@@ -24,6 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Bundle assets using WebAssets."""
+
 from __future__ import unicode_literals
 
 import os
@@ -38,21 +40,23 @@ from nikola import utils
 
 
 class BuildBundles(LateTask):
+
     """Bundle assets using WebAssets."""
 
     name = "create_bundles"
 
     def set_site(self, site):
-        self.logger = utils.get_logger('bundles', site.loghandlers)
+        """Set Nikola site."""
+        self.logger = utils.get_logger('bundles', utils.STDERR_HANDLER)
         if webassets is None and site.config['USE_BUNDLES']:
             utils.req_missing(['webassets'], 'USE_BUNDLES', optional=True)
             self.logger.warn('Setting USE_BUNDLES to False.')
             site.config['USE_BUNDLES'] = False
+            site._GLOBAL_CONTEXT['use_bundles'] = False
         super(BuildBundles, self).set_site(site)
 
     def gen_tasks(self):
         """Bundle assets using WebAssets."""
-
         kw = {
             'filters': self.site.config['FILTERS'],
             'output_folder': self.site.config['OUTPUT_FOLDER'],

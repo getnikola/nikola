@@ -1,0 +1,145 @@
+# Messages in Nikola
+# Copyright (C) 2012-2013
+# This file is distributed under the same license as the Nikola package.
+# 
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Saša Savić <sasa.savic@protonmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Nikola\n"
+"Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
+"POT-Creation-Date: 2013-03-15 12:24-0300\n"
+"PO-Revision-Date: 2015-08-31 07:51+0000\n"
+"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"Language-Team: Serbian (Latin) (http://www.transifex.com/ralsina/nikola/language/sr@latin/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: sr@latin\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid "More posts about %s"
+msgstr "Više objava o %s"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "LANGUAGE"
+msgstr "Bosanski"
+
+msgid "Tags"
+msgstr "Oznake"
+
+msgid "Categories"
+msgstr "Kategorije"
+
+msgid "Tags and Categories"
+msgstr "Oznake i kategorije"
+
+msgid "Comments"
+msgstr "Komentari"
+
+msgid "Read more"
+msgstr "Pročitaj više"
+
+msgid "Posts about %s"
+msgstr "Objave o %s"
+
+msgid "Next post"
+msgstr "Naredna objava"
+
+msgid "old posts, page %d"
+msgstr "stare objave, strana %d"
+
+msgid "page %d"
+msgstr "strana %d"
+
+msgid "Source"
+msgstr "Izvor"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "Read in English"
+msgstr "Pročitaj na bosanskom"
+
+msgid "Posts for year %s"
+msgstr "Objave u godini %s"
+
+msgid "Newer posts"
+msgstr "Novije objave"
+
+msgid "Previous post"
+msgstr "Prethodne objave"
+
+msgid "Also available in:"
+msgstr "Takođe dostupan u:"
+
+msgid "Languages:"
+msgstr "Jezici:"
+
+msgid "Original site"
+msgstr "Izvorni sajt"
+
+msgid "Older posts"
+msgstr "Starije objave"
+
+msgid "Archive"
+msgstr "Arhiva"
+
+msgid "Publication date"
+msgstr "Datum objavljivanja"
+
+msgid "Posted:"
+msgstr "Objavljeno:"
+
+msgid "Posts for {month} {year}"
+msgstr "Objave za {month} {year}"
+
+msgid "Posts for {month} {day}, {year}"
+msgstr "Objave za {month} {day}, {year}"
+
+msgid "Nothing found."
+msgstr "Ništa nije pronađeno."
+
+msgid "No posts found."
+msgstr "Nema objava."
+
+msgid "RSS feed"
+msgstr "RSS feed"
+
+msgid "%d min remaining to read"
+msgstr "%d minuta preostalo za čitanje"
+
+msgid "Skip to main content"
+msgstr "Preskoči na glavni sadržaj"
+
+msgid "Subcategories:"
+msgstr "Podkategorije:"
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
+msgstr "(aktivno)"
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr "Vašu objavu napišite ovdje."
+
+#. Default content for a new page
+msgid "Write your page here."
+msgstr "Vašu stranicu napišite ovdje."
+
+msgid "Uncategorized"
+msgstr ""
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr ""
+
+msgid "Authors"
+msgstr ""
+
+msgid "Posts by %s"
+msgstr ""

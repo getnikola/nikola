@@ -15,6 +15,7 @@ if 'nopull' not in sys.argv:
 trans_files = glob(os.path.join('translations', 'nikola.messages', '*.po'))
 for fname in trans_files:
     lang = os.path.splitext(os.path.basename(fname))[0].lower()
+    lang = lang.replace('@', '_')
     outf = os.path.join('nikola', 'data', 'themes', 'base',
                         'messages', 'messages_{0}.py'.format(lang))
     po = polib.pofile(fname)

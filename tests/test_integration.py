@@ -105,6 +105,9 @@ class DemoBuildTest(EmptyBuildTest):
         """Fill the site with demo content."""
         self.init_command.copy_sample_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
+        src1 = os.path.join(os.path.dirname(__file__), 'data', '1-nolinks.rst')
+        dst1 = os.path.join(self.target_dir, 'posts', '1.rst')
+        shutil.copy(src1, dst1)
         # File for Issue #374 (empty post text)
         with io.open(os.path.join(self.target_dir, 'posts', 'empty.txt'), "w+", encoding="utf8") as outf:
             outf.write(
@@ -116,12 +119,12 @@ class DemoBuildTest(EmptyBuildTest):
     def test_index_in_sitemap(self):
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
         sitemap_data = io.open(sitemap_path, "r", encoding="utf8").read()
-        self.assertTrue('<loc>http://getnikola.com/index.html</loc>' in sitemap_data)
+        self.assertTrue('<loc>https://example.com/index.html</loc>' in sitemap_data)
 
     def test_avoid_double_slash_in_rss(self):
         rss_path = os.path.join(self.target_dir, "output", "rss.xml")
         rss_data = io.open(rss_path, "r", encoding="utf8").read()
-        self.assertFalse('http://getnikola.com//' in rss_data)
+        self.assertFalse('https://example.com//' in rss_data)
 
 
 class RepeatedPostsSetting(DemoBuildTest):
@@ -272,8 +275,8 @@ class RelativeLinkTest(DemoBuildTest):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
-            data = data.replace('SITE_URL = "http://getnikola.com/"',
-                                'SITE_URL = "http://getnikola.com/foo/bar/"')
+            data = data.replace('SITE_URL = "https://example.com/"',
+                                'SITE_URL = "https://example.com/foo/bar/"')
         with io.open(conf_path, "w+", encoding="utf8") as outf:
             outf.write(data)
 
@@ -295,8 +298,8 @@ class RelativeLinkTest(DemoBuildTest):
         """Test that the correct path is in sitemap, and not the wrong one."""
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
         sitemap_data = io.open(sitemap_path, "r", encoding="utf8").read()
-        self.assertFalse('<loc>http://getnikola.com/</loc>' in sitemap_data)
-        self.assertTrue('<loc>http://getnikola.com/foo/bar/index.html</loc>' in sitemap_data)
+        self.assertFalse('<loc>https://example.com/</loc>' in sitemap_data)
+        self.assertTrue('<loc>https://example.com/foo/bar/index.html</loc>' in sitemap_data)
 
 
 class TestCheck(DemoBuildTest):
@@ -321,7 +324,7 @@ class TestCheckAbsoluteSubFolder(TestCheck):
     """Validate links in a site which is:
 
     * built in URL_TYPE="absolute"
-    * deployable to a subfolder (BASE_URL="http://getnikola.com/foo/")
+    * deployable to a subfolder (BASE_URL="https://example.com/foo/")
     """
 
     @classmethod
@@ -329,8 +332,8 @@ class TestCheckAbsoluteSubFolder(TestCheck):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
-            data = data.replace('SITE_URL = "http://getnikola.com/"',
-                                'SITE_URL = "http://getnikola.com/foo/"')
+            data = data.replace('SITE_URL = "https://example.com/"',
+                                'SITE_URL = "https://example.com/foo/"')
             data = data.replace("# URL_TYPE = 'rel_path'",
                                 "URL_TYPE = 'absolute'")
         with io.open(conf_path, "w+", encoding="utf8") as outf:
@@ -341,14 +344,14 @@ class TestCheckAbsoluteSubFolder(TestCheck):
         """Test that the correct path is in sitemap, and not the wrong one."""
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
         sitemap_data = io.open(sitemap_path, "r", encoding="utf8").read()
-        self.assertTrue('<loc>http://getnikola.com/foo/index.html</loc>' in sitemap_data)
+        self.assertTrue('<loc>https://example.com/foo/index.html</loc>' in sitemap_data)
 
 
 class TestCheckFullPathSubFolder(TestCheckAbsoluteSubFolder):
     """Validate links in a site which is:
 
     * built in URL_TYPE="full_path"
-    * deployable to a subfolder (BASE_URL="http://getnikola.com/foo/")
+    * deployable to a subfolder (BASE_URL="https://example.com/foo/")
     """
 
     @classmethod
@@ -356,8 +359,8 @@ class TestCheckFullPathSubFolder(TestCheckAbsoluteSubFolder):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
-            data = data.replace('SITE_URL = "http://getnikola.com/"',
-                                'SITE_URL = "http://getnikola.com/foo/"')
+            data = data.replace('SITE_URL = "https://example.com/"',
+                                'SITE_URL = "https://example.com/foo/"')
             data = data.replace("# URL_TYPE = 'rel_path'",
                                 "URL_TYPE = 'full_path'")
         with io.open(conf_path, "w+", encoding="utf8") as outf:
@@ -423,8 +426,8 @@ class RelativeLinkTest2(DemoBuildTest):
         """Test that the correct path is in sitemap, and not the wrong one."""
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
         sitemap_data = io.open(sitemap_path, "r", encoding="utf8").read()
-        self.assertFalse('<loc>http://getnikola.com/</loc>' in sitemap_data)
-        self.assertTrue('<loc>http://getnikola.com/blog/index.html</loc>' in sitemap_data)
+        self.assertFalse('<loc>https://example.com/</loc>' in sitemap_data)
+        self.assertTrue('<loc>https://example.com/blog/index.html</loc>' in sitemap_data)
 
 
 class MonthlyArchiveTest(DemoBuildTest):
@@ -526,8 +529,10 @@ class InvariantBuildTest(EmptyBuildTest):
         """Fill the site with demo content."""
         self.init_command.copy_sample_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
-        os.system('rm "{0}/stories/creating-a-theme.rst" "{0}/stories/extending.txt" "{0}/stories/internals.txt" "{0}/stories/manual.rst" "{0}/stories/social_buttons.txt" "{0}/stories/theming.rst" "{0}/stories/upgrading-to-v6.txt"'.format(self.target_dir))
-
+        src1 = os.path.join(os.path.dirname(__file__), 'data', '1-nolinks.rst')
+        dst1 = os.path.join(self.target_dir, 'posts', '1.rst')
+        shutil.copy(src1, dst1)
+        os.system('rm "{0}/stories/creating-a-theme.rst" "{0}/stories/extending.txt" "{0}/stories/internals.txt" "{0}/stories/manual.rst" "{0}/stories/social_buttons.txt" "{0}/stories/theming.rst" "{0}/stories/path_handlers.txt"'.format(self.target_dir))
     def test_invariance(self):
         """Compare the output to the canonical output."""
         if sys.version_info[0:2] != (2, 7):
@@ -543,6 +548,51 @@ class InvariantBuildTest(EmptyBuildTest):
                 print('Unexplained diff for the invariance test. (-canonical +built)')
                 print(exc.output.decode('utf-8'))
                 self.assertEqual(exc.returncode, 0, 'Unexplained diff for the invariance test.')
+
+
+class RedirectionsTest1(TestCheck):
+    """Check REDIRECTIONS"""
+
+    @classmethod
+    def patch_site(self):
+        """"""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with io.open(conf_path, "a", encoding="utf8") as outf:
+            outf.write("""\n\nREDIRECTIONS = [ ("posts/foo.html", "/foo/bar.html"), ]\n\n""")
+
+    @classmethod
+    def fill_site(self):
+        target_path = os.path.join(self.target_dir, "files", "foo", "bar.html")
+        nikola.utils.makedirs(os.path.join(self.target_dir, "files", "foo"))
+        with io.open(target_path, "w+", encoding="utf8") as outf:
+            outf.write("foo")
+
+class RedirectionsTest2(TestCheck):
+    """Check external REDIRECTIONS"""
+
+    @classmethod
+    def patch_site(self):
+        """"""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with io.open(conf_path, "a", encoding="utf8") as outf:
+            outf.write("""\n\nREDIRECTIONS = [ ("foo.html", "http://www.example.com/"), ]\n\n""")
+
+class RedirectionsTest3(TestCheck):
+    """Check relative REDIRECTIONS"""
+
+    @classmethod
+    def patch_site(self):
+        """"""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with io.open(conf_path, "a", encoding="utf8") as outf:
+            outf.write("""\n\nREDIRECTIONS = [ ("foo.html", "foo/bar.html"), ]\n\n""")
+
+    @classmethod
+    def fill_site(self):
+        target_path = os.path.join(self.target_dir, "files", "foo", "bar.html")
+        nikola.utils.makedirs(os.path.join(self.target_dir, "files", "foo"))
+        with io.open(target_path, "w+", encoding="utf8") as outf:
+            outf.write("foo")
 
 
 if __name__ == "__main__":

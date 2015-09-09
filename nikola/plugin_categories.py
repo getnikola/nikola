@@ -24,16 +24,19 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Nikola plugin categories."""
+
 from __future__ import absolute_import
 import sys
 import os
+import re
 
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
 
 from .utils import LOGGER, first_line
 
-__all__ = [
+__all__ = (
     'Command',
     'LateTask',
     'PageCompiler',
@@ -42,23 +45,23 @@ __all__ = [
     'Task',
     'TaskMultiplier',
     'TemplateSystem',
-    'SignalHandler'
-]
+    'SignalHandler',
+    'ConfigPlugin',
+    'PostScanner',
+)
 
 
 class BasePlugin(IPlugin):
+
     """Base plugin class."""
 
     def set_site(self, site):
-        """Sets site, which is a Nikola instance."""
+        """Set site, which is a Nikola instance."""
         self.site = site
         self.inject_templates()
 
     def inject_templates(self):
-        """If this plugin contains a 'templates' folder,
-        then templates/mako or templates/jinja will be inserted very early in
-        the theme chain."""
-
+        """Inject 'templates/<engine>' (if exists) very early in the theme chain."""
         try:
             # Sorry, found no other way to get this
             mod_path = sys.modules[self.__class__.__module__].__file__
@@ -75,9 +78,23 @@ class BasePlugin(IPlugin):
             # so let’s just ignore it and be done with it.
             pass
 
+    def inject_dependency(self, target, dependency):
+        """Add 'dependency' to the target task's task_deps."""
+        self.site.injected_deps[target].append(dependency)
+
+
+class PostScanner(BasePlugin):
+
+    """The scan method of these plugins is called by Nikola.scan_posts."""
+
+    def scan(self):
+        """Create a list of posts from some source. Returns a list of Post objects."""
+        raise NotImplementedError()
+
+
 class Command(BasePlugin, DoitCommand):
-    """These plugins are exposed via the command line.
-    They implement the doit Command interface."""
+
+    """Doit command implementation."""
 
     name = "dummy_command"
 
@@ -89,27 +106,29 @@ class Command(BasePlugin, DoitCommand):
     needs_config = True
 
     def __init__(self, *args, **kwargs):
+        """Initialize a command."""
         BasePlugin.__init__(self, *args, **kwargs)
         DoitCommand.__init__(self)
 
     def __call__(self, config=None, **kwargs):
+        """Reset doit arguments (workaround)."""
         self._doitargs = kwargs
         DoitCommand.__init__(self, config, **kwargs)
         return self
 
     def execute(self, options=None, args=None):
-        """Check if the command can run in the current environment,
-        fail if needed, or call _execute."""
+        """Check if the command can run in the current environment, fail if needed, or call _execute."""
         options = options or {}
         args = args or []
 
         if self.needs_config and not self.site.configured:
             LOGGER.error("This command needs to run inside an existing Nikola site.")
             return False
-        self._execute(options, args)
+        return self._execute(options, args)
 
     def _execute(self, options, args):
         """Do whatever this command does.
+
         @param options (dict) with values from cmd_options
         @param args (list) list of positional arguments
         """
@@ -117,7 +136,7 @@ class Command(BasePlugin, DoitCommand):
 
 
 def help(self):
-    """return help text"""
+    """Return help text for a command."""
     text = []
     text.append("Purpose: %s" % self.doc_purpose)
     text.append("Usage:   nikola %s %s" % (self.name, self.doc_usage))
@@ -137,7 +156,8 @@ DoitCommand.help = help
 
 
 class BaseTask(BasePlugin):
-    """Plugins of this type are task generators."""
+
+    """Base for task generators."""
 
     name = "dummy_task"
 
@@ -146,11 +166,11 @@ class BaseTask(BasePlugin):
     is_default = True
 
     def gen_tasks(self):
-        """Task generator."""
+        """Generate tasks."""
         raise NotImplementedError()
 
     def group_task(self):
-        """dict for group task"""
+        """Return dict for group task."""
         return {
             'basename': self.name,
             'name': None,
@@ -159,32 +179,35 @@ class BaseTask(BasePlugin):
 
 
 class Task(BaseTask):
-    """Plugins of this type are task generators."""
+
+    """Task generator."""
 
     name = "dummy_task"
 
 
 class LateTask(BaseTask):
-    """Plugins of this type are executed after all plugins of type Task."""
+
+    """Late task generator (plugin executed after all Task plugins)."""
 
     name = "dummy_latetask"
 
 
 class TemplateSystem(BasePlugin):
-    """Plugins of this type wrap templating systems."""
+
+    """Provide support for templating systems."""
 
     name = "dummy_templates"
 
     def set_directories(self, directories, cache_folder):
-        """Sets the list of folders where templates are located and cache."""
+        """Set the list of folders where templates are located and cache."""
         raise NotImplementedError()
 
     def template_deps(self, template_name):
-        """Returns filenames which are dependencies for a template."""
+        """Return filenames which are dependencies for a template."""
         raise NotImplementedError()
 
     def render_template(self, template_name, output_name, context):
-        """Renders template to a file using context.
+        """Render template to a file using context.
 
         This must save the data to output_name *and* return it
         so that the caller may do additional processing.
@@ -192,30 +215,31 @@ class TemplateSystem(BasePlugin):
         raise NotImplementedError()
 
     def render_template_to_string(self, template, context):
-        """Renders template to a string using context. """
+        """Render template to a string using context."""
         raise NotImplementedError()
 
     def inject_directory(self, directory):
-        """Injects the directory with the lowest priority in the
-        template search mechanism."""
+        """Inject the directory with the lowest priority in the template search mechanism."""
         raise NotImplementedError()
 
 
 class TaskMultiplier(BasePlugin):
-    """Plugins that take a task and return *more* tasks."""
+
+    """Take a task and return *more* tasks."""
 
     name = "dummy multiplier"
 
     def process(self, task):
-        """Examine task and create more tasks.
-        Returns extra tasks only."""
+        """Examine task and create more tasks. Returns extra tasks only."""
         return []
 
 
 class PageCompiler(BasePlugin):
-    """Plugins that compile text files into HTML."""
 
-    name = "dummy compiler"
+    """Compile text files into HTML."""
+
+    name = "dummy_compiler"
+    friendly_name = ''
     demote_headers = False
     supports_onefile = True
     default_metadata = {
@@ -234,7 +258,8 @@ class PageCompiler(BasePlugin):
         """Add additional dependencies to the post object.
 
         Current main use is the ReST page compiler, which puts extra
-        dependencies into a .deb file."""
+        dependencies into a .dep file.
+        """
         pass
 
     def compile_html(self, source, dest, is_two_file=False):
@@ -250,30 +275,81 @@ class PageCompiler(BasePlugin):
         return ".html"
 
     def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
-        """
-        Read the metadata from a post, and return a metadata dict
-        """
+        """Read the metadata from a post, and return a metadata dict."""
         return {}
 
+    def split_metadata(self, data):
+        """Split data from metadata in the raw post content.
 
-class RestExtension(BasePlugin):
+        This splits in the first empty line that is NOT at the beginning
+        of the document.
+        """
+        split_result = re.split('(\n\n|\r\n\r\n)', data.lstrip(), maxsplit=1)
+        if len(split_result) == 1:
+            return '', split_result[0]
+        # ['metadata', '\n\n', 'post content']
+        return split_result[0], split_result[-1]
+
+    def get_compiler_extensions(self):
+        """Activate all the compiler extension plugins for a given compiler and return them."""
+        plugins = []
+        for plugin_info in self.site.compiler_extensions:
+            if plugin_info.plugin_object.compiler_name == self.name:
+                plugins.append(plugin_info)
+        return plugins
+
+
+class CompilerExtension(BasePlugin):
+
+    """An extension for a Nikola compiler.
+
+    If you intend to implement those in your own compiler, you can:
+    (a) create a new plugin class for them; or
+    (b) use this class and filter them yourself.
+    If you choose (b), you should the compiler name to the .plugin
+    file in the Nikola/Compiler section and filter all plugins of
+    this category, getting the compiler name with:
+        p.details.get('Nikola', 'Compiler')
+    Note that not all compiler plugins have this option and you might
+    need to catch configparser.NoOptionError exceptions.
+    """
+
+    name = "dummy_compiler_extension"
+    compiler_name = "dummy_compiler"
+
+
+class RestExtension(CompilerExtension):
+
+    """Extensions for reStructuredText."""
+
     name = "dummy_rest_extension"
+    compiler_name = "rest"
 
 
-class MarkdownExtension(BasePlugin):
+class MarkdownExtension(CompilerExtension):
+
+    """Extensions for Markdown."""
+
     name = "dummy_markdown_extension"
+    compiler_name = "markdown"
 
 
 class SignalHandler(BasePlugin):
+
+    """Signal handlers."""
+
     name = "dummy_signal_handler"
 
 
 class ConfigPlugin(BasePlugin):
+
     """A plugin that can edit config (or modify the site) on-the-fly."""
+
     name = "dummy_config_plugin"
 
 
 class Importer(Command):
+
     """Basic structure for importing data into Nikola.
 
     The flow is:
@@ -317,7 +393,7 @@ class Importer(Command):
         raise NotImplementedError()
 
     def read_data(self, source):
-        """Fetch data into self.data"""
+        """Fetch data into self.data."""
         raise NotImplementedError()
 
     def preprocess_data(self):
@@ -325,7 +401,7 @@ class Importer(Command):
         pass
 
     def parse_data(self):
-        """Convert self.data into self.items"""
+        """Convert self.data into self.items."""
         raise NotImplementedError()
 
     def filter_data(self):

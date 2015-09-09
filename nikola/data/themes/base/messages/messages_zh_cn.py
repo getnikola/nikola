@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 
 MESSAGES = {
     "%d min remaining to read": "",
+    "(active)": "",
     "Also available in:": "其他语言版本：",
     "Archive": "文章存档",
+    "Authors": "",
     "Categories": "分类",
     "Comments": "",
     "LANGUAGE": "简体中文",
@@ -18,6 +20,7 @@ MESSAGES = {
     "Original site": "原文地址",
     "Posted:": "发表于：",
     "Posts about %s": "文章分类：%s",
+    "Posts by %s": "",
     "Posts for year %s": "%s年文章",
     "Posts for {month} {day}, {year}": "",
     "Posts for {month} {year}": "{year}年{month}月文章",
@@ -28,8 +31,13 @@ MESSAGES = {
     "Read more": "更多",
     "Skip to main content": "",
     "Source": "源代码",
+    "Subcategories:": "",
     "Tags and Categories": "标签和分类",
     "Tags": "标签",
+    "Uncategorized": "",
+    "Updates": "",
+    "Write your page here.": "",
+    "Write your post here.": "",
     "old posts, page %d": "旧文章页 %d",
     "page %d": "",
 }

@@ -21,17 +21,23 @@ dir="rtl"
 lang="{{ lang }}">
 <head>
     <meta charset="utf-8">
+    {% if use_base_tag %}
+    <base href="{{ abs_link(permalink) }}">
+    {% endif %}
     {% if description %}
     <meta name="description" content="{{ description }}">
     {% endif %}
     <meta name="viewport" content="width=device-width">
-    <title>{{ title|e }} | {{ blog_title|e }}</title>
+    {% if title == blog_title %}
+        <title>{{ blog_title|e }}</title>
+    {% else %}
+        <title>{{ title|e }} | {{ blog_title|e }}</title>
+    {% endif %}
 
     {{ html_stylesheets() }}
+    <meta content="{{ theme_color }}" name="theme-color">
     {{ html_feedlinks() }}
-    {% if permalink %}
-      <link rel="canonical" href="{{ abs_link(permalink) }}">
-    {% endif %}
+    <link rel="canonical" href="{{ abs_link(permalink) }}">
 
     {% if favicons %}
         {% for name, file, size in favicons %}
@@ -79,6 +85,10 @@ lang="{{ lang }}">
             <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
         {% endif %}
     {% endif %}
+    {% if needs_ipython_css %}
+        <link href="/assets/css/ipython.min.css" rel="stylesheet" type="text/css">
+        <link href="/assets/css/nikola_ipython.css" rel="stylesheet" type="text/css">
+    {% endif %}
 {% endmacro %}
 
 {% macro html_feedlinks() %}
@@ -86,18 +96,27 @@ lang="{{ lang }}">
         {{ rss_link }}
     {% elif generate_rss %}
         {% if translations|length > 1 %}
-            {% for language in translations %}
+            {% for language in translations|sort %}
                 <link rel="alternate" type="application/rss+xml" title="RSS ({{ language }})" href="{{ _link('rss', None, language) }}">
             {% endfor %}
         {% else %}
             <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ _link('rss', None) }}">
         {% endif %}
     {% endif %}
+    {% if generate_atom %}
+        {% if translations|length > 1 %}
+            {% for language in translations|sort %}
+                <link rel="alternate" type="application/atom+xml" title="Atom ({{ language }})" href="{{ _link('index_atom', None, language) }}">
+            {% endfor %}
+        {% else %}
+            <link rel="alternate" type="application/atom+xml" title="Atom" href="{{ _link('index_atom', None) }}">
+        {% endif %}
+    {% endif %}
 {% endmacro %}
 
 {% macro html_translations() %}
     <ul class="translations">
-    {% for langname in translations.keys() %}
+    {% for langname in translations|sort %}
         {% if langname != lang %}
             <li><a href="{{ abs_link(_link("root", None, langname)) }}" rel="alternate" hreflang="{{ langname }}">{{ messages("LANGUAGE", langname) }}</a></li>
         {% endif %}
