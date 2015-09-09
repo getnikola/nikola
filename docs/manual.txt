@@ -1136,8 +1136,7 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus",
    * In IntenseDebate it's the **IntenseDebate site acct**
    * In LiveFyre it's the **siteId**
    * In Moot it's your **username**
-   * For Google Plus, ``COMMENT_SYSTEM_ID`` need not be set, but you must
-     `verify your authorship <https://plus.google.com/authorship>`_
+   * For Google Plus, ``COMMENT_SYSTEM_ID`` need not be set. WARNING: this will not work correctly in the test server, needs to be deployed to a real server/URL.
    * For Facebook, you need to `create an app
      <https://developers.facebook.com/apps>` (turn off sandbox mode!)
      and get an **App ID**
