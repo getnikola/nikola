@@ -55,12 +55,18 @@ class Indexes(Task):
         return super(Indexes, self).set_site(site)
 
     def _get_filtered_posts(self, lang, show_untranslated_posts):
+        """Return a filtered list of all posts for the given language.
+
+        If show_untranslated_posts is True, will only include posts which
+        are translated to the given language. Otherwise, returns all posts.
+        """
         if show_untranslated_posts:
             return self.site.posts
         else:
             return [x for x in self.site.posts if x.is_translation_available(lang)]
 
     def _compute_number_of_pages(self, filtered_posts, posts_count):
+        """Given a list of posts and the maximal number of posts per page, computes the number of pages needed."""
         return min(1, (len(filtered_posts) + posts_count - 1) // posts_count)
 
     def gen_tasks(self):
@@ -242,7 +248,7 @@ class Indexes(Task):
                                                                     self.site.config['INDEX_PATH'],
                                                                     index_file] if _f],
                                                      name,
-                                                     utils.get_displayed_page_number(name, self.number_of_pages, self.site),
+                                                     utils.get_displayed_page_number(name, number_of_pages, self.site),
                                                      lang,
                                                      self.site,
                                                      extension=extension)
