@@ -886,7 +886,7 @@ def get_metadata_from_file(source_path, config=None, lang=None):
             source_path = get_translation_candidate(config, source_path, lang)
         elif lang:
             source_path += '.' + lang
-        with io.open(source_path, "r", encoding="utf8") as meta_file:
+        with io.open(source_path, "r", encoding="utf-8-sig") as meta_file:
             meta_data = [x.strip() for x in meta_file.readlines()]
         return _get_metadata_from_file(meta_data)
     except (UnicodeDecodeError, UnicodeEncodeError):
@@ -895,17 +895,36 @@ def get_metadata_from_file(source_path, config=None, lang=None):
         return {}
 
 
+re_md_title = re.compile(r'^{0}([^{0}].*)'.format(re.escape('#')))
+# Assuming rst titles are going to be at least 4 chars long
+# otherwise this detects things like ''' wich breaks other markups.
+re_rst_title = re.compile(r'^([{0}]{{4,}})'.format(re.escape(
+    string.punctuation)))
+
+
+def _get_title_from_contents(meta_data):
+    """Extract title from file contents, LAST RESOURCE."""
+    piece = meta_data[:]
+    title = None
+    for i, line in enumerate(piece):
+        if re_rst_title.findall(line) and i > 0:
+            title = meta_data[i - 1].strip()
+            break
+        if (re_rst_title.findall(line) and i >= 0 and
+                re_rst_title.findall(meta_data[i + 2])):
+            title = meta_data[i + 1].strip()
+            break
+        if re_md_title.findall(line):
+            title = re_md_title.findall(line)[0]
+            break
+    return title
+
+
 def _get_metadata_from_file(meta_data):
     """Extract metadata from a post's source file."""
     meta = {}
     if not meta_data:
         return meta
-
-    re_md_title = re.compile(r'^{0}([^{0}].*)'.format(re.escape('#')))
-    # Assuming rst titles are going to be at least 4 chars long
-    # otherwise this detects things like ''' wich breaks other markups.
-    re_rst_title = re.compile(r'^([{0}]{{4,}})'.format(re.escape(
-        string.punctuation)))
 
     # Skip up to one empty line at the beginning (for txt2tags)
     if not meta_data[0]:
@@ -923,18 +942,9 @@ def _get_metadata_from_file(meta_data):
 
     # If we have no title, try to get it from document
     if 'title' not in meta:
-        piece = meta_data[:]
-        for i, line in enumerate(piece):
-            if re_rst_title.findall(line) and i > 0:
-                meta['title'] = meta_data[i - 1].strip()
-                break
-            if (re_rst_title.findall(line) and i >= 0 and
-                    re_rst_title.findall(meta_data[i + 2])):
-                meta['title'] = meta_data[i + 1].strip()
-                break
-            if re_md_title.findall(line):
-                meta['title'] = re_md_title.findall(line)[0]
-                break
+        t = _get_title_from_contents(meta_data)
+        if t is not None:
+            meta['title'] = t
 
     return meta
 
