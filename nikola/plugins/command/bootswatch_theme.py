@@ -96,7 +96,11 @@ class CommandBootswatchTheme(Command):
                 url += '/' + version
             url = '/'.join((url, swatch, fname))
             LOGGER.info("Downloading: " + url)
-            data = requests.get(url).text
+            r = requests.get(url)
+            if r.status_code > 299:
+                LOGGER.error('Error {} getting {}', r.status_code, url)
+                exit(1)
+            data = r.text
             with open(os.path.join('themes', name, 'assets', 'css', fname),
                       'wb+') as output:
                 output.write(data.encode('utf-8'))

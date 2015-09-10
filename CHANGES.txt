@@ -16,6 +16,7 @@ Features
 Bugfixes
 --------
 
+* Handle error downloading bootswatches (Issue #2054)
 * Monitor plugins/ in ``nikola auto`` (Issue #2044)
 * Multi-lingual and multi-level directories confused section slug
   detection (Issue #2023)
