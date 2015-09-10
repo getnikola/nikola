@@ -40,7 +40,7 @@ except ImportError:
     import urllib.robotparser as robotparser  # NOQA
 
 from nikola.plugin_categories import LateTask
-from nikola.utils import config_changed, apply_filters
+from nikola.utils import apply_filters, config_changed, encodelink
 
 
 urlset_header = """<?xml version="1.0" encoding="UTF-8"?>
@@ -158,10 +158,10 @@ class Sitemap(LateTask):
                     if post:
                         for lang in kw['translations']:
                             alt_url = post.permalink(lang=lang, absolute=True)
-                            if loc == alt_url:
+                            if encodelink(loc) == alt_url:
                                 continue
                             alternates.append(alternates_format.format(lang, alt_url))
-                    urlset[loc] = loc_format.format(loc, lastmod, ''.join(alternates))
+                    urlset[loc] = loc_format.format(encodelink(loc), lastmod, ''.join(alternates))
                 for fname in files:
                     if kw['strip_indexes'] and fname == kw['index_file']:
                         continue  # We already mapped the folder
@@ -201,7 +201,7 @@ class Sitemap(LateTask):
                                 path = path.replace(os.sep, '/')
                                 lastmod = self.get_lastmod(real_path)
                                 loc = urljoin(base_url, base_path + path)
-                                sitemapindex[loc] = sitemap_format.format(loc, lastmod)
+                                sitemapindex[loc] = sitemap_format.format(encodelink(loc), lastmod)
                                 continue
                             else:
                                 continue  # ignores all XML files except those presumed to be RSS
@@ -215,10 +215,10 @@ class Sitemap(LateTask):
                         if post:
                             for lang in kw['translations']:
                                 alt_url = post.permalink(lang=lang, absolute=True)
-                                if loc == alt_url:
+                                if encodelink(loc) == alt_url:
                                     continue
                                 alternates.append(alternates_format.format(lang, alt_url))
-                        urlset[loc] = loc_format.format(loc, lastmod, '\n'.join(alternates))
+                        urlset[loc] = loc_format.format(encodelink(loc), lastmod, '\n'.join(alternates))
 
         def robot_fetch(path):
             """Check if robots can fetch a file."""

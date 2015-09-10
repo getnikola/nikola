@@ -45,15 +45,24 @@ import sys
 import dateutil.parser
 import dateutil.tz
 import logbook
+try:
+    from urllib import quote as urlquote
+    from urllib import unquote as urlunquote
+    from urlparse import urlparse, urlunparse
+except ImportError:
+    from urllib.parse import quote as urlquote  # NOQA
+    from urllib.parse import unquote as urlunquote  # NOQA
+    from urllib.parse import urlparse, urlunparse  # NOQA
 import warnings
 import PyRSS2Gen as rss
-from collections import defaultdict, Callable
+from collections import defaultdict, Callable, OrderedDict
 from logbook.compat import redirect_logging
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
 from pygments.formatters import HtmlFormatter
 from zipfile import ZipFile as zipf
 from doit import tools
 from unidecode import unidecode
+from unicodedata import normalize as unicodenormalize
 from pkg_resources import resource_filename
 from doit.cmdparse import CmdParse
 
@@ -725,7 +734,7 @@ def remove_file(source):
     elif os.path.isfile(source) or os.path.islink(source):
         os.remove(source)
 
-# slugify is copied from
+# slugify is adopted from
 # http://code.activestate.com/recipes/
 # 577257-slugify-make-a-string-usable-in-a-url-or-filename/
 _slugify_strip_re = re.compile(r'[^+\w\s-]')
@@ -783,8 +792,21 @@ def unslugify(value, discard_numbers=True):
     return value
 
 
+def encodelink(iri):
+    """Given an encoded or unencoded link string, return an encoded string suitable for use as a link in HTML and XML."""
+    iri = unicodenormalize('NFC', iri)
+    link = OrderedDict(urlparse(iri)._asdict())
+    link['path'] = urlquote(urlunquote(link['path']).encode('utf-8'))
+    try:
+        link['netloc'] = link['netloc'].encode('utf-8').decode('idna').encode('idna').decode('utf-8')
+    except UnicodeDecodeError:
+        link['netloc'] = link['netloc'].encode('idna').decode('utf-8')
+    encoded_link = urlunparse(link.values())
+    return encoded_link
+
 # A very slightly safer version of zip.extractall that works on
 # python < 2.6
+
 
 class UnsafeZipException(Exception):
 

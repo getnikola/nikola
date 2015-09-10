@@ -129,7 +129,6 @@ class Post(object):
         self._template_name = template_name
         self.is_two_file = True
         self.newstylemeta = True
-        self.hyphenate = self.config['HYPHENATE']
         self._reading_time = None
         self._remaining_reading_time = None
         self._paragraph_count = None
@@ -230,6 +229,11 @@ class Post(object):
 
         # Register potential extra dependencies
         self.compiler.register_extra_dependencies(self)
+
+    def _get_hyphenate(self):
+        return bool(self.config['HYPHENATE'] or self.meta('hyphenate'))
+
+    hyphenate = property(_get_hyphenate)
 
     def __repr__(self):
         """Provide a representation of the post object."""
@@ -707,10 +711,9 @@ class Post(object):
     def source_link(self, lang=None):
         """Return absolute link to the post's source."""
         ext = self.source_ext(True)
-        return "/" + self.destination_path(
-            lang=lang,
-            extension=ext,
-            sep='/')
+        link = "/" + self.destination_path(lang=lang, extension=ext, sep='/')
+        link = utils.encodelink(link)
+        return link
 
     def destination_path(self, lang=None, extension='.html', sep=os.sep):
         """Destination path for this post, relative to output/.
@@ -747,6 +750,7 @@ class Post(object):
             link = urljoin('/' + slug + '/', self.index_file)
         else:
             link = '/' + slug + '/'
+        link = utils.encodelink(link)
         return link
 
     def section_name(self, lang=None):
@@ -803,6 +807,7 @@ class Post(object):
             link = link[:-index_len]
         if query:
             link = link + "?" + query
+        link = utils.encodelink(link)
         return link
 
     @property
