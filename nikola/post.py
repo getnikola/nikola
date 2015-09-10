@@ -1069,7 +1069,11 @@ def hyphenate(dom, _lang):
     """Hyphenate a post."""
     # circular import prevention
     from .nikola import LEGAL_VALUES
-    lang = LEGAL_VALUES['PYPHEN_LOCALES'].get(_lang, pyphen.language_fallback(_lang))
+    lang = None
+    if pyphen is not None:
+        lang = LEGAL_VALUES['PYPHEN_LOCALES'].get(_lang, pyphen.language_fallback(_lang))
+    else:
+        utils.req_missing(['pyphen'], 'hyphenate texts', optional=True)
     if pyphen is not None and lang is not None:
         # If pyphen does exist, we tell the user when configuring the site.
         # If it does not support a language, we ignore it quietly.
