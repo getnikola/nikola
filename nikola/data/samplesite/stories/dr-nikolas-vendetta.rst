@@ -63,7 +63,7 @@ words.
 
 .. class:: pull-left
 
-.. figure:: http://www.gutenberg.org/files/21640/21640-h/images/illus_001.jpg
+.. figure:: /images/illus_001.jpg
 
    "Again she turned her face from me."
 
