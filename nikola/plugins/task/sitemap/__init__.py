@@ -135,12 +135,14 @@ class Sitemap(LateTask):
 
         output_path = kw['output_folder']
         sitemapindex_path = os.path.join(output_path, "sitemapindex.xml")
-        sitemap_path = os.path.join(output_path, "sitemap.xml")
         base_path = get_base_path(kw['base_url'])
         sitemapindex = {}
         urlset = {}
 
         def scan_locs():
+            # No need to run this more than once
+            if urlset:
+                return True
             """Scan site locations."""
             for root, dirs, files in os.walk(output, followlinks=True):
                 if not dirs and not files and not kw['sitemap_include_fileless_dirs']:
@@ -150,6 +152,16 @@ class Sitemap(LateTask):
                 path = (path.replace(os.sep, '/') + '/').replace('./', '')
                 lastmod = self.get_lastmod(root)
                 loc = urljoin(base_url, base_path + path)
+
+                # Directories with many files create their own sitemaps
+                if len([_ for _ in files if _.endswith('.html') or _.endswith('.htm') or _.endswith('.php')]) > 200:
+                    sitemap_path = os.path.join(root, "sitemap.xml")
+                else:
+                    sitemap_path = os.path.join(output_path, "sitemap.xml")
+                if sitemap_path not in urlset:
+                    urlset[sitemap_path] = {}
+                    sitemapindex[sitemap_path] = sitemap_format.format(self.site.abs_link(os.path.relpath(sitemap_path, output_path)), self.get_lastmod(sitemap_path))
+
                 if kw['index_file'] in files and kw['strip_indexes']:  # ignore folders when not stripping urls
                     post = self.site.post_per_file.get(path + kw['index_file'])
                     if post and (post.is_draft or post.is_private or post.publish_later):
@@ -161,7 +173,7 @@ class Sitemap(LateTask):
                             if loc == alt_url:
                                 continue
                             alternates.append(alternates_format.format(lang, alt_url))
-                    urlset[loc] = loc_format.format(loc, lastmod, ''.join(alternates))
+                    urlset[sitemap_path][loc] = loc_format.format(loc, lastmod, ''.join(alternates))
                 for fname in files:
                     if kw['strip_indexes'] and fname == kw['index_file']:
                         continue  # We already mapped the folder
@@ -196,8 +208,8 @@ class Sitemap(LateTask):
                         # put Atom and RSS in sitemapindex[] instead of in urlset[],
                         # sitemap_path is included after it is generated
                         if path.endswith('.xml') or path.endswith('.atom') or path.endswith('.rss'):
-                            known_elm_roots = (b'<feed', b'<rss', b'<urlset')
-                            if any([elm_root in filehead.lower() for elm_root in known_elm_roots]) and path != sitemap_path:
+                            known_elm_roots = (b'<feed', b'<rss')
+                            if any([elm_root in filehead.lower() for elm_root in known_elm_roots]):
                                 path = path.replace(os.sep, '/')
                                 lastmod = self.get_lastmod(real_path)
                                 loc = urljoin(base_url, base_path + path)
@@ -218,7 +230,7 @@ class Sitemap(LateTask):
                                 if loc == alt_url:
                                     continue
                                 alternates.append(alternates_format.format(lang, alt_url))
-                        urlset[loc] = loc_format.format(loc, lastmod, '\n'.join(alternates))
+                        urlset[sitemap_path][loc] = loc_format.format(loc, lastmod, '\n'.join(alternates))
 
         def robot_fetch(path):
             """Check if robots can fetch a file."""
@@ -233,17 +245,15 @@ class Sitemap(LateTask):
                         return False  # not robot food
             return True
 
-        def write_sitemap():
+        def write_sitemap(sitemap, sitemap_path):
             """Write sitemap to file."""
             # Have to rescan, because files may have been added between
             # task dep scanning and task execution
             with io.open(sitemap_path, 'w+', encoding='utf8') as outf:
                 outf.write(urlset_header)
-                for k in sorted(urlset.keys()):
-                    outf.write(urlset[k])
+                for k in sorted(sitemap.keys()):
+                    outf.write(sitemap[k])
                 outf.write(urlset_footer)
-            sitemap_url = urljoin(base_url, base_path + "sitemap.xml")
-            sitemapindex[sitemap_url] = sitemap_format.format(sitemap_url, self.get_lastmod(sitemap_path))
 
         def write_sitemapindex():
             """Write sitemap index."""
@@ -266,12 +276,13 @@ class Sitemap(LateTask):
             output = kw["output_folder"]
             file_dep = []
 
-            for i in urlset.keys():
-                p = os.path.join(output, urlparse(i).path.replace(base_path, '', 1))
-                if not p.endswith('sitemap.xml') and not os.path.isdir(p):
-                    file_dep.append(p)
-                if os.path.isdir(p) and os.path.exists(os.path.join(p, 'index.html')):
-                    file_dep.append(p + 'index.html')
+            for s in urlset.keys():
+                for i in urlset[s].keys():
+                    p = os.path.join(output, urlparse(i).path.replace(base_path, '', 1))
+                    if not p.endswith('sitemap.xml') and not os.path.isdir(p):
+                        file_dep.append(p)
+                    if os.path.isdir(p) and os.path.exists(os.path.join(p, 'index.html')):
+                        file_dep.append(p + 'index.html')
 
             for i in sitemapindex.keys():
                 p = os.path.join(output, urlparse(i).path.replace(base_path, '', 1))
@@ -282,6 +293,8 @@ class Sitemap(LateTask):
 
             return {'file_dep': file_dep}
 
+        scan_locs()
+
         yield {
             "basename": "_scan_locs",
             "name": "sitemap",
@@ -289,16 +302,21 @@ class Sitemap(LateTask):
         }
 
         yield self.group_task()
-        yield apply_filters({
-            "basename": "sitemap",
-            "name": sitemap_path,
-            "targets": [sitemap_path],
-            "actions": [(write_sitemap,)],
-            "uptodate": [config_changed(kw, 'nikola.plugins.task.sitemap:write')],
-            "clean": True,
-            "task_dep": ["render_site"],
-            "calc_dep": ["_scan_locs:sitemap"],
-        }, kw['filters'])
+
+        for sitemap_path in sorted(urlset.keys()):
+            # TODO: Fix issue #1683
+            sitemap = urlset[sitemap_path]
+            yield apply_filters({
+                "basename": "sitemap",
+                "name": sitemap_path,
+                "targets": [sitemap_path],
+                "actions": [(write_sitemap, [sitemap, sitemap_path])],
+                "uptodate": [config_changed(kw, 'nikola.plugins.task.sitemap:write')],
+                "clean": True,
+                "task_dep": ["render_site"],
+                "calc_dep": ["_scan_locs:sitemap"],
+            }, kw['filters'])
+
         yield apply_filters({
             "basename": "sitemap",
             "name": sitemapindex_path,
@@ -306,7 +324,7 @@ class Sitemap(LateTask):
             "actions": [(write_sitemapindex,)],
             "uptodate": [config_changed(kw, 'nikola.plugins.task.sitemap:write_index')],
             "clean": True,
-            "file_dep": [sitemap_path]
+            "file_dep": sorted(urlset.keys())
         }, kw['filters'])
 
     def get_lastmod(self, p):
@@ -317,7 +335,10 @@ class Sitemap(LateTask):
             # RFC 3339 (web ISO 8601 profile) represented in UTC with Zulu
             # zone desgignator as recommeded for sitemaps. Second and
             # microsecond precision is stripped for compatibility.
-            lastmod = datetime.datetime.utcfromtimestamp(os.stat(p).st_mtime).replace(tzinfo=dateutil.tz.gettz('UTC'), second=0, microsecond=0).isoformat().replace('+00:00', 'Z')
+            if os.path.exists(p):
+                lastmod = datetime.datetime.utcfromtimestamp(os.stat(p).st_mtime).replace(tzinfo=dateutil.tz.gettz('UTC'), second=0, microsecond=0).isoformat().replace('+00:00', 'Z')
+            else:
+                lastmod = datetime.datetime.utcnow().replace(tzinfo=dateutil.tz.gettz('UTC'), second=0, microsecond=0).isoformat().replace('+00:00', 'Z')
             return lastmod
 
 if __name__ == '__main__':
