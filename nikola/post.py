@@ -881,7 +881,7 @@ def get_metadata_from_file(source_path, config=None, lang=None):
             source_path = get_translation_candidate(config, source_path, lang)
         elif lang:
             source_path += '.' + lang
-        with io.open(source_path, "r", encoding="utf8") as meta_file:
+        with io.open(source_path, "r", encoding="utf-8-sig") as meta_file:
             meta_data = [x.strip() for x in meta_file.readlines()]
         return _get_metadata_from_file(meta_data)
     except (UnicodeDecodeError, UnicodeEncodeError):

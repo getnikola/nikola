@@ -15,6 +15,7 @@ Features
 Bugfixes
 --------
 
+* Handle metadata in post files that start with a BOM (Issue #2059)
 * Handle error downloading bootswatches (Issue #2054)
 * Monitor plugins/ in ``nikola auto`` (Issue #2044)
 * Multi-lingual and multi-level directories confused section slug
