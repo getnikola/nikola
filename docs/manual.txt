@@ -313,6 +313,10 @@ to your configuration:
       Set "True" if you do not want to see the **page** title as a
       heading of the output html file (does not work for posts).
 
+   hyphenate
+      Set "True" if you want this document to be hyphenated even if you have
+      hyphenation disabled by default.
+
    nocomments
       Set to "True" to disable comments. Example:
 
