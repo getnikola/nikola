@@ -1040,13 +1040,13 @@ to create a custom theme by downloading free CSS files from http://bootswatch.co
 
 .. code:: console
 
-    $ nikola bootswatch_theme -n custom_theme -s spruce -p bootstrap3
+    $ nikola bootswatch_theme -n custom_theme -s flatly -p bootstrap3
     [2013-10-12T16:46:58Z] NOTICE: bootswatch_theme: Creating 'custom_theme' theme
-    from 'spruce' and 'bootstrap3'
+    from 'flatly' and 'bootstrap3'
     [2013-10-12T16:46:58Z] NOTICE: bootswatch_theme: Downloading:
-    http://bootswatch.com//spruce/bootstrap.min.css
+    http://bootswatch.com//flatly/bootstrap.min.css
     [2013-10-12T16:46:58Z] NOTICE: bootswatch_theme: Downloading:
-    http://bootswatch.com//spruce/bootstrap.css
+    http://bootswatch.com//flatly/bootstrap.css
     [2013-10-12T16:46:59Z] NOTICE: bootswatch_theme: Theme created. Change the THEME setting to "custom_theme" to use it.
 
 You can even try what different swatches do on an existing site using
