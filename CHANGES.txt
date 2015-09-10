@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Per-document hyphenation using "hyphenate" metadata flag.
 * New option USE_KATEX to switch from MathJax to KaTeX (Experimental).
 * Support SVG in galleries (Issue #1605)
 * Made TAG_PATH translatable (Issue #1914)

@@ -129,7 +129,6 @@ class Post(object):
         self._template_name = template_name
         self.is_two_file = True
         self.newstylemeta = True
-        self.hyphenate = self.config['HYPHENATE']
         self._reading_time = None
         self._remaining_reading_time = None
         self._paragraph_count = None
@@ -230,6 +229,11 @@ class Post(object):
 
         # Register potential extra dependencies
         self.compiler.register_extra_dependencies(self)
+
+    def _get_hyphenate(self):
+        return bool(self.config['HYPHENATE'] or self.meta('hyphenate'))
+
+    hyphenate = property(_get_hyphenate)
 
     def __repr__(self):
         """Provide a representation of the post object."""
