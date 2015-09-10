@@ -1252,7 +1252,7 @@ class Nikola(object):
         """Take all necessary data, and render a RSS feed in output_path."""
         rss_obj = utils.ExtendedRSS2(
             title=title,
-            link=link,
+            link=utils.encodelink(link),
             description=description,
             lastBuildDate=datetime.datetime.utcnow(),
             generator='https://getnikola.com/',
@@ -1447,7 +1447,9 @@ class Nikola(object):
 
     def link(self, *args):
         """Create a link."""
-        return self.path(*args, is_link=True)
+        url = self.path(*args, is_link=True)
+        url = utils.encodelink(url)
+        return url
 
     def abs_link(self, dst, protocol_relative=False):
         """Get an absolute link."""
@@ -1459,6 +1461,7 @@ class Nikola(object):
         url = urlparse(dst).geturl()
         if protocol_relative:
             url = url.split(":", 1)[1]
+        url = utils.encodelink(url)
         return url
 
     def rel_link(self, src, dst):
@@ -1473,7 +1476,7 @@ class Nikola(object):
         parsed_src = urlsplit(src)
         parsed_dst = urlsplit(dst)
         if parsed_src[:2] != parsed_dst[:2]:
-            return dst
+            return utils.encodelink(dst)
         # Now both paths are on the same site and absolute
         src_elems = parsed_src.path.split('/')[1:]
         dst_elems = parsed_dst.path.split('/')[1:]
@@ -1484,7 +1487,9 @@ class Nikola(object):
         else:
             i += 1
         # Now i is the longest common prefix
-        return '/'.join(['..'] * (len(src_elems) - i - 1) + dst_elems[i:])
+        url = '/'.join(['..'] * (len(src_elems) - i - 1) + dst_elems[i:])
+        url = utils.encodelink(url)
+        return url
 
     def file_exists(self, path, not_empty=False):
         """Check if the file exists. If not_empty is True, it also must not be empty."""
@@ -1635,7 +1640,7 @@ class Nikola(object):
                             utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.posts_per_tag[other_tag]])))
                             quit = True
                     else:
-                        slugged_tags.add(utils.slugify(tag, force=True))
+                        slugged_tags.add(utils.slugify(tag))
                     self.posts_per_tag[tag].append(post)
                 for lang in self.config['TRANSLATIONS'].keys():
                     self.tags_per_language[lang].extend(post.tags_for_language(lang))
@@ -1792,7 +1797,7 @@ class Nikola(object):
             link = lxml.etree.Element("link")
             link.set("rel", link_rel)
             link.set("type", link_type)
-            link.set("href", link_href)
+            link.set("href", utils.encodelink(link_href))
             return link
 
         deps = []
@@ -1828,7 +1833,7 @@ class Nikola(object):
         feed_root = lxml.etree.Element("feed", nsmap=nslist)
         feed_root.addprevious(lxml.etree.ProcessingInstruction(
             "xml-stylesheet",
-            'href="' + feed_xsl_link + '" type="text/xsl media="all"'))
+            'href="' + utils.encodelink(feed_xsl_link) + '" type="text/xsl media="all"'))
         feed_root.set("{http://www.w3.org/XML/1998/namespace}lang", lang)
         feed_root.set("xmlns", "http://www.w3.org/2005/Atom")
         feed_title = lxml.etree.SubElement(feed_root, "title")
