@@ -262,6 +262,7 @@ class CommandAuto(Command):
         fname = os.path.basename(event_path)
         if (fname.endswith('~') or
                 fname.startswith('.') or
+                '__pycache__' in event_path or
                 os.path.isdir(event_path)):  # Skip on folders, these are usually duplicates
             return
         self.logger.info('REBUILDING SITE (from {0})'.format(event_path))
