@@ -2,9 +2,10 @@
 {% extends 'base.tmpl' %}
 
 {% block content %}
-<article class="authorindex">
 {% if items %}
     <h2>{{ messages("Authors") }}</h2>
+{% endif %}
+{% if items %}
     <ul class="list-inline">
     {% for text, link in items %}
         {% if text not in hidden_authors %}
@@ -13,5 +14,4 @@
     {% endfor %}
     </ul>
 {% endif %}
-</article>
 {% endblock %}
