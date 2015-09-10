@@ -491,6 +491,7 @@ class Nikola(object):
             'USE_CDN': False,
             'USE_CDN_WARNING': True,
             'USE_FILENAME_AS_TITLE': True,
+            'USE_KATEX': False,
             'USE_OPEN_GRAPH': True,
             'USE_SLUGIFY': True,
             'TIMEZONE': 'UTC',
@@ -915,6 +916,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['site_has_comments'] = bool(self.config.get('COMMENT_SYSTEM'))
         self._GLOBAL_CONTEXT['mathjax_config'] = self.config.get(
             'MATHJAX_CONFIG')
+        self._GLOBAL_CONTEXT['use_katex'] = self.config.get('USE_KATEX')
         self._GLOBAL_CONTEXT['subtheme'] = self.config.get('THEME_REVEAL_CONFIG_SUBTHEME')
         self._GLOBAL_CONTEXT['transition'] = self.config.get('THEME_REVEAL_CONFIG_TRANSITION')
         self._GLOBAL_CONTEXT['content_footer'] = self.config.get(
