@@ -3,7 +3,8 @@ New in master
 
 Features
 --------
-
+* Support UTF-8 paths and encoded links when the ``USE_SLUGIFY`` option
+  is disabled. (Issue #2037)
 * Per-document hyphenation using "hyphenate" metadata flag.
 * New option USE_KATEX to switch from MathJax to KaTeX (Experimental).
 * Support SVG in galleries (Issue #1605)
