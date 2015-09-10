@@ -88,6 +88,7 @@ class RenderTags(Task):
             "category_pages_titles": self.site.config['CATEGORY_PAGES_TITLES'],
             "tag_pages_descriptions": self.site.config['TAG_PAGES_DESCRIPTIONS'],
             "tag_pages_titles": self.site.config['TAG_PAGES_TITLES'],
+            "use_urlencoding": self.site.config['USE_URLENCODING'],
         }
 
         self.site.scan_posts()

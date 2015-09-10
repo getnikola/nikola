@@ -38,8 +38,9 @@ import re
 import string
 try:
     from urlparse import urljoin
+    from urllib import quote
 except ImportError:
-    from urllib.parse import urljoin  # NOQA
+    from urllib.parse import urljoin, quote  # NOQA
 
 from . import utils
 
@@ -711,10 +712,13 @@ class Post(object):
     def source_link(self, lang=None):
         """Return absolute link to the post's source."""
         ext = self.source_ext(True)
-        return "/" + self.destination_path(
+        path = "/" + self.destination_path(
             lang=lang,
             extension=ext,
             sep='/')
+        if self.config['USE_URLENCODING']:
+            path = quote(path.encode('utf-8'))
+        return path
 
     def destination_path(self, lang=None, extension='.html', sep=os.sep):
         """Destination path for this post, relative to output/.
@@ -751,6 +755,8 @@ class Post(object):
             link = urljoin('/' + slug + '/', self.index_file)
         else:
             link = '/' + slug + '/'
+        if self.config['USE_URLENCODING']:
+            link = quote(link.encode('utf-8'))
         return link
 
     def section_name(self, lang=None):
@@ -800,11 +806,13 @@ class Post(object):
             pieces += [self.meta[lang]['slug'] + extension]
         pieces = [_f for _f in pieces if _f and _f != '.']
         link = '/' + '/'.join(pieces)
-        if absolute:
-            link = urljoin(self.base_url, link[1:])
         index_len = len(self.index_file)
         if self.strip_indexes and link[-(1 + index_len):] == '/' + self.index_file:
             link = link[:-index_len]
+        if self.config['USE_URLENCODING']:
+            link = quote(link.encode('utf-8'))
+        if absolute:
+            link = urljoin(self.base_url, link[1:])
         if query:
             link = link + "?" + query
         return link

@@ -34,9 +34,10 @@ import os
 import sys
 try:
     from urlparse import urljoin, urlparse
+    from urllib import quote
     import robotparser as robotparser
 except ImportError:
-    from urllib.parse import urljoin, urlparse  # NOQA
+    from urllib.parse import urljoin, urlparse, quote  # NOQA
     import urllib.robotparser as robotparser  # NOQA
 
 from nikola.plugin_categories import LateTask
@@ -127,6 +128,7 @@ class Sitemap(LateTask):
             "translations": self.site.config["TRANSLATIONS"],
             "tzinfo": self.site.config['__tzinfo__'],
             "sitemap_plugin_revision": 1,
+            "use_urlencoding": self.site.config["USE_URLENCODING"],
         }
 
         output = kw['output_folder']
@@ -147,9 +149,16 @@ class Sitemap(LateTask):
                     continue  # Totally empty, not on sitemap
                 path = os.path.relpath(root, output)
                 # ignore the current directory.
-                path = (path.replace(os.sep, '/') + '/').replace('./', '')
+                if path == '.':
+                    link = ''
+                else:
+                    path = path.replace(os.sep, '/') + '/'
+                    if kw['use_urlencoding']:
+                        link = quote(path.encode('utf-8'))
+                    else:
+                        link = path
                 lastmod = self.get_lastmod(root)
-                loc = urljoin(base_url, base_path + path)
+                loc = urljoin(base_url, base_path + link)
                 if kw['index_file'] in files and kw['strip_indexes']:  # ignore folders when not stripping urls
                     post = self.site.post_per_file.get(path + kw['index_file'])
                     if post and (post.is_draft or post.is_private or post.publish_later):
@@ -161,7 +170,7 @@ class Sitemap(LateTask):
                             if loc == alt_url:
                                 continue
                             alternates.append(alternates_format.format(lang, alt_url))
-                    urlset[loc] = loc_format.format(loc, lastmod, ''.join(alternates))
+                    urlset[root] = loc_format.format(loc, lastmod, ''.join(alternates))
                 for fname in files:
                     if kw['strip_indexes'] and fname == kw['index_file']:
                         continue  # We already mapped the folder
@@ -199,9 +208,13 @@ class Sitemap(LateTask):
                             known_elm_roots = (b'<feed', b'<rss', b'<urlset')
                             if any([elm_root in filehead.lower() for elm_root in known_elm_roots]) and path != sitemap_path:
                                 path = path.replace(os.sep, '/')
+                                if kw['use_urlencoding']:
+                                    link = quote(path.encode('utf-8'))
+                                else:
+                                    link = path
                                 lastmod = self.get_lastmod(real_path)
-                                loc = urljoin(base_url, base_path + path)
-                                sitemapindex[loc] = sitemap_format.format(loc, lastmod)
+                                loc = urljoin(base_url, base_path + link)
+                                sitemapindex[real_path] = sitemap_format.format(loc, lastmod)
                                 continue
                             else:
                                 continue  # ignores all XML files except those presumed to be RSS
@@ -209,6 +222,8 @@ class Sitemap(LateTask):
                         if post and (post.is_draft or post.is_private or post.publish_later):
                             continue
                         path = path.replace(os.sep, '/')
+                        if kw['use_urlencoding']:
+                            path = quote(path.encode('utf-8'))
                         lastmod = self.get_lastmod(real_path)
                         loc = urljoin(base_url, base_path + path)
                         alternates = []
@@ -218,7 +233,7 @@ class Sitemap(LateTask):
                                 if loc == alt_url:
                                     continue
                                 alternates.append(alternates_format.format(lang, alt_url))
-                        urlset[loc] = loc_format.format(loc, lastmod, '\n'.join(alternates))
+                        urlset[real_path] = loc_format.format(loc, lastmod, '\n'.join(alternates))
 
         def robot_fetch(path):
             """Check if robots can fetch a file."""
@@ -243,7 +258,7 @@ class Sitemap(LateTask):
                     outf.write(urlset[k])
                 outf.write(urlset_footer)
             sitemap_url = urljoin(base_url, base_path + "sitemap.xml")
-            sitemapindex[sitemap_url] = sitemap_format.format(sitemap_url, self.get_lastmod(sitemap_path))
+            sitemapindex[sitemap_path] = sitemap_format.format(sitemap_url, self.get_lastmod(sitemap_path))
 
         def write_sitemapindex():
             """Write sitemap index."""
@@ -266,19 +281,17 @@ class Sitemap(LateTask):
             output = kw["output_folder"]
             file_dep = []
 
-            for i in urlset.keys():
-                p = os.path.join(output, urlparse(i).path.replace(base_path, '', 1))
+            for p in urlset.keys():
                 if not p.endswith('sitemap.xml') and not os.path.isdir(p):
                     file_dep.append(p)
                 if os.path.isdir(p) and os.path.exists(os.path.join(p, 'index.html')):
-                    file_dep.append(p + 'index.html')
+                    file_dep.append(p + '/index.html')
 
-            for i in sitemapindex.keys():
-                p = os.path.join(output, urlparse(i).path.replace(base_path, '', 1))
+            for p in sitemapindex.keys():
                 if not p.endswith('sitemap.xml') and not os.path.isdir(p):
                     file_dep.append(p)
                 if os.path.isdir(p) and os.path.exists(os.path.join(p, 'index.html')):
-                    file_dep.append(p + 'index.html')
+                    file_dep.append(p + '/index.html')
 
             return {'file_dep': file_dep}
 

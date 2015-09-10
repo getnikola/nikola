@@ -69,6 +69,7 @@ class Indexes(Task):
             "strip_indexes": self.site.config['STRIP_INDEXES'],
             "blog_title": self.site.config["BLOG_TITLE"],
             "generate_atom": self.site.config["GENERATE_ATOM"],
+            "use_urlencoding": self.site.config['USE_URLENCODING'],
         }
 
         template_name = "index.tmpl"

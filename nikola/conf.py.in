@@ -1053,6 +1053,10 @@ UNSLUGIFY_TITLES = True
 # sometimes crash Nikola, your web server, or eat your cat.
 # USE_SLUGIFY = True
 
+# If you use URL encoding rather than UTF-8 encoding for URLs, you should
+# set this to true.
+# USE_URLENCODING = False
+
 # Templates will use those filters, along with the defaults.
 # Consult your engine's documentation on filters if you need help defining
 # those.

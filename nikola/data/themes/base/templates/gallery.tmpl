@@ -17,8 +17,13 @@
     %if folders:
     <ul>
     % for folder, ftitle in folders:
-        <li><a href="${folder}"><i
-        class="icon-folder-open"></i>&nbsp;${ftitle}</a></li>
+        % if use_urlencoding:
+            <li><a href="${folder|u}"><i
+            class="icon-folder-open"></i>&nbsp;${ftitle|h}</a></li>
+        % else:
+            <li><a href="${folder}"><i
+            class="icon-folder-open"></i>&nbsp;${ftitle|h}</a></li>
+        % endif
     % endfor
     </ul>
     %endif
@@ -26,7 +31,7 @@
     <ul class="thumbnails">
         %for image in photo_array:
             <li><a href="${image['url']}" class="thumbnail image-reference" title="${image['title']}">
-                <img src="${image['url_thumb']}" alt="${image['title']}" /></a>
+                <img src="${image['url_thumb']}" alt="${image['title']|h}" /></a>
         %endfor
     </ul>
     %endif
