@@ -1130,6 +1130,7 @@ class LocaleBorg(object):
 
     @property
     def current_lang(self):
+        """Return the current language."""
         return self.__get_shared_state()['current_lang']
 
     def __set_locale(self, lang):
