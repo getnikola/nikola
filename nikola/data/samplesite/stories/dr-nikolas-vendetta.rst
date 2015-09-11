@@ -1,23 +1,17 @@
-﻿A BID FOR FORTUNE OR; DR. NIKOLA'S VENDETTA
-===========================================
+﻿.. title: A BID FOR FORTUNE OR; DR. NIKOLA'S VENDETTA
+.. hyphenate: yeah
+.. template: book.tmpl
 
 By GUY BOOTHBY
 
 Author of "Dr. Nikola," "The Beautiful White Devil," etc., etc.
 
-PART I
-======
-
-
-
-PROLOGUE
---------
 
 DR. NIKOLA
 ~~~~~~~~~~
 
 
-.. sidebar:: The Project Gutenberg EBook of A Bid for Fortune, by Guy Boothby
+.. topic:: The Project Gutenberg EBook of A Bid for Fortune, by Guy Boothby
 
     This eBook is for the use of anyone anywhere at no cost and with
     almost no restrictions whatsoever.  You may copy it, give it away or
@@ -43,7 +37,17 @@ DR. NIKOLA
     LONDON, MELBOURNE AND TORONTO
     1918
 
+------------------------
 
+.. figure:: /images/illus_001.jpg
+   :class: illus1
+   :figclass: figure1
+
+PART I
+======
+
+PROLOGUE
+--------
 
 The manager of the new Imperial Restaurant on the Thames Embankment went
 into his luxurious private office and shut the door. Having done so, he
@@ -60,13 +64,6 @@ took a magnificent repeater watch from his waistcoat pocket and glanced
 at the dial; the hands stood at half-past seven. He immediately threw
 the letter on the table, and as he did so his anxiety found relief in
 words.
-
-.. class:: pull-left
-
-.. figure:: /images/illus_001.jpg
-
-   "Again she turned her face from me."
-
 
 "It's really the most extraordinary affair I ever had to do with," he
 remarked. "And as I've been in the business just three-and-thirty years

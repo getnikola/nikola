@@ -3,6 +3,8 @@ New in master
 
 Features
 --------
+
+* Better Template / JS / CSS demo in sample site.
 * Support UTF-8 paths and encoded links when the ``USE_SLUGIFY`` option
   is disabled. (Issue #2037)
 * Per-document hyphenation using "hyphenate" metadata flag.

@@ -1,0 +1,104 @@
+## -*- coding: utf-8 -*-
+<%namespace name="helper" file="post_helper.tmpl"/>
+<%namespace name="pheader" file="post_header.tmpl"/>
+<%namespace name="comments" file="comments_helper.tmpl"/>
+<%inherit file="post.tmpl"/>
+
+<%block name="extra_head">
+    ${parent.extra_head()}
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Flowtype.js/1.1.0/flowtype.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Gentium+Book+Basic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Rye' rel='stylesheet' type='text/css'>
+<style>
+        p {
+            text-align: justify;
+        }
+ .chapter {
+    width: 100%;
+    padding: 10px 10px;
+    -webkit-column-gap: 40px;
+    -webkit-column-width: 400px;
+    -webkit-column-count: 2;
+    -webkit-column-rule: 1px solid #ddd;
+    height: 800px;
+    font-family: 'Gentium Book Basic', serif;
+    }
+
+    div.frame {
+        overflow: hidden;
+        padding: 0;
+        margin: 0;
+    }
+    div.scrolling-cont {
+    overflow-x: scroll;
+    padding: 0;
+    margin: 0;
+    }
+
+    .illus1 {
+        margin-left: auto;
+        margin-right: auto;
+        max-height: 780px;
+        width: 100%;
+    }
+
+    .figure1 {
+    padding-top: 20%;
+    padding-bottom: 20%;
+    height: 80%;
+    }
+
+    h1, h2, h3, h4 {
+        text-align: center;
+        width: 100%;
+        font-family: 'Rye', cursive;
+    }
+
+    </style>
+</%block>
+
+<%block name="content">
+<article class="storypage" itemscope="itemscope" itemtype="http://schema.org/Article">
+    <div class="frame">
+    <div class="scrolling-cont" id="scrolling-cont" name="scrolling-cont">
+    <div class="e-content entry-content chapter" itemprop="articleBody text">
+    <header>
+        ${pheader.html_title()}
+        ${pheader.html_translations(post)}
+    </header>
+    ${post.text()}
+    </div>
+    </div>
+    </div>
+    %if site_has_comments and enable_comments and not post.meta('nocomments'):
+        <section class="comments">
+        <h2>${messages("Comments")}</h2>
+        ${comments.comment_form(post.permalink(absolute=True), post.title(), post.base_path)}
+        </section>
+    %endif
+    ${helper.mathjax_script(post)}
+    <script>
+    $('#scrolling-cont').flowtype({
+        minimum   : 500,
+        maximum   : 1200,
+        minFont   : 20,
+        maxFont   : 40,
+        fontRatio : 50
+    });
+    $(document).ready(function() {
+        var elem = $('#scrolling-cont');
+        elem.click(function(event) {
+            var x1 = elem.position().left;
+            var pw = elem.width() + 20;
+            var x2 = event.pageX;
+            if (x2-x1 < pw/2) {
+                pw = -pw;
+            }
+            elem.animate({scrollLeft: '+='+pw}, 500)
+        });
+    });
+    </script>
+</article>
+
+</%block>
