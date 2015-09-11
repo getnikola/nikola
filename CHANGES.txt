@@ -3,6 +3,7 @@ New in master
 
 Features
 --------
+
 * Support UTF-8 paths and encoded links when the ``USE_SLUGIFY`` option
   is disabled. (Issue #2037)
 * Per-document hyphenation using "hyphenate" metadata flag.
@@ -17,6 +18,7 @@ Features
 Bugfixes
 --------
 
+* Generate language-specific section links (Issue #2069)
 * Handle metadata in post files that start with a BOM (Issue #2059)
 * Handle error downloading bootswatches (Issue #2054)
 * Monitor plugins/ in ``nikola auto`` (Issue #2044)

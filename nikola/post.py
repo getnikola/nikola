@@ -745,11 +745,16 @@ class Post(object):
 
     def section_link(self, lang=None):
         """Return the link to the post's section."""
+        if lang is None:
+            lang = nikola.utils.LocaleBorg().current_lang
+
         slug = self.section_slug(lang)
+        t = os.path.normpath(self.translations[lang])
+        if t == '.':
+            t = ''
+        link = '/' + '/'.join(i for i in (t, slug) if i) + '/'
         if not self.pretty_urls:
-            link = urljoin('/' + slug + '/', self.index_file)
-        else:
-            link = '/' + slug + '/'
+            link = urljoin(link, self.index_file)
         link = utils.encodelink(link)
         return link
 
