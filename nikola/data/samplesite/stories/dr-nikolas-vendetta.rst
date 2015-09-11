@@ -46,6 +46,7 @@ PART I
 PROLOGUE
 --------
 
+
 The manager of the new Imperial Restaurant on the Thames Embankment went
 into his luxurious private office and shut the door. Having done so, he
 first scratched his chin reflectively, and then took a letter from the
