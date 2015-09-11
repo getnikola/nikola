@@ -1078,6 +1078,8 @@ class LocaleBorg(object):
         cls.initialized = True
 
     def __get_shared_state(self):
+        if not self.initialized:
+            raise LocaleBorgUninitializedException()
         shared_state = getattr(self.__thread_local, 'shared_state', None)
         if shared_state is None:
             shared_state = {'current_lang': self.__initial_lang}
