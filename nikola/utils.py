@@ -1074,8 +1074,15 @@ class LocaleBorg(object):
             encodings[lang] = encoding
 
         cls.encodings = encodings
-        cls.__shared_state['current_lang'] = initial_lang
+        cls.__initial_lang = initial_lang
         cls.initialized = True
+
+    def __get_shared_state(self):
+        shared_state = getattr(self.__thread_local, 'shared_state', None)
+        if shared_state is None:
+            shared_state = {'current_lang': self.__initial_lang}
+            self.__thread_local.shared_state = shared_state
+        return shared_state
 
     @classmethod
     def reset(cls):
@@ -1083,12 +1090,17 @@ class LocaleBorg(object):
 
         Used in testing to prevent leaking state between tests.
         """
+        import threading
+        cls.__thread_local = threading.local()
+        cls.__thread_lock = threading.Lock()
+
         cls.locales = {}
         cls.encodings = {}
-        cls.__shared_state = {'current_lang': None}
         cls.initialized = False
         cls.month_name_handlers = []
         cls.formatted_date_handlers = []
+        cls.thread_local = None
+        cls.thread_lock = None
 
     @classmethod
     def add_handler(cls, month_name_handler=None, formatted_date_handler=None):
@@ -1115,7 +1127,15 @@ class LocaleBorg(object):
         """Initialize."""
         if not self.initialized:
             raise LocaleBorgUninitializedException()
-        self.__dict__ = self.__shared_state
+
+    @property
+    def current_lang(self):
+        return self.__get_shared_state()['current_lang']
+
+    def __set_locale(self, lang):
+        """Set the locale for language lang without updating current_lang."""
+        locale_n = self.locales[lang]
+        locale.setlocale(locale.LC_ALL, locale_n)
 
     def set_locale(self, lang):
         """Set the locale for language lang, returns an empty string.
@@ -1124,58 +1144,64 @@ class LocaleBorg(object):
         in windows that cannot be guaranted.
         In either case, the locale encoding is available in cls.encodings[lang]
         """
-        # intentional non try-except: templates must ask locales with a lang,
-        # let the code explode here and not hide the point of failure
-        # Also, not guarded with an if lang==current_lang because calendar may
-        # put that out of sync
-        locale_n = self.locales[lang]
-        self.__shared_state['current_lang'] = lang
-        locale.setlocale(locale.LC_ALL, locale_n)
-        return ''
+        with self.__thread_lock:
+            # intentional non try-except: templates must ask locales with a lang,
+            # let the code explode here and not hide the point of failure
+            # Also, not guarded with an if lang==current_lang because calendar may
+            # put that out of sync
+            self.__set_locale(lang)
+            self.__get_shared_state()['current_lang'] = lang
+            return ''
 
     def get_month_name(self, month_no, lang):
         """Return localized month name in an unicode string."""
-        for handler in self.month_name_handlers:
-            res = handler(month_no, lang)
-            if res is not None:
-                return res
-        if sys.version_info[0] == 3:  # Python 3
-            with calendar.different_locale(self.locales[lang]):
-                s = calendar.month_name[month_no]
-            # for py3 s is unicode
-        else:  # Python 2
-            with calendar.TimeEncoding(self.locales[lang]):
-                s = calendar.month_name[month_no]
-            enc = self.encodings[lang]
-            if not enc:
-                enc = 'UTF-8'
+        # For thread-safety
+        with self.__thread_lock:
+            for handler in self.month_name_handlers:
+                res = handler(month_no, lang)
+                if res is not None:
+                    return res
+            if sys.version_info[0] == 3:  # Python 3
+                with calendar.different_locale(self.locales[lang]):
+                    s = calendar.month_name[month_no]
+                # for py3 s is unicode
+            else:  # Python 2
+                with calendar.TimeEncoding(self.locales[lang]):
+                    s = calendar.month_name[month_no]
+                enc = self.encodings[lang]
+                if not enc:
+                    enc = 'UTF-8'
 
-            s = s.decode(enc)
-        # paranoid about calendar ending in the wrong locale (windows)
-        self.set_locale(self.current_lang)
-        return s
+                s = s.decode(enc)
+            # paranoid about calendar ending in the wrong locale (windows)
+            self.__set_locale(self.current_lang)
+            return s
 
     def formatted_date(self, date_format, date):
         """Return the formatted date as unicode."""
-        fmt_date = None
-        # First check handlers
-        for handler in self.formatted_date_handlers:
-            fmt_date = handler(date_format, date, self.__shared_state['current_lang'])
-            if fmt_date is not None:
-                break
-        # If no handler was able to format the date, ask Python
-        if fmt_date is None:
-            if date_format == 'webiso':
-                # Formatted after RFC 3339 (web ISO 8501 profile) with Zulu
-                # zone desgignator for times in UTC and no microsecond precision.
-                fmt_date = date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
-            else:
-                fmt_date = date.strftime(date_format)
+        with self.__thread_lock:
+            current_lang = self.current_lang
+            # For thread-safety
+            self.__set_locale(current_lang)
+            fmt_date = None
+            # First check handlers
+            for handler in self.formatted_date_handlers:
+                fmt_date = handler(date_format, date, current_lang)
+                if fmt_date is not None:
+                    break
+            # If no handler was able to format the date, ask Python
+            if fmt_date is None:
+                if date_format == 'webiso':
+                    # Formatted after RFC 3339 (web ISO 8501 profile) with Zulu
+                    # zone desgignator for times in UTC and no microsecond precision.
+                    fmt_date = date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
+                else:
+                    fmt_date = date.strftime(date_format)
 
-        # Issue #383, this changes from py2 to py3
-        if isinstance(fmt_date, bytes_str):
-            fmt_date = fmt_date.decode('utf8')
-        return fmt_date
+            # Issue #383, this changes from py2 to py3
+            if isinstance(fmt_date, bytes_str):
+                fmt_date = fmt_date.decode('utf8')
+            return fmt_date
 
 
 class ExtendedRSS2(rss.RSS2):
