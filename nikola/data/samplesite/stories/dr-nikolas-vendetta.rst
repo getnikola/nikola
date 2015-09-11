@@ -462,4 +462,4 @@ Sailor* public-house, East India Dock Road."
 
 ------------------------
 
-You can read the rest of "A Bid For Fortune; Or, Dr. Nikola's Vendetta" at `Project Gutenberg <http://www.gutenberg.org/ebooks/21640>`__
+You can read the rest of "A Bid For Fortune; Or, Dr. Nikola's Vendetta" at `Archive.org <https://archive.org/stream/bidforfortune00bootiala#page/14/mode/2up>`__
