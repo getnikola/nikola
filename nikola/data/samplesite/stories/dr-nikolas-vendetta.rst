@@ -6,10 +6,9 @@ By GUY BOOTHBY
 
 Author of "Dr. Nikola," "The Beautiful White Devil," etc., etc.
 
-
-DR. NIKOLA
-~~~~~~~~~~
-
+.. figure:: /images/frontispiece.jpg
+   :class: front
+   :figclass: figure2
 
 .. topic:: The Project Gutenberg EBook of A Bid for Fortune, by Guy Boothby
 
@@ -36,8 +35,6 @@ DR. NIKOLA
     WARD, LOCK & CO., LIMITED
     LONDON, MELBOURNE AND TORONTO
     1918
-
-------------------------
 
 .. figure:: /images/illus_001.jpg
    :class: illus1

@@ -23,6 +23,7 @@
     -webkit-column-rule: 1px solid #ddd;
     height: 800px;
     font-family: 'Gentium Book Basic', serif;
+    font-color: #2d2e2e;
     }
 
     div.frame {
@@ -36,25 +37,41 @@
     margin: 0;
     }
 
-    .illus1 {
-        margin-left: auto;
-        margin-right: auto;
-        max-height: 780px;
-        width: 100%;
-    }
-
-    .figure1 {
-    padding-top: 20%;
-    padding-bottom: 20%;
-    height: 80%;
-    }
-
     h1, h2, h3, h4 {
         text-align: center;
         width: 100%;
         font-family: 'Rye', cursive;
+        font-size: 120%;
     }
 
+    h1 {
+        font-size: 150%;
+    }
+
+    .figure2 {
+    height: 40%;
+    padding-bottom: 20%;
+    }
+    .figure1 {
+    height: 800px;
+    padding:  0;
+    margin: 0;
+    }
+
+    .illus1, .front {
+        margin-left: auto;
+        margin-right: auto;
+        max-height: 500px;
+    }
+    .illus1 {
+        height: 700px;
+        width: auto;
+        margin: 0;
+    }
+
+    div.topic {
+        margin: 0;
+    }
     </style>
 </%block>
 
@@ -63,10 +80,7 @@
     <div class="frame">
     <div class="scrolling-cont" id="scrolling-cont" name="scrolling-cont">
     <div class="e-content entry-content chapter" itemprop="articleBody text">
-    <header>
-        ${pheader.html_title()}
-        ${pheader.html_translations(post)}
-    </header>
+    ${pheader.html_title()}
     ${post.text()}
     </div>
     </div>
