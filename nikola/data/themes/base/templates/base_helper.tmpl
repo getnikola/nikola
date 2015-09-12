@@ -25,7 +25,7 @@ lang="${lang}">
     <base href="${abs_link(permalink)}">
     % endif
     %if description:
-    <meta name="description" content="${description}">
+    <meta name="description" content="${description|h}">
     %endif
     <meta name="viewport" content="width=device-width">
     %if title == blog_title:

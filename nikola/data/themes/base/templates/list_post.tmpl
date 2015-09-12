@@ -4,12 +4,12 @@
 <%block name="content">
 <article class="listpage">
     <header>
-        <h1>${title}</h1>
+        <h1>${title|h}</h1>
     </header>
     %if posts:
     <ul class="postlist">
     % for post in posts:
-        <li><a href="${post.permalink()}" class="listtitle">${post.title()|h}</a> <time class="listdate" datetime="${post.formatted_date('webiso')}" title="${post.formatted_date(date_format)}">${post.formatted_date(date_format)}</time></li>
+        <li><a href="${post.permalink()}" class="listtitle">${post.title()|h}</a> <time class="listdate" datetime="${post.formatted_date('webiso')}" title="${post.formatted_date(date_format)|h}">${post.formatted_date(date_format)|h}</time></li>
     % endfor
     </ul>
     %else:

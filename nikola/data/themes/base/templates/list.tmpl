@@ -4,12 +4,12 @@
 <%block name="content">
 <article class="listpage">
     <header>
-        <h1>${title}</h1>
+        <h1>${title|h}</h1>
     </header>
     %if items:
     <ul class="postlist">
     % for text, link, count in items:
-        <li><a href="${link}">${text}</a>
+        <li><a href="${link}">${text|h}</a>
         % if count:
             (${count})
         % endif
