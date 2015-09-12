@@ -6,7 +6,7 @@
     {{ messages('Subcategories:') }}
     <ul>
         {% for name, link in subcategories %}
-        <li><a href="{{ link }}">{{ name }}</a></li>
+        <li><a href="{{ link }}">{{ name|e }}</a></li>
         {% endfor %}
     </ul>
     {% endif %}
@@ -16,9 +16,9 @@
     {{ super() }}
     {% if translations|length > 1 and generate_atom %}
         {% for language in translations|sort %}
-            <link rel="alternate" type="application/atom+xml" title="Atom for the {{ tag }} section ({{ language }})" href="{{ _link(kind + "_atom", tag, language) }}">
+            <link rel="alternate" type="application/atom+xml" title="Atom for the {{ tag|e }} section ({{ language }})" href="{{ _link(kind + "_atom", tag, language) }}">
         {% endfor %}
     {% elif generate_atom %}
-        <link rel="alternate" type="application/atom+xml" title="Atom for the {{ tag }} section" href="{{ _link("tag" + "_atom", tag) }}">
+        <link rel="alternate" type="application/atom+xml" title="Atom for the {{ tag|e }} section" href="{{ _link("tag" + "_atom", tag) }}">
     {% endif %}
 {% endblock %}

@@ -6,7 +6,7 @@
     <ul class="post-list">
         {% for post in posts %}
             <li class="post-list-item">
-	        {{ post.formatted_date(date_format) }}
+	        {{ post.formatted_date(date_format)|e }}
 		&nbsp;
 		<a href="{{ post.permalink(lang) }}">{{ post.title(lang)|e }}</a>
 	    </li>

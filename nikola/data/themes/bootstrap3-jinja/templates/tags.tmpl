@@ -2,7 +2,7 @@
 {% extends 'base.tmpl' %}
 
 {% block content %}
-<h1>{{ title }}</h1>
+<h1>{{ title|e }}</h1>
 {% if cat_items %}
     {% if items %}
         <h2>{{ messages("Categories") }}</h2>
@@ -11,7 +11,7 @@
         {% for i in range(indent_change_before) %}
             <ul class="list-inline">
         {% endfor %}
-        <li><a class="reference badge" href="{{ link }}">{{ text }}</a>
+        <li><a class="reference badge" href="{{ link }}">{{ text|e }}</a>
         {% if indent_change_after <= 0 %}
             </li>
         {% endif %}
@@ -30,7 +30,7 @@
     <ul class="list-inline">
     {% for text, link in items %}
         {% if text not in hidden_tags %}
-            <li><a class="reference badge" href="{{ link }}">{{ text }}</a></li>
+            <li><a class="reference badge" href="{{ link }}">{{ text|e }}</a></li>
         {% endif %}
     {% endfor %}
     </ul>
