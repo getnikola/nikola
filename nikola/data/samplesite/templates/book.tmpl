@@ -9,61 +9,67 @@
     <script src="/assets/js/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/Flowtype.js/1.1.0/flowtype.min.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Gentium+Book+Basic' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Rye' rel='stylesheet' type='text/css'>
-<style>
+    <style>
         p {
             text-align: justify;
         }
- .chapter {
-    width: 100%;
-    padding: 10px 10px;
-    -webkit-column-gap: 40px;
-    -webkit-column-width: 400px;
-    -webkit-column-count: 2;
-    -webkit-column-rule: 1px solid #ddd;
-    height: 90vh;
-    font-family: 'Gentium Book Basic', serif;
-    font-color: #2d2e2e;
-    }
-
-    div.frame {
-        overflow: hidden;
-        padding: 0;
-        margin: 0;
-    }
-    div.scrolling-cont {
-    overflow-x: scroll;
-    padding: 0;
-    margin: 0;
-    }
-
-    h1, h2, h3, h4 {
-        text-align: center;
-        width: 100%;
-        font-family: 'Rye', cursive;
-        font-size: 120%;
-    }
-
-    h1 {
-        font-size: 150%;
-    }
-
-    .figure {
-        height: 90vh;
-        padding-top:  10vh;
-        margin: 0;
-    }
-
-    .illus1, .front {
-        margin-left: auto;
-        margin-right: auto;
-        max-height: 70vh;
-        width: 100%;
-    }
-
-    div.topic {
-        margin: 0;
-    }
+        .smallcaps {
+            font-variant: small-caps;
+        }
+        .chapter {
+            width: 100%;
+            padding: 10px 10px;
+            -webkit-column-gap: 40px;
+            -webkit-column-width: 400px;
+            -webkit-column-count: 2;
+            -webkit-column-rule: 1px solid #ddd;
+            height: 90vh;
+            font-family: 'Gentium Book Basic', serif;
+            font-color: #2d2e2e;
+            font-weight: 500;
+        }
+        div.frame {
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+        }
+        div.scrolling-cont {
+            overflow-x: scroll;
+            padding: 0;
+            margin: 0;
+        }
+        h1,
+        h2,
+        h3,
+        h4 {
+            text-align: center;
+            width: 100%;
+            font-family: 'Gentium Book Basic', serif;
+            font-size: 120%;
+            font-weight: 900;
+        }
+        h1 {
+            font-size: 150%;
+        }
+        .figure {
+            height: 88vh;
+            margin: 0;
+        }
+        .illus1,
+        .front {
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;
+        }
+        div.topic {
+            margin: 0;
+        }
+        div.section>p {
+            text-indent: 1em;
+            margin-bottom: 0;
+        }
     </style>
 </%block>
 

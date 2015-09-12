@@ -21,7 +21,7 @@ Author of "Dr. Nikola," "The Beautiful White Devil," etc., etc.
     Title: A Bid for Fortune
     or Dr. Nikola's Vendetta
 
-    Author: Guy Boothby
+    Author: `Guy Boothby <http://www.gutenberg.org/ebooks/author/3587>`__
 
     Release Date: May 29, 2007 [EBook #21640]
 
@@ -46,8 +46,10 @@ PART I
 PROLOGUE
 --------
 
+.. role:: smallcaps
 
-The manager of the new Imperial Restaurant on the Thames Embankment went
+
+:smallcaps:`The` manager of the new Imperial Restaurant on the Thames Embankment went
 into his luxurious private office and shut the door. Having done so, he
 first scratched his chin reflectively, and then took a letter from the
 drawer in which it had reposed for more than two months and perused it
@@ -462,4 +464,4 @@ Sailor* public-house, East India Dock Road."
 
 ------------------------
 
-You can read the rest of "A Bid For Fortune; Or, Dr. Nikola's Vendetta" at `Archive.org <https://archive.org/stream/bidforfortune00bootiala#page/14/mode/2up>`__
+You can read the rest of "A Bid For Fortune; Or, Dr. Nikola's Vendetta" at `Project Gutenberg <http://www.gutenberg.org/ebooks/21640>`__
