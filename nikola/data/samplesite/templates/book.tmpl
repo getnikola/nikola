@@ -18,7 +18,7 @@
         }
         .chapter {
             width: 100%;
-            padding: 10px 10px;
+            padding: 10px;
             -webkit-column-gap: 40px;
             -webkit-column-width: 400px;
             -webkit-column-count: 2;
@@ -51,6 +51,11 @@
         h1 {
             font-size: 150%;
         }
+
+        .subtitle {
+            text-align: center;
+            width: 100%;
+        }
         .figure {
             height: 88vh;
             margin: 0;
@@ -78,7 +83,7 @@
     <div class="frame">
     <div class="scrolling-cont" id="scrolling-cont" name="scrolling-cont">
     <div class="e-content entry-content chapter" itemprop="articleBody text">
-    ${pheader.html_title()}
+    <h1>${post.title()}</h1>
     ${post.text()}
     </div>
     </div>
@@ -91,25 +96,27 @@
     %endif
     ${helper.mathjax_script(post)}
     <script>
-    $('#scrolling-cont').flowtype({
-        minimum   : 500,
-        maximum   : 1200,
-        minFont   : 20,
-        maxFont   : 40,
-        fontRatio : 50
-    });
-    $(document).ready(function() {
-        var elem = $('#scrolling-cont');
-        elem.click(function(event) {
-            var x1 = elem.position().left;
-            var pw = elem.width() + 20;
-            var x2 = event.pageX;
-            if (x2-x1 < pw/2) {
-                pw = -pw;
-            }
-            elem.animate({scrollLeft: '+='+pw}, 500)
+        $('#scrolling-cont').flowtype({
+            minimum: 500,
+            maximum: 1200,
+            minFont: 20,
+            maxFont: 40,
+            fontRatio: 50
         });
-    });
+        $(document).ready(function() {
+            var elem = $('#scrolling-cont');
+            elem.click(function(event) {
+                var x1 = elem.position().left;
+                var pw = elem.width() + 20;
+                var x2 = event.pageX;
+                if (x2 - x1 < pw / 2) {
+                    pw = -pw;
+                }
+                elem.animate({
+                    scrollLeft: '+=' + pw
+                }, 500)
+            });
+        });
     </script>
 </article>
 

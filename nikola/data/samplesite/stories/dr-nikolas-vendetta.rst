@@ -2,7 +2,9 @@
 .. hyphenate: yeah
 .. template: book.tmpl
 
-By GUY BOOTHBY
+.. class:: subtitle
+
+By `GUY BOOTHBY <http://www.gutenberg.org/ebooks/author/3587>`__
 
 Author of "Dr. Nikola," "The Beautiful White Devil," etc., etc.
 
