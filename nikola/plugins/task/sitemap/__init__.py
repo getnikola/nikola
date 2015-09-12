@@ -147,7 +147,6 @@ class Sitemap(LateTask):
                     continue  # Totally empty, not on sitemap
                 path = os.path.relpath(root, output)
                 # ignore the current directory.
-                #path = (path.replace(os.sep, '/') + '/').replace('./', '')
                 if path == '.':
                     path = ''
                 else:
