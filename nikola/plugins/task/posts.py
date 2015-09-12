@@ -116,7 +116,7 @@ class RenderPosts(Task):
                             pass
                     else:
                         flist.append(f)
-                yield utils.apply_filters(task, {os.path.splitext(dest): flist})
+                yield utils.apply_filters(task, {os.path.splitext(dest)[-1]: flist})
 
     def dependence_on_timeline(self, post, lang):
         """Check if a post depends on the timeline."""
