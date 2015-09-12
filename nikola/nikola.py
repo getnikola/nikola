@@ -1800,6 +1800,7 @@ class Nikola(object):
             link.set("href", utils.encodelink(link_href))
             return link
 
+        utils.LocaleBorg().set_locale(lang)
         deps = []
         uptodate_deps = []
         for post in posts:
@@ -1885,7 +1886,7 @@ class Nikola(object):
                 # FIXME: this is duplicated with code in Post.text() and generic_rss_renderer
                 try:
                     doc = lxml.html.document_fromstring(data)
-                    doc.rewrite_links(lambda dst: self.url_replacer(post.permalink(), dst, lang, 'absolute'))
+                    doc.rewrite_links(lambda dst: self.url_replacer(post.permalink(lang), dst, lang, 'absolute'))
                     try:
                         body = doc.body
                         data = (body.text or '') + ''.join(
@@ -1922,7 +1923,7 @@ class Nikola(object):
                 entry_content.set("type", "xhtml")
                 entry_content_nsdiv = lxml.etree.SubElement(entry_content, "{http://www.w3.org/1999/xhtml}div")
                 entry_content_nsdiv.text = data
-            for category in post.tags:
+            for category in post.tags_for_language(lang):
                 entry_category = lxml.etree.SubElement(entry_root, "category")
                 entry_category.set("term", utils.slugify(category))
                 entry_category.set("label", category)
