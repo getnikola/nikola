@@ -3,6 +3,8 @@ New in master
 
 Features
 --------
+
+* New normalize_html filter
 * Support UTF-8 paths and encoded links when the ``USE_SLUGIFY`` option
   is disabled. (Issue #2037)
 * Per-document hyphenation using "hyphenate" metadata flag.
@@ -17,6 +19,7 @@ Features
 Bugfixes
 --------
 
+* Make typogrify filter work when applied from metadata (Issue #2064)
 * Handle metadata in post files that start with a BOM (Issue #2059)
 * Handle error downloading bootswatches (Issue #2054)
 * Monitor plugins/ in ``nikola auto`` (Issue #2044)
