@@ -310,7 +310,7 @@ def jsminify(data):
 def _normalize_html(data):
     """Pass HTML through LXML to clean it up, if possible."""
     try:
-        data = lxml.html.tostring(lxml.html.fragment_fromstring(data), encoding='unicode')
+        data = lxml.html.tostring(lxml.html.fromstring(data), encoding='unicode')
     except:
         pass
     return data
