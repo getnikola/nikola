@@ -19,6 +19,7 @@ Features
 Bugfixes
 --------
 
+* Locale is now threadsafe, avoid races in threaded builds (Issue #2071)
 * Make typogrify filter work when applied from metadata (Issue #2064)
 * Handle metadata in post files that start with a BOM (Issue #2059)
 * Handle error downloading bootswatches (Issue #2054)
