@@ -769,7 +769,7 @@ class Post(object):
 
         if not self.config['POSTS_SECTION_FROM_META']:
             dest = self.destination_path(lang)
-            if dest[-(1 + len(self.index_file)):] == '/' + self.index_file:
+            if dest[-(1 + len(self.index_file)):] == os.sep + self.index_file:
                 dest = dest[:-(1 + len(self.index_file))]
             dirname = os.path.dirname(dest)
             slug = dest.split(os.sep)
