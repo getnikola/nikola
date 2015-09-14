@@ -1362,6 +1362,7 @@ class Nikola(object):
         platform's separator.
         (ex: "archive\index.html")
         """
+        import pdb; pdb.set_trace()
         if lang is None:
             lang = utils.LocaleBorg().current_lang
 
