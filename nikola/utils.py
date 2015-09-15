@@ -968,12 +968,14 @@ def get_crumbs(path, is_file=False, index_folder=None):
     return list(reversed(_crumbs))
 
 
-def get_asset_path(path, themes, files_folders={'files': ''}, _themes_dir='themes'):
+def get_asset_path(path, themes, files_folders={'files': ''}, _themes_dir='themes', output_dir='output'):
     """Return the "real", absolute path to the asset.
 
     By default, it checks which theme provides the asset.
     If the asset is not provided by a theme, then it will be checked for
     in the FILES_FOLDERS.
+    If it's not provided by either, it will be chacked in output, where
+    it may have been created by another plugin.
 
     >>> print(get_asset_path('assets/css/rst.css', ['bootstrap3', 'base']))
     /.../nikola/data/themes/base/assets/css/rst.css
@@ -999,6 +1001,10 @@ def get_asset_path(path, themes, files_folders={'files': ''}, _themes_dir='theme
         candidate = os.path.abspath(os.path.join(src, path))
         if os.path.isfile(candidate):
             return candidate
+
+    candidate = os.path.join(output_dir, path)
+    if os.path.isfile(candidate):
+        return candidate
 
     # whatever!
     return None
