@@ -19,6 +19,7 @@ Features
 Bugfixes
 --------
 
+* Rebuild pages when user changes POST_SECTION_COLORS (Issue #2066)
 * Look for bundle assets also in output/, allowing bundling of files 
   created by plugins (Issue #1370)
 * In listings, if lexer is not specified, use literal (Issue #2078)
