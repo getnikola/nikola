@@ -3,12 +3,14 @@ docs/sphinx/creating-a-theme.txt
 docs/sphinx/extending.txt
 docs/sphinx/internals.txt
 docs/sphinx/manual.txt
+docs/sphinx/path_handlers.txt
 docs/sphinx/social_buttons.txt
 docs/sphinx/theming.txt
 nikola/data/samplesite/stories/creating-a-theme.rst
 nikola/data/samplesite/stories/extending.txt
 nikola/data/samplesite/stories/internals.txt
 nikola/data/samplesite/stories/manual.rst
+nikola/data/samplesite/stories/path_handlers.txt
 nikola/data/samplesite/stories/social_buttons.txt
 nikola/data/samplesite/stories/theming.rst
 nikola/data/symlink-test-link.txt
