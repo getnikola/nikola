@@ -227,7 +227,6 @@
                 // Create a new row div, add class, append the htmls and insert the flowy items
                 var $row = $('<div>').addClass(settings.rowClassName);
                 var slack = $this[0].clientWidth - rowData.width - 2 * settings.padding
-                console.log('==>', slack)
                 for (i = 0; i < rowData.data.length; i++) {
                     var displayData = rowData.data[i];
                     // Get the HTML object from custom render function passed as argument
