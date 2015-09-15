@@ -945,7 +945,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['hidden_categories'] = self.config.get('HIDDEN_CATEGORIES')
         self._GLOBAL_CONTEXT['hidden_authors'] = self.config.get('HIDDEN_AUTHORS')
         self._GLOBAL_CONTEXT['url_replacer'] = self.url_replacer
-        self._GLOBAL_CONTEXT['post_section_colors'] = self.config.get['POST_SECTION_COLORS']
+        self._GLOBAL_CONTEXT['post_section_colors'] = self.config.get('POST_SECTION_COLORS')
 
         # IPython theme configuration.  If a website has ipynb enabled in post_pages
         # we should enable the IPython CSS (leaving that up to the theme itself).
