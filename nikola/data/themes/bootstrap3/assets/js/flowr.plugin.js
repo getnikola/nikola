@@ -235,6 +235,7 @@
 					displayObject
 						.css( 'width', displayData.width )
 						.css( 'height', displayData.height )
+						.css( 'margin-bottom', settings.padding + "px" )
 						.css( 'margin-left', i==0 ? '0' : settings.padding + "px" );	//TODO:Refactor
 					$row.append( displayObject );
 
