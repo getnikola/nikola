@@ -1,6 +1,7 @@
 ﻿.. title: A BID FOR FORTUNE OR; DR. NIKOLA'S VENDETTA
-.. hyphenate: yeah
 .. template: book.tmpl
+.. hyphenate: yes
+.. filters: filters.typogrify
 
 .. class:: subtitle
 
@@ -9,8 +10,7 @@ By `GUY BOOTHBY <http://www.gutenberg.org/ebooks/author/3587>`__
 Author of "Dr. Nikola," "The Beautiful White Devil," etc., etc.
 
 .. figure:: /images/frontispiece.jpg
-   :class: front
-   :figclass: figure2
+   :class: bookfig
 
 .. topic:: The Project Gutenberg EBook of A Bid for Fortune, by Guy Boothby
 
@@ -39,8 +39,7 @@ Author of "Dr. Nikola," "The Beautiful White Devil," etc., etc.
     1918
 
 .. figure:: /images/illus_001.jpg
-   :class: illus1
-   :figclass: figure1
+   :class: bookfig
 
 PART I
 ======
@@ -466,4 +465,4 @@ Sailor* public-house, East India Dock Road."
 
 ------------------------
 
-You can read the rest of "A Bid For Fortune; Or, Dr. Nikola's Vendetta" at `Project Gutenberg <http://www.gutenberg.org/ebooks/21640>`__
+You can read the rest of "A Bid For Fortune; Or, Dr. Nikola's Vendetta" at `Open Library <https://archive.org/stream/bidforfortunenov00bootiala#page/12/mode/2up>`__
