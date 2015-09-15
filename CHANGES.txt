@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Better Template / JS / CSS demo in sample site.
 * New normalize_html filter
 * Support UTF-8 paths and encoded links when the ``USE_SLUGIFY`` option
   is disabled. (Issue #2037)

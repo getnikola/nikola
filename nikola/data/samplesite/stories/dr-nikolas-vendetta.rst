@@ -1,23 +1,18 @@
-﻿A BID FOR FORTUNE OR; DR. NIKOLA'S VENDETTA
-===========================================
+﻿.. title: A BID FOR FORTUNE OR; DR. NIKOLA'S VENDETTA
+.. template: book.tmpl
+.. hyphenate: yes
+.. filters: filters.typogrify
 
-By GUY BOOTHBY
+.. class:: subtitle
+
+By `GUY BOOTHBY <http://www.gutenberg.org/ebooks/author/3587>`__
 
 Author of "Dr. Nikola," "The Beautiful White Devil," etc., etc.
 
-PART I
-======
+.. figure:: /images/frontispiece.jpg
+   :class: bookfig
 
-
-
-PROLOGUE
---------
-
-DR. NIKOLA
-~~~~~~~~~~
-
-
-.. sidebar:: The Project Gutenberg EBook of A Bid for Fortune, by Guy Boothby
+.. topic:: The Project Gutenberg EBook of A Bid for Fortune, by Guy Boothby
 
     This eBook is for the use of anyone anywhere at no cost and with
     almost no restrictions whatsoever.  You may copy it, give it away or
@@ -28,7 +23,7 @@ DR. NIKOLA
     Title: A Bid for Fortune
     or Dr. Nikola's Vendetta
 
-    Author: Guy Boothby
+    Author: `Guy Boothby <http://www.gutenberg.org/ebooks/author/3587>`__
 
     Release Date: May 29, 2007 [EBook #21640]
 
@@ -43,9 +38,19 @@ DR. NIKOLA
     LONDON, MELBOURNE AND TORONTO
     1918
 
+.. figure:: /images/illus_001.jpg
+   :class: bookfig
+
+PART I
+======
+
+PROLOGUE
+--------
+
+.. role:: smallcaps
 
 
-The manager of the new Imperial Restaurant on the Thames Embankment went
+:smallcaps:`The` manager of the new Imperial Restaurant on the Thames Embankment went
 into his luxurious private office and shut the door. Having done so, he
 first scratched his chin reflectively, and then took a letter from the
 drawer in which it had reposed for more than two months and perused it
@@ -60,13 +65,6 @@ took a magnificent repeater watch from his waistcoat pocket and glanced
 at the dial; the hands stood at half-past seven. He immediately threw
 the letter on the table, and as he did so his anxiety found relief in
 words.
-
-.. class:: pull-left
-
-.. figure:: /images/illus_001.jpg
-
-   "Again she turned her face from me."
-
 
 "It's really the most extraordinary affair I ever had to do with," he
 remarked. "And as I've been in the business just three-and-thirty years
@@ -467,4 +465,4 @@ Sailor* public-house, East India Dock Road."
 
 ------------------------
 
-You can read the rest of "A Bid For Fortune; Or, Dr. Nikola's Vendetta" at `Project Gutenberg <http://www.gutenberg.org/ebooks/21640>`__
+You can read the rest of "A Bid For Fortune; Or, Dr. Nikola's Vendetta" at `Open Library <https://archive.org/stream/bidforfortunenov00bootiala#page/12/mode/2up>`__
