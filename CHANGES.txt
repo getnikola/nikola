@@ -19,9 +19,10 @@ Features
 Bugfixes
 --------
 
+* Generate language-specific section links (Issue #2069)
 * Fix index/page task conflict caused by \ as path separator (Issue #2079)
 * Rebuild pages when user changes POST_SECTION_COLORS (Issue #2066)
-* Look for bundle assets also in output/, allowing bundling of files 
+* Look for bundle assets also in output/, allowing bundling of files
   created by plugins (Issue #1370)
 * In listings, if lexer is not specified, use literal (Issue #2078)
 * Remove bogus ambiguity on listing links (Issue #2080)
