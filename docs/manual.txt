@@ -454,6 +454,14 @@ and ``PAGES`` configuration options:
         ("stories/*.rst", "stories", "story.tmpl"),
     )
 
+.. note:: POSTS and PAGES are not flat!
+
+   Even if the syntax may suggest you can't, you can create any directory structure you want
+   inside ``posts/`` or ``stories/`` and it will be reflected in the output. For example,
+   ``posts/foo/bar.txt`` would produce  ``output/posts/foo/bar.html``, assuming the slug is also ``bar``.
+
+   If you have ``PRETTY_URLS`` enabled, that would be ``output/posts/foo/bar/index.html``.
+
 ``new_post`` will use the *first* path in ``POSTS`` (or ``PAGES`` if ``-p`` is
 supplied) that ends with the extension of your desired markup format (as
 defined in ``COMPILERS`` in ``conf.py``) as the directory that the new post will be
