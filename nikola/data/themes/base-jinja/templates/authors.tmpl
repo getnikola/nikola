@@ -8,7 +8,7 @@
         <ul class="postlist">
         {% for text, link in items %}
             {% if text not in hidden_authors %}
-                <li><a class="reference listtitle" href="{{ link }}">{{ text }}</a></li>
+                <li><a class="reference listtitle" href="{{ link }}">{{ text|e }}</a></li>
             {% endif %}
         {% endfor %}
         </ul>

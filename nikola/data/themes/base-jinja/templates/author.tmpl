@@ -5,10 +5,10 @@
     {{ super() }}
     {% if translations|length > 1 and generate_rss %}
         {% for language in translations|sort %}
-            <link rel="alternate" type="application/rss+xml" title="RSS for {{ kind }} {{ author }} ({{ language }})" href="{{ _link(kind + "_rss", author, language) }}">
+            <link rel="alternate" type="application/rss+xml" title="RSS for {{ kind }} {{ author|e }} ({{ language }})" href="{{ _link(kind + "_rss", author, language) }}">
         {% endfor %}
     {% elif generate_rss %}
-        <link rel="alternate" type="application/rss+xml" title="RSS for {{ kind }} {{ author }}" href="{{ _link(kind + "_rss", author) }}">
+        <link rel="alternate" type="application/rss+xml" title="RSS for {{ kind }} {{ author|e }}" href="{{ _link(kind + "_rss", author) }}">
     {% endif %}
 {% endblock %}
 
@@ -18,7 +18,7 @@
     <header>
         <h1>{{ title|e }}</h1>
         {% if description %}
-        <p>{{ description }}</p>
+        <p>{{ description|e }}</p>
         {% endif %}
         <div class="metadata">
             {% if translations|length > 1 and generate_rss %}
@@ -35,7 +35,7 @@
     {% if posts %}
     <ul class="postlist">
     {% for post in posts %}
-        <li><a href="{{ post.permalink() }}" class="listtitle">{{ post.title()|e }}</a><time class="listdate" datetime="{{ post.formatted_date('webiso') }}" title="{{ post.formatted_date(date_format) }}">{{ post.formatted_date(date_format) }}</time></li>
+        <li><a href="{{ post.permalink() }}" class="listtitle">{{ post.title()|e }}</a><time class="listdate" datetime="{{ post.formatted_date('webiso') }}" title="{{ post.formatted_date(date_format)|e }}">{{ post.formatted_date(date_format)|e }}</time></li>
     {% endfor %}
     </ul>
     {% endif %}

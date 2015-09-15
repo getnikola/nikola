@@ -1351,6 +1351,10 @@ typogrify_sans_widont
 minify_lines
    **THIS FILTER HAS BEEN TURNED INTO A NOOP** and currently does nothing.
 
+normalize_html
+   Pass HTML through LXML to normalize it. For example, it will resolve ``&quot;`` to actual
+   quotes. Usually not needed.
+
 yui_compressor
    Compress CSS/JavaScript using `YUI compressor <http://yui.github.io/yuicompressor/>`_
 

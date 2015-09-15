@@ -17,8 +17,8 @@
     {% if folders %}
     <ul>
     {% for folder, ftitle in folders %}
-        <li><a href="{{ folder }}"><i
-        class="icon-folder-open"></i>&nbsp;{{ ftitle }}</a></li>
+        <li><a href="{{ folder|urlencode }}"><i
+        class="icon-folder-open"></i>&nbsp;{{ ftitle|e }}</a></li>
     {% endfor %}
     </ul>
     {% endif %}
@@ -26,7 +26,7 @@
     <ul class="thumbnails">
         {% for image in photo_array %}
             <li><a href="{{ image['url'] }}" class="thumbnail image-reference" title="{{ image['title'] }}">
-                <img src="{{ image['url_thumb'] }}" alt="{{ image['title'] }}" /></a>
+                <img src="{{ image['url_thumb'] }}" alt="{{ image['title']|e }}" /></a>
         {% endfor %}
     </ul>
     {% endif %}

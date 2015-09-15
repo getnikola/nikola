@@ -4,7 +4,7 @@
 <%block name="content">
 <article class="tagindex">
     <header>
-        <h1>${title}</h1>
+        <h1>${title|h}</h1>
     </header>
     % if cat_items:
         % if items:
@@ -33,7 +33,7 @@
         <ul class="postlist">
         % for text, link in items:
             % if text not in hidden_tags:
-                <li><a class="reference listtitle" href="${link}">${text}</a></li>
+                <li><a class="reference listtitle" href="${link}">${text|h}</a></li>
             % endif
         % endfor
         </ul>

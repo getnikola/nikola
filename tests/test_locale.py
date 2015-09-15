@@ -214,8 +214,8 @@ class TestLocaleBorg(unittest.TestCase):
     def test_services_reject_dumb_wrong_call(self):
         lang_11, loc_11 = LocaleSupportInTesting.langlocales['default']
         nikola.utils.LocaleBorg.reset()
+        self.assertRaises(Exception, nikola.utils.LocaleBorg)
         self.assertRaises(Exception, nikola.utils.LocaleBorg.set_locale, lang_11)
-        self.assertRaises(Exception, getattr, nikola.utils.LocaleBorg, 'current_lang')
 
     def test_set_locale_raises_on_invalid_lang(self):
         lang_11, loc_11 = LocaleSupportInTesting.langlocales['default']

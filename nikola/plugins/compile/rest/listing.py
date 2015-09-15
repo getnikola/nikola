@@ -171,7 +171,12 @@ class Listing(Include):
         """Run listing directive."""
         _fname = self.arguments.pop(0)
         fname = _fname.replace('/', os.sep)
-        lang = self.arguments.pop(0)
+        try:
+            lang = self.arguments.pop(0)
+            self.options['code'] = lang
+        except IndexError:
+            self.options['literal'] = True
+
         if len(self.folders) == 1:
             listings_folder = next(iter(self.folders.keys()))
             if fname.startswith(listings_folder):
@@ -181,7 +186,6 @@ class Listing(Include):
         else:
             fpath = os.path.join(fname)  # must be new syntax: specify folder name
         self.arguments.insert(0, fpath)
-        self.options['code'] = lang
         if 'linenos' in self.options:
             self.options['number-lines'] = self.options['linenos']
         with io.open(fpath, 'r+', encoding='utf8') as fileobject:

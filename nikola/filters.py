@@ -34,6 +34,7 @@ import subprocess
 import tempfile
 import shlex
 
+import lxml
 try:
     import typogrify.filters as typo
 except ImportError:
@@ -236,6 +237,7 @@ def typogrify(data):
     if typo is None:
         req_missing(['typogrify'], 'use the typogrify filter')
 
+    data = _normalize_html(data)
     data = typo.amp(data)
     data = typo.widont(data)
     data = typo.smartypants(data)
@@ -253,6 +255,7 @@ def typogrify_sans_widont(data):
     if typo is None:
         req_missing(['typogrify'], 'use the typogrify_sans_widont filter')
 
+    data = _normalize_html(data)
     data = typo.amp(data)
     data = typo.smartypants(data)
     # Disabled because of typogrify bug where it breaks <title>
@@ -302,3 +305,15 @@ def jsminify(data):
     except Exception as exc:
         LOGGER.error("can't use javascript-minifier.com: {}", exc)
         return data
+
+
+def _normalize_html(data):
+    """Pass HTML through LXML to clean it up, if possible."""
+    try:
+        data = lxml.html.tostring(lxml.html.fromstring(data), encoding='unicode')
+    except:
+        pass
+    return data
+
+
+normalize_html = apply_to_text_file(_normalize_html)
