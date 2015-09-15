@@ -21,6 +21,7 @@ Bugfixes
 
 * Look for bundle assets also in output/, allowing bundling of files 
   created by plugins (Issue #1370)
+* In listings, if lexer is not specified, use literal (Issue #2078)
 * Remove bogus ambiguity on listing links (Issue #2080)
 * Unix-slash caused conflict in windows (Issue #2079)
 * Locale is now threadsafe, avoid races in threaded builds (Issue #2071)
