@@ -142,6 +142,7 @@ class Sitemap(LateTask):
 
         def scan_locs():
             """Scan site locations."""
+            robots_rules = parse_robots_exclusions(kw['robots_exclusions'])
             for root, dirs, files in os.walk(output, followlinks=True):
                 if not dirs and not files and not kw['sitemap_include_fileless_dirs']:
                     continue  # Totally empty, not on sitemap
@@ -174,8 +175,12 @@ class Sitemap(LateTask):
                         if path.endswith(kw['index_file']) and kw['strip_indexes']:
                             # ignore index files when stripping urls
                             continue
-                        if not robot_fetch(path):
-                            continue
+                        if robots_rules:
+                            abspath = '/' + path
+                            if sys.version_info[0] == 2:
+                                abspath = abspath.encode('utf-8')
+                            if not robots_rules.can_fetch('*', abspath):
+                                continue
 
                         # read in binary mode to make ancient files work
                         fh = open(real_path, 'rb')
@@ -223,18 +228,19 @@ class Sitemap(LateTask):
                                 alternates.append(alternates_format.format(lang, alt_url))
                         urlset[loc] = loc_format.format(encodelink(loc), lastmod, '\n'.join(alternates))
 
-        def robot_fetch(path):
-            """Check if robots can fetch a file."""
-            for rule in kw["robots_exclusions"]:
+        def parse_robots_exclusions(exclusions):
+            """Parse rules to check fetchable."""
+            rules = []
+            for rule in exclusions:
+                rules.append('Disallow: {0}'.format(rule))
+            if len(rules):
                 robot = robotparser.RobotFileParser()
-                robot.parse(["User-Agent: *", "Disallow: {0}".format(rule)])
-                if sys.version_info[0] == 3:
-                    if not robot.can_fetch("*", '/' + path):
-                        return False  # not robot food
-                else:
-                    if not robot.can_fetch("*", ('/' + path).encode('utf-8')):
-                        return False  # not robot food
-            return True
+                rules = ['User-Agent: *'] + rules
+                if sys.version_info[0] == 2:
+                    rules = [ line.encode('utf-8') for line in rules ]
+                robot.parse(rules)
+                return robot
+            return None
 
         def write_sitemap():
             """Write sitemap to file."""
