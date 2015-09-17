@@ -1,3 +1,14 @@
+New in Master
+=============
+
+Features
+--------
+
+Bugfixes
+--------
+
+* /robots.txt was never being built (Issue #2098)
+
 New in v7.7.1
 =============
 
