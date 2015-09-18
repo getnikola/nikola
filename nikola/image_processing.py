@@ -29,6 +29,9 @@
 from __future__ import unicode_literals
 import datetime
 import os
+import lxml
+import re
+import gzip
 
 from nikola import utils
 
@@ -53,7 +56,7 @@ class ImageProcessor(object):
     def resize_image(self, src, dst, max_size, bigger_panoramas=True):
         """Make a copy of the image in the requested size."""
         if not Image or os.path.splitext(src)[1] in ['.svg', '.svgz']:
-            utils.copy_file(src, dst)
+            self.resize_svg(src, dst,  max_size, bigger_panoramas)
             return
         im = Image.open(src)
         w, h = im.size
@@ -88,6 +91,47 @@ class ImageProcessor(object):
                                  "image as thumbnail ({1})".format(src, e))
                 utils.copy_file(src, dst)
         else:  # Image is small
+            utils.copy_file(src, dst)
+
+    def resize_svg(self, src, dst, max_size, bigger_panoramas):
+        try:
+            # Resize svg based on viewport hacking.
+            # note that this can also lead to enlarged svgs
+            if src.endswith('.svgz'):
+                with gzip.GzipFile(src) as op:
+                    xml = op.read()
+            else:
+                with open(src) as op:
+                    xml = op.read()
+            tree = lxml.etree.XML(xml)
+            width = tree.attrib['width']
+            height = tree.attrib['height']
+            w = int(re.search("[0-9]+", width).group(0))
+            h = int(re.search("[0-9]+", height).group(0))
+            #calculate new size preserving aspect ratio.
+            ratio = float(w) / h
+            # Panoramas get larger thumbnails because they look *awful*
+            if bigger_panoramas and w > 2 * h:
+                max_size = max_size * 4
+            if w > h:
+                w = max_size
+                h = max_size / ratio
+            else:
+                w = max_size * ratio
+                h = max_size
+            w = int(w)
+            h = int(h)
+            tree.attrib['width'] = "%ipx" % w
+            tree.attrib['height'] = "%ipx" % h
+            tree.attrib['viewport'] = "0 0 %ipx %ipx" % (w, h)
+            if dst.endswith('.tgz'):
+                op = gzip.GzipFile(dst, 'w')
+            else:
+                op = open(dst, 'w')
+            op.write(lxml.etree.tostring(tree))
+            op.close()
+        except (KeyError, AttributeError) as e:
+            self.logger.warn("No width/height in %s" % src)
             utils.copy_file(src, dst)
 
     def image_date(self, src):
