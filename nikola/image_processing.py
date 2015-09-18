@@ -94,6 +94,7 @@ class ImageProcessor(object):
             utils.copy_file(src, dst)
 
     def resize_svg(self, src, dst, max_size, bigger_panoramas):
+        """Make a copy of an svg at the requested size"""
         try:
             # Resize svg based on viewport hacking.
             # note that this can also lead to enlarged svgs
