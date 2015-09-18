@@ -1938,7 +1938,6 @@ class Nikola(object):
                                                          rss_read_more_link=True,
                                                          rss_links_append_query=feed_append_query))
 
-
             entry_root = lxml.etree.SubElement(feed_root, "entry")
             entry_title = lxml.etree.SubElement(entry_root, "title")
             entry_title.text = post.title(lang)
@@ -2126,7 +2125,6 @@ class Nikola(object):
                     "uptodate": [utils.config_changed(kw, 'nikola.nikola.Nikola.atom_feed_renderer')] + additional_dependencies
                 }
                 yield utils.apply_filters(atom_task, kw['filters'])
-
 
         if kw["indexes_pages_main"] and kw['indexes_prety_page_url'](lang):
             # create redirection
