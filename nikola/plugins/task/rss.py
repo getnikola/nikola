@@ -64,8 +64,8 @@ class GenerateRSS(Task):
             "feed_length": self.site.config['FEED_LENGTH'],
             "feed_previewimage": self.site.config["FEED_PREVIEWIMAGE"],
             "tzinfo": self.site.tzinfo,
-            "rss_read_more_link": self.site.config["RSS_READ_MORE_LINK"],
-            "rss_links_append_query": self.site.config["RSS_LINKS_APPEND_QUERY"],
+            "feed_read_more_link": self.site.config["FEED_READ_MORE_LINK"],
+            "feed_links_append_query": self.site.config["FEED_LINKS_APPEND_QUERY"],
         }
         self.site.scan_posts()
         # Check for any changes in the state of use_in_feeds for any post.
@@ -98,7 +98,7 @@ class GenerateRSS(Task):
                             (lang, kw["blog_title"](lang), kw["site_url"],
                              kw["blog_description"](lang), posts, output_name,
                              kw["feed_teasers"], kw["feed_plain"], kw['feed_length'], feed_url,
-                             None, kw["rss_links_append_query"]))],
+                             None, kw["feed_links_append_query"]))],
 
                 'task_dep': ['render_posts'],
                 'clean': True,
