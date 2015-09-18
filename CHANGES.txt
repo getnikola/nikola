@@ -4,9 +4,14 @@ New in Master
 Features
 --------
 
+* New option ``FEED_PREVIEWIMAGE`` includes the ``post.meta.previewimage``
+  image in Atom and RSS feeds. (Issue #2095)
+
 Bugfixes
 --------
 
+* Deprecated ``RSS_TEASERS`` and ``RSS_PLAIN`` in favor of ``FEED_TEASERS``
+  and ``FEED_PLAIN`` for both RSS and Atom feeds. (Issue #2095)
 * /robots.txt was never being built (Issue #2098)
 
 New in v7.7.1

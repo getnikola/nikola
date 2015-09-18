@@ -425,9 +425,6 @@ HIDDEN_AUTHORS = ['Guest']
 # output / TRANSLATION[lang] / RSS_PATH / rss.xml
 # RSS_PATH = ""
 
-# Number of posts in RSS feeds
-# FEED_LENGTH = 10
-
 # Slug the Tag URL. Easier for users to type, special characters are
 # often removed or replaced as well.
 # SLUG_TAG_PATH = True
@@ -677,7 +674,7 @@ IMAGE_FOLDERS = {'images': 'images'}
 
 # 'Read more...' for the index page, if INDEX_TEASERS is True (translatable)
 INDEX_READ_MORE_LINK = ${INDEX_READ_MORE_LINK}
-# 'Read more...' for the RSS_FEED, if RSS_TEASERS is True (translatable)
+# 'Read more...' for the RSS_FEED, if FEED_TEASERS is True (translatable)
 RSS_READ_MORE_LINK = ${RSS_READ_MORE_LINK}
 
 # Append a URL query to the RSS_READ_MORE_LINK in Atom and RSS feeds. Advanced
@@ -892,21 +889,30 @@ MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
 # them. Generate Atom for tags by setting TAG_PAGES_ARE_INDEXES to True.
 # Atom feeds are built based on INDEX_DISPLAY_POST_COUNT and not FEED_LENGTH
 # Switch between plain-text summaries and full HTML content using the
-# RSS_TEASER option. RSS_LINKS_APPEND_QUERY is also respected. Atom feeds
+# FEED_TEASER option. RSS_LINKS_APPEND_QUERY is also respected. Atom feeds
 # are generated even for old indexes and have pagination link relations
 # between each other. Old Atom feeds with no changes are marked as archived.
 # GENERATE_ATOM = False
+
+# Only inlclude teasers in Atom and RSS feeds. Disabling include the full content.
+# FEED_TEASERS = True
+
+# Strip HTML from Atom annd RSS feed summaries and content.
+# FEED_PLAIN = True
+
+# Number of posts in Atom and RSS feeds.
+# FEED_LENGTH = 10
+
+# Inclue preview image as a <figure><img></figure> at the top of the entry.
+# Requires FEED_PLAIN = False. If the preview image is found in the content,
+# it will not be included again. Image will be included as-is, aim to optmize
+# the image source for Feedly, Apple News, Flipboard, and other popular clients.
+# FEED_PREVIEWIMAGE = False
 
 # RSS_LINK is a HTML fragment to link the RSS or Atom feeds. If set to None,
 # the base.tmpl will use the feed Nikola generates. However, you may want to
 # change it for a FeedBurner feed or something else.
 # RSS_LINK = None
-
-# Show teasers (instead of full posts) in feeds? Defaults to True.
-# RSS_TEASERS = True
-
-# Strip HTML in the RSS feed? Default to False
-# RSS_PLAIN = False
 
 # A search form to search this site, for the sidebar. You can use a Google
 # custom search (https://www.google.com/cse/)
