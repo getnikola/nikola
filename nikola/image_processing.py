@@ -56,7 +56,7 @@ class ImageProcessor(object):
     def resize_image(self, src, dst, max_size, bigger_panoramas=True):
         """Make a copy of the image in the requested size."""
         if not Image or os.path.splitext(src)[1] in ['.svg', '.svgz']:
-            self.resize_svg(src, dst,  max_size, bigger_panoramas)
+            self.resize_svg(src, dst, max_size, bigger_panoramas)
             return
         im = Image.open(src)
         w, h = im.size
@@ -109,7 +109,7 @@ class ImageProcessor(object):
             height = tree.attrib['height']
             w = int(re.search("[0-9]+", width).group(0))
             h = int(re.search("[0-9]+", height).group(0))
-            #calculate new size preserving aspect ratio.
+            # calculate new size preserving aspect ratio.
             ratio = float(w) / h
             # Panoramas get larger thumbnails because they look *awful*
             if bigger_panoramas and w > 2 * h:
@@ -132,7 +132,7 @@ class ImageProcessor(object):
             op.write(lxml.etree.tostring(tree))
             op.close()
         except (KeyError, AttributeError) as e:
-            self.logger.warn("No width/height in %s" % src)
+            self.logger.warn("No width/height in %s. Actuall exception: %s" % (src, e))
             utils.copy_file(src, dst)
 
     def image_date(self, src):
