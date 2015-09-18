@@ -121,10 +121,10 @@ class ImageProcessor(object):
                 h = max_size
             w = int(w)
             h = int(h)
-            tree.attrib['width'] = "%ipx" % w
-            tree.attrib['height'] = "%ipx" % h
+            tree.attrib.pop("width")
+            tree.attrib.pop("height")
             tree.attrib['viewport'] = "0 0 %ipx %ipx" % (w, h)
-            if dst.endswith('.tgz'):
+            if dst.endswith('.svgz'):
                 op = gzip.GzipFile(dst, 'w')
             else:
                 op = open(dst, 'w')
