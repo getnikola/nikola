@@ -237,7 +237,7 @@ class RenderAuthors(Task):
             'actions': [(utils.generic_rss_renderer,
                         (lang, "{0} ({1})".format(kw["blog_title"](lang), self._get_title(author)),
                          kw["site_url"], None, post_list,
-                         output_name, kw["rss_teasers"], kw["rss_plain"], kw['feed_length'],
+                         output_name, kw["feed_teasers"], kw["feed_plain"], kw['feed_length'],
                          feed_url, None, kw["rss_link_append_query"]))],
             'clean': True,
             'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.authors:rss')] + deps_uptodate,
