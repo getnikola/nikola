@@ -41,7 +41,7 @@ from pkg_resources import resource_filename
 import tarfile
 
 import nikola
-from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_RSS_READ_MORE_LINK, LEGAL_VALUES, urlsplit, urlunsplit
+from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_FEED_READ_MORE_LINK, LEGAL_VALUES, urlsplit, urlunsplit
 from nikola.plugin_categories import Command
 from nikola.utils import ask, ask_yesno, get_logger, makedirs, STDERR_HANDLER, load_messages
 from nikola.packages.tzlocal import get_localzone
@@ -71,7 +71,7 @@ SAMPLE_CONF = {
     'CATEGORY_OUTPUT_FLAT_HIERARCHY': False,
     'TRANSLATIONS_PATTERN': DEFAULT_TRANSLATIONS_PATTERN,
     'INDEX_READ_MORE_LINK': DEFAULT_INDEX_READ_MORE_LINK,
-    'RSS_READ_MORE_LINK': DEFAULT_RSS_READ_MORE_LINK,
+    'FEED_READ_MORE_LINK': DEFAULT_FEED_READ_MORE_LINK,
     'POSTS': """(
     ("posts/*.rst", "posts", "post.tmpl"),
     ("posts/*.txt", "posts", "post.tmpl"),
@@ -210,10 +210,10 @@ def prepare_config(config):
     """Parse sample config with JSON."""
     p = config.copy()
     p.update({k: json.dumps(v, ensure_ascii=False) for k, v in p.items()
-             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'INDEX_READ_MORE_LINK', 'RSS_READ_MORE_LINK')})
+             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'INDEX_READ_MORE_LINK', 'FEED_READ_MORE_LINK')})
     # READ_MORE_LINKs require some special treatment.
     p['INDEX_READ_MORE_LINK'] = "'" + p['INDEX_READ_MORE_LINK'].replace("'", "\\'") + "'"
-    p['RSS_READ_MORE_LINK'] = "'" + p['RSS_READ_MORE_LINK'].replace("'", "\\'") + "'"
+    p['FEED_READ_MORE_LINK'] = "'" + p['FEED_READ_MORE_LINK'].replace("'", "\\'") + "'"
     # fix booleans and None
     p.update({k: str(v) for k, v in config.items() if isinstance(v, bool) or v is None})
     return p

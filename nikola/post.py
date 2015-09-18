@@ -554,13 +554,13 @@ class Post(object):
             return get_translation_candidate(self.config, self.base_path, sorted(self.translated_to)[0])
 
     def text(self, lang=None, teaser_only=False, strip_html=False, show_read_more_link=True,
-             rss_read_more_link=False, rss_links_append_query=None):
+             feed_read_more_link=False, feed_links_append_query=None):
         """Read the post file for that language and return its contents.
 
         teaser_only=True breaks at the teaser marker and returns only the teaser.
         strip_html=True removes HTML tags
         show_read_more_link=False does not add the Read more... link
-        rss_read_more_link=True uses RSS_READ_MORE_LINK instead of INDEX_READ_MORE_LINK
+        feed_read_more_link=True uses FEED_READ_MORE_LINK instead of INDEX_READ_MORE_LINK
         lang=None uses the last used to set locale
 
         All links in the returned HTML will be relative.
@@ -609,9 +609,9 @@ class Post(object):
                         teaser_text = teaser_regexp.search(data).groups()[-1]
                     else:
                         teaser_text = self.messages[lang]["Read more"]
-                    l = self.config['RSS_READ_MORE_LINK'](lang) if rss_read_more_link else self.config['INDEX_READ_MORE_LINK'](lang)
+                    l = self.config['FEED_READ_MORE_LINK'](lang) if feed_read_more_link else self.config['INDEX_READ_MORE_LINK'](lang)
                     teaser += l.format(
-                        link=self.permalink(lang, query=rss_links_append_query),
+                        link=self.permalink(lang, query=feed_links_append_query),
                         read_more=teaser_text,
                         min_remaining_read=self.messages[lang]["%d min remaining to read"] % (self.remaining_reading_time),
                         reading_time=self.reading_time,
