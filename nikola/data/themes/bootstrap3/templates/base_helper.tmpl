@@ -139,17 +139,17 @@ lang="${lang}">
             <ul class="dropdown-menu">
             %for suburl, text in url:
                 % if rel_link(permalink, suburl) == "#":
-                    <li class="active"><a href="${permalink}">${text|h} <span class="sr-only">${messages("(active)", lang)}</span></a>
+                    <li class="active"><a href="${permalink}">${text} <span class="sr-only">${messages("(active)", lang)}</span></a>
                 %else:
-                    <li><a href="${suburl}">${text|h}</a>
+                    <li><a href="${suburl}">${text}</a>
                 %endif
             %endfor
             </ul>
         % else:
             % if rel_link(permalink, url) == "#":
-                <li class="active"><a href="${permalink}">${text|h} <span class="sr-only">${messages("(active)", lang)}</span></a>
+                <li class="active"><a href="${permalink}">${text} <span class="sr-only">${messages("(active)", lang)}</span></a>
             %else:
-                <li><a href="${url}">${text|h}</a>
+                <li><a href="${url}">${text}</a>
             %endif
         % endif
     %endfor
