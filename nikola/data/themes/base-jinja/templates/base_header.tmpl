@@ -32,7 +32,7 @@
     <ul>
     {% for url, text in navigation_links[lang] %}
         {% if isinstance(url, tuple) %}
-            <li> {{ text|e }}
+            <li> {{ text }}
             <ul>
             {% for suburl, text in url %}
                 {% if rel_link(permalink, suburl) == "#" %}
