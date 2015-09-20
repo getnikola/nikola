@@ -1,4 +1,4 @@
-New in Master
+New in master
 =============
 
 Features
@@ -7,6 +7,7 @@ Features
 Bugfixes
 --------
 
+* Fix reST post list date formatting error (Issue #2104)
 * /robots.txt was never being built (Issue #2098)
 
 New in v7.7.1
