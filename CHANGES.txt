@@ -4,10 +4,17 @@ New in master
 Features
 --------
 
+* New option ``FEED_PREVIEWIMAGE`` includes the ``post.meta.previewimage``
+  image in Atom and RSS feeds. (Issue #2095)
+
 Bugfixes
 --------
 
 * Fix reST post list date formatting error (Issue #2104)
+* Deprecated ``RSS_TEASERS``, ``RSS_PLAIN``, ``RSS_READ_MORE_LINK``, and
+  ``RSS_LINKS_APPEND_QUERY`` in favor of ``FEED_TEASERS``, ``FEED_PLAIN``,
+  ``FEED_READ_MORE_LINK``, and ``FEED_LINKS_APPEND_QUERY`` for both Atom
+  and RSS feeds. (Issue #2095)
 * /robots.txt was never being built (Issue #2098)
 
 New in v7.7.1
