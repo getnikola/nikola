@@ -1940,7 +1940,7 @@ class Nikola(object):
                         text = ""
                     else:  # let other errors raise
                         raise(e)
-            return text
+            return text.strip()
 
         for post in posts:
             summary = atom_post_text(post, post.text(lang, teaser_only=True,
