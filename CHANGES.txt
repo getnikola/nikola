@@ -11,8 +11,6 @@ Bugfixes
 --------
 
 * Fix reST post list date formatting error (Issue #2104)
-* Deprecated ``RSS_TEASERS`` and ``RSS_PLAIN`` in favor of ``FEED_TEASERS``
-  and ``FEED_PLAIN`` for both RSS and Atom feeds. (Issue #2095)
 * Deprecated ``RSS_TEASERS``, ``RSS_PLAIN``, ``RSS_READ_MORE_LINK``, and
   ``RSS_LINKS_APPEND_QUERY`` in favor of ``FEED_TEASERS``, ``FEED_PLAIN``,
   ``FEED_READ_MORE_LINK``, and ``FEED_LINKS_APPEND_QUERY`` for both Atom
