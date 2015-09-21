@@ -12,6 +12,7 @@ print(""".. title: Path Handlers for Nikola
 Nikola supports special links with the syntax ``link://kind/name``. Here is
 the description for all the supported kinds.
 
+.. class:: dl-horizontal
 """)
 
 for k in sorted(n.path_handlers.keys()):
