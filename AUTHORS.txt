@@ -106,3 +106,4 @@
 * `yarko <https://github.com/yarko>`_
 * `小明 <https://github.com/dongweiming>`_
 * `Brad Miller <https://github.com/bnmnetp>`_
+* `Florian Finkernagel <https://github.com/TyberiusPrime>`_

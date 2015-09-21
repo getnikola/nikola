@@ -70,8 +70,12 @@ class Thumbnail(Figure):
     def run(self):
         """Run the thumbnail directive."""
         uri = directives.uri(self.arguments[0])
+        if uri.endswith('.svg'):
+            # the ? at the end makes docutil output an <img> instead of an object for the svg, which colorbox requires
+            self.arguments[0] = '.thumbnail'.join(os.path.splitext(uri)) + '?'
+        else:
+            self.arguments[0] = '.thumbnail'.join(os.path.splitext(uri))
         self.options['target'] = uri
-        self.arguments[0] = '.thumbnail'.join(os.path.splitext(uri))
         if self.content:
             (node,) = Figure.run(self)
         else:
