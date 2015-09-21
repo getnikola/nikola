@@ -1376,13 +1376,13 @@ jpegoptim
    Compress JPEG files using `jpegoptim <http://www.kokkonen.net/tjko/projects.html>`_
 
 cssminify
-   Minify CSS using http://cssminifier.com/ (requires internet access)
+   Minify CSS using http://cssminifier.com/ (requires Internet access)
 
 jsminify
-   Minify JS using http://javascript-minifier.com/ (requires internet access)
+   Minify JS using http://javascript-minifier.com/ (requires Internet access)
 
 jsonminify
-   Minify JSON files (strips whitespace and use minimal separators).
+   Minify JSON files (strip whitespace and use minimal separators).
 
 You can apply filters to specific posts or pages by using the ``filters`` metadata field:
 

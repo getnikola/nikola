@@ -310,6 +310,7 @@ def jsminify(data):
 
 @apply_to_text_file
 def jsonminify(data):
+    """Minify JSON files (strip whitespace and use minimal separators)."""
     data = json.dumps(json.loads(data), indent=None, separators=(',', ':'))
     return data
 
