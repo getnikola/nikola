@@ -32,21 +32,21 @@
     <ul>
     {% for url, text in navigation_links[lang] %}
         {% if isinstance(url, tuple) %}
-            <li> {{ text|e }}
+            <li> {{ text }}
             <ul>
             {% for suburl, text in url %}
                 {% if rel_link(permalink, suburl) == "#" %}
-                    <li class="active"><a href="{{ permalink }}">{{ text|e }} <span class="sr-only">{{ messages("(active)", lang) }}</span></a></li>
+                    <li class="active"><a href="{{ permalink }}">{{ text }} <span class="sr-only">{{ messages("(active)", lang) }}</span></a></li>
                 {% else %}
-                    <li><a href="{{ suburl }}">{{ text|e }}</a></li>
+                    <li><a href="{{ suburl }}">{{ text }}</a></li>
                 {% endif %}
             {% endfor %}
             </ul>
         {% else %}
             {% if rel_link(permalink, url) == "#" %}
-                <li class="active"><a href="{{ permalink }}">{{ text|e }} <span class="sr-only">{{ messages("(active)", lang) }}</span></a></li>
+                <li class="active"><a href="{{ permalink }}">{{ text }} <span class="sr-only">{{ messages("(active)", lang) }}</span></a></li>
             {% else %}
-                <li><a href="{{ url }}">{{ text|e }}</a></li>
+                <li><a href="{{ url }}">{{ text }}</a></li>
             {% endif %}
         {% endif %}
     {% endfor %}
