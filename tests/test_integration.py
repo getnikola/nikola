@@ -307,18 +307,11 @@ class TestCheck(DemoBuildTest):
 
     def test_check_links(self):
         with cd(self.target_dir):
-            try:
-                __main__.main(['check', '-l'])
-            except SystemExit as e:
-                self.assertEqual(e.code, 0)
+            self.assertIsNone(__main__.main(['check', '-l']))
 
     def test_check_files(self):
         with cd(self.target_dir):
-            try:
-                __main__.main(['check', '-f'])
-            except SystemExit as e:
-                self.assertEqual(e.code, 0)
-
+            self.assertIsNone(__main__.main(['check', '-f']))
 
 class TestCheckAbsoluteSubFolder(TestCheck):
     """Validate links in a site which is:

@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Fix false orphan report for code.css and robots.txt (Issue #2106)
 * Fix reST post list date formatting error (Issue #2104)
 * Deprecated ``RSS_TEASERS``, ``RSS_PLAIN``, ``RSS_READ_MORE_LINK``, and
   ``RSS_LINKS_APPEND_QUERY`` in favor of ``FEED_TEASERS``, ``FEED_PLAIN``,
