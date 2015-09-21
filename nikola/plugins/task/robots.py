@@ -71,7 +71,7 @@ class RobotsFile(LateTask):
 
         yield self.group_task()
 
-        if not utils.get_asset_path("robots.txt", [], files_folders=kw["files_folders"]):
+        if not utils.get_asset_path("robots.txt", [], files_folders=kw["files_folders"], output_dir=False):
             yield utils.apply_filters({
                 "basename": self.name,
                 "name": robots_path,
@@ -82,6 +82,6 @@ class RobotsFile(LateTask):
                 "task_dep": ["sitemap"]
             }, kw["filters"])
         elif kw["robots_exclusions"]:
-            utils.LOGGER.warn('Did not generate robots.txt as one already exists in FILES_FOLDERS. ROBOTS_EXCLUSIONS will not have any affect on the copied fie.')
+            utils.LOGGER.warn('Did not generate robots.txt as one already exists in FILES_FOLDERS. ROBOTS_EXCLUSIONS will not have any affect on the copied file.')
         else:
             utils.LOGGER.debug('Did not generate robots.txt as one already exists in FILES_FOLDERS.')

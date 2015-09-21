@@ -515,8 +515,8 @@ In Markdown (or basically, the resulting HTML of any format):
 By default all your RSS feeds will be shortened (they'll contain only teasers)
 whereas your index page will still show complete posts. You can change
 this behaviour with your ``conf.py``: ``INDEX_TEASERS`` defines whether index
-page should display the whole contents or only teasers. ``RSS_TEASERS``
-works the same way for your RSS feeds.
+page should display the whole contents or only teasers. ``FEED_TEASERS``
+works the same way for your Atom and RSS feeds.
 
 By default, teasers will include a "read more" link at the end. If you want to
 change that text, you can use a custom teaser:
@@ -1376,10 +1376,13 @@ jpegoptim
    Compress JPEG files using `jpegoptim <http://www.kokkonen.net/tjko/projects.html>`_
 
 cssminify
-   Minify CSS using http://cssminifier.com/ (requires internet access)
+   Minify CSS using http://cssminifier.com/ (requires Internet access)
 
 jsminify
-   Minify JS using http://javascript-minifier.com/ (requires internet access)
+   Minify JS using http://javascript-minifier.com/ (requires Internet access)
+
+jsonminify
+   Minify JSON files (strip whitespace and use minimal separators).
 
 You can apply filters to specific posts or pages by using the ``filters`` metadata field:
 

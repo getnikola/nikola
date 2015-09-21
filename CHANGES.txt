@@ -1,3 +1,24 @@
+New in master
+=============
+
+Features
+--------
+
+* New ```jsonmnify``` filter for minifying JSON files.
+* New option ``FEED_PREVIEWIMAGE`` includes the ``post.meta.previewimage``
+  image in Atom and RSS feeds. (Issue #2095)
+
+Bugfixes
+--------
+
+* Fix reST post list date formatting error (Issue #2104)
+* Deprecated ``RSS_TEASERS``, ``RSS_PLAIN``, ``RSS_READ_MORE_LINK``, and
+  ``RSS_LINKS_APPEND_QUERY`` in favor of ``FEED_TEASERS``, ``FEED_PLAIN``,
+  ``FEED_READ_MORE_LINK``, and ``FEED_LINKS_APPEND_QUERY`` for both Atom
+  and RSS feeds. (Issue #2095)
+* /robots.txt was never being built (Issue #2098)
+* SVG thumbnails (Issue #2094)
+
 New in v7.7.1
 =============
 
@@ -78,7 +99,7 @@ Bugfixes
 * ``pagekind["main_index"]`` set on the main indexes to differentiate
   them from all the other indexes.
 * Add dependency on metadata file for 2-file posts (Issue #1968)
-* Set UTF-8 charset in Content-Type or text/* and *+xml (Issue #1966)
+* Set UTF-8 charset in Content-Type or ``text/*`` and ``*+xml`` (Issue #1966)
 
 New in v7.6.4
 =============

@@ -227,7 +227,7 @@ class CommandCheck(Command):
                 d = lxml.etree.parse(filename)
                 link_elements = lxml.html.fromstring('<html/>')
                 for elm in d.findall('*//{http://www.w3.org/2005/Atom}link'):
-                    feed_link = elm.attrib['href'].split('?')[0].strip()  # strip RSS_LINKS_APPEND_QUERY
+                    feed_link = elm.attrib['href'].split('?')[0].strip()  # strip FEED_LINKS_APPEND_QUERY
                     link_elements.append(lxml.etree.Element('a', href=feed_link))
                 link_elements = list(link_elements.iterlinks())
             elif filename.endswith('sitemap.xml') or filename.endswith('sitemapindex.xml'):

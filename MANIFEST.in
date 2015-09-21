@@ -5,3 +5,6 @@ graft tests
 include *.txt
 include *.rst
 include *.py
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *.pyd

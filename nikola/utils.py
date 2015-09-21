@@ -1002,9 +1002,10 @@ def get_asset_path(path, themes, files_folders={'files': ''}, _themes_dir='theme
         if os.path.isfile(candidate):
             return candidate
 
-    candidate = os.path.join(output_dir, path)
-    if os.path.isfile(candidate):
-        return candidate
+    if output_dir:
+        candidate = os.path.join(output_dir, path)
+        if os.path.isfile(candidate):
+            return candidate
 
     # whatever!
     return None

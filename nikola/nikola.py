@@ -80,7 +80,7 @@ else:
 
 # Default "Read more..." link
 DEFAULT_INDEX_READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
-DEFAULT_RSS_READ_MORE_LINK = '<p><a href="{link}">{read_more}…</a> ({min_remaining_read})</p>'
+DEFAULT_FEED_READ_MORE_LINK = '<p><a href="{link}">{read_more}…</a> ({min_remaining_read})</p>'
 
 # Default pattern for translation files' names
 DEFAULT_TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
@@ -450,16 +450,17 @@ class Nikola(object):
             'PRETTY_URLS': False,
             'FUTURE_IS_NOW': False,
             'INDEX_READ_MORE_LINK': DEFAULT_INDEX_READ_MORE_LINK,
-            'RSS_READ_MORE_LINK': DEFAULT_RSS_READ_MORE_LINK,
-            'RSS_LINKS_APPEND_QUERY': False,
             'REDIRECTIONS': [],
             'ROBOTS_EXCLUSIONS': [],
             'GENERATE_ATOM': False,
+            'FEED_TEASERS': True,
+            'FEED_PLAIN': False,
+            'FEED_PREVIEWIMAGE': True,
+            'FEED_READ_MORE_LINK': DEFAULT_FEED_READ_MORE_LINK,
+            'FEED_LINKS_APPEND_QUERY': False,
             'GENERATE_RSS': True,
             'RSS_LINK': None,
             'RSS_PATH': '',
-            'RSS_PLAIN': False,
-            'RSS_TEASERS': True,
             'SASS_COMPILER': 'sass',
             'SASS_OPTIONS': [],
             'SEARCH_FORM': '',
@@ -543,7 +544,7 @@ class Nikola(object):
                                       'EXTRA_HEAD_DATA',
                                       'NAVIGATION_LINKS',
                                       'INDEX_READ_MORE_LINK',
-                                      'RSS_READ_MORE_LINK',
+                                      'FEED_READ_MORE_LINK',
                                       'INDEXES_TITLE',
                                       'POSTS_SECTION_COLORS',
                                       'POSTS_SECTION_DESCRIPTIONS',
@@ -607,6 +608,38 @@ class Nikola(object):
             self.config['post_pages'].append([i1, i2, i3, True])
         for i1, i2, i3 in self.config['PAGES']:
             self.config['post_pages'].append([i1, i2, i3, False])
+
+        # RSS_TEASERS has been replaced with FEED_TEASERS
+        # TODO: remove on v8
+        if 'RSS_TEASERS' in config:
+            utils.LOGGER.warn('The RSS_TEASERS option is deprecated, use FEED_TEASERS instead.')
+            if 'FEED_TEASERS' in config:
+                utils.LOGGER.warn('FEED_TEASERS conflicts with RSS_TEASERS, ignoring RSS_TEASERS.')
+            self.config['FEED_TEASERS'] = config['RSS_TEASERS']
+
+        # RSS_PLAIN has been replaced with FEED_PLAIN
+        # TODO: remove on v8
+        if 'RSS_PLAIN' in config:
+            utils.LOGGER.warn('The RSS_PLAIN option is deprecated, use FEED_PLAIN instead.')
+            if 'FEED_PLAIN' in config:
+                utils.LOGGER.warn('FEED_PLIN conflicts with RSS_PLAIN, ignoring RSS_PLAIN.')
+            self.config['FEED_PLAIN'] = config['RSS_PLAIN']
+
+        # RSS_LINKS_APPEND_QUERY has been replaced with FEED_LINKS_APPEND_QUERY
+        # TODO: remove on v8
+        if 'RSS_LINKS_APPEND_QUERY' in config:
+            utils.LOGGER.warn('The RSS_LINKS_APPEND_QUERY option is deprecated, use FEED_LINKS_APPEND_QUERY instead.')
+            if 'FEED_TEASERS' in config:
+                utils.LOGGER.warn('FEED_LINKS_APPEND_QUERY conflicts with RSS_LINKS_APPEND_QUERY, ignoring RSS_LINKS_APPEND_QUERY.')
+            self.config['FEED_LINKS_APPEND_QUERY'] = utils.TranslatableSetting('FEED_LINKS_APPEND_QUERY', config['RSS_LINKS_APPEND_QUERY'], self.config['TRANSLATIONS'])
+
+        # RSS_READ_MORE_LINK has been replaced with FEED_READ_MORE_LINK
+        # TODO: remove on v8
+        if 'RSS_READ_MORE_LINK' in config:
+            utils.LOGGER.warn('The RSS_READ_MORE_LINK option is deprecated, use FEED_READ_MORE_LINK instead.')
+            if 'FEED_READ_MORE_LINK' in config:
+                utils.LOGGER.warn('FEED_READ_MORE_LINK conflicts with RSS_READ_MORE_LINK, ignoring RSS_READ_MORE_LINK')
+            self.config['FEED_READ_MORE_LINK'] = utils.TranslatableSetting('FEED_READ_MORE_LINK', config['RSS_READ_MORE_LINK'], self.config['TRANSLATIONS'])
 
         # DEFAULT_TRANSLATIONS_PATTERN was changed from "p.e.l" to "p.l.e"
         # TODO: remove on v8
@@ -1280,10 +1313,12 @@ class Nikola(object):
 
         for post in timeline[:feed_length]:
             data = post.text(lang, teaser_only=rss_teasers, strip_html=rss_plain,
-                             rss_read_more_link=True, rss_links_append_query=feed_append_query)
+                             feed_read_more_link=True, feed_links_append_query=feed_append_query)
             if feed_url is not None and data:
                 # Massage the post's HTML (unless plain)
                 if not rss_plain:
+                    if self.config["FEED_PREVIEWIMAGE"] and 'previewimage' in post.meta[lang] and post.meta[lang]['previewimage'] not in data:
+                        data = "<figure><img src=\"{}\"></figure> {}".format(post.meta[lang]['previewimage'], data)
                     # FIXME: this is duplicated with code in Post.text()
                     try:
                         doc = lxml.html.document_fromstring(data)
@@ -1835,8 +1870,6 @@ class Nikola(object):
         nslist = {}
         if context["is_feed_stale"] or "feedpagenum" in context and (not context["feedpagenum"] == context["feedpagecount"] - 1 and not context["feedpagenum"] == 0):
             nslist["fh"] = "http://purl.org/syndication/history/1.0"
-        if not self.config["RSS_TEASERS"]:
-            nslist["xh"] = "http://www.w3.org/1999/xhtml"
         feed_xsl_link = self.abs_link("/assets/xml/atom.xsl")
         feed_root = lxml.etree.Element("feed", nsmap=nslist)
         feed_root.addprevious(lxml.etree.ProcessingInstruction(
@@ -1881,31 +1914,45 @@ class Nikola(object):
         feed_generator.text = "Nikola"
 
         feed_append_query = None
-        if self.config["RSS_LINKS_APPEND_QUERY"]:
-            feed_append_query = self.config["RSS_LINKS_APPEND_QUERY"].format(
+        if self.config["FEED_LINKS_APPEND_QUERY"]:
+            feed_append_query = self.config["FEED_LINKS_APPEND_QUERY"].format(
                 feedRelUri=context["feedlink"],
                 feedFormat="atom")
 
-        for post in posts:
-            data = post.text(lang, teaser_only=self.config["RSS_TEASERS"], strip_html=self.config["RSS_TEASERS"],
-                             rss_read_more_link=True, rss_links_append_query=feed_append_query)
-            if not self.config["RSS_TEASERS"]:
+        def atom_post_text(post, text):
+            if not self.config["FEED_PLAIN"]:
+                if self.config["FEED_PREVIEWIMAGE"] and 'previewimage' in post.meta[lang] and post.meta[lang]['previewimage'] not in text:
+                    text = "<figure><img src=\"{}\"></figure> {}".format(post.meta[lang]['previewimage'], text)
+
                 # FIXME: this is duplicated with code in Post.text() and generic_rss_renderer
                 try:
-                    doc = lxml.html.document_fromstring(data)
+                    doc = lxml.html.document_fromstring(text)
                     doc.rewrite_links(lambda dst: self.url_replacer(post.permalink(lang), dst, lang, 'absolute'))
                     try:
                         body = doc.body
-                        data = (body.text or '') + ''.join(
+                        text = (body.text or '') + ''.join(
                             [lxml.html.tostring(child, encoding='unicode')
                                 for child in body.iterchildren()])
                     except IndexError:  # No body there, it happens sometimes
-                        data = ''
+                        text = ''
                 except lxml.etree.ParserError as e:
                     if str(e) == "Document is empty":
-                        data = ""
+                        text = ""
                     else:  # let other errors raise
                         raise(e)
+            return text.strip()
+
+        for post in posts:
+            summary = atom_post_text(post, post.text(lang, teaser_only=True,
+                                                     strip_html=self.config["FEED_PLAIN"],
+                                                     feed_read_more_link=True,
+                                                     feed_links_append_query=feed_append_query))
+            content = None
+            if not self.config["FEED_TEASERS"]:
+                content = atom_post_text(post, post.text(lang, teaser_only=self.config["FEED_TEASERS"],
+                                                         strip_html=self.config["FEED_PLAIN"],
+                                                         feed_read_more_link=True,
+                                                         feed_links_append_query=feed_append_query))
 
             entry_root = lxml.etree.SubElement(feed_root, "entry")
             entry_title = lxml.etree.SubElement(entry_root, "title")
@@ -1922,14 +1969,19 @@ class Nikola(object):
             entry_root.append(atom_link("alternate", "text/html",
                               post.permalink(lang, absolute=True,
                                              query=feed_append_query)))
-            if self.config["RSS_TEASERS"]:
-                entry_summary = lxml.etree.SubElement(entry_root, "summary")
-                entry_summary.text = data
+            entry_summary = lxml.etree.SubElement(entry_root, "summary")
+            if not self.config["FEED_PLAIN"]:
+                entry_summary.set("type", "html")
             else:
+                entry_summary.set("type", "text")
+            entry_summary.text = summary
+            if content:
                 entry_content = lxml.etree.SubElement(entry_root, "content")
-                entry_content.set("type", "xhtml")
-                entry_content_nsdiv = lxml.etree.SubElement(entry_content, "{http://www.w3.org/1999/xhtml}div")
-                entry_content_nsdiv.text = data
+                if not self.config["FEED_PLAIN"]:
+                    entry_content.set("type", "html")
+                else:
+                    entry_content.set("type", "text")
+                entry_content.text = content
             for category in post.tags_for_language(lang):
                 entry_category = lxml.etree.SubElement(entry_root, "category")
                 entry_category.set("term", utils.slugify(category))
@@ -1980,8 +2032,7 @@ class Nikola(object):
         kw['indexes_prety_page_url'] = self.config["INDEXES_PRETTY_PAGE_URL"]
         kw['demote_headers'] = self.config['DEMOTE_HEADERS']
         kw['generate_atom'] = self.config["GENERATE_ATOM"]
-        kw['feed_link_append_query'] = self.config["RSS_LINKS_APPEND_QUERY"]
-        kw['feed_teasers'] = self.config["RSS_TEASERS"]
+        kw['feed_link_append_query'] = self.config["FEED_LINKS_APPEND_QUERY"]
         kw['currentfeed'] = None
 
         # Split in smaller lists
@@ -2072,6 +2123,9 @@ class Nikola(object):
                 context["currentfeedlink"] = kw["currentfeed"]
                 context["feedpagenum"] = i
                 context["feedpagecount"] = num_pages
+                kw['feed_teasers'] = self.config['FEED_TEASERS']
+                kw['feed_plain'] = self.config['FEED_PLAIN']
+                kw['feed_previewimage'] = self.config['FEED_PREVIEWIMAGE']
                 atom_task = {
                     "basename": basename,
                     "name": atom_output_name,

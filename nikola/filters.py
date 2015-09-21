@@ -29,6 +29,7 @@
 from functools import wraps
 import os
 import io
+import json
 import shutil
 import subprocess
 import tempfile
@@ -305,6 +306,13 @@ def jsminify(data):
     except Exception as exc:
         LOGGER.error("can't use javascript-minifier.com: {}", exc)
         return data
+
+
+@apply_to_text_file
+def jsonminify(data):
+    """Minify JSON files (strip whitespace and use minimal separators)."""
+    data = json.dumps(json.loads(data), indent=None, separators=(',', ':'))
+    return data
 
 
 def _normalize_html(data):

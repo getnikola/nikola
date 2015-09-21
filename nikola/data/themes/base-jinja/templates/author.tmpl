@@ -18,7 +18,7 @@
     <header>
         <h1>{{ title|e }}</h1>
         {% if description %}
-        <p>{{ description|e }}</p>
+        <p>{{ description }}</p>
         {% endif %}
         <div class="metadata">
             {% if translations|length > 1 and generate_rss %}
