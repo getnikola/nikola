@@ -65,7 +65,7 @@ class CommandRst2Html(Command):
         parser = lxml.html.HTMLParser(remove_blank_text=True)
         doc = lxml.html.document_fromstring(template_output, parser)
         html = b'<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='utf8', method='html', pretty_print=True)
-        print(html)
+        print(html.decode('utf-8'))
         if error_level < 3:
             return 0
         else:
