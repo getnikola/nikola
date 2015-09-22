@@ -20,6 +20,12 @@ Bugfixes
 * /robots.txt was never being built (Issue #2098)
 * SVG thumbnails (Issue #2094)
 
+Deprecations
+------------
+
+* Post.section_link is now deprecated (Issue #2086). Use
+  site.link('index_section_path', post.section_slug()) instead.
+
 New in v7.7.1
 =============
 
