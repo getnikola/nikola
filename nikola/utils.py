@@ -1001,7 +1001,7 @@ def get_asset_path(path, themes, files_folders={'files': ''}, _themes_dir='theme
         if os.path.isfile(candidate):
             return candidate
     for src, rel_dst in files_folders.items():
-        relpath = os.path.relpath(path, rel_dst)
+        relpath = os.path.normpath(os.path.relpath(path, rel_dst))
         if not relpath.startswith('..' + os.path.sep):
             candidate = os.path.abspath(os.path.join(src, relpath))
             if os.path.isfile(candidate):
