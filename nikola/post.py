@@ -744,7 +744,7 @@ class Post(object):
         return utils.colorize_str_from_base_color(slug, base)
 
     def section_link(self, lang=None):
-        """Return the link to the post's section."""
+        """Return the link to the post's section (deprecated)."""
         if lang is None:
             lang = nikola.utils.LocaleBorg().current_lang
 
