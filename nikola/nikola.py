@@ -1734,6 +1734,7 @@ class Nikola(object):
 
     def generic_page_renderer(self, lang, post, filters, context=None):
         """Render post fragments to final HTML pages."""
+        utils.LocaleBorg().set_locale(lang)
         context = context.copy() if context else {}
         deps = post.deps(lang) + \
             self.template_system.template_deps(post.template_name)
