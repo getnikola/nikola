@@ -747,7 +747,7 @@ class Post(object):
     def section_link(self, lang=None):
         """Return the link to the post's section (deprecated)."""
         utils.LOGGER.warning("Post.section_link is deprecated. Please use " +
-                             "site.link('index_section_path', post.section_slug()) instead.")
+                             "site.link('section_index_link', post.section_slug()) instead.")
         if lang is None:
             lang = nikola.utils.LocaleBorg().current_lang
 
