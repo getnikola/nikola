@@ -236,7 +236,8 @@ def minify_lines(data):
 def typogrify(data):
     """Prettify text with typogrify."""
     if typo is None:
-        req_missing(['typogrify'], 'use the typogrify filter')
+        req_missing(['typogrify'], 'use the typogrify filter', optional=True)
+        return data
 
     data = _normalize_html(data)
     data = typo.amp(data)
