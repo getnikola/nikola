@@ -15,7 +15,7 @@ python:
   - "3.5"
 matrix:
   include:
-    - python: "2.7"
+    - python: "3.5"
       env: NMODE=flake8
 env:
     NMODE=nikola
