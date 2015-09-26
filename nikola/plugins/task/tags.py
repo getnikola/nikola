@@ -172,7 +172,7 @@ class RenderTags(Task):
             """Write tag data into JSON file, for use in tag clouds."""
             utils.makedirs(os.path.dirname(output_name))
             with open(output_name, 'w+') as fd:
-                json.dump(data, fd)
+                json.dump(data, fd, sort_keys=True)
 
         if self.site.config['WRITE_TAG_CLOUD']:
             task = {
