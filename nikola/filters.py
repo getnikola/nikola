@@ -315,6 +315,12 @@ def jsonminify(data):
     data = json.dumps(json.loads(data), indent=None, separators=(',', ':'))
     return data
 
+@apply_to_binary_file
+def xmlminify(data):
+    """Minify XML files (strip whitespace and use minimal separators)."""
+    parser = lxml.etree.XMLParser(remove_blank_text=True)
+    newdata = lxml.etree.XML(data, parser=parser)
+    return lxml.etree.tostring(newdata, encoding='utf-8', method='xml', xml_declaration=True)
 
 def _normalize_html(data):
     """Pass HTML through LXML to clean it up, if possible."""

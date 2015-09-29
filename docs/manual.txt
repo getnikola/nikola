@@ -1384,6 +1384,9 @@ jsminify
 jsonminify
    Minify JSON files (strip whitespace and use minimal separators).
 
+xmlminify
+   Minify XML files. Suitable for Nikola’s sitemaps and Atom feeds.
+
 You can apply filters to specific posts or pages by using the ``filters`` metadata field:
 
 .. code:: restructuredtext
