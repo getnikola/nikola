@@ -4,8 +4,8 @@ New in master
 Features
 --------
 
-* New ```jsonmnify``` filter for minifying JSON files.
-* New ```xmlmnify``` filter for minifying XML files.
+* New ```jsonminify``` filter for minifying JSON files.
+* New ```xmlminify``` filter for minifying XML files.
 * New option ``FEED_PREVIEWIMAGE`` includes the ``post.meta.previewimage``
   image in Atom and RSS feeds. (Issue #2095)
 
