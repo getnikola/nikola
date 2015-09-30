@@ -64,10 +64,11 @@ class RobotsFile(LateTask):
 
             with io.open(robots_path, 'w+', encoding='utf8') as outf:
                 outf.write("Sitemap: {0}\n\n".format(sitemapindex_url))
+                outf.write("User-Agent: *\n")
                 if kw["robots_exclusions"]:
-                    outf.write("User-Agent: *\n")
                     for loc in kw["robots_exclusions"]:
                         outf.write("Disallow: {0}\n".format(loc))
+                outf.write("Host: {0}\n".format(urlparse(kw["base_url"]).netloc))
 
         yield self.group_task()
 
