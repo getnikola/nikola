@@ -78,6 +78,9 @@ PY2_BARBS = [
     "Don’t get in the way of progress! Upgrade to Python 3 and save a developer’s mind today!",
     "Winners don't use Python 2 -- Signed: The FBI",
     "Python 2? What year is it?",
+    "I just wanna tell you how I'm feeling\n"
+    "Gotta make you understand\n"
+    "Never gonna give you up [But Python 2 has to go]",
 ]
 
 
