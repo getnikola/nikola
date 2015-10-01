@@ -64,10 +64,10 @@ config = {}
 # DO NOT USE unless you know what you are doing!
 _RETURN_DOITNIKOLA = False
 
-PY2_WARNING = """Nikola is going to deprecate python 2 support in 2016. You already have python 3
+PY2_WARNING = """Nikola is going to deprecate Python 2 support in 2016. You already have Python 3
 available in your system. Why not switch?
 
-Please check https://getnikola.com/blog/env-survey-results-and-the-future-of-python-27.html for details."""
+Please check http://bit.ly/1FKEsiX for details."""
 
 
 PY2_BARBS = [
