@@ -81,6 +81,7 @@ PY2_BARBS = [
     "I just wanna tell you how I'm feeling\n"
     "Gotta make you understand\n"
     "Never gonna give you up [But Python 2 has to go]",
+    "The year 2009 called, and they want their Python 2.7 back.",
 ]
 
 
