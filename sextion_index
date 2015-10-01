@@ -1,4 +1,0 @@
-CHANGES.txt[36m:[m  site.link('[1;31msection_index_link[m', post.section_slug()) instead.
-nikola/data/themes/base-jinja/templates/sectionindex.tmpl[36m:[m        <h2><a href="{{ _link('[1;31msection_index_link[m', posts[0].section_slug()) }}">{{ title|e }}</a></h2>
-nikola/data/themes/base/templates/sectionindex.tmpl[36m:[m        <h2><a href="${_link('[1;31msection_index_link[m', posts[0].section_slug())}">${title|h}</a></h2>
-nikola/post.py[36m:[m                             "site.link('[1;31msection_index_link[m', post.section_slug()) instead.")
