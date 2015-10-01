@@ -64,6 +64,20 @@ config = {}
 # DO NOT USE unless you know what you are doing!
 _RETURN_DOITNIKOLA = False
 
+PY2_WARNING = """Nikola is going to deprecate python 2 support in 2016. You already have python 3
+available in your system. Why not switch?
+
+Please check https://getnikola.com/blog/env-survey-results-and-the-future-of-python-27.html for details."""
+
+
+PY2_BARBS = [
+    "Python 2 has been deprecated for years. Stop clinging to your long gone youth and switch to Python3.",
+    "Python 2 is the safety blanket of languages. Be a big kid and switch to Python 3",
+    "Python 2 is old and busted. Python 3 is the new hotness.",
+    "Nice unicode you have there, would be a shame something happened to it.. switch to python 3!.",
+    "Don’t get in the way of progress! Upgrade to Python 3 and save a developer’s mind today!",
+]
+
 
 def main(args=None):
     """Run Nikola."""
