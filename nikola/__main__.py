@@ -76,6 +76,8 @@ PY2_BARBS = [
     "Python 2 is old and busted. Python 3 is the new hotness.",
     "Nice unicode you have there, would be a shame something happened to it.. switch to python 3!.",
     "Don’t get in the way of progress! Upgrade to Python 3 and save a developer’s mind today!",
+    "Winners don't use Python 2 -- Signed: The FBI",
+    "Python 2? What year is it?",
 ]
 
 
