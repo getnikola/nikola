@@ -132,7 +132,7 @@ class ImageProcessor(object):
             op.write(lxml.etree.tostring(tree))
             op.close()
         except (KeyError, AttributeError) as e:
-            self.logger.warn("No width/height in %s. Actuall exception: %s" % (src, e))
+            self.logger.warn("No width/height in %s. Original exception: %s" % (src, e))
             utils.copy_file(src, dst)
 
     def image_date(self, src):
@@ -148,8 +148,10 @@ class ImageProcessor(object):
                     decoded = ExifTags.TAGS.get(tag, tag)
                     if decoded in ('DateTimeOriginal', 'DateTimeDigitized'):
                         try:
+                            if isinstance(value, tuple):
+                                value = value[0]
                             self.dates[src] = datetime.datetime.strptime(
-                                value, r'%Y:%m:%d %H:%M:%S')
+                                value, '%Y:%m:%d %H:%M:%S')
                             break
                         except ValueError:  # Invalid EXIF date.
                             pass
