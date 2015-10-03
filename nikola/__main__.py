@@ -64,26 +64,6 @@ config = {}
 # DO NOT USE unless you know what you are doing!
 _RETURN_DOITNIKOLA = False
 
-PY2_WARNING = """Nikola is going to deprecate Python 2 support in 2016. You already have Python 3
-available in your system. Why not switch?
-
-Please check http://bit.ly/1FKEsiX for details."""
-
-
-PY2_BARBS = [
-    "Python 2 has been deprecated for years. Stop clinging to your long gone youth and switch to Python3.",
-    "Python 2 is the safety blanket of languages. Be a big kid and switch to Python 3",
-    "Python 2 is old and busted. Python 3 is the new hotness.",
-    "Nice unicode you have there, would be a shame something happened to it.. switch to python 3!.",
-    "Don’t get in the way of progress! Upgrade to Python 3 and save a developer’s mind today!",
-    "Winners don't use Python 2 -- Signed: The FBI",
-    "Python 2? What year is it?",
-    "I just wanna tell you how I'm feeling\n"
-    "Gotta make you understand\n"
-    "Never gonna give you up [But Python 2 has to go]",
-    "The year 2009 called, and they want their Python 2.7 back.",
-]
-
 
 def main(args=None):
     """Run Nikola."""
@@ -419,6 +399,7 @@ def levenshtein(s1, s2):
         previous_row = current_row
 
     return previous_row[-1]
+
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))

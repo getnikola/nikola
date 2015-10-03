@@ -1,0 +1,13 @@
+[Core]
+name = py3_switch
+module = py3_switch
+
+[Documentation]
+author = Roberto Alsina
+version = 1.0
+website = https://getnikola.com/
+description = Beg the user to switch to Python 3
+
+[Nikola]
+plugincategory = Task
+
