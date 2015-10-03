@@ -66,7 +66,7 @@ LOGGER = get_logger('Nikola', STDERR_HANDLER)
 
 def has_python_3():
     if 'win' in sys.platform:
-        py_bin = 'python3.exe'
+        py_bin = 'py.exe'
     else:
         py_bin = 'python3'
     for path in os.environ["PATH"].split(os.pathsep):
