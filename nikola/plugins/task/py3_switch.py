@@ -77,12 +77,13 @@ def has_python_3():
 
 
 class Py3Switch(LateTask):
+
     """Beg the user to switch to python 3."""
+
     name = "switch to py3"
 
     def gen_tasks(self):
         """Beg the user to switch to python 3."""
-
         def give_warning():
             if sys.version_info[0] == 3:
                 return
