@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Warning about Python 2.7 deprecation (Issues #2121, #2122)
 * New ```jsonminify``` filter for minifying JSON files.
 * New ```xmlminify``` filter for minifying XML files.
 * New option ``FEED_PREVIEWIMAGE`` includes the ``post.meta.previewimage``
