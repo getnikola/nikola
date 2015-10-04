@@ -400,5 +400,6 @@ def levenshtein(s1, s2):
 
     return previous_row[-1]
 
+
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))
