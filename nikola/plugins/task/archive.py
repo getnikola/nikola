@@ -45,6 +45,7 @@ class Archive(Task):
         """Set Nikola site."""
         site.register_path_handler('archive', self.archive_path)
         site.register_path_handler('archive_atom', self.archive_atom_path)
+        site.register_path_handler('archive_rss', self.archive_rss_path)
         return super(Archive, self).set_site(site)
 
     def _prepare_task(self, kw, name, lang, posts, items, template_name,
@@ -92,15 +93,25 @@ class Archive(Task):
         posts = sorted(posts, key=lambda a: a.date)
         posts.reverse()
         if kw['archives_are_indexes']:
+            def _get_feed(extension):
+                if extension == ".atom":
+                    return "_atom"
+                elif extension == ".xml":
+                    return "_rss"
+                else:
+                    return ""
+
             def page_link(i, displayed_i, num_pages, force_addition, extension=None):
-                feed = "_atom" if extension == ".atom" else ""
-                return adjust_name_for_index_link(self.site.link("archive" + feed, name, lang), i, displayed_i,
-                                                  lang, self.site, force_addition, extension)
+                feed = _get_feed(extension)
+                return adjust_name_for_index_link(
+                    self.site.link("archive" + feed, name, lang),
+                    i, displayed_i, lang, self.site, force_addition, extension)
 
             def page_path(i, displayed_i, num_pages, force_addition, extension=None):
-                feed = "_atom" if extension == ".atom" else ""
-                return adjust_name_for_index_path(self.site.path("archive" + feed, name, lang), i, displayed_i,
-                                                  lang, self.site, force_addition, extension)
+                feed = _get_feed(extension)
+                return adjust_name_for_index_path(
+                    self.site.path("archive" + feed, name, lang),
+                    i, displayed_i, lang, self.site, force_addition, extension)
 
             uptodate = []
             if deps_translatable is not None:
@@ -139,6 +150,7 @@ class Archive(Task):
             "strip_indexes": self.site.config['STRIP_INDEXES'],
             "index_file": self.site.config['INDEX_FILE'],
             "generate_atom": self.site.config["GENERATE_ATOM"],
+            "generate_rss": self.site.config["GENERATE_RSS"]
         }
         self.site.scan_posts()
         yield self.group_task()
@@ -221,20 +233,28 @@ class Archive(Task):
                 items = [(y, self.site.link("archive", y, lang), len(self.site.posts_per_year[y])) for y in years]
                 yield self._prepare_task(kw, None, lang, None, items, "list.tmpl", kw["messages"][lang]["Archive"])
 
-    def archive_path(self, name, lang, is_feed=False):
+    def archive_path(self, name, lang):
         """Link to archive path, name is the year.
 
         Example:
 
         link://archive/2013 => /archives/2013/index.html
         """
-        if is_feed:
-            extension = ".atom"
-            archive_file = os.path.splitext(self.site.config['ARCHIVE_FILENAME'])[0] + extension
-            index_file = os.path.splitext(self.site.config['INDEX_FILE'])[0] + extension
+        archive_file = self.site.config['ARCHIVE_FILENAME']
+        index_file = self.site.config['INDEX_FILE']
+        if name:
+            return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                                  self.site.config['ARCHIVE_PATH'], name,
+                                  index_file] if _f]
         else:
-            archive_file = self.site.config['ARCHIVE_FILENAME']
-            index_file = self.site.config['INDEX_FILE']
+            return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                                  self.site.config['ARCHIVE_PATH'],
+                                  archive_file] if _f]
+
+    def _archive_feed_path(self, name, lang, extension):
+        """Link to feed archive path, name is the year."""
+        archive_file = os.path.splitext(self.site.config['ARCHIVE_FILENAME'])[0] + extension
+        index_file = os.path.splitext(self.site.config['INDEX_FILE'])[0] + extension
         if name:
             return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                                   self.site.config['ARCHIVE_PATH'], name,
@@ -251,4 +271,13 @@ class Archive(Task):
 
         link://archive_atom/2013 => /archives/2013/index.atom
         """
-        return self.archive_path(name, lang, is_feed=True)
+        return self._archive_feed_path(name, lang, ".atom")
+
+    def archive_rss_path(self, name, lang):
+        """Link to RSS archive path, name is the year.
+
+        Example:
+
+        link://archive_atom/2013 => /archives/2013/index.xml
+        """
+        return self._archive_feed_path(name, lang, ".xml")

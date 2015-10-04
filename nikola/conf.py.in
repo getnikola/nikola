@@ -421,9 +421,10 @@ HIDDEN_AUTHORS = ['Guest']
 # disable it by setting USE_BASE_TAG to False.
 # USE_BASE_TAG = True
 
-# Final location for the blog main RSS feed is:
-# output / TRANSLATION[lang] / RSS_PATH / rss.xml
-# RSS_PATH = ""
+# Final location for the blog main feeds are:
+# output / TRANSLATION[lang] / FEED_PATH / rss.xml
+# output / TRANSLATION[lang] / FEED_PATH / feed.atom
+# FEED_PATH = ""
 
 # Slug the Tag URL. Easier for users to type, special characters are
 # often removed or replaced as well.
@@ -909,6 +910,17 @@ MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
 # it will not be included again. Image will be included as-is, aim to optmize
 # the image source for Feedly, Apple News, Flipboard, and other popular clients.
 # FEED_PREVIEWIMAGE = True
+
+# The Image will be used as the preview image when the preview image is not
+# found in the content. Defaults to None.
+# FEED_PREVIEWIMAGE_DEFAULT = None
+
+# A Enclosure type for feeds. 'link' or 'media'
+# Defaults to 'link'
+# FEED_ENCLOSURE = 'link'
+
+# The PubSubHubbub URL for feeds. Defaults to None.
+# FEED_PUSH = None
 
 # RSS_LINK is a HTML fragment to link the RSS or Atom feeds. If set to None,
 # the base.tmpl will use the feed Nikola generates. However, you may want to

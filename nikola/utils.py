@@ -83,9 +83,6 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_chain', 'load_messages'
            'flatten_tree_structure', 'parse_escaped_hierarchical_category_name',
            'join_hierarchical_category_path', 'indent')
 
-# Are you looking for 'generic_rss_renderer'?
-# It's defined in nikola.nikola.Nikola (the site object).
-
 if sys.version_info[0] == 3:
     # Python 3
     bytes_str = bytes

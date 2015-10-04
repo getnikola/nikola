@@ -61,12 +61,14 @@ class RenderAuthors(Task):
             "blog_title": self.site.config["BLOG_TITLE"],
             "site_url": self.site.config["SITE_URL"],
             "base_url": self.site.config["BASE_URL"],
+            "blog_description": self.site.config["BLOG_DESCRIPTION"],
             "messages": self.site.MESSAGES,
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
             'author_path': self.site.config['AUTHOR_PATH'],
             "author_pages_are_indexes": self.site.config['AUTHOR_PAGES_ARE_INDEXES'],
-            "generate_rss": self.site.config['GENERATE_RSS'],
+            "generate_atom": self.site.config["GENERATE_ATOM"],
+            "generate_rss": self.site.config["GENERATE_RSS"],
             "feed_teasers": self.site.config["FEED_TEASERS"],
             "feed_plain": self.site.config["FEED_PLAIN"],
             "feed_link_append_query": self.site.config["FEED_LINKS_APPEND_QUERY"],
@@ -100,8 +102,57 @@ class RenderAuthors(Task):
                         filtered_posts = post_list
                     else:
                         filtered_posts = [x for x in post_list if x.is_translation_available(lang)]
-                    if kw["generate_rss"]:
-                        yield self.author_rss(author, lang, filtered_posts, kw)
+                    if kw["generate_atom"] or kw["generate_rss"]:
+                        targets = []
+                        kind = "author"
+                        atom_path = self.site.path(kind + "_atom", author, lang)
+                        if kw['generate_atom']:
+                            atom_output_name = os.path.join(kw['output_folder'],
+                                                            atom_path.lstrip('/'))
+                            targets.append(atom_output_name)
+                        else:
+                            atom_output_name = None
+                        if kw['generate_rss']:
+                            rss_path = self.site.path(kind + "_rss", author, lang)
+                            rss_output_name = os.path.join(kw['output_folder'],
+                                                           rss_path.lstrip('/'))
+                            targets.append(rss_output_name)
+                        else:
+                            rss_path = None
+                            rss_output_name = None
+
+                        deps = []
+                        deps_uptodate = []
+                        post_list = filtered_posts[:kw['feed_length']]
+                        for post in post_list:
+                            deps += post.deps(lang)
+                            deps_uptodate += post.deps_uptodate(lang)
+
+                        title = '{0} ({1})'.format(kw['blog_title'](lang),
+                            self._get_title(author))
+
+                        description = None
+                        description = self._get_description(author, lang)
+                        if description is None:
+                            description = kw['blog_description'](lang)
+
+                        task = {
+                            'basename': RenderAuthors.name,
+                            'name': ('feed:' + lang + ':'+ author + ':' +
+                                     ':'.join(targets)),
+                            'actions': [(self.site.feedutil.gen_feed_generator,
+                                         (lang, post_list, kw['base_url'],
+                                          title, description,
+                                          atom_output_name, atom_path,
+                                          rss_output_name, rss_path))],
+                            'targets': targets,
+                            'file_dep': deps,
+                            'task_dep': ['render_posts'],
+                            'clean': True,
+                            'uptodate': [utils.config_changed(kw,'nikola.plugins.task.authors.feed')] + deps_uptodate,
+                        }
+                        yield task
+
                     # Render HTML
                     if kw['author_pages_are_indexes']:
                         yield self.author_page_as_index(author, lang, filtered_posts, kw)
@@ -160,13 +211,25 @@ class RenderAuthors(Task):
         """Render a sort of index page collection using only this author's posts."""
         kind = "author"
 
+        def _get_feed(extension):
+            if extension == ".atom":
+                return "_atom"
+            elif extension == ".xml":
+                return "_rss"
+            else:
+                return ""
+
         def page_link(i, displayed_i, num_pages, force_addition, extension=None):
-            feed = "_atom" if extension == ".atom" else ""
-            return utils.adjust_name_for_index_link(self.site.link(kind + feed, author, lang), i, displayed_i, lang, self.site, force_addition, extension)
+            feed = _get_feed(extension)
+            return utils.adjust_name_for_index_link(
+                self.site.link(kind + feed, author, lang),
+                i, displayed_i, lang, self.site, force_addition, extension)
 
         def page_path(i, displayed_i, num_pages, force_addition, extension=None):
-            feed = "_atom" if extension == ".atom" else ""
-            return utils.adjust_name_for_index_path(self.site.path(kind + feed, author, lang), i, displayed_i, lang, self.site, force_addition, extension)
+            feed = _get_feed(extension)
+            return utils.adjust_name_for_index_path(
+                self.site.path(kind + feed, author, lang),
+                i, displayed_i, lang, self.site, force_addition, extension)
 
         context_source = {}
         title = self._get_title(author)
@@ -212,37 +275,6 @@ class RenderAuthors(Task):
         task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.authors:list')]
         task['basename'] = str(self.name)
         yield task
-
-    def author_rss(self, author, lang, posts, kw):
-        """Create a RSS feed for a single author in a given language."""
-        kind = "author"
-        # Render RSS
-        output_name = os.path.normpath(
-            os.path.join(kw['output_folder'],
-                         self.site.path(kind + "_rss", author, lang)))
-        feed_url = urljoin(self.site.config['BASE_URL'], self.site.link(kind + "_rss", author, lang).lstrip('/'))
-        deps = []
-        deps_uptodate = []
-        post_list = sorted(posts, key=lambda a: a.date)
-        post_list.reverse()
-        for post in post_list:
-            deps += post.deps(lang)
-            deps_uptodate += post.deps_uptodate(lang)
-        task = {
-            'basename': str(self.name),
-            'name': output_name,
-            'file_dep': deps,
-            'targets': [output_name],
-            'actions': [(utils.generic_rss_renderer,
-                        (lang, "{0} ({1})".format(kw["blog_title"](lang), self._get_title(author)),
-                         kw["site_url"], None, post_list,
-                         output_name, kw["feed_teasers"], kw["feed_plain"], kw['feed_length'],
-                         feed_url, None, kw["feed_link_append_query"]))],
-            'clean': True,
-            'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.authors:rss')] + deps_uptodate,
-            'task_dep': ['render_posts'],
-        }
-        return utils.apply_filters(task, kw['filters'])
 
     def slugify_author_name(self, name):
         """Slugify an author name."""
@@ -296,15 +328,11 @@ class RenderAuthors(Task):
 
         Example:
 
-        link://author_rss/joe => /authors/joe.rss
+        link://author_rss/joe => /authors/joe.xml
         """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                               self.site.config['AUTHOR_PATH'], self.slugify_author_name(name) + ".xml"] if
                 _f]
-
-    def _add_extension(self, path, extension):
-        path[-1] += extension
-        return path
 
     def _posts_per_author(self):
         """Return a dict of posts per author."""

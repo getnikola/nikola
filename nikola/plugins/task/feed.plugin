@@ -1,0 +1,13 @@
+[Core]
+Name = generate_feed
+Module = feed
+
+[Documentation]
+Author = IGARASHI Masanao
+Version = 1.0
+Website = https://getnikola.com
+Description = Generate RSS/Atom feeds.
+
+[Nikola]
+plugincategory = Task
+

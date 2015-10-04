@@ -46,8 +46,6 @@ except ImportError:
     import Image as _Image
     Image = _Image
 
-import PyRSS2Gen as rss
-
 from nikola.plugin_categories import Task
 from nikola import utils
 from nikola.image_processing import ImageProcessor
@@ -67,6 +65,7 @@ class Galleries(Task, ImageProcessor):
         site.register_path_handler('gallery', self.gallery_path)
         site.register_path_handler('gallery_global', self.gallery_global_path)
         site.register_path_handler('gallery_rss', self.gallery_rss_path)
+        site.register_path_handler('gallery_atom', self.gallery_atom_path)
 
         self.logger = utils.get_logger('render_galleries', utils.STDERR_HANDLER)
 
@@ -85,7 +84,13 @@ class Galleries(Task, ImageProcessor):
             'feed_length': site.config['FEED_LENGTH'],
             'tzinfo': site.tzinfo,
             'comments_in_galleries': site.config['COMMENTS_IN_GALLERIES'],
+            'blog_title': site.config['BLOG_TITLE'],
+            'blog_description': site.config['BLOG_DESCRIPTION'],
+            'blog_author': site.config['BLOG_AUTHOR'],
+            'base_url': site.config['BASE_URL'],
+            'generate_atom': site.config['GENERATE_ATOM'],
             'generate_rss': site.config['GENERATE_RSS'],
+            'feed_enclosure': site.config['FEED_ENCLOSURE'],
         }
 
         # Verify that no folder in GALLERY_FOLDERS appears twice
@@ -164,6 +169,21 @@ class Galleries(Task, ImageProcessor):
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
                 gallery_path.split(os.sep) +
                 ['rss.xml'] if _f]
+
+    def gallery_atom_path(self, name, lang):
+        """Link to an image gallery's Atom feed.
+
+        It will try to find a gallery with that name if it's not ambiguous
+        or with that path. For example:
+
+        link://gallery_rss/london => /galleries/trips/london/feed.atom
+
+        link://gallery_rss/trips/london => /galleries/trips/london/feed.atom
+        """
+        gallery_path = self._find_gallery_path(name)
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
+                list(os.path.split(gallery_path)) +
+                ['feed.atom'] if _f]
 
     def gen_tasks(self):
         """Render image galleries."""
@@ -316,33 +336,45 @@ class Galleries(Task, ImageProcessor):
                     }, 'nikola.plugins.task.galleries:gallery')],
                 }, self.kw['filters'])
 
-                # RSS for the gallery
-                if self.kw["generate_rss"]:
-                    rss_dst = os.path.join(
-                        self.kw['output_folder'],
-                        self.site.path("gallery_rss", gallery, lang))
-                    rss_dst = os.path.normpath(rss_dst)
+                targets = []
+                atom_path = self.site.link("gallery_atom", gallery, lang)
+                if self.kw['generate_atom']:
+                    atom_output_name = os.path.join(self.kw['output_folder'],
+                                                atom_path.lstrip('/'))
+                    targets.append(atom_output_name)
+                else:
+                    atom_output_name = None
+                if self.kw['generate_rss']:
+                    rss_path = self.site.link("gallery_rss", gallery, lang)
+                    rss_output_name = os.path.join(self.kw['output_folder'],
+                                                   rss_path.lstrip('/'))
+                    targets.append(rss_output_name)
+                else:
+                    rss_path = None
+                    rss_output_name = None
 
-                    yield utils.apply_filters({
-                        'basename': self.name,
-                        'name': rss_dst,
-                        'file_dep': file_dep_dest,
-                        'targets': [rss_dst],
-                        'actions': [
-                            (self.gallery_rss, (
-                                image_list,
-                                dst_img_list,
-                                img_titles,
-                                lang,
-                                self.site.link("gallery_rss", gallery, lang),
-                                rss_dst,
-                                context['title']
-                            ))],
-                        'clean': True,
-                        'uptodate': [utils.config_changed({
-                            1: self.kw.copy(),
-                        }, 'nikola.plugins.task.galleries:rss')],
-                    }, self.kw['filters'])
+                gallery_path = os.path.join(self.kw['base_url'],
+                                            context["permalink"].lstrip('/'))
+
+                task = {
+                    'basename': Galleries.name,
+                    'name': lang + ':' + ':'.join(targets),
+                    'actions': [(self.site.feedutil.gallery_feed_generator,
+                                 (lang, image_list, dest_img_list, img_titles,
+                                  self,
+                                  gallery_path,
+                                  self.site.config['BLOG_TITLE'](lang),
+                                  self.site.config['BLOG_DESCRIPTION'](lang),
+                                  atom_output_name, atom_path,
+                                  rss_output_name, rss_path))],
+                    'targets': targets,
+                    'file_dep': file_dep_dest,
+                    'clean': True,
+                    'uptodate': [utils.config_changed({
+                        1: self.kw.copy(),
+                    }, 'nikola.plugins.task.galleries:feed')],
+                }
+                yield task
 
     def find_galleries(self):
         """Find all galleries to be processed according to conf.py."""
@@ -581,50 +613,3 @@ class Galleries(Task, ImageProcessor):
         context['photo_array'] = photo_array
         context['photo_array_json'] = json.dumps(photo_array, sort_keys=True)
         self.site.render_template(template_name, output_name, context)
-
-    def gallery_rss(self, img_list, dest_img_list, img_titles, lang, permalink, output_path, title):
-        """Create a RSS showing the latest images in the gallery.
-
-        This doesn't use generic_rss_renderer because it
-        doesn't involve Post objects.
-        """
-        def make_url(url):
-            return urljoin(self.site.config['BASE_URL'], url.lstrip('/'))
-
-        items = []
-        for img, srcimg, title in list(zip(dest_img_list, img_list, img_titles))[:self.kw["feed_length"]]:
-            img_size = os.stat(
-                os.path.join(
-                    self.site.config['OUTPUT_FOLDER'], img)).st_size
-            args = {
-                'title': title,
-                'link': make_url(img),
-                'guid': rss.Guid(img, False),
-                'pubDate': self.image_date(srcimg),
-                'enclosure': rss.Enclosure(
-                    make_url(img),
-                    img_size,
-                    mimetypes.guess_type(img)[0]
-                ),
-            }
-            items.append(rss.RSSItem(**args))
-        rss_obj = rss.RSS2(
-            title=title,
-            link=make_url(permalink),
-            description='',
-            lastBuildDate=datetime.datetime.utcnow(),
-            items=items,
-            generator='https://getnikola.com/',
-            language=lang
-        )
-
-        rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
-        rss_obj.self_url = make_url(permalink)
-        rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
-        dst_dir = os.path.dirname(output_path)
-        utils.makedirs(dst_dir)
-        with io.open(output_path, "w+", encoding="utf-8") as rss_file:
-            data = rss_obj.to_xml(encoding='utf-8')
-            if isinstance(data, utils.bytes_str):
-                data = data.decode('utf-8')
-            rss_file.write(data)
