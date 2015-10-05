@@ -80,7 +80,7 @@ class Py3Switch(LateTask):
 
     """Beg the user to switch to python 3."""
 
-    name = "switch to py3"
+    name = "_switch to py3"
 
     def gen_tasks(self):
         """Beg the user to switch to python 3."""
