@@ -2254,7 +2254,7 @@ def valid_locale_fallback(desired_locale=None):
     """
     # Whenever fallbacks change, adjust test TestHarcodedFallbacksWork
     candidates_windows = [str('English'), str('C')]
-    candidates_posix = [str('en_US.utf8'), str('C')]
+    candidates_posix = [str('en_US.UTF-8'), str('C')]
     candidates = candidates_windows if sys.platform == 'win32' else candidates_posix
     if desired_locale:
         candidates = list(candidates)
@@ -2288,7 +2288,7 @@ def guess_locale_from_lang_posix(lang):
         locale_n = str(lang)
     else:
         # this works in Travis when locale support set by Travis suggestion
-        locale_n = str((locale.normalize(lang).split('.')[0]) + '.utf8')
+        locale_n = str((locale.normalize(lang).split('.')[0]) + '.UTF-8')
     if not is_valid_locale(locale_n):
         # http://thread.gmane.org/gmane.comp.web.nikola/337/focus=343
         locale_n = str((locale.normalize(lang).split('.')[0]))

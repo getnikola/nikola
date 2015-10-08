@@ -1,3 +1,14 @@
+New in master
+=============
+
+Features
+--------
+
+Bugfixes
+--------
+
+* Capitalize "UTF-8" properly in locale guessing (Issue #2137)
+
 New in v7.7.2
 =============
 
