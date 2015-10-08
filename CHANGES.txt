@@ -13,6 +13,7 @@ Features
 Bugfixes
 --------
 
+* Support Pillow v3.0.0 (Issue #2130)
 * Support setting template in metadata in translated posts (Issue #2114)
 * Fix false orphan report for code.css and robots.txt (Issue #2106)
 * Fix reST post list date formatting error (Issue #2104)
