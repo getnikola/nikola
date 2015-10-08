@@ -1,12 +1,12 @@
-New in master
+New in v7.7.2
 =============
 
 Features
 --------
 
 * Warning about Python 2.7 deprecation (Issues #2121, #2122)
-* New ```jsonminify``` filter for minifying JSON files.
-* New ```xmlminify``` filter for minifying XML files.
+* New ``jsonminify`` filter for minifying JSON files.
+* New ``xmlminify`` filter for minifying XML files.
 * New option ``FEED_PREVIEWIMAGE`` includes the ``post.meta.previewimage``
   image in Atom and RSS feeds. (Issue #2095)
 
@@ -665,7 +665,7 @@ Features
 * Link listings raw sources if COPY_SOURCES is True (Issue #1214)
 * Much more powerful ``nikola plugin`` command (Issue #1189)
 * More powerful console mode allows access to all nikola commands (Issue #830)
-* New ```ROBOTS_EXCLUSIONS``` option listing resources to exclude from sitemap
+* New ``ROBOTS_EXCLUSIONS`` option listing resources to exclude from sitemap
   and include in new generated /robots.txt (Issue #804)
 * Generate sitemapindex containing RSS and sitemap files (Issue #804)
 * Support hooks in templates, for use by plugins (Issue #896)

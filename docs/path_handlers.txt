@@ -5,6 +5,7 @@
 Nikola supports special links with the syntax ``link://kind/name``. Here is
 the description for all the supported kinds.
 
+.. class:: dl-horizontal
 
 archive
     Link to archive path, name is the year.
