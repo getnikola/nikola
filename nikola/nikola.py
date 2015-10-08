@@ -130,7 +130,7 @@ LEGAL_VALUES = {
         'pa': 'Punjabi',
         'pl': 'Polish',
         'pt': 'Portuguese',
-        'pt_br': 'Portuguese (Brasil)',
+        'pt_br': 'Portuguese (Brazil)',
         'ru': 'Russian',
         'sk': 'Slovak',
         'sl': 'Slovene',
