@@ -98,7 +98,6 @@ class Py3Switch(LateTask):
             'name': 'please!',
             'actions': [give_warning],
             'clean': True,
-            'task_dep': ['sitemap'],
             'uptodate': [doit.tools.timeout(datetime.timedelta(days=3))]
         }
 
