@@ -10,7 +10,6 @@ from nikola.plugin_categories import RestExtension
 
 
 class Plugin(RestExtension):
-
     """Plugin for soundclound directive."""
 
     name = "rest_soundcloud"
@@ -31,7 +30,6 @@ src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/{preslug}/""
 
 
 class SoundCloud(Directive):
-
     """reST extension for inserting SoundCloud embedded music.
 
     Usage:
@@ -70,7 +68,6 @@ class SoundCloud(Directive):
 
 
 class SoundCloudPlaylist(SoundCloud):
-
     """reST directive for SoundCloud playlists."""
 
     preslug = "playlists"

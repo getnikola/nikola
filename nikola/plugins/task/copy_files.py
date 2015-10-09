@@ -33,7 +33,6 @@ from nikola import utils
 
 
 class CopyFiles(Task):
-
     """Copy static files into the output folder."""
 
     name = "copy_files"

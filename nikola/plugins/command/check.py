@@ -100,7 +100,6 @@ def fs_relpath_from_url_path(url_path):
 
 
 class CommandCheck(Command):
-
     """Check the generated site."""
 
     name = "check"

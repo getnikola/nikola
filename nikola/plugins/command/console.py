@@ -38,7 +38,6 @@ LOGGER = get_logger('console', STDERR_HANDLER)
 
 
 class CommandConsole(Command):
-
     """Start debugging console."""
 
     name = "console"

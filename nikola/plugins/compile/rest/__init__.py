@@ -42,7 +42,6 @@ from nikola.utils import unicode_str, get_logger, makedirs, write_metadata, STDE
 
 
 class CompileRest(PageCompiler):
-
     """Compile reStructuredText into HTML."""
 
     name = "rest"
@@ -172,7 +171,6 @@ def get_observer(settings):
 
 
 class NikolaReader(docutils.readers.standalone.Reader):
-
     """Nikola-specific docutils reader."""
 
     def __init__(self, *args, **kwargs):

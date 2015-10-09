@@ -37,7 +37,6 @@ from nikola.plugin_categories import RestExtension
 
 
 class Plugin(RestExtension):
-
     """Plugin for reST slides directive."""
 
     name = "rest_slides"
@@ -51,7 +50,6 @@ class Plugin(RestExtension):
 
 
 class Slides(Directive):
-
     """reST extension for inserting slideshows."""
 
     has_content = True

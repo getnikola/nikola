@@ -40,7 +40,6 @@ from nikola import utils
 
 
 class BuildBundles(LateTask):
-
     """Bundle assets using WebAssets."""
 
     name = "create_bundles"

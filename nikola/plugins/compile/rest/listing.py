@@ -55,7 +55,6 @@ from nikola.plugin_categories import RestExtension
 
 # A sanitized version of docutils.parsers.rst.directives.body.CodeBlock.
 class CodeBlock(Directive):
-
     """Parse and mark up content of a code block."""
 
     optional_arguments = 1
@@ -126,7 +125,6 @@ docutils.parsers.rst.directives.misc.CodeBlock = CodeBlock
 
 
 class Plugin(RestExtension):
-
     """Plugin for listing directive."""
 
     name = "rest_listing"
@@ -152,7 +150,6 @@ listing_spec['linenos'] = directives.unchanged
 
 
 class Listing(Include):
-
     """Create a highlighted block of code from a file in listings/.
 
     Usage:

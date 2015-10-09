@@ -32,7 +32,6 @@ from nikola.plugin_categories import Command
 
 
 class CommandNewPage(Command):
-
     """Create a new page."""
 
     name = "new_page"

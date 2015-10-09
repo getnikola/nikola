@@ -36,7 +36,6 @@ from nikola import utils
 
 
 class CopyAssets(Task):
-
     """Copy theme assets into output."""
 
     name = "copy_assets"

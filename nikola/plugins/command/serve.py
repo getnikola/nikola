@@ -157,7 +157,6 @@ class CommandServe(Command):
 
 
 class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
-
     """A request handler, modified for Nikola."""
 
     extensions_map = dict(SimpleHTTPRequestHandler.extensions_map)

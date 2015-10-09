@@ -40,7 +40,6 @@ from nikola.utils import req_missing
 
 
 class Plugin(RestExtension):
-
     """Plugin for reST media directive."""
 
     name = "rest_media"
@@ -53,7 +52,6 @@ class Plugin(RestExtension):
 
 
 class Media(Directive):
-
     """reST extension for inserting any sort of media using micawber."""
 
     has_content = False

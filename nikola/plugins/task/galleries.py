@@ -57,7 +57,6 @@ _image_size_cache = {}
 
 
 class Galleries(Task, ImageProcessor):
-
     """Render image galleries."""
 
     name = 'render_galleries'

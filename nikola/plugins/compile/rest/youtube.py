@@ -34,7 +34,6 @@ from nikola.plugin_categories import RestExtension
 
 
 class Plugin(RestExtension):
-
     """Plugin for the youtube directive."""
 
     name = "rest_youtube"
@@ -54,7 +53,6 @@ src="//www.youtube.com/embed/{yid}?rel=0&amp;hd=1&amp;wmode=transparent"
 
 
 class Youtube(Directive):
-
     """reST extension for inserting youtube embedded videos.
 
     Usage:

@@ -37,7 +37,6 @@ from nikola.utils import config_changed, adjust_name_for_index_path, adjust_name
 
 
 class Archive(Task):
-
     """Render the post archives."""
 
     name = "render_archive"

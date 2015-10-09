@@ -33,7 +33,6 @@ from nikola import utils
 
 
 class Sources(Task):
-
     """Copy page sources into the output."""
 
     name = "render_sources"

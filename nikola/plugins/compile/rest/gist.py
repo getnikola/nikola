@@ -11,7 +11,6 @@ from nikola.plugin_categories import RestExtension
 
 
 class Plugin(RestExtension):
-
     """Plugin for gist directive."""
 
     name = "rest_gist"
@@ -24,7 +23,6 @@ class Plugin(RestExtension):
 
 
 class GitHubGist(Directive):
-
     """Embed GitHub Gist.
 
     Usage:

@@ -43,7 +43,6 @@ _site = None
 
 
 class Plugin(RestExtension):
-
     """Plugin for chart role."""
 
     name = "rest_chart"
@@ -57,7 +56,6 @@ class Plugin(RestExtension):
 
 
 class Chart(Directive):
-
     """reStructuredText extension for inserting charts as SVG.
 
     Usage:

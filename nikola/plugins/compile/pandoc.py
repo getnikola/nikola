@@ -40,7 +40,6 @@ from nikola.utils import req_missing, makedirs, write_metadata
 
 
 class CompilePandoc(PageCompiler):
-
     """Compile markups into HTML using pandoc."""
 
     name = "pandoc"

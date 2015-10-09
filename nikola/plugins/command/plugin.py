@@ -45,7 +45,6 @@ LOGGER = utils.get_logger('plugin', utils.STDERR_HANDLER)
 
 
 class CommandPlugin(Command):
-
     """Manage plugins."""
 
     json = None

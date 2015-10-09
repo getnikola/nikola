@@ -43,7 +43,6 @@ from nikola.plugin_categories import RestExtension
 
 
 class Plugin(RestExtension):
-
     """Plugin for reST post-list directive."""
 
     name = "rest_post_list"
@@ -57,7 +56,6 @@ class Plugin(RestExtension):
 
 
 class PostList(Directive):
-
     """Provide a reStructuredText directive to create a list of posts.
 
     Post List

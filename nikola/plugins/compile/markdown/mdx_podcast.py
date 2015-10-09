@@ -51,7 +51,6 @@ PODCAST_RE = r'\[podcast\](?P<url>.+)\[/podcast\]'
 
 
 class PodcastPattern(Pattern):
-
     """InlinePattern for footnote markers in a document's body text."""
 
     def __init__(self, pattern, configs):
@@ -70,7 +69,6 @@ class PodcastPattern(Pattern):
 
 
 class PodcastExtension(MarkdownExtension, Extension):
-
     """"Podcast extension for Markdown."""
 
     def __init__(self, configs={}):

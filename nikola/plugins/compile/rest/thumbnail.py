@@ -35,7 +35,6 @@ from nikola.plugin_categories import RestExtension
 
 
 class Plugin(RestExtension):
-
     """Plugin for thumbnail directive."""
 
     name = "rest_thumbnail"
@@ -48,7 +47,6 @@ class Plugin(RestExtension):
 
 
 class Thumbnail(Figure):
-
     """Thumbnail directive for reST."""
 
     def align(argument):

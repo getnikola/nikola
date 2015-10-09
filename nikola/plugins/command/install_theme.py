@@ -43,7 +43,6 @@ LOGGER = utils.get_logger('install_theme', utils.STDERR_HANDLER)
 
 
 class CommandInstallTheme(Command):
-
     """Install a theme."""
 
     name = "install_theme"

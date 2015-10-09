@@ -217,7 +217,6 @@ GIST_RST_RE = r'(?m)^\.\.\s*gist::\s*(?P<gist_id>[^\]\s]+)(?:\s*(?P<filename>.+?
 
 
 class GistFetchException(Exception):
-
     """Raised when attempt to fetch content of a Gist from github.com fails."""
 
     def __init__(self, url, status_code):
@@ -228,7 +227,6 @@ class GistFetchException(Exception):
 
 
 class GistPattern(Pattern):
-
     """InlinePattern for footnote markers in a document's body text."""
 
     def __init__(self, pattern, configs):
@@ -290,7 +288,6 @@ class GistPattern(Pattern):
 
 
 class GistExtension(MarkdownExtension, Extension):
-
     """Gist extension for Markdown."""
 
     def __init__(self, configs={}):

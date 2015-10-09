@@ -44,7 +44,6 @@ from nikola.utils import makedirs, req_missing, write_metadata
 
 
 class CompileMarkdown(PageCompiler):
-
     """Compile Markdown into HTML."""
 
     name = "markdown"

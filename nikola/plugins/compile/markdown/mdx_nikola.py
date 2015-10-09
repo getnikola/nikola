@@ -42,7 +42,6 @@ CODERE = re.compile('<div class="codehilite"><pre>(.*?)</pre></div>', flags=re.M
 
 
 class NikolaPostProcessor(Postprocessor):
-
     """Nikola-specific post-processing for Markdown."""
 
     def run(self, text):
@@ -57,7 +56,6 @@ class NikolaPostProcessor(Postprocessor):
 
 
 class NikolaExtension(MarkdownExtension, Extension):
-
     """Extension for injecting the postprocessor."""
 
     def extendMarkdown(self, md, md_globals):
