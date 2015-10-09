@@ -34,7 +34,6 @@ from nikola.plugins.command.check import real_scan_files
 
 
 class CommandOrphans(Command):
-
     """List all orphans."""
 
     name = "orphans"

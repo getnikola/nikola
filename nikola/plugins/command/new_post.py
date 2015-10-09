@@ -114,7 +114,6 @@ def get_date(schedule=False, rule=None, last_date=None, tz=None, iso8601=False):
 
 
 class CommandNewPost(Command):
-
     """Create a new post."""
 
     name = "new_post"

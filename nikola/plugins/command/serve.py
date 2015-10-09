@@ -49,14 +49,12 @@ from nikola.utils import get_logger, STDERR_HANDLER
 
 
 class IPv6Server(HTTPServer):
-
     """An IPv6 HTTPServer."""
 
     address_family = socket.AF_INET6
 
 
 class CommandServe(Command):
-
     """Start test server."""
 
     name = "serve"

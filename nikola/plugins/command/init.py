@@ -220,7 +220,6 @@ def prepare_config(config):
 
 
 class CommandInit(Command):
-
     """Create a new site."""
 
     name = "init"
