@@ -44,7 +44,6 @@ LOGGER = get_logger('mako', STDERR_HANDLER)
 
 
 class MakoTemplates(TemplateSystem):
-
     """Support for Mako templates."""
 
     name = "mako"

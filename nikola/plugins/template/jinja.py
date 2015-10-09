@@ -42,7 +42,6 @@ from nikola.utils import makedirs, req_missing
 
 
 class JinjaTemplates(TemplateSystem):
-
     """Support for Jinja2 templates."""
 
     name = "jinja"

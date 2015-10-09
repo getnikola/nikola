@@ -79,7 +79,6 @@ ERROR {}
 
 
 class CommandAuto(Command):
-
     """Automatic rebuilds for Nikola."""
 
     name = "auto"
@@ -208,7 +207,6 @@ class CommandAuto(Command):
         parent = self
 
         class Mixed(WebSocketWSGIApplication):
-
             """A class that supports WS and HTTP protocols on the same port."""
 
             def __call__(self, environ, start_response):
@@ -342,7 +340,6 @@ pending = []
 
 
 class LRSocket(WebSocket):
-
     """Speak Livereload protocol."""
 
     def __init__(self, *a, **kw):
@@ -415,7 +412,6 @@ class LRSocket(WebSocket):
 
 
 class OurWatchHandler(FileSystemEventHandler):
-
     """A Nikola-specific handler for Watchdog."""
 
     def __init__(self, function):
@@ -429,7 +425,6 @@ class OurWatchHandler(FileSystemEventHandler):
 
 
 class ConfigWatchHandler(FileSystemEventHandler):
-
     """A Nikola-specific handler for Watchdog that handles the config file (as a workaround)."""
 
     def __init__(self, configuration_filename, function):

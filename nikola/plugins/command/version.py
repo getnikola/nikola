@@ -38,7 +38,6 @@ URL = 'https://pypi.python.org/pypi?:action=doap&name=Nikola'
 
 
 class CommandVersion(Command):
-
     """Print Nikola version."""
 
     name = "version"

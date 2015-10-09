@@ -57,7 +57,6 @@ def check_ghp_import_installed():
 
 
 class CommandGitHubDeploy(Command):
-
     """Deploy site to GitHub Pages."""
 
     name = 'github_deploy'

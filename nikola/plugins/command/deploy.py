@@ -41,7 +41,6 @@ from nikola.utils import get_logger, remove_file, unicode_str, makedirs, STDERR_
 
 
 class CommandDeploy(Command):
-
     """Deploy site."""
 
     name = "deploy"

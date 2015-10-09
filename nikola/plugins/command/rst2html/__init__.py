@@ -36,7 +36,6 @@ from nikola.plugin_categories import Command
 
 
 class CommandRst2Html(Command):
-
     """Compile reStructuredText to HTML, using Nikola architecture."""
 
     name = "rst2html"

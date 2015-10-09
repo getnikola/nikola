@@ -36,7 +36,6 @@ from nikola.plugin_categories import Command
 
 
 class CommandStatus(Command):
-
     """Display site status."""
 
     name = "status"

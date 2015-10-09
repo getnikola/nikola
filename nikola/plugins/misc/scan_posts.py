@@ -37,7 +37,6 @@ from nikola.post import Post
 
 
 class ScanPosts(PostScanner):
-
     """Scan posts in the site."""
 
     name = "scan_posts"

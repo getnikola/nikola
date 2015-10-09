@@ -88,7 +88,6 @@ def install_plugin(site, plugin_name, output_dir=None, show_install_notes=False)
 
 
 class CommandImportWordpress(Command, ImportMixin):
-
     """Import a WordPress dump."""
 
     name = "import_wordpress"

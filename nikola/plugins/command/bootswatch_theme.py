@@ -37,7 +37,6 @@ LOGGER = utils.get_logger('bootswatch_theme', utils.STDERR_HANDLER)
 
 
 class CommandBootswatchTheme(Command):
-
     """Given a swatch name from bootswatch.com and a parent theme, creates a custom theme."""
 
     name = "bootswatch_theme"
