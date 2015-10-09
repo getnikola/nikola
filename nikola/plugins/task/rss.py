@@ -38,7 +38,6 @@ from nikola.plugin_categories import Task
 
 
 class GenerateRSS(Task):
-
     """Generate RSS feeds."""
 
     name = "generate_rss"

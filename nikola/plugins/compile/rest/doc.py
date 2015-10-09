@@ -34,7 +34,6 @@ from nikola.plugin_categories import RestExtension
 
 
 class Plugin(RestExtension):
-
     """Plugin for doc role."""
 
     name = 'rest_doc'

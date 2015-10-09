@@ -53,7 +53,6 @@ from nikola.utils import makedirs, req_missing, get_logger, STDERR_HANDLER
 
 
 class CompileIPynb(PageCompiler):
-
     """Compile IPynb into HTML."""
 
     name = "ipynb"

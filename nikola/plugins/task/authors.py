@@ -40,7 +40,6 @@ from nikola import utils
 
 
 class RenderAuthors(Task):
-
     """Render the author pages and feeds."""
 
     name = "render_authors"

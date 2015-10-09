@@ -37,7 +37,6 @@ from nikola.plugin_categories import RestExtension
 
 
 class Plugin(RestExtension):
-
     """Plugin for vimeo reST directive."""
 
     name = "rest_vimeo"
@@ -60,7 +59,6 @@ VIDEO_DEFAULT_WIDTH = 281
 
 
 class Vimeo(Directive):
-
     """reST extension for inserting vimeo embedded videos.
 
     Usage:

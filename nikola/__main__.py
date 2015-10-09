@@ -176,7 +176,6 @@ def main(args=None):
 
 
 class Help(DoitHelp):
-
     """Show Nikola usage."""
 
     @staticmethod
@@ -200,7 +199,6 @@ class Help(DoitHelp):
 
 
 class Build(DoitRun):
-
     """Expose "run" command as "build" for backwards compatibility."""
 
     def __init__(self, *args, **kw):
@@ -239,7 +237,6 @@ class Build(DoitRun):
 
 
 class Clean(DoitClean):
-
     """Clean site, including the cache directory."""
 
     def clean_tasks(self, tasks, dryrun):
@@ -256,7 +253,6 @@ DoitAuto.name = 'doit_auto'
 
 
 class NikolaTaskLoader(TaskLoader):
-
     """Nikola-specific task loader."""
 
     def __init__(self, nikola, quiet=False):
@@ -289,7 +285,6 @@ class NikolaTaskLoader(TaskLoader):
 
 
 class DoitNikola(DoitMain):
-
     """Nikola-specific implementation of DoitMain."""
 
     # overwite help command

@@ -36,7 +36,6 @@ from nikola.utils import makedirs, write_metadata
 
 
 class CompileHtml(PageCompiler):
-
     """Compile HTML into HTML."""
 
     name = "html"

@@ -52,7 +52,6 @@ __all__ = (
 
 
 class BasePlugin(IPlugin):
-
     """Base plugin class."""
 
     def set_site(self, site):
@@ -84,7 +83,6 @@ class BasePlugin(IPlugin):
 
 
 class PostScanner(BasePlugin):
-
     """The scan method of these plugins is called by Nikola.scan_posts."""
 
     def scan(self):
@@ -93,7 +91,6 @@ class PostScanner(BasePlugin):
 
 
 class Command(BasePlugin, DoitCommand):
-
     """Doit command implementation."""
 
     name = "dummy_command"
@@ -156,7 +153,6 @@ DoitCommand.help = help
 
 
 class BaseTask(BasePlugin):
-
     """Base for task generators."""
 
     name = "dummy_task"
@@ -179,21 +175,18 @@ class BaseTask(BasePlugin):
 
 
 class Task(BaseTask):
-
     """Task generator."""
 
     name = "dummy_task"
 
 
 class LateTask(BaseTask):
-
     """Late task generator (plugin executed after all Task plugins)."""
 
     name = "dummy_latetask"
 
 
 class TemplateSystem(BasePlugin):
-
     """Provide support for templating systems."""
 
     name = "dummy_templates"
@@ -224,7 +217,6 @@ class TemplateSystem(BasePlugin):
 
 
 class TaskMultiplier(BasePlugin):
-
     """Take a task and return *more* tasks."""
 
     name = "dummy multiplier"
@@ -235,7 +227,6 @@ class TaskMultiplier(BasePlugin):
 
 
 class PageCompiler(BasePlugin):
-
     """Compile text files into HTML."""
 
     name = "dummy_compiler"
@@ -300,7 +291,6 @@ class PageCompiler(BasePlugin):
 
 
 class CompilerExtension(BasePlugin):
-
     """An extension for a Nikola compiler.
 
     If you intend to implement those in your own compiler, you can:
@@ -319,7 +309,6 @@ class CompilerExtension(BasePlugin):
 
 
 class RestExtension(CompilerExtension):
-
     """Extensions for reStructuredText."""
 
     name = "dummy_rest_extension"
@@ -327,7 +316,6 @@ class RestExtension(CompilerExtension):
 
 
 class MarkdownExtension(CompilerExtension):
-
     """Extensions for Markdown."""
 
     name = "dummy_markdown_extension"
@@ -335,21 +323,18 @@ class MarkdownExtension(CompilerExtension):
 
 
 class SignalHandler(BasePlugin):
-
     """Signal handlers."""
 
     name = "dummy_signal_handler"
 
 
 class ConfigPlugin(BasePlugin):
-
     """A plugin that can edit config (or modify the site) on-the-fly."""
 
     name = "dummy_config_plugin"
 
 
 class Importer(Command):
-
     """Basic structure for importing data into Nikola.
 
     The flow is:

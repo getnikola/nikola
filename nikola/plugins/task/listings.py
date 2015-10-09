@@ -42,7 +42,6 @@ from nikola import utils
 
 
 class Listings(Task):
-
     """Render code listings."""
 
     name = "render_listings"

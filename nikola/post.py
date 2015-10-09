@@ -76,7 +76,6 @@ _UPGRADE_METADATA_ADVERTISED = False
 
 
 class Post(object):
-
     """Represent a blog post or site page."""
 
     def __init__(

@@ -37,7 +37,6 @@ from hashlib import md5
 
 
 class CompilePhp(PageCompiler):
-
     """Compile PHP into PHP."""
 
     name = "php"
