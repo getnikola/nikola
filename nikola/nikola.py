@@ -1813,6 +1813,25 @@ class Nikola(object):
             description = context_source.get('description', None)
             if description is None:
                 description = kw['blog_description'](lang)
+            atom_currentlink = None
+            atom_archprev = None
+            atom_archnext = None
+            rss_currentlink = None
+            rss_archprev = None
+            rss_archnext = None
+            pagekind = context_source.get('pagekind')
+            if pagekind and 'archive_page' in pagekind:
+                archivefeed = context_source.get('archivefeed')
+                if kw['generate_atom']:
+                    atom_currentlink = self.link("atom", None, lang)
+                    if archivefeed:
+                        atom_archprev = archivefeed[0]
+                        atom_archnext = archivefeed[1]
+                if kw['generate_rss']:
+                    rss_currentlink = self.link("rss", None, lang)
+                    if archivefeed:
+                        rss_archprev = archivefeed[2]
+                        rss_archnext = archivefeed[3]
             atom_firstlink = None
             atom_lastlink = None
             rss_firstlink = None
@@ -1913,19 +1932,23 @@ class Nikola(object):
                                           extension=".atom")
                     atom_output_name = os.path.join(kw['output_folder'],
                                                     atom_path.lstrip('/'))
+                    targets.append(atom_output_name)
                     if nextlink is not None:
                         atom_prevlink = page_link(
                             nextlink,
                             utils.get_displayed_page_number(nextlink, num_pages,
                                                             self),
                             num_pages, False, extension=".atom")
+                    elif atom_currentlink and atom_archprev:
+                        atom_prevlink = atom_archprev
                     if prevlink is not None:
                         atom_nextlink = page_link(
                             prevlink,
                             utils.get_displayed_page_number(prevlink, num_pages,
                                                             self),
                             num_pages, False, extension=".atom")
-                    targets.append(atom_output_name)
+                    elif atom_currentlink and atom_archnext:
+                        atom_nextlink = atom_archnext
 
                 rss_path = None
                 rss_output_name = None
@@ -1936,19 +1959,23 @@ class Nikola(object):
                                          extension=".xml")
                     rss_output_name = os.path.join(kw['output_folder'],
                                                    rss_path.lstrip('/'))
+                    targets.append(rss_output_name)
                     if nextlink is not None:
                         rss_prevlink = page_link(
                             nextlink,
                             utils.get_displayed_page_number(nextlink, num_pages,
                                                             self),
                             num_pages, False, extension=".xml")
+                    elif rss_currentlink and rss_archprev:
+                        rss_prevlink = rss_archprev
                     if prevlink is not None:
                         rss_nextlink = page_link(
                             prevlink,
                             utils.get_displayed_page_number(prevlink, num_pages,
                                                             self),
                             num_pages, False, extension=".xml")
-                    targets.append(rss_output_name)
+                    elif rss_currentlink and rss_archnext:
+                        rss_nextlink = rss_archnext
 
                 feed_task = {
                     'basename': basename,
@@ -1963,7 +1990,8 @@ class Nikola(object):
                                   atom_nextlink, atom_prevlink,
                                   atom_firstlink, atom_lastlink,
                                   rss_nextlink, rss_prevlink,
-                                  rss_firstlink, rss_lastlink))],
+                                  rss_firstlink, rss_lastlink,
+                                  atom_currentlink, rss_currentlink))],
                     'targets': targets,
                     'file_dep': [output_name],
                     'clean': True,

@@ -155,7 +155,8 @@ class FeedUtil(object):
                            rss_path, atom_nextlink=None, atom_prevlink=None,
                            atom_firstlink=None, atom_lastlink=None,
                            rss_nextlink=None, rss_prevlink=None,
-                           rss_firstlink=None, rss_lastlink=None):
+                           rss_firstlink=None, rss_lastlink=None,
+                           atom_currentlink=None, rss_currentlink=None):
         """Generate feed tasks."""
         config = self.site.config
         base_url = config["BASE_URL"]
@@ -169,6 +170,8 @@ class FeedUtil(object):
 
         fg = FeedGenerator()
         fg.load_extension('dc', atom=False,rss=True)
+        if atom_currentlink or rss_currentlink:
+            fg.load_extension('history', atom=True, rss=True)
         fg.updated(datetime.now(dateutil.tz.tzutc()))
         fg.title(title=title, type=None, cdata=False)
         fg.subtitle(subtitle=subtitle, type=None, cdata=False)
@@ -188,22 +191,36 @@ class FeedUtil(object):
             links.append({'href': feed_push, 'rel': 'hub'})
 
         if atom_output_name:
-            if atom_nextlink is not None:
+            if atom_currentlink:
+                fg.history.history_archive()
                 links.append({'href': urljoin(base_url,
-                                              atom_nextlink.lstrip('/')),
-                              'rel': 'next'})
-            if atom_prevlink is not None:
-                links.append({'href': urljoin(base_url,
-                                              atom_prevlink.lstrip('/')),
-                              'rel': 'previous'})
-            if atom_firstlink is not None:
-                links.append({'href': urljoin(base_url,
-                                              atom_firstlink.lstrip('/')),
-                              'rel': 'first'})
-            if atom_lastlink is not None:
-                links.append({'href': urljoin(base_url,
-                                              atom_lastlink.lstrip('/')),
-                              'rel': 'last'})
+                                              atom_currentlink.lstrip('/')),
+                              'rel': 'current'})
+                if atom_nextlink is not None:
+                    links.append({'href': urljoin(base_url,
+                                                  atom_nextlink.lstrip('/')),
+                                  'rel': 'next-archive'})
+                if atom_prevlink is not None:
+                    links.append({'href': urljoin(base_url,
+                                                  atom_prevlink.lstrip('/')),
+                                  'rel': 'prev-archive'})
+            else:
+                if atom_nextlink is not None:
+                    links.append({'href': urljoin(base_url,
+                                                  atom_nextlink.lstrip('/')),
+                                  'rel': 'next'})
+                if atom_prevlink is not None:
+                    links.append({'href': urljoin(base_url,
+                                                  atom_prevlink.lstrip('/')),
+                                  'rel': 'previous'})
+                if atom_firstlink is not None:
+                    links.append({'href': urljoin(base_url,
+                                                  atom_firstlink.lstrip('/')),
+                                  'rel': 'first'})
+                if atom_lastlink is not None:
+                    links.append({'href': urljoin(base_url,
+                                                  atom_lastlink.lstrip('/')),
+                                  'rel': 'last'})
         fg.link(links)
 
         if rss_output_name:
@@ -215,22 +232,36 @@ class FeedUtil(object):
 
             fg.rss_atom_link_self(rss_feed_url)
             rss_links = []
-            if rss_nextlink is not None:
+            if rss_currentlink:
+                fg.history.history_archive()
                 rss_links.append({'href': urljoin(base_url,
-                                                  rss_nextlink.lstrip('/')),
-                                  'rel': 'next'})
-            if rss_prevlink is not None:
-                rss_links.append({'href': urljoin(base_url,
-                                                  rss_prevlink.lstrip('/')),
-                                  'rel': 'previous'})
-            if rss_firstlink is not None:
-                rss_links.append({'href': urljoin(base_url,
-                                                  rss_firstlink.lstrip('/')),
-                                  'rel': 'first'})
-            if rss_lastlink is not None:
-                rss_links.append({'href': urljoin(base_url,
-                                                  rss_lastlink.lstrip('/')),
-                                  'rel': 'last'})
+                                                  rss_currentlink.lstrip('/')),
+                                  'rel': 'current'})
+                if rss_nextlink is not None:
+                    rss_links.append({'href': urljoin(base_url,
+                                                      rss_nextlink.lstrip('/')),
+                                      'rel': 'next-archive'})
+                if rss_prevlink is not None:
+                    rss_links.append({'href': urljoin(base_url,
+                                                      rss_prevlink.lstrip('/')),
+                                      'rel': 'prev-archive'})
+            else:
+                if rss_nextlink is not None:
+                    rss_links.append({'href': urljoin(base_url,
+                                                      rss_nextlink.lstrip('/')),
+                                      'rel': 'next'})
+                if rss_prevlink is not None:
+                    rss_links.append({'href': urljoin(base_url,
+                                                      rss_prevlink.lstrip('/')),
+                                      'rel': 'previous'})
+                if rss_firstlink is not None:
+                    rss_links.append({'href': urljoin(base_url,
+                                                      rss_firstlink.lstrip('/')),
+                                      'rel': 'first'})
+                if rss_lastlink is not None:
+                    rss_links.append({'href': urljoin(base_url,
+                                                      rss_lastlink.lstrip('/')),
+                                      'rel': 'last'})
             if len(rss_links):
                 fg.rss_atom_link(rss_links)
 
