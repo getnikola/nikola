@@ -32,7 +32,6 @@ from nikola.utils import config_changed
 
 
 class RenderPages(Task):
-
     """Render pages into output."""
 
     name = "render_pages"

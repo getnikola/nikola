@@ -48,7 +48,6 @@ except ImportError:
 
 
 class ImageProcessor(object):
-
     """Apply image operations."""
 
     image_ext_list_builtin = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.bmp', '.tiff']

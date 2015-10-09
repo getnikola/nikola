@@ -35,7 +35,6 @@ from nikola import utils
 
 
 class Redirect(Task):
-
     """Generate redirections."""
 
     name = "redirect"

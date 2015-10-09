@@ -39,7 +39,6 @@ from nikola import utils
 
 
 class RobotsFile(LateTask):
-
     """Generate a robots.txt file."""
 
     name = "robots_file"

@@ -44,7 +44,6 @@ def update_deps(post, lang, task):
 
 
 class RenderPosts(Task):
-
     """Build HTML fragments from metadata and text."""
 
     name = "render_posts"

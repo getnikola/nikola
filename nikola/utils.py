@@ -104,7 +104,6 @@ class ApplicationWarning(Exception):
 
 
 class ColorfulStderrHandler(ColorizedStderrHandler):
-
     """Stream handler with colors."""
 
     _colorful = False
@@ -238,7 +237,6 @@ def makedirs(path):
 
 
 class Functionary(defaultdict):
-
     """Class that looks like a function, but is a defaultdict."""
 
     def __init__(self, default, default_lang):
@@ -254,7 +252,6 @@ class Functionary(defaultdict):
 
 
 class TranslatableSetting(object):
-
     """A setting that can be translated.
 
     You can access it via: SETTING(lang).  You can omit lang, in which
@@ -441,7 +438,6 @@ class TranslatableSetting(object):
 
 
 class TemplateHookRegistry(object):
-
     r"""A registry for template hooks.
 
     Usage:
@@ -507,7 +503,6 @@ class TemplateHookRegistry(object):
 
 
 class CustomEncoder(json.JSONEncoder):
-
     """Custom JSON encoder."""
 
     def default(self, obj):
@@ -523,7 +518,6 @@ class CustomEncoder(json.JSONEncoder):
 
 
 class config_changed(tools.config_changed):
-
     """A copy of doit's config_changed, using pickle instead of serializing manually."""
 
     def __init__(self, config, identifier=None):
@@ -620,7 +614,6 @@ language_incomplete_warned = []
 
 
 class LanguageNotFoundError(Exception):
-
     """An exception thrown if language is not found."""
 
     def __init__(self, lang, orig):
@@ -809,7 +802,6 @@ def encodelink(iri):
 
 
 class UnsafeZipException(Exception):
-
     """Exception for unsafe zip files."""
 
     pass
@@ -1017,7 +1009,6 @@ def get_asset_path(path, themes, files_folders={'files': ''}, _themes_dir='theme
 
 
 class LocaleBorgUninitializedException(Exception):
-
     """Exception for unitialized LocaleBorg."""
 
     def __init__(self):
@@ -1026,7 +1017,6 @@ class LocaleBorgUninitializedException(Exception):
 
 
 class LocaleBorg(object):
-
     """Provide locale related services and autoritative current_lang.
 
     current_lang is the last lang for which the locale was set
@@ -1220,7 +1210,6 @@ class LocaleBorg(object):
 
 
 class ExtendedRSS2(rss.RSS2):
-
     """Extended RSS class."""
 
     xsl_stylesheet_href = None
@@ -1244,7 +1233,6 @@ class ExtendedRSS2(rss.RSS2):
 
 
 class ExtendedItem(rss.RSSItem):
-
     """Extended RSS item."""
 
     def __init__(self, **kw):
@@ -1441,7 +1429,6 @@ def ask_yesno(query, default=None):
 
 
 class CommandWrapper(object):
-
     """Converts commands into functions."""
 
     def __init__(self, cmd, commands_object):
@@ -1457,7 +1444,6 @@ class CommandWrapper(object):
 
 
 class Commands(object):
-
     """Nikola Commands.
 
     Sample usage:
@@ -1548,7 +1534,6 @@ def options2docstring(name, options):
 
 
 class NikolaPygmentsHTML(HtmlFormatter):
-
     """A Nikola-specific modification of Pygments' HtmlFormatter."""
 
     def __init__(self, anchor_ref, classes=None, linenos='table', linenostart=1):
@@ -1655,7 +1640,6 @@ def create_redirect(src, dst):
 
 
 class TreeNode(object):
-
     """A tree node."""
 
     indent_levels = None  # use for formatting comments as tree

@@ -290,7 +290,6 @@ def _enclosure(post, lang):
 
 
 class Nikola(object):
-
     """Class that handles site generation.
 
     Takes a site config as argument on creation.

@@ -41,7 +41,6 @@ from nikola import utils
 
 
 class RenderTags(Task):
-
     """Render the tag/category pages and feeds."""
 
     name = "render_tags"

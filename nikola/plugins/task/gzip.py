@@ -35,7 +35,6 @@ from nikola.plugin_categories import TaskMultiplier
 
 
 class GzipFiles(TaskMultiplier):
-
     """If appropiate, create tasks to create gzipped versions of files."""
 
     name = "gzip"

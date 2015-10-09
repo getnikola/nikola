@@ -107,7 +107,6 @@ def get_base_path(base):
 
 
 class Sitemap(LateTask):
-
     """Generate a sitemap."""
 
     name = "sitemap"

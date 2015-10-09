@@ -34,7 +34,6 @@ from nikola import utils
 
 
 class ScaleImage(Task, ImageProcessor):
-
     """Resize images and create thumbnails for them."""
 
     name = "scale_images"

@@ -77,7 +77,6 @@ def has_python_3():
 
 
 class Py3Switch(LateTask):
-
     """Beg the user to switch to python 3."""
 
     name = "_switch to py3"

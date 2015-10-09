@@ -48,7 +48,6 @@ links = {}
 
 
 class ImportMixin(object):
-
     """Mixin with common used methods."""
 
     name = "import_mixin"
