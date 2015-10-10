@@ -40,6 +40,7 @@ import os
 import re
 import json
 import shutil
+import socket
 import subprocess
 import sys
 import dateutil.parser
@@ -1819,6 +1820,7 @@ def dns_sd(port, inet6):
         import avahi
         import dbus
         inet = avahi.PROTO_INET6 if inet6 else avahi.PROTO_INET
+        name = "{0}'s Nikola Server on {1}".format(os.getlogin(), socket.gethostname())
         bus = dbus.SystemBus()
         bus_server = dbus.Interface(bus.get_object(avahi.DBUS_NAME,
                                                    avahi.DBUS_PATH_SERVER),
@@ -1827,7 +1829,7 @@ def dns_sd(port, inet6):
                                                   bus_server.EntryGroupNew()),
                                    avahi.DBUS_INTERFACE_ENTRY_GROUP)
         bus_group.AddService(avahi.IF_UNSPEC, inet, dbus.UInt32(0),
-                             'Nikola Server', '_http._tcp', '', '',
+                             name, '_http._tcp', '', '',
                              dbus.UInt16(port), '')
         bus_group.Commit()
         return bus_group  # remember to bus_group.Reset() to unpublish
