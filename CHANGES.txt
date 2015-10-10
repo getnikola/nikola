@@ -3,6 +3,9 @@ New in master
 
 Features
 --------
+* ``serve`` and ``auto`` publishes DNS Service Discovery records
+  to the local network announcing they’re running web servers.
+
 
 Bugfixes
 --------

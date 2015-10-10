@@ -1813,6 +1813,28 @@ def color_hsl_adjust_hex(hexstr, adjust_h=None, adjust_s=None, adjust_l=None):
     return husl.husl_to_hex(h, s, l)
 
 
+def dns_sd(port, inet6):
+    """Optimistically publish a HTTP service to the local network over DNS-SD. (Linux/FreeBSD only.)"""
+    try:
+        import avahi
+        import dbus
+        inet = avahi.PROTO_INET6 if inet6 else avahi.PROTO_INET
+        bus = dbus.SystemBus()
+        bus_server = dbus.Interface(bus.get_object(avahi.DBUS_NAME,
+                                                   avahi.DBUS_PATH_SERVER),
+                                    avahi.DBUS_INTERFACE_SERVER)
+        bus_group = dbus.Interface(bus.get_object(avahi.DBUS_NAME,
+                                                  bus_server.EntryGroupNew()),
+                                   avahi.DBUS_INTERFACE_ENTRY_GROUP)
+        bus_group.AddService(avahi.IF_UNSPEC, inet, dbus.UInt32(0),
+                             'Nikola Server', '_http._tcp', '', '',
+                             dbus.UInt16(port), '')
+        bus_group.Commit()
+        return bus_group  # remember to bus_group.Reset() to unpublish
+    except:
+        return None
+
+
 # Stolen from textwrap in Python 3.4.3.
 def indent(text, prefix, predicate=None):
     """Add 'prefix' to the beginning of selected lines in 'text'.

@@ -45,7 +45,7 @@ except ImportError:
 
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, STDERR_HANDLER
+from nikola.utils import dns_sd, get_logger, STDERR_HANDLER
 
 
 class IPv6Server(HTTPServer):
@@ -61,6 +61,7 @@ class CommandServe(Command):
     doc_usage = "[options]"
     doc_purpose = "start the test webserver"
     logger = None
+    dns_sd = None
 
     cmd_options = (
         {
@@ -150,9 +151,12 @@ class CommandServe(Command):
                         raise e
             else:
                 try:
+                    self.dns_sd = dns_sd(options['port'], (options['ipv6'] or '::' in options['address']))
                     httpd.serve_forever()
                 except KeyboardInterrupt:
                     self.logger.info("Server is shutting down.")
+                    if self.dns_sd:
+                        self.dns_sd.Reset()
                     return 130
 
 
