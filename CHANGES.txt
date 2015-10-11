@@ -3,6 +3,8 @@ New in master
 
 Features
 --------
+
+* Hungarian translation (by Baptiste Darthenay)
 * ``serve`` and ``auto`` publishes DNS Service Discovery records
   to the local network announcing they’re running web servers.
 
