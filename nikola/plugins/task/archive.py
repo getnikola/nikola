@@ -26,6 +26,8 @@
 
 """Render the post archives."""
 
+from __future__ import division
+import math
 import copy
 import os
 
@@ -88,37 +90,18 @@ class Archive(Task):
         task['basename'] = self.name
         return task
 
-    def _generate_posts_task(self, kw, name, lang, posts, title, deps_translatable=None):
-        """Genereate a task for an archive with posts."""
-        posts = sorted(posts, key=lambda a: a.date)
-        posts.reverse()
+    def _generate_posts_task(self, kw, name, lang, posts, title, deps_translatable,
+                             archivefeed=[None, None, None, None]):
+        """Generate a task for an archive with posts."""
         if kw['archives_are_indexes']:
-            def _get_feed(extension):
-                if extension == ".atom":
-                    return "_atom"
-                elif extension == ".xml":
-                    return "_rss"
-                else:
-                    return ""
-
-            def page_link(i, displayed_i, num_pages, force_addition, extension=None):
-                feed = _get_feed(extension)
-                return adjust_name_for_index_link(
-                    self.site.link("archive" + feed, name, lang),
-                    i, displayed_i, lang, self.site, force_addition, extension)
-
-            def page_path(i, displayed_i, num_pages, force_addition, extension=None):
-                feed = _get_feed(extension)
-                return adjust_name_for_index_path(
-                    self.site.path("archive" + feed, name, lang),
-                    i, displayed_i, lang, self.site, force_addition, extension)
-
+            page_link, page_path = self._page_link_path(lang, name)
             uptodate = []
             if deps_translatable is not None:
                 uptodate += [config_changed(deps_translatable, 'nikola.plugins.task.archive')]
-            context = {"archive_name": name,
-                       "is_feed_stale": kw["is_feed_stale"],
-                       "pagekind": ["index", "archive_page"]}
+            context = {}
+            context['archive_name'] = name
+            context['archivefeed'] = archivefeed
+            context['pagekind'] = ['index', 'archive_page']
             yield self.site.generic_index_renderer(
                 lang,
                 posts,
@@ -131,7 +114,99 @@ class Archive(Task):
                 page_path,
                 uptodate)
         else:
-            yield self._prepare_task(kw, name, lang, posts, None, "list_post.tmpl", title, deps_translatable)
+            yield self._prepare_task(kw, name, lang, posts, None,
+                                     "list_post.tmpl", title, deps_translatable)
+
+    def _feed_fl_links(self, kw, posts, page_link):
+        """Get first/last links every year for feeds."""
+        atom_firstlink = None
+        atom_lastlink = None
+        rss_firstlink = None
+        rss_lastlink = None
+
+        num_pages = math.ceil(len(posts) / kw["index_display_post_count"])
+        if kw['indexes_static']:
+            if num_pages > 1:
+                first = 1
+            else:
+                first = 0
+        else:
+            first = num_pages - 1
+        last = 0
+        firstpages_i = nikola.utils.get_displayed_page_number(
+            first, num_pages, self.site)
+        lastpages_i = nikola.utils.get_displayed_page_number(
+            last, num_pages, self.site)
+
+        if kw['generate_atom']:
+            atom_firstlink = page_link(first, firstpages_i, num_pages, False,
+                                       extension=".atom")
+            atom_lastlink = page_link(last, lastpages_i, num_pages, False,
+                                      extension=".atom")
+        if kw['generate_rss']:
+            rss_firstlink = page_link(first, firstpages_i, num_pages, False,
+                                      extension=".xml")
+            rss_lastlink = page_link(last, lastpages_i, num_pages, False,
+                                     extension=".xml")
+
+        return [atom_firstlink, atom_lastlink, rss_firstlink, rss_lastlink]
+
+    def _page_link_path(self, lang, name):
+        def _get_feed(extension):
+            if extension == ".atom":
+                return "_atom"
+            elif extension == ".xml":
+                return "_rss"
+            else:
+                return ""
+
+        def page_link(i, displayed_i, num_pages, force_addition, extension=None):
+            feed = _get_feed(extension)
+            return adjust_name_for_index_link(
+                self.site.link("archive" + feed, name, lang),
+                i, displayed_i, lang, self.site, force_addition, extension)
+
+        def page_path(i, displayed_i, num_pages, force_addition, extension=None):
+            feed = _get_feed(extension)
+            return adjust_name_for_index_path(
+                self.site.path("archive" + feed, name, lang),
+                i, displayed_i, lang, self.site, force_addition, extension)
+        return page_link, page_path
+
+    def _generate_tasks(self, kw, lang, idxs, datadict):
+        """Generate tasks for an archive with posts."""
+        if kw['generate_atom'] or kw['generate_rss']:
+            for name in idxs:
+                posts = datadict[name][0]
+                page_link, _ = self._page_link_path(lang, name)
+                fl_links =  self._feed_fl_links(kw, posts, page_link)
+                datadict[name][3:] = fl_links
+
+            oldest = len(idxs) - 1
+            for i, name in enumerate(idxs):
+                atom_prevlink = None
+                atom_nextlink = None
+                rss_prevlink = None
+                rss_nextlink = None
+                if i > 0:
+                    atom_nextlink = datadict[idxs[i-1]][3] # atom_firstlink
+                    rss_nextlink = datadict[idxs[i-1]][5] # rss_firstlink
+                if i < oldest:
+                    atom_prevlink = datadict[idxs[i+1]][4] # atom_lastlink
+                    rss_prevlink = datadict[idxs[i+1]][6] # rss_lastlink
+
+                yield self._generate_posts_task(kw, name, lang,
+                                                datadict[name][0],
+                                                datadict[name][1],
+                                                datadict[name][2],
+                                                [atom_prevlink, atom_nextlink,
+                                                 rss_prevlink, rss_nextlink])
+        else:
+            for name in idxs:
+                yield self._generate_posts_task(kw, name, lang,
+                                                datadict[name][0],
+                                                datadict[name][1],
+                                                datadict[name][2])
 
     def gen_tasks(self):
         """Generate archive tasks."""
@@ -149,89 +224,128 @@ class Archive(Task):
             "pretty_urls": self.site.config['PRETTY_URLS'],
             "strip_indexes": self.site.config['STRIP_INDEXES'],
             "index_file": self.site.config['INDEX_FILE'],
+            "index_display_post_count": self.site.config['INDEX_DISPLAY_POST_COUNT'],
+            "indexes_static": self.site.config['INDEXES_STATIC'],
             "generate_atom": self.site.config["GENERATE_ATOM"],
             "generate_rss": self.site.config["GENERATE_RSS"]
         }
         self.site.scan_posts()
         yield self.group_task()
-        # TODO add next/prev links for years
+
         if (kw['create_monthly_archive'] and kw['create_single_archive']) and not kw['create_full_archives']:
             raise Exception('Cannot create monthly and single archives at the same time.')
-        for lang in kw["translations"]:
-            if kw['create_single_archive'] and not kw['create_full_archives']:
-                # if we are creating one single archive
-                archdata = {}
-            else:
-                # if we are not creating one single archive, start with all years
-                archdata = self.site.posts_per_year.copy()
-            if kw['create_single_archive'] or kw['create_full_archives']:
-                # if we are creating one single archive, or full archives
-                archdata[None] = self.site.posts  # for create_single_archive
 
-            for year, posts in archdata.items():
+        for lang in kw["translations"]:
+            deps_translatable = {}
+            for k in self.site._GLOBAL_CONTEXT_TRANSLATABLE:
+                deps_translatable[k] = self.site.GLOBAL_CONTEXT[k](lang)
+
+            if kw['create_single_archive'] or kw['create_full_archives']:
+                posts = self.site.posts
                 # Filter untranslated posts (Issue #1360)
                 if not kw["show_untranslated_posts"]:
                     posts = [p for p in posts if lang in p.translated_to]
+                    if len(posts) == 0:
+                        continue
+                posts = sorted(posts, key=lambda a: a.date, reverse=True)
+                title = kw["messages"][lang]["Archive"]
+                yield self._generate_posts_task(kw, None, lang, posts, title,
+                                                deps_translatable)
+                if kw['create_single_archive']:
+                    continue
 
+            # if we are not creating one single archive, start with all years
+            archdata = self.site.posts_per_year.copy()
+            years = list(archdata.keys())
+
+            for year in years[:]:
+                posts = archdata[year]
+                # Filter untranslated posts (Issue #1360)
+                if not kw["show_untranslated_posts"]:
+                    posts = [p for p in posts if lang in p.translated_to]
+                    if len(posts) == 0:
+                        years.remove(year)
+                        continue
+                posts = sorted(posts, key=lambda a: a.date, reverse=True)
                 # Add archive per year or total archive
-                if year:
-                    title = kw["messages"][lang]["Posts for year %s"] % year
-                    kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y") != year)
-                else:
-                    title = kw["messages"][lang]["Archive"]
-                    kw["is_feed_stale"] = False
-                deps_translatable = {}
-                for k in self.site._GLOBAL_CONTEXT_TRANSLATABLE:
-                    deps_translatable[k] = self.site.GLOBAL_CONTEXT[k](lang)
-                if not kw["create_monthly_archive"] or kw["create_full_archives"]:
-                    yield self._generate_posts_task(kw, year, lang, posts, title, deps_translatable)
-                else:
-                    months = set([(m.split('/')[1], self.site.link("archive", m, lang), len(self.site.posts_per_month[m])) for m in self.site.posts_per_month.keys() if m.startswith(str(year))])
-                    months = sorted(list(months))
-                    months.reverse()
-                    items = [[nikola.utils.LocaleBorg().get_month_name(int(month), lang), link, count] for month, link, count in months]
-                    yield self._prepare_task(kw, year, lang, None, items, "list.tmpl", title, deps_translatable)
+                title = kw["messages"][lang]["Posts for year %s"] % year
+                archdata[year] = [posts, title, deps_translatable, None, None, None, None]
+            years.sort(reverse=True)
 
-            if not kw["create_monthly_archive"] and not kw["create_full_archives"] and not kw["create_daily_archive"]:
+            if not kw['create_full_archives']:
+                items = [(y, self.site.link("archive", y, lang), len(self.site.posts_per_year[y])) for y in years]
+                yield self._prepare_task(kw, None, lang, None, items,
+                                         "list.tmpl",
+                                         kw["messages"][lang]["Archive"])
+
+            if not kw["create_monthly_archive"] or kw["create_full_archives"]:
+                yield self._generate_tasks(kw, lang, years, archdata)
+
+            if (not kw["create_monthly_archive"]
+                and not kw["create_full_archives"]
+                and not kw["create_daily_archive"]):
                 continue  # Just to avoid nesting the other loop in this if
-            for yearmonth, posts in self.site.posts_per_month.items():
-                # Add archive per month
-                year, month = yearmonth.split('/')
 
-                kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y/%m") != yearmonth)
-
+            ymarchdata = self.site.posts_per_month.copy()
+            yearmonths = list(ymarchdata.keys())
+            for yearmonth in yearmonths[:]:
+                posts = self.site.posts_per_month[yearmonth]
                 # Filter untranslated posts (via Issue #1360)
                 if not kw["show_untranslated_posts"]:
                     posts = [p for p in posts if lang in p.translated_to]
+                    if len(posts) == 0:
+                        yearmonths.remove(yearmonth)
+                        continue
+                posts = sorted(posts, key=lambda a: a.date, reverse=True)
+                # Add archive per month
+                year, month = yearmonth.split('/')
+                title = kw["messages"][lang]["Posts for {month} {year}"].format(
+                    year=year, month=nikola.utils.LocaleBorg().get_month_name(int(month), lang))
+                ymarchdata[yearmonth] = [posts, title, None, None, None, None, None]
+            yearmonths.sort(reverse=True)
 
-                if kw["create_monthly_archive"] or kw["create_full_archives"]:
-                    title = kw["messages"][lang]["Posts for {month} {year}"].format(
-                        year=year, month=nikola.utils.LocaleBorg().get_month_name(int(month), lang))
-                    yield self._generate_posts_task(kw, yearmonth, lang, posts, title)
+            if kw["create_monthly_archive"] and not kw["create_full_archives"]:
+                for year in years:
+                    arch = archdata[year]
+                    months = []
+                    for m in yearmonths:
+                        if m.startswith(year):
+                            months.append([m.split('/')[1],
+                                           self.site.link("archive", m, lang),
+                                           len(ymarchdata[m][0])])
+                    items = []
+                    for month, link, count in months:
+                        items.append(
+                            [nikola.utils.LocaleBorg().get_month_name(int(month), lang),
+                             link, count])
+                    yield self._prepare_task(kw, year, lang, None, items,
+                                             "list.tmpl",
+                                             arch[1],
+                                             arch[2])
 
-                if not kw["create_full_archives"] and not kw["create_daily_archive"]:
-                    continue  # Just to avoid nesting the other loop in this if
+            if kw["create_monthly_archive"] or kw["create_full_archives"]:
+                yield self._generate_tasks(kw, lang, yearmonths, ymarchdata)
+
+            if kw["create_daily_archive"] or kw["create_full_archives"]:
                 # Add archive per day
-                days = dict()
-                for p in posts:
-                    if p.date.day not in days:
-                        days[p.date.day] = list()
-                    days[p.date.day].append(p)
-                for day, posts in days.items():
-                    title = kw["messages"][lang]["Posts for {month} {day}, {year}"].format(
-                        year=year, month=nikola.utils.LocaleBorg().get_month_name(int(month), lang), day=day)
-                    yield self._generate_posts_task(kw, yearmonth + '/{0:02d}'.format(day), lang, posts, title)
+                daysdata = {}
+                days = []
+                for yearmonth in yearmonths:
+                    posts = ymarchdata[yearmonth][0]
+                    year, month = yearmonth.split('/')
 
-        if not kw['create_single_archive'] and not kw['create_full_archives']:
-            # And an "all your years" page for yearly and monthly archives
-            if "is_feed_stale" in kw:
-                del kw["is_feed_stale"]
-            years = list(self.site.posts_per_year.keys())
-            years.sort(reverse=True)
-            kw['years'] = years
-            for lang in kw["translations"]:
-                items = [(y, self.site.link("archive", y, lang), len(self.site.posts_per_year[y])) for y in years]
-                yield self._prepare_task(kw, None, lang, None, items, "list.tmpl", kw["messages"][lang]["Archive"])
+                    for p in posts:
+                        yearmonthday = yearmonth + '/{0:02d}'.format(p.date.day)
+                        d = daysdata.get(yearmonthday)
+                        if not d:
+                            title = kw["messages"][lang]["Posts for {month} {day}, {year}"].format(
+                                year=year, month=nikola.utils.LocaleBorg().get_month_name(int(month), lang), day=p.date.day)
+                            d = [list(), title, None, None, None, None, None]
+                            daysdata[yearmonthday] = d
+                            days.append(yearmonthday)
+                        d[0].append(p)
+
+                yield self._generate_tasks(kw, lang, days, daysdata)
 
     def archive_path(self, name, lang):
         """Link to archive path, name is the year.
