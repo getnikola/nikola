@@ -1817,7 +1817,7 @@ def color_hsl_adjust_hex(hexstr, adjust_h=None, adjust_s=None, adjust_l=None):
 def dns_sd(port, inet6):
     """Optimistically publish a HTTP service to the local network over DNS-SD.
 
-    Works only on Linux/FreeBSD.
+    Works only on Linux/FreeBSD.  Requires the `avahi` and `dbus` modules (symlinks in virtualenvs)
     """
     try:
         import avahi
@@ -1836,7 +1836,7 @@ def dns_sd(port, inet6):
                              dbus.UInt16(port), '')
         bus_group.Commit()
         return bus_group  # remember to bus_group.Reset() to unpublish
-    except:
+    except Exception:
         return None
 
 
