@@ -9,13 +9,14 @@
 # Translators:
 # Baptiste Darthenay <baptiste+transifex@darthenay.fr>, 2015
 # B E <steleto@gmail.com>, 2015
+# Chris Warrick <kwpolska@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-10-11 16:29+0000\n"
-"Last-Translator: Baptiste Darthenay <baptiste+transifex@darthenay.fr>\n"
+"PO-Revision-Date: 2015-10-14 07:32+0000\n"
+"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Hungarian (http://www.transifex.com/ralsina/nikola/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,7 @@ msgstr "Több bejegyzés erről: %s"
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "LANGUAGE"
-msgstr "magyar"
+msgstr "Magyarul"
 
 msgid "Tags"
 msgstr "Címkék"
@@ -44,13 +45,13 @@ msgid "Comments"
 msgstr "Hozzászólások"
 
 msgid "Read more"
-msgstr "Olváss többet"
+msgstr "Olvass tovább"
 
 msgid "Posts about %s"
 msgstr "Bejegyzések erről: %s"
 
 msgid "Next post"
-msgstr "Következő bejegyzés"
+msgstr "A következő bejegyzés"
 
 msgid "old posts, page %d"
 msgstr "régi bejegyzések, %d. oldal"
@@ -70,13 +71,13 @@ msgid "Posts for year %s"
 msgstr "%s. bejegyzések"
 
 msgid "Newer posts"
-msgstr "Újábbi bejegyzések"
+msgstr "Újabb bejegyzések"
 
 msgid "Previous post"
-msgstr "Előző bejegyzés "
+msgstr "Az előző bejegyzés "
 
 msgid "Also available in:"
-msgstr "Olvasható is:"
+msgstr "Olvasható még:"
 
 msgid "Languages:"
 msgstr "Nyelvek:"
@@ -88,7 +89,7 @@ msgid "Older posts"
 msgstr "Régebbi bejegyzések"
 
 msgid "Archive"
-msgstr "Archívum"
+msgstr "Archív"
 
 msgid "Publication date"
 msgstr "A megjelenés dátuma"
@@ -103,10 +104,10 @@ msgid "Posts for {month} {day}, {year}"
 msgstr "{year}. {month}. {day}.-i bejegyzések"
 
 msgid "Nothing found."
-msgstr "Nincs találat"
+msgstr "Nincs találat."
 
 msgid "No posts found."
-msgstr "Nincs talárt bejegyzés."
+msgstr "Nincs ilyen bejegyzés."
 
 msgid "RSS feed"
 msgstr "RSS"
@@ -115,7 +116,7 @@ msgid "%d min remaining to read"
 msgstr "%d perc van hátra olvasni"
 
 msgid "Skip to main content"
-msgstr "Ugrás a fő tartalomra"
+msgstr "Ugrás a főtartalomra"
 
 msgid "Subcategories:"
 msgstr "Alkategóriák:"
@@ -126,11 +127,11 @@ msgstr "(aktív)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr "Itt írjon a bejegyzése."
+msgstr "Ide írd a bejegyzésed."
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr "Itt írjon az oldalát."
+msgstr "Ide írd az oldalad."
 
 msgid "Uncategorized"
 msgstr "Nincs kategorizálva"
@@ -143,4 +144,4 @@ msgid "Authors"
 msgstr "Szerzők"
 
 msgid "Posts by %s"
-msgstr "Bejegyzések %s szerint"
+msgstr "Bejegyzések %s által"
