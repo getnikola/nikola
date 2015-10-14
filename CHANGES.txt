@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Support "maps.world.World" and similar charts in Pygal (Issue #2142)
 * Capitalize "UTF-8" properly in locale guessing (Issue #2137)
 
 New in v7.7.2
