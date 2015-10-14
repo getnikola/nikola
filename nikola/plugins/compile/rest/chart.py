@@ -148,8 +148,10 @@ class Chart(Directive):
             style = getattr(pygal.style, style_name)
         for k, v in self.options.items():
             options[k] = literal_eval(v)
-
-        chart = getattr(pygal, self.arguments[0])(style=style)
+        chart = pygal
+        for o in self.arguments[0].split('.'):
+            chart = getattr(chart, o)
+        chart = chart(style=style)
         if _site and _site.invariant:
             chart.no_prefix = True
         chart.config(**options)
