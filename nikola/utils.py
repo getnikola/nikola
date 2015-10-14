@@ -126,7 +126,7 @@ def get_logger(name, handlers):
 
 
 STDERR_HANDLER = [ColorfulStderrHandler(
-    level=logbook.INFO if not DEBUG else logbook.DEBUG,
+    level=logbook.NOTICE if not DEBUG else logbook.DEBUG,
     format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
 )]
 

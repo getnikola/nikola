@@ -274,7 +274,7 @@ class CommandCheck(Command):
                         if self.checked_remote_targets[target] in [301, 308]:
                             self.logger.warn("Remote link PERMANENTLY redirected in {0}: {1} [Error {2}]".format(filename, target, self.checked_remote_targets[target]))
                         elif self.checked_remote_targets[target] in [302, 307]:
-                            self.logger.info("Remote link temporarily redirected in {1}: {2} [HTTP: {3}]".format(filename, target, self.checked_remote_targets[target]))
+                            self.logger.notice("Remote link temporarily redirected in {1}: {2} [HTTP: {3}]".format(filename, target, self.checked_remote_targets[target]))
                         elif self.checked_remote_targets[target] > 399:
                             self.logger.error("Broken link in {0}: {1} [Error {2}]".format(filename, target, self.checked_remote_targets[target]))
                         continue
@@ -302,7 +302,7 @@ class CommandCheck(Command):
                         if redir_status_code in [301, 308]:
                             self.logger.warn("Remote link moved PERMANENTLY to \"{0}\" and should be updated in {1}: {2} [HTTP: {3}]".format(resp.url, filename, target, redir_status_code))
                         if redir_status_code in [302, 307]:
-                            self.logger.info("Remote link temporarily redirected to \"{0}\" in {1}: {2} [HTTP: {3}]".format(resp.url, filename, target, redir_status_code))
+                            self.logger.notice("Remote link temporarily redirected to \"{0}\" in {1}: {2} [HTTP: {3}]".format(resp.url, filename, target, redir_status_code))
                         self.checked_remote_targets[resp.url] = resp.status_code
                         self.checked_remote_targets[target] = redir_status_code
                     else:
@@ -343,7 +343,7 @@ class CommandCheck(Command):
 
                 elif target_filename not in self.existing_targets:
                     if os.path.exists(target_filename):
-                        self.logger.notice(u"Good link {0} => {1}".format(target, target_filename))
+                        self.logger.info(u"Good link {0} => {1}".format(target, target_filename))
                         self.existing_targets.add(target_filename)
                     else:
                         rv = True
