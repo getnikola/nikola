@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Fix support for panorama images in gallery(Issue #2143)
 * Support "maps.world.World" and similar charts in Pygal (Issue #2142)
 * Capitalize "UTF-8" properly in locale guessing (Issue #2137)
 
