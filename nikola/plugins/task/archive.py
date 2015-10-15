@@ -30,7 +30,10 @@ from __future__ import division
 import math
 import copy
 import os
-
+try:
+    from urlparse import urljoin
+except ImportError:
+    from urllib.parse import urljoin  # NOQA
 # for tearDown with _reload we cannot use 'import from' to access LocaleBorg
 import nikola.utils
 import datetime
@@ -51,7 +54,8 @@ class Archive(Task):
         return super(Archive, self).set_site(site)
 
     def _prepare_task(self, kw, name, lang, posts, items, template_name,
-                      title, deps_translatable=None):
+                      title, deps_translatable=None,
+                      archivefeed=[None, None, None, None]):
         """Prepare an archive task."""
         # name: used to build permalink and destination
         # posts, items: posts or items; only one of them should be used,
@@ -74,10 +78,11 @@ class Archive(Task):
             # Depend on the content of items, to rebuild if links change (Issue #1931)
             context["items"] = items
             task_cfg.append(items)
+        output_name = os.path.join(kw['output_folder'], self.site.path("archive", name, lang))
         task = self.site.generic_post_list_renderer(
             lang,
             [],
-            os.path.join(kw['output_folder'], self.site.path("archive", name, lang)),
+            output_name,
             template_name,
             kw['filters'],
             context,
@@ -88,7 +93,55 @@ class Archive(Task):
             task_cfg[3] = deps_translatable
         task['uptodate'] = task['uptodate'] + [config_changed(task_cfg, 'nikola.plugins.task.archive')]
         task['basename'] = self.name
-        return task
+        yield task
+
+        if posts and (kw['generate_atom'] or kw['generate_rss']):
+            kw['blog_description'] = self.site.config['BLOG_DESCRIPTION']
+            kw['base_url'] = self.site.config['BASE_URL']
+            page_link, _ = self._page_link_path(lang, name)
+            ipages_i = nikola.utils.get_displayed_page_number(0, 1, self.site)
+            description = kw['blog_description'](lang)
+            targets = []
+
+            atom_path = None
+            atom_output_name = None
+            if kw['generate_atom']:
+                atom_currentlink = self.site.link("atom", None, lang)
+                atom_path = page_link(0, ipages_i, 1, False, extension=".atom")
+                atom_output_name = os.path.join(kw['output_folder'],
+                                                atom_path.lstrip('/'))
+                targets.append(atom_output_name)
+
+            rss_path = None
+            rss_output_name = None
+            if kw['generate_rss']:
+                rss_currentlink = self.site.link("rss", None, lang)
+                rss_path = page_link(0, ipages_i, 1, False, extension=".xml")
+                rss_output_name = os.path.join(kw['output_folder'],
+                                               rss_path.lstrip('/'))
+                targets.append(rss_output_name)
+
+            feed_task = {
+                'basename': self.name,
+                'name': lang + ':' + ':'.join(targets),
+                'actions': [(self.site.feedutil.gen_feed_generator,
+                             (lang, posts, urljoin(
+                                 kw['base_url'],
+                                 context["permalink"].lstrip('/')),
+                              title, description,
+                              atom_output_name, atom_path,
+                              rss_output_name, rss_path,
+                              archivefeed[1], archivefeed[0],
+                              None, None,
+                              archivefeed[2], archivefeed[3],
+                              None, None,
+                              atom_currentlink, rss_currentlink))],
+                'targets': targets,
+                'file_dep': [output_name],
+                'clean': True,
+                'uptodate': task['uptodate']
+            }
+            yield feed_task
 
     def _generate_posts_task(self, kw, name, lang, posts, title, deps_translatable,
                              archivefeed=[None, None, None, None]):
@@ -115,7 +168,8 @@ class Archive(Task):
                 uptodate)
         else:
             yield self._prepare_task(kw, name, lang, posts, None,
-                                     "list_post.tmpl", title, deps_translatable)
+                                     "list_post.tmpl", title, deps_translatable,
+                                     archivefeed)
 
     def _feed_fl_links(self, kw, posts, page_link):
         """Get first/last links every year for feeds."""
@@ -124,7 +178,10 @@ class Archive(Task):
         rss_firstlink = None
         rss_lastlink = None
 
-        num_pages = math.ceil(len(posts) / kw["index_display_post_count"])
+        if kw['archives_are_indexes']:
+            num_pages = math.ceil(len(posts) / kw["index_display_post_count"])
+        else:
+            num_pages = 1
         if kw['indexes_static']:
             if num_pages > 1:
                 first = 1
