@@ -123,7 +123,7 @@ For your own plugin, just change the values in a sensible way. The
                 'long': 'port',
                 'default': 8000,
                 'type': int,
-                'help': 'Port nummber (default: 8000)',
+                'help': 'Port number (default: 8000)',
             },
             {
                 'name': 'address',
@@ -158,7 +158,7 @@ As mentioned above, a plugin can have options, which the user can see by doing
     Usage:   nikola serve [options]
 
     Options:
-    -p ARG, --port=ARG        Port nummber (default: 8000)
+    -p ARG, --port=ARG        Port number (default: 8000)
     -a ARG, ----address=ARG   Address to bind (default: 127.0.0.1)
 
     $ nikola serve -p 9000

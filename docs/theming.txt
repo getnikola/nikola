@@ -36,7 +36,7 @@ assets
 
     The included themes use `Bootstrap <http://twitter.github.com/bootstrap/>`_
     and `Colorbox <http://www.jacklmoore.com/colorbox>`_ so they are in assets,
-    along with CSS files for syntax highligting and reStructuredText, and a
+    along with CSS files for syntax highlighting and reStructuredText, and a
     minified copy of jQuery.
 
     If you want to base your theme on other frameworks (or on no framework at all)
@@ -119,7 +119,7 @@ These are the templates that come with the included themes:
 
     It has some separate pieces defined in ``base_helper.tmpl``,
     ``base_header.tmpl`` and ``base_footer.tmpl`` so they can be
-    easily overriden.
+    easily overridden.
 
 ``index.tmpl``
     Template used to render the multipost indexes. The posts are in a ``posts`` variable.
@@ -204,7 +204,7 @@ Each section has an assigned color that is either set by the user or auto
 selected by adjusting the hue of the user’s ``THEME_COLOR``. The color is
 exposed in templates through ``post.section_color(lang)``. The function that
 generates the colors from strings and any given color (by section name and
-theme color for sections) is expoed through the
+theme color for sections) is exposed through the
 ``colorize_str_from_base_color(string, hex_color)`` function
 
 Hex color values, like that returned by the theme or section color can be

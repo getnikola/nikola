@@ -122,7 +122,7 @@ Security
 
     A smaller software stack implies less security risk.
 
-Obsolescense
+Obsolescence
     If you create a site using (for example) WordPress, what happens when WordPress
     releases a new version? You have to update your WordPress. That is not optional,
     because of security and support issues. If I release a new version of Nikola, and
@@ -915,7 +915,7 @@ Navigation Links
 
        3. If you link to directories, make sure to follow ``STRIP_INDEXES``.  If
           it’s set to ``True``, end your links with a ``/``, otherwise end them
-          with ``/index.html`` — or else they won’t be hilighted when active.
+          with ``/index.html`` — or else they won’t be highlighted when active.
 
     The ``SEARCH_FORM`` option contains the HTML code for a search form based on
     duckduckgo.com which should always work, but feel free to change it to
