@@ -529,7 +529,7 @@ You can override the default value for ``TEASER_END`` in ``conf.py`` — for
 example, the following example will work for ``.. more``, and will be
 compatible with both WordPress and Nikola posts:
 
-..code:: python
+.. code:: python
 
     import re
     TEASER_REGEXP = re.compile('<!--\s*(more|TEASER_END)(:(.+))?\s*-->', re.IGNORECASE)
