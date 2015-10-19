@@ -61,6 +61,13 @@ class CompileMarkdownTests(BaseTestCase):
         actual_output = self.compile(input_str)
         self.assertEquals(actual_output.strip(), expected_output.strip())
 
+    def test_compile_strikethrough(self):
+        input_str = '~~strik text~~'
+        expected_output = '<p><del>strik text</del></p>'
+
+        actual_output = self.compile(input_str)
+        self.assertEquals(actual_output.strip(), expected_output.strip())
+
     def test_compile_html_gist(self):
         input_str = '''\
 Here's a gist file inline:
