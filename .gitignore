@@ -11,6 +11,7 @@ build/
 .idea/
 __pycache__/
 *.egg-info/
+.cache/
 
 # virtualenvwrapper oh-my-zsh plugin
 .venv
