@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Support for ``~~strikethrough~~`` in Markdown (Issue #2149)
 * Hungarian translation (by Baptiste Darthenay)
 * ``serve`` and ``auto`` publishes DNS Service Discovery records
   to the local network announcing they’re running web servers.

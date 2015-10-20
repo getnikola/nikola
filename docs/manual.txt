@@ -758,6 +758,9 @@ config option:
 
     MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
 
+Nikola comes with some Markdown Extensions built-in and enabled by default,
+namely a gist directive, a podcast directive, and ``~~strikethrough~~`` support.
+
 IPython Notebook/Jupyter
 ````````````````````````
 

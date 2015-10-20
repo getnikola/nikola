@@ -22,6 +22,7 @@
 * `Daniel Devine <https://github.com/DDevine>`_
 * `Daniel F. Moisset <https://github.com/dmoisset>`_
 * `David Beath <https://github.com/DBeath>`_
+* `David Barragán Merino <https://github.com/bameda>`_
 * `Dhruv Baldawa <https://github.com/dhruvbaldawa>`_
 * `Dirk Engling <https://github.com/erdgeist>`_
 * `Dmitry Verkhoturov <https://github.com/paskal>`_
