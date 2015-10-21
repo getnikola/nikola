@@ -482,6 +482,7 @@ class Nikola(object):
             'TAG_PAGES_ARE_INDEXES': False,
             'TAG_PAGES_DESCRIPTIONS': {},
             'TAG_PAGES_TITLES': {},
+            'TAGS_INDEX_PATH': '',
             'TAGLIST_MINIMUM_POSTS': 1,
             'TEMPLATE_FILTERS': {},
             'THEME': 'bootstrap3',
@@ -558,6 +559,7 @@ class Nikola(object):
                                       'INDEXES_PRETTY_PAGE_URL',
                                       # PATH options (Issue #1914)
                                       'TAG_PATH',
+                                      'TAGS_INDEX_PATH',
                                       'CATEGORY_PATH',
                                       'DATE_FORMAT',
                                       'JS_DATE_FORMAT',

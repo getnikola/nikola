@@ -399,9 +399,14 @@ class RenderTags(Task):
 
         link://tag_index => /tags/index.html
         """
-        return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['TAG_PATH'][lang],
-                              self.site.config['INDEX_FILE']] if _f]
+        if self.site.config['TAGS_INDEX_PATH']:
+            paths = [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                                   self.site.config['TAGS_INDEX_PATH'][lang]] if _f]
+        else:
+            paths = [_f for _f in [self.site.config['TRANSLATIONS'][lang],
+                                   self.site.config['TAG_PATH'][lang],
+                                   self.site.config['INDEX_FILE']] if _f]
+        return paths
 
     def category_index_path(self, name, lang):
         """A link to the category index.

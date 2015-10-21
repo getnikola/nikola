@@ -274,6 +274,11 @@ POSTS_SECTIONS = True
  # (translatable)
 # TAG_PATH = "categories"
 
+# See TAG_PATH's "list of tags" for the default setting value. Can be overwritten
+# here any path relative to the output directory.
+ # (translatable)
+# TAGS_INDEX_PATH = "tags.html"
+
 # If TAG_PAGES_ARE_INDEXES is set to True, each tag's page will contain
 # the posts themselves. If set to False, it will be just a list of links.
 # TAG_PAGES_ARE_INDEXES = False

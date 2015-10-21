@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* New ``TAGS_INDEX_PATH`` option for overwriting the path
+  of the tag index list page.
 * Support for ``~~strikethrough~~`` in Markdown (Issue #2149)
 * Hungarian translation (by Baptiste Darthenay)
 * ``serve`` and ``auto`` publishes DNS Service Discovery records
