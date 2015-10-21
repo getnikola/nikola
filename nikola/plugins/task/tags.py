@@ -399,7 +399,7 @@ class RenderTags(Task):
 
         link://tag_index => /tags/index.html
         """
-        if self.site.config['TAGS_INDEX_PATH']:
+        if self.site.config['TAGS_INDEX_PATH'][lang]:
             paths = [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                                    self.site.config['TAGS_INDEX_PATH'][lang]] if _f]
         else:
