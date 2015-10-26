@@ -205,6 +205,7 @@ class PostList(Directive):
             # Need to provide str, not TranslatableSetting (Issue #2104)
             'date_format': self.site.GLOBAL_CONTEXT.get('date_format')[lang],
             'post_list_id': post_list_id,
+            'messages': self.site.MESSAGES,
         }
         output = self.site.template_system.render_template(
             template, None, template_data)
