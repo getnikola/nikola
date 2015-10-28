@@ -679,7 +679,7 @@ IMAGE_FOLDERS = {'images': 'images'}
 
 # 'Read more...' for the index page, if INDEX_TEASERS is True (translatable)
 INDEX_READ_MORE_LINK = ${INDEX_READ_MORE_LINK}
-# 'Read more...' for the RSS_FEED, if FEED_TEASERS is True (translatable)
+# 'Read more...' for the feed, if FEED_TEASERS is True (translatable)
 FEED_READ_MORE_LINK = ${FEED_READ_MORE_LINK}
 
 # Append a URL query to the FEED_READ_MORE_LINK in Atom and RSS feeds. Advanced
