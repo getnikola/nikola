@@ -431,11 +431,17 @@ class TranslatableSetting(object):
 
     def __eq__(self, other):
         """Test whether two TranslatableSettings are equal."""
-        return self.values == other.values
+        try:
+            return self.values == other.values
+        except AttributeError:
+            return self(self.default_lang) == other
 
     def __ne__(self, other):
         """Test whether two TranslatableSettings are inequal."""
-        return self.values != other.values
+        try:
+            return self.values != other.values
+        except AttributeError:
+            return self(self.default_lang) == other
 
 
 class TemplateHookRegistry(object):
