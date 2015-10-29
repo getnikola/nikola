@@ -637,7 +637,7 @@ class Nikola(object):
             utils.LOGGER.warn('The RSS_LINKS_APPEND_QUERY option is deprecated, use FEED_LINKS_APPEND_QUERY instead.')
             if 'FEED_TEASERS' in config:
                 utils.LOGGER.warn('FEED_LINKS_APPEND_QUERY conflicts with RSS_LINKS_APPEND_QUERY, ignoring RSS_LINKS_APPEND_QUERY.')
-            self.config['FEED_LINKS_APPEND_QUERY'] = utils.TranslatableSetting('FEED_LINKS_APPEND_QUERY', config['RSS_LINKS_APPEND_QUERY'], self.config['TRANSLATIONS'])
+            self.config['FEED_LINKS_APPEND_QUERY'] = config['RSS_LINKS_APPEND_QUERY']
 
         # RSS_READ_MORE_LINK has been replaced with FEED_READ_MORE_LINK
         # TODO: remove on v8
