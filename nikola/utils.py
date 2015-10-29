@@ -441,7 +441,7 @@ class TranslatableSetting(object):
         try:
             return self.values != other.values
         except AttributeError:
-            return self(self.default_lang) == other
+            return self(self.default_lang) != other
 
 
 class TemplateHookRegistry(object):
