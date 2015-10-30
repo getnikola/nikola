@@ -1196,6 +1196,9 @@ class LocaleBorg(object):
             # For thread-safety
             self.__set_locale(current_lang)
             fmt_date = None
+            # Get a string out of a TranslatableSetting
+            if isinstance(date_format, TranslatableSetting):
+                date_format = date_format(current_lang)
             # First check handlers
             for handler in self.formatted_date_handlers:
                 fmt_date = handler(date_format, date, current_lang)
