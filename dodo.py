@@ -41,7 +41,7 @@ def task_locale():
             locales = []
             languages = set()
             for line in out.splitlines():
-                if line.endswith('.utf8') and '_' in line:
+                if (line.endswith('.utf8') or line.endswith('.UTF-8')) and '_' in line:
                     lang = line.split('_')[0]
                     if lang not in languages:
                         try:
