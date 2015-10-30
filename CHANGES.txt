@@ -1,4 +1,4 @@
-New in master
+New in v7.7.3
 =============
 
 Features
@@ -16,7 +16,7 @@ Features
 Bugfixes
 --------
 
-* Implement translating DATE_FORMAT properly
+* Implement translating ``DATE_FORMAT`` properly
 * Remove superfluous translatability for a boolean (Issue #2140)
 * Pass messages to post-list template (Issue #2156)
 * Changed default log level from INFO to NOTICE (``nikola check`` is less chatty)

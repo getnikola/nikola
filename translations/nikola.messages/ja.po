@@ -8,6 +8,7 @@
 # Translators:
 # Translators:
 # Chris Warrick <kwpolska@gmail.com>, 2013
+# IGARASHI Masanao <syoux2@gmail.com>, 2015
 # Chris Warrick <kwpolska@gmail.com>, 2013
 # Mika Kobayashi, 2014-2015
 # Yasuhiko Shiga <4wordextinguisher@gmail.com>, 2013
@@ -19,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-09-04 20:25+0000\n"
+"PO-Revision-Date: 2015-10-17 14:22+0000\n"
 "Last-Translator: IGARASHI Masanao <syoux2@gmail.com>\n"
 "Language-Team: Japanese (http://www.transifex.com/ralsina/nikola/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -102,10 +103,10 @@ msgid "Posted:"
 msgstr "公開日時:"
 
 msgid "Posts for {month} {year}"
-msgstr "{year}年{month}月の文書"
+msgstr "{year}年{month}の文書"
 
 msgid "Posts for {month} {day}, {year}"
-msgstr "{year}年{month}月{day}日の文書"
+msgstr "{year}年{month}{day}日の文書"
 
 msgid "Nothing found."
 msgstr "なにも見つかりませんでした。"
