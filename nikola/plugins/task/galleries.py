@@ -608,7 +608,6 @@ class Galleries(Task, ImageProcessor):
         else:
             img_list, dest_img_list, img_titles = [], [], []
 
-
         items = []
         for img, srcimg, title in list(zip(dest_img_list, img_list, img_titles))[:self.kw["feed_length"]]:
             img_size = os.stat(
