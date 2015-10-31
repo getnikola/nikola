@@ -596,6 +596,19 @@ class Galleries(Task, ImageProcessor):
         def make_url(url):
             return urljoin(self.site.config['BASE_URL'], url.lstrip('/'))
 
+        all_data = list(zip(img_list, dest_img_list, img_titles))
+
+        if self.kw['sort_by_date']:
+            all_data.sort(key=lambda a: self.image_date(a[0]))
+        else:  # Sort by name
+            all_data.sort(key=lambda a: a[0])
+
+        if all_data:
+            img_list, dest_img_list, img_titles = zip(*all_data)
+        else:
+            img_list, dest_img_list, img_titles = [], [], []
+
+
         items = []
         for img, srcimg, title in list(zip(dest_img_list, img_list, img_titles))[:self.kw["feed_length"]]:
             img_size = os.stat(
