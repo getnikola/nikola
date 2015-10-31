@@ -1277,7 +1277,7 @@ class Nikola(object):
         # Now i is the longest common prefix
         result = '/'.join(['..'] * (len(src_elems) - i - 1) + dst_elems[i:])
 
-        if not result:
+        if not result and not parsed_dst.fragment:
             result = "."
 
         # Don't forget the query part of the link

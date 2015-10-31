@@ -4,6 +4,7 @@ New in Master
 Bugfixes
 --------
 
+* Change rewrite rule for fragment-only links (Issue #2132)
 * Don't examine all gallery image dates every build (Issue #2160)
 
 New in v7.7.3
