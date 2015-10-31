@@ -1,3 +1,11 @@
+New in Master
+=============
+
+Bugfixes
+--------
+
+* Don't examine all gallery image dates every build (Issue #2160)
+
 New in v7.7.3
 =============
 

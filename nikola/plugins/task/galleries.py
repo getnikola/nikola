@@ -194,13 +194,6 @@ class Galleries(Task, ImageProcessor):
             # Create image list, filter exclusions
             image_list = self.get_image_list(gallery)
 
-            # Sort as needed
-            # Sort by date
-            if self.kw['sort_by_date']:
-                image_list.sort(key=lambda a: self.image_date(a))
-            else:  # Sort by name
-                image_list.sort()
-
             # Create thumbnails and large images in destination
             for image in image_list:
                 for task in self.create_target_images(image, input_folder):
@@ -558,6 +551,18 @@ class Galleries(Task, ImageProcessor):
             url = '/'.join(os.path.relpath(p, os.path.dirname(output_name) + os.sep).split(os.sep))
             return url
 
+        all_data = list(zip(img_list, thumbs, img_titles))
+
+        if self.kw['sort_by_date']:
+            all_data.sort(key=lambda a: self.image_date(a[0]))
+        else:  # Sort by name
+            all_data.sort(key=lambda a: a[0])
+
+        if all_data:
+            img_list, thumbs, img_titles = zip(*all_data)
+        else:
+            img_list, thumbs, img_titles = [], [], []
+
         photo_array = []
         for img, thumb, title in zip(img_list, thumbs, img_titles):
             w, h = _image_size_cache.get(thumb, (None, None))
@@ -590,6 +595,18 @@ class Galleries(Task, ImageProcessor):
         """
         def make_url(url):
             return urljoin(self.site.config['BASE_URL'], url.lstrip('/'))
+
+        all_data = list(zip(img_list, dest_img_list, img_titles))
+
+        if self.kw['sort_by_date']:
+            all_data.sort(key=lambda a: self.image_date(a[0]))
+        else:  # Sort by name
+            all_data.sort(key=lambda a: a[0])
+
+        if all_data:
+            img_list, dest_img_list, img_titles = zip(*all_data)
+        else:
+            img_list, dest_img_list, img_titles = [], [], []
 
         items = []
         for img, srcimg, title in list(zip(dest_img_list, img_list, img_titles))[:self.kw["feed_length"]]:
