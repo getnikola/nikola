@@ -558,7 +558,10 @@ class Galleries(Task, ImageProcessor):
         else:  # Sort by name
             all_data.sort(key=lambda a: a[0])
 
-        img_list, thumbs, img_titles = zip(*all_data)
+        if all_data:
+            img_list, thumbs, img_titles = zip(*all_data)
+        else:
+            img_list, thumbs, img_titles = [], [], []
 
         photo_array = []
         for img, thumb, title in zip(img_list, thumbs, img_titles):
