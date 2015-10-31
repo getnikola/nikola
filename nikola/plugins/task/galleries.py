@@ -194,13 +194,6 @@ class Galleries(Task, ImageProcessor):
             # Create image list, filter exclusions
             image_list = self.get_image_list(gallery)
 
-            # Sort as needed
-            # Sort by date
-            if self.kw['sort_by_date']:
-                image_list.sort(key=lambda a: self.image_date(a))
-            else:  # Sort by name
-                image_list.sort()
-
             # Create thumbnails and large images in destination
             for image in image_list:
                 for task in self.create_target_images(image, input_folder):
@@ -557,6 +550,15 @@ class Galleries(Task, ImageProcessor):
         def url_from_path(p):
             url = '/'.join(os.path.relpath(p, os.path.dirname(output_name) + os.sep).split(os.sep))
             return url
+
+        all_data = list(zip(img_list, thumbs, img_titles))
+
+        if self.kw['sort_by_date']:
+            all_data.sort(key=lambda a: self.image_date(a[0]))
+        else:  # Sort by name
+            all_data.sort(key=lambda a: a[0])
+
+        img_list, thumbs, img_titles = zip(*all_data)
 
         photo_array = []
         for img, thumb, title in zip(img_list, thumbs, img_titles):
