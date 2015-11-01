@@ -4,6 +4,7 @@ New in Master
 Bugfixes
 --------
 
+* Mention disabled plugins in ``nikola plugin --list-installed`` (Issue #2139)
 * Don't examine all gallery image dates every build (Issue #2160)
 
 New in v7.7.3
