@@ -1,9 +1,10 @@
-New in Master
+New in master
 =============
 
 Bugfixes
 --------
 
+* Change rewrite rule for fragment-only links (Issue #2132)
 * Mention disabled plugins in ``nikola plugin --list-installed`` (Issue #2139)
 * Don't examine all gallery image dates every build (Issue #2160)
 
