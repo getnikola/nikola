@@ -1,6 +1,11 @@
 New in master
 =============
 
+Features
+--------
+
+* Automatically open gallery images colorbox based on URL fragment (Issue #2146)
+
 Bugfixes
 --------
 
