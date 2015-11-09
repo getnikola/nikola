@@ -360,7 +360,7 @@ class CommandCheck(Command):
         """Check links on the site."""
         self.logger.info("Checking Links:")
         self.logger.info("===============\n")
-        self.logger.notice("{0} mode".format(self.site.config['URL_TYPE']))
+        self.logger.info("{0} mode".format(self.site.config['URL_TYPE']))
         failure = False
         # Maybe we should just examine all HTML files
         output_folder = self.site.config['OUTPUT_FOLDER']
