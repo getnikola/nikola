@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Better support for german eszett and diacritical (umlaut) characters in slugify
 * Automatically open gallery images colorbox based on URL fragment (Issue #2146)
 
 Bugfixes

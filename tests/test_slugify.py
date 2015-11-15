@@ -34,6 +34,13 @@ def test_pl():
     assert isinstance(o, nikola.utils.unicode_str)
 
 
+def test_de():
+    """Test a string with German eszett and diacritical (umlaut) characters."""
+    o = nikola.utils.slugify(u'äöüÄÖÜß')
+    assert o == u'aeoeueaeoeuess'
+    assert isinstance(o, nikola.utils.unicode_str)
+
+
 def test_pl_dash():
     """Test a string with Polish diacritical characters and dashes."""
     o = nikola.utils.slugify(u'zażółć-gęślą-jaźń')
