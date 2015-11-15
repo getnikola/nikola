@@ -737,8 +737,14 @@ def remove_file(source):
 # slugify is adopted from
 # http://code.activestate.com/recipes/
 # 577257-slugify-make-a-string-usable-in-a-url-or-filename/
+_de_char_map = {u'ü' : 'ue', u'Ü' : 'ue',
+                u'ä' : 'ae', u'Ä' : 'ae',
+                u'ö' : 'oe', u'Ö' : 'oe',
+                u'ß' : 'ss'
+                }
 _slugify_strip_re = re.compile(r'[^+\w\s-]')
 _slugify_hyphenate_re = re.compile(r'[-\s]+')
+_slugify_de_char_re = re.compile('(' + '|'.join(_de_char_map.keys()) + ')')
 
 
 def slugify(value, force=False):
@@ -754,10 +760,15 @@ def slugify(value, force=False):
 
     >>> print(slugify('foo bar'))
     foo-bar
+
+    >>> print(slugify('äöüß'))
+    aeoeuess
     """
     if not isinstance(value, unicode_str):
         raise ValueError("Not a unicode object: {0}".format(value))
     if USE_SLUGIFY or force:
+        # Special handling for german eszett and diacritical (umlaut) characters
+        value = _slugify_de_char_re.sub(lambda x: _de_char_map[x.group()], value)
         # This is the standard state of slugify, which actually does some work.
         # It is the preferred style, especially for Western languages.
         value = unicode_str(unidecode(value))
