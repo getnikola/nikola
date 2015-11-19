@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Check HTTP response status of minifying tools and skip them if they’re unavailable
 * Change rewrite rule for fragment-only links (Issue #2132)
 * Mention disabled plugins in ``nikola plugin --list-installed`` (Issue #2139)
 * Don't examine all gallery image dates every build (Issue #2160)

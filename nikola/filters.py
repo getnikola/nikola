@@ -290,6 +290,9 @@ def cssminify(data):
         url = 'http://cssminifier.com/raw'
         _data = {'input': data}
         response = requests.post(url, data=_data)
+        if response.status_code != 200:
+            LOGGER.error("can't use cssminifier.com: HTTP status {}", response.status_code)
+            return data
         return response.text
     except Exception as exc:
         LOGGER.error("can't use cssminifier.com: {}", exc)
@@ -303,6 +306,9 @@ def jsminify(data):
         url = 'http://javascript-minifier.com/raw'
         _data = {'input': data}
         response = requests.post(url, data=_data)
+        if response.status_code != 200:
+            LOGGER.error("can't use javascript-minifier.com: HTTP status {}", response.status_code)
+            return data
         return response.text
     except Exception as exc:
         LOGGER.error("can't use javascript-minifier.com: {}", exc)
