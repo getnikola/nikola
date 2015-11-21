@@ -14,7 +14,7 @@
 
 
 {% macro comment_link_script() %}
-    {% if comment_system_id %}
+    {% if comment_system_id and 'index' in pagekind %}
         <script src="{{ comment_system_id }}js/count.min.js" data-isso="{{ comment_system_id }}"></script>
     {% endif %}
 {% endmacro %}
