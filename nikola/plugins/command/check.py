@@ -245,7 +245,7 @@ class CommandCheck(Command):
                 target = urldefrag(target)[0]
 
                 if any([urlparse(target).netloc.endswith(_) for _ in ['example.com', 'example.net', 'example.org']]):
-                    self.logger.info("Not testing example address \"{0}\".".format(target))
+                    self.logger.debug("Not testing example address \"{0}\".".format(target))
                     continue
 
                 # absolute URL to root-relative
@@ -274,7 +274,7 @@ class CommandCheck(Command):
                         if self.checked_remote_targets[target] in [301, 308]:
                             self.logger.warn("Remote link PERMANENTLY redirected in {0}: {1} [Error {2}]".format(filename, target, self.checked_remote_targets[target]))
                         elif self.checked_remote_targets[target] in [302, 307]:
-                            self.logger.notice("Remote link temporarily redirected in {1}: {2} [HTTP: {3}]".format(filename, target, self.checked_remote_targets[target]))
+                            self.logger.debug("Remote link temporarily redirected in {1}: {2} [HTTP: {3}]".format(filename, target, self.checked_remote_targets[target]))
                         elif self.checked_remote_targets[target] > 399:
                             self.logger.error("Broken link in {0}: {1} [Error {2}]".format(filename, target, self.checked_remote_targets[target]))
                         continue
@@ -302,7 +302,7 @@ class CommandCheck(Command):
                         if redir_status_code in [301, 308]:
                             self.logger.warn("Remote link moved PERMANENTLY to \"{0}\" and should be updated in {1}: {2} [HTTP: {3}]".format(resp.url, filename, target, redir_status_code))
                         if redir_status_code in [302, 307]:
-                            self.logger.notice("Remote link temporarily redirected to \"{0}\" in {1}: {2} [HTTP: {3}]".format(resp.url, filename, target, redir_status_code))
+                            self.logger.debug("Remote link temporarily redirected to \"{0}\" in {1}: {2} [HTTP: {3}]".format(resp.url, filename, target, redir_status_code))
                         self.checked_remote_targets[resp.url] = resp.status_code
                         self.checked_remote_targets[target] = redir_status_code
                     else:
@@ -343,7 +343,7 @@ class CommandCheck(Command):
 
                 elif target_filename not in self.existing_targets:
                     if os.path.exists(target_filename):
-                        self.logger.info(u"Good link {0} => {1}".format(target, target_filename))
+                        self.logger.notice(u"Good link {0} => {1}".format(target, target_filename))
                         self.existing_targets.add(target_filename)
                     else:
                         rv = True
@@ -358,9 +358,9 @@ class CommandCheck(Command):
 
     def scan_links(self, find_sources=False, check_remote=False):
         """Check links on the site."""
-        self.logger.info("Checking Links:")
-        self.logger.info("===============\n")
-        self.logger.info("{0} mode".format(self.site.config['URL_TYPE']))
+        self.logger.debug("Checking Links:")
+        self.logger.debug("===============\n")
+        self.logger.debug("{0} mode".format(self.site.config['URL_TYPE']))
         failure = False
         # Maybe we should just examine all HTML files
         output_folder = self.site.config['OUTPUT_FOLDER']
@@ -380,14 +380,14 @@ class CommandCheck(Command):
                     if self.analyze(fname, find_sources, False):
                         failure = True
         if not failure:
-            self.logger.info("All links checked.")
+            self.logger.debug("All links checked.")
         return failure
 
     def scan_files(self):
         """Check files in the site, find missing and orphaned files."""
         failure = False
-        self.logger.info("Checking Files:")
-        self.logger.info("===============\n")
+        self.logger.debug("Checking Files:")
+        self.logger.debug("===============\n")
         only_on_output, only_on_input = real_scan_files(self.site, self.cache)
 
         # Ignore folders
@@ -406,14 +406,14 @@ class CommandCheck(Command):
             for f in only_on_input:
                 self.logger.warn(f)
         if not failure:
-            self.logger.info("All files checked.")
+            self.logger.debug("All files checked.")
         return failure
 
     def clean_files(self):
         """Remove orphaned files."""
         only_on_output, _ = real_scan_files(self.site, self.cache)
         for f in only_on_output:
-            self.logger.info('removed: {0}'.format(f))
+            self.logger.debug('removed: {0}'.format(f))
             os.unlink(f)
 
         # Find empty directories and remove them
@@ -425,7 +425,7 @@ class CommandCheck(Command):
         for d in all_dirs:
             try:
                 os.rmdir(d)
-                self.logger.info('removed: {0}/'.format(d))
+                self.logger.debug('removed: {0}/'.format(d))
             except OSError:
                 pass
         return True

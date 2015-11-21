@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Restored log level to INFO (it broke many messages)
 * Check HTTP response status of minifying tools and skip them if they’re unavailable
 * Change rewrite rule for fragment-only links (Issue #2132)
 * Mention disabled plugins in ``nikola plugin --list-installed`` (Issue #2139)
