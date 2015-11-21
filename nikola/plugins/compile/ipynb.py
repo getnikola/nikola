@@ -32,21 +32,33 @@ import os
 import sys
 
 try:
-    import IPython
-    from IPython.nbconvert.exporters import HTMLExporter
-    if IPython.version_info[0] >= 3:     # API changed with 3.0.0
-        from IPython import nbformat
-        current_nbformat = nbformat.current_nbformat
-        from IPython.kernel import kernelspec
-    else:
-        import IPython.nbformat.current as nbformat
-        current_nbformat = 'json'
-        kernelspec = None
-
-    from IPython.config import Config
+    from nbconvert.exporters import HTMLExporter
+    import nbformat
+    current_nbformat = nbformat.current_nbformat
+    from jupyter_client import kernelspec
+    from traitlets.config import Config
     flag = True
+    ipy_modern = True
 except ImportError:
-    flag = None
+    try:
+        import IPython
+        from IPython.nbconvert.exporters import HTMLExporter
+        if IPython.version_info[0] >= 3:     # API changed with 3.0.0
+            from IPython import nbformat
+            current_nbformat = nbformat.current_nbformat
+            from IPython.kernel import kernelspec
+            ipy_modern = True
+        else:
+            import IPython.nbformat.current as nbformat
+            current_nbformat = 'json'
+            kernelspec = None
+            ipy_modern = False
+
+        from IPython.config import Config
+        flag = True
+    except ImportError:
+        flag = None
+        ipy_modern = None
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, req_missing, get_logger, STDERR_HANDLER
@@ -118,7 +130,7 @@ class CompileIPynb(PageCompiler):
             # imported .ipynb file, guaranteed to start with "{" because it’s JSON.
             nb = nbformat.reads(content, current_nbformat)
         else:
-            if IPython.version_info[0] >= 3:
+            if ipy_modern:
                 nb = nbformat.v4.new_notebook()
                 nb["cells"] = [nbformat.v4.new_markdown_cell(content)]
             else:
@@ -151,7 +163,7 @@ class CompileIPynb(PageCompiler):
             nb["metadata"]["nikola"] = metadata
 
         with io.open(path, "w+", encoding="utf8") as fd:
-            if IPython.version_info[0] >= 3:
+            if ipy_modern:
                 nbformat.write(nb, fd, 4)
             else:
                 nbformat.write(nb, fd, 'ipynb')

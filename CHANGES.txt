@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Use Jupyter instead of IPython shims (Issue #1938)
 * Automatically open gallery images colorbox based on URL fragment (Issue #2146)
 
 Bugfixes
