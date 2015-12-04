@@ -11,7 +11,8 @@ DOIT_CONFIG = {
 
 
 def recursive_glob(path, pattern):
-    """recursively walk path directories and return files matching the pattern"""
+    """recursively walk path directories and return files matching the
+    pattern"""
     for root, dirnames, filenames in os.walk(path, followlinks=True):
         for filename in fnmatch.filter(filenames, pattern):
             yield os.path.join(root, filename)
@@ -23,6 +24,7 @@ def task_flake8():
         'name': os.path.join(os.getcwd(), 'nikola'),
         'actions': ['flake8 nikola/'],
     }
+
 
 def task_pep257():
     """pep257 -- static check for docstring style"""
@@ -41,7 +43,8 @@ def task_locale():
             locales = []
             languages = set()
             for line in out.splitlines():
-                if (line.endswith('.utf8') or line.endswith('.UTF-8')) and '_' in line:
+                if (line.endswith('.utf8') or line.endswith('.UTF-8')) and \
+                        '_' in line:
                     lang = line.split('_')[0]
                     if lang not in languages:
                         try:
