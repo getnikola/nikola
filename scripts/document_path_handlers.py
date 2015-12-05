@@ -18,5 +18,5 @@ the description for all the supported kinds.
 for k in sorted(n.path_handlers.keys()):
     v = n.path_handlers[k]
     print(k)
-    print('\n'.join('    '+l.strip() for l in v.__doc__.splitlines()))
+    print('\n'.join('    ' + l.strip() for l in v.__doc__.splitlines()))
     print()
