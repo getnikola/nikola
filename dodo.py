@@ -24,6 +24,7 @@ def task_flake8():
         'actions': ['flake8 nikola/'],
     }
 
+
 def task_pep257():
     """pep257 -- static check for docstring style"""
     yield {
