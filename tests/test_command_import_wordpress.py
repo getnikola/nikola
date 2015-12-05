@@ -257,7 +257,7 @@ The end.
                                                      'content': 'Das Cover von Arzt+Pfusch - S.I.C.K.',
                                                      'files': ['/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png',
                                                                '/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover-150x150.png'],
-                                                      'title': 'Arzt+Pfusch - S.I.C.K.'}})
+                                                     'title': 'Arzt+Pfusch - S.I.C.K.'}})
 
         write_content.assert_any_call(
             'new_site/posts/2008/07/arzt-und-pfusch-s-i-c-k.md'.replace('/', os.sep),

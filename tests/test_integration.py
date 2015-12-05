@@ -313,6 +313,7 @@ class TestCheck(DemoBuildTest):
         with cd(self.target_dir):
             self.assertIsNone(__main__.main(['check', '-f']))
 
+
 class TestCheckAbsoluteSubFolder(TestCheck):
     """Validate links in a site which is:
 
@@ -526,6 +527,7 @@ class InvariantBuildTest(EmptyBuildTest):
         dst1 = os.path.join(self.target_dir, 'posts', '1.rst')
         shutil.copy(src1, dst1)
         os.system('rm "{0}/stories/creating-a-theme.rst" "{0}/stories/extending.txt" "{0}/stories/internals.txt" "{0}/stories/manual.rst" "{0}/stories/social_buttons.txt" "{0}/stories/theming.rst" "{0}/stories/path_handlers.txt" "{0}/stories/charts.txt"'.format(self.target_dir))
+
     def test_invariance(self):
         """Compare the output to the canonical output."""
         if sys.version_info[0:2] != (2, 7):
@@ -560,6 +562,7 @@ class RedirectionsTest1(TestCheck):
         with io.open(target_path, "w+", encoding="utf8") as outf:
             outf.write("foo")
 
+
 class RedirectionsTest2(TestCheck):
     """Check external REDIRECTIONS"""
 
@@ -569,6 +572,7 @@ class RedirectionsTest2(TestCheck):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "a", encoding="utf8") as outf:
             outf.write("""\n\nREDIRECTIONS = [ ("foo.html", "http://www.example.com/"), ]\n\n""")
+
 
 class RedirectionsTest3(TestCheck):
     """Check relative REDIRECTIONS"""

@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
-import os
-import sys
-
-
 import unittest
 import mock
 import lxml.html
@@ -323,13 +318,14 @@ def test_get_metadata_from_file():
     from nikola.post import _get_metadata_from_file
     g = _get_metadata_from_file
     assert list(g([]).values()) == []
-    assert str(g(["======","FooBar","======"])["title"]) == 'FooBar'
-    assert str(g(["FooBar","======"])["title"]) == 'FooBar'
+    assert str(g(["======", "FooBar", "======"])["title"]) == 'FooBar'
+    assert str(g(["FooBar", "======"])["title"]) == 'FooBar'
     assert str(g(["#FooBar"])["title"]) == 'FooBar'
     assert str(g([".. title: FooBar"])["title"]) == 'FooBar'
-    assert 'title' not in g(["","",".. title: FooBar"])
-    assert 'title' in g(["",".. title: FooBar"])
-    assert 'title' in g([".. foo: bar","","FooBar", "------"])
+    assert 'title' not in g(["", "", ".. title: FooBar"])
+    assert 'title' in g(["", ".. title: FooBar"])
+    assert 'title' in g([".. foo: bar", "", "FooBar", "------"])
+
 
 if __name__ == '__main__':
     unittest.main()
