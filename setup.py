@@ -90,7 +90,7 @@ def expands_symlinks_for_windows():
     sys.path = oldpath
     del sys.modules['winutils']
     if failures != -1:
-        print('WARNING: your working copy is now dirty by changes in'
+        print('WARNING: your working copy is now dirty by changes in '
               'samplesite, sphinx and themes')
     if failures > 0:
         raise Exception("Error: \n\tnot all symlinked files could be fixed." +
