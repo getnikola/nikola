@@ -223,7 +223,7 @@ class VimeoTestCase(ReSTExtensionTestCase):
         """ Test Vimeo iframe tag generation """
         self.basic_test()
         self.assertHTMLContains("iframe",
-                                attributes={"src": ("//player.vimeo.com/"
+                                attributes={"src": ("https://player.vimeo.com/"
                                                     "video/VID"),
                                             "height": "400", "width": "600"})
 
@@ -237,7 +237,7 @@ class YoutubeTestCase(ReSTExtensionTestCase):
         """ Test Youtube iframe tag generation """
         self.basic_test()
         self.assertHTMLContains("iframe",
-                                attributes={"src": ("//www.youtube.com/"
+                                attributes={"src": ("https://www.youtube.com/"
                                                     "embed/YID?rel=0&hd=1&"
                                                     "wmode=transparent"),
                                             "height": "400", "width": "600"})
