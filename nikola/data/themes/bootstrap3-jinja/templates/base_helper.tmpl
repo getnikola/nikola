@@ -63,7 +63,7 @@ lang="{{ lang }}">
 
     {{ mathjax_config }}
     {% if use_cdn %}
-        <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+        <!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
     {% else %}
         <!--[if lt IE 9]><script src="{{ url_replacer(permalink, '/assets/js/html5.js', lang) }}"></script><![endif]-->
     {% endif %}
@@ -74,16 +74,16 @@ lang="{{ lang }}">
 {% macro late_load_js() %}
     {% if use_bundles %}
         {% if use_cdn %}
-            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-            <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
             <script src="/assets/js/all.js"></script>
         {% else %}
             <script src="/assets/js/all-nocdn.js"></script>
         {% endif %}
     {% else %}
         {% if use_cdn %}
-            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-            <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
         {% else %}
             <script src="/assets/js/jquery.min.js"></script>
             <script src="/assets/js/bootstrap.min.js"></script>
@@ -102,14 +102,14 @@ lang="{{ lang }}">
 {% macro html_stylesheets() %}
     {% if use_bundles %}
         {% if use_cdn %}
-            <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+            <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
             <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
         {% else %}
             <link href="/assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
         {% endif %}
     {% else %}
         {% if use_cdn %}
-            <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+            <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
         {% else %}
             <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         {% endif %}
