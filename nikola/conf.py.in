@@ -835,7 +835,7 @@ PRETTY_URLS = ${PRETTY_URLS}
 # it's faster and the output looks better.
 # If you set USE_KATEX to True, you also need to add an extra CSS file
 # like this:
-# EXTRA_HEAD_DATA = """<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">"""
+# EXTRA_HEAD_DATA = """<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">"""
 # USE_KATEX = False
 
 # Do you want to customize the nbconversion of your IPython notebook?
@@ -871,7 +871,7 @@ MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
 # <li><a class="addthis_button_twitter"></a>
 # </ul>
 # </div>
-# <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
+# <script src="https://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
 # <!-- End of social buttons -->
 # """
 
@@ -932,7 +932,7 @@ MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
 #
 # SEARCH_FORM = """
 # <!-- DuckDuckGo custom search -->
-# <form method="get" id="search" action="//duckduckgo.com/"
+# <form method="get" id="search" action="https://duckduckgo.com/"
 #  class="navbar-form pull-left">
 # <input type="hidden" name="sites" value="%s">
 # <input type="hidden" name="k8" value="#444444">
