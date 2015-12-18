@@ -52,9 +52,14 @@ class JinjaTemplates(TemplateSystem):
         """Initialize Jinja2 environment with extended set of filters."""
         if jinja2 is None:
             return
-        # Not ideal because it's not using our cache structure
-        # but we don't have that folder at init time
-        cache = jinja2.FileSystemBytecodeCache()
+
+    def set_directories(self, directories, cache_folder):
+        """Create a new template lookup with set directories."""
+        if jinja2 is None:
+            req_missing(['jinja2'], 'use this theme')
+        cache_folder = os.path.join(cache_folder, 'jinja')
+        makedirs(cache_folder)
+        cache = jinja2.FileSystemBytecodeCache(cache_folder)
         self.lookup = jinja2.Environment(bytecode_cache=cache)
         self.lookup.trim_blocks = True
         self.lookup.lstrip_blocks = True
@@ -62,11 +67,6 @@ class JinjaTemplates(TemplateSystem):
         self.lookup.globals['enumerate'] = enumerate
         self.lookup.globals['isinstance'] = isinstance
         self.lookup.globals['tuple'] = tuple
-
-    def set_directories(self, directories, cache_folder):
-        """Create a new template lookup with set directories."""
-        if jinja2 is None:
-            req_missing(['jinja2'], 'use this theme')
         self.directories = directories
         self.create_lookup()
 
