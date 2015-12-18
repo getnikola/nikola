@@ -52,7 +52,10 @@ class JinjaTemplates(TemplateSystem):
         """Initialize Jinja2 environment with extended set of filters."""
         if jinja2 is None:
             return
-        self.lookup = jinja2.Environment()
+        # Not ideal because it's not using our cache structure
+        # but we don't have that folder at init time
+        cache = jinja2.FileSystemBytecodeCache()
+        self.lookup = jinja2.Environment(bytecode_cache=cache)
         self.lookup.trim_blocks = True
         self.lookup.lstrip_blocks = True
         self.lookup.filters['tojson'] = json.dumps
