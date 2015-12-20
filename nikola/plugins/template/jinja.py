@@ -52,18 +52,21 @@ class JinjaTemplates(TemplateSystem):
         """Initialize Jinja2 environment with extended set of filters."""
         if jinja2 is None:
             return
-        self.lookup = jinja2.Environment()
+
+    def set_directories(self, directories, cache_folder):
+        """Create a new template lookup with set directories."""
+        if jinja2 is None:
+            req_missing(['jinja2'], 'use this theme')
+        cache_folder = os.path.join(cache_folder, 'jinja')
+        makedirs(cache_folder)
+        cache = jinja2.FileSystemBytecodeCache(cache_folder)
+        self.lookup = jinja2.Environment(bytecode_cache=cache)
         self.lookup.trim_blocks = True
         self.lookup.lstrip_blocks = True
         self.lookup.filters['tojson'] = json.dumps
         self.lookup.globals['enumerate'] = enumerate
         self.lookup.globals['isinstance'] = isinstance
         self.lookup.globals['tuple'] = tuple
-
-    def set_directories(self, directories, cache_folder):
-        """Create a new template lookup with set directories."""
-        if jinja2 is None:
-            req_missing(['jinja2'], 'use this theme')
         self.directories = directories
         self.create_lookup()
 
