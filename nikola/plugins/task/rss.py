@@ -34,6 +34,7 @@ except ImportError:
     from urllib.parse import urljoin  # NOQA
 
 from nikola import utils
+from nikola.nikola import _enclosure
 from nikola.plugin_categories import Task
 
 
@@ -97,7 +98,7 @@ class GenerateRSS(Task):
                             (lang, kw["blog_title"](lang), kw["site_url"],
                              kw["blog_description"](lang), posts, output_name,
                              kw["feed_teasers"], kw["feed_plain"], kw['feed_length'], feed_url,
-                             None, kw["feed_links_append_query"]))],
+                             _enclosure, kw["feed_links_append_query"]))],
 
                 'task_dep': ['render_posts'],
                 'clean': True,
