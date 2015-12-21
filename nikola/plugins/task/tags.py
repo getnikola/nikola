@@ -38,6 +38,7 @@ except ImportError:
 
 from nikola.plugin_categories import Task
 from nikola import utils
+from nikola.nikola import _enclosure
 
 
 class RenderTags(Task):
@@ -379,7 +380,7 @@ class RenderTags(Task):
                         (lang, "{0} ({1})".format(kw["blog_title"](lang), self._get_title(tag, is_category)),
                          kw["site_url"], None, post_list,
                          output_name, kw["feed_teasers"], kw["feed_plain"], kw['feed_length'],
-                         feed_url, None, kw["feed_link_append_query"]))],
+                         feed_url, _enclosure, kw["feed_link_append_query"]))],
             'clean': True,
             'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.tags:rss')] + deps_uptodate,
             'task_dep': ['render_posts'],
