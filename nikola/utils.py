@@ -1294,9 +1294,9 @@ def demote_headers(doc, level=1):
         r = range(1 + level, 7)
     for i in reversed(r):
         # html headers go to 6, so we can’t “lower” beneath five
-            elements = doc.xpath('//h' + str(i))
-            for e in elements:
-                e.tag = 'h' + str(i + level)
+        elements = doc.xpath('//h' + str(i))
+        for e in elements:
+            e.tag = 'h' + str(i + level)
 
 
 def get_root_dir():
