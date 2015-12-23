@@ -73,9 +73,12 @@ def _find_shortcodes(data):
 
     >>> import pprint  # (dict sorting for doctest)
     >>> list(_find_shortcodes('{{% foo %}}{{% bar %}}'))
-    [['foo', ([], {}), 0, 11], ['bar', ([], {}), 11, 22]]
+    [['foo', ([], {'data': ''}), 0, 11], ['bar', ([], {'data': ''}), 11, 22]]
     >>> pprint.pprint(list(_find_shortcodes('{{% foo bar baz=bat fee=fi fo fum %}}')))
-    [['foo', (['bar', 'fo', 'fum'], {'baz': 'bat', 'fee': 'fi'}), 0, 37]]
+    [['foo',
+      (['bar', 'fo', 'fum'], {'baz': 'bat', 'data': '', 'fee': 'fi'}),
+      0,
+      37]]
     >>> pprint.pprint(list(_find_shortcodes('{{% foo bar bat=baz%}}some data{{% /foo %}}')))
     [['foo', (['bar'], {'bat': 'baz', 'data': 'some data'}), 0, 43]]
     """
@@ -95,6 +98,7 @@ def _find_shortcodes(data):
         close = data.find(close_tag, end + 3)
         if close == -1:  # No closer
             end = end + 3
+            args[1]['data'] = ''
         else:  # Tag with closer
             args[1]['data'] = data[end + 3:close - 1]
             end = close + len(close_tag) + 1
