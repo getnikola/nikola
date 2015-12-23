@@ -1301,8 +1301,7 @@ class Nikola(object):
         self.shortcode_registry[name] = f
 
     def apply_shortcodes(self, data):
-        """Apply shortcodes from the registry into data."""
-
+        """Apply shortcodes from the registry on data."""
         return shortcodes.apply_shortcodes(data, self.shortcode_registry)
 
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,

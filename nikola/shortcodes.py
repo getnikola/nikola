@@ -24,7 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Support for hugo-style shortcodes."""
+"""Support for Hugo-style shortcodes."""
 
 try:
     from html.parser import HTMLParser
@@ -33,7 +33,7 @@ except ImportError:
 
 
 def apply_shortcodes(data, registry, site=None):
-    """Support for hugo-style shortcodes.
+    """Apply Hugo-style shortcodes on data.
 
     {{% name parameters %}} will end up calling the registered "name" function with the given parameters.
     {{% name parameters %}} something {{% /name %}} will call name with the parameters and
@@ -45,9 +45,7 @@ def apply_shortcodes(data, registry, site=None):
     '==> baz <=='
     >>> apply_shortcodes('==> {{% foo bar=baz %}}some data{{% /foo %}} <==', {'foo': lambda *a, **k: k['bar']+k['data']})
     '==> bazsome data <=='
-
     """
-
     shortcodes = list(_find_shortcodes(data))
     # Calculate shortcode results
     for sc in shortcodes:
@@ -65,7 +63,7 @@ def apply_shortcodes(data, registry, site=None):
 
 
 def _find_shortcodes(data):
-    """ Find starta and end of shortcode markers.
+    """Find start and end of shortcode markers.
 
     >>> list(_find_shortcodes('{{% foo %}}{{% bar %}}'))
     [['foo', ([], {}), 0, 11], ['bar', ([], {}), 11, 22]]
@@ -75,8 +73,8 @@ def _find_shortcodes(data):
 
     >>> list(_find_shortcodes('{{% foo bar bat=baz%}}some data{{% /foo %}}'))
     [['foo', (['bar'], {'bat': 'baz', 'data': 'some data'}), 0, 43]]
-    """
 
+    """
     # FIXME: this is really space-intolerant
 
     parser = SCParser()
@@ -101,9 +99,11 @@ def _find_shortcodes(data):
 
 
 class SCParser(HTMLParser):
-    """Because shortcode attributes are HTML-like abusing the HTML parser parser."""
+    """Parser for shortcode arguments."""
+    # Because shortcode attributes are HTML-like, we are abusing the HTML parser.
 
     def parse_sc(self, data):
+        """Parse shortcode arguments into a tuple."""
         self.name = None
         self.attrs = {}
         self.feed(data)
@@ -117,5 +117,6 @@ class SCParser(HTMLParser):
         return self.name, (args, kwargs)
 
     def handle_starttag(self, tag, attrs):
+        """Set start tag information on parser object."""
         self.name = tag
         self.attrs = attrs
