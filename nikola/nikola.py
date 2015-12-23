@@ -57,7 +57,7 @@ from yapsy.PluginManager import PluginManager
 from blinker import signal
 
 from .post import Post  # NOQA
-from . import DEBUG, utils
+from . import DEBUG, utils, shortcodes
 from .plugin_categories import (
     Command,
     LateTask,
@@ -334,6 +334,7 @@ class Nikola(object):
         self.configuration_filename = config.pop('__configuration_filename__', False)
         self.configured = bool(config)
         self.injected_deps = defaultdict(list)
+        self.shortcode_registry = {}
 
         self.rst_transforms = []
         self.template_hooks = {
@@ -905,7 +906,7 @@ class Nikola(object):
                 plugin_info.plugin_object
 
         self._activate_plugins_of_category("ConfigPlugin")
-
+        self._register_templated_shortcodes()
         signal('configured').send(self)
 
     def _set_global_context(self):
@@ -1291,6 +1292,32 @@ class Nikola(object):
         assert result, (src, dst, i, src_elems, dst_elems)
 
         return result
+
+    def _register_templated_shortcodes(self):
+        """Register shortcodes provided by templates in shortcodes/ folder."""
+        if not os.path.isdir('shortcodes'):
+            return
+        for fname in os.listdir('shortcodes'):
+            name, ext = os.path.splitext(fname)
+            if ext == '.tmpl':
+                with open(os.path.join('shortcodes', fname)) as fd:
+                    template_data = fd.read()
+
+                def render_shortcode(t_data=template_data, **kw):
+                    return self.template_system.render_template_to_string(t_data, kw)
+
+                self.register_shortcode(name, render_shortcode)
+
+    def register_shortcode(self, name, f):
+        """Register function f to handle shortcode "name"."""
+        if name in self.shortcode_registry:
+            utils.LOGGER.warn('Shortcode name conflict: %s', name)
+            return
+        self.shortcode_registry[name] = f
+
+    def apply_shortcodes(self, data):
+        """Apply shortcodes from the registry on data."""
+        return shortcodes.apply_shortcodes(data, self.shortcode_registry)
 
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
                              rss_teasers, rss_plain, feed_length=10, feed_url=None,

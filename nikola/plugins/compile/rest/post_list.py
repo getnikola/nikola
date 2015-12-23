@@ -50,6 +50,7 @@ class Plugin(RestExtension):
     def set_site(self, site):
         """Set Nikola site."""
         self.site = site
+        self.site.register_shortcode('post-list', _do_post_list)
         directives.register_directive('post-list', PostList)
         PostList.site = site
         return super(Plugin, self).set_site(site)
@@ -147,66 +148,77 @@ class PostList(Directive):
         lang = self.options.get('lang', utils.LocaleBorg().current_lang)
         template = self.options.get('template', 'post_list_directive.tmpl')
         sort = self.options.get('sort')
-        if self.site.invariant:  # for testing purposes
-            post_list_id = self.options.get('id', 'post_list_' + 'fixedvaluethatisnotauuid')
-        else:
-            post_list_id = self.options.get('id', 'post_list_' + uuid.uuid4().hex)
 
-        filtered_timeline = []
-        posts = []
-        step = -1 if reverse is None else None
-        if show_all is None:
-            timeline = [p for p in self.site.timeline]
-        else:
-            timeline = [p for p in self.site.timeline if p.use_in_feeds]
-
-        if categories:
-            timeline = [p for p in timeline if p.meta('category', lang=lang).lower() in categories]
-
-        for post in timeline:
-            if tags:
-                cont = True
-                tags_lower = [t.lower() for t in post.tags]
-                for tag in tags:
-                    if tag in tags_lower:
-                        cont = False
-
-                if cont:
-                    continue
-
-            filtered_timeline.append(post)
-
-        if sort:
-            filtered_timeline = natsort.natsorted(filtered_timeline, key=lambda post: post.meta[lang][sort], alg=natsort.ns.F | natsort.ns.IC)
-
-        for post in filtered_timeline[start:stop:step]:
-            if slugs:
-                cont = True
-                for slug in slugs:
-                    if slug == post.meta('slug'):
-                        cont = False
-
-                if cont:
-                    continue
-
-            bp = post.translated_base_path(lang)
-            if os.path.exists(bp):
-                self.state.document.settings.record_dependencies.add(bp)
-
-            posts += [post]
-
-        if not posts:
-            return []
+        output = _do_post_list(start, stop, reverse, tags, categories, slugs, show_all,
+                               lang, template, sort, state=self.state, site=self.site)
         self.state.document.settings.record_dependencies.add("####MAGIC####TIMELINE")
-
-        template_data = {
-            'lang': lang,
-            'posts': posts,
-            # Need to provide str, not TranslatableSetting (Issue #2104)
-            'date_format': self.site.GLOBAL_CONTEXT.get('date_format')[lang],
-            'post_list_id': post_list_id,
-            'messages': self.site.MESSAGES,
-        }
-        output = self.site.template_system.render_template(
-            template, None, template_data)
         return [nodes.raw('', output, format='html')]
+
+
+def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=None,
+                  slugs=None, show_all=False, lang=None, template='post_list_directive.tmpl',
+                  sort=None, id=None, data=None, state=None, site=None):
+    if lang is None:
+        lang = utils.LocaleBorg().current_lang
+    if site.invariant:  # for testing purposes
+        post_list_id = id or 'post_list_' + 'fixedvaluethatisnotauuid'
+    else:
+        post_list_id = id or 'post_list_' + uuid.uuid4().hex
+
+    filtered_timeline = []
+    posts = []
+    step = -1 if reverse is None else None
+    if show_all is None:
+        timeline = [p for p in site.timeline]
+    else:
+        timeline = [p for p in site.timeline if p.use_in_feeds]
+
+    if categories:
+        timeline = [p for p in timeline if p.meta('category', lang=lang).lower() in categories]
+
+    for post in timeline:
+        if tags:
+            cont = True
+            tags_lower = [t.lower() for t in post.tags]
+            for tag in tags:
+                if tag in tags_lower:
+                    cont = False
+
+            if cont:
+                continue
+
+        filtered_timeline.append(post)
+
+    if sort:
+        filtered_timeline = natsort.natsorted(filtered_timeline, key=lambda post: post.meta[lang][sort], alg=natsort.ns.F | natsort.ns.IC)
+
+    for post in filtered_timeline[start:stop:step]:
+        if slugs:
+            cont = True
+            for slug in slugs:
+                if slug == post.meta('slug'):
+                    cont = False
+
+            if cont:
+                continue
+
+        bp = post.translated_base_path(lang)
+        if os.path.exists(bp) and state:
+            state.document.settings.record_dependencies.add(bp)
+
+        posts += [post]
+
+    if not posts:
+        return []
+
+    template_data = {
+        'lang': lang,
+        'posts': posts,
+        # Need to provide str, not TranslatableSetting (Issue #2104)
+        'date_format': site.GLOBAL_CONTEXT.get('date_format')[lang],
+        'post_list_id': post_list_id,
+        'messages': site.MESSAGES,
+    }
+    output = site.template_system.render_template(
+        template, None, template_data)
+    return output

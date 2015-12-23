@@ -483,6 +483,7 @@ class Post(object):
             self.translated_source_path(lang),
             dest,
             self.is_two_file),
+
         if self.meta('password'):
             # TODO: get rid of this feature one day (v8?; warning added in v7.3.0.)
             LOGGER.warn("The post {0} is using the `password` attribute, which may stop working in the future.")
