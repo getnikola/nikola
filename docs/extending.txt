@@ -562,7 +562,7 @@ Some (hopefully all) markup compilers support shortcodes in these forms::
     {{% foo %}}Some text{{% /foo %}} # one argument called "data" containing "Some text"
 
 So, if you are creating a plugin that generates markup, it may be a good idea to register it as a shortcode
-in adition of a restructured text directive or markdown extension, thus making it available to all markups.
+in addition of a restructured text directive or markdown extension, thus making it available to all markups.
     
 To implement your own shortcodes from a plugin, you can call ``Nikola.register_shortcode(name, f)`` with the following
 arguments:
