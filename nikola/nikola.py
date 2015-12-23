@@ -1295,6 +1295,8 @@ class Nikola(object):
 
     def _register_templated_shortcodes(self):
         """Register shortcodes provided by templates in shortcodes/ folder."""
+        if not os.path.isdir('shortcodes'):
+            return
         for fname in os.listdir('shortcodes'):
             name, ext = os.path.splitext(fname)
             if ext == '.tmpl':
