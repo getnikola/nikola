@@ -906,7 +906,7 @@ class Nikola(object):
                 plugin_info.plugin_object
 
         self._activate_plugins_of_category("ConfigPlugin")
-
+        self._register_templated_shortcodes()
         signal('configured').send(self)
 
     def _set_global_context(self):
@@ -1292,6 +1292,19 @@ class Nikola(object):
         assert result, (src, dst, i, src_elems, dst_elems)
 
         return result
+
+    def _register_templated_shortcodes(self):
+        """Register shortcodes provided in shortcodes/ folder."""
+        for fname in os.listdir('shortcodes'):
+            name, ext = os.path.splitext(fname)
+            if ext == '.tmpl':
+                with open(os.path.join('shortcodes', fname)) as fd:
+                    template_data = fd.read()
+
+                def render_shortcode(t_data=template_data, **kw):
+                    return self.template_system.render_template_to_string(t_data, kw)
+
+                self.register_shortcode(name, render_shortcode)
 
     def register_shortcode(self, name, f):
         """Register function f to handle shortcode "name"."""
