@@ -34,20 +34,20 @@ except ImportError:
 
 def apply_shortcodes(data, registry, site=None):
     """Support for hugo-style shortcodes.
-    
+
     {{% name parameters %}} will end up calling the registered "name" function with the given parameters.
-    {{% name parameters %}} something {{% /name %}} will call name with the parameters and 
+    {{% name parameters %}} something {{% /name %}} will call name with the parameters and
     one extra "data" parameter containing " something ".
 
     The site parameter is passed with the same name to the shortcodes so they can access Nikola state.
-    
+
     >>> apply_shortcodes('==> {{% foo bar=baz %}} <==', {'foo': lambda *a, **k: k['bar']})
     '==> baz <=='
     >>> apply_shortcodes('==> {{% foo bar=baz %}}some data{{% /foo %}} <==', {'foo': lambda *a, **k: k['bar']+k['data']})
     '==> bazsome data <=='
-    
+
     """
-    
+
     shortcodes = list(_find_shortcodes(data))
     # Calculate shortcode results
     for sc in shortcodes:
@@ -56,26 +56,27 @@ def apply_shortcodes(data, registry, site=None):
         kw['site'] = site
         result = registry[name](*a, **kw)
         sc.append(result)
-    
+
     # Replace all shortcodes with their output
     for sc in shortcodes[::-1]:
         _, _, start, end, result = sc
         data = data[:start] + result + data[end:]
     return data
 
+
 def _find_shortcodes(data):
     """ Find starta and end of shortcode markers.
-    
+
     >>> list(_find_shortcodes('{{% foo %}}{{% bar %}}'))
     [['foo', ([], {}), 0, 11], ['bar', ([], {}), 11, 22]]
-    
+
     >>> list(_find_shortcodes('{{% foo bar baz=bat fee=fi fo fum %}}'))
     [['foo', (['bar', 'fo', 'fum'], {'fee': 'fi', 'baz': 'bat'}), 0, 37]]
-    
+
     >>> list(_find_shortcodes('{{% foo bar bat=baz%}}some data{{% /foo %}}'))
     [['foo', (['bar'], {'bat': 'baz', 'data': 'some data'}), 0, 43]]
     """
-    
+
     # FIXME: this is really space-intolerant
 
     parser = SCParser()
@@ -86,24 +87,23 @@ def _find_shortcodes(data):
             break
         # Get the whole shortcode tag
         end = data.find('%}}', start + 1)
-        name, args = parser.parse_sc('<{}>'.format(data[start + 3:end].strip()))        
+        name, args = parser.parse_sc('<{}>'.format(data[start + 3:end].strip()))
         # Check if this start has a matching close
         close_tag = '{{% /{} %}}'.format(name)
         close = data.find(close_tag, end + 3)
         if close == -1:  # No closer
             end = end + 3
         else:  # Tag with closer
-            args[1]['data'] = data[end + 3:close-1]
+            args[1]['data'] = data[end + 3:close - 1]
             end = close + len(close_tag) + 1
         pos = end
         yield [name, args, start, end]
-    
-    
-class SCParser(HTMLParser):    
+
+
+class SCParser(HTMLParser):
     """Because shortcode attributes are HTML-like abusing the HTML parser parser."""
-        
+
     def parse_sc(self, data):
-        #print('====> ', data)
         self.name = None
         self.attrs = {}
         self.feed(data)
@@ -115,9 +115,7 @@ class SCParser(HTMLParser):
             else:
                 kwargs[a] = b
         return self.name, (args, kwargs)
-        
+
     def handle_starttag(self, tag, attrs):
         self.name = tag
         self.attrs = attrs
-
-

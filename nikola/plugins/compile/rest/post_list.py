@@ -150,14 +150,14 @@ class PostList(Directive):
         sort = self.options.get('sort')
 
         output = _do_post_list(start, stop, reverse, tags, categories, slugs, show_all,
-                                    lang, template, sort, state=self.state, site=self.site)
+                               lang, template, sort, state=self.state, site=self.site)
         self.state.document.settings.record_dependencies.add("####MAGIC####TIMELINE")
         return [nodes.raw('', output, format='html')]
-        
-        
-def _do_post_list(start=None, stop=None, reverse = False, tags=None, categories=None, 
-                    slugs=None, show_all=False, lang=None, template='post_list_directive.tmpl',
-                    sort=None, id=None, data=None, state=None, site=None):
+
+
+def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=None,
+                  slugs=None, show_all=False, lang=None, template='post_list_directive.tmpl',
+                  sort=None, id=None, data=None, state=None, site=None):
     if lang is None:
         lang = utils.LocaleBorg().current_lang
     if site.invariant:  # for testing purposes

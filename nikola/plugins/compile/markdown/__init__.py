@@ -43,6 +43,7 @@ from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, req_missing, write_metadata
 from nikola.shortcodes import apply_shortcodes
 
+
 class CompileMarkdown(PageCompiler):
     """Compile Markdown into HTML."""
 
