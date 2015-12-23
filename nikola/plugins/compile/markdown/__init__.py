@@ -41,7 +41,7 @@ except ImportError:
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, req_missing, write_metadata
-
+from nikola.shortcodes import apply_shortcodes
 
 class CompileMarkdown(PageCompiler):
     """Compile Markdown into HTML."""
@@ -75,6 +75,7 @@ class CompileMarkdown(PageCompiler):
             if not is_two_file:
                 _, data = self.split_metadata(data)
             output = markdown(data, self.extensions)
+            output = apply_shortcodes(output, self.site.shortcode_registry, self.site)
             out_file.write(output)
 
     def create_post(self, path, **kw):
