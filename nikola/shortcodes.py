@@ -31,6 +31,7 @@ try:
 except ImportError:
     from HTMLParser import HTMLParser
 
+from .utils import LOGGER
 
 def apply_shortcodes(data, registry, site=None):
     """Apply Hugo-style shortcodes on data.
@@ -52,7 +53,11 @@ def apply_shortcodes(data, registry, site=None):
         name, args, start, end = sc
         a, kw = args
         kw['site'] = site
-        result = registry[name](*a, **kw)
+        if name in registry:
+            result = registry[name](*a, **kw)
+        else:
+            LOGGER.error('Unknown shortcode: {}', name)
+            result = ''
         sc.append(result)
 
     # Replace all shortcodes with their output
