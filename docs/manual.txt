@@ -546,7 +546,6 @@ Or you can completely customize the link using the ``READ_MORE_LINK`` option.
     # }}            A literal } (U+007D RIGHT CURLY BRACKET)
     # READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
 
-
 Drafts
 ~~~~~~
 
@@ -799,6 +798,59 @@ original compilers.  The input format is inferred from the extension by Pandoc.
 Using Pandoc for reStructuredText, Markdown and other input formats that have a
 standalone Nikola plugin is **not recommended** as it disables plugins and
 extensions that are usually provided by Nikola.
+
+Shortcodes
+----------
+
+This feature is "inspired" (copied wholesale) from `Hugo <https://gohugo.io/extras/shortcodes/>`__ so I will
+steal part of their docs too.
+
+A shortcode is a simple snippet inside a content file that Nikola will render using a predefined template or
+custom code from a plugin.
+
+To use them from plugins, please see `Extending Nikola <https://getnikola.com/extending.html#shortcodes>`__
+
+Using a shortcode
+~~~~~~~~~~~~~~~~~
+
+In your content files, a shortcode can be called by using the {{% name parameters %}} form. Shortcode parameters are space delimited. Parameters with spaces can be quoted.
+
+The first word is always the name of the shortcode. Parameters follow the name. Depending upon how the shortcode is defined, the parameters may be named, positional or both (although you can’t mixed parameter types in a single call). The format for named parameters models that of HTML with the format name="value".
+
+Some shortcodes use or require closing shortcodes. Like HTML, the opening and closing shortcodes match (name only), the closing being prepended with a slash.
+
+Example of a paired shortcode (note that we don't have a highlight shortcode yet ;-)::
+
+    {{% highlight go %}} A bunch of code here {{% /highlight %}}
+    
+Build-in shortcodes
+~~~~~~~~~~~~~~~~~~~
+
+post-list
+    Will show a list of posts, see the `Post List directive for details <#post-list>`__
+    
+
+Template-based shortcodes
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you put a template in ``shortcodes/`` called ``mycode.tmpl`` then Nikola will create a shortcode
+called ``mycode`` you can use. Any options you pass to the shortcode will be available as variables 
+for that template. If you use the shortcode as paired, then the contents between the paired tags will
+be available in the ``data`` variable.
+
+If you want to access the Nikola object, it will be available as ``site``. Use with care :-)
+
+For example, if your ``shortcodes/foo.tmpl`` contains this::
+
+    This uses the bar variable: ${bar}
+
+And your post contains this::
+
+    {{% foo bar=bla %}}
+
+Then the output file will contain::
+
+    This uses the bar variable: bla
 
 Redirections
 ------------
