@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# vim: set wrap
+# vim: set wrap textwidth=300
 
 u"""Test shortcodes."""
 
@@ -33,7 +33,7 @@ def test_arg_pos(fakesite):
     assert shortcodes.apply_shortcodes('test({{% arg 1 %}})', fakesite.shortcode_registry) == "test(arg ('1',)/[]/None)"
     assert shortcodes.apply_shortcodes('test({{% arg 1 2aa %}})', fakesite.shortcode_registry) == "test(arg ('1', '2aa')/[]/None)"
     # TODO: currently unsupported!
-    # assert shortcodes.apply_shortcodes('test({{% arg "hello world" %}})', fakesite.shortcode_registry) == "test(arg ('hello world')/[]/None)"
+    # assert shortcodes.apply_shortcodes('test({{% arg "hello world" %}})', fakesite.shortcode_registry) == "test(arg ('hello world',)/[]/None)"
 
 def test_arg_keyword(fakesite):
     assert shortcodes.apply_shortcodes('test({{% arg 1a=2b %}})', fakesite.shortcode_registry) == "test(arg ()/[('1a', '2b')]/None)"
@@ -43,4 +43,4 @@ def test_data(fakesite):
     assert shortcodes.apply_shortcodes('test({{% arg 123 %}}Hello!{{% /arg %}})', fakesite.shortcode_registry) == "test(arg ('123',)/[]/Hello!)"
     assert shortcodes.apply_shortcodes('test({{% arg 123 456 foo=bar %}}Hello world!{{% /arg %}})', fakesite.shortcode_registry) == "test(arg ('123', '456')/[('foo', 'bar')]/Hello world!)"
     assert shortcodes.apply_shortcodes('test({{% arg 123 456 foo=bar baz="quotes rock." %}}Hello test suite!{{% /arg %}})', fakesite.shortcode_registry) == "test(arg ('123', '456')/[('baz', 'quotes rock.'), ('foo', 'bar')]/Hello test suite!)"
-    #assert shortcodes.apply_shortcodes('test({{% arg "123 foo" foobar foo=bar baz="quotes rock." %}}Hello test suite!!{{% /arg %}})', fakesite.shortcode_registry) == "test(arg ('123 foo', 'foobar')/[('baz', 'quotes rock.'), ('foo', 'bar')]/Hello test suite!!)"
+    # assert shortcodes.apply_shortcodes('test({{% arg "123 foo" foobar foo=bar baz="quotes rock." %}}Hello test suite!!{{% /arg %}})', fakesite.shortcode_registry) == "test(arg ('123 foo', 'foobar')/[('baz', 'quotes rock.'), ('foo', 'bar')]/Hello test suite!!)"
