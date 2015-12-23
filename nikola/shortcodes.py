@@ -65,15 +65,13 @@ def apply_shortcodes(data, registry, site=None):
 def _find_shortcodes(data):
     """Find start and end of shortcode markers.
 
+    >>> import pprint  # (dict sorting for doctest)
     >>> list(_find_shortcodes('{{% foo %}}{{% bar %}}'))
     [['foo', ([], {}), 0, 11], ['bar', ([], {}), 11, 22]]
-
-    >>> list(_find_shortcodes('{{% foo bar baz=bat fee=fi fo fum %}}'))
-    [['foo', (['bar', 'fo', 'fum'], {'fee': 'fi', 'baz': 'bat'}), 0, 37]]
-
-    >>> list(_find_shortcodes('{{% foo bar bat=baz%}}some data{{% /foo %}}'))
+    >>> pprint.pprint(list(_find_shortcodes('{{% foo bar baz=bat fee=fi fo fum %}}')))
+    [['foo', (['bar', 'fo', 'fum'], {'baz': 'bat', 'fee': 'fi'}), 0, 37]]
+    >>> pprint.pprint(list(_find_shortcodes('{{% foo bar bat=baz%}}some data{{% /foo %}}')))
     [['foo', (['bar'], {'bat': 'baz', 'data': 'some data'}), 0, 43]]
-
     """
     # FIXME: this is really space-intolerant
 
@@ -100,7 +98,9 @@ def _find_shortcodes(data):
 
 class SCParser(HTMLParser):
     """Parser for shortcode arguments."""
+
     # Because shortcode attributes are HTML-like, we are abusing the HTML parser.
+    # TODO replace with self-contained parser
 
     def parse_sc(self, data):
         """Parse shortcode arguments into a tuple."""
