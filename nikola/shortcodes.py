@@ -107,6 +107,7 @@ class SCParser(HTMLParser):
 
     # Because shortcode attributes are HTML-like, we are abusing the HTML parser.
     # TODO replace with self-contained parser
+    # FIXME should be able to take quoted positional arguments!
 
     def parse_sc(self, data):
         """Parse shortcode arguments into a tuple."""
