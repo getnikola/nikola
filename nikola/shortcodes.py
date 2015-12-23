@@ -33,6 +33,7 @@ except ImportError:
 
 from .utils import LOGGER
 
+
 def apply_shortcodes(data, registry, site=None):
     """Apply Hugo-style shortcodes on data.
 
