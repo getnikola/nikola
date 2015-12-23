@@ -549,3 +549,44 @@ arguments.  Example use:
         endswith=endswith) + t
 
     site.template_hooks['page_header'].append(greeting, True, u'Nikola Tesla', endswith=u'!')
+
+Shortcodes
+==========
+
+Some (hopefully all) markup compilers support shortcodes in these forms::
+
+    {{% foo %}}  # No arguments
+    {{% foo bar %}}  # One argument, containing "bar"
+    {{% foo bar baz=bat %}}  # Two arguments, one containing "bar", one called "baz" containing "bat"
+    
+    {{% foo %}}Some text{{% /foo %}} # one argument called "data" containing "Some text"
+
+So, if you are creating a plugin that generates markup, it may be a good idea to register it as a shortcode
+in adition of a restructured text directive or markdown extension, thus making it available to all markups.
+    
+To implement your own shortcodes from a plugin, you can call ``Nikola.register_shortcode(name, f)`` with the following
+arguments:
+
+name:
+    name of the shortcode (foo in the examples above)
+f:
+    A function that will handle the shortcode
+    
+The shortcode handler should take *at least* the following named arguments:
+
+site:
+    An instance of the Nikola class, to access site state
+    
+data:
+    If the shortcut is used as opening/closing tags, it will be the text between them, otherwise None
+    
+If the shortcode tag has arguments of the form "foo=bar" they will be passed as named arguments. Everything else
+will be passed as positional arguments in the function call.
+
+So, for example::
+
+    {{% foo bar baz=bat beep %}}Some text{{% /foo %}}
+    
+Will cause a call like this::
+
+     foo_handler("bar", "beep", baz="bat", data="Some text", site=whatever)
