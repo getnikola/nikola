@@ -1,3 +1,11 @@
+New in master
+=============
+
+Features
+--------
+
+* Hugo-like shortcodes (Issue #1707)
+
 New in v7.7.4
 =============
 
