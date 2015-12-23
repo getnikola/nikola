@@ -20,6 +20,7 @@ import unittest
 import logbook
 
 import nikola.utils
+import nikola.shortcodes
 nikola.utils.LOGGER.handlers.append(logbook.TestHandler())
 
 from yapsy.PluginManager import PluginManager
@@ -35,51 +36,7 @@ from nikola.plugin_categories import (
     RestExtension
 )
 
-
-if sys.version_info < (2, 7):
-
-    try:
-        import unittest2
-        _unittest2 = True
-    except ImportError:
-        _unittest2 = False
-
-    if _unittest2:
-        BaseTestCase = unittest2.TestCase
-
-    else:
-
-        class BaseTestCase(unittest.TestCase):
-            """ Base class for providing 2.6 compatibility """
-
-            def assertIs(self, first, second, msg=None):
-                self.assertTrue(first is second)
-
-            def assertIsNot(self, first, second, msg=None):
-                self.assertTrue(first is not second)
-
-            def assertIsNone(self, expr, msg=None):
-                self.assertTrue(expr is None)
-
-            def assertIsNotNone(self, expr, msg=None):
-                self.assertTrue(expr is not None)
-
-            def assertIn(self, first, second, msg=None):
-                self.assertTrue(first in second)
-
-            def assertNotIn(self, first, second, msg=None):
-                self.assertTrue(first not in second)
-
-            def assertIsInstance(self, obj, cls, msg=None):
-                self.assertTrue(isinstance(obj, cls))
-
-            def assertNotIsInstance(self, obj, cls, msg=None):
-                self.assertFalse(isinstance(obj, cls))
-
-
-else:
-    BaseTestCase = unittest.TestCase
-
+BaseTestCase = unittest.TestCase
 
 @contextmanager
 def cd(path):
@@ -219,6 +176,7 @@ class FakeSite(object):
             "RestExtension": RestExtension
         })
         self.loghandlers = nikola.utils.STDERR_HANDLER  # TODO remove on v8
+        self.shortcode_registry = {}
         self.plugin_manager.setPluginInfoExtension('plugin')
         if sys.version_info[0] == 3:
             places = [
@@ -257,3 +215,15 @@ class FakeSite(object):
 
     def render_template(self, name, _, context):
         return('<img src="IMG.jpg">')
+
+    # this code duplicated in nikola/nikola.py
+    def register_shortcode(self, name, f):
+        """Register function f to handle shortcode "name"."""
+        if name in self.shortcode_registry:
+            nikola.utils.LOGGER.warn('Shortcode name conflict: %s', name)
+            return
+        self.shortcode_registry[name] = f
+
+    def apply_shortcodes(self, data):
+        """Apply shortcodes from the registry on data."""
+        return nikola.shortcodes.apply_shortcodes(data, self.shortcode_registry)
