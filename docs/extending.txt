@@ -256,7 +256,7 @@ If you want to do something that depends on the data in your site, you
 probably want to do a ``Task`` plugin, which will make it be part of the
 ``nikola build`` command. These are the currently available tasks, all
 provided by plugins:
-T
+
 .. sidebar:: Other Tasks
 
     There are also ``LateTask`` plugins, which are executed later,
