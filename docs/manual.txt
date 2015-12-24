@@ -1158,21 +1158,58 @@ GitHub pages.  The command builds the site, commits the output to a gh-pages
 branch and pushes the output to GitHub.  Nikola uses the `ghp-import command
 <https://github.com/davisp/ghp-import>`_ for this.
 
-The branch to use for committing the sources can be changed using the
-``GITHUB_DEPLOY_BRANCH`` option in your config.  For a
-user.github.io/organization.github.io, this MUST be set to ``master``,
-and the branch containing the sources must be changed to something
-else, like ``src``, using the ``GITHUB_SOURCE_BRANCH`` option.  The
-remote name to which the changes are pushed is ``origin`` by default,
-and can be changed using the ``GITHUB_REMOTE_NAME`` option.  You also,
-obviously, need to have ``git`` on your PATH, and should be able to
-push to the repository specified as the remote.
+In order to use this feature, you need to configure a few things first.  Make
+sure you have ``nikola`` and ``git`` installed on your PATH.
 
-This command performs the following actions, when it is run:
+1. Initialize a Nikola site, if you haven’t already.
+2. Initialize a git repository in your Nikola source directory by running:
 
-1. Builds the site
-2. Commit the output folder to the ``GITHUB_DEPLOY_BRANCH`` to this branch.
-3. Push the branch to the remote specified in ``GITHUB_REMOTE_NAME``!
+   .. code:: text
+
+      git init .
+      git remote add origin git@github.com:user/repository.git
+
+3. Setup branches and remotes in ``conf.py``:
+
+   * ``GITHUB_DEPLOY_BRANCH`` is the branch where Nikola-generated HTML files
+     will be deployed. It should be ``gh-pages`` for project pages and
+     ``master`` for user pages (user.github.io).
+   * ``GITHUB_SOURCE_BRANCH`` is the branch where your Nikola site source will be
+     deployed. We default to ``master``, but user pages should use ``src`` or
+     something else.
+   * ``GITHUB_REMOTE_NAME`` is the remote to which changes are pushed.
+
+4. Create a ``.gitignore`` file. We recommend adding at least the following entries:
+
+   .. code:: text
+
+      cache
+      .doit.db
+      __pycache__
+      output
+
+5. Switch to your source branch (if necessary) and commit to your source branch:
+
+   .. code:: text
+
+      git checkout -b src
+      git add .
+      git commit -am "Initial commit"
+
+6. Run ``nikola github_deploy``.  This will build the site, commit the output
+   folder to your deploy branch, and push to GitHub.  Your website should be up
+   and running within a few minutes.
+7. You should push your source branch to GitHub, too — this way, you have a
+   backup in case of catastrophic disk failure, and you can work on your
+   website from around the world.
+
+   .. code:: text
+
+      git push -u origin src
+
+If you want to use a custom domain, create your ``CNAME`` file in
+``files/CNAME`` on the source branch. Nikola will copy it to the
+output directory.
 
 Comments and Annotations
 ------------------------
