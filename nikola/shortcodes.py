@@ -125,14 +125,14 @@ def parse_sc(data):
     cvalue = ''
     qc = ''
     for char in elements[1]:
-        if flag & 0b100 and flag & 1:
+        if flag & 4 and flag & 1:
             # Backslash in value: escape next character, no matter what
             cvalue += char
-            flag -= 0b100
-        elif flag & 0b100:
+            flag = flag & 3
+        elif flag & 4:
             # Backslash in name: escape next character, no matter what
             cname += char
-            flag -= 0b100
+            flag = flag & 3
         elif char == '=' and flag == 0:
             # Equals sign inside unquoted name: switch to value
             flag = 1
@@ -153,7 +153,7 @@ def parse_sc(data):
             cvalue += char
         elif char == '\\':
             # Backslash: next character will be escaped
-            flag += 4
+            flag = flag | 4
         elif char == '"' or char == "'":
             # Quote handler
             qc = char
