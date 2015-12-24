@@ -1154,7 +1154,7 @@ Deploying to GitHub
 ~~~~~~~~~~~~~~~~~~~
 
 Nikola provides a separate command ``github_deploy`` to deploy your site to
-GitHub pages.  The command builds the site, commits the output to a gh-pages
+GitHub Pages.  The command builds the site, commits the output to a gh-pages
 branch and pushes the output to GitHub.  Nikola uses the `ghp-import command
 <https://github.com/davisp/ghp-import>`_ for this.
 
