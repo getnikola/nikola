@@ -26,11 +26,6 @@
 
 """Support for Hugo-style shortcodes."""
 
-try:
-    from html.parser import HTMLParser
-except ImportError:
-    from HTMLParser import HTMLParser
-
 from .utils import LOGGER
 
 
@@ -84,7 +79,6 @@ def _find_shortcodes(data):
     """
     # FIXME: this is really space-intolerant
 
-    parser = SCParser()
     pos = 0
     while True:
         start = data.find('{{%', pos)
@@ -92,7 +86,7 @@ def _find_shortcodes(data):
             break
         # Get the whole shortcode tag
         end = data.find('%}}', start + 1)
-        name, args = parser.parse_sc('<{}>'.format(data[start + 3:end].strip()))
+        name, args = parse_sc(data[start + 3:end].strip())
         # Check if this start has a matching close
         close_tag = '{{% /{} %}}'.format(name)
         close = data.find(close_tag, end + 3)
@@ -106,28 +100,84 @@ def _find_shortcodes(data):
         yield [name, args, start, end]
 
 
-class SCParser(HTMLParser):
-    """Parser for shortcode arguments."""
+def parse_sc(data):
+    """Parse shortcode arguments into a tuple."""
+    elements = data.split(' ', 1)
+    name = elements[0]
+    if len(elements) == 1:
+        # No arguments
+        return name, ([], {})
+    args = []
+    kwargs = {}
 
-    # Because shortcode attributes are HTML-like, we are abusing the HTML parser.
-    # TODO replace with self-contained parser
-    # FIXME should be able to take quoted positional arguments!
+    # "Simple" argument parser.
+    # flag can be one of:
+    # 0 name
+    # 1 value                               +value
+    # 2 name inside quotes                  +quotes
+    # 3 value inside quotes
+    # 4 [unsupported]                       +backslash
+    # 5 value inside backslash
+    # 4 [unsupported]
+    # 7 value inside quotes and backslash
+    flag = 0
+    cname = ''
+    cvalue = ''
+    qc = ''
+    for char in elements[1]:
+        if flag & 0b100 and flag & 1:
+            # Backslash in value: escape next character, no matter what
+            cvalue += char
+            flag -= 0b100
+        elif flag & 0b100:
+            # Backslash in name: escape next character, no matter what
+            cname += char
+            flag -= 0b100
+        elif char == '=' and flag == 0:
+            # Equals sign inside unquoted name: switch to value
+            flag = 1
+        elif char == ' ' and flag == 0:
+            # Space inside unquoted name: save as positional argument
+            args.append(cname)
+            cname = cvalue = qc = ''
+        elif char == ' ' and flag == 1:
+            # Space inside unquoted value: save as keyword argument
+            kwargs[cname] = cvalue
+            flag = 0
+            cname = cvalue = qc = ''
+        elif char == ' ' and flag == 2:
+            # Space inside quoted name: save to name
+            cname += char
+        elif char == ' ' and flag == 3:
+            # Space inside quoted value: save to value
+            cvalue += char
+        elif char == '\\':
+            # Backslash: next character will be escaped
+            flag += 4
+        elif char == '"' or char == "'":
+            # Quote handler
+            qc = char
+            if not flag & 2:
+                flag += 2
+            elif flag & 2 and qc == char:
+                flag -= 2
+            elif flag == 2:
+                # Unbalanced quotes, reproduce as is
+                cname += char
+            elif flag == 3:
+                # Unbalanced quotes, reproduce as is
+                cvalue += char
+        elif flag & 1:
+            # Fallback: add anything else to value
+            cvalue += char
+        else:
+            # Fallback: add anything else to name
+            cname += char
 
-    def parse_sc(self, data):
-        """Parse shortcode arguments into a tuple."""
-        self.name = None
-        self.attrs = {}
-        self.feed(data)
-        args = []
-        kwargs = {}
-        for a, b in self.attrs:
-            if b is None:
-                args.append(a)
-            else:
-                kwargs[a] = b
-        return self.name, (args, kwargs)
+    # Handle last argument
+    if cvalue:
+        kwargs[cname] = cvalue
+    else:
+        args.append(cname)
 
-    def handle_starttag(self, tag, attrs):
-        """Set start tag information on parser object."""
-        self.name = tag
-        self.attrs = attrs
+    return name, (args, kwargs)
