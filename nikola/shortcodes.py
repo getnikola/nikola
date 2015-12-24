@@ -125,7 +125,6 @@ def parse_sc(data):
     cvalue = ''
     qc = ''
     for char in elements[1]:
-        print(char, flag)
         if flag & 0b100 and flag & 1:
             # Backslash in value: escape next character, no matter what
             cvalue += char
