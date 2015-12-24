@@ -7,6 +7,7 @@ from __future__ import unicode_literals
 import pytest
 from nikola import shortcodes
 from .base import FakeSite
+import sys
 
 def noargs(site, data=''):
     return "noargs {0} success!".format(data)
@@ -15,6 +16,10 @@ def arg(*args, **kwargs):
     # don’t clutter the kwargs dict
     _ = kwargs.pop('site')
     data = kwargs.pop('data')
+    # TODO hack for Python 2.7 -- remove when possible
+    if sys.version_info[0] == 2:
+        args = tuple(i.encode('utf-8') for i in args)
+        kwargs = {k.encode('utf-8'): v.encode('utf-8') for k, v in kwargs.items()}
     return "arg {0}/{1}/{2}".format(args, sorted(kwargs.items()), data)
 
 
