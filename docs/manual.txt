@@ -813,9 +813,9 @@ To use them from plugins, please see `Extending Nikola <https://getnikola.com/ex
 Using a shortcode
 ~~~~~~~~~~~~~~~~~
 
-In your content files, a shortcode can be called by using the {{% name parameters %}} form. Shortcode parameters are space delimited. Parameters with spaces can be quoted.
+In your content files, a shortcode can be called by using the ``{{% name parameters %}}`` form. Shortcode parameters are space delimited. Parameters with spaces can be quoted (or backslash escaped).
 
-The first word is always the name of the shortcode. Parameters follow the name. Depending upon how the shortcode is defined, the parameters may be named, positional or both (although you can’t mixed parameter types in a single call). The format for named parameters models that of HTML with the format name="value".
+The first word is always the name of the shortcode. Parameters follow the name. Depending upon how the shortcode is defined, the parameters may be named, positional or both (although you can’t mix parameter types in a single call). The format for named parameters models that of HTML with the format name="value".
 
 Some shortcodes use or require closing shortcodes. Like HTML, the opening and closing shortcodes match (name only), the closing being prepended with a slash.
 
@@ -1162,7 +1162,7 @@ The branch to use for committing the sources can be changed using the
 ``GITHUB_DEPLOY_BRANCH`` option in your config.  For a
 user.github.io/organization.github.io, this MUST be set to ``master``,
 and the branch containing the sources must be changed to something
-else, like ``deploy``, using the ``GITHUB_SOURCE_BRANCH`` option.  The
+else, like ``src``, using the ``GITHUB_SOURCE_BRANCH`` option.  The
 remote name to which the changes are pushed is ``origin`` by default,
 and can be changed using the ``GITHUB_REMOTE_NAME`` option.  You also,
 obviously, need to have ``git`` on your PATH, and should be able to
