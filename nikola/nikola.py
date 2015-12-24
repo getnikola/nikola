@@ -1295,10 +1295,10 @@ class Nikola(object):
 
     def _register_templated_shortcodes(self):
         """Register shortcodes provided by templates in shortcodes/ folders."""
-        
+
         builtin_sc_dir = resource_filename('nikola', os.path.join('data', 'shortcodes', utils.get_template_engine(self.THEMES)))
         sc_dirs = [builtin_sc_dir, 'shortcodes']
-            
+
         for sc_dir in sc_dirs:
             if not os.path.isdir(sc_dir):
                 continue
