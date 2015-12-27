@@ -1178,6 +1178,9 @@ sure you have ``nikola`` and ``git`` installed on your PATH.
      deployed. We default to ``master``, but user pages should use ``src`` or
      something else.
    * ``GITHUB_REMOTE_NAME`` is the remote to which changes are pushed.
+   * ``GITHUB_COMMIT_SOURCE`` controls whether or not the source branch is
+     automatically committed to and pushed. We recommend setting it to
+     ``True``.
 
 4. Create a ``.gitignore`` file. We recommend adding at least the following entries:
 
@@ -1188,24 +1191,11 @@ sure you have ``nikola`` and ``git`` installed on your PATH.
       __pycache__
       output
 
-5. Switch to your source branch (if necessary) and commit to your source branch:
-
-   .. code:: text
-
-      git checkout -b src
-      git add .
-      git commit -am "Initial commit"
-
+5. If you set ``GITHUB_COMMIT_SOURCE`` to False, you must switch to your source
+   branch and commit to it.  Otherwise, this is done for you.
 6. Run ``nikola github_deploy``.  This will build the site, commit the output
    folder to your deploy branch, and push to GitHub.  Your website should be up
    and running within a few minutes.
-7. You should push your source branch to GitHub, too — this way, you have a
-   backup in case of catastrophic disk failure, and you can work on your
-   website from around the world.
-
-   .. code:: text
-
-      git push -u origin src
 
 If you want to use a custom domain, create your ``CNAME`` file in
 ``files/CNAME`` on the source branch. Nikola will copy it to the
