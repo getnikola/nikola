@@ -97,30 +97,61 @@ class CommandGitHubDeploy(Command):
 
         return
 
+    def _run_command(self, command, xfail=False):
+        """Run a command that may or may not fail."""
+        self.logger.info("==> {0}".format(command))
+        try:
+            subprocess.check_call(command)
+            return 0
+        except subprocess.CalledProcessError as e:
+            if xfail:
+                return e.returncode
+            self.logger.error(
+                'Failed GitHub deployment — command {0} '
+                'returned {1}'.format(e.cmd, e.returncode)
+            )
+            raise SystemError(e.returncode)
+
     def _commit_and_push(self):
         """Commit all the files and push."""
         source = self.site.config['GITHUB_SOURCE_BRANCH']
         deploy = self.site.config['GITHUB_DEPLOY_BRANCH']
         remote = self.site.config['GITHUB_REMOTE_NAME']
-        source_commit = uni_check_output(['git', 'rev-parse', source])
-        commit_message = (
-            'Nikola auto commit.\n\n'
-            'Source commit: %s'
-            'Nikola version: %s' % (source_commit, __version__)
-        )
-        output_folder = self.site.config['OUTPUT_FOLDER']
+        autocommit = self.site.config['GITHUB_COMMIT_SOURCE']
 
-        command = ['ghp-import', '-n', '-m', commit_message, '-p', '-r', remote, '-b', deploy, output_folder]
-
-        self.logger.info("==> {0}".format(command))
         try:
-            subprocess.check_call(command)
-        except subprocess.CalledProcessError as e:
-            self.logger.error(
-                'Failed GitHub deployment — command {0} '
-                'returned {1}'.format(e.cmd, e.returncode)
+            if autocommit:
+                commit_message = (
+                    'Nikola auto commit.\n\n'
+                    'Nikola version: {0}'.format(__version__)
+                )
+                e = self._run_command(['git', 'checkout', source], True)
+                if e != 0:
+                    self._run_command(['git', 'checkout', '-b', source])
+                self._run_command(['git', 'add', '.'])
+                # Figure out if there is anything to commit
+                e = self._run_command(['git', 'diff-index', '--quiet', 'HEAD'], True)
+                if e != 0:
+                    self._run_command(['git', 'commit', '-am', commit_message])
+                else:
+                    self.logger.notice('Nothing to commit to source branch.')
+
+            source_commit = uni_check_output(['git', 'rev-parse', source])
+            commit_message = (
+                'Nikola auto commit.\n\n'
+                'Source commit: {0}'
+                'Nikola version: {1}'.format(source_commit, __version__)
             )
-            return e.returncode
+            output_folder = self.site.config['OUTPUT_FOLDER']
+
+            command = ['ghp-import', '-n', '-m', commit_message, '-p', '-r', remote, '-b', deploy, output_folder]
+
+            self._run_command(command)
+
+            if autocommit:
+                self._run_command(['git', 'push', '-u', remote, source])
+        except SystemError as e:
+            return e.args[0]
 
         self.logger.info("Successful deployment")
 
