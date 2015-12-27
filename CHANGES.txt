@@ -4,7 +4,14 @@ New in master
 Features
 --------
 
+* Allow for customizing ``github_deploy`` commit messages with ``-m``
+  (Issue #2198)
+* Commit to source branch automatically in ``github_deploy``
+  if ``GITHUB_COMMIT_SOURCE`` is set to True (Issue #2186)
 * Hugo-like shortcodes (Issue #1707)
+
+Bugfixes
+--------
 
 New in v7.7.4
 =============
@@ -1690,3 +1697,5 @@ Bugfixes
 * Colorbox support in restructured text figures
 * Fix for content displaying too wide
 * Changelog
+
+vim: tw=70 syntax=rst
