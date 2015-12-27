@@ -823,7 +823,7 @@ Example of a paired shortcode (note that we don't have a highlight shortcode yet
 
     {{% highlight python %}} A bunch of code here {{% /highlight %}}
     
-Build-in shortcodes
+Built-in shortcodes
 ~~~~~~~~~~~~~~~~~~~
 
 post-list
