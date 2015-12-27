@@ -1199,7 +1199,8 @@ sure you have ``nikola`` and ``git`` installed on your PATH.
 
 If you want to use a custom domain, create your ``CNAME`` file in
 ``files/CNAME`` on the source branch. Nikola will copy it to the
-output directory.
+output directory. To add a custom commit message, use the ``-m`` option,
+followed by your message.
 
 Comments and Annotations
 ------------------------

@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Allow for customizing ``github_deploy`` commit messages with ``-m``
+  (Issue #2198)
 * Commit to source branch automatically in ``github_deploy``
   if ``GITHUB_COMMIT_SOURCE`` is set to True (Issue #2186)
 * Hugo-like shortcodes (Issue #1707)
