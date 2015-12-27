@@ -92,7 +92,7 @@ The most basic commands needed to get by are:
     check for dangling links or unknown files
 ``nikola deploy [[preset [preset...]]``
     deploy the site using the ``DEPLOY_COMMANDS`` setting
-``nikola github_deploy```
+``nikola github_deploy [-m COMMIT_MESSAGE]```
     deploy the site to GitHub Pages
 ``nikola serve [-p PORT] [-a ADDRESS] [-d|--detach] [-b|--browser] [-6|--ipv6]``
     start development web server

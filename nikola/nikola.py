@@ -512,6 +512,7 @@ class Nikola(object):
             'GITHUB_SOURCE_BRANCH': 'master',
             'GITHUB_DEPLOY_BRANCH': 'gh-pages',
             'GITHUB_REMOTE_NAME': 'origin',
+            'GITHUB_COMMIT_SOURCE': False,  # WARNING: conf.py.in overrides this with True for backwards compatibility
         }
 
         # set global_context for template rendering

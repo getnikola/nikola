@@ -61,7 +61,7 @@ class CommandGitHubDeploy(Command):
 
     name = 'github_deploy'
 
-    doc_usage = ''
+    doc_usage = '[-m COMMIT_MESSAGE]'
     doc_purpose = 'deploy the site to GitHub Pages'
     doc_description = dedent(
         """\
@@ -71,10 +71,19 @@ class CommandGitHubDeploy(Command):
 
         """
     )
-
+    cmd_options = [
+        {
+            'name': 'commit_message',
+            'short': 'm',
+            'long': 'message',
+            'default': 'Nikola auto commit.',
+            'type': str,
+            'help': 'Commit message (default: Nikola auto commit.)',
+        },
+    ]
     logger = None
 
-    def _execute(self, command, args):
+    def _execute(self, options, args):
         """Run the deployment."""
         self.logger = get_logger(CommandGitHubDeploy.name, STDERR_HANDLER)
 
@@ -93,34 +102,64 @@ class CommandGitHubDeploy(Command):
             os.unlink(f)
 
         # Commit and push
-        self._commit_and_push()
+        self._commit_and_push(options['commit_message'])
 
         return
 
-    def _commit_and_push(self):
-        """Commit all the files and push."""
-        source = self.site.config['GITHUB_SOURCE_BRANCH']
-        deploy = self.site.config['GITHUB_DEPLOY_BRANCH']
-        remote = self.site.config['GITHUB_REMOTE_NAME']
-        source_commit = uni_check_output(['git', 'rev-parse', source])
-        commit_message = (
-            'Nikola auto commit.\n\n'
-            'Source commit: %s'
-            'Nikola version: %s' % (source_commit, __version__)
-        )
-        output_folder = self.site.config['OUTPUT_FOLDER']
-
-        command = ['ghp-import', '-n', '-m', commit_message, '-p', '-r', remote, '-b', deploy, output_folder]
-
+    def _run_command(self, command, xfail=False):
+        """Run a command that may or may not fail."""
         self.logger.info("==> {0}".format(command))
         try:
             subprocess.check_call(command)
+            return 0
         except subprocess.CalledProcessError as e:
+            if xfail:
+                return e.returncode
             self.logger.error(
                 'Failed GitHub deployment — command {0} '
                 'returned {1}'.format(e.cmd, e.returncode)
             )
-            return e.returncode
+            raise SystemError(e.returncode)
+
+    def _commit_and_push(self, commit_first_line):
+        """Commit all the files and push."""
+        source = self.site.config['GITHUB_SOURCE_BRANCH']
+        deploy = self.site.config['GITHUB_DEPLOY_BRANCH']
+        remote = self.site.config['GITHUB_REMOTE_NAME']
+        autocommit = self.site.config['GITHUB_COMMIT_SOURCE']
+        try:
+            if autocommit:
+                commit_message = (
+                    '{0}\n\n'
+                    'Nikola version: {1}'.format(commit_first_line, __version__)
+                )
+                e = self._run_command(['git', 'checkout', source], True)
+                if e != 0:
+                    self._run_command(['git', 'checkout', '-b', source])
+                self._run_command(['git', 'add', '.'])
+                # Figure out if there is anything to commit
+                e = self._run_command(['git', 'diff-index', '--quiet', 'HEAD'], True)
+                if e != 0:
+                    self._run_command(['git', 'commit', '-am', commit_message])
+                else:
+                    self.logger.notice('Nothing to commit to source branch.')
+
+            source_commit = uni_check_output(['git', 'rev-parse', source])
+            commit_message = (
+                '{0}\n\n'
+                'Source commit: {1}'
+                'Nikola version: {2}'.format(commit_first_line, source_commit, __version__)
+            )
+            output_folder = self.site.config['OUTPUT_FOLDER']
+
+            command = ['ghp-import', '-n', '-m', commit_message, '-p', '-r', remote, '-b', deploy, output_folder]
+
+            self._run_command(command)
+
+            if autocommit:
+                self._run_command(['git', 'push', '-u', remote, source])
+        except SystemError as e:
+            return e.args[0]
 
         self.logger.info("Successful deployment")
 
