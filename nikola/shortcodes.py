@@ -245,7 +245,7 @@ def _split_shortcodes(data):
     return result
 
 
-def apply_shortcodes(data, registry, site=None):
+def apply_shortcodes(data, registry, site=None, filename=None):
     """Apply Hugo-style shortcodes on data.
 
     {{% name parameters %}} will end up calling the registered "name" function with the given parameters.
@@ -303,5 +303,5 @@ def apply_shortcodes(data, registry, site=None):
                 result.append(res)
         return empty_string.join(result)
     except ParsingError as e:
-        LOGGER.error("{0}".format(e))
+        LOGGER.error("Shortcode error in file {0}: {1}".format(filename, e))
         sys.exit(1)
