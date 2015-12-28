@@ -162,7 +162,7 @@ def _parse_string(data, start, stop_at_equals=False, must_have_content=False):
         end, value = _parse_unquoted_string(data, start, stop_at_equals)
         has_content = len(value) > 0
     if must_have_content and not has_content:
-        raise ParsingError("String starting at {0} must have non-trivial length!".format(_format_position(data, start)))
+        raise ParsingError("String starting at {0} must be non-empty!".format(_format_position(data, start)))
 
     next_is_equals = False
     if stop_at_equals and end + 1 < len(data):
