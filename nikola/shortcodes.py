@@ -170,7 +170,7 @@ def _parse_string(data, start, stop_at_equals=False, must_have_content=False):
     return end, value, next_is_equals
 
 
-def _parse_shortcode_args(data, start, name, start_pos):
+def _parse_shortcode_args(data, start, shortcode_name, start_pos):
     """When pointed to after a shortcode's name in a shortcode tag, parses the shortcode's arguments until '%}}'.
 
     Returns the position after '%}}', followed by a tuple (args, kw).
@@ -183,7 +183,10 @@ def _parse_shortcode_args(data, start, name, start_pos):
     pos = start
     while True:
         # Skip whitespaces
-        pos = _skip_whitespace(data, pos, must_be_nontrivial=True)
+        try:
+            pos = _skip_whitespace(data, pos, must_be_nontrivial=True)
+        except ParsingError:
+            raise ParsingError("Shortcode '{0}' starting at {1} is not terminated correctly with '%}}}}'!".format(shortcode_name, _format_position(data, start_pos)))
         if pos == len(data):
             break
         # Check for end of shortcode
@@ -200,7 +203,7 @@ def _parse_shortcode_args(data, start, name, start_pos):
             # Store positional argument
             args.append(name)
 
-    raise ParsingError("Shortcode '{0}' starting at {1} is not terminated correctly with '%}}}}'!".format(name, _format_position(data, start_pos)))
+    raise ParsingError("Shortcode '{0}' starting at {1} is not terminated correctly with '%}}}}'!".format(shortcode_name, _format_position(data, start_pos)))
 
 
 def _split_shortcodes(data):
@@ -230,7 +233,7 @@ def _split_shortcodes(data):
         name_end = _skip_nonwhitespace(data, name_start)
         name = data[name_start:name_end]
         if not name:
-            raise ParsingError("Syntax error: '{{{{%' must be followed by shortcode name ({1})!".format(_format_position(data, start)))
+            raise ParsingError("Syntax error: '{{{{%' must be followed by shortcode name ({0})!".format(_format_position(data, start)))
         # Finish shortcode
         if name[0] == '/':
             # This is a closing shortcode
