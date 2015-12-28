@@ -303,5 +303,8 @@ def apply_shortcodes(data, registry, site=None, filename=None):
                 result.append(res)
         return empty_string.join(result)
     except ParsingError as e:
-        LOGGER.error("Shortcode error in file {0}: {1}".format(filename, e))
+        if filename:
+            LOGGER.error("Shortcode error in file {0}: {1}".format(filename, e))
+        else:
+            LOGGER.error("Shortcode error: {0}".format(e))
         sys.exit(1)
