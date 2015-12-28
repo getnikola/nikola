@@ -186,7 +186,10 @@ def _parse_shortcode_args(data, start, shortcode_name, start_pos):
         try:
             pos = _skip_whitespace(data, pos, must_be_nontrivial=True)
         except ParsingError:
-            raise ParsingError("Shortcode '{0}' starting at {1} is not terminated correctly with '%}}}}'!".format(shortcode_name, _format_position(data, start_pos)))
+            if not args and not kwargs:
+                raise ParsingError("Shortcode '{0}' starting at {1} is not terminated correctly with '%}}}}'!".format(shortcode_name, _format_position(data, start_pos)))
+            else:
+                raise ParsingError("Syntax error in shortcode '{0}' at {1}: expecting whitespace!".format(shortcode_name, _format_position(data, pos)))
         if pos == len(data):
             break
         # Check for end of shortcode
