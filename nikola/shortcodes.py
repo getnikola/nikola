@@ -44,7 +44,10 @@ class ParsingError(Exception):
 
 
 def _format_position(data, pos):
-    """Return position formatted as line/column."""
+    """Return position formatted as line/column.
+
+    This is used for prettier error messages.
+    """
     line = 0
     col = 0
     llb = ''  # last line break
