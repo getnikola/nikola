@@ -184,7 +184,7 @@ def _parse_shortcode_args(data, start, name, start_pos):
         if pos == len(data):
             break
         # Check for end of shortcode
-        if pos + 3 < len(data) and data[pos:pos + 3] == '%}}':
+        if pos + 3 <= len(data) and data[pos:pos + 3] == '%}}':
             return pos + 3, (args, kwargs)
         # Read name
         pos, name, next_is_equals = _parse_string(data, pos, stop_at_equals=True, must_have_content=True)
