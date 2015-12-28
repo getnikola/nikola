@@ -284,7 +284,7 @@ def apply_shortcodes(data, registry, site=None):
                     data_arg = []
                     for p in range(pos + 1, found):
                         data_arg.append(sc_data[p][1])
-                    data_arg = ''.join(data_arg)
+                    data_arg = u''.join(data_arg)
                     pos = found + 1
                 else:
                     # Single shortcode
@@ -299,7 +299,7 @@ def apply_shortcodes(data, registry, site=None):
                     LOGGER.error('Unknown shortcode {0} (started at {1})', name, _format_position(data, current[2]))
                     res = ''
                 result.append(res)
-        return ''.join(result)
+        return u''.join(result)
     except ParsingError as e:
         LOGGER.error("{0}".format(e))
         sys.exit(1)
