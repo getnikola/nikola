@@ -258,6 +258,7 @@ def apply_shortcodes(data, registry, site=None):
     >>> apply_shortcodes('==> {{% foo bar=baz %}}some data{{% /foo %}} <==', {'foo': lambda *a, **k: k['bar']+k['data']})
     '==> bazsome data <=='
     """
+    empty_string = data[:0]  # same string type as data; to make Python 2 happy
     try:
         # Split input data into text, shortcodes and shortcode endings
         sc_data = _split_shortcodes(data)
@@ -284,7 +285,7 @@ def apply_shortcodes(data, registry, site=None):
                     data_arg = []
                     for p in range(pos + 1, found):
                         data_arg.append(sc_data[p][1])
-                    data_arg = u''.join(data_arg)
+                    data_arg = empty_string.join(data_arg)
                     pos = found + 1
                 else:
                     # Single shortcode
@@ -299,7 +300,7 @@ def apply_shortcodes(data, registry, site=None):
                     LOGGER.error('Unknown shortcode {0} (started at {1})', name, _format_position(data, current[2]))
                     res = ''
                 result.append(res)
-        return u''.join(result)
+        return empty_string.join(result)
     except ParsingError as e:
         LOGGER.error("{0}".format(e))
         sys.exit(1)
