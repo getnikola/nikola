@@ -244,19 +244,24 @@ def _split_shortcodes(data):
             if pos > len(data) or data[end_start:pos] != '%}}':
                 raise ParsingError("Syntax error: '{{{{% /{0}' must be followed by ' %}}}}' ({1})!".format(name, _format_position(data, end_start)))
             result.append((_SHORTCODE_END, data[start:pos], start, name))
+        elif name == '%}}':
+            raise ParsingError("Syntax error: '{{{{%' must be followed by shortcode name ({0})!".format(_format_position(data, start)))
         else:
             # This is an opening shortcode
-            pos, args = _parse_shortcode_args(data, name_end, name=name, start_pos=start)
+            pos, args = _parse_shortcode_args(data, name_end, shortcode_name=name, start_pos=start)
             result.append((_SHORTCODE_START, data[start:pos], start, name, args))
     return result
 
 
-def apply_shortcodes(data, registry, site=None, filename=None):
+def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=False):
     """Apply Hugo-style shortcodes on data.
 
     {{% name parameters %}} will end up calling the registered "name" function with the given parameters.
     {{% name parameters %}} something {{% /name %}} will call name with the parameters and
     one extra "data" parameter containing " something ".
+
+    If raise_exceptions is set to True, instead of printing error messages and terminating, errors are
+    passed on as exceptions to the caller.
 
     The site parameter is passed with the same name to the shortcodes so they can access Nikola state.
 
@@ -309,6 +314,9 @@ def apply_shortcodes(data, registry, site=None, filename=None):
                 result.append(res)
         return empty_string.join(result)
     except ParsingError as e:
+        if raise_exceptions:
+            # Throw up
+            raise e
         if filename:
             LOGGER.error("Shortcode error in file {0}: {1}".format(filename, e))
         else:
