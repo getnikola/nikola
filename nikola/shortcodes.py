@@ -254,10 +254,10 @@ def apply_shortcodes(data, registry, site=None, filename=None):
 
     The site parameter is passed with the same name to the shortcodes so they can access Nikola state.
 
-    >>> apply_shortcodes('==> {{% foo bar=baz %}} <==', {'foo': lambda *a, **k: k['bar']})
-    '==> baz <=='
-    >>> apply_shortcodes('==> {{% foo bar=baz %}}some data{{% /foo %}} <==', {'foo': lambda *a, **k: k['bar']+k['data']})
-    '==> bazsome data <=='
+    >>> print(apply_shortcodes('==> {{% foo bar=baz %}} <==', {'foo': lambda *a, **k: k['bar']}))
+    ==> baz <==
+    >>> print(apply_shortcodes('==> {{% foo bar=baz %}}some data{{% /foo %}} <==', {'foo': lambda *a, **k: k['bar']+k['data']}))
+    ==> bazsome data <==
     """
     empty_string = data[:0]  # same string type as data; to make Python 2 happy
     try:
