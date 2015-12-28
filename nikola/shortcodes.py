@@ -27,6 +27,221 @@
 """Support for Hugo-style shortcodes."""
 
 from .utils import LOGGER
+import sys
+
+
+# Constants
+_TEXT = 1
+_SHORTCODE_START = 2
+_SHORTCODE_END = 3
+
+
+class ParsingError(Exception):
+    """Used for forwarding paring error messages to apply_shortcodes."""
+
+    pass
+
+
+def _format_position(data, pos):
+    """Return position formatted as line/column."""
+    line = 0
+    col = 0
+    llb = ''  # last line break
+    for c in data[:pos]:
+        if c == '\r' or c == '\n':
+            if llb and c != llb:
+                llb = ''
+            else:
+                line += 1
+                col = 0
+                llb = c
+        else:
+            col += 1
+            llb = ''
+    return "line {0}, column {1}".format(line + 1, col + 1)
+
+
+def _skip_whitespace(data, pos, must_be_nontrivial=False):
+    """Return first position after whitespace.
+
+    If must_be_nontrivial is set to True, raises ParsingError
+    if no whitespace is found.
+    """
+    if must_be_nontrivial:
+        if pos == len(data) or not data[pos].isspace():
+            raise ParsingError("Expecting whitespace at {0}!".format(_format_position(data, pos)))
+    while pos < len(data):
+        if not data[pos].isspace():
+            break
+        pos += 1
+    return pos
+
+
+def _skip_nonwhitespace(data, pos):
+    """Return first position not before pos which contains a non-whitespace character."""
+    while pos < len(data):
+        if data[pos].isspace():
+            break
+        pos += 1
+    return pos
+
+
+def _parse_quoted_string(data, start):
+    """Parse a quoted string starting at position start in data.
+
+    Returns the position after the string followed by the string itself.
+    """
+    value = ''
+    qc = data[start]
+    pos = start + 1
+    while pos < len(data):
+        char = data[pos]
+        if char == '\\':
+            if pos + 1 < len(data):
+                value += data[pos + 1]
+                pos += 2
+            else:
+                raise ParsingError("Unexpected end of data while escaping ({0})".format(_format_position(data, pos)))
+        elif (char == "'" or char == '"') and char == qc:
+            return pos + 1, value
+        else:
+            value += char
+            pos += 1
+    raise ParsingError("Unexpected end of unquoted string (started at {0})!".format(_format_position(data, start)))
+
+
+def _parse_unquoted_string(data, start, stop_at_equals):
+    """Parse an unquoted string starting at position start in data.
+
+    Returns the position after the string followed by the string itself.
+    In case stop_at_equals is set to True, an equal sign will terminate
+    the string.
+    """
+    value = ''
+    pos = start
+    while pos < len(data):
+        char = data[pos]
+        if char == '\\':
+            if pos + 1 < len(data):
+                value += data[pos + 1]
+                pos += 2
+            else:
+                raise ParsingError("Unexpected end of data while escaping ({0})".format(_format_position(data, pos)))
+        elif char.isspace():
+            break
+        elif char == '=' and stop_at_equals:
+            break
+        elif char == "'" or char == '"':
+            raise ParsingError("Unexpected quotation mark in unquoted string ({0})".format(_format_position(data, pos)))
+        else:
+            value += char
+            pos += 1
+    return pos, value
+
+
+def _parse_string(data, start, stop_at_equals=False, must_have_content=False):
+    """Parse a string starting at position start in data.
+
+    Returns the position after the string, followed by the string itself, and
+    followed by a flog indicating whether the following character is an equals
+    sign (only set if stop_at_equals is True).
+
+    If must_have_content is set to True, no empty unquoted strings are accepted.
+    """
+    if start == len(data):
+        raise ParsingError("Expecting string, but found end of input!")
+    char = data[start]
+    if char == '"' or char == "'":
+        end, value = _parse_quoted_string(data, start)
+        has_content = True
+    else:
+        end, value = _parse_unquoted_string(data, start, stop_at_equals)
+        has_content = len(value) > 0
+    if must_have_content and not has_content:
+        raise ParsingError("String starting at {0} must have non-trivial length!".format(_format_position(data, start)))
+
+    next_is_equals = False
+    if stop_at_equals and end + 1 < len(data):
+        next_is_equals = (data[end] == '=')
+    return end, value, next_is_equals
+
+
+def _parse_shortcode_args(data, start, name, start_pos):
+    """When pointed to after a shortcode's name in a shortcode tag, parses the shortcode's arguments until '%}}'.
+
+    Returns the position after '%}}', followed by a tuple (args, kw).
+
+    name and start_pos are only used for formatting error messages.
+    """
+    args = []
+    kwargs = {}
+
+    pos = start
+    while True:
+        # Skip whitespaces
+        pos = _skip_whitespace(data, pos, must_be_nontrivial=True)
+        if pos == len(data):
+            break
+        # Check for end of shortcode
+        if pos + 3 < len(data) and data[pos:pos + 3] == '%}}':
+            return pos + 3, (args, kwargs)
+        # Read name
+        pos, name, next_is_equals = _parse_string(data, pos, stop_at_equals=True, must_have_content=True)
+        if next_is_equals:
+            # Read value
+            pos, value, _ = _parse_string(data, pos + 1, stop_at_equals=False, must_have_content=False)
+            # Store keyword argument
+            kwargs[name] = value
+        else:
+            # Store positional argument
+            args.append(name)
+
+    raise ParsingError("Shortcode '{0}' starting at {1} is not terminated correctly with '%}}}}'!".format(name, _format_position(data, start_pos)))
+
+
+def _split_shortcodes(data):
+    """Given input data, splits it into a sequence of texts, shortcode starts and shortcode ends.
+
+    Returns a list of tuples of the following forms:
+
+        1. (_TEXT, text)
+        2. (_SHORTCODE_START, text, start, name, args)
+        3. (_SHORTCODE_END, text, start, name)
+
+    Here, text is the raw text represented by the token; start is the starting position in data
+    of the token; name is the name of the shortcode; and args is a tuple (args, kw) as returned
+    by _parse_shortcode_args.
+    """
+    pos = 0
+    result = []
+    while pos < len(data):
+        # Search for shortcode start
+        start = data.find('{{%', pos)
+        if start < 0:
+            result.append((_TEXT, data[pos:]))
+            break
+        result.append((_TEXT, data[pos:start]))
+        # Extract name
+        name_start = _skip_whitespace(data, start + 3)
+        name_end = _skip_nonwhitespace(data, name_start)
+        name = data[name_start:name_end]
+        if not name:
+            raise ParsingError("Syntax error: '{{{{%' must be followed by shortcode name ({1})!".format(_format_position(data, start)))
+        # Finish shortcode
+        if name[0] == '/':
+            # This is a closing shortcode
+            name = name[1:]
+            end_start = _skip_whitespace(data, name_end)  # start of '%}}'
+            pos = end_start + 3
+            # Must be followed by '%}}'
+            if pos > len(data) or data[end_start:pos] != '%}}':
+                raise ParsingError("Syntax error: '{{{{% /{0}' must be followed by ' %}}}}' ({1})!".format(name, _format_position(data, end_start)))
+            result.append((_SHORTCODE_END, data[start:pos], start, name))
+        else:
+            # This is an opening shortcode
+            pos, args = _parse_shortcode_args(data, name_end, name=name, start_pos=start)
+            result.append((_SHORTCODE_START, data[start:pos], start, name, args))
+    return result
 
 
 def apply_shortcodes(data, registry, site=None):
@@ -43,141 +258,48 @@ def apply_shortcodes(data, registry, site=None):
     >>> apply_shortcodes('==> {{% foo bar=baz %}}some data{{% /foo %}} <==', {'foo': lambda *a, **k: k['bar']+k['data']})
     '==> bazsome data <=='
     """
-    shortcodes = list(_find_shortcodes(data))
-    # Calculate shortcode results
-    for sc in shortcodes:
-        name, args, start, end = sc
-        a, kw = args
-        kw['site'] = site
-        if name in registry:
-            result = registry[name](*a, **kw)
-        else:
-            LOGGER.error('Unknown shortcode: {}', name)
-            result = ''
-        sc.append(result)
-
-    # Replace all shortcodes with their output
-    for sc in shortcodes[::-1]:
-        _, _, start, end, result = sc
-        data = data[:start] + result + data[end:]
-    return data
-
-
-def _find_shortcodes(data):
-    """Find start and end of shortcode markers.
-
-    >>> import pprint  # (dict sorting for doctest)
-    >>> list(_find_shortcodes('{{% foo %}}{{% bar %}}'))
-    [['foo', ([], {'data': ''}), 0, 11], ['bar', ([], {'data': ''}), 11, 22]]
-    >>> pprint.pprint(list(_find_shortcodes('{{% foo bar baz=bat fee=fi fo fum %}}')))
-    [['foo',
-      (['bar', 'fo', 'fum'], {'baz': 'bat', 'data': '', 'fee': 'fi'}),
-      0,
-      37]]
-    >>> pprint.pprint(list(_find_shortcodes('{{% foo bar bat=baz%}}some data{{% /foo %}}')))
-    [['foo', (['bar'], {'bat': 'baz', 'data': 'some data'}), 0, 43]]
-    """
-    # FIXME: this is really space-intolerant
-
-    pos = 0
-    while True:
-        start = data.find('{{%', pos)
-        if start == -1:
-            break
-        # Get the whole shortcode tag
-        end = data.find('%}}', start + 1)
-        name, args = parse_sc(data[start + 3:end].strip())
-        # Check if this start has a matching close
-        close_tag = '{{% /{} %}}'.format(name)
-        close = data.find(close_tag, end + 3)
-        if close == -1:  # No closer
-            end = end + 3
-            args[1]['data'] = ''
-        else:  # Tag with closer
-            args[1]['data'] = data[end + 3:close - 1]
-            end = close + len(close_tag) + 1
-        pos = end
-        yield [name, args, start, end]
-
-
-def parse_sc(data):
-    """Parse shortcode arguments into a tuple."""
-    elements = data.split(' ', 1)
-    name = elements[0]
-    if len(elements) == 1:
-        # No arguments
-        return name, ([], {})
-    args = []
-    kwargs = {}
-
-    # "Simple" argument parser.
-    # flag can be one of:
-    # 0 name
-    # 1 value                               +value
-    # 2 name inside quotes                  +quotes
-    # 3 value inside quotes
-    # 4 [unsupported]                       +backslash
-    # 5 value inside backslash
-    # 4 [unsupported]
-    # 7 value inside quotes and backslash
-    flag = 0
-    cname = ''
-    cvalue = ''
-    qc = ''
-    for char in elements[1]:
-        if flag & 4 and flag & 1:
-            # Backslash in value: escape next character, no matter what
-            cvalue += char
-            flag = flag & 3
-        elif flag & 4:
-            # Backslash in name: escape next character, no matter what
-            cname += char
-            flag = flag & 3
-        elif char == '=' and flag == 0:
-            # Equals sign inside unquoted name: switch to value
-            flag = 1
-        elif char == ' ' and flag == 0:
-            # Space inside unquoted name: save as positional argument
-            args.append(cname)
-            cname = cvalue = qc = ''
-        elif char == ' ' and flag == 1:
-            # Space inside unquoted value: save as keyword argument
-            kwargs[cname] = cvalue
-            flag = 0
-            cname = cvalue = qc = ''
-        elif char == ' ' and flag == 2:
-            # Space inside quoted name: save to name
-            cname += char
-        elif char == ' ' and flag == 3:
-            # Space inside quoted value: save to value
-            cvalue += char
-        elif char == '\\':
-            # Backslash: next character will be escaped
-            flag = flag | 4
-        elif char == '"' or char == "'":
-            # Quote handler
-            qc = char
-            if not flag & 2:
-                flag += 2
-            elif flag & 2 and qc == char:
-                flag -= 2
-            elif flag == 2:
-                # Unbalanced quotes, reproduce as is
-                cname += char
-            elif flag == 3:
-                # Unbalanced quotes, reproduce as is
-                cvalue += char
-        elif flag & 1:
-            # Fallback: add anything else to value
-            cvalue += char
-        else:
-            # Fallback: add anything else to name
-            cname += char
-
-    # Handle last argument
-    if cvalue:
-        kwargs[cname] = cvalue
-    else:
-        args.append(cname)
-
-    return name, (args, kwargs)
+    try:
+        # Split input data into text, shortcodes and shortcode endings
+        sc_data = _split_shortcodes(data)
+        # Now process data
+        result = []
+        pos = 0
+        while pos < len(sc_data):
+            current = sc_data[pos]
+            if current[0] == _TEXT:
+                result.append(current[1])
+                pos += 1
+            elif current[0] == _SHORTCODE_END:
+                raise ParsingError("Found shortcode ending '{{{{% /{0} %}}}}' which isn't closing a started shortcode ({1})!".format(current[3], _format_position(data, current[2])))
+            elif current[0] == _SHORTCODE_START:
+                name = current[3]
+                # Check if we can find corresponding ending
+                found = None
+                for p in range(pos + 1, len(sc_data)):
+                    if sc_data[p][0] == _SHORTCODE_END and sc_data[p][3] == name:
+                        found = p
+                        break
+                if found:
+                    # Found ending. Extract data argument:
+                    data_arg = []
+                    for p in range(pos + 1, found):
+                        data_arg.append(sc_data[p][1])
+                    data_arg = ''.join(data_arg)
+                    pos = found + 1
+                else:
+                    # Single shortcode
+                    pos += 1
+                    data_arg = ''
+                args, kw = current[4]
+                kw['site'] = site
+                kw['data'] = data_arg
+                if name in registry:
+                    res = registry[name](*args, **kw)
+                else:
+                    LOGGER.error('Unknown shortcode {0} (started at {1})', name, _format_position(data, current[2]))
+                    res = ''
+                result.append(res)
+        return ''.join(result)
+    except ParsingError as e:
+        LOGGER.error("{0}".format(e))
+        sys.exit(1)
