@@ -62,7 +62,7 @@ class TestErrors(BaseTestCase):
         self.assertRaisesRegexp(shortcodes.ParsingError, "^Syntax error in shortcode 'wrong' at .*: expecting whitespace!", shortcodes.apply_shortcodes, '{{% wrong ending %%}', self.fakesite.shortcode_registry, raise_exceptions=True)
         self.assertRaisesRegexp(shortcodes.ParsingError, "^Found shortcode ending '{{% /end %}}' which isn't closing a started shortcode", shortcodes.apply_shortcodes, '{{% start %}} {{% /end %}}', self.fakesite.shortcode_registry, raise_exceptions=True)
         self.assertRaisesRegexp(shortcodes.ParsingError, "^Unexpected end of unquoted string", shortcodes.apply_shortcodes, '{{% start "asdf %}}', self.fakesite.shortcode_registry, raise_exceptions=True)
-        self.assertRaisesRegexp(shortcodes.ParsingError, "^String starting at .* must have non-trivial length!", shortcodes.apply_shortcodes, '{{% start =b %}}', self.fakesite.shortcode_registry, raise_exceptions=True)
+        self.assertRaisesRegexp(shortcodes.ParsingError, "^String starting at .* must be non-empty!", shortcodes.apply_shortcodes, '{{% start =b %}}', self.fakesite.shortcode_registry, raise_exceptions=True)
         self.assertRaisesRegexp(shortcodes.ParsingError, "^Unexpected end of data while escaping", shortcodes.apply_shortcodes, '{{% start "a\\', self.fakesite.shortcode_registry, raise_exceptions=True)
         self.assertRaisesRegexp(shortcodes.ParsingError, "^Unexpected end of data while escaping", shortcodes.apply_shortcodes, '{{% start a\\', self.fakesite.shortcode_registry, raise_exceptions=True)
         self.assertRaisesRegexp(shortcodes.ParsingError, "^Unexpected quotation mark in unquoted string", shortcodes.apply_shortcodes, '{{% start a"b" %}}', self.fakesite.shortcode_registry, raise_exceptions=True)
