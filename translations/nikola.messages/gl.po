@@ -7,13 +7,14 @@
 # Translators:
 # Translators:
 # Translators:
+# Rubén Santos <kojicomics@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-08-31 07:50+0000\n"
-"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2015-11-05 20:22+0000\n"
+"Last-Translator: Rubén Santos <kojicomics@gmail.com>\n"
 "Language-Team: Galician (http://www.transifex.com/ralsina/nikola/language/gl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,123 +23,123 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "More posts about %s"
-msgstr ""
+msgstr "Máis artigos sobre %s"
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "LANGUAGE"
-msgstr ""
+msgstr "Inglés"
 
 msgid "Tags"
-msgstr ""
+msgstr "Etiquetas"
 
 msgid "Categories"
-msgstr ""
+msgstr "Categorías"
 
 msgid "Tags and Categories"
-msgstr ""
+msgstr "Etiquetas e categorías"
 
 msgid "Comments"
-msgstr ""
+msgstr "Comentarios"
 
 msgid "Read more"
-msgstr ""
+msgstr "Ler máis"
 
 msgid "Posts about %s"
-msgstr ""
+msgstr "Artigos sobre %s"
 
 msgid "Next post"
-msgstr ""
+msgstr "Seguinte artigo"
 
 msgid "old posts, page %d"
-msgstr ""
+msgstr "Artigos vellos, páxina %d"
 
 msgid "page %d"
-msgstr ""
+msgstr "páxina %d"
 
 msgid "Source"
-msgstr ""
+msgstr "Fonte"
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "Read in English"
-msgstr ""
+msgstr "Ler en Inglés"
 
 msgid "Posts for year %s"
-msgstr ""
+msgstr "Artigos do ano %s"
 
 msgid "Newer posts"
-msgstr ""
+msgstr "Últimos artigos"
 
 msgid "Previous post"
-msgstr ""
+msgstr "Artigo anterior"
 
 msgid "Also available in:"
-msgstr ""
+msgstr "Tamén dispoñible en:"
 
 msgid "Languages:"
-msgstr ""
+msgstr "Linguas:"
 
 msgid "Original site"
-msgstr ""
+msgstr "Sitio orixinal"
 
 msgid "Older posts"
-msgstr ""
+msgstr "Artigos vellos"
 
 msgid "Archive"
-msgstr ""
+msgstr "Archivo"
 
 msgid "Publication date"
-msgstr ""
+msgstr "Data de publicación"
 
 msgid "Posted:"
-msgstr ""
+msgstr "Publicado:"
 
 msgid "Posts for {month} {year}"
-msgstr ""
+msgstr "Artigos de {month} {year}"
 
 msgid "Posts for {month} {day}, {year}"
-msgstr ""
+msgstr "Artigos de {month} {day}, {year}"
 
 msgid "Nothing found."
-msgstr ""
+msgstr "Non se atopou nada."
 
 msgid "No posts found."
-msgstr ""
+msgstr "Non se atoparon artigos."
 
 msgid "RSS feed"
-msgstr ""
+msgstr "Sindicación RSS"
 
 msgid "%d min remaining to read"
-msgstr ""
+msgstr "%d min restantes para ler"
 
 msgid "Skip to main content"
-msgstr ""
+msgstr "Saltar ó contido principal"
 
 msgid "Subcategories:"
-msgstr ""
+msgstr "Subcategorías:"
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr ""
+msgstr "(activo)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr ""
+msgstr "Escribe o teu artigo aquí."
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr ""
+msgstr "Escribe a túa páxina aquí."
 
 msgid "Uncategorized"
-msgstr ""
+msgstr "Sen categoría"
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr ""
+msgstr "Actualizacións"
 
 msgid "Authors"
-msgstr ""
+msgstr "Autores"
 
 msgid "Posts by %s"
-msgstr ""
+msgstr "Publicacións de %s"
