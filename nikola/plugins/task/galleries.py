@@ -476,7 +476,7 @@ class Galleries(Task, ImageProcessor):
             'targets': [thumb_path],
             'actions': [
                 (self.resize_image,
-                    (img, thumb_path, self.kw['thumbnail_size'], preserve_exif_data=self.kw['preserve_exif_data']))
+                    (img, thumb_path, self.kw['thumbnail_size'], False, self.kw['preserve_exif_data']))
             ],
             'clean': True,
             'uptodate': [utils.config_changed({
@@ -491,7 +491,7 @@ class Galleries(Task, ImageProcessor):
             'targets': [orig_dest_path],
             'actions': [
                 (self.resize_image,
-                    (img, orig_dest_path, self.kw['max_image_size'], preserve_exif_data=self.kw['preserve_exif_data']))
+                    (img, orig_dest_path, self.kw['max_image_size'], False, self.kw['preserve_exif_data']))
             ],
             'clean': True,
             'uptodate': [utils.config_changed({
