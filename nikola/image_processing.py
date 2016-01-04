@@ -84,7 +84,10 @@ class ImageProcessor(object):
                         break
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
-                im.save(dst)
+                if exif is not None:
+                    im.save(dst, exif=exif)
+                else:
+                    im.save(dst)
             except Exception as e:
                 self.logger.warn("Can't thumbnail {0}, using original "
                                  "image as thumbnail ({1})".format(src, e))

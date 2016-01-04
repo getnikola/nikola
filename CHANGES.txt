@@ -14,6 +14,8 @@ Features
 Bugfixes
 --------
 
+* Preserve EXIF data when resizing images (Issue #2204)
+
 New in v7.7.4
 =============
 
