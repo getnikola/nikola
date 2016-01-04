@@ -180,7 +180,7 @@
                 }
             } //utils
 
-        // If the resposive var is set to true then listen for resize method
+        // If the responsive var is set to true then listen for resize method
         // and prevent resizing from happening twice if responsive is set again during append phase!
         if (settings.responsive && !$this.data('__responsive')) {
             $(window).resize(function() {
@@ -211,7 +211,7 @@
             var currentItem = 0;
 
             // Store all the data
-            var allData = $this.data('data') || [];
+            var allData = [];
             for (i = 0; i < data.length; i++) {
                 allData.push(data[i]);
             }
