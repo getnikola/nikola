@@ -9,6 +9,7 @@ Features
 * Commit to source branch automatically in ``github_deploy``
   if ``GITHUB_COMMIT_SOURCE`` is set to True (Issue #2186)
 * Hugo-like shortcodes (Issue #1707)
+* New Galician translation
 
 Bugfixes
 --------
