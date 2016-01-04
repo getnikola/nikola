@@ -15,6 +15,7 @@ Bugfixes
 --------
 
 * Preserve EXIF data when resizing images (Issue #2204)
+* Decide is_mathjax based on current language tags (Issue #2205)
 
 New in v7.7.4
 =============
