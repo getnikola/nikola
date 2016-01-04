@@ -216,6 +216,19 @@ def mako2jinja(input_file):
 
     return output
 
+
+def jinjify_shortcodes(in_dir, out_dir):
+    for fname in os.listdir(in_dir):
+        if not fname.endswith('.tmpl'):
+            continue
+        in_file = os.path.join(in_dir, fname)
+        out_file = os.path.join(out_dir, fname)
+        with open(in_file) as inf:
+            data = mako2jinja(inf)
+        with open(out_file, 'w') as outf:
+            outf.write(data)
+            
+
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         print('Performing standard conversions:')
@@ -225,6 +238,7 @@ if __name__ == "__main__":
         ):
             print('    {0} -> {1}'.format(m, j))
             jinjify(m, j)
+        jinjify_shortcodes('nikola/data/shortcodes/mako', 'nikola/data/shortcodes/jinja')
     elif len(sys.argv) != 3:
         print('ERROR: needs input and output directory, or no arguments for default conversions.')
     else:
