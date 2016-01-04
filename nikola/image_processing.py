@@ -70,6 +70,7 @@ class ImageProcessor(object):
                 exif = im._getexif()
             except Exception:
                 exif = None
+            _exif = im.info.get('exif')
             if exif is not None:
                 for tag, value in list(exif.items()):
                     decoded = ExifTags.TAGS.get(tag, tag)
@@ -82,10 +83,13 @@ class ImageProcessor(object):
                         elif value == 8:
                             im = im.rotate(90)
                         break
+                    #if decoded == 'XResolution':
+                        #self.logger.warning('POP')
+                        #exif.pop(tag)
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
-                if exif is not None:
-                    im.save(dst, exif=exif)
+                if _exif is not None:
+                    im.save(dst, exif=_exif)
                 else:
                     im.save(dst)
             except Exception as e:
