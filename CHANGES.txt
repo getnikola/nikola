@@ -10,6 +10,7 @@ Features
   if ``GITHUB_COMMIT_SOURCE`` is set to True (Issue #2186)
 * Hugo-like shortcodes (Issue #1707)
 * New Galician translation
+* New facilities for data persistence and data caching (Issues #2209 and #2009)
 
 Bugfixes
 --------
