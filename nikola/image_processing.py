@@ -52,7 +52,7 @@ class ImageProcessor(object):
 
     image_ext_list_builtin = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.bmp', '.tiff']
 
-    def resize_image(self, src, dst, max_size, bigger_panoramas=True):
+    def resize_image(self, src, dst, max_size, bigger_panoramas=True, preserve_exif_data=False):
         """Make a copy of the image in the requested size."""
         if not Image or os.path.splitext(src)[1] in ['.svg', '.svgz']:
             self.resize_svg(src, dst, max_size, bigger_panoramas)
@@ -83,9 +83,6 @@ class ImageProcessor(object):
                         elif value == 8:
                             im = im.rotate(90)
                         break
-                    #if decoded == 'XResolution':
-                        #self.logger.warning('POP')
-                        #exif.pop(tag)
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
                 if _exif is not None:
