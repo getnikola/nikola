@@ -41,8 +41,9 @@ class Persistor():
     Intentionally it has no namespaces, sections, etc. Use as a
     responsible adult.
     """
+
     def __init__(self, path):
-        """Where do you want it persisted?"""
+        """Where do you want it persisted."""
         self._path = path
         utils.makedirs(os.path.dirname(path))
         self.data = {}
