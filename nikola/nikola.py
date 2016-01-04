@@ -816,11 +816,9 @@ class Nikola(object):
         
         # Set persistent state facility
         self.state = Persistor(os.path.join('state_data.json'))
-        self.state.set('foobar', {1:3})
                 
         # Set cache facility
         self.cache = Persistor(os.path.join(self.config['CACHE_FOLDER'], 'cache_data.json'))
-        self.cache.set('foobar', {1:3})
         
     def init_plugins(self, commands_only=False):
         """Load plugins as needed."""
