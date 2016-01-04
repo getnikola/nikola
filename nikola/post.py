@@ -257,8 +257,13 @@ class Post(object):
     @property
     def is_mathjax(self):
         """True if this post has the mathjax tag in the current language or is a python notebook."""
+        if self.compiler.name == 'ipynb':
+            return True
         lang = nikola.utils.LocaleBorg().current_lang
-        return ('mathjax' in self.tags_for_language(lang)) or (self.compiler.name == 'ipynb')
+        if self.is_translation_available(lang):
+            return 'mathjax' in self.tags_for_language(lang)
+        # If it has math in ANY other language, enable it. Better inefficient than broken.
+        return 'mathjax' in self.alltags
 
     @property
     def alltags(self):
