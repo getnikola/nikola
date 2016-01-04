@@ -1297,19 +1297,23 @@ class Nikola(object):
         return result
 
     def _register_templated_shortcodes(self):
-        """Register shortcodes provided by templates in shortcodes/ folder."""
-        if not os.path.isdir('shortcodes'):
-            return
-        for fname in os.listdir('shortcodes'):
-            name, ext = os.path.splitext(fname)
-            if ext == '.tmpl':
-                with open(os.path.join('shortcodes', fname)) as fd:
-                    template_data = fd.read()
+        """Register shortcodes provided by templates in shortcodes/ folders."""
+        builtin_sc_dir = resource_filename('nikola', os.path.join('data', 'shortcodes', utils.get_template_engine(self.THEMES)))
+        sc_dirs = [builtin_sc_dir, 'shortcodes']
 
-                def render_shortcode(t_data=template_data, **kw):
-                    return self.template_system.render_template_to_string(t_data, kw)
+        for sc_dir in sc_dirs:
+            if not os.path.isdir(sc_dir):
+                continue
+            for fname in os.listdir(sc_dir):
+                name, ext = os.path.splitext(fname)
+                if ext == '.tmpl':
+                    with open(os.path.join(sc_dir, fname)) as fd:
+                        template_data = fd.read()
 
-                self.register_shortcode(name, render_shortcode)
+                    def render_shortcode(t_data=template_data, **kw):
+                        return self.template_system.render_template_to_string(t_data, kw)
+
+                    self.register_shortcode(name, render_shortcode)
 
     def register_shortcode(self, name, f):
         """Register function f to handle shortcode "name"."""
