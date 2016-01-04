@@ -109,7 +109,6 @@ class Post(object):
         self.base_url = self.config['BASE_URL']
         self.is_draft = False
         self.is_private = False
-        self.is_mathjax = False
         self.strip_indexes = self.config['STRIP_INDEXES']
         self.index_file = self.config['INDEX_FILE']
         self.pretty_urls = self.config['PRETTY_URLS']
@@ -223,9 +222,6 @@ class Post(object):
         self.use_in_feeds = use_in_feeds and not is_draft and not is_private \
             and not self.publish_later
 
-        # If mathjax is a tag, or it's a ipynb post, then enable mathjax rendering support
-        self.is_mathjax = ('mathjax' in self.tags) or (self.compiler.name == 'ipynb')
-
         # Register potential extra dependencies
         self.compiler.register_extra_dependencies(self)
 
@@ -257,6 +253,12 @@ class Post(object):
             return True
         else:
             return False
+
+    @property
+    def is_mathjax(self):
+        """True if this post has the mathjax tag in the current language or is a python notebook."""
+        lang = nikola.utils.LocaleBorg().current_lang
+        return ('mathjax' in self.tags_for_language(lang)) or (self.compiler.name == 'ipynb')
 
     @property
     def alltags(self):
