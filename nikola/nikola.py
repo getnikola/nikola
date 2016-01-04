@@ -813,13 +813,13 @@ class Nikola(object):
                 self.bad_compilers.add(k)
 
         self._set_global_context()
-        
+
         # Set persistent state facility
         self.state = Persistor(os.path.join('state_data.json'))
-                
+
         # Set cache facility
         self.cache = Persistor(os.path.join(self.config['CACHE_FOLDER'], 'cache_data.json'))
-        
+
     def init_plugins(self, commands_only=False):
         """Load plugins as needed."""
         self.plugin_manager = PluginManager(categories_filter={
