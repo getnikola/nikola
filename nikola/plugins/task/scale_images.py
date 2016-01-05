@@ -82,7 +82,7 @@ class ScaleImage(Task, ImageProcessor):
             'image_folders': self.site.config['IMAGE_FOLDERS'],
             'output_folder': self.site.config['OUTPUT_FOLDER'],
             'filters': self.site.config['FILTERS'],
-            'preserve_exif_data': self.site.config['PRFESERVE_EXIF_DATA'],
+            'preserve_exif_data': self.site.config['PRESERVE_EXIF_DATA'],
         }
 
         self.image_ext_list = self.image_ext_list_builtin
