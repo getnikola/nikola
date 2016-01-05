@@ -18,11 +18,11 @@
     % if galleries_use_thumbnail:
     <div class="row">
     % for folder, ftitle, fpost in folders:
-	  <div class="col-md-4 col-sm-6 col-xs-12">
+	  <div class="col-md-4 col-sm-6 col-xs-12" style="min-height: 425px;">
 	    <div class="thumbnail">
 	      <a href="${folder}">
 		% if fpost and getattr(fpost, 'previewimage', None):
-		<img src="${folder}${fpost.previewimage}" alt="${ftitle|h}">
+		<img src="${folder}${fpost.previewimage}" style="width: 340px; height: 255px;" alt="${ftitle|h}">
 		% elif galleries_default_thumbnail:
 		<img src="${galleries_default_thumbnail}" alt="${ftitle|h}">
 		% else:
