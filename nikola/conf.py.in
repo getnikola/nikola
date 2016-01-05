@@ -920,10 +920,7 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 
 # Use a thumbnail (defined by ".. previewimage:") in list of galleries
 # for each gallery
-GALLERIES_USE_THUMBNAIL = True
-
-# Columns of thumbnails list in galleries index
-GALLERIES_COLUMNS = 3
+GALLERIES_USE_THUMBNAIL = False
 
 # Image to use as thumbnail for those galleries that doesn't have one
 # None: show a grey square
