@@ -51,6 +51,7 @@ class Persistor():
 
     def get(self, key):
         """Get data stored in key."""
+        self._read()
         return self.data.get(key)
 
     def set(self, key, value):
