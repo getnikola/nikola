@@ -67,7 +67,7 @@ class Persistor():
             self.data.pop(key)
         self._save()
 
-    def _read(self)
+    def _read(self):
         if os.path.isfile(self._path):
             with open(self._path) as inf:
                 self.data = json.load(inf)
