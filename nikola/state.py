@@ -51,21 +51,25 @@ class Persistor():
 
     def get(self, key):
         """Get data stored in key."""
-        if os.path.isfile(path):
-            with open(path) as inf:
-                self.data = json.load(inf)
         return self.data.get(key)
 
     def set(self, key, value):
         """Store value in key."""
+        self._read()
         self.data[key] = value
         self._save()
 
     def delete(self, key):
         """Delete key and the value it contains."""
+        self._read()
         if key in self.data:
             self.data.pop(key)
         self._save()
+
+    def _read(self)
+        if os.path.isfile(self._path):
+            with open(self._path) as inf:
+                self.data = json.load(inf)
 
     def _save(self):
         tpath = self._path + '.tmp'
