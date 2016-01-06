@@ -16,6 +16,7 @@ Bugfixes
 --------
 
 * Decide is_mathjax based on current language tags (Issue #2205)
+* Don't duplicate images in flowr when resizing page (Issue #2202)
 
 New in v7.7.4
 =============
