@@ -28,6 +28,7 @@
 
 import json
 import os
+import shutil
 
 from . import utils
 
@@ -47,12 +48,12 @@ class Persistor():
         self._path = path
         utils.makedirs(os.path.dirname(path))
         self.data = {}
-        if os.path.isfile(path):
-            with open(path) as inf:
-                self.data = json.load(inf)
 
     def get(self, key):
         """Get data stored in key."""
+        if os.path.isfile(path):
+            with open(path) as inf:
+                self.data = json.load(inf)
         return self.data.get(key)
 
     def set(self, key, value):
@@ -67,5 +68,7 @@ class Persistor():
         self._save()
 
     def _save(self):
-        with open(self._path, 'w') as outf:
+        tpath = self._path + '.tmp'
+        with open(tpath, 'w') as outf:
             json.dump(self.data, outf, sort_keys=True, indent=2)
+        shutil.move(tpath, self.path)
