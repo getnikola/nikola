@@ -14,6 +14,8 @@ Features
 Bugfixes
 --------
 
+* Display tags and archives in a unified format, with the date on the
+  left, instead of a misplaced dash in tags (Issue #2212)
 * Decide is_mathjax based on current language tags (Issue #2205)
 * Don't duplicate images in flowr when resizing page (Issue #2202)
 

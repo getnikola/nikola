@@ -120,7 +120,7 @@ body {
 }
 .metadata p:before,
 .postpromonav .tags li:before,
-.postlist .listdate:before {
+.postlist .listdate:after {
 	content: " — ";
 }
 .postlist li {
