@@ -29,6 +29,8 @@
 import json
 import os
 import shutil
+import tempfile
+import threading
 
 from . import utils
 
@@ -47,33 +49,35 @@ class Persistor():
         """Where do you want it persisted."""
         self._path = path
         utils.makedirs(os.path.dirname(path))
-        self.data = {}
+        self._local = threading.local()
+        self._local.data = {}
 
     def get(self, key):
         """Get data stored in key."""
         self._read()
-        return self.data.get(key)
+        return self._local.data.get(key)
 
     def set(self, key, value):
         """Store value in key."""
         self._read()
-        self.data[key] = value
+        self._local.data[key] = value
         self._save()
 
     def delete(self, key):
         """Delete key and the value it contains."""
         self._read()
-        if key in self.data:
-            self.data.pop(key)
+        if key in self._local.data:
+            self._local.data.pop(key)
         self._save()
 
     def _read(self):
         if os.path.isfile(self._path):
             with open(self._path) as inf:
-                self.data = json.load(inf)
+                self._local.data = json.load(inf)
 
     def _save(self):
-        tpath = self._path + '.tmp'
-        with open(tpath, 'w') as outf:
-            json.dump(self.data, outf, sort_keys=True, indent=2)
-        shutil.move(tpath, self.path)
+        dname = os.path.dirname(self._path)
+        with tempfile.NamedTemporaryFile(dir=dname, delete=False) as outf:
+            tname = outf.name
+            json.dump(self._local.data, outf, sort_keys=True, indent=2)
+        shutil.move(tname, self.path)
