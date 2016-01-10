@@ -221,6 +221,18 @@ def prepare_config(config):
     return p
 
 
+def test_destination(destination, demo=False):
+    """Check if the destination already exists, which can break demo site creation."""
+    # Issue #2214
+    if demo and os.path.exists(destination):
+        LOGGER.warning("The directory {0} already exists, and a new demo site cannot be initialized in an existing directory.".format(destination))
+        LOGGER.warning("Please remove the directory and try again, or use another directory.")
+        LOGGER.info("Hint: If you want to initialize a git repository in this directory, run `git init` in the directory after creating a Nikola site.")
+        return False
+    else:
+        return True
+
+
 class CommandInit(Command):
     """Create a new site."""
 
@@ -277,7 +289,7 @@ class CommandInit(Command):
             makedirs(os.path.join(target, folder))
 
     @staticmethod
-    def ask_questions(target):
+    def ask_questions(target, demo=False):
         """Ask some questions about Nikola."""
         def urlhandler(default, toconf):
             answer = ask('Site URL', 'https://example.com/')
@@ -442,7 +454,7 @@ class CommandInit(Command):
         print("If you do not want to answer and want to go with the defaults instead, simply restart with the `-q` parameter.")
 
         for query, default, toconf, destination in questions:
-            if target and destination == '!target':
+            if target and destination == '!target' and test_destination(target, demo):
                 # Skip the destination question if we know it already
                 pass
             else:
@@ -459,8 +471,9 @@ class CommandInit(Command):
                     if toconf:
                         SAMPLE_CONF[destination] = answer
                     if destination == '!target':
-                        while not answer:
-                            print('    ERROR: you need to specify a target directory.\n')
+                        while not answer or not test_destination(answer, demo):
+                            if not answer:
+                                print('    ERROR: you need to specify a target directory.\n')
                             answer = ask(query, default)
                         STORAGE['target'] = answer
 
@@ -476,7 +489,7 @@ class CommandInit(Command):
         except IndexError:
             target = None
         if not options.get('quiet'):
-            st = self.ask_questions(target=target)
+            st = self.ask_questions(target=target, demo=options.get('demo'))
             try:
                 if not target:
                     target = st['target']
@@ -489,11 +502,13 @@ class CommandInit(Command):
 Options:
   -q, --quiet               Do not ask questions about config.
   -d, --demo                Create a site filled with example data.""")
-            return False
+            return 1
         if not options.get('demo'):
             self.create_empty_site(target)
             LOGGER.info('Created empty site at {0}.'.format(target))
         else:
+            if not test_destination(target, True):
+                return 2
             self.copy_sample_site(target)
             LOGGER.info("A new site with example data has been created at "
                         "{0}.".format(target))
