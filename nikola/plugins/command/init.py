@@ -220,6 +220,7 @@ def prepare_config(config):
     p.update({k: str(v) for k, v in config.items() if isinstance(v, bool) or v is None})
     return p
 
+
 def test_destination(destination, demo=False):
     """Check if the destination already exists, which can break demo site creation."""
     # Issue #2214
@@ -230,6 +231,7 @@ def test_destination(destination, demo=False):
         return False
     else:
         return True
+
 
 class CommandInit(Command):
     """Create a new site."""
