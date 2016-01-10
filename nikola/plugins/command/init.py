@@ -221,6 +221,8 @@ def prepare_config(config):
     return p
 
 def test_destination(destination, demo=False):
+    """Check if the destination already exists, which can break demo site creation."""
+    # Issue #2214
     if demo and os.path.exists(destination):
         LOGGER.warning("The directory {0} already exists, and a new demo site cannot be initialized in an existing directory.".format(destination))
         LOGGER.warning("Please remove the directory and try again, or use another directory.")
