@@ -160,36 +160,36 @@ def jpegoptim(infile):
     return runinplace(r"jpegoptim -p --strip-all -q %1", infile)
 
 
-def html_tidy_withconfig(infile):
+def html_tidy_withconfig(infile, executable=r'tidy5'):
     """Run HTML Tidy with tidy5.conf as config file."""
-    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent -config tidy5.conf -modify %1")
+    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent -config tidy5.conf -modify %1", executable=executable)
 
 
-def html_tidy_nowrap(infile):
+def html_tidy_nowrap(infile, executable=r'tidy5'):
     """Run HTML Tidy without line wrapping."""
-    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes no --sort-attributes alpha --wrap 0 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1")
+    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes no --sort-attributes alpha --wrap 0 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1", executable=executable)
 
 
-def html_tidy_wrap(infile):
+def html_tidy_wrap(infile, executable=r'tidy5'):
     """Run HTML Tidy with line wrapping."""
-    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes no --sort-attributes alpha --wrap 80 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1")
+    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes no --sort-attributes alpha --wrap 80 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1", executable=executable)
 
 
-def html_tidy_wrap_attr(infile):
+def html_tidy_wrap_attr(infile, executable=r'tidy5'):
     """Run HTML tidy with line wrapping and attribute indentation."""
-    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes yes --sort-attributes alpha --wrap 80 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1")
+    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes yes --sort-attributes alpha --wrap 80 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1", executable=executable)
 
 
-def html_tidy_mini(infile):
+def html_tidy_mini(infile, executable=r'tidy5'):
     """Run HTML tidy with minimal settings."""
-    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 --indent-attributes no --sort-attributes alpha --wrap 0 --wrap-sections no --tidy-mark no --drop-empty-elements no -modify %1")
+    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 --indent-attributes no --sort-attributes alpha --wrap 0 --wrap-sections no --tidy-mark no --drop-empty-elements no -modify %1", executable=executable)
 
 
-def _html_tidy_runner(infile, options):
+def _html_tidy_runner(infile, options, executable=r'tidy5'):
     """Run HTML Tidy."""
     # Warnings (returncode 1) are not critical, and *everything* is a warning.
     try:
-        status = runinplace(r"tidy5 " + options, infile)
+        status = runinplace(executable + r" " + options, infile)
     except subprocess.CalledProcessError as err:
         status = 0 if err.returncode == 1 else err.returncode
     return status
