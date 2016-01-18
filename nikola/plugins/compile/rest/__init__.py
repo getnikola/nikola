@@ -97,6 +97,7 @@ class CompileRest(PageCompiler):
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
                 output, error_level, deps = self.compile_html_string(data, source, is_two_file)
+                output = apply_shortcodes(output, self.site.shortcode_registry, self.site, source)
                 out_file.write(output)
             deps_path = dest + '.dep'
             if deps.list:
