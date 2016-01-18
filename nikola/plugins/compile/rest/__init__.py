@@ -39,6 +39,7 @@ import docutils.writers.html4css1
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import unicode_str, get_logger, makedirs, write_metadata, STDERR_HANDLER
+from nikola.shortcodes import apply_shortcodes
 
 
 class CompileRest(PageCompiler):
