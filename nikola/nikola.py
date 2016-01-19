@@ -2200,7 +2200,7 @@ class Nikola(object):
 
     def __repr__(self):
         """Representation of a Nikola site."""
-        return '<Nikola Site: {0!r}>'.format(self.config['BLOG_TITLE']())
+        return '<Nikola Site: {0!r}>'.format(self.config['BLOG_TITLE'](self.config['DEFAULT_LANG']))
 
 
 def sanitized_locales(locale_fallback, locale_default, locales, translations):
