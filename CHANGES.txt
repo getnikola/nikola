@@ -15,6 +15,7 @@ Bugfixes
 --------
 
 * Avoid some random file rebuilds (Issue #2220)
+* Honor ``MATHJAX_CONFIG``
 * Display tags and archives in a unified format, with the date on the
   left, instead of a misplaced dash in tags (Issue #2212)
 * Decide is_mathjax based on current language tags (Issue #2205)
