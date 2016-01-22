@@ -49,7 +49,10 @@ def uni_check_output(*args, **kwargs):
 def check_ghp_import_installed():
     """Check if ghp-import is installed."""
     try:
-        subprocess.check_output(['ghp-import', '-h'])
+        if os.name == 'nt':
+            subprocess.check_output([b'ghp-import', b'-h'])
+        else:
+            subprocess.check_output(['ghp-import', '-h'])
     except OSError:
         # req_missing defaults to `python=True` — and it’s meant to be like this.
         # `ghp-import` is installed via pip, but the only way to use it is by executing the script it installs.
@@ -109,6 +112,8 @@ class CommandGitHubDeploy(Command):
     def _run_command(self, command, xfail=False):
         """Run a command that may or may not fail."""
         self.logger.info("==> {0}".format(command))
+        if os.name == 'nt':
+            command = [i.encode('ascii', errors='replace') for i in command]
         try:
             subprocess.check_call(command)
             return 0
