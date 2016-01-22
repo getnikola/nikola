@@ -334,7 +334,7 @@ class CommandImportWordpress(Command, ImportMixin):
         self.context['TRANSLATIONS'] = format_default_translations_config(
             self.extra_languages)
         self.context['REDIRECTIONS'] = self.configure_redirections(
-            self.url_map)
+            self.url_map, self.base_dir)
         if self.timezone:
             self.context['TIMEZONE'] = self.timezone
         if self.export_categories_as_categories:
