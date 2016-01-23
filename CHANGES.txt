@@ -14,6 +14,7 @@ Features
 Bugfixes
 --------
 
+* Fix ``github_deploy`` on Windows (Issue #2223)
 * Don’t attempt to create redirects for URLs with query strings in
   WordPress imports if the site is in a subdirectory (Issue #2224)
 * Avoid some random file rebuilds (Issue #2220)
