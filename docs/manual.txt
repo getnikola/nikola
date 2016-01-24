@@ -2146,7 +2146,13 @@ Nikola is released under the `MIT license <https://getnikola.com/license.html>`_
 components shipped along with Nikola, or required by it are released under
 other licenses.
 
-If you are not familiar with free software licensing: In general, you should be able to
-do pretty much anything you want, unless you modify Nikola. If you modify it, and share
-it with someone else, that someone else should get all your modifications under the same
-license you got it.
+
+If you are not familiar with free software licensing, here is a brief
+explanation (this is NOT legal advice): In general, you can do pretty much
+anything you want — including modifying Nikola, using and redistributing the
+original version or the your modified version. However, if you redistribute
+Nikola to someone else, either a modified version or the original version, the
+full copyright notice and license text must be included in your distribution.
+Nikola is provided “as is”, and the Nikola contributors are not liable for any
+damage caused by the software. Read the `full license text
+<https://getnikola.com/license.html>`_ for details.
