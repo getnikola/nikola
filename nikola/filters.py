@@ -142,54 +142,54 @@ def yui_compressor(infile):
             raise Exception("yui-compressor is not installed.")
             return False
 
-    return runinplace(r'{} --nomunge %1 -o %2'.format(yuicompressor), infile)
+    return runinplace('{} --nomunge %1 -o %2'.format(yuicompressor), infile)
 
 
 def closure_compiler(infile):
     """Run closure-compiler on a file."""
-    return runinplace(r'closure-compiler --warning_level QUIET --js %1 --js_output_file %2', infile)
+    return runinplace('closure-compiler --warning_level QUIET --js %1 --js_output_file %2', infile)
 
 
 def optipng(infile):
     """Run optipng on a file."""
-    return runinplace(r"optipng -preserve -o2 -quiet %1", infile)
+    return runinplace("optipng -preserve -o2 -quiet %1", infile)
 
 
 def jpegoptim(infile):
     """Run jpegoptim on a file."""
-    return runinplace(r"jpegoptim -p --strip-all -q %1", infile)
+    return runinplace("jpegoptim -p --strip-all -q %1", infile)
 
 
-def html_tidy_withconfig(infile):
+def html_tidy_withconfig(infile, executable='tidy5'):
     """Run HTML Tidy with tidy5.conf as config file."""
-    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent -config tidy5.conf -modify %1")
+    return _html_tidy_runner(infile, "-quiet --show-info no --show-warnings no -utf8 -indent -config tidy5.conf -modify %1", executable=executable)
 
 
-def html_tidy_nowrap(infile):
+def html_tidy_nowrap(infile, executable='tidy5'):
     """Run HTML Tidy without line wrapping."""
-    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes no --sort-attributes alpha --wrap 0 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1")
+    return _html_tidy_runner(infile, "-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes no --sort-attributes alpha --wrap 0 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1", executable=executable)
 
 
-def html_tidy_wrap(infile):
+def html_tidy_wrap(infile, executable='tidy5'):
     """Run HTML Tidy with line wrapping."""
-    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes no --sort-attributes alpha --wrap 80 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1")
+    return _html_tidy_runner(infile, "-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes no --sort-attributes alpha --wrap 80 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1", executable=executable)
 
 
-def html_tidy_wrap_attr(infile):
+def html_tidy_wrap_attr(infile, executable='tidy5'):
     """Run HTML tidy with line wrapping and attribute indentation."""
-    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes yes --sort-attributes alpha --wrap 80 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1")
+    return _html_tidy_runner(infile, "-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes yes --sort-attributes alpha --wrap 80 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1", executable=executable)
 
 
-def html_tidy_mini(infile):
+def html_tidy_mini(infile, executable='tidy5'):
     """Run HTML tidy with minimal settings."""
-    return _html_tidy_runner(infile, r"-quiet --show-info no --show-warnings no -utf8 --indent-attributes no --sort-attributes alpha --wrap 0 --wrap-sections no --tidy-mark no --drop-empty-elements no -modify %1")
+    return _html_tidy_runner(infile, "-quiet --show-info no --show-warnings no -utf8 --indent-attributes no --sort-attributes alpha --wrap 0 --wrap-sections no --tidy-mark no --drop-empty-elements no -modify %1", executable=executable)
 
 
-def _html_tidy_runner(infile, options):
+def _html_tidy_runner(infile, options, executable='tidy5'):
     """Run HTML Tidy."""
     # Warnings (returncode 1) are not critical, and *everything* is a warning.
     try:
-        status = runinplace(r"tidy5 " + options, infile)
+        status = runinplace(executable + " " + options, infile)
     except subprocess.CalledProcessError as err:
         status = 0 if err.returncode == 1 else err.returncode
     return status

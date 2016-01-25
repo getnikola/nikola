@@ -43,7 +43,7 @@
     %if posts:
     <ul class="postlist">
     % for post in posts:
-        <li><time class="listdate" datetime="${post.formatted_date('webiso')}" title="${post.formatted_date(date_format)|h}">${post.formatted_date(date_format)|h}</time><a href="${post.permalink()}" class="listtitle">${post.title()|h}<a></li>
+        <li><time class="listdate" datetime="${post.formatted_date('webiso')}" title="${post.formatted_date(date_format)|h}">${post.formatted_date(date_format)|h}</time> <a href="${post.permalink()}" class="listtitle">${post.title()|h}<a></li>
     % endfor
     </ul>
     %endif

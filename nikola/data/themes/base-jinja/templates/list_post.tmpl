@@ -9,7 +9,7 @@
     {% if posts %}
     <ul class="postlist">
     {% for post in posts %}
-        <li><a href="{{ post.permalink() }}" class="listtitle">{{ post.title()|e }}</a> <time class="listdate" datetime="{{ post.formatted_date('webiso') }}" title="{{ post.formatted_date(date_format)|e }}">{{ post.formatted_date(date_format)|e }}</time></li>
+        <li><time class="listdate" datetime="{{ post.formatted_date('webiso') }}" title="{{ post.formatted_date(date_format)|e }}">{{ post.formatted_date(date_format)|e }}</time> <a href="{{ post.permalink() }}" class="listtitle">{{ post.title()|e }}</a></li>
     {% endfor %}
     </ul>
     {% else %}
