@@ -15,6 +15,9 @@ Features
 Bugfixes
 --------
 
+* Don’t attempt to create redirects for URLs with query strings in
+  WordPress imports if the site is in a subdirectory (Issue #2224)
+* Avoid some random file rebuilds (Issue #2220)
 * Honor ``MATHJAX_CONFIG``
 * Display tags and archives in a unified format, with the date on the
   left, instead of a misplaced dash in tags (Issue #2212)
