@@ -53,7 +53,6 @@ class CommandDeploy(Command):
 
     def _execute(self, command, args):
         """Execute the deploy command."""
-        
         self.logger = get_logger('deploy', STDERR_HANDLER)
         # Get last successful deploy date
         timestamp_path = os.path.join(self.site.config['CACHE_FOLDER'], 'lastdeploy')
