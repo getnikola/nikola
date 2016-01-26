@@ -38,7 +38,7 @@ import time
 from blinker import signal
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, remove_file, unicode_str, makedirs, STDERR_HANDLER
+from nikola.utils import get_logger, remove_file, makedirs, STDERR_HANDLER
 
 
 class CommandDeploy(Command):
@@ -56,7 +56,7 @@ class CommandDeploy(Command):
         self.logger = get_logger('deploy', STDERR_HANDLER)
         # Get last successful deploy date
         timestamp_path = os.path.join(self.site.config['CACHE_FOLDER'], 'lastdeploy')
-        
+
         # Get last-deploy from persistent state
         last_deploy = self.site.state.get('last_deploy')
         if last_deploy is None:
@@ -65,7 +65,7 @@ class CommandDeploy(Command):
             if os.path.isfile(timestamp_path):
                 try:
                     with io.open(timestamp_path, 'r', encoding='utf8') as inf:
-                        last_deploy = dateutil.parser.parse(last_deploy)
+                        last_deploy = dateutil.parser.parse(inf.read())
                         clean = False
                 except (IOError, Exception) as e:
                     self.logger.debug("Problem when reading `{0}`: {1}".format(timestamp_path, e))
@@ -78,7 +78,7 @@ class CommandDeploy(Command):
         else:
             last_deploy = dateutil.parser.parse(last_deploy)
             clean = False
-        
+
         if self.site.config['COMMENT_SYSTEM_ID'] == 'nikolademo':
             self.logger.warn("\nWARNING WARNING WARNING WARNING\n"
                              "You are deploying using the nikolademo Disqus account.\n"
