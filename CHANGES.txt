@@ -10,12 +10,19 @@ Features
   if ``GITHUB_COMMIT_SOURCE`` is set to True (Issue #2186)
 * Hugo-like shortcodes (Issue #1707)
 * New Galician translation
+* New PRESERVE_EXIF_DATA to copy EXIF when resizing images (Issue #2204)
 
 Bugfixes
 --------
 
-* Preserve EXIF data when resizing images (Issue #2204)
+* Don’t attempt to create redirects for URLs with query strings in
+  WordPress imports if the site is in a subdirectory (Issue #2224)
+* Avoid some random file rebuilds (Issue #2220)
+* Honor ``MATHJAX_CONFIG``
+* Display tags and archives in a unified format, with the date on the
+  left, instead of a misplaced dash in tags (Issue #2212)
 * Decide is_mathjax based on current language tags (Issue #2205)
+* Don't duplicate images in flowr when resizing page (Issue #2202)
 
 New in v7.7.4
 =============

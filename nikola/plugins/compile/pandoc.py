@@ -37,6 +37,7 @@ import subprocess
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import req_missing, makedirs, write_metadata
+from nikola.shortcodes import apply_shortcodes
 
 
 class CompilePandoc(PageCompiler):
@@ -55,6 +56,10 @@ class CompilePandoc(PageCompiler):
         makedirs(os.path.dirname(dest))
         try:
             subprocess.check_call(['pandoc', '-o', dest, source] + self.site.config['PANDOC_OPTIONS'])
+            with open(dest, 'r', encoding='utf-8') as inf:
+                output = apply_shortcodes(inf.read(), self.site.shortcode_registry, self.site, source)
+            with open(dest, 'w', encoding='utf-8') as outf:
+                outf.write(output)
         except OSError as e:
             if e.strreror == 'No such file or directory':
                 req_missing(['pandoc'], 'build this site (compile with pandoc)', python=False)

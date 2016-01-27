@@ -76,8 +76,11 @@ class ImportMixin(object):
         return channel
 
     @staticmethod
-    def configure_redirections(url_map):
+    def configure_redirections(url_map, base_dir=''):
         """Configure redirections from an url_map."""
+        index = base_dir + 'index.html'
+        if index.startswith('/'):
+            index = index[1:]
         redirections = []
         for k, v in url_map.items():
             if not k[-1] == '/':
@@ -86,11 +89,10 @@ class ImportMixin(object):
             # remove the initial "/" because src is a relative file path
             src = (urlparse(k).path + 'index.html')[1:]
             dst = (urlparse(v).path)
-            if src == 'index.html':
+            if src == index:
                 utils.LOGGER.warn("Can't do a redirect for: {0!r}".format(k))
             else:
                 redirections.append((src, dst))
-
         return redirections
 
     def generate_base_site(self):

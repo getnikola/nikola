@@ -28,9 +28,13 @@
             </script>
         {% else %}
             <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"> </script>
+            {% if mathjax_config %}
+            {{ mathjax_config }}
+            {% else %}
             <script type="text/x-mathjax-config">
             MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
             </script>
+            {% endif %}
         {% endif %}
     {% endif %}
 {% endmacro %}

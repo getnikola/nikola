@@ -35,6 +35,8 @@ except ImportError:
     from urllib.parse import urljoin  # NOQA
 from collections import defaultdict
 
+from blinker import signal
+
 from nikola.plugin_categories import Task
 from nikola import utils
 
@@ -47,12 +49,19 @@ class RenderAuthors(Task):
 
     def set_site(self, site):
         """Set Nikola site."""
+        self.generate_author_pages = False
         if site.config["ENABLE_AUTHOR_PAGES"]:
             site.register_path_handler('author_index', self.author_index_path)
             site.register_path_handler('author', self.author_path)
             site.register_path_handler('author_atom', self.author_atom_path)
             site.register_path_handler('author_rss', self.author_rss_path)
+            signal('scanned').connect(self.posts_scanned)
         return super(RenderAuthors, self).set_site(site)
+
+    def posts_scanned(self, event):
+        """Called after posts are scanned via signal."""
+        self.generate_author_pages = self.site.config["ENABLE_AUTHOR_PAGES"] and len(self._posts_per_author()) > 1
+        self.site.GLOBAL_CONTEXT["author_pages_generated"] = self.generate_author_pages
 
     def gen_tasks(self):
         """Render the author pages and feeds."""
@@ -81,9 +90,7 @@ class RenderAuthors(Task):
         yield self.group_task()
         self.site.scan_posts()
 
-        generate_author_pages = self.site.config["ENABLE_AUTHOR_PAGES"] and len(self._posts_per_author()) > 1
-        self.site.GLOBAL_CONTEXT["author_pages_generated"] = generate_author_pages
-        if generate_author_pages:
+        if self.generate_author_pages:
             yield self.list_authors_page(kw)
 
             if not self._posts_per_author():  # this may be self.site.posts_per_author
