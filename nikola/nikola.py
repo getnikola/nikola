@@ -57,6 +57,7 @@ from yapsy.PluginManager import PluginManager
 from blinker import signal
 
 from .post import Post  # NOQA
+from .state import Persistor
 from . import DEBUG, utils, shortcodes
 from .plugin_categories import (
     Command,
@@ -812,6 +813,12 @@ class Nikola(object):
                 self.bad_compilers.add(k)
 
         self._set_global_context()
+
+        # Set persistent state facility
+        self.state = Persistor(os.path.join('state_data.json'))
+
+        # Set cache facility
+        self.cache = Persistor(os.path.join(self.config['CACHE_FOLDER'], 'cache_data.json'))
 
     def init_plugins(self, commands_only=False):
         """Load plugins as needed."""
