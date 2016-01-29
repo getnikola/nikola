@@ -85,7 +85,7 @@ class ImageProcessor(object):
                         break
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
-                if _exif is not None:
+                if _exif is not None and preserve_exif_data:
                     im.save(dst, exif=_exif)
                 else:
                     im.save(dst)
