@@ -30,6 +30,7 @@ from __future__ import print_function
 import io
 from datetime import datetime
 from dateutil.tz import gettz
+import dateutil
 import os
 import subprocess
 import time
@@ -37,7 +38,7 @@ import time
 from blinker import signal
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, remove_file, unicode_str, makedirs, STDERR_HANDLER
+from nikola.utils import get_logger, remove_file, makedirs, STDERR_HANDLER
 
 
 class CommandDeploy(Command):
@@ -55,6 +56,29 @@ class CommandDeploy(Command):
         self.logger = get_logger('deploy', STDERR_HANDLER)
         # Get last successful deploy date
         timestamp_path = os.path.join(self.site.config['CACHE_FOLDER'], 'lastdeploy')
+
+        # Get last-deploy from persistent state
+        last_deploy = self.site.state.get('last_deploy')
+        if last_deploy is None:
+            # If there is a last-deploy saved, move it to the new state persistence thing
+            # FIXME: remove in Nikola 8
+            if os.path.isfile(timestamp_path):
+                try:
+                    with io.open(timestamp_path, 'r', encoding='utf8') as inf:
+                        last_deploy = dateutil.parser.parse(inf.read())
+                        clean = False
+                except (IOError, Exception) as e:
+                    self.logger.debug("Problem when reading `{0}`: {1}".format(timestamp_path, e))
+                    last_deploy = datetime(1970, 1, 1)
+                    clean = True
+                os.unlink(timestamp_path)  # Remove because from now on it's in state
+            else:  # Just a default
+                last_deploy = datetime(1970, 1, 1)
+                clean = True
+        else:
+            last_deploy = dateutil.parser.parse(last_deploy)
+            clean = False
+
         if self.site.config['COMMENT_SYSTEM_ID'] == 'nikolademo':
             self.logger.warn("\nWARNING WARNING WARNING WARNING\n"
                              "You are deploying using the nikolademo Disqus account.\n"
@@ -102,22 +126,13 @@ class CommandDeploy(Command):
                     return e.returncode
 
         self.logger.info("Successful deployment")
-        try:
-            with io.open(timestamp_path, 'r', encoding='utf8') as inf:
-                last_deploy = datetime.strptime(inf.read().strip(), "%Y-%m-%dT%H:%M:%S.%f")
-                clean = False
-        except (IOError, Exception) as e:
-            self.logger.debug("Problem when reading `{0}`: {1}".format(timestamp_path, e))
-            last_deploy = datetime(1970, 1, 1)
-            clean = True
 
         new_deploy = datetime.utcnow()
         self._emit_deploy_event(last_deploy, new_deploy, clean, undeployed_posts)
 
         makedirs(self.site.config['CACHE_FOLDER'])
         # Store timestamp of successful deployment
-        with io.open(timestamp_path, 'w+', encoding='utf8') as outf:
-            outf.write(unicode_str(new_deploy.isoformat()))
+        self.site.state.set('last_deploy', new_deploy.isoformat())
 
     def _emit_deploy_event(self, last_deploy, new_deploy, clean=False, undeployed=None):
         """Emit events for all timeline entries newer than last deploy.
