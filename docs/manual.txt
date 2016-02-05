@@ -1553,11 +1553,15 @@ In reST:
 
     Euler’s formula: :math:`e^{ix} = \cos x + i\sin x`
 
-In other input formats:
+In HTML and other input formats:
 
 .. code:: text
 
     Euler’s formula: \(e^{ix} = \cos x + i\sin x\)
+
+Note that some input formats (including Markdown) require using **double
+backslashes** in the delimiters (``\\(inline math\\)``). Please check your
+output first before reporting bugs.
 
 Display mathematics are produced using the reST `math` **directive** or the
 LaTeX backslash-brackets delimiters:
@@ -1575,11 +1579,16 @@ In reST:
 
       \int \frac{dx}{1+ax}=\frac{1}{a}\ln(1+ax)+C
 
-In other input formats:
+In HTML and other input formats:
 
 .. code:: text
 
     \[\int \frac{dx}{1+ax}=\frac{1}{a}\ln(1+ax)+C\]
+
+Note that some input formats (including Markdown) require using **double
+backslashes** in the delimiters (``\\[display math\\]``). Please check your
+output first before reporting bugs.
+
 
 reStructuredText Extensions
 ---------------------------
