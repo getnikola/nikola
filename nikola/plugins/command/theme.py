@@ -99,7 +99,7 @@ class CommandTheme(Command):
         """Install theme into current site."""
         url = options['url']
 
-       # See the "mode" we need to operate in
+        # See the "mode" we need to operate in
         install = options.get('install')
         uninstall = options.get('uninstall')
         list_available = options.get('list')
