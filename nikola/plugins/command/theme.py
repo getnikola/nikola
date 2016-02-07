@@ -118,11 +118,12 @@ class CommandTheme(Command):
         elif uninstall:
             return self.do_uninstall(uninstall)
         elif install:
-            return self.do_install_loop(url, install)
+            return self.do_install_deps(url, install)
         elif get_path:
             return self.get_path(get_path)
 
-    def do_install_loop(self, url, name):
+    def do_install_deps(self, url, name):
+        """Install themes and their dependencies."""
         data = self.get_json(url)
         # `name` may be modified by the while loop.
         origname = name
@@ -184,6 +185,7 @@ class CommandTheme(Command):
         return True
 
     def do_uninstall(self, name):
+        """Uninstall a theme."""
         try:
             path = utils.get_theme_path(name)
         except Exception:

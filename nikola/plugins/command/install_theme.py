@@ -88,4 +88,4 @@ class CommandInstallTheme(Command):
         if listing:
             p.list_available(url)
         else:
-            p.do_install_loop(url, name)
+            p.do_install_deps(url, name)
