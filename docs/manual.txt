@@ -1076,12 +1076,13 @@ Getting More Themes
 
 There are a few themes for Nikola. They are available at
 the `Themes Index <https://themes.getnikola.com/>`_.
-Nikola has a built-in theme download/install mechanism to install those themes — the ``install_theme`` command:
+Nikola has a built-in theme download/install mechanism to install those themes
+— the ``theme`` command:
 
 
 .. code:: console
 
-    $ nikola install_theme -l
+    $ nikola theme -l
     Themes:
     -------
     blogtxt
@@ -1089,10 +1090,10 @@ Nikola has a built-in theme download/install mechanism to install those themes �
     ⋮
     ⋮
 
-    $ nikola install_theme blogtxt
-    [2013-10-12T16:46:13Z] NOTICE: install_theme: Downloading:
+    $ nikola theme -i blogtxt
+    [2013-10-12T16:46:13Z] NOTICE: theme: Downloading:
     https://themes.getnikola.com/v6/blogtxt.zip
-    [2013-10-12T16:46:15Z] NOTICE: install_theme: Extracting: blogtxt into themes
+    [2013-10-12T16:46:15Z] NOTICE: theme: Extracting: blogtxt into themes
 
 And there you are, you now have themes/blogtxt installed. It's very
 rudimentary, but it should work in most cases.

@@ -1,0 +1,13 @@
+[Core]
+name = theme
+module = theme
+
+[Documentation]
+author = Roberto Alsina and Chris Warrick
+version = 1.0
+website = https://getnikola.com/
+description = Manage Nikola themes
+
+[Nikola]
+plugincategory = Command
+
