@@ -138,6 +138,7 @@ class MakoTemplates(TemplateSystem):
         except exceptions.TopLevelLookupException:
             return None
 
+
 def striphtml(text):
     """Strip HTML tags from text."""
     return Markup(text).striptags()
