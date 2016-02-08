@@ -32,7 +32,7 @@ import shutil
 import sys
 import tempfile
 
-from mako import util, lexer, parsetree
+from mako import exceptions, util, lexer, parsetree
 from mako.lookup import TemplateLookup
 from mako.template import Template
 from markupsafe import Markup  # It's ok, Mako requires it
@@ -130,6 +130,13 @@ class MakoTemplates(TemplateSystem):
             self.cache[template_name] = tuple(deps)
         return list(self.cache[template_name])
 
+    def get_template_path(self, template_name):
+        """Get the path to a template or return None."""
+        try:
+            t = self.lookup.get_template(template_name)
+            return t.filename
+        except exceptions.TopLevelLookupException:
+            return None
 
 def striphtml(text):
     """Strip HTML tags from text."""
