@@ -259,7 +259,7 @@ class CommandTheme(Command):
         return 0
 
     def copy_template(self, template):
-        """Copies the named template file from the parent to a local theme or to templates/."""
+        """Copy the named template file from the parent to a local theme or to templates/."""
         # Find template
         t = self.site.template_system.get_template_path(template)
         if t is None:
