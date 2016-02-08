@@ -4,6 +4,12 @@ New in master
 Features
 --------
 
+* Add ``nikola theme --new`` command for creating new themes (Issue #2231)
+* Add ``nikola theme --copy-template`` command for copying templates
+  to customize them (Issue #2231)
+* Add ``nikola theme --uninstall`` command for deleting themes (Issue #2231)
+* Replace ``nikola install_theme`` with more capable ``nikola theme``
+  command (Issue #2231)
 * Allow for customizing ``github_deploy`` commit messages with ``-m``
   (Issue #2198)
 * Commit to source branch automatically in ``github_deploy``

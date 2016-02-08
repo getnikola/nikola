@@ -48,7 +48,7 @@ class CommandTheme(Command):
 
     json = None
     name = "theme"
-    doc_usage = "[-u] [-i theme_name] [-l] [-g] [-n] [-c]"
+    doc_usage = "[-i theme_name] [-r theme_name] [-l] [-u url] [-g] [-n theme_name] [-c template_name]"
     doc_purpose = "manage themes"
     output_dir = 'themes'
     cmd_options = [
@@ -231,7 +231,7 @@ class CommandTheme(Command):
         except Exception:
             LOGGER.error('Unknown theme: {0}'.format(name))
             return 1
-        LOGGER.warning('About to uninstall plugin: {0}'.format(name))
+        LOGGER.warning('About to uninstall theme: {0}'.format(name))
         LOGGER.warning('This will delete {0}'.format(path))
         sure = utils.ask_yesno('Are you sure?')
         if sure:
