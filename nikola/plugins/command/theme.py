@@ -93,6 +93,36 @@ class CommandTheme(Command):
             'default': '',
             'help': "Print the path for installed theme",
         },
+        {
+            'name': 'copy-template',
+            'short': 'c',
+            'long': 'copy-template',
+            'type': str,
+            'default': '',
+            'help': 'Copy a built-in template into templates/ or your theme',
+        },
+        {
+            'name': 'new',
+            'short': 'n',
+            'long': 'new',
+            'type': str,
+            'default': '',
+            'help': 'Create a new theme',
+        },
+        {
+            'name': 'new_engine',
+            'long': 'engine',
+            'type': str,
+            'default': 'mako',
+            'help': 'Engine to use for new theme (mako or jinja -- default: mako)',
+        },
+        {
+            'name': 'new_parent',
+            'long': 'parent',
+            'type': str,
+            'default': 'base',
+            'help': 'Parent to use for new theme (default: base)',
+        },
     ]
 
     def _execute(self, options, args):
@@ -104,23 +134,33 @@ class CommandTheme(Command):
         uninstall = options.get('uninstall')
         list_available = options.get('list')
         get_path = options.get('getpath')
+        copy_template = options.get('copy-template')
+        new = options.get('new')
+        new_engine = options.get('new_engine')
+        new_parent = options.get('new_parent')
         command_count = [bool(x) for x in (
             install,
             uninstall,
             list_available,
-            get_path)].count(True)
+            get_path,
+            copy_template,
+            new)].count(True)
         if command_count > 1 or command_count == 0:
             print(self.help())
             return 2
 
         if list_available:
             return self.list_available(url)
-        elif uninstall:
-            return self.do_uninstall(uninstall)
         elif install:
             return self.do_install_deps(url, install)
+        elif uninstall:
+            return self.do_uninstall(uninstall)
         elif get_path:
             return self.get_path(get_path)
+        elif copy_template:
+            return self.copy_template(copy_template)
+        elif new:
+            return self.new_theme(new, new_engine, new_parent)
 
     def do_install_deps(self, url, name):
         """Install themes and their dependencies."""
@@ -217,6 +257,71 @@ class CommandTheme(Command):
         for theme in sorted(data.keys()):
             print(theme)
         return 0
+
+    def copy_template(self, template):
+        """Copies the named template file from the parent to a local theme or to templates/."""
+        # Find template
+        t = self.site.template_system.get_template_path(template)
+        if t is None:
+            LOGGER.error("Cannot find template {0} in the lookup.".format(template))
+            return 2
+
+        # Figure out where to put it.
+        # Check if a local theme exists.
+        theme_path = utils.get_theme_path(self.site.THEMES[0])
+        if theme_path.startswith('themes' + os.sep):
+            # Theme in local themes/ directory
+            base = os.path.join(theme_path, 'templates')
+        else:
+            # Put it in templates/
+            base = 'templates'
+
+        if not os.path.exists(base):
+            os.mkdir(base)
+            LOGGER.info("Created directory {0}".format(base))
+
+        try:
+            out = shutil.copy(t, base)
+            LOGGER.info("Copied template from {0} to {1}".format(t, out))
+        except shutil.SameFileError:
+            LOGGER.error("This file already exists in your templates directory ({0}).".format(base))
+            return 3
+
+    def new_theme(self, name, engine, parent):
+        """Create a new theme."""
+        base = 'themes'
+        themedir = os.path.join(base, name)
+        LOGGER.info("Creating theme {0} with parent {1} and engine {2} in {3}".format(name, parent, engine, themedir))
+        if not os.path.exists(base):
+            os.mkdir(base)
+            LOGGER.info("Created directory {0}".format(base))
+
+        # Check if engine and parent match
+        engine_file = utils.get_asset_path('engine', utils.get_theme_chain(parent))
+        with io.open(engine_file, 'r', encoding='utf-8') as fh:
+            parent_engine = fh.read().strip()
+
+        if parent_engine != engine:
+            LOGGER.error("Cannot use engine {0} because parent theme '{1}' uses {2}".format(engine, parent, parent_engine))
+            return 2
+
+        # Create theme
+        if not os.path.exists(themedir):
+            os.mkdir(themedir)
+            LOGGER.info("Created directory {0}".format(themedir))
+        else:
+            LOGGER.error("Theme already exists")
+            return 2
+
+        with io.open(os.path.join(themedir, 'parent'), 'w', encoding='utf-8') as fh:
+            fh.write(parent + '\n')
+            LOGGER.info("Created file {0}".format(os.path.join(themedir, 'parent')))
+        with io.open(os.path.join(themedir, 'engine'), 'w', encoding='utf-8') as fh:
+            fh.write(engine + '\n')
+            LOGGER.info("Created file {0}".format(os.path.join(themedir, 'engine')))
+
+        LOGGER.info("Theme {0} created successfully.".format(themedir))
+        LOGGER.notice('Remember to set THEME="{0}" in conf.py to use this theme.'.format(name))
 
     def get_json(self, url):
         """Download the JSON file with all plugins."""
