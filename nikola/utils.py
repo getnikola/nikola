@@ -546,6 +546,8 @@ class config_changed(tools.config_changed):
                 byte_data = data
             digest = hashlib.md5(byte_data).hexdigest()
             # LOGGER.debug('{{"{0}": {1}}}'.format(digest, byte_data))
+            # Humanized format:
+            # LOGGER.debug('[Digest {0} for {2}]\n{1}\n[Digest {0} for {2}]'.format(digest, byte_data, self.identifier))
             return digest
         else:
             raise Exception('Invalid type of config_changed parameter -- got '
