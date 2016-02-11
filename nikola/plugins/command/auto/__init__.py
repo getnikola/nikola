@@ -61,7 +61,7 @@ except ImportError:
     FileSystemEventHandler = object
     PatternMatchingEventHandler = object
 
-
+import nikola
 from nikola.plugin_categories import Command
 from nikola.utils import dns_sd, req_missing, get_logger, get_theme_path, STDERR_HANDLER
 LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
@@ -167,6 +167,8 @@ class CommandAuto(Command):
             watched.add(item)
         for item in self.site.config['LISTINGS_FOLDERS']:
             watched.add(item)
+        # Nikola itself (useful for developers)
+        watched.add(os.path.dirname(nikola.__file__))
 
         out_folder = self.site.config['OUTPUT_FOLDER']
         if options and options.get('browser'):
