@@ -204,8 +204,6 @@ class Galleries(Task, ImageProcessor):
                 for task in self.remove_excluded_image(image, input_folder):
                     yield task
 
-            crumbs = utils.get_crumbs(gallery, index_folder=self)
-
             for lang in self.kw['translations']:
                 # save navigation links as dependencies
                 self.kw['navigation_links|{0}'.format(lang)] = self.kw['global_context']['navigation_links'](lang)
@@ -259,7 +257,7 @@ class Galleries(Task, ImageProcessor):
 
                 context["folders"] = natsort.natsorted(
                     folders, alg=natsort.ns.F | natsort.ns.IC)
-                context["crumbs"] = crumbs
+                context["crumbs"] = utils.get_crumbs(gallery, index_folder=self, lang=lang)
                 context["permalink"] = self.site.link("gallery", gallery, lang)
                 context["enable_comments"] = self.kw['comments_in_galleries']
                 context["thumbnail_size"] = self.kw["thumbnail_size"]
