@@ -19,9 +19,11 @@ nikola/data/themes/base/messages/messages_cz.py
 nikola/data/themes/bootstrap3-jinja/assets/css/bootstrap-theme.css
 nikola/data/themes/bootstrap3-jinja/assets/css/bootstrap-theme.css.map
 nikola/data/themes/bootstrap3-jinja/assets/css/bootstrap-theme.min.css
+nikola/data/themes/bootstrap3-jinja/assets/css/bootstrap-theme.min.css.map
 nikola/data/themes/bootstrap3-jinja/assets/css/bootstrap.css
 nikola/data/themes/bootstrap3-jinja/assets/css/bootstrap.css.map
 nikola/data/themes/bootstrap3-jinja/assets/css/bootstrap.min.css
+nikola/data/themes/bootstrap3-jinja/assets/css/bootstrap.min.css.map
 nikola/data/themes/bootstrap3-jinja/assets/css/colorbox.css
 nikola/data/themes/bootstrap3-jinja/assets/css/images/controls.png
 nikola/data/themes/bootstrap3-jinja/assets/css/images/loading.gif
