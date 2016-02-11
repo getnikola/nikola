@@ -1,4 +1,4 @@
-New in master
+New in v7.7.5
 =============
 
 Features
@@ -17,17 +17,20 @@ Features
 * Hugo-like shortcodes (Issue #1707)
 * New Galician translation
 * New facilities for data persistence and data caching (Issues #2209 and #2009)
+* (internal) allow ``scripts/jinjify.py`` usage with scripts (Issue #2240)
 
 Bugfixes
 --------
 
+* Fix some rebuilds with indexes and galleries
+* Make state files work on Python 3
 * Don’t attempt to create redirects for URLs with query strings in
   WordPress imports if the site is in a subdirectory (Issue #2224)
 * Avoid some random file rebuilds (Issue #2220)
-* Honor ``MATHJAX_CONFIG``
+* Honor ``MATHJAX_CONFIG`` setting
 * Display tags and archives in a unified format, with the date on the
   left, instead of a misplaced dash in tags (Issue #2212)
-* Decide is_mathjax based on current language tags (Issue #2205)
+* Decide ``is_mathjax`` based on current language tags (Issue #2205)
 * Don't duplicate images in flowr when resizing page (Issue #2202)
 
 New in v7.7.4
