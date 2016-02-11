@@ -110,8 +110,6 @@ class Indexes(Task):
             yield self.site.generic_index_renderer(lang, filtered_posts, indexes_title, template_name, context, kw, 'render_indexes', page_link, page_path)
 
             if self.site.config['POSTS_SECTIONS']:
-
-                kw["posts_section_are_indexes"] = self.site.config['POSTS_SECTION_ARE_INDEXES']
                 index_len = len(kw['index_file'])
 
                 groups = defaultdict(list)
@@ -147,14 +145,14 @@ class Indexes(Task):
 
                     if kw["posts_section_are_indexes"]:
                         context["pagekind"].append("index")
-                        kw["posts_section_title"] = self.site.config['POSTS_SECTION_TITLE'](lang)
+                        posts_section_title = self.site.config['POSTS_SECTION_TITLE'](lang)
 
                         section_title = None
-                        if type(kw["posts_section_title"]) is dict:
-                            if section_slug in kw["posts_section_title"]:
-                                section_title = kw["posts_section_title"][section_slug]
-                        elif type(kw["posts_section_title"]) is str:
-                            section_title = kw["posts_section_title"]
+                        if type(posts_section_title) is dict:
+                            if section_slug in posts_section_title:
+                                section_title = posts_section_title[section_slug]
+                        elif type(posts_section_title) is str:
+                            section_title = posts_section_title
                         if not section_title:
                             section_title = post_list[0].section_name(lang)
                         section_title = section_title.format(name=post_list[0].section_name(lang))

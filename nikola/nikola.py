@@ -581,7 +581,12 @@ class Nikola(object):
                                              'body_end',
                                              'extra_head_data',
                                              'date_format',
-                                             'js_date_format',)
+                                             'js_date_format',
+                                             'posts_section_colors',
+                                             'posts_section_descriptions',
+                                             'posts_section_name',
+                                             'posts_section_title',
+                                             )
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
 
