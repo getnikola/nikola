@@ -143,7 +143,7 @@ class Indexes(Task):
                     context["pagekind"] = ["section_page"]
                     context["description"] = self.site.config['POSTS_SECTION_DESCRIPTIONS'](lang)[section_slug] if section_slug in self.site.config['POSTS_SECTION_DESCRIPTIONS'](lang) else ""
 
-                    if kw["posts_section_are_indexes"]:
+                    if self.site.config["POSTS_SECTION_ARE_INDEXES"]:
                         context["pagekind"].append("index")
                         posts_section_title = self.site.config['POSTS_SECTION_TITLE'](lang)
 
