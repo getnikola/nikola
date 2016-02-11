@@ -845,19 +845,19 @@ class Nikola(object):
         self.plugin_manager.getPluginLocator().setPluginInfoExtension('plugin')
         extra_plugins_dirs = self.config['EXTRA_PLUGINS_DIRS']
         if sys.version_info[0] == 3:
-            places = [
+            self._plugin_places = [
                 resource_filename('nikola', 'plugins'),
                 os.path.join(os.getcwd(), 'plugins'),
                 os.path.expanduser('~/.nikola/plugins'),
             ] + [path for path in extra_plugins_dirs if path]
         else:
-            places = [
+            self._plugin_places = [
                 resource_filename('nikola', utils.sys_encode('plugins')),
                 os.path.join(os.getcwd(), utils.sys_encode('plugins')),
                 os.path.expanduser('~/.nikola/plugins'),
             ] + [utils.sys_encode(path) for path in extra_plugins_dirs if path]
 
-        self.plugin_manager.getPluginLocator().setPluginPlaces(places)
+        self.plugin_manager.getPluginLocator().setPluginPlaces(self._plugin_places)
         self.plugin_manager.locatePlugins()
         bad_candidates = set([])
         for p in self.plugin_manager._candidates:

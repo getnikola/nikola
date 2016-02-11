@@ -43,6 +43,7 @@ except ImportError:
 import webbrowser
 from wsgiref.simple_server import make_server
 import wsgiref.util
+import pkg_resources
 
 from blinker import signal
 try:
@@ -157,7 +158,7 @@ class CommandAuto(Command):
 
         # Do not duplicate entries -- otherwise, multiple rebuilds are triggered
         watched = set([
-            'templates/', 'plugins/',
+            'templates/'
         ] + [get_theme_path(name) for name in self.site.THEMES])
         for item in self.site.config['post_pages']:
             watched.add(os.path.dirname(item[0]))
@@ -167,8 +168,10 @@ class CommandAuto(Command):
             watched.add(item)
         for item in self.site.config['LISTINGS_FOLDERS']:
             watched.add(item)
+        for item in self.site._plugin_places:
+            watched.add(item)
         # Nikola itself (useful for developers)
-        watched.add(os.path.dirname(nikola.__file__))
+        watched.add(pkg_resources.resource_filename('nikola', ''))
 
         out_folder = self.site.config['OUTPUT_FOLDER']
         if options and options.get('browser'):
