@@ -215,6 +215,10 @@ class TemplateSystem(BasePlugin):
         """Inject the directory with the lowest priority in the template search mechanism."""
         raise NotImplementedError()
 
+    def get_template_path(self, template_name):
+        """Get the path to a template or return None."""
+        raise NotImplementedError()
+
 
 class TaskMultiplier(BasePlugin):
     """Take a task and return *more* tasks."""

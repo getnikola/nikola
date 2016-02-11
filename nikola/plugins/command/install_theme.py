@@ -27,18 +27,9 @@
 """Install a theme."""
 
 from __future__ import print_function
-import os
-import io
-import time
-import requests
 
-import pygments
-from pygments.lexers import PythonLexer
-from pygments.formatters import TerminalFormatter
-
-from nikola.plugin_categories import Command
 from nikola import utils
-
+from nikola.plugin_categories import Command
 LOGGER = utils.get_logger('install_theme', utils.STDERR_HANDLER)
 
 
@@ -79,6 +70,7 @@ class CommandInstallTheme(Command):
 
     def _execute(self, options, args):
         """Install theme into current site."""
+        p = self.site.plugin_manager.getPluginByName('theme', 'Command').plugin_object
         listing = options['list']
         url = options['url']
         if args:
@@ -87,85 +79,13 @@ class CommandInstallTheme(Command):
             name = None
 
         if options['getpath'] and name:
-            path = utils.get_theme_path(name)
-            if path:
-                print(path)
-            else:
-                print('not installed')
-            return 0
+            return p.get_path(name)
 
         if name is None and not listing:
             LOGGER.error("This command needs either a theme name or the -l option.")
             return False
-        try:
-            data = requests.get(url).json()
-        except requests.exceptions.SSLError:
-            LOGGER.warning("SSL error, using http instead of https (press ^C to abort)")
-            time.sleep(1)
-            url = url.replace('https', 'http', 1)
-            data = requests.get(url).json()
+
         if listing:
-            print("Themes:")
-            print("-------")
-            for theme in sorted(data.keys()):
-                print(theme)
-            return True
+            p.list_available(url)
         else:
-            # `name` may be modified by the while loop.
-            origname = name
-            installstatus = self.do_install(name, data)
-            # See if the theme's parent is available. If not, install it
-            while True:
-                parent_name = utils.get_parent_theme_name(name)
-                if parent_name is None:
-                    break
-                try:
-                    utils.get_theme_path(parent_name)
-                    break
-                except:  # Not available
-                    self.do_install(parent_name, data)
-                    name = parent_name
-            if installstatus:
-                LOGGER.notice('Remember to set THEME="{0}" in conf.py to use this theme.'.format(origname))
-
-    def do_install(self, name, data):
-        """Download and install a theme."""
-        if name in data:
-            utils.makedirs(self.output_dir)
-            url = data[name]
-            LOGGER.info("Downloading '{0}'".format(url))
-            try:
-                zip_data = requests.get(url).content
-            except requests.exceptions.SSLError:
-                LOGGER.warning("SSL error, using http instead of https (press ^C to abort)")
-                time.sleep(1)
-                url = url.replace('https', 'http', 1)
-                zip_data = requests.get(url).content
-
-            zip_file = io.BytesIO()
-            zip_file.write(zip_data)
-            LOGGER.info("Extracting '{0}' into themes/".format(name))
-            utils.extract_all(zip_file)
-            dest_path = os.path.join(self.output_dir, name)
-        else:
-            dest_path = os.path.join(self.output_dir, name)
-            try:
-                theme_path = utils.get_theme_path(name)
-                LOGGER.error("Theme '{0}' is already installed in {1}".format(name, theme_path))
-            except Exception:
-                LOGGER.error("Can't find theme {0}".format(name))
-
-            return False
-
-        confpypath = os.path.join(dest_path, 'conf.py.sample')
-        if os.path.exists(confpypath):
-            LOGGER.notice('This theme has a sample config file.  Integrate it with yours in order to make this theme work!')
-            print('Contents of the conf.py.sample file:\n')
-            with io.open(confpypath, 'r', encoding='utf-8') as fh:
-                if self.site.colorful:
-                    print(utils.indent(pygments.highlight(
-                        fh.read(), PythonLexer(), TerminalFormatter()),
-                        4 * ' '))
-                else:
-                    print(utils.indent(fh.read(), 4 * ' '))
-        return True
+            p.do_install_deps(url, name)

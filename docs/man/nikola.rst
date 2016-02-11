@@ -100,8 +100,8 @@ The most basic commands needed to get by are:
     start development web server with automated rebuilds and reloads
 ``nikola plugin [options]``
     manage plugins from the Plugins Index (https://plugins.getnikola.com/)
-``nikola install_theme [name]``
-    install themes from the Themes Index (https://themes.getnikola.com/)
+``nikola theme [options]``
+    manage themes from the Themes Index (https://themes.getnikola.com/)
 
 Use ``nikola help`` to get a list of all commands.
 

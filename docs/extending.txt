@@ -63,13 +63,13 @@ When you run ``nikola --help`` you will see something like this:
     nikola import_feed          import a RSS/Atom dump
     nikola import_wordpress     import a WordPress dump
     nikola init                 create a Nikola site in the specified folder
-    nikola install_theme        install theme into current site
     nikola list                 list tasks from dodo file
     nikola mincss               apply mincss to the generated site
     nikola new_post             create a new blog post or site page
     nikola run                  run tasks
     nikola serve                start the test webserver
     nikola strace               use strace to list file_deps and targets
+    nikola theme                manage themes
     nikola version              print the Nikola version number
 
     nikola help                 show help / reference

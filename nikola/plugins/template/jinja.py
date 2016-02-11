@@ -124,3 +124,11 @@ class JinjaTemplates(TemplateSystem):
                         queue.append(dep_name)
             self.dependency_cache[template_name] = deps
         return self.dependency_cache[template_name]
+
+    def get_template_path(self, template_name):
+        """Get the path to a template or return None."""
+        try:
+            t = self.lookup.get_template(template_name)
+            return t.filename
+        except jinja2.TemplateNotFound:
+            return None
