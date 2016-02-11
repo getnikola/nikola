@@ -34,7 +34,7 @@ MESSAGES = {
     "Subcategories:": "ذیلی زمرے",
     "Tags and Categories": "ٹیگز اور زمرے",
     "Tags": "ٹیگز",
-    "Uncategorized": "",
+    "Uncategorized": "بے زمرہ",
     "Updates": "تازہ ترین",
     "Write your page here.": "اپنے صفحے کا متن یہاں لکھیں۔",
     "Write your post here.": "اپنی تحریر یہاں لکھیں۔",

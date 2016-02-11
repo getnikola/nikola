@@ -8,14 +8,15 @@
 # Translators:
 # Translators:
 # aitorp <aitorp@gmail.com>, 2013
+# Aitor P <aitor.plaza@unavarra.es>, 2016
 # aitorp <aitorp@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-08-31 07:50+0000\n"
-"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2016-02-03 20:07+0000\n"
+"Last-Translator: Aitor P <aitor.plaza@unavarra.es>\n"
 "Language-Team: Basque (http://www.transifex.com/ralsina/nikola/language/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +42,7 @@ msgid "Tags and Categories"
 msgstr "Etiketak eta Kategoriak"
 
 msgid "Comments"
-msgstr ""
+msgstr "Izurkinak"
 
 msgid "Read more"
 msgstr "Irakurri gehiago"
@@ -79,7 +80,7 @@ msgid "Also available in:"
 msgstr "Eskuragarria hemen ere:"
 
 msgid "Languages:"
-msgstr ""
+msgstr "Hizkuntzak"
 
 msgid "Original site"
 msgstr "Jatorrizko orria"
@@ -91,7 +92,7 @@ msgid "Archive"
 msgstr "Artxiboa"
 
 msgid "Publication date"
-msgstr ""
+msgstr "Argitalpen data"
 
 msgid "Posted:"
 msgstr "Argitaratuta:"
@@ -100,47 +101,47 @@ msgid "Posts for {month} {year}"
 msgstr "{year}ko {month}ren postak"
 
 msgid "Posts for {month} {day}, {year}"
-msgstr ""
+msgstr "{year}ko  {month}aren {day}ko postak"
 
 msgid "Nothing found."
-msgstr ""
+msgstr "Ez da ezer aurkitu"
 
 msgid "No posts found."
-msgstr ""
+msgstr "Ez dira postak aurkitu"
 
 msgid "RSS feed"
-msgstr ""
+msgstr "RSS feed-a"
 
 msgid "%d min remaining to read"
-msgstr ""
+msgstr "Gelditzen dira %d minutu irakurtzeko"
 
 msgid "Skip to main content"
-msgstr ""
+msgstr "Joan eduki nagusira"
 
 msgid "Subcategories:"
-msgstr ""
+msgstr "Azpikategoriak"
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr ""
+msgstr "(aktibo)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr ""
+msgstr "Idatzi zure post-a hemen"
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr ""
+msgstr "Idatzi zure orria hemen"
 
 msgid "Uncategorized"
-msgstr ""
+msgstr "Kategorizatu-gabeak"
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr ""
+msgstr "Eguneraketak"
 
 msgid "Authors"
-msgstr ""
+msgstr "Autoreak"
 
 msgid "Posts by %s"
-msgstr ""
+msgstr "%s-ek idatzitako postak"

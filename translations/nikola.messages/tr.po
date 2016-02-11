@@ -8,15 +8,15 @@
 # Translators:
 # Translators:
 # Batuhan Büyükgüzel <bbuyukguzel@gmail.com>, 2013-2015
-# Caner Başaran <basaran.caner@gmail.com>, 2013-2014
+# Caner Başaran <basaran.caner@gmail.com>, 2013-2014,2016
 # Caner Başaran <basaran.caner@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-08-31 07:51+0000\n"
-"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2016-01-14 21:40+0000\n"
+"Last-Translator: Caner Başaran <basaran.caner@gmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/ralsina/nikola/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -119,29 +119,29 @@ msgid "Skip to main content"
 msgstr "Ana içeriğe geç"
 
 msgid "Subcategories:"
-msgstr ""
+msgstr "Altkategoriler:"
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr ""
+msgstr "(etkin)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr ""
+msgstr "Yazınızı buraya yazın."
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr ""
+msgstr "Sayfanızı buraya yazın."
 
 msgid "Uncategorized"
-msgstr ""
+msgstr "Kategorisiz"
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr ""
+msgstr "Güncellemeler"
 
 msgid "Authors"
-msgstr ""
+msgstr "Yazarlar"
 
 msgid "Posts by %s"
-msgstr ""
+msgstr "%s tarafından yazılar"
