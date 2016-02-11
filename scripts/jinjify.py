@@ -6,6 +6,7 @@ import os
 import re
 import json
 import shutil
+import tempfile
 
 import colorama
 import jinja2
@@ -229,6 +230,11 @@ def jinjify_shortcodes(in_dir, out_dir):
             outf.write(data)
             
 
+def usage():
+    print("Usage: python {} [in-dir] [out-dir]".format(sys.argv[0]))
+    print("OR")
+    print("Usage: python {} [in-file] [out-file]".format(sys.argv[0]))
+
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         print('Performing standard conversions:')
@@ -240,6 +246,18 @@ if __name__ == "__main__":
             jinjify(m, j)
         jinjify_shortcodes('nikola/data/shortcodes/mako', 'nikola/data/shortcodes/jinja')
     elif len(sys.argv) != 3:
-        print('ERROR: needs input and output directory, or no arguments for default conversions.')
-    else:
+        print('ERROR: needs input and output directory (file), or no arguments for default conversions.')
+        usage()
+    elif os.path.isdir(sys.argv[1]) and (os.path.isdir(sys.argv[2]) or not os.path.exists(sys.argv[2])):
         jinjify(sys.argv[1], sys.argv[2])
+    elif os.path.isfile(sys.argv[1]) and (os.path.isfile(sys.argv[2]) or not os.path.exists(sys.argv[2])):
+        tmpdir = tempfile.mkdtemp()
+        indir = os.path.sep.join((tmpdir, 'in', 'templates'))
+        outdir = os.path.sep.join((tmpdir, 'out', 'templates'))
+        os.makedirs(indir)
+        shutil.copy(sys.argv[1], indir)
+        jinjify(os.path.dirname(indir), os.path.dirname(outdir))
+        shutil.move(os.path.sep.join((outdir, os.path.basename(sys.argv[1]))), sys.argv[2])
+    else:
+        print('ERROR: the two arguments must be both directories or files')
+        usage()
