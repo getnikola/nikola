@@ -448,6 +448,7 @@ class Nikola(object):
             'OUTPUT_FOLDER': 'output',
             'POSTS': (("posts/*.txt", "posts", "post.tmpl"),),
             'POSTS_SECTIONS': True,
+            'POSTS_SECTION_COLORS': {},
             'POSTS_SECTION_ARE_INDEXES': True,
             'POSTS_SECTION_DESCRIPTIONS': "",
             'POSTS_SECTION_FROM_META': False,

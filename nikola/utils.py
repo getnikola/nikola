@@ -302,7 +302,7 @@ class TranslatableSetting(object):
         self.overriden_default = False
         self.values = defaultdict()
 
-        if isinstance(inp, dict):
+        if isinstance(inp, dict) and inp:
             self.translated = True
             self.values.update(inp)
             if self.default_lang not in self.values.keys():
