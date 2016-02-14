@@ -64,6 +64,7 @@ class Media(Directive):
         html = _gen_media_embed(" ".join(self.arguments))
         return [nodes.raw('', html, format='html')]
 
+
 def _gen_media_embed(url, *q, **kw):
     if micawber is None:
         msg = req_missing(['micawber'], 'use the media directive', optional=True)

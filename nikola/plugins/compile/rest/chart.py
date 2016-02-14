@@ -146,7 +146,7 @@ def _gen_chart(chart_type, **_options):
         return '<div class="text-error">{0}</div>'.format(msg)
     options = {}
     data = _options.pop('data')
-    site = _options.pop('site')
+    _options.pop('site')
     if 'style' in _options:
         style_name = _options.pop('style')
     else:
