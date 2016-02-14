@@ -828,6 +828,13 @@ Built-in shortcodes
 
 post-list
     Will show a list of posts, see the `Post List directive for details <#post-list>`__
+
+media
+    Display media embedded from a URL, for example, this will embed a youtube video::
+
+        {{% media https://www.youtube.com/watch?v=Nck6BZga7TQ %}}
+
+    In restructured text this shortcode will fail because docutils turns that URL to a link and everything breaks, use the `media directive <#media>`__ instead.
     
 
 Template-based shortcodes

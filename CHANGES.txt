@@ -1,3 +1,11 @@
+New in master
+=============
+
+Features
+--------
+
+* New Oembed-based media shortcode (Issue #2170)
+
 New in v7.7.5
 =============
 
