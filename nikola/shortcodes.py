@@ -186,7 +186,6 @@ def _parse_shortcode_args(data, start, shortcode_name, start_pos):
         try:
             pos = _skip_whitespace(data, pos, must_be_nontrivial=True)
         except ParsingError:
-            from doit.tools import set_trace; set_trace()
             if not args and not kwargs:
                 raise ParsingError("Shortcode '{0}' starting at {1} is not terminated correctly with '%}}}}'!".format(shortcode_name, _format_position(data, start_pos)))
             else:
