@@ -1331,7 +1331,7 @@ class Nikola(object):
     def register_shortcode(self, name, f):
         """Register function f to handle shortcode "name"."""
         if name in self.shortcode_registry:
-            utils.LOGGER.warn('Shortcode name conflict: %s', name)
+            utils.LOGGER.warn('Shortcode name conflict: {}', name)
             return
         self.shortcode_registry[name] = f
 
