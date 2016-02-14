@@ -822,7 +822,7 @@ Some shortcodes use or require closing shortcodes. Like HTML, the opening and cl
 Example of a paired shortcode (note that we don't have a highlight shortcode yet ;-)::
 
     {{% highlight python %}} A bunch of code here {{% /highlight %}}
-    
+
 Built-in shortcodes
 ~~~~~~~~~~~~~~~~~~~
 
@@ -834,14 +834,28 @@ media
 
         {{% media https://www.youtube.com/watch?v=Nck6BZga7TQ %}}
 
-    In restructured text this shortcode will fail because docutils turns that URL to a link and everything breaks, use the `media directive <#media>`__ instead.
-    
+    In reStructuredText this shortcode will fail because docutils turns that URL to a link and everything breaks, use the `media directive <#media>`__ instead.
+
+chart
+    Create charts via PyGal. This is similar to the `chart directive <#chart>`__ except the syntax is adapted to
+    shortcodes. This is an example::
+
+        {{% chart Bar title='Browser usage evolution (in %)'
+        x_labels='["2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012"]'%}}
+        'Firefox', [None, None, 0, 16.6, 25, 31]
+        'Chrome',  [None, None, None, None, None, None]
+        'IE',      [85.8, 84.6, 84.7, 74.5, 66, 58.6]
+        'Others',  [14.2, 15.4, 15.3, 8.9, 9, 10.4]
+        {{% /chart %}}
+
+    In reStructuredText the quoting needed to pass arguments gets insane really fast, use the chart directive
+    instead (the syntax is nicer anyway)
 
 Template-based shortcodes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you put a template in ``shortcodes/`` called ``mycode.tmpl`` then Nikola will create a shortcode
-called ``mycode`` you can use. Any options you pass to the shortcode will be available as variables 
+called ``mycode`` you can use. Any options you pass to the shortcode will be available as variables
 for that template. If you use the shortcode as paired, then the contents between the paired tags will
 be available in the ``data`` variable.
 
