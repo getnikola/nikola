@@ -52,7 +52,7 @@ class Plugin(RestExtension):
         global _site
         _site = self.site = site
         directives.register_directive('chart', Chart)
-        self.site.register_shortcode('chart', _gen_html)
+        self.site.register_shortcode('chart', _gen_chart)
         return super(Plugin, self).set_site(site)
 
 
@@ -136,11 +136,11 @@ class Chart(Directive):
     def run(self):
         """Run the directive."""
         self.options['site'] = None
-        html = _gen_html(self.arguments[0], data='\n'.join(self.content), **self.options)
+        html = _gen_chart(self.arguments[0], data='\n'.join(self.content), **self.options)
         return [nodes.raw('', html, format='html')]
 
 
-def _gen_html(chart_type, **_options):
+def _gen_chart(chart_type, **_options):
     if pygal is None:
         msg = req_missing(['pygal'], 'use the Chart directive', optional=True)
         return '<div class="text-error">{0}</div>'.format(msg)
