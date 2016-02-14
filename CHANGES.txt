@@ -4,7 +4,7 @@ New in master
 Bugfixes
 --------
 
-* Mark as out-of-date tasks when filters fail (Issue #2169)
+* Mark as failed tasks when filters fail (Issue #2169)
 
 New in v7.7.5
 =============
