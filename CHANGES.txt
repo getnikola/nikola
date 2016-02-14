@@ -16,6 +16,7 @@ Features
   if ``GITHUB_COMMIT_SOURCE`` is set to True (Issue #2186)
 * Hugo-like shortcodes (Issue #1707)
 * New Galician translation
+* New PRESERVE_EXIF_DATA option to copy EXIF when resizing images (Issue #2204)
 * New facilities for data persistence and data caching (Issues #2209 and #2009)
 * (internal) allow ``scripts/jinjify.py`` usage with scripts (Issue #2240)
 
