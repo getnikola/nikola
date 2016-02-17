@@ -10,6 +10,8 @@ Features
 Bugfixes
 --------
 
+* Make Jupyter posts build (Issues #2248, #2252)
+
 New in v7.7.5
 =============
 
