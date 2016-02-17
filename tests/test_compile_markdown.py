@@ -52,7 +52,7 @@ class CompileMarkdownTests(BaseTestCase):
         expected_output = '''\
 <table class="codehilitetable"><tr><td class="linenos">\
 <div class="linenodiv"><pre>1</pre></div>\
-</td><td class="code"><pre class="code literal-block">\
+</td><td class="code"><pre class="code literal-block"><span></span>\
 <span class="kn">from</span> <span class="nn">this</span>
 </pre>
 </td></tr></table>
@@ -62,8 +62,8 @@ class CompileMarkdownTests(BaseTestCase):
         self.assertEquals(actual_output.strip(), expected_output.strip())
 
     def test_compile_strikethrough(self):
-        input_str = '~~strik text~~'
-        expected_output = '<p><del>strik text</del></p>'
+        input_str = '~~striked out text~~'
+        expected_output = '<p><del>striked out text</del></p>'
 
         actual_output = self.compile(input_str)
         self.assertEquals(actual_output.strip(), expected_output.strip())
