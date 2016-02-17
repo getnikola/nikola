@@ -5,7 +5,7 @@ Features
 --------
 
 * Add ``FRONT_INDEX_HEADER`` setting to allow adding greeting notices
-  to the main index page
+  to the main index page (Issue #2249)
 
 Bugfixes
 --------
