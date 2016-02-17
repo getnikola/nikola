@@ -391,6 +391,12 @@ HIDDEN_AUTHORS = ['Guest']
 # output / TRANSLATION[lang] / INDEX_PATH / index-*.html
 # INDEX_PATH = ""
 
+# Optional HTML that displayed on “main” blog index.html files.
+# May be used for a greeting. (translatable)
+FRONT_INDEX_HEADER = {
+    DEFAULT_LANG: ''
+}
+
 # Create per-month archives instead of per-year
 # CREATE_MONTHLY_ARCHIVE = False
 # Create one large archive instead of per-year

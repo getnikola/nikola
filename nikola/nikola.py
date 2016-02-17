@@ -412,6 +412,7 @@ class Nikola(object):
             'FILES_FOLDERS': {'files': ''},
             'FILTERS': {},
             'FORCE_ISO8601': False,
+            'FRONT_INDEX_HEADER': '',
             'GALLERY_FOLDERS': {'galleries': 'galleries'},
             'GALLERY_SORT_BY_DATE': True,
             'GLOBAL_CONTEXT_FILLER': [],
@@ -555,6 +556,7 @@ class Nikola(object):
                                       'BODY_END',
                                       'EXTRA_HEAD_DATA',
                                       'NAVIGATION_LINKS',
+                                      'FRONT_INDEX_HEADER',
                                       'INDEX_READ_MORE_LINK',
                                       'FEED_READ_MORE_LINK',
                                       'INDEXES_TITLE',
@@ -588,6 +590,7 @@ class Nikola(object):
                                              'posts_section_descriptions',
                                              'posts_section_name',
                                              'posts_section_title',
+                                             'front_index_header',
                                              )
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
@@ -955,6 +958,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['show_blog_title'] = self.config.get('SHOW_BLOG_TITLE')
         self._GLOBAL_CONTEXT['logo_url'] = self.config.get('LOGO_URL')
         self._GLOBAL_CONTEXT['blog_description'] = self.config.get('BLOG_DESCRIPTION')
+        self._GLOBAL_CONTEXT['front_index_header'] = self.config.get('FRONT_INDEX_HEADER')
         self._GLOBAL_CONTEXT['color_hsl_adjust_hex'] = utils.color_hsl_adjust_hex
         self._GLOBAL_CONTEXT['colorize_str_from_base_color'] = utils.colorize_str_from_base_color
 
