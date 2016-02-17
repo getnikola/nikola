@@ -5,12 +5,12 @@ Features
 --------
 
 * Add ``FRONT_INDEX_HEADER`` setting to allow adding greeting notices
-  to the main index page
+  to the main index page (Issue #2249)
 
 Bugfixes
 --------
 
-* Fix ipynb/jupyter output
+* Make Jupyter posts build (Issues #2248, #2252)
 
 New in v7.7.5
 =============
