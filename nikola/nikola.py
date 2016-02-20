@@ -1513,7 +1513,7 @@ class Nikola(object):
 
         Example:
 
-        links://slug/yellow-camaro => /posts/cars/awful/yellow-camaro/index.html
+        link://slug/yellow-camaro => /posts/cars/awful/yellow-camaro/index.html
         """
         results = [p for p in self.timeline if p.meta('slug') == name]
         if not results:
