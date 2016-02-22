@@ -821,20 +821,20 @@ Some shortcodes use or require closing shortcodes. Like HTML, the opening and cl
 
 Example of a paired shortcode (note that we don't have a highlight shortcode yet ;-)::
 
-    {{% highlight python %}} A bunch of code here {{% /highlight %}}
-    
+    {{% raw %}}{{% highlight python %}} A bunch of code here {{% /highlight %}}{{% /raw %}}
+
 Built-in shortcodes
 ~~~~~~~~~~~~~~~~~~~
 
 post-list
     Will show a list of posts, see the `Post List directive for details <#post-list>`__
-    
+
 
 Template-based shortcodes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you put a template in ``shortcodes/`` called ``mycode.tmpl`` then Nikola will create a shortcode
-called ``mycode`` you can use. Any options you pass to the shortcode will be available as variables 
+called ``mycode`` you can use. Any options you pass to the shortcode will be available as variables
 for that template. If you use the shortcode as paired, then the contents between the paired tags will
 be available in the ``data`` variable.
 
@@ -846,7 +846,7 @@ For example, if your ``shortcodes/foo.tmpl`` contains this::
 
 And your post contains this::
 
-    {{% foo bar=bla %}}
+    {{% raw %}}{{% foo bar=bla %}}{{% /raw %}}
 
 Then the output file will contain::
 
