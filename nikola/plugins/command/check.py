@@ -274,7 +274,7 @@ class CommandCheck(Command):
                         if self.checked_remote_targets[target] in [301, 308]:
                             self.logger.warn("Remote link PERMANENTLY redirected in {0}: {1} [Error {2}]".format(filename, target, self.checked_remote_targets[target]))
                         elif self.checked_remote_targets[target] in [302, 307]:
-                            self.logger.debug("Remote link temporarily redirected in {1}: {2} [HTTP: {3}]".format(filename, target, self.checked_remote_targets[target]))
+                            self.logger.debug("Remote link temporarily redirected in {0}: {1} [HTTP: {2}]".format(filename, target, self.checked_remote_targets[target]))
                         elif self.checked_remote_targets[target] > 399:
                             self.logger.error("Broken link in {0}: {1} [Error {2}]".format(filename, target, self.checked_remote_targets[target]))
                         continue
