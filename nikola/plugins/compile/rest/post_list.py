@@ -62,7 +62,7 @@ class PostList(Directive):
     Post List
     =========
     :Directive Arguments: None.
-    :Directive Options: lang, start, stop, reverse, sort, tags, categories, slugs, all, template, id
+    :Directive Options: lang, start, stop, reverse, sort, tags, categories, slugs, post_type, all, template, id
     :Directive Content: None.
 
     The posts appearing in the list can be filtered by options.
@@ -102,6 +102,10 @@ class PostList(Directive):
         Filter posts to show only posts having at least one of the ``slugs``.
         Defaults to None.
 
+    ``post_type`` : string
+        Show only ``posts``, ``pages`` or ``all``.
+        Replaces ``all``. Defaults to ``posts``.
+
     ``all`` : flag
         Shows all posts and pages in the post list.
         Defaults to show only posts with set *use_in_feeds*.
@@ -127,6 +131,7 @@ class PostList(Directive):
         'tags': directives.unchanged,
         'categories': directives.unchanged,
         'slugs': directives.unchanged,
+        'post_type': directives.unchanged,
         'all': directives.flag,
         'lang': directives.unchanged,
         'template': directives.path,
@@ -144,20 +149,22 @@ class PostList(Directive):
         categories = [c.strip().lower() for c in categories.split(',')] if categories else []
         slugs = self.options.get('slugs')
         slugs = [s.strip() for s in slugs.split(',')] if slugs else []
+        post_type = self.options.get('post_type')
         show_all = self.options.get('all', False)
         lang = self.options.get('lang', utils.LocaleBorg().current_lang)
         template = self.options.get('template', 'post_list_directive.tmpl')
         sort = self.options.get('sort')
 
-        output = _do_post_list(start, stop, reverse, tags, categories, slugs, show_all,
-                               lang, template, sort, state=self.state, site=self.site)
+        output = _do_post_list(start, stop, reverse, tags, categories, slugs, post_type,
+                               show_all, lang, template, sort, state=self.state, site=self.site)
         self.state.document.settings.record_dependencies.add("####MAGIC####TIMELINE")
         return [nodes.raw('', output, format='html')]
 
 
 def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=None,
-                  slugs=None, show_all=False, lang=None, template='post_list_directive.tmpl',
-                  sort=None, id=None, data=None, state=None, site=None):
+                  slugs=None, post_type='post', show_all=False, lang=None,
+                  template='post_list_directive.tmpl', sort=None, id=None,
+                  data=None, state=None, site=None):
     if lang is None:
         lang = utils.LocaleBorg().current_lang
     if site.invariant:  # for testing purposes
@@ -168,10 +175,24 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
     filtered_timeline = []
     posts = []
     step = -1 if reverse is None else None
+
+    # TODO: remove in v8
     if show_all is None:
         timeline = [p for p in site.timeline]
-    else:
+    elif post_type == 'page':
+        timeline = [p for p in site.timeline if not p.use_in_feeds]
+    elif post_type == 'all':
+        timeline = [p for p in site.timeline]
+    else:  # post
         timeline = [p for p in site.timeline if p.use_in_feeds]
+
+    # TODO: replaces show_all, uncomment in v8
+    # if post_type == 'page':
+    #    timeline = [p for p in site.timeline if not p.use_in_feeds]
+    # elif post_type == 'all':
+    #    timeline = [p for p in site.timeline]
+    # else: # post
+    #    timeline = [p for p in site.timeline if p.use_in_feeds]
 
     if categories:
         timeline = [p for p in timeline if p.meta('category', lang=lang).lower() in categories]
