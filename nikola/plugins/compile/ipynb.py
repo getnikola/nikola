@@ -96,7 +96,7 @@ class CompileIPynb(PageCompiler):
         with io.open(dest, "w+", encoding="utf8") as out_file:
             output = self.compile_html_string(source, is_two_file)
             output = apply_shortcodes(output, self.site.shortcode_registry, self.site, source)
-            out_file.write()
+            out_file.write(output)
 
     def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
         """Read metadata directly from ipynb file.

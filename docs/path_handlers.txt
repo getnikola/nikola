@@ -204,7 +204,7 @@ slug
     
     Example:
     
-    links://slug/yellow-camaro => /posts/cars/awful/yellow-camaro/index.html
+    link://slug/yellow-camaro => /posts/cars/awful/yellow-camaro/index.html
     
 
 tag

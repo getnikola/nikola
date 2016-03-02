@@ -1,11 +1,25 @@
 New in master
-=============
+============
 
 Features
 --------
 
 * New Oembed-based media shortcode (Issue #2170)
 * New Pygal-based chart shortcode (Issue #2170)
+
+New in v7.7.6
+=============
+
+Features
+--------
+
+* Add ``FRONT_INDEX_HEADER`` setting to allow adding greeting notices
+  to the main index page (Issue #2249)
+
+Bugfixes
+--------
+
+* Make Jupyter posts build (Issues #2248, #2252)
 
 New in v7.7.5
 =============
@@ -25,6 +39,7 @@ Features
   if ``GITHUB_COMMIT_SOURCE`` is set to True (Issue #2186)
 * Hugo-like shortcodes (Issue #1707)
 * New Galician translation
+* New PRESERVE_EXIF_DATA option to copy EXIF when resizing images (Issue #2204)
 * New facilities for data persistence and data caching (Issues #2209 and #2009)
 * (internal) allow ``scripts/jinjify.py`` usage with scripts (Issue #2240)
 

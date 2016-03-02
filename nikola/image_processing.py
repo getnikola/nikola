@@ -52,7 +52,7 @@ class ImageProcessor(object):
 
     image_ext_list_builtin = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.bmp', '.tiff']
 
-    def resize_image(self, src, dst, max_size, bigger_panoramas=True):
+    def resize_image(self, src, dst, max_size, bigger_panoramas=True, preserve_exif_data=False):
         """Make a copy of the image in the requested size."""
         if not Image or os.path.splitext(src)[1] in ['.svg', '.svgz']:
             self.resize_svg(src, dst, max_size, bigger_panoramas)
@@ -70,6 +70,7 @@ class ImageProcessor(object):
                 exif = im._getexif()
             except Exception:
                 exif = None
+            _exif = im.info.get('exif')
             if exif is not None:
                 for tag, value in list(exif.items()):
                     decoded = ExifTags.TAGS.get(tag, tag)
@@ -84,7 +85,10 @@ class ImageProcessor(object):
                         break
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
-                im.save(dst)
+                if _exif is not None and preserve_exif_data:
+                    im.save(dst, exif=_exif)
+                else:
+                    im.save(dst)
             except Exception as e:
                 self.logger.warn("Can't thumbnail {0}, using original "
                                  "image as thumbnail ({1})".format(src, e))

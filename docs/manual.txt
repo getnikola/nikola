@@ -9,7 +9,7 @@
 The Nikola Handbook
 ===================
 
-:Version: 7.7.5
+:Version: v7.7.6
 
 .. class:: alert alert-info pull-right
 
@@ -1409,13 +1409,14 @@ The currently available filters are:
 .. sidebar:: Creating your own filters
 
    You can use any program name that works in place as a filter, like ``sed -i``
-   and you can use arbitrary python functions as filters, too.
+   and you can use arbitrary Python functions as filters, too.
 
-   If your program doesn't run in-place, then you can use Nikola's runinplace function.
+   If your program doesn't run in-place, then you can use Nikola's ``runinplace`` function (from the ``filters`` module).
    For example, this is how the yui_compressor filter is implemented:
 
    .. code-block:: python
 
+      from nikola.filters import runinplace
       def yui_compressor(infile):
           return runinplace(r'yui-compressor --nomunge %1 -o %2', infile)
 

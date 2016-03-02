@@ -391,6 +391,12 @@ HIDDEN_AUTHORS = ['Guest']
 # output / TRANSLATION[lang] / INDEX_PATH / index-*.html
 # INDEX_PATH = ""
 
+# Optional HTML that displayed on “main” blog index.html files.
+# May be used for a greeting. (translatable)
+FRONT_INDEX_HEADER = {
+    DEFAULT_LANG: ''
+}
+
 # Create per-month archives instead of per-year
 # CREATE_MONTHLY_ARCHIVE = False
 # Create one large archive instead of per-year
@@ -562,6 +568,11 @@ GITHUB_COMMIT_SOURCE = True
 #
 # If set to False, it will sort by filename instead. Defaults to True
 # GALLERY_SORT_BY_DATE = True
+
+# If set to True, EXIF data will be copied when an image is thumbnailed or
+# resized.
+# PRESERVE_EXIF_DATA = False
+
 #
 # Folders containing images to be used in normal posts or pages. Images will be
 # scaled down according to IMAGE_THUMBNAIL_SIZE and MAX_IMAGE_SIZE options, but
