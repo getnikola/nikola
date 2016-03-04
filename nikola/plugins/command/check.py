@@ -32,6 +32,7 @@ import os
 import re
 import sys
 import time
+import logbook
 try:
     from urllib import unquote
     from urlparse import urlparse, urljoin, urldefrag
@@ -164,9 +165,9 @@ class CommandCheck(Command):
             print(self.help())
             return False
         if options['verbose']:
-            self.logger.level = 1
+            self.logger.level = logbook.DEBUG
         else:
-            self.logger.level = 4
+            self.logger.level = logbook.NOTICE
         failure = False
         if options['links']:
             failure |= self.scan_links(options['find_sources'], options['remote'])
@@ -343,7 +344,7 @@ class CommandCheck(Command):
 
                 elif target_filename not in self.existing_targets:
                     if os.path.exists(target_filename):
-                        self.logger.notice(u"Good link {0} => {1}".format(target, target_filename))
+                        self.logger.info("Good link {0} => {1}".format(target, target_filename))
                         self.existing_targets.add(target_filename)
                     else:
                         rv = True
