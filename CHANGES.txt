@@ -1,3 +1,17 @@
+New in master
+=============
+
+Features
+--------
+
+* Add ``post_type`` to post-list directive (Issue #2272)
+* Use ``sys.executable`` for launching pip in ``plugin`` (Issue #2275)
+
+Bugfixes
+--------
+
+* Fix a format string in ``nikola check`` (Issue #2267)
+
 New in v7.7.6
 =============
 
