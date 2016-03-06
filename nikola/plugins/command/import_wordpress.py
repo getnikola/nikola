@@ -466,12 +466,12 @@ class CommandImportWordpress(Command, ImportMixin):
         path = urlparse(url).path
         dst_path = os.path.join(*([self.output_folder, 'files'] + list(path.split('/'))))
         if self.no_downloads:
+            LOGGER.info("Skipping downloading {0} => {1}".format(url, dst_path))
+        else:
             dst_dir = os.path.dirname(dst_path)
             utils.makedirs(dst_dir)
             LOGGER.info("Downloading {0} => {1}".format(url, dst_path))
             self.download_url_content_to_file(url, dst_path)
-        else:
-            LOGGER.info("Skipping downloading {0} => {1}".format(url, dst_path))
         dst_url = '/'.join(dst_path.split(os.sep)[2:])
         links[link] = '/' + dst_url
         links[url] = '/' + dst_url
@@ -567,10 +567,13 @@ class CommandImportWordpress(Command, ImportMixin):
 
                         path = urlparse(url).path
                         dst_path = os.path.join(*([self.output_folder, 'files'] + list(path.split('/'))))
-                        dst_dir = os.path.dirname(dst_path)
-                        utils.makedirs(dst_dir)
-                        LOGGER.info("Downloading {0} => {1}".format(url, dst_path))
-                        self.download_url_content_to_file(url, dst_path)
+                        if self.no_downloads:
+                            LOGGER.info("Skipping downloading {0} => {1}".format(url, dst_path))
+                        else:
+                            dst_dir = os.path.dirname(dst_path)
+                            utils.makedirs(dst_dir)
+                            LOGGER.info("Downloading {0} => {1}".format(url, dst_path))
+                            self.download_url_content_to_file(url, dst_path)
                         dst_url = '/'.join(dst_path.split(os.sep)[2:])
                         links[url] = '/' + dst_url
 
