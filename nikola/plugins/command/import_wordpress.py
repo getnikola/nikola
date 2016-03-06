@@ -562,8 +562,8 @@ class CommandImportWordpress(Command, ImportMixin):
                         meta = {}
                         meta['size'] = size.decode('utf-8')
                         if width_key in metadata[size_key][size] and height_key in metadata[size_key][size]:
-                            meta['width'] = metadata[size_key][size][width_key]
-                            meta['height'] = metadata[size_key][size][height_key]
+                            meta['width'] = int(metadata[size_key][size][width_key])
+                            meta['height'] = int(metadata[size_key][size][height_key])
 
                         path = urlparse(url).path
                         dst_path = os.path.join(*([self.output_folder, 'files'] + list(path.split('/'))))
