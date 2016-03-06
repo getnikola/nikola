@@ -238,13 +238,11 @@ Some source code.
 ```Python
 
 import sys
-
 print sys.version
 
 ```
 
 The end.
-
 """, True)
 
         self.assertTrue(write_attachments_info.called)
@@ -262,27 +260,17 @@ The end.
         write_content.assert_any_call(
             'new_site/posts/2008/07/arzt-und-pfusch-s-i-c-k.md'.replace('/', os.sep),
             '''<img class="size-full wp-image-10 alignright" title="Arzt+Pfusch - S.I.C.K." src="http://some.blog/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png" alt="Arzt+Pfusch - S.I.C.K." width="210" height="209" />Arzt+Pfusch - S.I.C.K.Gerade bin ich \xfcber das Album <em>S.I.C.K</em> von <a title="Arzt+Pfusch" href="http://www.arztpfusch.com/" target="_blank">Arzt+Pfusch</a> gestolpert, welches Arzt+Pfusch zum Download f\xfcr lau anbieten. Das Album steht unter einer Creative Commons <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/de/">BY-NC-ND</a>-Lizenz.
-
 Die Ladung <em>noisebmstupidevildustrial</em> gibts als MP3s mit <a href="http://www.archive.org/download/dmp005/dmp005_64kb_mp3.zip">64kbps</a> und <a href="http://www.archive.org/download/dmp005/dmp005_vbr_mp3.zip">VBR</a>, als Ogg Vorbis und als FLAC (letztere <a href="http://www.archive.org/details/dmp005">hier</a>). <a href="http://www.archive.org/download/dmp005/dmp005-artwork.zip">Artwork</a> und <a href="http://www.archive.org/download/dmp005/dmp005-lyrics.txt">Lyrics</a> gibts nochmal einzeln zum Download.''', True)
         write_content.assert_any_call(
             'new_site/stories/kontakt.md'.replace('/', os.sep), """<h1>Datenschutz</h1>
-
 Ich erhebe und speichere automatisch in meine Server Log Files Informationen, die dein Browser an mich \xfcbermittelt. Dies sind:
-
 <ul>
-
     <li>Browsertyp und -version</li>
-
     <li>verwendetes Betriebssystem</li>
-
     <li>Referrer URL (die zuvor besuchte Seite)</li>
-
     <li>IP Adresse des zugreifenden Rechners</li>
-
     <li>Uhrzeit der Serveranfrage.</li>
-
 </ul>
-
 Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammenf\xfchrung dieser Daten mit anderen Datenquellen wird nicht vorgenommen, die Daten werden einzig zu statistischen Zwecken erhoben.""", True)
 
         self.assertTrue(len(self.import_command.url_map) > 0)
