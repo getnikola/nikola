@@ -10,6 +10,9 @@ Features
 Bugfixes
 --------
 
+* Fix a JSON conversion bug in the WordPress importer (Issue #2264)
+* Don’t create download directories when not downloading WordPress
+  attachments (Issue #2260)
 * Don’t display “Good link” messages in ``nikola check -l`` by default,
   can be re-enabled with ``-v`` option (Issue #2268)
 * Fix a format string in ``nikola check`` (Issue #2267)
