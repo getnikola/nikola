@@ -446,9 +446,6 @@ class CommandImportWordpress(Command, ImportMixin):
 
     def download_url_content_to_file(self, url, dst_path):
         """Download some content (attachments) to a file."""
-        if self.no_downloads:
-            return
-
         try:
             request = requests.get(url, auth=self.auth)
             if request.status_code >= 400:
@@ -468,10 +465,13 @@ class CommandImportWordpress(Command, ImportMixin):
                             'foo')
         path = urlparse(url).path
         dst_path = os.path.join(*([self.output_folder, 'files'] + list(path.split('/'))))
-        dst_dir = os.path.dirname(dst_path)
-        utils.makedirs(dst_dir)
-        LOGGER.info("Downloading {0} => {1}".format(url, dst_path))
-        self.download_url_content_to_file(url, dst_path)
+        if self.no_downloads:
+            LOGGER.info("Skipping downloading {0} => {1}".format(url, dst_path))
+        else:
+            dst_dir = os.path.dirname(dst_path)
+            utils.makedirs(dst_dir)
+            LOGGER.info("Downloading {0} => {1}".format(url, dst_path))
+            self.download_url_content_to_file(url, dst_path)
         dst_url = '/'.join(dst_path.split(os.sep)[2:])
         links[link] = '/' + dst_url
         links[url] = '/' + dst_url
@@ -567,10 +567,13 @@ class CommandImportWordpress(Command, ImportMixin):
 
                         path = urlparse(url).path
                         dst_path = os.path.join(*([self.output_folder, 'files'] + list(path.split('/'))))
-                        dst_dir = os.path.dirname(dst_path)
-                        utils.makedirs(dst_dir)
-                        LOGGER.info("Downloading {0} => {1}".format(url, dst_path))
-                        self.download_url_content_to_file(url, dst_path)
+                        if self.no_downloads:
+                            LOGGER.info("Skipping downloading {0} => {1}".format(url, dst_path))
+                        else:
+                            dst_dir = os.path.dirname(dst_path)
+                            utils.makedirs(dst_dir)
+                            LOGGER.info("Downloading {0} => {1}".format(url, dst_path))
+                            self.download_url_content_to_file(url, dst_path)
                         dst_url = '/'.join(dst_path.split(os.sep)[2:])
                         links[url] = '/' + dst_url
 
