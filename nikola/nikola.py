@@ -1737,7 +1737,7 @@ class Nikola(object):
                         if _tag_slugified in slugged_tags[lang]:
                             if tag not in self.posts_per_tag:
                                 # Tags that differ only in case
-                                other_tag = [existing for existing in self.posts_per_tag.keys() if utils.slugify(existing) == _tag_slugified][0]
+                                other_tag = [existing for existing in self.posts_per_tag.keys() if utils.slugify(existing, lang) == _tag_slugified][0]
                                 utils.LOGGER.error('You have tags that are too similar: {0} and {1}'.format(tag, other_tag))
                                 utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
                                 utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.posts_per_tag[other_tag]])))
