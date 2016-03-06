@@ -382,7 +382,7 @@ class CommandImportWordpress(Command, ImportMixin):
                 if b'<atom:link rel=' in line:
                     continue
                 xml.append(line)
-        return b'\n'.join(xml)
+        return b''.join(xml)
 
     @classmethod
     def get_channel_from_file(cls, filename):
