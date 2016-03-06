@@ -140,6 +140,7 @@ class FakePost(object):
         self._title = title
         self._slug = slug
         self._meta = {'slug': slug}
+        self.default_lang = 'en'
 
     def title(self):
         return self._title

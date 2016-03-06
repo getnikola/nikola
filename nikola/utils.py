@@ -743,18 +743,18 @@ _slugify_strip_re = re.compile(r'[^+\w\s-]')
 _slugify_hyphenate_re = re.compile(r'[-\s]+')
 
 
-def slugify(value, force=False):
+def slugify(value, lang, force=False):
     u"""Normalize string, convert to lowercase, remove non-alpha characters, convert spaces to hyphens.
 
     From Django's "django/template/defaultfilters.py".
 
-    >>> print(slugify('áéí.óú'))
+    >>> print(slugify('áéí.óú', lang='en'))
     aeiou
 
-    >>> print(slugify('foo/bar'))
+    >>> print(slugify('foo/bar', lang='en'))
     foobar
 
-    >>> print(slugify('foo bar'))
+    >>> print(slugify('foo bar', lang='en'))
     foo-bar
     """
     if not isinstance(value, unicode_str):
@@ -781,7 +781,7 @@ def slugify(value, force=False):
         return value
 
 
-def unslugify(value, discard_numbers=True):
+def unslugify(value, lang, discard_numbers=True):
     """Given a slug string (as a filename), return a human readable string.
 
     If discard_numbers is True, numbers right at the beginning of input
@@ -1555,7 +1555,7 @@ class NikolaPygmentsHTML(HtmlFormatter):
         self.nclasses = classes
         super(NikolaPygmentsHTML, self).__init__(
             cssclass='code', linenos=linenos, linenostart=linenostart, nowrap=False,
-            lineanchors=slugify(anchor_ref, force=True), anchorlinenos=True)
+            lineanchors=slugify(anchor_ref, lang=LocaleBorg().current_lang, force=True), anchorlinenos=True)
 
     def wrap(self, source, outfile):
         """Wrap the ``source``, which is a generator yielding individual lines, in custom generators."""
