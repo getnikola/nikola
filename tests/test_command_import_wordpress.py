@@ -251,7 +251,7 @@ The end.
         write_attachments_info.assert_any_call('new_site/posts/2008/07/arzt-und-pfusch-s-i-c-k.attachments.json'.replace('/', os.sep),
                                                {10: {'wordpress_user_name': 'Niko',
                                                      'files_meta': [{'width': 300, 'height': 299},
-                                                                    {'width': b'150', 'size': 'thumbnail', 'height': b'150'}],
+                                                                    {'width': 150, 'size': 'thumbnail', 'height': 150}],
                                                      'excerpt': 'Arzt+Pfusch - S.I.C.K.',
                                                      'date_utc': '2009-07-16 19:40:37',
                                                      'content': 'Das Cover von Arzt+Pfusch - S.I.C.K.',
