@@ -127,9 +127,12 @@ class ImportMixin(object):
     def write_content(cls, filename, content, rewrite_html=True):
         """Write content to file."""
         if rewrite_html:
-            doc = html.document_fromstring(content)
-            doc.rewrite_links(replacer)
-            content = html.tostring(doc, encoding='utf8')
+            try:
+                doc = html.document_fromstring(content)
+                doc.rewrite_links(replacer)
+                content = html.tostring(doc, encoding='utf8')
+            except etree.ParserError:
+                content = content.encode('utf-8')
         else:
             content = content.encode('utf-8')
 
