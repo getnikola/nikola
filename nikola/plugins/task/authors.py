@@ -251,8 +251,11 @@ class RenderAuthors(Task):
         }
         return utils.apply_filters(task, kw['filters'])
 
-    def slugify_author_name(self, name, lang):
+    def slugify_author_name(self, name, lang=None):
         """Slugify an author name."""
+        if lang is None:  # TODO: remove in v8
+            utils.LOGGER.warn("RenderAuthors.slugify_author_name() called without language!")
+            lang = ''
         if self.site.config['SLUG_AUTHOR_PATH']:
             name = utils.slugify(name, lang)
         return name

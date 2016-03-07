@@ -390,6 +390,9 @@ class RenderTags(Task):
 
     def slugify_tag_name(self, name, lang):
         """Slugify a tag name."""
+        if lang is None:  # TODO: remove in v8
+            utils.LOGGER.warn("RenderTags.slugify_tag_name() called without language!")
+            lang = ''
         if self.site.config['SLUG_TAG_PATH']:
             name = utils.slugify(name, lang)
         return name
@@ -464,6 +467,9 @@ class RenderTags(Task):
 
     def slugify_category_name(self, name, lang):
         """Slugify a category name."""
+        if lang is None:  # TODO: remove in v8
+            utils.LOGGER.warn("RenderTags.slugify_category_name() called without language!")
+            lang = ''
         path = self.site.parse_category_name(name)
         if self.site.config['CATEGORY_OUTPUT_FLAT_HIERARCHY']:
             path = path[-1:]  # only the leaf
