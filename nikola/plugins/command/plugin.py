@@ -29,6 +29,7 @@
 from __future__ import print_function
 import io
 import os
+import sys
 import shutil
 import subprocess
 import time
@@ -254,7 +255,7 @@ class CommandPlugin(Command):
             LOGGER.notice('This plugin has Python dependencies.')
             LOGGER.info('Installing dependencies with pip...')
             try:
-                subprocess.check_call(('pip', 'install', '-r', reqpath))
+                subprocess.check_call((sys.executable, '-m', 'pip', 'install', '-r', reqpath))
             except subprocess.CalledProcessError:
                 LOGGER.error('Could not install the dependencies.')
                 print('Contents of the requirements.txt file:\n')

@@ -26,7 +26,12 @@ def sed_like_thing(pattern, repl, path):
 
 if __name__ == "__main__":
     inpf = raw_input if sys.version_info[0] == 2 else input
-    version = inpf("New version number (in format X.Y.Z): ").strip()
+    while True:
+        version = inpf("New version number (in format X.Y.Z): ").strip()
+        if version.startswith('v'):
+            print("ERROR: the version number must not start with v.")
+        else:
+            break
 
     for doc in glob.glob(os.path.join("docs/*.txt")):
         sed_like_thing(":Version: .*", ":Version: {0}".format(version), doc)

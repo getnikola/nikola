@@ -1,11 +1,24 @@
 New in master
-============
+=============
 
 Features
 --------
 
-* New Oembed-based media shortcode (Issue #2170)
 * New Pygal-based chart shortcode (Issue #2170)
+* Add ``post_type`` to post-list directive (Issue #2272)
+* Use ``sys.executable`` for launching pip in ``plugin`` (Issue #2275)
+
+Bugfixes
+--------
+
+* Fix a JSON conversion bug in the WordPress importer (Issue #2264)
+* Don’t create download directories when not downloading WordPress
+  attachments (Issue #2260)
+* Don’t display “Good link” messages in ``nikola check -l`` by default,
+  can be re-enabled with ``-v`` option (Issue #2268)
+* Fix a format string in ``nikola check`` (Issue #2267)
+* Don't crash wordpress importer when posts are "empty" (Issue #2263)
+* Don't put untranslated and nonexistant posts in sitemap (Issue #2289)
 
 New in v7.7.6
 =============
