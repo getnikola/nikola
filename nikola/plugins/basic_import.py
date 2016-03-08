@@ -142,7 +142,7 @@ class ImportMixin(object):
 
     @classmethod
     def write_post(cls, filename, content, headers, compiler, rewrite_html=True):
-    """Ask the specified compiler to write the post to disk."""
+        """Ask the specified compiler to write the post to disk."""
         if rewrite_html:
             try:
                 doc = html.document_fromstring(content)
