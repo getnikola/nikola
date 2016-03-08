@@ -8,7 +8,7 @@ from nikola.utils import demote_headers, TranslatableSetting
 
 
 class dummy(object):
-    pass
+    default_lang = 'en'
 
 
 class GetMetaTest(unittest.TestCase):
@@ -26,7 +26,6 @@ class GetMetaTest(unittest.TestCase):
         post = dummy()
         post.source_path = 'file_with_metadata'
         post.metadata_path = 'file_with_metadata.meta'
-        post.default_lang = 'en'
 
         with mock.patch('nikola.post.io.open', opener_mock, create=True):
             meta, nsm = get_meta(post)
@@ -53,7 +52,6 @@ class GetMetaTest(unittest.TestCase):
         post = dummy()
         post.source_path = 'file_with_metadata'
         post.metadata_path = 'file_with_metadata.meta'
-        post.default_lang = 'en'
 
         with mock.patch('nikola.post.io.open', opener_mock, create=True):
             meta, nsm = get_meta(post)
@@ -78,7 +76,6 @@ class GetMetaTest(unittest.TestCase):
         post = dummy()
         post.source_path = 'file_with_metadata'
         post.metadata_path = 'file_with_metadata.meta'
-        post.default_lang = 'en'
 
         with mock.patch('nikola.post.io.open', opener_mock, create=True):
             meta, nsm = get_meta(post, 'file_with_metadata')
@@ -104,7 +101,6 @@ class GetMetaTest(unittest.TestCase):
         post = dummy()
         post.source_path = 'Slugify this'
         post.metadata_path = 'Slugify this.meta'
-        post.default_lang = 'en'
 
         with mock.patch('nikola.post.io.open', opener_mock, create=True):
             meta, nsm = get_meta(post, 'Slugify this')
@@ -120,7 +116,6 @@ class GetMetaTest(unittest.TestCase):
         post = dummy()
         post.source_path = '2013-01-23-the_slug-dubdubtitle.md'
         post.metadata_path = '2013-01-23-the_slug-dubdubtitle.meta'
-        post.default_lang = 'en'
         with mock.patch('nikola.post.io.open', create=True):
             meta, _ = get_meta(
                 post,
@@ -134,7 +129,6 @@ class GetMetaTest(unittest.TestCase):
         post = dummy()
         post.source_path = 'some/path/the_slug.md'
         post.metadata_path = 'some/path/the_slug.meta'
-        post.default_lang = 'en'
         with mock.patch('nikola.post.io.open', create=True):
             meta, _ = get_meta(post)
 
