@@ -48,6 +48,7 @@ class Plugin(RestExtension):
         """Set Nikola site."""
         self.site = site
         directives.register_directive('media', Media)
+        self.site.register_shortcode('media', _gen_media_embed)
         return super(Plugin, self).set_site(site)
 
 
@@ -60,9 +61,13 @@ class Media(Directive):
 
     def run(self):
         """Run media directive."""
-        if micawber is None:
-            msg = req_missing(['micawber'], 'use the media directive', optional=True)
-            return [nodes.raw('', '<div class="text-error">{0}</div>'.format(msg), format='html')]
+        html = _gen_media_embed(" ".join(self.arguments))
+        return [nodes.raw('', html, format='html')]
 
-        providers = micawber.bootstrap_basic()
-        return [nodes.raw('', micawber.parse_text(" ".join(self.arguments), providers), format='html')]
+
+def _gen_media_embed(url, *q, **kw):
+    if micawber is None:
+        msg = req_missing(['micawber'], 'use the media directive', optional=True)
+        return '<div class="text-error">{0}</div>'.format(msg)
+    providers = micawber.bootstrap_basic()
+    return micawber.parse_text(url, providers)
