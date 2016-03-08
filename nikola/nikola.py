@@ -827,7 +827,7 @@ class Nikola(object):
         # Set persistent state facility
         self.state = Persistor(os.path.join('state_data.json'))
 
-        # Set cache facility
+        # Set cache 0facility
         self.cache = Persistor(os.path.join(self.config['CACHE_FOLDER'], 'cache_data.json'))
 
     def init_plugins(self, commands_only=False):
@@ -870,7 +870,7 @@ class Nikola(object):
                     # FIXME TemplateSystem should not be needed
                     if p[-1].details.get('Nikola', 'PluginCategory') not in {'Command', 'Template'}:
                         bad_candidates.add(p)
-            else:  # Not commands-only
+            elif self.configured:  # Not commands-only, and configured
                 # Remove compilers we don't use
                 if p[-1].name in self.bad_compilers:
                     bad_candidates.add(p)
