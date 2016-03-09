@@ -105,8 +105,7 @@ class RenderTags(Task):
             intersect = set(tags.keys()) & set(categories.keys())
             if len(intersect) > 0:
                 for slug in intersect:
-                    utils.LOGGER.error("Category '{0}' and tag '{1}' both have the same slug '{2}'!".format('/'.join(categories[slug]), tags[slug], slug))
-                sys.exit(1)
+                    utils.LOGGER.error("Category '{0}' and tag '{1}' both have the same slug '{2}'!".format(categories[slug], tags[slug], slug))
 
         # Test for category slug clashes
         categories = {}
@@ -115,13 +114,13 @@ class RenderTags(Task):
             for part in slug:
                 if len(part) == 0:
                     utils.LOGGER.error("Category '{0}' yields invalid slug '{1}'!".format(category, '/'.join(slug)))
-                    sys.exit(1)
+                    raise RuntimeError("Category '{0}' yields invalid slug '{1}'!".format(category, '/'.join(slug)))
             if slug in categories:
                 other_category = categories[slug]
                 utils.LOGGER.error('You have categories that are too similar: {0} and {1}'.format(category, other_category))
                 utils.LOGGER.error('Category {0} is used in: {1}'.format(category, ', '.join([p.source_path for p in self.site.posts_per_category[category]])))
                 utils.LOGGER.error('Category {0} is used in: {1}'.format(other_category, ', '.join([p.source_path for p in self.site.posts_per_category[other_category]])))
-                sys.exit(1)
+                raise RuntimeError("Category / Tag name collision.")
             categories[slug] = category
 
         tag_list = list(self.site.posts_per_tag.items())

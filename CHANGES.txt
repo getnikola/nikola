@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Don't call sys.exit() from plugins if possible (Issue #1839)
 * Fix a JSON conversion bug in the WordPress importer (Issue #2264)
 * Don’t create download directories when not downloading WordPress
   attachments (Issue #2260)
