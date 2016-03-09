@@ -57,8 +57,11 @@ def apply_to_binary_file(f):
         with open(fname, 'rb') as inf:
             data = inf.read()
         data = f(data)
-        with open(fname, 'wb+') as outf:
-            outf.write(data)
+        if data is not False:
+            with open(fname, 'wb+') as outf:
+                outf.write(data)
+        else:
+            return False
 
     return f_in_file
 
