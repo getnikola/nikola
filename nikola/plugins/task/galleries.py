@@ -86,6 +86,7 @@ class Galleries(Task, ImageProcessor):
             'tzinfo': site.tzinfo,
             'comments_in_galleries': site.config['COMMENTS_IN_GALLERIES'],
             'generate_rss': site.config['GENERATE_RSS'],
+            'preserve_exif_data': site.config['PRESERVE_EXIF_DATA'],
         }
 
         # Verify that no folder in GALLERY_FOLDERS appears twice
@@ -473,7 +474,7 @@ class Galleries(Task, ImageProcessor):
             'targets': [thumb_path],
             'actions': [
                 (self.resize_image,
-                    (img, thumb_path, self.kw['thumbnail_size']))
+                    (img, thumb_path, self.kw['thumbnail_size'], False, self.kw['preserve_exif_data']))
             ],
             'clean': True,
             'uptodate': [utils.config_changed({
@@ -488,7 +489,7 @@ class Galleries(Task, ImageProcessor):
             'targets': [orig_dest_path],
             'actions': [
                 (self.resize_image,
-                    (img, orig_dest_path, self.kw['max_image_size']))
+                    (img, orig_dest_path, self.kw['max_image_size'], False, self.kw['preserve_exif_data']))
             ],
             'clean': True,
             'uptodate': [utils.config_changed({

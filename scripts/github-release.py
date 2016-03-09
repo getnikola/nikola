@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import subprocess
-import sys
 import os
+import argparse
 
 if not os.path.exists('.pypt/gh-token'):
     print("To use this script, you must create a GitHub token first.")
@@ -9,11 +9,19 @@ if not os.path.exists('.pypt/gh-token'):
     print("Then, put it in a file named .pypt/gh-token")
     exit(1)
 
-inpf = input if sys.version_info[0] == 3 else raw_input
+parser = argparse.ArgumentParser(description="GitHub Release helper")
+parser.add_argument("FILE", nargs=1, help="Markdown file to use")
+parser.add_argument("TAG", nargs=1, help="Tag name (usually vX.Y.Z)")
 
-FILE = inpf("Markdown file to use: ")
+args = parser.parse_args()
+
+if not args.TAG[0].startswith("v"):
+    print("WARNING: tag should start with v")
+    i = input("Add `v` to tag? [y/n] ")
+    if i.lower().strip().startswith('y'):
+        args.TAG[0] = 'v' + args.TAG[0]
+
 BASEDIR = os.getcwd()
 REPO = 'getnikola/nikola'
-TAG = inpf("Tag name (usually vX.Y.Z): ")
 
-subprocess.call(['.pypt/ghrel', FILE, BASEDIR, REPO, TAG])
+subprocess.call(['.pypt/ghrel', args.FILE[0], BASEDIR, REPO, args.TAG[0]])

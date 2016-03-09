@@ -158,7 +158,7 @@ class Sitemap(LateTask):
                         continue
                     alternates = []
                     if post:
-                        for lang in kw['translations']:
+                        for lang in post.translated_to:
                             alt_url = post.permalink(lang=lang, absolute=True)
                             if encodelink(loc) == alt_url:
                                 continue
@@ -215,7 +215,7 @@ class Sitemap(LateTask):
                         loc = urljoin(base_url, base_path + path)
                         alternates = []
                         if post:
-                            for lang in kw['translations']:
+                            for lang in post.translated_to:
                                 alt_url = post.permalink(lang=lang, absolute=True)
                                 if encodelink(loc) == alt_url:
                                     continue

@@ -1,10 +1,40 @@
 New in master
 =============
 
+Features
+--------
+
+* New ``--one-file`` option to wordpress importer (Issue #2262)
+* New Pygal-based chart shortcode (Issue #2170)
+* Add ``post_type`` to post-list directive (Issue #2272)
+* Use ``sys.executable`` for launching pip in ``plugin`` (Issue #2275)
+
 Bugfixes
 --------
 
+* Fix a JSON conversion bug in the WordPress importer (Issue #2264)
+* Don’t create download directories when not downloading WordPress
+  attachments (Issue #2260)
+* Don’t display “Good link” messages in ``nikola check -l`` by default,
+  can be re-enabled with ``-v`` option (Issue #2268)
+* Fix a format string in ``nikola check`` (Issue #2267)
+* Don't crash wordpress importer when posts are "empty" (Issue #2263)
+* Don't put untranslated and nonexistant posts in sitemap (Issue #2289)
 * Mark as failed tasks when filters fail (Issue #2169)
+
+New in v7.7.6
+=============
+
+Features
+--------
+
+* Add ``FRONT_INDEX_HEADER`` setting to allow adding greeting notices
+  to the main index page (Issue #2249)
+
+Bugfixes
+--------
+
+* Make Jupyter posts build (Issues #2248, #2252)
 
 New in v7.7.5
 =============
@@ -24,6 +54,7 @@ Features
   if ``GITHUB_COMMIT_SOURCE`` is set to True (Issue #2186)
 * Hugo-like shortcodes (Issue #1707)
 * New Galician translation
+* New PRESERVE_EXIF_DATA option to copy EXIF when resizing images (Issue #2204)
 * New facilities for data persistence and data caching (Issues #2209 and #2009)
 * (internal) allow ``scripts/jinjify.py`` usage with scripts (Issue #2240)
 

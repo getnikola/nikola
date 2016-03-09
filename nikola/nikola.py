@@ -412,6 +412,7 @@ class Nikola(object):
             'FILES_FOLDERS': {'files': ''},
             'FILTERS': {},
             'FORCE_ISO8601': False,
+            'FRONT_INDEX_HEADER': '',
             'GALLERY_FOLDERS': {'galleries': 'galleries'},
             'GALLERY_SORT_BY_DATE': True,
             'GLOBAL_CONTEXT_FILLER': [],
@@ -454,6 +455,7 @@ class Nikola(object):
             'POSTS_SECTION_FROM_META': False,
             'POSTS_SECTION_NAME': "",
             'POSTS_SECTION_TITLE': "{name}",
+            'PRESERVE_EXIF_DATA': False,
             'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
             'PANDOC_OPTIONS': [],
             'PRETTY_URLS': False,
@@ -554,6 +556,7 @@ class Nikola(object):
                                       'BODY_END',
                                       'EXTRA_HEAD_DATA',
                                       'NAVIGATION_LINKS',
+                                      'FRONT_INDEX_HEADER',
                                       'INDEX_READ_MORE_LINK',
                                       'FEED_READ_MORE_LINK',
                                       'INDEXES_TITLE',
@@ -587,6 +590,7 @@ class Nikola(object):
                                              'posts_section_descriptions',
                                              'posts_section_name',
                                              'posts_section_title',
+                                             'front_index_header',
                                              )
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
@@ -866,7 +870,7 @@ class Nikola(object):
                     # FIXME TemplateSystem should not be needed
                     if p[-1].details.get('Nikola', 'PluginCategory') not in {'Command', 'Template'}:
                         bad_candidates.add(p)
-            else:  # Not commands-only
+            elif self.configured:  # Not commands-only, and configured
                 # Remove compilers we don't use
                 if p[-1].name in self.bad_compilers:
                     bad_candidates.add(p)
@@ -954,6 +958,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['show_blog_title'] = self.config.get('SHOW_BLOG_TITLE')
         self._GLOBAL_CONTEXT['logo_url'] = self.config.get('LOGO_URL')
         self._GLOBAL_CONTEXT['blog_description'] = self.config.get('BLOG_DESCRIPTION')
+        self._GLOBAL_CONTEXT['front_index_header'] = self.config.get('FRONT_INDEX_HEADER')
         self._GLOBAL_CONTEXT['color_hsl_adjust_hex'] = utils.color_hsl_adjust_hex
         self._GLOBAL_CONTEXT['colorize_str_from_base_color'] = utils.colorize_str_from_base_color
 
@@ -1331,7 +1336,7 @@ class Nikola(object):
     def register_shortcode(self, name, f):
         """Register function f to handle shortcode "name"."""
         if name in self.shortcode_registry:
-            utils.LOGGER.warn('Shortcode name conflict: %s', name)
+            utils.LOGGER.warn('Shortcode name conflict: {}', name)
             return
         self.shortcode_registry[name] = f
 
@@ -1508,7 +1513,7 @@ class Nikola(object):
 
         Example:
 
-        links://slug/yellow-camaro => /posts/cars/awful/yellow-camaro/index.html
+        link://slug/yellow-camaro => /posts/cars/awful/yellow-camaro/index.html
         """
         results = [p for p in self.timeline if p.meta('slug') == name]
         if not results:
