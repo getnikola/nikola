@@ -9,8 +9,8 @@ print(""".. title: Path Handlers for Nikola
 .. slug: path-handlers
 .. author: The Nikola Team
 
-Nikola supports special links with the syntax ``link://kind/name``. Here is
-the description for all the supported kinds.
+Nikola supports special links with the syntax ``link://kind/name``. In the templates you can also
+use ``_link(kind, name)`` Here is the description for all the supported kinds.
 
 .. class:: dl-horizontal
 """)
