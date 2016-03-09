@@ -140,6 +140,24 @@ class ImportMixin(object):
         with open(filename, "wb+") as fd:
             fd.write(content)
 
+    @classmethod
+    def write_post(cls, filename, content, headers, compiler, rewrite_html=True):
+        """Ask the specified compiler to write the post to disk."""
+        if rewrite_html:
+            try:
+                doc = html.document_fromstring(content)
+                doc.rewrite_links(replacer)
+                content = html.tostring(doc, encoding='utf8')
+            except etree.ParserError:
+                pass
+        if isinstance(content, utils.bytes_str):
+            content = content.decode('utf-8')
+        compiler.create_post(
+            filename,
+            content=content,
+            onefile=True,
+            **headers)
+
     @staticmethod
     def write_metadata(filename, title, slug, post_date, description, tags, **kwargs):
         """Write metadata to meta file."""

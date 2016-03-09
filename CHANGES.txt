@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New ``--one-file`` option to wordpress importer (Issue #2262)
 * New Pygal-based chart shortcode (Issue #2170)
 * Add ``post_type`` to post-list directive (Issue #2272)
 * Use ``sys.executable`` for launching pip in ``plugin`` (Issue #2275)

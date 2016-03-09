@@ -15,6 +15,7 @@ class BasicCommandImportWordpress(BaseTestCase):
     def setUp(self):
         self.module = nikola.plugins.command.import_wordpress
         self.import_command = self.module.CommandImportWordpress()
+        self.import_command.onefile = False
         self.import_filename = os.path.abspath(os.path.join(
             os.path.dirname(__file__), 'wordpress_export_example.xml'))
 
@@ -206,6 +207,7 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
 
         write_metadata = mock.MagicMock()
         write_content = mock.MagicMock()
+        write_post = mock.MagicMock()
         write_attachments_info = mock.MagicMock()
         download_mock = mock.MagicMock()
 
