@@ -290,7 +290,7 @@ def php_template_injection(data):
 def cssminify(data):
     """Minify CSS using http://cssminifier.com/."""
     try:
-        url = 'http://cssminifier.comFOO/raw'
+        url = 'http://cssminifier.com/raw'
         _data = {'input': data}
         response = requests.post(url, data=_data)
         if response.status_code != 200:
