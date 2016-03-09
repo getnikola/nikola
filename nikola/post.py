@@ -115,8 +115,8 @@ class Post(object):
         self.source_path = source_path  # posts/blah.txt
         self.post_name = os.path.splitext(source_path)[0]  # posts/blah
         # cache[\/]posts[\/]blah.html
-        self.base_path = os.path.join(self.config['CACHE_FOLDER'], self.post_name + ".html")
-        # cache/posts/blah.html
+        self.base_path = os.path.join(self.config['CACHE_FOLDER'], self.source_path + ".html")
+        # cache/posts/blah.txt.html
         self._base_path = self.base_path.replace('\\', '/')
         self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
         self.folder = destination
