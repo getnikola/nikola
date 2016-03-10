@@ -251,10 +251,13 @@ class RenderAuthors(Task):
         }
         return utils.apply_filters(task, kw['filters'])
 
-    def slugify_author_name(self, name):
+    def slugify_author_name(self, name, lang=None):
         """Slugify an author name."""
+        if lang is None:  # TODO: remove in v8
+            utils.LOGGER.warn("RenderAuthors.slugify_author_name() called without language!")
+            lang = ''
         if self.site.config['SLUG_AUTHOR_PATH']:
-            name = utils.slugify(name)
+            name = utils.slugify(name, lang)
         return name
 
     def author_index_path(self, name, lang):
@@ -279,13 +282,13 @@ class RenderAuthors(Task):
             return [_f for _f in [
                 self.site.config['TRANSLATIONS'][lang],
                 self.site.config['AUTHOR_PATH'],
-                self.slugify_author_name(name),
+                self.slugify_author_name(name, lang),
                 self.site.config['INDEX_FILE']] if _f]
         else:
             return [_f for _f in [
                 self.site.config['TRANSLATIONS'][lang],
                 self.site.config['AUTHOR_PATH'],
-                self.slugify_author_name(name) + ".html"] if _f]
+                self.slugify_author_name(name, lang) + ".html"] if _f]
 
     def author_atom_path(self, name, lang):
         """Link to an author's Atom feed.
@@ -295,7 +298,7 @@ class RenderAuthors(Task):
         link://author_atom/joe => /authors/joe.atom
         """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['AUTHOR_PATH'], self.slugify_author_name(name) + ".atom"] if
+                              self.site.config['AUTHOR_PATH'], self.slugify_author_name(name, lang) + ".atom"] if
                 _f]
 
     def author_rss_path(self, name, lang):
@@ -306,7 +309,7 @@ class RenderAuthors(Task):
         link://author_rss/joe => /authors/joe.rss
         """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['AUTHOR_PATH'], self.slugify_author_name(name) + ".xml"] if
+                              self.site.config['AUTHOR_PATH'], self.slugify_author_name(name, lang) + ".xml"] if
                 _f]
 
     def _add_extension(self, path, extension):

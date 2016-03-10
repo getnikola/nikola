@@ -98,31 +98,32 @@ class RenderTags(Task):
         if not self.site.posts_per_tag and not self.site.posts_per_category:
             return
 
-        if kw['category_path'] == kw['tag_path']:
-            tags = {self.slugify_tag_name(tag): tag for tag in self.site.posts_per_tag.keys()}
-            cats = {tuple(self.slugify_category_name(category)): category for category in self.site.posts_per_category.keys()}
-            categories = {k[0]: v for k, v in cats.items() if len(k) == 1}
-            intersect = set(tags.keys()) & set(categories.keys())
-            if len(intersect) > 0:
-                for slug in intersect:
-                    utils.LOGGER.error("Category '{0}' and tag '{1}' both have the same slug '{2}'!".format('/'.join(categories[slug]), tags[slug], slug))
-                sys.exit(1)
-
-        # Test for category slug clashes
-        categories = {}
-        for category in self.site.posts_per_category.keys():
-            slug = tuple(self.slugify_category_name(category))
-            for part in slug:
-                if len(part) == 0:
-                    utils.LOGGER.error("Category '{0}' yields invalid slug '{1}'!".format(category, '/'.join(slug)))
+        for lang in kw["translations"]:
+            if kw['category_path'][lang] == kw['tag_path'][lang]:
+                tags = {self.slugify_tag_name(tag, lang): tag for tag in self.site.tags_per_language[lang]}
+                cats = {tuple(self.slugify_category_name(category, lang)): category for category in self.site.posts_per_category.keys()}
+                categories = {k[0]: v for k, v in cats.items() if len(k) == 1}
+                intersect = set(tags.keys()) & set(categories.keys())
+                if len(intersect) > 0:
+                    for slug in intersect:
+                        utils.LOGGER.error("Category '{0}' and tag '{1}' both have the same slug '{2}' for language {3}!".format('/'.join(categories[slug]), tags[slug], slug, lang))
                     sys.exit(1)
-            if slug in categories:
-                other_category = categories[slug]
-                utils.LOGGER.error('You have categories that are too similar: {0} and {1}'.format(category, other_category))
-                utils.LOGGER.error('Category {0} is used in: {1}'.format(category, ', '.join([p.source_path for p in self.site.posts_per_category[category]])))
-                utils.LOGGER.error('Category {0} is used in: {1}'.format(other_category, ', '.join([p.source_path for p in self.site.posts_per_category[other_category]])))
-                sys.exit(1)
-            categories[slug] = category
+
+            # Test for category slug clashes
+            categories = {}
+            for category in self.site.posts_per_category.keys():
+                slug = tuple(self.slugify_category_name(category, lang))
+                for part in slug:
+                    if len(part) == 0:
+                        utils.LOGGER.error("Category '{0}' yields invalid slug '{1}'!".format(category, '/'.join(slug)))
+                        sys.exit(1)
+                if slug in categories:
+                    other_category = categories[slug]
+                    utils.LOGGER.error('You have categories that are too similar: {0} and {1} (language {2})'.format(category, other_category, lang))
+                    utils.LOGGER.error('Category {0} is used in: {1}'.format(category, ', '.join([p.source_path for p in self.site.posts_per_category[category]])))
+                    utils.LOGGER.error('Category {0} is used in: {1}'.format(other_category, ', '.join([p.source_path for p in self.site.posts_per_category[other_category]])))
+                    sys.exit(1)
+                categories[slug] = category
 
         tag_list = list(self.site.posts_per_tag.items())
         cat_list = list(self.site.posts_per_category.items())
@@ -186,7 +187,7 @@ class RenderTags(Task):
             task['clean'] = True
             yield utils.apply_filters(task, kw['filters'])
 
-    def _create_tags_page(self, kw, include_tags=True, include_categories=True):
+    def _create_tags_page(self, kw, lang, include_tags=True, include_categories=True):
         """Create a global "all your tags/categories" page for each language."""
         categories = [cat.category_name for cat in self.site.category_hierarchy]
         has_categories = (categories != []) and include_categories
@@ -194,59 +195,59 @@ class RenderTags(Task):
         kw = kw.copy()
         if include_categories:
             kw['categories'] = categories
-        for lang in kw["translations"]:
-            tags = natsort.natsorted([tag for tag in self.site.tags_per_language[lang]
-                                      if len(self.site.posts_per_tag[tag]) >= kw["taglist_minimum_post_count"]],
-                                     alg=natsort.ns.F | natsort.ns.IC)
-            has_tags = (tags != []) and include_tags
-            if include_tags:
-                kw['tags'] = tags
-            output_name = os.path.join(
-                kw['output_folder'], self.site.path('tag_index' if has_tags else 'category_index', None, lang))
-            context = {}
-            if has_categories and has_tags:
-                context["title"] = kw["messages"][lang]["Tags and Categories"]
-            elif has_categories:
-                context["title"] = kw["messages"][lang]["Categories"]
-            else:
-                context["title"] = kw["messages"][lang]["Tags"]
-            if has_tags:
-                context["items"] = [(tag, self.site.link("tag", tag, lang)) for tag
-                                    in tags]
-            else:
-                context["items"] = None
-            if has_categories:
-                context["cat_items"] = [(tag, self.site.link("category", tag, lang)) for tag
-                                        in categories]
-                context['cat_hierarchy'] = [(node.name, node.category_name, node.category_path,
-                                             self.site.link("category", node.category_name),
-                                             node.indent_levels, node.indent_change_before,
-                                             node.indent_change_after)
-                                            for node in self.site.category_hierarchy]
-            else:
-                context["cat_items"] = None
-            context["permalink"] = self.site.link("tag_index" if has_tags else "category_index", None, lang)
-            context["description"] = context["title"]
-            context["pagekind"] = ["list", "tags_page"]
-            task = self.site.generic_post_list_renderer(
-                lang,
-                [],
-                output_name,
-                template_name,
-                kw['filters'],
-                context,
-            )
-            task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.tags:page')]
-            task['basename'] = str(self.name)
-            yield task
+        tags = natsort.natsorted([tag for tag in self.site.tags_per_language[lang]
+                                  if len(self.site.posts_per_tag[tag]) >= kw["taglist_minimum_post_count"]],
+                                 alg=natsort.ns.F | natsort.ns.IC)
+        has_tags = (tags != []) and include_tags
+        if include_tags:
+            kw['tags'] = tags
+        output_name = os.path.join(
+            kw['output_folder'], self.site.path('tag_index' if has_tags else 'category_index', None, lang))
+        context = {}
+        if has_categories and has_tags:
+            context["title"] = kw["messages"][lang]["Tags and Categories"]
+        elif has_categories:
+            context["title"] = kw["messages"][lang]["Categories"]
+        else:
+            context["title"] = kw["messages"][lang]["Tags"]
+        if has_tags:
+            context["items"] = [(tag, self.site.link("tag", tag, lang)) for tag
+                                in tags]
+        else:
+            context["items"] = None
+        if has_categories:
+            context["cat_items"] = [(tag, self.site.link("category", tag, lang)) for tag
+                                    in categories]
+            context['cat_hierarchy'] = [(node.name, node.category_name, node.category_path,
+                                         self.site.link("category", node.category_name),
+                                         node.indent_levels, node.indent_change_before,
+                                         node.indent_change_after)
+                                        for node in self.site.category_hierarchy]
+        else:
+            context["cat_items"] = None
+        context["permalink"] = self.site.link("tag_index" if has_tags else "category_index", None, lang)
+        context["description"] = context["title"]
+        context["pagekind"] = ["list", "tags_page"]
+        task = self.site.generic_post_list_renderer(
+            lang,
+            [],
+            output_name,
+            template_name,
+            kw['filters'],
+            context,
+        )
+        task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.tags:page')]
+        task['basename'] = str(self.name)
+        yield task
 
     def list_tags_page(self, kw):
         """Create a global "all your tags/categories" page for each language."""
-        if self.site.config['TAG_PATH'] == self.site.config['CATEGORY_PATH']:
-            yield self._create_tags_page(kw, True, True)
-        else:
-            yield self._create_tags_page(kw, False, True)
-            yield self._create_tags_page(kw, True, False)
+        for lang in kw["translations"]:
+            if self.site.config['TAG_PATH'][lang] == self.site.config['CATEGORY_PATH'][lang]:
+                yield self._create_tags_page(kw, lang, True, True)
+            else:
+                yield self._create_tags_page(kw, lang, False, True)
+                yield self._create_tags_page(kw, lang, True, False)
 
     def _get_title(self, tag, is_category):
         if is_category:
@@ -387,10 +388,13 @@ class RenderTags(Task):
         }
         return utils.apply_filters(task, kw['filters'])
 
-    def slugify_tag_name(self, name):
+    def slugify_tag_name(self, name, lang):
         """Slugify a tag name."""
+        if lang is None:  # TODO: remove in v8
+            utils.LOGGER.warn("RenderTags.slugify_tag_name() called without language!")
+            lang = ''
         if self.site.config['SLUG_TAG_PATH']:
-            name = utils.slugify(name)
+            name = utils.slugify(name, lang)
         return name
 
     def tag_index_path(self, name, lang):
@@ -431,13 +435,13 @@ class RenderTags(Task):
             return [_f for _f in [
                 self.site.config['TRANSLATIONS'][lang],
                 self.site.config['TAG_PATH'][lang],
-                self.slugify_tag_name(name),
+                self.slugify_tag_name(name, lang),
                 self.site.config['INDEX_FILE']] if _f]
         else:
             return [_f for _f in [
                 self.site.config['TRANSLATIONS'][lang],
                 self.site.config['TAG_PATH'][lang],
-                self.slugify_tag_name(name) + ".html"] if _f]
+                self.slugify_tag_name(name, lang) + ".html"] if _f]
 
     def tag_atom_path(self, name, lang):
         """A link to a tag's Atom feed.
@@ -447,7 +451,7 @@ class RenderTags(Task):
         link://tag_atom/cats => /tags/cats.atom
         """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['TAG_PATH'][lang], self.slugify_tag_name(name) + ".atom"] if
+                              self.site.config['TAG_PATH'][lang], self.slugify_tag_name(name, lang) + ".atom"] if
                 _f]
 
     def tag_rss_path(self, name, lang):
@@ -458,15 +462,18 @@ class RenderTags(Task):
         link://tag_rss/cats => /tags/cats.xml
         """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['TAG_PATH'][lang], self.slugify_tag_name(name) + ".xml"] if
+                              self.site.config['TAG_PATH'][lang], self.slugify_tag_name(name, lang) + ".xml"] if
                 _f]
 
-    def slugify_category_name(self, name):
+    def slugify_category_name(self, name, lang):
         """Slugify a category name."""
+        if lang is None:  # TODO: remove in v8
+            utils.LOGGER.warn("RenderTags.slugify_category_name() called without language!")
+            lang = ''
         path = self.site.parse_category_name(name)
         if self.site.config['CATEGORY_OUTPUT_FLAT_HIERARCHY']:
             path = path[-1:]  # only the leaf
-        result = [self.slugify_tag_name(part) for part in path]
+        result = [self.slugify_tag_name(part, lang) for part in path]
         result[0] = self.site.config['CATEGORY_PREFIX'] + result[0]
         if not self.site.config['PRETTY_URLS']:
             result = ['-'.join(result)]
@@ -486,11 +493,11 @@ class RenderTags(Task):
         if self.site.config['PRETTY_URLS']:
             return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                                   self.site.config['CATEGORY_PATH'][lang]] if
-                    _f] + self.slugify_category_name(name) + [self.site.config['INDEX_FILE']]
+                    _f] + self.slugify_category_name(name, lang) + [self.site.config['INDEX_FILE']]
         else:
             return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                                   self.site.config['CATEGORY_PATH'][lang]] if
-                    _f] + self._add_extension(self.slugify_category_name(name), ".html")
+                    _f] + self._add_extension(self.slugify_category_name(name, lang), ".html")
 
     def category_atom_path(self, name, lang):
         """A link to a category's Atom feed.
@@ -501,7 +508,7 @@ class RenderTags(Task):
         """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                               self.site.config['CATEGORY_PATH'][lang]] if
-                _f] + self._add_extension(self.slugify_category_name(name), ".atom")
+                _f] + self._add_extension(self.slugify_category_name(name, lang), ".atom")
 
     def category_rss_path(self, name, lang):
         """A link to a category's RSS feed.
@@ -512,4 +519,4 @@ class RenderTags(Task):
         """
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
                               self.site.config['CATEGORY_PATH'][lang]] if
-                _f] + self._add_extension(self.slugify_category_name(name), ".xml")
+                _f] + self._add_extension(self.slugify_category_name(name, lang), ".xml")

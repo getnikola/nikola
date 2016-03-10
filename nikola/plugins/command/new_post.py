@@ -293,14 +293,14 @@ class CommandNewPost(Command):
 
         title = title.strip()
         if not path:
-            slug = utils.slugify(title)
+            slug = utils.slugify(title, lang=self.site.default_lang)
         else:
             if isinstance(path, utils.bytes_str):
                 try:
                     path = path.decode(sys.stdin.encoding)
                 except (AttributeError, TypeError):  # for tests
                     path = path.decode('utf-8')
-            slug = utils.slugify(os.path.splitext(os.path.basename(path))[0])
+            slug = utils.slugify(os.path.splitext(os.path.basename(path))[0], lang=self.site.default_lang)
 
         if isinstance(author, utils.bytes_str):
                 try:
