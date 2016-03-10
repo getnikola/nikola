@@ -139,4 +139,7 @@ nikola/data/themes/bootstrap3/assets/js/jquery.colorbox.js
 nikola/data/themes/bootstrap3/assets/js/jquery.js
 nikola/data/themes/bootstrap3/assets/js/jquery.min.js
 nikola/data/themes/bootstrap3/assets/js/jquery.min.map
+nikola/data/themes/bootstrap3/assets/js/jquery.slim.js
+nikola/data/themes/bootstrap3/assets/js/jquery.slim.min.js
+nikola/data/themes/bootstrap3/assets/js/jquery.slim.min.map
 nikola/plugins/command/auto/livereload.js
