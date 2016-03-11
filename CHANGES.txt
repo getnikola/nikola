@@ -1,3 +1,11 @@
+New in master
+=============
+
+Bugfixes
+--------
+
+* Don't randomly load plugins when Nikola is called with no arguments (PR #2297)
+
 New in v7.7.7
 =============
 
