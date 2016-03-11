@@ -870,6 +870,8 @@ class Nikola(object):
                     # FIXME TemplateSystem should not be needed
                     if p[-1].details.get('Nikola', 'PluginCategory') not in {'Command', 'Template'}:
                         bad_candidates.add(p)
+                else:
+                    bad_candidates.add(p)
             elif self.configured:  # Not commands-only, and configured
                 # Remove compilers we don't use
                 if p[-1].name in self.bad_compilers:
