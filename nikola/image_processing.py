@@ -50,7 +50,7 @@ except ImportError:
 class ImageProcessor(object):
     """Apply image operations."""
 
-    image_ext_list_builtin = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.bmp', '.tiff']
+    image_ext_list_builtin = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.svgz', '.bmp', '.tiff']
 
     def resize_image(self, src, dst, max_size, bigger_panoramas=True, preserve_exif_data=False):
         """Make a copy of the image in the requested size."""
@@ -102,10 +102,10 @@ class ImageProcessor(object):
             # Resize svg based on viewport hacking.
             # note that this can also lead to enlarged svgs
             if src.endswith('.svgz'):
-                with gzip.GzipFile(src) as op:
+                with gzip.GzipFile(src, 'rb') as op:
                     xml = op.read()
             else:
-                with open(src) as op:
+                with open(src, 'rb') as op:
                     xml = op.read()
             tree = lxml.etree.XML(xml)
             width = tree.attrib['width']
@@ -129,9 +129,9 @@ class ImageProcessor(object):
             tree.attrib.pop("height")
             tree.attrib['viewport'] = "0 0 %ipx %ipx" % (w, h)
             if dst.endswith('.svgz'):
-                op = gzip.GzipFile(dst, 'w')
+                op = gzip.GzipFile(dst, 'wb')
             else:
-                op = open(dst, 'w')
+                op = open(dst, 'wb')
             op.write(lxml.etree.tostring(tree))
             op.close()
         except (KeyError, AttributeError) as e:

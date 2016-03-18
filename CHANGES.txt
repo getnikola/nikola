@@ -1,3 +1,15 @@
+New in master
+=============
+
+Features
+--------
+
+Bugfixes
+--------
+
+* Use binary I/O for ``.svg`` files in galleries
+* Accept ``.svgz`` extension by default
+
 New in v7.7.7
 =============
 
