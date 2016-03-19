@@ -1,10 +1,15 @@
 New in master
 =============
 
+Features
+--------
+
 Bugfixes
 --------
 
-* Don't randomly load plugins when Nikola is called with no arguments (PR #2297)
+* Use binary I/O for ``.svg`` files in galleries
+* Accept ``.svgz`` extension by default
+* Don't randomly load plugins when Nikola is called with no arguments (Issue #2297)
 
 New in v7.7.7
 =============
