@@ -354,7 +354,7 @@ example::
     ...
 
 Note that "Document Title" and "Section Title" above both use equals
-signs, but are distict and unrelated styles.  The text of
+signs, but are distinct and unrelated styles.  The text of
 overline-and-underlined titles (but not underlined-only) may be inset
 for aesthetics.
 
