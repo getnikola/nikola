@@ -381,6 +381,7 @@ class Nikola(object):
             'COMPILERS': {
                 "rest": ('.txt', '.rst'),
                 "markdown": ('.md', '.mdown', '.markdown'),
+                "markdown2": ('.md', '.mdown', '.markdown'),
                 "textile": ('.textile',),
                 "txt2tags": ('.t2t',),
                 "bbcode": ('.bb',),
@@ -443,6 +444,7 @@ class Nikola(object):
             'LOGO_URL': '',
             'NAVIGATION_LINKS': {},
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],  # FIXME: Add 'extras' in v8
+            'MARKDOWN2_EXTENSIONS': {'fenced-code-blocks': None, 'tables': None},
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
             'OLD_THEME_SUPPORT': True,

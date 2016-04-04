@@ -1,0 +1,13 @@
+[Core]
+name = markdown2
+module = markdown2
+
+[Documentation]
+author = Richard Palmer
+version = 1.0
+website = http://tiro.org.uk/
+description = Compile Markdown into HTML using Markdown2 (https://github.com/trentm/python-markdown2) module
+
+[Nikola]
+plugincategory = Compiler
+friendlyname = Markdown2
