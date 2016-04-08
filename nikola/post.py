@@ -51,7 +51,7 @@ try:
 except ImportError:
     pyphen = None
 
-from math import ceil
+from math import ceil  # for reading time feature
 
 # for tearDown with _reload we cannot use 'from import' to get forLocaleBorg
 import nikola.utils
