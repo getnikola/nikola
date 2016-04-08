@@ -1734,8 +1734,11 @@ class Nikola(object):
                 for tag in post.alltags:
                     self.posts_per_tag[tag].append(post)
                 for lang in self.config['TRANSLATIONS'].keys():
+                    _tags_for_post = []
                     for tag in post.tags_for_language(lang):
                         _tag_slugified = utils.slugify(tag, lang)
+                        _tags_for_post.append(_tag_slugified)
+
                         if _tag_slugified in slugged_tags[lang]:
                             if tag not in self.posts_per_tag:
                                 # Tags that differ only in case
@@ -1744,6 +1747,11 @@ class Nikola(object):
                                 utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
                                 utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.posts_per_tag[other_tag]])))
                                 quit = True
+                            elif tag in _tags_for_post:
+                                utils.LOGGER.error("The tag {0} ({1}) appears more than once in post {2}.".format(tag, _tag_slugified, post.source_path))
+                                quit = True
+                            else:
+                                utils.LOGGER.error("The tag {0} ({1}) is duplicated.".format(tag, _tag_slugified))
                         else:
                             slugged_tags[lang].add(_tag_slugified)
                     self.tags_per_language[lang].extend(post.tags_for_language(lang))
