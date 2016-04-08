@@ -1745,7 +1745,7 @@ class Nikola(object):
                                 utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
                                 utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.posts_per_tag[other_tag]])))
                                 quit = True
-                            elif tag in _tags_for_post:
+                            elif _tag_slugified in _tags_for_post:
                                 utils.LOGGER.error("The tag {0} ({1}) appears more than once in post {2}.".format(tag, _tag_slugified, post.source_path))
                                 quit = True
                         else:
