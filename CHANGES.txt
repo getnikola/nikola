@@ -7,6 +7,7 @@ Features
 Bugfixes
 --------
 
+* Warn if a tag appears multiple times in a post (Issue #2315)
 * Use binary I/O for ``.svg`` files in galleries
 * Accept ``.svgz`` extension by default
 * Don't randomly load plugins when Nikola is called with no arguments (Issue #2297)
