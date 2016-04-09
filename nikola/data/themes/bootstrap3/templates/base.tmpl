@@ -66,12 +66,11 @@ ${template_hooks['extra_head']()}
             <%block name="content"></%block>
         </div>
         <!--End of body content-->
-
-        <footer id="footer">
-            ${content_footer}
-            ${template_hooks['page_footer']()}
-        </footer>
     </div>
+    <footer id="footer">
+        ${content_footer}
+        ${template_hooks['page_footer']()}
+    </footer>
 </div>
 
 ${base.late_load_js()}
