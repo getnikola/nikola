@@ -825,7 +825,7 @@ class Nikola(object):
         self._set_global_context()
 
         # Set persistent state facility
-        self.state = Persistor(os.path.join('state_data.json'))
+        self.state = Persistor('state_data.json')
 
         # Set cache facility
         self.cache = Persistor(os.path.join(self.config['CACHE_FOLDER'], 'cache_data.json'))
