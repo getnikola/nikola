@@ -743,20 +743,22 @@ _slugify_strip_re = re.compile(r'[^+\w\s-]')
 _slugify_hyphenate_re = re.compile(r'[-\s]+')
 
 
-def slugify(value, force=False):
+def slugify(value, lang=None, force=False):
     u"""Normalize string, convert to lowercase, remove non-alpha characters, convert spaces to hyphens.
 
     From Django's "django/template/defaultfilters.py".
 
-    >>> print(slugify('áéí.óú'))
+    >>> print(slugify('áéí.óú', lang='en'))
     aeiou
 
-    >>> print(slugify('foo/bar'))
+    >>> print(slugify('foo/bar', lang='en'))
     foobar
 
-    >>> print(slugify('foo bar'))
+    >>> print(slugify('foo bar', lang='en'))
     foo-bar
     """
+    if lang is None:  # TODO: remove in v8
+        LOGGER.warn("slugify() called without language!")
     if not isinstance(value, unicode_str):
         raise ValueError("Not a unicode object: {0}".format(value))
     if USE_SLUGIFY or force:
@@ -781,12 +783,14 @@ def slugify(value, force=False):
         return value
 
 
-def unslugify(value, discard_numbers=True):
+def unslugify(value, lang=None, discard_numbers=True):
     """Given a slug string (as a filename), return a human readable string.
 
     If discard_numbers is True, numbers right at the beginning of input
     will be removed.
     """
+    if lang is None:  # TODO: remove in v8
+        LOGGER.warn("unslugify() called without language!")
     if discard_numbers:
         value = re.sub('^[0-9]+', '', value)
     value = re.sub('([_\-\.])', ' ', value)
@@ -947,8 +951,10 @@ def get_crumbs(path, is_file=False, index_folder=None, lang=None):
         for i, crumb in enumerate(crumbs[-3::-1]):  # Up to parent folder only
             _path = '/'.join(['..'] * (i + 1))
             _crumbs.append([_path, crumb])
-        _crumbs.insert(0, ['.', crumbs[-2]])  # file's folder
-        _crumbs.insert(0, ['#', crumbs[-1]])  # file itself
+        if len(crumbs) >= 2:
+            _crumbs.insert(0, ['.', crumbs[-2]])  # file's folder
+        if len(crumbs) >= 1:
+            _crumbs.insert(0, ['#', crumbs[-1]])  # file itself
     else:
         for i, crumb in enumerate(crumbs[::-1]):
             _path = '/'.join(['..'] * i) or '#'
@@ -1555,7 +1561,7 @@ class NikolaPygmentsHTML(HtmlFormatter):
         self.nclasses = classes
         super(NikolaPygmentsHTML, self).__init__(
             cssclass='code', linenos=linenos, linenostart=linenostart, nowrap=False,
-            lineanchors=slugify(anchor_ref, force=True), anchorlinenos=True)
+            lineanchors=slugify(anchor_ref, lang=LocaleBorg().current_lang, force=True), anchorlinenos=True)
 
     def wrap(self, source, outfile):
         """Wrap the ``source``, which is a generator yielding individual lines, in custom generators."""

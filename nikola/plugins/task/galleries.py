@@ -235,7 +235,7 @@ class Galleries(Task, ImageProcessor):
                     img_titles = []
                     for fn in image_name_list:
                         name_without_ext = os.path.splitext(os.path.basename(fn))[0]
-                        img_titles.append(utils.unslugify(name_without_ext))
+                        img_titles.append(utils.unslugify(name_without_ext, lang))
                 else:
                     img_titles = [''] * len(image_name_list)
 

@@ -373,7 +373,7 @@ class CommandImportWordpress(Command, ImportMixin):
                     tag_str = tag
             except AttributeError:
                 tag_str = tag
-            tag = utils.slugify(tag_str)
+            tag = utils.slugify(tag_str, self.lang)
             src_url = '{}tag/{}'.format(self.context['SITE_URL'], tag)
             dst_url = self.site.link('tag', tag)
             if src_url != dst_url:
@@ -419,7 +419,8 @@ class CommandImportWordpress(Command, ImportMixin):
         wordpress_namespace = channel.nsmap['wp']
 
         context = SAMPLE_CONF.copy()
-        context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')[:2]
+        self.lang = get_text_tag(channel, 'language', 'en')[:2]
+        context['DEFAULT_LANG'] = self.lang
         context['TRANSLATIONS_PATTERN'] = DEFAULT_TRANSLATIONS_PATTERN
         context['BLOG_TITLE'] = get_text_tag(channel, 'title',
                                              'PUT TITLE HERE')
@@ -839,7 +840,7 @@ class CommandImportWordpress(Command, ImportMixin):
         else:
             if len(pathlist) > 1:
                 out_folder = os.path.join(*([out_folder] + pathlist[:-1]))
-            slug = utils.slugify(pathlist[-1])
+            slug = utils.slugify(pathlist[-1], self.lang)
 
         description = get_text_tag(item, 'description', '')
         post_date = get_text_tag(

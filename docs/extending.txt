@@ -9,7 +9,7 @@
 Extending Nikola
 ================
 
-:Version: 7.7.6
+:Version: 7.7.7
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-info pull-right
@@ -495,7 +495,7 @@ Here's the relevant code from the tag plugin.
     # path elements.
     def tag_rss_path(self, name, lang):
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                              self.site.config['TAG_PATH'], self.slugify_name(name) + ".xml"] if
+                              self.site.config['TAG_PATH'], self.slugify_name(name, lang) + ".xml"] if
                 _f]
 
 Template Hooks

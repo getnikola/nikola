@@ -4,6 +4,21 @@ New in master
 Features
 --------
 
+Bugfixes
+--------
+
+* Don't call sys.exit() from plugins if possible (Issue #1839)
+* Warn if a tag appears multiple times in a post (Issue #2315)
+* Use binary I/O for ``.svg`` files in galleries
+* Accept ``.svgz`` extension by default
+* Don't randomly load plugins when Nikola is called with no arguments (Issue #2297)
+
+New in v7.7.7
+=============
+
+Features
+--------
+
 * New ``--one-file`` option to wordpress importer (Issue #2262)
 * New Pygal-based chart shortcode (Issue #2170)
 * Add ``post_type`` to post-list directive (Issue #2272)
@@ -12,7 +27,7 @@ Features
 Bugfixes
 --------
 
-* Don't call sys.exit() from plugins if possible (Issue #1839)
+* Fix Indonesian translation (Issue #2291)
 * Fix a JSON conversion bug in the WordPress importer (Issue #2264)
 * Don’t create download directories when not downloading WordPress
   attachments (Issue #2260)

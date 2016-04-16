@@ -51,7 +51,7 @@ try:
 except ImportError:
     pyphen = None
 
-from math import ceil
+from math import ceil  # for reading time feature
 
 # for tearDown with _reload we cannot use 'from import' to get forLocaleBorg
 import nikola.utils
@@ -796,7 +796,7 @@ class Post(object):
                 slug = slug[0]
         else:
             slug = self.meta[lang]['section'].split(',')[0] if 'section' in self.meta[lang] else self.messages[lang]["Uncategorized"]
-        return utils.slugify(slug)
+        return utils.slugify(slug, lang)
 
     def permalink(self, lang=None, absolute=False, extension='.html', query=None):
         """Return permalink for a post."""
@@ -872,7 +872,7 @@ def re_meta(line, match=None):
         return (None,)
 
 
-def _get_metadata_from_filename_by_regex(filename, metadata_regexp, unslugify_titles):
+def _get_metadata_from_filename_by_regex(filename, metadata_regexp, unslugify_titles, lang):
     """Try to reed the metadata from the filename based on the given re.
 
     This requires to use symbolic group names in the pattern.
@@ -887,7 +887,7 @@ def _get_metadata_from_filename_by_regex(filename, metadata_regexp, unslugify_ti
         for key, value in match.groupdict().items():
             k = key.lower().strip()  # metadata must be lowercase
             if k == 'title' and unslugify_titles:
-                meta[k] = unslugify(value, discard_numbers=False)
+                meta[k] = unslugify(value, lang, discard_numbers=False)
             else:
                 meta[k] = value
 
@@ -1051,7 +1051,8 @@ def get_meta(post, file_metadata_regexp=None, unslugify_titles=False, lang=None)
     if file_metadata_regexp is not None:
         meta.update(_get_metadata_from_filename_by_regex(post.source_path,
                                                          file_metadata_regexp,
-                                                         unslugify_titles))
+                                                         unslugify_titles,
+                                                         post.default_lang))
 
     compiler_meta = {}
 
@@ -1070,7 +1071,7 @@ def get_meta(post, file_metadata_regexp=None, unslugify_titles=False, lang=None)
         if 'slug' not in meta:
             # If no slug is found in the metadata use the filename
             meta['slug'] = slugify(unicode_str(os.path.splitext(
-                os.path.basename(post.source_path))[0]))
+                os.path.basename(post.source_path))[0]), post.default_lang)
 
         if 'title' not in meta:
             # If no title is found, use the filename without extension
