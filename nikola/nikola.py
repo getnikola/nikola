@@ -1316,24 +1316,39 @@ class Nikola(object):
 
         return result
 
+    def _make_renderfunc(self, t_data):
+        """Return a function that can be registered as a template shortcode.
+
+        The returned function has access to the passed template data and
+        accepts any number of positional and keyword arguments. Positional
+        arguments values are added as a tuple under the key ``_args`` to the
+        keyword argument dict and then the latter provides the template
+        context.
+
+        """
+        def render_shortcode(*args, **kw):
+            kw['_args'] = args
+            return self.template_system.render_template_to_string(t_data, kw)
+        return render_shortcode
+
     def _register_templated_shortcodes(self):
         """Register shortcodes provided by templates in shortcodes/ folders."""
-        builtin_sc_dir = resource_filename('nikola', os.path.join('data', 'shortcodes', utils.get_template_engine(self.THEMES)))
-        sc_dirs = [builtin_sc_dir, 'shortcodes']
+        builtin_sc_dir = resource_filename(
+            'nikola',
+            os.path.join('data', 'shortcodes', utils.get_template_engine(self.THEMES)))
 
-        for sc_dir in sc_dirs:
+        for sc_dir in [builtin_sc_dir, 'shortcodes']:
             if not os.path.isdir(sc_dir):
                 continue
+
             for fname in os.listdir(sc_dir):
                 name, ext = os.path.splitext(fname)
-                if ext == '.tmpl':
-                    with open(os.path.join(sc_dir, fname)) as fd:
-                        template_data = fd.read()
 
-                    def render_shortcode(t_data=template_data, **kw):
-                        return self.template_system.render_template_to_string(t_data, kw)
+                if ext != '.tmpl':
+                    continue
 
-                    self.register_shortcode(name, render_shortcode)
+                with open(os.path.join(sc_dir, fname)) as fd:
+                    self.register_shortcode(name, self._make_renderfunc(fd.read()))
 
     def register_shortcode(self, name, f):
         """Register function f to handle shortcode "name"."""
