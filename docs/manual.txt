@@ -854,12 +854,16 @@ chart
 Template-based shortcodes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you put a template in ``shortcodes/`` called ``mycode.tmpl`` then Nikola will create a shortcode
-called ``mycode`` you can use. Any options you pass to the shortcode will be available as variables
-for that template. If you use the shortcode as paired, then the contents between the paired tags will
-be available in the ``data`` variable.
+If you put a template in ``shortcodes/`` called ``mycode.tmpl`` then Nikola
+will create a shortcode called ``mycode`` you can use. Any options you pass to
+the shortcode will be available as variables for that template. Non-keyword
+options will be passed in a tuple varaible named ``_args``.
 
-If you want to access the Nikola object, it will be available as ``site``. Use with care :-)
+If you use the shortcode as paired, then the contents between the paired tags
+will be available in the ``data`` variable. If you want to access the Nikola
+object, it will be available as ``site``. Use with care :-)
+
+See :doc:`extending` for detailed information.
 
 For example, if your ``shortcodes/foo.tmpl`` contains this::
 
@@ -872,6 +876,8 @@ And your post contains this::
 Then the output file will contain::
 
     This uses the bar variable: bla
+
+
 
 Redirections
 ------------
