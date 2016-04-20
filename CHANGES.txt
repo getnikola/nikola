@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Template-based shortcodes now receive positional arguments too (Issue #2319)
+
 Bugfixes
 --------
 
