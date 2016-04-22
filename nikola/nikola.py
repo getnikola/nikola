@@ -1746,10 +1746,7 @@ class Nikola(object):
                 self.posts_per_year[str(post.date.year)].append(post)
                 self.posts_per_month[
                     '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post)
-                for tag in post.alltags:
-                    self.posts_per_tag[tag].append(post)
                 for lang in self.config['TRANSLATIONS'].keys():
-                    _tags_for_post = []
                     for tag in post.tags_for_language(lang):
                         _tag_slugified = utils.slugify(tag, lang)
                         if _tag_slugified in slugged_tags[lang]:
@@ -1760,12 +1757,10 @@ class Nikola(object):
                                 utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
                                 utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.posts_per_tag[other_tag]])))
                                 quit = True
-                            elif _tag_slugified in _tags_for_post:
-                                utils.LOGGER.error("The tag {0} ({1}) appears more than once in post {2}.".format(tag, _tag_slugified, post.source_path))
-                                quit = True
                         else:
                             slugged_tags[lang].add(_tag_slugified)
-                        _tags_for_post.append(_tag_slugified)
+                        if post not in self.posts_per_tag[tag]:
+                            self.posts_per_tag[tag].append(post)
                     self.tags_per_language[lang].extend(post.tags_for_language(lang))
                 self._add_post_to_category(post, post.meta('category'))
 
