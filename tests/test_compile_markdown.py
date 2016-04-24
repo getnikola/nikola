@@ -68,48 +68,5 @@ class CompileMarkdownTests(BaseTestCase):
         actual_output = self.compile(input_str)
         self.assertEquals(actual_output.strip(), expected_output.strip())
 
-    def test_compile_html_gist(self):
-        input_str = '''\
-Here's a gist file inline:
-[:gist: 4747847 zen.py]
-
-Cool, eh?
-'''
-        expected_output = '''\
-<p>Here's a gist file inline:
-<div class="gist">
-<script src="https://gist.github.com/4747847.js?file=zen.py"></script>
-<noscript>
-<pre>import this</pre>
-</noscript>
-</div>
-</p>
-<p>Cool, eh?</p>
-'''
-        actual_output = self.compile(input_str)
-        self.assertEquals(actual_output.strip(), expected_output.strip())
-
-    def test_compile_html_gist_2(self):
-        input_str = '''\
-Here's a gist file inline, using reStructuredText syntax:
-..gist:: 4747847 zen.py
-
-Cool, eh?
-'''
-        expected_output = '''\
-<p>Here's a gist file inline, using reStructuredText syntax:
-<div class="gist">
-<script src="https://gist.github.com/4747847.js?file=zen.py"></script>
-<noscript>
-<pre>import this</pre>
-</noscript>
-</div>
-</p>
-<p>Cool, eh?</p>
-'''
-        actual_output = self.compile(input_str)
-        self.assertEquals(actual_output.strip(), expected_output.strip())
-
-
 if __name__ == '__main__':
     unittest.main()
