@@ -121,7 +121,7 @@ class CommandDeploy(Command):
                 try:
                     subprocess.check_call(command, shell=True)
                 except subprocess.CalledProcessError as e:
-                    self.logger.error('Failed deployment — command {0} '
+                    self.logger.error('Failed deployment -- command {0} '
                                       'returned {1}'.format(e.cmd, e.returncode))
                     return e.returncode
 

@@ -84,7 +84,7 @@ class CommandStatus(Command):
                 last_deploy = datetime.strptime(inf.read().strip(), "%Y-%m-%dT%H:%M:%S.%f")
                 last_deploy_offset = datetime.utcnow() - last_deploy
         except (IOError, Exception):
-            print("It does not seem like you’ve ever deployed the site (or cache missing).")
+            print("It does not seem like you've ever deployed the site (or cache missing).")
 
         if last_deploy:
 

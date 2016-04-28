@@ -102,7 +102,7 @@ class CommandAuto(Command):
             'long': 'address',
             'type': str,
             'default': '127.0.0.1',
-            'help': 'Address to bind (default: 127.0.0.1 – localhost)',
+            'help': 'Address to bind (default: 127.0.0.1 -- localhost)',
         },
         {
             'name': 'browser',

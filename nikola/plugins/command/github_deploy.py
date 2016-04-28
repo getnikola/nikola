@@ -116,7 +116,7 @@ class CommandGitHubDeploy(Command):
             if xfail:
                 return e.returncode
             self.logger.error(
-                'Failed GitHub deployment — command {0} '
+                'Failed GitHub deployment -- command {0} '
                 'returned {1}'.format(e.cmd, e.returncode)
             )
             raise SystemError(e.returncode)
