@@ -130,7 +130,6 @@ class CommandDeploy(Command):
         new_deploy = datetime.utcnow()
         self._emit_deploy_event(last_deploy, new_deploy, clean, undeployed_posts)
 
-        makedirs(self.site.config['CACHE_FOLDER'])
         # Store timestamp of successful deployment
         self.site.state.set('last_deploy', new_deploy.isoformat())
 

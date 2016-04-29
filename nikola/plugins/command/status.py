@@ -27,7 +27,6 @@
 """Display site status."""
 
 from __future__ import print_function
-import io
 import os
 from datetime import datetime
 from dateutil.tz import gettz, tzlocal
@@ -75,15 +74,11 @@ class CommandStatus(Command):
         """Display site status."""
         self.site.scan_posts()
 
-        timestamp_path = os.path.join(self.site.config["CACHE_FOLDER"], "lastdeploy")
-
-        last_deploy = None
-
-        try:
-            with io.open(timestamp_path, "r", encoding="utf8") as inf:
-                last_deploy = datetime.strptime(inf.read().strip(), "%Y-%m-%dT%H:%M:%S.%f")
-                last_deploy_offset = datetime.utcnow() - last_deploy
-        except (IOError, Exception):
+        last_deploy = self.site.state.get('last_deploy')
+        if last_deploy is not None:
+            last_deploy = datetime.strptime(last_deploy, "%Y-%m-%dT%H:%M:%S.%f")
+            last_deploy_offset = datetime.utcnow() - last_deploy
+        else:
             print("It does not seem like you've ever deployed the site (or cache missing).")
 
         if last_deploy:

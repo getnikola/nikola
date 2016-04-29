@@ -9,6 +9,8 @@ Features
 Bugfixes
 --------
 
+* Use state files in ``nikola github_deploy`` and ``nikola status``
+  (Issue #2317)
 * Add ``align`` options for ``youtube``, ``vimeo``, ``soundcloud``
   reST directives (Issue #2304)
 * Update ``FILE_METADATA_REGEXP`` example in docs (Issue #2296)

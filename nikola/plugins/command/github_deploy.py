@@ -164,8 +164,5 @@ class CommandGitHubDeploy(Command):
         self.logger.info("Successful deployment")
 
         # Store timestamp of successful deployment
-        timestamp_path = os.path.join(self.site.config["CACHE_FOLDER"], "lastdeploy")
         new_deploy = datetime.utcnow()
-        makedirs(self.site.config["CACHE_FOLDER"])
-        with io.open(timestamp_path, "w+", encoding="utf8") as outf:
-            outf.write(unicode_str(new_deploy.isoformat()))
+        self.site.state.set('last_deploy', new_deploy.isoformat())
