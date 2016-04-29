@@ -36,6 +36,7 @@ import docutils.utils
 import docutils.io
 import docutils.readers.standalone
 import docutils.writers.html4css1
+import docutils.parsers.rst.directives
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import unicode_str, get_logger, makedirs, write_metadata, STDERR_HANDLER
@@ -276,3 +277,10 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
     pub.publish(enable_exit_status=enable_exit_status)
 
     return pub.writer.parts['docinfo'] + pub.writer.parts['fragment'], pub.document.reporter.max_level, pub.settings.record_dependencies
+
+# Alignment helpers for extensions
+_align_options_base = ('left', 'center', 'right')
+
+
+def _align_choice(argument):
+    return docutils.parsers.rst.directives.choice(argument, _align_options_base + ("none", ""))

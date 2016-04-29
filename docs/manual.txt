@@ -1662,6 +1662,9 @@ Once you have that, all you need to do is:
 
     .. youtube:: 8N_tupPBtWQ
 
+Supported options: ``height``, ``width``, ``align`` (one of ``left``,
+``center``, ``right``) — all are optional.
+
 Vimeo
 ~~~~~
 
@@ -1684,6 +1687,9 @@ You can override this if you wish:
        :height: 240
        :width: 320
 
+Supported options: ``height``, ``width``, ``align`` (one of ``left``,
+``center``, ``right``) — all are optional.
+
 Soundcloud
 ~~~~~~~~~~
 
@@ -1704,6 +1710,9 @@ The ID is 78131362 and you can embed the audio with this:
 You can also embed playlists, via the `soundcloud_playlist` directive which works the same way.
 
     .. soundcloud_playlist:: 9411706
+
+Supported options: ``height``, ``width``, ``align`` (one of ``left``,
+``center``, ``right``) — all are optional.
 
 Code
 ~~~~

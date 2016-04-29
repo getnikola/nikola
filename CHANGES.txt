@@ -9,6 +9,8 @@ Features
 Bugfixes
 --------
 
+* Add ``align`` options for ``youtube``, ``vimeo``, ``soundcloud``
+  reST directives (Issue #2304)
 * Update ``FILE_METADATA_REGEXP`` example in docs (Issue #2296)
 * Show “tags too similar” error instead of cryptic doit crash (Issue #2325)
 * Fix crashes when tag appears multiple times in a post (Issue #2315)
