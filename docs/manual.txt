@@ -854,7 +854,7 @@ chart
 Community shortcodes
 ~~~~~~~~~~~~~~~~~~~~
 
-** `audio <https://gist.github.com/SpotlightKid/70f3ccdfacd9cfb091941a91f349924f>`_ by `SpotlightKid <https://github.com/SpotlightKid>`_ — embed a HTML5 audio player and download links
+Shortcodes created by the community are available in `the shortcodes repository on GitHub <https://github.com/getnikola/shortcodes>`_.
 
 Template-based shortcodes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
