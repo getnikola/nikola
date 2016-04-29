@@ -1,4 +1,4 @@
-New in master
+New in v7.7.8
 =============
 
 Features
