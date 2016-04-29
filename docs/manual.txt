@@ -851,6 +851,11 @@ chart
     In reStructuredText the quoting needed to pass arguments gets insane really fast, use the chart directive
     instead (the syntax is nicer anyway)
 
+Community shortcodes
+~~~~~~~~~~~~~~~~~~~~
+
+** `audio <https://gist.github.com/SpotlightKid/70f3ccdfacd9cfb091941a91f349924f>`_ by `SpotlightKid <https://github.com/SpotlightKid>`_ — embed a HTML5 audio player and download links
+
 Template-based shortcodes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -876,8 +881,6 @@ And your post contains this::
 Then the output file will contain::
 
     This uses the bar variable: bla
-
-
 
 Redirections
 ------------
