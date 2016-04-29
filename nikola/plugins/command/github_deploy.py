@@ -28,14 +28,13 @@
 
 from __future__ import print_function
 from datetime import datetime
-import io
 import os
 import subprocess
 from textwrap import dedent
 
 from nikola.plugin_categories import Command
 from nikola.plugins.command.check import real_scan_files
-from nikola.utils import get_logger, req_missing, makedirs, unicode_str, STDERR_HANDLER
+from nikola.utils import get_logger, req_missing, STDERR_HANDLER
 from nikola.__main__ import main
 from nikola import __version__
 

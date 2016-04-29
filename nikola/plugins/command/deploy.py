@@ -38,7 +38,7 @@ import time
 from blinker import signal
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, remove_file, makedirs, STDERR_HANDLER
+from nikola.utils import get_logger, remove_file, STDERR_HANDLER
 
 
 class CommandDeploy(Command):
