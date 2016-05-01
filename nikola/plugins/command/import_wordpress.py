@@ -812,7 +812,7 @@ class CommandImportWordpress(Command, ImportMixin):
         # titles can have line breaks in them, particularly when they are
         # created by third-party tools that post to Wordpress.
         # Handle windows-style and unix-style line endings.
-        title = title.replace('\r\n', ' ').replace('\n')
+        title = title.replace('\r\n', ' ').replace('\n', ' ')
 
         # link is something like http://foo.com/2012/09/01/hello-world/
         # So, take the path, utils.slugify it, and that's our slug
