@@ -191,8 +191,8 @@ class CommandImportWordpress(Command, ImportMixin):
             'help': "Automatically installs the WordPress page compiler (either locally or in the new site) if required by other options.\nWarning: the compiler is GPL software!",
         },
         {
-            'name': 'tag_saniziting_strategy',
-            'long': 'tag-saniziting-strategy',
+            'name': 'tag_sanitizing_strategy',
+            'long': 'tag-sanitizing-strategy',
             'default': 'first',
             'help': 'lower: Convert all tag and category names to lower case\nfirst: Keep first spelling of tag or category name',
         },
