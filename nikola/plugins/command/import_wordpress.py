@@ -808,6 +808,12 @@ class CommandImportWordpress(Command, ImportMixin):
             out_folder = 'posts'
 
         title = get_text_tag(item, 'title', 'NO TITLE')
+
+        # titles can have line breaks in them, particularly when they are
+        # created by third-party tools that post to Wordpress.
+        # Handle windows-style and unix-style line endings.
+        title = title.replace('\r\n', ' ').replace('\n')
+
         # link is something like http://foo.com/2012/09/01/hello-world/
         # So, take the path, utils.slugify it, and that's our slug
         link = get_text_tag(item, 'link', None)
