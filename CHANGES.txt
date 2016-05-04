@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* New Lithuanian translation by Antanas Lasys
+
 Bugfixes
 --------
 
