@@ -1,3 +1,14 @@
+New in master
+=============
+
+Features
+--------
+
+Bugfixes
+--------
+
+* Create Persistor directories only if site is configured (Issue #2334)
+
 New in v7.7.8
 =============
 

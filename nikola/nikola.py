@@ -830,6 +830,11 @@ class Nikola(object):
         # Set cache facility
         self.cache = Persistor(os.path.join(self.config['CACHE_FOLDER'], 'cache_data.json'))
 
+        # Create directories for persistors only if a site exists (Issue #2334)
+        if True or self.configured:
+            self.state._set_site(self)
+            self.cache._set_site(self)
+
     def init_plugins(self, commands_only=False):
         """Load plugins as needed."""
         self.plugin_manager = PluginManager(categories_filter={
