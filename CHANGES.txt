@@ -8,6 +8,7 @@ Bugfixes
 --------
 
 * Create Persistor directories only if site is configured (Issue #2334)
+* Remove newlines in imported WordPress titles (Issue #2330)
 
 New in v7.7.8
 =============
