@@ -23,6 +23,7 @@ Features
 Bugfixes
 --------
 
+* Fix folder handling and redirects in ``nikola auto`` (Issue #2331)
 * Use state files in ``nikola github_deploy`` and ``nikola status``
   (Issue #2317)
 * Add ``align`` options for ``youtube``, ``vimeo``, ``soundcloud``
