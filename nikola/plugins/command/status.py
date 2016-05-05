@@ -41,7 +41,7 @@ class CommandStatus(Command):
 
     doc_purpose = "display site status"
     doc_description = "Show information about the posts and site deployment."
-    doc_usage = '[-l|--list-drafts] [-m|--list-modified] [-s|--list-scheduled]'
+    doc_usage = '[-d|--list-drafts] [-m|--list-modified] [-s|--list-scheduled]'
     logger = None
     cmd_options = [
         {
