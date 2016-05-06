@@ -153,7 +153,7 @@ class CommandStatus(Command):
         if options['list_published']:
             for post in posts_published:
                 print("Published: '{0}' ({1}; source: {2})".format(post.meta('title'), post.permalink(), post.source_path))
-        print("{0} posts in total, {1} scheduled, and {2} drafts.".format(posts_count, len(posts_scheduled), len(posts_drafts)))
+        print("{0} posts in total, {1} scheduled, {2} drafts, {3} private and {4} published.".format(posts_count, len(posts_scheduled), len(posts_drafts), len(posts_private), len(posts_published)))
 
     def human_time(self, dt):
         """Translate time into a human-friendly representation."""
