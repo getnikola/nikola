@@ -293,9 +293,9 @@ LEGAL_VALUES = {
 
 def _enclosure(post, lang):
     """Add an enclosure to RSS."""
-    enclosure = post.meta('enclosure', lang)
+    enclosure = post.meta('enclosure_url', lang)
     if enclosure:
-        length = 0
+        length = post.meta('enclosure_length', lang)
         url = enclosure
         mime = mimetypes.guess_type(url)[0]
         return url, length, mime
