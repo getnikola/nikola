@@ -295,7 +295,13 @@ def _enclosure(post, lang):
     """Add an enclosure to RSS."""
     enclosure = post.meta('enclosure', lang)
     if enclosure:
-        length = int(post.meta('enclosure_length', lang) or 0)
+        try:
+            length = int(post.meta('enclosure_length', lang) or 0)
+        except KeyError:
+            length = 0
+        except ValueError:
+            utils.LOGGER.warn("Invalid enclosure length for post {0}".format(post.source_path))
+            length = 0
         url = enclosure
         mime = mimetypes.guess_type(url)[0]
         return url, length, mime
