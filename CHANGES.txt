@@ -10,6 +10,8 @@ Features
 Bugfixes
 --------
 
+* Add ``<link>`` tags to other languages even if the post is
+  untranslated (Google complained otherwise)
 * Create Persistor directories only if site is configured (Issue #2334)
 * Remove newlines in imported WordPress titles (Issue #2330)
 
