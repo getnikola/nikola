@@ -25,7 +25,6 @@ Features
 Bugfixes
 --------
 
-* Warn if a tag appears multiple times in a post (Issue #2315)
 * Fix folder handling and redirects in ``nikola auto`` (Issue #2331)
 * Use state files in ``nikola github_deploy`` and ``nikola status``
   (Issue #2317)
