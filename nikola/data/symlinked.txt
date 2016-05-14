@@ -77,6 +77,9 @@ nikola/data/themes/bootstrap3-jinja/assets/js/jquery.colorbox.js
 nikola/data/themes/bootstrap3-jinja/assets/js/jquery.js
 nikola/data/themes/bootstrap3-jinja/assets/js/jquery.min.js
 nikola/data/themes/bootstrap3-jinja/assets/js/jquery.min.map
+nikola/data/themes/bootstrap3-jinja/assets/js/jquery.slim.js
+nikola/data/themes/bootstrap3-jinja/assets/js/jquery.slim.min.js
+nikola/data/themes/bootstrap3-jinja/assets/js/jquery.slim.min.map
 nikola/data/themes/bootstrap3-jinja/bundles
 nikola/data/themes/bootstrap3/assets/css/bootstrap-theme.css
 nikola/data/themes/bootstrap3/assets/css/bootstrap-theme.css.map

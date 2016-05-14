@@ -191,8 +191,8 @@ class CommandImportWordpress(Command, ImportMixin):
             'help': "Automatically installs the WordPress page compiler (either locally or in the new site) if required by other options.\nWarning: the compiler is GPL software!",
         },
         {
-            'name': 'tag_saniziting_strategy',
-            'long': 'tag-saniziting-strategy',
+            'name': 'tag_sanitizing_strategy',
+            'long': 'tag-sanitizing-strategy',
             'default': 'first',
             'help': 'lower: Convert all tag and category names to lower case\nfirst: Keep first spelling of tag or category name',
         },
@@ -808,6 +808,12 @@ class CommandImportWordpress(Command, ImportMixin):
             out_folder = 'posts'
 
         title = get_text_tag(item, 'title', 'NO TITLE')
+
+        # titles can have line breaks in them, particularly when they are
+        # created by third-party tools that post to Wordpress.
+        # Handle windows-style and unix-style line endings.
+        title = title.replace('\r\n', ' ').replace('\n', ' ')
+
         # link is something like http://foo.com/2012/09/01/hello-world/
         # So, take the path, utils.slugify it, and that's our slug
         link = get_text_tag(item, 'link', None)

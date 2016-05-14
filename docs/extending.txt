@@ -9,7 +9,7 @@
 Extending Nikola
 ================
 
-:Version: 7.7.7
+:Version: 7.7.8
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-info pull-right
@@ -560,38 +560,76 @@ Some (hopefully all) markup compilers support shortcodes in these forms::
     {{% foo %}}  # No arguments
     {{% foo bar %}}  # One argument, containing "bar"
     {{% foo bar baz=bat %}}  # Two arguments, one containing "bar", one called "baz" containing "bat"
-    
-    {{% foo %}}Some text{{% /foo %}} # one argument called "data" containing "Some text"
 
-So, if you are creating a plugin that generates markup, it may be a good idea to register it as a shortcode
-in addition of a restructured text directive or markdown extension, thus making it available to all markups.
-    
-To implement your own shortcodes from a plugin, you can call ``Nikola.register_shortcode(name, f)`` with the following
-arguments:
+    {{% foo %}}Some text{{% /foo %}}  # one argument called "data" containing "Some text"
 
-name:
-    name of the shortcode (foo in the examples above)
-f:
+So, if you are creating a plugin that generates markup, it may be a good idea
+to register it as a shortcode in addition of to restructured text directive or
+markdown extension, thus making it available to all markup formats.
+
+To implement your own shortcodes from a plugin, you can call
+``Nikola.register_shortcode(name, func)`` with the following arguments:
+
+``name``:
+    Name of the shortcode ("foo" in the examples above)
+``func``:
     A function that will handle the shortcode
-    
-The shortcode handler should take *at least* the following named arguments:
 
-site:
+The shortcode handler **must** accept the following named arguments (or
+variable keyword arguments):
+
+``site``:
     An instance of the Nikola class, to access site state
-    
-data:
-    If the shortcut is used as opening/closing tags, it will be the text between them, otherwise None
-    
-If the shortcode tag has arguments of the form "foo=bar" they will be passed as named arguments. Everything else
-will be passed as positional arguments in the function call.
+
+``data``:
+    If the shortcut is used as opening/closing tags, it will be the text
+    between them, otherwise ``None``.
+
+If the shortcode tag has arguments of the form ``foo=bar`` they will be
+passed as named arguments. Everything else will be passed as positional
+arguments in the function call.
 
 So, for example::
 
-    {{% foo bar baz=bat beep %}}Some text{{% /foo %}}
-    
-Will cause a call like this::
+    {{% raw %}}{{% foo bar baz=bat beep %}}Some text{{% /foo %}}{{% /raw %}}
 
-     foo_handler("bar", "beep", baz="bat", data="Some text", site=whatever)
+Assuming you registered ``foo_handler`` as the handler function for the
+shortcode named ``foo``, this will result in the following call when the above
+shortcode is encountered::
+
+    foo_handler("bar", "beep", baz="bat", data="Some text", site=whatever)
+
+Template-based Shortcodes
+-------------------------
+
+Another way to define a new shortcode is to add a template file to the
+``shortcodes`` directory of your site. The template file must have the
+shortcode name as the basename and the extension ``.tmpl``. For example, if you
+want to add a new shortcode named ``foo``, create the template file as
+``shortcodes/foo.tmpl``.
+
+When the shortcode is encountered, the matching template will be rendered with
+its context provided by the arguments given in the shortcode. Keyword arguments
+are passed directly, i.e. the key becomes the variable name in the template
+namespace with a matching string value. Non-keyword arguments are passed as
+string values in a tuple named ``_args``. As for normal shortcodes with a
+handler function, ``site`` and ``data`` will be added to the keyword arguments.
+
+Example:
+
+The following shortcode::
+
+    {{% raw %}}{{% foo bar="baz" spam %}}{{% /raw %}}
+
+With a template in ``shortcodes/foo.tmpl`` with this content (using Jinja2
+syntax in this example)::
+
+    <div class="{{ _args[0] if _args else 'ham' }}">{{ bar }}</div>
+
+Will result in this output::
+
+    <div class="spam">baz</div>
+
 
 State and Cache
 ===============
@@ -601,7 +639,7 @@ Sometimes your plugins will need to cache things to speed up further actions. He
 * If it's a file, put it somewhere in ```self.site.config['CACHE_FOLDER']``` (defaults to ```cache/```.
 * If it's a value, use ```self.site.cache.set(key, value)``` to set it and ```self.site.cache.get(key)``` to get it.
   The key should be a string, the value should be json-encodable (so, be careful with datetime objects)
-  
+
 The values and files you store there can **and will** be deleted sometimes by the user. They should always be
 things you can reconstruct without lossage. They are throwaways.
 

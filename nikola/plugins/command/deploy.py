@@ -38,7 +38,7 @@ import time
 from blinker import signal
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, remove_file, makedirs, STDERR_HANDLER
+from nikola.utils import get_logger, remove_file, STDERR_HANDLER
 
 
 class CommandDeploy(Command):
@@ -121,7 +121,7 @@ class CommandDeploy(Command):
                 try:
                     subprocess.check_call(command, shell=True)
                 except subprocess.CalledProcessError as e:
-                    self.logger.error('Failed deployment — command {0} '
+                    self.logger.error('Failed deployment -- command {0} '
                                       'returned {1}'.format(e.cmd, e.returncode))
                     return e.returncode
 
@@ -130,7 +130,6 @@ class CommandDeploy(Command):
         new_deploy = datetime.utcnow()
         self._emit_deploy_event(last_deploy, new_deploy, clean, undeployed_posts)
 
-        makedirs(self.site.config['CACHE_FOLDER'])
         # Store timestamp of successful deployment
         self.site.state.set('last_deploy', new_deploy.isoformat())
 

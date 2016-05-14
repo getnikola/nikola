@@ -78,7 +78,7 @@ class CommandServe(Command):
             'long': 'address',
             'type': str,
             'default': '',
-            'help': 'Address to bind (default: 0.0.0.0 – all local IPv4 interfaces)',
+            'help': 'Address to bind (default: 0.0.0.0 -- all local IPv4 interfaces)',
         },
         {
             'name': 'detach',

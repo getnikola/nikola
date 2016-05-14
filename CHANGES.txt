@@ -4,11 +4,36 @@ New in master
 Features
 --------
 
+* Added ``enclosure_length`` meta field for better interop (Issue #2338)
+* New Lithuanian translation by Antanas Lasys
+
 Bugfixes
 --------
 
 * Don't call sys.exit() from plugins if possible (Issue #1839)
+* Create Persistor directories only if site is configured (Issue #2334)
+* Remove newlines in imported WordPress titles (Issue #2330)
+
+New in v7.7.8
+=============
+
+Features
+--------
+
+* Template-based shortcodes now receive positional arguments too (Issue #2319)
+
+Bugfixes
+--------
+
 * Warn if a tag appears multiple times in a post (Issue #2315)
+* Fix folder handling and redirects in ``nikola auto`` (Issue #2331)
+* Use state files in ``nikola github_deploy`` and ``nikola status``
+  (Issue #2317)
+* Add ``align`` options for ``youtube``, ``vimeo``, ``soundcloud``
+  reST directives (Issue #2304)
+* Update ``FILE_METADATA_REGEXP`` example in docs (Issue #2296)
+* Show “tags too similar” error instead of cryptic doit crash (Issue #2325)
+* Fix crashes when tag appears multiple times in a post (Issue #2315)
 * Use binary I/O for ``.svg`` files in galleries
 * Accept ``.svgz`` extension by default
 * Don't randomly load plugins when Nikola is called with no arguments (Issue #2297)

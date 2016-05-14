@@ -44,7 +44,6 @@ import pytest
 import unittest
 
 import nikola.plugins.compile.rest
-from nikola.plugins.compile.rest import gist
 from nikola.plugins.compile.rest import vimeo
 import nikola.plugins.compile.rest.listing
 from nikola.plugins.compile.rest.doc import Plugin as DocPlugin
@@ -127,55 +126,6 @@ class MathTestCase(ReSTExtensionTestCase):
         self.basic_test()
         self.assertHTMLContains("span", attributes={"class": "math"},
                                 text="\(e^{ix} = \cos x + i\sin x\)")
-
-
-class GistTestCase(ReSTExtensionTestCase):
-    """ Test GitHubGist.
-    We will replace get_raw_gist() and get_raw_gist_with_filename()
-    monkeypatching the GitHubGist class for avoiding network dependency
-
-    """
-    gist_type = gist.GitHubGist
-    sample = '.. gist:: fake_id\n   :file: spam.py'
-    sample_without_filename = '.. gist:: fake_id2'
-
-    def setUp(self):
-        """ Patch GitHubGist for avoiding network dependency """
-        super(GistTestCase, self).setUp()
-        self.gist_type.get_raw_gist_with_filename = lambda *_: 'raw_gist_file'
-        self.gist_type.get_raw_gist = lambda *_: "raw_gist"
-        _reload(nikola.plugins.compile.rest)
-
-    @pytest.mark.skipif(True, reason="This test indefinitely skipped.")
-    def test_gist(self):
-        """ Test the gist directive with filename """
-        self.setHtmlFromRst(self.sample)
-        output = 'https://gist.github.com/fake_id.js?file=spam.py'
-        self.assertHTMLContains("script", attributes={"src": output})
-        self.assertHTMLContains("pre", text="raw_gist_file")
-
-    @pytest.mark.skipif(True, reason="This test indefinitely skipped.")
-    def test_gist_without_filename(self):
-        """ Test the gist directive without filename """
-        self.setHtmlFromRst(self.sample_without_filename)
-        output = 'https://gist.github.com/fake_id2.js'
-        self.assertHTMLContains("script", attributes={"src": output})
-        self.assertHTMLContains("pre", text="raw_gist")
-
-
-class GistIntegrationTestCase(ReSTExtensionTestCase):
-    """ Test requests integration. The gist plugin uses requests to fetch gist
-    contents and place it in a noscript tag.
-
-    """
-    sample = '.. gist:: 1812835'
-
-    def test_gist_integration(self):
-        """ Fetch contents of the gist from GH and render in a noscript tag """
-        self.basic_test()
-        text = ('Be alone, that is the secret of invention: be alone, that is'
-                ' when ideas are born. -- Nikola Tesla')
-        self.assertHTMLContains('pre', text=text)
 
 
 class SlidesTestCase(ReSTExtensionTestCase):

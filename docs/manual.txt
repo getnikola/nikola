@@ -9,7 +9,7 @@
 The Nikola Handbook
 ===================
 
-:Version: 7.7.7
+:Version: 7.7.8
 
 .. class:: alert alert-info pull-right
 
@@ -851,15 +851,24 @@ chart
     In reStructuredText the quoting needed to pass arguments gets insane really fast, use the chart directive
     instead (the syntax is nicer anyway)
 
+Community shortcodes
+~~~~~~~~~~~~~~~~~~~~
+
+Shortcodes created by the community are available in `the shortcodes repository on GitHub <https://github.com/getnikola/shortcodes>`_.
+
 Template-based shortcodes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you put a template in ``shortcodes/`` called ``mycode.tmpl`` then Nikola will create a shortcode
-called ``mycode`` you can use. Any options you pass to the shortcode will be available as variables
-for that template. If you use the shortcode as paired, then the contents between the paired tags will
-be available in the ``data`` variable.
+If you put a template in ``shortcodes/`` called ``mycode.tmpl`` then Nikola
+will create a shortcode called ``mycode`` you can use. Any options you pass to
+the shortcode will be available as variables for that template. Non-keyword
+options will be passed in a tuple varaible named ``_args``.
 
-If you want to access the Nikola object, it will be available as ``site``. Use with care :-)
+If you use the shortcode as paired, then the contents between the paired tags
+will be available in the ``data`` variable. If you want to access the Nikola
+object, it will be available as ``site``. Use with care :-)
+
+See :doc:`extending` for detailed information.
 
 For example, if your ``shortcodes/foo.tmpl`` contains this::
 
@@ -1653,6 +1662,9 @@ Once you have that, all you need to do is:
 
     .. youtube:: 8N_tupPBtWQ
 
+Supported options: ``height``, ``width``, ``align`` (one of ``left``,
+``center``, ``right``) — all are optional.
+
 Vimeo
 ~~~~~
 
@@ -1675,6 +1687,9 @@ You can override this if you wish:
        :height: 240
        :width: 320
 
+Supported options: ``height``, ``width``, ``align`` (one of ``left``,
+``center``, ``right``) — all are optional.
+
 Soundcloud
 ~~~~~~~~~~
 
@@ -1695,6 +1710,9 @@ The ID is 78131362 and you can embed the audio with this:
 You can also embed playlists, via the `soundcloud_playlist` directive which works the same way.
 
     .. soundcloud_playlist:: 9411706
+
+Supported options: ``height``, ``width``, ``align`` (one of ``left``,
+``center``, ``right``) — all are optional.
 
 Code
 ~~~~

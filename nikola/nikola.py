@@ -128,6 +128,7 @@ LEGAL_VALUES = {
         'it': 'Italian',
         ('ja', '!jp'): 'Japanese',
         'ko': 'Korean',
+        'lt': 'Lithuanian',
         'nb': 'Norwegian Bokmål',
         'nl': 'Dutch',
         'pa': 'Punjabi',
@@ -198,6 +199,7 @@ LEGAL_VALUES = {
         it='it',
         ja='ja',
         ko='kr',  # kr is South Korea, ko is the Korean language
+        lt='lt',
         nb='no',
         nl='nl',
         pl='pl',
@@ -242,6 +244,7 @@ LEGAL_VALUES = {
         it='it',
         ja='ja',
         ko='ko',
+        lt='lt',
         nb='nb',
         nl='nl',
         pl='pl',
@@ -272,6 +275,7 @@ LEGAL_VALUES = {
         'hr': 'hr',
         'hu': 'hu',
         'it': 'it',
+        'lt': 'lt',
         'nb': 'nb',
         'nl': 'nl',
         'pl': 'pl',
@@ -291,7 +295,13 @@ def _enclosure(post, lang):
     """Add an enclosure to RSS."""
     enclosure = post.meta('enclosure', lang)
     if enclosure:
-        length = 0
+        try:
+            length = int(post.meta('enclosure_length', lang) or 0)
+        except KeyError:
+            length = 0
+        except ValueError:
+            utils.LOGGER.warn("Invalid enclosure length for post {0}".format(post.source_path))
+            length = 0
         url = enclosure
         mime = mimetypes.guess_type(url)[0]
         return url, length, mime
@@ -830,6 +840,11 @@ class Nikola(object):
         # Set cache facility
         self.cache = Persistor(os.path.join(self.config['CACHE_FOLDER'], 'cache_data.json'))
 
+        # Create directories for persistors only if a site exists (Issue #2334)
+        if True or self.configured:
+            self.state._set_site(self)
+            self.cache._set_site(self)
+
     def init_plugins(self, commands_only=False):
         """Load plugins as needed."""
         self.plugin_manager = PluginManager(categories_filter={
@@ -1316,24 +1331,39 @@ class Nikola(object):
 
         return result
 
+    def _make_renderfunc(self, t_data):
+        """Return a function that can be registered as a template shortcode.
+
+        The returned function has access to the passed template data and
+        accepts any number of positional and keyword arguments. Positional
+        arguments values are added as a tuple under the key ``_args`` to the
+        keyword argument dict and then the latter provides the template
+        context.
+
+        """
+        def render_shortcode(*args, **kw):
+            kw['_args'] = args
+            return self.template_system.render_template_to_string(t_data, kw)
+        return render_shortcode
+
     def _register_templated_shortcodes(self):
         """Register shortcodes provided by templates in shortcodes/ folders."""
-        builtin_sc_dir = resource_filename('nikola', os.path.join('data', 'shortcodes', utils.get_template_engine(self.THEMES)))
-        sc_dirs = [builtin_sc_dir, 'shortcodes']
+        builtin_sc_dir = resource_filename(
+            'nikola',
+            os.path.join('data', 'shortcodes', utils.get_template_engine(self.THEMES)))
 
-        for sc_dir in sc_dirs:
+        for sc_dir in [builtin_sc_dir, 'shortcodes']:
             if not os.path.isdir(sc_dir):
                 continue
+
             for fname in os.listdir(sc_dir):
                 name, ext = os.path.splitext(fname)
-                if ext == '.tmpl':
-                    with open(os.path.join(sc_dir, fname)) as fd:
-                        template_data = fd.read()
 
-                    def render_shortcode(t_data=template_data, **kw):
-                        return self.template_system.render_template_to_string(t_data, kw)
+                if ext != '.tmpl':
+                    continue
 
-                    self.register_shortcode(name, render_shortcode)
+                with open(os.path.join(sc_dir, fname)) as fd:
+                    self.register_shortcode(name, self._make_renderfunc(fd.read()))
 
     def register_shortcode(self, name, f):
         """Register function f to handle shortcode "name"."""
@@ -1731,10 +1761,7 @@ class Nikola(object):
                 self.posts_per_year[str(post.date.year)].append(post)
                 self.posts_per_month[
                     '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post)
-                for tag in post.alltags:
-                    self.posts_per_tag[tag].append(post)
                 for lang in self.config['TRANSLATIONS'].keys():
-                    _tags_for_post = []
                     for tag in post.tags_for_language(lang):
                         _tag_slugified = utils.slugify(tag, lang)
                         if _tag_slugified in slugged_tags[lang]:
@@ -1745,12 +1772,10 @@ class Nikola(object):
                                 utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
                                 utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.posts_per_tag[other_tag]])))
                                 quit = True
-                            elif _tag_slugified in _tags_for_post:
-                                utils.LOGGER.error("The tag {0} ({1}) appears more than once in post {2}.".format(tag, _tag_slugified, post.source_path))
-                                quit = True
                         else:
                             slugged_tags[lang].add(_tag_slugified)
-                        _tags_for_post.append(_tag_slugified)
+                        if post not in self.posts_per_tag[tag]:
+                            self.posts_per_tag[tag].append(post)
                     self.tags_per_language[lang].extend(post.tags_for_language(lang))
                 self._add_post_to_category(post, post.meta('category'))
 

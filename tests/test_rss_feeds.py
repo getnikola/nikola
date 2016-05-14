@@ -56,7 +56,8 @@ class RSSFeedTest(unittest.TestCase):
                               'tags': 'tags',
                               'link': 'link',
                               'description': 'description',
-                              'enclosure': 'http://www.example.org/foo.mp3'},
+                              'enclosure': 'http://www.example.org/foo.mp3',
+                              'enclosure_length': '5'},
                              True)
                         ))):
             with mock.patch('nikola.nikola.utils.os.path.isdir',

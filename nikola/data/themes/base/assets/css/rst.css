@@ -191,7 +191,7 @@ img.align-center, .figure.align-center, object.align-center {
   text-align: right }
 
 /* reset inner alignment in figures */
-div.align-right {
+.figure.align-right {
   text-align: inherit }
 
 /* div.align-center * { */

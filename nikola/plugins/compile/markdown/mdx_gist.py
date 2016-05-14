@@ -31,161 +31,48 @@ Extension to Python Markdown for Embedded Gists (gist.github.com).
 
 Basic Example:
 
-    >>> import markdown
-    >>> text = '''
-    ... Text of the gist:
-    ... [:gist: 4747847]
-    ... '''
-    >>> html = markdown.markdown(text, [GistExtension()])
-    >>> print(html)
-    <p>Text of the gist:
-    <div class="gist">
-    <script src="https://gist.github.com/4747847.js"></script>
-    <noscript>
-    <pre>import this</pre>
-    </noscript>
-    </div>
-    </p>
+    Text of the gist:
+    [:gist: 4747847]
 
 Example with filename:
 
-    >>> import markdown
-    >>> text = '''
-    ... Text of the gist:
-    ... [:gist: 4747847 zen.py]
-    ... '''
-    >>> html = markdown.markdown(text, [GistExtension()])
-    >>> print(html)
-    <p>Text of the gist:
-    <div class="gist">
-    <script src="https://gist.github.com/4747847.js?file=zen.py"></script>
-    <noscript>
-    <pre>import this</pre>
-    </noscript>
-    </div>
-    </p>
+    Text of the gist:
+    [:gist: 4747847 zen.py]
 
 Basic Example with hexidecimal id:
 
-    >>> import markdown
-    >>> text = '''
-    ... Text of the gist:
-    ... [:gist: c4a43d6fdce612284ac0]
-    ... '''
-    >>> html = markdown.markdown(text, [GistExtension()])
-    >>> print(html)
-    <p>Text of the gist:
-    <div class="gist">
-    <script src="https://gist.github.com/c4a43d6fdce612284ac0.js"></script>
-    <noscript>
-    <pre>Moo</pre>
-    </noscript>
-    </div>
-    </p>
+    Text of the gist:
+    [:gist: c4a43d6fdce612284ac0]
 
 Example with hexidecimal id filename:
 
-    >>> import markdown
-    >>> text = '''
-    ... Text of the gist:
-    ... [:gist: c4a43d6fdce612284ac0 cow.txt]
-    ... '''
-    >>> html = markdown.markdown(text, [GistExtension()])
-    >>> print(html)
-    <p>Text of the gist:
-    <div class="gist">
-    <script src="https://gist.github.com/c4a43d6fdce612284ac0.js?file=cow.txt"></script>
-    <noscript>
-    <pre>Moo</pre>
-    </noscript>
-    </div>
-    </p>
+    Text of the gist:
+    [:gist: c4a43d6fdce612284ac0 cow.txt]
 
 Example using reStructuredText syntax:
 
-    >>> import markdown
-    >>> text = '''
-    ... Text of the gist:
-    ... .. gist:: 4747847 zen.py
-    ... '''
-    >>> html = markdown.markdown(text, [GistExtension()])
-    >>> print(html)
-    <p>Text of the gist:
-    <div class="gist">
-    <script src="https://gist.github.com/4747847.js?file=zen.py"></script>
-    <noscript>
-    <pre>import this</pre>
-    </noscript>
-    </div>
-    </p>
+    Text of the gist:
+    .. gist:: 4747847 zen.py
 
 Example using hexidecimal ID with reStructuredText syntax:
 
-    >>> import markdown
-    >>> text = '''
-    ... Text of the gist:
-    ... .. gist:: c4a43d6fdce612284ac0
-    ... '''
-    >>> html = markdown.markdown(text, [GistExtension()])
-    >>> print(html)
-    <p>Text of the gist:
-    <div class="gist">
-    <script src="https://gist.github.com/c4a43d6fdce612284ac0.js"></script>
-    <noscript>
-    <pre>Moo</pre>
-    </noscript>
-    </div>
-    </p>
+    Text of the gist:
+    .. gist:: c4a43d6fdce612284ac0
 
 Example using hexidecimal ID and filename with reStructuredText syntax:
 
-    >>> import markdown
-    >>> text = '''
-    ... Text of the gist:
-    ... .. gist:: c4a43d6fdce612284ac0 cow.txt
-    ... '''
-    >>> html = markdown.markdown(text, [GistExtension()])
-    >>> print(html)
-    <p>Text of the gist:
-    <div class="gist">
-    <script src="https://gist.github.com/c4a43d6fdce612284ac0.js?file=cow.txt"></script>
-    <noscript>
-    <pre>Moo</pre>
-    </noscript>
-    </div>
-    </p>
+    Text of the gist:
+    .. gist:: c4a43d6fdce612284ac0 cow.txt
 
 Error Case: non-existent Gist ID:
 
-    >>> import markdown
-    >>> text = '''
-    ... Text of the gist:
-    ... [:gist: 0]
-    ... '''
-    >>> html = markdown.markdown(text, [GistExtension()])
-    >>> print(html)
-    <p>Text of the gist:
-    <div class="gist">
-    <script src="https://gist.github.com/0.js"></script>
-    <noscript><!-- WARNING: Received a 404 response from Gist URL: https://gist.githubusercontent.com/raw/0 --></noscript>
-    </div>
-    </p>
+    Text of the gist:
+    [:gist: 0]
 
-Error Case:  non-existent file:
+Error Case: non-existent file:
 
-    >>> import markdown
-    >>> text = '''
-    ... Text of the gist:
-    ... [:gist: 4747847 doesntexist.py]
-    ... '''
-    >>> html = markdown.markdown(text, [GistExtension()])
-    >>> print(html)
-    <p>Text of the gist:
-    <div class="gist">
-    <script src="https://gist.github.com/4747847.js?file=doesntexist.py"></script>
-    <noscript><!-- WARNING: Received a 404 response from Gist URL: https://gist.githubusercontent.com/raw/4747847/doesntexist.py --></noscript>
-    </div>
-    </p>
+    Text of the gist:
+    [:gist: 4747847 doesntexist.py]
 """
 
 from __future__ import unicode_literals, print_function

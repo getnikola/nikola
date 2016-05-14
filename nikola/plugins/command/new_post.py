@@ -343,6 +343,9 @@ class CommandNewPost(Command):
             signal('existing_' + content_type).send(self, **event)
 
             LOGGER.error("The title already exists!")
+            LOGGER.info("Existing {0}'s text is at: {1}".format(content_type, txt_path))
+            if not onefile:
+                LOGGER.info("Existing {0}'s metadata is at: {1}".format(content_type, meta_path))
             return 8
 
         d_name = os.path.dirname(txt_path)

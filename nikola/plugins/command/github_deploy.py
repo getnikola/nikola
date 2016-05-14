@@ -28,14 +28,13 @@
 
 from __future__ import print_function
 from datetime import datetime
-import io
 import os
 import subprocess
 from textwrap import dedent
 
 from nikola.plugin_categories import Command
 from nikola.plugins.command.check import real_scan_files
-from nikola.utils import get_logger, req_missing, makedirs, unicode_str, STDERR_HANDLER
+from nikola.utils import get_logger, req_missing, STDERR_HANDLER
 from nikola.__main__ import main
 from nikola import __version__
 
@@ -116,7 +115,7 @@ class CommandGitHubDeploy(Command):
             if xfail:
                 return e.returncode
             self.logger.error(
-                'Failed GitHub deployment — command {0} '
+                'Failed GitHub deployment -- command {0} '
                 'returned {1}'.format(e.cmd, e.returncode)
             )
             raise SystemError(e.returncode)
@@ -164,8 +163,5 @@ class CommandGitHubDeploy(Command):
         self.logger.info("Successful deployment")
 
         # Store timestamp of successful deployment
-        timestamp_path = os.path.join(self.site.config["CACHE_FOLDER"], "lastdeploy")
         new_deploy = datetime.utcnow()
-        makedirs(self.site.config["CACHE_FOLDER"])
-        with io.open(timestamp_path, "w+", encoding="utf8") as outf:
-            outf.write(unicode_str(new_deploy.isoformat()))
+        self.site.state.set('last_deploy', new_deploy.isoformat())

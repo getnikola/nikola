@@ -48,9 +48,13 @@ class Persistor():
     def __init__(self, path):
         """Where do you want it persisted."""
         self._path = path
-        utils.makedirs(os.path.dirname(path))
         self._local = threading.local()
         self._local.data = {}
+
+    def _set_site(self, site):
+        """Set site and create path directory."""
+        self._site = site
+        utils.makedirs(os.path.dirname(self._path))
 
     def get(self, key):
         """Get data stored in key."""

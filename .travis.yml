@@ -31,7 +31,7 @@ install:
 # WARNING: if you edit this, make sure to replicate your changes in dodo.py and appveyor.yml.
 script:
   - "if [[ $NMODE == 'nikola' ]]; then py.test --doctest-modules nikola/; fi"
-  - "if [[ $NMODE == 'nikola' ]]; then py.test --cov nikola --cov-report term-missing tests/; fi"
+  - "if [[ $NMODE == 'nikola' ]]; then py.test tests/; fi"
   - "if [[ $NMODE == 'nikola' ]]; then nikola; fi"
   - "if [[ $NMODE == 'nikola' ]]; then nikola help; fi"
   - "if [[ $NMODE == 'flake8' ]]; then flake8 nikola/; fi"

@@ -27,7 +27,6 @@
 """Display site status."""
 
 from __future__ import print_function
-import io
 import os
 from datetime import datetime
 from dateutil.tz import gettz, tzlocal
@@ -42,7 +41,7 @@ class CommandStatus(Command):
 
     doc_purpose = "display site status"
     doc_description = "Show information about the posts and site deployment."
-    doc_usage = '[-l|--list-drafts] [-m|--list-modified] [-s|--list-scheduled]'
+    doc_usage = '[-d|--list-drafts] [-m|--list-modified] [-p|--list-private] [-P|--list-published] [-s|--list-scheduled]'
     logger = None
     cmd_options = [
         {
@@ -62,6 +61,22 @@ class CommandStatus(Command):
             'help': 'List all modified files since last deployment',
         },
         {
+            'name': 'list_private',
+            'short': 'p',
+            'long': 'list-private',
+            'type': bool,
+            'default': False,
+            'help': 'List all private posts',
+        },
+        {
+            'name': 'list_published',
+            'short': 'P',
+            'long': 'list-published',
+            'type': bool,
+            'default': False,
+            'help': 'List all published posts',
+        },
+        {
             'name': 'list_scheduled',
             'short': 's',
             'long': 'list-scheduled',
@@ -75,16 +90,12 @@ class CommandStatus(Command):
         """Display site status."""
         self.site.scan_posts()
 
-        timestamp_path = os.path.join(self.site.config["CACHE_FOLDER"], "lastdeploy")
-
-        last_deploy = None
-
-        try:
-            with io.open(timestamp_path, "r", encoding="utf8") as inf:
-                last_deploy = datetime.strptime(inf.read().strip(), "%Y-%m-%dT%H:%M:%S.%f")
-                last_deploy_offset = datetime.utcnow() - last_deploy
-        except (IOError, Exception):
-            print("It does not seem like you’ve ever deployed the site (or cache missing).")
+        last_deploy = self.site.state.get('last_deploy')
+        if last_deploy is not None:
+            last_deploy = datetime.strptime(last_deploy, "%Y-%m-%dT%H:%M:%S.%f")
+            last_deploy_offset = datetime.utcnow() - last_deploy
+        else:
+            print("It does not seem like you've ever deployed the site (or cache missing).")
 
         if last_deploy:
 
@@ -110,6 +121,14 @@ class CommandStatus(Command):
 
         posts_count = len(self.site.all_posts)
 
+        # find all published posts
+        posts_published = [post for post in self.site.all_posts if post.use_in_feeds]
+        posts_published = sorted(posts_published, key=lambda post: post.source_path)
+
+        # find all private posts
+        posts_private = [post for post in self.site.all_posts if post.is_private]
+        posts_private = sorted(posts_private, key=lambda post: post.source_path)
+
         # find all drafts
         posts_drafts = [post for post in self.site.all_posts if post.is_draft]
         posts_drafts = sorted(posts_drafts, key=lambda post: post.source_path)
@@ -128,7 +147,13 @@ class CommandStatus(Command):
         if options['list_drafts']:
             for post in posts_drafts:
                 print("Draft: '{0}' ({1}; source: {2})".format(post.meta('title'), post.permalink(), post.source_path))
-        print("{0} posts in total, {1} scheduled, and {2} drafts.".format(posts_count, len(posts_scheduled), len(posts_drafts)))
+        if options['list_private']:
+            for post in posts_private:
+                print("Private: '{0}' ({1}; source: {2})".format(post.meta('title'), post.permalink(), post.source_path))
+        if options['list_published']:
+            for post in posts_published:
+                print("Published: '{0}' ({1}; source: {2})".format(post.meta('title'), post.permalink(), post.source_path))
+        print("{0} posts in total, {1} scheduled, {2} drafts, {3} private and {4} published.".format(posts_count, len(posts_scheduled), len(posts_drafts), len(posts_private), len(posts_published)))
 
     def human_time(self, dt):
         """Translate time into a human-friendly representation."""

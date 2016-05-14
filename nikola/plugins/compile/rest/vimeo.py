@@ -28,6 +28,7 @@
 
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
+from nikola.plugins.compile.rest import _align_choice, _align_options_base
 
 import requests
 import json
@@ -48,10 +49,12 @@ class Plugin(RestExtension):
         return super(Plugin, self).set_site(site)
 
 
-CODE = """<iframe src="https://player.vimeo.com/video/{vimeo_id}"
+CODE = """<div class="vimeo-video{align}">
+<iframe src="https://player.vimeo.com/video/{vimeo_id}"
 width="{width}" height="{height}"
 frameborder="0" webkitAllowFullScreen="webkitAllowFullScreen" mozallowfullscreen="mozallowfullscreen" allowFullScreen="allowFullScreen">
 </iframe>
+</div>
 """
 
 VIDEO_DEFAULT_HEIGHT = 500
@@ -73,6 +76,7 @@ class Vimeo(Directive):
     option_spec = {
         "width": directives.positive_int,
         "height": directives.positive_int,
+        "align": _align_choice
     }
 
     # set to False for not querying the vimeo api for size
@@ -92,6 +96,10 @@ class Vimeo(Directive):
                 return err
             self.set_video_size()
         options.update(self.options)
+        if self.options.get('align') in _align_options_base:
+            options['align'] = ' align-' + self.options['align']
+        else:
+            options['align'] = ''
         return [nodes.raw('', CODE.format(**options), format='html')]
 
     def check_modules(self):
