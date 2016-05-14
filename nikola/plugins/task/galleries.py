@@ -33,7 +33,6 @@ import io
 import json
 import mimetypes
 import os
-import sys
 try:
     from urlparse import urljoin
 except ImportError:

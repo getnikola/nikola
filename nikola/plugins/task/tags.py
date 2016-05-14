@@ -29,7 +29,6 @@
 from __future__ import unicode_literals
 import json
 import os
-import sys
 import natsort
 try:
     from urlparse import urljoin
@@ -107,7 +106,6 @@ class RenderTags(Task):
                 if len(intersect) > 0:
                     for slug in intersect:
                         utils.LOGGER.error("Category '{0}' and tag '{1}' both have the same slug '{2}' for language {3}!".format('/'.join(categories[slug]), tags[slug], slug, lang))
-                     utils.LOGGER.error("Category '{0}' and tag '{1}' both have the same slug '{2}'!".format(categories[slug], tags[slug], slug))
 
             # Test for category slug clashes
             categories = {}
