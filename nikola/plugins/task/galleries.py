@@ -33,7 +33,6 @@ import io
 import json
 import mimetypes
 import os
-import sys
 try:
     from urlparse import urljoin
 except ImportError:
@@ -94,8 +93,8 @@ class Galleries(Task, ImageProcessor):
         for source, dest in self.kw['gallery_folders'].items():
             if source in appearing_paths or dest in appearing_paths:
                 problem = source if source in appearing_paths else dest
-                utils.LOGGER.error("The gallery input or output folder '{0}' appears in more than one entry in GALLERY_FOLDERS, exiting.".format(problem))
-                sys.exit(1)
+                utils.LOGGER.error("The gallery input or output folder '{0}' appears in more than one entry in GALLERY_FOLDERS, ignoring.".format(problem))
+                continue
             appearing_paths.add(source)
             appearing_paths.add(dest)
 
@@ -116,10 +115,11 @@ class Galleries(Task, ImageProcessor):
             if len(candidates) == 1:
                 return candidates[0]
             self.logger.error("Gallery name '{0}' is not unique! Possible output paths: {1}".format(name, candidates))
+            raise RuntimeError("Gallery name '{0}' is not unique! Possible output paths: {1}".format(name, candidates))
         else:
             self.logger.error("Unknown gallery '{0}'!".format(name))
             self.logger.info("Known galleries: " + str(list(self.proper_gallery_links.keys())))
-        sys.exit(1)
+            raise RuntimeError("Unknown gallery '{0}'!".format(name))
 
     def gallery_path(self, name, lang):
         """Link to an image gallery's path.

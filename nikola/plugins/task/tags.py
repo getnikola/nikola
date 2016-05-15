@@ -29,7 +29,6 @@
 from __future__ import unicode_literals
 import json
 import os
-import sys
 import natsort
 try:
     from urlparse import urljoin
@@ -107,7 +106,6 @@ class RenderTags(Task):
                 if len(intersect) > 0:
                     for slug in intersect:
                         utils.LOGGER.error("Category '{0}' and tag '{1}' both have the same slug '{2}' for language {3}!".format('/'.join(categories[slug]), tags[slug], slug, lang))
-                    sys.exit(1)
 
             # Test for category slug clashes
             categories = {}
@@ -116,13 +114,13 @@ class RenderTags(Task):
                 for part in slug:
                     if len(part) == 0:
                         utils.LOGGER.error("Category '{0}' yields invalid slug '{1}'!".format(category, '/'.join(slug)))
-                        sys.exit(1)
+                        raise RuntimeError("Category '{0}' yields invalid slug '{1}'!".format(category, '/'.join(slug)))
                 if slug in categories:
                     other_category = categories[slug]
                     utils.LOGGER.error('You have categories that are too similar: {0} and {1} (language {2})'.format(category, other_category, lang))
                     utils.LOGGER.error('Category {0} is used in: {1}'.format(category, ', '.join([p.source_path for p in self.site.posts_per_category[category]])))
                     utils.LOGGER.error('Category {0} is used in: {1}'.format(other_category, ', '.join([p.source_path for p in self.site.posts_per_category[other_category]])))
-                    sys.exit(1)
+                    raise RuntimeError("Category '{0}' yields invalid slug '{1}'!".format(category, '/'.join(slug)))
                 categories[slug] = category
 
         tag_list = list(self.site.posts_per_tag.items())

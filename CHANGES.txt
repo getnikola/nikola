@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Don't call sys.exit() from plugins if possible (Issue #1839)
 * Create Persistor directories only if site is configured (Issue #2334)
 * Remove newlines in imported WordPress titles (Issue #2330)
 
