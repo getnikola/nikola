@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Cache theme messages after loading once (Issue #2344)
 * Add ``<link>`` tags to other languages even if the post is
   untranslated (Google complained otherwise)
 * Don't call sys.exit() from plugins if possible (Issue #1839)
