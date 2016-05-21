@@ -129,7 +129,7 @@ LEGAL_VALUES = {
         ('ja', '!jp'): 'Japanese',
         'ko': 'Korean',
         'lt': 'Lithuanian',
-        'nb': 'Norwegian Bokmål',
+        'nb': 'Norwegian (Bokmål)',
         'nl': 'Dutch',
         'pa': 'Punjabi',
         'pl': 'Polish',
@@ -148,26 +148,47 @@ LEGAL_VALUES = {
     },
     '_WINDOWS_LOCALE_GUESSES': {
         # TODO incomplete
-        # some languages may need that the appropiate Microsoft Language Pack be instaled.
+        # some languages may need that the appropriate Microsoft Language Pack be installed.
+        "ar": "Arabic",
+        "az": "Azeri (Latin)",
         "bg": "Bulgarian",
+        "bs": "Bosnian",
         "ca": "Catalan",
+        "cs": "Czech",
+        "da": "Danish",
         "de": "German",
         "el": "Greek",
         "en": "English",
-        "eo": "Esperanto",
+        # "eo": "Esperanto", # Not available
         "es": "Spanish",
-        "fa": "Farsi",  # Persian
+        "et": "Estonian",
+        "eu": "Basque",
+        "fa": "Persian",  # Persian
+        "fi": "Finnish",
         "fr": "French",
+        "gl": "Galician",
+        "hi": "Hindi",
         "hr": "Croatian",
         "hu": "Hungarian",
+        "id": "Indonesian",
         "it": "Italian",
-        "jp": "Japanese",
+        "ja": "Japanese",
+        "ko": "Korean",
+        "nb": "Norwegian",  # Not Bokmål, as Windows doesn't find it for unknown reasons.
         "nl": "Dutch",
+        "pa": "Punjabi",
         "pl": "Polish",
+        "pt": "Portuguese_Portugal",
         "pt_br": "Portuguese_Brazil",
         "ru": "Russian",
-        "sl_si": "Slovenian",
-        "tr_tr": "Turkish",
+        "sk": "Slovak",
+        "sl": "Slovenian",
+        "sr": "Serbian",
+        "sr_latin": "Serbian (Latin)",
+        "sv": "Swedish",
+        "tr": "Turkish",
+        "uk": "Ukrainian",
+        "ur": "Urdu",
         "zh_cn": "Chinese_China",  # Chinese (Simplified)
     },
     '_TRANSLATIONS_WITH_COUNTRY_SPECIFIERS': {
