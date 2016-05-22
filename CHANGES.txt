@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Reload English messages for every theme to prevent caching (Issue #2347)
 * Cache theme messages after loading once (Issue #2344)
 * Add ``<link>`` tags to other languages even if the post is
   untranslated (Google complained otherwise)
