@@ -649,6 +649,8 @@ def load_messages(themes, translations, default_lang):
         sys.path.insert(0, default_folder)
         sys.path.insert(0, msg_folder)
         english = __import__('messages_en')
+        # If we don't do the reload, the module is cached
+        _reload(english)
         for lang in list(translations.keys()):
             try:
                 translation = __import__('messages_' + lang)
@@ -667,6 +669,7 @@ def load_messages(themes, translations, default_lang):
                 del(translation)
             except ImportError as orig:
                 raise LanguageNotFoundError(lang, orig)
+        del(english)
     sys.path = oldpath
     return messages
 
