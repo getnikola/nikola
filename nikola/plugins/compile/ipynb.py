@@ -82,7 +82,6 @@ class CompileIPynb(PageCompiler):
         """Export notebooks as HTML strings."""
         if flag is None:
             req_missing(['ipython[notebook]>=2.0.0'], 'build this site (compile ipynb)')
-        HTMLExporter.default_template = 'basic'
         c = Config(self.site.config['IPYNB_CONFIG'])
         exportHtml = HTMLExporter(config=c)
         with io.open(source, "r", encoding="utf8") as in_file:
