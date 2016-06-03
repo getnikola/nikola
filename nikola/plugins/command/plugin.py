@@ -296,12 +296,15 @@ class CommandPlugin(Command):
     def do_uninstall(self, name):
         """Uninstall a plugin."""
         for plugin in self.site.plugin_manager.getAllPlugins():  # FIXME: this is repeated thrice
-            p = plugin.path
-            if os.path.isdir(p):
-                p = p + os.sep
-            else:
-                p = os.path.dirname(p)
             if name == plugin.name:  # Uninstall this one
+                p = plugin.path
+                if os.path.isdir(p):
+                    # Plugins that have a package in them need to delete parent
+                    # Issue #2356
+                    p = p + os.sep
+                    p = os.path.abspath(os.path.join(p, os.pardir))
+                else:
+                    p = os.path.dirname(p)
                 LOGGER.warning('About to uninstall plugin: {0}'.format(name))
                 LOGGER.warning('This will delete {0}'.format(p))
                 sure = utils.ask_yesno('Are you sure?')
