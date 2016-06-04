@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Option to disable color output using NIKOLA_MONO envvar (Issue #2360)
 * Improved locale detection in Windows (Issue #2343)
 * Added ``enclosure_length`` meta field for better interop (Issue #2338)
 * New Lithuanian translation by Antanas Lasys

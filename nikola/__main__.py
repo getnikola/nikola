@@ -68,7 +68,7 @@ _RETURN_DOITNIKOLA = False
 def main(args=None):
     """Run Nikola."""
     colorful = False
-    if sys.stderr.isatty() and os.name != 'nt':
+    if sys.stderr.isatty() and os.name != 'nt' and os.getenv('NIKOLA_MONO') is None:
         colorful = True
 
     ColorfulStderrHandler._colorful = colorful
