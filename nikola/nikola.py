@@ -28,6 +28,7 @@
 
 from __future__ import print_function, unicode_literals
 import io
+from collections import defaultdict
 from copy import copy
 from pkg_resources import resource_filename
 import datetime
