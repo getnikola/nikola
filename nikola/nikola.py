@@ -932,6 +932,7 @@ class Nikola(object):
 
         # Find repeated plugins and discard the less local copy
         def plugin_position_in_places(plugin):
+            # plugin here is a tuple, the 1st element is the path to the .plugin file
             for i, place in enumerate(self._plugin_places):
                 if plugin[0].startswith(place):
                     return i
