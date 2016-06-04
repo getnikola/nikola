@@ -867,7 +867,7 @@ class Nikola(object):
             self.state._set_site(self)
             self.cache._set_site(self)
 
-    def init_plugins(self, commands_only=False):
+    def init_plugins(self, commands_only=False, load_all=False):
         """Load plugins as needed."""
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,
@@ -901,34 +901,35 @@ class Nikola(object):
         self.plugin_manager.getPluginLocator().setPluginPlaces(self._plugin_places)
         self.plugin_manager.locatePlugins()
         bad_candidates = set([])
-        for p in self.plugin_manager._candidates:
-            if commands_only:
-                if p[-1].details.has_option('Nikola', 'plugincategory'):
-                    # FIXME TemplateSystem should not be needed
-                    if p[-1].details.get('Nikola', 'PluginCategory') not in {'Command', 'Template'}:
+        if not load_all:
+            for p in self.plugin_manager._candidates:
+                if commands_only:
+                    if p[-1].details.has_option('Nikola', 'plugincategory'):
+                        # FIXME TemplateSystem should not be needed
+                        if p[-1].details.get('Nikola', 'PluginCategory') not in {'Command', 'Template'}:
+                            bad_candidates.add(p)
+                    else:
                         bad_candidates.add(p)
-                else:
-                    bad_candidates.add(p)
-            elif self.configured:  # Not commands-only, and configured
-                # Remove compilers we don't use
-                if p[-1].name in self.bad_compilers:
-                    bad_candidates.add(p)
-                    self.disabled_compilers[p[-1].name] = p
-                    utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
-                if p[-1].name not in self.config['COMPILERS'] and \
-                        p[-1].details.has_option('Nikola', 'plugincategory') and p[-1].details.get('Nikola', 'PluginCategory') == 'Compiler':
-                    bad_candidates.add(p)
-                    self.disabled_compilers[p[-1].name] = p
-                    utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
-                # Remove blacklisted plugins
-                if p[-1].name in self.config['DISABLED_PLUGINS']:
-                    bad_candidates.add(p)
-                    utils.LOGGER.debug('Not loading disabled plugin {}', p[-1].name)
-                # Remove compiler extensions we don't need
-                if p[-1].details.has_option('Nikola', 'compiler') and p[-1].details.get('Nikola', 'compiler') in self.disabled_compilers:
-                    bad_candidates.add(p)
-                    utils.LOGGER.debug('Not loading compiler extension {}', p[-1].name)
-        self.plugin_manager._candidates = list(set(self.plugin_manager._candidates) - bad_candidates)
+                elif self.configured:  # Not commands-only, and configured
+                    # Remove compilers we don't use
+                    if p[-1].name in self.bad_compilers:
+                        bad_candidates.add(p)
+                        self.disabled_compilers[p[-1].name] = p
+                        utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
+                    if p[-1].name not in self.config['COMPILERS'] and \
+                            p[-1].details.has_option('Nikola', 'plugincategory') and p[-1].details.get('Nikola', 'PluginCategory') == 'Compiler':
+                        bad_candidates.add(p)
+                        self.disabled_compilers[p[-1].name] = p
+                        utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
+                    # Remove blacklisted plugins
+                    if p[-1].name in self.config['DISABLED_PLUGINS']:
+                        bad_candidates.add(p)
+                        utils.LOGGER.debug('Not loading disabled plugin {}', p[-1].name)
+                    # Remove compiler extensions we don't need
+                    if p[-1].details.has_option('Nikola', 'compiler') and p[-1].details.get('Nikola', 'compiler') in self.disabled_compilers:
+                        bad_candidates.add(p)
+                        utils.LOGGER.debug('Not loading compiler extension {}', p[-1].name)
+            self.plugin_manager._candidates = list(set(self.plugin_manager._candidates) - bad_candidates)
         self.plugin_manager.loadPlugins()
 
         self._activate_plugins_of_category("SignalHandler")
