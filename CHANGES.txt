@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Avoid conflicts caused by multiple copies of the same plugin (#2362)
 * Fix handling of some wordpress dumps (Issue #2340)
 * When using the plugin command, load ALL plugins (Issue #2359)
 * Fix plugin removal for plugins that are a package (Issue #2356)
