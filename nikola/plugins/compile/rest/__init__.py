@@ -37,6 +37,7 @@ import docutils.io
 import docutils.readers.standalone
 import docutils.writers.html4css1
 import docutils.parsers.rst.directives
+from docutils.parsers.rst import roles
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import unicode_str, get_logger, makedirs, write_metadata, STDERR_HANDLER
@@ -191,6 +192,14 @@ class NikolaReader(docutils.readers.standalone.Reader):
         document.reporter.stream = False
         document.reporter.attach_observer(get_observer(self.l_settings))
         return document
+
+def shortcode_role(name, rawtext, text, lineno, inliner,
+             options={}, content=[]):
+    return [docutils.nodes.raw('', text, format='html')], []
+
+roles.register_canonical_role('raw-html', shortcode_role)
+roles.register_canonical_role('html', shortcode_role)
+roles.register_canonical_role('sc', shortcode_role)
 
 
 def add_node(node, visit_function=None, depart_function=None):

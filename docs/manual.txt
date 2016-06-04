@@ -813,7 +813,7 @@ To use them from plugins, please see `Extending Nikola <https://getnikola.com/ex
 Using a shortcode
 ~~~~~~~~~~~~~~~~~
 
-In your content files, a shortcode can be called by using the {{% raw %}}{{% name parameters %}}{{% /raw %}} form. Shortcode parameters are space delimited. Parameters with spaces can be quoted (or backslash escaped).
+In your content files, a shortcode can be called by using the :sc:`{{% name parameters %}}` form. Shortcode parameters are space delimited. Parameters with spaces can be quoted (or backslash escaped).
 
 The first word is always the name of the shortcode. Parameters follow the name. Depending upon how the shortcode is defined, the parameters may be named, positional or both. The format for named parameters models that of HTML with the format name="value".
 
@@ -822,6 +822,19 @@ Some shortcodes use or require closing shortcodes. Like HTML, the opening and cl
 Example of a paired shortcode (note that we don't have a highlight shortcode yet ;-)::
 
     {{% raw %}}{{% highlight python %}} A bunch of code here {{% /highlight %}}{{% /raw %}}
+
+.. note:: Shortcodes and reStructuredText
+
+    In reStructuredText shortcodes may fail because docutils turns URL into links and everything breaks.
+    For some shortcodes there are alternative docutils directives (example, you can use the media
+    **directive** instead of the media shortcode.
+
+    Also, you can use the shortcode **role**::
+
+       :sc:`{{% shortcode here %}}`
+
+    That role passes text unaltered, so shortcodes behave correctly.
+
 
 Built-in shortcodes
 ~~~~~~~~~~~~~~~~~~~
@@ -832,24 +845,20 @@ post-list
 media
     Display media embedded from a URL, for example, this will embed a youtube video::
 
-        {{% raw %}}{{% media url="https://www.youtube.com/watch?v=Nck6BZga7TQ" %}}{{% /raw %}}
+        {{% media url="https://www.youtube.com/watch?v=Nck6BZga7TQ" %}}
 
-    In reStructuredText this shortcode will fail because docutils turns that URL to a link and everything breaks, use the `media directive <#media>`__ instead.
 
 chart
     Create charts via PyGal. This is similar to the `chart directive <#chart>`__ except the syntax is adapted to
     shortcodes. This is an example::
 
-        {{% raw %}}{{% chart Bar title='Browser usage evolution (in %)' %}}
+        {{% chart Bar title='Browser usage evolution (in %)' %}}
         x_labels='["2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012"]'%}}
         'Firefox', [None, None, 0, 16.6, 25, 31]
         'Chrome',  [None, None, None, None, None, None]
         'IE',      [85.8, 84.6, 84.7, 74.5, 66, 58.6]
         'Others',  [14.2, 15.4, 15.3, 8.9, 9, 10.4]
-        {{% /chart %}}{{% /raw %}}
-
-    In reStructuredText the quoting needed to pass arguments gets insane really fast, use the chart directive
-    instead (the syntax is nicer anyway)
+        {{% /chart %}}
 
 Community shortcodes
 ~~~~~~~~~~~~~~~~~~~~
@@ -876,7 +885,7 @@ For example, if your ``shortcodes/foo.tmpl`` contains this::
 
 And your post contains this::
 
-    {{% raw %}}{{% foo bar=bla %}}{{% /raw %}}
+    {{% foo bar=bla %}}
 
 Then the output file will contain::
 
