@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Fix handling of some wordpress dumps (Issue #2340)
 * When using the plugin command, load ALL plugins (Issue #2359)
 * Fix plugin removal for plugins that are a package (Issue #2356)
 * Reload English messages for every theme to prevent caching (Issue #2347)

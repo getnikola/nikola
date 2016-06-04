@@ -541,6 +541,8 @@ class CommandImportWordpress(Command, ImportMixin):
 
                     if meta_key in metadata:
                         image_meta = metadata[meta_key]
+                        if not image_meta:
+                            continue
                         dst_meta = {}
 
                         def add(our_key, wp_key, is_int=False, ignore_zero=False, is_float=False):
