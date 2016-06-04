@@ -933,7 +933,8 @@ class Nikola(object):
 
         # Find repeated plugins and discard the less local copy
         def plugin_position_in_places(plugin):
-            # plugin here is a tuple, the 1st element is the path to the .plugin file
+            # plugin here is a tuple:
+            # (path to the .plugin file, path to plugin module w/o .py, plugin metadata)
             for i, place in enumerate(self._plugin_places):
                 if plugin[0].startswith(place):
                     return i
@@ -946,6 +947,8 @@ class Nikola(object):
             if len(plugins) > 1:
                 # Sort by locality
                 plugins.sort(key=plugin_position_in_places)
+                utils.LOGGER.debug("Plugin {} exists in multiple places, using {}".format(
+                    plugins[-1][2].name, plugins[-1][0]))
             self.plugin_manager._candidates.append(plugins[-1])
 
         self.plugin_manager.loadPlugins()
