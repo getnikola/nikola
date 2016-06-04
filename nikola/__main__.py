@@ -332,6 +332,8 @@ class DoitNikola(DoitMain):
 
         if args[0] == 'help':
             self.nikola.init_plugins(commands_only=True)
+        elif args[0] == 'plugin':
+            self.nikola.init_plugins(load_all=True)
         else:
             self.nikola.init_plugins()
 
