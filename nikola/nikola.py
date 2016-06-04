@@ -888,8 +888,8 @@ class Nikola(object):
         if sys.version_info[0] == 3:
             self._plugin_places = [
                 resource_filename('nikola', 'plugins'),
-                os.path.join(os.getcwd(), 'plugins'),
                 os.path.expanduser('~/.nikola/plugins'),
+                os.path.join(os.getcwd(), 'plugins'),
             ] + [path for path in extra_plugins_dirs if path]
         else:
             self._plugin_places = [
@@ -930,6 +930,27 @@ class Nikola(object):
                         bad_candidates.add(p)
                         utils.LOGGER.debug('Not loading compiler extension {}', p[-1].name)
             self.plugin_manager._candidates = list(set(self.plugin_manager._candidates) - bad_candidates)
+
+        # Find repeated plugins and discard the less local copy
+        def plugin_position_in_places(plugin):
+            # plugin here is a tuple:
+            # (path to the .plugin file, path to plugin module w/o .py, plugin metadata)
+            for i, place in enumerate(self._plugin_places):
+                if plugin[0].startswith(place):
+                    return i
+
+        plugin_dict = defaultdict(list)
+        for data in self.plugin_manager._candidates:
+            plugin_dict[data[2].name].append(data)
+        self.plugin_manager._candidates = []
+        for name, plugins in plugin_dict.items():
+            if len(plugins) > 1:
+                # Sort by locality
+                plugins.sort(key=plugin_position_in_places)
+                utils.LOGGER.debug("Plugin {} exists in multiple places, using {}".format(
+                    plugins[-1][2].name, plugins[-1][0]))
+            self.plugin_manager._candidates.append(plugins[-1])
+
         self.plugin_manager.loadPlugins()
 
         self._activate_plugins_of_category("SignalHandler")
