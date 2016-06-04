@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Point the user to our users site after 1st successful deploy (Issue #2096)
 * Option to disable color output using ``NIKOLA_MONO`` environment
   variable (Issue #2360)
 * Improved locale detection in Windows (Issue #2343)
