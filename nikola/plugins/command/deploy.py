@@ -135,8 +135,8 @@ class CommandDeploy(Command):
         if clean:
             self.logger.info(
                 'Looks like this is the first time you deployed this site. '
-                'Maybe you would want to let us know you are using Nikola '
-                'at https://users.getnikola.add')
+                'Let us know you are using Nikola '
+                'at <https://users.getnikola.com/add/> if you want!')
 
     def _emit_deploy_event(self, last_deploy, new_deploy, clean=False, undeployed=None):
         """Emit events for all timeline entries newer than last deploy.
