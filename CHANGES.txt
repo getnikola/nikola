@@ -4,7 +4,7 @@ New in master
 Features
 --------
 
-* New ``sc`` or ``html`` reSt role, which passes content unaltered (Issue #1854)
+* New ``sc`` or ``html`` reST role, which passes content unaltered (Issue #1854)
 * Point the user to our users site after 1st successful deploy (Issue #2096)
 * Option to disable color output using ``NIKOLA_MONO`` environment
   variable (Issue #2360)

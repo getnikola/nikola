@@ -193,8 +193,10 @@ class NikolaReader(docutils.readers.standalone.Reader):
         document.reporter.attach_observer(get_observer(self.l_settings))
         return document
 
+
 def shortcode_role(name, rawtext, text, lineno, inliner,
-             options={}, content=[]):
+                   options={}, content=[]):
+    """A shortcode role that passes through raw inline HTML."""
     return [docutils.nodes.raw('', text, format='html')], []
 
 roles.register_canonical_role('raw-html', shortcode_role)
