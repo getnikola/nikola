@@ -813,7 +813,11 @@ To use them from plugins, please see `Extending Nikola <https://getnikola.com/ex
 Using a shortcode
 ~~~~~~~~~~~~~~~~~
 
-In your content files, a shortcode can be called by using the :sc:`{{% name parameters %}}` form. Shortcode parameters are space delimited. Parameters with spaces can be quoted (or backslash escaped).
+In your content files, a shortcode can be called by using this form::
+
+    {{% raw %}}{{% name parameters %}}{{% /raw %}}
+
+Shortcode parameters are space delimited. Parameters with spaces can be quoted (or backslash escaped).
 
 The first word is always the name of the shortcode. Parameters follow the name. Depending upon how the shortcode is defined, the parameters may be named, positional or both. The format for named parameters models that of HTML with the format name="value".
 
@@ -831,7 +835,7 @@ Example of a paired shortcode (note that we don't have a highlight shortcode yet
 
     Also, you can use the shortcode **role**::
 
-       :sc:`{{% shortcode here %}}`
+       :sc:`{{% raw %}}{{% shortcode here %}}{{% /raw %}}`
 
     That role passes text unaltered, so shortcodes behave correctly.
 
@@ -860,6 +864,11 @@ chart
         'Others',  [14.2, 15.4, 15.3, 8.9, 9, 10.4]
         {{% /chart %}}
 
+raw
+    Passes the content along, mostly used so I can write this damn section and you can see the shortcodes instead
+    of them being munged into shortcode **output**. I can't show an example because Inception.
+
+
 Community shortcodes
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -885,7 +894,7 @@ For example, if your ``shortcodes/foo.tmpl`` contains this::
 
 And your post contains this::
 
-    {{% foo bar=bla %}}
+    {{% raw %}}{{% foo bar=bla %}}{{% /raw %}}
 
 Then the output file will contain::
 
