@@ -813,7 +813,11 @@ To use them from plugins, please see `Extending Nikola <https://getnikola.com/ex
 Using a shortcode
 ~~~~~~~~~~~~~~~~~
 
-In your content files, a shortcode can be called by using the {{% raw %}}{{% name parameters %}}{{% /raw %}} form. Shortcode parameters are space delimited. Parameters with spaces can be quoted (or backslash escaped).
+In your content files, a shortcode can be called by using this form::
+
+    {{% raw %}}{{% name parameters %}}{{% /raw %}}
+
+Shortcode parameters are space delimited. Parameters with spaces can be quoted (or backslash escaped).
 
 The first word is always the name of the shortcode. Parameters follow the name. Depending upon how the shortcode is defined, the parameters may be named, positional or both. The format for named parameters models that of HTML with the format name="value".
 
@@ -822,6 +826,19 @@ Some shortcodes use or require closing shortcodes. Like HTML, the opening and cl
 Example of a paired shortcode (note that we don't have a highlight shortcode yet ;-)::
 
     {{% raw %}}{{% highlight python %}} A bunch of code here {{% /highlight %}}{{% /raw %}}
+
+.. note:: Shortcodes and reStructuredText
+
+    In reStructuredText shortcodes may fail because docutils turns URL into links and everything breaks.
+    For some shortcodes there are alternative docutils directives (example, you can use the media
+    **directive** instead of the media shortcode.
+
+    Also, you can use the shortcode **role**::
+
+       :sc:`{{% raw %}}{{% shortcode here %}}{{% /raw %}}`
+
+    That role passes text unaltered, so shortcodes behave correctly.
+
 
 Built-in shortcodes
 ~~~~~~~~~~~~~~~~~~~
@@ -834,7 +851,6 @@ media
 
         {{% raw %}}{{% media url="https://www.youtube.com/watch?v=Nck6BZga7TQ" %}}{{% /raw %}}
 
-    In reStructuredText this shortcode will fail because docutils turns that URL to a link and everything breaks, use the `media directive <#media>`__ instead.
 
 chart
     Create charts via PyGal. This is similar to the `chart directive <#chart>`__ except the syntax is adapted to
@@ -848,8 +864,10 @@ chart
         'Others',  [14.2, 15.4, 15.3, 8.9, 9, 10.4]
         {{% /chart %}}{{% /raw %}}
 
-    In reStructuredText the quoting needed to pass arguments gets insane really fast, use the chart directive
-    instead (the syntax is nicer anyway)
+raw
+    Passes the content along, mostly used so I can write this damn section and you can see the shortcodes instead
+    of them being munged into shortcode **output**. I can't show an example because Inception.
+
 
 Community shortcodes
 ~~~~~~~~~~~~~~~~~~~~
