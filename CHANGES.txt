@@ -1,5 +1,7 @@
-New in master
+New in v7.7.9
 =============
+
+(1000+ stars on GitHub — thanks!)
 
 Features
 --------

@@ -5,7 +5,7 @@ MESSAGES = {
     "%d min remaining to read": "%d min restantes para ler",
     "(active)": "(activo)",
     "Also available in:": "Tamén dispoñible en:",
-    "Archive": "Archivo",
+    "Archive": "Arquivo",
     "Authors": "Autores",
     "Categories": "Categorías",
     "Comments": "Comentarios",

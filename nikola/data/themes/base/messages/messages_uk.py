@@ -35,7 +35,7 @@ MESSAGES = {
     "Tags and Categories": "Теги і категорії",
     "Tags": "Теги",
     "Uncategorized": "Без категорії",
-    "Updates": "",
+    "Updates": "Підписки",
     "Write your page here.": "Напишіть Вашу сторінку тут.",
     "Write your post here.": "Напишить Вашу статтю тут.",
     "old posts, page %d": "старі статті, сторінка %d",

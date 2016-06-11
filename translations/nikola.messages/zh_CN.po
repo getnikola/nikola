@@ -7,18 +7,19 @@
 # Translators:
 # Translators:
 # Translators:
-# Christopher Meng <cickumqt@gmail.com>, 2013
+# Christopher Meng <i@cicku.me>, 2013
 # Kade For <kadefor@gmail.com>, 2013
 # Kade For <kadefor@gmail.com>, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
+# spaceoi <zhangzhaoyu@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-08-31 07:50+0000\n"
-"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2016-06-08 06:34+0000\n"
+"Last-Translator: spaceoi <zhangzhaoyu@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/ralsina/nikola/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "More posts about %s"
-msgstr "更多相关文章： %s"
+msgstr "更多 %s 相关文章"
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
@@ -44,7 +45,7 @@ msgid "Tags and Categories"
 msgstr "标签和分类"
 
 msgid "Comments"
-msgstr ""
+msgstr "注释"
 
 msgid "Read more"
 msgstr "更多"
@@ -59,7 +60,7 @@ msgid "old posts, page %d"
 msgstr "旧文章页 %d"
 
 msgid "page %d"
-msgstr ""
+msgstr "第 %d 页"
 
 msgid "Source"
 msgstr "源代码"
@@ -82,7 +83,7 @@ msgid "Also available in:"
 msgstr "其他语言版本："
 
 msgid "Languages:"
-msgstr ""
+msgstr "语言："
 
 msgid "Original site"
 msgstr "原文地址"
@@ -94,7 +95,7 @@ msgid "Archive"
 msgstr "文章存档"
 
 msgid "Publication date"
-msgstr ""
+msgstr "发布日期"
 
 msgid "Posted:"
 msgstr "发表于："
@@ -103,47 +104,47 @@ msgid "Posts for {month} {year}"
 msgstr "{year}年{month}月文章"
 
 msgid "Posts for {month} {day}, {year}"
-msgstr ""
+msgstr "{year}年{month}月{day}日文章"
 
 msgid "Nothing found."
-msgstr ""
+msgstr "没有找到。"
 
 msgid "No posts found."
-msgstr ""
+msgstr "没有找到文章"
 
 msgid "RSS feed"
-msgstr ""
+msgstr "RSS 源"
 
 msgid "%d min remaining to read"
-msgstr ""
+msgstr "剩余 %d 分钟去阅读"
 
 msgid "Skip to main content"
-msgstr ""
+msgstr "跳到主内容"
 
 msgid "Subcategories:"
-msgstr ""
+msgstr "子类别："
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr ""
+msgstr "(活跃)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr ""
+msgstr "在这里书写你的文章。"
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr ""
+msgstr "在这里书写你的页面。"
 
 msgid "Uncategorized"
-msgstr ""
+msgstr "未分类"
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr ""
+msgstr "更新"
 
 msgid "Authors"
-msgstr ""
+msgstr "作者"
 
 msgid "Posts by %s"
-msgstr ""
+msgstr "%s 发布"

@@ -863,7 +863,7 @@ class Nikola(object):
         self.cache = Persistor(os.path.join(self.config['CACHE_FOLDER'], 'cache_data.json'))
 
         # Create directories for persistors only if a site exists (Issue #2334)
-        if True or self.configured:
+        if self.configured:
             self.state._set_site(self)
             self.cache._set_site(self)
 

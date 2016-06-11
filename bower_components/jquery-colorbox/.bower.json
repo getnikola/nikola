@@ -37,14 +37,14 @@
     "example4/index.html",
     "example5/index.html"
   ],
-  "version": "1.6.3",
-  "_release": "1.6.3",
+  "version": "1.6.4",
+  "_release": "1.6.4",
   "_resolution": {
     "type": "version",
-    "tag": "1.6.3",
-    "commit": "f08f0ac16996b14e4ce681e0a08befc129b93924"
+    "tag": "1.6.4",
+    "commit": "54c8a883aa3fe2cb39ebda4c401bd92783fc9d7a"
   },
-  "_source": "git://github.com/jackmoore/colorbox.git",
+  "_source": "https://github.com/jackmoore/colorbox.git",
   "_target": "~1.6.0",
   "_originalSource": "jquery-colorbox"
 }
