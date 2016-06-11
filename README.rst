@@ -40,7 +40,7 @@ It has many features, but here are some of the nicer ones:
 * Syntax highlighting for almost any programming language or markup
 * Multilingual sites, `translated to 18 languages.`__
 * Doesn't reinvent wheels, leverages existing tools.
-* Python 2.7, 3.3 and 3.4 compatible.
+* Python 2.7, 3.3, 3.4 and 3.5 compatible.
 
 .. _Nikola Handbook: https://getnikola.com/handbook.html#why-static
 __ https://users.getnikola.com/
