@@ -3,7 +3,6 @@
 # Don't use __future__ in this script, it breaks buildout
 # from __future__ import print_function
 import os
-import subprocess
 import sys
 import shutil
 from setuptools import setup, find_packages
@@ -129,6 +128,7 @@ setup(name='Nikola',
                    'Intended Audience :: End Users/Desktop',
                    'License :: OSI Approved :: MIT License',
                    'Operating System :: MacOS',
+                   'Operating System :: MacOS :: MacOS X',
                    'Operating System :: Microsoft :: Windows',
                    'Operating System :: OS Independent',
                    'Operating System :: POSIX',
