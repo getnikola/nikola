@@ -454,7 +454,7 @@ Currently Nikola emits the following signals:
         {
          'source': # the path to the source file
          'dest': # the path to the cache file for the post/page
-         'post': # the nikola.post.Post object for the post/page
+         'post': # the Post object for the post/page
         }
 
 One example is the `deploy_hooks plugin. <https://github.com/getnikola/plugins/tree/master/v6/deploy_hooks>`__

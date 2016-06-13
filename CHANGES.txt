@@ -1,3 +1,14 @@
+New in master
+=============
+
+Features
+--------
+
+* Added ``compiled`` signal after post is compiled (Issue #2369)
+
+Bugfixes
+--------
+
 New in v7.7.9
 =============
 
