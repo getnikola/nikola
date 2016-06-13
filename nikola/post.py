@@ -43,6 +43,7 @@ except ImportError:
 
 from . import utils
 
+from blinker import signal
 import dateutil.tz
 import lxml.html
 import natsort
@@ -490,6 +491,12 @@ class Post(object):
             self.translated_source_path(lang),
             dest,
             self.is_two_file),
+
+        signal('compiled').send(dict(
+            source=self.translated_source_path(lang),
+            dest=dest,
+            post=self,
+        ))
 
         if self.meta('password'):
             # TODO: get rid of this feature one day (v8?; warning added in v7.3.0.)

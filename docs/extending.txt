@@ -447,6 +447,16 @@ Currently Nikola emits the following signals:
          'undeployed': # all files not deployed since they are either future posts/drafts
         }
 
+``compiled``
+    When a post/page is compiled from its source to html, before anything else is done with it.  The signal
+    data is in the form::
+
+        {
+         'source': # the path to the source file
+         'dest': # the path to the cache file for the post/page
+         'post': # the nikola.post.Post object for the post/page
+        }
+
 One example is the `deploy_hooks plugin. <https://github.com/getnikola/plugins/tree/master/v6/deploy_hooks>`__
 
 ConfigPlugin Plugins
