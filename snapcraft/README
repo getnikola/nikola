@@ -5,13 +5,25 @@ To build, in Ubuntu 16.04:
 apt install snapd snapcraft
 snap login some.account@whatever.com
 snapcraft
-snapd install nikola*snap --devmode
+cp nikola.py stage/usr/bin/nikola
+snapcraft
+snap install nikola*snap --devmode
+
+See that --devmode there? That makes Nikola run unconfined, giving it access
+to all your files. That sounds bad, but it's the same way you have run it
+in the past.
+
+If you want to run it in confined mode ... you can!
+The only problems are:
+
+* Your site needs to live in ~/snaps/nikola/x1/whatever (the x1 may change)
+* If you uninstall nikola it will kill your site ;-)
 
 To just use it:
 
 apt install snapd snapcraft
 snap login some.account@whatever.com
-snap install nikola
+snap install nikola --devmode
 
 
 That should leave you with a woring "nikola" command, which is functional with the 
