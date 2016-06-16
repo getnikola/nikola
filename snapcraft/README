@@ -1,0 +1,24 @@
+This folder contains an experimental attempt to build a snap package for nikola.
+
+To build, in Ubuntu 16.04:
+
+apt install snapd snapcraft
+snap login some.account@whatever.com
+snapcraft
+snapd install nikola*snap --devmode
+
+To just use it:
+
+apt install snapd snapcraft
+snap login some.account@whatever.com
+snap install nikola
+
+
+That should leave you with a woring "nikola" command, which is functional with the 
+following caveats:
+
+* Locales are broken: https://bugs.launchpad.net/ubuntu/+source/snapd/+bug/1576411
+* It needs to run in devmode (unconfined). I am not sure it makes much sense to
+  try to use it otherwise, and in any case it doesn't work for a variety of bugs.
+* The -b option in nikola serve and nikola auto will not work
+* Probaby other things I have not noticed yet.

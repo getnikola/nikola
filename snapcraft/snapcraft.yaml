@@ -1,0 +1,31 @@
+name: nikola
+version: 7.7.9
+summary: A static website generator
+description: A static website generator
+confinement: devmode
+
+apps:
+    nikola:
+         command: nikola.sh
+
+parts:
+    nikola:
+        plugin: copy
+        files:
+            nikola.sh: nikola.sh
+    nikola-source:
+        plugin: python3
+        source: git://github.com/getnikola/nikola.git
+        source-tag: v7.7.9
+        requirements: parts/nikola-source/src/requirements-extras.txt
+        stage-packages:
+            - locales
+            - libc-bin
+        build-packages:
+            - zlib1g-dev
+            - libjpeg-turbo8-dev
+            - libpng12-dev
+            - libxslt1-dev
+            - libxml2-dev
+            - gcc
+
