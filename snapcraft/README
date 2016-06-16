@@ -30,7 +30,5 @@ That should leave you with a woring "nikola" command, which is functional with t
 following caveats:
 
 * Locales are broken: https://bugs.launchpad.net/ubuntu/+source/snapd/+bug/1576411
-* It needs to run in devmode (unconfined). I am not sure it makes much sense to
-  try to use it otherwise, and in any case it doesn't work for a variety of bugs.
 * The -b option in nikola serve and nikola auto will not work
 * Probaby other things I have not noticed yet.
