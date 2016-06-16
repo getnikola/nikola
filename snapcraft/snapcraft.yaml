@@ -2,11 +2,12 @@ name: nikola
 version: 7.7.9
 summary: A static website generator
 description: A static website generator
-confinement: devmode
+confinement: strict
 
 apps:
     nikola:
          command: nikola.sh
+         plugs: [network, network-bind]
 
 parts:
     nikola:
@@ -28,4 +29,3 @@ parts:
             - libxslt1-dev
             - libxml2-dev
             - gcc
-
