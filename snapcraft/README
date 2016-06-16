@@ -13,11 +13,7 @@ See that --devmode there? That makes Nikola run unconfined, giving it access
 to all your files. That sounds bad, but it's the same way you have run it
 in the past.
 
-If you want to run it in confined mode ... you can!
-The only problems are:
 
-* Your site needs to live in ~/snaps/nikola/x1/whatever (the x1 may change)
-* If you uninstall nikola it will kill your site ;-)
 
 To just use it:
 
@@ -30,5 +26,12 @@ That should leave you with a woring "nikola" command, which is functional with t
 following caveats:
 
 * Locales are broken: https://bugs.launchpad.net/ubuntu/+source/snapd/+bug/1576411
-* The -b option in nikola serve and nikola auto will not work
+* The -b option in nikola serve and nikola auto will not work (need to use snap-xdg-open it seems)
+* Plugin installation is tricky
 * Probaby other things I have not noticed yet.
+
+Additionally, if used on strict mode:
+
+* Your site needs to live in ~/snaps/nikola/x1/whatever (the x1 may change)
+* If you uninstall nikola it will kill your site ;-)
+* You can't use "nikola deploy".
