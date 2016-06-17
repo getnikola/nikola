@@ -1,4 +1,4 @@
-This folder contains the files needed to build a snap package for nikola.
+This folder contains the files needed to build a snap package for Nikola.
 
 To build, in Ubuntu 16.04:
 
@@ -15,8 +15,8 @@ snap login some.account@whatever.com
 snap install nikola
 
 
-That should leave you with a woring "nikola" command, which is functional with the 
-following caveats:
+That should leave you with a working "nikola" command (/snap/bin/nikola if /snap/bin is not in your $PATH),
+which is functional with the following caveats:
 
 * Locales are a bit broken: https://bugs.launchpad.net/ubuntu/+source/snapd/+bug/1576411
 * The -b option in nikola serve and nikola auto will not work (need to use snap-xdg-open it seems)
