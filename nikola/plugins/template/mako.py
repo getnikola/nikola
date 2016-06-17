@@ -27,6 +27,7 @@
 """Mako template handler."""
 
 from __future__ import unicode_literals, print_function, absolute_import
+import io
 import os
 import shutil
 import sys
@@ -108,7 +109,7 @@ class MakoTemplates(TemplateSystem):
         data = template.render_unicode(**context)
         if output_name is not None:
             makedirs(os.path.dirname(output_name))
-            with open(output_name, 'w+') as output:
+            with io.open(output_name, 'w', encoding='utf-8') as output:
                 output.write(data)
         return data
 
