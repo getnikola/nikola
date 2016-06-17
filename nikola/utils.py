@@ -805,7 +805,7 @@ def encodelink(iri):
     """Given an encoded or unencoded link string, return an encoded string suitable for use as a link in HTML and XML."""
     iri = unicodenormalize('NFC', iri)
     link = OrderedDict(urlparse(iri)._asdict())
-    link['path'] = urlquote(urlunquote(link['path']).encode('utf-8'))
+    link['path'] = urlquote(urlunquote(link['path'], safe="/~").encode('utf-8'))
     try:
         link['netloc'] = link['netloc'].encode('utf-8').decode('idna').encode('idna').decode('utf-8')
     except UnicodeDecodeError:
