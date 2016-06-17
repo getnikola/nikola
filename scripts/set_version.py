@@ -42,6 +42,9 @@ if __name__ == "__main__":
     sed_like_thing('__version__ = ".*"', '__version__ = "{0}"'.format(version), os.path.join('nikola', '__init__.py'))
     sed_like_thing('New in master', 'New in v{0}'.format(version), 'CHANGES.txt')
     sed_like_thing(':Version: .*', ':Version: Nikola v{0}'.format(version), os.path.join('docs', 'man', 'nikola.rst'))
+    sed_like_thing('version: .*', 'version: {}'.format(version), 'snapcraft/snapcraft.yaml')
+    sed_like_thing('source-tag: .*', 'source-tag: {}'.format(version), 'snapcraft/snapcraft.yaml')
+    sed_like_thing('Nikola==.*\'', 'Nikola=={}\''.format(version), 'snapcraft/nikola.py')
     man = subprocess.check_output(["rst2man.py", os.path.join('docs', 'man', 'nikola.rst')])
     with io.open(os.path.join('docs', 'man', 'nikola.1'), 'w', encoding='utf-8') as fh:
         try:
