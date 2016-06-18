@@ -20,6 +20,7 @@ Features
   ``OPTIPNG_EXECUTABLE``, ``JPEGOPTIM_EXECUTABLE`` and
   ``HTML_TIDY_EXECUTABLE`` to configure executables for built-in filters.
   (Issue #2615)
+* Allow setting custom GUID in feeds (Issue #2378)
 
 Bugfixes
 --------
