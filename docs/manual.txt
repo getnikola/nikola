@@ -309,6 +309,9 @@ to your configuration:
    filters
       See the `Post Processing Filters`_ section.
 
+   guid
+      String used as GUID in RSS feeds and as ID in Atom feeds.
+
    hidetitle
       Set "True" if you do not want to see the **page** title as a
       heading of the output html file (does not work for posts).

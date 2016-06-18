@@ -5,6 +5,7 @@ Features
 --------
 
 * Added ``compiled`` signal after post is compiled (Issue #2369)
+* Allow setting custom GUID in feeds (Issue #2378)
 
 Bugfixes
 --------
