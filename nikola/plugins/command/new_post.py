@@ -29,10 +29,11 @@
 from __future__ import unicode_literals, print_function
 import io
 import datetime
-import os
-import sys
-import subprocess
 import operator
+import os
+import shutil
+import subprocess
+import sys
 
 from blinker import signal
 import dateutil.tz
@@ -366,17 +367,22 @@ class CommandNewPost(Command):
             onefile = False
             LOGGER.warn('This compiler does not support one-file posts.')
 
-        if import_file:
+        if onefile and import_file:
             with io.open(import_file, 'r', encoding='utf-8') as fh:
                 content = fh.read()
-        else:
+        elif not import_file:
             if is_page:
                 content = self.site.MESSAGES[self.site.default_lang]["Write your page here."]
             else:
                 content = self.site.MESSAGES[self.site.default_lang]["Write your post here."]
-        compiler_plugin.create_post(
-            txt_path, content=content, onefile=onefile, title=title,
-            slug=slug, date=date, tags=tags, is_page=is_page, **metadata)
+
+        if (not onefile) and import_file:
+            # Two-file posts are copied  on import (Issue #2380)
+            shutil.copy(import_file, txt_path)
+        else:
+            compiler_plugin.create_post(
+                txt_path, content=content, onefile=onefile, title=title,
+                slug=slug, date=date, tags=tags, is_page=is_page, **metadata)
 
         event = dict(path=txt_path)
 

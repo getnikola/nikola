@@ -9,6 +9,9 @@ Features
 Bugfixes
 --------
 
+* Copy files when importing two-file posts instead of reading and
+  writing (useful for binary formats, eg. docx) (Issue #2380)
+
 New in v7.7.9
 =============
 
