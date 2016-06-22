@@ -106,6 +106,12 @@ should learn one first. What engine is used by the theme is declared in the ``en
 
 The rest of this document explains Mako templates, but Jinja2 is fairly similar.
 
+.. Tip::
+
+   If you are using Mako templates, and want some extra speed when building the site
+   you can install Beaker and `make templates be cached <http://docs.makotemplates.org/en/latest/caching.html>`__
+
+
 Mako has a nifty concept of template inheritance. That means that, a
 template can inherit from another and only change small bits of the output. For example,
 ``base.tmpl`` defines the whole layout for a page but has only a placeholder for content
