@@ -34,7 +34,7 @@ from nikola.plugin_categories import BaseTask
 class ScanPosts(BaseTask):
     """Just scans for posts."""
 
-    name = "scan_posts"
+    name = "trigger_scan_posts"
 
     stage = 0
 

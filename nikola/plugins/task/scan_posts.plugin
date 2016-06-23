@@ -1,5 +1,5 @@
 [Core]
-Name = scan_posts
+Name = trigger_scan_posts
 Module = scan_posts
 
 [Documentation]
