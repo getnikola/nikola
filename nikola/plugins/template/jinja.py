@@ -97,7 +97,7 @@ class JinjaTemplates(TemplateSystem):
             makedirs(os.path.dirname(output_name))
             with io.open(output_name, 'w', encoding='utf-8') as output:
                 output.write(data)
-        return output
+        return data
 
     def render_template_to_string(self, template, context):
         """Render template to a string using context."""
