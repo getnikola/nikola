@@ -253,9 +253,9 @@ class RenderTags(Task):
         else:
             return tag
 
-    def _get_indexes_title(self, tag, is_category, lang, messages):
+    def _get_indexes_title(self, tag, nice_tag, is_category, lang, messages):
         titles = self.site.config['CATEGORY_PAGES_TITLES'] if is_category else self.site.config['TAG_PAGES_TITLES']
-        return titles[lang][tag] if lang in titles and tag in titles[lang] else messages[lang]["Posts about %s"] % tag
+        return titles[lang][tag] if lang in titles and tag in titles[lang] else messages[lang]["Posts about %s"] % nice_tag
 
     def _get_description(self, tag, is_category, lang):
         descriptions = self.site.config['CATEGORY_PAGES_DESCRIPTIONS'] if is_category else self.site.config['TAG_PAGES_DESCRIPTIONS']
@@ -290,7 +290,7 @@ class RenderTags(Task):
             context_source["category"] = tag
             context_source["category_path"] = self.site.parse_category_name(tag)
         context_source["tag"] = title
-        indexes_title = self._get_indexes_title(title, is_category, lang, kw["messages"])
+        indexes_title = self._get_indexes_title(tag, title, is_category, lang, kw["messages"])
         context_source["description"] = self._get_description(tag, is_category, lang)
         if is_category:
             context_source["subcategories"] = self._get_subcategories(tag)
@@ -312,7 +312,7 @@ class RenderTags(Task):
             context["category"] = tag
             context["category_path"] = self.site.parse_category_name(tag)
         context["tag"] = title
-        context["title"] = self._get_indexes_title(title, is_category, lang, kw["messages"])
+        context["title"] = self._get_indexes_title(tag, title, is_category, lang, kw["messages"])
         context["posts"] = post_list
         context["permalink"] = self.site.link(kind, tag, lang)
         context["kind"] = kind
