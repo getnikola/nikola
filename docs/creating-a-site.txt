@@ -70,8 +70,6 @@ And now we are ready to create our first page::
     Scanning posts....done!
     [1970-01-01T00:00:00Z] INFO: new_page: Your page's text is at: stories/index.rst
 
-.. note:: The ``-p`` option in the ``nikola new_post`` command means we are creating a page and not a blog post.
-
 We can now build and preview our site::
 
     $ nikola build
