@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Add horizontal scrollbar to listings (via getnikola/nikola-themes#86)
 * Copy files when importing two-file posts instead of reading and
   writing (useful for binary formats, eg. docx) (Issue #2380)
 * Using correct category titles for category hierarchies
