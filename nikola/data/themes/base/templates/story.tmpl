@@ -5,7 +5,7 @@
 <%inherit file="post.tmpl"/>
 
 <%block name="content">
-<article class="storypage" itemscope="itemscope" itemtype="http://schema.org/Article">
+<article class="post-${post.meta('type')} storypage" itemscope="itemscope" itemtype="http://schema.org/Article">
     <header>
         ${pheader.html_title()}
         ${pheader.html_translations(post)}
