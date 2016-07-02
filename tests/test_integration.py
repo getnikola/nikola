@@ -498,53 +498,6 @@ class SubdirRunningTest(DemoBuildTest):
             self.assertEquals(result, 0)
 
 
-class InvariantBuildTest(EmptyBuildTest):
-    """Test that a default build of --demo works."""
-
-    @classmethod
-    def build(self):
-        """Build the site."""
-        try:
-            self.oldlocale = locale.getlocale()
-            locale.setlocale(locale.LC_ALL, ("en_US", "utf8"))
-        except:
-            pytest.skip('no en_US locale!')
-        else:
-            with cd(self.target_dir):
-                __main__.main(["build", "--invariant"])
-        finally:
-            try:
-                locale.setlocale(locale.LC_ALL, self.oldlocale)
-            except:
-                pass
-
-    @classmethod
-    def fill_site(self):
-        """Fill the site with demo content."""
-        self.init_command.copy_sample_site(self.target_dir)
-        self.init_command.create_configuration(self.target_dir)
-        src1 = os.path.join(os.path.dirname(__file__), 'data', '1-nolinks.rst')
-        dst1 = os.path.join(self.target_dir, 'posts', '1.rst')
-        shutil.copy(src1, dst1)
-        os.system('rm "{0}/stories/creating-a-theme.rst" "{0}/stories/extending.txt" "{0}/stories/internals.txt" "{0}/stories/manual.rst" "{0}/stories/social_buttons.txt" "{0}/stories/theming.rst" "{0}/stories/path_handlers.txt" "{0}/stories/charts.txt"'.format(self.target_dir))
-
-    def test_invariance(self):
-        """Compare the output to the canonical output."""
-        if sys.version_info[0:2] != (2, 7):
-            pytest.skip('only python 2.7 is supported for invariance')
-        good_path = os.path.join(os.path.dirname(__file__), 'data', 'baseline{0[0]}.{0[1]}'.format(sys.version_info))
-        if not os.path.exists(good_path):
-            pytest.skip('no baseline found')
-        with cd(self.target_dir):
-            try:
-                diff = subprocess.check_output(['diff', '-ubwr', good_path, 'output'])
-                self.assertEqual(diff.strip(), '')
-            except subprocess.CalledProcessError as exc:
-                print('Unexplained diff for the invariance test. (-canonical +built)')
-                print(exc.output.decode('utf-8'))
-                self.assertEqual(exc.returncode, 0, 'Unexplained diff for the invariance test.')
-
-
 class RedirectionsTest1(TestCheck):
     """Check REDIRECTIONS"""
 

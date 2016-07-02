@@ -23,7 +23,6 @@ install:
   - "if [[ $NMODE == 'nikola' ]]; then scripts/getwheelhouse.sh $(scripts/getpyver.py short); fi"
   - "if [[ $NMODE == 'nikola' ]]; then pip install -r requirements-tests.txt; if [[ \"$?\" == '1' ]]; then cat /home/travis/.pip/pip.log; false; fi; fi"
   - "if [[ $NMODE == 'nikola' ]]; then pip install .; fi"
-  - "if [[ $NMODE == 'nikola' ]]; then scripts/getbaseline.sh $(scripts/getpyver.py short); fi"
   - "if [[ $NMODE == 'flake8' ]]; then pip install flake8 pep257; fi"
 # We run tests and nikola (to see if the command is executable) OR flake8.
 # We run `nikola` and `nikola help` because things may break due to human
@@ -34,6 +33,7 @@ script:
   - "if [[ $NMODE == 'nikola' ]]; then py.test tests/; fi"
   - "if [[ $NMODE == 'nikola' ]]; then nikola; fi"
   - "if [[ $NMODE == 'nikola' ]]; then nikola help; fi"
+  - "if [[ $NMODE == 'nikola' ]]; then scripts/baseline.sh check; fi"
   - "if [[ $NMODE == 'flake8' ]]; then flake8 nikola/; fi"
   - "if [[ $NMODE == 'flake8' ]]; then pep257 --count --match-dir='(?!^\\\\.)(?!data).*' nikola/; fi"
 after_success:
