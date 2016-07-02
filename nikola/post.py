@@ -1097,6 +1097,7 @@ def hyphenate(dom, _lang):
         lang = LEGAL_VALUES['PYPHEN_LOCALES'].get(_lang, pyphen.language_fallback(_lang))
     else:
         utils.req_missing(['pyphen'], 'hyphenate texts', optional=True)
+    hyphenator = None
     if pyphen is not None and lang is not None:
         # If pyphen does exist, we tell the user when configuring the site.
         # If it does not support a language, we ignore it quietly.
@@ -1105,6 +1106,7 @@ def hyphenate(dom, _lang):
         except KeyError:
             LOGGER.error("Cannot find hyphenation dictoniaries for {0} (from {1}).".format(lang, _lang))
             LOGGER.error("Pyphen cannot be installed to ~/.local (pip install --user).")
+    if hyphenator is not None:
         for tag in ('p', 'li', 'span'):
             for node in dom.xpath("//%s[not(parent::pre)]" % tag):
                 skip_node = False

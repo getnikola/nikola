@@ -289,7 +289,7 @@ LEGAL_VALUES = {
         'da': 'da',
         'de': 'de',
         'el': 'el',
-        'en': 'en',
+        'en': 'en_US',
         'es': 'es',
         'et': 'et',
         'fr': 'fr',

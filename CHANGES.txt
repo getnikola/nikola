@@ -11,6 +11,8 @@ Features
 Bugfixes
 --------
 
+* Use ``en_US`` dictionary name with pyphen for better compatibility
+* Fix graceful degradation if ``pyphen`` lacks dictionaries
 * Add horizontal scrollbar to listings (via getnikola/nikola-themes#86)
 * Copy files when importing two-file posts instead of reading and
   writing (useful for binary formats, eg. docx) (Issue #2380)
