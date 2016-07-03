@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Fix section color hashing when using Python 2
 * Use ``en_US`` dictionary name with pyphen for better compatibility
 * Fix graceful degradation if ``pyphen`` lacks dictionaries
 * Add horizontal scrollbar to listings (via getnikola/nikola-themes#86)

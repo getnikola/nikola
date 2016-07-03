@@ -1801,7 +1801,14 @@ def colorize_str_from_base_color(string, base_color):
     lightness and saturation untouched using HUSL colorspace.
     """
     def hash_str(string, pos):
-        return hashlib.md5(string.encode('utf-8')).digest()[pos]
+        x = hashlib.md5(string.encode('utf-8')).digest()[pos]
+        try:
+            # Python 2: a string
+            # TODO: remove in v8
+            return ord(x)
+        except TypeError:
+            # Python 3: already an integer
+            return x
 
     def degreediff(dega, degb):
         return min(abs(dega - degb), abs((degb - dega) + 360))
