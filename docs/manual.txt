@@ -332,6 +332,13 @@ to your configuration:
 
       More information: `Issue #1547 <https://github.com/getnikola/nikola/issues/1547>`_
 
+   pretty_url
+      Set to "False" to disable pretty URL for this page. Example:
+
+      .. code:: restructuredtext
+
+          .. pretty_url: False
+
    previewimage
       Designate a preview or other representative image path relative to BASE_URL
       for use with Open Graph for posts. Adds the image when sharing on social
