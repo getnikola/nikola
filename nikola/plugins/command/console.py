@@ -75,7 +75,7 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
     ]
 
     def ipython(self, willful=True):
-        """IPython shell."""
+        """Run an IPython shell."""
         try:
             import IPython
         except ImportError as e:
@@ -89,7 +89,7 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
             IPython.embed(header=self.header.format('IPython'))
 
     def bpython(self, willful=True):
-        """bpython shell."""
+        """Run a bpython shell."""
         try:
             import bpython
         except ImportError as e:
@@ -100,7 +100,7 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
             bpython.embed(banner=self.header.format('bpython'), locals_=self.context)
 
     def plain(self, willful=True):
-        """Plain Python shell."""
+        """Run a plain Python shell."""
         import code
         try:
             import readline
