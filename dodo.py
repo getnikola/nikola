@@ -25,11 +25,11 @@ def task_flake8():
     }
 
 
-def task_pep257():
-    """pep257 -- static check for docstring style"""
+def task_pydocstyle():
+    """pydocstyle -- static check for docstring style"""
     yield {
         'name': os.path.join(os.getcwd(), 'nikola'),
-        'actions': ["pep257 --count --match-dir='(?!^\.)(?!data).*' nikola/"],
+        'actions': ["pydocstyle --count --match-dir='(?!^\.)(?!data).*' nikola/"],
     }
 
 
