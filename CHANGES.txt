@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Register post list template as a dependency (Issue #2391)
 * Fix section color hashing when using Python 2
 * Use ``en_US`` dictionary name with pyphen for better compatibility
 * Fix graceful degradation if ``pyphen`` lacks dictionaries
