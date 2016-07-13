@@ -37,6 +37,7 @@ from docutils.parsers.rst import Directive, directives
 
 from nikola import utils
 from nikola.plugin_categories import RestExtension
+from nikola.packages.datecond import date_in_range
 
 # WARNING: the directive name is post-list
 #          (with a DASH instead of an UNDERSCORE)
@@ -86,9 +87,18 @@ class PostList(Directive):
         Reverse the order of the post-list.
         Defaults is to not reverse the order of posts.
 
-    ``sort``: string
+    ``sort`` : string
         Sort post list by one of each post's attributes, usually ``title`` or a
         custom ``priority``.  Defaults to None (chronological sorting).
+
+    ``date`` : string
+        Show posts that match date range specified by this option. Format:
+
+        * comma-separated clauses (AND)
+        * clause: attribute comparison_operator value (spaces optional)
+          * attribute: year, month, day, hour, month, second, weekday, isoweekday; or empty for full datetime
+          * comparison_operator: == != <= >= < >
+          * value: integer or dateutil-compatible date input
 
     ``tags`` : string [, string...]
         Filter posts to show only posts having at least one of the ``tags``.
@@ -136,6 +146,7 @@ class PostList(Directive):
         'lang': directives.unchanged,
         'template': directives.path,
         'id': directives.unchanged,
+        'date': directives.unchanged,
     }
 
     def run(self):
@@ -154,17 +165,21 @@ class PostList(Directive):
         lang = self.options.get('lang', utils.LocaleBorg().current_lang)
         template = self.options.get('template', 'post_list_directive.tmpl')
         sort = self.options.get('sort')
+        date = self.options.get('date')
 
         output = _do_post_list(start, stop, reverse, tags, categories, slugs, post_type,
-                               show_all, lang, template, sort, state=self.state, site=self.site)
+                               show_all, lang, template, sort, state=self.state, site=self.site, date=date)
         self.state.document.settings.record_dependencies.add("####MAGIC####TIMELINE")
-        return [nodes.raw('', output, format='html')]
+        if output:
+            return [nodes.raw('', output, format='html')]
+        else:
+            return []
 
 
 def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=None,
                   slugs=None, post_type='post', show_all=False, lang=None,
                   template='post_list_directive.tmpl', sort=None, id=None,
-                  data=None, state=None, site=None):
+                  data=None, state=None, site=None, date=None):
     if lang is None:
         lang = utils.LocaleBorg().current_lang
     if site.invariant:  # for testing purposes
@@ -212,6 +227,9 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
 
     if sort:
         filtered_timeline = natsort.natsorted(filtered_timeline, key=lambda post: post.meta[lang][sort], alg=natsort.ns.F | natsort.ns.IC)
+
+    if date:
+        filtered_timeline = [p for p in filtered_timeline if date_in_range(date, p.date)]
 
     for post in filtered_timeline[start:stop:step]:
         if slugs:
