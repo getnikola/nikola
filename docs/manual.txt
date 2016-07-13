@@ -233,9 +233,9 @@ and more via plugins — for more details, read the `input format documentation
 <#multiple-input-formats>`__.
 You can learn reStructuredText syntax with the `reST quickstart <https://getnikola.com/quickstart.html>`__.
 
-Please note that Nikola does not guarantee support for encodings other than
-UTF-8. We recommend converting your input files to that encoding.  It will
-prevent bugs, and Nikola will write UTF-8 output anyway.
+Please note that Nikola does not support encodings other than UTF-8. Make sure
+to convert your input files to that encoding to avoid issues.  It will prevent
+bugs, and Nikola will write UTF-8 output anyway.
 
 You can control what markup compiler is used for each file extension with the ``COMPILERS``
 option. The default configuration expects them to be placed in ``posts`` but that can be
@@ -422,19 +422,25 @@ add support for more languages, check out `the Transifex page for Nikola <https:
 The post page is generated using the ``post.tmpl`` template, which you can use
 to customize the output.
 
-The place where the post will be placed by ``new_post`` is based on the ``POSTS``
-and ``PAGES`` configuration options:
+How does Nikola decide where posts should go?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The place where the post will be placed by ``new_post`` (the first one that
+matches the given format) and the final post destination (the first one that
+matches a given file) is based on the ``POSTS`` and ``PAGES`` configuration
+options. The exact mechanism is explained above the config options in the
+``conf.py`` file, and also reproduced below:
 
 .. code:: python
 
     # POSTS and PAGES contains (wildcard, destination, template) tuples.
     #
-    # The wildcard is used to generate a list of reSt source files
-    # (whatever/thing.txt).
+    # The wildcard is used to generate a list of post source files
+    # (whatever/thing.rst, for example).
     #
     # That fragment could have an associated metadata file (whatever/thing.meta),
     # and optionally translated files (example for Spanish, with code "es"):
-    #     whatever/thing.es.txt and whatever/thing.es.meta
+    #     whatever/thing.es.rst and whatever/thing.es.meta
     #
     #     This assumes you use the default TRANSLATIONS_PATTERN.
     #
@@ -443,22 +449,26 @@ and ``PAGES`` configuration options:
     #
     # These files are combined with the template to produce rendered
     # pages, which will be placed at
-    # output / TRANSLATIONS[lang] / destination / pagename.html
+    # output/TRANSLATIONS[lang]/destination/pagename.html
     #
     # where "pagename" is the "slug" specified in the metadata file.
+    # The page might also be placed in /destinstion/pagename/index.html
+    # if PRETTY_URLS are enabled.
     #
     # The difference between POSTS and PAGES is that POSTS are added
-    # to feeds and are considered part of a blog, while PAGES are
-    # just independent HTML pages.
+    # to feeds, indexes, tag lists and archives and are considered part
+    # of a blog, while PAGES are just independent HTML pages.
     #
 
     POSTS = (
-        ("posts/*.txt", "posts", "post.tmpl"),
         ("posts/*.rst", "posts", "post.tmpl"),
+        ("posts/*.txt", "posts", "post.tmpl"),
+        ("posts/*.html", "posts", "post.tmpl"),
     )
     PAGES = (
-        ("stories/*.txt", "stories", "story.tmpl"),
         ("stories/*.rst", "stories", "story.tmpl"),
+        ("stories/*.txt", "stories", "story.tmpl"),
+        ("stories/*.html", "stories", "story.tmpl"),
     )
 
 .. note:: POSTS and PAGES are not flat!
@@ -468,6 +478,9 @@ and ``PAGES`` configuration options:
    ``posts/foo/bar.txt`` would produce  ``output/posts/foo/bar.html``, assuming the slug is also ``bar``.
 
    If you have ``PRETTY_URLS`` enabled, that would be ``output/posts/foo/bar/index.html``.
+
+The ``new_post`` command
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``new_post`` will use the *first* path in ``POSTS`` (or ``PAGES`` if ``-p`` is
 supplied) that ends with the extension of your desired markup format (as

@@ -95,12 +95,12 @@ THEME_COLOR = '#5670d4'
 
 # POSTS and PAGES contains (wildcard, destination, template) tuples.
 #
-# The wildcard is used to generate a list of reSt source files
-# (whatever/thing.txt).
+# The wildcard is used to generate a list of source files
+# (whatever/thing.rst, for example).
 #
 # That fragment could have an associated metadata file (whatever/thing.meta),
 # and optionally translated files (example for Spanish, with code "es"):
-#     whatever/thing.es.txt and whatever/thing.es.meta
+#     whatever/thing.es.rst and whatever/thing.es.meta
 #
 #     This assumes you use the default TRANSLATIONS_PATTERN.
 #
@@ -109,13 +109,15 @@ THEME_COLOR = '#5670d4'
 #
 # These files are combined with the template to produce rendered
 # pages, which will be placed at
-# output / TRANSLATIONS[lang] / destination / pagename.html
+# output/TRANSLATIONS[lang]/destination/pagename.html
 #
 # where "pagename" is the "slug" specified in the metadata file.
+# The page might also be placed in /destinstion/pagename/index.html
+# if PRETTY_URLS are enabled.
 #
 # The difference between POSTS and PAGES is that POSTS are added
-# to feeds and are considered part of a blog, while PAGES are
-# just independent HTML pages.
+# to feeds, indexes, tag lists and archives and are considered part
+# of a blog, while PAGES are just independent HTML pages.
 #
 
 POSTS = ${POSTS}
