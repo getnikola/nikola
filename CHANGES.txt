@@ -8,6 +8,7 @@ Features
 * Added ``post-(type)`` class to ``story.tmpl`` (uses the ``type``
   meta field, defaults to ``post-text`` — same behavior as posts)
 * Added ``compiled`` signal after post is compiled (Issue #2369)
+* Allow setting custom GUID in feeds (Issue #2378)
 
 Bugfixes
 --------
