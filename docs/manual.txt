@@ -863,6 +863,14 @@ Example of a paired shortcode (note that we don't have a highlight shortcode yet
 Built-in shortcodes
 ~~~~~~~~~~~~~~~~~~~
 
+doc
+    Will link to a document in the page, see `Doc directive for details
+    <#doc>`__. Example:
+
+    .. code:: restructuredtext
+
+       {{% raw %}}Take a look at {{% doc %}}my other post <creating-a-theme>{{% /doc %}} about theme creating.{{% /raw %}}
+
 post-list
     Will show a list of posts, see the `Post List directive for details <#post-list>`__
 

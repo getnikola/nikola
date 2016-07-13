@@ -29,7 +29,7 @@
 from docutils import nodes
 from docutils.parsers.rst import roles
 
-from nikola.utils import split_explicit_title
+from nikola.utils import split_explicit_title, LOGGER
 from nikola.plugin_categories import RestExtension
 
 
@@ -42,12 +42,12 @@ class Plugin(RestExtension):
         """Set Nikola site."""
         self.site = site
         roles.register_canonical_role('doc', doc_role)
+        self.site.register_shortcode('doc', doc_shortcode)
         doc_role.site = site
         return super(Plugin, self).set_site(site)
 
 
-def doc_role(name, rawtext, text, lineno, inliner,
-             options={}, content=[]):
+def _doc_link(rawtext, text, options={}, content=[]):
     """Handle the doc role."""
     # split link's text and post's slug in role content
     has_explicit_title, title, slug = split_explicit_title(text)
@@ -66,22 +66,48 @@ def doc_role(name, rawtext, text, lineno, inliner,
         if post is None:
             raise ValueError
     except ValueError:
+        return False, False, None, None, None
+
+    if not has_explicit_title:
+        # use post's title as link's text
+        title = post.title()
+    permalink = post.permalink()
+
+    return True, twin_slugs, title, permalink, slug
+
+
+def doc_role(name, rawtext, text, lineno, inliner, options={}, content=[]):
+    """Handle the doc role."""
+    success, twin_slugs, title, permalink, slug = _doc_link(rawtext, text, options, content)
+    if success:
+        if twin_slugs:
+            inliner.reporter.warning(
+                'More than one post with the same slug. Using "{0}"'.format(permalink))
+            LOGGER.warn(
+                'More than one post with the same slug. Using "{0}" for doc role'.format(permalink))
+        node = make_link_node(rawtext, title, permalink, options)
+        return [node], []
+    else:
         msg = inliner.reporter.error(
             '"{0}" slug doesn\'t exist.'.format(slug),
             line=lineno)
         prb = inliner.problematic(rawtext, rawtext, msg)
         return [prb], [msg]
 
-    if not has_explicit_title:
-        # use post's title as link's text
-        title = post.title()
-    permalink = post.permalink()
-    if twin_slugs:
-        msg = inliner.reporter.warning(
-            'More than one post with the same slug. Using "{0}"'.format(permalink))
 
-    node = make_link_node(rawtext, title, permalink, options)
-    return [node], []
+def doc_shortcode(*args, **kwargs):
+    """Implement the doc shortcode."""
+    text = kwargs['data']
+    success, twin_slugs, title, permalink, slug = _doc_link(text, text, LOGGER)
+    if success:
+        if twin_slugs:
+            LOGGER.warn(
+                'More than one post with the same slug. Using "{0}" for doc shortcode'.format(permalink))
+        return '<a href="{0}">{1}</a>'.format(permalink, title)
+    else:
+        LOGGER.error(
+            '"{0}" slug doesn\'t exist.'.format(slug))
+        return '<span class="error text-error" style="color: red;">Invalid link: {0}</span>'.format(text)
 
 
 def make_link_node(rawtext, text, url, options):
