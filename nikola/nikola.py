@@ -2375,6 +2375,9 @@ def sanitized_locales(locale_fallback, locale_default, locales, translations):
                 locale_n = locale_fallback
                 msg = "Could not guess locale for language {0}, using locale {1}"
                 utils.LOGGER.warn(msg.format(lang, locale_n))
+                utils.LOGGER.warn("Please fix your OS locale configuration or use the LOCALES option in conf.py to specify your preferred locale.")
+                if sys.platform != 'win32':
+                    utils.LOGGER.warn("Make sure to use an UTF-8 locale to ensure Unicode support.")
             locales[lang] = locale_n
 
     return locale_fallback, locale_default, locales

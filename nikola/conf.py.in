@@ -170,6 +170,10 @@ TIMEZONE = ${TIMEZONE}
 # LOCALE_DEFAULT = locale to use for languages not mentioned in LOCALES; if
 # not set the default Nikola mapping is used.
 
+# LOCALES = {}
+# LOCALE_FALLBACK = None
+# LOCALE_DEFAULT = None
+
 # One or more folders containing files to be copied as-is into the output.
 # The format is a dictionary of {source: relative destination}.
 # Default is:
