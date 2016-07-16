@@ -20,7 +20,9 @@ Nikola’s `own site <https://getnikola.com/>`_ is a fairly generic one. Let’s
 step by step on how you can do something like that.
 
 As usual when starting a nikola site, you start with ``nikola init`` which creates a
-empty (mostly) configured site::
+empty (mostly) configured site:
+
+.. code:: console
 
     $ nikola init mysite
     Creating Nikola Site
@@ -31,13 +33,7 @@ empty (mostly) configured site::
 Then we go into the new ``mysite`` folder, and make the needed changes in the ``conf.py``
 configuration file:
 
-.. code-block:: python
-
-
-    ##############################################
-    # Configuration, please edit
-    ##############################################
-
+.. code:: python
 
     # Data about this site
     BLOG_AUTHOR = "Roberto Alsina"
@@ -52,15 +48,21 @@ configuration file:
     # Some things in the middle you don't really need to change...
     #
 
-    POSTS = []
-    PAGES = [("pages/*.txt", "", "story.tmpl")]
+    POSTS = ()
+    # you can also keep the current content of POSTS if you want a blog with your site
+    PAGES = (
+        ("stories/*.rst", "", "story.tmpl"),
+        ("stories/*.txt", "", "story.tmpl"),
+        ("stories/*.html", "", "story.tmpl"),
+    )
 
     # And to avoid a conflict because blogs try to generate /index.html
     INDEX_PATH = "blog"
 
 
+And now we are ready to create our first page:
 
-And now we are ready to create our first page::
+.. code:: console
 
     $ nikola new_page
     Creating New Page
@@ -70,7 +72,9 @@ And now we are ready to create our first page::
     Scanning posts....done!
     [1970-01-01T00:00:00Z] INFO: new_page: Your page's text is at: stories/index.rst
 
-We can now build and preview our site::
+We can now build and preview our site:
+
+.. code:: console
 
     $ nikola build
     Scanning posts.done!
@@ -86,7 +90,7 @@ And you can see your (very empty) site in http://localhost:8000/
 
 So, what’s in that ``pages/index.txt`` file?
 
-.. code-block:: rest
+.. code:: rest
 
     .. title: index
     .. slug: index
@@ -103,16 +107,18 @@ So, what’s in that ``pages/index.txt`` file?
 doesn’t matter at all in stories. ``description`` is useful for SEO purposes
 if you care for that.
 
-And below, the content. By default you are expected to use
-`reStructuredText <https://getnikola.com/quickstart.html>`_ but
-Nikola supports a ton of formats, including Markdown, plain HTML, BBCode,
-Wiki, and Textile.
+And below, the content. By default Nikola uses
+`reStructuredText <https://getnikola.com/quickstart.html>`_ but it supports
+a ton of formats, including Markdown, plain HTML, Jupyter Notebooks, BBCode,
+Wiki, and Textile. We will use reStructuredText for this example, but some
+people might find it a bit too limiting — if that is the case, try using HTML
+for your pages (Nikola does this on the index page, for example).
 
 So, let's give the page a nicer title, and some fake content. Since the default
 Nikola theme (called ``bootstrap3``) is based on `Bootstrap <http://getbootstrap.com/>`_
 you can use anything you like from it:
 
-.. code-block:: rest
+.. code:: rest
 
     .. title: Welcome To The Fake Site
     .. slug: index
@@ -149,10 +155,11 @@ you can use anything you like from it:
 .. admonition:: TIP: Nice URLs
 
    If you like your URLs without the ``.html`` then you want to create folders and
-   put the pages in ``index.html`` inside them using the ``PRETTY_URLS`` option.
+   put the pages in ``index.html`` inside them using the ``PRETTY_URLS`` option
+   (on by default)
 
 And that's it. You will want to change the NAVIGATION_LINKS option to create a reasonable
-menu for your site, you will want to modify the theme (check ``nikola help bootswatch_theme``
+menu for your site, you may want to modify the theme (check ``nikola help bootswatch_theme``
 for a quick & dirty solution), and you may want to add a blog later on, for company news
 or whatever.
 
@@ -160,9 +167,13 @@ or whatever.
 
     First, change the ``POSTS`` option like this:
 
-    .. code-block:: python
+    .. code:: python
 
-        POSTS = [("posts/*.txt", "blog", "post.tmpl", True)]
+        POSTS = (
+            ("posts/*.rst", "blog", "post.tmpl"),
+            ("posts/*.txt", "blog", "post.tmpl"),
+            ("posts/*.html", "blog", "post.tmpl"),
+        )
 
     Create a post with ``nikola new_post`` and that's it, you now have a blog
     in the ``/blog/`` subdirectory of your site — you may want to link to
