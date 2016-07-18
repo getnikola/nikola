@@ -128,15 +128,15 @@ class ImageProcessor(object):
                     im = ImageOps.mirror(im)
                 exif['0th'][piexif.ImageIFD.Orientation] = 1
 
-                # Filter EXIF data as required
-                exif = self.filter_exif(exif, exif_whitelist)
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
                 if exif is not None and preserve_exif_data and '0th' in exif:
                     # Put right size in EXIF data
                     w, h = im.size
-                    exif["0th"][piexif.ImageIFD.XResolution] = (w, 1)
-                    exif["0th"][piexif.ImageIFD.YResolution] = (h, 1)
+                    exif["0th"][piexif.ImageIFD.ImageWidth] = (w, 1)
+                    exif["0th"][piexif.ImageIFD.ImageLength] = (h, 1)
+                    # Filter EXIF data as required
+                    exif = self.filter_exif(exif, exif_whitelist)
                     im.save(dst, exif=piexif.dump(exif))
                 else:
                     im.save(dst)
