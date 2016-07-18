@@ -37,14 +37,16 @@ from nikola import utils
 
 Image = None
 try:
-    from PIL import Image, ExifTags  # NOQA
+    from PIL import ExifTags, Image, ImageOps  # NOQA
 except ImportError:
     try:
-        import Image as _Image
         import ExifTags
+        import Image as _Image
+        import ImageOps
         Image = _Image
     except ImportError:
         pass
+import piexif
 
 
 class ImageProcessor(object):
@@ -67,26 +69,31 @@ class ImageProcessor(object):
                 size = min(w, max_size * 4), min(w, max_size * 4)
 
             try:
-                exif = im._getexif()
-            except Exception:
+                exif = piexif.load(im.info["exif"])
+            except KeyError:
                 exif = None
-            _exif = im.info.get('exif')
+            # Inside this if, we can manipulate exif as much as
+            # we want/need and it will be preserved if required
             if exif is not None:
-                for tag, value in list(exif.items()):
-                    decoded = ExifTags.TAGS.get(tag, tag)
-
-                    if decoded == 'Orientation':
-                        if value == 3:
-                            im = im.rotate(180)
-                        elif value == 6:
-                            im = im.rotate(270)
-                        elif value == 8:
-                            im = im.rotate(90)
-                        break
+                # Rotate according to EXIF
+                value = exif['0th'].get(piexif.ImageIFD.Orientation, 1)
+                if value in (3, 4):
+                    im = im.rotate(180)
+                elif value in (5, 6):
+                    im = im.rotate(270)
+                elif value in (7, 8):
+                    im = im.rotate(90)
+                if value in (2, 4, 5, 7):
+                    im = ImageOps.mirror(im)
+                exif['0th'][piexif.ImageIFD.Orientation] = 1
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
-                if _exif is not None and preserve_exif_data:
-                    im.save(dst, exif=_exif)
+                if exif is not None and preserve_exif_data:
+                    # Put right size in EXIF data
+                    w, h = im.size
+                    exif["0th"][piexif.ImageIFD.XResolution] = (w, 1)
+                    exif["0th"][piexif.ImageIFD.YResolution] = (h, 1)
+                    im.save(dst, exif=piexif.dump(exif))
                 else:
                     im.save(dst)
             except Exception as e:
