@@ -4,9 +4,11 @@ New in master
 Features
 --------
 
+* Support ``date`` filtering in the post list directive
+  (Issue #1889)
 * Support ``doc`` shortcode (equivalent to reST ``doc`` role — part of
   Issue #2170)
-* Albanian translation by Vango Stavro
+* Added Albanian translation by Vango Stavro
 * Added ``post-(type)`` class to ``story.tmpl`` (uses the ``type``
   meta field, defaults to ``post-text`` — same behavior as posts)
 * New ``compiled`` signal after post is compiled (Issue #2369)
