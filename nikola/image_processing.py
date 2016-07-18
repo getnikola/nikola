@@ -76,7 +76,7 @@ class ImageProcessor(object):
 
         # Scenario 2: keep nothing
         if whitelist == {}:
-            return {}
+            return None
 
         # Scenario 3: keep some
         for k in list(exif.keys()):
@@ -93,7 +93,7 @@ class ImageProcessor(object):
                     if EXIF_TAG_NAMES[tag] not in whitelist[k]:
                         exif[k].pop(tag)
 
-        return exif
+        return exif or None
 
     def resize_image(self, src, dst, max_size, bigger_panoramas=True, preserve_exif_data=False, exif_whitelist={}):
         """Make a copy of the image in the requested size."""
@@ -132,7 +132,7 @@ class ImageProcessor(object):
                 exif = self.filter_exif(exif, exif_whitelist)
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
-                if exif is not None and preserve_exif_data:
+                if exif is not None and preserve_exif_data and '0th' in exif:
                     # Put right size in EXIF data
                     w, h = im.size
                     exif["0th"][piexif.ImageIFD.XResolution] = (w, 1)

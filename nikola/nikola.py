@@ -652,8 +652,7 @@ class Nikola(object):
 
         # Setting PRESERVE_EXIF_DATA with an empty EXIF_WHITELIST implies 'keep everything'
         if self.config['PRESERVE_EXIF_DATA'] and not self.config['EXIF_WHITELIST']:
-            utils.LOGGER.warn('Setting PRESERVE_EXIF_DATA and not EXIF_WHITELIST implies all EXIF data will be kept.')
-            self.config['EXIF_WHITELIST'] = {"*": "*"}
+            utils.LOGGER.warn('You are setting PRESERVE_EXIF_DATA and not EXIF_WHITELIST so EXIF data is not really kept.')
 
         # Handle CONTENT_FOOTER properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS.
