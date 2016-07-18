@@ -33,6 +33,8 @@ import lxml
 import re
 import gzip
 
+import piexif
+
 from nikola import utils
 
 Image = None
@@ -46,7 +48,6 @@ except ImportError:
         Image = _Image
     except ImportError:
         pass
-import piexif
 
 
 class ImageProcessor(object):
