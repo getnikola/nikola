@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New EXIF_WHITELIST option to filter EXIF data.
 * Support ``doc`` shortcode (equivalent to reST ``doc`` role — part of
   Issue #2170)
 * Albanian translation by Vango Stavro
