@@ -61,7 +61,7 @@ class ImageProcessor(object):
         # Convert whitelisted tag names to numeric values
         if not EXIF_TAG_NAMES:
             for ifd in piexif.TAGS:
-                for tag, data in ifd.items():
+                for tag, data in piexif.TAGS[ifd].items():
                     EXIF_TAG_NAMES[tag] = data['name']
 
     def filter_exif(self, exif, whitelist):
@@ -80,6 +80,8 @@ class ImageProcessor(object):
 
         # Scenario 3: keep some
         for k in exif:
+            if type(exif[k]) != dict:
+                pass  # At least thumbnails have no fields
             if k not in whitelist:
                 exif.pop(k)  # Not whitelisted, remove
             elif k in whitelist and whitelist[k] == '*':
