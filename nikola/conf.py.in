@@ -592,6 +592,7 @@ GITHUB_COMMIT_SOURCE = True
 # from the setting. By default, no EXIF information is kept.
 # Setting the whitelist to anything other than {} implies
 # PRESERVE_EXIF_DATA is set to True
+# To preserve ALL EXIF data, set EXIF_WHITELIST to {"*": "*"}
 
 # EXIF_WHITELIST = {}
 
