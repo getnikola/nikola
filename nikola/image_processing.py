@@ -55,7 +55,11 @@ class ImageProcessor(object):
 
     image_ext_list_builtin = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.svgz', '.bmp', '.tiff']
 
-    def resize_image(self, src, dst, max_size, bigger_panoramas=True, preserve_exif_data=False):
+    def filter_exif(self, exif, whitelist):
+        """Filter EXIF data as described in the documentation."""
+        return exif
+
+    def resize_image(self, src, dst, max_size, bigger_panoramas=True, preserve_exif_data=False, exif_whitelist={}):
         """Make a copy of the image in the requested size."""
         if not Image or os.path.splitext(src)[1] in ['.svg', '.svgz']:
             self.resize_svg(src, dst, max_size, bigger_panoramas)
