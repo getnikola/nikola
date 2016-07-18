@@ -439,6 +439,7 @@ class Nikola(object):
             'EXTRA_PLUGINS_DIRS': [],
             'COMMENT_SYSTEM_ID': 'nikolademo',
             'ENABLE_AUTHOR_PAGES': True,
+            'EXIF_WHITELIST': {},
             'EXTRA_HEAD_DATA': '',
             'FAVICONS': (),
             'FEED_LENGTH': 10,
@@ -643,6 +644,11 @@ class Nikola(object):
                 self.config[i] = utils.TranslatableSetting(i, self.config[i], self.config['TRANSLATIONS'])
             except KeyError:
                 pass
+
+        # A EXIF_WHITELIST implies you want to keep EXIF data
+        if self.config['EXIF_WHITELIST'] and not self.config['PRESERVE_EXIF_DATA']:
+            utils.LOGGER.warn('Setting EXIF_WHITELIST implies PRESERVE_EXIF_DATA is set to True')
+            self.config['PRESERVE_EXIF_DATA'] = True
 
         # Handle CONTENT_FOOTER properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS.

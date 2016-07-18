@@ -589,9 +589,13 @@ GITHUB_COMMIT_SOURCE = True
 # name of a IDF, and each list item is a field you want to preserve.
 # If you have a IDF with only a '*' item, *EVERY* item in it will be
 # preserved. If you don't want to preserve anything in a IDF, remove it
-# from the setting.
+# from the setting. By default, no EXIF information is kept.
+# Setting the whitelist to anything other than {} implies
+# PRESERVE_EXIF_DATA is set to True
 
 # EXIF_WHITELIST = {}
+
+# Some examples of EXIF_WHITELIST settings:
 
 # Basic image information:
 # EXIF_WHITELIST['0th'] = [
@@ -600,9 +604,11 @@ GITHUB_COMMIT_SOURCE = True
 #    "YResolution",
 # ]
 
-# Geolocation data:
-
+# If you want to keep GPS data in the images:
 # EXIF_WHITELIST['GPS'] = ["*"]
+
+# Embedded thumbnail information:
+# EXIF_WHITELIST['1st'] = ["*"]
 
 # Folders containing images to be used in normal posts or pages. Images will be
 # scaled down according to IMAGE_THUMBNAIL_SIZE and MAX_IMAGE_SIZE options, but
