@@ -576,11 +576,11 @@ GITHUB_COMMIT_SOURCE = True
 # GALLERY_SORT_BY_DATE = True
 
 # If set to True, EXIF data will be copied when an image is thumbnailed or
-# resized.
+# resized. (See also EXIF_WHITELIST)
 # PRESERVE_EXIF_DATA = False
 
 # If you have enabled PRESERVE_EXIF_DATA, this option lets you choose EXIF
-# fields you want to keep in images.
+# fields you want to keep in images. (See also PRESERVE_EXIF_DATA)
 #
 # For a full list of field names, please see here:
 # http://www.cipa.jp/std/documents/e/DC-008-2012_E.pdf
