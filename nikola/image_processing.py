@@ -133,7 +133,6 @@ class ImageProcessor(object):
                 if exif is not None and preserve_exif_data:
                     # Put right size in EXIF data
                     w, h = im.size
-                    from doit.tools import set_trace; set_trace()
                     if '0th' in exif:
                         exif["0th"][piexif.ImageIFD.ImageWidth] = w
                         exif["0th"][piexif.ImageIFD.ImageLength] = h
