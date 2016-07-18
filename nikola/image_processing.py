@@ -49,14 +49,48 @@ except ImportError:
     except ImportError:
         pass
 
+EXIF_TAG_NAMES = {}
+
 
 class ImageProcessor(object):
     """Apply image operations."""
 
     image_ext_list_builtin = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.svgz', '.bmp', '.tiff']
 
+    def _fill_exif_tag_names(self):
+        # Convert whitelisted tag names to numeric values
+        if not EXIF_TAG_NAMES:
+            for ifd in piexif.TAGS:
+                for tag, data in ifd.items():
+                    EXIF_TAG_NAMES[tag] = data['name']
+
     def filter_exif(self, exif, whitelist):
         """Filter EXIF data as described in the documentation."""
+
+        self._fill_exif_tag_names()
+        exif = exif.copy()  # Don't modify in-place, it's rude
+
+        # Scenario 1: keep everything
+        if whitelist == {'*': '*'}:
+            return exif
+
+        # Scenario 2: keep nothing
+        if whitelist == {}:
+            return {}
+
+        # Scenario 3: keep some
+        for k in exif:
+            if k not in whitelist:
+                exif.pop(k)  # Not whitelisted, remove
+            elif k in whitelist and whitelist[k] == '*':
+                # Fully whitelisted, keep all
+                pass
+            else:
+                # Partially whitelisted
+                for tag in exif[k]:
+                    if EXIF_TAG_NAMES[tag] not in whitelist[k]:
+                        exif[k].pop(tag)
+
         return exif
 
     def resize_image(self, src, dst, max_size, bigger_panoramas=True, preserve_exif_data=False, exif_whitelist={}):
