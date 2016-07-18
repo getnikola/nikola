@@ -79,17 +79,17 @@ class ImageProcessor(object):
             return {}
 
         # Scenario 3: keep some
-        for k in exif:
+        for k in list(exif.keys()):
             if type(exif[k]) != dict:
                 pass  # At least thumbnails have no fields
-            if k not in whitelist:
+            elif k not in whitelist:
                 exif.pop(k)  # Not whitelisted, remove
             elif k in whitelist and whitelist[k] == '*':
                 # Fully whitelisted, keep all
                 pass
             else:
                 # Partially whitelisted
-                for tag in exif[k]:
+                for tag in list(exif[k].keys()):
                     if EXIF_TAG_NAMES[tag] not in whitelist[k]:
                         exif[k].pop(tag)
 
