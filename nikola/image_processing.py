@@ -130,11 +130,16 @@ class ImageProcessor(object):
 
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
-                if exif is not None and preserve_exif_data and '0th' in exif:
+                if exif is not None and preserve_exif_data:
                     # Put right size in EXIF data
                     w, h = im.size
-                    exif["0th"][piexif.ImageIFD.ImageWidth] = (w, 1)
-                    exif["0th"][piexif.ImageIFD.ImageLength] = (h, 1)
+                    from doit.tools import set_trace; set_trace()
+                    if '0th' in exif:
+                        exif["0th"][piexif.ImageIFD.ImageWidth] = w
+                        exif["0th"][piexif.ImageIFD.ImageLength] = h
+                    if 'Exif' in exif:
+                        exif["Exif"][piexif.ExifIFD.PixelXDimension] = w
+                        exif["Exif"][piexif.ExifIFD.PixelYDimension] = h
                     # Filter EXIF data as required
                     exif = self.filter_exif(exif, exif_whitelist)
                     im.save(dst, exif=piexif.dump(exif))
