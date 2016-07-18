@@ -91,6 +91,9 @@ class ImageProcessor(object):
                 if value in (2, 4, 5, 7):
                     im = ImageOps.mirror(im)
                 exif['0th'][piexif.ImageIFD.Orientation] = 1
+
+                # Filter EXIF data as required
+                exif = self.filter_exif(exif, exif_whitelist)
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
                 if exif is not None and preserve_exif_data:
