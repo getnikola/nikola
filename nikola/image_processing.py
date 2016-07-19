@@ -66,7 +66,6 @@ class ImageProcessor(object):
 
     def filter_exif(self, exif, whitelist):
         """Filter EXIF data as described in the documentation."""
-
         # Scenario 1: keep everything
         if whitelist == {'*': '*'}:
             return exif
