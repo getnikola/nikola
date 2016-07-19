@@ -16,6 +16,7 @@ Features
 Bugfixes
 --------
 
+* Warn about possible outdated files after --clean-files (Issue #2017)
 * Improved EXIF orientation handling
 * Register post list template as a dependency (Issue #2391)
 * Fix section color hashing when using Python 2
