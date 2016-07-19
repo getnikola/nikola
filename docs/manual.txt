@@ -1475,13 +1475,16 @@ Do this if you really know what you are doing. EXIF data comes separated in a fe
 The most common ones are:
 
 0th
-   Information about the image itself, and camera settings
+   Information about the image itself
+
+Exif
+   Information about the camera and the image
 
 1st
    Information about embedded thumbnails (usually nothing)
 
 thumbnail
-   An embedded thumbnail (usually nothing)
+   An embedded thumbnail, in JPEG format (usually nothing)
 
 GPS
    Geolocation information about the image
