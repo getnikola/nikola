@@ -66,8 +66,6 @@ class ImageProcessor(object):
 
     def filter_exif(self, exif, whitelist):
         """Filter EXIF data as described in the documentation."""
-        self._fill_exif_tag_names()
-        exif = exif.copy()  # Don't modify in-place, it's rude
 
         # Scenario 1: keep everything
         if whitelist == {'*': '*'}:
@@ -78,6 +76,8 @@ class ImageProcessor(object):
             return None
 
         # Scenario 3: keep some
+        self._fill_exif_tag_names()
+        exif = exif.copy()  # Don't modify in-place, it's rude
         for k in list(exif.keys()):
             if type(exif[k]) != dict:
                 pass  # At least thumbnails have no fields
