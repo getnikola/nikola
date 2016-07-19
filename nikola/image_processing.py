@@ -145,7 +145,7 @@ class ImageProcessor(object):
                 im.save(dst)
         except Exception as e:
             self.logger.warn("Can't process {0}, using original "
-                                "image! ({1})".format(src, e))
+                             "image! ({1})".format(src, e))
             utils.copy_file(src, dst)
 
     def resize_svg(self, src, dst, max_size, bigger_panoramas):
