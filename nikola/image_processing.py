@@ -58,7 +58,7 @@ class ImageProcessor(object):
     image_ext_list_builtin = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.svgz', '.bmp', '.tiff']
 
     def _fill_exif_tag_names(self):
-        # Convert whitelisted tag names to numeric values
+        """Connect EXIF tag names to numeric values."""
         if not EXIF_TAG_NAMES:
             for ifd in piexif.TAGS:
                 for tag, data in piexif.TAGS[ifd].items():
@@ -66,7 +66,6 @@ class ImageProcessor(object):
 
     def filter_exif(self, exif, whitelist):
         """Filter EXIF data as described in the documentation."""
-
         self._fill_exif_tag_names()
         exif = exif.copy()  # Don't modify in-place, it's rude
 
