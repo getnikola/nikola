@@ -1,5 +1,5 @@
-New in master
-=============
+New in v7.7.10
+==============
 
 Features
 --------

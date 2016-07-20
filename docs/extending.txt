@@ -9,7 +9,7 @@
 Extending Nikola
 ================
 
-:Version: 7.7.9
+:Version: 7.7.10
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-info pull-right
