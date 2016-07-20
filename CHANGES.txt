@@ -1,3 +1,11 @@
+New in master
+=============
+
+Bugfixes
+--------
+
+* Brown bag bug in image resizing (ralsina says my fault!)
+
 New in v7.7.10
 ==============
 

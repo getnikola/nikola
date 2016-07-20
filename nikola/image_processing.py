@@ -99,7 +99,7 @@ class ImageProcessor(object):
             self.resize_svg(src, dst, max_size, bigger_panoramas)
             return
         im = Image.open(src)
-        w, h = im.size
+        size = w, h = im.size
         if w > max_size or h > max_size:
             size = max_size, max_size
 
