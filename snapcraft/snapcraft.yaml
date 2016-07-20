@@ -17,7 +17,7 @@ parts:
     nikola-source:
         plugin: python3
         source: git://github.com/getnikola/nikola.git
-        source-tag: 7.7.11
+        source-tag: v7.7.11
         requirements: parts/nikola-source/src/requirements-extras.txt
         stage-packages:
             - locales
