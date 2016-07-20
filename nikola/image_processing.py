@@ -49,13 +49,51 @@ except ImportError:
     except ImportError:
         pass
 
+EXIF_TAG_NAMES = {}
+
 
 class ImageProcessor(object):
     """Apply image operations."""
 
     image_ext_list_builtin = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.svgz', '.bmp', '.tiff']
 
-    def resize_image(self, src, dst, max_size, bigger_panoramas=True, preserve_exif_data=False):
+    def _fill_exif_tag_names(self):
+        """Connect EXIF tag names to numeric values."""
+        if not EXIF_TAG_NAMES:
+            for ifd in piexif.TAGS:
+                for tag, data in piexif.TAGS[ifd].items():
+                    EXIF_TAG_NAMES[tag] = data['name']
+
+    def filter_exif(self, exif, whitelist):
+        """Filter EXIF data as described in the documentation."""
+        # Scenario 1: keep everything
+        if whitelist == {'*': '*'}:
+            return exif
+
+        # Scenario 2: keep nothing
+        if whitelist == {}:
+            return None
+
+        # Scenario 3: keep some
+        self._fill_exif_tag_names()
+        exif = exif.copy()  # Don't modify in-place, it's rude
+        for k in list(exif.keys()):
+            if type(exif[k]) != dict:
+                pass  # At least thumbnails have no fields
+            elif k not in whitelist:
+                exif.pop(k)  # Not whitelisted, remove
+            elif k in whitelist and whitelist[k] == '*':
+                # Fully whitelisted, keep all
+                pass
+            else:
+                # Partially whitelisted
+                for tag in list(exif[k].keys()):
+                    if EXIF_TAG_NAMES[tag] not in whitelist[k]:
+                        exif[k].pop(tag)
+
+        return exif or None
+
+    def resize_image(self, src, dst, max_size, bigger_panoramas=True, preserve_exif_data=False, exif_whitelist={}):
         """Make a copy of the image in the requested size."""
         if not Image or os.path.splitext(src)[1] in ['.svg', '.svgz']:
             self.resize_svg(src, dst, max_size, bigger_panoramas)
@@ -69,39 +107,44 @@ class ImageProcessor(object):
             if bigger_panoramas and w > 2 * h:
                 size = min(w, max_size * 4), min(w, max_size * 4)
 
-            try:
-                exif = piexif.load(im.info["exif"])
-            except KeyError:
-                exif = None
-            # Inside this if, we can manipulate exif as much as
-            # we want/need and it will be preserved if required
-            if exif is not None:
-                # Rotate according to EXIF
-                value = exif['0th'].get(piexif.ImageIFD.Orientation, 1)
-                if value in (3, 4):
-                    im = im.rotate(180)
-                elif value in (5, 6):
-                    im = im.rotate(270)
-                elif value in (7, 8):
-                    im = im.rotate(90)
-                if value in (2, 4, 5, 7):
-                    im = ImageOps.mirror(im)
-                exif['0th'][piexif.ImageIFD.Orientation] = 1
-            try:
-                im.thumbnail(size, Image.ANTIALIAS)
-                if exif is not None and preserve_exif_data:
-                    # Put right size in EXIF data
-                    w, h = im.size
-                    exif["0th"][piexif.ImageIFD.XResolution] = (w, 1)
-                    exif["0th"][piexif.ImageIFD.YResolution] = (h, 1)
-                    im.save(dst, exif=piexif.dump(exif))
-                else:
-                    im.save(dst)
-            except Exception as e:
-                self.logger.warn("Can't thumbnail {0}, using original "
-                                 "image as thumbnail ({1})".format(src, e))
-                utils.copy_file(src, dst)
-        else:  # Image is small
+        try:
+            exif = piexif.load(im.info["exif"])
+        except KeyError:
+            exif = None
+        # Inside this if, we can manipulate exif as much as
+        # we want/need and it will be preserved if required
+        if exif is not None:
+            # Rotate according to EXIF
+            value = exif['0th'].get(piexif.ImageIFD.Orientation, 1)
+            if value in (3, 4):
+                im = im.rotate(180)
+            elif value in (5, 6):
+                im = im.rotate(270)
+            elif value in (7, 8):
+                im = im.rotate(90)
+            if value in (2, 4, 5, 7):
+                im = ImageOps.mirror(im)
+            exif['0th'][piexif.ImageIFD.Orientation] = 1
+
+        try:
+            im.thumbnail(size, Image.ANTIALIAS)
+            if exif is not None and preserve_exif_data:
+                # Put right size in EXIF data
+                w, h = im.size
+                if '0th' in exif:
+                    exif["0th"][piexif.ImageIFD.ImageWidth] = w
+                    exif["0th"][piexif.ImageIFD.ImageLength] = h
+                if 'Exif' in exif:
+                    exif["Exif"][piexif.ExifIFD.PixelXDimension] = w
+                    exif["Exif"][piexif.ExifIFD.PixelYDimension] = h
+                # Filter EXIF data as required
+                exif = self.filter_exif(exif, exif_whitelist)
+                im.save(dst, exif=piexif.dump(exif))
+            else:
+                im.save(dst)
+        except Exception as e:
+            self.logger.warn("Can't process {0}, using original "
+                             "image! ({1})".format(src, e))
             utils.copy_file(src, dst)
 
     def resize_svg(self, src, dst, max_size, bigger_panoramas):

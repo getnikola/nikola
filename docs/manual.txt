@@ -1435,6 +1435,84 @@ be stripped. For example ``03_an_amazing_sunrise.jpg`` will be render as *An ama
 Here is a `demo gallery </galleries/demo>`_ of historic, public domain Nikola
 Tesla pictures taken from `this site <http://kerryr.net/pioneers/gallery/tesla.htm>`_.
 
+Handling EXIF Data
+------------------
+
+Your images contain a certain amount of extra data besides the image itself,
+called the `EXIF metadata. <https://en.wikipedia.org/wiki/Exchangeable_image_file_format>`__
+It contains information about the camera you used to take the picture, when it was taken,
+and maybe even the location where it was taken.
+
+This is both useful, because you can use it in some apps to locate all the pictures taken
+in a certain place, or with a certain camera, but also, since the pictures Nikola
+publishes are visible to anyone on the Internet, a privacy risk worth considering
+(Imagine if you post pictures taken at home with GPS info, you are publishing your
+home address!)
+
+Nikola has some support for managing it, so let's go through a few scenarios to
+see which one you prefer.
+
+Strip all EXIF data
+~~~~~~~~~~~~~~~~~~~
+
+Do this if you want to be absolutely sure that no sensitive information should ever leak::
+
+    PRESERVE_EXIF_DATA = False
+    EXIF_WHITELIST = {}
+
+Preserve all EXIF data
+~~~~~~~~~~~~~~~~~~~~~~
+
+Do this if you really don't mind people knowing where pictures were taken, or camera settings.
+
+    PRESERVE_EXIF_DATA = True
+    EXIF_WHITELIST = {'*': '*'}
+
+Preserve some EXIF data
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Do this if you really know what you are doing. EXIF data comes separated in a few IFD blocks.
+The most common ones are:
+
+0th
+   Information about the image itself
+
+Exif
+   Information about the camera and the image
+
+1st
+   Information about embedded thumbnails (usually nothing)
+
+thumbnail
+   An embedded thumbnail, in JPEG format (usually nothing)
+
+GPS
+   Geolocation information about the image
+
+Interop
+   Not too interesting at this point.
+
+Each IFD in turn contains a number of tags. For example, 0th contains a ImageWidth tag.
+You can tell Nikola exactly which IFDs to keep, and within each IFD, which tags to keep,
+using the EXIF_WHITELIST option.
+
+Let's see an example::
+
+    PRESERVE_EXIF_DATA = True
+    EXIF_WHITELIST = {
+        "0th": ["Orientation", "ImageWidth", "ImageLength"],
+        "Interop": "*",
+    }
+
+So, we preserve EXIF data, and the whitelisted IFDs are "0th" and "Interop". That means
+GPS, for example, will be totally deleted.
+
+Then, for the Interop IFD, we keep everything, and for the 0th IFD we only keep three tags,
+listed there.
+
+There is a huge number of EXIF tags, described in `the standard <http://www.cipa.jp/std/documents/e/DC-008-2012_E.pdf>`__
+
+
 Post Processing Filters
 -----------------------
 

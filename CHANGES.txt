@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New EXIF_WHITELIST option to filter EXIF data (Issue #2323)
 * Support ``date`` filtering in the post list directive
   (Issue #1889)
 * Support ``doc`` shortcode (equivalent to reST ``doc`` role — part of
@@ -16,6 +17,7 @@ Features
 Bugfixes
 --------
 
+* Some images were copied ignoring the PRESERVE_EXIF_DATA option
 * Warn about possible outdated files after --clean-files (Issue #2017)
 * Improved EXIF orientation handling
 * Register post list template as a dependency (Issue #2391)
