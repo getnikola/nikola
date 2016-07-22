@@ -18,10 +18,11 @@ parts:
         plugin: python3
         source: git://github.com/getnikola/nikola.git
         source-tag: v7.7.11
-        requirements: parts/nikola-source/src/requirements-extras.txt
+        requirements: requirements.txt
         stage-packages:
             - locales
             - libc-bin
+            - python3-lxml
         build-packages:
             - zlib1g-dev
             - libjpeg-turbo8-dev
