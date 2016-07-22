@@ -23,6 +23,7 @@ parts:
             - locales
             - libc-bin
             - python3-lxml
+            - python3-pil
         build-packages:
             - zlib1g-dev
             - libjpeg-turbo8-dev
