@@ -4,9 +4,7 @@ To build, in Ubuntu 16.04:
 
 apt install snapd snapcraft
 snap login some.account@whatever.com
-snapcraft
-cp nikola.py stage/usr/bin/nikola
-snapcraft
+./build.sh
 
 To just use it:
 
