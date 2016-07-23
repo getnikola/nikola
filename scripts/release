@@ -1,0 +1,155 @@
+#!/bin/zsh
+# The Release Script
+# Based on Python Project Template by Chris Warrick
+# Copyright © 2013-2016, Chris Warrick.
+# All rights reserved.
+
+# Permission is hereby granted, free of charge, to any
+# person obtaining a copy of this software and associated
+# documentation files (the "Software"), to deal in the
+# Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the
+# Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice
+# shall be included in all copies or substantial portions of
+# the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+# KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+# PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
+# OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+function status {
+    echo $@
+}
+
+function warning {
+    echo 'WARNING: '$@
+}
+
+function error {
+    echo 'ERROR: '$@
+}
+
+function cleanup {
+    rm -rf Nikola.egg-info build || true
+    rm -rf **/__pycache__ || true
+}
+
+status '*** Nikola Release Scripts'
+dates=$(date '+%s')
+
+echo -n "Version (in format X.Y.Z): "
+read version
+
+echo $version | grep '^[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}$' > /dev/null
+
+if [[ $? != 0 ]]; then
+    echo $version | grep '^[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\-[0-9A-Za-z-]\{1,\}$' > /dev/null
+    if [[ $? != 0 ]]; then
+        warning 'version number is not compliant with versioning scheme (Semantic Versioning 2.0)'
+        echo -n 'Continue? [y/N] '
+        read vercont
+        if [[ $vercont == 'y' || $vercont == 'Y' ]]; then
+            echo 'Continuing.'
+        else
+            exit 2
+        fi
+    else
+        status 'NOTICE: pre-release version number in use.'
+        echo -n 'Continue? [Y/n] '
+        read vercont
+        if [[ $vercont == 'n' || $vercont == 'N' ]]; then
+            exit 2
+        else
+            echo 'Continuing.'
+        fi
+    fi
+fi
+
+
+cleanup
+
+status 'Replacing versions in files...'
+
+sed "s/version=.*/version='$version',/g" setup.py -i
+sed "s/version = .*/version = '$version'/g" docs/sphinx/conf.py -i
+sed "s/release = .*/release = '$version'/g" docs/sphinx/conf.py -i
+sed "s/:Version: .*/:Version: $version/g" docs/*.txt -i
+sed "s/:Version: .*/:Version: Nikola $version/g" docs/man/nikola.rst -i
+sed "s/__version__ = .*/__version__ = '$version'/g" nikola/__init__.py -i
+sed "s/version: .*/version: $version/g" snapcraft/snapcraft.yaml -i
+sed "s/source-tag: .*/source-tag: v$version/g" snapcraft/snapcraft.yaml -i
+sed "s/Nikola==.*/Nikola==$version/g" snapcraft/nikola.py -i
+
+setopt errexit # Exit on errors
+
+# Slightly convoluted underline automation
+underline=$(python -c "import sys; sys.stdout.write((len('v$version')) * '=')")
+perl -0777 -i -pe "s/master\n======/v$version\n$underline/" CHANGES.txt
+# Man pages
+rst2man.py docs/man/nikola.rst > docs/man/nikola.1
+gzip -f docs/man/nikola.1
+
+status 'Updating path handler documentation...'
+scripts/document_path_handlers.py > docs/path_handlers.txt
+status 'Updating Jinja2 templates...'
+scripts/jinjify.py
+status 'Updating Bower...'
+scripts/update-bower.sh
+status 'Updating symlinked list...'
+scripts/generate_symlinked_list.sh
+status 'Updating website (conf.py and docs)...'
+scripts/generate_conf.py > ../nikola-site/listings/conf.py
+cp AUTHORS.txt CHANGES.txt ../nikola-site/stories
+cp docs/*.* ../nikola-site/stories
+sed 's/Nikola v[0-9\.A_Za-z-]\{1,\}/Nikola'" v$version/g" ../nikola-site/stories/conf.txt -i
+status 'Generating locales...'
+scripts/import_po.py
+status 'List of locales:'
+scripts/langstatus.py
+
+unsetopt errexit
+
+status 'If any locales are shown as "NOT found" and they have full translations, please add them in nikola.py. Check this in another terminal (or not) and press Enter to continue.'
+read localefix
+
+status 'Importing...'
+python -c "import nikola"
+if [[ $? == 1 ]]; then
+    error "Import failed.  Fix your code or don't come back."
+    exit 1
+fi
+
+status 'This is the last chance to quit.  Hit ^C now if you want to.'
+read bailout
+
+cleanup
+
+./setup.py sdist bdist_wheel || exit $?
+twine upload -s dist/Nikola-$version.tar.gz dist/Nikola-$version*.whl || exit $?
+
+cleanup
+
+git add -A --ignore-errors . || exit $?
+
+git commit -S -asm "Version $version" || exit $?
+git tag -sm "Version $version" v$version || exit $?
+git push --follow-tags origin master || exit $?
+
+status "Done!"
+
+echo "Next steps (see Release Checklist):"
+echo " * Write announcements, create blog posts"
+echo " * Create a GitHub release"
+echo " * Update GitHub Issues milestones"
+echo " * Update Nikola’s website"
+echo " * Send out announcement e-mails"
+echo " * Update AUR PKGBUILDs"
