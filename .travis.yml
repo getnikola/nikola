@@ -8,6 +8,7 @@ addons:
         packages:
             - language-pack-en-base
             - language-pack-pl-base
+            - colordiff
 python:
   - "2.7"
   - "3.3"

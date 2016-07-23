@@ -21,7 +21,7 @@ rm "stories/creating-a-theme.rst" "stories/extending.txt" "stories/internals.txt
 LC_ALL='en_US.UTF-8' PYTHONHASHSEED=0 nikola build --invariant
 if [[ "$1" == "check" ]]; then
     echo -e "\033[36m>> Testing baseline...\033[0m"
-    diff -ubwr ../baseline output
+    colordiff -ubwr ../baseline output
     if [[ $? == 0 ]]; then
         echo -e "\033[32;1m>> Baseline test successful\033[0m"
     else
