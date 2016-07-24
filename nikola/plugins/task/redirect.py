@@ -50,7 +50,7 @@ class Redirect(Task):
         yield self.group_task()
         if kw['redirections']:
             for src, dst in kw["redirections"]:
-                src_path = os.path.join(kw["output_folder"], src)
+                src_path = os.path.join(kw["output_folder"], src.lstrip('/'))
                 yield utils.apply_filters({
                     'basename': self.name,
                     'name': src_path,
