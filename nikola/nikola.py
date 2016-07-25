@@ -1110,9 +1110,11 @@ class Nikola(object):
             try:
                 self._THEMES = utils.get_theme_chain(self.config['THEME'])
             except Exception:
-                utils.LOGGER.warn('''Cannot load theme "{0}", using 'bootstrap3' instead.'''.format(self.config['THEME']))
-                self.config['THEME'] = 'bootstrap3'
-                return self._get_themes()
+                if self.config['THEME'] != 'bootstrap3':
+                    utils.LOGGER.warn('''Cannot load theme "{0}", using 'bootstrap3' instead.'''.format(self.config['THEME']))
+                    self.config['THEME'] = 'bootstrap3'
+                    return self._get_themes()
+                raise
             # Check consistency of USE_CDN and the current THEME (Issue #386)
             if self.config['USE_CDN'] and self.config['USE_CDN_WARNING']:
                 bootstrap_path = utils.get_asset_path(os.path.join(
