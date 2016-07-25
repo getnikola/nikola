@@ -66,7 +66,7 @@ def _doc_link(rawtext, text, options={}, content=[]):
         if post is None:
             raise ValueError
     except ValueError:
-        return False, False, None, None, None
+        return False, False, None, None, slug
 
     if not has_explicit_title:
         # use post's title as link's text
