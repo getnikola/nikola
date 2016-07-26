@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Update jQuery to v3.1.0 (might break some custom JS)
 * Update Bootstrap to v3.3.7
 
 Bugfixes
