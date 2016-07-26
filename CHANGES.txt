@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Don’t remove ``<!DOCTYPE html>`` if typogrify filters are in use
 * Avoid infinite loop if bootstrap3 can't be loaded (Issue #2402)
 
 New in v7.7.11

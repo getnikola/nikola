@@ -336,7 +336,7 @@ def _normalize_html(data):
         data = lxml.html.tostring(lxml.html.fromstring(data), encoding='unicode')
     except:
         pass
-    return data
+    return '<!DOCTYPE html>\n' + data
 
 
 normalize_html = apply_to_text_file(_normalize_html)
