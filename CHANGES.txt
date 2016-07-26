@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Update Bootstrap to v3.3.7
+
 Bugfixes
 --------
 
