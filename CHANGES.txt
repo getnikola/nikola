@@ -9,6 +9,8 @@ Features
 Bugfixes
 --------
 
+* Respect ``DEPLOY_DRAFTS`` and ``DEPLOY_FUTURE`` in ``github_deploy``
+  (Issue #2406)
 * Don’t remove ``<!DOCTYPE html>`` if typogrify filters are in use
 * Avoid infinite loop if bootstrap3 can't be loaded (Issue #2402)
 
@@ -1865,4 +1867,4 @@ Bugfixes
 * Fix for content displaying too wide
 * Changelog
 
-vim: tw=70 syntax=rst
+vim: cc=70 tw=70 syntax=rst

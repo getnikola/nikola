@@ -34,7 +34,7 @@ from textwrap import dedent
 
 from nikola.plugin_categories import Command
 from nikola.plugins.command.check import real_scan_files
-from nikola.utils import get_logger, req_missing, STDERR_HANDLER
+from nikola.utils import get_logger, req_missing, clean_before_deployment, STDERR_HANDLER
 from nikola.__main__ import main
 from nikola import __version__
 
@@ -99,6 +99,11 @@ class CommandGitHubDeploy(Command):
         only_on_output, _ = real_scan_files(self.site)
         for f in only_on_output:
             os.unlink(f)
+
+        # Remove drafts and future posts if requested (Issue #2406)
+        undeployed_posts = clean_before_deployment(self.site)
+        if undeployed_posts:
+            self.logger.notice("Deleted {0} posts due to DEPLOY_* settings".format(len(undeployed_posts)))
 
         # Commit and push
         self._commit_and_push(options['commit_message'])
