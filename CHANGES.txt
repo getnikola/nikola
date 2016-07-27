@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Add ``sections`` filtering in the post list directive
+  (Issue #2409)
 * Update Bootstrap to v3.3.7
 
 Bugfixes
