@@ -2080,8 +2080,8 @@ The following options are recognized:
       Replaces ``all``. Defaults to ``posts``.
 
 * ``all`` : flag
-      Shows all posts and pages in the post list.
-      Defaults to show only posts.
+      (deprecated, use ``post_type`` instead)
+      Shows all posts and pages in the post list.  Defaults to show only posts.
 
 * ``lang`` : string
       The language of post *titles* and *links*.
