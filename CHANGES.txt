@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Support post-list shortcode better (Issue #2408)
 * Respect ``DEPLOY_DRAFTS`` and ``DEPLOY_FUTURE`` in ``github_deploy``
   (Issue #2406)
 * Don’t remove ``<!DOCTYPE html>`` if typogrify filters are in use
