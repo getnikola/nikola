@@ -2106,6 +2106,9 @@ the appropriate path if this happens.
 We recommend using stories with dates in the past (1970-01-01) to avoid
 dependency issues.
 
+If you are using this as a shortcode, flags (``reverse``, ``all``) are meant to be used
+with a ``True`` argument, eg. ``all=True``.
+
 Importing your WordPress site into Nikola
 -----------------------------------------
 
