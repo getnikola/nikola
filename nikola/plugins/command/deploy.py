@@ -38,7 +38,7 @@ import time
 from blinker import signal
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, remove_file, STDERR_HANDLER
+from nikola.utils import get_logger, clean_before_deployment, STDERR_HANDLER
 
 
 class CommandDeploy(Command):
@@ -46,7 +46,7 @@ class CommandDeploy(Command):
 
     name = "deploy"
 
-    doc_usage = "[[preset [preset...]]"
+    doc_usage = "[preset [preset...]]"
     doc_purpose = "deploy the site"
     doc_description = "Deploy the site by executing deploy commands from the presets listed on the command line.  If no presets are specified, `default` is executed."
     logger = None
@@ -87,19 +87,7 @@ class CommandDeploy(Command):
                              "Think about it for 5 seconds, I'll wait :-)\n\n")
             time.sleep(5)
 
-        deploy_drafts = self.site.config.get('DEPLOY_DRAFTS', True)
-        deploy_future = self.site.config.get('DEPLOY_FUTURE', False)
-        undeployed_posts = []
-        if not (deploy_drafts and deploy_future):
-            # Remove drafts and future posts
-            out_dir = self.site.config['OUTPUT_FOLDER']
-            self.site.scan_posts()
-            for post in self.site.timeline:
-                if (not deploy_drafts and post.is_draft) or \
-                   (not deploy_future and post.publish_later):
-                    remove_file(os.path.join(out_dir, post.destination_path()))
-                    remove_file(os.path.join(out_dir, post.source_path))
-                    undeployed_posts.append(post)
+        undeployed_posts = clean_before_deployment(self.site)
 
         if args:
             presets = args

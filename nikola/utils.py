@@ -81,7 +81,7 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_chain', 'load_messages'
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
            'NikolaPygmentsHTML', 'create_redirect', 'TreeNode',
            'flatten_tree_structure', 'parse_escaped_hierarchical_category_name',
-           'join_hierarchical_category_path', 'indent')
+           'join_hierarchical_category_path', 'clean_before_deployment', 'indent')
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -1866,6 +1866,24 @@ def dns_sd(port, inet6):
     except Exception:
         return None
 
+
+def clean_before_deployment(site):
+    """Clean drafts and future posts before deployment."""
+    undeployed_posts = []
+    deploy_drafts = site.config.get('DEPLOY_DRAFTS', True)
+    deploy_future = site.config.get('DEPLOY_FUTURE', False)
+    if not (deploy_drafts and deploy_future):  # == !drafts || !future
+        # Remove drafts and future posts
+        out_dir = site.config['OUTPUT_FOLDER']
+        site.scan_posts()
+        for post in site.timeline:
+            if (not deploy_drafts and post.is_draft) or (not deploy_future and post.publish_later):
+                for lang in post.translated_to:
+                    remove_file(os.path.join(out_dir, post.destination_path(lang)))
+                    source_path = post.destination_path(lang, post.source_ext(True))
+                    remove_file(os.path.join(out_dir, source_path))
+                undeployed_posts.append(post)
+    return undeployed_posts
 
 # Stolen from textwrap in Python 3.4.3.
 def indent(text, prefix, predicate=None):
