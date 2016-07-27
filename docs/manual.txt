@@ -2051,13 +2051,13 @@ The following options are recognized:
       custom ``priority``.  Defaults to None (chronological sorting).
 
 * ``date``: string
-  Show posts that match date range specified by this option. Format:
+      Show posts that match date range specified by this option. Format:
 
-  * comma-separated clauses (AND)
-  * clause: attribute comparison_operator value (spaces optional)
-      * attribute: year, month, day, hour, month, second, weekday, isoweekday; or empty for full datetime
-      * comparison_operator: == != <= >= < >
-      * value: integer or dateutil-compatible date input
+      * comma-separated clauses (AND)
+      * clause: attribute comparison_operator value (spaces optional)
+          * attribute: year, month, day, hour, month, second, weekday, isoweekday; or empty for full datetime
+          * comparison_operator: == != <= >= < >
+          * value: integer or dateutil-compatible date input
 
 * ``tags`` : string [, string...]
       Filter posts to show only posts having at least one of the ``tags``.
@@ -2075,9 +2075,13 @@ The following options are recognized:
       Filter posts to show only posts having at least one of the ``slugs``.
       Defaults to None.
 
+* ``post_type`` (or ``type``) : string
+      Show only ``posts``, ``pages`` or ``all``.
+      Replaces ``all``. Defaults to ``posts``.
+
 * ``all`` : flag
       Shows all posts and pages in the post list.
-      Defaults to show only posts with set *use_in_feeds*.
+      Defaults to show only posts.
 
 * ``lang`` : string
       The language of post *titles* and *links*.

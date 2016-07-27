@@ -116,13 +116,13 @@ class PostList(Directive):
         Filter posts to show only posts having at least one of the ``slugs``.
         Defaults to None.
 
-    ``post_type`` : string
+    ``post_type`` (or ``type``) : string
         Show only ``posts``, ``pages`` or ``all``.
         Replaces ``all``. Defaults to ``posts``.
 
     ``all`` : flag
         Shows all posts and pages in the post list.
-        Defaults to show only posts with set *use_in_feeds*.
+        Defaults to show only posts.
 
     ``lang`` : string
         The language of post *titles* and *links*.
@@ -147,6 +147,7 @@ class PostList(Directive):
         'sections': directives.unchanged,
         'slugs': directives.unchanged,
         'post_type': directives.unchanged,
+        'type': directives.unchanged,
         'all': directives.flag,
         'lang': directives.unchanged,
         'template': directives.path,
@@ -164,14 +165,15 @@ class PostList(Directive):
         sections = self.options.get('sections')
         slugs = self.options.get('slugs')
         post_type = self.options.get('post_type')
-        show_all = self.options.get('all', False)
+        type = self.options.get('type', False)
+        all = self.options.get('all', False)
         lang = self.options.get('lang', utils.LocaleBorg().current_lang)
         template = self.options.get('template', 'post_list_directive.tmpl')
         sort = self.options.get('sort')
         date = self.options.get('date')
 
-        output = _do_post_list(start, stop, reverse, tags, categories, sections, slugs, post_type,
-                               show_all, lang, template, sort, state=self.state, site=self.site, date=date)
+        output = _do_post_list(start, stop, reverse, tags, categories, sections, slugs, post_type, type,
+                               all, lang, template, sort, state=self.state, site=self.site, date=date)
         self.state.document.settings.record_dependencies.add("####MAGIC####TIMELINE")
         if output:
             return [nodes.raw('', output, format='html')]
@@ -180,7 +182,7 @@ class PostList(Directive):
 
 
 def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=None,
-                  sections=None, slugs=None, post_type='post', show_all=False,
+                  sections=None, slugs=None, post_type='post', type=False, all=False,
                   lang=None, template='post_list_directive.tmpl', sort=None,
                   id=None, data=None, state=None, site=None, date=None):
     if lang is None:
@@ -200,8 +202,11 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
     posts = []
     step = -1 if reverse is None else None
 
+    if type is not False:
+        post_type = type
+
     # TODO: remove in v8
-    if show_all is None:
+    if all is not False:
         timeline = [p for p in site.timeline]
     elif post_type == 'page':
         timeline = [p for p in site.timeline if not p.use_in_feeds]
@@ -210,7 +215,7 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
     else:  # post
         timeline = [p for p in site.timeline if p.use_in_feeds]
 
-    # TODO: replaces show_all, uncomment in v8
+    # TODO: replaces all, uncomment in v8
     # if post_type == 'page':
     #    timeline = [p for p in site.timeline if not p.use_in_feeds]
     # elif post_type == 'all':
