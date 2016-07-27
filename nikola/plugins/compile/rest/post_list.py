@@ -192,6 +192,12 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
     else:
         post_list_id = id or 'post_list_' + uuid.uuid4().hex
 
+    # If we get strings for start/stop, make them integers
+    if start is not None:
+        start = int(start)
+    if stop is not None:
+        stop = int(stop)
+
     # Parse tags/categories/sections/slugs (input is strings)
     tags = [t.strip().lower() for t in tags.split(',')] if tags else []
     categories = [c.strip().lower() for c in categories.split(',')] if categories else []
