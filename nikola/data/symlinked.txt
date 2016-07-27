@@ -134,9 +134,13 @@ nikola/data/themes/bootstrap3/assets/js/colorbox-i18n/jquery.colorbox-tr.js
 nikola/data/themes/bootstrap3/assets/js/colorbox-i18n/jquery.colorbox-uk.js
 nikola/data/themes/bootstrap3/assets/js/colorbox-i18n/jquery.colorbox-zh-CN.js
 nikola/data/themes/bootstrap3/assets/js/colorbox-i18n/jquery.colorbox-zh-TW.js
+nikola/data/themes/bootstrap3/assets/js/core.js
 nikola/data/themes/bootstrap3/assets/js/jquery.colorbox-min.js
 nikola/data/themes/bootstrap3/assets/js/jquery.colorbox.js
 nikola/data/themes/bootstrap3/assets/js/jquery.js
 nikola/data/themes/bootstrap3/assets/js/jquery.min.js
 nikola/data/themes/bootstrap3/assets/js/jquery.min.map
+nikola/data/themes/bootstrap3/assets/js/jquery.slim.js
+nikola/data/themes/bootstrap3/assets/js/jquery.slim.min.js
+nikola/data/themes/bootstrap3/assets/js/jquery.slim.min.map
 nikola/plugins/command/auto/livereload.js

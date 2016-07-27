@@ -10,7 +10,7 @@
   "private": true,
   "dependencies": {
     "bootstrap": "~3.3.7",
-    "jquery": "<2.0.0",
+    "jquery": ">3.0.0",
     "jquery-colorbox": "~1.6.0",
     "moment": "~2.10.3",
     "livereload-js": "~2.2.1"
