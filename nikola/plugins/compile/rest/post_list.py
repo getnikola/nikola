@@ -271,11 +271,12 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
         posts += [post]
 
     if not posts:
-        return []
+        return ''
 
-    # Register template as a dependency (Issue #2391)
-    state.document.settings.record_dependencies.add(
-        site.template_system.get_template_path(template))
+    if state:
+        # Register template as a dependency (Issue #2391)
+        state.document.settings.record_dependencies.add(
+            site.template_system.get_template_path(template))
 
     template_data = {
         'lang': lang,
