@@ -63,7 +63,7 @@ class PostList(Directive):
     Post List
     =========
     :Directive Arguments: None.
-    :Directive Options: lang, start, stop, reverse, sort, tags, categories, slugs, post_type, all, template, id
+    :Directive Options: lang, start, stop, reverse, sort, date, tags, categories, sections, slugs, post_type, all, template, id
     :Directive Content: None.
 
     The posts appearing in the list can be filtered by options.
@@ -108,6 +108,10 @@ class PostList(Directive):
         Filter posts to show only posts having one of the ``categories``.
         Defaults to None.
 
+    ``sections`` : string [, string...]
+        Filter posts to show only posts having one of the ``sections``.
+        Defaults to None.
+
     ``slugs`` : string [, string...]
         Filter posts to show only posts having at least one of the ``slugs``.
         Defaults to None.
@@ -140,6 +144,7 @@ class PostList(Directive):
         'sort': directives.unchanged,
         'tags': directives.unchanged,
         'categories': directives.unchanged,
+        'sections': directives.unchanged,
         'slugs': directives.unchanged,
         'post_type': directives.unchanged,
         'all': directives.flag,
@@ -158,6 +163,8 @@ class PostList(Directive):
         tags = [t.strip().lower() for t in tags.split(',')] if tags else []
         categories = self.options.get('categories')
         categories = [c.strip().lower() for c in categories.split(',')] if categories else []
+        sections = self.options.get('sections')
+        sections = [s.strip().lower() for s in sections.split(',')] if sections else []
         slugs = self.options.get('slugs')
         slugs = [s.strip() for s in slugs.split(',')] if slugs else []
         post_type = self.options.get('post_type')
@@ -167,7 +174,7 @@ class PostList(Directive):
         sort = self.options.get('sort')
         date = self.options.get('date')
 
-        output = _do_post_list(start, stop, reverse, tags, categories, slugs, post_type,
+        output = _do_post_list(start, stop, reverse, tags, categories, sections, slugs, post_type,
                                show_all, lang, template, sort, state=self.state, site=self.site, date=date)
         self.state.document.settings.record_dependencies.add("####MAGIC####TIMELINE")
         if output:
@@ -177,9 +184,9 @@ class PostList(Directive):
 
 
 def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=None,
-                  slugs=None, post_type='post', show_all=False, lang=None,
-                  template='post_list_directive.tmpl', sort=None, id=None,
-                  data=None, state=None, site=None, date=None):
+                  sections=None, slugs=None, post_type='post', show_all=False,
+                  lang=None, template='post_list_directive.tmpl', sort=None,
+                  id=None, data=None, state=None, site=None, date=None):
     if lang is None:
         lang = utils.LocaleBorg().current_lang
     if site.invariant:  # for testing purposes
@@ -211,6 +218,9 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
 
     if categories:
         timeline = [p for p in timeline if p.meta('category', lang=lang).lower() in categories]
+
+    if sections:
+        timeline = [p for p in timeline if p.section_name(lang).lower() in sections]
 
     for post in timeline:
         if tags:

@@ -2067,6 +2067,10 @@ The following options are recognized:
       Filter posts to show only posts having one of the ``categories``.
       Defaults to None.
 
+* ``sections`` : string [, string...]
+      Filter posts to show only posts having one of the ``sections``.
+      Defaults to None.
+
 * ``slugs`` : string [, string...]
       Filter posts to show only posts having at least one of the ``slugs``.
       Defaults to None.
