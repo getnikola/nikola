@@ -160,13 +160,9 @@ class PostList(Directive):
         stop = self.options.get('stop')
         reverse = self.options.get('reverse', False)
         tags = self.options.get('tags')
-        tags = [t.strip().lower() for t in tags.split(',')] if tags else []
         categories = self.options.get('categories')
-        categories = [c.strip().lower() for c in categories.split(',')] if categories else []
         sections = self.options.get('sections')
-        sections = [s.strip().lower() for s in sections.split(',')] if sections else []
         slugs = self.options.get('slugs')
-        slugs = [s.strip() for s in slugs.split(',')] if slugs else []
         post_type = self.options.get('post_type')
         show_all = self.options.get('all', False)
         lang = self.options.get('lang', utils.LocaleBorg().current_lang)
@@ -193,6 +189,12 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
         post_list_id = id or 'post_list_' + 'fixedvaluethatisnotauuid'
     else:
         post_list_id = id or 'post_list_' + uuid.uuid4().hex
+
+    # Parse tags/categories/sections/slugs (input is strings)
+    tags = [t.strip().lower() for t in tags.split(',')] if tags else []
+    categories = [c.strip().lower() for c in categories.split(',')] if categories else []
+    sections = [s.strip().lower() for s in sections.split(',')] if sections else []
+    slugs = [s.strip() for s in slugs.split(',')] if slugs else []
 
     filtered_timeline = []
     posts = []
