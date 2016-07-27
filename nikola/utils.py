@@ -1885,6 +1885,7 @@ def clean_before_deployment(site):
                 undeployed_posts.append(post)
     return undeployed_posts
 
+
 # Stolen from textwrap in Python 3.4.3.
 def indent(text, prefix, predicate=None):
     """Add 'prefix' to the beginning of selected lines in 'text'.
