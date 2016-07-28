@@ -82,7 +82,7 @@ status 'Replacing versions in files...'
 sed "s/version=.*/version='$version',/g" setup.py -i
 sed "s/version = .*/version = '$version'/g" docs/sphinx/conf.py -i
 sed "s/release = .*/release = '$version'/g" docs/sphinx/conf.py -i
-sed "s/:Version: .*/:Version: $version/g" docs/*.txt -i
+sed "s/:Version: .*/:Version: $version/g" docs/*.txt docs/*.rst -i
 sed "s/:Version: .*/:Version: Nikola $version/g" docs/man/nikola.rst -i
 sed "s/__version__ = .*/__version__ = '$version'/g" nikola/__init__.py -i
 sed "s/version: .*/version: $version/g" snapcraft/snapcraft.yaml -i
