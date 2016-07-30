@@ -310,7 +310,10 @@ def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=
                 kw['site'] = site
                 kw['data'] = data_arg
                 if name in registry:
-                    res = registry[name](*args, **kw)
+                    f = registry[name]
+                    if getattr(f, 'nikola_shortcode_pass_filename', None):
+                        kw['filename'] = filename
+                    res = f(*args, **kw)
                 else:
                     LOGGER.error('Unknown shortcode {0} (started at {1})', name, _format_position(data, current[2]))
                     res = ''

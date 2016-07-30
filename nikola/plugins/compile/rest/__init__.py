@@ -52,19 +52,6 @@ class CompileRest(PageCompiler):
     demote_headers = True
     logger = None
 
-    def _read_extra_deps(self, post):
-        """Read contents of .dep file and returns them as a list."""
-        dep_path = post.base_path + '.dep'
-        if os.path.isfile(dep_path):
-            with io.open(dep_path, 'r+', encoding='utf8') as depf:
-                deps = [l.strip() for l in depf.readlines()]
-                return deps
-        return []
-
-    def register_extra_dependencies(self, post):
-        """Add dependency to post object to check .dep file."""
-        post.add_dependency(lambda: self._read_extra_deps(post), 'fragment')
-
     def compile_html_string(self, data, source_path=None, is_two_file=True):
         """Compile reST into HTML strings."""
         # If errors occur, this will be added to the line number reported by
@@ -102,14 +89,15 @@ class CompileRest(PageCompiler):
                 output, error_level, deps = self.compile_html_string(data, source, is_two_file)
                 output = apply_shortcodes(output, self.site.shortcode_registry, self.site, source)
                 out_file.write(output)
-            deps_path = dest + '.dep'
-            if deps.list:
-                deps.list = [p for p in deps.list if p != dest]  # Don't depend on yourself (#1671)
-                with io.open(deps_path, "w+", encoding="utf8") as deps_file:
-                    deps_file.write('\n'.join(deps.list))
+            try:
+                post = self.site.post_per_input_file[source]
+            except KeyError:
+                if deps.list:
+                    self.logger.error(
+                        "Cannot save dependencies for post {0} due to unregistered source file name",
+                        source)
             else:
-                if os.path.isfile(deps_path):
-                    os.unlink(deps_path)
+                post._depfile[dest] += deps.list
         if error_level < 3:
             return True
         else:

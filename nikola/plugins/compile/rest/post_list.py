@@ -184,13 +184,22 @@ class PostList(Directive):
 def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=None,
                   sections=None, slugs=None, post_type='post', type=False, all=False,
                   lang=None, template='post_list_directive.tmpl', sort=None,
-                  id=None, data=None, state=None, site=None, date=None):
+                  id=None, data=None, state=None, site=None, date=None, filename=None):
     if lang is None:
         lang = utils.LocaleBorg().current_lang
     if site.invariant:  # for testing purposes
         post_list_id = id or 'post_list_' + 'fixedvaluethatisnotauuid'
     else:
         post_list_id = id or 'post_list_' + uuid.uuid4().hex
+
+    # Get post from filename if available
+    if filename:
+        self_post = site.post_per_input_file.get(filename)
+    else:
+        self_post = None
+
+    if self_post:
+        self_post.register_depfile("####MAGIC####TIMELINE", lang=lang)
 
     # If we get strings for start/stop, make them integers
     if start is not None:
@@ -267,6 +276,8 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
         bp = post.translated_base_path(lang)
         if os.path.exists(bp) and state:
             state.document.settings.record_dependencies.add(bp)
+        elif os.path.exists(bp) and self_post:
+            self_post.register_depfile(bp, lang=lang)
 
         posts += [post]
 
@@ -277,6 +288,9 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
         # Register template as a dependency (Issue #2391)
         state.document.settings.record_dependencies.add(
             site.template_system.get_template_path(template))
+    elif self_post:
+        self_post.register_depfile(
+            site.template_system.get_template_path(template), lang=lang)
 
     template_data = {
         'lang': lang,
@@ -289,3 +303,6 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
     output = site.template_system.render_template(
         template, None, template_data)
     return output
+
+# Request file name from shortcode (Issue #2412)
+_do_post_list.nikola_shortcode_pass_filename = True
