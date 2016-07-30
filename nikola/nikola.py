@@ -1805,6 +1805,7 @@ class Nikola(object):
         self.tags_per_language = defaultdict(list)
         self.category_hierarchy = {}
         self.post_per_file = {}
+        self.post_per_input_file = {}
         self.timeline = []
         self.pages = []
 
@@ -1849,6 +1850,7 @@ class Nikola(object):
             for lang in self.config['TRANSLATIONS'].keys():
                 dest = post.destination_path(lang=lang)
                 src_dest = post.destination_path(lang=lang, extension=post.source_ext())
+                src_file = post.translated_source_path(lang=lang)
                 if dest in self.post_per_file:
                     utils.LOGGER.error('Two posts are trying to generate {0}: {1} and {2}'.format(
                         dest,
@@ -1863,6 +1865,7 @@ class Nikola(object):
                     quit = True
                 self.post_per_file[dest] = post
                 self.post_per_file[src_dest] = post
+                self.post_per_input_file[src_file] = post
                 # deduplicate tags_per_language
                 self.tags_per_language[lang] = list(set(self.tags_per_language[lang]))
 
