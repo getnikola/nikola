@@ -249,13 +249,19 @@ class PageCompiler(BasePlugin):
     }
     config_dependencies = []
 
-    def register_extra_dependencies(self, post):
-        """Add additional dependencies to the post object.
 
-        Current main use is the ReST page compiler, which puts extra
-        dependencies into a .dep file.
-        """
-        pass
+    def _read_extra_deps(self, post):
+        """Read contents of .dep file and return them as a list."""
+        dep_path = post.base_path + '.dep'
+        if os.path.isfile(dep_path):
+            with io.open(dep_path, 'r+', encoding='utf8') as depf:
+                deps = [l.strip() for l in depf.readlines()]
+                return deps
+        return []
+
+    def register_extra_dependencies(self, post):
+        """Add dependency to post object to check .dep file."""
+        post.add_dependency(lambda: self._read_extra_deps(post), 'fragment')
 
     def compile_html(self, source, dest, is_two_file=False):
         """Compile the source, save it on dest."""

@@ -191,11 +191,15 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
         post_list_id = id or 'post_list_' + 'fixedvaluethatisnotauuid'
     else:
         post_list_id = id or 'post_list_' + uuid.uuid4().hex
+
     # Get post from filename if available
     if filename:
         self_post = site.post_per_file.get(filename)
     else:
         self_post = None
+
+    if self_post:
+        self_post.add_depepdency("####MAGIC####TIMELINE")
 
     # If we get strings for start/stop, make them integers
     if start is not None:

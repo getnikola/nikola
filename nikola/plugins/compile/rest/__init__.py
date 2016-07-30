@@ -52,19 +52,6 @@ class CompileRest(PageCompiler):
     demote_headers = True
     logger = None
 
-    def _read_extra_deps(self, post):
-        """Read contents of .dep file and returns them as a list."""
-        dep_path = post.base_path + '.dep'
-        if os.path.isfile(dep_path):
-            with io.open(dep_path, 'r+', encoding='utf8') as depf:
-                deps = [l.strip() for l in depf.readlines()]
-                return deps
-        return []
-
-    def register_extra_dependencies(self, post):
-        """Add dependency to post object to check .dep file."""
-        post.add_dependency(lambda: self._read_extra_deps(post), 'fragment')
-
     def compile_html_string(self, data, source_path=None, is_two_file=True):
         """Compile reST into HTML strings."""
         # If errors occur, this will be added to the line number reported by
