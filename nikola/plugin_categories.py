@@ -30,6 +30,7 @@ from __future__ import absolute_import
 import sys
 import os
 import re
+import io
 
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
@@ -248,7 +249,6 @@ class PageCompiler(BasePlugin):
         'type': 'text',
     }
     config_dependencies = []
-
 
     def _read_extra_deps(self, post):
         """Read contents of .dep file and return them as a list."""

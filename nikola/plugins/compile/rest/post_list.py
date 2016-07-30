@@ -199,7 +199,7 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
         self_post = None
 
     if self_post:
-        self_post.add_depepdency("####MAGIC####TIMELINE")
+        self_post.add_dependency("####MAGIC####TIMELINE")
 
     # If we get strings for start/stop, make them integers
     if start is not None:
