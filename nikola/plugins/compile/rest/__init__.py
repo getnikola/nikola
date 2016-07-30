@@ -89,14 +89,8 @@ class CompileRest(PageCompiler):
                 output, error_level, deps = self.compile_html_string(data, source, is_two_file)
                 output = apply_shortcodes(output, self.site.shortcode_registry, self.site, source)
                 out_file.write(output)
-            deps_path = dest + '.dep'
-            if deps.list:
-                deps.list = [p for p in deps.list if p != dest]  # Don't depend on yourself (#1671)
-                with io.open(deps_path, "w+", encoding="utf8") as deps_file:
-                    deps_file.write('\n'.join(deps.list))
-            else:
-                if os.path.isfile(deps_path):
-                    os.unlink(deps_path)
+            post = self.site.post_per_input_file[source]
+            post._depfile[dest] += deps.list
         if error_level < 3:
             return True
         else:

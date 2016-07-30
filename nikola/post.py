@@ -136,6 +136,7 @@ class Post(object):
         self._dependency_file_page = defaultdict(list)
         self._dependency_uptodate_fragment = defaultdict(list)
         self._dependency_uptodate_page = defaultdict(list)
+        self._depfile = defaultdict(list)
 
         default_metadata, self.newstylemeta = get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'])
 
@@ -424,6 +425,24 @@ class Post(object):
         if add == 'page' or add == 'both':
             self._dependency_uptodate_page[lang].append((is_callable, dependency))
 
+    def register_depfile(self, dep, dest=None, lang=None):
+        """Register a dependency in the dependency file."""
+        if not dest:
+            dest = self.translated_base_path(lang)
+        self._depfile[dest].append(dep)
+
+    @staticmethod
+    def write_depfile(dest, deps_list):
+        """Write a depfile for a given language."""
+        deps_path = dest + '.dep'
+        if deps_list:
+            deps_list = [p for p in deps_list if p != dest]  # Don't depend on yourself (#1671)
+            with io.open(deps_path, "w+", encoding="utf8") as deps_file:
+                deps_file.write('\n'.join(deps_list))
+        else:
+            if os.path.isfile(deps_path):
+                os.unlink(deps_path)
+
     def _get_dependencies(self, deps_list):
         deps = []
         for dep in deps_list:
@@ -490,7 +509,8 @@ class Post(object):
         self.compile_html(
             self.translated_source_path(lang),
             dest,
-            self.is_two_file),
+            self.is_two_file)
+        Post.write_depfile(dest, self._depfile[dest])
 
         signal('compiled').send({
             'source': self.translated_source_path(lang),

@@ -194,12 +194,12 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
 
     # Get post from filename if available
     if filename:
-        self_post = site.post_per_file.get(filename)
+        self_post = site.post_per_input_file.get(filename)
     else:
         self_post = None
 
     if self_post:
-        self_post.add_dependency("####MAGIC####TIMELINE")
+        self_post.register_depfile("####MAGIC####TIMELINE", lang=lang)
 
     # If we get strings for start/stop, make them integers
     if start is not None:
@@ -277,7 +277,7 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
         if os.path.exists(bp) and state:
             state.document.settings.record_dependencies.add(bp)
         elif os.path.exists(bp) and self_post:
-            self_post.add_dependency(bp)
+            self_post.register_depfile(bp, lang=lang)
 
         posts += [post]
 
@@ -289,7 +289,8 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
         state.document.settings.record_dependencies.add(
             site.template_system.get_template_path(template))
     elif self_post:
-        self_post.add_dependency(site.template_system.get_template_path(template))
+        self_post.register_depfile(
+            site.template_system.get_template_path(template), lang=lang)
 
     template_data = {
         'lang': lang,
