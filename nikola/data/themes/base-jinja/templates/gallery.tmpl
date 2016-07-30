@@ -17,7 +17,7 @@
     {% if folders %}
     <ul>
     {% for folder, ftitle in folders %}
-        <li><a href="{{ folder|urlencode }}"><i
+        <li><a href="{{ folder }}"><i
         class="icon-folder-open"></i>&nbsp;{{ ftitle|e }}</a></li>
     {% endfor %}
     </ul>
