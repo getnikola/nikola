@@ -89,8 +89,15 @@ class CompileRest(PageCompiler):
                 output, error_level, deps = self.compile_html_string(data, source, is_two_file)
                 output = apply_shortcodes(output, self.site.shortcode_registry, self.site, source)
                 out_file.write(output)
-            post = self.site.post_per_input_file[source]
-            post._depfile[dest] += deps.list
+            try:
+                post = self.site.post_per_input_file[source]
+            except KeyError:
+                if deps.list:
+                    self.logger.error(
+                        "Cannot save dependencies for post {0} due to unregistered source file name",
+                        source)
+            else:
+                post._depfile[dest] += deps.list
         if error_level < 3:
             return True
         else:

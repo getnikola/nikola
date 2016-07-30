@@ -197,6 +197,7 @@ class FakeSite(object):
         ]
         self.debug = True
         self.rst_transforms = []
+        self.post_per_input_file = {}
         # This is to make plugin initialization happy
         self.template_system = self
         self.name = 'mako'

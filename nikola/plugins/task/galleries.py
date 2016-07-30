@@ -416,6 +416,8 @@ class Galleries(Task, ImageProcessor):
             #  may break)
             if post.title == 'index':
                 post.title = os.path.split(gallery)[1]
+            # Register the post (via #2417)
+            self.site.post_per_input_file[index_path] = post
         else:
             post = None
         return post
