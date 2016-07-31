@@ -175,6 +175,7 @@ class Galleries(Task, ImageProcessor):
         for k, v in self.site.GLOBAL_CONTEXT['template_hooks'].items():
             self.kw['||template_hooks|{0}||'.format(k)] = v._items
 
+        self.site.scan_posts()
         yield self.group_task()
 
         template_name = "gallery.tmpl"

@@ -84,6 +84,7 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
             raise e  # That’s how _execute knows whether to try something else.
         else:
             site = self.context['site']  # NOQA
+            nikola_site = self.context['site']  # NOQA
             conf = self.context['conf']  # NOQA
             commands = self.context['commands']  # NOQA
             IPython.embed(header=self.header.format('IPython'))
@@ -130,6 +131,7 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
         self.context = {
             'conf': self.site.config,
             'site': self.site,
+            'nikola_site': self.site,
             'commands': self.site.commands,
         }
         if options['bpython']:
