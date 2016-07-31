@@ -43,13 +43,12 @@ from lxml import html
 import pytest
 import unittest
 
-from nikola.post import Post
 import nikola.plugins.compile.rest
 from nikola.plugins.compile.rest import vimeo
 import nikola.plugins.compile.rest.listing
 from nikola.plugins.compile.rest.doc import Plugin as DocPlugin
 from nikola.utils import _reload
-from .base import BaseTestCase, FakeSite
+from .base import BaseTestCase, FakeSite, FakePost
 
 
 class ReSTExtensionTestCase(BaseTestCase):
@@ -72,23 +71,20 @@ class ReSTExtensionTestCase(BaseTestCase):
         tmpdir = tempfile.mkdtemp()
         inf = os.path.join(tmpdir, 'inf')
         outf = os.path.join(tmpdir, 'outf')
-        depf = os.path.join(tmpdir, 'outf.dep')
         with io.open(inf, 'w+', encoding='utf8') as f:
             f.write(rst)
-        p = Post(inf, self.site.config, outf, False, None, '', self.compiler)
-        self.site.post_per_input_file[inf] = p
-        self.html = p.compile_html(inf, outf)
+        p = FakePost('', '')
+        p._depfile[outf] = []
+        self.compiler.site.post_per_input_file[inf] = p
+        self.html = self.compiler.compile_html(inf, outf)
         with io.open(outf, 'r', encoding='utf8') as f:
             self.html = f.read()
         os.unlink(inf)
         os.unlink(outf)
-        p.write_depfile(outf, p._depfile[outf])
-        if os.path.isfile(depf):
-            with io.open(depf, 'r', encoding='utf8') as f:
-                self.assertEqual(self.deps.strip(), f.read().strip())
-            os.unlink(depf)
-        else:
-            self.assertEqual(self.deps, None)
+        depfile = [p for p in p._depfile[outf] if p != outf]
+        depfile = '\n'.join(depfile)
+        if depfile:
+            self.assertEqual(self.deps.strip(), depfile)
         os.rmdir(tmpdir)
         self.html_doc = html.parse(StringIO(self.html))
 
