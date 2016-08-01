@@ -123,7 +123,7 @@ class ImageProcessor(object):
             elif value in (7, 8):
                 im = im.transpose(Image.ROTATE_90)
             if value in (2, 4, 5, 7):
-                im = ImageOps.mirror(im)
+                im = im.transpose(Image.FLIP_LEFT_RIGHT)
             exif['0th'][piexif.ImageIFD.Orientation] = 1
 
         try:
