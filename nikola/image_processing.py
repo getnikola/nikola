@@ -39,12 +39,11 @@ from nikola import utils
 
 Image = None
 try:
-    from PIL import ExifTags, Image, ImageOps  # NOQA
+    from PIL import ExifTags, Image  # NOQA
 except ImportError:
     try:
         import ExifTags
         import Image as _Image
-        import ImageOps
         Image = _Image
     except ImportError:
         pass
@@ -117,13 +116,13 @@ class ImageProcessor(object):
             # Rotate according to EXIF
             value = exif['0th'].get(piexif.ImageIFD.Orientation, 1)
             if value in (3, 4):
-                im = im.rotate(180)
+                im = im.transpose(Image.ROTATE_180)
             elif value in (5, 6):
-                im = im.rotate(270)
+                im = im.transpose(Image.ROTATE_270)
             elif value in (7, 8):
-                im = im.rotate(90)
+                im = im.transpose(Image.ROTATE_90)
             if value in (2, 4, 5, 7):
-                im = ImageOps.mirror(im)
+                im = im.transpose(Image.FLIP_LEFT_RIGHT)
             exif['0th'][piexif.ImageIFD.Orientation] = 1
 
         try:

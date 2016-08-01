@@ -87,6 +87,7 @@
 * `Thibauld Nion <https://github.com/tibonihoo>`_
 * `Thomas Burette <https://github.com/tburette>`_
 * `Tim Chase <https://github.com/Gumnos>`_
+* `Timo Kankare <https://github.com/tikank>`_
 * `Tolu Sonaike <https://github.com/tolusonaike>`_
 * `Troy Toman <https://github.com/troytoman>`_
 * `Udo Spallek <https://github.com/udono>`_
