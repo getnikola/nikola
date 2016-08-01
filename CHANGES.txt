@@ -20,6 +20,7 @@ Bugfixes
   (Issue #2406)
 * Don’t remove ``<!DOCTYPE html>`` if typogrify filters are in use
 * Avoid infinite loop if bootstrap3 can't be loaded (Issue #2402)
+* Fixed image rotation to update image size correctly (Issue #2418)
 
 New in v7.7.11
 ==============
