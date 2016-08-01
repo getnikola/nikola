@@ -39,12 +39,11 @@ from nikola import utils
 
 Image = None
 try:
-    from PIL import ExifTags, Image, ImageOps  # NOQA
+    from PIL import ExifTags, Image  # NOQA
 except ImportError:
     try:
         import ExifTags
         import Image as _Image
-        import ImageOps
         Image = _Image
     except ImportError:
         pass
