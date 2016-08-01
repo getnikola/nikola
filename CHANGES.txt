@@ -11,6 +11,8 @@ Features
 Bugfixes
 --------
 
+* Put 2-file post metadata in the same place as the text file when
+  specifying a path in ``new_post``, ``new_page`` (Issue #2420)
 * Register dependencies in post-list shortcode (Issue #2412)
 * Support post-list shortcode better (Issue #2408)
 * Fix gallery links in base theme (Issue #2416)

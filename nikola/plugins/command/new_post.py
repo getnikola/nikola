@@ -325,14 +325,17 @@ class CommandNewPost(Command):
             'description': '',
             'type': 'text',
         }
-        output_path = os.path.dirname(entry[0])
-        meta_path = os.path.join(output_path, slug + ".meta")
-        pattern = os.path.basename(entry[0])
-        suffix = pattern[1:]
+
         if not path:
+            pattern = os.path.basename(entry[0])
+            suffix = pattern[1:]
+            output_path = os.path.dirname(entry[0])
+
             txt_path = os.path.join(output_path, slug + suffix)
+            meta_path = os.path.join(output_path, slug + ".meta")
         else:
             txt_path = os.path.join(self.site.original_cwd, path)
+            meta_path = os.path.splitext(txt_path)[0] + ".meta"
 
         if (not onefile and os.path.isfile(meta_path)) or \
                 os.path.isfile(txt_path):
