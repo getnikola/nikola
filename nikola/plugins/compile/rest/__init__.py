@@ -40,7 +40,14 @@ import docutils.parsers.rst.directives
 from docutils.parsers.rst import roles
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import unicode_str, get_logger, makedirs, write_metadata, STDERR_HANDLER
+from nikola.utils import (
+    unicode_str,
+    get_logger,
+    makedirs,
+    write_metadata,
+    STDERR_HANDLER,
+    LocaleBorg
+)
 from nikola.shortcodes import apply_shortcodes
 
 
@@ -63,16 +70,19 @@ class CompileRest(PageCompiler):
             add_ln = len(m_data.splitlines()) + 1
 
         default_template_path = os.path.join(os.path.dirname(__file__), 'template.txt')
+        settings_overrides = {
+            'initial_header_level': 1,
+            'record_dependencies': True,
+            'stylesheet_path': None,
+            'link_stylesheet': True,
+            'syntax_highlight': 'short',
+            'math_output': 'mathjax',
+            'template': default_template_path,
+        }
+        settings_overrides['language_code'] = LocaleBorg().current_lang
+
         output, error_level, deps = rst2html(
-            data, settings_overrides={
-                'initial_header_level': 1,
-                'record_dependencies': True,
-                'stylesheet_path': None,
-                'link_stylesheet': True,
-                'syntax_highlight': 'short',
-                'math_output': 'mathjax',
-                'template': default_template_path,
-            }, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms)
+            data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms)
         if not isinstance(output, unicode_str):
             # To prevent some weird bugs here or there.
             # Original issue: empty files.  `output` became a bytestring.
