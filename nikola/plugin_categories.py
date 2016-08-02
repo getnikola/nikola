@@ -344,6 +344,12 @@ class ConfigPlugin(BasePlugin):
     name = "dummy_config_plugin"
 
 
+class ShortcodePlugin(BasePlugin):
+    """A plugin that adds a shortcode."""
+
+    name = "dummy_shortcode_plugin"
+
+
 class Importer(Command):
     """Basic structure for importing data into Nikola.
 

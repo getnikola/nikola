@@ -66,6 +66,7 @@ from .plugin_categories import (
     CompilerExtension,
     MarkdownExtension,
     RestExtension,
+    ShortcodePlugin,
     Task,
     TaskMultiplier,
     TemplateSystem,
@@ -892,6 +893,7 @@ class Nikola(object):
             "CompilerExtension": CompilerExtension,
             "MarkdownExtension": MarkdownExtension,
             "RestExtension": RestExtension,
+            "ShortcodePlugin": ShortcodePlugin,
             "SignalHandler": SignalHandler,
             "ConfigPlugin": ConfigPlugin,
             "PostScanner": PostScanner,
@@ -989,6 +991,9 @@ class Nikola(object):
             if plugin_info.name in self.config["COMPILERS"].keys():
                 self.plugin_manager.activatePluginByName(plugin_info.name)
                 plugin_info.plugin_object.set_site(self)
+
+        # Activate shortcode plugins
+        self._activate_plugins_of_category("ShortcodePlugin")
 
         # Load compiler plugins
         self.compilers = {}
