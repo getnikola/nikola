@@ -78,8 +78,8 @@ class CompileRest(PageCompiler):
             'syntax_highlight': 'short',
             'math_output': 'mathjax',
             'template': default_template_path,
+            'language_code': LocaleBorg().current_lang,
         }
-        settings_overrides['language_code'] = LocaleBorg().current_lang
 
         output, error_level, deps = rst2html(
             data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms)
