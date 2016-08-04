@@ -2293,6 +2293,7 @@ class Nikola(object):
                     "basename": basename,
                     "name": atom_output_name,
                     "file_dep": sorted([_.base_path for _ in post_list]),
+                    "task_dep": ['render_posts'],
                     "targets": [atom_output_name],
                     "actions": [(self.atom_feed_renderer,
                                 (lang,
