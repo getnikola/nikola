@@ -1,1 +1,1 @@
-sphinxcontrib-gist
+sphinxcontrib.gist
