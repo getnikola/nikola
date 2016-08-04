@@ -27,12 +27,12 @@ from __future__ import unicode_literals
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.mathjax']
 try:
     import sphinxcontrib.gist  # NOQA
-    extensions = ['sphinxcontrib.gist', 'sphinx.ext.autodoc', 'sphinx.ext.mathjax']
-except ImportError as err:
-    import pdb; pdb.set_trace()
-    extensions = []
+    extensions.append('sphinxcontrib.gist')
+except ImportError:
+    pass
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
