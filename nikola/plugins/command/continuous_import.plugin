@@ -1,0 +1,13 @@
+[Core]
+name = continuous_import
+module = continuous_import
+
+[Documentation]
+author = Roberto Alsina
+version = 0.1
+website = https://getnikola.com/
+description = Seamlessly merge other feeds into your blog
+
+[Nikola]
+plugincategory = Command
+
