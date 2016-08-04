@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Added code documentation to ReadTheDocs (Issue #2124)
 * Pass language to docutils so admonitions are translated (Issue #2422)
 * Put 2-file post metadata in the same place as the text file when
   specifying a path in ``new_post``, ``new_page`` (Issue #2420)
