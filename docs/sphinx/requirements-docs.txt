@@ -1,2 +1,1 @@
-sphinxcontrib.gist
 -r ../../requirements-extras.txt
