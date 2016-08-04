@@ -79,7 +79,7 @@ class CommandBootswatchTheme(Command):
         version = ''
 
         # See if we need bootswatch for bootstrap v2 or v3
-        themes = utils.get_theme_chain(parent)
+        themes = utils.get_theme_chain(parent, self.site.themes_dirs)
         if 'bootstrap3' not in themes and 'bootstrap3-jinja' not in themes:
             version = '2'
         elif 'bootstrap' not in themes and 'bootstrap-jinja' not in themes:

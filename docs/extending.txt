@@ -351,7 +351,7 @@ And the ``task_copy_assets.py`` file, in its entirety:
 
             tasks = {}
             for theme_name in kw['themes']:
-                src = os.path.join(utils.get_theme_path(theme_name), 'assets')
+                src = os.path.join(utils.get_theme_path(theme_name, self.site.themes_dirs), 'assets')
                 dst = os.path.join(kw['output_folder'], 'assets')
                 for task in utils.copy_tree(src, dst):
                     if task['name'] in tasks:

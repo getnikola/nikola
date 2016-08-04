@@ -60,11 +60,12 @@ class CopyAssets(Task):
         code_css_path = os.path.join(kw['output_folder'], 'assets', 'css', 'code.css')
         code_css_input = utils.get_asset_path('assets/css/code.css',
                                               themes=kw['themes'],
-                                              files_folders=kw['files_folders'], output_dir=None)
+                                              files_folders=kw['files_folders'],
+                                              themes_dirs=self.site.themes_dirs, output_dir=None)
         yield self.group_task()
 
         for theme_name in kw['themes']:
-            src = os.path.join(utils.get_theme_path(theme_name), 'assets')
+            src = os.path.join(utils.get_theme_path(theme_name, self.site.themes_dirs), 'assets')
             dst = os.path.join(kw['output_folder'], 'assets')
             for task in utils.copy_tree(src, dst):
                 if task['name'] in tasks:

@@ -572,24 +572,25 @@ class config_changed(tools.config_changed):
                                                            sort_keys=True))
 
 
-def get_theme_path(theme, _themes_dir='themes'):
+def get_theme_path(theme, themes_dirs=['themes']):
     """Return the path where the given theme's files are located.
 
     Looks in ./themes and in the place where themes go when installed.
     """
-    dir_name = os.path.join(_themes_dir, theme)
-    if os.path.isdir(dir_name):
-        return dir_name
+    for themes_dir in themes_dirs:
+        dir_name = os.path.join(themes_dir, theme)
+        if os.path.isdir(dir_name):
+            return dir_name
     dir_name = resource_filename('nikola', os.path.join('data', 'themes', theme))
     if os.path.isdir(dir_name):
         return dir_name
     raise Exception("Can't find theme '{0}'".format(theme))
 
 
-def get_template_engine(themes, _themes_dir='themes'):
+def get_template_engine(themes, themes_dirs=['themes']):
     """Get template engine used by a given theme."""
     for theme_name in themes:
-        engine_path = os.path.join(get_theme_path(theme_name, _themes_dir), 'engine')
+        engine_path = os.path.join(get_theme_path(theme_name, themes_dirs), 'engine')
         if os.path.isfile(engine_path):
             with open(engine_path) as fd:
                 return fd.readlines()[0].strip()
@@ -597,21 +598,21 @@ def get_template_engine(themes, _themes_dir='themes'):
     return 'mako'
 
 
-def get_parent_theme_name(theme_name, _themes_dir='themes'):
+def get_parent_theme_name(theme_name, themes_dirs=['themes']):
     """Get name of parent theme."""
-    parent_path = os.path.join(get_theme_path(theme_name, _themes_dir), 'parent')
+    parent_path = os.path.join(get_theme_path(theme_name, themes_dirs), 'parent')
     if os.path.isfile(parent_path):
         with open(parent_path) as fd:
             return fd.readlines()[0].strip()
     return None
 
 
-def get_theme_chain(theme, _themes_dir='themes'):
+def get_theme_chain(theme, themes_dirs=['themes']):
     """Create the full theme inheritance chain."""
     themes = [theme]
 
     while True:
-        parent = get_parent_theme_name(themes[-1], _themes_dir)
+        parent = get_parent_theme_name(themes[-1], themes_dirs)
         # Avoid silly loops
         if parent is None or parent in themes:
             break
@@ -635,7 +636,7 @@ class LanguageNotFoundError(Exception):
         return 'cannot find language {0}'.format(self.lang)
 
 
-def load_messages(themes, translations, default_lang):
+def load_messages(themes, translations, default_lang, themes_dirs=['themes']):
     """Load theme's messages into context.
 
     All the messages from parent themes are loaded,
@@ -644,8 +645,8 @@ def load_messages(themes, translations, default_lang):
     messages = Functionary(dict, default_lang)
     oldpath = list(sys.path)
     for theme_name in themes[::-1]:
-        msg_folder = os.path.join(get_theme_path(theme_name), 'messages')
-        default_folder = os.path.join(get_theme_path('base'), 'messages')
+        msg_folder = os.path.join(get_theme_path(theme_name, themes_dirs), 'messages')
+        default_folder = os.path.join(get_theme_path('base', themes_dirs), 'messages')
         sys.path.insert(0, default_folder)
         sys.path.insert(0, msg_folder)
         english = __import__('messages_en')
@@ -978,7 +979,7 @@ def get_crumbs(path, is_file=False, index_folder=None, lang=None):
     return list(reversed(_crumbs))
 
 
-def get_asset_path(path, themes, files_folders={'files': ''}, _themes_dir='themes', output_dir='output'):
+def get_asset_path(path, themes, files_folders={'files': ''}, themes_dirs=['themes'], output_dir='output'):
     """Return the "real", absolute path to the asset.
 
     By default, it checks which theme provides the asset.
@@ -1005,7 +1006,7 @@ def get_asset_path(path, themes, files_folders={'files': ''}, _themes_dir='theme
     """
     for theme_name in themes:
         candidate = os.path.join(
-            get_theme_path(theme_name, _themes_dir),
+            get_theme_path(theme_name, themes_dirs),
             path
         )
         if os.path.isfile(candidate):

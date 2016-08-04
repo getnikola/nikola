@@ -158,7 +158,7 @@ class CommandAuto(Command):
         # Do not duplicate entries -- otherwise, multiple rebuilds are triggered
         watched = set([
             'templates/'
-        ] + [get_theme_path(name) for name in self.site.THEMES])
+        ] + [get_theme_path(name, self.site.themes_dirs) for name in self.site.THEMES])
         for item in self.site.config['post_pages']:
             watched.add(os.path.dirname(item[0]))
         for item in self.site.config['FILES_FOLDERS']:
