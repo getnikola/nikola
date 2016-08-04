@@ -10,9 +10,11 @@ the Nikola website <https://getnikola.com/documentation.html>`_.
 
    manual
    creating-a-site
-   creating-a-theme
+   Creating a Theme <creating-a-theme>
    theming
    extending
    internals
-   tests
    social_buttons
+   path_handlers
+   Code Documentation <modules>
+

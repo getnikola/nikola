@@ -29,8 +29,9 @@ from __future__ import unicode_literals
 # ones.
 try:
     import sphinxcontrib.gist  # NOQA
-    extensions = ['sphinxcontrib.gist']
-except ImportError:
+    extensions = ['sphinxcontrib.gist', 'sphinx.ext.autodoc', 'sphinx.ext.mathjax']
+except ImportError as err:
+    import pdb; pdb.set_trace()
     extensions = []
 
 # Add any paths that contain templates here, relative to this directory.
