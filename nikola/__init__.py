@@ -29,7 +29,7 @@
 from __future__ import absolute_import
 import os
 
-__version__ = "7.7.11"
+__version__ = '7.7.12'
 DEBUG = bool(os.getenv('NIKOLA_DEBUG'))
 
 from .nikola import Nikola  # NOQA

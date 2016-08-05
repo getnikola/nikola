@@ -1,5 +1,5 @@
 name: nikola
-version: 7.7.11
+version: 7.7.12
 summary: A static website generator
 description: A static website generator
 confinement: strict
@@ -17,7 +17,7 @@ parts:
     nikola-source:
         plugin: python3
         source: git://github.com/getnikola/nikola.git
-        source-tag: v7.7.11
+        source-tag: v7.7.12
         requirements: requirements.txt
         stage-packages:
             - locales

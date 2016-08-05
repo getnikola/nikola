@@ -143,6 +143,7 @@ LEGAL_VALUES = {
         'sr': 'Serbian (Cyrillic)',
         'sr_latin': 'Serbian (Latin)',
         'sv': 'Swedish',
+        'te': 'Telugu',
         ('tr', '!tr_TR'): 'Turkish',
         'ur': 'Urdu',
         'uk': 'Ukrainian',
@@ -189,6 +190,7 @@ LEGAL_VALUES = {
         "sr": "Serbian",
         "sr_latin": "Serbian (Latin)",
         "sv": "Swedish",
+        "te": "Telugu",
         "tr": "Turkish",
         "uk": "Ukrainian",
         "ur": "Urdu",
@@ -311,6 +313,7 @@ LEGAL_VALUES = {
         'sl': 'sl',
         'sr': 'sr',
         'sv': 'sv',
+        'te': 'te',
         'uk': 'uk',
     },
 }
