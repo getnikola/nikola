@@ -69,7 +69,7 @@ from doit.cmdparse import CmdParse
 
 from nikola import DEBUG
 
-__all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
+__all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real', 'get_theme_chain', 'load_messages', 'copy_tree',
            'copy_file', 'slugify', 'unslugify', 'to_datetime', 'apply_filters',
            'config_changed', 'get_crumbs', 'get_tzname', 'get_asset_path',
            '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
@@ -572,7 +572,7 @@ class config_changed(tools.config_changed):
                                                            sort_keys=True))
 
 
-def get_theme_path(theme, themes_dirs=['themes']):
+def get_theme_path_real(theme, themes_dirs):
     """Return the path where the given theme's files are located.
 
     Looks in ./themes and in the place where themes go when installed.
@@ -587,10 +587,15 @@ def get_theme_path(theme, themes_dirs=['themes']):
     raise Exception("Can't find theme '{0}'".format(theme))
 
 
-def get_template_engine(themes, themes_dirs=['themes']):
+def get_theme_path(theme):
+    """Return the theme's path, which equals the theme's name."""
+    return theme
+
+
+def get_template_engine(themes):
     """Get template engine used by a given theme."""
     for theme_name in themes:
-        engine_path = os.path.join(get_theme_path(theme_name, themes_dirs), 'engine')
+        engine_path = os.path.join(theme_name, 'engine')
         if os.path.isfile(engine_path):
             with open(engine_path) as fd:
                 return fd.readlines()[0].strip()
@@ -598,21 +603,24 @@ def get_template_engine(themes, themes_dirs=['themes']):
     return 'mako'
 
 
-def get_parent_theme_name(theme_name, themes_dirs=['themes']):
+def get_parent_theme_name(theme_name, themes_dirs=None):
     """Get name of parent theme."""
-    parent_path = os.path.join(get_theme_path(theme_name, themes_dirs), 'parent')
+    parent_path = os.path.join(theme_name, 'parent')
     if os.path.isfile(parent_path):
         with open(parent_path) as fd:
-            return fd.readlines()[0].strip()
+            parent = fd.readlines()[0].strip()
+        if themes_dirs:
+            return get_theme_path_real(parent, themes_dirs)
+        return parent
     return None
 
 
-def get_theme_chain(theme, themes_dirs=['themes']):
-    """Create the full theme inheritance chain."""
-    themes = [theme]
+def get_theme_chain(theme, themes_dirs):
+    """Create the full theme inheritance chain including paths."""
+    themes = [get_theme_path_real(theme, themes_dirs)]
 
     while True:
-        parent = get_parent_theme_name(themes[-1], themes_dirs)
+        parent = get_parent_theme_name(themes[-1], themes_dirs=themes_dirs)
         # Avoid silly loops
         if parent is None or parent in themes:
             break
@@ -636,7 +644,7 @@ class LanguageNotFoundError(Exception):
         return 'cannot find language {0}'.format(self.lang)
 
 
-def load_messages(themes, translations, default_lang, themes_dirs=['themes']):
+def load_messages(themes, translations, default_lang, themes_dirs):
     """Load theme's messages into context.
 
     All the messages from parent themes are loaded,
@@ -645,8 +653,8 @@ def load_messages(themes, translations, default_lang, themes_dirs=['themes']):
     messages = Functionary(dict, default_lang)
     oldpath = list(sys.path)
     for theme_name in themes[::-1]:
-        msg_folder = os.path.join(get_theme_path(theme_name, themes_dirs), 'messages')
-        default_folder = os.path.join(get_theme_path('base', themes_dirs), 'messages')
+        msg_folder = os.path.join(get_theme_path(theme_name), 'messages')
+        default_folder = os.path.join(get_theme_path_real('base', themes_dirs), 'messages')
         sys.path.insert(0, default_folder)
         sys.path.insert(0, msg_folder)
         english = __import__('messages_en')
@@ -979,7 +987,7 @@ def get_crumbs(path, is_file=False, index_folder=None, lang=None):
     return list(reversed(_crumbs))
 
 
-def get_asset_path(path, themes, files_folders={'files': ''}, themes_dirs=['themes'], output_dir='output'):
+def get_asset_path(path, themes, files_folders={'files': ''}, output_dir='output'):
     """Return the "real", absolute path to the asset.
 
     By default, it checks which theme provides the asset.
@@ -1005,10 +1013,7 @@ def get_asset_path(path, themes, files_folders={'files': ''}, themes_dirs=['them
 
     """
     for theme_name in themes:
-        candidate = os.path.join(
-            get_theme_path(theme_name, themes_dirs),
-            path
-        )
+        candidate = os.path.join(get_theme_path(theme_name), path)
         if os.path.isfile(candidate):
             return candidate
     for src, rel_dst in files_folders.items():

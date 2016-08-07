@@ -360,7 +360,7 @@ class CommandInit(Command):
             # Assuming that base contains all the locales, and that base does
             # not inherit from anywhere.
             try:
-                messages = load_messages(['base'], tr, default)
+                messages = load_messages(['base'], tr, default, themes_dirs=['themes'])
                 SAMPLE_CONF['NAVIGATION_LINKS'] = format_navigation_links(langs, default, messages, SAMPLE_CONF['STRIP_INDEXES'])
             except nikola.utils.LanguageNotFoundError as e:
                 print("    ERROR: the language '{0}' is not supported.".format(e.lang))

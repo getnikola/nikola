@@ -1127,7 +1127,7 @@ class Nikola(object):
             # Check consistency of USE_CDN and the current THEME (Issue #386)
             if self.config['USE_CDN'] and self.config['USE_CDN_WARNING']:
                 bootstrap_path = utils.get_asset_path(os.path.join(
-                    'assets', 'css', 'bootstrap.min.css'), self._THEMES, themes_dirs=self.themes_dirs)
+                    'assets', 'css', 'bootstrap.min.css'), self._THEMES)
                 if bootstrap_path and bootstrap_path.split(os.sep)[-4] not in ['bootstrap', 'bootstrap3']:
                     utils.LOGGER.warn('The USE_CDN option may be incompatible with your theme, because it uses a hosted version of bootstrap.')
 
@@ -1158,8 +1158,7 @@ class Nikola(object):
             custom_css_path = utils.get_asset_path(
                 'assets/css/custom.css',
                 self.THEMES,
-                self.config['FILES_FOLDERS'],
-                themes_dirs=self.themes_dirs
+                self.config['FILES_FOLDERS']
             )
             if custom_css_path and self.file_exists(custom_css_path, not_empty=True):
                 self._GLOBAL_CONTEXT['has_custom_css'] = True
@@ -1173,7 +1172,7 @@ class Nikola(object):
     def _get_template_system(self):
         if self._template_system is None:
             # Load template plugin
-            template_sys_name = utils.get_template_engine(self.THEMES, self.themes_dirs)
+            template_sys_name = utils.get_template_engine(self.THEMES)
             pi = self.plugin_manager.getPluginByName(
                 template_sys_name, "TemplateSystem")
             if pi is None:
@@ -1181,7 +1180,7 @@ class Nikola(object):
                                  "plugin\n".format(template_sys_name))
                 sys.exit(1)
             self._template_system = pi.plugin_object
-            lookup_dirs = ['templates'] + [os.path.join(utils.get_theme_path(name, self.themes_dirs), "templates")
+            lookup_dirs = ['templates'] + [os.path.join(utils.get_theme_path(name), "templates")
                                            for name in self.THEMES]
             self._template_system.set_directories(lookup_dirs,
                                                   self.config['CACHE_FOLDER'])
@@ -1422,7 +1421,7 @@ class Nikola(object):
         """Register shortcodes provided by templates in shortcodes/ folders."""
         builtin_sc_dir = resource_filename(
             'nikola',
-            os.path.join('data', 'shortcodes', utils.get_template_engine(self.THEMES, self.themes_dirs)))
+            os.path.join('data', 'shortcodes', utils.get_template_engine(self.THEMES)))
 
         for sc_dir in [builtin_sc_dir, 'shortcodes']:
             if not os.path.isdir(sc_dir):
@@ -1906,7 +1905,7 @@ class Nikola(object):
         context = context.copy() if context else {}
         deps = post.deps(lang) + \
             self.template_system.template_deps(post.template_name)
-        deps.extend(utils.get_asset_path(x, self.THEMES, themes_dirs=self.themes_dirs) for x in ('bundles', 'parent', 'engine'))
+        deps.extend(utils.get_asset_path(x, self.THEMES) for x in ('bundles', 'parent', 'engine'))
         deps = list(filter(None, deps))
         context['post'] = post
         context['lang'] = lang

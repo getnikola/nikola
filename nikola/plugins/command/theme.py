@@ -170,11 +170,11 @@ class CommandTheme(Command):
         installstatus = self.do_install(name, data)
         # See if the theme's parent is available. If not, install it
         while True:
-            parent_name = utils.get_parent_theme_name(name, self.site.themes_dirs)
+            parent_name = utils.get_parent_theme_name(utils.get_theme_path_real(name, self.site.themes_dirs))
             if parent_name is None:
                 break
             try:
-                utils.get_theme_path(parent_name, self.site.themes_dirs)
+                utils.get_theme_path_real(parent_name, self.site.themes_dirs)
                 break
             except:  # Not available
                 self.do_install(parent_name, data)
@@ -204,7 +204,7 @@ class CommandTheme(Command):
         else:
             dest_path = os.path.join(self.output_dir, name)
             try:
-                theme_path = utils.get_theme_path(name, self.site.themes_dirs)
+                theme_path = utils.get_theme_path_real(name, self.site.themes_dirs)
                 LOGGER.error("Theme '{0}' is already installed in {1}".format(name, theme_path))
             except Exception:
                 LOGGER.error("Can't find theme {0}".format(name))
@@ -227,7 +227,7 @@ class CommandTheme(Command):
     def do_uninstall(self, name):
         """Uninstall a theme."""
         try:
-            path = utils.get_theme_path(name, self.site.themes_dirs)
+            path = utils.get_theme_path_real(name, self.site.themes_dirs)
         except Exception:
             LOGGER.error('Unknown theme: {0}'.format(name))
             return 1
@@ -243,7 +243,7 @@ class CommandTheme(Command):
     def get_path(self, name):
         """Get path for an installed theme."""
         try:
-            path = utils.get_theme_path(name, self.site.themes_dirs)
+            path = utils.get_theme_path_real(name, self.site.themes_dirs)
             print(path)
         except Exception:
             print("not installed")
@@ -268,7 +268,7 @@ class CommandTheme(Command):
 
         # Figure out where to put it.
         # Check if a local theme exists.
-        theme_path = utils.get_theme_path(self.site.THEMES[0], self.site.themes_dirs)
+        theme_path = utils.get_theme_path(self.site.THEMES[0])
         if theme_path.startswith('themes' + os.sep):
             # Theme in local themes/ directory
             base = os.path.join(theme_path, 'templates')
@@ -297,7 +297,7 @@ class CommandTheme(Command):
             LOGGER.info("Created directory {0}".format(base))
 
         # Check if engine and parent match
-        engine_file = utils.get_asset_path('engine', utils.get_theme_chain(parent, self.site.themes_dirs), themes_dirs=self.site.themes_dirs)
+        engine_file = utils.get_asset_path('engine', utils.get_theme_chain(parent, self.site.themes_dirs))
         with io.open(engine_file, 'r', encoding='utf-8') as fh:
             parent_engine = fh.read().strip()
 
