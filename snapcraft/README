@@ -1,4 +1,5 @@
-This folder contains the files needed to build a snap package for Nikola.
+The folders edge/stable contain the files needed to build a snap package for Nikola.
+Edge will build from master, stable from the latest release.
 
 To build, in Ubuntu 16.04:
 
