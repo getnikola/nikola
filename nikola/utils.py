@@ -996,19 +996,19 @@ def get_asset_path(path, themes, files_folders={'files': ''}, output_dir='output
     If it's not provided by either, it will be chacked in output, where
     it may have been created by another plugin.
 
-    >>> print(get_asset_path('assets/css/rst.css', ['bootstrap3', 'base']))
+    >>> print(get_asset_path('assets/css/rst.css', get_theme_chain('bootstrap3', ['themes']))
     /.../nikola/data/themes/base/assets/css/rst.css
 
-    >>> print(get_asset_path('assets/css/theme.css', ['bootstrap3', 'base']))
+    >>> print(get_asset_path('assets/css/theme.css', get_theme_chain('bootstrap3', ['themes'])))
     /.../nikola/data/themes/bootstrap3/assets/css/theme.css
 
-    >>> print(get_asset_path('nikola.py', ['bootstrap3', 'base'], {'nikola': ''}))
+    >>> print(get_asset_path('nikola.py', get_theme_chain('bootstrap3', ['themes']), {'nikola': ''}))
     /.../nikola/nikola.py
 
-    >>> print(get_asset_path('nikola.py', ['bootstrap3', 'base'], {'nikola': 'nikola'}))
+    >>> print(get_asset_path('nikola.py', get_theme_chain('bootstrap3', ['themes']), {'nikola': 'nikola'}))
     None
 
-    >>> print(get_asset_path('nikola/nikola.py', ['bootstrap3', 'base'], {'nikola': 'nikola'}))
+    >>> print(get_asset_path('nikola/nikola.py', get_theme_chain('bootstrap3', ['themes']), {'nikola': 'nikola'}))
     /.../nikola/nikola.py
 
     """
