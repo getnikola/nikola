@@ -33,7 +33,6 @@ import io
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, write_metadata
-from nikola.shortcodes import apply_shortcodes
 
 
 class CompileHtml(PageCompiler):
@@ -50,7 +49,7 @@ class CompileHtml(PageCompiler):
                 data = in_file.read()
             if not is_two_file:
                 _, data = self.split_metadata(data)
-            data = apply_shortcodes(data, self.site.shortcode_registry, self.site, source)
+            data = self.site.apply_shortcodes(source)
             out_file.write(data)
         return True
 

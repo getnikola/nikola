@@ -62,7 +62,6 @@ except ImportError:
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, req_missing, get_logger, STDERR_HANDLER
-from nikola.shortcodes import apply_shortcodes
 
 
 class CompileIPynb(PageCompiler):
@@ -94,7 +93,7 @@ class CompileIPynb(PageCompiler):
         makedirs(os.path.dirname(dest))
         with io.open(dest, "w+", encoding="utf8") as out_file:
             output = self.compile_html_string(source, is_two_file)
-            output = apply_shortcodes(output, self.site.shortcode_registry, self.site, source)
+            output = self.site.apply_shortcodes(output, source)
             out_file.write(output)
 
     def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):

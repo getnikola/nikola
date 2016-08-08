@@ -595,6 +595,9 @@ variable keyword arguments):
     If the shortcut is used as opening/closing tags, it will be the text
     between them, otherwise ``None``.
 
+``lang``:
+    The current language.    
+
 If the shortcode tag has arguments of the form ``foo=bar`` they will be
 passed as named arguments. Everything else will be passed as positional
 arguments in the function call.
