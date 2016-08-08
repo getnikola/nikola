@@ -9,7 +9,7 @@
 The Nikola Handbook
 ===================
 
-:Version: 7.7.6
+:Version: 7.7.12
 
 .. class:: alert alert-info pull-right
 
@@ -233,9 +233,9 @@ and more via plugins — for more details, read the `input format documentation
 <#multiple-input-formats>`__.
 You can learn reStructuredText syntax with the `reST quickstart <https://getnikola.com/quickstart.html>`__.
 
-Please note that Nikola does not guarantee support for encodings other than
-UTF-8. We recommend converting your input files to that encoding.  It will
-prevent bugs, and Nikola will write UTF-8 output anyway.
+Please note that Nikola does not support encodings other than UTF-8. Make sure
+to convert your input files to that encoding to avoid issues.  It will prevent
+bugs, and Nikola will write UTF-8 output anyway.
 
 You can control what markup compiler is used for each file extension with the ``COMPILERS``
 option. The default configuration expects them to be placed in ``posts`` but that can be
@@ -332,6 +332,13 @@ to your configuration:
 
       More information: `Issue #1547 <https://github.com/getnikola/nikola/issues/1547>`_
 
+   pretty_url
+      Set to "False" to disable pretty URL for this page. Example:
+
+      .. code:: restructuredtext
+
+          .. pretty_url: False
+
    previewimage
       Designate a preview or other representative image path relative to BASE_URL
       for use with Open Graph for posts. Adds the image when sharing on social
@@ -415,19 +422,25 @@ add support for more languages, check out `the Transifex page for Nikola <https:
 The post page is generated using the ``post.tmpl`` template, which you can use
 to customize the output.
 
-The place where the post will be placed by ``new_post`` is based on the ``POSTS``
-and ``PAGES`` configuration options:
+How does Nikola decide where posts should go?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The place where the post will be placed by ``new_post`` (the first one that
+matches the given format) and the final post destination (the first one that
+matches a given file) is based on the ``POSTS`` and ``PAGES`` configuration
+options. The exact mechanism is explained above the config options in the
+``conf.py`` file, and also reproduced below:
 
 .. code:: python
 
     # POSTS and PAGES contains (wildcard, destination, template) tuples.
     #
-    # The wildcard is used to generate a list of reSt source files
-    # (whatever/thing.txt).
+    # The wildcard is used to generate a list of post source files
+    # (whatever/thing.rst, for example).
     #
     # That fragment could have an associated metadata file (whatever/thing.meta),
     # and optionally translated files (example for Spanish, with code "es"):
-    #     whatever/thing.es.txt and whatever/thing.es.meta
+    #     whatever/thing.es.rst and whatever/thing.es.meta
     #
     #     This assumes you use the default TRANSLATIONS_PATTERN.
     #
@@ -436,22 +449,26 @@ and ``PAGES`` configuration options:
     #
     # These files are combined with the template to produce rendered
     # pages, which will be placed at
-    # output / TRANSLATIONS[lang] / destination / pagename.html
+    # output/TRANSLATIONS[lang]/destination/pagename.html
     #
     # where "pagename" is the "slug" specified in the metadata file.
+    # The page might also be placed in /destinstion/pagename/index.html
+    # if PRETTY_URLS are enabled.
     #
     # The difference between POSTS and PAGES is that POSTS are added
-    # to feeds and are considered part of a blog, while PAGES are
-    # just independent HTML pages.
+    # to feeds, indexes, tag lists and archives and are considered part
+    # of a blog, while PAGES are just independent HTML pages.
     #
 
     POSTS = (
-        ("posts/*.txt", "posts", "post.tmpl"),
         ("posts/*.rst", "posts", "post.tmpl"),
+        ("posts/*.txt", "posts", "post.tmpl"),
+        ("posts/*.html", "posts", "post.tmpl"),
     )
     PAGES = (
-        ("stories/*.txt", "stories", "story.tmpl"),
         ("stories/*.rst", "stories", "story.tmpl"),
+        ("stories/*.txt", "stories", "story.tmpl"),
+        ("stories/*.html", "stories", "story.tmpl"),
     )
 
 .. note:: POSTS and PAGES are not flat!
@@ -461,6 +478,9 @@ and ``PAGES`` configuration options:
    ``posts/foo/bar.txt`` would produce  ``output/posts/foo/bar.html``, assuming the slug is also ``bar``.
 
    If you have ``PRETTY_URLS`` enabled, that would be ``output/posts/foo/bar/index.html``.
+
+The ``new_post`` command
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``new_post`` will use the *first* path in ``POSTS`` (or ``PAGES`` if ``-p`` is
 supplied) that ends with the extension of your desired markup format (as
@@ -813,7 +833,11 @@ To use them from plugins, please see `Extending Nikola <https://getnikola.com/ex
 Using a shortcode
 ~~~~~~~~~~~~~~~~~
 
-In your content files, a shortcode can be called by using the {{% raw %}}{{% name parameters %}}{{% /raw %}} form. Shortcode parameters are space delimited. Parameters with spaces can be quoted (or backslash escaped).
+In your content files, a shortcode can be called by using this form::
+
+    {{% raw %}}{{% name parameters %}}{{% /raw %}}
+
+Shortcode parameters are space delimited. Parameters with spaces can be quoted (or backslash escaped).
 
 The first word is always the name of the shortcode. Parameters follow the name. Depending upon how the shortcode is defined, the parameters may be named, positional or both. The format for named parameters models that of HTML with the format name="value".
 
@@ -823,8 +847,29 @@ Example of a paired shortcode (note that we don't have a highlight shortcode yet
 
     {{% raw %}}{{% highlight python %}} A bunch of code here {{% /highlight %}}{{% /raw %}}
 
+.. note:: Shortcodes and reStructuredText
+
+    In reStructuredText shortcodes may fail because docutils turns URL into links and everything breaks.
+    For some shortcodes there are alternative docutils directives (example, you can use the media
+    **directive** instead of the media shortcode.
+
+    Also, you can use the shortcode **role**::
+
+       :sc:`{{% raw %}}{{% shortcode here %}}{{% /raw %}}`
+
+    That role passes text unaltered, so shortcodes behave correctly.
+
+
 Built-in shortcodes
 ~~~~~~~~~~~~~~~~~~~
+
+doc
+    Will link to a document in the page, see `Doc directive for details
+    <#doc>`__. Example:
+
+    .. code:: restructuredtext
+
+       {{% raw %}}Take a look at {{% doc %}}my other post <creating-a-theme>{{% /doc %}} about theme creating.{{% /raw %}}
 
 post-list
     Will show a list of posts, see the `Post List directive for details <#post-list>`__
@@ -834,7 +879,6 @@ media
 
         {{% raw %}}{{% media url="https://www.youtube.com/watch?v=Nck6BZga7TQ" %}}{{% /raw %}}
 
-    In reStructuredText this shortcode will fail because docutils turns that URL to a link and everything breaks, use the `media directive <#media>`__ instead.
 
 chart
     Create charts via PyGal. This is similar to the `chart directive <#chart>`__ except the syntax is adapted to
@@ -848,18 +892,29 @@ chart
         'Others',  [14.2, 15.4, 15.3, 8.9, 9, 10.4]
         {{% /chart %}}{{% /raw %}}
 
-    In reStructuredText the quoting needed to pass arguments gets insane really fast, use the chart directive
-    instead (the syntax is nicer anyway)
+raw
+    Passes the content along, mostly used so I can write this damn section and you can see the shortcodes instead
+    of them being munged into shortcode **output**. I can't show an example because Inception.
+
+
+Community shortcodes
+~~~~~~~~~~~~~~~~~~~~
+
+Shortcodes created by the community are available in `the shortcodes repository on GitHub <https://github.com/getnikola/shortcodes>`_.
 
 Template-based shortcodes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you put a template in ``shortcodes/`` called ``mycode.tmpl`` then Nikola will create a shortcode
-called ``mycode`` you can use. Any options you pass to the shortcode will be available as variables
-for that template. If you use the shortcode as paired, then the contents between the paired tags will
-be available in the ``data`` variable.
+If you put a template in ``shortcodes/`` called ``mycode.tmpl`` then Nikola
+will create a shortcode called ``mycode`` you can use. Any options you pass to
+the shortcode will be available as variables for that template. Non-keyword
+options will be passed in a tuple varaible named ``_args``.
 
-If you want to access the Nikola object, it will be available as ``site``. Use with care :-)
+If you use the shortcode as paired, then the contents between the paired tags
+will be available in the ``data`` variable. If you want to access the Nikola
+object, it will be available as ``site``. Use with care :-)
+
+See :doc:`extending` for detailed information.
 
 For example, if your ``shortcodes/foo.tmpl`` contains this::
 
@@ -1380,6 +1435,84 @@ be stripped. For example ``03_an_amazing_sunrise.jpg`` will be render as *An ama
 Here is a `demo gallery </galleries/demo>`_ of historic, public domain Nikola
 Tesla pictures taken from `this site <http://kerryr.net/pioneers/gallery/tesla.htm>`_.
 
+Handling EXIF Data
+------------------
+
+Your images contain a certain amount of extra data besides the image itself,
+called the `EXIF metadata. <https://en.wikipedia.org/wiki/Exchangeable_image_file_format>`__
+It contains information about the camera you used to take the picture, when it was taken,
+and maybe even the location where it was taken.
+
+This is both useful, because you can use it in some apps to locate all the pictures taken
+in a certain place, or with a certain camera, but also, since the pictures Nikola
+publishes are visible to anyone on the Internet, a privacy risk worth considering
+(Imagine if you post pictures taken at home with GPS info, you are publishing your
+home address!)
+
+Nikola has some support for managing it, so let's go through a few scenarios to
+see which one you prefer.
+
+Strip all EXIF data
+~~~~~~~~~~~~~~~~~~~
+
+Do this if you want to be absolutely sure that no sensitive information should ever leak::
+
+    PRESERVE_EXIF_DATA = False
+    EXIF_WHITELIST = {}
+
+Preserve all EXIF data
+~~~~~~~~~~~~~~~~~~~~~~
+
+Do this if you really don't mind people knowing where pictures were taken, or camera settings.
+
+    PRESERVE_EXIF_DATA = True
+    EXIF_WHITELIST = {'*': '*'}
+
+Preserve some EXIF data
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Do this if you really know what you are doing. EXIF data comes separated in a few IFD blocks.
+The most common ones are:
+
+0th
+   Information about the image itself
+
+Exif
+   Information about the camera and the image
+
+1st
+   Information about embedded thumbnails (usually nothing)
+
+thumbnail
+   An embedded thumbnail, in JPEG format (usually nothing)
+
+GPS
+   Geolocation information about the image
+
+Interop
+   Not too interesting at this point.
+
+Each IFD in turn contains a number of tags. For example, 0th contains a ImageWidth tag.
+You can tell Nikola exactly which IFDs to keep, and within each IFD, which tags to keep,
+using the EXIF_WHITELIST option.
+
+Let's see an example::
+
+    PRESERVE_EXIF_DATA = True
+    EXIF_WHITELIST = {
+        "0th": ["Orientation", "ImageWidth", "ImageLength"],
+        "Interop": "*",
+    }
+
+So, we preserve EXIF data, and the whitelisted IFDs are "0th" and "Interop". That means
+GPS, for example, will be totally deleted.
+
+Then, for the Interop IFD, we keep everything, and for the 0th IFD we only keep three tags,
+listed there.
+
+There is a huge number of EXIF tags, described in `the standard <http://www.cipa.jp/std/documents/e/DC-008-2012_E.pdf>`__
+
+
 Post Processing Filters
 -----------------------
 
@@ -1653,6 +1786,9 @@ Once you have that, all you need to do is:
 
     .. youtube:: 8N_tupPBtWQ
 
+Supported options: ``height``, ``width``, ``align`` (one of ``left``,
+``center``, ``right``) — all are optional.
+
 Vimeo
 ~~~~~
 
@@ -1675,6 +1811,9 @@ You can override this if you wish:
        :height: 240
        :width: 320
 
+Supported options: ``height``, ``width``, ``align`` (one of ``left``,
+``center``, ``right``) — all are optional.
+
 Soundcloud
 ~~~~~~~~~~
 
@@ -1695,6 +1834,9 @@ The ID is 78131362 and you can embed the audio with this:
 You can also embed playlists, via the `soundcloud_playlist` directive which works the same way.
 
     .. soundcloud_playlist:: 9411706
+
+Supported options: ``height``, ``width``, ``align`` (one of ``left``,
+``center``, ``right``) — all are optional.
 
 Code
 ~~~~
@@ -1908,6 +2050,15 @@ The following options are recognized:
       Sort post list by one of each post's attributes, usually ``title`` or a
       custom ``priority``.  Defaults to None (chronological sorting).
 
+* ``date``: string
+      Show posts that match date range specified by this option. Format:
+
+      * comma-separated clauses (AND)
+      * clause: attribute comparison_operator value (spaces optional)
+          * attribute: year, month, day, hour, month, second, weekday, isoweekday; or empty for full datetime
+          * comparison_operator: == != <= >= < >
+          * value: integer or dateutil-compatible date input
+
 * ``tags`` : string [, string...]
       Filter posts to show only posts having at least one of the ``tags``.
       Defaults to None.
@@ -1916,13 +2067,21 @@ The following options are recognized:
       Filter posts to show only posts having one of the ``categories``.
       Defaults to None.
 
+* ``sections`` : string [, string...]
+      Filter posts to show only posts having one of the ``sections``.
+      Defaults to None.
+
 * ``slugs`` : string [, string...]
       Filter posts to show only posts having at least one of the ``slugs``.
       Defaults to None.
 
+* ``post_type`` (or ``type``) : string
+      Show only ``posts``, ``pages`` or ``all``.
+      Replaces ``all``. Defaults to ``posts``.
+
 * ``all`` : flag
-      Shows all posts and pages in the post list.
-      Defaults to show only posts with set *use_in_feeds*.
+      (deprecated, use ``post_type`` instead)
+      Shows all posts and pages in the post list.  Defaults to show only posts.
 
 * ``lang`` : string
       The language of post *titles* and *links*.
@@ -1946,6 +2105,9 @@ the appropriate path if this happens.
 
 We recommend using stories with dates in the past (1970-01-01) to avoid
 dependency issues.
+
+If you are using this as a shortcode, flags (``reverse``, ``all``) are meant to be used
+with a ``True`` argument, eg. ``all=True``.
 
 Importing your WordPress site into Nikola
 -----------------------------------------

@@ -29,7 +29,6 @@
 from __future__ import unicode_literals, print_function
 
 from collections import defaultdict
-import sys
 import os
 import lxml.html
 
@@ -73,7 +72,7 @@ class Listings(Task):
             if source in appearing_paths or dest in appearing_paths:
                 problem = source if source in appearing_paths else dest
                 utils.LOGGER.error("The listings input or output folder '{0}' appears in more than one entry in LISTINGS_FOLDERS, exiting.".format(problem))
-                sys.exit(1)
+                continue
             appearing_paths.add(source)
             appearing_paths.add(dest)
 
@@ -275,14 +274,14 @@ class Listings(Task):
                 # ambiguities.
                 if len(self.improper_input_file_mapping[name]) > 1:
                     utils.LOGGER.error("Using non-unique listing name '{0}', which maps to more than one listing name ({1})!".format(name, str(self.improper_input_file_mapping[name])))
-                    sys.exit(1)
+                    return ["ERROR"]
                 if len(self.site.config['LISTINGS_FOLDERS']) > 1:
                     utils.LOGGER.notice("Using listings names in site.link() without input directory prefix while configuration's LISTINGS_FOLDERS has more than one entry.")
                 name = list(self.improper_input_file_mapping[name])[0]
                 break
         else:
             utils.LOGGER.error("Unknown listing name {0}!".format(namep))
-            sys.exit(1)
+            return ["ERROR"]
         if not name.endswith(os.sep + self.site.config["INDEX_FILE"]):
             name += '.html'
         path_parts = name.split(os.sep)

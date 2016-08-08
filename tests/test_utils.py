@@ -8,7 +8,7 @@ from nikola.utils import demote_headers, TranslatableSetting
 
 
 class dummy(object):
-    pass
+    default_lang = 'en'
 
 
 class GetMetaTest(unittest.TestCase):

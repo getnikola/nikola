@@ -177,6 +177,14 @@ article.post-micro {
     border-top: 1px solid #e5e5e5;
 }
 
+.codetable {
+    table-layout: fixed;
+}
+
+.codetable pre {
+    overflow-x: scroll;
+}
+
 /* hat tip bootstrap/html5 boilerplate */
 @media print {
     *, *:before, *:after {

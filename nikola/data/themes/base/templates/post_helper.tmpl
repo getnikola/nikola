@@ -3,7 +3,7 @@
 <%def name="meta_translations(post)">
     %if len(translations) > 1:
         %for langname in sorted(translations):
-            %if langname != lang and post.is_translation_available(langname):
+            %if langname != lang and ((not post.skip_untranslated) or post.is_translation_available(langname)):
                 <link rel="alternate" hreflang="${langname}" href="${post.permalink(langname)}">
             %endif
         %endfor

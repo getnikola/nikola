@@ -3,6 +3,136 @@ New in master
 
 Features
 --------
+* Update options of chart directive to Pygal 2.2.3
+
+
+New in v7.7.12
+==============
+
+Features
+--------
+
+* New Telugu translation by Chillar Anand
+* Add ``sections`` filtering in the post list directive
+  (Issue #2409)
+* Update Bootstrap to v3.3.7
+
+Bugfixes
+--------
+
+* Added code documentation to ReadTheDocs (Issue #2124)
+  (https://nikola.readthedocs.io/en/latest/)
+* Pass language to docutils so admonitions are translated (Issue #2422)
+* Put 2-file post metadata in the same place as the text file when
+  specifying a path in ``new_post``, ``new_page`` (Issue #2420)
+* Register dependencies in post-list shortcode (Issue #2412)
+* Support post-list shortcode better (Issue #2408)
+* Fix gallery links in base theme (Issue #2416)
+* Respect ``DEPLOY_DRAFTS`` and ``DEPLOY_FUTURE`` in ``github_deploy``
+  (Issue #2406)
+* Don’t remove ``<!DOCTYPE html>`` if typogrify filters are in use
+* Avoid infinite loop if bootstrap3 can't be loaded (Issue #2402)
+* Fixed image rotation to update image size correctly (Issue #2418)
+
+New in v7.7.11
+==============
+
+Bugfixes
+--------
+
+* Brown bag bug in image resizing (ralsina says my fault!)
+
+New in v7.7.10
+==============
+
+Features
+--------
+
+* New EXIF_WHITELIST option to filter EXIF data (Issue #2323)
+* Support ``date`` filtering in the post list directive
+  (Issue #1889)
+* Support ``doc`` shortcode (equivalent to reST ``doc`` role — part of
+  Issue #2170)
+* Added Albanian translation by Vango Stavro
+* Added ``post-(type)`` class to ``story.tmpl`` (uses the ``type``
+  meta field, defaults to ``post-text`` — same behavior as posts)
+* New ``compiled`` signal after post is compiled (Issue #2369)
+
+Bugfixes
+--------
+
+* Some images were copied ignoring the PRESERVE_EXIF_DATA option
+* Warn about possible outdated files after --clean-files (Issue #2017)
+* Improved EXIF orientation handling
+* Register post list template as a dependency (Issue #2391)
+* Fix section color hashing when using Python 2
+* Use ``en_US`` dictionary name with pyphen for better compatibility
+* Fix graceful degradation if ``pyphen`` lacks dictionaries
+* Add horizontal scrollbar to listings (via getnikola/nikola-themes#86)
+* Copy files when importing two-file posts instead of reading and
+  writing (useful for binary formats, eg. docx) (Issue #2380)
+* Using correct category titles for category hierarchies
+  (Issue #2384)
+
+New in v7.7.9
+=============
+
+(1000+ stars on GitHub — thanks!)
+
+Features
+--------
+
+* New ``sc`` or ``html`` reST role, which passes content unaltered (Issue #1854)
+* Point the user to our users site after 1st successful deploy (Issue #2096)
+* Option to disable color output using ``NIKOLA_MONO`` environment
+  variable (Issue #2360)
+* Improved locale detection in Windows (Issue #2343)
+* Added ``enclosure_length`` meta field for better interop (Issue #2338)
+* New Lithuanian translation by Antanas Lasys
+
+Bugfixes
+--------
+
+* Avoid conflicts caused by multiple copies of the same plugin (#2362)
+* Fix handling of some wordpress dumps (Issue #2340)
+* When using the plugin command, load ALL plugins (Issue #2359)
+* Fix plugin removal for plugins that are a package (Issue #2356)
+* Reload English messages for every theme to prevent caching (Issue #2347)
+* Cache theme messages after loading once (Issue #2344)
+* Add ``<link>`` tags to other languages even if the post is
+  untranslated (Google complained otherwise)
+* Don't call sys.exit() from plugins if possible (Issue #1839)
+* Create Persistor directories only if site is configured (Issue #2334)
+* Remove newlines in imported WordPress titles (Issue #2330)
+
+New in v7.7.8
+=============
+
+Features
+--------
+
+* Template-based shortcodes now receive positional arguments too (Issue #2319)
+
+Bugfixes
+--------
+
+* Fix folder handling and redirects in ``nikola auto`` (Issue #2331)
+* Use state files in ``nikola github_deploy`` and ``nikola status``
+  (Issue #2317)
+* Add ``align`` options for ``youtube``, ``vimeo``, ``soundcloud``
+  reST directives (Issue #2304)
+* Update ``FILE_METADATA_REGEXP`` example in docs (Issue #2296)
+* Show “tags too similar” error instead of cryptic doit crash (Issue #2325)
+* Fix crashes when tag appears multiple times in a post (Issue #2315)
+* Use binary I/O for ``.svg`` files in galleries
+* Accept ``.svgz`` extension by default
+* Don't randomly load plugins when Nikola is called with no arguments (Issue #2297)
+
+New in v7.7.7
+=============
+
+Features
+--------
 
 * New ``--one-file`` option to wordpress importer (Issue #2262)
 * New Pygal-based chart shortcode (Issue #2170)
@@ -12,6 +142,7 @@ Features
 Bugfixes
 --------
 
+* Fix Indonesian translation (Issue #2291)
 * Fix a JSON conversion bug in the WordPress importer (Issue #2264)
 * Don’t create download directories when not downloading WordPress
   attachments (Issue #2260)
@@ -1757,4 +1888,4 @@ Bugfixes
 * Fix for content displaying too wide
 * Changelog
 
-vim: tw=70 syntax=rst
+vim: cc=70 tw=70 syntax=rst

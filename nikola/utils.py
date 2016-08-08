@@ -81,7 +81,7 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_chain', 'load_messages'
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
            'NikolaPygmentsHTML', 'create_redirect', 'TreeNode',
            'flatten_tree_structure', 'parse_escaped_hierarchical_category_name',
-           'join_hierarchical_category_path', 'indent')
+           'join_hierarchical_category_path', 'clean_before_deployment', 'indent')
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -649,6 +649,8 @@ def load_messages(themes, translations, default_lang):
         sys.path.insert(0, default_folder)
         sys.path.insert(0, msg_folder)
         english = __import__('messages_en')
+        # If we don't do the reload, the module is cached
+        _reload(english)
         for lang in list(translations.keys()):
             try:
                 translation = __import__('messages_' + lang)
@@ -667,6 +669,7 @@ def load_messages(themes, translations, default_lang):
                 del(translation)
             except ImportError as orig:
                 raise LanguageNotFoundError(lang, orig)
+        del(english)
     sys.path = oldpath
     return messages
 
@@ -743,20 +746,22 @@ _slugify_strip_re = re.compile(r'[^+\w\s-]')
 _slugify_hyphenate_re = re.compile(r'[-\s]+')
 
 
-def slugify(value, force=False):
+def slugify(value, lang=None, force=False):
     u"""Normalize string, convert to lowercase, remove non-alpha characters, convert spaces to hyphens.
 
     From Django's "django/template/defaultfilters.py".
 
-    >>> print(slugify('áéí.óú'))
+    >>> print(slugify('áéí.óú', lang='en'))
     aeiou
 
-    >>> print(slugify('foo/bar'))
+    >>> print(slugify('foo/bar', lang='en'))
     foobar
 
-    >>> print(slugify('foo bar'))
+    >>> print(slugify('foo bar', lang='en'))
     foo-bar
     """
+    if lang is None:  # TODO: remove in v8
+        LOGGER.warn("slugify() called without language!")
     if not isinstance(value, unicode_str):
         raise ValueError("Not a unicode object: {0}".format(value))
     if USE_SLUGIFY or force:
@@ -781,12 +786,14 @@ def slugify(value, force=False):
         return value
 
 
-def unslugify(value, discard_numbers=True):
+def unslugify(value, lang=None, discard_numbers=True):
     """Given a slug string (as a filename), return a human readable string.
 
     If discard_numbers is True, numbers right at the beginning of input
     will be removed.
     """
+    if lang is None:  # TODO: remove in v8
+        LOGGER.warn("unslugify() called without language!")
     if discard_numbers:
         value = re.sub('^[0-9]+', '', value)
     value = re.sub('([_\-\.])', ' ', value)
@@ -798,7 +805,7 @@ def encodelink(iri):
     """Given an encoded or unencoded link string, return an encoded string suitable for use as a link in HTML and XML."""
     iri = unicodenormalize('NFC', iri)
     link = OrderedDict(urlparse(iri)._asdict())
-    link['path'] = urlquote(urlunquote(link['path']).encode('utf-8'))
+    link['path'] = urlquote(urlunquote(link['path']).encode('utf-8'), safe="/~")
     try:
         link['netloc'] = link['netloc'].encode('utf-8').decode('idna').encode('idna').decode('utf-8')
     except UnicodeDecodeError:
@@ -947,8 +954,10 @@ def get_crumbs(path, is_file=False, index_folder=None, lang=None):
         for i, crumb in enumerate(crumbs[-3::-1]):  # Up to parent folder only
             _path = '/'.join(['..'] * (i + 1))
             _crumbs.append([_path, crumb])
-        _crumbs.insert(0, ['.', crumbs[-2]])  # file's folder
-        _crumbs.insert(0, ['#', crumbs[-1]])  # file itself
+        if len(crumbs) >= 2:
+            _crumbs.insert(0, ['.', crumbs[-2]])  # file's folder
+        if len(crumbs) >= 1:
+            _crumbs.insert(0, ['#', crumbs[-1]])  # file itself
     else:
         for i, crumb in enumerate(crumbs[::-1]):
             _path = '/'.join(['..'] * i) or '#'
@@ -1555,7 +1564,7 @@ class NikolaPygmentsHTML(HtmlFormatter):
         self.nclasses = classes
         super(NikolaPygmentsHTML, self).__init__(
             cssclass='code', linenos=linenos, linenostart=linenostart, nowrap=False,
-            lineanchors=slugify(anchor_ref, force=True), anchorlinenos=True)
+            lineanchors=slugify(anchor_ref, lang=LocaleBorg().current_lang, force=True), anchorlinenos=True)
 
     def wrap(self, source, outfile):
         """Wrap the ``source``, which is a generator yielding individual lines, in custom generators."""
@@ -1792,7 +1801,14 @@ def colorize_str_from_base_color(string, base_color):
     lightness and saturation untouched using HUSL colorspace.
     """
     def hash_str(string, pos):
-        return hashlib.md5(string.encode('utf-8')).digest()[pos]
+        x = hashlib.md5(string.encode('utf-8')).digest()[pos]
+        try:
+            # Python 2: a string
+            # TODO: remove in v8
+            return ord(x)
+        except TypeError:
+            # Python 3: already an integer
+            return x
 
     def degreediff(dega, degb):
         return min(abs(dega - degb), abs((degb - dega) + 360))
@@ -1849,6 +1865,25 @@ def dns_sd(port, inet6):
         return bus_group  # remember to bus_group.Reset() to unpublish
     except Exception:
         return None
+
+
+def clean_before_deployment(site):
+    """Clean drafts and future posts before deployment."""
+    undeployed_posts = []
+    deploy_drafts = site.config.get('DEPLOY_DRAFTS', True)
+    deploy_future = site.config.get('DEPLOY_FUTURE', False)
+    if not (deploy_drafts and deploy_future):  # == !drafts || !future
+        # Remove drafts and future posts
+        out_dir = site.config['OUTPUT_FOLDER']
+        site.scan_posts()
+        for post in site.timeline:
+            if (not deploy_drafts and post.is_draft) or (not deploy_future and post.publish_later):
+                for lang in post.translated_to:
+                    remove_file(os.path.join(out_dir, post.destination_path(lang)))
+                    source_path = post.destination_path(lang, post.source_ext(True))
+                    remove_file(os.path.join(out_dir, source_path))
+                undeployed_posts.append(post)
+    return undeployed_posts
 
 
 # Stolen from textwrap in Python 3.4.3.

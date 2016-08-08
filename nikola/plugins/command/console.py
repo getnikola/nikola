@@ -75,7 +75,7 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
     ]
 
     def ipython(self, willful=True):
-        """IPython shell."""
+        """Run an IPython shell."""
         try:
             import IPython
         except ImportError as e:
@@ -84,12 +84,13 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
             raise e  # That’s how _execute knows whether to try something else.
         else:
             site = self.context['site']  # NOQA
+            nikola_site = self.context['site']  # NOQA
             conf = self.context['conf']  # NOQA
             commands = self.context['commands']  # NOQA
             IPython.embed(header=self.header.format('IPython'))
 
     def bpython(self, willful=True):
-        """bpython shell."""
+        """Run a bpython shell."""
         try:
             import bpython
         except ImportError as e:
@@ -100,7 +101,7 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
             bpython.embed(banner=self.header.format('bpython'), locals_=self.context)
 
     def plain(self, willful=True):
-        """Plain Python shell."""
+        """Run a plain Python shell."""
         import code
         try:
             import readline
@@ -130,6 +131,7 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
         self.context = {
             'conf': self.site.config,
             'site': self.site,
+            'nikola_site': self.site,
             'commands': self.site.commands,
         }
         if options['bpython']:

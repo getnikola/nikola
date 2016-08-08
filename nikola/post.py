@@ -43,6 +43,7 @@ except ImportError:
 
 from . import utils
 
+from blinker import signal
 import dateutil.tz
 import lxml.html
 import natsort
@@ -51,7 +52,7 @@ try:
 except ImportError:
     pyphen = None
 
-from math import ceil
+from math import ceil  # for reading time feature
 
 # for tearDown with _reload we cannot use 'from import' to get forLocaleBorg
 import nikola.utils
@@ -135,6 +136,7 @@ class Post(object):
         self._dependency_file_page = defaultdict(list)
         self._dependency_uptodate_fragment = defaultdict(list)
         self._dependency_uptodate_page = defaultdict(list)
+        self._depfile = defaultdict(list)
 
         default_metadata, self.newstylemeta = get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'])
 
@@ -423,6 +425,24 @@ class Post(object):
         if add == 'page' or add == 'both':
             self._dependency_uptodate_page[lang].append((is_callable, dependency))
 
+    def register_depfile(self, dep, dest=None, lang=None):
+        """Register a dependency in the dependency file."""
+        if not dest:
+            dest = self.translated_base_path(lang)
+        self._depfile[dest].append(dep)
+
+    @staticmethod
+    def write_depfile(dest, deps_list):
+        """Write a depfile for a given language."""
+        deps_path = dest + '.dep'
+        if deps_list:
+            deps_list = [p for p in deps_list if p != dest]  # Don't depend on yourself (#1671)
+            with io.open(deps_path, "w+", encoding="utf8") as deps_file:
+                deps_file.write('\n'.join(deps_list))
+        else:
+            if os.path.isfile(deps_path):
+                os.unlink(deps_path)
+
     def _get_dependencies(self, deps_list):
         deps = []
         for dep in deps_list:
@@ -489,7 +509,14 @@ class Post(object):
         self.compile_html(
             self.translated_source_path(lang),
             dest,
-            self.is_two_file),
+            self.is_two_file)
+        Post.write_depfile(dest, self._depfile[dest])
+
+        signal('compiled').send({
+            'source': self.translated_source_path(lang),
+            'dest': dest,
+            'post': self,
+        })
 
         if self.meta('password'):
             # TODO: get rid of this feature one day (v8?; warning added in v7.3.0.)
@@ -796,7 +823,7 @@ class Post(object):
                 slug = slug[0]
         else:
             slug = self.meta[lang]['section'].split(',')[0] if 'section' in self.meta[lang] else self.messages[lang]["Uncategorized"]
-        return utils.slugify(slug)
+        return utils.slugify(slug, lang)
 
     def permalink(self, lang=None, absolute=False, extension='.html', query=None):
         """Return permalink for a post."""
@@ -872,7 +899,7 @@ def re_meta(line, match=None):
         return (None,)
 
 
-def _get_metadata_from_filename_by_regex(filename, metadata_regexp, unslugify_titles):
+def _get_metadata_from_filename_by_regex(filename, metadata_regexp, unslugify_titles, lang):
     """Try to reed the metadata from the filename based on the given re.
 
     This requires to use symbolic group names in the pattern.
@@ -887,7 +914,7 @@ def _get_metadata_from_filename_by_regex(filename, metadata_regexp, unslugify_ti
         for key, value in match.groupdict().items():
             k = key.lower().strip()  # metadata must be lowercase
             if k == 'title' and unslugify_titles:
-                meta[k] = unslugify(value, discard_numbers=False)
+                meta[k] = unslugify(value, lang, discard_numbers=False)
             else:
                 meta[k] = value
 
@@ -1051,7 +1078,8 @@ def get_meta(post, file_metadata_regexp=None, unslugify_titles=False, lang=None)
     if file_metadata_regexp is not None:
         meta.update(_get_metadata_from_filename_by_regex(post.source_path,
                                                          file_metadata_regexp,
-                                                         unslugify_titles))
+                                                         unslugify_titles,
+                                                         post.default_lang))
 
     compiler_meta = {}
 
@@ -1070,7 +1098,7 @@ def get_meta(post, file_metadata_regexp=None, unslugify_titles=False, lang=None)
         if 'slug' not in meta:
             # If no slug is found in the metadata use the filename
             meta['slug'] = slugify(unicode_str(os.path.splitext(
-                os.path.basename(post.source_path))[0]))
+                os.path.basename(post.source_path))[0]), post.default_lang)
 
         if 'title' not in meta:
             # If no title is found, use the filename without extension
@@ -1089,6 +1117,7 @@ def hyphenate(dom, _lang):
         lang = LEGAL_VALUES['PYPHEN_LOCALES'].get(_lang, pyphen.language_fallback(_lang))
     else:
         utils.req_missing(['pyphen'], 'hyphenate texts', optional=True)
+    hyphenator = None
     if pyphen is not None and lang is not None:
         # If pyphen does exist, we tell the user when configuring the site.
         # If it does not support a language, we ignore it quietly.
@@ -1097,6 +1126,7 @@ def hyphenate(dom, _lang):
         except KeyError:
             LOGGER.error("Cannot find hyphenation dictoniaries for {0} (from {1}).".format(lang, _lang))
             LOGGER.error("Pyphen cannot be installed to ~/.local (pip install --user).")
+    if hyphenator is not None:
         for tag in ('p', 'li', 'span'):
             for node in dom.xpath("//%s[not(parent::pre)]" % tag):
                 skip_node = False

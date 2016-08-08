@@ -1,0 +1,145 @@
+# Messages in Nikola
+# Copyright (C) 2012-2013
+# This file is distributed under the same license as the Nikola package.
+# 
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Vango Stavro <vstavro@stavrocons.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Nikola\n"
+"Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
+"POT-Creation-Date: 2013-03-15 12:24-0300\n"
+"PO-Revision-Date: 2016-07-05 18:49+0000\n"
+"Last-Translator: Vango Stavro <vstavro@stavrocons.com>\n"
+"Language-Team: Albanian (http://www.transifex.com/ralsina/nikola/language/sq/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: sq\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "More posts about %s"
+msgstr "Më shumë postime rreth %s"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "LANGUAGE"
+msgstr "Shqip"
+
+msgid "Tags"
+msgstr "Etiketa"
+
+msgid "Categories"
+msgstr "Kategori"
+
+msgid "Tags and Categories"
+msgstr "Etiketa dhe Kategori"
+
+msgid "Comments"
+msgstr "Komente"
+
+msgid "Read more"
+msgstr "Lexo më shumë"
+
+msgid "Posts about %s"
+msgstr "Postime rreth %s"
+
+msgid "Next post"
+msgstr "Postimi i rradhës"
+
+msgid "old posts, page %d"
+msgstr "Postime të kaluara, faqe %d"
+
+msgid "page %d"
+msgstr "faqe %d"
+
+msgid "Source"
+msgstr "Burim"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "Read in English"
+msgstr "Lexo në Shqip"
+
+msgid "Posts for year %s"
+msgstr "Postime për vitin %s"
+
+msgid "Newer posts"
+msgstr "Postime më të reja"
+
+msgid "Previous post"
+msgstr "Postim i kaluar"
+
+msgid "Also available in:"
+msgstr "Gjithashtu e disponueshme në:"
+
+msgid "Languages:"
+msgstr "Gjuhë:"
+
+msgid "Original site"
+msgstr "Faqja origjinale"
+
+msgid "Older posts"
+msgstr "Postime më të vjetra"
+
+msgid "Archive"
+msgstr "Arkiva"
+
+msgid "Publication date"
+msgstr "Data e publikimit"
+
+msgid "Posted:"
+msgstr "Postuar:"
+
+msgid "Posts for {month} {year}"
+msgstr "Postime për {month} {year}"
+
+msgid "Posts for {month} {day}, {year}"
+msgstr "Postime për {month} {day}, {year}"
+
+msgid "Nothing found."
+msgstr "Nuk është gjetur asgjë."
+
+msgid "No posts found."
+msgstr "Nuk është gjetur asnjë post."
+
+msgid "RSS feed"
+msgstr "Furnizim RSS"
+
+msgid "%d min remaining to read"
+msgstr "%d min ngelen për tu lexuar"
+
+msgid "Skip to main content"
+msgstr "Shko tek përmbajtja kryesore"
+
+msgid "Subcategories:"
+msgstr "Nënkategori:"
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
+msgstr "(aktiv)"
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr "Shkruaj postin tënd këtu."
+
+#. Default content for a new page
+msgid "Write your page here."
+msgstr "Shkruaj faqen tënde këtu."
+
+msgid "Uncategorized"
+msgstr "E pa kategorizuar"
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr "Përditësime"
+
+msgid "Authors"
+msgstr "Autorë"
+
+msgid "Posts by %s"
+msgstr "Postime nga %s"

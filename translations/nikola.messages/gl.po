@@ -7,13 +7,13 @@
 # Translators:
 # Translators:
 # Translators:
-# Rubén Santos <kojicomics@gmail.com>, 2015
+# Rubén Santos <kojicomics@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-11-05 20:22+0000\n"
+"PO-Revision-Date: 2016-05-12 19:50+0000\n"
 "Last-Translator: Rubén Santos <kojicomics@gmail.com>\n"
 "Language-Team: Galician (http://www.transifex.com/ralsina/nikola/language/gl/)\n"
 "MIME-Version: 1.0\n"
@@ -87,7 +87,7 @@ msgid "Older posts"
 msgstr "Artigos vellos"
 
 msgid "Archive"
-msgstr "Archivo"
+msgstr "Arquivo"
 
 msgid "Publication date"
 msgstr "Data de publicación"

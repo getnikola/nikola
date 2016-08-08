@@ -29,6 +29,7 @@
 
 from __future__ import unicode_literals
 import os
+import io
 import json
 from collections import deque
 try:
@@ -91,12 +92,12 @@ class JinjaTemplates(TemplateSystem):
         if jinja2 is None:
             req_missing(['jinja2'], 'use this theme')
         template = self.lookup.get_template(template_name)
-        output = template.render(**context)
+        data = template.render(**context)
         if output_name is not None:
             makedirs(os.path.dirname(output_name))
-            with open(output_name, 'w+') as output:
-                output.write(output.encode('utf8'))
-        return output
+            with io.open(output_name, 'w', encoding='utf-8') as output:
+                output.write(data)
+        return data
 
     def render_template_to_string(self, template, context):
         """Render template to a string using context."""

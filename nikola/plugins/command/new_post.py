@@ -29,10 +29,11 @@
 from __future__ import unicode_literals, print_function
 import io
 import datetime
-import os
-import sys
-import subprocess
 import operator
+import os
+import shutil
+import subprocess
+import sys
 
 from blinker import signal
 import dateutil.tz
@@ -293,14 +294,14 @@ class CommandNewPost(Command):
 
         title = title.strip()
         if not path:
-            slug = utils.slugify(title)
+            slug = utils.slugify(title, lang=self.site.default_lang)
         else:
             if isinstance(path, utils.bytes_str):
                 try:
                     path = path.decode(sys.stdin.encoding)
                 except (AttributeError, TypeError):  # for tests
                     path = path.decode('utf-8')
-            slug = utils.slugify(os.path.splitext(os.path.basename(path))[0])
+            slug = utils.slugify(os.path.splitext(os.path.basename(path))[0], lang=self.site.default_lang)
 
         if isinstance(author, utils.bytes_str):
                 try:
@@ -324,14 +325,17 @@ class CommandNewPost(Command):
             'description': '',
             'type': 'text',
         }
-        output_path = os.path.dirname(entry[0])
-        meta_path = os.path.join(output_path, slug + ".meta")
-        pattern = os.path.basename(entry[0])
-        suffix = pattern[1:]
+
         if not path:
+            pattern = os.path.basename(entry[0])
+            suffix = pattern[1:]
+            output_path = os.path.dirname(entry[0])
+
             txt_path = os.path.join(output_path, slug + suffix)
+            meta_path = os.path.join(output_path, slug + ".meta")
         else:
             txt_path = os.path.join(self.site.original_cwd, path)
+            meta_path = os.path.splitext(txt_path)[0] + ".meta"
 
         if (not onefile and os.path.isfile(meta_path)) or \
                 os.path.isfile(txt_path):
@@ -343,6 +347,9 @@ class CommandNewPost(Command):
             signal('existing_' + content_type).send(self, **event)
 
             LOGGER.error("The title already exists!")
+            LOGGER.info("Existing {0}'s text is at: {1}".format(content_type, txt_path))
+            if not onefile:
+                LOGGER.info("Existing {0}'s metadata is at: {1}".format(content_type, meta_path))
             return 8
 
         d_name = os.path.dirname(txt_path)
@@ -363,17 +370,22 @@ class CommandNewPost(Command):
             onefile = False
             LOGGER.warn('This compiler does not support one-file posts.')
 
-        if import_file:
+        if onefile and import_file:
             with io.open(import_file, 'r', encoding='utf-8') as fh:
                 content = fh.read()
-        else:
+        elif not import_file:
             if is_page:
                 content = self.site.MESSAGES[self.site.default_lang]["Write your page here."]
             else:
                 content = self.site.MESSAGES[self.site.default_lang]["Write your post here."]
-        compiler_plugin.create_post(
-            txt_path, content=content, onefile=onefile, title=title,
-            slug=slug, date=date, tags=tags, is_page=is_page, **metadata)
+
+        if (not onefile) and import_file:
+            # Two-file posts are copied  on import (Issue #2380)
+            shutil.copy(import_file, txt_path)
+        else:
+            compiler_plugin.create_post(
+                txt_path, content=content, onefile=onefile, title=title,
+                slug=slug, date=date, tags=tags, is_page=is_page, **metadata)
 
         event = dict(path=txt_path)
 

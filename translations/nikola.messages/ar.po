@@ -47,16 +47,16 @@ msgid "Read more"
 msgstr "قراءة المزيد"
 
 msgid "Posts about %s"
-msgstr "مقالات عن s%"
+msgstr "مقالات عن %s"
 
 msgid "Next post"
 msgstr "المقالة التالية"
 
 msgid "old posts, page %d"
-msgstr "مقالات قديمة, صفحة d%"
+msgstr "مقالات قديمة, صفحة %d"
 
 msgid "page %d"
-msgstr "صفحة d%"
+msgstr "صفحة %d"
 
 msgid "Source"
 msgstr "المصدر"
@@ -67,7 +67,7 @@ msgid "Read in English"
 msgstr "اقرأ بالعربية"
 
 msgid "Posts for year %s"
-msgstr "مقالات سنة s%"
+msgstr "مقالات سنة %s"
 
 msgid "Newer posts"
 msgstr "مقالات أحدث"

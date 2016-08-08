@@ -66,6 +66,7 @@ from .plugin_categories import (
     CompilerExtension,
     MarkdownExtension,
     RestExtension,
+    ShortcodePlugin,
     Task,
     TaskMultiplier,
     TemplateSystem,
@@ -128,7 +129,8 @@ LEGAL_VALUES = {
         'it': 'Italian',
         ('ja', '!jp'): 'Japanese',
         'ko': 'Korean',
-        'nb': 'Norwegian Bokmål',
+        'lt': 'Lithuanian',
+        'nb': 'Norwegian (Bokmål)',
         'nl': 'Dutch',
         'pa': 'Punjabi',
         'pl': 'Polish',
@@ -137,9 +139,11 @@ LEGAL_VALUES = {
         'ru': 'Russian',
         'sk': 'Slovak',
         'sl': 'Slovene',
+        'sq': 'Albanian',
         'sr': 'Serbian (Cyrillic)',
         'sr_latin': 'Serbian (Latin)',
         'sv': 'Swedish',
+        'te': 'Telugu',
         ('tr', '!tr_TR'): 'Turkish',
         'ur': 'Urdu',
         'uk': 'Ukrainian',
@@ -147,26 +151,49 @@ LEGAL_VALUES = {
     },
     '_WINDOWS_LOCALE_GUESSES': {
         # TODO incomplete
-        # some languages may need that the appropiate Microsoft Language Pack be instaled.
+        # some languages may need that the appropriate Microsoft Language Pack be installed.
+        "ar": "Arabic",
+        "az": "Azeri (Latin)",
         "bg": "Bulgarian",
+        "bs": "Bosnian",
         "ca": "Catalan",
+        "cs": "Czech",
+        "da": "Danish",
         "de": "German",
         "el": "Greek",
         "en": "English",
-        "eo": "Esperanto",
+        # "eo": "Esperanto", # Not available
         "es": "Spanish",
-        "fa": "Farsi",  # Persian
+        "et": "Estonian",
+        "eu": "Basque",
+        "fa": "Persian",  # Persian
+        "fi": "Finnish",
         "fr": "French",
+        "gl": "Galician",
+        "hi": "Hindi",
         "hr": "Croatian",
         "hu": "Hungarian",
+        "id": "Indonesian",
         "it": "Italian",
-        "jp": "Japanese",
+        "ja": "Japanese",
+        "ko": "Korean",
+        "nb": "Norwegian",  # Not Bokmål, as Windows doesn't find it for unknown reasons.
         "nl": "Dutch",
+        "pa": "Punjabi",
         "pl": "Polish",
+        "pt": "Portuguese_Portugal",
         "pt_br": "Portuguese_Brazil",
         "ru": "Russian",
-        "sl_si": "Slovenian",
-        "tr_tr": "Turkish",
+        "sk": "Slovak",
+        "sl": "Slovenian",
+        "sq": "Albanian",
+        "sr": "Serbian",
+        "sr_latin": "Serbian (Latin)",
+        "sv": "Swedish",
+        "te": "Telugu",
+        "tr": "Turkish",
+        "uk": "Ukrainian",
+        "ur": "Urdu",
         "zh_cn": "Chinese_China",  # Chinese (Simplified)
     },
     '_TRANSLATIONS_WITH_COUNTRY_SPECIFIERS': {
@@ -198,6 +225,7 @@ LEGAL_VALUES = {
         it='it',
         ja='ja',
         ko='kr',  # kr is South Korea, ko is the Korean language
+        lt='lt',
         nb='no',
         nl='nl',
         pl='pl',
@@ -242,6 +270,7 @@ LEGAL_VALUES = {
         it='it',
         ja='ja',
         ko='ko',
+        lt='lt',
         nb='nb',
         nl='nl',
         pl='pl',
@@ -250,6 +279,7 @@ LEGAL_VALUES = {
         ru='ru',
         sk='sk',
         sl='sl',
+        sq='sq',
         sr='sr-cyrl',
         sr_latin='sr',
         sv='sv',
@@ -265,13 +295,14 @@ LEGAL_VALUES = {
         'da': 'da',
         'de': 'de',
         'el': 'el',
-        'en': 'en',
+        'en': 'en_US',
         'es': 'es',
         'et': 'et',
         'fr': 'fr',
         'hr': 'hr',
         'hu': 'hu',
         'it': 'it',
+        'lt': 'lt',
         'nb': 'nb',
         'nl': 'nl',
         'pl': 'pl',
@@ -282,6 +313,7 @@ LEGAL_VALUES = {
         'sl': 'sl',
         'sr': 'sr',
         'sv': 'sv',
+        'te': 'te',
         'uk': 'uk',
     },
 }
@@ -291,7 +323,13 @@ def _enclosure(post, lang):
     """Add an enclosure to RSS."""
     enclosure = post.meta('enclosure', lang)
     if enclosure:
-        length = 0
+        try:
+            length = int(post.meta('enclosure_length', lang) or 0)
+        except KeyError:
+            length = 0
+        except ValueError:
+            utils.LOGGER.warn("Invalid enclosure length for post {0}".format(post.source_path))
+            length = 0
         url = enclosure
         mime = mimetypes.guess_type(url)[0]
         return url, length, mime
@@ -327,6 +365,7 @@ class Nikola(object):
         self._scanned = False
         self._template_system = None
         self._THEMES = None
+        self._MESSAGES = None
         self.debug = DEBUG
         self.loghandlers = utils.STDERR_HANDLER  # TODO remove on v8
         self.colorful = config.pop('__colorful__', False)
@@ -404,6 +443,7 @@ class Nikola(object):
             'EXTRA_PLUGINS_DIRS': [],
             'COMMENT_SYSTEM_ID': 'nikolademo',
             'ENABLE_AUTHOR_PAGES': True,
+            'EXIF_WHITELIST': {},
             'EXTRA_HEAD_DATA': '',
             'FAVICONS': (),
             'FEED_LENGTH': 10,
@@ -608,6 +648,15 @@ class Nikola(object):
                 self.config[i] = utils.TranslatableSetting(i, self.config[i], self.config['TRANSLATIONS'])
             except KeyError:
                 pass
+
+        # A EXIF_WHITELIST implies you want to keep EXIF data
+        if self.config['EXIF_WHITELIST'] and not self.config['PRESERVE_EXIF_DATA']:
+            utils.LOGGER.warn('Setting EXIF_WHITELIST implies PRESERVE_EXIF_DATA is set to True')
+            self.config['PRESERVE_EXIF_DATA'] = True
+
+        # Setting PRESERVE_EXIF_DATA with an empty EXIF_WHITELIST implies 'keep everything'
+        if self.config['PRESERVE_EXIF_DATA'] and not self.config['EXIF_WHITELIST']:
+            utils.LOGGER.warn('You are setting PRESERVE_EXIF_DATA and not EXIF_WHITELIST so EXIF data is not really kept.')
 
         # Handle CONTENT_FOOTER properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS.
@@ -825,12 +874,17 @@ class Nikola(object):
         self._set_global_context()
 
         # Set persistent state facility
-        self.state = Persistor(os.path.join('state_data.json'))
+        self.state = Persistor('state_data.json')
 
         # Set cache facility
         self.cache = Persistor(os.path.join(self.config['CACHE_FOLDER'], 'cache_data.json'))
 
-    def init_plugins(self, commands_only=False):
+        # Create directories for persistors only if a site exists (Issue #2334)
+        if self.configured:
+            self.state._set_site(self)
+            self.cache._set_site(self)
+
+    def init_plugins(self, commands_only=False, load_all=False):
         """Load plugins as needed."""
         self.plugin_manager = PluginManager(categories_filter={
             "Command": Command,
@@ -842,6 +896,7 @@ class Nikola(object):
             "CompilerExtension": CompilerExtension,
             "MarkdownExtension": MarkdownExtension,
             "RestExtension": RestExtension,
+            "ShortcodePlugin": ShortcodePlugin,
             "SignalHandler": SignalHandler,
             "ConfigPlugin": ConfigPlugin,
             "PostScanner": PostScanner,
@@ -851,8 +906,8 @@ class Nikola(object):
         if sys.version_info[0] == 3:
             self._plugin_places = [
                 resource_filename('nikola', 'plugins'),
-                os.path.join(os.getcwd(), 'plugins'),
                 os.path.expanduser('~/.nikola/plugins'),
+                os.path.join(os.getcwd(), 'plugins'),
             ] + [path for path in extra_plugins_dirs if path]
         else:
             self._plugin_places = [
@@ -864,32 +919,56 @@ class Nikola(object):
         self.plugin_manager.getPluginLocator().setPluginPlaces(self._plugin_places)
         self.plugin_manager.locatePlugins()
         bad_candidates = set([])
-        for p in self.plugin_manager._candidates:
-            if commands_only:
-                if p[-1].details.has_option('Nikola', 'plugincategory'):
-                    # FIXME TemplateSystem should not be needed
-                    if p[-1].details.get('Nikola', 'PluginCategory') not in {'Command', 'Template'}:
+        if not load_all:
+            for p in self.plugin_manager._candidates:
+                if commands_only:
+                    if p[-1].details.has_option('Nikola', 'plugincategory'):
+                        # FIXME TemplateSystem should not be needed
+                        if p[-1].details.get('Nikola', 'PluginCategory') not in {'Command', 'Template'}:
+                            bad_candidates.add(p)
+                    else:
                         bad_candidates.add(p)
-            elif self.configured:  # Not commands-only, and configured
-                # Remove compilers we don't use
-                if p[-1].name in self.bad_compilers:
-                    bad_candidates.add(p)
-                    self.disabled_compilers[p[-1].name] = p
-                    utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
-                if p[-1].name not in self.config['COMPILERS'] and \
-                        p[-1].details.has_option('Nikola', 'plugincategory') and p[-1].details.get('Nikola', 'PluginCategory') == 'Compiler':
-                    bad_candidates.add(p)
-                    self.disabled_compilers[p[-1].name] = p
-                    utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
-                # Remove blacklisted plugins
-                if p[-1].name in self.config['DISABLED_PLUGINS']:
-                    bad_candidates.add(p)
-                    utils.LOGGER.debug('Not loading disabled plugin {}', p[-1].name)
-                # Remove compiler extensions we don't need
-                if p[-1].details.has_option('Nikola', 'compiler') and p[-1].details.get('Nikola', 'compiler') in self.disabled_compilers:
-                    bad_candidates.add(p)
-                    utils.LOGGER.debug('Not loading compiler extension {}', p[-1].name)
-        self.plugin_manager._candidates = list(set(self.plugin_manager._candidates) - bad_candidates)
+                elif self.configured:  # Not commands-only, and configured
+                    # Remove compilers we don't use
+                    if p[-1].name in self.bad_compilers:
+                        bad_candidates.add(p)
+                        self.disabled_compilers[p[-1].name] = p
+                        utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
+                    if p[-1].name not in self.config['COMPILERS'] and \
+                            p[-1].details.has_option('Nikola', 'plugincategory') and p[-1].details.get('Nikola', 'PluginCategory') == 'Compiler':
+                        bad_candidates.add(p)
+                        self.disabled_compilers[p[-1].name] = p
+                        utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
+                    # Remove blacklisted plugins
+                    if p[-1].name in self.config['DISABLED_PLUGINS']:
+                        bad_candidates.add(p)
+                        utils.LOGGER.debug('Not loading disabled plugin {}', p[-1].name)
+                    # Remove compiler extensions we don't need
+                    if p[-1].details.has_option('Nikola', 'compiler') and p[-1].details.get('Nikola', 'compiler') in self.disabled_compilers:
+                        bad_candidates.add(p)
+                        utils.LOGGER.debug('Not loading compiler extension {}', p[-1].name)
+            self.plugin_manager._candidates = list(set(self.plugin_manager._candidates) - bad_candidates)
+
+        # Find repeated plugins and discard the less local copy
+        def plugin_position_in_places(plugin):
+            # plugin here is a tuple:
+            # (path to the .plugin file, path to plugin module w/o .py, plugin metadata)
+            for i, place in enumerate(self._plugin_places):
+                if plugin[0].startswith(place):
+                    return i
+
+        plugin_dict = defaultdict(list)
+        for data in self.plugin_manager._candidates:
+            plugin_dict[data[2].name].append(data)
+        self.plugin_manager._candidates = []
+        for name, plugins in plugin_dict.items():
+            if len(plugins) > 1:
+                # Sort by locality
+                plugins.sort(key=plugin_position_in_places)
+                utils.LOGGER.debug("Plugin {} exists in multiple places, using {}".format(
+                    plugins[-1][2].name, plugins[-1][0]))
+            self.plugin_manager._candidates.append(plugins[-1])
+
         self.plugin_manager.loadPlugins()
 
         self._activate_plugins_of_category("SignalHandler")
@@ -915,6 +994,9 @@ class Nikola(object):
             if plugin_info.name in self.config["COMPILERS"].keys():
                 self.plugin_manager.activatePluginByName(plugin_info.name)
                 plugin_info.plugin_object.set_site(self)
+
+        # Activate shortcode plugins
+        self._activate_plugins_of_category("ShortcodePlugin")
 
         # Load compiler plugins
         self.compilers = {}
@@ -1036,9 +1118,11 @@ class Nikola(object):
             try:
                 self._THEMES = utils.get_theme_chain(self.config['THEME'])
             except Exception:
-                utils.LOGGER.warn('''Cannot load theme "{0}", using 'bootstrap3' instead.'''.format(self.config['THEME']))
-                self.config['THEME'] = 'bootstrap3'
-                return self._get_themes()
+                if self.config['THEME'] != 'bootstrap3':
+                    utils.LOGGER.warn('''Cannot load theme "{0}", using 'bootstrap3' instead.'''.format(self.config['THEME']))
+                    self.config['THEME'] = 'bootstrap3'
+                    return self._get_themes()
+                raise
             # Check consistency of USE_CDN and the current THEME (Issue #386)
             if self.config['USE_CDN'] and self.config['USE_CDN_WARNING']:
                 bootstrap_path = utils.get_asset_path(os.path.join(
@@ -1052,9 +1136,11 @@ class Nikola(object):
 
     def _get_messages(self):
         try:
-            return utils.load_messages(self.THEMES,
-                                       self.translations,
-                                       self.default_lang)
+            if self._MESSAGES is None:
+                self._MESSAGES = utils.load_messages(self.THEMES,
+                                                     self.translations,
+                                                     self.default_lang)
+            return self._MESSAGES
         except utils.LanguageNotFoundError as e:
             utils.LOGGER.error('''Cannot load language "{0}".  Please make sure it is supported by Nikola itself, or that you have the appropriate messages files in your themes.'''.format(e.lang))
             sys.exit(1)
@@ -1314,24 +1400,39 @@ class Nikola(object):
 
         return result
 
+    def _make_renderfunc(self, t_data):
+        """Return a function that can be registered as a template shortcode.
+
+        The returned function has access to the passed template data and
+        accepts any number of positional and keyword arguments. Positional
+        arguments values are added as a tuple under the key ``_args`` to the
+        keyword argument dict and then the latter provides the template
+        context.
+
+        """
+        def render_shortcode(*args, **kw):
+            kw['_args'] = args
+            return self.template_system.render_template_to_string(t_data, kw)
+        return render_shortcode
+
     def _register_templated_shortcodes(self):
         """Register shortcodes provided by templates in shortcodes/ folders."""
-        builtin_sc_dir = resource_filename('nikola', os.path.join('data', 'shortcodes', utils.get_template_engine(self.THEMES)))
-        sc_dirs = [builtin_sc_dir, 'shortcodes']
+        builtin_sc_dir = resource_filename(
+            'nikola',
+            os.path.join('data', 'shortcodes', utils.get_template_engine(self.THEMES)))
 
-        for sc_dir in sc_dirs:
+        for sc_dir in [builtin_sc_dir, 'shortcodes']:
             if not os.path.isdir(sc_dir):
                 continue
+
             for fname in os.listdir(sc_dir):
                 name, ext = os.path.splitext(fname)
-                if ext == '.tmpl':
-                    with open(os.path.join(sc_dir, fname)) as fd:
-                        template_data = fd.read()
 
-                    def render_shortcode(t_data=template_data, **kw):
-                        return self.template_system.render_template_to_string(t_data, kw)
+                if ext != '.tmpl':
+                    continue
 
-                    self.register_shortcode(name, render_shortcode)
+                with open(os.path.join(sc_dir, fname)) as fd:
+                    self.register_shortcode(name, self._make_renderfunc(fd.read()))
 
     def register_shortcode(self, name, f):
         """Register function f to handle shortcode "name"."""
@@ -1712,6 +1813,7 @@ class Nikola(object):
         self.tags_per_language = defaultdict(list)
         self.category_hierarchy = {}
         self.post_per_file = {}
+        self.post_per_input_file = {}
         self.timeline = []
         self.pages = []
 
@@ -1722,27 +1824,28 @@ class Nikola(object):
 
         quit = False
         # Classify posts per year/tag/month/whatever
-        slugged_tags = set([])
+        slugged_tags = defaultdict(set)
         for post in self.timeline:
             if post.use_in_feeds:
                 self.posts.append(post)
                 self.posts_per_year[str(post.date.year)].append(post)
                 self.posts_per_month[
                     '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post)
-                for tag in post.alltags:
-                    _tag_slugified = utils.slugify(tag)
-                    if _tag_slugified in slugged_tags:
-                        if tag not in self.posts_per_tag:
-                            # Tags that differ only in case
-                            other_tag = [existing for existing in self.posts_per_tag.keys() if utils.slugify(existing) == _tag_slugified][0]
-                            utils.LOGGER.error('You have tags that are too similar: {0} and {1}'.format(tag, other_tag))
-                            utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
-                            utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.posts_per_tag[other_tag]])))
-                            quit = True
-                    else:
-                        slugged_tags.add(utils.slugify(tag))
-                    self.posts_per_tag[tag].append(post)
                 for lang in self.config['TRANSLATIONS'].keys():
+                    for tag in post.tags_for_language(lang):
+                        _tag_slugified = utils.slugify(tag, lang)
+                        if _tag_slugified in slugged_tags[lang]:
+                            if tag not in self.posts_per_tag:
+                                # Tags that differ only in case
+                                other_tag = [existing for existing in self.posts_per_tag.keys() if utils.slugify(existing, lang) == _tag_slugified][0]
+                                utils.LOGGER.error('You have tags that are too similar: {0} and {1}'.format(tag, other_tag))
+                                utils.LOGGER.error('Tag {0} is used in: {1}'.format(tag, post.source_path))
+                                utils.LOGGER.error('Tag {0} is used in: {1}'.format(other_tag, ', '.join([p.source_path for p in self.posts_per_tag[other_tag]])))
+                                quit = True
+                        else:
+                            slugged_tags[lang].add(_tag_slugified)
+                        if post not in self.posts_per_tag[tag]:
+                            self.posts_per_tag[tag].append(post)
                     self.tags_per_language[lang].extend(post.tags_for_language(lang))
                 self._add_post_to_category(post, post.meta('category'))
 
@@ -1755,6 +1858,7 @@ class Nikola(object):
             for lang in self.config['TRANSLATIONS'].keys():
                 dest = post.destination_path(lang=lang)
                 src_dest = post.destination_path(lang=lang, extension=post.source_ext())
+                src_file = post.translated_source_path(lang=lang)
                 if dest in self.post_per_file:
                     utils.LOGGER.error('Two posts are trying to generate {0}: {1} and {2}'.format(
                         dest,
@@ -1769,6 +1873,7 @@ class Nikola(object):
                     quit = True
                 self.post_per_file[dest] = post
                 self.post_per_file[src_dest] = post
+                self.post_per_input_file[src_file] = post
                 # deduplicate tags_per_language
                 self.tags_per_language[lang] = list(set(self.tags_per_language[lang]))
 
@@ -2045,7 +2150,7 @@ class Nikola(object):
                 entry_content.text = content
             for category in post.tags_for_language(lang):
                 entry_category = lxml.etree.SubElement(entry_root, "category")
-                entry_category.set("term", utils.slugify(category))
+                entry_category.set("term", utils.slugify(category, lang))
                 entry_category.set("label", category)
 
         dst_dir = os.path.dirname(output_path)
@@ -2191,6 +2296,7 @@ class Nikola(object):
                     "basename": basename,
                     "name": atom_output_name,
                     "file_dep": sorted([_.base_path for _ in post_list]),
+                    "task_dep": ['render_posts'],
                     "targets": [atom_output_name],
                     "actions": [(self.atom_feed_renderer,
                                 (lang,
@@ -2293,6 +2399,9 @@ def sanitized_locales(locale_fallback, locale_default, locales, translations):
                 locale_n = locale_fallback
                 msg = "Could not guess locale for language {0}, using locale {1}"
                 utils.LOGGER.warn(msg.format(lang, locale_n))
+                utils.LOGGER.warn("Please fix your OS locale configuration or use the LOCALES option in conf.py to specify your preferred locale.")
+                if sys.platform != 'win32':
+                    utils.LOGGER.warn("Make sure to use an UTF-8 locale to ensure Unicode support.")
             locales[lang] = locale_n
 
     return locale_fallback, locale_default, locales

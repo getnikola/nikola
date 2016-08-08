@@ -1,0 +1,32 @@
+name: nikola
+version: master
+summary: A static website generator
+description: A static website generator
+confinement: strict
+
+apps:
+    nikola:
+         command: nikola.sh
+         plugs: [network, network-bind, home]
+
+parts:
+    nikola:
+        plugin: copy
+        files:
+            nikola.sh: nikola.sh
+    nikola-source:
+        plugin: python3
+        source: git://github.com/getnikola/nikola.git
+        requirements: requirements.txt
+        stage-packages:
+            - locales
+            - libc-bin
+            - python3-lxml
+            - python3-pil
+        build-packages:
+            - zlib1g-dev
+            - libjpeg-turbo8-dev
+            - libpng12-dev
+            - libxslt1-dev
+            - libxml2-dev
+            - gcc

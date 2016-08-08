@@ -417,6 +417,8 @@ class CommandCheck(Command):
             self.logger.debug('removed: {0}'.format(f))
             os.unlink(f)
 
+        warn_flag = bool(only_on_output)
+
         # Find empty directories and remove them
         output_folder = self.site.config['OUTPUT_FOLDER']
         all_dirs = []
@@ -427,6 +429,11 @@ class CommandCheck(Command):
             try:
                 os.rmdir(d)
                 self.logger.debug('removed: {0}/'.format(d))
+                warn_flag = True
             except OSError:
                 pass
+
+        if warn_flag:
+            self.logger.warn('Some files or directories have been removed, your site may need rebuilding')
+
         return True

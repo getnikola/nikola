@@ -191,8 +191,8 @@ class CommandImportWordpress(Command, ImportMixin):
             'help': "Automatically installs the WordPress page compiler (either locally or in the new site) if required by other options.\nWarning: the compiler is GPL software!",
         },
         {
-            'name': 'tag_saniziting_strategy',
-            'long': 'tag-saniziting-strategy',
+            'name': 'tag_sanitizing_strategy',
+            'long': 'tag-sanitizing-strategy',
             'default': 'first',
             'help': 'lower: Convert all tag and category names to lower case\nfirst: Keep first spelling of tag or category name',
         },
@@ -373,7 +373,7 @@ class CommandImportWordpress(Command, ImportMixin):
                     tag_str = tag
             except AttributeError:
                 tag_str = tag
-            tag = utils.slugify(tag_str)
+            tag = utils.slugify(tag_str, self.lang)
             src_url = '{}tag/{}'.format(self.context['SITE_URL'], tag)
             dst_url = self.site.link('tag', tag)
             if src_url != dst_url:
@@ -419,7 +419,8 @@ class CommandImportWordpress(Command, ImportMixin):
         wordpress_namespace = channel.nsmap['wp']
 
         context = SAMPLE_CONF.copy()
-        context['DEFAULT_LANG'] = get_text_tag(channel, 'language', 'en')[:2]
+        self.lang = get_text_tag(channel, 'language', 'en')[:2]
+        context['DEFAULT_LANG'] = self.lang
         context['TRANSLATIONS_PATTERN'] = DEFAULT_TRANSLATIONS_PATTERN
         context['BLOG_TITLE'] = get_text_tag(channel, 'title',
                                              'PUT TITLE HERE')
@@ -540,6 +541,8 @@ class CommandImportWordpress(Command, ImportMixin):
 
                     if meta_key in metadata:
                         image_meta = metadata[meta_key]
+                        if not image_meta:
+                            continue
                         dst_meta = {}
 
                         def add(our_key, wp_key, is_int=False, ignore_zero=False, is_float=False):
@@ -807,6 +810,12 @@ class CommandImportWordpress(Command, ImportMixin):
             out_folder = 'posts'
 
         title = get_text_tag(item, 'title', 'NO TITLE')
+
+        # titles can have line breaks in them, particularly when they are
+        # created by third-party tools that post to Wordpress.
+        # Handle windows-style and unix-style line endings.
+        title = title.replace('\r\n', ' ').replace('\n', ' ')
+
         # link is something like http://foo.com/2012/09/01/hello-world/
         # So, take the path, utils.slugify it, and that's our slug
         link = get_text_tag(item, 'link', None)
@@ -839,7 +848,7 @@ class CommandImportWordpress(Command, ImportMixin):
         else:
             if len(pathlist) > 1:
                 out_folder = os.path.join(*([out_folder] + pathlist[:-1]))
-            slug = utils.slugify(pathlist[-1])
+            slug = utils.slugify(pathlist[-1], self.lang)
 
         description = get_text_tag(item, 'description', '')
         post_date = get_text_tag(

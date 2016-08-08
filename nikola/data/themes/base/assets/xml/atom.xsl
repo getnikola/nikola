@@ -14,7 +14,7 @@
 <p>This is an Atom feed. To subscribe to it, copy its address and paste it when your feed reader asks for it. It will be updated periodically in your reader. New to feeds? <a href="https://duckduckgo.com/?q=how+to+get+started+with+rss+feeds" title="Search on the web to learn more">Learn more</a>.</p>
 <p>
 <label for="address">Atom feed address:</label>
-<input><xsl:attribute name="id">address</xsl:attribute><xsl:attribute name="spellcheck">false</xsl:attribute><xsl:attribute name="value"><xsl:value-of select="feed/link[@rel='self']/@href"/></xsl:attribute></input>
+<input><xsl:attribute name="type">url</xsl:attribute><xsl:attribute name="id">address</xsl:attribute><xsl:attribute name="spellcheck">false</xsl:attribute><xsl:attribute name="value"><xsl:value-of select="feed/link[@rel='self']/@href"/></xsl:attribute></input>
 </p>
 <p>Preview of the feed’s current headlines:</p>
 <ol>

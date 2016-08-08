@@ -140,6 +140,8 @@ class FakePost(object):
         self._title = title
         self._slug = slug
         self._meta = {'slug': slug}
+        self.default_lang = 'en'
+        self._depfile = {}
 
     def title(self):
         return self._title
@@ -196,6 +198,7 @@ class FakeSite(object):
         ]
         self.debug = True
         self.rst_transforms = []
+        self.post_per_input_file = {}
         # This is to make plugin initialization happy
         self.template_system = self
         self.name = 'mako'

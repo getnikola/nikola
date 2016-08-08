@@ -33,7 +33,6 @@ import io
 import json
 import mimetypes
 import os
-import sys
 try:
     from urlparse import urljoin
 except ImportError:
@@ -87,6 +86,7 @@ class Galleries(Task, ImageProcessor):
             'comments_in_galleries': site.config['COMMENTS_IN_GALLERIES'],
             'generate_rss': site.config['GENERATE_RSS'],
             'preserve_exif_data': site.config['PRESERVE_EXIF_DATA'],
+            'exif_whitelist': site.config['EXIF_WHITELIST'],
         }
 
         # Verify that no folder in GALLERY_FOLDERS appears twice
@@ -94,8 +94,8 @@ class Galleries(Task, ImageProcessor):
         for source, dest in self.kw['gallery_folders'].items():
             if source in appearing_paths or dest in appearing_paths:
                 problem = source if source in appearing_paths else dest
-                utils.LOGGER.error("The gallery input or output folder '{0}' appears in more than one entry in GALLERY_FOLDERS, exiting.".format(problem))
-                sys.exit(1)
+                utils.LOGGER.error("The gallery input or output folder '{0}' appears in more than one entry in GALLERY_FOLDERS, ignoring.".format(problem))
+                continue
             appearing_paths.add(source)
             appearing_paths.add(dest)
 
@@ -116,10 +116,11 @@ class Galleries(Task, ImageProcessor):
             if len(candidates) == 1:
                 return candidates[0]
             self.logger.error("Gallery name '{0}' is not unique! Possible output paths: {1}".format(name, candidates))
+            raise RuntimeError("Gallery name '{0}' is not unique! Possible output paths: {1}".format(name, candidates))
         else:
             self.logger.error("Unknown gallery '{0}'!".format(name))
             self.logger.info("Known galleries: " + str(list(self.proper_gallery_links.keys())))
-        sys.exit(1)
+            raise RuntimeError("Unknown gallery '{0}'!".format(name))
 
     def gallery_path(self, name, lang):
         """Link to an image gallery's path.
@@ -174,6 +175,7 @@ class Galleries(Task, ImageProcessor):
         for k, v in self.site.GLOBAL_CONTEXT['template_hooks'].items():
             self.kw['||template_hooks|{0}||'.format(k)] = v._items
 
+        self.site.scan_posts()
         yield self.group_task()
 
         template_name = "gallery.tmpl"
@@ -234,7 +236,7 @@ class Galleries(Task, ImageProcessor):
                     img_titles = []
                     for fn in image_name_list:
                         name_without_ext = os.path.splitext(os.path.basename(fn))[0]
-                        img_titles.append(utils.unslugify(name_without_ext))
+                        img_titles.append(utils.unslugify(name_without_ext, lang))
                 else:
                     img_titles = [''] * len(image_name_list)
 
@@ -415,6 +417,8 @@ class Galleries(Task, ImageProcessor):
             #  may break)
             if post.title == 'index':
                 post.title = os.path.split(gallery)[1]
+            # Register the post (via #2417)
+            self.site.post_per_input_file[index_path] = post
         else:
             post = None
         return post
@@ -474,7 +478,8 @@ class Galleries(Task, ImageProcessor):
             'targets': [thumb_path],
             'actions': [
                 (self.resize_image,
-                    (img, thumb_path, self.kw['thumbnail_size'], False, self.kw['preserve_exif_data']))
+                    (img, thumb_path, self.kw['thumbnail_size'], False, self.kw['preserve_exif_data'],
+                     self.kw['exif_whitelist']))
             ],
             'clean': True,
             'uptodate': [utils.config_changed({
@@ -489,7 +494,8 @@ class Galleries(Task, ImageProcessor):
             'targets': [orig_dest_path],
             'actions': [
                 (self.resize_image,
-                    (img, orig_dest_path, self.kw['max_image_size'], False, self.kw['preserve_exif_data']))
+                    (img, orig_dest_path, self.kw['max_image_size'], False, self.kw['preserve_exif_data'],
+                     self.kw['exif_whitelist']))
             ],
             'clean': True,
             'uptodate': [utils.config_changed({

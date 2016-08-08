@@ -4,7 +4,7 @@
 
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
-
+from nikola.plugins.compile.rest import _align_choice, _align_options_base
 
 from nikola.plugin_categories import RestExtension
 
@@ -22,11 +22,13 @@ class Plugin(RestExtension):
         return super(Plugin, self).set_site(site)
 
 
-CODE = ("""<iframe width="{width}" height="{height}"
+CODE = """\
+<div class="soundcloud-player{align}">
+<iframe width="{width}" height="{height}"
 scrolling="no" frameborder="no"
-src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/{preslug}/"""
-        """{sid}">
-</iframe>""")
+src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/{preslug}/{sid}">
+</iframe>
+</div>"""
 
 
 class SoundCloud(Directive):
@@ -44,6 +46,7 @@ class SoundCloud(Directive):
     option_spec = {
         'width': directives.positive_int,
         'height': directives.positive_int,
+        "align": _align_choice
     }
     preslug = "tracks"
 
@@ -57,6 +60,10 @@ class SoundCloud(Directive):
             'preslug': self.preslug,
         }
         options.update(self.options)
+        if self.options.get('align') in _align_options_base:
+            options['align'] = ' align-' + self.options['align']
+        else:
+            options['align'] = ''
         return [nodes.raw('', CODE.format(**options), format='html')]
 
     def check_content(self):

@@ -1,5 +1,5 @@
 {
-  "name": "Nikola",
+  "name": "nikola",
   "version": "0.0.0",
   "homepage": "https://github.com/getnikola/nikola",
   "authors": [
@@ -9,7 +9,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "bootstrap": "~3.3.6",
+    "bootstrap": "~3.3.7",
     "jquery": "<2.0.0",
     "jquery-colorbox": "~1.6.0",
     "moment": "~2.10.3",

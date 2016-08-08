@@ -3,7 +3,6 @@
 # Don't use __future__ in this script, it breaks buildout
 # from __future__ import print_function
 import os
-import subprocess
 import sys
 import shutil
 from setuptools import setup, find_packages
@@ -113,7 +112,7 @@ class nikola_install(install):
 
 
 setup(name='Nikola',
-      version='7.7.6',
+      version='7.7.12',
       description='A modular, fast, simple, static website and blog generator',
       long_description=open('README.rst').read(),
       author='Roberto Alsina and others',
@@ -129,6 +128,7 @@ setup(name='Nikola',
                    'Intended Audience :: End Users/Desktop',
                    'License :: OSI Approved :: MIT License',
                    'Operating System :: MacOS',
+                   'Operating System :: MacOS :: MacOS X',
                    'Operating System :: Microsoft :: Windows',
                    'Operating System :: OS Independent',
                    'Operating System :: POSIX',
