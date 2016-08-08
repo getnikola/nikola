@@ -26,23 +26,26 @@
 
 """Mixin for importer plugins."""
 
-from __future__ import unicode_literals, print_function
-import io
+from __future__ import print_function, unicode_literals
+
 import csv
 import datetime
+import io
 import os
 import sys
+
+from lxml import etree, html
+from mako.template import Template
 from pkg_resources import resource_filename
+
+from nikola import utils
 
 try:
     from urlparse import urlparse
 except ImportError:
     from urllib.parse import urlparse  # NOQA
 
-from lxml import etree, html
-from mako.template import Template
 
-from nikola import utils
 
 links = {}
 

@@ -29,7 +29,7 @@
 import os
 
 from docutils.parsers.rst import directives
-from docutils.parsers.rst.directives.images import Image, Figure
+from docutils.parsers.rst.directives.images import Figure, Image
 
 from nikola.plugin_categories import RestExtension
 

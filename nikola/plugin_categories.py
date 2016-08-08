@@ -27,13 +27,14 @@
 """Nikola plugin categories."""
 
 from __future__ import absolute_import
-import sys
+
+import io
 import os
 import re
-import io
+import sys
 
-from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
+from yapsy.IPlugin import IPlugin
 
 from .utils import LOGGER, first_line
 

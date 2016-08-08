@@ -26,16 +26,19 @@
 
 """Generate a robots.txt file."""
 
-from __future__ import print_function, absolute_import, unicode_literals
+from __future__ import absolute_import, print_function, unicode_literals
+
 import io
 import os
+
+from nikola import utils
+from nikola.plugin_categories import LateTask
+
 try:
     from urlparse import urljoin, urlparse
 except ImportError:
     from urllib.parse import urljoin, urlparse  # NOQA
 
-from nikola.plugin_categories import LateTask
-from nikola import utils
 
 
 class RobotsFile(LateTask):

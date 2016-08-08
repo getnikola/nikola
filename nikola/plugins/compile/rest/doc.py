@@ -29,8 +29,8 @@
 from docutils import nodes
 from docutils.parsers.rst import roles
 
-from nikola.utils import split_explicit_title, LOGGER
 from nikola.plugin_categories import RestExtension
+from nikola.utils import LOGGER, split_explicit_title
 
 
 class Plugin(RestExtension):

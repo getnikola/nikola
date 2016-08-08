@@ -30,14 +30,15 @@ from __future__ import unicode_literals
 
 import os
 import uuid
-import natsort
 
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
+import natsort
 from nikola import utils
-from nikola.plugin_categories import RestExtension
 from nikola.packages.datecond import date_in_range
+from nikola.plugin_categories import RestExtension
+
 
 # WARNING: the directive name is post-list
 #          (with a DASH instead of an UNDERSCORE)

@@ -26,49 +26,44 @@
 
 """The Post class."""
 
-from __future__ import unicode_literals, print_function, absolute_import
+from __future__ import absolute_import, print_function, unicode_literals
 
-import io
-from collections import defaultdict
 import datetime
 import hashlib
+import io
 import json
 import os
 import re
 import string
+from collections import defaultdict
+from math import ceil  # for reading time feature
+
+import lxml.html
+
+import dateutil.tz
+import natsort
+# for tearDown with _reload we cannot use 'from import' to get forLocaleBorg
+import nikola.utils
+from blinker import signal
+
+from . import utils
+from .rc4 import rc4
+from .utils import (LOGGER, Functionary, LocaleBorg, current_time,
+                    demote_headers, get_translation_candidate, slugify,
+                    to_datetime, unicode_str, unslugify)
+
 try:
     from urlparse import urljoin
 except ImportError:
     from urllib.parse import urljoin  # NOQA
 
-from . import utils
 
-from blinker import signal
-import dateutil.tz
-import lxml.html
-import natsort
 try:
     import pyphen
 except ImportError:
     pyphen = None
 
-from math import ceil  # for reading time feature
 
-# for tearDown with _reload we cannot use 'from import' to get forLocaleBorg
-import nikola.utils
-from .utils import (
-    current_time,
-    Functionary,
-    LOGGER,
-    LocaleBorg,
-    slugify,
-    to_datetime,
-    unicode_str,
-    demote_headers,
-    get_translation_candidate,
-    unslugify,
-)
-from .rc4 import rc4
 
 __all__ = ('Post',)
 

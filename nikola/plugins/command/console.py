@@ -32,7 +32,7 @@ import os
 
 from nikola import __version__
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, STDERR_HANDLER, req_missing, Commands
+from nikola.utils import STDERR_HANDLER, Commands, get_logger, req_missing
 
 LOGGER = get_logger('console', STDERR_HANDLER)
 

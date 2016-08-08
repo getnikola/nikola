@@ -27,24 +27,28 @@
 """Check the generated site."""
 
 from __future__ import print_function
-from collections import defaultdict
+
 import os
 import re
 import sys
 import time
+from collections import defaultdict
+
 import logbook
+import lxml.html
+import requests
+from doit.loader import generate_tasks
+
+from nikola.plugin_categories import Command
+from nikola.utils import STDERR_HANDLER, get_logger
+
 try:
     from urllib import unquote
     from urlparse import urlparse, urljoin, urldefrag
 except ImportError:
     from urllib.parse import unquote, urlparse, urljoin, urldefrag  # NOQA
 
-from doit.loader import generate_tasks
-import lxml.html
-import requests
 
-from nikola.plugin_categories import Command
-from nikola.utils import get_logger, STDERR_HANDLER
 
 
 def _call_nikola_list(site, cache=None):

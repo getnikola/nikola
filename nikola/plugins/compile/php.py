@@ -28,12 +28,12 @@
 
 from __future__ import unicode_literals
 
-import os
 import io
+import os
+from hashlib import md5
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, write_metadata
-from hashlib import md5
 
 
 class CompilePhp(PageCompiler):

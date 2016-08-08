@@ -27,10 +27,15 @@
 """Start test server."""
 
 from __future__ import print_function
+
 import os
 import re
 import socket
 import webbrowser
+
+from nikola.plugin_categories import Command
+from nikola.utils import STDERR_HANDLER, dns_sd, get_logger
+
 try:
     from BaseHTTPServer import HTTPServer
     from SimpleHTTPServer import SimpleHTTPRequestHandler
@@ -44,8 +49,6 @@ except ImportError:
     from io import BytesIO as StringIO  # NOQA
 
 
-from nikola.plugin_categories import Command
-from nikola.utils import dns_sd, get_logger, STDERR_HANDLER
 
 
 class IPv6Server(HTTPServer):

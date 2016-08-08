@@ -26,20 +26,21 @@
 
 """Mako template handler."""
 
-from __future__ import unicode_literals, print_function, absolute_import
+from __future__ import absolute_import, print_function, unicode_literals
+
 import io
 import os
 import shutil
 import sys
 import tempfile
 
-from mako import exceptions, util, lexer, parsetree
+from mako import exceptions, lexer, parsetree, util
 from mako.lookup import TemplateLookup
 from mako.template import Template
 from markupsafe import Markup  # It's ok, Mako requires it
 
 from nikola.plugin_categories import TemplateSystem
-from nikola.utils import makedirs, get_logger, STDERR_HANDLER
+from nikola.utils import STDERR_HANDLER, get_logger, makedirs
 
 LOGGER = get_logger('mako', STDERR_HANDLER)
 

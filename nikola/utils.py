@@ -26,26 +26,43 @@
 
 """Utility functions."""
 
-from __future__ import print_function, unicode_literals, absolute_import
+from __future__ import absolute_import, print_function, unicode_literals
+
 import calendar
 import datetime
-import dateutil.tz
 import hashlib
-import husl
 import io
+import json
 import locale
 import logging
-import natsort
 import os
 import re
-import json
 import shutil
 import socket
 import subprocess
 import sys
+import warnings
+from collections import Callable, OrderedDict, defaultdict
+from unicodedata import normalize as unicodenormalize
+from zipfile import ZipFile as zipf
+
+import logbook
+from doit import tools
+from doit.cmdparse import CmdParse
+from logbook.compat import redirect_logging
+from logbook.more import ColorizedStderrHandler, ExceptionHandler
+from pkg_resources import resource_filename
+from pygments.formatters import HtmlFormatter
+
 import dateutil.parser
 import dateutil.tz
-import logbook
+import husl
+import natsort
+import PyRSS2Gen as rss
+from nikola import filters as task_filters  # NOQA
+from nikola import DEBUG
+from unidecode import unidecode
+
 try:
     from urllib import quote as urlquote
     from urllib import unquote as urlunquote
@@ -54,20 +71,7 @@ except ImportError:
     from urllib.parse import quote as urlquote  # NOQA
     from urllib.parse import unquote as urlunquote  # NOQA
     from urllib.parse import urlparse, urlunparse  # NOQA
-import warnings
-import PyRSS2Gen as rss
-from collections import defaultdict, Callable, OrderedDict
-from logbook.compat import redirect_logging
-from logbook.more import ExceptionHandler, ColorizedStderrHandler
-from pygments.formatters import HtmlFormatter
-from zipfile import ZipFile as zipf
-from doit import tools
-from unidecode import unidecode
-from unicodedata import normalize as unicodenormalize
-from pkg_resources import resource_filename
-from doit.cmdparse import CmdParse
 
-from nikola import DEBUG
 
 __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
            'copy_file', 'slugify', 'unslugify', 'to_datetime', 'apply_filters',
@@ -201,7 +205,6 @@ def req_missing(names, purpose, python=True, optional=False):
     return msg
 
 
-from nikola import filters as task_filters  # NOQA
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
 
 

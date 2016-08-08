@@ -30,6 +30,7 @@ from __future__ import print_function
 
 from nikola import utils
 from nikola.plugin_categories import Command
+
 LOGGER = utils.get_logger('install_theme', utils.STDERR_HANDLER)
 
 

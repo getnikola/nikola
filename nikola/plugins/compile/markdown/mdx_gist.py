@@ -75,7 +75,12 @@ Error Case: non-existent file:
     [:gist: 4747847 doesntexist.py]
 """
 
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
+
+import requests
+
+from nikola.plugin_categories import MarkdownExtension
+from nikola.utils import STDERR_HANDLER, get_logger
 
 try:
     from markdown.extensions import Extension
@@ -87,10 +92,7 @@ except ImportError:
     # the markdown compiler will fail first
     Extension = Pattern = object
 
-from nikola.plugin_categories import MarkdownExtension
-from nikola.utils import get_logger, STDERR_HANDLER
 
-import requests
 
 LOGGER = get_logger('compile_markdown.mdx_gist', STDERR_HANDLER)
 

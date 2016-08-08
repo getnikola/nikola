@@ -3,9 +3,10 @@
 # Don't use __future__ in this script, it breaks buildout
 # from __future__ import print_function
 import os
-import sys
 import shutil
-from setuptools import setup, find_packages
+import sys
+
+from setuptools import find_packages, setup
 from setuptools.command.install import install
 from setuptools.command.test import test as TestCommand
 

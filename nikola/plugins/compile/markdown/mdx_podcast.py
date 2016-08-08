@@ -37,7 +37,9 @@ Basic Example:
 """
 
 from __future__ import print_function, unicode_literals
+
 from nikola.plugin_categories import MarkdownExtension
+
 try:
     from markdown.extensions import Extension
     from markdown.inlinepatterns import Pattern

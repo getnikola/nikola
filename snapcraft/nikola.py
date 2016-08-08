@@ -2,6 +2,7 @@
 # EASY-INSTALL-ENTRY-SCRIPT: 'Nikola==master'
 __requires__ = 'Nikola==7.7.12'
 import sys
+
 from pkg_resources import load_entry_point
 
 if __name__ == '__main__':

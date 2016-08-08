@@ -27,18 +27,21 @@
 """Render the author pages and feeds."""
 
 from __future__ import unicode_literals
+
 import os
+from collections import defaultdict
+
 import natsort
+from blinker import signal
+from nikola import utils
+from nikola.plugin_categories import Task
+
 try:
     from urlparse import urljoin
 except ImportError:
     from urllib.parse import urljoin  # NOQA
-from collections import defaultdict
 
-from blinker import signal
 
-from nikola.plugin_categories import Task
-from nikola import utils
 
 
 class RenderAuthors(Task):

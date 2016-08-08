@@ -31,8 +31,8 @@ from __future__ import unicode_literals
 import io
 import os
 
-from nikola.plugin_categories import Task
 from nikola import utils
+from nikola.plugin_categories import Task
 
 
 class CopyAssets(Task):

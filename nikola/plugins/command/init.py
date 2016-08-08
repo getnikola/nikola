@@ -27,25 +27,30 @@
 """Create a new site."""
 
 from __future__ import print_function, unicode_literals
-import os
-import shutil
+
+import datetime
 import io
 import json
+import os
+import shutil
+import tarfile
 import textwrap
-import datetime
-import unidecode
-import dateutil.tz
-import dateutil.zoneinfo
+
 from mako.template import Template
 from pkg_resources import resource_filename
-import tarfile
 
+import dateutil.tz
+import dateutil.zoneinfo
 import nikola
-from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_FEED_READ_MORE_LINK, LEGAL_VALUES, urlsplit, urlunsplit
-from nikola.plugin_categories import Command
-from nikola.utils import ask, ask_yesno, get_logger, makedirs, STDERR_HANDLER, load_messages
+import unidecode
+from nikola.nikola import (DEFAULT_FEED_READ_MORE_LINK,
+                           DEFAULT_INDEX_READ_MORE_LINK,
+                           DEFAULT_TRANSLATIONS_PATTERN, LEGAL_VALUES,
+                           urlsplit, urlunsplit)
 from nikola.packages.tzlocal import get_localzone
-
+from nikola.plugin_categories import Command
+from nikola.utils import (STDERR_HANDLER, ask, ask_yesno, get_logger,
+                          load_messages, makedirs)
 
 LOGGER = get_logger('init', STDERR_HANDLER)
 

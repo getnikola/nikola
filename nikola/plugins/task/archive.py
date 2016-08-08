@@ -27,13 +27,14 @@
 """Render the post archives."""
 
 import copy
+import datetime
 import os
 
 # for tearDown with _reload we cannot use 'import from' to access LocaleBorg
 import nikola.utils
-import datetime
 from nikola.plugin_categories import Task
-from nikola.utils import config_changed, adjust_name_for_index_path, adjust_name_for_index_link
+from nikola.utils import (adjust_name_for_index_link,
+                          adjust_name_for_index_path, config_changed)
 
 
 class Archive(Task):

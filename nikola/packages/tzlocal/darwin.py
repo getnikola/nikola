@@ -1,8 +1,9 @@
 """tzlocal for OS X."""
 
 import os
-import dateutil.tz
 import subprocess
+
+import dateutil.tz
 
 _cache_tz = None
 

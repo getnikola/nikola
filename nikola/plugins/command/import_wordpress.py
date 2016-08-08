@@ -26,16 +26,27 @@
 
 """Import a WordPress dump."""
 
-from __future__ import unicode_literals, print_function
-import os
-import re
-import sys
+from __future__ import print_function, unicode_literals
+
 import datetime
 import io
 import json
+import os
+import re
+import sys
+from collections import defaultdict
+
 import requests
 from lxml import etree
-from collections import defaultdict
+
+from nikola import utils
+from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
+from nikola.plugin_categories import Command
+from nikola.plugins.basic_import import ImportMixin, links
+from nikola.plugins.command.init import (SAMPLE_CONF,
+                                         format_default_translations_config,
+                                         prepare_config)
+from nikola.utils import req_missing, unicode_str
 
 try:
     from urlparse import urlparse
@@ -48,12 +59,6 @@ try:
 except ImportError:
     phpserialize = None  # NOQA
 
-from nikola.plugin_categories import Command
-from nikola import utils
-from nikola.utils import req_missing, unicode_str
-from nikola.plugins.basic_import import ImportMixin, links
-from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
-from nikola.plugins.command.init import SAMPLE_CONF, prepare_config, format_default_translations_config
 
 LOGGER = utils.get_logger('import_wordpress', utils.STDERR_HANDLER)
 

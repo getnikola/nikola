@@ -28,18 +28,21 @@
 """Jinja template handler."""
 
 from __future__ import unicode_literals
-import os
+
 import io
 import json
+import os
 from collections import deque
+
+from nikola.plugin_categories import TemplateSystem
+from nikola.utils import makedirs, req_missing
+
 try:
     import jinja2
     from jinja2 import meta
 except ImportError:
     jinja2 = None  # NOQA
 
-from nikola.plugin_categories import TemplateSystem
-from nikola.utils import makedirs, req_missing
 
 
 class JinjaTemplates(TemplateSystem):

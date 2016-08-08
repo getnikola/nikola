@@ -27,12 +27,13 @@
 """Process images."""
 
 from __future__ import unicode_literals
-import datetime
-import os
-import lxml
-import re
-import gzip
 
+import datetime
+import gzip
+import os
+import re
+
+import lxml
 import piexif
 
 from nikola import utils

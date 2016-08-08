@@ -30,8 +30,8 @@ from __future__ import unicode_literals
 
 import os
 
-from nikola.plugin_categories import Task
 from nikola import utils
+from nikola.plugin_categories import Task
 
 
 class Redirect(Task):

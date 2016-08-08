@@ -26,13 +26,14 @@
 
 """The default post scanner."""
 
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
+
 import glob
 import os
 import sys
 
-from nikola.plugin_categories import PostScanner
 from nikola import utils
+from nikola.plugin_categories import PostScanner
 from nikola.post import Post
 
 

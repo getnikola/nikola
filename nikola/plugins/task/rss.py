@@ -26,16 +26,19 @@
 
 """Generate RSS feeds."""
 
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
+
 import os
+
+from nikola import utils
+from nikola.nikola import _enclosure
+from nikola.plugin_categories import Task
+
 try:
     from urlparse import urljoin
 except ImportError:
     from urllib.parse import urljoin  # NOQA
 
-from nikola import utils
-from nikola.nikola import _enclosure
-from nikola.plugin_categories import Task
 
 
 class GenerateRSS(Task):
