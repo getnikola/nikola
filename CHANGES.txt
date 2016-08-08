@@ -1,4 +1,8 @@
+New in master
+=============
 
+Features
+--------
 * Update options of chart directive to Pygal 2.2.3
 
 
