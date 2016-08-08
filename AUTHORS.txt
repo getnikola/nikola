@@ -3,11 +3,13 @@
 * `Alex Popescu <https://github.com/al3xandru>`_
 * `Alex Walters <https://github.com/tritium21>`_
 * `Andreas Linz <https://github.com/KLINGTdotNET>`_
+* `André Felipe Dias <https://github.com/andredias>`_
 * `Areski Belaid <https://github.com/areski>`_
 * `Aru Sahni <https://github.com/arusahni>`_
 * `Aurelien Naldi <https://github.com/aurelien-naldi>`_
 * `Ben Mather <https://github.com/bwhmather>`_
 * `Boris Kaul <https://github.com/localvoid>`_
+* `Brad Miller <https://github.com/bnmnetp>`_
 * `Brandon W. Maister <https://github.com/quodlibetor>`_
 * `Bussonnier Matthias <https://gtihub.com/carreau>`_
 * `Carlos Martín Sánchez <https://github.com/carlosvin>`_
@@ -22,8 +24,10 @@
 * `Daniel Aleksandersen <https://github.com/Aeyoun>`_
 * `Daniel Devine <https://github.com/DDevine>`_
 * `Daniel F. Moisset <https://github.com/dmoisset>`_
-* `David Beath <https://github.com/DBeath>`_
+* `dastagg <https://github.com/dastagg>`_
+* `dastagg <https://github.com/dastagg>`_
 * `David Barragán Merino <https://github.com/bameda>`_
+* `David Beath <https://github.com/DBeath>`_
 * `Dhruv Baldawa <https://github.com/dhruvbaldawa>`_
 * `Dirk Engling <https://github.com/erdgeist>`_
 * `Dmitry Verkhoturov <https://github.com/paskal>`_
@@ -32,9 +36,12 @@
 * `Eduardo Schettino <https://github.com/schettino72>`_
 * `Edwin Steele <https://github.com/edwinsteele>`_
 * `Emilien Klein <https://github.com/e2jk>`_
+* `ermeaney <https://github.com/ermeaney>`_
 * `Evgeni Golov <https://github.com/evgeni>`_
 * `Felix Fontein <https://github.com/felixfontein>`_
 * `Felix Schwarz <https://github.com/FelixSchwarz>`_
+* `Florian Finkernagel <https://github.com/TyberiusPrime>`_
+* `follower <https://github.com/follower>`_
 * `Grzegorz Śliwiński <https://github.com/fizyk>`_
 * `Guillermo O. Freschi <https://github.com/Tordek>`_
 * `Hardening <https://github.com/hardening>`_
@@ -45,6 +52,7 @@
 * `Juanjo Conti <https://github.com/jjconti>`_
 * `Kade For <https://github.com/kadefor>`_
 * `Kay Hayen <https://github.com/kayhayen>`_
+* `lbiaggi <https://github.com/lbiaggi>`_
 * `Leandro Poblet <https://github.com/DoctorMalboro>`_
 * `Luis Miguel Morillas <https://github.com/lmorillas>`_
 * `Manuel Kaufmann <https://github.com/humitos>`_
@@ -61,17 +69,24 @@
 * `Michael McNeil Forbes <https://github.com/mforbes>`_
 * `Michal Petrucha <https://github.com/koniiiik>`_
 * `Miguel Ángel García <https://github.com/magmax>`_
+* `mrabbitt <https://github.com/mrabbitt>`_
 * `Neil MartinsenBurrell <https://github.com/neilmb>`_
 * `Niko Wenselowski <https://github.com/okin>`_
 * `Nikola Kotur <https://github.com/kotnik>`_
+* `nlaurens <https://github.com/nlaurens>`_
+* `notfoss <https://github.com/notfoss>`_
 * `Ondřej Grover <https://github.com/smartass101>`_
 * `Onno Broekmans <https://github.com/onnodb>`_
 * `Pablo Seminario <https://github.com/pabluk>`_
 * `Patrick Wildt <https://github.com/Bluerise>`_
 * `Paul Ivanov <https://github.com/ivanov>`_
 * `Pelle Nilsson <https://github.com/pellenilsson>`_
+* `phora <https://github.com/phora>`_
 * `Pierpaolo Da Fieno <https://github.com/numshub>`_
+* `pmav99 <https://github.com/pmav99>`_
 * `Puneeth Chaganti <https://github.com/punchagan>`_
+* `pwm1234 <https://github.com/pwm1234>`_
+* `rafacarrascosa <https://github.com/rafacarrascosa>`_
 * `Raimon Esteve <https://github.com/raimonesteve>`_
 * `Ramiro Morales <https://github.com/ramiro>`_
 * `Roberto Alsina <https://github.com/ralsina>`_
@@ -92,22 +107,8 @@
 * `Troy Toman <https://github.com/troytoman>`_
 * `Udo Spallek <https://github.com/udono>`_
 * `Yamila Moreno <https://github.com/yamila-moreno>`_
-* `Yaşar Arabacı <https://github.com/yasar11732>`_
-* `Yasuhiko Shiga <https://github.com/quoth>`_
-* `Zhaojun Meng <https://github.com/zhaojunmeng>`_
-* `dastagg <https://github.com/dastagg>`_
-* `dastagg <https://github.com/dastagg>`_
-* `ermeaney <https://github.com/ermeaney>`_
-* `follower <https://github.com/follower>`_
-* `lbiaggi <https://github.com/lbiaggi>`_
-* `mrabbitt <https://github.com/mrabbitt>`_
-* `nlaurens <https://github.com/nlaurens>`_
-* `notfoss <https://github.com/notfoss>`_
-* `phora <https://github.com/phora>`_
-* `pmav99 <https://github.com/pmav99>`_
-* `pwm1234 <https://github.com/pwm1234>`_
-* `rafacarrascosa <https://github.com/rafacarrascosa>`_
 * `yarko <https://github.com/yarko>`_
+* `Yasuhiko Shiga <https://github.com/quoth>`_
+* `Yaşar Arabacı <https://github.com/yasar11732>`_
+* `Zhaojun Meng <https://github.com/zhaojunmeng>`_
 * `小明 <https://github.com/dongweiming>`_
-* `Brad Miller <https://github.com/bnmnetp>`_
-* `Florian Finkernagel <https://github.com/TyberiusPrime>`_
