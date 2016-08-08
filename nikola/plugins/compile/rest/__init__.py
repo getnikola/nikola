@@ -96,7 +96,7 @@ class CompileRest(PageCompiler):
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
                 output, error_level, deps = self.compile_html_string(data, source, is_two_file)
-                output = self.site.apply_shortcodes(output, source)
+                output = self.site.apply_shortcodes(output, filename=source)
                 out_file.write(output)
             try:
                 post = self.site.post_per_input_file[source]

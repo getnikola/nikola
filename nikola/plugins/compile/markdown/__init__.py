@@ -75,7 +75,7 @@ class CompileMarkdown(PageCompiler):
             if not is_two_file:
                 _, data = self.split_metadata(data)
             output = markdown(data, self.extensions)
-            output = self.site.apply_shortcodes(output, source)
+            output = self.site.apply_shortcodes(output, filename=source)
             out_file.write(output)
 
     def create_post(self, path, **kw):
