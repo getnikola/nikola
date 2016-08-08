@@ -9,13 +9,14 @@ from nikola import shortcodes
 from .base import FakeSite, BaseTestCase
 import sys
 
-def noargs(site, data=''):
+def noargs(site, data='', lang=''):
     return "noargs {0} success!".format(data)
 
 def arg(*args, **kwargs):
     # don’t clutter the kwargs dict
     _ = kwargs.pop('site')
     data = kwargs.pop('data')
+    lang = kwargs.pop('lang')
     # TODO hack for Python 2.7 -- remove when possible
     if sys.version_info[0] == 2:
         args = tuple(i.encode('utf-8') for i in args)
