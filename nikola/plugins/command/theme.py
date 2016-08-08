@@ -27,18 +27,19 @@
 """Manage themes."""
 
 from __future__ import print_function
-import os
+
 import io
+import os
 import shutil
 import time
-import requests
 
 import pygments
-from pygments.lexers import PythonLexer
+import requests
 from pygments.formatters import TerminalFormatter
+from pygments.lexers import PythonLexer
 
-from nikola.plugin_categories import Command
 from nikola import utils
+from nikola.plugin_categories import Command
 
 LOGGER = utils.get_logger('theme', utils.STDERR_HANDLER)
 

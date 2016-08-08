@@ -26,11 +26,11 @@
 
 """Build HTML fragments from metadata and text."""
 
-from copy import copy
 import os
+from copy import copy
 
-from nikola.plugin_categories import Task
 from nikola import filters, utils
+from nikola.plugin_categories import Task
 
 
 def update_deps(post, lang, task):

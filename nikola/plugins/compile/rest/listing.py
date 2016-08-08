@@ -29,28 +29,31 @@
 
 
 from __future__ import unicode_literals
+
 import io
 import os
 import uuid
+
+import docutils.parsers.rst.directives.body
+import docutils.parsers.rst.directives.misc
+import pygments
+import pygments.util
+from docutils import core, nodes
+from docutils.parsers.rst import Directive, directives
+from docutils.parsers.rst.directives.misc import Include
+from docutils.parsers.rst.roles import set_classes
+from pygments.lexers import get_lexer_by_name
+
+from nikola import utils
+from nikola.plugin_categories import RestExtension
+
 try:
     from urlparse import urlunsplit
 except ImportError:
     from urllib.parse import urlunsplit  # NOQA
 
-import docutils.parsers.rst.directives.body
-import docutils.parsers.rst.directives.misc
-from docutils import core
-from docutils import nodes
-from docutils.parsers.rst import Directive, directives
-from docutils.parsers.rst.roles import set_classes
-from docutils.parsers.rst.directives.misc import Include
 
-from pygments.lexers import get_lexer_by_name
-import pygments
-import pygments.util
 
-from nikola import utils
-from nikola.plugin_categories import RestExtension
 
 
 # A sanitized version of docutils.parsers.rst.directives.body.CodeBlock.

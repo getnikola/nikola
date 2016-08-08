@@ -27,15 +27,18 @@
 """Render the blog indexes."""
 
 from __future__ import unicode_literals
-from collections import defaultdict
+
 import os
+from collections import defaultdict
+
+from nikola import utils
+from nikola.plugin_categories import Task
+
 try:
     from urlparse import urljoin
 except ImportError:
     from urllib.parse import urljoin  # NOQA
 
-from nikola.plugin_categories import Task
-from nikola import utils
 
 
 class Indexes(Task):

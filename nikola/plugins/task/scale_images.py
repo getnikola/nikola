@@ -28,9 +28,9 @@
 
 import os
 
-from nikola.plugin_categories import Task
-from nikola.image_processing import ImageProcessor
 from nikola import utils
+from nikola.image_processing import ImageProcessor
+from nikola.plugin_categories import Task
 
 
 class ScaleImage(Task, ImageProcessor):

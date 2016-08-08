@@ -26,10 +26,15 @@
 
 """Implementation of compile_html based on nbconvert."""
 
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
+
 import io
 import os
 import sys
+
+from nikola.plugin_categories import PageCompiler
+from nikola.shortcodes import apply_shortcodes
+from nikola.utils import STDERR_HANDLER, get_logger, makedirs, req_missing
 
 try:
     from nbconvert.exporters import HTMLExporter
@@ -60,9 +65,6 @@ except ImportError:
         flag = None
         ipy_modern = None
 
-from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing, get_logger, STDERR_HANDLER
-from nikola.shortcodes import apply_shortcodes
 
 
 class CompileIPynb(PageCompiler):

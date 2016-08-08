@@ -27,17 +27,37 @@
 """The main Nikola site object."""
 
 from __future__ import print_function, unicode_literals
+
+import datetime
 import io
+import json
+import locale
+import logging
+import mimetypes
+import os
+import sys
 from collections import defaultdict
 from copy import copy
+
+import lxml.etree
+import lxml.html
 from pkg_resources import resource_filename
-import datetime
-import locale
-import os
-import json
-import sys
+from yapsy.PluginManager import PluginManager
+
+import dateutil.tz
 import natsort
-import mimetypes
+import PyRSS2Gen as rss
+from blinker import signal
+
+from . import DEBUG, shortcodes, utils
+from .plugin_categories import (Command, CompilerExtension, ConfigPlugin,
+                                LateTask, MarkdownExtension, PageCompiler,
+                                PostScanner, RestExtension, ShortcodePlugin,
+                                SignalHandler, Task, TaskMultiplier,
+                                TemplateSystem)
+from .post import Post  # NOQA
+from .state import Persistor
+
 try:
     from urlparse import urlparse, urlsplit, urlunsplit, urljoin, unquote
 except ImportError:
@@ -48,32 +68,7 @@ try:
 except ImportError:
     pyphen = None
 
-import dateutil.tz
-import logging
-import PyRSS2Gen as rss
-import lxml.etree
-import lxml.html
-from yapsy.PluginManager import PluginManager
-from blinker import signal
 
-from .post import Post  # NOQA
-from .state import Persistor
-from . import DEBUG, utils, shortcodes
-from .plugin_categories import (
-    Command,
-    LateTask,
-    PageCompiler,
-    CompilerExtension,
-    MarkdownExtension,
-    RestExtension,
-    ShortcodePlugin,
-    Task,
-    TaskMultiplier,
-    TemplateSystem,
-    SignalHandler,
-    ConfigPlugin,
-    PostScanner,
-)
 
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)

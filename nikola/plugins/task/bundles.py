@@ -30,13 +30,14 @@ from __future__ import unicode_literals
 
 import os
 
+from nikola import utils
+from nikola.plugin_categories import LateTask
+
 try:
     import webassets
 except ImportError:
     webassets = None  # NOQA
 
-from nikola.plugin_categories import LateTask
-from nikola import utils
 
 
 class BuildBundles(LateTask):

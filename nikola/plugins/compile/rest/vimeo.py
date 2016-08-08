@@ -26,15 +26,14 @@
 
 """Vimeo directive for reStructuredText."""
 
-from docutils import nodes
-from docutils.parsers.rst import Directive, directives
-from nikola.plugins.compile.rest import _align_choice, _align_options_base
-
-import requests
 import json
 
+import requests
+from docutils import nodes
+from docutils.parsers.rst import Directive, directives
 
 from nikola.plugin_categories import RestExtension
+from nikola.plugins.compile.rest import _align_choice, _align_options_base
 
 
 class Plugin(RestExtension):

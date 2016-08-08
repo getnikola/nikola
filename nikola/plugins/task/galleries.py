@@ -27,30 +27,33 @@
 """Render image galleries."""
 
 from __future__ import unicode_literals
+
 import datetime
 import glob
 import io
 import json
 import mimetypes
 import os
+
+import natsort
+import PyRSS2Gen as rss
+from nikola import utils
+from nikola.image_processing import ImageProcessor
+from nikola.plugin_categories import Task
+from nikola.post import Post
+
 try:
     from urlparse import urljoin
 except ImportError:
     from urllib.parse import urljoin  # NOQA
 
-import natsort
 try:
     from PIL import Image  # NOQA
 except ImportError:
     import Image as _Image
     Image = _Image
 
-import PyRSS2Gen as rss
 
-from nikola.plugin_categories import Task
-from nikola import utils
-from nikola.image_processing import ImageProcessor
-from nikola.post import Post
 
 _image_size_cache = {}
 

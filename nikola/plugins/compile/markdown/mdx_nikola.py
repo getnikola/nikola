@@ -31,7 +31,11 @@
 """
 
 from __future__ import unicode_literals
+
 import re
+
+from nikola.plugin_categories import MarkdownExtension
+
 try:
     from markdown.postprocessors import Postprocessor
     from markdown.inlinepatterns import SimpleTagPattern
@@ -41,7 +45,6 @@ except ImportError:
     # the markdown compiler will fail first
     Postprocessor = SimpleTagPattern = Extension = object
 
-from nikola.plugin_categories import MarkdownExtension
 
 
 CODERE = re.compile('<div class="codehilite"><pre>(.*?)</pre></div>', flags=re.MULTILINE | re.DOTALL)

@@ -31,13 +31,14 @@ from ast import literal_eval
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
+from nikola.plugin_categories import RestExtension
+from nikola.utils import req_missing
+
 try:
     import pygal
 except ImportError:
     pygal = None  # NOQA
 
-from nikola.plugin_categories import RestExtension
-from nikola.utils import req_missing
 
 _site = None
 

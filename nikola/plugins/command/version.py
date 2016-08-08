@@ -31,8 +31,8 @@ from __future__ import print_function
 import lxml
 import requests
 
-from nikola.plugin_categories import Command
 from nikola import __version__
+from nikola.plugin_categories import Command
 
 URL = 'https://pypi.python.org/pypi?:action=doap&name=Nikola'
 

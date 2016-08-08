@@ -1,7 +1,7 @@
 
-import os
 import fnmatch
 import locale
+import os
 import subprocess
 
 DOIT_CONFIG = {

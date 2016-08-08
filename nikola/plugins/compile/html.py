@@ -28,12 +28,12 @@
 
 from __future__ import unicode_literals
 
-import os
 import io
+import os
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, write_metadata
 from nikola.shortcodes import apply_shortcodes
+from nikola.utils import makedirs, write_metadata
 
 
 class CompileHtml(PageCompiler):

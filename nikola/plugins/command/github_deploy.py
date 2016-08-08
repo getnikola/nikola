@@ -27,16 +27,18 @@
 """Deploy site to GitHub Pages."""
 
 from __future__ import print_function
-from datetime import datetime
+
 import os
 import subprocess
+from datetime import datetime
 from textwrap import dedent
 
+from nikola import __version__
+from nikola.__main__ import main
 from nikola.plugin_categories import Command
 from nikola.plugins.command.check import real_scan_files
-from nikola.utils import get_logger, req_missing, clean_before_deployment, STDERR_HANDLER
-from nikola.__main__ import main
-from nikola import __version__
+from nikola.utils import (STDERR_HANDLER, clean_before_deployment, get_logger,
+                          req_missing)
 
 
 def uni_check_output(*args, **kwargs):

@@ -27,9 +27,10 @@
 """Support for Hugo-style shortcodes."""
 
 from __future__ import unicode_literals
-from .utils import LOGGER
+
 import sys
 
+from .utils import LOGGER
 
 # Constants
 _TEXT = 1

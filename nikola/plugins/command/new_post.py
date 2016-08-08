@@ -26,20 +26,20 @@
 
 """Create a new post."""
 
-from __future__ import unicode_literals, print_function
-import io
+from __future__ import print_function, unicode_literals
+
 import datetime
+import io
 import operator
 import os
 import shutil
 import subprocess
 import sys
 
-from blinker import signal
 import dateutil.tz
-
-from nikola.plugin_categories import Command
+from blinker import signal
 from nikola import utils
+from nikola.plugin_categories import Command
 
 COMPILERS_DOC_LINK = 'https://getnikola.com/handbook.html#configuring-other-input-formats'
 POSTLOGGER = utils.get_logger('new_post', utils.STDERR_HANDLER)

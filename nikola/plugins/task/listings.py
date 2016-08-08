@@ -26,18 +26,18 @@
 
 """Render code listings."""
 
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
 
-from collections import defaultdict
 import os
+from collections import defaultdict
+
 import lxml.html
-
 from pygments import highlight
-from pygments.lexers import get_lexer_for_filename, TextLexer
-import natsort
+from pygments.lexers import TextLexer, get_lexer_for_filename
 
-from nikola.plugin_categories import Task
+import natsort
 from nikola import utils
+from nikola.plugin_categories import Task
 
 
 class Listings(Task):

@@ -1,8 +1,10 @@
 """tzlocal for UNIX."""
 
 from __future__ import with_statement
+
 import os
 import re
+
 import dateutil.tz
 
 _cache_tz = None

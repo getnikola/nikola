@@ -27,20 +27,21 @@
 """Manage plugins."""
 
 from __future__ import print_function
+
 import io
 import os
-import sys
 import shutil
 import subprocess
+import sys
 import time
-import requests
 
 import pygments
-from pygments.lexers import PythonLexer
+import requests
 from pygments.formatters import TerminalFormatter
+from pygments.lexers import PythonLexer
 
-from nikola.plugin_categories import Command
 from nikola import utils
+from nikola.plugin_categories import Command
 
 LOGGER = utils.get_logger('plugin', utils.STDERR_HANDLER)
 

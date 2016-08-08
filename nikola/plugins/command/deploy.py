@@ -27,18 +27,18 @@
 """Deploy site."""
 
 from __future__ import print_function
+
 import io
-from datetime import datetime
-from dateutil.tz import gettz
-import dateutil
 import os
 import subprocess
 import time
+from datetime import datetime
 
+import dateutil
 from blinker import signal
-
+from dateutil.tz import gettz
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, clean_before_deployment, STDERR_HANDLER
+from nikola.utils import STDERR_HANDLER, clean_before_deployment, get_logger
 
 
 class CommandDeploy(Command):

@@ -26,23 +26,25 @@
 
 """Utility functions to help run filters on files."""
 
-from functools import wraps
-import os
 import io
 import json
+import os
+import shlex
 import shutil
 import subprocess
 import tempfile
-import shlex
+from functools import wraps
 
 import lxml
+import requests
+
+from .utils import LOGGER, req_missing
+
 try:
     import typogrify.filters as typo
 except ImportError:
     typo = None  # NOQA
-import requests
 
-from .utils import req_missing, LOGGER
 
 
 def apply_to_binary_file(f):

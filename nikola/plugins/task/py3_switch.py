@@ -33,8 +33,8 @@ import sys
 
 import doit.tools
 
-from nikola.utils import get_logger, STDERR_HANDLER
 from nikola.plugin_categories import LateTask
+from nikola.utils import STDERR_HANDLER, get_logger
 
 PY2_AND_NO_PY3_WARNING = """Nikola is going to deprecate Python 2 support in 2016. Your current
 version will continue to work, but please consider upgrading to Python 3.
