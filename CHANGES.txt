@@ -1,3 +1,7 @@
+
+* Update options of chart directive to Pygal 2.2.3
+
+
 New in v7.7.12
 ==============
 
