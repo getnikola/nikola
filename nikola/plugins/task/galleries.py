@@ -641,6 +641,9 @@ class Galleries(Task, ImageProcessor):
                     mimetypes.guess_type(img)[0]
                 ),
             }
+            if 'description' in metadata:
+                # Pass the standard description field
+                args['description'] = metadata['description']
             items.append(rss.RSSItem(**args))
         rss_obj = rss.RSS2(
             title=title,
