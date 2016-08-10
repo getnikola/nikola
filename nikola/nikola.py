@@ -455,7 +455,6 @@ class Nikola(object):
             'FRONT_INDEX_HEADER': '',
             'GALLERY_FOLDERS': {'galleries': 'galleries'},
             'GALLERY_SORT_BY_DATE': True,
-            'GALLERY_USE_METADATA': True,
             'GLOBAL_CONTEXT_FILLER': [],
             'GZIP_COMMAND': None,
             'GZIP_FILES': False,

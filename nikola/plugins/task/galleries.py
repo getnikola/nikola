@@ -79,7 +79,6 @@ class Galleries(Task, ImageProcessor):
             'use_filename_as_title': site.config['USE_FILENAME_AS_TITLE'],
             'gallery_folders': site.config['GALLERY_FOLDERS'],
             'sort_by_date': site.config['GALLERY_SORT_BY_DATE'],
-            'use_metadata': site.config['GALLERY_USE_METADATA'],
             'filters': site.config['FILTERS'],
             'translations': site.config['TRANSLATIONS'],
             'global_context': site.GLOBAL_CONTEXT,
@@ -248,11 +247,10 @@ class Galleries(Task, ImageProcessor):
                         metadata['title'] = ''
                         img_metadata.append(metadata)
 
-                if self.kw['use_metadata']:
-                    for idx, fn in enumerate(image_name_list):
-                        metadata, newstyle = get_metadata_from_meta_file(os.path.join(gallery,fn))
-                        if metadata != None:
-                            img_metadata[idx].update(metadata)
+                for idx, fn in enumerate(image_name_list):
+                    metadata, newstyle = get_metadata_from_meta_file(os.path.join(gallery,fn))
+                    if metadata != None:
+                        img_metadata[idx].update(metadata)
 
                 thumbs = ['.thumbnail'.join(os.path.splitext(p)) for p in image_list]
                 thumbs = [os.path.join(self.kw['output_folder'], output_folder, os.path.relpath(t, input_folder)) for t in thumbs]
