@@ -3,8 +3,14 @@ New in master
 
 Features
 --------
+
 * Update options of chart directive to Pygal 2.2.3
 
+Bugfixes
+--------
+
+* Default to English for docutils messages if no translations exist
+  (Issues #2422, #2437)
 
 New in v7.7.12
 ==============
