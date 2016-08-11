@@ -316,6 +316,27 @@ LEGAL_VALUES = {
         'te': 'te',
         'uk': 'uk',
     },
+    'DOCUTILS_LOCALES': {
+        'ca': 'ca',
+        'da': 'da',
+        'de': 'de',
+        'en': 'en',
+        'eo': 'eo',
+        'es': 'es',
+        'fi': 'fi',
+        'fr': 'fr',
+        'gl': 'gl',
+        'it': 'it',
+        'ja': 'ja',
+        'lt': 'lt',
+        'pl': 'pl',
+        'pt': 'pt_br',  # hope nobody will mind
+        'pt_br': 'pt_br',
+        'ru': 'ru',
+        'sk': 'sk',
+        'sv': 'sv',
+        'zh_cn': 'zh_cn'
+    }
 }
 
 

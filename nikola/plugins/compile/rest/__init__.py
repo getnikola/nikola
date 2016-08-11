@@ -39,6 +39,7 @@ import docutils.writers.html4css1
 import docutils.parsers.rst.directives
 from docutils.parsers.rst import roles
 
+from nikola.nikola import LEGAL_VALUES
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import (
     unicode_str,
@@ -77,7 +78,7 @@ class CompileRest(PageCompiler):
             'syntax_highlight': 'short',
             'math_output': 'mathjax',
             'template': default_template_path,
-            'language_code': LocaleBorg().current_lang,
+            'language_code': LEGAL_VALUES['DOCUTILS_LOCALES'].get(LocaleBorg().current_lang, 'en')
         }
 
         output, error_level, deps = rst2html(
