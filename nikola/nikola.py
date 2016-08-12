@@ -1432,8 +1432,7 @@ class Nikola(object):
 
         """
         def render_shortcode(*args, **kw):
-            context = {}
-            context.update(self.GLOBAL_CONTEXT)
+            context = self.GLOBAL_CONTEXT.copy()
             context.update(kw)
             context['_args'] = args
             context['lang'] = utils.LocaleBorg().current_lang
