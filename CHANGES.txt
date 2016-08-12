@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Pass global context to template shortcodes (Issue #2424)
 * Update options of chart directive to Pygal 2.2.3
 
 Bugfixes

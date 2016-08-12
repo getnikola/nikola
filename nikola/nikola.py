@@ -1432,8 +1432,14 @@ class Nikola(object):
 
         """
         def render_shortcode(*args, **kw):
-            kw['_args'] = args
-            return self.template_system.render_template_to_string(t_data, kw)
+            context = {}
+            context.update(self.GLOBAL_CONTEXT)
+            context.update(kw)
+            context['_args'] = args
+            context['lang'] = utils.LocaleBorg().current_lang
+            for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
+                context[k] = context[k](context['lang'])
+            return self.template_system.render_template_to_string(t_data, context)
         return render_shortcode
 
     def _register_templated_shortcodes(self):
