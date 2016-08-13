@@ -30,6 +30,9 @@
                 %if 'description' in image:
                 <p>${image['description']}</p>
                 %endif
+                %if 'author' in image:
+                <p>Author: ${image['author']}</p>
+                %endif
             </li>
         %endfor
     </ul>
