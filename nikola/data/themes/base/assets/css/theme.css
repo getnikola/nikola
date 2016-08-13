@@ -248,6 +248,8 @@ img {
 .thumbnails > li {
 	display: inline-block;
 	margin-right: 10px;
+	width: 200px;
+	vertical-align: top;
 }
 
 .thumbnails > li:last-of-type {
