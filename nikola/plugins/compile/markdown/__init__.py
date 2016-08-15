@@ -80,7 +80,7 @@ class CompileMarkdown(PageCompiler):
         try:
             post = self.site.post_per_input_file[source]
         except KeyError:
-            if deps.list:
+            if shortcode_deps:
                 self.logger.error(
                     "Cannot save dependencies for post {0} due to unregistered source file name",
                     source)
