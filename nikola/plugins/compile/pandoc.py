@@ -56,9 +56,18 @@ class CompilePandoc(PageCompiler):
         try:
             subprocess.check_call(['pandoc', '-o', dest, source] + self.site.config['PANDOC_OPTIONS'])
             with open(dest, 'r', encoding='utf-8') as inf:
-                output = self.site.apply_shortcodes(inf.read())
+                output, shortcode_deps = self.site.apply_shortcodes(inf.read(), with_dependencies=True)
             with open(dest, 'w', encoding='utf-8') as outf:
                 outf.write(output)
+            try:
+                post = self.site.post_per_input_file[source]
+            except KeyError:
+                if deps.list:
+                    self.logger.error(
+                        "Cannot save dependencies for post {0} due to unregistered source file name",
+                        source)
+            else:
+                post._depfile[dest] += shortcode_deps
         except OSError as e:
             if e.strreror == 'No such file or directory':
                 req_missing(['pandoc'], 'build this site (compile with pandoc)', python=False)

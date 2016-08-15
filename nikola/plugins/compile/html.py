@@ -49,8 +49,17 @@ class CompileHtml(PageCompiler):
                 data = in_file.read()
             if not is_two_file:
                 _, data = self.split_metadata(data)
-            data = self.site.apply_shortcodes(source)
+            data, shortcode_deps = self.site.apply_shortcodes(source, with_dependencies=True)
             out_file.write(data)
+        try:
+            post = self.site.post_per_input_file[source]
+        except KeyError:
+            if deps.list:
+                self.logger.error(
+                    "Cannot save dependencies for post {0} due to unregistered source file name",
+                    source)
+        else:
+            post._depfile[dest] += shortcode_deps
         return True
 
     def create_post(self, path, **kw):
